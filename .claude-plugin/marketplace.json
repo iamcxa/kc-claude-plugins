@@ -16,7 +16,7 @@
         "repo": "iamcxa/claude-e2e-pipeline"
       },
       "description": "Browser E2E testing pipeline with context-isolating subagents — map UI, run tests, walk through apps, record video",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "keywords": ["e2e", "browser-testing", "agent-browser", "ui-mapping", "video-recording", "subagents"]
     }
   ]
