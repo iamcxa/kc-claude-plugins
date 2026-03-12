@@ -2,9 +2,18 @@
 
 Browser E2E testing pipeline for Claude Code. Maps UI elements, runs test flows, and walks through apps interactively — all with context-isolating subagents that keep browser data out of your main conversation.
 
+## Install
+
+Via the [kc-claude-plugins](https://github.com/iamcxa/kc-claude-plugins) marketplace:
+
+```bash
+/plugin marketplace add iamcxa/kc-claude-plugins
+/plugin install e2e-pipeline@kc-claude-plugins
+```
+
 ## Prerequisites
 
-- [agent-browser](https://github.com/anthropics/agent-browser) CLI installed globally
+- [agent-browser](https://github.com/nicobrinkkemper/agent-browser) CLI installed globally
 
 ## Quick Start
 
@@ -353,6 +362,7 @@ The bug appears randomly — race conditions, timing issues, flaky state.
 | Screenshots | PNG | Every step (when recording) or on failure |
 | Annotated screenshots | PNG with labeled elements | On demand (`--annotate`) |
 | Video recording | WebM | Walkthroughs (default) or tests (`--video`) |
+| MP4 video | MP4 (1.5x speed) | Auto-converted from WebM for sharing |
 | Steps GIF | GIF (800px, 1fps loop) | Auto-generated from per-step screenshots |
 | Network trace | JSONL HAR (trace.zip) | Per walkthrough/test run |
 | Console log | JSONL (trace.zip) | Per walkthrough/test run |
@@ -375,9 +385,12 @@ Output per run:
 | File | Purpose |
 |------|---------|
 | `full.webm` | Complete viewport recording for debugging |
+| `test-run.mp4` / `walkthrough.mp4` | 1.5x speed MP4 for sharing (auto-converted from WebM) |
 | `steps.gif` | Step overview for communication (PR comments, Slack) |
 | `step-*.png` | Individual step screenshots |
 | `trace.zip` | Interactive replay with network waterfall and DOM snapshots |
+
+> **Note:** Large binary artifacts (`*.webm`, `*.mp4`, `trace.zip`) are automatically added to the project's `.gitignore` on first run to prevent accidental commits.
 
 ---
 
@@ -398,11 +411,11 @@ Output per run:
 
 Skills run in main context as thin orchestrators. Heavy browser work is delegated to subagents:
 
-| Skill | Agent | Role |
-|-------|-------|------|
+| Skill | Agent(s) | Role |
+|-------|----------|------|
 | `e2e-map` | `e2e-mapper` | Explore pages, extract selectors |
-| `e2e-test` | `e2e-test-runner` | Execute flow steps, collect results |
-| `e2e-walkthrough` | `e2e-trace-analyzer` | Parse trace.zip for API/console errors |
+| `e2e-test` | `e2e-test-runner` + `e2e-trace-analyzer` | Execute flow steps, collect results, analyze trace |
+| `e2e-walkthrough` | `e2e-trace-analyzer` | Interactive exploration, trace analysis on completion |
 
 This keeps browser screenshots, accessibility trees, and trace data out of the main conversation context.
 
