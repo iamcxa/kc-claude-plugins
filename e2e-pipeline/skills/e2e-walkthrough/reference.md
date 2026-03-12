@@ -22,6 +22,17 @@ Before opening a new browser session, check for stale sessions from previous ski
 REPORT_DIR="$(pwd)/e2e-reports/$(date +%Y%m%d-%H%M%S)" && mkdir -p "$REPORT_DIR"
 ```
 
+**Gitignore housekeeping** (ensure large artifacts are not committed):
+
+```bash
+if [ -f .gitignore ]; then
+  grep -q 'e2e-reports/\*\*/\*.webm' .gitignore 2>/dev/null || \
+    printf '\n# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' >> .gitignore
+else
+  printf '# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' > .gitignore
+fi
+```
+
 **Recording-aware browser open** (agent-browser v0.16.x `record` is incompatible with `--profile`):
 
 - **Recording OFF** (`--no-video`): Use `--profile` as normal.

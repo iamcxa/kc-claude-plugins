@@ -71,6 +71,34 @@ Patterns and gotchas for E2E testing agents. For project-specific patterns, chec
 - **Max retries**: Attempt recovery once. If the browser crashes again on the same step, STOP and report: "Browser unresponsive on step `<id>`. Partial results saved to `<report_dir>`."
 - **Common causes**: Memory-heavy pages, infinite redirect loops, unresponsive dev server, stale browser profiles.
 
+## Gitignore Housekeeping
+
+E2E runs produce large binary artifacts (webm, mp4, trace.zip) that should NOT be committed. Before writing any of these files, ensure the project's `.gitignore` includes rules for them.
+
+**Patterns to add** (if missing):
+
+```
+# E2E pipeline artifacts (large binary files)
+e2e-reports/**/*.webm
+e2e-reports/**/*.mp4
+e2e-reports/**/trace.zip
+```
+
+**Check & append** (idempotent — safe to run multiple times):
+
+```bash
+PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+if [ -f "$PROJ_ROOT/.gitignore" ]; then
+  if ! grep -q 'e2e-reports/\*\*/\*.webm' "$PROJ_ROOT/.gitignore" 2>/dev/null; then
+    printf '\n# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' >> "$PROJ_ROOT/.gitignore"
+  fi
+else
+  printf '# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' > "$PROJ_ROOT/.gitignore"
+fi
+```
+
+Run this **once per session**, during the setup phase (after `mkdir -p` for `report_dir`). If `.gitignore` already has the patterns, the check is a no-op.
+
 ## Trace Analysis
 
 - `trace.zip` contains: `trace.network` (JSONL HAR), `trace.trace` (JSONL events), `resources/` (response bodies)

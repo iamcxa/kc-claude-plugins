@@ -75,6 +75,21 @@ If any required field is missing, STOP with: "Missing required field: `<field>`.
 
 ## Phase 1: Setup
 
+### 1a0. Gitignore Housekeeping
+
+Ensure large binary artifacts are git-ignored before writing any files. Run once per session:
+
+```bash
+mkdir -p "{{report_dir}}"
+PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || dirname "$(dirname "{{report_dir}}")")
+if [ -f "$PROJ_ROOT/.gitignore" ]; then
+  grep -q 'e2e-reports/\*\*/\*.webm' "$PROJ_ROOT/.gitignore" 2>/dev/null || \
+    printf '\n# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' >> "$PROJ_ROOT/.gitignore"
+else
+  printf '# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' > "$PROJ_ROOT/.gitignore"
+fi
+```
+
 ### 1a. Pre-flight Checks
 
 Run these checks and STOP with a clear error if any critical check fails:
