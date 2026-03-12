@@ -1,0 +1,3 @@
+agent-browser version: unknown
+last-synced: 2026-03-07
+source: manual extraction from project .claude/skills/agent-browser/references/
