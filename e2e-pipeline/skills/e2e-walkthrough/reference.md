@@ -252,6 +252,19 @@ flowchart TD
 - **Health Log**: Integrate trace-analysis.md content. Always show the 3-row table. If all clean, values are `0 / 0 / Clean`. If failures exist, add a paragraph after the table explaining each — distinguish app issues from infra noise (e.g., Sentry 429 rate limiting).
 - **Observations**: Key behavioral findings. Focus on: bug status (reproduced / not reproduced vs prior sessions), agent behavior patterns (turn count, tool usage, skipped steps), UX quality (suggestion chips, confirmation flows), deviations from expected flow YAML. **Omit section entirely** if walkthrough was purely mechanical with no notable findings.
 - **Artifacts**: All files in `$REPORT_DIR/` — screenshots, trace.zip, trace-analysis.md, video files. One row per file.
+- **Replay**: Always the last section. Shows commands to re-run and inspect. Template:
+
+```markdown
+## Replay
+
+| Action | Command |
+|--------|---------|
+| Re-run as automated test | `/e2e-test <flow-yaml-name>` |
+| Re-walk interactively | `/e2e-walkthrough` |
+| View trace | `npx playwright show-trace $REPORT_DIR/trace.zip` |
+
+> **Tip:** The `e2e-reports/` directory can be gitignored — only `.claude/e2e/flows/` and `.claude/e2e/mappings/` are needed to reproduce results.
+```
 
 #### `pr-summary.md` — PR Comment Report
 
@@ -294,6 +307,8 @@ Video file: `$REPORT_DIR/<video-filename>`
 
 **Key findings:**
 - <bullet points summarizing results across all scenarios>
+
+> **Replay:** `/e2e-test <flow-name>` | **Trace:** `npx playwright show-trace <report_dir>/trace.zip`
 ````
 
 **PR summary rules:**

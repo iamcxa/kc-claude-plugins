@@ -175,6 +175,7 @@ If recording was enabled, append:
 - Steps GIF reference (local path)
 - Key findings from trace analysis
 - Link to full report
+- Replay line: `` > **Replay:** `/e2e-test <flow>` | **Trace:** `npx playwright show-trace <path>` ``
 
 Then: `gh pr comment <PR> --body-file $REPORT_DIR/pr-summary.md`
 

@@ -424,6 +424,16 @@ _(Recording/GIF rows only if `record` was true)_
 ## Health Issues
 - N console errors (after noise filter)
 - N API failures (4xx/5xx)
+
+## Replay
+
+| Action | Command |
+|--------|---------|
+| Re-run this test | `/e2e-test {{flow_name}}` |
+| Re-run with video | `/e2e-test {{flow_name}} --video` |
+| View trace | `npx playwright show-trace {{report_dir}}/trace.zip` |
+
+> **Tip:** The `e2e-reports/` directory can be gitignored — only `.claude/e2e/flows/` and `.claude/e2e/mappings/` are needed to reproduce results.
 ```
 
 ### 3d. Return Structured Summary
