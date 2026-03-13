@@ -19,7 +19,7 @@ Human-agent collaborative browser walkthrough with trace recording, health monit
 ## Invocation
 
 ```
-/e2e-walkthrough [context] [--mode guided|step|auto] [--sites name1,name2] [--pr N] [--issue ID] [--no-video]
+/e2e-walkthrough [context] [--mode guided|step|auto] [--sites name1,name2] [--pr N] [--issue ID] [--verify] [--no-video]
 ```
 
 | Entry point | Behavior |
@@ -29,6 +29,7 @@ Human-agent collaborative browser walkthrough with trace recording, health monit
 | Free text | Use mapping + codebase to propose path |
 | `--page org-settings` | Explore all mapped elements on that page |
 | `--smoke` | Walk critical paths from mapping |
+| `--verify` | Verification mode: focus on assertions + external checkpoints, tag flow as `verification` |
 | `--sites admin,portal` | Cross-site walkthrough using named mappings |
 | `--no-video` | Skip screen recording (default: recording ON) |
 
@@ -106,6 +107,48 @@ When invoked with `--smoke`, auto-generate a walkthrough plan from the mapping:
 7. **Post-walkthrough selector sweep**: After all navigation steps, run a dedicated `is visible` verification pass for all `data-testid` and `aria-label` selectors in the mapping. The a11y snapshot does NOT expose these attributes — only `is visible` can confirm they exist in the DOM. Group tests by page to minimize navigation.
 
 Present the plan conversationally. If context is vague, ask clarifying questions.
+
+### `--verify` Mode (PR Verification)
+
+When invoked with `--verify`, the walkthrough focuses on producing a stable, repeatable verification flow with external checkpoints:
+
+1. **Every step MUST have `expect:`** — bare navigation without assertions is insufficient for verification
+2. **Core integration path only** — 5-12 steps covering the feature's critical user journey
+3. **Deterministic assertions** — prefer `url contains`, `element visible`, `text '...'` over timing-dependent checks
+4. **External checkpoints** — at key integration points, insert `verify-external` steps to check external services:
+   - After a tracked user action → PostHog event checkpoint
+   - After an AI interaction → Langfuse trace checkpoint
+   - After a form submission → API/database checkpoint
+   - After a notification trigger → Slack/email checkpoint
+5. **Full tool access** — unlike the test-runner subagent, walkthrough runs in main context. Claude uses MCP, curl, database queries, Slack MCP, or any available tool to execute checkpoint `verify:` blocks.
+6. **Tagged output** — generated flow gets `tags: [verification, auto-generated]`
+7. **Replay suggestion** — after flow generation: "Run `/e2e-test <flow>` to confirm this flow passes consistently"
+
+**Checkpoint execution in walkthrough (Phase 3):**
+
+When the current step has `action: "Verify external"`:
+1. Wait `wait` seconds (allow propagation)
+2. Read the `verify:` block, iterate service groups
+3. For each check: use the best available tool — MCP server, curl, database query, file read, etc.
+4. Report result inline to user: `✓ PostHog: event found (count=3)` or `✗ Langfuse: no trace found`
+5. Apply `on_fail:` logic (default `warn` — log and continue)
+6. No browser interaction for checkpoint steps
+
+**Verify mode plan example:**
+
+```
+Verification walkthrough (8 steps + 2 checkpoints):
+1. Navigate to /projects
+2. Click "Create Project" → dialog opens
+3. Fill form with test data
+4. Click Submit → expect success toast
+5. ✓ CHECKPOINT: Verify PostHog 'project_created' event
+6. Navigate to /projects → verify new project in list
+7. Click new project → verify detail page
+8. ✓ CHECKPOINT: Verify Langfuse trace for project creation flow
+```
+
+Combine `--verify` with `--pr N` to read PR diff for context + produce verification flow.
 
 **After plan is presented, proceed to Phase 2 for human approval.**
 
@@ -246,3 +289,6 @@ Next steps:
 | Large table snapshots consume context | Ant Design tables with 10+ rows produce 100+ @ref entries. Use targeted `is visible` checks instead of full snapshot when only verifying element presence |
 | Strict mode violation on `aria-label` | React Native Web may render duplicate `aria-label` elements (e.g., two notification buttons). Use `role=button[name="..."] >> nth=0` or add `data-testid` to disambiguate |
 | Assuming snapshot shows `data-testid` | a11y snapshot does NOT expose `data-testid` or `aria-label` attributes. Use `is visible` for DOM-level verification of attribute-based selectors |
+| Checkpoint without `description:` | Always explain WHY the checkpoint exists — the LLM needs context to choose the right verification approach |
+| `--verify` without `expect:` on steps | Every step in verification mode must have assertions — bare navigation is insufficient |
+| Snapshot/click on `verify-external` step | Checkpoint steps do NOT interact with the browser — skip snapshot, skip element resolution |

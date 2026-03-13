@@ -390,7 +390,9 @@ This is informational — always write the new flow regardless.
 - Use structured action references (`"Click <element> on <page>"`) not natural-language descriptions
 - Set `mapping:` to the mapping filename without `.yaml` extension
 - Format must match `/e2e-test` flow spec — valid keys: `name`, `description`, `tags`, `mapping` (single-site) or `sites` (cross-site), `variables`, `steps` (each with `id`, `site` (cross-site only), `action`, `expect`, `screenshot`, `optional`, `timeout`, `note`)
+- **Checkpoint steps**: serialize with `action: "Verify external"`, `description`, `wait`, `verify:` block, and `on_fail`. Preserve the full `verify:` structure including service groups and natural language checks.
 - Set `tags: [walkthrough, auto-generated]` plus any context-specific tags
+- **`--verify` mode**: add `verification` to tags. E.g., `tags: [verification, walkthrough, auto-generated]`
 - Set `description:` summarizing the walkthrough context
 
 **Output path:** `.claude/e2e/flows/<auto-name>.yaml`

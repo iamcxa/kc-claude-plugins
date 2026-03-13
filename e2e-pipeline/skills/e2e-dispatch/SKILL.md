@@ -87,7 +87,7 @@ The e2e-map skill runs codebase analysis then dispatches e2e-mapper agent.
 Invoke `Skill: "e2e-map"` — runs entirely in main context (interactive mode).
 
 ### --walk
-Invoke `Skill: "e2e-walkthrough"` with mapping name and any --mode, --smoke, --sites, --pr, --issue, **--no-video** arguments.
+Invoke `Skill: "e2e-walkthrough"` with mapping name and any --mode, --smoke, --verify, --sites, --pr, --issue, **--no-video** arguments.
 Runs entirely in main context (interactive).
 
 ### --analyze
@@ -135,3 +135,4 @@ Direct invocation of `/e2e-test`, `/e2e-map`, `/e2e-walkthrough`, `/e2e-skill-op
 | Debug skill issue | `/e2e-dispatch --ops --debug` |
 | Record a test run | `/e2e-dispatch --test login-flow --video` |
 | Walkthrough no video | `/e2e-dispatch --walk admin-panel --no-video` |
+| Verify feature via walkthrough | `/e2e-dispatch --walk admin-panel --verify` |

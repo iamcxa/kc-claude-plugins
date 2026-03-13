@@ -106,3 +106,84 @@ Run this **once per session**, during the setup phase (after `mkdir -p` for `rep
 - Response bodies in `resources/` are SHA1-referenced files
 - Filter trace.network for `status >= 400` to find API failures
 - Filter trace.trace for console errors (after noise removal)
+
+## External Verification Checkpoints
+
+Checkpoint steps (`action: "Verify external"`) let the LLM pause browser automation to verify external service side-effects. The `verify:` block uses semi-structured YAML — service grouping for organization, natural language for the actual checks.
+
+### PostHog Patterns
+
+```yaml
+- id: verify-tracking-event
+  action: "Verify external"
+  description: "After CTA click, verify PostHog received the conversion event"
+  wait: 10
+  verify:
+    posthog:
+      - event: button_clicked
+        expect: "count > 0 in last 5 minutes"
+        properties: [button_name, page, user_id]
+      - event: "$pageview"
+        expect: "path matches /thank-you"
+  on_fail: warn
+```
+
+**Walkthrough**: Claude uses PostHog API via curl or MCP.
+**Test runner**: Attempts curl to `$POSTHOG_HOST/api/projects/$POSTHOG_PROJECT_ID/events/`. Needs `POSTHOG_API_KEY` env var.
+
+### Langfuse Patterns
+
+```yaml
+- id: verify-ai-trace
+  action: "Verify external"
+  description: "After AI chat response, verify Langfuse recorded the trace"
+  wait: 15
+  verify:
+    langfuse:
+      - check: "Recent trace named 'ai-chat' with output"
+        expect: "At least one trace within last 5 minutes"
+      - check: "Generation with model containing 'claude'"
+        expect: "Generation exists in trace, input/output non-empty"
+        note: "Check generations endpoint, filter by trace name"
+  on_fail: warn
+```
+
+**Walkthrough**: Claude uses Langfuse API via curl (Basic auth with `$LANGFUSE_PUBLIC_KEY:$LANGFUSE_SECRET_KEY`).
+**Test runner**: Same curl approach. Needs env vars set.
+
+### Custom / Generic Patterns
+
+For any external service — database, Slack, webhooks, email, etc.:
+
+```yaml
+- id: verify-db-record
+  action: "Verify external"
+  description: "After form submission, verify database has the new record"
+  wait: 5
+  verify:
+    custom:
+      - check: "Query the orders table for a record created in the last minute"
+        expect: "At least one row with status='confirmed'"
+      - check: "確認 Slack #alerts channel 收到下單通知"
+        expect: "最新訊息包含 order ID"
+  on_fail: fail
+```
+
+The `check:` field is natural language — the LLM decides how to verify:
+- Database → SQL query via MCP or curl to admin API
+- Slack → Slack MCP `slack_read_channel`
+- Email → check inbox via API
+- Webhook → check webhook receiver logs
+- Any HTTP endpoint → curl
+
+### Checkpoint Design Guidelines
+
+| Guideline | Reason |
+|-----------|--------|
+| Always include `description:` | LLM needs context to choose the right tool |
+| Set `wait:` based on service latency | PostHog: 5-10s, Langfuse: 10-15s, DB: 3-5s |
+| Use `on_fail: warn` for flaky services | External services have propagation delay and intermittent availability |
+| Use `on_fail: fail` for critical checks | DB record existence, payment confirmation |
+| Use `on_fail: block` sparingly | Only when subsequent steps depend on the checkpoint |
+| Group related checks in one step | One checkpoint per integration point, not one per assertion |
+| `note:` for edge cases | "May be 0 if fast-path routing bypasses load_skill" |

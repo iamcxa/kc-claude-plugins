@@ -206,7 +206,68 @@ steps:
 ```
 
 **Action syntax:**
-`Click <el> on <page>` | `Click <el>(<p>=<v>) on <page>` | `Fill <el> with '<text>' on <page>` | `Wait for <el> on <page>` | `Navigate to <path>` | `Press <key>` | `Scroll <dir>` | `Verify <el> on <page>` | `Eval '<js>'`
+`Click <el> on <page>` | `Click <el>(<p>=<v>) on <page>` | `Fill <el> with '<text>' on <page>` | `Wait for <el> on <page>` | `Navigate to <path>` | `Press <key>` | `Scroll <dir>` | `Verify <el> on <page>` | `Eval '<js>'` | `Verify external` (checkpoint)
+
+### External Verification Checkpoint Steps
+
+Steps with `action: "Verify external"` pause browser automation and verify external service side-effects. The LLM uses available tools (MCP, curl, API calls, DB queries) to fulfill each check.
+
+```yaml
+  - id: verify-intent-events
+    action: "Verify external"
+    description: >
+      After agent responds, verify PostHog received the intent event
+      and Langfuse recorded the classifier trace.
+    wait: 10                             # seconds to wait before starting checks
+    verify:
+      posthog:
+        - event: web_agent_support_intent_detected
+          expect: "count > 0 in last 5 minutes"
+          properties: [email, organizationId, projectId]
+          note: "Triggered by support escalation intent"
+        - event: web_agent_support_skill_loaded
+          expect: "count >= 0"
+          note: "May be 0 if fast-path routing bypasses load_skill"
+      langfuse:
+        - check: "Recent trace with generation containing 'support_escalation'"
+          expect: "At least one trace within last 5 minutes"
+        - check: "Classifier generation with intent=support_escalation"
+          expect: "Generation exists in trace"
+      custom:
+        - check: "Query orders API for new record"
+          expect: "JSON array length > 0"
+        - check: "確認 Slack #support channel 收到通知"
+          expect: "最新訊息包含 request title"
+    on_fail: warn                        # warn (default) | fail | block
+```
+
+**Checkpoint fields:**
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `action` | Yes | Must be `"Verify external"` |
+| `description` | Yes | Why this checkpoint exists (context for LLM) |
+| `wait` | No | Seconds to pause before starting checks (default: 5). Allows propagation delay. |
+| `verify` | Yes | Service-grouped checks. Keys are service names (`posthog`, `langfuse`, `custom`, or any identifier). |
+| `on_fail` | No | `warn` (log + continue, default), `fail` (mark FAIL + continue), `block` (mark FAIL + stop flow) |
+
+**Within each service group**, entries use:
+
+| Field | Description |
+|-------|-------------|
+| `event:` | Event/trace name to look for (structured hint for PostHog-style services) |
+| `check:` | Natural language description of what to verify (for Langfuse-style or custom) |
+| `expect:` | Natural language success criteria |
+| `properties:` | List of expected property names (hint, not strict validation) |
+| `note:` | Context hint for the LLM (edge cases, known exceptions) |
+
+**Execution model:**
+- **Walkthrough** (main context): Full tool access — LLM uses MCP, curl, database, Slack, anything needed.
+- **Test runner** (subagent): Best-effort via Bash/curl. Complex checks that need MCP → marked SKIP with note.
+
+**Flow schema validation**: `verify-external` steps have no page/element references, so they skip mapping cross-check entirely. They MUST have a `verify:` block — missing `verify:` on a `verify-external` step is a validation error.
+
+**Execution model**: In the test-runner subagent, checkpoints execute best-effort via Bash/curl. Complex checks requiring MCP tools (Slack, database) are marked SKIP. For comprehensive checkpoint verification, use `/e2e-walkthrough --verify` which runs in main context with full tool access. See test-runner agent § 2m for execution details.
 
 ### Cross-Site Flow Format
 
@@ -252,3 +313,6 @@ runs:
 | Missing `site:` in cross-site step | Required on every step |
 | Mixing `mapping:` and `sites:` | Mutually exclusive |
 | Flows with 20+ steps | Split into 5-10 per flow |
+| `verify-external` without `verify:` block | `verify:` is required on checkpoint steps |
+| `verify-external` with `expect:` at step level | Browser `expect:` doesn't apply — use `expect:` inside `verify:` entries |
+| Checkpoint `on_fail: block` on flaky external service | Use `warn` for services with propagation delay or intermittent availability |

@@ -198,6 +198,7 @@ Action string formats and their handling:
 | `"Verify <element> on <location>"` | Navigate if needed, snapshot, run expects only (no click) |
 | `"Verify <description>"` | Snapshot current page, run expects only (no navigation) |
 | `"Verify <el1>, <el2>, ... on <location>"` | Verify multiple elements -- just snapshot + run expects |
+| `"Verify external"` | External verification checkpoint — see § 2m below |
 
 ### 2c. Element Resolution
 
@@ -335,6 +336,41 @@ On ANY failure during a step:
 3. Record the failure reason
 4. **Continue to next step** -- do NOT abort the flow. Collect maximum evidence.
 
+### 2m. External Verification Checkpoints
+
+When the step has `action: "Verify external"`, skip all browser interaction (no snapshot, no click, no element resolution). Instead:
+
+1. **Wait**: Pause for `wait` seconds (default: 5) to allow propagation delay.
+2. **Read `verify:` block**: Iterate over each service group and its entries. Each entry may have:
+   - `event:` — event/trace name (structured hint, e.g., PostHog event name)
+   - `check:` — natural language description of what to verify
+   - `expect:` — natural language success criteria
+   - `properties:` — list of expected property names (hint, not strict)
+   - `note:` — context hint (edge cases, known exceptions)
+3. **Attempt each check** (best-effort via Bash):
+   - If `event:` is present (PostHog-style): attempt `curl` to the service API to query for the event. Requires API credentials in environment variables. If env vars are missing → SKIP the check.
+   - If `check:` is a curl command or HTTP request: execute directly via Bash.
+   - If `check:` is natural language (e.g., "確認 Slack 收到通知"): **SKIP** with note "Requires main context tools (MCP). Run via `/e2e-walkthrough --verify` for full verification."
+4. **Record results** per check: `{service, event_or_check, status: pass|fail|skip, detail}`.
+5. **Apply `on_fail:`**:
+   - `warn` (default): log results, continue to next step regardless.
+   - `fail`: mark the step as FAIL, continue to next step.
+   - `block`: mark as FAIL, **stop the flow** (no further steps executed).
+6. **No screenshot** for checkpoint steps (no browser state changed).
+
+**Result tracking**: Checkpoint results are included in the step results array with a `type: checkpoint` marker. The report template includes a dedicated "Checkpoint Results" section when any `verify-external` steps exist.
+
+**Report section for checkpoints** (add to § 3c report.md if checkpoint steps exist):
+
+```markdown
+## Checkpoint Results
+
+| Step | Service | Check | Result | Detail |
+|------|---------|-------|--------|--------|
+| verify-intent | posthog | event: web_agent_support_intent_detected | PASS | count=3 |
+| verify-intent | langfuse | trace with 'support_escalation' | SKIP | Requires MCP |
+```
+
 ---
 
 ## Phase 3: Report
@@ -421,6 +457,15 @@ _(Recording/GIF rows only if `record` was true)_
 ### [SKIP] step-id: action description (optional)
 - Reason: Element not found
 
+## Checkpoint Results
+
+_(Include this section only when the flow contains `verify-external` steps)_
+
+| Step | Service | Check | Result | Detail |
+|------|---------|-------|--------|--------|
+| verify-intent | posthog | event: web_agent_support_intent_detected | PASS | count=3 |
+| verify-intent | langfuse | trace with 'support_escalation' | SKIP | Requires MCP |
+
 ## Health Issues
 - N console errors (after noise filter)
 - N API failures (4xx/5xx)
@@ -473,3 +518,4 @@ These rules are non-negotiable. Violating them causes flaky or broken tests.
 10. **Ant Design**: CSS-hidden inputs (e.g., Segmented control radio buttons). `is visible` returns false even when the component is rendered. Verify via snapshot a11y tree instead.
 11. **Multi-site flows**: When `suite_context` is provided, use `--session {{app}}` on all agent-browser commands to keep sessions separate.
 12. **Timeout values** in flow YAML are in seconds. Convert to milliseconds (`* 1000`) for `--timeout` flags.
+13. **Checkpoint best-effort**. `verify-external` steps execute via Bash/curl only. Complex checks needing MCP (Slack, database) → mark SKIP. For full verification, use `/e2e-walkthrough --verify` (main context, full tool access).
