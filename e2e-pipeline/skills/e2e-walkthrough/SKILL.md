@@ -192,11 +192,11 @@ Human adjusts the plan via natural conversation:
 
 **After human says "go" (or equivalent), proceed to Phase 3.**
 
-## Phase 3 — Execute & Monitor
+## Phase 3 — Execute & Monitor (Observe-and-Continue)
 
-For detailed execution mechanics (startup, multi-site, per-step loop, health checks, anomaly handling), see [reference.md](./reference.md).
+For detailed execution mechanics (startup, multi-site, per-step loop, anomaly observation, step log), see [reference.md](./reference.md).
 
-**Summary**: Open browser (without `--profile` when recording) → verify auth (auto-login if needed) → **start recording** → start trace → execute steps in chosen interaction mode → track mapping discrepancies.
+**Summary**: Open browser (without `--profile` when recording) → verify auth (auto-login if needed) → **start recording** → start trace → execute steps → observe anomalies → write step log.
 
 **Start recording** (unless `--no-video`):
 
@@ -206,11 +206,19 @@ agent-browser record start "$REPORT_DIR/full.webm"
 
 > **Note**: `record start` is incompatible with `--profile` sessions (v0.16.x). When recording is ON, open the browser WITHOUT `--profile` and handle auth via auto-login or manual prompt. See [reference.md](./reference.md) § Startup for details.
 
-**Per-step loop**: snapshot → action via `@ref` → wait networkidle → screenshot → health check → report to human.
+**Per-step loop (observe-and-continue)**:
+1. `snapshot -i` → find `@ref` (interactive-only, less noise)
+2. Action via `@ref`
+3. `wait networkidle` → `screenshot`
+4. `errors --json` → non-empty? record anomaly + notify (don't stop)
+5. Visual observation → unexpected UI? record anomaly + notify (don't stop)
+6. One-line report: `Step N ✓` / `Step N ✓  ⚠ <anomaly summary>` / `Step N ✗  <failure reason>`
 
-**Interaction modes**: Guided (default, show plan + summary), Step (wait "go" between steps), Auto (silent, log anomalies).
+**Key principle**: Anomalies are recorded and reported inline, but the walkthrough **never pauses** for them. Full analysis happens in Phase 4 via trace cross-reference. The only exception is auth expiration (which makes all subsequent steps meaningless).
 
-**On anomaly**: Track mapping discrepancies (stale selectors, missing elements, trigger mismatches, new elements) for Phase 4 self-repair. On step failure, offer: continue / debug / stop.
+**Interaction modes**: Guided (default, show plan + one-line report), Step (wait "go" between steps), Auto (silent, record anomalies).
+
+**Step log**: At the end of Phase 3, write `$REPORT_DIR/step-log.json` with step timestamps + anomalies. This feeds the enhanced trace analyzer in Phase 4.
 
 **After all steps complete (or human says "stop here"), proceed to Phase 4.**
 
@@ -218,19 +226,40 @@ agent-browser record start "$REPORT_DIR/full.webm"
 
 **Execute ALL subsections below in order. Do NOT skip to Browser Handoff.**
 
-For detailed procedures (trace analysis, report templates, flow YAML rules, mapping self-repair), see [reference.md](./reference.md).
+**Print this checklist at the start of Phase 4. Update each line as you complete it. Do NOT proceed to Browser Handoff until lines 1-11 are checked.**
+
+```
+Phase 4 checklist:
+[ ] 1. record stop (or N/A if --no-video)
+[ ] 2. trace stop → trace.zip saved
+[ ] 3. trace-analyzer dispatched (with step-log.json)
+[ ] 4. anomaly review presented (or N/A if zero anomalies AND trace clean)
+[ ] 5. report.md written (full artifact with flowchart + step table + health log)
+[ ] 6. pr-summary.md written (PR reviewer version with inline screenshots)
+[ ] 7. GIF generated (or N/A if no screenshots)
+[ ] 8. MP4 generated (from trace screencast or recording)
+[ ] 9. flow YAML written to .claude/e2e/flows/
+[ ] 10. PR comment posted with pr-summary.md (or N/A if no --pr)
+[ ] 11. mapping discrepancy check done
+[ ] 12. browser handoff + action menu presented
+[ ] 13. pipeline next steps shown
+```
+
+For detailed procedures (trace analysis, anomaly review, report templates, flow YAML rules, mapping self-repair), see [reference.md](./reference.md).
+
+Checklist items map to procedure steps below. Items 5-6 are both from procedure step 5 (dual output). Item 13 maps to Pipeline Next Steps section below.
 
 1. **Stop recording** (if recording): `agent-browser record stop`
 2. **Stop trace**: `agent-browser trace stop "$REPORT_DIR/trace.zip"`
-3. **Trace analysis**: Dispatch `e2e-trace-analyzer` subagent with `trace_path` + `report_dir`
-4. **Report (dual output, MANDATORY)**: Write both `$REPORT_DIR/report.md` (full artifact: flowchart + step results + health log + observations + artifacts) and `$REPORT_DIR/pr-summary.md` (PR reviewer version: inline screenshots + flowchart + step table + video). See [reference.md](./reference.md) § Report for templates.
-5. **GIF generation** (if recording): see `references/commands.md` § GIF Generation for the canonical ffmpeg command. Warn but continue if ffmpeg fails.
-6. **MP4 video conversion** (if recording): see `references/commands.md` § MP4 Video Conversion. Default 1.5x speed. Warn but continue if ffmpeg fails.
-7. **Flow YAML auto-generation (MANDATORY)**: Always auto-generate — never ask. Auto-name: `walkthrough-<timestamp>-<first-page>.yaml`. Write to `.claude/e2e/flows/`
-8. **Cross-site flow**: Use `sites:` instead of `mapping:` when `--sites` was used
-9. **PR/Issue posting**: If `--pr` provided, ask user to confirm → commit + push screenshots → `gh pr comment` with `pr-summary.md`. See [reference.md](./reference.md) § PR/Issue Posting.
-10. **Mapping self-repair**: Present discrepancy list, human approves, patch mapping. 3+ stale on same page → recommend `/e2e-map --page`
-11. **Browser handoff (BLOCKING: report + flow YAML must be written first)**: Present summary table, then numbered action menu. Do NOT close browser — user may need to inspect final state.
+3. **Trace analysis (enhanced)**: Dispatch `e2e-trace-analyzer` subagent with `trace_path` + `report_dir` + `step_log_path`. Prerequisite: `step-log.json` must exist in `$REPORT_DIR` (written at end of Phase 3). If missing, write it now from in-memory step data and verify the file exists. If write fails again, dispatch WITHOUT `step_log_path` — analyzer degrades gracefully to non-enhanced mode (no cross-reference, but analysis still completes). See [reference.md](./reference.md) § Trace Analysis.
+4. **Anomaly review** (checklist item 4): If anomalies were observed during Phase 3 (check step-log.json `anomalies` arrays) OR trace found issues (`clean: false`), present the cross-reference summary and offer: review details / fix / re-walk / continue. Skip to step 5 ONLY when BOTH conditions are true: zero anomalies in step-log AND trace returns `clean: true`. Note: `clean: true` from trace-analyzer means zero API/console/silent-failure — it does NOT account for unmatched visual anomalies. See [reference.md](./reference.md) § Anomaly Review.
+5. **Report (dual output, MANDATORY)** (checklist items 5+6): Write both `$REPORT_DIR/report.md` and `$REPORT_DIR/pr-summary.md`. Health Log now includes step-correlated data from trace analysis. See [reference.md](./reference.md) § Report for templates.
+6. **GIF generation** (checklist item 7, if recording): see `references/commands.md` § GIF Generation for the canonical ffmpeg command. Warn but continue if ffmpeg fails.
+7. **MP4 video conversion** (checklist item 8, if recording): see `references/commands.md` § MP4 Video Conversion. Default 1.5x speed. Warn but continue if ffmpeg fails.
+8. **Flow YAML auto-generation (MANDATORY)** (checklist item 9): Always auto-generate — never ask. Auto-name: `walkthrough-<timestamp>-<first-page>.yaml`. Write to `.claude/e2e/flows/`. Cross-site: use `sites:` instead of `mapping:` when `--sites` was used.
+9. **PR/Issue posting** (checklist item 10): If `--pr` provided, ask user to confirm → commit + push screenshots → `gh pr comment` with `pr-summary.md`. See [reference.md](./reference.md) § PR/Issue Posting.
+10. **Mapping self-repair** (checklist item 11): Present discrepancy list, human approves, patch mapping. 3+ stale on same page → recommend `/e2e-map --page`
+11. **Browser handoff** (checklist item 12, BLOCKING: report + flow YAML must be written first): Present summary table, then numbered action menu. Do NOT close browser — user may need to inspect final state.
 
 **Post-completion menu** (always present, numbered):
 
@@ -273,22 +302,28 @@ Next steps:
 
 ## Common Mistakes
 
+**Top 5 (highest frequency):**
+
 | Mistake | Fix |
 |---------|-----|
-| Skipping Pipeline Next Steps | MANDATORY block — present after every menu interaction, even under context pressure. "User already knows" is not a valid reason to skip. |
-| Headless mode for walkthrough | Always `--headed` — human must see browser |
-| Acting without snapshot | `snapshot` before every action — a11y tree is source of truth |
+| Stopping walkthrough for anomalies | **Observe-and-continue**: record anomaly + notify + keep going. Only auth expiration pauses. Full analysis in Phase 4 via trace cross-reference. |
+| Running `console --json` at any point during walkthrough | Never used in Phase 3 — not once, not "just for this error." Trace.zip captures complete console with better coverage. `errors --json` is the only per-step check. If user asks to "pay attention to console," use `errors --json` — that IS the console error check. |
+| Using full `snapshot` instead of `snapshot -i` | Per-step loops always use `snapshot -i`. Full snapshot only for `--smoke` post-walkthrough selector sweep or when user explicitly requests element discovery. |
+| Skipping step-log.json write | MANDATORY at end of Phase 3. Trace analyzer needs it for step correlation. Without it, cross-reference sections are absent. |
+| Skipping Phase 4 checklist items | Phase 4 has 13 items. Print checklist, complete ALL. "Context pressure" is NOT a valid reason to skip. |
+
+**agent-browser gotchas (see also `references/commands.md`):**
+
+| Mistake | Fix |
+|---------|-----|
+| Acting without snapshot | `snapshot -i` before every action — a11y tree is source of truth |
 | CSS selectors for clicks | Use `@ref` from snapshot. `role=` only for visibility checks |
 | `has-text()` selectors | BROKEN in agent-browser — times out. Use `role=button[name="..."]` |
 | Screenshot relative paths | agent-browser needs absolute paths (sandbox CWD differs) |
 | Forgetting `trace stop` | Trace data lost if browser closes without stopping |
-| `scroll` to element | `scroll` only accepts direction (up/down). Use `hover "@ref"` to auto-scroll element into view |
-| Reporting noise as errors | Filter known noise per mapping or defaults (HMR, favicon, React DevTools) |
-| `is visible` false on CSS-hidden inputs | Ant Design Segmented radio, custom checkboxes — element works but CSS-hidden. Verify via `snapshot` a11y tree presence instead |
-| `is visible` exit code always 0 | `agent-browser is visible` returns text "true"/"false" but exit code is always 0. Do NOT chain with `&&` for conditional logic — check stdout text |
-| Large table snapshots consume context | Ant Design tables with 10+ rows produce 100+ @ref entries. Use targeted `is visible` checks instead of full snapshot when only verifying element presence |
-| Strict mode violation on `aria-label` | React Native Web may render duplicate `aria-label` elements (e.g., two notification buttons). Use `role=button[name="..."] >> nth=0` or add `data-testid` to disambiguate |
-| Assuming snapshot shows `data-testid` | a11y snapshot does NOT expose `data-testid` or `aria-label` attributes. Use `is visible` for DOM-level verification of attribute-based selectors |
-| Checkpoint without `description:` | Always explain WHY the checkpoint exists — the LLM needs context to choose the right verification approach |
-| `--verify` without `expect:` on steps | Every step in verification mode must have assertions — bare navigation is insufficient |
-| Snapshot/click on `verify-external` step | Checkpoint steps do NOT interact with the browser — skip snapshot, skip element resolution |
+| `scroll` to element | `scroll` only accepts direction (up/down). Use `hover "@ref"` to auto-scroll |
+| `is visible` exit code always 0 | Check stdout text "true"/"false", NOT exit code. Don't chain with `&&` |
+| Large table snapshots consume context | Use targeted `is visible` checks instead of full snapshot for 10+ row tables |
+| Assuming snapshot shows `data-testid` | a11y snapshot does NOT expose `data-testid`/`aria-label`. Use `is visible` |
+| `--profile` silently ignored | Daemon already running without profile. `agent-browser close` → wait 3s → re-open |
+| Checkpoint steps interact with browser | `verify-external` steps do NOT touch browser — skip snapshot, skip element resolution |

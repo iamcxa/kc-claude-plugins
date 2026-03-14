@@ -40,3 +40,67 @@ Post-implementation impact scan (Explore agent) found 7 gaps across 4 files:
 | 7 | Test-runner missing checkpoint critical rule | LOW | Added rule #13 about best-effort execution |
 
 **Lesson**: Cross-skill features need explicit cross-links. The e2e-test SKILL.md defines the spec but the test-runner executes it — both must reference each other.
+
+## New Features
+
+### 2026-03-15: Observe-and-Continue — Walkthrough Noise Reduction + Enhanced Trace Correlation
+
+**Problem**: e2e-walkthrough had lowest skill compliance among e2e skills. Root cause: 812 lines of instructions competing with ~1,050 lines of browser output in main context (45% noise). e2e-test and e2e-map don't have this problem because browser output is isolated in subagents.
+
+**Solution**: Three-part design:
+1. **Phase 3 observe-and-continue**: Replace per-step `console --json` + `errors --json` + health report with lightweight `errors --json` only + visual anomaly observation. Record anomalies + notify (don't stop). One-line per-step report. Context noise: ~1,050 → ~50 lines (-95%).
+2. **step-log.json**: New artifact written at end of Phase 3 with step timestamps + anomaly records. Feeds enhanced trace analyzer for step-correlated analysis.
+3. **Enhanced trace-analyzer**: New `step_log_path` input (optional, backward-compatible). Produces 3 new sections: Step-Correlated Issues, Anomaly × Trace Cross-Reference, Anomalies Without Trace Evidence. Detects silent failures (UI success + API error).
+
+**Where**:
+- `agents/e2e-trace-analyzer.md` — step_log_path input, Step 3.5 cross-reference logic, enhanced output template
+- `skills/e2e-walkthrough/SKILL.md` — Phase 3 observe-and-continue summary, Phase 4 checklist (13 items), anomaly review step
+- `skills/e2e-walkthrough/reference.md` — Per-step loop rewrite, anomaly observation rules, step-log.json spec, anomaly review procedure, enhanced trace dispatch
+
+**Design spec**: `docs/plans/2026-03-15-observe-and-continue-design.md`
+
+**Key design decisions**:
+- `step_log_path` is optional — trace-analyzer without it produces identical output (zero regression for e2e-test)
+- Only auth expiration pauses walkthrough — all other anomalies record + continue
+- `console --json` removed from per-step loop — trace.zip has complete console with better coverage
+- `snapshot -i` (interactive-only) replaces full `snapshot` as default
+- Silent failure detection is conservative: requires BOTH positive UI indicator text + API error in same time window
+- Common Mistakes split into "Top 5" + "gotchas" for better attention allocation under context pressure
+
+**Backward compatibility**:
+- e2e-test skill dispatch unchanged (no step_log_path → standard output)
+- e2e-map skill unaffected
+- e2e-dispatch routing unaffected
+- common-patterns.md has no obsolete references
+
+## Findings
+
+### 2026-03-15: Impact scan for Observe-and-Continue
+
+Post-implementation impact scan (Explore agent) found 2 items:
+
+| # | Gap | Severity | Fix |
+|---|-----|----------|-----|
+| 1 | SKILL.md Phase 4 step 3 missing prerequisite guard for step-log.json | LOW | Added: "If missing, write it now before dispatching" |
+| 2 | Anomaly detail length: reference.md says ≤100 chars, agent says ≤200 | VERY LOW | Acceptable variance — 100 is conservative limit, agent handles up to 200 |
+
+**False positive**: Explorer reported "checklist step 3.5 missing" but step 4 in checklist IS "anomaly review presented" — renumbered from design doc's 3.5 to final checklist's 4.
+
+**Lesson**: When adding optional input to a shared agent (trace-analyzer), Rule 9 ("additive, never breaking") is the critical safety net. Always verify the dispatch from ALL orchestrators that use the agent, not just the one being modified.
+
+### 2026-03-15: REFACTOR round — combined pressure test findings
+
+Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + sunk cost, bulk errors, mode transition, cascading failure + re-run) found 1 BREAK + 4 CRACKs:
+
+| # | Issue | Severity | Fix |
+|---|-------|----------|-----|
+| 1 | Re-run/retry has zero step-log specification | BREAK | Added: `superseded_by` field, retry entry id scheme, trace-analyzer re-run awareness |
+| 2 | Bulk errors (>5 from `errors --json`) no aggregation | CRACK | Added: aggregate recording (≤3 representative + summary), raw output to file |
+| 3 | Smoke mode batch errors no step-log destination | CRACK | Added: record on last step with `source: "errors --json (batch)"` |
+| 4 | Per-step loop has no late-stage integrity guarantee | CRACK | Added: "All 7 substeps mandatory for EVERY step" + context-critical escape |
+
+**Deferred (not over-engineering for this iteration):**
+- Anomaly observation vacuousness — cognitive check has inherent limits. Could add `observation_scope` field in future.
+- Combined-pressure synthesis paragraph — defense is adequate from individual rules.
+
+**Lesson**: Single-pressure tests pass easily. Combined pressures (authority + real error + late stage, OR bulk data + ambiguity + exhaustion) expose gaps that unit-style tests miss. Always run at least 2 combo scenarios in the REFACTOR phase.

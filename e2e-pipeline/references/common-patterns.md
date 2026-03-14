@@ -17,6 +17,8 @@ Patterns and gotchas for E2E testing agents. For project-specific patterns, chec
 - Auth expired: DON'T close browser — user re-logs in existing `--headed` window
 - Clear auth state: `eval "localStorage.clear(); sessionStorage.clear();"` then `open <base_url>`
 - If mapping has `auth.type: none` — skip all auth checks, profile auto-creates on first open
+- **`--profile` daemon gotcha**: `--profile` only takes effect when starting a NEW daemon. If a daemon is already running (from a prior command without `--profile`), the flag is silently ignored. Fix: `agent-browser close` → wait 3-5s for full exit → then `--profile` open.
+- **SingletonLock after force-kill**: Force-killing chrome leaves `SingletonLock`/`SingletonCookie`/`SingletonSocket` in the profile dir. Remove with `rm -f ~/.agent-browser/<app>/Singleton*` before re-opening.
 
 ## Ant Design Components
 
@@ -103,7 +105,8 @@ Run this **once per session**, during the setup phase (after `mkdir -p` for `rep
 
 - `trace.zip` contains: `trace.network` (JSONL HAR), `trace.trace` (JSONL events), `resources/` (response bodies)
 - View interactively: `npx playwright show-trace trace.zip`
-- Response bodies in `resources/` are SHA1-referenced files
+- Response bodies in `resources/` are SHA1-referenced files (`.dat` extension)
+- Screencast frames in `resources/` use full filename as SHA1 (e.g., `page@xxx-timestamp.jpeg`). Use `frameSwapWallTime` (wall clock ms) for duration, NOT `timestamp` (monotonic).
 - Filter trace.network for `status >= 400` to find API failures
 - Filter trace.trace for console errors (after noise removal)
 

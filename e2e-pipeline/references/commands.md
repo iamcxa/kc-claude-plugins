@@ -7,7 +7,8 @@ Core commands for E2E testing agents. For full reference, see project-level `.cl
 ```bash
 agent-browser open <url>                          # Navigate (auto-creates session)
 agent-browser --session <name> open <url>         # Named session (multi-site)
-agent-browser --profile <path> open <url>         # Persistent auth profile
+agent-browser --profile <path> open <url>         # Persistent auth profile (NEW daemon only!)
+# NOTE: --profile is silently ignored if daemon already running. Fix: `agent-browser close` → wait → re-open.
 agent-browser --headed open <url>                 # Visible browser (required for auth)
 agent-browser close                               # Close current session
 agent-browser --session <name> close              # Close named session
