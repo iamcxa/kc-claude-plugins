@@ -8,7 +8,7 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 
 ## Architecture
 
-**Skills** (5) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
+**Skills** (6) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
 
 **Agents** (3) run as subagents for heavy browser work, keeping verbose data out of main context:
 - `e2e-mapper` — explores pages, generates YAML mappings
@@ -20,8 +20,10 @@ skills/e2e-dispatch/     → router (auth gate + skill selection)
 skills/e2e-map/          → mapping orchestrator → dispatches e2e-mapper agent
 skills/e2e-test/         → test orchestrator → dispatches e2e-test-runner + trace-analyzer
 skills/e2e-walkthrough/  → interactive exploration (main context, no dedicated agent)
+skills/e2e-acceptance/   → generate E2E flows from plans/specs/PRs (planning → verification bridge)
 skills/e2e-skill-ops/    → meta-skill for debugging/maintaining the pipeline itself
 agents/                  → subagent definitions (e2e-mapper, e2e-test-runner, e2e-trace-analyzer)
+hooks/                   → E2E acceptance loop enforcement (SessionStart + pre-commit)
 references/              → agent-browser CLI commands, common browser testing patterns
 ```
 
@@ -30,6 +32,7 @@ references/              → agent-browser CLI commands, common browser testing 
 ```
 /e2e-map           → .claude/e2e/mappings/<app>.yaml
 /e2e-walkthrough   → .claude/e2e/flows/walkthrough-*.yaml + e2e-reports/<ts>/flow-report.md
+/e2e-acceptance    → .claude/e2e/flows/acceptance-*.yaml (from plans/specs/PRs)
 /e2e-test <flow>   → e2e-reports/<ts>/report.md, trace.zip, screenshots, video
 ```
 
@@ -91,6 +94,73 @@ When modifying skill or agent definitions:
 | `/e2e-walkthrough` | ON | `--no-video` |
 | `/e2e-test` | OFF | `--video` or `--pr` |
 | `/e2e-map` | No recording | — |
+
+## Planning Integration (E2E-First Acceptance)
+
+Enforced by three layers — any planning framework (superpowers, GSD, plan mode, or bare conversation) is covered:
+
+| Layer | Mechanism | When | Strength |
+|-------|-----------|------|----------|
+| **Upstream** | SessionStart hook | Every session in a project with mappings | Injects reminder into context |
+| **Bridge** | `/e2e-acceptance` skill | During or after planning | Generates structured flow YAML from plan/spec/PR |
+| **Downstream** | PreToolUse hook on `git commit` | Every commit in a project with mappings | Warns if no recent E2E report |
+
+**Closed loop:**
+```
+SessionStart ──→ "E2E infrastructure detected, use /e2e-acceptance"
+     │
+     ▼
+Planning (any framework)
+     │
+     ▼
+/e2e-acceptance --from <plan>  ──→  .claude/e2e/flows/acceptance-*.yaml
+     │
+     ▼
+/e2e-test acceptance-<feature>  ──→  e2e-reports/*/report.md
+     │
+     ▼
+git commit  ──→  hook checks: flows exist? report recent? ──→  warn if not
+```
+
+**Draft flow template** (for plans that embed acceptance criteria inline):
+
+```yaml
+# draft — validate against mapping before use
+name: <feature-name>
+description: "<what this verifies>"
+tags: [acceptance, <feature-tag>]
+mapping: <app-name>                    # must match an existing mapping
+
+steps:
+  - id: navigate-to-feature
+    action: "Navigate to <path>"
+    expect:
+      - "<key_element> visible on <page>"
+
+  - id: perform-action
+    action: "Click <element> on <page>"
+    expect:
+      - "url contains <expected-path>"
+      - "text '<success message>' on <page>"
+
+  # Optional: external verification checkpoint
+  - id: verify-side-effect
+    action: "Verify external"
+    description: "Confirm <service> received the expected event"
+    wait: 5
+    verify:
+      <service>:
+        - event: <event_name>
+          expect: "count > 0 in last 5 minutes"
+    on_fail: warn
+```
+
+**Rules for draft flows:**
+- Element/page names MUST match the mapping exactly (`snake_case` elements, `kebab-case` pages)
+- 5-12 steps — focused acceptance path, not exhaustive coverage
+- Every step needs `expect:` — bare navigation is insufficient for acceptance
+- `Verify external` checkpoints only at real integration boundaries
+- Use `/e2e-acceptance` to generate from plan; manual embedding is fallback
 
 ## Git Conventions
 
