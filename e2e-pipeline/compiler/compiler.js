@@ -27,7 +27,7 @@ function hashSources(flowPath, mappingPaths) {
 }
 
 /**
- * compile(flowPath, mappingDir, outputDir) — run the full compilation pipeline.
+ * compile(flowPath, mappingDir, outputDir, options) — run the full compilation pipeline.
  *
  * Supports single-site (mapping: field) and cross-site (sites: block) flows.
  *
@@ -36,9 +36,14 @@ function hashSources(flowPath, mappingPaths) {
  * Pass 3: generate(resolved, flowName, meta) — emit bash script string with provenance
  * Output: write <flowName>.sh to outputDir, chmod 755
  *
+ * options.dryRun {boolean} — validate + generate but skip writing output file
+ * options.verbose {boolean} — print step details (id, type, operands, expects) to stderr
+ *
  * Returns: Promise<{ success: boolean, outputPath?: string, stats?, errors? }>
  */
-async function compile(flowPath, mappingDir, outputDir) {
+async function compile(flowPath, mappingDir, outputDir, options) {
+  var dryRun = (options && options.dryRun) || false;
+  var verbose = (options && options.verbose) || false;
   // Pass 1: Parse
   var parseResult = parse(flowPath, mappingDir);
   if (parseResult.errors.length > 0) {
@@ -118,17 +123,42 @@ async function compile(flowPath, mappingDir, outputDir) {
     meta.mappingPaths = mappingPaths;
   }
 
+  // verbose: print step details to stderr before codegen
+  if (verbose) {
+    var steps = resolveResult.resolved.steps;
+    steps.forEach(function(step, i) {
+      var n = i + 1;
+      var t = steps.length;
+      console.error('[' + n + '/' + t + '] ' + step.id + ': ' + step.type);
+      if (step.operands) {
+        console.error('  operands: ' + JSON.stringify(step.operands));
+      }
+      if (step.expects) {
+        step.expects.forEach(function(e) {
+          console.error('  expect: ' + e.type + ' — ' + e.raw);
+        });
+      }
+    });
+  }
+
   // Pass 3: Codegen — pass meta for header provenance
   var script = generate(resolveResult.resolved, flowName, meta);
 
-  // Write output
+  // Compute output path
   var outPath = path.join(outputDir, flowName + '.sh');
-  fs.mkdirSync(outputDir, { recursive: true });
-  fs.writeFileSync(outPath, script, 'utf8');
-  fs.chmodSync(outPath, '755');
+
+  // dryRun: skip file creation, just report what would happen
+  var s = resolveResult.stats;
+  if (dryRun) {
+    console.error('DRY RUN: would write ' + outPath + ' (' + script.length + ' bytes, ' + s.total + ' steps)');
+  } else {
+    // Write output
+    fs.mkdirSync(outputDir, { recursive: true });
+    fs.writeFileSync(outPath, script, 'utf8');
+    fs.chmodSync(outPath, '755');
+  }
 
   // Print summary
-  var s = resolveResult.stats;
   console.log(
     'Compiled: ' + s.total + ' steps, ' +
     s.activeExpects + ' expects active, ' +

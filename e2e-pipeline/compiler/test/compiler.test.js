@@ -387,6 +387,80 @@ describe('compile() — cross-site flow integration', function() {
 });
 
 // ---------------------------------------------------------------------------
+// Phase 2 Plan 03 Task 1: compile() dryRun and verbose options
+// ---------------------------------------------------------------------------
+
+describe('compile() dryRun and verbose options', function() {
+  var tmpDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("compile() with dryRun:true does NOT create output file", async function() {
+    const dryDir = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, dryDir, { dryRun: true });
+      // The output file must NOT exist
+      const outFile = path.join(dryDir, 'test-login.sh');
+      assert.ok(!fs.existsSync(outFile), 'DRY RUN must not create output file');
+    } finally {
+      fs.rmSync(dryDir, { recursive: true, force: true });
+    }
+  });
+
+  test("compile() with dryRun:true still returns success:true with outputPath and stats", async function() {
+    const dryDir = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, dryDir, { dryRun: true });
+      assert.equal(result.success, true, 'Expected success=true even in dryRun mode');
+      assert.ok(result.outputPath, 'Expected outputPath in dryRun result');
+      assert.ok(result.stats, 'Expected stats in dryRun result');
+    } finally {
+      fs.rmSync(dryDir, { recursive: true, force: true });
+    }
+  });
+
+  test("compile() with verbose:true still creates output file", async function() {
+    const verbDir = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, verbDir, { verbose: true });
+      assert.equal(result.success, true, 'Expected success=true with verbose');
+      assert.ok(fs.existsSync(result.outputPath), 'verbose mode must still create output file');
+    } finally {
+      fs.rmSync(verbDir, { recursive: true, force: true });
+    }
+  });
+
+  test("compile() with dryRun:true and verbose:true does NOT create file but returns success", async function() {
+    const bothDir = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, bothDir, { dryRun: true, verbose: true });
+      assert.equal(result.success, true, 'Expected success=true for dryRun+verbose');
+      const outFile = path.join(bothDir, 'test-login.sh');
+      assert.ok(!fs.existsSync(outFile), 'dryRun+verbose must not create output file');
+    } finally {
+      fs.rmSync(bothDir, { recursive: true, force: true });
+    }
+  });
+
+  test("compile() with no options argument still works (backwards compat)", async function() {
+    const compatDir = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, compatDir);
+      assert.equal(result.success, true, 'Expected success=true with no options (backwards compat)');
+      assert.ok(fs.existsSync(result.outputPath), 'Output file must exist with no options');
+    } finally {
+      fs.rmSync(compatDir, { recursive: true, force: true });
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Phase 2 Plan 02 Task 3: SHA-256 source hashing + header provenance
 // ---------------------------------------------------------------------------
 
