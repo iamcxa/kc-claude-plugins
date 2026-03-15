@@ -25,9 +25,15 @@ pages:
       welcome_text: { selector: "[data-testid='welcome']" }
 ```
 
-## Step 2: Write a flow in natural language
+## Step 2: Generate or write a flow
 
-Flow files use plain English for actions and expectations:
+**Automated** — generate from a plan, spec, or PR:
+```
+/e2e-flow --from <plan.md>
+```
+The flow-writer agent reads your codebase and mapping to produce a validated flow YAML, then the flow-verifier agent tests it in a real browser and auto-repairs broken selectors.
+
+**Manual** — write a flow in natural language. Flow files use plain English for actions and expectations:
 
 ```yaml
 # .claude/e2e/flows/login-flow.yaml

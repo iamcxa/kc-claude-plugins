@@ -24,23 +24,39 @@ Via the [kc-claude-plugins](https://github.com/iamcxa/kc-claude-plugins) marketp
 
 Creates a YAML mapping of pages, elements, and selectors in `.claude/e2e/mappings/<app>.yaml`.
 
-### 2. Run a test flow
+### 2. Generate a flow from a plan or spec
+
+```
+/e2e-flow --from <plan.md>
+```
+
+Analyzes your codebase and mapping to generate a flow YAML, then verifies it in a real browser with auto-repair.
+
+### 3. Smoke test all mapped pages
+
+```
+/e2e-flow --smoke
+```
+
+Generates and runs a visit-all-pages flow from the mapping — quick sanity check after changes.
+
+### 4. Run a test flow
 
 ```
 /e2e-test <flow-name>
 ```
 
-Executes a flow file from `.claude/e2e/flows/` against the mapped UI.
+Replays a flow file from `.claude/e2e/flows/` against the mapped UI.
 
-### 3. Walk through interactively
+### 5. Walk through interactively
 
 ```
 /e2e-walkthrough
 ```
 
-Human-guided browser exploration with trace recording and auto-generated flow output.
+Human-guided browser exploration for visual QA, debugging, or demo recording.
 
-### 4. Compile for CI
+### 6. Compile for CI
 
 ```
 /e2e-compile --all
