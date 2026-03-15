@@ -1919,3 +1919,198 @@ describe('v2.0 poll-until — cross-site expects use session prefix', function()
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 4 Plan 03: BASE_URL normalization and trap cleanup EXIT (CODEGEN-03 + CI-06)
+// ---------------------------------------------------------------------------
+
+describe('v2.0 BASE_URL normalization and cleanup', function() {
+
+  // --- BASE_URL normalization tests ---
+
+  test("single-site compiled output contains BASE_URL normalization line", function() {
+    const resolved = {
+      name: 'test-login',
+      description: 'Test',
+      variables: { base_url: 'http://localhost:3000' },
+      steps: [makeNavigate('nav', '/login')],
+    };
+    const script = generate(resolved, 'test-login');
+    assert.ok(
+      script.includes('BASE_URL="${BASE_URL%/}"'),
+      'Expected BASE_URL normalization line. Got snippet: ' + script.slice(0, 600)
+    );
+  });
+
+  test("cross-site compiled output contains per-site BASE_URL normalization lines", function() {
+    function makeCrossSiteStep(id, site, urlPath) {
+      return {
+        id: id, action: 'Navigate to ' + urlPath, type: 'navigate', session: site,
+        operands: { target: urlPath, urlPath: urlPath },
+      };
+    }
+    const resolved = {
+      name: 'cross-site-test',
+      description: 'Cross-site test',
+      variables: { OFFICE_BASE_URL: 'http://localhost:5173', APP_BASE_URL: 'http://localhost:8081' },
+      steps: [
+        makeCrossSiteStep('office-nav', 'office', '/dashboard'),
+        makeCrossSiteStep('app-nav', 'app', '/home'),
+      ],
+    };
+    const script = generate(resolved, 'cross-site-test');
+    assert.ok(
+      script.includes('OFFICE_BASE_URL="${OFFICE_BASE_URL%/}"'),
+      'Expected OFFICE_BASE_URL normalization. Got snippet: ' + script.slice(0, 800)
+    );
+    assert.ok(
+      script.includes('APP_BASE_URL="${APP_BASE_URL%/}"'),
+      'Expected APP_BASE_URL normalization. Got snippet: ' + script.slice(0, 800)
+    );
+  });
+
+  test("BASE_URL normalization appears AFTER variable assignment block", function() {
+    const resolved = {
+      name: 'test-login',
+      description: 'Test',
+      variables: { base_url: 'http://localhost:3000' },
+      steps: [makeNavigate('nav', '/login')],
+    };
+    const script = generate(resolved, 'test-login');
+    const varIdx = script.indexOf('BASE_URL="${1:-');
+    const normIdx = script.indexOf('BASE_URL="${BASE_URL%/}"');
+    assert.ok(varIdx !== -1, 'Missing variable assignment block');
+    assert.ok(normIdx !== -1, 'Missing BASE_URL normalization line');
+    assert.ok(varIdx < normIdx, 'Normalization must appear AFTER variable assignment. varIdx=' + varIdx + ' normIdx=' + normIdx);
+  });
+
+  test("BASE_URL normalization appears BEFORE runtime support functions", function() {
+    const resolved = {
+      name: 'test-login',
+      description: 'Test',
+      variables: { base_url: 'http://localhost:3000' },
+      steps: [makeNavigate('nav', '/login')],
+    };
+    const script = generate(resolved, 'test-login');
+    const normIdx = script.indexOf('BASE_URL="${BASE_URL%/}"');
+    const supportIdx = script.indexOf('_handle_failure()');
+    assert.ok(normIdx !== -1, 'Missing BASE_URL normalization');
+    assert.ok(supportIdx !== -1, 'Missing _handle_failure function');
+    assert.ok(normIdx < supportIdx, 'Normalization must appear BEFORE runtime support. normIdx=' + normIdx + ' supportIdx=' + supportIdx);
+  });
+
+  test("non-base-url variables do NOT get %/ normalization", function() {
+    const resolved = {
+      name: 'test-login',
+      description: 'Test',
+      variables: { base_url: 'http://localhost:3000', user_email: 'test@example.com' },
+      steps: [makeNavigate('nav', '/login')],
+    };
+    const script = generate(resolved, 'test-login');
+    // USER_EMAIL should NOT have a normalization line
+    assert.ok(
+      !script.includes('USER_EMAIL="${USER_EMAIL%/}"'),
+      'Non-base-url variable USER_EMAIL must not get normalization. Got snippet: ' + script.slice(0, 800)
+    );
+  });
+
+  // --- Trap cleanup tests ---
+
+  test("single-site compiled output contains cleanup() function with agent-browser close", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('cleanup()'),
+      'Expected cleanup() function definition. Got snippet: ' + script.slice(0, 800)
+    );
+    assert.ok(
+      script.includes('agent-browser close 2>/dev/null || true'),
+      'Expected agent-browser close in cleanup. Got snippet: ' + script.slice(0, 800)
+    );
+  });
+
+  test("compiled output contains trap cleanup EXIT line", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('trap cleanup EXIT'),
+      'Expected trap cleanup EXIT. Got snippet: ' + script.slice(0, 800)
+    );
+  });
+
+  test("trap cleanup EXIT appears BEFORE first step block", function() {
+    const step = makeNavigate('nav', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const trapIdx = script.indexOf('trap cleanup EXIT');
+    const stepIdx = script.indexOf('echo "[1/1]');
+    assert.ok(trapIdx !== -1, 'Missing trap cleanup EXIT');
+    assert.ok(stepIdx !== -1, 'Missing first step echo');
+    assert.ok(trapIdx < stepIdx, 'trap must appear BEFORE first step. trapIdx=' + trapIdx + ' stepIdx=' + stepIdx);
+  });
+
+  test("trap cleanup EXIT appears AFTER runtime support functions", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const supportIdx = script.indexOf('_handle_failure()');
+    const trapIdx = script.indexOf('trap cleanup EXIT');
+    assert.ok(supportIdx !== -1, 'Missing _handle_failure function');
+    assert.ok(trapIdx !== -1, 'Missing trap cleanup EXIT');
+    assert.ok(supportIdx < trapIdx, 'trap must appear AFTER runtime support. supportIdx=' + supportIdx + ' trapIdx=' + trapIdx);
+  });
+
+  test("cross-site cleanup function closes all named sessions", function() {
+    function makeCrossSiteStep(id, site, urlPath) {
+      return {
+        id: id, action: 'Navigate to ' + urlPath, type: 'navigate', session: site,
+        operands: { target: urlPath, urlPath: urlPath },
+      };
+    }
+    const resolved = {
+      name: 'cross-site-test',
+      description: 'Cross-site test',
+      variables: { OFFICE_BASE_URL: 'http://localhost:5173', APP_BASE_URL: 'http://localhost:8081' },
+      steps: [
+        makeCrossSiteStep('office-nav', 'office', '/dashboard'),
+        makeCrossSiteStep('app-nav', 'app', '/home'),
+      ],
+    };
+    const script = generate(resolved, 'cross-site-test');
+    assert.ok(
+      script.includes('agent-browser --session office close 2>/dev/null || true'),
+      'Expected --session office close in cross-site cleanup. Got snippet: ' + script.slice(0, 1000)
+    );
+    assert.ok(
+      script.includes('agent-browser --session app close 2>/dev/null || true'),
+      'Expected --session app close in cross-site cleanup. Got snippet: ' + script.slice(0, 1000)
+    );
+  });
+
+  test("single-site cleanup has only default session close (no --session flag)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // Extract cleanup function body
+    const cleanupStart = script.indexOf('cleanup()');
+    const cleanupEnd = script.indexOf('\n}', cleanupStart);
+    const cleanupBody = script.slice(cleanupStart, cleanupEnd + 2);
+    assert.ok(
+      !cleanupBody.includes('--session'),
+      'Single-site cleanup must NOT have --session flag. Got cleanup body: ' + cleanupBody
+    );
+    assert.ok(
+      cleanupBody.includes('agent-browser close'),
+      'Single-site cleanup must have plain agent-browser close. Got cleanup body: ' + cleanupBody
+    );
+  });
+
+  test("cleanup function uses || true to prevent cleanup failure from overriding exit code", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const cleanupStart = script.indexOf('cleanup()');
+    const cleanupEnd = script.indexOf('\n}', cleanupStart);
+    const cleanupBody = script.slice(cleanupStart, cleanupEnd + 2);
+    assert.ok(
+      cleanupBody.includes('|| true'),
+      'cleanup must use || true on close commands. Got cleanup body: ' + cleanupBody
+    );
+  });
+});
