@@ -10,7 +10,7 @@ Compile E2E flow YAML files into standalone bash test scripts using the e2e-comp
 ## Invocation
 
 ```
-/e2e-compile [flow-name|--all] [--dry-run] [--verbose]
+/e2e-compile [flow-name|--all] [--dry-run] [--verbose] [--coverage] [--coverage-output <dir>]
 ```
 
 | Arg | Effect |
@@ -19,6 +19,8 @@ Compile E2E flow YAML files into standalone bash test scripts using the e2e-comp
 | `--all` | Compile every flow in `.claude/e2e/flows/` |
 | `--dry-run` | Validate flow + mapping coherence without writing output |
 | `--verbose` | Show resolved step details (operands, expects) during compilation |
+| `--coverage` | Produce static coverage report (elements reached vs verified) after compilation |
+| `--coverage-output <dir>` | Output directory for coverage JSON (default: `.claude/e2e/coverage`) |
 
 ## Prerequisites
 
@@ -149,6 +151,31 @@ For dry-run errors, present the ERROR lines from stderr.
 
 If the flows directory has no YAML files, suggest next steps:
 "No flow files found in `.claude/e2e/flows/`. Create flows with `/e2e-acceptance` (from a plan or spec) or `/e2e-walkthrough` (interactive browser exploration)."
+
+### Coverage report (when --coverage)
+
+Compiler stdout appends coverage summary after compilation output:
+```
+Compiled: N steps, M expects active, K expects deferred (Phase 2)
+Coverage: X/Y elements (Z%) verified across 1 flow
+  Reached (but not verified): elem_a, elem_b (N elements)
+  Untouched: elem_c, elem_d (N elements)
+OK: <flow-name>
+```
+
+Present as:
+```
+Compiled: <flow-name>
+  Output:   .claude/e2e/compiled/<flow-name>.sh
+  Steps:    N (M expects active)
+  Coverage: X/Y elements (Z%) verified
+    Reached but not verified: elem_a, elem_b
+    Untouched: elem_c, elem_d
+  Coverage JSON: .claude/e2e/coverage/coverage.json
+```
+
+If coverage regression warning appears (::warning:: line), present prominently:
+"Warning: Coverage dropped N% from previous run (was X%, now Y%)"
 
 ## Common Mistakes
 
