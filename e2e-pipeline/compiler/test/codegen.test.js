@@ -1109,3 +1109,389 @@ describe('generateHeader() — provenance metadata', function() {
     assert.ok(header.includes('export LC_ALL=en_US.UTF-8'), 'Must still have LC_ALL export');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 4 Plan 01: v2.0 runtime infrastructure (FLAG-02 + FLAG-03)
+// ---------------------------------------------------------------------------
+
+describe('v2.0 runtime infrastructure — flag parsing block', function() {
+  test("compiled output contains CONTINUE_ON_ERROR=false default", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('CONTINUE_ON_ERROR=false'),
+      'Expected CONTINUE_ON_ERROR=false default. Got: ' + script.slice(0, 300)
+    );
+  });
+
+  test("compiled output contains RETRIES=0 default", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('RETRIES=0'),
+      'Expected RETRIES=0 default. Got: ' + script.slice(0, 300)
+    );
+  });
+
+  test("compiled output contains while flag-parsing loop header", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('while [[ $# -gt 0 ]]; do'),
+      'Expected while flag-parsing loop. Got: ' + script
+    );
+  });
+
+  test("compiled output contains --continue-on-error flag handler", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('--continue-on-error)'),
+      'Expected --continue-on-error case. Got: ' + script
+    );
+  });
+
+  test("compiled output contains --retries flag handler", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('--retries)'),
+      'Expected --retries case. Got: ' + script
+    );
+  });
+
+  test("compiled output contains set -- restore for positional args (bash 3.2 safe)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('set -- "${_POSITIONAL[@]:-}"'),
+      'Expected set -- "${_POSITIONAL[@]:-}" for bash 3.2 safety. Got: ' + script
+    );
+  });
+
+  test("flag parsing block appears before variable assignment block", function() {
+    const resolved = {
+      name: 'test-flow',
+      description: 'Test',
+      variables: { base_url: 'http://localhost:3000' },
+      steps: [makeNavigate('nav', '/login')],
+    };
+    const script = generate(resolved, 'test-flow');
+    const flagIdx = script.indexOf('CONTINUE_ON_ERROR=false');
+    const varIdx = script.indexOf('BASE_URL=');
+    assert.ok(flagIdx !== -1, 'Missing flag block');
+    assert.ok(varIdx !== -1, 'Missing variable block');
+    assert.ok(flagIdx < varIdx, 'Flag parsing block must appear before variable assignment. flagIdx=' + flagIdx + ' varIdx=' + varIdx);
+  });
+
+  test("flag parsing block appears after LANG export (in correct header order)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const langIdx = script.indexOf('export LANG=en_US.UTF-8');
+    const flagIdx = script.indexOf('CONTINUE_ON_ERROR=false');
+    assert.ok(langIdx !== -1, 'Missing LANG export');
+    assert.ok(flagIdx !== -1, 'Missing flag block');
+    assert.ok(langIdx < flagIdx, 'LANG export must appear before flag block');
+  });
+});
+
+describe('v2.0 runtime infrastructure — _handle_failure and _FAILED_STEPS', function() {
+  test("compiled output contains _FAILED_STEPS=() array init", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_FAILED_STEPS=()'),
+      'Expected _FAILED_STEPS=() array. Got: ' + script
+    );
+  });
+
+  test("compiled output contains _handle_failure() function definition", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_handle_failure()'),
+      'Expected _handle_failure() function definition. Got: ' + script
+    );
+  });
+
+  test("_handle_failure function checks CONTINUE_ON_ERROR to decide accumulate vs exit 1", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('CONTINUE_ON_ERROR'),
+      'Expected CONTINUE_ON_ERROR check inside _handle_failure. Got: ' + script
+    );
+    assert.ok(
+      script.includes('_FAILED_STEPS+='),
+      'Expected _FAILED_STEPS+= accumulate branch. Got: ' + script
+    );
+  });
+
+  test("_handle_failure function returns 0 (must not cause set -e to abort)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // The function body must end with 'return 0' so || _handle_failure satisfies set -e
+    assert.ok(
+      script.includes('return 0'),
+      'Expected return 0 in _handle_failure to satisfy set -e. Got: ' + script
+    );
+  });
+
+  test("_FAILED_STEPS+= is in _handle_failure body (not elsewhere)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const fnStart = script.indexOf('_handle_failure()');
+    const fnEnd = script.indexOf('\n}', fnStart);
+    const fnBody = script.slice(fnStart, fnEnd + 2);
+    assert.ok(
+      fnBody.includes('_FAILED_STEPS+='),
+      'Expected _FAILED_STEPS+= inside _handle_failure body. Got fn body: ' + fnBody
+    );
+  });
+});
+
+describe('v2.0 runtime infrastructure — retry wrapper on action steps', function() {
+  test("navigate step uses _handle_failure instead of inline exit 1", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_handle_failure'),
+      'Expected _handle_failure in navigate step. Got: ' + script
+    );
+  });
+
+  test("navigate step has retry wrapper with _retry=0 initialization", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_retry=0'),
+      'Expected _retry=0 in navigate step retry wrapper. Got: ' + script
+    );
+  });
+
+  test("navigate step has while true retry loop", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('while true; do'),
+      'Expected while true retry loop in navigate step. Got: ' + script
+    );
+  });
+
+  test("navigate step has && break pattern for success exit", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('&& break'),
+      'Expected && break for success exit from retry loop. Got: ' + script
+    );
+  });
+
+  test("navigate step retry wrapper increments _retry with POSIX arithmetic", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_retry=$((_retry + 1))'),
+      'Expected _retry=$((_retry + 1)) — no let or (( )). Got: ' + script
+    );
+  });
+
+  test("navigate retry wrapper checks RETRIES -eq 0 for immediate fail path", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('"$RETRIES" -eq 0'),
+      'Expected RETRIES -eq 0 check for immediate fail. Got: ' + script
+    );
+  });
+
+  test("navigate retry wrapper emits RETRY log line with counter", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('echo "RETRY [$_retry/$RETRIES]: nav-login"'),
+      'Expected RETRY log line. Got: ' + script
+    );
+  });
+
+  test("navigate retry wrapper has sleep 2 between retries", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // sleep 2 is inside the retry loop (after RETRY echo, before next attempt)
+    assert.ok(
+      script.includes('sleep 2'),
+      'Expected sleep 2 in retry loop. Got: ' + script
+    );
+  });
+
+  test("click step uses _handle_failure instead of inline exit 1", function() {
+    const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_handle_failure'),
+      'Expected _handle_failure in click step. Got: ' + script
+    );
+  });
+
+  test("click step has retry wrapper", function() {
+    const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('while true; do'),
+      'Expected retry wrapper in click step. Got: ' + script
+    );
+  });
+
+  test("fill step uses _handle_failure instead of inline exit 1", function() {
+    const step = makeFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'test@example.com');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_handle_failure'),
+      'Expected _handle_failure in fill step. Got: ' + script
+    );
+  });
+
+  test("fill step has retry wrapper", function() {
+    const step = makeFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'test@example.com');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('while true; do'),
+      'Expected retry wrapper in fill step. Got: ' + script
+    );
+  });
+});
+
+describe('v2.0 runtime infrastructure — non-action steps have NO retry wrapper', function() {
+  test("snapshot step has NO retry wrapper (no while true loop)", function() {
+    const step = makeSnapshot('take-snap');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // A snapshot-only flow should not have a retry while loop
+    assert.ok(
+      !script.includes('while true; do'),
+      'snapshot step must NOT have retry wrapper. Got: ' + script
+    );
+  });
+
+  test("wait step has NO retry wrapper", function() {
+    const step = makeWait('wait-2', 2);
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      !script.includes('while true; do'),
+      'wait step must NOT have retry wrapper. Got: ' + script
+    );
+  });
+
+  test("verify-external step has NO retry wrapper", function() {
+    const step = makeVerifyExternal('verify-ext');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      !script.includes('while true; do'),
+      'verify-external step must NOT have retry wrapper. Got: ' + script
+    );
+  });
+});
+
+describe('v2.0 runtime infrastructure — structured footer', function() {
+  test("footer uses _FAILED_STEPS array length check", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('${#_FAILED_STEPS[@]}'),
+      'Expected _FAILED_STEPS length check in footer. Got: ' + script
+    );
+  });
+
+  test("footer exits 1 when failures exist", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // The failure branch in the footer must have exit 1
+    assert.ok(
+      script.includes('exit 1'),
+      'Expected exit 1 in footer failure branch. Got: ' + script
+    );
+  });
+
+  test("footer exits 0 when no failures (PASS path)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.trimEnd().endsWith('exit 0'),
+      'Script must still end with exit 0 on the PASS path. Got end: ' + script.slice(-60)
+    );
+  });
+
+  test("footer emits PASS message with flow name and step counts", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step], 'my-flow'), 'my-flow');
+    assert.ok(
+      script.includes('echo "PASS: my-flow'),
+      'Expected PASS echo in footer with flow name. Got: ' + script.slice(-200)
+    );
+  });
+
+  test("footer failure branch emits FAIL summary with failed step list", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // The footer failure branch should emit a FAIL: N steps failed message
+    assert.ok(
+      script.includes('FAIL:'),
+      'Expected FAIL: in footer failure branch. Got: ' + script.slice(-300)
+    );
+  });
+});
+
+describe('v2.0 runtime infrastructure — set -euo pipefail preserved', function() {
+  test("set -euo pipefail still present in header", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('set -euo pipefail'),
+      'Expected set -euo pipefail preserved. Got start: ' + script.slice(0, 100)
+    );
+  });
+
+  test("set +e does NOT appear anywhere (must never disable errexit)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      !script.includes('set +e'),
+      'set +e must NOT appear in compiled script. Got: ' + script
+    );
+  });
+
+  test("set -euo pipefail appears exactly once (not duplicated)", function() {
+    const steps = [
+      makeNavigate('nav', '/login'),
+      makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]'),
+      makeFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'test@example.com'),
+    ];
+    const script = generate(makeResolved(steps), 'test-flow');
+    const count = (script.match(/set -euo pipefail/g) || []).length;
+    assert.equal(count, 1, 'set -euo pipefail must appear exactly once. Count: ' + count);
+  });
+});
+
+describe('v2.0 runtime infrastructure — v1.0 backward compat (no flags = exit 1 on first failure)', function() {
+  test("_handle_failure body includes exit 1 path (for CONTINUE_ON_ERROR=false)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // In the _handle_failure function, when CONTINUE_ON_ERROR=false, it must call exit 1
+    const fnStart = script.indexOf('_handle_failure()');
+    const fnEnd = script.indexOf('\n}', fnStart);
+    const fnBody = script.slice(fnStart, fnEnd + 2);
+    assert.ok(
+      fnBody.includes('exit 1'),
+      'Expected exit 1 in _handle_failure for CONTINUE_ON_ERROR=false path. Got fn body: ' + fnBody
+    );
+  });
+
+  test("navigate failure message is preserved in FAIL echo inside handle_failure call", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // The _handle_failure "nav-login" "msg" call must include the failure message
+    assert.ok(
+      script.includes('"nav-login"') || script.includes("nav-login"),
+      'Expected step id nav-login passed to _handle_failure. Got: ' + script
+    );
+  });
+});
