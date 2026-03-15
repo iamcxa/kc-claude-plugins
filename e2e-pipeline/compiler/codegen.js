@@ -181,8 +181,9 @@ function generateHeader(meta) {
 /**
  * generateRuntimeFlagBlock() — produce bash flag-parsing block for compiled scripts.
  *
- * Parses --continue-on-error and --retries N at script runtime.
- * Must appear BEFORE variable assignment (uses shift/set -- to consume flags).
+ * Parses --continue-on-error, --retries N, --junit <path>, and --metrics-output <path>
+ * at script runtime. Must appear BEFORE variable assignment (uses shift/set -- to
+ * consume flags before positionals are read).
  *
  * Uses set -- "${_POSITIONAL[@]:-}" (the :- is required for bash 3.2 + set -u)
  *
@@ -194,6 +195,7 @@ function generateRuntimeFlagBlock() {
     'CONTINUE_ON_ERROR=false',
     'RETRIES=0',
     'JUNIT_OUTPUT=""',
+    'METRICS_OUTPUT=""',
     '_POSITIONAL=()',
     'while [[ $# -gt 0 ]]; do',
     '  case "$1" in',
@@ -210,6 +212,14 @@ function generateRuntimeFlagBlock() {
     '      shift 2',
     '      if [ -z "$JUNIT_OUTPUT" ]; then',
     '        echo "ERROR: --junit requires a path argument"',
+    '        exit 1',
+    '      fi',
+    '      ;;',
+    '    --metrics-output)',
+    '      METRICS_OUTPUT="$2"',
+    '      shift 2',
+    '      if [ -z "$METRICS_OUTPUT" ]; then',
+    '        echo "ERROR: --metrics-output requires a path argument"',
     '        exit 1',
     '      fi',
     '      ;;',
@@ -254,6 +264,9 @@ function generateRuntimeSupport() {
     '# Failure accumulator',
     '_FAILED_STEPS=()',
     '_HAD_RETRIES=false',
+    '# Attempt tracking (FLAKY-02)',
+    '_TOTAL_ATTEMPTS=1',
+    '_ATTEMPT_NUM=1',
     '# JUnit step tracking arrays (FLAG-01)',
     '_STEP_NAMES=()',
     '_STEP_RESULTS=()',
@@ -498,6 +511,81 @@ function generateJUnitEmitter(flowName) {
 }
 
 // ---------------------------------------------------------------------------
+// Metrics JSON emitter function codegen (FLAKY-02)
+// ---------------------------------------------------------------------------
+
+/**
+ * generateMetricsEmitter(flowName) — produce _emit_metrics() bash function.
+ *
+ * Flow name is embedded at compile time (same pattern as _emit_junit).
+ * The emitted bash function:
+ *   - Accepts $1 = output file path
+ *   - Determines pass/fail from ${#_FAILED_STEPS[@]}
+ *   - Calculates passed_first_try = (no failures AND no retries)
+ *   - Calculates flaky_pass = (no failures AND had retries)
+ *   - Iterates _STEP_NAMES/_STEP_RESULTS/_STEP_TIMES/_STEP_FAILURES for per-step entries
+ *   - JSON-escapes failure messages (backslash + double-quote + newline)
+ *   - Writes JSON matching the locked schema from CONTEXT.md
+ *
+ * Returns: string (multi-line bash block)
+ */
+function generateMetricsEmitter(flowName) {
+  var lines = [
+    '_emit_metrics() {',
+    '  local _out="$1"',
+    '  local _total=${#_STEP_NAMES[@]}',
+    '  local _passed=0',
+    '  local _failed=0',
+    '  local _skipped=0',
+    '  local _i',
+    '  for _i in "${!_STEP_RESULTS[@]}"; do',
+    '    case "${_STEP_RESULTS[$_i]}" in',
+    '      pass) _passed=$(( _passed + 1 )) ;;',
+    '      fail) _failed=$(( _failed + 1 )) ;;',
+    '      skip) _skipped=$(( _skipped + 1 )) ;;',
+    '    esac',
+    '  done',
+    '  local _exit_fail=0',
+    '  [ "${#_FAILED_STEPS[@]}" -gt 0 ] && _exit_fail=1',
+    '  local _passed_first_try=false',
+    '  local _flaky_pass=false',
+    '  if [ "$_exit_fail" -eq 0 ] && [ "$_HAD_RETRIES" = "false" ]; then',
+    '    _passed_first_try=true',
+    '  fi',
+    '  if [ "$_exit_fail" -eq 0 ] && [ "$_HAD_RETRIES" = "true" ]; then',
+    '    _flaky_pass=true',
+    '  fi',
+    '  {',
+    '    printf \'{"flow":"\' ; printf \'%s\' "' + flowName + '" ; printf \'",\'',
+    '    printf \'"timestamp":"%s",\' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"',
+    '    printf \'"attempt":%s,\' "$_ATTEMPT_NUM"',
+    '    printf \'"total_attempts":%s,\' "$_TOTAL_ATTEMPTS"',
+    '    printf \'"passed_first_try":%s,\' "$_passed_first_try"',
+    '    printf \'"flaky_pass":%s,\' "$_flaky_pass"',
+    '    printf \'"steps":[\' ',
+    '    local _first=true',
+    '    for _i in "${!_STEP_NAMES[@]}"; do',
+    '      local _sname="${_STEP_NAMES[$_i]}"',
+    '      local _sresult="${_STEP_RESULTS[$_i]}"',
+    '      local _stime="${_STEP_TIMES[$_i]}"',
+    '      local _sfail="${_STEP_FAILURES[$_i]}"',
+    '      local _sfail_esc',
+    "      _sfail_esc=$(printf '%s' \"$_sfail\" | sed 's/\\\\/\\\\\\\\/g; s/\"/\\\\\"/g' | tr -d '\\n')",
+    '      if [ "$_first" = "true" ]; then _first=false; else printf \',\'; fi',
+    '      printf \'{"id":"%s","result":"%s","time_s":%s,"failure_msg":"%s"}\' \\',
+    '        "$_sname" "$_sresult" "$_stime" "$_sfail_esc"',
+    '    done',
+    '    printf \'],"summary":{"total":%s,"passed":%s,"failed":%s,"skipped":%s,"flaky_pass":%s}}\' \\',
+    '      "$_total" "$_passed" "$_failed" "$_skipped" "$_flaky_pass"',
+    '    printf \'\\n\'',
+    '  } > "$_out"',
+    '}',
+    '',
+  ];
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
 // Footer generation (structured PASS/FAIL summary)
 // ---------------------------------------------------------------------------
 
@@ -511,6 +599,8 @@ function generateJUnitEmitter(flowName) {
  */
 function generateFooter(flowName, totalSteps, skipped) {
   var lines = [
+    '# Emit metrics JSON if --metrics-output path was provided (FLAKY-02)',
+    'if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi',
     '# Emit JUnit XML if --junit path was provided (FLAG-01)',
     'if [ -n "$JUNIT_OUTPUT" ]; then _emit_junit "$JUNIT_OUTPUT"; fi',
     '# Exit summary',
@@ -822,6 +912,9 @@ function generate(resolved, flowName, meta) {
   // 5b. JUnit emitter function (FLAG-01) — defined here, called in footer
   parts.push(generateJUnitEmitter(flowName));
 
+  // 5c. Metrics emitter function (FLAKY-02) — defined here, called in footer
+  parts.push(generateMetricsEmitter(flowName));
+
   // 6. Cleanup trap — registers agent-browser close on EXIT (CI-06)
   parts.push(generateCleanupTrap(steps));
   parts.push('');
@@ -851,4 +944,17 @@ function generate(resolved, flowName, meta) {
 // Exports
 // ---------------------------------------------------------------------------
 
-module.exports = { generate: generate, generateHeader: generateHeader, singleQuote: singleQuote, generateVariables: generateVariables, generateBaseUrlNormalization: generateBaseUrlNormalization, generateCleanupTrap: generateCleanupTrap, generateJUnitEmitter: generateJUnitEmitter, xmlAttrEscape: xmlAttrEscape };
+module.exports = {
+  generate: generate,
+  generateHeader: generateHeader,
+  singleQuote: singleQuote,
+  generateVariables: generateVariables,
+  generateBaseUrlNormalization: generateBaseUrlNormalization,
+  generateCleanupTrap: generateCleanupTrap,
+  generateJUnitEmitter: generateJUnitEmitter,
+  generateMetricsEmitter: generateMetricsEmitter,
+  generateRuntimeFlagBlock: generateRuntimeFlagBlock,
+  generateRuntimeSupport: generateRuntimeSupport,
+  generateFooter: generateFooter,
+  xmlAttrEscape: xmlAttrEscape,
+};
