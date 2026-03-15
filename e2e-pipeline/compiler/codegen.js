@@ -209,6 +209,7 @@ function generateRuntimeSupport() {
   var lines = [
     '# Failure accumulator',
     '_FAILED_STEPS=()',
+    '_HAD_RETRIES=false',
     '_handle_failure() {',
     '  local _step_id="$1"',
     '  local _msg="$2"',
@@ -399,7 +400,11 @@ function generateFooter(flowName, totalSteps, skipped) {
     '  echo "FAIL: ${#_FAILED_STEPS[@]} steps failed: ${_FAILED_STEPS[*]}"',
     '  exit 1',
     'fi',
-    'echo "PASS: ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    'if [ "$_HAD_RETRIES" = "true" ]; then',
+    '  echo "PASS (FLAKY): ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    'else',
+    '  echo "PASS: ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    'fi',
     'exit 0',
   ];
   return lines.join('\n');
@@ -444,6 +449,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('    _handle_failure "' + step.id + '" "' + navMsg + '"');
       lines.push('    break');
       lines.push('  fi');
+      lines.push('  _HAD_RETRIES=true');
       lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
       lines.push('  sleep 2');
       lines.push('done');
@@ -461,6 +467,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('    _handle_failure "' + step.id + '" "click action failed"');
       lines.push('    break');
       lines.push('  fi');
+      lines.push('  _HAD_RETRIES=true');
       lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
       lines.push('  sleep 2');
       lines.push('done');
@@ -479,6 +486,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('    _handle_failure "' + step.id + '" "fill action failed"');
       lines.push('    break');
       lines.push('  fi');
+      lines.push('  _HAD_RETRIES=true');
       lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
       lines.push('  sleep 2');
       lines.push('done');
