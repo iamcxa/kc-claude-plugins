@@ -553,3 +553,292 @@ describe('generate() — variables block placement', function() {
     assert.ok(!script.includes('BASE_URL='), 'Must not emit BASE_URL when no variables');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 2: generateExpects() — new expect type handlers (Task 2)
+// ---------------------------------------------------------------------------
+
+describe('generateExpects() — element-visible (no is keyword)', function() {
+  test("element-visible generates stdout capture same as active type", function() {
+    const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
+    step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("result=$(agent-browser is visible 'role=button[name=\"Sign In\"]') || true"),
+      'element-visible should use same stdout capture pattern as active. Got: ' + script
+    );
+  });
+
+  test("element-visible check uses string comparison != true", function() {
+    const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
+    step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(script.includes('if [ "$result" != "true" ]; then'));
+  });
+
+  test("element-visible FAIL message names element and step id", function() {
+    const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
+    step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(script.includes('FAIL: click-btn -- login_button is not visible'));
+  });
+});
+
+describe('generateExpects() — element-not-visible', function() {
+  test("element-not-visible generates stdout capture with role=dialog selector", function() {
+    const step = makeSnapshot('check-dialog', 'Take snapshot');
+    step.expects = [{ type: 'element-not-visible', raw: 'dialog not visible', elementName: 'dialog', selector: 'role=dialog' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("result=$(agent-browser is visible 'role=dialog') || true"),
+      'element-not-visible should capture stdout via is visible. Got: ' + script
+    );
+  });
+
+  test("element-not-visible check uses != false (inverted comparison)", function() {
+    const step = makeSnapshot('check-dialog', 'Take snapshot');
+    step.expects = [{ type: 'element-not-visible', raw: 'dialog not visible', elementName: 'dialog', selector: 'role=dialog' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('if [ "$result" != "false" ]; then'),
+      'element-not-visible must check != "false", not != "true". Got: ' + script
+    );
+  });
+
+  test("element-not-visible FAIL message says 'is still visible (expected not visible)'", function() {
+    const step = makeSnapshot('check-dialog', 'Take snapshot');
+    step.expects = [{ type: 'element-not-visible', raw: 'dialog not visible', elementName: 'dialog', selector: 'role=dialog' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(script.includes('FAIL: check-dialog -- dialog is still visible (expected not visible)'));
+  });
+
+  test("element-not-visible selector is single-quoted", function() {
+    const step = makeSnapshot('check-modal', 'Take snapshot');
+    step.expects = [{ type: 'element-not-visible', raw: 'modal not visible', elementName: 'modal', selector: "role=dialog[name='Confirm']" }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("result=$(agent-browser is visible 'role=dialog[name='\\''Confirm'\\'']') || true"),
+      'selector with single quotes must be escaped. Got: ' + script
+    );
+  });
+});
+
+describe('generateExpects() — url-contains', function() {
+  test("url-contains generates agent-browser get url capture", function() {
+    const step = makeNavigate('nav-dashboard', '/dashboard');
+    step.expects = [{ type: 'url-contains', raw: 'url contains /dashboard', value: '/dashboard' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('current_url=$(agent-browser get url) || true'),
+      'url-contains must capture current URL. Got: ' + script
+    );
+  });
+
+  test("url-contains bash glob checks url != *value*", function() {
+    const step = makeNavigate('nav-dashboard', '/dashboard');
+    step.expects = [{ type: 'url-contains', raw: 'url contains /dashboard', value: '/dashboard' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('[[ "$current_url" != *"/dashboard"* ]]'),
+      'url-contains should use bash glob != pattern. Got: ' + script
+    );
+  });
+
+  test("url-contains FAIL message includes value and current_url reference", function() {
+    const step = makeNavigate('nav-dashboard', '/dashboard');
+    step.expects = [{ type: 'url-contains', raw: 'url contains /dashboard', value: '/dashboard' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('FAIL: nav-dashboard -- url does not contain /dashboard (got: $current_url)'),
+      'url-contains FAIL must include path and $current_url. Got: ' + script
+    );
+  });
+});
+
+describe('generateExpects() — url-not-contains', function() {
+  test("url-not-contains generates agent-browser get url capture", function() {
+    const step = makeNavigate('submit-login', '/login');
+    step.expects = [{ type: 'url-not-contains', raw: 'url does not contain /login', value: '/login' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('current_url=$(agent-browser get url) || true'),
+      'url-not-contains must capture current URL. Got: ' + script
+    );
+  });
+
+  test("url-not-contains bash glob checks url == *value* (inverted — fail if found)", function() {
+    const step = makeNavigate('submit-login', '/login');
+    step.expects = [{ type: 'url-not-contains', raw: 'url does not contain /login', value: '/login' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('[[ "$current_url" == *"/login"* ]]'),
+      'url-not-contains should fail when URL matches. Got: ' + script
+    );
+  });
+
+  test("url-not-contains FAIL message says 'url contains X but should not'", function() {
+    const step = makeNavigate('submit-login', '/login');
+    step.expects = [{ type: 'url-not-contains', raw: 'url does not contain /login', value: '/login' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('FAIL: submit-login -- url contains /login but should not (got: $current_url)'),
+      'url-not-contains FAIL message must match expected format. Got: ' + script
+    );
+  });
+});
+
+describe('generateExpects() — text-visible', function() {
+  test("text-visible generates agent-browser snapshot capture", function() {
+    const step = makeSnapshot('verify-text', 'Take snapshot');
+    step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_snapshot=$(agent-browser snapshot) || true'),
+      'text-visible must capture snapshot. Got: ' + script
+    );
+  });
+
+  test("text-visible uses grep -qF for fixed-string matching (CJK safe)", function() {
+    const step = makeSnapshot('verify-text', 'Take snapshot');
+    step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("grep -qF '每日看板'"),
+      'text-visible must use grep -qF for fixed string match. Got: ' + script
+    );
+  });
+
+  test("text-visible uses if ! pattern (fail when text NOT found)", function() {
+    const step = makeSnapshot('verify-text', 'Take snapshot');
+    step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("if ! echo \"$_snapshot\" | grep -qF"),
+      'text-visible must use if ! pattern for failure detection. Got: ' + script
+    );
+  });
+
+  test("text-visible FAIL message names the text and step id", function() {
+    const step = makeSnapshot('verify-text', 'Take snapshot');
+    step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("FAIL: verify-text -- text '每日看板' not found on page"),
+      'text-visible FAIL must name the text. Got: ' + script
+    );
+  });
+
+  test("text-visible with ASCII text works correctly", function() {
+    const step = makeSnapshot('verify-title', 'Take snapshot');
+    step.expects = [{ type: 'text-visible', raw: 'text "Dashboard" visible', text: 'Dashboard' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("grep -qF 'Dashboard'"),
+      'text-visible with ASCII text uses grep -qF. Got: ' + script
+    );
+  });
+});
+
+describe('generateExpects() — or-visible', function() {
+  test("or-visible generates accumulator _or_pass variable initialized to false", function() {
+    const step = makeSnapshot('check-or', 'Take snapshot');
+    step.expects = [{
+      type: 'or-visible',
+      raw: 'email_input visible or login_button visible',
+      elements: [
+        { elementName: 'email_input', selector: 'role=textbox[name="Email"]' },
+        { elementName: 'login_button', selector: 'role=button[name="Sign In"]' },
+      ],
+    }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_or_pass="false"'),
+      'or-visible must initialize _or_pass to "false". Got: ' + script
+    );
+  });
+
+  test("or-visible generates is-visible check for first element", function() {
+    const step = makeSnapshot('check-or', 'Take snapshot');
+    step.expects = [{
+      type: 'or-visible',
+      raw: 'email_input visible or login_button visible',
+      elements: [
+        { elementName: 'email_input', selector: 'role=textbox[name="Email"]' },
+        { elementName: 'login_button', selector: 'role=button[name="Sign In"]' },
+      ],
+    }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("_r=$(agent-browser is visible 'role=textbox[name=\"Email\"]') || true"),
+      'or-visible must check first element. Got: ' + script
+    );
+  });
+
+  test("or-visible generates is-visible check for second element", function() {
+    const step = makeSnapshot('check-or', 'Take snapshot');
+    step.expects = [{
+      type: 'or-visible',
+      raw: 'email_input visible or login_button visible',
+      elements: [
+        { elementName: 'email_input', selector: 'role=textbox[name="Email"]' },
+        { elementName: 'login_button', selector: 'role=button[name="Sign In"]' },
+      ],
+    }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("_r=$(agent-browser is visible 'role=button[name=\"Sign In\"]') || true"),
+      'or-visible must check second element. Got: ' + script
+    );
+  });
+
+  test("or-visible uses accumulator pattern to set _or_pass=true on match", function() {
+    const step = makeSnapshot('check-or', 'Take snapshot');
+    step.expects = [{
+      type: 'or-visible',
+      raw: 'email_input visible or login_button visible',
+      elements: [
+        { elementName: 'email_input', selector: 'role=textbox[name="Email"]' },
+        { elementName: 'login_button', selector: 'role=button[name="Sign In"]' },
+      ],
+    }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('[ "$_r" = "true" ] && _or_pass="true"'),
+      'or-visible must accumulate true via && pattern. Got: ' + script
+    );
+  });
+
+  test("or-visible final check tests _or_pass != true", function() {
+    const step = makeSnapshot('check-or', 'Take snapshot');
+    step.expects = [{
+      type: 'or-visible',
+      raw: 'email_input visible or login_button visible',
+      elements: [
+        { elementName: 'email_input', selector: 'role=textbox[name="Email"]' },
+        { elementName: 'login_button', selector: 'role=button[name="Sign In"]' },
+      ],
+    }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('if [ "$_or_pass" != "true" ]; then'),
+      'or-visible final check must test _or_pass. Got: ' + script
+    );
+  });
+
+  test("or-visible FAIL message names both elements", function() {
+    const step = makeSnapshot('check-or', 'Take snapshot');
+    step.expects = [{
+      type: 'or-visible',
+      raw: 'email_input visible or login_button visible',
+      elements: [
+        { elementName: 'email_input', selector: 'role=textbox[name="Email"]' },
+        { elementName: 'login_button', selector: 'role=button[name="Sign In"]' },
+      ],
+    }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('FAIL: check-or -- neither email_input nor login_button is visible'),
+      'or-visible FAIL must name both elements. Got: ' + script
+    );
+  });
+});

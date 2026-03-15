@@ -178,7 +178,7 @@ function generateAction(step, stepIndex, totalSteps) {
 
 /**
  * Generate bash assertions for a step's expects array.
- * Only 'active' (visible) expects are compiled; deferred emits TODO.
+ * Handles all Phase 1 and Phase 2 expect types.
  */
 function generateExpects(step) {
   if (!step.expects || step.expects.length === 0) {
@@ -190,14 +190,68 @@ function generateExpects(step) {
   for (var i = 0; i < step.expects.length; i++) {
     var expect = step.expects[i];
 
-    if (expect.type === 'active') {
+    if (expect.type === 'active' || expect.type === 'element-visible') {
       // SHEL-09: stdout capture pattern — never rely on exit code
+      // 'active' = Phase 1 "element is visible"; 'element-visible' = Phase 2 "element visible"
       var sel = singleQuote(expect.selector);
       lines.push('result=$(agent-browser is visible ' + sel + ') || true');
       lines.push('if [ "$result" != "true" ]; then');
       lines.push('  echo "FAIL: ' + step.id + ' -- ' + expect.elementName + ' is not visible"');
       lines.push('  exit 1');
       lines.push('fi');
+
+    } else if (expect.type === 'element-not-visible') {
+      // Check result != "false" — if result is anything other than "false", element is still visible
+      var sel = singleQuote(expect.selector);
+      lines.push('result=$(agent-browser is visible ' + sel + ') || true');
+      lines.push('if [ "$result" != "false" ]; then');
+      lines.push('  echo "FAIL: ' + step.id + ' -- ' + expect.elementName + ' is still visible (expected not visible)"');
+      lines.push('  exit 1');
+      lines.push('fi');
+
+    } else if (expect.type === 'url-contains') {
+      // agent-browser get url returns current URL as stdout
+      lines.push('current_url=$(agent-browser get url) || true');
+      lines.push('if [[ "$current_url" != *"' + expect.value + '"* ]]; then');
+      lines.push('  echo "FAIL: ' + step.id + ' -- url does not contain ' + expect.value + ' (got: $current_url)"');
+      lines.push('  exit 1');
+      lines.push('fi');
+
+    } else if (expect.type === 'url-not-contains') {
+      // Fail if the URL DOES contain the value
+      lines.push('current_url=$(agent-browser get url) || true');
+      lines.push('if [[ "$current_url" == *"' + expect.value + '"* ]]; then');
+      lines.push('  echo "FAIL: ' + step.id + ' -- url contains ' + expect.value + ' but should not (got: $current_url)"');
+      lines.push('  exit 1');
+      lines.push('fi');
+
+    } else if (expect.type === 'text-visible') {
+      // snapshot outputs page accessibility tree; grep -qF for fixed-string (CJK-safe)
+      // Use single-quoted grep argument to handle special chars
+      var quotedText = singleQuote(expect.text);
+      lines.push('_snapshot=$(agent-browser snapshot) || true');
+      lines.push('if ! echo "$_snapshot" | grep -qF ' + quotedText + '; then');
+      lines.push('  echo "FAIL: ' + step.id + ' -- text \'' + expect.text + '\' not found on page"');
+      lines.push('  exit 1');
+      lines.push('fi');
+
+    } else if (expect.type === 'or-visible') {
+      // Accumulator pattern — check each element, pass if any is visible
+      var elements = expect.elements;
+      lines.push('_or_pass="false"');
+      for (var j = 0; j < elements.length; j++) {
+        var elemSel = singleQuote(elements[j].selector);
+        lines.push('_r=$(agent-browser is visible ' + elemSel + ') || true');
+        lines.push('[ "$_r" = "true" ] && _or_pass="true"');
+      }
+      // Build the element names list for FAIL message
+      var elemNames = elements.map(function(e) { return e.elementName; });
+      var neitherMsg = 'neither ' + elemNames.join(' nor ') + ' is visible';
+      lines.push('if [ "$_or_pass" != "true" ]; then');
+      lines.push('  echo "FAIL: ' + step.id + ' -- ' + neitherMsg + '"');
+      lines.push('  exit 1');
+      lines.push('fi');
+
     } else if (expect.type === 'deferred') {
       lines.push('echo "TODO: expect \'' + expect.raw + '\' not compiled (Phase 2)"');
     }
