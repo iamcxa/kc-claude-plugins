@@ -130,11 +130,18 @@ describe('generate() — navigate action', function() {
     assert.ok(script.includes('agent-browser open "${BASE_URL}/dashboard"'));
   });
 
-  test("navigate failure block includes FAIL message and exit 1", function() {
+  test("navigate failure block calls _handle_failure with step id and message", function() {
     const step = makeNavigate('nav-login', '/login');
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('FAIL: nav-login -- navigate to /login failed'));
-    assert.ok(script.includes('exit 1'));
+    // v2.0: _handle_failure replaces inline echo + exit 1
+    assert.ok(
+      script.includes('_handle_failure "nav-login"'),
+      'Expected _handle_failure "nav-login" call. Got: ' + script
+    );
+    assert.ok(
+      script.includes('navigate to /login failed'),
+      'Expected failure message referencing urlPath. Got: ' + script
+    );
   });
 });
 
@@ -148,11 +155,18 @@ describe('generate() — click action', function() {
     );
   });
 
-  test("click failure block includes FAIL message and exit 1", function() {
+  test("click failure block calls _handle_failure with step id and message", function() {
     const step = makeClick('click-submit', 'login_button', 'role=button[name="Sign In"]');
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('FAIL: click-submit -- click action failed'));
-    assert.ok(script.includes('exit 1'));
+    // v2.0: _handle_failure replaces inline echo + exit 1
+    assert.ok(
+      script.includes('_handle_failure "click-submit"'),
+      'Expected _handle_failure "click-submit" call. Got: ' + script
+    );
+    assert.ok(
+      script.includes('click action failed'),
+      'Expected click action failed message. Got: ' + script
+    );
   });
 });
 
@@ -175,11 +189,18 @@ describe('generate() — fill action', function() {
     );
   });
 
-  test("fill failure block includes FAIL message and exit 1", function() {
+  test("fill failure block calls _handle_failure with step id and message", function() {
     const step = makeFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'test@example.com');
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('FAIL: fill-email -- fill action failed'));
-    assert.ok(script.includes('exit 1'));
+    // v2.0: _handle_failure replaces inline echo + exit 1
+    assert.ok(
+      script.includes('_handle_failure "fill-email"'),
+      'Expected _handle_failure "fill-email" call. Got: ' + script
+    );
+    assert.ok(
+      script.includes('fill action failed'),
+      'Expected fill action failed message. Got: ' + script
+    );
   });
 });
 
@@ -314,34 +335,42 @@ describe('generate() — step logging [N/T] prefix', function() {
 });
 
 describe('generate() — failure messages', function() {
-  test("navigate failure reason includes urlPath", function() {
+  test("navigate failure reason includes urlPath (via _handle_failure call)", function() {
     const step = makeNavigate('nav-login', '/login', 'Navigate to /login');
     const script = generate(makeResolved([step]), 'test-flow');
+    // v2.0: _handle_failure "step-id" "msg" replaces inline echo + exit 1
     assert.ok(
-      script.includes('echo "FAIL: nav-login -- navigate to /login failed"'),
-      'Navigate FAIL must reference the urlPath. Got: ' + script
+      script.includes('_handle_failure "nav-login"') && script.includes('navigate to /login failed'),
+      'Navigate failure must call _handle_failure with step id and urlPath. Got: ' + script
     );
   });
 
-  test("click failure reason is generic 'click action failed'", function() {
+  test("click failure reason is generic 'click action failed' (via _handle_failure call)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('echo "FAIL: click-btn -- click action failed"'));
+    assert.ok(
+      script.includes('_handle_failure "click-btn"') && script.includes('click action failed'),
+      'Click failure must call _handle_failure with step id. Got: ' + script
+    );
   });
 
-  test("fill failure reason is generic 'fill action failed'", function() {
+  test("fill failure reason is generic 'fill action failed' (via _handle_failure call)", function() {
     const step = makeFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'test@example.com');
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('echo "FAIL: fill-email -- fill action failed"'));
+    assert.ok(
+      script.includes('_handle_failure "fill-email"') && script.includes('fill action failed'),
+      'Fill failure must call _handle_failure with step id. Got: ' + script
+    );
   });
 
-  test("snapshot has no failure block", function() {
+  test("snapshot has no failure block (no _handle_failure call near snapshot)", function() {
     const step = makeSnapshot('take-snap');
     const script = generate(makeResolved([step]), 'test-flow');
-    // snapshot block should not contain FAIL
+    // snapshot block should not contain _handle_failure in its vicinity
+    // A snapshot-only script has no retry wrapper and no _handle_failure call in step code
     const snapIdx = script.indexOf('agent-browser snapshot');
-    const afterSnap = script.slice(snapIdx, snapIdx + 60);
-    assert.ok(!afterSnap.includes('FAIL'), 'snapshot must not have failure block');
+    const afterSnap = script.slice(snapIdx, snapIdx + 100);
+    assert.ok(!afterSnap.includes('_handle_failure'), 'snapshot must not have _handle_failure call after it');
   });
 
   test("wait has no failure block", function() {
