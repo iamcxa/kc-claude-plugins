@@ -90,38 +90,153 @@ function resolveNavigate(operands, stepId, mapping) {
   return { operands: { target: target, urlPath: page.url_pattern } };
 }
 
+// ---------------------------------------------------------------------------
+// Phase 2: Expect pattern dispatch table
+// ---------------------------------------------------------------------------
+
+// Built-in keywords that resolve to ARIA selectors without requiring a mapping entry
+var BUILT_IN_KEYWORDS = {
+  dialog: 'role=dialog',
+};
+
+// Ordered dispatch table for expect pattern matching.
+// Priority matters: more specific patterns must come before general ones.
+var EXPECT_PATTERNS = [
+  // Phase 1 — kept as 'active' type for full backwards compatibility
+  { re: /^(\w+) is visible$/, type: 'active' },
+
+  // Phase 2 — element visibility with page qualifier (more specific, before plain visible)
+  { re: /^(\w+) visible on [\w-]+$/, type: 'element-visible' },
+
+  // Phase 2 — element visibility without page qualifier
+  { re: /^(\w+) visible$/, type: 'element-visible' },
+
+  // Phase 2 — element not visible
+  { re: /^(\w+) is not visible$/, type: 'element-not-visible' },
+  { re: /^(\w+) not visible$/, type: 'element-not-visible' },
+
+  // Phase 2 — URL checks (url-does-not-contain must come before url-contains)
+  { re: /^url does not contain (.+)$/, type: 'url-not-contains' },
+  { re: /^url contains (.+)$/, type: 'url-contains' },
+
+  // Phase 2 — text visibility (single-quote and double-quote variants)
+  { re: /^text '(.+)' on page$/, type: 'text-visible' },
+  { re: /^text "(.+)" visible$/, type: 'text-visible' },
+
+  // Phase 2 — or-syntax (two elements, any-true logic)
+  { re: /^(\w+) visible or (\w+) visible$/, type: 'or-visible' },
+];
+
+/**
+ * Resolve a single element name using the symbol table, with built-in keyword fallback.
+ * Returns { selector } on success, or pushes an error and returns null.
+ */
+function resolveElement(elemName, symbolTable, collisionsTable, stepId, errors) {
+  if (collisionsTable.has(elemName)) {
+    var colPages = collisionsTable.get(elemName);
+    errors.push("Step '" + stepId + "': expect element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', '));
+    return null;
+  }
+  var entry = symbolTable.get(elemName);
+  if (entry) {
+    return { selector: entry.selector };
+  }
+  // Check built-in keywords (e.g., dialog -> role=dialog)
+  if (BUILT_IN_KEYWORDS[elemName]) {
+    return { selector: BUILT_IN_KEYWORDS[elemName] };
+  }
+  errors.push("Step '" + stepId + "': expect element '" + elemName + "' not found in mapping");
+  return null;
+}
+
 function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
   var resolvedExpects = [];
   var activeCount = 0;
   var deferredCount = 0;
   var errors = [];
 
-  var ACTIVE_PATTERN = /^(\w+) is visible$/;
-
   for (var i = 0; i < expects.length; i++) {
     var expectStr = expects[i];
-    var match = ACTIVE_PATTERN.exec(expectStr);
-    if (match) {
-      var elemName = match[1];
-      if (collisionsTable.has(elemName)) {
-        // Element is ambiguous — fail only when referenced
-        var colPages = collisionsTable.get(elemName);
-        errors.push("Step '" + stepId + "': expect element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', '));
-      } else {
-        var entry = symbolTable.get(elemName);
-        if (!entry) {
-          errors.push("Step '" + stepId + "': expect element '" + elemName + "' not found in mapping");
-        } else {
+    var matched = false;
+
+    for (var p = 0; p < EXPECT_PATTERNS.length; p++) {
+      var pattern = EXPECT_PATTERNS[p];
+      var match = pattern.re.exec(expectStr);
+      if (!match) continue;
+
+      matched = true;
+      var type = pattern.type;
+
+      if (type === 'active') {
+        // Phase 1 pattern: "element is visible"
+        var elemName = match[1];
+        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors);
+        if (resolved) {
           resolvedExpects.push({
             type: 'active',
             raw: expectStr,
             elementName: elemName,
-            selector: entry.selector,
+            selector: resolved.selector,
+          });
+          activeCount++;
+        }
+      } else if (type === 'element-visible') {
+        // "element visible" or "element visible on page"
+        var elemName = match[1];
+        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors);
+        if (resolved) {
+          resolvedExpects.push({
+            type: 'element-visible',
+            raw: expectStr,
+            elementName: elemName,
+            selector: resolved.selector,
+          });
+          activeCount++;
+        }
+      } else if (type === 'element-not-visible') {
+        // "element not visible" or "element is not visible"
+        var elemName = match[1];
+        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors);
+        if (resolved) {
+          resolvedExpects.push({
+            type: 'element-not-visible',
+            raw: expectStr,
+            elementName: elemName,
+            selector: resolved.selector,
+          });
+          activeCount++;
+        }
+      } else if (type === 'url-contains') {
+        resolvedExpects.push({ type: 'url-contains', raw: expectStr, value: match[1] });
+        activeCount++;
+      } else if (type === 'url-not-contains') {
+        resolvedExpects.push({ type: 'url-not-contains', raw: expectStr, value: match[1] });
+        activeCount++;
+      } else if (type === 'text-visible') {
+        resolvedExpects.push({ type: 'text-visible', raw: expectStr, text: match[1] });
+        activeCount++;
+      } else if (type === 'or-visible') {
+        var elemA = match[1];
+        var elemB = match[2];
+        var resolvedA = resolveElement(elemA, symbolTable, collisionsTable, stepId, errors);
+        var resolvedB = resolveElement(elemB, symbolTable, collisionsTable, stepId, errors);
+        if (resolvedA && resolvedB) {
+          resolvedExpects.push({
+            type: 'or-visible',
+            raw: expectStr,
+            elements: [
+              { elementName: elemA, selector: resolvedA.selector },
+              { elementName: elemB, selector: resolvedB.selector },
+            ],
           });
           activeCount++;
         }
       }
-    } else {
+
+      break; // First matching pattern wins
+    }
+
+    if (!matched) {
       resolvedExpects.push({ type: 'deferred', raw: expectStr });
       deferredCount++;
     }

@@ -250,9 +250,9 @@ test('resolve: activeExpects counted for "element is visible" format', () => {
     ],
   };
   const result = resolve(flow, SIMPLE_MAPPING);
-  // "email_input is visible" → active; "url contains /login" → deferred
-  assert.equal(result.stats.activeExpects, 1);
-  assert.equal(result.stats.deferredExpects, 1);
+  // Phase 2: "email_input is visible" → active; "url contains /login" → also active (Phase 2)
+  assert.equal(result.stats.activeExpects, 2);
+  assert.equal(result.stats.deferredExpects, 0);
 });
 
 test('resolve: expect "element is visible" resolves element name to selector', () => {
@@ -334,4 +334,202 @@ test('integration: parse + resolve missing-element-flow.yaml surfaces element er
   const resolveResult = resolve(parseResult.flow, parseResult.mapping);
   assert.ok(resolveResult.errors.length > 0, 'resolve should surface missing element error');
   assert.ok(resolveResult.errors.some(e => e.includes('nonexistent_button')));
+});
+
+// ---------------------------------------------------------------------------
+// Phase 2: resolveExpects() — new expect patterns
+// ---------------------------------------------------------------------------
+
+// Helper: build a flow with one step containing a set of expects
+function flowWithExpects(expects) {
+  return {
+    name: 'test',
+    steps: [
+      {
+        id: 'step1',
+        type: 'snapshot',
+        action: 'Take snapshot',
+        expect: expects,
+      },
+    ],
+  };
+}
+
+// Extended SIMPLE_MAPPING with sidebar_dashboard for or-visible tests
+const EXTENDED_MAPPING = {
+  version: 2,
+  app: 'test-app',
+  base_url: 'http://localhost:3000',
+  pages: {
+    login: {
+      url_pattern: '/login',
+      elements: {
+        email_input: { selector: 'role=textbox[name="Email"]', description: 'Email input' },
+        password_input: { selector: "input[type='password']", description: 'Password input' },
+        login_button: { selector: 'role=button[name="Sign In"]', description: 'Login button' },
+      },
+    },
+    dashboard: {
+      url_pattern: '/dashboard',
+      elements: {
+        heading: { selector: 'role=heading[name="Dashboard"]', description: 'Dashboard heading' },
+        sidebar_dashboard: { selector: 'role=menuitem[name="Dashboard"]', description: 'Sidebar dashboard link' },
+      },
+    },
+    _global: {
+      description: 'Global elements',
+      elements: {
+        sidebar_home: { selector: 'role=menuitem[name="Home"]', description: 'Sidebar home link' },
+      },
+    },
+  },
+};
+
+test('resolveExpects Phase 2: "element visible" (no is) resolves type element-visible', () => {
+  const flow = flowWithExpects(['sidebar_dashboard visible']);
+  const result = resolve(flow, EXTENDED_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  assert.ok(step.expects, 'step should have expects');
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'element-visible');
+  assert.equal(exp.elementName, 'sidebar_dashboard');
+  assert.equal(exp.selector, 'role=menuitem[name="Dashboard"]');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: "element visible on page" resolves type element-visible with page qualifier', () => {
+  const flow = flowWithExpects(['sidebar_dashboard visible on dashboard']);
+  const result = resolve(flow, EXTENDED_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'element-visible');
+  assert.equal(exp.elementName, 'sidebar_dashboard');
+  assert.equal(exp.selector, 'role=menuitem[name="Dashboard"]');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: "dialog not visible" resolves to built-in role=dialog', () => {
+  const flow = flowWithExpects(['dialog not visible']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'element-not-visible');
+  assert.equal(exp.elementName, 'dialog');
+  assert.equal(exp.selector, 'role=dialog');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: "heading is not visible" resolves type element-not-visible from table', () => {
+  const flow = flowWithExpects(['heading is not visible']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'element-not-visible');
+  assert.equal(exp.elementName, 'heading');
+  assert.equal(exp.selector, 'role=heading[name="Dashboard"]');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: "url contains /dashboard" resolves type url-contains', () => {
+  const flow = flowWithExpects(['url contains /dashboard']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'url-contains');
+  assert.equal(exp.value, '/dashboard');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: "url does not contain /login" resolves type url-not-contains', () => {
+  const flow = flowWithExpects(['url does not contain /login']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'url-not-contains');
+  assert.equal(exp.value, '/login');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: "text \'每日看板\' on page" resolves type text-visible', () => {
+  const flow = flowWithExpects(["text '每日看板' on page"]);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'text-visible');
+  assert.equal(exp.text, '每日看板');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: text with double-quote format resolves type text-visible', () => {
+  const flow = flowWithExpects(['text "Dashboard" visible']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'text-visible');
+  assert.equal(exp.text, 'Dashboard');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: or-visible resolves both elements with correct selectors', () => {
+  const flow = flowWithExpects(['email_input visible or login_button visible']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'or-visible');
+  assert.ok(Array.isArray(exp.elements), 'elements should be an array');
+  assert.equal(exp.elements.length, 2);
+  assert.equal(exp.elements[0].elementName, 'email_input');
+  assert.equal(exp.elements[0].selector, 'role=textbox[name="Email"]');
+  assert.equal(exp.elements[1].elementName, 'login_button');
+  assert.equal(exp.elements[1].selector, 'role=button[name="Sign In"]');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: unrecognized format still becomes deferred', () => {
+  const flow = flowWithExpects(['something completely unknown xyz123']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'deferred');
+  assert.equal(result.stats.deferredExpects, 1);
+  assert.equal(result.stats.activeExpects, 0);
+});
+
+test('resolveExpects Phase 2: nonexistent element in visible pattern returns error', () => {
+  const flow = flowWithExpects(['nonexistent visible']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.ok(result.errors.length > 0, 'should have error for missing element');
+  assert.ok(result.errors.some(e => e.includes('nonexistent')), 'error should mention element name');
+});
+
+test('resolveExpects Phase 2: Phase 1 "element is visible" still works (backwards compat)', () => {
+  const flow = flowWithExpects(['email_input is visible']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected');
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  // Phase 1 pattern keeps type 'active' (or could be 'element-visible' — accept either)
+  assert.ok(exp.type === 'active' || exp.type === 'element-visible', 'should be active or element-visible type');
+  assert.equal(exp.elementName, 'email_input');
+  assert.equal(exp.selector, 'role=textbox[name="Email"]');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
 });
