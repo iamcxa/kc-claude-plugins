@@ -433,6 +433,34 @@ describe('generate() — PASS summary and exit', function() {
       'Expected PASS with 1 skipped for 6-step flow. Got: ' + script.slice(-150)
     );
   });
+
+  test("script emits _HAD_RETRIES=false default", function() {
+    const steps = [makeNavigate('nav', '/home')];
+    const script = generate(makeResolved(steps, 'f'), 'f');
+    assert.ok(script.includes('_HAD_RETRIES=false'), 'Expected _HAD_RETRIES=false default');
+  });
+
+  test("retry branch sets _HAD_RETRIES=true before RETRY echo", function() {
+    const steps = [makeNavigate('nav', '/home')];
+    const script = generate(makeResolved(steps, 'f'), 'f');
+    const retryIdx = script.indexOf('_HAD_RETRIES=true');
+    const echoIdx = script.indexOf('echo "RETRY');
+    assert.ok(retryIdx > -1, 'Expected _HAD_RETRIES=true in retry branch');
+    assert.ok(retryIdx < echoIdx, '_HAD_RETRIES=true must come before RETRY echo');
+  });
+
+  test("footer emits PASS (FLAKY) when _HAD_RETRIES is true", function() {
+    const steps = [makeNavigate('nav', '/home')];
+    const script = generate(makeResolved(steps, 'f'), 'f');
+    assert.ok(
+      script.includes('if [ "$_HAD_RETRIES" = "true" ]; then'),
+      'Expected flaky check in footer'
+    );
+    assert.ok(
+      script.includes('echo "PASS (FLAKY): f ('),
+      'Expected PASS (FLAKY) branch in footer'
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
