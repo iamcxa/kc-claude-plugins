@@ -20,11 +20,11 @@ skills/e2e-dispatch/     → router (auth gate + skill selection)
 skills/e2e-map/          → mapping orchestrator → dispatches e2e-mapper agent
 skills/e2e-test/         → test orchestrator → dispatches e2e-test-runner + trace-analyzer
 skills/e2e-walkthrough/  → interactive exploration (main context, no dedicated agent)
-skills/e2e-acceptance/   → generate E2E flows from plans/specs/PRs (planning → verification bridge)
+skills/e2e-flow/         → generate & verify E2E flows from plans/specs/PRs
 skills/e2e-compile/      → compile flow YAML to standalone bash test scripts (requires npm deps)
 skills/e2e-skill-ops/    → meta-skill for debugging/maintaining the pipeline itself
 agents/                  → subagent definitions (e2e-mapper, e2e-test-runner, e2e-trace-analyzer)
-hooks/                   → E2E acceptance loop enforcement (SessionStart + pre-commit)
+hooks/                   → E2E pipeline hooks (SessionStart context + pre-commit check)
 references/              → agent-browser CLI commands, common browser testing patterns
 ```
 
@@ -33,7 +33,7 @@ references/              → agent-browser CLI commands, common browser testing 
 ```
 /e2e-map           → .claude/e2e/mappings/<app>.yaml
 /e2e-walkthrough   → .claude/e2e/flows/walkthrough-*.yaml + e2e-reports/<ts>/flow-report.md
-/e2e-acceptance    → .claude/e2e/flows/acceptance-*.yaml (from plans/specs/PRs)
+/e2e-flow          → .claude/e2e/flows/<feature>.yaml + e2e-reports/<ts>/report.md
 /e2e-test <flow>   → e2e-reports/<ts>/report.md, trace.zip, screenshots, video
 /e2e-compile       → .claude/e2e/compiled/<flow>.sh (standalone bash test scripts)
 ```
@@ -104,28 +104,28 @@ Enforced by three layers — any planning framework (superpowers, GSD, plan mode
 | Layer | Mechanism | When | Strength |
 |-------|-----------|------|----------|
 | **Upstream** | SessionStart hook | Every session in a project with mappings | Injects reminder into context |
-| **Bridge** | `/e2e-acceptance` skill | During or after planning | Generates structured flow YAML from plan/spec/PR |
+| **Bridge** | `/e2e-flow` skill | During or after planning | Generates structured flow YAML from plan/spec/PR |
 | **Downstream** | PreToolUse hook on `git commit` | Every commit in a project with mappings | Warns if no recent E2E report |
 
 **Closed loop:**
 ```
-SessionStart ──→ "E2E infrastructure detected, use /e2e-acceptance"
+SessionStart ──→ "E2E infrastructure detected, use /e2e-flow"
      │
      ▼
 Planning (any framework)
      │
      ▼
-/e2e-acceptance --from <plan>  ──→  .claude/e2e/flows/acceptance-*.yaml
-     │
+/e2e-flow --from <plan>  ──→  .claude/e2e/flows/<feature>.yaml
+     │                         (generates + verifies in browser)
      ▼
-/e2e-test acceptance-<feature>  ──→  e2e-reports/*/report.md
+/e2e-test <feature>  ──→  e2e-reports/*/report.md
      │                                    ▲
-     ▼                                    │ (no draft flow? create one first)
-git commit  ──→  hook checks      /e2e-walkthrough --verify --pr N
-                                         └→ auto-saves flow → future /e2e-test
+     ▼                                    │ (no flow? create one first)
+git commit  ──→  hook checks      /e2e-flow --from <plan>
+                                         └→ generates flow → verifies → future /e2e-test
 ```
 
-**Verification decision**: Draft flow exists → `/e2e-test` (automated, subagent). No flow → `/e2e-walkthrough --verify` (interactive, produces flow for next time). See `e2e-acceptance` skill for full decision table.
+**Verification decision**: Draft flow exists → `/e2e-test` (automated, subagent). No flow → `/e2e-flow --from <plan>` (generates + verifies automatically). For interactive exploration → `/e2e-walkthrough`.
 
 **Draft flow template** (for plans that embed acceptance criteria inline):
 
@@ -165,7 +165,7 @@ steps:
 - 5-12 steps — focused acceptance path, not exhaustive coverage
 - Every step needs `expect:` — bare navigation is insufficient for acceptance
 - `Verify external` checkpoints only at real integration boundaries
-- Use `/e2e-acceptance` to generate from plan; manual embedding is fallback
+- Use `/e2e-flow --from <plan>` to generate from plan; manual embedding is fallback
 
 ## Compiler Dependencies
 

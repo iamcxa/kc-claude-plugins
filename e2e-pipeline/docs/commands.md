@@ -11,10 +11,11 @@
 | `/e2e-test <flow> --video` | Run flow with video recording + GIF |
 | `/e2e-test <flow> --pr 940` | Run flow, record, post results to PR |
 | `/e2e-walkthrough` | Interactive walkthrough (records by default) |
-| `/e2e-walkthrough --smoke` | Auto-generated smoke walkthrough from mapping |
 | `/e2e-walkthrough --no-video` | Walkthrough without video recording |
-| `/e2e-walkthrough --verify` | Verify external checkpoints during walkthrough |
-| `/e2e-acceptance --from <plan>` | Generate E2E flow YAML from a plan or spec |
+| `/e2e-flow --from <plan>` | Generate E2E flow YAML from a plan or spec |
+| `/e2e-flow --smoke` | Generate visit-all-pages smoke flow from mapping |
+| `/e2e-flow --verify-only <flow>` | Verify an existing flow in browser with auto-repair |
+| `/e2e-flow --no-verify` | Generate flow only, skip browser verification |
 | `/e2e-compile <flow>` | Compile one flow YAML to a standalone bash script |
 | `/e2e-compile --all` | Compile all flows in the flows directory |
 | `/e2e-compile --all --coverage` | Compile all + produce element coverage report |
