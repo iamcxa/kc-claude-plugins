@@ -48,7 +48,12 @@ function validateFlow(flow, filePath, errors) {
   if (!flow.name) {
     errors.push('Flow missing required field "name" in ' + filePath);
   }
-  if (!flow.mapping) {
+  // mapping is optional when sites: block is present
+  // but both mapping: and sites: together is an error
+  if (flow.mapping && flow.sites) {
+    errors.push("Flow has both 'mapping:' and 'sites:' — use one or the other in " + filePath);
+  }
+  if (!flow.mapping && !flow.sites) {
     errors.push('Flow missing required field "mapping" in ' + filePath);
   }
   if (!Array.isArray(flow.steps) || flow.steps.length === 0) {
@@ -77,11 +82,17 @@ function validateMapping(mapping, filePath, errors) {
 }
 
 /**
- * Parse a flow YAML file and its associated mapping YAML file.
+ * Parse a flow YAML file and its associated mapping YAML file(s).
+ *
+ * Supports two flow formats:
+ *   - Single-site: flow has top-level mapping: field
+ *   - Cross-site:  flow has top-level sites: block (no mapping: field)
  *
  * @param {string} flowPath - Path to the flow YAML file
  * @param {string} mappingDir - Directory containing mapping YAML files
- * @returns {{ flow: object|null, mapping: object|null, errors: string[] }}
+ * @returns {{ flow: object|null, mapping: object|null, sites: object|null, errors: string[] }}
+ *   - Single-site: { flow, mapping, sites: null, errors }
+ *   - Cross-site:  { flow, mapping: null, sites: { siteName: { mappingName, mapping } }, errors }
  */
 function parse(flowPath, mappingDir) {
   const errors = [];
@@ -90,13 +101,42 @@ function parse(flowPath, mappingDir) {
   const flow = loadYaml(flowPath, errors);
   if (flow === null) {
     // Could not load flow at all — return early with errors
-    return { flow: null, mapping: null, errors };
+    return { flow: null, mapping: null, sites: null, errors };
   }
 
   // Validate flow structure
   validateFlow(flow, flowPath, errors);
 
-  // Resolve and load mapping file
+  // --- Cross-site flow: sites: block ---
+  if (flow.sites && !flow.mapping) {
+    var sitesMap = {};
+    var siteNames = Object.keys(flow.sites);
+
+    for (var i = 0; i < siteNames.length; i++) {
+      var siteName = siteNames[i];
+      var siteEntry = flow.sites[siteName];
+      var mappingName = siteEntry && siteEntry.mapping;
+
+      if (!mappingName) {
+        errors.push("Site '" + siteName + "' in sites: block has no mapping field in " + flowPath);
+        continue;
+      }
+
+      var mappingPath = path.join(mappingDir, mappingName + '.yaml');
+      var mappingObj = loadYaml(mappingPath, errors);
+      if (mappingObj !== null) {
+        validateMapping(mappingObj, mappingPath, errors);
+        sitesMap[siteName] = { mappingName: mappingName, mapping: mappingObj };
+      } else {
+        // loadYaml already pushed the error
+        sitesMap[siteName] = { mappingName: mappingName, mapping: null };
+      }
+    }
+
+    return { flow, mapping: null, sites: sitesMap, errors };
+  }
+
+  // --- Single-site flow: mapping: field ---
   let mapping = null;
   if (flow.mapping) {
     const mappingName = flow.mapping;
@@ -109,7 +149,7 @@ function parse(flowPath, mappingDir) {
 
   // If there were validation errors, return with nulled objects to signal failure
   // but preserve the flow/mapping for partial diagnostics
-  return { flow, mapping, errors };
+  return { flow, mapping, sites: null, errors };
 }
 
 module.exports = { parse };

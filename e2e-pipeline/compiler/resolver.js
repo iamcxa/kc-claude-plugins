@@ -351,4 +351,143 @@ function resolve(flow, mapping) {
   return { resolved: resolved, stats: stats, errors: errors };
 }
 
-module.exports = { resolve: resolve };
+/**
+ * resolveMultiSite(flow, siteMappings) — resolve a cross-site flow.
+ *
+ * siteMappings: { [siteName]: { mappingName, mapping } }
+ *   - Each entry holds a loaded mapping object with its name
+ *
+ * Returns: { resolved, stats, errors }
+ *   - resolved.steps each have a session field from step.site qualifier
+ *   - Element lookups use the per-site symbol table
+ */
+function resolveMultiSite(flow, siteMappings) {
+  var errors = [];
+
+  // Build per-site symbol tables
+  var siteTables = {};
+  for (var siteName in siteMappings) {
+    var siteData = siteMappings[siteName];
+    if (siteData && siteData.mapping) {
+      siteTables[siteName] = buildSymbolTable(siteData.mapping);
+    }
+  }
+
+  var resolvedSteps = [];
+  var activeExpects = 0;
+  var deferredExpects = 0;
+  var skipped = 0;
+
+  var steps = flow.steps || [];
+  for (var si = 0; si < steps.length; si++) {
+    var step = steps[si];
+    var stepId = step.id || '(unnamed)';
+
+    // Require site: qualifier on every step in a cross-site flow
+    if (!step.site) {
+      errors.push("Step '" + stepId + "': cross-site flow step must have a 'site:' qualifier");
+      continue;
+    }
+
+    var siteName = step.site;
+    var siteTableResult = siteTables[siteName];
+    if (!siteTableResult) {
+      errors.push("Step '" + stepId + "': unknown site '" + siteName + "' (not in sites: block)");
+      continue;
+    }
+
+    var table = siteTableResult.table;
+    var collisions = siteTableResult.collisions;
+    // Get site mapping for navigate resolution
+    var siteMapping = siteMappings[siteName] && siteMappings[siteName].mapping;
+
+    if (!step.type) {
+      errors.push("Step '" + stepId + "' has no type field — run migration tool first");
+      continue;
+    }
+
+    var parseResult = parseActionString(step.type, step.action || '', stepId);
+    if (parseResult.error) {
+      errors.push(parseResult.error);
+      continue;
+    }
+
+    var rawOperands = parseResult.operands;
+    var resolvedOperands = Object.assign({}, rawOperands);
+    var skipStep = false;
+
+    if (step.type === 'navigate') {
+      var navResult = resolveNavigate(rawOperands, stepId, siteMapping);
+      if (navResult.error) {
+        errors.push(navResult.error);
+        skipStep = true;
+      } else {
+        resolvedOperands = navResult.operands;
+      }
+
+    } else if (step.type === 'click' || step.type === 'fill') {
+      var elemName = rawOperands.element;
+      if (elemName) {
+        if (collisions.has(elemName)) {
+          var colPages = collisions.get(elemName);
+          errors.push("Step '" + stepId + "': element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', '));
+          skipStep = true;
+        } else {
+          var entry = table.get(elemName);
+          if (!entry) {
+            errors.push("Step '" + stepId + "': element '" + elemName + "' not found in mapping");
+            skipStep = true;
+          } else {
+            resolvedOperands = Object.assign({}, rawOperands, { selector: entry.selector });
+          }
+        }
+      }
+
+    } else if (step.type === 'verify-external') {
+      skipped++;
+    }
+
+    if (skipStep) continue;
+
+    var stepExpects = [];
+    if (Array.isArray(step.expect) && step.expect.length > 0) {
+      var expectResult = resolveExpects(step.expect, table, collisions, stepId);
+      stepExpects = expectResult.resolvedExpects;
+      activeExpects += expectResult.activeCount;
+      deferredExpects += expectResult.deferredCount;
+      for (var ei = 0; ei < expectResult.errors.length; ei++) {
+        errors.push(expectResult.errors[ei]);
+      }
+    }
+
+    var resolvedStep = {
+      id: stepId,
+      action: step.action,
+      type: step.type,
+      session: siteName,
+      operands: resolvedOperands,
+    };
+    if (stepExpects.length > 0) {
+      resolvedStep.expects = stepExpects;
+    }
+    resolvedSteps.push(resolvedStep);
+  }
+
+  var stats = {
+    total: (flow.steps || []).length,
+    activeExpects: activeExpects,
+    deferredExpects: deferredExpects,
+    skipped: skipped,
+  };
+
+  var resolved = {
+    name: flow.name,
+    description: flow.description,
+    variables: flow.variables,
+    steps: resolvedSteps,
+  };
+
+  return { resolved: resolved, stats: stats, errors: errors };
+}
+
+module.exports = { resolve: resolve, resolveMultiSite: resolveMultiSite, buildSymbolTable: buildSymbolTable };

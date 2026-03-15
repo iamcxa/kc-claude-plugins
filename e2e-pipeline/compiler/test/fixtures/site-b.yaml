@@ -1,0 +1,10 @@
+version: 2
+app: site-b
+base_url: "http://localhost:8081"
+pages:
+  home:
+    url_pattern: "/home"
+    elements:
+      button_b:
+        selector: 'role=button[name="App Button"]'
+        description: "App button"

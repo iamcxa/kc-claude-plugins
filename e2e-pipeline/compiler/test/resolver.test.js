@@ -1,10 +1,10 @@
 'use strict';
 
-const { test } = require('node:test');
+const { test, describe } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 
-const { resolve } = require('../resolver');
+const { resolve, resolveMultiSite } = require('../resolver');
 const { parse } = require('../parser');
 
 const FIXTURES = path.join(__dirname, 'fixtures');
@@ -532,4 +532,130 @@ test('resolveExpects Phase 2: Phase 1 "element is visible" still works (backward
   assert.equal(exp.selector, 'role=textbox[name="Email"]');
   assert.equal(result.stats.activeExpects, 1);
   assert.equal(result.stats.deferredExpects, 0);
+});
+
+// ---------------------------------------------------------------------------
+// Phase 2 Plan 02: cross-site sites: block — resolver
+// ---------------------------------------------------------------------------
+
+const SITE_A_MAPPING = {
+  version: 2,
+  app: 'site-a',
+  base_url: 'http://localhost:5173',
+  pages: {
+    dashboard: {
+      url_pattern: '/dashboard',
+      elements: {
+        heading_a: { selector: 'role=heading[name="Office Dashboard"]', description: 'Office dashboard heading' },
+      },
+    },
+  },
+};
+
+const SITE_B_MAPPING = {
+  version: 2,
+  app: 'site-b',
+  base_url: 'http://localhost:8081',
+  pages: {
+    home: {
+      url_pattern: '/home',
+      elements: {
+        button_b: { selector: 'role=button[name="App Button"]', description: 'App button' },
+      },
+    },
+  },
+};
+
+const CROSS_SITE_FLOW = {
+  name: 'cross-site-test',
+  description: 'Cross-site authentication check',
+  sites: {
+    office: { mapping: 'site-a' },
+    app: { mapping: 'site-b' },
+  },
+  steps: [
+    { id: 'office-nav', site: 'office', type: 'navigate', action: 'Navigate to /dashboard' },
+    { id: 'office-check', site: 'office', type: 'snapshot', action: 'Take snapshot', expect: ['heading_a is visible'] },
+    { id: 'app-nav', site: 'app', type: 'navigate', action: 'Navigate to /home' },
+    { id: 'app-check', site: 'app', type: 'click', action: 'Click button_b on home' },
+  ],
+};
+
+const SITE_MAPPINGS = {
+  office: { mappingName: 'site-a', mapping: SITE_A_MAPPING },
+  app: { mappingName: 'site-b', mapping: SITE_B_MAPPING },
+};
+
+describe('cross-site sites: block — resolver', function() {
+  test('resolveMultiSite: steps get session field from site: qualifier', function() {
+    const result = resolveMultiSite(CROSS_SITE_FLOW, SITE_MAPPINGS);
+    assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+    const officeNav = result.resolved.steps.find(s => s.id === 'office-nav');
+    assert.ok(officeNav, 'office-nav step should be in resolved output');
+    assert.equal(officeNav.session, 'office', 'step should have session=office');
+
+    const appNav = result.resolved.steps.find(s => s.id === 'app-nav');
+    assert.ok(appNav, 'app-nav step should be in resolved output');
+    assert.equal(appNav.session, 'app', 'step should have session=app');
+  });
+
+  test('resolveMultiSite: elements resolve from correct site symbol table', function() {
+    const result = resolveMultiSite(CROSS_SITE_FLOW, SITE_MAPPINGS);
+    assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+
+    const appCheck = result.resolved.steps.find(s => s.id === 'app-check');
+    assert.ok(appCheck, 'app-check step should be in resolved output');
+    assert.equal(appCheck.operands.selector, 'role=button[name="App Button"]', 'button_b selector from site-b');
+
+    const officeCheck = result.resolved.steps.find(s => s.id === 'office-check');
+    assert.ok(officeCheck, 'office-check should have expects');
+    assert.ok(officeCheck.expects && officeCheck.expects.length > 0, 'office-check should have resolved expects');
+    assert.equal(officeCheck.expects[0].selector, 'role=heading[name="Office Dashboard"]', 'heading_a from site-a');
+  });
+
+  test('resolveMultiSite: error when step has no site: qualifier', function() {
+    const flowNoSite = {
+      name: 'bad-cross-site',
+      sites: { office: { mapping: 'site-a' }, app: { mapping: 'site-b' } },
+      steps: [
+        { id: 'no-site-step', type: 'snapshot', action: 'Take snapshot' },
+      ],
+    };
+    const result = resolveMultiSite(flowNoSite, SITE_MAPPINGS);
+    assert.ok(result.errors.length > 0, 'should have error for step without site: qualifier');
+    const err = result.errors.find(e => e.includes('no-site-step') && e.includes('site'));
+    assert.ok(err, 'error should name the step and mention site. Errors: ' + result.errors.join('; '));
+  });
+
+  test('resolveMultiSite: all 4 steps resolve without errors using inline mappings', function() {
+    const result = resolveMultiSite(CROSS_SITE_FLOW, SITE_MAPPINGS);
+    assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+    assert.equal(result.resolved.steps.length, 4, 'all 4 steps should be resolved');
+  });
+
+  test('parser: both mapping: and sites: present triggers error', function() {
+    const parseResult = parse(
+      path.join(FIXTURES, 'cross-site-flow.yaml'),
+      FIXTURES
+    );
+    // cross-site-flow.yaml has only sites:, no mapping: — parse should succeed
+    assert.deepEqual(parseResult.errors, [], 'cross-site-flow.yaml (sites only) should parse without error');
+    assert.ok(parseResult.sites, 'parseResult.sites should be populated');
+    assert.equal(parseResult.mapping, null, 'parseResult.mapping should be null for cross-site');
+  });
+
+  test('parser: cross-site-flow.yaml loads site-a and site-b mappings', function() {
+    const parseResult = parse(
+      path.join(FIXTURES, 'cross-site-flow.yaml'),
+      FIXTURES
+    );
+    assert.deepEqual(parseResult.errors, [], 'parse should succeed. Got: ' + parseResult.errors.join('; '));
+    assert.ok(parseResult.sites, 'parseResult.sites should exist');
+    assert.ok(parseResult.sites.office, 'sites.office should exist');
+    assert.ok(parseResult.sites.app, 'sites.app should exist');
+    assert.equal(parseResult.sites.office.mappingName, 'site-a');
+    assert.equal(parseResult.sites.app.mappingName, 'site-b');
+    assert.ok(parseResult.sites.office.mapping, 'sites.office.mapping should be loaded');
+    assert.ok(parseResult.sites.app.mapping, 'sites.app.mapping should be loaded');
+  });
 });
