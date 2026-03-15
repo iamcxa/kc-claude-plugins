@@ -121,3 +121,21 @@ Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + su
 **Future alternatives if context pressure recurs**: Targeted snapshot compression (output only step-relevant @ref lines from `snapshot -i`), not subagent migration.
 
 **Follow-up documentation**: Added "Verification Decision" table to `e2e-acceptance` SKILL.md (after Phase 4) and updated `e2e-pipeline` CLAUDE.md closed-loop diagram. Clarifies: draft flow exists → `/e2e-test`; no flow → `/e2e-walkthrough --verify` (produces flow for future `/e2e-test`).
+
+### 2026-03-16: Recording startup — eliminate dual-context (orphan browser window)
+
+**Problem**: `agent-browser open <url>` + `agent-browser record start <path>` created two browser contexts — `open` creates context #1, `record start` creates context #2 with recording. Agent operates on #2 while context #1 remains as a visible orphan window. Users reported confusion.
+
+**Root cause**: `record start` uses Playwright's `recordVideo` which must be set at context creation time, so it always creates a new context. Documentation said "Start AFTER `open`", implying `open` must come first.
+
+**Discovery**: Testing revealed `record start` can launch the daemon independently — `open` is not a prerequisite. When `record start` is called first and `open` called after, `open` navigates within the existing recording context instead of creating a new one.
+
+**Fix**: Reverse the startup order for recording-enabled sessions:
+- **Old**: `open <url>` → `record start` → `trace start` (two contexts, two windows)
+- **New**: `record start` → `open <url>` → `trace start` (one context, one window)
+
+**Verification**: Tested full flow — `record start` → `open --headed` → `snapshot -i` → `trace start` → `record stop` → `trace stop`. Video output: 1280×720 VP8, same quality as old flow. Single browser window confirmed.
+
+**Files changed**: `agents/e2e-test-runner.md` (§ 1b-1f), `skills/e2e-walkthrough/reference.md` (Startup), `references/commands.md` (Recording rules).
+
+**Also investigated (rejected)**: Using trace screencast frames for video. Trace captures at 800×450 / ~1fps (event-driven) — too low quality for PR reviews. `record start` remains the correct approach for video.

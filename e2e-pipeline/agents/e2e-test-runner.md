@@ -110,28 +110,31 @@ ls {{auth_profile}} 2>/dev/null                                      # Auth prof
 agent-browser get url 2>/dev/null
 ```
 
-- **Active session, same profile** -> `agent-browser open {{base_url}}` (reuse)
-- **Active session, different profile** -> `agent-browser close` first, then open fresh
-- **No active session** -> proceed to open
+- **Active session** -> `agent-browser close` first, wait for full exit
+- **No active session** -> proceed
 
 ### 1c. Open Browser
 
-**Recording-aware open** (agent-browser v0.16.x `record` is incompatible with `--profile`):
+**Recording ON** (`record` is `true`):
 
-- **Recording OFF** (`record` is `false` or absent):
-  ```bash
-  agent-browser --profile {{auth_profile}} --headed open {{base_url}}
-  ```
-- **Recording ON** (`record` is `true`): Open WITHOUT `--profile`:
-  ```bash
-  agent-browser --headed open {{base_url}}
-  ```
+```bash
+agent-browser record start "{{report_dir}}/full.webm"
+agent-browser --headed open {{base_url}}
+```
+
+`record start` launches the daemon and creates a single recording context. The subsequent `open` navigates within that context — no orphan window. `--profile` is not used (incompatible with recording context).
+
+**Recording OFF** (`record` is `false` or absent):
+
+```bash
+agent-browser --profile {{auth_profile}} --headed open {{base_url}}
+```
+
+Use `--session {{app}}` if `suite_context` is provided (multi-site flows).
 
 ```bash
 agent-browser wait --load networkidle
 ```
-
-Use `--session {{app}}` if `suite_context` is provided (multi-site flows).
 
 ### 1d. Auth Verification
 
@@ -148,17 +151,7 @@ If auth check FAILS:
 1. **Auto-login** (if mapping has `auth.test_accounts` with email/password): Use snapshot + fill to login automatically. Find email/password fields via `snapshot -i`, fill with test account credentials, click submit, wait networkidle, re-verify URL.
 2. **No test accounts**: Report "Auth expired. Please re-login in the headed browser." and **STOP**. Do not attempt re-auth. The orchestrator handles that.
 
-### 1e. Start Recording (conditional)
-
-If `record` is `true`:
-
-```bash
-agent-browser record start "{{report_dir}}/full.webm"
-```
-
-Start recording BEFORE trace start. Recording must start first because `record` creates a fresh browser context.
-
-### 1f. Start Tracing
+### 1e. Start Tracing
 
 ```bash
 agent-browser trace start

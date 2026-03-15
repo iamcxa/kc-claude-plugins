@@ -8,7 +8,7 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 
 ## Architecture
 
-**Skills** (6) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
+**Skills** (7) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
 
 **Agents** (3) run as subagents for heavy browser work, keeping verbose data out of main context:
 - `e2e-mapper` — explores pages, generates YAML mappings
@@ -21,6 +21,7 @@ skills/e2e-map/          → mapping orchestrator → dispatches e2e-mapper agen
 skills/e2e-test/         → test orchestrator → dispatches e2e-test-runner + trace-analyzer
 skills/e2e-walkthrough/  → interactive exploration (main context, no dedicated agent)
 skills/e2e-acceptance/   → generate E2E flows from plans/specs/PRs (planning → verification bridge)
+skills/e2e-compile/      → compile flow YAML to standalone bash test scripts (requires npm deps)
 skills/e2e-skill-ops/    → meta-skill for debugging/maintaining the pipeline itself
 agents/                  → subagent definitions (e2e-mapper, e2e-test-runner, e2e-trace-analyzer)
 hooks/                   → E2E acceptance loop enforcement (SessionStart + pre-commit)
@@ -34,6 +35,7 @@ references/              → agent-browser CLI commands, common browser testing 
 /e2e-walkthrough   → .claude/e2e/flows/walkthrough-*.yaml + e2e-reports/<ts>/flow-report.md
 /e2e-acceptance    → .claude/e2e/flows/acceptance-*.yaml (from plans/specs/PRs)
 /e2e-test <flow>   → e2e-reports/<ts>/report.md, trace.zip, screenshots, video
+/e2e-compile       → .claude/e2e/compiled/<flow>.sh (standalone bash test scripts)
 ```
 
 ## YAML Format Conventions (v2 only)
@@ -164,6 +166,14 @@ steps:
 - Every step needs `expect:` — bare navigation is insufficient for acceptance
 - `Verify external` checkpoints only at real integration boundaries
 - Use `/e2e-acceptance` to generate from plan; manual embedding is fallback
+
+## Compiler Dependencies
+
+The `/e2e-compile` skill uses a Node.js CLI (`bin/e2e-compile.js`) that requires npm packages. Run `npm install` in the plugin directory if `node_modules/` is missing. Dependencies are declared in `package.json`.
+
+## Plugin Runtime Variable
+
+`${CLAUDE_PLUGIN_ROOT}` is set by Claude Code at session start to the plugin's installation directory. Skills and hooks use this to resolve paths to `references/`, `hooks/scripts/`, and `bin/`. It is only available within the plugin context (skills, agents, hooks) — not in user code.
 
 ## Git Conventions
 
