@@ -1,23 +1,29 @@
-# Proposals: e2e-pipeline improvements (run 2)
+# Proposal: Add flow-writer agent role to e2e-pipeline
 
-## 1. Cross-component sync enforcement in skill-ops
+## Signal
+- ID: sig-20260316-001
+- Source: journal
+- Date: 2026-03-16
+- Confidence: high
+- Related proxy signal: flow-coverage
 
-### Signal
-- ID: sig-20260314-006
-- Source: memory
-- Date: 2026-03-14
-- Confidence: medium
-- Related proxy signal: pipeline-friction
+## Current State
+The e2e-pipeline has agents for mapping (e2e-mapper), testing (e2e-test-runner), verifying (e2e-flow-verifier), and analyzing (e2e-trace-analyzer). The e2e-flow-writer agent exists but is only dispatched during `/e2e-flow` skill invocations. There is no autonomous path from walkthrough observations to reusable flow YAML — the walkthrough produces observations and screenshots but requires manual authoring to convert them into executable flow files. This creates a gap where valuable walkthrough insights are never systematically captured as regression tests.
 
-### Current State
-When an agent adds a feature (e.g., new output file), the orchestrating skill must be updated to present the new artifact. This sync is currently manual — the Impact Matrix in e2e-skill-ops doesn't enforce checking the dispatching skill after agent changes.
+## Suggested Change
+Extend the e2e-walkthrough skill to offer a "convert to flow" option at completion:
+1. After walkthrough finishes, detect if the session produced navigations + interactions
+2. Offer: "Convert this walkthrough to a reusable E2E flow?"
+3. If accepted, dispatch e2e-flow-writer with the walkthrough step log as input
+4. The flow-writer agent produces a draft flow YAML referencing the existing mapping
+5. Save to `.claude/e2e/flows/` for future `e2e-test` execution
 
-### Suggested Change
-Add a "Dispatch Sync" check to e2e-skill-ops: after any agent .md change, automatically scan the dispatching skill for references to the agent's output contract. If the skill doesn't mention the new artifact, flag it as a sync gap.
+Alternatively, add a standalone `/e2e-flow --from-walkthrough <report-dir>` mode that reads a walkthrough report and generates flow YAML from the recorded steps.
 
-### Impact Scope
-- Files likely affected: `skills/e2e-skill-ops/SKILL.md`
+## Impact Scope
+- Files likely affected: `skills/e2e-walkthrough/SKILL.md` (add post-completion option), `agents/e2e-flow-writer.md` (extend input contract to accept walkthrough step logs)
 - Cross-plugin dependencies: none
 
-### North Star Alignment
-Prevents silent feature loss when agents evolve faster than orchestrating skills.
+## North Star Alignment
+How this moves toward: "Browser E2E testing is fully automated — map UI, write flows, run tests, verify checkpoints — with zero manual selector maintenance"
+— Closing the walkthrough-to-flow gap means every exploratory session automatically produces regression test assets, moving from manual flow authoring to automated flow generation.
