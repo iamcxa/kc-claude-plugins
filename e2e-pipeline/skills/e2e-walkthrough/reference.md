@@ -33,15 +33,18 @@ else
 fi
 ```
 
-**Recording-aware browser open** (agent-browser v0.16.x `record` is incompatible with `--profile`):
+**Recording-aware browser open**:
+
+- **Recording ON** (default): `record start` first, then navigate.
+  ```bash
+  agent-browser record start "$REPORT_DIR/full.webm"
+  agent-browser --headed open <base_url>
+  ```
+  `record start` launches the daemon and creates a single recording context. `open` navigates within it — one browser window, no orphan context. `--profile` is not used (incompatible with recording context).
 
 - **Recording OFF** (`--no-video`): Use `--profile` as normal.
   ```bash
   agent-browser --profile ~/.agent-browser/<app> --headed open <base_url>
-  ```
-- **Recording ON** (default): Open WITHOUT `--profile`, then handle auth.
-  ```bash
-  agent-browser --headed open <base_url>
   ```
 
 ```bash
@@ -65,12 +68,7 @@ Check URL against `auth.verification` condition. If verification fails (auth exp
    ```
 2. **Manual path** (fallback): Read `auth.manual_prompt` from mapping and present to user. Browser is already `--headed` — user logs in directly. After user confirms → `agent-browser get url` and re-check. Repeat until verified or user aborts.
 
-**Start recording** (if recording ON):
-```bash
-agent-browser record start "$REPORT_DIR/full.webm"
-```
-
-**Start trace** (after recording — trace captures internal data, recording captures visual viewport):
+**Start trace** (after auth verified):
 ```bash
 agent-browser trace start
 ```

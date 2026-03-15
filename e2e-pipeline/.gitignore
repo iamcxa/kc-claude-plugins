@@ -3,3 +3,6 @@ VERIFICATION-LOG.md
 
 # Node.js dependencies
 node_modules/
+
+# Development planning artifacts
+.planning/

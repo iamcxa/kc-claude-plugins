@@ -81,15 +81,21 @@ agent-browser record restart "<abs-path.webm>"       # Stop current + start new 
 ```
 
 **Rules:**
-- Start AFTER `open` (browser must be active)
+- Can be called before or after `open` — if called before `open`, it launches the daemon and creates the recording context automatically
+- When called before `open`, the subsequent `open` navigates within the recording context (single window)
 - Stop BEFORE `close` (or video file is truncated)
 - Stop BEFORE `trace stop` (recording captures the trace-stop moment)
 - Path must be absolute (same as screenshots/traces)
 - Output format: WebM (VP8/VP9 codec)
-- Creates a fresh browser context but preserves cookies and localStorage
-- If no URL provided to `start`, records current page
+- `--profile` is a daemon-level option and cannot be used with recording — handle auth via auto-login or manual login after `open`
 
-**Known limitation (v0.16.x):** `record start` is incompatible with `--profile` sessions. When the browser was opened with `--profile`, `record start` fails with "Browser not launched." **Workaround:** Open without `--profile` and handle auth manually (auto-login via fill commands or manual prompt). See walkthrough reference.md and test-runner agent for recording-aware startup procedures.
+**Recommended startup order (recording ON):**
+```bash
+agent-browser record start "<abs-path.webm>"    # 1. Start daemon + recording context
+agent-browser --headed open <url>                # 2. Navigate in recording context
+agent-browser wait --load networkidle            # 3. Wait for page load
+agent-browser trace start                        # 4. Start tracing
+```
 
 ## GIF Generation (from per-step screenshots)
 
