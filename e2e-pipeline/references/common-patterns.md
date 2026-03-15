@@ -109,6 +109,15 @@ fi
 
 Run this **once per session**, during the setup phase (after `mkdir -p` for `report_dir`). If `.gitignore` already has the patterns, the check is a no-op.
 
+## AI-Interactive vs Deterministic Flows
+
+Flow steps fall into two categories with different replayability:
+
+- **Deterministic steps** (`navigate`, `click`, `fill`, `select`): Produce the same result every time. Safe to replay via `e2e-test`.
+- **AI-interactive steps** (LLM-driven decisions, natural-language assertions, `action: "Verify external"` with custom checks): Depend on model reasoning at execution time. These steps may produce different results on replay — assertions may be stricter/looser, verification strategies may vary.
+
+**Implication:** Flows containing AI-interactive steps should be run via `e2e-walkthrough` (human-supervised) rather than `e2e-test` (automated replay). If a flow mixes both types, mark AI-interactive steps with `interactive: true` so the test runner can flag them as non-deterministic.
+
 ## Trace Analysis
 
 - `trace.zip` contains: `trace.network` (JSONL HAR), `trace.trace` (JSONL events), `resources/` (response bodies)

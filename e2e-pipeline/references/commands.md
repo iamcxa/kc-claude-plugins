@@ -97,6 +97,8 @@ agent-browser wait --load networkidle            # 3. Wait for page load
 agent-browser trace start                        # 4. Start tracing
 ```
 
+**Reverse-order gotcha:** If you call `open` BEFORE `record start`, the browser opens in a non-recording context. When `record start` runs next, it creates a SECOND recording-context window — resulting in two windows (the original orphan + the recording window). Commands then target the orphan window, not the recording one. Always start recording first.
+
 ## GIF Generation (from per-step screenshots)
 
 ```bash
