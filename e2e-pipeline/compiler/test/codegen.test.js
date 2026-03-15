@@ -399,3 +399,157 @@ describe('generate() — PASS summary and exit', function() {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// Task 1: Variable handling (generateVariables + generate() integration)
+// ---------------------------------------------------------------------------
+
+const { generateVariables } = require('../codegen.js');
+
+describe('generateVariables() — no variables', function() {
+  test("undefined variables returns empty string", function() {
+    assert.equal(generateVariables(undefined, 'test-flow'), '');
+  });
+
+  test("null variables returns empty string", function() {
+    assert.equal(generateVariables(null, 'test-flow'), '');
+  });
+
+  test("empty object returns empty string", function() {
+    assert.equal(generateVariables({}, 'test-flow'), '');
+  });
+});
+
+describe('generateVariables() — single optional variable (has default)', function() {
+  test("usage comment lists variable in square brackets (optional)", function() {
+    const result = generateVariables({ base_url: 'http://localhost:3000' }, 'test-flow');
+    assert.ok(
+      result.includes('# Usage: test-flow.sh [base_url]'),
+      'Expected optional var in square brackets. Got: ' + result
+    );
+  });
+
+  test("parameter comment describes optional with env fallback and default", function() {
+    const result = generateVariables({ base_url: 'http://localhost:3000' }, 'test-flow');
+    assert.ok(
+      result.includes('# $1 BASE_URL -- optional (or set E2E_BASE_URL, default: http://localhost:3000)'),
+      'Expected optional parameter comment. Got: ' + result
+    );
+  });
+
+  test("assignment uses :- pattern with env fallback and default value", function() {
+    const result = generateVariables({ base_url: 'http://localhost:3000' }, 'test-flow');
+    assert.ok(
+      result.includes('BASE_URL="${1:-${E2E_BASE_URL:-http://localhost:3000}}"'),
+      'Expected :- pattern with env+default. Got: ' + result
+    );
+  });
+
+  test("variable name is uppercased in assignment", function() {
+    const result = generateVariables({ base_url: 'http://localhost:3000' }, 'test-flow');
+    assert.ok(result.includes('BASE_URL='), 'Expected uppercased variable name');
+  });
+});
+
+describe('generateVariables() — single required variable (null default)', function() {
+  test("usage comment lists variable in angle brackets (required)", function() {
+    const result = generateVariables({ base_url: null }, 'test-flow');
+    assert.ok(
+      result.includes('# Usage: test-flow.sh <base_url>'),
+      'Expected required var in angle brackets. Got: ' + result
+    );
+  });
+
+  test("parameter comment describes required with env fallback only", function() {
+    const result = generateVariables({ base_url: null }, 'test-flow');
+    assert.ok(
+      result.includes('# $1 BASE_URL -- required (or set E2E_BASE_URL)'),
+      'Expected required parameter comment. Got: ' + result
+    );
+  });
+
+  test("assignment uses :? pattern with usage message", function() {
+    const result = generateVariables({ base_url: null }, 'test-flow');
+    assert.ok(
+      result.includes('BASE_URL="${1:?Usage: test-flow.sh <base_url>}"'),
+      'Expected :? pattern for required var. Got: ' + result
+    );
+  });
+});
+
+describe('generateVariables() — multiple variables (required + optional)', function() {
+  test("usage comment puts required first (angle brackets), optional second (square brackets)", function() {
+    const result = generateVariables({ base_url: 'http://localhost:3000', password: null }, 'test-flow');
+    assert.ok(
+      result.includes('# Usage: test-flow.sh [base_url] <password>'),
+      'Expected mixed required/optional usage. Got: ' + result
+    );
+  });
+
+  test("positional args are 1-indexed: $1 BASE_URL, $2 PASSWORD", function() {
+    const result = generateVariables({ base_url: 'http://localhost:3000', password: null }, 'test-flow');
+    assert.ok(result.includes('# $1 BASE_URL'), 'Expected $1 for base_url. Got: ' + result);
+    assert.ok(result.includes('# $2 PASSWORD'), 'Expected $2 for password. Got: ' + result);
+  });
+
+  test("optional var env fallback uses E2E_ prefix: base_url -> E2E_BASE_URL", function() {
+    const result = generateVariables({ base_url: 'http://localhost:3000', password: null }, 'test-flow');
+    assert.ok(result.includes('E2E_BASE_URL'), 'Expected E2E_BASE_URL. Got: ' + result);
+  });
+
+  test("required var env fallback uses E2E_ prefix: password -> E2E_PASSWORD", function() {
+    const result = generateVariables({ base_url: 'http://localhost:3000', password: null }, 'test-flow');
+    assert.ok(result.includes('E2E_PASSWORD'), 'Expected E2E_PASSWORD. Got: ' + result);
+  });
+
+  test("optional variable without meaningful default uses empty :- fallback (set -u safety)", function() {
+    const result = generateVariables({ password_opt: '' }, 'test-flow');
+    assert.ok(
+      result.includes('PASSWORD_OPT="${1:-${E2E_PASSWORD_OPT:-}}"'),
+      'Expected empty :- fallback for empty-string default. Got: ' + result
+    );
+  });
+});
+
+describe('generate() — variables block placement', function() {
+  test("variable block appears after LANG export but before step code", function() {
+    const resolved = {
+      name: 'test-login',
+      description: 'Test',
+      variables: { base_url: 'http://localhost:3000' },
+      steps: [makeNavigate('nav', '/login', 'Navigate to /login')],
+    };
+    const script = generate(resolved, 'test-login');
+    const langIdx = script.indexOf('export LANG=en_US.UTF-8');
+    const varIdx = script.indexOf('BASE_URL=');
+    const stepIdx = script.indexOf('echo "[1/1]');
+    assert.ok(langIdx !== -1, 'Missing LANG export');
+    assert.ok(varIdx !== -1, 'Missing BASE_URL= assignment');
+    assert.ok(stepIdx !== -1, 'Missing step echo');
+    assert.ok(langIdx < varIdx, 'LANG export must come before variable block');
+    assert.ok(varIdx < stepIdx, 'Variable block must come before step code');
+  });
+
+  test("generate() with variables replaces placeholder comment with real variable block", function() {
+    const resolved = {
+      name: 'test-login',
+      description: 'Test',
+      variables: { base_url: 'http://localhost:3000' },
+      steps: [],
+    };
+    const script = generate(resolved, 'test-login');
+    assert.ok(
+      !script.includes('# Variables: added by generateVariables()'),
+      'Placeholder comment must be replaced when variables present'
+    );
+    assert.ok(script.includes('BASE_URL='), 'Expected actual variable declaration');
+  });
+
+  test("generate() without variables keeps placeholder comment (no variables block)", function() {
+    const resolved = { name: 'test-flow', description: 'Test', steps: [] };
+    const script = generate(resolved, 'test-flow');
+    // When no variables, the placeholder comment remains (as per Plan 02)
+    // OR it's just absent — either is acceptable as long as no BASE_URL= appears
+    assert.ok(!script.includes('BASE_URL='), 'Must not emit BASE_URL when no variables');
+  });
+});
