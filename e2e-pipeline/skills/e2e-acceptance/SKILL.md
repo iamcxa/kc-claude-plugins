@@ -114,6 +114,18 @@ Warnings: [element mismatches, unmappable criteria]
 Next: /e2e-test acceptance-<feature>
 ```
 
+## After Implementation — Verification Decision
+
+Once the feature is implemented, choose the right verification tool:
+
+| Situation | Use | Why |
+|-----------|-----|-----|
+| Draft flow exists (from this skill) | `/e2e-test acceptance-<feature>` | Flow already defined → automated replay via subagent |
+| No flow exists, need to explore | `/e2e-walkthrough --verify --pr N` | Human-in-the-loop builds flow → auto-saved for future `/e2e-test` |
+| External checkpoints need MCP (Slack, DB) | `/e2e-walkthrough --verify` first run → `/e2e-test` after | Walkthrough has full tool access; test-runner does best-effort curl |
+
+**Rule of thumb**: `/e2e-walkthrough --verify` is the **flow producer** (interactive, first-time). `/e2e-test` is the **flow consumer** (automated, repeatable). If a flow already exists, skip walkthrough — go straight to test.
+
 ## `--validate` Mode
 
 Audit existing flows against plan requirements:

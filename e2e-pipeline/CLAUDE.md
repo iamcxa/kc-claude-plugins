@@ -117,10 +117,13 @@ Planning (any framework)
      │
      ▼
 /e2e-test acceptance-<feature>  ──→  e2e-reports/*/report.md
-     │
-     ▼
-git commit  ──→  hook checks: flows exist? report recent? ──→  warn if not
+     │                                    ▲
+     ▼                                    │ (no draft flow? create one first)
+git commit  ──→  hook checks      /e2e-walkthrough --verify --pr N
+                                         └→ auto-saves flow → future /e2e-test
 ```
+
+**Verification decision**: Draft flow exists → `/e2e-test` (automated, subagent). No flow → `/e2e-walkthrough --verify` (interactive, produces flow for next time). See `e2e-acceptance` skill for full decision table.
 
 **Draft flow template** (for plans that embed acceptance criteria inline):
 

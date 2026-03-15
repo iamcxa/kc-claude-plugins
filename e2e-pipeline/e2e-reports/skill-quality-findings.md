@@ -104,3 +104,20 @@ Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + su
 - Combined-pressure synthesis paragraph — defense is adequate from individual rules.
 
 **Lesson**: Single-pressure tests pass easily. Combined pressures (authority + real error + late stage, OR bulk data + ambiguity + exhaustion) expose gaps that unit-style tests miss. Always run at least 2 combo scenarios in the REFACTOR phase.
+
+### 2026-03-15: Evaluate — Walkthrough Phase 3 subagent feasibility
+
+**Question**: Can e2e-walkthrough dispatch a subagent for agent-browser execution (like e2e-test / e2e-map do) to save main context?
+
+**Verdict**: NOT recommended. Walkthrough's interactive nature is fundamentally incompatible with subagent isolation.
+
+**Key factors**:
+1. Observe-and-continue already reduced Phase 3 context noise by 95% (1,050 → ~50 lines). Remaining consumption (~120-330 lines for 10 steps) is necessary for @ref extraction + anomaly observation.
+2. Six core features break under subagent: ad-hoc commands, step mode, external checkpoints (--verify), dynamic plan modification, debug pivot, Phase 4 anomaly review.
+3. Alternative approaches evaluated and rejected: auto-mode-only subagent (rare use, dual-path maintenance cost), per-step dispatch (overhead > savings), batch dispatch (loses interactivity = becomes e2e-test).
+
+**Architecture principle**: e2e-test/e2e-map are automated (zero human interaction during execution) → subagent. e2e-walkthrough is collaborative (human participates during execution) → main context. This is a category distinction, not a cost optimization target.
+
+**Future alternatives if context pressure recurs**: Targeted snapshot compression (output only step-relevant @ref lines from `snapshot -i`), not subagent migration.
+
+**Follow-up documentation**: Added "Verification Decision" table to `e2e-acceptance` SKILL.md (after Phase 4) and updated `e2e-pipeline` CLAUDE.md closed-loop diagram. Clarifies: draft flow exists → `/e2e-test`; no flow → `/e2e-walkthrough --verify` (produces flow for future `/e2e-test`).
