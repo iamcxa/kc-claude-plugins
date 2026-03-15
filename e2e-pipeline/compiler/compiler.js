@@ -32,6 +32,18 @@ async function compile(flowPath, mappingDir, outputDir) {
     return { success: false, errors: resolveResult.errors };
   }
 
+  // Auto-inject base_url from mapping when flow has no variables block
+  // Prevents unbound ${BASE_URL} in navigate commands under set -u
+  if (!resolveResult.resolved.variables || !('base_url' in resolveResult.resolved.variables)) {
+    if (!resolveResult.resolved.variables) {
+      resolveResult.resolved.variables = {};
+    }
+    resolveResult.resolved.variables = Object.assign(
+      { base_url: parseResult.mapping.base_url || '' },
+      resolveResult.resolved.variables
+    );
+  }
+
   // Pass 3: Codegen
   var flowName = parseResult.flow.name;
   var script = generate(resolveResult.resolved, flowName);

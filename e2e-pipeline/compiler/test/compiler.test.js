@@ -11,6 +11,7 @@ const { compile } = require('../compiler.js');
 
 const FIXTURES_DIR = path.join(__dirname, 'fixtures');
 const SIMPLE_FLOW = path.join(FIXTURES_DIR, 'simple-flow.yaml');
+const NO_VARS_FLOW = path.join(FIXTURES_DIR, 'no-vars-flow.yaml');
 const MISSING_ELEM_FLOW = path.join(FIXTURES_DIR, 'missing-element-flow.yaml');
 
 // ---------------------------------------------------------------------------
@@ -200,6 +201,59 @@ describe('Integration: complete pipeline produces valid bash script', function()
     assert.ok(content.includes('BASE_URL='), 'Expected BASE_URL= in output');
     assert.ok(content.includes('#!/usr/bin/env bash'), 'Expected shebang');
     assert.ok(content.includes('agent-browser open "${BASE_URL}'), 'Expected navigate action with BASE_URL');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// compile() — flow without variables block auto-injects BASE_URL from mapping
+// ---------------------------------------------------------------------------
+
+describe('compile() — flow without variables block', function() {
+  var tmpDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("flow without variables block still has BASE_URL declared in output", async function() {
+    const result = await compile(NO_VARS_FLOW, FIXTURES_DIR, tmpDir);
+    assert.ok(result.success, 'Compile should succeed. Errors: ' + JSON.stringify(result.errors));
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(content.includes('BASE_URL='), 'Expected BASE_URL= declaration even without variables block');
+  });
+
+  test("BASE_URL is declared before first ${BASE_URL} reference", async function() {
+    const result = await compile(NO_VARS_FLOW, FIXTURES_DIR, tmpDir);
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    const lines = content.split('\n');
+    var declLine = -1;
+    var firstRefLine = -1;
+    for (var i = 0; i < lines.length; i++) {
+      if (declLine === -1 && lines[i].includes('BASE_URL=')) declLine = i;
+      if (firstRefLine === -1 && lines[i].includes('${BASE_URL}')) firstRefLine = i;
+    }
+    assert.ok(declLine !== -1, 'BASE_URL= must exist');
+    assert.ok(firstRefLine !== -1, '${BASE_URL} reference must exist');
+    assert.ok(declLine < firstRefLine, 'Declaration must come before reference');
+  });
+
+  test("auto-injected BASE_URL uses mapping base_url as default value", async function() {
+    const result = await compile(NO_VARS_FLOW, FIXTURES_DIR, tmpDir);
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(
+      content.includes('http://localhost:3000'),
+      'Expected mapping base_url as default. Got: ' + content.slice(0, 500)
+    );
+  });
+
+  test("bash -n syntax check passes on flow without variables", async function() {
+    const result = await compile(NO_VARS_FLOW, FIXTURES_DIR, tmpDir);
+    const bashResult = spawnSync('bash', ['-n', result.outputPath], { encoding: 'utf8' });
+    assert.equal(bashResult.status, 0, 'bash -n failed. stderr: ' + bashResult.stderr);
   });
 });
 
