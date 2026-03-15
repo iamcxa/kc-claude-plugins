@@ -4,6 +4,18 @@ Persistent record of skill gaps, fixes, and feature additions. Referenced by `/e
 
 ## New Features
 
+### 2026-03-16: v2.0 Role Restructuring — Validation
+
+**Changes:**
+- Added agents: e2e-flow-writer (codebase analysis → flow YAML), e2e-flow-verifier (adaptive browser validation)
+- Added skill: /e2e-flow (generate + verify + smoke, replaces /e2e-acceptance)
+- Removed: e2e-acceptance skill
+- Modified: e2e-walkthrough (removed --smoke, --verify), e2e-dispatch (added --flow route)
+- Updated: CLAUDE.md, README.md, docs/, plugin.json (v2.0.0), hooks
+
+**Validation:** All 7 validation checks passed — zero stale references, all new files exist, cross-references correct.
+**Reference cleanup:** Zero stale e2e-acceptance references in active files.
+
 ### 2026-03-14: PR Pre-Flight E2E Suggestion + External Verification Checkpoints
 
 **Feature A — PR Pre-Flight E2E Suggestion**
