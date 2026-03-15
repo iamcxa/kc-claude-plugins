@@ -1,0 +1,337 @@
+'use strict';
+
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const path = require('node:path');
+
+const { resolve } = require('../resolver');
+const { parse } = require('../parser');
+
+const FIXTURES = path.join(__dirname, 'fixtures');
+
+// ---------------------------------------------------------------------------
+// Inline test fixtures (for isolation — no FS dependency in resolver tests)
+// ---------------------------------------------------------------------------
+
+/**
+ * Minimal mapping matching simple-mapping.yaml / test-app.yaml structure.
+ * 5 elements total: email_input, password_input, login_button (login),
+ *                   heading (dashboard), sidebar_home (_global)
+ */
+const SIMPLE_MAPPING = {
+  version: 2,
+  app: 'test-app',
+  base_url: 'http://localhost:3000',
+  pages: {
+    login: {
+      url_pattern: '/login',
+      elements: {
+        email_input: { selector: 'role=textbox[name="Email"]', description: 'Email input' },
+        password_input: { selector: "input[type='password']", description: 'Password input' },
+        login_button: { selector: 'role=button[name="Sign In"]', description: 'Login button' },
+      },
+    },
+    dashboard: {
+      url_pattern: '/dashboard',
+      elements: {
+        heading: { selector: 'role=heading[name="Dashboard"]', description: 'Dashboard heading' },
+      },
+    },
+    _global: {
+      description: 'Global elements',
+      elements: {
+        sidebar_home: { selector: 'role=menuitem[name="Home"]', description: 'Sidebar home link' },
+      },
+    },
+  },
+};
+
+const DUPLICATE_MAPPING = {
+  version: 2,
+  app: 'test-app-dupes',
+  base_url: 'http://localhost:3000',
+  pages: {
+    'page-a': {
+      url_pattern: '/a',
+      elements: {
+        data_table: { selector: 'role=table', description: 'Table on page A' },
+        unique_a: { selector: '.unique-a', description: 'Only on A' },
+      },
+    },
+    'page-b': {
+      url_pattern: '/b',
+      elements: {
+        data_table: { selector: 'role=grid', description: 'Table on page B' },
+        unique_b: { selector: '.unique-b', description: 'Only on B' },
+      },
+    },
+  },
+};
+
+const SIMPLE_FLOW = {
+  name: 'test-login',
+  description: 'Test login flow',
+  tags: ['smoke'],
+  mapping: 'test-app',
+  variables: { base_url: 'http://localhost:3000' },
+  steps: [
+    { id: 'navigate-to-login', type: 'navigate', action: 'Navigate to /login' },
+    { id: 'fill-email', type: 'fill', action: "Fill email_input with 'test@example.com' on login", expect: ['email_input is visible'] },
+    { id: 'click-submit', type: 'click', action: 'Click login_button on login' },
+    { id: 'take-snapshot', type: 'snapshot', action: 'Take snapshot' },
+    { id: 'wait-for-load', type: 'wait', action: 'Wait 2' },
+    { id: 'verify-external', type: 'verify-external', action: 'Verify external' },
+  ],
+};
+
+const MISSING_ELEMENT_FLOW = {
+  name: 'test-missing',
+  description: 'Flow with missing element ref',
+  tags: ['test'],
+  mapping: 'test-app',
+  steps: [
+    { id: 'click-nonexistent', type: 'click', action: 'Click nonexistent_button on login' },
+  ],
+};
+
+// ---------------------------------------------------------------------------
+// Symbol table tests
+// ---------------------------------------------------------------------------
+
+test('buildSymbolTable: simple mapping yields 5 entries', () => {
+  // We test this indirectly via resolve — but resolve exposes stats
+  // Use a flow that resolves all 5 elements to confirm all are in the table
+  const flow = {
+    name: 'test',
+    steps: [
+      { id: 'nav', type: 'navigate', action: 'Navigate to /login' },
+      { id: 'click-email', type: 'click', action: 'Click email_input on login' },
+      { id: 'click-pwd', type: 'click', action: 'Click password_input on login' },
+      { id: 'click-btn', type: 'click', action: 'Click login_button on login' },
+      { id: 'click-heading', type: 'click', action: 'Click heading on dashboard' },
+      { id: 'click-sidebar', type: 'click', action: 'Click sidebar_home' },
+    ],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'should resolve all 5 elements without error');
+});
+
+test('buildSymbolTable: duplicate elements mapping returns ambiguous error', () => {
+  const flow = {
+    name: 'test',
+    steps: [
+      { id: 'click-table', type: 'click', action: 'Click data_table on page-a' },
+    ],
+  };
+  const result = resolve(flow, DUPLICATE_MAPPING);
+  const dupeError = result.errors.find(e => e.includes("'data_table' is ambiguous"));
+  assert.ok(dupeError, "should have ambiguous error for data_table. Errors: " + result.errors.join('; '));
+  assert.ok(dupeError.includes('page-a'), 'error should name page-a');
+  assert.ok(dupeError.includes('page-b'), 'error should name page-b');
+});
+
+// ---------------------------------------------------------------------------
+// Element resolution tests
+// ---------------------------------------------------------------------------
+
+test('resolve: simple-flow resolves email_input to correct selector', () => {
+  const result = resolve(SIMPLE_FLOW, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+
+  const fillStep = result.resolved.steps.find(s => s.id === 'fill-email');
+  assert.ok(fillStep, 'fill-email step should be in resolved output');
+  assert.equal(fillStep.operands.element, 'email_input');
+  assert.equal(fillStep.operands.selector, 'role=textbox[name="Email"]');
+});
+
+test('resolve: missing element returns descriptive error', () => {
+  const result = resolve(MISSING_ELEMENT_FLOW, SIMPLE_MAPPING);
+  const missingErr = result.errors.find(e =>
+    e.includes("'nonexistent_button' not found")
+  );
+  assert.ok(missingErr, "should report missing element. Errors: " + result.errors.join('; '));
+  assert.ok(missingErr.includes("click-nonexistent"), 'error should name the step ID');
+});
+
+test('resolve: accumulates ALL missing element errors across all steps', () => {
+  const flow = {
+    name: 'test-multi-missing',
+    steps: [
+      { id: 'step-1', type: 'click', action: 'Click ghost_button on login' },
+      { id: 'step-2', type: 'click', action: 'Click phantom_link' },
+    ],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.equal(result.errors.length, 2, 'should have 2 errors for 2 missing elements');
+  assert.ok(result.errors.some(e => e.includes('ghost_button')));
+  assert.ok(result.errors.some(e => e.includes('phantom_link')));
+});
+
+// ---------------------------------------------------------------------------
+// Navigate resolution tests
+// ---------------------------------------------------------------------------
+
+test('resolve: navigate with / prefix uses URL path directly', () => {
+  const flow = {
+    name: 'test',
+    steps: [{ id: 'nav', type: 'navigate', action: 'Navigate to /login' }],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected');
+
+  const navStep = result.resolved.steps.find(s => s.id === 'nav');
+  assert.equal(navStep.operands.target, '/login', 'target should be the URL path');
+});
+
+test('resolve: navigate without / prefix looks up page url_pattern', () => {
+  const flow = {
+    name: 'test',
+    steps: [{ id: 'nav', type: 'navigate', action: 'Navigate to dashboard' }],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected');
+
+  const navStep = result.resolved.steps.find(s => s.id === 'nav');
+  assert.equal(navStep.operands.urlPath, '/dashboard', 'urlPath should be the page url_pattern');
+});
+
+test('resolve: navigate to _global (no url_pattern) returns error', () => {
+  const flow = {
+    name: 'test',
+    steps: [{ id: 'nav-global', type: 'navigate', action: 'Navigate to _global' }],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  const err = result.errors.find(e => e.includes("cannot navigate to '_global'"));
+  assert.ok(err, "should error on navigate to _global. Errors: " + result.errors.join('; '));
+  assert.ok(err.includes('nav-global'), 'error should name the step ID');
+});
+
+test('resolve: navigate to nonexistent page returns error', () => {
+  const flow = {
+    name: 'test',
+    steps: [{ id: 'nav-404', type: 'navigate', action: 'Navigate to nonexistent' }],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  const err = result.errors.find(e =>
+    e.includes("page 'nonexistent' not found") || e.includes('nonexistent')
+  );
+  assert.ok(err, "should error on nonexistent page. Errors: " + result.errors.join('; '));
+  assert.ok(err.includes('nav-404'), 'error should name the step ID');
+});
+
+// ---------------------------------------------------------------------------
+// Stats counting tests
+// ---------------------------------------------------------------------------
+
+test('resolve: stats counts total, activeExpects, deferredExpects, skipped', () => {
+  const result = resolve(SIMPLE_FLOW, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected');
+
+  // 6 total steps
+  assert.equal(result.stats.total, 6);
+  // 1 expect: "email_input is visible" → active
+  assert.equal(result.stats.activeExpects, 1);
+  // 0 deferred expects
+  assert.equal(result.stats.deferredExpects, 0);
+  // 1 verify-external → skipped
+  assert.equal(result.stats.skipped, 1);
+});
+
+test('resolve: activeExpects counted for "element is visible" format', () => {
+  const flow = {
+    name: 'test',
+    steps: [
+      {
+        id: 'fill-email',
+        type: 'fill',
+        action: "Fill email_input with 'test@example.com' on login",
+        expect: ['email_input is visible', 'url contains /login'],
+      },
+    ],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  // "email_input is visible" → active; "url contains /login" → deferred
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 1);
+});
+
+test('resolve: expect "element is visible" resolves element name to selector', () => {
+  const flow = {
+    name: 'test',
+    steps: [
+      {
+        id: 'fill-email',
+        type: 'fill',
+        action: "Fill email_input with 'test@example.com' on login",
+        expect: ['email_input is visible'],
+      },
+    ],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected');
+
+  const step = result.resolved.steps[0];
+  assert.ok(step.expects, 'step should have expects array');
+  const activeExpect = step.expects.find(e => e.type === 'active');
+  assert.ok(activeExpect, 'should have one active expect');
+  assert.equal(activeExpect.selector, 'role=textbox[name="Email"]');
+  assert.equal(activeExpect.elementName, 'email_input');
+});
+
+// ---------------------------------------------------------------------------
+// Action parser regex tests
+// ---------------------------------------------------------------------------
+
+test('resolve: step with no type field returns error', () => {
+  const flow = {
+    name: 'test',
+    steps: [{ id: 'no-type', action: 'Click something' }],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  const err = result.errors.find(e => e.includes('no-type') && e.includes('no type'));
+  assert.ok(err, "should error on missing type. Errors: " + result.errors.join('; '));
+});
+
+test('resolve: action string not matching regex returns descriptive error', () => {
+  const flow = {
+    name: 'test',
+    steps: [
+      {
+        id: 'bad-fill',
+        type: 'fill',
+        action: 'This does not match the fill pattern',
+      },
+    ],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  const err = result.errors.find(e =>
+    e.includes('bad-fill') &&
+    (e.includes('does not match') || e.includes('format'))
+  );
+  assert.ok(err, "should error on unmatched action string. Errors: " + result.errors.join('; '));
+  assert.ok(err.includes('fill'), "error should mention the type 'fill'");
+});
+
+// ---------------------------------------------------------------------------
+// Integration test: use parser + resolver together on fixture files
+// ---------------------------------------------------------------------------
+
+test('integration: parse + resolve simple-flow.yaml produces no errors', () => {
+  const flowPath = path.join(FIXTURES, 'simple-flow.yaml');
+  const parseResult = parse(flowPath, FIXTURES);
+  assert.deepEqual(parseResult.errors, [], 'parse should succeed');
+
+  const resolveResult = resolve(parseResult.flow, parseResult.mapping);
+  assert.deepEqual(resolveResult.errors, [], 'resolve should succeed');
+  assert.equal(resolveResult.stats.total, 6);
+});
+
+test('integration: parse + resolve missing-element-flow.yaml surfaces element error', () => {
+  const flowPath = path.join(FIXTURES, 'missing-element-flow.yaml');
+  const parseResult = parse(flowPath, FIXTURES);
+  assert.deepEqual(parseResult.errors, [], 'parse should succeed');
+
+  const resolveResult = resolve(parseResult.flow, parseResult.mapping);
+  assert.ok(resolveResult.errors.length > 0, 'resolve should surface missing element error');
+  assert.ok(resolveResult.errors.some(e => e.includes('nonexistent_button')));
+});
