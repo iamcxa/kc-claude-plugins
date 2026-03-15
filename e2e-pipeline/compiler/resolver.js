@@ -331,6 +331,10 @@ function resolve(flow, mapping) {
     if (stepExpects.length > 0) {
       resolvedStep.expects = stepExpects;
     }
+    // Thread wait: field as per-step timeout for poll-until (CODEGEN-02)
+    if (step.wait != null) {
+      resolvedStep.timeout = Number(step.wait);
+    }
     resolvedSteps.push(resolvedStep);
   }
 
@@ -469,6 +473,10 @@ function resolveMultiSite(flow, siteMappings) {
     };
     if (stepExpects.length > 0) {
       resolvedStep.expects = stepExpects;
+    }
+    // Thread wait: field as per-step timeout for poll-until (CODEGEN-02)
+    if (step.wait != null) {
+      resolvedStep.timeout = Number(step.wait);
     }
     resolvedSteps.push(resolvedStep);
   }

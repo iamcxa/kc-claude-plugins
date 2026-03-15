@@ -241,28 +241,34 @@ describe('generate() — verify-external action', function() {
 // ---------------------------------------------------------------------------
 
 describe('generate() — expect: visible', function() {
-  test("visible expect uses stdout capture pattern (|| true, not exit code)", function() {
+  test("visible expect uses poll-until pattern (v2.0: _poll_visible call)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("result=$(agent-browser is visible 'role=button[name=\"Sign In\"]') || true"),
-      'Expected stdout capture with || true. Got: ' + script
+      script.includes("_poll_visible 'role=button[name=\"Sign In\"]'"),
+      'Expected _poll_visible call for active expect. Got: ' + script
     );
   });
 
-  test("visible expect check uses string comparison not exit code", function() {
+  test("visible expect uses || _handle_failure pattern (no inline exit 1)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('if [ "$result" != "true" ]; then'));
+    assert.ok(
+      script.includes('|| _handle_failure "click-btn"'),
+      'Expected || _handle_failure for poll failure. Got: ' + script
+    );
   });
 
-  test("visible expect FAIL message names the element", function() {
+  test("visible expect FAIL message names the element (via _handle_failure)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('FAIL: click-btn -- login_button is not visible'));
+    assert.ok(
+      script.includes('login_button not visible'),
+      'Expected failure message naming element login_button. Got: ' + script
+    );
   });
 });
 
@@ -588,110 +594,119 @@ describe('generate() — variables block placement', function() {
 // ---------------------------------------------------------------------------
 
 describe('generateExpects() — element-visible (no is keyword)', function() {
-  test("element-visible generates stdout capture same as active type", function() {
+  test("element-visible uses _poll_visible call (same as active type)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("result=$(agent-browser is visible 'role=button[name=\"Sign In\"]') || true"),
-      'element-visible should use same stdout capture pattern as active. Got: ' + script
+      script.includes("_poll_visible 'role=button[name=\"Sign In\"]'"),
+      'element-visible should use _poll_visible call. Got: ' + script
     );
   });
 
-  test("element-visible check uses string comparison != true", function() {
+  test("element-visible uses || _handle_failure pattern (no inline exit 1)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('if [ "$result" != "true" ]; then'));
+    assert.ok(
+      script.includes('|| _handle_failure "click-btn"'),
+      'element-visible must use || _handle_failure. Got: ' + script
+    );
   });
 
   test("element-visible FAIL message names element and step id", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('FAIL: click-btn -- login_button is not visible'));
+    assert.ok(
+      script.includes('login_button not visible'),
+      'element-visible FAIL must name the element. Got: ' + script
+    );
   });
 });
 
 describe('generateExpects() — element-not-visible', function() {
-  test("element-not-visible generates stdout capture with role=dialog selector", function() {
+  test("element-not-visible uses _poll_not_visible call (inverted logic)", function() {
     const step = makeSnapshot('check-dialog', 'Take snapshot');
     step.expects = [{ type: 'element-not-visible', raw: 'dialog not visible', elementName: 'dialog', selector: 'role=dialog' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("result=$(agent-browser is visible 'role=dialog') || true"),
-      'element-not-visible should capture stdout via is visible. Got: ' + script
+      script.includes("_poll_not_visible 'role=dialog'"),
+      'element-not-visible should use _poll_not_visible call. Got: ' + script
     );
   });
 
-  test("element-not-visible check uses != false (inverted comparison)", function() {
+  test("element-not-visible uses || _handle_failure pattern", function() {
     const step = makeSnapshot('check-dialog', 'Take snapshot');
     step.expects = [{ type: 'element-not-visible', raw: 'dialog not visible', elementName: 'dialog', selector: 'role=dialog' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('if [ "$result" != "false" ]; then'),
-      'element-not-visible must check != "false", not != "true". Got: ' + script
+      script.includes('|| _handle_failure "check-dialog"'),
+      'element-not-visible must use || _handle_failure. Got: ' + script
     );
   });
 
-  test("element-not-visible FAIL message says 'is still visible (expected not visible)'", function() {
+  test("element-not-visible FAIL message says 'still visible (expected not visible)'", function() {
     const step = makeSnapshot('check-dialog', 'Take snapshot');
     step.expects = [{ type: 'element-not-visible', raw: 'dialog not visible', elementName: 'dialog', selector: 'role=dialog' }];
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('FAIL: check-dialog -- dialog is still visible (expected not visible)'));
+    assert.ok(
+      script.includes('still visible') && script.includes('expected not visible'),
+      'element-not-visible FAIL must mention still visible. Got: ' + script
+    );
   });
 
-  test("element-not-visible selector is single-quoted", function() {
+  test("element-not-visible selector is single-quoted in poll call", function() {
     const step = makeSnapshot('check-modal', 'Take snapshot');
     step.expects = [{ type: 'element-not-visible', raw: 'modal not visible', elementName: 'modal', selector: "role=dialog[name='Confirm']" }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("result=$(agent-browser is visible 'role=dialog[name='\\''Confirm'\\'']') || true"),
-      'selector with single quotes must be escaped. Got: ' + script
+      script.includes("_poll_not_visible 'role=dialog[name='\\''Confirm'\\'']'"),
+      'selector with single quotes must be escaped in _poll_not_visible call. Got: ' + script
     );
   });
 });
 
 describe('generateExpects() — url-contains', function() {
-  test("url-contains generates agent-browser get url capture", function() {
+  test("url-contains uses _poll_url_contains call (poll-until, CODEGEN-01)", function() {
     const step = makeNavigate('nav-dashboard', '/dashboard');
     step.expects = [{ type: 'url-contains', raw: 'url contains /dashboard', value: '/dashboard' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('current_url=$(agent-browser get url) || true'),
-      'url-contains must capture current URL. Got: ' + script
+      script.includes("_poll_url_contains '/dashboard'"),
+      'url-contains must use _poll_url_contains call. Got: ' + script
     );
   });
 
-  test("url-contains bash glob checks url != *value*", function() {
+  test("url-contains uses || _handle_failure pattern with step id", function() {
     const step = makeNavigate('nav-dashboard', '/dashboard');
     step.expects = [{ type: 'url-contains', raw: 'url contains /dashboard', value: '/dashboard' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('[[ "$current_url" != *"/dashboard"* ]]'),
-      'url-contains should use bash glob != pattern. Got: ' + script
+      script.includes('|| _handle_failure "nav-dashboard"'),
+      'url-contains must use || _handle_failure. Got: ' + script
     );
   });
 
-  test("url-contains FAIL message includes value and current_url reference", function() {
+  test("url-contains FAIL message includes value (via _handle_failure)", function() {
     const step = makeNavigate('nav-dashboard', '/dashboard');
     step.expects = [{ type: 'url-contains', raw: 'url contains /dashboard', value: '/dashboard' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('FAIL: nav-dashboard -- url does not contain /dashboard (got: $current_url)'),
-      'url-contains FAIL must include path and $current_url. Got: ' + script
+      script.includes('url does not contain /dashboard'),
+      'url-contains FAIL must mention the expected value. Got: ' + script
     );
   });
 });
 
 describe('generateExpects() — url-not-contains', function() {
-  test("url-not-contains generates agent-browser get url capture", function() {
+  test("url-not-contains generates instant agent-browser get url capture (no poll)", function() {
     const step = makeNavigate('submit-login', '/login');
     step.expects = [{ type: 'url-not-contains', raw: 'url does not contain /login', value: '/login' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
       script.includes('current_url=$(agent-browser get url) || true'),
-      'url-not-contains must capture current URL. Got: ' + script
+      'url-not-contains must capture current URL instantly. Got: ' + script
     );
   });
 
@@ -705,13 +720,13 @@ describe('generateExpects() — url-not-contains', function() {
     );
   });
 
-  test("url-not-contains FAIL message says 'url contains X but should not'", function() {
+  test("url-not-contains FAIL message says 'url contains X but should not' (via _handle_failure)", function() {
     const step = makeNavigate('submit-login', '/login');
     step.expects = [{ type: 'url-not-contains', raw: 'url does not contain /login', value: '/login' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('FAIL: submit-login -- url contains /login but should not (got: $current_url)'),
-      'url-not-contains FAIL message must match expected format. Got: ' + script
+      script.includes('url contains /login but should not (got: $current_url)'),
+      'url-not-contains FAIL message must mention the value. Got: ' + script
     );
   });
 });
@@ -747,13 +762,13 @@ describe('generateExpects() — text-visible', function() {
     );
   });
 
-  test("text-visible FAIL message names the text and step id", function() {
+  test("text-visible FAIL message names the text and step id (via _handle_failure)", function() {
     const step = makeSnapshot('verify-text', 'Take snapshot');
     step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("FAIL: verify-text -- text '每日看板' not found on page"),
-      'text-visible FAIL must name the text. Got: ' + script
+      script.includes("_handle_failure \"verify-text\"") && script.includes("每日看板' not found on page"),
+      'text-visible FAIL must name the text via _handle_failure. Got: ' + script
     );
   });
 
@@ -769,7 +784,7 @@ describe('generateExpects() — text-visible', function() {
 });
 
 describe('generateExpects() — or-visible', function() {
-  test("or-visible generates accumulator _or_pass variable initialized to false", function() {
+  test("or-visible uses _poll_or_visible call (v2.0 poll-until)", function() {
     const step = makeSnapshot('check-or', 'Take snapshot');
     step.expects = [{
       type: 'or-visible',
@@ -781,12 +796,12 @@ describe('generateExpects() — or-visible', function() {
     }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_or_pass="false"'),
-      'or-visible must initialize _or_pass to "false". Got: ' + script
+      script.includes('_poll_or_visible '),
+      'or-visible must use _poll_or_visible call. Got: ' + script
     );
   });
 
-  test("or-visible generates is-visible check for first element", function() {
+  test("or-visible includes first element selector in poll call", function() {
     const step = makeSnapshot('check-or', 'Take snapshot');
     step.expects = [{
       type: 'or-visible',
@@ -798,12 +813,12 @@ describe('generateExpects() — or-visible', function() {
     }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("_r=$(agent-browser is visible 'role=textbox[name=\"Email\"]') || true"),
-      'or-visible must check first element. Got: ' + script
+      script.includes("'role=textbox[name=\"Email\"]'"),
+      'or-visible must include first element selector. Got: ' + script
     );
   });
 
-  test("or-visible generates is-visible check for second element", function() {
+  test("or-visible includes second element selector in poll call", function() {
     const step = makeSnapshot('check-or', 'Take snapshot');
     step.expects = [{
       type: 'or-visible',
@@ -815,12 +830,12 @@ describe('generateExpects() — or-visible', function() {
     }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("_r=$(agent-browser is visible 'role=button[name=\"Sign In\"]') || true"),
-      'or-visible must check second element. Got: ' + script
+      script.includes("'role=button[name=\"Sign In\"]'"),
+      'or-visible must include second element selector. Got: ' + script
     );
   });
 
-  test("or-visible uses accumulator pattern to set _or_pass=true on match", function() {
+  test("or-visible uses || _handle_failure pattern with step id", function() {
     const step = makeSnapshot('check-or', 'Take snapshot');
     step.expects = [{
       type: 'or-visible',
@@ -832,12 +847,12 @@ describe('generateExpects() — or-visible', function() {
     }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('[ "$_r" = "true" ] && _or_pass="true"'),
-      'or-visible must accumulate true via && pattern. Got: ' + script
+      script.includes('|| _handle_failure "check-or"'),
+      'or-visible must use || _handle_failure. Got: ' + script
     );
   });
 
-  test("or-visible final check tests _or_pass != true", function() {
+  test("or-visible poll call includes step id as first argument", function() {
     const step = makeSnapshot('check-or', 'Take snapshot');
     step.expects = [{
       type: 'or-visible',
@@ -849,12 +864,12 @@ describe('generateExpects() — or-visible', function() {
     }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('if [ "$_or_pass" != "true" ]; then'),
-      'or-visible final check must test _or_pass. Got: ' + script
+      script.includes('_poll_or_visible "check-or"'),
+      'or-visible poll call must include step id. Got: ' + script
     );
   });
 
-  test("or-visible FAIL message names both elements", function() {
+  test("or-visible FAIL message names both elements (via _handle_failure)", function() {
     const step = makeSnapshot('check-or', 'Take snapshot');
     step.expects = [{
       type: 'or-visible',
@@ -866,7 +881,7 @@ describe('generateExpects() — or-visible', function() {
     }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('FAIL: check-or -- neither email_input nor login_button is visible'),
+      script.includes('neither email_input nor login_button'),
       'or-visible FAIL must name both elements. Got: ' + script
     );
   });
@@ -988,7 +1003,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     );
   });
 
-  test("expect with session field on step uses --session prefix in is visible call", function() {
+  test("expect with session field on step passes session to _poll_visible (v2.0 poll-until)", function() {
     const step = makeCrossSiteSnapshot('office-check', 'office');
     step.expects = [{
       type: 'active',
@@ -997,18 +1012,26 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
       selector: 'role=heading[name="Office Dashboard"]',
     }];
     const script = generate(makeResolved([step]), 'cross-site-test');
+    // v2.0: session is passed as 4th arg to _poll_visible, not as inline prefix
     assert.ok(
-      script.includes('agent-browser --session office is visible'),
-      'cross-site expect must use --session prefix. Got: ' + script
+      script.includes('_poll_visible') && script.includes('"office"'),
+      'cross-site expect must pass session to _poll_visible. Got: ' + script
     );
   });
 
-  test("step without session field uses regular agent-browser (no --session)", function() {
-    const step = makeNavigate('nav-login', '/login');
+  test("step without session field uses empty session string in poll call", function() {
+    const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
+    step.expects = [{
+      type: 'active',
+      raw: 'login_button is visible',
+      elementName: 'login_button',
+      selector: 'role=button[name="Sign In"]',
+    }];
     const script = generate(makeResolved([step]), 'test-flow');
+    // Single-site step: empty session arg "" passed to poll helper
     assert.ok(
-      !script.includes('agent-browser --session'),
-      'single-site step must not have --session prefix. Got: ' + script
+      script.includes('_poll_visible') && script.includes('""'),
+      'single-site expect must use empty session arg in _poll_visible. Got: ' + script
     );
   });
 });
@@ -1737,10 +1760,18 @@ describe('v2.0 poll-until — generateExpects uses poll helpers (CODEGEN-01)', f
     const step = makeNavigate('submit-login', '/login');
     step.expects = [{ type: 'url-not-contains', raw: 'url does not contain /login', value: '/login' }];
     const script = generate(makeResolved([step]), 'test-flow');
-    // url-not-contains remains an instant check — should NOT call _poll_url_contains
+    // url-not-contains remains an instant check — the expect section must not CALL _poll_url_contains
+    // (the helper function definition is still emitted, but it must not be called for this expect type)
+    // Check: step section should have 'current_url=' for instant capture, not a poll call
+    const stepSection = script.slice(script.indexOf('[1/1]'), script.indexOf('# Exit summary'));
     assert.ok(
-      !script.includes('_poll_url_contains'),
-      'url-not-contains must NOT use _poll_url_contains (instant check only). Got: ' + script
+      stepSection.includes('current_url='),
+      'url-not-contains must use instant current_url= capture, not poll. Got section: ' + stepSection
+    );
+    // The step section must NOT call _poll_url_contains (the helper exists but must not be invoked)
+    assert.ok(
+      !stepSection.includes('_poll_url_contains '),
+      'url-not-contains must NOT call _poll_url_contains in expect section. Got section: ' + stepSection
     );
   });
 
@@ -1753,10 +1784,11 @@ describe('v2.0 poll-until — generateExpects uses poll helpers (CODEGEN-01)', f
       script.includes('_snapshot=$(agent-browser snapshot) || true'),
       'text-visible must still use snapshot capture. Got: ' + script
     );
-    // Should not poll
+    // The step section must NOT call _poll_visible for text checks
+    const stepSection = script.slice(script.indexOf('[1/1]'), script.indexOf('# Exit summary'));
     assert.ok(
-      !script.includes('_poll_visible') || !script.includes("'每日看板'"),
-      'text-visible must NOT use _poll_visible for text search. Got: ' + script
+      !stepSection.includes('_poll_visible '),
+      'text-visible must NOT call _poll_visible in expect section. Got section: ' + stepSection
     );
   });
 
