@@ -186,13 +186,22 @@ function generateRuntimeFlagBlock() {
 // ---------------------------------------------------------------------------
 
 /**
- * generateRuntimeSupport() — produce _FAILED_STEPS array and _handle_failure() function.
+ * generateRuntimeSupport() — produce _FAILED_STEPS array, _handle_failure() function,
+ * and poll-until helper functions.
  *
  * _handle_failure "step_id" "msg":
  *   - Echoes FAIL line
  *   - If CONTINUE_ON_ERROR=true: accumulates step_id into _FAILED_STEPS
  *   - If CONTINUE_ON_ERROR=false: calls exit 1 (v1.0 backward compat)
  *   - Always returns 0 so the || operator satisfies set -e
+ *
+ * Poll helpers (_poll_visible, _poll_not_visible, _poll_url_contains, _poll_or_visible):
+ *   - Use local variables (bash 3.2 safe)
+ *   - Use $((_count + 1)) arithmetic (no let, no (( )))
+ *   - Use sleep 1 between iterations
+ *   - Use 2>/dev/null on agent-browser calls
+ *   - Use || true after $() capture to prevent set -e abort
+ *   - Return 1 on deadline (callers use || _handle_failure)
  *
  * Returns: string (multi-line bash block)
  */
@@ -210,6 +219,87 @@ function generateRuntimeSupport() {
     '    exit 1',
     '  fi',
     '  return 0',
+    '}',
+    '',
+    '# Poll-until helpers (CODEGEN-01)',
+    '_poll_visible() {',
+    '  local _sel="$1"',
+    '  local _step_id="$2"',
+    '  local _timeout="${3:-10}"',
+    '  local _session="${4:-}"',
+    '  local _count=0',
+    '  local _result',
+    '  while [ "$_count" -lt "$_timeout" ]; do',
+    '    if [ -n "$_session" ]; then',
+    '      _result=$(agent-browser --session "$_session" is visible "$_sel" 2>/dev/null) || true',
+    '    else',
+    '      _result=$(agent-browser is visible "$_sel" 2>/dev/null) || true',
+    '    fi',
+    '    [ "$_result" = "true" ] && return 0',
+    '    sleep 1',
+    '    _count=$((_count + 1))',
+    '  done',
+    '  return 1',
+    '}',
+    '',
+    '_poll_not_visible() {',
+    '  local _sel="$1"',
+    '  local _step_id="$2"',
+    '  local _timeout="${3:-10}"',
+    '  local _session="${4:-}"',
+    '  local _count=0',
+    '  local _result',
+    '  while [ "$_count" -lt "$_timeout" ]; do',
+    '    if [ -n "$_session" ]; then',
+    '      _result=$(agent-browser --session "$_session" is visible "$_sel" 2>/dev/null) || true',
+    '    else',
+    '      _result=$(agent-browser is visible "$_sel" 2>/dev/null) || true',
+    '    fi',
+    '    [ "$_result" = "false" ] && return 0',
+    '    sleep 1',
+    '    _count=$((_count + 1))',
+    '  done',
+    '  return 1',
+    '}',
+    '',
+    '_poll_url_contains() {',
+    '  local _value="$1"',
+    '  local _step_id="$2"',
+    '  local _timeout="${3:-10}"',
+    '  local _count=0',
+    '  local _url',
+    '  while [ "$_count" -lt "$_timeout" ]; do',
+    '    _url=$(agent-browser get url 2>/dev/null) || true',
+    '    [[ "$_url" == *"$_value"* ]] && return 0',
+    '    sleep 1',
+    '    _count=$((_count + 1))',
+    '  done',
+    '  return 1',
+    '}',
+    '',
+    '_poll_or_visible() {',
+    '  local _step_id="$1"',
+    '  local _timeout="$2"',
+    '  local _session="$3"',
+    '  shift 3',
+    '  local _count=0',
+    '  local _result',
+    '  local _found',
+    '  while [ "$_count" -lt "$_timeout" ]; do',
+    '    _found=false',
+    '    for _sel in "$@"; do',
+    '      if [ -n "$_session" ]; then',
+    '        _result=$(agent-browser --session "$_session" is visible "$_sel" 2>/dev/null) || true',
+    '      else',
+    '        _result=$(agent-browser is visible "$_sel" 2>/dev/null) || true',
+    '      fi',
+    '      if [ "$_result" = "true" ]; then _found=true; break; fi',
+    '    done',
+    '    [ "$_found" = "true" ] && return 0',
+    '    sleep 1',
+    '    _count=$((_count + 1))',
+    '  done',
+    '  return 1',
     '}',
     '',
   ];
@@ -353,7 +443,12 @@ function generateAction(step, stepIndex, totalSteps) {
  * Generate bash assertions for a step's expects array.
  * Handles all Phase 1 and Phase 2 expect types.
  *
- * Cross-site: when step.session is set, agent-browser commands use --session prefix.
+ * Visibility assertions use poll-until loops (_poll_visible, _poll_not_visible, etc.)
+ * with a deadline counter (CODEGEN-01). Per-step timeout comes from step.timeout
+ * (threaded from YAML wait: field via resolver), defaulting to ${WAIT_TIMEOUT:-10}.
+ *
+ * Cross-site: when step.session is set, poll helpers receive session as argument.
+ * url-not-contains and text-visible remain instant checks (no poll).
  */
 function generateExpects(step) {
   if (!step.expects || step.expects.length === 0) {
@@ -361,73 +456,54 @@ function generateExpects(step) {
   }
 
   var lines = [];
-  var session = step.session;
-  var sessionPrefix = session ? '--session ' + session + ' ' : '';
+  var session = step.session || '';
+  var sessionArg = session ? ' "' + session + '"' : ' ""';
+
+  // Timeout argument: literal number if step.timeout set, else env var default
+  var timeoutArg = (step.timeout != null) ? String(step.timeout) : '"${WAIT_TIMEOUT:-10}"';
 
   for (var i = 0; i < step.expects.length; i++) {
     var expect = step.expects[i];
 
     if (expect.type === 'active' || expect.type === 'element-visible') {
-      // SHEL-09: stdout capture pattern — never rely on exit code
-      // 'active' = Phase 1 "element is visible"; 'element-visible' = Phase 2 "element visible"
+      // Poll until element is visible (CODEGEN-01)
       var sel = singleQuote(expect.selector);
-      lines.push('result=$(agent-browser ' + sessionPrefix + 'is visible ' + sel + ') || true');
-      lines.push('if [ "$result" != "true" ]; then');
-      lines.push('  echo "FAIL: ' + step.id + ' -- ' + expect.elementName + ' is not visible"');
-      lines.push('  exit 1');
-      lines.push('fi');
+      var failMsg = expect.elementName + ' not visible after ' + timeoutArg + 's';
+      lines.push('_poll_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
 
     } else if (expect.type === 'element-not-visible') {
-      // Check result != "false" — if result is anything other than "false", element is still visible
+      // Poll until element is not visible (inverted logic — CODEGEN-01 Pitfall 4)
       var sel = singleQuote(expect.selector);
-      lines.push('result=$(agent-browser ' + sessionPrefix + 'is visible ' + sel + ') || true');
-      lines.push('if [ "$result" != "false" ]; then');
-      lines.push('  echo "FAIL: ' + step.id + ' -- ' + expect.elementName + ' is still visible (expected not visible)"');
-      lines.push('  exit 1');
-      lines.push('fi');
+      var failMsg = expect.elementName + ' still visible after ' + timeoutArg + 's (expected not visible)';
+      lines.push('_poll_not_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
 
     } else if (expect.type === 'url-contains') {
-      // agent-browser get url returns current URL as stdout
-      lines.push('current_url=$(agent-browser get url) || true');
-      lines.push('if [[ "$current_url" != *"' + expect.value + '"* ]]; then');
-      lines.push('  echo "FAIL: ' + step.id + ' -- url does not contain ' + expect.value + ' (got: $current_url)"');
-      lines.push('  exit 1');
-      lines.push('fi');
+      // Poll until URL contains value (CODEGEN-01)
+      var failMsg = 'url does not contain ' + expect.value + ' after ' + timeoutArg + 's';
+      lines.push('_poll_url_contains ' + singleQuote(expect.value) + ' "' + step.id + '" ' + timeoutArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
 
     } else if (expect.type === 'url-not-contains') {
-      // Fail if the URL DOES contain the value
+      // Instant check — no poll. There is no reason to wait for a forbidden URL substring to appear.
       lines.push('current_url=$(agent-browser get url) || true');
       lines.push('if [[ "$current_url" == *"' + expect.value + '"* ]]; then');
-      lines.push('  echo "FAIL: ' + step.id + ' -- url contains ' + expect.value + ' but should not (got: $current_url)"');
-      lines.push('  exit 1');
+      lines.push('  _handle_failure "' + step.id + '" "url contains ' + expect.value + ' but should not (got: $current_url)"');
       lines.push('fi');
 
     } else if (expect.type === 'text-visible') {
-      // snapshot outputs page accessibility tree; grep -qF for fixed-string (CJK-safe)
-      // Use single-quoted grep argument to handle special chars
+      // Instant check — snapshot + grep is too heavy for polling.
       var quotedText = singleQuote(expect.text);
       lines.push('_snapshot=$(agent-browser snapshot) || true');
       lines.push('if ! echo "$_snapshot" | grep -qF ' + quotedText + '; then');
-      lines.push('  echo "FAIL: ' + step.id + ' -- text \'' + expect.text + '\' not found on page"');
-      lines.push('  exit 1');
+      lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' not found on page"');
       lines.push('fi');
 
     } else if (expect.type === 'or-visible') {
-      // Accumulator pattern — check each element, pass if any is visible
+      // Poll until either element is visible (CODEGEN-01)
       var elements = expect.elements;
-      lines.push('_or_pass="false"');
-      for (var j = 0; j < elements.length; j++) {
-        var elemSel = singleQuote(elements[j].selector);
-        lines.push('_r=$(agent-browser ' + sessionPrefix + 'is visible ' + elemSel + ') || true');
-        lines.push('[ "$_r" = "true" ] && _or_pass="true"');
-      }
-      // Build the element names list for FAIL message
       var elemNames = elements.map(function(e) { return e.elementName; });
-      var neitherMsg = 'neither ' + elemNames.join(' nor ') + ' is visible';
-      lines.push('if [ "$_or_pass" != "true" ]; then');
-      lines.push('  echo "FAIL: ' + step.id + ' -- ' + neitherMsg + '"');
-      lines.push('  exit 1');
-      lines.push('fi');
+      var neitherMsg = 'neither ' + elemNames.join(' nor ') + ' visible after ' + timeoutArg + 's';
+      var selectorArgs = elements.map(function(e) { return singleQuote(e.selector); }).join(' ');
+      lines.push('_poll_or_visible "' + step.id + '" ' + timeoutArg + ' "' + session + '" ' + selectorArgs + ' || _handle_failure "' + step.id + '" "' + neitherMsg + '"');
 
     } else if (expect.type === 'deferred') {
       lines.push('echo "TODO: expect \'' + expect.raw + '\' not compiled (Phase 2)"');
