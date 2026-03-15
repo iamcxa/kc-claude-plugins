@@ -22,6 +22,7 @@
 | Skill | Video Default | Override |
 |-------|--------------|----------|
 | `/e2e-walkthrough` | ON | `--no-video` |
+| `/e2e-flow --verify-only` | ON | `--no-video` |
 | `/e2e-test` | OFF | `--video` or `--pr` |
 | `/e2e-map` | No recording | — |
 
