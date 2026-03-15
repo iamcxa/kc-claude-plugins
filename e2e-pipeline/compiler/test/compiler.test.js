@@ -385,3 +385,79 @@ describe('compile() — cross-site flow integration', function() {
     assert.equal(result.status, 0, 'bash -n failed. stderr: ' + result.stderr);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 2 Plan 02 Task 3: SHA-256 source hashing + header provenance
+// ---------------------------------------------------------------------------
+
+describe('SHA-256 source hashing', function() {
+  var tmpDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("compiled output from simple-flow.yaml contains '# SHA-256:' line", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    assert.ok(result.success, 'Compile must succeed. Errors: ' + JSON.stringify(result.errors));
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(
+      content.includes('# SHA-256:'),
+      'Expected SHA-256: line in output. Got header: ' + content.slice(0, 400)
+    );
+  });
+
+  test("hash is deterministic: compile same flow twice, hashes match", async function() {
+    const tmpDir2 = makeTmpDir();
+    try {
+      const result1 = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+      const result2 = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir2);
+      const content1 = fs.readFileSync(result1.outputPath, 'utf8');
+      const content2 = fs.readFileSync(result2.outputPath, 'utf8');
+
+      const hashLine1 = content1.split('\n').find(l => l.startsWith('# SHA-256:'));
+      const hashLine2 = content2.split('\n').find(l => l.startsWith('# SHA-256:'));
+
+      assert.ok(hashLine1, 'Expected SHA-256: line in first compile output');
+      assert.ok(hashLine2, 'Expected SHA-256: line in second compile output');
+      assert.equal(hashLine1, hashLine2, 'Hashes must be identical for same source files');
+    } finally {
+      fs.rmSync(tmpDir2, { recursive: true, force: true });
+    }
+  });
+
+  test("compiled output contains '# DO NOT EDIT' line", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(
+      content.includes('# DO NOT EDIT'),
+      'Expected DO NOT EDIT line in output. Got header: ' + content.slice(0, 400)
+    );
+  });
+
+  test("compiled output contains '# Source:' line with flow path", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(
+      content.includes('# Source: ' + SIMPLE_FLOW),
+      'Expected Source: line with flow path. Got header: ' + content.slice(0, 400)
+    );
+  });
+
+  test("cross-site compiled output also contains SHA-256 and DO NOT EDIT", async function() {
+    const tmpDir2 = makeTmpDir();
+    try {
+      const result = await compile(CROSS_SITE_FLOW_PATH, FIXTURES_DIR, tmpDir2);
+      assert.ok(result.success, 'Cross-site compile must succeed. Errors: ' + JSON.stringify(result.errors));
+      const content = fs.readFileSync(result.outputPath, 'utf8');
+      assert.ok(content.includes('# SHA-256:'), 'Cross-site output must have SHA-256:');
+      assert.ok(content.includes('# DO NOT EDIT'), 'Cross-site output must have DO NOT EDIT');
+    } finally {
+      fs.rmSync(tmpDir2, { recursive: true, force: true });
+    }
+  });
+});

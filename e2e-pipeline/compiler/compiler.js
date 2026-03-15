@@ -2,10 +2,29 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const crypto = require('node:crypto');
 
 const { parse } = require('./parser');
 const { resolve, resolveMultiSite } = require('./resolver');
 const { generate } = require('./codegen');
+
+/**
+ * hashSources(flowPath, mappingPaths) — compute SHA-256 of source files.
+ *
+ * Hash is computed from source file contents only (flow YAML + mapping YAMLs),
+ * NOT from generated output. This makes it deterministic for staleness detection.
+ *
+ * @param {string} flowPath - Path to the flow YAML file
+ * @param {string|string[]} mappingPaths - One or more mapping file paths
+ * @returns {string} SHA-256 hex digest
+ */
+function hashSources(flowPath, mappingPaths) {
+  var hash = crypto.createHash('sha256');
+  hash.update(fs.readFileSync(flowPath, 'utf8'));
+  var paths = Array.isArray(mappingPaths) ? mappingPaths : [mappingPaths];
+  paths.forEach(function(p) { hash.update(fs.readFileSync(p, 'utf8')); });
+  return hash.digest('hex');
+}
 
 /**
  * compile(flowPath, mappingDir, outputDir) — run the full compilation pipeline.
@@ -14,7 +33,7 @@ const { generate } = require('./codegen');
  *
  * Pass 1: parse(flowPath, mappingDir) — load and validate YAML
  * Pass 2: resolve(flow, mapping) or resolveMultiSite(flow, sites) — build symbol tables
- * Pass 3: generate(resolved, flowName) — emit bash script string
+ * Pass 3: generate(resolved, flowName, meta) — emit bash script string with provenance
  * Output: write <flowName>.sh to outputDir, chmod 755
  *
  * Returns: Promise<{ success: boolean, outputPath?: string, stats?, errors? }>
@@ -28,6 +47,7 @@ async function compile(flowPath, mappingDir, outputDir) {
   }
 
   var resolveResult;
+  var mappingPaths;
 
   if (parseResult.sites) {
     // --- Cross-site flow path ---
@@ -52,6 +72,11 @@ async function compile(flowPath, mappingDir, outputDir) {
       }
     }
 
+    // Build mapping paths for SHA-256 hashing (cross-site: all mapping files)
+    mappingPaths = siteNames.map(function(sn) {
+      return path.join(mappingDir, parseResult.sites[sn].mappingName + '.yaml');
+    });
+
   } else {
     // --- Single-site flow path ---
     resolveResult = resolve(parseResult.flow, parseResult.mapping);
@@ -71,11 +96,30 @@ async function compile(flowPath, mappingDir, outputDir) {
         resolveResult.resolved.variables
       );
     }
+
+    // Build mapping path for SHA-256 hashing (single-site: one mapping file)
+    mappingPaths = [path.join(mappingDir, parseResult.flow.mapping + '.yaml')];
   }
 
-  // Pass 3: Codegen
+  // Compute SHA-256 hash from source files (not generated output — deterministic)
+  var sourceHash = hashSources(flowPath, mappingPaths);
   var flowName = parseResult.flow.name;
-  var script = generate(resolveResult.resolved, flowName);
+
+  // Build meta object for header provenance
+  var meta = {
+    flowName: flowName,
+    flowPath: flowPath,
+    hash: sourceHash,
+    timestamp: new Date().toISOString(),
+  };
+  if (mappingPaths.length === 1) {
+    meta.mappingPath = mappingPaths[0];
+  } else {
+    meta.mappingPaths = mappingPaths;
+  }
+
+  // Pass 3: Codegen — pass meta for header provenance
+  var script = generate(resolveResult.resolved, flowName, meta);
 
   // Write output
   var outPath = path.join(outputDir, flowName + '.sh');

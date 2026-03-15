@@ -3,7 +3,7 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert/strict');
 
-const { generate, singleQuote } = require('../codegen.js');
+const { generate, generateHeader, singleQuote } = require('../codegen.js');
 
 // ---------------------------------------------------------------------------
 // Test helpers — build minimal resolved step objects matching resolver output
@@ -981,5 +981,131 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
       !script.includes('agent-browser --session'),
       'single-site step must not have --session prefix. Got: ' + script
     );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 2 Plan 02 Task 3: generateHeader(meta) — provenance metadata
+// ---------------------------------------------------------------------------
+
+describe('generateHeader() — provenance metadata', function() {
+  test("generateHeader() with no args returns minimal Phase 1 header (backwards compat)", function() {
+    const header = generateHeader();
+    assert.ok(header.startsWith('#!/usr/bin/env bash\nset -euo pipefail'), 'Expected shebang + set. Got: ' + header);
+    assert.ok(header.includes('export LANG=en_US.UTF-8'), 'Expected LANG export');
+    assert.ok(!header.includes('DO NOT EDIT'), 'No-args header must not have DO NOT EDIT');
+    assert.ok(!header.includes('SHA-256'), 'No-args header must not have SHA-256');
+  });
+
+  test("generateHeader(null) returns minimal header (backwards compat)", function() {
+    const header = generateHeader(null);
+    assert.ok(!header.includes('DO NOT EDIT'), 'null meta must not have DO NOT EDIT');
+  });
+
+  test("generateHeader(meta) includes DO NOT EDIT comment", function() {
+    const meta = {
+      flowName: 'my-flow',
+      flowPath: '/flows/my-flow.yaml',
+      mappingPath: '/mappings/my-app.yaml',
+      timestamp: '2026-03-15T10:00:00.000Z',
+      hash: 'abc123',
+    };
+    const header = generateHeader(meta);
+    assert.ok(
+      header.includes('# DO NOT EDIT -- regenerate with: e2e-compile my-flow'),
+      'Expected DO NOT EDIT comment. Got: ' + header
+    );
+  });
+
+  test("generateHeader(meta) includes Source: flow path", function() {
+    const meta = {
+      flowName: 'my-flow',
+      flowPath: '/flows/my-flow.yaml',
+      mappingPath: '/mappings/my-app.yaml',
+      timestamp: '2026-03-15T10:00:00.000Z',
+      hash: 'abc123',
+    };
+    const header = generateHeader(meta);
+    assert.ok(
+      header.includes('# Source: /flows/my-flow.yaml'),
+      'Expected Source: comment. Got: ' + header
+    );
+  });
+
+  test("generateHeader(meta) with single mappingPath includes Mapping: line", function() {
+    const meta = {
+      flowName: 'my-flow',
+      flowPath: '/flows/my-flow.yaml',
+      mappingPath: '/mappings/my-app.yaml',
+      timestamp: '2026-03-15T10:00:00.000Z',
+      hash: 'abc123',
+    };
+    const header = generateHeader(meta);
+    assert.ok(
+      header.includes('# Mapping: /mappings/my-app.yaml'),
+      'Expected Mapping: comment. Got: ' + header
+    );
+  });
+
+  test("generateHeader(meta) with mappingPaths array lists each on separate Mapping: line", function() {
+    const meta = {
+      flowName: 'cross-flow',
+      flowPath: '/flows/cross-flow.yaml',
+      mappingPaths: ['/mappings/site-a.yaml', '/mappings/site-b.yaml'],
+      timestamp: '2026-03-15T10:00:00.000Z',
+      hash: 'def456',
+    };
+    const header = generateHeader(meta);
+    assert.ok(
+      header.includes('# Mapping: /mappings/site-a.yaml'),
+      'Expected Mapping: for site-a. Got: ' + header
+    );
+    assert.ok(
+      header.includes('# Mapping: /mappings/site-b.yaml'),
+      'Expected Mapping: for site-b. Got: ' + header
+    );
+  });
+
+  test("generateHeader(meta) includes Generated: timestamp line", function() {
+    const meta = {
+      flowName: 'my-flow',
+      flowPath: '/flows/my-flow.yaml',
+      mappingPath: '/mappings/my-app.yaml',
+      timestamp: '2026-03-15T10:00:00.000Z',
+      hash: 'abc123',
+    };
+    const header = generateHeader(meta);
+    assert.ok(
+      header.includes('# Generated: 2026-03-15T10:00:00.000Z'),
+      'Expected Generated: comment. Got: ' + header
+    );
+  });
+
+  test("generateHeader(meta) includes SHA-256 hash line", function() {
+    const meta = {
+      flowName: 'my-flow',
+      flowPath: '/flows/my-flow.yaml',
+      mappingPath: '/mappings/my-app.yaml',
+      timestamp: '2026-03-15T10:00:00.000Z',
+      hash: 'abc123deadbeef',
+    };
+    const header = generateHeader(meta);
+    assert.ok(
+      header.includes('# SHA-256: abc123deadbeef'),
+      'Expected SHA-256: comment. Got: ' + header
+    );
+  });
+
+  test("generateHeader(meta) still includes LANG and LC_ALL exports after provenance block", function() {
+    const meta = {
+      flowName: 'my-flow',
+      flowPath: '/flows/my-flow.yaml',
+      mappingPath: '/mappings/my-app.yaml',
+      timestamp: '2026-03-15T10:00:00.000Z',
+      hash: 'abc123',
+    };
+    const header = generateHeader(meta);
+    assert.ok(header.includes('export LANG=en_US.UTF-8'), 'Must still have LANG export');
+    assert.ok(header.includes('export LC_ALL=en_US.UTF-8'), 'Must still have LC_ALL export');
   });
 });
