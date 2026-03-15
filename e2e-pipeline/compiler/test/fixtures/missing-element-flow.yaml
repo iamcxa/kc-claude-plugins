@@ -1,0 +1,8 @@
+name: test-missing
+description: "Flow with missing element ref"
+tags: [test]
+mapping: test-app
+steps:
+  - id: click-nonexistent
+    type: click
+    action: "Click nonexistent_button on login"

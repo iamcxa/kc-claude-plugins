@@ -2,6 +2,14 @@
 
 Patterns and gotchas for E2E testing agents. For project-specific patterns, check `<project>/.claude/skills/agent-browser/references/`.
 
+## Environment Setup
+
+- **PATH**: `agent-browser` is installed globally via npm at `~/.npm-global/bin/`. After context reset or in subagent contexts, this path may not be in `$PATH`. Always verify availability before first use:
+  ```bash
+  command -v agent-browser >/dev/null 2>&1 || export PATH="$HOME/.npm-global/bin:$PATH"
+  ```
+- Run this check at the start of any agent or skill that calls `agent-browser` CLI commands.
+
 ## SPA Navigation
 
 - After `open <url>`, always `wait --load networkidle` before snapshot

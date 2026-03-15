@@ -1,2 +1,5 @@
 # Internal audit logs — not for end users
 VERIFICATION-LOG.md
+
+# Node.js dependencies
+node_modules/

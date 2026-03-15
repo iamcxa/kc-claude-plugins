@@ -1,0 +1,26 @@
+name: cross-site-test
+description: "Cross-site authentication check"
+sites:
+  office:
+    mapping: site-a
+  app:
+    mapping: site-b
+steps:
+  - id: office-nav
+    site: office
+    type: navigate
+    action: "Navigate to /dashboard"
+  - id: office-check
+    site: office
+    type: snapshot
+    action: "Take snapshot"
+    expect:
+      - "heading_a is visible"
+  - id: app-nav
+    site: app
+    type: navigate
+    action: "Navigate to /home"
+  - id: app-check
+    site: app
+    type: click
+    action: "Click button_b on home"

@@ -1,0 +1,11 @@
+name: test-no-vars
+description: "Flow without variables block — navigate should still get BASE_URL from mapping"
+tags: [smoke]
+mapping: test-app
+steps:
+  - id: navigate-to-login
+    type: navigate
+    action: "Navigate to /login"
+  - id: click-submit
+    type: click
+    action: "Click login_button on login"

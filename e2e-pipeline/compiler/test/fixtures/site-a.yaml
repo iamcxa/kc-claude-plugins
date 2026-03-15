@@ -1,0 +1,10 @@
+version: 2
+app: site-a
+base_url: "http://localhost:5173"
+pages:
+  dashboard:
+    url_pattern: "/dashboard"
+    elements:
+      heading_a:
+        selector: 'role=heading[name="Office Dashboard"]'
+        description: "Office dashboard heading"

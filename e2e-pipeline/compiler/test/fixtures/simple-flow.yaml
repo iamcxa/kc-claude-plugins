@@ -1,0 +1,27 @@
+name: test-login
+description: "Test login flow"
+tags: [smoke]
+mapping: test-app
+variables:
+  base_url: "http://localhost:3000"
+steps:
+  - id: navigate-to-login
+    type: navigate
+    action: "Navigate to /login"
+  - id: fill-email
+    type: fill
+    action: "Fill email_input with 'test@example.com' on login"
+    expect:
+      - "email_input is visible"
+  - id: click-submit
+    type: click
+    action: "Click login_button on login"
+  - id: take-snapshot
+    type: snapshot
+    action: "Take snapshot"
+  - id: wait-for-load
+    type: wait
+    action: "Wait 2"
+  - id: verify-external
+    type: verify-external
+    action: "Verify external"

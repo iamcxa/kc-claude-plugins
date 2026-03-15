@@ -1,0 +1,537 @@
+'use strict';
+
+const { test, describe, before, after } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
+
+const { compile } = require('../compiler.js');
+
+const FIXTURES_DIR = path.join(__dirname, 'fixtures');
+const SIMPLE_FLOW = path.join(FIXTURES_DIR, 'simple-flow.yaml');
+const NO_VARS_FLOW = path.join(FIXTURES_DIR, 'no-vars-flow.yaml');
+const MISSING_ELEM_FLOW = path.join(FIXTURES_DIR, 'missing-element-flow.yaml');
+
+// ---------------------------------------------------------------------------
+// Helper: create a temp output directory for each test group
+// ---------------------------------------------------------------------------
+
+function makeTmpDir() {
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-compiler-test-'));
+}
+
+// ---------------------------------------------------------------------------
+// compile() basic output
+// ---------------------------------------------------------------------------
+
+describe('compile() — basic output', function() {
+  var tmpDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("compile(simple-flow.yaml) returns success=true", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    assert.equal(result.success, true, 'Expected success=true. Result: ' + JSON.stringify(result));
+  });
+
+  test("compile() writes .sh file named after flow", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    assert.ok(result.outputPath, 'Expected outputPath in result');
+    assert.ok(
+      result.outputPath.endsWith('test-login.sh'),
+      'Expected output named test-login.sh. Got: ' + result.outputPath
+    );
+    assert.ok(fs.existsSync(result.outputPath), 'Output file must exist on disk');
+  });
+
+  test("written file starts with #!/usr/bin/env bash", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(content.startsWith('#!/usr/bin/env bash'), 'Expected shebang at start');
+  });
+
+  test("written file has chmod 755 (executable by owner)", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    const stat = fs.statSync(result.outputPath);
+    const mode = stat.mode & 0o777;
+    // 0o755 = owner rwx, group rx, others rx
+    assert.equal(mode, 0o755, 'Expected chmod 755. Got: ' + mode.toString(8));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// compile() summary stats
+// ---------------------------------------------------------------------------
+
+describe('compile() — summary stats', function() {
+  var tmpDir;
+  var capturedStdout;
+  var originalLog;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("compile() returns stats with total, activeExpects, deferredExpects", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    assert.ok(result.stats, 'Expected stats in result');
+    assert.ok(typeof result.stats.total === 'number', 'stats.total must be a number');
+    assert.ok(typeof result.stats.activeExpects === 'number', 'stats.activeExpects must be a number');
+    assert.ok(typeof result.stats.deferredExpects === 'number', 'stats.deferredExpects must be a number');
+  });
+
+  test("simple-flow.yaml has 6 total steps", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    assert.equal(result.stats.total, 6, 'Expected 6 steps for simple-flow.yaml');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// compile() error handling
+// ---------------------------------------------------------------------------
+
+describe('compile() — error handling', function() {
+  var tmpDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("compile() with missing-element-flow.yaml returns success=false", async function() {
+    const result = await compile(MISSING_ELEM_FLOW, FIXTURES_DIR, tmpDir);
+    assert.equal(result.success, false, 'Expected success=false for missing element');
+  });
+
+  test("compile() with missing-element-flow.yaml returns errors array with content", async function() {
+    const result = await compile(MISSING_ELEM_FLOW, FIXTURES_DIR, tmpDir);
+    assert.ok(Array.isArray(result.errors) && result.errors.length > 0, 'Expected non-empty errors array');
+  });
+
+  test("compile() with nonexistent file returns success=false", async function() {
+    const result = await compile('/nonexistent/flow.yaml', FIXTURES_DIR, tmpDir);
+    assert.equal(result.success, false, 'Expected success=false for nonexistent file');
+  });
+
+  test("compile() accumulates errors from parse phase", async function() {
+    const result = await compile('/nonexistent/flow.yaml', FIXTURES_DIR, tmpDir);
+    assert.ok(result.errors && result.errors.length > 0, 'Expected errors from parse phase');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// compile() module interface
+// ---------------------------------------------------------------------------
+
+describe('compile() — module interface', function() {
+  test("compile is a function (module export)", function() {
+    assert.equal(typeof compile, 'function', 'compile must be exported as a function');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Integration: BASE_URL variable ordering + bash -n syntax check
+// ---------------------------------------------------------------------------
+
+describe('Integration: complete pipeline produces valid bash script', function() {
+  var tmpDir;
+  var outputPath;
+
+  before(async function() {
+    tmpDir = makeTmpDir();
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    assert.ok(result.success, 'Integration setup: compile must succeed');
+    outputPath = result.outputPath;
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("BASE_URL= declaration appears before first ${BASE_URL} reference", function() {
+    const content = fs.readFileSync(outputPath, 'utf8');
+    const lines = content.split('\n');
+
+    var declLine = -1;
+    var firstRefLine = -1;
+
+    for (var i = 0; i < lines.length; i++) {
+      if (declLine === -1 && lines[i].includes('BASE_URL=')) {
+        declLine = i;
+      }
+      if (firstRefLine === -1 && lines[i].includes('${BASE_URL}')) {
+        firstRefLine = i;
+      }
+    }
+
+    assert.ok(declLine !== -1, 'BASE_URL= declaration must exist in output');
+    assert.ok(firstRefLine !== -1, '${BASE_URL} reference must exist in output');
+    assert.ok(
+      declLine < firstRefLine,
+      'BASE_URL= (line ' + (declLine + 1) + ') must come before ${BASE_URL} (line ' + (firstRefLine + 1) + ')'
+    );
+  });
+
+  test("bash -n syntax check passes on compiled output", function() {
+    const result = spawnSync('bash', ['-n', outputPath], { encoding: 'utf8' });
+    assert.equal(
+      result.status,
+      0,
+      'bash -n syntax check failed. stderr: ' + result.stderr
+    );
+  });
+
+  test("compiled script contains variable block before steps", function() {
+    const content = fs.readFileSync(outputPath, 'utf8');
+    assert.ok(content.includes('BASE_URL='), 'Expected BASE_URL= in output');
+    assert.ok(content.includes('#!/usr/bin/env bash'), 'Expected shebang');
+    assert.ok(content.includes('agent-browser open "${BASE_URL}'), 'Expected navigate action with BASE_URL');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// compile() — flow without variables block auto-injects BASE_URL from mapping
+// ---------------------------------------------------------------------------
+
+describe('compile() — flow without variables block', function() {
+  var tmpDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("flow without variables block still has BASE_URL declared in output", async function() {
+    const result = await compile(NO_VARS_FLOW, FIXTURES_DIR, tmpDir);
+    assert.ok(result.success, 'Compile should succeed. Errors: ' + JSON.stringify(result.errors));
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(content.includes('BASE_URL='), 'Expected BASE_URL= declaration even without variables block');
+  });
+
+  test("BASE_URL is declared before first ${BASE_URL} reference", async function() {
+    const result = await compile(NO_VARS_FLOW, FIXTURES_DIR, tmpDir);
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    const lines = content.split('\n');
+    var declLine = -1;
+    var firstRefLine = -1;
+    for (var i = 0; i < lines.length; i++) {
+      if (declLine === -1 && lines[i].includes('BASE_URL=')) declLine = i;
+      if (firstRefLine === -1 && lines[i].includes('${BASE_URL}')) firstRefLine = i;
+    }
+    assert.ok(declLine !== -1, 'BASE_URL= must exist');
+    assert.ok(firstRefLine !== -1, '${BASE_URL} reference must exist');
+    assert.ok(declLine < firstRefLine, 'Declaration must come before reference');
+  });
+
+  test("auto-injected BASE_URL uses mapping base_url as default value", async function() {
+    const result = await compile(NO_VARS_FLOW, FIXTURES_DIR, tmpDir);
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(
+      content.includes('http://localhost:3000'),
+      'Expected mapping base_url as default. Got: ' + content.slice(0, 500)
+    );
+  });
+
+  test("bash -n syntax check passes on flow without variables", async function() {
+    const result = await compile(NO_VARS_FLOW, FIXTURES_DIR, tmpDir);
+    const bashResult = spawnSync('bash', ['-n', result.outputPath], { encoding: 'utf8' });
+    assert.equal(bashResult.status, 0, 'bash -n failed. stderr: ' + bashResult.stderr);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// CLI: node compiler.js with no args exits 1 and prints usage
+// ---------------------------------------------------------------------------
+
+describe('CLI: node compiler.js', function() {
+  var compilerPath = path.join(__dirname, '..', 'compiler.js');
+
+  test("node compiler.js with no args exits with code 1", function() {
+    const result = spawnSync('node', [compilerPath], { encoding: 'utf8' });
+    assert.equal(result.status, 1, 'Expected exit code 1 with no args. Got: ' + result.status);
+  });
+
+  test("node compiler.js with no args prints usage to stderr", function() {
+    const result = spawnSync('node', [compilerPath], { encoding: 'utf8' });
+    assert.ok(
+      result.stderr.includes('Usage:') || result.stderr.includes('usage:'),
+      'Expected usage message in stderr. Got: ' + result.stderr
+    );
+  });
+
+  test("node compiler.js <flow.yaml> exits 0 on success", function() {
+    const tmpDir = makeTmpDir();
+    try {
+      const result = spawnSync(
+        'node',
+        [compilerPath, SIMPLE_FLOW, '--mapping-dir', FIXTURES_DIR, '--output-dir', tmpDir],
+        { encoding: 'utf8' }
+      );
+      assert.equal(result.status, 0, 'Expected exit 0. stderr: ' + result.stderr + ' stdout: ' + result.stdout);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test("node compiler.js <flow.yaml> prints Compiled summary to stdout", function() {
+    const tmpDir = makeTmpDir();
+    try {
+      const result = spawnSync(
+        'node',
+        [compilerPath, SIMPLE_FLOW, '--mapping-dir', FIXTURES_DIR, '--output-dir', tmpDir],
+        { encoding: 'utf8' }
+      );
+      assert.ok(
+        result.stdout.includes('Compiled:'),
+        'Expected "Compiled:" in stdout. Got: ' + result.stdout
+      );
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test("node compiler.js <missing-element-flow.yaml> exits 1", function() {
+    const tmpDir = makeTmpDir();
+    try {
+      const result = spawnSync(
+        'node',
+        [compilerPath, MISSING_ELEM_FLOW, '--mapping-dir', FIXTURES_DIR, '--output-dir', tmpDir],
+        { encoding: 'utf8' }
+      );
+      assert.equal(result.status, 1, 'Expected exit 1 for compilation error. Got: ' + result.status);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 2 Plan 02: cross-site integration — compile cross-site-flow.yaml
+// ---------------------------------------------------------------------------
+
+const CROSS_SITE_FLOW_PATH = path.join(FIXTURES_DIR, 'cross-site-flow.yaml');
+
+describe('compile() — cross-site flow integration', function() {
+  var tmpDir;
+  var outputPath;
+  var outputContent;
+
+  before(async function() {
+    tmpDir = makeTmpDir();
+    const result = await compile(CROSS_SITE_FLOW_PATH, FIXTURES_DIR, tmpDir);
+    assert.ok(result.success, 'Cross-site compile must succeed. Errors: ' + JSON.stringify(result.errors));
+    outputPath = result.outputPath;
+    outputContent = fs.readFileSync(outputPath, 'utf8');
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("cross-site compile returns success=true", async function() {
+    // Already verified in before() — just assert the outputPath
+    assert.ok(outputPath, 'outputPath must be set');
+    assert.ok(fs.existsSync(outputPath), 'output file must exist');
+  });
+
+  test("compiled output contains --session office prefix", function() {
+    assert.ok(
+      outputContent.includes('--session office'),
+      'Expected --session office in output. Got snippet: ' + outputContent.slice(0, 500)
+    );
+  });
+
+  test("compiled output contains --session app prefix", function() {
+    assert.ok(
+      outputContent.includes('--session app'),
+      'Expected --session app in output. Got snippet: ' + outputContent.slice(0, 500)
+    );
+  });
+
+  test("compiled output contains OFFICE_BASE_URL variable", function() {
+    assert.ok(
+      outputContent.includes('OFFICE_BASE_URL'),
+      'Expected OFFICE_BASE_URL in output. Got snippet: ' + outputContent.slice(0, 500)
+    );
+  });
+
+  test("compiled output contains APP_BASE_URL variable", function() {
+    assert.ok(
+      outputContent.includes('APP_BASE_URL'),
+      'Expected APP_BASE_URL in output. Got snippet: ' + outputContent.slice(0, 500)
+    );
+  });
+
+  test("cross-site compiled script passes bash -n syntax check", function() {
+    const result = spawnSync('bash', ['-n', outputPath], { encoding: 'utf8' });
+    assert.equal(result.status, 0, 'bash -n failed. stderr: ' + result.stderr);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 2 Plan 03 Task 1: compile() dryRun and verbose options
+// ---------------------------------------------------------------------------
+
+describe('compile() dryRun and verbose options', function() {
+  var tmpDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("compile() with dryRun:true does NOT create output file", async function() {
+    const dryDir = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, dryDir, { dryRun: true });
+      // The output file must NOT exist
+      const outFile = path.join(dryDir, 'test-login.sh');
+      assert.ok(!fs.existsSync(outFile), 'DRY RUN must not create output file');
+    } finally {
+      fs.rmSync(dryDir, { recursive: true, force: true });
+    }
+  });
+
+  test("compile() with dryRun:true still returns success:true with outputPath and stats", async function() {
+    const dryDir = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, dryDir, { dryRun: true });
+      assert.equal(result.success, true, 'Expected success=true even in dryRun mode');
+      assert.ok(result.outputPath, 'Expected outputPath in dryRun result');
+      assert.ok(result.stats, 'Expected stats in dryRun result');
+    } finally {
+      fs.rmSync(dryDir, { recursive: true, force: true });
+    }
+  });
+
+  test("compile() with verbose:true still creates output file", async function() {
+    const verbDir = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, verbDir, { verbose: true });
+      assert.equal(result.success, true, 'Expected success=true with verbose');
+      assert.ok(fs.existsSync(result.outputPath), 'verbose mode must still create output file');
+    } finally {
+      fs.rmSync(verbDir, { recursive: true, force: true });
+    }
+  });
+
+  test("compile() with dryRun:true and verbose:true does NOT create file but returns success", async function() {
+    const bothDir = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, bothDir, { dryRun: true, verbose: true });
+      assert.equal(result.success, true, 'Expected success=true for dryRun+verbose');
+      const outFile = path.join(bothDir, 'test-login.sh');
+      assert.ok(!fs.existsSync(outFile), 'dryRun+verbose must not create output file');
+    } finally {
+      fs.rmSync(bothDir, { recursive: true, force: true });
+    }
+  });
+
+  test("compile() with no options argument still works (backwards compat)", async function() {
+    const compatDir = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, compatDir);
+      assert.equal(result.success, true, 'Expected success=true with no options (backwards compat)');
+      assert.ok(fs.existsSync(result.outputPath), 'Output file must exist with no options');
+    } finally {
+      fs.rmSync(compatDir, { recursive: true, force: true });
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 2 Plan 02 Task 3: SHA-256 source hashing + header provenance
+// ---------------------------------------------------------------------------
+
+describe('SHA-256 source hashing', function() {
+  var tmpDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("compiled output from simple-flow.yaml contains '# SHA-256:' line", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    assert.ok(result.success, 'Compile must succeed. Errors: ' + JSON.stringify(result.errors));
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(
+      content.includes('# SHA-256:'),
+      'Expected SHA-256: line in output. Got header: ' + content.slice(0, 400)
+    );
+  });
+
+  test("hash is deterministic: compile same flow twice, hashes match", async function() {
+    const tmpDir2 = makeTmpDir();
+    try {
+      const result1 = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+      const result2 = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir2);
+      const content1 = fs.readFileSync(result1.outputPath, 'utf8');
+      const content2 = fs.readFileSync(result2.outputPath, 'utf8');
+
+      const hashLine1 = content1.split('\n').find(l => l.startsWith('# SHA-256:'));
+      const hashLine2 = content2.split('\n').find(l => l.startsWith('# SHA-256:'));
+
+      assert.ok(hashLine1, 'Expected SHA-256: line in first compile output');
+      assert.ok(hashLine2, 'Expected SHA-256: line in second compile output');
+      assert.equal(hashLine1, hashLine2, 'Hashes must be identical for same source files');
+    } finally {
+      fs.rmSync(tmpDir2, { recursive: true, force: true });
+    }
+  });
+
+  test("compiled output contains '# DO NOT EDIT' line", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(
+      content.includes('# DO NOT EDIT'),
+      'Expected DO NOT EDIT line in output. Got header: ' + content.slice(0, 400)
+    );
+  });
+
+  test("compiled output contains '# Source:' line with flow path", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir);
+    const content = fs.readFileSync(result.outputPath, 'utf8');
+    assert.ok(
+      content.includes('# Source: ' + SIMPLE_FLOW),
+      'Expected Source: line with flow path. Got header: ' + content.slice(0, 400)
+    );
+  });
+
+  test("cross-site compiled output also contains SHA-256 and DO NOT EDIT", async function() {
+    const tmpDir2 = makeTmpDir();
+    try {
+      const result = await compile(CROSS_SITE_FLOW_PATH, FIXTURES_DIR, tmpDir2);
+      assert.ok(result.success, 'Cross-site compile must succeed. Errors: ' + JSON.stringify(result.errors));
+      const content = fs.readFileSync(result.outputPath, 'utf8');
+      assert.ok(content.includes('# SHA-256:'), 'Cross-site output must have SHA-256:');
+      assert.ok(content.includes('# DO NOT EDIT'), 'Cross-site output must have DO NOT EDIT');
+    } finally {
+      fs.rmSync(tmpDir2, { recursive: true, force: true });
+    }
+  });
+});

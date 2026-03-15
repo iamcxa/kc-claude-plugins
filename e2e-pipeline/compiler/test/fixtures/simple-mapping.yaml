@@ -1,0 +1,28 @@
+version: 2
+app: test-app
+base_url: "http://localhost:3000"
+pages:
+  login:
+    url_pattern: "/login"
+    elements:
+      email_input:
+        selector: "role=textbox[name=\"Email\"]"
+        description: "Email input"
+      password_input:
+        selector: "input[type='password']"
+        description: "Password input"
+      login_button:
+        selector: "role=button[name=\"Sign In\"]"
+        description: "Login button"
+  dashboard:
+    url_pattern: "/dashboard"
+    elements:
+      heading:
+        selector: "role=heading[name=\"Dashboard\"]"
+        description: "Dashboard heading"
+  _global:
+    description: "Global elements"
+    elements:
+      sidebar_home:
+        selector: "role=menuitem[name=\"Home\"]"
+        description: "Sidebar home link"
