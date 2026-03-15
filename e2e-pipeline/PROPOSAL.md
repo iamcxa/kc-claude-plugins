@@ -1,30 +1,6 @@
 # Proposals: e2e-pipeline improvements (run 2)
 
-## 1. Walkthrough completion — proactive artifact handling
-
-### Signal
-- ID: sig-20260310-002
-- Source: journal
-- Date: 2026-03-10
-- Confidence: high
-- Related proxy signal: pipeline-friction
-
-### Current State
-After walkthrough/test completion, the agent ends with a passive "what next?" instead of proactively presenting artifact handling options (video conversion, PR comment, flow save, report archive).
-
-### Suggested Change
-Add an "Artifact Close-Out" step at the end of e2e-walkthrough SKILL.md that presents a structured menu: (1) convert video to MP4, (2) save flow YAML, (3) draft PR comment with evidence, (4) archive report. Agent selects applicable options based on what was produced.
-
-### Impact Scope
-- Files likely affected: `skills/e2e-walkthrough/SKILL.md`
-- Cross-plugin dependencies: none
-
-### North Star Alignment
-Zero manual post-walkthrough artifact management.
-
----
-
-## 2. Cross-component sync enforcement in skill-ops
+## 1. Cross-component sync enforcement in skill-ops
 
 ### Signal
 - ID: sig-20260314-006
