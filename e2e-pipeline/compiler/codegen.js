@@ -307,6 +307,80 @@ function generateRuntimeSupport() {
 }
 
 // ---------------------------------------------------------------------------
+// BASE_URL normalization (CODEGEN-03)
+// ---------------------------------------------------------------------------
+
+/**
+ * generateBaseUrlNormalization(variables) — produce trailing-slash normalization lines.
+ *
+ * For each variable whose uppercased name is exactly BASE_URL or ends with _BASE_URL,
+ * emit: VARNAME="${VARNAME%/}"
+ *
+ * The %/ shell parameter expansion strips one trailing slash (no-op if absent).
+ * This prevents double-slash URLs when CI env vars include trailing slashes.
+ *
+ * Returns: string (multi-line block, or '' if no base URL variables)
+ */
+function generateBaseUrlNormalization(variables) {
+  if (!variables) return '';
+  var lines = [];
+  var entries = Object.entries(variables);
+  for (var i = 0; i < entries.length; i++) {
+    var name = entries[i][0].toUpperCase();
+    if (name === 'BASE_URL' || name.endsWith('_BASE_URL')) {
+      lines.push(name + '="${' + name + '%/}"');
+    }
+  }
+  return lines.length > 0 ? lines.join('\n') : '';
+}
+
+// ---------------------------------------------------------------------------
+// Cleanup trap (CI-06)
+// ---------------------------------------------------------------------------
+
+/**
+ * generateCleanupTrap(steps) — produce cleanup() function and trap cleanup EXIT.
+ *
+ * Collects unique step.session values from resolved steps.
+ * - Single-site (no sessions): emits default agent-browser close
+ * - Cross-site (sessions present): emits per-session close for each distinct session
+ *
+ * The trap ensures agent-browser is closed on PASS, FAIL, and unexpected exit.
+ * Uses || true to prevent cleanup failure from overriding the script's exit code.
+ *
+ * Returns: string (multi-line bash block)
+ */
+function generateCleanupTrap(steps) {
+  // Collect distinct session names (excluding falsy/empty)
+  var sessions = [];
+  var seen = {};
+  for (var i = 0; i < steps.length; i++) {
+    var s = steps[i].session;
+    if (s && !seen[s]) {
+      seen[s] = true;
+      sessions.push(s);
+    }
+  }
+
+  var lines = ['cleanup() {'];
+
+  if (sessions.length === 0) {
+    // Single-site: default session close
+    lines.push('  agent-browser close 2>/dev/null || true');
+  } else {
+    // Cross-site: close each named session
+    for (var j = 0; j < sessions.length; j++) {
+      lines.push('  agent-browser --session ' + sessions[j] + ' close 2>/dev/null || true');
+    }
+  }
+
+  lines.push('}');
+  lines.push('trap cleanup EXIT');
+
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
 // Footer generation (structured PASS/FAIL summary)
 // ---------------------------------------------------------------------------
 
@@ -552,10 +626,21 @@ function generate(resolved, flowName, meta) {
     parts.push('');
   }
 
-  // 4. Runtime support functions (_handle_failure, _FAILED_STEPS)
+  // 4. BASE_URL normalization — strips trailing slash from all *_BASE_URL variables (CODEGEN-03)
+  var normBlock = generateBaseUrlNormalization(resolved.variables);
+  if (normBlock) {
+    parts.push(normBlock);
+    parts.push('');
+  }
+
+  // 5. Runtime support functions (_handle_failure, _FAILED_STEPS, poll helpers)
   parts.push(generateRuntimeSupport());
 
-  // 5. Per-step action blocks
+  // 6. Cleanup trap — registers agent-browser close on EXIT (CI-06)
+  parts.push(generateCleanupTrap(steps));
+  parts.push('');
+
+  // 7. Per-step action blocks
   for (var si = 0; si < steps.length; si++) {
     var step = steps[si];
 
@@ -570,7 +655,7 @@ function generate(resolved, flowName, meta) {
     parts.push('');
   }
 
-  // 6. Structured footer (replaces inline PASS/exit 0)
+  // 8. Structured footer (replaces inline PASS/exit 0)
   parts.push(generateFooter(flowName, totalSteps, skipped));
 
   return parts.join('\n');
@@ -580,4 +665,4 @@ function generate(resolved, flowName, meta) {
 // Exports
 // ---------------------------------------------------------------------------
 
-module.exports = { generate: generate, generateHeader: generateHeader, singleQuote: singleQuote, generateVariables: generateVariables };
+module.exports = { generate: generate, generateHeader: generateHeader, singleQuote: singleQuote, generateVariables: generateVariables, generateBaseUrlNormalization: generateBaseUrlNormalization, generateCleanupTrap: generateCleanupTrap };
