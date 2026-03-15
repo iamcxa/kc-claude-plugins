@@ -1,5 +1,5 @@
 {
-  "description": "E2E acceptance loop: SessionStart context injection + pre-commit verification check",
+  "description": "E2E pipeline hooks: SessionStart context injection + pre-commit verification check",
   "hooks": {
     "SessionStart": [
       {

@@ -7,16 +7,14 @@ This plugin forms a self-healing cycle: **Map → Test → Analyze → Repair �
 ```
 /e2e-map             → .claude/e2e/mappings/<app>.yaml
        ↓
-/e2e-walkthrough     → .claude/e2e/flows/walkthrough-*.yaml + e2e-reports/<ts>/
-       ↓
-/e2e-acceptance      → .claude/e2e/flows/acceptance-*.yaml (from plans/specs/PRs)
-       ↓
+/e2e-flow            → .claude/e2e/flows/<feature>.yaml + e2e-reports/<ts>/
+       ↓                 (generate from plans/specs/PRs, verify in browser)
 /e2e-compile         → .claude/e2e/compiled/<flow>.sh (standalone bash scripts)
        ↓
 /e2e-test <flow>     → e2e-reports/<ts>/report.md, trace.zip, screenshots, video
        ↓
   Stale selectors?   → /e2e-map --page X (repair mapping)
-  Flow changed?      → Edit flow or re-walkthrough
+  Flow changed?      → Edit flow or /e2e-flow --verify-only
 ```
 
 Every step feeds back into the next. A walkthrough auto-generates a reusable flow. A failing test tells you whether to update the mapping or the flow. No manual glue needed.
@@ -30,8 +28,8 @@ Skills run in main context as thin orchestrators. Heavy browser work is delegate
 | `e2e-map` | `e2e-mapper` | Explore pages, extract selectors |
 | `e2e-test` | `e2e-test-runner` + `e2e-trace-analyzer` | Execute flow steps, collect results, analyze trace |
 | `e2e-walkthrough` | `e2e-trace-analyzer` | Interactive exploration, trace analysis on completion |
+| `e2e-flow` | `e2e-flow-writer` + `e2e-flow-verifier` + `e2e-trace-analyzer` | Generate flows from plans/specs, verify in browser |
 | `e2e-compile` | *(none)* | Node.js compiler, runs locally |
-| `e2e-acceptance` | *(none)* | YAML generation from plans/specs |
 | `e2e-skill-ops` | *(none)* | Meta-skill for pipeline maintenance |
 | `e2e-dispatch` | *(none)* | Router to the right skill |
 
@@ -78,12 +76,14 @@ e2e-pipeline/
 │   ├── e2e-map/                 # Mapping orchestrator → e2e-mapper agent
 │   ├── e2e-test/                # Test orchestrator → e2e-test-runner + trace-analyzer
 │   ├── e2e-walkthrough/         # Interactive exploration (main context)
-│   ├── e2e-acceptance/          # Generate flows from plans/specs/PRs
+│   ├── e2e-flow/                # Generate & verify flows from plans/specs/PRs
 │   ├── e2e-compile/             # Compile flow YAML → bash scripts
 │   └── e2e-skill-ops/           # Meta-skill for pipeline maintenance
 ├── agents/
 │   ├── e2e-mapper.md            # UI exploration subagent
 │   ├── e2e-test-runner.md       # Flow execution subagent
+│   ├── e2e-flow-writer.md       # Flow generation subagent
+│   ├── e2e-flow-verifier.md     # Flow verification subagent
 │   └── e2e-trace-analyzer.md    # Trace parsing subagent
 ├── hooks/                       # SessionStart + PreToolUse hooks
 ├── references/                  # agent-browser CLI docs, patterns
