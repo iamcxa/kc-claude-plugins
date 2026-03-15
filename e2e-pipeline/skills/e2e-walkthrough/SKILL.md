@@ -1,12 +1,23 @@
 ---
 name: e2e-walkthrough
-description: Use when walking through UI flows interactively, exploring features with human guidance, or visually validating changes in a browser. Records video by default for evidence and communication. Triggers on "walkthrough", "explore this feature", "walk the UI", "step through", "browse the app", "guided e2e", "interactive walkthrough", "record walkthrough", "video walkthrough".
+description: Use when walking through UI flows interactively, exploring features with human guidance, visual QA, debugging in browser, or recording demos. Records video by default. Triggers on "walkthrough", "explore this feature", "walk the UI", "step through", "browse the app", "guided e2e", "interactive walkthrough", "explore pages", "visual QA", "debug in browser", "demo recording".
 ---
 
 # E2E Walkthrough — Interactive UI Exploration
 
 Human-agent collaborative browser walkthrough with trace recording, health monitoring, and reusable flow output.
 
+## Role
+
+Interactive human-in-the-loop browser exploration. Use this when:
+- **Exploring unknown features** — no spec, discovering what the app does
+- **Visual QA** — subjective design review, layout inspection, responsive check
+- **Debug escape hatch** — automated `/e2e-flow --verify` failed, need human eyes
+- **Demo recording** — walkthrough with human narration for stakeholders
+
+For automated flow generation → `/e2e-flow`
+For automated flow verification → `/e2e-flow --verify-only`
+For smoke testing → `/e2e-flow --smoke`
 
 ## Pipeline Context
 
@@ -19,7 +30,7 @@ Human-agent collaborative browser walkthrough with trace recording, health monit
 ## Invocation
 
 ```
-/e2e-walkthrough [context] [--mode guided|step|auto] [--sites name1,name2] [--pr N] [--issue ID] [--verify] [--no-video]
+/e2e-walkthrough [context] [--mode guided|step|auto] [--sites name1,name2] [--pr N] [--issue ID] [--no-video]
 ```
 
 | Entry point | Behavior |
@@ -28,8 +39,6 @@ Human-agent collaborative browser walkthrough with trace recording, health monit
 | `--issue DRC-2811` | Read issue, propose path for the feature |
 | Free text | Use mapping + codebase to propose path |
 | `--page org-settings` | Explore all mapped elements on that page |
-| `--smoke` | Walk critical paths from mapping |
-| `--verify` | Verification mode: focus on assertions + external checkpoints, tag flow as `verification` |
 | `--sites admin,portal` | Cross-site walkthrough using named mappings |
 | `--no-video` | Skip screen recording (default: recording ON) |
 
@@ -88,67 +97,9 @@ If agent-browser is not installed, stop and report: "agent-browser is required f
 3. Cross-reference: which pages/elements/dialogs are relevant to the context
 4. Propose numbered walkthrough steps with concrete actions
 
-### `--smoke` Mode
+For smoke testing, use `/e2e-flow --smoke`.
 
-When invoked with `--smoke`, auto-generate a walkthrough plan from the mapping:
-
-1. **Select pages** using these rules (in order):
-   a. Include pages with non-empty `elements:` AND a navigable `url_pattern` (no unresolvable parameters like `${traceId}`, `${sessionId}`)
-   b. Skip pages whose `url_pattern` contains parameters that require external state (e.g., `${traceId}`, `${sessionId}`)
-   c. Skip pages that match the mapping's `auth.signin_path` (navigating there would log out the session)
-   d. Skip pages with `note:` containing "Requires admin" or "admin access" — unless explicitly included by user
-   e. **RBAC-aware filtering**: Elements with `note:` containing role requirements (e.g., "Requires auditor/manager role") should be marked `expected: conditional` in the plan when the current test account's role doesn't match. These are NOT failures — report as "expected not visible for [role]" rather than MISMATCH.
-   f. For onboarding pages: include only if the user is in onboarding state (or mark with `optional: true` in generated steps)
-2. **Ordering**: shared sidebar verification first, then main pages, then settings, then onboarding
-3. **Per page**: Navigate → verify 2-3 key elements exist (prefer headings and primary buttons) → take screenshot.
-4. **Interactions**: For pages with dialogs in the `dialogs:` section, include one open-close cycle for the primary dialog (first dialog whose `trigger_page` matches the current page).
-5. **Auth state**: Smoke plans assume an authenticated session. Login flows should run separately before smoke. Flows that assume authenticated state should document `precondition: Authenticated`.
-6. **Total steps**: Aim for 2-3 steps per page. Present proposed plan before execution.
-7. **Post-walkthrough selector sweep**: After all navigation steps, run a dedicated `is visible` verification pass for all `data-testid` and `aria-label` selectors in the mapping. The a11y snapshot does NOT expose these attributes — only `is visible` can confirm they exist in the DOM. Group tests by page to minimize navigation.
-
-Present the plan conversationally. If context is vague, ask clarifying questions.
-
-### `--verify` Mode (PR Verification)
-
-When invoked with `--verify`, the walkthrough focuses on producing a stable, repeatable verification flow with external checkpoints:
-
-1. **Every step MUST have `expect:`** — bare navigation without assertions is insufficient for verification
-2. **Core integration path only** — 5-12 steps covering the feature's critical user journey
-3. **Deterministic assertions** — prefer `url contains`, `element visible`, `text '...'` over timing-dependent checks
-4. **External checkpoints** — at key integration points, insert `verify-external` steps to check external services:
-   - After a tracked user action → PostHog event checkpoint
-   - After an AI interaction → Langfuse trace checkpoint
-   - After a form submission → API/database checkpoint
-   - After a notification trigger → Slack/email checkpoint
-5. **Full tool access** — unlike the test-runner subagent, walkthrough runs in main context. Claude uses MCP, curl, database queries, Slack MCP, or any available tool to execute checkpoint `verify:` blocks.
-6. **Tagged output** — generated flow gets `tags: [verification, auto-generated]`
-7. **Replay suggestion** — after flow generation: "Run `/e2e-test <flow>` to confirm this flow passes consistently"
-
-**Checkpoint execution in walkthrough (Phase 3):**
-
-When the current step has `action: "Verify external"`:
-1. Wait `wait` seconds (allow propagation)
-2. Read the `verify:` block, iterate service groups
-3. For each check: use the best available tool — MCP server, curl, database query, file read, etc.
-4. Report result inline to user: `✓ PostHog: event found (count=3)` or `✗ Langfuse: no trace found`
-5. Apply `on_fail:` logic (default `warn` — log and continue)
-6. No browser interaction for checkpoint steps
-
-**Verify mode plan example:**
-
-```
-Verification walkthrough (8 steps + 2 checkpoints):
-1. Navigate to /projects
-2. Click "Create Project" → dialog opens
-3. Fill form with test data
-4. Click Submit → expect success toast
-5. ✓ CHECKPOINT: Verify PostHog 'project_created' event
-6. Navigate to /projects → verify new project in list
-7. Click new project → verify detail page
-8. ✓ CHECKPOINT: Verify Langfuse trace for project creation flow
-```
-
-Combine `--verify` with `--pr N` to read PR diff for context + produce verification flow.
+For flow verification, use `/e2e-flow --verify-only`.
 
 **After plan is presented, proceed to Phase 2 for human approval.**
 
