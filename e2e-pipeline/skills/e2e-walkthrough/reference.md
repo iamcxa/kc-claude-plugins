@@ -143,7 +143,7 @@ Visual anomalies are always listed individually. JS error counts replace individ
 
 **Selector verification strategy:**
 - `text=` selectors: verify by comparing snapshot a11y tree text content against mapping values. Snapshot is the source of truth.
-- `data-testid` / `aria-label` / `role=` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `agent-browser is visible "<selector>"` for DOM-level verification. In smoke mode, batch these into a post-walkthrough sweep (see `--smoke` rule 7).
+- `data-testid` / `aria-label` / `role=` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `agent-browser is visible "<selector>"` for DOM-level verification.
 
 ### Anomaly Observation Rules
 
@@ -594,7 +594,7 @@ This is informational — always write the new flow regardless.
 - Format must match `/e2e-test` flow spec — valid keys: `name`, `description`, `tags`, `mapping` (single-site) or `sites` (cross-site), `variables`, `steps` (each with `id`, `site` (cross-site only), `action`, `expect`, `screenshot`, `optional`, `timeout`, `note`)
 - **Checkpoint steps**: serialize with `action: "Verify external"`, `description`, `wait`, `verify:` block, and `on_fail`. Preserve the full `verify:` structure including service groups and natural language checks.
 - Set `tags: [walkthrough, auto-generated]` plus any context-specific tags
-- **`--verify` mode**: add `verification` to tags. E.g., `tags: [verification, walkthrough, auto-generated]`
+- For verification flows, use `/e2e-flow --verify-only` instead
 - Set `description:` summarizing the walkthrough context
 
 **Output path:** `.claude/e2e/flows/<auto-name>.yaml`
