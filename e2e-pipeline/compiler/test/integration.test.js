@@ -169,3 +169,98 @@ describe('Integration: migrate + compile real carlove flow', function() {
   });
 
 });
+
+// ---------------------------------------------------------------------------
+// Phase 5 Plan 01: JUnit XML codegen integration tests
+// ---------------------------------------------------------------------------
+
+const { generate } = require('../codegen');
+
+describe('Integration: JUnit XML codegen (FLAG-01)', function() {
+
+  test('compiled script with CJK step names has valid UTF-8 in _STEP_NAMES', function() {
+    var resolved = {
+      name: 'cjk-flow',
+      description: 'CJK step test',
+      steps: [{
+        id: '登入-login',
+        action: 'Navigate to login',
+        type: 'navigate',
+        operands: { target: '/login', urlPath: '/login' },
+      }],
+    };
+    var script = generate(resolved, 'cjk-flow');
+    assert.ok(
+      script.includes('_STEP_NAMES+=("登入-login")'),
+      'CJK step id must appear as UTF-8 in _STEP_NAMES. Got snippet: ' + script
+    );
+    assert.ok(
+      !script.includes('&#'),
+      'CJK must not be encoded as numeric entities. Got snippet: ' + script
+    );
+  });
+
+  test('compiled script with XML-special step names has escaped values in _STEP_NAMES', function() {
+    var resolved = {
+      name: 'xml-special-flow',
+      description: 'XML special chars test',
+      steps: [{
+        id: 'check-<input>-field',
+        action: 'Check input field',
+        type: 'navigate',
+        operands: { target: '/form', urlPath: '/form' },
+      }],
+    };
+    var script = generate(resolved, 'xml-special-flow');
+    assert.ok(
+      script.includes('_STEP_NAMES+=("check-&lt;input&gt;-field")'),
+      'Angle bracket step id must be XML-escaped in _STEP_NAMES. Got snippet: ' + script
+    );
+  });
+
+  test('_emit_junit function body contains pre-escaped flow name (& → &amp;)', function() {
+    var resolved = {
+      name: 'login & signup',
+      description: 'Login and signup flow',
+      steps: [{
+        id: 'nav-login',
+        action: 'Navigate to login',
+        type: 'navigate',
+        operands: { target: '/login', urlPath: '/login' },
+      }],
+    };
+    var script = generate(resolved, 'login & signup');
+    var emitStart = script.indexOf('_emit_junit()');
+    var emitEnd = script.lastIndexOf('}');
+    var emitBody = script.slice(emitStart, emitEnd + 1);
+    assert.ok(
+      emitBody.includes('login &amp; signup'),
+      'Flow name with & must be pre-escaped as &amp; in _emit_junit. Got body snippet: ' + emitBody.slice(0, 300)
+    );
+  });
+
+  test('ANSI strip pattern present in _handle_failure', function() {
+    var resolved = {
+      name: 'test-flow',
+      description: 'Test',
+      steps: [{
+        id: 'nav',
+        action: 'Navigate to /home',
+        type: 'navigate',
+        operands: { target: '/home', urlPath: '/home' },
+      }],
+    };
+    var script = generate(resolved, 'test-flow');
+    assert.ok(
+      script.includes("sed 's/\\x1b\\[[0-9;]*m//g'") || script.includes("sed 's/\\x1b"),
+      'Expected ANSI strip sed pattern in compiled output. Got fn snippet: ' +
+        script.slice(script.indexOf('_handle_failure()'), script.indexOf('_handle_failure()') + 300)
+    );
+    assert.ok(
+      script.includes('tr -d'),
+      'Expected tr -d control char strip in compiled output. Got fn snippet: ' +
+        script.slice(script.indexOf('_handle_failure()'), script.indexOf('_handle_failure()') + 300)
+    );
+  });
+
+});
