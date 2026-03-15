@@ -44,6 +44,28 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # MAINT-01: Warn if mapping files are stale relative to UI source changes
+      - name: Check mapping staleness
+        run: |
+          # UI_PATHS: directories containing UI source code
+          # CUSTOMIZE: adjust to match your project structure
+          UI_PATHS="src/ app/ pages/ components/"
+          for mapping in .claude/e2e/mappings/*.yaml; do
+            [ -f "$mapping" ] || continue
+            app=$(basename "$mapping" .yaml)
+            # Get ISO date of mapping's last git commit
+            mapping_date=$(git log -1 --format="%ai" -- "$mapping" 2>/dev/null)
+            if [ -z "$mapping_date" ]; then
+              echo "::notice::Mapping '$app' is not tracked by git -- skipping staleness check"
+              continue
+            fi
+            # Count UI file changes after the mapping was last updated
+            ui_changes=$(git log --after="$mapping_date" --oneline -- $UI_PATHS 2>/dev/null | wc -l | tr -d ' ')
+            if [ "$ui_changes" -gt 0 ]; then
+              echo "::warning::Mapping '$app' may be stale: $ui_changes UI change(s) since $(echo $mapping_date | cut -d' ' -f1). Consider running /e2e-map."
+            fi
+          done
+
       # Cache key matches browser-e2e exactly to share the same Chrome binary.
       - name: Cache agent-browser Chrome
         uses: actions/cache@v4
