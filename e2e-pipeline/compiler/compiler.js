@@ -44,6 +44,7 @@ function hashSources(flowPath, mappingPaths) {
 async function compile(flowPath, mappingDir, outputDir, options) {
   var dryRun = (options && options.dryRun) || false;
   var verbose = (options && options.verbose) || false;
+  var coverage = (options && options.coverage) || false;
   // Pass 1: Parse
   var parseResult = parse(flowPath, mappingDir);
   if (parseResult.errors.length > 0) {
@@ -53,6 +54,8 @@ async function compile(flowPath, mappingDir, outputDir, options) {
 
   var resolveResult;
   var mappingPaths;
+
+  var coverageData = undefined;
 
   if (parseResult.sites) {
     // --- Cross-site flow path ---
@@ -82,6 +85,12 @@ async function compile(flowPath, mappingDir, outputDir, options) {
       return path.join(mappingDir, parseResult.sites[sn].mappingName + '.yaml');
     });
 
+    // Coverage analysis not yet supported for cross-site flows
+    if (coverage) {
+      console.error('Warning: Coverage analysis for cross-site flows is not yet supported');
+      coverageData = null;
+    }
+
   } else {
     // --- Single-site flow path ---
     resolveResult = resolve(parseResult.flow, parseResult.mapping);
@@ -104,6 +113,12 @@ async function compile(flowPath, mappingDir, outputDir, options) {
 
     // Build mapping path for SHA-256 hashing (single-site: one mapping file)
     mappingPaths = [path.join(mappingDir, parseResult.flow.mapping + '.yaml')];
+
+    // Coverage analysis for single-site flows
+    if (coverage) {
+      var analyzeCoverage = require('./coverage').analyzeCoverage;
+      coverageData = analyzeCoverage(parseResult.mapping, resolveResult.resolved.steps);
+    }
   }
 
   // Compute SHA-256 hash from source files (not generated output — deterministic)
@@ -165,7 +180,11 @@ async function compile(flowPath, mappingDir, outputDir, options) {
     s.deferredExpects + ' expects deferred (Phase 2)'
   );
 
-  return { success: true, outputPath: outPath, stats: s };
+  var returnVal = { success: true, outputPath: outPath, stats: s };
+  if (coverage) {
+    returnVal.coverage = coverageData;
+  }
+  return returnVal;
 }
 
 module.exports = { compile: compile };

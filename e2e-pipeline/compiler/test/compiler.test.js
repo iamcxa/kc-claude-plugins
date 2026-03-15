@@ -535,3 +535,74 @@ describe('SHA-256 source hashing', function() {
     }
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 6 Plan 01: compile() with options.coverage
+// ---------------------------------------------------------------------------
+
+describe('compile() — options.coverage', function() {
+  var tmpDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("compile() with coverage:true returns result.coverage object", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir, { coverage: true });
+    assert.ok(result.success, 'Compile must succeed. Errors: ' + JSON.stringify(result.errors));
+    assert.ok(result.coverage && typeof result.coverage === 'object', 'Expected result.coverage to be an object');
+  });
+
+  test("compile() with coverage:true returns result.coverage.elements array", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir, { coverage: true });
+    assert.ok(result.success, 'Compile must succeed');
+    assert.ok(Array.isArray(result.coverage.elements), 'result.coverage.elements must be an array');
+  });
+
+  test("compile() with coverage:true returns result.coverage.summary object", async function() {
+    const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir, { coverage: true });
+    assert.ok(result.success, 'Compile must succeed');
+    assert.ok(result.coverage.summary && typeof result.coverage.summary === 'object', 'result.coverage.summary must be an object');
+  });
+
+  test("compile() with coverage:false (default) does NOT include result.coverage", async function() {
+    const tmpDir2 = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir2, { coverage: false });
+      assert.ok(result.success, 'Compile must succeed');
+      assert.equal(result.coverage, undefined, 'result.coverage must not exist when coverage:false');
+    } finally {
+      fs.rmSync(tmpDir2, { recursive: true, force: true });
+    }
+  });
+
+  test("compile() with no options does NOT include result.coverage", async function() {
+    const tmpDir3 = makeTmpDir();
+    try {
+      const result = await compile(SIMPLE_FLOW, FIXTURES_DIR, tmpDir3);
+      assert.ok(result.success, 'Compile must succeed');
+      assert.equal(result.coverage, undefined, 'result.coverage must not exist with no options');
+    } finally {
+      fs.rmSync(tmpDir3, { recursive: true, force: true });
+    }
+  });
+
+  test("compile() with coverage:true for cross-site flow does not crash (unsupported warning)", async function() {
+    const tmpDir4 = makeTmpDir();
+    try {
+      const result = await compile(CROSS_SITE_FLOW_PATH, FIXTURES_DIR, tmpDir4, { coverage: true });
+      assert.ok(result.success, 'Cross-site compile must succeed even with coverage:true');
+      // Cross-site coverage is not yet supported — coverage should be null or undefined
+      assert.ok(
+        result.coverage === null || result.coverage === undefined,
+        'Cross-site flow coverage should be null (not yet supported). Got: ' + JSON.stringify(result.coverage)
+      );
+    } finally {
+      fs.rmSync(tmpDir4, { recursive: true, force: true });
+    }
+  });
+});
