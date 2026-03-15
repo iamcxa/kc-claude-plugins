@@ -322,3 +322,66 @@ describe('CLI: node compiler.js', function() {
     }
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 2 Plan 02: cross-site integration — compile cross-site-flow.yaml
+// ---------------------------------------------------------------------------
+
+const CROSS_SITE_FLOW_PATH = path.join(FIXTURES_DIR, 'cross-site-flow.yaml');
+
+describe('compile() — cross-site flow integration', function() {
+  var tmpDir;
+  var outputPath;
+  var outputContent;
+
+  before(async function() {
+    tmpDir = makeTmpDir();
+    const result = await compile(CROSS_SITE_FLOW_PATH, FIXTURES_DIR, tmpDir);
+    assert.ok(result.success, 'Cross-site compile must succeed. Errors: ' + JSON.stringify(result.errors));
+    outputPath = result.outputPath;
+    outputContent = fs.readFileSync(outputPath, 'utf8');
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  test("cross-site compile returns success=true", async function() {
+    // Already verified in before() — just assert the outputPath
+    assert.ok(outputPath, 'outputPath must be set');
+    assert.ok(fs.existsSync(outputPath), 'output file must exist');
+  });
+
+  test("compiled output contains --session office prefix", function() {
+    assert.ok(
+      outputContent.includes('--session office'),
+      'Expected --session office in output. Got snippet: ' + outputContent.slice(0, 500)
+    );
+  });
+
+  test("compiled output contains --session app prefix", function() {
+    assert.ok(
+      outputContent.includes('--session app'),
+      'Expected --session app in output. Got snippet: ' + outputContent.slice(0, 500)
+    );
+  });
+
+  test("compiled output contains OFFICE_BASE_URL variable", function() {
+    assert.ok(
+      outputContent.includes('OFFICE_BASE_URL'),
+      'Expected OFFICE_BASE_URL in output. Got snippet: ' + outputContent.slice(0, 500)
+    );
+  });
+
+  test("compiled output contains APP_BASE_URL variable", function() {
+    assert.ok(
+      outputContent.includes('APP_BASE_URL'),
+      'Expected APP_BASE_URL in output. Got snippet: ' + outputContent.slice(0, 500)
+    );
+  });
+
+  test("cross-site compiled script passes bash -n syntax check", function() {
+    const result = spawnSync('bash', ['-n', outputPath], { encoding: 'utf8' });
+    assert.equal(result.status, 0, 'bash -n failed. stderr: ' + result.stderr);
+  });
+});

@@ -842,3 +842,144 @@ describe('generateExpects() — or-visible', function() {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 2 Plan 02: cross-site codegen — generateVariables per-site + --session prefix
+// ---------------------------------------------------------------------------
+
+describe('generateVariables() — per-site variables (cross-site support)', function() {
+  test("generateVariables with OFFICE_BASE_URL and APP_BASE_URL produces correct bash declarations", function() {
+    const result = generateVariables(
+      { OFFICE_BASE_URL: 'http://localhost:5173', APP_BASE_URL: 'http://localhost:8081' },
+      'cross-site-test'
+    );
+    assert.ok(
+      result.includes('OFFICE_BASE_URL='),
+      'Expected OFFICE_BASE_URL= declaration. Got: ' + result
+    );
+    assert.ok(
+      result.includes('APP_BASE_URL='),
+      'Expected APP_BASE_URL= declaration. Got: ' + result
+    );
+    assert.ok(
+      result.includes('http://localhost:5173'),
+      'Expected office base_url in output. Got: ' + result
+    );
+    assert.ok(
+      result.includes('http://localhost:8081'),
+      'Expected app base_url in output. Got: ' + result
+    );
+  });
+
+  test("generateVariables with per-site names uppercases correctly (no collision with BASE_URL)", function() {
+    const result = generateVariables(
+      { OFFICE_BASE_URL: 'http://localhost:5173', APP_BASE_URL: 'http://localhost:8081' },
+      'cross-site-test'
+    );
+    // Should NOT have plain BASE_URL (only OFFICE_BASE_URL and APP_BASE_URL)
+    const lines = result.split('\n');
+    const basUrlLines = lines.filter(l => l.match(/^BASE_URL=/));
+    assert.equal(basUrlLines.length, 0, 'Should not have plain BASE_URL= in per-site vars. Got: ' + result);
+  });
+});
+
+describe('cross-site codegen — --session prefix on agent-browser commands', function() {
+  function makeCrossSiteNavigate(id, site, urlPath) {
+    return {
+      id: id,
+      action: 'Navigate to ' + urlPath,
+      type: 'navigate',
+      session: site,
+      operands: { target: urlPath, urlPath: urlPath },
+    };
+  }
+
+  function makeCrossSiteClick(id, site, element, selector) {
+    return {
+      id: id,
+      action: 'Click ' + element,
+      type: 'click',
+      session: site,
+      operands: { element: element, selector: selector },
+    };
+  }
+
+  function makeCrossSiteSnapshot(id, site) {
+    return {
+      id: id,
+      action: 'Take snapshot',
+      type: 'snapshot',
+      session: site,
+      operands: {},
+    };
+  }
+
+  test("navigate with session field uses --session prefix before open command", function() {
+    const step = makeCrossSiteNavigate('office-nav', 'office', '/dashboard');
+    const script = generate(makeResolved([step]), 'cross-site-test');
+    assert.ok(
+      script.includes('agent-browser --session office open'),
+      'cross-site navigate must use --session prefix. Got: ' + script
+    );
+  });
+
+  test("cross-site navigate uses site-specific base URL variable (OFFICE_BASE_URL)", function() {
+    const step = makeCrossSiteNavigate('office-nav', 'office', '/dashboard');
+    const script = generate(makeResolved([step]), 'cross-site-test');
+    assert.ok(
+      script.includes('"${OFFICE_BASE_URL}/dashboard"'),
+      'cross-site navigate must use OFFICE_BASE_URL. Got: ' + script
+    );
+  });
+
+  test("cross-site navigate for 'app' site uses APP_BASE_URL", function() {
+    const step = makeCrossSiteNavigate('app-nav', 'app', '/home');
+    const script = generate(makeResolved([step]), 'cross-site-test');
+    assert.ok(
+      script.includes('"${APP_BASE_URL}/home"'),
+      'cross-site navigate for app site must use APP_BASE_URL. Got: ' + script
+    );
+  });
+
+  test("click with session field uses --session prefix", function() {
+    const step = makeCrossSiteClick('app-click', 'app', 'button_b', 'role=button[name="App Button"]');
+    const script = generate(makeResolved([step]), 'cross-site-test');
+    assert.ok(
+      script.includes("agent-browser --session app click"),
+      'cross-site click must use --session prefix. Got: ' + script
+    );
+  });
+
+  test("snapshot with session field uses --session prefix", function() {
+    const step = makeCrossSiteSnapshot('office-snap', 'office');
+    const script = generate(makeResolved([step]), 'cross-site-test');
+    assert.ok(
+      script.includes('agent-browser --session office snapshot'),
+      'cross-site snapshot must use --session prefix. Got: ' + script
+    );
+  });
+
+  test("expect with session field on step uses --session prefix in is visible call", function() {
+    const step = makeCrossSiteSnapshot('office-check', 'office');
+    step.expects = [{
+      type: 'active',
+      raw: 'heading_a is visible',
+      elementName: 'heading_a',
+      selector: 'role=heading[name="Office Dashboard"]',
+    }];
+    const script = generate(makeResolved([step]), 'cross-site-test');
+    assert.ok(
+      script.includes('agent-browser --session office is visible'),
+      'cross-site expect must use --session prefix. Got: ' + script
+    );
+  });
+
+  test("step without session field uses regular agent-browser (no --session)", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      !script.includes('agent-browser --session'),
+      'single-site step must not have --session prefix. Got: ' + script
+    );
+  });
+});

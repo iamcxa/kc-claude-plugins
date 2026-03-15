@@ -4,14 +4,16 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const { parse } = require('./parser');
-const { resolve } = require('./resolver');
+const { resolve, resolveMultiSite } = require('./resolver');
 const { generate } = require('./codegen');
 
 /**
  * compile(flowPath, mappingDir, outputDir) — run the full compilation pipeline.
  *
+ * Supports single-site (mapping: field) and cross-site (sites: block) flows.
+ *
  * Pass 1: parse(flowPath, mappingDir) — load and validate YAML
- * Pass 2: resolve(flow, mapping) — build symbol table, resolve operands
+ * Pass 2: resolve(flow, mapping) or resolveMultiSite(flow, sites) — build symbol tables
  * Pass 3: generate(resolved, flowName) — emit bash script string
  * Output: write <flowName>.sh to outputDir, chmod 755
  *
@@ -25,23 +27,50 @@ async function compile(flowPath, mappingDir, outputDir) {
     return { success: false, errors: parseResult.errors };
   }
 
-  // Pass 2: Resolve
-  var resolveResult = resolve(parseResult.flow, parseResult.mapping);
-  if (resolveResult.errors.length > 0) {
-    resolveResult.errors.forEach(function(e) { console.error('ERROR: ' + e); });
-    return { success: false, errors: resolveResult.errors };
-  }
+  var resolveResult;
 
-  // Auto-inject base_url from mapping when flow has no variables block
-  // Prevents unbound ${BASE_URL} in navigate commands under set -u
-  if (!resolveResult.resolved.variables || !('base_url' in resolveResult.resolved.variables)) {
+  if (parseResult.sites) {
+    // --- Cross-site flow path ---
+    resolveResult = resolveMultiSite(parseResult.flow, parseResult.sites);
+    if (resolveResult.errors.length > 0) {
+      resolveResult.errors.forEach(function(e) { console.error('ERROR: ' + e); });
+      return { success: false, errors: resolveResult.errors };
+    }
+
+    // Auto-inject per-site base URL variables from each mapping's base_url
+    // e.g., { OFFICE_BASE_URL: 'http://localhost:5173', APP_BASE_URL: 'http://localhost:8081' }
     if (!resolveResult.resolved.variables) {
       resolveResult.resolved.variables = {};
     }
-    resolveResult.resolved.variables = Object.assign(
-      { base_url: parseResult.mapping.base_url || '' },
-      resolveResult.resolved.variables
-    );
+    var siteNames = Object.keys(parseResult.sites);
+    for (var i = 0; i < siteNames.length; i++) {
+      var siteName = siteNames[i];
+      var siteData = parseResult.sites[siteName];
+      var siteVarName = siteName.toUpperCase() + '_BASE_URL';
+      if (!resolveResult.resolved.variables.hasOwnProperty(siteVarName)) {
+        resolveResult.resolved.variables[siteVarName] = (siteData.mapping && siteData.mapping.base_url) || '';
+      }
+    }
+
+  } else {
+    // --- Single-site flow path ---
+    resolveResult = resolve(parseResult.flow, parseResult.mapping);
+    if (resolveResult.errors.length > 0) {
+      resolveResult.errors.forEach(function(e) { console.error('ERROR: ' + e); });
+      return { success: false, errors: resolveResult.errors };
+    }
+
+    // Auto-inject base_url from mapping when flow has no variables block
+    // Prevents unbound ${BASE_URL} in navigate commands under set -u
+    if (!resolveResult.resolved.variables || !('base_url' in resolveResult.resolved.variables)) {
+      if (!resolveResult.resolved.variables) {
+        resolveResult.resolved.variables = {};
+      }
+      resolveResult.resolved.variables = Object.assign(
+        { base_url: parseResult.mapping.base_url || '' },
+        resolveResult.resolved.variables
+      );
+    }
   }
 
   // Pass 3: Codegen
