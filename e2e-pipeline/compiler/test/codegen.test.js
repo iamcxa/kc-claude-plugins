@@ -2142,3 +2142,431 @@ describe('v2.0 BASE_URL normalization and cleanup', function() {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 5 Plan 01: v2.0 JUnit XML codegen (FLAG-01)
+// ---------------------------------------------------------------------------
+
+const { xmlAttrEscape } = require('../codegen.js');
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — --junit flag in runtime flag block', function() {
+  test("compiled output contains JUNIT_OUTPUT=\"\" default", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('JUNIT_OUTPUT=""'),
+      'Expected JUNIT_OUTPUT="" default. Got snippet: ' + script.slice(0, 500)
+    );
+  });
+
+  test("compiled output contains --junit) case handler", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('--junit)'),
+      'Expected --junit) case in flag block. Got snippet: ' + script.slice(0, 600)
+    );
+  });
+
+  test("--junit case sets JUNIT_OUTPUT to $2 and shift 2", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('JUNIT_OUTPUT="$2"'),
+      'Expected JUNIT_OUTPUT="$2" in --junit case. Got snippet: ' + script.slice(0, 600)
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — step bookkeeping arrays', function() {
+  test("compiled output contains _STEP_NAMES=() array", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_NAMES=()'),
+      'Expected _STEP_NAMES=() array init. Got snippet: ' + script.slice(0, 600)
+    );
+  });
+
+  test("compiled output contains _STEP_RESULTS=() array", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_RESULTS=()'),
+      'Expected _STEP_RESULTS=() array init. Got snippet: ' + script.slice(0, 600)
+    );
+  });
+
+  test("compiled output contains _STEP_FAILURES=() array", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_FAILURES=()'),
+      'Expected _STEP_FAILURES=() array init. Got snippet: ' + script.slice(0, 600)
+    );
+  });
+
+  test("compiled output contains _STEP_TIMES=() array", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_TIMES=()'),
+      'Expected _STEP_TIMES=() array init. Got snippet: ' + script.slice(0, 600)
+    );
+  });
+
+  test("compiled output contains _FLOW_START=$SECONDS", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_FLOW_START=$SECONDS'),
+      'Expected _FLOW_START=$SECONDS. Got snippet: ' + script.slice(0, 600)
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — per-step timing bookkeeping (navigate)', function() {
+  test("navigate action block contains _STEP_START=$SECONDS before action", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // _STEP_START must appear before the agent-browser open command
+    const stepStartIdx = script.indexOf('_STEP_START=$SECONDS');
+    const navIdx = script.indexOf('agent-browser open');
+    assert.ok(stepStartIdx !== -1, 'Missing _STEP_START=$SECONDS in navigate block');
+    assert.ok(navIdx !== -1, 'Missing agent-browser open command');
+    assert.ok(stepStartIdx < navIdx, '_STEP_START must appear before agent-browser open. stepStartIdx=' + stepStartIdx + ' navIdx=' + navIdx);
+  });
+
+  test("navigate success path appends step id to _STEP_NAMES", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_NAMES+=("nav-login")'),
+      'Expected _STEP_NAMES+= with step id nav-login. Got snippet containing STEP_NAMES: ' + script.slice(script.indexOf('_STEP_NAMES'), script.indexOf('_STEP_NAMES') + 100)
+    );
+  });
+
+  test("navigate success path records pass result in _STEP_RESULTS", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_RESULTS+=("pass")'),
+      'Expected _STEP_RESULTS+=("pass") in navigate success path. Got snippet: ' + script
+    );
+  });
+
+  test("navigate success path records empty failure in _STEP_FAILURES", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_FAILURES+=("")'),
+      'Expected _STEP_FAILURES+=("") in navigate success path. Got snippet: ' + script
+    );
+  });
+
+  test("navigate block computes elapsed time with $(( SECONDS - _STEP_START ))", function() {
+    const step = makeNavigate('nav-login', '/login');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_elapsed=$(( SECONDS - _STEP_START ))') || script.includes('_elapsed=$(($SECONDS - $_STEP_START))') || script.includes('_elapsed=$(( SECONDS - _STEP_START))'),
+      'Expected _elapsed=$(( SECONDS - _STEP_START )) in navigate block. Got snippet: ' + script
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — per-step timing bookkeeping (click)', function() {
+  test("click action block contains _STEP_START=$SECONDS before action", function() {
+    const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const stepStartIdx = script.indexOf('_STEP_START=$SECONDS');
+    const clickIdx = script.indexOf('agent-browser click');
+    assert.ok(stepStartIdx !== -1, 'Missing _STEP_START=$SECONDS in click block');
+    assert.ok(clickIdx !== -1, 'Missing agent-browser click command');
+    assert.ok(stepStartIdx < clickIdx, '_STEP_START must appear before agent-browser click');
+  });
+
+  test("click success path records pass result in _STEP_RESULTS", function() {
+    const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_RESULTS+=("pass")'),
+      'Expected _STEP_RESULTS+=("pass") in click success path. Got snippet: ' + script
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — per-step timing bookkeeping (verify-external skip)', function() {
+  test("verify-external step records skip result in _STEP_RESULTS", function() {
+    const step = makeVerifyExternal('verify-ext');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_RESULTS+=("skip")'),
+      'Expected _STEP_RESULTS+=("skip") for verify-external. Got snippet: ' + script
+    );
+  });
+
+  test("verify-external step records time 0 in _STEP_TIMES", function() {
+    const step = makeVerifyExternal('verify-ext');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_TIMES+=("0")'),
+      'Expected _STEP_TIMES+=("0") for verify-external. Got snippet: ' + script
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — _handle_failure records to _STEP_FAILURES', function() {
+  test("_handle_failure contains ANSI strip pattern (sed)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("sed 's/\\x1b\\[[0-9;]*m//g'") || script.includes("sed 's/\\x1b"),
+      'Expected ANSI strip sed pattern in _handle_failure. Got snippet: ' + script.slice(script.indexOf('_handle_failure()'), script.indexOf('_handle_failure()') + 300)
+    );
+  });
+
+  test("_handle_failure contains control char strip (tr -d)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const fnStart = script.indexOf('_handle_failure()');
+    const fnEnd = script.indexOf('\n}', fnStart);
+    const fnBody = script.slice(fnStart, fnEnd + 2);
+    assert.ok(
+      fnBody.includes('tr -d'),
+      'Expected tr -d control char strip in _handle_failure. Got fn body: ' + fnBody
+    );
+  });
+
+  test("_handle_failure appends to _STEP_FAILURES inside function body", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const fnStart = script.indexOf('_handle_failure()');
+    const fnEnd = script.indexOf('\n}', fnStart);
+    const fnBody = script.slice(fnStart, fnEnd + 2);
+    assert.ok(
+      fnBody.includes('_STEP_FAILURES+='),
+      'Expected _STEP_FAILURES+= inside _handle_failure function body. Got fn body: ' + fnBody
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — _emit_junit function in compiled output', function() {
+  test("compiled output contains _emit_junit() function definition", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_emit_junit()'),
+      'Expected _emit_junit() function definition. Got snippet: ' + script.slice(0, 800)
+    );
+  });
+
+  test("_emit_junit function writes XML declaration", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const emitStart = script.indexOf('_emit_junit()');
+    const emitEnd = script.indexOf('\n}', emitStart);
+    const emitBody = script.slice(emitStart, emitEnd + 2);
+    assert.ok(
+      emitBody.includes('<?xml') || emitBody.includes('xml version'),
+      'Expected XML declaration in _emit_junit function. Got body: ' + emitBody
+    );
+  });
+
+  test("_emit_junit function writes testsuites element", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const emitStart = script.indexOf('_emit_junit()');
+    const emitEnd = script.indexOf('\n}', emitStart);
+    const emitBody = script.slice(emitStart, emitEnd + 2);
+    assert.ok(
+      emitBody.includes('testsuites') || emitBody.includes('<testsuites'),
+      'Expected testsuites element in _emit_junit function. Got body: ' + emitBody
+    );
+  });
+
+  test("_emit_junit function writes testsuite element", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const emitStart = script.indexOf('_emit_junit()');
+    const emitEnd = script.indexOf('\n}', emitStart);
+    const emitBody = script.slice(emitStart, emitEnd + 2);
+    assert.ok(
+      emitBody.includes('testsuite') || emitBody.includes('<testsuite'),
+      'Expected testsuite element in _emit_junit function. Got body: ' + emitBody
+    );
+  });
+
+  test("_emit_junit function writes testcase element", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    const emitStart = script.indexOf('_emit_junit()');
+    const emitEnd = script.indexOf('\n}', emitStart);
+    const emitBody = script.slice(emitStart, emitEnd + 2);
+    assert.ok(
+      emitBody.includes('testcase') || emitBody.includes('<testcase'),
+      'Expected testcase element in _emit_junit function. Got body: ' + emitBody
+    );
+  });
+
+  test("footer calls _emit_junit when JUNIT_OUTPUT is non-empty", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_emit_junit "$JUNIT_OUTPUT"') || script.includes('_emit_junit'),
+      'Expected _emit_junit call in footer. Got snippet: ' + script.slice(-500)
+    );
+    assert.ok(
+      script.includes('if [ -n "$JUNIT_OUTPUT" ]'),
+      'Expected conditional _emit_junit call based on JUNIT_OUTPUT. Got snippet: ' + script.slice(-500)
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — xmlAttrEscape', function() {
+  test("xmlAttrEscape escapes < as &lt;", function() {
+    const result = xmlAttrEscape('a<b');
+    assert.ok(
+      result.includes('&lt;'),
+      'Expected &lt; for < character. Got: ' + result
+    );
+  });
+
+  test("xmlAttrEscape escapes > as &gt;", function() {
+    const result = xmlAttrEscape('a>b');
+    assert.ok(
+      result.includes('&gt;'),
+      'Expected &gt; for > character. Got: ' + result
+    );
+  });
+
+  test("xmlAttrEscape escapes & as &amp;", function() {
+    const result = xmlAttrEscape('a&b');
+    assert.ok(
+      result.includes('&amp;'),
+      'Expected &amp; for & character. Got: ' + result
+    );
+  });
+
+  test("xmlAttrEscape escapes \" as &quot;", function() {
+    const result = xmlAttrEscape('a"b');
+    assert.ok(
+      result.includes('&quot;'),
+      'Expected &quot; for " character. Got: ' + result
+    );
+  });
+
+  test("xmlAttrEscape passes through normal ASCII text unchanged", function() {
+    const result = xmlAttrEscape('normal text');
+    assert.equal(result, 'normal text', 'Expected normal text unchanged');
+  });
+
+  test("xmlAttrEscape returns empty string for empty input", function() {
+    const result = xmlAttrEscape('');
+    assert.equal(result, '', 'Expected empty string for empty input');
+  });
+
+  test("xmlAttrEscape passes CJK characters through as UTF-8 (not numeric entities)", function() {
+    const result = xmlAttrEscape('登入頁面');
+    assert.ok(
+      result.includes('登入頁面'),
+      'Expected CJK characters to pass through as UTF-8. Got: ' + result
+    );
+    assert.ok(
+      !result.includes('&#'),
+      'CJK must not be encoded as numeric entities. Got: ' + result
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — CJK step name as UTF-8 in _STEP_NAMES', function() {
+  test("flow with CJK step ID has UTF-8 in _STEP_NAMES (not numeric entities)", function() {
+    const step = {
+      id: '登入頁面',
+      action: 'Navigate to login',
+      type: 'navigate',
+      operands: { target: '/login', urlPath: '/login' },
+    };
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_NAMES+=("登入頁面")'),
+      'Expected CJK step id as UTF-8 in _STEP_NAMES. Got snippet: ' + script
+    );
+    assert.ok(
+      !script.includes('&#'),
+      'CJK must not appear as numeric entities. Got snippet: ' + script
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — angle bracket step names XML-escaped in _STEP_NAMES', function() {
+  test("flow with angle bracket step ID has escaped values in _STEP_NAMES", function() {
+    const step = {
+      id: 'check-<input>-field',
+      action: 'Check input field',
+      type: 'navigate',
+      operands: { target: '/form', urlPath: '/form' },
+    };
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_STEP_NAMES+=("check-&lt;input&gt;-field")'),
+      'Expected &lt; and &gt; escaping in _STEP_NAMES for angle bracket step ID. Got snippet: ' + script
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — --junit omitted preserves v1.0 behavior', function() {
+  test("JUNIT_OUTPUT=\"\" is the default (no --junit = empty string)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('JUNIT_OUTPUT=""'),
+      'Expected JUNIT_OUTPUT="" default for v1.0 compat. Got snippet: ' + script.slice(0, 400)
+    );
+  });
+
+  test("footer has conditional _emit_junit (no-op when JUNIT_OUTPUT is empty)", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('if [ -n "$JUNIT_OUTPUT" ]'),
+      'Expected conditional check before _emit_junit call. Got snippet: ' + script.slice(-500)
+    );
+  });
+
+  test("step bookkeeping arrays are always emitted regardless of --junit", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // Arrays present even without --junit (overhead is negligible)
+    assert.ok(
+      script.includes('_STEP_NAMES=()') &&
+      script.includes('_STEP_RESULTS=()') &&
+      script.includes('_STEP_FAILURES=()') &&
+      script.includes('_STEP_TIMES=()'),
+      'All step bookkeeping arrays must always be emitted. Got snippet: ' + script.slice(0, 600)
+    );
+  });
+});
+
+describe('v2.0 JUnit XML codegen (FLAG-01) — --junit empty-path guard (Pitfall 5)', function() {
+  test("compiled output contains empty-path guard in --junit case", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('echo "ERROR: --junit requires a path argument"'),
+      'Expected ERROR message for empty --junit path. Got snippet: ' + script.slice(0, 700)
+    );
+  });
+
+  test("empty-path guard exits 1 when JUNIT_OUTPUT is empty after --junit flag", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // The --junit case block must have an exit 1 guard for empty path
+    const junitCaseIdx = script.indexOf('--junit)');
+    const junitCaseEnd = script.indexOf(';;', junitCaseIdx);
+    const junitCaseBlock = script.slice(junitCaseIdx, junitCaseEnd);
+    assert.ok(
+      junitCaseBlock.includes('exit 1'),
+      'Expected exit 1 guard in --junit case for empty path. Got case block: ' + junitCaseBlock
+    );
+  });
+});
