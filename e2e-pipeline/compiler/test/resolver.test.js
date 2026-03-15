@@ -659,3 +659,70 @@ describe('cross-site sites: block — resolver', function() {
     assert.ok(parseResult.sites.app.mapping, 'sites.app.mapping should be loaded');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 4 Plan 02: wait: field threading (CODEGEN-02)
+// ---------------------------------------------------------------------------
+
+test('resolve: step with wait: 15 produces resolvedStep with timeout: 15', () => {
+  const flow = {
+    name: 'test-timeout',
+    steps: [
+      {
+        id: 'fill-email',
+        type: 'fill',
+        action: "Fill email_input with 'test@example.com' on login",
+        wait: 15,
+        expect: ['email_input is visible'],
+      },
+    ],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  assert.ok(step, 'step should be resolved');
+  assert.equal(step.timeout, 15, 'step.timeout should be 15 (from wait: 15). Got: ' + step.timeout);
+});
+
+test('resolve: step without wait: field produces resolvedStep with no timeout key', () => {
+  const flow = {
+    name: 'test-no-timeout',
+    steps: [
+      {
+        id: 'fill-email',
+        type: 'fill',
+        action: "Fill email_input with 'test@example.com' on login",
+        expect: ['email_input is visible'],
+      },
+    ],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  assert.ok(step, 'step should be resolved');
+  assert.equal(step.timeout, undefined, 'step.timeout should be undefined when no wait: field. Got: ' + step.timeout);
+});
+
+test('resolveMultiSite: cross-site step with wait: also gets timeout threaded', () => {
+  const crossSiteFlowWithWait = {
+    name: 'cross-site-timeout',
+    sites: {
+      office: { mapping: 'site-a' },
+      app: { mapping: 'site-b' },
+    },
+    steps: [
+      { id: 'office-nav', site: 'office', type: 'navigate', action: 'Navigate to /dashboard', wait: 20 },
+      { id: 'app-nav', site: 'app', type: 'navigate', action: 'Navigate to /home' },
+    ],
+  };
+  const result = resolveMultiSite(crossSiteFlowWithWait, SITE_MAPPINGS);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+
+  const officeNav = result.resolved.steps.find(s => s.id === 'office-nav');
+  assert.ok(officeNav, 'office-nav step should be resolved');
+  assert.equal(officeNav.timeout, 20, 'office-nav should have timeout: 20 (from wait: 20)');
+
+  const appNav = result.resolved.steps.find(s => s.id === 'app-nav');
+  assert.ok(appNav, 'app-nav step should be resolved');
+  assert.equal(appNav.timeout, undefined, 'app-nav without wait: should have no timeout');
+});
