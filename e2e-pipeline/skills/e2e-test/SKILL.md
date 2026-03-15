@@ -10,7 +10,7 @@ Resolve browser E2E test flows and dispatch the `e2e-test-runner` agent for exec
 ## Invocation
 
 ```
-/e2e-test [flow-name|--tag tag|--all] [--mapping name] [--all-sites] [--suite name] [--pr NUMBER] [--issue ISSUE-ID] [--video]
+/e2e-test [flow-name|--tag tag|--all] [--mapping name] [--all-sites] [--suite name] [--pr NUMBER] [--issue ISSUE-ID] [--video] [--no-compile]
 ```
 
 | Arg | Effect |
@@ -24,6 +24,7 @@ Resolve browser E2E test flows and dispatch the `e2e-test-runner` agent for exec
 | `--all-sites` | Discover all mappings and run applicable flows on each site |
 | `--suite name` | Run a specific suite from `.claude/e2e/suites/<name>.yaml` |
 | `--video` | Enable screen recording + GIF generation (auto-enabled when `--pr` is used) |
+| `--no-compile` | Skip auto-compile and compiled script run after LLM execution |
 
 ## Prerequisites
 
@@ -148,6 +149,69 @@ Agent returns: `api_failures`, `console_errors`, `clean`, `analysis_path`. Merge
 
 If `trace.zip` doesn't exist (e.g., trace was never started), skip this phase.
 
+## Phase 1.8 -- Auto-Compile and Compiled Run
+
+> Default ON. Skip entirely when `--no-compile` was passed.
+
+After trace analysis, auto-compile and run the same flow as a compiled script to detect divergence between LLM and deterministic execution.
+
+### Step 1: Locate compiler
+
+```bash
+COMPILER=$(find ~/.claude/plugins -name "e2e-compile.js" -path "*/e2e-pipeline/bin/*" -print -quit 2>/dev/null)
+```
+
+If not found: skip Phase 1.8 with note "Compiler not found -- skipping auto-compile."
+
+### Step 2: Compile the flow
+
+```bash
+node "$COMPILER" "$FLOW_NAME" \
+  --flows-dir .claude/e2e/flows \
+  --mappings-dir .claude/e2e/mappings \
+  --output-dir .claude/e2e/compiled
+```
+
+If compilation fails: present the error, skip compiled run, note divergence is unavailable.
+
+### Step 3: Run the compiled script
+
+```bash
+COMPILED_JUNIT="$REPORT_DIR/compiled-junit.xml"
+bash ".claude/e2e/compiled/${FLOW_NAME}.sh" \
+  --junit "$COMPILED_JUNIT" \
+  --continue-on-error
+COMPILED_EXIT=$?
+```
+
+Capture exit code. Both pass (0) and fail (non-zero) proceed to divergence analysis.
+
+### Step 4: Divergence analysis (INT-03)
+
+Compare LLM agent results vs compiled script results step-by-step.
+
+**Source data:**
+- LLM results: `key_findings` from agent return (natural language per step)
+- Compiled results: Parse `$COMPILED_JUNIT` XML for step outcomes (`<testcase>` pass vs `<failure>`)
+
+**Build divergence table:**
+
+| Step | LLM Result | Compiled Result | Status | Likely Cause |
+|------|-----------|-----------------|--------|--------------|
+| step-id | PASS | PASS | Same | -- |
+| step-id | PASS | FAIL | Diverged | Selector may be timing-sensitive |
+| step-id | FAIL | PASS | Diverged | LLM may have hallucinated failure |
+
+**Likely cause heuristics:**
+- LLM PASS / Compiled FAIL -> "Selector may be timing-sensitive; LLM used snapshot @ref, compiled uses static selector"
+- LLM FAIL / Compiled PASS -> "LLM may have hallucinated failure; compiled script is authoritative"
+- Both FAIL -> "Genuine bug in app or test"
+- Both PASS -> No action needed
+
+**Summary line:** "Divergence: N diverged steps out of M total"
+
+If 0 diverged: "LLM and compiled runs agree on all steps."
+
 ## Phase 2 — Present Results
 
 **Single:** `Test complete: N/M PASS (X console errors, Y API failures) Report: <path> Browser still open.`
@@ -165,6 +229,32 @@ If recording was enabled, append:
 | bad-format | ERROR | — (invalid YAML) |
 
 **Multi-site:** Per-site summary + total.
+
+**Quick Re-Run (always shown after single-flow results):**
+
+```
+## Quick Re-Run
+
+To reproduce this test without AI execution:
+```bash
+bash .claude/e2e/compiled/<flow-name>.sh
+```
+
+With full options (continue on error, JUnit output):
+```bash
+bash .claude/e2e/compiled/<flow-name>.sh --continue-on-error --junit /tmp/junit.xml
+```
+
+> Compiled script regenerated automatically. To force recompile: `/e2e-compile <flow-name>`
+```
+
+Include the Quick Re-Run section in both single-flow results and in the per-flow section of batch results.
+
+**Divergence Report (when Phase 1.8 ran):**
+
+Present the divergence table from Step 4. If 0 diverged steps, show: "Compiled run matches LLM run -- all steps agree."
+
+If diverged steps exist, add recommendation: "Re-run `/e2e-compile --dry-run <flow>` to validate selectors, or update the mapping with a more stable selector."
 
 **On failures:** Offer "Investigate?", "Keep browser open", "Re-run failed?".
 
