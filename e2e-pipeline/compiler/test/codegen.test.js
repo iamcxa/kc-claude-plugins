@@ -72,7 +72,8 @@ describe('singleQuote()', function() {
 
   test("string with embedded single quote uses escape pattern", function() {
     // input[type='password'] → 'input[type='\''password'\'']'
-    assert.equal(singleQuote("input[type='password']"), "'input[type='\\''password'\\''']'");
+    // Each ' becomes '\'' — end quote, backslash-escaped quote, reopen quote
+    assert.equal(singleQuote("input[type='password']"), "'input[type='\\''password'\\'']'");
   });
 
   test("string with double quotes is unaffected (only single quotes escaped)", function() {
@@ -169,7 +170,7 @@ describe('generate() — fill action', function() {
     const step = makeFill('fill-pass', 'password_input', "input[type='password']", 'secret');
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("agent-browser fill 'input[type='\\''password'\\''']' 'secret'"),
+      script.includes("agent-browser fill 'input[type='\\''password'\\'']' 'secret'"),
       'Expected escaped single quotes in fill. Got: ' + script
     );
   });
