@@ -140,6 +140,108 @@ function generateHeader(meta) {
 }
 
 // ---------------------------------------------------------------------------
+// Runtime flag parsing block (FLAG-02 + FLAG-03)
+// ---------------------------------------------------------------------------
+
+/**
+ * generateRuntimeFlagBlock() — produce bash flag-parsing block for compiled scripts.
+ *
+ * Parses --continue-on-error and --retries N at script runtime.
+ * Must appear BEFORE variable assignment (uses shift/set -- to consume flags).
+ *
+ * Uses set -- "${_POSITIONAL[@]:-}" (the :- is required for bash 3.2 + set -u)
+ *
+ * Returns: string (multi-line bash block)
+ */
+function generateRuntimeFlagBlock() {
+  var lines = [
+    '# Runtime flags',
+    'CONTINUE_ON_ERROR=false',
+    'RETRIES=0',
+    '_POSITIONAL=()',
+    'while [[ $# -gt 0 ]]; do',
+    '  case "$1" in',
+    '    --continue-on-error)',
+    '      CONTINUE_ON_ERROR=true',
+    '      shift',
+    '      ;;',
+    '    --retries)',
+    '      RETRIES="$2"',
+    '      shift 2',
+    '      ;;',
+    '    *)',
+    '      _POSITIONAL+=("$1")',
+    '      shift',
+    '      ;;',
+    '  esac',
+    'done',
+    'set -- "${_POSITIONAL[@]:-}"',
+    '',
+  ];
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
+// Runtime support functions (_handle_failure, _FAILED_STEPS)
+// ---------------------------------------------------------------------------
+
+/**
+ * generateRuntimeSupport() — produce _FAILED_STEPS array and _handle_failure() function.
+ *
+ * _handle_failure "step_id" "msg":
+ *   - Echoes FAIL line
+ *   - If CONTINUE_ON_ERROR=true: accumulates step_id into _FAILED_STEPS
+ *   - If CONTINUE_ON_ERROR=false: calls exit 1 (v1.0 backward compat)
+ *   - Always returns 0 so the || operator satisfies set -e
+ *
+ * Returns: string (multi-line bash block)
+ */
+function generateRuntimeSupport() {
+  var lines = [
+    '# Failure accumulator',
+    '_FAILED_STEPS=()',
+    '_handle_failure() {',
+    '  local _step_id="$1"',
+    '  local _msg="$2"',
+    '  echo "FAIL: $_step_id -- $_msg"',
+    '  if [ "$CONTINUE_ON_ERROR" = "true" ]; then',
+    '    _FAILED_STEPS+=("$_step_id")',
+    '  else',
+    '    exit 1',
+    '  fi',
+    '  return 0',
+    '}',
+    '',
+  ];
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
+// Footer generation (structured PASS/FAIL summary)
+// ---------------------------------------------------------------------------
+
+/**
+ * generateFooter(flowName, totalSteps, skipped) — produce structured exit block.
+ *
+ * If any steps in _FAILED_STEPS: emit "FAIL: N steps failed: list" and exit 1
+ * Otherwise: emit "PASS: flowName (N/N steps, M skipped)" and exit 0
+ *
+ * Returns: string (multi-line bash block)
+ */
+function generateFooter(flowName, totalSteps, skipped) {
+  var lines = [
+    '# Exit summary',
+    'if [ ${#_FAILED_STEPS[@]} -gt 0 ]; then',
+    '  echo "FAIL: ${#_FAILED_STEPS[@]} steps failed: ${_FAILED_STEPS[*]}"',
+    '  exit 1',
+    'fi',
+    'echo "PASS: ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    'exit 0',
+  ];
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
 // Per-action bash block generation
 // ---------------------------------------------------------------------------
 
@@ -168,29 +270,54 @@ function generateAction(step, stepIndex, totalSteps) {
   switch (step.type) {
     case 'navigate': {
       var urlPath = step.operands.urlPath || step.operands.target;
-      lines.push('agent-browser ' + sessionPrefix + 'open "' + baseUrlVar + urlPath + '" || {');
-      lines.push('  echo "FAIL: ' + step.id + ' -- navigate to ' + urlPath + ' failed"');
-      lines.push('  exit 1');
-      lines.push('}');
+      var navCmd = 'agent-browser ' + sessionPrefix + 'open "' + baseUrlVar + urlPath + '"';
+      var navMsg = 'navigate to ' + urlPath + ' failed';
+      lines.push('_retry=0');
+      lines.push('while true; do');
+      lines.push('  ' + navCmd + ' && break');
+      lines.push('  _retry=$((_retry + 1))');
+      lines.push('  if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then');
+      lines.push('    _handle_failure "' + step.id + '" "' + navMsg + '"');
+      lines.push('    break');
+      lines.push('  fi');
+      lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
+      lines.push('  sleep 2');
+      lines.push('done');
       break;
     }
 
     case 'click': {
       var sel = singleQuote(step.operands.selector);
-      lines.push('agent-browser ' + sessionPrefix + 'click ' + sel + ' || {');
-      lines.push('  echo "FAIL: ' + step.id + ' -- click action failed"');
-      lines.push('  exit 1');
-      lines.push('}');
+      var clickCmd = 'agent-browser ' + sessionPrefix + 'click ' + sel;
+      lines.push('_retry=0');
+      lines.push('while true; do');
+      lines.push('  ' + clickCmd + ' && break');
+      lines.push('  _retry=$((_retry + 1))');
+      lines.push('  if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then');
+      lines.push('    _handle_failure "' + step.id + '" "click action failed"');
+      lines.push('    break');
+      lines.push('  fi');
+      lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
+      lines.push('  sleep 2');
+      lines.push('done');
       break;
     }
 
     case 'fill': {
       var fillSel = singleQuote(step.operands.selector);
       var fillVal = singleQuote(step.operands.value);
-      lines.push('agent-browser ' + sessionPrefix + 'fill ' + fillSel + ' ' + fillVal + ' || {');
-      lines.push('  echo "FAIL: ' + step.id + ' -- fill action failed"');
-      lines.push('  exit 1');
-      lines.push('}');
+      var fillCmd = 'agent-browser ' + sessionPrefix + 'fill ' + fillSel + ' ' + fillVal;
+      lines.push('_retry=0');
+      lines.push('while true; do');
+      lines.push('  ' + fillCmd + ' && break');
+      lines.push('  _retry=$((_retry + 1))');
+      lines.push('  if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then');
+      lines.push('    _handle_failure "' + step.id + '" "fill action failed"');
+      lines.push('    break');
+      lines.push('  fi');
+      lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
+      lines.push('  sleep 2');
+      lines.push('done');
       break;
     }
 
@@ -339,14 +466,20 @@ function generate(resolved, flowName, meta) {
   // 1. Shell header (with optional provenance metadata)
   parts.push(generateHeader(meta));
 
-  // 2. Variable handling — generateVariables() adds block when present
+  // 2. Runtime flag parsing — BEFORE variable block (flags consume $1/$2 positional args)
+  parts.push(generateRuntimeFlagBlock());
+
+  // 3. Variable handling — generateVariables() adds block when present
   var varBlock = generateVariables(resolved.variables, flowName);
   if (varBlock) {
     parts.push(varBlock);
     parts.push('');
   }
 
-  // 3. Per-step action blocks
+  // 4. Runtime support functions (_handle_failure, _FAILED_STEPS)
+  parts.push(generateRuntimeSupport());
+
+  // 5. Per-step action blocks
   for (var si = 0; si < steps.length; si++) {
     var step = steps[si];
 
@@ -361,9 +494,8 @@ function generate(resolved, flowName, meta) {
     parts.push('');
   }
 
-  // 4. PASS summary and exit
-  parts.push('echo "PASS: ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"');
-  parts.push('exit 0');
+  // 6. Structured footer (replaces inline PASS/exit 0)
+  parts.push(generateFooter(flowName, totalSteps, skipped));
 
   return parts.join('\n');
 }
