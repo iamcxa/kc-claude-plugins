@@ -22,6 +22,9 @@ Route E2E operations to the correct executor with auth pre-flight.
 | `--map <app>` | `/e2e-dispatch --map my-app` |
 | `--map --interactive` | `/e2e-dispatch --map my-app --interactive` |
 | `--walk [mapping]` | `/e2e-dispatch --walk admin-panel` |
+| `--flow [--from source]` | `/e2e-dispatch --flow --from plan.md` |
+| `--flow --smoke` | `/e2e-dispatch --flow --smoke` |
+| `--flow --verify-only` | `/e2e-dispatch --flow --verify-only login-flow` |
 | `--analyze <path>` | `/e2e-dispatch --analyze e2e-reports/trace.zip` |
 | `--ops [mode]` | `/e2e-dispatch --ops --debug` |
 
@@ -30,27 +33,29 @@ No args or ambiguous request: present the routing menu and ask user to choose:
 > **Available E2E operations:**
 > 1. `--test` — Run E2E test flows (single flow, suite, tag, or all)
 > 2. `--map` — Create or update UI element mappings
-> 3. `--walk` — Interactive walkthrough / explore UI
-> 4. `--analyze` — Analyze a Playwright trace file
-> 5. `--ops` — Debug, maintain, or evaluate E2E skills
+> 3. `--flow` — Generate & verify E2E flows from plans/specs/PRs, or smoke test
+> 4. `--walk` — Interactive walkthrough / explore UI
+> 5. `--analyze` — Analyze a Playwright trace file
+> 6. `--ops` — Debug, maintain, or evaluate E2E skills
 >
 > Which operation? (or describe what you want to do)
 
 **Routing priority** (when user intent matches multiple routes):
 1. Explicit `--flag` → use that route directly
-2. Natural language with clear action verb → match: "test" → `--test`, "record/map" → `--map`, "walk/explore/browse" → `--walk`, "analyze/trace" → `--analyze`, "debug/fix skill" → `--ops`
+2. Natural language with clear action verb → match: "test" → `--test`, "record/map" → `--map`, "generate flow/verify flow/smoke test" → `--flow`, "walk/explore/browse" → `--walk`, "analyze/trace" → `--analyze`, "debug/fix skill" → `--ops`
 3. Ambiguous → present the menu above and ask user to clarify
 
 **Unknown command** (e.g., `--deploy`, `--something`): respond with "Unknown e2e operation. Available operations:" + the menu above.
 
 ## Auth Gate
 
-**Applies to**: `--test`, `--map`, `--walk` (NOT `--analyze` or `--ops`)
+**Applies to**: `--test`, `--map`, `--flow`, `--walk` (NOT `--analyze` or `--ops`)
 
 1. **Determine app name** from the arguments:
    - `--test`: resolve flow file → read `mapping:` field → load mapping → `app` field
    - `--test --suite`: resolve suite → collect all unique site mappings → `app` fields (check all)
    - `--map <app>`: use the `<app>` argument directly
+   - `--flow`: resolve mapping from `--mapping` arg or auto-discover → `app` field
    - `--walk [mapping]`: read mapping file → `app` field
 
 2. **Check auth profile exists**:
@@ -86,9 +91,17 @@ The e2e-map skill runs codebase analysis then dispatches e2e-mapper agent.
 ### --map --interactive
 Invoke `Skill: "e2e-map"` — runs entirely in main context (interactive mode).
 
+### --flow
+Invoke `Skill: "e2e-flow"` with --from, --smoke, --verify-only, --mapping, --pr, --issue, --no-verify, --no-video arguments.
+The e2e-flow skill runs codebase scan then dispatches flow-writer + flow-verifier agents.
+
 ### --walk
-Invoke `Skill: "e2e-walkthrough"` with mapping name and any --mode, --smoke, --verify, --sites, --pr, --issue, **--no-video** arguments.
+Invoke `Skill: "e2e-walkthrough"` with mapping name and any --mode, --sites, --pr, --issue, **--no-video** arguments.
 Runs entirely in main context (interactive).
+
+**Rerouting:** If `--walk` is combined with `--smoke` or `--verify`, redirect to `--flow`:
+- `--walk --smoke` → `--flow --smoke` (smoke test is now automated via flow-writer)
+- `--walk --verify` → `--flow --verify-only` (verification is now automated via flow-verifier)
 
 ### --analyze
 Dispatch directly — no skill needed:
@@ -109,6 +122,7 @@ Invoke `Skill: "e2e-skill-ops"` with --debug/--maintain/--add-feature/--evaluate
 | `--test` | Background | `--fg` for foreground |
 | `--map` (no --interactive) | Background | `--fg` for foreground |
 | `--map --interactive` | Foreground | — |
+| `--flow` | Foreground | — |
 | `--walk` | Foreground | — |
 | `--analyze` | Background | `--fg` for foreground |
 | `--ops` | Foreground | — |
@@ -130,9 +144,11 @@ Direct invocation of `/e2e-test`, `/e2e-map`, `/e2e-walkthrough`, `/e2e-skill-op
 | All smoke tagged | `/e2e-dispatch --test --tag smoke` |
 | Map new app | `/e2e-dispatch --map my-app` |
 | Update one page | `/e2e-dispatch --map my-app --page dashboard` |
+| Generate flow from plan | `/e2e-dispatch --flow --from plan.md` |
+| Smoke test all pages | `/e2e-dispatch --flow --smoke` |
+| Verify existing flow | `/e2e-dispatch --flow --verify-only login-flow` |
 | Interactive explore | `/e2e-dispatch --walk admin-panel` |
 | Analyze trace | `/e2e-dispatch --analyze e2e-reports/20260306/trace.zip` |
 | Debug skill issue | `/e2e-dispatch --ops --debug` |
 | Record a test run | `/e2e-dispatch --test login-flow --video` |
 | Walkthrough no video | `/e2e-dispatch --walk admin-panel --no-video` |
-| Verify feature via walkthrough | `/e2e-dispatch --walk admin-panel --verify` |
