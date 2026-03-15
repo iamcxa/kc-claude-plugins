@@ -6,6 +6,9 @@
   "scripts": {
     "test": "node --test compiler/test/"
   },
+  "bin": {
+    "e2e-compile": "bin/e2e-compile.js"
+  },
   "dependencies": {
     "commander": "^14.0.3",
     "js-yaml": "^4.1.1"
