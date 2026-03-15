@@ -23,9 +23,8 @@ name: Browser E2E
 on:
   pull_request:
     branches: [main]
-  # Uncomment for push-triggered runs:
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
 
 # Cancel in-progress runs for the same PR (prevents stale E2E runs blocking merges)
 concurrency:
@@ -176,6 +175,7 @@ jobs:
           chmod +x .claude/e2e/compiled/${{ matrix.flow }}.sh
           .claude/e2e/compiled/${{ matrix.flow }}.sh \
             --junit /tmp/junit-${{ matrix.flow }}.xml \
+            --metrics-output /tmp/e2e-metrics-${{ matrix.flow }}.json \
             --continue-on-error
 
       # CI-02: Failure artifacts persist on both pass and fail for debugging
@@ -189,6 +189,7 @@ jobs:
           retention-days: 7
           path: |
             /tmp/junit-${{ matrix.flow }}.xml
+            /tmp/e2e-metrics-${{ matrix.flow }}.json
             /tmp/e2e-screenshots/
             /tmp/e2e-trace/
 
@@ -211,6 +212,32 @@ jobs:
           path: junit-results
           merge-multiple: true
 
+      # Checkout quarantine.json to enable quarantine-aware gate on PR runs
+      - name: Checkout for quarantine state
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: .claude/e2e/quarantine.json
+          sparse-checkout-cone-mode: false
+
+      # Remove JUnit XML files for quarantined flows so they don't contribute to fail_on_failure gate
+      - name: Exclude quarantined flows from gate
+        run: |
+          if [ -f .claude/e2e/quarantine.json ]; then
+            node -e "
+              var fs = require('fs');
+              var q = JSON.parse(fs.readFileSync('.claude/e2e/quarantine.json', 'utf8'));
+              Object.keys(q.flows || {}).forEach(function(f) {
+                if (q.flows[f].status === 'quarantined') {
+                  var junitFile = 'junit-results/junit-' + f + '.xml';
+                  if (fs.existsSync(junitFile)) {
+                    console.log('Excluding quarantined flow from gate: ' + f);
+                    fs.unlinkSync(junitFile);
+                  }
+                }
+              });
+            "
+          fi
+
       - name: Publish JUnit report
         uses: mikepenz/action-junit-report@v6
         with:
@@ -218,3 +245,63 @@ jobs:
           fail_on_failure: true    # Creates hard CI gate — PR cannot merge with failures
           check_name: 'E2E Test Results'
           summary: true
+
+      # Full checkout on main branch runs to enable state commit
+      - name: Checkout repo
+        uses: actions/checkout@v6
+        if: github.ref == 'refs/heads/main'
+
+      # Node.js required for e2e-quarantine.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Evaluate quarantine state on main branch — updates quarantine.json and manages GH issues
+      - name: Evaluate quarantine state
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node kc-claude-plugins/e2e-pipeline/bin/e2e-quarantine.js \
+            --metrics-dir junit-results \
+            --quarantine-path .claude/e2e/quarantine.json \
+            --manage-issues \
+            --rotate
+
+      # Commit updated metrics and quarantine state to main branch with [skip ci]
+      - name: Commit metrics and quarantine state
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p .claude/e2e/metrics/
+          cp junit-results/e2e-metrics-*.json .claude/e2e/metrics/ 2>/dev/null || true
+          git add .claude/e2e/metrics/ .claude/e2e/quarantine.json
+          git diff --staged --quiet || git commit -m "ci: update E2E flaky metrics and quarantine state [skip ci]"
+          git push
+
+      # Post quarantine table as PR comment (only when quarantined flows exist)
+      - name: Post quarantine PR comment
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node kc-claude-plugins/e2e-pipeline/bin/e2e-quarantine.js \
+            --quarantine-path .claude/e2e/quarantine.json \
+            --pr-comment ${{ github.event.pull_request.number }}
+
+      # Emit ::warning:: annotations for quarantined flows (PR runs only)
+      - name: Quarantine warnings
+        if: github.event_name == 'pull_request'
+        run: |
+          if [ -f .claude/e2e/quarantine.json ]; then
+            node -e "
+              var q = require('./.claude/e2e/quarantine.json');
+              Object.keys(q.flows || {}).forEach(function(f) {
+                if (q.flows[f].status === 'quarantined') {
+                  console.log('::warning::Flow ' + f + ' is quarantined (flaky rate: ' + (q.flows[f].flaky_rate * 100).toFixed(0) + '%). Failures will not block merge.');
+                }
+              });
+            "
+          fi
