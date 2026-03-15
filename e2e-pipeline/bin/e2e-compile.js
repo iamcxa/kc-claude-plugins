@@ -19,6 +19,7 @@ const { Command } = require('commander');
 const path = require('node:path');
 const fs = require('node:fs');
 const { compile } = require('../compiler/compiler.js');
+const { appendCoverageHistory, checkCoverageRegression } = require('../compiler/coverage.js');
 
 const program = new Command();
 
@@ -32,6 +33,8 @@ program
   .option('--all', 'compile all flows in flows directory')
   .option('--dry-run', 'validate flow + mapping coherence without writing output')
   .option('--verbose', 'show resolved operands and expects per step')
+  .option('--coverage', 'produce static coverage report after compilation')
+  .option('--coverage-output <dir>', 'directory for coverage JSON output', '.claude/e2e/coverage')
   .option('--flows-dir <dir>', 'flows directory', '.claude/e2e/flows')
   .option('--mappings-dir <dir>', 'mappings directory', '.claude/e2e/mappings')
   .option('--output-dir <dir>', 'output directory', '.claude/e2e/compiled')
@@ -39,6 +42,7 @@ program
     var compileOptions = {
       dryRun: options.dryRun || false,
       verbose: options.verbose || false,
+      coverage: options.coverage || false,
     };
 
     if (options.all) {
@@ -68,6 +72,13 @@ program
       var failed = 0;
       var failures = [];
 
+      // Aggregate coverage across all flows (for --all --coverage)
+      var allCoverageElements = {};  // keyed by element name, accumulate verified/reached
+      var allCoverageTotal = 0;
+      var allCoverageVerified = 0;
+      var allCoverageReached = 0;
+      var coverageFlowCount = 0;
+
       // Process each file — continue on error (CRITICAL: never stop on first failure)
       for (var i = 0; i < files.length; i++) {
         var flowFile = files[i];
@@ -78,6 +89,17 @@ program
           if (result.success) {
             console.log('OK: ' + flowBaseName);
             passed++;
+            // Aggregate coverage if available
+            if (options.coverage && result.coverage) {
+              coverageFlowCount++;
+              result.coverage.elements.forEach(function(el) {
+                if (!allCoverageElements[el.name]) {
+                  allCoverageElements[el.name] = { name: el.name, page: el.page, reached_count: 0, verified_count: 0 };
+                }
+                allCoverageElements[el.name].reached_count += el.reached_count;
+                allCoverageElements[el.name].verified_count += el.verified_count;
+              });
+            }
           } else {
             console.error('FAIL: ' + flowBaseName + (result.errors ? ' — ' + result.errors.join(', ') : ''));
             failures.push(flowBaseName);
@@ -88,6 +110,45 @@ program
           failures.push(flowBaseName);
           failed++;
         }
+      }
+
+      // Emit aggregated coverage summary for --all --coverage
+      if (options.coverage && coverageFlowCount > 0) {
+        var aggElements = Object.values(allCoverageElements);
+        var aggTotal = aggElements.length;
+        aggElements.forEach(function(el) {
+          if (el.reached_count > 0) allCoverageReached++;
+          if (el.verified_count > 0) allCoverageVerified++;
+        });
+        allCoverageTotal = aggTotal;
+        var aggPercent = aggTotal === 0 ? 0 : Math.round((allCoverageVerified / aggTotal) * 100);
+        console.log('Coverage: ' + allCoverageVerified + '/' + aggTotal + ' elements (' + aggPercent + '%) verified across ' + coverageFlowCount + ' flow' + (coverageFlowCount === 1 ? '' : 's'));
+
+        // Write aggregated coverage.json
+        var coverageOutputDir = options.coverageOutput;
+        fs.mkdirSync(coverageOutputDir, { recursive: true });
+        var aggCoverageData = {
+          flow: '__all__',
+          timestamp: new Date().toISOString(),
+          elements: aggElements,
+          summary: {
+            total: aggTotal,
+            reached: allCoverageReached,
+            verified: allCoverageVerified,
+            percent: aggPercent,
+          },
+        };
+        fs.writeFileSync(path.join(coverageOutputDir, 'coverage.json'), JSON.stringify(aggCoverageData, null, 2) + '\n', 'utf8');
+
+        // Append to coverage-history.json
+        var historyPath = path.join(coverageOutputDir, 'coverage-history.json');
+        appendCoverageHistory(historyPath, {
+          flow: '__all__',
+          timestamp: new Date().toISOString(),
+          percent: aggPercent,
+          verified: allCoverageVerified,
+          total: aggTotal,
+        });
       }
 
       // Summary report
@@ -118,6 +179,58 @@ program
         var result = await compile(flowPath, mappingsDir, outputDir, compileOptions);
         if (result.success) {
           console.log('OK: ' + path.basename(flowName, '.yaml'));
+
+          // Output coverage data when --coverage flag was used
+          if (options.coverage && result.coverage) {
+            var cov = result.coverage;
+            var coverageOutputDir = options.coverageOutput;
+            var flowBaseName = path.basename(flowName, '.yaml');
+
+            // Print coverage summary line
+            console.log('Coverage: ' + cov.summary.verified + '/' + cov.summary.total + ' elements (' + cov.summary.percent + '%) verified across 1 flow');
+
+            // Print reached-but-not-verified elements
+            var reachedNotVerified = cov.elements.filter(function(el) { return el.reached_count > 0 && el.verified_count === 0; });
+            if (reachedNotVerified.length > 0) {
+              console.log('Reached but not verified (' + reachedNotVerified.length + '):');
+              reachedNotVerified.forEach(function(el) { console.log('  - ' + el.page + '/' + el.name); });
+            }
+
+            // Print untouched elements
+            var untouched = cov.elements.filter(function(el) { return el.reached_count === 0 && el.verified_count === 0; });
+            if (untouched.length > 0) {
+              console.log('Untouched (' + untouched.length + '):');
+              untouched.forEach(function(el) { console.log('  - ' + el.page + '/' + el.name); });
+            }
+
+            // Write coverage.json to coverage output directory
+            fs.mkdirSync(coverageOutputDir, { recursive: true });
+            var coverageJson = {
+              flow: flowBaseName,
+              timestamp: new Date().toISOString(),
+              elements: cov.elements,
+              summary: cov.summary,
+            };
+            fs.writeFileSync(path.join(coverageOutputDir, 'coverage.json'), JSON.stringify(coverageJson, null, 2) + '\n', 'utf8');
+
+            // Append to coverage-history.json
+            var historyPath = path.join(coverageOutputDir, 'coverage-history.json');
+            appendCoverageHistory(historyPath, {
+              flow: flowBaseName,
+              mapping: flowBaseName,
+              timestamp: new Date().toISOString(),
+              percent: cov.summary.percent,
+              verified: cov.summary.verified,
+              total: cov.summary.total,
+            });
+
+            // Check for regression and emit warning if applicable
+            var warning = checkCoverageRegression(historyPath, flowBaseName, cov.summary.percent);
+            if (warning) {
+              console.log(warning);
+            }
+          }
+
           process.exit(0);
         } else {
           if (result.errors) {

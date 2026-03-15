@@ -282,6 +282,137 @@ describe('CLI-05: --verbose mode', function() {
 });
 
 // ---------------------------------------------------------------------------
+// CLI-07: --coverage flag
+// ---------------------------------------------------------------------------
+
+describe('CLI-07: --coverage flag', function() {
+  var tmpDir;
+  var coverageDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+    coverageDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    fs.rmSync(coverageDir, { recursive: true, force: true });
+  });
+
+  test("--coverage flag compiles and exits 0", function() {
+    var result = runCli([
+      '--coverage',
+      '--coverage-output', coverageDir,
+      'simple-flow',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    assert.equal(result.status, 0, 'Expected exit 0 with --coverage. stderr: ' + result.stderr + ' stdout: ' + result.stdout);
+  });
+
+  test("--coverage prints 'Coverage:' line to stdout", function() {
+    var result = runCli([
+      '--coverage',
+      '--coverage-output', coverageDir,
+      'simple-flow',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    assert.ok(
+      result.stdout.includes('Coverage:'),
+      'Expected "Coverage:" in stdout. Got: ' + result.stdout
+    );
+  });
+
+  test("--coverage writes coverage.json to coverage output directory", function() {
+    var result = runCli([
+      '--coverage',
+      '--coverage-output', coverageDir,
+      'simple-flow',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    assert.equal(result.status, 0, 'Compile must succeed. stderr: ' + result.stderr);
+    var coverageFile = path.join(coverageDir, 'coverage.json');
+    assert.ok(fs.existsSync(coverageFile), 'coverage.json must be written to --coverage-output dir');
+  });
+
+  test("coverage.json contains elements array and summary", function() {
+    var result = runCli([
+      '--coverage',
+      '--coverage-output', coverageDir,
+      'simple-flow',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    assert.equal(result.status, 0, 'Compile must succeed');
+    var coverageFile = path.join(coverageDir, 'coverage.json');
+    if (fs.existsSync(coverageFile)) {
+      var data = JSON.parse(fs.readFileSync(coverageFile, 'utf8'));
+      assert.ok(Array.isArray(data.elements), 'coverage.json must have elements array');
+      assert.ok(data.summary && typeof data.summary === 'object', 'coverage.json must have summary object');
+    }
+  });
+
+  test("--coverage appends to coverage-history.json", function() {
+    var historyDir = makeTmpDir();
+    try {
+      // Run twice — history must grow
+      runCli([
+        '--coverage',
+        '--coverage-output', historyDir,
+        'simple-flow',
+        '--flows-dir', FIXTURES_DIR,
+        '--mappings-dir', FIXTURES_DIR,
+        '--output-dir', tmpDir,
+      ]);
+      runCli([
+        '--coverage',
+        '--coverage-output', historyDir,
+        'simple-flow',
+        '--flows-dir', FIXTURES_DIR,
+        '--mappings-dir', FIXTURES_DIR,
+        '--output-dir', tmpDir,
+      ]);
+      var historyFile = path.join(historyDir, 'coverage-history.json');
+      assert.ok(fs.existsSync(historyFile), 'coverage-history.json must be created');
+      var data = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
+      assert.ok(Array.isArray(data) && data.length >= 2, 'coverage-history.json must grow per run. Got: ' + JSON.stringify(data));
+    } finally {
+      fs.rmSync(historyDir, { recursive: true, force: true });
+    }
+  });
+
+  test("--coverage stdout format includes element counts", function() {
+    var result = runCli([
+      '--coverage',
+      '--coverage-output', coverageDir,
+      'simple-flow',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    // Format: "Coverage: X/Y elements (Z%) verified across 1 flow"
+    assert.ok(
+      result.stdout.includes('elements') && result.stdout.includes('%'),
+      'Expected coverage format with element counts. Got: ' + result.stdout
+    );
+  });
+
+  test("--help output mentions --coverage flag", function() {
+    var result = runCli(['--help']);
+    assert.ok(
+      result.stdout.includes('--coverage'),
+      'Expected --coverage in --help output. Got: ' + result.stdout
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
 // CLI-06: Commander basics (--help, exit codes)
 // ---------------------------------------------------------------------------
 
