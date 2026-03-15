@@ -77,6 +77,7 @@ Using `app:` or `name:` in steps means v1 format — rejected by the test runner
 
 ## Key Gotchas
 
+- **`e2e-flow-writer` has no Bash tool**: intentional — it does pure codebase analysis, never opens a browser. Adding Bash would break isolation.
 - **`@ref` is ephemeral**: snapshot `@ref` values change on every DOM mutation. Mappings store stable selectors, not `@ref`.
 - **`is visible` exit code is always 0**: check stdout text `"true"`/`"false"`, not exit code.
 - **React Native Web**: text elements render twice. Use `>> nth=1` for `text=` selectors.
@@ -90,6 +91,13 @@ When modifying skill or agent definitions:
 - Cross-reference step numbers between `SKILL.md` (summary) and `reference.md` (details)
 - Run the **e2e-skill-ops 5 rules**: search before diagnose, 3-skill impact scan, verify after fix, write back findings, propose (don't ship) SKILL.md changes without review
 - Quality findings persist in `e2e-reports/skill-quality-findings.md`
+
+**Removing a skill or agent:**
+1. Delete the directory/file
+2. Run: `grep -rn "<name>" e2e-pipeline/ --include="*.md" --include="*.json" --include="*.sh" | grep -v skill-quality-findings | grep -v node_modules | grep -v docs/superpowers/`
+3. Update every hit — replace with successor or remove
+4. Update `skills/e2e-dispatch/SKILL.md` routing table + reroute removed flags to successor
+5. Re-run grep to verify zero active references (historical in findings/specs is OK)
 
 ## Documentation Maintenance
 
