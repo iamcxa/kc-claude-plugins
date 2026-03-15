@@ -24,6 +24,70 @@ function singleQuote(str) {
 }
 
 // ---------------------------------------------------------------------------
+// Variable handling
+// ---------------------------------------------------------------------------
+
+/**
+ * generateVariables(variables, flowName) — produce bash variable declarations.
+ *
+ * variables: { [name: string]: string | null }
+ *   - null or undefined value => required variable (uses :? pattern)
+ *   - string value => optional variable (uses :- pattern with env fallback)
+ * flowName: string — used in :? usage message and usage comment
+ *
+ * Returns: string (multi-line bash block), or '' if variables is empty/absent
+ */
+function generateVariables(variables, flowName) {
+  if (!variables) return '';
+
+  var entries = Object.entries(variables);
+  if (entries.length === 0) return '';
+
+  // Classify each variable and build usage parts
+  var usageParts = [];
+  for (var i = 0; i < entries.length; i++) {
+    var name = entries[i][0];
+    var value = entries[i][1];
+    var isRequired = (value === null || value === undefined);
+    usageParts.push(isRequired ? '<' + name + '>' : '[' + name + ']');
+  }
+
+  var usageLine = '# Usage: ' + flowName + '.sh ' + usageParts.join(' ');
+  var lines = [usageLine, '# Parameters:'];
+
+  // Build assignment lines in same pass
+  var assignments = [];
+
+  for (var j = 0; j < entries.length; j++) {
+    var varName = entries[j][0];
+    var varValue = entries[j][1];
+    var isReq = (varValue === null || varValue === undefined);
+    var bashName = varName.toUpperCase();
+    var envName = 'E2E_' + bashName;
+    var pos = j + 1;
+
+    if (isReq) {
+      // Required: collect all usage params for the :? message
+      var reqUsage = flowName + '.sh ' + usageParts.join(' ');
+      lines.push('# $' + pos + ' ' + bashName + ' -- required (or set ' + envName + ')');
+      assignments.push(bashName + '="${' + pos + ':?Usage: ' + reqUsage + '}"');
+    } else {
+      var defaultStr = String(varValue);
+      if (defaultStr === '') {
+        lines.push('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ')');
+        assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-}}"');
+      } else {
+        lines.push('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ', default: ' + defaultStr + ')');
+        assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-' + defaultStr + '}}"');
+      }
+    }
+  }
+
+  // Combine comments and assignments
+  return lines.join('\n') + '\n' + assignments.join('\n');
+}
+
+// ---------------------------------------------------------------------------
 // Header generation
 // ---------------------------------------------------------------------------
 
@@ -170,9 +234,12 @@ function generate(resolved, flowName) {
   // 1. Shell header
   parts.push(generateHeader());
 
-  // 2. Variable handling — placeholder for Plan 01-03
-  parts.push('# Variables: added by generateVariables() when present');
-  parts.push('');
+  // 2. Variable handling — generateVariables() adds block when present
+  var varBlock = generateVariables(resolved.variables, flowName);
+  if (varBlock) {
+    parts.push(varBlock);
+    parts.push('');
+  }
 
   // 3. Per-step action blocks
   for (var si = 0; si < steps.length; si++) {
@@ -200,4 +267,4 @@ function generate(resolved, flowName) {
 // Exports
 // ---------------------------------------------------------------------------
 
-module.exports = { generate: generate, singleQuote: singleQuote };
+module.exports = { generate: generate, singleQuote: singleQuote, generateVariables: generateVariables };
