@@ -14,7 +14,8 @@ const ACTION_PARSERS = {
     extract: function(m) { return { element: m[1], value: m[2], page: m[3] || null }; },
   },
   snapshot: {
-    pattern: /snapshot/i,
+    // Matches "Take snapshot", "snapshot", and "Verify <element>" (element verification is observe-then-assert)
+    pattern: /snapshot|^Verify\s+(?!external)\w+/i,
     extract: function() { return {}; },
   },
   wait: {
@@ -29,7 +30,6 @@ const ACTION_PARSERS = {
 
 function buildSymbolTable(mapping) {
   var table = new Map();
-  var errors = [];
   var collisions = new Map();
 
   var pages = mapping.pages || {};
@@ -39,6 +39,7 @@ function buildSymbolTable(mapping) {
     for (var elemName in elements) {
       var elemData = elements[elemName];
       if (table.has(elemName)) {
+        // Track collision but do NOT fail here — only fail if this element is referenced
         if (!collisions.has(elemName)) {
           collisions.set(elemName, [table.get(elemName).page]);
         }
@@ -49,11 +50,8 @@ function buildSymbolTable(mapping) {
     }
   }
 
-  collisions.forEach(function(pages, elemName) {
-    errors.push("element '" + elemName + "' is ambiguous -- found on: " + pages.join(', '));
-  });
-
-  return { table: table, errors: errors };
+  // Return collisions map so resolve() can check only referenced elements
+  return { table: table, collisions: collisions };
 }
 
 function parseActionString(type, action, stepId) {
@@ -92,7 +90,7 @@ function resolveNavigate(operands, stepId, mapping) {
   return { operands: { target: target, urlPath: page.url_pattern } };
 }
 
-function resolveExpects(expects, symbolTable, stepId) {
+function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
   var resolvedExpects = [];
   var activeCount = 0;
   var deferredCount = 0;
@@ -105,17 +103,23 @@ function resolveExpects(expects, symbolTable, stepId) {
     var match = ACTIVE_PATTERN.exec(expectStr);
     if (match) {
       var elemName = match[1];
-      var entry = symbolTable.get(elemName);
-      if (!entry) {
-        errors.push("Step '" + stepId + "': expect element '" + elemName + "' not found in mapping");
+      if (collisionsTable.has(elemName)) {
+        // Element is ambiguous — fail only when referenced
+        var colPages = collisionsTable.get(elemName);
+        errors.push("Step '" + stepId + "': expect element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', '));
       } else {
-        resolvedExpects.push({
-          type: 'active',
-          raw: expectStr,
-          elementName: elemName,
-          selector: entry.selector,
-        });
-        activeCount++;
+        var entry = symbolTable.get(elemName);
+        if (!entry) {
+          errors.push("Step '" + stepId + "': expect element '" + elemName + "' not found in mapping");
+        } else {
+          resolvedExpects.push({
+            type: 'active',
+            raw: expectStr,
+            elementName: elemName,
+            selector: entry.selector,
+          });
+          activeCount++;
+        }
       }
     } else {
       resolvedExpects.push({ type: 'deferred', raw: expectStr });
@@ -131,10 +135,7 @@ function resolve(flow, mapping) {
 
   var symbolResult = buildSymbolTable(mapping);
   var table = symbolResult.table;
-  var tableErrors = symbolResult.errors;
-  for (var i = 0; i < tableErrors.length; i++) {
-    errors.push(tableErrors[i]);
-  }
+  var collisions = symbolResult.collisions;
 
   var resolvedSteps = [];
   var activeExpects = 0;
@@ -173,12 +174,19 @@ function resolve(flow, mapping) {
     } else if (step.type === 'click' || step.type === 'fill') {
       var elemName = rawOperands.element;
       if (elemName) {
-        var entry = table.get(elemName);
-        if (!entry) {
-          errors.push("Step '" + stepId + "': element '" + elemName + "' not found in mapping");
+        if (collisions.has(elemName)) {
+          // Element exists but is ambiguous — fail only when referenced
+          var colPages = collisions.get(elemName);
+          errors.push("Step '" + stepId + "': element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', '));
           skipStep = true;
         } else {
-          resolvedOperands = Object.assign({}, rawOperands, { selector: entry.selector });
+          var entry = table.get(elemName);
+          if (!entry) {
+            errors.push("Step '" + stepId + "': element '" + elemName + "' not found in mapping");
+            skipStep = true;
+          } else {
+            resolvedOperands = Object.assign({}, rawOperands, { selector: entry.selector });
+          }
         }
       }
 
@@ -190,7 +198,7 @@ function resolve(flow, mapping) {
 
     var stepExpects = [];
     if (Array.isArray(step.expect) && step.expect.length > 0) {
-      var expectResult = resolveExpects(step.expect, table, stepId);
+      var expectResult = resolveExpects(step.expect, table, collisions, stepId);
       stepExpects = expectResult.resolvedExpects;
       activeExpects += expectResult.activeCount;
       deferredExpects += expectResult.deferredCount;
