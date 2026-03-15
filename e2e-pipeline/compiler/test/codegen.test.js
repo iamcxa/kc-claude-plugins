@@ -2570,3 +2570,234 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — --junit empty-path guard (Pitfall
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 7 Plan 01: metrics codegen (FLAKY-02)
+// ---------------------------------------------------------------------------
+
+const {
+  generateRuntimeFlagBlock,
+  generateRuntimeSupport,
+  generateFooter,
+  generateMetricsEmitter,
+} = require('../codegen.js');
+
+describe('metrics codegen (FLAKY-02) — generateRuntimeFlagBlock()', function() {
+  test("output includes METRICS_OUTPUT empty default", function() {
+    const block = generateRuntimeFlagBlock();
+    assert.ok(
+      block.includes('METRICS_OUTPUT=""'),
+      'Expected METRICS_OUTPUT="" default. Got: ' + block
+    );
+  });
+
+  test("output includes --metrics-output case", function() {
+    const block = generateRuntimeFlagBlock();
+    assert.ok(
+      block.includes('--metrics-output)'),
+      'Expected --metrics-output) case. Got: ' + block
+    );
+  });
+
+  test("--metrics-output case uses shift 2", function() {
+    const block = generateRuntimeFlagBlock();
+    const metricsIdx = block.indexOf('--metrics-output)');
+    const afterMetrics = block.slice(metricsIdx, metricsIdx + 200);
+    assert.ok(
+      afterMetrics.includes('shift 2'),
+      'Expected shift 2 in --metrics-output case. Got: ' + afterMetrics
+    );
+  });
+
+  test("--metrics-output case has empty-path guard", function() {
+    const block = generateRuntimeFlagBlock();
+    const metricsIdx = block.indexOf('--metrics-output)');
+    const doubleColonIdx = block.indexOf(';;', metricsIdx);
+    const caseBlock = block.slice(metricsIdx, doubleColonIdx);
+    assert.ok(
+      caseBlock.includes('exit 1'),
+      'Expected exit 1 guard in --metrics-output case for empty path. Got: ' + caseBlock
+    );
+  });
+});
+
+describe('metrics codegen (FLAKY-02) — generateRuntimeSupport()', function() {
+  test("output includes _TOTAL_ATTEMPTS=1", function() {
+    const block = generateRuntimeSupport();
+    assert.ok(
+      block.includes('_TOTAL_ATTEMPTS=1'),
+      'Expected _TOTAL_ATTEMPTS=1 in runtime support. Got snippet: ' + block.slice(0, 400)
+    );
+  });
+
+  test("output includes _ATTEMPT_NUM=1", function() {
+    const block = generateRuntimeSupport();
+    assert.ok(
+      block.includes('_ATTEMPT_NUM=1'),
+      'Expected _ATTEMPT_NUM=1 in runtime support. Got snippet: ' + block.slice(0, 400)
+    );
+  });
+});
+
+describe('metrics codegen (FLAKY-02) — generateMetricsEmitter()', function() {
+  test("generateMetricsEmitter() is exported from codegen.js", function() {
+    assert.equal(typeof generateMetricsEmitter, 'function',
+      'Expected generateMetricsEmitter to be a function');
+  });
+
+  test("output defines _emit_metrics() bash function", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('_emit_metrics()'),
+      'Expected _emit_metrics() function definition. Got: ' + block.slice(0, 300)
+    );
+  });
+
+  test("flow name is embedded at compile time", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('login-flow'),
+      'Expected flow name embedded in _emit_metrics. Got: ' + block.slice(0, 400)
+    );
+  });
+
+  test("_emit_metrics iterates _STEP_NAMES array", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('_STEP_NAMES'),
+      'Expected _STEP_NAMES iteration in _emit_metrics. Got: ' + block.slice(0, 500)
+    );
+  });
+
+  test("_emit_metrics iterates _STEP_RESULTS array", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('_STEP_RESULTS'),
+      'Expected _STEP_RESULTS in _emit_metrics. Got: ' + block.slice(0, 500)
+    );
+  });
+
+  test("_emit_metrics iterates _STEP_TIMES array", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('_STEP_TIMES'),
+      'Expected _STEP_TIMES in _emit_metrics. Got: ' + block.slice(0, 500)
+    );
+  });
+
+  test("_emit_metrics iterates _STEP_FAILURES array", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('_STEP_FAILURES'),
+      'Expected _STEP_FAILURES in _emit_metrics. Got: ' + block.slice(0, 500)
+    );
+  });
+
+  test("_emit_metrics JSON includes \"flow\" field", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('"flow"'),
+      'Expected "flow" JSON field in _emit_metrics. Got: ' + block.slice(0, 600)
+    );
+  });
+
+  test("_emit_metrics JSON includes \"timestamp\" field", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('"timestamp"'),
+      'Expected "timestamp" JSON field in _emit_metrics. Got: ' + block.slice(0, 600)
+    );
+  });
+
+  test("_emit_metrics JSON includes \"passed_first_try\" field", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('"passed_first_try"'),
+      'Expected "passed_first_try" JSON field in _emit_metrics. Got: ' + block.slice(0, 600)
+    );
+  });
+
+  test("_emit_metrics JSON includes \"flaky_pass\" field", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('"flaky_pass"'),
+      'Expected "flaky_pass" JSON field in _emit_metrics. Got: ' + block.slice(0, 600)
+    );
+  });
+
+  test("_emit_metrics JSON includes \"steps\" field", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('"steps"'),
+      'Expected "steps" JSON field in _emit_metrics. Got: ' + block.slice(0, 600)
+    );
+  });
+
+  test("_emit_metrics JSON includes \"summary\" field", function() {
+    const block = generateMetricsEmitter('login-flow');
+    assert.ok(
+      block.includes('"summary"'),
+      'Expected "summary" JSON field in _emit_metrics. Got: ' + block.slice(0, 600)
+    );
+  });
+});
+
+describe('metrics codegen (FLAKY-02) — generate() integration', function() {
+  test("generated script contains _emit_metrics function definition", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'my-flow');
+    assert.ok(
+      script.includes('_emit_metrics()'),
+      'Expected _emit_metrics() in generated script. Got snippet: ' + script.slice(0, 800)
+    );
+  });
+
+  test("generated script footer calls _emit_metrics when METRICS_OUTPUT is set", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'my-flow');
+    assert.ok(
+      script.includes('_emit_metrics "$METRICS_OUTPUT"'),
+      'Expected _emit_metrics "$METRICS_OUTPUT" call in footer. Got snippet: ' + script.slice(-400)
+    );
+  });
+
+  test("generated script footer wraps _emit_metrics call in METRICS_OUTPUT guard", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'my-flow');
+    assert.ok(
+      script.includes('[ -n "$METRICS_OUTPUT" ]') && script.includes('_emit_metrics "$METRICS_OUTPUT"'),
+      'Expected METRICS_OUTPUT guard around _emit_metrics call. Got snippet: ' + script.slice(-600)
+    );
+  });
+});
+
+describe('metrics codegen (FLAKY-02) — generateFooter() integration', function() {
+  test("footer contains conditional _emit_metrics call", function() {
+    const footer = generateFooter('my-flow', 3, 0);
+    assert.ok(
+      footer.includes('_emit_metrics'),
+      'Expected _emit_metrics call in footer. Got: ' + footer
+    );
+  });
+
+  test("footer _emit_metrics call is guarded by METRICS_OUTPUT check", function() {
+    const footer = generateFooter('my-flow', 3, 0);
+    const metricsIdx = footer.indexOf('_emit_metrics');
+    // Find the surrounding context
+    const context = footer.slice(Math.max(0, metricsIdx - 60), metricsIdx + 60);
+    assert.ok(
+      context.includes('METRICS_OUTPUT'),
+      'Expected METRICS_OUTPUT guard near _emit_metrics call. Got context: ' + context
+    );
+  });
+
+  test("footer _emit_metrics call appears before JUnit emission", function() {
+    const footer = generateFooter('my-flow', 3, 0);
+    const metricsIdx = footer.indexOf('_emit_metrics');
+    const junitIdx = footer.indexOf('_emit_junit');
+    assert.ok(
+      metricsIdx < junitIdx,
+      'Expected _emit_metrics before _emit_junit in footer. metricsIdx=' + metricsIdx + ' junitIdx=' + junitIdx
+    );
+  });
+});
