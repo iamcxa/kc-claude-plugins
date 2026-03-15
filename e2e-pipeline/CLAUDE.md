@@ -4,14 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via context-isolating subagents. The pipeline: **Map UI** → **Walk Through** → **Test** → **Analyze**.
+A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via context-isolating subagents. The pipeline: **Map UI** → **Generate Flows** → **Verify & Test** → **Analyze**.
 
 ## Architecture
 
 **Skills** (7) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
 
-**Agents** (3) run as subagents for heavy browser work, keeping verbose data out of main context:
+**Agents** (5) run as subagents for heavy work, keeping verbose data out of main context:
 - `e2e-mapper` — explores pages, generates YAML mappings
+- `e2e-flow-writer` — analyzes codebase + mapping to generate flow YAML (no browser)
+- `e2e-flow-verifier` — runs flows in browser, auto-repairs selectors/steps, produces reports
 - `e2e-test-runner` — executes flow files, validates expectations
 - `e2e-trace-analyzer` — parses Playwright trace.zip for API failures and console errors
 
@@ -19,11 +21,11 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 skills/e2e-dispatch/     → router (auth gate + skill selection)
 skills/e2e-map/          → mapping orchestrator → dispatches e2e-mapper agent
 skills/e2e-test/         → test orchestrator → dispatches e2e-test-runner + trace-analyzer
-skills/e2e-walkthrough/  → interactive exploration (main context, no dedicated agent)
-skills/e2e-flow/         → generate & verify E2E flows from plans/specs/PRs
+skills/e2e-walkthrough/  → interactive exploration (main context)
+skills/e2e-flow/         → generate & verify flows → dispatches flow-writer + flow-verifier + trace-analyzer
 skills/e2e-compile/      → compile flow YAML to standalone bash test scripts (requires npm deps)
 skills/e2e-skill-ops/    → meta-skill for debugging/maintaining the pipeline itself
-agents/                  → subagent definitions (e2e-mapper, e2e-test-runner, e2e-trace-analyzer)
+agents/                  → subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer)
 hooks/                   → E2E pipeline hooks (SessionStart context + pre-commit check)
 references/              → agent-browser CLI commands, common browser testing patterns
 ```
@@ -94,6 +96,7 @@ When modifying skill or agent definitions:
 | Skill | Video Default | Override |
 |-------|--------------|----------|
 | `/e2e-walkthrough` | ON | `--no-video` |
+| `/e2e-flow --verify-only` | ON | `--no-video` |
 | `/e2e-test` | OFF | `--video` or `--pr` |
 | `/e2e-map` | No recording | — |
 
