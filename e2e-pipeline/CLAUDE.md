@@ -91,6 +91,18 @@ When modifying skill or agent definitions:
 - Run the **e2e-skill-ops 5 rules**: search before diagnose, 3-skill impact scan, verify after fix, write back findings, propose (don't ship) SKILL.md changes without review
 - Quality findings persist in `e2e-reports/skill-quality-findings.md`
 
+## Documentation Maintenance
+
+When adding, removing, or renaming skills or agents, update these files:
+
+1. `README.md` — quick start commands, pipeline summary
+2. `docs/commands.md` — command table with all flags
+3. `docs/architecture.md` — skill→agent table and plugin file tree
+4. `docs/getting-started.md` — step-by-step guide
+5. `docs/writing-tests.md` and `docs/recording-evidence.md` — check for stale references
+6. `.claude-plugin/plugin.json` — bump version
+7. `CLAUDE.md` (this file) — Architecture section counts, directory listing, Recording Defaults table
+
 ## Recording Defaults
 
 | Skill | Video Default | Override |
