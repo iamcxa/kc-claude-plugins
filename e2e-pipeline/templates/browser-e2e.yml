@@ -13,6 +13,10 @@
 #   - E2E_BASE_URL: Set to your deployment preview URL
 #   - max-parallel: Adjust based on your CI runner capacity (default: 3)
 #   - timeout-minutes: Adjust based on your longest flow (default: 20)
+#
+# WORKFLOW STRUCTURE:
+#   auth-setup  →  browser-e2e (matrix)  →  report
+#   AUTH-01: Login once, reuse session across all parallel flows
 
 name: Browser E2E
 
@@ -29,8 +33,61 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # CI-04: Auth setup runs before matrix, uploads session directory
+  # AUTH-01: Login once, reuse session across all parallel flows
+  # If your app doesn't require authentication, remove auth-setup job and needs: [auth-setup]
+  auth-setup:
+    name: Auth Setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # Cache key matches browser-e2e exactly to share the same Chrome binary.
+      - name: Cache agent-browser Chrome
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/agent-browser
+          key: agent-browser-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            agent-browser-${{ runner.os }}-
+
+      - name: Install agent-browser
+        run: |
+          npm install -g agent-browser
+          agent-browser install
+
+      # Pitfall 3: Session dir discovery handles agent-browser version differences
+      - name: Discover session directory
+        id: session-dir
+        run: |
+          SESSION_DIR=$(agent-browser session dir 2>/dev/null || echo "$HOME/.config/agent-browser")
+          echo "path=$SESSION_DIR" >> "$GITHUB_OUTPUT"
+
+      # Credentials: compiled login-flow.sh may have hardcoded test creds from flow YAML.
+      #   For production: use GHA secrets via E2E_TEST_EMAIL/E2E_TEST_PASSWORD env vars
+      - name: Run login flow
+        env:
+          E2E_BASE_URL: http://localhost:3000   # CUSTOMIZE: same as browser-e2e
+          # For CI secrets: uncomment and set in GitHub repo settings
+          # E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          # E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+        run: |
+          chmod +x .claude/e2e/compiled/login-flow.sh
+          .claude/e2e/compiled/login-flow.sh
+
+      # retention-days: 1 is intentionally short — auth sessions may contain cookies/tokens
+      - name: Upload auth session
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth-session
+          retention-days: 1        # Short retention — session may contain auth cookies
+          path: ${{ steps.session-dir.outputs.path }}
+
   browser-e2e:
     name: E2E / ${{ matrix.flow }}
+    needs: [auth-setup]
     runs-on: ubuntu-latest
     timeout-minutes: 20          # CUSTOMIZE: adjust for your longest flow
 
@@ -63,6 +120,24 @@ jobs:
           npm install -g agent-browser
           agent-browser install
 
+      # Pitfall 3: match auth-setup path — session dir may vary by agent-browser version
+      - name: Discover session directory
+        id: session-dir
+        run: |
+          SESSION_DIR=$(agent-browser session dir 2>/dev/null || echo "$HOME/.config/agent-browser")
+          echo "path=$SESSION_DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Download auth session
+        uses: actions/download-artifact@v4
+        with:
+          name: auth-session
+          path: /tmp/auth-session
+
+      - name: Restore auth session
+        run: |
+          mkdir -p ${{ steps.session-dir.outputs.path }}
+          cp -r /tmp/auth-session/. ${{ steps.session-dir.outputs.path }}/
+
       # Run the compiled flow script with JUnit output and --continue-on-error
       # so the workflow step does not fail immediately — let the upload-artifact
       # step always run and collect results.
@@ -74,15 +149,16 @@ jobs:
           #
           # For carlove integration, replace with:
           # E2E_BASE_URL: ${{ needs.detect.outputs.deploy_preview_url }}
-          # and add: needs: [detect, wait-netlify-preview]
+          # and add: needs: [detect, wait-netlify-preview, auth-setup]
         run: |
           chmod +x .claude/e2e/compiled/${{ matrix.flow }}.sh
           .claude/e2e/compiled/${{ matrix.flow }}.sh \
             --junit /tmp/junit-${{ matrix.flow }}.xml \
             --continue-on-error
 
-      # Upload JUnit XML (and any screenshots) for every run — pass and fail.
-      # Artifact name includes github.run_id to prevent cross-run artifact collisions.
+      # CI-02: Failure artifacts persist on both pass and fail for debugging
+      # CI-02: Screenshots and trace uploaded alongside JUnit XML for debugging
+      # Artifact name includes github.run_id to prevent cross-run artifact collisions (Pitfall 4).
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()             # Upload on both pass and fail
@@ -91,3 +167,32 @@ jobs:
           retention-days: 7
           path: |
             /tmp/junit-${{ matrix.flow }}.xml
+            /tmp/e2e-screenshots/
+            /tmp/e2e-trace/
+
+  # Report job aggregates all matrix results into one GitHub check annotation
+  # fail_on_failure: true makes this a release gate — PR blocked on E2E failure
+  # If you don't need PR check annotations, remove the report job
+  report:
+    name: E2E Report
+    needs: [browser-e2e]
+    if: always()                    # Run even when test jobs fail
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      # merge-multiple: true combines all e2e-results-* artifacts into one directory
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: e2e-results-*
+          path: junit-results
+          merge-multiple: true
+
+      - name: Publish JUnit report
+        uses: mikepenz/action-junit-report@v6
+        with:
+          report_paths: 'junit-results/**/*.xml'
+          fail_on_failure: true    # Creates hard CI gate — PR cannot merge with failures
+          check_name: 'E2E Test Results'
+          summary: true
