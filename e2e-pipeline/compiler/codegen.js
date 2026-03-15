@@ -13,7 +13,42 @@
  * Cross-site support (Phase 2 Plan 02):
  *   - When step.session is set, all agent-browser commands get --session <name> prefix
  *   - Navigate in cross-site uses ${SITE_BASE_URL} (e.g., ${OFFICE_BASE_URL})
+ *
+ * JUnit XML support (Phase 5 Plan 01, FLAG-01):
+ *   - Compiled scripts accept --junit <path> flag at runtime
+ *   - Step-level timing/result tracking arrays always emitted
+ *   - _emit_junit() bash function writes valid JUnit XML with pre-escaped values
+ *   - xmlbuilder2 used for compile-time XML escaping (no bash XML escaping)
  */
+
+const { create: xmlCreate } = require('xmlbuilder2');
+
+// ---------------------------------------------------------------------------
+// XML attribute escaping helper (compile-time, using xmlbuilder2)
+// ---------------------------------------------------------------------------
+
+/**
+ * xmlAttrEscape(str) — escape a string for safe embedding as XML attribute value.
+ *
+ * Uses xmlbuilder2 to perform canonical XML escaping:
+ *   < → &lt;   > → &gt;   & → &amp;   " → &quot;
+ *
+ * CJK and other Unicode characters pass through as valid UTF-8.
+ * Returns the escaped string (no surrounding quotes).
+ */
+function xmlAttrEscape(str) {
+  if (str === '') return '';
+  // Build a minimal XML document with the value as an attribute
+  // Extract the escaped attribute value via regex
+  var doc = xmlCreate({ version: '1.0' }).ele('r').att('v', str).end({ headless: true });
+  // doc is like: <r v="escaped-value"/>  or  <r v="escaped-value"></r>
+  var match = doc.match(/v="([\s\S]*?)"/);
+  if (match) {
+    return match[1];
+  }
+  // Fallback: manual escaping if regex fails
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 // ---------------------------------------------------------------------------
 // Shell quoting helper
@@ -158,6 +193,7 @@ function generateRuntimeFlagBlock() {
     '# Runtime flags',
     'CONTINUE_ON_ERROR=false',
     'RETRIES=0',
+    'JUNIT_OUTPUT=""',
     '_POSITIONAL=()',
     'while [[ $# -gt 0 ]]; do',
     '  case "$1" in',
@@ -168,6 +204,14 @@ function generateRuntimeFlagBlock() {
     '    --retries)',
     '      RETRIES="$2"',
     '      shift 2',
+    '      ;;',
+    '    --junit)',
+    '      JUNIT_OUTPUT="$2"',
+    '      shift 2',
+    '      if [ -z "$JUNIT_OUTPUT" ]; then',
+    '        echo "ERROR: --junit requires a path argument"',
+    '        exit 1',
+    '      fi',
     '      ;;',
     '    *)',
     '      _POSITIONAL+=("$1")',
@@ -210,10 +254,19 @@ function generateRuntimeSupport() {
     '# Failure accumulator',
     '_FAILED_STEPS=()',
     '_HAD_RETRIES=false',
+    '# JUnit step tracking arrays (FLAG-01)',
+    '_STEP_NAMES=()',
+    '_STEP_RESULTS=()',
+    '_STEP_FAILURES=()',
+    '_STEP_TIMES=()',
+    '_FLOW_START=$SECONDS',
     '_handle_failure() {',
     '  local _step_id="$1"',
     '  local _msg="$2"',
     '  echo "FAIL: $_step_id -- $_msg"',
+    '  local _msg_clean',
+    "  _msg_clean=$(printf '%s' \"$_msg\" | sed 's/\\x1b\\[[0-9;]*m//g' | tr -d '\\000-\\010\\013\\014\\016-\\037')",
+    '  _STEP_FAILURES+=("$_msg_clean")',
     '  if [ "$CONTINUE_ON_ERROR" = "true" ]; then',
     '    _FAILED_STEPS+=("$_step_id")',
     '  else',
@@ -382,6 +435,69 @@ function generateCleanupTrap(steps) {
 }
 
 // ---------------------------------------------------------------------------
+// JUnit XML emitter function codegen (FLAG-01)
+// ---------------------------------------------------------------------------
+
+/**
+ * generateJUnitEmitter(flowName) — produce _emit_junit() bash function.
+ *
+ * Pre-escapes flowName using xmlAttrEscape at compile time.
+ * The emitted bash function:
+ *   - Accepts $1 = output file path
+ *   - Iterates _STEP_NAMES/_STEP_RESULTS/_STEP_FAILURES/_STEP_TIMES arrays
+ *   - Writes valid JUnit XML with printf (no echo, no ESC bytes)
+ *   - Step names are pre-escaped at compile time (embedded as literals)
+ *   - Failure messages are ANSI-stripped at runtime by _handle_failure
+ *
+ * Returns: string (multi-line bash block)
+ */
+function generateJUnitEmitter(flowName) {
+  var escapedFlow = xmlAttrEscape(flowName);
+  var lines = [
+    '_emit_junit() {',
+    '  local _out="$1"',
+    '  local _total=${#_STEP_NAMES[@]}',
+    '  local _failures=0',
+    '  local _skipped=0',
+    '  local _duration=$(( SECONDS - _FLOW_START ))',
+    '  local _i',
+    '  for _i in "${!_STEP_RESULTS[@]}"; do',
+    '    case "${_STEP_RESULTS[$_i]}" in',
+    '      fail) _failures=$(( _failures + 1 )) ;;',
+    '      skip) _skipped=$(( _skipped + 1 )) ;;',
+    '    esac',
+    '  done',
+    '  {',
+    '    printf \'<?xml version="1.0" encoding="UTF-8"?>\\n\'',
+    '    printf \'<testsuites>\\n\'',
+    '    printf \'  <testsuite name="' + escapedFlow + '" tests="%s" failures="%s" skipped="%s" time="%s" timestamp="%s">\\n\' \\',
+    '      "$_total" "$_failures" "$_skipped" "$_duration" "$(date -u +%Y-%m-%dT%H:%M:%SZ)"',
+    '    for _i in "${!_STEP_NAMES[@]}"; do',
+    '      local _sname="${_STEP_NAMES[$_i]}"',
+    '      local _sresult="${_STEP_RESULTS[$_i]}"',
+    '      local _stime="${_STEP_TIMES[$_i]}"',
+    '      local _sfail="${_STEP_FAILURES[$_i]}"',
+    '      if [ "$_sresult" = "skip" ]; then',
+    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped/></testcase>\\n\' \\',
+    '          "$_sname" "$_stime"',
+    '      elif [ "$_sresult" = "fail" ]; then',
+    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><failure message="%s"/></testcase>\\n\' \\',
+    '          "$_sname" "$_stime" "$_sfail"',
+    '      else',
+    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"/>\\n\' \\',
+    '          "$_sname" "$_stime"',
+    '      fi',
+    '    done',
+    '    printf \'  </testsuite>\\n\'',
+    '    printf \'</testsuites>\\n\'',
+    '  } > "$_out"',
+    '}',
+    '',
+  ];
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
 // Footer generation (structured PASS/FAIL summary)
 // ---------------------------------------------------------------------------
 
@@ -395,6 +511,8 @@ function generateCleanupTrap(steps) {
  */
 function generateFooter(flowName, totalSteps, skipped) {
   var lines = [
+    '# Emit JUnit XML if --junit path was provided (FLAG-01)',
+    'if [ -n "$JUNIT_OUTPUT" ]; then _emit_junit "$JUNIT_OUTPUT"; fi',
     '# Exit summary',
     'if [ ${#_FAILED_STEPS[@]} -gt 0 ]; then',
     '  echo "FAIL: ${#_FAILED_STEPS[@]} steps failed: ${_FAILED_STEPS[*]}"',
@@ -436,41 +554,72 @@ function generateAction(step, stepIndex, totalSteps) {
   // Cross-site: compute base URL variable name (OFFICE_BASE_URL, APP_BASE_URL, etc.)
   var baseUrlVar = session ? '${' + session.toUpperCase() + '_BASE_URL}' : '${BASE_URL}';
 
+  // Pre-escape step id for XML attribute embedding (compile-time)
+  var escapedId = xmlAttrEscape(step.id);
+
   switch (step.type) {
     case 'navigate': {
       var urlPath = step.operands.urlPath || step.operands.target;
       var navCmd = 'agent-browser ' + sessionPrefix + 'open "' + baseUrlVar + urlPath + '"';
       var navMsg = 'navigate to ' + urlPath + ' failed';
+      lines.push('_STEP_START=$SECONDS');
       lines.push('_retry=0');
+      lines.push('_step_ok=true');
       lines.push('while true; do');
       lines.push('  ' + navCmd + ' && break');
       lines.push('  _retry=$((_retry + 1))');
       lines.push('  if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then');
-      lines.push('    _handle_failure "' + step.id + '" "' + navMsg + '"');
+      lines.push('    _step_ok=false');
       lines.push('    break');
       lines.push('  fi');
       lines.push('  _HAD_RETRIES=true');
       lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
       lines.push('  sleep 2');
       lines.push('done');
+      lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
+      lines.push('if [ "$_step_ok" = "true" ]; then');
+      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  _STEP_RESULTS+=("pass")');
+      lines.push('  _STEP_FAILURES+=("")');
+      lines.push('  _STEP_TIMES+=("$_elapsed")');
+      lines.push('else');
+      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  _STEP_RESULTS+=("fail")');
+      lines.push('  _STEP_TIMES+=("$_elapsed")');
+      lines.push('  _handle_failure "' + step.id + '" "' + navMsg + '"');
+      lines.push('fi');
       break;
     }
 
     case 'click': {
       var sel = singleQuote(step.operands.selector);
       var clickCmd = 'agent-browser ' + sessionPrefix + 'click ' + sel;
+      lines.push('_STEP_START=$SECONDS');
       lines.push('_retry=0');
+      lines.push('_step_ok=true');
       lines.push('while true; do');
       lines.push('  ' + clickCmd + ' && break');
       lines.push('  _retry=$((_retry + 1))');
       lines.push('  if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then');
-      lines.push('    _handle_failure "' + step.id + '" "click action failed"');
+      lines.push('    _step_ok=false');
       lines.push('    break');
       lines.push('  fi');
       lines.push('  _HAD_RETRIES=true');
       lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
       lines.push('  sleep 2');
       lines.push('done');
+      lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
+      lines.push('if [ "$_step_ok" = "true" ]; then');
+      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  _STEP_RESULTS+=("pass")');
+      lines.push('  _STEP_FAILURES+=("")');
+      lines.push('  _STEP_TIMES+=("$_elapsed")');
+      lines.push('else');
+      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  _STEP_RESULTS+=("fail")');
+      lines.push('  _STEP_TIMES+=("$_elapsed")');
+      lines.push('  _handle_failure "' + step.id + '" "click action failed"');
+      lines.push('fi');
       break;
     }
 
@@ -478,33 +627,59 @@ function generateAction(step, stepIndex, totalSteps) {
       var fillSel = singleQuote(step.operands.selector);
       var fillVal = singleQuote(step.operands.value);
       var fillCmd = 'agent-browser ' + sessionPrefix + 'fill ' + fillSel + ' ' + fillVal;
+      lines.push('_STEP_START=$SECONDS');
       lines.push('_retry=0');
+      lines.push('_step_ok=true');
       lines.push('while true; do');
       lines.push('  ' + fillCmd + ' && break');
       lines.push('  _retry=$((_retry + 1))');
       lines.push('  if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then');
-      lines.push('    _handle_failure "' + step.id + '" "fill action failed"');
+      lines.push('    _step_ok=false');
       lines.push('    break');
       lines.push('  fi');
       lines.push('  _HAD_RETRIES=true');
       lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
       lines.push('  sleep 2');
       lines.push('done');
+      lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
+      lines.push('if [ "$_step_ok" = "true" ]; then');
+      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  _STEP_RESULTS+=("pass")');
+      lines.push('  _STEP_FAILURES+=("")');
+      lines.push('  _STEP_TIMES+=("$_elapsed")');
+      lines.push('else');
+      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  _STEP_RESULTS+=("fail")');
+      lines.push('  _STEP_TIMES+=("$_elapsed")');
+      lines.push('  _handle_failure "' + step.id + '" "fill action failed"');
+      lines.push('fi');
       break;
     }
 
     case 'snapshot': {
       lines.push('agent-browser ' + sessionPrefix + 'snapshot');
+      lines.push('_STEP_NAMES+=("' + escapedId + '")');
+      lines.push('_STEP_RESULTS+=("pass")');
+      lines.push('_STEP_FAILURES+=("")');
+      lines.push('_STEP_TIMES+=("0")');
       break;
     }
 
     case 'wait': {
       lines.push('sleep ' + step.operands.seconds);
+      lines.push('_STEP_NAMES+=("' + escapedId + '")');
+      lines.push('_STEP_RESULTS+=("pass")');
+      lines.push('_STEP_FAILURES+=("")');
+      lines.push('_STEP_TIMES+=("' + step.operands.seconds + '")');
       break;
     }
 
     case 'verify-external': {
       lines.push('echo "SKIP: ' + step.id + ' -- external verification (no human in CI)"');
+      lines.push('_STEP_NAMES+=("' + escapedId + '")');
+      lines.push('_STEP_RESULTS+=("skip")');
+      lines.push('_STEP_FAILURES+=("")');
+      lines.push('_STEP_TIMES+=("0")');
       break;
     }
 
@@ -644,6 +819,9 @@ function generate(resolved, flowName, meta) {
   // 5. Runtime support functions (_handle_failure, _FAILED_STEPS, poll helpers)
   parts.push(generateRuntimeSupport());
 
+  // 5b. JUnit emitter function (FLAG-01) — defined here, called in footer
+  parts.push(generateJUnitEmitter(flowName));
+
   // 6. Cleanup trap — registers agent-browser close on EXIT (CI-06)
   parts.push(generateCleanupTrap(steps));
   parts.push('');
@@ -673,4 +851,4 @@ function generate(resolved, flowName, meta) {
 // Exports
 // ---------------------------------------------------------------------------
 
-module.exports = { generate: generate, generateHeader: generateHeader, singleQuote: singleQuote, generateVariables: generateVariables, generateBaseUrlNormalization: generateBaseUrlNormalization, generateCleanupTrap: generateCleanupTrap };
+module.exports = { generate: generate, generateHeader: generateHeader, singleQuote: singleQuote, generateVariables: generateVariables, generateBaseUrlNormalization: generateBaseUrlNormalization, generateCleanupTrap: generateCleanupTrap, generateJUnitEmitter: generateJUnitEmitter, xmlAttrEscape: xmlAttrEscape };
