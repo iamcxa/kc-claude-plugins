@@ -83,6 +83,7 @@ Using `app:` or `name:` in steps means v1 format — rejected by the test runner
 - **React Native Web**: text elements render twice. Use `>> nth=1` for `text=` selectors.
 - **Ant Design CSS-hidden inputs**: `is visible` returns false for functional elements. Verify via snapshot a11y tree presence instead.
 - **Snapshot doesn't expose `data-testid`/`aria-label`**: use `agent-browser is visible "<selector>"` for attribute-based verification.
+- **Don't pass-through what you can execute**: If an agent has the tools to attempt a step (e.g., verifier has Bash → can run CLI commands), it should attempt it best-effort rather than blindly skipping. Silent skip = the user discovers broken commands only at execution time, not verification time. External checkpoint failures in the verifier use `on_fail: warn` override so they never block browser verification.
 
 ## Editing Skills and Agents
 

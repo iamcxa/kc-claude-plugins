@@ -97,7 +97,32 @@ step_results = []
 
 **For each step in the flow:**
 
-**Checkpoint pass-through**: If the step has `action: "Verify external"` or `action: "Execute external"`, skip all browser interaction for this step (no snapshot, no element resolution, no action, no expect validation). Log as `status: skip, reason: "External checkpoint — handled by test-runner at execution time"`. Record in `step_results` and continue to the next step.
+**External checkpoint handling**: If the step has `action: "Verify external"` or `action: "Execute external"`, skip all browser interaction (no snapshot, no element resolution, no click). Instead, attempt best-effort execution — see **§ External Checkpoint Execution** below. External checkpoint failures are **never counted as `unfixable`** and never block Round 2.
+
+#### External Checkpoint Execution
+
+**`Execute external`** steps:
+
+1. Read `execute:` block. For each entry:
+   - If `run:` looks like a shell command (starts with a known binary, contains `/`, `|`, `$`): execute via Bash.
+   - If `run:` is natural language: SKIP with note "Requires LLM interpretation — run via `/e2e-test`".
+   - If `repeat:` > 1: execute N times sequentially.
+2. Validate `expect:` (if present): check exit code / stdout against assertion.
+3. Wait `wait_after` seconds (default: 0).
+4. Record result: `{step_id, type: execution, service, run, status: pass|fail|skip, detail}`.
+
+**`Verify external`** steps:
+
+1. Wait `wait` seconds (default: 5) for propagation.
+2. Read `verify:` block. For each entry:
+   - If `event:` is present (PostHog-style): attempt `curl` to service API. If env vars missing → SKIP.
+   - If `check:` is a curl/HTTP command: execute via Bash.
+   - If `check:` is natural language: SKIP with note "Requires MCP — run via `/e2e-walkthrough --verify`".
+3. Record result: `{step_id, type: checkpoint, service, event_or_check, status: pass|fail|skip, detail}`.
+
+**`on_fail` override**: During verification, ALL external checkpoint `on_fail` values are **treated as `warn`** regardless of what the YAML specifies. Rationale: verification phase tests "can the flow run?" — external service availability should not block browser verification. The test-runner respects the original `on_fail` at execution time.
+
+**No screenshot** for checkpoint steps (no browser state changed).
 
 1. **Snapshot**: `agent-browser snapshot -i` → parse interactive elements and `@ref` values
 2. **Resolve element**: Find the flow step's target element in the snapshot by matching the mapping selector
@@ -255,6 +280,15 @@ Write `$REPORT_DIR/report.md`:
 |------|--------|--------|------------|
 | 1 | Navigate to /projects | PASS | step-1.png |
 | ... | | | |
+
+## Checkpoint Results
+
+_(Include only when the flow contains `Verify external` or `Execute external` steps)_
+
+| Step | Type | Service | Check | Result | Detail |
+|------|------|---------|-------|--------|--------|
+| trigger-sessions | execution | cli | run: recce-cloud run ×3 | PASS | exit 0 |
+| verify-posthog | checkpoint | posthog | event: page_view | SKIP | POSTHOG_API_KEY not set |
 ```
 
 #### 4b. PR Summary (pr-summary.md)
@@ -354,6 +388,12 @@ video_path: <absolute path or empty>
 corrections_path: <absolute path>
 flow_updated: <true|false>
 mapping_updated: <true|false>
+checkpoint_results:
+  - step_id: <id>
+    type: <execution|checkpoint>
+    service: <service-name>
+    status: <pass|fail|skip>
+    detail: <description>
 trace_path: <absolute path to trace.zip>
 step_log_path: <absolute path to step-log.json>
 ```
@@ -374,4 +414,4 @@ step_log_path: <absolute path to step-log.json>
 12. **Don't dispatch other agents** — You cannot dispatch subagents. Save trace.zip and step-log.json; the skill handles trace analysis.
 13. **Never close browser at end** — Leave it open. The skill or user may need to inspect final state.
 14. **`_correction` metadata** — Add to every inserted/enriched step. Test-runner ignores it but reviewers use it.
-15. **Skip external checkpoints** — Steps with `action: "Verify external"` or `action: "Execute external"` get `status: skip`. No snapshot, no element resolution, no action. The test-runner handles these at execution time.
+15. **Best-effort external checkpoints** — Steps with `action: "Verify external"` or `action: "Execute external"` skip browser interaction but attempt CLI/curl execution. Failures are always `warn` (never block Round 2). No snapshot, no element resolution. See § External Checkpoint Execution.
