@@ -24,7 +24,7 @@ Compile E2E flow YAML files into standalone bash test scripts using the e2e-comp
 
 ## Prerequisites
 
-1. **Flow files** in `.claude/e2e/flows/*.yaml` — run `/e2e-acceptance` or `/e2e-walkthrough` to create them
+1. **Flow files** in `.claude/e2e/flows/*.yaml` — run `/e2e-flow` or `/e2e-walkthrough` to create them
 2. **Mapping files** in `.claude/e2e/mappings/*.yaml` — run `/e2e-map` first if missing
 
 ## Phase 0 — Parse Arguments
@@ -150,7 +150,7 @@ For dry-run errors, present the ERROR lines from stderr.
 ### No flows found
 
 If the flows directory has no YAML files, suggest next steps:
-"No flow files found in `.claude/e2e/flows/`. Create flows with `/e2e-acceptance` (from a plan or spec) or `/e2e-walkthrough` (interactive browser exploration)."
+"No flow files found in `.claude/e2e/flows/`. Create flows with `/e2e-flow` (from a plan or spec) or `/e2e-walkthrough` (interactive browser exploration)."
 
 ### Coverage report (when --coverage)
 
