@@ -63,6 +63,60 @@ steps:
 
 No CSS selectors, no XPath, no Page Object boilerplate. Just element names from your mapping + human-readable actions.
 
+### Flows with external checkpoints
+
+Some tests need to go beyond the browser — run CLI commands, call APIs, or verify external services. Use `Execute external` (do things) and `Verify external` (check things):
+
+```yaml
+# .claude/e2e/flows/recce-artifacts-auto-upload.yaml
+name: Recce Artifacts Auto Upload
+description: "Verify artifacts_auto_uploaded flips after 3 CLI sessions and PostHog event fires"
+mapping: recce-cloud
+variables:
+  project_id: "test-project-001"
+
+steps:
+  # 1. Browser: confirm initial state
+  - id: verify-initial-false
+    action: Navigate to /projects/${project_id}/settings
+    expect:
+      - "text 'artifacts_auto_uploaded: false' on page"
+    screenshot: true
+
+  # 2. CLI: trigger 3 sessions (outside browser)
+  - id: trigger-recce-sessions
+    action: "Execute external"
+    description: "Run touch-recce-session 3 times to hit artifact upload threshold"
+    execute:
+      cli:
+        - run: "touch-recce-session"
+          repeat: 3
+          expect: "exit code 0"
+    wait_after: 10
+    on_fail: fail
+
+  # 3. Browser: confirm state flipped
+  - id: verify-state-flipped
+    action: Navigate to /projects/${project_id}/settings
+    timeout: 30
+    expect:
+      - "text 'artifacts_auto_uploaded: true' on page"
+    screenshot: true
+
+  # 4. External: verify PostHog funnel event
+  - id: verify-posthog-funnel
+    action: "Verify external"
+    description: "Confirm PostHog received the artifacts_auto_uploaded funnel event"
+    wait: 15
+    verify:
+      posthog:
+        - event: artifacts_auto_uploaded
+          expect: "count > 0 in last 5 minutes"
+    on_fail: warn
+```
+
+This flow mixes three modes: browser actions (steps 1, 3), CLI execution (step 2), and external verification (step 4). The test runner handles all three — browser steps use the mapping, `Execute external` steps use Bash, and `Verify external` steps use curl/API calls.
+
 ## Step 3: Or, let the walkthrough generate flows for you
 
 If you don't want to write YAML by hand:

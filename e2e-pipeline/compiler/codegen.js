@@ -773,6 +773,15 @@ function generateAction(step, stepIndex, totalSteps) {
       break;
     }
 
+    case 'execute-external': {
+      lines.push('echo "SKIP: ' + step.id + ' -- external execution (no human in CI)"');
+      lines.push('_STEP_NAMES+=("' + escapedId + '")');
+      lines.push('_STEP_RESULTS+=("skip")');
+      lines.push('_STEP_FAILURES+=("")');
+      lines.push('_STEP_TIMES+=("0")');
+      break;
+    }
+
     default: {
       lines.push('# Unknown action type: ' + step.type);
       break;
@@ -877,9 +886,9 @@ function generate(resolved, flowName, meta) {
   var totalSteps = steps.length;
   var skipped = 0;
 
-  // Count verify-external steps for PASS summary
+  // Count verify-external and execute-external steps for PASS summary
   for (var i = 0; i < steps.length; i++) {
-    if (steps[i].type === 'verify-external') {
+    if (steps[i].type === 'verify-external' || steps[i].type === 'execute-external') {
       skipped++;
     }
   }

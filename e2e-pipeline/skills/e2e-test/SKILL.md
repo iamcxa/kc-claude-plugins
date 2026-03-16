@@ -296,11 +296,13 @@ steps:
 ```
 
 **Action syntax:**
-`Click <el> on <page>` | `Click <el>(<p>=<v>) on <page>` | `Fill <el> with '<text>' on <page>` | `Wait for <el> on <page>` | `Navigate to <path>` | `Press <key>` | `Scroll <dir>` | `Verify <el> on <page>` | `Eval '<js>'` | `Verify external` (checkpoint)
+`Click <el> on <page>` | `Click <el>(<p>=<v>) on <page>` | `Fill <el> with '<text>' on <page>` | `Wait for <el> on <page>` | `Navigate to <path>` | `Press <key>` | `Scroll <dir>` | `Verify <el> on <page>` | `Eval '<js>'` | `Verify external` (verify checkpoint) | `Execute external` (execute checkpoint)
 
-### External Verification Checkpoint Steps
+### External Checkpoint Steps
 
-Steps with `action: "Verify external"` pause browser automation and verify external service side-effects. The LLM uses available tools (MCP, curl, API calls, DB queries) to fulfill each check.
+**Verify external** — pause browser automation and verify external service side-effects. The LLM uses available tools (MCP, curl, API calls, DB queries) to fulfill each check. See test-runner § 2m.
+
+**Execute external** — pause browser automation and trigger non-browser actions (CLI commands, API calls, scripts, data seeding). The LLM uses Bash to execute commands. See test-runner § 2n.
 
 ```yaml
   - id: verify-intent-events

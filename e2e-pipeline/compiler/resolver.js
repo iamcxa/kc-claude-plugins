@@ -26,6 +26,10 @@ const ACTION_PARSERS = {
     pattern: /Verify external/i,
     extract: function() { return {}; },
   },
+  'execute-external': {
+    pattern: /Execute external/i,
+    extract: function() { return {}; },
+  },
 };
 
 function buildSymbolTable(mapping) {
@@ -305,7 +309,7 @@ function resolve(flow, mapping) {
         }
       }
 
-    } else if (step.type === 'verify-external') {
+    } else if (step.type === 'verify-external' || step.type === 'execute-external') {
       skipped++;
     }
 
@@ -447,7 +451,7 @@ function resolveMultiSite(flow, siteMappings) {
         }
       }
 
-    } else if (step.type === 'verify-external') {
+    } else if (step.type === 'verify-external' || step.type === 'execute-external') {
       skipped++;
     }
 

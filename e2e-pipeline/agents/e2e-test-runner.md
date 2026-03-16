@@ -192,6 +192,7 @@ Action string formats and their handling:
 | `"Verify <description>"` | Snapshot current page, run expects only (no navigation) |
 | `"Verify <el1>, <el2>, ... on <location>"` | Verify multiple elements -- just snapshot + run expects |
 | `"Verify external"` | External verification checkpoint — see § 2m below |
+| `"Execute external"` | External execution checkpoint — see § 2n below |
 
 ### 2c. Element Resolution
 
@@ -362,7 +363,32 @@ When the step has `action: "Verify external"`, skip all browser interaction (no 
 |------|---------|-------|--------|--------|
 | verify-intent | posthog | event: web_agent_support_intent_detected | PASS | count=3 |
 | verify-intent | langfuse | trace with 'support_escalation' | SKIP | Requires MCP |
+| trigger-sessions | cli | run: touch-recce-session ×3 | PASS | exit 0 |
 ```
+
+---
+
+### 2n. External Execution Checkpoints
+
+When the step has `action: "Execute external"`, skip all browser interaction (no snapshot, no click, no element resolution). Instead:
+
+1. **Read `execute:` block**: Iterate over each context group and its entries. Each entry has:
+   - `run:` — command string or natural language instruction
+   - `repeat:` — number of times to execute (default: 1)
+   - `expect:` — per-command success criteria (optional, natural language)
+2. **Execute each entry** via Bash:
+   - If `run:` looks like a shell command (starts with a known binary, contains `/`, `|`, `$`): execute directly via Bash.
+   - If `run:` is natural language (e.g., "Upload file via Recce CLI"): interpret and construct the appropriate command. If unclear → SKIP with note.
+   - If `repeat:` > 1: execute the command N times sequentially. Stop early if any fails and `on_fail` is `fail` or `block`.
+3. **Validate `expect:`** (if present): check command output / exit code against the assertion.
+4. **Wait**: Pause for `wait_after` seconds (default: 0) to allow backend processing.
+5. **Apply `on_fail:`**:
+   - `fail` (default): mark the step as FAIL, continue to next step.
+   - `warn`: log results, continue regardless.
+   - `block`: mark as FAIL, **stop the flow**.
+6. **No screenshot** for execution steps (no browser state changed).
+
+**Result tracking**: Execution results are included in the step results array with a `type: execution` marker. They appear in the same "Checkpoint Results" report section alongside `verify-external` results.
 
 ---
 

@@ -37,8 +37,8 @@ function analyzeCoverage(mapping, resolvedSteps) {
   // Walk steps
   var steps = Array.isArray(resolvedSteps) ? resolvedSteps : [];
   steps.forEach(function(step) {
-    // Skip verify-external steps entirely
-    if (step.type === 'verify-external') {
+    // Skip verify-external and execute-external steps entirely
+    if (step.type === 'verify-external' || step.type === 'execute-external') {
       return;
     }
 

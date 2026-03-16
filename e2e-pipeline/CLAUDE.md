@@ -171,7 +171,18 @@ steps:
       - "url contains <expected-path>"
       - "text '<success message>' on <page>"
 
-  # Optional: external verification checkpoint
+  # Optional: external execution checkpoint (trigger non-browser actions)
+  - id: trigger-side-effect
+    action: "Execute external"
+    description: "Run <command> to <purpose>"
+    execute:
+      cli:
+        - run: "<command>"
+          expect: "exit code 0"
+    wait_after: 5
+    on_fail: fail
+
+  # Optional: external verification checkpoint (check side-effects)
   - id: verify-side-effect
     action: "Verify external"
     description: "Confirm <service> received the expected event"
@@ -187,7 +198,9 @@ steps:
 - Element/page names MUST match the mapping exactly (`snake_case` elements, `kebab-case` pages)
 - 5-12 steps — focused acceptance path, not exhaustive coverage
 - Every step needs `expect:` — bare navigation is insufficient for acceptance
-- `Verify external` checkpoints only at real integration boundaries
+- `Execute external` for triggering non-browser actions (CLI, API, scripts)
+- `Verify external` for checking external service side-effects
+- External checkpoints only at real integration boundaries
 - Use `/e2e-flow --from <plan>` to generate from plan; manual embedding is fallback
 
 ## Compiler Dependencies

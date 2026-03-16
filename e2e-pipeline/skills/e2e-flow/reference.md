@@ -61,6 +61,23 @@ Glob: app/api/**/route.{ts,js}  (Next.js API routes)
 Glob: pages/api/**/*.{ts,js}    (Next.js Pages API)
 ```
 
+### External Service Discovery
+
+Scan for SDK integration files that represent external service side-effects:
+
+```
+Grep: posthog\.capture|posthog\.identify|analytics\.track
+Grep: langfuse\.trace|langfuse\.generation|langfuse\.span
+Grep: sentry\.captureException|sentry\.captureMessage
+Grep: webhook|sendWebhook|notifyExternal
+Grep: fetch\(.*(slack|discord|sendgrid|twilio)
+Grep: SLACK_WEBHOOK|DISCORD_WEBHOOK|SENDGRID_API|TWILIO_
+```
+
+For each match, record: service name, file path, SDK call pattern.
+
+**Cap**: Share the 20 file-read budget with other discovery phases. External service discovery uses grep only (no file reads) — unless a match needs surrounding context to determine the service name.
+
 ### Assembling context_summary
 
 Format the scan results as a structured text block:
@@ -81,9 +98,108 @@ API endpoints:
   GET /api/projects — lists projects
 
 Mapping pages: projects-page (6 elements), new-project-page (4 elements), settings-page (8 elements)
+
+External services detected:
+  PostHog: src/lib/analytics.ts — capture('cta_clicked', { page, variant })
+  Langfuse: src/lib/tracing.ts — langfuse.trace({ name: 'ai-chat' })
 ```
 
 **Cap:** Max 20 file reads during the entire scan phase.
+
+---
+
+## External Verification Templates
+
+Generation templates for the flow-writer when constructing `Verify external` steps. These parallel `references/common-patterns.md` execution patterns but are framed as **generation guidance** (what to write) rather than execution guidance (how to run).
+
+### Analytics (PostHog, Mixpanel)
+
+```yaml
+- id: verify-tracking-event
+  action: "Verify external"
+  description: "After <trigger>, verify <service> received the <event> event"
+  wait: 10
+  verify:
+    posthog:
+      - event: <event_name>
+        expect: "count > 0 in last 5 minutes"
+        properties:
+          page: "<expected_page>"
+  on_fail: warn
+```
+
+### Tracing (Langfuse, Sentry)
+
+```yaml
+- id: verify-ai-trace
+  action: "Verify external"
+  description: "After <AI interaction>, verify <service> recorded the trace"
+  wait: 15
+  verify:
+    langfuse:
+      - check: "Recent trace named '<trace_name>' with output"
+  on_fail: warn
+```
+
+### Generic REST / Webhook / Database
+
+```yaml
+- id: verify-side-effect
+  action: "Verify external"
+  description: "After <action>, verify <target> reflects the change"
+  wait: 5
+  verify:
+    custom:
+      - check: "<natural language description of what to query/verify>"
+  on_fail: warn
+```
+
+## External Execution Templates
+
+Generation templates for the flow-writer when constructing `Execute external` steps. These trigger non-browser actions (CLI, API calls, scripts) as part of the test flow.
+
+### CLI Commands
+
+```yaml
+- id: trigger-cli-action
+  action: "Execute external"
+  description: "Run <command> to <purpose>"
+  execute:
+    cli:
+      - run: "<command>"
+        repeat: 3             # optional
+        expect: "exit code 0"
+  wait_after: 10              # wait for backend to process
+  on_fail: fail
+```
+
+### API Triggers
+
+```yaml
+- id: trigger-api-call
+  action: "Execute external"
+  description: "Call <endpoint> to trigger <side-effect>"
+  execute:
+    api:
+      - run: "curl -X POST <endpoint> -H 'Authorization: Bearer $TOKEN' -d '{...}'"
+        expect: "HTTP 200 or 201"
+  wait_after: 5
+  on_fail: fail
+```
+
+### Data Seeding / Setup
+
+```yaml
+- id: seed-test-data
+  action: "Execute external"
+  description: "Insert test records before browser verification"
+  execute:
+    db:
+      - run: "Insert 3 test orders into the orders table"
+        expect: "3 rows inserted"
+  wait_after: 2
+  on_fail: fail
+```
 
 ---
 
