@@ -15,9 +15,9 @@
         "source": "github",
         "repo": "iamcxa/claude-e2e-pipeline"
       },
-      "description": "Browser E2E testing pipeline with context-isolating subagents — map UI, run tests, walk through apps, record video",
-      "version": "1.5.0",
-      "keywords": ["e2e", "browser-testing", "agent-browser", "ui-mapping", "video-recording", "flow-report", "subagents", "acceptance-criteria"]
+      "description": "Browser E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video",
+      "version": "2.0.0",
+      "keywords": ["e2e", "browser-testing", "agent-browser", "ui-mapping", "flow-generation", "flow-verification", "video-recording", "subagents"]
     }
   ]
 }
