@@ -155,6 +155,7 @@ Dispatch `e2e-pipeline:e2e-trace-analyzer` with:
 Merge verifier output + trace analysis:
 - Corrections applied (repair/adapt/enrich counts)
 - Unfixable issues
+- Checkpoint results (external execution/verification pass/fail/skip)
 - API failures and console errors from trace
 - Video path
 
@@ -169,6 +170,7 @@ Status: <PASS ✅ | PARTIAL ⚠️ | FAIL ❌>
 Steps:       N (M original + K inserted)
 Corrections: N (R repair, A adapt, E enrich)
 Unfixable:   N
+Checkpoints: N pass, M fail, K skip
 Trace:       N API failures, M console errors
 ─────────────────────────────
 Flow:    .claude/e2e/flows/<name>.yaml
@@ -184,6 +186,12 @@ Corrections applied:
 {if unfixable}
 Unfixable issues:
   - step-7: Element not found (export feature not implemented?)
+{endif}
+
+{if checkpoint_results}
+Checkpoint results:
+  - trigger-sessions: PASS (cli: recce-cloud run ×3, exit 0)
+  - verify-posthog: SKIP (POSTHOG_API_KEY not set)
 {endif}
 ```
 
