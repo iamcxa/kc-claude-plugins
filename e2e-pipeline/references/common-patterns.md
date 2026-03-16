@@ -65,6 +65,13 @@ Patterns and gotchas for E2E testing agents. For project-specific patterns, chec
 - Use snapshot for @ref extraction and text/role verification
 - `is visible` returns text "true"/"false" but exit code is always 0
 
+## Getting Raw HTML
+
+- `agent-browser` has **no `html` subcommand** — `agent-browser html` will fail with a command resolution error
+- To get raw HTML content, use eval: `agent-browser eval "document.body.innerHTML"`
+- For full page HTML including `<head>`: `agent-browser eval "document.documentElement.outerHTML"`
+- Output can be large — pipe through `head -c 10000` if you only need a preview
+
 ## Known Noise (filter before reporting)
 
 - HMR websocket messages (hot module replacement)
