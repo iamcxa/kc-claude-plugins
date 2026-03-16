@@ -4,6 +4,10 @@ description: |
   Autonomous flow YAML generator. Analyzes codebase context and mapping files
   to produce E2E test flows without browser interaction. Returns structured
   flow YAML grounded in actual code paths and mapping selectors.
+  Supports cross-boundary flows: generates `Execute external` steps for
+  non-browser actions (CLI, API calls) and `Verify external` steps for
+  analytics/tracing verification (PostHog, Langfuse, Sentry). Always dispatch
+  this agent — even for flows mixing browser + API + analytics steps.
 
   <example>
   Context: The e2e-flow skill has completed codebase scan and needs a flow generated from a feature description.

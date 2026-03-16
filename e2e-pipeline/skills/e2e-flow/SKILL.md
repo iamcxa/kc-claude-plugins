@@ -225,3 +225,4 @@ Next steps:
 | Skipping trace analysis | Always dispatch trace-analyzer after verifier — even on PASS. Silent API failures are invisible otherwise. |
 | Re-dispatching verifier for minor fixes | Verifier does its own repair loop (2 rounds max). If it returns PARTIAL, the remaining issues are genuinely unfixable by automation. |
 | Generating flow without mapping | Mapping must exist first. `/e2e-map` before `/e2e-flow`. |
+| Bypassing flow-writer for cross-boundary flows | Always dispatch flow-writer — it supports `Execute external` and `Verify external` steps for non-browser actions (CLI, API, analytics). Runner limits ≠ writer limits. Never hand-write flows to avoid the agent. |
