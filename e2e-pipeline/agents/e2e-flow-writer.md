@@ -94,6 +94,8 @@ Map the description (or extracted criteria) to concrete flow steps:
 - `Fill <element_name> on <page_name> with '<value>'` — fill an input
 - `Wait for networkidle` — wait for network stability
 - `Eval document.querySelector('<sel>').scrollIntoView()` — scroll to element
+- `Verify external` — external service verification checkpoint (no browser interaction)
+- `Execute external` — external execution checkpoint: trigger non-browser actions (CLI, API calls, scripts)
 
 **Expect types** (must match test-runner grammar):
 - `<element_name> visible on <page_name>` — element exists
@@ -101,6 +103,42 @@ Map the description (or extracted criteria) to concrete flow steps:
 - `url contains '<path>'` — URL check
 - `text '<text>' on page` — text presence
 - `network POST <endpoint> status 2xx` — API call check
+
+**Verify external schema** (checkpoint steps — no browser interaction):
+
+```yaml
+- id: verify-<service>-<what>
+  action: "Verify external"
+  description: "<why this checkpoint exists — context for the test-runner LLM>"
+  wait: 10                    # seconds for propagation delay (default: 5)
+  verify:
+    <service-name>:           # posthog, langfuse, custom, or any identifier
+      - event: <event_name>   # structured hint (optional)
+        expect: "<natural language assertion>"
+      - check: "<natural language description of what to verify>"
+  on_fail: warn               # warn (default) | fail | block
+```
+
+**Execute external schema** (execution steps — trigger non-browser actions):
+
+```yaml
+- id: trigger-<context>-<what>
+  action: "Execute external"
+  description: "<why — context for the test-runner LLM>"
+  execute:
+    <context-name>:           # cli, api, db, or any identifier
+      - run: "<command or natural language instruction>"
+        repeat: 3             # optional, default: 1
+        expect: "exit code 0" # optional per-command assertion
+  wait_after: 5               # seconds to wait AFTER execution (default: 0)
+  on_fail: fail               # fail (default) | warn | block
+```
+
+**When to generate `Execute external` steps:**
+When `source_text` describes actions that happen OUTSIDE the browser as part of the test scenario — CLI commands, API calls, file operations, background jobs, data seeding — generate an `Execute external` step for those actions. Unlike `Verify external` (detected from SDK calls in codebase), `Execute external` is primarily detected from explicit instructions in `source_text` or `description`. Do NOT infer CLI execution needs from codebase scanning alone.
+
+**When to generate `Verify external` steps:**
+Scan `source_text` (if provided) and the "External services detected" section of `context_summary` for signals — analytics events (PostHog `capture`, Mixpanel `track`), tracing (Langfuse, Sentry), webhooks, or external API calls that are side-effects of the UI action under test. If signals are found, append a `Verify external` step after the triggering UI step. Prefer max 2 checkpoint steps per flow. If the feature has more than 2 integration points, group related checks into a single step using multiple service groups in the `verify:` block. If neither `source_text` nor `context_summary` contains external service signals, do NOT generate any `Verify external` steps. Never infer external services from generic API endpoints or form submissions alone.
 
 **Construction rules:**
 1. Every step MUST have at least one `expect:` assertion
@@ -110,6 +148,8 @@ Map the description (or extracted criteria) to concrete flow steps:
 5. Include `timeout: N` for steps that trigger API calls or file uploads
 6. Use reasonable test values for fills (e.g., "Test Project", "test@example.com", "Description for testing")
 7. Include `screenshot: true` on key verification steps
+8. `Verify external` steps are **exempt from rule 1** (`expect:` requirement). They MUST have `description:` and `verify:` (not `expect:`). No page/element references needed.
+9. `Execute external` steps are **exempt from rule 1**. They MUST have `description:` and `execute:` (not `expect:`). No page/element references needed.
 
 **Flow structure:**
 ```yaml
@@ -153,6 +193,8 @@ For each step in the constructed flow:
 2. Verify `action:` references an element that exists on that page
 3. Verify `expect:` element/page names exist in the mapping
 4. If a reference is unresolvable → add to `warnings` list (do NOT block, write the flow anyway)
+5. For `Verify external` steps: skip page/element cross-check. Validate that `verify:` block is present and non-empty instead.
+6. For `Execute external` steps: skip page/element cross-check. Validate that `execute:` block is present and non-empty instead.
 
 ### Step 5 — Write Output
 
@@ -183,7 +225,7 @@ coverage_notes: "<what's covered and what's not>"
 2. **NEVER invent element names** — every element/page in the flow must come from the mapping. If the mapping doesn't have the element, add a warning and use the closest match.
 3. **NEVER skip the validation pass** — Step 4 is mandatory. Unvalidated flows cause runtime failures in the verifier.
 4. **Max 10 file reads** — Don't explore the entire codebase. The skill gave you a `context_summary` with the relevant file paths. Read those.
-5. **Every step needs expect** — A step without `expect:` is useless for verification. Even navigation steps should verify the target page loaded.
+5. **Every step needs expect (except checkpoints)** — A step without `expect:` is useless for verification. Even navigation steps should verify the target page loaded. Exceptions: `Verify external` uses `verify:`, `Execute external` uses `execute:`.
 6. **Use v2 format only** — `mapping:` not `app:`, `id:` not `name:`. The test-runner rejects v1 format.
 7. **Absolute paths for output** — `output_dir` is an absolute path. Write there directly.
 8. **Reasonable test values** — Use plausible test data (names, emails, descriptions). Don't use "test123" or "asdf". Think about what a human tester would type.

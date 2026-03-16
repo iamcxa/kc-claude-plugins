@@ -71,7 +71,7 @@ Generate structured E2E flow YAMLs from codebase analysis, then verify them in a
 
 For non-smoke, non-verify-only invocations, scan the codebase to build a `context_summary` for the flow-writer agent. See [reference.md](./reference.md) § Codebase Scan Strategy for exact patterns.
 
-**Summary:** Identify routes → component files → form fields → API endpoints → assemble into `context_summary` text block.
+**Summary:** Identify routes → component files → form fields → API endpoints → external service integrations → assemble into `context_summary` text block. Also scan for external service integrations (PostHog, Langfuse, Sentry, webhooks) — see [reference.md](./reference.md) § External Service Discovery. Include matches in the `context_summary` under "External services detected".
 
 **Cap:** Max 20 file reads during scan. Prioritize files matching affected pages.
 
@@ -84,6 +84,7 @@ Flow generation plan:
   Source: <PR #940 / plan file / conversation>
   Mapping: <app-name> (<N> pages, <M> elements)
   Criteria: <N> acceptance items extracted
+  External: <N> service integrations detected
   Estimated steps: ~<N>
 
 Proceed? (y / adjust)

@@ -24,6 +24,7 @@ const yaml = require('js-yaml');
 var LOCAL_CLASSIFIERS = [
   { type: 'navigate',        pattern: /^Navigate to\s+/i },
   { type: 'verify-external', pattern: /^Verify external/i },     // before generic Verify
+  { type: 'execute-external', pattern: /^Execute external/i },   // before generic click/fill
   { type: 'snapshot',        pattern: /^Verify\s+\w+/i },        // element verification -> snapshot
   { type: 'click',           pattern: /^Click\s+\w+_\w+/i },   // element name must be snake_case
   { type: 'fill',            pattern: /^Fill\s+\w+_\w+\s+with\s+/i }, // element name must be snake_case
@@ -94,7 +95,7 @@ function classifyWithClaude(action) {
     var type = parsed.type;
     var confidence = parsed.confidence;
 
-    var knownTypes = ['navigate', 'click', 'fill', 'snapshot', 'wait', 'verify-external'];
+    var knownTypes = ['navigate', 'click', 'fill', 'snapshot', 'wait', 'verify-external', 'execute-external'];
     if (!knownTypes.includes(type) || type === 'manual') {
       return { type: null, source: null };
     }

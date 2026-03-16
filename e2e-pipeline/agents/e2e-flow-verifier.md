@@ -97,6 +97,8 @@ step_results = []
 
 **For each step in the flow:**
 
+**Checkpoint pass-through**: If the step has `action: "Verify external"` or `action: "Execute external"`, skip all browser interaction for this step (no snapshot, no element resolution, no action, no expect validation). Log as `status: skip, reason: "External checkpoint — handled by test-runner at execution time"`. Record in `step_results` and continue to the next step.
+
 1. **Snapshot**: `agent-browser snapshot -i` → parse interactive elements and `@ref` values
 2. **Resolve element**: Find the flow step's target element in the snapshot by matching the mapping selector
 3. **Attempt action**:
@@ -372,3 +374,4 @@ step_log_path: <absolute path to step-log.json>
 12. **Don't dispatch other agents** — You cannot dispatch subagents. Save trace.zip and step-log.json; the skill handles trace analysis.
 13. **Never close browser at end** — Leave it open. The skill or user may need to inspect final state.
 14. **`_correction` metadata** — Add to every inserted/enriched step. Test-runner ignores it but reviewers use it.
+15. **Skip external checkpoints** — Steps with `action: "Verify external"` or `action: "Execute external"` get `status: skip`. No snapshot, no element resolution, no action. The test-runner handles these at execution time.

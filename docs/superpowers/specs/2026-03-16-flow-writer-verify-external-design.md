@@ -111,6 +111,20 @@ This mirrors the test-runner's checkpoint concept but without attempting any cur
 - No changes to flow-writer input contract — `context_summary` is free-text, no schema change needed
 - No new service-specific detection beyond grep patterns — flow-writer uses natural language, not structured matching
 
+## Addendum: Execute External (added during implementation)
+
+During evaluation of the Recce Cloud test case (browser → CLI → browser → PostHog), a gap was identified: `Verify external` is passive (check things) but the case needed active execution (do things). Added `Execute external` as a symmetric counterpart.
+
+**Schema**: `execute:` block with `run:`, `repeat:`, `expect:` per entry. `wait_after:` for post-execution delay. Default `on_fail: fail`.
+
+**Additional files changed** (11 total, beyond original 5):
+- `agents/e2e-test-runner.md` — § 2b action table + § 2n execution logic
+- `skills/e2e-test/SKILL.md` — action syntax line
+- `skills/e2e-walkthrough/reference.md` — serialization rule
+- `references/common-patterns.md` — CLI, API, data seeding patterns
+- `CLAUDE.md` — draft flow template
+- `compiler/` — resolver.js, migrate.js, codegen.js, coverage.js (all SKIP in CI, 470/470 tests pass)
+
 ## Implementation
 
-Use `/e2e-skill-ops --add-feature` which enforces: feasibility PoC > impact scan > design > implement > RED test > evaluate.
+Used `/e2e-skill-ops --add-feature` + `superpowers:writing-skills` TDD cycle (RED → GREEN → REFACTOR).

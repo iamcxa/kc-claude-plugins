@@ -4,6 +4,38 @@ Persistent record of skill gaps, fixes, and feature additions. Referenced by `/e
 
 ## New Features
 
+### 2026-03-16: Verify External Support in Flow-Writer (Approach B — Active Discovery)
+
+**Problem**: flow-writer agent couldn't generate `Verify external` checkpoint steps. Execution side (test-runner § 2m, walkthrough, compiler) fully supported the pattern since v1.5.0, but generation side was missing — flows with external verification had to be hand-written.
+
+**Solution** (5 change points):
+1. `agents/e2e-flow-writer.md` — `Verify external` action type + `verify:` schema + detection heuristic (text parsing on `source_text` + `context_summary`) + rule 8 exemption + Step 4 validation skip
+2. `skills/e2e-flow/reference.md` — External Service Discovery (grep patterns for SDK calls) + External Verification Templates (analytics, tracing, generic)
+3. `skills/e2e-flow/SKILL.md` — Phase 0 codebase scan includes external services + Present Plan shows count
+4. `agents/e2e-flow-verifier.md` — Pass-through rule for checkpoint steps (skip browser interaction, log as skip) + Critical Rule 15
+
+**Design spec**: `docs/superpowers/specs/2026-03-16-flow-writer-verify-external-design.md`
+
+**Key design decisions**:
+- Approach B (Active Discovery) over A (passive) or C (structured handoff): orchestrator scans via grep, passes results as free-text in `context_summary` — no input contract change, consistent with existing convention
+- Detection heuristic includes explicit negative case: "If neither source_text nor context_summary contains signals, do NOT generate checkpoints"
+- Soft cap on checkpoints: "prefer max 2, group if more than 2 integration points"
+- Verifier pass-through in both Phase 2 per-step loop AND Critical Rules (pressure-resistance)
+
+**Quality check** (kc-plugin-forge):
+- 2 LOW issues found and fixed before applying: (1) missing negative case in heuristic, (2) missing Critical Rule 15 in verifier
+- 13/13 chain verification checks passed (writer → verifier → runner field name consistency)
+
+**Feature 1b — Execute External Checkpoints** (same session):
+- **What**: `action: "Execute external"` step type — symmetric counterpart to `Verify external`. Triggers non-browser actions (CLI commands, API calls, scripts, data seeding) as part of E2E flows.
+- **Schema**: `execute:` block (context-grouped, `run:` + `repeat:` + `expect:` per entry), `wait_after:` (post-execution delay), `on_fail: fail` (default)
+- **Where**: 11 files — test-runner § 2n, flow-writer, flow-verifier, e2e-flow reference + SKILL.md, e2e-test SKILL.md, walkthrough reference, common-patterns, CLAUDE.md, compiler (resolver + migrate + codegen + coverage)
+- **Compiler**: SKIP in CI (same as verify-external) — 470/470 tests pass
+- **Impact scan gap found**: walkthrough serialization rule only mentioned Verify external — added Execute external serialization guidance
+- **Key distinction**: `Execute external` = do things (default `on_fail: fail`); `Verify external` = check things (default `on_fail: warn`)
+
+**Lesson**: When adding generation capability for a pattern that already exists on the execution side, check BOTH the generator AND all intermediate agents (verifier). The verifier sits between writer and runner — if it doesn't know about the new step type, it breaks the chain even though both endpoints are correct.
+
 ### 2026-03-16: v2.0 Role Restructuring — Validation
 
 **Changes:**

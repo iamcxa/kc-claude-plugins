@@ -198,3 +198,115 @@ The `check:` field is natural language — the LLM decides how to verify:
 | Use `on_fail: block` sparingly | Only when subsequent steps depend on the checkpoint |
 | Group related checks in one step | One checkpoint per integration point, not one per assertion |
 | `note:` for edge cases | "May be 0 if fast-path routing bypasses load_skill" |
+
+## External Execution Checkpoints
+
+Execution steps (`action: "Execute external"`) let the LLM pause browser automation to trigger non-browser side-effects. The `execute:` block uses semi-structured YAML — context grouping for organization, commands or natural language for the actual execution.
+
+### CLI Patterns
+
+```yaml
+- id: trigger-recce-sessions
+  action: "Execute external"
+  description: "Run touch-recce-session 3 times to trigger artifact upload threshold"
+  execute:
+    cli:
+      - run: "touch-recce-session"
+        repeat: 3
+        expect: "exit code 0"
+  wait_after: 10
+  on_fail: fail
+```
+
+**Test runner**: Executes via Bash. Inherits session env vars. `repeat: 3` runs command 3 times sequentially.
+
+### API Trigger Patterns
+
+```yaml
+- id: trigger-webhook
+  action: "Execute external"
+  description: "POST to webhook endpoint to simulate external event"
+  execute:
+    api:
+      - run: "curl -X POST $WEBHOOK_URL -H 'Content-Type: application/json' -d '{\"event\": \"test\"}'"
+        expect: "HTTP 200"
+  wait_after: 5
+  on_fail: fail
+```
+
+### Data Seeding Patterns
+
+```yaml
+- id: seed-test-data
+  action: "Execute external"
+  description: "Insert test records before browser verification"
+  execute:
+    db:
+      - run: "Insert 3 test orders with status='pending' into the orders table"
+        expect: "3 rows inserted"
+  wait_after: 2
+  on_fail: fail
+```
+
+The `run:` field can be a literal command or natural language — the LLM decides how to execute:
+- Literal command → run directly via Bash
+- Natural language → interpret and construct the appropriate command
+- Unknown/ambiguous → SKIP with note
+
+### Execution Design Guidelines
+
+| Guideline | Reason |
+|-----------|--------|
+| Always include `description:` | LLM needs context to construct the right command |
+| Set `wait_after:` based on backend latency | Give the backend time to process before the next browser step |
+| Use `on_fail: fail` (default) for execution | Execution failure usually means the test can't proceed |
+| Use `on_fail: warn` for optional setup | Non-critical data seeding that doesn't block the flow |
+| Use `repeat:` instead of multiple `run:` entries | For identical commands, `repeat` is cleaner |
+| Literal commands over natural language | When you know the exact command, write it — less LLM interpretation needed |
+
+### Combined Flow Example: Browser → CLI → Browser → PostHog
+
+A real-world pattern mixing all three modes — browser actions, CLI execution, and external verification:
+
+```yaml
+name: Recce Artifacts Auto Upload
+description: "Verify artifacts_auto_uploaded flips after 3 CLI sessions and PostHog event fires"
+mapping: recce-cloud
+variables:
+  project_id: "test-project-001"
+
+steps:
+  - id: verify-initial-false
+    action: Navigate to /projects/${project_id}/settings
+    expect:
+      - "text 'artifacts_auto_uploaded: false' on page"
+
+  - id: trigger-recce-sessions
+    action: "Execute external"
+    description: "Run touch-recce-session 3 times to hit artifact upload threshold"
+    execute:
+      cli:
+        - run: "touch-recce-session"
+          repeat: 3
+          expect: "exit code 0"
+    wait_after: 10
+    on_fail: fail
+
+  - id: verify-state-flipped
+    action: Navigate to /projects/${project_id}/settings
+    timeout: 30
+    expect:
+      - "text 'artifacts_auto_uploaded: true' on page"
+
+  - id: verify-posthog-funnel
+    action: "Verify external"
+    description: "Confirm PostHog received the artifacts_auto_uploaded funnel event"
+    wait: 15
+    verify:
+      posthog:
+        - event: artifacts_auto_uploaded
+          expect: "count > 0 in last 5 minutes"
+    on_fail: warn
+```
+
+**Pattern**: Browser (verify precondition) → Execute external (trigger) → Browser (verify postcondition) → Verify external (confirm side-effect). The `wait_after: 10` on the execution step gives the backend time to process before the next browser check.
