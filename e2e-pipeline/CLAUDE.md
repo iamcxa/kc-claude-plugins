@@ -124,6 +124,7 @@ When adding, removing, or renaming skills or agents, update these files:
 3. `docs/architecture.md` — skill→agent table and plugin file tree
 4. `docs/getting-started.md` — step-by-step guide
 5. `docs/writing-tests.md` and `docs/recording-evidence.md` — check for stale references
+5b. `docs/common-patterns.md` — external checkpoint patterns, combined flow examples
 6. `.claude-plugin/plugin.json` — bump version
 7. `CLAUDE.md` (this file) — Architecture section counts, directory listing, Recording Defaults table
 
