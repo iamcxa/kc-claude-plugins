@@ -28,7 +28,7 @@ if [ -d "$flow_dir" ]; then
 fi
 
 if [ "$flow_count" -eq 0 ]; then
-  jq -n '{"systemMessage": "⚠ E2E mappings exist but no flow files in .claude/e2e/flows/. If this commit includes UI changes, consider running /e2e-acceptance to generate acceptance flows first."}'
+  jq -n '{"systemMessage": "⚠ E2E mappings exist but no flow files in .claude/e2e/flows/. If this commit includes UI changes, consider running /e2e-flow to generate flows first."}'
   exit 0
 fi
 

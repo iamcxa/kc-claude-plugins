@@ -17,5 +17,5 @@ if [ -d "$flow_dir" ]; then
   flow_count=$(ls "$flow_dir"/*.yaml 2>/dev/null | wc -l | tr -d ' ')
 fi
 
-jq -n --arg msg "E2E infrastructure detected (${mapping_count} mapping(s), ${flow_count} flow(s)). When planning or implementing UI-facing features: include draft E2E flow YAMLs as acceptance criteria, use /e2e-acceptance to generate from plans, and run /e2e-test before finalizing." \
+jq -n --arg msg "E2E infrastructure detected (${mapping_count} mapping(s), ${flow_count} flow(s)). When planning or implementing UI-facing features: use /e2e-flow to generate flows from plans, and run /e2e-test before finalizing." \
   '{"systemMessage": $msg}'

@@ -1,6 +1,6 @@
 # e2e-pipeline
 
-Browser E2E testing pipeline for Claude Code. Maps UI elements, runs test flows, and walks through apps interactively — all with context-isolating subagents that keep browser data out of your main conversation.
+Browser E2E testing pipeline for Claude Code. Maps UI elements, generates and verifies test flows, runs automated tests, and walks through apps interactively — all with context-isolating subagents that keep browser data out of your main conversation.
 
 ## Install
 
@@ -15,14 +15,16 @@ Browser E2E testing pipeline for Claude Code. Maps UI elements, runs test flows,
 
 ```
 /e2e-map                    # 1. Map your app's UI → .claude/e2e/mappings/<app>.yaml
-/e2e-test <flow-name>       # 2. Run a test flow from .claude/e2e/flows/
-/e2e-walkthrough            # 3. Walk through interactively (auto-generates flow YAML)
-/e2e-compile --all          # 4. Compile to standalone bash scripts for CI
+/e2e-flow --from <plan>     # 2. Generate + verify flow from plan/spec/PR
+/e2e-flow --smoke           # 3. Smoke test all mapped pages
+/e2e-test <flow-name>       # 4. Replay a test flow automatically
+/e2e-walkthrough            # 5. Walk through interactively (exploration, QA, debug)
+/e2e-compile --all          # 6. Compile to standalone bash scripts for CI
 ```
 
 ## The Pipeline
 
-**Map → Walk → Test → Analyze → Repair → Re-test**
+**Map → Generate → Verify → Test → Analyze → Repair → Re-test**
 
 Write tests in natural language — element names from your mapping, not CSS selectors:
 
