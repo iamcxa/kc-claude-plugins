@@ -12,7 +12,7 @@ Claude Code plugin marketplace by [Kent Chen](https://github.com/iamcxa).
 
 | Plugin | Version | Description | Install |
 |--------|---------|-------------|---------|
-| [e2e-pipeline](./e2e-pipeline/) | 2.0.0 | Browser E2E testing with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video | `/plugin install e2e-pipeline@kc-claude-plugins` |
+| [e2e-pipeline](./e2e-pipeline/) | 2.1.0 | Browser E2E testing with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video | `/plugin install e2e-pipeline@kc-claude-plugins` |
 
 ## Usage
 
