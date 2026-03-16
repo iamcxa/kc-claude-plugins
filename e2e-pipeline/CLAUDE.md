@@ -93,6 +93,21 @@ When modifying skill or agent definitions:
 - Run the **e2e-skill-ops 5 rules**: search before diagnose, 3-skill impact scan, verify after fix, write back findings, propose (don't ship) SKILL.md changes without review
 - Quality findings persist in `e2e-reports/skill-quality-findings.md`
 
+**Adding or changing action types (e.g., new `action:` value in flow YAML):**
+Trace the full chain and update EVERY layer. No layer may be skipped:
+
+| Layer | File | Question |
+|-------|------|----------|
+| Generator | `agents/e2e-flow-writer.md` | Can it produce the new action type? |
+| Verifier | `agents/e2e-flow-verifier.md` | Can it attempt execution (not just skip)? Check available tools. |
+| Test-runner | `agents/e2e-test-runner.md` | Can it execute at full fidelity? |
+| Compiler | `bin/e2e-compile.js` | Does it handle or explicitly SKIP the type? |
+| Skill | `skills/e2e-flow/SKILL.md` | Does the result summary show the new type's output? |
+| Reference | `references/common-patterns.md` | Are execution patterns documented? |
+| CLAUDE.md | `CLAUDE.md` draft flow template | Is the new type in the example? |
+
+Rule: if a layer has the tools to attempt a step, it MUST attempt it (best-effort). "Skip because another layer handles it" is only valid when the layer genuinely lacks the capability.
+
 **Removing a skill or agent:**
 1. Delete the directory/file
 2. Run: `grep -rn "<name>" e2e-pipeline/ --include="*.md" --include="*.json" --include="*.sh" | grep -v skill-quality-findings | grep -v node_modules | grep -v docs/superpowers/`
