@@ -76,6 +76,54 @@ If ANY fail: warn with migration guidance (`app:`->`mapping:`, `name:`->`id:`, s
 5. **Mapping resolution**: Read `flow.sites[<alias>].mapping` → resolve to `.claude/e2e/mappings/<name>.yaml`.
 6. Proceed with standard Route A single-site dispatch using the filtered steps and resolved mapping.
 
+### Preconditions Check (all routes)
+
+After flow validation, before agent dispatch. Optional — skip if flow has no `preconditions:` block.
+
+**Schema:**
+```yaml
+preconditions:
+  runner: psql              # "psql" (default) | "supabase"
+  env:                      # required when runner: psql
+    - DATABASE_URL
+  project: my-project-ref   # required when runner: supabase
+  checks:
+    - query: "SELECT count(*) FROM table"
+      expect: "> 0"
+      fail_message: "Description of what's missing"
+      site: alias           # optional — only checked when site context matches
+```
+
+**Execution logic:**
+
+1. Parse `preconditions:` from flow YAML. No block → skip.
+2. Resolve runner (default `psql`):
+   - **psql**: Read `.env` from project root. Extract vars listed in `env:`. Any missing → stop: `"Missing env var: <name>. Add it to .env"`
+   - **supabase**: Verify `project:` field exists. Execute via `execute_sql` MCP tool.
+3. Determine site context:
+   - Route A with `--site X` → site context = X
+   - Route B (`--all-sites`) → run once per site iteration; site context = current alias
+   - Route C (`--suite`) → run once per site iteration; site context = current alias
+   - Route A without `--site` → site context = none
+4. Filter checks:
+   - site context = none → run checks WITHOUT `site:` field only
+   - site context = X → run global checks (no `site:` field) + checks where `site` === X
+5. Execute filtered checks sequentially:
+   - **psql**: `psql "$DATABASE_URL" -t -A -c "<query>"` (via Bash). Trim whitespace. Take first line if multi-row.
+   - **supabase**: `execute_sql(project, query)` MCP tool.
+   - Parse `expect:` → operator (`>`, `>=`, `=`, `!=`) + number.
+   - Compare query result against expect.
+6. Error handling:
+   - psql non-zero exit → treat as failure, show stderr as message.
+   - Empty or non-numeric result → failure: `"Query returned non-numeric result: '<value>'. Use aggregate queries (COUNT, SUM, etc.)"`
+7. Any check fails → stop:
+   ```
+   ❌ Precondition failed: <fail_message>
+      Query: <query>
+      Expected: <expect>, Got: <actual>
+   ```
+8. All pass → `✅ Preconditions passed (N/N checks)` → proceed to Phase 1.
+
 **Multi-Flow Execution** (batch mode): alphabetical order, navigate to `base_url` between flows, each gets `$REPORT_DIR/<flow-name>/`, failed flow does NOT abort remaining. If a flow has invalid YAML or fails schema validation, mark it as ERROR in results table with the parse reason, skip it, and continue with remaining flows.
 
 ### Route B: `--all-sites`
@@ -303,6 +351,13 @@ name: <flow-name>
 description: "<what this tests>"
 tags: [smoke, feature-x]                     # optional
 mapping: <mapping-filename-no-ext>           # -> .claude/e2e/mappings/<name>.yaml
+preconditions:                               # optional — data readiness checks
+  runner: psql
+  env: [DATABASE_URL]
+  checks:
+    - query: "SELECT count(*) FROM users"
+      expect: "> 0"
+      fail_message: "No users — run seed first"
 
 steps:
   - id: <unique-step-id>

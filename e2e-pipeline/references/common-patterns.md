@@ -118,6 +118,64 @@ Run this **once per session**, during the setup phase (after `mkdir -p` for `rep
 - Filter trace.network for `status >= 400` to find API failures
 - Filter trace.trace for console errors (after noise removal)
 
+## Preconditions (Data Readiness Checks)
+
+Preconditions validate seed data before dispatching browser agents. Executed by the skill in Phase 0 — if any check fails, the agent is never launched.
+
+### psql runner (default)
+
+```yaml
+preconditions:
+  runner: psql
+  env:
+    - DATABASE_URL
+  checks:
+    - query: "SELECT count(*) FROM work_order_tasks WHERE status = 'reviewing'"
+      expect: "> 0"
+      fail_message: "No tasks in reviewing state — run seed lifecycle first"
+    - query: "SELECT count(*) FROM work_order_tasks WHERE jsonb_array_length(audit_template_snapshots) > 0"
+      expect: "> 0"
+      fail_message: "No tasks with audit snapshots — run `pnpm seed` first"
+```
+
+### Supabase MCP runner
+
+```yaml
+preconditions:
+  runner: supabase
+  project: my-project-ref
+  checks:
+    - query: "SELECT count(*) FROM profiles WHERE role = 'admin'"
+      expect: ">= 1"
+      fail_message: "No admin users — check seed script"
+```
+
+### Site-scoped checks
+
+```yaml
+preconditions:
+  runner: psql
+  env: [DATABASE_URL]
+  checks:
+    - query: "SELECT count(*) FROM users"
+      expect: "> 0"
+      fail_message: "No users"
+      # No site: field — always checked (global)
+    - query: "SELECT count(*) FROM mobile_sessions"
+      expect: "> 0"
+      fail_message: "No mobile sessions"
+      site: mobile    # Only checked when --site mobile or --all-sites iterating mobile
+```
+
+### Comparison operators
+
+| Operator | Example | Meaning |
+|----------|---------|---------|
+| `>` | `"> 0"` | Greater than |
+| `>=` | `">= 5"` | Greater than or equal |
+| `=` | `"= 1"` | Exact match |
+| `!=` | `"!= 0"` | Not equal |
+
 ## External Verification Checkpoints
 
 Checkpoint steps (`action: "Verify external"`) let the LLM pause browser automation to verify external service side-effects. The `verify:` block uses semi-structured YAML — service grouping for organization, natural language for the actual checks.
