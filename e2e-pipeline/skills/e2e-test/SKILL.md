@@ -31,6 +31,20 @@ Resolve browser E2E test flows and dispatch the `e2e-test-runner` agent for exec
 
 1. **agent-browser** installed globally  2. **Dev server running**  3. **Mapping file** in `.claude/e2e/mappings/`  4. **Flow files** in `.claude/e2e/flows/`
 
+## Knowledge Bootstrap (before Phase 0)
+
+Read accumulated patterns to inform test execution and result analysis:
+
+```
+Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md
+Read → .claude/e2e-lessons.md (if exists — project-specific E2E lessons)
+```
+
+Use loaded patterns to:
+- Anticipate known timing/selector issues during result analysis
+- Recognize recurring divergence patterns in Phase 1.8
+- Avoid re-discovering known flaky patterns
+
 ## Phase 0 — Resolve Mapping & Flow
 
 ### Mapping Resolution Reference
@@ -486,6 +500,36 @@ runs:
 
 **Validation:** Flow must exist. `site:`/`sites:` must match mapping `app` fields. Cannot use both `site:` and `sites:`. Cannot override cross-site flow's sites. Generic flow without site info -> error. Duplicate flow+site -> warning.
 
+## Phase 3 — Learning
+
+After presenting results, evaluate findings for knowledge capture.
+
+Read → `${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md`
+
+### D1 candidates (auto-append)
+
+Scan test results for general patterns:
+- Selector strategies that consistently pass/fail (e.g., `data-testid` vs `role=button`)
+- Divergence patterns between LLM and compiled execution
+- Agent-browser behavior discoveries
+- Flow design patterns that improve reliability
+
+Auto-append to `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. Notify: "Appended pattern: [title]"
+
+### D2 candidates (gated — e2e-test only)
+
+Scan for project-specific patterns that pass the write threshold:
+- Recurring timing issues on specific endpoints/pages
+- Auth/session patterns unique to this project
+- Data dependency requirements for test flows
+
+Apply severity gate + three-question test from `knowledge-capture.md`. Present candidates for user confirmation. Target: `.claude/e2e-lessons.md` or project `CLAUDE.md`.
+
+### Skip conditions
+
+- Zero failures AND zero divergence AND no novel observations → skip Learning
+- All findings already in learned-patterns.md → skip (no duplicates)
+
 ## Common Mistakes
 
 | Mistake | Fix |
@@ -498,3 +542,6 @@ runs:
 | `verify-external` without `verify:` block | `verify:` is required on checkpoint steps |
 | `verify-external` with `expect:` at step level | Browser `expect:` doesn't apply — use `expect:` inside `verify:` entries |
 | Checkpoint `on_fail: block` on flaky external service | Use `warn` for services with propagation delay or intermittent availability |
+| Capturing one-off flake as D2 | Flakes don't pass three-question test — D2 needs recurring patterns |
+| Duplicate D1 entry | Search learned-patterns.md before appending |
+| Skipping Learning on all-pass | Skip is correct — nothing to learn from clean runs with no novel observations |

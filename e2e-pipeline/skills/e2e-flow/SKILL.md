@@ -35,6 +35,19 @@ Generate structured E2E flow YAMLs from codebase analysis, then verify them in a
 | `--no-verify` | Generate flow only, skip browser verification |
 | `--no-video` | Skip video recording during verification |
 
+## Knowledge Bootstrap (before mapping discovery)
+
+Read accumulated patterns to inform flow generation and verification:
+
+```
+Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md
+```
+
+Use loaded patterns to:
+- Apply known flow design patterns during generation (e.g., wait after modal trigger)
+- Anticipate verifier correction patterns
+- Avoid generating steps known to cause divergence
+
 ## Discover Mapping (BLOCKING — must complete before proceeding)
 
 1. Scan `.claude/e2e/mappings/*.yaml`
@@ -271,6 +284,28 @@ Next steps:
 - `/e2e-compile <flow-name>` — compile to standalone bash script
 ```
 
+## Phase 4 — Learning (D1 only)
+
+After presenting results, evaluate findings for skill-level knowledge capture.
+
+Read → `${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md`
+
+### D1 candidates (auto-append)
+
+Scan generation + verification results for general patterns:
+- Flow structures that the verifier consistently corrects (indicates generation gap)
+- Codebase scan strategies that yield better element coverage
+- Checkpoint patterns that work/fail across services
+- Smoke mode patterns for different UI frameworks
+
+Auto-append to `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. Notify: "Appended pattern: [title]"
+
+### Skip conditions
+
+- `--no-verify` with zero warnings → skip (generation-only, no feedback signal)
+- Zero corrections AND zero unfixable AND no novel observations → skip
+- All findings already in learned-patterns.md → skip (no duplicates)
+
 ## Common Mistakes
 
 | Mistake | Fix |
@@ -282,3 +317,4 @@ Next steps:
 | Re-dispatching verifier for minor fixes | Verifier does its own repair loop (2 rounds max). If it returns PARTIAL, the remaining issues are genuinely unfixable by automation. |
 | Generating flow without mapping | Mapping must exist first. `/e2e-map` before `/e2e-flow`. |
 | Bypassing flow-writer for cross-boundary flows | Always dispatch flow-writer — it supports `Execute external` and `Verify external` steps for non-browser actions (CLI, API, analytics). Runner limits ≠ writer limits. Never hand-write flows to avoid the agent. |
+| Duplicate D1 entry | Search learned-patterns.md before appending |

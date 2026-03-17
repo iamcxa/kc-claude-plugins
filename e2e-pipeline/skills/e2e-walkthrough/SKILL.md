@@ -90,6 +90,19 @@ If agent-browser is not installed, stop and report: "agent-browser is required f
 - **Automated OTP path**: If mapping has `auth.test_accounts` with phone numbers AND the project has Supabase `config.toml` with `[auth.sms.test_otp]` entries, automate login: navigate to signin path → fill phone number (strip country code if UI has country selector) → submit → fill OTP from config → submit → verify URL. This avoids blocking on human input for local dev environments.
 - **Manual path**: If no test accounts or OTP config available, open browser `agent-browser --profile ~/.agent-browser/<app> --headed open <base_url>`, read `auth.manual_prompt` from mapping and relay it to the user (e.g., "Please complete login in the browser"). After user confirms → `agent-browser get url` and verify using `auth.verification.url_not_contains` from mapping (`url_not_contains` performs a **substring check** on the full URL). If verification fails, re-prompt user. Repeat until verified or user aborts. Profile persists — login is one-time only.
 
+## Knowledge Bootstrap (before Phase 1)
+
+Read accumulated patterns to inform walkthrough execution:
+
+```
+Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md
+```
+
+Use loaded patterns to:
+- Apply known selector strategies during interactive exploration
+- Anticipate framework-specific UI behaviors (e.g., Ant Design hidden inputs)
+- Recognize anomaly patterns from past walkthroughs
+
 ## Phase 1 — Plan
 
 1. Read context: PR diff (`gh pr diff`), issue description (Linear MCP), or human's text
@@ -192,13 +205,14 @@ Phase 4 checklist:
 [ ] 9. flow YAML written to .claude/e2e/flows/
 [ ] 10. PR comment posted with pr-summary.md (or N/A if no --pr)
 [ ] 11. mapping discrepancy check done
-[ ] 12. browser handoff + action menu presented
-[ ] 13. pipeline next steps shown
+[ ] 12. D1 knowledge capture (learned-patterns.md)
+[ ] 13. browser handoff + action menu presented
+[ ] 14. pipeline next steps shown
 ```
 
 For detailed procedures (trace analysis, anomaly review, report templates, flow YAML rules, mapping self-repair), see [reference.md](./reference.md).
 
-Checklist items map to procedure steps below. Items 5-6 are both from procedure step 5 (dual output). Item 13 maps to Pipeline Next Steps section below.
+Checklist items map to procedure steps below. Items 5-6 are both from procedure step 5 (dual output). Item 12 is D1 knowledge capture. Item 14 maps to Pipeline Next Steps section below.
 
 1. **Stop recording** (if recording): `agent-browser record stop`
 2. **Stop trace**: `agent-browser trace stop "$REPORT_DIR/trace.zip"`
@@ -218,7 +232,8 @@ Checklist items map to procedure steps below. Items 5-6 are both from procedure 
 7. **Flow YAML auto-generation (MANDATORY)** (checklist item 9): Always auto-generate — never ask. Auto-name: `walkthrough-<timestamp>-<first-page>.yaml`. Write to `.claude/e2e/flows/`. Cross-site: use `sites:` instead of `mapping:` when `--sites` was used.
 8. **PR/Issue posting** (checklist item 10): If `--pr` provided, ask user to confirm → commit + push screenshots → `gh pr comment` with `pr-summary.md`. See [reference.md](./reference.md) § PR/Issue Posting.
 9. **Mapping self-repair** (checklist item 11): Present discrepancy list, human approves, patch mapping. 3+ stale on same page → recommend `/e2e-map --page`
-10. **Browser handoff** (checklist item 12, BLOCKING: report + flow YAML must be written first): Present summary table, then numbered action menu. Do NOT close browser — user may need to inspect final state.
+10. **D1 Knowledge capture** (checklist item 12): Evaluate walkthrough findings for skill-level patterns. Read `${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md`. Scan anomalies, selector discoveries, and framework behaviors for general patterns. Auto-append to `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. Skip if zero anomalies AND no novel selector/framework observations. Notify: "Appended pattern: [title]"
+11. **Browser handoff** (checklist item 13, BLOCKING: report + flow YAML must be written first): Present summary table, then numbered action menu. Do NOT close browser — user may need to inspect final state.
 
 **Post-completion menu** (always present, numbered):
 

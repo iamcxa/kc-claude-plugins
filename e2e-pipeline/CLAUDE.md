@@ -28,8 +28,29 @@ skills/e2e-compile/      → compile flow YAML to standalone bash test scripts (
 skills/e2e-skill-ops/    → meta-skill for debugging/maintaining the pipeline itself
 agents/                  → subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor)
 hooks/                   → E2E pipeline hooks (SessionStart context + pre-commit check + plan E2E check)
-references/              → agent-browser CLI commands, common browser testing patterns
+references/              → agent-browser CLI commands, common browser testing patterns, knowledge capture framework
 ```
+
+## Self-Improvement
+
+5 of 7 skills accumulate knowledge after execution via a two-dimension framework (`references/knowledge-capture.md`):
+
+| Skill | D1 (skill-level) | D2 (project-level) |
+|-------|-------------------|---------------------|
+| e2e-test | Auto-append to `learned-patterns.md` | Gated write to `.claude/e2e-lessons.md` |
+| e2e-skill-ops | Auto-append to `learned-patterns.md` | Gated write (--evaluate mode only) |
+| e2e-flow | Auto-append to `learned-patterns.md` | — |
+| e2e-walkthrough | Auto-append to `learned-patterns.md` | — |
+| e2e-map | Auto-append to `learned-patterns.md` | — |
+| e2e-compile | — (deterministic) | — |
+| e2e-dispatch | — (router) | — |
+
+**D1** = cross-project patterns (selector strategies, framework behaviors, agent-browser gotchas). Auto-append, no gate.
+**D2** = project-specific patterns (timing, auth, data dependencies). Severity gate + three-question test + user confirmation.
+
+All skills read `learned-patterns.md` at startup (Knowledge Bootstrap phase). D2-capable skills also read `.claude/e2e-lessons.md`.
+
+PR-back flow: users curate local `learned-patterns.md` → PR to plugin origin → all users benefit.
 
 ## Data Flow
 
