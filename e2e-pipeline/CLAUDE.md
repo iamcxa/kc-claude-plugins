@@ -10,12 +10,13 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 
 **Skills** (7) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
 
-**Agents** (5) run as subagents for heavy work, keeping verbose data out of main context:
+**Agents** (6) run as subagents for heavy work, keeping verbose data out of main context:
 - `e2e-mapper` — explores pages, generates YAML mappings
 - `e2e-flow-writer` — analyzes codebase + mapping to generate flow YAML (no browser)
 - `e2e-flow-verifier` — runs flows in browser, auto-repairs selectors/steps, produces reports
 - `e2e-test-runner` — executes flow files, validates expectations
 - `e2e-trace-analyzer` — parses Playwright trace.zip for API failures and console errors
+- `e2e-media-processor` — blank-frame-trimmed GIF, MP4 video, thumbnail from screenshots/recordings
 
 ```
 skills/e2e-dispatch/     → router (auth gate + skill selection)
@@ -25,7 +26,7 @@ skills/e2e-walkthrough/  → interactive exploration (main context)
 skills/e2e-flow/         → generate & verify flows → dispatches flow-writer + flow-verifier + trace-analyzer
 skills/e2e-compile/      → compile flow YAML to standalone bash test scripts (requires npm deps)
 skills/e2e-skill-ops/    → meta-skill for debugging/maintaining the pipeline itself
-agents/                  → subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer)
+agents/                  → subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor)
 hooks/                   → E2E pipeline hooks (SessionStart context + pre-commit check + plan E2E check)
 references/              → agent-browser CLI commands, common browser testing patterns
 ```
@@ -65,6 +66,8 @@ steps:
     action: "Click <element> on <page>"
     expect: ["<element> visible on <page>"]
 ```
+
+Flow files may also include an optional `preconditions:` block for data readiness checks (see `references/common-patterns.md`).
 
 Using `app:` or `name:` in steps means v1 format — rejected by the test runner.
 
@@ -136,6 +139,8 @@ When adding, removing, or renaming skills or agents, update these files:
 | `/e2e-flow --verify-only` | ON | `--no-video` |
 | `/e2e-test` | OFF | `--video` or `--pr` |
 | `/e2e-map` | No recording | — |
+
+All media post-processing (GIF, MP4, thumbnail) is handled by the `e2e-media-processor` agent, dispatched by each skill after browser work completes. Browser agents produce raw screenshots and WebM recordings only.
 
 ## Planning Integration (E2E-First Acceptance)
 
