@@ -24,17 +24,17 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Depends on**: Nothing (first phase)
 **Requirements**: FOUND-01, FOUND-02, FOUND-03, FOUND-04, FOUND-05, FOUND-06, FOUND-07, FOUND-08, SEC-01, SEC-02, SEC-03
 **Success Criteria** (what must be TRUE):
-  1. Server and worker start together; worker connects to server via Unix socket and sends a heartbeat every 30 seconds; server marks worker offline if heartbeat is >60s stale
-  2. Killing the worker process causes the server to detect disconnect, clean up orphaned safehouse+claude processes using PID files, and reject new run requests with a visible error
-  3. Restarting the server after a crash removes the stale socket file and starts cleanly (no EADDRINUSE restart loop)
+  1. Server and worker start together; worker connects to server via Bun native IPC and sends a heartbeat every 30 seconds; server marks worker offline if heartbeat is >90s stale (3 missed)
+  2. Killing the worker process causes the server to detect disconnect, clean up orphaned safehouse+claude processes (pgrep scan), and enter exponential backoff restart (2s/5s/15s); after 3rd crash enters read-only mode
+  3. Restarting the server after a crash starts cleanly — Bun native IPC eliminates socket file/EADDRINUSE; orphan scan covers stale state from prior crash
   4. A claude run that completes (result event received) is force-killed within 10 seconds even if MCP connections keep the process alive
   5. The app binds to 127.0.0.1 by default; remote mode requires explicit opt-in and a token on all API endpoints
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Shared types, Unix socket IPC, heartbeat + liveness detection
-- [ ] 01-02: Worker executor — safehouse chain, PID tracking, forced-kill on result event
-- [ ] 01-03: Server startup cleanup — stale socket removal, orphan PID scan, SIGINT/SIGTERM handlers, yaml-store with file lock, app bootstrap (nightwatch-app.yaml), run artifact rolling cleanup
+- [ ] 01-01-PLAN.md — Project scaffold, shared types/constants/logger, Bun native IPC, heartbeat + liveness detection, GET /health
+- [ ] 01-02-PLAN.md — Worker executor: safehouse chain, PID tracking, force-kill after result event, timeout enforcement, artifact rolling cleanup
+- [ ] 01-03-PLAN.md — Server startup: orphan cleanup, crash recovery backoff, graceful shutdown, yaml-store bootstrap, Bearer token security gate
 
 ### Phase 2: Core Cockpit
 **Goal**: Users can monitor targets, trigger runs with real-time log streaming, view run history, and control the interval scheduler — replacing the current cron + YAML-file workflow entirely
