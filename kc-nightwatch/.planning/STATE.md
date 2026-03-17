@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-03-17T18:38:56.734Z"
-last_activity: "2026-03-18 — Plan 01-02 complete: worker executor with force-kill, PID tracking, safehouse policy, log parser"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-03-18T18:55:00.000Z"
+last_activity: "2026-03-18 — Plan 01-03 complete: YAML config bootstrap, auth middleware, orphan cleanup, crash recovery, security gate"
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
-  percent: 11
+  completed_plans: 3
+  percent: 25
 ---
 
 # Project State
@@ -25,29 +25,29 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation)
-Plan: 2 of 3 in current phase (01-02 complete)
-Status: In progress — executing plans
-Last activity: 2026-03-18 — Plan 01-02 complete: worker executor with force-kill, PID tracking, safehouse policy, log parser
+Phase: 1 of 4 (Foundation) — COMPLETE
+Plan: 3 of 3 in current phase (01-03 complete)
+Status: Phase 1 complete — ready for Phase 2
+Last activity: 2026-03-18 — Plan 01-03 complete: YAML config bootstrap, auth middleware, orphan cleanup, crash recovery, security gate
 
-Progress: [███████░░░] 67%
+Progress: [██████████] 100% (Phase 1)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 3.5 min
-- Total execution time: 0.12 hours
+- Total plans completed: 3
+- Average duration: 7.7 min
+- Total execution time: 0.38 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 2/3 | 7 min | 3.5 min |
+| 01-foundation | 3/3 | 32 min | 10.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (2 min)
-- Trend: establishing baseline
+- Last 5 plans: 01-01 (5 min), 01-02 (2 min), 01-03 (15 min)
+- Trend: Phase 1 complete
 
 *Updated after each plan completion*
 
@@ -66,6 +66,9 @@ Recent decisions affecting current work:
 - Phase 3: Feedback buttons land in Phase 2 (Core Cockpit) — flywheel must be seeded from day one
 - [Phase 01-foundation]: PolicyTarget is minimal (name + resolved_path + optional extra_plugin_dirs) — full Target type deferred to Phase 2
 - [Phase 01-foundation]: Force-kill uses RESULT_FORCE_KILL_DELAY_MS constant (not hardcoded 10_000) — GitHub #25629 workaround
+- 01-03: Bun.file handle stale after write — always re-create handle for read (not reuse pre-write object)
+- 01-03: tokenAuth applied at app.use('*') before app.route() — Hono order enforces auth before routing
+- 01-03: cleanupOrphans called at boot AND crash recovery — prevents zombie accumulation on repeated crashes
 
 ### Pending Todos
 
@@ -79,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-17T18:38:56.731Z
-Stopped at: Completed 01-02-PLAN.md
-Resume file: .planning/phases/01-foundation/01-03-PLAN.md
+Last session: 2026-03-18T18:55:00.000Z
+Stopped at: Completed 01-03-PLAN.md
+Resume file: .planning/phases/02-cockpit/02-01-PLAN.md (Phase 2 next)

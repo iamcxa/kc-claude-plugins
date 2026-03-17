@@ -8,12 +8,12 @@
 ### Foundation
 
 - [ ] **FOUND-01**: Server + worker two-process architecture with Bun native IPC
-- [ ] **FOUND-02**: Graceful shutdown (SIGINT/SIGTERM) with child process cleanup
-- [ ] **FOUND-03**: Worker crash recovery — server detects disconnect, cleans orphan processes
-- [ ] **FOUND-04**: Socket/PID file cleanup on startup (prevent EADDRINUSE)
+- [x] **FOUND-02**: Graceful shutdown (SIGINT/SIGTERM) with child process cleanup
+- [x] **FOUND-03**: Worker crash recovery — server detects disconnect, cleans orphan processes
+- [x] **FOUND-04**: Socket/PID file cleanup on startup (prevent EADDRINUSE)
 - [x] **FOUND-05**: Timeout enforcement per run (from safety.yaml max_runtime_minutes)
 - [x] **FOUND-06**: Orphaned safehouse+claude process detection and kill on startup
-- [ ] **FOUND-07**: App bootstrap — create default nightwatch-app.yaml on first start
+- [x] **FOUND-07**: App bootstrap — create default nightwatch-app.yaml on first start
 - [x] **FOUND-08**: Run artifact directory with rolling cleanup (keep last 50)
 
 ### Dashboard
@@ -116,9 +116,9 @@
 
 ### Security
 
-- [ ] **SEC-01**: Localhost binding by default (127.0.0.1)
-- [ ] **SEC-02**: Optional remote mode (0.0.0.0) with required token auth
-- [ ] **SEC-03**: Token auth on all API/MCP/WebSocket endpoints in remote mode
+- [x] **SEC-01**: Localhost binding by default (127.0.0.1)
+- [x] **SEC-02**: Optional remote mode (0.0.0.0) with required token auth
+- [x] **SEC-03**: Token auth on all API/MCP/WebSocket endpoints in remote mode
 
 ## v2 Requirements
 
@@ -158,17 +158,17 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 1 | Pending |
-| FOUND-02 | Phase 1 | Pending |
-| FOUND-03 | Phase 1 | Pending |
-| FOUND-04 | Phase 1 | Pending |
+| FOUND-01 | Phase 1 | Complete |
+| FOUND-02 | Phase 1 | Complete |
+| FOUND-03 | Phase 1 | Complete |
+| FOUND-04 | Phase 1 | Complete |
 | FOUND-05 | Phase 1 | Complete |
 | FOUND-06 | Phase 1 | Complete |
-| FOUND-07 | Phase 1 | Pending |
+| FOUND-07 | Phase 1 | Complete |
 | FOUND-08 | Phase 1 | Complete |
-| SEC-01 | Phase 1 | Pending |
-| SEC-02 | Phase 1 | Pending |
-| SEC-03 | Phase 1 | Pending |
+| SEC-01 | Phase 1 | Complete |
+| SEC-02 | Phase 1 | Complete |
+| SEC-03 | Phase 1 | Complete |
 | DASH-01 | Phase 2 | Pending |
 | DASH-02 | Phase 2 | Pending |
 | DASH-03 | Phase 2 | Pending |
