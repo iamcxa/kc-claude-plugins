@@ -728,32 +728,32 @@ describe('generateExpects() — url-contains', function() {
 });
 
 describe('generateExpects() — url-not-contains', function() {
-  test("url-not-contains generates instant agent-browser get url capture (no poll)", function() {
+  test("url-not-contains uses _poll_url_not_contains helper (polls for redirect)", function() {
     const step = makeNavigate('submit-login', '/login');
     step.expects = [{ type: 'url-not-contains', raw: 'url does not contain /login', value: '/login' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('current_url=$(agent-browser get url) || true'),
-      'url-not-contains must capture current URL instantly. Got: ' + script
+      script.includes("_poll_url_not_contains '/login'"),
+      'url-not-contains must use _poll_url_not_contains helper. Got: ' + script
     );
   });
 
-  test("url-not-contains bash glob checks url == *value* (inverted — fail if found)", function() {
+  test("url-not-contains passes step id and timeout to poll helper", function() {
     const step = makeNavigate('submit-login', '/login');
     step.expects = [{ type: 'url-not-contains', raw: 'url does not contain /login', value: '/login' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('[[ "$current_url" == *"/login"* ]]'),
-      'url-not-contains should fail when URL matches. Got: ' + script
+      script.includes('_poll_url_not_contains \'/login\' "submit-login"'),
+      'url-not-contains must pass step id to poll helper. Got: ' + script
     );
   });
 
-  test("url-not-contains FAIL message says 'url contains X but should not' (via _handle_failure)", function() {
+  test("url-not-contains FAIL message says 'url still contains X after Ns' (via _handle_failure)", function() {
     const step = makeNavigate('submit-login', '/login');
     step.expects = [{ type: 'url-not-contains', raw: 'url does not contain /login', value: '/login' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('url contains /login but should not (got: $current_url)'),
+      script.includes('url still contains /login after'),
       'url-not-contains FAIL message must mention the value. Got: ' + script
     );
   });
@@ -1608,6 +1608,15 @@ describe('v2.0 poll-until — poll helpers emitted in generateRuntimeSupport', f
     );
   });
 
+  test("_poll_url_not_contains() function is emitted in compiled output", function() {
+    const step = makeNavigate('nav', '/home');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_poll_url_not_contains()'),
+      'Expected _poll_url_not_contains() function definition. Got: ' + script.slice(0, 500)
+    );
+  });
+
   test("_poll_or_visible() function is emitted in compiled output", function() {
     const step = makeNavigate('nav', '/home');
     const script = generate(makeResolved([step]), 'test-flow');
@@ -1784,22 +1793,19 @@ describe('v2.0 poll-until — generateExpects uses poll helpers (CODEGEN-01)', f
     );
   });
 
-  test("url-not-contains expect does NOT use poll (instant check — no reason to wait)", function() {
+  test("url-not-contains uses _poll_url_not_contains (distinct from _poll_url_contains)", function() {
     const step = makeNavigate('submit-login', '/login');
     step.expects = [{ type: 'url-not-contains', raw: 'url does not contain /login', value: '/login' }];
     const script = generate(makeResolved([step]), 'test-flow');
-    // url-not-contains remains an instant check — the expect section must not CALL _poll_url_contains
-    // (the helper function definition is still emitted, but it must not be called for this expect type)
-    // Check: step section should have 'current_url=' for instant capture, not a poll call
     const stepSection = script.slice(script.indexOf('[1/1]'), script.indexOf('# Exit summary'));
+    // Must use the _not_ variant, not the positive _poll_url_contains
     assert.ok(
-      stepSection.includes('current_url='),
-      'url-not-contains must use instant current_url= capture, not poll. Got section: ' + stepSection
+      stepSection.includes('_poll_url_not_contains'),
+      'url-not-contains must use _poll_url_not_contains helper. Got section: ' + stepSection
     );
-    // The step section must NOT call _poll_url_contains (the helper exists but must not be invoked)
     assert.ok(
       !stepSection.includes('_poll_url_contains '),
-      'url-not-contains must NOT call _poll_url_contains in expect section. Got section: ' + stepSection
+      'url-not-contains must NOT call _poll_url_contains (positive variant). Got section: ' + stepSection
     );
   });
 
