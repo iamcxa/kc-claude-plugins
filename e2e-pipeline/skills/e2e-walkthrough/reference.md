@@ -637,10 +637,23 @@ Each step's `site:` is set based on which session was active during that walkthr
 - `--pr`: `gh pr comment <N> --body-file $REPORT_DIR/pr-summary.md`
 - `--issue`: Linear MCP `create_comment` with `pr-summary.md` content
 
-**Screenshot prerequisite:** Screenshots must be committed and pushed to the PR branch before posting, otherwise GitHub raw URLs will return 404. The posting step should:
-1. Check if screenshot files are committed: `git status $REPORT_DIR/*.png`
-2. If uncommitted, warn: "Screenshots not yet pushed — inline images will be broken. Commit and push first?"
-3. After push confirmed, post the comment.
+**Media hosting (private repos):** `raw.githubusercontent.com` returns 403 for private repos. Use draft releases to host screenshots and videos:
+
+```bash
+# Create/reuse a draft release for E2E assets
+gh release create e2e-assets-<branch> --draft --title "E2E assets (<branch>)" --notes ""
+# Upload media files (--clobber overwrites existing)
+gh release upload e2e-assets-<branch> $REPORT_DIR/*.png $REPORT_DIR/*.mp4 --clobber
+```
+
+Asset URLs: `https://github.com/<owner>/<repo>/releases/download/e2e-assets-<branch>/<filename>`
+
+The posting step should:
+1. Upload screenshots/videos to draft release (command above)
+2. Update `pr-summary.md`: replace relative image paths (`![](step-1.png)`) with release asset URLs
+3. Post the comment: `gh pr comment <N> --body-file $REPORT_DIR/pr-summary.md`
+
+**Why draft release?** GitHub CLI has no API for uploading images to PR comments ([cli/cli#1895](https://github.com/cli/cli/issues/1895)). Draft releases produce stable, repo-scoped URLs without creating a real release.
 
 ### Mapping Self-Repair
 
