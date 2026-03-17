@@ -114,7 +114,7 @@ Flow generated: .claude/e2e/flows/<name>.yaml
 Proceeding to browser verification...
 ```
 
-If `--no-verify` → skip to Phase 3.
+If `--no-verify` → skip to Phase 3 (no-verify path).
 
 ## Phase 2 — Verify (dispatch flow-verifier + trace-analyzer)
 
@@ -158,6 +158,15 @@ Merge verifier output + trace analysis:
 - Checkpoint results (external execution/verification pass/fail/skip)
 - API failures and console errors from trace
 - Video path
+
+If verifier applied corrections (`flow_updated: true` or `mapping_updated: true`), present a correction diff summary before the full report:
+
+```
+Verifier corrections:
+  Corrected N selectors, inserted M steps, enriched K assertions
+  Flow updated: .claude/e2e/flows/<name>.yaml
+  Mapping updated: .claude/e2e/mappings/<app>.yaml
+```
 
 ## Phase 3 — Present Results
 
@@ -203,9 +212,13 @@ Ask user to confirm, then:
 
 ### Next Steps (always shown)
 
+**After verification (normal path):**
+
 ```
 Next steps:
 - `/e2e-test <flow-name>` — replay this flow automatically
+- `/e2e-test <flow-name> --video` — replay with recording
+- `/e2e-compile <flow-name>` — compile to standalone bash script for CI
 {if corrections}
 - `/e2e-flow --verify-only <flow-name>` — re-verify after fixing issues
 {endif}
@@ -213,6 +226,22 @@ Next steps:
 - `/e2e-map --page <page>` — re-scan pages with missing elements
 {endif}
 - `/e2e-walkthrough` — explore interactively
+```
+
+**After `--no-verify` (generation only):**
+
+When Phase 2 is skipped, present the flow-writer output summary + next steps:
+
+```
+Flow generated: .claude/e2e/flows/<name>.yaml
+  Steps: N
+  Warnings: <count or "none">
+  Coverage: <notes>
+
+Next steps:
+- `/e2e-flow --verify-only <flow-name>` — verify in browser with auto-repair
+- `/e2e-test <flow-name> --video` — replay with recording
+- `/e2e-compile <flow-name>` — compile to standalone bash script
 ```
 
 ## Common Mistakes
