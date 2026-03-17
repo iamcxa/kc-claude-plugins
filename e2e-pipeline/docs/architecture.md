@@ -26,9 +26,9 @@ Skills run in main context as thin orchestrators. Heavy browser work is delegate
 | Skill | Agent(s) | Role |
 |-------|----------|------|
 | `e2e-map` | `e2e-mapper` | Explore pages, extract selectors |
-| `e2e-test` | `e2e-test-runner` + `e2e-trace-analyzer` | Execute flow steps, collect results, analyze trace |
-| `e2e-walkthrough` | `e2e-trace-analyzer` | Interactive exploration, trace analysis on completion |
-| `e2e-flow` | `e2e-flow-writer` + `e2e-flow-verifier` + `e2e-trace-analyzer` | Generate flows from plans/specs, verify in browser |
+| `e2e-test` | `e2e-test-runner` + `e2e-trace-analyzer` + `e2e-media-processor` | Execute flow steps, collect results, analyze trace, generate media |
+| `e2e-walkthrough` | `e2e-trace-analyzer` + `e2e-media-processor` | Interactive exploration, trace analysis, media generation |
+| `e2e-flow` | `e2e-flow-writer` + `e2e-flow-verifier` + `e2e-trace-analyzer` + `e2e-media-processor` | Generate flows from plans/specs, verify in browser, generate media |
 | `e2e-compile` | *(none)* | Node.js compiler, runs locally |
 | `e2e-skill-ops` | *(none)* | Meta-skill for pipeline maintenance |
 | `e2e-dispatch` | *(none)* | Router to the right skill |
@@ -84,7 +84,8 @@ e2e-pipeline/
 │   ├── e2e-test-runner.md       # Flow execution subagent
 │   ├── e2e-flow-writer.md       # Flow generation subagent
 │   ├── e2e-flow-verifier.md     # Flow verification subagent
-│   └── e2e-trace-analyzer.md    # Trace parsing subagent
+│   ├── e2e-trace-analyzer.md    # Trace parsing subagent
+│   └── e2e-media-processor.md  # Media post-processing subagent
 ├── hooks/                       # SessionStart + PreToolUse hooks
 ├── references/                  # agent-browser CLI docs, patterns
 ├── compiler/                    # Node.js compiler modules
