@@ -11,10 +11,10 @@
 - [ ] **FOUND-02**: Graceful shutdown (SIGINT/SIGTERM) with child process cleanup
 - [ ] **FOUND-03**: Worker crash recovery — server detects disconnect, cleans orphan processes
 - [ ] **FOUND-04**: Socket/PID file cleanup on startup (prevent EADDRINUSE)
-- [ ] **FOUND-05**: Timeout enforcement per run (from safety.yaml max_runtime_minutes)
-- [ ] **FOUND-06**: Orphaned safehouse+claude process detection and kill on startup
+- [x] **FOUND-05**: Timeout enforcement per run (from safety.yaml max_runtime_minutes)
+- [x] **FOUND-06**: Orphaned safehouse+claude process detection and kill on startup
 - [ ] **FOUND-07**: App bootstrap — create default nightwatch-app.yaml on first start
-- [ ] **FOUND-08**: Run artifact directory with rolling cleanup (keep last 50)
+- [x] **FOUND-08**: Run artifact directory with rolling cleanup (keep last 50)
 
 ### Dashboard
 
@@ -162,10 +162,10 @@
 | FOUND-02 | Phase 1 | Pending |
 | FOUND-03 | Phase 1 | Pending |
 | FOUND-04 | Phase 1 | Pending |
-| FOUND-05 | Phase 1 | Pending |
-| FOUND-06 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Complete |
+| FOUND-06 | Phase 1 | Complete |
 | FOUND-07 | Phase 1 | Pending |
-| FOUND-08 | Phase 1 | Pending |
+| FOUND-08 | Phase 1 | Complete |
 | SEC-01 | Phase 1 | Pending |
 | SEC-02 | Phase 1 | Pending |
 | SEC-03 | Phase 1 | Pending |
