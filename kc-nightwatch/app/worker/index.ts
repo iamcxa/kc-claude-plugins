@@ -4,12 +4,14 @@ import { HEARTBEAT_INTERVAL_MS } from '../shared/constants.ts'
 
 log.info({ component: 'worker', msg: 'Worker started' })
 
+const send = (msg: IpcMessage) => process.send?.(msg)
+
 // Send initial state
-process.send({ type: 'state', queue: [], current: undefined } satisfies IpcMessage)
+send({ type: 'state', queue: [], current: undefined })
 
 // Heartbeat every 30s
 const heartbeatTimer = setInterval(() => {
-  process.send({ type: 'heartbeat', ts: Date.now() } satisfies IpcMessage)
+  send({ type: 'heartbeat', ts: Date.now() })
 }, HEARTBEAT_INTERVAL_MS)
 
 // Handle messages from server
@@ -19,9 +21,8 @@ process.on('message', (msg: ServerToWorker) => {
       log.info({ component: 'worker', msg: 'Received shutdown — exiting' })
       clearInterval(heartbeatTimer)
       process.exit(0)
-      break
     case 'status':
-      process.send({ type: 'state', queue: [], current: undefined } satisfies IpcMessage)
+      send({ type: 'state', queue: [], current: undefined })
       break
     case 'enqueue':
       log.info({ component: 'worker', msg: `Enqueue run ${msg.run.id} (executor not yet implemented)` })
