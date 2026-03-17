@@ -54,6 +54,19 @@ Any 2xx or 3xx HTTP response means the server is running.
 - Otherwise: `agent-browser --profile ~/.agent-browser/<app> --headed open <base_url>`, read `auth.manual_prompt` from mapping and present to user. Verify using `auth.verification` condition. If verification fails, re-prompt user. Profile persists — login is one-time only.
 - **If no mapping yet**, skip auth here — the mapper agent handles discovery.
 
+## Knowledge Bootstrap (before Phase 1)
+
+Read accumulated patterns to inform mapping exploration:
+
+```
+Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md
+```
+
+Use loaded patterns to:
+- Apply known selector strategies for the detected framework
+- Anticipate hidden element patterns (e.g., Ant Design CSS-hidden inputs)
+- Inform codebase analysis approach based on framework-specific route patterns
+
 ## Phase 1 — Codebase Analysis (~30s)
 
 Use subagents in parallel to gather UI structure from source code.
@@ -184,6 +197,27 @@ ls .claude/e2e/mappings/*.yaml
 ```
 
 If other mappings found, suggest multi-site commands (`/e2e-test --all-sites`, etc.). If this is the only mapping, skip the hint.
+
+## Phase 6 — Learning (D1 only)
+
+After finalizing the mapping, evaluate discoveries for skill-level knowledge capture.
+
+Read → `${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md`
+
+### D1 candidates (auto-append)
+
+Scan mapping exploration for general patterns:
+- Selector strategies that worked well for this UI framework
+- Hidden element discovery techniques (dialogs, drawers, modals)
+- Framework-specific route discovery patterns
+- Codebase analysis shortcuts that yielded better coverage
+
+Auto-append to `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. Notify: "Appended pattern: [title]"
+
+### Skip conditions
+
+- Re-mapping single page with no new selector insights → skip
+- No framework or selector discoveries beyond what's already in learned-patterns.md → skip
 
 ## Common Mistakes
 
