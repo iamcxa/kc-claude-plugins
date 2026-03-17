@@ -207,8 +207,21 @@ Checkpoint results:
 ### PR Posting (if `--pr`)
 
 Ask user to confirm, then:
-1. Commit screenshots + video to branch
-2. Post `pr-summary.md` as PR comment via `gh pr comment`
+
+1. **Upload media to draft release** (private repos — `raw.githubusercontent.com` returns 403):
+   ```bash
+   # Create a draft release for E2E assets (reuse if tag exists)
+   gh release create e2e-assets-<branch> --draft --title "E2E assets (<branch>)" --notes ""
+   # Upload screenshots and video
+   gh release upload e2e-assets-<branch> e2e-reports/<ts>/*.png e2e-reports/<ts>/*.mp4 --clobber
+   ```
+   Asset URLs: `https://github.com/<owner>/<repo>/releases/download/e2e-assets-<branch>/<filename>`
+
+2. **Update `pr-summary.md`**: Replace relative image paths with release asset URLs.
+
+3. **Post to PR**: `gh pr comment <N> --body-file e2e-reports/<ts>/pr-summary.md`
+
+**Why draft release?** GitHub CLI has no API for uploading images to PR comments ([cli/cli#1895](https://github.com/cli/cli/issues/1895)). Draft releases are the only CLI-friendly method that produces stable, repo-scoped URLs for images and videos. The draft release is visible in the Releases page but does not create a real release.
 
 ### Next Steps (always shown)
 
