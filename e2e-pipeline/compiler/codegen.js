@@ -344,6 +344,21 @@ function generateRuntimeSupport() {
     '  return 1',
     '}',
     '',
+    '_poll_url_not_contains() {',
+    '  local _value="$1"',
+    '  local _step_id="$2"',
+    '  local _timeout="${3:-10}"',
+    '  local _count=0',
+    '  local _url',
+    '  while [ "$_count" -lt "$_timeout" ]; do',
+    '    _url=$(agent-browser get url 2>/dev/null) || true',
+    '    [[ "$_url" != *"$_value"* ]] && return 0',
+    '    sleep 1',
+    '    _count=$((_count + 1))',
+    '  done',
+    '  return 1',
+    '}',
+    '',
     '_poll_or_visible() {',
     '  local _step_id="$1"',
     '  local _timeout="$2"',
@@ -839,11 +854,9 @@ function generateExpects(step) {
       lines.push('_poll_url_contains ' + singleQuote(expect.value) + ' "' + step.id + '" ' + timeoutArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
 
     } else if (expect.type === 'url-not-contains') {
-      // Instant check — no poll. There is no reason to wait for a forbidden URL substring to appear.
-      lines.push('current_url=$(agent-browser get url) || true');
-      lines.push('if [[ "$current_url" == *"' + expect.value + '"* ]]; then');
-      lines.push('  _handle_failure "' + step.id + '" "url contains ' + expect.value + ' but should not (got: $current_url)"');
-      lines.push('fi');
+      // Poll until URL does NOT contain value — redirects (e.g., login → dashboard) need time
+      var failMsg = 'url still contains ' + expect.value + ' after ' + timeoutArg + 's';
+      lines.push('_poll_url_not_contains ' + singleQuote(expect.value) + ' "' + step.id + '" ' + timeoutArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
 
     } else if (expect.type === 'text-visible') {
       // Instant check — snapshot + grep is too heavy for polling.
