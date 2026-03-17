@@ -1,0 +1,11 @@
+{
+  "name": "kc-nightwatch",
+  "description": "Autonomous nightly improvement — forge validation, multi-source signal discovery (journal, Sentry, E2E, git), north-star-aligned proposals and alerts",
+  "version": "0.4.0",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": ["nightwatch", "improvement", "automation", "forge", "scheduler", "quality"]
+}
