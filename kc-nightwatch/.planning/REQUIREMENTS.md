@@ -158,13 +158,85 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (Populated during roadmap creation) | | |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 1 | Pending |
+| FOUND-04 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Pending |
+| FOUND-06 | Phase 1 | Pending |
+| FOUND-07 | Phase 1 | Pending |
+| FOUND-08 | Phase 1 | Pending |
+| SEC-01 | Phase 1 | Pending |
+| SEC-02 | Phase 1 | Pending |
+| SEC-03 | Phase 1 | Pending |
+| DASH-01 | Phase 2 | Pending |
+| DASH-02 | Phase 2 | Pending |
+| DASH-03 | Phase 2 | Pending |
+| DASH-04 | Phase 2 | Pending |
+| DASH-05 | Phase 2 | Pending |
+| EXEC-01 | Phase 2 | Pending |
+| EXEC-02 | Phase 2 | Pending |
+| EXEC-03 | Phase 2 | Pending |
+| EXEC-04 | Phase 2 | Pending |
+| EXEC-05 | Phase 2 | Pending |
+| EXEC-06 | Phase 2 | Pending |
+| EXEC-07 | Phase 2 | Pending |
+| EXEC-08 | Phase 2 | Pending |
+| EXEC-09 | Phase 2 | Pending |
+| SCHED-01 | Phase 2 | Pending |
+| SCHED-02 | Phase 2 | Pending |
+| SCHED-03 | Phase 2 | Pending |
+| HIST-01 | Phase 2 | Pending |
+| HIST-02 | Phase 2 | Pending |
+| HIST-03 | Phase 2 | Pending |
+| HIST-04 | Phase 2 | Pending |
+| MEM-01 | Phase 2 | Pending |
+| MEM-02 | Phase 2 | Pending |
+| MEM-03 | Phase 2 | Pending |
+| CONF-01 | Phase 3 | Pending |
+| CONF-02 | Phase 3 | Pending |
+| CONF-03 | Phase 3 | Pending |
+| CONF-04 | Phase 3 | Pending |
+| CONF-05 | Phase 3 | Pending |
+| CONF-06 | Phase 3 | Pending |
+| CONF-07 | Phase 3 | Pending |
+| CONF-08 | Phase 3 | Pending |
+| CHAT-01 | Phase 3 | Pending |
+| CHAT-02 | Phase 3 | Pending |
+| CHAT-03 | Phase 3 | Pending |
+| CHAT-04 | Phase 3 | Pending |
+| CHAT-05 | Phase 3 | Pending |
+| CHAT-06 | Phase 3 | Pending |
+| CHAT-07 | Phase 3 | Pending |
+| FEED-01 | Phase 3 | Pending |
+| FEED-02 | Phase 3 | Pending |
+| FEED-03 | Phase 3 | Pending |
+| FEED-04 | Phase 3 | Pending |
+| FEED-05 | Phase 3 | Pending |
+| FEED-06 | Phase 3 | Pending |
+| FEED-07 | Phase 3 | Pending |
+| ASSESS-01 | Phase 3 | Pending |
+| ASSESS-02 | Phase 3 | Pending |
+| ASSESS-03 | Phase 3 | Pending |
+| ASSESS-04 | Phase 3 | Pending |
+| MEAS-01 | Phase 3 | Pending |
+| MEAS-02 | Phase 3 | Pending |
+| MEAS-03 | Phase 3 | Pending |
+| MCP-01 | Phase 4 | Pending |
+| MCP-02 | Phase 4 | Pending |
+| MCP-03 | Phase 4 | Pending |
+| MCP-04 | Phase 4 | Pending |
+| HEALTH-01 | Phase 4 | Pending |
+| HEALTH-02 | Phase 4 | Pending |
+| HEALTH-03 | Phase 4 | Pending |
+| HEALTH-04 | Phase 4 | Pending |
+| HEALTH-05 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 56 total
-- Mapped to phases: 0
-- Unmapped: 56
+- v1 requirements: 73 total
+- Mapped to phases: 73
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 after initial definition*
+*Last updated: 2026-03-18 after roadmap creation — all 73 requirements mapped*
