@@ -410,17 +410,6 @@ agent-browser trace stop "{{report_dir}}/trace.zip"
 
 **Order matters**: record stop → trace stop → (do NOT close browser).
 
-### 3a2. Video Conversion (if recording)
-
-```bash
-ffmpeg -i "{{report_dir}}/full.webm" -filter:v "setpts=PTS/1.5" \
-  -an -c:v libx264 -pix_fmt yuv420p -y "{{report_dir}}/test-run.mp4" 2>/dev/null \
-  && echo "Video: {{report_dir}}/test-run.mp4" \
-  || echo "ffmpeg not available, skipping video conversion"
-```
-
-Default 1.5x speed. Skip gracefully if ffmpeg missing.
-
 ### 3b. Do NOT Close Browser
 
 The human may want to inspect the browser state after the test. Leave it open.
@@ -452,11 +441,13 @@ Write `{{report_dir}}/report.md` with the following structure:
 
 | Artifact | Link |
 |----------|------|
-| Steps GIF | [steps.gif](./steps.gif) |
+| Steps GIF | [steps.gif](./steps.gif) _(via media agent)_ |
 | Full recording | [full.webm](./full.webm) |
+| Video | [test-run.mp4](./test-run.mp4) _(via media agent)_ |
+| Thumbnail | [thumbnail.png](./thumbnail.png) _(via media agent)_ |
 | Trace (interactive) | [trace.zip](./trace.zip) |
 
-_(Recording/GIF rows only if `record` was true)_
+_(Recording/media rows only if `record` was true)_
 
 ## Step Results
 

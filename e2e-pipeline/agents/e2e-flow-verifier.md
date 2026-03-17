@@ -349,15 +349,7 @@ Write `$REPORT_DIR/corrections.md` with before/after diffs for each correction:
 ```
 ```
 
-#### 4d. Video conversion (if recording)
-
-```bash
-ffmpeg -i "$REPORT_DIR/full.webm" -filter:v "setpts=PTS/1.5" -c:v libx264 -preset fast -crf 23 -c:a aac "$REPORT_DIR/video.mp4" 2>/dev/null
-```
-
-Warn but continue if ffmpeg fails or is not installed.
-
-#### 4e. Write back corrected files
+#### 4d. Write back corrected files
 
 1. Flow YAML: overwrite `flow_path` with corrected version (includes `_correction` metadata on inserted/enriched steps)
 2. Mapping YAML: overwrite `mapping_path` with corrected selectors
@@ -388,7 +380,7 @@ unfixable:
 rounds: <1|2>
 report_path: <absolute path>
 pr_summary_path: <absolute path>
-video_path: <absolute path or empty>
+video_path: <empty — video now produced by media agent>
 corrections_path: <absolute path>
 flow_updated: <true|false>
 mapping_updated: <true|false>
