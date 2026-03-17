@@ -293,31 +293,35 @@ _(Include only when the flow contains `Verify external` or `Execute external` st
 
 #### 4b. PR Summary (pr-summary.md)
 
-Write `$REPORT_DIR/pr-summary.md`:
+Write `$REPORT_DIR/pr-summary.md` following the unified PR report template in `${CLAUDE_PLUGIN_ROOT}/references/pr-report-template.md`.
 
-```markdown
-## E2E Verification: <flow-name>
+**Use Type:** `Verification` (title: `## E2E Verification: <flow-name>`)
 
-<STATUS_EMOJI> <STATUS> (<N> steps, <K> corrections applied)
+**Extension sections** (insert between `### Steps` and `### Health`):
 
-### Corrections from draft
+1. **Corrections** — from the corrections log accumulated during verification:
 
-| Change | Type | Detail |
-|--------|------|--------|
-| +step 3.1 | auto-inserted | Confirm dialog after "Add Connection" |
-| fix step 2 | selector repair | `add_btn` → `add_connection_button` |
+   | Change | Type | Detail |
+   |--------|------|--------|
+   | +step 3.1 | auto-inserted | Confirm dialog after "Add Connection" |
+   | fix step 2 | selector repair | `add_btn` → `add_connection_button` |
 
-### Step screenshots
+2. **Checkpoint Results** — when the flow has `Verify external` or `Execute external` steps:
 
-| Step | Screenshot | Status |
-|------|-----------|--------|
-| 1. Navigate to settings | ![](step-1.png) | PASS |
-| ... | | |
+   | Checkpoint | Type | Result | Detail |
+   |-----------|------|--------|--------|
+   | trigger-sessions | Execute | PASS | exit 0 |
+   | verify-posthog | Verify | SKIP | No API key |
 
-<VIDEO_LINK_IF_AVAILABLE>
-```
+3. **Acceptance Mapping** — when flow was generated from a plan/spec (source metadata in flow YAML):
 
-Use `✅` for PASS, `⚠️` for PARTIAL, `❌` for FAIL.
+   | # | Criterion | Steps | Status |
+   |---|-----------|-------|--------|
+   | 1 | User can create project | step-1 → step-4 | ✅ Covered |
+
+**Include flowchart:** REQUIRED. Use the shared flowchart node type rules from the template.
+
+**Screenshot URLs:** Use relative paths (`step-1.png`). The orchestrating skill handles draft release upload and URL replacement before posting.
 
 #### 4c. Corrections detail (corrections.md)
 

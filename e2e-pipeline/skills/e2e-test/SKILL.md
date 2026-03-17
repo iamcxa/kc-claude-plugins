@@ -260,12 +260,28 @@ If diverged steps exist, add recommendation: "Re-run `/e2e-compile --dry-run <fl
 
 **Mapping staleness:** 0 stale -> nothing; 1-2 -> `/e2e-walkthrough --page`; 3+ -> `/e2e-map --page`.
 
-**PR comment (if --pr):** Write `$REPORT_DIR/pr-summary.md` with:
-- Pass/fail summary table
-- Steps GIF reference (local path)
-- Key findings from trace analysis
-- Link to full report
-- Replay line: `` > **Replay:** `/e2e-test <flow>` | **Trace:** `npx playwright show-trace <path>` ``
+**PR comment (if --pr):** Write `$REPORT_DIR/pr-summary.md` following the [unified PR report template](../../references/pr-report-template.md).
+
+**e2e-test-specific extensions** (insert between `### Steps` and `### Health`):
+
+1. **Divergence (LLM vs Compiled)** — when Phase 1.8 auto-compile ran:
+
+| Step | LLM | Compiled | Likely Cause |
+|------|-----|----------|-------------|
+| step-3 | PASS | FAIL | Timing-sensitive selector |
+| step-7 | FAIL | PASS | LLM hallucinated failure |
+
+> N diverged steps out of M total
+
+2. **Quick Re-Run** (always present):
+
+```bash
+bash .claude/e2e/compiled/<flow>.sh
+```
+
+> Compiled script auto-regenerated. Force recompile: `/e2e-compile <flow>`
+
+**Footer override:** Line 1 shows compiled script path instead of `/e2e-test <flow>` (since Quick Re-Run provides the detailed replay).
 
 Then: `gh pr comment <PR> --body-file $REPORT_DIR/pr-summary.md`
 

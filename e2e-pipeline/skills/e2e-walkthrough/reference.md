@@ -449,7 +449,7 @@ flowchart TD
 **Section rules:**
 
 - **Summary**: 2-3 sentences. Template: "Starting from `{start page}`, {path summary}. {conclusion}." Conclusion auto-select: 0 anomalies → "All steps passed." / has anomalies → "Found N issues — see Observations." / has health issues → "Found N console errors / API failures — see Health Log."
-- **Flowchart**: Covers the complete walkthrough path. See § Flowchart Rules below.
+- **Flowchart**: Covers the complete walkthrough path. See [pr-report-template.md](../../references/pr-report-template.md) § Flowchart Rules.
 - **Step Results**: One row per walkthrough step. Action = concise verb phrase. Expected = shortened expectation from flow. Result = PASS, FAIL, SKIP, or CONDITIONAL (RBAC).
 - **Health Log**: Integrate trace-analysis.md content. Always show the base 3-row table (API failures / Console errors / Trace status). When step-log cross-reference data is available, add 2 additional rows (Anomalies observed / Silent failures). If all clean, values are `0 / 0 / Clean / 0 / 0`. If failures exist, add a paragraph after the table explaining each — distinguish app issues from infra noise (e.g., Sentry 429 rate limiting). Include step-correlated detail when available (e.g., "step-3: POST /api/items 500 → TypeError").
 - **Observations**: Key behavioral findings. Focus on: bug status (reproduced / not reproduced vs prior sessions), anomaly cross-reference insights (silent failures, cascading errors), UX quality (suggestion chips, confirmation flows), deviations from expected flow YAML. **Omit section entirely** if walkthrough was purely mechanical with no notable findings.
@@ -470,99 +470,35 @@ flowchart TD
 
 #### `pr-summary.md` — PR Comment Report
 
-````markdown
-## E2E Walkthrough Verification Report
+See [pr-report-template.md](../../references/pr-report-template.md) for the unified PR report skeleton and field specifications. All `pr-summary.md` files follow that template.
 
-<1-2 sentence overview: what was verified and which scenarios were covered>
+**Walkthrough-specific extensions** (insert between `### Steps` and `### Health`):
 
-### <Scenario Name> (<N turns/steps>)
+1. **Key Findings** (always present):
 
-**Flow:** <one-sentence user journey description>
+```markdown
+### Key Findings
 
-## Flowchart
-
-```mermaid
-flowchart TD
-    ...
+- <bullet points from anomaly cross-reference>
+- <behavioral observations>
+- <UX quality notes>
 ```
 
-| Step | Screenshot | What happens |
-|------|-----------|-------------|
-| 1. <step name> | ![step1](<screenshot-github-url>) | <what happened> |
-| 2. <step name> | ![step2](<screenshot-github-url>) | <what happened> |
+2. **Scenario Summary** (only for multi-scenario walkthroughs):
 
-<details>
-<summary>Video recording (M:SS)</summary>
-
-<!-- 👇 DRAG-DROP video.mp4 HERE (replace this line) -->
-Video file: `$REPORT_DIR/<video-filename>`
-
-</details>
-
----
-
+```markdown
 ### Summary
 
-| Flow | User Turns | Result | Trace |
-|------|:----------:|:------:|:-----:|
+| Flow | Steps | Result | Trace |
+|------|:-----:|:------:|:-----:|
 | <flow name> | <N> | PASS/FAIL | Clean / <note> |
-
-**Key findings:**
-- <bullet points summarizing results across all scenarios>
-
-> **Replay:** `/e2e-test <flow-name>` | **Trace:** `npx playwright show-trace <report_dir>/trace.zip`
-````
-
-**PR summary rules:**
-
-- **Step table is the core structure** — Every scenario MUST have a 3-column `Step | Screenshot | What happens` table. This lets reviewers see key frame changes at a glance.
-- **Flowchart** — Include the same mermaid flowchart from `report.md`. GitHub renders mermaid natively in PR comments. Place after the flow description, before the step table.
-- **One section per scenario** — Each scenario gets its own `### <Name>` section with flowchart + step table.
-- **Screenshot URLs**: `https://github.com/<org>/<repo>/blob/<branch>/<path>?raw=true`. Screenshots must be committed and pushed to the branch before URLs will render.
-- **Video**: MP4 cannot auto-embed in GitHub — use `<details>` with drag-drop placeholder. One video block per scenario.
-- **Summary table** — Always last. One row per flow with turn count, result, trace status.
-- **Key findings** — Bullet points highlighting the most important outcomes (bug fixes, behavior changes, regressions).
-
-#### Flowchart Rules
-
-Both `report.md` and `pr-summary.md` use the same flowchart. Generate once, include in both.
-
-**Mermaid Node Types:**
-
-| UI concept | Syntax | Example |
-|------------|--------|---------|
-| Page | `["..."]` | `A["Dashboard"]` |
-| Dialog/Modal | `{{"..."}}` | `C{{"Add Member Dialog"}}` |
-| Form submit | `(["..."])` | `F(["Submit Form"])` |
-| Conditional branch | `{"..."}` | `D{"Select Role"}` |
-| Final result (PASS) | `["..."]` with style | `G["PASS"]` + `style G fill:#4caf50,color:white` |
-
-**Edge Rules:**
-
-- Label format: `"N. action summary"` (N = step number)
-- Action summary: max 15 characters; truncate if longer
-- Return to same page: dashed arrow `-.->` to distinguish "forward" from "back to origin"
-- Same page appearing multiple times: reuse existing node (mermaid handles natively)
-
-**Node ID Rules:**
-
-Use camelCase abbreviation of page name. Dialogs get `Dlg` suffix. Avoid mermaid reserved words.
-
-**Cross-Site Flowchart:**
-
-Each site wrapped in `subgraph`, cross-site edges annotated with switch action:
-
-```mermaid
-flowchart TD
-    subgraph admin["admin-panel"]
-        A1["Users"] -->|"1. Create user"| A2{{"Create User"}}
-        A2 -.->|"2. Submit"| A1
-    end
-    subgraph portal["customer-portal"]
-        P1["Users"] -->|"4. Verify user appears"| P2["User Detail"]
-    end
-    A1 -->|"3. Switch to portal"| P1
 ```
+
+Omit when only one scenario.
+
+**Walkthrough Detail column**: Always populate with narrative description of what happened at each step — this is the reviewer's primary reading alongside screenshots. See template for full Detail column semantics.
+
+**Walkthrough Health table**: Includes 2 additional rows (Anomalies observed, Silent failures) when step-log cross-reference data is available. See template for row format.
 
 ### Flow YAML Auto-Generation (MANDATORY)
 
