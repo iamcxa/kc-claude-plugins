@@ -26,7 +26,7 @@ skills/e2e-flow/         → generate & verify flows → dispatches flow-writer 
 skills/e2e-compile/      → compile flow YAML to standalone bash test scripts (requires npm deps)
 skills/e2e-skill-ops/    → meta-skill for debugging/maintaining the pipeline itself
 agents/                  → subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer)
-hooks/                   → E2E pipeline hooks (SessionStart context + pre-commit check)
+hooks/                   → E2E pipeline hooks (SessionStart context + pre-commit check + plan E2E check)
 references/              → agent-browser CLI commands, common browser testing patterns
 ```
 
@@ -139,11 +139,12 @@ When adding, removing, or renaming skills or agents, update these files:
 
 ## Planning Integration (E2E-First Acceptance)
 
-Enforced by three layers — any planning framework (superpowers, GSD, plan mode, or bare conversation) is covered:
+Enforced by four layers — any planning framework (superpowers, GSD, plan mode, or bare conversation) is covered:
 
 | Layer | Mechanism | When | Strength |
 |-------|-----------|------|----------|
 | **Upstream** | SessionStart hook | Every session in a project with mappings | Injects reminder into context |
+| **Plan gate** | PostToolUse hook on Write | Plan file written in E2E-enabled project | Warns if plan has no E2E steps |
 | **Bridge** | `/e2e-flow` skill | During or after planning | Generates structured flow YAML from plan/spec/PR |
 | **Downstream** | PreToolUse hook on `git commit` | Every commit in a project with mappings | Warns if no recent E2E report |
 
@@ -155,6 +156,9 @@ SessionStart ──→ "E2E infrastructure detected, use /e2e-flow"
 Planning (any framework)
      │
      ▼
+Write plan ──→ hook checks ──→ "Plan has no E2E steps!" (if missing)
+     │
+     ▼
 /e2e-flow --from <plan>  ──→  .claude/e2e/flows/<feature>.yaml
      │                         (generates + verifies in browser)
      ▼
@@ -164,6 +168,8 @@ Planning (any framework)
 git commit  ──→  hook checks      /e2e-flow --from <plan>
                                          └→ generates flow → verifies → future /e2e-test
 ```
+
+**Worktree E2E**: When working in a git worktree, the dev server typically runs from the main repo, not the worktree. E2E tests need a running server. Options: (1) start dev server from the worktree, (2) merge to main first and run E2E from the main repo. Plan accordingly — don't defer E2E without noting this constraint.
 
 **Verification decision**: Draft flow exists → `/e2e-test` (automated, subagent). No flow → `/e2e-flow --from <plan>` (generates + verifies automatically). For interactive exploration → `/e2e-walkthrough`.
 
