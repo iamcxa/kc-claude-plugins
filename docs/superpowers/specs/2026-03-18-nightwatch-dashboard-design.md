@@ -98,20 +98,20 @@ kc-nightwatch/
     │
     ├── frontend/
     │   ├── index.html            # shell
-    │   ├── app.tsx               # root component + router
+    │   ├── app.ts               # root component + router
     │   ├── pages/
-    │   │   ├── dashboard.tsx     # target cards + chat panel
-    │   │   ├── runs.tsx          # run history + detail + live view
-    │   │   └── config.tsx        # YAML editor with guards
+    │   │   ├── dashboard.ts     # target cards + chat panel
+    │   │   ├── runs.ts          # run history + detail + live view
+    │   │   └── config.ts        # YAML editor with guards
     │   ├── components/
-    │   │   ├── target-card.tsx
-    │   │   ├── run-timeline.tsx
-    │   │   ├── log-stream.tsx
-    │   │   ├── yaml-editor.tsx
-    │   │   ├── trigger-dialog.tsx
-    │   │   ├── chat-panel.tsx
-    │   │   ├── feedback-buttons.tsx
-    │   │   └── add-target-wizard.tsx
+    │   │   ├── target-card.ts
+    │   │   ├── run-timeline.ts
+    │   │   ├── log-stream.ts
+    │   │   ├── yaml-editor.ts
+    │   │   ├── trigger-dialog.ts
+    │   │   ├── chat-panel.ts
+    │   │   ├── feedback-buttons.ts
+    │   │   └── add-target-wizard.ts
     │   └── lib/
     │       ├── api.ts            # fetch wrapper
     │       ├── sse.ts            # SSE client hook
@@ -189,15 +189,13 @@ interface Run {
   target: string | '__all__'       // single target or full pipeline
   mode: 'production' | 'dry-run' | 'self-repair'
   trigger: 'manual' | 'interval' | 'webhook' | 'implementation'
-  status: 'queued' | 'running' | 'completed' | 'failed' | 'timeout'
+  status: 'queued' | 'running' | 'completed' | 'failed' | 'timeout' | 'cancelled'
   custom_prompt?: string           // optional instructions from manual trigger
   proposal_id?: string             // if trigger is 'implementation'
   started_at?: string
   completed_at?: string
   duration_seconds?: number
-  summary?: RunSummary
-  pre_assessment?: string          // Round 1: strategy assessment
-  post_assessment?: string         // Round 2: reflection assessment
+  summary?: RunSummary             // assessments live here (per_target.pre/post_assessment)
   log_path: string
 }
 ```
@@ -671,6 +669,11 @@ The app introduces new field names (`monitors`, `watch`, `respond`, `indicators`
 - Write: always write new names
 - Existing SKILL.md phases continue reading old names (no skill changes in MVP)
 
+**Monitor value renames** (also handled by compatibility layer):
+- `git-stats` → `git-churn`
+- `e2e-reports` → `e2e-reports` (unchanged)
+- `sentry` → `sentry` (unchanged)
+
 **Phase 2 (post-MVP)**: Migrate SKILL.md to new names, drop old name support.
 
 ### Action Type Mapping
@@ -707,6 +710,7 @@ interface RunSummary {
       executed: Record<string, number>
     }
     actions: Array<{
+      signal_id: string            // links to feedback API
       type: string
       summary: string
       pr_url?: string
@@ -718,24 +722,25 @@ interface RunSummary {
         reasoning: string
       }
     }>
+    indicator_baseline: Record<string, {
+      value: number
+      measurement: string          // "5 journal mentions in 14d"
+      previous_value?: number
+      trend: 'improving' | 'stable' | 'degrading'
+    }>
+    implementation_outcomes: Array<{
+      proposal_id: string
+      pr_url: string
+      target: string               // which target this was for
+      indicator: string
+      before: number
+      after: number
+      delta: number
+      effective: boolean
+    }>
+    pre_assessment: string         // Phase 3.5 strategy text
+    post_assessment: string        // Phase 4.5 reflection text
   }>
-  indicator_baseline: Record<string, {
-    value: number
-    measurement: string            // "5 journal mentions in 14d"
-    previous_value?: number
-    trend: 'improving' | 'stable' | 'degrading'
-  }>
-  implementation_outcomes: Array<{
-    proposal_id: string
-    pr_url: string
-    indicator: string
-    before: number
-    after: number
-    delta: number
-    effective: boolean
-  }>
-  pre_assessment: string           // Phase 3.5 strategy text
-  post_assessment: string          // Phase 4.5 reflection text
 }
 ```
 
@@ -835,7 +840,7 @@ All paths in `buildSafehouseFlags` are resolved to absolute paths using `path.re
 
 | Monitor name | Agent | Notes |
 |-------------|-------|-------|
-| `github-issues` | signal-harvester (enhanced) | New capability: harvester also searches gh issues |
+| `github-issues` | signal-harvester (enhanced) | MVP: enhance harvester to also run `gh issue list`. Requires adding Bash tool to harvester agent. |
 | `journal` | signal-harvester | Existing |
 | `episodic-memory` | signal-harvester | Existing |
 | `memory-md` | signal-harvester | Existing |
@@ -845,7 +850,7 @@ All paths in `buildSafehouseFlags` are resolved to absolute paths using `path.re
 
 ### Frontend Build
 
-Preact + HTM uses tagged template literals (`html\`<div>...</div>\``), not JSX. Frontend files use `.ts` (not `.tsx`). Bun serves them directly with on-the-fly transpilation in dev mode. Production build uses `Bun.build()` to bundle into a single JS file inlined into `index.html`.
+Preact + HTM uses tagged template literals (`html\`<div>...</div>\``), not JSX. Frontend files use `.ts` (not `.ts`). Bun serves them directly with on-the-fly transpilation in dev mode. Production build uses `Bun.build()` to bundle into a single JS file inlined into `index.html`.
 
 ### App Bootstrap
 
