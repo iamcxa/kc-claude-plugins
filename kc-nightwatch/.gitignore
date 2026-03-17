@@ -1,3 +1,5 @@
 .DS_Store
 *.log
 /tmp/
+# runtime config generated on first server start
+nightwatch-app.yaml
