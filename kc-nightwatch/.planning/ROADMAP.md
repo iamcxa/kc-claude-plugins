@@ -12,7 +12,7 @@ Build a web-based autonomous improvement platform that replaces the launchd cron
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Two-process architecture with all 6 critical pitfalls resolved
+- [x] **Phase 1: Foundation** - Two-process architecture with all 6 critical pitfalls resolved (completed 2026-03-18)
 - [ ] **Phase 2: Core Cockpit** - Working dashboard: targets, run trigger, SSE logs, history, scheduler, memory isolation
 - [ ] **Phase 3: Flywheel Core** - NW-Claude chat, config editor, feedback calibration, self-assessment, baseline measurement
 - [ ] **Phase 4: Full Flywheel** - MCP server + flywheel health metrics (data-dependent, deferred until Phase 3 produces sufficient feedback data)
@@ -33,8 +33,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Project scaffold, shared types/constants/logger, Bun native IPC, heartbeat + liveness detection, GET /health (completed 2026-03-18, 13 tests)
-- [ ] 01-02-PLAN.md — Worker executor: safehouse chain, PID tracking, force-kill after result event, timeout enforcement, artifact rolling cleanup
-- [ ] 01-03-PLAN.md — Server startup: orphan cleanup, crash recovery backoff, graceful shutdown, yaml-store bootstrap, Bearer token security gate
+- [x] 01-02-PLAN.md — Worker executor: safehouse chain, PID tracking, force-kill after result event, timeout enforcement, artifact rolling cleanup (completed 2026-03-18)
+- [x] 01-03-PLAN.md — Server startup: orphan cleanup, crash recovery backoff, graceful shutdown, yaml-store bootstrap, Bearer token security gate (completed 2026-03-18, 20 tests)
 
 ### Phase 2: Core Cockpit
 **Goal**: Users can monitor targets, trigger runs with real-time log streaming, view run history, and control the interval scheduler — replacing the current cron + YAML-file workflow entirely
@@ -92,7 +92,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | In Progress|  |
+| 1. Foundation | 3/3 | Complete | 2026-03-18 |
 | 2. Core Cockpit | 0/3 | Not started | - |
 | 3. Flywheel Core | 0/4 | Not started | - |
 | 4. Full Flywheel | 0/2 | Not started | - |

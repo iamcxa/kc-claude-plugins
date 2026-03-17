@@ -11,7 +11,8 @@
     "nyquist_validation": true,
     "auto_advance": true,
     "ui_phase": true,
-    "ui_safety_gate": true
+    "ui_safety_gate": true,
+    "_auto_chain_active": false
   },
   "git": {
     "branching_strategy": "none"
