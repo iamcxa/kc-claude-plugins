@@ -99,30 +99,36 @@ agent-browser trace start                        # 4. Start tracing
 
 ## GIF Generation (from per-step screenshots)
 
+> **Note:** GIF generation is handled by the `e2e-media-processor` agent, dispatched by skills after browser agents return. The agent performs blank frame detection (skipping leading/trailing white/black frames) before generating the GIF. Manual GIF generation is no longer needed in browser agents.
+
+**Canonical command** (used by media agent):
 ```bash
-ffmpeg -framerate 1 -pattern_type glob -i "$REPORT_DIR/step-*.png" \
+ffmpeg -f concat -safe 0 -r 1 -i "$REPORT_DIR/gif-frames.txt" \
   -vf "scale=800:-1:flags=lanczos" -loop 0 -y "$REPORT_DIR/steps.gif"
 ```
 
+- `gif-frames.txt` contains only non-blank screenshot paths (blank = pixel value >250 or <5)
 - Framerate 1 = each screenshot holds 1 second
 - Width 800px, height auto-scaled with lanczos filter
 - `-loop 0` = infinite loop
-- If ffmpeg fails (no screenshots, missing binary), warn but continue — GIF is optional
 - **Verify**: `test -s "$REPORT_DIR/steps.gif"` (exists and size > 0)
 
 ## MP4 Video Conversion (from WebM recording)
 
+> **Note:** MP4 conversion is handled by the `e2e-media-processor` agent. The agent trims the first 2 seconds (browser startup blank) and applies speed adjustment.
+
+**Canonical command** (used by media agent):
 ```bash
-ffmpeg -i "$REPORT_DIR/full.webm" -filter:v "setpts=PTS/1.5" \
-  -an -c:v libx264 -pix_fmt yuv420p -y "$REPORT_DIR/walkthrough.mp4"
+ffmpeg -i "$REPORT_DIR/full.webm" -ss 2 -filter:v "setpts=PTS/1.5" \
+  -an -c:v libx264 -pix_fmt yuv420p -y "$REPORT_DIR/<output_name>.mp4"
 ```
 
 - **Default speed: 1.5x** (`setpts=PTS/1.5`). Override: 2x = `PTS/2`, 1x = `PTS/1`
+- **Default trim: 2 seconds** (`-ss 2`). Skips browser startup blank frames.
 - `-an` strips audio (browser recordings have no useful audio)
 - `-pix_fmt yuv420p` ensures GitHub/browser/Slack compatibility
-- If ffmpeg fails, warn but continue — MP4 is optional (WebM still available)
-- **Verify**: `test -s "$REPORT_DIR/walkthrough.mp4"` (exists and size > 0)
-- For test runner: output name is `test-run.mp4` instead of `walkthrough.mp4`
+- Output name varies by skill: `test-run.mp4`, `verification.mp4`, `walkthrough.mp4`
+- **Verify**: `test -s "$REPORT_DIR/<output_name>.mp4"` (exists and size > 0)
 
 ## Semantic Locators (alternative to @ref)
 
