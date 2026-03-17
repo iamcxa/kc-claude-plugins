@@ -32,7 +32,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Project scaffold, shared types/constants/logger, Bun native IPC, heartbeat + liveness detection, GET /health
+- [x] 01-01-PLAN.md — Project scaffold, shared types/constants/logger, Bun native IPC, heartbeat + liveness detection, GET /health (completed 2026-03-18, 13 tests)
 - [ ] 01-02-PLAN.md — Worker executor: safehouse chain, PID tracking, force-kill after result event, timeout enforcement, artifact rolling cleanup
 - [ ] 01-03-PLAN.md — Server startup: orphan cleanup, crash recovery backoff, graceful shutdown, yaml-store bootstrap, Bearer token security gate
 
@@ -92,7 +92,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/3 | Not started | - |
+| 1. Foundation | 1/3 | In progress | - |
 | 2. Core Cockpit | 0/3 | Not started | - |
 | 3. Flywheel Core | 0/4 | Not started | - |
 | 4. Full Flywheel | 0/2 | Not started | - |
