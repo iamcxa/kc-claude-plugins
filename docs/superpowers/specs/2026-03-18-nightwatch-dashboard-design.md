@@ -294,24 +294,84 @@ function buildSafehouseFlags(target: Target, run: Run): string[] {
 
 ```
 Phase 0:   Resolve        — load config, resolve paths, check skip guards
+Phase 0.5: Measure        — quantify current indicator values (baseline)
+Phase 0.6: Outcomes       — check past implementation outcomes
 Phase 1:   Forge Check    — plugin targets only, skip if forge unavailable
 Phase 2:   Monitor        — dispatch agents per enabled monitor
 Phase 3:   Classify       — confidence filter, cooldown, map to indicators
-Phase 3.5: Assess (pre)   — strategy: "what's the best approach to north star?"
+Phase 3.5: Assess (pre)   — strategy with data: "given baseline + outcomes, best approach?"
 Phase 4:   Respond        — code-fix PR / proposal PR / alert
 Phase 4.5: Assess (post)  — reflection: "did this move closer to north star?"
 Phase 5:   Report         — Slack + dashboard + run artifacts
 ```
 
+### Phase 0.5: Measure Indicators (baseline)
+
+At the start of each run, NW quantifies every indicator for the target. This provides a data-backed baseline for self-assessment instead of qualitative guessing.
+
+**Measurement methods per monitor type:**
+
+| Indicator pattern | Measurement | Example |
+|-------------------|-------------|---------|
+| Journal frequency | Count `watch` term hits in journal over last 14 days | `pipeline-friction`: 5 hits → score 5 |
+| Git churn | Count high-churn files matching `watch` terms | `mapping-freshness`: 2 stale mappings → score 2 |
+| GitHub issues | Count open issues matching `watch` terms | `open-bugs`: 3 open issues → score 3 |
+| E2E failures | Count failing flows in last 10 reports | `e2e-reliability`: 2 failing → score 2 |
+
+**Output**: `indicator_baseline` map in RunSummary:
+
+```typescript
+indicator_baseline: Record<string, {
+  value: number
+  measurement: string      // human-readable: "5 journal mentions in 14d"
+  previous_value?: number  // from last run (for delta)
+  trend: 'improving' | 'stable' | 'degrading'
+}>
+```
+
+Phase 3.5 pre-assessment uses this data: "pipeline-friction is 5 (down from 8 last run, improving). Focus remaining issues on..."
+
+### Phase 0.6: Check Past Outcomes
+
+For each implementation PR that was merged since the last run, compare indicator values before and after merge:
+
+1. Find merged implementation PRs (from `nightwatch-feedback.yaml` with `trigger: 'implementation'`)
+2. Look up the indicator baseline from the run that created the proposal
+3. Compare with current baseline (from Phase 0.5)
+4. Record outcome:
+
+```typescript
+implementation_outcomes: Array<{
+  proposal_id: string
+  pr_url: string
+  indicator: string
+  before: number           // indicator value when proposed
+  after: number            // indicator value now
+  delta: number            // after - before (negative = improved)
+  effective: boolean       // did the indicator improve?
+}>
+```
+
+Write outcomes to NW journal:
+- Effective → "Retry logic PR improved pipeline-friction from 5 to 3. This type of fix works."
+- Not effective → "Documentation PR didn't change friction (5 → 5). Documentation alone doesn't reduce friction."
+
+This closes the loop: NW knows not just "was the proposal accepted?" but "did it actually help?"
+
 ### Two-Phase Self-Assessment
 
-**Phase 3.5 (pre-action)**: After classifying signals, before responding. NW asks itself:
-> "Given these N signals mapped to indicators, what's the best strategy to move toward north_star? Prioritize and explain reasoning."
+**Phase 3.5 (pre-action)**: After classifying signals, before responding. NW has:
+- Indicator baselines (Phase 0.5) — quantified current state
+- Implementation outcomes (Phase 0.6) — what worked and what didn't
+- NW journal — accumulated strategy learnings
 
-Writes strategy to NW journal (target-specific). Informs Phase 4 action ordering.
+NW asks itself:
+> "Given baseline measurements, past outcomes, and journal learnings — what's the best strategy to move toward north_star? Prioritize and explain reasoning."
 
-**Phase 4.5 (post-action)**: After creating PRs/proposals. NW evaluates each action:
-> "Does this {code-fix/proposal} move {target} closer to north_star? Why? Confidence: {high/medium/low}"
+Writes strategy to NW journal. Informs Phase 4 action ordering.
+
+**Phase 4.5 (post-action)**: After creating PRs/proposals. NW evaluates each action with data:
+> "Indicator {name} is currently at {baseline_value} ({trend}). This {action} targets it. Expected impact: {reasoning}. Confidence: {high/medium/low}"
 
 Assessment stored in `summary.yaml`, displayed in dashboard run detail and Slack report.
 
@@ -421,6 +481,28 @@ User Claude → nw_get_run(run_id)                   → {status: "completed", s
 - **Global actions**: Run All / Run All (dry-run)
 - **Schedule status bar**: interval, next run countdown, last run summary
 - **Chat panel**: Right side, persistent NW-Claude conversation
+- **Flywheel health section**: Bottom of dashboard, shows NW's self-improvement metrics
+
+### Flywheel Health (dashboard bottom section)
+
+Per-target trend data aggregated from run history. Shows whether NW is actually getting better.
+
+**Metrics displayed:**
+
+| Metric | Source | Display |
+|--------|--------|---------|
+| Indicator trends | `indicator_baseline` from each run | Sparkline per indicator (last 10 runs) |
+| Reject rate | `nightwatch-feedback.yaml` aggregates | Line chart, per indicator |
+| Acceptance rate | proposals accepted / total proposals | Percentage + trend arrow |
+| Implementation effectiveness | `implementation_outcomes` | "X of Y implementations improved their indicator" |
+| Signal quality | signals acted on / signals found | Funnel efficiency over time |
+
+**Per-target card enhancement**: Each target card shows a mini health indicator:
+- Green up arrow: indicators improving, reject rate falling
+- Yellow dash: stable, no significant change
+- Red down arrow: indicators degrading or reject rate rising
+
+**Aggregate health bar** (top of section): "NW is getting better at e2e-pipeline (3 indicators improving), stable on kc-pr-flow, needs attention on carlove (reject rate 67%)"
 
 ### NW-Claude Chat Panel
 
@@ -636,6 +718,21 @@ interface RunSummary {
         reasoning: string
       }
     }>
+  }>
+  indicator_baseline: Record<string, {
+    value: number
+    measurement: string            // "5 journal mentions in 14d"
+    previous_value?: number
+    trend: 'improving' | 'stable' | 'degrading'
+  }>
+  implementation_outcomes: Array<{
+    proposal_id: string
+    pr_url: string
+    indicator: string
+    before: number
+    after: number
+    delta: number
+    effective: boolean
   }>
   pre_assessment: string           // Phase 3.5 strategy text
   post_assessment: string          // Phase 4.5 reflection text
