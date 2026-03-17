@@ -7,7 +7,7 @@ description: |
   Context: kc-nightwatch orchestrator is running Phase 2 and needs improvement signals for kc-pr-flow
   user: "Harvest signals for kc-pr-flow. Keywords: [PR, review, pr-flow, create-pr, code review]. North star: PR lifecycle from creation to review response. Proxy signals: skill-coverage, review-friction. Plugin path: ~/Project/my-workspace/kc-pr-flow. Repo: my-plugins."
   assistant: "Searching journal, episodic memory, and MEMORY.md for kc-pr-flow improvement signals."
-  <commentary>Phase 2 dispatches one harvester per plugin with keywords and north star context from north-stars.yaml.</commentary>
+  <commentary>Phase 2 dispatches one harvester per plugin with keywords and north star context from nightwatch-targets.yaml.</commentary>
   </example>
 
   <example>
@@ -36,7 +36,7 @@ You receive these fields from the orchestrator:
 - **plugin**: plugin name (e.g., `kc-pr-flow`)
 - **plugin_path**: absolute path to plugin directory
 - **repo**: repository name (for PR routing)
-- **keywords**: list of search terms from north-stars.yaml
+- **keywords**: list of search terms from nightwatch-targets.yaml
 - **north_star**: the plugin's qualitative north star goal
 - **proxy_signals**: list of measurable proxy signal IDs and descriptions
 
