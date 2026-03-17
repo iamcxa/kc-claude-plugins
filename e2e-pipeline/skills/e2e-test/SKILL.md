@@ -10,7 +10,7 @@ Resolve browser E2E test flows and dispatch the `e2e-test-runner` agent for exec
 ## Invocation
 
 ```
-/e2e-test [flow-name|--tag tag|--all] [--mapping name] [--all-sites] [--suite name] [--pr NUMBER] [--issue ISSUE-ID] [--video] [--no-compile]
+/e2e-test [flow-name|--tag tag|--all] [--mapping name] [--site alias] [--all-sites] [--suite name] [--pr NUMBER] [--issue ISSUE-ID] [--video] [--no-compile]
 ```
 
 | Arg | Effect |
@@ -22,6 +22,7 @@ Resolve browser E2E test flows and dispatch the `e2e-test-runner` agent for exec
 | `--pr 940` | Post summary as PR comment after execution |
 | `--issue DRC-2779` | Include issue context in report header |
 | `--all-sites` | Discover all mappings and run applicable flows on each site |
+| `--site alias` | Run only the specified site's steps from a cross-site flow (mutually exclusive with `--all-sites` and `--suite`) |
 | `--suite name` | Run a specific suite from `.claude/e2e/suites/<name>.yaml` |
 | `--video` | Enable screen recording + GIF generation (auto-enabled when `--pr` is used) |
 | `--no-compile` | Skip auto-compile and compiled script run after LLM execution |
@@ -65,7 +66,15 @@ If ANY fail: warn with migration guidance (`app:`->`mapping:`, `name:`->`id:`, s
 
 **Element Reference Validation (warning-only):** Cross-check element names in `action:`/`expect:` against mapping (`pages.<page>.elements.<name>` or `_global.elements.<name>`). Report mismatches as warnings — do NOT stop execution. Warning format: `⚠ Element not in mapping: "<element>" (step <id>, page <page>). Test may fail at runtime.` Skip validation for `text '...'`, `url contains`, `dialog visible`, and non-element patterns.
 
-**Cross-site flow guard:** If any resolved flow has `sites:`, stop: "Use `--all-sites` or `--suite` for cross-site flows."
+**Cross-site flow guard:** If any resolved flow has `sites:` and none of `--all-sites`, `--suite`, or `--site` is present, stop: "Use `--all-sites`, `--suite`, or `--site <alias>` for cross-site flows."
+
+**`--site` validation (Route A only):** When `--site <alias>` is present:
+1. Verify the resolved flow has `sites:`. If not: stop with `"Flow is not a cross-site flow. Remove --site flag."`
+2. Verify `--site` is not combined with `--all-sites` or `--suite`. If combined: stop with `"Cannot use --site with --all-sites"` (or `--suite`).
+3. Verify `<alias>` exists in `flow.sites` keys. If not: stop with `ERROR: Site "<alias>" not found in flow. Available sites: <comma-separated keys>`
+4. **Step filtering**: Keep only steps where `step.site === <alias>`.
+5. **Mapping resolution**: Read `flow.sites[<alias>].mapping` → resolve to `.claude/e2e/mappings/<name>.yaml`.
+6. Proceed with standard Route A single-site dispatch using the filtered steps and resolved mapping.
 
 **Multi-Flow Execution** (batch mode): alphabetical order, navigate to `base_url` between flows, each gets `$REPORT_DIR/<flow-name>/`, failed flow does NOT abort remaining. If a flow has invalid YAML or fails schema validation, mark it as ERROR in results table with the parse reason, skip it, and continue with remaining flows.
 
@@ -417,7 +426,7 @@ runs:
 | Mistake | Fix |
 |---------|-----|
 | v1 flow in batch | Migrate: `app:`->`mapping:`, `name:`->`id:`, structured expects->grammar strings |
-| Cross-site in Route A | Use `--all-sites` or `--suite` |
+| Cross-site in Route A | Use `--all-sites`, `--suite`, or `--site <alias>` |
 | Missing `site:` in cross-site step | Required on every step |
 | Mixing `mapping:` and `sites:` | Mutually exclusive |
 | Flows with 20+ steps | Split into 5-10 per flow |
