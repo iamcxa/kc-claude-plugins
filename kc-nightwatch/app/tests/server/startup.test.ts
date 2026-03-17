@@ -4,7 +4,7 @@
 // The orphan scan covers the "clean crash recovery" intent — killing stale claude processes
 // from a prior crash that did not clean up after itself.
 import { describe, it, expect } from 'bun:test'
-import { cleanupOrphans } from '../../server/index.ts'
+import { cleanupOrphans } from '../../server/services/orphan-cleanup.ts'
 
 describe('cleanupOrphans', () => {
   it('runs without throwing when no orphans exist', async () => {
