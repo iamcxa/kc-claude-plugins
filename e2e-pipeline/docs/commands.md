@@ -84,6 +84,47 @@ node bin/e2e-quarantine.js \
 
 See [CI Integration](ci-integration.md) for how this fits into a GitHub Actions workflow.
 
+## Flow Step Types
+
+Flow YAML supports three step types. Browser steps are the default; checkpoint steps handle non-browser actions.
+
+| Step type | `action:` value | Required block | Default `on_fail` |
+|-----------|----------------|----------------|-------------------|
+| Browser | `Navigate to`, `Click`, `Fill`, `Wait for networkidle` | `expect:` | (test fails) |
+| Execute external | `"Execute external"` | `execute:` | `fail` |
+| Verify external | `"Verify external"` | `verify:` | `warn` |
+
+**Execute external** — trigger CLI commands, API calls, or scripts:
+
+```yaml
+- id: trigger-something
+  action: "Execute external"
+  description: "Why this step exists"
+  execute:
+    cli:
+      - run: "my-command --flag"
+        repeat: 3            # optional
+        expect: "exit code 0"
+  wait_after: 5              # seconds after execution
+  on_fail: fail
+```
+
+**Verify external** — check analytics, tracing, or external service state:
+
+```yaml
+- id: verify-something
+  action: "Verify external"
+  description: "Why this checkpoint exists"
+  wait: 10                   # propagation delay
+  verify:
+    posthog:
+      - event: my_event
+        expect: "Event exists with expected properties"
+  on_fail: warn
+```
+
+See [Cross-Boundary Testing](cross-boundary-testing.md) for a complete example.
+
 ### Compiled Flow Scripts
 
 Each compiled `.sh` script supports these runtime flags:
