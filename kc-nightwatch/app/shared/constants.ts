@@ -1,0 +1,12 @@
+export const HEARTBEAT_INTERVAL_MS = 30_000
+export const HEARTBEAT_TIMEOUT_MS = 90_000   // 3 missed heartbeats
+export const WORKER_RESTART_BACKOFF_MS = [2000, 5000, 15000]
+export const MAX_WORKER_RESTARTS = 3
+export const RESULT_FORCE_KILL_DELAY_MS = 10_000
+export const ORPHAN_SIGTERM_WAIT_MS = 3000
+export const SHUTDOWN_WORKER_TIMEOUT_MS = 35_000
+export const KEEP_RUNS_COUNT = 50
+export const DEFAULT_PORT = 3200
+export const DEFAULT_HOST = '127.0.0.1'
+export const LOG_ROTATION_MAX_SIZE = 10 * 1024 * 1024   // 10MB
+export const LOG_ROTATION_MAX_FILES = 5
