@@ -1,0 +1,28 @@
+#!/bin/sh
+# Pre-commit hook: runs biome lint + tests for e2e-pipeline
+# Activate: git config core.hooksPath .githooks
+
+set -e
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+# Only run if e2e-pipeline files are staged
+if git diff --cached --name-only | grep -q '^e2e-pipeline/'; then
+  echo "[pre-commit] e2e-pipeline files staged — running lint + tests..."
+
+  cd "$REPO_ROOT/e2e-pipeline"
+
+  # Ensure dependencies are installed
+  if [ ! -d node_modules ]; then
+    echo "[pre-commit] Installing dependencies..."
+    npm install --silent
+  fi
+
+  echo "[pre-commit] Running biome lint..."
+  npx @biomejs/biome lint compiler/ bin/
+
+  echo "[pre-commit] Running tests..."
+  npm test
+
+  echo "[pre-commit] All checks passed."
+fi

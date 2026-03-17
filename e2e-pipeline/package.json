@@ -4,7 +4,10 @@
   "private": true,
   "description": "Browser E2E testing plugin compiler",
   "scripts": {
-    "test": "node --test compiler/test/"
+    "test": "node --test compiler/test/",
+    "lint": "biome lint compiler/ bin/",
+    "lint:fix": "biome lint --write compiler/ bin/",
+    "check": "npm run lint && npm test"
   },
   "bin": {
     "e2e-compile": "bin/e2e-compile.js"
@@ -13,5 +16,8 @@
     "commander": "^14.0.3",
     "js-yaml": "^4.1.1",
     "xmlbuilder2": "^4.0.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.7"
   }
 }
