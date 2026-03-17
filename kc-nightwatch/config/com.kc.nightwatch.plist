@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.kc.nightwatch</string>
+
+	<key>Program</key>
+	<string>__HOME__/.claude/scripts/nightwatch-cron.sh</string>
+
+	<key>StartCalendarInterval</key>
+	<dict>
+		<key>Hour</key>
+		<integer>__HOUR__</integer>
+		<key>Minute</key>
+		<integer>__MINUTE__</integer>
+	</dict>
+
+	<key>StandardOutPath</key>
+	<string>/tmp/kc-nightwatch-launchd.log</string>
+
+	<key>StandardErrorPath</key>
+	<string>/tmp/kc-nightwatch-launchd.log</string>
+
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+		<key>HOME</key>
+		<string>__HOME__</string>
+	</dict>
+</dict>
+</plist>

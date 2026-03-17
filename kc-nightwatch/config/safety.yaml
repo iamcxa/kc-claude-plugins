@@ -1,0 +1,42 @@
+# kc-nightwatch safety boundaries
+# This file is the single source of truth for all limits and constraints.
+# The orchestrator skill references these values — never hardcode limits.
+
+auto_fix:
+  max_files_per_plugin: 3
+  allowed_operations: [edit]        # edit only, no create/delete
+  must_pass_forge: true
+  commit_prefix: "kc-nightwatch:"
+
+proposal:
+  max_per_plugin: 3
+  pr_type: draft
+  require_proposal_md: true
+  allowed_operations: [edit, create]  # proposals can create PROPOSAL.md
+
+e2e_flow:
+  max_files_per_target: 1            # one flow YAML per signal
+  allowed_operations: [create]       # only creates new flow files
+  require_existing_mapping: true     # must have .claude/e2e/mappings/ first
+
+alert:
+  max_per_target: 5                  # cap alerts per target per run
+  # cooldown inherits from global.cooldown_per_signal (7d)
+
+global:
+  skip_if_dirty: true              # uncommitted changes -> skip plugin
+  skip_if_recent_human_commit: 2h  # human commit within 2h -> skip
+  cooldown_per_signal: 7d          # same signal not re-processed within 7 days
+  max_runtime_minutes: 30          # total execution time cap
+  slack_on_error: true             # notify on execution failure too
+
+self_repair:
+  max_config_fixes: 3              # max auto-fix corrections per run
+  max_self_fix_prs: 1              # max PRs for nightwatch's own code per run
+  backup_before_fix: true          # write .bak before modifying targets.yaml
+  matching_algorithm:              # for team/project name resolution
+    - exact                        # 1. exact match
+    - case_insensitive             # 2. case-insensitive exact
+    - single_substring             # 3. single substring match
+    # 2+ substring matches = ambiguous → skip
+    # 0 matches = skip
