@@ -234,13 +234,38 @@ Store the safety values for reference throughout execution:
 - `global.skip_if_recent_human_commit`: time threshold for recent human commits
 - `global.cooldown_per_signal`: cooldown period for signal deduplication
 
-### Step 0.2: Verify Target Paths
+### Step 0.2: Resolve Target Paths
 
-For each target in `nightwatch-targets.yaml`:
+**For `type: plugin` targets** — `path` field is optional. Resolve source path automatically:
+
+1. Check `~/.claude/plugins/local/{target_name}`:
+   ```bash
+   readlink -f ~/.claude/plugins/local/{target_name} 2>/dev/null
+   ```
+   If it's a symlink → resolved path is the source directory.
+   If it's a regular directory AND is a git repo → use it as source.
+   If it's a regular directory but NOT a git repo → it's a copy, continue to step 2.
+
+2. Scan `$KC_WORKSPACE` (if env var is set) for the plugin:
+   ```bash
+   find "$KC_WORKSPACE" -path "*/{target_name}/.claude-plugin/plugin.json" -maxdepth 4 2>/dev/null | head -1
+   ```
+   Extract parent directory as source path.
+
+3. If still not found → log warning and skip: `[WARN] Cannot resolve source path for {target_name} — skipping`
+
+4. If target has an explicit `path` field → use it directly (override auto-resolution).
+
+Store for each plugin target:
+- `path` — resolved source directory (e.g., `~/Project/workspace/kc-claude-plugins/kc-pr-flow`)
+- `repo_root` — git repo root: `git -C {path} rev-parse --show-toplevel`
+- `repo` — from target config if set, otherwise basename of `repo_root`
+- `has_remote` — `git -C {repo_root} remote get-url origin 2>/dev/null` succeeds
+
+**For `type: product` targets** — `path` is required. Resolve:
 1. Expand `~` in path to absolute path
 2. Verify the directory exists
-3. For `type: plugin` — check if `.claude-plugin/plugin.json` exists
-4. For `type: product` — check if the directory is a git repo
+3. Verify it's a git repo
 
 If a target path is invalid, log a warning and skip it (do not abort the entire run).
 

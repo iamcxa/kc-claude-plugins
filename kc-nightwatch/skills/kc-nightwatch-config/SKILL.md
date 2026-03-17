@@ -310,14 +310,12 @@ Read `~/.claude/kc-plugins-config/nightwatch-targets.yaml`.
 
 **Add flow:**
 1. Ask: plugin or product?
-2. Ask for target path
-3. For `plugin` — verify `.claude-plugin/plugin.json` exists
-4. For `product` — verify it's a git repo; ask for `linear_project` and `sentry_project` (optional)
-5. Ask for north star goal (one sentence)
-6. Ask for 2-3 keywords
-7. Ask for 1-2 proxy signals (id + description)
-8. Determine repo from path (which git repo contains it)
-9. Set sources and actions based on type:
+2. For `plugin` — ask for plugin name (e.g., `kc-pr-flow`). Path is auto-resolved at runtime from `~/.claude/plugins/local/` or `$KC_WORKSPACE`. Optionally ask for explicit `path` override.
+3. For `product` — ask for target path (required); verify it's a git repo; ask for `linear_team`, `linear_project`, `sentry_org`, `sentry_projects` (optional)
+4. Ask for north star goal (one sentence)
+5. Ask for 2-3 keywords
+6. Ask for 1-2 proxy signals (id + description)
+7. Set sources and actions based on type:
    - `plugin`: sources `[journal, episodic-memory, memory-md]`, actions `[quick-fix, proposal]`
    - `product`: sources `[journal, episodic-memory, memory-md]`, actions `[proposal, linear-issue]`
 10. Append to `~/.claude/kc-plugins-config/nightwatch-targets.yaml`
