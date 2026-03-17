@@ -14,39 +14,17 @@ import {
   WORKER_RESTART_BACKOFF_MS,
   MAX_WORKER_RESTARTS,
   SHUTDOWN_WORKER_TIMEOUT_MS,
-  ORPHAN_SIGTERM_WAIT_MS,
   DEFAULT_PORT,
   DEFAULT_HOST,
 } from '../shared/constants.ts'
 import { loadOrCreateAppConfig } from './services/yaml-store.ts'
 import { tokenAuth } from './services/auth.ts'
+import { cleanupOrphans } from './services/orphan-cleanup.ts'
 
 const app = new Hono()
 
 let restartCount = 0
 let isShuttingDown = false
-
-export async function cleanupOrphans(): Promise<void> {
-  // Find orphaned safehouse+claude processes from prior crash
-  const proc = Bun.spawn(['pgrep', '-f', 'safehouse.*claude'], { stdout: 'pipe' })
-  await proc.exited
-  const output = await Bun.readableStreamToText(proc.stdout)
-
-  const pids = output.trim().split('\n').filter(Boolean).map(Number).filter(n => !isNaN(n))
-  if (pids.length === 0) return
-
-  log.warn({ component: 'server', msg: `Found ${pids.length} orphan process(es): ${pids.join(', ')}` })
-  for (const pid of pids) {
-    try {
-      process.kill(pid, 'SIGTERM')
-      await Bun.sleep(ORPHAN_SIGTERM_WAIT_MS)
-      try { process.kill(pid, 'SIGKILL') } catch { /* already gone */ }
-    } catch {
-      // Process already gone — that's fine
-    }
-  }
-  log.info({ component: 'server', msg: `Cleaned up ${pids.length} orphan process(es)` })
-}
 
 async function spawnWorker(): Promise<void> {
   const proc = Bun.spawn(['bun', 'run', `${import.meta.dir}/../worker/index.ts`], {
