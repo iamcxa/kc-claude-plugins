@@ -168,6 +168,20 @@ Verifier corrections:
   Mapping updated: .claude/e2e/mappings/<app>.yaml
 ```
 
+### Phase 2.5 — Media Post-Processing
+
+After verifier and trace-analyzer return, dispatch media processing:
+
+```
+Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
+  "Process media:
+   report_dir: <report_dir>
+   recording_path: <report_dir>/full.webm    # only if recording was on
+   output_name: verification"
+```
+
+Agent returns: `gif_path`, `mp4_path`, `thumbnail_path`. Use these in Phase 3 results.
+
 ## Phase 3 — Present Results
 
 ### Summary
@@ -184,7 +198,7 @@ Trace:       N API failures, M console errors
 ─────────────────────────────
 Flow:    .claude/e2e/flows/<name>.yaml
 Report:  e2e-reports/<ts>/report.md
-Video:   e2e-reports/<ts>/video.mp4
+Video:   e2e-reports/<ts>/verification.mp4
 
 {if corrections}
 Corrections applied:

@@ -188,9 +188,19 @@ Agent returns: `total_steps, passed, failed, skipped, console_errors, api_failur
 
 ### Phase 1.5 — Media Post-Processing
 
-After agent returns, if `record` was `true`:
+After agent returns, dispatch media processing:
 
-**Generate steps GIF** from per-step screenshots (see `references/commands.md` § GIF Generation for the canonical ffmpeg command). Warn but continue if ffmpeg fails — GIF is optional.
+```
+Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
+  "Process media:
+   report_dir: <report_dir>
+   recording_path: <report_dir>/full.webm    # only if record was true
+   output_name: test-run"
+```
+
+Agent returns: `gif_path`, `gif_frames`, `mp4_path`, `thumbnail_path`, `blank_frames`. Store for Phase 2 results.
+
+Always dispatch (even without recording) — GIF and thumbnail come from screenshots which are always captured.
 
 ### Phase 1.75 — Trace Analysis
 
@@ -275,7 +285,7 @@ If 0 diverged: "LLM and compiled runs agree on all steps."
 
 If recording was enabled, append:
 - `Recording: <path>/full.webm`
-- `Video: <path>/test-run.mp4` (1.5x speed, converted by agent)
+- `Video: <path>/test-run.mp4` (1.5x speed, via media agent)
 - `Steps GIF: <path>/steps.gif`
 
 **Batch:**

@@ -187,8 +187,8 @@ Phase 4 checklist:
 [ ] 4. anomaly review presented (or N/A if zero anomalies AND trace clean)
 [ ] 5. report.md written (full artifact with flowchart + step table + health log)
 [ ] 6. pr-summary.md written (PR reviewer version with inline screenshots)
-[ ] 7. GIF generated (or N/A if no screenshots)
-[ ] 8. MP4 generated (from trace screencast or recording)
+[ ] 7. Media agent dispatched → GIF + MP4 + thumbnail (or N/A if no screenshots)
+[ ] 8. (merged into item 7)
 [ ] 9. flow YAML written to .claude/e2e/flows/
 [ ] 10. PR comment posted with pr-summary.md (or N/A if no --pr)
 [ ] 11. mapping discrepancy check done
@@ -205,12 +205,20 @@ Checklist items map to procedure steps below. Items 5-6 are both from procedure 
 3. **Trace analysis (enhanced)**: Dispatch `e2e-trace-analyzer` subagent with `trace_path` + `report_dir` + `step_log_path`. Prerequisite: `step-log.json` must exist in `$REPORT_DIR` (written at end of Phase 3). If missing, write it now from in-memory step data and verify the file exists. If write fails again, dispatch WITHOUT `step_log_path` — analyzer degrades gracefully to non-enhanced mode (no cross-reference, but analysis still completes). See [reference.md](./reference.md) § Trace Analysis.
 4. **Anomaly review** (checklist item 4): If anomalies were observed during Phase 3 (check step-log.json `anomalies` arrays) OR trace found issues (`clean: false`), present the cross-reference summary and offer: review details / fix / re-walk / continue. Skip to step 5 ONLY when BOTH conditions are true: zero anomalies in step-log AND trace returns `clean: true`. Note: `clean: true` from trace-analyzer means zero API/console/silent-failure — it does NOT account for unmatched visual anomalies. See [reference.md](./reference.md) § Anomaly Review.
 5. **Report (dual output, MANDATORY)** (checklist items 5+6): Write both `$REPORT_DIR/report.md` and `$REPORT_DIR/pr-summary.md`. Health Log now includes step-correlated data from trace analysis. See [reference.md](./reference.md) § Report for templates.
-6. **GIF generation** (checklist item 7, if recording): see `references/commands.md` § GIF Generation for the canonical ffmpeg command. Warn but continue if ffmpeg fails.
-7. **MP4 video conversion** (checklist item 8, if recording): see `references/commands.md` § MP4 Video Conversion. Default 1.5x speed. Warn but continue if ffmpeg fails.
-8. **Flow YAML auto-generation (MANDATORY)** (checklist item 9): Always auto-generate — never ask. Auto-name: `walkthrough-<timestamp>-<first-page>.yaml`. Write to `.claude/e2e/flows/`. Cross-site: use `sites:` instead of `mapping:` when `--sites` was used.
-9. **PR/Issue posting** (checklist item 10): If `--pr` provided, ask user to confirm → commit + push screenshots → `gh pr comment` with `pr-summary.md`. See [reference.md](./reference.md) § PR/Issue Posting.
-10. **Mapping self-repair** (checklist item 11): Present discrepancy list, human approves, patch mapping. 3+ stale on same page → recommend `/e2e-map --page`
-11. **Browser handoff** (checklist item 12, BLOCKING: report + flow YAML must be written first): Present summary table, then numbered action menu. Do NOT close browser — user may need to inspect final state.
+6. **Media post-processing** (checklist items 7+8): Dispatch media agent:
+   ```
+   Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
+     "Process media:
+      report_dir: $REPORT_DIR
+      recording_path: $REPORT_DIR/full.webm    # only if recording was on
+      output_name: walkthrough"
+   ```
+   Agent returns: `gif_path`, `mp4_path`, `thumbnail_path`. Use in report + PR summary.
+   Replaces manual GIF generation (old item 7) and MP4 conversion (old item 8).
+7. **Flow YAML auto-generation (MANDATORY)** (checklist item 9): Always auto-generate — never ask. Auto-name: `walkthrough-<timestamp>-<first-page>.yaml`. Write to `.claude/e2e/flows/`. Cross-site: use `sites:` instead of `mapping:` when `--sites` was used.
+8. **PR/Issue posting** (checklist item 10): If `--pr` provided, ask user to confirm → commit + push screenshots → `gh pr comment` with `pr-summary.md`. See [reference.md](./reference.md) § PR/Issue Posting.
+9. **Mapping self-repair** (checklist item 11): Present discrepancy list, human approves, patch mapping. 3+ stale on same page → recommend `/e2e-map --page`
+10. **Browser handoff** (checklist item 12, BLOCKING: report + flow YAML must be written first): Present summary table, then numbered action menu. Do NOT close browser — user may need to inspect final state.
 
 **Post-completion menu** (always present, numbered):
 
