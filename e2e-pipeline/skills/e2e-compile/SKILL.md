@@ -81,6 +81,8 @@ Default directories (resolved relative to project root):
 - Mappings: `.claude/e2e/mappings`
 - Output: `.claude/e2e/compiled`
 
+**Note:** Flow files may contain a `preconditions:` top-level block (data readiness checks executed by e2e-test skill). The compiler ignores this block — it is not compiled into the output script.
+
 ## Phase 3 — Present Results
 
 Parse stdout/stderr from the compiler and present conversationally.
