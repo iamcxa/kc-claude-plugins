@@ -26,6 +26,15 @@ description: |
   Smoke mode generates a visit-all-pages flow from the mapping. No codebase analysis needed — the mapping provides all page/element information.
   </commentary>
   </example>
+
+  <example>
+  Context: The e2e-flow skill needs a cross-boundary flow mixing browser + API + analytics verification.
+  user: "Generate E2E flow:\n  description: After 3 API calls to /api/webhook/trigger, the dashboard shows new items and a PostHog event fires\n  mapping_path: /home/user/project/.claude/e2e/mappings/my-app.yaml\n  context_summary: Routes found:\n    /dashboard → src/app/dashboard/page.tsx\n  API endpoints:\n    POST /api/webhook/trigger — creates items, increments counter\n  External services detected:\n    PostHog — track_items_created() event name: 'items_batch_created'\n  Mapping pages: dashboard (8 elements including items_table, empty_state_cta)\n  output_dir: /home/user/project/.claude/e2e/flows"
+  assistant: "Reads mapping, constructs flow with browser steps (navigate, verify empty state), an Execute external step for the 3 API calls (using execute: block with run: and repeat: 3), browser steps to verify items appeared, and a Verify external step for the PostHog event (using verify: block). Does NOT use manual: true — uses the structured Execute external and Verify external step schemas instead."
+  <commentary>
+  Cross-boundary flows use Execute external (action: "Execute external" with execute: block) for non-browser actions and Verify external (action: "Verify external" with verify: block) for analytics/tracing checks. Never use manual: true — it is not part of the flow schema.
+  </commentary>
+  </example>
 tools: Read, Write, Grep, Glob
 model: inherit
 color: magenta
@@ -233,3 +242,4 @@ coverage_notes: "<what's covered and what's not>"
 6. **Use v2 format only** — `mapping:` not `app:`, `id:` not `name:`. The test-runner rejects v1 format.
 7. **Absolute paths for output** — `output_dir` is an absolute path. Write there directly.
 8. **Reasonable test values** — Use plausible test data (names, emails, descriptions). Don't use "test123" or "asdf". Think about what a human tester would type.
+9. **NEVER use `manual: true`** — It is not part of the flow schema. For non-browser actions (CLI, API calls, scripts), use `Execute external` with an `execute:` block. For analytics/tracing verification (PostHog, Langfuse, Sentry), use `Verify external` with a `verify:` block. These are the only supported checkpoint step types.
