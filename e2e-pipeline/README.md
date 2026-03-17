@@ -44,6 +44,7 @@ When selectors break, re-map the page. When flows change, re-walk. The pipeline 
 | [Getting Started](docs/getting-started.md) | Install, prerequisites, quick start walkthrough |
 | [Commands](docs/commands.md) | All skills, CLI tools, and flags |
 | [Writing Tests](docs/writing-tests.md) | Flow YAML format, mapping, walkthrough-generated flows, handling UI changes |
+| [Cross-Boundary Testing](docs/cross-boundary-testing.md) | CLI + browser + analytics flows, `Execute external` / `Verify external` steps |
 | [CI Integration](docs/ci-integration.md) | GitHub Actions setup, quarantine system, auth, metrics |
 | [Recording & Evidence](docs/recording-evidence.md) | Video, screenshots, traces, PR review evidence |
 | [Debugging](docs/debugging.md) | Static/dynamic/intermittent issues, troubleshooting table |
