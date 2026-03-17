@@ -30,8 +30,23 @@ Meta-skill for the `e2e-map` / `e2e-test` / `e2e-walkthrough` pipeline. Enforces
 /e2e-skill-ops --evaluate    # Gap analysis: execution results vs skill expectations
 ```
 
-No args: infer mode from context. If ambiguous, ask.
-Unknown mode (e.g., `--fix`): list the 4 available modes with one-line descriptions.
+No args: show available modes with status, then ask which to run:
+
+```
+E2E Skill Operations
+────────────────────
+Modes:
+  /e2e-skill-ops --debug       — diagnose e2e execution failure
+  /e2e-skill-ops --maintain    — sync changes across skills after edit
+  /e2e-skill-ops --add-feature — add capability to one or more e2e skills
+  /e2e-skill-ops --evaluate    — gap analysis: execution results vs expectations
+
+Recent findings: {count from skill-quality-findings.md, or "none yet"}
+
+Which mode? (or describe what happened — I'll pick the right one)
+```
+
+Unknown mode (e.g., `--fix`): show the same menu.
 Multiple modes (e.g., `--debug --maintain`): run in the order given, sequentially.
 
 ## The 5 Rules (apply to ALL modes)
