@@ -18,6 +18,18 @@ When modifying safety values:
 - Changes require human review (never auto-modified by nightwatch)
 - Test changes with `--dry-run` before the next nightly cycle
 
+## Development Rule: Dry-Run Before Push
+
+After any skill, agent, or config change to kc-nightwatch:
+
+1. Commit locally
+2. Sync to `~/.claude/plugins/local/kc-nightwatch`
+3. Run `claude -p "/kc-nightwatch --self-repair --dry-run"` with appropriate plugin-dirs
+4. Verify exit 0 + `[SELF-REPAIR] complete` in log
+5. Only then `git push`
+
+Forge validate-only checks structure but NOT runtime behavior. A structural PASS can still break at runtime (e.g., Phase 0 path resolution, MCP connectivity, skip guard logic).
+
 ## Self-Repair (v0.4+)
 
 kc-nightwatch monitors itself via `--self-repair` mode:
