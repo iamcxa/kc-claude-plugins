@@ -1,0 +1,191 @@
+version: 2
+app: nightwatch-dashboard
+base_url: "http://127.0.0.1:3200"
+
+auth:
+  type: none
+
+codebase:
+  routes_glob: "app/client/pages/*.ts"
+  source_patterns: ["app/client/**/*.ts"]
+
+pages:
+  _global:
+    description: "Elements visible on all pages"
+    elements:
+      scheduler_toggle:
+        selector: "role=button[name='ON']"
+        description: "Scheduler ON/OFF toggle in the top schedule bar"
+        note: "Text changes between 'ON' and 'OFF' based on state"
+      schedule_bar_text:
+        selector: "text=/Scheduler:.*Next in/"
+        description: "Schedule bar showing interval and next run countdown"
+      last_run_text:
+        selector: "text=/Last run:/"
+        description: "Last run timestamp in the schedule bar"
+      nav_dashboard:
+        selector: "role=link[name='Dashboard']"
+        description: "Bottom nav link to Dashboard page"
+      nav_runs:
+        selector: "role=link[name='Runs']"
+        description: "Bottom nav link to Runs page"
+      nav_config:
+        selector: "role=link[name='Config']"
+        description: "Bottom nav link to Config page"
+      chat_fab:
+        selector: "role=button[name='Open NW-Claude chat']"
+        description: "Floating action button to open/close the NW-Claude chat drawer"
+        note: "Text content changes to 'X' when chat is open"
+      chat_dialog:
+        selector: "role=dialog[name='NW-Claude chat']"
+        description: "Chat drawer overlay panel"
+      chat_reset_button:
+        selector: "role=button[name='Reset conversation']"
+        description: "Reset button in chat drawer header"
+      chat_close_button:
+        selector: "role=button[name='Close chat']"
+        description: "Close button (X) in chat drawer header"
+      chat_input:
+        selector: "role=textbox[name='Ask NW-Claude...']"
+        description: "Chat message input textbox"
+      chat_send_button:
+        selector: "role=button[name='Send']"
+        description: "Send button for chat messages, disabled when input is empty"
+
+  dashboard:
+    url_pattern: "/#/dashboard"
+    description: "Master-detail view with target sidebar and target detail panel"
+    elements:
+      sidebar:
+        selector: "role=complementary"
+        description: "Left sidebar containing the target list"
+      target_list:
+        selector: "role=complementary >> role=list"
+        description: "List of monitoring targets in the sidebar"
+      target_item:
+        selector: "role=listitem >> nth=0"
+        description: "A single target item in the sidebar list. Click to select and show detail."
+        note: "Sidebar items use event delegation (cursor: pointer). Select by text content."
+      target_item_by_name:
+        selector: "role=complementary >> text=${targetName}"
+        description: "Target sidebar item by name. ${targetName} is the display name (e.g. 'kc-plugin-forge')."
+      add_target_button:
+        selector: "role=button[name='+ Add Target']"
+        description: "Button at bottom of sidebar to add a new monitoring target"
+      run_all_button:
+        selector: "role=button[name='Run All']"
+        description: "Button to trigger all targets. Disabled when no targets are runnable."
+      empty_state_text:
+        selector: "text=Select a target from the sidebar to view details"
+        description: "Placeholder text shown when no target is selected"
+
+  dashboard-detail:
+    url_pattern: "/#/dashboard"
+    description: "Target detail panel shown after selecting a sidebar target"
+    elements:
+      target_heading:
+        selector: "role=heading[level=2]"
+        description: "Target name heading (e.g. 'kc-plugin-forge')"
+      target_type_badge:
+        selector: "text=/^plugin$|^product$/"
+        description: "Badge showing target type next to the heading"
+      north_star_text:
+        selector: "text=North star"
+        description: "North star section label"
+      run_button:
+        selector: "role=button[name='Run']"
+        description: "Run button for the selected target (production mode)"
+      dry_run_button:
+        selector: "role=button[name='Dry run']"
+        description: "Dry run button for the selected target"
+      more_menu_button:
+        selector: "role=button[name='⋮']"
+        description: "Ellipsis (more) menu button opening dropdown actions"
+      last_run_status:
+        selector: "text=Last run"
+        description: "Last run status section in target detail"
+
+  dashboard-detail-menu:
+    url_pattern: "/#/dashboard"
+    description: "Dropdown menu opened by the ellipsis button on target detail"
+    elements:
+      menu_run:
+        selector: "role=button[name='Run'] >> nth=1"
+        description: "Run option in the dropdown menu"
+        note: "nth=1 to distinguish from the main Run button (nth=0)"
+      menu_dry_run:
+        selector: "role=button[name='Dry run'] >> nth=1"
+        description: "Dry run option in the dropdown menu"
+        note: "nth=1 to distinguish from the main Dry run button (nth=0)"
+      menu_edit:
+        selector: "role=button[name='Edit']"
+        description: "Edit option in the dropdown menu (currently disabled)"
+      menu_chat:
+        selector: "role=button[name='Chat']"
+        description: "Chat option in the dropdown menu (currently disabled)"
+      menu_remove_target:
+        selector: "role=button[name='Remove target']"
+        description: "Remove target option in the dropdown menu (destructive, shown in red)"
+
+  runs:
+    url_pattern: "/#/runs"
+    description: "Run history list with filters"
+    elements:
+      status_filter:
+        selector: "role=combobox >> nth=0"
+        description: "Dropdown to filter runs by status (All statuses, Completed, Failed, Running, Queued, Cancelled)"
+      target_filter:
+        selector: "role=combobox >> nth=1"
+        description: "Dropdown to filter runs by target name"
+      run_row:
+        selector: "css=[style*='cursor: pointer'] >> nth=0"
+        description: "A single run row in the list. Click to view run detail."
+        note: "Run rows are div elements with cursor:pointer style, using event delegation"
+
+  runs-detail:
+    url_pattern: "/#/runs"
+    description: "Detail view for a single run, showing log output"
+    elements:
+      back_to_runs_link:
+        selector: "role=link[name='← Back to runs']"
+        description: "Link to navigate back to the runs list"
+      show_raw_button:
+        selector: "role=button[name='Show raw']"
+        description: "Toggle to show raw log output"
+      log_output:
+        selector: "role=log"
+        description: "Log output area showing run progress and results"
+
+  config:
+    url_pattern: "/#/config"
+    description: "YAML configuration editor with Targets and Safety tabs"
+    elements:
+      targets_tab:
+        selector: "role=tab[name='Targets']"
+        description: "Tab to show targets configuration"
+      safety_tab:
+        selector: "role=tab[name='Safety']"
+        description: "Tab to show safety configuration"
+      edit_button:
+        selector: "role=button[name='Edit']"
+        description: "Button to enter edit mode (enables textarea)"
+      add_target_config_button:
+        selector: "role=button[name='+ Add Target']"
+        description: "Button to add a new target (visible on Targets tab)"
+      targets_textarea:
+        selector: "role=textbox[name='Targets configuration']"
+        description: "YAML editor textarea for targets config. Disabled in read-only mode."
+      safety_textarea:
+        selector: "role=textbox[name='Safety configuration']"
+        description: "YAML editor textarea for safety config. Disabled in read-only mode."
+
+  config-edit-mode:
+    url_pattern: "/#/config"
+    description: "Config page in edit mode after clicking Edit button"
+    elements:
+      validate_button:
+        selector: "role=button[name='Validate']"
+        description: "Button to validate YAML before saving (replaces Edit button)"
+      discard_changes_button:
+        selector: "role=button[name='Discard Changes']"
+        description: "Button to discard edits and return to read-only mode"
