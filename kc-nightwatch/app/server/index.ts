@@ -16,6 +16,8 @@ import { apiRoutes } from './routes/api.ts'
 import { streamRoutes } from './routes/stream.ts'
 import { scheduleRoutes } from './routes/schedule.ts'
 import { chatRoutes } from './routes/chat.ts'
+import { feedbackRoutes } from './routes/feedback.ts'
+import { configRoutes } from './routes/config.ts'
 import {
   WORKER_RESTART_BACKOFF_MS,
   MAX_WORKER_RESTARTS,
@@ -152,6 +154,8 @@ app.route('/', apiRoutes)
 app.route('/', streamRoutes)
 app.route('/', scheduleRoutes)
 app.route('/', chatRoutes)
+app.route('/', feedbackRoutes)
+app.route('/', configRoutes)
 
 // SPA root route — serve index.html for / (after all API routes)
 app.get('/', async (c) => {
