@@ -87,7 +87,17 @@ export async function executeRun(
   }, opts.maxRuntimeMs)
 
   let resultReceived = false
-  const summary: RunSummary = { phases_completed: [], signals_found: 0, actions_taken: 0, errors: [] }
+  // Phase 1 minimal summary — fields not yet populated by skill; defaults to zero/empty
+  const legacyPhases: string[] = []
+  const summary: RunSummary = {
+    targets_active: 0,
+    targets_skipped: 0,
+    total_signals: 0,
+    total_actions: 0,
+    errors: 0,
+    per_target: {},
+    phases_completed: legacyPhases,
+  }
 
   try {
     for await (const chunk of child.stdout) {
@@ -118,8 +128,8 @@ export async function executeRun(
         // Track phase progress from assistant messages
         if (event.type === 'assistant' && event.content) {
           const phaseMatch = event.content.match(/Phase (\d+(?:\.\d+)?)/i)
-          if (phaseMatch && !summary.phases_completed.includes(phaseMatch[0])) {
-            summary.phases_completed.push(phaseMatch[0])
+          if (phaseMatch && !legacyPhases.includes(phaseMatch[0])) {
+            legacyPhases.push(phaseMatch[0])
           }
         }
       }
@@ -132,7 +142,7 @@ export async function executeRun(
     await Bun.write(logFilePath, logLines.join('\n') + '\n')
     await Bun.write(
       summaryPath,
-      `phases_completed:\n${summary.phases_completed.map(p => `  - ${p}`).join('\n')}\n`
+      `phases_completed:\n${legacyPhases.map(p => `  - ${p}`).join('\n')}\n`
     )
 
     if (timedOut) {
