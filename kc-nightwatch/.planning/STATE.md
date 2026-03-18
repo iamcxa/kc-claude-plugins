@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 2 approved — IPC heartbeat fix applied, all human checks passed, 104 tests green
-stopped_at: Completed 03-flywheel-core/03-01-PLAN.md — Chat system, global SSE, ChatDrawer, auto-brief
-last_updated: "2026-03-18T10:17:11.957Z"
-last_activity: "2026-03-18 — Phase 02 approved: IPC heartbeat fix (c582fae), all 5 human checks passed"
+status: Phase 3 plan 03 complete — feedback pipeline, ActionCard, calibration, implicit PR collector, 140 tests green
+stopped_at: Completed 03-flywheel-core/03-03-PLAN.md — Feedback pipeline, ActionCard, calibration, implicit PR collector
+last_updated: "2026-03-18T10:42:52Z"
+last_activity: "2026-03-18 — Phase 03-03 complete: feedback store (b187127), ActionCard (c8001f9), PR collector (0609857)"
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 10
-  completed_plans: 7
-  percent: 50
+  completed_plans: 8
+  percent: 60
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 
 ## Current Position
 
-Phase: 2 of 4 (Core Cockpit) — COMPLETE
-Next: Phase 3 (Flywheel Core)
-Status: Phase 2 approved — IPC heartbeat fix applied, all human checks passed, 104 tests green
-Last activity: 2026-03-18 — Phase 02 approved: IPC heartbeat fix (c582fae), all 5 human checks passed
+Phase: 3 of 4 (Flywheel Core) — IN PROGRESS (Plan 03/03 complete, Phase 3 done)
+Next: Phase 4 (MCP + Linear integration)
+Status: Phase 3 plan 03 complete — feedback pipeline, ActionCard, calibration, implicit PR collector, 140 tests green
+Last activity: 2026-03-18 — Phase 03-03: feedback store (b187127), ActionCard (c8001f9), PR collector (0609857)
 
-Progress: [█████░░░░░] 50% (Phase 2 complete, Phase 3 next)
+Progress: [██████░░░░] 60% (Phase 2 complete, Phase 3 plans 01-03 complete)
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Progress: [█████░░░░░] 50% (Phase 2 complete, Phase 3 next)
 | Phase 02-core-cockpit P02 | 6min | 2 tasks | 7 files |
 | Phase 02-core-cockpit P03 | ~90min | 3 tasks | 17 files |
 | Phase 03-flywheel-core P01 | 16min | 3 tasks | 13 files |
+| Phase 03-flywheel-core P03 | 24min | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [Phase 03-flywheel-core]: 03-01: Anthropic SDK as default chat backend — claude-haiku-4-5 for cost/speed balance; briefChat injects RunSummary into system prompt
 - [Phase 03-flywheel-core]: 03-01: Fire-and-forget POST /message + SSE GET /stream — decouples HTTP lifecycle from LLM streaming
 - [Phase 03-flywheel-core]: 03-01: Global subscribers Set<SSEWriter> in ipc.ts — mirrors run-scoped SSE fan-out pattern from Phase 2
+- [Phase 03-flywheel-core]: 03-03: Calibration formula: threshold = clamp(0.1, 0.9, 0.5 + (rejectRate - 0.5) * 0.5) — half-rate adjustment toward reject direction
+- [Phase 03-flywheel-core]: 03-03: Route ordering guard: /api/feedback/calibration MUST precede /api/feedback/:runId in Hono to avoid param capture
+- [Phase 03-flywheel-core]: 03-03: checkLinearStatus is Phase 3 placeholder returning null — Linear MCP integration deferred to Phase 4
 
 ### Pending Todos
 
@@ -99,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T10:17:11.954Z
-Stopped at: Completed 03-flywheel-core/03-01-PLAN.md — Chat system, global SSE, ChatDrawer, auto-brief
+Last session: 2026-03-18T10:42:52Z
+Stopped at: Completed 03-flywheel-core/03-03-PLAN.md — Feedback pipeline, ActionCard, calibration, implicit PR collector
 Resume file: None
