@@ -62,13 +62,13 @@
 
 ### Chat
 
-- [ ] **CHAT-01**: NW-Claude chat panel (right side of dashboard)
-- [ ] **CHAT-02**: Auto-brief after run completes (spawn Claude with run summary as context)
-- [ ] **CHAT-03**: Bidirectional Claude session (`--input-format stream-json`, API fallback)
+- [x] **CHAT-01**: NW-Claude chat panel (right side of dashboard)
+- [x] **CHAT-02**: Auto-brief after run completes (spawn Claude with run summary as context)
+- [x] **CHAT-03**: Bidirectional Claude session (`--input-format stream-json`, API fallback)
 - [ ] **CHAT-04**: NW-Claude has NW-MCP access (trigger runs, query state, submit feedback)
 - [ ] **CHAT-05**: NW-Claude has target-specific NW journal access
-- [ ] **CHAT-06**: Per-target chat focus ("Chat about this" from target card)
-- [ ] **CHAT-07**: Session lifecycle (persist until close/reset, switch context prompt on new run)
+- [x] **CHAT-06**: Per-target chat focus ("Chat about this" from target card)
+- [x] **CHAT-07**: Session lifecycle (persist until close/reset, switch context prompt on new run)
 
 ### Feedback
 
@@ -201,13 +201,13 @@
 | CONF-06 | Phase 3 | Pending |
 | CONF-07 | Phase 3 | Pending |
 | CONF-08 | Phase 3 | Pending |
-| CHAT-01 | Phase 3 | Pending |
-| CHAT-02 | Phase 3 | Pending |
-| CHAT-03 | Phase 3 | Pending |
+| CHAT-01 | Phase 3 | Complete |
+| CHAT-02 | Phase 3 | Complete |
+| CHAT-03 | Phase 3 | Complete |
 | CHAT-04 | Phase 3 | Pending |
 | CHAT-05 | Phase 3 | Pending |
-| CHAT-06 | Phase 3 | Pending |
-| CHAT-07 | Phase 3 | Pending |
+| CHAT-06 | Phase 3 | Complete |
+| CHAT-07 | Phase 3 | Complete |
 | FEED-01 | Phase 3 | Pending |
 | FEED-02 | Phase 3 | Pending |
 | FEED-03 | Phase 3 | Pending |
