@@ -27,13 +27,13 @@ pages:
 
 ## Step 2: Generate or write a flow
 
-**Automated** — generate from a plan, spec, or PR:
+**Automated** -- generate from a plan, spec, or PR:
 ```
 /e2e-flow --from <plan.md>
 ```
 The flow-writer agent reads your codebase and mapping to produce a validated flow YAML, then the flow-verifier agent tests it in a real browser and auto-repairs broken selectors.
 
-**Manual** — write a flow in natural language. Flow files use plain English for actions and expectations:
+**Manual** -- write a flow in natural language. Flow files use plain English for actions and expectations:
 
 ```yaml
 # .claude/e2e/flows/login-flow.yaml
@@ -63,9 +63,91 @@ steps:
 
 No CSS selectors, no XPath, no Page Object boilerplate. Just element names from your mapping + human-readable actions.
 
+### Preconditions
+
+Flows can include a `preconditions:` block that validates data readiness before the browser agent launches. If any check fails, the test stops immediately with a clear error message -- no wasted browser time.
+
+```yaml
+name: Audit Options
+mapping: secha-admin
+preconditions:
+  runner: psql
+  env:
+    - DATABASE_URL
+  checks:
+    - query: "SELECT count(*) FROM work_order_tasks WHERE status = 'reviewing'"
+      expect: "> 0"
+      fail_message: "No tasks in reviewing state -- run seed lifecycle first"
+    - query: "SELECT count(*) FROM profiles WHERE role = 'admin'"
+      expect: ">= 1"
+      fail_message: "No admin users -- check seed script"
+steps:
+  # ...
+```
+
+**Schema overview:**
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `runner` | No | `psql` (default) or `supabase` |
+| `env` | When `psql` | Environment variables to read from `.env` (e.g., `DATABASE_URL`) |
+| `project` | When `supabase` | Supabase project ref for MCP-based execution |
+| `checks` | Yes | List of query/expect pairs |
+| `checks[].query` | Yes | SQL query (use aggregates like `COUNT`, `SUM`) |
+| `checks[].expect` | Yes | Comparison: `"> 0"`, `">= 5"`, `"= 1"`, `"!= 0"` |
+| `checks[].fail_message` | Yes | Human-readable message when check fails |
+| `checks[].site` | No | Only check when running this site (for cross-site flows) |
+
+**Runner types:**
+
+| Runner | How it executes | When to use |
+|--------|----------------|-------------|
+| `psql` | `psql "$DATABASE_URL" -t -A -c "<query>"` via Bash | Local dev with direct DB access |
+| `supabase` | `execute_sql` MCP tool | Remote projects, no direct DB connection |
+
+**Expect operators:**
+
+| Operator | Example | Meaning |
+|----------|---------|---------|
+| `>` | `"> 0"` | Greater than |
+| `>=` | `">= 5"` | Greater than or equal |
+| `=` | `"= 1"` | Exact match |
+| `!=` | `"!= 0"` | Not equal |
+
+**Site-scoped checks** for cross-site flows:
+
+```yaml
+preconditions:
+  runner: psql
+  env: [DATABASE_URL]
+  checks:
+    - query: "SELECT count(*) FROM users"
+      expect: "> 0"
+      fail_message: "No users"
+      # No site: field -- always checked
+    - query: "SELECT count(*) FROM mobile_sessions"
+      expect: "> 0"
+      fail_message: "No mobile sessions"
+      site: mobile    # Only checked when --site mobile or iterating mobile
+```
+
+Checks without `site:` run for every site. Checks with `site: X` run only when the current site context matches X.
+
+**Error messages:**
+
+When a precondition fails, the test stops with:
+
+```
+Precondition failed: No tasks in reviewing state -- run seed lifecycle first
+   Query: SELECT count(*) FROM work_order_tasks WHERE status = 'reviewing'
+   Expected: > 0, Got: 0
+```
+
+Non-numeric query results and psql connection errors are also caught and reported.
+
 ### Flows with external checkpoints
 
-Some tests need to go beyond the browser — run CLI commands, call APIs, or verify external services. Use `Execute external` (do things) and `Verify external` (check things):
+Some tests need to go beyond the browser -- run CLI commands, call APIs, or verify external services. Use `Execute external` (do things) and `Verify external` (check things):
 
 ```yaml
 steps:
@@ -109,7 +191,7 @@ steps:
     on_fail: warn
 ```
 
-This flow mixes three step types: browser actions (steps 1, 3), CLI execution (step 2), and external verification (step 4). The test runner handles all three — browser steps use the mapping, `Execute external` steps run commands, and `Verify external` steps check external services.
+This flow mixes three step types: browser actions (steps 1, 3), CLI execution (step 2), and external verification (step 4). The test runner handles all three -- browser steps use the mapping, `Execute external` steps run commands, and `Verify external` steps check external services.
 
 For a complete real-world example with environment setup and multi-phase verification, see [Cross-Boundary Testing](cross-boundary-testing.md).
 
@@ -151,7 +233,7 @@ If you don't want to write YAML by hand:
 /e2e-walkthrough
 ```
 
-Walk through the app interactively. When done, the skill **automatically generates** a flow YAML capturing every step you performed — ready to replay with `/e2e-test`.
+Walk through the app interactively. When done, the skill **automatically generates** a flow YAML capturing every step you performed -- ready to replay with `/e2e-test`.
 
 ## Step 4: Run it
 
@@ -167,7 +249,7 @@ The test runner resolves element names to selectors via the mapping, executes ea
 /e2e-compile login-flow
 ```
 
-Produces `.claude/e2e/compiled/login-flow.sh` — a standalone bash script that runs the same test headlessly without Claude Code. See [CI Integration](ci-integration.md).
+Produces `.claude/e2e/compiled/login-flow.sh` -- a standalone bash script that runs the same test headlessly without Claude Code. See [CI Integration](ci-integration.md).
 
 ---
 
@@ -181,7 +263,7 @@ The visual design changed (new layout, restyled buttons) but the user journey is
 /e2e-map --page login
 ```
 
-This re-explores just the `login` page, updates selectors in the mapping, and preserves all other pages. Your existing flow files remain untouched — they reference element *names*, not selectors.
+This re-explores just the `login` page, updates selectors in the mapping, and preserves all other pages. Your existing flow files remain untouched -- they reference element *names*, not selectors.
 
 Then re-run:
 
@@ -199,7 +281,7 @@ This walks the specific page, detects stale selectors, and offers to patch the m
 
 ### Scenario B: UI flow entirely redesigned
 
-The user journey itself changed — new pages, different steps, removed features. The old flow YAML no longer matches reality.
+The user journey itself changed -- new pages, different steps, removed features. The old flow YAML no longer matches reality.
 
 1. **Re-map the affected pages** (or the whole app):
 
@@ -233,7 +315,16 @@ The user journey itself changed — new pages, different steps, removed features
    /e2e-test login-flow
    ```
 
+## Related
+
+- [Commands](commands.md) -- all skill invocations and flags
+- [Cross-Boundary Testing](cross-boundary-testing.md) -- `Execute external` / `Verify external` steps
+- [Multi-Site Testing](multi-site-testing.md) -- cross-site flows with `sites:`
+- [Debugging](debugging.md) -- troubleshooting test failures
+- [CI Integration](ci-integration.md) -- running compiled flows in GitHub Actions
+
 ---
 
 > **Need help?** `/e2e-help writing-tests` for an interactive guide.
-> **Found a better pattern?** [Open a PR](https://github.com/iamcxa/kc-claude-plugins/pulls) to update this doc.
+> **Found a better pattern?** [Open a PR](https://github.com/iamcxa/kc-claude-plugins/pulls) to share it.
+> **Docs unclear?** Use `/e2e-help --feedback "<description>"` to let us know.

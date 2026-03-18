@@ -1,18 +1,18 @@
 # CI Integration
 
-Run E2E tests in GitHub Actions using compiled flow scripts — no Claude Code required at runtime.
+Run E2E tests in GitHub Actions using compiled flow scripts -- no Claude Code required at runtime.
 
 ## Overview
 
 The pipeline provides a GHA workflow template (`templates/browser-e2e.yml`) with three jobs:
 
 ```
-auth-setup  →  browser-e2e (matrix)  →  report
+auth-setup  ->  browser-e2e (matrix)  ->  report
 ```
 
-1. **auth-setup** — runs a login flow once, uploads the browser session as an artifact
-2. **browser-e2e** — runs each flow in parallel (matrix strategy), reusing the auth session
-3. **report** — aggregates JUnit results, publishes check annotations, evaluates quarantine state
+1. **auth-setup** -- runs a login flow once, uploads the browser session as an artifact
+2. **browser-e2e** -- runs each flow in parallel (matrix strategy), reusing the auth session
+3. **report** -- aggregates JUnit results, publishes check annotations, evaluates quarantine state
 
 ## Setup
 
@@ -58,7 +58,7 @@ run: |
     --rotate
 ```
 
-> **Why copy instead of install?** The plugin is a Claude Code plugin (`private: true`), not an npm package. CI environments don't have Claude Code — they need the quarantine logic as plain Node.js files with no external dependencies.
+> **Why copy instead of install?** The plugin is a Claude Code plugin (`private: true`), not an npm package. CI environments don't have Claude Code -- they need the quarantine logic as plain Node.js files with no external dependencies.
 
 ### Step 4: Customize the workflow
 
@@ -98,7 +98,7 @@ timeout-minutes: 30
 
 If your login flow uses credentials:
 
-1. Go to **Settings → Secrets and variables → Actions** in your GitHub repo
+1. Go to **Settings -> Secrets and variables -> Actions** in your GitHub repo
 2. Add `E2E_TEST_EMAIL` and `E2E_TEST_PASSWORD`
 3. Uncomment the secrets in the workflow:
 
@@ -121,7 +121,7 @@ The quarantine system automatically manages flaky tests so they don't block merg
 1. Each compiled flow emits a metrics JSON file (`--metrics-output`) with pass/fail data per step
 2. The `report` job runs `e2e-quarantine.js` to evaluate flaky rates over a sliding window (default: 20 runs)
 3. Flows exceeding the flaky threshold (default: 20%) are **quarantined**
-4. Quarantined flows are excluded from the CI gate — their failures don't block merges
+4. Quarantined flows are excluded from the CI gate -- their failures don't block merges
 5. Flows that pass consistently (default: 3 consecutive first-attempt passes) are **recovered**
 
 ### GitHub issue lifecycle
@@ -130,7 +130,7 @@ With `--manage-issues`, the quarantine CLI:
 - **Creates** a GitHub issue when a flow is quarantined (labeled `e2e-flaky` + flow name)
 - **Closes** the issue with a recovery summary when the flow stabilizes
 - **Adds** an `e2e-stale` label if a flow stays quarantined beyond the stale threshold (default: 14 days)
-- **Deduplicates** — won't create a new issue if one already exists for that flow
+- **Deduplicates** -- won't create a new issue if one already exists for that flow
 
 ### PR comments
 
@@ -174,7 +174,219 @@ The `auth-setup` job includes a staleness check that compares mapping file dates
     # ... warns if mapping hasn't been updated since UI changes
 ```
 
-Customize `UI_PATHS` to match your project's frontend source directories. The check emits `::warning::` annotations — it doesn't fail the build.
+Customize `UI_PATHS` to match your project's frontend source directories. The check emits `::warning::` annotations -- it doesn't fail the build.
+
+---
+
+## CI Gate -- Quick Start (Minimal)
+
+The simplest setup: 3 jobs, ~60 lines. No dynamic discovery, no quarantine, no JUnit report.
+
+```yaml
+name: Browser E2E Gate
+
+on:
+  pull_request:
+
+jobs:
+  auth-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: .claude/e2e/compiled
+          sparse-checkout-cone-mode: false
+
+      - name: Install agent-browser
+        run: |
+          npm install -g agent-browser
+          agent-browser install
+
+      - name: Run login flow
+        env:
+          E2E_BASE_URL: https://your-preview-url.example.com
+          WAIT_TIMEOUT: '30'
+          AGENT_BROWSER_PROFILE: /tmp/e2e-auth-profile
+        run: |
+          mkdir -p /tmp/e2e-auth-profile
+          chmod +x .claude/e2e/compiled/gate-login-flow.sh
+          .claude/e2e/compiled/gate-login-flow.sh
+
+      - name: Upload auth session
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-auth-session
+          path: /tmp/e2e-auth-profile
+          if-no-files-found: error
+
+  browser-e2e:
+    needs: [auth-setup]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        flow: [gate-catalog-browse, gate-smoke-all-pages]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: .claude/e2e/compiled
+          sparse-checkout-cone-mode: false
+
+      - name: Install agent-browser
+        run: |
+          npm install -g agent-browser
+          agent-browser install
+
+      - name: Download auth session
+        uses: actions/download-artifact@v8
+        with:
+          name: e2e-auth-session
+          path: /tmp/e2e-auth-profile
+
+      - name: Run flow
+        env:
+          E2E_BASE_URL: https://your-preview-url.example.com
+          WAIT_TIMEOUT: '30'
+          AGENT_BROWSER_PROFILE: /tmp/e2e-auth-profile
+        run: |
+          chmod +x .claude/e2e/compiled/${{ matrix.flow }}.sh
+          .claude/e2e/compiled/${{ matrix.flow }}.sh --continue-on-error
+
+  gate:
+    needs: [auth-setup, browser-e2e]
+    if: always()
+    runs-on: ubuntu-latest
+    outputs:
+      passed: ${{ steps.check.outputs.passed }}
+    steps:
+      - name: Evaluate results
+        id: check
+        env:
+          AUTH: ${{ needs.auth-setup.result }}
+          E2E: ${{ needs.browser-e2e.result }}
+        run: |
+          PASSED=true
+          if [ "$AUTH" != "success" ]; then
+            echo "Auth setup failed: $AUTH"; PASSED=false
+          fi
+          if [ "$E2E" != "success" ] && [ "$E2E" != "skipped" ]; then
+            echo "E2E failed: $E2E"; PASSED=false
+          fi
+          echo "passed=$PASSED" >> "$GITHUB_OUTPUT"
+          [ "$PASSED" = "true" ] || exit 1
+```
+
+**Key environment variables:**
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `E2E_BASE_URL` | Target URL for compiled scripts | `http://localhost:5173` |
+| `WAIT_TIMEOUT` | Seconds for visibility/URL polls | `10` (use `30` for deploy previews) |
+| `AGENT_BROWSER_PROFILE` | Persistent browser profile directory (cookies, localStorage) | none |
+| `E2E_SCREENSHOT_DIR` | Where `_handle_failure` saves diagnostic screenshots | `/tmp/e2e-screenshots` |
+
+### Why `gate` job uses explicit output
+
+`needs.X.result` for reusable workflows is unreliable when internal jobs use `if: always()`. A succeeding `always()` job can mask upstream failures. The `gate` job provides an explicit `passed` output that callers check:
+
+```yaml
+# In caller workflow (e.g., release-gate.yaml):
+if: needs.browser-e2e.outputs.passed == 'true'
+# NOT: needs.browser-e2e.result == 'success'
+```
+
+### Why `!= success` instead of `== failure`
+
+Gate conditions must exclude known-safe states rather than match known-bad states. `== "failure"` misses `cancelled` (e.g., job timeout). Use `!= "success" && != "skipped"` to catch all failure modes.
+
+---
+
+## CI Gate -- Full Example (Reusable Workflow)
+
+For production use with dynamic flow discovery, JUnit reports, and release gate integration, see this structure:
+
+```
+reuse-browser-e2e.yaml (reusable, workflow_call)
+|- discover        -- scan .claude/e2e/compiled/gate-*.sh, build matrix JSON
+|- auth-setup      -- login flow + upload AGENT_BROWSER_PROFILE artifact
+|- browser-e2e     -- matrix of gate flows (excludes login)
+|- report          -- aggregate JUnit XML via mikepenz/action-junit-report
++-- gate            -- explicit passed output for callers
+
+release-gate.yaml (caller)
++-- browser-e2e     -- uses: reuse-browser-e2e.yaml
+    +-- auto-approve -- if: needs.browser-e2e.outputs.passed == 'true'
+```
+
+**Dynamic flow discovery** avoids hardcoding flow names in the matrix:
+
+```yaml
+# In discover job:
+FLOWS=$(ls .claude/e2e/compiled/gate-*.sh | xargs -I{} basename {} .sh \
+  | grep -v "^gate-login-flow$" \
+  | jq -R -s -c 'split("\n") | map(select(length > 0))' || echo '[]')
+```
+
+**Empty matrix workaround**: GitHub Actions crashes on `fromJSON('[]')`. Use `["__skip__"]` sentinel + early exit in run step.
+
+**Auth session sharing**: `AGENT_BROWSER_PROFILE=/tmp/e2e-auth-profile` persists cookies/localStorage. Upload as artifact in auth-setup, download in matrix jobs. Do NOT use `agent-browser session dir` -- it returns the session name (`"default"`), not a directory path.
+
+---
+
+## Headless CI Limitations
+
+`agent-browser` uses Playwright under the hood. On **GitHub Actions Linux runners** (headless Chrome), Playwright's actionability checks behave differently:
+
+| Command | Local (macOS) | CI (Linux headless) |
+|---------|---------------|---------------------|
+| `agent-browser snapshot` | Works | Works |
+| `agent-browser is visible` | Works | Always returns `false` |
+| `agent-browser fill` | Works | Returns exit 0 but doesn't fill |
+| `agent-browser click` | Works | Returns non-zero |
+| `agent-browser eval` | Works | Works |
+| `agent-browser screenshot` | Works | Works |
+
+### Workarounds (applied by the compiler)
+
+**Visibility checks**: The compiler generates `_poll_snapshot_contains` (grepping the a11y tree) instead of `_poll_visible` (Playwright's `isVisible()`). The `selectorToA11yPattern()` function converts ARIA selectors to grep patterns:
+
+| Selector | Grep pattern |
+|----------|-------------|
+| `role=textbox[name="電子郵件"]` | `textbox "電子郵件"` |
+| `role=button[name="登 入"]` | `button "登 入"` |
+| `role=heading[name=/每日看板/]` | `每日看板` (literal prefix) |
+| `role=menuitem[name=/營運概況/]` | `營運概況` |
+| `role=combobox >> nth=0` | `combobox` (role only -- may be broad) |
+
+**Fill and click** (login flows only): Replace `agent-browser fill`/`click` with `agent-browser eval` using JavaScript:
+
+```bash
+# Fill (React-compatible via nativeInputValueSetter):
+agent-browser eval "(()=>{const el=document.querySelector('input[name=\"email\"]');
+const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
+s.call(el,'user@example.com');
+el.dispatchEvent(new Event('input',{bubbles:true}));
+el.dispatchEvent(new Event('change',{bubbles:true}));})()"
+
+# Click:
+agent-browser eval "(()=>{document.querySelector('button[type=\"submit\"]').click();})()"
+```
+
+**IIFE required**: Consecutive `agent-browser eval` calls share the same JS global scope. `const` redeclaration across evals causes `SyntaxError`. Always wrap in `(()=>{...})()`.
+
+**Ant Design `Input.Password`**: Does not pass `name` attribute to inner `<input>`. Use `input[type="password"]` instead of `input[name="password"]`.
+
+### What the compiler handles vs manual patches
+
+| Aspect | Compiler handles | Manual patch needed |
+|--------|-----------------|-------------------|
+| Visibility checks (`_poll_snapshot_contains`) | All flows | -- |
+| Failure diagnostics (`_handle_failure`) | All flows | -- |
+| `WAIT_TIMEOUT`, `E2E_SCREENSHOT_DIR` | All flows | -- |
+| Fill via eval (login) | No | gate-login-flow.sh |
+| Click via eval (login) | No | gate-login-flow.sh |
+
+> **Warning**: Running `/e2e-compile gate-login-flow` will overwrite the manual eval patches. Re-apply them after recompilation. See [e2e-compile Common Mistakes](../skills/e2e-compile/SKILL.md).
 
 ---
 
@@ -185,4 +397,17 @@ Customize `UI_PATHS` to match your project's frontend source directories. The ch
 - **No auth?** Remove the `auth-setup` job entirely and drop `needs: [auth-setup]` from `browser-e2e`.
 - **Quarantine off?** Remove the quarantine steps from `report` if you want a simpler pass/fail gate.
 - **Re-compile after flow changes.** Editing a flow YAML requires re-running `/e2e-compile` and committing the updated `.sh` file.
-- **Metrics rotation.** Use `--rotate` to prevent unbounded metrics file growth — keeps 2x window per flow.
+- **Metrics rotation.** Use `--rotate` to prevent unbounded metrics file growth -- keeps 2x window per flow.
+- **Set `WAIT_TIMEOUT=30` for deploy previews.** Default 10s is too short for cold starts on Netlify/Vercel preview deploys.
+- **Always use `AGENT_BROWSER_PROFILE`** for auth session sharing across CI jobs. Don't use `agent-browser session dir`.
+
+## Related
+
+- [Commands](commands.md) -- compiled script flags and environment variables
+- [Architecture](architecture.md) -- pipeline design and file structure
+- [Recording & Evidence](recording-evidence.md) -- metrics and JUnit output
+
+---
+
+> **Found a better pattern?** [Open a PR](https://github.com/iamcxa/kc-claude-plugins/pulls) to share it.
+> **Docs unclear?** Use `/e2e-help --feedback "<description>"` to let us know.
