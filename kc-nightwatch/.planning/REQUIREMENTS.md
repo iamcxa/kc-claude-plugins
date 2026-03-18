@@ -19,10 +19,10 @@
 ### Dashboard
 
 - [x] **DASH-01**: Target cards showing name, type, north star, last run summary, health indicator
-- [ ] **DASH-02**: Per-target context menu (Run / Run dry / Edit / Chat / Remove)
+- [x] **DASH-02**: Per-target context menu (Run / Run dry / Edit / Chat / Remove)
 - [x] **DASH-03**: Global Run All / Run All (dry-run) buttons
 - [x] **DASH-04**: Schedule status bar (interval, next run countdown, last run summary)
-- [ ] **DASH-05**: Navigation between Dashboard, Runs, and Config pages
+- [x] **DASH-05**: Navigation between Dashboard, Runs, and Config pages
 
 ### Execution
 
@@ -47,7 +47,7 @@
 - [x] **HIST-01**: Run history list with status, trigger type, duration, action counts
 - [x] **HIST-02**: Run detail view with phase progress, log, action cards
 - [x] **HIST-03**: Filter runs by status (failed, with actions) and target
-- [ ] **HIST-04**: Live view during execution (auto-switch from history to live)
+- [x] **HIST-04**: Live view during execution (auto-switch from history to live)
 
 ### Config
 

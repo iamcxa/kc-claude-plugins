@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-18T02:36:19.478Z"
-last_activity: "2026-03-18 — Plan 02-01 complete: extended types, REST API routes, SSE fan-out, run-store, yaml-store extensions"
+status: in_progress
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-03-18T04:00:00.000Z"
+last_activity: "2026-03-18 — Plan 02-03 complete: Preact+HTM frontend cockpit, vendor ESM, trigger modal, SSE log stream, human-verified"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 6
-  completed_plans: 5
-  percent: 25
+  total_plans: 7
+  completed_plans: 6
+  percent: 38
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 ## Current Position
 
 Phase: 2 of 4 (Core Cockpit) — IN PROGRESS
-Plan: 1 of 4 in current phase (02-01 complete)
-Status: Phase 2 Plan 01 complete — ready for Plan 02-02 (Worker NW Memory Isolation)
-Last activity: 2026-03-18 — Plan 02-01 complete: extended types, REST API routes, SSE fan-out, run-store, yaml-store extensions
+Plan: 3 of 4 in current phase (02-03 complete — human-verified)
+Status: Phase 2 Plan 03 complete — Preact+HTM frontend cockpit built and visually verified. Ready for Plan 02-04.
+Last activity: 2026-03-18 — Plan 02-03 complete: Preact+HTM frontend cockpit, vendor ESM, trigger modal, SSE log stream, human-verified
 
-Progress: [███░░░░░░░] 25% (Phase 2)
+Progress: [████░░░░░░] 38% (Phase 2 — 3/4 plans done)
 
 ## Performance Metrics
 
@@ -44,14 +44,15 @@ Progress: [███░░░░░░░] 25% (Phase 2)
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 3/3 | 32 min | 10.7 min |
-| 02-core-cockpit | 1/4 | 6 min | 6 min |
+| 02-core-cockpit | 3/4 | 96 min | 32 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (2 min), 01-03 (15 min), 02-01 (6 min)
-- Trend: Phase 2 in progress
+- Last 5 plans: 01-02 (2 min), 01-03 (15 min), 02-01 (6 min), 02-02 (6 min), 02-03 (~90 min)
+- Trend: Phase 2 in progress — frontend plan was larger due to checkpoint + 2 fix rounds
 
 *Updated after each plan completion*
 | Phase 02-core-cockpit P02 | 6min | 2 tasks | 7 files |
+| Phase 02-core-cockpit P03 | ~90min | 3 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,9 @@ Recent decisions affecting current work:
 - [Phase 02-core-cockpit]: 02-02: ScheduleConfig.self_repair_before is required (not optional) — test configs must include it explicitly
 - [Phase 02-core-cockpit]: 02-02: __all__ target expanded inline in processNextRun (sub-runs pushed to queue, drain chain handles them)
 - [Phase 02-core-cockpit]: 02-02: ensureNwMemoryDir + writeNwJournalConfig exported from executor.ts for independent unit testing
+- [Phase 02-core-cockpit]: 02-03: Preact vendor split — single-file esm.sh bundle has duplicate 'var V'; split into core + hooks separate files
+- [Phase 02-core-cockpit]: 02-03: Bun serveStatic serves .ts with text/plain MIME — must use custom Bun.Transpiler route with Content-Type: application/javascript
+- [Phase 02-core-cockpit]: 02-03: No-bundler architecture validated — import maps + vendored ESM + Bun transpile = full Preact app, zero build tooling
 
 ### Pending Todos
 
@@ -91,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T02:36:19.475Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-03-18T04:00:00.000Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
