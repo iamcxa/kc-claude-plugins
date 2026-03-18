@@ -181,6 +181,22 @@ test('resolve: element without css_selector has no cssSelector in operands', () 
   assert.equal(fillStep.operands.cssSelector, undefined, 'cssSelector should be undefined when not in mapping');
 });
 
+test('resolve: screenshot: true passes through to resolved step', () => {
+  const flow = {
+    name: 'test-screenshot',
+    steps: [
+      { id: 'nav', type: 'navigate', action: 'Navigate to /login', screenshot: true },
+      { id: 'fill', type: 'fill', action: "Fill email_input with 'x@y.z' on login" },
+    ],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, []);
+  const navStep = result.resolved.steps.find(s => s.id === 'nav');
+  assert.equal(navStep.screenshot, true, 'screenshot should be true');
+  const fillStep = result.resolved.steps.find(s => s.id === 'fill');
+  assert.equal(fillStep.screenshot, undefined, 'screenshot should be undefined when not set');
+});
+
 test('resolve: missing element returns descriptive error', () => {
   const result = resolve(MISSING_ELEMENT_FLOW, SIMPLE_MAPPING);
   const missingErr = result.errors.find(e =>
