@@ -113,6 +113,36 @@ This flow mixes three step types: browser actions (steps 1, 3), CLI execution (s
 
 For a complete real-world example with environment setup and multi-phase verification, see [Cross-Boundary Testing](cross-boundary-testing.md).
 
+### Cross-site flows
+
+When a test spans multiple apps, use `sites:` instead of `mapping:`:
+
+```yaml
+# .claude/e2e/flows/admin-portal-sync.yaml
+name: Admin Portal Sync
+tags: [cross-site]
+sites:
+  admin:
+    mapping: admin-panel
+  portal:
+    mapping: customer-portal
+
+steps:
+  - id: admin-create-item
+    site: admin
+    action: Click create_button on items-page
+    expect: ["text 'Created' on items-page"]
+
+  - id: portal-verify-item
+    site: portal
+    action: Navigate to /items
+    expect: ["items_table visible on items-page"]
+```
+
+Every step requires `site:`. Run with `--all-sites`, `--suite`, or `--site <alias>`.
+
+For the complete guide, see [Multi-Site Testing](multi-site-testing.md). For organizing flows into suites, see [Test Suites](suites.md).
+
 ## Step 3: Or, let the walkthrough generate flows for you
 
 If you don't want to write YAML by hand:
@@ -202,3 +232,8 @@ The user journey itself changed — new pages, different steps, removed features
    ```
    /e2e-test login-flow
    ```
+
+---
+
+> **Need help?** `/e2e-help writing-tests` for an interactive guide.
+> **Found a better pattern?** [Open a PR](https://github.com/iamcxa/kc-claude-plugins/pulls) to update this doc.

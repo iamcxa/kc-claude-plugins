@@ -8,15 +8,16 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 
 ## Architecture
 
-**Skills** (7) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
+**Skills** (9) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
 
-**Agents** (6) run as subagents for heavy work, keeping verbose data out of main context:
+**Agents** (7) run as subagents for heavy work, keeping verbose data out of main context:
 - `e2e-mapper` — explores pages, generates YAML mappings
 - `e2e-flow-writer` — analyzes codebase + mapping to generate flow YAML (no browser)
 - `e2e-flow-verifier` — runs flows in browser, auto-repairs selectors/steps, produces reports
 - `e2e-test-runner` — executes flow files, validates expectations
 - `e2e-trace-analyzer` — parses Playwright trace.zip for API failures and console errors
 - `e2e-media-processor` — blank-frame-trimmed GIF, MP4 video, thumbnail from screenshots/recordings
+- `e2e-doc-scanner` — scans skills/agents vs docs for gaps, writes doc updates
 
 ```
 skills/e2e-dispatch/     → router (auth gate + skill selection)
@@ -26,7 +27,9 @@ skills/e2e-walkthrough/  → interactive exploration (main context)
 skills/e2e-flow/         → generate & verify flows → dispatches flow-writer + flow-verifier + trace-analyzer
 skills/e2e-compile/      → compile flow YAML to standalone bash test scripts (requires npm deps)
 skills/e2e-skill-ops/    → meta-skill for debugging/maintaining the pipeline itself
-agents/                  → subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor)
+skills/e2e-help/         → interactive help guide, topic deep-dive, feedback collection
+skills/e2e-doc-sync/     → documentation gap scanner & writer → dispatches e2e-doc-scanner agent
+agents/                  → subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor, e2e-doc-scanner)
 hooks/                   → E2E pipeline hooks (SessionStart context + pre-commit check + plan E2E check)
 references/              → agent-browser CLI commands, common browser testing patterns, knowledge capture framework
 ```
@@ -141,16 +144,31 @@ Rule: if a layer has the tools to attempt a step, it MUST attempt it (best-effor
 
 ## Documentation Maintenance
 
+### Pre-Publish Gate (read by `/kc-marketplace-sync`)
+
+**Before syncing this plugin to the marketplace, the following gate MUST pass:**
+
+1. Run `/e2e-doc-sync --check` — reports gaps between skills/agents and docs
+2. If gaps found → run `/e2e-doc-sync --fix` to resolve, or acknowledge as intentional
+3. Only proceed with `/kc-marketplace-sync` after docs are in sync
+
+This gate exists because SKILL.md definitions are authoritative but not user-facing. Publishing a version where docs lag behind skills means users can't discover features.
+
+### Manual Checklist
+
 When adding, removing, or renaming skills or agents, update these files:
 
-1. `README.md` — quick start commands, pipeline summary
+1. `README.md` — quick start commands, pipeline summary, docs table
 2. `docs/commands.md` — command table with all flags
 3. `docs/architecture.md` — skill→agent table and plugin file tree
 4. `docs/getting-started.md` — step-by-step guide
 5. `docs/writing-tests.md` and `docs/recording-evidence.md` — check for stale references
-5b. `docs/common-patterns.md` — external checkpoint patterns, combined flow examples
+5b. `docs/multi-site-testing.md` and `docs/suites.md` — cross-site and suite features
+5c. `docs/common-patterns.md` — external checkpoint patterns, combined flow examples
 6. `.claude-plugin/plugin.json` — bump version
 7. `CLAUDE.md` (this file) — Architecture section counts, directory listing, Recording Defaults table
+
+**Prefer `/e2e-doc-sync --fix` over the manual checklist** — it scans the same items automatically and catches gaps the checklist misses (e.g., new flags added to an existing skill).
 
 ## Recording Defaults
 

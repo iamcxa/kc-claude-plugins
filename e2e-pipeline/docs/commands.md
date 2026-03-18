@@ -7,7 +7,9 @@
 | `/e2e-map` | Create or update UI element mappings |
 | `/e2e-test <flow>` | Run a specific E2E test flow |
 | `/e2e-test --tag smoke` | Run all flows tagged with `smoke` |
-| `/e2e-test --suite <name>` | Run a named test suite |
+| `/e2e-test --suite <name>` | Run a named [test suite](suites.md) |
+| `/e2e-test --all-sites` | Auto-discover all mappings and run flows on each site ([details](multi-site-testing.md#auto-discover-all-sites)) |
+| `/e2e-test --site <alias>` | Run only one site's steps from a [cross-site flow](multi-site-testing.md#filter-by-site-site-alias) |
 | `/e2e-test <flow> --video` | Run flow with video recording + GIF |
 | `/e2e-test <flow> --pr 940` | Run flow, record, post results to PR |
 | `/e2e-walkthrough` | Interactive walkthrough (records by default) |
@@ -21,6 +23,9 @@
 | `/e2e-compile --all --coverage` | Compile all + produce element coverage report |
 | `/e2e-dispatch` | Unified entry point (routes to the right skill) |
 | `/e2e-skill-ops` | Debug, maintain, or evaluate E2E skills |
+| `/e2e-help` | Interactive help guide — topics, examples, feedback |
+| `/e2e-help <topic>` | Deep dive into a topic (e.g., `cross-site`, `suites`, `checkpoints`) |
+| `/e2e-doc-sync` | Scan docs for gaps against skills/agents, write updates |
 
 ## CLI Tools (Node.js)
 
@@ -83,6 +88,16 @@ node bin/e2e-quarantine.js \
 5. Optionally posts a quarantine status table as a PR comment
 
 See [CI Integration](ci-integration.md) for how this fits into a GitHub Actions workflow.
+
+### Multi-Site & Suite Flags
+
+| Flag | Description | Details |
+|------|-------------|---------|
+| `--all-sites` | Discover all mappings and run applicable flows on each site. Presents execution plan before running. Session isolation automatic. | [Multi-Site Testing](multi-site-testing.md) |
+| `--site <alias>` | Run only the specified site's steps from a cross-site flow. Cannot combine with `--all-sites` or `--suite`. | [Cross-site filter](multi-site-testing.md#filter-by-site-site-alias) |
+| `--suite <name>` | Run a named suite from `.claude/e2e/suites/<name>.yaml`. Resolves flows and site assignments per suite definition. | [Test Suites](suites.md) |
+
+**Mutual exclusivity**: `--site`, `--all-sites`, and `--suite` are mutually exclusive — use only one.
 
 ## Flow Step Types
 

@@ -37,12 +37,14 @@ No args or ambiguous request: present the routing menu and ask user to choose:
 > 4. `--walk` — Interactive walkthrough / explore UI
 > 5. `--analyze` — Analyze a Playwright trace file
 > 6. `--ops` — Debug, maintain, or evaluate E2E skills
+> 7. `--help` — Interactive help guide & topic deep-dive
+> 8. `--doc-sync` — Scan docs for gaps, write updates
 >
 > Which operation? (or describe what you want to do)
 
 **Routing priority** (when user intent matches multiple routes):
 1. Explicit `--flag` → use that route directly
-2. Natural language with clear action verb → match: "test" → `--test`, "record/map" → `--map`, "generate flow/verify flow/smoke test" → `--flow`, "walk/explore/browse" → `--walk`, "analyze/trace" → `--analyze`, "debug/fix skill" → `--ops`
+2. Natural language with clear action verb → match: "test" → `--test`, "record/map" → `--map`, "generate flow/verify flow/smoke test" → `--flow`, "walk/explore/browse" → `--walk`, "analyze/trace" → `--analyze`, "debug/fix skill" → `--ops`, "help/how/what commands" → `--help`, "doc/sync docs/update docs" → `--doc-sync`
 3. Ambiguous → present the menu above and ask user to clarify
 
 **Unknown command** (e.g., `--deploy`, `--something`): respond with "Unknown e2e operation. Available operations:" + the menu above.
@@ -115,6 +117,12 @@ Present summary when agent returns.
 ### --ops
 Invoke `Skill: "e2e-skill-ops"` with --debug/--maintain/--add-feature/--evaluate mode.
 
+### --help
+Invoke `Skill: "e2e-help"` with topic name or --feedback arguments.
+
+### --doc-sync
+Invoke `Skill: "e2e-doc-sync"` with --fix or --check arguments.
+
 ## Background vs Foreground
 
 | Route | Default | Override |
@@ -126,6 +134,8 @@ Invoke `Skill: "e2e-skill-ops"` with --debug/--maintain/--add-feature/--evaluate
 | `--walk` | Foreground | — |
 | `--analyze` | Background | `--fg` for foreground |
 | `--ops` | Foreground | — |
+| `--help` | Foreground | — |
+| `--doc-sync` | Foreground | — |
 
 Background = `run_in_background: true` on Agent dispatch. Main context free for other work.
 Foreground = wait for completion, interactive.
@@ -152,3 +162,6 @@ Direct invocation of `/e2e-test`, `/e2e-map`, `/e2e-walkthrough`, `/e2e-skill-op
 | Debug skill issue | `/e2e-dispatch --ops --debug` |
 | Record a test run | `/e2e-dispatch --test login-flow --video` |
 | Walkthrough no video | `/e2e-dispatch --walk admin-panel --no-video` |
+| Get help on suites | `/e2e-dispatch --help suites` |
+| Report doc gap | `/e2e-dispatch --help --feedback "suite subset"` |
+| Sync docs after changes | `/e2e-dispatch --doc-sync --fix` |
