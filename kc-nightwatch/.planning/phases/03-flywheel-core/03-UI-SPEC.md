@@ -43,7 +43,7 @@ All tokens come from `index.html :root` block. Phase 3 adds two new semantic tok
 | `--error` | `#f85149` | Rejected feedback, failed status, thumbs-down active state, destructive buttons |
 | `--warn` | `#d29922` | Queued/timeout status, inline config warnings |
 | `--btn-primary` | `#238636` | Primary action buttons (Start Run, Save Config, Send) |
-| `--btn-secondary` | `#21262d` | Secondary buttons (Cancel, Close, Edit toggle off) |
+| `--btn-secondary` | `#21262d` | Secondary buttons (Discard Changes, Close, Edit toggle off) |
 | `--btn-danger` | `#da3633` | Remove Target confirmation button |
 | `--font-body` | system-ui stack | All UI text |
 | `--font-mono` | SF Mono / Fira Code | YAML editor textarea, log stream |
@@ -65,6 +65,7 @@ Declared values (must be multiples of 4):
 |-------|-------|-------|
 | xs | 4px | Icon gaps, feedback button inner padding, status dot size (8px = 2×xs) |
 | sm | 8px | Compact element padding, list item gaps, label-to-field gap |
+| sm-plus | 12px | BaselineCard padding, ChatMessage bubble padding (8px 12px) |
 | md | 16px | Default content padding, dialog section spacing, drawer internal padding |
 | lg | 24px | Dialog padding, section separation, wizard step padding |
 | xl | 32px | Major layout gaps (not used in current Phase 2 components) |
@@ -79,7 +80,7 @@ Exceptions:
 - Border radius: 6px (inputs, buttons), 8px (dialogs, cards), 4px (badges, small chips)
 - Status dot: 8px × 8px circle — established pattern
 
-Source: Extracted from existing component inline styles (sidebar.ts, trigger-dialog.ts, target-detail.ts).
+Source: Extracted from existing component inline styles (sidebar.ts, trigger-dialog.ts, target-detail.ts). 12px added as `sm-plus` token to cover BaselineCard and ChatMessage usages — it is a mid-point between sm and md, distinct enough to warrant a named token.
 
 ---
 
@@ -89,14 +90,14 @@ All sizes sourced from existing codebase patterns. Phase 3 does not add new size
 
 | Role | Size | Weight | Line Height | Used for |
 |------|------|--------|-------------|----------|
-| Body | 14px | 400 | 1.5 | Default text, run logs, YAML editor, chat messages |
-| Label | 12px | 600 | 1.4 | Section labels, status badges, type chips, tab labels, field labels |
+| Body | 14px | 400 | 1.5 | Default text, run logs, YAML editor (mono face), chat messages, assessment body text |
+| Label | 12px | 600 | 1.4 | Section labels, status badges, type chips, tab labels, field labels, feedback buttons |
 | Heading | 16px | 400–600 | 1.3 | Dialog titles (h3), target name in detail view |
 | Subheading | 18px | 400 | 1.3 | Section headers (h2) — e.g., target name in TargetDetail |
 
 Source: `index.html` global styles + component inline styles. Pattern confirmed: 12/14/16/18px used across Phase 2.
 
-**YAML editor textarea**: `font-family: var(--font-mono); font-size: 13px; line-height: 1.6` — mono exception for code readability.
+**YAML editor textarea**: `font-family: var(--font-mono); font-size: 14px; line-height: 1.6` — uses Body size (14px). The monospace font face already provides sufficient visual differentiation from prose text; a separate size level is not needed.
 
 ---
 
@@ -173,7 +174,7 @@ Source: CONTEXT.md locked decisions + existing codebase color usage patterns.
 - Expanded: toggle on click — shows strategy rationale block + reflection block + feedback buttons
 - Strategy section header: `font-size: 12px; color: var(--muted); font-weight: 600` — "Strategy"
 - Reflection section header: same style — "Reflection"
-- Assessment body text: `font-size: 13px; line-height: 1.6; color: var(--text)`
+- Assessment body text: `font-size: 14px; line-height: 1.5; color: var(--text)`
 - Feedback buttons: inline after reflection text, right-aligned
 - Feedback button sizes: `padding: 3px 8px; font-size: 12px; border-radius: 4px`
 - Thumbs-up active: `background: var(--success); color: #fff; border-color: var(--success)`
@@ -188,8 +189,8 @@ Source: CONTEXT.md locked decisions + existing codebase color usage patterns.
 - Background: `var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 12px`
 - Header label: `font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 8px` — "Indicator Baselines"
 - Row per indicator: `display: flex; align-items: center; gap: 8px; padding: 4px 0`
-- Indicator name: `font-size: 13px; color: var(--text); flex: 1`
-- Current value: `font-size: 13px; font-weight: 600; color: var(--text)`
+- Indicator name: `font-size: 14px; color: var(--text); flex: 1`
+- Current value: `font-size: 14px; font-weight: 600; color: var(--text)`
 - Trend arrow: ↑ = `color: var(--success)`, ↓ = `color: var(--error)`, → = `color: var(--muted)`
 - No border between rows (compact list, border-bottom only if >5 indicators)
 
@@ -203,10 +204,10 @@ Source: CONTEXT.md locked decisions + existing codebase color usage patterns.
 
 #### YAML Editor (per tab)
 
-- Toolbar above textarea: `[Edit]` button (read-only) or `[Validate] [Cancel]` (editing)
+- Toolbar above textarea: `[Edit]` button (read-only) or `[Validate] [Discard Changes]` (editing)
 - Read-only state: textarea `disabled` attribute + `opacity: 0.7; cursor: default`
 - Edit mode: textarea fully interactive, `border-color: var(--accent)`
-- YAML textarea: `font-family: var(--font-mono); font-size: 13px; line-height: 1.6; width: 100%; min-height: 400px; resize: vertical; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 12px`
+- YAML textarea: `font-family: var(--font-mono); font-size: 14px; line-height: 1.6; width: 100%; min-height: 400px; resize: vertical; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 12px`
 - Warning badges: amber pill `background: rgba(210,153,34,0.2); color: var(--warn); border: 1px solid var(--warn); border-radius: 4px; font-size: 11px; padding: 2px 6px` — shown inline before the textarea
 
 #### 4-Step Validation Flow (inside config editor, inline — not wizard)
@@ -217,7 +218,7 @@ Step indicator: `font-size: 12px; color: var(--muted)` — "Step 1 of 4: Syntax 
 - Step 3 (diff): render line diff below textarea — `+` lines `color: var(--success)`, `-` lines `color: var(--error)`, prefix in mono
 - Step 4 (confirm): show `[Confirm Save]` button in `var(--btn-primary)` + estimated cost displayed
 
-Error banner: `background: rgba(248,81,73,0.1); border: 1px solid var(--error); border-radius: 6px; padding: 8px 12px; font-size: 13px; color: var(--error); margin-top: 8px`
+Error banner: `background: rgba(248,81,73,0.1); border: 1px solid var(--error); border-radius: 6px; padding: 8px 12px; font-size: 14px; color: var(--error); margin-top: 8px`
 
 #### Add Target Wizard (4-step modal)
 
@@ -233,7 +234,11 @@ Error banner: `background: rgba(248,81,73,0.1); border: 1px solid var(--error); 
 - Same overlay as TriggerDialog
 - Dialog: `max-width: 360px`
 - Body: "Remove [target name]? This cannot be undone." in `var(--text)`
-- Actions: `[Cancel]` secondary + `[Remove]` in `var(--btn-danger)` style (`background: var(--btn-danger); color: #fff`)
+- Actions: `[Stay]` secondary + `[Remove]` in `var(--btn-danger)` style (`background: var(--btn-danger); color: #fff`)
+
+#### Dashboard Screen — Primary Focal Point
+
+The active target card in the sidebar is the primary visual anchor of the Dashboard screen. It draws the eye first via the `--accent` left-border highlight and background tint (`rgba(88,166,255,0.1)`), establishing which target's run detail is shown in the main content area.
 
 ---
 
@@ -273,10 +278,10 @@ Error banner: `background: rgba(248,81,73,0.1); border: 1px solid var(--error); 
 | Config Targets tab | "Targets" |
 | Config Safety tab | "Safety" |
 | Edit unlock button | "Edit" |
-| Cancel edit button | "Cancel" |
+| Discard edit button | "Discard Changes" |
 | Validate button | "Validate" |
 
-Source: CONTEXT.md specifics + defaults matched to existing project language ("Never mind" in TriggerDialog → matched register here).
+Source: CONTEXT.md specifics + defaults matched to existing project language ("Never mind" in TriggerDialog → matched register here). "Cancel" replaced with "Discard Changes" — specific verb + noun per copywriting contract rules.
 
 ---
 
@@ -314,6 +319,8 @@ Source: CONTEXT.md specifics + defaults matched to existing project language ("N
 ## Accessibility
 
 - Chat drawer: `role="dialog"` `aria-label="NW-Claude chat"` `aria-modal="false"` (slide-over, not blocking)
+- Chat drawer toggle button: `aria-label="Open NW-Claude chat"` — distinguishes toggle from drawer content label
+- Chat reset button: `aria-label="Reset conversation"` — icon-only button requires explicit label
 - Add Target wizard: `role="dialog"` `aria-modal="true"` `aria-labelledby="wizard-title"`
 - Remove confirm dialog: `role="alertdialog"` `aria-modal="true"`
 - Feedback buttons: `aria-label="Accept signal"` / `aria-label="Reject signal"` + `aria-pressed` state
@@ -351,11 +358,16 @@ No third-party component registries. All components are hand-written Preact + HT
 | 4-step validation flow | CONTEXT.md locked |
 | Wizard 4-step: TriggerDialog pattern | CONTEXT.md + code_context |
 | All CSS tokens (--bg, --panel, etc.) | `app/frontend/index.html` :root |
-| Font sizes 12/13/14/16/18px | Extracted from Phase 2 components |
+| Font sizes 12/14/16/18px | Extracted from Phase 2 components |
 | Button border-radius 6px, dialog 8px | `trigger-dialog.ts`, `index.html` |
 | "+1"/"-1" text labels (not emoji) | Claude's discretion — no-bundler constraint |
 | Inline validation (not wizard-style) | Claude's discretion — less context-switching |
-| Mono 13px for YAML | Claude's discretion — readability at terminal density |
+| YAML editor uses 14px body size | Checker fix — mono font face differentiates code from prose; no separate size needed |
+| 12px as `sm-plus` scale token | Checker fix — BaselineCard padding + ChatMessage padding both use 12px |
+| "Discard Changes" (not "Cancel") | Checker fix — specific verb + noun required; "Cancel" blocked as generic label |
+| Chat toggle aria-label | Checker fix — icon-only button requires explicit label |
+| Reset button aria-label | Checker fix — icon-only button requires explicit label |
+| Dashboard primary focal point declared | Checker fix — selected target card in sidebar is visual anchor |
 | `--chat-user-bg` / `--chat-nw-bg` new tokens | Claude's discretion — visual separation in chat |
 
 ---
