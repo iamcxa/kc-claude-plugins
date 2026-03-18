@@ -95,7 +95,7 @@ If agent-browser is not installed, stop and report: "agent-browser is required f
 Read accumulated patterns to inform walkthrough execution:
 
 ```
-Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md
+Read → ${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md
 ```
 
 Use loaded patterns to:
@@ -232,7 +232,7 @@ Checklist items map to procedure steps below. Items 5-6 are both from procedure 
 7. **Flow YAML auto-generation (MANDATORY)** (checklist item 9): Always auto-generate — never ask. Auto-name: `walkthrough-<timestamp>-<first-page>.yaml`. Write to `.claude/e2e/flows/`. Cross-site: use `sites:` instead of `mapping:` when `--sites` was used.
 8. **PR/Issue posting** (checklist item 10): If `--pr` provided, ask user to confirm → commit + push screenshots → `gh pr comment` with `pr-summary.md`. See [reference.md](./reference.md) § PR/Issue Posting.
 9. **Mapping self-repair** (checklist item 11): Present discrepancy list, human approves, patch mapping. 3+ stale on same page → recommend `/e2e-map --page`
-10. **D1 Knowledge capture** (checklist item 12): Evaluate walkthrough findings for skill-level patterns. Read `${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md`. Scan anomalies, selector discoveries, and framework behaviors for general patterns. Auto-append to `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. Skip if zero anomalies AND no novel selector/framework observations. Notify: "Appended pattern: [title]"
+10. **D1 Knowledge capture** (checklist item 12): Evaluate walkthrough findings for skill-level patterns. Read `${CLAUDE_PLUGIN_ROOT}/references/knowledge-capture.md`. Scan anomalies, selector discoveries, and framework behaviors for general patterns. Auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Skip if zero anomalies AND no novel selector/framework observations. Notify: "Appended pattern: [title]"
 11. **Browser handoff** (checklist item 13, BLOCKING: report + flow YAML must be written first): Present summary table, then numbered action menu. Do NOT close browser — user may need to inspect final state.
 
 **Post-completion menu** (always present, numbered):

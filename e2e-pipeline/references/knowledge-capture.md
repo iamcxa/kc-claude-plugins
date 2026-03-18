@@ -8,9 +8,9 @@ General E2E testing patterns discovered during execution. Written to the plugin'
 
 | Insight type | Target |
 |-------------|--------|
-| New testing pattern | `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` |
+| New testing pattern | `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md` |
 | Enhancement to existing reference | The specific reference file (e.g., add to `common-patterns.md`) |
-| New agent-browser gotcha | `${CLAUDE_PLUGIN_ROOT}/reference/commands.md` |
+| New agent-browser gotcha | `${CLAUDE_PLUGIN_ROOT}/references/commands.md` |
 
 **Write mode**: Auto-append. Briefly notify user: "Appended pattern to learned-patterns.md: [title]"
 

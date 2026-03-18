@@ -55,10 +55,10 @@ Every mode enforces these. Skipping any one is a violation.
 
 | # | Rule | Why |
 |---|------|-----|
-| 1 | **Search before diagnose** — query journal + `.claude/e2e/reports/skill-quality-findings.md` + MEMORY.md + `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` + `.claude/e2e-lessons.md` for prior findings. If `skill-quality-findings.md` doesn't exist, create it with a `# E2E Skill Quality Findings` heading. | Prevents re-discovering known issues |
+| 1 | **Search before diagnose** — query journal + `.claude/e2e/reports/skill-quality-findings.md` + MEMORY.md + `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md` + `.claude/e2e-lessons.md` for prior findings. If `skill-quality-findings.md` doesn't exist, create it with a `# E2E Skill Quality Findings` heading. | Prevents re-discovering known issues |
 | 2 | **3-skill impact scan** — check all files in the Impact Matrix below | Prevents silent drift between skills |
 | 3 | **Verify after fix** — run the failing scenario (or subagent pressure test) after changes | Prevents "fix and forget" |
-| 4 | **Write back findings (D1+D2)** — append to `skill-quality-findings.md` + journal. **D1**: general patterns → auto-append to `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. **D2** (--evaluate mode): project-specific patterns → gated write to `.claude/e2e-lessons.md` or project `CLAUDE.md` (see `${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md`). | Prevents session amnesia + accumulates knowledge |
+| 4 | **Write back findings (D1+D2)** — append to `skill-quality-findings.md` + journal. **D1**: general patterns → auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. **D2** (--evaluate mode): project-specific patterns → gated write to `.claude/e2e-lessons.md` or project `CLAUDE.md` (see `${CLAUDE_PLUGIN_ROOT}/references/knowledge-capture.md`). | Prevents session amnesia + accumulates knowledge |
 | 5 | **Propose, don't ship SKILL.md changes** — present skill file changes for human approval before writing. Mapping/flow fixes can be applied directly. | Skills are shared infrastructure |
 
 ## Impact Matrix (mandatory scan)

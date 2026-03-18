@@ -36,7 +36,7 @@ Resolve browser E2E test flows and dispatch the `e2e-test-runner` agent for exec
 Read accumulated patterns to inform test execution and result analysis:
 
 ```
-Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md
+Read → ${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md
 Read → .claude/e2e-lessons.md (if exists — project-specific E2E lessons)
 ```
 
@@ -504,7 +504,7 @@ runs:
 
 After presenting results, evaluate findings for knowledge capture.
 
-Read → `${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md`
+Read → `${CLAUDE_PLUGIN_ROOT}/references/knowledge-capture.md`
 
 ### D1 candidates (auto-append)
 
@@ -514,7 +514,7 @@ Scan test results for general patterns:
 - Agent-browser behavior discoveries
 - Flow design patterns that improve reliability
 
-Auto-append to `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. Notify: "Appended pattern: [title]"
+Auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "Appended pattern: [title]"
 
 ### D2 candidates (gated — e2e-test only)
 

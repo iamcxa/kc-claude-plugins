@@ -23,6 +23,7 @@ description: |
   </example>
 tools: Read, Write, Grep, Glob
 model: inherit
+color: green
 ---
 
 # E2E Doc Scanner Agent

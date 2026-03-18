@@ -59,7 +59,7 @@ Any 2xx or 3xx HTTP response means the server is running.
 Read accumulated patterns to inform mapping exploration:
 
 ```
-Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md
+Read → ${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md
 ```
 
 Use loaded patterns to:
@@ -202,7 +202,7 @@ If other mappings found, suggest multi-site commands (`/e2e-test --all-sites`, e
 
 After finalizing the mapping, evaluate discoveries for skill-level knowledge capture.
 
-Read → `${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md`
+Read → `${CLAUDE_PLUGIN_ROOT}/references/knowledge-capture.md`
 
 ### D1 candidates (auto-append)
 
@@ -212,7 +212,7 @@ Scan mapping exploration for general patterns:
 - Framework-specific route discovery patterns
 - Codebase analysis shortcuts that yielded better coverage
 
-Auto-append to `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. Notify: "Appended pattern: [title]"
+Auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "Appended pattern: [title]"
 
 ### Skip conditions
 
