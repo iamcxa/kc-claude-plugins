@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Phase 2 approved — IPC heartbeat fix applied, all human checks passed, 104 tests green
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-18T08:01:16.081Z"
+stopped_at: Completed 03-flywheel-core/03-01-PLAN.md — Chat system, global SSE, ChatDrawer, auto-brief
+last_updated: "2026-03-18T10:17:11.957Z"
 last_activity: "2026-03-18 — Phase 02 approved: IPC heartbeat fix (c582fae), all 5 human checks passed"
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 10
+  completed_plans: 7
   percent: 50
 ---
 
@@ -53,6 +53,7 @@ Progress: [█████░░░░░] 50% (Phase 2 complete, Phase 3 next)
 *Updated after each plan completion*
 | Phase 02-core-cockpit P02 | 6min | 2 tasks | 7 files |
 | Phase 02-core-cockpit P03 | ~90min | 3 tasks | 17 files |
+| Phase 03-flywheel-core P01 | 16min | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,9 @@ Recent decisions affecting current work:
 - [Phase 02-core-cockpit]: 02-03: Preact vendor split — single-file esm.sh bundle has duplicate 'var V'; split into core + hooks separate files
 - [Phase 02-core-cockpit]: 02-03: Bun serveStatic serves .ts with text/plain MIME — must use custom Bun.Transpiler route with Content-Type: application/javascript
 - [Phase 02-core-cockpit]: 02-03: No-bundler architecture validated — import maps + vendored ESM + Bun transpile = full Preact app, zero build tooling
+- [Phase 03-flywheel-core]: 03-01: Anthropic SDK as default chat backend — claude-haiku-4-5 for cost/speed balance; briefChat injects RunSummary into system prompt
+- [Phase 03-flywheel-core]: 03-01: Fire-and-forget POST /message + SSE GET /stream — decouples HTTP lifecycle from LLM streaming
+- [Phase 03-flywheel-core]: 03-01: Global subscribers Set<SSEWriter> in ipc.ts — mirrors run-scoped SSE fan-out pattern from Phase 2
 
 ### Pending Todos
 
@@ -95,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T08:01:16.075Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-flywheel-core/03-CONTEXT.md
+Last session: 2026-03-18T10:17:11.954Z
+Stopped at: Completed 03-flywheel-core/03-01-PLAN.md — Chat system, global SSE, ChatDrawer, auto-brief
+Resume file: None

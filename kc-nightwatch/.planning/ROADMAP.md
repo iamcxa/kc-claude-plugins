@@ -98,5 +98,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-03-18 |
 | 2. Core Cockpit | 3/3 | Complete | 2026-03-18 |
-| 3. Flywheel Core | 0/4 | Not started | - |
+| 3. Flywheel Core | 1/4 | In Progress|  |
 | 4. Full Flywheel | 0/2 | Not started | - |
