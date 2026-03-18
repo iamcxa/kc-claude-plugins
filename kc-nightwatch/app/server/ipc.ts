@@ -45,6 +45,25 @@ export function closeRunSubscribers(runId: string): void {
 }
 
 // ============================================================
+// Global SSE broadcast (Phase 3: auto-brief, config-changed)
+// ============================================================
+const globalSubscribers = new Set<SSEWriter>()
+
+export function subscribeGlobal(writer: SSEWriter, signal: AbortSignal): () => void {
+  globalSubscribers.add(writer)
+  const cleanup = () => globalSubscribers.delete(writer)
+  signal.addEventListener('abort', cleanup)
+  return cleanup
+}
+
+export function broadcastGlobal(event: string, data: unknown): void {
+  const payload = JSON.stringify(data)
+  for (const writer of globalSubscribers) {
+    void writer.writeSSE({ data: payload, event })
+  }
+}
+
+// ============================================================
 // IPC message handler
 // ============================================================
 export function handleWorkerMessage(msg: WorkerToServer) {
@@ -64,6 +83,7 @@ export function handleWorkerMessage(msg: WorkerToServer) {
       break
     case 'run:completed':
       closeRunSubscribers(msg.run_id)
+      broadcastGlobal('brief-ready', { run_id: msg.run_id, summary: msg.summary })
       log.info({ component: 'server', msg: `Run ${msg.run_id} completed` })
       break
     case 'run:failed':
