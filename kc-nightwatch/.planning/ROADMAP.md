@@ -65,13 +65,14 @@ Plans:
   4. User thumbs-up or thumbs-down an action card; feedback is stored per signal; PR merges are collected as implicit feedback; reject rate per indicator adjusts confidence thresholds; feedback trends are written to the NW journal
   5. Run detail shows Phase 3.5 pre-action strategy and Phase 4.5 post-action reflection per action card; Phase 0.5 indicator baselines with quantified values appear in run detail with trend direction
   6. Orchestrator skill produces assessment and baseline data during runs; executor parses structured summary.yaml output
-**Plans**: 4 plans
+**Plans**: 5 plans
 
 Plans:
 - [x] 03-01-PLAN.md — Phase 3 shared types + global SSE broadcast + chat session manager (Anthropic SDK) + chat routes + ChatDrawer UI + auto-brief wiring (completed 2026-03-18)
 - [x] 03-02-PLAN.md — Config validation service (4-step flow) + config API routes + YAML editor page (tabs, edit lock, warnings) + AddTargetWizard + Edit/Remove target (completed 2026-03-18)
 - [x] 03-03-PLAN.md — Feedback store + feedback API routes + ActionCard component with feedback buttons + implicit feedback collector (PR polling) + reject rate calibration (completed 2026-03-18)
-- [ ] 03-04-PLAN.md — Orchestrator skill phases (0.5, 3.5, 4.5) + executor summary parsing + Slack assessment + BaselineCard + ActionCard assessment + human verification
+- [x] 03-04-PLAN.md — Orchestrator skill phases (0.5, 3.5, 4.5) + executor summary parsing + Slack assessment + BaselineCard + ActionCard assessment + human verification (completed 2026-03-18)
+- [ ] 03-05-PLAN.md — Gap closure: wire orphaned feedback collector + trend writer into executor.ts, update REQUIREMENTS.md status
 
 ### Phase 4: Full Flywheel
 **Goal**: The entire nightwatch state is queryable and actionable from any Claude session via MCP, and flywheel health is visible as charts and trends — completing the closed-loop improvement system
@@ -98,5 +99,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-03-18 |
 | 2. Core Cockpit | 3/3 | Complete | 2026-03-18 |
-| 3. Flywheel Core | 4/4 | Complete   | 2026-03-18 |
+| 3. Flywheel Core | 4/5 | Gap closure | 2026-03-18 |
 | 4. Full Flywheel | 0/2 | Not started | - |
