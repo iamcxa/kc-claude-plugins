@@ -30,6 +30,13 @@ sha256() {
   fi
 }
 
+# Detect current compiler version from plugin package.json
+plugin_root="${CLAUDE_PLUGIN_ROOT:-}"
+current_compiler_version=""
+if [ -n "$plugin_root" ] && [ -f "$plugin_root/package.json" ]; then
+  current_compiler_version=$(grep '"version"' "$plugin_root/package.json" 2>/dev/null | sed 's/.*"version".*"\(.*\)".*/\1/' || true)
+fi
+
 stale=()
 
 for script in "$compiled_dir"/*.sh; do
@@ -37,6 +44,8 @@ for script in "$compiled_dir"/*.sh; do
   stored_hash=$(grep "^# SHA-256:" "$script" 2>/dev/null | sed 's/^# SHA-256: //' || true)
   # Extract source flow path (relative to project root)
   flow_path=$(grep "^# Source:" "$script" 2>/dev/null | sed 's/^# Source: //' || true)
+  # Extract compiler version from header
+  stored_version=$(grep "^# Compiler:" "$script" 2>/dev/null | sed 's/^# Compiler: //' || true)
 
   # Guard: malformed header — skip this script
   if [ -z "$stored_hash" ] || [ -z "$flow_path" ]; then
@@ -79,6 +88,9 @@ for script in "$compiled_dir"/*.sh; do
 
   if [ "$stored_hash" != "$current_hash" ]; then
     stale+=("$(basename "$script")")
+  # Check compiler version mismatch (compiler upgraded but script not recompiled)
+  elif [ -n "$current_compiler_version" ] && [ -n "$stored_version" ] && [ "$stored_version" != "$current_compiler_version" ]; then
+    stale+=("$(basename "$script") (compiler $stored_version → $current_compiler_version)")
   fi
 done
 

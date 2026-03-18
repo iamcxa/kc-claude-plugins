@@ -194,6 +194,7 @@ function generateVariables(variables, flowName) {
  *   mappingPaths?: string[],// multiple mapping paths (cross-site)
  *   timestamp: string,      // ISO-8601 timestamp
  *   hash: string,           // SHA-256 hex digest of source files
+ *   compilerVersion?: string, // e2e-pipeline package version
  * }
  */
 function generateHeader(meta) {
@@ -213,6 +214,9 @@ function generateHeader(meta) {
     }
     lines.push('# Generated: ' + meta.timestamp);
     lines.push('# SHA-256: ' + meta.hash);
+    if (meta.compilerVersion) {
+      lines.push('# Compiler: ' + meta.compilerVersion);
+    }
     lines.push('');
   }
 
