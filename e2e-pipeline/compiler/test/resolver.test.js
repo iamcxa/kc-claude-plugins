@@ -144,6 +144,43 @@ test('resolve: simple-flow resolves email_input to correct selector', () => {
   assert.equal(fillStep.operands.selector, 'role=textbox[name="Email"]');
 });
 
+test('resolve: css_selector in mapping passes through as cssSelector in operands', () => {
+  const mappingWithCss = {
+    version: 2, app: 'test', base_url: 'http://localhost',
+    pages: {
+      login: {
+        url_pattern: '/login',
+        elements: {
+          email_input: { selector: 'role=textbox[name="Email"]', css_selector: 'input[name="email"]' },
+          login_button: { selector: 'role=button[name="Sign In"]', css_selector: 'button[type="submit"]' },
+        },
+      },
+    },
+  };
+  const flow = {
+    name: 'test-css',
+    steps: [
+      { id: 'fill-email', type: 'fill', action: "Fill email_input with 'test@example.com' on login" },
+      { id: 'click-submit', type: 'click', action: 'Click login_button on login' },
+    ],
+  };
+  const result = resolve(flow, mappingWithCss);
+  assert.deepEqual(result.errors, [], 'no errors expected');
+
+  const fillStep = result.resolved.steps.find(s => s.id === 'fill-email');
+  assert.equal(fillStep.operands.cssSelector, 'input[name="email"]', 'fill should have cssSelector');
+  assert.equal(fillStep.operands.selector, 'role=textbox[name="Email"]', 'fill should keep ARIA selector');
+
+  const clickStep = result.resolved.steps.find(s => s.id === 'click-submit');
+  assert.equal(clickStep.operands.cssSelector, 'button[type="submit"]', 'click should have cssSelector');
+});
+
+test('resolve: element without css_selector has no cssSelector in operands', () => {
+  const result = resolve(SIMPLE_FLOW, SIMPLE_MAPPING);
+  const fillStep = result.resolved.steps.find(s => s.id === 'fill-email');
+  assert.equal(fillStep.operands.cssSelector, undefined, 'cssSelector should be undefined when not in mapping');
+});
+
 test('resolve: missing element returns descriptive error', () => {
   const result = resolve(MISSING_ELEMENT_FLOW, SIMPLE_MAPPING);
   const missingErr = result.errors.find(e =>

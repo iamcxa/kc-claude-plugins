@@ -27,12 +27,30 @@ function makeClick(id, element, selector, action) {
   };
 }
 
+function makeEvalClick(id, element, selector, cssSelector, action) {
+  return {
+    id: id,
+    action: action || ('Click ' + element),
+    type: 'click',
+    operands: { element: element, selector: selector, cssSelector: cssSelector },
+  };
+}
+
 function makeFill(id, element, selector, value, action) {
   return {
     id: id,
     action: action || ('Fill ' + element + " with '" + value + "'"),
     type: 'fill',
     operands: { element: element, selector: selector, value: value },
+  };
+}
+
+function makeEvalFill(id, element, selector, cssSelector, value, action) {
+  return {
+    id: id,
+    action: action || ('Fill ' + element + " with '" + value + "'"),
+    type: 'fill',
+    operands: { element: element, selector: selector, cssSelector: cssSelector, value: value },
   };
 }
 
@@ -204,6 +222,163 @@ describe('generate() — fill action', function() {
   });
 });
 
+// ---------------------------------------------------------------------------
+// eval-based click (cssSelector present)
+// ---------------------------------------------------------------------------
+
+describe('generate() — eval-based click (cssSelector)', function() {
+  test("click with cssSelector emits agent-browser eval with querySelector.click()", function() {
+    const step = makeEvalClick('click-submit', 'login_button', 'role=button[name="Sign In"]', 'button[type="submit"]');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('agent-browser eval "'),
+      'Expected agent-browser eval command. Got: ' + script
+    );
+    assert.ok(
+      script.includes('querySelector'),
+      'Expected querySelector in eval. Got: ' + script
+    );
+    assert.ok(
+      script.includes('button[type=\\"submit\\"]'),
+      'Expected CSS selector in eval. Got: ' + script
+    );
+    assert.ok(
+      script.includes('.click()'),
+      'Expected .click() call in eval. Got: ' + script
+    );
+  });
+
+  test("click with cssSelector has Playwright fallback", function() {
+    const step = makeEvalClick('click-submit', 'login_button', 'role=button[name="Sign In"]', 'button[type="submit"]');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("agent-browser click 'role=button[name=\"Sign In\"]'"),
+      'Expected Playwright fallback click. Got: ' + script
+    );
+  });
+
+  test("click with cssSelector does NOT have retry loop (eval + fallback instead)", function() {
+    const step = makeEvalClick('click-submit', 'login_button', 'role=button[name="Sign In"]', 'button[type="submit"]');
+    const script = generate(makeResolved([step]), 'test-flow');
+    // eval-based click should not have while/retry loop — it uses eval + fallback
+    assert.ok(
+      !script.includes('while true; do'),
+      'Expected no retry loop for eval-based click. Got: ' + script
+    );
+  });
+
+  test("click without cssSelector still uses Playwright retry loop", function() {
+    const step = makeClick('click-submit', 'login_button', 'role=button[name="Sign In"]');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('while true; do'),
+      'Expected retry loop for Playwright click. Got: ' + script
+    );
+    assert.ok(
+      !script.includes('agent-browser eval'),
+      'Expected no eval command for Playwright click. Got: ' + script
+    );
+  });
+
+  test("click with cssSelector still records step result and calls _handle_failure on fail", function() {
+    const step = makeEvalClick('click-submit', 'login_button', 'role=button[name="Sign In"]', 'button[type="submit"]');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_handle_failure "click-submit"') && script.includes('click action failed'),
+      'Expected _handle_failure with click action failed. Got: ' + script
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// eval-based fill (cssSelector present)
+// ---------------------------------------------------------------------------
+
+describe('generate() — eval-based fill (cssSelector)', function() {
+  test("fill with cssSelector emits agent-browser eval with nativeInputValueSetter", function() {
+    const step = makeEvalFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'input[name="email"]', 'test@example.com');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('agent-browser eval "'),
+      'Expected agent-browser eval command. Got: ' + script
+    );
+    assert.ok(
+      script.includes('nativeInputValueSetter') || script.includes('HTMLInputElement.prototype'),
+      'Expected nativeInputValueSetter pattern. Got: ' + script
+    );
+    assert.ok(
+      script.includes('input[name=\\"email\\"]'),
+      'Expected CSS selector in eval. Got: ' + script
+    );
+    assert.ok(
+      script.includes('test@example.com'),
+      'Expected fill value in eval. Got: ' + script
+    );
+  });
+
+  test("fill with cssSelector dispatches input and change events", function() {
+    const step = makeEvalFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'input[name="email"]', 'test@example.com');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('dispatchEvent') && script.includes('input') && script.includes('change'),
+      'Expected input + change event dispatch. Got: ' + script
+    );
+  });
+
+  test("fill with cssSelector does NOT have retry loop", function() {
+    const step = makeEvalFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'input[name="email"]', 'test@example.com');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      !script.includes('while true; do'),
+      'Expected no retry loop for eval-based fill. Got: ' + script
+    );
+  });
+
+  test("fill without cssSelector still uses Playwright retry loop", function() {
+    const step = makeFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'test@example.com');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('while true; do'),
+      'Expected retry loop for Playwright fill. Got: ' + script
+    );
+    assert.ok(
+      !script.includes('agent-browser eval'),
+      'Expected no eval command for Playwright fill. Got: ' + script
+    );
+  });
+
+  test("fill with cssSelector records step result and calls _handle_failure on fail", function() {
+    const step = makeEvalFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'input[name="email"]', 'test@example.com');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_handle_failure "fill-email"') && script.includes('fill action failed'),
+      'Expected _handle_failure with fill action failed. Got: ' + script
+    );
+  });
+
+  test("fill with cssSelector uses IIFE to avoid const redeclaration", function() {
+    const step = makeEvalFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'input[name="email"]', 'test@example.com');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('(()=>{') && script.includes('})()'),
+      'Expected IIFE wrapper. Got: ' + script
+    );
+  });
+
+  test("fill with cssSelector for password input (type selector)", function() {
+    const step = makeEvalFill('fill-pass', 'password_input', 'role=textbox[name="Password"]', 'input[type="password"]', 'secret123');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('input[type=\\"password\\"]'),
+      'Expected type=password CSS selector. Got: ' + script
+    );
+    assert.ok(
+      script.includes('secret123'),
+      'Expected password value in eval. Got: ' + script
+    );
+  });
+});
+
 describe('generate() — snapshot action', function() {
   test("snapshot emits agent-browser snapshot", function() {
     const step = makeSnapshot('take-snap');
@@ -241,13 +416,13 @@ describe('generate() — verify-external action', function() {
 // ---------------------------------------------------------------------------
 
 describe('generate() — expect: visible', function() {
-  test("visible expect uses poll-until pattern (v2.0: _poll_visible call)", function() {
+  test("visible expect uses snapshot-based poll pattern (_poll_snapshot_contains for convertible selectors)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("_poll_visible 'role=button[name=\"Sign In\"]'"),
-      'Expected _poll_visible call for active expect. Got: ' + script
+      script.includes("_poll_snapshot_contains 'button \"Sign In\"'"),
+      'Expected _poll_snapshot_contains for convertible role selector. Got: ' + script
     );
   });
 
@@ -266,7 +441,7 @@ describe('generate() — expect: visible', function() {
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('login_button not visible'),
+      script.includes('login_button not in a11y tree'),
       'Expected failure message naming element login_button. Got: ' + script
     );
   });
@@ -622,13 +797,13 @@ describe('generate() — variables block placement', function() {
 // ---------------------------------------------------------------------------
 
 describe('generateExpects() — element-visible (no is keyword)', function() {
-  test("element-visible uses _poll_visible call (same as active type)", function() {
+  test("element-visible uses _poll_snapshot_contains for convertible selectors", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("_poll_visible 'role=button[name=\"Sign In\"]'"),
-      'element-visible should use _poll_visible call. Got: ' + script
+      script.includes("_poll_snapshot_contains 'button \"Sign In\"'"),
+      'element-visible should use _poll_snapshot_contains. Got: ' + script
     );
   });
 
@@ -647,7 +822,7 @@ describe('generateExpects() — element-visible (no is keyword)', function() {
     step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('login_button not visible'),
+      script.includes('login_button not in a11y tree'),
       'element-visible FAIL must name the element. Got: ' + script
     );
   });
@@ -1031,7 +1206,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     );
   });
 
-  test("expect with session field on step passes session to _poll_visible (v2.0 poll-until)", function() {
+  test("expect with session field on step uses _poll_snapshot_contains for convertible selectors", function() {
     const step = makeCrossSiteSnapshot('office-check', 'office');
     step.expects = [{
       type: 'active',
@@ -1040,14 +1215,14 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
       selector: 'role=heading[name="Office Dashboard"]',
     }];
     const script = generate(makeResolved([step]), 'cross-site-test');
-    // v2.0: session is passed as 4th arg to _poll_visible, not as inline prefix
+    // Snapshot-based check: _poll_snapshot_contains replaces _poll_visible for convertible selectors
     assert.ok(
-      script.includes('_poll_visible') && script.includes('"office"'),
-      'cross-site expect must pass session to _poll_visible. Got: ' + script
+      script.includes("_poll_snapshot_contains 'heading \"Office Dashboard\"'"),
+      'cross-site expect must use _poll_snapshot_contains for convertible selector. Got: ' + script
     );
   });
 
-  test("step without session field uses empty session string in poll call", function() {
+  test("step without session field uses _poll_snapshot_contains for convertible selectors", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{
       type: 'active',
@@ -1056,10 +1231,10 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
       selector: 'role=button[name="Sign In"]',
     }];
     const script = generate(makeResolved([step]), 'test-flow');
-    // Single-site step: empty session arg "" passed to poll helper
+    // Snapshot-based check doesn't need session arg (global snapshot)
     assert.ok(
-      script.includes('_poll_visible') && script.includes('""'),
-      'single-site expect must use empty session arg in _poll_visible. Got: ' + script
+      script.includes("_poll_snapshot_contains 'button \"Sign In\"'"),
+      'single-site expect must use _poll_snapshot_contains. Got: ' + script
     );
   });
 });
@@ -1736,23 +1911,23 @@ describe('v2.0 poll-until — poll helpers emitted in generateRuntimeSupport', f
 });
 
 describe('v2.0 poll-until — generateExpects uses poll helpers (CODEGEN-01)', function() {
-  test("active expect compiles to _poll_visible call (not inline is visible check)", function() {
+  test("active expect compiles to _poll_snapshot_contains for convertible selectors", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("_poll_visible 'role=button[name=\"Sign In\"]'"),
-      'active expect must compile to _poll_visible call. Got: ' + script
+      script.includes("_poll_snapshot_contains 'button \"Sign In\"'"),
+      'active expect must compile to _poll_snapshot_contains. Got: ' + script
     );
   });
 
-  test("element-visible expect compiles to _poll_visible call", function() {
+  test("element-visible expect compiles to _poll_snapshot_contains for convertible selectors", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("_poll_visible 'role=button[name=\"Sign In\"]'"),
-      'element-visible expect must compile to _poll_visible call. Got: ' + script
+      script.includes("_poll_snapshot_contains 'button \"Sign In\"'"),
+      'element-visible expect must compile to _poll_snapshot_contains. Got: ' + script
     );
   });
 
@@ -1872,7 +2047,7 @@ describe('v2.0 poll-until — generateExpects uses poll helpers (CODEGEN-01)', f
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('login_button not visible'),
+      script.includes('login_button not in a11y tree'),
       'Expected failure message naming element login_button. Got: ' + script
     );
   });
@@ -1946,10 +2121,10 @@ describe('v2.0 poll-until — cross-site expects use session prefix', function()
       script.includes('office'),
       'Expected session "office" in cross-site expect codegen. Got: ' + script
     );
-    // The poll function call should include --session in its agent-browser command
+    // Snapshot-based check: _poll_snapshot_contains for convertible selector
     assert.ok(
-      script.includes('_poll_visible ') && script.includes('office'),
-      'Cross-site active expect must use _poll_visible with session reference. Got: ' + script
+      script.includes("_poll_snapshot_contains 'heading \"Office Dashboard\"'"),
+      'Cross-site active expect must use _poll_snapshot_contains for convertible selector. Got: ' + script
     );
   });
 });
