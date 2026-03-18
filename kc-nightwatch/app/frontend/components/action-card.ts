@@ -60,6 +60,19 @@ export function ActionCard({ action, target, runId, existingFeedback }: Props) {
             </div>
           `}
 
+          <!-- Reflection section (assessment verdict) -->
+          <div style="margin-bottom:8px;">
+            <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px;">Reflection</div>
+            <div style="font-size:14px;line-height:1.5;color:var(--text);">
+              ${action.assessment.closer_to_north_star === 'yes'
+                ? 'This action moves closer to the north star.'
+                : action.assessment.closer_to_north_star === 'no'
+                ? 'This action may not align with the north star.'
+                : 'Impact on the north star is uncertain.'}
+              ${' '}Confidence: ${action.assessment.confidence}.
+            </div>
+          </div>
+
           <!-- Indicator -->
           <div style="margin-bottom:8px;">
             <span style="font-size:12px;color:var(--muted);">Indicator: </span>

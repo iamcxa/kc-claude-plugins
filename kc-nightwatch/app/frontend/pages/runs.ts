@@ -4,6 +4,7 @@ import type { Run, RunSummary, ParsedLogEvent } from '../../shared/types.ts'
 import { LogStream } from '../components/log-stream.ts'
 import { RunTimeline } from '../components/run-timeline.ts'
 import { ActionCard } from '../components/action-card.ts'
+import { BaselineCard } from '../components/baseline-card.ts'
 import { api } from '../lib/api.ts'
 
 function getRunIdFromHash(): string | null {
@@ -109,6 +110,31 @@ export function Runs() {
             <${RunTimeline} phases=${phases} activePhase=${isRunning ? phases[phases.length - 1] ?? null : null} />
           </div>
         `}
+        <!-- Indicator baselines (above action cards, always visible) -->
+        ${selectedRun.summary?.per_target && Object.entries(selectedRun.summary.per_target).map(([targetName, targetData]) =>
+          targetData.indicator_baseline && Object.keys(targetData.indicator_baseline).length > 0 && html`
+            <${BaselineCard} key=${'baseline-' + targetName} baselines=${targetData.indicator_baseline} />
+          `
+        )}
+        <!-- Pre/Post assessment text (target level) -->
+        ${selectedRun.summary?.per_target && Object.entries(selectedRun.summary.per_target).map(([targetName, targetData]) =>
+          (targetData.pre_assessment || targetData.post_assessment) && html`
+            <div key=${'assess-' + targetName} style="padding:8px 16px;border-bottom:1px solid var(--border);flex-shrink:0;">
+              ${targetData.pre_assessment && html`
+                <div style="margin-bottom:8px;">
+                  <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px;">Pre-Run Strategy (${targetName})</div>
+                  <div style="font-size:14px;line-height:1.5;color:var(--text);">${targetData.pre_assessment}</div>
+                </div>
+              `}
+              ${targetData.post_assessment && html`
+                <div>
+                  <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px;">Post-Run Reflection (${targetName})</div>
+                  <div style="font-size:14px;line-height:1.5;color:var(--text);">${targetData.post_assessment}</div>
+                </div>
+              `}
+            </div>
+          `
+        )}
         <!-- Action cards from per_target summary -->
         ${selectedRun.summary?.per_target && Object.entries(selectedRun.summary.per_target).map(([targetName, targetData]) =>
           targetData.actions && targetData.actions.length > 0 && html`
