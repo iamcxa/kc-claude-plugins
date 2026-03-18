@@ -73,4 +73,17 @@ export const api = {
   webhook(body: { target?: string; mode?: Run['mode'] }): Promise<{ run_id: string }> {
     return post<{ run_id: string }>('/api/webhook', body)
   },
+
+  // Chat
+  sendChatMessage(target: string, message: string): Promise<{ ok: boolean }> {
+    return post<{ ok: boolean }>(`/api/chat/${encodeURIComponent(target)}/message`, { message })
+  },
+
+  resetChatSession(target: string): Promise<{ ok: boolean }> {
+    return post<{ ok: boolean }>(`/api/chat/${encodeURIComponent(target)}/reset`)
+  },
+
+  briefChat(target: string, summary: unknown): Promise<{ ok: boolean }> {
+    return post<{ ok: boolean }>(`/api/chat/${encodeURIComponent(target)}/brief`, { summary })
+  },
 }
