@@ -13,6 +13,7 @@ Via the [kc-claude-plugins](https://github.com/iamcxa/kc-claude-plugins) marketp
 
 - [agent-browser](https://github.com/nicobrinkkemper/agent-browser) CLI installed globally
 - Node.js 20+ (required for the compiler and quarantine CLI)
+- Run `npm install` in the plugin directory (for `/e2e-compile` dependencies)
 
 ## Quick Start
 
@@ -44,9 +45,13 @@ Generates and runs a visit-all-pages flow from the mapping -- quick sanity check
 
 ```
 /e2e-test <flow-name>
+/e2e-test <flow-name> --video        # with screen recording
+/e2e-test <flow-name> --pr 940       # record + post results to PR
 ```
 
-Replays a flow file from `.claude/e2e/flows/` against the mapped UI.
+Replays a flow file from `.claude/e2e/flows/` against the mapped UI. Use `--video` for recording or `--pr` to post evidence directly to a pull request (see [PR Workflow](pr-workflow.md)).
+
+Flows can include [preconditions](writing-tests.md#preconditions) that validate data readiness (e.g., database records exist) before the browser launches.
 
 ### 5. Walk through interactively
 

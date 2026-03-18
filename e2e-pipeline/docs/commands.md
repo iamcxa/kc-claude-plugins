@@ -32,10 +32,29 @@
 | `/e2e-compile --all` | Compile all flows in the flows directory |
 | `/e2e-compile --all --coverage` | Compile all + produce element coverage report |
 | `/e2e-dispatch` | Unified entry point (routes to the right skill) |
+| `/e2e-dispatch --test <flow> --fg` | Force foreground execution (override background default) |
 | `/e2e-skill-ops` | Debug, maintain, or evaluate E2E skills |
 | `/e2e-help` | Interactive help guide — topics, examples, feedback |
 | `/e2e-help <topic>` | Deep dive into a topic (e.g., `cross-site`, `suites`, `checkpoints`) |
+| `/e2e-help --feedback "<text>"` | Report a documentation gap or confusing area |
 | `/e2e-doc-sync` | Scan docs for gaps against skills/agents, write updates |
+| `/e2e-doc-sync --check` | Report-only mode (no writes) |
+| `/e2e-doc-sync --fix` | Scan + auto-write approved gaps |
+
+## Background vs Foreground Execution
+
+Some dispatch routes run in the **background** by default (main context stays free for other work). Use `--fg` to force foreground execution:
+
+| Route | Default | Override |
+|-------|---------|---------|
+| `/e2e-test` | Background | `--fg` |
+| `/e2e-map` (no --interactive) | Background | `--fg` |
+| `/e2e-map --interactive` | Foreground | -- |
+| `/e2e-flow` | Foreground | -- |
+| `/e2e-walkthrough` | Foreground | -- |
+| `/e2e-skill-ops` | Foreground | -- |
+
+Interactive skills (walkthrough, flow, skill-ops) always run in foreground. Non-interactive skills (test, map) default to background so you can continue working.
 
 ## Auto-Compile & Divergence
 

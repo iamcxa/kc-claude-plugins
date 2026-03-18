@@ -101,6 +101,37 @@ The bug appears randomly -- race conditions, timing issues, flaky state.
 
 For deeper diagnostics: `/e2e-skill-ops --debug`
 
+## Interpreting Divergence Analysis
+
+When `/e2e-test` runs, it auto-compiles the flow and runs both the LLM agent and the compiled script. The divergence table shows where they disagree:
+
+| Pattern | Meaning | Action |
+|---------|---------|--------|
+| Both PASS | High confidence — step works reliably | None |
+| LLM PASS, Compiled FAIL | Selector may be timing-sensitive. LLM used snapshot `@ref` (adaptive), compiled uses static selector. | Add `wait_after` or increase `timeout` in the flow step |
+| LLM FAIL, Compiled PASS | LLM may have hallucinated a failure. The compiled script is authoritative. | Verify the step manually; trust compiled result |
+| Both FAIL | Genuine bug in the app or incorrect test | Fix the app or update the flow |
+
+**Zero diverged steps** = both modes agree on every step. This is the highest confidence level — the test is deterministic and reliable.
+
+**When to use `--no-compile`:** Skip divergence when you only care about the LLM run (debugging a specific interaction) or the compiler is not installed (`node_modules/` missing).
+
+## Observe-and-Continue Model
+
+During `/e2e-walkthrough`, the browser agent follows an **observe-and-continue** execution model:
+
+1. Execute step action
+2. Check `errors --json` for console errors
+3. Visual observation — unexpected UI?
+4. **Record anomaly + notify** — but **never pause**
+5. Continue to next step
+
+Anomalies (console errors, visual issues, unexpected state) are logged inline with a `⚠` marker but do not interrupt the walkthrough. Full analysis happens in **Phase 4** where trace data is cross-referenced with the step log to identify root causes.
+
+**The only exception**: auth expiration pauses the walkthrough, because all subsequent steps would fail without authentication.
+
+**Why this model?** Stopping for every anomaly breaks flow and makes walkthroughs painfully slow. Many anomalies are transient (analytics errors, non-blocking console warnings). By continuing, the walkthrough captures the complete picture — Phase 4 trace analysis is far better at distinguishing real issues from noise than per-step interruption.
+
 ## Related
 
 - [Commands](commands.md) -- all skills and flags

@@ -136,6 +136,47 @@ With `--manage-issues`, the quarantine CLI:
 
 With `--pr-comment <number>`, a status table is posted to the PR showing all quarantined flows, their flaky rates, and last failure dates. The comment is updated (not duplicated) on subsequent runs.
 
+### Metrics JSON format
+
+Each compiled flow run with `--metrics-output` produces a JSON file like:
+
+```json
+{
+  "flow": "login-flow",
+  "timestamp": "2026-03-18T14:30:00Z",
+  "duration_ms": 12340,
+  "result": "pass",
+  "steps": [
+    { "id": "navigate-to-login", "result": "pass", "duration_ms": 1200 },
+    { "id": "fill-credentials", "result": "pass", "duration_ms": 800 },
+    { "id": "submit-form", "result": "pass", "duration_ms": 2100 },
+    { "id": "verify-dashboard", "result": "pass", "duration_ms": 1500 }
+  ],
+  "retries": 0
+}
+```
+
+The quarantine CLI reads these files to calculate flaky rates over the sliding window.
+
+### Quarantined flow entry
+
+When a flow is quarantined, its entry in `quarantine.json` looks like:
+
+```json
+{
+  "flows": {
+    "checkout-flow": {
+      "status": "quarantined",
+      "quarantined_at": "2026-03-15T10:00:00Z",
+      "flaky_rate": 0.25,
+      "last_failure": "2026-03-18T09:00:00Z",
+      "consecutive_passes": 0,
+      "issue_number": 42
+    }
+  }
+}
+```
+
 ### Configuration
 
 Quarantine thresholds are stored in `quarantine.json`:

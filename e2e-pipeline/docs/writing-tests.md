@@ -315,11 +315,42 @@ The user journey itself changed -- new pages, different steps, removed features.
    /e2e-test login-flow
    ```
 
+## Element Coverage
+
+After compiling flows, you can check how well your tests cover the mapped UI:
+
+```
+/e2e-compile --all --coverage
+```
+
+This produces `.claude/e2e/coverage/coverage.json` with per-element data:
+
+```json
+{
+  "login": {
+    "email_input": { "verified": 1, "reached": 2, "status": "verified" },
+    "password_input": { "verified": 1, "reached": 1, "status": "verified" },
+    "forgot_link": { "verified": 0, "reached": 0, "status": "untouched" }
+  }
+}
+```
+
+| Status | Meaning |
+|--------|---------|
+| `verified` | Element appears in `expect:` assertions — actively checked |
+| `reached` | Element is used in actions (click, fill) but never in expects |
+| `untouched` | Element exists in mapping but no flow references it |
+
+**Coverage regression**: When coverage drops between runs, the compiler prints a warning. Use this to catch flows that were removed or narrowed.
+
+**Improving coverage**: Look for `untouched` elements — these represent UI that no test exercises. Consider adding steps or new flows targeting them.
+
 ## Related
 
 - [Commands](commands.md) -- all skill invocations and flags
 - [Cross-Boundary Testing](cross-boundary-testing.md) -- `Execute external` / `Verify external` steps
 - [Multi-Site Testing](multi-site-testing.md) -- cross-site flows with `sites:`
+- [PR Workflow](pr-workflow.md) -- posting E2E evidence to pull requests
 - [Debugging](debugging.md) -- troubleshooting test failures
 - [CI Integration](ci-integration.md) -- running compiled flows in GitHub Actions
 
