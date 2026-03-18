@@ -68,6 +68,9 @@ Compiles all flow YAML files to standalone bash scripts in `.claude/e2e/compiled
 
 - [Commands](commands.md) -- all skills, CLI tools, and flags
 - [Writing Tests](writing-tests.md) -- flow YAML format, preconditions, cross-site flows
+- [Recording & Evidence](recording-evidence.md) -- video recording, screenshots, trace replay
+- [PR Workflow](pr-workflow.md) -- posting E2E evidence to pull requests
+- [Suites](suites.md) -- organizing tests into named suites
 - [Debugging](debugging.md) -- troubleshooting test failures by type
 
 ---

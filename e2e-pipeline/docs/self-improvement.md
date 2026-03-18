@@ -101,6 +101,7 @@ Test/Explore --> Findings --> D1: skill gets smarter     --> D2: project tests g
 - [Commands](commands.md) -- all skill invocations and flags
 - [Architecture](architecture.md) -- skill-to-agent model and pipeline design
 - [Writing Tests](writing-tests.md) -- flow YAML format and preconditions
+- [Debugging](debugging.md) -- using `/e2e-skill-ops --evaluate` findings to improve
 
 ---
 
