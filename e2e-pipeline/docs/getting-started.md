@@ -38,7 +38,7 @@ Analyzes your codebase and mapping to generate a flow YAML, then verifies it in 
 /e2e-flow --smoke
 ```
 
-Generates and runs a visit-all-pages flow from the mapping — quick sanity check after changes.
+Generates and runs a visit-all-pages flow from the mapping -- quick sanity check after changes.
 
 ### 4. Run a test flow
 
@@ -63,3 +63,14 @@ Human-guided browser exploration for visual QA, debugging, or demo recording.
 ```
 
 Compiles all flow YAML files to standalone bash scripts in `.claude/e2e/compiled/`, ready for headless CI execution without Claude Code.
+
+## Related
+
+- [Commands](commands.md) -- all skills, CLI tools, and flags
+- [Writing Tests](writing-tests.md) -- flow YAML format, preconditions, cross-site flows
+- [Debugging](debugging.md) -- troubleshooting test failures by type
+
+---
+
+> **Found a better pattern?** [Open a PR](https://github.com/iamcxa/kc-claude-plugins/pulls) to share it.
+> **Docs unclear?** Use `/e2e-help --feedback "<description>"` to let us know.

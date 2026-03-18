@@ -187,3 +187,6 @@ If coverage regression warning appears (::warning:: line), present prominently:
 | Flow uses v1 format (`app:`, `name:`) | Migrate to v2: `app:`→`mapping:`, `name:`→`id:` |
 | No mapping file | Run `/e2e-map` first to create `.claude/e2e/mappings/*.yaml` |
 | `--dry-run` with `--all` | Dry-run works with `--all`; validation runs per flow |
+| Recompile overwrites eval patches | Login flows with manual `agent-browser eval` workarounds (for headless CI) are overwritten by recompile. **Re-apply eval patches after recompiling `gate-login-flow`**. See [Headless CI Limitations](../../docs/ci-integration.md#headless-ci-limitations). |
+| Compiled script fails in CI but passes locally | Playwright `fill`/`click`/`is visible` fail in headless Chrome on Linux CI. Visibility checks use `_poll_snapshot_contains` (auto-generated). Fill/click need manual eval patches for login flows. |
+| `combobox` pattern too broad in a11y grep | `role=combobox >> nth=0` converts to grep pattern `combobox` which matches any combobox. Acceptable when page has only one; add accessible name to mapping selector for disambiguation. |

@@ -1,6 +1,6 @@
 # e2e-pipeline
 
-Browser E2E testing pipeline for Claude Code. Maps UI elements, generates and verifies test flows, runs automated tests, and walks through apps interactively — all with context-isolating subagents that keep browser data out of your main conversation.
+Browser E2E testing pipeline for Claude Code. Maps UI elements, generates and verifies test flows, runs automated tests, and walks through apps interactively -- all with context-isolating subagents that keep browser data out of your main conversation.
 
 ## Install
 
@@ -14,7 +14,7 @@ Browser E2E testing pipeline for Claude Code. Maps UI elements, generates and ve
 ## Quick Start
 
 ```
-/e2e-map                    # 1. Map your app's UI → .claude/e2e/mappings/<app>.yaml
+/e2e-map                    # 1. Map your app's UI -> .claude/e2e/mappings/<app>.yaml
 /e2e-flow --from <plan>     # 2. Generate + verify flow from plan/spec/PR
 /e2e-flow --smoke           # 3. Smoke test all mapped pages
 /e2e-test <flow-name>       # 4. Replay a test flow automatically
@@ -27,9 +27,9 @@ Browser E2E testing pipeline for Claude Code. Maps UI elements, generates and ve
 
 ## The Pipeline
 
-**Map → Generate → Verify → Test → Analyze → Repair → Re-test**
+**Map -> Generate -> Verify -> Test -> Analyze -> Repair -> Re-test**
 
-Write tests in natural language — element names from your mapping, not CSS selectors:
+Write tests in natural language -- element names from your mapping, not CSS selectors:
 
 ```yaml
 steps:
@@ -53,13 +53,14 @@ When selectors break, re-map the page. When flows change, re-walk. The pipeline 
 | [CI Integration](docs/ci-integration.md) | GitHub Actions setup, quarantine system, auth, metrics |
 | [Recording & Evidence](docs/recording-evidence.md) | Video, screenshots, traces, PR review evidence |
 | [Debugging](docs/debugging.md) | Static/dynamic/intermittent issues, troubleshooting table |
-| [Architecture](docs/architecture.md) | Pipeline design, skill→agent model, file structure |
+| [Architecture](docs/architecture.md) | Pipeline design, skill->agent model, file structure |
+| [Self-Improvement](docs/self-improvement.md) | Knowledge bootstrap, D1/D2 patterns, PR-back flow |
 
 > **New to the pipeline?** Try `/e2e-help` for an interactive guide. Found a gap? `/e2e-help --feedback "<description>"`
 
 ## Contributing
 
-Found a gap? Have a better pattern? See [CONTRIBUTING.md](CONTRIBUTING.md) for how to help — from one-minute feedback to full feature PRs.
+Found a gap? Have a better pattern? See [CONTRIBUTING.md](CONTRIBUTING.md) for how to help -- from one-minute feedback to full feature PRs.
 
 ## License
 

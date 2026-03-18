@@ -6,7 +6,7 @@ When a feature spans browser UI, backend APIs, and external services (analytics,
 
 - Feature involves CLI commands or API calls that change what the UI displays
 - Verification requires checking analytics events (PostHog, Mixpanel) or tracing (Langfuse, Sentry)
-- The test scenario crosses the browser boundary: **do something outside** → **observe result inside**
+- The test scenario crosses the browser boundary: **do something outside** -> **observe result inside**
 
 ## Flow Structure
 
@@ -20,14 +20,14 @@ A cross-boundary flow has three step types:
 
 ```yaml
 steps:
-  # Phase 1: Browser — observe initial state
+  # Phase 1: Browser -- observe initial state
   - id: verify-empty-state
     action: "Navigate to /dashboard"
     expect:
       - "items_table visible on dashboard"
       - "empty_state_cta visible on dashboard"
 
-  # Phase 2: Execute external — trigger the change
+  # Phase 2: Execute external -- trigger the change
   - id: trigger-data-load
     action: "Execute external"
     description: "Load 3 batches of data via CLI"
@@ -39,14 +39,14 @@ steps:
     wait_after: 5
     on_fail: fail
 
-  # Phase 3: Browser — verify the change appeared
+  # Phase 3: Browser -- verify the change appeared
   - id: verify-data-appeared
     action: "Navigate to /dashboard"
     expect:
       - "items_table visible on dashboard"
       - "empty_state_cta not visible on dashboard"
 
-  # Phase 4: Verify external — check side effects
+  # Phase 4: Verify external -- check side effects
   - id: verify-analytics-event
     action: "Verify external"
     description: "Confirm analytics event was emitted"
@@ -95,7 +95,7 @@ tags: [drc-2880, cross-boundary]
 mapping: recce-cloud
 
 steps:
-  # Phase 1: Browser — confirm empty state
+  # Phase 1: Browser -- confirm empty state
   - id: navigate-to-project
     action: "Navigate to /${orgName}/${projectName}"
     expect:
@@ -109,7 +109,7 @@ steps:
     expect:
       - "sessions_table visible on project"
 
-  # Phase 2: CLI — upload artifacts 3 times
+  # Phase 2: CLI -- upload artifacts 3 times
   - id: trigger-ci-touch-1
     action: "Execute external"
     description: "First upload: creates session, ci_touch_count=1"
@@ -149,7 +149,7 @@ steps:
     wait_after: 3
     on_fail: fail
 
-  # Phase 3: Browser — verify sessions appeared
+  # Phase 3: Browser -- verify sessions appeared
   - id: reload-project-page
     action: "Navigate to /${orgName}/${projectName}"
     expect:
@@ -165,7 +165,7 @@ steps:
       - "create_first_session not visible on project"
     screenshot: true
 
-  # Phase 4: Analytics — verify PostHog event
+  # Phase 4: Analytics -- verify PostHog event
   - id: verify-posthog-artifacts-event
     action: "Verify external"
     description: "Confirm PostHog received the funnel event"
@@ -208,10 +208,10 @@ recce-cloud upload --session-name "test-1" --yes
 
 ### Key Takeaways
 
-1. **Flow-writer generates all step types** — browser, `Execute external`, and `Verify external`. Don't hand-write flows to avoid the agent.
-2. **Browser and checkpoint steps are independent** — browser verification works even when checkpoints are skipped.
+1. **Flow-writer generates all step types** -- browser, `Execute external`, and `Verify external`. Don't hand-write flows to avoid the agent.
+2. **Browser and checkpoint steps are independent** -- browser verification works even when checkpoints are skipped.
 3. **`RECCE_CLOUD_API_HOST` env var** controls which server the CLI talks to. Always set it for local dev to avoid hitting production.
-4. **`on_fail: warn` for analytics** — PostHog verification is advisory. Don't block the test on analytics propagation delays.
+4. **`on_fail: warn` for analytics** -- PostHog verification is advisory. Don't block the test on analytics propagation delays.
 
 ## Step Type Reference
 
@@ -258,3 +258,14 @@ Checks state in external services. Use for analytics events, tracing spans, webh
 | Default `on_fail` | `fail` | `warn` |
 | Timing | `wait_after` (after) | `wait` (before) |
 | Browser state | Unchanged | Unchanged |
+
+## Related
+
+- [Writing Tests](writing-tests.md) -- flow YAML format and checkpoint syntax
+- [Commands](commands.md) -- all skills and flags
+- [Recording & Evidence](recording-evidence.md) -- trace analysis for cross-boundary verification
+
+---
+
+> **Found a better pattern?** [Open a PR](https://github.com/iamcxa/kc-claude-plugins/pulls) to share it.
+> **Docs unclear?** Use `/e2e-help --feedback "<description>"` to let us know.

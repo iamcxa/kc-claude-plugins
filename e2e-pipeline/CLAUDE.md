@@ -4,34 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via context-isolating subagents. The pipeline: **Map UI** → **Generate Flows** → **Verify & Test** → **Analyze**.
+A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via context-isolating subagents. The pipeline: **Map UI** -> **Generate Flows** -> **Verify & Test** -> **Analyze**.
 
 ## Architecture
 
 **Skills** (9) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
 
 **Agents** (7) run as subagents for heavy work, keeping verbose data out of main context:
-- `e2e-mapper` — explores pages, generates YAML mappings
-- `e2e-flow-writer` — analyzes codebase + mapping to generate flow YAML (no browser)
-- `e2e-flow-verifier` — runs flows in browser, auto-repairs selectors/steps, produces reports
-- `e2e-test-runner` — executes flow files, validates expectations
-- `e2e-trace-analyzer` — parses Playwright trace.zip for API failures and console errors
-- `e2e-media-processor` — blank-frame-trimmed GIF, MP4 video, thumbnail from screenshots/recordings
-- `e2e-doc-scanner` — scans skills/agents vs docs for gaps, writes doc updates
+- `e2e-mapper` -- explores pages, generates YAML mappings
+- `e2e-flow-writer` -- analyzes codebase + mapping to generate flow YAML (no browser)
+- `e2e-flow-verifier` -- runs flows in browser, auto-repairs selectors/steps, produces reports
+- `e2e-test-runner` -- executes flow files, validates expectations
+- `e2e-trace-analyzer` -- parses Playwright trace.zip for API failures and console errors
+- `e2e-media-processor` -- blank-frame-trimmed GIF, MP4 video, thumbnail from screenshots/recordings
+- `e2e-doc-scanner` -- scans skills/agents vs docs for gaps, writes doc updates
 
 ```
-skills/e2e-dispatch/     → router (auth gate + skill selection)
-skills/e2e-map/          → mapping orchestrator → dispatches e2e-mapper agent
-skills/e2e-test/         → test orchestrator → dispatches e2e-test-runner + trace-analyzer
-skills/e2e-walkthrough/  → interactive exploration (main context)
-skills/e2e-flow/         → generate & verify flows → dispatches flow-writer + flow-verifier + trace-analyzer
-skills/e2e-compile/      → compile flow YAML to standalone bash test scripts (requires npm deps)
-skills/e2e-skill-ops/    → meta-skill for debugging/maintaining the pipeline itself
-skills/e2e-help/         → interactive help guide, topic deep-dive, feedback collection
-skills/e2e-doc-sync/     → documentation gap scanner & writer → dispatches e2e-doc-scanner agent
-agents/                  → subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor, e2e-doc-scanner)
-hooks/                   → E2E pipeline hooks (SessionStart context + pre-commit check + plan E2E check)
-references/              → agent-browser CLI commands, common browser testing patterns, knowledge capture framework
+skills/e2e-dispatch/     -> router (auth gate + skill selection)
+skills/e2e-map/          -> mapping orchestrator -> dispatches e2e-mapper agent
+skills/e2e-test/         -> test orchestrator -> dispatches e2e-test-runner + trace-analyzer
+skills/e2e-walkthrough/  -> interactive exploration (main context)
+skills/e2e-flow/         -> generate & verify flows -> dispatches flow-writer + flow-verifier + trace-analyzer
+skills/e2e-compile/      -> compile flow YAML to standalone bash test scripts (requires npm deps)
+skills/e2e-skill-ops/    -> meta-skill for debugging/maintaining the pipeline itself
+skills/e2e-help/         -> interactive help guide, topic deep-dive, feedback collection
+skills/e2e-doc-sync/     -> documentation gap scanner & writer -> dispatches e2e-doc-scanner agent
+agents/                  -> subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor, e2e-doc-scanner)
+hooks/                   -> E2E pipeline hooks (SessionStart context + pre-commit check + plan E2E check)
+references/              -> agent-browser CLI commands, common browser testing patterns, knowledge capture framework
 ```
 
 ## Self-Improvement
@@ -42,32 +42,32 @@ references/              → agent-browser CLI commands, common browser testing 
 |-------|-------------------|---------------------|
 | e2e-test | Auto-append to `learned-patterns.md` | Gated write to `.claude/e2e-lessons.md` |
 | e2e-skill-ops | Auto-append to `learned-patterns.md` | Gated write (--evaluate mode only) |
-| e2e-flow | Auto-append to `learned-patterns.md` | — |
-| e2e-walkthrough | Auto-append to `learned-patterns.md` | — |
-| e2e-map | Auto-append to `learned-patterns.md` | — |
-| e2e-compile | — (deterministic) | — |
-| e2e-dispatch | — (router) | — |
+| e2e-flow | Auto-append to `learned-patterns.md` | -- |
+| e2e-walkthrough | Auto-append to `learned-patterns.md` | -- |
+| e2e-map | Auto-append to `learned-patterns.md` | -- |
+| e2e-compile | -- (deterministic) | -- |
+| e2e-dispatch | -- (router) | -- |
 
 **D1** = cross-project patterns (selector strategies, framework behaviors, agent-browser gotchas). Auto-append, no gate.
 **D2** = project-specific patterns (timing, auth, data dependencies). Severity gate + three-question test + user confirmation.
 
 All skills read `learned-patterns.md` at startup (Knowledge Bootstrap phase). D2-capable skills also read `.claude/e2e-lessons.md`.
 
-PR-back flow: users curate local `learned-patterns.md` → PR to plugin origin → all users benefit.
+PR-back flow: users curate local `learned-patterns.md` -> PR to plugin origin -> all users benefit.
 
 ## Data Flow
 
 ```
-/e2e-map           → .claude/e2e/mappings/<app>.yaml
-/e2e-walkthrough   → .claude/e2e/flows/walkthrough-*.yaml + e2e-reports/<ts>/flow-report.md
-/e2e-flow          → .claude/e2e/flows/<feature>.yaml + e2e-reports/<ts>/report.md
-/e2e-test <flow>   → e2e-reports/<ts>/report.md, trace.zip, screenshots, video
-/e2e-compile       → .claude/e2e/compiled/<flow>.sh (standalone bash test scripts)
+/e2e-map           -> .claude/e2e/mappings/<app>.yaml
+/e2e-walkthrough   -> .claude/e2e/flows/walkthrough-*.yaml + e2e-reports/<ts>/flow-report.md
+/e2e-flow          -> .claude/e2e/flows/<feature>.yaml + e2e-reports/<ts>/report.md
+/e2e-test <flow>   -> e2e-reports/<ts>/report.md, trace.zip, screenshots, video
+/e2e-compile       -> .claude/e2e/compiled/<flow>.sh (standalone bash test scripts)
 ```
 
 ## YAML Format Conventions (v2 only)
 
-**Mapping files** — page names in `kebab-case`, element names in `snake_case`:
+**Mapping files** -- page names in `kebab-case`, element names in `snake_case`:
 ```yaml
 version: 2
 app: <name>
@@ -81,7 +81,7 @@ pages:
         description: "..."
 ```
 
-**Flow files** — use `mapping:` (not `app:`), steps use `id:` (not `name:`):
+**Flow files** -- use `mapping:` (not `app:`), steps use `id:` (not `name:`):
 ```yaml
 name: <flow-name>
 mapping: <app-name>
@@ -93,24 +93,24 @@ steps:
 
 Flow files may also include an optional `preconditions:` block for data readiness checks (see `references/common-patterns.md`).
 
-Using `app:` or `name:` in steps means v1 format — rejected by the test runner.
+Using `app:` or `name:` in steps means v1 format -- rejected by the test runner.
 
 ## Selector Priority
 
-1. `data-testid="value"` — best stability
-2. `role=button[name="..."]` — good semantic match
-3. `aria-label="..."` — acceptable
-4. Never use `has-text()` — broken in agent-browser, causes timeout
+1. `data-testid="value"` -- best stability
+2. `role=button[name="..."]` -- good semantic match
+3. `aria-label="..."` -- acceptable
+4. Never use `has-text()` -- broken in agent-browser, causes timeout
 
 ## Key Gotchas
 
-- **`e2e-flow-writer` has no Bash tool**: intentional — it does pure codebase analysis, never opens a browser. Adding Bash would break isolation.
+- **`e2e-flow-writer` has no Bash tool**: intentional -- it does pure codebase analysis, never opens a browser. Adding Bash would break isolation.
 - **`@ref` is ephemeral**: snapshot `@ref` values change on every DOM mutation. Mappings store stable selectors, not `@ref`.
 - **`is visible` exit code is always 0**: check stdout text `"true"`/`"false"`, not exit code.
 - **React Native Web**: text elements render twice. Use `>> nth=1` for `text=` selectors.
 - **Ant Design CSS-hidden inputs**: `is visible` returns false for functional elements. Verify via snapshot a11y tree presence instead.
 - **Snapshot doesn't expose `data-testid`/`aria-label`**: use `agent-browser is visible "<selector>"` for attribute-based verification.
-- **Don't pass-through what you can execute**: If an agent has the tools to attempt a step (e.g., verifier has Bash → can run CLI commands), it should attempt it best-effort rather than blindly skipping. Silent skip = the user discovers broken commands only at execution time, not verification time. External checkpoint failures in the verifier use `on_fail: warn` override so they never block browser verification.
+- **Don't pass-through what you can execute**: If an agent has the tools to attempt a step (e.g., verifier has Bash -> can run CLI commands), it should attempt it best-effort rather than blindly skipping. Silent skip = the user discovers broken commands only at execution time, not verification time. External checkpoint failures in the verifier use `on_fail: warn` override so they never block browser verification.
 
 ## Editing Skills and Agents
 
@@ -138,7 +138,7 @@ Rule: if a layer has the tools to attempt a step, it MUST attempt it (best-effor
 **Removing a skill or agent:**
 1. Delete the directory/file
 2. Run: `grep -rn "<name>" e2e-pipeline/ --include="*.md" --include="*.json" --include="*.sh" | grep -v skill-quality-findings | grep -v node_modules | grep -v docs/superpowers/`
-3. Update every hit — replace with successor or remove
+3. Update every hit -- replace with successor or remove
 4. Update `skills/e2e-dispatch/SKILL.md` routing table + reroute removed flags to successor
 5. Re-run grep to verify zero active references (historical in findings/specs is OK)
 
@@ -148,8 +148,8 @@ Rule: if a layer has the tools to attempt a step, it MUST attempt it (best-effor
 
 **Before syncing this plugin to the marketplace, the following gate MUST pass:**
 
-1. Run `/e2e-doc-sync --check` — reports gaps between skills/agents and docs
-2. If gaps found → run `/e2e-doc-sync --fix` to resolve, or acknowledge as intentional
+1. Run `/e2e-doc-sync --check` -- reports gaps between skills/agents and docs
+2. If gaps found -> run `/e2e-doc-sync --fix` to resolve, or acknowledge as intentional
 3. Only proceed with `/kc-marketplace-sync` after docs are in sync
 
 This gate exists because SKILL.md definitions are authoritative but not user-facing. Publishing a version where docs lag behind skills means users can't discover features.
@@ -158,17 +158,17 @@ This gate exists because SKILL.md definitions are authoritative but not user-fac
 
 When adding, removing, or renaming skills or agents, update these files:
 
-1. `README.md` — quick start commands, pipeline summary, docs table
-2. `docs/commands.md` — command table with all flags
-3. `docs/architecture.md` — skill→agent table and plugin file tree
-4. `docs/getting-started.md` — step-by-step guide
-5. `docs/writing-tests.md` and `docs/recording-evidence.md` — check for stale references
-5b. `docs/multi-site-testing.md` and `docs/suites.md` — cross-site and suite features
-5c. `docs/common-patterns.md` — external checkpoint patterns, combined flow examples
-6. `.claude-plugin/plugin.json` — bump version
-7. `CLAUDE.md` (this file) — Architecture section counts, directory listing, Recording Defaults table
+1. `README.md` -- quick start commands, pipeline summary, docs table
+2. `docs/commands.md` -- command table with all flags
+3. `docs/architecture.md` -- skill->agent table and plugin file tree
+4. `docs/getting-started.md` -- step-by-step guide
+5. `docs/writing-tests.md` and `docs/recording-evidence.md` -- check for stale references
+5b. `docs/multi-site-testing.md` and `docs/suites.md` -- cross-site and suite features
+5c. `references/common-patterns.md` -- external checkpoint patterns, combined flow examples
+6. `.claude-plugin/plugin.json` -- bump version
+7. `CLAUDE.md` (this file) -- Architecture section counts, directory listing, Recording Defaults table
 
-**Prefer `/e2e-doc-sync --fix` over the manual checklist** — it scans the same items automatically and catches gaps the checklist misses (e.g., new flags added to an existing skill).
+**Prefer `/e2e-doc-sync --fix` over the manual checklist** -- it scans the same items automatically and catches gaps the checklist misses (e.g., new flags added to an existing skill).
 
 ## Recording Defaults
 
@@ -177,13 +177,13 @@ When adding, removing, or renaming skills or agents, update these files:
 | `/e2e-walkthrough` | ON | `--no-video` |
 | `/e2e-flow --verify-only` | ON | `--no-video` |
 | `/e2e-test` | OFF | `--video` or `--pr` |
-| `/e2e-map` | No recording | — |
+| `/e2e-map` | No recording | -- |
 
 All media post-processing (GIF, MP4, thumbnail) is handled by the `e2e-media-processor` agent, dispatched by each skill after browser work completes. Browser agents produce raw screenshots and WebM recordings only.
 
 ## Planning Integration (E2E-First Acceptance)
 
-Enforced by four layers — any planning framework (superpowers, GSD, plan mode, or bare conversation) is covered:
+Enforced by four layers -- any planning framework (superpowers, GSD, plan mode, or bare conversation) is covered:
 
 | Layer | Mechanism | When | Strength |
 |-------|-----------|------|----------|
@@ -194,33 +194,33 @@ Enforced by four layers — any planning framework (superpowers, GSD, plan mode,
 
 **Closed loop:**
 ```
-SessionStart ──→ "E2E infrastructure detected, use /e2e-flow"
-     │
-     ▼
+SessionStart --> "E2E infrastructure detected, use /e2e-flow"
+     |
+     v
 Planning (any framework)
-     │
-     ▼
-Write plan ──→ hook checks ──→ "Plan has no E2E steps!" (if missing)
-     │
-     ▼
-/e2e-flow --from <plan>  ──→  .claude/e2e/flows/<feature>.yaml
-     │                         (generates + verifies in browser)
-     ▼
-/e2e-test <feature>  ──→  e2e-reports/*/report.md
-     │                                    ▲
-     ▼                                    │ (no flow? create one first)
-git commit  ──→  hook checks      /e2e-flow --from <plan>
-                                         └→ generates flow → verifies → future /e2e-test
+     |
+     v
+Write plan --> hook checks --> "Plan has no E2E steps!" (if missing)
+     |
+     v
+/e2e-flow --from <plan>  -->  .claude/e2e/flows/<feature>.yaml
+     |                         (generates + verifies in browser)
+     v
+/e2e-test <feature>  -->  e2e-reports/*/report.md
+     |                                    ^
+     v                                    | (no flow? create one first)
+git commit  -->  hook checks      /e2e-flow --from <plan>
+                                         +-> generates flow -> verifies -> future /e2e-test
 ```
 
-**Worktree E2E**: When working in a git worktree, the dev server typically runs from the main repo, not the worktree. E2E tests need a running server. Options: (1) start dev server from the worktree, (2) merge to main first and run E2E from the main repo. Plan accordingly — don't defer E2E without noting this constraint.
+**Worktree E2E**: When working in a git worktree, the dev server typically runs from the main repo, not the worktree. E2E tests need a running server. Options: (1) start dev server from the worktree, (2) merge to main first and run E2E from the main repo. Plan accordingly -- don't defer E2E without noting this constraint.
 
-**Verification decision**: Draft flow exists → `/e2e-test` (automated, subagent). No flow → `/e2e-flow --from <plan>` (generates + verifies automatically). For interactive exploration → `/e2e-walkthrough`.
+**Verification decision**: Draft flow exists -> `/e2e-test` (automated, subagent). No flow -> `/e2e-flow --from <plan>` (generates + verifies automatically). For interactive exploration -> `/e2e-walkthrough`.
 
 **Draft flow template** (for plans that embed acceptance criteria inline):
 
 ```yaml
-# draft — validate against mapping before use
+# draft -- validate against mapping before use
 name: <feature-name>
 description: "<what this verifies>"
 tags: [acceptance, <feature-tag>]
@@ -263,8 +263,8 @@ steps:
 
 **Rules for draft flows:**
 - Element/page names MUST match the mapping exactly (`snake_case` elements, `kebab-case` pages)
-- 5-12 steps — focused acceptance path, not exhaustive coverage
-- Every step needs `expect:` — bare navigation is insufficient for acceptance
+- 5-12 steps -- focused acceptance path, not exhaustive coverage
+- Every step needs `expect:` -- bare navigation is insufficient for acceptance
 - `Execute external` for triggering non-browser actions (CLI, API, scripts)
 - `Verify external` for checking external service side-effects
 - External checkpoints only at real integration boundaries
@@ -276,7 +276,7 @@ The `/e2e-compile` skill uses a Node.js CLI (`bin/e2e-compile.js`) that requires
 
 ## Plugin Runtime Variable
 
-`${CLAUDE_PLUGIN_ROOT}` is set by Claude Code at session start to the plugin's installation directory. Skills and hooks use this to resolve paths to `references/`, `hooks/scripts/`, and `bin/`. It is only available within the plugin context (skills, agents, hooks) — not in user code.
+`${CLAUDE_PLUGIN_ROOT}` is set by Claude Code at session start to the plugin's installation directory. Skills and hooks use this to resolve paths to `references/`, `hooks/scripts/`, and `bin/`. It is only available within the plugin context (skills, agents, hooks) -- not in user code.
 
 ## Git Conventions
 

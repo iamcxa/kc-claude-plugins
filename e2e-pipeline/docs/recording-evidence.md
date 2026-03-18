@@ -25,7 +25,7 @@
 | `/e2e-walkthrough` | ON | `--no-video` |
 | `/e2e-flow --verify-only` | ON | `--no-video` |
 | `/e2e-test` | OFF | `--video` or `--pr` |
-| `/e2e-map` | No recording | — |
+| `/e2e-map` | No recording | -- |
 
 ## Output files per run
 
@@ -57,7 +57,7 @@ A PR claims to fix a frontend bug. Use the pipeline to produce evidence:
 /e2e-walkthrough --pr 940
 ```
 
-The skill reads the PR diff, identifies which UI pages are affected, and proposes a walkthrough targeting the fix. Walk through the repaired flow — the output includes:
+The skill reads the PR diff, identifies which UI pages are affected, and proposes a walkthrough targeting the fix. Walk through the repaired flow -- the output includes:
 
 - Step-by-step screenshots
 - Console error / API failure counts (via trace analysis)
@@ -81,7 +81,7 @@ A PR implements a feature from a spec or flowchart. You need to verify the imple
 
 The skill reads both the PR diff and the issue description (from Linear/GitHub), then proposes a walkthrough plan covering the feature's expected flow. Walk through it step by step:
 
-1. The walkthrough plan maps issue requirements → UI pages → expected elements
+1. The walkthrough plan maps issue requirements to UI pages to expected elements
 2. Each step verifies elements exist, interactions work, and navigation is correct
 3. Trace analysis catches API errors or console warnings hidden from the UI
 4. A flow YAML is auto-generated, becoming a **regression test** for this feature
@@ -93,3 +93,14 @@ Post results:
 ```
 
 The PR comment includes the issue context, making the review self-documenting.
+
+## Related
+
+- [Commands](commands.md) -- all skills and flags including `--video`, `--pr`, `--no-video`
+- [Debugging](debugging.md) -- using traces and recordings to diagnose failures
+- [CI Integration](ci-integration.md) -- metrics and JUnit output for CI pipelines
+
+---
+
+> **Found a better pattern?** [Open a PR](https://github.com/iamcxa/kc-claude-plugins/pulls) to share it.
+> **Docs unclear?** Use `/e2e-help --feedback "<description>"` to let us know.
