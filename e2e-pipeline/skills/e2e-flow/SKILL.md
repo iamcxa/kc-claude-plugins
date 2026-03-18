@@ -40,7 +40,7 @@ Generate structured E2E flow YAMLs from codebase analysis, then verify them in a
 Read accumulated patterns to inform flow generation and verification:
 
 ```
-Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md
+Read → ${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md
 ```
 
 Use loaded patterns to:
@@ -288,7 +288,7 @@ Next steps:
 
 After presenting results, evaluate findings for skill-level knowledge capture.
 
-Read → `${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md`
+Read → `${CLAUDE_PLUGIN_ROOT}/references/knowledge-capture.md`
 
 ### D1 candidates (auto-append)
 
@@ -298,7 +298,7 @@ Scan generation + verification results for general patterns:
 - Checkpoint patterns that work/fail across services
 - Smoke mode patterns for different UI frameworks
 
-Auto-append to `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. Notify: "Appended pattern: [title]"
+Auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "Appended pattern: [title]"
 
 ### Skip conditions
 
