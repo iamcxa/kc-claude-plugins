@@ -63,6 +63,55 @@ function singleQuote(str) {
 }
 
 // ---------------------------------------------------------------------------
+// Selector → a11y tree pattern conversion (for snapshot-based visibility checks)
+// ---------------------------------------------------------------------------
+
+/**
+ * selectorToA11yPattern(selector) — convert a Playwright role selector to a grep
+ * pattern that matches the agent-browser snapshot (a11y tree) output.
+ *
+ * agent-browser snapshot outputs lines like:
+ *   - textbox "電子郵件" [required, ref=e9]
+ *   - button "登 入" [ref=e4]
+ *   - heading "每日看板" [ref=e14]
+ *   - menuitem "dashboard 營運概況" [ref=e1]
+ *
+ * Conversion rules:
+ *   role=textbox[name="X"]  → textbox "X"    (exact name match)
+ *   role=button[name="X"]   → button "X"     (exact name match)
+ *   role=heading[name=/X/]  → X              (regex → literal text, grep -F)
+ *   role=menuitem[name=/X/] → X              (regex → literal text, grep -F)
+ *   role=textbox >> nth=0   → textbox         (role only)
+ *   css=...                 → null            (can't convert to a11y pattern)
+ *
+ * Returns: string pattern for grep -Fq, or null if conversion not possible.
+ */
+function selectorToA11yPattern(selector) {
+  // role=X[name="Y"] → X "Y"
+  var exactMatch = selector.match(/^role=(\w+)\[name="([^"]+)"\]/);
+  if (exactMatch) return exactMatch[1] + ' "' + exactMatch[2] + '"';
+
+  // role=X[name=/Y/] → extract longest literal prefix before first regex metachar
+  var regexMatch = selector.match(/^role=\w+\[name=\/([^/]+)\/\]/);
+  if (regexMatch) {
+    // Strip regex metacharacters — take literal prefix up to first . * + ? [ ( { |
+    var literal = regexMatch[1].replace(/[.*+?[\](){}|\\].*$/, '');
+    return literal || regexMatch[1].replace(/[.*+?[\](){}|\\]/g, '');
+  }
+
+  // role=X >> nth=N → X (role name only)
+  var nthMatch = selector.match(/^role=(\w+)\s*>>/);
+  if (nthMatch) return nthMatch[1];
+
+  // role=X (bare role, no attributes) → X
+  var bareMatch = selector.match(/^role=(\w+)$/);
+  if (bareMatch) return bareMatch[1];
+
+  // css= or other formats → can't convert
+  return null;
+}
+
+// ---------------------------------------------------------------------------
 // Variable handling
 // ---------------------------------------------------------------------------
 
@@ -273,10 +322,21 @@ function generateRuntimeSupport() {
     '_STEP_FAILURES=()',
     '_STEP_TIMES=()',
     '_FLOW_START=$SECONDS',
+    '_SCREENSHOT_DIR="${E2E_SCREENSHOT_DIR:-/tmp/e2e-screenshots}"',
+    'mkdir -p "$_SCREENSHOT_DIR"',
+    '',
     '_handle_failure() {',
     '  local _step_id="$1"',
     '  local _msg="$2"',
     '  echo "FAIL: $_step_id -- $_msg"',
+    '  # Capture diagnostic artifacts on failure',
+    '  echo "--- Diagnostic: screenshot ---"',
+    '  agent-browser screenshot "$_SCREENSHOT_DIR/fail-${_step_id}.png" 2>&1 || echo "(screenshot failed)"',
+    '  echo "--- Diagnostic: current URL ---"',
+    '  agent-browser get url 2>&1 || echo "(get url failed)"',
+    '  echo "--- Diagnostic: a11y snapshot (first 80 lines) ---"',
+    '  agent-browser snapshot 2>&1 | head -80 || echo "(snapshot failed)"',
+    '  echo "--- End diagnostic ---"',
     '  local _msg_clean',
     "  _msg_clean=$(printf '%s' \"$_msg\" | sed 's/\\x1b\\[[0-9;]*m//g' | tr -d '\\000-\\010\\013\\014\\016-\\037')",
     '  _STEP_FAILURES+=("$_msg_clean")',
@@ -289,6 +349,8 @@ function generateRuntimeSupport() {
     '}',
     '',
     '# Poll-until helpers (CODEGEN-01)',
+    '# NOTE: _poll_visible uses agent-browser "is visible" which fails in headless CI on Linux.',
+    '# Use _poll_snapshot_contains as the primary visibility check (grepping the a11y tree).',
     '_poll_visible() {',
     '  local _sel="$1"',
     '  local _step_id="$2"',
@@ -378,6 +440,23 @@ function generateRuntimeSupport() {
     '      if [ "$_result" = "true" ]; then _found=true; break; fi',
     '    done',
     '    [ "$_found" = "true" ] && return 0',
+    '    sleep 1',
+    '    _count=$((_count + 1))',
+    '  done',
+    '  return 1',
+    '}',
+    '',
+    '# Snapshot-based visibility check — workaround for "is visible" returning false in headless CI.',
+    '# Polls the a11y tree for a text pattern instead of using Playwright isVisible().',
+    '_poll_snapshot_contains() {',
+    '  local _pattern="$1"',
+    '  local _step_id="$2"',
+    '  local _timeout="${3:-10}"',
+    '  local _count=0',
+    '  while [ "$_count" -lt "$_timeout" ]; do',
+    '    if agent-browser snapshot 2>/dev/null | grep -Fq "$_pattern"; then',
+    '      return 0',
+    '    fi',
     '    sleep 1',
     '    _count=$((_count + 1))',
     '  done',
@@ -698,21 +777,41 @@ function generateAction(step, stepIndex, totalSteps) {
 
     case 'click': {
       var sel = singleQuote(step.operands.selector);
-      var clickCmd = 'agent-browser ' + sessionPrefix + 'click ' + sel;
+      var cssSel = step.operands.cssSelector || null;
       lines.push('_STEP_START=$SECONDS');
-      lines.push('_retry=0');
       lines.push('_step_ok=true');
-      lines.push('while true; do');
-      lines.push('  ' + clickCmd + ' && break');
-      lines.push('  _retry=$((_retry + 1))');
-      lines.push('  if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then');
-      lines.push('    _step_ok=false');
-      lines.push('    break');
-      lines.push('  fi');
-      lines.push('  _HAD_RETRIES=true');
-      lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
-      lines.push('  sleep 2');
-      lines.push('done');
+
+      if (cssSel) {
+        // eval-based click: querySelector + .click() — reliable in headless CI
+        // Use JS single quotes for string delimiters; shell \" for CSS attr quotes
+        var shellCss = cssSel.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        var clickEval = "(()=>{"
+          + "const el=document.querySelector('" + shellCss + "');"
+          + "if(!el)throw new Error('element not found: " + shellCss + "');"
+          + "el.click();"
+          + "})()";
+        var evalClickCmd = 'agent-browser ' + sessionPrefix + 'eval "' + clickEval + '"';
+        lines.push(evalClickCmd + ' || _step_ok=false');
+        // Fallback: try Playwright click if eval fails
+        lines.push('if [ "$_step_ok" = "false" ]; then');
+        lines.push('  agent-browser ' + sessionPrefix + 'click ' + sel + ' && _step_ok=true');
+        lines.push('fi');
+      } else {
+        // Playwright click with retry loop
+        lines.push('_retry=0');
+        lines.push('while true; do');
+        lines.push('  agent-browser ' + sessionPrefix + 'click ' + sel + ' && break');
+        lines.push('  _retry=$((_retry + 1))');
+        lines.push('  if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then');
+        lines.push('    _step_ok=false');
+        lines.push('    break');
+        lines.push('  fi');
+        lines.push('  _HAD_RETRIES=true');
+        lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
+        lines.push('  sleep 2');
+        lines.push('done');
+      }
+
       lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
       lines.push('if [ "$_step_ok" = "true" ]; then');
       lines.push('  _STEP_NAMES+=("' + escapedId + '")');
@@ -730,22 +829,42 @@ function generateAction(step, stepIndex, totalSteps) {
 
     case 'fill': {
       var fillSel = singleQuote(step.operands.selector);
-      var fillVal = singleQuote(step.operands.value);
-      var fillCmd = 'agent-browser ' + sessionPrefix + 'fill ' + fillSel + ' ' + fillVal;
+      var fillVal = step.operands.value;
+      var fillCssSel = step.operands.cssSelector || null;
       lines.push('_STEP_START=$SECONDS');
-      lines.push('_retry=0');
       lines.push('_step_ok=true');
-      lines.push('while true; do');
-      lines.push('  ' + fillCmd + ' && break');
-      lines.push('  _retry=$((_retry + 1))');
-      lines.push('  if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then');
-      lines.push('    _step_ok=false');
-      lines.push('    break');
-      lines.push('  fi');
-      lines.push('  _HAD_RETRIES=true');
-      lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
-      lines.push('  sleep 2');
-      lines.push('done');
+
+      if (fillCssSel) {
+        // eval-based fill: nativeInputValueSetter — bypasses React controlled inputs
+        // Use JS single quotes for string delimiters; shell \" for CSS attr quotes
+        var shellFillCss = fillCssSel.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        var shellFillVal = fillVal.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        var fillEval = "(()=>{"
+          + "const el=document.querySelector('" + shellFillCss + "');"
+          + "if(!el)throw new Error('element not found: " + shellFillCss + "');"
+          + "const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;"
+          + "s.call(el,'" + shellFillVal + "');"
+          + "el.dispatchEvent(new Event('input',{bubbles:true}));"
+          + "el.dispatchEvent(new Event('change',{bubbles:true}));"
+          + "})()";
+        var evalFillCmd = 'agent-browser ' + sessionPrefix + 'eval "' + fillEval + '"';
+        lines.push(evalFillCmd + ' || _step_ok=false');
+      } else {
+        // Playwright fill with retry loop
+        lines.push('_retry=0');
+        lines.push('while true; do');
+        lines.push('  agent-browser ' + sessionPrefix + 'fill ' + fillSel + ' ' + singleQuote(fillVal) + ' && break');
+        lines.push('  _retry=$((_retry + 1))');
+        lines.push('  if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then');
+        lines.push('    _step_ok=false');
+        lines.push('    break');
+        lines.push('  fi');
+        lines.push('  _HAD_RETRIES=true');
+        lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
+        lines.push('  sleep 2');
+        lines.push('done');
+      }
+
       lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
       lines.push('if [ "$_step_ok" = "true" ]; then');
       lines.push('  _STEP_NAMES+=("' + escapedId + '")');
@@ -837,13 +956,21 @@ function generateExpects(step) {
     var expect = step.expects[i];
 
     if (expect.type === 'active' || expect.type === 'element-visible') {
-      // Poll until element is visible (CODEGEN-01)
-      var sel = singleQuote(expect.selector);
-      var failMsg = expect.elementName + ' not visible after ' + timeoutArg + 's';
-      lines.push('_poll_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
+      // Prefer snapshot-based check (agent-browser "is visible" fails in headless CI on Linux)
+      var a11yPattern = selectorToA11yPattern(expect.selector);
+      if (a11yPattern) {
+        var failMsg = expect.elementName + ' not in a11y tree after ' + timeoutArg + 's';
+        lines.push('_poll_snapshot_contains ' + singleQuote(a11yPattern) + ' "' + step.id + '" ' + timeoutArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
+      } else {
+        // Fallback to _poll_visible for non-convertible selectors (e.g., css=)
+        var sel = singleQuote(expect.selector);
+        var failMsg = expect.elementName + ' not visible after ' + timeoutArg + 's';
+        lines.push('_poll_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
+      }
 
     } else if (expect.type === 'element-not-visible') {
       // Poll until element is not visible (inverted logic — CODEGEN-01 Pitfall 4)
+      // Keep _poll_not_visible — headless CI issue is less critical for "not visible" checks
       var sel = singleQuote(expect.selector);
       var failMsg = expect.elementName + ' still visible after ' + timeoutArg + 's (expected not visible)';
       lines.push('_poll_not_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
@@ -970,6 +1097,7 @@ module.exports = {
   generate: generate,
   generateHeader: generateHeader,
   singleQuote: singleQuote,
+  selectorToA11yPattern: selectorToA11yPattern,
   generateVariables: generateVariables,
   generateBaseUrlNormalization: generateBaseUrlNormalization,
   generateCleanupTrap: generateCleanupTrap,

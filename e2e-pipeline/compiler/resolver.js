@@ -49,7 +49,9 @@ function buildSymbolTable(mapping) {
         }
         collisions.get(elemName).push(pageName);
       } else {
-        table.set(elemName, { selector: elemData.selector, page: pageName });
+        var entry = { selector: elemData.selector, page: pageName };
+        if (elemData.css_selector) entry.cssSelector = elemData.css_selector;
+        table.set(elemName, entry);
       }
     }
   }
@@ -304,7 +306,9 @@ function resolve(flow, mapping) {
             errors.push("Step '" + stepId + "': element '" + elemName + "' not found in mapping");
             skipStep = true;
           } else {
-            resolvedOperands = Object.assign({}, rawOperands, { selector: entry.selector });
+            var merged = { selector: entry.selector };
+            if (entry.cssSelector) merged.cssSelector = entry.cssSelector;
+            resolvedOperands = Object.assign({}, rawOperands, merged);
           }
         }
       }
@@ -446,7 +450,9 @@ function resolveMultiSite(flow, siteMappings) {
             errors.push("Step '" + stepId + "': element '" + elemName + "' not found in mapping");
             skipStep = true;
           } else {
-            resolvedOperands = Object.assign({}, rawOperands, { selector: entry.selector });
+            var merged = { selector: entry.selector };
+            if (entry.cssSelector) merged.cssSelector = entry.cssSelector;
+            resolvedOperands = Object.assign({}, rawOperands, merged);
           }
         }
       }
