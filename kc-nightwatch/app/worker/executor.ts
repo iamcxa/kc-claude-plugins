@@ -1,4 +1,6 @@
 import path from 'node:path'
+import os from 'node:os'
+import fs from 'node:fs/promises'
 import { log } from '../shared/logger.ts'
 import type { Run, RunSummary, IpcMessage } from '../shared/types.ts'
 import { parseStreamJsonLine } from './log-parser.ts'
@@ -10,6 +12,30 @@ import {
 
 // In-memory PID tracking — never use files (worker has direct handles)
 export const activePids = new Set<number>()
+
+// MEM-01: Create per-target NW journal directory on first use
+// CRITICAL: Use os.homedir() + path.join, never template literal '~' (policy.ts anti-pattern rule)
+export async function ensureNwMemoryDir(targetName: string): Promise<string> {
+  const dir = path.join(os.homedir(), '.claude', 'nightwatch', 'memory', targetName, '.private-journal')
+  await fs.mkdir(dir, { recursive: true })
+  return dir
+}
+
+// MEM-02: Write per-run MCP config pointing to target-specific journal
+export async function writeNwJournalConfig(runDir: string, journalDir: string): Promise<string> {
+  const configPath = path.join(runDir, 'nw-journal.json')
+  const config = {
+    mcpServers: {
+      'nw-journal': {
+        type: 'stdio',
+        command: 'private-journal',
+        args: ['--dir', journalDir],
+      },
+    },
+  }
+  await Bun.write(configPath, JSON.stringify(config, null, 2))
+  return configPath
+}
 
 // Rolling cleanup — keep last N runs (FOUND-08)
 export async function cleanupOldRuns(runsDir: string, keepCount = KEEP_RUNS_COUNT): Promise<void> {
@@ -55,6 +81,11 @@ export async function executeRun(
   const summaryPath = path.join(runDir, 'summary.yaml')
   const logLines: string[] = []
 
+  // MEM-01/02/03: Create per-target NW journal dir and write per-run MCP config
+  // Each target gets a distinct journal path — no cross-target sharing (MEM-03)
+  const journalDir = await ensureNwMemoryDir(target.name)
+  const journalConfigPath = await writeNwJournalConfig(runDir, journalDir)
+
   const safehouseFlags = buildSafehouseFlags(target, run, opts.runsDir)
   const safehouseBin = opts.safehousePath ?? 'safehouse'
 
@@ -66,6 +97,7 @@ export async function executeRun(
     '--output-format', 'stream-json',
     '--model', 'claude-opus-4-5',
     '--cwd', target.resolved_path,
+    '--mcp-config', journalConfigPath,
     ...(run.custom_prompt ? ['--append-system-prompt', run.custom_prompt] : []),
   ]
 
