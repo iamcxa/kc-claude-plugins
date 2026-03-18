@@ -8,7 +8,7 @@ description: |
 
   <example>
   Context: The e2e-test skill has resolved a single flow YAML and its mapping, and needs to execute the test.
-  user: "Execute E2E flow:\n  flow_path: /home/user/project/.claude/e2e/flows/smoke-navigation.yaml\n  mapping_path: /home/user/project/.claude/e2e/mappings/my-app.yaml\n  auth_profile: ~/.agent-browser/my-app/\n  base_url: http://localhost:3000\n  app: my-app\n  report_dir: /home/user/project/e2e-reports/20260309-143000\n  headed: true"
+  user: "Execute E2E flow:\n  flow_path: /home/user/project/.claude/e2e/flows/smoke-navigation.yaml\n  mapping_path: /home/user/project/.claude/e2e/mappings/my-app.yaml\n  auth_profile: ~/.agent-browser/my-app/\n  base_url: http://localhost:3000\n  app: my-app\n  report_dir: /home/user/project/.claude/e2e/reports/20260309-143000\n  headed: true"
   assistant: "Reads reference files and flow YAML, runs pre-flight checks, opens browser with auth profile, executes each step sequentially (snapshot -> interact -> validate expectations), captures screenshots on failure, writes report.md, and returns structured summary with pass/fail counts."
   <commentary>
   The e2e-test skill dispatches this agent for each flow+mapping pair. The agent receives all paths as absolute values and executes autonomously without needing to resolve flows or mappings.
@@ -17,7 +17,7 @@ description: |
 
   <example>
   Context: The e2e-test skill is running a multi-site suite and dispatches this agent for one site with session isolation enabled.
-  user: "Execute E2E flow:\n  flow_path: /home/user/project/.claude/e2e/flows/smoke-navigation.yaml\n  mapping_path: /home/user/project/.claude/e2e/mappings/admin-panel.yaml\n  auth_profile: ~/.agent-browser/admin-panel/\n  base_url: http://localhost:5173\n  app: admin-panel\n  report_dir: /home/user/project/e2e-reports/20260309-143000/admin-panel\n  headed: true\n  suite_context: true"
+  user: "Execute E2E flow:\n  flow_path: /home/user/project/.claude/e2e/flows/smoke-navigation.yaml\n  mapping_path: /home/user/project/.claude/e2e/mappings/admin-panel.yaml\n  auth_profile: ~/.agent-browser/admin-panel/\n  base_url: http://localhost:5173\n  app: admin-panel\n  report_dir: /home/user/project/.claude/e2e/reports/20260309-143000/admin-panel\n  headed: true\n  suite_context: true"
   assistant: "Detects suite_context=true, uses --session admin-panel on all agent-browser commands for session isolation. Executes flow steps, writes per-site report, returns structured summary."
   <commentary>
   When suite_context is true, the agent uses --session to keep browser sessions separate across sites in a multi-site suite. This prevents cookie/localStorage leakage between different apps under test.
@@ -83,10 +83,10 @@ Ensure large binary artifacts are git-ignored before writing any files. Run once
 mkdir -p "{{report_dir}}"
 PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || dirname "$(dirname "{{report_dir}}")")
 if [ -f "$PROJ_ROOT/.gitignore" ]; then
-  grep -q 'e2e-reports/\*\*/\*.webm' "$PROJ_ROOT/.gitignore" 2>/dev/null || \
-    printf '\n# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' >> "$PROJ_ROOT/.gitignore"
+  grep -q '.claude/e2e/reports/\*\*/\*.webm' "$PROJ_ROOT/.gitignore" 2>/dev/null || \
+    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' >> "$PROJ_ROOT/.gitignore"
 else
-  printf '# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' > "$PROJ_ROOT/.gitignore"
+  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' > "$PROJ_ROOT/.gitignore"
 fi
 ```
 
@@ -488,7 +488,7 @@ _(Include this section only when the flow contains `verify-external` steps)_
 | Re-run with video | `/e2e-test {{flow_name}} --video` |
 | View trace | `npx playwright show-trace {{report_dir}}/trace.zip` |
 
-> **Tip:** The `e2e-reports/` directory can be gitignored — only `.claude/e2e/flows/` and `.claude/e2e/mappings/` are needed to reproduce results.
+> **Tip:** The `.claude/e2e/reports/` directory can be gitignored — only `.claude/e2e/flows/` and `.claude/e2e/mappings/` are needed to reproduce results.
 ```
 
 ### 3d. Return Structured Summary

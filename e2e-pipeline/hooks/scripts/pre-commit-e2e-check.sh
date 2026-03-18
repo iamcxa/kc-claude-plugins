@@ -19,7 +19,7 @@ if [ ! -d "$mapping_dir" ] || ! ls "$mapping_dir"/*.yaml &>/dev/null; then
 fi
 
 flow_dir="$project_dir/.claude/e2e/flows"
-report_dir="$project_dir/e2e-reports"
+report_dir="$project_dir/.claude/e2e/reports"
 
 # Check 1: Any flows exist?
 flow_count=0

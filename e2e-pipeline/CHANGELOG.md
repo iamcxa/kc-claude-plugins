@@ -5,6 +5,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+- Default report output directory from `e2e-reports/` to `.claude/e2e/reports/`, unifying all E2E artifacts under `.claude/e2e/` (DEV-2)
+
 ### Added
 - `docs/pr-workflow.md` — end-to-end guide for posting E2E evidence to PRs
 - Media processing pipeline section in `docs/recording-evidence.md`

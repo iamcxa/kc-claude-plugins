@@ -89,9 +89,9 @@ E2E runs produce large binary artifacts (webm, mp4, trace.zip) that should NOT b
 
 ```
 # E2E pipeline artifacts (large binary files)
-e2e-reports/**/*.webm
-e2e-reports/**/*.mp4
-e2e-reports/**/trace.zip
+.claude/e2e/reports/**/*.webm
+.claude/e2e/reports/**/*.mp4
+.claude/e2e/reports/**/trace.zip
 ```
 
 **Check & append** (idempotent — safe to run multiple times):
@@ -99,11 +99,11 @@ e2e-reports/**/trace.zip
 ```bash
 PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 if [ -f "$PROJ_ROOT/.gitignore" ]; then
-  if ! grep -q 'e2e-reports/\*\*/\*.webm' "$PROJ_ROOT/.gitignore" 2>/dev/null; then
-    printf '\n# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' >> "$PROJ_ROOT/.gitignore"
+  if ! grep -q '.claude/e2e/reports/\*\*/\*.webm' "$PROJ_ROOT/.gitignore" 2>/dev/null; then
+    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' >> "$PROJ_ROOT/.gitignore"
   fi
 else
-  printf '# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' > "$PROJ_ROOT/.gitignore"
+  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' > "$PROJ_ROOT/.gitignore"
 fi
 ```
 

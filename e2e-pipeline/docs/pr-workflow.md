@@ -62,11 +62,11 @@ After test completes, the skill:
 
    ```bash
    gh release create e2e-assets-<branch> --draft --title "E2E assets (<branch>)" --notes ""
-   gh release upload e2e-assets-<branch> e2e-reports/<ts>/*.png e2e-reports/<ts>/*.mp4 --clobber
+   gh release upload e2e-assets-<branch> .claude/e2e/reports/<ts>/*.png .claude/e2e/reports/<ts>/*.mp4 --clobber
    ```
 
 2. **Updates image paths** in `pr-summary.md` to use release asset URLs
-3. **Posts to PR**: `gh pr comment <N> --body-file e2e-reports/<ts>/pr-summary.md`
+3. **Posts to PR**: `gh pr comment <N> --body-file .claude/e2e/reports/<ts>/pr-summary.md`
 
 You confirm before posting.
 
@@ -114,7 +114,7 @@ bash .claude/e2e/compiled/login-flow.sh
 <details>
 <summary>Video (42s)</summary>
 <!-- drag-drop video file here -->
-Video file: e2e-reports/20260318-143000/test-run.mp4
+Video file: .claude/e2e/reports/20260318-143000/test-run.mp4
 </details>
 ```
 
@@ -212,7 +212,7 @@ bash .claude/e2e/compiled/<flow>.sh
 
 ## Output Files
 
-After a `--pr` run, the report directory (`e2e-reports/<timestamp>/`) contains:
+After a `--pr` run, the report directory (`.claude/e2e/reports/<timestamp>/`) contains:
 
 | File | Purpose |
 |------|---------|

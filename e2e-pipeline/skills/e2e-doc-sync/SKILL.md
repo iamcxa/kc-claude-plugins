@@ -127,7 +127,7 @@ Run `/e2e-doc-sync --check` to verify no remaining gaps.
 After completing a doc sync, check:
 
 1. **e2e-help topic map**: If new docs were created, verify the topic-to-file mapping in `skills/e2e-help/SKILL.md` Phase 3 includes them
-2. **Feedback log**: Read `e2e-reports/feedback-log.md` (if exists) for unresolved user feedback that the new docs might address
+2. **Feedback log**: Read `.claude/e2e/reports/feedback-log.md` (if exists) for unresolved user feedback that the new docs might address
 3. **Suggest closing issues**: If gaps were filled that match open GitHub issues tagged `documentation`, suggest closing them
 
 ## When to Run

@@ -7,7 +7,7 @@ description: |
 
   <example>
   Context: The e2e-flow skill has a generated flow that needs browser validation.
-  user: "Verify E2E flow:\n  flow_path: /home/user/project/.claude/e2e/flows/create-project.yaml\n  mapping_path: /home/user/project/.claude/e2e/mappings/admin-panel.yaml\n  auth_profile: ~/.agent-browser/admin-panel/\n  base_url: http://localhost:3000\n  app: admin-panel\n  report_dir: /home/user/project/e2e-reports/20260316-143000\n  record: true"
+  user: "Verify E2E flow:\n  flow_path: /home/user/project/.claude/e2e/flows/create-project.yaml\n  mapping_path: /home/user/project/.claude/e2e/mappings/admin-panel.yaml\n  auth_profile: ~/.agent-browser/admin-panel/\n  base_url: http://localhost:3000\n  app: admin-panel\n  report_dir: /home/user/project/.claude/e2e/reports/20260316-143000\n  record: true"
   assistant: "Reads flow and mapping, opens browser with --profile, runs Round 1 (fix run): finds 2 stale selectors and 1 missing confirmation dialog, repairs mapping + inserts step. Closes browser, starts recording, runs Round 2 (clean evidence run): all steps pass. Writes report.md, pr-summary.md, corrections.md, converts video to MP4, writes back corrected flow and mapping."
   <commentary>
   The e2e-flow skill dispatches this agent after flow-writer produces a draft flow. The agent runs up to 2 rounds: Round 1 to diagnose and fix issues, Round 2 as the clean evidence run with recording. Trace analysis is NOT done by this agent — the skill dispatches trace-analyzer separately.
@@ -16,7 +16,7 @@ description: |
 
   <example>
   Context: Verifying an existing flow with unfixable issues.
-  user: "Verify E2E flow:\n  flow_path: /home/user/project/.claude/e2e/flows/acceptance-export.yaml\n  mapping_path: /home/user/project/.claude/e2e/mappings/admin-panel.yaml\n  auth_profile: ~/.agent-browser/admin-panel/\n  base_url: http://localhost:3000\n  app: admin-panel\n  report_dir: /home/user/project/e2e-reports/20260316-150000\n  record: true"
+  user: "Verify E2E flow:\n  flow_path: /home/user/project/.claude/e2e/flows/acceptance-export.yaml\n  mapping_path: /home/user/project/.claude/e2e/mappings/admin-panel.yaml\n  auth_profile: ~/.agent-browser/admin-panel/\n  base_url: http://localhost:3000\n  app: admin-panel\n  report_dir: /home/user/project/.claude/e2e/reports/20260316-150000\n  record: true"
   assistant: "Runs Round 1: 5/8 steps pass, 2 selectors repaired, 1 step has element genuinely missing (export feature not implemented). Writes partial corrections, skips Round 2 (unfixable issues present). Returns status: partial with corrections and unfixable list."
   <commentary>
   When unfixable issues exist, Round 2 is skipped. Partial corrections are still written back — they improve the flow even though some steps remain broken.

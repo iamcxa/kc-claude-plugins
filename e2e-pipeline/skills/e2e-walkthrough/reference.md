@@ -19,17 +19,17 @@ Before opening a new browser session, check for stale sessions from previous ski
 ### Startup
 
 ```bash
-REPORT_DIR="$(pwd)/e2e-reports/$(date +%Y%m%d-%H%M%S)" && mkdir -p "$REPORT_DIR"
+REPORT_DIR="$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)" && mkdir -p "$REPORT_DIR"
 ```
 
 **Gitignore housekeeping** (ensure large artifacts are not committed):
 
 ```bash
 if [ -f .gitignore ]; then
-  grep -q 'e2e-reports/\*\*/\*.webm' .gitignore 2>/dev/null || \
-    printf '\n# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' >> .gitignore
+  grep -q '.claude/e2e/reports/\*\*/\*.webm' .gitignore 2>/dev/null || \
+    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' >> .gitignore
 else
-  printf '# E2E pipeline artifacts (large binary files)\ne2e-reports/**/*.webm\ne2e-reports/**/*.mp4\ne2e-reports/**/trace.zip\n' > .gitignore
+  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' > .gitignore
 fi
 ```
 
@@ -465,7 +465,7 @@ flowchart TD
 | Re-walk interactively | `/e2e-walkthrough` |
 | View trace | `npx playwright show-trace $REPORT_DIR/trace.zip` |
 
-> **Tip:** The `e2e-reports/` directory can be gitignored — only `.claude/e2e/flows/` and `.claude/e2e/mappings/` are needed to reproduce results.
+> **Tip:** The `.claude/e2e/reports/` directory can be gitignored — only `.claude/e2e/flows/` and `.claude/e2e/mappings/` are needed to reproduce results.
 ```
 
 #### `pr-summary.md` — PR Comment Report

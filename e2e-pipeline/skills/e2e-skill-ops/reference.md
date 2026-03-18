@@ -82,7 +82,7 @@ Extend the e2e skill ecosystem with a new capability.
 ### Feature Development Checklist
 
 1. **Feasibility PoC** — validate with real data before touching skills
-   - Use actual `trace.zip`, mapping, or flow files from `e2e-reports/`
+   - Use actual `trace.zip`, mapping, or flow files from `.claude/e2e/reports/`
    - Document assumption vs reality gaps (see template below)
 2. **Impact scan** — which skills and references need changes?
    - Primary: the skill that owns the feature

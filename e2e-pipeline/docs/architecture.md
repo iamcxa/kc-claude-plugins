@@ -7,11 +7,11 @@ This plugin forms a self-healing cycle: **Map -> Test -> Analyze -> Repair -> Re
 ```
 /e2e-map             -> .claude/e2e/mappings/<app>.yaml
        |
-/e2e-flow            -> .claude/e2e/flows/<feature>.yaml + e2e-reports/<ts>/
+/e2e-flow            -> .claude/e2e/flows/<feature>.yaml + .claude/e2e/reports/<ts>/
        |                 (generate from plans/specs/PRs, verify in browser)
 /e2e-compile         -> .claude/e2e/compiled/<flow>.sh (standalone bash scripts)
        |
-/e2e-test <flow>     -> e2e-reports/<ts>/report.md, trace.zip, screenshots, video
+/e2e-test <flow>     -> .claude/e2e/reports/<ts>/report.md, trace.zip, screenshots, video
        |
   Stale selectors?   -> /e2e-map --page X (repair mapping)
   Flow changed?      -> Edit flow or /e2e-flow --verify-only

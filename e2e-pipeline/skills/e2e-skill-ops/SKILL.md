@@ -55,7 +55,7 @@ Every mode enforces these. Skipping any one is a violation.
 
 | # | Rule | Why |
 |---|------|-----|
-| 1 | **Search before diagnose** — query journal + `e2e-reports/skill-quality-findings.md` + MEMORY.md + `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` + `.claude/e2e-lessons.md` for prior findings. If `skill-quality-findings.md` doesn't exist, create it with a `# E2E Skill Quality Findings` heading. | Prevents re-discovering known issues |
+| 1 | **Search before diagnose** — query journal + `.claude/e2e/reports/skill-quality-findings.md` + MEMORY.md + `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` + `.claude/e2e-lessons.md` for prior findings. If `skill-quality-findings.md` doesn't exist, create it with a `# E2E Skill Quality Findings` heading. | Prevents re-discovering known issues |
 | 2 | **3-skill impact scan** — check all files in the Impact Matrix below | Prevents silent drift between skills |
 | 3 | **Verify after fix** — run the failing scenario (or subagent pressure test) after changes | Prevents "fix and forget" |
 | 4 | **Write back findings (D1+D2)** — append to `skill-quality-findings.md` + journal. **D1**: general patterns → auto-append to `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. **D2** (--evaluate mode): project-specific patterns → gated write to `.claude/e2e-lessons.md` or project `CLAUDE.md` (see `${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md`). | Prevents session amnesia + accumulates knowledge |
@@ -75,7 +75,7 @@ When ANY e2e skill changes, scan every row:
 | `e2e-pipeline` plugin: `agents/` | `e2e-test-runner.md`, `e2e-mapper.md`, `e2e-trace-analyzer.md`, `e2e-flow-writer.md`, `e2e-flow-verifier.md`, `e2e-media-processor.md` — startup flow, auth, recording, correction logic, media generation |
 | `e2e-pipeline` plugin: `references/` | `commands.md`, `common-patterns.md` |
 | `<project>/.claude/e2e/mappings/*.yaml` | Selector conventions match skill guidance |
-| `<project>/e2e-reports/skill-quality-findings.md` | Past findings for this exact pattern |
+| `<project>/.claude/e2e/reports/skill-quality-findings.md` | Past findings for this exact pattern |
 
 **Quick skip rule**: Purely cosmetic changes (typo, formatting) — scan only "common mistakes" in the other two skills. All other changes require full scan.
 
@@ -124,7 +124,7 @@ If verification fails, loop back to `--debug`. Write-back is not optional — at
 
 | Need | Command |
 |------|---------|
-| Search past findings | `Read e2e-reports/skill-quality-findings.md` |
+| Search past findings | `Read .claude/e2e/reports/skill-quality-findings.md` |
 | Search journal | `mcp__private-journal__search_journal` query: "e2e skill" |
 | List all e2e skills | `ls ~/.claude/plugins/*/e2e-pipeline/*/skills/*/SKILL.md ~/.claude/plugins/local/e2e-pipeline/skills/*/SKILL.md 2>/dev/null` |
 | List project mappings | `ls .claude/e2e/mappings/*.yaml` |

@@ -8,7 +8,7 @@ description: |
 
   <example>
   Context: The e2e-test skill completed a test run and needs media assets generated.
-  user: "Process media:\n  report_dir: /home/user/project/e2e-reports/20260317-143000\n  recording_path: /home/user/project/e2e-reports/20260317-143000/full.webm\n  output_name: test-run"
+  user: "Process media:\n  report_dir: /home/user/project/.claude/e2e/reports/20260317-143000\n  recording_path: /home/user/project/.claude/e2e/reports/20260317-143000/full.webm\n  output_name: test-run"
   assistant: "Scans step-*.png screenshots, detects 2 leading blank frames and 1 trailing blank frame, generates steps.gif from 8 non-blank frames, converts full.webm to test-run.mp4 at 1.5x speed with 2s trim, copies first non-blank screenshot as thumbnail.png. Returns structured summary."
   <commentary>
   The e2e-test skill dispatches this agent after the browser agent returns. The agent processes raw artifacts autonomously and returns paths + counts.
@@ -17,7 +17,7 @@ description: |
 
   <example>
   Context: The e2e-walkthrough skill finished and needs media without a recording.
-  user: "Process media:\n  report_dir: /home/user/project/e2e-reports/20260317-150000\n  output_name: walkthrough"
+  user: "Process media:\n  report_dir: /home/user/project/.claude/e2e/reports/20260317-150000\n  output_name: walkthrough"
   assistant: "No recording_path provided — skips MP4 conversion. Scans 12 screenshots, finds 1 leading blank, generates steps.gif from 11 frames, creates thumbnail.png. Returns summary with mp4_path: (none)."
   <commentary>
   When no recording_path is provided, the agent skips MP4 but still generates GIF and thumbnail from screenshots.

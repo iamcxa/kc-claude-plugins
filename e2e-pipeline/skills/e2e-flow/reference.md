@@ -276,7 +276,7 @@ Agent tool (e2e-pipeline:e2e-flow-verifier):
       auth_profile: ~/.agent-browser/<app>/
       base_url: <from mapping>
       app: <from mapping>
-      report_dir: <absolute path to e2e-reports/timestamp/>
+      report_dir: <absolute path to .claude/e2e/reports/timestamp/>
       record: <true|false>
 ```
 
