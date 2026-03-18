@@ -59,17 +59,17 @@ Plans:
 **Requirements**: CONF-01, CONF-02, CONF-03, CONF-04, CONF-05, CONF-06, CONF-07, CONF-08, CHAT-01, CHAT-02, CHAT-03, CHAT-04, CHAT-05, CHAT-06, CHAT-07, FEED-01, FEED-02, FEED-03, FEED-04, FEED-05, FEED-06, FEED-07, ASSESS-01, ASSESS-02, ASSESS-03, ASSESS-04, MEAS-01, MEAS-02, MEAS-03
 **Success Criteria** (what must be TRUE):
   1. After a run completes, NW-Claude chat panel auto-briefs with a run summary; user can ask follow-up questions; NW-Claude can trigger runs and query state via NW-MCP; switching target focus prompts a context switch
-  2. User opens Config page, unlocks editing, modifies targets.yaml or safety.yaml, and the 4-step validation flow (syntax → Haiku semantic → diff → confirm) runs before any write; config warnings from self-repair.yaml appear inline
-  3. User adds a new target via the 4-step wizard (type → goals → monitors/respond → validate) and sees it appear on the dashboard; user can edit or remove targets
+  2. User opens Config page, unlocks editing, modifies targets.yaml or safety.yaml, and the 4-step validation flow (syntax -> Haiku semantic -> diff -> confirm) runs before any write; config warnings from self-repair.yaml appear inline
+  3. User adds a new target via the 4-step wizard (type -> goals -> monitors/respond -> validate) and sees it appear on the dashboard; user can edit or remove targets
   4. User thumbs-up or thumbs-down an action card; feedback is stored per signal; PR merges and Linear issue closes are collected as implicit feedback; reject rate per indicator adjusts confidence thresholds; feedback trends are written to the NW journal
   5. Run detail shows Phase 3.5 pre-action strategy and Phase 4.5 post-action reflection per action card; Phase 0.5 indicator baselines with quantified values appear in run detail with trend direction
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 03-01: NW-Claude chat — WebSocket endpoint, chat-session service (Anthropic SDK as default, CLI path as optimization), session lifecycle, per-target focus, auto-brief trigger
-- [ ] 03-02: Config editor — YAML editor UI, edit lock, 4-step save validation flow, config warnings panel, Add/Edit/Remove target wizard
-- [ ] 03-03: Feedback pipeline — dashboard feedback buttons, POST /api/feedback endpoint, MCP feedback tool, PR + Linear status polling, reject rate calibration, NW journal write
-- [ ] 03-04: Self-assessment + measurement — Phase 3.5/4.5 assessment in orchestrator skill, Phase 0.5 baseline measurement in worker pipeline, display in run detail and Slack report
+- [ ] 03-01-PLAN.md — Phase 3 shared types + global SSE broadcast + chat session manager (Anthropic SDK) + chat routes + ChatDrawer UI + auto-brief wiring
+- [ ] 03-02-PLAN.md — Config validation service (4-step flow) + config API routes + YAML editor page (tabs, edit lock, warnings) + AddTargetWizard + Edit/Remove target
+- [ ] 03-03-PLAN.md — Feedback store + feedback API routes + ActionCard component with feedback buttons + implicit feedback collector (PR/Linear polling) + reject rate calibration
+- [ ] 03-04-PLAN.md — BaselineCard component + ActionCard assessment sections (Strategy/Reflection) + runs.ts integration + human verification checkpoint
 
 ### Phase 4: Full Flywheel
 **Goal**: The entire nightwatch state is queryable and actionable from any Claude session via MCP, and flywheel health is visible as charts and trends — completing the closed-loop improvement system
@@ -88,7 +88,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
