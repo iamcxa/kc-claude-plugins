@@ -7,7 +7,7 @@
 
 ### Foundation
 
-- [ ] **FOUND-01**: Server + worker two-process architecture with Bun native IPC
+- [x] **FOUND-01**: Server + worker two-process architecture with Bun native IPC
 - [x] **FOUND-02**: Graceful shutdown (SIGINT/SIGTERM) with child process cleanup
 - [x] **FOUND-03**: Worker crash recovery — server detects disconnect, cleans orphan processes
 - [x] **FOUND-04**: Socket/PID file cleanup on startup (prevent EADDRINUSE)
@@ -72,13 +72,13 @@
 
 ### Feedback
 
-- [ ] **FEED-01**: Dashboard feedback buttons (thumbs up/down) per action card
-- [ ] **FEED-02**: Feedback API endpoint (POST /api/feedback with signal_id, verdict, reason)
+- [x] **FEED-01**: Dashboard feedback buttons (thumbs up/down) per action card
+- [x] **FEED-02**: Feedback API endpoint (POST /api/feedback with signal_id, verdict, reason)
 - [ ] **FEED-03**: MCP feedback tool (nw_submit_feedback)
-- [ ] **FEED-04**: PR status collection (merged = accepted, closed = rejected)
+- [x] **FEED-04**: PR status collection (merged = accepted, closed = rejected)
 - [ ] **FEED-05**: Linear issue status collection
-- [ ] **FEED-06**: Reject rate calibration (per indicator, adjust confidence threshold)
-- [ ] **FEED-07**: Feedback trends written to NW journal (slow learning path)
+- [x] **FEED-06**: Reject rate calibration (per indicator, adjust confidence threshold)
+- [x] **FEED-07**: Feedback trends written to NW journal (slow learning path)
 
 ### Self-Assessment
 
@@ -170,10 +170,10 @@
 | SEC-02 | Phase 1 | Complete |
 | SEC-03 | Phase 1 | Complete |
 | DASH-01 | Phase 2 | Complete |
-| DASH-02 | Phase 2 | Pending |
+| DASH-02 | Phase 2 | Complete |
 | DASH-03 | Phase 2 | Complete |
 | DASH-04 | Phase 2 | Complete |
-| DASH-05 | Phase 2 | Pending |
+| DASH-05 | Phase 2 | Complete |
 | EXEC-01 | Phase 2 | Complete |
 | EXEC-02 | Phase 2 | Complete |
 | EXEC-03 | Phase 2 | Complete |
@@ -189,7 +189,7 @@
 | HIST-01 | Phase 2 | Complete |
 | HIST-02 | Phase 2 | Complete |
 | HIST-03 | Phase 2 | Complete |
-| HIST-04 | Phase 2 | Pending |
+| HIST-04 | Phase 2 | Complete |
 | MEM-01 | Phase 2 | Complete |
 | MEM-02 | Phase 2 | Complete |
 | MEM-03 | Phase 2 | Complete |
@@ -208,13 +208,13 @@
 | CHAT-05 | Phase 3 | Pending |
 | CHAT-06 | Phase 3 | Complete |
 | CHAT-07 | Phase 3 | Complete |
-| FEED-01 | Phase 3 | Pending |
-| FEED-02 | Phase 3 | Pending |
+| FEED-01 | Phase 3 | Complete |
+| FEED-02 | Phase 3 | Complete |
 | FEED-03 | Phase 3 | Pending |
-| FEED-04 | Phase 3 | Pending |
+| FEED-04 | Phase 3 | Complete |
 | FEED-05 | Phase 3 | Pending |
-| FEED-06 | Phase 3 | Pending |
-| FEED-07 | Phase 3 | Pending |
+| FEED-06 | Phase 3 | Complete |
+| FEED-07 | Phase 3 | Complete |
 | ASSESS-01 | Phase 3 | Complete |
 | ASSESS-02 | Phase 3 | Complete |
 | ASSESS-03 | Phase 3 | Complete |
