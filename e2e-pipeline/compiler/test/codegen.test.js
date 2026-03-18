@@ -2553,15 +2553,19 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — _handle_failure records to _STEP_
     );
   });
 
-  test("_handle_failure appends to _STEP_FAILURES inside function body", function() {
+  test("_handle_failure overwrites last _STEP_FAILURES and _STEP_RESULTS entries", function() {
     const step = makeNavigate('nav', '/home');
     const script = generate(makeResolved([step]), 'test-flow');
     const fnStart = script.indexOf('_handle_failure()');
     const fnEnd = script.indexOf('\n}', fnStart);
     const fnBody = script.slice(fnStart, fnEnd + 2);
     assert.ok(
-      fnBody.includes('_STEP_FAILURES+='),
-      'Expected _STEP_FAILURES+= inside _handle_failure function body. Got fn body: ' + fnBody
+      fnBody.includes('_STEP_FAILURES[$_last_idx]'),
+      'Expected _STEP_FAILURES[$_last_idx]= (overwrite) inside _handle_failure. Got fn body: ' + fnBody
+    );
+    assert.ok(
+      fnBody.includes('_STEP_RESULTS[$_last_idx]="fail"'),
+      'Expected _STEP_RESULTS[$_last_idx]="fail" (overwrite) inside _handle_failure. Got fn body: ' + fnBody
     );
   });
 });
