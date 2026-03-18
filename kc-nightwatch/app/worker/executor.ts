@@ -172,10 +172,37 @@ export async function executeRun(
 
     // Write run artifacts
     await Bun.write(logFilePath, logLines.join('\n') + '\n')
-    await Bun.write(
-      summaryPath,
-      `phases_completed:\n${legacyPhases.map(p => `  - ${p}`).join('\n')}\n`
-    )
+
+    // Only write legacy phases_completed if skill didn't produce a summary.yaml
+    const summaryExists = await Bun.file(summaryPath).exists()
+    if (!summaryExists) {
+      await Bun.write(
+        summaryPath,
+        `phases_completed:\n${legacyPhases.map(p => `  - ${p}`).join('\n')}\n`
+      )
+    }
+
+    // Read structured summary from NW-Claude output (Phase 5.2.5 writes this)
+    try {
+      const summaryFile = Bun.file(summaryPath)
+      if (await summaryFile.exists()) {
+        const { parse } = await import('yaml')
+        const summaryData = parse(await summaryFile.text()) as Record<string, unknown> | null
+        if (summaryData && typeof summaryData === 'object') {
+          // Populate RunSummary from structured output
+          summary.targets_active = (summaryData.targets_active as number) ?? 0
+          summary.targets_skipped = (summaryData.targets_skipped as number) ?? 0
+          summary.total_signals = (summaryData.total_signals as number) ?? 0
+          summary.total_actions = (summaryData.total_actions as number) ?? 0
+          summary.errors = (summaryData.errors as number) ?? 0
+          if (summaryData.per_target && typeof summaryData.per_target === 'object') {
+            summary.per_target = summaryData.per_target as typeof summary.per_target
+          }
+        }
+      }
+    } catch (err) {
+      log.warn({ component: 'worker', msg: `Failed to read summary.yaml for ${run.id}: ${String(err)}` })
+    }
 
     if (timedOut) {
       opts.onMessage({ type: 'run:failed', run_id: run.id, error: 'timeout' })

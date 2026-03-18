@@ -347,6 +347,44 @@ Add a `## Feedback` section under the run date:
 - `corrected` → use correction context to adjust confidence (typically downgrade by one level)
 - `accepted` → no change (confirms the signal was valuable)
 
+## Phase 0.5: Indicator Baseline Measurement
+
+**Purpose:** Measure quantified indicator values BEFORE any actions, providing a baseline to compare against after the run.
+
+For each active target's `indicators` list (from nightwatch-targets.yaml), measure the current value:
+
+1. **Read the target's indicators** from nightwatch-targets.yaml. Each indicator has `id` and `description`.
+2. **For each indicator**, attempt to measure its current value using available tools:
+   - Test coverage: run `bun test --coverage` or read last coverage report
+   - Git churn: count commits in last 7 days via `git log --oneline --since="7 days ago" | wc -l`
+   - Open issues: count via `gh issue list --state open --json number | jq length`
+   - Lint warnings: run linter in count mode
+   - If measurement fails, log warning and skip that indicator
+3. **Compute trend** by comparing against the previous run's baseline (from `nightwatch-feedback.yaml` under `baselines:` key):
+   - Value improved → `trend: improving`
+   - Value unchanged (within 5%) → `trend: stable`
+   - Value worsened → `trend: degrading`
+   - No previous value → `trend: stable` (first measurement)
+4. **Store baselines** in the run's structured output (written to summary.yaml in Phase 5)
+
+**Output format** (YAML, written as part of summary.yaml per-target section):
+
+```yaml
+indicator_baseline:
+  test-coverage:
+    value: 85
+    measurement: "percent"
+    previous_value: 82
+    trend: improving
+  open-issues:
+    value: 12
+    measurement: "count"
+    previous_value: 15
+    trend: improving
+```
+
+If a target has no `indicators` defined, skip Phase 0.5 for that target and leave `indicator_baseline: {}`.
+
 ## Phase 1: Forge Validation
 
 **Skip entirely if `forge_available = false`** — log `[SKIP] Phase 1: kc-plugin-forge not loaded` and proceed to Phase 2.
@@ -564,6 +602,29 @@ Apply `proposal.max_per_plugin` limit (default: 3) per target across all action 
 
 3. **Respect target's actions list.** If a target only allows `[proposal, linear-issue]`, do NOT classify any signal as `quick-fix` even if it looks trivial. The target owner has explicitly restricted what nightwatch can do.
 </CRITICAL>
+
+## Phase 3.5: Pre-Action Strategy Assessment
+
+**Purpose:** Document the reasoning and strategy BEFORE taking action. This becomes the "Strategy" text visible in the dashboard.
+
+For each active target, AFTER gap analysis classifies signals but BEFORE execution:
+
+1. Review the classified signals and their confidence levels
+2. Write a 2-4 sentence pre-assessment summarizing:
+   - How many signals will be acted on and why
+   - Which indicators are being targeted
+   - What the expected impact on the north star is
+   - Any signals deliberately skipped and why
+
+**Output:** Store as `pre_assessment` string in the per-target section of summary.yaml.
+
+Example:
+
+```
+pre_assessment: "3 high-priority signals identified targeting code quality and test coverage. Focusing on 2 code-fix actions (lint warnings, missing error handling) and 1 proposal (test infrastructure). Skipping 1 low-confidence churn signal. Expected to improve coverage by ~5% and reduce lint warnings to zero."
+```
+
+This text should be natural-language prose readable by humans in the dashboard, not structured data.
 
 ## Phase 4: Execute
 
@@ -791,6 +852,29 @@ For each e2e-flow signal within the cap:
 7. **E2E flows require existing mappings.** If no mapping YAML exists, downgrade to linear-issue. Do not generate a flow that references unmapped elements.
 </CRITICAL>
 
+## Phase 4.5: Post-Action Reflection
+
+**Purpose:** Evaluate what happened AFTER executing actions. This becomes the "Reflection" text visible in the dashboard.
+
+For each active target, AFTER all Phase 4 actions are complete:
+
+1. Review the outcomes of each executed action (success/failure, PR created, etc.)
+2. Write a 2-4 sentence post-assessment summarizing:
+   - How many actions succeeded vs failed
+   - What concrete artifacts were produced (PRs, fixes, proposals)
+   - Whether the actions align with the north star
+   - Any unexpected outcomes or concerns
+
+**Output:** Store as `post_assessment` string in the per-target section of summary.yaml.
+
+Example:
+
+```
+post_assessment: "Executed 2 of 3 planned actions. Code-fix for lint warnings succeeded (PR #47 created). Error handling fix succeeded (PR #48). Test infrastructure proposal deferred -- target repo has CI constraints that need manual resolution. Overall: code quality improved, test coverage unchanged."
+```
+
+This text should be natural-language prose, not structured data.
+
 ## Phase 5: Output
 
 ### Step 5.1: PR Routing
@@ -834,6 +918,55 @@ Read current `~/.claude/kc-plugins-config/nightwatch-improvement-log.md`, update
   files_changed: [{list}]         # for quick-fix
   reason: "{if skipped, why}"     # for skipped
 ```
+
+### Step 5.2.5: Write summary.yaml (Dashboard Structured Output)
+
+Write the complete structured run summary to `{run_dir}/summary.yaml` in the run directory. This file is read by the dashboard executor to populate RunSummary.per_target.
+
+**The file MUST include the full per-target structure:**
+
+```yaml
+targets_active: {count}
+targets_skipped: {count}
+total_signals: {count}
+total_actions: {count}
+errors: {count}
+per_target:
+  {target-name}:
+    monitors:
+      {monitor-name}:
+        status: ok | error
+        signals: {count}
+    pipeline:
+      found: {n}
+      after_dedup: {n}
+      after_confidence_filter: {n}
+      after_cooldown: {n}
+      classified: { code-fix: n, proposal: n, ... }
+      executed: { code-fix: n, proposal: n, ... }
+    actions:
+      - signal_id: "{id}"
+        type: "{type}"
+        summary: "{description}"
+        pr_url: "{url}"  # if PR created
+        branch: "{branch}"  # if branch created
+        indicator: "{indicator-id}"
+        assessment:
+          closer_to_north_star: yes | no | uncertain
+          confidence: high | medium | low
+          reasoning: "{prose explanation}"
+    indicator_baseline:
+      {indicator-id}:
+        value: {number}
+        measurement: "{unit}"
+        previous_value: {number}  # from last run, if available
+        trend: improving | stable | degrading
+    pre_assessment: "{strategy prose from Phase 3.5}"
+    post_assessment: "{reflection prose from Phase 4.5}"
+    implementation_outcomes: []
+```
+
+**Important:** Accumulate all per-target data throughout Phases 0.5 (indicator_baseline), 3.5 (pre_assessment), 4 (actions with assessment), and 4.5 (post_assessment) so this file can be written completely in Step 5.2.5.
 
 ### Step 5.3: Write Run Trace
 
@@ -914,7 +1047,23 @@ runs:
 • {target}: {summary}
 
 ⏭️ Skipped: {count} signals ({reasons})
+
+📊 Assessment (per active target):
+• {target}: *Strategy:* {pre_assessment first sentence} | *Reflection:* {post_assessment first sentence}
+• {target}: *Baselines:* {count} indicators — {improving_count} improving, {degrading_count} degrading
 ```
+
+**Assessment section rules (ASSESS-04):**
+
+After the per-target actions table, include a brief assessment summary per active target:
+
+```
+*Strategy:* {pre_assessment first sentence}
+*Reflection:* {post_assessment first sentence}
+*Baselines:* {count} indicators measured, {improving_count} improving, {degrading_count} degrading
+```
+
+If `pre_assessment` or `post_assessment` is empty, omit that line. If no baselines were measured for a target, omit the baselines line. If no targets produced assessment data, omit the entire Assessment section.
 
 **Delivery strategy (try in order):**
 
