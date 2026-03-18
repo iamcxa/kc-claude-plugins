@@ -63,6 +63,8 @@ Exceptions:
 Font stack (body/heading): `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
 Font stack (mono): `"SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace`
 
+**Typography note — 13px Mono:** The 1px gap between Mono (13px) and Body/Label (14px/12px) is intentional. Mono always renders in its own font stack (`"SF Mono", "Fira Code", monospace`), which has distinct metrics from the system-ui body stack. At 14px, monospace log lines visually crowd the surrounding UI text. 13px compensates for monospace's wider glyph width while keeping log output readable at 1.6 line-height. The font stack boundary is the differentiator, not just the size.
+
 **Source:** Design spec (CSS + no framework), defaults for dark terminal-style dashboards.
 
 ---
@@ -150,6 +152,7 @@ Phase 2 components (Preact + HTM `.ts` files):
 - Right panel: fills remaining width, `#161b22` background, scrollable independently
 - On first load with no target selected: right panel shows empty state (see Copywriting Contract)
 - Target selection is immediate — no loading delay for sidebar switch (data already fetched)
+- **Primary focal point:** right panel TargetDetail component — the north star text block is the first element the user's eye should reach when a target is selected. It anchors the entire detail view.
 
 **Source:** CONTEXT.md (master-detail layout decision).
 
@@ -171,9 +174,9 @@ Phase 2 components (Preact + HTM `.ts` files):
   1. **Mode toggle** — two adjacent buttons "Production" / "Dry-run", only one active at a time, active has `#238636` background
   2. **Custom instructions** — `<textarea>` placeholder "Optional: additional instructions for this run", 4 rows, full width
   3. **Self-repair** — checkbox-style toggle "Run self-repair first" checked by default
-- Footer: Cancel (ghost) + Start Run (primary green) buttons, right-aligned
+- Footer: "Never mind" (ghost) + "Start Run" (primary green) buttons, right-aligned
 - Start Run disabled state: `opacity: 0.5`, cursor not-allowed — active when `worker.status === 'online'` AND no run currently in queue/running
-- Dismiss by clicking overlay background OR Cancel button
+- Dismiss by clicking overlay background OR "Never mind" button
 - "Run All" reuse: same modal, target label shows "All targets (N targets)" above sections
 
 **Source:** CONTEXT.md (modal dialog decision, 3-section spec, double-trigger prevention).
@@ -243,6 +246,7 @@ Every visible state the UI must render (executor checklist):
 | Primary CTA (run all) | "Run All" |
 | Secondary CTA (dry run) | "Dry Run" |
 | Cancel run | "Cancel Run" |
+| Trigger dialog dismiss | "Never mind" |
 | Empty state — no target selected | "Select a target from the sidebar to view details" |
 | Empty state — no targets configured | "No targets configured. Add a target to get started." |
 | Empty state — no runs yet | "No runs yet. Trigger a run to see history here." |
@@ -255,7 +259,7 @@ Every visible state the UI must render (executor checklist):
 | Trigger dialog — run queued | "Run queued (1 run in progress)" |
 | Config page stub | "Config editor coming in Phase 3. Edit targets.yaml directly for now." |
 | Add Target button | "+ Add Target" |
-| Destructive: Remove target | "Remove target" confirmation: "Remove {target name}? This will not delete any files." [Cancel] [Remove] |
+| Destructive: Remove target | "Remove target" confirmation: "Remove {target name}? This will not delete any files." [Never mind] [Remove] |
 | Destructive: Cancel run | "Cancel run?" confirmation inline in log stream header: [Keep running] [Cancel run] |
 | Mode toggle labels | "Production" / "Dry Run" |
 | Self-repair toggle label | "Run self-repair first" |
