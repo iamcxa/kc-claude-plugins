@@ -2,13 +2,15 @@ import path from 'node:path'
 import os from 'node:os'
 import fs from 'node:fs/promises'
 import { log } from '../shared/logger.ts'
-import type { Run, RunSummary, IpcMessage } from '../shared/types.ts'
+import type { Run, RunSummary, IpcMessage, RunSummaryAction } from '../shared/types.ts'
 import { parseStreamJsonLine } from './log-parser.ts'
 import { buildSafehouseFlags, type PolicyTarget } from './policy.ts'
 import {
   RESULT_FORCE_KILL_DELAY_MS,
   KEEP_RUNS_COUNT,
 } from '../shared/constants.ts'
+import { collectImplicitFeedback } from './feedback-collector.ts'
+import { appendFeedback, writeFeedbackTrends } from '../server/services/feedback-store.ts'
 
 // In-memory PID tracking — never use files (worker has direct handles)
 export const activePids = new Set<number>()
@@ -202,6 +204,34 @@ export async function executeRun(
       }
     } catch (err) {
       log.warn({ component: 'worker', msg: `Failed to read summary.yaml for ${run.id}: ${String(err)}` })
+    }
+
+    // FEED-04: Collect implicit feedback from PR merge status
+    // FEED-07: Write feedback trends to NW journal for slow learning
+    // Both are fire-and-forget — errors MUST NOT block run completion
+    if (!timedOut && Object.keys(summary.per_target).length > 0) {
+      try {
+        // Collect all actions with pr_url across all targets
+        const actionsWithTargets: Array<{ action: RunSummaryAction; target: string; run_id: string }> = []
+        for (const [targetName, targetSummary] of Object.entries(summary.per_target)) {
+          for (const action of targetSummary.actions ?? []) {
+            if (action.pr_url) {
+              actionsWithTargets.push({ action, target: targetName, run_id: run.id })
+            }
+          }
+        }
+        if (actionsWithTargets.length > 0) {
+          await collectImplicitFeedback(actionsWithTargets, appendFeedback)
+        }
+
+        // Write feedback trends to each target's NW journal
+        for (const targetName of Object.keys(summary.per_target)) {
+          const journalDir = await ensureNwMemoryDir(targetName)
+          await writeFeedbackTrends(targetName, journalDir)
+        }
+      } catch (err) {
+        log.warn({ component: 'worker', msg: `Post-run feedback collection error: ${String(err)}` })
+      }
     }
 
     if (timedOut) {
