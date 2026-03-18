@@ -120,8 +120,9 @@ function enqueue(run: Run): void {
   void processNextRun()
 }
 
-// Send initial state
+// Send initial state + immediate heartbeat (so server marks us online instantly)
 send({ type: 'state', queue: [], current: undefined })
+send({ type: 'heartbeat', ts: Date.now() })
 
 // Heartbeat every 30s
 const heartbeatTimer = setInterval(() => {
