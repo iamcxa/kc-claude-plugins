@@ -3,6 +3,7 @@ import { useState, useEffect } from 'preact/hooks'
 import type { Run, RunSummary, ParsedLogEvent } from '../../shared/types.ts'
 import { LogStream } from '../components/log-stream.ts'
 import { RunTimeline } from '../components/run-timeline.ts'
+import { ActionCard } from '../components/action-card.ts'
 import { api } from '../lib/api.ts'
 
 function getRunIdFromHash(): string | null {
@@ -108,6 +109,22 @@ export function Runs() {
             <${RunTimeline} phases=${phases} activePhase=${isRunning ? phases[phases.length - 1] ?? null : null} />
           </div>
         `}
+        <!-- Action cards from per_target summary -->
+        ${selectedRun.summary?.per_target && Object.entries(selectedRun.summary.per_target).map(([targetName, targetData]) =>
+          targetData.actions && targetData.actions.length > 0 && html`
+            <div key=${targetName} style="padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0;overflow-y:auto;max-height:300px;">
+              <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px;">${targetName} Actions</div>
+              ${targetData.actions.map((action: import('../../shared/types.ts').RunSummaryAction) => html`
+                <${ActionCard}
+                  key=${action.signal_id}
+                  action=${action}
+                  target=${targetName}
+                  runId=${selectedId}
+                />
+              `)}
+            </div>
+          `
+        )}
         <!-- Log stream -->
         <div style="flex:1;overflow:hidden;padding:0;">
           <${LogStream}
