@@ -1,6 +1,8 @@
 import { parse, stringify } from 'yaml'
+import path from 'node:path'
+import os from 'node:os'
 import { log } from '../../shared/logger.ts'
-import { AppConfigSchema, type AppConfig } from '../../shared/types.ts'
+import { AppConfigSchema, type AppConfig, type Target } from '../../shared/types.ts'
 import {
   DEFAULT_HOST,
   DEFAULT_PORT,
@@ -40,4 +42,48 @@ export async function readYamlFile<T>(filePath: string): Promise<T | null> {
 
 export async function writeYamlFile(filePath: string, data: unknown): Promise<void> {
   await Bun.write(filePath, stringify(data as Record<string, unknown>))
+}
+
+// ============================================================
+// Phase 2 extensions
+// ============================================================
+
+export const TARGETS_YAML_PATH = path.join(os.homedir(), '.claude/kc-plugins-config/nightwatch-targets.yaml')
+
+// Appendix A compat: accept both old and new field names
+function normalizeTarget(name: string, raw: Record<string, unknown>): Target {
+  return {
+    name,
+    type: (raw.type as Target['type']) ?? 'plugin',
+    monitors: (raw.monitors ?? raw.sources ?? []) as string[],
+    watch: (raw.watch ?? raw.keywords ?? []) as string[],
+    respond: (raw.respond ?? mapOldActions(raw.actions)) as Record<string, boolean>,
+    indicators: (raw.indicators ?? raw.proxy_signals ?? []) as Target['indicators'],
+    north_star: (raw.north_star as string) ?? '',
+    path: raw.path as string | undefined,
+    auth: raw.auth as string | undefined,
+    extra_plugin_dirs: (raw.extra_plugin_dirs ?? []) as string[],
+    extra_mcp_config: (raw.extra_mcp_config ?? []) as string[],
+  }
+}
+
+function mapOldActions(actions: unknown): Record<string, boolean> {
+  if (!Array.isArray(actions)) return {}
+  return Object.fromEntries((actions as string[]).map((a) => {
+    const key = a === 'quick-fix' ? 'code-fix' : a
+    return [key, true]
+  }))
+}
+
+export async function readTargets(): Promise<Record<string, Target>> {
+  const raw = await readYamlFile<{ targets: Record<string, unknown> }>(TARGETS_YAML_PATH)
+  if (!raw?.targets) return {}
+  return Object.fromEntries(
+    Object.entries(raw.targets).map(([name, t]) => [name, normalizeTarget(name, t as Record<string, unknown>)])
+  )
+}
+
+export async function writeAppConfig(config: AppConfig, configPath = APP_CONFIG_PATH): Promise<void> {
+  // Always re-create file handle (Pitfall: stale handle after write)
+  await Bun.write(configPath, stringify(config as Record<string, unknown>))
 }

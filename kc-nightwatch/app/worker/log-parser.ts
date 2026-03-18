@@ -20,7 +20,26 @@ export function parseStreamJsonLine(line: string): ParsedLogEvent {
       content = obj.result
     }
 
-    return { type, content, raw: line }
+    // Phase 2: extract phase, tool_name, agent_name
+    let phase: string | undefined
+    let tool_name: string | undefined
+    let agent_name: string | undefined
+    let is_phase_start: boolean | undefined
+
+    if (type === 'assistant' && content) {
+      const phaseMatch = content.match(/Phase\s+(\d+(?:\.\d+)?)/i)
+      if (phaseMatch) {
+        phase = `Phase ${phaseMatch[1]}`
+        is_phase_start = true
+      }
+      const agentMatch = content.match(/(?:Dispatching|Running|Starting)\s+(\S+)\s+agent/i)
+      if (agentMatch) agent_name = agentMatch[1]
+    }
+    if (type === 'tool_use' && typeof obj.name === 'string') {
+      tool_name = obj.name
+    }
+
+    return { type, content, raw: line, phase, tool_name, agent_name, is_phase_start }
   } catch {
     return { type: 'text', raw: line }
   }
