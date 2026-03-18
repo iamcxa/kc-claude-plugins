@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Two-process architecture with all 6 critical pitfalls resolved (completed 2026-03-18)
 - [x] **Phase 2: Core Cockpit** - Working dashboard: targets, run trigger, SSE logs, history, scheduler, memory isolation (completed 2026-03-18)
 - [ ] **Phase 3: Flywheel Core** - NW-Claude chat, config editor, feedback calibration, self-assessment, baseline measurement
-- [ ] **Phase 4: Full Flywheel** - MCP server + flywheel health metrics (data-dependent, deferred until Phase 3 produces sufficient feedback data)
+- [ ] **Phase 4: Full Flywheel** - MCP server + flywheel health metrics + deferred chat/feedback capabilities (data-dependent, deferred until Phase 3 produces sufficient feedback data)
 
 ## Phase Details
 
@@ -43,7 +43,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. User opens the dashboard and sees target cards with name, type, north star, last run summary, and health indicator; a schedule status bar shows interval, next run countdown, and last run summary
   2. User triggers a run (production or dry-run) with an optional custom prompt; the log panel shows real-time output line by line via SSE; user can cancel the run and it terminates cleanly
-  3. User navigates to Run History, filters by status or target, opens a run detail with phase progress (Phase 0–5 detected), log, and action cards
+  3. User navigates to Run History, filters by status or target, opens a run detail with phase progress (Phase 0-5 detected), log, and action cards
   4. User enables the interval scheduler, sets hours, and the scheduler persists across server restarts; webhook endpoint accepts POST requests to trigger a run
   5. Each run executes in an isolated agent-safehouse context with per-target policy (read-only vs read-write by mode); max 1 concurrent run; second trigger queues rather than overlapping
 **Plans**: 3 plans
@@ -56,29 +56,33 @@ Plans:
 ### Phase 3: Flywheel Core
 **Goal**: Users can interact with NW-Claude about run results, edit config safely, submit structured feedback that calibrates future runs, and see per-run self-assessment and indicator baselines — turning nightwatch from automation into a learning system
 **Depends on**: Phase 2
-**Requirements**: CONF-01, CONF-02, CONF-03, CONF-04, CONF-05, CONF-06, CONF-07, CONF-08, CHAT-01, CHAT-02, CHAT-03, CHAT-04, CHAT-05, CHAT-06, CHAT-07, FEED-01, FEED-02, FEED-03, FEED-04, FEED-05, FEED-06, FEED-07, ASSESS-01, ASSESS-02, ASSESS-03, ASSESS-04, MEAS-01, MEAS-02, MEAS-03
+**Requirements**: CONF-01, CONF-02, CONF-03, CONF-04, CONF-05, CONF-06, CONF-07, CONF-08, CHAT-01, CHAT-02, CHAT-03, CHAT-06, CHAT-07, FEED-01, FEED-02, FEED-04, FEED-06, FEED-07, ASSESS-01, ASSESS-02, ASSESS-03, ASSESS-04, MEAS-01, MEAS-02, MEAS-03
+**Deferred to Phase 4**: CHAT-04 (NW-MCP access -- requires MCP server), CHAT-05 (NW journal access via MCP -- requires MCP config injection), FEED-03 (nw_submit_feedback MCP tool -- requires MCP server), FEED-05 (Linear issue status collection -- requires Linear MCP integration)
 **Success Criteria** (what must be TRUE):
-  1. After a run completes, NW-Claude chat panel auto-briefs with a run summary; user can ask follow-up questions; NW-Claude can trigger runs and query state via NW-MCP; switching target focus prompts a context switch
+  1. After a run completes, NW-Claude chat panel auto-briefs with a run summary; user can ask follow-up questions; switching target focus prompts a context switch
   2. User opens Config page, unlocks editing, modifies targets.yaml or safety.yaml, and the 4-step validation flow (syntax -> Haiku semantic -> diff -> confirm) runs before any write; config warnings from self-repair.yaml appear inline
   3. User adds a new target via the 4-step wizard (type -> goals -> monitors/respond -> validate) and sees it appear on the dashboard; user can edit or remove targets
-  4. User thumbs-up or thumbs-down an action card; feedback is stored per signal; PR merges and Linear issue closes are collected as implicit feedback; reject rate per indicator adjusts confidence thresholds; feedback trends are written to the NW journal
+  4. User thumbs-up or thumbs-down an action card; feedback is stored per signal; PR merges are collected as implicit feedback; reject rate per indicator adjusts confidence thresholds; feedback trends are written to the NW journal
   5. Run detail shows Phase 3.5 pre-action strategy and Phase 4.5 post-action reflection per action card; Phase 0.5 indicator baselines with quantified values appear in run detail with trend direction
+  6. Orchestrator skill produces assessment and baseline data during runs; executor parses structured summary.yaml output
 **Plans**: 4 plans
 
 Plans:
 - [ ] 03-01-PLAN.md — Phase 3 shared types + global SSE broadcast + chat session manager (Anthropic SDK) + chat routes + ChatDrawer UI + auto-brief wiring
 - [ ] 03-02-PLAN.md — Config validation service (4-step flow) + config API routes + YAML editor page (tabs, edit lock, warnings) + AddTargetWizard + Edit/Remove target
-- [ ] 03-03-PLAN.md — Feedback store + feedback API routes + ActionCard component with feedback buttons + implicit feedback collector (PR/Linear polling) + reject rate calibration
-- [ ] 03-04-PLAN.md — BaselineCard component + ActionCard assessment sections (Strategy/Reflection) + runs.ts integration + human verification checkpoint
+- [ ] 03-03-PLAN.md — Feedback store + feedback API routes + ActionCard component with feedback buttons + implicit feedback collector (PR polling) + reject rate calibration
+- [ ] 03-04-PLAN.md — Orchestrator skill phases (0.5, 3.5, 4.5) + executor summary parsing + Slack assessment + BaselineCard + ActionCard assessment + human verification
 
 ### Phase 4: Full Flywheel
 **Goal**: The entire nightwatch state is queryable and actionable from any Claude session via MCP, and flywheel health is visible as charts and trends — completing the closed-loop improvement system
 **Depends on**: Phase 3
-**Requirements**: MCP-01, MCP-02, MCP-03, MCP-04, HEALTH-01, HEALTH-02, HEALTH-03, HEALTH-04, HEALTH-05
+**Requirements**: MCP-01, MCP-02, MCP-03, MCP-04, HEALTH-01, HEALTH-02, HEALTH-03, HEALTH-04, HEALTH-05, CHAT-04, CHAT-05, FEED-03, FEED-05
 **Success Criteria** (what must be TRUE):
   1. A Claude session configured with the NW MCP server can call nw_get_targets, nw_get_latest_run, nw_get_proposals, and nw_get_schedule and receive current state; it can call nw_trigger_run, nw_submit_feedback, and nw_update_schedule and see the effects in the dashboard
   2. Remote mode is enabled via config; a request to any API, MCP, or WebSocket endpoint without the token is rejected with 401; a request with the correct token succeeds
   3. Flywheel health page shows indicator trend sparklines (last 10 runs), reject rate chart per indicator, acceptance rate, and per-target health arrow (up/stable/down); aggregate health summary bar reflects overall trend
+  4. NW-Claude chat has NW-MCP access to trigger runs, query state, and submit feedback (CHAT-04); NW-Claude has target-specific NW journal access (CHAT-05)
+  5. nw_submit_feedback MCP tool allows NW-Claude to submit feedback programmatically (FEED-03); Linear issue status collection for implicit feedback (FEED-05)
 **Plans**: TBD
 
 Plans:
