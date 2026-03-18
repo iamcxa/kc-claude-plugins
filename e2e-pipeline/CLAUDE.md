@@ -59,9 +59,9 @@ PR-back flow: users curate local `learned-patterns.md` -> PR to plugin origin ->
 
 ```
 /e2e-map           -> .claude/e2e/mappings/<app>.yaml
-/e2e-walkthrough   -> .claude/e2e/flows/walkthrough-*.yaml + e2e-reports/<ts>/flow-report.md
-/e2e-flow          -> .claude/e2e/flows/<feature>.yaml + e2e-reports/<ts>/report.md
-/e2e-test <flow>   -> e2e-reports/<ts>/report.md, trace.zip, screenshots, video
+/e2e-walkthrough   -> .claude/e2e/flows/walkthrough-*.yaml + .claude/e2e/reports/<ts>/flow-report.md
+/e2e-flow          -> .claude/e2e/flows/<feature>.yaml + .claude/e2e/reports/<ts>/report.md
+/e2e-test <flow>   -> .claude/e2e/reports/<ts>/report.md, trace.zip, screenshots, video
 /e2e-compile       -> .claude/e2e/compiled/<flow>.sh (standalone bash test scripts)
 ```
 
@@ -118,7 +118,7 @@ When modifying skill or agent definitions:
 - Skills have a main `SKILL.md` and optional `reference.md` for detailed mechanics
 - Cross-reference step numbers between `SKILL.md` (summary) and `reference.md` (details)
 - Run the **e2e-skill-ops 5 rules**: search before diagnose, 3-skill impact scan, verify after fix, write back findings, propose (don't ship) SKILL.md changes without review
-- Quality findings persist in `e2e-reports/skill-quality-findings.md`
+- Quality findings persist in `.claude/e2e/reports/skill-quality-findings.md`
 
 **Adding or changing action types (e.g., new `action:` value in flow YAML):**
 Trace the full chain and update EVERY layer. No layer may be skipped:
@@ -206,7 +206,7 @@ Write plan --> hook checks --> "Plan has no E2E steps!" (if missing)
 /e2e-flow --from <plan>  -->  .claude/e2e/flows/<feature>.yaml
      |                         (generates + verifies in browser)
      v
-/e2e-test <feature>  -->  e2e-reports/*/report.md
+/e2e-test <feature>  -->  .claude/e2e/reports/*/report.md
      |                                    ^
      v                                    | (no flow? create one first)
 git commit  -->  hook checks      /e2e-flow --from <plan>

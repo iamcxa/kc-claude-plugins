@@ -178,7 +178,7 @@ For each mapping+flow group:
 | `auth_profile` | `~/.agent-browser/<app>/` (from mapping `app` field) |
 | `base_url` | From mapping header |
 | `app` | From mapping `app` field |
-| `report_dir` | `$(pwd)/e2e-reports/$(date +%Y%m%d-%H%M%S)` (create with `mkdir -p`) |
+| `report_dir` | `$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)` (create with `mkdir -p`) |
 | `headed` | Always `true` (agent opens browser in headed mode) |
 | `record` | `true` when `--video` or `--pr` is present, otherwise `false` |
 | `suite_context` | Set to `true` when dispatching via `--all-sites` or `--suite` (enables multi-session with `--session <app>`) |

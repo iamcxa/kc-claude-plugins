@@ -7,7 +7,7 @@ description: |
 
   <example>
   Context: The e2e-walkthrough skill completed a walkthrough and needs trace analysis.
-  user: "Analyze trace:\n  trace_path: /home/user/project/e2e-reports/20260309-150000/trace.zip\n  report_dir: /home/user/project/e2e-reports/20260309-150000"
+  user: "Analyze trace:\n  trace_path: /home/user/project/.claude/e2e/reports/20260309-150000/trace.zip\n  report_dir: /home/user/project/.claude/e2e/reports/20260309-150000"
   assistant: "[Extracts trace.zip, parses trace.network for HTTP 4xx/5xx failures, parses trace.trace for console errors, filters noise, writes trace-analysis.md, returns structured summary with counts]"
   <commentary>
   Agent receives absolute paths, extracts to temp dir, processes all trace files, writes analysis, cleans up temp dir.
@@ -25,7 +25,7 @@ description: |
 
   <example>
   Context: The e2e-walkthrough skill completed a walkthrough with anomaly observations and needs step-correlated analysis.
-  user: "Analyze trace:\n  trace_path: /home/user/project/e2e-reports/20260315-143200/trace.zip\n  report_dir: /home/user/project/e2e-reports/20260315-143200\n  step_log_path: /home/user/project/e2e-reports/20260315-143200/step-log.json"
+  user: "Analyze trace:\n  trace_path: /home/user/project/.claude/e2e/reports/20260315-143200/trace.zip\n  report_dir: /home/user/project/.claude/e2e/reports/20260315-143200\n  step_log_path: /home/user/project/.claude/e2e/reports/20260315-143200/step-log.json"
   assistant: "[Extracts trace.zip, parses network/console as usual, reads step-log.json, correlates trace events with step timestamps and agent-observed anomalies, writes enhanced trace-analysis.md with Step-Correlated Issues and Anomaly × Trace Cross-Reference sections, returns structured summary with anomaly counts]"
   <commentary>
   When step_log_path is provided, the agent performs timestamp-based correlation between trace events and walkthrough steps. Agent-observed anomalies (visual issues, JS errors) are cross-referenced with trace data to identify root causes and silent failures.
@@ -34,7 +34,7 @@ description: |
 
   <example>
   Context: Trace zip is missing trace.network (no network recording was active).
-  user: "Analyze trace:\n  trace_path: /home/user/project/e2e-reports/run-1/trace.zip\n  report_dir: /home/user/project/e2e-reports/run-1"
+  user: "Analyze trace:\n  trace_path: /home/user/project/.claude/e2e/reports/run-1/trace.zip\n  report_dir: /home/user/project/.claude/e2e/reports/run-1"
   assistant: "[Extracts zip, finds no trace.network file, reports 0 API failures, parses trace.trace for console errors, writes analysis, returns clean: true]"
   <commentary>
   Agent gracefully handles missing files — reports 0 for that category instead of failing.

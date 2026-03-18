@@ -25,7 +25,7 @@ Route E2E operations to the correct executor with auth pre-flight.
 | `--flow [--from source]` | `/e2e-dispatch --flow --from plan.md` |
 | `--flow --smoke` | `/e2e-dispatch --flow --smoke` |
 | `--flow --verify-only` | `/e2e-dispatch --flow --verify-only login-flow` |
-| `--analyze <path>` | `/e2e-dispatch --analyze e2e-reports/trace.zip` |
+| `--analyze <path>` | `/e2e-dispatch --analyze .claude/e2e/reports/trace.zip` |
 | `--ops [mode]` | `/e2e-dispatch --ops --debug` |
 
 No args or ambiguous request: present the routing menu and ask user to choose:
@@ -158,7 +158,7 @@ Direct invocation of `/e2e-test`, `/e2e-map`, `/e2e-walkthrough`, `/e2e-skill-op
 | Smoke test all pages | `/e2e-dispatch --flow --smoke` |
 | Verify existing flow | `/e2e-dispatch --flow --verify-only login-flow` |
 | Interactive explore | `/e2e-dispatch --walk admin-panel` |
-| Analyze trace | `/e2e-dispatch --analyze e2e-reports/20260306/trace.zip` |
+| Analyze trace | `/e2e-dispatch --analyze .claude/e2e/reports/20260306/trace.zip` |
 | Debug skill issue | `/e2e-dispatch --ops --debug` |
 | Record a test run | `/e2e-dispatch --test login-flow --video` |
 | Walkthrough no video | `/e2e-dispatch --walk admin-panel --no-video` |

@@ -177,7 +177,7 @@ gh issue create \
 ```
 
 5. If `gh` is unavailable or fails:
-   - Append to `${CLAUDE_PLUGIN_ROOT}/e2e-reports/feedback-log.md`
+   - Append to `${CLAUDE_PLUGIN_ROOT}/.claude/e2e/reports/feedback-log.md`
    - Suggest: "Saved locally. Submit manually: https://github.com/iamcxa/kc-claude-plugins/issues/new"
 
 ## Phase 5 — Knowledge Loop

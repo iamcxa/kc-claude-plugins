@@ -66,7 +66,7 @@ The bug appears randomly -- race conditions, timing issues, flaky state.
    /e2e-test flaky-flow
    ```
 
-   Repeat across runs. Each run produces a separate report in `e2e-reports/<timestamp>/` with its own trace.
+   Repeat across runs. Each run produces a separate report in `.claude/e2e/reports/<timestamp>/` with its own trace.
 
 3. **Compare traces** across passing and failing runs. The trace analyzer extracts API failures and console errors -- diff these to isolate what's different in failing runs.
 

@@ -115,7 +115,7 @@ After Phase 1, prepare the agent input and dispatch.
 | `base_url` | From existing mapping or user prompt | Required |
 | `app` | From existing mapping or user prompt | Required |
 | `auth_profile` | `~/.agent-browser/<app>/` | Required |
-| `report_dir` | `$(pwd)/e2e-reports/$(date +%Y%m%d-%H%M%S)-map` | Required |
+| `report_dir` | `$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)-map` | Required |
 | `routes` | Phase 1 codebase analysis output (may be empty) | Optional |
 | `existing_mapping_path` | Path to current mapping (if updating) | Optional |
 | `target_page` | From `--page` flag | Optional |
@@ -132,7 +132,7 @@ Agent(subagent_type="e2e-mapper"):
   routes: [list from Phase 1 codebase analysis]
   existing_mapping_path: <path if updating>
   target_page: <page name if --page mode>
-  report_dir: $(pwd)/e2e-reports/$(date +%Y%m%d-%H%M%S)-map
+  report_dir: $(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)-map
   auth_config: {type, verification, manual_prompt} from existing mapping
   headed: true
 ```

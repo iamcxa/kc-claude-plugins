@@ -8,5 +8,5 @@ node_modules/
 .planning/
 
 # Runtime E2E reports (keep findings file)
-e2e-reports/*
-!e2e-reports/skill-quality-findings.md
+.claude/e2e/reports/*
+!.claude/e2e/reports/skill-quality-findings.md
