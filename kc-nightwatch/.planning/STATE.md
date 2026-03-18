@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 3 plan 03 complete — feedback pipeline, ActionCard, calibration, implicit PR collector, 140 tests green
-stopped_at: Completed 03-flywheel-core/03-03-PLAN.md — Feedback pipeline, ActionCard, calibration, implicit PR collector
-last_updated: "2026-03-18T10:42:52Z"
-last_activity: "2026-03-18 — Phase 03-03 complete: feedback store (b187127), ActionCard (c8001f9), PR collector (0609857)"
+status: completed
+stopped_at: Completed 03-flywheel-core/03-02-PLAN.md — Config editor, 4-step Haiku validation, AddTargetWizard, write lock
+last_updated: "2026-03-18T10:46:56.200Z"
+last_activity: "2026-03-18 — Phase 03-03: feedback store (b187127), ActionCard (c8001f9), PR collector (0609857)"
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 10
-  completed_plans: 8
+  completed_plans: 9
   percent: 60
 ---
 
@@ -55,6 +55,7 @@ Progress: [██████░░░░] 60% (Phase 2 complete, Phase 3 plans 
 | Phase 02-core-cockpit P03 | ~90min | 3 tasks | 17 files |
 | Phase 03-flywheel-core P01 | 16min | 3 tasks | 13 files |
 | Phase 03-flywheel-core P03 | 24min | 3 tasks | 10 files |
+| Phase 03-flywheel-core P02 | 18 | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,10 @@ Recent decisions affecting current work:
 - [Phase 03-flywheel-core]: 03-03: Calibration formula: threshold = clamp(0.1, 0.9, 0.5 + (rejectRate - 0.5) * 0.5) — half-rate adjustment toward reject direction
 - [Phase 03-flywheel-core]: 03-03: Route ordering guard: /api/feedback/calibration MUST precede /api/feedback/:runId in Hono to avoid param capture
 - [Phase 03-flywheel-core]: 03-03: checkLinearStatus is Phase 3 placeholder returning null — Linear MCP integration deferred to Phase 4
+- [Phase 03-flywheel-core]: 03-02: withWriteLock in-memory Map per file key — serializes concurrent YAML writes, targets and safety lock independently
+- [Phase 03-flywheel-core]: 03-02: Fail-open Haiku semantic check — Haiku unavailable => WARN verdict, save proceeds; config editor never gated by LLM availability
+- [Phase 03-flywheel-core]: 03-02: /api/config/warnings registered before /api/config/:file — Hono param routes are greedy, ordering prevents capture
+- [Phase 03-flywheel-core]: 03-02: Wizard Step 4 uses JSON.stringify preview — yaml package is server-side only; browser frontend uses JSON for target preview
 
 ### Pending Todos
 
@@ -103,6 +108,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T10:42:52Z
-Stopped at: Completed 03-flywheel-core/03-03-PLAN.md — Feedback pipeline, ActionCard, calibration, implicit PR collector
+Last session: 2026-03-18T10:46:56.198Z
+Stopped at: Completed 03-flywheel-core/03-02-PLAN.md — Config editor, 4-step Haiku validation, AddTargetWizard, write lock
 Resume file: None
