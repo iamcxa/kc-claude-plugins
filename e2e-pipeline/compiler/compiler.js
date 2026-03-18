@@ -8,6 +8,8 @@ const { parse } = require('./parser');
 const { resolve, resolveMultiSite } = require('./resolver');
 const { generate } = require('./codegen');
 
+var COMPILER_VERSION = require('../package.json').version;
+
 /**
  * hashSources(flowPath, mappingPaths) — compute SHA-256 of source files.
  *
@@ -130,6 +132,7 @@ async function compile(flowPath, mappingDir, outputDir, options) {
     flowName: flowName,
     flowPath: flowPath,
     hash: sourceHash,
+    compilerVersion: COMPILER_VERSION,
     timestamp: new Date().toISOString(),
   };
   if (mappingPaths.length === 1) {
