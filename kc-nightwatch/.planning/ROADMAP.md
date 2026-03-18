@@ -13,7 +13,7 @@ Build a web-based autonomous improvement platform that replaces the launchd cron
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Two-process architecture with all 6 critical pitfalls resolved (completed 2026-03-18)
-- [ ] **Phase 2: Core Cockpit** - Working dashboard: targets, run trigger, SSE logs, history, scheduler, memory isolation
+- [x] **Phase 2: Core Cockpit** - Working dashboard: targets, run trigger, SSE logs, history, scheduler, memory isolation (completed 2026-03-18)
 - [ ] **Phase 3: Flywheel Core** - NW-Claude chat, config editor, feedback calibration, self-assessment, baseline measurement
 - [ ] **Phase 4: Full Flywheel** - MCP server + flywheel health metrics (data-dependent, deferred until Phase 3 produces sufficient feedback data)
 
@@ -49,9 +49,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Shared type extensions (Target, RunSummary, ParsedLogEvent) + REST API routes (targets, runs, webhook, schedule) + SSE fan-out wiring + run-store service + yaml-store extensions
-- [ ] 02-02-PLAN.md — Worker execution queue (max concurrency 1) + target path resolution + interval scheduler + cancel implementation + NW memory isolation (ensureNwMemoryDir, nw-journal MCP injection)
-- [ ] 02-03-PLAN.md — Frontend: Preact+HTM vendor setup, import map, app router, dashboard master-detail layout, trigger modal, log-stream SSE component, run history/detail pages, config stub + human verification
+- [x] 02-01-PLAN.md — Shared type extensions (Target, RunSummary, ParsedLogEvent) + REST API routes (targets, runs, webhook, schedule) + SSE fan-out wiring + run-store service + yaml-store extensions (completed 2026-03-18)
+- [x] 02-02-PLAN.md — Worker execution queue (max concurrency 1) + target path resolution + interval scheduler + cancel implementation + NW memory isolation (ensureNwMemoryDir, nw-journal MCP injection) (completed 2026-03-18)
+- [x] 02-03-PLAN.md — Frontend: Preact+HTM vendor setup, import map, app router, dashboard master-detail layout, trigger modal, log-stream SSE component, run history/detail pages, config stub + human verification (completed 2026-03-18, human-verified)
 
 ### Phase 3: Flywheel Core
 **Goal**: Users can interact with NW-Claude about run results, edit config safely, submit structured feedback that calibrates future runs, and see per-run self-assessment and indicator baselines — turning nightwatch from automation into a learning system
@@ -93,6 +93,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-03-18 |
-| 2. Core Cockpit | 2/3 | In Progress|  |
+| 2. Core Cockpit | 3/3 | Complete | 2026-03-18 |
 | 3. Flywheel Core | 0/4 | Not started | - |
 | 4. Full Flywheel | 0/2 | Not started | - |
