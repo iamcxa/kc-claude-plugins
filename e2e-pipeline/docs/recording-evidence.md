@@ -94,9 +94,53 @@ Post results:
 
 The PR comment includes the issue context, making the review self-documenting.
 
+## Media Processing Pipeline
+
+After browser work completes, each skill dispatches the `e2e-media-processor` agent to transform raw artifacts into shareable assets.
+
+### Pipeline flow
+
+```
+Browser agent (raw output)
+    ├── step-*.png          (screenshots per step)
+    └── full.webm           (viewport recording, if enabled)
+          │
+          ▼
+Skill dispatches e2e-media-processor
+          │
+          ├── steps.gif     (800px wide, 1fps loop, blank frames skipped)
+          ├── test-run.mp4  (1.5x speed, leading/trailing silence trimmed)
+          └── thumbnail.png (first non-blank screenshot)
+```
+
+### Blank frame detection
+
+The media processor scans `step-*.png` for leading and trailing blank frames (white/empty screenshots from page load delays). These are excluded from the GIF to avoid dead frames at the start or end of the animation.
+
+Example: 12 screenshots captured, 1 leading blank, 1 trailing blank → GIF contains 10 frames.
+
+### Processing parameters
+
+| Output | Format | Parameters |
+|--------|--------|------------|
+| GIF | 800px wide, 1fps, loop | Blank frames excluded |
+| MP4 | 1.5x playback speed | 2s trim from start (browser chrome), full WebM → MP4 conversion |
+| Thumbnail | Original resolution PNG | First non-blank screenshot |
+
+### When media processor runs
+
+The processor is **always dispatched** after browser work — even without video recording — because GIF and thumbnail are generated from screenshots (which are always captured).
+
+| Recording enabled? | GIF | MP4 | Thumbnail |
+|:------------------:|:---:|:---:|:---------:|
+| Yes | from screenshots | from full.webm | from screenshots |
+| No | from screenshots | skipped | from screenshots |
+
 ## Related
 
+- [PR Workflow](pr-workflow.md) -- full guide for posting E2E evidence to PRs
 - [Commands](commands.md) -- all skills and flags including `--video`, `--pr`, `--no-video`
+- [Cross-Boundary Testing](cross-boundary-testing.md) -- external checkpoints that produce evidence
 - [Debugging](debugging.md) -- using traces and recordings to diagnose failures
 - [CI Integration](ci-integration.md) -- metrics and JUnit output for CI pipelines
 

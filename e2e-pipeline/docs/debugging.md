@@ -106,6 +106,7 @@ For deeper diagnostics: `/e2e-skill-ops --debug`
 - [Commands](commands.md) -- all skills and flags
 - [Writing Tests](writing-tests.md) -- flow YAML format and preconditions
 - [Recording & Evidence](recording-evidence.md) -- trace replay and PR evidence
+- [Self-Improvement](self-improvement.md) -- how debugging findings feed back into pipeline learning
 - [Architecture](architecture.md) -- pipeline design and skill-to-agent model
 
 ---

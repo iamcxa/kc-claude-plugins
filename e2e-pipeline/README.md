@@ -51,7 +51,8 @@ When selectors break, re-map the page. When flows change, re-walk. The pipeline 
 | [Test Suites](docs/suites.md) | Suite file format, site assignment, CI suite patterns |
 | [Cross-Boundary Testing](docs/cross-boundary-testing.md) | CLI + browser + analytics flows, `Execute external` / `Verify external` steps |
 | [CI Integration](docs/ci-integration.md) | GitHub Actions setup, quarantine system, auth, metrics |
-| [Recording & Evidence](docs/recording-evidence.md) | Video, screenshots, traces, PR review evidence |
+| [Recording & Evidence](docs/recording-evidence.md) | Video, screenshots, traces, media processing pipeline |
+| [PR Workflow](docs/pr-workflow.md) | End-to-end guide for posting E2E evidence to pull requests |
 | [Debugging](docs/debugging.md) | Static/dynamic/intermittent issues, troubleshooting table |
 | [Architecture](docs/architecture.md) | Pipeline design, skill->agent model, file structure |
 | [Self-Improvement](docs/self-improvement.md) | Knowledge bootstrap, D1/D2 patterns, PR-back flow |
