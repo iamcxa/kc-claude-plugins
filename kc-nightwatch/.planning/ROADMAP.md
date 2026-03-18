@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Two-process architecture with all 6 critical pitfalls resolved (completed 2026-03-18)
 - [x] **Phase 2: Core Cockpit** - Working dashboard: targets, run trigger, SSE logs, history, scheduler, memory isolation (completed 2026-03-18)
-- [ ] **Phase 3: Flywheel Core** - NW-Claude chat, config editor, feedback calibration, self-assessment, baseline measurement
+- [x] **Phase 3: Flywheel Core** - NW-Claude chat, config editor, feedback calibration, self-assessment, baseline measurement (completed 2026-03-18)
 - [ ] **Phase 4: Full Flywheel** - MCP server + flywheel health metrics + deferred chat/feedback capabilities (data-dependent, deferred until Phase 3 produces sufficient feedback data)
 
 ## Phase Details
@@ -98,5 +98,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-03-18 |
 | 2. Core Cockpit | 3/3 | Complete | 2026-03-18 |
-| 3. Flywheel Core | 3/4 | In Progress|  |
+| 3. Flywheel Core | 4/4 | Complete   | 2026-03-18 |
 | 4. Full Flywheel | 0/2 | Not started | - |

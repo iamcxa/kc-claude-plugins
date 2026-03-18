@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-flywheel-core/03-02-PLAN.md — Config editor, 4-step Haiku validation, AddTargetWizard, write lock
-last_updated: "2026-03-18T10:46:56.200Z"
+stopped_at: "Completed 03-flywheel-core/03-04-PLAN.md — Self-Assessment + Measurement: skill phases 0.5/3.5/4.5, executor summary.yaml parsing, BaselineCard, ActionCard Reflection, runs.ts integration"
+last_updated: "2026-03-18T10:53:53.104Z"
 last_activity: "2026-03-18 — Phase 03-03: feedback store (b187127), ActionCard (c8001f9), PR collector (0609857)"
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 10
-  completed_plans: 9
+  completed_plans: 10
   percent: 60
 ---
 
@@ -56,6 +56,7 @@ Progress: [██████░░░░] 60% (Phase 2 complete, Phase 3 plans 
 | Phase 03-flywheel-core P01 | 16min | 3 tasks | 13 files |
 | Phase 03-flywheel-core P03 | 24min | 3 tasks | 10 files |
 | Phase 03-flywheel-core P02 | 18 | 3 tasks | 9 files |
+| Phase 03-flywheel-core P04 | 15 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,9 @@ Recent decisions affecting current work:
 - [Phase 03-flywheel-core]: 03-02: Fail-open Haiku semantic check — Haiku unavailable => WARN verdict, save proceeds; config editor never gated by LLM availability
 - [Phase 03-flywheel-core]: 03-02: /api/config/warnings registered before /api/config/:file — Hono param routes are greedy, ordering prevents capture
 - [Phase 03-flywheel-core]: 03-02: Wizard Step 4 uses JSON.stringify preview — yaml package is server-side only; browser frontend uses JSON for target preview
+- [Phase 03-flywheel-core]: summary.yaml is the handoff contract between NW-Claude skill (writer) and dashboard executor (reader)
+- [Phase 03-flywheel-core]: executor.ts non-destructive fallback: only writes legacy phases_completed if skill did not produce summary.yaml
+- [Phase 03-flywheel-core]: BaselineCard always visible (not collapsible) per CONTEXT.md Indicator Baseline Display decision
 
 ### Pending Todos
 
@@ -108,6 +112,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T10:46:56.198Z
-Stopped at: Completed 03-flywheel-core/03-02-PLAN.md — Config editor, 4-step Haiku validation, AddTargetWizard, write lock
+Last session: 2026-03-18T10:53:53.101Z
+Stopped at: Completed 03-flywheel-core/03-04-PLAN.md — Self-Assessment + Measurement: skill phases 0.5/3.5/4.5, executor summary.yaml parsing, BaselineCard, ActionCard Reflection, runs.ts integration
 Resume file: None

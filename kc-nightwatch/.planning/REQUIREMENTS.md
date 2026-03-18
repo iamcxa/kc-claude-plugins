@@ -51,14 +51,14 @@
 
 ### Config
 
-- [ ] **CONF-01**: YAML editor for targets.yaml (read-only by default, unlock to edit)
-- [ ] **CONF-02**: YAML editor for safety.yaml
-- [ ] **CONF-03**: Edit lock (must explicitly enable editing)
-- [ ] **CONF-04**: 4-step save validation (static → semantic via Haiku → diff → confirm)
-- [ ] **CONF-05**: Config warnings panel (from self-repair.yaml, inline markers)
-- [ ] **CONF-06**: Add Target wizard (4 steps: type → goals → monitors/respond → validate)
-- [ ] **CONF-07**: Edit Target (same wizard, pre-filled)
-- [ ] **CONF-08**: Remove Target (confirm dialog)
+- [x] **CONF-01**: YAML editor for targets.yaml (read-only by default, unlock to edit)
+- [x] **CONF-02**: YAML editor for safety.yaml
+- [x] **CONF-03**: Edit lock (must explicitly enable editing)
+- [x] **CONF-04**: 4-step save validation (static → semantic via Haiku → diff → confirm)
+- [x] **CONF-05**: Config warnings panel (from self-repair.yaml, inline markers)
+- [x] **CONF-06**: Add Target wizard (4 steps: type → goals → monitors/respond → validate)
+- [x] **CONF-07**: Edit Target (same wizard, pre-filled)
+- [x] **CONF-08**: Remove Target (confirm dialog)
 
 ### Chat
 
@@ -82,16 +82,16 @@
 
 ### Self-Assessment
 
-- [ ] **ASSESS-01**: Phase 3.5 pre-action strategy assessment (in orchestrator skill)
-- [ ] **ASSESS-02**: Phase 4.5 post-action reflection assessment (in orchestrator skill)
-- [ ] **ASSESS-03**: Assessment display in run detail (per action card)
-- [ ] **ASSESS-04**: Assessment in Slack report
+- [x] **ASSESS-01**: Phase 3.5 pre-action strategy assessment (in orchestrator skill)
+- [x] **ASSESS-02**: Phase 4.5 post-action reflection assessment (in orchestrator skill)
+- [x] **ASSESS-03**: Assessment display in run detail (per action card)
+- [x] **ASSESS-04**: Assessment in Slack report
 
 ### Measurement
 
-- [ ] **MEAS-01**: Phase 0.5 indicator baseline measurement (quantified values per indicator)
-- [ ] **MEAS-02**: Indicator trend tracking (previous_value + trend direction)
-- [ ] **MEAS-03**: Baseline display in run detail
+- [x] **MEAS-01**: Phase 0.5 indicator baseline measurement (quantified values per indicator)
+- [x] **MEAS-02**: Indicator trend tracking (previous_value + trend direction)
+- [x] **MEAS-03**: Baseline display in run detail
 
 ### Memory
 
@@ -193,14 +193,14 @@
 | MEM-01 | Phase 2 | Complete |
 | MEM-02 | Phase 2 | Complete |
 | MEM-03 | Phase 2 | Complete |
-| CONF-01 | Phase 3 | Pending |
-| CONF-02 | Phase 3 | Pending |
-| CONF-03 | Phase 3 | Pending |
-| CONF-04 | Phase 3 | Pending |
-| CONF-05 | Phase 3 | Pending |
-| CONF-06 | Phase 3 | Pending |
-| CONF-07 | Phase 3 | Pending |
-| CONF-08 | Phase 3 | Pending |
+| CONF-01 | Phase 3 | Complete |
+| CONF-02 | Phase 3 | Complete |
+| CONF-03 | Phase 3 | Complete |
+| CONF-04 | Phase 3 | Complete |
+| CONF-05 | Phase 3 | Complete |
+| CONF-06 | Phase 3 | Complete |
+| CONF-07 | Phase 3 | Complete |
+| CONF-08 | Phase 3 | Complete |
 | CHAT-01 | Phase 3 | Complete |
 | CHAT-02 | Phase 3 | Complete |
 | CHAT-03 | Phase 3 | Complete |
@@ -215,13 +215,13 @@
 | FEED-05 | Phase 3 | Pending |
 | FEED-06 | Phase 3 | Pending |
 | FEED-07 | Phase 3 | Pending |
-| ASSESS-01 | Phase 3 | Pending |
-| ASSESS-02 | Phase 3 | Pending |
-| ASSESS-03 | Phase 3 | Pending |
-| ASSESS-04 | Phase 3 | Pending |
-| MEAS-01 | Phase 3 | Pending |
-| MEAS-02 | Phase 3 | Pending |
-| MEAS-03 | Phase 3 | Pending |
+| ASSESS-01 | Phase 3 | Complete |
+| ASSESS-02 | Phase 3 | Complete |
+| ASSESS-03 | Phase 3 | Complete |
+| ASSESS-04 | Phase 3 | Complete |
+| MEAS-01 | Phase 3 | Complete |
+| MEAS-02 | Phase 3 | Complete |
+| MEAS-03 | Phase 3 | Complete |
 | MCP-01 | Phase 4 | Pending |
 | MCP-02 | Phase 4 | Pending |
 | MCP-03 | Phase 4 | Pending |
