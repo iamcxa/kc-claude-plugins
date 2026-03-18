@@ -111,12 +111,39 @@ if (config.host !== '127.0.0.1' && config.auth_token) {
 }
 
 // Serve frontend static files — BEFORE API routes (order matters in Hono)
+// Vendor files (preact, htm) are plain JS — serve as-is
 app.use('/vendor/*', serveStatic({ root: FRONTEND_ROOT }))
-app.use('/pages/*', serveStatic({ root: FRONTEND_ROOT }))
-app.use('/components/*', serveStatic({ root: FRONTEND_ROOT }))
-app.use('/lib/*', serveStatic({ root: FRONTEND_ROOT }))
-app.use('/app.ts', serveStatic({ root: FRONTEND_ROOT }))
-app.use('/shared/*', serveStatic({ root: path.join(import.meta.dir, '..') }))
+
+// TypeScript files — transpile on-the-fly with Bun then serve as JS
+const serveTsFile = async (filePath: string) => {
+  const file = Bun.file(filePath)
+  if (!(await file.exists())) return null
+  const transpiler = new Bun.Transpiler({ loader: 'ts' })
+  const source = await file.text()
+  const js = transpiler.transformSync(source)
+  return new Response(js, { headers: { 'Content-Type': 'application/javascript; charset=utf-8' } })
+}
+
+app.get('/pages/*', async (c) => {
+  const resp = await serveTsFile(path.join(FRONTEND_ROOT, c.req.path))
+  return resp ?? c.notFound()
+})
+app.get('/components/*', async (c) => {
+  const resp = await serveTsFile(path.join(FRONTEND_ROOT, c.req.path))
+  return resp ?? c.notFound()
+})
+app.get('/lib/*', async (c) => {
+  const resp = await serveTsFile(path.join(FRONTEND_ROOT, c.req.path))
+  return resp ?? c.notFound()
+})
+app.get('/app.ts', async (c) => {
+  const resp = await serveTsFile(path.join(FRONTEND_ROOT, 'app.ts'))
+  return resp ?? c.notFound()
+})
+app.get('/shared/*', async (c) => {
+  const resp = await serveTsFile(path.join(import.meta.dir, '..', c.req.path))
+  return resp ?? c.notFound()
+})
 
 // Register API routes after auth middleware and static serving (order matters in Hono)
 app.route('/', healthRoutes)
