@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { streamSSE } from 'hono/streaming'
-import { subscribeToRun } from '../ipc.ts'
+import { subscribeToRun, subscribeGlobal } from '../ipc.ts'
 
 export const streamRoutes = new Hono()
 
@@ -18,6 +18,20 @@ streamRoutes.get('/api/runs/:id/stream', (c) => {
     // Max 35 min (safety.yaml max_runtime_minutes = 30, plus buffer)
     await stream.sleep(35 * 60_000)
 
+    clearInterval(pingTimer)
+    unsub()
+  })
+})
+
+// GET /api/events — global SSE for lifecycle events (brief-ready, config-changed)
+streamRoutes.get('/api/events', (c) => {
+  return streamSSE(c, async (stream) => {
+    const unsub = subscribeGlobal(stream, c.req.raw.signal)
+    const pingTimer = setInterval(() => {
+      void stream.writeSSE({ data: '', event: 'ping' })
+    }, 60_000)
+    // 1 hour max connection
+    await stream.sleep(60 * 60_000)
     clearInterval(pingTimer)
     unsub()
   })

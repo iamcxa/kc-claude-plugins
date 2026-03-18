@@ -144,6 +144,49 @@ export interface RunSummary {
 }
 
 // ============================================================
+// Phase 3: Chat types
+// ============================================================
+export interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: string
+  streaming?: boolean
+}
+
+// ============================================================
+// Phase 3: Feedback types
+// ============================================================
+export interface FeedbackEntry {
+  signal_id: string
+  target: string
+  run_id: string
+  verdict: 'accepted' | 'rejected'
+  reason?: string
+  source: 'user' | 'pr_status' | 'linear_status'
+  submitted_at: string
+}
+
+export interface CalibrationData {
+  indicator: string
+  total_feedback: number
+  reject_count: number
+  reject_rate: number
+  current_threshold: number
+}
+
+// ============================================================
+// Phase 3: Config validation types
+// ============================================================
+export interface ConfigValidationResult {
+  valid: boolean
+  step: 'static' | 'semantic' | 'ready'
+  error?: string
+  haiku_verdict?: string
+  diff?: Array<{ type: 'add' | 'remove' | 'same'; line: string }>
+}
+
+// ============================================================
 // ParsedLogEvent — extended with Phase 2 fields
 // ============================================================
 export interface ParsedLogEvent {
