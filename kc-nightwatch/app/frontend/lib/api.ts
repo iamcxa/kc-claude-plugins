@@ -1,4 +1,4 @@
-import type { Target, Run, RunSummary, ScheduleConfig } from '../../shared/types.ts'
+import type { Target, Run, RunSummary, ScheduleConfig, ConfigValidationResult, FeedbackEntry, CalibrationData } from '../../shared/types.ts'
 
 const BASE = ''
 
@@ -85,5 +85,50 @@ export const api = {
 
   briefChat(target: string, summary: unknown): Promise<{ ok: boolean }> {
     return post<{ ok: boolean }>(`/api/chat/${encodeURIComponent(target)}/brief`, { summary })
+  },
+
+  // Feedback
+  submitFeedback(body: {
+    signal_id: string; target: string; run_id: string;
+    verdict: 'accepted' | 'rejected'; reason?: string
+  }): Promise<{ ok: boolean }> {
+    return post<{ ok: boolean }>('/api/feedback', body)
+  },
+
+  getFeedback(runId: string): Promise<FeedbackEntry[]> {
+    return get<FeedbackEntry[]>(`/api/feedback/${runId}`)
+  },
+
+  getCalibration(): Promise<CalibrationData[]> {
+    return get<CalibrationData[]>('/api/feedback/calibration')
+  },
+
+  // Config
+  getConfig(file: 'targets' | 'safety'): Promise<{ content: string }> {
+    return get<{ content: string }>(`/api/config/${file}`)
+  },
+
+  validateConfig(file: 'targets' | 'safety', content: string): Promise<ConfigValidationResult> {
+    return put<ConfigValidationResult>(`/api/config/${file}`, { content })
+  },
+
+  saveConfig(file: 'targets' | 'safety', content: string): Promise<{ ok: boolean }> {
+    return put<{ ok: boolean }>(`/api/config/${file}`, { content, confirm: true })
+  },
+
+  getConfigWarnings(): Promise<{ warnings: Record<string, unknown> }> {
+    return get<{ warnings: Record<string, unknown> }>('/api/config/warnings')
+  },
+
+  addTarget(name: string, target: Record<string, unknown>): Promise<{ ok: boolean }> {
+    return post<{ ok: boolean }>('/api/config/targets/add', { name, target })
+  },
+
+  editTarget(name: string, target: Record<string, unknown>): Promise<{ ok: boolean }> {
+    return put<{ ok: boolean }>(`/api/config/targets/${encodeURIComponent(name)}`, { target })
+  },
+
+  removeTarget(name: string): Promise<void> {
+    return del(`/api/config/targets/${encodeURIComponent(name)}`)
   },
 }
