@@ -1,6 +1,8 @@
 // FOUND-04: Using Bun native IPC (not Unix socket) eliminates EADDRINUSE risk.
 // No socket file is created. Stale state from prior crash is handled by cleanupOrphans().
 import { Hono } from 'hono'
+import { serveStatic } from 'hono/bun'
+import path from 'node:path'
 import { log } from '../shared/logger.ts'
 import type { IpcMessage, WorkerToServer } from '../shared/types.ts'
 import {
@@ -23,6 +25,8 @@ import {
 import { loadOrCreateAppConfig } from './services/yaml-store.ts'
 import { tokenAuth } from './services/auth.ts'
 import { cleanupOrphans } from './services/orphan-cleanup.ts'
+
+const FRONTEND_ROOT = path.join(import.meta.dir, '../frontend')
 
 const app = new Hono()
 
@@ -106,11 +110,25 @@ if (config.host !== '127.0.0.1' && config.auth_token) {
   log.info({ component: 'server', msg: 'Remote mode: Bearer token auth enabled on all routes' })
 }
 
-// Register routes after auth middleware (order matters in Hono)
+// Serve frontend static files — BEFORE API routes (order matters in Hono)
+app.use('/vendor/*', serveStatic({ root: FRONTEND_ROOT }))
+app.use('/pages/*', serveStatic({ root: FRONTEND_ROOT }))
+app.use('/components/*', serveStatic({ root: FRONTEND_ROOT }))
+app.use('/lib/*', serveStatic({ root: FRONTEND_ROOT }))
+app.use('/app.ts', serveStatic({ root: FRONTEND_ROOT }))
+app.use('/shared/*', serveStatic({ root: path.join(import.meta.dir, '..') }))
+
+// Register API routes after auth middleware and static serving (order matters in Hono)
 app.route('/', healthRoutes)
 app.route('/', apiRoutes)
 app.route('/', streamRoutes)
 app.route('/', scheduleRoutes)
+
+// SPA root route — serve index.html for / (after all API routes)
+app.get('/', async (c) => {
+  const html = await Bun.file(path.join(FRONTEND_ROOT, 'index.html')).text()
+  return c.html(html)
+})
 
 const port = Number(process.env.PORT ?? config.port ?? DEFAULT_PORT)
 const hostname = process.env.HOST ?? config.host ?? DEFAULT_HOST

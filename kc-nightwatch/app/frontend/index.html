@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nightwatch</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "preact": "/vendor/preact.module.js",
+      "preact/hooks": "/vendor/preact.module.js",
+      "htm/preact": "/vendor/htm.module.js",
+      "@preact/signals": "/vendor/signals.module.js"
+    }
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --success: #3fb950;
+      --error: #f85149;
+      --warn: #d29922;
+      --btn-primary: #238636;
+      --btn-secondary: #21262d;
+      --btn-danger: #da3633;
+      --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+    }
+    #app {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    button {
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      background: var(--btn-secondary);
+      color: var(--text);
+    }
+    button:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    input, textarea, select {
+      font-family: inherit;
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 8px;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">Loading...</div>
+  <script type="module" src="/app.ts"></script>
+</body>
+</html>
