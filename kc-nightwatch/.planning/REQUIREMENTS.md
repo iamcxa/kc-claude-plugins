@@ -18,35 +18,35 @@
 
 ### Dashboard
 
-- [ ] **DASH-01**: Target cards showing name, type, north star, last run summary, health indicator
+- [x] **DASH-01**: Target cards showing name, type, north star, last run summary, health indicator
 - [ ] **DASH-02**: Per-target context menu (Run / Run dry / Edit / Chat / Remove)
-- [ ] **DASH-03**: Global Run All / Run All (dry-run) buttons
-- [ ] **DASH-04**: Schedule status bar (interval, next run countdown, last run summary)
+- [x] **DASH-03**: Global Run All / Run All (dry-run) buttons
+- [x] **DASH-04**: Schedule status bar (interval, next run countdown, last run summary)
 - [ ] **DASH-05**: Navigation between Dashboard, Runs, and Config pages
 
 ### Execution
 
-- [ ] **EXEC-01**: Manual run trigger with mode selection (production/dry-run)
-- [ ] **EXEC-02**: Custom prompt field on manual trigger (saved to run artifacts)
-- [ ] **EXEC-03**: Self-repair toggle on manual trigger
+- [x] **EXEC-01**: Manual run trigger with mode selection (production/dry-run)
+- [x] **EXEC-02**: Custom prompt field on manual trigger (saved to run artifacts)
+- [x] **EXEC-03**: Self-repair toggle on manual trigger
 - [ ] **EXEC-04**: Per-target safehouse policy generation (read-only vs read-write by mode)
 - [ ] **EXEC-05**: `claude -p --output-format stream-json` spawning with target cwd
-- [ ] **EXEC-06**: Real-time log streaming from worker to browser via SSE
-- [ ] **EXEC-07**: Phase progress extraction from stream-json (Phase 0-5 detection)
-- [ ] **EXEC-08**: Run cancellation (SIGTERM to claude -p child)
+- [x] **EXEC-06**: Real-time log streaming from worker to browser via SSE
+- [x] **EXEC-07**: Phase progress extraction from stream-json (Phase 0-5 detection)
+- [x] **EXEC-08**: Run cancellation (SIGTERM to claude -p child)
 - [ ] **EXEC-09**: Execution queue with max concurrency 1
 
 ### Scheduling
 
 - [ ] **SCHED-01**: Interval scheduler (every N hours, configurable)
-- [ ] **SCHED-02**: Webhook endpoint (POST /api/webhook with optional target + mode)
-- [ ] **SCHED-03**: Schedule state persisted in nightwatch-app.yaml
+- [x] **SCHED-02**: Webhook endpoint (POST /api/webhook with optional target + mode)
+- [x] **SCHED-03**: Schedule state persisted in nightwatch-app.yaml
 
 ### Run History
 
-- [ ] **HIST-01**: Run history list with status, trigger type, duration, action counts
-- [ ] **HIST-02**: Run detail view with phase progress, log, action cards
-- [ ] **HIST-03**: Filter runs by status (failed, with actions) and target
+- [x] **HIST-01**: Run history list with status, trigger type, duration, action counts
+- [x] **HIST-02**: Run detail view with phase progress, log, action cards
+- [x] **HIST-03**: Filter runs by status (failed, with actions) and target
 - [ ] **HIST-04**: Live view during execution (auto-switch from history to live)
 
 ### Config
@@ -169,26 +169,26 @@
 | SEC-01 | Phase 1 | Complete |
 | SEC-02 | Phase 1 | Complete |
 | SEC-03 | Phase 1 | Complete |
-| DASH-01 | Phase 2 | Pending |
+| DASH-01 | Phase 2 | Complete |
 | DASH-02 | Phase 2 | Pending |
-| DASH-03 | Phase 2 | Pending |
-| DASH-04 | Phase 2 | Pending |
+| DASH-03 | Phase 2 | Complete |
+| DASH-04 | Phase 2 | Complete |
 | DASH-05 | Phase 2 | Pending |
-| EXEC-01 | Phase 2 | Pending |
-| EXEC-02 | Phase 2 | Pending |
-| EXEC-03 | Phase 2 | Pending |
+| EXEC-01 | Phase 2 | Complete |
+| EXEC-02 | Phase 2 | Complete |
+| EXEC-03 | Phase 2 | Complete |
 | EXEC-04 | Phase 2 | Pending |
 | EXEC-05 | Phase 2 | Pending |
-| EXEC-06 | Phase 2 | Pending |
-| EXEC-07 | Phase 2 | Pending |
-| EXEC-08 | Phase 2 | Pending |
+| EXEC-06 | Phase 2 | Complete |
+| EXEC-07 | Phase 2 | Complete |
+| EXEC-08 | Phase 2 | Complete |
 | EXEC-09 | Phase 2 | Pending |
 | SCHED-01 | Phase 2 | Pending |
-| SCHED-02 | Phase 2 | Pending |
-| SCHED-03 | Phase 2 | Pending |
-| HIST-01 | Phase 2 | Pending |
-| HIST-02 | Phase 2 | Pending |
-| HIST-03 | Phase 2 | Pending |
+| SCHED-02 | Phase 2 | Complete |
+| SCHED-03 | Phase 2 | Complete |
+| HIST-01 | Phase 2 | Complete |
+| HIST-02 | Phase 2 | Complete |
+| HIST-03 | Phase 2 | Complete |
 | HIST-04 | Phase 2 | Pending |
 | MEM-01 | Phase 2 | Pending |
 | MEM-02 | Phase 2 | Pending |

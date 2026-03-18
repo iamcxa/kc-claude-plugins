@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-03-18T00:58:04.154Z"
-last_activity: "2026-03-18 — Plan 01-03 complete: YAML config bootstrap, auth middleware, orphan cleanup, crash recovery, security gate"
+status: in_progress
+stopped_at: "02-01-PLAN.md complete"
+last_updated: "2026-03-18T02:26:18.000Z"
+last_activity: "2026-03-18 — Plan 02-01 complete: extended types, REST API routes, SSE fan-out, run-store, yaml-store extensions"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
-  percent: 100
+  total_plans: 4
+  completed_plans: 1
+  percent: 25
 ---
 
 # Project State
@@ -21,33 +21,34 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** The closed-loop feedback flywheel — NW monitors, proposes, learns from feedback, and gets measurably better over time
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Phase 2 — Core Cockpit
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation) — COMPLETE
-Plan: 3 of 3 in current phase (01-03 complete)
-Status: Phase 1 complete — ready for Phase 2
-Last activity: 2026-03-18 — Plan 01-03 complete: YAML config bootstrap, auth middleware, orphan cleanup, crash recovery, security gate
+Phase: 2 of 4 (Core Cockpit) — IN PROGRESS
+Plan: 1 of 4 in current phase (02-01 complete)
+Status: Phase 2 Plan 01 complete — ready for Plan 02-02 (Worker NW Memory Isolation)
+Last activity: 2026-03-18 — Plan 02-01 complete: extended types, REST API routes, SSE fan-out, run-store, yaml-store extensions
 
-Progress: [██████████] 100% (Phase 1)
+Progress: [███░░░░░░░] 25% (Phase 2)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 7.7 min
-- Total execution time: 0.38 hours
+- Total plans completed: 4
+- Average duration: 6.5 min
+- Total execution time: 0.43 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 3/3 | 32 min | 10.7 min |
+| 02-core-cockpit | 1/4 | 6 min | 6 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (2 min), 01-03 (15 min)
-- Trend: Phase 1 complete
+- Last 5 plans: 01-01 (5 min), 01-02 (2 min), 01-03 (15 min), 02-01 (6 min)
+- Trend: Phase 2 in progress
 
 *Updated after each plan completion*
 
@@ -69,6 +70,10 @@ Recent decisions affecting current work:
 - 01-03: Bun.file handle stale after write — always re-create handle for read (not reuse pre-write object)
 - 01-03: tokenAuth applied at app.use('*') before app.route() — Hono order enforces auth before routing
 - 01-03: cleanupOrphans called at boot AND crash recovery — prevents zombie accumulation on repeated crashes
+- 02-01: RunSummary phases_completed kept as optional backward-compat field — executor.ts Phase 1 code compiles without migration
+- 02-01: SSE subscribers stored as Map<runId, Set<SSEWriter>> — O(1) lookup, auto-cleaned on run:completed/run:failed
+- 02-01: readTargets() normalizes both old and new field names at read time — Appendix A compat, no migration needed
+- 02-01: writeAppConfig() always re-creates Bun.file handle (Pitfall: stale handle after write, per 01-03 lesson)
 
 ### Pending Todos
 
@@ -82,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T00:58:04.151Z
-Stopped at: Phase 2 UI-SPEC approved
-Resume file: .planning/phases/02-core-cockpit/02-UI-SPEC.md
+Last session: 2026-03-18T02:26:18.000Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: .planning/phases/02-core-cockpit/02-01-SUMMARY.md
