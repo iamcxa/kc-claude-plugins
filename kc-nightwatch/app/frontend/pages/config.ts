@@ -2,6 +2,7 @@ import { html } from 'htm/preact'
 import { useState, useEffect } from 'preact/hooks'
 import type { ConfigValidationResult } from '../../shared/types.ts'
 import { api } from '../lib/api.ts'
+import { AddTargetWizard } from '../components/add-target-wizard.ts'
 
 type ConfigTab = 'targets' | 'safety'
 
@@ -15,6 +16,9 @@ export function Config() {
   const [validationResult, setValidationResult] = useState<ConfigValidationResult | null>(null)
   const [warnings, setWarnings] = useState<Record<string, unknown>>({})
   const [saving, setSaving] = useState(false)
+  const [wizardOpen, setWizardOpen] = useState(false)
+  const [editTarget, setEditTarget] = useState<{ name: string; data: Record<string, unknown> } | null>(null)
+  const [removeConfirm, setRemoveConfirm] = useState<string | null>(null)
 
   // Load config content when tab changes
   useEffect(() => {
@@ -124,6 +128,16 @@ export function Config() {
         `}
       </div>
 
+      <!-- Add Target button (Targets tab only) -->
+      ${tab === 'targets' && html`
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <button
+            onClick=${() => { setEditTarget(null); setWizardOpen(true) }}
+            style="background:var(--btn-primary);color:#fff;border-color:var(--btn-primary);"
+          >+ Add Target</button>
+        </div>
+      `}
+
       <!-- YAML editor -->
       <textarea
         aria-label="${tab === 'targets' ? 'Targets' : 'Safety'} configuration"
@@ -188,5 +202,44 @@ export function Config() {
         </div>
       `}
     </div>
+
+    <${AddTargetWizard}
+      isOpen=${wizardOpen}
+      onClose=${() => { setWizardOpen(false); setEditTarget(null) }}
+      onSaved=${() => {
+        api.getConfig(tab).then(r => {
+          setContent(r.content)
+          setOriginalContent(r.content)
+        }).catch(console.error)
+      }}
+      editTarget=${editTarget}
+    />
+
+    ${removeConfirm && html`
+      <div
+        style="position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:100;"
+        onClick=${() => setRemoveConfirm(null)}
+      >
+        <div
+          role="alertdialog"
+          aria-modal="true"
+          style="background:var(--panel);border:1px solid var(--border);border-radius:8px;max-width:360px;width:90%;padding:24px;"
+          onClick=${(e: Event) => e.stopPropagation()}
+        >
+          <p style="margin:0 0 16px;">Remove ${removeConfirm}? This cannot be undone.</p>
+          <div style="display:flex;justify-content:flex-end;gap:8px;">
+            <button onClick=${() => setRemoveConfirm(null)}>Stay</button>
+            <button
+              onClick=${async () => {
+                await api.removeTarget(removeConfirm!)
+                setRemoveConfirm(null)
+                api.getConfig(tab).then(r => { setContent(r.content); setOriginalContent(r.content) }).catch(console.error)
+              }}
+              style="background:var(--btn-danger);color:#fff;border-color:var(--btn-danger);"
+            >Remove</button>
+          </div>
+        </div>
+      </div>
+    `}
   `
 }
