@@ -46,12 +46,12 @@ Plans:
   3. User navigates to Run History, filters by status or target, opens a run detail with phase progress (Phase 0–5 detected), log, and action cards
   4. User enables the interval scheduler, sets hours, and the scheduler persists across server restarts; webhook endpoint accepts POST requests to trigger a run
   5. Each run executes in an isolated agent-safehouse context with per-target policy (read-only vs read-write by mode); max 1 concurrent run; second trigger queues rather than overlapping
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: REST API routes (/api/targets, /api/runs, /api/webhook) + SSE stream route with fan-out and disconnect cleanup
-- [ ] 02-02: Worker scheduler (interval timer) + execution queue (max concurrency 1) + per-target safehouse policy + NW journal isolation in executor
-- [ ] 02-03: Frontend — dashboard page (target cards, context menu, run trigger dialog, schedule bar, nav), run history/detail pages, log-stream component with stream-json phase parsing
+- [ ] 02-01-PLAN.md — Shared type extensions (Target, RunSummary, ParsedLogEvent) + REST API routes (targets, runs, webhook, schedule) + SSE fan-out wiring + run-store service + yaml-store extensions
+- [ ] 02-02-PLAN.md — Worker execution queue (max concurrency 1) + target path resolution + interval scheduler + cancel implementation + NW memory isolation (ensureNwMemoryDir, nw-journal MCP injection)
+- [ ] 02-03-PLAN.md — Frontend: Preact+HTM vendor setup, import map, app router, dashboard master-detail layout, trigger modal, log-stream SSE component, run history/detail pages, config stub + human verification
 
 ### Phase 3: Flywheel Core
 **Goal**: Users can interact with NW-Claude about run results, edit config safely, submit structured feedback that calibrates future runs, and see per-run self-assessment and indicator baselines — turning nightwatch from automation into a learning system
