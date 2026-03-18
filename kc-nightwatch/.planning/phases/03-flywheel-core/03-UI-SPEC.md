@@ -59,13 +59,12 @@ All tokens come from `index.html :root` block. Phase 3 adds two new semantic tok
 
 ## Spacing Scale
 
-Declared values (must be multiples of 4):
+Declared values (multiples of 4 only):
 
 | Token | Value | Usage |
 |-------|-------|-------|
 | xs | 4px | Icon gaps, feedback button inner padding, status dot size (8px = 2×xs) |
 | sm | 8px | Compact element padding, list item gaps, label-to-field gap |
-| sm-plus | 12px | BaselineCard padding, ChatMessage bubble padding (8px 12px) |
 | md | 16px | Default content padding, dialog section spacing, drawer internal padding |
 | lg | 24px | Dialog padding, section separation, wizard step padding |
 | xl | 32px | Major layout gaps (not used in current Phase 2 components) |
@@ -73,14 +72,18 @@ Declared values (must be multiples of 4):
 | 3xl | 64px | Reserved — phase 4 use |
 
 Exceptions:
-- Bottom nav height: 48px (2xl) — already established in Phase 2
-- Sidebar width: 240px — established constraint
-- Chat drawer width: 400px — locked in CONTEXT.md
-- Dialog max-width: 480px — established in TriggerDialog
-- Border radius: 6px (inputs, buttons), 8px (dialogs, cards), 4px (badges, small chips)
-- Status dot: 8px × 8px circle — established pattern
 
-Source: Extracted from existing component inline styles (sidebar.ts, trigger-dialog.ts, target-detail.ts). 12px added as `sm-plus` token to cover BaselineCard and ChatMessage usages — it is a mid-point between sm and md, distinct enough to warrant a named token.
+| Usage | Value | Reason |
+|-------|-------|--------|
+| Bottom nav height | 48px (2xl) | Already established in Phase 2 |
+| Sidebar width | 240px | Established constraint |
+| Chat drawer width | 400px | Locked in CONTEXT.md |
+| Dialog max-width | 480px | Established in TriggerDialog |
+| Border radius | 6px (inputs, buttons), 8px (dialogs, cards), 4px (badges, small chips) | Established pattern |
+| Status dot | 8px × 8px circle | Established pattern |
+| BaselineCard + ChatMessage bubble padding | 12px | Existing codebase usage; mid-point between sm (8px) and md (16px); not a general spacing token |
+
+Source: Extracted from existing component inline styles (sidebar.ts, trigger-dialog.ts, target-detail.ts). The 12px bubble/card padding is a codebase-specific measurement, documented as an exception rather than a named scale token to keep the standard set clean.
 
 ---
 
@@ -363,7 +366,7 @@ No third-party component registries. All components are hand-written Preact + HT
 | "+1"/"-1" text labels (not emoji) | Claude's discretion — no-bundler constraint |
 | Inline validation (not wizard-style) | Claude's discretion — less context-switching |
 | YAML editor uses 14px body size | Checker fix — mono font face differentiates code from prose; no separate size needed |
-| 12px as `sm-plus` scale token | Checker fix — BaselineCard padding + ChatMessage padding both use 12px |
+| 12px bubble/card padding as spacing exception | Checker fix — BaselineCard padding + ChatMessage padding both use 12px; documented as exception not scale token to keep standard set (4,8,16,24,32,48,64) clean |
 | "Discard Changes" (not "Cancel") | Checker fix — specific verb + noun required; "Cancel" blocked as generic label |
 | Chat toggle aria-label | Checker fix — icon-only button requires explicit label |
 | Reset button aria-label | Checker fix — icon-only button requires explicit label |
