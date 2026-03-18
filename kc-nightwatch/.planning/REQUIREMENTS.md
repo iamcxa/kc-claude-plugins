@@ -29,16 +29,16 @@
 - [x] **EXEC-01**: Manual run trigger with mode selection (production/dry-run)
 - [x] **EXEC-02**: Custom prompt field on manual trigger (saved to run artifacts)
 - [x] **EXEC-03**: Self-repair toggle on manual trigger
-- [ ] **EXEC-04**: Per-target safehouse policy generation (read-only vs read-write by mode)
-- [ ] **EXEC-05**: `claude -p --output-format stream-json` spawning with target cwd
+- [x] **EXEC-04**: Per-target safehouse policy generation (read-only vs read-write by mode)
+- [x] **EXEC-05**: `claude -p --output-format stream-json` spawning with target cwd
 - [x] **EXEC-06**: Real-time log streaming from worker to browser via SSE
 - [x] **EXEC-07**: Phase progress extraction from stream-json (Phase 0-5 detection)
 - [x] **EXEC-08**: Run cancellation (SIGTERM to claude -p child)
-- [ ] **EXEC-09**: Execution queue with max concurrency 1
+- [x] **EXEC-09**: Execution queue with max concurrency 1
 
 ### Scheduling
 
-- [ ] **SCHED-01**: Interval scheduler (every N hours, configurable)
+- [x] **SCHED-01**: Interval scheduler (every N hours, configurable)
 - [x] **SCHED-02**: Webhook endpoint (POST /api/webhook with optional target + mode)
 - [x] **SCHED-03**: Schedule state persisted in nightwatch-app.yaml
 
@@ -95,9 +95,9 @@
 
 ### Memory
 
-- [ ] **MEM-01**: Per-target NW journal directory (~/.claude/nightwatch/memory/{target}/)
-- [ ] **MEM-02**: NW journal MCP injection into worker's claude -p sessions
-- [ ] **MEM-03**: Journal isolation (no cross-target memory)
+- [x] **MEM-01**: Per-target NW journal directory (~/.claude/nightwatch/memory/{target}/)
+- [x] **MEM-02**: NW journal MCP injection into worker's claude -p sessions
+- [x] **MEM-03**: Journal isolation (no cross-target memory)
 
 ### MCP Server
 
@@ -177,22 +177,22 @@
 | EXEC-01 | Phase 2 | Complete |
 | EXEC-02 | Phase 2 | Complete |
 | EXEC-03 | Phase 2 | Complete |
-| EXEC-04 | Phase 2 | Pending |
-| EXEC-05 | Phase 2 | Pending |
+| EXEC-04 | Phase 2 | Complete |
+| EXEC-05 | Phase 2 | Complete |
 | EXEC-06 | Phase 2 | Complete |
 | EXEC-07 | Phase 2 | Complete |
 | EXEC-08 | Phase 2 | Complete |
-| EXEC-09 | Phase 2 | Pending |
-| SCHED-01 | Phase 2 | Pending |
+| EXEC-09 | Phase 2 | Complete |
+| SCHED-01 | Phase 2 | Complete |
 | SCHED-02 | Phase 2 | Complete |
 | SCHED-03 | Phase 2 | Complete |
 | HIST-01 | Phase 2 | Complete |
 | HIST-02 | Phase 2 | Complete |
 | HIST-03 | Phase 2 | Complete |
 | HIST-04 | Phase 2 | Pending |
-| MEM-01 | Phase 2 | Pending |
-| MEM-02 | Phase 2 | Pending |
-| MEM-03 | Phase 2 | Pending |
+| MEM-01 | Phase 2 | Complete |
+| MEM-02 | Phase 2 | Complete |
+| MEM-03 | Phase 2 | Complete |
 | CONF-01 | Phase 3 | Pending |
 | CONF-02 | Phase 3 | Pending |
 | CONF-03 | Phase 3 | Pending |

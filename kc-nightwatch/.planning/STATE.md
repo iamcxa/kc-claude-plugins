@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: "02-01-PLAN.md complete"
-last_updated: "2026-03-18T02:26:18.000Z"
+status: completed
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-03-18T02:36:19.478Z"
 last_activity: "2026-03-18 — Plan 02-01 complete: extended types, REST API routes, SSE fan-out, run-store, yaml-store extensions"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 4
-  completed_plans: 1
+  total_plans: 6
+  completed_plans: 5
   percent: 25
 ---
 
@@ -51,6 +51,7 @@ Progress: [███░░░░░░░] 25% (Phase 2)
 - Trend: Phase 2 in progress
 
 *Updated after each plan completion*
+| Phase 02-core-cockpit P02 | 6min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,9 @@ Recent decisions affecting current work:
 - 02-01: SSE subscribers stored as Map<runId, Set<SSEWriter>> — O(1) lookup, auto-cleaned on run:completed/run:failed
 - 02-01: readTargets() normalizes both old and new field names at read time — Appendix A compat, no migration needed
 - 02-01: writeAppConfig() always re-creates Bun.file handle (Pitfall: stale handle after write, per 01-03 lesson)
+- [Phase 02-core-cockpit]: 02-02: ScheduleConfig.self_repair_before is required (not optional) — test configs must include it explicitly
+- [Phase 02-core-cockpit]: 02-02: __all__ target expanded inline in processNextRun (sub-runs pushed to queue, drain chain handles them)
+- [Phase 02-core-cockpit]: 02-02: ensureNwMemoryDir + writeNwJournalConfig exported from executor.ts for independent unit testing
 
 ### Pending Todos
 
@@ -87,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T02:26:18.000Z
-Stopped at: Completed 02-01-PLAN.md
-Resume file: .planning/phases/02-core-cockpit/02-01-SUMMARY.md
+Last session: 2026-03-18T02:36:19.475Z
+Stopped at: Completed 02-02-PLAN.md
+Resume file: None
