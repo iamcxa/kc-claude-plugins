@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: "Completed 03-flywheel-core/03-04-PLAN.md — Self-Assessment + Measurement: skill phases 0.5/3.5/4.5, executor summary.yaml parsing, BaselineCard, ActionCard Reflection, runs.ts integration"
-last_updated: "2026-03-18T10:53:53.104Z"
+stopped_at: "Completed 03-flywheel-core/03-05-PLAN.md — Gap closure: wired collectImplicitFeedback + writeFeedbackTrends into executor.ts, updated REQUIREMENTS.md FEED-* status"
+last_updated: "2026-03-18T12:16:56.561Z"
 last_activity: "2026-03-18 — Phase 03-03: feedback store (b187127), ActionCard (c8001f9), PR collector (0609857)"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 11
+  completed_plans: 11
   percent: 60
 ---
 
@@ -57,6 +57,7 @@ Progress: [██████░░░░] 60% (Phase 2 complete, Phase 3 plans 
 | Phase 03-flywheel-core P03 | 24min | 3 tasks | 10 files |
 | Phase 03-flywheel-core P02 | 18 | 3 tasks | 9 files |
 | Phase 03-flywheel-core P04 | 15 | 2 tasks | 8 files |
+| Phase 03-flywheel-core P05 | 135s | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,8 @@ Recent decisions affecting current work:
 - [Phase 03-flywheel-core]: summary.yaml is the handoff contract between NW-Claude skill (writer) and dashboard executor (reader)
 - [Phase 03-flywheel-core]: executor.ts non-destructive fallback: only writes legacy phases_completed if skill did not produce summary.yaml
 - [Phase 03-flywheel-core]: BaselineCard always visible (not collapsible) per CONTEXT.md Indicator Baseline Display decision
+- [Phase 03-flywheel-core]: Static source-read TDD for executor wiring: Bun.file + regex avoids mocking safehouse/claude spawn while verifying production code path
+- [Phase 03-flywheel-core]: Feedback block placement: after summary.yaml parse, before IPC dispatch, wrapped in try/catch — fire-and-forget, never blocks run completion
 
 ### Pending Todos
 
@@ -112,6 +115,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T10:53:53.101Z
-Stopped at: Completed 03-flywheel-core/03-04-PLAN.md — Self-Assessment + Measurement: skill phases 0.5/3.5/4.5, executor summary.yaml parsing, BaselineCard, ActionCard Reflection, runs.ts integration
+Last session: 2026-03-18T12:16:56.558Z
+Stopped at: Completed 03-flywheel-core/03-05-PLAN.md — Gap closure: wired collectImplicitFeedback + writeFeedbackTrends into executor.ts, updated REQUIREMENTS.md FEED-* status
 Resume file: None
