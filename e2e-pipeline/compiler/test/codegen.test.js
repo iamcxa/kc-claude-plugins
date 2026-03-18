@@ -223,6 +223,41 @@ describe('generate() — fill action', function() {
 });
 
 // ---------------------------------------------------------------------------
+// screenshot: true support
+// ---------------------------------------------------------------------------
+
+describe('generate() — screenshot capture (screenshot: true)', function() {
+  test("step with screenshot: true emits agent-browser screenshot after action", function() {
+    const step = makeClick('submit-login', 'login_button', 'role=button[name="Sign In"]');
+    step.screenshot = true;
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('agent-browser screenshot "$_SCREENSHOT_DIR/submit-login.png"'),
+      'Expected screenshot capture with step id filename. Got: ' + script
+    );
+  });
+
+  test("step without screenshot does NOT emit screenshot command", function() {
+    const step = makeClick('submit-login', 'login_button', 'role=button[name="Sign In"]');
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      !script.includes('agent-browser screenshot "$_SCREENSHOT_DIR/submit-login.png"'),
+      'Expected no screenshot capture. Got: ' + script
+    );
+  });
+
+  test("screenshot failure is non-fatal (2>/dev/null || echo skipped)", function() {
+    const step = makeSnapshot('verify-dash', 'Take snapshot');
+    step.screenshot = true;
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('2>/dev/null || echo "(screenshot verify-dash skipped)"'),
+      'Expected non-fatal screenshot with fallback echo. Got: ' + script
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
 // eval-based click (cssSelector present)
 // ---------------------------------------------------------------------------
 

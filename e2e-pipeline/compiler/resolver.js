@@ -343,6 +343,10 @@ function resolve(flow, mapping) {
     if (step.wait != null) {
       resolvedStep.timeout = Number(step.wait);
     }
+    // Thread screenshot: field for post-step capture
+    if (step.screenshot) {
+      resolvedStep.screenshot = true;
+    }
     resolvedSteps.push(resolvedStep);
   }
 
@@ -487,6 +491,10 @@ function resolveMultiSite(flow, siteMappings) {
     // Thread wait: field as per-step timeout for poll-until (CODEGEN-02)
     if (step.wait != null) {
       resolvedStep.timeout = Number(step.wait);
+    }
+    // Thread screenshot: field for post-step capture
+    if (step.screenshot) {
+      resolvedStep.screenshot = true;
     }
     resolvedSteps.push(resolvedStep);
   }

@@ -1080,6 +1080,13 @@ function generate(resolved, flowName, meta) {
       parts.push(expectBlock);
     }
 
+    // Post-step screenshot capture (flow YAML screenshot: true)
+    if (step.screenshot) {
+      var session = step.session;
+      var sessionPrefix = session ? '--session ' + session + ' ' : '';
+      parts.push('agent-browser ' + sessionPrefix + 'screenshot "$_SCREENSHOT_DIR/' + step.id + '.png" 2>/dev/null || echo "(screenshot ' + step.id + ' skipped)"');
+    }
+
     parts.push('');
   }
 
