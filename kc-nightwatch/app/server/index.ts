@@ -10,6 +10,9 @@ import {
   startHeartbeatWatchdog,
 } from './ipc.ts'
 import { healthRoutes } from './routes/health.ts'
+import { apiRoutes } from './routes/api.ts'
+import { streamRoutes } from './routes/stream.ts'
+import { scheduleRoutes } from './routes/schedule.ts'
 import {
   WORKER_RESTART_BACKOFF_MS,
   MAX_WORKER_RESTARTS,
@@ -105,6 +108,9 @@ if (config.host !== '127.0.0.1' && config.auth_token) {
 
 // Register routes after auth middleware (order matters in Hono)
 app.route('/', healthRoutes)
+app.route('/', apiRoutes)
+app.route('/', streamRoutes)
+app.route('/', scheduleRoutes)
 
 const port = Number(process.env.PORT ?? config.port ?? DEFAULT_PORT)
 const hostname = process.env.HOST ?? config.host ?? DEFAULT_HOST
