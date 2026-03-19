@@ -369,6 +369,76 @@ Display: "Profile updated. Next scan will track N known issues."
 
 ---
 
+## Learning (D1 + D2)
+
+After scan state update, check for cross-project and project-specific learning opportunities. This step runs AFTER the profile is saved — learning never blocks the scan flow.
+
+### D1 — General Domain Patterns (auto-append to reference)
+
+D1 captures patterns that are useful across ALL projects. Low friction — auto-append with brief notification.
+
+**Trigger: Cross-project noise convergence**
+
+1. Read all profiles: Glob `${project}/.claude/insight/sentry/profiles/*.yaml`
+2. For each `noise_patterns` entry in the current profile, check if a similar pattern exists in 2+ OTHER profiles
+3. If a pattern appears in 3+ profiles total → it's a community pattern
+
+**Action:** Read `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. If the pattern is NOT already listed:
+- Append under `## Noise Patterns`:
+```markdown
+### <pattern description> (YYYY-MM-DD)
+- Regex: `<pattern regex>`
+- Seen in: <profile1>, <profile2>, <profile3>
+- Why noise: <brief explanation>
+```
+- Notify user: "D1 Learning: added '<pattern>' to learned-patterns.md (seen in 3+ profiles)"
+
+**Trigger: Classification refinement**
+
+If during this scan, an issue was classified with high confidence BUT the user overrode the classification (via iteration proposals or manual profile edit in the same session):
+- This suggests the heuristic needs adjustment
+- Append under `## Classification Adjustments` in `learned-patterns.md`
+- Notify user: "D1 Learning: recorded classification adjustment for '<issue type>'"
+
+### D2 — Project-Specific Patterns (gated write to CLAUDE.md)
+
+D2 captures patterns specific to THIS project. High friction — requires passing a 3-question gate before writing.
+
+**Trigger: Dominant error pattern**
+
+If >50% of issues in this scan share the same `error_type` or `tool` (structured), this suggests a project-level pattern worth documenting.
+
+**3-Question Gate** — ALL must be YES to proceed:
+
+1. **Project-specific?** Is this pattern tied to this project's infrastructure/codebase (not generalizable)?
+   - YES example: "All MCP errors come from BigQuery permission issues in this project"
+   - NO example: "TimeoutError on health checks" (this is general → D1 instead)
+
+2. **Future scans benefit?** Would knowing this context help future scans produce better reports or iteration proposals?
+   - YES example: "This project's `not_found` errors are expected during data migration periods"
+   - NO example: "There were 5 errors this week" (transient, not actionable)
+
+3. **Not already covered?** Is this NOT already in the profile's `noise_patterns`, `severity_overrides`, or the project's existing CLAUDE.md?
+
+**Action (if all 3 = YES):**
+- Propose to user: "D2 Learning: This project's Sentry errors are dominated by <pattern>. Add to project CLAUDE.md?"
+- If user confirms → append to `${project}/CLAUDE.md` under a `## Sentry Context` section:
+```markdown
+## Sentry Context
+- <pattern description> (added by kc-sentry-insight on YYYY-MM-DD)
+```
+- If CLAUDE.md doesn't exist or has no `## Sentry Context` section → create/append the section
+
+**If any gate question = NO:** Skip D2 silently. Do not ask the user.
+
+### Skip Conditions
+
+- Skip D1 if only 1 profile exists in the project (no cross-project data)
+- Skip D2 if scan returned 0 issues or all issues are noise-filtered
+- Skip both if agent returned a `warning` (no scan data to learn from)
+
+---
+
 ## Push Flow
 
 Handles `/kc-sentry-insight push <keyword> --issues 1,3,5 [--report YYYY-MM-DD]`.
