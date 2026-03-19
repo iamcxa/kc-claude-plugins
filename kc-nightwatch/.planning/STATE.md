@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-full-flywheel/04-01-PLAN.md
-last_updated: "2026-03-19T03:10:35.132Z"
+stopped_at: Completed 04-full-flywheel/04-02-PLAN.md
+last_updated: "2026-03-19T03:20:00.655Z"
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 14
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -55,6 +55,7 @@ Plan: 1 of 3
 | Phase 03-flywheel-core P04 | 15 | 2 tasks | 8 files |
 | Phase 03-flywheel-core P05 | 135s | 2 tasks | 3 files |
 | Phase 04-full-flywheel P01 | 8 | 2 tasks | 7 files |
+| Phase 04-full-flywheel P02 | 6 | 3 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,8 @@ Recent decisions affecting current work:
 - [Phase 04-full-flywheel]: MCP SDK v1.27.1 _registeredTools is plain object (not Map) — tests use Object.keys() not tools.size
 - [Phase 04-full-flywheel]: Plan spec says 13 tools but breakdown totals 12 (7+1+4) — implemented 12 specified tools
 - [Phase 04-full-flywheel]: nw_submit_feedback validates signal_id from run history before appendFeedback (per CONTEXT.md locked decision)
+- [Phase 04-full-flywheel]: healthData prop flow: app.ts fetches per-target health data on mount and passes down to Dashboard->Sidebar (no re-fetch per component)
+- [Phase 04-full-flywheel]: LineChart Y-axis fixed 0-100% for reject rate — not auto-scaled so charts are visually comparable across indicators
 
 ### Pending Todos
 
@@ -115,6 +118,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T03:10:35.129Z
-Stopped at: Completed 04-full-flywheel/04-01-PLAN.md
+Last session: 2026-03-19T03:20:00.652Z
+Stopped at: Completed 04-full-flywheel/04-02-PLAN.md
 Resume file: None
