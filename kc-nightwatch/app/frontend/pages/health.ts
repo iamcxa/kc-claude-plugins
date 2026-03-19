@@ -148,8 +148,8 @@ export function Health() {
           <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Reject Rate by Indicator</div>
           <div style="display:flex;flex-wrap:wrap;gap:16px;">
             ${Object.values(healthData).flatMap(data =>
-              Object.entries(data.indicators).map(([name, indicator]) =>
-                html`<${LineChart} key=${name} values=${[data.reject_rate]} label=${name} />`
+              Object.entries(data.per_indicator_rates ?? {}).map(([name, rateData]) =>
+                html`<${LineChart} key=${name} values=${rateData.history} label="${name} (${Math.round(rateData.rate * 100)}%)" />`
               )
             )}
           </div>

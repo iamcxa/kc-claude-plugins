@@ -200,6 +200,7 @@ export interface TargetHealthData {
   health: 'improving' | 'stable' | 'degrading'
   indicators: Record<string, HealthIndicatorData>
   reject_rate: number
+  per_indicator_rates: Record<string, { rate: number; history: number[] }>
   acceptance_rate: number
   runs_analyzed: number
 }

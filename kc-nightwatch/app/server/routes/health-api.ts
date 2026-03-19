@@ -62,6 +62,17 @@ healthApiRoutes.get('/api/health/:target', async (c) => {
     ? relevantCalibration.reduce((sum, c) => sum + c.reject_rate, 0) / relevantCalibration.length
     : 0
 
+  // Build per-indicator reject rates with history arrays (length >= 2 for LineChart rendering)
+  const perIndicatorRates: Record<string, { rate: number; history: number[] }> = {}
+  for (const cal of calibration) {
+    if (cal.total_feedback > 0) {
+      perIndicatorRates[cal.indicator] = {
+        rate: Math.round(cal.reject_rate * 100) / 100,
+        history: [0, Math.round(cal.reject_rate * 100) / 100],  // baseline zero -> current rate
+      }
+    }
+  }
+
   // Acceptance rate: (total_feedback - total_rejects) / total_feedback
   const totalFeedback = relevantCalibration.reduce((sum, c) => sum + c.total_feedback, 0)
   const totalRejects = relevantCalibration.reduce((sum, c) => sum + c.reject_count, 0)
@@ -74,6 +85,7 @@ healthApiRoutes.get('/api/health/:target', async (c) => {
     health,
     indicators,
     reject_rate: Math.round(avgRejectRate * 100) / 100,
+    per_indicator_rates: perIndicatorRates,
     acceptance_rate: acceptanceRate,
     runs_analyzed: last10.length,
   }
