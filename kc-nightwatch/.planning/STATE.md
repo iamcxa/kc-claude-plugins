@@ -2,16 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Phase 4 UI-SPEC approved
-last_updated: "2026-03-19T00:41:49.879Z"
-last_activity: "2026-03-18 — Phase 03-03: feedback store (b187127), ActionCard (c8001f9), PR collector (0609857)"
+status: unknown
+stopped_at: Completed 04-full-flywheel/04-01-PLAN.md
+last_updated: "2026-03-19T03:10:35.132Z"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 11
-  completed_plans: 11
-  percent: 60
+  total_plans: 14
+  completed_plans: 12
 ---
 
 # Project State
@@ -21,16 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** The closed-loop feedback flywheel — NW monitors, proposes, learns from feedback, and gets measurably better over time
-**Current focus:** Phase 3 — Flywheel Core
+**Current focus:** Phase 04 — full-flywheel
 
 ## Current Position
 
-Phase: 3 of 4 (Flywheel Core) — IN PROGRESS (Plan 03/03 complete, Phase 3 done)
-Next: Phase 4 (MCP + Linear integration)
-Status: Phase 3 plan 03 complete — feedback pipeline, ActionCard, calibration, implicit PR collector, 140 tests green
-Last activity: 2026-03-18 — Phase 03-03: feedback store (b187127), ActionCard (c8001f9), PR collector (0609857)
-
-Progress: [██████░░░░] 60% (Phase 2 complete, Phase 3 plans 01-03 complete)
+Phase: 04 (full-flywheel) — EXECUTING
+Plan: 1 of 3
 
 ## Performance Metrics
 
@@ -60,6 +54,7 @@ Progress: [██████░░░░] 60% (Phase 2 complete, Phase 3 plans 
 | Phase 03-flywheel-core P02 | 18 | 3 tasks | 9 files |
 | Phase 03-flywheel-core P04 | 15 | 2 tasks | 8 files |
 | Phase 03-flywheel-core P05 | 135s | 2 tasks | 3 files |
+| Phase 04-full-flywheel P01 | 8 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -104,6 +99,9 @@ Recent decisions affecting current work:
 - [Phase 03-flywheel-core]: BaselineCard always visible (not collapsible) per CONTEXT.md Indicator Baseline Display decision
 - [Phase 03-flywheel-core]: Static source-read TDD for executor wiring: Bun.file + regex avoids mocking safehouse/claude spawn while verifying production code path
 - [Phase 03-flywheel-core]: Feedback block placement: after summary.yaml parse, before IPC dispatch, wrapped in try/catch — fire-and-forget, never blocks run completion
+- [Phase 04-full-flywheel]: MCP SDK v1.27.1 _registeredTools is plain object (not Map) — tests use Object.keys() not tools.size
+- [Phase 04-full-flywheel]: Plan spec says 13 tools but breakdown totals 12 (7+1+4) — implemented 12 specified tools
+- [Phase 04-full-flywheel]: nw_submit_feedback validates signal_id from run history before appendFeedback (per CONTEXT.md locked decision)
 
 ### Pending Todos
 
@@ -117,6 +115,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T00:41:49.875Z
-Stopped at: Phase 4 UI-SPEC approved
-Resume file: .planning/phases/04-full-flywheel/04-UI-SPEC.md
+Last session: 2026-03-19T03:10:35.129Z
+Stopped at: Completed 04-full-flywheel/04-01-PLAN.md
+Resume file: None
