@@ -84,11 +84,37 @@ export async function checkPrStatus(prUrl: string): Promise<'accepted' | 'reject
 }
 
 /**
- * Check Linear issue status.
- * For Phase 3, this is a placeholder. Full Linear MCP integration deferred to Phase 4.
- * Returns null (unresolved) for now — can be wired to Linear MCP when available.
+ * Check Linear issue status via GraphQL API.
+ * Replaces Phase 3 placeholder with real implementation.
+ * Returns null if no LINEAR_API_KEY, invalid URL, or issue still in progress.
  */
-export async function checkLinearStatus(_issueUrl: string): Promise<'accepted' | 'rejected' | null> {
-  // Phase 3 placeholder — Linear MCP integration in Phase 4
-  return null
+export async function checkLinearStatus(issueUrl: string): Promise<'accepted' | 'rejected' | null> {
+  const apiKey = process.env.LINEAR_API_KEY
+  if (!apiKey) return null  // graceful skip — no API key configured
+
+  // Extract issue identifier from Linear URL
+  // Format: https://linear.app/{team}/issue/{ID} (e.g., linear.app/team/issue/SC-123)
+  const match = issueUrl.match(/linear\.app\/[^/]+\/issue\/([A-Z]+-\d+)/)
+  if (!match) return null
+
+  const issueId = match[1]
+  const query = `{ issue(id: "${issueId}") { state { type } } }`
+
+  try {
+    const res = await fetch('https://api.linear.app/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': apiKey,  // NOTE: Linear personal API keys do NOT use Bearer prefix
+      },
+      body: JSON.stringify({ query }),
+    })
+    const data = await res.json() as { data?: { issue?: { state?: { type?: string } } } }
+    const stateType = data?.data?.issue?.state?.type
+    if (stateType === 'completed') return 'accepted'
+    if (stateType === 'cancelled') return 'rejected'
+    return null  // started, triage, backlog, unstarted = still in progress
+  } catch {
+    return null
+  }
 }
