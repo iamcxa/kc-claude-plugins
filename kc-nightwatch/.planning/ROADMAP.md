@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Two-process architecture with all 6 critical pitfalls resolved (completed 2026-03-18)
 - [x] **Phase 2: Core Cockpit** - Working dashboard: targets, run trigger, SSE logs, history, scheduler, memory isolation (completed 2026-03-18)
 - [x] **Phase 3: Flywheel Core** - NW-Claude chat, config editor, feedback calibration, self-assessment, baseline measurement (completed 2026-03-18)
-- [x] **Phase 4: Full Flywheel** - MCP server + flywheel health metrics + deferred chat/feedback capabilities (data-dependent, deferred until Phase 3 produces sufficient feedback data) (completed 2026-03-18)
+- [ ] **Phase 4: Full Flywheel** - MCP server + flywheel health metrics + deferred chat/feedback capabilities (data-dependent, deferred until Phase 3 produces sufficient feedback data)
 
 ## Phase Details
 
@@ -84,11 +84,12 @@ Plans:
   3. Flywheel health page shows indicator trend sparklines (last 10 runs), reject rate chart per indicator, acceptance rate, and per-target health arrow (up/stable/down); aggregate health summary bar reflects overall trend
   4. NW-Claude chat has NW-MCP access to trigger runs, query state, and submit feedback (CHAT-04); NW-Claude has target-specific NW journal access (CHAT-05)
   5. nw_submit_feedback MCP tool allows NW-Claude to submit feedback programmatically (FEED-03); Linear issue status collection for implicit feedback (FEED-05)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: MCP server — Hono /mcp route, Streamable HTTP transport, 10 tools (query + action), token auth for remote mode
-- [ ] 04-02: Flywheel health UI — sparkline charts, reject rate charts, acceptance rate, per-target health indicators, aggregate health summary bar
+- [ ] 04-01-PLAN.md — MCP server: shared types (health), McpServer factory with 13 tools (7 query + 1 search + 4 action + 1 stub), WebStandard Streamable HTTP transport, Linear GraphQL integration
+- [ ] 04-02-PLAN.md — Flywheel Health: health API aggregation, sparkline SVG components, reject rate line charts, acceptance rate, per-target sidebar arrows, bottom nav Health tab, human verification
+- [ ] 04-03-PLAN.md — Chat MCP integration: NW tool schemas in Anthropic API, MCP client for tool_use routing, multi-turn tool loop, journal access via MCP tools
 
 ## Progress
 
@@ -100,4 +101,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 1. Foundation | 3/3 | Complete | 2026-03-18 |
 | 2. Core Cockpit | 3/3 | Complete | 2026-03-18 |
 | 3. Flywheel Core | 5/5 | Complete   | 2026-03-18 |
-| 4. Full Flywheel | 0/2 | Not started | - |
+| 4. Full Flywheel | 0/3 | Not started | - |
