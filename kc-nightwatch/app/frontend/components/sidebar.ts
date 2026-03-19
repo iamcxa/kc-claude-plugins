@@ -5,6 +5,7 @@ interface Props {
   targets: Target[]
   selectedTarget: string | null
   lastRuns: Record<string, Run>
+  healthData?: Record<string, { health: 'improving' | 'stable' | 'degrading' }>
   onSelect: (targetName: string) => void
   onRun: (targetName: string) => void
 }
@@ -20,7 +21,7 @@ function statusDotColor(run: Run | undefined): string {
   }
 }
 
-export function Sidebar({ targets, selectedTarget, lastRuns, onSelect, onRun }: Props) {
+export function Sidebar({ targets, selectedTarget, lastRuns, healthData, onSelect, onRun }: Props) {
   if (targets.length === 0) {
     return html`
       <aside style="width:240px;min-width:240px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
@@ -40,6 +41,7 @@ export function Sidebar({ targets, selectedTarget, lastRuns, onSelect, onRun }: 
         ${targets.map(target => {
           const isSelected = selectedTarget === target.name
           const lastRun = lastRuns[target.name]
+          const targetHealth = healthData?.[target.name]
           return html`
             <li
               key=${target.name}
@@ -59,6 +61,12 @@ export function Sidebar({ targets, selectedTarget, lastRuns, onSelect, onRun }: 
                 <div style="font-size:12px;color:var(--muted);">${target.type}</div>
               </div>
               <div style="width:8px;height:8px;border-radius:50%;background:${statusDotColor(lastRun)};flex-shrink:0;" title=${lastRun?.status ?? 'no runs'}></div>
+              ${targetHealth && html`
+                <span
+                  aria-label="trend: ${targetHealth.health === 'improving' ? 'up' : targetHealth.health === 'degrading' ? 'down' : 'flat'}"
+                  style="font-size:12px;color:${targetHealth.health === 'improving' ? 'var(--success)' : targetHealth.health === 'degrading' ? 'var(--error)' : 'var(--muted)'};"
+                >${targetHealth.health === 'improving' ? '\u2191' : targetHealth.health === 'degrading' ? '\u2193' : '\u2192'}</span>
+              `}
             </li>
           `
         })}
