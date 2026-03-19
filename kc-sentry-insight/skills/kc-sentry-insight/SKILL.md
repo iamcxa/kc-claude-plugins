@@ -91,7 +91,7 @@ Attempt to Read the profile file at `${project}/.claude/insight/sentry/profiles/
 
 **If the file exists:**
 - Parse the YAML content into `profile` object
-- Extract fields: `sentry_org`, `projects`, `strategy`, `structured_config`, `keywords`, `noise_patterns`, `known_issue_ids`, `linear_config`
+- Extract fields: `sentry_org`, `projects`, `strategy`, `structured_config`, `keywords`, `noise_patterns`, `known_issue_ids`, `linear`
 - Proceed to Scan Flow (or Push Flow, depending on routing from Command Routing section above)
 
 **If the file does not exist:**
@@ -327,7 +327,7 @@ After report generation, check for iteration opportunities:
 
 1. **Noise proposal:** `issue_history` entries with `seen_count >= 2` and `last_pushed: null` → propose adding to `noise_patterns`
 2. **Focus proposal (structured only):** New tool names appearing in issues that aren't in `structured.focus` → propose adding
-3. **Cleanup proposal:** Known issues resolved for 3+ consecutive scans → propose removal from `known_issue_ids`
+3. **Cleanup proposal:** Issues in `issue_history` that are NOT in the current scan results AND whose `first_scan` is more than 30 days ago → propose removal from `known_issue_ids`
 4. **Learn mode enhancements:** If `learn_mode == true`:
    - Lower noise threshold to `seen_count >= 1`
    - Use the agent's `error_distribution` data (if present) to suggest keyword/focus adjustments
@@ -340,6 +340,14 @@ Present each proposal individually to the user (not all at once). User confirms 
 ### Scan State Update
 
 After proposals are handled, update the profile:
+
+**If the agent returned a `warning` (no issues were returned):**
+- Update `last_scan.timestamp` only
+- Do NOT update `last_scan.report_path` (leave as-is)
+- Do NOT modify `issue_history`
+- Write profile and stop
+
+Otherwise, proceed with the full update below:
 
 1. `last_scan.timestamp` = current ISO 8601 datetime
 2. `last_scan.known_issue_ids` = list of all sentry_ids from current agent output (`issues` list only — NOT `noise_filtered`)
@@ -452,7 +460,7 @@ For each selected issue number, in order:
 
 ```markdown
 ## Source
-- Sentry Issue: <sentry_id>
+- Sentry Issue: [<sentry_id>](https://<sentry_org>.sentry.io/issues/<sentry_id>/)
 - First seen: <first_seen>
 - Events (7d): <events_7d>
 - Delta: <delta label>
