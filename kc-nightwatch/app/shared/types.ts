@@ -187,6 +187,24 @@ export interface ConfigValidationResult {
 }
 
 // ============================================================
+// Phase 4: Health types
+// ============================================================
+export interface HealthIndicatorData {
+  current: number
+  trend: 'improving' | 'stable' | 'degrading'
+  history: number[]  // last N values, chronological order
+}
+
+export interface TargetHealthData {
+  target: string
+  health: 'improving' | 'stable' | 'degrading'
+  indicators: Record<string, HealthIndicatorData>
+  reject_rate: number
+  acceptance_rate: number
+  runs_analyzed: number
+}
+
+// ============================================================
 // ParsedLogEvent — extended with Phase 2 fields
 // ============================================================
 export interface ParsedLogEvent {
