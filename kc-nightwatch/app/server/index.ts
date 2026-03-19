@@ -19,6 +19,7 @@ import { chatRoutes } from './routes/chat.ts'
 import { feedbackRoutes } from './routes/feedback.ts'
 import { configRoutes } from './routes/config.ts'
 import { mcpRoutes } from './routes/mcp.ts'
+import { healthApiRoutes } from './routes/health-api.ts'
 import {
   WORKER_RESTART_BACKOFF_MS,
   MAX_WORKER_RESTARTS,
@@ -158,6 +159,7 @@ app.route('/', chatRoutes)
 app.route('/', feedbackRoutes)
 app.route('/', configRoutes)
 app.route('/', mcpRoutes)
+app.route('/', healthApiRoutes)
 
 // SPA root route — serve index.html for / (after all API routes)
 app.get('/', async (c) => {
