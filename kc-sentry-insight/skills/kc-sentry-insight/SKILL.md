@@ -54,6 +54,7 @@ digraph routing {
 
 **Routing rules:**
 - `first_arg == "push"` → extract `keyword` from second positional arg, `push_issue_ids` from `--issues`, `report_date` from `--report` → Push Flow
+  - **Validation:** If `keyword` is missing (no second arg) or `--issues` is missing → print usage and stop with: `Error: push requires keyword and --issues. Usage: /kc-sentry-insight push <keyword> --issues N,N,N`
 - `first_arg == "profiles"` → List Profiles
 - Otherwise → treat `first_arg` as `keyword` → check for `--learn` → Scan Flow
 
@@ -249,6 +250,8 @@ After profile is loaded, dispatch the `sentry-analyzer` agent:
    - `projects_scanned` list
 
 4. If agent returns a `warning` field → display warning to user, skip to state update (no report).
+
+5. If agent returns 0 issues AND 0 noise_filtered_ids → display "No issues found matching this profile's criteria." Skip report generation and iteration proposals. Proceed directly to state update (which updates timestamp and clears known_issue_ids to empty list).
 
 ---
 
