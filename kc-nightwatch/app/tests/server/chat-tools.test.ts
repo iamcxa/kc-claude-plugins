@@ -88,6 +88,8 @@ const {
 // Helper: reset state between tests
 // ============================================================
 function resetMocks() {
+  // killAllSessions BEFORE clearing mock counts — prevents leftover close() calls bleeding into next test
+  killAllSessions()
   mockMessagesCreateCallCount = 0
   mockMessagesCreateResponses = []
   mockMcpClientCallToolCalls = []
@@ -97,7 +99,6 @@ function resetMocks() {
   mockMcpCallTool.mockClear()
   mockMcpClose.mockClear()
   mockMcpConnect.mockClear()
-  killAllSessions()
 }
 
 // ============================================================
@@ -108,8 +109,8 @@ describe('NW_TOOLS', () => {
     expect(Array.isArray(NW_TOOLS)).toBe(true)
   })
 
-  it('NW_TOOLS has 13 entries', () => {
-    expect(NW_TOOLS.length).toBe(13)
+  it('NW_TOOLS has 12 entries (7 query + 1 search + 4 action per STATE.md decision)', () => {
+    expect(NW_TOOLS.length).toBe(12)
   })
 
   it('each tool has name, description, and input_schema', () => {
@@ -173,7 +174,7 @@ describe('sendMessage — tool_use routing', () => {
     const callArgs = mockMessagesCreate.mock.calls[0]![0] as { tools: Tool[] }
     expect(callArgs.tools).toBeDefined()
     expect(Array.isArray(callArgs.tools)).toBe(true)
-    expect(callArgs.tools.length).toBe(13)
+    expect(callArgs.tools.length).toBe(12)
   })
 
   it('routes tool_use block to MCP client and appends tool_result', async () => {
