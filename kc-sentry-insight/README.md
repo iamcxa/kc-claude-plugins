@@ -39,10 +39,9 @@ ${project}/.claude/insight/sentry/
 ├── profiles/              # Domain knowledge profiles per keyword
 │   ├── <keyword>.yaml
 │   └── ...
-├── reports/               # Scan reports with timestamps
-│   ├── 2026-03-18-<keyword>.yaml
-│   └── ...
-└── cache/                 # Temporary diff tracking and metadata
+└── reports/               # Scan reports organized by keyword
+    └── <keyword>/
+        └── YYYY-MM-DD.md
 ```
 
 ## Architecture
