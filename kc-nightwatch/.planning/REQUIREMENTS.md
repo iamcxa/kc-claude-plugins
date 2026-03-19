@@ -108,11 +108,11 @@
 
 ### Flywheel Health
 
-- [ ] **HEALTH-01**: Indicator trend sparklines (last 10 runs per indicator)
-- [ ] **HEALTH-02**: Reject rate chart per indicator
-- [ ] **HEALTH-03**: Acceptance rate (proposals accepted / total)
-- [ ] **HEALTH-04**: Per-target health indicator on target cards (up/stable/down arrow)
-- [ ] **HEALTH-05**: Aggregate health summary bar
+- [x] **HEALTH-01**: Indicator trend sparklines (last 10 runs per indicator)
+- [x] **HEALTH-02**: Reject rate chart per indicator
+- [x] **HEALTH-03**: Acceptance rate (proposals accepted / total)
+- [x] **HEALTH-04**: Per-target health indicator on target cards (up/stable/down arrow)
+- [x] **HEALTH-05**: Aggregate health summary bar
 
 ### Security
 
@@ -226,11 +226,11 @@
 | MCP-02 | Phase 4 | Complete |
 | MCP-03 | Phase 4 | Complete |
 | MCP-04 | Phase 4 | Complete |
-| HEALTH-01 | Phase 4 | Pending |
-| HEALTH-02 | Phase 4 | Pending |
-| HEALTH-03 | Phase 4 | Pending |
-| HEALTH-04 | Phase 4 | Pending |
-| HEALTH-05 | Phase 4 | Pending |
+| HEALTH-01 | Phase 4 | Complete |
+| HEALTH-02 | Phase 4 | Complete |
+| HEALTH-03 | Phase 4 | Complete |
+| HEALTH-04 | Phase 4 | Complete |
+| HEALTH-05 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 73 total
