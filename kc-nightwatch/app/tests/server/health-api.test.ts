@@ -321,4 +321,36 @@ describe('health api', () => {
     expect(data.acceptance_rate).toBe(0)
     expect(data.reject_rate).toBe(0)
   })
+
+  it('response includes per_indicator_rates with per-indicator data', async () => {
+    const res = await testApp.request('/api/health/my-plugin')
+    const data = await res.json() as { per_indicator_rates: Record<string, { rate: number; history: number[] }> }
+    expect(data).toHaveProperty('per_indicator_rates')
+    expect(data.per_indicator_rates).toHaveProperty('quality')
+    expect(data.per_indicator_rates).toHaveProperty('coverage')
+  })
+
+  it('per_indicator_rates entries have history arrays with length >= 2', async () => {
+    const res = await testApp.request('/api/health/my-plugin')
+    const data = await res.json() as { per_indicator_rates: Record<string, { rate: number; history: number[] }> }
+    for (const [, entry] of Object.entries(data.per_indicator_rates)) {
+      expect(Array.isArray(entry.history)).toBe(true)
+      expect(entry.history.length).toBeGreaterThanOrEqual(2)
+    }
+  })
+
+  it('per_indicator_rates is empty when no calibration data', async () => {
+    mockCalibration = []
+    const res = await testApp.request('/api/health/my-plugin')
+    const data = await res.json() as { per_indicator_rates: Record<string, unknown> }
+    expect(Object.keys(data.per_indicator_rates).length).toBe(0)
+  })
+
+  it('per_indicator_rates rate matches calibration reject_rate', async () => {
+    const res = await testApp.request('/api/health/my-plugin')
+    const data = await res.json() as { per_indicator_rates: Record<string, { rate: number; history: number[] }> }
+    // quality reject_rate = 0.2, coverage reject_rate = 0.6
+    expect(data.per_indicator_rates.quality.rate).toBeCloseTo(0.2, 2)
+    expect(data.per_indicator_rates.coverage.rate).toBeCloseTo(0.6, 2)
+  })
 })
