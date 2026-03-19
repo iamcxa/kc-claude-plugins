@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-full-flywheel/04-02-PLAN.md
-last_updated: "2026-03-19T03:20:00.655Z"
+stopped_at: Completed 04-full-flywheel/04-03-PLAN.md
+last_updated: "2026-03-19T03:19:44Z"
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 
 ## Current Position
 
-Phase: 04 (full-flywheel) — EXECUTING
-Plan: 1 of 3
+Phase: 04 (full-flywheel) — COMPLETE
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Plan: 1 of 3
 | Phase 03-flywheel-core P05 | 135s | 2 tasks | 3 files |
 | Phase 04-full-flywheel P01 | 8 | 2 tasks | 7 files |
 | Phase 04-full-flywheel P02 | 6 | 3 tasks | 12 files |
+| Phase 04-full-flywheel P03 | 7min | 1 task (TDD) | 2 files |
 
 ## Accumulated Context
 
@@ -105,6 +106,9 @@ Recent decisions affecting current work:
 - [Phase 04-full-flywheel]: nw_submit_feedback validates signal_id from run history before appendFeedback (per CONTEXT.md locked decision)
 - [Phase 04-full-flywheel]: healthData prop flow: app.ts fetches per-target health data on mount and passes down to Dashboard->Sidebar (no re-fetch per component)
 - [Phase 04-full-flywheel]: LineChart Y-axis fixed 0-100% for reject rate — not auto-scaled so charts are visually comparable across indicators
+- [Phase 04-full-flywheel]: 04-03: messages.create() replaces messages.stream() for tool_use — streaming API doesn't expose stop_reason/content blocks needed for tool routing
+- [Phase 04-full-flywheel]: 04-03: MCP client lazy-init per session via getMcpClient() — stored in ChatSession.mcpClient, reused across messages, closed on killSession
+- [Phase 04-full-flywheel]: 04-03: Mock reset order — killAllSessions() BEFORE mockClear() prevents close() counts bleeding across tests
 
 ### Pending Todos
 
@@ -118,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T03:20:00.652Z
-Stopped at: Completed 04-full-flywheel/04-02-PLAN.md
+Last session: 2026-03-19T03:19:44Z
+Stopped at: Completed 04-full-flywheel/04-03-PLAN.md
 Resume file: None
