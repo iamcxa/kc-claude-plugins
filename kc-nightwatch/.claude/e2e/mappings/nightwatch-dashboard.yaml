@@ -1,6 +1,6 @@
 version: 2
 app: nightwatch-dashboard
-base_url: "http://127.0.0.1:3200"
+base_url: "http://127.0.0.1:3201"
 
 auth:
   type: none

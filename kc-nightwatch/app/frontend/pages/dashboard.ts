@@ -4,14 +4,14 @@ import type { Target, Run } from '../../shared/types.ts'
 import { Sidebar } from '../components/sidebar.ts'
 import { TargetDetail } from '../components/target-detail.ts'
 import { TriggerDialog } from '../components/trigger-dialog.ts'
+import { ChatPanel } from '../components/chat-panel.ts'
 import { api } from '../lib/api.ts'
 
 interface DashboardProps {
   healthData?: Record<string, { health: 'improving' | 'stable' | 'degrading' }>
-  onTargetSelect?: (targetName: string) => void
 }
 
-export function Dashboard({ healthData, onTargetSelect }: DashboardProps = {}) {
+export function Dashboard({ healthData }: DashboardProps = {}) {
   const [targets, setTargets] = useState<Target[]>([])
   const [selectedTarget, setSelectedTarget] = useState<string | null>(null)
   const [lastRuns, setLastRuns] = useState<Record<string, Run>>({})
@@ -95,7 +95,7 @@ export function Dashboard({ healthData, onTargetSelect }: DashboardProps = {}) {
         selectedTarget=${selectedTarget}
         lastRuns=${lastRuns}
         healthData=${healthData}
-        onSelect=${(name: string) => { setSelectedTarget(name); onTargetSelect?.(name) }}
+        onSelect=${(name: string) => { setSelectedTarget(name) }}
         onRun=${openDialog}
       />
       <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--panel);">
@@ -113,6 +113,10 @@ export function Dashboard({ healthData, onTargetSelect }: DashboardProps = {}) {
           onRun=${(mode: 'production' | 'dry-run') => selectedTarget && openDialog(selectedTarget)}
           onRemove=${handleRemove}
         />
+      </div>
+      <!-- Inline chat panel -->
+      <div style="width:340px;min-width:340px;border-left:1px solid var(--border);background:var(--panel);overflow:hidden;">
+        <${ChatPanel} targetName=${selectedTarget} />
       </div>
       <${TriggerDialog}
         target=${dialogTarget}

@@ -5,6 +5,28 @@ import type { RunSummary } from '../../shared/types.ts'
 
 export const chatRoutes = new Hono()
 
+/** Extract display-friendly text from Anthropic message content (string or ContentBlock[]) */
+export function extractDisplayContent(content: unknown): string | null {
+  if (typeof content === 'string') return content
+
+  if (Array.isArray(content)) {
+    const textParts: string[] = []
+    let isToolResult = false
+    for (const block of content) {
+      if (block.type === 'text' && block.text) {
+        textParts.push(block.text)
+      } else if (block.type === 'tool_result') {
+        isToolResult = true
+      }
+    }
+    // Skip tool_result messages entirely — they're internal API plumbing
+    if (isToolResult) return null
+    return textParts.join('\n') || null
+  }
+
+  return String(content)
+}
+
 // POST /api/chat/:target/message — send a message, response streams via SSE
 chatRoutes.post('/api/chat/:target/message', async (c) => {
   const target = decodeURIComponent(c.req.param('target'))
@@ -22,11 +44,13 @@ chatRoutes.get('/api/chat/:target/stream', (c) => {
   return streamSSE(c, async (stream) => {
     const unsub = chatManager.subscribeToTarget(target, stream, c.req.raw.signal)
 
-    // Send current message history on connect
+    // Send current message history on connect (normalize content blocks for display)
     const session = chatManager.getOrCreateSession(target)
     for (const msg of session.messages) {
+      const displayContent = extractDisplayContent(msg.content)
+      if (displayContent === null) continue // Skip tool_result and empty messages
       void stream.writeSSE({
-        data: JSON.stringify({ type: 'history', role: msg.role, content: msg.content }),
+        data: JSON.stringify({ type: 'history', role: msg.role, content: displayContent }),
         event: 'chat',
       })
     }
