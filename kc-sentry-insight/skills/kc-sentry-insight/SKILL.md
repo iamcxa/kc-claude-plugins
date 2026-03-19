@@ -360,10 +360,225 @@ Display: "Profile updated. Next scan will track N known issues."
 
 ## Push Flow
 
-<!-- Task 7 will add push flow here -->
+Handles `/kc-sentry-insight push <keyword> --issues 1,3,5 [--report YYYY-MM-DD]`.
+
+### Step P1: Load Profile
+
+Resolve profile path: `${project}/.claude/insight/sentry/profiles/<keyword>.yaml`
+
+Read the profile using the Read tool. If the file does not exist, stop with:
+
+```
+Error: No profile for keyword '<keyword>'. Run `/kc-sentry-insight <keyword>` first.
+```
+
+### Step P2: Discover Linear MCP Tool Prefix
+
+**Do NOT hardcode Linear MCP tool names.** Tool name prefixes vary by installation. Always discover dynamically:
+
+1. Use `ToolSearch` with query `"+linear save"` (max_results: 3)
+2. Extract the prefix from the returned tool name (e.g., `mcp__claude_ai_Linear__` from `mcp__claude_ai_Linear__save_issue`, or `mcp__plugin_linear_linear__` from `mcp__plugin_linear_linear__save_issue`)
+3. Cache the prefix for this session as `linear_prefix`
+4. If no Linear tools found → display warning and stop:
+
+```
+Warning: Linear MCP not connected. Cannot push issues.
+Connect the Linear MCP server and retry.
+```
+
+### Step P3: Resolve Report
+
+Determine which report to load:
+
+- If `--report YYYY-MM-DD` flag is present → load `${project}/.claude/insight/sentry/reports/<keyword>/YYYY-MM-DD.md`
+- If no flag → load from `profile.last_scan.report_path` (the latest report path stored in the profile)
+- If the resolved path does not exist or `report_path` is empty → stop with:
+
+```
+Error: No report found. Run `/kc-sentry-insight <keyword>` first.
+```
+
+### Step P4: Parse Report
+
+Parse the loaded markdown report to extract issue data for the selected `#N` numbers (from `push_issue_ids`).
+
+Each issue in the report follows the heading format:
+
+```
+### #N [DELTA] `<title>`
+- **Sentry ID:** <sentry_id>
+- **Project:** <project> [<label>]
+- **First seen:** <first_seen>
+- **Events (7d):** <events_7d>
+- **Events trend:** <events_trend> vs prior 7d
+- **Tool:** <tool>        ← only present for structured strategy
+- **Impact:** <impact_hint>
+- **Stack:** <stack_summary>
+```
+
+For each requested issue number N:
+- Extract all fields from the `### #N` section
+- If an issue number is not found in the report → stop with:
+
+```
+Error: Issue #N not found in report. Available issues: 1, 2, 3, ...
+```
+
+Validate all requested issue numbers exist before proceeding.
+
+### Step P5: Resolve Linear Target
+
+Determine the Linear team and labels:
+
+1. **Team ID:**
+   - If `profile.linear.team_id` is set → use it
+   - If not set → ask: "Which Linear team ID should issues be created in?" → save the answer to `profile.linear.team_id`
+
+2. **Labels:**
+   - If `profile.linear.default_labels` is non-empty → use the list as-is
+   - If empty → ask: "Which labels should be applied? (e.g., Bug, Sentry)" → parse the answer into a list → save to `profile.linear.default_labels`
+
+Save any updates to the profile YAML using the Write tool before proceeding.
+
+### Step P6: Create Linear Issues
+
+For each selected issue number, in order:
+
+**1. Build title:**
+- structured strategy: `[Sentry] <tool_name> — <error summary from title>`
+- keyword strategy: `[Sentry] <error summary from title>`
+
+**2. Build description** using this template:
+
+```markdown
+## Source
+- Sentry Issue: <sentry_id>
+- First seen: <first_seen>
+- Events (7d): <events_7d>
+- Delta: <delta label>
+
+## Impact
+<impact_hint>
+
+## Stack Trace
+<stack_summary>
+
+## Context
+Detected by `/kc-sentry-insight <keyword>` scan on <scan date from report filename or last_scan.timestamp>.
+Tool: <tool> | Strategy: <strategy>
+
+## Suggested Action
+<initial suggestion based on error type — e.g., "Investigate why <tool> returns <error>", "Add error handling for <condition>", etc.>
+```
+
+Notes:
+- Omit the `Tool:` line entirely for keyword strategy (it is not present in those issues)
+- `<scan date>` = date portion of the report filename (YYYY-MM-DD) or `profile.last_scan.timestamp`
+
+**3. Confirm with user:**
+
+Show the title and description for EACH issue and ask for confirmation BEFORE creating:
+
+```
+Issue #N ready to push:
+Title: [Sentry] <title>
+---
+<description>
+---
+Create this Linear issue? (yes/no/skip)
+```
+
+Wait for user response before proceeding to the next issue. "skip" skips this issue, "no" aborts the entire push.
+
+**4. Create the issue:**
+
+Use `{linear_prefix}save_issue` with:
+- `title`: the built title
+- `description`: the built description (markdown)
+- `teamId`: `profile.linear.team_id`
+- `labelIds` (if labels are set): resolve label names to IDs using `{linear_prefix}list_issue_labels`, then pass the matching IDs
+
+**5. Record the result:**
+
+After successful creation, capture the returned Linear issue identifier (e.g., `LIN-123`) for use in Step P7.
+
+### Step P7: Update Artifacts
+
+After all issues are processed:
+
+**1. Update the report file:**
+
+Find the footer line in the report:
+```
+**Pushed to Linear:** (none yet)
+```
+
+Replace it with the actual push results:
+```
+**Pushed to Linear:** #1 → LIN-123, #3 → LIN-456
+```
+
+If issues were previously pushed (the line already contains entries), append the new entries rather than overwriting.
+
+Use the Edit tool to update the report file in-place.
+
+**2. Update the profile:**
+
+For each successfully pushed issue, set:
+```yaml
+issue_history:
+  <sentry_id>:
+    last_pushed: <today YYYY-MM-DD>
+```
+
+Write the updated profile YAML back to disk using the Write tool.
+
+**3. Display summary:**
+
+```
+Pushed N issues to Linear:
+  #1 → LIN-123 — [Sentry] <title>
+  #3 → LIN-456 — [Sentry] <title>
+
+Report updated: <report_path>
+Profile updated: <profile_path>
+```
 
 ---
 
 ## Profiles List
 
-<!-- Task 7 will add profiles list here -->
+Handles `/kc-sentry-insight profiles`.
+
+**1. Discover profile files:**
+
+Use Glob to find all profile YAML files:
+```
+${project}/.claude/insight/sentry/profiles/*.yaml
+```
+
+**2. If no files found**, display:
+
+```
+No profiles found for this project. Run `/kc-sentry-insight <keyword>` to create one.
+```
+
+Stop here.
+
+**3. For each profile file found**, use the Read tool to load it and extract:
+- `name` — the filename stem (e.g., `mcp` from `mcp.yaml`)
+- `strategy` — value of `strategy` field (`structured` or `keyword`)
+- `projects` — list of project slugs from `sentry.projects[]` (join with `, `)
+- `last_scan` — date portion of `last_scan.timestamp` (YYYY-MM-DD), or `(never)` if null/empty
+- `known_issues` — count of entries in `issue_history` (number of tracked sentry IDs)
+
+**4. Display as a table:**
+
+```
+| Profile | Strategy | Projects | Last Scan | Known Issues |
+|---------|----------|----------|-----------|--------------|
+| mcp | structured | recce-python | 2026-03-19 | 5 |
+| checkout | keyword | my-app-web | 2026-03-18 | 3 |
+```
+
+Sort rows by `last_scan` descending (most recently scanned first). Profiles that have never been scanned appear last.
