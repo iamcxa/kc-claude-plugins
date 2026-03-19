@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-stopped_at: Completed 04-full-flywheel/04-03-PLAN.md
-last_updated: "2026-03-19T03:19:44Z"
+status: complete
+stopped_at: Completed 04-full-flywheel/04-04-PLAN.md
+last_updated: "2026-03-19T07:16:46Z"
 progress:
   total_phases: 4
   completed_phases: 4
-  total_plans: 14
-  completed_plans: 14
+  total_plans: 15
+  completed_plans: 15
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 ## Current Position
 
 Phase: 04 (full-flywheel) — COMPLETE
-Plan: 3 of 3
+Plan: 4 of 4 (gap closure 04-04 complete)
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Plan: 3 of 3
 | Phase 04-full-flywheel P01 | 8 | 2 tasks | 7 files |
 | Phase 04-full-flywheel P02 | 6 | 3 tasks | 12 files |
 | Phase 04-full-flywheel P03 | 7min | 1 task (TDD) | 2 files |
+| Phase 04-full-flywheel P04 | 5min | 1 task (TDD) | 4 files |
 
 ## Accumulated Context
 
@@ -109,6 +110,7 @@ Recent decisions affecting current work:
 - [Phase 04-full-flywheel]: 04-03: messages.create() replaces messages.stream() for tool_use — streaming API doesn't expose stop_reason/content blocks needed for tool routing
 - [Phase 04-full-flywheel]: 04-03: MCP client lazy-init per session via getMcpClient() — stored in ChatSession.mcpClient, reused across messages, closed on killSession
 - [Phase 04-full-flywheel]: 04-03: Mock reset order — killAllSessions() BEFORE mockClear() prevents close() counts bleeding across tests
+- [Phase 04-full-flywheel]: 04-04: per_indicator_rates[indicator].history = [0, currentRate] — baseline-zero is the minimal floor for LineChart >= 2 points; keeps reject_rate scalar for backward compat
 
 ### Pending Todos
 
