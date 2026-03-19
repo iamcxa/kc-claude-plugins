@@ -12,30 +12,30 @@ The closed-loop feedback flywheel: NW monitors codebases, proposes improvements,
 
 ### Validated
 
-(None yet — ship to validate)
+Validated in Phase 1-4 (2026-03-18 to 2026-03-19):
+- [x] Two-process architecture (Hono server + worker) with IPC
+- [x] Dashboard UI showing targets, run history, schedule status
+- [x] Manual run trigger with mode selection (production/dry-run) and custom prompt
+- [x] Real-time log streaming via `claude -p --output-format stream-json` + SSE
+- [x] Per-target agent-safehouse execution policies
+- [x] Interval scheduler (every N hours) + webhook trigger
+- [x] YAML config editor with edit lock + 4-step validation (static → semantic via Haiku → diff → confirm)
+- [x] Add/Edit/Remove target wizard
+- [x] NW-Claude chat panel with auto-brief after runs
+- [x] Bidirectional Claude session via Anthropic SDK (API fallback from --input-format stream-json)
+- [x] MCP server exposing nightwatch state to any Claude session (12 tools: query + trigger + feedback)
+- [x] Multi-channel feedback collection (dashboard, MCP, PR status, Linear status)
+- [x] Feedback → reject rate calibration + NW journal reflection
+- [x] Two-phase self-assessment (Phase 3.5 strategy + Phase 4.5 reflection)
+- [x] Indicator baseline measurement (Phase 0.5) with quantified values
+- [x] Flywheel health metrics (indicator trends, reject rate, acceptance rate, per-target health arrows)
+- [x] Per-target NW memory layer (isolated private-journal per target)
+- [x] Localhost by default + optional remote mode with token auth
 
-### Active
+### Active (v2)
 
-- [ ] Two-process architecture (Hono server + worker) with IPC
-- [ ] Dashboard UI showing targets, run history, schedule status
-- [ ] Manual run trigger with mode selection (production/dry-run) and custom prompt
-- [ ] Real-time log streaming via `claude -p --output-format stream-json` + SSE
-- [ ] Per-target agent-safehouse execution policies
-- [ ] Interval scheduler (every N hours) + webhook trigger
-- [ ] YAML config editor with edit lock + 4-step validation (static → semantic via Haiku → diff → confirm)
-- [ ] Add/Edit/Remove target wizard
-- [ ] NW-Claude chat panel with auto-brief after runs
-- [ ] Bidirectional Claude session via `--input-format stream-json`
-- [ ] MCP server exposing nightwatch state to any Claude session (query + trigger + feedback)
-- [ ] Multi-channel feedback collection (dashboard, MCP, PR status, Linear status)
-- [ ] Feedback → reject rate calibration + NW journal reflection
-- [ ] Two-phase self-assessment (Phase 3.5 strategy + Phase 4.5 reflection)
-- [ ] Indicator baseline measurement (Phase 0.5) with quantified values
 - [ ] Implementation outcome tracking (Phase 0.6) — did merged PRs actually help?
-- [ ] Flywheel health metrics (indicator trends, reject rate, acceptance rate, effectiveness)
 - [ ] Proposal → implementation pipeline (accept → spawn implementation run → code PR)
-- [ ] Per-target NW memory layer (isolated private-journal per target)
-- [ ] Localhost by default + optional remote mode with token auth
 
 ### Out of Scope
 
@@ -82,4 +82,4 @@ The closed-loop feedback flywheel: NW monitors codebases, proposes improvements,
 | Proposal → Implementation pipeline | Closes the flywheel: accepted proposals get implemented, outcomes tracked | — Pending |
 
 ---
-*Last updated: 2026-03-18 after initialization*
+*Last updated: 2026-03-19 after Phase 4 completion — all v1 milestone phases complete*
