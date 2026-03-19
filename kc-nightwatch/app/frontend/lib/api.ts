@@ -1,4 +1,4 @@
-import type { Target, Run, RunSummary, ScheduleConfig, ConfigValidationResult, FeedbackEntry, CalibrationData } from '../../shared/types.ts'
+import type { Target, Run, RunSummary, ScheduleConfig, ConfigValidationResult, FeedbackEntry, CalibrationData, TargetHealthData } from '../../shared/types.ts'
 
 const BASE = ''
 
@@ -130,5 +130,10 @@ export const api = {
 
   removeTarget(name: string): Promise<void> {
     return del(`/api/config/targets/${encodeURIComponent(name)}`)
+  },
+
+  // Health
+  getHealth(target: string): Promise<TargetHealthData> {
+    return get<TargetHealthData>(`/api/health/${encodeURIComponent(target)}`)
   },
 }

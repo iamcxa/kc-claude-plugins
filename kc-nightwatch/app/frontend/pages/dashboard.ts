@@ -6,7 +6,11 @@ import { TargetDetail } from '../components/target-detail.ts'
 import { TriggerDialog } from '../components/trigger-dialog.ts'
 import { api } from '../lib/api.ts'
 
-export function Dashboard() {
+interface DashboardProps {
+  healthData?: Record<string, { health: 'improving' | 'stable' | 'degrading' }>
+}
+
+export function Dashboard({ healthData }: DashboardProps = {}) {
   const [targets, setTargets] = useState<Target[]>([])
   const [selectedTarget, setSelectedTarget] = useState<string | null>(null)
   const [lastRuns, setLastRuns] = useState<Record<string, Run>>({})
@@ -89,6 +93,7 @@ export function Dashboard() {
         targets=${targets}
         selectedTarget=${selectedTarget}
         lastRuns=${lastRuns}
+        healthData=${healthData}
         onSelect=${setSelectedTarget}
         onRun=${openDialog}
       />

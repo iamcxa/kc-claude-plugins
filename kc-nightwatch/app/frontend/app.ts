@@ -1,20 +1,22 @@
 import { html } from 'htm/preact'
 import { useState, useEffect, useRef } from 'preact/hooks'
 import { render } from 'preact'
-import type { ScheduleConfig } from '../shared/types.ts'
+import type { ScheduleConfig, TargetHealthData } from '../shared/types.ts'
 import { Dashboard } from './pages/dashboard.ts'
 import { Runs } from './pages/runs.ts'
 import { Config } from './pages/config.ts'
+import { Health } from './pages/health.ts'
 import { BottomNav } from './components/bottom-nav.ts'
 import { ScheduleBar } from './components/schedule-bar.ts'
 import { ChatDrawer } from './components/chat-drawer.ts'
 import { api } from './lib/api.ts'
 
-type Page = 'dashboard' | 'runs' | 'config'
+type Page = 'dashboard' | 'runs' | 'health' | 'config'
 
 function getPage(): Page {
   const hash = location.hash
   if (hash.startsWith('#/runs')) return 'runs'
+  if (hash === '#/health') return 'health'
   if (hash === '#/config') return 'config'
   return 'dashboard'
 }
@@ -25,6 +27,7 @@ function App() {
   const [chatOpen, setChatOpen] = useState(false)
   const [chatTarget, setChatTarget] = useState<string | null>(null)
   const [chatBriefBadge, setChatBriefBadge] = useState(false)
+  const [healthData, setHealthData] = useState<Record<string, { health: 'improving' | 'stable' | 'degrading' }>>({})
   const globalEsRef = useRef<EventSource | null>(null)
 
   useEffect(() => {
@@ -60,6 +63,28 @@ function App() {
     }
   }, [])
 
+  // Fetch health data for sidebar arrows after targets are loaded
+  useEffect(() => {
+    api.getTargets()
+      .then(targets => {
+        if (targets.length === 0) return
+        return Promise.all(
+          targets.map(t =>
+            api.getHealth(t.name)
+              .then((h: TargetHealthData) => ({ name: t.name, health: h.health }))
+              .catch(() => null)
+          )
+        ).then(results => {
+          const data: Record<string, { health: 'improving' | 'stable' | 'degrading' }> = {}
+          for (const r of results ?? []) {
+            if (r) data[r.name] = { health: r.health }
+          }
+          setHealthData(data)
+        })
+      })
+      .catch(console.error)
+  }, [])
+
   function handleScheduleToggle() {
     if (!schedule) return
     const updated = { ...schedule, enabled: !schedule.enabled }
@@ -87,8 +112,9 @@ function App() {
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
       <${ScheduleBar} schedule=${schedule} onToggle=${handleScheduleToggle} />
       <div style="flex:1;overflow:hidden;padding-bottom:48px;">
-        ${page === 'dashboard' && html`<${Dashboard} />`}
+        ${page === 'dashboard' && html`<${Dashboard} healthData=${healthData} />`}
         ${page === 'runs' && html`<${Runs} />`}
+        ${page === 'health' && html`<${Health} />`}
         ${page === 'config' && html`<${Config} />`}
       </div>
       <${BottomNav} current=${page} />
