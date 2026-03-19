@@ -8,9 +8,10 @@ import { api } from '../lib/api.ts'
 
 interface DashboardProps {
   healthData?: Record<string, { health: 'improving' | 'stable' | 'degrading' }>
+  onTargetSelect?: (targetName: string) => void
 }
 
-export function Dashboard({ healthData }: DashboardProps = {}) {
+export function Dashboard({ healthData, onTargetSelect }: DashboardProps = {}) {
   const [targets, setTargets] = useState<Target[]>([])
   const [selectedTarget, setSelectedTarget] = useState<string | null>(null)
   const [lastRuns, setLastRuns] = useState<Record<string, Run>>({})
@@ -94,7 +95,7 @@ export function Dashboard({ healthData }: DashboardProps = {}) {
         selectedTarget=${selectedTarget}
         lastRuns=${lastRuns}
         healthData=${healthData}
-        onSelect=${setSelectedTarget}
+        onSelect=${(name: string) => { setSelectedTarget(name); onTargetSelect?.(name) }}
         onRun=${openDialog}
       />
       <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--panel);">

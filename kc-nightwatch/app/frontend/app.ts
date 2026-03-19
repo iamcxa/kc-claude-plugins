@@ -93,8 +93,21 @@ function App() {
   }
 
   function handleChatToggle() {
-    setChatOpen(prev => !prev)
+    setChatOpen(prev => {
+      if (!prev && !chatTarget) {
+        // Opening chat with no target — fetch first target as fallback
+        api.getTargets().then(targets => {
+          if (targets.length > 0) setChatTarget(targets[0].name)
+        }).catch(console.error)
+      }
+      return !prev
+    })
     setChatBriefBadge(false)
+  }
+
+  // Sync chatTarget when Dashboard selects a target
+  function handleTargetSelect(targetName: string) {
+    setChatTarget(targetName)
   }
 
   // Allow pages to set chat target via custom event
@@ -112,7 +125,7 @@ function App() {
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
       <${ScheduleBar} schedule=${schedule} onToggle=${handleScheduleToggle} />
       <div style="flex:1;overflow:hidden;padding-bottom:48px;">
-        ${page === 'dashboard' && html`<${Dashboard} healthData=${healthData} />`}
+        ${page === 'dashboard' && html`<${Dashboard} healthData=${healthData} onTargetSelect=${handleTargetSelect} />`}
         ${page === 'runs' && html`<${Runs} />`}
         ${page === 'health' && html`<${Health} />`}
         ${page === 'config' && html`<${Config} />`}
