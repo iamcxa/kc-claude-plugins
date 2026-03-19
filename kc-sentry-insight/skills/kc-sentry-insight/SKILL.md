@@ -227,7 +227,134 @@ Then transition: return to the Scan Flow section — the profile now exists and 
 
 ## Scan Flow
 
-<!-- Task 6 will add scan flow here -->
+### Agent Dispatch
+
+After profile is loaded, dispatch the `sentry-analyzer` agent:
+
+1. Build prompt from profile fields:
+   - `strategy` (from profile)
+   - `sentry_org` (from `profile.sentry.org`)
+   - `projects` (from `profile.sentry.projects` — list of `{slug, label}`)
+   - If `strategy == structured`: include structured config (`span_op`, `focus`)
+   - If `strategy == keyword`: include keywords config (`primary`, `secondary`)
+   - `noise_patterns` (from profile)
+   - `known_issue_ids` (from `profile.last_scan.known_issue_ids`)
+   - If `learn_mode == true`: add `learn_mode: true`
+
+2. Use Agent tool with `subagent_type: "kc-sentry-insight:sentry-analyzer"` and `model: sonnet`
+
+3. Agent returns YAML string. Parse the result to extract:
+   - `issues` list
+   - `noise_filtered_ids` list
+   - `projects_scanned` list
+
+4. If agent returns a `warning` field → display warning to user, skip to state update (no report).
+
+---
+
+### Diff & Classify
+
+For each issue in the agent's `issues` list, assign a delta label by comparing against `profile.last_scan.known_issue_ids`:
+
+| Label | Condition |
+|-------|-----------|
+| `NEW` | sentry_id NOT in known_issue_ids |
+| `WORSENED` | in known_issue_ids AND events_trend > +50% |
+| `RECURRING` | in known_issue_ids AND (events_trend <= +50% OR events_trend is null) |
+| `RESOLVED` | in known_issue_ids AND NOT in agent issues AND NOT in noise_filtered_ids |
+
+**Important rules:**
+- If sentry_id is in `noise_filtered_ids` → skip entirely (don't label as RESOLVED)
+- If `events_trend` is null → default to RECURRING, not WORSENED
+- Sort: NEW + WORSENED first, then RECURRING, then RESOLVED
+
+---
+
+### Report Generation
+
+Generate a markdown report. Write to: `${project}/.claude/insight/sentry/reports/<keyword>/YYYY-MM-DD.md`
+
+Create the reports subdirectory first:
+
+```bash
+mkdir -p ${project}/.claude/insight/sentry/reports/<keyword>
+```
+
+Report format:
+
+```markdown
+# Sentry Insight: <keyword> — YYYY-MM-DD
+
+**Strategy:** structured (span.op: mcp.server) | keyword
+**Projects:** <project slugs with labels> | **Org:** <org>
+**Scan period:** <7d window> → <today> (vs last scan: <last_scan.timestamp or "first scan">)
+
+## Summary
+- N new issues
+- N worsened
+- N recurring (stable)
+- N resolved since last scan
+
+## Issues
+
+### #1 [NEW] `<title>`
+- **Sentry ID:** <sentry_id>
+- **Project:** <project> [<label>]
+- **First seen:** <first_seen>
+- **Events (7d):** <events_7d>
+- **Events trend:** <events_trend> vs prior 7d
+- **Tool:** <tool> ← ONLY for structured strategy, omit for keyword
+- **Impact:** <impact_hint>
+- **Stack:** <stack_summary>
+
+(... more issues ...)
+
+---
+**Pushed to Linear:** (none yet)
+```
+
+After writing the report, display a summary to the user in the conversation:
+- Total issues found
+- Count by delta label (new, worsened, recurring, resolved)
+- Report path
+- Brief list of top issues (just titles with delta labels)
+
+---
+
+### Profile Iteration Proposals
+
+After report generation, check for iteration opportunities:
+
+1. **Noise proposal:** `issue_history` entries with `seen_count >= 2` and `last_pushed: null` → propose adding to `noise_patterns`
+2. **Focus proposal (structured only):** New tool names appearing in issues that aren't in `structured.focus` → propose adding
+3. **Cleanup proposal:** Known issues resolved for 3+ consecutive scans → propose removal from `known_issue_ids`
+4. **Learn mode enhancements:** If `learn_mode == true`:
+   - Lower noise threshold to `seen_count >= 1`
+   - Use the agent's `error_distribution` data (if present) to suggest keyword/focus adjustments
+   - Be more proactive with proposals
+
+Present each proposal individually to the user (not all at once). User confirms yes/no. Apply confirmed changes to the profile object (in memory — the file write happens in state update).
+
+---
+
+### Scan State Update
+
+After proposals are handled, update the profile:
+
+1. `last_scan.timestamp` = current ISO 8601 datetime
+2. `last_scan.known_issue_ids` = list of all sentry_ids from current agent output (`issues` list only — NOT `noise_filtered`)
+3. `last_scan.report_path` = path to the report just written
+
+4. Update `issue_history`:
+   - For each issue in agent's `issues` list:
+     - If sentry_id exists in `issue_history` → increment `seen_count`
+     - If sentry_id NOT in `issue_history` → append new entry: `{sentry_id, seen_count: 1, first_scan: today, last_pushed: null}`
+   - Issues in `noise_filtered_ids` → do NOT increment `seen_count`, do NOT create new entries
+   - Entries not in agent output AND not in `noise_filtered_ids` → leave as-is (resolved issues keep history)
+
+5. Write updated profile YAML back to disk using Write tool
+
+Display: "Profile updated. Next scan will track N known issues."
 
 ---
 
