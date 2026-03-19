@@ -74,9 +74,9 @@
 
 - [x] **FEED-01**: Dashboard feedback buttons (thumbs up/down) per action card
 - [x] **FEED-02**: Feedback API endpoint (POST /api/feedback with signal_id, verdict, reason)
-- [ ] **FEED-03**: MCP feedback tool (nw_submit_feedback)
+- [x] **FEED-03**: MCP feedback tool (nw_submit_feedback)
 - [x] **FEED-04**: PR status collection (merged = accepted, closed = rejected)
-- [ ] **FEED-05**: Linear issue status collection
+- [x] **FEED-05**: Linear issue status collection
 - [x] **FEED-06**: Reject rate calibration (per indicator, adjust confidence threshold)
 - [x] **FEED-07**: Feedback trends written to NW journal (slow learning path)
 
@@ -101,10 +101,10 @@
 
 ### MCP Server
 
-- [ ] **MCP-01**: Hono route at /mcp using Streamable HTTP transport
-- [ ] **MCP-02**: Query tools (nw_get_targets, nw_get_latest_run, nw_get_run, nw_get_proposals, nw_get_schedule)
-- [ ] **MCP-03**: Action tools (nw_trigger_run, nw_submit_feedback, nw_update_schedule)
-- [ ] **MCP-04**: Token auth for remote mode
+- [x] **MCP-01**: Hono route at /mcp using Streamable HTTP transport
+- [x] **MCP-02**: Query tools (nw_get_targets, nw_get_latest_run, nw_get_run, nw_get_proposals, nw_get_schedule)
+- [x] **MCP-03**: Action tools (nw_trigger_run, nw_submit_feedback, nw_update_schedule)
+- [x] **MCP-04**: Token auth for remote mode
 
 ### Flywheel Health
 
@@ -210,9 +210,9 @@
 | CHAT-07 | Phase 3 | Complete |
 | FEED-01 | Phase 3 | Complete |
 | FEED-02 | Phase 3 | Complete |
-| FEED-03 | Phase 3 | Pending |
+| FEED-03 | Phase 3 | Complete |
 | FEED-04 | Phase 3 | Complete |
-| FEED-05 | Phase 3 | Pending |
+| FEED-05 | Phase 3 | Complete |
 | FEED-06 | Phase 3 | Complete |
 | FEED-07 | Phase 3 | Complete |
 | ASSESS-01 | Phase 3 | Complete |
@@ -222,10 +222,10 @@
 | MEAS-01 | Phase 3 | Complete |
 | MEAS-02 | Phase 3 | Complete |
 | MEAS-03 | Phase 3 | Complete |
-| MCP-01 | Phase 4 | Pending |
-| MCP-02 | Phase 4 | Pending |
-| MCP-03 | Phase 4 | Pending |
-| MCP-04 | Phase 4 | Pending |
+| MCP-01 | Phase 4 | Complete |
+| MCP-02 | Phase 4 | Complete |
+| MCP-03 | Phase 4 | Complete |
+| MCP-04 | Phase 4 | Complete |
 | HEALTH-01 | Phase 4 | Pending |
 | HEALTH-02 | Phase 4 | Pending |
 | HEALTH-03 | Phase 4 | Pending |
