@@ -2,16 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dashboard UX Polish
-status: planning
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-20T07:39:29.258Z"
-last_activity: 2026-03-20 — v1.1 roadmap created (Phases 5-7), ready to plan Phase 5
+status: unknown
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-20T08:07:40.583Z"
 progress:
   total_phases: 3
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 80
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
 ---
 
 # Project State
@@ -21,16 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** The closed-loop feedback flywheel — NW monitors, proposes, learns from feedback, and gets measurably better over time
-**Current focus:** Phase 5 — Schema + Server Infrastructure (v1.1 start)
+**Current focus:** Phase 05 — schema-server-infrastructure
 
 ## Current Position
 
-Phase: 5 of 7 (Schema + Server Infrastructure)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-20 — v1.1 roadmap created (Phases 5-7), ready to plan Phase 5
-
-Progress: [████████░░] 80% (v1.0 complete; 3 phases remaining in v1.1)
+Phase: 05 (schema-server-infrastructure) — EXECUTING
+Plan: 1 of 1
 
 ## Performance Metrics
 
@@ -55,6 +49,7 @@ Progress: [████████░░] 80% (v1.0 complete; 3 phases remainin
 - Trend: Stable
 
 *Updated after each plan completion*
+| Phase 05 P01 | 10 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -67,6 +62,9 @@ Recent decisions affecting current work:
 - [v1.1 Scope]: Toast library rejected (no-build constraint); handroll ~70 lines with @preact/signals
 - [v1.1 Architecture]: Queue state via GET /api/worker/state (not SSE) to keep lifecycle channel clean
 - [v1.1 Architecture]: Browser Notification permission gated on user gesture, not page load
+- [Phase 05]: queued_at field is optional for backward compatibility with existing YAML-stored runs
+- [Phase 05]: run:failed target resolved from lastWorkerState.current?.target — failing run IS current run at failure time; fallback to 'unknown'
+- [Phase 05]: GET /api/worker/state placed before GET /api/runs/:id param route per Hono route ordering rules
 
 ### Pending Todos
 
@@ -79,6 +77,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T07:39:29.254Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-schema-server-infrastructure/05-CONTEXT.md
+Last session: 2026-03-20T08:07:40.580Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None

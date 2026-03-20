@@ -126,7 +126,7 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 
 ### Queue Awareness
 
-- [ ] **QUEUE-01**: Run type includes `queued_at` timestamp set on all 4 enqueue paths (manual, webhook, scheduler, `__all__` expansion)
+- [x] **QUEUE-01**: Run type includes `queued_at` timestamp set on all 4 enqueue paths (manual, webhook, scheduler, `__all__` expansion)
 - [ ] **QUEUE-02**: Run list and run detail display trigger/queued time for all runs
 - [ ] **QUEUE-03**: Target detail panel shows count of currently queued runs for that target
 - [ ] **QUEUE-04**: Queued runs display their position in the queue (e.g., "#2 in queue")
@@ -263,7 +263,7 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 | HEALTH-03 | Phase 4 | Complete |
 | HEALTH-04 | Phase 4 | Complete |
 | HEALTH-05 | Phase 4 | Complete |
-| QUEUE-01 | Phase 5 | Pending |
+| QUEUE-01 | Phase 5 | Complete |
 | QUEUE-02 | Phase 6 | Pending |
 | QUEUE-03 | Phase 6 | Pending |
 | QUEUE-04 | Phase 6 | Pending |
