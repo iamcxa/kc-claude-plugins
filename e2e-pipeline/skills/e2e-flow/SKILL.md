@@ -271,6 +271,8 @@ Ask user to confirm, then:
 
 **Why draft release?** GitHub CLI has no API for uploading images to PR comments ([cli/cli#1895](https://github.com/cli/cli/issues/1895)). Draft releases are the only CLI-friendly method that produces stable, repo-scoped URLs for images and videos. The draft release is visible in the Releases page but does not create a real release.
 
+**⚠️ Auth context matters**: Draft release asset URLs require GitHub authentication. They work in **PR comments** (reader is logged in) but **fail in Slack and other external services** (unfurler has no auth → 403). For Slack announcements, link to the PR comment URL instead of embedding image URLs directly. See `kc-pr-announce` skill for the correct Slack media strategy.
+
 ### Next Steps (always shown)
 
 **After verification (normal path):**
