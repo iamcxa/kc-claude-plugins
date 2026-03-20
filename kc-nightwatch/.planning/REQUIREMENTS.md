@@ -144,9 +144,9 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 
 ### Cleanup
 
-- [ ] **CLEAN-01**: `chat-drawer.ts` deleted (confirmed dead — not imported anywhere)
-- [ ] **CLEAN-02**: Dead `phases` variable in `target-detail.ts` fixed (always `[]`, should read from run summary)
-- [ ] **CLEAN-03**: Sidebar "Add Target" button wired to open add-target-wizard
+- [x] **CLEAN-01**: `chat-drawer.ts` deleted (confirmed dead — not imported anywhere)
+- [x] **CLEAN-02**: Dead `phases` variable in `target-detail.ts` fixed (always `[]`, should read from run summary)
+- [x] **CLEAN-03**: Sidebar "Add Target" button wired to open add-target-wizard
 
 ## v2 Requirements
 
@@ -272,9 +272,9 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 | NOTIF-03 | Phase 6 | Complete |
 | POLL-01 | Phase 6 | Complete |
 | POLL-02 | Phase 6 | Complete |
-| CLEAN-01 | Phase 7 | Pending |
-| CLEAN-02 | Phase 7 | Pending |
-| CLEAN-03 | Phase 7 | Pending |
+| CLEAN-01 | Phase 7 | Complete |
+| CLEAN-02 | Phase 7 | Complete |
+| CLEAN-03 | Phase 7 | Complete |
 
 **Coverage:**
 - v1.0 requirements: 73 total (all Complete)
