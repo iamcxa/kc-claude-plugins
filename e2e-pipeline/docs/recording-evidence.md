@@ -100,9 +100,44 @@ The PR comment includes the issue context, making the review self-documenting.
 
 After browser work completes, each skill dispatches the `e2e-media-processor` agent to transform raw artifacts into shareable assets.
 
-**Browser recording demo** — 4-page walkthrough of docs.reccehq.com (screenshots → GIF):
+<details>
+<summary><strong>Browser recording demo</strong> — 4-page walkthrough of docs.reccehq.com (screenshots → GIF)</summary>
 
 ![Browser recording demo](assets/browser-recording-demo.gif)
+
+```yaml
+name: demo-browser-recording
+description: Browse docs.reccehq.com to demonstrate the browser media pipeline
+mapping: recce-docs
+tags: [demo, browser-recording]
+
+steps:
+  - id: landing
+    action: "Navigate to https://docs.reccehq.com/"
+    expect:
+      - "page loaded with title containing 'Recce'"
+    screenshot: true
+
+  - id: summary-agent
+    action: "Navigate to https://docs.reccehq.com/recce-cloud/recce-summary-agent/"
+    expect:
+      - "page loaded with Summary Agent content"
+    screenshot: true
+
+  - id: mcp-server
+    action: "Navigate to https://docs.reccehq.com/recce-cloud/mcp-server/"
+    expect:
+      - "page loaded with MCP Server content"
+    screenshot: true
+
+  - id: lineage-diff
+    action: "Navigate to https://docs.reccehq.com/features/lineage/"
+    expect:
+      - "page loaded with Lineage Diff content"
+    screenshot: true
+```
+
+</details>
 
 ### Pipeline flow
 
