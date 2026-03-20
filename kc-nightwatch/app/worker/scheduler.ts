@@ -28,6 +28,7 @@ export function startScheduler(
       mode: config.self_repair_before ? 'self-repair' : 'production',
       trigger: 'interval',
       status: 'queued',
+      queued_at: new Date().toISOString(),
       log_path: `runs/${runId}/log.jsonl`,
     }
     enqueue(run)
