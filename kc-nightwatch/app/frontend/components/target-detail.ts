@@ -6,6 +6,7 @@ import { RunTimeline } from './run-timeline.ts'
 interface Props {
   target: Target | null
   lastRun: Run | null
+  workerQueue?: Run[]
   onRun: (mode: 'production' | 'dry-run') => void
   onRemove: () => void
 }
@@ -31,7 +32,18 @@ function formatDuration(seconds?: number): string {
   return `${m}m ${s}s`
 }
 
-export function TargetDetail({ target, lastRun, onRun, onRemove }: Props) {
+function timeAgo(dateStr?: string): string {
+  if (!dateStr) return ''
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const m = Math.floor(diff / 60_000)
+  if (m < 1) return 'just now'
+  if (m < 60) return `${m}m ago`
+  const h = Math.floor(m / 60)
+  if (h < 24) return `${h}h ago`
+  return `${Math.floor(h / 24)}d ago`
+}
+
+export function TargetDetail({ target, lastRun, workerQueue, onRun, onRemove }: Props) {
   const [showMenu, setShowMenu] = useState(false)
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
 
@@ -42,8 +54,6 @@ export function TargetDetail({ target, lastRun, onRun, onRemove }: Props) {
       </div>
     `
   }
-
-  const phases = lastRun?.log_path ? [] : []
 
   return html`
     <div style="flex:1;overflow-y:auto;padding:16px;position:relative;">
@@ -114,6 +124,33 @@ export function TargetDetail({ target, lastRun, onRun, onRemove }: Props) {
         `}
       </div>
 
+      <!-- Queue status -->
+      ${(() => {
+        const queuedForTarget = (workerQueue ?? []).filter(r => r.target === target.name)
+        if (queuedForTarget.length === 0) return null
+        return html`
+          <div style="margin-bottom:16px;">
+            <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px;">Queue</div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px;">
+              <div style="font-size:14px;color:var(--warn);font-weight:600;margin-bottom:8px;">${queuedForTarget.length} queued</div>
+              ${queuedForTarget.map((run, index) => {
+                const allQueued = workerQueue ?? []
+                const globalIndex = allQueued.indexOf(run)
+                const position = globalIndex >= 0 ? globalIndex + 1 : index + 1
+                const queuedAgo = run.queued_at ? timeAgo(run.queued_at) : ''
+                return html`
+                  <div key=${run.id} style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px;">
+                    <span style="background:var(--warn);color:#000;font-size:11px;font-weight:700;padding:1px 6px;border-radius:10px;">#${position}</span>
+                    <span style="color:var(--muted);">${run.mode}</span>
+                    ${queuedAgo && html`<span style="color:var(--muted);font-size:12px;margin-left:auto;">${queuedAgo}</span>`}
+                  </div>
+                `
+              })}
+            </div>
+          </div>
+        `
+      })()}
+
       <!-- Last run summary -->
       <div style="margin-bottom:16px;">
         <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px;">Last run</div>
@@ -125,7 +162,6 @@ export function TargetDetail({ target, lastRun, onRun, onRemove }: Props) {
                 <span style="color:var(--muted);font-size:12px;">${lastRun.trigger}</span>
                 <span style="color:var(--muted);font-size:12px;">${formatDuration(lastRun.duration_seconds)}</span>
               </div>
-              ${phases.length > 0 && html`<${RunTimeline} phases=${phases} activePhase=${null} />`}
             </div>
           `
           : html`<div style="color:var(--muted);font-size:13px;">No runs yet</div>`

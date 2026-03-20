@@ -8,6 +8,7 @@ interface Props {
   healthData?: Record<string, { health: 'improving' | 'stable' | 'degrading' }>
   onSelect: (targetName: string) => void
   onRun: (targetName: string) => void
+  onAddTarget: () => void
 }
 
 function statusDotColor(run: Run | undefined): string {
@@ -21,7 +22,7 @@ function statusDotColor(run: Run | undefined): string {
   }
 }
 
-export function Sidebar({ targets, selectedTarget, lastRuns, healthData, onSelect, onRun }: Props) {
+export function Sidebar({ targets, selectedTarget, lastRuns, healthData, onSelect, onRun, onAddTarget }: Props) {
   if (targets.length === 0) {
     return html`
       <aside style="width:240px;min-width:240px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
@@ -29,7 +30,7 @@ export function Sidebar({ targets, selectedTarget, lastRuns, healthData, onSelec
           No targets configured. Add a target to get started.
         </div>
         <div style="padding:8px;">
-          <button style="width:100%;background:transparent;border:1px dashed var(--border);color:var(--muted);" onClick=${() => {}}>+ Add Target</button>
+          <button style="width:100%;background:transparent;border:1px dashed var(--border);color:var(--muted);" onClick=${onAddTarget}>+ Add Target</button>
         </div>
       </aside>
     `
@@ -72,7 +73,7 @@ export function Sidebar({ targets, selectedTarget, lastRuns, healthData, onSelec
         })}
       </ul>
       <div style="padding:8px;border-top:1px solid var(--border);">
-        <button style="width:100%;background:transparent;border:1px dashed var(--border);color:var(--muted);" onClick=${() => {}}>+ Add Target</button>
+        <button style="width:100%;background:transparent;border:1px dashed var(--border);color:var(--muted);" onClick=${onAddTarget}>+ Add Target</button>
       </div>
     </aside>
   `
