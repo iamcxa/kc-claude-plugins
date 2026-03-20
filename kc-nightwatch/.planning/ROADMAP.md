@@ -99,7 +99,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 05-01-PLAN.md — queued_at field on Run type + all 4 enqueue paths, GET /api/worker/state endpoint, run:failed SSE broadcast
+- [x] 05-01-PLAN.md — queued_at field on Run type + all 4 enqueue paths, GET /api/worker/state endpoint, run:failed SSE broadcast
 
 #### Phase 6: Frontend Wiring
 **Goal**: Users can see queue depth, trigger time, and position for every run; they receive immediate toast feedback on trigger actions; the Runs page stays current during active runs; and background completions surface as browser notifications
@@ -111,7 +111,12 @@ Plans:
   3. Target detail panel shows "2 queued" count for the selected target when runs are waiting; each queued run shows its position ("#2 in queue")
   4. The Runs page auto-refreshes every 5s when active or queued runs exist and stops polling when all runs are in a terminal state — identical behavior to the dashboard
   5. When a run completes or fails while the browser tab is in the background, a desktop notification appears; first-time users are prompted for permission via a user gesture (not on page load)
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Toast system (use-toast.ts + toast.ts), usePoll hook, api.getWorkerState() method
+- [ ] 06-02-PLAN.md — App root toast/notification wiring, dashboard trigger toasts + queue state + AddTargetWizard, target-detail queue display, sidebar Add Target button
+- [ ] 06-03-PLAN.md — Runs page auto-refresh polling and queued_at time display
 
 #### Phase 7: Cleanup
 **Goal**: Dead code is deleted and the sidebar Add Target button works — leaving a codebase with no orphan files, no dead variables, and no placeholder buttons
@@ -134,6 +139,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 2. Core Cockpit | v1.0 | 3/3 | Complete | 2026-03-18 |
 | 3. Flywheel Core | v1.0 | 5/5 | Complete | 2026-03-18 |
 | 4. Full Flywheel | v1.0 | 4/4 | Complete | 2026-03-19 |
-| 5. Schema + Server Infrastructure | 1/1 | Complete   | 2026-03-20 | - |
-| 6. Frontend Wiring | v1.1 | 0/TBD | Not started | - |
+| 5. Schema + Server Infrastructure | v1.1 | 1/1 | Complete | 2026-03-20 |
+| 6. Frontend Wiring | v1.1 | 0/3 | Not started | - |
 | 7. Cleanup | v1.1 | 0/TBD | Not started | - |
