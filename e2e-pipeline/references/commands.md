@@ -117,14 +117,17 @@ ffmpeg -f concat -safe 0 -r 1 -i "$REPORT_DIR/gif-frames.txt" \
 
 > **Note:** MP4 conversion is handled by the `e2e-media-processor` agent. The agent trims the first 2 seconds (browser startup blank) and applies speed adjustment.
 
-**Canonical command** (used by media agent):
+**Canonical command** (used by media agent, smart dedup enabled):
 ```bash
-ffmpeg -i "$REPORT_DIR/full.webm" -ss 2 -filter:v "setpts=PTS/1.5" \
-  -an -c:v libx264 -pix_fmt yuv420p -y "$REPORT_DIR/<output_name>.mp4"
+ffmpeg -i "$REPORT_DIR/full.webm" -ss 2 \
+  -filter:v "mpdecimate=hi=64*12:lo=64*5:frac=0.33,setpts=N/FRAME_RATE/TB,setpts=PTS/2" \
+  -r 30 -an -c:v libx264 -pix_fmt yuv420p -y "$REPORT_DIR/<output_name>.mp4"
 ```
 
-- **Default speed: 1.5x** (`setpts=PTS/1.5`). Override: 2x = `PTS/2`, 1x = `PTS/1`
+- **Smart dedup** (`mpdecimate`): drops near-duplicate frames (loading spinners, idle waits) before speed-up
+- **Default speed: 2x** (`setpts=PTS/2`). Override: 1.5x = `PTS/1.5`, 1x = `PTS/1`
 - **Default trim: 2 seconds** (`-ss 2`). Skips browser startup blank frames.
+- `-r 30` output framerate after dedup (ensures smooth playback)
 - `-an` strips audio (browser recordings have no useful audio)
 - `-pix_fmt yuv420p` ensures GitHub/browser/Slack compatibility
 - Output name varies by skill: `test-run.mp4`, `verification.mp4`, `walkthrough.mp4`
