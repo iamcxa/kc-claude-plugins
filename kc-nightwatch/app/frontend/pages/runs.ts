@@ -1,11 +1,12 @@
 import { html } from 'htm/preact'
-import { useState, useEffect } from 'preact/hooks'
+import { useState, useEffect, useCallback } from 'preact/hooks'
 import type { Run, RunSummary, ParsedLogEvent } from '../../shared/types.ts'
 import { LogStream } from '../components/log-stream.ts'
 import { RunTimeline } from '../components/run-timeline.ts'
 import { ActionCard } from '../components/action-card.ts'
 import { BaselineCard } from '../components/baseline-card.ts'
 import { api } from '../lib/api.ts'
+import { usePoll } from '../lib/use-poll.ts'
 
 function getRunIdFromHash(): string | null {
   const hash = location.hash
@@ -50,13 +51,22 @@ interface RunDetailData extends Run {
 
 export function Runs() {
   const [runs, setRuns] = useState<Run[]>([])
+  const [hasActiveRuns, setHasActiveRuns] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(getRunIdFromHash())
   const [selectedRun, setSelectedRun] = useState<RunDetailData | null>(null)
   const [statusFilter, setStatusFilter] = useState('')
   const [targetFilter, setTargetFilter] = useState('')
 
+  const loadRuns = useCallback(() => {
+    api.getRuns().then(allRuns => {
+      setRuns(allRuns)
+      const active = allRuns.some(r => r.status === 'running' || r.status === 'queued')
+      setHasActiveRuns(active)
+    }).catch(console.error)
+  }, [])
+
   useEffect(() => {
-    api.getRuns().then(setRuns).catch(console.error)
+    loadRuns()
 
     const handler = () => {
       const id = getRunIdFromHash()
@@ -66,6 +76,11 @@ export function Runs() {
     return () => window.removeEventListener('hashchange', handler)
   }, [])
 
+  // Auto-refresh every 5s when active runs exist.
+  // usePoll also watches refreshTrigger internally — SSE events from app.ts
+  // (run:failed, brief-ready) trigger immediate re-fetch without waiting for interval.
+  usePoll(loadRuns, 5_000, hasActiveRuns)
+
   useEffect(() => {
     if (!selectedId) {
       setSelectedRun(null)
@@ -73,6 +88,14 @@ export function Runs() {
     }
     api.getRun(selectedId).then(r => setSelectedRun(r)).catch(console.error)
   }, [selectedId])
+
+  // Re-fetch run detail when the run list refreshes during active polling.
+  // Keeps detail view current without requiring a manual refresh.
+  useEffect(() => {
+    if (!selectedId) return
+    if (!hasActiveRuns) return
+    api.getRun(selectedId).then(r => setSelectedRun(r)).catch(console.error)
+  }, [runs])
 
   const filteredRuns = runs.filter(r => {
     if (statusFilter && r.status !== statusFilter) return false
@@ -97,6 +120,16 @@ export function Runs() {
           <span style="color:var(--muted);font-size:12px;">${selectedRun.mode}</span>
           <span style="color:var(--muted);font-size:12px;">${selectedRun.trigger}</span>
           <span style="color:var(--muted);font-size:12px;margin-left:auto;">${formatDuration(selectedRun.duration_seconds)}</span>
+          ${selectedRun.queued_at && html`
+            <span style="color:var(--muted);font-size:12px;" title=${`Queued: ${selectedRun.queued_at}`}>
+              Queued ${timeAgo(selectedRun.queued_at)}
+            </span>
+          `}
+          ${selectedRun.started_at && html`
+            <span style="color:var(--muted);font-size:12px;" title=${`Started: ${selectedRun.started_at}`}>
+              Started ${timeAgo(selectedRun.started_at)}
+            </span>
+          `}
           ${isRunning && html`
             <button
               style="background:var(--btn-danger);color:#fff;border-color:var(--btn-danger);font-size:12px;padding:4px 8px;"
@@ -217,7 +250,12 @@ export function Runs() {
               <span style="color:var(--muted);font-size:12px;">${run.mode}</span>
               <span style="color:var(--muted);font-size:12px;">${run.trigger}</span>
               <span style="color:var(--muted);font-size:12px;margin-left:auto;">${formatDuration(run.duration_seconds)}</span>
-              <span style="color:var(--muted);font-size:12px;">${timeAgo(run.started_at)}</span>
+              <span style="color:var(--muted);font-size:12px;">
+                ${run.status === 'queued'
+                  ? `Queued ${timeAgo(run.queued_at)}`
+                  : timeAgo(run.started_at)
+                }
+              </span>
             </div>
           `)
         }
