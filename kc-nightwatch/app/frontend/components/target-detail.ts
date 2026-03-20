@@ -1,11 +1,11 @@
 import { html } from 'htm/preact'
 import { useState } from 'preact/hooks'
-import type { Target, Run } from '../../shared/types.ts'
+import type { Target, Run, RunSummary } from '../../shared/types.ts'
 import { RunTimeline } from './run-timeline.ts'
 
 interface Props {
   target: Target | null
-  lastRun: Run | null
+  lastRun: (Run & { summary?: RunSummary }) | null
   workerQueue?: Run[]
   onRun: (mode: 'production' | 'dry-run') => void
   onRemove: () => void
