@@ -114,9 +114,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Toast system (use-toast.ts + toast.ts), usePoll hook, api.getWorkerState() method
-- [ ] 06-02-PLAN.md — App root toast/notification wiring, dashboard trigger toasts + queue state + AddTargetWizard, target-detail queue display, sidebar Add Target button
-- [ ] 06-03-PLAN.md — Runs page auto-refresh polling and queued_at time display
+- [x] 06-01-PLAN.md — Toast system (use-toast.ts + toast.ts), usePoll hook, api.getWorkerState() method
+- [x] 06-02-PLAN.md — App root toast/notification wiring, dashboard trigger toasts + queue state + AddTargetWizard, target-detail queue display, sidebar Add Target button
+- [x] 06-03-PLAN.md — Runs page auto-refresh polling and queued_at time display
 
 #### Phase 7: Cleanup
 **Goal**: Dead code is deleted and the sidebar Add Target button works — leaving a codebase with no orphan files, no dead variables, and no placeholder buttons
@@ -126,7 +126,10 @@ Plans:
   1. `chat-drawer.ts` no longer exists in the codebase; `bun typecheck` exits 0 after its deletion (no dangling imports)
   2. The `phases` variable in `target-detail.ts` reads from the actual run summary rather than always returning `[]`; the target detail panel displays phase progress correctly
   3. Clicking "Add Target" in the sidebar opens the AddTargetWizard — same wizard accessible from the Config page
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 07-01-PLAN.md — Delete orphaned chat-drawer.ts, verify CLEAN-02 and CLEAN-03 (completed in Phase 6)
 
 ## Progress
 
@@ -140,5 +143,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 3. Flywheel Core | v1.0 | 5/5 | Complete | 2026-03-18 |
 | 4. Full Flywheel | v1.0 | 4/4 | Complete | 2026-03-19 |
 | 5. Schema + Server Infrastructure | v1.1 | 1/1 | Complete | 2026-03-20 |
-| 6. Frontend Wiring | 3/3 | Complete   | 2026-03-20 | - |
-| 7. Cleanup | v1.1 | 0/TBD | Not started | - |
+| 6. Frontend Wiring | v1.1 | 3/3 | Complete | 2026-03-20 |
+| 7. Cleanup | v1.1 | 0/1 | Not started | - |
