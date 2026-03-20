@@ -315,7 +315,7 @@ If 0 diverged: "LLM and compiled runs agree on all steps."
 
 If recording was enabled, append:
 - `Recording: <path>/full.webm`
-- `Video: <path>/test-run.mp4` (1.5x speed, via media agent)
+- `Video: <path>/test-run.mp4` (2x speed + smart dedup, via media agent)
 - `Steps GIF: <path>/steps.gif`
 
 **Batch:**

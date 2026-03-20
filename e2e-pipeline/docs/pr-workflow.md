@@ -83,7 +83,7 @@ All approaches produce a flow YAML at `.claude/e2e/flows/<name>.yaml`.
 `--pr` auto-enables video recording. What happens:
 
 1. **Browser agent** executes flow steps, captures screenshots per step
-2. **Media processor** generates GIF (step overview), MP4 (1.5x speed video), thumbnail
+2. **Media processor** generates GIF (step overview), MP4 (2x speed video), thumbnail
 3. **Trace analyzer** parses network/console for API failures and errors
 4. **Auto-compile** runs the same flow as a deterministic script, compares results (divergence analysis)
 5. **PR report** assembles `pr-summary.md` from all artifacts
@@ -254,7 +254,7 @@ After a `--pr` run, the report directory (`.claude/e2e/reports/<timestamp>/`) co
 | `pr-summary.md` | PR comment body (image URLs point to draft release) |
 | `step-*.png` | Individual step screenshots |
 | `steps.gif` | Step overview animation (blank frames skipped) |
-| `test-run.mp4` | 1.5x speed video (trimmed) |
+| `test-run.mp4` | 2x speed video (trimmed) |
 | `thumbnail.png` | First non-blank screenshot |
 | `trace.zip` | Network + console trace (replay with `npx playwright show-trace`) |
 | `compiled-junit.xml` | JUnit output from compiled script run |

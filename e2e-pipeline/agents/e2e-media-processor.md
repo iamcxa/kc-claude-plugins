@@ -9,7 +9,7 @@ description: |
   <example>
   Context: The e2e-test skill completed a test run and needs media assets generated.
   user: "Process media:\n  report_dir: /home/user/project/.claude/e2e/reports/20260317-143000\n  recording_path: /home/user/project/.claude/e2e/reports/20260317-143000/full.webm\n  output_name: test-run"
-  assistant: "Scans step-*.png screenshots, detects 2 leading blank frames and 1 trailing blank frame, generates steps.gif from 8 non-blank frames, converts full.webm to test-run.mp4 at 1.5x speed with 2s trim, copies first non-blank screenshot as thumbnail.png. Returns structured summary."
+  assistant: "Scans step-*.png screenshots, detects 2 leading blank frames and 1 trailing blank frame, generates steps.gif from 8 non-blank frames, converts full.webm to test-run.mp4 at 2x speed with smart dedup (drops near-duplicate frames) and 2s trim, copies first non-blank screenshot as thumbnail.png. Returns structured summary."
   <commentary>
   The e2e-test skill dispatches this agent after the browser agent returns. The agent processes raw artifacts autonomously and returns paths + counts.
   </commentary>
@@ -51,7 +51,8 @@ Parse these fields from the dispatch message:
 | `screenshots_pattern` | No | `step-*.png` | Glob pattern for screenshot files |
 | `recording_path` | No | — | Absolute path to WebM recording. Omitted = no MP4 |
 | `output_name` | No | `test-run` | MP4 filename prefix |
-| `speed` | No | `1.5` | MP4 playback speed multiplier |
+| `speed` | No | `2` | MP4 playback speed multiplier |
+| `smart_dedup` | No | `true` | Drop near-duplicate frames before speed-up (reduces spinner/loading segments) |
 | `trim_start` | No | `2` | Seconds to trim from MP4 start (browser startup blank) |
 | `cast_path` | No | — | Absolute path to asciinema `.cast` file. When present, switches to CLI conversion mode (skips screenshot phases) |
 | `cast_cols` | No | `120` | Terminal columns for agg rendering |
@@ -109,6 +110,27 @@ ffmpeg -f concat -safe 0 -r 1 -i "$REPORT_DIR/gif-frames.txt" \
 ## Phase 3: MP4 Conversion
 
 **Skip entirely if `recording_path` was not provided or file doesn't exist.**
+
+### Smart dedup (default: enabled)
+
+When `smart_dedup` is `true`, use `mpdecimate` to drop near-duplicate frames before applying speed-up. This intelligently compresses "nothing happening" segments (loading spinners, network waits) while preserving frames with actual UI changes.
+
+```bash
+ffmpeg -i "$RECORDING_PATH" -ss $TRIM_START \
+  -filter:v "mpdecimate=hi=64*12:lo=64*5:frac=0.33,setpts=N/FRAME_RATE/TB,setpts=PTS/$SPEED" \
+  -r 30 -an -c:v libx264 -pix_fmt yuv420p \
+  -y "$REPORT_DIR/$OUTPUT_NAME.mp4" 2>/dev/null
+```
+
+**Filter chain explained:**
+1. `mpdecimate` — compares each frame to the previous; drops frames with pixel difference below threshold (hi/lo/frac control sensitivity)
+2. First `setpts=N/FRAME_RATE/TB` — closes gaps left by dropped frames (no frozen pauses)
+3. Second `setpts=PTS/$SPEED` — applies the base speed multiplier (default 2x)
+4. `-r 30` — output at 30fps for smooth playback
+
+### Without smart dedup
+
+When `smart_dedup` is `false`, use simple speed-up only:
 
 ```bash
 ffmpeg -i "$RECORDING_PATH" -ss $TRIM_START \
