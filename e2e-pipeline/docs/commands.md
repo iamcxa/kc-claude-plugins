@@ -40,6 +40,11 @@
 | `/e2e-doc-sync` | Scan docs for gaps against skills/agents, write updates |
 | `/e2e-doc-sync --check` | Report-only mode (no writes) |
 | `/e2e-doc-sync --fix` | Scan + auto-write approved gaps |
+| `/e2e-pipeline-doc-sync` | Full doc sync: static scan + history enrichment + write + live probe verification |
+| `/e2e-pipeline-doc-sync --check` | Report gaps + history enrichment, no writes |
+| `/e2e-pipeline-doc-sync --probe-only` | Verify existing docs against actual skill behavior |
+| `/e2e-pipeline-doc-sync --auto` | Full sync, skip user confirmation |
+| `/e2e-pipeline-doc-sync --section <doc>` | Targeted sync for one doc file |
 
 ## Background vs Foreground Execution
 

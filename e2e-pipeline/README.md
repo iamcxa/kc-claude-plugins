@@ -59,6 +59,17 @@ When selectors break, re-map the page. When flows change, re-walk. The pipeline 
 
 > **New to the pipeline?** Try `/e2e-help` for an interactive guide. Found a gap? `/e2e-help --feedback "<description>"`
 
+## Documentation Maintenance
+
+Keep docs in sync with source code:
+
+```
+/e2e-pipeline-doc-sync           # Full sync: scan + history + write + live probe verify
+/e2e-pipeline-doc-sync --check   # Report gaps without writing
+/e2e-pipeline-doc-sync --probe-only  # Verify existing docs match actual behavior
+/e2e-doc-sync --check            # Legacy scanner (coverage gaps only)
+```
+
 ## Contributing
 
 Found a gap? Have a better pattern? See [CONTRIBUTING.md](CONTRIBUTING.md) for how to help -- from one-minute feedback to full feature PRs.
