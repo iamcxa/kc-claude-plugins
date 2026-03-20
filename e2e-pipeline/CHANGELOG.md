@@ -5,17 +5,32 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-03-20
+
+### Added
+- **CLI terminal recording mode** for cross-boundary flows — `asciinema rec` → `agg` → GIF → `ffmpeg` → MP4
+- `e2e-media-processor` agent: `cast_path`, `cast_cols`, `cast_rows` input fields for CLI mode
+- CLI-only flow detection in `e2e-flow` (Phase 2.5), `e2e-test` (Phase 1.5), `e2e-walkthrough` (Phase 4)
+- `docs/assets/cli-recording-demo.gif` — demo of terminal recording pipeline
+- `doc-probe` agent: added missing `color: yellow` field
+- `docs/commands.md` § CLI-Only Flow Recording
+- `docs/cross-boundary-testing.md` § Recording CLI-Only Flows (with demo GIF)
+- `e2e-help` topic keywords: `cli-recording`, `terminal-recording`, `cli-only`
+- Troubleshooting entry for missing `asciinema`/`agg` in `docs/debugging.md`
+- CLI recording prerequisites in `docs/getting-started.md`
+- CI runner note for `asciinema`/`agg` in `docs/ci-integration.md`
+
 ### Changed
 - Default report output directory from `e2e-reports/` to `.claude/e2e/reports/`, unifying all E2E artifacts under `.claude/e2e/` (DEV-2)
 
-### Added
+### Documentation
 - `docs/pr-workflow.md` — end-to-end guide for posting E2E evidence to PRs
-- Media processing pipeline section in `docs/recording-evidence.md`
+- Media processing pipeline section in `docs/recording-evidence.md` (browser + CLI dual-track)
 - Divergence interpretation guide and observe-and-continue model in `docs/debugging.md`
 - Element coverage section with JSON examples in `docs/writing-tests.md`
 - Background/foreground execution table and `--fg` flag in `docs/commands.md`
 - Metrics JSON and quarantine entry examples in `docs/ci-integration.md`
-- Cross-references across 5 doc files
+- Cross-references across 9 doc files for CLI recording discoverability
 
 ## [2.3.0] - 2026-03-18
 

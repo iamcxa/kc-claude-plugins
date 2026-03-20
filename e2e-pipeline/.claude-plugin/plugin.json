@@ -1,7 +1,7 @@
 {
   "name": "e2e-pipeline",
-  "description": "Browser E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video",
-  "version": "2.3.0",
+  "description": "Browser & CLI E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video, terminal recording for CLI-only flows",
+  "version": "2.4.0",
   "author": {
     "name": "Kent Chen",
     "url": "https://github.com/iamcxa"
