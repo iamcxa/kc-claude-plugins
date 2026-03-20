@@ -136,4 +136,9 @@ export const api = {
   getHealth(target: string): Promise<TargetHealthData> {
     return get<TargetHealthData>(`/api/health/${encodeURIComponent(target)}`)
   },
+
+  // Worker state (queue visibility)
+  getWorkerState(): Promise<{ queue: Run[]; current?: Run; schedule?: ScheduleConfig }> {
+    return get<{ queue: Run[]; current?: Run; schedule?: ScheduleConfig }>('/api/worker/state')
+  },
 }
