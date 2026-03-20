@@ -849,8 +849,10 @@ function generateAction(step, stepIndex, totalSteps) {
         var fillEval = "(()=>{"
           + "const el=document.querySelector('" + shellFillCss + "');"
           + "if(!el)throw new Error('element not found: " + shellFillCss + "');"
+          + "el.focus();"
           + "const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;"
           + "s.call(el,'" + shellFillVal + "');"
+          + "const t=el._valueTracker;if(t)t.setValue('');"
           + "el.dispatchEvent(new Event('input',{bubbles:true}));"
           + "el.dispatchEvent(new Event('change',{bubbles:true}));"
           + "})()";
