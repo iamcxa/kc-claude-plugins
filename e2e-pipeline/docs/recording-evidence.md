@@ -166,6 +166,8 @@ Skill dispatches e2e-media-processor (CLI mode: cast_path)
           └── thumbnail.png (first frame extracted from GIF)
 ```
 
+> See the CLI recording demo in [Cross-Boundary Testing — Recording CLI-Only Flows](cross-boundary-testing.md#recording-cli-only-flows).
+
 ### Blank frame detection
 
 The media processor scans `step-*.png` for leading and trailing blank frames (white/empty screenshots from page load delays). These are excluded from the GIF to avoid dead frames at the start or end of the animation.
