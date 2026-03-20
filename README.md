@@ -15,7 +15,6 @@ Claude Code plugin marketplace by [Kent Chen](https://github.com/iamcxa).
 | [e2e-pipeline](./e2e-pipeline/) | 2.3.0 | Browser E2E testing — map UI, generate & verify flows, run tests, walkthroughs, video | `/plugin install e2e-pipeline@kc-claude-plugins` |
 | [kc-plugin-forge](./kc-plugin-forge/) | 1.3.0 | Plugin quality pipeline — scaffold, TDD skills, verify agents, doc self-iteration | `/plugin install kc-plugin-forge@kc-claude-plugins` |
 | [kc-nightwatch](./kc-nightwatch/) | 0.4.0 | Nightly improvement — forge validation, multi-source signals, proposals & alerts | `/plugin install kc-nightwatch@kc-claude-plugins` |
-| [kc-sentry-insight](./kc-sentry-insight/) | 0.1.0 | Sentry error scanning — diff tracking, domain profiles, Linear push | `/plugin install kc-sentry-insight@kc-claude-plugins` |
 
 ---
 
@@ -187,28 +186,6 @@ Autonomous nightly plugin improvement cycle. Runs forge validation, harvests sig
 
 ---
 
-## kc-sentry-insight
-
-Scan Sentry for production errors with diff tracking — only new/changed issues since last scan.
-
-### Skills
-
-| Command | Purpose |
-|---------|---------|
-| `/kc-sentry-insight` | Scan Sentry, classify issues, show diff |
-| `/kc-sentry-insight --push` | Push findings to Linear as issues |
-| `/kc-sentry-insight --profile` | Manage project error profiles |
-
-### Features
-
-- **Diff tracking**: Only surfaces new/changed issues since last scan
-- **Domain profiles**: Per-project noise filters and known-issue lists
-- **Dual strategy**: Sentry native MCP (span.op) + keyword search
-- **Linear push**: One-command push classified errors to Linear
-- **Self-learning**: D1 cross-project patterns, D2 project-specific rules
-
----
-
 ## Adding to Your Project
 
 Add to `.claude/settings.json`:
@@ -226,8 +203,7 @@ Add to `.claude/settings.json`:
   "enabledPlugins": {
     "e2e-pipeline@kc-claude-plugins": true,
     "kc-plugin-forge@kc-claude-plugins": true,
-    "kc-nightwatch@kc-claude-plugins": true,
-    "kc-sentry-insight@kc-claude-plugins": true
+    "kc-nightwatch@kc-claude-plugins": true
   }
 }
 ```
