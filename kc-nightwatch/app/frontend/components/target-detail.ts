@@ -47,6 +47,9 @@ export function TargetDetail({ target, lastRun, workerQueue, onRun, onRemove }: 
   const [showMenu, setShowMenu] = useState(false)
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
 
+  const phases = lastRun?.summary?.phases_completed ?? []
+  const isRunning = lastRun?.status === 'running'
+
   if (!target) {
     return html`
       <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted);">
@@ -162,6 +165,11 @@ export function TargetDetail({ target, lastRun, workerQueue, onRun, onRemove }: 
                 <span style="color:var(--muted);font-size:12px;">${lastRun.trigger}</span>
                 <span style="color:var(--muted);font-size:12px;">${formatDuration(lastRun.duration_seconds)}</span>
               </div>
+              ${phases.length > 0 && html`
+                <div style="margin-top:8px;">
+                  <${RunTimeline} phases=${phases} activePhase=${isRunning ? phases[phases.length - 1] ?? null : null} />
+                </div>
+              `}
             </div>
           `
           : html`<div style="color:var(--muted);font-size:13px;">No runs yet</div>`
