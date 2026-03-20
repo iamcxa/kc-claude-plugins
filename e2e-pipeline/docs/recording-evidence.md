@@ -129,30 +129,34 @@ Skill dispatches e2e-media-processor (CLI mode: cast_path)
 
 The media processor scans `step-*.png` for leading and trailing blank frames (white/empty screenshots from page load delays). These are excluded from the GIF to avoid dead frames at the start or end of the animation.
 
-Example: 12 screenshots captured, 1 leading blank, 1 trailing blank → GIF contains 10 frames.
+Example: 12 screenshots captured, 1 leading blank, 1 trailing blank -> GIF contains 10 frames.
 
 ### Processing parameters
 
 | Output | Format | Parameters |
 |--------|--------|------------|
-| GIF | 800px wide, 1fps, loop | Blank frames excluded |
-| MP4 | 1.5x playback speed | 2s trim from start (browser chrome), full WebM → MP4 conversion |
-| Thumbnail | Original resolution PNG | First non-blank screenshot |
+| GIF (browser) | 800px wide, 1fps, loop | Blank frames excluded |
+| MP4 (browser) | 1.5x playback speed | 2s trim from start (browser chrome), full WebM -> MP4 conversion |
+| Thumbnail (browser) | Original resolution PNG | First non-blank screenshot |
+| GIF (CLI) | agg render, 120x35 terminal, 2x speed, monokai theme | From asciinema .cast file |
+| MP4 (CLI) | ffmpeg from GIF, yuv420p, faststart | Even dimensions enforced via scale filter |
+| Thumbnail (CLI) | PNG | First frame extracted from GIF |
 
 ### When media processor runs
 
-The processor is **always dispatched** after browser work — even without video recording — because GIF and thumbnail are generated from screenshots (which are always captured).
+The processor is **always dispatched** after browser work -- even without video recording -- because GIF and thumbnail are generated from screenshots (which are always captured).
 
-| Recording enabled? | GIF | MP4 | Thumbnail |
-|:------------------:|:---:|:---:|:---------:|
-| Yes | from screenshots | from full.webm | from screenshots |
-| No | from screenshots | skipped | from screenshots |
+| Source | GIF | MP4 | Thumbnail |
+|:------:|:---:|:---:|:---------:|
+| Browser (recording ON) | from screenshots | from full.webm | from screenshots |
+| Browser (recording OFF) | from screenshots | skipped | from screenshots |
+| CLI-only (cast file) | from cast via agg | from GIF via ffmpeg | first GIF frame |
 
 ## Related
 
 - [PR Workflow](pr-workflow.md) -- full guide for posting E2E evidence to PRs
 - [Commands](commands.md) -- all skills and flags including `--video`, `--pr`, `--no-video`
-- [Cross-Boundary Testing](cross-boundary-testing.md) -- external checkpoints that produce evidence
+- [Cross-Boundary Testing](cross-boundary-testing.md) -- external checkpoints that produce evidence, CLI terminal recording pipeline
 - [Debugging](debugging.md) -- using traces and recordings to diagnose failures
 - [CI Integration](ci-integration.md) -- metrics and JUnit output for CI pipelines
 

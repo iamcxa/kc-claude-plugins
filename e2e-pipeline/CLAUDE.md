@@ -146,7 +146,7 @@ Rule: if a layer has the tools to attempt a step, it MUST attempt it (best-effor
 
 ## Documentation Maintenance
 
-### Doc Sync — Coexistence (Migration Step 1)
+### Doc Sync -- Coexistence (Migration Step 1)
 
 Both `e2e-doc-sync` (original, plugin-specific) and `e2e-pipeline-doc-sync` (forge template, generic) coexist:
 - **`/e2e-doc-sync`**: Plugin-specific orchestrator + e2e-doc-scanner agent. Coverage gaps only.
@@ -186,6 +186,7 @@ When adding, removing, or renaming skills or agents, update these files:
 | `/e2e-walkthrough` | ON | `--no-video` |
 | `/e2e-flow --verify-only` | ON | `--no-video` |
 | `/e2e-test` | OFF | `--video` or `--pr` |
+| CLI-only flows | ON (asciinema) | `--no-video` |
 | `/e2e-map` | No recording | -- |
 
 All media post-processing (GIF, MP4, thumbnail) is handled by the `e2e-media-processor` agent, dispatched by each skill after browser work completes. Browser agents produce raw screenshots and WebM recordings only.

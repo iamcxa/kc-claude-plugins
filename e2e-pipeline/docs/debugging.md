@@ -98,6 +98,7 @@ The bug appears randomly -- race conditions, timing issues, flaky state.
 | `node_modules/` missing for compiler | Run `npm install` in the plugin directory |
 | Compiled script fails with `command not found` | Ensure `agent-browser` is on PATH; check `chmod +x` on the script |
 | Coverage report shows 0% | Verify mapping file matches the flow's `mapping:` field |
+| CLI recording skipped (agg/asciinema missing) | Install: `brew install asciinema agg`. Required only for CLI-only flows (zero browser steps). |
 
 For deeper diagnostics: `/e2e-skill-ops --debug`
 

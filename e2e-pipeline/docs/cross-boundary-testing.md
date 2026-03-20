@@ -276,7 +276,7 @@ Skill wraps CLI command with asciinema
           ▼
 e2e-media-processor (CLI mode, cast_path provided)
           │
-          ├── steps.gif     (agg: 120×35, 2x speed, monokai)
+          ├── steps.gif     (agg: 120x35, 2x speed, monokai)
           ├── test-run.mp4  (ffmpeg: yuv420p, faststart)
           └── thumbnail.png (first GIF frame)
 ```
@@ -308,13 +308,13 @@ If missing: warn user, skip recording, proceed with text-only results. Install: 
 
 ### Headless Mode
 
-In non-interactive shells (CI, subagents), asciinema runs in headless mode automatically ("TTY not available, recording in headless mode"). This is expected — the cast file is still produced correctly.
+In non-interactive shells (CI, subagents), asciinema runs in headless mode automatically ("TTY not available, recording in headless mode"). This is expected -- the cast file is still produced correctly.
 
 ## Related
 
 - [Writing Tests](writing-tests.md) -- flow YAML format and checkpoint syntax
 - [Commands](commands.md) -- all skills and flags
-- [Recording & Evidence](recording-evidence.md) -- trace analysis for cross-boundary verification
+- [Recording & Evidence](recording-evidence.md) -- media processing pipeline, CLI terminal recording parameters
 
 ---
 

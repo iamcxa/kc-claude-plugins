@@ -441,6 +441,7 @@ agent-browser eval "(()=>{document.querySelector('button[type=\"submit\"]').clic
 - **Metrics rotation.** Use `--rotate` to prevent unbounded metrics file growth -- keeps 2x window per flow.
 - **Set `WAIT_TIMEOUT=30` for deploy previews.** Default 10s is too short for cold starts on Netlify/Vercel preview deploys.
 - **Always use `AGENT_BROWSER_PROFILE`** for auth session sharing across CI jobs. Don't use `agent-browser session dir`.
+- **CLI-only flow recording in CI.** If your matrix includes CLI-only flows (zero browser steps), install `asciinema` and `agg` in the runner: `sudo apt-get install -y asciinema && pip install agg` (or `brew install asciinema agg` on macOS runners). Without them, terminal recording is skipped but tests still run.
 
 ## Related
 
