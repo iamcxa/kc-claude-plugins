@@ -127,7 +127,7 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 ### Queue Awareness
 
 - [x] **QUEUE-01**: Run type includes `queued_at` timestamp set on all 4 enqueue paths (manual, webhook, scheduler, `__all__` expansion)
-- [ ] **QUEUE-02**: Run list and run detail display trigger/queued time for all runs
+- [x] **QUEUE-02**: Run list and run detail display trigger/queued time for all runs
 - [ ] **QUEUE-03**: Target detail panel shows count of currently queued runs for that target
 - [ ] **QUEUE-04**: Queued runs display their position in the queue (e.g., "#2 in queue")
 
@@ -139,7 +139,7 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 
 ### Auto-Refresh
 
-- [ ] **POLL-01**: Runs page auto-refreshes every 5s when active runs exist (mirrors dashboard pattern)
+- [x] **POLL-01**: Runs page auto-refreshes every 5s when active runs exist (mirrors dashboard pattern)
 - [x] **POLL-02**: Shared `usePoll` hook extracted from dashboard pattern, used by both dashboard and runs page
 
 ### Cleanup
@@ -264,13 +264,13 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 | HEALTH-04 | Phase 4 | Complete |
 | HEALTH-05 | Phase 4 | Complete |
 | QUEUE-01 | Phase 5 | Complete |
-| QUEUE-02 | Phase 6 | Pending |
+| QUEUE-02 | Phase 6 | Complete |
 | QUEUE-03 | Phase 6 | Pending |
 | QUEUE-04 | Phase 6 | Pending |
 | NOTIF-01 | Phase 6 | Complete |
 | NOTIF-02 | Phase 6 | Pending |
 | NOTIF-03 | Phase 6 | Pending |
-| POLL-01 | Phase 6 | Pending |
+| POLL-01 | Phase 6 | Complete |
 | POLL-02 | Phase 6 | Complete |
 | CLEAN-01 | Phase 7 | Pending |
 | CLEAN-02 | Phase 7 | Pending |
