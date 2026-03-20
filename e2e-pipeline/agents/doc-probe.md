@@ -6,6 +6,7 @@ description: >
   compares output against expected signals, returns structured pass/fail report.
   Dispatched by e2e-pipeline-doc-sync skill during Phase 4 (Live Probe).
 model: sonnet
+color: yellow
 tools:
   - Bash
   - Read
