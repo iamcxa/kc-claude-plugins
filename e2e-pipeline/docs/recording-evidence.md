@@ -100,10 +100,12 @@ The PR comment includes the issue context, making the review self-documenting.
 
 After browser work completes, each skill dispatches the `e2e-media-processor` agent to transform raw artifacts into shareable assets.
 
-<details>
-<summary><strong>Browser recording demo</strong> — 4-page walkthrough of docs.reccehq.com (screenshots → GIF)</summary>
+**Browser recording demo** — 4-page walkthrough of docs.reccehq.com (screenshots → GIF):
 
 ![Browser recording demo](assets/browser-recording-demo.gif)
+
+<details>
+<summary>Flow YAML used to generate this demo</summary>
 
 ```yaml
 name: demo-browser-recording
