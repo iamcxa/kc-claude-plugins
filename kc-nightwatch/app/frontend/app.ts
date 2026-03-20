@@ -8,7 +8,10 @@ import { Config } from './pages/config.ts'
 import { Health } from './pages/health.ts'
 import { BottomNav } from './components/bottom-nav.ts'
 import { ScheduleBar } from './components/schedule-bar.ts'
+import { Toast } from './components/toast.ts'
 import { api } from './lib/api.ts'
+import { showToast } from './lib/use-toast.ts'
+import { refreshTrigger } from './lib/use-poll.ts'
 
 type Page = 'dashboard' | 'runs' | 'health' | 'config'
 
@@ -36,6 +39,9 @@ function App() {
     const es = new EventSource('/api/events')
     globalEsRef.current = es
 
+    // NOTE: Notification.requestPermission() is called on first manual run trigger
+    // in dashboard.ts (user gesture required). Here we only CHECK permission before firing.
+
     es.addEventListener('brief-ready', (e: MessageEvent) => {
       const data = JSON.parse(e.data)
       const targetNames = Object.keys(data.summary?.per_target ?? {})
@@ -43,6 +49,36 @@ function App() {
       if (briefTarget) {
         // Send brief context to the target's chat session
         api.briefChat(briefTarget, data.summary).catch(console.error)
+
+        // Toast for completion
+        const actionCount = data.summary?.per_target?.[briefTarget]?.actions?.length ?? 0
+        showToast(`${briefTarget} run complete (${actionCount} actions)`, 'success')
+
+        // Increment refreshTrigger so usePoll consumers re-fetch immediately
+        refreshTrigger.value++
+
+        // Browser notification when tab is backgrounded
+        if (document.visibilityState === 'hidden' && Notification.permission === 'granted') {
+          const proposals = data.summary?.per_target?.[briefTarget]?.actions?.filter((a: any) => a.type === 'proposal')?.length ?? 0
+          const n = new Notification(`NW: ${briefTarget} complete`, { body: `${actionCount} actions, ${proposals} proposals` })
+          n.onclick = () => { window.focus() }
+        }
+      }
+    })
+
+    es.addEventListener('run:failed', (e: MessageEvent) => {
+      const data = JSON.parse(e.data)
+      const target = data.target ?? 'unknown'
+      const errorMsg = data.error ? String(data.error).slice(0, 80) : 'Unknown error'
+      showToast(`${target} run failed: ${errorMsg}`, 'error')
+
+      // Increment refreshTrigger so usePoll consumers re-fetch immediately
+      refreshTrigger.value++
+
+      // Browser notification when tab is backgrounded
+      if (document.visibilityState === 'hidden' && Notification.permission === 'granted') {
+        const n = new Notification(`NW: ${target} failed`, { body: errorMsg })
+        n.onclick = () => { window.focus() }
       }
     })
 
@@ -82,16 +118,19 @@ function App() {
   }
 
   return html`
-    <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
-      <${ScheduleBar} schedule=${schedule} onToggle=${handleScheduleToggle} />
-      <div style="flex:1;overflow:hidden;padding-bottom:48px;">
-        ${page === 'dashboard' && html`<${Dashboard} healthData=${healthData} />`}
-        ${page === 'runs' && html`<${Runs} />`}
-        ${page === 'health' && html`<${Health} />`}
-        ${page === 'config' && html`<${Config} />`}
+    <>
+      <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
+        <${ScheduleBar} schedule=${schedule} onToggle=${handleScheduleToggle} />
+        <div style="flex:1;overflow:hidden;padding-bottom:48px;">
+          ${page === 'dashboard' && html`<${Dashboard} healthData=${healthData} />`}
+          ${page === 'runs' && html`<${Runs} />`}
+          ${page === 'health' && html`<${Health} />`}
+          ${page === 'config' && html`<${Config} />`}
+        </div>
+        <${BottomNav} current=${page} />
       </div>
-      <${BottomNav} current=${page} />
-    </div>
+      <${Toast} />
+    </>
   `
 }
 
