@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { randomUUID } from 'node:crypto'
 import { readTargets } from '../services/yaml-store.ts'
 import { listRuns, getRun, appendRun } from '../services/run-store.ts'
-import { sendToWorker, workerStatus } from '../ipc.ts'
+import { sendToWorker, workerStatus, getLastWorkerState } from '../ipc.ts'
 import type { Run } from '../../shared/types.ts'
 
 export const apiRoutes = new Hono()
@@ -39,6 +39,11 @@ apiRoutes.post('/api/runs', async (c) => {
   await appendRun(run)
   sendToWorker({ type: 'enqueue', run })
   return c.json({ run_id: run.id }, 202)
+})
+
+// GET /api/worker/state — current queue snapshot (polling endpoint for frontend)
+apiRoutes.get('/api/worker/state', (c) => {
+  return c.json(getLastWorkerState())
 })
 
 // GET /api/runs — list runs (filterable by status + target)

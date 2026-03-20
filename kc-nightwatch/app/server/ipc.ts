@@ -1,10 +1,17 @@
-import type { WorkerToServer, IpcMessage, ParsedLogEvent } from '../shared/types.ts'
+import type { WorkerToServer, IpcMessage, ParsedLogEvent, Run, ScheduleConfig } from '../shared/types.ts'
 import { log } from '../shared/logger.ts'
 import { HEARTBEAT_TIMEOUT_MS } from '../shared/constants.ts'
 
 export type WorkerStatus = 'online' | 'offline' | 'offline_permanent'
 
 export let workerStatus: WorkerStatus = 'offline'
+
+// Last worker state snapshot — updated on each 'state' IPC message, served via GET /api/worker/state
+let lastWorkerState: { queue: Run[]; current?: Run; schedule?: ScheduleConfig } = { queue: [] }
+
+export function getLastWorkerState() {
+  return lastWorkerState
+}
 export let lastHeartbeatAt: number | null = null
 export let workerProc: ReturnType<typeof Bun.spawn> | null = null
 
@@ -73,6 +80,7 @@ export function handleWorkerMessage(msg: WorkerToServer) {
       if (workerStatus === 'offline') setWorkerStatus('online')
       break
     case 'state':
+      lastWorkerState = { queue: msg.queue, current: msg.current, schedule: msg.schedule }
       log.debug({ component: 'server', msg: 'Worker state received', queue: msg.queue.length })
       break
     case 'run:log':
@@ -88,6 +96,11 @@ export function handleWorkerMessage(msg: WorkerToServer) {
       break
     case 'run:failed':
       closeRunSubscribers(msg.run_id)
+      broadcastGlobal('run:failed', {
+        run_id: msg.run_id,
+        target: lastWorkerState.current?.target ?? 'unknown',
+        error: msg.error,
+      })
       log.warn({ component: 'server', msg: `Run ${msg.run_id} failed: ${msg.error}` })
       break
     default:
