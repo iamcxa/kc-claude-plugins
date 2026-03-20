@@ -84,7 +84,7 @@ Plans:
 
 </details>
 
-### 🚧 v1.1 Dashboard UX Polish (In Progress)
+### v1.1 Dashboard UX Polish (In Progress)
 
 **Milestone Goal:** Improve run lifecycle visibility and clean up stale v1.0 UI debt — queued_at timestamps, queue display, toast/notification system, auto-refresh consistency, and dead code removal.
 
@@ -96,7 +96,10 @@ Plans:
   1. Every newly enqueued run has a `queued_at` ISO timestamp set at enqueue time, visible in the run store, across all 4 trigger paths (manual POST /api/runs, webhook POST /api/webhook, scheduler interval, __all__ expansion)
   2. GET /api/worker/state returns the current queue snapshot (pending runs with their target + queued_at) and is callable from the browser without side effects
   3. When a run fails, the global SSE channel broadcasts a `run:failed` event with runId and targetId — matching the existing `run:complete` pattern
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 05-01-PLAN.md — queued_at field on Run type + all 4 enqueue paths, GET /api/worker/state endpoint, run:failed SSE broadcast
 
 #### Phase 6: Frontend Wiring
 **Goal**: Users can see queue depth, trigger time, and position for every run; they receive immediate toast feedback on trigger actions; the Runs page stays current during active runs; and background completions surface as browser notifications
@@ -131,6 +134,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 2. Core Cockpit | v1.0 | 3/3 | Complete | 2026-03-18 |
 | 3. Flywheel Core | v1.0 | 5/5 | Complete | 2026-03-18 |
 | 4. Full Flywheel | v1.0 | 4/4 | Complete | 2026-03-19 |
-| 5. Schema + Server Infrastructure | v1.1 | 0/TBD | Not started | - |
+| 5. Schema + Server Infrastructure | v1.1 | 0/1 | Not started | - |
 | 6. Frontend Wiring | v1.1 | 0/TBD | Not started | - |
 | 7. Cleanup | v1.1 | 0/TBD | Not started | - |
