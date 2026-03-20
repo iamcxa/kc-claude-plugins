@@ -10,11 +10,11 @@ Claude Code plugin marketplace by [Kent Chen](https://github.com/iamcxa).
 
 ## Available Plugins
 
-### [e2e-pipeline](./e2e-pipeline/) `v2.3.0`
+### [e2e-pipeline](./e2e-pipeline/) `v2.4.0`
 
-Browser E2E testing with context-isolating subagents. Map your app's UI, generate test flows from plans, verify in browser with auto-repair, run tests with video recording, and compile to standalone CI scripts.
+Browser & CLI E2E testing with context-isolating subagents. Map your app's UI, generate test flows from plans, verify in browser with auto-repair, run tests with video recording, and record CLI-only flows via terminal recording (asciinema).
 
-**Use when:** You need automated browser testing for a web app — from first mapping to CI integration.
+**Use when:** You need automated browser or CLI testing for a web app — from first mapping to CI integration.
 
 **Prerequisite:** [agent-browser](https://github.com/nicobrinkkemper/agent-browser) CLI installed globally.
 
