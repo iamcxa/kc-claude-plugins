@@ -123,13 +123,13 @@ Plans:
 **Depends on**: Phase 6
 **Requirements**: CLEAN-01, CLEAN-02, CLEAN-03
 **Success Criteria** (what must be TRUE):
-  1. `chat-drawer.ts` no longer exists in the codebase; `bun typecheck` exits 0 after its deletion (no dangling imports)
+  1. `chat-drawer.ts` no longer exists in the codebase; `grep -r "chat-drawer" app/` returns zero matches and `bun test` passes (no dangling imports, no regressions)
   2. The `phases` variable in `target-detail.ts` reads from the actual run summary rather than always returning `[]`; the target detail panel displays phase progress correctly
   3. Clicking "Add Target" in the sidebar opens the AddTargetWizard — same wizard accessible from the Config page
 **Plans**: 1 plan
 
 Plans:
-- [ ] 07-01-PLAN.md — Delete orphaned chat-drawer.ts, verify CLEAN-02 and CLEAN-03 (completed in Phase 6)
+- [ ] 07-01-PLAN.md — Delete orphaned chat-drawer.ts, wire phases_completed into target-detail panel, verify CLEAN-03
 
 ## Progress
 
