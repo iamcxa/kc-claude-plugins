@@ -19,7 +19,7 @@ Generate structured E2E flow YAMLs from codebase analysis, then verify them in a
 ## Invocation
 
 ```
-/e2e-flow [--from <source>] [--smoke] [--verify-only] [--mapping <name>] [--pr N] [--issue ID] [--no-verify] [--no-video]
+/e2e-flow [--from <source>] [--smoke] [--verify-only] [--mapping <name>] [--issue ID] [--no-verify] [--no-video] [--no-pr]
 ```
 
 | Arg | Effect |
@@ -30,10 +30,22 @@ Generate structured E2E flow YAMLs from codebase analysis, then verify them in a
 | `--smoke` | Generate visit-all-pages flow from mapping |
 | `--verify-only` | Skip generation, verify an existing flow in browser |
 | `--mapping <name>` | Target a specific mapping (skip selection if only one) |
-| `--pr N` | Post PR comment with verification results |
 | `--issue ID` | Include issue context in report header |
 | `--no-verify` | Generate flow only, skip browser verification |
 | `--no-video` | Skip video recording during verification |
+| `--no-pr` | Skip PR auto-detection, commit, and PR comment posting |
+
+### PR Mode (default)
+
+PR mode is **enabled by default**. On invocation, auto-detect the current branch's PR:
+
+```bash
+gh pr view --json number,headRefName --jq '.number' 2>/dev/null
+```
+
+- **PR found** → PR mode active. Flow will be committed and results posted to PR.
+- **No PR / not a git repo / `gh` unavailable** → PR mode silently skipped (no error).
+- **`--no-pr`** → PR mode explicitly disabled regardless of PR existence.
 
 ## Knowledge Bootstrap (before mapping discovery)
 
@@ -144,7 +156,7 @@ Flow generated: .claude/e2e/flows/<name>.yaml
 Proceeding to browser verification...
 ```
 
-If `--no-verify` → **delete flow-write sentinel** → skip to Phase 3 (no-verify path).
+If `--no-verify` → **delete flow-write sentinel** → if PR mode active, commit flow (`git add .claude/e2e/flows/<name>.yaml && git commit -m "test(e2e): add <flow-name> flow (unverified)"`) → skip to Phase 3 (no-verify path).
 
 ## Phase 2 — Verify (dispatch flow-verifier + trace-analyzer)
 
@@ -216,6 +228,29 @@ Agent returns: `gif_path`, `mp4_path`, `thumbnail_path`. Use these in Phase 3 re
 
 **→ Delete flow-write sentinel** (all flow-writing agents have returned)
 
+### Phase 2.6 — Commit Flow (PR mode only)
+
+When PR mode is active (PR detected and `--no-pr` not set), commit the finalized flow YAML:
+
+```bash
+git add .claude/e2e/flows/<name>.yaml
+git commit -m "test(e2e): add <flow-name> flow"
+```
+
+**Timing matters**: commit AFTER verification corrections are applied — the committed flow is the verified version, not the raw generation output. If verification updated the mapping too, include it:
+
+```bash
+git add .claude/e2e/flows/<name>.yaml .claude/e2e/mappings/<app>.yaml
+git commit -m "test(e2e): add <flow-name> flow (verified)"
+```
+
+For `--verify-only` mode, only commit if the verifier made corrections (`flow_updated: true`):
+
+```bash
+git add .claude/e2e/flows/<name>.yaml
+git commit -m "fix(e2e): update <flow-name> flow (re-verified)"
+```
+
 ## Phase 3 — Present Results
 
 ### Summary
@@ -252,9 +287,9 @@ Checkpoint results:
 {endif}
 ```
 
-### PR Posting (if `--pr`)
+### PR Posting (default when PR detected)
 
-Ask user to confirm, then:
+When PR mode is active, post results to the PR. Ask user to confirm, then:
 
 1. **Upload media to draft release** (private repos — `raw.githubusercontent.com` returns 403):
    ```bash
