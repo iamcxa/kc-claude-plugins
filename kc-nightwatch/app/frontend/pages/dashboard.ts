@@ -123,7 +123,6 @@ export function Dashboard({ healthData }: DashboardProps = {}) {
         isOpen=${showDialog}
         onClose=${() => setShowDialog(false)}
         onStart=${handleTrigger}
-        isDisabled=${hasActiveRun}
       />
     </div>
   `
