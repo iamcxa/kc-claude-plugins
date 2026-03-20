@@ -2,22 +2,56 @@
 
 End-to-end guide for producing E2E test evidence and posting it to a PR as a structured comment with screenshots, video, and health data.
 
+## PR Mode is Default
+
+As of v2.4.0, **PR mode is enabled by default** for `/e2e-flow`. When you're on a branch with an open PR, the skill automatically:
+
+1. Detects the PR via `gh pr view`
+2. Commits the verified flow YAML
+3. Posts results as a PR comment
+
+Use `--no-pr` to opt out. If no PR exists on the current branch, PR mode is silently skipped.
+
+```mermaid
+flowchart LR
+    A["/e2e-flow"] --> B{"PR on branch?"}
+    B -->|Yes| C["Generate → Verify → Commit flow → Post to PR"]
+    B -->|No| D["Generate → Verify → Done"]
+    B -->|"--no-pr"| D
+```
+
 ## Quick Reference
 
-```
+```bash
+# Feature — flow from plan (PR mode automatic)
+/e2e-flow --from <plan-or-spec> --issue DRC-2779
+
 # Bug fix — walkthrough + test + PR comment
 /e2e-walkthrough --pr 940
 /e2e-test <generated-flow> --pr 940 --video
 
-# Feature — with issue context
-/e2e-flow --from <plan-or-spec> --pr 940 --issue DRC-2779
-/e2e-test <flow> --pr 940
-
 # Existing flow — replay with evidence
 /e2e-test login-flow --pr 940
+
+# Opt out of PR mode
+/e2e-flow --from <plan> --no-pr
 ```
 
 ## Full Workflow: Map to PR Comment
+
+```mermaid
+flowchart TD
+    M["/e2e-map<br/>Map UI elements"] --> F["/e2e-flow --from plan<br/>Generate flow YAML"]
+    F --> W["flow-writer agent<br/>Codebase analysis → YAML"]
+    W --> V["flow-verifier agent<br/>Browser verify + auto-repair"]
+    V --> T["trace-analyzer agent<br/>API failures + console errors"]
+    T --> MP["media-processor agent<br/>GIF + MP4 + thumbnail"]
+    MP --> C{"PR on branch?"}
+    C -->|Yes| GC["git commit flow YAML"]
+    GC --> DR["Upload media → draft release"]
+    DR --> PR["gh pr comment → PR"]
+    C -->|No| Done["Present results locally"]
+```
 
 ### Step 1 — Map the UI (one-time setup)
 
@@ -129,13 +163,13 @@ Video file: .claude/e2e/reports/20260318-143000/test-run.mp4
 | Key Findings | -- | yes | -- |
 | Health | 3 rows | 5 rows | 3 rows |
 
-## The `--pr` Flag Across Skills
+## PR Mode Across Skills
 
-| Skill | `--pr N` behavior |
-|-------|-------------------|
-| `/e2e-test` | Auto-enables video. Posts `pr-summary.md` as PR comment after execution. |
-| `/e2e-walkthrough` | Reads PR diff to propose walkthrough path. Posts results as PR comment. |
-| `/e2e-flow` | Reads PR diff for context. Posts verification results as PR comment. |
+| Skill | PR behavior | Opt-in/out |
+|-------|------------|------------|
+| `/e2e-flow` | **Default ON** — auto-detects PR, commits flow, posts results | `--no-pr` to disable |
+| `/e2e-test` | Opt-in — auto-enables video, posts `pr-summary.md` | `--pr N` to enable |
+| `/e2e-walkthrough` | Opt-in — reads PR diff, posts results | `--pr N` to enable |
 
 All three use the same draft release + `gh pr comment` mechanism for posting.
 

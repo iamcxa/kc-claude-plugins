@@ -27,6 +27,7 @@
 | `/e2e-flow --smoke` | Generate visit-all-pages smoke flow from mapping |
 | `/e2e-flow --verify-only <flow>` | Verify an existing flow in browser with auto-repair |
 | `/e2e-flow --no-verify` | Generate flow only, skip browser verification |
+| `/e2e-flow --no-pr` | Skip PR auto-detection, commit, and PR comment posting |
 | `/e2e-flow --issue DRC-2779` | Include issue context in report header |
 | `/e2e-compile <flow>` | Compile one flow YAML to a standalone bash script |
 | `/e2e-compile --all` | Compile all flows in the flows directory |
