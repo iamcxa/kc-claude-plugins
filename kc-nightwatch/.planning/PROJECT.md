@@ -72,14 +72,14 @@ Validated in Phase 1-4 (2026-03-18 to 2026-03-19):
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Server + Worker (2 processes) | UI stays responsive regardless of execution load; worker can crash without losing dashboard | — Pending |
-| Preact + HTM over vanilla TS | Need component model + hooks for chat/forms; HTM avoids build step | — Pending |
-| Per-target NW journal isolation | Prevent cross-target memory leakage; each target has its own learning context | — Pending |
-| Feedback loop as highest priority | It's the engine of the flywheel — without it, other features are "do once and stop" | — Pending |
-| Field renaming with compat layer | Better naming (monitors/watch/respond) without breaking existing skills | — Pending |
-| `--input-format stream-json` for chat | Bidirectional streaming via CLI; API fallback if unreliable | — Pending |
-| Indicator measurement in Phase 0.5 | Data-backed self-assessment instead of qualitative LLM guessing | — Pending |
-| Proposal → Implementation pipeline | Closes the flywheel: accepted proposals get implemented, outcomes tracked | — Pending |
+| Server + Worker (2 processes) | UI stays responsive regardless of execution load; worker can crash without losing dashboard | ✓ Good — worker crashes don't affect dashboard |
+| Preact + HTM over vanilla TS | Need component model + hooks for chat/forms; HTM avoids build step | ✓ Good — 8.8K LOC, zero build tooling |
+| Per-target NW journal isolation | Prevent cross-target memory leakage; each target has its own learning context | ✓ Good — clean per-target memory |
+| Feedback loop as highest priority | It's the engine of the flywheel — without it, other features are "do once and stop" | ✓ Good — calibration working |
+| Field renaming with compat layer | Better naming (monitors/watch/respond) without breaking existing skills | ✓ Good — zero migration needed |
+| `--input-format stream-json` for chat | Bidirectional streaming via CLI; API fallback if unreliable | ⚠️ Revisit — dropped CLI path, Anthropic SDK is sole backend |
+| Indicator measurement in Phase 0.5 | Data-backed self-assessment instead of qualitative LLM guessing | ✓ Good — baselines with quantified values |
+| Proposal → Implementation pipeline | Closes the flywheel: accepted proposals get implemented, outcomes tracked | — Deferred to v2 |
 
 ---
-*Last updated: 2026-03-19 after Phase 4 completion — all v1 milestone phases complete*
+*Last updated: 2026-03-20 after v1.0 milestone completion*
