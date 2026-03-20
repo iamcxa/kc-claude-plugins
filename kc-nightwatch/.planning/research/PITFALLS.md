@@ -1,152 +1,223 @@
 # Pitfalls Research
 
-**Domain:** Bun server + worker IPC + CLI child process spawning + SSE/WebSocket streaming + Preact/HTM SPA + always-on local service
-**Researched:** 2026-03-18
-**Confidence:** HIGH (most claims verified via official GitHub issues or Hono/Bun docs)
+**Domain:** Adding toast/notification/polling/backward-compat features to existing Bun + Hono + Preact/HTM no-bundler dashboard
+**Researched:** 2026-03-20
+**Confidence:** HIGH (based on direct codebase inspection + known project-specific pitfalls)
+
+> Note: This file covers v1.1 Dashboard UX Polish pitfalls. For v1.0 infrastructure pitfalls (Claude CLI hang, socket cleanup, SSE memory leaks, IPC heartbeat, YAML concurrent writes), see the original research at commit history.
 
 ---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Claude CLI hangs after emitting result event — processes accumulate silently
+### Pitfall 1: Toast component imported into app.ts as side effect — triggers before Preact renders
 
 **What goes wrong:**
-`claude -p --output-format stream-json` completes its task and emits `{"type":"result",...}` but the process never exits cleanly. The parent worker's `for await` loop never receives an end-of-stream signal, so the run stays `running` forever. If the interval scheduler fires again before the hung process is detected, a second run is attempted and queued. Over hours, zombie `claude` processes accumulate and consume memory.
+A toast manager created at module scope in a new `toast.ts` file (e.g., `const toastQueue = signal([])`) gets evaluated when `app.ts` imports it. If the DOM `#app` div is not yet mounted or `render()` has not been called, the first toast that fires during app boot (e.g., on startup error) targets a non-existent element. In Preact/HTM without a bundler, module-level code executes immediately on import — there is no deferred initialization pass.
 
 **Why it happens:**
-This is a confirmed Claude Code CLI bug (GitHub issues #25629 and #21099, reported February 2026). The trigger is active MCP server connections keeping the process alive after the result event is written. Claude does not call `process.exit()` cleanly when MCP servers are connected. The process keeps stdout open, so the consuming `AsyncIterable` waits forever for stream close.
+No-bundler setups rely on browser ES module evaluation order. `app.ts` is the entry point and calls `render()` at its last line. Any module imported by `app.ts` runs its top-level code before `render()` is called. A toast component that tries to attach a portal to `document.body` at module scope finds the DOM in a partially initialized state.
 
 **How to avoid:**
-- After receiving a `{"type":"result"}` line from the stdout stream, do NOT wait for stream close. Immediately record result, then schedule a hard kill: `setTimeout(() => child.kill('SIGKILL'), 10_000)`.
-- This is not optional — it is a required workaround for a known unfixed CLI bug.
-- Track every child PID in a set. On worker shutdown, kill all tracked PIDs.
+- Do NOT create toast DOM elements at module scope. Render the `<ToastContainer />` component inside the `App()` function's return value — it lives in the Preact tree alongside everything else.
+- Use a Preact signal (`signal<Toast[]>([])`) as the toast queue. The signal lives at module scope (fine — it holds data, not DOM), but the component rendering it is tree-mounted.
+- Expose a `showToast(msg, type)` function that mutates the signal. Callers import this function; they never touch the DOM directly.
+- The `<ToastContainer />` component reads the signal and renders positioned toasts using `position:fixed` inline styles (no CSS classes needed — matches existing project style).
 
 **Warning signs:**
-- Run shows `status: running` for longer than `safety.yaml max_runtime_minutes`
-- `ps aux | grep claude` shows N processes older than expected
-- Worker's IPC message rate drops to zero but no `run:completed` arrives
+- Browser console shows "Cannot read properties of null (reading 'appendChild')" on page load
+- Toast appears for a fraction of a second then disappears — signal updated before component mounts, then Preact re-renders correctly but initial paint is missed
+- Toast container renders twice (once from side effect, once from Preact tree)
 
-**Phase to address:** Phase 1 (Worker core — executor.ts). Must be in the initial spawn implementation, not added later.
+**Phase to address:** Phase 1 (Toast infrastructure). Establish the signal + component pattern before wiring any callers.
 
 ---
 
-### Pitfall 2: Unix socket file survives crash — server refuses to start on restart
+### Pitfall 2: Browser Notification permission requested before user gesture — request silently denied
 
 **What goes wrong:**
-Server creates `nightwatch.sock` on startup. If the server crashes (OOM, SIGKILL from mprocs restart, uncaught exception), the socket file is left on disk. On the next start, `net.createServer().listen(socketPath)` throws `EADDRINUSE`, and the server fails to start entirely. Since mprocs restarts the server process on crash, this creates a permanent restart loop.
+`Notification.requestPermission()` is called inside a `useEffect` in the App component (e.g., on mount) rather than in response to a direct user click. Modern browsers (Chrome 84+, Firefox 72+, Safari 16.4+) silently deny permission requests not tied to a user activation event. The promise resolves with `"denied"` immediately. When the run completes and `new Notification(...)` is called, nothing appears. The user never knew a permission was needed.
 
 **Why it happens:**
-Unix domain socket files are filesystem artifacts that are only cleaned up if the owning process calls `server.close()` explicitly or if the OS-level API unlinks them. A crash skips cleanup. Node.js's `net.createServer()` does NOT auto-unlink stale socket files on EADDRINUSE — the caller must handle this.
+Browser vendor documentation is clear on this requirement, but it is easy to miss when prototyping. The dashboard auto-loads and it feels natural to request permission immediately. The API does not throw — it just returns `"denied"` — so there is no error to catch and the code appears to work in the browser console.
 
 **How to avoid:**
-On server startup, before calling `server.listen()`:
-```typescript
-try {
-  await fs.unlink(socketPath)
-} catch (e) {
-  // ENOENT = file didn't exist, that's fine
-  if ((e as NodeJS.ErrnoException).code !== 'ENOENT') throw e
-}
-```
-Then register `process.on('SIGINT', cleanup)` and `process.on('SIGTERM', cleanup)` to unlink on graceful shutdown.
+- Request notification permission only inside an `onClick` handler — specifically, wire it to the "Enable notifications" button in the TriggerDialog or to a dedicated "Enable run notifications" button in the top bar.
+- Check `Notification.permission` state on mount. If `"default"`, show a subtle prompt badge. If `"granted"`, show the run-complete notification directly. If `"denied"`, do not show any UI for it — the user declined.
+- Do not treat `"denied"` as an error; fall back to the in-app toast silently.
+- Permission state persists across page loads — only request once per browser origin.
 
 **Warning signs:**
-- Server process exits with `EADDRINUSE` immediately after crash + restart
-- mprocs shows rapid restart loop (restart count climbing every few seconds)
-- Log shows no HTTP requests processed before exit
+- `Notification.permission` reads as `"denied"` immediately after `requestPermission()` is called from `useEffect`
+- No permission dialog ever appears in the browser
+- Works in dev but not in production (different interaction pattern)
 
-**Phase to address:** Phase 1 (Server entry point `server/index.ts`). Socket lifecycle must be established before any feature work starts.
+**Phase to address:** Phase 2 (Browser notifications). Must be wired to a user gesture from day one.
 
 ---
 
-### Pitfall 3: Worker disconnect not detected — server queues runs into the void
+### Pitfall 3: Polling interval leaks when Runs page unmounts — multiple intervals accumulate
 
 **What goes wrong:**
-Server sends `{ type: 'enqueue', run }` to the worker via the Unix socket. Worker has crashed and the socket connection is broken, but the server's IPC write succeeds silently (the write buffer accepts the bytes). The run is recorded as `queued` in the UI. It never becomes `running`. No error is surfaced. If the interval scheduler fires every 2 hours, the queue grows indefinitely.
+The `Runs` component calls `setInterval` to poll `/api/runs` every 5 seconds. When the user navigates to Dashboard and back (hash change causes Preact to unmount/remount `<Runs />`), a new interval is started without the previous one being cleared. After navigating back and forth 5 times, 5 intervals fire in parallel, each updating state 5× per second. The UI flickers and the server receives 5× the expected load.
 
 **Why it happens:**
-TCP/Unix socket writes buffer data even after the remote end disconnects. The disconnect is only detected on the next read, or when the write exceeds the buffer limit and the kernel sends EPIPE. Since the server mostly writes to the worker (not reads), a dead worker can go unnoticed for the duration of the run timeout.
+This has already happened once in this project — the Dashboard component's polling logic (dashboard.ts:54–60) handles this correctly by using a `pollTimerRef` and checking `if (active && !pollTimerRef.current)`. But the Runs page currently has no polling at all. Adding polling by copy-pasting the pattern from the Dashboard is easy to do incorrectly if the cleanup `useEffect` is forgotten.
 
 **How to avoid:**
-- Implement a heartbeat: every 30 seconds, worker sends `{ type: 'heartbeat' }`, server tracks `lastHeartbeatAt`.
-- If `lastHeartbeatAt` is older than 60 seconds, mark worker as offline. Reject new enqueue requests with a visible error. Mark any in-flight run as `failed`.
-- Worker reconnect loop must re-request current state on reconnect: `{ type: 'status' }` so both sides re-sync.
+- Pattern to follow: always pair `setInterval` with a matching `useEffect` cleanup that calls `clearInterval`. `pollTimerRef.current` guards against double-registration. Dashboard's `loadRuns()` + `pollTimerRef` pattern (dashboard.ts:21, 54–70) is the right model — copy it exactly.
+- Verify: open Runs page, navigate away, navigate back. Open browser DevTools Network tab. Only one `/api/runs` request per 5-second window should appear.
+- Do not start polling unconditionally on mount — only start if there are active runs. Stop polling when all runs are terminal.
 
 **Warning signs:**
-- Run stays `queued` past 2× expected queue wait time
-- Dashboard shows worker status as unknown
-- No `run:started` IPC message arrives after enqueue
+- Network tab shows 2× or 3× `/api/runs` requests per poll interval
+- CPU % in Activity Monitor climbs on the Runs page over time
+- React/Preact DevTools shows unusually frequent re-renders of the run list
 
-**Phase to address:** Phase 1 (IPC transport `server/ipc.ts`). Add heartbeat in the same phase as the basic IPC implementation.
+**Phase to address:** Phase 3 (Runs page auto-refresh). Implement cleanup-first before adding the interval.
 
 ---
 
-### Pitfall 4: Hono SSE disconnect not detected in Bun — log stream leaks memory
+### Pitfall 4: `queued_at` field added to Run type but existing YAML entries silently read as undefined
 
 **What goes wrong:**
-Browser closes the run detail page (or navigates away) while a run is streaming. The SSE connection is dropped from the client side. Hono's `streamSSE` does not reliably fire `stream.onAbort()` in the Bun runtime (this was a confirmed bug, fixed in Hono PR #3042, but version pinning may mean deploying an affected version). Even when fixed, if the server holds a reference to the stream object in a `Set<StreamWriter>` for fan-out, the reference is never removed. The set grows without bound across many page views.
+`Run` interface gains a new optional `queued_at?: string` field. Existing entries in `~/.claude/kc-plugins-config/nightwatch-runs.yaml` do not have this field. When the UI tries to display `queued_at`, it renders `—` (correct, since `timeAgo(undefined)` returns `—`). However, the sort logic in `run-store.ts` (line 16: sort by `started_at`) remains untouched. If the new queue display panel sorts by `queued_at` and falls back to sorting missing entries last, the "queued" run at the top of the visible queue will appear to be a run that was queued a moment ago, while older runs (without `queued_at`) will sort to the bottom — correct behavior but only by accident, not by design.
 
 **Why it happens:**
-Two compounding issues: (1) `stream.onAbort()` was a Bun-specific bug (abort events not propagated), and (2) fan-out subscriber sets require explicit removal on disconnect. Neither is handled automatically. Also: AbortSignal-based cleanup holds references to large data structures if the listener captures the log buffer.
+TypeScript marks optional fields as `field?: type`, so `undefined` is a valid value for all existing callers. The bug is invisible at compile time. The issue is that display logic assumes the field exists on new runs but not old ones, and sorting/display must explicitly handle the `undefined` case as "unknown / legacy run".
 
 **How to avoid:**
-- Use `c.req.raw.signal.addEventListener('abort', () => subscribers.delete(streamRef))` as the disconnect hook — prefer `raw.signal` over `stream.onAbort()` for Bun reliability.
-- Keep the subscriber map keyed by `run_id` and clean up entries when the run completes and all subscribers are gone.
-- Cap the log buffer per run at N lines in memory (e.g., 500 lines); reads beyond that come from the `.jsonl` file on disk.
-- Verify with Hono version ≥ the PR #3042 merge (check changelog for "call stream.abort() explicitly when request is aborted").
+- `queued_at` must be added to `appendRun()` in `run-store.ts` as a required field for new runs: set it to `new Date().toISOString()` at the moment `enqueue` is sent to the worker.
+- For display: `queued_at ?? started_at` is the right fallback — "when did we first know about this run?" Use this composite for the queue display.
+- Do NOT migrate existing YAML entries. Old runs without `queued_at` should show `—` in the trigger time column — that is accurate.
+- Add a TypeScript type guard: `run.queued_at ? formatTime(run.queued_at) : '—'` to make the undefined case explicit at every display site.
 
 **Warning signs:**
-- Server heap grows steadily over days with no reduction
-- `process.memoryUsage().heapUsed` climbs on each page view of the runs detail
-- Bun memory debugger shows large numbers of dead `ReadableStreamDefaultController` instances
+- TypeScript compiles cleanly but runtime shows `undefined` in queue display
+- Sort order looks wrong when mixing old and new runs
+- Queue display shows `NaN` or `Invalid Date` instead of `—` (indicates `new Date(undefined)` was called)
 
-**Phase to address:** Phase 1 (SSE route `server/routes/stream.ts`). Build with abort cleanup from the start; retrofitting is error-prone.
+**Phase to address:** Phase 1 (Run type + store). Add `queued_at` to the `appendRun` call at the same time as the type definition.
 
 ---
 
-### Pitfall 5: Orphaned `safehouse → claude -p` chain when worker process is killed
+### Pitfall 5: Removing `chat-drawer.ts` breaks nothing in TypeScript but the import still exists in a dead-code path
 
 **What goes wrong:**
-Worker spawns: `bun → safehouse → claude`. When the mprocs restart policy kills the worker process (SIGTERM), `safehouse` and `claude -p` are in a different process group and do not receive the signal. They continue running, potentially for the full `max_runtime_minutes`. With 2-hour intervals and 30-minute max runtimes, this means up to 30 minutes of an unaccounted run consuming resources, and the next run attempt finds concurrency limit already "used" (it's not — the old run is just orphaned).
+`chat-drawer.ts` is a full component (256 lines). It is not imported by `app.ts` or any page. However, if it was at any point imported as a conditional import (e.g., an old draft of `dashboard.ts` had `import { ChatDrawer }...`), TypeScript's module resolution will still flag it as "referenced" in the project graph even if the import statement was removed. The risk is the reverse: a future developer adding `ChatDrawer` back via autocomplete gets the old broken version instead of the current `ChatPanel`. The file must be deleted, not just disconnected.
 
 **Why it happens:**
-`Bun.spawn()` does not transfer signal delivery to grandchild processes. `safehouse` itself may set up its own process group (macOS `sandbox-exec` spawns a child). Neither `safehouse` nor `claude` receives SIGTERM when the worker's parent is killed.
+Files left in the codebase act as noise. Autocomplete systems (including Claude Code's own context loading) will surface dead files in suggestions. In a no-bundler project, dead files are not tree-shaken. They add to the cognitive load of anyone reading the `components/` directory.
 
 **How to avoid:**
-- Store `safehouse`'s PID in a file `app/runs/{id}/worker.pid` immediately after spawn.
-- On server startup, scan `app/runs/*/worker.pid` for any PIDs from runs that were `running` at last shutdown. Send `SIGTERM` to each. Wait 5 seconds. Send `SIGKILL`.
-- During graceful worker shutdown: `child.kill('SIGTERM')` → wait 3s → `child.kill('SIGKILL')`.
-- Do NOT use `detached: true` when spawning `safehouse` — that would make orphaning intentional.
+- Before removing `chat-drawer.ts`: verify it is not imported anywhere with a grep. The check: `grep -r "chat-drawer" app/` should return zero results.
+- Delete the file with `git rm` so the deletion is tracked. Do not just empty the file.
+- Same for any other dead component files found during cleanup (`add-target-wizard.ts` uses state logic that may or may not still be live — verify before touching).
+- After deletion: run `bun typecheck` to confirm no remaining imports break.
 
 **Warning signs:**
-- `ps aux | grep safehouse` shows processes with start times predating current server uptime
-- Run history shows runs stuck at `status: running` across server restarts
-- `app/runs/` directory has PID files with no corresponding live process
+- `bun typecheck` passes after removing an import but the file still exists — file is now orphaned
+- `grep -r "ChatDrawer" app/` still returns hits in component files after the "cleanup"
+- Browser DevTools Network tab shows the old file being fetched (if it was referenced in a dynamic import somewhere)
 
-**Phase to address:** Phase 1 (executor.ts). PID tracking and orphan cleanup on startup is load-bearing infrastructure.
+**Phase to address:** Phase 4 (Stale UI cleanup). Always grep before delete, delete via `git rm`, typecheck after.
 
 ---
 
-### Pitfall 6: `--input-format stream-json` for NW-Claude chat is unreliable for long-lived sessions
+### Pitfall 6: Toast renders inside a `position:fixed` z-index below the TriggerDialog overlay
 
 **What goes wrong:**
-The design uses `claude --input-format stream-json --output-format stream-json` for the NW-Claude chat panel — a long-lived, bidirectional session. In practice, this mode has documented instability: stdin freezes where keystrokes stop being processed but the process stays alive (mentioned in search results), hangs after result event (Pitfall 1 above), and potential empty-output bugs with large inputs (>7000 characters). A chat session that silently stops responding appears broken to the user but leaves a zombie process running.
+The TriggerDialog uses `z-index:100` (trigger-dialog.ts:47). The ChatDrawer uses `z-index:200`. If the ToastContainer is rendered with `z-index:50` (a common default), toasts triggered while the TriggerDialog is open will appear behind the dialog overlay and be invisible to the user. This is especially bad for the "run triggered" toast which fires when the user clicks "Start Run" in the dialog — exactly the moment the dialog is still visible.
 
 **Why it happens:**
-The `--input-format stream-json` feature is relatively new and primarily designed for batch chaining, not interactive sessions. Long-lived sessions stress-test buffer management between stdin/stdout pipes. The design spec (Appendix D) explicitly notes the fallback: "If `--input-format stream-json` proves unreliable for long-lived sessions, fallback to the Anthropic API directly."
+The existing project has established z-index layers but they are not documented centrally. `z-index:100` (TriggerDialog), `z-index:200` (ChatDrawer), and `z-index:10` (TargetDetail dropdown menu) are scattered across files. Adding a toast container at any z-index below 100 creates the invisible-toast bug.
 
 **How to avoid:**
-- Implement the API fallback (`@anthropic-ai/sdk`) in the same phase as the CLI approach. Do not defer it.
-- Add a health check: if no message has been written or received on the chat session within 2 minutes, emit a no-op ping or restart the session.
-- Cap chat session lifetime at N messages or N minutes. Offer "Reset conversation" button.
-- Use the fallback API path as the primary in MVP; switch to CLI path only when confirmed stable.
+- Toast container must use `z-index:300` — above all existing overlays.
+- `index.html` has no CSS custom property for z-index layers. Add them as CSS variables:
+  ```
+  --z-dropdown: 10;
+  --z-dialog: 100;
+  --z-drawer: 200;
+  --z-toast: 300;
+  ```
+- Use these variables in all overlay components, not literal numbers.
+- Test by triggering a toast while the TriggerDialog is open.
 
 **Warning signs:**
-- Browser sends a chat message but no response arrives within 30 seconds
-- `process.list()` shows a `claude` process with zero stdout bytes written in last 60 seconds
-- User reports chat "frozen" without any server error logged
+- Toast fires (visible in browser DevTools: element exists in DOM) but user cannot see it
+- Toast becomes visible only after closing the dialog
+- `getComputedStyle(toastContainer).zIndex` reads lower than 100
 
-**Phase to address:** Phase 2 (Chat implementation). Start with API fallback as default; CLI path is the optimization, not the baseline.
+**Phase to address:** Phase 1 (Toast infrastructure). Z-index layer must be set correctly before any testing.
+
+---
+
+### Pitfall 7: Browser Notification `onclick` navigates to a URL but the dashboard is not focused — notification fires silently
+
+**What goes wrong:**
+`new Notification("Run completed", { body: "..." })` is created. `notification.onclick` sets `window.focus()` and `location.hash = '#/runs/' + runId`. When the dashboard is in a background tab and the user is in another app (not another tab), `window.focus()` has no effect — browsers block cross-app focus for security reasons. The notification appears in the OS notification center, but clicking it does nothing because the tab never comes to front.
+
+**Why it happens:**
+`window.focus()` works in some browsers when clicking a notification that is from a same-session foreground tab, but is blocked for background sessions in macOS and most browser/OS combinations. The expected pattern is to use the `clients.openWindow()` API in a Service Worker, but that requires registering a Service Worker — which this no-bundler project does not have and should not add.
+
+**How to avoid:**
+- Accept the limitation: set `notification.onclick` to `window.focus()` and `location.hash = '#/runs/' + runId`. In the browser-tab scenario this works. In the cross-app scenario the user must manually switch to the tab.
+- Do not add a Service Worker for this feature. The complexity is not justified for a local dashboard.
+- The notification body should contain enough context (target name, status, duration) so the user can understand the result without needing to click through.
+- This is a known acceptable limitation — document it in the feature implementation.
+
+**Warning signs:**
+- Clicking a notification in macOS Notification Center does nothing
+- No errors appear in console (the failure is silent — the browser blocks focus)
+- Works when the tab is already in foreground but not when the tab is backgrounded and user is in a different app
+
+**Phase to address:** Phase 2 (Browser notifications). Accept the limitation; do not gold-plate.
+
+---
+
+### Pitfall 8: Polling on Runs page polls ALL runs but only needs to re-fetch when runs are active
+
+**What goes wrong:**
+The Runs page loads `api.getRuns()` and shows a list. Adding polling that calls `api.getRuns()` every 5 seconds is wasteful when no runs are active. The `/api/runs` endpoint reads `nightwatch-runs.yaml` on each call. At idle (no active runs), this is 12 file reads per minute for information that does not change. The Dashboard already implements conditional polling (only when `hasActiveRun` is true) — the Runs page must do the same.
+
+**Why it happens:**
+Simpler to start polling unconditionally. The cost is not obvious until you look at the YAML read frequency.
+
+**How to avoid:**
+- Same pattern as Dashboard: only poll while `runs.some(r => r.status === 'running' || r.status === 'queued')`.
+- When a poll returns with all terminal statuses, clear the interval.
+- On initial load (before first fetch), do not start polling — fetch once, then decide.
+- The global SSE (`/api/events`) already emits `run:completed` events. Consider subscribing to it on the Runs page to trigger a re-fetch on completion rather than polling blindly. This eliminates polling entirely for the runs-list-refresh case.
+
+**Warning signs:**
+- `app/server/routes/api.ts` logs show a high `/api/runs` call rate even when no runs are active
+- Adding `console.time/timeEnd` around YAML reads shows 200ms+ latency spikes every 5 seconds
+
+**Phase to address:** Phase 3 (Runs page auto-refresh). Use the existing global SSE or conditional polling — not unconditional polling.
+
+---
+
+### Pitfall 9: Removing disabled Edit/Chat buttons without verifying the menu click handler logic
+
+**What goes wrong:**
+`target-detail.ts` has two `aria-disabled="true"` buttons for Edit and Chat (lines 83–93) in the dropdown menu. The cleanup task removes them. However, the dropdown `<div>` uses `onMouseLeave=${() => setShowMenu(false)}` to close. If any remaining code in the menu's click handler references a now-deleted variable or import (e.g., if a future edit touched the dropdown and added a reference), removing the buttons leaves the handler in an inconsistent state.
+
+**Why it happens:**
+The buttons are visually disabled but their surrounding container has live event handlers. Copy-pasting the removal without reading the full container context misses live code above and below the removed section.
+
+**How to avoid:**
+- When removing code inside a conditional block, read the entire parent container first — not just the targeted lines.
+- After removal: check that no remaining event handler references a now-deleted variable.
+- Run `bun typecheck` to catch any dangling references.
+- Do a visual inspection of the rendered dropdown after removal to confirm the remaining items (Run, Dry run, separator, Remove target) all still work.
+
+**Warning signs:**
+- `bun typecheck` error after removal: "cannot find name X"
+- Dropdown menu closes immediately on hover or does not open after edit
+- `console.error` in browser shows "undefined is not a function" on dropdown interaction
+
+**Phase to address:** Phase 4 (Stale UI cleanup). Read the full container before removing pieces.
 
 ---
 
@@ -154,11 +225,11 @@ The `--input-format stream-json` feature is relatively new and primarily designe
 
 | Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
 |----------|-------------------|----------------|-----------------|
-| Write YAML files without file locking | Simpler code | Run completion + feedback submission race → corrupted `nightwatch-runs.yaml` (both processes append to the file at the same time) | Never — runs complete while user submits feedback in parallel |
-| Use `JSON.stringify` to serialize run logs in memory instead of streaming to disk | Simpler in-memory fan-out | Holding 30-minute run logs in RAM crashes on memory-constrained systems | Never for production; only in unit tests with mock data |
-| Reuse the same `claude` process for all NW-Claude chat contexts (no per-target isolation) | Single process, simpler lifecycle | Cross-target context leakage: NW-Claude mixes e2e-pipeline and carlove memories | Never — isolation is a named design requirement |
-| Skip MCP transport version negotiation and hardcode SSE | Faster first implementation | MCP clients using Streamable HTTP (current spec since March 2025) cannot connect | MVP acceptable if only claude sessions with matching client version are used; must fix before open-source release |
-| Trust `nightwatch-runs.yaml` for all run state instead of writing a separate in-memory state | One source of truth | YAML read is slow for frequent status polling during active runs; SSE push becomes a YAML parse bottleneck | Accept for MVP; add in-memory run state cache in Phase 3 if polling becomes an issue |
+| Toast with `setTimeout` auto-dismiss at hardcoded 3000ms | Simpler — no configuration | Cannot dismiss urgent errors (failed trigger) manually; 3s may be too fast for non-technical messages | Acceptable for success toasts; errors should require manual dismiss |
+| Store toast queue in a plain `useState` array at App level | No extra dependency | Toast state is prop-drilled to every component that might need to show a toast | Never — use a module-level signal so any module can call `showToast()` without prop threading |
+| Poll `/api/runs` every 5s unconditionally | Always shows current state | 12 YAML reads/minute at idle; multiply by tabs open | Never — always gate polling on active-run check |
+| Skip `queued_at` on scheduler-triggered runs (only add for manual) | Less diff | Queue display shows `—` for scheduled runs even though they were freshly queued | Never — all run enqueue paths must set `queued_at` |
+| Use `window.addEventListener('focus', reload)` instead of polling | Event-driven; no interval | Does not refresh while tab is already focused (active run updates invisible until blur+focus) | Complement to polling, not replacement |
 
 ---
 
@@ -166,12 +237,11 @@ The `--input-format stream-json` feature is relatively new and primarily designe
 
 | Integration | Common Mistake | Correct Approach |
 |-------------|----------------|------------------|
-| `agent-safehouse` | Passing tilde (`~`) in path arguments — safehouse does not expand shell tildes | Resolve all paths to absolute before building flags: `path.resolve(os.homedir(), 'relative/path')`. Design spec (Appendix E) already notes this, but it's easy to miss in implementation |
-| `agent-safehouse` | Granting `--add-dirs` to a path that doesn't exist yet (e.g., `app/runs/{id}/` before the run starts) | Create the directory before spawning safehouse. Safehouse fails silently on nonexistent allowed dirs |
-| `claude -p` MCP config | Passing `--mcp-config` with a path to a file that doesn't exist | Create default MCP config files (nw-journal, nw-mcp) during app bootstrap, not on first run |
-| Hono + MCP server | Following TypeScript SDK docs written for Express — headers added after response is sent cause silent failures | Use `@hono/mcp` package (JSR: `@hono/mcp`) with `StreamableHTTPTransport`. Support both Streamable HTTP and legacy SSE transport for client compatibility |
-| `nightwatch-feedback.yaml` concurrent writes | Multiple feedback submissions (dashboard + MCP in parallel) both append to the same YAML file | Serialize YAML writes through a queue or file lock. Use a simple in-memory async mutex per file path |
-| Preact/HTM in browser without import maps | Bare specifier `import { html } from 'htm/preact'` fails in the browser — no module resolution | Configure `<script type="importmap">` in `index.html` or use CDN-hosted ESM URLs. Bun's server can serve from `node_modules/.bun/...` in dev mode |
+| Preact signals in no-bundler setup | Importing `@preact/signals` but not adding it to the importmap in `index.html` | The importmap already includes `"@preact/signals": "/vendor/signals.module.js"`. Signals work. BUT: importing signals in a file that also does `html` tagged template calls causes silent issues if HTM's Preact reference diverges from the signals' Preact reference — they must resolve to the same module object |
+| Browser Notification API | Calling `Notification.requestPermission()` as a Promise on older Safari (< 15) | Use the callback form: `Notification.requestPermission(status => ...)` as the safe fallback. Modern Safari supports Promise form. Since this dashboard is local/single-user, targeting modern browsers is fine — but if Safari is in scope, test explicitly |
+| Global SSE `/api/events` reconnect | `EventSource` auto-reconnects after server restart. On reconnect, the `open` event fires again. If the handler assumes `open` = first connection and resets state, a server restart will clear in-flight run state in the UI | Check `es.readyState` before resetting: only reset state on the first open (track with a `let connected = false` flag, as already done in `chat-drawer.ts:41`) |
+| `Bun.file().text()` stale handle | Reading `nightwatch-runs.yaml` via a stored `Bun.file(path)` handle after a write to the same path | Always create a new `Bun.file(path)` handle for each read. This is already done correctly in `yaml-store.ts:35`. Do not cache the `BunFile` object — only cache the parsed result |
+| `setInterval` timer ID type in TypeScript | `ReturnType<typeof setInterval>` in Node vs browser returns different types. Bun's `setInterval` returns a `Timer` type, not `number` | The project already uses `useRef<ReturnType<typeof setInterval> | null>` (dashboard.ts:21) — match this pattern exactly |
 
 ---
 
@@ -179,10 +249,10 @@ The `--input-format stream-json` feature is relatively new and primarily designe
 
 | Trap | Symptoms | Prevention | When It Breaks |
 |------|----------|------------|----------------|
-| SSE fan-out via polling: reading `log.jsonl` on each SSE tick | CPU spike during active runs as many browser tabs each poll the same file | Keep the authoritative live log in memory (a `Map<runId, string[]>`) during run execution. SSE writes from memory, not disk. Persist to disk asynchronously | With 3+ browser tabs watching the same run |
-| YAML parse on every `/api/targets` request | 50–200ms latency on each dashboard load | Cache the parsed YAML in memory; invalidate only on write. `yaml-store.ts` should have an in-memory cache with TTL or write-invalidation | Noticeable immediately; dashboard polling at 30s makes it 3× reads per minute |
-| Bun child process stdout Buffer accumulation | Memory climbs linearly with run output volume | Do NOT buffer stdout in a `Buffer[]` array awaiting process exit. Parse line-by-line with `readline` or `Bun.lineIterator` and discard raw bytes after parsing | On long (30-min) runs generating verbose stream-json output |
-| Socket reconnect storm | Worker and server restart simultaneously (mprocs restart both), both try to connect before the server socket is ready | Worker reconnect uses exponential backoff: 1s, 2s, 4s, 8s, max 30s. No tight retry loops | On any simultaneous restart scenario |
+| Toast renders a new DOM node for each notification without a max-cap | Long-running dashboard accumulates 100+ toast nodes if run completions fire rapidly | Cap at 5 visible toasts; oldest auto-dismissed when cap exceeded | After ~20 runs in quick succession (e.g., dry-run testing) |
+| Polling interval survives page navigations (not cleaned up) | `api.getRuns()` called N× per poll period where N = number of times user navigated to Runs | Cleanup effect removes the interval; verified by checking Network tab after navigation | From the second navigation cycle onwards |
+| `timeAgo()` function called on every render without memoization | `timeAgo(run.started_at)` re-evaluated on every Preact re-render, including unrelated state changes | Since `timeAgo` is a pure function and runs list is short (<100), this is acceptable. If list grows, use `useMemo` | Not a concern at current scale (<100 runs) |
+| Global SSE connection (`/api/events`) held open for 1 hour with 60s keepalive ping | 60 pings/hour × always-open = constant low-level traffic even at idle | 60s keepalive is already in `stream.ts:31`. This is the correct tradeoff for a local always-on tool | Not a concern for localhost single-user use |
 
 ---
 
@@ -190,10 +260,8 @@ The `--input-format stream-json` feature is relatively new and primarily designe
 
 | Mistake | Risk | Prevention |
 |---------|------|------------|
-| Binding to `0.0.0.0` without `auth_token` | Any process on the machine (or network if port is exposed) can trigger runs, submit feedback, or read private run logs | Enforce in server startup: if `host == '0.0.0.0'` and `auth_token` is absent, refuse to start with a clear error message |
-| Passing `custom_prompt` from webhook body directly to `--append-system-prompt` without sanitization | Prompt injection via webhook: attacker controls the custom prompt sent to the claude process | Whitelist webhook callers by token. Truncate custom_prompt at 2000 characters. Log full custom_prompt to run artifact for audit |
-| Writing `runs/{id}/log.jsonl` with world-readable permissions | Run logs may contain API keys, file contents, or private journal text seen by claude during execution | Create `app/runs/` with mode `0700`. Each run directory inherits. Verify with `fs.mkdir(path, { mode: 0o700 })` |
-| MCP endpoint exposed without auth in "remote mode" | Any caller can invoke `nw_trigger_run` or `nw_implement_proposal`, causing unexpected code changes in target repositories | Auth check must be middleware-level in Hono, not per-route. A missing route-level check is a single point of failure. Use Hono middleware that applies to all `/mcp` and `/api` routes |
+| Showing notification body content that includes run `custom_prompt` verbatim | Custom prompt may contain sensitive instructions; visible in OS notification center | Only include `target`, `status`, and `duration` in notification body. Never include `custom_prompt` |
+| Storing notification permission state in `localStorage` and always granting silently | Bypasses browser permission model on re-load | Never store/replay permissions. Always check `Notification.permission` live; never cache the result |
 
 ---
 
@@ -201,22 +269,22 @@ The `--input-format stream-json` feature is relatively new and primarily designe
 
 | Pitfall | User Impact | Better Approach |
 |---------|-------------|-----------------|
-| Showing raw stream-json lines in the log view | User sees `{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"..."}]}}` — unreadable | `log-parser.ts` must extract human-readable text from stream-json. Only display parsed phase markers, tool calls, and text content. Raw JSONL is for disk storage only |
-| Auto-starting NW-Claude brief immediately after run completes, even if chat panel is not visible | Background claude process spawns unnecessarily; costs tokens; user sees stale "new brief" notification on next open | Defer NW-Claude brief spawn until user opens the chat panel (lazy init). Store run ID for briefing; load brief on panel open |
-| Config editor loses unsaved changes on navigation | User writes 10 minutes of YAML edits, clicks Dashboard tab, changes are gone | Either warn on navigation ("You have unsaved changes"), or persist draft to `localStorage` on each keystroke |
-| 4-step validation modal is blocking during 30-second semantic validation step | User clicks "Review Changes", sees spinner for 30 seconds with no progress — assumes it's broken | Show per-target validation progress inline: "Validating e2e-pipeline... ✓", "Validating carlove... ⟳" |
+| Toast that says "Run triggered" with no target name | Ambiguous when running multiple targets in sequence | Include target name: "Run triggered for e2e-pipeline (dry-run)" |
+| Notification fires even when dashboard tab is active and user can already see the run status | Notification for something already visible is noise | Only fire `new Notification()` when `document.visibilityState === 'hidden'`. If tab is visible, the in-app toast is sufficient |
+| Polling refresh causes the selected run to deselect (state reset on new runs load) | User is reading a run detail; new run appears; list re-renders; selection clears | Keep `selectedId` state independent of the runs list. Re-fetch does not change `selectedId`. Only the hash-change handler changes selection |
+| `queued_at` displayed as "just now" even for a run queued 2 minutes ago that has not started | Scheduler queues a run but the worker is busy; the queue timestamp looks like it was just created | `queued_at` is set at enqueue time, not at display time. `timeAgo(run.queued_at)` will correctly show "2m ago" for a stale queue entry |
 
 ---
 
 ## "Looks Done But Isn't" Checklist
 
-- [ ] **Claude process cleanup**: Spawning `claude -p` and reading its output appears to work in happy-path testing, but zombie processes only manifest after hours of real use. Verify by inspecting `ps aux` after 10 test runs with deliberate SIGKILL of the worker mid-run.
-- [ ] **Socket file cleanup**: IPC "works" in dev where the server is gracefully stopped. Test crash recovery: `kill -9` the server process, then restart. If the server fails to start, the stale socket cleanup is missing.
-- [ ] **SSE disconnect cleanup**: Fan-out "works" when one tab is open. Open 5 tabs to the same run, then close 4. If `subscribers` set still has 4 entries after a minute, the cleanup is broken.
-- [ ] **Feedback YAML writes**: Dashboard 👍 and MCP `nw_submit_feedback` firing at the same millisecond should not corrupt `nightwatch-feedback.yaml`. Test with concurrent `Promise.all([submit1, submit2])` in an integration test.
-- [ ] **Safehouse absolute paths**: Flags built with `~/.claude/...` instead of `os.homedir() + '/.claude/...'` will cause safehouse to fail silently. Add a startup assertion that all safehouse paths are absolute.
-- [ ] **MCP transport compatibility**: The MCP endpoint "works" when tested with curl but may not work with `claude --mcp-config` pointing to it. Test with an actual Claude session using the MCP config before calling the MCP feature complete.
-- [ ] **Result event timeout**: The worker correctly calls `run:completed` after receiving the stream-json result event — but only if the forced-kill timeout fires. Test by spawning a real `claude -p` run, receiving the result, and verifying the worker sends `run:completed` within 15 seconds even without the process exiting on its own.
+- [ ] **Toast z-index**: Toast appears in all states — check: trigger toast while TriggerDialog is open, while ChatPanel is visible. Toast must be on top of both.
+- [ ] **Notification permission flow**: "Enable notifications" button triggers the browser permission dialog. Check in a fresh browser profile with no prior permission grant. Check that `"denied"` state shows no error — just silent fallback to toast.
+- [ ] **Polling cleanup**: Navigate to Runs page → navigate to Dashboard → navigate back to Runs. Exactly one `/api/runs` request per poll interval. Open Network tab to verify.
+- [ ] **`queued_at` on all triggers**: Trigger a manual run (dashboard), trigger an interval-scheduled run (enable schedule, wait for it). Both should have `queued_at` in `nightwatch-runs.yaml`.
+- [ ] **Dead code removal verification**: `grep -r "ChatDrawer\|chat-drawer" app/` returns zero results after cleanup. `grep -r "aria-disabled" app/frontend/components/target-detail.ts` returns zero results after removing disabled buttons. `bun typecheck` exits 0.
+- [ ] **Notification on background tab**: Open dashboard, switch to another app, trigger a run manually (from Terminal via curl or by keeping the trigger dialog sent). Wait for run to complete. Browser notification should appear in macOS Notification Center.
+- [ ] **Runs page shows queued runs**: Trigger a run when one is already running. Second run should appear in Runs page list as `queued` with a `queued_at` time display.
 
 ---
 
@@ -224,11 +292,11 @@ The `--input-format stream-json` feature is relatively new and primarily designe
 
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| Zombie claude processes accumulated from pitfall 1 | LOW | Add a `POST /api/admin/cleanup-zombies` endpoint during development. On call: scan all `running` runs older than max_runtime_minutes, kill their PIDs, mark as `timeout` |
-| Stale socket file (pitfall 2) | LOW | `rm /path/to/nightwatch.sock`, then `mprocs restart nightwatch-server`. Implement auto-cleanup in startup code to prevent recurrence |
-| Corrupted YAML file from concurrent writes | MEDIUM | Keep a rolling backup: before any YAML write, copy current file to `{filename}.bak`. Recovery: `cp nightwatch-runs.yaml.bak nightwatch-runs.yaml` |
-| Chat session frozen (pitfall 6) | LOW | Add "Reset conversation" button that kills the claude process and starts a fresh session. Auto-detect via health check and show "Session timed out — click to reconnect" |
-| MCP transport mismatch | MEDIUM | Implement both Streamable HTTP and legacy HTTP+SSE transport in the MCP server. Client compatibility negotiation makes this a one-time fix |
+| Interval leak accumulated | LOW | Refresh the page — all intervals are destroyed on page unload. Add the cleanup `useEffect` to prevent recurrence |
+| Toast not visible (z-index below dialog) | LOW | Add `z-index:300` to ToastContainer inline style; test immediately |
+| `queued_at` missing from existing runs | LOW | Field is optional; display `—` for runs without it. No migration needed — existing behavior degrades gracefully |
+| Notification permission permanently denied | LOW | Cannot be reset programmatically. User must go to `chrome://settings/content/notifications` or Safari Preferences. Show a help tooltip when `Notification.permission === "denied"` |
+| Dead file not fully removed (still imported somewhere) | LOW | `bun typecheck` will catch the dangling import. Fix the import, then delete the file |
 
 ---
 
@@ -236,34 +304,25 @@ The `--input-format stream-json` feature is relatively new and primarily designe
 
 | Pitfall | Prevention Phase | Verification |
 |---------|------------------|--------------|
-| Claude CLI hangs after result event | Phase 1 (executor.ts) | Integration test: spawn real `claude -p`, receive result event, assert process is dead within 15s |
-| Stale socket file on restart | Phase 1 (server/index.ts) | Test: `kill -9` server, `ls nightwatch.sock` (file exists), restart server — must start successfully |
-| Worker disconnect not detected | Phase 1 (ipc.ts) | Test: kill worker with `SIGKILL`, assert server marks it offline within 90 seconds |
-| SSE leak on client disconnect | Phase 1 (routes/stream.ts) | Test: open 5 SSE connections, close all 5, assert subscribers set is empty |
-| Orphaned safehouse chain | Phase 1 (executor.ts) | Test: kill worker mid-run with `SIGKILL`, restart server, assert `ps aux` shows no orphan claude processes |
-| NW-Claude chat unreliability | Phase 2 (chat-session.ts) | Build with API fallback as default; validate CLI path separately before switching to it |
-| Concurrent YAML corruption | Phase 1 (yaml-store.ts) | Integration test: 10 concurrent POSTs to `/api/feedback`, verify YAML is valid and has 10 entries |
-| Safehouse path with tildes | Phase 1 (policy.ts) | Unit test: `buildSafehouseFlags()` output contains no `~` characters |
-| Preact/HTM import map | Phase 1 (frontend/index.html) | Manual test: load page in browser with no build server, check browser console for import errors |
-| MCP transport version | Phase 3 (routes/mcp.ts) | Test with actual `claude --mcp-config` session pointing to the endpoint |
+| Toast side-effect at module scope | Phase 1 (toast.ts + ToastContainer) | Browser console has zero errors on page load before user interaction |
+| Notification permission not user-gesture-gated | Phase 2 (notification wiring in TriggerDialog) | Open fresh browser profile; permission dialog appears only on button click |
+| Polling interval leak on unmount | Phase 3 (Runs page polling) | Network tab: exactly 1 request per 5s after 3 navigations to/from Runs page |
+| `queued_at` undefined in display | Phase 1 (Run type + appendRun) | `nightwatch-runs.yaml` shows `queued_at` field on all new run entries |
+| Toast invisible behind dialog overlay | Phase 1 (toast z-index) | Toast visible while TriggerDialog is open |
+| Dead code removal breaks imports | Phase 4 (cleanup) | `bun typecheck` exits 0 after each file deletion |
+| Notification fires when tab is active | Phase 2 (visibility check) | Trigger run while tab is focused: no OS notification, only in-app toast |
+| Uncapped toast accumulation | Phase 1 (toast queue design) | Trigger 10 runs rapidly: never more than 5 toast nodes in DOM |
 
 ---
 
 ## Sources
 
-- [Claude Code CLI hangs after result event — GitHub #25629](https://github.com/anthropics/claude-code/issues/25629) — HIGH confidence (closed as duplicate of #21099, confirmed behavior)
-- [Claude Code input stream-json hang — GitHub #3187](https://github.com/anthropics/claude-code/issues/3187) — HIGH confidence (closed as completed)
-- [Claude Code empty output with large stdin — GitHub #7263](https://github.com/anthropics/claude-code/issues/7263) — HIGH confidence (closed as not planned, known limitation)
-- [Hono abort not working in Bun — GitHub #3032](https://github.com/honojs/hono/issues/3032) — HIGH confidence (fixed in PR #3042, merged)
-- [Hono event listener on client disconnect — GitHub #1770](https://github.com/honojs/hono/issues/1770) — HIGH confidence (open issue, acknowledged by maintainers)
-- [Hono SSE memory leak at 30 concurrent connections — GitHub #3940](https://github.com/honojs/hono/issues/3940) — MEDIUM confidence (open issue, reproduction not confirmed)
-- [MCP SSE transport deprecated, Streamable HTTP is current spec — MCP spec March 2025](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports) — HIGH confidence (official spec)
-- [MCP transport change — fka.dev analysis](https://blog.fka.dev/blog/2025-06-06-why-mcp-deprecated-sse-and-went-with-streamable-http/) — MEDIUM confidence (community analysis, consistent with official spec)
-- [Unix socket EADDRINUSE stale file pattern — Node.js docs + community patterns](https://nodejs.org/api/net.html) — HIGH confidence (documented behavior)
-- [Bun child process stdout is Buffer not ReadableStream — Bun docs](https://bun.com/reference/bun/spawn) — HIGH confidence (official reference)
-- [agent-safehouse deny-first policy, path resolution — agent-safehouse.dev](https://agent-safehouse.dev/docs/overview) — HIGH confidence (official docs)
-- [Claude Code stdin freeze in long-running sessions — GitHub changelog reference](https://code.claude.com/docs/en/changelog) — MEDIUM confidence (mentioned in community search, not linked to specific fix version)
+- Direct inspection: `app/frontend/app.ts`, `app/frontend/components/trigger-dialog.ts`, `app/frontend/components/target-detail.ts`, `app/frontend/components/chat-drawer.ts`, `app/frontend/pages/runs.ts`, `app/frontend/pages/dashboard.ts`, `app/server/services/run-store.ts`, `app/server/services/yaml-store.ts`, `app/server/routes/stream.ts`, `app/shared/types.ts`, `app/frontend/index.html`
+- Known project pitfalls from MEMORY.md: esm.sh preact+hooks var V collision, .ts MIME type, Bun.file stale handle, import side-effect trap, Hono route ordering
+- Browser Notification API permission model: MDN Web Docs — HIGH confidence (stable spec)
+- Preact signals module resolution requirement (same module object): Preact signals GitHub README — HIGH confidence
+- `document.visibilityState` for notification gating: W3C Page Visibility API spec — HIGH confidence
 
 ---
-*Pitfalls research for: Nightwatch Dashboard (Bun + Hono + Worker IPC + SSE/WebSocket + Preact/HTM + always-on mprocs service)*
-*Researched: 2026-03-18*
+*Pitfalls research for: Nightwatch Dashboard v1.1 UX Polish (toast / browser notifications / auto-refresh / queued_at backward compat / dead code cleanup)*
+*Researched: 2026-03-20*

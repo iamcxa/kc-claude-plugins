@@ -1,243 +1,176 @@
 # Project Research Summary
 
-**Project:** Nightwatch Dashboard
-**Domain:** Autonomous agent monitoring + improvement cockpit (Bun server + worker + Preact frontend)
-**Researched:** 2026-03-18
+**Project:** Nightwatch Dashboard v1.1 — UX Polish
+**Domain:** Bun-native web dashboard (Preact + HTM + Hono + Bun worker + IPC)
+**Researched:** 2026-03-20
 **Confidence:** HIGH
 
 ## Executive Summary
 
-The Nightwatch Dashboard is a single-user, localhost-first autonomous improvement platform that replaces a launchd cron job with a persistent Bun HTTP server + background worker. The closest analogues are CI/CD dashboards (GitHub Actions, CircleCI) for the operational shell and AI agent observability tools (LangSmith, Langfuse) for the trace/feedback model — but Nightwatch is unusual because it combines both *monitoring* (observe what happened) and *directing* (accept/reject proposals, trigger runs, inject per-run instructions) in one tool. The recommended implementation uses a two-process architecture with Hono HTTP server and a Bun worker communicating via Unix domain socket, Preact+HTM for a no-build-step frontend, and a staged feature rollout that defers flywheel health metrics until core feedback infrastructure is proven.
+The Nightwatch Dashboard v1.1 is a targeted UX polish pass on a complete v1.0 cockpit. The system is a no-bundler Preact/HTM frontend served by Hono on Bun, communicating with a Bun background worker via native IPC, with SSE for real-time log streaming and HTTP polling for run state. The v1.1 scope addresses five gaps identified during use: the trigger action produces no feedback, the Runs page goes stale after a trigger, queue depth is invisible, the target detail panel has dead UI elements, and long-running completions are invisible when the tab is backgrounded. All five are addressable with the existing stack — no new npm packages are required.
 
-The recommended stack is entirely Bun-native: Hono 4.12.x for HTTP/SSE/WebSocket, `@modelcontextprotocol/sdk@1.27.x` + `@hono/mcp` for the MCP endpoint, Preact+HTM served via Bun's on-the-fly TypeScript transpilation, and `yaml`+`zod` at all YAML config boundaries. The architecture research confirms the design spec's two-process split is correct: the HTTP server must stay responsive while a 30-minute Claude run executes in the worker. All worker communication must flow through a single IPC module (never direct imports across the process boundary). SSE fans out log events from IPC to browsers; WebSocket proxies the NW-Claude chat session.
+The recommended approach is a sequential 4-phase build that respects data dependencies: schema first (`queued_at` field), then server infrastructure (queue endpoint + IPC state capture), then frontend wiring (toast + notification + polling + queue display), then cleanup (dead code removal). This order avoids the two worst failure modes: frontend code consuming a schema field that does not exist yet, and dead code removal that leaves dangling imports. The single highest-risk implementation decision is the toast rendering strategy — if the toast queue is created as a DOM side effect at module scope rather than inside the Preact tree via a signal, it silently breaks on page load with no error in the console.
 
-The most significant risks are not architectural but operational. Six critical pitfalls are all load-bearing infrastructure that must be built in Phase 1: claude CLI zombie processes (known bug — forced kill required after result event), Unix socket file left on crash (EADDRINUSE restart loop), worker disconnect not detected (silent queue growth), SSE subscriber leak on browser disconnect, orphaned safehouse→claude chains after worker SIGKILL, and concurrent YAML writes corrupting state files. None of these manifests in happy-path dev testing — all require deliberate failure injection to verify. The mitigation for each is straightforward, but all must be in place before any feature work starts.
+The architecture patterns established in v1.0 (SSE for lifecycle events, HTTP polling for frequent state, module-level callbacks for cross-cutting concerns) are the correct model for all v1.1 additions. Specifically: browser notifications must be gated on a user gesture (not on-mount), Runs page polling must be conditional on active runs (not unconditional), and queue state must surface via a new REST endpoint rather than SSE broadcasts (which would pollute the lifecycle event channel). All three deviations are documented in PITFALLS.md as critical anti-patterns that produce silent failures — the kind that pass happy-path testing but break immediately in real use.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The stack is fully settled by constraints (Bun runtime, Hono+Preact+HTM from design spec) and confirmed by research against official documentation. The only non-obvious decision is IPC transport: despite the design spec calling for Unix domain socket with NDJSON, Bun's native IPC (`Bun.spawn` with `ipc` option) is actually the simpler path since both processes are Bun. However, the design spec's explicit requirement for a worker-connects-to-server topology (worker is client, server is listener) is the reverse of what Bun's built-in IPC supports (parent spawns child). Use `node:net` Unix socket with NDJSON framing to honor the spec exactly.
+No new npm packages are needed for v1.1. All features are implementable with the existing Bun + Hono + Preact/HTM + @preact/signals stack. The existing codebase provides a reference implementation for every pattern needed: the Dashboard's `pollTimerRef + setInterval(5000)` pattern is the exact model for Runs page polling; the Dashboard's `handleTrigger` click handler is the correct user-gesture context for `Notification.requestPermission()`; the `@preact/signals` import map is already wired and ready for a toast signal.
 
-**Core technologies:**
-- **Bun 1.2.x**: Runtime, bundler, test runner — project constraint; native TS, ESM, `Bun.spawn()` for child processes
-- **Hono 4.12.x**: HTTP framework — Bun-native (Web Standards APIs), provides `streamSSE()`, `upgradeWebSocket`, `serveStatic`
-- **Preact 10.23.x + HTM 3.1.1**: Frontend — project constraint; ~4KB total, no build step, Bun transpiles `.ts` on-the-fly
-- **`@modelcontextprotocol/sdk@1.27.x`**: MCP server — v1.27.x is latest stable; v2 pre-alpha, use v1 until stable
-- **`@hono/mcp@0.2.4`**: MCP Hono middleware — mounts McpServer onto `/mcp` route, saves ~30 lines of manual transport wiring
-- **`yaml@2.x`**: YAML read/write — Bun's built-in `Bun.YAML.parse()` is parse-only (no stringify); `yaml` package handles both
-- **`zod@3.x`**: Schema validation — required by project conventions; use at all YAML config + IPC message boundaries
-- **`@preact/signals@1.3.x`**: Fine-grained reactivity — efficient for high-frequency SSE log stream updates
+**Core technologies (unchanged from v1.0):**
+- **Bun 1.2.x**: Runtime, test runner, TypeScript-native — no new config needed
+- **Hono 4.12.x**: HTTP server — add one `GET /api/worker/state` endpoint
+- **Preact + HTM**: Frontend UI — add two new files (toast hook + toast component)
+- **@preact/signals**: State management — use for toast queue (already in importmap)
+- **yaml + zod**: YAML persistence + schema validation — `queued_at` is optional, no migration needed
 
-See `.planning/research/STACK.md` for version compatibility matrix and full rationale.
+**v1.1 additions (zero new packages):**
+- Custom `useToast` hook (~70 lines): module-level callback pattern, no prop drilling, no CDN dependency
+- Raw `Notification` Web API: desktop-only, localhost = secure context by spec, no HTTPS needed
+- `useInterval` custom hook: extracted from existing Dashboard polling logic
 
 ### Expected Features
 
-Features are well-defined by the design spec (812 lines, 2 review rounds). The research confirms a three-tier MVP structure:
+**Must have (table stakes — ship in v1.1):**
+- `queued_at` timestamp on Run type — schema change that unlocks two other features; do this first
+- Toast notification component — success/error variants, auto-dismiss, `position:fixed` top-right
+- Toast on run trigger success/error — immediate acknowledgement after `api.triggerRun()` resolves or rejects
+- Runs page auto-refresh — mirror Dashboard's polling pattern; poll when active runs exist, stop when idle
+- Queue depth display in TargetDetail — count + list of queued runs for selected target
+- Stale UI cleanup — remove dead "Edit"/"Chat" menu items and `chat-drawer.ts` orphan file
+- Sidebar "Add Target" button wiring — open existing `AddTargetWizard` on click (already exists)
 
-**Must have (P1 — table stakes):**
-- Target list with last run status + schedule bar — replaces manual nightwatch-runs.yaml inspection
-- Manual run trigger with mode selection (production/dry-run) + custom prompt
-- Real-time log streaming during execution (SSE from worker) — single biggest UX improvement over cron
-- Run history list + detail with phase progress + action summary
-- Interval scheduler (enable/disable, set hours) — replaces launchd plist management
-- Feedback buttons per action (thumbs up/down) + POST /api/feedback
-- Per-target NW memory isolation — foundational; painful to retrofit later
-- Sandboxed execution with per-target agent-safehouse policy — non-negotiable safety requirement
+**Should have (add if time allows):**
+- Browser Notification API on completion — requires explicit user opt-in gesture; fallback to toast if permission denied
+- Trigger time in run list — show `queued_at` relative time alongside `started_at`
 
-**Should have (P2 — differentiators, add after core cockpit is validated):**
-- Indicator baseline measurement (Phase 0.5) — quantified, not qualitative
-- Per-run self-assessment display (Phase 3.5 + 4.5) — surfaces agent's strategic reasoning
-- Config editor with 4-step validation (static → Haiku semantic → diff → confirm)
-- Add Target wizard
-- NW-Claude chat panel with auto-brief after runs
-- Webhook trigger
-
-**Defer (P3 — full flywheel, needs feedback data first):**
-- Implementation outcome tracking (Phase 0.6)
-- Flywheel health display (sparklines, reject rate trends)
-- Proposal → Implementation pipeline
-- MCP server (requires stable run store API surface)
-
-**Anti-features to avoid:** Multi-user RBAC, cron expression scheduling (intervals are clearer), auto-start NW-Claude brief (lazy init only), proposal execution without explicit user approval.
-
-See `.planning/research/FEATURES.md` for dependency graph and competitor analysis.
+**Defer to v2+:**
+- Notification center / bell icon — no value for single-user local tool
+- Service Worker push — wrong complexity/value ratio for localhost-only dashboard
+- WebSocket for run status — SSE + 5s polling is already sufficient at this scale
 
 ### Architecture Approach
 
-The two-process architecture is the correct choice and is confirmed by the design spec. The Hono HTTP server must remain alive and responsive during a 30-minute Claude run executing in the worker. These two concerns must never share a process. The critical path for build order is: `shared/types.ts` → `yaml-store` → worker (executor + scheduler) → `server/ipc.ts` → REST routes → SSE → frontend. The MCP endpoint is Phase 5 in build order — it depends on a stable run store but is independent of the chat and SSE features.
+The system has a clean 3-tier architecture (Preact frontend → Hono server → Bun worker) with IPC as the worker-to-server channel and SSE as the server-to-browser channel for lifecycle events. All v1.1 changes are additive: two new files, twelve modified files, one file deletion. The architecture research provides a precise 10-step build order and a file change matrix covering 14 files. The key architectural decision is surfacing worker queue state via a new polling endpoint (`GET /api/worker/state`) rather than global SSE, preserving the invariant that the global SSE channel carries only infrequent lifecycle events.
 
-**Major components:**
-1. **Hono HTTP server** (`server/`) — HTTP routing, SSE emission, WebSocket upgrade, MCP endpoint, static file serving
-2. **Worker process** (`worker/`) — scheduler, execution queue, safehouse spawning, run lifecycle via Bun.spawn
-3. **Unix domain socket IPC** — bidirectional NDJSON; server is listener, worker is client; heartbeat-based liveness
-4. **log-parser** (`worker/log-parser.ts`) — parses `--output-format stream-json` into typed events before IPC crossing
-5. **SSE fan-out** (`server/routes/stream.ts`) — `Map<runId, Set<SSEWriter>>` fanned from IPC `run:log` events
-6. **chat-session** (`server/services/chat-session.ts`) — manages long-lived `claude --input-format stream-json` process per WebSocket
-7. **yaml-store** (`server/services/yaml-store.ts`) — read/write YAML config with field rename compat layer; in-memory cache
-
-See `.planning/research/ARCHITECTURE.md` for data flow diagrams and anti-patterns.
+**Major components affected by v1.1:**
+1. `shared/types.ts` — adds `queued_at?: string` to Run interface (backward-compatible)
+2. `server/ipc.ts` + `server/routes/api.ts` — captures `lastWorkerState` from IPC; exposes via `GET /api/worker/state`
+3. `frontend/lib/use-toast.ts` + `frontend/components/toast.ts` — new module-level signal-backed toast system
+4. `frontend/app.ts` — mounts Toast; adds Notification permission request + fires on `brief-ready`
+5. `frontend/pages/dashboard.ts` — showToast on trigger; AddTargetWizard wiring; queue fetch; pass queue to TargetDetail
+6. `frontend/pages/runs.ts` — adds conditional polling pattern identical to Dashboard
+7. `frontend/components/target-detail.ts` + `sidebar.ts` — queue display, dead button removal, Add Target wiring
+8. `worker/index.ts` + `worker/scheduler.ts` — set `queued_at` at enqueue time on all code paths
 
 ### Critical Pitfalls
 
-All 6 critical pitfalls must be addressed in Phase 1. None manifests in happy-path testing.
+1. **Toast DOM side effect at module scope** — Do not create toast DOM elements at module scope. Render `<ToastContainer />` inside the Preact tree. Use a `signal<Toast[]>([])` at module scope (data, not DOM). Symptom of failure: "Cannot read properties of null" on page load.
 
-1. **Claude CLI hangs after result event** — Confirmed bug (GitHub #25629, #21099): active MCP connections keep the process alive after `{"type":"result"}`. Prevention: on result event, schedule hard kill `setTimeout(() => child.kill('SIGKILL'), 10_000)`. Do not wait for stream close. Track all PIDs.
+2. **Toast z-index below TriggerDialog overlay** — TriggerDialog uses `z-index:100`. Toast must use `z-index:300`. "Run queued" toast fires while the dialog is still visible — invisible toast is the failure mode. Establish CSS variables (`--z-toast: 300`) to document the layer hierarchy.
 
-2. **Stale Unix socket file after crash** — `net.createServer().listen()` throws `EADDRINUSE` and creates a restart loop. Prevention: on server startup, `await fs.unlink(socketPath)` (ignore ENOENT), then register SIGINT/SIGTERM cleanup handlers.
+3. **Browser Notification permission requested on page load** — Chrome 84+, Firefox 72+, Safari 16.4+ silently deny `Notification.requestPermission()` not tied to a user gesture. Symptom: promise resolves `"denied"` immediately, no dialog appears, no error in console.
 
-3. **Worker disconnect not detected** — Socket writes buffer silently to a dead worker; runs queue into the void. Prevention: 30-second heartbeat from worker; server marks worker offline if heartbeat is >60s stale; reject enqueue with visible error.
+4. **Polling interval leak on Runs page unmount** — `setInterval` not cleared in `useEffect` cleanup accumulates N intervals after N page navigations. Follow Dashboard's exact pattern: `pollTimerRef.current` guard + `clearInterval` in unmount cleanup.
 
-4. **SSE subscriber leak on browser disconnect** — `stream.onAbort()` was a Bun bug (fixed in Hono PR #3042); `fan-out Set` requires explicit removal. Prevention: use `c.req.raw.signal.addEventListener('abort', cleanup)` for disconnect detection; cap in-memory log buffer at 500 lines per run.
-
-5. **Orphaned safehouse→claude chain after worker SIGKILL** — Grandchild processes do not receive SIGTERM when worker is killed. Prevention: write `app/runs/{id}/worker.pid` immediately after spawn; on server startup, scan for stale PID files and SIGKILL orphans.
-
-6. **NW-Claude chat session unreliability** — `--input-format stream-json` is designed for batch chaining, not long-lived interactive sessions; documented instability for sessions >7000 chars or after long idle. Prevention: implement `@anthropic-ai/sdk` API fallback in the same phase; use API path as MVP default; switch to CLI path only after confirmed stable.
-
-See `.planning/research/PITFALLS.md` for verification checklists and recovery strategies.
+5. **`queued_at` missing from all 4 enqueue paths** — Paths: `POST /api/runs`, `POST /api/webhook`, `worker/index.ts` `__all__` expansion, `worker/scheduler.ts` interval trigger. Missing any one produces runs with `—` in queue display even though freshly queued.
 
 ## Implications for Roadmap
 
-Based on research, all 6 critical pitfalls plus the IPC foundation must land in Phase 1. This is not negotiable — the pitfalls are invisible in happy-path dev but emerge in production within hours. The feature phases build on top.
+Based on research, the dependency order is clear and maps directly to 4 phases. Each phase builds on the previous one's deliverables.
 
-### Phase 1: Foundation + Reliability Infrastructure
+### Phase 1: Schema + Toast Infrastructure
 
-**Rationale:** All critical pitfalls are infrastructure-level and must be addressed before any feature work. The IPC boundary, socket lifecycle, and process cleanup are the foundation every subsequent feature depends on. Building features before these are solid creates compounding debt.
+**Rationale:** Two prerequisites that unlock everything else. The `queued_at` schema must exist before any display code can reference it. Toast infrastructure must be built with the correct pattern (signal + component, not module-scope DOM) before any caller can use it. Both are zero-dependency additions with no external consumers yet.
 
-**Delivers:** Runnable two-process app: server starts and stays up across crashes, worker connects and stays in sync with server, basic HTTP routes serving placeholder responses, IPC message protocol fully typed and tested.
+**Delivers:** `shared/types.ts` with `queued_at`; all 4 enqueue paths setting it; `use-toast.ts` + `toast.ts` new files; `app.ts` mounting Toast; z-index 300 CSS variable established
 
-**Addresses:** P1 features (table stakes prerequisites) — IPC foundation, scheduler skeleton, run lifecycle state machine
+**Addresses:** FEATURES.md P1 items: `queued_at` field, Toast component
 
-**Avoids:** Pitfalls 1–5 from PITFALLS.md (all Phase 1 designation). Specific items: claude zombie process handling, socket file cleanup, heartbeat, SSE subscriber cleanup, orphan PID cleanup.
+**Avoids:** Pitfall 1 (toast DOM side effect), Pitfall 2 (z-index below dialog), Pitfall 5 (`queued_at` missing from scheduler/webhook paths)
 
-**Key deliverables:**
-- `shared/types.ts` — all IPC message types + domain types
-- `server/ipc.ts` — Unix socket client with heartbeat, reconnect, worker liveness detection
-- `worker/index.ts` — socket server + message dispatch
-- `worker/executor.ts` — Bun.spawn safehouse chain with forced-kill on result event, PID tracking
-- `worker/policy.ts` — safehouse flag builder (no tilde paths)
-- `worker/log-parser.ts` — stream-json line parser
-- `server/services/yaml-store.ts` — YAML read/write with in-memory cache + file lock (async mutex)
-- `server/index.ts` — socket cleanup on startup + SIGINT/SIGTERM handlers
+### Phase 2: Server Layer + Notification Wiring
 
-### Phase 2: Core Cockpit (P1 Features)
+**Rationale:** The server-side queue endpoint must exist before the frontend can display queue depth. Browser notification wiring extends the existing `brief-ready` SSE handler in `app.ts` — it belongs here because it is a server behavior change (`run-failed` global broadcast) plus a `app.ts` change (fire Notification in `brief-ready` handler). The user-gesture gating must be wired from day one.
 
-**Rationale:** With the foundation solid, deliver the full P1 feature set that makes the dashboard better than the current cron+YAML-file workflow. These features are table stakes — users expect them from any CI/CD or monitoring tool.
+**Delivers:** `server/ipc.ts` storing `lastWorkerState`; `GET /api/worker/state` endpoint; `run-failed` global SSE broadcast; notification permission flow wired to user gesture in `app.ts`
 
-**Delivers:** Working dashboard UI: target cards with run status, manual trigger with mode selection, real-time SSE log streaming during execution, run history and detail pages, interval scheduler, per-target NW memory isolation, and sandboxed execution enforcement.
+**Uses:** STACK.md patterns: HTTP polling for frequent state (not SSE), raw Notification API (no Service Worker)
 
-**Addresses:** All P1 features from FEATURES.md MVP list
+**Avoids:** Pitfall 3 (permission on page load), ARCHITECTURE.md Anti-pattern 1 (queue state over SSE)
 
-**Implements:** ARCHITECTURE.md Phase 3–6 build order (server REST routes → SSE → frontend pages)
+### Phase 3: Frontend Wiring
 
-**Key deliverables:**
-- REST API routes (`/api/targets`, `/api/runs`, `/api/feedback`, `/api/webhook`)
-- SSE streaming route (`/api/runs/:id/stream`) with fan-out and disconnect cleanup
-- `worker/scheduler.ts` — interval timer
-- Frontend: dashboard page, run history/detail page, log-stream component with stream-json parsing
-- Trigger dialog, feedback buttons, schedule status bar
-- Per-target NW journal isolation in executor (target-specific `--mcp-config`)
+**Rationale:** All backend dependencies now exist (schema, endpoints, SSE events). Wire the full frontend: toast on trigger, Runs page polling, queue display in TargetDetail, Add Target button, API client update. The Dashboard is the reference implementation for every pattern here — no new patterns are introduced.
 
-### Phase 3: Flywheel Core (P2 Features)
+**Delivers:** `api.ts` `getWorkerState()`; `dashboard.ts` toast calls + AddTargetWizard + queue fetch; `runs.ts` conditional polling; `target-detail.ts` queue prop + display; `sidebar.ts` Add Target wiring
 
-**Rationale:** Once the core cockpit is working and feedback data starts accumulating (even just a few runs), add the features that differentiate Nightwatch from generic CI/CD tools. NW-Claude chat requires run history to be meaningful; config editor requires YAML store to be stable. These features are additive — they don't change the existing data flow.
+**Implements:** All P1 FEATURES.md items except cleanup
 
-**Delivers:** NW-Claude chat panel, config editor with 4-step validation, Add Target wizard, indicator baseline measurement, self-assessment display in run detail.
+**Avoids:** Pitfall 4 (unconditional polling), ARCHITECTURE.md Anti-pattern 3 (prop-drilling toast), Anti-pattern 4 (navigating to Config for Add Target)
 
-**Addresses:** P2 features from FEATURES.md
+### Phase 4: Stale UI Cleanup
 
-**Uses:** STACK.md WebSocket pattern (chat), Hono `upgradeWebSocket` from `hono/bun`, `@anthropic-ai/sdk` API fallback for chat stability (PITFALL #6)
+**Rationale:** Delete last. Verify no imports exist before removing any file. Run `bun typecheck` after each deletion. Removing dead code after all new code is wired ensures there are no unexpected references from new code to deleted files. The Edit button situation (currently disabled, but AddTargetWizard already supports edit mode) is a decision point: wire it as working or remove it — both are valid.
 
-**Key deliverables:**
-- `server/services/chat-session.ts` — API fallback as default; CLI path as optimization
-- `server/routes/chat.ts` — WebSocket upgrade
-- Frontend: chat-panel component, YAML editor with 4-step validation flow
-- Config save flow (4-step: syntax → Haiku semantic → diff → confirm)
-- Phase 0.5 baseline measurement in worker pipeline
-- Self-assessment display (reads existing run data — display-only)
+**Delivers:** `chat-drawer.ts` deleted (confirmed orphan); disabled Edit/Chat buttons removed from `target-detail.ts`; dead `phases` variable removed; `bun typecheck` exits 0
 
-### Phase 4: Full Flywheel (P3 Features)
-
-**Rationale:** Defer until flywheel core is validated and sufficient feedback + indicator data exists (several proposal→feedback cycles). Flywheel health display is meaningless without implementation outcome data. Proposal → implementation pipeline is high complexity and high risk — validate proposal quality first.
-
-**Delivers:** MCP server, flywheel health metrics display, implementation outcome tracking (Phase 0.6), proposal → implementation pipeline.
-
-**Addresses:** P3 features from FEATURES.md
-
-**Avoids:** PITFALL #3 (MCP transport version mismatch) — test with actual `claude --mcp-config` session before marking complete; implement both Streamable HTTP and legacy SSE transport for compatibility
-
-**Key deliverables:**
-- `server/routes/mcp.ts` — MCP Streamable HTTP endpoint with 10 tools
-- Phase 0.6 outcome tracking in worker pipeline
-- Flywheel health sparklines and reject rate charts
-- Proposal → implementation pipeline (accept action → spawn implementation run)
+**Avoids:** PITFALLS.md Pitfall 9 (removing buttons without reading full container context), Pitfall 5 (dangling imports post-deletion)
 
 ### Phase Ordering Rationale
 
-- Phase 1 before everything: pitfalls are invisible in dev but fatal in production. Socket lifecycle + process cleanup is not a feature, it's a precondition for all features.
-- Phase 2 before Phase 3: NW-Claude chat requires run history to exist (needs several runs). Config editor requires yaml-store to be stable. Both are P2 by design.
-- Phase 3 before Phase 4: Flywheel health metrics require implementation outcome data. MCP server requires stable run store API. Both have data dependencies that only Phase 3 can produce.
-- Feedback buttons land in Phase 2 (not Phase 3): They are table stakes for the flywheel — shipping without them means the first run creates no learning data. The flywheel must be seeded from day one.
+- Schema before server: TypeScript types must exist when writing the server-side `POST /api/runs` changes
+- Server before frontend: `GET /api/worker/state` endpoint must exist before `api.ts` can wrap it
+- Toast infrastructure before notification wiring: fallback path (toast when permission denied) must already work when the Notification path is added
+- Cleanup last: prevents new code from accidentally referencing files about to be deleted
 
 ### Research Flags
 
-Phases likely needing deeper research during planning:
-- **Phase 3 (Chat panel):** `--input-format stream-json` reliability for long sessions is an open question. Research confirms known bugs but no definitive fix version. Plan must include API fallback as default with explicit cutover criteria.
-- **Phase 4 (MCP server):** `@hono/mcp` is new (appeared March 2025). Transport compatibility between Streamable HTTP and legacy SSE clients needs hands-on testing, not just doc review. Flag for a research spike before implementation.
-- **Phase 4 (Flywheel metrics):** Implementation outcome tracking (Phase 0.6) — "did merged PRs actually help?" — requires cross-run data correlation that has not been designed in detail. Needs a design spike.
+All phases have standard, well-documented patterns. No additional `/gsd:research-phase` is needed.
 
-Phases with standard patterns (skip research):
-- **Phase 1 (Foundation):** All patterns are well-documented. Unix socket cleanup, heartbeat, PID tracking — standard Node.js patterns with Bun-compatible `node:net`. Bun docs are authoritative.
-- **Phase 2 (Core cockpit):** Hono REST + SSE patterns are fully verified against official docs. Preact+HTM no-build-step pattern is documented by Preact team.
+- **Phase 1:** `queued_at` schema + toast signal — exact implementation specified in ARCHITECTURE.md with line-level file references
+- **Phase 2:** Server queue endpoint + notification — trivial route addition; notification pattern verified against MDN spec
+- **Phase 3:** Frontend wiring — `dashboard.ts` reference implementation is the model for every pattern
+- **Phase 4:** Dead code removal — verification steps fully specified (grep + typecheck checklist in PITFALLS.md)
+
+One optional decision to surface during Phase 4 planning: wire the Edit button (AddTargetWizard already supports it) vs. just removing it. Either direction is low-effort — document the choice.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Core stack verified via Context7 against Hono, Bun, MCP SDK docs. One caveat: `yaml@2.x` npm page 403'd during research — version from ecosystem inference, not direct npm verification |
-| Features | HIGH | Design spec is authoritative (812 lines, 2 review rounds). Feature prioritization from external analogues is MEDIUM (community sources) |
-| Architecture | HIGH | Design spec is authoritative. All patterns verified against Bun + Hono official docs. IPC topology (worker-connects-to-server) resolves correctly to `node:net` Unix socket |
-| Pitfalls | HIGH | Critical pitfalls backed by specific GitHub issue numbers. Hono abort bug verified by PR number. Unix socket EADDRINUSE is documented Node.js behavior |
+| Stack | HIGH | All v1.1 features confirmed implementable with existing stack; no new packages; verified via MDN, Bun docs, Preact docs, and direct codebase inspection |
+| Features | HIGH | Derived from direct codebase analysis + PROJECT.md v1.1 requirements list; clear P1/P2 distinction with dependency graph |
+| Architecture | HIGH | Based on direct inspection of all 14 affected files with line-level specificity; file change matrix + 10-step build order provided |
+| Pitfalls | HIGH | Mix of project-specific pitfalls (from MEMORY.md + codebase inspection) and verified browser spec behavior (MDN); all 9 pitfalls include warning signs and recovery strategies |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **`--input-format stream-json` stability threshold:** Research confirms it's unreliable but does not give a fixed version where it's resolved. The API fallback (`@anthropic-ai/sdk`) must be built in the same phase as the CLI path — treat the CLI path as an optimization, not the baseline.
-- **MCP transport dual-support:** Implementing both Streamable HTTP and legacy HTTP+SSE in the MCP server is flagged as a "one-time fix" in PITFALLS.md but the exact `@hono/mcp` API for dual transport is not researched. Needs a short spike before Phase 4.
-- **Flywheel outcome tracking data model:** How to correlate "PR merged" events (from GitHub webhook/polling) with indicator baseline changes is not designed. Phase 4 needs a design spike before implementation starts.
-- **`yaml@2.x` version confirmation:** npm page returned 403 during research. Use `npm info yaml version` to confirm the current 2.x minor before pinning in package.json.
+- **Browser Notification on older Safari**: Research confirms Promise-based `requestPermission()` works on Safari 16.4+. For older Safari, use callback form. Not a blocker — document as implementation note in Phase 2.
+- **`document.visibilityState` gating**: Research recommends only firing `new Notification()` when tab is hidden. Easy to forget — add to Phase 2 acceptance checklist explicitly.
+- **Edit button decision**: `target-detail.ts` has a disabled Edit button. `AddTargetWizard` supports edit mode via `editTarget` prop. The roadmap should decide: wire it (free improvement at the same touch point) or remove it (cleaner cleanup). Either is valid — needs a decision, not more research.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Design spec: `kc-nightwatch/docs/superpowers/specs/2026-03-18-nightwatch-dashboard-design.md` — authoritative 812-line spec, 2 review rounds
-- PROJECT.md: `kc-nightwatch/.planning/PROJECT.md` — requirements, constraints, key decisions
-- [Hono official docs — Bun getting started](https://hono.dev/docs/getting-started/bun) — verified v4.12.2, `serveStatic`, Bun-native support
-- [Hono Streaming Helper docs](https://hono.dev/docs/helpers/streaming) — `streamSSE()`, `writeSSE()` signature
-- [Bun IPC documentation](https://bun.com/docs/guides/process/ipc) — spawn + `.send()` / `process.on("message")`
-- [Bun WebSocket docs](https://bun.com/docs/runtime/http/websockets) — native upgrade API, pub/sub
-- [Bun child process docs](https://bun.com/docs/runtime/child-process) — `Bun.spawn()` stdout as ReadableStream
-- [MCP TypeScript SDK GitHub releases](https://github.com/modelcontextprotocol/typescript-sdk/releases) — v1.27.1 latest stable v1.x
-- [Claude Code CLI hangs after result event — GitHub #25629](https://github.com/anthropics/claude-code/issues/25629) — confirmed bug
-- [Hono abort not working in Bun — GitHub PR #3042](https://github.com/honojs/hono/issues/3032) — fixed
-- [Unix socket EADDRINUSE stale file — Node.js docs](https://nodejs.org/api/net.html) — documented behavior
-- [MCP Transports specification 2025-03-26](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports) — Streamable HTTP current spec
+- Direct codebase inspection (2026-03-20): `app/shared/types.ts`, `app/server/ipc.ts`, `app/server/routes/api.ts`, `app/worker/index.ts`, `app/worker/scheduler.ts`, `app/frontend/app.ts`, `app/frontend/pages/dashboard.ts`, `app/frontend/pages/runs.ts`, `app/frontend/components/sidebar.ts`, `app/frontend/components/target-detail.ts`, `app/frontend/components/chat-drawer.ts`, `app/frontend/lib/api.ts`, `app/frontend/index.html`
+- `.planning/PROJECT.md` — v1.1 requirements list (authoritative)
+- MDN Web Docs — Notifications API, requestPermission(), secure context definition, Page Visibility API
+- Chrome Lighthouse — notification-on-start best practice (do not request on page load)
+- Bun official docs — spawn, IPC, YAML, 1.2 release notes
+- Hono official docs — Bun getting started, SSE streaming
+- Preact no-build workflows guide — HTM + import maps, custom hooks
 
 ### Secondary (MEDIUM confidence)
-- [Preact no-build workflows guide](https://preactjs.com/guide/v10/no-build-workflows/) — HTM + import maps
-- [LangSmith observability](https://www.langchain.com/langsmith/observability) — competitor feature analysis
-- [Langfuse evaluation](https://langfuse.com/docs/evaluation/core-concepts) — competitor feature analysis
-- [Bun 1.2 release notes](https://socket.dev/blog/bun-1-2-released-90-node-js-compatibility-built-in-s3-object-support) — 90% Node.js compat, current minor 1.2.20+
-- [SSE vs WebSocket 2026 comparison](https://oneuptime.com/blog/post/2026-01-27-sse-vs-websockets/view) — confirmed design spec transport decisions
-- [@hono/mcp npm package](https://www.npmjs.com/package/@hono/mcp) — v0.2.4
-- [agent-safehouse official docs](https://agent-safehouse.dev/docs/overview) — path resolution, deny-first policy
-- Hono SSE memory leak at 30 connections — [GitHub #3940](https://github.com/honojs/hono/issues/3940) — open issue, MEDIUM confidence
-
-### Tertiary (LOW confidence)
-- GitHub Agentic Workflows overview (The New Stack) — competitor positioning only
-- Claude Code stdin freeze in long-running sessions — mentioned in community search, not linked to specific fix version
+- LogRocket — Toast Notifications Best Practices (auto-dismiss timing, error persistence norms)
+- Smashing Magazine — UX Strategies for Real-Time Dashboards (polling vs push tradeoffs)
+- overreacted.io — Making setInterval Declarative with React Hooks (useInterval canonical pattern, applies identically to Preact)
+- Carbon Design System — Notification Pattern (toast positioning, stacking behavior)
 
 ---
-*Research completed: 2026-03-18*
+*Research completed: 2026-03-20*
 *Ready for roadmap: yes*

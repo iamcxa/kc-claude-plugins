@@ -1,534 +1,465 @@
 # Architecture Research
 
-**Domain:** Bun-native HTTP server + background worker with real-time streaming, bidirectional Claude CLI integration, and MCP HTTP endpoint
-**Researched:** 2026-03-18
-**Confidence:** HIGH (design spec is detailed and authoritative; Bun/Hono/MCP SDK patterns verified against official docs)
+**Domain:** Nightwatch Dashboard v1.1 — UX Polish integration
+**Researched:** 2026-03-20
+**Confidence:** HIGH (direct codebase inspection of all affected files)
 
-## Standard Architecture
-
-### System Overview
+## Existing System Overview
 
 ```
-Browser (Preact + HTM — no build step, Bun transpiles on-the-fly)
-    |
-    |  HTTP REST /api/*
-    |  SSE  /api/runs/:id/stream
-    |  WebSocket  /ws/chat
-    |
-    v
-+-------------------------------------------------------------------+
-|  Bun HTTP Server (Hono)                               :3200       |
-|                                                                   |
-|  routes/api.ts       — /api/targets, /api/runs, /api/feedback     |
-|  routes/stream.ts    — /api/runs/:id/stream (SSE)                 |
-|  routes/config.ts    — /api/config (YAML read/write + validation) |
-|  routes/chat.ts      — /ws/chat (WebSocket upgrade)               |
-|  routes/mcp.ts       — /mcp (MCP Streamable HTTP endpoint)        |
-|                                                                   |
-|  services/ipc.ts     — socket client → worker                     |
-|  services/yaml-store.ts  — read/write ~/.claude/kc-plugins-config |
-|  services/run-store.ts   — read run artifacts from app/runs/      |
-|  services/chat-session.ts— manage NW-Claude process lifecycle     |
-+---------------------------|----|----------------------------------|
-                             |    |
-           Unix domain socket|    | (nightwatch.sock)
-                             |    |
-+----------------------------v----v---------------------------------+
-|  Worker Process (bun run worker/index.ts)                         |
-|                                                                   |
-|  scheduler.ts    — interval timer + webhook trigger               |
-|  executor.ts     — spawn safehouse → claude -p per target         |
-|  policy.ts       — build safehouse flags per target/mode          |
-|  log-parser.ts   — parse stream-json lines → structured events    |
-+------------------------------|------------------------------------+
-                                |
-              Bun.spawn(['safehouse', ...flags, 'claude', '-p', ...])
-                                |
-+-------------------------------v------------------------------------+
-|  agent-safehouse (macOS sandbox-exec)                             |
-|  claude -p --output-format stream-json                            |
-|     cwd = target_path (auto-loads project .mcp.json, CLAUDE.md)   |
-|     --mcp-config nw-mcp.json (NW-MCP tools)                       |
-|     --mcp-config nw-journal.json (per-target private journal)     |
-+-------------------------------------------------------------------+
+┌──────────────────────────────────────────────────────────────────────┐
+│                          Browser (Preact + HTM)                       │
+│                                                                        │
+│  app.ts (root)                                                         │
+│    ├─ ScheduleBar                      ← top bar, always visible      │
+│    ├─ [page router via location.hash]                                  │
+│    │    ├─ Dashboard (pages/dashboard.ts)                              │
+│    │    │    ├─ Sidebar                ← target list + status dots     │
+│    │    │    ├─ TargetDetail           ← selected target panel         │
+│    │    │    ├─ TriggerDialog          ← run trigger modal             │
+│    │    │    └─ ChatPanel              ← inline NW-Claude chat         │
+│    │    ├─ Runs (pages/runs.ts)        ← run list + run detail         │
+│    │    ├─ Health (pages/health.ts)                                     │
+│    │    └─ Config (pages/config.ts)                                     │
+│    └─ BottomNav                        ← tab bar                       │
+│                                                                        │
+│  Dead code                                                             │
+│    └─ frontend/components/chat-drawer.ts  ← ORPHAN (unused)           │
+└───────────────────────────┬──────────────────────────────────────────┘
+                            │ HTTP + SSE
+┌───────────────────────────▼──────────────────────────────────────────┐
+│                         Hono Server (server/)                          │
+│                                                                        │
+│  routes/api.ts     GET/POST /api/targets, /api/runs, /api/webhook     │
+│  routes/stream.ts  GET /api/runs/:id/stream (SSE), /api/events (SSE)  │
+│  routes/chat.ts    POST /api/chat/:target/message + SSE stream         │
+│  routes/feedback.ts POST /api/feedback, GET calibration               │
+│  routes/health-api.ts GET /api/health/:target                          │
+│  routes/config.ts  GET/PUT /api/config + target CRUD                  │
+│  routes/schedule.ts GET/PUT /api/schedule                              │
+│  routes/mcp.ts     MCP server (12 tools)                               │
+│                                                                        │
+│  server/ipc.ts     ← SSE fan-out + global broadcast + IPC handler     │
+│    sseSubscribers: Map<runId, Set<SSEWriter>>                          │
+│    globalSubscribers: Set<SSEWriter>                                   │
+│                                                                        │
+│  services/run-store.ts   ← YAML-backed run persistence                 │
+│  services/yaml-store.ts  ← generic YAML r/w                            │
+│  services/chat-manager.ts ← per-target Anthropic SDK sessions          │
+└───────────────────────────┬──────────────────────────────────────────┘
+                            │ Bun native IPC (process.send)
+┌───────────────────────────▼──────────────────────────────────────────┐
+│                       Bun Worker (worker/)                             │
+│                                                                        │
+│  worker/index.ts     ← IPC handler, queue: Run[], currentRun          │
+│  worker/executor.ts  ← claude -p spawn, log stream, summary write      │
+│  worker/scheduler.ts ← interval timer → enqueue()                     │
+│  worker/log-parser.ts ← JSONL → ParsedLogEvent                        │
+│  worker/feedback-collector.ts ← PR/Linear status polling              │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
-### Component Responsibilities
+## Component Responsibilities
 
-| Component | Responsibility | Communicates With |
-|-----------|---------------|-------------------|
-| Hono server | HTTP routing, SSE emission, WebSocket upgrade, MCP endpoint, static file serving | Browser (HTTP/SSE/WS), Worker (IPC client), YAML files |
-| Worker process | Scheduler, execution queue, safehouse spawning, run lifecycle | Server (IPC server), claude -p child processes |
-| IPC layer | Bidirectional message passing between server and worker | Unix domain socket at `app/nightwatch.sock` |
-| log-parser | Parse `--output-format stream-json` lines into typed events | Worker (reads stdout), Server (receives via IPC) |
-| SSE endpoint | Push run log events to browser in real-time | Browser EventSource, Worker via IPC |
-| WebSocket/chat | Proxy messages between browser and NW-Claude CLI process | Browser WS, chat-session (manages `claude` process stdin/stdout) |
-| MCP endpoint | Expose nightwatch state + actions to any Claude session | Any external Claude session, YAML store, Worker IPC |
-| yaml-store | Read/write YAML config files with field compatibility layer | Server routes, Worker (reads targets) |
-| run-store | Read run artifacts (log.jsonl, summary.yaml) | Server routes, SSE stream |
-| chat-session | Manage long-lived `claude --input-format stream-json` process | Server WebSocket route, claude process stdio |
+| Component | Responsibility | Location |
+|-----------|----------------|----------|
+| `app.ts` | Root render, global SSE listener (`/api/events`), health data loader, page router | `frontend/app.ts` |
+| `Dashboard` | Target selection, run trigger coordination, polling while active (5s) | `frontend/pages/dashboard.ts` |
+| `Sidebar` | Target list, status dots, health arrows, "Add Target" button (no-op today) | `frontend/components/sidebar.ts` |
+| `TargetDetail` | Target metadata, Run/Dry-run buttons, last run status, menu with dead Edit/Chat buttons | `frontend/components/target-detail.ts` |
+| `TriggerDialog` | Modal for run mode + custom prompt selection | `frontend/components/trigger-dialog.ts` |
+| `Runs` | Run list with filters + run detail view with LogStream. No polling (gap vs Dashboard) | `frontend/pages/runs.ts` |
+| `ChatPanel` | Inline NW-Claude chat (live replacement for ChatDrawer) | `frontend/components/chat-panel.ts` |
+| `ChatDrawer` | Overlay chat drawer — **DEAD CODE**, not imported anywhere | `frontend/components/chat-drawer.ts` |
+| `server/ipc.ts` | SSE fan-out state, global broadcast, IPC handler, heartbeat watchdog | `server/ipc.ts` |
+| `run-store.ts` | YAML-backed run list (`nightwatch-runs.yaml`) + per-run summary.yaml | `server/services/run-store.ts` |
+| `worker/index.ts` | Queue (`Run[]`), `currentRun`, IPC message router | `worker/index.ts` |
+| `worker/executor.ts` | Spawns `claude -p`, streams logs via IPC, writes summary.yaml | `worker/executor.ts` |
+| `shared/types.ts` | Central Zod schemas + TypeScript interfaces — single source of truth | `shared/types.ts` |
+| `frontend/lib/api.ts` | Typed fetch wrappers — one method per endpoint | `frontend/lib/api.ts` |
 
-## Recommended Project Structure
+---
 
+## v1.1 Feature Integration Analysis
+
+### Feature 1: Toast System
+
+**What it is:** Lightweight overlay notification for run trigger feedback (success/error) and other one-shot messages.
+
+**Integration points:**
+- New component: `frontend/components/toast.ts` — renders a fixed-position overlay, manages a queue of `{ id, message, type, duration }` entries with auto-dismiss
+- New module: `frontend/lib/use-toast.ts` — module-level callback registration so any page can call `showToast()` without prop drilling
+
+**Mount point:** `app.ts` renders `<Toast />` alongside the page router (outside the page div, at root level). The Toast component registers its handler on mount; any module calls the exported `showToast()` function.
+
+**Consumers:**
+- `Dashboard` (`pages/dashboard.ts`): `handleTrigger()` resolves → `showToast('Run queued for {target}', 'success')`, rejects → `showToast('Worker offline', 'error')`
+- `app.ts`: optionally show toast on `brief-ready` run completion event
+
+**Data flow:**
 ```
-kc-nightwatch/app/
-├── package.json
-├── tsconfig.json
-├── nightwatch-app.yaml           # AppConfig (created on first run)
-├── runs/                         # run artifacts (gitignored)
-│   └── {run-id}/
-│       ├── log.jsonl
-│       ├── summary.yaml
-│       ├── custom-prompt.txt
-│       └── stdout.txt
-│
-├── server/
-│   ├── index.ts                  # entry point: starts HTTP server + spawns worker
-│   ├── ipc.ts                    # Unix socket client (connect to worker, send/receive)
-│   ├── routes/
-│   │   ├── api.ts                # REST: /api/targets, /api/runs, /api/feedback, /api/webhook
-│   │   ├── stream.ts             # SSE: /api/runs/:id/stream
-│   │   ├── config.ts             # YAML editor API: /api/config
-│   │   ├── chat.ts               # WebSocket upgrade: /ws/chat
-│   │   └── mcp.ts                # MCP Streamable HTTP: /mcp (POST + GET)
-│   └── services/
-│       ├── yaml-store.ts         # YAML read/write with old→new field compat layer
-│       ├── run-store.ts          # read run artifacts, list run history
-│       ├── chat-session.ts       # spawn + manage claude --input-format stream-json
-│       └── auth.ts               # optional Bearer token check for remote mode
-│
-├── worker/
-│   ├── index.ts                  # entry point: Unix socket server + message dispatch
-│   ├── scheduler.ts              # interval timer management
-│   ├── executor.ts               # build command, spawn safehouse, timeout enforcement
-│   ├── policy.ts                 # buildSafehouseFlags(target, run) → string[]
-│   └── log-parser.ts             # parse stream-json lines → ParsedLogEvent
-│
-├── frontend/
-│   ├── index.html                # shell (imports app.ts as module)
-│   ├── app.ts                    # root Preact component + client-side router
-│   ├── pages/
-│   │   ├── dashboard.ts          # target cards + flywheel health + chat panel
-│   │   ├── runs.ts               # run history + detail + live log view
-│   │   └── config.ts             # YAML editor with 4-step validation flow
-│   ├── components/               # target-card, run-timeline, log-stream, yaml-editor,
-│   │   └── ...                   # trigger-dialog, chat-panel, feedback-buttons, wizard
-│   └── lib/
-│       ├── api.ts                # fetch wrapper (REST calls)
-│       ├── sse.ts                # SSE client hook (useSSE)
-│       └── ws.ts                 # WebSocket client hook (useWebSocket)
-│
-└── shared/
-    ├── types.ts                  # Run, Target, RunSummary, AppConfig, IPC messages
-    └── constants.ts
+Dashboard.handleTrigger()
+  → api.triggerRun() resolves → showToast('Run queued', 'success')
+                     rejects  → showToast('Worker offline', 'error')
+  → Toast component auto-dismisses after N ms
 ```
 
-### Structure Rationale
+**What to create:** `frontend/components/toast.ts` (new), `frontend/lib/use-toast.ts` (new)
+**What to modify:** `frontend/app.ts` (mount Toast), `frontend/pages/dashboard.ts` (call showToast on trigger)
 
-- **server/ vs worker/**: Hard process boundary keeps HTTP serving alive when worker is busy executing a 30-minute Claude run. Worker crash does not kill the dashboard.
-- **server/ipc.ts**: Single module owns the Unix socket connection — server routes never talk to the worker directly. Centralizes reconnect logic.
-- **worker/log-parser.ts**: Stream-JSON parsing isolated in worker — keeps executor.ts focused on process lifecycle. Parser output crosses IPC boundary as `run:log` events.
-- **shared/types.ts**: IPC message types and domain types in one place — both processes import from here. Prevents type drift across the boundary.
-- **frontend/lib/**: SSE and WebSocket client hooks separated from components — reusable and testable independently.
+---
+
+### Feature 2: Browser Notification API
+
+**What it is:** `Notification.requestPermission()` at startup and `new Notification(...)` when a run completes.
+
+**Integration points:**
+- `app.ts` already has the global SSE listener for `brief-ready` events (lines 39–47). Run completion arrives there via `broadcastGlobal('brief-ready', ...)` from `server/ipc.ts`.
+- Permission request: add `Notification.requestPermission()` inside the startup `useEffect` that sets up the EventSource. Wrap in `'Notification' in window` guard.
+- Notification fire: in the existing `brief-ready` listener, after `api.briefChat()`, call `new Notification('Run complete', { body: targetName })`.
+- No new component needed — pure logic addition in `app.ts`.
+
+**Current `brief-ready` handler location:** `frontend/app.ts` lines 39–47
+
+**What to modify:** `frontend/app.ts` only — add permission request at startup + notification fire in `brief-ready` handler
+
+---
+
+### Feature 3: Runs Page Auto-Refresh
+
+**What it is:** The Runs page should poll `api.getRuns()` when active runs exist, matching the polling pattern Dashboard already uses.
+
+**Current gap:** `Runs` page (lines 58–67 in `pages/runs.ts`) fetches runs once on mount and never refreshes. A run that transitions from `queued` → `running` → `completed` while the user is on the Runs page requires a manual refresh.
+
+**Dashboard reference implementation** (in `pages/dashboard.ts`):
+- `useRef<ReturnType<typeof setInterval>>` for the timer
+- `loadRuns()` function: fetches, updates state, checks for active runs (`status === 'running' || status === 'queued'`), starts or clears timer accordingly
+- Cleanup in unmount `useEffect`
+
+**What to add to Runs page:**
+- `useRef` for poll timer
+- `loadRuns()` function wrapping the existing `api.getRuns()` call
+- Active-run detection + timer start/stop
+- Optional: subscribe to global SSE `brief-ready` to trigger an immediate refresh when a run completes (avoids waiting for next 5s poll)
+
+**What to modify:** `frontend/pages/runs.ts` — add polling pattern identical to Dashboard
+
+---
+
+### Feature 4: `queued_at` Field on Run Type
+
+**What it is:** A timestamp recording when a run was enqueued, distinct from `started_at` (when execution began). Currently runs in `queued` status have no timestamp for when they were queued.
+
+**This is a schema change that touches 4 layers:**
+
+**Layer 1 — `shared/types.ts`**
+- Add `queued_at?: string` to the `Run` interface (optional for backward compat with ~100 existing runs in `nightwatch-runs.yaml`)
+
+**Layer 2 — `server/routes/api.ts`**
+- `POST /api/runs` (lines 25–41): set `queued_at: new Date().toISOString()` on the `run` object before `appendRun()`
+- `POST /api/webhook` (lines 66–81): same
+
+**Layer 3 — `server/services/run-store.ts`**
+- No change needed. Run objects are stored and retrieved as-is from YAML.
+
+**Layer 4 — Worker**
+- `worker/index.ts` lines 78–92 (`__all__` expansion): set `queued_at` on each `subRun` built during expansion
+- `worker/scheduler.ts` lines 22–33: set `queued_at` on the `run` object built by the scheduler interval
+
+**Display changes:**
+- `frontend/pages/runs.ts` run list row: for runs with `status === 'queued'` and no `started_at`, show `timeAgo(run.queued_at)` instead of `timeAgo(run.started_at)` (the existing `timeAgo()` helper handles this)
+- `frontend/components/target-detail.ts` last run panel: show "Queued X ago" when `status === 'queued'` and `queued_at` is present
+
+**What to modify:** `shared/types.ts`, `server/routes/api.ts`, `worker/index.ts`, `worker/scheduler.ts`, `frontend/pages/runs.ts`, `frontend/components/target-detail.ts`
+
+---
+
+### Feature 5: Queue Visibility in TargetDetail
+
+**What it is:** Show queue depth (how many runs are waiting) for the selected target in the TargetDetail panel.
+
+**Where queue state lives:** `worker/index.ts` maintains `const queue: Run[]` and `let currentRun: Run | null`. It sends `{ type: 'state', queue, current }` IPC messages whenever the queue changes. `server/ipc.ts` receives these in `handleWorkerMessage` but currently only logs them (line 76 — debug log only, no fan-out to frontend).
+
+**Two design options — Option A recommended:**
+
+**Option A — HTTP polling endpoint (recommended):**
+- `server/ipc.ts`: add `let lastWorkerState: { queue: Run[]; current?: Run } = { queue: [] }` module-level variable, updated in the `state` case of `handleWorkerMessage`
+- `server/routes/api.ts`: add `GET /api/worker/state` returning `lastWorkerState`
+- `frontend/lib/api.ts`: add `getWorkerState(): Promise<{ queue: Run[]; current?: Run }>`
+- `frontend/pages/dashboard.ts`: call `api.getWorkerState()` in `loadRuns()` (runs every 5s when active), store as `workerQueue` state, pass to TargetDetail
+
+**Option B — Global SSE broadcast (not recommended):**
+- Would broadcast a `worker:state` SSE event on every queue change during a run
+- Queue changes can happen dozens of times per minute — pollutes the SSE channel designed for infrequent lifecycle events
+
+**TargetDetail display:**
+- Accept new prop `workerQueue: Run[]`
+- Filter by `run.target === target.name` to get per-target queue items
+- Show "X run(s) queued" below the last-run panel when count > 0
+
+**What to modify:** `server/ipc.ts` (store lastWorkerState), `server/routes/api.ts` (add GET /api/worker/state), `frontend/lib/api.ts` (add getWorkerState), `frontend/pages/dashboard.ts` (fetch queue, pass to TargetDetail), `frontend/components/target-detail.ts` (accept + display queue prop)
+
+---
+
+### Feature 6: Sidebar Add Target Button Wiring
+
+**What it is:** The `+ Add Target` button in `Sidebar` has `onClick=${() => {}}` today — two instances of it (line 32: empty-state version; line 75: footer button). It should open the `AddTargetWizard`.
+
+**Current state of AddTargetWizard:** The component exists at `frontend/components/add-target-wizard.ts` and handles both create and edit modes. It is already used in the Config page. Dashboard does not currently mount it.
+
+**Integration points:**
+- `Sidebar` Props: add `onAddTarget: () => void` — both `onClick=${() => {}}` instances wire to this
+- `Dashboard`: add `showAddWizard: boolean` state + mount `<AddTargetWizard isOpen={showAddWizard} onClose={...} onSaved={...} />`
+- Pass `onAddTarget={() => setShowAddWizard(true)}` from Dashboard to Sidebar
+- On wizard `onSaved`: reload targets with `api.getTargets()` and refresh run data
+
+**What to modify:** `frontend/components/sidebar.ts` (add onAddTarget prop, wire both buttons), `frontend/pages/dashboard.ts` (add wizard state + mount, pass callback to Sidebar)
+
+---
+
+### Feature 7: Cleanup
+
+**chat-drawer.ts — DELETE:**
+- File: `frontend/components/chat-drawer.ts`
+- `chat-panel.ts` is the live replacement. `chat-drawer.ts` is not imported from `app.ts`, Dashboard, or any page.
+- Verify before deleting: `grep -r "chat-drawer" app/frontend/` should return zero results.
+
+**Disabled buttons in target-detail.ts (lines 83–95):**
+- "Edit" button: `aria-disabled="true"`, `title="Coming in Phase 3"` — Edit functionality is implemented (AddTargetWizard handles edit mode via `editTarget` prop). Wire to `onEdit` callback. Pass `editTarget` data to the wizard from Dashboard.
+- "Chat" button: `aria-disabled="true"`, `title="Coming in Phase 3"` — ChatPanel is now always visible inline on Dashboard. This menu item is vestigial. Remove it from the dropdown, or change to a no-op label noting chat is in the right panel.
+
+**Dead code in target-detail.ts (line 46):**
+- `const phases = lastRun?.log_path ? [] : []` — always evaluates to `[]` regardless of the condition. This was scaffolding never completed. Remove the variable entirely (it is only used in the `phases.length > 0` guard that is therefore always false).
+
+**What to delete:** `frontend/components/chat-drawer.ts`
+**What to modify:** `frontend/components/target-detail.ts` (fix/remove disabled buttons, remove dead phases variable)
+
+---
+
+## File Change Matrix
+
+| File | Change | v1.1 Feature(s) |
+|------|--------|-----------------|
+| `shared/types.ts` | MODIFIED | queued_at field on Run |
+| `server/ipc.ts` | MODIFIED | Store lastWorkerState for queue visibility |
+| `server/routes/api.ts` | MODIFIED | queued_at on POST /api/runs + webhook; GET /api/worker/state |
+| `worker/index.ts` | MODIFIED | queued_at on __all__ sub-runs |
+| `worker/scheduler.ts` | MODIFIED | queued_at on scheduled runs |
+| `frontend/app.ts` | MODIFIED | Mount Toast; Notification API permission + fire |
+| `frontend/lib/api.ts` | MODIFIED | Add getWorkerState() |
+| `frontend/lib/use-toast.ts` | NEW | Toast state management (module-level callback) |
+| `frontend/components/toast.ts` | NEW | Toast overlay component |
+| `frontend/pages/dashboard.ts` | MODIFIED | Toast calls; AddTargetWizard wiring; queue fetch; pass queue to TargetDetail |
+| `frontend/pages/runs.ts` | MODIFIED | Polling pattern; show queued_at for queued runs |
+| `frontend/components/sidebar.ts` | MODIFIED | Add onAddTarget prop; wire both Add Target buttons |
+| `frontend/components/target-detail.ts` | MODIFIED | Queue display prop; fix/remove disabled buttons; remove dead phases variable |
+| `frontend/components/chat-drawer.ts` | DELETE | Dead code |
+
+---
+
+## Data Flow Changes
+
+### Run Trigger with Toast
+
+```
+User: clicks Run in TargetDetail
+  → Dashboard.openDialog(targetName) → TriggerDialog shown
+  → User confirms → handleTrigger({ mode, custom_prompt })
+  → api.triggerRun({ target, mode, ... })
+     ├── 202 Accepted → showToast('Run queued for {target}', 'success')
+     │                → loadRuns() [existing]
+     └── error        → showToast('Worker offline', 'error')
+```
+
+### Run Completion with Browser Notification
+
+```
+worker/index.ts: run completes → send({ type: 'run:completed', run_id, summary })
+  → server/ipc.ts: handleWorkerMessage → broadcastGlobal('brief-ready', { run_id, summary })
+  → browser app.ts: es.addEventListener('brief-ready')
+     ├── api.briefChat(target, summary)               [existing]
+     ├── new Notification('Run complete', { body })   [NEW]
+     └── showToast('{target} run complete', 'success') [NEW, optional]
+```
+
+### Queue State Display
+
+```
+worker/index.ts: send({ type: 'state', queue, current })  [existing, on every queue change]
+  → server/ipc.ts: handleWorkerMessage
+     ├── debug log                                         [existing]
+     └── lastWorkerState = { queue, current }              [NEW]
+
+Dashboard.loadRuns() [runs every 5s while active]
+  → api.getWorkerState()   [NEW call added to loadRuns]
+  → setWorkerQueue(queue)
+  → pass workerQueue to TargetDetail prop
+  → TargetDetail: filter queue by target.name → show "X queued"
+```
+
+### Runs Page Live Refresh
+
+```
+Runs page mounts
+  → loadRuns() → api.getRuns() → setRuns(runs)
+  → if active runs: start 5s poll timer [NEW]
+  → on brief-ready SSE (optional): loadRuns() immediately [NEW]
+  → on unmount: clearInterval [NEW]
+```
+
+---
 
 ## Architectural Patterns
 
-### Pattern 1: Unix Domain Socket IPC (newline-delimited JSON)
+### Pattern 1: Polling While Active
 
-**What:** Server spawns worker as a child process. Worker connects to a Unix domain socket created by the server. Messages flow as newline-delimited JSON objects (one JSON object per line, terminated with `\n`).
+**What:** Components start a `setInterval` when active runs exist and clear it when idle.
+**When to use:** Any page/component that displays live run state (list, counts, status).
+**Trade-offs:** Simple, no WebSocket complexity. 5s latency is fine for this tool.
 
-**When to use:** When both processes run on the same machine and you need low-latency bidirectional messaging without HTTP overhead.
-
-**Trade-offs:** Faster and lower overhead than TCP loopback (30-66% lower latency per benchmarks). Bun's native IPC (`.send()` / `process.on("message")`) is simpler to set up but is Bun-to-Bun only and uses `structuredClone()` internally. Unix socket with NDJSON is marginally more code but gives full control over reconnect behavior and is interoperable.
-
-**Recommended approach for this project:** Use Bun's native IPC (`ipc: true` on `Bun.spawn`) for the server→worker channel. It handles the underlying socket automatically. Use newline-delimited JSON messages (serialization: `"json"` mode in Bun IPC) so the protocol is inspectable.
+Dashboard is the reference implementation. Runs page needs the same pattern:
 
 ```typescript
-// server/index.ts — spawn worker with IPC channel
-const worker = Bun.spawn(['bun', 'run', 'worker/index.ts'], {
-  ipc(message) {
-    handleWorkerMessage(message)  // Worker → Server messages
-  },
-  env: { ...process.env }
-})
+const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-// server sending to worker
-worker.send({ type: 'enqueue', run })
-
-// worker/index.ts — receive from parent and send back
-process.on('message', (msg) => handleServerMessage(msg))
-process.send({ type: 'run:started', run_id, pid })
-```
-
-**Reconnect on worker crash:** Server detects disconnect via `worker.exited` promise. Cleans up orphan `claude -p` processes by stored PID. Restarts worker after brief delay.
-
-### Pattern 2: SSE Log Streaming (Hono streamSSE)
-
-**What:** Worker emits `run:log` IPC messages for each stream-json line parsed from claude's stdout. Server fans these out to connected SSE clients (browsers watching a run).
-
-**When to use:** One-directional push from server to browser — log lines, phase progress, tool call events. SSE is simpler than WebSocket for this case (auto-reconnect built into browser EventSource).
-
-**Trade-offs:** SSE requires HTTP/1.1 keep-alive or HTTP/2. With HTTP/2 there is no per-domain connection limit. For localhost this is not a concern.
-
-**Implementation:**
-
-```typescript
-// server/routes/stream.ts
-import { streamSSE } from 'hono/streaming'
-
-app.get('/api/runs/:id/stream', (c) => {
-  const runId = c.req.param('id')
-  return streamSSE(c, async (stream) => {
-    const unsubscribe = subscribeToRun(runId, async (event) => {
-      await stream.writeSSE({
-        data: JSON.stringify(event),
-        event: event.type,
-        id: event.seq.toString()
-      })
-    })
-    // Keep alive until run completes or client disconnects
-    await stream.sleep(maxRunDurationMs)
-    unsubscribe()
-  })
-})
-```
-
-**Fan-out mechanism:** Server maintains a `Map<runId, Set<SSEWriter>>`. IPC `run:log` handler looks up active writers for the run and calls `writeSSE` on each. On `run:completed`, flush final event and remove from map.
-
-### Pattern 3: WebSocket Bidirectional Chat (Bun native + chat-session)
-
-**What:** Browser connects via WebSocket. Server upgrades the HTTP connection and proxies messages to/from a long-lived `claude --input-format stream-json --output-format stream-json` child process.
-
-**When to use:** Bidirectional streaming where browser needs to send user messages and receive Claude responses in real-time.
-
-**Trade-offs:** `--input-format stream-json` is a documented Claude CLI feature but is newer than `--output-format stream-json`. Treat as potentially unreliable for long-lived sessions; design for fallback to Anthropic SDK if needed.
-
-**Implementation:**
-
-```typescript
-// server/services/chat-session.ts
-class ChatSession {
-  private proc: Subprocess
-  private ws: ServerWebSocket
-
-  constructor(ws: ServerWebSocket, systemPrompt: string) {
-    this.ws = ws
-    this.proc = Bun.spawn(['claude',
-      '--input-format', 'stream-json',
-      '--output-format', 'stream-json',
-      '--system-prompt', systemPrompt,
-    ], { stdin: 'pipe', stdout: 'pipe', cwd: targetPath })
-
-    // Pipe proc.stdout → WebSocket
-    this.pipeOutput()
-  }
-
-  send(userMessage: string) {
-    // Write stream-json format to stdin
-    const msg = JSON.stringify({ type: 'user', message: { role: 'user', content: userMessage } })
-    this.proc.stdin.write(msg + '\n')
-  }
-
-  private async pipeOutput() {
-    for await (const chunk of this.proc.stdout) {
-      this.ws.send(chunk)  // Forward raw stream-json to browser
+function loadRuns() {
+  api.getRuns().then(runs => {
+    setRuns(runs)
+    const active = runs.some(r => r.status === 'running' || r.status === 'queued')
+    if (active && !pollTimerRef.current) {
+      pollTimerRef.current = setInterval(loadRuns, 5_000)
+    } else if (!active && pollTimerRef.current) {
+      clearInterval(pollTimerRef.current)
+      pollTimerRef.current = null
     }
-  }
+  }).catch(console.error)
+}
+
+useEffect(() => {
+  loadRuns()
+  return () => { if (pollTimerRef.current) clearInterval(pollTimerRef.current) }
+}, [])
+```
+
+### Pattern 2: Toast via Module-Level Callback (no Context, no prop-drilling)
+
+**What:** A module exports `showToast()` that delegates to a callback registered by the Toast component at mount time.
+**When to use:** Cross-cutting concerns where prop-drilling would be invasive (toast, global errors).
+**Trade-offs:** Less "React pure" but avoids Zustand/Redux and Preact context overhead. No build step required.
+
+```typescript
+// frontend/lib/use-toast.ts
+type ToastType = 'success' | 'error' | 'info'
+let _handler: ((msg: string, type: ToastType) => void) | null = null
+
+export function registerToastHandler(fn: typeof _handler) { _handler = fn }
+export function showToast(message: string, type: ToastType = 'success') {
+  _handler?.(message, type)
 }
 ```
 
-**Bun WebSocket upgrade:**
+The `Toast` component calls `registerToastHandler(...)` in its `useEffect` on mount. Any module calls `showToast(...)` directly — no prop threading needed.
 
-```typescript
-// server/routes/chat.ts
-app.get('/ws/chat', (c) => {
-  const server = getBunServer()
-  const upgraded = server.upgrade(c.req.raw, { data: { sessionId: crypto.randomUUID() } })
-  if (upgraded) return undefined
-  return c.text('WebSocket upgrade failed', 426)
-})
-```
+### Pattern 3: HTTP Polling for Frequent State, SSE for Lifecycle Events
 
-### Pattern 4: MCP Streamable HTTP with @hono/mcp
+**What:** The existing global SSE channel (`/api/events`) carries infrequent lifecycle events (`brief-ready`, `config-changed`). Frequent state updates (queue depth, run list) use HTTP polling.
+**When to use:** Always in this codebase — keep the SSE channel clean.
+**Trade-offs:** Two connection patterns, but clear separation of concerns. Prevents SSE flooding.
 
-**What:** MCP server embedded in the Hono app, exposed at `/mcp`. Handles both POST (JSON-RPC requests) and GET (SSE stream for server-initiated messages). Uses `@hono/mcp` package which wraps `@modelcontextprotocol/sdk`.
+---
 
-**When to use:** Any Claude session (external) needs to query or command nightwatch without running it locally.
+## Anti-Patterns to Avoid
 
-**Trade-offs:** `@hono/mcp` is relatively new (appeared with MCP spec 2025-03-26). `@modelcontextprotocol/sdk` v1.x is stable; v2 is pre-alpha as of early 2026. Use v1.x for MVP.
+### Anti-Pattern 1: Broadcasting Queue State Over Global SSE
 
-**Implementation:**
+**What people do:** Add `broadcastGlobal('worker:state', ...)` every time the queue changes.
+**Why it's wrong:** Queue changes multiple times per minute during active runs. Global SSE is designed for infrequent lifecycle events. This conflates the two concerns and creates unnecessary event volume even for a single-user tool.
+**Do this instead:** Add `GET /api/worker/state` endpoint. Clients poll it at 5s alongside the run list — one function call added to `loadRuns()`.
 
-```typescript
-// server/routes/mcp.ts
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import { StreamableHTTPTransport } from '@hono/mcp'
-import { Hono } from 'hono'
-import { z } from 'zod'
+### Anti-Pattern 2: Making `queued_at` Required
 
-const mcpApp = new Hono()
-const mcpServer = new McpServer({ name: 'nightwatch', version: '1.0.0' })
+**What people do:** Add `queued_at: string` (non-optional) to enforce timestamp hygiene.
+**Why it's wrong:** ~100 existing runs in `nightwatch-runs.yaml` have no `queued_at`. Non-optional breaks backward compat; requires a data migration.
+**Do this instead:** Keep `queued_at?: string` optional. Display logic falls back to `started_at` or `—` when absent. New runs set it; old runs show nothing.
 
-// Register tools
-mcpServer.tool('nw_trigger_run', { target: z.string(), mode: z.enum(['production', 'dry-run']) },
-  async ({ target, mode }) => {
-    const run = await ipc.send({ type: 'enqueue', run: createRun(target, mode) })
-    return { content: [{ type: 'text', text: JSON.stringify({ run_id: run.id }) }] }
-  }
-)
+### Anti-Pattern 3: Prop-Drilling Toast State
 
-const transport = new StreamableHTTPTransport()
-mcpApp.all('/', async (c) => {
-  if (!mcpServer.isConnected()) await mcpServer.connect(transport)
-  return transport.handleRequest(c)
-})
+**What people do:** Add `showToast: (msg: string) => void` to Dashboard, then thread it through to TargetDetail and deeper children.
+**Why it's wrong:** Toast is a cross-cutting concern. Prop-drilling invades 4+ components for what is logically a global utility.
+**Do this instead:** Module-level callback pattern (Pattern 2 above).
 
-export { mcpApp }
-// Mounted at /mcp in server/index.ts: app.route('/mcp', mcpApp)
-```
+### Anti-Pattern 4: Wiring Add Target via Config Page's Wizard
 
-**Auth:** When remote mode is active, add Bearer token middleware before the MCP route.
+**What people do:** Navigate to `#/config` when user clicks "+ Add Target" in Sidebar, since the wizard is already there.
+**Why it's wrong:** Context switch disrupts the user's flow in the Dashboard. The wizard already supports a standalone `isOpen` prop — it was designed for embedding anywhere.
+**Do this instead:** Mount `AddTargetWizard` directly in Dashboard with its own `showAddWizard` state. Dashboard and Config page each manage their own wizard instance independently.
 
-## Data Flow
+---
 
-### Run Trigger → Log Streaming → Browser
+## Recommended Build Order
+
+This order respects dependencies. Each step can be done independently of steps at the same level.
 
 ```
-Browser: POST /api/runs { target, mode, custom_prompt }
-    |
-    v
-server/routes/api.ts
-    | IPC: { type: 'enqueue', run }
-    v
-worker/index.ts (receives IPC)
-    |
-    v
-worker/scheduler.ts → executor.ts
-    | Bun.spawn(['safehouse', ...flags, 'claude', '-p', ...])
-    v
-claude -p process (cwd = target_path)
-    | stdout (stream-json lines)
-    v
-worker/log-parser.ts → ParsedLogEvent
-    | IPC: { type: 'run:log', run_id, event }
-    v
-server/ipc.ts (receives from worker)
-    | fan-out to active SSE writers
-    v
-server/routes/stream.ts → streamSSE.writeSSE()
-    | SSE event
-    v
-Browser: EventSource receives event → log-stream component updates
+Step 1 — Schema (foundation, no deps)
+  shared/types.ts — add queued_at?: string to Run
+
+Step 2 — Server: set queued_at + queue state endpoint (deps: step 1)
+  server/routes/api.ts — queued_at on POST /api/runs and webhook
+  server/ipc.ts        — store lastWorkerState on 'state' IPC messages
+  server/routes/api.ts — GET /api/worker/state returning lastWorkerState
+
+Step 3 — Worker: set queued_at (deps: step 1, parallel with step 2)
+  worker/index.ts   — queued_at on __all__ sub-runs
+  worker/scheduler.ts — queued_at on scheduled interval runs
+
+Step 4 — Toast infrastructure (no deps, pure new code)
+  frontend/lib/use-toast.ts   — module-level callback + showToast()
+  frontend/components/toast.ts — overlay component + registerToastHandler
+
+Step 5 — App root updates (deps: step 4)
+  frontend/app.ts — mount <Toast />, add Notification.requestPermission(),
+                    fire Notification in brief-ready handler
+
+Step 6 — API client update (deps: step 2 endpoint must exist)
+  frontend/lib/api.ts — add getWorkerState()
+
+Step 7 — Dashboard updates (deps: steps 4, 6)
+  frontend/pages/dashboard.ts — showToast on trigger, getWorkerState in loadRuns,
+                                 AddTargetWizard mount, pass workerQueue to TargetDetail
+
+Step 8 — Component updates (deps: step 7 for prop additions)
+  frontend/components/target-detail.ts — workerQueue prop, fix disabled buttons,
+                                          remove dead phases variable
+  frontend/components/sidebar.ts       — onAddTarget prop, wire both buttons
+
+Step 9 — Runs page refresh (deps: step 1 for queued_at display)
+  frontend/pages/runs.ts — polling pattern, show queued_at for queued runs
+
+Step 10 — Cleanup (last, after confirming nothing references removed code)
+  DELETE frontend/components/chat-drawer.ts
 ```
 
-### IPC Message Flow (bidirectional)
-
-```
-SERVER → WORKER
-  enqueue   { type: 'enqueue', run: Run }
-  cancel    { type: 'cancel', run_id: string }
-  schedule  { type: 'schedule', config: ScheduleConfig }
-  status    { type: 'status' }
-  shutdown  { type: 'shutdown' }
-
-WORKER → SERVER
-  run:started    { type: 'run:started', run_id, pid }
-  run:log        { type: 'run:log', run_id, event: ParsedLogEvent }
-  run:completed  { type: 'run:completed', run_id, summary: RunSummary }
-  run:failed     { type: 'run:failed', run_id, error }
-  state          { type: 'state', queue: Run[], current?: Run, schedule }
-```
-
-### Chat Message Flow
-
-```
-Browser: WebSocket message (user text)
-    |
-    v
-server/routes/chat.ts → ws.on('message')
-    |
-    v
-server/services/chat-session.ts → proc.stdin.write(stream-json)
-    |
-    v
-claude process (--input-format stream-json)
-    | stdout (stream-json response chunks)
-    v
-chat-session.ts pipeOutput() loop
-    | ws.send(chunk)
-    v
-Browser: receives stream-json → renders assistant message
-```
-
-### Config Save Flow (4-step validation)
-
-```
-Browser: PUT /api/config { content: yaml_string }
-    |
-    v
-server/routes/config.ts
-    | Step 1: YAML.parse() + zod schema validation (sync)
-    | → error response if invalid
-    |
-    | Step 2: Spawn claude -p --model haiku --max-budget-usd 0.05
-    |         with semantic validation prompt (stream-json)
-    |         SSE progress events back to browser
-    | → warning response if semantic issues
-    |
-    | Step 3: diff old vs new content (server computes, sends to browser)
-    |
-    | Step 4: Browser confirms → PUT /api/config/confirm
-    v
-server/services/yaml-store.ts → write file
-```
-
-### MCP External Access Flow
-
-```
-External Claude session: POST /mcp (JSON-RPC: nw_trigger_run)
-    |
-    v
-server/routes/mcp.ts → McpServer tool handler
-    | IPC: { type: 'enqueue', run }
-    v
-Worker → executor → safehouse → claude -p
-    |
-    v
-{ content: [{ type: 'text', text: '{"run_id":"..."}' }] }
-    |
-    v
-External Claude session: nw_get_run(run_id) → poll for completion
-```
-
-## Build Order (Component Dependencies)
-
-Dependencies flow from bottom to top. Build in this order:
-
-```
-Phase 1 — Foundation (no dependencies)
-  shared/types.ts           — domain types and IPC message types
-  server/services/yaml-store.ts  — read/write YAML (needed by all routes)
-  worker/log-parser.ts      — stream-json parsing (isolated, no deps)
-  worker/policy.ts          — safehouse flag builder (isolated)
-
-Phase 2 — Worker core (depends on Phase 1)
-  worker/executor.ts        — spawn + manage claude -p (deps: policy, log-parser)
-  worker/scheduler.ts       — interval timer (deps: executor)
-  worker/index.ts           — IPC server + message dispatch (deps: all worker)
-
-Phase 3 — Server IPC + basic routes (depends on Phase 2)
-  server/ipc.ts             — Unix socket IPC client to worker
-  server/services/run-store.ts  — read run artifacts
-  server/routes/api.ts      — REST CRUD (deps: yaml-store, run-store, ipc)
-  server/index.ts           — entry point: HTTP server + spawn worker
-
-Phase 4 — Real-time (depends on Phase 3)
-  server/routes/stream.ts   — SSE endpoint (deps: ipc, run-store)
-  server/services/chat-session.ts  — claude process management
-  server/routes/chat.ts     — WebSocket upgrade (deps: chat-session)
-
-Phase 5 — MCP (depends on Phase 3)
-  server/routes/mcp.ts      — MCP Streamable HTTP (deps: ipc, yaml-store, run-store)
-
-Phase 6 — Frontend (depends on Phases 3-4)
-  frontend/lib/api.ts       — REST client
-  frontend/lib/sse.ts       — SSE hook
-  frontend/lib/ws.ts        — WebSocket hook
-  frontend/pages/dashboard.ts
-  frontend/pages/runs.ts    — live log view requires SSE
-  frontend/pages/config.ts  — YAML editor
-```
-
-**Critical path:** shared/types.ts → yaml-store → worker (executor + scheduler) → server/ipc → REST routes → SSE → Frontend
-
-## Integration Points
-
-### External Services
-
-| Service | Integration Pattern | Notes |
-|---------|---------------------|-------|
-| agent-safehouse | `Bun.spawn(['safehouse', ...flags, 'claude', '-p', ...])` | macOS sandbox-exec wrapper. Must be on PATH or absolute path in AppConfig |
-| claude CLI | Child process via Bun.spawn, stdout as ReadableStream | `--output-format stream-json` for runs, `--input-format stream-json` for chat |
-| private-journal MCP | `--mcp-config` pointing to per-target dir at spawn time | Injected by executor per target, not global |
-| GitHub CLI (gh) | NW-Claude chat session has gh available via safehouse policy | Used by NW-Claude for PR operations |
-| Anthropic API (fallback) | `@anthropic-ai/sdk` direct API for chat if CLI bidirectional proves unreliable | Decision deferred to implementation phase |
-
-### Internal Boundaries
-
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| Server ↔ Worker | Bun native IPC (Unix socket, JSC serialize) | All messages typed in `shared/types.ts`. Server is IPC caller, worker is responder |
-| Worker ↔ claude -p | `Bun.spawn` stdout as ReadableStream, SIGTERM for cancel | Async line iteration via ReadableStream reader |
-| Server ↔ Browser (logs) | SSE via Hono `streamSSE` | Server fans out IPC `run:log` events to registered SSE writers per run_id |
-| Server ↔ Browser (chat) | WebSocket via Bun native upgrade | chat-session.ts proxies to/from claude process stdio |
-| Server ↔ External Claude | MCP Streamable HTTP via `@hono/mcp` + `@modelcontextprotocol/sdk` | Single `/mcp` endpoint handles POST + GET per spec |
-| Routes ↔ YAML files | yaml-store service (sync layer) | Handles field renaming compat: reads both `sources`/`monitors`, writes new names only |
-
-## Anti-Patterns
-
-### Anti-Pattern 1: Direct Route-to-Worker Communication
-
-**What people do:** Have individual HTTP route handlers reach into the worker module directly (shared module import instead of IPC).
-
-**Why it's wrong:** Defeats the two-process isolation goal. If the worker hangs executing a 30-minute Claude run, it drags down the HTTP server. The entire point of the process split is the server stays responsive.
-
-**Do this instead:** All worker communication goes through `server/ipc.ts`. Routes call `ipc.send(msg)` and get back a response or subscribe to events. Never import worker modules from server modules.
-
-### Anti-Pattern 2: Blocking SSE on IPC Await
-
-**What people do:** `const result = await ipc.send(enqueue)` in the POST /api/runs handler — waiting for the run to complete before returning.
-
-**Why it's wrong:** The run takes 5-30 minutes. The HTTP response will time out. The browser spinner will spin forever.
-
-**Do this instead:** IPC enqueue is fire-and-notify. POST /api/runs returns `{ run_id }` immediately (202 Accepted). Browser subscribes to `/api/runs/:id/stream` (SSE) for real-time progress. Completion is signaled via a final SSE event.
-
-### Anti-Pattern 3: Per-Request MCP Transport Instantiation Without Cleanup
-
-**What people do:** Create `new StreamableHTTPServerTransport()` inside the route handler on every request, then forget to close it.
-
-**Why it's wrong:** Each transport maintains its own session state and potentially open SSE streams. Memory leaks over time.
-
-**Do this instead:** For stateful MCP (session management), create one transport per session and store in a Map keyed by `Mcp-Session-Id`. Clean up on session termination (HTTP DELETE to `/mcp`) or timeout. For stateless mode (simpler, fine for single-user), create and close per POST request.
-
-### Anti-Pattern 4: Writing stream-json Lines as Raw Text to Browser
-
-**What people do:** Forward raw `claude -p` stdout bytes directly to the SSE stream without parsing.
-
-**Why it's wrong:** The browser gets unparsed JSON blob per line. The frontend can't extract phase progress, tool calls, or errors without re-parsing the entire log format. Also, raw forwarding makes it impossible to filter sensitive content or annotate events server-side.
-
-**Do this instead:** `log-parser.ts` parses each line into a typed `ParsedLogEvent` before it crosses the IPC boundary. The SSE stream carries structured events. Raw log lines are also written to `runs/{id}/log.jsonl` for replay.
-
-### Anti-Pattern 5: Global NW Journal for All Targets
-
-**What people do:** Point all `claude -p` spawns at the same private-journal MCP config, letting all targets share one journal.
-
-**Why it's wrong:** Cross-target memory leakage. NW's learnings about e2e-pipeline bleed into its assessment of kc-nightwatch. Patterns from one codebase incorrectly reinforce behavior for another.
-
-**Do this instead:** `executor.ts` generates a target-specific `--mcp-config` pointing to `~/.claude/nightwatch/memory/{target.name}/`. Each target's NW journal is completely isolated.
-
-## Scaling Considerations
-
-This is a single-user localhost tool. Scaling is not a concern for MVP. The relevant considerations are reliability, not scale:
-
-| Concern | Approach |
-|---------|----------|
-| Worker crash during run | Server detects via IPC disconnect; kills orphan claude process by stored PID; marks run as `failed`; restarts worker |
-| Server restart during run | Worker has reconnect loop (1s backoff); in-progress run continues; server re-reads run state on reconnect via `status` IPC message |
-| Run timeout | `setTimeout` in executor wraps each claude child process; SIGTERM on timeout; status set to `timeout` |
-| Queue overflow | Max 1 concurrent run. Additional triggers FIFO queued in worker memory. Queue survives server restart (worker persists). |
-| Artifact disk growth | Rolling cleanup: keep last 50 run directories. Worker checks on each completion. |
+---
 
 ## Sources
 
-- Design spec: `kc-nightwatch/docs/superpowers/specs/2026-03-18-nightwatch-dashboard-design.md` (authoritative, 2 review rounds)
-- [Bun IPC documentation](https://bun.com/docs/guides/process/ipc) — spawn + `.send()` / `process.on("message")` patterns
-- [Bun WebSocket server](https://bun.com/docs/runtime/http/websockets) — native upgrade API, pub/sub pattern
-- [Hono Streaming Helper](https://hono.dev/docs/helpers/streaming) — `streamSSE`, `stream.writeSSE()`
-- [MCP Transports specification 2025-03-26](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports) — Streamable HTTP POST+GET, session management, `Mcp-Session-Id` header
-- [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) — `McpServer`, `@hono/mcp` `StreamableHTTPTransport`
-- [@hono/mcp npm package](https://jsr.io/@hono/mcp) — `StreamableHTTPTransport`, `transport.handleRequest(c)` pattern
-- [Unix Domain Sockets vs TCP](https://nodevibe.substack.com/p/the-nodejs-developers-guide-to-unix) — 30-66% lower latency, basis for IPC transport choice
+- Direct codebase inspection (2026-03-20):
+  - `app/shared/types.ts` — Run interface, IPC message types
+  - `app/server/ipc.ts` — SSE fan-out, global broadcast, handleWorkerMessage (lines 69–96)
+  - `app/server/routes/api.ts` — POST /api/runs (lines 25–41), POST /api/webhook (lines 66–81)
+  - `app/server/services/run-store.ts` — YAML-backed run persistence
+  - `app/worker/index.ts` — queue: Run[], currentRun, IPC handler, __all__ expansion (lines 61–121)
+  - `app/worker/scheduler.ts` — interval timer, Run construction (lines 22–33)
+  - `app/frontend/app.ts` — root component, global SSE, brief-ready handler (lines 39–47)
+  - `app/frontend/pages/dashboard.ts` — polling reference (lines 33–63)
+  - `app/frontend/pages/runs.ts` — current no-polling gap (lines 58–67)
+  - `app/frontend/components/sidebar.ts` — unconnected Add Target buttons (lines 32, 75)
+  - `app/frontend/components/target-detail.ts` — disabled buttons (lines 83–95), dead phases (line 46)
+  - `app/frontend/components/chat-drawer.ts` — confirmed orphan (no imports in app.ts or pages)
+  - `app/frontend/lib/api.ts` — full endpoint inventory
+- `.planning/PROJECT.md` — v1.1 requirements list
 
 ---
-*Architecture research for: Nightwatch Dashboard — Bun server + worker with SSE, WebSocket, MCP*
-*Researched: 2026-03-18*
+*Architecture research for: Nightwatch Dashboard v1.1 UX Polish*
+*Researched: 2026-03-20*
