@@ -193,6 +193,8 @@ steps:
 
 This flow mixes three step types: browser actions (steps 1, 3), CLI execution (step 2), and external verification (step 4). The test runner handles all three -- browser steps use the mapping, `Execute external` steps run commands, and `Verify external` steps check external services.
 
+Flows with **zero browser steps** (only `Execute external` and `Verify external`) automatically get terminal recording instead of browser recording. See [Cross-Boundary Testing -- Recording CLI-Only Flows](cross-boundary-testing.md#recording-cli-only-flows).
+
 For a complete real-world example with environment setup and multi-phase verification, see [Cross-Boundary Testing](cross-boundary-testing.md).
 
 ### Cross-site flows
@@ -337,13 +339,13 @@ This produces `.claude/e2e/coverage/coverage.json` with per-element data:
 
 | Status | Meaning |
 |--------|---------|
-| `verified` | Element appears in `expect:` assertions — actively checked |
+| `verified` | Element appears in `expect:` assertions -- actively checked |
 | `reached` | Element is used in actions (click, fill) but never in expects |
 | `untouched` | Element exists in mapping but no flow references it |
 
 **Coverage regression**: When coverage drops between runs, the compiler prints a warning. Use this to catch flows that were removed or narrowed.
 
-**Improving coverage**: Look for `untouched` elements — these represent UI that no test exercises. Consider adding steps or new flows targeting them.
+**Improving coverage**: Look for `untouched` elements -- these represent UI that no test exercises. Consider adding steps or new flows targeting them.
 
 ## Related
 

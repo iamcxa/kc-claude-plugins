@@ -14,6 +14,7 @@ Via the [kc-claude-plugins](https://github.com/iamcxa/kc-claude-plugins) marketp
 - [agent-browser](https://github.com/nicobrinkkemper/agent-browser) CLI installed globally
 - Node.js 20+ (required for the compiler and quarantine CLI)
 - Run `npm install` in the plugin directory (for `/e2e-compile` dependencies)
+- For CLI-only flow recording: `brew install asciinema agg` (optional)
 
 ## Quick Start
 

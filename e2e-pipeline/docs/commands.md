@@ -34,7 +34,7 @@
 | `/e2e-dispatch` | Unified entry point (routes to the right skill) |
 | `/e2e-dispatch --test <flow> --fg` | Force foreground execution (override background default) |
 | `/e2e-skill-ops` | Debug, maintain, or evaluate E2E skills |
-| `/e2e-help` | Interactive help guide — topics, examples, feedback |
+| `/e2e-help` | Interactive help guide -- topics, examples, feedback |
 | `/e2e-help <topic>` | Deep dive into a topic (e.g., `cross-site`, `suites`, `checkpoints`) |
 | `/e2e-help --feedback "<text>"` | Report a documentation gap or confusing area |
 | `/e2e-doc-sync` | Scan docs for gaps against skills/agents, write updates |
@@ -90,6 +90,34 @@ Zero diverged steps means both execution modes agree -- high confidence the test
 bash .claude/e2e/compiled/<flow-name>.sh
 bash .claude/e2e/compiled/<flow-name>.sh --continue-on-error --junit /tmp/junit.xml
 ```
+
+## CLI-Only Flow Recording
+
+When a flow contains **zero browser steps** (only `Execute external` and `Verify external` actions), the skill automatically switches from browser-based recording to terminal recording via asciinema.
+
+**Detection logic:** The skill scans all steps in the flow. If every step has `action: "Execute external"` or `action: "Verify external"`, the flow is classified as CLI-only.
+
+**Prerequisites:** `asciinema` and `agg` must be installed. If either is missing, the skill warns and proceeds without recording.
+
+```bash
+brew install asciinema agg
+```
+
+**Dispatch behavior:** The skill wraps CLI execution with `asciinema rec`, producing a `.cast` file. It then dispatches the `e2e-media-processor` agent with `cast_path` instead of `recording_path`:
+
+```yaml
+# Browser flow (default):
+#   recording_path: $REPORT_DIR/full.webm
+
+# CLI-only flow (automatic):
+#   cast_path: $REPORT_DIR/recording.cast
+```
+
+The media processor converts the cast file to GIF (via `agg`), MP4 (via `ffmpeg`), and thumbnail -- the same output artifacts as browser recording, just sourced from terminal output instead of screenshots.
+
+**Override:** Pass `--no-video` to skip terminal recording entirely.
+
+For the full terminal recording pipeline and parameters, see [Cross-Boundary Testing -- Recording CLI-Only Flows](cross-boundary-testing.md#recording-cli-only-flows).
 
 ## CLI Tools (Node.js)
 
