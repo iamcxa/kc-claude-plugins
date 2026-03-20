@@ -96,6 +96,11 @@ None - no external service configuration required.
 - Runs page polling mirrors Dashboard behavior, both driven by the same usePoll + refreshTrigger infrastructure from Plan 01
 - SSE events from Plan 02 (app.ts) automatically trigger re-fetch on both Dashboard and Runs page via shared refreshTrigger signal
 
+## Self-Check: PASSED
+- FOUND: app/frontend/pages/runs.ts
+- FOUND: .planning/phases/06-frontend-wiring/06-03-SUMMARY.md
+- FOUND: commit 5ced23a (feat(06-03): add auto-refresh polling and queue time display)
+
 ---
 *Phase: 06-frontend-wiring*
 *Completed: 2026-03-20*
