@@ -263,6 +263,10 @@ Checks state in external services. Use for analytics events, tracing spans, webh
 
 When a flow has **zero browser steps** (only `Execute external` + `Verify external`), the browser-based recording pipeline (screenshots + WebM) doesn't apply. Use terminal recording instead.
 
+**Demo** — `recce summary` recorded via the CLI pipeline (asciinema → agg → GIF):
+
+![CLI recording demo](assets/cli-recording-demo.gif)
+
 ### Detection
 
 A flow is CLI-only when all steps have `action: "Execute external"` or `action: "Verify external"`. No `Navigate`, `Click`, `Fill`, or other browser actions.
