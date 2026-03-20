@@ -37,9 +37,10 @@ export function ChatDrawer({ isOpen, onClose, targetName }: Props) {
     const es = new EventSource(`/api/chat/${encodeURIComponent(targetName)}/stream`)
     esRef.current = es
 
-    // Clear messages on connect/reconnect — server resends full history
+    let connected = false
     es.addEventListener('open', () => {
-      setMessages([])
+      if (connected) setMessages([])
+      connected = true
     })
 
     es.addEventListener('chat', (e: MessageEvent) => {

@@ -35,9 +35,16 @@ export function ChatPanel({ targetName }: Props) {
     const es = new EventSource(`/api/chat/${encodeURIComponent(targetName)}/stream`)
     esRef.current = es
 
-    // Clear messages on connect/reconnect — server resends full history
+    // Clear messages only on REconnect — useEffect already cleared on initial connect.
+    // First open is harmless (messages already empty), but a race exists if user
+    // sends a message before the connection establishes.
+    let connected = false
     es.addEventListener('open', () => {
-      setMessages([])
+      if (connected) {
+        // Reconnect: clear stale client messages, server resends full history
+        setMessages([])
+      }
+      connected = true
     })
 
     es.addEventListener('chat', (e: MessageEvent) => {
@@ -133,7 +140,7 @@ export function ChatPanel({ targetName }: Props) {
   }
 
   function handleKeyDown(e: KeyboardEvent) {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
       e.preventDefault()
       void handleSend()
     }
