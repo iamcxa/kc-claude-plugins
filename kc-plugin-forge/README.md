@@ -39,6 +39,76 @@ Required marketplace plugins (runtime dependencies):
 /kc-plugin-forge-help
 ```
 
+## How It Works
+
+```
+     /kc-plugin-forge path/to/my-plugin
+                    |
+          +---------+---------+
+          |                   |
+    Phase 1: Structure   Phase 1.5: Autonomy
+    Validate plugin.json,   Choose self-improvement
+    layout, agents          level (D1/D2/Skip) +
+          |                 doc-sync level
+          |                   |
+          +---------+---------+
+                    |
+          Phase 2: Skill TDD
+          RED → GREEN → REFACTOR
+          per skill, under pressure
+                    |
+          Phase 3: Agent Verify
+          Examples, tools, prompts,
+          dispatch test per agent
+                    |
+          Phase 4: Report + Learning
+          Re-validate, capture patterns
+          to learned-patterns.md
+```
+
+## Why It Works — Real Examples
+
+The forge pipeline catches issues that code review and manual testing miss. These are real findings from forge runs on production plugins:
+
+### "MANDATORY" doesn't mean enforced
+
+During the **kc-em-triage** forge, Phase 2 TDD revealed that a "MANDATORY" Learning step (Step 7) existed in the skill text but was **absent from the dot graph**. Under pressure testing, agents followed the graph — `discuss → next issue` — and silently skipped Learning every time.
+
+**Root cause:** Agents treat flow visualizations as the authoritative contract. Text-only steps are invisible.
+
+**Fix:** Every mandatory step must appear in BOTH the text description AND the flow graph. The forge now checks for this mismatch.
+
+### Escape hatches get stretched
+
+During the **superpowers /auto** forge, a skill had an escape hatch: "skip TDD for pure UI with no testable logic." In practice, agents classified a button with `onClick → useCustomMutation → error handling` as "pure UI" — because the predicate was subjective.
+
+**Root cause:** Vague predicates invite rationalization. "Pure UI" means whatever the agent wants it to mean.
+
+**Fix:** Replace subjective predicates with concrete decision lists. "Does it have an `on*` handler that calls a mutation? → TESTABLE." No list match → escape hatch does not apply.
+
+### Template blocks dominate live-read instructions
+
+During **kc-plugin-forge self-forge** (this plugin auditing itself), a help skill was told to "Read live data from `skills/*.md`" but then shown a hardcoded output template. The template's specificity dominated — agents emitted it verbatim, silently missing any newly added skills.
+
+**Root cause:** Specific templates win over abstract instructions. The agent sees a ready-made answer and uses it.
+
+**Fix:** Insert an explicit "formatting guide only — populate from live reads" directive before template blocks.
+
+### These patterns compound
+
+Each finding becomes a permanent entry in `learned-patterns.md`. The forge reads this file at startup, so future runs catch the same class of issues across ALL plugins — not just the one where the pattern was discovered.
+
+```
+Plugin A forge run → discovers "escape hatch abuse" pattern
+                   → auto-appends to learned-patterns.md
+                   ↓
+Plugin B forge run → reads learned-patterns.md at startup
+                   → flags similar escape hatches in Plugin B
+                   → fixes before they cause real issues
+```
+
+After 8 forge runs across 6 plugins, the knowledge base has **9 cross-project patterns** — each discovered from a real failure, each preventing the same failure in every future run.
+
 ## Pipeline Phases
 
 | Phase | What it does | Marketplace skill used |
