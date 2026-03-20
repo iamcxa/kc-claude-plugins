@@ -34,7 +34,7 @@ Validated in Phase 1-4 (2026-03-18 to 2026-03-19):
 
 ### Active (v1.1)
 
-- [ ] `queued_at` timestamp on runs + trigger time display
+- [x] `queued_at` timestamp on runs + server infrastructure (Validated in Phase 5)
 - [ ] Queue visibility in target detail panel
 - [ ] Toast notification system for run trigger feedback
 - [ ] Run completion notification (browser Notification API)
@@ -103,4 +103,4 @@ Validated in Phase 1-4 (2026-03-18 to 2026-03-19):
 - Sidebar add target button wiring
 
 ---
-*Last updated: 2026-03-20 after milestone v1.1 started*
+*Last updated: 2026-03-20 after Phase 5 complete*
