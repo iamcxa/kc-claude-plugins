@@ -202,8 +202,11 @@ Agent returns: `total_steps, passed, failed, skipped, console_errors, api_failur
 
 ### Phase 1.5 — Media Post-Processing
 
-After agent returns, dispatch media processing:
+After agent returns, dispatch media processing.
 
+**Detect flow type**: If ALL flow steps use `action: "Execute external"` or `action: "Verify external"` (zero browser steps), this is a **CLI-only flow**.
+
+**Browser flow** (default):
 ```
 Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
   "Process media:
@@ -212,9 +215,22 @@ Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
    output_name: test-run"
 ```
 
-Agent returns: `gif_path`, `gif_frames`, `mp4_path`, `thumbnail_path`, `blank_frames`. Store for Phase 2 results.
+Always dispatch for browser flows (even without recording) — GIF and thumbnail come from screenshots which are always captured.
 
-Always dispatch (even without recording) — GIF and thumbnail come from screenshots which are always captured.
+**CLI-only flow**:
+
+1. Check prerequisites: `command -v asciinema && command -v agg`. If missing → warn, skip recording.
+2. The test-runner agent should have already recorded the primary `Execute external` command with asciinema during execution. If `$REPORT_DIR/recording.cast` exists:
+   ```
+   Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
+     "Process media:
+      report_dir: <report_dir>
+      cast_path: <report_dir>/recording.cast
+      output_name: test-run"
+   ```
+3. If no cast file exists (prerequisites missing or recording skipped) → skip media processing for CLI flow.
+
+Agent returns: `gif_path`, `gif_frames`, `mp4_path`, `thumbnail_path`, `blank_frames`. Store for Phase 2 results.
 
 ### Phase 1.75 — Trace Analysis
 

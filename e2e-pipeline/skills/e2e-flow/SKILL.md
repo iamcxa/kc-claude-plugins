@@ -214,8 +214,11 @@ Verifier corrections:
 
 ### Phase 2.5 — Media Post-Processing
 
-After verifier and trace-analyzer return, dispatch media processing:
+After verifier and trace-analyzer return, dispatch media processing.
 
+**Detect flow type**: Parse the flow YAML steps. If ALL steps use `action: "Execute external"` or `action: "Verify external"` (zero browser steps), this is a **CLI-only flow**.
+
+**Browser flow** (has browser steps):
 ```
 Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
   "Process media:
@@ -223,6 +226,23 @@ Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
    recording_path: <report_dir>/full.webm    # only if recording was on
    output_name: verification"
 ```
+
+**CLI-only flow** (no browser steps):
+
+1. Check prerequisites: `command -v asciinema && command -v agg`. If missing → warn, skip recording.
+2. Record CLI execution (re-run the primary `Execute external` command):
+   ```bash
+   asciinema rec --cols 120 --rows 35 \
+     -c "<primary execute command>" "$REPORT_DIR/recording.cast"
+   ```
+3. Dispatch media processor in CLI mode:
+   ```
+   Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
+     "Process media:
+      report_dir: <report_dir>
+      cast_path: <report_dir>/recording.cast
+      output_name: verification"
+   ```
 
 Agent returns: `gif_path`, `mp4_path`, `thumbnail_path`. Use these in Phase 3 results.
 

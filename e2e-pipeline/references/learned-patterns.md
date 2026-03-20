@@ -26,6 +26,10 @@ When converting `role=X[name=/pattern/]` to a grep pattern, extract the longest 
 
 Consecutive `agent-browser eval` calls share the same JavaScript global scope. Declaring `const el` in two consecutive evals causes `SyntaxError: Identifier 'el' has already been declared`. Fix: wrap each eval in an IIFE `(()=>{...})()`.
 
+## CLI-only flow recording: asciinema + agg + ffmpeg (2026-03-20)
+
+Cross-boundary flows with zero browser steps (only `Execute external` + `Verify external`) cannot use the browser-based media pipeline (screenshots + WebM). **Pipeline**: `asciinema rec --cols 120 --rows 35 -c "<cmd>" recording.cast` → `agg --speed 2 --theme monokai` → GIF → `ffmpeg -pix_fmt yuv420p` → MP4. Media processor dispatched with `cast_path` instead of `recording_path`/`screenshots_pattern`. Headless mode (no TTY) works — asciinema outputs cast file correctly. `scale=trunc(iw/2)*2:trunc(ih/2)*2` filter required for ffmpeg libx264 even-dimension constraint. Draft release upload pattern still applies for PR posting.
+
 ## React 18 _valueTracker suppresses nativeInputValueSetter onChange (2026-03-20)
 
 `nativeInputValueSetter.call(el, value)` sets the DOM value but React 18's internal `el._valueTracker` can suppress the subsequent `input`/`change` event if the tracked value matches. Result: `dispatchEvent` fires, React sees "no change", `onChange` never called, Ant Design Form store stays empty. **Fix**: clear the tracker before dispatching: `const t=el._valueTracker;if(t)t.setValue('');`. Also add `el.focus()` before setting value to ensure React's event system is attached. Applied to e2e-compile codegen `case 'fill'` in `codegen.js`. **Silent failure**: no error thrown, no visible symptom — form just submits with empty values. Only detectable by checking the a11y tree post-fill (values missing) or observing the form stays on the same page.

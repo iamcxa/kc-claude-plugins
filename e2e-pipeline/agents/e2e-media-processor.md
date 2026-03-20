@@ -1,10 +1,10 @@
 ---
 name: e2e-media-processor
 description: |
-  Autonomous media post-processor for E2E test artifacts. Receives a report
-  directory with screenshots and optional WebM recording, produces GIF (with
-  blank frame skip), MP4 video (trimmed + sped up), and thumbnail. Centralizes
-  media logic for e2e-test, e2e-flow, and e2e-walkthrough skills.
+  Autonomous media post-processor for E2E test artifacts. Two modes:
+  (1) Browser mode: screenshots + optional WebM → GIF + MP4 + thumbnail.
+  (2) CLI mode: asciinema .cast file → GIF + MP4 + thumbnail via agg + ffmpeg.
+  Centralizes media logic for e2e-test, e2e-flow, and e2e-walkthrough skills.
 
   <example>
   Context: The e2e-test skill completed a test run and needs media assets generated.
@@ -21,6 +21,15 @@ description: |
   assistant: "No recording_path provided — skips MP4 conversion. Scans 12 screenshots, finds 1 leading blank, generates steps.gif from 11 frames, creates thumbnail.png. Returns summary with mp4_path: (none)."
   <commentary>
   When no recording_path is provided, the agent skips MP4 but still generates GIF and thumbnail from screenshots.
+  </commentary>
+  </example>
+
+  <example>
+  Context: The e2e-flow skill ran a CLI-only agent test and needs video from terminal recording.
+  user: "Process media:\n  report_dir: /home/user/project/.claude/e2e/reports/20260320-183000\n  cast_path: /home/user/project/.claude/e2e/reports/20260320-183000/recording.cast\n  output_name: test-run"
+  assistant: "CLI mode detected (cast_path provided). Skips screenshot phases. Converts recording.cast to steps.gif via agg (120x35, 2x speed, monokai theme), then to test-run.mp4 via ffmpeg. Extracts first frame as thumbnail.png. Returns structured summary."
+  <commentary>
+  When cast_path is provided, the agent switches to CLI conversion mode. No screenshots or WebM are expected.
   </commentary>
   </example>
 tools: Bash, Read, Write
@@ -44,6 +53,9 @@ Parse these fields from the dispatch message:
 | `output_name` | No | `test-run` | MP4 filename prefix |
 | `speed` | No | `1.5` | MP4 playback speed multiplier |
 | `trim_start` | No | `2` | Seconds to trim from MP4 start (browser startup blank) |
+| `cast_path` | No | — | Absolute path to asciinema `.cast` file. When present, switches to CLI conversion mode (skips screenshot phases) |
+| `cast_cols` | No | `120` | Terminal columns for agg rendering |
+| `cast_rows` | No | `35` | Terminal rows for agg rendering |
 
 ## Phase 1: Blank Frame Detection
 
@@ -108,6 +120,53 @@ ffmpeg -i "$RECORDING_PATH" -ss $TRIM_START \
 - Verify: `test -s "$REPORT_DIR/$OUTPUT_NAME.mp4"`
 - If ffmpeg fails → warn, set `mp4_path` to empty in summary
 - `-an` strips audio, `-pix_fmt yuv420p` ensures compatibility
+
+## CLI Mode: Cast File Conversion
+
+**When `cast_path` is provided, skip Phases 1-3 entirely and run this instead.**
+
+CLI-only flows (no browser steps) produce an asciinema `.cast` recording instead of screenshots + WebM. Convert it to GIF + MP4.
+
+### Prerequisites check
+
+```bash
+command -v agg >/dev/null 2>&1 || { echo "WARN: agg not installed (brew install agg). Skipping CLI media."; }
+command -v ffmpeg >/dev/null 2>&1 || { echo "WARN: ffmpeg not installed. Skipping CLI media."; }
+```
+
+If `agg` is missing, warn and return empty paths (graceful degradation, same as ffmpeg missing for browser mode).
+
+### Cast → GIF
+
+```bash
+agg --cols $CAST_COLS --rows $CAST_ROWS --speed 2 --theme monokai \
+  "$CAST_PATH" "$REPORT_DIR/steps.gif"
+```
+
+- Verify: `test -s "$REPORT_DIR/steps.gif"`
+- If agg fails → warn, set `gif_path` to empty
+
+### GIF → MP4
+
+```bash
+ffmpeg -y -i "$REPORT_DIR/steps.gif" \
+  -movflags faststart -pix_fmt yuv420p \
+  -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
+  "$REPORT_DIR/$OUTPUT_NAME.mp4" 2>/dev/null
+```
+
+- Verify: `test -s "$REPORT_DIR/$OUTPUT_NAME.mp4"`
+- The `scale=trunc(...)` filter ensures even dimensions (required by libx264)
+
+### Thumbnail (CLI mode)
+
+Extract first frame from GIF:
+
+```bash
+ffmpeg -y -i "$REPORT_DIR/steps.gif" -frames:v 1 "$REPORT_DIR/thumbnail.png" 2>/dev/null
+```
+
+**Then proceed to Phase 5 (Return Summary) as normal.** Set `blank_frames` to all zeros for CLI mode.
 
 ## Phase 4: Thumbnail
 
