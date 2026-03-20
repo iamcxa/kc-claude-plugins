@@ -5,7 +5,7 @@
     "email": "iamcxa@gmail.com"
   },
   "metadata": {
-    "description": "Curated Claude Code plugins for browser E2E testing, automation, and developer workflows",
+    "description": "Curated Claude Code plugins for browser E2E testing, plugin quality, production monitoring, and developer workflows",
     "version": "1.0.0"
   },
   "plugins": [
@@ -18,6 +18,24 @@
       "description": "Browser E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video",
       "version": "2.3.0",
       "keywords": ["e2e", "browser-testing", "agent-browser", "ui-mapping", "flow-generation", "flow-verification", "video-recording", "subagents"]
+    },
+    {
+      "name": "kc-plugin-forge",
+      "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, doc self-iteration",
+      "version": "1.3.0",
+      "keywords": ["plugin", "quality", "tdd", "validation", "forge", "lifecycle", "audit"]
+    },
+    {
+      "name": "kc-nightwatch",
+      "description": "Autonomous nightly improvement — forge validation, multi-source signal discovery (journal, Sentry, E2E, git), north-star-aligned proposals and alerts",
+      "version": "0.4.0",
+      "keywords": ["nightwatch", "improvement", "automation", "forge", "scheduler", "quality"]
+    },
+    {
+      "name": "kc-sentry-insight",
+      "description": "Scan Sentry for production errors with diff tracking, profile-based domain knowledge, and optional Linear push",
+      "version": "0.1.0",
+      "keywords": ["sentry", "insight", "error-analysis", "linear", "mcp-monitoring", "profile"]
     }
   ]
 }

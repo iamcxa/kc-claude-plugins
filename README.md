@@ -12,7 +12,12 @@ Claude Code plugin marketplace by [Kent Chen](https://github.com/iamcxa).
 
 | Plugin | Version | Description | Install |
 |--------|---------|-------------|---------|
-| [e2e-pipeline](./e2e-pipeline/) | 2.3.0 | Browser E2E testing pipeline — map UI, generate & verify flows, run tests, interactive walkthroughs, video recording | `/plugin install e2e-pipeline@kc-claude-plugins` |
+| [e2e-pipeline](./e2e-pipeline/) | 2.3.0 | Browser E2E testing — map UI, generate & verify flows, run tests, walkthroughs, video | `/plugin install e2e-pipeline@kc-claude-plugins` |
+| [kc-plugin-forge](./kc-plugin-forge/) | 1.3.0 | Plugin quality pipeline — scaffold, TDD skills, verify agents, doc self-iteration | `/plugin install kc-plugin-forge@kc-claude-plugins` |
+| [kc-nightwatch](./kc-nightwatch/) | 0.4.0 | Nightly improvement — forge validation, multi-source signals, proposals & alerts | `/plugin install kc-nightwatch@kc-claude-plugins` |
+| [kc-sentry-insight](./kc-sentry-insight/) | 0.1.0 | Sentry error scanning — diff tracking, domain profiles, Linear push | `/plugin install kc-sentry-insight@kc-claude-plugins` |
+
+---
 
 ## e2e-pipeline
 
@@ -111,8 +116,6 @@ Output goes to `.claude/e2e/compiled/<flow>.sh`. Each script is self-contained:
 .claude/e2e/compiled/login-flow.sh --screenshot-dir ./ss # capture screenshots
 ```
 
-**Auto-compile**: `/e2e-test` automatically compiles + runs the compiled script after each LLM-driven test and compares results. Divergence between LLM and compiled execution is flagged — this catches selector drift and flow ambiguities early.
-
 ### CI Integration
 
 Compiled scripts are the bridge to CI — commit them to your repo and run in GitHub Actions without Claude Code:
@@ -123,6 +126,88 @@ Compiled scripts are the bridge to CI — commit them to your repo and run in Gi
 ```
 
 The plugin provides a full GHA template with auth session reuse, matrix parallelism, quarantine system, and JUnit reporting. See [CI Integration docs](./e2e-pipeline/docs/ci-integration.md) for setup.
+
+---
+
+## kc-plugin-forge
+
+One-command plugin development and quality pipeline. Orchestrates marketplace skills to scaffold, TDD-test, validate, and improve Claude Code plugins.
+
+**Prerequisites:** `superpowers` + `plugin-dev` marketplace plugins.
+
+### Skills
+
+| Command | Purpose |
+|---------|---------|
+| `/kc-plugin-forge <path>` | Full pipeline: validate → TDD → agents → report |
+| `/kc-plugin-forge new <name>` | Scaffold a new plugin, then full pipeline |
+| `/kc-plugin-forge validate-only` | Phase 1 only — structure check |
+| `/kc-plugin-forge skill-tdd-only` | Phase 2 only — TDD cycle per skill |
+| `/kc-plugin-forge self-forge` | Forge audits itself (Phase 2 + 4) |
+| `/kc-plugin-forge-help` | Interactive guide, topic deep-dive, feedback → issue |
+
+### Pipeline
+
+| Phase | What | Uses |
+|-------|------|------|
+| 1. Structure | Validate plugin.json, layout, agents | `plugin-dev:plugin-validator` |
+| 1.5 Autonomy | Self-Learning (D1/D2) + Doc Self-Iteration | — |
+| 2. Skill TDD | RED/GREEN/REFACTOR per skill | `superpowers:writing-skills` |
+| 3. Agent Verify | Examples, tools, prompts | `plugin-dev:agent-development` |
+| 4. Report | Re-validate + learning capture | `plugin-dev:plugin-validator` |
+
+### Self-Improvement
+
+Lessons accumulate in `reference/learned-patterns.md` (D1, cross-project) and `reference/quality-pipeline.md` (forge-specific gotchas). Phase 1.5 lets you choose the self-improvement level for each plugin you forge.
+
+---
+
+## kc-nightwatch
+
+Autonomous nightly plugin improvement cycle. Runs forge validation, harvests signals from multiple sources, and generates improvement proposals.
+
+### Skills
+
+| Command | Purpose |
+|---------|---------|
+| `/kc-nightwatch` | Run full pipeline (forge + signals + proposals) |
+| `/kc-nightwatch-report` | View last run, compare runs, review proposals |
+| `/kc-nightwatch-config` | Configure schedule, Slack channel, target plugins |
+
+### Signal Sources
+
+4 scanner agents harvest signals in parallel:
+
+| Agent | Source | Finds |
+|-------|--------|-------|
+| signal-harvester | Journal + episodic memory + MEMORY.md | Past insights, user feedback |
+| sentry-scanner | Sentry MCP | Production errors, regressions |
+| e2e-scanner | E2E test reports | Failure trends, coverage gaps |
+| git-scanner | Git history | Churn hotspots, stale code |
+
+---
+
+## kc-sentry-insight
+
+Scan Sentry for production errors with diff tracking — only new/changed issues since last scan.
+
+### Skills
+
+| Command | Purpose |
+|---------|---------|
+| `/kc-sentry-insight` | Scan Sentry, classify issues, show diff |
+| `/kc-sentry-insight --push` | Push findings to Linear as issues |
+| `/kc-sentry-insight --profile` | Manage project error profiles |
+
+### Features
+
+- **Diff tracking**: Only surfaces new/changed issues since last scan
+- **Domain profiles**: Per-project noise filters and known-issue lists
+- **Dual strategy**: Sentry native MCP (span.op) + keyword search
+- **Linear push**: One-command push classified errors to Linear
+- **Self-learning**: D1 cross-project patterns, D2 project-specific rules
+
+---
 
 ## Adding to Your Project
 
@@ -139,7 +224,10 @@ Add to `.claude/settings.json`:
     }
   },
   "enabledPlugins": {
-    "e2e-pipeline@kc-claude-plugins": true
+    "e2e-pipeline@kc-claude-plugins": true,
+    "kc-plugin-forge@kc-claude-plugins": true,
+    "kc-nightwatch@kc-claude-plugins": true,
+    "kc-sentry-insight@kc-claude-plugins": true
   }
 }
 ```
