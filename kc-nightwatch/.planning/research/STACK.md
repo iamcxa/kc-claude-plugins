@@ -1,12 +1,301 @@
 # Stack Research
 
 **Domain:** Bun-native web dashboard — HTTP server + background worker + Preact frontend with real-time streaming, IPC, and MCP server
-**Researched:** 2026-03-18 (v1.0 baseline) / 2026-03-20 (v1.1 addendum)
-**Confidence:** HIGH (core stack verified via official docs and Context7; v1.1 additions verified via MDN + ecosystem research)
+**Researched:** 2026-03-18 (v1.0 baseline) / 2026-03-20 (v1.1 addendum) / 2026-03-21 (v2.0 addendum)
+**Confidence:** HIGH (core stack verified via official docs and Context7; v2.0 additions verified against existing codebase + official sources)
 
 ---
 
-## v1.1 Stack Additions (NEW — 2026-03-20)
+## v2.0 Stack Additions (NEW — 2026-03-21)
+
+> The v1.0/v1.1 stack (Bun, Hono, Preact/HTM, Zod, yaml, MCP SDK, toast, Notification API) is complete and validated. This section covers ONLY what v2.0 adds for: parallel execution, per-target scheduling, auto PR + Linear creation, and outcome tracking.
+
+### New Feature Areas
+
+| Feature | Stack Needed |
+|---------|-------------|
+| Parallel execution (per-target isolation) | `Map<string, Run[]>` + `Map<string, boolean>` in `worker/index.ts` — zero new deps |
+| Per-target scheduling | `Map<string, Timer>` in `worker/scheduler.ts` — zero new deps |
+| Auto PR creation | `gh` CLI (already system-wide authed), called via `Bun.spawn` — zero new deps |
+| Auto Linear issue creation | Linear GraphQL API via `fetch()` — zero new deps |
+| Outcome tracking | New `outcomes.yaml` store + `ActionOutcome` type — uses existing `yaml` + `zod` |
+
+**Summary: No new npm packages.** All five v2.0 features are implementable with existing stack.
+
+---
+
+### Pattern 1: Per-Target Parallel Execution
+
+**Decision: `Map<string, Run[]>` per-target queue + `Map<string, boolean>` running flag.**
+
+Replace the current global `queue: Run[]` + `currentRun: Run | null` in `worker/index.ts` with per-target data structures.
+
+**Why this is enough in Bun:** Bun's event loop is single-threaded — `async/await` ensures per-target state mutations are race-free without explicit locks. Each `executeRun()` call launches a separate `Bun.spawn` child process, so different targets genuinely run in parallel at the OS level. The `Map` is just routing logic; the actual parallelism comes from `Bun.spawn` already.
+
+**Invariant:** `processTarget(name)` is idempotent — it's a no-op if that target is already running. Different targets drain independently; same-target runs queue sequentially.
+
+```typescript
+// Conceptual replacement in worker/index.ts
+const queues = new Map<string, Run[]>()     // per-target pending runs
+const running = new Map<string, boolean>()  // per-target running flag
+
+async function processTarget(targetName: string): Promise<void> {
+  if (running.get(targetName)) return
+  const queue = queues.get(targetName) ?? []
+  if (queue.length === 0) return
+  running.set(targetName, true)
+  const run = queue.shift()!
+  try {
+    await executeRun(run, resolveTarget(targetName), { ... })
+  } finally {
+    running.set(targetName, false)
+    void processTarget(targetName)  // drain next in same-target queue
+  }
+}
+
+function enqueue(run: Run): void {
+  const targetQueue = queues.get(run.target) ?? []
+  targetQueue.push(run)
+  queues.set(run.target, targetQueue)
+  void processTarget(run.target)
+}
+```
+
+**`__all__` expansion stays the same** — it creates per-target `Run` objects that flow through the new per-target queues, just like before.
+
+**IPC state shape change:** `type: 'state'` message in `WorkerToServer` changes from `{ queue: Run[], current?: Run }` to `{ queues: Record<string, Run[]>, running: string[] }`. Server-side `workerStatus` type in `server/ipc.ts` updates accordingly.
+
+**Confidence:** HIGH — verified against Bun 1.3.9 async model; no native concurrency API needed. Confirmed: Bun has no built-in `PQueue` (GitHub Issue #15050 — feature request only).
+
+---
+
+### Pattern 2: Per-Target Scheduling
+
+**Decision: `Map<string, ReturnType<typeof setInterval>>` keyed by target name.**
+
+Replace the single global `schedulerTimer` in `worker/scheduler.ts` with per-target intervals.
+
+**Schema addition needed** in `shared/types.ts`:
+```typescript
+export interface Target {
+  // ... existing fields
+  schedule?: {
+    interval_hours: number   // per-target override; min 10min enforced in scheduler
+  }
+}
+```
+
+`yaml-store.ts`'s `normalizeTarget()` passes `schedule` through. The `ScheduleConfig` in `nightwatch-app.yaml` becomes the global fallback — active when a target has no `schedule` field.
+
+**New `scheduler.ts` API:**
+```typescript
+startTargetSchedulers(targets: Record<string, Target>, globalConfig: ScheduleConfig, enqueue: (run: Run) => void): void
+stopAllSchedulers(): void
+```
+
+Internally: iterate targets, compute effective `interval_hours` (target.schedule?.interval_hours ?? globalConfig.interval_hours), enforce 10min minimum, call `setInterval` per target, store handle in `Map<string, Timer>`. `stopAllSchedulers()` clears all handles.
+
+**Why per-target intervals beat the `__all__` pattern:** `__all__` fires all targets simultaneously on one global timer — targets with different natural cadences end up artificially coupled. Per-target intervals let each target fire at its own rhythm.
+
+**Confidence:** HIGH — `setInterval` is fully stable in Bun 1.3.9 (bun.sh/reference/globals/setInterval). Multiple independent intervals are cheap.
+
+---
+
+### Pattern 3: Auto PR Creation via `gh` CLI
+
+**Decision: `Bun.spawn(['gh', 'pr', 'create', ...])` in new `worker/pr-creator.ts`.**
+
+**Why `gh` CLI not GitHub REST API:** Already used in `feedback-collector.ts` for `gh pr view`. Auth is system-wide — no PAT token management needed. The Claude run in the target repo creates the branch and commits; `gh pr create` just opens the PR.
+
+**Key flags for non-interactive mode** (verified against gh 2.83.2 official manual):
+- `--title` — required, skips title prompt
+- `--body` — required, skips body prompt
+- `--head` — required, skips push/fork prompt
+- `--base` — required, defaults to repo default branch but explicit is safer
+- `--repo owner/repo` — explicit, avoids working directory confusion
+
+When all four (`--title`, `--body`, `--head`, `--base`) are provided, `gh pr create` is fully non-interactive. Branch must already be pushed (the Claude run handles this via Phase 1/4 commit-and-push).
+
+**Return value:** `gh pr create` prints the PR URL on stdout on success (e.g., `https://github.com/owner/repo/pull/42`). Capture `stdout` text, strip whitespace, store in `ActionOutcome.pr_url`.
+
+**Error handling:** Fire-and-forget in `executor.ts` `finally` block. Non-zero exit (PR already exists, no remote, no commits vs base) → log warning, leave `pr_url` undefined on the outcome record. This matches the existing `collectImplicitFeedback` fire-and-forget pattern.
+
+**New file:** `worker/pr-creator.ts` — mirrors `feedback-collector.ts` structure. Exported function: `createPr(branch: string, title: string, body: string, repoOwner: string, repoName: string): Promise<string | null>` (returns URL or null on failure).
+
+**Confidence:** HIGH — `gh pr create` non-interactive behavior verified against official docs; pattern is identical to existing `checkPrStatus` in `feedback-collector.ts`.
+
+---
+
+### Pattern 4: Auto Linear Issue Creation via GraphQL API
+
+**Decision: Direct `fetch()` call to Linear GraphQL API in new `worker/linear-creator.ts`.**
+
+**Why not Linear MCP:** Linear MCP tools exist inside Claude sessions only (passed via `--mcp-config`). The worker is a plain Bun process. The existing `checkLinearStatus()` in `feedback-collector.ts` already proves the pattern: direct `fetch` to `https://api.linear.app/graphql` with `Authorization: <key>` (no `Bearer` prefix — verified in existing tests).
+
+**Why not `@linear/sdk`:** Adds a dependency for a single mutation. The existing `checkLinearStatus` demonstrates raw GraphQL works without it.
+
+**`issueCreate` mutation** (verified from Linear API docs + Apollo schema reference at studio.apollographql.com/public/Linear-API):
+```graphql
+mutation IssueCreate($title: String!, $description: String!, $teamId: String!) {
+  issueCreate(input: { title: $title, description: $description, teamId: $teamId }) {
+    success
+    issue {
+      id
+      identifier
+      url
+    }
+  }
+}
+```
+
+The `url` field IS available on the `Issue` type in mutation responses (confirmed from Apollo schema). `identifier` gives human-readable `ENG-123` form. `url` gives the direct link.
+
+**New `Target` field:**
+```typescript
+export interface Target {
+  // ... existing fields
+  linear_team_id?: string   // LINEAR_TEAM_ID for auto-issue creation; omit to skip
+}
+```
+
+If `target.linear_team_id` is absent OR `LINEAR_API_KEY` env var is absent, issue creation is skipped gracefully — no error thrown.
+
+**New file:** `worker/linear-creator.ts`. Exported function: `createLinearIssue(title: string, description: string, teamId: string): Promise<string | null>` (returns issue URL or null on failure).
+
+**URL construction for Linear:** The mutation's `issue.url` field returns the full URL directly. No manual construction needed.
+
+**Confidence:** HIGH — mutation verified from Linear API docs + Apollo schema. Auth pattern (no `Bearer`) confirmed in existing `linear-status.test.ts`.
+
+---
+
+### Pattern 5: Outcome Tracking via `outcomes.yaml`
+
+**Decision: New `server/services/outcome-store.ts` + `~/.claude/kc-plugins-config/nightwatch-outcomes.yaml`.**
+
+**Why a separate file from `runs.yaml`:** Outcomes outlive runs. Runs are pruned after 50 (KEEP_RUNS_COUNT). A PR created months ago is still worth showing on the Outcomes page after its run artifact is deleted.
+
+**New type in `shared/types.ts`:**
+```typescript
+export interface ActionOutcome {
+  id: string                   // randomUUID() — from node:crypto (already imported)
+  run_id: string
+  target: string
+  signal_id: string
+  signal_summary: string
+  action_type: 'code-fix' | 'proposal' | 'linear-issue'
+  pr_url?: string              // set if gh pr create succeeded
+  linear_url?: string          // set if issueCreate succeeded
+  created_at: string           // ISO timestamp
+  status: 'open' | 'merged' | 'closed' | 'cancelled' | 'unknown'
+}
+```
+
+**`outcome-store.ts` API** (mirrors `run-store.ts`):
+```typescript
+appendOutcome(outcome: ActionOutcome): Promise<void>
+listOutcomes(filter?: { target?: string; status?: string; limit?: number }): Promise<ActionOutcome[]>
+updateOutcomeStatus(id: string, status: ActionOutcome['status']): Promise<void>
+```
+
+Cap at 500 entries (new constant `KEEP_OUTCOMES_COUNT = 500` in `shared/constants.ts`).
+
+**Status updates:** The existing `collectImplicitFeedback` (post-run PR status check) already calls `gh pr view`. Extend it to also call `updateOutcomeStatus()` when it detects a PR was merged/closed.
+
+**MCP exposure:** Add `nw_get_outcomes` tool to `server/services/mcp-tools.ts`:
+```typescript
+server.registerTool('nw_get_outcomes', {
+  description: 'List action outcomes (PRs and Linear issues) created by nightwatch runs',
+  inputSchema: {
+    target: z.string().optional(),
+    status: z.enum(['open','merged','closed','cancelled','unknown']).optional(),
+    limit: z.number().optional().default(20),
+  }
+}, async ({ target, status, limit }) => { ... })
+```
+
+This lets NW-Claude answer "what PRs did nightwatch create this week?" via chat.
+
+**Outcomes page UI:** New `frontend/pages/outcomes.ts` (Preact component, same no-build pattern). New GET `/api/outcomes` route in `server/routes/api.ts`. Polled with existing `usePoll` hook — outcomes change slowly, 30s poll is fine.
+
+**Confidence:** HIGH — extends existing `run-store.ts` pattern directly; no new libraries needed.
+
+---
+
+## New Files Summary for v2.0
+
+| New File | Purpose | Pattern From |
+|----------|---------|-------------|
+| `worker/pr-creator.ts` | `gh pr create` wrapper | `feedback-collector.ts` (same Bun.spawn pattern) |
+| `worker/linear-creator.ts` | Linear `issueCreate` mutation | `feedback-collector.ts` (same fetch pattern) |
+| `server/services/outcome-store.ts` | Persist `ActionOutcome` records | `run-store.ts` (same YAML read/append pattern) |
+| `frontend/pages/outcomes.ts` | Outcomes aggregate page | `frontend/pages/runs.ts` (same Preact list pattern) |
+
+## Modified Files Summary for v2.0
+
+| Modified File | Change |
+|---------------|--------|
+| `worker/index.ts` | Replace global queue with `Map<string, Run[]>` per-target queues |
+| `worker/scheduler.ts` | Replace single timer with `Map<string, Timer>` per-target timers |
+| `worker/executor.ts` | Add post-run `createPr()` + `createLinearIssue()` calls, write `ActionOutcome` |
+| `shared/types.ts` | Add `ActionOutcome`, `Target.schedule?`, `Target.linear_team_id?`, update IPC state shape |
+| `shared/constants.ts` | Add `KEEP_OUTCOMES_COUNT = 500`, `MIN_SCHEDULE_INTERVAL_MS = 600_000` |
+| `server/services/mcp-tools.ts` | Add `nw_get_outcomes` tool |
+| `server/routes/api.ts` | Add GET `/api/outcomes` route |
+| `frontend/app.ts` | Add Outcomes page route to navigation |
+| `frontend/components/bottom-nav.ts` | Add Outcomes nav item |
+
+---
+
+## Alternatives Considered (v2.0)
+
+| Recommended | Alternative | Why Not |
+|-------------|-------------|---------|
+| `Map<string, Run[]>` per-target queue | BullMQ / p-queue / bee-queue | BullMQ requires Redis. p-queue is npm-installable but solves a harder problem (priority, concurrency across all items). The per-target-sequential, cross-target-parallel constraint is exactly solved by a `Map<string, Run[]>` — no dependency needed. |
+| Per-target `setInterval` in Map | node-cron / croner | Cron expressions are explicitly Out of Scope (PROJECT.md). Interval-based is sufficient. Multiple `setInterval` handles is idiomatic JS for this. |
+| Direct `fetch()` for Linear | `@linear/sdk` | One mutation. `@linear/sdk` is a full typed SDK (useful for complex integrations). For a single `issueCreate` call where auth and response shape are known, raw GraphQL fetch is simpler and adds no dep. |
+| `gh` CLI for PR creation | GitHub REST API via `fetch()` | Would require managing PAT tokens separately. `gh` is already authed system-wide (same reason `checkPrStatus` uses `gh pr view`). |
+| Separate `outcomes.yaml` | Embed in `runs.yaml` | Outcomes outlive runs (runs pruned at 50). Separating prevents data loss on run cleanup. |
+| GET `/api/outcomes` + `usePoll` | SSE stream for outcomes | Outcomes are slow-changing (created once per action, status updates rare). Polling at 30s interval is simpler and sufficient — no need to add SSE consumers for this. |
+
+---
+
+## What NOT to Use (v2.0)
+
+| Avoid | Why | Use Instead |
+|-------|-----|-------------|
+| Linear MCP tools from worker | MCP tools only exist inside Claude sessions — worker is a plain Bun process with no MCP client | Direct GraphQL `fetch()` to `api.linear.app/graphql` |
+| `@linear/sdk` npm package | Adds dep for one mutation already demonstrated to work with raw fetch | `fetch()` with inline GraphQL mutation |
+| BullMQ | Requires Redis, heavyweight for per-target isolation that's solvable with a Map | Native `Map<string, Run[]>` pattern |
+| Constructing Linear URL manually | Fragile — workspace slug format can change | Request `url` field directly from `issueCreate` mutation response |
+| `gh` with missing `--base` flag | Without `--base`, gh may interactively prompt if repo has multiple candidate branches | Always pass `--base main` (or repo default branch from target config) |
+
+---
+
+## Version Compatibility (v2.0)
+
+| Package | Version | Notes |
+|---------|---------|-------|
+| Bun | 1.3.9 (current installed) | `setInterval` multi-timer, `Map`, `Bun.spawn`, `fetch` — all stable |
+| `gh` CLI | 2.83.2 (current installed) | `--title --body --head --base` non-interactive verified |
+| Linear API | GraphQL (current) | `issueCreate` mutation + `url` field on `Issue` type — stable, no versioning |
+| `yaml` | ^2.8.2 (existing) | Handles new `outcomes.yaml` — no version change |
+| `zod` | ^3.0.0 (existing) | `ActionOutcome` schema validation — no version change |
+
+---
+
+## Sources (v2.0)
+
+- Bun 1.3.9 docs (bun.sh/reference/globals/setInterval) — multi-timer pattern confirmed stable, HIGH confidence
+- Bun GitHub Issue #15050 (github.com/oven-sh/bun/issues/15050) — no native PQueue; custom Map pattern is idiomatic, HIGH confidence
+- gh 2.83.2 official manual (cli.github.com/manual/gh_pr_create) — `--title --body --head --base` are sufficient for non-interactive mode, HIGH confidence
+- Linear API docs (linear.app/developers/graphql) — `issueCreate` mutation structure, HIGH confidence
+- Linear Apollo schema (studio.apollographql.com/public/Linear-API/variant/current/schema/reference/objects/Mutation) — `issue.url` field confirmed on mutation response, HIGH confidence
+- Existing `worker/feedback-collector.ts` — `checkLinearStatus` uses same fetch + no-Bearer-prefix auth pattern, HIGH confidence (live code, not docs)
+- Existing `worker/feedback-collector.ts` `checkPrStatus` — `Bun.spawn(['gh', ...])` pattern for CLI calls, HIGH confidence
+
+---
+
+## v1.1 Stack Additions (2026-03-20)
 
 > The v1.0 baseline stack (Bun, Hono, Preact/HTM, Zod, yaml, MCP SDK) is complete and validated. This section covers ONLY what v1.1 adds.
 
@@ -155,7 +444,7 @@ bun add hono zod yaml @modelcontextprotocol/sdk @hono/mcp
 # Dev dependencies
 bun add -D @types/bun biome
 
-# v1.1: No new packages required
+# v1.1 and v2.0: No new packages required
 ```
 
 ## Alternatives Considered
@@ -229,6 +518,15 @@ bun add -D @types/bun biome
 
 ## Sources
 
+**v2.0 sources:**
+- Bun 1.3.9 docs (bun.sh/reference/globals/setInterval) — multi-timer pattern confirmed stable, HIGH confidence
+- Bun GitHub Issue #15050 (github.com/oven-sh/bun/issues/15050) — no native PQueue; custom Map pattern is idiomatic, HIGH confidence
+- gh 2.83.2 official manual (cli.github.com/manual/gh_pr_create) — `--title --body --head --base` are sufficient for non-interactive mode, HIGH confidence
+- Linear API docs (linear.app/developers/graphql) — `issueCreate` mutation structure, HIGH confidence
+- Linear Apollo schema (studio.apollographql.com/public/Linear-API/variant/current/schema/reference/objects/Mutation) — `issue.url` field confirmed on mutation response, HIGH confidence
+- Existing `worker/feedback-collector.ts` — `checkLinearStatus` uses same fetch + no-Bearer-prefix auth pattern, HIGH confidence
+- Existing `worker/feedback-collector.ts` `checkPrStatus` — `Bun.spawn(['gh', ...])` pattern for CLI calls, HIGH confidence
+
 **v1.0 sources:**
 - [Hono official docs — Bun getting started](https://hono.dev/docs/getting-started/bun) — verified Bun-native support, `serveStatic`, current version 4.12.2
 - [Hono SSE streaming helper docs](https://hono.dev/docs/helpers/streaming) — `streamSSE()` API, `writeSSE()` signature
@@ -254,4 +552,4 @@ bun add -D @types/bun biome
 
 ---
 *Stack research for: Nightwatch Dashboard (Bun + Hono + Preact autonomous agent platform)*
-*Researched: 2026-03-18 (v1.0) / 2026-03-20 (v1.1 addendum)*
+*Researched: 2026-03-18 (v1.0) / 2026-03-20 (v1.1 addendum) / 2026-03-21 (v2.0 addendum)*
