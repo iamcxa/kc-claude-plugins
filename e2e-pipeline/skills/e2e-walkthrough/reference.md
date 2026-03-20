@@ -504,6 +504,8 @@ Omit when only one scenario.
 
 **Always auto-generate a flow file after walkthrough completes.** Do NOT ask "Save as reusable flow?" — always write the file. This is mandatory because the proposal pattern gets skipped under context pressure, losing valuable walkthrough data.
 
+**Flow write authorization**: A PreToolUse hook blocks direct writes to `.claude/e2e/flows/*.yaml`. Before writing the flow YAML, create sentinel `.claude/e2e/.flow-write-authorized` (content: current unix timestamp). Delete the sentinel after the write completes.
+
 **Auto-naming:**
 ```
 walkthrough-<YYYYMMDD-HHMMSS>-<first-page>.yaml

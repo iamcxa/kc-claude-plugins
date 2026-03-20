@@ -103,7 +103,24 @@ Flow generation plan:
 Proceed? (y / adjust)
 ```
 
+### Flow Write Authorization
+
+A PreToolUse hook blocks direct writes to `.claude/e2e/flows/*.yaml`. The `/e2e-flow` skill must create a sentinel file to authorize its agents (flow-writer, flow-verifier) to write flow YAML.
+
+**Protocol:**
+1. **Create sentinel** — Write `.claude/e2e/.flow-write-authorized` (content: current unix timestamp) **before** dispatching the first flow-writing agent
+2. **Delete sentinel** — Delete `.claude/e2e/.flow-write-authorized` **after** the last flow-writing agent returns
+
+**Per mode:**
+- Normal: create before Phase 1 → delete after Phase 2d
+- `--no-verify`: create before Phase 1 → delete after Phase 1
+- `--verify-only`: create before Phase 2b → delete after Phase 2d
+
+The sentinel has a 10-minute staleness timeout as safety net.
+
 ## Phase 1 — Generate (dispatch flow-writer agent)
+
+**→ Create flow-write sentinel** (see § Flow Write Authorization)
 
 Dispatch `e2e-pipeline:e2e-flow-writer` with:
 - `description`: Extracted criteria or feature description
@@ -127,7 +144,7 @@ Flow generated: .claude/e2e/flows/<name>.yaml
 Proceeding to browser verification...
 ```
 
-If `--no-verify` → skip to Phase 3 (no-verify path).
+If `--no-verify` → **delete flow-write sentinel** → skip to Phase 3 (no-verify path).
 
 ## Phase 2 — Verify (dispatch flow-verifier + trace-analyzer)
 
@@ -142,6 +159,8 @@ ls ~/.agent-browser/<app>/ 2>/dev/null
 Dev server must be running. Auth profile should exist (run `/e2e-map` or `/e2e-walkthrough` first to create one).
 
 ### 2b. Dispatch flow-verifier
+
+**→ If `--verify-only`, create flow-write sentinel now** (see § Flow Write Authorization)
 
 Dispatch `e2e-pipeline:e2e-flow-verifier` with:
 - `flow_path`: Path to generated (or existing) flow YAML
@@ -194,6 +213,8 @@ Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
 ```
 
 Agent returns: `gif_path`, `mp4_path`, `thumbnail_path`. Use these in Phase 3 results.
+
+**→ Delete flow-write sentinel** (all flow-writing agents have returned)
 
 ## Phase 3 — Present Results
 
