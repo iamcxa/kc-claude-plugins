@@ -13,10 +13,9 @@ interface Props {
   isOpen: boolean
   onClose: () => void
   onStart: (opts: TriggerOpts) => void
-  isDisabled: boolean
 }
 
-export function TriggerDialog({ target, isOpen, onClose, onStart, isDisabled }: Props) {
+export function TriggerDialog({ target, isOpen, onClose, onStart }: Props) {
   const [mode, setMode] = useState<'production' | 'dry-run'>('production')
   const [customPrompt, setCustomPrompt] = useState('')
   const [selfRepair, setSelfRepair] = useState(true)
@@ -99,7 +98,6 @@ export function TriggerDialog({ target, isOpen, onClose, onStart, isDisabled }: 
           <button onClick=${onClose}>Never mind</button>
           <button
             onClick=${handleStart}
-            disabled=${isDisabled}
             style="background:var(--btn-primary);color:#fff;border-color:var(--btn-primary);"
           >Start Run</button>
         </div>
