@@ -259,6 +259,57 @@ Checks state in external services. Use for analytics events, tracing spans, webh
 | Timing | `wait_after` (after) | `wait` (before) |
 | Browser state | Unchanged | Unchanged |
 
+## Recording CLI-Only Flows
+
+When a flow has **zero browser steps** (only `Execute external` + `Verify external`), the browser-based recording pipeline (screenshots + WebM) doesn't apply. Use terminal recording instead.
+
+### Detection
+
+A flow is CLI-only when all steps have `action: "Execute external"` or `action: "Verify external"`. No `Navigate`, `Click`, `Fill`, or other browser actions.
+
+### Recording Pipeline
+
+```
+Skill wraps CLI command with asciinema
+    └── recording.cast      (JSONL: timestamp + character data)
+          │
+          ▼
+e2e-media-processor (CLI mode, cast_path provided)
+          │
+          ├── steps.gif     (agg: 120×35, 2x speed, monokai)
+          ├── test-run.mp4  (ffmpeg: yuv420p, faststart)
+          └── thumbnail.png (first GIF frame)
+```
+
+### Skill Dispatch Pattern
+
+```bash
+# 1. Record execution
+asciinema rec --cols 120 --rows 35 \
+  -c "<command>" "$REPORT_DIR/recording.cast"
+
+# 2. Dispatch media processor in CLI mode
+Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
+  "Process media:
+   report_dir: $REPORT_DIR
+   cast_path: $REPORT_DIR/recording.cast
+   output_name: test-run"
+```
+
+### Prerequisites
+
+`asciinema` and `agg` must be installed. Skills check availability before recording:
+
+```bash
+command -v asciinema >/dev/null 2>&1 && command -v agg >/dev/null 2>&1
+```
+
+If missing: warn user, skip recording, proceed with text-only results. Install: `brew install asciinema agg`.
+
+### Headless Mode
+
+In non-interactive shells (CI, subagents), asciinema runs in headless mode automatically ("TTY not available, recording in headless mode"). This is expected — the cast file is still produced correctly.
+
 ## Related
 
 - [Writing Tests](writing-tests.md) -- flow YAML format and checkpoint syntax

@@ -17,6 +17,7 @@
 | Test report | Markdown | After each test run |
 | Flow YAML | YAML | Auto-generated after walkthrough |
 | Metrics JSON | JSON | When `--metrics-output` is used |
+| Terminal cast | asciinema .cast (JSONL) | CLI-only flows (Execute/Verify external steps only) |
 
 ## Recording defaults
 
@@ -26,6 +27,7 @@
 | `/e2e-flow --verify-only` | ON | `--no-video` |
 | `/e2e-test` | OFF | `--video` or `--pr` |
 | `/e2e-map` | No recording | -- |
+| CLI-only flows | ON (asciinema) | `--no-video` |
 
 ## Output files per run
 
@@ -111,6 +113,16 @@ Skill dispatches e2e-media-processor
           ├── steps.gif     (800px wide, 1fps loop, blank frames skipped)
           ├── test-run.mp4  (1.5x speed, leading/trailing silence trimmed)
           └── thumbnail.png (first non-blank screenshot)
+
+CLI agent (raw output)
+    └── recording.cast      (asciinema terminal recording)
+          │
+          ▼
+Skill dispatches e2e-media-processor (CLI mode: cast_path)
+          │
+          ├── steps.gif     (agg render, 2x speed, monokai theme)
+          ├── test-run.mp4  (ffmpeg from GIF, yuv420p)
+          └── thumbnail.png (first frame extracted from GIF)
 ```
 
 ### Blank frame detection

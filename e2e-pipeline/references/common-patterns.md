@@ -109,6 +109,53 @@ fi
 
 Run this **once per session**, during the setup phase (after `mkdir -p` for `report_dir`). If `.gitignore` already has the patterns, the check is a no-op.
 
+## CLI Terminal Recording (for CLI-only flows)
+
+CLI-only cross-boundary flows (no browser steps) use `asciinema` + `agg` for terminal recording instead of browser screenshots + WebM.
+
+### Prerequisites
+
+```bash
+# Check and install (one-time)
+command -v asciinema >/dev/null 2>&1 || brew install asciinema
+command -v agg >/dev/null 2>&1 || brew install agg
+```
+
+### Record a CLI execution
+
+```bash
+asciinema rec --cols 120 --rows 35 \
+  -c "<command to record>" "$REPORT_DIR/recording.cast"
+```
+
+- `--cols 120 --rows 35`: fixed terminal dimensions for consistent rendering
+- Headless mode (non-interactive shells): produces cast file without TTY — this is normal
+- Cast format: JSONL with header + `[timestamp, "o", "data"]` events
+
+### Convert cast → GIF → MP4
+
+```bash
+# Cast → GIF (via agg)
+agg --cols 120 --rows 35 --speed 2 --theme monokai recording.cast recording.gif
+
+# GIF → MP4 (via ffmpeg)
+ffmpeg -y -i recording.gif -movflags faststart -pix_fmt yuv420p \
+  -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" recording.mp4
+```
+
+- `--speed 2`: 2x playback (terminal output often has long pauses)
+- `--theme monokai`: dark background, readable in PR comments
+- `scale=trunc(...)`: ensures even dimensions for libx264 compatibility
+
+### Gitignore additions
+
+Add alongside existing browser artifact patterns:
+
+```
+.claude/e2e/reports/**/*.cast
+.claude/e2e/reports/**/*.gif
+```
+
 ## Trace Analysis
 
 - `trace.zip` contains: `trace.network` (JSONL HAR), `trace.trace` (JSONL events), `resources/` (response bodies)
