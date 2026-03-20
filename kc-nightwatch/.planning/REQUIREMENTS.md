@@ -120,6 +120,34 @@
 - [x] **SEC-02**: Optional remote mode (0.0.0.0) with required token auth
 - [x] **SEC-03**: Token auth on all API/MCP/WebSocket endpoints in remote mode
 
+## v1.1 Requirements
+
+Requirements for UX polish pass. Each maps to roadmap phases (continuing from Phase 4).
+
+### Queue Awareness
+
+- [ ] **QUEUE-01**: Run type includes `queued_at` timestamp set on all 4 enqueue paths (manual, webhook, scheduler, `__all__` expansion)
+- [ ] **QUEUE-02**: Run list and run detail display trigger/queued time for all runs
+- [ ] **QUEUE-03**: Target detail panel shows count of currently queued runs for that target
+- [ ] **QUEUE-04**: Queued runs display their position in the queue (e.g., "#2 in queue")
+
+### Notification
+
+- [ ] **NOTIF-01**: Toast notification appears when a run is triggered ("Run queued for {target}")
+- [ ] **NOTIF-02**: Toast notification appears when a run completes or fails
+- [ ] **NOTIF-03**: Browser Notification API fires for run completion/failure when tab is in background (user-gesture-gated permission request)
+
+### Auto-Refresh
+
+- [ ] **POLL-01**: Runs page auto-refreshes every 5s when active runs exist (mirrors dashboard pattern)
+- [ ] **POLL-02**: Shared `usePoll` hook extracted from dashboard pattern, used by both dashboard and runs page
+
+### Cleanup
+
+- [ ] **CLEAN-01**: `chat-drawer.ts` deleted (confirmed dead — not imported anywhere)
+- [ ] **CLEAN-02**: Dead `phases` variable in `target-detail.ts` fixed (always `[]`, should read from run summary)
+- [ ] **CLEAN-03**: Sidebar "Add Target" button wired to open add-target-wizard
+
 ## v2 Requirements
 
 ### Proposal Pipeline
@@ -153,6 +181,10 @@
 | Custom MCP/plugin marketplace per target | Use user-scope MCPs + project .mcp.json auto-discovery |
 | Per-target auth tokens | Schema prepared in config, defer implementation |
 | Mobile responsive design | Desktop-first local tool |
+| Remove disabled Edit/Chat menu buttons | User chose not to include in v1.1 |
+| Inline target editing from detail view | Config page editor is sufficient |
+| Remove target API | Not requested for v1.1 |
+| Toast library (react-toastify, sonner) | Breaks no-build constraint; handroll is ~70 lines |
 
 ## Traceability
 
@@ -232,11 +264,25 @@
 | HEALTH-04 | Phase 4 | Complete |
 | HEALTH-05 | Phase 4 | Complete |
 
+| QUEUE-01 | — | Pending |
+| QUEUE-02 | — | Pending |
+| QUEUE-03 | — | Pending |
+| QUEUE-04 | — | Pending |
+| NOTIF-01 | — | Pending |
+| NOTIF-02 | — | Pending |
+| NOTIF-03 | — | Pending |
+| POLL-01 | — | Pending |
+| POLL-02 | — | Pending |
+| CLEAN-01 | — | Pending |
+| CLEAN-02 | — | Pending |
+| CLEAN-03 | — | Pending |
+
 **Coverage:**
-- v1 requirements: 73 total
-- Mapped to phases: 73
-- Unmapped: 0
+- v1.0 requirements: 73 total (all Complete)
+- v1.1 requirements: 12 total
+- Mapped to phases: 0
+- Unmapped: 12 ⚠️
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 after roadmap creation — all 73 requirements mapped*
+*Last updated: 2026-03-20 after v1.1 requirements added*
