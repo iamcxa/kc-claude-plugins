@@ -91,17 +91,38 @@ steps:
     on_fail: warn
 ```
 
-### CI Integration
+### Compiled Scripts
 
-Compiled flows run as standalone bash scripts — no Claude Code or LLM needed:
+`/e2e-compile` transforms flow YAML into standalone bash scripts that call `agent-browser` directly — no Claude Code or LLM needed at runtime. 30-50x faster than LLM-driven execution.
 
 ```bash
-npx e2e-compile --all                        # compile all flows
-.claude/e2e/compiled/login-flow.sh            # run directly
-.claude/e2e/compiled/login-flow.sh --junit results.xml  # JUnit output
+/e2e-compile login-flow          # compile one flow
+/e2e-compile --all               # compile all flows in .claude/e2e/flows/
+/e2e-compile --all --coverage    # compile + element coverage report
+/e2e-compile --dry-run login-flow  # validate without writing output
 ```
 
-See [CI Integration docs](./e2e-pipeline/docs/ci-integration.md) for GitHub Actions setup.
+Output goes to `.claude/e2e/compiled/<flow>.sh`. Each script is self-contained:
+
+```bash
+.claude/e2e/compiled/login-flow.sh                      # run directly
+.claude/e2e/compiled/login-flow.sh --headed              # visible browser
+.claude/e2e/compiled/login-flow.sh --junit results.xml   # JUnit output for CI
+.claude/e2e/compiled/login-flow.sh --screenshot-dir ./ss # capture screenshots
+```
+
+**Auto-compile**: `/e2e-test` automatically compiles + runs the compiled script after each LLM-driven test and compares results. Divergence between LLM and compiled execution is flagged — this catches selector drift and flow ambiguities early.
+
+### CI Integration
+
+Compiled scripts are the bridge to CI — commit them to your repo and run in GitHub Actions without Claude Code:
+
+```yaml
+# .github/workflows/e2e.yml
+- run: .claude/e2e/compiled/login-flow.sh --junit results.xml
+```
+
+The plugin provides a full GHA template with auth session reuse, matrix parallelism, quarantine system, and JUnit reporting. See [CI Integration docs](./e2e-pipeline/docs/ci-integration.md) for setup.
 
 ## Adding to Your Project
 
