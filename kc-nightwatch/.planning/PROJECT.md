@@ -32,7 +32,17 @@ Validated in Phase 1-4 (2026-03-18 to 2026-03-19):
 - [x] Per-target NW memory layer (isolated private-journal per target)
 - [x] Localhost by default + optional remote mode with token auth
 
-### Active (v2)
+### Active (v1.1)
+
+- [ ] `queued_at` timestamp on runs + trigger time display
+- [ ] Queue visibility in target detail panel
+- [ ] Toast notification system for run trigger feedback
+- [ ] Run completion notification (browser Notification API)
+- [ ] Runs page auto-refresh (polling parity with dashboard)
+- [ ] Stale UI cleanup (Edit/Chat disabled buttons, dead code, leftover chat-drawer)
+- [ ] Sidebar add target button wiring
+
+### Future (v2+)
 
 - [ ] Implementation outcome tracking (Phase 0.6) — did merged PRs actually help?
 - [ ] Proposal → implementation pipeline (accept → spawn implementation run → code PR)
@@ -81,5 +91,16 @@ Validated in Phase 1-4 (2026-03-18 to 2026-03-19):
 | Indicator measurement in Phase 0.5 | Data-backed self-assessment instead of qualitative LLM guessing | ✓ Good — baselines with quantified values |
 | Proposal → Implementation pipeline | Closes the flywheel: accepted proposals get implemented, outcomes tracked | — Deferred to v2 |
 
+## Current Milestone: v1.1 Dashboard UX Polish
+
+**Goal:** Improve run lifecycle visibility and clean up stale v1.0 UI debt — queued_at timestamps, queue display, toast/notification system, auto-refresh consistency, and dead code removal.
+
+**Target features:**
+- Run queue awareness (queued_at timestamp, queue display, trigger time)
+- Notification system (toast on trigger, browser notification on completion)
+- Runs page auto-refresh (polling parity with dashboard)
+- Stale UI cleanup (disabled buttons, dead files, dead code)
+- Sidebar add target button wiring
+
 ---
-*Last updated: 2026-03-20 after v1.0 milestone completion*
+*Last updated: 2026-03-20 after milestone v1.1 started*
