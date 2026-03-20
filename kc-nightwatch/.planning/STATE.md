@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dashboard UX Polish
 status: unknown
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-03-20T09:39:00.900Z"
+stopped_at: Completed 06-03-PLAN.md
+last_updated: "2026-03-20T09:50:00.000Z"
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 4
 ---
 
 # Project State
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-03-20)
 
 ## Current Position
 
-Phase: 06 (frontend-wiring) — EXECUTING
-Plan: 1 of 3
+Phase: 06 (frontend-wiring) — COMPLETE
+Plan: 3 of 3 (all plans complete)
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Plan: 1 of 3
 *Updated after each plan completion*
 | Phase 05 P01 | 10 | 2 tasks | 5 files |
 | Phase 06-frontend-wiring P01 | 3 | 2 tasks | 4 files |
+| Phase 06-frontend-wiring P03 | 5 | 1 task | 1 file |
 
 ## Accumulated Context
 
@@ -69,6 +70,9 @@ Recent decisions affecting current work:
 - [Phase 06-01]: Toast z-index:300 to appear above TriggerDialog overlay (z-index:100) — 'Run queued' toast fires while dialog is still visible
 - [Phase 06-01]: refreshTrigger initial value 0 — useEffect skips initial render by checking value > 0 before calling fnRef.current()
 - [Phase 06-01]: fnRef pattern in usePoll: fetchFn ref updated each render so interval always calls latest version without restarting timer
+- [Phase 06-03]: useCallback wraps loadRuns for stable identity — avoids spurious usePoll re-setup on every render
+- [Phase 06-03]: Detail refresh effect guards on hasActiveRuns — no api.getRun() calls when polling is stopped
+- [Phase 06-03]: Queue time: 'Queued Xm ago' for queued status, timeAgo(started_at) for all other statuses
 
 ### Pending Todos
 
@@ -81,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T09:39:00.897Z
-Stopped at: Completed 06-01-PLAN.md
+Last session: 2026-03-20T09:50:00.000Z
+Stopped at: Completed 06-03-PLAN.md
 Resume file: None
