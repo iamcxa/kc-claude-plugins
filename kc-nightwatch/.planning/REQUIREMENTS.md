@@ -263,26 +263,25 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 | HEALTH-03 | Phase 4 | Complete |
 | HEALTH-04 | Phase 4 | Complete |
 | HEALTH-05 | Phase 4 | Complete |
-
-| QUEUE-01 | — | Pending |
-| QUEUE-02 | — | Pending |
-| QUEUE-03 | — | Pending |
-| QUEUE-04 | — | Pending |
-| NOTIF-01 | — | Pending |
-| NOTIF-02 | — | Pending |
-| NOTIF-03 | — | Pending |
-| POLL-01 | — | Pending |
-| POLL-02 | — | Pending |
-| CLEAN-01 | — | Pending |
-| CLEAN-02 | — | Pending |
-| CLEAN-03 | — | Pending |
+| QUEUE-01 | Phase 5 | Pending |
+| QUEUE-02 | Phase 6 | Pending |
+| QUEUE-03 | Phase 6 | Pending |
+| QUEUE-04 | Phase 6 | Pending |
+| NOTIF-01 | Phase 6 | Pending |
+| NOTIF-02 | Phase 6 | Pending |
+| NOTIF-03 | Phase 6 | Pending |
+| POLL-01 | Phase 6 | Pending |
+| POLL-02 | Phase 6 | Pending |
+| CLEAN-01 | Phase 7 | Pending |
+| CLEAN-02 | Phase 7 | Pending |
+| CLEAN-03 | Phase 7 | Pending |
 
 **Coverage:**
 - v1.0 requirements: 73 total (all Complete)
 - v1.1 requirements: 12 total
-- Mapped to phases: 0
-- Unmapped: 12 ⚠️
+- Mapped to phases: 12
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-20 after v1.1 requirements added*
+*Last updated: 2026-03-20 after v1.1 roadmap created (Phases 5-7)*

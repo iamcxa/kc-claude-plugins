@@ -1,23 +1,14 @@
 # Roadmap: Nightwatch Dashboard
 
-## Overview
+## Milestones
 
-Build a web-based autonomous improvement platform that replaces the launchd cron job with a persistent Bun server + worker architecture. The journey starts with a crash-proof foundation (all 6 critical infrastructure pitfalls solved before any UI), advances to a working cockpit that replaces daily YAML-file inspection, layers in the flywheel differentiators (NW-Claude chat, config editor, feedback calibration, self-assessment), and culminates in the MCP server and health metrics that make the flywheel observable and programmable from any Claude session.
+- ✅ **v1.0 MVP** - Phases 1-4 (shipped 2026-03-19)
+- 🚧 **v1.1 Dashboard UX Polish** - Phases 5-7 (in progress)
 
 ## Phases
 
-**Phase Numbering:**
-- Integer phases (1, 2, 3): Planned milestone work
-- Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
-
-Decimal phases appear between their surrounding integers in numeric order.
-
-- [x] **Phase 1: Foundation** - Two-process architecture with all 6 critical pitfalls resolved (completed 2026-03-18)
-- [x] **Phase 2: Core Cockpit** - Working dashboard: targets, run trigger, SSE logs, history, scheduler, memory isolation (completed 2026-03-18)
-- [x] **Phase 3: Flywheel Core** - NW-Claude chat, config editor, feedback calibration, self-assessment, baseline measurement (completed 2026-03-18)
-- [x] **Phase 4: Full Flywheel** - MCP server + flywheel health metrics + deferred chat/feedback capabilities (data-dependent, deferred until Phase 3 produces sufficient feedback data) (completed 2026-03-19)
-
-## Phase Details
+<details>
+<summary>✅ v1.0 MVP (Phases 1-4) - SHIPPED 2026-03-19</summary>
 
 ### Phase 1: Foundation
 **Goal**: The two-process app starts, stays up across crashes, and handles every process-lifecycle failure mode before any feature work starts
@@ -57,7 +48,6 @@ Plans:
 **Goal**: Users can interact with NW-Claude about run results, edit config safely, submit structured feedback that calibrates future runs, and see per-run self-assessment and indicator baselines — turning nightwatch from automation into a learning system
 **Depends on**: Phase 2
 **Requirements**: CONF-01, CONF-02, CONF-03, CONF-04, CONF-05, CONF-06, CONF-07, CONF-08, CHAT-01, CHAT-02, CHAT-03, CHAT-06, CHAT-07, FEED-01, FEED-02, FEED-04, FEED-06, FEED-07, ASSESS-01, ASSESS-02, ASSESS-03, ASSESS-04, MEAS-01, MEAS-02, MEAS-03
-**Deferred to Phase 4**: CHAT-04 (NW-MCP access -- requires MCP server), CHAT-05 (NW journal access via MCP -- requires MCP config injection), FEED-03 (nw_submit_feedback MCP tool -- requires MCP server), FEED-05 (Linear issue status collection -- requires Linear MCP integration)
 **Success Criteria** (what must be TRUE):
   1. After a run completes, NW-Claude chat panel auto-briefs with a run summary; user can ask follow-up questions; switching target focus prompts a context switch
   2. User opens Config page, unlocks editing, modifies targets.yaml or safety.yaml, and the 4-step validation flow (syntax -> Haiku semantic -> diff -> confirm) runs before any write; config warnings from self-repair.yaml appear inline
@@ -72,7 +62,7 @@ Plans:
 - [x] 03-02-PLAN.md — Config validation service (4-step flow) + config API routes + YAML editor page (tabs, edit lock, warnings) + AddTargetWizard + Edit/Remove target (completed 2026-03-18)
 - [x] 03-03-PLAN.md — Feedback store + feedback API routes + ActionCard component with feedback buttons + implicit feedback collector (PR polling) + reject rate calibration (completed 2026-03-18)
 - [x] 03-04-PLAN.md — Orchestrator skill phases (0.5, 3.5, 4.5) + executor summary parsing + Slack assessment + BaselineCard + ActionCard assessment + human verification (completed 2026-03-18)
-- [ ] 03-05-PLAN.md — Gap closure: wire orphaned feedback collector + trend writer into executor.ts, update REQUIREMENTS.md status
+- [x] 03-05-PLAN.md — Gap closure: wire orphaned feedback collector + trend writer into executor.ts, update REQUIREMENTS.md status (completed 2026-03-18)
 
 ### Phase 4: Full Flywheel
 **Goal**: The entire nightwatch state is queryable and actionable from any Claude session via MCP, and flywheel health is visible as charts and trends — completing the closed-loop improvement system
@@ -87,19 +77,60 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [x] 04-01-PLAN.md — MCP server: shared types (health), McpServer factory with 13 tools (7 query + 1 search + 4 action + 1 stub), WebStandard Streamable HTTP transport, Linear GraphQL integration
-- [x] 04-02-PLAN.md — Flywheel Health: health API aggregation, sparkline SVG components, reject rate line charts, acceptance rate, per-target sidebar arrows, bottom nav Health tab, human verification
-- [x] 04-03-PLAN.md — Chat MCP integration: NW tool schemas in Anthropic API, MCP client for tool_use routing, multi-turn tool loop, journal access via MCP tools
-- [ ] 04-04-PLAN.md — Gap closure: fix reject rate chart rendering (HEALTH-02) -- per-indicator reject rate data in health API, fix frontend to pass multi-value arrays to LineChart
+- [x] 04-01-PLAN.md — MCP server: shared types (health), McpServer factory with 13 tools (7 query + 1 search + 4 action + 1 stub), WebStandard Streamable HTTP transport, Linear GraphQL integration (completed 2026-03-19)
+- [x] 04-02-PLAN.md — Flywheel Health: health API aggregation, sparkline SVG components, reject rate line charts, acceptance rate, per-target sidebar arrows, bottom nav Health tab, human verification (completed 2026-03-19)
+- [x] 04-03-PLAN.md — Chat MCP integration: NW tool schemas in Anthropic API, MCP client for tool_use routing, multi-turn tool loop, journal access via MCP tools (completed 2026-03-19)
+- [x] 04-04-PLAN.md — Gap closure: fix reject rate chart rendering (HEALTH-02) -- per-indicator reject rate data in health API, fix frontend to pass multi-value arrays to LineChart (completed 2026-03-19)
+
+</details>
+
+### 🚧 v1.1 Dashboard UX Polish (In Progress)
+
+**Milestone Goal:** Improve run lifecycle visibility and clean up stale v1.0 UI debt — queued_at timestamps, queue display, toast/notification system, auto-refresh consistency, and dead code removal.
+
+#### Phase 5: Schema + Server Infrastructure
+**Goal**: The data foundation is in place — queued_at timestamp exists on all runs and server exposes the queue state endpoint and run:failed SSE event that frontend phases depend on
+**Depends on**: Phase 4
+**Requirements**: QUEUE-01
+**Success Criteria** (what must be TRUE):
+  1. Every newly enqueued run has a `queued_at` ISO timestamp set at enqueue time, visible in the run store, across all 4 trigger paths (manual POST /api/runs, webhook POST /api/webhook, scheduler interval, __all__ expansion)
+  2. GET /api/worker/state returns the current queue snapshot (pending runs with their target + queued_at) and is callable from the browser without side effects
+  3. When a run fails, the global SSE channel broadcasts a `run:failed` event with runId and targetId — matching the existing `run:complete` pattern
+**Plans**: TBD
+
+#### Phase 6: Frontend Wiring
+**Goal**: Users can see queue depth, trigger time, and position for every run; they receive immediate toast feedback on trigger actions; the Runs page stays current during active runs; and background completions surface as browser notifications
+**Depends on**: Phase 5
+**Requirements**: QUEUE-02, QUEUE-03, QUEUE-04, NOTIF-01, NOTIF-02, NOTIF-03, POLL-01, POLL-02
+**Success Criteria** (what must be TRUE):
+  1. Run list and run detail both show queued_at as a relative time (e.g., "queued 2m ago") alongside started_at; queued runs that have not started yet show their trigger time
+  2. Triggering a run from any trigger point (dashboard button, context menu, Run All) immediately shows a toast "Run queued for {target}" at top-right; if the trigger fails, a red toast shows the error message
+  3. Target detail panel shows "2 queued" count for the selected target when runs are waiting; each queued run shows its position ("#2 in queue")
+  4. The Runs page auto-refreshes every 5s when active or queued runs exist and stops polling when all runs are in a terminal state — identical behavior to the dashboard
+  5. When a run completes or fails while the browser tab is in the background, a desktop notification appears; first-time users are prompted for permission via a user gesture (not on page load)
+**Plans**: TBD
+
+#### Phase 7: Cleanup
+**Goal**: Dead code is deleted and the sidebar Add Target button works — leaving a codebase with no orphan files, no dead variables, and no placeholder buttons
+**Depends on**: Phase 6
+**Requirements**: CLEAN-01, CLEAN-02, CLEAN-03
+**Success Criteria** (what must be TRUE):
+  1. `chat-drawer.ts` no longer exists in the codebase; `bun typecheck` exits 0 after its deletion (no dangling imports)
+  2. The `phases` variable in `target-detail.ts` reads from the actual run summary rather than always returning `[]`; the target detail panel displays phase progress correctly
+  3. Clicking "Add Target" in the sidebar opens the AddTargetWizard — same wizard accessible from the Config page
+**Plans**: TBD
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
-| Phase | Plans Complete | Status | Completed |
-|-------|----------------|--------|-----------|
-| 1. Foundation | 3/3 | Complete | 2026-03-18 |
-| 2. Core Cockpit | 3/3 | Complete | 2026-03-18 |
-| 3. Flywheel Core | 5/5 | Complete   | 2026-03-18 |
-| 4. Full Flywheel | 4/4 | Complete   | 2026-03-19 |
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1. Foundation | v1.0 | 3/3 | Complete | 2026-03-18 |
+| 2. Core Cockpit | v1.0 | 3/3 | Complete | 2026-03-18 |
+| 3. Flywheel Core | v1.0 | 5/5 | Complete | 2026-03-18 |
+| 4. Full Flywheel | v1.0 | 4/4 | Complete | 2026-03-19 |
+| 5. Schema + Server Infrastructure | v1.1 | 0/TBD | Not started | - |
+| 6. Frontend Wiring | v1.1 | 0/TBD | Not started | - |
+| 7. Cleanup | v1.1 | 0/TBD | Not started | - |
