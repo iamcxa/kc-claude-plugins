@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dashboard UX Polish
 status: unknown
-stopped_at: Phase 6 context gathered
-last_updated: "2026-03-20T08:42:28.086Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-20T09:39:00.900Z"
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 4
+  completed_plans: 2
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** The closed-loop feedback flywheel — NW monitors, proposes, learns from feedback, and gets measurably better over time
-**Current focus:** Phase 05 — schema-server-infrastructure
+**Current focus:** Phase 06 — frontend-wiring
 
 ## Current Position
 
-Phase: 05 (schema-server-infrastructure) — EXECUTING
-Plan: 1 of 1
+Phase: 06 (frontend-wiring) — EXECUTING
+Plan: 1 of 3
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Plan: 1 of 1
 
 *Updated after each plan completion*
 | Phase 05 P01 | 10 | 2 tasks | 5 files |
+| Phase 06-frontend-wiring P01 | 3 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,9 @@ Recent decisions affecting current work:
 - [Phase 05]: queued_at field is optional for backward compatibility with existing YAML-stored runs
 - [Phase 05]: run:failed target resolved from lastWorkerState.current?.target — failing run IS current run at failure time; fallback to 'unknown'
 - [Phase 05]: GET /api/worker/state placed before GET /api/runs/:id param route per Hono route ordering rules
+- [Phase 06-01]: Toast z-index:300 to appear above TriggerDialog overlay (z-index:100) — 'Run queued' toast fires while dialog is still visible
+- [Phase 06-01]: refreshTrigger initial value 0 — useEffect skips initial render by checking value > 0 before calling fnRef.current()
+- [Phase 06-01]: fnRef pattern in usePoll: fetchFn ref updated each render so interval always calls latest version without restarting timer
 
 ### Pending Todos
 
@@ -77,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T08:42:28.083Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-frontend-wiring/06-CONTEXT.md
+Last session: 2026-03-20T09:39:00.897Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: None

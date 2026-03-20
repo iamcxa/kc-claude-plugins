@@ -133,14 +133,14 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 
 ### Notification
 
-- [ ] **NOTIF-01**: Toast notification appears when a run is triggered ("Run queued for {target}")
+- [x] **NOTIF-01**: Toast notification appears when a run is triggered ("Run queued for {target}")
 - [ ] **NOTIF-02**: Toast notification appears when a run completes or fails
 - [ ] **NOTIF-03**: Browser Notification API fires for run completion/failure when tab is in background (user-gesture-gated permission request)
 
 ### Auto-Refresh
 
 - [ ] **POLL-01**: Runs page auto-refreshes every 5s when active runs exist (mirrors dashboard pattern)
-- [ ] **POLL-02**: Shared `usePoll` hook extracted from dashboard pattern, used by both dashboard and runs page
+- [x] **POLL-02**: Shared `usePoll` hook extracted from dashboard pattern, used by both dashboard and runs page
 
 ### Cleanup
 
@@ -267,11 +267,11 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 | QUEUE-02 | Phase 6 | Pending |
 | QUEUE-03 | Phase 6 | Pending |
 | QUEUE-04 | Phase 6 | Pending |
-| NOTIF-01 | Phase 6 | Pending |
+| NOTIF-01 | Phase 6 | Complete |
 | NOTIF-02 | Phase 6 | Pending |
 | NOTIF-03 | Phase 6 | Pending |
 | POLL-01 | Phase 6 | Pending |
-| POLL-02 | Phase 6 | Pending |
+| POLL-02 | Phase 6 | Complete |
 | CLEAN-01 | Phase 7 | Pending |
 | CLEAN-02 | Phase 7 | Pending |
 | CLEAN-03 | Phase 7 | Pending |
