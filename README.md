@@ -12,7 +12,7 @@ Claude Code plugin marketplace by [Kent Chen](https://github.com/iamcxa).
 
 | Plugin | Version | Description | Install |
 |--------|---------|-------------|---------|
-| [e2e-pipeline](./e2e-pipeline/) | 2.1.0 | Browser E2E testing pipeline — map UI, generate & verify flows, run tests, interactive walkthroughs, video recording | `/plugin install e2e-pipeline@kc-claude-plugins` |
+| [e2e-pipeline](./e2e-pipeline/) | 2.3.0 | Browser E2E testing pipeline — map UI, generate & verify flows, run tests, interactive walkthroughs, video recording | `/plugin install e2e-pipeline@kc-claude-plugins` |
 
 ## e2e-pipeline
 
@@ -35,18 +35,22 @@ Browser E2E testing with context-isolating subagents. The pipeline: **Map → Ge
 | `/e2e-compile --all` | Compile flow YAML to standalone bash scripts for CI |
 | `/e2e-dispatch` | Unified entry point (routes to the right skill) |
 | `/e2e-skill-ops` | Debug, maintain, or evaluate pipeline skills |
+| `/e2e-help` | Interactive help guide, topic deep-dive, feedback collection |
+| `/e2e-doc-sync` | Scan docs for gaps against skills/agents, write updates |
+| `/e2e-pipeline-doc-sync` | Full doc sync: static scan + history + write + live probe verify |
 
 ### Architecture
 
-5 agents + 7 skills. Skills run in main conversation as thin orchestrators; agents run as subagents to keep verbose data out of context.
+8 agents + 10 skills. Skills run in main conversation as thin orchestrators; agents run as subagents to keep verbose data out of context.
 
 ```
 User ──→ /e2e-map ──→ e2e-mapper agent ──→ mapping YAML
-     ──→ /e2e-flow ──→ e2e-flow-writer agent (codebase analysis, no browser)
-                   ──→ e2e-flow-verifier agent (browser verification + auto-repair)
-     ──→ /e2e-test ──→ e2e-test-runner agent ──→ e2e-trace-analyzer agent
-     ──→ /e2e-walkthrough ──→ (main context, interactive)
+     ──→ /e2e-flow ──→ e2e-flow-writer + e2e-flow-verifier + e2e-trace-analyzer + e2e-media-processor
+     ──→ /e2e-test ──→ e2e-test-runner + e2e-trace-analyzer + e2e-media-processor
+     ──→ /e2e-walkthrough ──→ (main context) + e2e-trace-analyzer + e2e-media-processor
      ──→ /e2e-compile ──→ Node.js CLI (no LLM needed, 30-50x faster)
+     ──→ /e2e-doc-sync ──→ e2e-doc-scanner agent
+     ──→ /e2e-pipeline-doc-sync ──→ doc-probe agent (live verification)
 ```
 
 ### Flow YAML
