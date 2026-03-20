@@ -62,29 +62,29 @@ Requirements for parallel execution + auto-action milestone. Each maps to roadma
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PARA-01 | - | Pending |
-| PARA-02 | - | Pending |
-| PARA-03 | - | Pending |
-| PARA-04 | - | Pending |
-| SCHED-04 | - | Pending |
-| SCHED-05 | - | Pending |
-| SCHED-06 | - | Pending |
-| SCHED-07 | - | Pending |
-| AUTO-01 | - | Pending |
-| AUTO-02 | - | Pending |
-| AUTO-03 | - | Pending |
-| AUTO-04 | - | Pending |
-| OUT-01 | - | Pending |
-| OUT-02 | - | Pending |
-| OUT-03 | - | Pending |
-| OUT-04 | - | Pending |
-| UI-01 | - | Pending |
+| PARA-01 | Phase 9 | Pending |
+| PARA-02 | Phase 8 | Pending |
+| PARA-03 | Phase 8 | Pending |
+| PARA-04 | Phase 11 | Pending |
+| SCHED-04 | Phase 8 | Pending |
+| SCHED-05 | Phase 9 | Pending |
+| SCHED-06 | Phase 11 | Pending |
+| SCHED-07 | Phase 11 | Pending |
+| AUTO-01 | Phase 10 | Pending |
+| AUTO-02 | Phase 10 | Pending |
+| AUTO-03 | Phase 10 | Pending |
+| AUTO-04 | Phase 11 | Pending |
+| OUT-01 | Phase 11 | Pending |
+| OUT-02 | Phase 11 | Pending |
+| OUT-03 | Phase 10 | Pending |
+| OUT-04 | Phase 11 | Pending |
+| UI-01 | Phase 11 | Pending |
 
 **Coverage:**
 - v2.0 requirements: 17 total
-- Mapped to phases: 0
-- Unmapped: 17
+- Mapped to phases: 17
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-21*
-*Last updated: 2026-03-21 after initial definition*
+*Last updated: 2026-03-21 after roadmap created (v2.0 Phases 8-11)*
