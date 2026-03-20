@@ -118,19 +118,17 @@ function App() {
   }
 
   return html`
-    <>
-      <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
-        <${ScheduleBar} schedule=${schedule} onToggle=${handleScheduleToggle} />
-        <div style="flex:1;overflow:hidden;padding-bottom:48px;">
-          ${page === 'dashboard' && html`<${Dashboard} healthData=${healthData} />`}
-          ${page === 'runs' && html`<${Runs} />`}
-          ${page === 'health' && html`<${Health} />`}
-          ${page === 'config' && html`<${Config} />`}
-        </div>
-        <${BottomNav} current=${page} />
+    <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
+      <${ScheduleBar} schedule=${schedule} onToggle=${handleScheduleToggle} />
+      <div style="flex:1;overflow:hidden;padding-bottom:48px;">
+        ${page === 'dashboard' && html`<${Dashboard} healthData=${healthData} />`}
+        ${page === 'runs' && html`<${Runs} />`}
+        ${page === 'health' && html`<${Health} />`}
+        ${page === 'config' && html`<${Config} />`}
       </div>
+      <${BottomNav} current=${page} />
       <${Toast} />
-    </>
+    </div>
   `
 }
 
