@@ -41,10 +41,20 @@ Validated in v1.1 (Phases 5-7, 2026-03-20):
 - ✓ Dead code cleanup (chat-drawer.ts deleted, phases_completed wired) — v1.1
 - ✓ Sidebar Add Target button wiring — v1.1
 
-### Active (v2+)
+### Active (v2.0)
 
+- [ ] Per-target scheduling with global fallback (minimum 10min interval)
+- [ ] Parallel execution — per-target isolation (different targets concurrent, same target queued)
+- [ ] Auto-create PR when code changes are proposed
+- [ ] Auto-create Linear issues for improvement signals
+- [ ] Outcome visibility — action cards with PR/Linear links
+- [ ] Outcomes page — aggregate view of all PRs/issues across runs, filterable
+- [ ] NW-Claude awareness of PR/Linear outcomes (chat can answer about them)
 - [ ] Implementation outcome tracking (Phase 0.6) — did merged PRs actually help?
-- [ ] Proposal → implementation pipeline (accept → spawn implementation run → code PR)
+- [ ] UI fix — bottom nav gap (black line between content and nav bar)
+
+### Future (v3+)
+
 - [ ] Slack reaction feedback — requires Slack MCP read
 - [ ] PR review comment parsing — requires gh API parsing
 
@@ -76,7 +86,7 @@ Validated in v1.1 (Phases 5-7, 2026-03-20):
 - **Runtime**: Bun — matches existing 1on1 report engine, native TS support
 - **Framework**: Hono (server) + Preact/HTM (frontend) — lightweight, no heavy deps
 - **Execution**: agent-safehouse mandatory for all `claude -p` spawns
-- **Concurrency**: Max 1 concurrent run (queue if busy)
+- **Concurrency**: Per-target isolation — different targets run in parallel, same target queues (v2.0 change from max 1)
 - **Config validation budget**: $0.05 cap (Haiku model) for semantic validation
 - **Always-on**: Must be stable enough for mprocs integration (crash recovery, graceful shutdown)
 - **Compatibility**: Existing nightwatch skills/agents unchanged — app wraps them
@@ -97,9 +107,35 @@ Validated in v1.1 (Phases 5-7, 2026-03-20):
 | Handroll toast (no library) | No-build constraint; signal-backed toast is ~70 lines | ✓ Good — lightweight, no deps |
 | Proposal → Implementation pipeline | Closes the flywheel: accepted proposals get implemented, outcomes tracked | — Deferred to v2 |
 
-## Current State
+## Current Milestone: v2.0 Parallel Execution + Auto-Action
 
-v1.1 shipped. All 85 requirements (73 v1.0 + 12 v1.1) satisfied. Next milestone not yet planned.
+**Goal:** Enable parallel target execution with per-target scheduling, auto-create PRs and Linear issues from run results, and surface outcomes in a dedicated page and NW-Claude chat.
+
+**Target features:**
+- Per-target scheduling (individual intervals, 10min minimum, global fallback)
+- Parallel execution (per-target isolation — concurrent across targets, queued within)
+- Auto PR + Linear creation (no human approval gate)
+- Outcomes visibility (action cards with links + Outcomes aggregate page)
+- NW-Claude chat awareness of PR/Linear outcomes
+- Implementation outcome tracking (Phase 0.6 — did PRs help?)
+- UI polish (bottom nav gap fix)
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd:transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd:complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
 
 ---
-*Last updated: 2026-03-21 after v1.1 milestone completion*
+*Last updated: 2026-03-21 after v2.0 milestone started*
