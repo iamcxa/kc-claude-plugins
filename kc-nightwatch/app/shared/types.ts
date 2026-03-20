@@ -74,6 +74,7 @@ export interface Run {
   trigger: 'manual' | 'interval' | 'webhook' | 'implementation'
   status: 'queued' | 'running' | 'completed' | 'failed' | 'timeout' | 'cancelled'
   custom_prompt?: string
+  queued_at?: string
   started_at?: string
   completed_at?: string
   duration_seconds?: number

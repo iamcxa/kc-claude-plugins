@@ -83,6 +83,7 @@ async function processNextRun(): Promise<void> {
           mode: run.mode,
           trigger: run.trigger,
           status: 'queued',
+          queued_at: new Date().toISOString(),
           log_path: '',
         }
         subRun.log_path = `runs/${subRun.id}/log.jsonl`

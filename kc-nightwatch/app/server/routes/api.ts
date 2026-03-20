@@ -31,6 +31,7 @@ apiRoutes.post('/api/runs', async (c) => {
     mode: body.mode,
     trigger: 'manual',
     status: 'queued',
+    queued_at: new Date().toISOString(),
     custom_prompt: body.custom_prompt,
     log_path: '',
   }
@@ -72,6 +73,7 @@ apiRoutes.post('/api/webhook', async (c) => {
     mode: body.mode ?? 'production',
     trigger: 'webhook',
     status: 'queued',
+    queued_at: new Date().toISOString(),
     log_path: '',
   }
   run.log_path = `runs/${run.id}/log.jsonl`
