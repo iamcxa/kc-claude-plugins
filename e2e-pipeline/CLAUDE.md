@@ -8,9 +8,9 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 
 ## Architecture
 
-**Skills** (9) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
+**Skills** (10) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
 
-**Agents** (7) run as subagents for heavy work, keeping verbose data out of main context:
+**Agents** (8) run as subagents for heavy work, keeping verbose data out of main context:
 - `e2e-mapper` -- explores pages, generates YAML mappings
 - `e2e-flow-writer` -- analyzes codebase + mapping to generate flow YAML (no browser)
 - `e2e-flow-verifier` -- runs flows in browser, auto-repairs selectors/steps, produces reports
@@ -18,6 +18,7 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 - `e2e-trace-analyzer` -- parses Playwright trace.zip for API failures and console errors
 - `e2e-media-processor` -- blank-frame-trimmed GIF, MP4 video, thumbnail from screenshots/recordings
 - `e2e-doc-scanner` -- scans skills/agents vs docs for gaps, writes doc updates
+- `doc-probe` -- verifies documentation accuracy via live behavioral probes (dispatched by e2e-pipeline-doc-sync)
 
 ```
 skills/e2e-dispatch/     -> router (auth gate + skill selection)
@@ -29,7 +30,8 @@ skills/e2e-compile/      -> compile flow YAML to standalone bash test scripts (r
 skills/e2e-skill-ops/    -> meta-skill for debugging/maintaining the pipeline itself
 skills/e2e-help/         -> interactive help guide, topic deep-dive, feedback collection
 skills/e2e-doc-sync/     -> documentation gap scanner & writer -> dispatches e2e-doc-scanner agent
-agents/                  -> subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor, e2e-doc-scanner)
+skills/e2e-pipeline-doc-sync/ -> forge-template doc sync with live probe verification (coexists with e2e-doc-sync)
+agents/                  -> subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor, e2e-doc-scanner, doc-probe)
 hooks/                   -> E2E pipeline hooks (SessionStart context + pre-commit check + plan E2E check)
 references/              -> agent-browser CLI commands, common browser testing patterns, knowledge capture framework
 ```
@@ -143,6 +145,13 @@ Rule: if a layer has the tools to attempt a step, it MUST attempt it (best-effor
 5. Re-run grep to verify zero active references (historical in findings/specs is OK)
 
 ## Documentation Maintenance
+
+### Doc Sync — Coexistence (Migration Step 1)
+
+Both `e2e-doc-sync` (original, plugin-specific) and `e2e-pipeline-doc-sync` (forge template, generic) coexist:
+- **`/e2e-doc-sync`**: Plugin-specific orchestrator + e2e-doc-scanner agent. Coverage gaps only.
+- **`/e2e-pipeline-doc-sync`**: Generic template with history enrichment + live probe verification. Coverage + accuracy.
+- Use `/e2e-pipeline-doc-sync --check` to compare gap detection with `/e2e-doc-sync --check`.
 
 ### Pre-Publish Gate (read by `/kc-marketplace-sync`)
 

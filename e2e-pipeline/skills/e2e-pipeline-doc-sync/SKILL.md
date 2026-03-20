@@ -22,7 +22,7 @@ description: >
 
 ## Phase 1: Static Scan
 
-1. Read `reference/doc-sync-context.md` → load Source Map, Doc Structure, Probe Config, Post-Sync Hooks
+1. Read `references/doc-sync-context.md` → load Source Map, Doc Structure, Probe Config, Post-Sync Hooks
 2. Inventory source files:
    - Glob `skills/*/SKILL.md` → for each: extract skill name, description, all `--flags`, modes (from routing tables), key concepts
    - Glob `agents/*.md` → for each: extract agent name, tools, input contract fields, dispatch trigger
