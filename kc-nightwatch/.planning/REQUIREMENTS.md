@@ -128,14 +128,14 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 
 - [x] **QUEUE-01**: Run type includes `queued_at` timestamp set on all 4 enqueue paths (manual, webhook, scheduler, `__all__` expansion)
 - [x] **QUEUE-02**: Run list and run detail display trigger/queued time for all runs
-- [ ] **QUEUE-03**: Target detail panel shows count of currently queued runs for that target
-- [ ] **QUEUE-04**: Queued runs display their position in the queue (e.g., "#2 in queue")
+- [x] **QUEUE-03**: Target detail panel shows count of currently queued runs for that target
+- [x] **QUEUE-04**: Queued runs display their position in the queue (e.g., "#2 in queue")
 
 ### Notification
 
 - [x] **NOTIF-01**: Toast notification appears when a run is triggered ("Run queued for {target}")
-- [ ] **NOTIF-02**: Toast notification appears when a run completes or fails
-- [ ] **NOTIF-03**: Browser Notification API fires for run completion/failure when tab is in background (user-gesture-gated permission request)
+- [x] **NOTIF-02**: Toast notification appears when a run completes or fails
+- [x] **NOTIF-03**: Browser Notification API fires for run completion/failure when tab is in background (user-gesture-gated permission request)
 
 ### Auto-Refresh
 
@@ -265,11 +265,11 @@ Requirements for UX polish pass. Each maps to roadmap phases (continuing from Ph
 | HEALTH-05 | Phase 4 | Complete |
 | QUEUE-01 | Phase 5 | Complete |
 | QUEUE-02 | Phase 6 | Complete |
-| QUEUE-03 | Phase 6 | Pending |
-| QUEUE-04 | Phase 6 | Pending |
+| QUEUE-03 | Phase 6 | Complete |
+| QUEUE-04 | Phase 6 | Complete |
 | NOTIF-01 | Phase 6 | Complete |
-| NOTIF-02 | Phase 6 | Pending |
-| NOTIF-03 | Phase 6 | Pending |
+| NOTIF-02 | Phase 6 | Complete |
+| NOTIF-03 | Phase 6 | Complete |
 | POLL-01 | Phase 6 | Complete |
 | POLL-02 | Phase 6 | Complete |
 | CLEAN-01 | Phase 7 | Pending |

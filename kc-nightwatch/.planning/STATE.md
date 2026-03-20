@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dashboard UX Polish
 status: unknown
-stopped_at: Completed 06-03-PLAN.md
-last_updated: "2026-03-20T09:50:00.000Z"
+stopped_at: Completed 06-02-PLAN.md
+last_updated: "2026-03-20T09:51:24.257Z"
 progress:
   total_phases: 3
   completed_phases: 2
@@ -52,6 +52,7 @@ Plan: 3 of 3 (all plans complete)
 | Phase 05 P01 | 10 | 2 tasks | 5 files |
 | Phase 06-frontend-wiring P01 | 3 | 2 tasks | 4 files |
 | Phase 06-frontend-wiring P03 | 5 | 1 task | 1 file |
+| Phase 06-frontend-wiring P02 | 8 | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,8 @@ Recent decisions affecting current work:
 - [Phase 06-03]: useCallback wraps loadRuns for stable identity — avoids spurious usePoll re-setup on every render
 - [Phase 06-03]: Detail refresh effect guards on hasActiveRuns — no api.getRun() calls when polling is stopped
 - [Phase 06-03]: Queue time: 'Queued Xm ago' for queued status, timeAgo(started_at) for all other statuses
+- [Phase 06-02]: [Phase 06-02]: Fragment wrapper required in htm to render Toast sibling to main layout div
+- [Phase 06-02]: [Phase 06-02]: Notification.requestPermission() placed in handleTrigger (user gesture), not useEffect — browser security requirement
 
 ### Pending Todos
 
@@ -85,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T09:50:00.000Z
-Stopped at: Completed 06-03-PLAN.md
+Last session: 2026-03-20T09:51:24.214Z
+Stopped at: Completed 06-02-PLAN.md
 Resume file: None
