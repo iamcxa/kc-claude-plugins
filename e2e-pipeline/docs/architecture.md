@@ -2,19 +2,20 @@
 
 ## The Closed-Loop Pipeline
 
-This plugin forms a self-healing cycle: **Map -> Test -> Analyze -> Repair -> Re-test**.
+This plugin forms a self-healing cycle: **Map → Test → Analyze → Repair → Re-test**.
 
-```
-/e2e-map             -> .claude/e2e/mappings/<app>.yaml
-       |
-/e2e-flow            -> .claude/e2e/flows/<feature>.yaml + .claude/e2e/reports/<ts>/
-       |                 (generate from plans/specs/PRs, verify in browser)
-/e2e-compile         -> .claude/e2e/compiled/<flow>.sh (standalone bash scripts)
-       |
-/e2e-test <flow>     -> .claude/e2e/reports/<ts>/report.md, trace.zip, screenshots, video
-       |
-  Stale selectors?   -> /e2e-map --page X (repair mapping)
-  Flow changed?      -> Edit flow or /e2e-flow --verify-only
+```mermaid
+flowchart TD
+    MAP["/e2e-map"] -->|"mappings/*.yaml"| FLOW["/e2e-flow"]
+    FLOW -->|"flows/*.yaml"| COMPILE["/e2e-compile"]
+    COMPILE -->|"compiled/*.sh"| TEST["/e2e-test"]
+    FLOW -->|"flows/*.yaml"| TEST
+    TEST -->|"reports/"| ANALYZE{"Failures?"}
+    ANALYZE -->|Stale selectors| MAP
+    ANALYZE -->|Flow changed| FLOW
+    ANALYZE -->|All pass| DONE["Done ✓"]
+
+    WALK["/e2e-walkthrough"] -->|"generates flow"| FLOW
 ```
 
 Every step feeds back into the next. A walkthrough auto-generates a reusable flow. A failing test tells you whether to update the mapping or the flow. No manual glue needed.
