@@ -32,7 +32,7 @@
 **Milestone Goal:** Enable parallel target execution with per-target scheduling, auto-create PRs and Linear issues from run results, and surface outcomes in a dedicated page and NW-Claude chat.
 
 - [x] **Phase 8: Schema + Safety Foundation** - Type system and IPC shape changes that unblock all downstream work — completed 2026-03-21
-- [ ] **Phase 9: Worker Parallel Execution + Scheduling** - Per-target queue isolation and multi-timer scheduler
+- [x] **Phase 9: Worker Parallel Execution + Scheduling** - Per-target queue isolation and multi-timer scheduler — completed 2026-03-22
 - [ ] **Phase 10: Auto-Action Output Loop** - Worker auto-creates PRs and Linear issues; server exposes outcomes API and MCP tools
 - [ ] **Phase 11: Frontend Outcomes + UI Polish** - Dashboard parallel status, Outcomes page, action card links, schedule display, nav fix
 
@@ -104,6 +104,6 @@ Plans:
 | 6. Frontend Wiring | v1.1 | 3/3 | Complete | 2026-03-20 |
 | 7. Cleanup | v1.1 | 1/1 | Complete | 2026-03-20 |
 | 8. Schema + Safety Foundation | v2.0 | 2/2 | Complete | 2026-03-21 |
-| 9. Worker Parallel Execution + Scheduling | v2.0 | 0/2 | Not started | - |
+| 9. Worker Parallel Execution + Scheduling | v2.0 | 2/2 | Complete | 2026-03-22 |
 | 10. Auto-Action Output Loop | v2.0 | 0/TBD | Not started | - |
 | 11. Frontend Outcomes + UI Polish | v2.0 | 0/TBD | Not started | - |
