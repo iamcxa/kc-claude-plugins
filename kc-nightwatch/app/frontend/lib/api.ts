@@ -138,7 +138,7 @@ export const api = {
   },
 
   // Worker state (queue visibility)
-  getWorkerState(): Promise<{ queue: Run[]; current?: Run; schedule?: ScheduleConfig }> {
-    return get<{ queue: Run[]; current?: Run; schedule?: ScheduleConfig }>('/api/worker/state')
+  getWorkerState(): Promise<{ queue: Run[]; active: Run[]; schedule?: ScheduleConfig }> {
+    return get<{ queue: Run[]; active: Run[]; schedule?: ScheduleConfig }>('/api/worker/state')
   },
 }

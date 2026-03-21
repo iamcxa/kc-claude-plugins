@@ -7,7 +7,7 @@ export type WorkerStatus = 'online' | 'offline' | 'offline_permanent'
 export let workerStatus: WorkerStatus = 'offline'
 
 // Last worker state snapshot — updated on each 'state' IPC message, served via GET /api/worker/state
-let lastWorkerState: { queue: Run[]; current?: Run; schedule?: ScheduleConfig } = { queue: [] }
+let lastWorkerState: { queue: Run[]; active: Run[]; schedule?: ScheduleConfig } = { queue: [], active: [] }
 
 export function getLastWorkerState() {
   return lastWorkerState
@@ -80,7 +80,7 @@ export function handleWorkerMessage(msg: WorkerToServer) {
       if (workerStatus === 'offline') setWorkerStatus('online')
       break
     case 'state':
-      lastWorkerState = { queue: msg.queue, current: msg.current, schedule: msg.schedule }
+      lastWorkerState = { queue: msg.queue, active: msg.active, schedule: msg.schedule }
       log.debug({ component: 'server', msg: 'Worker state received', queue: msg.queue.length })
       break
     case 'run:log':
@@ -98,7 +98,7 @@ export function handleWorkerMessage(msg: WorkerToServer) {
       closeRunSubscribers(msg.run_id)
       broadcastGlobal('run:failed', {
         run_id: msg.run_id,
-        target: lastWorkerState.current?.target ?? 'unknown',
+        target: lastWorkerState.active[0]?.target ?? 'unknown',
         error: msg.error,
       })
       log.warn({ component: 'server', msg: `Run ${msg.run_id} failed: ${msg.error}` })
