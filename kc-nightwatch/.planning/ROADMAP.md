@@ -47,7 +47,10 @@
   2. Server and frontend can observe an array of active runs (not a single current run) from worker IPC state
   3. A target config with `schedule.interval_hours` set overrides the global interval; targets without it inherit global
   4. `app-config.yaml` files containing the old `max_concurrent_runs` field load without startup error
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 08-01-PLAN.md — Types, schema, constants, and activePids Map migration
+- [ ] 08-02-PLAN.md — IPC state shape consumers (worker, server, frontend) and cancel handler
 
 ### Phase 9: Worker Parallel Execution + Scheduling
 **Goal**: Different targets execute concurrently in the worker, same-target runs queue behind each other, and each target has its own independently ticking scheduler
@@ -96,7 +99,7 @@
 | 5. Schema + Server Infrastructure | v1.1 | 1/1 | Complete | 2026-03-20 |
 | 6. Frontend Wiring | v1.1 | 3/3 | Complete | 2026-03-20 |
 | 7. Cleanup | v1.1 | 1/1 | Complete | 2026-03-20 |
-| 8. Schema + Safety Foundation | v2.0 | 0/TBD | Not started | - |
+| 8. Schema + Safety Foundation | v2.0 | 0/2 | Planned | - |
 | 9. Worker Parallel Execution + Scheduling | v2.0 | 0/TBD | Not started | - |
 | 10. Auto-Action Output Loop | v2.0 | 0/TBD | Not started | - |
 | 11. Frontend Outcomes + UI Polish | v2.0 | 0/TBD | Not started | - |
