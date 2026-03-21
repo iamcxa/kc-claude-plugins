@@ -20,6 +20,12 @@ flowchart TD
 
 Every step feeds back into the next. A walkthrough auto-generates a reusable flow. A failing test tells you whether to update the mapping or the flow. No manual glue needed.
 
+> **CLI-only flows (no browser app) start directly at `/e2e-flow` -- no mapping required.**
+> When no mapping exists and the source material contains CLI/API signals, the skill
+> auto-detects CLI intent and generates a flow using only `Execute external` /
+> `Verify external` steps. Terminal output is recorded via `asciinema` instead of
+> browser screenshots. See [Cross-Boundary Testing: CLI-Only Flows](cross-boundary-testing.md#cli-only-flows-no-mapping-required).
+
 ## Skill -> Agent Architecture
 
 Skills run in main context as thin orchestrators. Heavy browser work is delegated to subagents:
@@ -159,6 +165,7 @@ e2e-pipeline/
 - [Self-Improvement](self-improvement.md) -- how skills learn from execution (D1/D2 framework)
 - [CI Integration](ci-integration.md) -- GitHub Actions setup and quarantine system
 - [Getting Started](getting-started.md) -- install and first run
+- [Cross-Boundary Testing](cross-boundary-testing.md) -- CLI-only flows, mixed browser + CLI tests
 
 ---
 

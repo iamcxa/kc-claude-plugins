@@ -10,10 +10,42 @@ Keep documentation in sync with skill and agent definitions after feature change
 ## Invocation
 
 ```
-/e2e-doc-sync                    # Scan for gaps, propose fixes
+/e2e-doc-sync                    # Scan for gaps (with diff-aware), propose fixes
 /e2e-doc-sync --fix              # Scan + auto-write approved gaps
 /e2e-doc-sync --check            # Report-only mode (no writes)
+/e2e-doc-sync --diff <ref>       # Explicit diff base (default: auto-detect last version tag)
 ```
+
+## Phase 0 — Diff-Aware Pre-Processing (automatic)
+
+Before dispatching the scanner, compute a diff of changed skill/agent content since the last version tag. This catches **behavioral branches** and other features that the scanner's surface-level extraction (flags, headings) would miss.
+
+**Step 1 — Find diff base:**
+
+```bash
+# Auto-detect: find the most recent e2e-pipeline version tag
+DIFF_BASE=$(git -C ${CLAUDE_PLUGIN_ROOT} tag -l "e2e-pipeline-v*" --sort=-v:refname | head -1)
+# If --diff <ref> provided, use that instead
+# If no tags exist, use HEAD~10 as fallback
+```
+
+**Step 2 — Extract changed content:**
+
+```bash
+git -C ${CLAUDE_PLUGIN_ROOT} diff ${DIFF_BASE}..HEAD \
+  -- 'skills/*/SKILL.md' 'agents/*.md' \
+  | grep '^+' | grep -v '^+++' | sed 's/^+//'
+```
+
+This produces only the **added lines** — new content that might need doc coverage.
+
+**Step 3 — Build diff summary:**
+
+Group added lines by source file. For each file, extract a brief summary of what changed (new sections, new fields, new conditionals, new rules). Cap at 2000 chars total to stay within agent context budget.
+
+**Step 4 — Pass to scanner:**
+
+Include `diff_content` in the scanner dispatch (see Phase 1). If the diff is empty (no changes since last tag), omit the field — scanner runs in surface-only mode as before.
 
 ## Phase 1 — Scan for Gaps
 
@@ -23,12 +55,14 @@ Dispatch the `e2e-doc-scanner` agent to analyze the gap between implementation a
 Agent(subagent_type="e2e-pipeline:e2e-doc-scanner"):
   "Scan for documentation gaps:
    plugin_root: ${CLAUDE_PLUGIN_ROOT}
-   mode: scan"
+   mode: scan
+   diff_content: <grouped added lines from Phase 0, or omit if empty>"
 ```
 
 The agent cross-references:
-- **Skills** (`skills/*/SKILL.md`) — flags, modes, concepts, features
-- **Agents** (`agents/*.md`) — capabilities, input contracts, behaviors
+- **Skills** (`skills/*/SKILL.md`) — flags, modes, concepts, features (surface extraction)
+- **Agents** (`agents/*.md`) — capabilities, input contracts, behaviors (surface extraction)
+- **Diff content** (if provided) — new behavioral branches, conditionals, fields (diff extraction)
 - **Docs** (`docs/*.md`) — covered topics, examples, sections
 - **CHANGELOG.md** — recent feature additions
 - **README.md** — quick start coverage, docs table completeness
