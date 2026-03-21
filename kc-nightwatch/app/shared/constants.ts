@@ -11,3 +11,4 @@ export const DEFAULT_HOST = '127.0.0.1'
 export const LOG_ROTATION_MAX_SIZE = 10 * 1024 * 1024   // 10MB
 export const LOG_ROTATION_MAX_FILES = 5
 export const SCHEDULER_RUNS_ALL_TARGET = '__all__'
+export const MIN_SCHEDULE_INTERVAL_HOURS = 1 / 6  // 10 minutes
