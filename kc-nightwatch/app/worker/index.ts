@@ -7,7 +7,7 @@ import { HEARTBEAT_INTERVAL_MS, SCHEDULER_RUNS_ALL_TARGET } from '../shared/cons
 import { executeRun, killAllActive, activePids } from './executor.ts'
 import type { PolicyTarget } from './policy.ts'
 import { readTargets, readYamlFile } from '../server/services/yaml-store.ts'
-import { startScheduler, stopScheduler } from './scheduler.ts'
+import { startPerTargetSchedulers, stopAllSchedulers } from './scheduler.ts'
 import type { Target } from '../shared/types.ts'
 
 log.info({ component: 'worker', msg: 'Worker started' })
@@ -157,7 +157,7 @@ process.on('message', (msg: ServerToWorker) => {
     case 'shutdown':
       log.info({ component: 'worker', msg: 'Received shutdown — killing active runs and exiting' })
       clearInterval(heartbeatTimer)
-      stopScheduler()
+      stopAllSchedulers()
       killAllActive().then(() => process.exit(0))
       break
 
@@ -197,7 +197,15 @@ process.on('message', (msg: ServerToWorker) => {
     case 'schedule': {
       const config: ScheduleConfig = msg.config
       log.info({ component: 'worker', msg: `Received schedule IPC — enabled: ${config.enabled}, interval: ${config.interval_hours}h` })
-      startScheduler(config, enqueue)
+      // Reload targets to pick up any per-target schedule changes, then restart all timers (D-10)
+      void (async () => {
+        try {
+          targetsMap = await readTargets()
+        } catch (err) {
+          log.warn({ component: 'worker', msg: `Failed to reload targets for scheduler: ${String(err)}` })
+        }
+        startPerTargetSchedulers(config, targetsMap, enqueue)
+      })()
       break
     }
   }
