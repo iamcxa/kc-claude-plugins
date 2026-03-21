@@ -20,19 +20,27 @@ interface Run {
 
 function makeQueue() {
   const queue: Run[] = []
-  let currentRun: Run | null = null
+  let activeRun: Run | null = null
   const completedRuns: Run[] = []
   let processCallCount = 0
+  const sentStates: Array<{ active: Run[] }> = []
+
+  function sendState(): void {
+    const active: Run[] = activeRun ? [activeRun] : []
+    sentStates.push({ active: [...active] })
+  }
 
   async function processNextRun(): Promise<void> {
-    if (currentRun || queue.length === 0) return
+    if (activeRun || queue.length === 0) return
     processCallCount++
     const run = queue.shift()!
-    currentRun = run
+    activeRun = run
+    sendState()
     // Simulate async run completion
     await Promise.resolve()
     completedRuns.push(run)
-    currentRun = null
+    activeRun = null
+    sendState()
     await processNextRun()
   }
 
@@ -41,12 +49,10 @@ function makeQueue() {
     void processNextRun()
   }
 
-  function cancel(runId: string, activePids: Set<number>): boolean {
-    if (currentRun?.id === runId) {
-      // Kill all active PIDs
-      for (const pid of activePids) {
-        try { process.kill(pid, 'SIGTERM') } catch { /* already gone */ }
-      }
+  function cancel(runId: string, activePids: Map<string, number>): boolean {
+    const pid = activePids.get(runId)
+    if (pid !== undefined) {
+      try { process.kill(pid, 'SIGTERM') } catch { /* already gone */ }
       return true
     }
     const idx = queue.findIndex(r => r.id === runId)
@@ -57,7 +63,7 @@ function makeQueue() {
     return false
   }
 
-  return { queue, getQueueLength: () => queue.length, getCurrentRun: () => currentRun, completedRuns, enqueue, cancel, getProcessCallCount: () => processCallCount }
+  return { queue, getQueueLength: () => queue.length, getActiveRun: () => activeRun, completedRuns, enqueue, cancel, getProcessCallCount: () => processCallCount, sentStates }
 }
 
 const makeRun = (id: string, target = 'test-target'): Run => ({
@@ -70,11 +76,11 @@ const makeRun = (id: string, target = 'test-target'): Run => ({
 })
 
 describe('EXEC-09: Execution queue max concurrency 1', () => {
-  it('enqueuing a run while idle starts it immediately (currentRun set)', () => {
+  it('enqueuing a run while idle starts it immediately (activeRun set)', () => {
     const q = makeQueue()
     const run = makeRun('run-1')
     // Before enqueue, nothing is running
-    expect(q.getCurrentRun()).toBeNull()
+    expect(q.getActiveRun()).toBeNull()
     expect(q.getQueueLength()).toBe(0)
     // Push directly to test queue depth behavior
     q.queue.push(run)
@@ -86,11 +92,11 @@ describe('EXEC-09: Execution queue max concurrency 1', () => {
     const run1 = makeRun('run-1')
     const run2 = makeRun('run-2')
 
-    // Manually set currentRun to simulate "run-1 is active"
+    // Manually set activeRun to simulate "run-1 is active"
     q.queue.push(run1)
-    // Simulate: run-1 is being processed (currentRun set, run-1 removed from queue)
+    // Simulate: run-1 is being processed (activeRun set, run-1 removed from queue)
     q.queue.shift()
-    // Now queue is empty and currentRun would be set in processNextRun
+    // Now queue is empty and activeRun would be set in processNextRun
     // Enqueue run-2 while "busy"
     q.queue.push(run2)
     expect(q.getQueueLength()).toBe(1)
@@ -110,10 +116,10 @@ describe('EXEC-09: Execution queue max concurrency 1', () => {
     await new Promise(r => setTimeout(r, 10))
     expect(q.completedRuns.length).toBe(3)
     expect(q.getQueueLength()).toBe(0)
-    expect(q.getCurrentRun()).toBeNull()
+    expect(q.getActiveRun()).toBeNull()
   })
 
-  it('processNextRun is idempotent — returns early if currentRun is set', async () => {
+  it('processNextRun is idempotent — returns early if activeRun is set', async () => {
     const q = makeQueue()
     const run1 = makeRun('run-1')
     const run2 = makeRun('run-2')
@@ -126,6 +132,23 @@ describe('EXEC-09: Execution queue max concurrency 1', () => {
     await new Promise(r => setTimeout(r, 10))
     // Both should complete
     expect(q.completedRuns.length).toBe(2)
+  })
+
+  it('sendState helper emits active array shape (not current)', async () => {
+    const q = makeQueue()
+    const run1 = makeRun('run-1')
+
+    q.enqueue(run1)
+    // Wait for completion
+    await new Promise(r => setTimeout(r, 10))
+
+    // Should have emitted states with active array
+    expect(q.sentStates.length).toBeGreaterThan(0)
+    // All emitted states should have active array property, not current
+    for (const state of q.sentStates) {
+      expect(Array.isArray(state.active)).toBe(true)
+      expect('current' in state).toBe(false)
+    }
   })
 })
 
@@ -141,8 +164,8 @@ describe('EXEC-08: Cancel active and queued runs', () => {
     q.queue.push(run2)
     q.queue.push(run3)
 
-    // Cancel middle run
-    const pids = new Set<number>()
+    // Cancel middle run using Map-based activePids (empty = not active)
+    const pids = new Map<string, number>()
     const result = q.cancel('run-2', pids)
     expect(result).toBe(true)
     expect(q.getQueueLength()).toBe(2)
@@ -151,32 +174,33 @@ describe('EXEC-08: Cancel active and queued runs', () => {
 
   it('cancel returns false for unknown run id', () => {
     const q = makeQueue()
-    const pids = new Set<number>()
+    const pids = new Map<string, number>()
     const result = q.cancel('nonexistent-run', pids)
     expect(result).toBe(false)
   })
 
-  it('cancel active run sends SIGTERM to all activePids', () => {
+  it('cancel active run sends SIGTERM via Map lookup (not bulk kill)', () => {
     const q = makeQueue()
-    // Simulate an active run by directly setting internal state
-    const run1 = makeRun('run-1')
-    q.queue.push(run1)
-    q.queue.shift() // simulate: processNextRun shifted it
+    // Simulate an active run PID in the Map
+    const pids = new Map<string, number>()
+    pids.set('run-1', 999999)  // fake PID — process.kill will throw but cancel catches it
 
-    // fake activePids with a PID that doesn't exist (process.kill will throw, but cancel catches it)
-    const pids = new Set<number>([999999])
+    // cancel should return true for the active run (PID found in Map)
+    const result = q.cancel('run-1', pids)
+    expect(result).toBe(true)
+  })
 
-    // We can't directly test SIGTERM delivery without a real process,
-    // but we can verify the cancel function iterates activePids
-    // Set up a spy-like tracking
-    let killAttempted = false
-    const origKill = process.kill.bind(process)
-    // Since process.kill is not easily mockable, verify the cancel path is taken
-    // by checking that when currentRun is set and IDs match, no error is thrown
-    expect(() => {
-      // Manually set currentRun via queue manipulation
-      // This tests the branch logic: currentRun?.id === runId
-    }).not.toThrow()
+  it('cancel targets specific run PID via Map lookup (not all PIDs)', () => {
+    const q = makeQueue()
+    const pids = new Map<string, number>()
+    pids.set('run-1', 11111)
+    pids.set('run-2', 22222)
+
+    // Cancel only run-1 — should NOT affect run-2's PID
+    const result = q.cancel('run-1', pids)
+    expect(result).toBe(true)
+    // run-2 still in the Map (cancel does not clear all)
+    expect(pids.has('run-2')).toBe(true)
   })
 })
 

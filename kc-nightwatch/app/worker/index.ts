@@ -60,13 +60,18 @@ function resolveTarget(targetName: string): PolicyTarget {
 
 // Execution queue — max concurrency 1 (EXEC-09)
 const queue: Run[] = []
-let currentRun: Run | null = null
+let activeRun: Run | null = null  // Phase 8: still serial, but state emits as array (ready for Phase 9 parallel)
+
+function sendState(): void {
+  const active: Run[] = activeRun ? [activeRun] : []
+  send({ type: 'state', queue: [...queue], active })
+}
 
 async function processNextRun(): Promise<void> {
-  if (currentRun || queue.length === 0) return
+  if (activeRun || queue.length === 0) return
   const run = queue.shift()!
-  currentRun = run
-  send({ type: 'state', queue: [...queue], current: currentRun })
+  activeRun = run
+  sendState()
   log.info({ component: 'worker', msg: `Starting run ${run.id} for target '${run.target}'` })
 
   // Handle __all__ target: enqueue each active target as a separate run
@@ -91,8 +96,8 @@ async function processNextRun(): Promise<void> {
         log.info({ component: 'worker', msg: `Enqueued sub-run ${subRun.id} for target '${targetName}' (from __all__)` })
       }
     }
-    currentRun = null
-    send({ type: 'state', queue: [...queue], current: undefined })
+    activeRun = null
+    sendState()
     void processNextRun()
     return
   }
@@ -108,8 +113,8 @@ async function processNextRun(): Promise<void> {
     log.error({ component: 'worker', msg: `Run ${run.id} failed: ${String(err)}` })
     send({ type: 'run:failed', run_id: run.id, error: String(err) } satisfies IpcMessage)
   } finally {
-    currentRun = null
-    send({ type: 'state', queue: [...queue], current: undefined })
+    activeRun = null
+    sendState()
     void processNextRun()
   }
 }
@@ -117,12 +122,12 @@ async function processNextRun(): Promise<void> {
 function enqueue(run: Run): void {
   queue.push(run)
   log.info({ component: 'worker', msg: `Enqueued run ${run.id} for '${run.target}' (queue depth: ${queue.length})` })
-  send({ type: 'state', queue: [...queue], current: currentRun ?? undefined })
+  sendState()
   void processNextRun()
 }
 
 // Send initial state + immediate heartbeat (so server marks us online instantly)
-send({ type: 'state', queue: [], current: undefined })
+sendState()
 send({ type: 'heartbeat', ts: Date.now() })
 
 // Heartbeat every 30s
@@ -141,30 +146,31 @@ process.on('message', (msg: ServerToWorker) => {
       break
 
     case 'status':
-      send({ type: 'state', queue: [...queue], current: currentRun ?? undefined })
+      sendState()
       break
 
     case 'enqueue':
       enqueue(msg.run)
       break
 
-    case 'cancel':
-      if (currentRun?.id === msg.run_id) {
-        log.info({ component: 'worker', msg: `Cancelling active run ${msg.run_id} — sending SIGTERM to ${activePids.size} PIDs` })
-        for (const pid of activePids) {
-          try { process.kill(pid, 'SIGTERM') } catch { /* already gone */ }
-        }
+    case 'cancel': {
+      // Check if the run is currently active — look up specific PID by run_id (not bulk kill)
+      const pid = activePids.get(msg.run_id)
+      if (pid !== undefined) {
+        log.info({ component: 'worker', msg: `Cancelling active run ${msg.run_id} — sending SIGTERM to PID ${pid}` })
+        try { process.kill(pid, 'SIGTERM') } catch { /* already gone */ }
       } else {
         const idx = queue.findIndex(r => r.id === msg.run_id)
         if (idx >= 0) {
           queue.splice(idx, 1)
           log.info({ component: 'worker', msg: `Removed queued run ${msg.run_id}` })
-          send({ type: 'state', queue: [...queue], current: currentRun ?? undefined })
+          sendState()
         } else {
           log.warn({ component: 'worker', msg: `Cancel: run ${msg.run_id} not found in active or queue` })
         }
       }
       break
+    }
 
     case 'schedule': {
       const config: ScheduleConfig = msg.config
