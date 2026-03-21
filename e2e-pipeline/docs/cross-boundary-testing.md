@@ -142,7 +142,114 @@ CLI-only flows skip the browser verifier entirely. Instead:
 - **No compiled script output.** The compiler targets browser flows with mapping references. CLI-only flows run through the LLM test runner.
 - **Browser steps cannot be mixed in.** If any step needs browser interaction, a mapping is required -- use a cross-boundary (mixed) flow instead.
 
-## Real-World Example: DRC-2880
+## Using Project-Specific Commands in Execute external Steps
+
+`Execute external` steps run shell commands in the working directory of the Claude Code session. Any executable reachable from that working directory -- wrapper scripts, installed CLI tools, local dev installs -- can be used directly.
+
+### What counts as a project-specific command
+
+- **Wrapper scripts**: `bash scripts/run-checks.sh`, `./bin/verify`, `make test-mcp`
+- **Installed CLI tools**: `recce run`, `dbt run`, `prisma migrate`
+- **Local dev installs**: packages installed with `pip install -e .` or `npm link`
+- **Inline commands**: multi-line shell blocks with env vars, pipes, and conditionals
+
+```yaml
+- id: run-project-checks
+  action: "Execute external"
+  description: "Run the project's preset check suite"
+  execute:
+    cli:
+      - run: |
+          cd /path/to/project
+          python -m recce run --select tag:pr_check
+        expect: "All checks passed"
+  on_fail: fail
+```
+
+### What does NOT work
+
+**Claude Code skill invocations are not shell commands.** You cannot write:
+
+```yaml
+# WRONG -- /skill-name is a Claude Code slash command, not a shell executable
+- run: "/e2e-help --feedback 'test'"
+```
+
+If a Claude Code skill wraps an underlying script, invoke the script directly instead. For example, if `/recce-mcp-e2e` ultimately calls `bash .claude/scripts/recce-mcp-e2e.sh`, use the script path in your `run:` block.
+
+### Pattern: wrap project commands in a shell script
+
+For complex setups, create a thin wrapper script and call it from the flow:
+
+```bash
+# .claude/scripts/verify-mcp-errors.sh
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/../.."
+
+# Set up environment
+export PYTHONPATH="${PYTHONPATH:-}:$(pwd)"
+source .venv/bin/activate 2>/dev/null || true
+
+# Run the verification
+python -m pytest tests/mcp/ -k "error_classification" -v
+```
+
+```yaml
+- id: verify-mcp-error-classification
+  action: "Execute external"
+  description: "Run MCP error classification tests"
+  execute:
+    cli:
+      - run: "bash /path/to/project/.claude/scripts/verify-mcp-errors.sh"
+        expect: "passed"
+  on_fail: fail
+```
+
+### Real-world example: recce MCP error classification
+
+The recce project uses a template script (`recce-mcp-e2e`) to verify that the MCP server correctly classifies SQL errors (Snowflake syntax errors, missing table errors, permission errors) and routes them to the appropriate Sentry channel.
+
+The `Execute external` step calls the underlying Python test suite directly:
+
+```yaml
+- id: run-mcp-error-classification-tests
+  action: "Execute external"
+  description: "Verify MCP server classifies Snowflake SQL errors correctly"
+  execute:
+    cli:
+      - run: |
+          cd /Users/kent/Project/recce/recce
+          source .venv/bin/activate
+          python -m pytest tests/mcp/test_error_classification.py -v \
+            -k "snowflake or syntax_error or permission_denied"
+        expect: "passed"
+  on_fail: fail
+
+- id: verify-sentry-routing
+  action: "Verify external"
+  description: "Confirm errors appear in Sentry with correct classification tags"
+  wait: 15
+  verify:
+    sentry:
+      - check: "Issues tagged error_type=syntax_error exist for DRC-3053"
+        expect: "At least 1 issue with correct tag"
+      - check: "Issues tagged error_type=permission_denied exist for DRC-3054"
+        expect: "At least 1 issue with correct tag"
+  on_fail: warn
+```
+
+### Caveats
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| `command not found` | Tool not on PATH in the subshell | Use absolute path, or `source .venv/bin/activate` first |
+| `ModuleNotFoundError` | Local dev install not active | Add `export PYTHONPATH=...` or activate virtualenv |
+| Wrong working dir | Relative paths resolve from session cwd | Use `cd /absolute/path` at the start of `run:` block |
+| Env vars missing | Session env not inherited | Set vars explicitly in `run:` block |
+| Script not executable | Missing `chmod +x` | Add `chmod +x` or invoke with `bash script.sh` |
+
+## Real-World Example -- DRC-2880
 
 **Feature:** When CI runners upload dbt artifacts 3 times (via `recce-cloud upload`), the system marks the project as having auto-uploaded artifacts and fires a PostHog funnel event.
 
@@ -297,6 +404,165 @@ recce-cloud upload --session-name "test-1" --yes
 3. **`RECCE_CLOUD_API_HOST` env var** controls which server the CLI talks to. Always set it for local dev to avoid hitting production.
 4. **`on_fail: warn` for analytics** -- PostHog verification is advisory. Don't block the test on analytics propagation delays.
 
+## Real-World Example -- MCP Error Classification Verification (CLI-Only)
+
+**Feature:** The recce MCP server must correctly classify SQL errors from Snowflake (syntax errors, missing table, permission denied) and route them to the appropriate Sentry channel. Issues DRC-3051, DRC-3052, DRC-3053, DRC-3054.
+
+**Why CLI-only:** There is no browser UI involved. The entire verification is: run pytest against the MCP server's error classification logic, confirm Sentry receives correctly-tagged events.
+
+**Pipeline flow:** No mapping exists for this project's MCP layer, so `/e2e-flow` auto-detects CLI intent and generates a CLI-only flow. The flow runs via the LLM test runner (no browser verifier), records via `asciinema`, and the media processor produces a GIF embedded in the PR comment.
+
+### The Flow
+
+```yaml
+name: verify-mcp-error-classification
+description: |
+  DRC-3051/3052/3053/3054: MCP server correctly classifies SQL errors
+  and routes them to Sentry with proper error_type tags.
+tags: [cli-only, mcp, drc-3051, drc-3052, drc-3053, drc-3054]
+
+steps:
+  - id: run-none-relation-guard-tests
+    action: "Execute external"
+    description: "DRC-3051: verify get_columns handles None relation without crashing"
+    execute:
+      cli:
+        - run: |
+            cd /Users/kent/Project/recce/recce
+            source .venv/bin/activate
+            python -m pytest tests/mcp/test_get_columns.py \
+              -k "none_relation" -v
+          expect: "passed"
+    on_fail: fail
+
+  - id: run-syntax-error-classification-tests
+    action: "Execute external"
+    description: "DRC-3053/3054: verify Snowflake SQL syntax and permission errors are classified correctly"
+    execute:
+      cli:
+        - run: |
+            cd /Users/kent/Project/recce/recce
+            source .venv/bin/activate
+            python -m pytest tests/mcp/test_error_classification.py \
+              -k "snowflake" -v
+          expect: "passed"
+    on_fail: fail
+
+  - id: run-integration-syntax-error-path
+    action: "Execute external"
+    description: "DRC-3052: verify new syntax_error classification path via integration test"
+    execute:
+      cli:
+        - run: |
+            cd /Users/kent/Project/recce/recce
+            source .venv/bin/activate
+            python -m pytest tests/mcp/test_integration.py \
+              -k "syntax_error" -v
+          expect: "passed"
+    on_fail: fail
+
+  - id: verify-sentry-error-tags
+    action: "Verify external"
+    description: "Confirm Sentry received issues with correct error_type classification tags"
+    wait: 15
+    verify:
+      sentry:
+        - check: "Issues tagged error_type=syntax_error present for recent MCP runs"
+          expect: "At least 1 issue"
+        - check: "Issues tagged error_type=permission_denied present for recent MCP runs"
+          expect: "At least 1 issue"
+        - check: "No unclassified MCP errors (error_type tag always present)"
+          expect: "0 issues without error_type tag"
+    on_fail: warn
+
+  - id: verify-no-sentry-noise
+    action: "Verify external"
+    description: "Confirm classified errors are warnings (no Sentry events), not errors"
+    wait: 5
+    verify:
+      sentry:
+        - check: "table_not_found errors logged as warnings, not captured as Sentry exceptions"
+          expect: "No new Sentry exceptions for table_not_found category"
+        - check: "permission_denied errors logged as warnings, not captured as Sentry exceptions"
+          expect: "No new Sentry exceptions for permission_denied category"
+    on_fail: warn
+```
+
+### What the PR comment looks like
+
+Because there are no browser steps, the PR comment omits the steps screenshot table and divergence analysis. Instead it embeds the asciinema GIF and shows a checkpoint results table:
+
+```markdown
+## E2E Test: verify-mcp-error-classification
+
+PASS -- 5 checkpoints, 3 executed, 2 advisory
+
+Verified MCP server error classification for DRC-3051/3052/3053/3054:
+get_columns None guard, Snowflake syntax error classification, and
+permission_denied classification all pass. Sentry routing advisory checks
+deferred to post-deploy verification.
+
+### CLI Recording
+
+![MCP error classification verification](https://github.com/.../steps.gif)
+
+### Checkpoint Results
+
+| # | Checkpoint | Result | Detail |
+|---|-----------|--------|--------|
+| 1 | none_relation guard tests | PASS | 3 tests passed |
+| 2 | Snowflake syntax error tests | PASS | 5 tests passed |
+| 3 | integration syntax_error path | PASS | 2 tests passed |
+| 4 | Sentry error_type tags | SKIP | post-deploy only |
+| 5 | No Sentry noise for classified errors | SKIP | post-deploy only |
+
+### Health
+
+| Check | Result |
+|-------|--------|
+| Test failures | 0 |
+| Unclassified errors | 0 |
+| Advisory skips | 2 (Sentry -- post-deploy) |
+
+<details>
+<summary>Full terminal output</summary>
+
+[Embedded asciinema cast or link to .mp4]
+</details>
+```
+
+### Pipeline flow (no mapping)
+
+```
+/e2e-flow (no mapping in .claude/e2e/mappings/)
+    |
+    +-- CLI signal detected (pytest, python, source .venv)
+    |
+    v
+flow-writer agent (CLI-only mode)
+    +-- generates 5 Execute external / Verify external steps
+    +-- no mapping: field in YAML
+    |
+    v
+LLM test runner (no browser verifier)
+    +-- executes each step via shell
+    +-- asciinema records terminal session
+    |
+    v
+e2e-media-processor (CLI mode, cast_path provided)
+    +-- steps.gif (agg: 120x35, 2x speed)
+    +-- test-run.mp4 (ffmpeg)
+    +-- thumbnail.png
+    |
+    v
+Draft release upload (.gif + .mp4)
+    |
+    v
+gh pr comment (checkpoint results table + embedded GIF)
+```
+
+Note that draft release upload still applies for CLI-only flows. The `.mp4` and `.gif` from asciinema are uploaded to `e2e-assets-<branch>` just like browser recording artifacts.
+
 ## Step Type Reference
 
 ### Execute external
@@ -347,7 +613,7 @@ Checks state in external services. Use for analytics events, tracing spans, webh
 
 When a flow has **zero browser steps** (only `Execute external` + `Verify external`), the browser-based recording pipeline (screenshots + WebM) doesn't apply. Use terminal recording instead.
 
-**Demo** — `recce summary` recorded via the CLI pipeline (asciinema -> agg -> GIF):
+**Demo** -- `recce summary` recorded via the CLI pipeline (asciinema -> agg -> GIF):
 
 ![CLI recording demo](assets/cli-recording-demo.gif)
 
@@ -404,6 +670,7 @@ In non-interactive shells (CI, subagents), asciinema runs in headless mode autom
 - [Commands](commands.md) -- all skills and flags
 - [Recording & Evidence](recording-evidence.md) -- media processing pipeline, CLI terminal recording parameters
 - [Multi-Site Testing](multi-site-testing.md) -- cross-site flows with `sites:` and `--all-sites`
+- [PR Workflow](pr-workflow.md) -- how CLI-only results appear in PR comments
 
 ---
 
