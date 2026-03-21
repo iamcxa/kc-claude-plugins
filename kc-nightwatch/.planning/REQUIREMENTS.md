@@ -9,7 +9,7 @@ Requirements for parallel execution + auto-action milestone. Each maps to roadma
 
 ### Parallel Execution
 
-- [ ] **PARA-01**: Worker supports per-target queue isolation — different targets execute concurrently, same target queues
+- [x] **PARA-01**: Worker supports per-target queue isolation — different targets execute concurrently, same target queues
 - [x] **PARA-02**: `activePids` migrated from Set to Map<runId, pid> — cancel targets only the intended run
 - [x] **PARA-03**: IPC state shape updated from `current?: Run` to `active: Run[]` — server and frontend see all concurrent runs
 - [ ] **PARA-04**: Dashboard shows per-target running status with independent progress when multiple targets execute simultaneously
@@ -17,7 +17,7 @@ Requirements for parallel execution + auto-action milestone. Each maps to roadma
 ### Per-Target Scheduling
 
 - [x] **SCHED-04**: Target config supports optional `schedule.interval_hours` override; targets without it inherit global interval
-- [ ] **SCHED-05**: Minimum interval enforcement at 10 minutes — scheduler rejects shorter intervals
+- [x] **SCHED-05**: Minimum interval enforcement at 10 minutes — scheduler rejects shorter intervals
 - [ ] **SCHED-06**: Each target card displays its own "next run at" timestamp based on its individual schedule
 - [ ] **SCHED-07**: Add/Edit Target wizard includes schedule configuration step
 
@@ -62,12 +62,12 @@ Requirements for parallel execution + auto-action milestone. Each maps to roadma
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PARA-01 | Phase 9 | Pending |
+| PARA-01 | Phase 9 | ✓ Done |
 | PARA-02 | Phase 8 | ✓ Done |
 | PARA-03 | Phase 8 | ✓ Done |
 | PARA-04 | Phase 11 | Pending |
 | SCHED-04 | Phase 8 | ✓ Done |
-| SCHED-05 | Phase 9 | Pending |
+| SCHED-05 | Phase 9 | ✓ Done |
 | SCHED-06 | Phase 11 | Pending |
 | SCHED-07 | Phase 11 | Pending |
 | AUTO-01 | Phase 10 | Pending |
