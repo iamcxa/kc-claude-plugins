@@ -24,10 +24,13 @@
 | Skill | Video Default | Override |
 |-------|--------------|----------|
 | `/e2e-walkthrough` | ON | `--no-video` |
-| `/e2e-flow --verify-only` | ON | `--no-video` |
+| `/e2e-flow` (generation + browser verify) | ON | `--no-video` |
+| `/e2e-flow` (CLI-only verify) | ON (asciinema) | `--no-video` |
 | `/e2e-test` | OFF | `--video` or `--pr` |
 | `/e2e-map` | No recording | -- |
 | CLI-only flows | ON (asciinema) | `--no-video` |
+
+`/e2e-flow` records during the verification phase (Phase 2). When verifying browser flows, it produces WebM + screenshots. When verifying CLI-only flows (all `Execute external` / `Verify external` steps), it records via asciinema instead. Pass `--no-video` to skip recording in either case.
 
 ## Output files per run
 
@@ -100,7 +103,7 @@ The PR comment includes the issue context, making the review self-documenting.
 
 After browser work completes, each skill dispatches the `e2e-media-processor` agent to transform raw artifacts into shareable assets.
 
-**Browser recording demo** — 4-page walkthrough of docs.reccehq.com (screenshots → GIF):
+**Browser recording demo** -- 4-page walkthrough of docs.reccehq.com (screenshots -> GIF):
 
 ![Browser recording demo](assets/browser-recording-demo.gif)
 
@@ -145,28 +148,28 @@ steps:
 
 ```
 Browser agent (raw output)
-    ├── step-*.png          (screenshots per step)
-    └── full.webm           (viewport recording, if enabled)
-          │
-          ▼
+    +-- step-*.png          (screenshots per step)
+    +-- full.webm           (viewport recording, if enabled)
+          |
+          v
 Skill dispatches e2e-media-processor
-          │
-          ├── steps.gif     (800px wide, 1fps loop, blank frames skipped)
-          ├── test-run.mp4  (2x speed, leading/trailing silence trimmed)
-          └── thumbnail.png (first non-blank screenshot)
+          |
+          +-- steps.gif     (800px wide, 1fps loop, blank frames skipped)
+          +-- test-run.mp4  (2x speed, leading/trailing silence trimmed)
+          +-- thumbnail.png (first non-blank screenshot)
 
 CLI agent (raw output)
-    └── recording.cast      (asciinema terminal recording)
-          │
-          ▼
+    +-- recording.cast      (asciinema terminal recording)
+          |
+          v
 Skill dispatches e2e-media-processor (CLI mode: cast_path)
-          │
-          ├── steps.gif     (agg render, 2x speed, monokai theme)
-          ├── test-run.mp4  (ffmpeg from GIF, yuv420p)
-          └── thumbnail.png (first frame extracted from GIF)
+          |
+          +-- steps.gif     (agg render, 2x speed, monokai theme)
+          +-- test-run.mp4  (ffmpeg from GIF, yuv420p)
+          +-- thumbnail.png (first frame extracted from GIF)
 ```
 
-> See the CLI recording demo in [Cross-Boundary Testing — Recording CLI-Only Flows](cross-boundary-testing.md#recording-cli-only-flows).
+> See the CLI recording demo in [Cross-Boundary Testing -- Recording CLI-Only Flows](cross-boundary-testing.md#recording-cli-only-flows).
 
 ### Blank frame detection
 

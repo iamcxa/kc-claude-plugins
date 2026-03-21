@@ -69,7 +69,7 @@ Suite: regression (5 runs)
   customer-portal:
     smoke-navigation (7 steps)
   cross-site:
-    admin-creates-customer-verifies (10 steps, admin ↔ portal)
+    admin-creates-customer-verifies (10 steps, admin <-> portal)
 Total: 4 dispatches, 36 steps. Proceed?
 ```
 
@@ -95,7 +95,7 @@ Records each dispatch separately. Media files generated per-site.
 
 ### Smoke Suite
 
-Quick post-deploy sanity check — one flow, all sites:
+Quick post-deploy sanity check -- one flow, all sites:
 
 ```yaml
 name: smoke
@@ -134,7 +134,7 @@ runs:
 
 ### Feature Suite
 
-Focused on one feature area — good for feature branch validation:
+Focused on one feature area -- good for feature branch validation:
 
 ```yaml
 name: user-management-v2
@@ -200,6 +200,14 @@ done
 | **--all-sites** | Auto-discovery mode; suites provide explicit control over what runs where |
 | **Preconditions** | Per-flow preconditions still run; site-scoped checks filter by the suite's site context |
 | **Compiled scripts** | Compile individual flows from a suite; the suite definition itself isn't compiled |
+
+## Related
+
+- [Multi-Site Testing](multi-site-testing.md) -- cross-site flows, `--site`, `--all-sites`, session isolation
+- [Commands](commands.md) -- all skills and flags including `--suite`
+- [Writing Tests](writing-tests.md) -- flow YAML format and preconditions
+- [CI Integration](ci-integration.md) -- running suites in GitHub Actions
+- [PR Workflow](pr-workflow.md) -- posting suite results to pull requests
 
 ---
 

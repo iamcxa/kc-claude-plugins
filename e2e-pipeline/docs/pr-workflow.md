@@ -1,4 +1,4 @@
-# PR Workflow — E2E Evidence for Pull Requests
+# PR Workflow -- E2E Evidence for Pull Requests
 
 End-to-end guide for producing E2E test evidence and posting it to a PR as a structured comment with screenshots, video, and health data.
 
@@ -15,8 +15,8 @@ Use `--no-pr` to opt out. If no PR exists on the current branch, PR mode is sile
 ```mermaid
 flowchart LR
     A["/e2e-flow"] --> B{"PR on branch?"}
-    B -->|Yes| C["Generate → Verify → Commit flow → Post to PR"]
-    B -->|No| D["Generate → Verify → Done"]
+    B -->|Yes| C["Generate -> Verify -> Commit flow -> Post to PR"]
+    B -->|No| D["Generate -> Verify -> Done"]
     B -->|"--no-pr"| D
 ```
 
@@ -42,18 +42,18 @@ flowchart LR
 ```mermaid
 flowchart TD
     M["/e2e-map<br/>Map UI elements"] --> F["/e2e-flow --from plan<br/>Generate flow YAML"]
-    F --> W["flow-writer agent<br/>Codebase analysis → YAML"]
+    F --> W["flow-writer agent<br/>Codebase analysis -> YAML"]
     W --> V["flow-verifier agent<br/>Browser verify + auto-repair"]
     V --> T["trace-analyzer agent<br/>API failures + console errors"]
     T --> MP["media-processor agent<br/>GIF + MP4 + thumbnail"]
     MP --> C{"PR on branch?"}
     C -->|Yes| GC["git commit flow YAML"]
-    GC --> DR["Upload media → draft release"]
-    DR --> PR["gh pr comment → PR"]
+    GC --> DR["Upload media -> draft release"]
+    DR --> PR["gh pr comment -> PR"]
     C -->|No| Done["Present results locally"]
 ```
 
-### Step 1 — Map the UI (one-time setup)
+### Step 1 -- Map the UI (one-time setup)
 
 ```
 /e2e-map
@@ -61,7 +61,7 @@ flowchart TD
 
 Generates `.claude/e2e/mappings/<app>.yaml` with page selectors. Skip if mapping already exists.
 
-### Step 2 — Generate a flow
+### Step 2 -- Generate a flow
 
 Choose one approach:
 
@@ -74,7 +74,7 @@ Choose one approach:
 
 All approaches produce a flow YAML at `.claude/e2e/flows/<name>.yaml`.
 
-### Step 3 — Run the test with recording
+### Step 3 -- Run the test with recording
 
 ```
 /e2e-test <flow-name> --pr 940 --video
@@ -88,11 +88,11 @@ All approaches produce a flow YAML at `.claude/e2e/flows/<name>.yaml`.
 4. **Auto-compile** runs the same flow as a deterministic script, compares results (divergence analysis)
 5. **PR report** assembles `pr-summary.md` from all artifacts
 
-### Step 4 — Post to PR
+### Step 4 -- Post to PR
 
 After test completes, the skill:
 
-1. **Uploads media to a draft release** (private repos need this — `raw.githubusercontent.com` returns 403 for private assets):
+1. **Uploads media to a draft release** (private repos need this -- `raw.githubusercontent.com` returns 403 for private assets):
 
    ```bash
    gh release create e2e-assets-<branch> --draft --title "E2E assets (<branch>)" --notes ""
@@ -111,7 +111,7 @@ The comment follows the [unified PR report template](../references/pr-report-tem
 ```markdown
 ## E2E Test: login-flow
 
-PASS — 7 steps, 0 diverged steps
+PASS -- 7 steps, 0 diverged steps
 
 Verified login flow: navigate to login, enter credentials, submit, verify dashboard loads.
 
@@ -167,9 +167,9 @@ Video file: .claude/e2e/reports/20260318-143000/test-run.mp4
 
 | Skill | PR behavior | Opt-in/out |
 |-------|------------|------------|
-| `/e2e-flow` | **Default ON** — auto-detects PR, commits flow, posts results | `--no-pr` to disable |
-| `/e2e-test` | Opt-in — auto-enables video, posts `pr-summary.md` | `--pr N` to enable |
-| `/e2e-walkthrough` | Opt-in — reads PR diff, posts results | `--pr N` to enable |
+| `/e2e-flow` | **Default ON** -- auto-detects PR, commits flow, posts results | `--no-pr` to disable |
+| `/e2e-test` | Opt-in -- auto-enables video, posts `pr-summary.md` | `--pr N` to enable |
+| `/e2e-walkthrough` | Opt-in -- reads PR diff, posts results | `--pr N` to enable |
 
 All three use the same draft release + `gh pr comment` mechanism for posting.
 
@@ -179,7 +179,7 @@ GitHub CLI has no API for uploading images directly to PR comments ([cli/cli#189
 
 - **Draft releases** produce stable, repo-scoped URLs for images and videos
 - The release appears in the Releases page but is not a real release (draft = not published)
-- Tag format: `e2e-assets-<branch>` — one per branch, reused with `--clobber`
+- Tag format: `e2e-assets-<branch>` -- one per branch, reused with `--clobber`
 - Asset URL pattern: `https://github.com/<owner>/<repo>/releases/download/e2e-assets-<branch>/<filename>`
 
 Public repos don't strictly need this (raw GitHub URLs work), but the draft release approach is used universally for consistency.
@@ -215,7 +215,7 @@ Typical combined flow:
 /e2e-test <flow> --pr 940           # Replay + post evidence
 ```
 
-The walkthrough produces a reusable flow YAML — future regressions of this bug are caught automatically.
+The walkthrough produces a reusable flow YAML -- future regressions of this bug are caught automatically.
 
 ### Feature acceptance with issue traceability
 
@@ -265,6 +265,8 @@ After a `--pr` run, the report directory (`.claude/e2e/reports/<timestamp>/`) co
 - [Commands](commands.md) -- all flags including `--pr`, `--video`, `--issue`
 - [CI Integration](ci-integration.md) -- automated runs in CI pipelines
 - [Getting Started](getting-started.md) -- first-time setup
+- [Multi-Site Testing](multi-site-testing.md) -- cross-site flows and multi-site PR evidence
+- [Test Suites](suites.md) -- running suite results with `--pr`
 
 ---
 

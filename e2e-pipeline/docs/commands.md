@@ -5,6 +5,8 @@
 | Command | What it does |
 |---------|-------------|
 | `/e2e-map` | Create or update UI element mappings |
+| `/e2e-map --scope page --page <name>` | Re-explore a single page only (merge into existing mapping) |
+| `/e2e-map --scope full` | Full exploration of all pages (default when no `--scope` given) |
 | `/e2e-map --interactive` | Run browser exploration inline (skip agent dispatch, for debugging) |
 | `/e2e-test <flow>` | Run a specific E2E test flow |
 | `/e2e-test --tag smoke` | Run all flows tagged with `smoke` |
@@ -26,6 +28,7 @@
 | `/e2e-flow --from pr 940` | Generate flow from PR diff |
 | `/e2e-flow --smoke` | Generate visit-all-pages smoke flow from mapping |
 | `/e2e-flow --verify-only <flow>` | Verify an existing flow in browser with auto-repair |
+| `/e2e-flow --mapping <name>` | Target a specific mapping file (skip selection when multiple exist) |
 | `/e2e-flow --no-verify` | Generate flow only, skip browser verification |
 | `/e2e-flow --no-pr` | Skip PR auto-detection, commit, and PR comment posting |
 | `/e2e-flow --issue DRC-2779` | Include issue context in report header |
@@ -34,18 +37,25 @@
 | `/e2e-compile --all --coverage` | Compile all + produce element coverage report |
 | `/e2e-dispatch` | Unified entry point (routes to the right skill) |
 | `/e2e-dispatch --test <flow> --fg` | Force foreground execution (override background default) |
-| `/e2e-skill-ops` | Debug, maintain, or evaluate E2E skills |
+| `/e2e-skill-ops` | Show available modes, then pick one (or describe the problem) |
+| `/e2e-skill-ops --debug` | Diagnose an e2e execution failure (search known issues, classify, fix, verify) |
+| `/e2e-skill-ops --maintain` | Sync changes across skills after editing one (impact scan + cross-skill consistency) |
+| `/e2e-skill-ops --add-feature` | Add a new capability to the pipeline (feasibility PoC, impact scan, implement, test) |
+| `/e2e-skill-ops --evaluate` | Gap analysis after a test run (classify failures, identify skill gaps, prioritize fixes) |
 | `/e2e-help` | Interactive help guide -- topics, examples, feedback |
 | `/e2e-help <topic>` | Deep dive into a topic (e.g., `cross-site`, `suites`, `checkpoints`) |
+| `/e2e-help --list-topics` | Show all available help topics with descriptions |
 | `/e2e-help --feedback "<text>"` | Report a documentation gap or confusing area |
 | `/e2e-doc-sync` | Scan docs for gaps against skills/agents, write updates |
 | `/e2e-doc-sync --check` | Report-only mode (no writes) |
 | `/e2e-doc-sync --fix` | Scan + auto-write approved gaps |
-| `/e2e-pipeline-doc-sync` | Full doc sync: static scan + history enrichment + write + live probe verification |
+| `/e2e-pipeline-doc-sync` | Full doc sync: static scan + history enrichment + write + live probe verification via `doc-probe` agent |
 | `/e2e-pipeline-doc-sync --check` | Report gaps + history enrichment, no writes |
-| `/e2e-pipeline-doc-sync --probe-only` | Verify existing docs against actual skill behavior |
+| `/e2e-pipeline-doc-sync --probe-only` | Verify existing docs against actual skill behavior (dispatches `doc-probe` agent to run live probes) |
 | `/e2e-pipeline-doc-sync --auto` | Full sync, skip user confirmation |
 | `/e2e-pipeline-doc-sync --section <doc>` | Targeted sync for one doc file |
+
+**CLI-only flow triggers**: `/e2e-flow` also responds to natural language like "cli flow", "backend e2e", "api test flow", and "cli recording". When no mapping exists and the source material contains CLI signals (shell commands, API endpoints, database queries), the skill auto-detects CLI-only intent and generates a flow using only `Execute external` / `Verify external` steps -- no mapping required. See [Cross-Boundary Testing -- CLI-Only Flows](cross-boundary-testing.md#cli-only-flows-no-mapping-required) for details.
 
 ## Background vs Foreground Execution
 
@@ -261,7 +271,7 @@ Each compiled `.sh` script supports these runtime flags:
 - [CI Integration](ci-integration.md) -- GitHub Actions setup with compiled scripts
 - [Multi-Site Testing](multi-site-testing.md) -- cross-site flows, `--site`, `--all-sites`
 - [Test Suites](suites.md) -- suite file format and site assignment
-- [Cross-Boundary Testing](cross-boundary-testing.md) -- `Execute external` / `Verify external` steps
+- [Cross-Boundary Testing](cross-boundary-testing.md) -- `Execute external` / `Verify external` steps, CLI-only flows
 - [Self-Improvement](self-improvement.md) -- how skills learn from execution
 
 ---
