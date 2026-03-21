@@ -58,6 +58,90 @@ steps:
     on_fail: warn
 ```
 
+## CLI-Only Flows (No Mapping Required)
+
+Not every E2E test needs a browser. When the entire test scenario involves CLI commands, API calls, or database operations -- with no browser UI interaction -- you can generate a **CLI-only flow** without any mapping file.
+
+### When to use CLI-only mode
+
+- Backend migration verification (run migration, check database state)
+- API endpoint testing (curl commands + response validation)
+- CLI tool validation (run tool, verify output)
+- Database seeding verification (insert data, query to confirm)
+
+### Auto-detection
+
+`/e2e-flow` auto-detects CLI-only intent when:
+
+1. **No mapping exists** in `.claude/e2e/mappings/`
+2. **Source material contains CLI signals**: shell commands (`curl`, `psql`, `npm run`, `bun`), API endpoint testing, database queries, migration scripts, or `Execute external` mentions
+
+When both conditions are met, the skill informs you and proceeds without a mapping:
+
+```
+No mapping found. Detected CLI/backend intent --
+generating CLI-only flow (Execute external / Verify external steps only).
+```
+
+If no CLI signals are detected either, the skill asks whether this is a CLI test or a browser test that needs `/e2e-map` first.
+
+### Manual trigger
+
+You can also explicitly request CLI-only mode by using trigger phrases like "cli flow", "backend e2e", "api test flow", or "cli recording" in your request to `/e2e-flow`.
+
+### CLI-only flow YAML
+
+CLI-only flows omit the `mapping:` field entirely and use only `Execute external` and `Verify external` steps:
+
+```yaml
+name: verify-migration-rollback
+description: "Run migration, verify schema change, rollback, verify revert"
+tags: [cli-only, migration]
+
+steps:
+  - id: run-migration
+    action: "Execute external"
+    description: "Apply the pending migration"
+    execute:
+      cli:
+        - run: "npx prisma migrate deploy"
+          expect: "exit code 0"
+    on_fail: fail
+
+  - id: verify-schema-change
+    action: "Verify external"
+    description: "Confirm new column exists in target table"
+    verify:
+      db:
+        - check: "SELECT column_name FROM information_schema.columns WHERE table_name='users' AND column_name='preferences'"
+          expect: "Row returned"
+    on_fail: fail
+
+  - id: rollback-migration
+    action: "Execute external"
+    description: "Roll back to previous state"
+    execute:
+      cli:
+        - run: "npx prisma migrate reset --skip-seed --force"
+          expect: "exit code 0"
+    on_fail: fail
+```
+
+### What happens during verification
+
+CLI-only flows skip the browser verifier entirely. Instead:
+
+1. The flow-writer generates only `Execute external` / `Verify external` steps
+2. Browser verification (Phase 2a-2d) is skipped -- there are no browser steps to verify
+3. CLI execution is recorded via `asciinema` (terminal recording instead of screenshots)
+4. The `e2e-media-processor` agent converts the `.cast` file to GIF, MP4, and thumbnail
+
+### Limitations
+
+- **`--smoke` requires a mapping.** Smoke mode generates a visit-all-pages flow, which is inherently browser-based.
+- **No compiled script output.** The compiler targets browser flows with mapping references. CLI-only flows run through the LLM test runner.
+- **Browser steps cannot be mixed in.** If any step needs browser interaction, a mapping is required -- use a cross-boundary (mixed) flow instead.
+
 ## Real-World Example: DRC-2880
 
 **Feature:** When CI runners upload dbt artifacts 3 times (via `recce-cloud upload`), the system marks the project as having auto-uploaded artifacts and fires a PostHog funnel event.
@@ -263,7 +347,7 @@ Checks state in external services. Use for analytics events, tracing spans, webh
 
 When a flow has **zero browser steps** (only `Execute external` + `Verify external`), the browser-based recording pipeline (screenshots + WebM) doesn't apply. Use terminal recording instead.
 
-**Demo** — `recce summary` recorded via the CLI pipeline (asciinema → agg → GIF):
+**Demo** — `recce summary` recorded via the CLI pipeline (asciinema -> agg -> GIF):
 
 ![CLI recording demo](assets/cli-recording-demo.gif)
 
@@ -275,14 +359,14 @@ A flow is CLI-only when all steps have `action: "Execute external"` or `action: 
 
 ```
 Skill wraps CLI command with asciinema
-    └── recording.cast      (JSONL: timestamp + character data)
-          │
-          ▼
+    +-- recording.cast      (JSONL: timestamp + character data)
+          |
+          v
 e2e-media-processor (CLI mode, cast_path provided)
-          │
-          ├── steps.gif     (agg: 120x35, 2x speed, monokai)
-          ├── test-run.mp4  (ffmpeg: yuv420p, faststart)
-          └── thumbnail.png (first GIF frame)
+          |
+          +-- steps.gif     (agg: 120x35, 2x speed, monokai)
+          +-- test-run.mp4  (ffmpeg: yuv420p, faststart)
+          +-- thumbnail.png (first GIF frame)
 ```
 
 ### Skill Dispatch Pattern
@@ -319,6 +403,7 @@ In non-interactive shells (CI, subagents), asciinema runs in headless mode autom
 - [Writing Tests](writing-tests.md) -- flow YAML format and checkpoint syntax
 - [Commands](commands.md) -- all skills and flags
 - [Recording & Evidence](recording-evidence.md) -- media processing pipeline, CLI terminal recording parameters
+- [Multi-Site Testing](multi-site-testing.md) -- cross-site flows with `sites:` and `--all-sites`
 
 ---
 

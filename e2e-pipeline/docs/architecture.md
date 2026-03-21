@@ -2,7 +2,7 @@
 
 ## The Closed-Loop Pipeline
 
-This plugin forms a self-healing cycle: **Map → Test → Analyze → Repair → Re-test**.
+This plugin forms a self-healing cycle: **Map -> Test -> Analyze -> Repair -> Re-test**.
 
 ```mermaid
 flowchart TD
@@ -13,7 +13,7 @@ flowchart TD
     TEST -->|"reports/"| ANALYZE{"Failures?"}
     ANALYZE -->|Stale selectors| MAP
     ANALYZE -->|Flow changed| FLOW
-    ANALYZE -->|All pass| DONE["Done ✓"]
+    ANALYZE -->|All pass| DONE["Done"]
 
     WALK["/e2e-walkthrough"] -->|"generates flow"| FLOW
 ```
@@ -35,7 +35,11 @@ Skills run in main context as thin orchestrators. Heavy browser work is delegate
 | `e2e-dispatch` | *(none)* | Router to the right skill |
 | `e2e-help` | *(none)* | Interactive help, topic guide, feedback collection |
 | `e2e-doc-sync` | `e2e-doc-scanner` | Documentation gap scanner and writer |
-| `e2e-pipeline-doc-sync` | `doc-probe` | Doc sync with history enrichment + live behavioral verification |
+| `e2e-pipeline-doc-sync` | `doc-probe` | Forge-template doc sync with history enrichment (journal + memory) and live behavioral probe verification. Coexists with `e2e-doc-sync` -- adds accuracy checking on top of coverage scanning. |
+
+**`e2e-pipeline-doc-sync` details**: This skill runs a 6-phase pipeline: static scan (inventory sources vs docs), history enrichment (search journal + memory for usage patterns), doc write/update, live probe verification (dispatches `doc-probe` agent to execute CLI probes against behavioral claims), self-update of its reference config, and knowledge loop reporting.
+
+**`doc-probe` agent**: A mechanical accuracy verifier. Receives a list of behavioral claims extracted from documentation, executes each as a CLI probe, compares output against expected signals, and returns a structured pass/fail report. Safety-gated (rejects destructive commands). Uses Sonnet model for cost efficiency.
 
 This keeps browser screenshots, accessibility trees, and trace data out of the main conversation context.
 

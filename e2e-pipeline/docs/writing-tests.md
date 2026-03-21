@@ -63,6 +63,12 @@ steps:
 
 No CSS selectors, no XPath, no Page Object boilerplate. Just element names from your mapping + human-readable actions.
 
+**Flow write guard**: A PreToolUse hook blocks direct writes to `.claude/e2e/flows/*.yaml`. This prevents accidental hand-editing of flow files -- flows should be generated via `/e2e-flow` (which authorizes its agents via a sentinel file) or `/e2e-walkthrough`. If you need to make a manual edit, the hook warns you and suggests using the appropriate skill instead.
+
+### CLI-only flows (no mapping required)
+
+Flows can also be entirely CLI-based -- all `Execute external` and `Verify external` steps, with no browser interaction. These flows do not need a mapping file. `/e2e-flow` auto-detects CLI-only intent when no mapping exists and your source material describes shell commands or API calls. See [Cross-Boundary Testing -- CLI-Only Flows](cross-boundary-testing.md#cli-only-flows-no-mapping-required) for the full guide.
+
 ### Preconditions
 
 Flows can include a `preconditions:` block that validates data readiness before the browser agent launches. If any check fails, the test stops immediately with a clear error message -- no wasted browser time.
@@ -104,6 +110,20 @@ steps:
 |--------|----------------|-------------|
 | `psql` | `psql "$DATABASE_URL" -t -A -c "<query>"` via Bash | Local dev with direct DB access |
 | `supabase` | `execute_sql` MCP tool | Remote projects, no direct DB connection |
+
+**Supabase runner example:**
+
+```yaml
+preconditions:
+  runner: supabase
+  project: abcdefghijklmnop    # Supabase project ref
+  checks:
+    - query: "SELECT count(*) FROM auth.users WHERE role = 'admin'"
+      expect: ">= 1"
+      fail_message: "No admin user in Supabase -- run seed via dashboard"
+```
+
+The Supabase runner uses the `execute_sql` MCP tool instead of a local `psql` connection. No `env` field is needed -- the MCP tool handles authentication via the Supabase project ref.
 
 **Expect operators:**
 
@@ -350,7 +370,7 @@ This produces `.claude/e2e/coverage/coverage.json` with per-element data:
 ## Related
 
 - [Commands](commands.md) -- all skill invocations and flags
-- [Cross-Boundary Testing](cross-boundary-testing.md) -- `Execute external` / `Verify external` steps
+- [Cross-Boundary Testing](cross-boundary-testing.md) -- `Execute external` / `Verify external` steps, CLI-only flows
 - [Multi-Site Testing](multi-site-testing.md) -- cross-site flows with `sites:`
 - [PR Workflow](pr-workflow.md) -- posting E2E evidence to pull requests
 - [Debugging](debugging.md) -- troubleshooting test failures

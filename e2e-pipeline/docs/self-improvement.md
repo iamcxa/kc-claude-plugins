@@ -25,6 +25,17 @@ Knowledge is captured along two axes:
 | `e2e-compile` | No (deterministic) | No | -- |
 | `e2e-dispatch` | No (router) | No | -- |
 
+## Knowledge Bootstrap
+
+Every learning-capable skill reads `references/learned-patterns.md` at startup before doing any work. This is the **Knowledge Bootstrap** phase -- it loads accumulated D1 patterns so the skill can avoid known pitfalls and apply proven strategies from the start.
+
+For example, `/e2e-flow` reads learned patterns before generating a flow, so it can:
+- Apply known selector strategies for the detected UI framework
+- Anticipate verifier correction patterns (e.g., "always add a wait after modal trigger")
+- Avoid generating steps known to cause divergence
+
+D2-capable skills (`e2e-test`, `e2e-skill-ops`) also read `.claude/e2e-lessons.md` for project-specific lessons. The combined effect: each run starts with all prior knowledge loaded, not from scratch.
+
 ## Where Patterns Are Stored
 
 ### D1: `references/learned-patterns.md`
@@ -32,7 +43,7 @@ Knowledge is captured along two axes:
 Lives in the plugin directory. Accumulated entries look like:
 
 ```markdown
-### [2026-03-18] Login flow — Regex selector needs literal prefix for grep -F
+### [2026-03-18] Login flow -- Regex selector needs literal prefix for grep -F
 
 **Pattern**: When converting `role=X[name=/pattern/]` to a grep pattern,
 extract the longest literal prefix before the first regex metacharacter.
@@ -47,7 +58,7 @@ Every skill reads this file at startup (Knowledge Bootstrap phase) to avoid re-d
 Lives in the project repo. Contains project-specific timing, auth, and data dependency rules:
 
 ```markdown
-### [2026-03-15] audit-options — Modal animation delay
+### [2026-03-15] audit-options -- Modal animation delay
 
 **Pattern**: Audit options modal has a 3s CSS transition.
 LLM and compiled runs always diverge on modal steps.
@@ -102,6 +113,7 @@ Test/Explore --> Findings --> D1: skill gets smarter     --> D2: project tests g
 - [Architecture](architecture.md) -- skill-to-agent model and pipeline design
 - [Writing Tests](writing-tests.md) -- flow YAML format and preconditions
 - [Debugging](debugging.md) -- using `/e2e-skill-ops --evaluate` findings to improve
+- [PR Workflow](pr-workflow.md) -- posting E2E evidence to pull requests
 
 ---
 
