@@ -23,14 +23,14 @@ flowchart LR
 ## Quick Reference
 
 ```bash
-# Feature — flow from plan (PR mode automatic)
+# Feature -- flow from plan (PR mode automatic)
 /e2e-flow --from <plan-or-spec> --issue DRC-2779
 
-# Bug fix — walkthrough + test + PR comment
+# Bug fix -- walkthrough + test + PR comment
 /e2e-walkthrough --pr 940
 /e2e-test <generated-flow> --pr 940 --video
 
-# Existing flow — replay with evidence
+# Existing flow -- replay with evidence
 /e2e-test login-flow --pr 940
 
 # Opt out of PR mode
@@ -41,7 +41,13 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    M["/e2e-map<br/>Map UI elements"] --> F["/e2e-flow --from plan<br/>Generate flow YAML"]
+    M["/e2e-map<br/>Map UI elements"] --> HasMapping{"Has mapping?"}
+    HasMapping -->|Yes| F["/e2e-flow --from plan<br/>Generate flow YAML"]
+    HasMapping -->|"No (CLI-only)"| CLI["CLI-only: asciinema recording"]
+    CLI --> CLIMedia["media-processor<br/>GIF + MP4"]
+    CLIMedia --> CLIDraft["Upload media -> draft release"]
+    CLIDraft --> CLIPr["gh pr comment<br/>(checkpoint table + GIF)"]
+
     F --> W["flow-writer agent<br/>Codebase analysis -> YAML"]
     W --> V["flow-verifier agent<br/>Browser verify + auto-repair"]
     V --> T["trace-analyzer agent<br/>API failures + console errors"]
@@ -59,7 +65,7 @@ flowchart TD
 /e2e-map
 ```
 
-Generates `.claude/e2e/mappings/<app>.yaml` with page selectors. Skip if mapping already exists.
+Generates `.claude/e2e/mappings/<app>.yaml` with page selectors. Skip if mapping already exists. Skip entirely if this is a CLI-only flow (no browser app).
 
 ### Step 2 -- Generate a flow
 
@@ -151,6 +157,66 @@ bash .claude/e2e/compiled/login-flow.sh
 Video file: .claude/e2e/reports/20260318-143000/test-run.mp4
 </details>
 ```
+
+### CLI-Only Flow PR Evidence
+
+When a flow has **zero browser steps** (all `Execute external` / `Verify external`), the PR comment format changes. There are no screenshots to display and no browser-based divergence analysis. The comment instead embeds an asciinema GIF and shows a checkpoint results table.
+
+#### When this applies
+
+- All flow steps are `Execute external` or `Verify external`
+- No `Navigate`, `Click`, `Fill`, or other browser actions present
+- The flow was generated without a mapping file
+
+#### What the PR comment looks like
+
+```markdown
+## E2E Test: verify-mcp-error-classification
+
+PASS -- 5 checkpoints, 3 executed, 2 advisory
+
+Verified MCP server error classification for DRC-3051/3052/3053/3054:
+get_columns None guard, Snowflake syntax error classification, and
+permission_denied classification all pass. Sentry routing advisory checks
+deferred to post-deploy verification.
+
+### CLI Recording
+
+![MCP error classification verification](https://github.com/.../steps.gif)
+
+### Checkpoint Results
+
+| # | Checkpoint | Result | Detail |
+|---|-----------|--------|--------|
+| 1 | none_relation guard tests | PASS | 3 tests passed |
+| 2 | Snowflake syntax error classification | PASS | 5 tests passed |
+| 3 | integration syntax_error path | PASS | 2 tests passed |
+| 4 | Sentry error_type tags | SKIP | post-deploy only |
+| 5 | No Sentry noise for classified errors | SKIP | post-deploy only |
+
+### Health
+
+| Check | Result |
+|-------|--------|
+| Test failures | 0 |
+| Unclassified errors | 0 |
+| Advisory skips | 2 (Sentry -- post-deploy) |
+```
+
+Key differences from browser flow comments:
+
+| Element | Browser flow | CLI-only flow |
+|---------|-------------|---------------|
+| Steps table with screenshots | Yes | No |
+| Divergence analysis | Yes | No |
+| Quick Re-Run script | Yes | No |
+| CLI recording (GIF) | No | Yes |
+| Checkpoint results table | No | Yes |
+| Draft release upload | Yes | Yes (GIF + MP4 from asciinema) |
+
+#### Draft release still applies
+
+Even for CLI-only flows, the `.mp4` and `.gif` produced by asciinema are uploaded to the draft release tag (`e2e-assets-<branch>`) and referenced via stable release asset URLs in the PR comment. The mechanism is identical to browser flows -- only the artifacts differ.
 
 ### Report sections by skill
 
@@ -244,6 +310,23 @@ bash .claude/e2e/compiled/<flow>.sh
 /e2e-test <flow> --pr 940
 ```
 
+### CLI-Only Flow PR Evidence
+
+When there is no browser app -- all verification is CLI commands, pytest runs, or API calls -- skip the mapping step and run `/e2e-flow` directly. The skill auto-detects CLI-only intent, generates a flow with `Execute external` / `Verify external` steps, records via asciinema, and posts a checkpoint results table to the PR instead of a screenshot grid.
+
+**Real-world example (DRC-3051/3052/3053/3054 -- recce MCP error classification):**
+
+```
+/e2e-flow --from .claude/insight/drc-3051-fix-summary.md --pr 962 --issue DRC-3051
+```
+
+No mapping existed for the MCP layer. The skill detected `pytest`, `python`, and `.venv` signals in the source material, generated a 5-step CLI-only flow, ran it via the LLM test runner, recorded the terminal session, and posted a PR comment with:
+- An embedded asciinema GIF (uploaded to `e2e-assets-fix/mcp-sentry-errors`)
+- A checkpoint results table (3 PASS, 2 SKIP advisory)
+- Health summary (0 test failures, 0 unclassified errors)
+
+See [Cross-Boundary Testing: CLI-Only Flows](cross-boundary-testing.md#cli-only-flows-no-mapping-required) for the full flow YAML and pipeline walkthrough.
+
 ## Output Files
 
 After a `--pr` run, the report directory (`.claude/e2e/reports/<timestamp>/`) contains:
@@ -252,12 +335,13 @@ After a `--pr` run, the report directory (`.claude/e2e/reports/<timestamp>/`) co
 |------|---------|
 | `report.md` | Full test report (local reference) |
 | `pr-summary.md` | PR comment body (image URLs point to draft release) |
-| `step-*.png` | Individual step screenshots |
-| `steps.gif` | Step overview animation (blank frames skipped) |
+| `step-*.png` | Individual step screenshots (browser flows only) |
+| `steps.gif` | Step overview animation or asciinema GIF (CLI flows) |
 | `test-run.mp4` | 2x speed video (trimmed) |
-| `thumbnail.png` | First non-blank screenshot |
-| `trace.zip` | Network + console trace (replay with `npx playwright show-trace`) |
-| `compiled-junit.xml` | JUnit output from compiled script run |
+| `thumbnail.png` | First non-blank screenshot or first GIF frame |
+| `trace.zip` | Network + console trace (browser flows; replay with `npx playwright show-trace`) |
+| `compiled-junit.xml` | JUnit output from compiled script run (browser flows only) |
+| `recording.cast` | Raw asciinema terminal recording (CLI-only flows) |
 
 ## Related
 
@@ -267,6 +351,7 @@ After a `--pr` run, the report directory (`.claude/e2e/reports/<timestamp>/`) co
 - [Getting Started](getting-started.md) -- first-time setup
 - [Multi-Site Testing](multi-site-testing.md) -- cross-site flows and multi-site PR evidence
 - [Test Suites](suites.md) -- running suite results with `--pr`
+- [Cross-Boundary Testing](cross-boundary-testing.md) -- CLI-only flows, how checkpoint results appear in PR comments
 
 ---
 
