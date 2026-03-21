@@ -27,7 +27,7 @@ Different targets execute concurrently in the worker, same-target runs queue beh
 ### Per-Target Scheduler
 - **D-08:** Multi-timer model — `Map<string, Timer>` replacing single `schedulerTimer`
 - **D-09:** Each target reads `target.schedule?.interval_hours ?? globalConfig.schedule.interval_hours` (merge logic from Phase 8 D-07)
-- **D-10:** Updating one target's schedule restarts only that target's timer — other timers continue undisturbed (SC #4)
+- **D-10:** On config save, stop-all-rebuild-all (safe approach per D-11/Pitfall 3). Timer *firing* remains independent — one target's scheduler firing does not reset any other's countdown (SC #4)
 - **D-11:** `stopAllSchedulers()` must clear the full Map before rebuilding (Pitfall 3 from research)
 
 ### Minimum Interval Enforcement
