@@ -18,6 +18,14 @@ Via the [kc-claude-plugins](https://github.com/iamcxa/kc-claude-plugins) marketp
 
 ## Quick Start
 
+> **No browser app? Testing a CLI tool or backend service?**
+> Skip steps 1-2. Run `/e2e-flow` directly — the skill auto-detects CLI-only intent
+> when no mapping exists and your source material contains CLI/API signals
+> (shell commands, API calls, migration scripts). The resulting flow records via
+> `asciinema` instead of browser screenshots. See
+> [Cross-Boundary Testing: CLI-Only Flows](cross-boundary-testing.md#cli-only-flows-no-mapping-required)
+> for details, including `asciinema` and `agg` prerequisites.
+
 ### 1. Map your app's UI
 
 ```
@@ -78,6 +86,7 @@ Compiles all flow YAML files to standalone bash scripts in `.claude/e2e/compiled
 - [PR Workflow](pr-workflow.md) -- posting E2E evidence to pull requests
 - [Suites](suites.md) -- organizing tests into named suites
 - [Debugging](debugging.md) -- troubleshooting test failures by type
+- [Cross-Boundary Testing](cross-boundary-testing.md) -- CLI-only flows, mixed browser + CLI tests
 
 ---
 

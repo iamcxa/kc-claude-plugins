@@ -36,6 +36,7 @@ You scan the e2e-pipeline plugin for documentation gaps and write updates when a
 |-------|----------|-------------|
 | `plugin_root` | Yes | Absolute path to the e2e-pipeline plugin directory |
 | `mode` | Yes | `scan` (find gaps) or `write` (create/update docs) |
+| `diff_content` | Scan, optional | Added lines from `git diff` grouped by file. When present, enables diff-aware gap detection for behavioral branches that surface extraction misses. |
 | `approved_gaps` | Write only | JSON list of approved gaps with outlines |
 | `style_guide` | Write only | List of writing style directives |
 
@@ -91,9 +92,24 @@ Read `${plugin_root}/CLAUDE.md`:
 - **Skill/agent counts**: verify they match actual directories
 - **Architecture listing**: verify all skills/agents mentioned
 
+### Step 4.5 — Diff-Aware Feature Extraction (when `diff_content` provided)
+
+If `diff_content` is present, parse the added lines to extract features that surface extraction (Steps 1-2) may have missed:
+
+1. **Scan for new conditionals**: lines containing "if", "when", "→", "skip", "only when", "detected" that introduce behavioral branches
+2. **Scan for new input fields**: lines in agent files matching `| field | ... |` table rows not already in the surface-extracted input list
+3. **Scan for new mode names**: terms like `cli-only`, `flow_mode`, `cli_only` that represent new operational modes without `--flag` syntax
+4. **Scan for new action types or step types**: any new `action:` values or schema definitions
+
+For each diff-extracted feature:
+- Check if it overlaps with a surface-extracted feature (already covered → skip)
+- If novel → add to the feature list for Step 5 cross-reference, tagged as `[diff]` to distinguish from surface-extracted features
+
+**Why this matters**: Surface extraction catches flags (`--xxx`), headings (`## xxx`), and named modes. But features implemented as conditional branches within existing steps (e.g., auto-detection logic, skip conditions, new optional fields) are invisible to surface extraction. Diff-aware extraction fills this gap by looking at what actually changed.
+
 ### Step 5 — Cross-Reference
 
-For each skill feature/flag/concept:
+For each skill feature/flag/concept (including `[diff]`-tagged features from Step 4.5):
 1. Search docs for coverage: `Grep → pattern in docs/*.md`
 2. Classify:
    - **Critical**: feature exists in skill, zero mentions in any doc
@@ -115,6 +131,7 @@ Return structured gap report as markdown:
 ### Critical (N)
 1. [GAP-1] **<feature>** — defined in `<skill>` but undocumented
    - Source: `skills/<name>/SKILL.md` lines X-Y
+   - Detection: surface | diff  ← indicates how the gap was found
    - Proposed: create `docs/<name>.md`
    - Suggested outline: [section1, section2, ...]
 
