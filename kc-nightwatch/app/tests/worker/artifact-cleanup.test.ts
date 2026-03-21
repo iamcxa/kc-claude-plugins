@@ -45,4 +45,27 @@ describe('cleanupOldRuns', () => {
     const remaining = await Array.fromAsync(new Bun.Glob('*').scan({ cwd: testDir, onlyFiles: false }))
     expect(remaining.length).toBe(30)
   })
+
+  it('skips active run directories during cleanup', async () => {
+    // Create 5 run dirs with distinct mtimes, keepCount=3
+    // run-0000 and run-0001 are oldest and should be deleted normally
+    // but mark run-0000 as active — it should survive even though it's oldest
+    await createRunDirs(testDir, 5)
+    const activeRunIds = new Set(['run-0000'])
+    await cleanupOldRuns(testDir, 3, activeRunIds)
+    const remaining = await Array.fromAsync(new Bun.Glob('*').scan({ cwd: testDir, onlyFiles: false }))
+    // run-0000 is active — must NOT be deleted
+    expect(remaining).toContain('run-0000')
+    // 5 dirs - 1 delete (run-0001 is oldest non-active) = 4 remaining
+    expect(remaining.length).toBe(4)
+  })
+
+  it('with empty activeRunIds behaves as before (deletes oldest)', async () => {
+    await createRunDirs(testDir, 5)
+    await cleanupOldRuns(testDir, 3, new Set())
+    const remaining = await Array.fromAsync(new Bun.Glob('*').scan({ cwd: testDir, onlyFiles: false }))
+    expect(remaining.length).toBe(3)
+    expect(remaining).not.toContain('run-0000')
+    expect(remaining).not.toContain('run-0001')
+  })
 })

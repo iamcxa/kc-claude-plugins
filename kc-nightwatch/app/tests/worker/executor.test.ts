@@ -30,8 +30,29 @@ describe('activePids', () => {
     expect(activePids.size).toBe(0)
   })
 
-  it('killAllActive clears the set', async () => {
-    activePids.add(999999)  // fake PID — process likely doesn't exist
+  it('is a Map (has .set, .get, .has methods — not .add)', () => {
+    expect(activePids).toBeInstanceOf(Map)
+    expect(typeof activePids.set).toBe('function')
+    expect(typeof activePids.get).toBe('function')
+    expect(typeof activePids.has).toBe('function')
+  })
+
+  it('stores run_id → pid mapping via .set()', () => {
+    activePids.set('run-001', 12345)
+    expect(activePids.get('run-001')).toBe(12345)
+    activePids.delete('run-001')
+  })
+
+  it('deletes by run_id (not by pid)', () => {
+    activePids.set('run-002', 99999)
+    expect(activePids.has('run-002')).toBe(true)
+    activePids.delete('run-002')
+    expect(activePids.has('run-002')).toBe(false)
+  })
+
+  it('killAllActive iterates values and clears the map', async () => {
+    activePids.set('run-fake-1', 999999)  // fake PID — process likely doesn't exist
+    activePids.set('run-fake-2', 999998)
     await killAllActive()   // should not throw, process may already be gone
     expect(activePids.size).toBe(0)
   })
@@ -51,8 +72,8 @@ describe('executor module exports', () => {
     expect(typeof executeRun).toBe('function')
   })
 
-  it('exports activePids Set', () => {
-    expect(activePids).toBeInstanceOf(Set)
+  it('exports activePids Map (not Set)', () => {
+    expect(activePids).toBeInstanceOf(Map)
   })
 
   it('exports killAllActive function', () => {
@@ -179,14 +200,23 @@ describe('NW memory isolation — MEM-02: writeNwJournalConfig', () => {
 })
 
 describe('cancel / EXEC-08: activePids pattern', () => {
-  it('activePids is exported and is a Set (used by cancel in worker/index.ts)', () => {
-    expect(activePids).toBeInstanceOf(Set)
+  it('activePids is exported and is a Map keyed by run_id', () => {
+    expect(activePids).toBeInstanceOf(Map)
   })
 
   it('activePids is cleared after killAllActive', async () => {
-    activePids.add(999998)
-    activePids.add(999997)
+    activePids.set('fake-run-a', 999998)
+    activePids.set('fake-run-b', 999997)
     await killAllActive()
     expect(activePids.size).toBe(0)
+  })
+
+  it('allows targeting specific run_id without affecting others', () => {
+    activePids.set('run-target', 11111)
+    activePids.set('run-other', 22222)
+    activePids.delete('run-target')
+    expect(activePids.has('run-target')).toBe(false)
+    expect(activePids.get('run-other')).toBe(22222)
+    activePids.delete('run-other')
   })
 })
