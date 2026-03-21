@@ -1,9 +1,10 @@
 import { Hono } from 'hono'
 import { randomUUID } from 'node:crypto'
-import { readTargets } from '../services/yaml-store.ts'
+import { readTargets, writeTargets, loadOrCreateAppConfig } from '../services/yaml-store.ts'
 import { listRuns, getRun, appendRun } from '../services/run-store.ts'
 import { sendToWorker, workerStatus, getLastWorkerState } from '../ipc.ts'
-import type { Run } from '../../shared/types.ts'
+import type { Run, Target } from '../../shared/types.ts'
+import { MIN_SCHEDULE_INTERVAL_HOURS } from '../../shared/constants.ts'
 
 export const apiRoutes = new Hono()
 
@@ -66,6 +67,40 @@ apiRoutes.delete('/api/runs/:id', async (c) => {
   if (workerStatus === 'offline_permanent') return c.json({ error: 'worker offline' }, 503)
   const ok = sendToWorker({ type: 'cancel', run_id: c.req.param('id') })
   return c.json({ ok })
+})
+
+// PUT /api/targets/:name — update target config with per-target schedule override validation (D-13)
+apiRoutes.put('/api/targets/:name', async (c) => {
+  const name = c.req.param('name')
+  const body = await c.req.json<Partial<Target>>()
+
+  // D-13: Reject if schedule.interval_hours is below minimum (defense in depth — also enforced in scheduler)
+  if (body.schedule?.interval_hours !== undefined) {
+    if (body.schedule.interval_hours < MIN_SCHEDULE_INTERVAL_HOURS) {
+      return c.json(
+        {
+          error: `interval_hours ${body.schedule.interval_hours} is below minimum ${MIN_SCHEDULE_INTERVAL_HOURS} hours (${Math.round(MIN_SCHEDULE_INTERVAL_HOURS * 60)} minutes)`,
+        },
+        400
+      )
+    }
+  }
+
+  const targets = await readTargets()
+  if (!targets[name]) return c.json({ error: 'target not found' }, 404)
+
+  // Merge schedule override into existing target
+  if (body.schedule) {
+    targets[name].schedule = { ...targets[name].schedule, ...body.schedule }
+  }
+
+  await writeTargets(targets)
+
+  // Trigger scheduler restart with updated targets — worker will reload targets and rebuild all per-target timers (D-10)
+  const config = await loadOrCreateAppConfig()
+  sendToWorker({ type: 'schedule', config: config.schedule })
+
+  return c.json(targets[name])
 })
 
 // POST /api/webhook — external trigger (optional target + mode)

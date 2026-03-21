@@ -82,6 +82,15 @@ export async function readTargets(): Promise<Record<string, Target>> {
   )
 }
 
+/**
+ * Write targets back to TARGETS_YAML_PATH, preserving the `targets:` wrapper key.
+ * Used by PUT /api/targets/:name to persist per-target schedule overrides.
+ */
+export async function writeTargets(targets: Record<string, Target>): Promise<void> {
+  // Preserve the wrapper key structure: { targets: { name: Target } }
+  await writeYamlFile(TARGETS_YAML_PATH, { targets })
+}
+
 export async function writeAppConfig(config: AppConfig, configPath = APP_CONFIG_PATH): Promise<void> {
   // Always re-create file handle (Pitfall: stale handle after write)
   await Bun.write(configPath, stringify(config as Record<string, unknown>))
