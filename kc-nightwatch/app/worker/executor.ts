@@ -12,8 +12,9 @@ import {
 import { collectImplicitFeedback } from './feedback-collector.ts'
 import { appendFeedback, writeFeedbackTrends } from '../server/services/feedback-store.ts'
 
-// In-memory PID tracking — never use files (worker has direct handles)
-export const activePids = new Set<number>()
+// In-memory PID tracking — keyed by run_id so cancel can target a specific run
+// Map<run_id, pid> — allows per-run cancel without killing concurrent runs
+export const activePids = new Map<string, number>()
 
 // MEM-01: Create per-target NW journal directory on first use
 // CRITICAL: Use os.homedir() + path.join, never template literal '~' (policy.ts anti-pattern rule)
@@ -40,7 +41,12 @@ export async function writeNwJournalConfig(runDir: string, journalDir: string): 
 }
 
 // Rolling cleanup — keep last N runs (FOUND-08)
-export async function cleanupOldRuns(runsDir: string, keepCount = KEEP_RUNS_COUNT): Promise<void> {
+// activeRunIds: skip deletion of any run whose directory name is in this set (parallel safety)
+export async function cleanupOldRuns(
+  runsDir: string,
+  keepCount = KEEP_RUNS_COUNT,
+  activeRunIds?: Set<string>
+): Promise<void> {
   try {
     const glob = new Bun.Glob('*')
     const entries = await Array.fromAsync(glob.scan({ cwd: runsDir, onlyFiles: false }))
@@ -55,11 +61,19 @@ export async function cleanupOldRuns(runsDir: string, keepCount = KEEP_RUNS_COUN
     withStats.sort((a, b) => a.mtime - b.mtime)
 
     const toDelete = withStats.slice(0, withStats.length - keepCount)
+    let deleted = 0
     for (const { name } of toDelete) {
+      if (activeRunIds?.has(name)) {
+        log.debug({ component: 'worker', msg: `Skipping cleanup of active run: ${name}` })
+        continue
+      }
       await Bun.spawn(['rm', '-rf', `${runsDir}/${name}`]).exited
       log.debug({ component: 'worker', msg: `Deleted old run artifact: ${name}` })
+      deleted++
     }
-    log.info({ component: 'worker', msg: `Cleaned up ${toDelete.length} old run(s), keeping ${keepCount}` })
+    if (deleted > 0) {
+      log.info({ component: 'worker', msg: `Cleaned up ${deleted} old run(s), keeping ${keepCount}` })
+    }
   } catch (err) {
     log.warn({ component: 'worker', msg: `Run cleanup error: ${String(err)}` })
   }
@@ -109,7 +123,7 @@ export async function executeRun(
     env: { ...process.env },
   })
 
-  activePids.add(child.pid)
+  activePids.set(run.id, child.pid)
   opts.onMessage({ type: 'run:started', run_id: run.id, pid: child.pid })
 
   // Enforce max_runtime_minutes from safety.yaml (FOUND-05)
@@ -170,7 +184,7 @@ export async function executeRun(
     }
   } finally {
     clearTimeout(runtimeTimeout)
-    activePids.delete(child.pid)
+    activePids.delete(run.id)
 
     // Write run artifacts
     await Bun.write(logFilePath, logLines.join('\n') + '\n')
@@ -240,15 +254,15 @@ export async function executeRun(
       opts.onMessage({ type: 'run:completed', run_id: run.id, summary })
     }
 
-    // Rolling cleanup — keep last 50 runs
-    await cleanupOldRuns(opts.runsDir)
+    // Rolling cleanup — keep last 50 runs, skipping currently active run directories
+    await cleanupOldRuns(opts.runsDir, KEEP_RUNS_COUNT, new Set(activePids.keys()))
   }
 }
 
 // Kill all active PIDs — called on worker shutdown (FOUND-06)
 export async function killAllActive(): Promise<void> {
-  for (const pid of activePids) {
-    log.warn({ component: 'worker', msg: `Killing active process PID ${pid} on shutdown` })
+  for (const [runId, pid] of activePids) {
+    log.warn({ component: 'worker', msg: `Killing active process PID ${pid} (run ${runId}) on shutdown` })
     try {
       process.kill(pid, 'SIGKILL')
     } catch {
