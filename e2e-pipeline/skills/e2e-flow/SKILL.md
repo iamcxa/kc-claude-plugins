@@ -60,12 +60,16 @@ Use loaded patterns to:
 - Anticipate verifier correction patterns
 - Avoid generating steps known to cause divergence
 
-## Discover Mapping (BLOCKING — must complete before proceeding)
+## Discover Mapping
 
 1. Scan `.claude/e2e/mappings/*.yaml`
-2. One file → use it. Read `app`, `base_url`, `auth` from the mapping.
-3. Multiple files + no `--mapping` → list them (show filename, `app`, `base_url`), ask user which to use.
-4. None → stop: "No mappings. Run `/e2e-map` first."
+2. One file → use it. Read `app`, `base_url`, `auth` from the mapping. Set `flow_mode: browser`.
+3. Multiple files + no `--mapping` → list them (show filename, `app`, `base_url`), ask user which to use. Set `flow_mode: browser`.
+4. **None found → CLI-only intent check:**
+   - Scan source material (conversation context, `--from` file content) for CLI signals: shell commands (`curl`, `psql`, `npm run`, `bun`, script paths), API endpoint testing, database queries, migration scripts, `Execute external` mentions
+   - **CLI signals found** → set `flow_mode: cli-only`. Inform user: "No mapping found. Detected CLI/backend intent — generating CLI-only flow (Execute external / Verify external steps only)."
+   - **No CLI signals** → ask user: "No mapping found. Options: (a) This is a CLI-only backend test → proceed without mapping, (b) Browser UI test → run `/e2e-map` first."
+   - **`--smoke` mode** → stop: "Smoke mode requires a mapping. Run `/e2e-map` first." (smoke is inherently browser-based)
 5. Parse failure → report error with line number and stop.
 
 ## Phase 0 — Prepare
@@ -90,6 +94,7 @@ Use loaded patterns to:
 **Verify-only** (`--verify-only`):
 - List existing flows in `.claude/e2e/flows/`
 - Ask user which to verify (or accept flow name as argument)
+- **Detect flow type**: Read the flow YAML. If ALL steps are `Execute external` or `Verify external` → set `flow_mode: cli-only` (skip browser verifier, go to Phase 2.5 CLI recording). Otherwise → `flow_mode: browser`.
 - Skip to Phase 2
 
 ### Codebase Scan
@@ -136,12 +141,13 @@ The sentinel has a 10-minute staleness timeout as safety net.
 
 Dispatch `e2e-pipeline:e2e-flow-writer` with:
 - `description`: Extracted criteria or feature description
-- `mapping_path`: Absolute path to mapping YAML
+- `mapping_path`: Absolute path to mapping YAML (**omit if `flow_mode: cli-only`**)
 - `context_summary`: Assembled codebase scan results
 - `output_dir`: `.claude/e2e/flows/` absolute path
 - `source_text`: Full plan/spec/PR diff text (if `--from` used)
 - `smoke_mode`: true if `--smoke`
 - `flow_name`: User-specified or auto-generated
+- `cli_only`: true if `flow_mode: cli-only`
 
 See [reference.md](./reference.md) § Agent Dispatch Patterns for exact dispatch message format.
 
@@ -149,18 +155,22 @@ See [reference.md](./reference.md) § Agent Dispatch Patterns for exact dispatch
 
 ```
 Flow generated: .claude/e2e/flows/<name>.yaml
+  Mode: <browser | cli-only>
   Steps: N
   Warnings: <count or "none">
   Coverage: <notes>
 
-Proceeding to browser verification...
+{if browser} Proceeding to browser verification...
+{if cli-only} Proceeding to CLI recording...
 ```
 
 If `--no-verify` → **delete flow-write sentinel** → if PR mode active, commit flow (`git add .claude/e2e/flows/<name>.yaml && git commit -m "test(e2e): add <flow-name> flow (unverified)"`) → skip to Phase 3 (no-verify path).
 
 ## Phase 2 — Verify (dispatch flow-verifier + trace-analyzer)
 
-### 2a. Pre-flight
+**CLI-only flows (`flow_mode: cli-only`)**: Skip Phase 2a-2d entirely. Jump directly to Phase 2.5 (CLI recording). Browser verifier is not dispatched — there are no browser steps to verify.
+
+### 2a. Pre-flight (browser flows only)
 
 ```bash
 agent-browser --version
@@ -393,6 +403,8 @@ Auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "
 | Smoke test on app with dynamic URLs | Smoke auto-skips pages with `${id}` parameters. This is correct behavior, not a bug. |
 | Skipping trace analysis | Always dispatch trace-analyzer after verifier — even on PASS. Silent API failures are invisible otherwise. |
 | Re-dispatching verifier for minor fixes | Verifier does its own repair loop (2 rounds max). If it returns PARTIAL, the remaining issues are genuinely unfixable by automation. |
-| Generating flow without mapping | Mapping must exist first. `/e2e-map` before `/e2e-flow`. |
+| Generating browser flow without mapping | Mapping must exist for browser steps. `/e2e-map` before `/e2e-flow`. CLI-only flows (all Execute/Verify external) do NOT need mapping. |
+| Sending CLI-only flow to browser verifier | CLI-only flows skip Phase 2a-2d entirely. Go directly to Phase 2.5 CLI recording. |
+| Adding browser steps to CLI-only flow | CLI-only mode generates ONLY Execute external / Verify external. If browser steps are needed, mapping is required — re-run with `/e2e-map` first. |
 | Bypassing flow-writer for cross-boundary flows | Always dispatch flow-writer — it supports `Execute external` and `Verify external` steps for non-browser actions (CLI, API, analytics). Runner limits ≠ writer limits. Never hand-write flows to avoid the agent. |
 | Duplicate D1 entry | Search learned-patterns.md before appending |

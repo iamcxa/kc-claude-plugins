@@ -70,3 +70,10 @@ When a help skill says "Read live data from skills/*.md" but then provides a har
 
 **Applies to**: Any help/guide skill with example output templates
 **Action**: Always insert a "format guide only" directive before template blocks that should be populated dynamically
+
+## Global prerequisites block mode-specific paths (2026-03-21)
+
+When a skill supports multiple flow modes (e.g., browser + CLI-only), a "BLOCKING" prerequisite that only applies to one mode silently prevents the others. e2e-flow's "Discover Mapping" was a hard gate that blocked CLI-only flows — even though CLI-only flows use zero mapping references. Fix: prerequisites must be mode-aware. Check mode signals BEFORE enforcing the gate. If the prerequisite is irrelevant to the detected mode, skip it with an informational message instead of blocking.
+
+**Applies to**: Any skill with multi-mode pipelines sharing a common preamble (e.g., browser/CLI, sync/async, interactive/batch)
+**Action**: Audit each "BLOCKING" / "must complete before proceeding" gate — does it apply to ALL modes or only some? Mode-specific gates need early intent detection before enforcement.
