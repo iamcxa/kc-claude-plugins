@@ -62,7 +62,10 @@ Plans:
   3. A target with `interval_hours: 0.1` (6 minutes) is rejected at config save time with a clear error message
   4. One target's scheduler firing does not reset or delay any other target's countdown
   5. A target with `schedule.interval_hours` set uses its own interval; targets without it inherit the global interval
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 09-01-PLAN.md — Per-target queue isolation in worker/index.ts (parallel execution model)
+- [ ] 09-02-PLAN.md — Per-target multi-timer scheduler and server-side min interval validation
 
 ### Phase 10: Auto-Action Output Loop
 **Goal**: The worker automatically creates PRs and Linear issues after runs that produce actionable output, skipping creation when duplicates already exist, and NW-Claude can answer questions about outcomes via MCP
@@ -101,6 +104,6 @@ Plans:
 | 6. Frontend Wiring | v1.1 | 3/3 | Complete | 2026-03-20 |
 | 7. Cleanup | v1.1 | 1/1 | Complete | 2026-03-20 |
 | 8. Schema + Safety Foundation | v2.0 | 2/2 | Complete | 2026-03-21 |
-| 9. Worker Parallel Execution + Scheduling | v2.0 | 0/TBD | Not started | - |
+| 9. Worker Parallel Execution + Scheduling | v2.0 | 0/2 | Not started | - |
 | 10. Auto-Action Output Loop | v2.0 | 0/TBD | Not started | - |
 | 11. Frontend Outcomes + UI Polish | v2.0 | 0/TBD | Not started | - |
