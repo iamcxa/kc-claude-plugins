@@ -45,7 +45,7 @@
 **Success Criteria** (what must be TRUE):
   1. Cancel for a single run kills only that run's process — other concurrent runs continue unaffected
   2. Server and frontend can observe an array of active runs (not a single current run) from worker IPC state
-  3. A target config with `schedule.interval_hours` set overrides the global interval; targets without it inherit global
+  3. Target interface has an optional `schedule.interval_hours` field; per-target override behavior ships in Phase 9
   4. `app-config.yaml` files containing the old `max_concurrent_runs` field load without startup error
 **Plans:** 2 plans
 Plans:
@@ -61,6 +61,7 @@ Plans:
   2. Two runs for the same target queue — the second run does not start until the first completes
   3. A target with `interval_hours: 0.1` (6 minutes) is rejected at config save time with a clear error message
   4. One target's scheduler firing does not reset or delay any other target's countdown
+  5. A target with `schedule.interval_hours` set uses its own interval; targets without it inherit the global interval
 **Plans**: TBD
 
 ### Phase 10: Auto-Action Output Loop
