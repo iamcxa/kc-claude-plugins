@@ -20,7 +20,6 @@ describe('loadOrCreateAppConfig', () => {
     const config = await loadOrCreateAppConfig(configPath)
     expect(config.host).toBe('127.0.0.1')
     expect(config.port).toBe(3200)
-    expect(config.max_concurrent_runs).toBe(1)
     expect(config.schedule.enabled).toBe(false)
     expect(await Bun.file(configPath).exists()).toBe(true)
   })
@@ -34,10 +33,12 @@ describe('loadOrCreateAppConfig', () => {
     expect(config2.port).toBe(9999)
   })
 
-  it('throws Zod error on invalid max_concurrent_runs', async () => {
+  it('accepts YAML with max_concurrent_runs: 2 (backward compat — field silently ignored)', async () => {
+    // max_concurrent_runs is no longer validated — passthrough ignores unknown fields
     const configPath = join(testDir, 'nightwatch-app.yaml')
     await Bun.write(configPath, 'host: 127.0.0.1\nport: 3200\nmax_concurrent_runs: 2\nplugins_dir: /tmp\nschedule:\n  enabled: false\n  self_repair_before: true\n')
-    await expect(loadOrCreateAppConfig(configPath)).rejects.toThrow()
+    const config = await loadOrCreateAppConfig(configPath)
+    expect(config.host).toBe('127.0.0.1')
   })
 })
 

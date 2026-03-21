@@ -13,6 +13,9 @@ export interface Target {
   north_star: string
   path?: string             // absolute path to target repo/dir
   auth?: string
+  schedule?: {              // per-target schedule override (Phase 8); inherits global if omitted
+    interval_hours?: number
+  }
   extra_plugin_dirs?: string[]
   extra_mcp_config?: string[]
 }
@@ -42,7 +45,7 @@ export type WorkerToServer =
   | { type: 'run:log'; run_id: string; event: ParsedLogEvent }
   | { type: 'run:completed'; run_id: string; summary: RunSummary }
   | { type: 'run:failed'; run_id: string; error: string }
-  | { type: 'state'; queue: Run[]; current?: Run; schedule?: ScheduleConfig }
+  | { type: 'state'; queue: Run[]; active: Run[]; schedule?: ScheduleConfig }
 
 export type IpcMessage = ServerToWorker | WorkerToServer
 
@@ -58,10 +61,10 @@ export const AppConfigSchema = z.object({
     interval_hours: z.number().optional(),
     self_repair_before: z.boolean().default(true),
   }),
-  max_concurrent_runs: z.literal(1),
   safehouse_path: z.string().optional(),
   plugins_dir: z.string().default(`${process.env.HOME ?? '/tmp'}/.claude/plugins/local`),
-})
+}).passthrough()
+// .passthrough() ensures old YAML files containing max_concurrent_runs: 1 load without error
 export type AppConfig = z.infer<typeof AppConfigSchema>
 
 // ============================================================
@@ -89,6 +92,7 @@ export interface RunSummaryAction {
   type: string
   summary: string
   pr_url?: string
+  linear_url?: string
   branch?: string
   indicator: string
   assessment: {

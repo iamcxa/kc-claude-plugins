@@ -14,7 +14,6 @@ const DEFAULT_APP_CONFIG: AppConfig = {
   host: DEFAULT_HOST,
   port: DEFAULT_PORT,
   schedule: { enabled: false, self_repair_before: true },
-  max_concurrent_runs: 1,
   plugins_dir: `${process.env.HOME ?? '/tmp'}/.claude/plugins/local`,
 }
 

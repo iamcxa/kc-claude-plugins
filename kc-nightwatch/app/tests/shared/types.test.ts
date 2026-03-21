@@ -19,7 +19,6 @@ describe('AppConfigSchema', () => {
     host: '127.0.0.1',
     port: 3200,
     schedule: { enabled: false, self_repair_before: true },
-    max_concurrent_runs: 1 as const,
     plugins_dir: '/tmp',
   }
 
@@ -27,8 +26,21 @@ describe('AppConfigSchema', () => {
     expect(() => AppConfigSchema.parse(base)).not.toThrow()
   })
 
-  it('rejects max_concurrent_runs != 1', () => {
-    expect(() => AppConfigSchema.parse({ ...base, max_concurrent_runs: 2 })).toThrow()
+  it('silently ignores unknown fields like max_concurrent_runs (backward compat)', () => {
+    const result = AppConfigSchema.parse({ ...base, max_concurrent_runs: 1 })
+    expect(result.host).toBe('127.0.0.1')
+    // max_concurrent_runs passes through (passthrough mode)
+    expect((result as Record<string, unknown>).max_concurrent_runs).toBe(1)
+  })
+
+  it('accepts config without max_concurrent_runs field at all', () => {
+    expect(() => AppConfigSchema.parse(base)).not.toThrow()
+  })
+
+  it('parsed result does not have max_concurrent_runs as typed property', () => {
+    const result = AppConfigSchema.parse(base)
+    // The AppConfig type does not include max_concurrent_runs
+    expect('max_concurrent_runs' in result).toBe(false)
   })
 
   it('accepts optional auth_token', () => {
@@ -44,7 +56,6 @@ describe('AppConfigSchema', () => {
   // PHASE 2: plugins_dir now has a default value
   it('plugins_dir has default when omitted', () => {
     const result = AppConfigSchema.parse({
-      max_concurrent_runs: 1 as const,
       schedule: { enabled: false, self_repair_before: true },
     })
     expect(result.plugins_dir).toBeTruthy()
@@ -221,13 +232,68 @@ describe('IPC message extensions', () => {
     expect(msg.type).toBe('schedule')
   })
 
-  it('WorkerToServer state includes optional schedule field', () => {
+  it('WorkerToServer state includes active array (not current)', () => {
     const msg: WorkerToServer = {
       type: 'state',
       queue: [],
+      active: [],
       schedule: { enabled: false, self_repair_before: false },
     }
     expect(msg.type).toBe('state')
-    expect(msg.schedule?.enabled).toBe(false)
+    expect(msg.active).toEqual([])
+  })
+})
+
+describe('Target schedule override (Phase 8)', () => {
+  it('accepts optional schedule override', () => {
+    const target: Target = {
+      name: 'scheduled-plugin',
+      type: 'plugin',
+      monitors: [],
+      watch: [],
+      respond: {},
+      indicators: [],
+      north_star: 'Fast builds',
+      schedule: { interval_hours: 6 },
+    }
+    expect(target.schedule?.interval_hours).toBe(6)
+  })
+
+  it('accepts target without schedule field', () => {
+    const target: Target = {
+      name: 'unscheduled-plugin',
+      type: 'plugin',
+      monitors: [],
+      watch: [],
+      respond: {},
+      indicators: [],
+      north_star: 'Fast builds',
+    }
+    expect(target.schedule).toBeUndefined()
+  })
+})
+
+describe('RunSummaryAction.linear_url (Phase 8)', () => {
+  it('RunSummaryAction accepts optional linear_url', () => {
+    const action: RunSummaryAction = {
+      signal_id: 'SIG-001',
+      type: 'code-fix',
+      summary: 'Fix test',
+      linear_url: 'https://linear.app/team/issue/TEAM-123',
+      indicator: 'IND-01',
+      assessment: { closer_to_north_star: 'yes', confidence: 'high', reasoning: 'test' },
+    }
+    expect(action.linear_url).toBe('https://linear.app/team/issue/TEAM-123')
+  })
+
+  it('RunSummaryAction works without linear_url', () => {
+    const action: RunSummaryAction = {
+      signal_id: 'SIG-002',
+      type: 'proposal',
+      summary: 'Proposal without linear',
+      indicator: 'IND-02',
+      assessment: { closer_to_north_star: 'uncertain', confidence: 'medium', reasoning: 'maybe' },
+    }
+    expect(action.linear_url).toBeUndefined()
   })
 })
