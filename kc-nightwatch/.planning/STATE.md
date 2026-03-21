@@ -24,17 +24,17 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 9 of 11 (Worker Parallel Execution + Scheduling)
-Plan: 01 complete (per-target queue isolation)
-Status: executing — Plan 02 (per-target scheduler) next
-Last activity: 2026-03-22 — Phase 9 Plan 01 completed (per-target queue isolation, PARA-01)
+Plan: 02 complete (per-target multi-timer scheduler + server validation)
+Status: executing — Phase 9 complete (all 2 plans done), ready for Phase 10
+Last activity: 2026-03-22 — Phase 9 Plan 02 completed (per-target scheduler, SCHED-05)
 
-Progress: [███░░░░░░░] 33% (v2.0)
+Progress: [████░░░░░░] 40% (v2.0)
 
 ## Performance Metrics
 
 **Cumulative (v1.0 + v1.1):** 20 plans, 7 phases
 
-**v2.0:** 2 plans completed (Phase 8)
+**v2.0:** 4 plans completed (Phase 8: 2, Phase 9: 2)
 
 ## Accumulated Context
 
@@ -47,6 +47,8 @@ Recent decisions affecting v2.0 work:
 - Phase 0.6 outcome tracking (OUT-04): assigned to Phase 11 as a required deliverable (not stretch); the ImplementationOutcome type will exist from Phase 8
 - [Phase 09-worker-parallel-scheduling]: Per-target Map isolation: Map<targetName, Run[]> + Map<targetName, Run> replaces serial queue — different targets execute concurrently
 - [Phase 09-worker-parallel-scheduling]: Queue depth 1 per target with trigger-aware overflow: manual=run:failed IPC rejection, interval=silent skip
+- [Phase 09]: Per-target Map isolation in scheduler: Map<string, Timer> replaces single schedulerTimer — each target gets independent setInterval with its own interval_hours
+- [Phase 09]: Defense-in-depth min interval: enforced at both scheduler startup (warn+skip) and API save (400 error) using shared MIN_SCHEDULE_INTERVAL_HOURS constant
 
 ### Pending Todos
 
@@ -60,5 +62,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 09 Plan 01 complete — per-target queue isolation implemented and tested
-Resume file: .planning/phases/09-worker-parallel-scheduling/09-01-SUMMARY.md
+Stopped at: Phase 09 Plan 02 complete — per-target multi-timer scheduler implemented and wired
+Resume file: .planning/phases/09-worker-parallel-scheduling/09-02-SUMMARY.md
