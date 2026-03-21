@@ -1,5 +1,6 @@
 import path from 'node:path'
 import os from 'node:os'
+import { randomUUID } from 'node:crypto'
 import { log } from '../shared/logger.ts'
 import type { IpcMessage, Run, ServerToWorker, ScheduleConfig } from '../shared/types.ts'
 import { HEARTBEAT_INTERVAL_MS, SCHEDULER_RUNS_ALL_TARGET } from '../shared/constants.ts'
@@ -58,49 +59,24 @@ function resolveTarget(targetName: string): PolicyTarget {
   }
 }
 
-// Execution queue — max concurrency 1 (EXEC-09)
-const queue: Run[] = []
-let activeRun: Run | null = null  // Phase 8: still serial, but state emits as array (ready for Phase 9 parallel)
+// Per-target queue isolation (PARA-01) — replaces serial queue: Run[] + activeRun: Run | null
+const targetQueues: Map<string, Run[]> = new Map()   // pending runs per target
+const activeRuns: Map<string, Run> = new Map()       // at most 1 active run per target
 
 function sendState(): void {
-  const active: Run[] = activeRun ? [activeRun] : []
-  send({ type: 'state', queue: [...queue], active })
+  const active = Array.from(activeRuns.values())
+  const queue = Array.from(targetQueues.values()).flat()
+  send({ type: 'state', queue, active })
 }
 
-async function processNextRun(): Promise<void> {
-  if (activeRun || queue.length === 0) return
+async function processTarget(targetName: string): Promise<void> {
+  if (activeRuns.has(targetName)) return  // already running for this target
+  const queue = targetQueues.get(targetName)
+  if (!queue || queue.length === 0) return
   const run = queue.shift()!
-  activeRun = run
+  activeRuns.set(targetName, run)
   sendState()
   log.info({ component: 'worker', msg: `Starting run ${run.id} for target '${run.target}'` })
-
-  // Handle __all__ target: enqueue each active target as a separate run
-  if (run.target === SCHEDULER_RUNS_ALL_TARGET) {
-    const activeTargets = Object.keys(targetsMap)
-    if (activeTargets.length === 0) {
-      log.warn({ component: 'worker', msg: `No targets loaded — __all__ run ${run.id} has nothing to do` })
-    } else {
-      for (const targetName of activeTargets) {
-        const { randomUUID } = await import('node:crypto')
-        const subRun: Run = {
-          id: randomUUID(),
-          target: targetName,
-          mode: run.mode,
-          trigger: run.trigger,
-          status: 'queued',
-          queued_at: new Date().toISOString(),
-          log_path: '',
-        }
-        subRun.log_path = `runs/${subRun.id}/log.jsonl`
-        queue.push(subRun)
-        log.info({ component: 'worker', msg: `Enqueued sub-run ${subRun.id} for target '${targetName}' (from __all__)` })
-      }
-    }
-    activeRun = null
-    sendState()
-    void processNextRun()
-    return
-  }
 
   const target = resolveTarget(run.target as string)
   try {
@@ -113,17 +89,57 @@ async function processNextRun(): Promise<void> {
     log.error({ component: 'worker', msg: `Run ${run.id} failed: ${String(err)}` })
     send({ type: 'run:failed', run_id: run.id, error: String(err) } satisfies IpcMessage)
   } finally {
-    activeRun = null
+    activeRuns.delete(targetName)
     sendState()
-    void processNextRun()
+    void processTarget(targetName)  // drain next in this target's queue
   }
 }
 
 function enqueue(run: Run): void {
-  queue.push(run)
-  log.info({ component: 'worker', msg: `Enqueued run ${run.id} for '${run.target}' (queue depth: ${queue.length})` })
+  // __all__ expands to N per-target sub-runs (D-01, D-02, D-03)
+  if (run.target === SCHEDULER_RUNS_ALL_TARGET) {
+    const activeTargets = Object.keys(targetsMap)
+    if (activeTargets.length === 0) {
+      log.warn({ component: 'worker', msg: `No targets loaded — __all__ run ${run.id} has nothing to do` })
+      return
+    }
+    log.info({ component: 'worker', msg: `Expanding __all__ run ${run.id} into ${activeTargets.length} per-target sub-runs` })
+    for (const targetName of activeTargets) {
+      const subRun: Run = {
+        id: randomUUID(),
+        target: targetName,
+        mode: run.mode,
+        trigger: run.trigger,
+        status: 'queued',
+        queued_at: new Date().toISOString(),
+        log_path: '',
+      }
+      subRun.log_path = `runs/${subRun.id}/log.jsonl`
+      enqueue(subRun) // recursive — routes through per-target logic
+    }
+    return
+  }
+
+  // Per-target queue depth 1: max 1 active + 1 queued (D-04)
+  const isActive = activeRuns.has(run.target)
+  const queuedCount = (targetQueues.get(run.target) ?? []).length
+  if (isActive && queuedCount >= 1) {
+    if (run.trigger === 'interval') {
+      // D-06: scheduled trigger — skip silently to prevent scheduler pile-up
+      log.info({ component: 'worker', msg: `Skipping scheduled run for '${run.target}' — queue full (1 active + 1 queued)` })
+      return
+    }
+    // D-05: manual trigger — reject with clear message
+    log.warn({ component: 'worker', msg: `Rejecting run ${run.id} for '${run.target}' — target already has a queued run` })
+    send({ type: 'run:failed', run_id: run.id, error: `Target '${run.target}' already has a queued run` } satisfies IpcMessage)
+    return
+  }
+
+  if (!targetQueues.has(run.target)) targetQueues.set(run.target, [])
+  targetQueues.get(run.target)!.push(run)
+  log.info({ component: 'worker', msg: `Enqueued run ${run.id} for '${run.target}' (target queue depth: ${targetQueues.get(run.target)!.length})` })
   sendState()
-  void processNextRun()
+  void processTarget(run.target) // each target drains independently
 }
 
 // Send initial state + immediate heartbeat (so server marks us online instantly)
@@ -154,19 +170,25 @@ process.on('message', (msg: ServerToWorker) => {
       break
 
     case 'cancel': {
-      // Check if the run is currently active — look up specific PID by run_id (not bulk kill)
       const pid = activePids.get(msg.run_id)
       if (pid !== undefined) {
         log.info({ component: 'worker', msg: `Cancelling active run ${msg.run_id} — sending SIGTERM to PID ${pid}` })
         try { process.kill(pid, 'SIGTERM') } catch { /* already gone */ }
       } else {
-        const idx = queue.findIndex(r => r.id === msg.run_id)
-        if (idx >= 0) {
-          queue.splice(idx, 1)
-          log.info({ component: 'worker', msg: `Removed queued run ${msg.run_id}` })
-          sendState()
-        } else {
-          log.warn({ component: 'worker', msg: `Cancel: run ${msg.run_id} not found in active or queue` })
+        // Search all target queues for the queued run
+        let found = false
+        for (const [targetName, tQueue] of targetQueues) {
+          const idx = tQueue.findIndex(r => r.id === msg.run_id)
+          if (idx >= 0) {
+            tQueue.splice(idx, 1)
+            log.info({ component: 'worker', msg: `Removed queued run ${msg.run_id} from target '${targetName}' queue` })
+            sendState()
+            found = true
+            break
+          }
+        }
+        if (!found) {
+          log.warn({ component: 'worker', msg: `Cancel: run ${msg.run_id} not found in active or any queue` })
         }
       }
       break
