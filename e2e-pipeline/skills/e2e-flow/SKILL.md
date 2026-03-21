@@ -1,11 +1,11 @@
 ---
 name: e2e-flow
-description: Use when generating E2E test flows from plans, specs, or PRs, verifying flows in browser, or running smoke tests across all mapped pages. Triggers on "e2e flow", "generate flow", "create flow", "verify flow", "draft flow", "smoke test", "e2e smoke", "write a flow", "produce flow", "validate flow", "flow from plan".
+description: Use when generating E2E test flows from plans, specs, or PRs, verifying flows in browser or CLI, running smoke tests across all mapped pages, or recording backend/API verification with asciinema. Supports browser UI flows, CLI-only flows (Execute external), and mixed flows. Triggers on "e2e flow", "generate flow", "create flow", "verify flow", "draft flow", "smoke test", "e2e smoke", "write a flow", "produce flow", "validate flow", "flow from plan", "cli flow", "backend e2e", "api test flow", "cli recording".
 ---
 
 # E2E Flow — Generate & Verify
 
-Generate structured E2E flow YAMLs from codebase analysis, then verify them in a real browser with auto-repair. Combines autonomous flow generation (no browser) with adaptive browser validation.
+Generate and verify E2E flows — browser UI, CLI commands, or API checkpoints. Combines autonomous flow generation (codebase analysis, no browser) with adaptive verification: browser flows use auto-repair, CLI-only flows use asciinema recording.
 
 ## Pipeline Context
 
