@@ -24,11 +24,11 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 9 of 11 (Worker Parallel Execution + Scheduling)
-Plan: — (not yet planned)
-Status: Ready to discuss/plan
-Last activity: 2026-03-21 — Phase 8 completed (2/2 plans, verification passed 4/4 SC)
+Plan: 01 complete (per-target queue isolation)
+Status: executing — Plan 02 (per-target scheduler) next
+Last activity: 2026-03-22 — Phase 9 Plan 01 completed (per-target queue isolation, PARA-01)
 
-Progress: [██░░░░░░░░] 25% (v2.0)
+Progress: [███░░░░░░░] 33% (v2.0)
 
 ## Performance Metrics
 
@@ -45,6 +45,8 @@ See PROJECT.md Key Decisions table for full history.
 Recent decisions affecting v2.0 work:
 - Schema-first ordering: activePids Set→Map and max_concurrent_runs removal are startup/safety blockers — must land in Phase 8 before any execution model work
 - Phase 0.6 outcome tracking (OUT-04): assigned to Phase 11 as a required deliverable (not stretch); the ImplementationOutcome type will exist from Phase 8
+- [Phase 09-worker-parallel-scheduling]: Per-target Map isolation: Map<targetName, Run[]> + Map<targetName, Run> replaces serial queue — different targets execute concurrently
+- [Phase 09-worker-parallel-scheduling]: Queue depth 1 per target with trigger-aware overflow: manual=run:failed IPC rejection, interval=silent skip
 
 ### Pending Todos
 
@@ -57,6 +59,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-21
-Stopped at: Phase 8 complete — Schema + Safety Foundation verified
-Resume file: .planning/phases/08-schema-safety-foundation/08-VERIFICATION.md
+Last session: 2026-03-22
+Stopped at: Phase 09 Plan 01 complete — per-target queue isolation implemented and tested
+Resume file: .planning/phases/09-worker-parallel-scheduling/09-01-SUMMARY.md
