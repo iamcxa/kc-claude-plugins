@@ -22,7 +22,7 @@ Browser & CLI E2E testing with context-isolating subagents. Map your app's UI, g
 /plugin install e2e-pipeline@kc-claude-plugins
 ```
 
-### [kc-plugin-forge](./kc-plugin-forge/) `v1.3.0`
+### [kc-plugin-forge](./kc-plugin-forge/) `v1.4.0`
 
 One-command plugin quality pipeline. Validates structure, TDD-tests skills under pressure, verifies agent definitions, and scaffolds self-improvement (D1/D2 learning) and doc-sync capabilities into your plugins.
 
