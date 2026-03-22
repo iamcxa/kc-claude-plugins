@@ -10,8 +10,8 @@ interface Props {
   editTarget?: { name: string; data: Record<string, unknown> } | null
 }
 
-const MONITOR_OPTIONS = ['github-issues', 'journal', 'git-churn', 'sentry', 'e2e-reports']
-const RESPOND_OPTIONS = ['code-fix', 'proposal', 'e2e-flow']
+const MONITOR_OPTIONS = ['journal', 'episodic-memory', 'memory-md', 'git-stats', 'sentry', 'e2e-reports']
+const RESPOND_OPTIONS = ['quick-fix', 'proposal', 'linear-issue', 'e2e-flow']
 
 export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props) {
   const [step, setStep] = useState(1)
