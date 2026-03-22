@@ -35,7 +35,8 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
       setType((editTarget.data.type as 'plugin' | 'product') ?? 'plugin')
       setNorthStar((editTarget.data.north_star as string) ?? '')
       setWatchKeywords(Array.isArray(editTarget.data.watch) ? (editTarget.data.watch as string[]).join(', ') : '')
-      setMonitors(Array.isArray(editTarget.data.monitors) ? editTarget.data.monitors as string[] : [])
+      const srcMonitors = editTarget.data.monitors ?? editTarget.data.sources
+      setMonitors(Array.isArray(srcMonitors) ? srcMonitors as string[] : [])
       setRespond((editTarget.data.respond as Record<string, boolean>) ?? {})
       setTargetPath((editTarget.data.path as string) ?? '')
       if (editTarget.data.schedule && (editTarget.data.schedule as any).interval_hours) {
@@ -75,7 +76,7 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
       type,
       path: targetPath || undefined,
       north_star: northStar,
-      monitors,
+      sources: monitors,
       watch: watchKeywords.split(',').map(s => s.trim()).filter(Boolean),
       respond: Object.fromEntries(Object.entries(respond).filter(([, v]) => v)),
       indicators: [],
