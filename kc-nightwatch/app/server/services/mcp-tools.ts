@@ -7,6 +7,8 @@ import { listRuns, getRun, appendRun } from './run-store.ts'
 import { appendFeedback, getCalibrationData } from './feedback-store.ts'
 import { workerStatus, sendToWorker } from '../ipc.ts'
 import type { Run, FeedbackEntry } from '../../shared/types.ts'
+import { queryOutcomes, readOutcomes } from './outcome-store.ts'
+import { checkPrStatus, checkLinearStatus } from '../../worker/feedback-collector.ts'
 
 const NW_JOURNAL_BASE = path.join(os.homedir(), '.claude/nightwatch/memory')
 
@@ -314,6 +316,92 @@ export function createMcpServer(): McpServer {
       content: [{
         type: 'text' as const,
         text: 'Proposal implementation is not yet available via MCP. Use nw_trigger_run with a custom prompt to implement proposals manually.',
+      }],
+    }
+  })
+
+  // ============================================================
+  // Outcome tools (3) — Phase 10: AUTO-01/OUT-03
+  // ============================================================
+
+  server.registerTool('nw_get_outcomes', {
+    description: 'List nightwatch-created PRs and Linear issues with optional filters',
+    inputSchema: {
+      target: z.string().optional().describe('Filter by target name'),
+      type: z.enum(['pr', 'linear_issue']).optional().describe('Filter by outcome type'),
+      status: z.string().optional().describe('Filter by status (open, merged, closed, completed, cancelled)'),
+      since: z.string().optional().describe('Filter by created_at >= this ISO date string (e.g. 2026-03-20)'),
+    },
+  }, async ({ target, type, status, since }) => {
+    const outcomes = await queryOutcomes({ target, type, status, since })
+    return {
+      content: [{ type: 'text' as const, text: JSON.stringify(outcomes) }],
+    }
+  })
+
+  server.registerTool('nw_get_outcome_status', {
+    description: 'Check the live status of a specific PR or Linear issue outcome by outcome ID',
+    inputSchema: {
+      outcome_id: z.string().describe('The outcome record ID to check'),
+    },
+  }, async ({ outcome_id }) => {
+    const all = await readOutcomes()
+    const outcome = all.find(o => o.id === outcome_id)
+    if (!outcome) {
+      return {
+        content: [{ type: 'text' as const, text: `Outcome not found: ${outcome_id}` }],
+        isError: true,
+      }
+    }
+
+    let liveStatus: 'accepted' | 'rejected' | null = null
+    if (outcome.type === 'pr' && outcome.url) {
+      liveStatus = await checkPrStatus(outcome.url)
+    } else if (outcome.type === 'linear_issue' && outcome.url) {
+      liveStatus = await checkLinearStatus(outcome.url)
+    }
+
+    return {
+      content: [{
+        type: 'text' as const,
+        text: JSON.stringify({
+          ...outcome,
+          live_status: liveStatus ?? 'open',
+          checked_at: new Date().toISOString(),
+        }),
+      }],
+    }
+  })
+
+  server.registerTool('nw_outcome_summary', {
+    description: 'Get aggregated outcome stats: counts by type+status and by target',
+    inputSchema: {},
+  }, async () => {
+    const all = await readOutcomes()
+    const byTypeStatus: Record<string, number> = {}
+    const byTarget: Record<string, number> = {}
+
+    for (const o of all) {
+      const key = `${o.type}:${o.status}`
+      byTypeStatus[key] = (byTypeStatus[key] ?? 0) + 1
+      byTarget[o.target] = (byTarget[o.target] ?? 0) + 1
+    }
+
+    const recentCount = all.filter(o => {
+      const created = new Date(o.created_at)
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+      return created >= weekAgo
+    }).length
+
+    return {
+      content: [{
+        type: 'text' as const,
+        text: JSON.stringify({
+          total: all.length,
+          recent_7d: recentCount,
+          by_type_status: byTypeStatus,
+          by_target: byTarget,
+        }),
       }],
     }
   })
