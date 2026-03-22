@@ -211,6 +211,21 @@ export interface TargetHealthData {
 }
 
 // ============================================================
+// Phase 10: Outcome types — queryable index of PR and Linear outcomes
+// ============================================================
+export interface OutcomeRecord {
+  id: string
+  type: 'pr' | 'linear_issue'
+  target: string
+  signal_id: string
+  run_id: string
+  url: string
+  branch?: string
+  status: 'open' | 'merged' | 'closed' | 'completed' | 'cancelled'
+  created_at: string
+}
+
+// ============================================================
 // ParsedLogEvent — extended with Phase 2 fields
 // ============================================================
 export interface ParsedLogEvent {
