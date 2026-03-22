@@ -1,4 +1,4 @@
-import type { Target, Run, RunSummary, ScheduleConfig, ConfigValidationResult, FeedbackEntry, CalibrationData, TargetHealthData } from '../../shared/types.ts'
+import type { Target, Run, RunSummary, ScheduleConfig, ConfigValidationResult, FeedbackEntry, CalibrationData, TargetHealthData, OutcomeRecord } from '../../shared/types.ts'
 
 const BASE = ''
 
@@ -140,5 +140,19 @@ export const api = {
   // Worker state (queue visibility)
   getWorkerState(): Promise<{ queue: Run[]; active: Run[]; schedule?: ScheduleConfig }> {
     return get<{ queue: Run[]; active: Run[]; schedule?: ScheduleConfig }>('/api/worker/state')
+  },
+
+  // Outcomes
+  getOutcomes(filter?: { target?: string; type?: string; status?: string }): Promise<OutcomeRecord[]> {
+    const params = new URLSearchParams()
+    if (filter?.target) params.set('target', filter.target)
+    if (filter?.type) params.set('type', filter.type)
+    if (filter?.status) params.set('status', filter.status)
+    const qs = params.toString()
+    return get<OutcomeRecord[]>(`/api/outcomes${qs ? `?${qs}` : ''}`)
+  },
+
+  getOutcomeStatus(id: string): Promise<{ status: OutcomeRecord['status'] }> {
+    return get<{ status: OutcomeRecord['status'] }>(`/api/outcomes/${id}/status`)
   },
 }

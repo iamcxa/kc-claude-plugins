@@ -1,6 +1,6 @@
 import { html } from 'htm/preact'
 
-type Page = 'dashboard' | 'runs' | 'health' | 'config'
+type Page = 'dashboard' | 'runs' | 'outcomes' | 'health' | 'config'
 
 interface Props {
   current: Page
@@ -24,6 +24,7 @@ export function BottomNav({ current }: Props) {
     <nav style="position:fixed;bottom:0;left:0;right:0;height:48px;background:var(--panel);border-top:1px solid var(--border);display:flex;z-index:50;">
       <a href="#/dashboard" style="${tabStyle('dashboard')}">Dashboard</a>
       <a href="#/runs" style="${tabStyle('runs')}">Runs</a>
+      <a href="#/outcomes" style="${tabStyle('outcomes')}">Outcomes</a>
       <a href="#/health" style="${tabStyle('health')}">Health</a>
       <a href="#/config" style="${tabStyle('config')}">Config</a>
     </nav>
