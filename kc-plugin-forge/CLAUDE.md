@@ -11,7 +11,7 @@ A Claude Code plugin (`kc-plugin-forge`) that provides a one-command quality pip
 **Skills** (2) run in main conversation context:
 
 ```
-skills/kc-plugin-forge/      -> main orchestrator (4-phase pipeline + routes)
+skills/kc-plugin-forge/      -> main orchestrator (5-phase pipeline + routes: 1→1.5→2→2.5→3→4)
 skills/kc-plugin-forge-help/ -> interactive help guide, topic deep-dive, feedback collection
 ```
 
@@ -21,13 +21,14 @@ skills/kc-plugin-forge-help/ -> interactive help guide, topic deep-dive, feedbac
 hooks/session-start.md       -> reminds user of forge availability at session start
 ```
 
-**References** (4) — knowledge base read by the orchestrator skill:
+**References** (5) — knowledge base read by the orchestrator skill:
 
 ```
 reference/quality-pipeline.md    -> phase gotchas, cross-phase lessons (grows over time)
 reference/skill-evolution.md     -> D1/D2 self-improvement framework
 reference/doc-sync-templates.md  -> templates for scaffolding doc-sync into plugins
 reference/learned-patterns.md    -> cross-project patterns from forge runs (grows over time)
+reference/clean-profile-test.sh  -> execution isolator for Phase 2.5 clean profile smoke test
 ```
 
 ## Self-Improvement
