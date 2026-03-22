@@ -32,3 +32,16 @@ export async function appendRun(run: Run): Promise<void> {
   runs.unshift(run)
   await writeYamlFile(RUNS_YAML_PATH, { runs })
 }
+
+export async function updateRunStatus(
+  runId: string,
+  updates: Partial<Pick<Run, 'status' | 'started_at' | 'completed_at' | 'duration_seconds'>>
+): Promise<void> {
+  const data = await readYamlFile<{ runs: Run[] }>(RUNS_YAML_PATH)
+  const runs = data?.runs ?? []
+  const run = runs.find(r => r.id === runId)
+  if (run) {
+    Object.assign(run, updates)
+    await writeYamlFile(RUNS_YAML_PATH, { runs })
+  }
+}
