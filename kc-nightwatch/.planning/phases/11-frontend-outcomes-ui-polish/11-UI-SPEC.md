@@ -1,7 +1,8 @@
 ---
 phase: 11
 slug: frontend-outcomes-ui-polish
-status: draft
+status: approved
+reviewed_at: 2026-03-22
 shadcn_initialized: false
 preset: none
 created: 2026-03-22
@@ -402,11 +403,11 @@ No external registries. No third-party components. All UI is handwritten Preact 
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: FLAG (bare "Next" on wizard steps 1-2, standard convention)
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: FLAG (11px/12px 1px apart, mitigated by weight/color co-constraints)
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** approved (2026-03-22, revision 1 — fixed D4 typography 5→4 sizes, D5 spacing 12px→exception)
