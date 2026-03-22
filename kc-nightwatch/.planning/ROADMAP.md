@@ -93,7 +93,11 @@ Plans:
   5. The Outcomes page lists all NW-created PRs and Linear issues, filterable by target and status
   6. The Add/Edit Target wizard includes a schedule configuration step where interval can be set
   7. The black line between content area and nav bar is gone
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 11-01-PLAN.md — Outcomes API routes, Outcomes page, bottom nav 5th tab, app router, nav gap fix
+- [ ] 11-02-PLAN.md — Sidebar parallel dots, dashboard summary line, target-detail schedule, wizard schedule step
+- [ ] 11-03-PLAN.md — Action card status badges + URLs, runs.ts outcome pre-fetch, full phase visual checkpoint
 
 ## Progress
 
@@ -109,4 +113,4 @@ Plans:
 | 8. Schema + Safety Foundation | v2.0 | 2/2 | Complete | 2026-03-21 |
 | 9. Worker Parallel Execution + Scheduling | v2.0 | 2/2 | Complete | 2026-03-22 |
 | 10. Auto-Action Output Loop | v2.0 | 2/2 | Complete | 2026-03-22 |
-| 11. Frontend Outcomes + UI Polish | v2.0 | 0/TBD | Not started | - |
+| 11. Frontend Outcomes + UI Polish | v2.0 | 0/3 | Planning complete | - |
