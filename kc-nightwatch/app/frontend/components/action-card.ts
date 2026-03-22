@@ -1,6 +1,6 @@
 import { html } from 'htm/preact'
 import { useState } from 'preact/hooks'
-import type { RunSummaryAction } from '../../shared/types.ts'
+import type { RunSummaryAction, OutcomeRecord } from '../../shared/types.ts'
 import { api } from '../lib/api.ts'
 
 interface Props {
@@ -8,9 +8,36 @@ interface Props {
   target: string
   runId: string
   existingFeedback?: 'accepted' | 'rejected' | null
+  outcomeStatus?: { status: OutcomeRecord['status']; url: string; type: OutcomeRecord['type'] } | null
 }
 
-export function ActionCard({ action, target, runId, existingFeedback }: Props) {
+function badgeBg(status: OutcomeRecord['status']): string {
+  const map: Record<string, string> = {
+    open: 'rgba(88,166,255,0.15)', merged: 'rgba(63,185,80,0.15)',
+    completed: 'rgba(63,185,80,0.15)', closed: 'rgba(248,81,73,0.15)',
+    cancelled: 'rgba(139,148,158,0.15)',
+  }
+  return map[status] ?? 'transparent'
+}
+
+function badgeColor(status: OutcomeRecord['status']): string {
+  const map: Record<string, string> = {
+    open: 'var(--accent)', merged: 'var(--success)',
+    completed: 'var(--success)', closed: 'var(--error)',
+    cancelled: 'var(--muted)',
+  }
+  return map[status] ?? 'var(--muted)'
+}
+
+function badgeText(status: OutcomeRecord['status']): string {
+  const map: Record<string, string> = {
+    open: 'open', merged: 'merged', completed: 'done',
+    closed: 'closed', cancelled: 'cancelled',
+  }
+  return map[status] ?? status
+}
+
+export function ActionCard({ action, target, runId, existingFeedback, outcomeStatus }: Props) {
   const [expanded, setExpanded] = useState(false)
   const [submitted, setSubmitted] = useState<'accepted' | 'rejected' | null>(existingFeedback ?? null)
 
@@ -45,6 +72,9 @@ export function ActionCard({ action, target, runId, existingFeedback }: Props) {
       >
         <span style="flex:1;font-size:14px;">${action.summary}</span>
         <span style="font-size:11px;padding:2px 6px;border-radius:4px;background:var(--btn-secondary);color:var(--muted);">${action.type}</span>
+        ${outcomeStatus ? html`
+          <span style="font-size:11px;padding:2px 6px;border-radius:4px;font-weight:600;background:${badgeBg(outcomeStatus.status)};color:${badgeColor(outcomeStatus.status)};">${badgeText(outcomeStatus.status)}</span>
+        ` : null}
         <span style="font-size:11px;color:${confidenceColor};font-weight:600;">${action.assessment.confidence}</span>
         <span style="font-size:12px;color:var(--muted);">${expanded ? '\u25B2' : '\u25BC'}</span>
       </div>
@@ -90,6 +120,15 @@ export function ActionCard({ action, target, runId, existingFeedback }: Props) {
               <a href=${action.pr_url} target="_blank" style="font-size:12px;">View PR</a>
             </div>
           `}
+
+          <!-- Outcome URL -->
+          ${outcomeStatus?.url ? html`
+            <div style="margin-bottom:8px;">
+              <a href=${outcomeStatus.url} target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--accent);">
+                ${outcomeStatus.type === 'pr' ? 'View on GitHub' : 'View on Linear'}
+              </a>
+            </div>
+          ` : null}
 
           <!-- Feedback buttons -->
           <div style="display:flex;gap:4px;justify-content:flex-end;padding-top:4px;">

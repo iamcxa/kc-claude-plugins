@@ -1,6 +1,6 @@
 import { html } from 'htm/preact'
 import { useState, useEffect, useCallback } from 'preact/hooks'
-import type { Run, RunSummary, ParsedLogEvent } from '../../shared/types.ts'
+import type { Run, RunSummary, ParsedLogEvent, OutcomeRecord } from '../../shared/types.ts'
 import { LogStream } from '../components/log-stream.ts'
 import { RunTimeline } from '../components/run-timeline.ts'
 import { ActionCard } from '../components/action-card.ts'
@@ -56,6 +56,7 @@ export function Runs() {
   const [selectedRun, setSelectedRun] = useState<RunDetailData | null>(null)
   const [statusFilter, setStatusFilter] = useState('')
   const [targetFilter, setTargetFilter] = useState('')
+  const [outcomesMap, setOutcomesMap] = useState<Record<string, OutcomeRecord>>({})
 
   const loadRuns = useCallback(() => {
     api.getRuns().then(allRuns => {
@@ -67,6 +68,11 @@ export function Runs() {
 
   useEffect(() => {
     loadRuns()
+    api.getOutcomes().then(list => {
+      const map: Record<string, OutcomeRecord> = {}
+      for (const o of list) map[o.signal_id] = o
+      setOutcomesMap(map)
+    }).catch(console.error)
 
     const handler = () => {
       const id = getRunIdFromHash()
@@ -179,6 +185,7 @@ export function Runs() {
                   action=${action}
                   target=${targetName}
                   runId=${selectedId}
+                  outcomeStatus=${outcomesMap[action.signal_id] ? { status: outcomesMap[action.signal_id].status, url: outcomesMap[action.signal_id].url, type: outcomesMap[action.signal_id].type } : null}
                 />
               `)}
             </div>
