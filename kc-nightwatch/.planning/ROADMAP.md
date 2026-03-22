@@ -78,7 +78,7 @@ Plans:
   4. Asking NW-Claude "what PRs did nightwatch create this week?" returns a list of outcomes with links
 **Plans:** 2 plans
 Plans:
-- [ ] 10-01-PLAN.md — Outcome store and auto-action post-run hook with dedup
+- [x] 10-01-PLAN.md — Outcome store and auto-action post-run hook with dedup
 - [ ] 10-02-PLAN.md — MCP outcome tools and chat manager tool definitions
 
 ### Phase 11: Frontend Outcomes + UI Polish
@@ -108,5 +108,5 @@ Plans:
 | 7. Cleanup | v1.1 | 1/1 | Complete | 2026-03-20 |
 | 8. Schema + Safety Foundation | v2.0 | 2/2 | Complete | 2026-03-21 |
 | 9. Worker Parallel Execution + Scheduling | v2.0 | 2/2 | Complete | 2026-03-22 |
-| 10. Auto-Action Output Loop | v2.0 | 0/2 | Not started | - |
+| 10. Auto-Action Output Loop | v2.0 | 1/2 | In progress | - |
 | 11. Frontend Outcomes + UI Polish | v2.0 | 0/TBD | Not started | - |
