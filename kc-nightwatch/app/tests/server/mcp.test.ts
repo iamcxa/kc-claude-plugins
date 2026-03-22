@@ -65,6 +65,21 @@ mock.module('../../server/services/yaml-store.ts', () => ({
   loadOrCreateAppConfig: mockLoadOrCreateAppConfig,
   writeAppConfig: mockWriteAppConfig,
   readYamlFile: mockReadYamlFile,
+  writeYamlFile: mock(async (_path: string, _data: unknown) => {}),
+}))
+
+// Mocks for new outcome tools dependencies (Phase 10)
+mock.module('../../server/services/outcome-store.ts', () => ({
+  queryOutcomes: mock(async () => []),
+  readOutcomes: mock(async () => []),
+  appendOutcome: mock(async () => {}),
+  OUTCOMES_YAML_PATH: '/tmp/test-outcomes.yaml',
+}))
+
+mock.module('../../worker/feedback-collector.ts', () => ({
+  checkPrStatus: mock(async () => null),
+  checkLinearStatus: mock(async () => null),
+  collectImplicitFeedback: mock(async () => ({ entries: [], errors: [] })),
 }))
 
 mock.module('../../server/services/run-store.ts', () => ({
@@ -109,7 +124,7 @@ describe('createMcpServer', () => {
     expect((server as unknown as { server: { _serverInfo: { name: string } } }).server._serverInfo.name).toBe('nightwatch')
   })
 
-  it('registers all 12 tools (7 query + 1 search + 4 action)', () => {
+  it('registers all 15 tools (7 query + 1 search + 4 action + 3 outcome)', () => {
     const server = createMcpServer()
     // biome-ignore lint: accessing private for testing
     const tools = (server as unknown as { _registeredTools: Record<string, unknown> })._registeredTools
@@ -129,7 +144,11 @@ describe('createMcpServer', () => {
     expect(toolNames).toContain('nw_submit_feedback')
     expect(toolNames).toContain('nw_update_schedule')
     expect(toolNames).toContain('nw_implement_proposal')
-    expect(toolNames.length).toBe(12)
+    // 3 outcome tools (Phase 10)
+    expect(toolNames).toContain('nw_get_outcomes')
+    expect(toolNames).toContain('nw_get_outcome_status')
+    expect(toolNames).toContain('nw_outcome_summary')
+    expect(toolNames.length).toBe(15)
   })
 })
 
