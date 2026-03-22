@@ -106,15 +106,19 @@ export async function executeRun(
   const safehouseFlags = buildSafehouseFlags(target, run, opts.runsDir)
   const safehouseBin = opts.safehousePath ?? 'safehouse'
 
+  // Build the prompt: custom_prompt overrides, otherwise invoke /kc-nightwatch skill
+  const dryRunFlag = run.mode === 'dry-run' ? ' --dry-run' : ''
+  const selfRepairFlag = (run as unknown as Record<string, unknown>).self_repair ? ' --self-repair' : ''
+  const prompt = run.custom_prompt ?? `/kc-nightwatch${dryRunFlag}${selfRepairFlag}`
+
   const claudeArgs = [
     safehouseBin,
     ...safehouseFlags,
     'claude',
-    '-p',
+    '-p', prompt,
     '--output-format', 'stream-json',
     '--model', 'claude-opus-4-5',
     '--mcp-config', journalConfigPath,
-    ...(run.custom_prompt ? ['--append-system-prompt', run.custom_prompt] : []),
   ]
 
   const child = Bun.spawn(claudeArgs, {
