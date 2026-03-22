@@ -9,6 +9,7 @@ interface Props {
   workerQueue?: Run[]
   globalSchedule?: ScheduleConfig | null  // NEW
   onRun: (mode: 'production' | 'dry-run') => void
+  onEdit: () => void
   onRemove: () => void
 }
 
@@ -44,7 +45,7 @@ function timeAgo(dateStr?: string): string {
   return `${Math.floor(h / 24)}d ago`
 }
 
-export function TargetDetail({ target, lastRun, workerQueue, globalSchedule, onRun, onRemove }: Props) {
+export function TargetDetail({ target, lastRun, workerQueue, globalSchedule, onRun, onEdit, onRemove }: Props) {
   const [showMenu, setShowMenu] = useState(false)
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
   const [nextRunText, setNextRunText] = useState('')
@@ -141,10 +142,8 @@ export function TargetDetail({ target, lastRun, workerQueue, globalSchedule, onR
             <button style="width:100%;text-align:left;border:none;border-radius:0;background:transparent;" onClick=${() => { onRun('dry-run'); setShowMenu(false) }}>Dry run</button>
             <div style="height:1px;background:var(--border);margin:4px 0;"></div>
             <button
-              aria-disabled="true"
-              title="Coming in Phase 3"
-              style="width:100%;text-align:left;border:none;border-radius:0;background:transparent;opacity:0.5;cursor:not-allowed;"
-              onClick=${(e: Event) => e.preventDefault()}
+              style="width:100%;text-align:left;border:none;border-radius:0;background:transparent;"
+              onClick=${() => { onEdit(); setShowMenu(false) }}
             >Edit</button>
             <button
               aria-disabled="true"
