@@ -113,7 +113,6 @@ export async function executeRun(
     '-p',
     '--output-format', 'stream-json',
     '--model', 'claude-opus-4-5',
-    '--cwd', target.resolved_path,
     '--mcp-config', journalConfigPath,
     ...(run.custom_prompt ? ['--append-system-prompt', run.custom_prompt] : []),
   ]
@@ -121,6 +120,7 @@ export async function executeRun(
   const child = Bun.spawn(claudeArgs, {
     stdout: 'pipe',
     stderr: 'pipe',
+    cwd: target.resolved_path,
     env: { ...process.env },
   })
 
