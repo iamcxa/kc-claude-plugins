@@ -1,6 +1,7 @@
 import { html } from 'htm/preact'
 import { useState, useEffect } from 'preact/hooks'
 import { api } from '../lib/api.ts'
+import { MIN_SCHEDULE_INTERVAL_HOURS } from '../../shared/constants.ts'
 
 interface Props {
   isOpen: boolean
@@ -23,6 +24,9 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
   const [targetPath, setTargetPath] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [useGlobalSchedule, setUseGlobalSchedule] = useState(true)
+  const [customIntervalHours, setCustomIntervalHours] = useState('')
+  const [scheduleError, setScheduleError] = useState('')
 
   // Pre-fill for edit mode
   useEffect(() => {
@@ -34,10 +38,18 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
       setMonitors(Array.isArray(editTarget.data.monitors) ? editTarget.data.monitors as string[] : [])
       setRespond((editTarget.data.respond as Record<string, boolean>) ?? {})
       setTargetPath((editTarget.data.path as string) ?? '')
+      if (editTarget.data.schedule && (editTarget.data.schedule as any).interval_hours) {
+        setUseGlobalSchedule(false)
+        setCustomIntervalHours(String((editTarget.data.schedule as any).interval_hours))
+      } else {
+        setUseGlobalSchedule(true)
+        setCustomIntervalHours('')
+      }
     } else {
       // Reset form
       setName(''); setType('plugin'); setNorthStar(''); setWatchKeywords('')
       setMonitors([]); setRespond({}); setTargetPath('')
+      setUseGlobalSchedule(true); setCustomIntervalHours(''); setScheduleError('')
     }
     setStep(1); setError('')
   }, [isOpen, editTarget])
@@ -67,6 +79,9 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
       watch: watchKeywords.split(',').map(s => s.trim()).filter(Boolean),
       respond: Object.fromEntries(Object.entries(respond).filter(([, v]) => v)),
       indicators: [],
+      ...(!useGlobalSchedule && customIntervalHours ? {
+        schedule: { interval_hours: parseFloat(customIntervalHours) }
+      } : {}),
     }
   }
 
@@ -114,7 +129,7 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
 
         <!-- Step dots -->
         <div style="display:flex;gap:8px;margin-bottom:16px;justify-content:center;">
-          ${[1,2,3,4].map(s => html`<div key=${s} style=${dotStyle(s)} />`)}
+          ${[1,2,3,4,5].map(s => html`<div key=${s} style=${dotStyle(s)} />`)}
         </div>
 
         <!-- Step 1: Type + Name -->
@@ -194,8 +209,40 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
           </div>
         `}
 
-        <!-- Step 4: Preview + save -->
+        <!-- Step 4: Schedule (optional) -->
         ${step === 4 && html`
+          <div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:600;">Schedule (optional)</div>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:16px;">
+              <input
+                type="checkbox"
+                checked=${useGlobalSchedule}
+                onChange=${() => { setUseGlobalSchedule((v: boolean) => !v); setScheduleError('') }}
+              />
+              <span>Use global schedule</span>
+            </label>
+            ${!useGlobalSchedule && html`
+              <div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;">Run every (hours)</div>
+                <input
+                  type="number"
+                  min="0.17"
+                  step="1"
+                  value=${customIntervalHours}
+                  onInput=${(e: Event) => { setCustomIntervalHours((e.target as HTMLInputElement).value); setScheduleError('') }}
+                  placeholder="e.g. 6"
+                  style="width:100%;margin-bottom:4px;"
+                />
+                ${scheduleError && html`
+                  <div style="font-size:12px;color:var(--error);">${scheduleError}</div>
+                `}
+              </div>
+            `}
+          </div>
+        `}
+
+        <!-- Step 5: Preview + save -->
+        ${step === 5 && html`
           <div>
             <div style="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:600;">Generated YAML preview</div>
             <pre style="font-family:var(--font-mono);font-size:13px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;overflow-x:auto;max-height:300px;overflow-y:auto;">${
@@ -214,14 +261,23 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
           ${step > 1 && html`
             <button onClick=${() => setStep(s => s - 1)}>Back</button>
           `}
-          ${step < 4 && html`
+          ${step < 5 && html`
             <button
-              onClick=${() => setStep(s => s + 1)}
+              onClick=${() => {
+                if (step === 4 && !useGlobalSchedule) {
+                  const val = parseFloat(customIntervalHours)
+                  if (isNaN(val) || val < MIN_SCHEDULE_INTERVAL_HOURS) {
+                    setScheduleError('Minimum interval is 10 minutes')
+                    return
+                  }
+                }
+                setStep(s => s + 1)
+              }}
               disabled=${step === 1 && !name.trim() && !isEdit}
               style="background:var(--btn-primary);color:#fff;border-color:var(--btn-primary);"
-            >Next</button>
+            >${step === 3 ? 'Next: Schedule' : 'Next'}</button>
           `}
-          ${step === 4 && html`
+          ${step === 5 && html`
             <button
               onClick=${handleSave}
               disabled=${saving}
