@@ -4,6 +4,7 @@ import { render } from 'preact'
 import type { ScheduleConfig, TargetHealthData } from '../shared/types.ts'
 import { Dashboard } from './pages/dashboard.ts'
 import { Runs } from './pages/runs.ts'
+import { Outcomes } from './pages/outcomes.ts'
 import { Config } from './pages/config.ts'
 import { Health } from './pages/health.ts'
 import { BottomNav } from './components/bottom-nav.ts'
@@ -13,11 +14,12 @@ import { api } from './lib/api.ts'
 import { showToast } from './lib/use-toast.ts'
 import { refreshTrigger } from './lib/use-poll.ts'
 
-type Page = 'dashboard' | 'runs' | 'health' | 'config'
+type Page = 'dashboard' | 'runs' | 'outcomes' | 'health' | 'config'
 
 function getPage(): Page {
   const hash = location.hash
   if (hash.startsWith('#/runs')) return 'runs'
+  if (hash.startsWith('#/outcomes')) return 'outcomes'
   if (hash === '#/health') return 'health'
   if (hash === '#/config') return 'config'
   return 'dashboard'
@@ -120,9 +122,10 @@ function App() {
   return html`
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
       <${ScheduleBar} schedule=${schedule} onToggle=${handleScheduleToggle} />
-      <div style="flex:1;overflow:hidden;padding-bottom:48px;">
+      <div style="flex:1;overflow:hidden;margin-bottom:48px;">
         ${page === 'dashboard' && html`<${Dashboard} healthData=${healthData} />`}
         ${page === 'runs' && html`<${Runs} />`}
+        ${page === 'outcomes' && html`<${Outcomes} />`}
         ${page === 'health' && html`<${Health} />`}
         ${page === 'config' && html`<${Config} />`}
       </div>
