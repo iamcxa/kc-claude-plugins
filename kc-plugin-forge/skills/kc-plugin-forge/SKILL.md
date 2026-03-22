@@ -31,6 +31,7 @@ digraph forge {
   audit [label="Phase 1: Validate\nDispatch plugin-dev:plugin-validator agent"];
   fix [label="Fix FAIL items\n(reference: quality-pipeline.md Phase 1)"];
   tdd [label="Phase 2: Skill TDD\nInvoke superpowers:writing-skills\nper skill in plugin"];
+  clean [label="Phase 2.5: Clean Profile\nSmoke Test"];
   agents [label="Phase 3: Agent Verify\nInvoke plugin-dev:agent-development\nper agent in plugin"];
   revalidate [label="Phase 4: Re-validate\nDispatch plugin-dev:plugin-validator agent"];
   report [label="Summary Report"];
@@ -48,7 +49,7 @@ digraph forge {
   input -> agents [label="agent-verify-only"];
   input -> selfforge [label="self-forge"];
   selfforge -> tdd;
-  tdd -> report [label="self-forge\n(skip agents + revalidate)"];
+  tdd -> report [label="self-forge\n(skip clean + agents + revalidate)"];
   create -> tdd;
   reaudit [label="Re-validate FAIL items\nDispatch plugin-dev:plugin-validator agent"];
   audit -> fix [label="FAIL"];
@@ -57,7 +58,8 @@ digraph forge {
   fix -> reaudit;
   reaudit -> tdd [label="PASS"];
   reaudit -> fix [label="still FAIL"];
-  tdd -> agents;
+  tdd -> clean;
+  clean -> agents;
   agents -> revalidate;
   revalidate -> report [label="PASS"];
   revalidate -> fix [label="FAIL"];
@@ -82,6 +84,7 @@ digraph forge {
 | Reference file inconsistency found | File content contradicts SKILL.md or other references | skill-evolution.md Applicability table lists levels that SKILL.md Phase 1.5 doesn't offer; quality-pipeline.md gotcha contradicts a Rule |
 
 - **Bare or vague input** (no path, no keyword, or ambiguous scope) → **DISAMBIGUATE**: list available plugins, confirm target + scope (full pipeline vs. validate-only) before proceeding. Never infer a default plugin.
+- **Phase 2.5 follows Phase 2** on all routes that include Phase 2 (`<path>`, `skill-tdd-only`, `new <name>`). Skipped on `self-forge`, `validate-only`, `agent-verify-only`.
 
 ## Phase 1: Structure
 
@@ -241,6 +244,29 @@ For EACH skill in the plugin's `skills/` directory:
 
 Skip if plugin has no skills.
 
+## Phase 2.5: Clean Profile Smoke Test
+
+Runs after Phase 2 TDD passes. Verifies skill works without user-specific context (no MEMORY.md, no user CLAUDE.md, no other plugin hooks).
+
+For EACH skill that passed Phase 2:
+
+1. **Load smoke definition**: `${TARGET_PLUGIN}/smoke-tests/<skill-name>.smoke.yaml` if exists, else auto-generate from SKILL.md:
+   - **Trigger**: extract from `description:` "Use when [triggers]" → first clause as prompt. Fallback if no "Use when": use `"<skill-name>"` as prompt.
+   - **Assertions**: Phase/Step names → `contains:`, tool invocations → `contains:`, fixed: `not_contains: "MEMORY.md"`, `not_contains: "previous session"`. Limit: 3-7 (fallback: 2-3 fixed only).
+   - Auto-generated smoke is ephemeral (not saved).
+   - **Skip auto-generate** for skills whose SKILL.md contains `AskUserQuestion` without a non-interactive path.
+2. **Detect safehouse**: `command -v safehouse >/dev/null 2>&1`
+   - Available → run `${CLAUDE_PLUGIN_ROOT}/reference/clean-profile-test.sh <plugin-dir> <trigger> <timeout> [assertions...]`
+   - Unavailable → silent degradation, report marks `(clean profile unavailable)`
+3. **Compare results**:
+   - Both pass → `(verified: clean)` in report
+   - Polluted pass + clean fail → WARNING with failing assertions listed. Skill depends on external context.
+   - Clean unavailable → `(clean profile unavailable)` in report
+4. Clean profile WARNING does not block Phase 3 — it is reported in Phase 4
+5. Any context-dependent warning → downgrades Overall verdict from PASS to CONDITIONAL PASS (advisory, does not block shipping)
+
+Skip when: `self-forge` route, `validate-only` route, `agent-verify-only` route.
+
 ## Phase 3: Agent Verify
 
 For EACH agent in the plugin's `agents/` directory:
@@ -263,6 +289,8 @@ Plugin Forge Report: <plugin-name>
 ─────────────────────────────────
 Structure:  PASS/FAIL (N items fixed)
 Skills:     N skills tested (M scenarios, K passed)
+Clean Profile: N skills verified (K clean-pass, J context-dependent)
+               Mode: clean / polluted-only / unavailable
 Agents:     N agents verified
 Evolution:  N skills with self-improvement
             Level: Full (D1+D2) / D1 only / Skipped
@@ -318,3 +346,5 @@ Overall:    PASS / CONDITIONAL PASS / FAIL
 - **Self-forge verifies self-improvement integrity** — when running `self-forge`, Phase 2 step 6 checks that the forge's own Full D1+D2 setup remains intact. If drift is detected, fix it as part of the self-forge run.
 - **Doc self-iteration is user-chosen** — forge presents three levels (Full / Light / Skip) at Phase 1.5 B with signal-based recommendation. The user always makes the final choice.
 - **Doc-sync templates are in references** — all template content lives in `doc-sync-templates.md`. When scaffolding, read templates from there and replace `{{PLUGIN_NAME}}` with actual plugin name.
+- **Clean profile is progressive enhancement** — requires `safehouse` binary. Without it, Phase 2.5 silently degrades to `(clean profile unavailable)` and does not affect the Overall verdict.
+- **Smoke test directory convention** — hand-written smoke files go in `${TARGET_PLUGIN}/smoke-tests/<skill-name>.smoke.yaml`. This directory name avoids collision with generic `tests/`.
