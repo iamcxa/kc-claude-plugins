@@ -22,7 +22,7 @@ healthApiRoutes.get('/api/health/:target', async (c) => {
   const indicatorTrends: Record<string, string> = {}
 
   for (const runData of runsWithSummary) {
-    if (!runData?.summary) continue
+    if (!runData?.summary?.per_target) continue
     const targetSummary = runData.summary.per_target[target]
     if (!targetSummary) continue
 
