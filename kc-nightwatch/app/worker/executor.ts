@@ -111,6 +111,17 @@ export async function executeRun(
   const selfRepairFlag = (run as unknown as Record<string, unknown>).self_repair ? ' --self-repair' : ''
   const prompt = run.custom_prompt ?? `/kc-nightwatch${dryRunFlag}${selfRepairFlag}`
 
+  // Build --plugin-dir flags so spawned claude can find kc-nightwatch skill + extra plugins
+  const pluginDirFlags: string[] = []
+  // Always include kc-nightwatch itself (this plugin's root — 2 levels up from app/worker/)
+  const nwPluginRoot = path.resolve(import.meta.dir, '..', '..')
+  pluginDirFlags.push('--plugin-dir', nwPluginRoot)
+  // Include any extra_plugin_dirs from target config
+  for (const dir of target.extra_plugin_dirs ?? []) {
+    const resolved = dir.startsWith('~') ? path.join(os.homedir(), dir.slice(1)) : dir
+    pluginDirFlags.push('--plugin-dir', resolved)
+  }
+
   const claudeArgs = [
     safehouseBin,
     ...safehouseFlags,
@@ -120,6 +131,7 @@ export async function executeRun(
     '--output-format', 'stream-json',
     '--model', 'claude-opus-4-5',
     '--mcp-config', journalConfigPath,
+    ...pluginDirFlags,
   ]
 
   const child = Bun.spawn(claudeArgs, {
