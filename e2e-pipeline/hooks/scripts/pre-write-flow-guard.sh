@@ -1,8 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-# PreToolUse hook: block direct writes to flow YAML unless authorized by /e2e-flow sentinel
+# PreToolUse hook: warn on direct writes to flow YAML unless authorized by /e2e-flow sentinel
 # Fires on Write tool — only matches .claude/e2e/flows/*.yaml
+# Design: warn (not block) because block is trivially bypassed via Bash, creating
+# an adversarial dynamic where agents find workarounds instead of understanding why
+# the /e2e-flow path is better. A strong warning with consequences is more effective.
 input=$(cat)
 file_path=$(echo "$input" | jq -r '.tool_input.file_path // empty')
 
@@ -36,8 +39,18 @@ if [ -f "$sentinel" ]; then
   fi
 fi
 
-# No valid sentinel → block
-jq -n '{
-  "decision": "block",
-  "reason": "Flow YAML must be generated via /e2e-flow (or /e2e-flow --no-verify). Hand-writing bypasses codebase analysis, mapping validation, and external checkpoint detection. Use: /e2e-flow <description> or /e2e-flow --from <plan>"
-}'
+# No valid sentinel → warn (not block — block is bypassed via Bash, warn is cooperative)
+cat <<'WARN'
+⚠️ FLOW YAML WRITE WITHOUT /e2e-flow ⚠️
+
+You are writing directly to .claude/e2e/flows/*.yaml without the /e2e-flow pipeline.
+This skips: (1) codebase analysis, (2) mapping element validation, (3) external checkpoint detection.
+
+Consequences:
+- Element/page names may not match the mapping → runtime failures in test-runner
+- Missing Execute external / Verify external steps for detected integrations
+- No browser verification → stale selectors ship undetected
+
+Recommended: Use /e2e-flow --from <plan> or /e2e-flow <description> instead.
+If you have good reason to hand-write (e.g., quick fix to existing flow), proceed — but validate element names against the mapping manually.
+WARN
