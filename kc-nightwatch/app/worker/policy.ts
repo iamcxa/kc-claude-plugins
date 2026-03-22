@@ -25,8 +25,12 @@ export function buildSafehouseFlags(target: PolicyTarget, run: Run, appRunsDir: 
   }
 
   // Plugin dirs — read-only
+  // Include kc-nightwatch's own plugin root so /kc-nightwatch skill is loadable
+  const nwPluginRoot = path.resolve(__dirname, '..', '..')
   const basePluginDirs = [
     path.join(homeDir, '.claude/plugins/local'),
+    path.join(homeDir, '.claude/plugins/cache'),
+    nwPluginRoot,
   ]
   for (const dir of [...basePluginDirs, ...(target.extra_plugin_dirs ?? []).map(resolve)]) {
     flags.push('--add-dirs-ro', dir)
