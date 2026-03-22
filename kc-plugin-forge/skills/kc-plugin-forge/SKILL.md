@@ -256,9 +256,9 @@ For EACH skill that passed Phase 2:
    - Auto-generated smoke is ephemeral (not saved).
    - **Timeout**: 90s default for auto-generated smoke tests.
    - **Skip auto-generate** for skills whose SKILL.md contains `AskUserQuestion` without a non-interactive path.
-2. **Detect safehouse**: `command -v safehouse >/dev/null 2>&1`
-   - Available → run `${CLAUDE_PLUGIN_ROOT}/reference/clean-profile-test.sh <plugin-dir> <trigger> <timeout> [assertions...]`. Exit 0 = pass, exit 1 = assertion failure, exit 2 (execution error) → treat as `(clean profile unavailable)`.
-   - Unavailable → silent degradation, report marks `(clean profile unavailable)`
+2. **Check ANTHROPIC_API_KEY**: `[[ -n "${ANTHROPIC_API_KEY:-}" ]]`
+   - Set → run `${CLAUDE_PLUGIN_ROOT}/reference/clean-profile-test.sh <plugin-dir> <trigger> <timeout> [assertions...]`. Exit 0 = pass, exit 1 = assertion failure, exit 2 (execution error) → treat as `(clean profile unavailable)`.
+   - Not set → silent degradation, report marks `(clean profile unavailable)`
 3. **Compare results**:
    The Phase 2 TDD pass result (from the current session) serves as the polluted baseline — it passed with user-specific context present.
    - Both pass → `(verified: clean)` in report
@@ -348,5 +348,5 @@ Overall:    PASS / CONDITIONAL PASS / FAIL
 - **Self-forge verifies self-improvement integrity** — when running `self-forge`, Phase 2 step 6 checks that the forge's own Full D1+D2 setup remains intact. If drift is detected, fix it as part of the self-forge run.
 - **Doc self-iteration is user-chosen** — forge presents three levels (Full / Light / Skip) at Phase 1.5 B with signal-based recommendation. The user always makes the final choice.
 - **Doc-sync templates are in references** — all template content lives in `doc-sync-templates.md`. When scaffolding, read templates from there and replace `{{PLUGIN_NAME}}` with actual plugin name.
-- **Clean profile is progressive enhancement** — requires `safehouse` binary. Without it, Phase 2.5 silently degrades to `(clean profile unavailable)` and does not affect the Overall verdict.
+- **Clean profile is progressive enhancement** — requires `ANTHROPIC_API_KEY` env var. Without it, Phase 2.5 silently degrades to `(clean profile unavailable)` and does not affect the Overall verdict. The script uses `claude --bare` which strips all user context (MEMORY.md, CLAUDE.md, hooks) while loading only the target plugin via `--plugin-dir`.
 - **Smoke test directory convention** — hand-written smoke files go in `${TARGET_PLUGIN}/smoke-tests/<skill-name>.smoke.yaml`. This directory name avoids collision with generic `tests/`.

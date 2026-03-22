@@ -1,11 +1,16 @@
 #!/bin/bash
 # Clean Profile Test — execution isolator for forge Phase 2.5
-# Runs claude -p in a clean HOME via safehouse to simulate first-time user.
+# Runs claude --bare -p to simulate a first-time user with zero context.
+#
+# --bare skips: auto-memory (MEMORY.md), CLAUDE.md auto-discovery,
+# hooks, plugin sync, keychain reads. Only --plugin-dir content is loaded.
+#
+# Prerequisites: ANTHROPIC_API_KEY must be set (--bare requires it).
 #
 # Usage: clean-profile-test.sh <plugin-dir> <prompt> <timeout> [assertion...]
 # Exit:  0 = all assertions pass
 #        1 = assertion failure
-#        2 = execution error (auth, timeout, safehouse)
+#        2 = execution error (auth, timeout, missing key)
 #
 # Assertions format:
 #   contains:<pattern>       — output must include pattern (case-insensitive)
@@ -18,15 +23,13 @@ PROMPT="$1"; shift
 TIMEOUT="${1:-60}"; shift 2>/dev/null || true
 ASSERTIONS=("$@")
 
-CLEAN_HOME=$(mktemp -d)
-trap "rm -rf '$CLEAN_HOME'" EXIT
+if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
+  echo "ERROR: ANTHROPIC_API_KEY not set (required for --bare mode)"
+  exit 2
+fi
 
-# Keychain auth is UID-based, unaffected by HOME change.
-# Safehouse reads HOME at startup (home_dir="${HOME:-}") and passes it
-# through to sandbox-exec env (HOME=${home_dir}).
-OUTPUT=$(timeout "$TIMEOUT" env HOME="$CLEAN_HOME" safehouse \
-  --dangerously-skip-permissions \
-  claude --plugin-dir "$PLUGIN_DIR" -p "$PROMPT" 2>&1)
+OUTPUT=$(timeout "$TIMEOUT" claude --bare \
+  --plugin-dir "$PLUGIN_DIR" -p "$PROMPT" 2>&1)
 CLAUDE_EXIT=$?
 if [[ $CLAUDE_EXIT -ne 0 ]]; then
   echo "ERROR: claude execution failed (exit $CLAUDE_EXIT)"

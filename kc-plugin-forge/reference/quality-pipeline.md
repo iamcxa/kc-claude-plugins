@@ -48,7 +48,8 @@ After TDD passes for each skill, verify self-improvement capability per `skill-e
 ## Phase 2.5: Clean Profile Smoke Test Gotchas
 
 - **`timeout` on macOS requires coreutils**: The `timeout` command is from GNU coreutils (`brew install coreutils`). macOS ships `gtimeout` instead. If the script fails with "timeout: command not found", install coreutils or alias `timeout=gtimeout`.
-- **Smoke assertions should target skill-level output, not tool-level**: In clean HOME, marketplace plugins are not loaded. Assertions like `contains: "plugin-validator"` test that the skill mentions the concept, not that the tool actually ran. Skills with inter-plugin dependencies should use hand-written smoke files scoped to skill-own output.
+- **`ANTHROPIC_API_KEY` is required**: The script uses `claude --bare` which only accepts API key auth (no OAuth/keychain). Store the key in a `.env` file and `export` it before running forge. Without the key, Phase 2.5 silently degrades.
+- **Smoke assertions should target skill-level output, not tool-level**: In `--bare` mode, no other plugins are loaded. Assertions like `contains: "plugin-validator"` test that the skill mentions the concept, not that the tool actually ran. Skills with inter-plugin dependencies should use hand-written smoke files scoped to skill-own output.
 - **`not_contains` is case-insensitive**: `not_contains: "MEMORY.md"` catches both `MEMORY.md` and `memory.md`. Be specific with patterns.
 - **AskUserQuestion skills skip auto-generate**: Skills with interactive prompts and no non-interactive path are skipped entirely by auto-generate. Hand-written smoke files can override this by providing a prompt that takes the non-interactive path.
 - **Large plugins add ~1min per skill**: Each smoke test invokes `claude -p` (30-60s overhead). A 9-skill plugin adds ~9 minutes to Phase 2.5. Acceptable for quality gating; parallelization is a future optimization.
