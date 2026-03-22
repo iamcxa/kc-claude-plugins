@@ -34,7 +34,7 @@
 - [x] **Phase 8: Schema + Safety Foundation** - Type system and IPC shape changes that unblock all downstream work — completed 2026-03-21
 - [x] **Phase 9: Worker Parallel Execution + Scheduling** - Per-target queue isolation and multi-timer scheduler — completed 2026-03-22
 - [x] **Phase 10: Auto-Action Output Loop** - Worker auto-creates PRs and Linear issues; server exposes outcomes API and MCP tools — completed 2026-03-22
-- [ ] **Phase 11: Frontend Outcomes + UI Polish** - Dashboard parallel status, Outcomes page, action card links, schedule display, nav fix
+- [x] **Phase 11: Frontend Outcomes + UI Polish** - Dashboard parallel status, Outcomes page, action card links, schedule display, nav fix — completed 2026-03-22
 
 ## Phase Details
 
@@ -95,9 +95,9 @@ Plans:
   7. The black line between content area and nav bar is gone
 **Plans:** 3 plans
 Plans:
-- [ ] 11-01-PLAN.md — Outcomes API routes, Outcomes page, bottom nav 5th tab, app router, nav gap fix
-- [ ] 11-02-PLAN.md — Sidebar parallel dots, dashboard summary line, target-detail schedule, wizard schedule step
-- [ ] 11-03-PLAN.md — Action card status badges + URLs, runs.ts outcome pre-fetch, full phase visual checkpoint
+- [x] 11-01-PLAN.md — Outcomes API routes, Outcomes page, bottom nav 5th tab, app router, nav gap fix
+- [x] 11-02-PLAN.md — Sidebar parallel dots, dashboard summary line, target-detail schedule, wizard schedule step
+- [x] 11-03-PLAN.md — Action card status badges + URLs, runs.ts outcome pre-fetch, full phase visual checkpoint
 
 ## Progress
 
@@ -113,4 +113,4 @@ Plans:
 | 8. Schema + Safety Foundation | v2.0 | 2/2 | Complete | 2026-03-21 |
 | 9. Worker Parallel Execution + Scheduling | v2.0 | 2/2 | Complete | 2026-03-22 |
 | 10. Auto-Action Output Loop | v2.0 | 2/2 | Complete | 2026-03-22 |
-| 11. Frontend Outcomes + UI Polish | v2.0 | 0/3 | Planning complete | - |
+| 11. Frontend Outcomes + UI Polish | v2.0 | 3/3 | Complete | 2026-03-22 |

@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Parallel Execution + Auto-Action
-status: executing
-stopped_at: "Phase 10 complete — ready for Phase 11"
-last_updated: "2026-03-22T08:45:00Z"
+status: complete
+stopped_at: "v2.0 milestone complete — all 4 phases (8-11) shipped"
+last_updated: "2026-03-22T12:00:00Z"
 progress:
   total_phases: 4
-  completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 4
+  total_plans: 9
+  completed_plans: 9
 ---
 
 # Project State
@@ -19,22 +19,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** The closed-loop feedback flywheel — NW monitors, proposes, learns from feedback, and gets measurably better over time
-**Current focus:** Phase 11 — Frontend Outcomes + UI Polish
+**Current focus:** v2.0 complete — ready for milestone archival
 
 ## Current Position
 
-Phase: 11 of 11 (Frontend Outcomes + UI Polish)
-Plan: — (not yet planned)
-Status: Ready to discuss/plan
-Last activity: 2026-03-22 — Phase 10 completed (2/2 plans, verification passed 4/4 SC)
+Phase: 11 of 11 (Frontend Outcomes + UI Polish) — COMPLETE
+Plan: 3/3 complete
+Status: v2.0 milestone complete
+Last activity: 2026-03-22 — Phase 11 completed (3/3 plans, verification passed 11/11 must-haves, E2E 17/17)
 
-Progress: [███████░░░] 75% (v2.0)
+Progress: [██████████] 100% (v2.0)
 
 ## Performance Metrics
 
 **Cumulative (v1.0 + v1.1):** 20 plans, 7 phases
 
-**v2.0:** 6 plans completed (Phase 8: 2, Phase 9: 2, Phase 10: 2)
+**v2.0:** 9 plans completed (Phase 8: 2, Phase 9: 2, Phase 10: 2, Phase 11: 3)
 
 ## Accumulated Context
 
@@ -51,8 +51,9 @@ Recent decisions affecting v2.0 work:
 - [Phase 09]: Defense-in-depth min interval: enforced at both scheduler startup (warn+skip) and API save (400 error) using shared MIN_SCHEDULE_INTERVAL_HOURS constant
 - [Phase 10-01]: Optional path param for testability: outcome-store functions accept outcomesPath arg to enable test isolation via temp dirs without module mocking
 - [Phase 10-01]: PR dedup is outcomes.yaml-first with gh pr list --head {branch} as secondary fallback; Linear dedup is outcomes.yaml-only (no external API in dedup path)
-- [Phase 10-02]: Mock reset with beforeEach mockClear(): inter-test call accumulation caused false test failures; always reset mocks per describe block in outcome tool tests
-- [Phase 10-02]: When new imports are added to a module, all test files mocking that module's dependency chain need updating (mcp.test.ts needed outcome-store + feedback-collector mocks)
+- [Phase 11]: OutcomeRecord has no summary field — list items display `type + " · " + target` instead
+- [Phase 11]: GET /api/outcomes/:id/status returns cached status only (no live gh call) — centralized polling in Outcomes page
+- [Phase 11]: Action card outcomeStatus prop-passed from runs.ts pre-fetch, not per-card polling (D-13/D-14)
 
 ### Pending Todos
 
@@ -60,11 +61,10 @@ None.
 
 ### Blockers/Concerns
 
-- Phase 10: Verify `gh` CLI auth is accessible inside safehouse-wrapped processes before building auto-create PR flow (one `gh repo view` dry-run test)
-- Phase 9: Audit which files kc-nightwatch skill writes during a run before enabling parallel spawning (nightwatch-improvement-log.md, per-target memory/, per-run runs/)
+None — v2.0 milestone complete.
 
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 10 complete — verified 4/4 SC passed
-Resume file: .planning/phases/10-auto-action-output-loop/10-VERIFICATION.md
+Stopped at: v2.0 milestone complete — Phase 11 verified (11/11 must-haves, E2E 17/17)
+Resume file: .planning/phases/11-frontend-outcomes-ui-polish/11-VERIFICATION.md
