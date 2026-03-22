@@ -1,6 +1,7 @@
 import type { WorkerToServer, IpcMessage, ParsedLogEvent, Run, ScheduleConfig } from '../shared/types.ts'
 import { log } from '../shared/logger.ts'
 import { HEARTBEAT_TIMEOUT_MS } from '../shared/constants.ts'
+import { updateRunStatus } from './services/run-store.ts'
 
 export type WorkerStatus = 'online' | 'offline' | 'offline_permanent'
 
@@ -88,11 +89,13 @@ export function handleWorkerMessage(msg: WorkerToServer) {
       break
     case 'run:started':
       log.info({ component: 'server', msg: `Run ${msg.run_id} started PID ${msg.pid}` })
+      void updateRunStatus(msg.run_id, { status: 'running', started_at: new Date().toISOString() })
       break
     case 'run:completed':
       closeRunSubscribers(msg.run_id)
       broadcastGlobal('brief-ready', { run_id: msg.run_id, summary: msg.summary })
       log.info({ component: 'server', msg: `Run ${msg.run_id} completed` })
+      void updateRunStatus(msg.run_id, { status: 'completed', completed_at: new Date().toISOString() })
       break
     case 'run:failed':
       closeRunSubscribers(msg.run_id)
@@ -102,6 +105,7 @@ export function handleWorkerMessage(msg: WorkerToServer) {
         error: msg.error,
       })
       log.warn({ component: 'server', msg: `Run ${msg.run_id} failed: ${msg.error}` })
+      void updateRunStatus(msg.run_id, { status: 'failed', completed_at: new Date().toISOString() })
       break
     default:
       log.debug({ component: 'server', msg: `IPC message: ${(msg as WorkerToServer).type}` })
