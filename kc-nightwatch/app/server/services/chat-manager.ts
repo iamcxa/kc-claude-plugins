@@ -18,8 +18,8 @@ interface ChatSession {
 }
 
 // ============================================================
-// NW tool schemas — 13 Anthropic tool definitions
-// (7 query + 1 search + 4 action = 12 unique tools per STATE.md decision)
+// NW tool schemas — 15 Anthropic tool definitions
+// (7 query + 1 search + 4 action + 3 outcome = 15 MCP tools)
 // ============================================================
 export const NW_TOOLS: Anthropic.Tool[] = [
   // Query (7)
@@ -153,6 +153,41 @@ export const NW_TOOLS: Anthropic.Tool[] = [
         proposal_id: { type: 'string', description: 'Proposal ID to implement' },
       },
       required: ['proposal_id'],
+    },
+  },
+  // Outcome (3)
+  {
+    name: 'nw_get_outcomes',
+    description: 'List nightwatch-created PRs and Linear issues. Filter by target, type (pr/linear_issue), status, or date range (since).',
+    input_schema: {
+      type: 'object',
+      properties: {
+        target: { type: 'string', description: 'Filter by target name (optional)' },
+        type: { type: 'string', enum: ['pr', 'linear_issue'], description: 'Filter by outcome type (optional)' },
+        status: { type: 'string', description: 'Filter by status: open, merged, closed, completed, cancelled (optional)' },
+        since: { type: 'string', description: 'Filter by created_at >= this ISO date (e.g. 2026-03-20) (optional)' },
+      },
+      required: [],
+    },
+  },
+  {
+    name: 'nw_get_outcome_status',
+    description: 'Check the live status of a specific outcome (PR or Linear issue) by its outcome ID. Polls GitHub/Linear API for current state.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        outcome_id: { type: 'string', description: 'The outcome record ID to check live status for' },
+      },
+      required: ['outcome_id'],
+    },
+  },
+  {
+    name: 'nw_outcome_summary',
+    description: 'Get aggregated outcome stats: total count, count by type+status, count by target, recent 7-day count. Use for overview questions.',
+    input_schema: {
+      type: 'object',
+      properties: {},
+      required: [],
     },
   },
 ]

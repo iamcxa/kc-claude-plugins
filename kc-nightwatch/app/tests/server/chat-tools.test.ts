@@ -109,8 +109,8 @@ describe('NW_TOOLS', () => {
     expect(Array.isArray(NW_TOOLS)).toBe(true)
   })
 
-  it('NW_TOOLS has 12 entries (7 query + 1 search + 4 action per STATE.md decision)', () => {
-    expect(NW_TOOLS.length).toBe(12)
+  it('NW_TOOLS has 15 entries (7 query + 1 search + 4 action + 3 outcome)', () => {
+    expect(NW_TOOLS.length).toBe(15)
   })
 
   it('each tool has name, description, and input_schema', () => {
@@ -145,6 +145,10 @@ describe('NW_TOOLS', () => {
     expect(names).toContain('nw_submit_feedback')
     expect(names).toContain('nw_update_schedule')
     expect(names).toContain('nw_implement_proposal')
+    // 3 outcome (Phase 10)
+    expect(names).toContain('nw_get_outcomes')
+    expect(names).toContain('nw_get_outcome_status')
+    expect(names).toContain('nw_outcome_summary')
   })
 })
 
@@ -174,7 +178,7 @@ describe('sendMessage — tool_use routing', () => {
     const callArgs = mockMessagesCreate.mock.calls[0]![0] as { tools: Tool[] }
     expect(callArgs.tools).toBeDefined()
     expect(Array.isArray(callArgs.tools)).toBe(true)
-    expect(callArgs.tools.length).toBe(12)
+    expect(callArgs.tools.length).toBe(15)
   })
 
   it('routes tool_use block to MCP client and appends tool_result', async () => {
