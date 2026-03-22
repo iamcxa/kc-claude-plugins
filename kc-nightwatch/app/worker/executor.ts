@@ -116,6 +116,7 @@ export async function executeRun(
     ...safehouseFlags,
     'claude',
     '-p', prompt,
+    '--verbose',
     '--output-format', 'stream-json',
     '--model', 'claude-opus-4-5',
     '--mcp-config', journalConfigPath,
