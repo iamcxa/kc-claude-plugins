@@ -78,7 +78,7 @@ configRoutes.post('/api/config/targets/add', async (c) => {
   return c.json({ ok: true }, 201)
 })
 
-// PUT /api/config/targets/:name — edit an existing target
+// PUT /api/config/targets/:name — edit an existing target (merge, not replace)
 configRoutes.put('/api/config/targets/:name', async (c) => {
   const name = decodeURIComponent(c.req.param('name'))
   const { target } = await c.req.json<{ target: Record<string, unknown> }>()
@@ -91,7 +91,14 @@ configRoutes.put('/api/config/targets/:name', async (c) => {
       notFound = true
       return
     }
-    parsed.targets[name] = target
+    // Merge wizard fields into existing target — preserves fields the wizard
+    // doesn't manage (repo, proxy_signals, sentry_projects, extra_plugin_dirs, etc.)
+    const existing = parsed.targets[name] as Record<string, unknown>
+    parsed.targets[name] = { ...existing, ...target }
+    // If wizard sends useGlobalSchedule (no schedule key), remove any existing per-target schedule
+    if (!target.schedule && existing.schedule) {
+      delete (parsed.targets[name] as Record<string, unknown>).schedule
+    }
     await Bun.write(TARGETS_YAML_PATH, stringify(parsed))
   })
   if (notFound) return c.json({ error: 'target not found' }, 404)
