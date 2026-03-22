@@ -64,8 +64,8 @@ Plans:
   5. A target with `schedule.interval_hours` set uses its own interval; targets without it inherit the global interval
 **Plans:** 2 plans
 Plans:
-- [ ] 09-01-PLAN.md — Per-target queue isolation in worker/index.ts (parallel execution model)
-- [ ] 09-02-PLAN.md — Per-target multi-timer scheduler and server-side min interval validation
+- [x] 09-01-PLAN.md — Per-target queue isolation in worker/index.ts (parallel execution model)
+- [x] 09-02-PLAN.md — Per-target multi-timer scheduler and server-side min interval validation
 
 ### Phase 10: Auto-Action Output Loop
 **Goal**: The worker automatically creates PRs and Linear issues after runs that produce actionable output, skipping creation when duplicates already exist, and NW-Claude can answer questions about outcomes via MCP
@@ -76,7 +76,10 @@ Plans:
   2. After a run that classifies a signal as a Linear issue, a Linear issue appears without any manual step — the issue URL is stored in the run record
   3. Running the same target twice on the same unresolved signal does not create a second PR or Linear issue
   4. Asking NW-Claude "what PRs did nightwatch create this week?" returns a list of outcomes with links
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 10-01-PLAN.md — Outcome store and auto-action post-run hook with dedup
+- [ ] 10-02-PLAN.md — MCP outcome tools and chat manager tool definitions
 
 ### Phase 11: Frontend Outcomes + UI Polish
 **Goal**: The dashboard visually reflects parallel execution, all run detail views surface PR and Linear links, a dedicated Outcomes page aggregates all created PRs and issues, and the nav gap visual bug is gone
@@ -105,5 +108,5 @@ Plans:
 | 7. Cleanup | v1.1 | 1/1 | Complete | 2026-03-20 |
 | 8. Schema + Safety Foundation | v2.0 | 2/2 | Complete | 2026-03-21 |
 | 9. Worker Parallel Execution + Scheduling | v2.0 | 2/2 | Complete | 2026-03-22 |
-| 10. Auto-Action Output Loop | v2.0 | 0/TBD | Not started | - |
+| 10. Auto-Action Output Loop | v2.0 | 0/2 | Not started | - |
 | 11. Frontend Outcomes + UI Polish | v2.0 | 0/TBD | Not started | - |
