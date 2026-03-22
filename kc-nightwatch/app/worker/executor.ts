@@ -11,6 +11,7 @@ import {
 } from '../shared/constants.ts'
 import { collectImplicitFeedback } from './feedback-collector.ts'
 import { appendFeedback, writeFeedbackTrends } from '../server/services/feedback-store.ts'
+import { recordRunOutcomes } from './auto-action.ts'
 
 // In-memory PID tracking — keyed by run_id so cancel can target a specific run
 // Map<run_id, pid> — allows per-run cancel without killing concurrent runs
@@ -245,6 +246,13 @@ export async function executeRun(
         }
       } catch (err) {
         log.warn({ component: 'worker', msg: `Post-run feedback collection error: ${String(err)}` })
+      }
+
+      // AUTO-01/02/03: Record PR and Linear outcomes from run actions into outcomes.yaml
+      try {
+        await recordRunOutcomes(run, summary.per_target)
+      } catch (err) {
+        log.warn({ component: 'worker', msg: `Auto-action outcome recording error: ${String(err)}` })
       }
     }
 
