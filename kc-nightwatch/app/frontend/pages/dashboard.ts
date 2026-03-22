@@ -25,6 +25,7 @@ export function Dashboard({ healthData }: DashboardProps = {}) {
   const [activeRuns, setActiveRuns] = useState<Run[]>([])
   const [globalSchedule, setGlobalSchedule] = useState<ScheduleConfig | null>(null)
   const [showAddWizard, setShowAddWizard] = useState(false)
+  const [editTarget, setEditTarget] = useState<{ name: string; data: Record<string, unknown> } | null>(null)
 
   useEffect(() => {
     // Fetch targets
@@ -141,6 +142,12 @@ export function Dashboard({ healthData }: DashboardProps = {}) {
           workerQueue=${workerQueue}
           globalSchedule=${globalSchedule}
           onRun=${(mode: 'production' | 'dry-run') => selectedTarget && openDialog(selectedTarget)}
+          onEdit=${() => {
+            if (selectedTargetObj) {
+              setEditTarget({ name: selectedTargetObj.name, data: selectedTargetObj as unknown as Record<string, unknown> })
+              setShowAddWizard(true)
+            }
+          }}
           onRemove=${handleRemove}
         />
       </div>
@@ -156,8 +163,9 @@ export function Dashboard({ healthData }: DashboardProps = {}) {
       />
       <${AddTargetWizard}
         isOpen=${showAddWizard}
-        onClose=${() => setShowAddWizard(false)}
-        onSaved=${() => { setShowAddWizard(false); api.getTargets().then(setTargets).catch(console.error); loadRuns() }}
+        onClose=${() => { setShowAddWizard(false); setEditTarget(null) }}
+        onSaved=${() => { setShowAddWizard(false); setEditTarget(null); api.getTargets().then(setTargets).catch(console.error); loadRuns() }}
+        editTarget=${editTarget}
       />
     </div>
   `
