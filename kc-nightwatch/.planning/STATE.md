@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Parallel Execution + Auto-Action
 status: executing
-stopped_at: "Phase 10 Plan 01 complete — outcome-store.ts + auto-action.ts + executor wired"
-last_updated: "2026-03-22T08:19:01Z"
+stopped_at: "Phase 10 Plan 02 complete — 3 MCP outcome tools + 3 Anthropic tool defs in NW_TOOLS"
+last_updated: "2026-03-22T08:35:00Z"
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -24,17 +24,17 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 10 of 11 (Auto-Action Output Loop)
-Plan: 01 completed
-Status: Executing — Plan 01 done, Plan 02 (MCP tools) pending
-Last activity: 2026-03-22 — Phase 10 Plan 01 completed (OutcomeRecord type + outcome-store.ts + auto-action.ts + executor wiring)
+Plan: 02 completed — Phase 10 DONE
+Status: Executing — Phase 10 complete, Phase 11 (Outcomes page) next
+Last activity: 2026-03-22 — Phase 10 Plan 02 completed (3 MCP outcome tools + 3 Anthropic tool defs in NW_TOOLS)
 
-Progress: [█████░░░░░] 50% (v2.0)
+Progress: [██████░░░░] 60% (v2.0)
 
 ## Performance Metrics
 
 **Cumulative (v1.0 + v1.1):** 20 plans, 7 phases
 
-**v2.0:** 5 plans completed (Phase 8: 2, Phase 9: 2, Phase 10: 1)
+**v2.0:** 6 plans completed (Phase 8: 2, Phase 9: 2, Phase 10: 2)
 
 ## Accumulated Context
 
@@ -51,6 +51,8 @@ Recent decisions affecting v2.0 work:
 - [Phase 09]: Defense-in-depth min interval: enforced at both scheduler startup (warn+skip) and API save (400 error) using shared MIN_SCHEDULE_INTERVAL_HOURS constant
 - [Phase 10-01]: Optional path param for testability: outcome-store functions accept outcomesPath arg to enable test isolation via temp dirs without module mocking
 - [Phase 10-01]: PR dedup is outcomes.yaml-first with gh pr list --head {branch} as secondary fallback; Linear dedup is outcomes.yaml-only (no external API in dedup path)
+- [Phase 10-02]: Mock reset with beforeEach mockClear(): inter-test call accumulation caused false test failures; always reset mocks per describe block in outcome tool tests
+- [Phase 10-02]: When new imports are added to a module, all test files mocking that module's dependency chain need updating (mcp.test.ts needed outcome-store + feedback-collector mocks)
 
 ### Pending Todos
 
@@ -64,5 +66,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 10 Plan 01 complete — outcome-store.ts + auto-action.ts + executor wired
-Resume file: .planning/phases/10-auto-action-output-loop/10-01-SUMMARY.md
+Stopped at: Phase 10 Plan 02 complete — 3 MCP outcome tools + 3 Anthropic tool defs in NW_TOOLS
+Resume file: .planning/phases/10-auto-action-output-loop/10-02-SUMMARY.md
