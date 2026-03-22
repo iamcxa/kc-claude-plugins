@@ -61,6 +61,7 @@ function normalizeTarget(name: string, raw: Record<string, unknown>): Target {
     north_star: (raw.north_star as string) ?? '',
     path: raw.path as string | undefined,
     auth: raw.auth as string | undefined,
+    schedule: raw.schedule as Target['schedule'] | undefined,
     extra_plugin_dirs: (raw.extra_plugin_dirs ?? []) as string[],
     extra_mcp_config: (raw.extra_mcp_config ?? []) as string[],
   }
