@@ -71,7 +71,7 @@ digraph forge {
 - **`new <name>`** → Phase 1 scaffold → full pipeline
 - **`<path>`** → Phase 1 validate → full pipeline (Phase 1→2→3→4). A path always triggers Phase 1 first — no exceptions, even if user claims prior validation.
 - **`validate-only`** → Phase 1 validate → report (skip Phase 2 and 3)
-- **`skill-tdd-only`** → Phase 2 only. Assumes structure was validated separately. Do NOT use this to bypass Phase 1 on a path-based invocation.
+- **`skill-tdd-only`** → Phase 2 + 2.5. Assumes structure was validated separately. Do NOT use this to bypass Phase 1 on a path-based invocation.
 - **`agent-verify-only`** → Phase 3 only
 - **`self-forge`** → Forge audits itself. Target is always `${CLAUDE_PLUGIN_ROOT}`. Runs Phase 2 TDD (pressure test SKILL.md via `superpowers:writing-skills`) + Phase 4 Learning. Skips Phase 1 (own structure is stable), Phase 1.5 (forge's evolution is pre-established), and Phase 3 (no agents). Use when: periodic self-audit, after editing references, or to check for SKILL.md drift. Self-forge uses a dedicated Detection signal table:
 
@@ -254,11 +254,13 @@ For EACH skill that passed Phase 2:
    - **Trigger**: extract from `description:` "Use when [triggers]" → first clause as prompt. Fallback if no "Use when": use `"<skill-name>"` as prompt.
    - **Assertions**: Phase/Step names → `contains:`, tool invocations → `contains:`, fixed: `not_contains: "MEMORY.md"`, `not_contains: "previous session"`. Limit: 3-7 (fallback: 2-3 fixed only).
    - Auto-generated smoke is ephemeral (not saved).
+   - **Timeout**: 90s default for auto-generated smoke tests.
    - **Skip auto-generate** for skills whose SKILL.md contains `AskUserQuestion` without a non-interactive path.
 2. **Detect safehouse**: `command -v safehouse >/dev/null 2>&1`
-   - Available → run `${CLAUDE_PLUGIN_ROOT}/reference/clean-profile-test.sh <plugin-dir> <trigger> <timeout> [assertions...]`
+   - Available → run `${CLAUDE_PLUGIN_ROOT}/reference/clean-profile-test.sh <plugin-dir> <trigger> <timeout> [assertions...]`. Exit 0 = pass, exit 1 = assertion failure, exit 2 (execution error) → treat as `(clean profile unavailable)`.
    - Unavailable → silent degradation, report marks `(clean profile unavailable)`
 3. **Compare results**:
+   The Phase 2 TDD pass result (from the current session) serves as the polluted baseline — it passed with user-specific context present.
    - Both pass → `(verified: clean)` in report
    - Polluted pass + clean fail → WARNING with failing assertions listed. Skill depends on external context.
    - Clean unavailable → `(clean profile unavailable)` in report
@@ -290,7 +292,7 @@ Plugin Forge Report: <plugin-name>
 Structure:  PASS/FAIL (N items fixed)
 Skills:     N skills tested (M scenarios, K passed)
 Clean Profile: N skills verified (K clean-pass, J context-dependent)
-               Mode: clean / polluted-only / unavailable
+               Mode: clean / unavailable
 Agents:     N agents verified
 Evolution:  N skills with self-improvement
             Level: Full (D1+D2) / D1 only / Skipped
