@@ -5,24 +5,37 @@ interface Props {
   targets: Target[]
   selectedTarget: string | null
   lastRuns: Record<string, Run>
+  activeRuns?: Run[]  // NEW — from worker IPC state
   healthData?: Record<string, { health: 'improving' | 'stable' | 'degrading' }>
   onSelect: (targetName: string) => void
   onRun: (targetName: string) => void
   onAddTarget: () => void
 }
 
-function statusDotColor(run: Run | undefined): string {
-  if (!run) return 'var(--muted)'
-  switch (run.status) {
-    case 'completed': return 'var(--success)'
-    case 'failed': return 'var(--error)'
-    case 'running': return 'var(--accent)'
-    case 'queued': return 'var(--warn)'
-    default: return 'var(--muted)'
+function statusDotInfo(
+  targetName: string,
+  lastRun: Run | undefined,
+  activeRuns: Run[]
+): { color: string; animate: boolean } {
+  const targetActive = activeRuns.filter(r => r.target === targetName)
+  if (targetActive.some(r => r.status === 'running')) {
+    return { color: 'var(--accent)', animate: true }
   }
+  if (targetActive.some(r => r.status === 'queued')) {
+    return { color: 'var(--warn)', animate: false }
+  }
+  if (!lastRun) return { color: 'var(--muted)', animate: false }
+  const colors: Record<string, string> = {
+    completed: 'var(--success)',
+    failed: 'var(--error)',
+    running: 'var(--accent)',
+    queued: 'var(--warn)',
+    cancelled: 'var(--muted)',
+  }
+  return { color: colors[lastRun.status] ?? 'var(--muted)', animate: false }
 }
 
-export function Sidebar({ targets, selectedTarget, lastRuns, healthData, onSelect, onRun, onAddTarget }: Props) {
+export function Sidebar({ targets, selectedTarget, lastRuns, activeRuns, healthData, onSelect, onRun, onAddTarget }: Props) {
   if (targets.length === 0) {
     return html`
       <aside style="width:240px;min-width:240px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
@@ -61,7 +74,10 @@ export function Sidebar({ targets, selectedTarget, lastRuns, healthData, onSelec
                 <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${target.name}</div>
                 <div style="font-size:12px;color:var(--muted);">${target.type}</div>
               </div>
-              <div style="width:8px;height:8px;border-radius:50%;background:${statusDotColor(lastRun)};flex-shrink:0;" title=${lastRun?.status ?? 'no runs'}></div>
+              ${(() => {
+                const dot = statusDotInfo(target.name, lastRun, activeRuns ?? [])
+                return html`<div style="width:8px;height:8px;border-radius:50%;background:${dot.color};flex-shrink:0;${dot.animate ? 'animation:pulse 1.5s ease-in-out infinite;' : ''}" title=${lastRun?.status ?? 'no runs'}></div>`
+              })()}
               ${targetHealth && html`
                 <span
                   aria-label="trend: ${targetHealth.health === 'improving' ? 'up' : targetHealth.health === 'degrading' ? 'down' : 'flat'}"

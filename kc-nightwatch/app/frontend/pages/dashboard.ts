@@ -1,6 +1,6 @@
 import { html } from 'htm/preact'
 import { useState, useEffect } from 'preact/hooks'
-import type { Target, Run } from '../../shared/types.ts'
+import type { Target, Run, ScheduleConfig } from '../../shared/types.ts'
 import { Sidebar } from '../components/sidebar.ts'
 import { TargetDetail } from '../components/target-detail.ts'
 import { TriggerDialog } from '../components/trigger-dialog.ts'
@@ -22,6 +22,8 @@ export function Dashboard({ healthData }: DashboardProps = {}) {
   const [dialogTarget, setDialogTarget] = useState('')
   const [hasActiveRuns, setHasActiveRuns] = useState(false)
   const [workerQueue, setWorkerQueue] = useState<Run[]>([])
+  const [activeRuns, setActiveRuns] = useState<Run[]>([])
+  const [globalSchedule, setGlobalSchedule] = useState<ScheduleConfig | null>(null)
   const [showAddWizard, setShowAddWizard] = useState(false)
 
   useEffect(() => {
@@ -29,6 +31,9 @@ export function Dashboard({ healthData }: DashboardProps = {}) {
     api.getTargets().then(list => {
       setTargets(list)
     }).catch(console.error)
+
+    // Fetch global schedule
+    api.getSchedule().then(setGlobalSchedule).catch(console.error)
 
     // Fetch runs and build lastRuns map (most recent per target)
     loadRuns()
@@ -58,6 +63,7 @@ export function Dashboard({ healthData }: DashboardProps = {}) {
     // Fetch queue state for queue display in TargetDetail
     api.getWorkerState().then(state => {
       setWorkerQueue(state.queue)
+      setActiveRuns(state.active ?? [])
     }).catch(console.error)
   }
 
@@ -101,6 +107,7 @@ export function Dashboard({ healthData }: DashboardProps = {}) {
         targets=${targets}
         selectedTarget=${selectedTarget}
         lastRuns=${lastRuns}
+        activeRuns=${activeRuns}
         healthData=${healthData}
         onSelect=${(name: string) => { setSelectedTarget(name) }}
         onRun=${openDialog}
@@ -115,10 +122,24 @@ export function Dashboard({ healthData }: DashboardProps = {}) {
             disabled=${hasActiveRuns}
           >Run All</button>
         </div>
+        <!-- Parallel execution summary line -->
+        ${(() => {
+          const running = activeRuns.filter(r => r.status === 'running').length
+          const queued = activeRuns.filter(r => r.status === 'queued').length
+          if (running === 0 && queued === 0) return null
+          return html`
+            <div style="padding:6px 16px;border-bottom:1px solid var(--border);background:var(--panel);font-size:12px;color:var(--muted);flex-shrink:0;">
+              ${running > 0 ? html`<span style="color:var(--success);">${running}</span><span> target${running !== 1 ? 's' : ''} running</span>` : null}
+              ${running > 0 && queued > 0 ? html`<span> \u00b7 </span>` : null}
+              ${queued > 0 ? html`<span style="color:var(--warn);">${queued}</span><span> queued</span>` : null}
+            </div>
+          `
+        })()}
         <${TargetDetail}
           target=${selectedTargetObj}
           lastRun=${lastRunForSelected}
           workerQueue=${workerQueue}
+          globalSchedule=${globalSchedule}
           onRun=${(mode: 'production' | 'dry-run') => selectedTarget && openDialog(selectedTarget)}
           onRemove=${handleRemove}
         />
