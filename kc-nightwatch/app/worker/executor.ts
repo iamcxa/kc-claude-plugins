@@ -148,6 +148,16 @@ export async function executeRun(
     phases_completed: legacyPhases,
   }
 
+  // Capture stderr in background (safehouse/claude errors go here)
+  const stderrChunks: string[] = []
+  ;(async () => {
+    for await (const chunk of child.stderr) {
+      const text = new TextDecoder().decode(chunk)
+      stderrChunks.push(text)
+      log.warn({ component: 'worker', msg: `Run ${run.id} stderr: ${text.trim().slice(0, 200)}` })
+    }
+  })()
+
   try {
     for await (const chunk of child.stdout) {
       const lines = new TextDecoder().decode(chunk).split('\n').filter(Boolean)
@@ -187,7 +197,10 @@ export async function executeRun(
     clearTimeout(runtimeTimeout)
     activePids.delete(run.id)
 
-    // Write run artifacts
+    // Write run artifacts (include stderr if stdout was empty)
+    if (logLines.length === 0 && stderrChunks.length > 0) {
+      logLines.push(JSON.stringify({ type: 'system', subtype: 'stderr', message: stderrChunks.join('').trim() }))
+    }
     await Bun.write(logFilePath, logLines.join('\n') + '\n')
 
     // Only write legacy phases_completed if skill didn't produce a summary.yaml
