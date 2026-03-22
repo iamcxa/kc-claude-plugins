@@ -62,10 +62,12 @@ const mockReadYamlFile = mock(async (_path: string) => null)
 
 mock.module('../../server/services/yaml-store.ts', () => ({
   readTargets: mockReadTargets,
+  writeTargets: mock(async (_targets: unknown) => {}),
   loadOrCreateAppConfig: mockLoadOrCreateAppConfig,
   writeAppConfig: mockWriteAppConfig,
   readYamlFile: mockReadYamlFile,
   writeYamlFile: mock(async (_path: string, _data: unknown) => {}),
+  TARGETS_YAML_PATH: '/tmp/test-targets.yaml',
 }))
 
 // Mocks for new outcome tools dependencies (Phase 10)
@@ -86,11 +88,16 @@ mock.module('../../server/services/run-store.ts', () => ({
   listRuns: mockListRuns,
   getRun: mockGetRun,
   appendRun: mockAppendRun,
+  RUNS_YAML_PATH: '/tmp/test-runs.yaml',
 }))
 
 mock.module('../../server/services/feedback-store.ts', () => ({
   appendFeedback: mockAppendFeedback,
   getCalibrationData: mockGetCalibrationData,
+  getFeedbackForRun: mock(async () => []),
+  getFeedbackForSignal: mock(async () => []),
+  writeFeedbackTrends: mock(async () => {}),
+  FEEDBACK_YAML_PATH: '/tmp/test-feedback.yaml',
 }))
 
 // ============================================================

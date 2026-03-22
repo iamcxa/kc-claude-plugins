@@ -14,6 +14,8 @@ const mockCheckLinearStatus = mock(async (_url: string): Promise<'accepted' | 'r
 mock.module('../../server/services/outcome-store.ts', () => ({
   queryOutcomes: mockQueryOutcomes,
   readOutcomes: mockReadOutcomes,
+  appendOutcome: mock(async () => {}),
+  OUTCOMES_YAML_PATH: '/tmp/test-outcomes.yaml',
 }))
 
 mock.module('../../worker/feedback-collector.ts', () => ({
@@ -24,6 +26,7 @@ mock.module('../../worker/feedback-collector.ts', () => ({
 
 mock.module('../../server/services/yaml-store.ts', () => ({
   readTargets: mock(async () => ({})),
+  writeTargets: mock(async () => {}),
   loadOrCreateAppConfig: mock(async () => ({
     host: '127.0.0.1',
     port: 3200,
@@ -33,17 +36,24 @@ mock.module('../../server/services/yaml-store.ts', () => ({
   })),
   writeAppConfig: mock(async () => {}),
   readYamlFile: mock(async () => null),
+  writeYamlFile: mock(async () => {}),
+  TARGETS_YAML_PATH: '/tmp/test-targets.yaml',
 }))
 
 mock.module('../../server/services/run-store.ts', () => ({
   listRuns: mock(async () => []),
   getRun: mock(async () => null),
   appendRun: mock(async () => {}),
+  RUNS_YAML_PATH: '/tmp/test-runs.yaml',
 }))
 
 mock.module('../../server/services/feedback-store.ts', () => ({
   appendFeedback: mock(async () => {}),
   getCalibrationData: mock(async () => []),
+  getFeedbackForRun: mock(async () => []),
+  getFeedbackForSignal: mock(async () => []),
+  writeFeedbackTrends: mock(async () => {}),
+  FEEDBACK_YAML_PATH: '/tmp/test-feedback.yaml',
 }))
 
 // ============================================================
