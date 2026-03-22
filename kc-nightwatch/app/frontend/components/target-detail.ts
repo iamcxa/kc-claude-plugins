@@ -1,12 +1,13 @@
 import { html } from 'htm/preact'
-import { useState } from 'preact/hooks'
-import type { Target, Run, RunSummary } from '../../shared/types.ts'
+import { useState, useEffect } from 'preact/hooks'
+import type { Target, Run, RunSummary, ScheduleConfig } from '../../shared/types.ts'
 import { RunTimeline } from './run-timeline.ts'
 
 interface Props {
   target: Target | null
   lastRun: (Run & { summary?: RunSummary }) | null
   workerQueue?: Run[]
+  globalSchedule?: ScheduleConfig | null  // NEW
   onRun: (mode: 'production' | 'dry-run') => void
   onRemove: () => void
 }
@@ -43,12 +44,45 @@ function timeAgo(dateStr?: string): string {
   return `${Math.floor(h / 24)}d ago`
 }
 
-export function TargetDetail({ target, lastRun, workerQueue, onRun, onRemove }: Props) {
+export function TargetDetail({ target, lastRun, workerQueue, globalSchedule, onRun, onRemove }: Props) {
   const [showMenu, setShowMenu] = useState(false)
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
+  const [nextRunText, setNextRunText] = useState('')
 
   const phases = lastRun?.summary?.phases_completed ?? []
   const isRunning = lastRun?.status === 'running'
+
+  useEffect(() => {
+    if (!target) { setNextRunText(''); return }
+    const effectiveInterval = target.schedule?.interval_hours ?? globalSchedule?.interval_hours
+    if (!effectiveInterval || !globalSchedule?.enabled) {
+      setNextRunText('Not yet scheduled')
+      return
+    }
+    const updateCountdown = () => {
+      const lastRunMs = lastRun?.started_at ? new Date(lastRun.started_at).getTime() : null
+      if (!lastRunMs) {
+        setNextRunText('Not yet scheduled')
+        return
+      }
+      const intervalMs = effectiveInterval * 3_600_000
+      const nextRunMs = lastRunMs + intervalMs
+      const remaining = nextRunMs - Date.now()
+      if (remaining <= 0) {
+        setNextRunText('Due now')
+        return
+      }
+      const h = Math.floor(remaining / 3_600_000)
+      const m = Math.floor((remaining % 3_600_000) / 60_000)
+      const nextDate = new Date(nextRunMs)
+      const hh = String(nextDate.getHours()).padStart(2, '0')
+      const mm = String(nextDate.getMinutes()).padStart(2, '0')
+      setNextRunText(`Next: ${hh}:${mm} (in ${h}h ${m}m)`)
+    }
+    updateCountdown()
+    const id = setInterval(updateCountdown, 60_000)
+    return () => clearInterval(id)
+  }, [target?.name, target?.schedule?.interval_hours, globalSchedule?.interval_hours, globalSchedule?.enabled, lastRun?.started_at])
 
   if (!target) {
     return html`
@@ -70,6 +104,19 @@ export function TargetDetail({ target, lastRun, workerQueue, onRun, onRemove }: 
       <div style="margin-bottom:20px;padding:12px;background:var(--panel);border:1px solid var(--border);border-radius:6px;">
         <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:6px;">North star</div>
         <p style="margin:0;color:var(--text);font-style:italic;line-height:1.5;">${target.north_star}</p>
+      </div>
+
+      <!-- Schedule -->
+      <div style="margin-bottom:20px;padding:12px;background:var(--panel);border:1px solid var(--border);border-radius:6px;">
+        <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:6px;">Schedule</div>
+        <div style="font-size:14px;color:var(--text);margin-bottom:4px;">
+          ${target.schedule?.interval_hours
+            ? `Every ${target.schedule.interval_hours}h (custom)`
+            : globalSchedule?.interval_hours
+              ? `Every ${globalSchedule.interval_hours}h (global)`
+              : 'No schedule configured'}
+        </div>
+        <div style="font-size:12px;color:var(--muted);">${nextRunText}</div>
       </div>
 
       <!-- Action buttons -->
