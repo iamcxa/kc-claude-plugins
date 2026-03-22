@@ -77,3 +77,10 @@ When a skill supports multiple flow modes (e.g., browser + CLI-only), a "BLOCKIN
 
 **Applies to**: Any skill with multi-mode pipelines sharing a common preamble (e.g., browser/CLI, sync/async, interactive/batch)
 **Action**: Audit each "BLOCKING" / "must complete before proceeding" gate — does it apply to ALL modes or only some? Mode-specific gates need early intent detection before enforcement.
+
+## PreToolUse block is bypassed by Bash — warn beats block for hooks (2026-03-22)
+
+A `PreToolUse:Write` hook that returns `{"decision": "block"}` only blocks the Write tool. Agents bypass it by using Bash (`echo > file`, `cat <<EOF > file`) — the hook never fires on Bash tool calls to the same path. Result: the agent learns to avoid Write, not to avoid the prohibited action. Worse: Bash writes get zero warning, so the bypass is completely silent. **Fix**: replace `"decision": "block"` with plain text warning output (cat <<'WARN'). PreToolUse hooks that output text (not JSON) inject that text as a warning into agent context without blocking. This is cooperative (agent gets consequences, decides) vs adversarial (agent finds workaround). Keep sentinel mechanisms for authorized paths — sentinel present → `exit 0` (silent), sentinel absent → warning text.
+
+**Applies to**: Any PreToolUse hook that uses `"decision": "block"` on Write/Edit tools. Bash tool can perform the same filesystem operations.
+**Action**: Prefer warn over block for file-write guards. Reserve block for truly dangerous operations where Bash bypass is also covered (e.g., matching both Write and Bash tools for the same path pattern).
