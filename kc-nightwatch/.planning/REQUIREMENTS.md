@@ -41,6 +41,12 @@ Requirements for parallel execution + auto-action milestone. Each maps to roadma
 
 ## v3 Requirements
 
+### Run Execution UX
+
+- **RUNUX-01**: Completed run detail reads log from file (GET /api/runs/:id/log) — SSE-only log display shows "Waiting for output..." when page opens after run finishes
+- **RUNUX-02**: Target `path` field required in Add Target wizard — optional path falls back to nonexistent directory, causing silent execution failures
+- **RUNUX-03**: Server hot-reload or auto-restart on code change — currently requires manual restart after every code edit
+
 ### Extended Feedback
 
 - **EXTFEED-01**: Slack reaction parsing on reports
