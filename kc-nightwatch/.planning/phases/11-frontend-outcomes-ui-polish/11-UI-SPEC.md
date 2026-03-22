@@ -60,12 +60,12 @@ Declared values (must be multiples of 4):
 |-------|-------|-------|
 | xs | 4px | Icon gaps, badge internal padding (2px 6px), feedback button gaps |
 | sm | 8px | Card inner padding, list item vertical padding, gap between related elements |
-| md | 12px | Header padding, card section internal padding |
-| lg | 16px | Section padding, detail panel padding, wizard modal padding (24px at modal level) |
-| xl | 24px | Modal internal padding (add-target-wizard), major section margin-bottom |
+| md | 16px | Section padding, detail panel padding, wizard modal padding (24px at modal level) |
+| lg | 24px | Modal internal padding (add-target-wizard), major section margin-bottom |
 | 2xl | 48px | Bottom nav height, schedule bar height |
 
 Exceptions:
+- 12px padding: established codebase pattern (runs.ts filter bar, action-card.ts, target-detail.ts) used as mid-range padding between 8px and 16px. Retained for consistency with existing shipped phases. All component contracts that reference "12px" padding use this documented exception value.
 - Bottom nav: 48px fixed height (touch target, D-18) — source: bottom-nav.ts
 - Schedule bar: 48px fixed height (matches nav, visual consistency) — source: schedule-bar.ts
 - Sidebar width: 240px fixed (D-07 prohibits widening) — source: sidebar.ts
@@ -90,7 +90,7 @@ Rules carried into Phase 11:
 - Status badges: 12px, weight 600, text-transform: uppercase
 - Type/category chips: 11px, weight 400, color var(--muted), background var(--btn-secondary)
 - Section label above a group: 12px, weight 600, color var(--muted), margin-bottom 4px
-- Monospace content (YAML preview): 13px, var(--font-mono)
+- Monospace content (YAML preview): 12px, var(--font-mono) — uses a distinct font stack (--font-mono), so 12px does not cause visual confusion with 12px sans-serif labels
 
 ---
 
@@ -130,6 +130,8 @@ Warn (#d29922 `--warn`):
 
 **Layout:** Identical split-panel to `runs.ts`. Full-height flex column. Left = filter bar + list. Right = detail panel when an outcome is selected.
 
+**Primary visual anchor: status dot color column — users scan for color before reading text.**
+
 **Source decision:** D-01 (list → detail), D-02 (filter bar), D-03 (card fields), D-04 (detail panel)
 
 **Filter bar:** `padding: 12px 16px`, border-bottom, 3 `<select>` dropdowns:
@@ -167,14 +169,14 @@ cancelled  → var(--muted)
 - Fields section: same pattern as target-detail.ts "North star" card
   - `background: var(--panel)`, `border: 1px solid var(--border)`, `border-radius: 6px`, `padding: 12px`
 - Field list (label 12px muted 600, value 14px text):
-  - Target, Type, Status (with color), Created, Signal ID (monospace 13px), Run ID (monospace 13px)
+  - Target, Type, Status (with color), Created, Signal ID (monospace 12px), Run ID (monospace 12px)
 - URL: `<a href={url} target="_blank">` styled as `color: var(--accent)`, font-size 14px, full URL visible (not truncated)
 - Status check button: `padding: 3px 8px`, font-size 12px, `border: 1px solid var(--accent)`, `color: var(--accent)`, background transparent, label "Check status"
 
 **Empty state (no outcomes yet):**
 - Heading: "No outcomes recorded yet"
 - Body: "Outcomes appear here after a run creates PRs or Linear issues."
-- Style: centered in list area, color var(--muted), font-size 13px — copy from `runs.ts` empty state pattern
+- Style: centered in list area, color var(--muted), font-size 12px — copy from `runs.ts` empty state pattern
 
 **Empty state (filter returns no results):**
 - "No outcomes match the current filters."
@@ -212,7 +214,7 @@ Sidebar width: 240px — unchanged (D-07).
 
 A single-line status summary is inserted between the ScheduleBar and the main dashboard split layout.
 
-**Location in DOM:** `padding: 6px 16px`, between schedule bar and sidebar+content row, `border-bottom: 1px solid var(--border)`, `background: var(--panel)`, `font-size: 13px`, `color: var(--muted)`
+**Location in DOM:** `padding: 6px 16px`, between schedule bar and sidebar+content row, `border-bottom: 1px solid var(--border)`, `background: var(--panel)`, `font-size: 12px`, `color: var(--muted)`
 
 **Content:**
 - 0 active: hidden (render null)
@@ -303,7 +305,8 @@ Step validation (all steps):
 |---------|------|
 | Primary CTA (Outcomes page) | "Check status" |
 | Primary CTA (Wizard save) | "Validate & Save" (unchanged) |
-| Primary CTA (wizard next) | "Next" (unchanged) |
+| Primary CTA (wizard next, steps 1–3) | "Next" |
+| Primary CTA (wizard next, step 3 → schedule step) | "Next: Schedule" |
 | Empty state heading — Outcomes (no data) | "No outcomes recorded yet" |
 | Empty state body — Outcomes | "Outcomes appear here after a run creates PRs or Linear issues." |
 | Empty state heading — Outcomes (filtered) | "No outcomes match the current filters." |
