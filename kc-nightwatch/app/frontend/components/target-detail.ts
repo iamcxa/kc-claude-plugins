@@ -205,18 +205,22 @@ export function TargetDetail({ target, lastRun, workerQueue, globalSchedule, onR
         <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px;">Last run</div>
         ${lastRun
           ? html`
-            <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px;">
+            <a href="#/runs/${lastRun.id}" style="display:block;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px;cursor:pointer;"
+              onMouseEnter=${(e: MouseEvent) => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent)' }}
+              onMouseLeave=${(e: MouseEvent) => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)' }}
+            >
               <div style="display:flex;gap:16px;align-items:center;margin-bottom:8px;">
                 ${statusBadge(lastRun.status)}
                 <span style="color:var(--muted);font-size:12px;">${lastRun.trigger}</span>
                 <span style="color:var(--muted);font-size:12px;">${formatDuration(lastRun.duration_seconds)}</span>
+                <span style="color:var(--accent);font-size:12px;margin-left:auto;">View →</span>
               </div>
               ${phases.length > 0 && html`
                 <div style="margin-top:8px;">
                   <${RunTimeline} phases=${phases} activePhase=${isRunning ? phases[phases.length - 1] ?? null : null} />
                 </div>
               `}
-            </div>
+            </a>
           `
           : html`<div style="color:var(--muted);font-size:13px;">No runs yet</div>`
         }
