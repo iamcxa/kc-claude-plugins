@@ -100,6 +100,19 @@ agent-browser errors --clear
 
 Capture network baseline — run `agent-browser network requests` and note the current count so post-step collection only reports new requests.
 
+Start HAR recording for full request/response body capture:
+```bash
+agent-browser network har start
+```
+
+Capture storage and cookies baseline (useful for cache/auth debugging):
+```bash
+agent-browser storage local       # localStorage snapshot
+agent-browser storage session     # sessionStorage snapshot
+agent-browser cookies             # all cookies
+```
+Note the baseline values — post-step collection compares against these.
+
 Record starting URL:
 ```bash
 agent-browser get url
@@ -171,6 +184,11 @@ agent-browser network requests
 
 # Current URL (detect redirects, SPA route changes)
 agent-browser get url
+
+# Storage changes (compare against baseline — only report if changed)
+agent-browser storage local
+agent-browser storage session
+agent-browser cookies
 ```
 
 **Parsing collected data:**
@@ -179,6 +197,7 @@ agent-browser get url
 - **Errors**: Parse JSON output. Count and store each error with message.
 - **Network**: Parse the text output. Each line is a request. If `network_filters` are provided, keep only requests whose URL contains any filter keyword. Record method, URL, status code for each.
 - **URL**: Compare against previous step's URL. If changed unexpectedly (e.g., redirect to /login), note as anomaly.
+- **Storage/Cookies**: Compare against baseline captured in Step 2. Only report entries that **changed** since baseline (new keys, modified values, deleted keys). Unchanged entries are noise — omit them. This reveals cache mutations and auth token changes caused by each step.
 
 ### 3d: Record step result
 
@@ -189,6 +208,7 @@ Store for each step:
 - JS errors captured after this step
 - Network requests captured after this step (filtered if network_filters provided)
 - Current URL after this step
+- Storage/cookie changes (diff from baseline — only changed entries)
 - Screenshot path
 
 ---
@@ -235,6 +255,20 @@ Use the **Write** tool to write `{{report_dir}}/report.md`. Do NOT use Bash echo
 
 > Network filter (inclusion): api/export, api/dashboard
 
+## Storage & Cookie Changes
+
+| # | Step | Type | Key | Before | After |
+|---|------|------|-----|--------|-------|
+| 1 | 2 | localStorage | auth_token | (none) | eyJhbG... |
+| 2 | 3 | cookie | session_id | abc123 | def456 |
+
+> Only entries that changed from baseline are shown. Unchanged entries omitted.
+
+## HAR Recording
+
+Full HTTP request/response data saved to: `debug.har`
+Use browser DevTools or `jq` to inspect individual request bodies.
+
 ## Step Screenshots
 
 | Step | Path |
@@ -270,9 +304,15 @@ Use the **Write** tool to write `{{report_dir}}/report.md`. Do NOT use Bash echo
 
 ---
 
-## Step 5: Close Browser
+## Step 5: Save HAR + Close Browser
 
-Always close the browser, even if prior steps failed:
+Stop HAR recording and save before closing:
+
+```bash
+agent-browser network har stop "{{report_dir}}/debug.har"
+```
+
+Then close the browser (even if prior steps failed):
 
 ```bash
 agent-browser close
