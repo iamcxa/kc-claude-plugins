@@ -33,7 +33,9 @@ Read -> ${CLAUDE_PLUGIN_ROOT}/skills/*/SKILL.md  (extract name + description fro
 Read -> ${CLAUDE_PLUGIN_ROOT}/docs/*.md           (extract filenames for topic mapping)
 ```
 
-Present:
+**IMPORTANT: The table below is a formatting guide only — populate it from live reads above.** New skills added to the plugin must appear in the output. Do not emit this template verbatim.
+
+Present (format guide — populate from live data):
 
 ```markdown
 # E2E Pipeline -- Quick Reference
@@ -42,20 +44,8 @@ Present:
 
 | Command | What it does |
 |---------|-------------|
-| `/e2e-map` | Map your app's UI elements -> YAML mapping |
-| `/e2e-test <flow>` | Run a test flow against mapped UI |
-| `/e2e-test --suite <name>` | Run a curated suite of flows |
-| `/e2e-test --all-sites` | Auto-discover sites and run flows |
-| `/e2e-test --tag smoke` | Run all flows tagged with `smoke` |
-| `/e2e-flow --from <plan>` | Generate + verify flow from a plan/spec |
-| `/e2e-flow --smoke` | Generate visit-all-pages smoke flow |
-| `/e2e-flow --verify-only <flow>` | Verify existing flow with auto-repair |
-| `/e2e-walkthrough` | Interactive browser exploration |
-| `/e2e-compile --all` | Compile flows to standalone CI scripts |
-| `/e2e-dispatch` | Unified entry point (routes to right skill) |
-| `/e2e-doc-sync` | Scan and update documentation gaps |
-| `/e2e-skill-ops` | Debug, maintain, or evaluate pipeline skills |
-| `/e2e-help` | This help screen |
+| `/<skill-name>` | <extracted from skill description frontmatter> |
+| ... | ... |
 
 ## Topics (use `/e2e-help <topic>` for details)
 

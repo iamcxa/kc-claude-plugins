@@ -66,14 +66,14 @@ for assertion in "${ASSERTIONS[@]}"; do
   case "$assertion" in
     contains:*)
       pattern="${assertion#contains:}"
-      if ! echo "$OUTPUT" | grep -qi "$pattern"; then
+      if ! echo "$OUTPUT" | grep -qiF -- "$pattern"; then
         echo "FAIL: expected '$pattern' not found"
         FAILED=1
       fi
       ;;
     not_contains:*)
       pattern="${assertion#not_contains:}"
-      if echo "$OUTPUT" | grep -qi "$pattern"; then
+      if echo "$OUTPUT" | grep -qiF -- "$pattern"; then
         echo "FAIL: unexpected '$pattern' found"
         FAILED=1
       fi
