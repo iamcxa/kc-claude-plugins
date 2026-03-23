@@ -68,19 +68,24 @@ You are a browser observation specialist. You open a browser, execute reproducti
 mkdir -p "{{report_dir}}"
 ```
 
-Choose browser open mode (in priority order):
+Choose browser open mode — `--headed` and `--profile` are orthogonal:
 
-1. If `auth_profile` is provided:
+1. If `auth_profile` AND `headed`:
+```bash
+agent-browser --profile "{{auth_profile}}" --headed open "{{target_url}}"
+```
+
+2. If `auth_profile` only:
 ```bash
 agent-browser --profile "{{auth_profile}}" open "{{target_url}}"
 ```
 
-2. If `headed` is `true` (no auth_profile):
+3. If `headed` only (no auth_profile):
 ```bash
 agent-browser --headed open "{{target_url}}"
 ```
 
-3. Otherwise (headless, no auth):
+4. Otherwise (headless, no auth):
 ```bash
 agent-browser open "{{target_url}}"
 ```
@@ -91,10 +96,17 @@ Wait for page load:
 agent-browser wait --load networkidle
 ```
 
-**Headed mode auth pause:** If `headed` is `true`, after page load, use `AskUserQuestion` to pause:
-> "Browser is open in headed mode. Please log in manually, then confirm here when ready to continue."
+**Headed mode auth pause:** If `headed` is `true`, after page load, **return immediately** with status `WAITING_FOR_AUTH`:
 
-Wait for user confirmation before proceeding to Step 2. This allows the user to complete any auth flow (login, 2FA, OAuth) in the visible browser window.
+```
+WAITING_FOR_AUTH
+browser_open: true
+headed: true
+target_url: {{target_url}}
+message: Browser is open in headed mode. Please log in manually, then tell the skill to continue.
+```
+
+The **orchestrator skill** (not this agent) handles user interaction. The skill will re-dispatch this agent after user confirms login. On re-dispatch, skip Step 1 (browser already open) and proceed from Step 2.
 
 If the browser fails to open (command exits non-zero or times out), record the error and skip to Step 5 (Close Browser). Do NOT retry.
 

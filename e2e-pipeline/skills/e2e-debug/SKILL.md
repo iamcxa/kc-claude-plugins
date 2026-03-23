@@ -162,6 +162,7 @@ Agent(subagent_type="e2e-pipeline:e2e-debug-observe"):
       ...
     report_dir: <absolute_path>/.claude/e2e/debug
     auth_profile: <path if needed>
+    headed: true              # only include if --headed flag provided
     log_tags:
       - E2E-DBG
     network_filters:
@@ -171,7 +172,8 @@ Agent(subagent_type="e2e-pipeline:e2e-debug-observe"):
 
 ### Handle agent result
 
-- **Success:** Agent returns structured summary with console output, errors, network data. Proceed to Phase 3.
+- **`WAITING_FOR_AUTH`:** Agent opened headed browser but needs user to log in. Present the agent's message to the user, wait for confirmation ("已登入" / "ready" / "continue"), then re-dispatch the same agent with the same payload. The browser is already open — the agent will skip Step 1 on re-dispatch.
+- **`OBSERVATION COMPLETE`:** Agent finished successfully. Proceed to Phase 3.
 - **Failure:** Note the failure reason. **Still proceed to Phase 4 (cleanup).** Skip Phase 3 — report that observation failed and suggest manual reproduction.
 
 ---
