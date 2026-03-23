@@ -11,18 +11,21 @@
   "plugins": [
     {
       "name": "e2e-pipeline",
+      "source": "./e2e-pipeline",
       "description": "Browser & CLI E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video, terminal recording for CLI-only flows",
       "version": "2.5.0",
       "keywords": ["e2e", "browser-testing", "agent-browser", "ui-mapping", "flow-generation", "flow-verification", "video-recording", "cli-recording", "subagents"]
     },
     {
       "name": "kc-plugin-forge",
+      "source": "./kc-plugin-forge",
       "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, doc self-iteration",
       "version": "1.5.0",
       "keywords": ["plugin", "quality", "tdd", "validation", "forge", "lifecycle", "audit"]
     },
     {
       "name": "kc-nightwatch",
+      "source": "./kc-nightwatch",
       "description": "Autonomous nightly improvement — forge validation, multi-source signal discovery (journal, Sentry, E2E, git), north-star-aligned proposals and alerts",
       "version": "0.4.0",
       "keywords": ["nightwatch", "improvement", "automation", "forge", "scheduler", "quality"]
