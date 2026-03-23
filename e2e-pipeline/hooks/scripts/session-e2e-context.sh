@@ -5,6 +5,16 @@ set -euo pipefail
 input=$(cat)
 project_dir="${CLAUDE_PROJECT_DIR:-$(echo "$input" | jq -r '.cwd // "."')}"
 
+# Debug injection residual check
+debug_manifest="$project_dir/.claude/e2e/debug/manifest.yaml"
+if [ -f "$debug_manifest" ]; then
+  session_id=$(grep 'session_id:' "$debug_manifest" | head -1 | sed 's/.*: *//' | tr -d '"')
+  files=$(grep '  file:' "$debug_manifest" | sed 's/.*file: *//' | tr -d '"' | paste -sd ', ')
+  jq -n --arg msg "⚠️ Uncleaned debug injections detected (session: ${session_id}). Run /e2e-debug --cleanup or manually remove. Affected files: ${files}" \
+    '{"systemMessage": $msg}'
+  exit 0
+fi
+
 mapping_dir="$project_dir/.claude/e2e/mappings"
 if [ ! -d "$mapping_dir" ] || ! ls "$mapping_dir"/*.yaml &>/dev/null; then
   exit 0

@@ -39,12 +39,13 @@ No args or ambiguous request: present the routing menu and ask user to choose:
 > 6. `--ops` — Debug, maintain, or evaluate E2E skills
 > 7. `--help` — Interactive help guide & topic deep-dive
 > 8. `--doc-sync` — Scan docs for gaps, write updates
+> 9. `/e2e-debug` — Debug frontend runtime bugs (inject logs → browser observe → cleanup)
 >
 > Which operation? (or describe what you want to do)
 
 **Routing priority** (when user intent matches multiple routes):
 1. Explicit `--flag` → use that route directly
-2. Natural language with clear action verb → match: "test" → `--test`, "record/map" → `--map`, "generate flow/verify flow/smoke test" → `--flow`, "walk/explore/browse" → `--walk`, "analyze/trace" → `--analyze`, "debug/fix skill" → `--ops`, "help/how/what commands" → `--help`, "doc/sync docs/update docs" → `--doc-sync`
+2. Natural language with clear action verb → match: "test" → `--test`, "record/map" → `--map`, "generate flow/verify flow/smoke test" → `--flow`, "walk/explore/browse" → `--walk`, "analyze/trace" → `--analyze`, "debug/fix skill" → `--ops`, "help/how/what commands" → `--help`, "doc/sync docs/update docs" → `--doc-sync`, "debug runtime/inject logs/browser debug/data shape" → suggest `/e2e-debug` (direct invocation)
 3. Ambiguous → present the menu above and ask user to clarify
 
 **Unknown command** (e.g., `--deploy`, `--something`): respond with "Unknown e2e operation. Available operations:" + the menu above.
