@@ -32,6 +32,8 @@ Debug frontend runtime bugs by injecting `console.log` probes into suspect code,
 
 **No args:** Ask user to describe the bug or provide `--experiment` parameters. Do not proceed without input.
 
+**Experiment mode validation:** When `--experiment` is set, all three are required: `--inject`, `--steps`, `--url`. If any is missing, ask the user for the missing parameter(s) before proceeding. Do NOT skip Phase 0 as a fallback — experiment mode means the caller already did the analysis.
+
 ## Knowledge Bootstrap (before Phase 0)
 
 Read accumulated patterns to inform debug analysis:
@@ -67,6 +69,7 @@ Use loaded patterns to:
    - Grep for keywords from the symptom (component names, variable names, route paths)
    - Read the most relevant 2-3 files
    - Form a hypothesis based on common patterns (double-wrapping, undefined access, stale cache, race condition)
+   - **If grep yields nothing useful and no target URL can be determined:** tell the user what information is needed (suspect file, URL, or reproduction steps) before proceeding. Do not attempt blind injection.
 4. Present hypothesis to user for confirmation before proceeding
 
 ### Path C: `--continue` mode
