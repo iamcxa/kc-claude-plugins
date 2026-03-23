@@ -1,0 +1,110 @@
+# Architecture
+
+## Overview
+
+kc-plugin-forge is a skill-only plugin (no agents) that orchestrates marketplace skills to validate and improve other plugins.
+
+```
+kc-plugin-forge/
+├── .claude-plugin/plugin.json     # metadata only
+├── skills/
+│   ├── kc-plugin-forge/           # main orchestrator (5-phase pipeline)
+│   │   └── SKILL.md
+│   ├── kc-plugin-forge-help/      # interactive help guide
+│   │   └── SKILL.md
+│   └── kc-plugin-forge-doc-sync/  # documentation sync (Light — no live probes)
+│       └── SKILL.md
+├── hooks/
+│   └── hooks.json                 # SessionStart reminder
+├── reference/
+│   ├── quality-pipeline.md        # phase gotchas, cross-phase lessons (grows)
+│   ├── learned-patterns.md        # cross-project patterns from forge runs (grows)
+│   ├── skill-evolution.md         # D1/D2 self-improvement framework
+│   ├── doc-sync-templates.md      # templates for scaffolding doc-sync into plugins
+│   ├── doc-sync-context.md        # doc-sync domain knowledge (self-maintained)
+│   └── clean-profile-test.sh      # Phase 2.5 execution isolator script
+├── docs/
+│   ├── getting-started.md         # prerequisites, install, first run
+│   ├── commands.md                # all routes, flags, configuration
+│   └── architecture.md            # this file
+├── CLAUDE.md                      # plugin-specific conventions
+├── README.md                      # marketplace README
+└── LICENSE                        # MIT
+```
+
+## Pipeline Flow
+
+```
+/kc-plugin-forge <path>
+        │
+Phase 1 ─── plugin-dev:plugin-validator
+        │   (validate structure, fix FAILs)
+        │
+Phase 1.5 ── A: Self-Learning choice (D1+D2 / D1 / Skip)
+        │    B: Doc Self-Iteration choice (Full / Light / Skip)
+        │
+Phase 2 ─── superpowers:writing-skills
+        │   (RED/GREEN/REFACTOR per skill)
+        │
+Phase 2.5 ── clean-profile-test.sh
+        │    (claude --bare --effort low per skill)
+        │
+Phase 3 ─── plugin-dev:agent-development
+        │   (verify each agent)
+        │
+Phase 4 ─── plugin-dev:plugin-validator (re-validate)
+            + Summary Report
+            + Learning (Detection → Capture)
+```
+
+## Reference Files (Growing Knowledge Base)
+
+Two reference files grow over time through the Learning mechanism:
+
+### `quality-pipeline.md`
+
+Forge-specific gotchas organized by phase. Entries are added when a forge run discovers a new structural issue or anti-pattern. This is internal knowledge — it helps the forge itself make better decisions.
+
+### `learned-patterns.md`
+
+Cross-project patterns discovered during forge runs on any plugin. These are general — they apply to all plugin development, not just forge. The PR-back flow means patterns discovered by one user benefit everyone:
+
+```
+Plugin A forge → discovers pattern → appends to learned-patterns.md
+                                            ↓
+Plugin B forge → reads at startup → catches same issue class
+```
+
+## Self-Improvement Framework
+
+The forge scaffolds self-improvement into other plugins via Phase 1.5. Two dimensions:
+
+**D1 (cross-project)**: General patterns auto-append to `learned-patterns.md`. Low friction, no user gate.
+
+**D2 (project-specific)**: Patterns gated by severity threshold + three-question test (Recurs? Non-obvious? Ruleable?). Written to project CLAUDE.md or project-specific lesson files.
+
+See `reference/skill-evolution.md` for the full framework.
+
+## Doc-Sync Architecture
+
+The forge also scaffolds doc-sync capability into plugins (Phase 1.5 B). Three levels:
+
+| Level | Components | Probe? |
+|-------|-----------|--------|
+| Full | Skill + doc-probe agent + context reference | Yes (live behavioral verification) |
+| Light | Skill + context reference | No (static scan + history enrichment only) |
+| Skip | None | — |
+
+kc-plugin-forge itself uses **Light** — its skills depend on marketplace plugins, making live probes impractical.
+
+## Dependencies
+
+kc-plugin-forge has no agents of its own. It relies entirely on marketplace skills:
+
+| Dependency | Used in | Required? |
+|-----------|---------|-----------|
+| `superpowers:writing-skills` | Phase 2 | Yes |
+| `plugin-dev:plugin-validator` | Phase 1, 4 | Yes |
+| `plugin-dev:agent-development` | Phase 3 | Yes (if plugin has agents) |
+| `plugin-dev:create-plugin` | `new` route | Yes (for new plugins) |
+| `claude-md-management:revise-claude-md` | Phase 4 | Optional |

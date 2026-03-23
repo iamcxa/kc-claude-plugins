@@ -8,20 +8,21 @@ A Claude Code plugin (`kc-plugin-forge`) that provides a one-command quality pip
 
 ## Architecture
 
-**Skills** (2) run in main conversation context:
+**Skills** (3) run in main conversation context:
 
 ```
-skills/kc-plugin-forge/      -> main orchestrator (5-phase pipeline + routes: 1→1.5→2→2.5→3→4)
-skills/kc-plugin-forge-help/ -> interactive help guide, topic deep-dive, feedback collection
+skills/kc-plugin-forge/          -> main orchestrator (5-phase pipeline + routes: 1→1.5→2→2.5→3→4)
+skills/kc-plugin-forge-help/     -> interactive help guide, topic deep-dive, feedback collection
+skills/kc-plugin-forge-doc-sync/ -> documentation gap scanner & writer (Light — static scan + history)
 ```
 
 **Hooks** (1):
 
 ```
-hooks/session-start.md       -> reminds user of forge availability at session start
+hooks/hooks.json                 -> SessionStart reminder of forge availability
 ```
 
-**References** (5) — knowledge base read by the orchestrator skill:
+**References** (6) — knowledge base read by the orchestrator skill:
 
 ```
 reference/quality-pipeline.md    -> phase gotchas, cross-phase lessons (grows over time)
@@ -29,6 +30,7 @@ reference/skill-evolution.md     -> D1/D2 self-improvement framework
 reference/doc-sync-templates.md  -> templates for scaffolding doc-sync into plugins
 reference/learned-patterns.md    -> cross-project patterns from forge runs (grows over time)
 reference/clean-profile-test.sh  -> execution isolator for Phase 2.5 clean profile smoke test
+reference/doc-sync-context.md    -> doc-sync domain knowledge (self-maintained by doc-sync skill)
 ```
 
 ## Self-Improvement

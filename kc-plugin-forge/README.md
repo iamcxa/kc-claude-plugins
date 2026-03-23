@@ -156,6 +156,15 @@ Run with `/<plugin>-doc-sync` after scaffolding.
 |-------|---------|
 | `kc-plugin-forge` | Main orchestrator — full pipeline or single-phase routes |
 | `kc-plugin-forge-help` | Interactive guide, topic deep-dive, feedback → GitHub issue |
+| `kc-plugin-forge-doc-sync` | Documentation gap scanner & writer (Light — static scan + history) |
+
+## Documentation
+
+| File | Content |
+|------|---------|
+| `docs/getting-started.md` | Prerequisites, install, first forge run, Phase 2.5 setup |
+| `docs/commands.md` | All routes, flags, Phase 2.5 configuration |
+| `docs/architecture.md` | Pipeline flow, file tree, reference descriptions, dependencies |
 
 ## Reference Files
 
@@ -165,6 +174,8 @@ Run with `/<plugin>-doc-sync` after scaffolding.
 | `reference/skill-evolution.md` | D1/D2 self-improvement framework |
 | `reference/doc-sync-templates.md` | Templates for scaffolding doc-sync into plugins |
 | `reference/learned-patterns.md` | Cross-project patterns accumulated from forge runs |
+| `reference/doc-sync-context.md` | Doc-sync domain knowledge (self-maintained) |
+| `reference/clean-profile-test.sh` | Phase 2.5 execution isolator script |
 
 ## Contributing
 
