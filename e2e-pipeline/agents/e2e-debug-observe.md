@@ -322,6 +322,7 @@ Use browser DevTools or `jq` to inspect individual request bodies.
 - If no network requests of interest, replace the table body with: `| - | - | - | - | No requests captured |`
 - Truncate URLs longer than 80 chars (keep host + first/last segments with `...`)
 - Truncate error/console messages at 200 chars
+- Truncate storage/cookie values at 120 chars (JWTs, serialized state can be 1000+ chars — show first 120 + `...`)
 - If more than 30 entries in any category, show top 30 and add: `(N more entries -- showing top 30)`
 - Step slug in screenshot filenames: lowercase, spaces to hyphens, strip special chars, max 40 chars
 

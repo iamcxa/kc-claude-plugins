@@ -56,8 +56,10 @@ Use loaded patterns to:
 
 ### Path A: Clear description (user provides steps + symptom)
 
-1. Dispatch `feature-dev:code-explorer` agent to trace the execution path from the described symptom — it maps architecture layers, data flow, and dependencies more effectively than generic grep
-2. From explorer results: identify key data flow points (variable assignments, function returns, API response handlers, React hook returns)
+1. Check if `feature-dev:code-explorer` agent is available (it belongs to a separate plugin)
+   - **If available:** dispatch it to trace the execution path from the described symptom — it maps architecture layers, data flow, and dependencies more effectively than generic grep
+   - **If unavailable:** grep codebase for files mentioned in description or `--suspect`, then Read suspect files directly
+2. From explorer results (or direct reads): identify key data flow points (variable assignments, function returns, API response handlers, React hook returns)
 3. Determine injection points: pick 2-5 locations where `console.log` will reveal the data shape at each stage of the flow
 4. Determine reproduction steps: translate user's description into ordered browser actions
 5. Resolve `--url` (explicit or infer from dev server / code routes)
