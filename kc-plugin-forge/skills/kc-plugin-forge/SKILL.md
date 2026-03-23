@@ -34,7 +34,7 @@ digraph forge {
   clean [label="Phase 2.5: Clean Profile\nSmoke Test"];
   agents [label="Phase 3: Agent Verify\nInvoke plugin-dev:agent-development\nper agent in plugin"];
   revalidate [label="Phase 4: Re-validate\nDispatch plugin-dev:plugin-validator agent"];
-  report [label="Summary Report"];
+  report [label="Summary Report\n+ Learning + Doc-sync offer"];
   selfforge [label="self-forge\nPhase 2 TDD + Phase 4 Learning"];
 
   input -> create [label="new <name>"];
@@ -334,6 +334,26 @@ Overall:    PASS / CONDITIONAL PASS / FAIL
    - "Nothing" → done. Zero learning output is valid and encouraged.
 
 6. If `claude-md-management:revise-claude-md` available → optionally extract insights
+
+7. **Doc-sync offer** (conditional): Check if the target plugin has a doc-sync skill:
+   ```bash
+   ls ${TARGET_PLUGIN}/skills/*-doc-sync/SKILL.md 2>/dev/null
+   ```
+   - **Found** → present:
+     ```
+     Target plugin has a doc-sync skill.
+     Forge made changes to skills/agents/references — docs may need updating.
+     Run /<plugin-name>-doc-sync? (y/n)
+     ```
+     User says yes → invoke the plugin's doc-sync skill (`Skill: "<plugin-name>-doc-sync"`).
+   - **Not found but `docs/` exists** → advisory:
+     ```
+     Plugin has docs/ but no doc-sync skill — docs may go stale after forge changes.
+     Consider adding one: /kc-plugin-forge <plugin-path> (Phase 1.5 B offers doc-sync scaffolding)
+     ```
+   - **Not found and no `docs/`** → skip silently.
+   - **`self-forge` route** → check for forge's own `kc-plugin-forge-doc-sync`. Same offer.
+   - **`validate-only` route** → skip (no changes were made).
 
 ## Rules
 

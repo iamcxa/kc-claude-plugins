@@ -72,6 +72,8 @@ After TDD passes for each skill, verify self-improvement capability per `skill-e
 - Run `plugin-dev:plugin-validator` agent after all fixes
 - Expect PASS on all previously-FAIL items
 - WARN items are acceptable if documented (README, SKILL.md Prerequisites)
+- **Doc-sync offer detects by naming convention only**: The glob `*-doc-sync/SKILL.md` only matches directories ending in `-doc-sync`. Manually-created doc-sync skills with non-standard names (e.g., `custom-docs/`) are silently missed. This is acceptable for forge-scaffolded plugins (which always use `{{PLUGIN_NAME}}-doc-sync`), but document the constraint if hand-built doc-sync is common.
+- **Warn when docs/ exists but no doc-sync**: A plugin with `docs/` but no `-doc-sync` skill will have docs that go stale after forge changes. Step 7 now shows an advisory suggesting Phase 1.5 B scaffolding. "Not found → skip silently" was the original behavior — it hid a real staleness risk.
 
 ## Phase 1→2 Transition Gotchas
 
