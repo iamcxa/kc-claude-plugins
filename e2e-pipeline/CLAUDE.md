@@ -8,9 +8,9 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 
 ## Architecture
 
-**Skills** (10) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
+**Skills** (11) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
 
-**Agents** (8) run as subagents for heavy work, keeping verbose data out of main context:
+**Agents** (9) run as subagents for heavy work, keeping verbose data out of main context:
 - `e2e-mapper` -- explores pages, generates YAML mappings
 - `e2e-flow-writer` -- analyzes codebase + mapping to generate flow YAML (no browser)
 - `e2e-flow-verifier` -- runs flows in browser, auto-repairs selectors/steps, produces reports
@@ -19,6 +19,7 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 - `e2e-media-processor` -- blank-frame-trimmed GIF, MP4 video, thumbnail from screenshots/recordings
 - `e2e-doc-scanner` -- scans skills/agents vs docs for gaps, writes doc updates
 - `doc-probe` -- verifies documentation accuracy via live behavioral probes (dispatched by e2e-pipeline-doc-sync)
+- `e2e-debug-observe` -- executes reproduction steps in browser, collects [E2E-DBG] console logs for debug pipeline
 
 ```
 skills/e2e-dispatch/     -> router (auth gate + skill selection)
@@ -31,14 +32,15 @@ skills/e2e-skill-ops/    -> meta-skill for debugging/maintaining the pipeline it
 skills/e2e-help/         -> interactive help guide, topic deep-dive, feedback collection
 skills/e2e-doc-sync/     -> documentation gap scanner & writer -> dispatches e2e-doc-scanner agent
 skills/e2e-pipeline-doc-sync/ -> forge-template doc sync with live probe verification (coexists with e2e-doc-sync)
-agents/                  -> subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor, e2e-doc-scanner, doc-probe)
+skills/e2e-debug/        -> debug orchestrator: inject logs → dispatch e2e-debug-observe → diagnose → cleanup
+agents/                  -> subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor, e2e-doc-scanner, doc-probe, e2e-debug-observe)
 hooks/                   -> E2E pipeline hooks (SessionStart context + pre-commit check + plan E2E check)
 references/              -> agent-browser CLI commands, common browser testing patterns, knowledge capture framework
 ```
 
 ## Self-Improvement
 
-5 of 7 skills accumulate knowledge after execution via a two-dimension framework (`references/knowledge-capture.md`):
+6 of 8 core skills accumulate knowledge after execution via a two-dimension framework (`references/knowledge-capture.md`):
 
 | Skill | D1 (skill-level) | D2 (project-level) |
 |-------|-------------------|---------------------|
@@ -47,6 +49,7 @@ references/              -> agent-browser CLI commands, common browser testing p
 | e2e-flow | Auto-append to `learned-patterns.md` | -- |
 | e2e-walkthrough | Auto-append to `learned-patterns.md` | -- |
 | e2e-map | Auto-append to `learned-patterns.md` | -- |
+| e2e-debug | Auto-append to `learned-patterns.md` | -- |
 | e2e-compile | -- (deterministic) | -- |
 | e2e-dispatch | -- (router) | -- |
 
@@ -65,6 +68,7 @@ PR-back flow: users curate local `learned-patterns.md` -> PR to plugin origin ->
 /e2e-flow          -> .claude/e2e/flows/<feature>.yaml + .claude/e2e/reports/<ts>/report.md
 /e2e-test <flow>   -> .claude/e2e/reports/<ts>/report.md, trace.zip, screenshots, video
 /e2e-compile       -> .claude/e2e/compiled/<flow>.sh (standalone bash test scripts)
+/e2e-debug         -> .claude/e2e/debug/manifest.yaml, report.md, history/<session>-r<N>.yaml
 ```
 
 ## YAML Format Conventions (v2 only)
