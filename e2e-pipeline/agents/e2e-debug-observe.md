@@ -98,12 +98,17 @@ agent-browser console --clear
 agent-browser errors --clear
 ```
 
-Network requests have no explicit clear command -- note the current request count as baseline.
+Capture network baseline — run `agent-browser network requests` and note the current count so post-step collection only reports new requests.
+
+Record starting URL:
+```bash
+agent-browser get url
+```
 
 Take a baseline screenshot:
 
 ```bash
-agent-browser screenshot "{{report_dir}}/step-00-baseline.png"
+agent-browser screenshot --annotate "{{report_dir}}/step-00-baseline.png"
 ```
 
 ---
@@ -134,6 +139,12 @@ agent-browser snapshot -i
 
 - Take a screenshot and snapshot only. Do NOT interact with the page.
 - Record what is visible in the snapshot for the report.
+- If the step mentions a specific element, use `agent-browser get text @ref` to extract its displayed value.
+- If the step hints at runtime state inspection (e.g., "check the data", "inspect state"), use `agent-browser eval` to read relevant JS state:
+  ```bash
+  agent-browser eval "JSON.stringify(document.querySelector('[data-testid=target]')?.textContent)"
+  ```
+  Record the eval result in the report as additional context.
 
 **Element not found**: If the target element cannot be located in the snapshot, record the step as `FAILED: element not found` and continue to the next step. Do NOT abort.
 
@@ -142,8 +153,10 @@ agent-browser snapshot -i
 After each step, collect:
 
 ```bash
-# Screenshot
-agent-browser screenshot "{{report_dir}}/step-{{NN}}-{{step_slug}}.png"
+# Screenshot (annotated preferred — labels elements for easier identification)
+agent-browser screenshot --annotate "{{report_dir}}/step-{{NN}}-{{step_slug}}.png"
+# If --annotate fails, fall back to plain:
+# agent-browser screenshot "{{report_dir}}/step-{{NN}}-{{step_slug}}.png"
 
 # Console output (JSON format for structured parsing)
 agent-browser console --json
@@ -151,14 +164,21 @@ agent-browser console --json
 # JS errors
 agent-browser errors --json
 
-# Network requests (not available as standalone; use console for network-related logs)
+# Network requests (inclusion filter — only matching URLs are reported)
+agent-browser network requests
+# If network_filters provided, also run filtered queries:
+# agent-browser network requests --filter "{{filter_keyword}}"
+
+# Current URL (detect redirects, SPA route changes)
+agent-browser get url
 ```
 
-Parse the console JSON output. For each entry:
-- If the message contains any of the `log_tags` (default: `[E2E-DBG]`), mark it as a **tagged log**.
-- All entries go into the raw console collection regardless of tags.
+**Parsing collected data:**
 
-Parse the errors JSON output. Count and store each error with its message.
+- **Console**: Parse JSON output. If entry message contains any `log_tags` (default: `[E2E-DBG]`), mark as **tagged log**. All entries go into raw console collection regardless.
+- **Errors**: Parse JSON output. Count and store each error with message.
+- **Network**: Parse the text output. Each line is a request. If `network_filters` are provided, keep only requests whose URL contains any filter keyword. Record method, URL, status code for each.
+- **URL**: Compare against previous step's URL. If changed unexpectedly (e.g., redirect to /login), note as anomaly.
 
 ### 3d: Record step result
 
@@ -167,6 +187,8 @@ Store for each step:
 - Result: `PASS` (interaction succeeded), `FAIL` (element not found or interaction error), `OBSERVE` (exploratory step, no interaction)
 - Tagged console logs captured after this step
 - JS errors captured after this step
+- Network requests captured after this step (filtered if network_filters provided)
+- Current URL after this step
 - Screenshot path
 
 ---
