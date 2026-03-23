@@ -44,6 +44,22 @@ Scaffolds a new plugin directory, then runs the full pipeline on it.
 
 Runs Phase 1 only — checks plugin.json, file layout, agent frontmatter. No TDD or agent verification.
 
+## Phase 1.5: Autonomy Decision
+
+After structure validation, forge asks two questions about the plugin's self-improvement capabilities:
+
+**A — Self-Learning**: Should the plugin accumulate patterns from its own runs?
+- Forge analyzes the plugin description (review/analyze → recommends Full, sync/scaffold → recommends Skip)
+- You pick: Full (D1+D2), D1 only, or Skip
+
+**B — Doc Self-Iteration**: Should the plugin have a doc-sync skill?
+- Forge counts docs and skills to recommend a level
+- You pick: Full (with live probes), Light (static scan only), or Skip
+
+Both choices are presented with recommendations. See [commands.md](commands.md#phase-15-options) for the full signal tables.
+
+**Existing plugins**: If the plugin already has `learned-patterns.md` or a doc-sync skill, forge verifies the existing setup instead of re-scaffolding.
+
 ## Phase 2.5: Clean Profile Smoke Test
 
 Phase 2.5 runs automatically after Phase 2 TDD. It verifies each skill works without user-specific context (no MEMORY.md, no CLAUDE.md, no other plugin hooks).

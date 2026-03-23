@@ -54,6 +54,17 @@ After learning, forge checks if the target plugin has a doc-sync skill (`*-doc-s
 
 **A — Self-Learning:**
 
+Forge analyzes the plugin description to recommend a level:
+
+| Description keywords | → Classification | → Recommended |
+|---------------------|-----------------|---------------|
+| review, analyze, audit, triage, check, evaluate | analysis | Full (D1+D2) |
+| sync, bump, scaffold, generate, compile, convert | utility | Skip |
+| create, build, new, init | scaffold | Skip |
+| mixed or ambiguous | mixed | Full (D1+D2) |
+
+The recommendation is advisory — you always pick the final level:
+
 | Level | What's scaffolded |
 |-------|-------------------|
 | Full (D1+D2) | `learned-patterns.md` + Learning step in each skill + D1 auto-append + D2 gated write |
@@ -62,13 +73,27 @@ After learning, forge checks if the target plugin has a doc-sync skill (`*-doc-s
 
 **B — Doc Self-Iteration:**
 
+Forge counts docs and skills to recommend a level:
+
+| Signal | → Full | → Light | → Skip |
+|--------|--------|---------|--------|
+| `docs/` with 3+ files | Yes | | |
+| `docs/` with <3 files | | Yes | |
+| README.md only | | Yes | |
+| No documentation at all | | | Yes |
+| 3+ skills | Yes | | |
+
 | Level | What's scaffolded |
 |-------|-------------------|
 | Full | `<plugin>-doc-sync` skill + `doc-probe` agent + `doc-sync-context.md` |
 | Light | `<plugin>-doc-sync` skill + `doc-sync-context.md` (no live probing) |
 | Skip | No doc-sync capability |
 
+**Existing plugin retrofit**: When forging an existing plugin, forge checks for pre-existing `learned-patterns.md` (A) and `*-doc-sync/` skill (B). If found → verifies setup matches level. If not found → presents the same choices above.
+
 ### Phase 2.5 Configuration
+
+Smoke tests use `claude --bare --effort low` — `--effort low` reduces cost ~77% ($0.107→$0.025/test) and time ~50% with zero quality loss for assertion checking. Do NOT substitute haiku — it fabricates prior conversation context in `--bare` mode, defeating the test's purpose.
 
 API key is resolved automatically:
 
@@ -120,12 +145,12 @@ Documentation gap scanner and writer for this plugin (Light variant — no live 
 
 | Phase | What it does |
 |-------|-------------|
-| 1. Static Scan | Inventory skills/hooks, cross-reference against docs, classify gaps |
-| 2. History Enrichment | Search episodic memory + journal for usage context (requires MCP tools — gracefully skips if unavailable) |
-| 3. Write / Update | Present gaps for approval, write new docs or update existing sections |
-| 4. Live Probe | *Disabled (Light variant)* — forge skills depend on marketplace plugins |
-| 5. Self-Update | Sync `doc-sync-context.md` with current skill/hook inventory |
-| 6. Report | Summary table + offer to create GitHub issue for remaining gaps |
+| 1. Static Scan | Inventory skills/hooks, cross-reference against docs, classify gaps (Critical/Warning/Info) |
+| 2. History Enrichment | Search episodic memory + journal for usage context. **Graceful degradation**: if MCP tools unavailable → runs static-only mode (no error) |
+| 3. Write / Update | Present gaps for approval: **a** (all), **s** (select), **e** (edit outlines), **q** (quit). Respects `auto-sync` flag per doc: `yes` = safe to rewrite, `partial` = edit subsection only |
+| 4. Live Probe | *Disabled (Light variant)* — forge skills depend on marketplace plugins, probes would fail |
+| 5. Self-Update | Sync `doc-sync-context.md` Source Map with current skill/hook inventory. New files → auto-added. Removed files → marked deprecated. |
+| 6. Report | Summary table + D1 learning check + offer to create GitHub issue for remaining gaps |
 
 ## SessionStart Hook
 
