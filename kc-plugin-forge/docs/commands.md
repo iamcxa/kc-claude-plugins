@@ -25,7 +25,30 @@ Main orchestrator — runs the quality pipeline on a target plugin.
 | 2 | RED/GREEN/REFACTOR TDD cycle per skill | `superpowers:writing-skills` |
 | 2.5 | Clean profile smoke test per skill | `clean-profile-test.sh` |
 | 3 | Verify agent examples, tools, prompts, dispatch test | `plugin-dev:agent-development` |
-| 4 | Re-validate, summary report, learning capture | `plugin-dev:plugin-validator` |
+| 4 | Re-validate, summary report, learning capture, doc-sync offer | `plugin-dev:plugin-validator` |
+
+### Phase 4 Learning
+
+After the summary report, forge scans for **hard signals** — concrete events during the run that indicate a new pattern:
+
+| Signal | Source |
+|--------|--------|
+| Phase 1 FAIL item fixed | Structural problem → potential new gotcha |
+| Phase 2 TDD RED failure mode | Skill weakness → potential pattern |
+| Phase 2 REFACTOR rationalization | New anti-pattern discovered |
+| Phase 3 agent verification failure | Agent design issue |
+| Fix attempt > 1 | Non-obvious problem |
+| Workaround used | Tool/process limitation |
+
+Signals found → compared against `learned-patterns.md` + `quality-pipeline.md`. Novel patterns are captured. No signals → Light Reflection ("What was most unexpected?").
+
+### Phase 4 Doc-Sync Offer
+
+After learning, forge checks if the target plugin has a doc-sync skill (`*-doc-sync/SKILL.md`):
+
+- **Found** → "Forge made changes — run `/<plugin>-doc-sync`?" (y/n)
+- **Not found but `docs/` exists** → advisory suggesting Phase 1.5 B scaffolding
+- **Neither** → skip silently
 
 ### Phase 1.5 Options
 
@@ -75,12 +98,16 @@ Interactive help guide for the forge.
 |-----|--------|
 | *(none)* | Overview of all commands and topics |
 | `<topic>` | Deep dive into a topic |
-| `--feedback "<message>"` | Report a doc gap → GitHub issue |
+| `--feedback "<message>"` | Report a doc gap → GitHub issue (falls back to local `feedback-log.md` if `gh` unavailable) |
 | `--list-topics` | Show available help topics |
+
+The help skill also has two proactive behaviors:
+- **Gap Detection**: When answering from SKILL.md instead of docs, it offers to draft a doc section or create a tracking issue.
+- **Knowledge Loop**: After any interaction, checks if the user shared a pattern worth capturing.
 
 ## `/kc-plugin-forge-doc-sync`
 
-Documentation gap scanner and writer for this plugin.
+Documentation gap scanner and writer for this plugin (Light variant — no live probes).
 
 | Arg | Effect |
 |-----|--------|
@@ -88,3 +115,18 @@ Documentation gap scanner and writer for this plugin.
 | `--check` | Report only (no writes) |
 | `--auto` | Full sync without confirmation prompts |
 | `--section <doc-file>` | Targeted sync on one doc file |
+
+### Phases
+
+| Phase | What it does |
+|-------|-------------|
+| 1. Static Scan | Inventory skills/hooks, cross-reference against docs, classify gaps |
+| 2. History Enrichment | Search episodic memory + journal for usage context (requires MCP tools — gracefully skips if unavailable) |
+| 3. Write / Update | Present gaps for approval, write new docs or update existing sections |
+| 4. Live Probe | *Disabled (Light variant)* — forge skills depend on marketplace plugins |
+| 5. Self-Update | Sync `doc-sync-context.md` with current skill/hook inventory |
+| 6. Report | Summary table + offer to create GitHub issue for remaining gaps |
+
+## SessionStart Hook
+
+The plugin includes a SessionStart hook (`hooks/hooks.json`) that fires at the start of every session where the forge plugin is loaded. It detects uncommitted plugin changes and suggests running `validate-only`.

@@ -116,17 +116,18 @@ After 8 forge runs across 6 plugins, the knowledge base has **9 cross-project pa
 | 1. Structure | Validate plugin.json, file layout, agent frontmatter | `plugin-dev:plugin-validator` |
 | 1.5 Autonomy | A: Self-Learning level (D1/D2) + B: Doc Self-Iteration level | — |
 | 2. Skill TDD | RED/GREEN/REFACTOR cycle per skill | `superpowers:writing-skills` |
+| 2.5 Clean Profile | Smoke test each skill in isolated `--bare` context | `clean-profile-test.sh` |
 | 3. Agent Verify | Check examples, tools, prompts per agent | `plugin-dev:agent-development` |
-| 4. Report | Final structure check, summary, learning capture | `plugin-dev:plugin-validator` |
+| 4. Report | Re-validate, summary, learning capture, doc-sync offer | `plugin-dev:plugin-validator` |
 
 ## Routes
 
 | Input | Phases run |
 |-------|-----------|
-| `<path>` | 1 → 1.5 → 2 → 3 → 4 (full pipeline) |
-| `new <name>` | scaffold → 1.5 → 2 → 3 → 4 |
+| `<path>` | 1 → 1.5 → 2 → 2.5 → 3 → 4 (full pipeline) |
+| `new <name>` | scaffold → 1.5 → 2 → 2.5 → 3 → 4 |
 | `validate-only` | 1 only |
-| `skill-tdd-only` | 2 only |
+| `skill-tdd-only` | 2 → 2.5 |
 | `agent-verify-only` | 3 only |
 | `self-forge` | 2 + 4 (self-audit) |
 | *(bare)* | Disambiguate: list plugins, confirm target + scope |
