@@ -151,6 +151,12 @@ Phase 1.5 B offers template-based documentation sync:
 
 Run with `/<plugin>-doc-sync` after scaffolding.
 
+## Clean Profile Testing
+
+Phase 2.5 verifies each skill works **without user-specific context** — no MEMORY.md, no CLAUDE.md, no other plugin hooks. This catches skills that silently depend on your personal setup and would fail for other users.
+
+Each skill runs in `claude --bare --effort low` (~$0.025/test). API key is configured once in `~/.claude/kc-plugins-config/forge.yaml` and auto-resolved on every run. See [getting-started.md](docs/getting-started.md#phase-25-clean-profile-smoke-test) for setup.
+
 ## Skills
 
 | Skill | Purpose |
