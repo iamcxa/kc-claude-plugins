@@ -27,6 +27,7 @@ Debug frontend runtime bugs by injecting `console.log` probes into suspect code,
 | `--experiment` | Experiment mode — skip analysis, injection points pre-specified by caller |
 | `--inject '[...]'` | JSON array of injection specs (experiment mode only) |
 | `--steps "..."` | Reproduction steps as semicolon-separated string (experiment mode only) |
+| `--headed` | Open visible browser — user can manually log in before agent continues |
 | `--continue` | Resume from previous round's conclusions |
 | `--cleanup` | Force cleanup — skip all phases, run Phase 4 only |
 
@@ -55,8 +56,8 @@ Use loaded patterns to:
 
 ### Path A: Clear description (user provides steps + symptom)
 
-1. Grep codebase for files mentioned in description or `--suspect`
-2. Read suspect files — identify key data flow points (variable assignments, function returns, API response handlers, React hook returns)
+1. Dispatch `feature-dev:code-explorer` agent to trace the execution path from the described symptom — it maps architecture layers, data flow, and dependencies more effectively than generic grep
+2. From explorer results: identify key data flow points (variable assignments, function returns, API response handlers, React hook returns)
 3. Determine injection points: pick 2-5 locations where `console.log` will reveal the data shape at each stage of the flow
 4. Determine reproduction steps: translate user's description into ordered browser actions
 5. Resolve `--url` (explicit or infer from dev server / code routes)
@@ -145,6 +146,7 @@ Build from manifest + Phase 0 outputs:
 | `reproduction_steps` | From Phase 0 or `--steps` |
 | `report_dir` | `.claude/e2e/debug/` (absolute path) |
 | `auth_profile` | Detect from `.agent-browser/` profiles if auth is needed for the URL |
+| `headed` | `true` if `--headed` flag provided (user needs to log in manually) |
 | `log_tags` | `["E2E-DBG"]` (always) |
 | `network_filters` | Extract from manifest `network_filters` if present |
 

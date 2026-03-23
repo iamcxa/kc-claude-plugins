@@ -54,6 +54,7 @@ You are a browser observation specialist. You open a browser, execute reproducti
 | `auth_profile` | Optional | Absolute path to agent-browser auth profile directory. Passed as `--profile` to `open`. |
 | `log_tags` | Optional | List of console log tag prefixes to highlight (default: `[E2E-DBG]`). Tags are matched as prefix substrings. |
 | `network_filters` | Optional | List of URL substrings to include in network observation (e.g., `["pipeline-preview", "api/rest"]`). Only matching requests are reported. If empty/absent, report all requests. |
+| `headed` | Optional | If `true`, open browser in visible (headed) mode. After page load, **pause and ask** the user to log in manually before proceeding with reproduction steps. |
 
 **STOP guard**: If `target_url`, `reproduction_steps`, or `report_dir` is missing, respond: "Missing required field: '<field>'. The orchestrator must provide all required fields." Do NOT proceed.
 
@@ -67,14 +68,19 @@ You are a browser observation specialist. You open a browser, execute reproducti
 mkdir -p "{{report_dir}}"
 ```
 
-If `auth_profile` is provided:
+Choose browser open mode (in priority order):
 
+1. If `auth_profile` is provided:
 ```bash
 agent-browser --profile "{{auth_profile}}" open "{{target_url}}"
 ```
 
-Otherwise:
+2. If `headed` is `true` (no auth_profile):
+```bash
+agent-browser --headed open "{{target_url}}"
+```
 
+3. Otherwise (headless, no auth):
 ```bash
 agent-browser open "{{target_url}}"
 ```
@@ -84,6 +90,11 @@ Wait for page load:
 ```bash
 agent-browser wait --load networkidle
 ```
+
+**Headed mode auth pause:** If `headed` is `true`, after page load, use `AskUserQuestion` to pause:
+> "Browser is open in headed mode. Please log in manually, then confirm here when ready to continue."
+
+Wait for user confirmation before proceeding to Step 2. This allows the user to complete any auth flow (login, 2FA, OAuth) in the visible browser window.
 
 If the browser fails to open (command exits non-zero or times out), record the error and skip to Step 5 (Close Browser). Do NOT retry.
 
