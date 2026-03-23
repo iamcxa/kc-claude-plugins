@@ -30,7 +30,7 @@ if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
   exit 2
 fi
 
-JSON_OUTPUT=$(timeout "$TIMEOUT" claude --bare \
+JSON_OUTPUT=$(timeout "$TIMEOUT" claude --bare --effort low \
   --plugin-dir "$PLUGIN_DIR" -p "$PROMPT" --output-format json 2>/dev/null)
 CLAUDE_EXIT=$?
 if [[ $CLAUDE_EXIT -ne 0 ]]; then
