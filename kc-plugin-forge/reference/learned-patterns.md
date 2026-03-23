@@ -84,3 +84,10 @@ A `PreToolUse:Write` hook that returns `{"decision": "block"}` only blocks the W
 
 **Applies to**: Any PreToolUse hook that uses `"decision": "block"` on Write/Edit tools. Bash tool can perform the same filesystem operations.
 **Action**: Prefer warn over block for file-write guards. Reserve block for truly dangerous operations where Bash bypass is also covered (e.g., matching both Write and Bash tools for the same path pattern).
+
+## Bare skill name ≠ skill invocation in isolated mode (2026-03-23)
+
+When running LLM in isolated mode (`claude --bare`), passing a skill name as a prompt (e.g., `"kc-sentry-insight"`) does NOT trigger the skill — the LLM treats it as an informational query and produces a topic summary. Adding a slash prefix (`"/kc-sentry-insight"`) signals invocation intent and triggers the skill's routing. This matters for any automated testing that invokes skills via CLI prompts (e.g., smoke tests, CI verification). The slash is an LLM convention, not a Claude Code feature — it's how agents distinguish "tell me about X" from "run X".
+
+**Applies to**: Any automated test or script that invokes a skill via `claude -p` or similar CLI prompt
+**Action**: Always use `/<skill-name>` (with slash) when the intent is to invoke the skill, not describe it. For smoke tests, prefer first-clause extraction from description; use `/<name>` as fallback only.

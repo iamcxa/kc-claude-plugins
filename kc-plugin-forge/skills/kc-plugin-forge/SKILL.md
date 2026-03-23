@@ -251,7 +251,7 @@ Runs after Phase 2 TDD passes. Verifies skill works without user-specific contex
 For EACH skill that passed Phase 2:
 
 1. **Load smoke definition**: `${TARGET_PLUGIN}/smoke-tests/<skill-name>.smoke.yaml` if exists, else auto-generate from SKILL.md:
-   - **Trigger**: extract from `description:` "Use when [triggers]" → first clause as prompt. Fallback if no "Use when": use `"<skill-name>"` as prompt.
+   - **Trigger**: extract from `description:` "Use when [triggers]" → first clause as prompt. Fallback if no "Use when": use `"/<skill-name>"` as prompt (slash prefix signals invocation intent — bare skill name produces topic summaries in `--bare` mode).
    - **Assertions**: Phase/Step names → `contains:`, tool invocations → `contains:`, fixed: `not_contains: "MEMORY.md"`, `not_contains: "previous session"`. Limit: 3-7 (fallback: 2-3 fixed only).
    - Auto-generated smoke is ephemeral (not saved).
    - **Timeout**: 90s default for auto-generated smoke tests.
