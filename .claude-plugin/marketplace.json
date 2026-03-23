@@ -22,7 +22,7 @@
     {
       "name": "kc-plugin-forge",
       "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, doc self-iteration",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "keywords": ["plugin", "quality", "tdd", "validation", "forge", "lifecycle", "audit"]
     },
     {
