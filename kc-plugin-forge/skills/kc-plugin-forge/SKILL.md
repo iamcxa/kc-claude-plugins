@@ -257,8 +257,9 @@ For EACH skill that passed Phase 2:
    - **Timeout**: 90s default for auto-generated smoke tests.
    - **Skip auto-generate** for skills whose SKILL.md contains `AskUserQuestion` without a non-interactive path.
 2. **Check ANTHROPIC_API_KEY**: `[[ -n "${ANTHROPIC_API_KEY:-}" ]]`
-   - Set → run `${CLAUDE_PLUGIN_ROOT}/reference/clean-profile-test.sh <plugin-dir> <trigger> <timeout> [assertions...]`. Exit 0 = pass, exit 1 = assertion failure, exit 2 (execution error) → treat as `(clean profile unavailable)`.
+   - Set → run `${CLAUDE_PLUGIN_ROOT}/reference/clean-profile-test.sh <plugin-dir> <trigger> <timeout> [assertions...]`. Exit 0 = pass (with metrics), exit 1 = assertion failure (with metrics), exit 2 (execution error) → treat as `(clean profile unavailable)`.
    - Not set → silent degradation, report marks `(clean profile unavailable)`
+   - **Metrics**: The script outputs `cost=$N.NNNN duration=NNNNms tokens=NNNin+NNNout` on both PASS and FAIL. Parse and accumulate for the Phase 4 report.
 3. **Compare results**:
    The Phase 2 TDD pass result (from the current session) serves as the polluted baseline — it passed with user-specific context present.
    - Both pass → `(verified: clean)` in report
@@ -293,6 +294,7 @@ Structure:  PASS/FAIL (N items fixed)
 Skills:     N skills tested (M scenarios, K passed)
 Clean Profile: N skills verified (K clean-pass, J context-dependent)
                Mode: clean / unavailable
+               Cost: $N.NNNN | Duration: NNNNms | Tokens: NNNin+NNNout
 Agents:     N agents verified
 Evolution:  N skills with self-improvement
             Level: Full (D1+D2) / D1 only / Skipped

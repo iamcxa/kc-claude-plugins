@@ -12,6 +12,8 @@
 #        1 = assertion failure
 #        2 = execution error (auth, timeout, missing key)
 #
+# Output: PASS/FAIL line + metrics line (cost, duration, tokens)
+#
 # Assertions format:
 #   contains:<pattern>       — output must include pattern (case-insensitive)
 #   not_contains:<pattern>   — output must NOT include pattern (case-insensitive)
@@ -28,11 +30,34 @@ if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
   exit 2
 fi
 
-OUTPUT=$(timeout "$TIMEOUT" claude --bare \
-  --plugin-dir "$PLUGIN_DIR" -p "$PROMPT" 2>&1)
+JSON_OUTPUT=$(timeout "$TIMEOUT" claude --bare \
+  --plugin-dir "$PLUGIN_DIR" -p "$PROMPT" --output-format json 2>/dev/null)
 CLAUDE_EXIT=$?
 if [[ $CLAUDE_EXIT -ne 0 ]]; then
   echo "ERROR: claude execution failed (exit $CLAUDE_EXIT)"
+  exit 2
+fi
+
+# Extract text result and metrics from JSON
+OUTPUT=$(echo "$JSON_OUTPUT" | python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+print(data.get('result', ''))
+" 2>/dev/null)
+
+METRICS=$(echo "$JSON_OUTPUT" | python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+cost = data.get('total_cost_usd', 0)
+duration = data.get('duration_ms', 0)
+usage = data.get('usage', {})
+input_t = usage.get('input_tokens', 0) + usage.get('cache_read_input_tokens', 0) + usage.get('cache_creation_input_tokens', 0)
+output_t = usage.get('output_tokens', 0)
+print(f'cost=\${cost:.4f} duration={duration}ms tokens={input_t}in+{output_t}out')
+" 2>/dev/null || echo "cost=? duration=? tokens=?")
+
+if [[ -z "$OUTPUT" ]]; then
+  echo "ERROR: empty result from claude"
   exit 2
 fi
 
@@ -57,8 +82,9 @@ for assertion in "${ASSERTIONS[@]}"; do
 done
 
 if [[ $FAILED -eq 0 ]]; then
-  echo "PASS"
+  echo "PASS ($METRICS)"
   exit 0
 else
+  echo "METRICS: $METRICS"
   exit 1
 fi

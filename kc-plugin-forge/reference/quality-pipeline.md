@@ -53,6 +53,7 @@ After TDD passes for each skill, verify self-improvement capability per `skill-e
 - **`not_contains` is case-insensitive**: `not_contains: "MEMORY.md"` catches both `MEMORY.md` and `memory.md`. Be specific with patterns.
 - **AskUserQuestion skills skip auto-generate**: Skills with interactive prompts and no non-interactive path are skipped entirely by auto-generate. Hand-written smoke files can override this by providing a prompt that takes the non-interactive path.
 - **Large plugins add ~1min per skill**: Each smoke test invokes `claude -p` (30-60s overhead). A 9-skill plugin adds ~9 minutes to Phase 2.5. Acceptable for quality gating; parallelization is a future optimization.
+- **Skill-name fallback trigger produces topic summaries, not skill invocations**: In `--bare` mode, using the skill name (e.g., `"kc-sentry-insight"`) as the smoke trigger causes the LLM to treat it as an informational query about the plugin, not a skill invocation. Skill routing never fires, and assertions expecting skill-level output (like `contains: "Usage"`) fail. Prefer first-clause extraction from description (e.g., `"scanning Sentry for production errors"`) over skill-name fallback. If the first clause also fails, the smoke trigger should prepend a slash: `"/kc-sentry-insight"` to signal invocation intent.
 
 ## Phase 3: Agent Verification Checklist
 

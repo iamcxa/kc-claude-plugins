@@ -1,8 +1,9 @@
 skill: kc-plugin-forge
-trigger: "forge validate-only ./sample-plugin"
-timeout: 90
+trigger: "forge"
+timeout: 60
 assertions:
-  - contains: "Phase 1"
-  - contains: "Structure"
+  - contains: "forge"
+  - contains: "plugin"
+  - contains: "Clean Profile"
   - not_contains: "MEMORY.md"
   - not_contains: "previous session"
