@@ -5,14 +5,17 @@
 # --bare skips: auto-memory (MEMORY.md), CLAUDE.md auto-discovery,
 # hooks, plugin sync, keychain reads. Only --plugin-dir content is loaded.
 #
-# Prerequisites: ANTHROPIC_API_KEY must be set (--bare requires it).
+# API key resolution (in order):
+#   1. ANTHROPIC_API_KEY already in environment → use it
+#   2. ~/.claude/kc-plugins-config/forge.yaml api_key_file → source it
+#   3. Neither → exit 2
 #
 # Usage: clean-profile-test.sh <plugin-dir> <prompt> <timeout> [assertion...]
 # Exit:  0 = all assertions pass
 #        1 = assertion failure
 #        2 = execution error (auth, timeout, missing key)
 #
-# Output: PASS/FAIL line + metrics line (cost, duration, tokens)
+# Output: PASS/FAIL line with metrics (cost, duration, tokens, key_source)
 #
 # Assertions format:
 #   contains:<pattern>       — output must include pattern (case-insensitive)
@@ -25,8 +28,27 @@ PROMPT="$1"; shift
 TIMEOUT="${1:-60}"; shift 2>/dev/null || true
 ASSERTIONS=("$@")
 
+# --- API key resolution ---
+KEY_SOURCE=""
+FORGE_CONFIG="$HOME/.claude/kc-plugins-config/forge.yaml"
+
+if [[ -n "${ANTHROPIC_API_KEY:-}" ]]; then
+  KEY_SOURCE="env"
+elif [[ -f "$FORGE_CONFIG" ]]; then
+  # Extract api_key_file from YAML (simple grep, no yq dependency)
+  API_KEY_FILE=$(grep '^api_key_file:' "$FORGE_CONFIG" | sed 's/^api_key_file:[[:space:]]*//' | sed 's/[[:space:]]*$//')
+  if [[ -n "$API_KEY_FILE" && -f "$API_KEY_FILE" ]]; then
+    source "$API_KEY_FILE"
+    export ANTHROPIC_API_KEY
+    if [[ -n "${ANTHROPIC_API_KEY:-}" ]]; then
+      KEY_SOURCE="$API_KEY_FILE"
+    fi
+  fi
+fi
+
 if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
-  echo "ERROR: ANTHROPIC_API_KEY not set (required for --bare mode)"
+  echo "ERROR: ANTHROPIC_API_KEY not found"
+  echo "  Set it in env, or configure api_key_file in $FORGE_CONFIG"
   exit 2
 fi
 
@@ -82,9 +104,9 @@ for assertion in "${ASSERTIONS[@]}"; do
 done
 
 if [[ $FAILED -eq 0 ]]; then
-  echo "PASS ($METRICS)"
+  echo "PASS ($METRICS key_source=$KEY_SOURCE)"
   exit 0
 else
-  echo "METRICS: $METRICS"
+  echo "METRICS: $METRICS key_source=$KEY_SOURCE"
   exit 1
 fi

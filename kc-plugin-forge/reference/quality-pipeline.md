@@ -48,7 +48,7 @@ After TDD passes for each skill, verify self-improvement capability per `skill-e
 ## Phase 2.5: Clean Profile Smoke Test Gotchas
 
 - **`timeout` on macOS requires coreutils**: The `timeout` command is from GNU coreutils (`brew install coreutils`). macOS ships `gtimeout` instead. If the script fails with "timeout: command not found", install coreutils or alias `timeout=gtimeout`.
-- **`ANTHROPIC_API_KEY` is required**: The script uses `claude --bare` which only accepts API key auth (no OAuth/keychain). Store the key in a `.env` file and `export` it before running forge. Without the key, Phase 2.5 silently degrades.
+- **`ANTHROPIC_API_KEY` is auto-resolved**: The script checks (1) env var already set, (2) `~/.claude/kc-plugins-config/forge.yaml` → `api_key_file` path → source it. Configure once: `api_key_file: /path/to/.env` in `forge.yaml`. The report shows `key_source=<env|path>` so you know where the key came from. Without the key from either source, Phase 2.5 silently degrades.
 - **Smoke assertions should target skill-level output, not tool-level**: In `--bare` mode, no other plugins are loaded. Assertions like `contains: "plugin-validator"` test that the skill mentions the concept, not that the tool actually ran. Skills with inter-plugin dependencies should use hand-written smoke files scoped to skill-own output.
 - **`not_contains` is case-insensitive**: `not_contains: "MEMORY.md"` catches both `MEMORY.md` and `memory.md`. Be specific with patterns.
 - **AskUserQuestion skills skip auto-generate**: Skills with interactive prompts and no non-interactive path are skipped entirely by auto-generate. Hand-written smoke files can override this by providing a prompt that takes the non-interactive path.
