@@ -148,6 +148,10 @@ Rule: if a layer has the tools to attempt a step, it MUST attempt it (best-effor
 4. Update `skills/e2e-dispatch/SKILL.md` routing table + reroute removed flags to successor
 5. Re-run grep to verify zero active references (historical in findings/specs is OK)
 
+## Soft Dependencies
+
+- **`e2e-debug` → `systematic-debugging`** (superpowers plugin): Phase 0 Path B invokes `Skill("systematic-debugging")` for hypothesis generation when bug description is vague. Graceful fallback: if unavailable, best-effort grep + user confirmation. Debug skill works fully without it.
+
 ## Documentation Maintenance
 
 ### Doc Sync -- Coexistence (Migration Step 1)
