@@ -98,3 +98,10 @@ When a skill has multiple invocation modes (standalone, experiment, continue), e
 
 **Applies to**: Any skill with mode-dependent phase skipping
 **Action**: After the argument table, add a validation block per mode listing required fields. "If missing, ask the user" — never silently proceed with undefined inputs.
+
+## Subagents cannot use AskUserQuestion — skill must handle user interaction (2026-03-23)
+
+Subagents communicate only via their return value to the orchestrator skill. They cannot use `AskUserQuestion` or other user-facing tools. If a subagent needs user input (e.g., "please log in manually"), it must return a special status (e.g., `WAITING_FOR_AUTH`) and let the **skill** (main context) handle the user interaction. The skill then re-dispatches the agent after user confirmation. Found in e2e-debug: agent was instructed to use `AskUserQuestion` for headed-mode auth pause, but subagents don't have access to it.
+
+**Applies to**: Any agent definition that requires user interaction mid-execution
+**Action**: Never reference `AskUserQuestion` in agent system prompts. Design a return-status protocol instead: agent returns structured status → skill presents to user → skill re-dispatches after confirmation.
