@@ -33,7 +33,7 @@ The orchestrator skill dispatches this agent with the following fields. Parse th
 | `report_dir` | Yes | Absolute path to the directory for report output (create with `mkdir -p` if missing) |
 | `headed` | No | Run browser in headed mode (default: `true` — always headed in current workflow) |
 | `suite_context` | No | When `true`, use `--session {{app}}` on all `agent-browser` commands for multi-site session isolation (default: `false`) |
-| `record` | No | When `true`, record browser viewport to `{{report_dir}}/full.webm` (default: `false`) |
+| `video` | No | When `true`, orchestrator will dispatch media-processor for screenshot-based MP4 after this agent completes (default: `false`). This agent always captures step screenshots regardless. |
 
 If any required field is missing, STOP with: "Missing required field: `<field>`. The orchestrator must provide all required fields."
 
@@ -61,10 +61,10 @@ Ensure large binary artifacts are git-ignored before writing any files. Run once
 mkdir -p "{{report_dir}}"
 PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || dirname "$(dirname "{{report_dir}}")")
 if [ -f "$PROJ_ROOT/.gitignore" ]; then
-  grep -q '.claude/e2e/reports/\*\*/\*.webm' "$PROJ_ROOT/.gitignore" 2>/dev/null || \
-    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' >> "$PROJ_ROOT/.gitignore"
+  grep -q '.claude/e2e/reports/\*\*/\*.mp4' "$PROJ_ROOT/.gitignore" 2>/dev/null || \
+    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/*.gif\n' >> "$PROJ_ROOT/.gitignore"
 else
-  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' > "$PROJ_ROOT/.gitignore"
+  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/*.gif\n' > "$PROJ_ROOT/.gitignore"
 fi
 ```
 
@@ -92,17 +92,6 @@ agent-browser get url 2>/dev/null
 - **No active session** -> proceed
 
 ### 1c. Open Browser
-
-**Recording ON** (`record` is `true`):
-
-```bash
-agent-browser record start "{{report_dir}}/full.webm"
-agent-browser --headed open {{base_url}}
-```
-
-`record start` launches the daemon and creates a single recording context. The subsequent `open` navigates within that context — no orphan window. `--profile` is not used (incompatible with recording context).
-
-**Recording OFF** (`record` is `false` or absent):
 
 ```bash
 agent-browser --profile {{auth_profile}} --headed open {{base_url}}
@@ -372,21 +361,13 @@ When the step has `action: "Execute external"`, skip all browser interaction (no
 
 ## Phase 3: Report
 
-### 3a. Stop Recording & Trace
-
-If `record` is `true`:
-
-```bash
-agent-browser record stop
-```
-
-Then stop the trace:
+### 3a. Stop Trace
 
 ```bash
 agent-browser trace stop "{{report_dir}}/trace.zip"
 ```
 
-**Order matters**: record stop → trace stop → (do NOT close browser).
+Do NOT close browser after stopping trace.
 
 ### 3b. Do NOT Close Browser
 
@@ -420,12 +401,11 @@ Write `{{report_dir}}/report.md` with the following structure:
 | Artifact | Link |
 |----------|------|
 | Steps GIF | [steps.gif](./steps.gif) _(via media agent)_ |
-| Full recording | [full.webm](./full.webm) |
 | Video | [test-run.mp4](./test-run.mp4) _(via media agent)_ |
 | Thumbnail | [thumbnail.png](./thumbnail.png) _(via media agent)_ |
 | Trace (interactive) | [trace.zip](./trace.zip) |
 
-_(Recording/media rows only if `record` was true)_
+_(Media rows only if `video` was true)_
 
 ## Step Results
 
@@ -482,7 +462,7 @@ You MUST end your response with this exact structured block (the orchestrator pa
 - console_errors: N
 - api_failures: N
 - report_path: {{report_dir}}/report.md
-- recording_path: {{report_dir}}/full.webm    ← (only if record was true, else omit)
+- video: true|false    ← (echoes input, orchestrator uses this to decide media dispatch)
 - key_findings:
   - "finding 1"
   - "finding 2"

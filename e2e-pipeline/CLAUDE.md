@@ -187,7 +187,9 @@ When adding, removing, or renaming skills or agents, update these files:
 
 **Prefer `/e2e-doc-sync --fix` over the manual checklist** -- it scans the same items automatically and catches gaps the checklist misses (e.g., new flags added to an existing skill).
 
-## Recording Defaults
+## Video Defaults
+
+Video is generated from step screenshots by the `e2e-media-processor` agent — no simultaneous browser recording needed. Each step gets 2 seconds in the MP4.
 
 | Skill | Video Default | Override |
 |-------|--------------|----------|
@@ -195,9 +197,9 @@ When adding, removing, or renaming skills or agents, update these files:
 | `/e2e-flow --verify-only` | ON | `--no-video` |
 | `/e2e-test` | OFF | `--video` or `--pr` |
 | CLI-only flows | ON (asciinema) | `--no-video` |
-| `/e2e-map` | No recording | -- |
+| `/e2e-map` | No video | -- |
 
-All media post-processing (GIF, MP4, thumbnail) is handled by the `e2e-media-processor` agent, dispatched by each skill after browser work completes. Browser agents produce raw screenshots and WebM recordings only.
+All media post-processing (GIF, MP4, thumbnail) is handled by the `e2e-media-processor` agent, dispatched by each skill after browser work completes. Browser agents produce step screenshots + trace.zip only. `record start/stop` is no longer used — it caused instability when running alongside trace.
 
 ## Planning Integration (E2E-First Acceptance)
 

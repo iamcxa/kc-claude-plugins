@@ -180,7 +180,7 @@ For each mapping+flow group:
 | `app` | From mapping `app` field |
 | `report_dir` | `$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)` (create with `mkdir -p`) |
 | `headed` | Always `true` (agent opens browser in headed mode) |
-| `record` | `true` when `--video` or `--pr` is present, otherwise `false` |
+| `video` | `true` when `--video` or `--pr` is present, otherwise `false` |
 | `suite_context` | Set to `true` when dispatching via `--all-sites` or `--suite` (enables multi-session with `--session <app>`) |
 
 ### Dispatch
@@ -190,7 +190,7 @@ Agent(subagent_type="e2e-test-runner"):
   "Execute E2E flow:
    flow_path: <path>  mapping_path: <path>  auth_profile: <path>
    base_url: <url>  app: <name>  report_dir: <path>  headed: true
-   record: true              # only when --video or --pr
+   video: true               # only when --video or --pr
    suite_context: true"      # only for --all-sites / --suite
 ```
 
@@ -211,11 +211,10 @@ After agent returns, dispatch media processing.
 Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
   "Process media:
    report_dir: <report_dir>
-   recording_path: <report_dir>/full.webm    # only if record was true
    output_name: test-run"
 ```
 
-Always dispatch for browser flows (even without recording) — GIF and thumbnail come from screenshots which are always captured.
+Always dispatch for browser flows when `--video` or `--pr` — GIF, MP4, and thumbnail all come from step screenshots.
 
 **CLI-only flow**:
 
@@ -313,9 +312,8 @@ If 0 diverged: "LLM and compiled runs agree on all steps."
 
 **Single:** `Test complete: N/M PASS (X console errors, Y API failures) Report: <path> Browser still open.`
 
-If recording was enabled, append:
-- `Recording: <path>/full.webm`
-- `Video: <path>/test-run.mp4` (2x speed + smart dedup, via media agent)
+If `--video` or `--pr` was used, append:
+- `Video: <path>/test-run.mp4` (step-paced, via media agent)
 - `Steps GIF: <path>/steps.gif`
 
 **Batch:**

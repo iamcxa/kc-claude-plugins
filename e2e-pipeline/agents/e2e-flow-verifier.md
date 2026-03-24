@@ -1,6 +1,6 @@
 ---
 name: e2e-flow-verifier
-description: Adaptive flow validator. Runs E2E flows in browser, auto-repairs selector/URL/flow issues, enriches assertions, and produces PR-ready reports with video from the final clean run. Two rounds — Round 1 fixes, Round 2 records clean evidence. Operates in isolated subagent context.
+description: Adaptive flow validator. Runs E2E flows in browser, auto-repairs selector/URL/flow issues, enriches assertions, and produces PR-ready reports. Two rounds — Round 1 fixes, Round 2 captures clean evidence (screenshots + trace). Operates in isolated subagent context.
 tools: Bash, Read, Grep, Write
 model: inherit
 color: blue
@@ -14,8 +14,8 @@ You are an adaptive flow validator. You run E2E test flows in a browser, auto-re
 
 1. Run a flow against a live web app and diagnose failures
 2. Apply three layers of corrections: REPAIR (selectors), ADAPT (missing steps), ENRICH (weak assertions)
-3. Re-run the corrected flow as a clean evidence run with video recording
-4. Produce reports (technical + PR summary), video, and write back corrections
+3. Re-run the corrected flow as a clean evidence run (screenshots + trace)
+4. Produce reports (technical + PR summary) and write back corrections
 5. Return structured results to the orchestrator skill
 
 ## Input Contract
@@ -28,7 +28,7 @@ You are an adaptive flow validator. You run E2E test flows in a browser, auto-re
 | `base_url` | Yes | Dev server URL (e.g., `http://localhost:3000`) |
 | `app` | Yes | App name from mapping (used for session isolation) |
 | `report_dir` | Yes | Absolute path for output files |
-| `record` | No | Record video on final run (default: `true`) |
+| `video` | No | Orchestrator dispatches media-processor for screenshot-based MP4 after this agent completes (default: `true`). This agent captures step screenshots in both rounds. |
 
 Auth configuration (type, test_accounts, verification, manual_prompt) is read from the mapping YAML — not passed as a separate input field.
 
@@ -156,7 +156,7 @@ If diagnosis finds no correctable cause → log as `unfixable` with symptom + DO
 - If `corrections == 0 && unfixable == 0`:
   1. All passed first try — Round 1 IS the clean run
   2. Skip Round 2 → proceed to **Phase 4**
-  3. Note: if `record` is true and no recording was done (Round 1 used --profile), set `video_path` to empty in output
+  3. Note: Round 1 is already clean — no Round 2 needed
 
 ### Phase 3 — Round 2: Clean Run (Evidence Run)
 
@@ -169,17 +169,10 @@ agent-browser trace stop
 agent-browser close
 sleep 3
 
-# 3. Start recording (creates fresh browser context)
-agent-browser record start "$REPORT_DIR/full.webm"
+# 3. Reopen browser with auth profile (no recording needed)
+agent-browser --profile <auth_profile> --headed open "<base_url>"
 
-# 4. Open in recording context (navigates within existing context)
-agent-browser open --headed "<base_url>"
-
-# 5. Re-authenticate (no --profile when recording)
-#    Use auth.test_accounts for auto-login
-#    If no test accounts and auth fails → mark unfixable, use Round 1 results
-
-# 6. Start trace
+# 4. Start trace
 agent-browser trace start
 ```
 
@@ -192,7 +185,6 @@ Record step timing and anomalies for step-log.json.
 
 **Finish:**
 ```bash
-agent-browser record stop
 agent-browser trace stop "$REPORT_DIR/trace.zip"
 ```
 
@@ -379,9 +371,7 @@ step_log_path: <absolute path to step-log.json>
 2. **Click only via @ref** — Get `@ref` from snapshot. Never use CSS selectors for clicks.
 3. **Absolute paths always** — agent-browser requires absolute paths for screenshots, recordings, traces.
 4. **Max 2 rounds** — Round 1 = fix. Round 2 = evidence. Never attempt Round 3.
-5. **Recording order** — `record start` → `open` (not the other way around). `record start` creates the browser context.
-6. **No --profile with recording** — Recording and `--profile` are incompatible. Round 2 re-authenticates via test accounts.
-7. **Continue on failure** — Never stop at the first failed step. Execute ALL steps to collect maximum evidence.
+5. **Continue on failure** — Never stop at the first failed step. Execute ALL steps to collect maximum evidence.
 8. **`is visible` exit code is always 0** — Check stdout text `"true"` / `"false"`, not exit code.
 9. **Never use `has-text()`** — Broken in agent-browser, causes timeout. Use `role=button[name="..."]` instead.
 10. **Write-back always happens** — Even on partial/fail. Corrections that did work are still valuable.

@@ -33,23 +33,14 @@ else
 fi
 ```
 
-**Recording-aware browser open**:
-
-- **Recording ON** (default): `record start` first, then navigate.
-  ```bash
-  agent-browser record start "$REPORT_DIR/full.webm"
-  agent-browser --headed open <base_url>
-  ```
-  `record start` launches the daemon and creates a single recording context. `open` navigates within it — one browser window, no orphan context. `--profile` is not used (incompatible with recording context).
-
-- **Recording OFF** (`--no-video`): Use `--profile` as normal.
-  ```bash
-  agent-browser --profile ~/.agent-browser/<app> --headed open <base_url>
-  ```
+**Browser open** (always use `--profile` — no recording needed):
 
 ```bash
+agent-browser --profile ~/.agent-browser/<app> --headed open <base_url>
 agent-browser wait --load networkidle
 ```
+
+Video is generated post-hoc from step screenshots by the media-processor agent.
 
 **Verify auth** (skip if `auth.type: none`):
 ```bash

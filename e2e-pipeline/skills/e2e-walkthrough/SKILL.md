@@ -160,15 +160,7 @@ Human adjusts the plan via natural conversation:
 
 For detailed execution mechanics (startup, multi-site, per-step loop, anomaly observation, step log), see [reference.md](./reference.md).
 
-**Summary**: Open browser (without `--profile` when recording) → verify auth (auto-login if needed) → **start recording** → start trace → execute steps → observe anomalies → write step log.
-
-**Start recording** (unless `--no-video`):
-
-```bash
-agent-browser record start "$REPORT_DIR/full.webm"
-```
-
-> **Note**: `record start` is incompatible with `--profile` sessions (v0.16.x). When recording is ON, open the browser WITHOUT `--profile` and handle auth via auto-login or manual prompt. See [reference.md](./reference.md) § Startup for details.
+**Summary**: Open browser with `--profile` → verify auth (auto-login if needed) → start trace → execute steps → observe anomalies → write step log. Video is generated post-hoc from step screenshots by the media-processor agent.
 
 **Per-step loop (observe-and-continue)**:
 1. `snapshot -i` → find `@ref` (interactive-only, less noise)
@@ -194,8 +186,8 @@ agent-browser record start "$REPORT_DIR/full.webm"
 
 ```
 Phase 4 checklist:
-[ ] 1. record stop (or N/A if --no-video)
-[ ] 2. trace stop → trace.zip saved
+[ ] 1. trace stop → trace.zip saved
+[ ] 2. (reserved)
 [ ] 3. trace-analyzer dispatched (with step-log.json)
 [ ] 4. anomaly review presented (or N/A if zero anomalies AND trace clean)
 [ ] 5. report.md written (full artifact with flowchart + step table + health log)
@@ -214,8 +206,7 @@ For detailed procedures (trace analysis, anomaly review, report templates, flow 
 
 Checklist items map to procedure steps below. Items 5-6 are both from procedure step 5 (dual output). Item 12 is D1 knowledge capture. Item 14 maps to Pipeline Next Steps section below.
 
-1. **Stop recording** (if recording): `agent-browser record stop`
-2. **Stop trace**: `agent-browser trace stop "$REPORT_DIR/trace.zip"`
+1. **Stop trace**: `agent-browser trace stop "$REPORT_DIR/trace.zip"`
 3. **Trace analysis (enhanced)**: Dispatch `e2e-trace-analyzer` subagent with `trace_path` + `report_dir` + `step_log_path`. Prerequisite: `step-log.json` must exist in `$REPORT_DIR` (written at end of Phase 3). If missing, write it now from in-memory step data and verify the file exists. If write fails again, dispatch WITHOUT `step_log_path` — analyzer degrades gracefully to non-enhanced mode (no cross-reference, but analysis still completes). See [reference.md](./reference.md) § Trace Analysis.
 4. **Anomaly review** (checklist item 4): If anomalies were observed during Phase 3 (check step-log.json `anomalies` arrays) OR trace found issues (`clean: false`), present the cross-reference summary and offer: review details / fix / re-walk / continue. Skip to step 5 ONLY when BOTH conditions are true: zero anomalies in step-log AND trace returns `clean: true`. Note: `clean: true` from trace-analyzer means zero API/console/silent-failure — it does NOT account for unmatched visual anomalies. See [reference.md](./reference.md) § Anomaly Review.
 5. **Report (dual output, MANDATORY)** (checklist items 5+6): Write both `$REPORT_DIR/report.md` and `$REPORT_DIR/pr-summary.md`. Health Log now includes step-correlated data from trace analysis. See [reference.md](./reference.md) § Report for templates.
@@ -224,7 +215,6 @@ Checklist items map to procedure steps below. Items 5-6 are both from procedure 
    Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
      "Process media:
       report_dir: $REPORT_DIR
-      recording_path: $REPORT_DIR/full.webm    # only if recording was on
       output_name: walkthrough"
    ```
    Agent returns: `gif_path`, `mp4_path`, `thumbnail_path`. Use in report + PR summary.
@@ -233,7 +223,7 @@ Checklist items map to procedure steps below. Items 5-6 are both from procedure 
    **CLI-only walkthroughs** (rare — walkthrough is primarily browser-based): If the walkthrough
    involved only `Execute external` / `Verify external` steps with no browser interaction, use CLI
    recording mode instead. Record with `asciinema rec` during Phase 3, then dispatch media processor
-   with `cast_path` instead of `recording_path`. See cross-boundary-testing.md § Recording CLI-Only Flows.
+   with `cast_path`. See cross-boundary-testing.md § Recording CLI-Only Flows.
 7. **Flow YAML auto-generation (MANDATORY)** (checklist item 9): Always auto-generate — never ask. Auto-name: `walkthrough-<timestamp>-<first-page>.yaml`. Write to `.claude/e2e/flows/`. Cross-site: use `sites:` instead of `mapping:` when `--sites` was used. **Flow write authorization**: Write `.claude/e2e/.flow-write-authorized` (content: current unix timestamp) before writing the flow YAML, then delete it after the write completes.
 8. **PR/Issue posting** (checklist item 10): If `--pr` provided, ask user to confirm → commit + push screenshots → `gh pr comment` with `pr-summary.md`. See [reference.md](./reference.md) § PR/Issue Posting.
 9. **Mapping self-repair** (checklist item 11): Present discrepancy list, human approves, patch mapping. 3+ stale on same page → recommend `/e2e-map --page`

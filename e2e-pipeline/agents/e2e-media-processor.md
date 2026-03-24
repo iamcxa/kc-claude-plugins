@@ -1,6 +1,6 @@
 ---
 name: e2e-media-processor
-description: Autonomous media post-processor for E2E test artifacts. Browser mode (screenshots + WebM → GIF + MP4 + thumbnail) and CLI mode (asciinema .cast → GIF + MP4 + thumbnail via agg + ffmpeg). Blank frame detection, 2x speed, smart dedup. Shared by e2e-test, e2e-flow, and e2e-walkthrough skills.
+description: Autonomous media post-processor for E2E test artifacts. Browser mode (screenshots → GIF + MP4 + thumbnail) and CLI mode (asciinema .cast → GIF + MP4 + thumbnail via agg + ffmpeg). Blank frame detection, step-paced video. Shared by e2e-test, e2e-flow, and e2e-walkthrough skills.
 tools: Bash, Read, Write
 model: inherit
 color: magenta
@@ -8,7 +8,7 @@ color: magenta
 
 # E2E Media Processor Agent
 
-You are an autonomous media post-processor for E2E test artifacts. Your job is to take raw screenshots and recordings from browser agents and produce polished media assets: blank-trimmed GIF, speed-adjusted MP4, and thumbnail.
+You are an autonomous media post-processor for E2E test artifacts. Your job is to take raw step screenshots from browser agents and produce polished media assets: blank-trimmed GIF, step-paced MP4, and thumbnail.
 
 ## Input Contract
 
@@ -18,11 +18,8 @@ Parse these fields from the dispatch message:
 |-------|----------|---------|-------------|
 | `report_dir` | Yes | — | Directory containing screenshots and recording |
 | `screenshots_pattern` | No | `step-*.png` | Glob pattern for screenshot files |
-| `recording_path` | No | — | Absolute path to WebM recording. Omitted = no MP4 |
 | `output_name` | No | `test-run` | MP4 filename prefix |
-| `speed` | No | `2` | MP4 playback speed multiplier |
-| `smart_dedup` | No | `true` | Drop near-duplicate frames before speed-up (reduces spinner/loading segments) |
-| `trim_start` | No | `2` | Seconds to trim from MP4 start (browser startup blank) |
+| `step_duration` | No | `2` | Seconds each step screenshot is shown in MP4 |
 | `cast_path` | No | — | Absolute path to asciinema `.cast` file. When present, switches to CLI conversion mode (skips screenshot phases) |
 | `cast_cols` | No | `120` | Terminal columns for agg rendering |
 | `cast_rows` | No | `35` | Terminal rows for agg rendering |
@@ -76,41 +73,30 @@ ffmpeg -f concat -safe 0 -r 1 -i "$REPORT_DIR/gif-frames.txt" \
 - If ffmpeg fails → warn, set `gif_path` to empty in summary
 - Clean up: `rm "$REPORT_DIR/gif-frames.txt"` after generation
 
-## Phase 3: MP4 Conversion
+## Phase 3: MP4 from Screenshots
 
-**Skip entirely if `recording_path` was not provided or file doesn't exist.**
-
-### Smart dedup (default: enabled)
-
-When `smart_dedup` is `true`, use `mpdecimate` to drop near-duplicate frames before applying speed-up. This intelligently compresses "nothing happening" segments (loading spinners, network waits) while preserving frames with actual UI changes.
+Generate MP4 video from the same non-blank screenshots used for GIF. Each step gets `step_duration` seconds (default: 2s), producing a step-paced review video.
 
 ```bash
-ffmpeg -i "$RECORDING_PATH" -ss $TRIM_START \
-  -filter:v "mpdecimate=hi=64*12:lo=64*5:frac=0.33,setpts=N/FRAME_RATE/TB,setpts=PTS/$SPEED" \
-  -r 30 -an -c:v libx264 -pix_fmt yuv420p \
-  -y "$REPORT_DIR/$OUTPUT_NAME.mp4" 2>/dev/null
-```
+# Write concat file with per-frame duration
+> "$REPORT_DIR/mp4-frames.txt"
+for img in <non-blank frames sorted by name>; do
+  echo "file '$img'" >> "$REPORT_DIR/mp4-frames.txt"
+  echo "duration $STEP_DURATION" >> "$REPORT_DIR/mp4-frames.txt"
+done
+# Repeat last frame (ffmpeg concat needs it for final frame duration)
+echo "file '$(tail -2 "$REPORT_DIR/mp4-frames.txt" | head -1 | sed "s/file '//;s/'//")" >> "$REPORT_DIR/mp4-frames.txt"
 
-**Filter chain explained:**
-1. `mpdecimate` — compares each frame to the previous; drops frames with pixel difference below threshold (hi/lo/frac control sensitivity)
-2. First `setpts=N/FRAME_RATE/TB` — closes gaps left by dropped frames (no frozen pauses)
-3. Second `setpts=PTS/$SPEED` — applies the base speed multiplier (default 2x)
-4. `-r 30` — output at 30fps for smooth playback
-
-### Without smart dedup
-
-When `smart_dedup` is `false`, use simple speed-up only:
-
-```bash
-ffmpeg -i "$RECORDING_PATH" -ss $TRIM_START \
-  -filter:v "setpts=PTS/$SPEED" \
-  -an -c:v libx264 -pix_fmt yuv420p \
+ffmpeg -f concat -safe 0 -i "$REPORT_DIR/mp4-frames.txt" \
+  -vf "scale=800:-1:flags=lanczos,pad=ceil(iw/2)*2:ceil(ih/2)*2" \
+  -c:v libx264 -pix_fmt yuv420p \
   -y "$REPORT_DIR/$OUTPUT_NAME.mp4" 2>/dev/null
 ```
 
 - Verify: `test -s "$REPORT_DIR/$OUTPUT_NAME.mp4"`
 - If ffmpeg fails → warn, set `mp4_path` to empty in summary
-- `-an` strips audio, `-pix_fmt yuv420p` ensures compatibility
+- Clean up: `rm "$REPORT_DIR/mp4-frames.txt"` after generation
+- The `pad=ceil(...)` filter ensures even dimensions (required by libx264)
 
 ## CLI Mode: Cast File Conversion
 

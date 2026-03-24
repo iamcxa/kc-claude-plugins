@@ -233,7 +233,6 @@ After verifier and trace-analyzer return, dispatch media processing.
 Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
   "Process media:
    report_dir: <report_dir>
-   recording_path: <report_dir>/full.webm    # only if recording was on
    output_name: verification"
 ```
 

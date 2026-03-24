@@ -72,29 +72,16 @@ agent-browser eval "<js>"                         # Execute JavaScript in page c
 agent-browser eval -b "<base64>"                  # Execute base64-encoded JS (reliable escaping)
 ```
 
-## Recording
+## Recording (DEPRECATED)
 
+> **Video is now generated from step screenshots by the `e2e-media-processor` agent.**
+> The `record start/stop` commands are no longer used in the pipeline — they caused instability when running simultaneously with `trace start/stop`. If you need raw WebM recording for debugging, the commands still exist in agent-browser but are not part of the standard pipeline.
+
+**Recommended startup order:**
 ```bash
-agent-browser record start "<abs-path.webm>"        # Start viewport recording (WebM)
-agent-browser record stop                            # Stop recording and save file
-agent-browser record restart "<abs-path.webm>"       # Stop current + start new recording
-```
-
-**Rules:**
-- Can be called before or after `open` — if called before `open`, it launches the daemon and creates the recording context automatically
-- When called before `open`, the subsequent `open` navigates within the recording context (single window)
-- Stop BEFORE `close` (or video file is truncated)
-- Stop BEFORE `trace stop` (recording captures the trace-stop moment)
-- Path must be absolute (same as screenshots/traces)
-- Output format: WebM (VP8/VP9 codec)
-- `--profile` is a daemon-level option and cannot be used with recording — handle auth via auto-login or manual login after `open`
-
-**Recommended startup order (recording ON):**
-```bash
-agent-browser record start "<abs-path.webm>"    # 1. Start daemon + recording context
-agent-browser --headed open <url>                # 2. Navigate in recording context
-agent-browser wait --load networkidle            # 3. Wait for page load
-agent-browser trace start                        # 4. Start tracing
+agent-browser --profile <auth_profile> --headed open <url>   # 1. Open with auth profile
+agent-browser wait --load networkidle                         # 2. Wait for page load
+agent-browser trace start                                     # 3. Start tracing
 ```
 
 ## GIF Generation (from per-step screenshots)
@@ -113,22 +100,21 @@ ffmpeg -f concat -safe 0 -r 1 -i "$REPORT_DIR/gif-frames.txt" \
 - `-loop 0` = infinite loop
 - **Verify**: `test -s "$REPORT_DIR/steps.gif"` (exists and size > 0)
 
-## MP4 Video Conversion (from WebM recording)
+## MP4 Video Generation (from step screenshots)
 
-> **Note:** MP4 conversion is handled by the `e2e-media-processor` agent. The agent trims the first 2 seconds (browser startup blank) and applies speed adjustment.
+> **Note:** MP4 generation is handled by the `e2e-media-processor` agent. It uses the same non-blank screenshots as GIF generation, with configurable duration per step (default: 2 seconds).
 
-**Canonical command** (used by media agent, smart dedup enabled):
+**Canonical command** (used by media agent):
 ```bash
-ffmpeg -i "$REPORT_DIR/full.webm" -ss 2 \
-  -filter:v "mpdecimate=hi=64*12:lo=64*5:frac=0.33,setpts=N/FRAME_RATE/TB,setpts=PTS/2" \
-  -r 30 -an -c:v libx264 -pix_fmt yuv420p -y "$REPORT_DIR/<output_name>.mp4"
+# mp4-frames.txt has "file 'path'" + "duration 2" per frame
+ffmpeg -f concat -safe 0 -i "$REPORT_DIR/mp4-frames.txt" \
+  -vf "scale=800:-1:flags=lanczos,pad=ceil(iw/2)*2:ceil(ih/2)*2" \
+  -c:v libx264 -pix_fmt yuv420p -y "$REPORT_DIR/<output_name>.mp4"
 ```
 
-- **Smart dedup** (`mpdecimate`): drops near-duplicate frames (loading spinners, idle waits) before speed-up
-- **Default speed: 2x** (`setpts=PTS/2`). Override: 1.5x = `PTS/1.5`, 1x = `PTS/1`
-- **Default trim: 2 seconds** (`-ss 2`). Skips browser startup blank frames.
-- `-r 30` output framerate after dedup (ensures smooth playback)
-- `-an` strips audio (browser recordings have no useful audio)
+- **Step-paced**: Each screenshot holds for `step_duration` seconds (default: 2s)
+- Uses same non-blank frame set as GIF (blank detection already done)
+- `pad=ceil(...)` ensures even dimensions (required by libx264)
 - `-pix_fmt yuv420p` ensures GitHub/browser/Slack compatibility
 - Output name varies by skill: `test-run.mp4`, `verification.mp4`, `walkthrough.mp4`
 - **Verify**: `test -s "$REPORT_DIR/<output_name>.mp4"` (exists and size > 0)
