@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test'
 import { activePids, executeRun, killAllActive, cleanupOldRuns, ensureNwMemoryDir, writeNwJournalConfig } from '../../worker/executor.ts'
+import * as worktreeManager from '../../worker/worktree-manager.ts'
 import type { Run, IpcMessage } from '../../shared/types.ts'
 import { mkdtemp, rm, stat, readFile } from 'node:fs/promises'
 import { tmpdir, homedir } from 'node:os'
@@ -218,5 +219,33 @@ describe('cancel / EXEC-08: activePids pattern', () => {
     expect(activePids.has('run-target')).toBe(false)
     expect(activePids.get('run-other')).toBe(22222)
     activePids.delete('run-other')
+  })
+})
+
+describe('worktree integration — WKTREE-01/02/03', () => {
+  it('worktree-manager exports required functions', () => {
+    expect(typeof worktreeManager.detectDefaultBranch).toBe('function')
+    expect(typeof worktreeManager.createWorktree).toBe('function')
+    expect(typeof worktreeManager.cleanupWorktree).toBe('function')
+    expect(typeof worktreeManager.ensureWorktreesExcluded).toBe('function')
+    expect(typeof worktreeManager.detectWorktreeBranch).toBe('function')
+    expect(typeof worktreeManager.runGit).toBe('function')
+  })
+
+  it('executor source uses worktreePath as cwd (not target.resolved_path)', async () => {
+    const src = await Bun.file(join(import.meta.dir, '../../worker/executor.ts')).text()
+    expect(src).toContain('cwd: worktreePath')
+    expect(src).not.toContain('cwd: target.resolved_path')
+  })
+
+  it('executor source includes worktree cleanup in finally block', async () => {
+    const src = await Bun.file(join(import.meta.dir, '../../worker/executor.ts')).text()
+    expect(src).toContain('cleanupWorktree')
+    expect(src).toContain('worktreeCreated')
+  })
+
+  it('executor source constructs worktree path with .worktrees/nw- prefix (D-01, D-02)', async () => {
+    const src = await Bun.file(join(import.meta.dir, '../../worker/executor.ts')).text()
+    expect(src).toMatch(/\.worktrees.*nw-/)
   })
 })
