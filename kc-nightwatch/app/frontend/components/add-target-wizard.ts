@@ -74,7 +74,7 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
   function buildTarget(): Record<string, unknown> {
     return {
       type,
-      path: targetPath || undefined,
+      path: targetPath,
       north_star: northStar,
       sources: monitors,
       watch: watchKeywords.split(',').map(s => s.trim()).filter(Boolean),
@@ -155,13 +155,16 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
               disabled=${isEdit}
               style="width:100%;margin-bottom:16px;"
             />
-            <div style="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:600;">Path (optional)</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:600;">Path</div>
             <input
               value=${targetPath}
               onInput=${(e: Event) => setTargetPath((e.target as HTMLInputElement).value)}
               placeholder="/absolute/path/to/target"
               style="width:100%;"
             />
+            ${!targetPath.trim() && html`
+              <div style="font-size:12px;color:var(--error);margin-top:4px;">Path is required</div>
+            `}
           </div>
         `}
 
@@ -274,7 +277,7 @@ export function AddTargetWizard({ isOpen, onClose, onSaved, editTarget }: Props)
                 }
                 setStep(s => s + 1)
               }}
-              disabled=${step === 1 && !name.trim() && !isEdit}
+              disabled=${step === 1 && ((!name.trim() && !isEdit) || !targetPath.trim())}
               style="background:var(--btn-primary);color:#fff;border-color:var(--btn-primary);"
             >${step === 3 ? 'Next: Schedule' : 'Next'}</button>
           `}

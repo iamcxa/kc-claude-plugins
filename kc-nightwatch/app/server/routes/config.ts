@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import path from 'node:path'
 import os from 'node:os'
+import { existsSync } from 'node:fs'
 import { parse, stringify } from 'yaml'
 import { readYamlFile, TARGETS_YAML_PATH } from '../services/yaml-store.ts'
 import { validateConfigSave, withWriteLock } from '../services/config-validator.ts'
@@ -64,6 +65,14 @@ configRoutes.post('/api/config/targets/add', async (c) => {
   const { name, target } = await c.req.json<{ name: string; target: Record<string, unknown> }>()
   if (!name?.trim()) return c.json({ error: 'name required' }, 400)
 
+  const targetPath = (target as Record<string, unknown>).path as string | undefined
+  if (!targetPath?.trim()) {
+    return c.json({ error: 'path is required' }, 400)
+  }
+  if (!existsSync(targetPath)) {
+    return c.json({ error: `path does not exist: ${targetPath}` }, 400)
+  }
+
   let conflict = false
   await withWriteLock('targets', async () => {
     const raw = await Bun.file(TARGETS_YAML_PATH).text().catch(() => 'targets: {}')
@@ -84,6 +93,16 @@ configRoutes.post('/api/config/targets/add', async (c) => {
 configRoutes.put('/api/config/targets/:name', async (c) => {
   const name = decodeURIComponent(c.req.param('name'))
   const { target } = await c.req.json<{ target: Record<string, unknown> }>()
+
+  const targetPath = (target as Record<string, unknown>).path as string | undefined
+  if (targetPath !== undefined) {
+    if (!targetPath.trim()) {
+      return c.json({ error: 'path is required' }, 400)
+    }
+    if (!existsSync(targetPath)) {
+      return c.json({ error: `path does not exist: ${targetPath}` }, 400)
+    }
+  }
 
   let notFound = false
   await withWriteLock('targets', async () => {
