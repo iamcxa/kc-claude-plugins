@@ -9,9 +9,9 @@ Requirements for run execution reliability, worktree isolation, extended feedbac
 
 ### Run Execution UX
 
-- [ ] **RUNUX-01**: Completed run detail reads log from file via GET /api/runs/:id/log — SSE-only display shows "Waiting for output..." when page opens after run completes
-- [ ] **RUNUX-02**: Target `path` field required in Add Target wizard — optional path falls back to nonexistent directory, causing silent execution failures
-- [ ] **RUNUX-03**: Server auto-restart on code change via Bun --watch or file watcher — currently requires manual restart after every code edit
+- [x] **RUNUX-01**: Completed run detail reads log from file via GET /api/runs/:id/log — SSE-only display shows "Waiting for output..." when page opens after run completes
+- [x] **RUNUX-02**: Target `path` field required in Add Target wizard — optional path falls back to nonexistent directory, causing silent execution failures
+- [x] **RUNUX-03**: Server auto-restart on code change via Bun --watch or file watcher — currently requires manual restart after every code edit
 
 ### Worktree Isolation
 
@@ -43,9 +43,9 @@ Requirements for run execution reliability, worktree isolation, extended feedbac
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | TEST-01 | Phase 12 | Complete (12-01) |
-| RUNUX-01 | Phase 12 | Pending |
-| RUNUX-02 | Phase 12 | Pending |
-| RUNUX-03 | Phase 12 | Pending |
+| RUNUX-01 | Phase 12 | Complete (12-02) |
+| RUNUX-02 | Phase 12 | Complete (12-03) |
+| RUNUX-03 | Phase 12 | Complete (12-02) |
 | WKTREE-01 | Phase 13 | Pending |
 | WKTREE-02 | Phase 13 | Pending |
 | WKTREE-03 | Phase 13 | Pending |
@@ -59,4 +59,4 @@ Requirements for run execution reliability, worktree isolation, extended feedbac
 
 ---
 *Requirements defined: 2026-03-23*
-*Traceability updated: 2026-03-23 (v3.0 roadmap)*
+*Traceability updated: 2026-03-24 (Phase 12 complete)*
