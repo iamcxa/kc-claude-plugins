@@ -909,6 +909,8 @@ Read current `~/.claude/kc-plugins-config/nightwatch-improvement-log.md`, update
 ```markdown
 ## {YYYY-MM-DD}
 
+slack_url: {full Slack message URL or null}
+
 ### {plugin_name}
 - signal: {signal_id}
   action: quick-fix | proposal | linear-issue | e2e-flow | alert | auto-fix (Phase 1) | skipped
@@ -918,6 +920,8 @@ Read current `~/.claude/kc-plugins-config/nightwatch-improvement-log.md`, update
   files_changed: [{list}]         # for quick-fix
   reason: "{if skipped, why}"     # for skipped
 ```
+
+**slack_url field:** Written after Step 5.4 Slack delivery. Contains the full Slack message URL for reaction collection on the next run (see Step 0.4.5). Value is `null` when Slack delivery fails or uses webhook fallback (no URL returned). This field is at the run-date level (not per-target) because one Slack message covers all targets.
 
 ### Step 5.2.5: Write summary.yaml (Dashboard Structured Output)
 
@@ -1075,6 +1079,15 @@ If `pre_assessment` or `post_assessment` is empty, omit that line. If no baselin
      -d '{"text": "<message in mrkdwn format>"}'
    ```
 3. **Log only** — if both fail, log `Slack delivery failed — report in improvement-log only` and continue.
+
+**Capture Slack message URL for feedback collection:**
+
+After successful Slack delivery (MCP or webhook):
+1. If sent via `slack_send_message` MCP — the response includes the message URL or `ts` value. Construct the full URL: `https://{workspace}.slack.com/archives/{channel_id}/p{ts_without_dot}`
+2. If sent via webhook — webhook responses do not return message metadata. Set `slack_url: null` (reaction collection will be skipped next run).
+3. If delivery failed — set `slack_url: null`.
+
+Store the `slack_url` value for use in Step 5.2 (improvement-log update).
 
 **Silent night report** — when zero active targets (all skipped):
 
