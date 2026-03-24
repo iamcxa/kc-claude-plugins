@@ -1,40 +1,16 @@
-import { describe, it, expect, mock, afterAll, beforeAll } from 'bun:test'
+import { describe, it, expect, mock, afterAll, beforeAll, beforeEach, afterEach, spyOn } from 'bun:test'
 import { Hono } from 'hono'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
+import * as yamlStore from '../../server/services/yaml-store.ts'
+import * as configValidator from '../../server/services/config-validator.ts'
+import * as ipc from '../../server/ipc.ts'
 
 // Create a real temp directory for "valid path" tests
 const tmpDir = mkdtempSync(path.join(os.tmpdir(), 'nw-test-'))
 
-// Temp targets YAML path — used by mock and route
-const tmpTargetsYaml = path.join(os.tmpdir(), 'nw-test-targets.yaml')
-
-// Mock yaml-store — override TARGETS_YAML_PATH to point to a temp file
-// Note: real signature is withWriteLock(file: string, fn: () => Promise<T>)
-mock.module('../../server/services/yaml-store.ts', () => ({
-  readTargets: mock(async () => ({})),
-  writeTargets: mock(async () => {}),
-  readYamlFile: mock(async () => ({})),
-  writeYamlFile: mock(async () => {}),
-  loadOrCreateAppConfig: mock(async () => ({ schedule: { enabled: false } })),
-  writeAppConfig: mock(async () => {}),
-  TARGETS_YAML_PATH: tmpTargetsYaml,
-}))
-
-// Mock config-validator — withWriteLock should just execute the callback
-// Note: real signature is withWriteLock(file: string, fn: () => Promise<T>)
-mock.module('../../server/services/config-validator.ts', () => ({
-  validateConfigSave: mock(async () => ({ valid: true })),
-  withWriteLock: mock(async (_file: string, fn: () => Promise<unknown>) => fn()),
-}))
-
-// Mock ipc — sendToWorker used for config-changed notification
-mock.module('../../server/ipc.ts', () => ({
-  sendToWorker: mock(() => {}),
-}))
-
-// Import routes AFTER mocking
+// Import routes — spyOn patches are set up in beforeEach
 const { configRoutes } = await import('../../server/routes/config.ts')
 
 function makeApp() {
@@ -43,14 +19,54 @@ function makeApp() {
   return app
 }
 
+// Spy declarations
+let readTargetsSpy: ReturnType<typeof spyOn>
+let writeTargetsSpy: ReturnType<typeof spyOn>
+let readYamlFileSpy: ReturnType<typeof spyOn>
+let writeYamlFileSpy: ReturnType<typeof spyOn>
+let loadOrCreateAppConfigSpy: ReturnType<typeof spyOn>
+let writeAppConfigSpy: ReturnType<typeof spyOn>
+let withWriteLockSpy: ReturnType<typeof spyOn>
+let validateConfigSaveSpy: ReturnType<typeof spyOn>
+let sendToWorkerSpy: ReturnType<typeof spyOn>
+
 beforeAll(() => {
-  // Initialize temp targets file with one pre-existing target for PUT tests
-  writeFileSync(tmpTargetsYaml, 'targets:\n  my-target:\n    type: plugin\n    path: /tmp\n')
+  // No temp targets YAML needed — withWriteLock is mocked via spyOn
 })
 
 afterAll(() => {
   rmSync(tmpDir, { recursive: true, force: true })
-  try { rmSync(tmpTargetsYaml) } catch { /* ignore */ }
+})
+
+beforeEach(() => {
+  readTargetsSpy = spyOn(yamlStore, 'readTargets').mockResolvedValue({})
+  writeTargetsSpy = spyOn(yamlStore, 'writeTargets').mockResolvedValue(undefined)
+  readYamlFileSpy = spyOn(yamlStore, 'readYamlFile').mockResolvedValue({})
+  writeYamlFileSpy = spyOn(yamlStore, 'writeYamlFile').mockResolvedValue(undefined)
+  loadOrCreateAppConfigSpy = spyOn(yamlStore, 'loadOrCreateAppConfig').mockResolvedValue({
+    host: '127.0.0.1',
+    port: 3200,
+    schedule: { enabled: false, self_repair_before: true },
+    max_concurrent_runs: 1 as const,
+    plugins_dir: '/tmp/plugins',
+  })
+  writeAppConfigSpy = spyOn(yamlStore, 'writeAppConfig').mockResolvedValue(undefined)
+  // withWriteLock: execute the callback (mimics real behavior without file writes)
+  withWriteLockSpy = spyOn(configValidator, 'withWriteLock').mockImplementation(async (_file: string, fn: () => Promise<unknown>) => fn())
+  validateConfigSaveSpy = spyOn(configValidator, 'validateConfigSave').mockResolvedValue({ valid: true, step: 'ready' as const })
+  sendToWorkerSpy = spyOn(ipc, 'sendToWorker').mockReturnValue(false)
+})
+
+afterEach(() => {
+  readTargetsSpy.mockRestore()
+  writeTargetsSpy.mockRestore()
+  readYamlFileSpy.mockRestore()
+  writeYamlFileSpy.mockRestore()
+  loadOrCreateAppConfigSpy.mockRestore()
+  writeAppConfigSpy.mockRestore()
+  withWriteLockSpy.mockRestore()
+  validateConfigSaveSpy.mockRestore()
+  sendToWorkerSpy.mockRestore()
 })
 
 describe('POST /api/config/targets/add — path validation', () => {

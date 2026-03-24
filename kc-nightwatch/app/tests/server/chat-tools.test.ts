@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach, mock } from 'bun:test'
+import { describe, it, expect, beforeEach, mock, spyOn } from 'bun:test'
 import type { Message, Tool } from '@anthropic-ai/sdk/resources/messages'
+import * as yamlStore from '../../server/services/yaml-store.ts'
 
 // ============================================================
 // Mocks — must precede chat-manager import
@@ -64,25 +65,27 @@ mock.module('@modelcontextprotocol/sdk/client/streamableHttp.js', () => ({
   },
 }))
 
-mock.module('../../server/services/yaml-store.ts', () => ({
-  loadOrCreateAppConfig: mock(async () => ({
-    host: '127.0.0.1',
-    port: 3200,
-    schedule: { enabled: false, self_repair_before: true },
-    max_concurrent_runs: 1,
-    plugins_dir: '/tmp/plugins',
-  })),
-}))
+// ============================================================
+// Import after external SDK mocks (yaml-store uses spyOn)
+// ============================================================
+let loadOrCreateAppConfigSpy: ReturnType<typeof spyOn>
 
-// ============================================================
-// Import after mocks
-// ============================================================
 const {
   getOrCreateSession,
   killSession,
   killAllSessions,
   NW_TOOLS,
 } = await import('../../server/services/chat-manager.ts')
+
+// Set up yaml-store spy at module level (before any describe blocks)
+// This spy is refreshed in resetMocks to ensure clean state per test
+loadOrCreateAppConfigSpy = spyOn(yamlStore, 'loadOrCreateAppConfig').mockResolvedValue({
+  host: '127.0.0.1',
+  port: 3200,
+  schedule: { enabled: false, self_repair_before: true },
+  max_concurrent_runs: 1 as const,
+  plugins_dir: '/tmp/plugins',
+})
 
 // ============================================================
 // Helper: reset state between tests
@@ -99,6 +102,15 @@ function resetMocks() {
   mockMcpCallTool.mockClear()
   mockMcpClose.mockClear()
   mockMcpConnect.mockClear()
+  // Refresh yaml-store spy for each test
+  loadOrCreateAppConfigSpy.mockRestore()
+  loadOrCreateAppConfigSpy = spyOn(yamlStore, 'loadOrCreateAppConfig').mockResolvedValue({
+    host: '127.0.0.1',
+    port: 3200,
+    schedule: { enabled: false, self_repair_before: true },
+    max_concurrent_runs: 1 as const,
+    plugins_dir: '/tmp/plugins',
+  })
 }
 
 // ============================================================

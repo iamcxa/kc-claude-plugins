@@ -1,27 +1,10 @@
-import { describe, it, expect, beforeAll, afterAll, mock } from 'bun:test'
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, mock, spyOn } from 'bun:test'
 import { Hono } from 'hono'
-import { mkdirSync, writeFileSync, rmSync, existsSync } from 'node:fs'
+import { mkdirSync, writeFileSync, rmSync } from 'node:fs'
 import path from 'node:path'
+import * as ipc from '../../server/ipc.ts'
 
-// Mock IPC to prevent SSE routes from trying to subscribe to worker IPC in test context
-mock.module('../../server/ipc.ts', () => ({
-  subscribeToRun: () => () => {},
-  subscribeGlobal: () => () => {},
-  workerStatus: 'offline',
-  getLastWorkerState: () => ({ queue: [], active: [] }),
-  lastHeartbeatAt: null,
-  workerProc: null,
-  setWorkerProc: () => {},
-  setWorkerStatus: () => {},
-  fanOutLogEvent: () => {},
-  closeRunSubscribers: () => {},
-  broadcastGlobal: () => {},
-  handleWorkerMessage: () => {},
-  sendToWorker: () => false,
-  startHeartbeatWatchdog: () => setInterval(() => {}, 99999),
-}))
-
-// Import streamRoutes AFTER mocking IPC
+// Import streamRoutes — spyOn patches ipc functions in beforeEach
 const { streamRoutes } = await import('../../server/routes/stream.ts')
 
 // Test UUID and path setup — uses real RUNS_DIR so the route can resolve the file
@@ -43,6 +26,20 @@ beforeAll(() => {
 
 afterAll(() => {
   rmSync(testRunDir, { recursive: true, force: true })
+})
+
+// Spy on ipc functions used by stream.ts SSE routes
+let subscribeToRunSpy: ReturnType<typeof spyOn>
+let subscribeGlobalSpy: ReturnType<typeof spyOn>
+
+beforeEach(() => {
+  subscribeToRunSpy = spyOn(ipc, 'subscribeToRun').mockReturnValue(() => {})
+  subscribeGlobalSpy = spyOn(ipc, 'subscribeGlobal').mockReturnValue(() => {})
+})
+
+afterEach(() => {
+  subscribeToRunSpy.mockRestore()
+  subscribeGlobalSpy.mockRestore()
 })
 
 function makeApp() {

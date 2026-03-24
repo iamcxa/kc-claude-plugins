@@ -1,6 +1,8 @@
-import { describe, it, expect, mock, beforeEach } from 'bun:test'
+import { describe, it, expect, mock, beforeEach, afterEach, spyOn } from 'bun:test'
 import { Hono } from 'hono'
 import type { Run, RunSummary, CalibrationData } from '../../shared/types.ts'
+import * as runStore from '../../server/services/run-store.ts'
+import * as feedbackStore from '../../server/services/feedback-store.ts'
 
 // ============================================================
 // Mocks — must precede health-api import
@@ -118,29 +120,14 @@ let mockRunMap: Record<string, RunSummary> = {
 }
 let mockCalibration: CalibrationData[] = mockCalibrationData
 
-const mockListRuns = mock(async (filter?: { status?: string; target?: string }) => {
-  if (filter?.target) return mockRunsResult.filter(r => r.target === filter.target)
-  return mockRunsResult
-})
+// ============================================================
+// Spy declarations
+// ============================================================
+let listRunsSpy: ReturnType<typeof spyOn>
+let getRunSpy: ReturnType<typeof spyOn>
+let getCalibrationDataSpy: ReturnType<typeof spyOn>
 
-const mockGetRun = mock(async (id: string) => {
-  const run = mockRunsResult.find(r => r.id === id)
-  if (!run) return null
-  return { ...run, summary: mockRunMap[id] }
-})
-
-const mockGetCalibrationData = mock(async () => mockCalibration)
-
-mock.module('../../server/services/run-store.ts', () => ({
-  listRuns: mockListRuns,
-  getRun: mockGetRun,
-}))
-
-mock.module('../../server/services/feedback-store.ts', () => ({
-  getCalibrationData: mockGetCalibrationData,
-}))
-
-// Import after mocks are registered
+// Import routes — spyOn patches in beforeEach
 const { healthApiRoutes } = await import('../../server/routes/health-api.ts')
 
 // ============================================================
@@ -159,9 +146,24 @@ describe('health api', () => {
       'run-003': mockSummary3,
     }
     mockCalibration = mockCalibrationData
-    mockListRuns.mockClear()
-    mockGetRun.mockClear()
-    mockGetCalibrationData.mockClear()
+
+    // Set up spies with closures over control variables
+    listRunsSpy = spyOn(runStore, 'listRuns').mockImplementation(async (filter?: { status?: string; target?: string }) => {
+      if (filter?.target) return mockRunsResult.filter(r => r.target === filter.target)
+      return mockRunsResult
+    })
+    getRunSpy = spyOn(runStore, 'getRun').mockImplementation(async (id: string) => {
+      const run = mockRunsResult.find(r => r.id === id)
+      if (!run) return null
+      return { ...run, summary: mockRunMap[id] }
+    })
+    getCalibrationDataSpy = spyOn(feedbackStore, 'getCalibrationData').mockImplementation(async () => mockCalibration)
+  })
+
+  afterEach(() => {
+    listRunsSpy.mockRestore()
+    getRunSpy.mockRestore()
+    getCalibrationDataSpy.mockRestore()
   })
 
   it('GET /api/health/:target returns 200', async () => {

@@ -1,6 +1,7 @@
-import { describe, it, expect, mock, beforeEach, afterEach } from 'bun:test'
+import { describe, it, expect, mock, beforeEach, afterEach, spyOn } from 'bun:test'
 import { Hono } from 'hono'
 import type { OutcomeRecord } from '../../shared/types.ts'
+import * as outcomeStore from '../../server/services/outcome-store.ts'
 
 // Test fixtures
 const makeRecord = (overrides: Partial<OutcomeRecord> = {}): OutcomeRecord => ({
@@ -23,25 +24,12 @@ const RECORDS: OutcomeRecord[] = [
   makeRecord({ id: 'r-4', target: 'kc-plugin-forge', type: 'linear_issue', status: 'closed', url: 'https://linear.app/team/issue/SC-2' }),
 ]
 
-// Mock queryOutcomes and readOutcomes before importing the routes
-const mockQueryOutcomes = mock(async (filter: { target?: string; type?: string; status?: string } = {}) => {
-  let records = [...RECORDS]
-  if (filter.target) records = records.filter(r => r.target === filter.target)
-  if (filter.type) records = records.filter(r => r.type === filter.type)
-  if (filter.status) records = records.filter(r => r.status === filter.status)
-  return records
-})
+// Spy declarations
+let queryOutcomesSpy: ReturnType<typeof spyOn>
+let readOutcomesSpy: ReturnType<typeof spyOn>
+let appendOutcomeSpy: ReturnType<typeof spyOn>
 
-const mockReadOutcomes = mock(async () => [...RECORDS])
-
-mock.module('../../server/services/outcome-store.ts', () => ({
-  queryOutcomes: mockQueryOutcomes,
-  readOutcomes: mockReadOutcomes,
-  OUTCOMES_YAML_PATH: '/tmp/test-outcomes.yaml',
-  appendOutcome: mock(async () => {}),
-}))
-
-// Import routes AFTER mocking
+// Import routes
 const { outcomesRoutes } = await import('../../server/routes/outcomes.ts')
 
 // Create a test app that mounts the routes
@@ -53,8 +41,21 @@ function makeApp() {
 
 describe('GET /api/outcomes', () => {
   beforeEach(() => {
-    mockQueryOutcomes.mockClear()
-    mockReadOutcomes.mockClear()
+    queryOutcomesSpy = spyOn(outcomeStore, 'queryOutcomes').mockImplementation(async (filter: { target?: string; type?: string; status?: string } = {}) => {
+      let records = [...RECORDS]
+      if (filter.target) records = records.filter(r => r.target === filter.target)
+      if (filter.type) records = records.filter(r => r.type === filter.type)
+      if (filter.status) records = records.filter(r => r.status === filter.status)
+      return records
+    })
+    readOutcomesSpy = spyOn(outcomeStore, 'readOutcomes').mockResolvedValue([...RECORDS])
+    appendOutcomeSpy = spyOn(outcomeStore, 'appendOutcome').mockResolvedValue(undefined)
+  })
+
+  afterEach(() => {
+    queryOutcomesSpy.mockRestore()
+    readOutcomesSpy.mockRestore()
+    appendOutcomeSpy.mockRestore()
   })
 
   it('returns all outcomes when no filters provided', async () => {
@@ -86,8 +87,21 @@ describe('GET /api/outcomes', () => {
 
 describe('GET /api/outcomes/:id/status', () => {
   beforeEach(() => {
-    mockQueryOutcomes.mockClear()
-    mockReadOutcomes.mockClear()
+    queryOutcomesSpy = spyOn(outcomeStore, 'queryOutcomes').mockImplementation(async (filter: { target?: string; type?: string; status?: string } = {}) => {
+      let records = [...RECORDS]
+      if (filter.target) records = records.filter(r => r.target === filter.target)
+      if (filter.type) records = records.filter(r => r.type === filter.type)
+      if (filter.status) records = records.filter(r => r.status === filter.status)
+      return records
+    })
+    readOutcomesSpy = spyOn(outcomeStore, 'readOutcomes').mockResolvedValue([...RECORDS])
+    appendOutcomeSpy = spyOn(outcomeStore, 'appendOutcome').mockResolvedValue(undefined)
+  })
+
+  afterEach(() => {
+    queryOutcomesSpy.mockRestore()
+    readOutcomesSpy.mockRestore()
+    appendOutcomeSpy.mockRestore()
   })
 
   it('returns { status } for existing record id', async () => {
