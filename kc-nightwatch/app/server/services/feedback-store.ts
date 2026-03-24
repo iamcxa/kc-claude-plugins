@@ -10,13 +10,18 @@ interface FeedbackStore {
   explicit_feedback?: FeedbackEntry[]
   pr_feedback?: FeedbackEntry[]
   linear_feedback?: FeedbackEntry[]
+  slack_feedback?: FeedbackEntry[]
+  pr_review_feedback?: FeedbackEntry[]
 }
 
 export async function appendFeedback(entry: FeedbackEntry): Promise<void> {
   const data = await readYamlFile<FeedbackStore>(FEEDBACK_YAML_PATH) ?? {}
   const key = entry.source === 'user' ? 'explicit_feedback'
     : entry.source === 'pr_status' ? 'pr_feedback'
-    : 'linear_feedback'
+    : entry.source === 'linear_status' ? 'linear_feedback'
+    : entry.source === 'slack_reaction' ? 'slack_feedback'
+    : entry.source === 'pr_review' ? 'pr_review_feedback'
+    : 'linear_feedback'  // fallback
   if (!data[key]) data[key] = []
   data[key]!.push(entry)
   await writeYamlFile(FEEDBACK_YAML_PATH, data)
@@ -29,6 +34,8 @@ export async function getFeedbackForRun(runId: string): Promise<FeedbackEntry[]>
     ...(data.explicit_feedback ?? []),
     ...(data.pr_feedback ?? []),
     ...(data.linear_feedback ?? []),
+    ...(data.slack_feedback ?? []),
+    ...(data.pr_review_feedback ?? []),
   ]
   return all.filter(f => f.run_id === runId)
 }
@@ -39,6 +46,8 @@ export async function getFeedbackForSignal(signalId: string): Promise<FeedbackEn
     ...(data.explicit_feedback ?? []),
     ...(data.pr_feedback ?? []),
     ...(data.linear_feedback ?? []),
+    ...(data.slack_feedback ?? []),
+    ...(data.pr_review_feedback ?? []),
   ]
   return all.filter(f => f.signal_id === signalId)
 }
@@ -49,6 +58,8 @@ export async function getCalibrationData(): Promise<CalibrationData[]> {
     ...(data.explicit_feedback ?? []),
     ...(data.pr_feedback ?? []),
     ...(data.linear_feedback ?? []),
+    ...(data.slack_feedback ?? []),
+    ...(data.pr_review_feedback ?? []),
   ]
 
   // Group by indicator (derived from signal_id pattern: "indicator-name:signal-type")

@@ -167,9 +167,9 @@ export interface FeedbackEntry {
   signal_id: string
   target: string
   run_id: string
-  verdict: 'accepted' | 'rejected'
+  verdict: 'accepted' | 'rejected' | 'uncertain'
   reason?: string
-  source: 'user' | 'pr_status' | 'linear_status'
+  source: 'user' | 'pr_status' | 'linear_status' | 'slack_reaction' | 'pr_review'
   submitted_at: string
 }
 
