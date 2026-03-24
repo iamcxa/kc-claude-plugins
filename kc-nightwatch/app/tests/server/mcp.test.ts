@@ -1,22 +1,23 @@
-import { describe, it, expect, beforeEach, afterEach, mock } from 'bun:test'
+import { describe, it, expect, beforeEach, afterEach, mock, spyOn } from 'bun:test'
 import type { Run, RunSummary } from '../../shared/types.ts'
+import * as yamlStore from '../../server/services/yaml-store.ts'
+import * as outcomeStore from '../../server/services/outcome-store.ts'
+import * as feedbackCollector from '../../worker/feedback-collector.ts'
+import * as runStore from '../../server/services/run-store.ts'
+import * as feedbackStore from '../../server/services/feedback-store.ts'
 
 // ============================================================
-// Mocks — must precede createMcpServer import
+// Mock data fixtures
 // ============================================================
-const mockReadTargets = mock(async () => ({
+const MOCK_TARGETS = {
   'e2e-pipeline': { name: 'e2e-pipeline', type: 'plugin' as const, monitors: [], watch: [], respond: {}, indicators: [], north_star: 'quality' },
   'kc-nightwatch': { name: 'kc-nightwatch', type: 'plugin' as const, monitors: [], watch: [], respond: {}, indicators: [], north_star: 'self-improve' },
-}))
+}
 
-const mockListRuns = mock(async (_filter?: { status?: string; target?: string }) => {
-  const runs: Run[] = [
-    { id: 'run-001', target: 'e2e-pipeline', mode: 'production', trigger: 'manual', status: 'completed', log_path: '/tmp/run-001.jsonl', started_at: '2026-03-19T00:00:00Z' },
-    { id: 'run-002', target: 'kc-nightwatch', mode: 'dry-run', trigger: 'interval', status: 'running', log_path: '/tmp/run-002.jsonl', started_at: '2026-03-19T01:00:00Z' },
-  ]
-  if (_filter?.target) return runs.filter(r => r.target === _filter.target)
-  return runs
-})
+const MOCK_RUNS: Run[] = [
+  { id: 'run-001', target: 'e2e-pipeline', mode: 'production', trigger: 'manual', status: 'completed', log_path: '/tmp/run-001.jsonl', started_at: '2026-03-19T00:00:00Z' },
+  { id: 'run-002', target: 'kc-nightwatch', mode: 'dry-run', trigger: 'interval', status: 'running', log_path: '/tmp/run-002.jsonl', started_at: '2026-03-19T01:00:00Z' },
+]
 
 const mockRunSummary: RunSummary = {
   targets_active: 1,
@@ -39,72 +40,92 @@ const mockRunSummary: RunSummary = {
   },
 }
 
-const mockGetRun = mock(async (id: string) => {
-  if (id === 'run-001') {
-    return { id: 'run-001', target: 'e2e-pipeline', mode: 'production' as const, trigger: 'manual' as const, status: 'completed' as const, log_path: '/tmp/run-001.jsonl', started_at: '2026-03-19T00:00:00Z', summary: mockRunSummary }
-  }
-  return null
-})
-
-const mockAppendRun = mock(async (_run: Run) => {})
-const mockAppendFeedback = mock(async (_entry: unknown) => {})
-const mockGetCalibrationData = mock(async () => [])
-
-const mockLoadOrCreateAppConfig = mock(async () => ({
-  host: '127.0.0.1',
-  port: 3200,
-  schedule: { enabled: false, self_repair_before: true },
-  max_concurrent_runs: 1 as const,
-  plugins_dir: '/tmp/.claude/plugins/local',
-}))
-const mockWriteAppConfig = mock(async (_config: unknown) => {})
-const mockReadYamlFile = mock(async (_path: string) => null)
-
-mock.module('../../server/services/yaml-store.ts', () => ({
-  readTargets: mockReadTargets,
-  writeTargets: mock(async (_targets: unknown) => {}),
-  loadOrCreateAppConfig: mockLoadOrCreateAppConfig,
-  writeAppConfig: mockWriteAppConfig,
-  readYamlFile: mockReadYamlFile,
-  writeYamlFile: mock(async (_path: string, _data: unknown) => {}),
-  TARGETS_YAML_PATH: '/tmp/test-targets.yaml',
-}))
-
-// Mocks for new outcome tools dependencies (Phase 10)
-mock.module('../../server/services/outcome-store.ts', () => ({
-  queryOutcomes: mock(async () => []),
-  readOutcomes: mock(async () => []),
-  appendOutcome: mock(async () => {}),
-  OUTCOMES_YAML_PATH: '/tmp/test-outcomes.yaml',
-}))
-
-mock.module('../../worker/feedback-collector.ts', () => ({
-  checkPrStatus: mock(async () => null),
-  checkLinearStatus: mock(async () => null),
-  collectImplicitFeedback: mock(async () => ({ entries: [], errors: [] })),
-}))
-
-mock.module('../../server/services/run-store.ts', () => ({
-  listRuns: mockListRuns,
-  getRun: mockGetRun,
-  appendRun: mockAppendRun,
-  RUNS_YAML_PATH: '/tmp/test-runs.yaml',
-}))
-
-mock.module('../../server/services/feedback-store.ts', () => ({
-  appendFeedback: mockAppendFeedback,
-  getCalibrationData: mockGetCalibrationData,
-  getFeedbackForRun: mock(async () => []),
-  getFeedbackForSignal: mock(async () => []),
-  writeFeedbackTrends: mock(async () => {}),
-  FEEDBACK_YAML_PATH: '/tmp/test-feedback.yaml',
-}))
-
 // ============================================================
-// Import after mocks — use real ipc.ts + setWorkerStatus for state control
+// Import system under test (static import — spyOn patches at runtime in beforeEach)
 // ============================================================
 const { createMcpServer } = await import('../../server/services/mcp-tools.ts')
 const { setWorkerStatus } = await import('../../server/ipc.ts')
+
+// ============================================================
+// Spy declarations
+// ============================================================
+let readTargetsSpy: ReturnType<typeof spyOn>
+let listRunsSpy: ReturnType<typeof spyOn>
+let getRunSpy: ReturnType<typeof spyOn>
+let appendRunSpy: ReturnType<typeof spyOn>
+let appendFeedbackSpy: ReturnType<typeof spyOn>
+let getCalibrationDataSpy: ReturnType<typeof spyOn>
+let loadOrCreateAppConfigSpy: ReturnType<typeof spyOn>
+let writeAppConfigSpy: ReturnType<typeof spyOn>
+let readYamlFileSpy: ReturnType<typeof spyOn>
+let writeYamlFileSpy: ReturnType<typeof spyOn>
+let queryOutcomesSpy: ReturnType<typeof spyOn>
+let readOutcomesSpy: ReturnType<typeof spyOn>
+let appendOutcomeSpy: ReturnType<typeof spyOn>
+let checkPrStatusSpy: ReturnType<typeof spyOn>
+let checkLinearStatusSpy: ReturnType<typeof spyOn>
+let collectImplicitFeedbackSpy: ReturnType<typeof spyOn>
+let getFeedbackForRunSpy: ReturnType<typeof spyOn>
+let getFeedbackForSignalSpy: ReturnType<typeof spyOn>
+let writeFeedbackTrendsSpy: ReturnType<typeof spyOn>
+
+beforeEach(() => {
+  readTargetsSpy = spyOn(yamlStore, 'readTargets').mockResolvedValue(MOCK_TARGETS)
+  listRunsSpy = spyOn(runStore, 'listRuns').mockImplementation(async (_filter?: { status?: string; target?: string }) => {
+    if (_filter?.target) return MOCK_RUNS.filter(r => r.target === _filter.target)
+    return MOCK_RUNS
+  })
+  getRunSpy = spyOn(runStore, 'getRun').mockImplementation(async (id: string) => {
+    if (id === 'run-001') {
+      return { id: 'run-001', target: 'e2e-pipeline', mode: 'production' as const, trigger: 'manual' as const, status: 'completed' as const, log_path: '/tmp/run-001.jsonl', started_at: '2026-03-19T00:00:00Z', summary: mockRunSummary }
+    }
+    return null
+  })
+  appendRunSpy = spyOn(runStore, 'appendRun').mockResolvedValue(undefined)
+  appendFeedbackSpy = spyOn(feedbackStore, 'appendFeedback').mockResolvedValue(undefined)
+  getCalibrationDataSpy = spyOn(feedbackStore, 'getCalibrationData').mockResolvedValue([])
+  loadOrCreateAppConfigSpy = spyOn(yamlStore, 'loadOrCreateAppConfig').mockResolvedValue({
+    host: '127.0.0.1',
+    port: 3200,
+    schedule: { enabled: false, self_repair_before: true },
+    max_concurrent_runs: 1 as const,
+    plugins_dir: '/tmp/.claude/plugins/local',
+  })
+  writeAppConfigSpy = spyOn(yamlStore, 'writeAppConfig').mockResolvedValue(undefined)
+  readYamlFileSpy = spyOn(yamlStore, 'readYamlFile').mockResolvedValue(null)
+  writeYamlFileSpy = spyOn(yamlStore, 'writeYamlFile').mockResolvedValue(undefined)
+  queryOutcomesSpy = spyOn(outcomeStore, 'queryOutcomes').mockResolvedValue([])
+  readOutcomesSpy = spyOn(outcomeStore, 'readOutcomes').mockResolvedValue([])
+  appendOutcomeSpy = spyOn(outcomeStore, 'appendOutcome').mockResolvedValue(undefined)
+  checkPrStatusSpy = spyOn(feedbackCollector, 'checkPrStatus').mockResolvedValue(null)
+  checkLinearStatusSpy = spyOn(feedbackCollector, 'checkLinearStatus').mockResolvedValue(null)
+  collectImplicitFeedbackSpy = spyOn(feedbackCollector, 'collectImplicitFeedback').mockResolvedValue({ entries: [], errors: [] })
+  getFeedbackForRunSpy = spyOn(feedbackStore, 'getFeedbackForRun').mockResolvedValue([])
+  getFeedbackForSignalSpy = spyOn(feedbackStore, 'getFeedbackForSignal').mockResolvedValue([])
+  writeFeedbackTrendsSpy = spyOn(feedbackStore, 'writeFeedbackTrends').mockResolvedValue(undefined)
+})
+
+afterEach(() => {
+  readTargetsSpy.mockRestore()
+  listRunsSpy.mockRestore()
+  getRunSpy.mockRestore()
+  appendRunSpy.mockRestore()
+  appendFeedbackSpy.mockRestore()
+  getCalibrationDataSpy.mockRestore()
+  loadOrCreateAppConfigSpy.mockRestore()
+  writeAppConfigSpy.mockRestore()
+  readYamlFileSpy.mockRestore()
+  writeYamlFileSpy.mockRestore()
+  queryOutcomesSpy.mockRestore()
+  readOutcomesSpy.mockRestore()
+  appendOutcomeSpy.mockRestore()
+  checkPrStatusSpy.mockRestore()
+  checkLinearStatusSpy.mockRestore()
+  collectImplicitFeedbackSpy.mockRestore()
+  getFeedbackForRunSpy.mockRestore()
+  getFeedbackForSignalSpy.mockRestore()
+  writeFeedbackTrendsSpy.mockRestore()
+})
 
 // ============================================================
 // Helper: call a registered tool by name
@@ -185,11 +206,6 @@ describe('nw_get_run', () => {
 })
 
 describe('nw_submit_feedback', () => {
-  beforeEach(() => {
-    mockGetRun.mockClear()
-    mockAppendFeedback.mockClear()
-  })
-
   it('returns isError:true when run_id does not exist', async () => {
     const result = await callTool('nw_submit_feedback', {
       signal_id: 'sig-abc',
@@ -222,8 +238,8 @@ describe('nw_submit_feedback', () => {
     }) as { content: Array<{ type: string; text: string }> }
     const data = JSON.parse(result.content[0]!.text)
     expect(data.ok).toBe(true)
-    expect(mockAppendFeedback).toHaveBeenCalledTimes(1)
-    const calledWith = mockAppendFeedback.mock.calls[0]![0] as { signal_id: string; source: string }
+    expect(appendFeedbackSpy).toHaveBeenCalledTimes(1)
+    const calledWith = appendFeedbackSpy.mock.calls[0]![0] as { signal_id: string; source: string }
     expect(calledWith.signal_id).toBe('sig-abc')
     expect(calledWith.source).toBe('user')
   })
@@ -244,7 +260,7 @@ describe('nw_trigger_run', () => {
 
   it('enqueues run and returns run_id when worker is online', async () => {
     setWorkerStatus('online')
-    mockAppendRun.mockClear()
+    appendRunSpy.mockClear()
     const result = await callTool('nw_trigger_run', { target: 'e2e-pipeline' }) as { content: Array<{ type: string; text: string }> }
     const data = JSON.parse(result.content[0]!.text)
     expect(data.run_id).toBeDefined()

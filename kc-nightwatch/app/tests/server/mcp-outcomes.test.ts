@@ -1,65 +1,91 @@
-import { describe, it, expect, mock, beforeEach } from 'bun:test'
+import { describe, it, expect, mock, beforeEach, afterEach, spyOn } from 'bun:test'
 import type { OutcomeRecord } from '../../shared/types.ts'
+import * as outcomeStore from '../../server/services/outcome-store.ts'
+import * as feedbackCollector from '../../worker/feedback-collector.ts'
+import * as yamlStore from '../../server/services/yaml-store.ts'
+import * as runStore from '../../server/services/run-store.ts'
+import * as feedbackStore from '../../server/services/feedback-store.ts'
 
 // ============================================================
-// Mocks — must precede mcp-tools import
+// Import after namespace imports (spyOn patches at runtime in beforeEach)
 // ============================================================
+const { createMcpServer } = await import('../../server/services/mcp-tools.ts')
 
-const mockQueryOutcomes = mock(async (_filter?: unknown): Promise<OutcomeRecord[]> => [])
-const mockReadOutcomes = mock(async (): Promise<OutcomeRecord[]> => [])
-const mockCheckPrStatus = mock(async (_url: string): Promise<'accepted' | 'rejected' | null> => null)
-const mockCheckLinearStatus = mock(async (_url: string): Promise<'accepted' | 'rejected' | null> => null)
+// ============================================================
+// Spy declarations
+// ============================================================
+let queryOutcomesSpy: ReturnType<typeof spyOn>
+let readOutcomesSpy: ReturnType<typeof spyOn>
+let appendOutcomeSpy: ReturnType<typeof spyOn>
+let checkPrStatusSpy: ReturnType<typeof spyOn>
+let checkLinearStatusSpy: ReturnType<typeof spyOn>
+let collectImplicitFeedbackSpy: ReturnType<typeof spyOn>
+let readTargetsSpy: ReturnType<typeof spyOn>
+let writeTargetsSpy: ReturnType<typeof spyOn>
+let loadOrCreateAppConfigSpy: ReturnType<typeof spyOn>
+let writeAppConfigSpy: ReturnType<typeof spyOn>
+let readYamlFileSpy: ReturnType<typeof spyOn>
+let writeYamlFileSpy: ReturnType<typeof spyOn>
+let listRunsSpy: ReturnType<typeof spyOn>
+let getRunSpy: ReturnType<typeof spyOn>
+let appendRunSpy: ReturnType<typeof spyOn>
+let appendFeedbackSpy: ReturnType<typeof spyOn>
+let getCalibrationDataSpy: ReturnType<typeof spyOn>
+let getFeedbackForRunSpy: ReturnType<typeof spyOn>
+let getFeedbackForSignalSpy: ReturnType<typeof spyOn>
+let writeFeedbackTrendsSpy: ReturnType<typeof spyOn>
 
-// Existing dependency mocks (required by mcp-tools.ts)
-mock.module('../../server/services/outcome-store.ts', () => ({
-  queryOutcomes: mockQueryOutcomes,
-  readOutcomes: mockReadOutcomes,
-  appendOutcome: mock(async () => {}),
-  OUTCOMES_YAML_PATH: '/tmp/test-outcomes.yaml',
-}))
-
-mock.module('../../worker/feedback-collector.ts', () => ({
-  checkPrStatus: mockCheckPrStatus,
-  checkLinearStatus: mockCheckLinearStatus,
-  collectImplicitFeedback: mock(async () => ({ entries: [], errors: [] })),
-}))
-
-mock.module('../../server/services/yaml-store.ts', () => ({
-  readTargets: mock(async () => ({})),
-  writeTargets: mock(async () => {}),
-  loadOrCreateAppConfig: mock(async () => ({
+beforeEach(() => {
+  queryOutcomesSpy = spyOn(outcomeStore, 'queryOutcomes').mockResolvedValue([])
+  readOutcomesSpy = spyOn(outcomeStore, 'readOutcomes').mockResolvedValue([])
+  appendOutcomeSpy = spyOn(outcomeStore, 'appendOutcome').mockResolvedValue(undefined)
+  checkPrStatusSpy = spyOn(feedbackCollector, 'checkPrStatus').mockResolvedValue(null)
+  checkLinearStatusSpy = spyOn(feedbackCollector, 'checkLinearStatus').mockResolvedValue(null)
+  collectImplicitFeedbackSpy = spyOn(feedbackCollector, 'collectImplicitFeedback').mockResolvedValue({ entries: [], errors: [] })
+  readTargetsSpy = spyOn(yamlStore, 'readTargets').mockResolvedValue({})
+  writeTargetsSpy = spyOn(yamlStore, 'writeTargets').mockResolvedValue(undefined)
+  loadOrCreateAppConfigSpy = spyOn(yamlStore, 'loadOrCreateAppConfig').mockResolvedValue({
     host: '127.0.0.1',
     port: 3200,
     schedule: { enabled: false, self_repair_before: true },
-    max_concurrent_runs: 1,
+    max_concurrent_runs: 1 as const,
     plugins_dir: '/tmp/plugins',
-  })),
-  writeAppConfig: mock(async () => {}),
-  readYamlFile: mock(async () => null),
-  writeYamlFile: mock(async () => {}),
-  TARGETS_YAML_PATH: '/tmp/test-targets.yaml',
-}))
+  })
+  writeAppConfigSpy = spyOn(yamlStore, 'writeAppConfig').mockResolvedValue(undefined)
+  readYamlFileSpy = spyOn(yamlStore, 'readYamlFile').mockResolvedValue(null)
+  writeYamlFileSpy = spyOn(yamlStore, 'writeYamlFile').mockResolvedValue(undefined)
+  listRunsSpy = spyOn(runStore, 'listRuns').mockResolvedValue([])
+  getRunSpy = spyOn(runStore, 'getRun').mockResolvedValue(null)
+  appendRunSpy = spyOn(runStore, 'appendRun').mockResolvedValue(undefined)
+  appendFeedbackSpy = spyOn(feedbackStore, 'appendFeedback').mockResolvedValue(undefined)
+  getCalibrationDataSpy = spyOn(feedbackStore, 'getCalibrationData').mockResolvedValue([])
+  getFeedbackForRunSpy = spyOn(feedbackStore, 'getFeedbackForRun').mockResolvedValue([])
+  getFeedbackForSignalSpy = spyOn(feedbackStore, 'getFeedbackForSignal').mockResolvedValue([])
+  writeFeedbackTrendsSpy = spyOn(feedbackStore, 'writeFeedbackTrends').mockResolvedValue(undefined)
+})
 
-mock.module('../../server/services/run-store.ts', () => ({
-  listRuns: mock(async () => []),
-  getRun: mock(async () => null),
-  appendRun: mock(async () => {}),
-  RUNS_YAML_PATH: '/tmp/test-runs.yaml',
-}))
-
-mock.module('../../server/services/feedback-store.ts', () => ({
-  appendFeedback: mock(async () => {}),
-  getCalibrationData: mock(async () => []),
-  getFeedbackForRun: mock(async () => []),
-  getFeedbackForSignal: mock(async () => []),
-  writeFeedbackTrends: mock(async () => {}),
-  FEEDBACK_YAML_PATH: '/tmp/test-feedback.yaml',
-}))
-
-// ============================================================
-// Import after mocks
-// ============================================================
-const { createMcpServer } = await import('../../server/services/mcp-tools.ts')
+afterEach(() => {
+  queryOutcomesSpy.mockRestore()
+  readOutcomesSpy.mockRestore()
+  appendOutcomeSpy.mockRestore()
+  checkPrStatusSpy.mockRestore()
+  checkLinearStatusSpy.mockRestore()
+  collectImplicitFeedbackSpy.mockRestore()
+  readTargetsSpy.mockRestore()
+  writeTargetsSpy.mockRestore()
+  loadOrCreateAppConfigSpy.mockRestore()
+  writeAppConfigSpy.mockRestore()
+  readYamlFileSpy.mockRestore()
+  writeYamlFileSpy.mockRestore()
+  listRunsSpy.mockRestore()
+  getRunSpy.mockRestore()
+  appendRunSpy.mockRestore()
+  appendFeedbackSpy.mockRestore()
+  getCalibrationDataSpy.mockRestore()
+  getFeedbackForRunSpy.mockRestore()
+  getFeedbackForSignalSpy.mockRestore()
+  writeFeedbackTrendsSpy.mockRestore()
+})
 
 // ============================================================
 // Helper: call a registered tool by name
@@ -124,25 +150,25 @@ const OLD_OUTCOME: OutcomeRecord = {
 // ============================================================
 describe('nw_get_outcomes', () => {
   beforeEach(() => {
-    mockQueryOutcomes.mockClear()
-    mockReadOutcomes.mockClear()
-    mockCheckPrStatus.mockClear()
-    mockCheckLinearStatus.mockClear()
+    queryOutcomesSpy.mockClear()
+    readOutcomesSpy.mockClear()
+    checkPrStatusSpy.mockClear()
+    checkLinearStatusSpy.mockClear()
   })
 
   it('Test 1: returns all outcomes when no filters provided', async () => {
-    mockQueryOutcomes.mockImplementation(async () => [PR_OUTCOME, LINEAR_OUTCOME, OLD_OUTCOME])
+    queryOutcomesSpy.mockImplementation(async () => [PR_OUTCOME, LINEAR_OUTCOME, OLD_OUTCOME])
 
     const result = await callTool('nw_get_outcomes', {})
     const outcomes = JSON.parse(result.content[0]!.text) as OutcomeRecord[]
     expect(Array.isArray(outcomes)).toBe(true)
     expect(outcomes.length).toBe(3)
     // Verify queryOutcomes was called (filter values may be undefined/omitted)
-    expect(mockQueryOutcomes).toHaveBeenCalledTimes(1)
+    expect(queryOutcomesSpy).toHaveBeenCalledTimes(1)
   })
 
   it('Test 2: filters by target when target is provided', async () => {
-    mockQueryOutcomes.mockImplementation(async (filter: unknown) => {
+    queryOutcomesSpy.mockImplementation(async (filter: unknown) => {
       const f = filter as { target?: string }
       return [PR_OUTCOME, OLD_OUTCOME].filter(o => !f.target || o.target === f.target)
     })
@@ -151,13 +177,13 @@ describe('nw_get_outcomes', () => {
     const outcomes = JSON.parse(result.content[0]!.text) as OutcomeRecord[]
     expect(outcomes.every(o => o.target === 'e2e-pipeline')).toBe(true)
     // Verify the filter was passed through (either as {target: 'e2e-pipeline'} or positional)
-    expect(mockQueryOutcomes).toHaveBeenCalledTimes(1)
-    const callArgs = mockQueryOutcomes.mock.calls[0]![0] as { target?: string }
+    expect(queryOutcomesSpy).toHaveBeenCalledTimes(1)
+    const callArgs = queryOutcomesSpy.mock.calls[0]![0] as { target?: string }
     expect(callArgs.target).toBe('e2e-pipeline')
   })
 
   it('Test 3: filters by type=pr when type is provided', async () => {
-    mockQueryOutcomes.mockImplementation(async (filter: unknown) => {
+    queryOutcomesSpy.mockImplementation(async (filter: unknown) => {
       const f = filter as { type?: string }
       return [PR_OUTCOME, LINEAR_OUTCOME, OLD_OUTCOME].filter(o => !f.type || o.type === f.type)
     })
@@ -165,13 +191,13 @@ describe('nw_get_outcomes', () => {
     const result = await callTool('nw_get_outcomes', { type: 'pr' })
     const outcomes = JSON.parse(result.content[0]!.text) as OutcomeRecord[]
     expect(outcomes.every(o => o.type === 'pr')).toBe(true)
-    expect(mockQueryOutcomes).toHaveBeenCalledTimes(1)
-    const callArgs = mockQueryOutcomes.mock.calls[0]![0] as { type?: string }
+    expect(queryOutcomesSpy).toHaveBeenCalledTimes(1)
+    const callArgs = queryOutcomesSpy.mock.calls[0]![0] as { type?: string }
     expect(callArgs.type).toBe('pr')
   })
 
   it('Test 4: filters by since date when since is provided', async () => {
-    mockQueryOutcomes.mockImplementation(async (filter: unknown) => {
+    queryOutcomesSpy.mockImplementation(async (filter: unknown) => {
       const f = filter as { since?: string }
       return [PR_OUTCOME, LINEAR_OUTCOME, OLD_OUTCOME].filter(o => !f.since || o.created_at >= f.since)
     })
@@ -179,8 +205,8 @@ describe('nw_get_outcomes', () => {
     const result = await callTool('nw_get_outcomes', { since: '2026-03-20' })
     const outcomes = JSON.parse(result.content[0]!.text) as OutcomeRecord[]
     expect(outcomes.every(o => o.created_at >= '2026-03-20')).toBe(true)
-    expect(mockQueryOutcomes).toHaveBeenCalledTimes(1)
-    const callArgs = mockQueryOutcomes.mock.calls[0]![0] as { since?: string }
+    expect(queryOutcomesSpy).toHaveBeenCalledTimes(1)
+    const callArgs = queryOutcomesSpy.mock.calls[0]![0] as { since?: string }
     expect(callArgs.since).toBe('2026-03-20')
   })
 })
@@ -190,38 +216,38 @@ describe('nw_get_outcomes', () => {
 // ============================================================
 describe('nw_get_outcome_status', () => {
   beforeEach(() => {
-    mockReadOutcomes.mockClear()
-    mockCheckPrStatus.mockClear()
-    mockCheckLinearStatus.mockClear()
+    readOutcomesSpy.mockClear()
+    checkPrStatusSpy.mockClear()
+    checkLinearStatusSpy.mockClear()
   })
 
   it('Test 5: polls checkPrStatus for PR outcomes and returns live status', async () => {
-    mockReadOutcomes.mockImplementation(async () => [PR_OUTCOME])
-    mockCheckPrStatus.mockImplementation(async () => 'accepted')
+    readOutcomesSpy.mockImplementation(async () => [PR_OUTCOME])
+    checkPrStatusSpy.mockImplementation(async () => 'accepted')
 
     const result = await callTool('nw_get_outcome_status', { outcome_id: 'oc-pr-001' })
     const data = JSON.parse(result.content[0]!.text) as OutcomeRecord & { live_status: string; checked_at: string }
     expect(data.id).toBe('oc-pr-001')
     expect(data.live_status).toBe('accepted')
     expect(data.checked_at).toBeDefined()
-    expect(mockCheckPrStatus).toHaveBeenCalledWith(PR_OUTCOME.url)
-    expect(mockCheckLinearStatus).not.toHaveBeenCalled()
+    expect(checkPrStatusSpy).toHaveBeenCalledWith(PR_OUTCOME.url)
+    expect(checkLinearStatusSpy).not.toHaveBeenCalled()
   })
 
   it('Test 6: polls checkLinearStatus for Linear outcomes and returns live status', async () => {
-    mockReadOutcomes.mockImplementation(async () => [LINEAR_OUTCOME])
-    mockCheckLinearStatus.mockImplementation(async () => 'accepted')
+    readOutcomesSpy.mockImplementation(async () => [LINEAR_OUTCOME])
+    checkLinearStatusSpy.mockImplementation(async () => 'accepted')
 
     const result = await callTool('nw_get_outcome_status', { outcome_id: 'oc-li-001' })
     const data = JSON.parse(result.content[0]!.text) as OutcomeRecord & { live_status: string }
     expect(data.id).toBe('oc-li-001')
     expect(data.live_status).toBe('accepted')
-    expect(mockCheckLinearStatus).toHaveBeenCalledWith(LINEAR_OUTCOME.url)
-    expect(mockCheckPrStatus).not.toHaveBeenCalled()
+    expect(checkLinearStatusSpy).toHaveBeenCalledWith(LINEAR_OUTCOME.url)
+    expect(checkPrStatusSpy).not.toHaveBeenCalled()
   })
 
   it('Test 7: returns isError when outcome_id is not found', async () => {
-    mockReadOutcomes.mockImplementation(async () => [PR_OUTCOME])
+    readOutcomesSpy.mockImplementation(async () => [PR_OUTCOME])
 
     const result = await callTool('nw_get_outcome_status', { outcome_id: 'unknown-id' })
     expect(result.isError).toBe(true)
@@ -234,7 +260,7 @@ describe('nw_get_outcome_status', () => {
 // ============================================================
 describe('nw_outcome_summary', () => {
   it('Test 8: returns aggregated counts by type+status and by target', async () => {
-    mockReadOutcomes.mockImplementation(async () => [PR_OUTCOME, LINEAR_OUTCOME, OLD_OUTCOME])
+    readOutcomesSpy.mockImplementation(async () => [PR_OUTCOME, LINEAR_OUTCOME, OLD_OUTCOME])
 
     const result = await callTool('nw_outcome_summary', {})
     const summary = JSON.parse(result.content[0]!.text) as {
