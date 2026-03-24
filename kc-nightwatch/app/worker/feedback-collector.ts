@@ -84,6 +84,116 @@ export async function checkPrStatus(prUrl: string): Promise<'accepted' | 'reject
 }
 
 /**
+ * Parse review verdict from a list of GitHub reviews.
+ * Pure function — no I/O, easy to test.
+ *
+ * Rules:
+ *   D-17: Latest review per reviewer wins (deduplicate by submittedAt)
+ *   D-03: CHANGES_REQUESTED from any reviewer overrides all others → 'rejected'
+ *         APPROVED beats COMMENTED → 'accepted'
+ *         COMMENTED with no APPROVED → 'uncertain'
+ *         DISMISSED is skipped (not counted)
+ */
+export function parseReviewVerdict(
+  reviews: Array<{ author: { login: string }; state: string; submittedAt: string }>
+): 'accepted' | 'rejected' | 'uncertain' | null {
+  if (!reviews.length) return null
+
+  // D-17: Latest review per reviewer
+  const byReviewer = new Map<string, { state: string; submittedAt: string }>()
+  for (const r of reviews) {
+    const existing = byReviewer.get(r.author.login)
+    if (!existing || r.submittedAt > existing.submittedAt) {
+      byReviewer.set(r.author.login, r)
+    }
+  }
+
+  // D-03: Cross-reviewer aggregation — CHANGES_REQUESTED wins (strongest signal)
+  let verdict: 'accepted' | 'rejected' | 'uncertain' | null = null
+  for (const { state } of byReviewer.values()) {
+    if (state === 'CHANGES_REQUESTED') return 'rejected'
+    if (state === 'APPROVED') verdict = 'accepted'
+    else if (state === 'COMMENTED' && verdict === null) verdict = 'uncertain'
+    // DISMISSED: skip (not counted)
+  }
+  return verdict
+}
+
+/**
+ * Fetch PR reviews from GitHub via gh CLI and return a verdict.
+ * Returns null for non-GitHub URLs, CLI errors, or no actionable reviews.
+ */
+export async function checkPrReviews(
+  prUrl: string
+): Promise<'accepted' | 'rejected' | 'uncertain' | null> {
+  try {
+    const match = prUrl.match(/github\.com\/([^/]+\/[^/]+)\/pull\/(\d+)/)
+    if (!match) return null
+    const [, repo, prNumber] = match
+
+    const proc = Bun.spawn(
+      ['gh', 'pr', 'view', prNumber!, '--repo', repo!, '--json', 'reviews'],
+      { stdout: 'pipe', stderr: 'pipe' }
+    )
+    const stdout = await new Response(proc.stdout).text()
+    await proc.exited
+    if (proc.exitCode !== 0) return null
+
+    const data = JSON.parse(stdout) as {
+      reviews: Array<{ author: { login: string }; state: string; submittedAt: string }>
+    }
+    return parseReviewVerdict(data.reviews)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Collect PR review feedback for a set of actions with PR URLs.
+ * Mirrors collectImplicitFeedback signature (fire-and-forget, never throws).
+ * Source is 'pr_review'; verdict is the 3-state result from parseReviewVerdict.
+ */
+export async function collectPrReviewFeedback(
+  actions: Array<{ action: RunSummaryAction; target: string; run_id: string }>,
+  appendFn: (entry: FeedbackEntry) => Promise<void>
+): Promise<CollectionResult> {
+  const result: CollectionResult = { entries: [], errors: [] }
+
+  for (const { action, target, run_id } of actions) {
+    if (!action.pr_url) continue
+
+    try {
+      const reviewVerdict = await checkPrReviews(action.pr_url)
+      if (!reviewVerdict) continue
+
+      const entry: FeedbackEntry = {
+        signal_id: action.signal_id,
+        target,
+        run_id,
+        verdict: reviewVerdict,
+        source: 'pr_review',
+        submitted_at: new Date().toISOString(),
+      }
+
+      await appendFn(entry)
+      result.entries.push(entry)
+      log.info({
+        component: 'feedback-collector',
+        msg: `PR review feedback: ${action.pr_url} = ${reviewVerdict}`,
+      })
+    } catch (err) {
+      result.errors.push(`Failed to check reviews for ${action.pr_url}: ${String(err)}`)
+      log.warn({
+        component: 'feedback-collector',
+        msg: `PR review check failed: ${action.pr_url} — ${String(err)}`,
+      })
+    }
+  }
+
+  return result
+}
+
+/**
  * Check Linear issue status via GraphQL API.
  * Replaces Phase 3 placeholder with real implementation.
  * Returns null if no LINEAR_API_KEY, invalid URL, or issue still in progress.
