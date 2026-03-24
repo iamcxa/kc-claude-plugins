@@ -1,6 +1,6 @@
 import { html } from 'htm/preact'
 import { useState, useEffect, useCallback } from 'preact/hooks'
-import type { Run, RunSummary, ParsedLogEvent, OutcomeRecord } from '../../shared/types.ts'
+import type { Run, RunSummary, ParsedLogEvent, OutcomeRecord, FeedbackEntry } from '../../shared/types.ts'
 import { LogStream } from '../components/log-stream.ts'
 import { RunTimeline } from '../components/run-timeline.ts'
 import { ActionCard } from '../components/action-card.ts'
@@ -57,6 +57,7 @@ export function Runs() {
   const [statusFilter, setStatusFilter] = useState('')
   const [targetFilter, setTargetFilter] = useState('')
   const [outcomesMap, setOutcomesMap] = useState<Record<string, OutcomeRecord>>({})
+  const [feedbackMap, setFeedbackMap] = useState<Record<string, FeedbackEntry[]>>({})
 
   const loadRuns = useCallback(() => {
     api.getRuns().then(allRuns => {
@@ -90,9 +91,18 @@ export function Runs() {
   useEffect(() => {
     if (!selectedId) {
       setSelectedRun(null)
+      setFeedbackMap({})
       return
     }
     api.getRun(selectedId).then(r => setSelectedRun(r)).catch(console.error)
+    api.getFeedback(selectedId).then(entries => {
+      const map: Record<string, FeedbackEntry[]> = {}
+      for (const e of entries) {
+        if (!map[e.signal_id]) map[e.signal_id] = []
+        map[e.signal_id].push(e)
+      }
+      setFeedbackMap(map)
+    }).catch(console.error)
   }, [selectedId])
 
   // Re-fetch run detail when the run list refreshes during active polling.
@@ -101,6 +111,14 @@ export function Runs() {
     if (!selectedId) return
     if (!hasActiveRuns) return
     api.getRun(selectedId).then(r => setSelectedRun(r)).catch(console.error)
+    api.getFeedback(selectedId).then(entries => {
+      const map: Record<string, FeedbackEntry[]> = {}
+      for (const e of entries) {
+        if (!map[e.signal_id]) map[e.signal_id] = []
+        map[e.signal_id].push(e)
+      }
+      setFeedbackMap(map)
+    }).catch(console.error)
   }, [runs])
 
   const filteredRuns = runs.filter(r => {
@@ -185,6 +203,7 @@ export function Runs() {
                   action=${action}
                   target=${targetName}
                   runId=${selectedId}
+                  existingFeedback=${feedbackMap[action.signal_id] ?? []}
                   outcomeStatus=${outcomesMap[action.signal_id] ? { status: outcomesMap[action.signal_id].status, url: outcomesMap[action.signal_id].url, type: outcomesMap[action.signal_id].type } : null}
                 />
               `)}

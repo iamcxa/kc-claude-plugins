@@ -1,13 +1,13 @@
 import { html } from 'htm/preact'
 import { useState } from 'preact/hooks'
-import type { RunSummaryAction, OutcomeRecord } from '../../shared/types.ts'
+import type { RunSummaryAction, OutcomeRecord, FeedbackEntry } from '../../shared/types.ts'
 import { api } from '../lib/api.ts'
 
 interface Props {
   action: RunSummaryAction
   target: string
   runId: string
-  existingFeedback?: 'accepted' | 'rejected' | null
+  existingFeedback: FeedbackEntry[]
   outcomeStatus?: { status: OutcomeRecord['status']; url: string; type: OutcomeRecord['type'] } | null
 }
 
@@ -37,9 +37,34 @@ function badgeText(status: OutcomeRecord['status']): string {
   return map[status] ?? status
 }
 
+function sourceLabel(source: FeedbackEntry['source']): string {
+  const labels: Record<string, string> = {
+    user: 'manual',
+    pr_status: 'PR status',
+    linear_status: 'Linear',
+    slack_reaction: 'Slack',
+    pr_review: 'PR review',
+  }
+  return labels[source] ?? source
+}
+
+function verdictBg(verdict: FeedbackEntry['verdict']): string {
+  if (verdict === 'accepted') return 'rgba(63,185,80,0.15)'
+  if (verdict === 'rejected') return 'rgba(248,81,73,0.15)'
+  return 'rgba(227,179,65,0.15)'
+}
+
+function verdictColor(verdict: FeedbackEntry['verdict']): string {
+  if (verdict === 'accepted') return 'var(--success)'
+  if (verdict === 'rejected') return 'var(--error)'
+  return 'var(--warn)'
+}
+
 export function ActionCard({ action, target, runId, existingFeedback, outcomeStatus }: Props) {
   const [expanded, setExpanded] = useState(false)
-  const [submitted, setSubmitted] = useState<'accepted' | 'rejected' | null>(existingFeedback ?? null)
+  const userFeedback = existingFeedback.find(f => f.source === 'user')
+  const [submitted, setSubmitted] = useState<'accepted' | 'rejected' | 'uncertain' | null>(userFeedback?.verdict ?? null)
+  const autoFeedback = existingFeedback.filter(f => f.source !== 'user')
 
   async function handleFeedback(verdict: 'accepted' | 'rejected') {
     setSubmitted(verdict) // Optimistic disable (Pitfall 5: double-submit prevention)
@@ -52,7 +77,7 @@ export function ActionCard({ action, target, runId, existingFeedback, outcomeSta
       })
     } catch {
       // Revert on failure
-      setSubmitted(existingFeedback ?? null)
+      setSubmitted(userFeedback?.verdict ?? null)
     }
   }
 
@@ -74,6 +99,9 @@ export function ActionCard({ action, target, runId, existingFeedback, outcomeSta
         <span style="font-size:11px;padding:2px 6px;border-radius:4px;background:var(--btn-secondary);color:var(--muted);">${action.type}</span>
         ${outcomeStatus ? html`
           <span style="font-size:11px;padding:2px 6px;border-radius:4px;font-weight:600;background:${badgeBg(outcomeStatus.status)};color:${badgeColor(outcomeStatus.status)};">${badgeText(outcomeStatus.status)}</span>
+        ` : null}
+        ${autoFeedback.length > 0 ? html`
+          <span style="font-size:11px;padding:2px 6px;border-radius:4px;background:rgba(88,166,255,0.15);color:var(--accent);">${autoFeedback.length} feedback</span>
         ` : null}
         <span style="font-size:11px;color:${confidenceColor};font-weight:600;">${action.assessment.confidence}</span>
         <span style="font-size:12px;color:var(--muted);">${expanded ? '\u25B2' : '\u25BC'}</span>
@@ -129,6 +157,20 @@ export function ActionCard({ action, target, runId, existingFeedback, outcomeSta
               </a>
             </div>
           ` : null}
+
+          <!-- Auto-collected feedback entries -->
+          ${autoFeedback.length > 0 && html`
+            <div style="margin-bottom:8px;padding:6px 8px;background:var(--panel);border-radius:4px;">
+              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px;">Auto-collected Feedback</div>
+              ${autoFeedback.map(f => html`
+                <div key=${f.signal_id + f.source + f.submitted_at} style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                  <span style="font-size:11px;padding:1px 4px;border-radius:3px;background:${verdictBg(f.verdict)};color:${verdictColor(f.verdict)};">${f.verdict}</span>
+                  <span style="font-size:11px;padding:1px 4px;border-radius:3px;background:var(--btn-secondary);color:var(--muted);">${sourceLabel(f.source)}</span>
+                  ${f.reason ? html`<span style="font-size:11px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${f.reason}</span>` : null}
+                </div>
+              `)}
+            </div>
+          `}
 
           <!-- Feedback buttons -->
           <div style="display:flex;gap:4px;justify-content:flex-end;padding-top:4px;">

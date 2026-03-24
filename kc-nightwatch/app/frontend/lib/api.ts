@@ -90,7 +90,7 @@ export const api = {
   // Feedback
   submitFeedback(body: {
     signal_id: string; target: string; run_id: string;
-    verdict: 'accepted' | 'rejected'; reason?: string
+    verdict: 'accepted' | 'rejected' | 'uncertain'; reason?: string
   }): Promise<{ ok: boolean }> {
     return post<{ ok: boolean }>('/api/feedback', body)
   },
