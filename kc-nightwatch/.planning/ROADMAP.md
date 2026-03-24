@@ -10,7 +10,7 @@
 ## Phases
 
 - [x] **Phase 12: Test Infrastructure + Run UX Fixes** — Fix test suite contamination and close immediate run UX gaps (completed 2026-03-24)
-- [ ] **Phase 13: Worktree Isolation** — Executor runs each nightwatch session in an isolated git worktree
+- [x] **Phase 13: Worktree Isolation** — Executor runs each nightwatch session in an isolated git worktree (completed 2026-03-24)
 - [ ] **Phase 14: Extended Feedback** — Slack reaction and PR review comment feedback channels
 
 ## Phase Details
@@ -44,7 +44,7 @@ Plans:
 
 Plans:
 - [x] 13-01-PLAN.md — Create worktree-manager.ts with git worktree lifecycle functions + tests
-- [ ] 13-02-PLAN.md — Wire worktree lifecycle into executor.ts + integration tests
+- [x] 13-02-PLAN.md — Wire worktree lifecycle into executor.ts + integration tests
 
 ### Phase 14: Extended Feedback
 **Goal**: Nightwatch captures feedback from Slack reactions and PR review comments automatically
@@ -64,6 +64,6 @@ Plans:
 | 5-7 | v1.1 | 5/5 | Complete | 2026-03-20 |
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
 | 12. Test Infra + Run UX | v3.0 | 3/3 | Complete | 2026-03-24 |
-| 13. Worktree Isolation | v3.0 | 0/2 | Planning | - |
+| 13. Worktree Isolation | v3.0 | 2/2 | Complete | 2026-03-24 |
 | 14. Extended Feedback | v3.0 | 0/? | Not started | - |
-| **Total** | | **32** | | |
+| **Total** | | **34** | | |

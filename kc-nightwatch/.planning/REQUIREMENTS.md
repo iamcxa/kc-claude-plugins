@@ -15,9 +15,9 @@ Requirements for run execution reliability, worktree isolation, extended feedbac
 
 ### Worktree Isolation
 
-- [ ] **WKTREE-01**: Executor creates a temporary git worktree from target's latest main branch before each run — run executes in isolated worktree, not target's working directory
-- [ ] **WKTREE-02**: Worktree cleanup after run — remove worktree when run has no branch to preserve; keep worktree if proposal/fix branch was created
-- [ ] **WKTREE-03**: Proposals and fixes create branches inside the worktree — branches are pushed to origin but worktree is cleaned up; main working directory is never modified by nightwatch
+- [x] **WKTREE-01**: Executor creates a temporary git worktree from target's latest main branch before each run — run executes in isolated worktree, not target's working directory
+- [x] **WKTREE-02**: Worktree cleanup after run — remove worktree when run has no branch to preserve; keep worktree if proposal/fix branch was created
+- [x] **WKTREE-03**: Proposals and fixes create branches inside the worktree — branches are pushed to origin but worktree is cleaned up; main working directory is never modified by nightwatch
 
 ### Extended Feedback
 
@@ -46,9 +46,9 @@ Requirements for run execution reliability, worktree isolation, extended feedbac
 | RUNUX-01 | Phase 12 | Complete (12-02) |
 | RUNUX-02 | Phase 12 | Complete (12-03) |
 | RUNUX-03 | Phase 12 | Complete (12-02) |
-| WKTREE-01 | Phase 13 | In Progress (13-01 worktree-manager built) |
-| WKTREE-02 | Phase 13 | In Progress (13-01 cleanupWorktree built) |
-| WKTREE-03 | Phase 13 | In Progress (13-01 push-before-remove built) |
+| WKTREE-01 | Phase 13 | Complete (13-01 + 13-02) |
+| WKTREE-02 | Phase 13 | Complete (13-01 + 13-02) |
+| WKTREE-03 | Phase 13 | Complete (13-01 + 13-02) |
 | EXTFEED-01 | Phase 14 | Pending |
 | EXTFEED-02 | Phase 14 | Pending |
 
@@ -59,4 +59,4 @@ Requirements for run execution reliability, worktree isolation, extended feedbac
 
 ---
 *Requirements defined: 2026-03-23*
-*Traceability updated: 2026-03-24 (Phase 13 plan 01 complete — worktree-manager built)*
+*Traceability updated: 2026-03-24 (Phase 13 complete — worktree isolation verified)*
