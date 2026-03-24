@@ -35,6 +35,12 @@
 | `/e2e-compile <flow>` | Compile one flow YAML to a standalone bash script |
 | `/e2e-compile --all` | Compile all flows in the flows directory |
 | `/e2e-compile --all --coverage` | Compile all + produce element coverage report |
+| `/e2e-debug "<bug>"` | Debug a frontend runtime bug via inject-observe-cleanup pipeline |
+| `/e2e-debug --headed` | Open visible browser so user can manually log in before agent continues |
+| `/e2e-debug --url <url> --suspect "<file>"` | Provide target URL and suspect file(s) for focused analysis |
+| `/e2e-debug --experiment --inject '[...]' --steps "..." --url <url>` | Experiment mode -- caller pre-specifies injection points (used by systematic-debugging) |
+| `/e2e-debug --continue` | Resume from previous round's conclusions (multi-round debugging) |
+| `/e2e-debug --cleanup` | Force cleanup of residual `[E2E-DBG]` injections from a crashed session |
 | `/e2e-dispatch` | Unified entry point (routes to the right skill) |
 | `/e2e-dispatch --test <flow> --fg` | Force foreground execution (override background default) |
 | `/e2e-skill-ops` | Show available modes, then pick one (or describe the problem) |
@@ -69,8 +75,9 @@ Some dispatch routes run in the **background** by default (main context stays fr
 | `/e2e-flow` | Foreground | -- |
 | `/e2e-walkthrough` | Foreground | -- |
 | `/e2e-skill-ops` | Foreground | -- |
+| `/e2e-debug` | Foreground | -- |
 
-Interactive skills (walkthrough, flow, skill-ops) always run in foreground. Non-interactive skills (test, map) default to background so you can continue working.
+Interactive skills (walkthrough, flow, skill-ops, debug) always run in foreground. Non-interactive skills (test, map) default to background so you can continue working.
 
 ## Auto-Compile & Divergence
 
@@ -114,11 +121,11 @@ When a flow contains **zero browser steps** (only `Execute external` and `Verify
 brew install asciinema agg
 ```
 
-**Dispatch behavior:** The skill wraps CLI execution with `asciinema rec`, producing a `.cast` file. It then dispatches the `e2e-media-processor` agent with `cast_path` instead of `recording_path`:
+**Dispatch behavior:** The skill wraps CLI execution with `asciinema rec`, producing a `.cast` file. It then dispatches the `e2e-media-processor` agent with `cast_path` instead of the browser screenshot path:
 
 ```yaml
 # Browser flow (default):
-#   recording_path: $REPORT_DIR/full.webm
+#   video: $REPORT_DIR/test-run.mp4  (generated from step screenshots)
 
 # CLI-only flow (automatic):
 #   cast_path: $REPORT_DIR/recording.cast
@@ -273,6 +280,7 @@ Each compiled `.sh` script supports these runtime flags:
 - [Test Suites](suites.md) -- suite file format and site assignment
 - [Cross-Boundary Testing](cross-boundary-testing.md) -- `Execute external` / `Verify external` steps, CLI-only flows
 - [Self-Improvement](self-improvement.md) -- how skills learn from execution
+- [Debugging](debugging.md) -- runtime debugging with `/e2e-debug`
 
 ---
 

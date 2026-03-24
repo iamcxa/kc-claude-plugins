@@ -84,6 +84,119 @@ The bug appears randomly -- race conditions, timing issues, flaky state.
    tags: [smoke, regression, flaky-fix]
    ```
 
+### Runtime data shape issues (wrong data, not wrong UI)
+
+The UI renders correctly but shows wrong data, empty lists, or stale values. The DOM and selectors are fine -- the bug is in the data flow between API responses and component state.
+
+```
+/e2e-debug "workspace list shows 0 items but API returns 42"
+```
+
+The `/e2e-debug` skill injects `console.log` probes at key data flow points (API response handlers, hook returns, state updates), opens a browser to reproduce the issue, and reads the logged values to pinpoint where data is lost or transformed incorrectly. See [Runtime Debugging with /e2e-debug](#runtime-debugging-with-e2e-debug) below for the full workflow.
+
+**When to use `/e2e-debug` vs `/e2e-walkthrough`:**
+
+| Symptom | Tool | Why |
+|---------|------|-----|
+| Element missing, button broken, wrong page | `/e2e-walkthrough` | UI structure issue -- snapshots + screenshots reveal it |
+| Data wrong, list empty, stale cache, wrong count | `/e2e-debug` | Data flow issue -- `console.log` probes reveal it |
+| Not sure | `/e2e-debug` with `--headed` | Headed mode lets you see the UI while probes capture data |
+
+---
+
+## Runtime Debugging with /e2e-debug
+
+The `/e2e-debug` skill runs an **inject-observe-cleanup** pipeline for diagnosing frontend runtime bugs -- particularly data shape issues that are invisible to screenshot/snapshot-based testing.
+
+### The workflow
+
+```
+Phase 0: Analyze     -- identify suspect code, form hypothesis, pick injection points
+Phase 1: Inject      -- insert [E2E-DBG] console.log probes into source files
+Phase 2: Observe     -- open browser, reproduce the bug, collect console output (via e2e-debug-observe agent)
+Phase 3: Diagnose    -- cross-reference observed values with expected values, identify root cause
+Phase 4: Cleanup     -- remove ALL injected code (mandatory, runs even if prior phases fail)
+```
+
+### Basic usage
+
+Describe the bug in natural language:
+
+```
+/e2e-debug "the workspace list shows 0 items even though the API returns data"
+```
+
+The skill analyzes your codebase, identifies 2-5 key data flow points (API response, state hook, component render), injects `console.log('[E2E-DBG:module:variable]', JSON.stringify(value))` at each point, opens a browser to reproduce, and reads the output to find where the data gets lost.
+
+### Headed mode for manual auth
+
+When the target page requires authentication that cannot be handled by an agent-browser profile:
+
+```
+/e2e-debug "dashboard shows stale data" --headed --url http://localhost:3000/dashboard
+```
+
+The browser opens visibly. You log in manually, then tell the skill to continue. The agent resumes from where you left off.
+
+### Multi-round debugging with --continue
+
+If the first round narrows the problem but does not pinpoint it:
+
+```
+/e2e-debug --continue
+```
+
+The skill reads the previous round's history (`.claude/e2e/debug/history/`), loads its observations and conclusions, and generates new injection points based on what was learned. Each round cleans up before the next.
+
+### Experiment mode for systematic-debugging integration
+
+When another skill (e.g., `systematic-debugging`) has already analyzed the problem and knows exactly what to probe:
+
+```
+/e2e-debug --experiment \
+  --inject '[{"file":"src/hooks/useWorkspaces.ts","line":42,"tag":"hook-return","code":"console.log(\"[E2E-DBG:useWorkspaces:data]\", JSON.stringify(data));"}]' \
+  --steps "Navigate to /dashboard; Wait for network idle; Observe workspace list" \
+  --url http://localhost:3000/dashboard
+```
+
+Experiment mode skips the analysis phase entirely. All three flags (`--inject`, `--steps`, `--url`) are required. The skill injects, observes, and returns a structured `experiment_result` YAML without user interaction.
+
+### Force cleanup
+
+If a previous session crashed and left `[E2E-DBG]` markers in your source code:
+
+```
+/e2e-debug --cleanup
+```
+
+This skips all phases and runs only the cleanup pipeline (manifest-driven removal, then grep fallback, then verification).
+
+### What the agent collects
+
+The `e2e-debug-observe` agent (dispatched during Phase 2) captures:
+
+| Data | Method |
+|------|--------|
+| `[E2E-DBG]` console logs | `agent-browser console --json` filtered by tag |
+| JS errors | `agent-browser errors --json` |
+| Network requests | `agent-browser network requests` (with optional URL filters) |
+| Storage/cookie changes | `agent-browser storage local/session` + `agent-browser cookies` diff against baseline |
+| HAR recording | `agent-browser network har start/stop` for full request/response bodies |
+| Screenshots per step | `agent-browser screenshot --annotate` |
+
+Storage and cookie diffing is particularly useful for diagnosing auth token mutations, cache invalidation issues, and session state corruption -- the agent captures baselines before reproduction and reports only changed entries.
+
+### Output files
+
+```
+.claude/e2e/debug/
+|- manifest.yaml          # injection registry (deleted after cleanup)
+|- report.md              # observation report from agent (deleted after cleanup)
+|- history/               # round history (persisted for --continue)
+|   |- <session>-r1.yaml
+|   +-- <session>-r2.yaml
+```
+
 ---
 
 ## Troubleshooting
@@ -99,6 +212,8 @@ The bug appears randomly -- race conditions, timing issues, flaky state.
 | Compiled script fails with `command not found` | Ensure `agent-browser` is on PATH; check `chmod +x` on the script |
 | Coverage report shows 0% | Verify mapping file matches the flow's `mapping:` field |
 | CLI recording skipped (agg/asciinema missing) | Install: `brew install asciinema agg`. Required only for CLI-only flows (zero browser steps). |
+| Residual `[E2E-DBG]` markers in source | Run `/e2e-debug --cleanup` to remove them. Nuclear option: `git checkout -- <file>` |
+| `/e2e-debug` cleanup missed some files | Check non-standard directories. Cleanup scans `apps/ src/ lib/ components/` by default. |
 
 For deeper diagnostics: `/e2e-skill-ops --debug`
 

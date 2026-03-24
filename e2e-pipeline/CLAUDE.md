@@ -150,7 +150,8 @@ Rule: if a layer has the tools to attempt a step, it MUST attempt it (best-effor
 
 ## Soft Dependencies
 
-- **`e2e-debug` → `systematic-debugging`** (superpowers plugin): Phase 0 Path B invokes `Skill("systematic-debugging")` for hypothesis generation when bug description is vague. Graceful fallback: if unavailable, best-effort grep + user confirmation. Debug skill works fully without it.
+- **`e2e-debug` -> `systematic-debugging`** (superpowers plugin): Phase 0 Path B invokes `Skill("systematic-debugging")` for hypothesis generation when bug description is vague. Graceful fallback: if unavailable, best-effort grep + user confirmation. Debug skill works fully without it.
+- **`e2e-debug` -> `feature-dev:code-explorer`** (feature-dev plugin): Phase 0 Path A dispatches `code-explorer` agent for codebase tracing when the bug description is clear (maps architecture layers, data flow, dependencies). Graceful fallback: if unavailable, grep + direct file reads. Debug skill works fully without it.
 
 ## Documentation Maintenance
 

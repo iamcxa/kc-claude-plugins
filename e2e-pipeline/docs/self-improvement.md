@@ -22,6 +22,7 @@ Knowledge is captured along two axes:
 | `e2e-flow` | Yes | No | After generation + verification |
 | `e2e-walkthrough` | Yes | No | After walkthrough completion |
 | `e2e-map` | Yes | No | After mapping exploration |
+| `e2e-debug` | Yes | No | After successful diagnosis (verdict = confirmed, fix applied) |
 | `e2e-compile` | No (deterministic) | No | -- |
 | `e2e-dispatch` | No (router) | No | -- |
 
@@ -33,6 +34,11 @@ For example, `/e2e-flow` reads learned patterns before generating a flow, so it 
 - Apply known selector strategies for the detected UI framework
 - Anticipate verifier correction patterns (e.g., "always add a wait after modal trigger")
 - Avoid generating steps known to cause divergence
+
+`/e2e-debug` reads learned patterns before analyzing a bug, so it can:
+- Recognize previously-seen data shape issues (e.g., double-wrapped API responses)
+- Avoid re-investigating known framework behaviors
+- Inform hypothesis formation with past root cause patterns
 
 D2-capable skills (`e2e-test`, `e2e-skill-ops`) also read `.claude/e2e-lessons.md` for project-specific lessons. The combined effect: each run starts with all prior knowledge loaded, not from scratch.
 
