@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "bun run server/index.ts",
+    "start": "bun --watch run server/index.ts",
     "dev": "bun --watch run server/index.ts",
     "test": "bun test"
   },

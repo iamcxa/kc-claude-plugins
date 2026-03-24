@@ -1,6 +1,7 @@
 import { html } from 'htm/preact'
 import { useState, useEffect, useRef } from 'preact/hooks'
 import type { ParsedLogEvent } from '../../shared/types.ts'
+import { parseStreamJsonLine } from '../../shared/log-parser.ts'
 
 interface PhaseGroup {
   phase: string
@@ -89,6 +90,32 @@ export function LogStream({ runId, initialEvents = [], isCompleted }: Props) {
       esRef.current = null
     }
   }, [runId])
+
+  // Fetch completed run log from file (per D-01: simple GET, no SSE for completed runs)
+  useEffect(() => {
+    if (!isCompleted) return
+
+    fetch(`/api/runs/${runId}/log`)
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        return r.json() as Promise<{ lines: string[] }>
+      })
+      .then(({ lines }) => {
+        const events = lines.map(parseStreamJsonLine)
+        // Feed events through the same phase-grouping logic as SSE
+        let grouped: PhaseGroup[] = []
+        for (const ev of events) {
+          grouped = appendToPhases(grouped, ev)
+        }
+        // Mark last phase as complete since run is done
+        if (grouped.length > 0) {
+          grouped[grouped.length - 1] = { ...grouped[grouped.length - 1], status: 'complete' }
+        }
+        setPhases(grouped)
+        setRawLines(lines)
+      })
+      .catch(err => console.error('Failed to fetch run log:', err))
+  }, [runId, isCompleted])
 
   useEffect(() => {
     if (autoScroll && bottomRef.current) {
