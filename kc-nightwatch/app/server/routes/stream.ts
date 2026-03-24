@@ -1,8 +1,31 @@
 import { Hono } from 'hono'
 import { streamSSE } from 'hono/streaming'
 import { subscribeToRun, subscribeGlobal } from '../ipc.ts'
+import path from 'node:path'
 
 export const streamRoutes = new Hono()
+
+const RUNS_DIR = path.resolve(import.meta.dir, '../../../runs')
+
+// GET /api/runs/:id/log — fetch completed run log as raw JSONL lines
+streamRoutes.get('/api/runs/:id/log', async (c) => {
+  const runId = c.req.param('id')
+
+  // Validate runId format (UUID) to prevent path traversal
+  if (!/^[0-9a-f-]{36}$/i.test(runId)) {
+    return c.json({ error: 'invalid run id' }, 400)
+  }
+
+  const logPath = path.join(RUNS_DIR, runId, 'log.jsonl')
+  const exists = await Bun.file(logPath).exists()
+  if (!exists) {
+    return c.json({ error: 'log not found' }, 404)
+  }
+
+  const text = await Bun.file(logPath).text()
+  const lines = text.split('\n').filter(Boolean)
+  return c.json({ lines })
+})
 
 // GET /api/runs/:id/stream — SSE fan-out for real-time log streaming
 streamRoutes.get('/api/runs/:id/stream', (c) => {
