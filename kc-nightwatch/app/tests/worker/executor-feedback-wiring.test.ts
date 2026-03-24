@@ -79,3 +79,49 @@ describe('executor.ts feedback wiring (static verification)', () => {
     expect(typeof mod.writeFeedbackTrends).toBe('function')
   })
 })
+
+/**
+ * EXTFEED-02: collectPrReviewFeedback wired into post-run flow
+ */
+describe('executor.ts PR review feedback wiring (EXTFEED-02)', () => {
+  it('imports collectPrReviewFeedback from feedback-collector.ts', async () => {
+    const source = await Bun.file(EXECUTOR_PATH).text()
+    expect(source).toMatch(/import\s*\{[^}]*collectPrReviewFeedback[^}]*\}\s*from\s*['"].*feedback-collector/)
+  })
+
+  it('calls collectPrReviewFeedback in post-run flow (not just imported)', async () => {
+    const source = await Bun.file(EXECUTOR_PATH).text()
+    // Must appear at least twice: import line + actual call
+    const matches = source.match(/collectPrReviewFeedback/g)
+    expect(matches).not.toBeNull()
+    expect(matches!.length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('calls collectPrReviewFeedback with actionsWithTargets and appendFeedback', async () => {
+    const source = await Bun.file(EXECUTOR_PATH).text()
+    expect(source).toContain('collectPrReviewFeedback(actionsWithTargets, appendFeedback)')
+  })
+
+  it('EXTFEED-02 comment present in executor.ts (requirement traced)', async () => {
+    const source = await Bun.file(EXECUTOR_PATH).text()
+    expect(source).toContain('EXTFEED-02')
+  })
+
+  it('collectPrReviewFeedback is inside the same try/catch as collectImplicitFeedback', async () => {
+    const source = await Bun.file(EXECUTOR_PATH).text()
+    // Both calls must appear before the 'Post-run feedback collection error' catch message
+    const catchMsgIndex = source.indexOf('Post-run feedback collection error')
+    const implicitIndex = source.indexOf('collectImplicitFeedback(actionsWithTargets')
+    const reviewIndex = source.indexOf('collectPrReviewFeedback(actionsWithTargets')
+    expect(implicitIndex).toBeGreaterThan(0)
+    expect(reviewIndex).toBeGreaterThan(0)
+    // Both calls should come before the catch message (inside the try block)
+    expect(implicitIndex).toBeLessThan(catchMsgIndex)
+    expect(reviewIndex).toBeLessThan(catchMsgIndex)
+  })
+
+  it('feedback-collector module exports collectPrReviewFeedback', async () => {
+    const mod = await import('../../worker/feedback-collector.ts')
+    expect(typeof mod.collectPrReviewFeedback).toBe('function')
+  })
+})

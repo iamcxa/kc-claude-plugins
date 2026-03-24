@@ -9,7 +9,7 @@ import {
   RESULT_FORCE_KILL_DELAY_MS,
   KEEP_RUNS_COUNT,
 } from '../shared/constants.ts'
-import { collectImplicitFeedback } from './feedback-collector.ts'
+import { collectImplicitFeedback, collectPrReviewFeedback } from './feedback-collector.ts'
 import { appendFeedback, writeFeedbackTrends } from '../server/services/feedback-store.ts'
 import { recordRunOutcomes } from './auto-action.ts'
 import { detectDefaultBranch, createWorktree, cleanupWorktree } from './worktree-manager.ts'
@@ -283,6 +283,8 @@ export async function executeRun(
         }
         if (actionsWithTargets.length > 0) {
           await collectImplicitFeedback(actionsWithTargets, appendFeedback)
+          // EXTFEED-02: Collect PR review feedback (reviewer approve/reject/comment verdicts)
+          await collectPrReviewFeedback(actionsWithTargets, appendFeedback)
         }
 
         // Write feedback trends to each target's NW journal
