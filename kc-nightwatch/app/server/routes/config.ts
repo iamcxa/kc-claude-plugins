@@ -4,6 +4,8 @@ import os from 'node:os'
 import { parse, stringify } from 'yaml'
 import { readYamlFile, TARGETS_YAML_PATH } from '../services/yaml-store.ts'
 import { validateConfigSave, withWriteLock } from '../services/config-validator.ts'
+import { sendToWorker } from '../ipc.ts'
+import { MIN_SCHEDULE_INTERVAL_HOURS } from '../../shared/constants.ts'
 
 export const configRoutes = new Hono()
 
@@ -102,6 +104,21 @@ configRoutes.put('/api/config/targets/:name', async (c) => {
     await Bun.write(TARGETS_YAML_PATH, stringify(parsed))
   })
   if (notFound) return c.json({ error: 'target not found' }, 404)
+
+  // Validate min interval (server-side, mirrors api.ts validation)
+  const schedule = target.schedule as { interval_hours?: number } | undefined
+  if (schedule?.interval_hours !== undefined && schedule.interval_hours < MIN_SCHEDULE_INTERVAL_HOURS) {
+    return c.json({ error: `interval_hours ${schedule.interval_hours} is below minimum ${MIN_SCHEDULE_INTERVAL_HOURS} hours` }, 400)
+  }
+
+  // Reload scheduler with updated config so timer changes take effect immediately
+  const scheduleConfig = await readYamlFile<{ schedule?: { enabled: boolean; interval_hours: number } }>(
+    path.join(os.homedir(), '.claude/kc-plugins-config/nightwatch-config.yaml')
+  )
+  if (scheduleConfig?.schedule) {
+    sendToWorker({ type: 'schedule', config: scheduleConfig.schedule as any })
+  }
+
   return c.json({ ok: true })
 })
 
