@@ -11,7 +11,7 @@
 
 - [x] **Phase 12: Test Infrastructure + Run UX Fixes** — Fix test suite contamination and close immediate run UX gaps (completed 2026-03-24)
 - [x] **Phase 13: Worktree Isolation** — Executor runs each nightwatch session in an isolated git worktree (completed 2026-03-24)
-- [ ] **Phase 14: Extended Feedback** — Slack reaction and PR review comment feedback channels
+- [x] **Phase 14: Extended Feedback** — Slack reaction and PR review comment feedback channels (completed 2026-03-24)
 
 ## Phase Details
 
@@ -54,12 +54,13 @@ Plans:
   1. After a nightwatch run posts to Slack, any reaction added to that message is parsed and appears as a feedback entry in feedback.yaml with correct signal_id correlation
   2. When a reviewer approves, requests changes on, or comments on a nightwatch-created PR, that review is parsed and a corresponding feedback entry (accepted/rejected/signal) is written to feedback.yaml
   3. Feedback entries from both Slack and PR review sources appear in the dashboard's feedback view alongside existing dashboard/MCP feedback
-**Plans:** 3 plans
+**Plans:** 4 plans
 
 Plans:
-- [ ] 14-01-PLAN.md — Extend types, store routing, and API/MCP validation for 3-state verdict + new sources
-- [ ] 14-02-PLAN.md — Implement checkPrReviews + collectPrReviewFeedback and wire into executor
-- [ ] 14-03-PLAN.md — Add Slack reaction collection to nightwatch skill (Step 0.4.5 + slack_url capture)
+- [x] 14-01-PLAN.md — Extend types, store routing, and API/MCP validation for 3-state verdict + new sources
+- [x] 14-02-PLAN.md — Implement checkPrReviews + collectPrReviewFeedback and wire into executor
+- [x] 14-03-PLAN.md — Add Slack reaction collection to nightwatch skill (Step 0.4.5 + slack_url capture)
+- [x] 14-04-PLAN.md — Gap closure: dashboard feedback display for extended sources
 
 ## Progress
 
@@ -70,5 +71,5 @@ Plans:
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
 | 12. Test Infra + Run UX | v3.0 | 3/3 | Complete | 2026-03-24 |
 | 13. Worktree Isolation | v3.0 | 2/2 | Complete | 2026-03-24 |
-| 14. Extended Feedback | v3.0 | 0/3 | Planning | - |
-| **Total** | | **34** | | |
+| 14. Extended Feedback | v3.0 | 4/4 | Complete | 2026-03-24 |
+| **Total** | | **38** | | |
