@@ -114,13 +114,24 @@ Validated in v3.0 (Phases 12-14, 2026-03-24):
 | Queue state via GET endpoint (not SSE) | Keep lifecycle SSE channel clean; polling for queue is fine at 5s intervals | ✓ Good — simple and reliable |
 | Browser Notification on user gesture | Permission on page load is anti-pattern; trigger button click is natural gesture | ✓ Good — no surprise permission prompts |
 | Handroll toast (no library) | No-build constraint; signal-backed toast is ~70 lines | ✓ Good — lightweight, no deps |
-| Proposal → Implementation pipeline | Closes the flywheel: accepted proposals get implemented, outcomes tracked | — Deferred to v2 |
+| Proposal → Implementation pipeline | Closes the flywheel: accepted proposals get implemented, outcomes tracked | ✓ Good — v2.0 shipped auto-action |
+
+## Current Milestone: v4.0 Flywheel Intelligence
+
+**Goal:** Make the feedback flywheel visible and self-adjusting — users see improvement trends, system auto-calibrates from feedback data
+
+**Target features:**
+- Feedback trend visualization (accept/reject rate over time, per-target charts)
+- Auto-calibration (feedback-driven confidence threshold adjustment)
+- Signal prioritization (confidence × historical success ranking)
+- Forge results in dashboard (self-repair output visibility)
+- Per-indicator trend sparklines (health arrows → mini charts)
 
 ## Current State: v3.0 Shipped
 
 All four milestones complete. 14 phases, 38 plans, 51 requirements validated across v1.0 + v1.1 + v2.0 + v3.0.
 
-**Next milestone** not yet defined. Use `/gsd:new-milestone` to plan v4.0.
+**v4.0 in progress** — Flywheel Intelligence.
 
 ## Evolution
 
@@ -140,4 +151,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-24 after v3.0 milestone completed*
+*Last updated: 2026-03-24 after v4.0 milestone started*
