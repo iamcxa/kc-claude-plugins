@@ -52,13 +52,20 @@ Validated in v2.0 (Phases 8-11, 2026-03-21 to 2026-03-23):
 - ✓ Implementation outcome tracking (Phase 0.6) — did merged PRs actually help? — v2.0
 - ✓ UI fix — bottom nav gap (black line between content and nav bar) — v2.0
 
-### Future (v3+)
+Validated in v3.0 (Phases 12-14, 2026-03-24):
+- ✓ Completed run log read from file (not SSE-only) — v3.0 (RUNUX-01)
+- ✓ Target path required in wizard — v3.0 (RUNUX-02)
+- ✓ Server auto-restart on code change — v3.0 (RUNUX-03)
+- ✓ Test suite reliability — mock.module contamination fixed — v3.0 (TEST-01)
+- ✓ Worktree isolation — runs execute in temporary worktrees — v3.0 (WKTREE-01~03)
+- ✓ Slack reaction feedback with signal_id correlation — v3.0 (EXTFEED-01)
+- ✓ PR review comment parsing into feedback entries — v3.0 (EXTFEED-02)
+- ✓ Dashboard displays all feedback sources with source labels — v3.0
+- ✓ 3-state verdict (accepted/rejected/uncertain) — v3.0
 
-- [ ] Completed run log read from file (not SSE-only) — RUNUX-01
-- [ ] Target path required in wizard — RUNUX-02
-- [ ] Server hot-reload / auto-restart — RUNUX-03
-- [ ] Slack reaction feedback — EXTFEED-01
-- [ ] PR review comment parsing — EXTFEED-02
+### Future (v4+)
+
+(No items defined — start next milestone with `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -74,14 +81,14 @@ Validated in v2.0 (Phases 8-11, 2026-03-21 to 2026-03-23):
 
 ## Context
 
-- **Shipped versions**: v1.0 MVP (2026-03-19), v1.1 UX Polish (2026-03-20), v2.0 Parallel + Auto-Action (2026-03-23)
+- **Shipped versions**: v1.0 MVP (2026-03-19), v1.1 UX Polish (2026-03-20), v2.0 Parallel + Auto-Action (2026-03-23), v3.0 Worktree + Feedback (2026-03-24)
 - **Existing plugin**: kc-nightwatch v0.4.0 with 3 skills + 4 agents
 - **Execution**: launchd plist at 03:00 daily; dashboard provides alternative manual/webhook triggers
 - **Config files**: All in `~/.claude/kc-plugins-config/` — targets.yaml, runs.yaml, feedback.yaml, improvement-log.md, self-repair.yaml
 - **Design spec**: `docs/superpowers/specs/2026-03-18-nightwatch-dashboard-design.md`
 - **Field renaming**: App introduces `monitors`/`watch`/`respond`/`indicators` (replacing `sources`/`keywords`/`actions`/`proxy_signals`) with compatibility layer
-- **Pipeline phases**: 0 → 0.5 (Measure) → 0.6 (Outcomes) → 1 → 2 → 3 → 3.5 (Assess) → 4 → 4.5 (Assess) → 5
-- **Codebase**: ~11.5K LOC TypeScript (Bun + Hono + Preact/HTM), zero build tooling, 225+ tests
+- **Pipeline phases**: 0 → 0.4.5 (Reactions) → 0.5 (Measure) → 0.6 (Outcomes) → 1 → 2 → 3 → 3.5 (Assess) → 4 → 4.5 (Assess) → 5
+- **Codebase**: ~12K LOC TypeScript (Bun + Hono + Preact/HTM), zero build tooling, 373 tests
 
 ## Constraints
 
@@ -109,11 +116,11 @@ Validated in v2.0 (Phases 8-11, 2026-03-21 to 2026-03-23):
 | Handroll toast (no library) | No-build constraint; signal-backed toast is ~70 lines | ✓ Good — lightweight, no deps |
 | Proposal → Implementation pipeline | Closes the flywheel: accepted proposals get implemented, outcomes tracked | — Deferred to v2 |
 
-## Current State: v2.0 Shipped
+## Current State: v3.0 Shipped
 
-All three milestones complete. 11 phases, 29 plans, 42 requirements validated across v1.0 + v1.1 + v2.0.
+All four milestones complete. 14 phases, 38 plans, 51 requirements validated across v1.0 + v1.1 + v2.0 + v3.0.
 
-**Next milestone** not yet defined. v3 backlog has 5 items (RUNUX-01~03, EXTFEED-01~02).
+**Next milestone** not yet defined. Use `/gsd:new-milestone` to plan v4.0.
 
 ## Evolution
 
@@ -133,4 +140,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-23 after v2.0 milestone completed*
+*Last updated: 2026-03-24 after v3.0 milestone completed*
