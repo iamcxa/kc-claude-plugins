@@ -347,6 +347,71 @@ Add a `## Feedback` section under the run date:
 - `corrected` → use correction context to adjust confidence (typically downgrade by one level)
 - `accepted` → no change (confirms the signal was valuable)
 
+### Step 0.4.5: Collect Slack Reaction Feedback
+
+**Purpose:** Read reactions on the previous run's Slack morning report and convert them to feedback entries. This implements EXTFEED-01 (D-09, D-12).
+
+**Prerequisites:** Step 0.1 must have loaded the improvement-log. Step 0.4 must have completed (PR/Linear feedback scanned first).
+
+**Step 1 — Find previous Slack message URL:**
+
+Read `~/.claude/kc-plugins-config/nightwatch-improvement-log.md` and find the most recent run entry that has a `slack_url` field with a non-null value.
+
+- If no `slack_url` found in any recent entry → skip silently. This is expected for silent nights or when Slack delivery failed. Do NOT log a warning.
+- If `slack_url: null` → skip silently (same reason).
+
+**Step 2 — Read reactions via Slack MCP:**
+
+Call `slack_read_thread` with the Slack message URL from Step 1. The `slack_read_thread` tool returns the message reactions (emoji name + users list).
+
+If the MCP tool is not available in this session → log `[WARN] Slack MCP unavailable — skipping reaction feedback collection` and continue to Phase 0.5.
+
+If the MCP call fails (timeout, auth error, channel not found) → log `[WARN] Slack reaction collection failed: {error} — skipping` and continue to Phase 0.5. Never block Phase 1+.
+
+> **Abstraction note (D-10):** Steps 3-5 are backend-agnostic. To replace Slack MCP with Bot API (`fetch` + `SLACK_BOT_TOKEN`), only Step 2 needs changing — the rest of the pipeline stays the same.
+
+**Step 3 — Map reactions to verdicts (per D-02):**
+
+For each `slack_reaction` emoji returned by `slack_read_thread`:
+
+| Reaction | Emoji aliases | Verdict |
+|----------|---------------|---------|
+| thumbsup | `+1`, `thumbsup` | `accepted` |
+| thumbsdown | `-1`, `thumbsdown` | `rejected` |
+| thinking_face | `thinking_face`, `thinking` | `uncertain` |
+| Any other reaction | — | Skip (ignore) |
+
+**Dedup rule:** If the same user reacted with multiple mapped reactions, take the strongest signal: `rejected` > `uncertain` > `accepted`. Rationale: a thumbsdown overrides a thumbsup from the same person.
+
+**Step 4 — Write FeedbackEntries:**
+
+For each mapped `slack_reaction` (after dedup), append a FeedbackEntry to `~/.claude/kc-plugins-config/nightwatch-feedback.yaml`:
+
+```yaml
+- signal_id: "{from improvement-log — use the first signal_id in that run's entries, or 'run-{date}' if no signals}"
+  target: "{target name from improvement-log entry, or 'nightwatch-report' for run-level reactions}"
+  run_id: "{run date from improvement-log, e.g., 2026-03-24}"
+  verdict: "{mapped verdict}"
+  reason: "Slack reaction: {emoji_name} by {user}"
+  source: "slack_reaction"
+  submitted_at: "{current ISO 8601 timestamp}"
+```
+
+Append under the `slack_feedback` key in the feedback YAML (this key is created by Plan 14-01's FeedbackStore routing).
+
+**Signal_id correlation:** The Slack morning report covers all targets in a single message. For per-signal correlation:
+- If the improvement-log entry for that run has exactly 1 signal → use that signal_id
+- If the improvement-log entry has multiple signals → use `run-{date}` as a synthetic signal_id (the reaction is on the whole report, not a specific signal)
+- The dashboard will display these as run-level feedback
+
+**Step 5 — Log results:**
+
+```
+[PHASE 0] Slack reactions collected: {count} entries from {emoji_count} reactions ({accepted_count} accepted, {rejected_count} rejected, {uncertain_count} uncertain)
+```
+
+If zero mapped reactions found → log `[PHASE 0] Slack reactions: none found on previous report` (info, not warning).
+
 ## Phase 0.5: Indicator Baseline Measurement
 
 **Purpose:** Measure quantified indicator values BEFORE any actions, providing a baseline to compare against after the run.
