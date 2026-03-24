@@ -24,7 +24,12 @@
   2. Completed run detail page shows actual log content fetched from file, not "Waiting for output..."
   3. Add Target wizard rejects submission when `path` is empty — user sees inline validation error
   4. Code changes to server or worker files cause the server to restart automatically without manual intervention
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Fix Bun mock.module cross-file test contamination (spyOn conversion)
+- [ ] 12-02-PLAN.md — Add GET /api/runs/:id/log endpoint + LogStream completed run fetch + auto-restart
+- [ ] 12-03-PLAN.md — Defense-in-depth path validation (wizard + server)
 
 ### Phase 13: Worktree Isolation
 **Goal**: Every nightwatch run executes in a temporary git worktree, leaving the target's working directory untouched
@@ -54,7 +59,7 @@
 | 1-4 | v1.0 | 15/15 | Complete | 2026-03-19 |
 | 5-7 | v1.1 | 5/5 | Complete | 2026-03-20 |
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
-| 12. Test Infra + Run UX | v3.0 | 0/? | Not started | - |
+| 12. Test Infra + Run UX | v3.0 | 0/3 | Planned | - |
 | 13. Worktree Isolation | v3.0 | 0/? | Not started | - |
 | 14. Extended Feedback | v3.0 | 0/? | Not started | - |
 | **Total** | | **29** | | |
