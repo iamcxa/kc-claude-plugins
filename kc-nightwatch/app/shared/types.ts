@@ -18,6 +18,7 @@ export interface Target {
   }
   extra_plugin_dirs?: string[]
   extra_mcp_config?: string[]
+  default_branch?: string    // WKTREE-01: explicit override for repos using develop, release, etc.
 }
 
 // ============================================================
