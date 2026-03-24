@@ -1,200 +1,194 @@
 # Project Research Summary
 
-**Project:** Nightwatch Dashboard v2.0 — Parallel Execution + Auto-Action
-**Domain:** Bun-native autonomous improvement dashboard (Preact + HTM + Hono + Bun worker + IPC)
-**Researched:** 2026-03-21
+**Project:** Nightwatch Dashboard v4.0 — Flywheel Intelligence
+**Domain:** Bun-native dashboard analytics — feedback trend visualization, auto-calibration, signal prioritization, forge results display, and enhanced sparklines added to existing Hono + Preact/HTM stack
+**Researched:** 2026-03-25
 **Confidence:** HIGH
 
 ## Executive Summary
 
-The Nightwatch Dashboard v2.0 is a significant capability expansion on a complete v1.1 cockpit. It changes two fundamental execution properties — from serial-global to per-target-parallel execution, and from one-global-interval to per-target scheduling — and closes the output loop by auto-creating PRs and Linear issues without human approval gates. The existing stack (Bun + Hono + Preact/HTM + Bun IPC) handles all of this without new npm packages. The parallel execution model is not a concurrency library problem; it is a queue data structure problem solvable with `Map<string, Run[]>` and Bun's single-threaded async event loop, where `Bun.spawn` already provides genuine OS-level parallelism.
+Nightwatch Dashboard v4.0 is a subsequent milestone built on a complete v3.0 system. The five "flywheel intelligence" features all have their data sources already in place — `FeedbackEntry` records with timestamps in `feedback.yaml`, `CalibrationData` computed in `feedback-store.ts`, `nightwatch-self-repair.yaml` with forge results — but the dashboard either feeds fake stub data to existing chart components or does not surface the data at all. The recommended approach is purely additive: extend existing routes, services, and pages rather than building new pages or touching the worker layer. Zero new npm packages are required; all chart enhancements use inline SVG composing with the existing Preact/HTM pattern.
 
-The recommended approach is a 4-phase build ordered strictly by data-flow dependencies: schema + IPC shape first (everything downstream reads these), then the worker (parallel queues + per-target scheduler), then server endpoints and MCP tools, then frontend. Within this order, two independent tracks can proceed in parallel: the execution model refactor (worker queues/scheduler) and the auto-create output loop (PR/Linear wiring in executor + feedback-collector). Both tracks depend only on the schema changes in Phase 1. The Outcomes page depends on the server endpoints in Phase 3, which in turn depend on the worker state shape from Phase 2.
+The key architectural insight is that the gap is wiring, not infrastructure. `LineChart` already accepts `values: number[]` — it is fed a fake `[0, current_rate]` two-point stub. `api.getCalibration()` is already defined but never called from the health page. `nightwatch-self-repair.yaml` has a stable `forge_result` block with no API endpoint reading it. The highest-complexity item (auto-calibration wiring back to the kc-nightwatch skill) is explicitly deferred to v4.1+ — v4.0 delivers display-only calibration surfacing, which requires no skill changes and reduces the milestone to a clean server+frontend additive build.
 
-The three highest-risk areas are: (1) the `activePids` data structure, which must change from a `Set<number>` to a `Map<string, number>` keyed by run_id before parallelism is enabled or cancel will kill all concurrent runs simultaneously; (2) concurrent YAML writes from parallel `claude -p` processes to shared config files like `nightwatch-improvement-log.md`, which requires an audit of exactly which files the NW skill writes before enabling parallel spawning; and (3) deduplication logic for auto-created PRs and Linear issues, which must include pre-flight existence checks (`gh pr list` and Linear search) or repeated runs on the same unresolved signal will create duplicate PRs and Linear issues that erode user trust. All three are well-defined problems with clear prevention strategies.
+The three critical risks are: (1) the fake `[0, rate]` two-point history in `health-api.ts` must be replaced with real per-run bucketed rates before any trend visualization is built on top of it; (2) auto-calibration thresholds must be computed on-demand or persisted in a separate file — never written back to the append-only `feedback.yaml` which would create race conditions; and (3) Preact/HTM-specific pitfalls (SVG kebab-case attributes, HTM fragment syntax, vendor Preact singleton) are well-catalogued from previous milestones and must be applied as checklists when writing each new component.
 
 ## Key Findings
 
 ### Recommended Stack
 
-No new npm packages are required for v2.0. All five major new feature areas — parallel execution, per-target scheduling, auto PR creation, auto Linear issue creation, and outcome tracking — are implementable with the existing stack. The `Map<string, Run[]>` parallel queue model requires zero new dependencies. `gh pr create` reuses the same `Bun.spawn` pattern already proven in `feedback-collector.ts`. Linear issue creation reuses the same `fetch()` GraphQL pattern already in `checkLinearStatus()`. A new `outcomes.yaml` store extends the existing `run-store.ts` read/append YAML pattern.
+**Zero new dependencies for v4.0.** The existing Bun + Hono + Preact/HTM + yaml stack handles all five features without additions.
 
-**Core technologies (unchanged from v1.0/v1.1):**
-- **Bun 1.3.9**: Runtime — `setInterval` multi-timer, `Bun.spawn`, `fetch`, `Map` — all stable at current version
-- **Hono 4.12.x**: HTTP server — adds `GET /api/outcomes` route; existing SSE and polling patterns unchanged
-- **Preact + HTM**: Frontend — adds new `outcomes.ts` page; no new hooks or libraries needed
-- **yaml + zod**: YAML persistence + schema validation — `ActionOutcome` type + `outcomes.yaml` file added; no version change
+**Core technologies (unchanged):**
+- **Bun**: Runtime — already deployed, no version decisions needed
+- **Hono**: HTTP framework — new routes follow existing `app.route('/api/x', routeFile)` pattern in `server/index.ts`
+- **Preact + HTM**: Frontend — components use `html` tagged templates; Typescript transpiled via `Bun.Transpiler` at serve time
+- **yaml (js-yaml)**: Runtime data store — `feedback.yaml`, `nightwatch-self-repair.yaml`, `nightwatch-targets.yaml` all read via existing `readYamlFile()` / `writeYamlFile()` helpers
+- **SVG inline rendering**: All chart enhancements (area fill, gradient, target line) use browser-native SVG elements composing cleanly with `html` template literals
 
-**v2.0 additions (zero new packages):**
-- `worker/pr-creator.ts`: `Bun.spawn(['gh', 'pr', 'create', ...])` wrapper — mirrors `feedback-collector.ts`
-- `worker/linear-creator.ts`: Direct `fetch()` to Linear GraphQL API — mirrors `checkLinearStatus()`
-- `server/services/outcome-store.ts`: New YAML store for `ActionOutcome` records — mirrors `run-store.ts`
-- `frontend/pages/outcomes.ts`: New Preact page — mirrors `frontend/pages/runs.ts` list pattern
+**Why no charting library:**
+Chart.js requires `@kurkle/color` bare specifier (breaks the import map), uPlot is Canvas-based DOM mutation (incompatible with Preact's declarative render), D3 is 500KB+ and requires 8+ vendor files. The existing `Sparkline` (80x20 SVG polyline) and `LineChart` (240x80 SVG with axes) components already implement the right primitives — extending them with `<path>` area fill and `<linearGradient>` is 20 lines of TypeScript.
+
+**New types needed in `shared/types.ts`:**
+- `CalibrationState`: persisted EMA thresholds per indicator (if threshold persistence is chosen over compute-on-demand)
+- `ForgeResult`: `{ status: 'pass'|'fail', branch: string|null, details: string }`
+- `SelfRepairData`: superset of existing config_warnings return shape
+- `SignalPriorityScore`: computed score per indicator (not persisted)
+- `history: number[]` field addition to existing `CalibrationData` interface
 
 ### Expected Features
 
-**Must have (table stakes — ship in v2.0 P1):**
-- Parallel execution model — per-target queue isolation (`Map<string, Run[]>` + `Map<string, boolean>`); different targets concurrent, same target queued
-- Per-target scheduling — `Target.schedule?: { interval_hours }` override with global fallback; 10-min minimum enforced
-- Auto-create PR — post-run `gh pr create` on actions where `branch` is set; pre-flight `gh pr list` dedup check required
-- Auto-create Linear issue — auto `issueCreate` mutation when signal classified as `linear-issue`; dedup via `improvement-log.md` lookup required
-- Action card PR/Linear links — `ActionCard` already renders `pr_url`; add parallel `linear_url` "View Issue" link
-- Outcomes aggregate page — new `GET /api/outcomes` server endpoint + `frontend/pages/outcomes.ts` + Bottom Nav "Outcomes" tab
-- NW-Claude outcomes awareness — add `nw_get_outcomes` MCP tool to `mcp-tools.ts`
-- UI fix: bottom nav gap — black line between content and nav bar (carry-over from v1.1)
-- Schema migration: remove `max_concurrent_runs: z.literal(1)` from `AppConfigSchema` — existing configs must start cleanly
+**P1 — Must ship (foundational + quick wins):**
+- Feedback trend data fix — replace fake `[0, rate]` stub in `health-api.ts` with real per-run bucketed rates from `FeedbackEntry.run_id` correlation; this unblocks all trend visualization
+- Forge results display — new `GET /api/forge/results` endpoint reading `nightwatch-self-repair.yaml` + `ForgeResultCard` component on health page; highest value-to-complexity ratio in v4.0
+- Per-indicator rejection rate sparkline alongside value sparkline — depends on data fix; uses existing `Sparkline` component with inverted color logic via `RateSparkline` wrapper
+- Sparkline tooltip — add SVG `<title>` element to `Sparkline` component; fully independent, zero data dependencies
+- Calibration data table (display-only) — render `CalibrationData[]` as threshold/reject-rate table; `api.getCalibration()` already exists but is never called from the health page
 
-**Should have (P2 — ship if scope allows):**
-- Phase 0.6 implementation outcome tracking — PR merge status polling, indicator re-measurement, `ImplementationOutcome` population
-- Per-target "next run at" display on target cards
-- PR status badge (open/merged/closed) on action cards
+**P2 — Ship if scope allows:**
+- Signal prioritization (display sort only) — sort `ActionCard` list in run detail by `confidence_numeric × acceptance_rate`; frontend-only computation from existing `CalibrationData`
+- Calibration threshold annotation on trend chart — dotted horizontal line at `current_threshold` on `LineChart`; depends on P1 data fix
 
-**Defer to v2.1+:**
-- Outcome analytics charts and trend visualizations
-- Real-time push for outcome status updates (polling at 30s is sufficient)
-- Per-target auth token management via UI
+**P3 — Defer to v4.1+:**
+- Auto-calibration wiring to kc-nightwatch skill — propagating thresholds back into Phase 3 of the NW pipeline requires skill changes; out of app scope for v4.0
+- Signal prioritization in pipeline execution (not just display order)
+- Forge status badge on target card (nice-to-have, depends on P1 scope settling)
+
+**Anti-features (explicitly excluded):**
+- Rolling average trend smoothing — hides the step-function behavior of calibration changes
+- Global aggregate reject rate chart across targets — mixes incomparable signal types
+- Interactive zoom/pan for trend charts — overkill for 20–180 data points; no-build constraint anyway
+- Historical threshold editing — defeats the auto-calibration purpose
 
 ### Architecture Approach
 
-The v2.0 architecture changes are additive to the proven 3-tier Bun worker + Hono server + Preact frontend model. The most significant change is inside the worker: the single `queue: Run[]` + `currentRun: Run | null` model becomes per-target `Map<string, Run[]>` + `Map<string, Run>`. The IPC `state` message shape widens from `{ queue, current }` to `{ targets: Record<string, { queue, current }> }`. All server and frontend consumers update to match this new shape. The `executor.ts` is untouched by parallelism — single-run execution is already correct; parallelism is a queue-routing concern.
+All v4.0 changes are in the server and frontend layers only — the worker is unchanged. The build is additive: 2 new route files (`routes/signals.ts`, or `routes/forge.ts`), 2-3 new frontend components (`CalibrationTable`, `SignalPriorityList`, `ForgeResultCard`), and targeted modifications to `health-api.ts`, `feedback-store.ts`, `pages/health.ts`, `pages/runs.ts`, `components/sparkline.ts`, and `lib/api.ts`.
 
-**Major components changed in v2.0:**
-1. `shared/types.ts` — MODIFIED: per-target IPC state shape; `Target.schedule`; `ScheduleConfig.per_target`; `RunSummaryAction.linear_url`; `OutcomeItem` type; `max_concurrent_runs` removed
-2. `worker/index.ts` — MODIFIED: `targetQueues` + `activeRuns` Maps; new `processTarget()`; `activePids` Set→Map (critical safety fix)
-3. `worker/scheduler.ts` — MODIFIED: `Map<string, Timer>` per-target timers; min interval enforcement
-4. `worker/executor.ts` — MINOR: `production-auto` mode system prompt injection
-5. `server/routes/api.ts` + `server/services/outcome-store.ts` — ADD `GET /api/outcomes`; ADD `outcome-store.ts`
-6. `server/services/mcp-tools.ts` — ADD `nw_get_outcomes` + `nw_get_outcome_status`
-7. `frontend/pages/outcomes.ts` — NEW aggregate page
-8. `frontend/components/action-card.ts` + `trigger-dialog.ts` + `target-detail.ts` + `bottom-nav.ts` — UI updates for new capabilities
-
-**4 new files total:** `worker/pr-creator.ts`, `worker/linear-creator.ts`, `server/services/outcome-store.ts`, `frontend/pages/outcomes.ts`
+**Major components and their v4.0 changes:**
+1. `services/feedback-store.ts` — add `getFeedbackTrends()` bucketed by run_id + weekly rate aggregation
+2. `routes/feedback.ts` — add `GET /api/feedback/trends`
+3. `routes/forge.ts` (new) or extend `routes/health-api.ts` — `GET /api/forge/results` with staleness check
+4. `routes/signals.ts` (new) — `GET /api/signals/priority` with 30-run window limit
+5. `routes/health-api.ts` — extend history from 10→20 runs; add forge pass/fail stats to `TargetHealthData`
+6. `components/sparkline.ts` — add optional `target?: number` for horizontal target line; add SVG `<title>` tooltip; add area fill via `<polygon>` or `<path>`
+7. `components/calibration-table.ts` (new) — renders `CalibrationData[]` with threshold status
+8. `components/signal-priority-list.ts` (new) — ranked recurring unresolved signals
+9. `components/forge-result-card.ts` (new) — status badge, run date, details, branch link
+10. `pages/health.ts` — wire all new endpoints; render new components in new sections
+11. `pages/runs.ts` — sort actions by priority score; self-repair run label; quick-fix filter
 
 ### Critical Pitfalls
 
-1. **`activePids` Set kills all concurrent runs on cancel** — Change from `Set<number>` to `Map<string, number>` keyed by `run_id` before enabling any parallel execution. Cancel handler must target by run_id, not kill all. Do this first in Phase 1.
+1. **Fake two-point history is the root dependency** — `per_indicator_rates[].history = [0, currentRate]` in `health-api.ts` must be fixed before building any trend visualization. Building chart UI on top of fake data produces misleading flat lines that users will trust. Fix: bucket `FeedbackEntry[]` by run_id → compute per-run reject rate per indicator → return real history array.
 
-2. **IPC `state` message shape mismatch during migration** — The server's `lastWorkerState` type and all frontend consumers must update atomically with the worker's new `{ targets: Record<string, {queue, current}> }` shape. Keep deprecated `current` compat shim for one phase only, then remove.
+2. **Auto-calibration threshold volatility with small N** — The existing formula recomputes threshold on every request. With < 10 feedback entries, a single new rejected signal moves the threshold by ~5%. Add a minimum sample size gate (< 10 entries → return `current_threshold: null` with "Accumulating data (N/10)" display). Do NOT add EMA smoothing in v4.0 — gate is sufficient and simpler.
 
-3. **Per-target scheduler timer leak** — `startScheduler()` must call `stopAllSchedulers()` (clearing the full `Map<string, Timer>`) before rebuilding, not just `clearInterval(schedulerTimer)` (the old single-timer approach). Any update to one target's schedule must restart ALL timers from the full config.
+3. **NEVER write calibration thresholds back to `feedback.yaml`** — `feedback.yaml` is append-only via `appendFeedback`. Any path that calls `writeYamlFile(FEEDBACK_YAML_PATH, ...)` outside of `appendFeedback` creates a race condition with concurrent feedback collection. Decision: keep calibration as compute-on-demand (no persistence in v4.0). If persistence is needed later, use a separate `nightwatch-calibration.yaml`.
 
-4. **Concurrent YAML writes from parallel `claude -p` processes** — Audit which files the NW skill writes before enabling parallel spawning. `nightwatch-improvement-log.md` is append-only (mostly safe). `nightwatch-runs.yaml` must never be written by skill processes — only the app via `run-store.ts`. Per-target `memory/{target_name}/` and `runs/{run_id}/` are already scoped and safe.
+4. **SVG attribute casing in Preact/HTM** — Preact passes SVG attributes verbatim (not normalized like React). `strokeWidth` silently renders at browser default. Always use kebab-case: `stroke-width`, `fill-opacity`, `text-anchor`. The existing `sparkline.ts` and `line-chart.ts` are the correct reference models.
 
-5. **Auto PR dedup failure creates duplicate PRs** — Before any `gh pr create`, run `gh pr list --head {branch} --json url` and reuse the existing URL if found. Never fire-and-forget `gh pr create` without this pre-flight check.
-
-6. **Auto Linear issue dedup failure creates duplicate issues** — Before `issueCreate`, check `improvement-log.md` for an existing `linear_url` for this signal. If the previous issue is still open (check via `checkLinearStatus`), skip creation. Title template `[NW] {signal_summary} [{target}]` enables search-based dedup as a secondary guard.
-
-7. **`max_concurrent_runs: z.literal(1)` blocks app startup after upgrade** — Remove from `AppConfigSchema` and add a startup migration that silently ignores the old field if present. This is a compile-time blocker — fix it first in Phase 1.
-
-8. **`cleanupOldRuns` deletes in-progress run artifacts under parallelism** — Pass active run IDs to `cleanupOldRuns` and skip deletion for any run in `activeRuns.keys()`. Or move cleanup to worker startup only.
+5. **HTM fragment syntax crash** — `html\`<>...</>\`` produces `undefined` in HTM and crashes Preact's diff. Never use JSX fragment shorthand. Use a wrapper `<div>` or `html\`<${Fragment}>...<//>\`` with `Fragment` imported from `preact`. This is a known recurring pitfall for this project.
 
 ## Implications for Roadmap
 
-Based on combined research, the dependency graph maps cleanly to 4 phases with two internal parallel tracks.
+Research supports a 3-phase build ordered by data dependencies and risk level.
 
-### Phase 1: Schema + Safety Foundation
+### Phase 1: Data Layer Foundations
+**Rationale:** All chart UI depends on real data. Server-side endpoints must exist before frontend calls them. Zero-risk data changes first to establish confidence before complex aggregation.
+**Delivers:** Real feedback trend data (replacing fake stub), forge results API endpoint with staleness handling, signal priority API endpoint, extended 20-run history window
+**Addresses:** P1 features: feedback trend data fix, forge results endpoint, history extension
+**Avoids:** Building chart UI on top of fake data; unbounded run history scan (hard-limit to 30 runs in signals endpoint); feedback.yaml write-back race condition
 
-**Rationale:** All downstream work depends on the schema. `activePids` and `max_concurrent_runs` are code-correctness and startup blockers that must be fixed before any execution model work begins. This phase has no UI and no server changes — pure type/safety work.
+Build steps:
+- Extend history window in `health-api.ts` (10→20 runs): 30 min, zero risk
+- Add `getFeedbackTrends()` to `feedback-store.ts` + `GET /api/feedback/trends` route + `api.getFeedbackTrends()` method: 60 min
+- Add `GET /api/forge/results` (or `/api/self-repair/latest`) with staleness check: 45 min
+- Add `routes/signals.ts` with `GET /api/signals/priority` (30-run window) + register in `index.ts` + `api.getSignalPriority()`: 60 min
 
-**Delivers:** Updated `shared/types.ts` (per-target IPC state shape, `ActionOutcome`, `OutcomeItem`, `Target.schedule`, `RunSummaryAction.linear_url`, `max_concurrent_runs` removed); `shared/constants.ts` additions; `activePids` Set→Map in `executor.ts`; `cleanupOldRuns` safety fix; schema startup migration for old `app-config.yaml` files
+### Phase 2: Component Enhancements
+**Rationale:** Self-contained component changes with no new API dependencies. Sparkline enhancements use already-available data (existing `Target.indicators[].target`). Frontend wiring of trend data replaces the fake stub once Phase 1 server work is proven.
+**Delivers:** Sparkline with target line + area fill + tooltip; frontend wiring for real feedback trends on health page; calibration data table
+**Addresses:** P1 features: sparkline tooltip, calibration display, per-indicator rejection rate sparkline; P2: threshold annotation on trend chart
+**Avoids:** Breaking Sparkline's existing API (all new props are optional); Preact singleton violation (no new vendor files); SVG casing pitfalls (kebab-case audit before writing each component)
 
-**Addresses:** FEATURES.md: schema migration (table stakes); PITFALLS.md: Pitfalls 1, 5, 7, 10
+Build steps:
+- `Sparkline` component: add optional `target?: number` prop + horizontal target line + SVG `<title>` tooltip + area fill: 45 min
+- `pages/health.ts`: replace `[0, rate]` stub with real `api.getFeedbackTrends()` data: 45 min
+- `components/calibration-table.ts` (new) + wire `api.getCalibration()` in health page: 45 min
 
-**Avoids:** Type errors cascading into all downstream work; cancel-all bug in parallel mode; startup failure for existing users
+### Phase 3: New Components and Full Integration
+**Rationale:** New components built after their server APIs are proven working in Phase 1. Forge results card and signal priority list render in health page alongside calibration table. Runs page sort is independent of all above — can be done anytime.
+**Delivers:** ForgeResultCard on health page, SignalPriorityList section, runs page priority sort + self-repair label, forge stats on TargetHealthData
+**Addresses:** P1: forge results display, per-indicator rejection rate sparkline row; P2: signal prioritization display
+**Avoids:** New page anti-pattern (all wired into health.ts + runs.ts); polling signal priority (load once on mount, refresh on `brief-ready` SSE only); HTM fragment crashes (wrapper div everywhere)
 
-**Research flag:** Standard patterns — no additional research needed.
-
-### Phase 2: Worker — Parallel Execution + Per-Target Scheduling
-
-**Rationale:** The two foundational execution model changes can proceed as parallel sub-tracks within this phase because they affect different files (`index.ts` vs `scheduler.ts`) with a clean interface boundary (`enqueue()` function). The parallel execution refactor is the bigger change and should be done first since the scheduler calls `enqueue()`. Both must be complete before server/frontend can use the per-target state shape.
-
-**Delivers:** `worker/index.ts` per-target queue model (targetQueues + activeRuns); new `processTarget()` + `enqueue()` replacing `processNextRun()`; `worker/scheduler.ts` multi-timer model; per-target interval override with global fallback; 10-min minimum enforcement; `sendState()` broadcasting per-target shape
-
-**Uses:** STACK.md patterns: `Map<string, Run[]>` native data structures, zero new deps, `setInterval` multi-timer pattern
-
-**Avoids:** PITFALLS.md: Pitfall 3 (scheduler timer leak), Pitfall 4 (concurrent YAML writes — audit first), Pitfall 8 (schedule IPC wipes all timers), Pitfall 9 (SSE log cross-contamination), Pitfall 12 (agent-browser daemon collision)
-
-**Research flag:** Standard patterns — verified against Bun event loop model and existing codebase. No additional research needed.
-
-### Phase 3: Server + Auto-Action Output Loop
-
-**Rationale:** Two parallel sub-tracks here too. Track A: server endpoints + MCP tools (depend on Phase 1 schema + Phase 2 worker state shape). Track B: auto PR/Linear creation in worker (depends only on Phase 1 schema, not Phase 2 queue model — can run in parallel with Phase 2). In practice, do Track B first (it's simpler) and Track A second.
-
-**Delivers:** Track A — `server/ipc.ts` per-target state shape; `GET /api/outcomes`; `server/services/outcome-store.ts`; `nw_get_outcomes` + `nw_get_outcome_status` MCP tools; `server/routes/schedule.ts` per-target schedule acceptance; Track B — `worker/pr-creator.ts`; `worker/linear-creator.ts`; `worker/executor.ts` auto-create system prompt injection; `worker/feedback-collector.ts` linear_url wiring
-
-**Implements:** FEATURES.md P1: auto-create PR, auto-create Linear issue, outcomes aggregate data layer, NW-Claude outcomes awareness
-
-**Avoids:** PITFALLS.md: Pitfall 6 (gh pr create on existing PR fails silently — pre-flight check), Pitfall 7 (duplicate Linear issues — dedup check), Pitfall 11 (outcomes chicken-and-egg — phase ordering)
-
-**Research flag:** `gh` CLI non-interactive mode and Linear GraphQL `issueCreate` mutation are both verified HIGH confidence. No additional research needed.
-
-### Phase 4: Frontend Outcomes + UI Polish
-
-**Rationale:** All server endpoints exist; worker state is correct. Frontend changes are purely additive consumers. Five independent sub-tasks with no dependencies between them — parallelize freely.
-
-**Delivers:** `frontend/pages/outcomes.ts` (NEW); `frontend/lib/api.ts` `getOutcomes()`; `frontend/app.ts` `#/outcomes` route; `frontend/components/action-card.ts` "View Issue" `linear_url` link; `frontend/components/trigger-dialog.ts` auto-create toggle; `frontend/pages/runs.ts` `implementation_outcomes` section; `frontend/components/target-detail.ts` per-target schedule display; `frontend/components/bottom-nav.ts` Outcomes tab + nav gap CSS fix
-
-**Avoids:** PITFALLS.md: UX pitfall — outcomes page without grouping (group by target + status); UX pitfall — generic PR title (use `[NW] {signal} [{target}]` template)
-
-**Research flag:** Standard Preact/HTM patterns. Outcomes page follows `runs.ts` list pattern exactly. No additional research needed.
+Build steps:
+- `components/forge-result-card.ts` (new) + wire in `pages/health.ts`: 45 min
+- `components/signal-priority-list.ts` (new) + wire in `pages/health.ts`: 45 min
+- `pages/runs.ts`: sort actions by priority score, self-repair run label: 30 min
+- `shared/types.ts` + `routes/health-api.ts`: optional forge stats on `TargetHealthData`: 30 min
 
 ### Phase Ordering Rationale
 
-- Schema changes are compile-time prerequisites — every other phase has TypeScript imports that depend on the new types
-- `activePids` and `max_concurrent_runs` are safety/startup blockers — fixing them in Phase 1 before execution model work prevents both data corruption and startup failure
-- Worker changes before server changes — server needs to consume the new `WorkerToServer.state` per-target shape; premature consumption would read `undefined`
-- Auto-create PR/Linear is independent of the parallel execution model but shares the Phase 3 slot because it produces the outcome data that the Phase 4 UI consumes
-- Frontend last — standard dependency ordering; all API endpoints and data must exist before consumers are wired
+- Server before frontend: API endpoints must be curl-testable before wiring UI — avoids building UI against non-existent data shapes
+- Zero-risk first: history window extension is a one-line change that immediately improves existing sparklines with no new code paths
+- CalibrationTable before ForgeResultCard: calibration uses an existing API already defined in `api.ts`; ForgeResultCard requires a new server route
+- Signal priority list last: requires both the server route from Phase 1 and the component from Phase 3; complexity justifies later placement
+- Runs page sort anytime: pure frontend sort using existing `CalibrationData` already available — truly independent
 
 ### Research Flags
 
-All 4 phases use well-documented patterns with HIGH-confidence sources. No `/gsd:research-phase` is needed for any phase.
+All three phases use well-documented patterns. No `/gsd:research-phase` is needed.
 
-- **Phase 1:** Schema migrations + type changes — standard TypeScript/Zod, no research needed
-- **Phase 2:** Worker queue model — verified against Bun event loop; `Map` + `setInterval` multi-timer confirmed in Bun 1.3.9 docs; STACK.md has code-level implementation patterns
-- **Phase 3:** `gh pr create` non-interactive flags verified against gh 2.83.2 official manual; Linear `issueCreate` mutation verified against Apollo schema; auth pattern (no Bearer prefix) confirmed in existing codebase
-- **Phase 4:** Preact/HTM page patterns established in v1.0/v1.1; `usePoll` hook already exists; outcomes page is `runs.ts` clone
+- **Phase 1 (Data Layer):** All server patterns established in existing codebase. New routes follow `routes/*.ts` pattern. New service functions follow `services/feedback-store.ts` pattern. Feedback bucketing by `run_id` is pure TypeScript array grouping — no external research needed.
+- **Phase 2 (Component Enhancements):** Sparkline is a simple SVG component; adding optional props is standard. Health page fetch pattern established. Calibration API already wired in `api.ts` — only the consumer page changes.
+- **Phase 3 (New Components):** ForgeResultCard, SignalPriorityList, CalibrationTable all follow the existing Preact/HTM component pattern. Signal scoring formula (`confidence_numeric × (1 - reject_rate)`) is pure arithmetic requiring no external research.
 
-One deferred item to flag during Phase 4 planning: Phase 0.6 implementation outcome tracking (P2). The `ImplementationOutcome` type and `per_target.implementation_outcomes` field exist in the schema. The measurement logic belongs in the kc-nightwatch skill. The app only needs to surface the data. Decision: include Phase 0.6 as a stretch task in Phase 4 or defer to v2.1 based on scope.
+The one item worth a quick pre-implementation check: verify `gh` CLI auth works in the safehouse context before building forge result PR link rendering. `gh repo view --json url` is a safe test.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | All v2.0 features confirmed implementable with existing stack; zero new packages; verified via Bun 1.3.9 docs, gh 2.83.2 official manual, Linear Apollo schema, and direct codebase inspection of feedback-collector.ts + run-store.ts |
-| Features | HIGH | Derived from direct codebase read of all affected files + authoritative PROJECT.md v2.0 requirements; schema hooks (`pr_url`, `ImplementationOutcome`, `linear_url` stub) already exist confirming design intent |
-| Architecture | HIGH | Based on direct inspection of all 18 modified/new files with line-level specificity; complete file change matrix + 11-step build order provided; data flow diagrams for all 4 major feature tracks |
-| Pitfalls | HIGH | Mix of project-specific pitfalls from direct codebase inspection (activePids, YAML concurrent writes, cleanupOldRuns) + verified API behaviors (gh exit codes, Linear GraphQL) + MEMORY.md known patterns (ToolSearch, Linear team requirement, Bun IPC) |
+| Stack | HIGH | Zero new packages confirmed by direct library evaluation (uPlot Canvas incompatibility, Chart.js bare-specifier issue verified against GitHub issue #11592); existing vendor files confirmed functional |
+| Features | HIGH | Derived from authoritative PROJECT.md v4.0 requirements + direct codebase inspection of all affected files; existing data shapes confirmed (FeedbackEntry.submitted_at, forge_result YAML schema) |
+| Architecture | HIGH | ARCHITECTURE.md provides line-level specificity on all 8 build steps, file change matrix, and data flow diagrams; all integration points verified against current code |
+| Pitfalls | HIGH | Mix of project-specific patterns from direct inspection (fake history stub location, calibration formula statelessness, YAML write-back race) + known HTM/Preact pitfalls from MEMORY.md with specific error descriptions |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **NW skill writes audit**: Before enabling parallel execution, confirm exactly which files `kc-nightwatch` skill writes during a run. The ARCHITECTURE research identifies `memory/{target}/` and `runs/{run_id}/` as per-target/per-run scoped (safe). `nightwatch-improvement-log.md` is append-only (low risk). Any other shared writes need a coordination strategy. This is a 30-min audit task, not a research gap.
-- **Phase 0.6 scope decision**: Implementation outcome tracking (`ImplementationOutcome` population + health page correlation) is the highest-complexity v2 feature. The type exists; the measurement logic is in the skill. Decision: include in v2.0 Phase 4 as a stretch goal or explicitly defer to v2.1. Flag this as a planning decision, not a technical gap.
-- **`gh` auth in safehouse context**: The safehouse may restrict `~/.config/gh/` access. Verify `buildSafehouseFlags` in `policy.ts` grants read access to `~/.config/gh/`. One `gh repo view` dry-run test from within a safehouse-wrapped process confirms this before building the auto-create PR flow.
+- **Per-run bucketing strategy**: ARCHITECTURE.md and PITFALLS.md both identify `FeedbackEntry.run_id` bucketing as the right approach; FEATURES.md identifies weekly time-bucketing as an alternative. Decision needed at Phase 1 start: run-id bucketing (shows run-aligned history, matches `health-api.ts` existing run-based structure) vs. weekly bucketing (more stable with irregular run cadence). Recommendation: run-id first since it aligns with the existing `history: number[]` shape populated from runs. Add weekly aggregation if users request smoother trend lines.
+
+- **Calibration persistence decision**: STACK.md proposes EMA + persistence to `nightwatch-calibration.yaml`; PITFALLS.md recommends starting with compute-on-demand + minimum sample gate. These are not contradictory — gate first, EMA later. Document the decision explicitly before Phase 1 implementation so the calibration API response shape is stable.
+
+- **ForgeResultCard placement**: ARCHITECTURE.md suggests health page as a sidebar panel; FEATURES.md notes config page is natural home since self-repair data comes from the same YAML as config warnings. Decision: health page (where users look for system health) vs. config page (where self-repair data already lives). Recommendation: health page — the self-repair result is a health indicator, not a configuration item.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Direct codebase inspection (2026-03-21): `app/worker/index.ts`, `app/worker/executor.ts`, `app/worker/scheduler.ts`, `app/worker/feedback-collector.ts`, `app/worker/policy.ts`, `app/server/ipc.ts`, `app/server/routes/api.ts`, `app/server/services/run-store.ts`, `app/server/services/mcp-tools.ts`, `app/shared/types.ts`, `app/shared/constants.ts`, `app/frontend/components/action-card.ts`, `app/frontend/pages/runs.ts`, `app/frontend/lib/api.ts`
-- `.planning/PROJECT.md` — v2.0 requirements list (authoritative)
-- `reference/ROADMAP.md` — v2.0 milestone definition
-- Bun 1.3.9 docs (bun.sh/reference/globals/setInterval) — multi-timer pattern confirmed
-- Bun GitHub Issue #15050 — no native PQueue; `Map` pattern is idiomatic
-- gh 2.83.2 official manual (cli.github.com/manual/gh_pr_create) — `--title --body --head --base` confirmed non-interactive
-- Linear API docs (linear.app/developers/graphql) — `issueCreate` mutation structure
-- Linear Apollo schema (studio.apollographql.com/public/Linear-API) — `issue.url` field on mutation response
+- Direct codebase inspection of `app/server/`, `app/worker/`, `app/frontend/`, `app/shared/` (2026-03-25)
+- `services/feedback-store.ts`: existing aggregation logic, YAML schema, `getCalibrationData()` formula
+- `routes/health-api.ts`: fake `[0, currentRate]` two-point history (confirmed location + behavior)
+- `pages/health.ts`: existing render logic for sparklines and line charts
+- `shared/types.ts`: FeedbackEntry, CalibrationData, TargetHealthData, IndicatorBaseline shapes
+- `~/.claude/kc-plugins-config/nightwatch-self-repair.yaml`: actual file format for forge results display
+- `~/.claude/kc-plugins-config/nightwatch-feedback.yaml`: current size (35 lines / 1KB, ~5 feedback entries)
+- `.planning/PROJECT.md` v4.0 target features (authoritative)
 
 ### Secondary (MEDIUM confidence)
-- Bun IPC throughput under parallel load — Bun docs state Node-compatible message passing; no official throughput limit; empirical evidence from existing NW runs
-- Linear issue dedup pattern — derived from kc-sentry-insight `date-based cleanup` lesson in MEMORY.md
-- LogRocket — UI patterns for async workflows (parallel job dashboard patterns)
-- Per-target scheduler reference implementations: Cronicle, Dkron (similar domain, different scale)
+- `reference/ROADMAP.md`: v0.5 feature intentions confirm v4.0 alignment with planned direction
+- MEMORY.md entries: HTM fragment syntax pitfall, vendor module import path verification, Preact singleton, Bun IPC patterns (all project-specific validated patterns)
+- uPlot ESM verification (esm.sh/uplot@1.6.32) — Canvas-based incompatibility confirmed
+- Chart.js bare specifier issue (GitHub #11592) — confirmed `@kurkle/color` import map problem
+- Preact SVG docs — confirmed verbatim attribute passthrough (no camelCase normalization)
+- PatternFly sparkline UX guidelines — directional + metric pairing patterns
 
 ### Tertiary (LOW confidence)
-- Outcome tracking patterns — Linear + GitHub integration docs, DORA metrics background (general patterns; exact v2.0 design is project-specific, not borrowed)
+- RICE scoring model — confidence × success_rate prioritization framework (general pattern, adapted to NW domain)
+- Smashing Magazine dashboard UX patterns — progressive disclosure via hover states
 
 ---
-*Research completed: 2026-03-21*
+*Research completed: 2026-03-25*
 *Ready for roadmap: yes*

@@ -1,409 +1,342 @@
 # Pitfalls Research
 
-**Domain:** Adding parallel execution, per-target scheduling, auto PR/Linear creation, and outcomes tracking to existing Bun + Hono + Preact/HTM worker-based dashboard (v2.0 milestone)
-**Researched:** 2026-03-21
-**Confidence:** HIGH (based on direct codebase inspection of worker/index.ts, executor.ts, scheduler.ts, shared/types.ts, server/ipc.ts, run-store.ts, policy.ts + known project-specific patterns)
+**Domain:** Adding feedback trend visualization, auto-calibration, signal prioritization, forge results display, and indicator sparklines to existing Bun + Hono + Preact/HTM dashboard (v4.0 Flywheel Intelligence milestone)
+**Researched:** 2026-03-25
+**Confidence:** HIGH (based on direct codebase inspection of sparkline.ts, line-chart.ts, health-api.ts, feedback-store.ts, yaml-store.ts, frontend/index.html import map, vendor/ directory + known project-specific patterns from MEMORY.md)
 
-> Note: This file covers v2.0 pitfalls only. For v1.0 infrastructure pitfalls (Claude CLI hang, socket cleanup, SSE memory leaks, IPC heartbeat, YAML concurrent writes) and v1.1 UI pitfalls (toast z-index, polling interval leaks, Notification permission), see the commit history for those research files.
+> Note: This file covers v4.0 pitfalls only. For v1.0–v3.0 pitfalls (IPC shape, parallel execution, scheduler timers, concurrent YAML writes, auto PR dedup), see the previous research files for those milestones.
 
 ---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Parallel execution uses a single `activePids` Set — cross-target cancellation kills the wrong process
+### Pitfall 1: SVG attribute casing — Preact uses kebab-case for SVG, not camelCase
 
 **What goes wrong:**
-`executor.ts` uses `export const activePids = new Set<number>()` as a module-level singleton. In the current serial model (max concurrency 1), there is at most one PID in the set at any time. With parallel execution, multiple `executeRun` calls run simultaneously. When the cancel handler fires `for (const pid of activePids) process.kill(pid, 'SIGTERM')`, it kills ALL active runs across ALL targets — not just the target the user requested to cancel.
+The existing `sparkline.ts` and `line-chart.ts` use `stroke-width="1.5"` correctly. If any new chart component is added that copies SVG from an external source (e.g., an icon, a reference implementation), camelCase attributes like `strokeWidth`, `strokeLinejoin`, `fillOpacity`, `textAnchor` will be passed as-is by Preact/HTM and silently fail to render in the browser. This is a Preact-specific behavior difference from React (which maps camelCase to SVG attributes) that has bitten this project before.
 
 **Why it happens:**
-The `activePids` Set was designed for a single-run world. The cancel IPC handler in `worker/index.ts:153–157` does `for (const pid of activePids)` — this was correct when only one run could be active. The parallel model invalidates this assumption completely.
+Preact intentionally applies SVG attributes verbatim — what you write is what lands in the DOM. React normalizes camelCase to kebab-case; Preact does not. In HTM template literals, it is easy to copy SVG markup from a reference without noticing this difference.
 
-**How to avoid:**
-- Replace `activePids: Set<number>` with `activePids: Map<string, number>` keyed by `run_id`. The run_id is available at `executeRun` call time.
-- Update the cancel handler to look up the specific PID by run_id: `const pid = activePids.get(run_id); if (pid) process.kill(pid, 'SIGTERM')`
-- Update `killAllActive()` to iterate the Map values, not the Set.
-- Update the `run:started` IPC message to carry `run_id → pid` association so the server can also track it.
+**Consequences:**
+Charts render with default stroke widths, wrong line joins, or missing text anchors. The chart appears to "work" but looks different than expected — lines are too thin, text is misaligned, rounded corners are missing. No error is thrown.
 
-**Warning signs:**
-- Cancelling a dry-run also kills a production run on a different target running in parallel
-- `activePids.size` consistently matches the number of active runs rather than always being 0 or 1
-- Test: start two parallel runs, cancel one, verify only one stops
+**Prevention:**
+- Always use kebab-case for SVG attribute names in HTM templates: `stroke-width`, `stroke-linejoin`, `fill-opacity`, `text-anchor`, `font-size`, `font-family`.
+- The existing sparkline.ts and line-chart.ts are correct models — follow their attribute naming exactly.
+- When the browser renders unexpectedly, inspect the DOM element attributes directly in DevTools — a camelCase attribute that made it into the DOM is the tell.
 
-**Phase to address:** Phase 1 (parallel execution refactor). Change `activePids` to a Map before starting any parallel execution work — this is the foundation.
+**Detection:**
+SVG element in browser DevTools shows `strokeWidth="1.5"` as a literal attribute name (instead of rendered as `stroke-width`). The line renders at browser default (1px) instead of 1.5px.
+
+**Phase to address:** Any phase adding new chart components. Pre-check: audit every SVG attribute name before writing the component, not after noticing visual bugs.
 
 ---
 
-### Pitfall 2: Single global queue becomes per-target queues but state snapshot `IpcMessage` still sends one `queue` array — server-side state diverges from worker state
+### Pitfall 2: Preact singleton violation — adding a chart library via CDN or a second `<script type="module">` creates a second Preact instance
 
 **What goes wrong:**
-`worker/index.ts` currently sends `{ type: 'state', queue: [...queue], current: currentRun }` on every state change. The server stores `lastWorkerState` as `{ queue: Run[]; current?: Run }`. With per-target parallelism, there is no single "current run" — there are N current runs, one per target. Sending a flat `queue` array with a single `current` makes the server's state snapshot permanently stale for parallel runs.
+The import map in `index.html` maps `"preact"` to `/vendor/preact.module.js`. If any new vendor file (e.g., a charting library added to `/vendor/`) internally imports `preact` from a CDN URL (e.g., `https://esm.sh/preact`) instead of relying on the import map, two separate Preact instances will coexist. Hooks state, signals, and reconciliation break in subtle ways: `useState` updates don't re-render, `useEffect` fires twice, signals don't propagate.
 
 **Why it happens:**
-The `state` IPC message type was designed for the serial (max-1) model. It maps 1:1 to the UI's "one running + one queue" mental model. Parallel execution requires rethinking the state shape before any UI changes.
+esm.sh bundles dependencies. If you download a pre-bundled ESM file (e.g., some chart library that depends on Preact), the bundle may have Preact inlined. The Preact docs explicitly warn: "Duplication of preact and some other libraries will cause (often subtle and unexpected) issues."
 
-**How to avoid:**
-- Redefine the state message to carry an `active: Run[]` array (not a single `current?: Run`) plus the full `queue: Run[]` of waiting runs.
-- Update `shared/types.ts` `WorkerToServer` union: `{ type: 'state'; queue: Run[]; active: Run[] }` (remove `current` field — it was `Run | undefined`, which is just an array of length 0 or 1).
-- Keep the existing `current` field temporarily with a deprecation comment that maps `current = active[0]` for any UI code not yet updated. Remove it once all consumers are migrated.
-- Update `getLastWorkerState()` to return the new shape. Update all frontend callers that read `state.current` to handle `state.active`.
+**Consequences:**
+This is the "ghost Preact" failure mode. Symptoms are non-deterministic: components render once and stop updating, signals lose reactivity, error boundaries don't catch, hooks call order diverges. Debugging is extremely difficult because nothing throws — the app just stops working in portions.
 
-**Warning signs:**
-- Dashboard shows only one running run even when two are executing in parallel
-- "current run" indicator shows undefined while runs are genuinely active
-- `GET /api/worker/state` returns `current: undefined` during parallel execution
+**Prevention:**
+- Do NOT add any pre-bundled chart library that has Preact as a dependency. The v4.0 features use inline SVG (as sparkline.ts and line-chart.ts already do) — stick to this pattern.
+- If a library MUST be added, use the `?external=preact` esm.sh flag when downloading: `https://esm.sh/library@version?external=preact`. This produces a file that imports `preact` from the import map instead of inlining it.
+- After adding any vendor file, open browser DevTools → Network tab → filter by `vendor` → inspect the file's source to confirm it does not contain inline `var h = ` (Preact's pragma) other than in `preact.module.js` itself.
 
-**Phase to address:** Phase 1 (state shape). Settle the new IPC shape first. Every other parallel execution feature depends on it.
+**Detection:**
+`window.__preactInstances` does not exist as a standard check, but you can verify by adding `console.log(window.__preact)` and checking uniqueness. Simpler: if `@preact/signals`'s `.value` changes but the component that uses `signal.value` doesn't re-render, a second Preact instance is almost certainly the cause.
+
+**Phase to address:** Any phase that evaluates adding a third-party chart library (Phase X: Forge results display, or if sparklines need a more complex visualization). Decision: avoid external chart libraries entirely for v4.0 — all charts are SVG-in-HTM. This avoids the problem entirely.
 
 ---
 
-### Pitfall 3: Per-target scheduler timers are module-level singletons — replacing the global scheduler leaks old timers
+### Pitfall 3: `per_indicator_rates.history` is currently a hardcoded 2-element fake — trend charts will look flat until real history is accumulated per-run
 
 **What goes wrong:**
-`worker/scheduler.ts` has `let schedulerTimer: ReturnType<typeof setInterval> | null = null`. There is one timer for one global schedule. The v2.0 feature requires per-target intervals (each target can have its own `interval_hours`). A naive implementation creates N scheduler instances, each holding their own `setInterval`. When a target is updated or removed via the config editor, the old timer is not cleared because the module-level singleton only tracks one timer.
+In `health-api.ts:71`, the reject rate history array is hardcoded:
+```
+history: [0, Math.round(cal.reject_rate * 100) / 100]  // baseline zero -> current rate
+```
+This means LineChart in `health.ts` always renders a straight line from 0% to the current reject rate — it has exactly 2 data points, which is the minimum to render. Any new "trend visualization" feature that adds more chart panels or a time-windowed view will pull this same fake history array and render meaningless flat-line charts, with no indication to the user that the data is synthetic.
 
 **Why it happens:**
-The current `startScheduler` / `stopScheduler` pair assumes single-instance semantics. Calling `startScheduler` for target A, then `startScheduler` for target B would call `stopScheduler()` at the top, which only clears `schedulerTimer` (singular). Target A's timer is gone; target B's timer starts. But if the caller passes each target separately in a loop: `targets.forEach(t => startScheduler(t.config, enqueue))`, the first call starts and immediately `stopScheduler` in the next call kills it.
+`feedback-store.ts` stores `FeedbackEntry` objects without timestamps bucketed per-run or per-time-window. `getCalibrationData()` computes a single aggregate reject rate from all historical entries — it does not produce a time series. The health API then fakes a two-point history from this scalar.
 
-**How to avoid:**
-- Change the scheduler to manage a `Map<string, ReturnType<typeof setInterval>>` keyed by target name.
-- `startTargetScheduler(targetName, config, enqueue)` — adds/replaces the timer for that target.
-- `stopTargetScheduler(targetName)` — clears only that target's timer.
-- `stopAllSchedulers()` — iterates the Map and clears all (used on worker shutdown, replacing `stopScheduler()`).
-- `getNextRunAtForTarget(targetName)` — per-target next-run timestamp.
-- Keep the global fallback: if a target has no `interval_hours`, apply the global schedule config.
-- Minimum interval enforcement (10min) must be applied in `startTargetScheduler`, not in the caller.
+**Consequences:**
+Feedback trend visualization (the core v4.0 feature) renders charts that appear to show trends but show no meaningful trend because the history is 2 points. Users will trust the flat lines and conclude "reject rate is stable at X%" when in reality they have no temporal data at all.
 
-**Warning signs:**
-- Only one target receives scheduled runs even though multiple have intervals configured
-- After editing a target's schedule, the old interval continues firing AND the new one starts (double-fire)
-- `clearInterval` is never called on worker shutdown for all timers
+**Prevention:**
+The real fix is to add a `week` or `submitted_at` timestamp bucketing step in `getCalibrationData()`:
+- Group `FeedbackEntry` by week (ISO week number from `submitted_at`)
+- Compute reject rate per week
+- Return `history: number[]` with one point per week in chronological order
 
-**Phase to address:** Phase 2 (per-target scheduling). Refactor scheduler before wiring config UI changes.
+This requires no schema change to `FeedbackEntry` (it already has `submitted_at: string`). The computation is in `feedback-store.ts`, not in the frontend.
+
+Specifically:
+1. In `getCalibrationData()`, bucket entries by `submitted_at` week.
+2. Sort weeks chronologically.
+3. Produce one reject rate per week: `reject_count / total` for that week.
+4. Return `history: weeklyRejectRates`.
+5. `CalibrationData` interface needs a `history: number[]` field (currently absent from `shared/types.ts`).
+
+**Detection:**
+`GET /api/feedback/calibration` returns `history: [0, 0.5]` — exactly two elements regardless of how many feedback entries exist. Any chart using this data will be a straight diagonal line.
+
+**Phase to address:** Phase 1 (feedback trend visualization). This is the foundation data fix. All chart UX depends on it being real data.
 
 ---
 
-### Pitfall 4: Multiple concurrent `claude -p` processes under safehouse contend on shared config files — YAML corruption under concurrent writes
+### Pitfall 4: Auto-calibration threshold formula is stateless — recalculated from scratch on every request, making calibration volatile with small sample sizes
 
 **What goes wrong:**
-All targets share `~/.claude/kc-plugins-config/` for YAML state files (`nightwatch-targets.yaml`, `nightwatch-runs.yaml`, `nightwatch-improvement-log.md`, etc.). In the serial model, only one `claude -p` process runs at a time. With parallel execution, two `claude -p` processes may simultaneously:
-1. Read `nightwatch-improvement-log.md` at phase 0 (signal dedup check)
-2. Write new entries to `nightwatch-improvement-log.md` at phase 4 (after taking action)
+`feedback-store.ts:83`:
+```typescript
+const currentThreshold = Math.min(0.9, Math.max(0.1, 0.5 + (rejectRate - 0.5) * 0.5))
+```
+This formula recomputes the threshold from the current aggregate reject rate every time `getCalibrationData()` is called. With only 3 feedback entries (e.g., 2 rejected, 1 accepted = 67% reject rate), the threshold jumps to 0.585. With 4 entries (2 rejected, 2 accepted = 50% reject rate), it falls back to 0.5. The threshold oscillates wildly with small N.
 
-Concurrent writes to the same YAML/Markdown file without a lock produce interleaved or truncated content. The NW skill uses bash `echo >> file` style appends — these are not atomic on most filesystems.
+There is no persistence of the computed threshold. Every API call recalculates from all historical data — there is no "previous threshold" to compare against, no dampening, and no minimum sample size gate.
 
 **Why it happens:**
-The skill itself has no concurrency awareness. It was written assuming sequential execution. The `allowed_operations` config in `safety.yaml` controls what operations are allowed but says nothing about ordering or locking. The `yaml-store.ts` in the app does have read-modify-write logic but the skill runs as a separate `claude -p` process with its own file access — not mediated by `yaml-store.ts`.
+The formula was designed as a first-pass placeholder. It works correctly in the limit (large N, stable reject rate) but is unreliable during the early feedback accumulation period (first 5–20 runs), which is exactly when a new user is using the system.
 
-**How to avoid:**
-- `nightwatch-improvement-log.md` — append-only. On most filesystems, appending (O_APPEND) is atomic per-line. Instruct the skill to append entries rather than rewrite. This is already the case. Flag a risk but this is low severity.
-- `nightwatch-runs.yaml` — the app controls this via `run-store.ts`. The skill should not write to this file directly. Verify the skill only writes to its own output files (per-target summary.yaml in the run artifact dir).
-- High-risk: if the skill writes to any shared file that another concurrent run is simultaneously reading+writing, add a file lock. Use `flock` (available on macOS/Linux) as a shell advisory lock. The worker can acquire the lock before spawning `claude -p` and release it after completion — but this serializes only the locked resource, not the whole run.
-- Safest approach: make each run's outputs target-scoped. The skill writes `~/.claude/nightwatch/memory/{target_name}/` (already per-target) and `runs/{run_id}/` (already per-run). The risk area is `~/.claude/kc-plugins-config/nightwatch-improvement-log.md` — verify if the skill writes there directly.
+**Consequences:**
+- Auto-calibration "jumps" by large amounts between runs when sample size is small.
+- The NW skill, if it reads the threshold via API, gets a different value each run even if no new feedback has arrived (due to floating point and ordering).
+- Dashboard shows confusing threshold changes that don't correspond to any user action.
 
-**Warning signs:**
-- `nightwatch-improvement-log.md` has truncated entries or entries that appear mid-write (text cuts off mid-line)
-- Two runs for different targets report working on the same signal ID on the same day (dedup check failed due to race)
-- `yaml.parse()` throws in run-store.ts after a concurrent run (YAML file is invalid)
+**Prevention:**
+Add two safeguards:
+1. **Minimum sample size gate**: If `total_feedback < 10`, do not compute a calibrated threshold — return `current_threshold: null` and the UI shows "Accumulating data (N/10 feedback entries)".
+2. **Exponential moving average (EMA) dampening**: Instead of a direct formula, use `newThreshold = alpha * formulaResult + (1 - alpha) * previousThreshold` where `alpha = 0.2` (slow adjustment). Requires persisting the previous threshold per-indicator in the YAML store.
 
-**Phase to address:** Phase 1 (parallel execution). Audit exactly which files the NW skill writes to. Document safe vs. unsafe concurrent writes before enabling parallelism.
+The simpler option for v4.0: just gate on minimum sample size. EMA can come later.
+
+**Detection:**
+`GET /api/feedback/calibration` returns a different `current_threshold` value after adding a single new feedback entry that changes the reject rate by <5%. Threshold should be stable until N >= 10.
+
+**Phase to address:** Phase 2 (auto-calibration). Fix the minimum sample gate before wiring calibration results into the dashboard display — otherwise the UI will show constantly-changing thresholds that confuse users.
 
 ---
 
-### Pitfall 5: Run cleanup (`cleanupOldRuns`) deletes runs from disk while another run is actively writing to the same directory
+### Pitfall 5: Signal prioritization adds a new scoring concept that is not in `shared/types.ts` — if score is computed in the worker and never returned to the server, the dashboard cannot show it
 
 **What goes wrong:**
-`cleanupOldRuns` in `executor.ts:43–66` scans the `runs/` directory and deletes the oldest entries when count exceeds `KEEP_RUNS_COUNT`. With parallel execution, multiple runs exist simultaneously. If run A finishes and triggers cleanup, it might delete the artifact directory for run B which is still actively writing its `log.jsonl`. The `KEEP_RUNS_COUNT = 50` constant means this only occurs after 50 simultaneous-ish runs, but the logic is unsafe regardless.
+Signal prioritization (confidence × historical success ranking) requires computing a score at the point signals are evaluated — inside the NW skill execution, or in a post-run aggregation step. If the score is only computed within the `claude -p` subprocess (the NW skill itself), it lives in the LLM's reasoning and never gets written to a structured output file that the dashboard can read.
+
+Currently, `RunSummaryAction` in `shared/types.ts` has `assessment.confidence: 'high' | 'medium' | 'low'` — a string enum, not a numeric score. There is no `priority_score: number` field anywhere in the type system.
 
 **Why it happens:**
-`cleanupOldRuns` was written for the serial model where only one run is "in progress" at a time. It deletes runs sorted by mtime — the oldest could be a freshly started run with a recent mtime (so it would be safe), but a run that started 28 minutes ago on a different target could have an older mtime and still be running.
+The NW skill was not designed to output a numeric priority score — it outputs string-based confidence levels. Adding signal prioritization in v4.0 requires either: (a) the skill emits numeric scores in Appendix B, (b) the dashboard computes scores from the existing confidence string + feedback history, or (c) a new server-side scoring step runs post-run on the stored summary.
 
-**How to avoid:**
-- Before deleting a run artifact directory, check if the run_id is in `activePids.keys()` (with the Map change from Pitfall 1). If it is active, skip deletion.
-- Alternative: cleanup only at worker startup (before any runs begin), not after each run completes.
-- Pass the set of active run IDs to `cleanupOldRuns` and exclude them: `cleanupOldRuns(runsDir, keepCount, activeRunIds: Set<string>)`.
+**Consequences:**
+If the dashboard tries to show "signal priority" but the data source doesn't exist yet, the feature ships as all-zeros or all-nulls. Or worse: the feature is wired to the confidence string (`high=3, medium=2, low=1`) without any historical success weighting, making it "just a confidence display" not actual prioritization.
 
-**Warning signs:**
-- `log.jsonl` for an in-progress run disappears mid-execution
-- `executeRun` throws "ENOENT: no such file or directory" when writing to `log.jsonl`
-- Parallel run B's stream SSE returns no events because its log file was deleted
+**Prevention:**
+Option B (server-side scoring from existing data) is the correct approach for v4.0:
+- `RunSummaryAction.assessment.confidence` maps to a numeric base score.
+- Historical success rate = accepted / total for signals with the same `indicator` field.
+- Priority score = `confidenceScore * (1 + historicalSuccessRate)`.
+- This computation belongs in a new `computeSignalPriority(action, calibration)` function in a shared utility — NOT in the frontend and NOT requiring skill changes.
+- The API endpoint returns scored actions: `GET /api/runs/:id/signals` → `Array<RunSummaryAction & { priority_score: number }>`.
 
-**Phase to address:** Phase 1 (parallel execution). Modify `cleanupOldRuns` signature before enabling parallel execution.
+**Detection:**
+Search `shared/types.ts` for `priority_score` — if absent, the feature has no data contract yet. Confirm before writing any UI code.
+
+**Phase to address:** Phase 3 (signal prioritization). Define the data contract in `shared/types.ts` first, then the scoring logic, then the API, then the UI. In that order — never reverse.
 
 ---
 
-### Pitfall 6: Auto PR creation runs `gh pr create` as a subprocess inside `claude -p` — if the repo already has an open PR on the same branch, `gh pr create` fails silently and the outcome is never recorded
+## Moderate Pitfalls
+
+### Pitfall 6: `feedback.yaml` grows unboundedly — `getCalibrationData()` scans all entries on every health API call
 
 **What goes wrong:**
-The NW skill's auto-create PR flow calls `gh pr create` on a freshly created branch. If nightwatch ran within the last 7 days and created a proposal branch `kc-nightwatch/2026-03-14-e2e-pipeline-proposal` that was never merged or closed, a subsequent run for the same target + signal will try to create the same-named branch (or re-use it). `gh pr create` on an existing open PR returns exit code 1 with "a pull request for branch X already exists". The skill treats this as a failure and may not record the outcome.
+`feedback-store.ts` reads the entire `feedback.yaml` file and flattens all five source arrays on every `getCalibrationData()` call. The health API calls this on every `GET /api/health/:target`. The health page has a polling interval (via `usePoll`). At current scale (35 lines / ~1KB), this is fine. After 12 months of daily nightwatch runs generating 5–10 feedback entries per run, `feedback.yaml` will be ~500KB with ~2000 entries. YAML parse at 500KB is ~2ms. But scanning all 2000 entries to group by indicator adds O(N) overhead that compounds with the number of targets.
 
 **Why it happens:**
-The cooldown mechanism (`cooldown_per_signal: 7d`) prevents re-processing the same signal within 7 days. But the cooldown is checked against the signal ID in `improvement-log.md`, not against open PR status. If a PR is created but the user never reviews it (leaves it open), the signal re-enters cooldown after 7 days and a new run might attempt to re-create the branch.
+The feedback store was designed for small N (prototype phase). There is no index, no TTL, no pagination, and no archival strategy.
 
-**How to avoid:**
-- Before calling `gh pr create`, run `gh pr list --head {branch_name} --json url` to check for existing PRs. If one exists, skip creation and return the existing PR URL as the outcome.
-- This check is cheap (one `gh` call) and prevents the failure path entirely.
-- In the outcomes tracking system (Phase 0.6), treat "PR already exists" as a valid outcome state — not a failure. The outcome card should link to the existing PR.
-- The NW skill should emit a structured outcome even on "PR already exists" so the dashboard can surface it.
+**Consequences:**
+Health page load time increases linearly with feedback history. At 10K entries, `yaml.parse()` on a 2MB file takes ~20ms and the array scan takes another 5ms. Still acceptable for a local tool, but it means the health endpoint is never cached and always re-reads disk.
 
-**Warning signs:**
-- `gh pr create` exits non-zero inside a run but the skill continues silently
-- Outcomes page shows no PR link for a target that clearly had changes proposed
-- `improvement-log.md` has an action entry but `actions[].pr_url` is empty
+**Prevention:**
+No immediate action needed for v4.0 (current scale is far from problematic). Design the time-bucketed history from Pitfall 3's fix to only retain per-week aggregates — this naturally caps the working dataset. The raw entries can be archived after aggregation.
 
-**Phase to address:** Phase 3 (auto PR creation). Add the pre-flight `gh pr list` check before any `gh pr create` call.
+Add a comment in `feedback-store.ts` marking the file as "archival target after 1000 entries" so the threshold is documented before it's a problem.
+
+**Detection:**
+`wc -l ~/.claude/kc-plugins-config/nightwatch-feedback.yaml` > 500 lines. Add a warning log in `getCalibrationData()` if entry count exceeds 200.
+
+**Phase to address:** Note in Phase 1 (feedback trend) when adding weekly bucketing. The bucketing step is a natural ceiling on working set size.
 
 ---
 
-### Pitfall 7: Auto Linear issue creation fires on every run for the same unresolved signal — creates duplicate issues
+### Pitfall 7: Forge results display requires reading `nightwatch-self-repair.yaml` — this file may not exist or may be stale
 
 **What goes wrong:**
-Phase 3 auto-creates Linear issues from improvement signals. If the NW skill runs every 24 hours for the same target and signal X has `action_type: linear-issue` but the issue has never been resolved (it stays open in Linear), the next day's run sees the same signal again (cooldown has not expired or the signal is recurring), creates another Linear issue, and the user now has 7 duplicate issues for the same root problem over a week.
+`nightwatch-self-repair.yaml` is written by the `--self-repair` run (a separate `claude -p` session before the regular pipeline). The dashboard wants to display forge results from this file. If the server's API endpoint for forge results reads this file at request time, it may find: (a) no file (self-repair never ran), (b) a stale file from 3 days ago (self-repair ran but not today), (c) a file written mid-self-repair run (partial write).
+
+The file path is `~/.claude/kc-plugins-config/nightwatch-self-repair.yaml`. The app does not currently have a route for this.
 
 **Why it happens:**
-Linear issue creation is treated as a "fire and forget" action in the current feedback model. The feedback collection only tracks PR merge status (`collectImplicitFeedback` checks `pr_url`), not Linear issue resolution status. Without checking whether an open issue already exists, every run that triggers this signal creates a new issue.
+Self-repair writes the file at the end of its session. The dashboard has no mechanism to know when the file was last written or whether it reflects the most recent self-repair outcome. The `run_date` field in the file IS present (verified from the actual file format), but the API consumer needs to check it before presenting the data as "recent".
 
-**How to avoid:**
-- Before creating a Linear issue, search for existing open issues with the same title or signal ID label. The Linear MCP exposes search capability. Use it.
-- Use a consistent issue title template: `[NW] {signal_summary} [{target_name}]`. The `[NW]` prefix + target name makes dedup searchable.
-- Record created issue URLs in `improvement-log.md` alongside signal entries. On subsequent runs, if a signal matches a log entry with an existing `linear_url` that is still open (check Linear status), skip creation.
-- The `kc-nightwatch-feedback.yaml` + `collectImplicitFeedback` mechanism already tracks `linear_status`. Extend it to gate issue creation: if a previous issue for this signal is still open, do not create another.
+**Consequences:**
+Forge results panel shows yesterday's data labeled as current. User sees "0 config fixes" and thinks nothing was repaired today, but yesterday's self-repair is what's shown.
 
-**Warning signs:**
-- Linear project shows 5+ issues with nearly identical titles for the same target
-- `improvement-log.md` has multiple entries for the same signal_id with `linear_url` fields pointing to different issue URLs
-- User feedback rate in `feedback.yaml` spikes (user rejecting duplicates)
+**Prevention:**
+- Add `run_date` staleness check in the forge results API: if `run_date` is older than 36 hours, mark results as `stale: true` and the UI shows a "Last updated: 3 days ago" badge instead of presenting the data as current.
+- The API response shape should include `run_date`, `stale: boolean`, and the raw `config_fixes` / `config_warnings` arrays.
+- Empty state: if the file doesn't exist, return `{ run_date: null, stale: true, config_fixes: [], config_warnings: [] }` — do not 404.
 
-**Phase to address:** Phase 3 (auto Linear creation). Implement dedup check before issue creation, using improvement-log.md as the source of truth for existing issues.
+**Detection:**
+`ls -la ~/.claude/kc-plugins-config/nightwatch-self-repair.yaml` and compare `run_date` in the file to the current date. If they differ, the UI must communicate this.
+
+**Phase to address:** Phase 4 (forge results display). Add staleness check before wiring the UI.
 
 ---
 
-### Pitfall 8: Per-target scheduling IPC message carries a single `ScheduleConfig` — updating one target's schedule resets all others
+### Pitfall 8: HTM fragment syntax crash — adding wrapper-free multi-element returns in new components
 
 **What goes wrong:**
-The current `schedule` IPC message type is `{ type: 'schedule'; config: ScheduleConfig }` carrying a single global config. The server sends this when the schedule changes. With per-target scheduling, updating target A's interval must not affect target B's active timer. But if the server sends `{ type: 'schedule'; config: globalConfig }` and the worker calls `startScheduler(config, enqueue)` which first calls `stopScheduler()` — all per-target timers are wiped and only the global fallback is restarted.
+This project has already hit this pitfall (documented in MEMORY.md: "htm fragment syntax: htm template literals do NOT support JSX `<>...</>` shorthand — produces undefined type that crashes Preact diff"). Any new component added for v4.0 (forge results panel, calibration table, trend chart section) that attempts to return two sibling elements without a wrapper will crash at runtime.
 
 **Why it happens:**
-The `schedule` IPC message was designed for a single config object. The server's schedule route likely re-reads the config and sends the updated global schedule. Per-target scheduling requires either (a) a new `schedule:target` IPC message type, or (b) sending the full targets map when any schedule changes so the worker can reconcile all per-target timers.
+HTM's template literal parser does not implement JSX fragment shorthand. `html\`<>...</>\`` evaluates to `html\`${undefined}...\``, which Preact's diff algorithm receives as an invalid vnode and either throws or silently drops the content.
 
-**How to avoid:**
-- Add a new IPC message type: `{ type: 'schedule:target'; target_name: string; config: ScheduleConfig }` that updates only the named target's timer.
-- When the config editor saves changes, identify which fields changed (global schedule vs. per-target interval) and emit the appropriate IPC message.
-- Worker handles `schedule:target` by calling `startTargetScheduler(msg.target_name, msg.config, enqueue)` which replaces only that target's timer.
-- Keep `schedule` (global) working for the "enable/disable all scheduling" toggle.
+**Consequences:**
+New component renders nothing. No error in the console unless Preact's error boundary catches it. Component appears "not rendering" — developer wastes time checking imports and component registration before finding the real cause.
 
-**Warning signs:**
-- After updating target B's schedule in the config editor, target A's runs stop occurring on their expected interval
-- Worker log shows `Scheduler stopped` followed by only one target being scheduled instead of all targets
-- `getNextRunAt()` returns the global interval time even though a target has a custom shorter interval
+**Prevention:**
+Always wrap multi-element returns in a `<div>` or use `html\`<${Fragment}>...<//>\``. The `Fragment` must be imported from `preact`. Check the import in the new component file:
+```typescript
+import { Fragment } from 'preact'
+// Then: html`<${Fragment}><div>A</div><div>B</div><//>`
+```
 
-**Phase to address:** Phase 2 (per-target scheduling). Extend IPC message types before wiring the scheduler refactor.
+Simpler: just use a wrapper div. Position:fixed elements (toasts, overlays) can go in any parent without affecting layout.
+
+**Detection:**
+Component function returns `html\`<>...</>\`` — immediate red flag. Grep new component files for `html\`<>\`` before the phase ships.
+
+**Phase to address:** All phases. This is a "new file" checklist item, not a phase-specific risk. Apply when writing any new frontend component.
 
 ---
 
-### Pitfall 9: SSE log streaming sends all parallel run logs to `/api/runs/:id/stream` but the worker sends `run:log` IPC without associating it clearly to the correct `run_id` under high parallelism — log lines interleave
+### Pitfall 9: Calibration threshold changes must NOT be written back to `feedback.yaml` — they belong in a separate config layer
 
 **What goes wrong:**
-`executor.ts` calls `opts.onMessage({ type: 'run:log', run_id: run.id, event })` for every log line. The server's `handleWorkerMessage` routes this to `fanOutLogEvent(msg.run_id, msg.event)`. This looks correct, but the actual bottleneck is in the worker's IPC channel itself: all runs share a single `process.send()` channel. Under parallel execution, multiple `executeRun` calls concurrently push `run:log` messages onto the same IPC channel. Bun/Node IPC serializes these messages in arrival order, which means log events from run A and run B are interleaved in the channel. The server correctly demultiplexes them by `run_id`, but if the IPC channel's backpressure causes message drops (unlikely but possible at high log volume), the stream for a specific run may silently miss lines.
+Auto-calibration computes a `current_threshold` per indicator. If this threshold is persisted into `feedback.yaml` alongside feedback entries, the file becomes both a log (append-only) and a config (read-modify-write). Concurrent writes from the feedback collection path (append) and the calibration update path (rewrite) create a race condition where the file is corrupted or one write silently overwrites the other.
 
 **Why it happens:**
-The current design works correctly for the serial case because only one run generates log events at a time. The parallel case sends N times more events through the same single IPC channel. The risk is low (Bun's IPC has a large internal buffer) but worth understanding.
+`writeYamlFile` in `yaml-store.ts` is a full overwrite (`Bun.write(filePath, stringify(data))`). If the calibration path calls `writeYamlFile(FEEDBACK_YAML_PATH, {...data, calibration_thresholds: ...})`, it rewrites the entire file. Any concurrent `appendFeedback` call that read the file before the calibration write will overwrite the calibration back to the old value.
 
-**How to avoid:**
-- This is NOT a rewrite-forcing problem. The existing design is architecturally correct for parallel use — `run_id` is the demultiplexer.
-- Monitor IPC message throughput during parallel runs in development. If log events are dropped, add a `seq: number` field to `run:log` messages so the client can detect gaps.
-- The real risk is the opposite: the SSE writers for different run streams write concurrently to `stream.writeSSE()`. Hono's streaming handles this per-connection, so two separate browser tabs watching two different run SSE streams are safe. One browser watching run A's stream will not see run B's events.
-- Set up a test: run two targets in parallel, open both streams in two browser tabs, verify no cross-contamination.
+**Consequences:**
+Calibration thresholds are lost intermittently. User sees threshold change in the UI, but the next request returns the old threshold because an `appendFeedback` call overwrote it.
 
-**Warning signs:**
-- Browser watching `/api/runs/{A}/stream` sees log lines with `run_id: B` in the payload
-- Log viewer shows phases from a different target mid-stream
-- IPC channel log shows `[warn] IPC send buffer full` (Bun internal message)
+**Prevention:**
+Keep `feedback.yaml` as append-only. Store computed thresholds in a separate file: `nightwatch-calibration.yaml`. The file is small (one entry per indicator, ~10–20 entries). Update it only from the health API layer, never from `feedback-store.ts`.
 
-**Phase to address:** Phase 1 (parallel execution). Add the `run_id` correctness assertion to the test suite early.
+Alternatively: compute thresholds on-the-fly from `feedback.yaml` on every request (current approach) and never persist them — display only. This avoids the race entirely at the cost of re-computation on each request (acceptable at current scale).
+
+**Detection:**
+If a new PR adds `writeYamlFile(FEEDBACK_YAML_PATH, ...)` anywhere other than `appendFeedback`, that is the anti-pattern. Code review gate: no one should be calling `writeYamlFile` on `FEEDBACK_YAML_PATH` except `appendFeedback`.
+
+**Phase to address:** Phase 2 (auto-calibration). Decide at the start: computed-only (no persist) vs. persisted-separately. Document the decision before writing any calibration persistence code.
 
 ---
 
-### Pitfall 10: `AppConfigSchema` has `max_concurrent_runs: z.literal(1)` — adding parallel execution requires a schema migration that existing config files will fail
+## Minor Pitfalls
+
+### Pitfall 10: Vendor module import path verification after adding new vendor files
 
 **What goes wrong:**
-`shared/types.ts:62` has `max_concurrent_runs: z.literal(1)`. This Zod schema validates the app config YAML and will reject any value other than `1`. When v2.0 adds parallel execution, the config needs to express per-target concurrency (or drop this field entirely). Any user running with an existing `app-config.yaml` that has `max_concurrent_runs: 1` will have that config fail validation if the schema changes to `z.number().min(1)` without a compat migration.
+The import map in `index.html` maps four specifiers to four vendor files. If a new vendor file is added (e.g., `preact-compat.module.js`) that internally imports from `/vendor/preact.module.js` but the actual vendor path is `/vendor/preact-core.module.js`, the import fails with a 404 at runtime. This is the pattern that broke `@preact/signals` in a previous milestone (MEMORY.md: "Vendor module import path verification: hardcoded import paths must match the import map").
 
-**Why it happens:**
-The field was added as a `z.literal(1)` to explicitly document the current constraint. It was not meant to be user-configurable — it documented an architectural decision. But it exists in the config YAML, so it has a migration story.
+**Prevention:**
+After downloading any new vendor file, open it and search for all `import` statements. Verify each import path matches what is served. The current vendor files:
+- `preact.module.js` — serves `preact`
+- `preact-hooks.module.js` — serves `preact/hooks`
+- `htm.module.js` — serves `htm/preact` (imports from `preact.module.js`)
+- `signals.module.js` — serves `@preact/signals` (imports from `signals-core.module.js`)
+- `signals-core.module.js` — serves the signals core
 
-**How to avoid:**
-- Per-target concurrency is not a single `max_concurrent_runs` number — it is "different targets run in parallel; same target queues". This cannot be expressed as a simple integer.
-- Remove `max_concurrent_runs` from `AppConfigSchema` entirely in v2.0. The behavior is now "unlimited cross-target concurrency, per-target serial queue" — this is an architectural property, not a config value.
-- For migration: use `z.coerce.number().optional()` during a transition period that reads (and ignores) the old value without failing. Then remove it.
-- Add a migration step at startup: if `max_concurrent_runs` exists in the loaded config, log a deprecation warning and ignore it.
+Any new file must be verified in this chain.
 
-**Warning signs:**
-- App fails to start after v2.0 upgrade with "ZodError: invalid_literal" on `max_concurrent_runs`
-- Existing users who have explicitly set `max_concurrent_runs: 1` in their config get startup failure
-- `bun typecheck` shows `AppConfig` type as changed but the config loading code still expects the old shape
-
-**Phase to address:** Phase 1 (parallel execution). Remove or migrate the schema before any other work — it is a compile-time blocker.
+**Phase to address:** Any phase that adds a new vendor file. Low risk for v4.0 if no new vendor files are added (SVG-inline charts need no vendor additions).
 
 ---
 
-### Pitfall 11: Outcomes tracking (`ImplementationOutcome`) writes before-value at PR creation time and after-value at "next measurement" — but the measurement happens in the same run that processes the outcome, creating a chicken-and-egg problem
+### Pitfall 11: `health-api.ts` issues one `getRun()` call per run (up to 10 calls) on every health page load — no caching
 
 **What goes wrong:**
-`shared/types.ts` defines `ImplementationOutcome` with `before: number`, `after: number`, `delta: number`. The "before" value is the indicator baseline measured at Phase 0.5 when the PR was proposed. The "after" value should be measured N days after the PR is merged. But the current pipeline design runs Phase 0.5 (measure) at the start of every run — meaning the "after" measurement is taken by the same run that might also be proposing new changes. If the PR was merged 2 days ago and the indicator improved, the "after" value is captured, the delta is computed, and a new signal from the indicator (still above threshold) might immediately trigger another proposal in the same run.
+`health-api.ts` calls `listRuns({ target })` then `getRun(r.id)` for each of the last 10 runs. With 3 targets on the health page, this is 30 individual file reads on every `GET /api/health/:target` call. The health page polls via `usePoll`. Each poll triggers one request per target.
 
 **Why it happens:**
-The pipeline phases run sequentially: 0.5 (measure) → 1 → 2 → 3 → 4. Phase 0.6 (outcomes) was designed to happen after 0.5 but before 1. However, if Phase 0.6 sees that a PR was merged and the indicator improved, it marks the outcome as effective — but the signal from that indicator has already been harvested in Phase 1 and may still trigger a new action in Phase 4.
+Each run stores its summary in a separate JSON file in the `runs/` directory. `getRun()` reads and parses one file per call. There is no summary index or cached aggregate.
 
-**How to avoid:**
-- Phase 0.6 should run AFTER Phase 1 (signal harvest) but BEFORE Phase 2 (dedup). This way, if Phase 0.6 marks an indicator as "recently resolved by merged PR", Phase 2 can suppress signals for that indicator using a short cooldown.
-- Add a `recently_resolved` flag to the cooldown check: if an indicator has a merged PR within the last N days (e.g., 14d), signals from that indicator get a longer cooldown automatically.
-- Do not measure "after" in the same run that proposes new changes. The "after" measurement should be gated: only measure if the PR was merged at least `min_measurement_window` days ago (e.g., 3d). If the window has not passed, record `after: null` and defer.
+**Consequences:**
+At 3 targets with polling at 5s, this is ~60 file reads per minute from the health page alone. On macOS with SSD, each read is ~0.1ms. Total: ~6ms/minute. Negligible. But indicator history arrays are recomputed on every request, which means the health page shows different "histories" on back-to-back loads if the YAML parse produces different floating point results (it won't, but the computation is unnecessary).
 
-**Warning signs:**
-- Outcomes page shows "effective: true" but a new proposal for the same indicator is created in the same run
-- `improvement-log.md` shows two consecutive actions for the same indicator within a single run
-- A merged PR that fully fixed an issue triggers 3 more proposals before the outcomes tracking catches up
+**Prevention:**
+For v4.0, no action needed — the overhead is immaterial. If the health page becomes a performance concern in v5.0, cache the `TargetHealthData` with a 60-second TTL keyed by `(target, lastRunId)`. Invalidate when a `run:completed` IPC event arrives.
 
-**Phase to address:** Phase 4 (outcomes tracking / Phase 0.6). Define the pipeline ordering explicitly before implementing.
+**Phase to address:** Not in v4.0 scope. Document as a known limitation.
 
 ---
 
-### Pitfall 12: Multiple concurrent safehouse processes each launch their own `agent-browser` daemon on the same profile — they collide
+### Pitfall 12: `FeedbackEntry` has no deduplication — the same signal can accumulate multiple identical feedback entries
 
 **What goes wrong:**
-The safehouse policy includes agent-browser access via `--enable=agent-browser` (from MEMORY.md: alias `cc` uses `--enable=shell-init,agent-browser`). If two concurrent `claude -p` processes both have agent-browser enabled and both try to launch the browser daemon on the same user profile, they get a collision on the daemon socket or the profile lock file. The second process's browser calls fail or silently use a shared (dirty) browser context.
+`appendFeedback` in `feedback-store.ts` always appends without checking for existing entries for the same `signal_id + verdict + source` combination. The external feedback collectors (`collectImplicitFeedback`, `collectPrReviewFeedback`) are called before each run. If a PR is merged but no new runs have cleared the signal from cooldown, the next 7 runs will each add `{ signal_id: X, verdict: 'accepted', source: 'pr_status' }` to `feedback.yaml`. The calibration computation then counts this as 7 accepted signals when it was one PR merge.
 
 **Why it happens:**
-agent-browser uses a profile-based daemon model. The daemon is started per-profile. If two NW processes both have `--enable=agent-browser`, both call the same daemon start sequence and may conflict.
+The feedback collectors are designed as fire-and-forget. They don't check for existing entries before appending. The cooldown mechanism is in the NW skill's `improvement-log.md`, not in the feedback store.
 
-**How to avoid:**
-- The NW skill does NOT need agent-browser — it uses `gh` CLI, Linear MCP, and git. Remove `--enable=agent-browser` from the safehouse flags used by the worker (check `buildSafehouseFlags` in `policy.ts`).
-- Currently `policy.ts` does not pass `--enable=agent-browser` — this is correct. The risk is if someone adds it later as a "nice to have". Document this explicitly in `policy.ts` as a comment: "Never add agent-browser here — concurrent NW runs collide on the browser daemon."
-- If a future NW feature genuinely needs browser access (e.g., scraping a metrics page), it must use a per-run browser profile via `--profile=nw-{run_id}` and clean it up after.
+**Consequences:**
+Calibration data is inflated by repeat identical entries. A target that merged 1 PR (1 true accepted signal) will show 7 accepted entries → artificially high acceptance rate → threshold drops too fast.
 
-**Warning signs:**
-- `claude -p` for a NW run hangs at "Starting agent-browser daemon" while another run is already using the browser
-- Two runs both succeed but one has all-empty browser action results
-- `ps aux | grep agent-browser` shows two daemon processes for the same profile
+**Prevention:**
+Add a `deduplicate` step in `getCalibrationData()`: before computing rates, filter entries by `(signal_id, source)` keeping only the most recent entry per pair. This is a read-time dedup that doesn't require changing the append logic.
 
-**Phase to address:** Phase 1 (parallel execution). Add a comment to `policy.ts` before parallelism is enabled. Run a quick audit that agent-browser is not in the safehouse flags.
+Alternatively (better long-term): add a pre-append check in `appendFeedback`: if an entry with the same `signal_id + source` exists with the same `verdict`, skip appending.
+
+**Phase to address:** Phase 1 (feedback trend). The weekly bucketing fix from Pitfall 3 naturally mitigates this — multiple entries in the same week for the same signal collapse to a single rate. But the explicit dedup is still worth adding to `getCalibrationData()`.
 
 ---
 
-## Technical Debt Patterns
+## Phase-Specific Warnings
 
-| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
-|----------|-------------------|----------------|-----------------|
-| Keep `current?: Run` in state IPC message alongside new `active: Run[]` | No UI code changes needed immediately | Server and UI drift: some code uses `current`, some uses `active[0]` — both track the same thing inconsistently | Only acceptable as a temporary compat shim for 1 phase. Remove in phase following migration. |
-| Use one global queue for all targets, dequeue by round-robin | Simpler than per-target queues | "Same target queues" constraint becomes impossible to enforce without scanning the whole queue for same-target runs | Never — the constraint requires per-target queue tracking from day one |
-| Skip dedup check before `gh pr create` | 5 fewer lines of code | Creates duplicate PRs on re-runs; user trust erodes fast | Never — always pre-flight check |
-| Store `ImplementationOutcome` only in `summary.yaml` (per-run artifact) | No persistent store changes | Outcomes are lost when run is cleaned up after `KEEP_RUNS_COUNT` is exceeded (50 runs ≈ ~2 months at current cadence) | Never for outcome data — outcomes must persist in a separate store beyond run artifact lifecycle |
-| Auto-create Linear issues without a title dedup search | Faster to implement | Duplicate issues accumulate; user becomes noise-immune (stops checking Linear) | Never — the Linear API search is cheap and the downside is catastrophic for trust |
-
----
-
-## Integration Gotchas
-
-| Integration | Common Mistake | Correct Approach |
-|-------------|----------------|------------------|
-| GitHub CLI (`gh pr create`) | Assuming `gh` is auth'd in the safehouse context | The safehouse restricts env vars. Verify `GH_TOKEN` or `~/.config/gh/hosts.yml` is accessible. The safehouse `--add-dirs-ro` for `~/.config/gh` may need to be added to `buildSafehouseFlags`. |
-| Linear MCP (`linear_*` tools) | Hardcoding the MCP tool name prefix (e.g., `linear_createIssue`) | Use `ToolSearch "+linear save"` to discover the actual prefix at runtime — tool names vary by MCP server version. This pattern is already documented in MEMORY.md (kc-sentry-insight). |
-| Linear MCP issue creation | Creating an issue without a `team` ID | Linear issues require a team. Always resolve the team ID at Phase 0 from the target's config (not hardcoded). See kc-nightwatch v0.3.0 lesson: `team` required, not just `project`. |
-| `gh` CLI inside safehouse | `gh pr list` fails if the repo's git remote is not accessible | safehouse may block network in some configurations. Verify that `gh` API calls work from within a safehouse-wrapped `claude -p`. Test with a dry-run that calls `gh repo view`. |
-| Bun IPC (`process.send`) under parallel load | Sending hundreds of `run:log` messages per second per run × N parallel runs | IPC is synchronous in the sense that `process.send()` enqueues the message. The channel does not block, but very high throughput may cause the child process to slow down if the parent's IPC handler is blocking. Keep `handleWorkerMessage` non-blocking (already the case). |
-| YAML concurrent reads via `yaml-store.ts` | `readYamlFile` + `writeYamlFile` are not atomic | The existing `yaml-store.ts` does read-then-write without a lock. For files written only by the app (not by the NW skill processes), this is safe because the app is single-threaded (Bun event loop). For files written by NW skill processes too, there is a TOCTOU window. |
-
----
-
-## Performance Traps
-
-| Trap | Symptoms | Prevention | When It Breaks |
-|------|----------|------------|----------------|
-| N parallel `claude -p` processes each read `nightwatch-targets.yaml` at startup | N reads × N runs per day = O(N²) file reads | Worker caches `targetsMap` at startup (already done in `worker/index.ts:29–35`). Runs use the cached map, not re-reading on each spawn. | Not a current concern — already cached. Risk if someone adds `readTargets()` inside `executeRun`. |
-| SSE fan-out for N parallel runs multiplied by M browser subscribers | M browsers × N runs × log event rate = quadratic SSE writes | `sseSubscribers` Map already isolates per run_id. SSE writes are fire-and-forget. Issue only arises if many runs are streaming simultaneously to many open browser tabs. | Not a concern at current scale (1 user, <10 parallel targets). |
-| `cleanupOldRuns` stat() calls for all run dirs on every run completion | N parallel completions each trigger `Bun.Glob.scan()` + `stat()` × total_dirs | Move cleanup to worker startup only (not post-run). Or rate-limit cleanup to once per hour. | Breaks when parallel run completions fire simultaneously and each triggers a cleanup scan. |
-| Linear MCP search for dedup before every issue creation | One API call per issue-creation attempt, may add 2–3s per run | Acceptable — issue creation is rare (1–3 per run). Linear API p95 < 1s. | Not a concern unless a run creates >20 issues (would indicate config miscalibration, not a perf issue). |
-
----
-
-## Security Mistakes
-
-| Mistake | Risk | Prevention |
-|---------|------|------------|
-| PR description includes the full NW skill prompt context | Sensitive system-level instructions (skill contents) visible in public GitHub PRs | Only include the improvement description and diff summary in PR body. Never include `--append-system-prompt` content in the PR. |
-| Linear issue title echoes the signal content verbatim, which may include internal commit messages or file paths | Internal codebase structure leaked to Linear (project management tool, potentially accessible to more people) | Sanitize: include only the high-level summary and indicator name. Strip file paths. |
-| Per-run MCP config (`nw-journal.json`) in `runs/{id}/` is readable by any process with `runs/` access | `runs/` is an artifact dir, not a secrets dir. The journal MCP config includes the journal path but no auth tokens — low risk | Keep current behavior. Do not add secrets to per-run MCP configs. |
-| `auth_token` for remote mode dashboard is passed as an env var to `claude -p` subprocess | Could leak to subprocesses | Auth token is for the Hono server only, not forwarded to spawned processes. Verify `buildSafehouseFlags` and `claudeArgs` in `executor.ts` do not include `auth_token`. |
-
----
-
-## UX Pitfalls
-
-| Pitfall | User Impact | Better Approach |
-|---------|-------------|-----------------|
-| Outcomes page shows all PRs/issues ever created with no grouping | 50+ rows with no context; user cannot tell what helped vs. what failed | Group by target, then by status (open/merged/closed). Show indicator improvement delta prominently for merged PRs. |
-| Auto-created PR title is generic ("NW improvement for e2e-pipeline") | User cannot distinguish improvements without reading each PR | Include the signal summary and indicator in the title: "[NW] Reduce test flakiness: fix race in e2e-flow-verifier (test_reliability)" |
-| NW-Claude chat says "I don't know about PR #123" when user asks about an outcome | Breaks trust in the AI assistant | NW-Claude must have access to outcomes data. Wire the MCP tool `get_outcomes` to `ImplementationOutcome[]` before the chat panel is connected. |
-| Parallel runs all show as "running" simultaneously in target list — no visual distinction | User cannot tell which run is far along vs. just started | Show phase progress per target. Parse `phase` field from `ParsedLogEvent` (already populated in `log-parser.ts`) and expose it in per-target state. |
-| Auto-created issues/PRs appear with no link in the dashboard until the run completes | User triggers a run; 30 min later sees a PR was created but had no visibility during execution | Emit a `run:action-created` IPC message when the skill creates a PR/issue mid-run. Display it in the live log view. |
-
----
-
-## "Looks Done But Isn't" Checklist
-
-- [ ] **Parallel execution**: Cancel one target's run while another target's run is ongoing. Verify only the cancelled target's process is killed (`ps aux | grep claude` before and after).
-- [ ] **Per-target scheduler**: Set target A to every-2h and target B to every-3h. After 6h, A should have fired 3 times and B should have fired 2 times. Check `nightwatch-runs.yaml` counts.
-- [ ] **Auto PR dedup**: Run NW twice in quick succession on the same target without merging the first PR. Second run should NOT create a second PR. Verify `gh pr list` shows only one open PR.
-- [ ] **Auto Linear dedup**: Trigger two runs for the same target with the same unresolved signal. Linear project should show exactly one open issue, not two.
-- [ ] **Outcomes tracking after merge**: Merge a NW-created PR. Next run should measure the "after" indicator value and record `delta`. Verify `effective: true/false` is set in `implementation_outcomes`.
-- [ ] **Config schema migration**: Start the app with an existing `app-config.yaml` that has `max_concurrent_runs: 1`. App should start without error (field silently ignored or migrated).
-- [ ] **Run cleanup safety**: Start 3 parallel runs; the moment the first completes, verify its run dir is NOT deleted if 2 others are still active.
-- [ ] **GitHub auth in safehouse**: Run `gh repo view` from within a safehouse-wrapped process with the same flags used by `buildSafehouseFlags`. Verify exit 0.
-- [ ] **NW-Claude outcomes awareness**: Ask "Did the PR for e2e-pipeline test flakiness actually help?" in the NW-Claude chat after a merged PR outcome exists. Verify the answer references the specific delta.
-
----
-
-## Recovery Strategies
-
-| Pitfall | Recovery Cost | Recovery Steps |
-|---------|---------------|----------------|
-| `activePids` Set cancels wrong process | LOW | Add `activePids` → Map change. Already isolated to `executor.ts` — no cascading changes except the cancel handler in `worker/index.ts`. |
-| Duplicate Linear issues created | MEDIUM | Manually close duplicates in Linear. Add `linear_url` field to `improvement-log.md` entries retroactively by running a migration script against the YAML. Then add dedup check to skill. |
-| Scheduler timer leak (old timer not cleared) | LOW | Worker restart clears all timers. Add `stopAllSchedulers()` call to the existing `shutdown` IPC handler which already calls `stopScheduler()`. |
-| YAML corruption from concurrent writes | HIGH | Restore from git history (improvement-log.md and targets.yaml are in `~/.claude/kc-plugins-config/` which is not git-tracked — manual recovery or last-known-good from `safety.yaml` `backup_before_fix: true` backup). Prevention is far cheaper than recovery. |
-| Outcomes store cleaned up with run artifacts | MEDIUM | Move `implementation_outcomes` to a dedicated persistent YAML file (e.g., `nightwatch-outcomes.yaml` alongside `nightwatch-runs.yaml`). Running `cleanupOldRuns` only deletes `log.jsonl` artifacts, not outcomes. |
-| `max_concurrent_runs: z.literal(1)` startup failure after upgrade | LOW | Remove the field from `app-config.yaml` manually, or add the schema migration code to the startup path. |
-
----
-
-## Pitfall-to-Phase Mapping
-
-| Pitfall | Prevention Phase | Verification |
-|---------|------------------|--------------|
-| `activePids` Set cancels wrong process in parallel | Phase 1 (parallel execution refactor) | Cancel test: kill one target, verify other is unaffected |
-| Single `current` in IPC state breaks parallel visibility | Phase 1 (state IPC shape) | Worker state endpoint shows all active runs, not just one |
-| Scheduler timer module singleton leaks on per-target config | Phase 2 (per-target scheduling) | Multiple targets have distinct `setInterval` handles; stopping one leaves others running |
-| Shared YAML files written concurrently without locks | Phase 1 (parallel execution) | Audit which files NW skill writes; add guards before enabling parallelism |
-| `cleanupOldRuns` deletes active run artifacts | Phase 1 (parallel execution) | Start N parallel runs; cleanup skips all active run dirs |
-| `gh pr create` on existing open PR fails silently | Phase 3 (auto PR creation) | Pre-flight `gh pr list` check; second run for same target reuses existing PR URL |
-| Duplicate Linear issues from re-runs | Phase 3 (auto Linear creation) | `improvement-log.md` lookup gates creation; only one issue per open signal |
-| Schedule IPC wipes all per-target timers | Phase 2 (per-target scheduling) | Updating target A schedule leaves target B timer unchanged |
-| SSE log cross-contamination under parallel load | Phase 1 (parallel execution) | Integration test: two parallel runs, two SSE streams, zero cross-contamination |
-| `max_concurrent_runs: z.literal(1)` startup failure | Phase 1 (parallel execution) | Existing `app-config.yaml` with old field starts cleanly after migration |
-| Outcomes chicken-and-egg with same-run signal harvest | Phase 4 (outcomes tracking) | Merged PR outcome does not trigger new proposal in same run |
-| agent-browser daemon collision from concurrent safehouse | Phase 1 (parallel execution) | Verify `policy.ts` buildSafehouseFlags has no `--enable=agent-browser` |
+| Phase Topic | Likely Pitfall | Mitigation |
+|-------------|----------------|------------|
+| Feedback trend visualization | Fake 2-point history in health-api.ts (Pitfall 3) | Add weekly bucketing to `getCalibrationData()` first |
+| Feedback trend visualization | Missing `history` field in `CalibrationData` type | Add to `shared/types.ts` before writing any chart component |
+| Auto-calibration | Volatile threshold with small N (Pitfall 4) | Gate on minimum 10 feedback entries per indicator |
+| Auto-calibration | Writing thresholds back to feedback.yaml (Pitfall 9) | Decision: computed-only. Document explicitly |
+| Signal prioritization | No `priority_score` in type system (Pitfall 5) | Define data contract in `shared/types.ts` first |
+| Signal prioritization | Confidence string → numeric mapping is ad-hoc | Codify: `high=3, medium=2, low=1` as a named constant |
+| Forge results display | Stale `nightwatch-self-repair.yaml` (Pitfall 7) | Add `run_date` staleness check, never 404 on missing file |
+| Forge results display | No existing API route for self-repair results | New route: `GET /api/forge/results` returns `{ run_date, stale, config_fixes, config_warnings }` |
+| Per-indicator sparklines | SVG attribute casing (Pitfall 1) | Audit all SVG attributes in new components, use kebab-case |
+| Per-indicator sparklines | HTM fragment syntax (Pitfall 8) | Never use `<>...</>` shorthand — use wrapper div |
+| Any new vendor file | Second Preact instance (Pitfall 2) | No new vendor files needed for v4.0 — all charts are SVG-in-HTM |
+| Any new vendor file | Import path mismatch (Pitfall 10) | Verify vendor file's internal imports match the served paths |
 
 ---
 
 ## Sources
 
-- Direct codebase inspection: `worker/index.ts`, `worker/executor.ts`, `worker/scheduler.ts`, `worker/policy.ts`, `server/ipc.ts`, `server/routes/api.ts`, `server/services/run-store.ts`, `shared/types.ts`, `shared/constants.ts`, `config/safety.yaml`
-- MEMORY.md: known project-specific patterns — NW skill Linear team requirement (v0.3.0), `ToolSearch` for MCP prefix discovery (kc-sentry-insight), agent-browser profile collision risk, Bun IPC child-to-parent verified working, YAML concurrent write risk in yaml-store.ts
-- Known project decisions (PROJECT.md): "Per-target isolation — different targets concurrent, same target queued" as the explicit v2.0 concurrency model
-- GitHub CLI `gh pr create` exit-code behavior: HIGH confidence (standard `gh` behavior, documented in gh CLI docs)
-- Linear issue dedup pattern: MEDIUM confidence (based on kc-sentry-insight's `date-based cleanup over consecutive-count` lesson in MEMORY.md, applied to issue creation)
-- Bun IPC throughput under load: MEDIUM confidence (Bun docs state IPC uses Node-compatible message passing; no official throughput limits documented; empirical evidence from existing NW runs)
-
----
-*Pitfalls research for: Nightwatch Dashboard v2.0 (parallel execution, per-target scheduling, auto PR/Linear creation, outcomes tracking)*
-*Researched: 2026-03-21*
+- Direct codebase inspection: `app/frontend/components/sparkline.ts`, `line-chart.ts`, `health.ts`, `health-api.ts`, `feedback-store.ts`, `yaml-store.ts`, `shared/types.ts`, `frontend/index.html`, `frontend/vendor/` directory listing
+- MEMORY.md (this project): htm fragment syntax pitfall, vendor module import path verification, Preact vendor bundling (esm.sh var collision), `signals.module.js` import chain
+- Previous PITFALLS.md for v2.0: concurrent YAML write patterns, yaml-store.ts write semantics
+- Preact documentation (WebSearch 2026-03-25): singleton requirement (`?external=preact`), SVG attribute behavior, import map necessity for no-build workflows
+- `~/.claude/kc-plugins-config/nightwatch-self-repair.yaml`: actual file format verification for forge results display feature
+- `~/.claude/kc-plugins-config/nightwatch-feedback.yaml`: current file size (35 lines / 1KB) establishing growth baseline

@@ -1,36 +1,32 @@
 # Feature Research
 
-**Domain:** Autonomous Improvement Dashboard v2.0 — Parallel Execution + Auto-Action
-**Researched:** 2026-03-21
-**Confidence:** HIGH (codebase read + confirmed patterns via PROJECT.md + web research)
+**Domain:** Nightwatch Dashboard v4.0 — Flywheel Intelligence
+**Researched:** 2026-03-25
+**Confidence:** HIGH (codebase direct inspection + PROJECT.md + pattern research)
 
 ---
 
 ## Context
 
-This is a v2.0 research pass. v1.0 built the full dashboard cockpit. v1.1 polished run lifecycle feedback. v2.0 changes the fundamental execution model and closes the output loop:
+This is a v4.0 research pass. v3.0 shipped worktree isolation, external feedback sources (Slack reactions + PR review comments), 3-state verdict (accepted/rejected/uncertain), dashboard source labels on ActionCard, and CalibrationData per-indicator reject rates.
 
-**What changes in v2.0:**
-- Execution goes from max-1-global to per-target isolation (different targets concurrent, same target queued)
-- Scheduling goes from one-global-interval to per-target intervals with global fallback
-- Outputs go from "proposals on branches" to auto-created PRs and Linear issues without human approval gates
-- Outcomes become visible in the UI: action cards get PR/Linear links, new Outcomes aggregate page
-- NW-Claude becomes aware of outcomes (chat can answer about them)
-- Feedback loop closes further: Phase 0.6 tracks whether merged PRs actually improved indicators
+**What v4.0 adds:**
 
-**What the codebase currently has (carry-forward):**
-- `max_concurrent_runs: z.literal(1)` enforced at Zod schema level — must change to per-target model
-- Single `ScheduleConfig` with one `interval_hours` — must extend to per-target overrides
-- `RunSummaryAction` already has `pr_url?: string` and `branch?: string` fields — hooking point exists
-- `ActionCard` component already renders a "View PR" link when `pr_url` is set — partially built
-- `ImplementationOutcome` type already defined in `types.ts` — schema ready, just not populated
-- `Run` type has `trigger: 'implementation'` variant — designed for v2 auto-action trigger
+- **Feedback trend visualization** — reject/accept rate over time is currently a single static value per indicator; v4 makes the trend visible as a proper time series across runs
+- **Auto-calibration** — `current_threshold` is computed on every `/api/feedback/calibration` call using a static formula; v4 makes this threshold actively propagate back into the nightwatch pipeline as a tuning signal
+- **Signal prioritization** — signals are currently filtered by confidence (high/medium/low) with fixed thresholds; v4 ranks signals by `confidence × historical_success_rate` so the most proven signal types surface first
+- **Forge results display** — `nightwatch-self-repair.yaml` already has a `forge_result` block with `status/branch/details`; this data is not currently surfaced in the dashboard at all
+- **Per-indicator trend sparklines** — health page already has sparklines for indicator values (the `Sparkline` component + `HealthIndicatorData.history[]`); the ask is to enrich these or add rejection-rate sparklines alongside indicator value sparklines
 
-**Constraints (unchanged):**
-- No build step (Preact + HTM, no Vite/webpack)
-- Bun + Hono + IPC architecture unchanged
-- No new frontend frameworks or state libraries
-- agent-safehouse mandatory for all `claude -p` spawns
+**Existing data and endpoints (carry-forward — already built):**
+
+- `FeedbackEntry` with `submitted_at`, `source`, `verdict`, `signal_id` — the raw time-series data exists in `feedback.yaml`
+- `CalibrationData` with `reject_rate`, `total_feedback`, `current_threshold` per indicator — computed on demand in `feedback-store.ts`
+- `GET /api/feedback/calibration` — returns `CalibrationData[]`, no time dimension yet
+- `GET /api/health/:target` — returns `TargetHealthData` with `indicators[].history[]` (chronological value array across last 10 runs) and `per_indicator_rates` (static rate + stub `[0, rate]` history — currently fake)
+- `Sparkline` component (80x20 SVG polyline, color-coded by direction) — exists and in use
+- `LineChart` component (240x80 SVG with axes, y=0-1, renders reject rate history) — exists but fed fake `[0, rate]` stub data
+- `nightwatch-self-repair.yaml` with `forge_result: { status, branch, details }` — file exists, no API endpoint reads it
 
 ---
 
@@ -38,229 +34,233 @@ This is a v2.0 research pass. v1.0 built the full dashboard cockpit. v1.1 polish
 
 ### Table Stakes (Users Expect These)
 
-Features that users of an autonomous improvement dashboard assume exist once the system matures past single-job execution. Missing these creates visible operational friction.
+Features where the system clearly has the data and the absence is a visible gap — the dashboard shows a number where a trend belongs, or reads from a file it never exposes.
 
 | Feature | Why Expected | Complexity | Depends On |
 |---------|--------------|------------|------------|
-| Per-target scheduling (individual intervals) | Once a user has 3+ targets, a single global schedule forces all to run at the same cadence. A busy plugin gets the same frequency as a stable one — obviously wrong. | MEDIUM | AppConfig schema change (add `schedule` field to Target), IPC schedule message update, scheduler refactor |
-| Global schedule fallback for targets without override | "Set it and forget it" — targets with no per-target schedule should inherit the global interval. Removing that would require configuring every target. | LOW | Per-target scheduling feature (precondition) |
-| Minimum interval enforcement (10 min floor) | Prevents accidental tight loops that spam the LLM API. A floor users expect because it prevents costly mistakes. | LOW | Scheduler logic — add guard before enqueueing |
-| Parallel execution (different targets concurrent) | Running 3 targets serially triples wall-clock time. Once targets are independent (different repos, different contexts), parallel execution is expected. | HIGH | Execution model refactor: one worker slot → per-target slots. Biggest architectural change in v2. |
-| Same-target queuing (not dropped) | If a scheduled run arrives while the same target is running, it should queue, not be silently dropped. Users expect queued confirmation, not silent discard. | MEDIUM | Parallel execution (requires per-target queue map, not single global queue) |
-| Auto-create PR when code changes proposed | The current nightwatch pipeline proposes changes but requires a human to manually create the PR. In an automated improvement tool, the PR creation step should be automated after acceptance. | MEDIUM | Existing `branch` field in RunSummaryAction, gh CLI or GitHub API, new `trigger: 'implementation'` run type |
-| Auto-create Linear issue for improvement signals | Same as PR — nightwatch identifies signals and already creates Linear issues in some paths. Making this consistent and visible closes the loop. | MEDIUM | Linear MCP tools (already available), signal classification in nightwatch skill |
-| Action cards show PR and Linear links | When NW creates a PR or issue, the dashboard action card should show a clickable link. Currently `pr_url` exists in the type but is only sometimes populated. | LOW | Auto-create PR/Linear features (precondition to have URLs), existing `ActionCard` component already renders `pr_url` |
-| Outcomes aggregate page | A single page listing all PRs and Linear issues created across all runs and targets, filterable by target and status. Analogous to GitHub's PR list but scoped to NW-generated items. | MEDIUM | Action cards with PR/Linear links, new route + page component |
-| NW-Claude chat awareness of outcomes | If a user asks "what PRs did NW create this week?", NW-Claude should be able to answer from the outcomes data, not just the run summaries. | MEDIUM | Outcomes stored in run summaries, MCP server tool expansion |
+| Feedback trend over time (accept/reject rate time series per indicator) | Health page shows a single static reject rate per indicator. The underlying `FeedbackEntry[]` records already have `submitted_at` timestamps. Showing a rate-per-run chart — not just "40% reject rate overall" — is the obvious next step for a system that explicitly tracks learning over time. | MEDIUM | `GET /api/health/:target` currently returns fake `[0, rate]` for `per_indicator_rates[].history` — replace with real per-run bucketed rates derived from `FeedbackEntry.run_id` correlation to run dates. No new schema changes needed. |
+| Forge results visible in dashboard | `nightwatch-self-repair.yaml` contains `forge_result: { status: pass/fail, branch, details }` after every self-repair run. This is health-relevant data (is NW's own plugin quality degrading?) that is completely invisible in the UI. Users who trigger self-repair have no way to see the outcome without reading the raw YAML. | LOW | New `GET /api/self-repair/latest` endpoint reading `nightwatch-self-repair.yaml`; new ForgeResultCard component or section in health page. The YAML structure is already stable. |
+| Per-indicator rejection rate sparkline alongside value sparkline | Health page shows a value sparkline per indicator (e.g., "test coverage: 82, 83, 85 →") but no rejection rate sparkline. A user seeing "coverage improving" next to "80% of coverage signals rejected" needs both in the same row to assess whether the trend is signal-driven or noise. Currently these are in separate sections (indicator value row vs LineChart section below). | LOW | `per_indicator_rates[indicator].history` currently contains fake data; fix the real data first (see "Feedback trend over time"), then the sparkline is a component addition — same `Sparkline` used with rate history array. |
+| Auto-calibration effect visible in dashboard | `current_threshold` per indicator is computed but never written back to any config or shown adjusting the pipeline behavior. Users see "40% reject rate → threshold 0.7" but have no way to know if this threshold is actually used anywhere or is just decorative. The feature is only table stakes if the threshold is actually wired into something (auto-calibration) — without that wiring, displaying it is misleading. | HIGH | Requires: (1) propagating `current_threshold` from `CalibrationData` back to the kc-nightwatch skill via the journal context or a config file it reads; (2) surfacing in the dashboard that auto-calibration is active and showing the current threshold value per indicator |
 
 ### Differentiators (Worth Doing Well)
 
-Features where implementation quality matters beyond basic functionality.
+Features where quality of implementation matters beyond basic presence — these are what make the flywheel "visible and self-adjusting" rather than just a stats page.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Implementation outcome tracking (Phase 0.6) | Closes the final loop of the flywheel: "NW proposed this, the PR merged, the indicator improved by X%. Was the intervention effective?" No generic automation tool does this. | HIGH | Requires: PR merge status polling (gh CLI), indicator re-measurement after merge, `ImplementationOutcome` type already defined in types.ts — needs population |
-| Parallel execution status per target on dashboard | When 3 targets run simultaneously, the dashboard should show all 3 as "running" with independent progress indicators — not a single spinner. Users of parallel execution tools (CI/CD) expect per-job visibility. | MEDIUM | Per-target execution slots, dashboard polling must show concurrent state, `TargetDetail` component update |
-| Schedule "next run at" per target | When schedules are per-target, each target card should show its own "next run at" timestamp. Currently one global "next run" shown. | LOW | Per-target scheduler state reporting back via IPC, dashboard display update |
-| Outcomes filterable by target, date range, status | A PR list with 50 entries that can't be filtered is unusable. Filter by target (which repo?), date (this week?), and status (merged/open/closed) are the three most valuable axes. | MEDIUM | Outcomes page (precondition), client-side filter state in Preact component |
-| Action card PR status badge (open/merged/closed) | Knowing a PR was created is useful. Knowing if it was merged is actionable feedback. A merged badge signals "someone accepted this." | LOW | GitHub API poll for PR status, existing ActionCard component — small addition |
+| Time-bucketed feedback trend (per-run rate, not rolling average) | Grouping feedback by run_id and displaying accept/reject rate per run (x-axis = run index, y-axis = rate) shows "learning over time" rather than a cumulative diluted average. A system that improved from 60% accept to 90% accept after 5 runs should show that upward slope, not just "75% overall." | MEDIUM | `getCalibrationData()` currently aggregates all-time; extend `feedback-store.ts` with a `getCalibrationHistory(runIds: string[])` function that buckets by run_id in run-date order. Feed into existing `LineChart` component (currently rendering fake data). |
+| Calibration thresholds annotated on trend chart | When the auto-calibration threshold changes over time, annotating those changes on the trend line (e.g., a dotted horizontal line at y=0.7, labeled "threshold") makes the control loop visible. Users see: "rejection rate was 60%, threshold raised to 0.7, rate then dropped to 30%." | MEDIUM | SVG annotation line inside `LineChart` component; threshold history requires adding a timestamp to `current_threshold` when it changes (minor schema addition) |
+| Signal prioritization display in run detail | When a run produces 12 signals but only 3 are acted on, showing them ranked by `confidence × historical_success_rate` (not arbitrary order) lets users understand why signals were selected, and builds trust in the selection mechanism. | MEDIUM | `RunSummaryAction` already has `assessment.confidence`; historical success rate must be derived from `FeedbackEntry` (accepted/total for the same indicator); ranking is computed server-side in a new endpoint or embedded in the existing run summary response |
+| Forge result status badge on target card | A small pass/fail/warn badge on each target's card in the dashboard (reading from the latest self-repair result) gives users an at-a-glance plugin health signal without navigating to the health page. This is the same information as the forge results page/section, surfaced one level higher. | LOW | Requires same `GET /api/self-repair/latest` endpoint; target card must check if the target is "kc-nightwatch" (self-monitoring) or surface forge results per monitored target if those are also validated |
+| Indicator sparkline tooltip on hover | The existing `Sparkline` SVG component shows a 80x20 chart but no values on hover. Adding a simple SVG `<title>` element or a positioned tooltip showing "run N: 83" on hover converts a purely directional signal into a precise one. Low implementation cost, meaningfully improves utility. | LOW | Pure SVG addition to `Sparkline` component; `<title>` in the SVG path element is the accessibility-correct approach; custom positioned div is an alternative for richer UX |
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| Global parallel concurrency (all targets at once, no per-target isolation) | "Run everything simultaneously for maximum speed" | Different targets compete for the same CPU, same LLM API rate limits, and potentially the same repo paths. Unbounded parallelism hits API 429s and produces confused output. Current per-target isolation design is correct. | Keep per-target isolation model: different targets parallel, same target queued |
-| Auto-merge PRs created by NW | "Full automation — why wait for review?" | NW creates proposals based on signals. Even high-confidence signals can be wrong in context. Auto-merge removes the human review step that is the safety net of the entire system. The ROADMAP.md explicitly calls out "human decides implementation." | Auto-create PR (visible, reviewable), never auto-merge. Show merge status back in dashboard. |
-| Scheduling cron expressions | "I want 'every Monday at 9am', not just 'every 24h'" | Cron expressions require a parser, user-facing validation, and a UI (datetime picker or cron string input). The interval model covers 95% of use cases (every N hours). PROJECT.md explicitly lists "cron expressions" as Out of Scope. | Interval + enabled/disabled per target. If once-per-day is needed: interval_hours: 24 |
-| Outcome analytics charts (trend lines, acceptance rate graphs) | "I want to see the flywheel in action visually" | Health page already has this at the indicator/proxy-signal level (sparklines, accept/reject trends). Duplicating at the outcomes level adds data that overlaps. Wait until the data model is proven before building analytics on top. | Phase 0.6 implementation outcome tracking gives the raw data. Chart layer is v3+ |
-| Outcomes page with real-time push | "Update the outcomes as PRs merge" | Outcomes change on PR merge events which happen asynchronously (human reviewer action). Polling GitHub every 60s is fine for this signal — no user expects PR merge status to update in real-time in a local dashboard. | Poll PR status on outcomes page load + manual refresh button |
-| Per-target auth tokens in UI | "I want to manage GitHub tokens per repo from the dashboard" | Schema prepared in TARGET type (`auth?: string`). The UI surface area to securely manage tokens in a browser (without exposing them in the DOM, handling storage safely) is significant. The use case is narrow — most users will share the same GH auth context. | Manage via YAML config directly. PROJECT.md lists this as Out of Scope. |
+| Rolling average trend smoothing | "The per-run rate is too noisy — smooth it with a 3-run moving average" | Smoothing hides the very signal the system is trying to capture: abrupt threshold changes in auto-calibration should show as step functions, not gradual curves. Smoothing makes a 3-run improvement look like a gradual 10-run improvement and obscures whether a calibration change had an effect. | Show raw per-run rates. If noise is an issue, add more runs to the x-axis rather than smoothing. |
+| Global accept/reject rate aggregate chart across all targets | "Show me the overall flywheel health in one chart" | Different targets have completely different north stars and signal types. A global reject rate mixing "PR quality" (low stakes, high volume) and "test coverage" (high stakes, low volume) produces a meaningless number. The health page already aggregates health into an overall indicator — that's the right level. | Keep the existing per-target HealthSummaryBar for global health signal; per-indicator charts stay per-target. |
+| Historical threshold editing (allow user to override computed thresholds) | "I want to override the computed 0.7 threshold to 0.5 for this indicator" | Manual override defeats the auto-calibration purpose. More importantly, the threshold formula (`0.5 + (rejectRate - 0.5) * 0.5`) is a deterministic function of reject rate — if the user disagrees with the threshold, the correct action is to submit more feedback to change the reject rate, not to override the formula. | Surface the formula explanation in the dashboard ("threshold = 0.5 + reject_rate × 0.5") so users understand how to influence it. |
+| Feedback trend chart as interactive zoom-and-pan | "I want to scrub through 6 months of feedback history" | The nightwatch pipeline runs infrequently (daily/weekly). Even after 6 months, this is 20-180 data points — well within the range of a static SVG chart. Interactive zoom is appropriate for hundreds of data points, not dozens. The no-build constraint also makes interactive chart libraries (d3, Chart.js) expensive to add. | Show all available data points in the existing `LineChart` component. If the run count exceeds 20, show the last 20 with a count label ("showing last 20 of N"). |
+| Automated signal suppression based on reject rate | "If an indicator's reject rate is above 80%, stop sending those signals automatically" | Auto-suppression creates invisible dead zones: users won't know a class of signal is being blocked, can't tell if the situation changed, and can't re-enable without knowing to look for the suppression. The `current_threshold` raising approach is safer — signals still appear but ranked lower. | Use the calibration threshold to rank signals lower (or require higher LLM confidence), not to hard-suppress them. Always show the threshold adjustment in the dashboard so the effect is visible. |
+| Forge result diff viewer (show changed lines from forge fix PR) | "I want to see what forge changed in-dashboard" | Forge fix PRs are GitHub PRs with proper diffs. Rendering a diff in the dashboard adds a diff-formatting component, a `gh pr diff` subprocess, and a code display UI. The GitHub PR URL is already shown — that's the right place for the diff. | Link to the forge fix PR URL in the ForgeResultCard. The PR diff is one click away. |
 
 ---
 
 ## Feature Dependencies
 
 ```
-[Per-target scheduling]
-    └──requires──> [AppConfig Target.schedule override field] (schema change)
-    └──requires──> [Scheduler refactor: per-target setInterval map]
-    └──enhances──> [Global schedule fallback] (targets without override use global)
-    └──enables──> ["Next run at" per target card display]
+[Feedback trend over time (real data)]
+    └──requires──> [getCalibrationHistory() in feedback-store.ts]
+                   (bucket FeedbackEntry[] by run_id, join to run dates for chronological order)
+    └──feeds──>    [LineChart on health page] (replace fake [0, rate] stub with real history array)
+    └──enables──>  [Per-indicator rejection rate sparkline] (same data, smaller component)
+    └──enables──>  [Calibration threshold annotation on trend chart]
 
-[Parallel execution]
-    └──requires──> [Per-target queue map] (replace single queue + currentRun with Map<targetName, {queue, current}>)
-    └──requires──> [max_concurrent_runs schema change] (Zod literal(1) → min(1))
-    └──requires──> [IPC state message update] (WorkerToServer state must carry per-target state)
-    └──enables──> [Per-target status on dashboard] (concurrent running indicators)
-    └──enables──> [Same-target queuing without blocking other targets]
+[Per-indicator rejection rate sparkline]
+    └──requires──> [Feedback trend data fix] (real per-run rates, not stub)
+    └──requires──> [UI layout change on health page indicator row] (add second Sparkline beside value Sparkline)
+    └──note──>     Sparkline component itself already exists — no new component needed
 
-[Auto-create PR]
-    └──requires──> [gh CLI availability] (already used by feedback-collector.ts)
-    └──requires──> [RunSummaryAction.branch field populated] (already in type, needs skill to set it)
-    └──requires──> [Post-run PR creation step in executor.ts or skill]
-    └──enables──> [Action card PR link] (pr_url already in type and rendered)
-    └──enables──> [PR status badge on action card]
+[Auto-calibration wiring]
+    └──requires──> [current_threshold already computed in getCalibrationData()]
+    └──requires──> [mechanism to pass thresholds to nightwatch skill]
+                   Options: (A) write to journal context file the skill reads at Phase 0,
+                             (B) write to a new ~/.claude/kc-plugins-config/nightwatch-calibration.yaml,
+                             (C) inject via custom_prompt when enqueueing a run
+    └──requires──> [nightwatch skill updated to read and use calibration thresholds]
+                   (changes kc-nightwatch skill, not just the app — cross-component concern)
+    └──enables──>  [Calibration status badge in dashboard ("auto-calibration: active / N thresholds adjusted")]
+    └──note──>     This is the highest-complexity v4 feature; wiring to the skill is out of app scope
+                   unless option C (custom_prompt injection) is used, which requires no skill changes
 
-[Auto-create Linear issue]
-    └──requires──> [Linear MCP tools in executor context] (already available via NW journal config)
-    └──requires──> [signal.linear_issue_id populated in RunSummaryAction]
-    └──enables──> [Action card Linear link]
+[Signal prioritization]
+    └──requires──> [Historical success rate per indicator] (accepted / total for indicator, from FeedbackEntry[])
+    └──requires──> [Confidence numeric mapping] (high=1.0, medium=0.5, low=0.2 or similar)
+    └──requires──> [Score = confidence_numeric × historical_success_rate] (computed in run summary or server-side)
+    └──enables──>  [Ranked signal display in run detail] (ActionCards ordered by score descending)
+    └──note──>     Historical success rate is already computable from getCalibrationData();
+                   confidence numeric mapping is the only new logic needed
+    └──note──>     Ranking ActionCards in UI (frontend sort) vs ranking before action execution
+                   (pipeline change) are two different features — distinguish clearly in planning
 
-[Outcomes aggregate page]
-    └──requires──> [action cards with PR/Linear links populated] (auto-create features)
-    └──requires──> [New /api/outcomes endpoint] (aggregate across all run summaries)
-    └──requires──> [New frontend page: outcomes.ts]
-    └──requires──> [Bottom nav update: add Outcomes tab]
-    └──enables──> [Filter by target/status/date]
+[Forge results display]
+    └──requires──> [GET /api/self-repair/latest endpoint] (reads nightwatch-self-repair.yaml)
+    └──requires──> [ForgeResultCard component OR section in health page]
+    └──note──>     nightwatch-self-repair.yaml structure is stable: forge_result.status (pass/fail/warn),
+                   forge_result.branch (nullable), forge_result.details (string)
+    └──enables──>  [Forge status badge on target card in dashboard] (one level higher, same data)
+    └──note──>     Self-repair run_date is in the YAML — surface "last checked: N days ago"
 
-[NW-Claude outcomes awareness]
-    └──requires──> [Outcomes stored in run summaries] (already in PerTargetSummary.actions)
-    └──requires──> [MCP server new tool: get_outcomes] (server/services/mcp-tools.ts)
-    └──enhances──> [Chat panel responses about recent PRs/issues]
-
-[Implementation outcome tracking (Phase 0.6)]
-    └──requires──> [Auto-create PR] (need pr_url to poll)
-    └──requires──> [PR merge status polling] (gh pr view or GitHub API)
-    └──requires──> [Indicator re-measurement after merge] (compare to Phase 0.5 baseline)
-    └──requires──> [ImplementationOutcome type population] (type defined, not populated)
-    └──enables──> [Health indicator trend correlation with specific PRs]
-    └──note──> [Most complex v2 feature — can defer to Phase X if scope tightens]
+[Indicator sparkline tooltip]
+    └──requires──> [Sparkline component change] (add SVG title or hover div)
+    └──note──>     Pure component enhancement; no data dependencies; fully independent
 ```
 
-### Dependency Notes
-
-- **Parallel execution is the biggest architectural change.** The current single `queue: Run[]` and `currentRun: Run | null` model in `worker/index.ts` must become `Map<targetName, { queue: Run[], current: Run | null }>`. The IPC `state` message must carry per-target state. The dashboard polling must render per-target status. This is foundational — do it before per-target scheduling.
-- **Per-target scheduling builds on parallel execution.** If targets can run in parallel, per-target schedules are meaningful. With serial execution, per-target scheduling would create queue pile-ups with no benefit.
-- **Auto-create PR/Linear can be phased independently.** These don't depend on parallel execution. They depend on the nightwatch skill emitting `branch` and `linear_issue_id` fields in `RunSummaryAction`, and on a post-run creation step in executor.ts. This path is independent.
-- **Outcomes page depends on auto-create (for data).** An outcomes page with no auto-created items is empty. Build auto-create first, then build the aggregate view.
-- **Phase 0.6 is the deepest item.** It requires PR creation (precondition), merge polling, and indicator re-measurement. If scope tightens, defer Phase 0.6 to v2.1 — everything else ships without it.
-- **`max_concurrent_runs: z.literal(1)`** is a Zod schema constraint. Changing to `z.number().min(1)` or removing and replacing with per-target logic requires updating `AppConfigSchema` in `types.ts` and the app config YAML schema validation.
-
 ---
 
-## MVP Definition (v2.0 scope)
+## MVP Recommendation for v4.0
 
-### Foundational (must ship first — others depend on these)
+### P1 — Ship (high value, manageable scope)
 
-- [ ] **Parallel execution model** — per-target queue map, concurrent different-target runs, same-target queuing. Change `max_concurrent_runs: literal(1)` to per-target model. Update IPC state message. Update dashboard to show concurrent state.
-- [ ] **Per-target scheduling** — add `schedule?: { enabled: boolean; interval_hours: number }` to Target config. Scheduler creates per-target timers. Global schedule is fallback for targets without override. 10-min floor enforced.
+**Feedback trend data fix** — Replace the fake `[0, rate]` stub in `health-api.ts` with real per-run bucketed rates. This unblocks `LineChart` rendering real data and unblocks the sparkline fix. The `FeedbackEntry.run_id` field exists; the `listRuns()` function exists; this is a data join in `health-api.ts`, not a schema change.
 
-### Auto-Action (auto-create outputs)
+**Forge results display** — New `GET /api/self-repair/latest` endpoint + `ForgeResultCard` component added to health page. `nightwatch-self-repair.yaml` is stable. One read endpoint + one display component. Highest value-to-complexity ratio in v4.
 
-- [ ] **Auto-create PR** — when `branch` is set on a `RunSummaryAction`, executor post-processing (or a new skill phase) calls `gh pr create`. Writes `pr_url` back into the action. No approval gate.
-- [ ] **Auto-create Linear issue** — when nightwatch skill classifies a signal as `linear-issue`, the issue is created automatically (already happens in some skill paths — make it consistent). Write `linear_issue_id` back into the action.
-- [ ] **Action card links** — `ActionCard` already renders `pr_url` as a "View PR" link. Add parallel `linear_url` link. Both are conditional on data presence.
+**Per-indicator rejection rate sparkline** — Depends on the feedback trend data fix. Once `per_indicator_rates[].history` is real, add a second `Sparkline` in the indicator row on the health page. Uses existing component, existing layout slot. Small change with clear value: users see value trend and rejection trend side-by-side.
 
-### Visibility (surface outcomes)
+**Indicator sparkline tooltip** — Add `<title>` SVG element to `Sparkline` component. Fully independent, low effort, meaningful improvement for accessibility and precision.
 
-- [ ] **Outcomes page** — new `/api/outcomes` endpoint aggregating actions across run summaries. New `outcomes.ts` page component. Bottom nav update. Filterable by target (client-side).
-- [ ] **NW-Claude outcomes awareness** — add `get_outcomes` MCP tool to `mcp-tools.ts`. Chat can answer "what PRs did NW create this week?"
-- [ ] **UI fix: bottom nav gap** — black line between content and nav bar (carried from v1.1, still open).
+### P2 — Ship if scope allows
 
-### Outcome Tracking (v2.0 stretch — defer to v2.1 if scope tightens)
+**Signal prioritization (display only)** — Sort `ActionCard` list in the run detail view by a `score = confidence_numeric × acceptance_rate` derived from `CalibrationData`. This is frontend-only sorting using data already available. Distinct from changing the pipeline execution order (P3).
 
-- [ ] **Phase 0.6 implementation outcomes** — PR merge status polling, indicator re-measurement, `ImplementationOutcome` population, health page correlation display.
+**Calibration threshold annotation on trend chart** — Add a dotted horizontal line at `y = current_threshold` to the `LineChart`. Requires the feedback trend data fix (P1 precondition). Low complexity once data is real.
 
----
+### P3 — Defer to v4.1+
 
-## Feature Prioritization Matrix
+**Auto-calibration wiring to nightwatch skill** — Propagating `current_threshold` back into the kc-nightwatch pipeline requires deciding on a mechanism (journal context vs config file vs custom_prompt) and potentially modifying the kc-nightwatch skill. This is a cross-component change with implications for the skill's Phase 0 behavior. Worth its own milestone sub-task.
 
-| Feature | User Value | Implementation Cost | Priority |
-|---------|------------|---------------------|----------|
-| Parallel execution model | HIGH (core v2 value prop) | HIGH | P1 — foundational |
-| Per-target scheduling | HIGH (core v2 value prop) | MEDIUM | P1 — foundational |
-| Auto-create PR | HIGH (closes output loop) | MEDIUM | P1 |
-| Auto-create Linear issue | HIGH (closes output loop) | MEDIUM | P1 |
-| Action card PR/Linear links | HIGH (visibility of outputs) | LOW | P1 — carry-over |
-| Outcomes aggregate page | HIGH (aggregate visibility) | MEDIUM | P1 |
-| NW-Claude outcomes awareness | MEDIUM (chat quality) | LOW | P1 |
-| UI fix: bottom nav gap | LOW (cosmetic) | LOW | P1 — quick win |
-| Phase 0.6 outcome tracking | HIGH (flywheel completion) | HIGH | P2 — stretch |
-| Per-target "next run at" display | MEDIUM (UX quality) | LOW | P2 |
-| PR status badge (open/merged) | MEDIUM (action card quality) | LOW | P2 |
-| Outcomes filter by date range | LOW (advanced UX) | MEDIUM | P3 |
+**Signal prioritization in pipeline execution** — Changing *which* signals nightwatch acts on (not just display order in the dashboard) requires modifying the skill's Phase 3 signal ranking. Cross-component, separate from the display-only sort.
 
-**Priority key:**
-- P1: Ship in v2.0 phases
-- P2: Ship if scope allows, otherwise v2.1
-- P3: Future consideration
+**Forge status badge on target card** — Depends on forge results display (P1). Once that endpoint exists, adding a badge to target cards is low effort — but it requires a decision about whether to show per-target forge results (each target monitored by NW has its own forge check?) or just the kc-nightwatch self-check. Defer until the forge results page clarifies scope.
 
 ---
 
 ## Implementation Pattern Notes
 
-### Parallel Execution Model
+### Feedback Trend Data Fix
 
-The key change is from a single slot model to a per-target slot map:
+The bottleneck: `per_indicator_rates[indicator].history` in `health-api.ts` line 70-73 currently returns `[0, currentRate]` — a two-point stub. Real fix:
+
+1. Collect `FeedbackEntry[]` for all runs in the `last10` window
+2. Group by `run_id`, then by `indicator` (derived from `signal_id.split(':')[0]`)
+3. For each run (chronological), compute that run's reject rate per indicator
+4. Return as a properly-ordered array of length equal to runs that had feedback
+
+The `FeedbackEntry.run_id` field is already populated. The runs are already sorted chronologically in `runsWithSummary`. This is a pure data aggregation change in `health-api.ts` — no new files, no schema changes.
+
+### Forge Results Endpoint
+
+`GET /api/self-repair/latest` reads `~/.claude/kc-plugins-config/nightwatch-self-repair.yaml` via the existing `readYamlFile()` helper. The relevant fields:
 
 ```typescript
-// Current (worker/index.ts)
-const queue: Run[] = []
-let currentRun: Run | null = null
-
-// v2.0 target
-const perTargetState: Map<string, { queue: Run[]; current: Run | null }> = new Map()
+interface SelfRepairResult {
+  run_date: string
+  mode: string
+  forge_result: {
+    status: 'pass' | 'fail' | 'warn'
+    branch: string | null
+    details: string
+  }
+  config_warnings: Array<{ target: string; field: string; error: string; suggestion: string }>
+  config_fixes: Array<unknown>
+}
 ```
 
-The IPC `WorkerToServer` state message must carry this per-target map. The server exposes it via `/api/worker/state`. The dashboard polls this and renders each target's current state independently.
+New `ForgeResultCard` component in health page: status badge (green/red/yellow), `details` text (truncated with expand), `branch` link if non-null, `run_date` as "last checked N days ago."
 
-Concurrency ceiling: use `safety.yaml` to set `max_concurrent_targets` (e.g., 5). The worker checks the count of active runs across all targets before starting a new one. Same-target runs always queue.
+### Signal Prioritization Score
 
-### Per-Target Scheduling
+Confidence numeric mapping: `high → 1.0`, `medium → 0.5`, `low → 0.2` (not linear — high is strongly preferred over medium).
 
-Each target in `nightwatch-targets.yaml` gets an optional `schedule` block:
-```yaml
-targets:
-  my-plugin:
-    schedule:
-      enabled: true
-      interval_hours: 6
+Historical success rate: already available from `CalibrationData.reject_rate` per indicator. Success rate = `1 - reject_rate`.
+
+Score: `confidence_numeric × (1 - reject_rate)`. An action with `high` confidence and 20% reject rate scores `1.0 × 0.8 = 0.8`. An action with `medium` confidence and 0% reject rate scores `0.5 × 1.0 = 0.5`. The high-confidence action ranks above the medium-confidence action even with slightly more historical rejection.
+
+Edge case: indicators with zero feedback (`total_feedback === 0`) → `success_rate = 1.0` (benefit of doubt). This matches existing behavior where new indicators aren't penalized.
+
+### Per-Indicator Rate Sparkline Layout
+
+Current health page indicator row:
+```
+[indicator name]     [value sparkline]   [current value]   [trend arrow]
 ```
 
-Targets without a `schedule` block fall back to the global `AppConfig.schedule`. The scheduler maintains a `Map<targetName, ReturnType<typeof setInterval>>` for per-target timers. On config reload (SIGHUP or API update), all timers are cleared and rebuilt.
+Target v4 layout:
+```
+[indicator name]     [value sparkline]   [rate sparkline]   [current value]   [trend arrow]
+```
 
-### Auto-Create PR Flow
+The `rate sparkline` uses the same `Sparkline` component but inverted color logic: higher reject rate is red (bad), lower is green (good). A separate `RateSparkline` wrapper component around `Sparkline` handles color inversion without modifying the base component.
 
-After a nightwatch run completes, `executor.ts` iterates `summary.per_target[name].actions` and for each action where `branch` is set but `pr_url` is not yet set:
-1. Call `gh pr create --base main --head {branch} --title "{summary}" --body "..."` in the target's repo path
-2. Parse the output URL, write it back to the action in the run's `summary.yaml`
-3. Emit an IPC message so the server can notify the dashboard
+### Auto-Calibration Display (display-only, threshold wire-up deferred)
 
-This runs as a post-run step in executor.ts — no new worker needed.
+The calibration endpoint already returns `current_threshold` per indicator. Add a small "Calibration" section to the health page showing:
 
-### Outcomes API Design
+```
+Indicator          Feedback  Reject%  Threshold
+coverage:test-count   12      40%      0.70 ↑
+review-friction       8       25%      0.62 ↓
+```
 
-`GET /api/outcomes` aggregates across run summaries:
-- Reads `runs/*/summary.yaml` for all completed runs
-- Extracts `per_target.*.actions` where `pr_url` or `linear_url` is set
-- Returns a flat array sorted by run date
-- Optional query params: `?target=X&status=open|merged&since=ISO_DATE`
+Arrow direction: threshold vs the neutral 0.5 baseline (up = more selective = tighter filter). This surfaces the auto-calibration data without requiring skill changes. The wire-up to the pipeline is a separate P3 item.
 
-The outcomes page fetches on mount and on manual refresh. No real-time push needed — this data changes only when runs complete.
+---
 
-### Phase 0.6 — Implementation Outcome Tracking
+## Existing Component and Data Summary
 
-For each action with a `pr_url` that was previously recorded:
-1. Call `gh pr view {pr_url} --json merged,mergedAt,state`
-2. If merged: re-measure the indicator using the same Phase 0.5 measurement logic
-3. Compare `after` vs `before` (from the original `IndicatorBaseline` for that run)
-4. Write `ImplementationOutcome` to run summary
-5. Surface in health page trend with annotation "PR merged, indicator moved from X to Y"
+| Component/Data | Current State | v4.0 Change |
+|----------------|--------------|-------------|
+| `Sparkline` | Used for indicator value history — exists, works | Add `<title>` tooltip (P1); no other changes |
+| `LineChart` | Renders reject rate history — exists but fed fake `[0, rate]` data | Fix data source to real per-run bucketed rates (P1) |
+| `HealthIndicatorData.history[]` | Real per-run indicator values — already working | No change |
+| `per_indicator_rates[].history` | Fake two-point stub — currently broken | Fix in `health-api.ts` (P1 data fix) |
+| `CalibrationData[]` from `/api/feedback/calibration` | All-time aggregate per indicator | Add `getCalibrationHistory()` function for time-series (P1) |
+| `nightwatch-self-repair.yaml` | Exists, written by self-repair runs | New read endpoint + ForgeResultCard (P1) |
+| `FeedbackEntry.submitted_at` | Exists but unused in health computation | Used in per-run bucketing (P1 data fix) |
+| `ActionCard` | Renders action with feedback buttons and outcome links | Sort by priority score (P2 signal prioritization) |
 
-This is the highest-complexity v2 feature. The `ImplementationOutcome` type is already defined in `types.ts` — population is what's missing.
+---
+
+## Feature Prioritization Matrix
+
+| Feature | User Value | Complexity | Priority |
+|---------|------------|------------|----------|
+| Feedback trend data fix (real per-run rates) | HIGH — enables all trend viz features | MEDIUM | P1 — foundational |
+| Forge results display | HIGH — first-time visibility of NW self-health | LOW | P1 — independent quick win |
+| Per-indicator rejection rate sparkline | HIGH — value + rejection side-by-side | LOW (after data fix) | P1 — depends on data fix |
+| Sparkline tooltip on hover | MEDIUM — precision over direction-only | LOW | P1 — independent quick win |
+| Calibration data table (display-only) | MEDIUM — makes threshold logic visible | LOW | P1 — display only |
+| Signal prioritization (display sort) | MEDIUM — improves actionability of run detail | MEDIUM | P2 |
+| Calibration threshold annotation on trend chart | MEDIUM — makes control loop visible | MEDIUM | P2 — after data fix |
+| Auto-calibration wire-up to NW skill | HIGH — closes the flywheel adjustment loop | HIGH | P3 — next milestone |
+| Signal prioritization in pipeline execution | HIGH — changes what NW acts on | HIGH | P3 — next milestone |
+| Forge status badge on target card | LOW — convenience, redundant with health page | LOW | P3 — after P1 scope settled |
 
 ---
 
 ## Sources
 
-- Codebase analysis: `app/shared/types.ts`, `app/worker/index.ts`, `app/worker/executor.ts`, `app/worker/scheduler.ts`, `app/server/routes/api.ts`, `app/frontend/components/action-card.ts` — HIGH confidence (direct read)
-- PROJECT.md v2.0 requirements: `.planning/PROJECT.md` — HIGH confidence (authoritative)
-- kc-nightwatch ROADMAP.md: `reference/ROADMAP.md` — HIGH confidence
-- Parallel job dashboard patterns: [LogRocket — UI patterns for async workflows](https://blog.logrocket.com/ui-patterns-for-async-workflows-background-jobs-and-data-pipelines) — MEDIUM confidence
-- Per-target scheduler reference implementations: [Cronicle](https://github.com/jhuckaby/Cronicle), [Dkron](https://dkron.io/) — MEDIUM confidence (similar domain, different scale)
-- Outcome tracking patterns: [Linear + GitHub integration docs](https://linear.app/docs/github-integration), [DORA metrics background](https://www.browserstack.com/guide/software-engineering-metrics) — LOW confidence (general patterns, not exact domain)
+- Direct codebase inspection (2026-03-25): `app/server/services/feedback-store.ts`, `app/server/routes/health-api.ts`, `app/server/routes/feedback.ts`, `app/shared/types.ts`, `app/frontend/pages/health.ts`, `app/frontend/components/sparkline.ts`, `app/frontend/components/line-chart.ts`, `app/frontend/components/action-card.ts`, `~/.claude/kc-plugins-config/nightwatch-self-repair.yaml`, `~/.claude/kc-plugins-config/nightwatch-feedback.yaml` — HIGH confidence (direct read, current state confirmed)
+- `.planning/PROJECT.md` v4.0 target features — HIGH confidence (authoritative)
+- PatternFly Sparkline design guidelines (patternfly.org) — MEDIUM confidence (sparkline UX best practices: no axes, pair with metric, answer "where are we, direction, trend")
+- Smashing Magazine — UX strategies for real-time dashboards (smashingmagazine.com/2025) — MEDIUM confidence (progressive disclosure via hover states, annotation patterns)
+- RICE scoring model (productplan.com) — MEDIUM confidence (signal prioritization framework: confidence × success_rate is a RICE-inspired composite score)
+- FasterCapital — Dashboard dynamics integrating sparklines (fastercapital.com) — LOW confidence (general dashboard patterns only)
 
 ---
 
-*Feature research for: Nightwatch Dashboard v2.0 — Parallel Execution + Auto-Action*
-*Researched: 2026-03-21*
+*Feature research for: Nightwatch Dashboard v4.0 — Flywheel Intelligence*
+*Researched: 2026-03-25*
