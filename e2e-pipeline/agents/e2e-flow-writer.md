@@ -1,49 +1,6 @@
 ---
 name: e2e-flow-writer
-description: |
-  Autonomous flow YAML generator. Analyzes codebase context and mapping files
-  to produce E2E test flows without browser interaction. Returns structured
-  flow YAML grounded in actual code paths and mapping selectors.
-  Supports cross-boundary flows: generates `Execute external` steps for
-  non-browser actions (CLI, API calls) and `Verify external` steps for
-  analytics/tracing verification (PostHog, Langfuse, Sentry). Always dispatch
-  this agent — even for flows mixing browser + API + analytics steps.
-
-  <example>
-  Context: The e2e-flow skill has completed codebase scan and needs a flow generated from a feature description.
-  user: "Generate E2E flow:\n  description: User creates a new project and verifies it appears in the project list\n  mapping_path: /home/user/project/.claude/e2e/mappings/admin-panel.yaml\n  context_summary: Routes found:\n    /projects → src/app/projects/page.tsx\n    /projects/new → src/app/projects/new/page.tsx\n  Components in scope:\n    src/components/ProjectForm.tsx — fields: name, description, template\n  API endpoints:\n    POST /api/projects — creates project\n  Mapping pages: projects-page (6 elements), new-project-page (4 elements)\n  output_dir: /home/user/project/.claude/e2e/flows"
-  assistant: "Reads mapping YAML, reads ProjectForm.tsx and page.tsx for form fields and redirect logic, constructs 8-step flow with navigate/fill/click/verify steps, validates all element names against mapping, writes flow YAML to output_dir."
-  <commentary>
-  The e2e-flow skill dispatches this agent after completing its codebase scan. The agent receives the scan results as context_summary and does targeted file reads for details. It never opens a browser.
-  </commentary>
-  </example>
-
-  <example>
-  Context: The e2e-flow skill wants a smoke test flow generated from mapping.
-  user: "Generate E2E flow:\n  description: Smoke test all pages\n  mapping_path: /home/user/project/.claude/e2e/mappings/admin-panel.yaml\n  context_summary: (empty - smoke mode uses mapping only)\n  output_dir: /home/user/project/.claude/e2e/flows\n  smoke_mode: true"
-  assistant: "Reads mapping, filters pages by navigability rules, generates 2-3 steps per page (navigate + verify key elements), includes dialog open-close cycles, writes smoke flow YAML."
-  <commentary>
-  Smoke mode generates a visit-all-pages flow from the mapping. No codebase analysis needed — the mapping provides all page/element information.
-  </commentary>
-  </example>
-
-  <example>
-  Context: The e2e-flow skill detected CLI-only intent (no mapping exists, backend test plan).
-  user: "Generate E2E flow:\n  description: Trigger webhook 3 times and verify items created in database\n  cli_only: true\n  context_summary: API endpoints:\n    POST /api/webhooks/trigger — creates items\n  Database:\n    items table (id, webhook_id, created_at)\n  output_dir: /home/user/project/.claude/e2e/flows"
-  assistant: "No mapping to read (cli_only mode). Parses description and context for CLI commands. Generates 2-step flow: Execute external (curl POST x3) + Execute external (psql count check). Flow omits mapping: field. Writes cli-webhook-test.yaml."
-  <commentary>
-  CLI-only mode: no mapping_path provided, no browser steps generated. Flow uses only Execute external and Verify external actions. The mapping: field is omitted from the flow YAML.
-  </commentary>
-  </example>
-
-  <example>
-  Context: The e2e-flow skill needs a cross-boundary flow mixing browser + API + analytics verification.
-  user: "Generate E2E flow:\n  description: After 3 API calls to /api/webhook/trigger, the dashboard shows new items and a PostHog event fires\n  mapping_path: /home/user/project/.claude/e2e/mappings/my-app.yaml\n  context_summary: Routes found:\n    /dashboard → src/app/dashboard/page.tsx\n  API endpoints:\n    POST /api/webhook/trigger — creates items, increments counter\n  External services detected:\n    PostHog — track_items_created() event name: 'items_batch_created'\n  Mapping pages: dashboard (8 elements including items_table, empty_state_cta)\n  output_dir: /home/user/project/.claude/e2e/flows"
-  assistant: "Reads mapping, constructs flow with browser steps (navigate, verify empty state), an Execute external step for the 3 API calls (using execute: block with run: and repeat: 3), browser steps to verify items appeared, and a Verify external step for the PostHog event (using verify: block). Does NOT use manual: true — uses the structured Execute external and Verify external step schemas instead."
-  <commentary>
-  Cross-boundary flows use Execute external (action: "Execute external" with execute: block) for non-browser actions and Verify external (action: "Verify external" with verify: block) for analytics/tracing checks. Never use manual: true — it is not part of the flow schema.
-  </commentary>
-  </example>
+description: Autonomous flow YAML generator. Analyzes codebase context and mapping files to produce E2E test flows without browser interaction. Supports browser flows, CLI-only flows (Execute external), cross-boundary flows (browser + API + Verify external), and smoke tests. Never opens a browser.
 tools: Read, Write, Grep, Glob
 model: inherit
 color: magenta

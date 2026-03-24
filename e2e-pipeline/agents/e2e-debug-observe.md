@@ -1,28 +1,6 @@
 ---
 name: e2e-debug-observe
-description: |
-  Opens a browser, executes reproduction steps, and collects debug observations
-  (console logs, JS errors, network requests, screenshots). Produces a structured
-  report.md report. Runs in isolated subagent context to keep verbose
-  browser data out of main conversation. Never modifies code — observation only.
-
-  <example>
-  Context: The e2e-debug skill needs to observe a bug reproduction in the browser.
-  user: "Observe debug:\n  target_url: http://localhost:3000/dashboard\n  reproduction_steps:\n    - Navigate to /dashboard\n    - Click the 'Export' button\n    - Observe the error toast\n  report_dir: /home/user/project/.claude/e2e/reports/debug-20260323-140000"
-  assistant: "[Opens browser to target_url, clears console/errors/network baselines, executes each step with snapshot+screenshot+console collection, writes report.md, closes browser, returns structured summary with counts]"
-  <commentary>
-  Agent receives absolute paths and structured reproduction steps. Each step collects console (filtered for [E2E-DBG] tags), JS errors, and network requests. Full raw console is preserved in a details tag. Report written via Write tool.
-  </commentary>
-  </example>
-
-  <example>
-  Context: The e2e-debug skill needs to observe a bug with auth profile and custom log filtering.
-  user: "Observe debug:\n  target_url: http://localhost:3000/admin/settings\n  reproduction_steps:\n    - Navigate to /admin/settings\n    - Select 'Advanced' tab\n    - Check the 'Enable debug mode' checkbox\n    - Observe console output for [E2E-DBG] entries\n  report_dir: /home/user/project/.claude/e2e/reports/debug-20260323-150000\n  auth_profile: /home/user/.agent-browser/profiles/admin\n  log_tags:\n    - E2E-DBG\n    - DEBUG\n  network_filters:\n    - api/settings\n    - api/admin"
-  assistant: "[Opens browser with --profile for auth, clears baselines, executes 4 steps collecting observations, filters console for [E2E-DBG] and [DEBUG] tags, filters network for api/settings and api/admin URLs, writes report, closes browser, returns summary]"
-  <commentary>
-  Auth profile enables pre-authenticated access. Custom log_tags expand the default [E2E-DBG] filter. Network filters remove noise from observation data. Element-not-found on any step is recorded as failure but does not abort.
-  </commentary>
-  </example>
+description: Opens a browser, executes reproduction steps, and collects debug observations (console logs, JS errors, network requests, screenshots). Produces a structured report.md. Runs in isolated subagent context to keep verbose browser data out of main conversation. Never modifies code — observation only.
 
 tools: Bash, Read, Write
 model: inherit

@@ -1,26 +1,6 @@
 ---
 name: e2e-doc-scanner
-description: |
-  Scans e2e-pipeline skills and agents against documentation to identify gaps,
-  then writes doc updates when approved. Dispatched by e2e-doc-sync skill.
-
-  <example>
-  Context: The e2e-doc-sync skill needs to find documentation gaps after a feature addition.
-  user: "Scan for documentation gaps:\n  plugin_root: /Users/user/.claude/plugins/cache/xxx/e2e-pipeline/1.0.0\n  mode: scan"
-  assistant: "Reads all SKILL.md files, agent definitions, and docs. Cross-references to find 3 critical gaps (undocumented features), 2 warnings (partial coverage), 1 info (missing cross-reference). Returns structured gap report."
-  <commentary>
-  Scan mode reads everything and returns a report. No files are modified.
-  </commentary>
-  </example>
-
-  <example>
-  Context: The e2e-doc-sync skill has user-approved outlines and needs docs written.
-  user: "Write documentation updates:\n  plugin_root: /Users/user/.claude/plugins/cache/xxx/e2e-pipeline/1.0.0\n  mode: write\n  approved_gaps: [{id: 1, file: 'docs/multi-site-testing.md', type: 'create', outline: ['concepts', 'format', 'examples', 'troubleshooting']}, {id: 2, file: 'docs/commands.md', type: 'update', outline: ['expand --site flag description']}]\n  style_guide: ['Practical examples', 'CTA at end', 'Cross-reference related docs']"
-  assistant: "Reads source skills/agents for content, reads existing docs for style. Creates docs/multi-site-testing.md with 4 sections. Updates docs/commands.md with expanded flag descriptions. Updates README.md docs table. Returns file list with change summary."
-  <commentary>
-  Write mode creates/updates files based on approved outlines. Always reads source + existing docs first.
-  </commentary>
-  </example>
+description: Scans e2e-pipeline skills and agents against documentation to identify gaps, then writes doc updates when approved. Two modes — scan (read-only gap report) and write (create/update docs from approved outlines). Dispatched by e2e-doc-sync skill.
 tools: Read, Write, Grep, Glob
 model: inherit
 color: green

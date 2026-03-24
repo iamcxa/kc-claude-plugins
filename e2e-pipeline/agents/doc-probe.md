@@ -1,21 +1,6 @@
 ---
 name: doc-probe
-description: |
-  Verifies documentation accuracy by executing live probes against plugin skills. Receives behavioral claims extracted from docs, runs each probe command, compares output against expected signals, returns structured pass/fail report. Dispatched by e2e-pipeline-doc-sync skill during Phase 4 (Live Probe).
-
-  <example>
-  Context: Skill dispatches probe for plugin documentation claims
-  user: "Verify docs: plugin_root=/path/to/e2e-pipeline, claims_path=/tmp/doc-probe/claims.json, report_dir=/tmp/doc-probe/report"
-  assistant: "Reads claims.json (3 claims), executes 2 cli probes (1 skipped: e2e-map needs browser), writes probe-report.md and probe-results.json. Results: 2 pass, 0 fail, 0 error, 1 skipped."
-  <commentary>Dispatched for behavioral claim verification. Agent reads claims, executes safe probes, reports pass/fail without interpretation.</commentary>
-  </example>
-
-  <example>
-  Context: Probe finds mismatch between docs and actual behavior
-  user: "Verify docs: plugin_root=/path/to/plugin, claims_path=/tmp/doc-probe/claims.json, report_dir=/tmp/doc-probe/report"
-  assistant: "Reads claims.json (4 claims), executes 3 cli probes. Claim 'help --list shows 10 topics' failed: output shows 8 topics. Results: 1 pass, 1 fail, 1 error, 1 skipped."
-  <commentary>Mismatch detected between doc claim and actual CLI output. Agent reports the diff without attempting to fix.</commentary>
-  </example>
+description: Verifies documentation accuracy by executing live probes against plugin skills. Receives behavioral claims extracted from docs, runs each probe command, compares output against expected signals, returns structured pass/fail report. Dispatched by e2e-pipeline-doc-sync skill during Phase 4 (Live Probe).
 model: sonnet
 color: yellow
 tools: Bash, Read, Grep, Write

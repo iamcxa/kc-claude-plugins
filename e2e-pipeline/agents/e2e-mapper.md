@@ -1,36 +1,6 @@
 ---
 name: e2e-mapper
-description: |
-  Autonomous UI element mapper. Explores web pages using agent-browser CLI
-  and generates/updates YAML mapping files for E2E testing. Returns page
-  inventory with elements, selectors, and unexplored areas.
-
-  <example>
-  Context: The e2e-map skill has completed codebase analysis and needs to explore a web app's UI for the first time.
-  user: "Map UI elements:\n  base_url: http://localhost:3000\n  app: my-app\n  auth_profile: ~/.agent-browser/my-app/\n  routes: [/dashboard, /users, /settings]\n  report_dir: /home/user/project/.claude/e2e/reports/20260309-150000-map\n  auth_config: {type: manual, verification: {url_not_contains: '/login'}}"
-  assistant: "Reads reference files, runs pre-flight checks, opens browser with auth profile, navigates to each route, takes snapshots and annotated screenshots, extracts interactive elements with stable selectors, generates v2 mapping YAML at .claude/e2e/mappings/my-app.yaml, identifies unexplored dialogs/modals, and returns structured summary."
-  <commentary>
-  The e2e-map skill dispatches this agent after gathering routes from codebase analysis. The agent receives all paths as absolute values and explores autonomously. No existing mapping means full exploration mode.
-  </commentary>
-  </example>
-
-  <example>
-  Context: The e2e-map skill is re-mapping a single page to update stale selectors.
-  user: "Map UI elements:\n  base_url: http://localhost:3000\n  app: my-app\n  auth_profile: ~/.agent-browser/my-app/\n  existing_mapping_path: /home/user/project/.claude/e2e/mappings/my-app.yaml\n  target_page: dashboard\n  report_dir: /home/user/project/.claude/e2e/reports/20260309-160000-map\n  auth_config: {type: none}"
-  assistant: "Reads existing mapping, navigates only to the dashboard page, re-snapshots and extracts elements, merges updates into the existing mapping (preserving all other pages), and returns summary with changes."
-  <commentary>
-  When target_page is specified, the agent updates only that page's section in the existing mapping. This is the incremental update path — other pages are preserved byte-for-byte.
-  </commentary>
-  </example>
-
-  <example>
-  Context: The e2e-map skill is mapping a new app with no prior codebase analysis (browser-only discovery).
-  user: "Map UI elements:\n  base_url: http://localhost:5173\n  app: admin-panel\n  auth_profile: ~/.agent-browser/admin-panel/\n  routes: []\n  report_dir: /home/user/project/.claude/e2e/reports/20260309-170000-map"
-  assistant: "No routes provided — enters discovery mode. Snapshots landing page, extracts navigation links from sidebar/tab bar, builds route list from discovered nav elements, explores each route one level deep, generates mapping YAML, and returns summary with discovered pages."
-  <commentary>
-  Empty routes list triggers discovery mode. The agent also detects auth status since no auth_config was provided — it checks for login redirects and tentatively sets auth.type based on what it finds.
-  </commentary>
-  </example>
+description: Autonomous UI element mapper. Explores web pages using agent-browser CLI and generates/updates YAML mapping files for E2E testing. Supports full exploration, incremental single-page update, and browser-only discovery mode. Returns page inventory with elements, selectors, and unexplored areas.
 tools: Bash, Read, Grep, Write
 model: inherit
 color: green

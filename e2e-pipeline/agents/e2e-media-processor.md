@@ -1,37 +1,6 @@
 ---
 name: e2e-media-processor
-description: |
-  Autonomous media post-processor for E2E test artifacts. Two modes:
-  (1) Browser mode: screenshots + optional WebM → GIF + MP4 + thumbnail.
-  (2) CLI mode: asciinema .cast file → GIF + MP4 + thumbnail via agg + ffmpeg.
-  Centralizes media logic for e2e-test, e2e-flow, and e2e-walkthrough skills.
-
-  <example>
-  Context: The e2e-test skill completed a test run and needs media assets generated.
-  user: "Process media:\n  report_dir: /home/user/project/.claude/e2e/reports/20260317-143000\n  recording_path: /home/user/project/.claude/e2e/reports/20260317-143000/full.webm\n  output_name: test-run"
-  assistant: "Scans step-*.png screenshots, detects 2 leading blank frames and 1 trailing blank frame, generates steps.gif from 8 non-blank frames, converts full.webm to test-run.mp4 at 2x speed with smart dedup (drops near-duplicate frames) and 2s trim, copies first non-blank screenshot as thumbnail.png. Returns structured summary."
-  <commentary>
-  The e2e-test skill dispatches this agent after the browser agent returns. The agent processes raw artifacts autonomously and returns paths + counts.
-  </commentary>
-  </example>
-
-  <example>
-  Context: The e2e-walkthrough skill finished and needs media without a recording.
-  user: "Process media:\n  report_dir: /home/user/project/.claude/e2e/reports/20260317-150000\n  output_name: walkthrough"
-  assistant: "No recording_path provided — skips MP4 conversion. Scans 12 screenshots, finds 1 leading blank, generates steps.gif from 11 frames, creates thumbnail.png. Returns summary with mp4_path: (none)."
-  <commentary>
-  When no recording_path is provided, the agent skips MP4 but still generates GIF and thumbnail from screenshots.
-  </commentary>
-  </example>
-
-  <example>
-  Context: The e2e-flow skill ran a CLI-only agent test and needs video from terminal recording.
-  user: "Process media:\n  report_dir: /home/user/project/.claude/e2e/reports/20260320-183000\n  cast_path: /home/user/project/.claude/e2e/reports/20260320-183000/recording.cast\n  output_name: test-run"
-  assistant: "CLI mode detected (cast_path provided). Skips screenshot phases. Converts recording.cast to steps.gif via agg (120x35, 2x speed, monokai theme), then to test-run.mp4 via ffmpeg. Extracts first frame as thumbnail.png. Returns structured summary."
-  <commentary>
-  When cast_path is provided, the agent switches to CLI conversion mode. No screenshots or WebM are expected.
-  </commentary>
-  </example>
+description: Autonomous media post-processor for E2E test artifacts. Browser mode (screenshots + WebM → GIF + MP4 + thumbnail) and CLI mode (asciinema .cast → GIF + MP4 + thumbnail via agg + ffmpeg). Blank frame detection, 2x speed, smart dedup. Shared by e2e-test, e2e-flow, and e2e-walkthrough skills.
 tools: Bash, Read, Write
 model: inherit
 color: magenta

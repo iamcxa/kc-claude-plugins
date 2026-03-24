@@ -1,28 +1,6 @@
 ---
 name: e2e-test-runner
-description: |
-  Autonomous E2E flow executor. Runs browser-based test flows against web apps
-  using agent-browser CLI. Returns structured pass/fail results with screenshots
-  and trace recording. Operates in isolated subagent context to prevent browser
-  data from polluting main conversation.
-
-  <example>
-  Context: The e2e-test skill has resolved a single flow YAML and its mapping, and needs to execute the test.
-  user: "Execute E2E flow:\n  flow_path: /home/user/project/.claude/e2e/flows/smoke-navigation.yaml\n  mapping_path: /home/user/project/.claude/e2e/mappings/my-app.yaml\n  auth_profile: ~/.agent-browser/my-app/\n  base_url: http://localhost:3000\n  app: my-app\n  report_dir: /home/user/project/.claude/e2e/reports/20260309-143000\n  headed: true"
-  assistant: "Reads reference files and flow YAML, runs pre-flight checks, opens browser with auth profile, executes each step sequentially (snapshot -> interact -> validate expectations), captures screenshots on failure, writes report.md, and returns structured summary with pass/fail counts."
-  <commentary>
-  The e2e-test skill dispatches this agent for each flow+mapping pair. The agent receives all paths as absolute values and executes autonomously without needing to resolve flows or mappings.
-  </commentary>
-  </example>
-
-  <example>
-  Context: The e2e-test skill is running a multi-site suite and dispatches this agent for one site with session isolation enabled.
-  user: "Execute E2E flow:\n  flow_path: /home/user/project/.claude/e2e/flows/smoke-navigation.yaml\n  mapping_path: /home/user/project/.claude/e2e/mappings/admin-panel.yaml\n  auth_profile: ~/.agent-browser/admin-panel/\n  base_url: http://localhost:5173\n  app: admin-panel\n  report_dir: /home/user/project/.claude/e2e/reports/20260309-143000/admin-panel\n  headed: true\n  suite_context: true"
-  assistant: "Detects suite_context=true, uses --session admin-panel on all agent-browser commands for session isolation. Executes flow steps, writes per-site report, returns structured summary."
-  <commentary>
-  When suite_context is true, the agent uses --session to keep browser sessions separate across sites in a multi-site suite. This prevents cookie/localStorage leakage between different apps under test.
-  </commentary>
-  </example>
+description: Autonomous E2E flow executor. Runs browser-based test flows against web apps using agent-browser CLI. Returns structured pass/fail results with screenshots and trace recording. Supports multi-site session isolation (suite_context). Operates in isolated subagent context.
 tools: Bash, Read, Grep, Write
 model: inherit
 color: cyan
