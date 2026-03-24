@@ -10,7 +10,7 @@ feedbackRoutes.post('/api/feedback', async (c) => {
     signal_id: string
     target: string
     run_id: string
-    verdict: 'accepted' | 'rejected'
+    verdict: 'accepted' | 'rejected' | 'uncertain'
     reason?: string
   }>()
 
@@ -18,8 +18,8 @@ feedbackRoutes.post('/api/feedback', async (c) => {
     return c.json({ error: 'signal_id, target, run_id, and verdict are required' }, 400)
   }
 
-  if (body.verdict !== 'accepted' && body.verdict !== 'rejected') {
-    return c.json({ error: 'verdict must be accepted or rejected' }, 400)
+  if (!['accepted', 'rejected', 'uncertain'].includes(body.verdict)) {
+    return c.json({ error: 'verdict must be accepted, rejected, or uncertain' }, 400)
   }
 
   const entry: FeedbackEntry = {

@@ -247,7 +247,7 @@ export function createMcpServer(): McpServer {
       signal_id: z.string().describe('The signal ID from the run actions'),
       target: z.string().describe('Target name the signal belongs to'),
       run_id: z.string().describe('The run ID that produced the signal'),
-      verdict: z.enum(['accepted', 'rejected']).describe('Feedback verdict'),
+      verdict: z.enum(['accepted', 'rejected', 'uncertain']).describe('Feedback verdict (accepted, rejected, or uncertain)'),
       reason: z.string().optional().describe('Optional reason for the feedback'),
     },
   }, async ({ signal_id, target, run_id, verdict, reason }) => {
