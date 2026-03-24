@@ -46,9 +46,9 @@ Requirements for run execution reliability, worktree isolation, extended feedbac
 | RUNUX-01 | Phase 12 | Complete (12-02) |
 | RUNUX-02 | Phase 12 | Complete (12-03) |
 | RUNUX-03 | Phase 12 | Complete (12-02) |
-| WKTREE-01 | Phase 13 | Pending |
-| WKTREE-02 | Phase 13 | Pending |
-| WKTREE-03 | Phase 13 | Pending |
+| WKTREE-01 | Phase 13 | In Progress (13-01 worktree-manager built) |
+| WKTREE-02 | Phase 13 | In Progress (13-01 cleanupWorktree built) |
+| WKTREE-03 | Phase 13 | In Progress (13-01 push-before-remove built) |
 | EXTFEED-01 | Phase 14 | Pending |
 | EXTFEED-02 | Phase 14 | Pending |
 
@@ -59,4 +59,4 @@ Requirements for run execution reliability, worktree isolation, extended feedbac
 
 ---
 *Requirements defined: 2026-03-23*
-*Traceability updated: 2026-03-24 (Phase 12 complete)*
+*Traceability updated: 2026-03-24 (Phase 13 plan 01 complete — worktree-manager built)*

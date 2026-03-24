@@ -43,7 +43,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 13-01-PLAN.md — Create worktree-manager.ts with git worktree lifecycle functions + tests
+- [x] 13-01-PLAN.md — Create worktree-manager.ts with git worktree lifecycle functions + tests
 - [ ] 13-02-PLAN.md — Wire worktree lifecycle into executor.ts + integration tests
 
 ### Phase 14: Extended Feedback
