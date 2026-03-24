@@ -41,22 +41,24 @@ Validated in v1.1 (Phases 5-7, 2026-03-20):
 - ✓ Dead code cleanup (chat-drawer.ts deleted, phases_completed wired) — v1.1
 - ✓ Sidebar Add Target button wiring — v1.1
 
-### Active (v2.0)
-
-- [ ] Per-target scheduling with global fallback (minimum 10min interval)
-- [ ] Parallel execution — per-target isolation (different targets concurrent, same target queued)
-- [ ] Auto-create PR when code changes are proposed
-- [ ] Auto-create Linear issues for improvement signals
-- [ ] Outcome visibility — action cards with PR/Linear links
-- [ ] Outcomes page — aggregate view of all PRs/issues across runs, filterable
-- [ ] NW-Claude awareness of PR/Linear outcomes (chat can answer about them)
-- [ ] Implementation outcome tracking (Phase 0.6) — did merged PRs actually help?
-- [ ] UI fix — bottom nav gap (black line between content and nav bar)
+Validated in v2.0 (Phases 8-11, 2026-03-21 to 2026-03-23):
+- ✓ Per-target scheduling with global fallback (minimum 10min interval) — v2.0
+- ✓ Parallel execution — per-target isolation (different targets concurrent, same target queued) — v2.0
+- ✓ Auto-create PR when code changes are proposed — v2.0
+- ✓ Auto-create Linear issues for improvement signals — v2.0
+- ✓ Outcome visibility — action cards with PR/Linear links — v2.0
+- ✓ Outcomes page — aggregate view of all PRs/issues across runs, filterable — v2.0
+- ✓ NW-Claude awareness of PR/Linear outcomes (chat can answer about them) — v2.0
+- ✓ Implementation outcome tracking (Phase 0.6) — did merged PRs actually help? — v2.0
+- ✓ UI fix — bottom nav gap (black line between content and nav bar) — v2.0
 
 ### Future (v3+)
 
-- [ ] Slack reaction feedback — requires Slack MCP read
-- [ ] PR review comment parsing — requires gh API parsing
+- [ ] Completed run log read from file (not SSE-only) — RUNUX-01
+- [ ] Target path required in wizard — RUNUX-02
+- [ ] Server hot-reload / auto-restart — RUNUX-03
+- [ ] Slack reaction feedback — EXTFEED-01
+- [ ] PR review comment parsing — EXTFEED-02
 
 ### Out of Scope
 
@@ -72,14 +74,14 @@ Validated in v1.1 (Phases 5-7, 2026-03-20):
 
 ## Context
 
-- **Shipped versions**: v1.0 MVP (2026-03-19), v1.1 UX Polish (2026-03-20)
+- **Shipped versions**: v1.0 MVP (2026-03-19), v1.1 UX Polish (2026-03-20), v2.0 Parallel + Auto-Action (2026-03-23)
 - **Existing plugin**: kc-nightwatch v0.4.0 with 3 skills + 4 agents
 - **Execution**: launchd plist at 03:00 daily; dashboard provides alternative manual/webhook triggers
 - **Config files**: All in `~/.claude/kc-plugins-config/` — targets.yaml, runs.yaml, feedback.yaml, improvement-log.md, self-repair.yaml
 - **Design spec**: `docs/superpowers/specs/2026-03-18-nightwatch-dashboard-design.md`
 - **Field renaming**: App introduces `monitors`/`watch`/`respond`/`indicators` (replacing `sources`/`keywords`/`actions`/`proxy_signals`) with compatibility layer
 - **Pipeline phases**: 0 → 0.5 (Measure) → 0.6 (Outcomes) → 1 → 2 → 3 → 3.5 (Assess) → 4 → 4.5 (Assess) → 5
-- **Codebase**: ~8.8K LOC TypeScript (Bun + Hono + Preact/HTM), zero build tooling, 167+ tests
+- **Codebase**: ~11.5K LOC TypeScript (Bun + Hono + Preact/HTM), zero build tooling, 225+ tests
 
 ## Constraints
 
@@ -107,18 +109,11 @@ Validated in v1.1 (Phases 5-7, 2026-03-20):
 | Handroll toast (no library) | No-build constraint; signal-backed toast is ~70 lines | ✓ Good — lightweight, no deps |
 | Proposal → Implementation pipeline | Closes the flywheel: accepted proposals get implemented, outcomes tracked | — Deferred to v2 |
 
-## Current Milestone: v2.0 Parallel Execution + Auto-Action
+## Current State: v2.0 Shipped
 
-**Goal:** Enable parallel target execution with per-target scheduling, auto-create PRs and Linear issues from run results, and surface outcomes in a dedicated page and NW-Claude chat.
+All three milestones complete. 11 phases, 29 plans, 42 requirements validated across v1.0 + v1.1 + v2.0.
 
-**Target features:**
-- Per-target scheduling (individual intervals, 10min minimum, global fallback)
-- Parallel execution (per-target isolation — concurrent across targets, queued within)
-- Auto PR + Linear creation (no human approval gate)
-- Outcomes visibility (action cards with links + Outcomes aggregate page)
-- NW-Claude chat awareness of PR/Linear outcomes
-- Implementation outcome tracking (Phase 0.6 — did PRs help?)
-- UI polish (bottom nav gap fix)
+**Next milestone** not yet defined. v3 backlog has 5 items (RUNUX-01~03, EXTFEED-01~02).
 
 ## Evolution
 
@@ -138,4 +133,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-21 after v2.0 milestone started*
+*Last updated: 2026-03-23 after v2.0 milestone completed*
