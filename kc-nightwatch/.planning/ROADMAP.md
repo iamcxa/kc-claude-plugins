@@ -54,7 +54,11 @@ Plans:
   1. After a nightwatch run posts to Slack, any reaction added to that message is parsed and appears as a feedback entry in feedback.yaml with correct signal_id correlation
   2. When a reviewer approves, requests changes on, or comments on a nightwatch-created PR, that review is parsed and a corresponding feedback entry (accepted/rejected/signal) is written to feedback.yaml
   3. Feedback entries from both Slack and PR review sources appear in the dashboard's feedback view alongside existing dashboard/MCP feedback
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 14-01-PLAN.md — Extend types, store routing, and API/MCP validation for 3-state verdict + new sources
+- [ ] 14-02-PLAN.md — Implement checkPrReviews + collectPrReviewFeedback and wire into executor
 
 ## Progress
 
@@ -65,5 +69,5 @@ Plans:
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
 | 12. Test Infra + Run UX | v3.0 | 3/3 | Complete | 2026-03-24 |
 | 13. Worktree Isolation | v3.0 | 2/2 | Complete | 2026-03-24 |
-| 14. Extended Feedback | v3.0 | 0/? | Not started | - |
+| 14. Extended Feedback | v3.0 | 0/2 | Planning | - |
 | **Total** | | **34** | | |
