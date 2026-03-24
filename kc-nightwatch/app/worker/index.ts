@@ -56,6 +56,7 @@ function resolveTarget(targetName: string): PolicyTarget {
     name: target.name,
     resolved_path: resolvedPath,
     extra_plugin_dirs: target.extra_plugin_dirs ?? [],
+    default_branch: target.default_branch,   // WKTREE-01: pass through for worktree branch detection
   }
 }
 

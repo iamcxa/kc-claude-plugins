@@ -12,6 +12,7 @@ import {
 import { collectImplicitFeedback } from './feedback-collector.ts'
 import { appendFeedback, writeFeedbackTrends } from '../server/services/feedback-store.ts'
 import { recordRunOutcomes } from './auto-action.ts'
+import { detectDefaultBranch, createWorktree, cleanupWorktree } from './worktree-manager.ts'
 
 // In-memory PID tracking — keyed by run_id so cancel can target a specific run
 // Map<run_id, pid> — allows per-run cancel without killing concurrent runs
@@ -103,6 +104,21 @@ export async function executeRun(
   const journalDir = await ensureNwMemoryDir(target.name)
   const journalConfigPath = await writeNwJournalConfig(runDir, journalDir)
 
+  // WKTREE-01: Create isolated worktree (per D-01, D-11, D-14)
+  const worktreePath = path.join(target.resolved_path, '.worktrees', `nw-${run.id}`)
+  let worktreeCreated = false
+  try {
+    const defaultBranch = await detectDefaultBranch(target.resolved_path, target.default_branch)
+    await createWorktree(target.resolved_path, worktreePath, defaultBranch)
+    worktreeCreated = true
+    log.info({ component: 'worker', msg: `Worktree created at ${worktreePath} from origin/${defaultBranch}` })
+  } catch (err) {
+    // D-10: No fallback to in-place execution — fail the run
+    log.error({ component: 'worker', msg: `Worktree creation failed for run ${run.id}: ${String(err)}` })
+    opts.onMessage({ type: 'run:failed', run_id: run.id, error: String(err) })
+    return
+  }
+
   const safehouseFlags = buildSafehouseFlags(target, run, opts.runsDir)
   const safehouseBin = opts.safehousePath ?? 'safehouse'
 
@@ -137,7 +153,7 @@ export async function executeRun(
   const child = Bun.spawn(claudeArgs, {
     stdout: 'pipe',
     stderr: 'pipe',
-    cwd: target.resolved_path,
+    cwd: worktreePath,
     env: { ...process.env },
   })
 
@@ -294,6 +310,18 @@ export async function executeRun(
 
     // Rolling cleanup — keep last 50 runs, skipping currently active run directories
     await cleanupOldRuns(opts.runsDir, KEEP_RUNS_COUNT, new Set(activePids.keys()))
+
+    // WKTREE-02/03: Cleanup worktree LAST — after all artifacts collected (per D-12)
+    if (worktreeCreated) {
+      try {
+        await cleanupWorktree(target.resolved_path, worktreePath)
+        log.info({ component: 'worker', msg: `Worktree cleaned up for run ${run.id}` })
+      } catch (err) {
+        // D-13: If cleanup fails (e.g., push fails), log but don't fail the run
+        // Next run's createWorktree will prune stale entries
+        log.warn({ component: 'worker', msg: `Worktree cleanup error for run ${run.id}: ${String(err)}` })
+      }
+    }
   }
 }
 

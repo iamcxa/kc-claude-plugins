@@ -6,6 +6,7 @@ export interface PolicyTarget {
   name: string
   resolved_path: string
   extra_plugin_dirs?: string[]
+  default_branch?: string    // WKTREE-01: passed from Target config for branch detection
 }
 
 export function buildSafehouseFlags(target: PolicyTarget, run: Run, appRunsDir: string): string[] {
