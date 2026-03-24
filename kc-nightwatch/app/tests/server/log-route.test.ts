@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, mock, spyOn } from 'bun:test'
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, spyOn } from 'bun:test'
 import { Hono } from 'hono'
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs'
 import path from 'node:path'

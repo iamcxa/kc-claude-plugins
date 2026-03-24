@@ -1,4 +1,4 @@
-import { describe, it, expect, mock, beforeEach, afterEach, spyOn } from 'bun:test'
+import { describe, it, expect, beforeEach, afterEach, spyOn } from 'bun:test'
 import type { OutcomeRecord } from '../../shared/types.ts'
 import * as outcomeStore from '../../server/services/outcome-store.ts'
 import * as feedbackCollector from '../../worker/feedback-collector.ts'

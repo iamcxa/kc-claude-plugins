@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, mock, spyOn } from 'bun:test'
+import { describe, it, expect, beforeEach, afterEach, spyOn } from 'bun:test'
 import type { Run, RunSummary } from '../../shared/types.ts'
 import * as yamlStore from '../../server/services/yaml-store.ts'
 import * as outcomeStore from '../../server/services/outcome-store.ts'
