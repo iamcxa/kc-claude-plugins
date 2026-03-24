@@ -42,18 +42,19 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VIZ-01 | TBD | Pending |
-| VIZ-02 | TBD | Pending |
-| VIZ-03 | TBD | Pending |
-| SIG-01 | TBD | Pending |
-| SIG-02 | TBD | Pending |
-| SIG-03 | TBD | Pending |
-| FORGE-01 | TBD | Pending |
+| VIZ-01 | Phase 15 | Pending |
+| SIG-02 | Phase 15 | Pending |
+| SIG-03 | Phase 15 | Pending |
+| VIZ-02 | Phase 16 | Pending |
+| VIZ-03 | Phase 16 | Pending |
+| FORGE-01 | Phase 16 | Pending |
+| SIG-01 | Phase 17 | Pending |
 
 **Coverage:**
 - v4.0 requirements: 7 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 7
+- Mapped to phases: 7
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
+*Traceability updated: 2026-03-25*
