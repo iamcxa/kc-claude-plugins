@@ -27,7 +27,7 @@
 **Plans:** 3 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — Fix Bun mock.module cross-file test contamination (spyOn conversion)
+- [x] 12-01-PLAN.md — Fix Bun mock.module cross-file test contamination (spyOn conversion)
 - [ ] 12-02-PLAN.md — Add GET /api/runs/:id/log endpoint + LogStream completed run fetch + auto-restart
 - [ ] 12-03-PLAN.md — Defense-in-depth path validation (wizard + server)
 

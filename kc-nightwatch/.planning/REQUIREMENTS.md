@@ -26,7 +26,7 @@ Requirements for run execution reliability, worktree isolation, extended feedbac
 
 ### Test Infrastructure
 
-- [ ] **TEST-01**: Fix Bun mock.module cross-file contamination — 21 false failures in full suite due to module cache pollution between test files; all pass in isolation
+- [x] **TEST-01**: Fix Bun mock.module cross-file contamination — 21 false failures in full suite due to module cache pollution between test files; all pass in isolation
 
 ## Out of Scope
 
@@ -42,7 +42,7 @@ Requirements for run execution reliability, worktree isolation, extended feedbac
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TEST-01 | Phase 12 | Pending |
+| TEST-01 | Phase 12 | Complete (12-01) |
 | RUNUX-01 | Phase 12 | Pending |
 | RUNUX-02 | Phase 12 | Pending |
 | RUNUX-03 | Phase 12 | Pending |
