@@ -40,14 +40,18 @@ Plans:
   2. When a run produces no branch (dry-run, signal-only, no proposals), the worktree is removed after the run completes
   3. When a run creates a proposal or fix branch, that branch exists in the worktree and is pushed to origin — the target's working directory has no uncommitted changes from the run
   4. After any run (with or without branch), the target's main working directory git status is identical to before the run started
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 13-01-PLAN.md — Create worktree-manager.ts with git worktree lifecycle functions + tests
+- [ ] 13-02-PLAN.md — Wire worktree lifecycle into executor.ts + integration tests
 
 ### Phase 14: Extended Feedback
 **Goal**: Nightwatch captures feedback from Slack reactions and PR review comments automatically
 **Depends on**: Phase 13
 **Requirements**: EXTFEED-01, EXTFEED-02
 **Success Criteria** (what must be TRUE):
-  1. After a nightwatch run posts to Slack, any 👍/👎/🤔 reaction added to that message is parsed and appears as a feedback entry in feedback.yaml with correct signal_id correlation
+  1. After a nightwatch run posts to Slack, any reaction added to that message is parsed and appears as a feedback entry in feedback.yaml with correct signal_id correlation
   2. When a reviewer approves, requests changes on, or comments on a nightwatch-created PR, that review is parsed and a corresponding feedback entry (accepted/rejected/signal) is written to feedback.yaml
   3. Feedback entries from both Slack and PR review sources appear in the dashboard's feedback view alongside existing dashboard/MCP feedback
 **Plans**: TBD
@@ -60,6 +64,6 @@ Plans:
 | 5-7 | v1.1 | 5/5 | Complete | 2026-03-20 |
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
 | 12. Test Infra + Run UX | v3.0 | 3/3 | Complete | 2026-03-24 |
-| 13. Worktree Isolation | v3.0 | 0/? | Not started | - |
+| 13. Worktree Isolation | v3.0 | 0/2 | Planning | - |
 | 14. Extended Feedback | v3.0 | 0/? | Not started | - |
 | **Total** | | **32** | | |
