@@ -32,7 +32,7 @@
   5. `GET /api/signals/priority` returns indicators ranked by `confidence × (1 - reject_rate)` with a 30-run window cap
 **Plans**: 2 plans
 Plans:
-- [ ] 15-01-PLAN.md — Types + CalibrationData rewrite with EMA bucketing, N gate, updated tests
+- [x] 15-01-PLAN.md — Types + CalibrationData rewrite with EMA bucketing, N gate, updated tests
 - [ ] 15-02-PLAN.md — Forge results endpoint, signals priority endpoint, health-api fix, route registration
 **UI hint**: no
 
@@ -66,7 +66,7 @@ Plans:
 | 5-7 | v1.1 | 5/5 | Complete | 2026-03-20 |
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
 | 12-14 | v3.0 | 9/9 | Complete | 2026-03-24 |
-| 15. Data Layer Foundations | v4.0 | 0/2 | Not started | - |
+| 15. Data Layer Foundations | v4.0 | 1/2 | In Progress | - |
 | 16. Health Page Enrichment | v4.0 | 0/TBD | Not started | - |
 | 17. Signal Priority Display | v4.0 | 0/TBD | Not started | - |
-| **Total** | | **38** | | |
+| **Total** | | **39** | | |

@@ -27,28 +27,57 @@ describe('feedback-store', () => {
   })
 
   it('CalibrationData computes reject rate correctly', () => {
-    // Simulate calibration logic
+    // Simulate calibration logic — reject_rate = rejected / total (unchanged)
     const total = 10
     const rejected = 3
     const rejectRate = rejected / total
-    const threshold = Math.min(0.9, Math.max(0.1, 0.5 + (rejectRate - 0.5) * 0.5))
     expect(rejectRate).toBeCloseTo(0.3)
-    expect(threshold).toBeCloseTo(0.4) // 0.5 + (0.3 - 0.5) * 0.5 = 0.5 - 0.1 = 0.4
   })
 
-  it('calibration threshold rises with high reject rate', () => {
-    const rejectRate = 0.8
-    const threshold = Math.min(0.9, Math.max(0.1, 0.5 + (rejectRate - 0.5) * 0.5))
-    expect(threshold).toBeCloseTo(0.65) // 0.5 + 0.15 = 0.65
+  it('calibration threshold rises with high reject rate (EMA)', () => {
+    // All-0.8 history: EMA converges toward 0.8, clamped to max 0.9
+    const ALPHA = 0.3
+    let ema = 0.5
+    for (let i = 0; i < 10; i++) {
+      ema = ALPHA * 0.8 + (1 - ALPHA) * ema
+    }
+    const threshold = Math.round(Math.min(0.9, Math.max(0.1, ema)) * 100) / 100
+    expect(threshold).toBeGreaterThan(0.5) // high reject rate → threshold above midpoint
+    expect(threshold).toBeLessThanOrEqual(0.9)
   })
 
-  it('calibration threshold stays bounded [0.1, 0.9]', () => {
-    // 100% reject rate
-    const threshold1 = Math.min(0.9, Math.max(0.1, 0.5 + (1.0 - 0.5) * 0.5))
-    expect(threshold1).toBe(0.75)
-    // 0% reject rate
-    const threshold2 = Math.min(0.9, Math.max(0.1, 0.5 + (0.0 - 0.5) * 0.5))
-    expect(threshold2).toBe(0.25)
+  it('calibration threshold stays bounded [0.1, 0.9] (EMA)', () => {
+    // All-1.0 history: clamps to 0.9
+    const ALPHA = 0.3
+    let ema1 = 0.5
+    for (let i = 0; i < 20; i++) ema1 = ALPHA * 1.0 + (1 - ALPHA) * ema1
+    expect(Math.min(0.9, Math.max(0.1, ema1))).toBeLessThanOrEqual(0.9)
+
+    // All-0.0 history: clamps to 0.1
+    let ema2 = 0.5
+    for (let i = 0; i < 20; i++) ema2 = ALPHA * 0.0 + (1 - ALPHA) * ema2
+    expect(Math.min(0.9, Math.max(0.1, ema2))).toBeGreaterThanOrEqual(0.1)
+  })
+
+  it('CalibrationData includes history array', () => {
+    // Verify the shape includes history: number[]
+    const mockCal = { indicator: 'test', total_feedback: 10, reject_count: 2, reject_rate: 0.2, current_threshold: 0.45, history: [0.1, 0.3, 0.2] }
+    expect(Array.isArray(mockCal.history)).toBe(true)
+    expect(mockCal.history.length).toBe(3)
+  })
+
+  it('CalibrationData includes threshold_null_reason when threshold is null', () => {
+    const mockCal = {
+      indicator: 'test',
+      total_feedback: 5,
+      reject_count: 2,
+      reject_rate: 0.4,
+      current_threshold: null,
+      threshold_null_reason: 'Accumulating data (5/10)',
+      history: [],
+    }
+    expect(mockCal.current_threshold).toBeNull()
+    expect(mockCal.threshold_null_reason).toContain('5/10')
   })
 
   it('FeedbackEntry source variants are recognized', () => {

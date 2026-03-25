@@ -178,7 +178,27 @@ export interface CalibrationData {
   total_feedback: number
   reject_count: number
   reject_rate: number
-  current_threshold: number
+  current_threshold: number | null  // null when total_feedback < 10 (D-04)
+  threshold_null_reason?: string    // "Accumulating data (N/10)" when threshold is null
+  history: number[]                 // per-run reject rates, chronological, capped at 30 (D-01)
+}
+
+export interface ForgeResultData {
+  forge_result: {
+    status: 'pass' | 'fail'
+    branch: string | null
+    details: string
+  } | null
+  run_date: string | null
+  stale: boolean
+}
+
+export interface SignalPriorityItem {
+  indicator: string
+  score: number              // confidence_weight x (1 - reject_rate)
+  confidence_weight: number
+  reject_rate: number
+  total_feedback: number
 }
 
 // ============================================================
