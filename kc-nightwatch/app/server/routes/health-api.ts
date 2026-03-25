@@ -68,7 +68,7 @@ healthApiRoutes.get('/api/health/:target', async (c) => {
     if (cal.total_feedback > 0) {
       perIndicatorRates[cal.indicator] = {
         rate: Math.round(cal.reject_rate * 100) / 100,
-        history: [0, Math.round(cal.reject_rate * 100) / 100],  // baseline zero -> current rate
+        history: cal.history,  // Real per-run bucketed data from getCalibrationData() (VIZ-01)
       }
     }
   }

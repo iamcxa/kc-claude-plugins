@@ -21,6 +21,8 @@ import { configRoutes } from './routes/config.ts'
 import { mcpRoutes } from './routes/mcp.ts'
 import { healthApiRoutes } from './routes/health-api.ts'
 import { outcomesRoutes } from './routes/outcomes.ts'
+import { forgeRoutes } from './routes/forge.ts'
+import { signalsRoutes } from './routes/signals.ts'
 import {
   WORKER_RESTART_BACKOFF_MS,
   MAX_WORKER_RESTARTS,
@@ -162,6 +164,8 @@ app.route('/', configRoutes)
 app.route('/', mcpRoutes)
 app.route('/', healthApiRoutes)
 app.route('/', outcomesRoutes)
+app.route('/', forgeRoutes)
+app.route('/', signalsRoutes)
 
 // SPA root route — serve index.html for / (after all API routes)
 app.get('/', async (c) => {

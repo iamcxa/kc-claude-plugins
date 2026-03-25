@@ -332,13 +332,20 @@ describe('health api', () => {
     expect(data.per_indicator_rates).toHaveProperty('coverage')
   })
 
-  it('per_indicator_rates entries have history arrays with length >= 2', async () => {
+  it('per_indicator_rates entries use real history from CalibrationData', async () => {
     const res = await testApp.request('/api/health/my-plugin')
     const data = await res.json() as { per_indicator_rates: Record<string, { rate: number; history: number[] }> }
-    for (const [, entry] of Object.entries(data.per_indicator_rates)) {
-      expect(Array.isArray(entry.history)).toBe(true)
-      expect(entry.history.length).toBeGreaterThanOrEqual(2)
-    }
+    // quality has 3 history entries from mock [0.1, 0.2, 0.3]
+    expect(Array.isArray(data.per_indicator_rates.quality.history)).toBe(true)
+    expect(data.per_indicator_rates.quality.history).toEqual([0.1, 0.2, 0.3])
+  })
+
+  it('per_indicator_rates includes indicators with null threshold when total_feedback > 0', async () => {
+    // coverage has total_feedback=5 > 0 but current_threshold=null (N gate) — still included
+    const res = await testApp.request('/api/health/my-plugin')
+    const data = await res.json() as { per_indicator_rates: Record<string, { rate: number; history: number[] }> }
+    expect(data.per_indicator_rates).toHaveProperty('coverage')
+    expect(data.per_indicator_rates.coverage.rate).toBeCloseTo(0.6, 2)
   })
 
   it('per_indicator_rates is empty when no calibration data', async () => {
