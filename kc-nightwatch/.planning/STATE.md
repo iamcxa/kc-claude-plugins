@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Flywheel Intelligence
 status: in_progress
-stopped_at: "Phase 15 Plan 01 complete"
-last_updated: "2026-03-25T14:42:41Z"
+stopped_at: "Phase 15 Plan 02 complete"
+last_updated: "2026-03-25T16:11:13Z"
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 7
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,23 +24,23 @@ See: .planning/PROJECT.md (updated 2026-03-24)
 ## Current Position
 
 Phase: 15 of 17 (Data Layer Foundations)
-Plan: 01 complete, 02 next
+Plan: 02 complete, Phase 15 done — Phase 16 next
 Status: In progress
-Last activity: 2026-03-25 — Plan 15-01 complete
+Last activity: 2026-03-25 — Plan 15-02 complete
 
-Progress: [█░░░░░░░░░] 14% (v4.0, 1/7 plans)
+Progress: [██░░░░░░░░] 28% (v4.0, 2/7 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed (v4.0): 1
+- Total plans completed (v4.0): 2
 - Previous milestone (v3.0): 9 plans, ~1 day
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 15 | 1/2 | 6min | 6min |
+| 15 | 2/2 (complete) | 10min | 5min |
 | 16-17 | TBD | - | - |
 
 *Updated after each plan completion*
@@ -55,6 +55,8 @@ Progress: [█░░░░░░░░░] 14% (v4.0, 1/7 plans)
 - EMA alpha=0.3 hardcoded (D-05) — not user-configurable at this stage.
 - N gate at 10 total_feedback entries — null threshold with "Accumulating data (N/10)" message (D-04).
 - History capped at 30 most recent run-ids sorted by earliest submitted_at (D-01).
+- forge.ts redefines SELF_REPAIR_YAML_PATH locally (not imported from config.ts — not exported there).
+- CONFIDENCE_WEIGHT: high=1.0, medium=0.6, low=0.3 per CONTEXT.md direction.
 
 ### Pending Todos
 
@@ -62,11 +64,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- health-api.ts:71 fake `[0, currentRate]` stub still in place — Plan 15-02 Task 3 will fix this.
 - Verify `gh` CLI auth works in safehouse context before building forge result PR link rendering.
 
 ## Session Continuity
 
 Last session: 2026-03-25
-Stopped at: Phase 15 Plan 01 complete — EMA calibration + data layer foundations
+Stopped at: Completed 15-02-PLAN.md
 Resume file: None
