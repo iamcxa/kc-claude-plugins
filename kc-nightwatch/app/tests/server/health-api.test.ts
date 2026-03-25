@@ -107,8 +107,8 @@ const mockSummary3: RunSummary = {
 }
 
 const mockCalibrationData: CalibrationData[] = [
-  { indicator: 'quality', total_feedback: 10, reject_count: 2, reject_rate: 0.2, current_threshold: 0.45 },
-  { indicator: 'coverage', total_feedback: 5, reject_count: 3, reject_rate: 0.6, current_threshold: 0.55 },
+  { indicator: 'quality', total_feedback: 10, reject_count: 2, reject_rate: 0.2, current_threshold: 0.45, history: [0.1, 0.2, 0.3] },
+  { indicator: 'coverage', total_feedback: 5, reject_count: 3, reject_rate: 0.6, current_threshold: null, threshold_null_reason: 'Accumulating data (5/10)', history: [] },
 ]
 
 // Control variables for mock behavior

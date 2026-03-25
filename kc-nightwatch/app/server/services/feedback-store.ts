@@ -52,6 +52,30 @@ export async function getFeedbackForSignal(signalId: string): Promise<FeedbackEn
   return all.filter(f => f.signal_id === signalId)
 }
 
+const MIN_FEEDBACK_FOR_THRESHOLD = 10
+const ALPHA = 0.3  // hardcoded per D-05
+const HISTORY_WINDOW = 30  // cap at 30 runs per D-01 — used in slice(-30) below
+
+/**
+ * Build per-run reject rate history for a given indicator.
+ * Only includes runs where the indicator had feedback.
+ */
+function buildHistory(
+  sortedRunIds: string[],
+  runByIndicator: Map<string, Map<string, { total: number; rejected: number }>>,
+  indicator: string,
+): number[] {
+  const history: number[] = []
+  for (const runId of sortedRunIds) {
+    const runCounts = runByIndicator.get(runId)
+    if (!runCounts) continue
+    const counts = runCounts.get(indicator)
+    if (!counts || counts.total === 0) continue
+    history.push(Math.round((counts.rejected / counts.total) * 100) / 100)
+  }
+  return history
+}
+
 export async function getCalibrationData(): Promise<CalibrationData[]> {
   const data = await readYamlFile<FeedbackStore>(FEEDBACK_YAML_PATH) ?? {}
   const all = [
@@ -62,32 +86,91 @@ export async function getCalibrationData(): Promise<CalibrationData[]> {
     ...(data.pr_review_feedback ?? []),
   ]
 
-  // Group by indicator (derived from signal_id pattern: "indicator-name:signal-type")
-  const byIndicator = new Map<string, { total: number; rejected: number }>()
-
+  // Skip entries with empty/falsy run_id (defensive)
+  const valid: typeof all = []
   for (const entry of all) {
-    // Extract indicator from signal_id (format: "indicator-name:..." or use target as fallback)
+    if (!entry.run_id) {
+      log.warn({ component: 'feedback', msg: `Skipping malformed feedback entry (missing run_id): ${entry.signal_id}` })
+      continue
+    }
+    valid.push(entry)
+  }
+
+  // Build run timestamps: run_id → earliest submitted_at
+  const runTimestamps = new Map<string, string>()
+  for (const entry of valid) {
+    const existing = runTimestamps.get(entry.run_id)
+    if (!existing || entry.submitted_at < existing) {
+      runTimestamps.set(entry.run_id, entry.submitted_at)
+    }
+  }
+
+  // Sort run_ids chronologically, take last 30 (D-01)
+  const sortedRunIds = Array.from(runTimestamps.entries())
+    .sort((a, b) => a[1].localeCompare(b[1]))
+    .map(([runId]) => runId)
+    .slice(-30)  // HISTORY_WINDOW = 30 cap per D-01
+
+  // Build per-run per-indicator counts
+  // runByIndicator: Map<run_id, Map<indicator, {total, rejected}>>
+  const runByIndicator = new Map<string, Map<string, { total: number; rejected: number }>>()
+  for (const entry of valid) {
     const indicator = entry.signal_id.split(':')[0] ?? entry.target
-    const current = byIndicator.get(indicator) ?? { total: 0, rejected: 0 }
+    if (!runByIndicator.has(entry.run_id)) {
+      runByIndicator.set(entry.run_id, new Map())
+    }
+    const runMap = runByIndicator.get(entry.run_id)!
+    const current = runMap.get(indicator) ?? { total: 0, rejected: 0 }
     current.total++
     if (entry.verdict === 'rejected') current.rejected++
-    byIndicator.set(indicator, current)
+    runMap.set(indicator, current)
+  }
+
+  // Build all-time per-indicator totals
+  const indicatorAllTime = new Map<string, { total: number; rejected: number }>()
+  for (const entry of valid) {
+    const indicator = entry.signal_id.split(':')[0] ?? entry.target
+    const current = indicatorAllTime.get(indicator) ?? { total: 0, rejected: 0 }
+    current.total++
+    if (entry.verdict === 'rejected') current.rejected++
+    indicatorAllTime.set(indicator, current)
   }
 
   const results: CalibrationData[] = []
-  for (const [indicator, { total, rejected }] of byIndicator) {
+  for (const [indicator, { total, rejected }] of indicatorAllTime) {
     const rejectRate = total > 0 ? rejected / total : 0
-    // Threshold: start at 0.5, adjust based on reject rate
-    // High reject rate (>0.7) → raise threshold (be more selective)
-    // Low reject rate (<0.3) → lower threshold (accept more signals)
-    const currentThreshold = Math.min(0.9, Math.max(0.1, 0.5 + (rejectRate - 0.5) * 0.5))
-    results.push({
-      indicator,
-      total_feedback: total,
-      reject_count: rejected,
-      reject_rate: Math.round(rejectRate * 100) / 100,
-      current_threshold: Math.round(currentThreshold * 100) / 100,
-    })
+    const history = buildHistory(sortedRunIds, runByIndicator, indicator)
+
+    if (total < MIN_FEEDBACK_FOR_THRESHOLD) {
+      // D-04: minimum N gate — not enough data for reliable threshold
+      results.push({
+        indicator,
+        total_feedback: total,
+        reject_count: rejected,
+        reject_rate: Math.round(rejectRate * 100) / 100,
+        current_threshold: null,
+        threshold_null_reason: `Accumulating data (${total}/10)`,
+        history,
+      })
+    } else {
+      // D-03: EMA threshold — compute over per-run rate history
+      // D-05: alpha=0.3, starting value 0.5
+      let emaThreshold = 0.5
+      for (const rate of history) {
+        emaThreshold = ALPHA * rate + (1 - ALPHA) * emaThreshold
+      }
+      // D-06: clamp to [0.1, 0.9]
+      const clampedThreshold = Math.round(Math.min(0.9, Math.max(0.1, emaThreshold)) * 100) / 100
+
+      results.push({
+        indicator,
+        total_feedback: total,
+        reject_count: rejected,
+        reject_rate: Math.round(rejectRate * 100) / 100,
+        current_threshold: clampedThreshold,
+        history,
+      })
+    }
   }
 
   return results
@@ -107,7 +190,7 @@ export async function writeFeedbackTrends(targetName: string, journalDir: string
     '| Indicator | Total | Rejected | Reject Rate | Threshold |',
     '|-----------|-------|----------|-------------|-----------|',
     ...targetCalibration.map(c =>
-      `| ${c.indicator} | ${c.total_feedback} | ${c.reject_count} | ${(c.reject_rate * 100).toFixed(0)}% | ${(c.current_threshold * 100).toFixed(0)}% |`
+      `| ${c.indicator} | ${c.total_feedback} | ${c.reject_count} | ${(c.reject_rate * 100).toFixed(0)}% | ${c.current_threshold !== null ? (c.current_threshold * 100).toFixed(0) + '%' : 'N/A'} |`
     ),
     '',
   ]
