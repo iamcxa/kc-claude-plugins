@@ -25,7 +25,7 @@
 **Depends on**: Phase 14 (v3.0 complete)
 **Requirements**: VIZ-01, SIG-02, SIG-03
 **Success Criteria** (what must be TRUE):
-  1. `GET /api/feedback/trends` returns per-indicator rejection rates bucketed by run_id (not a fake 2-point array)
+  1. `GET /api/feedback/calibration` returns per-indicator CalibrationData with `history: number[]` containing rejection rates bucketed by run_id (not a fake 2-point array) — per D-07, trends data is co-located in the existing calibration endpoint
   2. Calibration data for indicators with fewer than 10 feedback entries returns a null threshold with "Accumulating data (N/10)" message
   3. Calibration threshold is computed using EMA smoothing (α=0.3) instead of raw all-time average
   4. `GET /api/forge/results` returns forge validation status, branch, and details from `nightwatch-self-repair.yaml`
