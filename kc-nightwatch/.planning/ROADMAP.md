@@ -30,7 +30,10 @@
   3. Calibration threshold is computed using EMA smoothing (α=0.3) instead of raw all-time average
   4. `GET /api/forge/results` returns forge validation status, branch, and details from `nightwatch-self-repair.yaml`
   5. `GET /api/signals/priority` returns indicators ranked by `confidence × (1 - reject_rate)` with a 30-run window cap
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 15-01-PLAN.md — Types + CalibrationData rewrite with EMA bucketing, N gate, updated tests
+- [ ] 15-02-PLAN.md — Forge results endpoint, signals priority endpoint, health-api fix, route registration
 **UI hint**: no
 
 ### Phase 16: Health Page Enrichment
@@ -63,7 +66,7 @@
 | 5-7 | v1.1 | 5/5 | Complete | 2026-03-20 |
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
 | 12-14 | v3.0 | 9/9 | Complete | 2026-03-24 |
-| 15. Data Layer Foundations | v4.0 | 0/TBD | Not started | - |
+| 15. Data Layer Foundations | v4.0 | 0/2 | Not started | - |
 | 16. Health Page Enrichment | v4.0 | 0/TBD | Not started | - |
 | 17. Signal Priority Display | v4.0 | 0/TBD | Not started | - |
 | **Total** | | **38** | | |
