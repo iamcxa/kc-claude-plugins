@@ -1,6 +1,6 @@
 import { html } from 'htm/preact'
 import { useState, useEffect, useCallback } from 'preact/hooks'
-import type { Run, RunSummary, ParsedLogEvent, OutcomeRecord, FeedbackEntry, SignalPriorityEntry } from '../../shared/types.ts'
+import type { Run, RunSummary, ParsedLogEvent, OutcomeRecord, FeedbackEntry } from '../../shared/types.ts'
 import { LogStream } from '../components/log-stream.ts'
 import { RunTimeline } from '../components/run-timeline.ts'
 import { ActionCard } from '../components/action-card.ts'
@@ -58,7 +58,7 @@ export function Runs() {
   const [targetFilter, setTargetFilter] = useState('')
   const [outcomesMap, setOutcomesMap] = useState<Record<string, OutcomeRecord>>({})
   const [feedbackMap, setFeedbackMap] = useState<Record<string, FeedbackEntry[]>>({})
-  const [priorityMap, setPriorityMap] = useState<Record<string, SignalPriorityEntry>>({})
+  const [priorityMap, setPriorityMap] = useState<Record<string, number>>({})
 
   const loadRuns = useCallback(() => {
     api.getRuns().then(allRuns => {
@@ -104,9 +104,9 @@ export function Runs() {
       }
       setFeedbackMap(map)
     }).catch(console.error)
-    api.getSignalPriority(selectedId).then(entries => {
-      const map: Record<string, SignalPriorityEntry> = {}
-      for (const e of entries) map[e.signal_id] = e
+    api.getSignalPriority().then(items => {
+      const map: Record<string, number> = {}
+      for (const item of items) map[item.indicator] = item.score
       setPriorityMap(map)
     }).catch(console.error)
   }, [selectedId])
@@ -125,9 +125,9 @@ export function Runs() {
       }
       setFeedbackMap(map)
     }).catch(console.error)
-    api.getSignalPriority(selectedId).then(entries => {
-      const map: Record<string, SignalPriorityEntry> = {}
-      for (const e of entries) map[e.signal_id] = e
+    api.getSignalPriority().then(items => {
+      const map: Record<string, number> = {}
+      for (const item of items) map[item.indicator] = item.score
       setPriorityMap(map)
     }).catch(console.error)
   }, [runs])
@@ -210,9 +210,9 @@ export function Runs() {
               <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px;">${targetName} Actions</div>
               ${[...targetData.actions]
                 .sort((a: import('../../shared/types.ts').RunSummaryAction, b: import('../../shared/types.ts').RunSummaryAction) => {
-                  const scoreA = priorityMap[a.signal_id]?.score ?? 0
-                  const scoreB = priorityMap[b.signal_id]?.score ?? 0
-                  return scoreB - scoreA || a.signal_id.localeCompare(b.signal_id)
+                  const scoreA = priorityMap[a.indicator] ?? 0
+                  const scoreB = priorityMap[b.indicator] ?? 0
+                  return scoreB - scoreA
                 })
                 .map((action: import('../../shared/types.ts').RunSummaryAction) => html`
                   <${ActionCard}
@@ -222,7 +222,7 @@ export function Runs() {
                     runId=${selectedId}
                     existingFeedback=${feedbackMap[action.signal_id] ?? []}
                     outcomeStatus=${outcomesMap[action.signal_id] ? { status: outcomesMap[action.signal_id].status, url: outcomesMap[action.signal_id].url, type: outcomesMap[action.signal_id].type } : null}
-                    priorityScore=${priorityMap[action.signal_id]?.score}
+                    priorityScore=${priorityMap[action.indicator]}
                   />
               `)}
             </div>

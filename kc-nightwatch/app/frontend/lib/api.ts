@@ -1,4 +1,4 @@
-import type { Target, Run, RunSummary, ScheduleConfig, ConfigValidationResult, FeedbackEntry, CalibrationData, ForgeResultData, TargetHealthData, OutcomeRecord, SignalPriorityEntry } from '../../shared/types.ts'
+import type { Target, Run, RunSummary, ScheduleConfig, ConfigValidationResult, FeedbackEntry, CalibrationData, ForgeResultData, TargetHealthData, OutcomeRecord, SignalPriorityItem } from '../../shared/types.ts'
 
 const BASE = ''
 
@@ -161,7 +161,7 @@ export const api = {
   },
 
   // Signal priority
-  getSignalPriority(runId: string): Promise<SignalPriorityEntry[]> {
-    return get<SignalPriorityEntry[]>(`/api/signals/priority?run_id=${encodeURIComponent(runId)}`)
+  getSignalPriority(): Promise<SignalPriorityItem[]> {
+    return get<SignalPriorityItem[]>('/api/signals/priority')
   },
 }

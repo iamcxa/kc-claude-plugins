@@ -23,7 +23,6 @@ import { healthApiRoutes } from './routes/health-api.ts'
 import { outcomesRoutes } from './routes/outcomes.ts'
 import { forgeRoutes } from './routes/forge.ts'
 import { signalsRoutes } from './routes/signals.ts'
-import { signalPriorityRoutes } from './routes/signal-priority.ts'
 import {
   WORKER_RESTART_BACKOFF_MS,
   MAX_WORKER_RESTARTS,
@@ -167,7 +166,6 @@ app.route('/', healthApiRoutes)
 app.route('/', outcomesRoutes)
 app.route('/', forgeRoutes)
 app.route('/', signalsRoutes)
-app.route('/', signalPriorityRoutes)
 
 // SPA root route — serve index.html for / (after all API routes)
 app.get('/', async (c) => {
