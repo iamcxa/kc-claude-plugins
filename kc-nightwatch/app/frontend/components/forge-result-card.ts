@@ -20,7 +20,7 @@ export function statusColor(data: ForgeResultData): string {
 }
 
 export function statusIcon(data: ForgeResultData): string {
-  if (data.forge_result === null || data.stale) return '\u2014'
+  if (data.forge_result === null) return '\u2014'
   if (data.forge_result.status === 'pass') return '\u2713'
   return '\u2717'
 }
