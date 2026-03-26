@@ -20,6 +20,7 @@ healthApiRoutes.get('/api/health/:target', async (c) => {
   // Build indicator history from run summaries
   const indicatorHistory: Record<string, number[]> = {}
   const indicatorTrends: Record<string, string> = {}
+  const indicatorRunIds: Record<string, string[]> = {}
 
   for (const runData of runsWithSummary) {
     if (!runData?.summary?.per_target) continue
@@ -29,7 +30,9 @@ healthApiRoutes.get('/api/health/:target', async (c) => {
     // Aggregate indicator baselines
     for (const [name, baseline] of Object.entries(targetSummary.indicator_baseline)) {
       if (!indicatorHistory[name]) indicatorHistory[name] = []
+      if (!indicatorRunIds[name]) indicatorRunIds[name] = []
       indicatorHistory[name].push(baseline.value)
+      indicatorRunIds[name].push(runData.id)
       indicatorTrends[name] = baseline.trend  // latest trend wins
     }
   }
@@ -42,6 +45,7 @@ healthApiRoutes.get('/api/health/:target', async (c) => {
       current: history[history.length - 1] ?? 0,
       trend,
       history,
+      run_ids: indicatorRunIds[name] ?? [],
     }
   }
 

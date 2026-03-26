@@ -219,6 +219,7 @@ export interface HealthIndicatorData {
   current: number
   trend: 'improving' | 'stable' | 'degrading'
   history: number[]  // last N values, chronological order
+  run_ids?: string[]  // parallel to history — run IDs for tooltip display (VIZ-03)
 }
 
 export interface TargetHealthData {
