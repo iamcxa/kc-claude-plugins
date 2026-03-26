@@ -1,4 +1,4 @@
-import type { Target, Run, RunSummary, ScheduleConfig, ConfigValidationResult, FeedbackEntry, CalibrationData, TargetHealthData, OutcomeRecord } from '../../shared/types.ts'
+import type { Target, Run, RunSummary, ScheduleConfig, ConfigValidationResult, FeedbackEntry, CalibrationData, ForgeResultData, TargetHealthData, OutcomeRecord } from '../../shared/types.ts'
 
 const BASE = ''
 
@@ -101,6 +101,10 @@ export const api = {
 
   getCalibration(): Promise<CalibrationData[]> {
     return get<CalibrationData[]>('/api/feedback/calibration')
+  },
+
+  getForgeResults(): Promise<ForgeResultData> {
+    return get<ForgeResultData>('/api/forge/results')
   },
 
   // Config

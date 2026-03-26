@@ -362,4 +362,19 @@ describe('health api', () => {
     expect(data.per_indicator_rates.quality.rate).toBeCloseTo(0.2, 2)
     expect(data.per_indicator_rates.coverage.rate).toBeCloseTo(0.6, 2)
   })
+
+  it('indicators include run_ids parallel to history', async () => {
+    const res = await testApp.request('/api/health/my-plugin')
+    const data = await res.json() as { indicators: Record<string, { history: number[]; run_ids: string[] }> }
+    const quality = data.indicators.quality
+    expect(Array.isArray(quality.run_ids)).toBe(true)
+    expect(quality.run_ids.length).toBe(quality.history.length)
+  })
+
+  it('run_ids contain the correct run IDs in chronological order', async () => {
+    const res = await testApp.request('/api/health/my-plugin')
+    const data = await res.json() as { indicators: Record<string, { run_ids: string[] }> }
+    // Runs are processed chronologically: run-001, run-002, run-003
+    expect(data.indicators.quality.run_ids).toEqual(['run-001', 'run-002', 'run-003'])
+  })
 })
