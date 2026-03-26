@@ -29,6 +29,12 @@ pages:
       nav_runs:
         selector: "role=link[name='Runs']"
         description: "Bottom nav link to Runs page"
+      nav_outcomes:
+        selector: "role=link[name='Outcomes']"
+        description: "Bottom nav link to Outcomes page"
+      nav_health:
+        selector: "role=link[name='Health']"
+        description: "Bottom nav link to Health page"
       nav_config:
         selector: "role=link[name='Config']"
         description: "Bottom nav link to Config page"
@@ -92,6 +98,15 @@ pages:
       north_star_text:
         selector: "text=North star"
         description: "North star section label"
+      schedule_label:
+        selector: "text=Schedule"
+        description: "Schedule section label in target detail"
+      schedule_interval_text:
+        selector: "text=/Every \\d+h/"
+        description: "Schedule interval display (e.g. 'Every 6h (global)' or 'Every 4h')"
+      schedule_countdown_text:
+        selector: "text=/Not yet scheduled|Next in/"
+        description: "Countdown to next run or 'Not yet scheduled' when no run is planned"
       run_button:
         selector: "role=button[name='Run']"
         description: "Run button for the selected target (production mode)"
@@ -156,6 +171,99 @@ pages:
         selector: "role=log"
         description: "Log output area showing run progress and results"
 
+  outcomes:
+    url_pattern: "/#/outcomes"
+    description: "Outcome tracking list with filters for PRs and Linear issues created by runs"
+    elements:
+      target_filter:
+        selector: "role=combobox >> nth=0"
+        description: "Dropdown to filter outcomes by target name (All targets, plus dynamic target names)"
+      type_filter:
+        selector: "role=combobox >> nth=1"
+        description: "Dropdown to filter outcomes by type (All types, pr, linear_issue)"
+      status_filter:
+        selector: "role=combobox >> nth=2"
+        description: "Dropdown to filter outcomes by status (All statuses, open, merged, closed, completed, cancelled)"
+      outcome_item:
+        selector: "css=[style*='cursor: pointer'] >> nth=0"
+        description: "A single outcome row in the list. Click to view detail."
+        note: "Outcome rows are div elements with cursor:pointer style, showing type badge, target name, and status dot"
+      empty_state_heading:
+        selector: "text=No outcomes recorded yet"
+        description: "Empty state heading when no outcomes exist"
+      empty_state_subtext:
+        selector: "text=Outcomes appear here after a run creates PRs or Linear issues."
+        description: "Empty state description text"
+      no_match_text:
+        selector: "text=No outcomes match the current filters."
+        description: "Text shown when filters exclude all outcomes"
+
+  outcomes-detail:
+    url_pattern: "/#/outcomes"
+    description: "Detail view for a selected outcome showing metadata fields"
+    elements:
+      back_link:
+        selector: "role=link[name='← Back to outcomes']"
+        description: "Link to navigate back to the outcomes list"
+        note: "Uses onClick to clear selectedId, not actual navigation"
+      target_field:
+        selector: "text=Target"
+        description: "Target field label in the detail panel"
+      type_field:
+        selector: "text=Type"
+        description: "Type field label in the detail panel"
+      status_field:
+        selector: "text=Status"
+        description: "Status field label with colored dot indicator"
+      created_field:
+        selector: "text=Created"
+        description: "Created timestamp field showing relative time"
+      signal_id_field:
+        selector: "text=Signal ID"
+        description: "Signal ID field label (monospace value)"
+      run_id_field:
+        selector: "text=Run ID"
+        description: "Run ID field label (monospace value)"
+      url_field:
+        selector: "text=URL"
+        description: "URL field label with clickable link to GitHub PR or Linear issue"
+      check_status_button:
+        selector: "role=button[name='Check status']"
+        description: "Button to refresh the outcome status from the external service"
+        note: "Text changes to 'Checking...' while loading"
+
+  health:
+    url_pattern: "/#/health"
+    description: "Flywheel health dashboard showing per-target health metrics and reject rate charts"
+    elements:
+      page_title:
+        selector: "text=Flywheel Health"
+        description: "Page title heading"
+      overall_status:
+        selector: "text=/Overall:/"
+        description: "Overall health status with trend indicator (e.g. 'Overall: Improving')"
+      gathering_data_text:
+        selector: "text=/Gathering data/"
+        description: "Info banner shown when insufficient runs for full health metrics"
+      target_health_card:
+        selector: "text=${targetName}"
+        description: "Per-target health card heading. ${targetName} is the target display name."
+      runs_analyzed_text:
+        selector: "text=/\\d+ runs analyzed/"
+        description: "Run count for a target health card"
+        note: "Appears once per target card"
+      proposals_accepted_text:
+        selector: "text=/Proposals accepted:/"
+        description: "Proposal acceptance rate line in target health card"
+        note: "Format: 'Proposals accepted: N/M (P%)' with trend arrow"
+      reject_rate_heading:
+        selector: "text=Reject Rate by Indicator"
+        description: "Section heading for the reject rate sparkline charts"
+      reject_rate_chart:
+        selector: "role=graphics-document >> nth=0"
+        description: "SVG sparkline chart for an indicator's reject rate"
+        note: "Multiple charts rendered, one per indicator per target. Use nth for specific chart."
+
   config:
     url_pattern: "/#/config"
     description: "YAML configuration editor with Targets and Safety tabs"
@@ -189,3 +297,118 @@ pages:
       discard_changes_button:
         selector: "role=button[name='Discard Changes']"
         description: "Button to discard edits and return to read-only mode"
+
+  add-target-wizard-step1:
+    url_pattern: "/#/dashboard"
+    description: "Add Target wizard Step 1: basic info (type, name, path)"
+    elements:
+      dialog:
+        selector: "role=dialog[name='Add Target']"
+        description: "The wizard modal dialog"
+      dialog_heading:
+        selector: "role=heading[name='Add Target']"
+        description: "Dialog title heading"
+      close_button:
+        selector: "role=button[name='X']"
+        description: "Close button to dismiss the wizard"
+      type_plugin_button:
+        selector: "role=button[name='Plugin']"
+        description: "Button to select Plugin target type"
+      type_product_button:
+        selector: "role=button[name='Product']"
+        description: "Button to select Product target type"
+      name_input:
+        selector: "role=textbox[name='e.g. my-plugin']"
+        description: "Target name text input"
+      path_input:
+        selector: "role=textbox[name='/absolute/path/to/target']"
+        description: "Optional absolute path text input"
+      next_button:
+        selector: "role=button[name='Next']"
+        description: "Next button to advance to Step 2. Disabled until name is entered."
+
+  add-target-wizard-step2:
+    url_pattern: "/#/dashboard"
+    description: "Add Target wizard Step 2: north star and watch keywords"
+    elements:
+      north_star_input:
+        selector: "role=textbox[name='What is the ultimate goal for improving this target?']"
+        description: "North star goal text input"
+      keywords_input:
+        selector: "role=textbox[name='e.g. coverage, test, performance']"
+        description: "Comma-separated watch keywords text input"
+      back_button:
+        selector: "role=button[name='Back']"
+        description: "Back button to return to Step 1"
+      next_button:
+        selector: "role=button[name='Next']"
+        description: "Next button to advance to Step 3"
+
+  add-target-wizard-step3:
+    url_pattern: "/#/dashboard"
+    description: "Add Target wizard Step 3: monitors and respond actions"
+    elements:
+      monitor_github_issues:
+        selector: "role=checkbox[name='github-issues']"
+        description: "Checkbox to enable github-issues monitor"
+      monitor_journal:
+        selector: "role=checkbox[name='journal']"
+        description: "Checkbox to enable journal monitor"
+      monitor_git_churn:
+        selector: "role=checkbox[name='git-churn']"
+        description: "Checkbox to enable git-churn monitor"
+      monitor_sentry:
+        selector: "role=checkbox[name='sentry']"
+        description: "Checkbox to enable sentry monitor"
+      monitor_e2e_reports:
+        selector: "role=checkbox[name='e2e-reports']"
+        description: "Checkbox to enable e2e-reports monitor"
+      action_code_fix:
+        selector: "role=checkbox[name='code-fix']"
+        description: "Checkbox to enable code-fix respond action"
+      action_proposal:
+        selector: "role=checkbox[name='proposal']"
+        description: "Checkbox to enable proposal respond action"
+      action_e2e_flow:
+        selector: "role=checkbox[name='e2e-flow']"
+        description: "Checkbox to enable e2e-flow respond action"
+      back_button:
+        selector: "role=button[name='Back']"
+        description: "Back button to return to Step 2"
+      next_schedule_button:
+        selector: "role=button[name='Next: Schedule']"
+        description: "Next button to advance to Step 4 (Schedule)"
+
+  add-target-wizard-step4:
+    url_pattern: "/#/dashboard"
+    description: "Add Target wizard Step 4: optional per-target schedule override"
+    elements:
+      use_global_schedule_checkbox:
+        selector: "role=checkbox[name='Use global schedule']"
+        description: "Checkbox to use the global schedule interval. Checked by default."
+      custom_interval_input:
+        selector: "role=spinbutton[name='e.g. 6']"
+        description: "Custom interval hours input. Only visible when 'Use global schedule' is unchecked."
+      interval_error_text:
+        selector: "text=Minimum interval is 10 minutes"
+        description: "Validation error when custom interval is too short"
+      back_button:
+        selector: "role=button[name='Back']"
+        description: "Back button to return to Step 3"
+      next_button:
+        selector: "role=button[name='Next']"
+        description: "Next button to advance to Step 5 (Review)"
+
+  add-target-wizard-step5:
+    url_pattern: "/#/dashboard"
+    description: "Add Target wizard Step 5: review generated YAML and save"
+    elements:
+      yaml_preview:
+        selector: "text=/Generated YAML preview/"
+        description: "Label above the generated YAML preview block"
+      back_button:
+        selector: "role=button[name='Back']"
+        description: "Back button to return to Step 4"
+      validate_save_button:
+        selector: "role=button[name='Validate & Save']"
+        description: "Button to validate and save the new target configuration"

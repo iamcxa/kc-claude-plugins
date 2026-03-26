@@ -111,6 +111,14 @@ None - no external service configuration required.
 - Auto-restart enabled — code changes during development no longer require manual server restart
 - Plan 03 (target path validation) can proceed independently
 
+## Self-Check: PASSED
+
+All created files found. All task commits verified:
+- e7483a4: test(12-02) TDD RED tests
+- 652f591: feat(12-02) shared log-parser + endpoint
+- 99106aa: feat(12-02) LogStream fix + --watch
+- 6b5387f: docs(12-02) SUMMARY + STATE
+
 ---
 *Phase: 12-test-infra-run-ux-fixes*
 *Completed: 2026-03-24*
