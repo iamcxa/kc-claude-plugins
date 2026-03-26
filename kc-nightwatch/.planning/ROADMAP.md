@@ -14,7 +14,7 @@
 
 | Phase | Name | Plans | Status |
 |-------|------|-------|--------|
-| 17 | signal-priority-display | 1/1 | Complete (visual checkpoint pending) |
+| 17 | signal-priority-display | Complete    | 2026-03-26 |
 
 ## Progress
 
