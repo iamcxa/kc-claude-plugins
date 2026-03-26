@@ -68,6 +68,6 @@
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
 | 12-14 | v3.0 | 9/9 | Complete | 2026-03-24 |
 | 15. Data Layer Foundations | v4.0 | 2/2 | Complete | 2026-03-25 |
-| 16. Health Page Enrichment | v4.0 | 2/2 | Complete   | 2026-03-26 |
+| 16. Health Page Enrichment | v4.0 | 2/2 | Complete    | 2026-03-26 |
 | 17. Signal Priority Display | v4.0 | 0/TBD | Not started | - |
 | **Total** | | **39** | | |
