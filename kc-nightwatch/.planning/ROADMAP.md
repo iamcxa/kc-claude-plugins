@@ -14,7 +14,7 @@
 
 **Milestone Goal:** Make the feedback flywheel visible and self-adjusting — users see improvement trends, calibration tables, forge health, and priority-sorted signals
 
-- [ ] **Phase 15: Data Layer Foundations** - Fix fake history, add calibration logic (EMA + sample gate), add forge and signal priority endpoints
+- [x] **Phase 15: Data Layer Foundations** - Fix fake history, add calibration logic (EMA + sample gate), add forge and signal priority endpoints
 - [ ] **Phase 16: Health Page Enrichment** - Wire real sparkline data, add calibration table, add tooltip, add forge results card
 - [ ] **Phase 17: Signal Priority Display** - Sort run detail actions by priority score, surface calibration-driven ranking
 
@@ -31,9 +31,8 @@
   4. `GET /api/forge/results` returns forge validation status, branch, and details from `nightwatch-self-repair.yaml`
   5. `GET /api/signals/priority` returns indicators ranked by `confidence × (1 - reject_rate)` with a 30-run window cap
 **Plans**: 2 plans
-Plans:
 - [x] 15-01-PLAN.md — Types + CalibrationData rewrite with EMA bucketing, N gate, updated tests
-- [ ] 15-02-PLAN.md — Forge results endpoint, signals priority endpoint, health-api fix, route registration
+- [x] 15-02-PLAN.md — Forge results endpoint, signals priority endpoint, health-api fix, route registration
 **UI hint**: no
 
 ### Phase 16: Health Page Enrichment
@@ -45,7 +44,9 @@ Plans:
   2. A calibration table is visible on the health page with columns for indicator, current threshold, reject rate, and feedback count; rows with fewer than 10 entries show "Accumulating data" instead of a threshold value
   3. Hovering over any sparkline data point shows a tooltip with the exact value and the associated run ID
   4. A forge results card on the health page displays the most recent self-repair run status (pass/fail), branch name, and validation details
-**Plans**: TBD
+**Plans**: 2 plans
+- [ ] 16-01-PLAN.md — Type changes (HealthIndicatorData.run_ids), health-api run_ids extraction, api.ts getForgeResults()
+- [ ] 16-02-PLAN.md — ForgeResultCard, CalibrationTable, sparkline tooltip, health.ts wiring + visual checkpoint
 **UI hint**: yes
 
 ### Phase 17: Signal Priority Display
@@ -66,7 +67,7 @@ Plans:
 | 5-7 | v1.1 | 5/5 | Complete | 2026-03-20 |
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
 | 12-14 | v3.0 | 9/9 | Complete | 2026-03-24 |
-| 15. Data Layer Foundations | v4.0 | 1/2 | In Progress | - |
-| 16. Health Page Enrichment | v4.0 | 0/TBD | Not started | - |
+| 15. Data Layer Foundations | v4.0 | 2/2 | Complete | 2026-03-25 |
+| 16. Health Page Enrichment | v4.0 | 0/2 | Not started | - |
 | 17. Signal Priority Display | v4.0 | 0/TBD | Not started | - |
 | **Total** | | **39** | | |
