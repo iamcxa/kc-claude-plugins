@@ -58,7 +58,7 @@ Declared values (multiples of 4). Derived from measurement of existing component
 | Token | Value | Usage in this phase |
 |-------|-------|---------------------|
 | xs | 4px | Padding: `<td>` cell top/bottom, indicator row vertical padding |
-| sm | 8px | Card internal padding (compact rows), section label margin-bottom |
+| sm | 8px | Card internal padding (compact rows), section label margin-bottom, table cell top/bottom padding |
 | md | 12px | Card padding (primary), indicator row gap, table cell horizontal padding |
 | lg | 16px | Page horizontal margin (all cards), section margin-bottom, page padding |
 | xl | 24px | Not used in Phase 16 |
@@ -69,7 +69,7 @@ Exceptions:
 - Sparkline hit rect: full-height (20px default = sparkline height), no minimum. Column width = `pointSpacing` (derived from data count).
 - ForgeResultCard collapsed height: matches existing target card header line (approximately 40px) — same as HealthSummaryBar height.
 - Tooltip div: fixed height 36px above sparkline container (`top:-36px`), 4px 8px padding.
-- Table cell padding: `padding: 6px 12px` (6px top/bottom, 12px left/right) — consistent with existing button padding pattern.
+- Table cell padding: `padding: 8px 12px` (8px top/bottom, 12px left/right) — multiples of 4 on both axes.
 
 ---
 
@@ -77,11 +77,12 @@ Exceptions:
 
 All sizes derived from existing codebase measurements. No external font loading.
 
+Scale reduced from 4 to 3 sizes: 13px secondary label consolidated into 14px body to eliminate the 1px step between 13px and 14px.
+
 | Role | Size | Weight | Line Height | Usage |
 |------|------|--------|-------------|-------|
 | Page heading | 16px | 600 (semibold) | 1.2 | "Flywheel Health" page title, target name |
-| Body / label | 14px | 400 (regular) | 1.5 | Indicator name, ForgeResultCard text, table cell text, button text |
-| Secondary label | 13px | 600 (semibold) for values, 400 for labels | 1.5 | Indicator current value (numeric), runs analyzed count |
+| Body / label | 14px | 400 (regular) for labels, 600 (semibold) for values | 1.5 | Indicator name, ForgeResultCard text, table cell text, button text, indicator current value (numeric), runs analyzed count, ForgeResultCard branch + details text |
 | Micro / caption | 11px | 400 (regular) | 1.4 | Tooltip content, section subheadings, chart axis labels, Sparkline fallback "--" |
 
 Font weights in use: **400** (regular) and **600** (semibold) only.
@@ -143,8 +144,8 @@ Details:
   • [detail item 2]
 ```
 - Expanded section: `padding-top:8px;border-top:1px solid var(--border);margin-top:8px;`
-- Branch line: `font-size:13px;color:var(--text);font-family:var(--font-mono);`
-- Details list: `<ul>` with `font-size:13px;color:var(--muted);margin:4px 0;padding-left:16px;`
+- Branch line: `font-size:14px;color:var(--text);font-family:var(--font-mono);`
+- Details list: `<ul>` with `font-size:14px;color:var(--muted);margin:4px 0;padding-left:16px;`
 - Expand/collapse: instant toggle (no CSS transition) — consistent with utilitarian aesthetic
 
 **Null / no-data state (forge_result === null):**
@@ -177,8 +178,8 @@ Details:
 
 - Table container: `width:100%;border-collapse:collapse;font-size:14px;`
 - Container wrapper: `background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px;margin:0 16px 16px;`
-- Header row: `font-size:12px;font-weight:600;color:var(--muted);text-align:left;padding:6px 12px;border-bottom:1px solid var(--border);`
-- Data row: `font-size:14px;color:var(--text);padding:6px 12px;border-bottom:1px solid var(--border);`
+- Header row: `font-size:12px;font-weight:600;color:var(--muted);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);`
+- Data row: `font-size:14px;color:var(--text);padding:8px 12px;border-bottom:1px solid var(--border);`
 - Last row: no bottom border
 
 **Threshold cell (N-gate):**
@@ -381,3 +382,5 @@ No third-party component registries. All new components are hand-rolled inline i
 | Spacing values | Codebase scan — health.ts, health-summary.ts inline style measurements |
 | Component library = none | RESEARCH.md Standard Stack |
 | No shadcn | Codebase scan — no components.json found |
+| 13px → 14px consolidation | UI checker FLAG (Dimension 4) — 1px step eliminated, scale reduced to 3 sizes |
+| 6px → 8px table cell padding | UI checker BLOCK (Dimension 5) — all spacing values now multiples of 4 |
