@@ -77,13 +77,13 @@ Exceptions:
 
 All sizes derived from existing codebase measurements. No external font loading.
 
-Scale reduced from 4 to 3 sizes: 13px secondary label consolidated into 14px body to eliminate the 1px step between 13px and 14px.
+Scale reduced from 4 to 3 sizes: 13px secondary label consolidated into 14px body to eliminate the 1px step between 13px and 14px. 12px section subheadings standardized to 11px to keep the scale at 3 sizes.
 
 | Role | Size | Weight | Line Height | Usage |
 |------|------|--------|-------------|-------|
 | Page heading | 16px | 600 (semibold) | 1.2 | "Flywheel Health" page title, target name |
 | Body / label | 14px | 400 (regular) for labels, 600 (semibold) for values | 1.5 | Indicator name, ForgeResultCard text, table cell text, button text, indicator current value (numeric), runs analyzed count, ForgeResultCard branch + details text |
-| Micro / caption | 11px | 400 (regular) | 1.4 | Tooltip content, section subheadings, chart axis labels, Sparkline fallback "--" |
+| Micro / caption | 11px | 400 (regular) | 1.4 | Tooltip content, section subheadings, CalibrationTable header row, chart axis labels, Sparkline fallback "--" |
 
 Font weights in use: **400** (regular) and **600** (semibold) only.
 
@@ -165,7 +165,7 @@ Details:
 
 **Structure:**
 ```
-[Section header: "Calibration"] (12px, semibold, var(--muted))
+[Section header: "Calibration"] (11px, semibold, var(--muted))
 <table>
   <thead>
     Indicator | Threshold | Reject % | Feedback Count
@@ -178,7 +178,7 @@ Details:
 
 - Table container: `width:100%;border-collapse:collapse;font-size:14px;`
 - Container wrapper: `background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px;margin:0 16px 16px;`
-- Header row: `font-size:12px;font-weight:600;color:var(--muted);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);`
+- Header row: `font-size:11px;font-weight:600;color:var(--muted);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);`
 - Data row: `font-size:14px;color:var(--text);padding:8px 12px;border-bottom:1px solid var(--border);`
 - Last row: no bottom border
 
@@ -239,6 +239,8 @@ interface Props {
 
 Source: CONTEXT.md D-01, D-02
 
+**Primary visual anchor:** ForgeResultCard — positioned immediately below HealthSummaryBar.
+
 **Section order (top to bottom):**
 1. Page heading ("Flywheel Health") — existing, unchanged
 2. `HealthSummaryBar` — existing, unchanged
@@ -250,7 +252,7 @@ Source: CONTEXT.md D-01, D-02
 
 **Layout model:** Single scrollable column. No tabs, no grid, no sidebar. All sections share the same `margin:0 16px 16px` horizontal spacing. Source: CONTEXT.md D-02.
 
-**Section dividers:** No `<hr>` elements. Sections are visually separated by the card backgrounds (`var(--panel)`) against the page background (`var(--bg)`). Section subheadings use `font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;` (existing pattern from Reject Rate Charts section).
+**Section dividers:** No `<hr>` elements. Sections are visually separated by the card backgrounds (`var(--panel)`) against the page background (`var(--bg)`). Section subheadings use `font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;` (existing pattern from Reject Rate Charts section, standardized to 11px).
 
 ---
 
@@ -383,4 +385,6 @@ No third-party component registries. All new components are hand-rolled inline i
 | Component library = none | RESEARCH.md Standard Stack |
 | No shadcn | Codebase scan — no components.json found |
 | 13px → 14px consolidation | UI checker FLAG (Dimension 4) — 1px step eliminated, scale reduced to 3 sizes |
+| 12px font-size → 11px standardization | UI checker BLOCK (Dimension 4, revision 2) — section subheadings collapsed into micro/caption tier; scale stays at 3 sizes |
 | 6px → 8px table cell padding | UI checker BLOCK (Dimension 5) — all spacing values now multiples of 4 |
+| Primary visual anchor declaration | UI checker FLAG (Dimension 2, revision 2) — ForgeResultCard focal point added to Page Layout Contract |
