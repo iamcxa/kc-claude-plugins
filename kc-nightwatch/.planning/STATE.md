@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Flywheel Intelligence
 status: executing
-stopped_at: Phase 16 UI-SPEC approved
-last_updated: "2026-03-26T08:05:28.333Z"
-last_activity: 2026-03-25 — Plan 15-02 complete
+stopped_at: Completed 16-health-page-enrichment 16-01-PLAN.md
+last_updated: "2026-03-26T08:55:37.389Z"
+last_activity: 2026-03-26
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
   percent: 28
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-24)
 
 **Core value:** The closed-loop feedback flywheel — NW monitors, proposes, learns from feedback, and gets measurably better over time
-**Current focus:** v4.0 Flywheel Intelligence — Phase 15: Data Layer Foundations
+**Current focus:** Phase 16 — health-page-enrichment
 
 ## Current Position
 
-Phase: 15 of 17 (Data Layer Foundations)
-Plan: 02 complete, Phase 15 done — Phase 16 next
-Status: In progress
-Last activity: 2026-03-25 — Plan 15-02 complete
+Phase: 16 (health-page-enrichment) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-03-26
 
 Progress: [██░░░░░░░░] 28% (v4.0, 2/7 plans)
 
@@ -47,6 +47,7 @@ Progress: [██░░░░░░░░] 28% (v4.0, 2/7 plans)
 | 16-17 | TBD | - | - |
 
 *Updated after each plan completion*
+| Phase 16-health-page-enrichment P01 | 10 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -60,6 +61,9 @@ Progress: [██░░░░░░░░] 28% (v4.0, 2/7 plans)
 - History capped at 30 most recent run-ids sorted by earliest submitted_at (D-01).
 - forge.ts redefines SELF_REPAIR_YAML_PATH locally (not imported from config.ts — not exported there).
 - CONFIDENCE_WEIGHT: high=1.0, medium=0.6, low=0.3 per CONTEXT.md direction.
+- [Phase 16-health-page-enrichment]: run_ids is optional (run_ids?: string[]) so existing callers don't break
+- [Phase 16-health-page-enrichment]: indicatorRunIds pushed in same branch as indicatorHistory to guarantee parallel alignment (Pitfall 2)
+- [Phase 16-health-page-enrichment]: getForgeResults() placed after getCalibration() in api.ts for logical API grouping
 
 ### Pending Todos
 
@@ -71,6 +75,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T08:05:28.329Z
-Stopped at: Phase 16 UI-SPEC approved
-Resume file: .planning/phases/16-health-page-enrichment/16-UI-SPEC.md
+Last session: 2026-03-26T08:55:37.386Z
+Stopped at: Completed 16-health-page-enrichment 16-01-PLAN.md
+Resume file: None

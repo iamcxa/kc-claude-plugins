@@ -45,7 +45,7 @@
   3. Hovering over any sparkline data point shows a tooltip with the exact value and the associated run ID
   4. A forge results card on the health page displays the most recent self-repair run status (pass/fail), branch name, and validation details
 **Plans**: 2 plans
-- [ ] 16-01-PLAN.md — Type changes (HealthIndicatorData.run_ids), health-api run_ids extraction, api.ts getForgeResults()
+- [x] 16-01-PLAN.md — Type changes (HealthIndicatorData.run_ids), health-api run_ids extraction, api.ts getForgeResults()
 - [ ] 16-02-PLAN.md — ForgeResultCard, CalibrationTable, sparkline tooltip, health.ts wiring + visual checkpoint
 **UI hint**: yes
 
@@ -68,6 +68,6 @@
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
 | 12-14 | v3.0 | 9/9 | Complete | 2026-03-24 |
 | 15. Data Layer Foundations | v4.0 | 2/2 | Complete | 2026-03-25 |
-| 16. Health Page Enrichment | v4.0 | 0/2 | Not started | - |
+| 16. Health Page Enrichment | v4.0 | 1/2 | In Progress|  |
 | 17. Signal Priority Display | v4.0 | 0/TBD | Not started | - |
 | **Total** | | **39** | | |

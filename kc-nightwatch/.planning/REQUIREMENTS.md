@@ -11,7 +11,7 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 
 - [ ] **VIZ-01**: Health page shows per-indicator reject rate trend as a sparkline with real historical data (not fake 2-point stub)
 - [ ] **VIZ-02**: Health page shows calibration table with current threshold, reject rate, total feedback count, and sample size per indicator
-- [ ] **VIZ-03**: Sparkline and trend chart show tooltip with exact value and run ID on hover
+- [x] **VIZ-03**: Sparkline and trend chart show tooltip with exact value and run ID on hover
 
 ### Signal Intelligence
 
@@ -21,7 +21,7 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 
 ### Forge Visibility
 
-- [ ] **FORGE-01**: Health page displays forge validation results from the most recent self-repair run (status, branch, details)
+- [x] **FORGE-01**: Health page displays forge validation results from the most recent self-repair run (status, branch, details)
 
 ## Future (v4.1+)
 
@@ -46,8 +46,8 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 | SIG-02 | Phase 15 | Pending |
 | SIG-03 | Phase 15 | Pending |
 | VIZ-02 | Phase 16 | Pending |
-| VIZ-03 | Phase 16 | Pending |
-| FORGE-01 | Phase 16 | Pending |
+| VIZ-03 | Phase 16 | Complete |
+| FORGE-01 | Phase 16 | Complete |
 | SIG-01 | Phase 17 | Pending |
 
 **Coverage:**
