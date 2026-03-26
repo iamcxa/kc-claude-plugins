@@ -88,7 +88,7 @@ Validated in v3.0 (Phases 12-14, 2026-03-24):
 - **Design spec**: `docs/superpowers/specs/2026-03-18-nightwatch-dashboard-design.md`
 - **Field renaming**: App introduces `monitors`/`watch`/`respond`/`indicators` (replacing `sources`/`keywords`/`actions`/`proxy_signals`) with compatibility layer
 - **Pipeline phases**: 0 → 0.4.5 (Reactions) → 0.5 (Measure) → 0.6 (Outcomes) → 1 → 2 → 3 → 3.5 (Assess) → 4 → 4.5 (Assess) → 5
-- **Codebase**: ~12K LOC TypeScript (Bun + Hono + Preact/HTM), zero build tooling, 373 tests
+- **Codebase**: ~12K LOC TypeScript (Bun + Hono + Preact/HTM), zero build tooling, 436 tests
 
 ## Constraints
 
@@ -127,11 +127,11 @@ Validated in v3.0 (Phases 12-14, 2026-03-24):
 - Forge results in dashboard (self-repair output visibility)
 - Per-indicator trend sparklines (health arrows → mini charts)
 
-## Current State: v3.0 Shipped
+## Current State: v4.0 In Progress
 
-All four milestones complete. 14 phases, 38 plans, 51 requirements validated across v1.0 + v1.1 + v2.0 + v3.0.
+All four milestones complete. 16 phases, 42 plans across v1.0 + v1.1 + v2.0 + v3.0 + v4.0 (partial).
 
-**v4.0 in progress** — Flywheel Intelligence.
+**v4.0 in progress** — Flywheel Intelligence. Phase 15 (data layer) + Phase 16 (health page enrichment) complete. Phase 17 (signal priority display) remaining.
 
 ## Evolution
 
@@ -151,4 +151,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-24 after v4.0 milestone started*
+*Last updated: 2026-03-26 after Phase 16 complete*
