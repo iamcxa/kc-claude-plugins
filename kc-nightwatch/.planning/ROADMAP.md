@@ -56,7 +56,8 @@
 **Success Criteria** (what must be TRUE):
   1. Actions in the run detail view are sorted descending by a numeric priority score computed as `confidence_weight × (1 - reject_rate)`
   2. Each action displays its computed priority score alongside the existing confidence label
-**Plans**: TBD
+**Plans**: 1 plan
+- [ ] 17-01-PLAN.md — Priority API client, action sort by score in runs.ts, score display in ActionCard
 **UI hint**: yes
 
 ## Progress
@@ -69,5 +70,5 @@
 | 12-14 | v3.0 | 9/9 | Complete | 2026-03-24 |
 | 15. Data Layer Foundations | v4.0 | 2/2 | Complete | 2026-03-25 |
 | 16. Health Page Enrichment | v4.0 | 2/2 | Complete    | 2026-03-26 |
-| 17. Signal Priority Display | v4.0 | 0/TBD | Not started | - |
+| 17. Signal Priority Display | v4.0 | 0/1 | Not started | - |
 | **Total** | | **39** | | |
