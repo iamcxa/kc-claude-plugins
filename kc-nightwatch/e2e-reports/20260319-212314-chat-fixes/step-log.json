@@ -1,0 +1,93 @@
+{
+  "steps": [
+    {
+      "id": "navigate-to-dashboard",
+      "started_at": "2026-03-19T21:23:20Z",
+      "completed_at": "2026-03-19T21:23:25Z",
+      "result": "pass",
+      "anomalies": []
+    },
+    {
+      "id": "open-chat-via-fab",
+      "started_at": "2026-03-19T21:23:25Z",
+      "completed_at": "2026-03-19T21:23:30Z",
+      "result": "pass",
+      "anomalies": []
+    },
+    {
+      "id": "close-chat-via-x",
+      "started_at": "2026-03-19T21:23:30Z",
+      "completed_at": "2026-03-19T21:23:38Z",
+      "result": "pass",
+      "anomalies": [
+        {
+          "type": "visual",
+          "detail": "Playwright is_visible returns true for off-screen dialog (CSS transform slide-out). Visual confirmation shows dialog is closed.",
+          "severity": "low"
+        }
+      ]
+    },
+    {
+      "id": "click-sidebar-target-opens-chat",
+      "started_at": "2026-03-19T21:23:38Z",
+      "completed_at": "2026-03-19T21:23:45Z",
+      "result": "pass",
+      "anomalies": []
+    },
+    {
+      "id": "switch-target-via-sidebar",
+      "started_at": "2026-03-19T21:23:45Z",
+      "completed_at": "2026-03-19T21:23:52Z",
+      "result": "pass",
+      "anomalies": []
+    },
+    {
+      "id": "verify-reset-button-clickable",
+      "started_at": "2026-03-19T21:23:52Z",
+      "completed_at": "2026-03-19T21:23:58Z",
+      "result": "pass",
+      "anomalies": []
+    },
+    {
+      "id": "type-message-in-chat",
+      "started_at": "2026-03-19T21:23:58Z",
+      "completed_at": "2026-03-19T21:24:02Z",
+      "result": "pass",
+      "anomalies": []
+    },
+    {
+      "id": "send-message",
+      "started_at": "2026-03-19T21:24:02Z",
+      "completed_at": "2026-03-19T21:24:10Z",
+      "result": "pass",
+      "anomalies": []
+    },
+    {
+      "id": "wait-for-response-or-error",
+      "started_at": "2026-03-19T21:24:10Z",
+      "completed_at": "2026-03-19T21:24:45Z",
+      "result": "pass",
+      "anomalies": []
+    },
+    {
+      "id": "verify-input-recovers-after-send",
+      "started_at": "2026-03-19T21:24:45Z",
+      "completed_at": "2026-03-19T21:24:50Z",
+      "result": "pass",
+      "anomalies": []
+    },
+    {
+      "id": "close-chat-final",
+      "started_at": "2026-03-19T21:24:50Z",
+      "completed_at": "2026-03-19T21:24:58Z",
+      "result": "pass",
+      "anomalies": [
+        {
+          "type": "visual",
+          "detail": "Same as close-chat-via-x: Playwright is_visible returns true for off-screen dialog.",
+          "severity": "low"
+        }
+      ]
+    }
+  ]
+}

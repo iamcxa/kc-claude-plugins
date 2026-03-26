@@ -1,6 +1,6 @@
 import { html } from 'htm/preact'
 import { useState, useEffect, useCallback } from 'preact/hooks'
-import type { Run, RunSummary, ParsedLogEvent, OutcomeRecord, FeedbackEntry } from '../../shared/types.ts'
+import type { Run, RunSummary, ParsedLogEvent, OutcomeRecord, FeedbackEntry, SignalPriorityEntry } from '../../shared/types.ts'
 import { LogStream } from '../components/log-stream.ts'
 import { RunTimeline } from '../components/run-timeline.ts'
 import { ActionCard } from '../components/action-card.ts'
@@ -58,6 +58,7 @@ export function Runs() {
   const [targetFilter, setTargetFilter] = useState('')
   const [outcomesMap, setOutcomesMap] = useState<Record<string, OutcomeRecord>>({})
   const [feedbackMap, setFeedbackMap] = useState<Record<string, FeedbackEntry[]>>({})
+  const [priorityMap, setPriorityMap] = useState<Record<string, SignalPriorityEntry>>({})
 
   const loadRuns = useCallback(() => {
     api.getRuns().then(allRuns => {
@@ -103,6 +104,11 @@ export function Runs() {
       }
       setFeedbackMap(map)
     }).catch(console.error)
+    api.getSignalPriority(selectedId).then(entries => {
+      const map: Record<string, SignalPriorityEntry> = {}
+      for (const e of entries) map[e.signal_id] = e
+      setPriorityMap(map)
+    }).catch(console.error)
   }, [selectedId])
 
   // Re-fetch run detail when the run list refreshes during active polling.
@@ -118,6 +124,11 @@ export function Runs() {
         map[e.signal_id].push(e)
       }
       setFeedbackMap(map)
+    }).catch(console.error)
+    api.getSignalPriority(selectedId).then(entries => {
+      const map: Record<string, SignalPriorityEntry> = {}
+      for (const e of entries) map[e.signal_id] = e
+      setPriorityMap(map)
     }).catch(console.error)
   }, [runs])
 
@@ -192,20 +203,27 @@ export function Runs() {
             </div>
           `
         )}
-        <!-- Action cards from per_target summary -->
+        <!-- Action cards from per_target summary, sorted by priority score (descending) -->
         ${selectedRun.summary?.per_target && Object.entries(selectedRun.summary.per_target).map(([targetName, targetData]) =>
           targetData.actions && targetData.actions.length > 0 && html`
             <div key=${targetName} style="padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0;overflow-y:auto;max-height:300px;">
               <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px;">${targetName} Actions</div>
-              ${targetData.actions.map((action: import('../../shared/types.ts').RunSummaryAction) => html`
-                <${ActionCard}
-                  key=${action.signal_id}
-                  action=${action}
-                  target=${targetName}
-                  runId=${selectedId}
-                  existingFeedback=${feedbackMap[action.signal_id] ?? []}
-                  outcomeStatus=${outcomesMap[action.signal_id] ? { status: outcomesMap[action.signal_id].status, url: outcomesMap[action.signal_id].url, type: outcomesMap[action.signal_id].type } : null}
-                />
+              ${[...targetData.actions]
+                .sort((a: import('../../shared/types.ts').RunSummaryAction, b: import('../../shared/types.ts').RunSummaryAction) => {
+                  const scoreA = priorityMap[a.signal_id]?.score ?? 0
+                  const scoreB = priorityMap[b.signal_id]?.score ?? 0
+                  return scoreB - scoreA || a.signal_id.localeCompare(b.signal_id)
+                })
+                .map((action: import('../../shared/types.ts').RunSummaryAction) => html`
+                  <${ActionCard}
+                    key=${action.signal_id}
+                    action=${action}
+                    target=${targetName}
+                    runId=${selectedId}
+                    existingFeedback=${feedbackMap[action.signal_id] ?? []}
+                    outcomeStatus=${outcomesMap[action.signal_id] ? { status: outcomesMap[action.signal_id].status, url: outcomesMap[action.signal_id].url, type: outcomesMap[action.signal_id].type } : null}
+                    priorityScore=${priorityMap[action.signal_id]?.score}
+                  />
               `)}
             </div>
           `

@@ -9,6 +9,7 @@ interface Props {
   runId: string
   existingFeedback: FeedbackEntry[]
   outcomeStatus?: { status: OutcomeRecord['status']; url: string; type: OutcomeRecord['type'] } | null
+  priorityScore?: number  // 0.0–1.0 from /api/signals/priority; undefined if not yet loaded
 }
 
 function badgeBg(status: OutcomeRecord['status']): string {
@@ -60,7 +61,7 @@ function verdictColor(verdict: FeedbackEntry['verdict']): string {
   return 'var(--warn)'
 }
 
-export function ActionCard({ action, target, runId, existingFeedback, outcomeStatus }: Props) {
+export function ActionCard({ action, target, runId, existingFeedback, outcomeStatus, priorityScore }: Props) {
   const [expanded, setExpanded] = useState(false)
   const userFeedback = existingFeedback.find(f => f.source === 'user')
   const [submitted, setSubmitted] = useState<'accepted' | 'rejected' | 'uncertain' | null>(userFeedback?.verdict ?? null)
@@ -97,13 +98,19 @@ export function ActionCard({ action, target, runId, existingFeedback, outcomeSta
       >
         <span style="flex:1;font-size:14px;">${action.summary}</span>
         <span style="font-size:11px;padding:2px 6px;border-radius:4px;background:var(--btn-secondary);color:var(--muted);">${action.type}</span>
+        ${priorityScore !== undefined ? html`
+          <span
+            title="Priority score: ${priorityScore} (${action.assessment.confidence} confidence, ${action.assessment.closer_to_north_star === 'yes' ? 'aligned' : action.assessment.closer_to_north_star === 'no' ? 'not aligned' : 'uncertain'} with north star)"
+            style="font-size:11px;padding:2px 6px;border-radius:4px;font-weight:600;font-variant-numeric:tabular-nums;background:${priorityScore >= 0.67 ? 'rgba(63,185,80,0.12)' : priorityScore >= 0.34 ? 'rgba(227,179,65,0.12)' : 'rgba(139,148,158,0.12)'};color:${priorityScore >= 0.67 ? 'var(--success)' : priorityScore >= 0.34 ? 'var(--warn)' : 'var(--muted)'};"
+          >${priorityScore.toFixed(2)} ${action.assessment.confidence}</span>
+        ` : null}
         ${outcomeStatus ? html`
           <span style="font-size:11px;padding:2px 6px;border-radius:4px;font-weight:600;background:${badgeBg(outcomeStatus.status)};color:${badgeColor(outcomeStatus.status)};">${badgeText(outcomeStatus.status)}</span>
         ` : null}
         ${autoFeedback.length > 0 ? html`
           <span style="font-size:11px;padding:2px 6px;border-radius:4px;background:rgba(88,166,255,0.15);color:var(--accent);">${autoFeedback.length} feedback</span>
         ` : null}
-        <span style="font-size:11px;color:${confidenceColor};font-weight:600;">${action.assessment.confidence}</span>
+        ${priorityScore === undefined ? html`<span style="font-size:11px;color:${confidenceColor};font-weight:600;">${action.assessment.confidence}</span>` : null}
         <span style="font-size:12px;color:var(--muted);">${expanded ? '\u25B2' : '\u25BC'}</span>
       </div>
 

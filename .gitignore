@@ -1,0 +1,14 @@
+node_modules/
+.env
+.env.local
+.env.*.local
+
+# E2E pipeline artifacts (large binary files)
+e2e-reports/**/*.webm
+e2e-reports/**/*.mp4
+e2e-reports/**/trace.zip
+
+# E2E pipeline artifacts (large binary files)
+.claude/e2e/reports/**/*.webm
+.claude/e2e/reports/**/*.mp4
+.claude/e2e/reports/**/trace.zip

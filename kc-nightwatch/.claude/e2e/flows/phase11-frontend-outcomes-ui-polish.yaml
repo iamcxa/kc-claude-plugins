@@ -1,0 +1,119 @@
+name: phase11-frontend-outcomes-ui-polish
+description: "Verify Phase 11 frontend outcomes: navigate all 5 tabs, check Outcomes page empty state, verify nav gap fix, check dashboard target detail schedule section, open wizard to step 4 schedule"
+tags: [phase-11, outcomes, ui-polish, wizard, schedule]
+mapping: nightwatch-dashboard
+
+steps:
+  - id: navigate-to-dashboard
+    action: "Navigate to http://127.0.0.1:3201/#/dashboard"
+    expect:
+      - "nav_dashboard visible on _global"
+      - "nav_runs visible on _global"
+      - "nav_outcomes visible on _global"
+      - "nav_health visible on _global"
+      - "nav_config visible on _global"
+      - "url contains '/#/dashboard'"
+    screenshot: true
+    timeout: 10
+
+  - id: click-runs-tab
+    action: "Click nav_runs on _global"
+    expect:
+      - "url contains '/#/runs'"
+    timeout: 5
+
+  - id: click-outcomes-tab
+    action: "Click nav_outcomes on _global"
+    expect:
+      - "url contains '/#/outcomes'"
+    screenshot: true
+    timeout: 5
+
+  - id: verify-outcomes-empty-state
+    action: "Wait for networkidle"
+    expect:
+      - "empty_state_heading visible on outcomes"
+      - "text 'No outcomes recorded yet' on page"
+    screenshot: true
+
+  - id: verify-outcomes-filters-present
+    action: "Wait for networkidle"
+    expect:
+      - "target_filter visible on outcomes"
+      - "type_filter visible on outcomes"
+      - "status_filter visible on outcomes"
+
+  - id: click-health-tab
+    action: "Click nav_health on _global"
+    expect:
+      - "url contains '/#/health'"
+    timeout: 5
+
+  - id: click-config-tab
+    action: "Click nav_config on _global"
+    expect:
+      - "url contains '/#/config'"
+      - "targets_tab visible on config"
+      - "safety_tab visible on config"
+    timeout: 5
+
+  - id: verify-nav-gap-fix
+    action: "Click nav_dashboard on _global"
+    expect:
+      - "url contains '/#/dashboard'"
+      - "nav_dashboard visible on _global"
+    screenshot: true
+
+  - id: select-first-target
+    action: "Click target_item on dashboard"
+    expect:
+      - "target_heading visible on dashboard-detail"
+      - "schedule_label visible on dashboard-detail"
+    screenshot: true
+    timeout: 5
+
+  - id: verify-schedule-section
+    action: "Wait for networkidle"
+    expect:
+      - "schedule_label visible on dashboard-detail"
+      - "schedule_interval_text visible on dashboard-detail"
+      - "schedule_countdown_text visible on dashboard-detail"
+    screenshot: true
+
+  - id: open-add-target-wizard
+    action: "Click add_target_button on dashboard"
+    expect:
+      - "dialog visible on add-target-wizard-step1"
+    timeout: 5
+
+  - id: fill-wizard-step1-name
+    action: "Fill name_input on add-target-wizard-step1 with 'test-phase11-target'"
+    expect:
+      - "next_button visible on add-target-wizard-step1"
+
+  - id: wizard-step1-to-step2
+    action: "Click next_button on add-target-wizard-step1"
+    expect:
+      - "north_star_input visible on add-target-wizard-step2"
+
+  - id: wizard-step2-to-step3
+    action: "Click next_button on add-target-wizard-step2"
+    expect:
+      - "next_schedule_button visible on add-target-wizard-step3"
+
+  - id: wizard-step3-to-step4
+    action: "Click next_schedule_button on add-target-wizard-step3"
+    expect:
+      - "use_global_schedule_checkbox visible on add-target-wizard-step4"
+    screenshot: true
+
+  - id: verify-wizard-step4-schedule
+    action: "Click use_global_schedule_checkbox on add-target-wizard-step4"
+    expect:
+      - "custom_interval_input visible on add-target-wizard-step4"
+    screenshot: true
+
+  - id: close-wizard
+    action: "Click close_button on add-target-wizard-step1"
+    expect:
+      - "dialog not visible on add-target-wizard-step1"
