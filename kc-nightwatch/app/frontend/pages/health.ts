@@ -1,10 +1,12 @@
 import { html } from 'htm/preact'
 import { useState, useEffect } from 'preact/hooks'
-import type { Target, TargetHealthData } from '../../shared/types.ts'
+import type { Target, TargetHealthData, ForgeResultData, CalibrationData } from '../../shared/types.ts'
 import { api } from '../lib/api.ts'
 import { Sparkline } from '../components/sparkline.ts'
 import { LineChart } from '../components/line-chart.ts'
 import { HealthSummaryBar } from '../components/health-summary.ts'
+import { ForgeResultCard } from '../components/forge-result-card.ts'
+import { CalibrationTable } from '../components/calibration-table.ts'
 
 function trendArrow(trend: 'improving' | 'stable' | 'degrading'): { symbol: string; color: string; label: string } {
   switch (trend) {
@@ -32,6 +34,9 @@ export function Health() {
   const [healthData, setHealthData] = useState<Record<string, TargetHealthData>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [forgeData, setForgeData] = useState<ForgeResultData | null>(null)
+  const [calibration, setCalibration] = useState<CalibrationData[] | null>(null)
+  const [calibrationLoading, setCalibrationLoading] = useState(true)
 
   useEffect(() => {
     api.getTargets()
@@ -57,6 +62,13 @@ export function Health() {
       })
   }, [])
 
+  useEffect(() => {
+    api.getForgeResults().then(setForgeData).catch(() => setForgeData(null))
+    api.getCalibration()
+      .then(data => { setCalibration(data); setCalibrationLoading(false) })
+      .catch(() => { setCalibration([]); setCalibrationLoading(false) })
+  }, [])
+
   const overallHealth = deriveOverallHealth(healthData)
 
   // Check if any target has fewer than 3 runs analyzed
@@ -70,6 +82,8 @@ export function Health() {
       </div>
 
       <${HealthSummaryBar} health=${overallHealth} />
+
+      <${ForgeResultCard} data=${forgeData} />
 
       ${loading && html`
         <div style="padding:16px;color:var(--muted);font-size:14px;">Loading...</div>
@@ -105,7 +119,7 @@ export function Health() {
                 aria-label=${targetArrow.label}
                 style="font-size:14px;color:${targetArrow.color};"
               >${targetArrow.symbol}</span>
-              <div style="font-size:12px;color:var(--muted);margin-left:auto;">${data.runs_analyzed} runs analyzed</div>
+              <div style="font-size:11px;color:var(--muted);margin-left:auto;">${data.runs_analyzed} runs analyzed</div>
             </div>
 
             <!-- Indicators with sparklines -->
@@ -117,11 +131,11 @@ export function Health() {
                   style="display:flex;align-items:center;gap:12px;padding:4px 0;border-bottom:1px solid var(--border);"
                 >
                   <div style="font-size:14px;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
-                  <${Sparkline} values=${indicator.history} />
-                  <div style="font-size:13px;font-weight:600;color:var(--text);min-width:40px;text-align:right;">${indicator.current}</div>
+                  <${Sparkline} values=${indicator.history} runIds=${indicator.run_ids} />
+                  <div style="font-size:14px;font-weight:600;color:var(--text);min-width:40px;text-align:right;">${indicator.current}</div>
                   <span
                     aria-label=${arrow.label}
-                    style="font-size:13px;color:${arrow.color};"
+                    style="font-size:14px;color:${arrow.color};"
                   >${arrow.symbol}</span>
                 </div>
               `
@@ -142,10 +156,14 @@ export function Health() {
         `
       })}
 
+      ${!loading && !error && html`
+        <${CalibrationTable} calibration=${calibration} loading=${calibrationLoading} />
+      `}
+
       <!-- Reject rate charts section -->
       ${!loading && !error && Object.keys(healthData).length > 0 && html`
         <div style="margin:0 16px 16px;">
-          <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Reject Rate by Indicator</div>
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;">Reject Rate by Indicator</div>
           <div style="display:flex;flex-wrap:wrap;gap:16px;">
             ${Object.values(healthData).flatMap(data =>
               Object.entries(data.per_indicator_rates ?? {}).map(([name, rateData]) =>
