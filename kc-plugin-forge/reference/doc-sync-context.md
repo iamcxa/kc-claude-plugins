@@ -1,7 +1,7 @@
 ---
 plugin: kc-plugin-forge
-version: 1.4.0
-last_sync: 2026-03-23
+version: 1.6.0
+last_sync: 2026-03-27
 ---
 
 # Doc-Sync Context

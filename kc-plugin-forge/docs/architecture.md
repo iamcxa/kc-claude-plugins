@@ -8,7 +8,7 @@ kc-plugin-forge is a skill-only plugin (no agents) that orchestrates marketplace
 kc-plugin-forge/
 ├── .claude-plugin/plugin.json     # metadata only
 ├── skills/
-│   ├── kc-plugin-forge/           # main orchestrator (5-phase pipeline)
+│   ├── kc-plugin-forge/           # main orchestrator (7-phase pipeline + dreaming)
 │   │   └── SKILL.md
 │   ├── kc-plugin-forge-help/      # interactive help guide
 │   │   └── SKILL.md
@@ -46,6 +46,9 @@ Phase 1.5 ── A: Self-Learning choice (D1+D2 / D1 / Skip)
 Phase 2 ─── superpowers:writing-skills
         │   (RED/GREEN/REFACTOR per skill)
         │
+Phase 2.7 ── Dreaming (pattern promotion)
+        │    (promote mature learned-patterns.md entries → reference files)
+        │
 Phase 2.5 ── clean-profile-test.sh
         │    (claude --bare --effort low per skill)
         │
@@ -82,6 +85,16 @@ The forge scaffolds self-improvement into other plugins via Phase 1.5. Two dimen
 **D1 (cross-project)**: General patterns auto-append to `learned-patterns.md`. Low friction, no user gate.
 
 **D2 (project-specific)**: Patterns gated by severity threshold + three-question test (Recurs? Non-obvious? Ruleable?). Written to project CLAUDE.md or project-specific lesson files.
+
+Phase 2.7 (Dreaming) completes the flywheel by graduating mature D1 patterns into structured reference files:
+
+```
+Skill session → D1 auto-append → learned-patterns.md accumulates
+    → Dreaming (≥14 days, ≥5 patterns):
+        cleanup already-covered → promote to reference files → PR-back
+            → reference files get richer → fewer novel patterns to capture
+                → learned-patterns.md stays lean
+```
 
 See `reference/skill-evolution.md` for the full framework.
 

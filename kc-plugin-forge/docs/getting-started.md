@@ -26,7 +26,7 @@ claude --plugin-dir path/to/kc-plugin-forge
 /kc-plugin-forge path/to/my-plugin
 ```
 
-This runs the full 4-phase pipeline: Structure → Skill TDD → Agent Verify → Report.
+This runs the full pipeline: Structure → Skill TDD → Dreaming → Clean Profile → Agent Verify → Report.
 
 ### Create a new plugin
 
@@ -94,6 +94,8 @@ Plugin Forge Report: my-plugin
 Structure:  PASS (0 items fixed)
 Skills:     3 skills tested (9 scenarios, 9 passed)
 Clean Profile: 3 skills verified (3 clean-pass)
+Dreaming:   8 candidates → 2 promoted, 1 cleanup
+            Promoted: compliance-audit.md §Red Flags, review-triage.md §4f
 Agents:     1 agent verified
 Evolution:  2 skills with self-improvement (D1 only)
 Overall:    PASS

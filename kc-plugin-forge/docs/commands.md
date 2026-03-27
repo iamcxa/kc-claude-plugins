@@ -8,12 +8,15 @@ Main orchestrator — runs the quality pipeline on a target plugin.
 
 | Input | Phases | Description |
 |-------|--------|-------------|
-| `<path>` | 1 → 1.5 → 2 → 2.5 → 3 → 4 | Full pipeline on existing plugin |
-| `new <name>` | scaffold → 1.5 → 2 → 2.5 → 3 → 4 | Create new plugin + full pipeline |
+| `<path>` | 1 → 1.5 → 2 → 2.7 → 2.5 → 3 → 4 | Full pipeline on existing plugin |
+| `new <name>` | scaffold → 1.5 → 2 → 2.7 → 2.5 → 3 → 4 | Create new plugin + full pipeline |
 | `validate-only` | 1 | Structure check only |
-| `skill-tdd-only` | 2 → 2.5 | Skill TDD + smoke test only |
+| `skill-tdd-only` | 2 → 2.7 → 2.5 | Skill TDD + dreaming + smoke test |
 | `agent-verify-only` | 3 | Agent verification only |
-| `self-forge` | 2 → 4 | Forge audits itself |
+| `self-forge` | 2 → 2.7 → 4 | Forge audits itself (incl. pattern promotion) |
+| `dreaming <path>` | 2.7 | Pattern promotion only — pure knowledge curation |
+| `dreaming --all` | 2.7 × N | Multi-plugin discovery + promotion per plugin |
+| `dreaming --dry-run` | 2.7 (analysis) | Show promotion plan without executing (combinable) |
 | *(bare)* | — | Disambiguate: list plugins, confirm target + scope |
 
 ### Phase Reference
@@ -24,8 +27,30 @@ Main orchestrator — runs the quality pipeline on a target plugin.
 | 1.5 | A: Self-Learning level (D1/D2/Skip) + B: Doc Self-Iteration level | — |
 | 2 | RED/GREEN/REFACTOR TDD cycle per skill | `superpowers:writing-skills` |
 | 2.5 | Clean profile smoke test per skill | `clean-profile-test.sh` |
+| 2.7 | Dreaming — promote mature patterns from `learned-patterns.md` into reference files | — (LLM analysis) |
 | 3 | Verify agent examples, tools, prompts, dispatch test | `plugin-dev:agent-development` |
 | 4 | Re-validate, summary report, learning capture, doc-sync offer | `plugin-dev:plugin-validator` |
+
+### Phase 2.7 Dreaming
+
+After Phase 2 TDD, forge analyzes mature patterns in `learned-patterns.md` and promotes them into structured reference files. This graduates knowledge from a flat list into the files where it's most useful.
+
+**Entry gate**: ≥5 dated patterns in `learned-patterns.md`. **Age filter**: only patterns ≥14 days old become candidates. Both must pass for dreaming to run.
+
+**Steps:**
+
+| Step | What it does |
+|------|-------------|
+| 2.7.1 Inventory | Parse dated headings, apply age filter, build candidate list |
+| 2.7.2 Duplicate Detection | Check candidates against existing reference files (batch LLM calls) — auto-cleanup already-covered patterns |
+| 2.7.3 Placement Analysis | LLM determines target file, section, promotion type (`new_entry` / `enhance_existing` / `new_section` / `skill_rule`) |
+| 2.7.4 Confirm & Execute | Present plan, user approves. `skill_rule` requires per-item confirmation. |
+
+**Safety limits**: max 5 promotions/run, max 2 `skill_rule`/run, oldest patterns first if exceeded. Cleanup (auto-delete of already-covered patterns) is unlimited.
+
+**Standalone route** (`dreaming <path>` / `--all`): commits changes + offers PR if repo has remote. In-pipeline: changes are working-tree only (no mid-pipeline commit).
+
+**Discovery for `--all`**: `$KC_WORKSPACE` → `~/.claude/plugins/local/` → ask user.
 
 ### Phase 4 Learning
 
@@ -41,6 +66,13 @@ After the summary report, forge scans for **hard signals** — concrete events d
 | Workaround used | Tool/process limitation |
 
 Signals found → compared against `learned-patterns.md` + `quality-pipeline.md`. Novel patterns are captured. No signals → Light Reflection ("What was most unexpected?").
+
+The Phase 4 report includes a Dreaming section when Phase 2.7 ran:
+
+```
+Dreaming:   N candidates → M promoted, K cleanup
+            Promoted: <file> §<section>, ...
+```
 
 ### Phase 4 Doc-Sync Offer
 
