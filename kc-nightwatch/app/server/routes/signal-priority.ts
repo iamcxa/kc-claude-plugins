@@ -5,9 +5,10 @@ import type { RunSummaryAction } from '../../shared/types.ts'
 
 export const signalPriorityRoutes = new Hono()
 
-// GET /api/signals/priority?run_id=<id>
+// GET /api/signals/priority/run?run_id=<id>
 // Returns priority scores for all signals in a run, sorted descending.
-signalPriorityRoutes.get('/api/signals/priority', async (c) => {
+// Distinct from Phase 15 /api/signals/priority (aggregate by indicator).
+signalPriorityRoutes.get('/api/signals/priority/run', async (c) => {
   const runId = c.req.query('run_id')
   if (!runId) {
     return c.json({ error: 'run_id query parameter is required' }, 400)

@@ -90,7 +90,7 @@ describe('computePriorities', () => {
 // API route: GET /api/signals/priority
 // ============================================================
 
-describe('GET /api/signals/priority', () => {
+describe('GET /api/signals/priority/run', () => {
   const mockRun: Run = {
     id: 'run-001',
     target: 'my-plugin',
@@ -144,7 +144,7 @@ describe('GET /api/signals/priority', () => {
 
   it('returns 400 when run_id is missing', async () => {
     const app = await makeApp()
-    const res = await app.request('/api/signals/priority')
+    const res = await app.request('/api/signals/priority/run')
     expect(res.status).toBe(400)
     const body = await res.json() as { error: string }
     expect(body.error).toContain('run_id')
@@ -153,13 +153,13 @@ describe('GET /api/signals/priority', () => {
   it('returns 404 when run not found', async () => {
     getRun.mockResolvedValueOnce(null)
     const app = await makeApp()
-    const res = await app.request('/api/signals/priority?run_id=nonexistent')
+    const res = await app.request('/api/signals/priority/run?run_id=nonexistent')
     expect(res.status).toBe(404)
   })
 
   it('returns priority entries sorted descending by score', async () => {
     const app = await makeApp()
-    const res = await app.request('/api/signals/priority?run_id=run-001')
+    const res = await app.request('/api/signals/priority/run?run_id=run-001')
     expect(res.status).toBe(200)
     const body = await res.json() as Array<{ signal_id: string; score: number }>
     expect(body).toHaveLength(2)
@@ -177,7 +177,7 @@ describe('GET /api/signals/priority', () => {
       summary: { ...mockSummary, per_target: { 'my-plugin': { ...mockSummary.per_target['my-plugin'], actions: [] } } }
     })
     const app = await makeApp()
-    const res = await app.request('/api/signals/priority?run_id=run-001')
+    const res = await app.request('/api/signals/priority/run?run_id=run-001')
     expect(res.status).toBe(200)
     const body = await res.json() as unknown[]
     expect(body).toHaveLength(0)
@@ -186,7 +186,7 @@ describe('GET /api/signals/priority', () => {
   it('returns empty array when run has no summary', async () => {
     getRun.mockResolvedValueOnce({ ...mockRun, summary: undefined })
     const app = await makeApp()
-    const res = await app.request('/api/signals/priority?run_id=run-001')
+    const res = await app.request('/api/signals/priority/run?run_id=run-001')
     expect(res.status).toBe(200)
     const body = await res.json() as unknown[]
     expect(body).toHaveLength(0)

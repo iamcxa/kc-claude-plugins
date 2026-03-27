@@ -248,16 +248,6 @@ export interface OutcomeRecord {
 }
 
 // ============================================================
-// Signal priority — computed from RunSummaryAction assessment
-// ============================================================
-export interface SignalPriorityEntry {
-  signal_id: string
-  score: number                              // 0.0–1.0, rounded to 2 decimals
-  confidence: 'high' | 'medium' | 'low'
-  closer_to_north_star: 'yes' | 'no' | 'uncertain'
-}
-
-// ============================================================
 // ParsedLogEvent — extended with Phase 2 fields
 // ============================================================
 export interface ParsedLogEvent {
