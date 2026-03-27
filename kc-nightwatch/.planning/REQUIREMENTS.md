@@ -9,15 +9,15 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 
 ### Feedback Visualization
 
-- [ ] **VIZ-01**: Health page shows per-indicator reject rate trend as a sparkline with real historical data (not fake 2-point stub)
+- [x] **VIZ-01**: Health page shows per-indicator reject rate trend as a sparkline with real historical data (not fake 2-point stub)
 - [x] **VIZ-02**: Health page shows calibration table with current threshold, reject rate, total feedback count, and sample size per indicator
 - [x] **VIZ-03**: Sparkline and trend chart show tooltip with exact value and run ID on hover
 
 ### Signal Intelligence
 
 - [ ] **SIG-01**: Each action in run detail has a numeric priority score computed as confidence weight × (1 - reject_rate), and actions are sorted by score descending
-- [ ] **SIG-02**: Calibration data is hidden for indicators with fewer than 10 feedback entries (minimum sample gate)
-- [ ] **SIG-03**: Calibration threshold uses EMA smoothing (α=0.3) instead of raw all-time average
+- [x] **SIG-02**: Calibration data is hidden for indicators with fewer than 10 feedback entries (minimum sample gate)
+- [x] **SIG-03**: Calibration threshold uses EMA smoothing (α=0.3) instead of raw all-time average
 
 ### Forge Visibility
 
@@ -42,9 +42,9 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VIZ-01 | Phase 15 → **Phase 18** (verification closure) | Pending |
-| SIG-02 | Phase 15 → **Phase 18** (verification closure) | Pending |
-| SIG-03 | Phase 15 → **Phase 18** (verification closure) | Pending |
+| VIZ-01 | Phase 15 (verified in Phase 18) | Complete |
+| SIG-02 | Phase 15 (verified in Phase 18) | Complete |
+| SIG-03 | Phase 15 (verified in Phase 18) | Complete |
 | VIZ-02 | Phase 16 | Complete |
 | VIZ-03 | Phase 16 | Complete |
 | FORGE-01 | Phase 16 | Complete |
@@ -52,11 +52,11 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 
 **Coverage:**
 - v4.0 requirements: 7 total
-- Satisfied: 4 (VIZ-02, VIZ-03, FORGE-01, VIZ-02)
-- Pending: 3 (VIZ-01, SIG-02, SIG-03 — verification gap)
-- Unsatisfied: 1 (SIG-01 — code gap)
+- Satisfied: 6 (VIZ-01, VIZ-02, VIZ-03, SIG-02, SIG-03, FORGE-01)
+- Pending: 0
+- Unsatisfied: 1 (SIG-01 — code gap, Phase 19)
 - Mapped to phases: 7
 
 ---
 *Requirements defined: 2026-03-25*
-*Traceability updated: 2026-03-27 (gap closure phases 18-19 added)*
+*Traceability updated: 2026-03-27 (Phase 18 verification closure complete)*
