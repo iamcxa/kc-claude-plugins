@@ -15,7 +15,7 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 
 ### Signal Intelligence
 
-- [ ] **SIG-01**: Each action in run detail has a numeric priority score computed as confidence weight × (1 - reject_rate), and actions are sorted by score descending
+- [x] **SIG-01**: Each action in run detail has a numeric priority score computed as confidence weight x alignment weight (closer to north star), and actions are sorted by score descending
 - [x] **SIG-02**: Calibration data is hidden for indicators with fewer than 10 feedback entries (minimum sample gate)
 - [x] **SIG-03**: Calibration threshold uses EMA smoothing (α=0.3) instead of raw all-time average
 
@@ -48,13 +48,13 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 | VIZ-02 | Phase 16 | Complete |
 | VIZ-03 | Phase 16 | Complete |
 | FORGE-01 | Phase 16 | Complete |
-| SIG-01 | Phase 17 → **Phase 19** (wire fix) | Pending |
+| SIG-01 | Phase 17 + Phase 19 (wire fix) | Complete |
 
 **Coverage:**
 - v4.0 requirements: 7 total
-- Satisfied: 6 (VIZ-01, VIZ-02, VIZ-03, SIG-02, SIG-03, FORGE-01)
+- Satisfied: 7 (VIZ-01, VIZ-02, VIZ-03, SIG-01, SIG-02, SIG-03, FORGE-01)
 - Pending: 0
-- Unsatisfied: 1 (SIG-01 — code gap, Phase 19)
+- Unsatisfied: 0
 - Mapped to phases: 7
 
 ---

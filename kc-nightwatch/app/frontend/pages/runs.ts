@@ -104,9 +104,9 @@ export function Runs() {
       }
       setFeedbackMap(map)
     }).catch(console.error)
-    api.getSignalPriority().then(items => {
+    api.getSignalPriority(selectedId).then(items => {
       const map: Record<string, number> = {}
-      for (const item of items) map[item.indicator] = item.score
+      for (const item of items) map[item.signal_id] = item.score
       setPriorityMap(map)
     }).catch(console.error)
   }, [selectedId])
@@ -125,9 +125,9 @@ export function Runs() {
       }
       setFeedbackMap(map)
     }).catch(console.error)
-    api.getSignalPriority().then(items => {
+    api.getSignalPriority(selectedId!).then(items => {
       const map: Record<string, number> = {}
-      for (const item of items) map[item.indicator] = item.score
+      for (const item of items) map[item.signal_id] = item.score
       setPriorityMap(map)
     }).catch(console.error)
   }, [runs])
@@ -210,8 +210,8 @@ export function Runs() {
               <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px;">${targetName} Actions</div>
               ${[...targetData.actions]
                 .sort((a: import('../../shared/types.ts').RunSummaryAction, b: import('../../shared/types.ts').RunSummaryAction) => {
-                  const scoreA = priorityMap[a.indicator] ?? 0
-                  const scoreB = priorityMap[b.indicator] ?? 0
+                  const scoreA = priorityMap[a.signal_id] ?? 0
+                  const scoreB = priorityMap[b.signal_id] ?? 0
                   return scoreB - scoreA
                 })
                 .map((action: import('../../shared/types.ts').RunSummaryAction) => html`
@@ -222,7 +222,7 @@ export function Runs() {
                     runId=${selectedId}
                     existingFeedback=${feedbackMap[action.signal_id] ?? []}
                     outcomeStatus=${outcomesMap[action.signal_id] ? { status: outcomesMap[action.signal_id].status, url: outcomesMap[action.signal_id].url, type: outcomesMap[action.signal_id].type } : null}
-                    priorityScore=${priorityMap[action.indicator]}
+                    priorityScore=${priorityMap[action.signal_id]}
                   />
               `)}
             </div>
