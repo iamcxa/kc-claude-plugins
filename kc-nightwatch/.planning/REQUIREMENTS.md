@@ -10,7 +10,7 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 ### Feedback Visualization
 
 - [ ] **VIZ-01**: Health page shows per-indicator reject rate trend as a sparkline with real historical data (not fake 2-point stub)
-- [ ] **VIZ-02**: Health page shows calibration table with current threshold, reject rate, total feedback count, and sample size per indicator
+- [x] **VIZ-02**: Health page shows calibration table with current threshold, reject rate, total feedback count, and sample size per indicator
 - [x] **VIZ-03**: Sparkline and trend chart show tooltip with exact value and run ID on hover
 
 ### Signal Intelligence
@@ -42,19 +42,21 @@ Requirements for feedback trend visualization, signal intelligence, and forge vi
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VIZ-01 | Phase 15 | Pending |
-| SIG-02 | Phase 15 | Pending |
-| SIG-03 | Phase 15 | Pending |
-| VIZ-02 | Phase 16 | Pending |
+| VIZ-01 | Phase 15 → **Phase 18** (verification closure) | Pending |
+| SIG-02 | Phase 15 → **Phase 18** (verification closure) | Pending |
+| SIG-03 | Phase 15 → **Phase 18** (verification closure) | Pending |
+| VIZ-02 | Phase 16 | Complete |
 | VIZ-03 | Phase 16 | Complete |
 | FORGE-01 | Phase 16 | Complete |
-| SIG-01 | Phase 17 | Pending |
+| SIG-01 | Phase 17 → **Phase 19** (wire fix) | Pending |
 
 **Coverage:**
 - v4.0 requirements: 7 total
+- Satisfied: 4 (VIZ-02, VIZ-03, FORGE-01, VIZ-02)
+- Pending: 3 (VIZ-01, SIG-02, SIG-03 — verification gap)
+- Unsatisfied: 1 (SIG-01 — code gap)
 - Mapped to phases: 7
-- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Traceability updated: 2026-03-25*
+*Traceability updated: 2026-03-27 (gap closure phases 18-19 added)*
