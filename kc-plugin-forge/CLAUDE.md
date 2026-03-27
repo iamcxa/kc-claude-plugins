@@ -11,7 +11,7 @@ A Claude Code plugin (`kc-plugin-forge`) that provides a one-command quality pip
 **Skills** (3) run in main conversation context:
 
 ```
-skills/kc-plugin-forge/          -> main orchestrator (5-phase pipeline + routes: 1→1.5→2→2.5→3→4)
+skills/kc-plugin-forge/          -> main orchestrator (7-phase pipeline + routes: 1→1.5→2→2.7→2.5→3→4 + dreaming)
 skills/kc-plugin-forge-help/     -> interactive help guide, topic deep-dive, feedback collection
 skills/kc-plugin-forge-doc-sync/ -> documentation gap scanner & writer (Light — static scan + history)
 ```
@@ -43,6 +43,8 @@ The orchestrator skill accumulates lessons via Phase 4 Learning:
 | Forge-specific | `reference/quality-pipeline.md` | Hard signal detection |
 
 Both files grow over time. `learned-patterns.md` benefits all users via PR-back flow. `quality-pipeline.md` is forge-internal knowledge.
+
+Phase 2.7 (Dreaming) promotes mature D1 patterns from `learned-patterns.md` into structured reference files, completing the knowledge flywheel: learn → accumulate → promote → lean file.
 
 ## Editing Skills
 
