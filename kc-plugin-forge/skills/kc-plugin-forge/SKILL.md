@@ -31,14 +31,16 @@ digraph forge {
   audit [label="Phase 1: Validate\nDispatch plugin-dev:plugin-validator agent"];
   fix [label="Fix FAIL items\n(reference: quality-pipeline.md Phase 1)"];
   tdd [label="Phase 2: Skill TDD\nInvoke superpowers:writing-skills\nper skill in plugin"];
+  dreaming [label="Phase 2.7: Dreaming\nPattern Promotion"];
   clean [label="Phase 2.5: Clean Profile\nSmoke Test"];
   agents [label="Phase 3: Agent Verify\nInvoke plugin-dev:agent-development\nper agent in plugin"];
   revalidate [label="Phase 4: Re-validate\nDispatch plugin-dev:plugin-validator agent"];
   report [label="Summary Report\n+ Learning + Doc-sync offer"];
-  selfforge [label="self-forge\nPhase 2 TDD + Phase 4 Learning"];
+  selfforge [label="self-forge\nPhase 2 TDD + Phase 2.7 Dreaming\n+ Phase 4 Learning"];
 
   input -> create [label="new <name>"];
   input -> disambig [label="bare / vague"];
+  input -> dreaming [label="dreaming <path>\ndreaming --all\ndreaming --dry-run"];
   disambig -> ask [label="yes"];
   ask -> audit [label="full pipeline"];
   ask -> audit [label="validate-only\n(skip Phase 2-3)"];
@@ -49,8 +51,11 @@ digraph forge {
   input -> agents [label="agent-verify-only"];
   input -> selfforge [label="self-forge"];
   selfforge -> tdd;
-  tdd -> report [label="self-forge\n(skip clean + agents + revalidate)"];
   create -> tdd;
+  tdd -> dreaming;
+  dreaming -> report [label="self-forge\n(skip clean + agents + revalidate)"];
+  dreaming -> clean [label="full pipeline / skill-tdd-only / new"];
+  dreaming -> report [label="standalone dreaming route"];
   reaudit [label="Re-validate FAIL items\nDispatch plugin-dev:plugin-validator agent"];
   audit -> fix [label="FAIL"];
   audit -> tdd [label="PASS\n(full pipeline)"];
@@ -58,7 +63,6 @@ digraph forge {
   fix -> reaudit;
   reaudit -> tdd [label="PASS"];
   reaudit -> fix [label="still FAIL"];
-  tdd -> clean;
   clean -> agents;
   agents -> revalidate;
   revalidate -> report [label="PASS"];
@@ -73,7 +77,7 @@ digraph forge {
 - **`validate-only`** → Phase 1 validate → report (skip Phase 2 and 3)
 - **`skill-tdd-only`** → Phase 2 + 2.5. Assumes structure was validated separately. Do NOT use this to bypass Phase 1 on a path-based invocation.
 - **`agent-verify-only`** → Phase 3 only
-- **`self-forge`** → Forge audits itself. Target is always `${CLAUDE_PLUGIN_ROOT}`. Runs Phase 2 TDD (pressure test SKILL.md via `superpowers:writing-skills`) + Phase 4 Learning. Skips Phase 1 (own structure is stable), Phase 1.5 (forge's evolution is pre-established), and Phase 3 (no agents). Use when: periodic self-audit, after editing references, or to check for SKILL.md drift. Self-forge uses a dedicated Detection signal table:
+- **`self-forge`** → Forge audits itself. Target is always `${CLAUDE_PLUGIN_ROOT}`. Runs Phase 2 TDD (pressure test SKILL.md via `superpowers:writing-skills`) + Phase 2.7 Dreaming (scan forge's own `learned-patterns.md` → promote to `quality-pipeline.md`, `skill-evolution.md`, or SKILL.md Rules) + Phase 4 Learning. Skips Phase 1 (own structure is stable), Phase 1.5 (forge's evolution is pre-established), and Phase 3 (no agents). Use when: periodic self-audit, after editing references, or to check for SKILL.md drift. Self-forge uses a dedicated Detection signal table:
 
 | Hard Signal | Source | Example |
 |-------------|--------|---------|
@@ -82,9 +86,13 @@ digraph forge {
 | Fix attempt > 1 (same issue fixed more than once) | Non-obvious self-referential problem | Edited same rule twice because first fix introduced new ambiguity |
 | Workaround used (bypass instead of direct fix) | Forge's own process limitation | Used ad-hoc note instead of proper Detection → Capture flow |
 | Reference file inconsistency found | File content contradicts SKILL.md or other references | skill-evolution.md Applicability table lists levels that SKILL.md Phase 1.5 doesn't offer; quality-pipeline.md gotcha contradicts a Rule |
+| Dreaming promotion to `skill_rule` | Pattern mature enough to become a forge Rule | Pattern about fix-loop escalation promoted from learned-patterns.md to SKILL.md Rules |
 
+- **`dreaming <path>`** → Phase 2.7 only + commit + PR offer + report. Pure knowledge curation — does NOT run Phase 1/2/2.5/3/4.
+- **`dreaming --all`** → Multi-plugin discovery + Phase 2.7 per plugin + commit + PR offer + report. Discovery order: `$KC_WORKSPACE` → `~/.claude/plugins/local/` → manual fallback.
+- **`dreaming --dry-run`** → Phase 2.7 analysis only, no changes applied. Combinable with `<path>` or `--all`.
 - **Bare or vague input** (no path, no keyword, or ambiguous scope) → **DISAMBIGUATE**: list available plugins, confirm target + scope (full pipeline vs. validate-only) before proceeding. Never infer a default plugin.
-- **Phase 2.5 follows Phase 2** on all routes that include Phase 2 (`<path>`, `skill-tdd-only`, `new <name>`). Skipped on `self-forge`, `validate-only`, `agent-verify-only`.
+- **Phase 2.7 follows Phase 2** on all routes that include Phase 2 (`<path>`, `skill-tdd-only`, `self-forge`; also `new <name>` but skipped via entry gate — new plugins have 0 patterns). **Phase 2.5 follows Phase 2.7** on routes that include Phase 2.5 (`<path>`, `skill-tdd-only`, `new <name>`). Phase 2.5 skipped on `self-forge`, `validate-only`, `agent-verify-only`.
 
 ## Phase 1: Structure
 
