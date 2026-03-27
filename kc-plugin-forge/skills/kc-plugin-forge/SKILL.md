@@ -278,6 +278,157 @@ For EACH skill that passed Phase 2:
 
 Skip when: `self-forge` route, `validate-only` route, `agent-verify-only` route.
 
+## Phase 2.7: Dreaming — Pattern Promotion
+
+Analyzes mature patterns in `learned-patterns.md` and promotes them into structured reference files. Runs after Phase 2 TDD on all routes that include Phase 2.
+
+**Skip when**: `new <name>` route (no patterns yet), `validate-only` route, `agent-verify-only` route.
+
+### Entry Gate
+
+```
+dated_patterns = [h for h in "##" and "###" headings if heading contains "(YYYY-MM-DD)" or "[YYYY-MM-DD]" suffix]
+if len(dated_patterns) < 5:
+    log "Dreaming: skipped (only {N} dated patterns, minimum 5)"
+    → in-pipeline: proceed to next phase (Phase 2.5 or Phase 3)
+    → standalone: report "skipped" and move to next plugin (or exit)
+```
+
+Age filter: among dated patterns, only those **≥ 14 days old** become candidates. If zero candidates after age filter → skip with log.
+
+Note: The spec's entry gate pseudocode shows only `"##"` headings. This implementation intentionally scans both `##` and `###` to support structured-format plugins (e.g., kc-team-ops uses `## Section` with potential `### Pattern (date)` sub-entries).
+
+### Pattern Boundary Detection
+
+Two `learned-patterns.md` formats exist. Detection is **date-suffix-based**, not heading-level-based:
+
+1. Scan all `##` and `###` headings
+2. Headings with `(YYYY-MM-DD)` or `[YYYY-MM-DD]` suffix = **dated pattern entries** (regardless of level)
+3. Headings without date suffix = organizational sections (ignored as candidates)
+4. Pattern content = text from dated heading to next heading of same or higher level
+
+### Step 2.7.1: Inventory
+
+For each dated heading in `learned-patterns.md`:
+- Extract: title, date, full content
+- Apply age filter (≥ 14 days)
+- Build candidate list
+
+Note: If Phase 2 TDD's Learning step just wrote a new D1 pattern, its age is 0 days → excluded by age filter. No special handling needed.
+
+### Step 2.7.2: Duplicate Detection
+
+For each candidate, check against all reference files in `{plugin}/reference/*.md` (excluding `learned-patterns.md` itself):
+
+- **Batch for efficiency**: group all candidate summaries against one reference file per LLM call (reduces calls from `N_candidates × N_files` to `N_files`)
+- LLM judge: "Does this reference file already contain a rule/heuristic covering the same insight?"
+- `already-covered` → auto-cleanup: delete from `learned-patterns.md`, notify user
+- `not-covered` → proceed to Step 2.7.3
+
+Cleanup is **automatic** (low-risk). Does NOT count toward max promotions limit.
+
+### Step 2.7.3: Placement Analysis
+
+For each not-covered candidate, LLM determines promotion target:
+
+**Input:**
+- Pattern content (full text)
+- Target plugin's reference files: section headings + full content of the most likely target section (needed to match style and detect conflicts)
+- SKILL.md Rules section
+
+**Output per pattern:**
+- `target_file`, `target_section`
+- `promotion_type`: `new_entry` | `enhance_existing` | `new_section` | `skill_rule`
+- `conflict_detected`: boolean
+- `draft_content`: adapted to target section's style
+
+**Promotion types:**
+
+| Type | Meaning |
+|------|---------|
+| `new_entry` | Add entry to existing section |
+| `enhance_existing` | Strengthen an existing entry's description |
+| `new_section` | Create new section in target file |
+| `skill_rule` | Promote to target plugin's SKILL.md Rules section |
+
+`skill_rule` targets the plugin being dreamed about (not forge, unless self-forge). Multi-target patterns: LLM may return multiple targets; user approves subset. Pattern removed from `learned-patterns.md` once promoted to ≥1 target — unapproved targets are not revisited (user's conscious decision).
+
+### Step 2.7.4: Confirm & Execute
+
+Present plan:
+
+```
+## Dreaming — <plugin-name> (N candidates, M already covered)
+
+Cleanup (auto):
+  - "pattern title" → already in <file> §<section>
+
+Promotions (need approval):
+| # | Pattern | → Target | Section | Type |
+|---|---------|----------|---------|------|
+| 1 | "..." | reference-file.md | §Section | new_entry |
+
+Apply which? [all / <numbers> / none]
+```
+
+`skill_rule` items require **per-item confirmation** even in batch `all`.
+
+**Conflict handling**: If `conflict_detected`, present both sides, ask user to: update old rule / discard pattern / merge.
+
+After approval:
+
+**Step A — Apply locally:**
+1. Edit target reference files (insert draft_content)
+2. Delete promoted patterns from `learned-patterns.md`
+
+**Step B — Offer PR** (standalone `dreaming` route only, skip in-pipeline):
+3. Plugin repo has remote → offer PR branch: `kc-plugin-forge/dreaming-YYYY-MM-DD`
+4. Commit message: `docs(dreaming): promote N patterns to reference files`
+5. No remote → "changes are local only"
+
+### Safety Boundaries
+
+| Limit | Value |
+|-------|-------|
+| Max promotions per plugin per run | 5 (oldest first if exceeded) |
+| Max `skill_rule` promotions per plugin | 2 |
+| Min pattern age | 14 days |
+| Min dated pattern count (entry gate) | 5 |
+| Conflict | Block + ask user |
+| Cleanup | Unlimited (auto, no cap) |
+
+### Standalone `dreaming` Route
+
+When invoked as `dreaming <path>`, `dreaming --all`, or `dreaming --dry-run`:
+
+**Discovery for `--all`** (first successful strategy wins):
+1. `$KC_WORKSPACE` env var set → `find "$KC_WORKSPACE" -path "*/reference/learned-patterns.md" -maxdepth 5`
+2. `~/.claude/plugins/local/` exists → find + readlink to resolve source paths
+3. Fallback → ask user for explicit paths
+
+**`--dry-run`**: Run Steps 2.7.1–2.7.3, present the confirmation table, then stop:
+`[DRY-RUN] No changes applied. Re-run without --dry-run to execute.`
+
+**Standalone report format:**
+
+```
+Dreaming Report
+───────────────
+Plugins scanned: N
+  plugin-a: X promoted, Y cleanup, PR #NN
+  plugin-b: 0 candidates (no dated patterns)
+
+Total: X promoted, Y cleanup
+```
+
+**Edge cases:**
+- Plugin has `learned-patterns.md` but zero other reference files → report advisory ("Consider creating reference files via forge Phase 1.5"), skip
+- Plugin's `learned-patterns.md` has no dated patterns → skip with "no dated patterns"
+
+### Read Instruction Stability
+
+Skills that read `learned-patterns.md` (e.g., kc-pr-review Step 5a-k) do NOT need modification after dreaming. The `Read → learned-patterns.md` instruction remains — the file just gets leaner. Promoted patterns are now in reference files that the skill already reads. Do NOT add Read instructions to other plugins' skills as part of dreaming.
+
 ## Phase 3: Agent Verify
 
 For EACH agent in the plugin's `agents/` directory:
