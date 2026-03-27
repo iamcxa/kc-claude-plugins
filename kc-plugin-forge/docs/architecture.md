@@ -90,7 +90,7 @@ Phase 2.7 (Dreaming) completes the flywheel by graduating mature D1 patterns int
 
 ```
 Skill session → D1 auto-append → learned-patterns.md accumulates
-    → Dreaming (≥14 days, ≥5 patterns):
+    → Dreaming (≥7 days, ≥5 patterns):
         cleanup already-covered → promote to reference files → PR-back
             → reference files get richer → fewer novel patterns to capture
                 → learned-patterns.md stays lean

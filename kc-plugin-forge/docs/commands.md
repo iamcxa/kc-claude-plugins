@@ -35,7 +35,7 @@ Main orchestrator — runs the quality pipeline on a target plugin.
 
 After Phase 2 TDD, forge analyzes mature patterns in `learned-patterns.md` and promotes them into structured reference files. This graduates knowledge from a flat list into the files where it's most useful.
 
-**Entry gate**: ≥5 dated patterns in `learned-patterns.md`. **Age filter**: only patterns ≥14 days old become candidates. Both must pass for dreaming to run.
+**Entry gate**: ≥5 dated patterns in `learned-patterns.md`. **Age filter**: only patterns ≥7 days old become candidates. Both must pass for dreaming to run.
 
 **Steps:**
 
