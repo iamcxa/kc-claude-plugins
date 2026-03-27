@@ -17,11 +17,12 @@
 | 15 | data-layer-foundations | Complete | 2026-03-25 |
 | 16 | health-page-enrichment | Complete | 2026-03-26 |
 | 17 | signal-priority-display | Complete | 2026-03-26 |
-| 18 | 1/1 | Complete    | 2026-03-27 |
-| 19 | signal-priority-wire-fix | — | Planned |
+| 18 | verification-closure | Complete | 2026-03-27 |
+| 19 | signal-priority-wire-fix | 1 plan | Planned |
 
 Plans:
 - [x] 18-01-PLAN.md — Create Phase 15 VERIFICATION.md and update REQUIREMENTS.md checkboxes
+- [ ] 19-01-PLAN.md — Wire signal priority route, API client, frontend mapping (SIG-01 gap closure)
 
 ## Progress
 
@@ -32,5 +33,5 @@ Plans:
 | 8-11 | v2.0 | 9/9 | Complete | 2026-03-23 |
 | 12-14 | v3.0 | 9/9 | Complete | 2026-03-24 |
 | 15-17 | v4.0 | 5/5 | Complete | 2026-03-26 |
-| 18-19 | v4.0 (gap closure) | 0/? | Planned | — |
-| **Total** | | **39** | | |
+| 18-19 | v4.0 (gap closure) | 1/2 | In Progress | — |
+| **Total** | | **40** | | |
