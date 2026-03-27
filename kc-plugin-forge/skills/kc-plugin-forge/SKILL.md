@@ -455,6 +455,9 @@ Clean Profile: N skills verified (K clean-pass, J context-dependent)
                Mode: clean / unavailable
                Key source: <env | path-to-file>
                Cost: $N.NNNN | Duration: NNNNms | Tokens: NNNin+NNNout
+Dreaming:   N candidates → M promoted, K cleanup
+            Promoted: <file> §<section>, ...
+            Cleanup: K patterns already covered
 Agents:     N agents verified
 Evolution:  N skills with self-improvement
             Level: Full (D1+D2) / D1 only / Skipped
@@ -532,3 +535,8 @@ Overall:    PASS / CONDITIONAL PASS / FAIL
 - **Doc-sync templates are in references** — all template content lives in `doc-sync-templates.md`. When scaffolding, read templates from there and replace `{{PLUGIN_NAME}}` with actual plugin name.
 - **Clean profile is progressive enhancement** — requires `ANTHROPIC_API_KEY` env var. Without it, Phase 2.5 silently degrades to `(clean profile unavailable)` and does not affect the Overall verdict. The script uses `claude --bare --effort low` which strips all user context (MEMORY.md, CLAUDE.md, hooks) while loading only the target plugin via `--plugin-dir`. `--effort low` reduces cost ~77% and time ~50% without affecting assertion reliability. Do NOT downgrade to haiku — it fabricates prior context, defeating the smoke test's purpose.
 - **Smoke test directory convention** — hand-written smoke files go in `${TARGET_PLUGIN}/smoke-tests/<skill-name>.smoke.yaml`. This directory name avoids collision with generic `tests/`.
+- **Dreaming respects entry gate** — fewer than 5 dated patterns or all patterns younger than 14 days → skip Phase 2.7 silently. Do not prompt user or suggest workarounds.
+- **Cleanup is automatic, promotion needs approval** — removing already-covered patterns from `learned-patterns.md` is low-risk and auto-executed. Promoting to reference files changes skill behavior and requires user confirmation. `skill_rule` promotions require per-item confirmation even in batch mode.
+- **No new reference files in dreaming** — if a plugin has no reference files to promote into, report an advisory and skip. Creating reference files is Phase 1.5's responsibility.
+- **Standalone dreaming is independent** — `dreaming <path>` and `dreaming --all` do not run Phase 1/2/2.5/3/4. They are pure knowledge curation operations with their own commit + PR flow.
+- **Discovery falls through gracefully** — `dreaming --all` tries `$KC_WORKSPACE` → `~/.claude/plugins/local/` → manual. If no strategy succeeds, ask user for explicit paths. Never silently skip discovery failure.
