@@ -63,9 +63,19 @@ Validated in v3.0 (Phases 12-14, 2026-03-24):
 - ✓ Dashboard displays all feedback sources with source labels — v3.0
 - ✓ 3-state verdict (accepted/rejected/uncertain) — v3.0
 
-### Future (v4+)
+Validated in v4.0 (Phases 15-19, 2026-03-25 to 2026-03-27):
+- ✓ Health page sparkline with real per-indicator reject rate history (not fake stub) — v4.0 (VIZ-01)
+- ✓ Health page calibration table with threshold, reject rate, feedback count, sample size — v4.0 (VIZ-02)
+- ✓ Sparkline and trend chart tooltip with exact value and run ID on hover — v4.0 (VIZ-03)
+- ✓ Signal priority scoring (confidence × alignment) on ActionCards, sorted descending — v4.0 (SIG-01)
+- ✓ Calibration data hidden for indicators with fewer than 10 feedback entries — v4.0 (SIG-02)
+- ✓ Calibration threshold uses EMA smoothing (α=0.3) — v4.0 (SIG-03)
+- ✓ Forge validation results displayed on health page — v4.0 (FORGE-01)
 
-(No items defined — start next milestone with `/gsd:new-milestone`)
+### Future (v4.1+)
+
+- Auto-calibration wire-up: propagate computed thresholds back to kc-nightwatch skill pipeline
+- Signal priority influence on pipeline execution order
 
 ### Out of Scope
 
@@ -81,14 +91,14 @@ Validated in v3.0 (Phases 12-14, 2026-03-24):
 
 ## Context
 
-- **Shipped versions**: v1.0 MVP (2026-03-19), v1.1 UX Polish (2026-03-20), v2.0 Parallel + Auto-Action (2026-03-23), v3.0 Worktree + Feedback (2026-03-24)
+- **Shipped versions**: v1.0 MVP (2026-03-19), v1.1 UX Polish (2026-03-20), v2.0 Parallel + Auto-Action (2026-03-23), v3.0 Worktree + Feedback (2026-03-24), v4.0 Flywheel Intelligence (2026-03-27)
 - **Existing plugin**: kc-nightwatch v0.4.0 with 3 skills + 4 agents
 - **Execution**: launchd plist at 03:00 daily; dashboard provides alternative manual/webhook triggers
 - **Config files**: All in `~/.claude/kc-plugins-config/` — targets.yaml, runs.yaml, feedback.yaml, improvement-log.md, self-repair.yaml
 - **Design spec**: `docs/superpowers/specs/2026-03-18-nightwatch-dashboard-design.md`
 - **Field renaming**: App introduces `monitors`/`watch`/`respond`/`indicators` (replacing `sources`/`keywords`/`actions`/`proxy_signals`) with compatibility layer
 - **Pipeline phases**: 0 → 0.4.5 (Reactions) → 0.5 (Measure) → 0.6 (Outcomes) → 1 → 2 → 3 → 3.5 (Assess) → 4 → 4.5 (Assess) → 5
-- **Codebase**: ~12K LOC TypeScript (Bun + Hono + Preact/HTM), zero build tooling, 436 tests
+- **Codebase**: ~14.4K LOC TypeScript (Bun + Hono + Preact/HTM), zero build tooling, 450 tests
 
 ## Constraints
 
@@ -116,22 +126,11 @@ Validated in v3.0 (Phases 12-14, 2026-03-24):
 | Handroll toast (no library) | No-build constraint; signal-backed toast is ~70 lines | ✓ Good — lightweight, no deps |
 | Proposal → Implementation pipeline | Closes the flywheel: accepted proposals get implemented, outcomes tracked | ✓ Good — v2.0 shipped auto-action |
 
-## Current Milestone: v4.0 Flywheel Intelligence
+## Current State: v4.0 Complete
 
-**Goal:** Make the feedback flywheel visible and self-adjusting — users see improvement trends, system auto-calibrates from feedback data
+Five milestones shipped. 19 phases, 46 plans across v1.0 + v1.1 + v2.0 + v3.0 + v4.0.
 
-**Target features:**
-- Feedback trend visualization (accept/reject rate over time, per-target charts)
-- Auto-calibration (feedback-driven confidence threshold adjustment)
-- Signal prioritization (confidence × historical success ranking)
-- Forge results in dashboard (self-repair output visibility)
-- Per-indicator trend sparklines (health arrows → mini charts)
-
-## Current State: v4.0 In Progress
-
-All four milestones complete. 16 phases, 42 plans across v1.0 + v1.1 + v2.0 + v3.0 + v4.0 (partial).
-
-**v4.0 in progress** — Flywheel Intelligence. Phase 15 (data layer) + Phase 16 (health page enrichment) complete. Phase 17 (signal priority display) remaining.
+**v4.0 Flywheel Intelligence** — shipped 2026-03-27. Feedback trend visualization (sparklines with real history), calibration table (EMA-smoothed thresholds, N-gate), signal priority scoring (confidence × alignment badges on ActionCards), forge result visibility on health page. All 7/7 requirements satisfied, 450 tests pass.
 
 ## Evolution
 
@@ -151,4 +150,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after Phase 16 complete*
+*Last updated: 2026-03-27 after v4.0 milestone*

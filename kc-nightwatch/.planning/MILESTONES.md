@@ -1,5 +1,30 @@
 # Milestones
 
+## v4.0 Flywheel Intelligence (Shipped: 2026-03-27)
+
+**Phases completed:** 12 phases, 25 plans, 34 tasks
+
+**Key accomplishments:**
+
+- activePids migrated from Set<number> to Map<string, number>, AppConfigSchema backward-compatible via .passthrough(), and WorkerToServer state shape updated to active: Run[] for parallel execution foundation
+- Serial single-run-at-a-time queue replaced with Map-based per-target isolation — different targets now execute concurrently, same-target runs queue with depth 1, __all__ expands to N parallel sub-runs
+- 1. [Rule 2 - Missing Dependency] Added writeTargets() to yaml-store.ts
+- YAML outcome data layer (outcome-store.ts) + post-run recorder (auto-action.ts) that persists PR and Linear issue URLs with dedup to ~/.claude/kc-plugins-config/nightwatch-outcomes.yaml after production runs
+- 3 MCP tools (nw_get_outcomes, nw_get_outcome_status, nw_outcome_summary) registered for NW-Claude chat awareness of nightwatch-created PRs and Linear issues
+- All 299 Bun tests pass in full-suite run after converting 7 test files from mock.module to spyOn+mockRestore, eliminating permanent module registry pollution
+- GET /api/runs/:id/log endpoint reading log.jsonl for completed runs, parseStreamJsonLine moved to shared/, and bun --watch auto-restart added to start script
+- Defense-in-depth path validation via existsSync: Add Target wizard disables Next + shows inline error, server returns 400 for empty or non-existent paths in both Add and Edit flows, with 7 passing behavioral tests
+- Bun.spawn-based git worktree lifecycle module with 6 exported async functions, tested against real tmp git repos with macOS symlink resolution
+- Worktree lifecycle wired into executeRun — cwd switched from target.resolved_path to worktreePath, with create-before-spawn and cleanup-in-finally ordering
+- CalibrationData updated with EMA-smoothed threshold (alpha=0.3), per-run history bucketing (30-run window), minimum N gate (null threshold below 10), plus ForgeResultData and SignalPriorityItem types
+- HealthIndicatorData extended with run_ids parallel array (VIZ-03) and api.getForgeResults() added for forge card data (FORGE-01), with 2 new test cases confirming alignment
+- ForgeResultCard
+- Priority score badge (0.72 high) on ActionCards, sorted by confidence × north-star alignment, backed by new /api/signals/priority endpoint with 14 tests
+- Phase 15 VERIFICATION.md created (10/10 truths, 3 requirements SATISFIED), and REQUIREMENTS.md updated from 4 to 6 satisfied requirements — orphaned gap from v4.0 audit formally closed
+- End-to-end signal priority data flow restored: /api/signals/priority/run route registered, API client updated with runId param, priorityMap keyed by signal_id — ActionCards now display score badges and sort descending in run detail
+
+---
+
 ## v3.0 Worktree Isolation + Extended Feedback (Shipped: 2026-03-24)
 
 **Phases completed:** 3 phases, 9 plans | **Timeline:** 1 day | **App commits:** 17 | **+2037 / -309 lines**
