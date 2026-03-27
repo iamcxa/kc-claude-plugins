@@ -333,7 +333,7 @@ For each not-covered candidate, LLM determines promotion target:
 
 **Input:**
 - Pattern content (full text)
-- Target plugin's reference files: section headings + full content of the most likely target section (needed to match style and detect conflicts)
+- Target plugin's reference files: section headings + full content of the most likely target section (needed to match style and detect conflicts). Self-forge targets: `quality-pipeline.md`, `skill-evolution.md`; other reference files are valid only if semantically appropriate.
 - SKILL.md Rules section
 
 **Output per pattern:**
@@ -381,6 +381,8 @@ After approval:
 1. Edit target reference files (insert draft_content)
 2. Delete promoted patterns from `learned-patterns.md`
 
+**In-pipeline**: Step A edits remain as working-tree changes — do NOT commit. Phase 4 report records the dreaming results. Commit is handled by the user or the pipeline's own commit flow.
+
 **Step B — Offer PR** (standalone `dreaming` route only, skip in-pipeline):
 3. Plugin repo has remote → offer PR branch: `kc-plugin-forge/dreaming-YYYY-MM-DD`
 4. Commit message: `docs(dreaming): promote N patterns to reference files`
@@ -396,6 +398,7 @@ After approval:
 | Min dated pattern count (entry gate) | 5 |
 | Conflict | Block + ask user |
 | Cleanup | Unlimited (auto, no cap) |
+| `skill_rule` target | Target plugin's SKILL.md, never forge's (unless self-forge) |
 
 ### Standalone `dreaming` Route
 
