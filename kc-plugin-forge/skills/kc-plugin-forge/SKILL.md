@@ -294,7 +294,7 @@ if len(dated_patterns) < 5:
     → standalone: report "skipped" and move to next plugin (or exit)
 ```
 
-Age filter: among dated patterns, only those **≥ 14 days old** become candidates. If zero candidates after age filter → skip with log.
+Age filter: among dated patterns, only those **≥ 7 days old** become candidates. If zero candidates after age filter → skip with log.
 
 Note: The spec's entry gate pseudocode shows only `"##"` headings. This implementation intentionally scans both `##` and `###` to support structured-format plugins (e.g., kc-team-ops uses `## Section` with potential `### Pattern (date)` sub-entries).
 
@@ -311,7 +311,7 @@ Two `learned-patterns.md` formats exist. Detection is **date-suffix-based**, not
 
 For each dated heading in `learned-patterns.md`:
 - Extract: title, date, full content
-- Apply age filter (≥ 14 days)
+- Apply age filter (≥ 7 days)
 - Build candidate list
 
 Note: If Phase 2 TDD's Learning step just wrote a new D1 pattern, its age is 0 days → excluded by age filter. No special handling needed.
@@ -394,7 +394,7 @@ After approval:
 |-------|-------|
 | Max promotions per plugin per run | 5 (oldest first if exceeded) |
 | Max `skill_rule` promotions per plugin | 2 |
-| Min pattern age | 14 days |
+| Min pattern age | 7 days |
 | Min dated pattern count (entry gate) | 5 |
 | Conflict | Block + ask user |
 | Cleanup | Unlimited (auto, no cap) |
@@ -538,7 +538,7 @@ Overall:    PASS / CONDITIONAL PASS / FAIL
 - **Doc-sync templates are in references** — all template content lives in `doc-sync-templates.md`. When scaffolding, read templates from there and replace `{{PLUGIN_NAME}}` with actual plugin name.
 - **Clean profile is progressive enhancement** — requires `ANTHROPIC_API_KEY` env var. Without it, Phase 2.5 silently degrades to `(clean profile unavailable)` and does not affect the Overall verdict. The script uses `claude --bare --effort low` which strips all user context (MEMORY.md, CLAUDE.md, hooks) while loading only the target plugin via `--plugin-dir`. `--effort low` reduces cost ~77% and time ~50% without affecting assertion reliability. Do NOT downgrade to haiku — it fabricates prior context, defeating the smoke test's purpose.
 - **Smoke test directory convention** — hand-written smoke files go in `${TARGET_PLUGIN}/smoke-tests/<skill-name>.smoke.yaml`. This directory name avoids collision with generic `tests/`.
-- **Dreaming respects entry gate** — fewer than 5 dated patterns or all patterns younger than 14 days → skip Phase 2.7 silently. Do not prompt user or suggest workarounds.
+- **Dreaming respects entry gate** — fewer than 5 dated patterns or all patterns younger than 7 days → skip Phase 2.7 silently. Do not prompt user or suggest workarounds.
 - **Cleanup is automatic, promotion needs approval** — removing already-covered patterns from `learned-patterns.md` is low-risk and auto-executed. Promoting to reference files changes skill behavior and requires user confirmation. `skill_rule` promotions require per-item confirmation even in batch mode.
 - **No new reference files in dreaming** — if a plugin has no reference files to promote into, report an advisory and skip. Creating reference files is Phase 1.5's responsibility.
 - **Standalone dreaming is independent** — `dreaming <path>` and `dreaming --all` do not run Phase 1/2/2.5/3/4. They are pure knowledge curation operations with their own commit + PR flow.

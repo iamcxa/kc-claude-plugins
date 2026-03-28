@@ -78,7 +78,7 @@ completed: 2026-03-27
 1. **Task 1: Wire signal priority route + API client + update tests** - `05fec6a` (fix)
 2. **Task 2: Wire frontend mapping + sort + update SIG-01 requirement** - `070421b` (fix)
 
-**Plan metadata:** (final docs commit — see below)
+**Plan metadata:** `4e498e9` (docs: complete plan)
 
 ## Files Created/Modified
 
@@ -112,6 +112,14 @@ None - no external service configuration required.
 - v4.0 milestone requirements complete: all 7/7 satisfied (VIZ-01, VIZ-02, VIZ-03, SIG-01, SIG-02, SIG-03, FORGE-01)
 - ActionCards in run detail will display priority score badges and sort by score descending once the server is running with the new code
 - No blockers for future work
+
+## Self-Check: PASSED
+
+- All 7 modified files found on disk
+- Commits 05fec6a and 070421b verified in git log
+- 450 tests pass, 0 fail
+- SIG-01 marked complete in REQUIREMENTS.md
+- SUMMARY.md created at .planning/phases/19-signal-priority-wire-fix/19-01-SUMMARY.md
 
 ---
 *Phase: 19-signal-priority-wire-fix*
