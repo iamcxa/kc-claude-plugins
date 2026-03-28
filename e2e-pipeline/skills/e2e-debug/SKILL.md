@@ -17,6 +17,7 @@ Debug frontend runtime bugs by injecting `console.log` probes into suspect code,
 /e2e-debug --experiment --inject '[...]' --steps "..." --url <url>          # experiment (UC2)
 /e2e-debug --continue                                                       # next round with previous context
 /e2e-debug --cleanup                                                        # force cleanup of residual injections
+/e2e-debug --cleanup --teardown                                               # cleanup + shutdown observer + delete team
 ```
 
 | Arg | Effect |
@@ -27,9 +28,13 @@ Debug frontend runtime bugs by injecting `console.log` probes into suspect code,
 | `--experiment` | Experiment mode — skip analysis, injection points pre-specified by caller |
 | `--inject '[...]'` | JSON array of injection specs (experiment mode only) |
 | `--steps "..."` | Reproduction steps as semicolon-separated string (experiment mode only) |
-| `--headed` | Open visible browser — user can manually log in before agent continues |
+| `--headed` | Open visible browser — user can see and optionally log in before agent continues |
+| `--headless` | Force headless browser (override Teams mode default) |
+| `--model sonnet\|haiku\|opus` | Model for observer agent (default: `sonnet`). Observer does browser interaction, not reasoning — sonnet is cost-effective. |
 | `--continue` | Resume from previous round's conclusions |
 | `--cleanup` | Force cleanup — skip all phases, run Phase 4 only |
+| `--no-teams` | Force subagent mode even when Agent Teams is available |
+| `--teardown` | With `--cleanup`: also shutdown observer teammate and delete team |
 
 **No args:** Ask user to describe the bug or provide `--experiment` parameters. Do not proceed without input.
 
@@ -132,13 +137,48 @@ Write -> .claude/e2e/debug/manifest.yaml
 
 **From this point forward, Phase 4 cleanup is MANDATORY. If any subsequent phase fails, skip to Phase 4.**
 
+### Dev server cache warning
+
+After writing the manifest, check if a dev server is likely serving transpiled/cached source files:
+
+```bash
+lsof -ti:<port from target_url> 2>/dev/null
+```
+
+If a process is found, warn the user:
+
+```
+⚠️ Dev server detected on port <port>. Injected [E2E-DBG] probes are in source .ts/.tsx files,
+but the running server may serve cached/transpiled versions. If observer reports 0 DBG logs:
+- Restart the dev server, OR
+- Hard-refresh the browser (Cmd+Shift+R)
+```
+
+This is informational only — do not block Phase 2.
+
 ---
 
 ## Phase 2 — Observe
 
-Dispatch the `e2e-debug-observe` agent to open a browser, execute reproduction steps, and collect debug output.
+Observe the injected debug probes in a browser. Two observation modes with three diagnosis behaviors:
 
-### Prepare dispatch payload
+### Mode selection
+
+> Detection logic: see `references/agent-teams.md` § 1
+
+**Observation mode** (Phase 2 — how the browser is operated):
+- **Teams mode**: TeamCreate available AND `--no-teams` not set → persistent observer
+- **Subagent mode**: TeamCreate unavailable OR `--no-teams` set → one-shot subagent
+
+**Diagnosis mode** (Phase 3 — how results are processed):
+
+| Condition | Diagnosis mode | Behavior |
+|-----------|---------------|----------|
+| Teams + no `--experiment` | **Auto-loop** | Self-driving: auto-form hypotheses, loop up to 3 rounds, only stop on `confirmed` or limit |
+| No Teams + no `--experiment` | **Interactive** | Original: present diagnosis, user decides `y/n/--continue` |
+| `--experiment` (any) | **Experiment** | Structured result: return `experiment_result` YAML to caller |
+
+### Prepare dispatch payload (both modes)
 
 Build from manifest + Phase 0 outputs:
 
@@ -148,11 +188,95 @@ Build from manifest + Phase 0 outputs:
 | `reproduction_steps` | From Phase 0 or `--steps` |
 | `report_dir` | `.claude/e2e/debug/` (absolute path) |
 | `auth_profile` | Detect from `.agent-browser/` profiles if auth is needed for the URL |
-| `headed` | `true` if `--headed` flag provided (user needs to log in manually) |
+| `headed` | Teams mode: `true` by default (user can see browser). Override with `--headless`. Subagent mode: `true` only if `--headed` flag provided. |
+| `model` | From `--model` flag. Default: `sonnet`. Observer does browser interaction, not deep reasoning. |
 | `log_tags` | `["E2E-DBG"]` (always) |
 | `network_filters` | Extract from manifest `network_filters` if present |
 
-### Dispatch
+---
+
+### Teams mode — Persistent observer
+
+> Lifecycle, startup, and shutdown: see `references/agent-teams.md` § 2-3
+
+The observer teammate keeps the browser open across rounds, eliminating browser restart overhead in hypothesis-verify loops (e.g., `systematic-debugging` → `e2e-debug --experiment` → repeat).
+
+#### Step 1: Ensure observer is alive
+
+Detect existing team (`references/agent-teams.md` § 2). If team `e2e-debug` exists with "observer" member → skip to Step 2.
+
+If no team exists → create and spawn:
+
+```
+TeamCreate(team_name="e2e-debug", description="Persistent browser observer for debug loop")
+
+Agent(
+  team_name="e2e-debug",
+  name="observer",
+  subagent_type="e2e-pipeline:e2e-debug-observe",
+  model=<model>,          # default: "sonnet"
+  prompt="TEAMS MODE. Open browser at <target_url> --headed [with --profile <auth_profile>].
+          Report dir: <report_dir>.
+          After browser is ready, send message to lead: 'BROWSER_READY'.
+          Then STOP and wait for VERIFY commands."
+)
+```
+
+**Teams mode defaults to `--headed`** (user can see browser). Add `--headless` to the spawn prompt only if `--headless` flag was explicitly provided.
+
+Wait for `BROWSER_READY` or handle `WAITING_FOR_AUTH` (`references/agent-teams.md` § 3).
+`WAITING_FOR_AUTH` is only sent when `auth_profile` is provided — headed-without-auth proceeds directly to `BROWSER_READY`.
+
+#### Step 2: Send verify command
+
+```
+SendMessage(
+  to="observer",
+  message="VERIFY\nsteps:\n- <step 1>\n- <step 2>\n...\nlog_tags: [E2E-DBG]\nnetwork_filters: [<filter>]\nreport_dir: <report_dir>",
+  summary="Verify hypothesis in browser"
+)
+```
+
+Then wait for observer's response.
+
+#### Step 3: Handle observer response
+
+Observer sends structured results via SendMessage (schema in `reference.md` Section 7):
+
+```
+OBSERVATION COMPLETE
+steps_executed: N/M
+dbg_logs_captured: N
+errors_captured: N
+...
+```
+
+- **`OBSERVATION COMPLETE`:** Parse results — proceed to Phase 3. Observer stays alive (browser open).
+- **Failure message:** Note the failure reason. **Still proceed to Phase 4 (cleanup).** Observer stays alive — do NOT shutdown on observation failure. The browser may still be usable for the next round.
+
+#### Teams mode: Phase 4 behavior
+
+- Clean up source file injections — **same as subagent mode**
+- **DO NOT** shutdown observer or delete team
+- Observer stays alive with browser open for next round
+
+#### Teams mode: Teardown
+
+> Teardown procedure: see `references/agent-teams.md` § 2 (Teardown)
+
+Trigger teardown when ANY of:
+- User explicitly declines keep-alive after `confirmed` fix ("No" to "Continue debugging on this page?")
+- User explicitly says done or abort
+- `--cleanup --teardown` invoked
+- Session ending
+
+**Cross-bug keep-alive:** After a confirmed fix, the skill asks if the user wants to continue debugging. If yes, observer stays alive with browser open — the next `/e2e-debug` invocation detects the existing team and reuses it (no browser restart, no re-navigate). This is efficient when debugging multiple issues on the same page.
+
+---
+
+### Subagent mode (original behavior)
+
+#### Dispatch
 
 ```
 Agent(subagent_type="e2e-pipeline:e2e-debug-observe"):
@@ -172,7 +296,7 @@ Agent(subagent_type="e2e-pipeline:e2e-debug-observe"):
       ...
 ```
 
-### Handle agent result
+#### Handle agent result
 
 - **`WAITING_FOR_AUTH`:** Agent opened headed browser but needs user to log in. Present the agent's message to the user, wait for confirmation ("已登入" / "ready" / "continue"), then re-dispatch the same agent with the same payload. The browser is already open — the agent will skip Step 1 on re-dispatch.
 - **`OBSERVATION COMPLETE`:** Agent finished successfully. Proceed to Phase 3.
@@ -190,7 +314,62 @@ Agent(subagent_type="e2e-pipeline:e2e-debug-observe"):
 
 ### Present diagnosis
 
-**Standalone mode (no `--experiment`):**
+Three diagnosis modes, determined by invocation context:
+
+#### Mode A: Auto-loop (Teams mode, no `--experiment`)
+
+**Default when Teams is active.** The lead drives a self-contained hypothesis-verify loop without user intervention until root cause is found or the loop limit is hit.
+
+After analyzing observation results, determine verdict:
+
+- **`confirmed`** → present diagnosis + suggested fix to user:
+  ```markdown
+  ## Debug Diagnosis (auto-loop, round N)
+
+  **Hypothesis:** <the hypothesis>
+  **Root cause:** <description based on observed vs expected>
+  **Evidence:** <tag X shows Y at step N, but code expects Z>
+  **Suggested fix:** <specific code change with file + line>
+
+  Apply this fix? (y/n)
+  ```
+  User says yes → apply fix → Phase 4 (cleanup injections only, observer stays alive) → then ask:
+  ```
+  Fix applied. Continue debugging on this page?
+  - Yes → observer stays alive, ready for next `/e2e-debug` invocation (new bug, same browser session)
+  - No → teardown observer + TeamDelete
+  ```
+  User says no to fix → Phase 4 (cleanup injections) → same keep-alive prompt above.
+
+- **Loop limit check (MUST evaluate FIRST)**: if current round >= 3 AND verdict is NOT `confirmed` → jump to loop limit handling below. **MUST NOT** enter auto-continue for a 4th round. Maximum 3 rounds is a hard limit.
+
+- **`inconclusive` or `unconfirmed` (round < 3)** → **auto-continue** (no user interaction):
+  1. Save history for current round
+  2. Phase 4: cleanup injections only (observer stays alive)
+  3. Show brief status: `Round N: <verdict>. <1-line summary of what was observed>. Forming next hypothesis...`
+  4. Re-run Phase 0 (Path C: `--continue` logic — load history, form new hypothesis based on prior observations)
+  5. Re-run Phase 1 (inject new points)
+  6. Re-run Phase 2 (SendMessage VERIFY to existing observer — no browser restart)
+  7. Re-run Phase 3 (this section — re-evaluate verdict)
+
+- **Loop limit (3 rounds without `confirmed`)** → stop and present to user:
+  ```markdown
+  ## Debug: 3 rounds without confirmation
+
+  **Round 1:** <hypothesis> → <verdict> — <summary>
+  **Round 2:** <hypothesis> → <verdict> — <summary>
+  **Round 3:** <hypothesis> → <verdict> — <summary>
+
+  The auto-loop hit the limit. Options:
+  - Provide additional context or a different suspect file
+  - `/e2e-debug --continue` to manually guide the next hypothesis
+  - `/e2e-debug --cleanup --teardown` to stop
+  ```
+  Phase 4: cleanup injections. Observer stays alive (user may want `--continue`).
+
+#### Mode B: Interactive (no Teams, no `--experiment`)
+
+Original standalone behavior. User drives each round.
 
 ```markdown
 ## Debug Diagnosis
@@ -207,9 +386,9 @@ Apply this fix? (y/n/need more investigation -> --continue)
 - **User says "need more investigation":** Save history (see below), then proceed to Phase 4. Suggest `--continue` for next round.
 - **User says no:** Proceed to Phase 4 only.
 
-**Experiment mode (`--experiment`):**
+#### Mode C: Experiment (any `--experiment`, regardless of Teams)
 
-Skip user interaction. Build and return structured `experiment_result` YAML (schema in `reference.md` Section 6):
+Called by external drivers (e.g., `systematic-debugging`). Skip user interaction. Build and return structured `experiment_result` YAML (schema in `reference.md` Section 6):
 
 ```yaml
 experiment_result:
@@ -277,6 +456,16 @@ Grep for '\[E2E-DBG\]' across apps/ src/ lib/ components/
 - Delete `.claude/e2e/debug/report.md` (if exists)
 - Keep history files (`.claude/e2e/debug/history/`) — needed for `--continue`
 
+### Teams mode: observer lifecycle after cleanup
+
+**Source file cleanup does NOT affect the observer.** The observer's browser session persists.
+
+- **Verdict `confirmed` + fix applied** → cleanup injections → ask "Continue debugging on this page?" → Yes: observer stays alive. No: teardown.
+- **Verdict `unconfirmed` / `inconclusive`** → observer stays alive for next round. Suggest `--continue`.
+- **`--cleanup --teardown`** → cleanup injections + shutdown observer + TeamDelete
+- **`--cleanup` (without `--teardown`)** → cleanup injections only. Observer stays alive.
+- **Next `/e2e-debug` with observer alive** → detect existing team via `~/.claude/teams/e2e-debug/config.json` → reuse observer (skip TeamCreate + browser open). New injections + VERIFY on existing browser session.
+
 ---
 
 ## D1 Knowledge Capture
@@ -313,3 +502,4 @@ If all three = yes, auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-pat
 | 8 | Not saving history before cleanup | Loses context for `--continue` | Save history BEFORE Phase 4 |
 | 9 | Combining multiple values in one log | Hard to parse which value is which | One `console.log` per data point |
 | 10 | Forgetting to create `.claude/e2e/debug/` directory | manifest.yaml write fails | `mkdir -p` at start of Phase 1 |
+| 11 | Delegating Phase 4 cleanup to observer | Observer has no Edit tool and is designed as observation-only (Critical Rule #1: "Never modify code") | Lead does all cleanup — same context that injected is responsible for removal (injection ownership) |

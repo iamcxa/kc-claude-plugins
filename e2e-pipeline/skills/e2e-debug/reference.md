@@ -191,3 +191,65 @@ experiment_result:
       status: 200
   verdict: "confirmed"    # confirmed | unconfirmed | inconclusive
 ```
+
+---
+
+## 7. Teams Communication Schema
+
+> Shared protocol (startup, lifecycle, shutdown): `references/agent-teams.md`
+> This section covers **e2e-debug-specific** command and response formats only.
+
+### Verify command (lead → observer)
+
+```
+VERIFY
+steps:
+- Navigate to /operations/service-schedule
+- Click 建立服務單
+- Select customer 王大明
+- Click 快速洗車
+- Observe step 3 workspace section
+log_tags: [E2E-DBG]
+network_filters: [pipeline-preview, api/rest]
+report_dir: /absolute/path/.claude/e2e/debug
+```
+
+### Observation result (observer → lead)
+
+```
+OBSERVATION COMPLETE
+steps_executed: 5/5
+dbg_logs_captured: 2
+errors_captured: 0
+network_captured: 1
+report_path: /absolute/path/.claude/e2e/debug/report.md
+
+[E2E-DBG] Console:
+| Tag | Value | Step |
+|-----|-------|------|
+| usePipelineWorkspaces:allData | {"data":{"data":{"workspaces":[...]}}} | 4 |
+| usePipelineWorkspaces:wsList | undefined | 4 |
+
+JS Errors:
+(none)
+
+Network:
+| URL | Method | Status | Step |
+|-----|--------|--------|------|
+| /api/rest/pipeline-preview | GET | 200 | 4 |
+```
+
+### Lifecycle and teardown
+
+See `references/agent-teams.md` § 2 (lifecycle detection + teardown sequence).
+```
+
+### Round-trip timing (empirical from PoC)
+
+| Operation | Subagent mode | Teams mode (first round) | Teams mode (reuse) |
+|-----------|--------------|--------------------------|---------------------|
+| Context spawn | ~5-10s | ~5-10s | 0 |
+| Browser open + networkidle | ~8-15s | ~8-15s | 0 (navigate only ~3s) |
+| Steps + collection | ~10-20s | ~10-20s | ~10-20s |
+| Report + close | ~5s | ~2s (message) | ~2s (message) |
+| **Total per round** | **~30-50s** | **~25-45s** | **~12-25s** |

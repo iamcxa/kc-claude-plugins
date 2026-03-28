@@ -3,7 +3,7 @@ name: e2e-debug-observe
 description: Opens a browser, executes reproduction steps, and collects debug observations (console logs, JS errors, network requests, screenshots). Produces a structured report.md. Runs in isolated subagent context to keep verbose browser data out of main conversation. Never modifies code — observation only.
 
 tools: Bash, Read, Write
-model: inherit
+model: sonnet
 color: cyan
 ---
 
@@ -74,7 +74,7 @@ Wait for page load:
 agent-browser wait --load networkidle
 ```
 
-**Headed mode auth pause:** If `headed` is `true`, after page load, **return immediately** with status `WAITING_FOR_AUTH`:
+**Headed mode auth pause:** If `headed` is `true` **AND** `auth_profile` is provided, after page load, **return immediately** with status `WAITING_FOR_AUTH`:
 
 ```
 WAITING_FOR_AUTH
@@ -85,6 +85,8 @@ message: Browser is open in headed mode. Please log in manually, then tell the s
 ```
 
 The **orchestrator skill** (not this agent) handles user interaction. The skill will re-dispatch this agent after user confirms login. On re-dispatch, skip Step 1 (browser already open) and proceed from Step 2.
+
+**Headed without auth:** If `headed` is `true` but `auth_profile` is NOT provided, the browser opens visibly for the user to observe, but no auth pause is needed — proceed directly to Step 2.
 
 If the browser fails to open (command exits non-zero or times out), record the error and skip to Step 5 (Close Browser). Do NOT retry.
 
@@ -343,6 +345,16 @@ report_path: {{report_dir}}/report.md
 - `network_captured`: count of network requests recorded (after noise filtering)
 - `report_path`: absolute path to the written report
 
+**Zero DBG log warning:** If `log_tags` were specified (e.g., `[E2E-DBG]`) but `dbg_logs_captured` is 0, append a warning line to the summary:
+
+```
+WARNING: log_tags [E2E-DBG] specified but 0 matching console entries found.
+Possible causes: (1) dev server serving cached/transpiled source — restart server or hard-refresh browser,
+(2) injected code path not executed during reproduction steps, (3) injections in wrong file/location.
+```
+
+This warning helps the orchestrator distinguish "no data to observe" from "injections didn't take effect".
+
 ---
 
 ## Edge Cases
@@ -367,4 +379,76 @@ report_path: {{report_dir}}/report.md
 3. **Filter console for tag prefixes** (default `[E2E-DBG]`) in the main console table, but keep ALL entries in the Raw Console `<details>` section. The tagged table is the signal; raw console is the context.
 4. **Use Write tool for the report.** Do NOT use Bash echo/redirect to write `report.md`. The Write tool provides better error handling and user visibility.
 5. **Absolute paths only** for all file operations -- screenshots, report, profile. Any path not starting with `/` or `$` (variable resolving to absolute) is wrong.
-6. **Close browser even if steps fail.** Step 5 runs unconditionally. The only exception is a confirmed browser crash (process already dead).
+6. **Close browser even if steps fail.** Step 5 runs unconditionally. The only exception is a confirmed browser crash (process already dead). **Exception in Teams mode:** do NOT close browser unless explicitly told to — see Team Mode Protocol below.
+
+---
+
+## Team Mode Protocol
+
+> Shared protocol: `references/agent-teams.md` § 3 (startup), § 5 (browser persistence), § 8 (template)
+
+When your spawn prompt starts with **"TEAMS MODE"**, you operate as a persistent browser teammate instead of a one-shot subagent. The browser stays open across multiple verify rounds.
+
+### Startup (first spawn only)
+
+Follow `references/agent-teams.md` § 3:
+1. Open browser + clear baseline (Steps 1-2 as normal)
+2. If `--headed` AND `--profile` (auth needed): send `WAITING_FOR_AUTH`, wait for `AUTH_COMPLETE`, then `BROWSER_READY`
+3. Otherwise (headed without auth, or headless): send `BROWSER_READY` directly (include `target_url` and `role: observer`)
+4. **Stop your turn** — go idle and wait for VERIFY commands
+
+### On receiving VERIFY message
+
+Expected inbound format from lead:
+```
+VERIFY
+target_url: http://localhost:5173/operations/service-schedule
+steps:
+- Navigate to /operations/service-schedule
+- Click 建立服務單
+- Observe step 3 workspace section
+log_tags: [E2E-DBG]
+network_filters: [pipeline-preview, api/rest]
+report_dir: /absolute/path/.claude/e2e/debug
+```
+
+1. Parse `steps`, `log_tags`, `network_filters`, `report_dir`, `target_url` from the message
+2. Navigate to target URL: `agent-browser open "<url>"` then `agent-browser wait --load networkidle`
+   - `agent-browser open` on an already-open browser navigates within the existing session (no new window)
+3. Clear console and errors: `agent-browser console --clear` + `agent-browser errors --clear`
+4. Execute all reproduction steps — Steps 3a-3d as normal (snapshot, interact, collect)
+5. Write `report.md` to `report_dir` — Step 4 as normal
+6. Send structured results to lead via `SendMessage`. **Always include `dbg_logs` section** — even when empty:
+   ```
+   SendMessage(
+     to="lead",
+     message="OBSERVATION COMPLETE\nsteps_executed: N/M\ndbg_logs_captured: N\nerrors_captured: N\nnetwork_captured: N\nreport_path: <path>\n\ndbg_logs:\n  - tag: \"<tag>\"\n    value: \"<raw JSON value>\"\n    step: <N>\n  - tag: \"<tag2>\"\n    ...\n\nJS Errors:\n| Error | Step |\n|-------|------|\n| <msg> | <N> |\n\n<WARNING if applicable>",
+     summary="Observation: N logs, M errors"
+   )
+   ```
+
+   **dbg_logs section rules:**
+   - List ALL console entries matching `log_tags`, with the raw JSON value (not truncated)
+   - If 0 matches and `log_tags` was specified, add:
+     `WARNING: log_tags [E2E-DBG] specified but 0 matching console entries found. Possible causes: (1) dev server cache — restart or hard-refresh, (2) code path not executed, (3) wrong injection location.`
+   - The lead uses these raw values for diagnosis — truncation defeats the purpose
+7. **DO NOT close browser**
+8. **Stop your turn** — go idle and wait for next VERIFY or shutdown
+
+### On receiving shutdown_request
+
+1. Close browser: `agent-browser close`
+2. Respond with shutdown approval:
+   ```
+   SendMessage(to="lead", message={type: "shutdown_response", request_id: "<id>", approve: true})
+   ```
+
+### Key differences from subagent mode
+
+| Aspect | Subagent mode | Teams mode |
+|--------|--------------|------------|
+| Results delivery | Return summary at end | SendMessage after each VERIFY |
+| Browser lifecycle | Open → steps → close (one shot) | Open once → multiple VERIFYs → close on shutdown |
+| Report writing | Always writes report.md | Writes report.md each VERIFY round (for history) |
+| Turn behavior | Runs to completion, returns | Goes idle between rounds, waits for messages |
+| Close browser | Always (Step 5) | Only on shutdown_request |
