@@ -115,6 +115,9 @@ Using `app:` or `name:` in steps means v1 format -- rejected by the test runner.
 - **Ant Design CSS-hidden inputs**: `is visible` returns false for functional elements. Verify via snapshot a11y tree presence instead.
 - **Snapshot doesn't expose `data-testid`/`aria-label`**: use `agent-browser is visible "<selector>"` for attribute-based verification.
 - **Don't pass-through what you can execute**: If an agent has the tools to attempt a step (e.g., verifier has Bash -> can run CLI commands), it should attempt it best-effort rather than blindly skipping. Silent skip = the user discovers broken commands only at execution time, not verification time. External checkpoint failures in the verifier use `on_fail: warn` override so they never block browser verification.
+- **Headless CI: snapshot works, locators don't**: On Linux CI runners, Playwright actionability checks fail for `fill`, `click`, `is visible` even though `snapshot` shows the full a11y tree. Workarounds: `_poll_snapshot_contains` for visibility, `nativeInputValueSetter` for fill, `querySelector.click()` for click. All wrapped in `agent-browser eval` IIFEs.
+- **Ant Design `Input.Password` drops `name` attribute**: `Input.Password` doesn't pass `name` to the inner `<input>`. Use `input[type="password"]` selector instead of `input[name="password"]`.
+- **`agent-browser eval` shares global scope**: Consecutive `eval` calls share the same JS global scope. Redeclaring `const`/`let` causes SyntaxError. Wrap each eval in an IIFE: `(()=>{...})()`.
 
 ## Editing Skills and Agents
 

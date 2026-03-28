@@ -35,6 +35,12 @@ Patterns and gotchas for E2E testing agents. For project-specific patterns, chec
 - **Table**: snapshot scoped to `.ant-table` to reduce noise (10+ rows = 100+ @refs)
 - **Segmented control**: CSS-hidden radio inputs. `is visible` returns false. Verify via snapshot a11y tree instead
 - **Popover/Tooltip**: wait for `.ant-popover` after hover trigger
+- **`Input.Password` drops `name` attribute**: `Input.Password` doesn't pass `name` to inner `<input>`. Use `input[type="password"]` instead of `input[name="password"]`
+
+## React Controlled Input Gotchas
+
+- **React 18 `_valueTracker` suppresses `nativeInputValueSetter` onChange**: Setting value via `nativeInputValueSetter.call(el, value)` works at DOM level, but React's internal `_valueTracker` can suppress the `change` event if tracked value matches. Fix: clear tracker before dispatching — `const t=el._valueTracker; if(t) t.setValue('');`. Also `el.focus()` before setting value. Silent failure: no error, form submits with empty values.
+- **Wrap consecutive `eval` calls in IIFEs**: `agent-browser eval` calls share global JS scope. Redeclaring `const`/`let` across calls causes SyntaxError. Always use `(()=>{...})()`.
 
 ## React Native Web (Expo)
 
@@ -57,6 +63,8 @@ Patterns and gotchas for E2E testing agents. For project-specific patterns, chec
 3. `role=button[name=/pattern/]` — regex partial match
 4. `css=[aria-label="..."]` — semantic
 5. NEVER use `css=...has-text('...')` — broken in agent-browser, times out
+
+**Regex selector → literal prefix for grep**: When converting `role=X[name=/pattern/]` to a grep pattern (e.g., for compiled scripts using `grep -F`), extract the longest literal prefix before the first regex metacharacter. E.g., `/切換為.*模式/` → `切換為`. Using the full regex string with `grep -F` causes false negatives because `.*` is treated literally.
 
 ## Snapshot vs is visible
 
