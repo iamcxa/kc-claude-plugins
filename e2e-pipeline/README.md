@@ -64,10 +64,9 @@ When selectors break, re-map the page. When flows change, re-walk. The pipeline 
 Keep docs in sync with source code:
 
 ```
-/e2e-pipeline-doc-sync           # Full sync: scan + history + write + live probe verify
-/e2e-pipeline-doc-sync --check   # Report gaps without writing
-/e2e-pipeline-doc-sync --probe-only  # Verify existing docs match actual behavior
-/e2e-doc-sync --check            # Legacy scanner (coverage gaps only)
+/e2e-doc-sync                    # Full sync: diff-aware scan + history + write + live probe verify
+/e2e-doc-sync --check            # Report gaps without writing
+/e2e-doc-sync --probe-only       # Verify existing docs match actual behavior
 ```
 
 ## Contributing

@@ -137,9 +137,41 @@ The sentinel has a 10-minute staleness timeout as safety net.
 
 ## Phase 1 — Generate (dispatch flow-writer agent)
 
+### Mode selection
+
+> Detection logic: see `references/agent-teams.md` § 1
+
+- **Teams mode**: TeamCreate available AND `--no-teams` not set AND `flow_mode: browser` (CLI-only flows don't need Teams)
+- **Subagent mode**: TeamCreate unavailable OR `--no-teams` set OR `flow_mode: cli-only`
+
+### Teams mode: Pre-warm verifier browser (parallel with writer)
+
+> Shared protocol: `references/agent-teams.md` § 2-3
+
+When Teams mode is active AND `--no-verify` is NOT set, spawn the verifier teammate BEFORE dispatching the writer. This overlaps browser startup with flow generation.
+
+```
+TeamCreate(team_name="e2e-flow", description="Flow generation + verification")
+
+Agent(
+  team_name="e2e-flow",
+  name="verifier",
+  subagent_type="e2e-pipeline:e2e-flow-verifier",
+  prompt="TEAMS MODE. Pre-warm: open browser at <base_url> with auth profile <auth_profile>.
+          App: <app>. Report dir: <report_dir>.
+          After browser is ready, send BROWSER_READY and wait for VERIFY_FLOW command."
+)
+```
+
+Verifier opens browser in parallel while the writer generates the flow. By the time the writer returns, the verifier's browser is already warm.
+
+If `--no-verify`: skip verifier spawn (no browser needed).
+
+### Generate
+
 **→ Create flow-write sentinel** (see § Flow Write Authorization)
 
-Dispatch `e2e-pipeline:e2e-flow-writer` with:
+Dispatch `e2e-pipeline:e2e-flow-writer` (always as subagent — no browser, read-only, benefits from blocking return) with:
 - `description`: Extracted criteria or feature description
 - `mapping_path`: Absolute path to mapping YAML (**omit if `flow_mode: cli-only`**)
 - `context_summary`: Assembled codebase scan results
@@ -151,7 +183,9 @@ Dispatch `e2e-pipeline:e2e-flow-writer` with:
 
 See [reference.md](./reference.md) § Agent Dispatch Patterns for exact dispatch message format.
 
-**On return:** Read the generated flow YAML. Present summary to user:
+**On return:** Read the generated flow YAML. **Validate mapping field**: if `flow_mode: browser`, verify the flow's `mapping:` field matches the `app` value from the loaded mapping. If mismatch → treat as generation error (same cleanup path as invalid YAML below).
+
+Present summary to user:
 
 ```
 Flow generated: .claude/e2e/flows/<name>.yaml
@@ -165,6 +199,12 @@ Flow generated: .claude/e2e/flows/<name>.yaml
 ```
 
 If `--no-verify` → **delete flow-write sentinel** → if PR mode active, commit flow (`git add .claude/e2e/flows/<name>.yaml && git commit -m "test(e2e): add <flow-name> flow (unverified)"`) → skip to Phase 3 (no-verify path).
+
+**If flow-writer fails or returns invalid YAML:**
+1. Delete flow-write sentinel immediately
+2. If Teams mode (verifier was pre-warmed): shutdown verifier → `TeamDelete()` (see `references/agent-teams.md` § 2 Teardown)
+3. Report error to user with writer's error output
+4. Skip all subsequent phases — do NOT proceed to Phase 2
 
 ## Phase 2 — Verify (dispatch flow-verifier + trace-analyzer)
 
@@ -180,9 +220,33 @@ ls ~/.agent-browser/<app>/ 2>/dev/null
 
 Dev server must be running. Auth profile should exist (run `/e2e-map` or `/e2e-walkthrough` first to create one).
 
+**Teams mode**: pre-flight already passed during Phase 1 pre-warm. If verifier sent `BROWSER_READY`, skip pre-flight.
+
 ### 2b. Dispatch flow-verifier
 
 **→ If `--verify-only`, create flow-write sentinel now** (see § Flow Write Authorization)
+
+---
+
+**Teams mode** (verifier already spawned and browser ready):
+
+Send flow to the pre-warmed verifier:
+
+```
+SendMessage(
+  to="verifier",
+  message="VERIFY_FLOW\nflow_path: <path>\nmapping_path: <path>\nbase_url: <url>\nauth_profile: <path>\nrecord: <bool>",
+  summary="Verify flow: <flow-name>"
+)
+```
+
+Wait for verifier's `VERIFICATION COMPLETE` response containing corrections, results, and report path.
+
+For `--verify-only` with existing team: detect existing team (`references/agent-teams.md` § 2). If verifier alive → send `VERIFY_FLOW` directly (no browser restart).
+
+---
+
+**Subagent mode** (original behavior):
 
 Dispatch `e2e-pipeline:e2e-flow-verifier` with:
 - `flow_path`: Path to generated (or existing) flow YAML
@@ -256,6 +320,8 @@ Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
 Agent returns: `gif_path`, `mp4_path`, `thumbnail_path`. Use these in Phase 3 results.
 
 **→ Delete flow-write sentinel** (all flow-writing agents have returned)
+
+**Teams mode: Teardown verifier** — After media processing, shutdown the verifier teammate and delete team (`references/agent-teams.md` § 2). For `--verify-only` re-runs, keep verifier alive (user may re-verify).
 
 ### Phase 2.6 — Commit Flow (PR mode only)
 

@@ -52,14 +52,13 @@
 | `/e2e-help <topic>` | Deep dive into a topic (e.g., `cross-site`, `suites`, `checkpoints`) |
 | `/e2e-help --list-topics` | Show all available help topics with descriptions |
 | `/e2e-help --feedback "<text>"` | Report a documentation gap or confusing area |
-| `/e2e-doc-sync` | Scan docs for gaps against skills/agents, write updates |
-| `/e2e-doc-sync --check` | Report-only mode (no writes) |
-| `/e2e-doc-sync --fix` | Scan + auto-write approved gaps |
-| `/e2e-pipeline-doc-sync` | Full doc sync: static scan + history enrichment + write + live probe verification via `doc-probe` agent |
-| `/e2e-pipeline-doc-sync --check` | Report gaps + history enrichment, no writes |
-| `/e2e-pipeline-doc-sync --probe-only` | Verify existing docs against actual skill behavior (dispatches `doc-probe` agent to run live probes) |
-| `/e2e-pipeline-doc-sync --auto` | Full sync, skip user confirmation |
-| `/e2e-pipeline-doc-sync --section <doc>` | Targeted sync for one doc file |
+| `/e2e-doc-sync` | Full doc sync: diff-aware scan + history enrichment + write + live probe verification |
+| `/e2e-doc-sync --check` | Report gaps + history enrichment, no writes |
+| `/e2e-doc-sync --fix` | Full sync (alias for bare invocation, backward compat) |
+| `/e2e-doc-sync --probe-only` | Verify existing docs against actual skill behavior (dispatches `doc-probe` agent) |
+| `/e2e-doc-sync --auto` | Full sync, skip user confirmation |
+| `/e2e-doc-sync --section <doc>` | Targeted sync for one doc file |
+| `/e2e-doc-sync --diff <ref>` | Use explicit git diff base instead of auto-detect |
 
 **CLI-only flow triggers**: `/e2e-flow` also responds to natural language like "cli flow", "backend e2e", "api test flow", and "cli recording". When no mapping exists and the source material contains CLI signals (shell commands, API endpoints, database queries), the skill auto-detects CLI-only intent and generates a flow using only `Execute external` / `Verify external` steps -- no mapping required. See [Cross-Boundary Testing -- CLI-Only Flows](cross-boundary-testing.md#cli-only-flows-no-mapping-required) for details.
 

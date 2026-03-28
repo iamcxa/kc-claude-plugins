@@ -167,9 +167,14 @@ Total: 4 runs, 31 steps. Proceed?
 
 ## Phase 1 — Dispatch
 
-For each mapping+flow group:
+### Mode selection
 
-### Prepare Agent Input
+> Detection logic: see `references/agent-teams.md` § 1
+
+- **Teams mode**: TeamCreate available AND `--no-teams` not set
+- **Subagent mode**: TeamCreate unavailable OR `--no-teams` set
+
+### Prepare Agent Input (both modes)
 
 | Field | Source |
 |-------|--------|
@@ -183,7 +188,186 @@ For each mapping+flow group:
 | `video` | `true` when `--video` or `--pr` is present, otherwise `false` |
 | `suite_context` | Set to `true` when dispatching via `--all-sites` or `--suite` (enables multi-session with `--session <app>`) |
 
-### Dispatch
+---
+
+### Teams mode — Multi-role parallel testing
+
+> Shared protocol: `references/agent-teams.md` § 2-6
+
+Teams mode spawns persistent runner teammates. Benefits:
+- **Per-step results** — lead sees each step's result immediately via SendMessage
+- **Multi-role parallel** — different sites/auth profiles run simultaneously
+- **Cross-role coordination** — lead orchestrates sequential dependencies between roles
+- **Mixed environments** — browser + CLI teammates in the same test session
+- **Fail-fast** — on failure, lead can immediately transition to `/e2e-debug` (same browser)
+
+#### Scenario A: Single-site, single-flow
+
+One persistent runner teammate.
+
+```
+TeamCreate(team_name="e2e-test", description="E2E test execution")
+
+Agent(
+  team_name="e2e-test",
+  name="runner",
+  subagent_type="e2e-pipeline:e2e-test-runner",
+  prompt="TEAMS MODE. Execute E2E flow.
+          flow_path: <path>  mapping_path: <path>  auth_profile: <path>
+          base_url: <url>  app: <name>  report_dir: <path>
+          video: <bool>
+          Open browser, execute all steps, send FLOW COMPLETE with results.
+          Then go idle — browser stays open for potential re-run or debug."
+)
+```
+
+Wait for `BROWSER_READY` → runner executes flow → `FLOW COMPLETE` with results.
+
+On failure: offer `"Investigate with /e2e-debug? (browser is still open)"`
+On re-run: `SendMessage(to="runner", message="RE-RUN\nflow_path: <path>")` — no browser restart.
+
+#### Scenario B: Multi-site suite / --all-sites (parallel flows)
+
+One teammate per site. Flows dispatched in parallel.
+
+```
+TeamCreate(team_name="e2e-test", description="Multi-site E2E suite")
+
+# Spawn one runner per unique site/mapping
+for site in sites:
+  Agent(
+    team_name="e2e-test",
+    name="runner-<site.alias>",
+    subagent_type="e2e-pipeline:e2e-test-runner",
+    prompt="TEAMS MODE. Role: <site.alias>.
+            auth_profile: <site.auth>  mapping_path: <site.mapping>
+            base_url: <site.base_url>  app: <site.app>
+            report_dir: <report_dir>/<site.alias>/
+            video: <bool>
+            Wait for EXECUTE_FLOW commands."
+  )
+```
+
+Wait for all `BROWSER_READY` messages. Handle `WAITING_FOR_AUTH` per `references/agent-teams.md` § 3.
+
+Then dispatch flows in parallel:
+
+```
+SendMessage(to="runner-admin", message="EXECUTE_FLOW\nflow_path: <admin-flow>", summary="admin: smoke-navigation")
+SendMessage(to="runner-customer", message="EXECUTE_FLOW\nflow_path: <customer-flow>", summary="customer: booking-flow")
+```
+
+Responses arrive asynchronously. Aggregate into combined results table.
+
+#### Scenario C: Cross-site flow (step-level routing)
+
+One teammate per site defined in flow `sites:`. Lead routes each step by `site:` field.
+
+```
+# Same multi-runner spawn as Scenario B (one per sites: entry)
+```
+
+After all runners ready, lead routes steps:
+
+```
+for step in flow.steps:
+  target = f"runner-{step.site}"
+  SendMessage(to=target, message="EXECUTE_STEP\n{step as YAML}", summary=f"{step.site}: {step.id}")
+  # Wait for STEP COMPLETE before next step to SAME site
+  # Steps to DIFFERENT site with no data dependency → can dispatch in parallel
+```
+
+**Parallel eligibility** (`references/agent-teams.md` § 6):
+- Consecutive steps to DIFFERENT sites → dispatch simultaneously
+- Steps to SAME site → must be sequential (one browser)
+- Steps referencing `{{variable}}` from a prior step → must wait for that step
+
+**Failure handling** (`references/agent-teams.md` § 6 — Failure handling in multi-step routing):
+- A step returns `result: FAIL` → **continue dispatching** (collect maximum evidence)
+- **Dependency cascade**: scan remaining steps' `context:` for references to the failed step's `data:` keys → mark matched steps as `SKIP` with reason `"dependency failed: <step-id>"`. Do NOT dispatch with empty context.
+- **Partial data**: FAIL always triggers cascade regardless of partial data in the response
+- Independent steps (no data dependency on the failed step) proceed normally
+- Log cascade in the final report: `"Steps skipped due to dependency: <list>"`
+
+**Data passing between roles**:
+When a step produces data needed by a subsequent cross-site step, the runner includes it in the response:
+
+```
+STEP COMPLETE
+id: create-order
+result: PASS
+data:
+  order_id: "12345"
+  order_url: "/orders/12345"
+```
+
+Lead extracts `data:` and includes as `context:` in the next step's command:
+
+```
+SendMessage(to="runner-customer",
+  message="EXECUTE_STEP\nid: verify-order\ncontext:\n  order_id: 12345\naction: Navigate to /orders\nexpect:\n  - text '12345' on orders-list",
+  summary="customer: verify-order")
+```
+
+#### Scenario D: Mixed browser + CLI
+
+Spawn browser runners + a CLI runner (general-purpose agent, not test-runner):
+
+```
+Agent(
+  team_name="e2e-test",
+  name="runner-cli",
+  subagent_type="general-purpose",
+  prompt="TEAMS MODE. You are a CLI test runner.
+          report_dir: <report_dir>/cli/
+          Execute CLI commands and report results.
+          On EXECUTE_STEP: run the command via Bash, capture stdout/stderr/exit code.
+          PASS/FAIL rule: exit code 0 = PASS, non-zero = FAIL. stderr alone does NOT mean FAIL (many CLI tools write progress to stderr).
+          Persist output: write stdout to <report_dir>/cli/<step-id>.stdout.txt, stderr to <step-id>.stderr.txt.
+          Send STEP COMPLETE with result (include exit_code in data:)."
+)
+```
+
+Lead coordinates: "CLI runner executes `recce run ...`" → "browser runner verifies result appears in UI."
+
+**CLI result contract:**
+
+| Field | Meaning |
+|-------|---------|
+| `result: PASS` | exit code 0 |
+| `result: FAIL` | exit code non-zero |
+| `data.exit_code` | raw exit code for the lead's report |
+| `data.stdout_path` | path to saved stdout file |
+| `data.stderr_path` | path to saved stderr file (if non-empty) |
+
+#### Teams mode: Teardown
+
+> See `references/agent-teams.md` § 2 (Teardown)
+
+After all results collected and presented: shutdown all runners → `TeamDelete()`.
+For single-flow: keep runners alive if user might re-run or debug. Teardown on explicit close.
+
+#### Teams mode: Result aggregation
+
+Collect `FLOW COMPLETE` or `STEP COMPLETE` messages from all runners. Build the same result structure as subagent mode (total_steps, passed, failed, etc.).
+
+**Mixed flow handling**: CLI step results are aggregated alongside browser step results in the same report. CLI steps show `exit_code` and `stdout_path` instead of screenshots. The final results table includes a `Runner` column to distinguish browser vs CLI steps:
+
+```
+| Step | Runner | Result | Details |
+|------|--------|--------|---------|
+| create-order | runner-admin | PASS | screenshot: step-01.png |
+| run-pipeline | runner-cli | PASS | exit: 0, stdout: cli/run-pipeline.stdout.txt |
+| verify-result | runner-web | PASS | screenshot: step-03.png |
+```
+
+Proceed to Phase 1.5 as normal.
+
+---
+
+### Subagent mode (original behavior)
+
+#### Dispatch
 
 ```
 Agent(subagent_type="e2e-test-runner"):
@@ -196,7 +380,7 @@ Agent(subagent_type="e2e-test-runner"):
 
 Batch mode: dispatch sequentially (session reuse). Multi-site: dispatch per-site groups, always include `suite_context: true`.
 
-### Receive Results
+#### Receive Results
 
 Agent returns: `total_steps, passed, failed, skipped, console_errors, api_failures, report_path, key_findings`.
 
@@ -204,9 +388,12 @@ Agent returns: `total_steps, passed, failed, skipped, console_errors, api_failur
 
 After agent returns, dispatch media processing.
 
-**Detect flow type**: If ALL flow steps use `action: "Execute external"` or `action: "Verify external"` (zero browser steps), this is a **CLI-only flow**.
+**Detect flow type**: Classify based on step actions:
+- **CLI-only**: ALL steps are `Execute external` or `Verify external` (zero browser steps)
+- **Browser-only**: ALL steps are browser actions (zero CLI steps)
+- **Mixed** (Teams Scenario D): both browser and CLI steps exist
 
-**Browser flow** (default):
+**Browser-only flow** (default):
 ```
 Agent(subagent_type="e2e-pipeline:e2e-media-processor"):
   "Process media:
@@ -228,6 +415,13 @@ Always dispatch for browser flows when `--video` or `--pr` — GIF, MP4, and thu
       output_name: test-run"
    ```
 3. If no cast file exists (prerequisites missing or recording skipped) → skip media processing for CLI flow.
+
+**Mixed flow** (Teams Scenario D):
+
+Process browser and CLI media separately:
+1. **Browser media**: dispatch media-processor for browser runner's `report_dir` (screenshots from browser steps)
+2. **CLI media**: if `<report_dir>/cli/recording.cast` exists → dispatch media-processor in CLI mode for the CLI runner's output
+3. Both media sets are included in the final report. Browser steps get screenshots/video; CLI steps get stdout/stderr text files.
 
 Agent returns: `gif_path`, `gif_frames`, `mp4_path`, `thumbnail_path`, `blank_frames`. Store for Phase 2 results.
 

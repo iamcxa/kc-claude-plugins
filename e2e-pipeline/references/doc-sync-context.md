@@ -24,7 +24,6 @@ defines sync levels, probe classification, and style defaults.
 | `skills/e2e-skill-ops/SKILL.md` | `docs/commands.md` (e2e-skill-ops row) | `docs/debugging.md` (pipeline debugging) |
 | `skills/e2e-help/SKILL.md` | `docs/commands.md` (e2e-help row) | — |
 | `skills/e2e-doc-sync/SKILL.md` | `docs/commands.md` (e2e-doc-sync row) | `docs/architecture.md` (doc maintenance) |
-| `skills/e2e-pipeline-doc-sync/SKILL.md` | `docs/commands.md` (e2e-pipeline-doc-sync row) | `docs/architecture.md` (doc maintenance) |
 
 ### Agents → Doc Targets
 
@@ -36,7 +35,6 @@ defines sync levels, probe classification, and style defaults.
 | `agents/e2e-test-runner.md` | `docs/architecture.md` (Agent table) |
 | `agents/e2e-trace-analyzer.md` | `docs/architecture.md` (Agent table) |
 | `agents/e2e-media-processor.md` | `docs/architecture.md` (Agent table) |
-| `agents/e2e-doc-scanner.md` | `docs/architecture.md` (Agent table) |
 | `agents/doc-probe.md` | `docs/architecture.md` (Agent table) |
 
 ### Hooks → Doc Targets
@@ -79,7 +77,7 @@ defines sync levels, probe classification, and style defaults.
 
 ## Style Guide
 
-Defaults extracted from `agents/e2e-doc-scanner.md` style rules:
+Defaults for documentation writing:
 
 1. **Practical over abstract** — lead with a working code/YAML example, explain after
 2. **Troubleshooting tables** — Issue | Cause | Fix format for complex topics
@@ -98,15 +96,14 @@ Classifies each skill for automated doc-sync probing (can the scanner invoke it 
 | `e2e-help` | cli | Pure text output, no side effects |
 | `e2e-help --list-topics` | cli | Pure text, enumerates available topics |
 | `e2e-compile --all` | cli | Compiles flow YAML to scripts, no browser |
-| `e2e-doc-sync --check` | cli | Scan-only mode, no file modifications |
+| `e2e-doc-sync --check` | cli | Report-only mode, no writes, MCP graceful degradation |
+| `e2e-doc-sync` | skip | Full sync modifies files + dispatches agents |
 | `e2e-dispatch` | skip | Requires user intent routing input |
 | `e2e-map` | skip | Requires browser + live application |
 | `e2e-flow` | skip | Requires browser + live application |
 | `e2e-test` | skip | Requires browser + live application + test data |
 | `e2e-walkthrough` | skip | Requires browser + live application |
 | `e2e-skill-ops` | skip | Requires failure context or specific debug target |
-| `e2e-pipeline-doc-sync --check` | cli | Report-only mode, no writes, MCP graceful degradation |
-| `e2e-pipeline-doc-sync` | skip | Full sync modifies files + dispatches agents |
 
 ## Post-Sync Hooks
 

@@ -41,10 +41,9 @@ Skills run in main context as thin orchestrators. Heavy browser work is delegate
 | `e2e-skill-ops` | *(none)* | Meta-skill for pipeline maintenance |
 | `e2e-dispatch` | *(none)* | Router to the right skill |
 | `e2e-help` | *(none)* | Interactive help, topic guide, feedback collection |
-| `e2e-doc-sync` | `e2e-doc-scanner` | Documentation gap scanner and writer |
-| `e2e-pipeline-doc-sync` | `doc-probe` | Forge-template doc sync with history enrichment (journal + memory) and live behavioral probe verification. Coexists with `e2e-doc-sync` -- adds accuracy checking on top of coverage scanning. |
+| `e2e-doc-sync` | `doc-probe` | Unified doc sync: diff-aware scan + history enrichment (journal + memory) + write + live behavioral probe verification |
 
-**`e2e-pipeline-doc-sync` details**: This skill runs a 6-phase pipeline: static scan (inventory sources vs docs), history enrichment (search journal + memory for usage patterns), doc write/update, live probe verification (dispatches `doc-probe` agent to execute CLI probes against behavioral claims), self-update of its reference config, and knowledge loop reporting.
+**`e2e-doc-sync` details**: This skill runs a 6-phase pipeline: diff-aware static scan (git diff + inventory sources vs docs), history enrichment (search journal + memory for usage patterns), doc write/update, live probe verification (dispatches `doc-probe` agent to execute CLI probes against behavioral claims), self-update of its reference config, and knowledge loop reporting.
 
 **`doc-probe` agent**: A mechanical accuracy verifier. Receives a list of behavioral claims extracted from documentation, executes each as a CLI probe, compares output against expected signals, and returns a structured pass/fail report. Safety-gated (rejects destructive commands). Uses Sonnet model for cost efficiency.
 
@@ -142,8 +141,7 @@ e2e-pipeline/
 |   |- e2e-compile/             # Compile flow YAML -> bash scripts
 |   |- e2e-skill-ops/           # Meta-skill for pipeline maintenance
 |   |- e2e-help/                # Interactive help guide, topic deep-dive, feedback
-|   |- e2e-doc-sync/            # Documentation gap scanner & writer
-|   |- e2e-pipeline-doc-sync/   # Forge-template doc sync with live probe verification
+|   |- e2e-doc-sync/            # Unified doc sync: diff-aware scan + history + write + live probe
 |   +-- e2e-debug/              # Runtime debug: inject -> observe -> diagnose -> cleanup
 |- agents/
 |   |- e2e-mapper.md            # UI exploration subagent
@@ -152,7 +150,6 @@ e2e-pipeline/
 |   |- e2e-flow-verifier.md     # Flow verification subagent
 |   |- e2e-trace-analyzer.md    # Trace parsing subagent
 |   |- e2e-media-processor.md   # Media post-processing subagent
-|   |- e2e-doc-scanner.md       # Documentation gap scanner subagent
 |   |- doc-probe.md             # Documentation accuracy verifier (live probes)
 |   +-- e2e-debug-observe.md    # Browser observation for debug pipeline
 |- hooks/                       # SessionStart + PreToolUse hooks

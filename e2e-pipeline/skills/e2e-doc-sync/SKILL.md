@@ -1,26 +1,36 @@
 ---
 name: e2e-doc-sync
-description: Use when E2E pipeline features have been added or changed and documentation needs updating. Scans skills and agents against docs to find gaps, proposes outlines for approval, then dispatches a subagent to write updates. Triggers on "sync e2e docs", "update e2e documentation", "doc sync", "e2e-doc-sync", "check doc coverage".
+description: >
+  Use when plugin documentation needs updating after feature changes,
+  when verifying existing docs accurately reflect actual skill/agent behavior,
+  or for periodic documentation maintenance. Scans source code with diff-aware
+  detection, enriches with usage history from journal and memory, writes or
+  updates docs, then verifies accuracy via live behavioral probes.
+  Triggers on "sync e2e docs", "update e2e documentation", "doc sync",
+  "e2e-doc-sync", "check doc coverage".
 ---
 
-# E2E Doc Sync — Documentation Gap Scanner & Writer
+# E2E Doc Sync — Documentation Gap Scanner, Writer & Verifier
 
-Keep documentation in sync with skill and agent definitions after feature changes.
+## Routing
 
-## Invocation
+| Input | Route |
+|-------|-------|
+| bare invocation | → Full Sync |
+| `--fix` | → Full Sync (alias for bare — kept for backward compat) |
+| `--check` | → Report Only (no writes) |
+| `--probe-only` | → Verify Existing Docs |
+| `--auto` | → Full Sync (skip confirmation) |
+| `--section <doc-file>` | → Targeted Sync (one doc file) |
+| `--diff <ref>` | → Use explicit git diff base instead of auto-detect |
 
-```
-/e2e-doc-sync                    # Scan for gaps (with diff-aware), propose fixes
-/e2e-doc-sync --fix              # Scan + auto-write approved gaps
-/e2e-doc-sync --check            # Report-only mode (no writes)
-/e2e-doc-sync --diff <ref>       # Explicit diff base (default: auto-detect last version tag)
-```
+## Phase 1: Static Scan
 
-## Phase 0 — Diff-Aware Pre-Processing (automatic)
+### Step 0 — Diff-Aware Pre-Processing (automatic)
 
-Before dispatching the scanner, compute a diff of changed skill/agent content since the last version tag. This catches **behavioral branches** and other features that the scanner's surface-level extraction (flags, headings) would miss.
+Before inventorying files, compute a diff of changed skill/agent content since the last version tag. This catches **behavioral branches** and other features that surface-level extraction (flags, headings) would miss.
 
-**Step 1 — Find diff base:**
+**Find diff base:**
 
 ```bash
 # Auto-detect: find the most recent e2e-pipeline version tag
@@ -29,7 +39,7 @@ DIFF_BASE=$(git -C ${CLAUDE_PLUGIN_ROOT} tag -l "e2e-pipeline-v*" --sort=-v:refn
 # If no tags exist, use HEAD~10 as fallback
 ```
 
-**Step 2 — Extract changed content:**
+**Extract changed content:**
 
 ```bash
 git -C ${CLAUDE_PLUGIN_ROOT} diff ${DIFF_BASE}..HEAD \
@@ -37,159 +47,135 @@ git -C ${CLAUDE_PLUGIN_ROOT} diff ${DIFF_BASE}..HEAD \
   | grep '^+' | grep -v '^+++' | sed 's/^+//'
 ```
 
-This produces only the **added lines** — new content that might need doc coverage.
+Group added lines by source file. Cap diff summary at 2000 chars.
 
-**Step 3 — Build diff summary:**
+### Step 1 — Inventory & Cross-Reference
 
-Group added lines by source file. For each file, extract a brief summary of what changed (new sections, new fields, new conditionals, new rules). Cap at 2000 chars total to stay within agent context budget.
+1. Read `references/doc-sync-context.md` → load Source Map, Doc Structure, Probe Config, Post-Sync Hooks
+2. Inventory source files:
+   - Glob `skills/*/SKILL.md` → for each: extract skill name, description, all `--flags`, modes (from routing tables), key concepts
+   - Glob `agents/*.md` → for each: extract agent name, tools, input contract fields, dispatch trigger
+   - Glob `hooks/` → for each: extract event type, trigger condition, affected tools
+3. Inventory documentation:
+   - Glob `docs/*.md` + `README.md` → for each: extract title, section headings, mentioned features, example count
+4. Cross-reference: for each Source Map entry, search its Doc Target for coverage of every extracted feature
+   - If diff summary exists: additionally check whether diff-added content has doc coverage
+5. Classify gaps:
+   - **Critical**: source feature exists, zero mention in any doc
+   - **Warning**: mentioned in one doc but not explained (e.g., flag listed in table but no usage guide)
+   - **Info**: documented but could be improved (missing example, stale cross-reference)
+6. Meta-doc consistency check: verify CLAUDE.md skill/agent counts, README docs table completeness, plugin.json description accuracy
 
-**Step 4 — Pass to scanner:**
+If `--section <doc-file>`: filter Source Map to entries targeting that doc file only.
 
-Include `diff_content` in the scanner dispatch (see Phase 1). If the diff is empty (no changes since last tag), omit the field — scanner runs in surface-only mode as before.
+Output: gap_report + feature_inventory
 
-## Phase 1 — Scan for Gaps
+## Phase 2: History Enrichment
 
-Dispatch the `e2e-doc-scanner` agent to analyze the gap between implementation and documentation:
+**Prerequisite**: MCP tools `episodic-memory` and `private-journal`. If unavailable, skip Phase 2 with warning: "History enrichment skipped — MCP tools unavailable. Running static-only mode." Proceed to Phase 3 with unenriched gaps.
 
-```
-Agent(subagent_type="e2e-pipeline:e2e-doc-scanner"):
-  "Scan for documentation gaps:
-   plugin_root: ${CLAUDE_PLUGIN_ROOT}
-   mode: scan
-   diff_content: <grouped added lines from Phase 0, or omit if empty>"
-```
+1. Search episodic memory: `search("e2e-pipeline")` → extract usage patterns, user workflows, reported issues
+2. Search journal: `search_journal("e2e-pipeline")` → extract technical insights, debug findings, failed attempts
+3. Read MEMORY.md → extract known plugin knowledge entries
+4. Enrich each gap:
+   - History mentions this feature with usage context? → add context to gap (improves doc writing quality)
+   - History contradicts current docs? → escalate gap to `accuracy_risk` (priority for probe verification)
+5. Features found in history but NOT in gap report → add as new Info-level gap ("undocumented but used")
 
-The agent cross-references:
-- **Skills** (`skills/*/SKILL.md`) — flags, modes, concepts, features (surface extraction)
-- **Agents** (`agents/*.md`) — capabilities, input contracts, behaviors (surface extraction)
-- **Diff content** (if provided) — new behavioral branches, conditionals, fields (diff extraction)
-- **Docs** (`docs/*.md`) — covered topics, examples, sections
-- **CHANGELOG.md** — recent feature additions
-- **README.md** — quick start coverage, docs table completeness
+If `--check`: skip to Phase 6 after this phase.
 
-Returns a structured gap report with entries classified by severity:
+Output: enriched_gaps
 
-| Severity | Meaning |
-|----------|---------|
-| **Critical** | Feature implemented in skills/agents, zero doc coverage |
-| **Warning** | Feature partially documented (e.g., flag listed but not explained) |
-| **Info** | Could be improved (cross-reference missing, example would help) |
+## Phase 3: Write / Update Docs
 
-## Phase 2 — Present & Confirm Outlines
+Unless `--auto`, present enriched_gaps grouped by severity (Critical first):
+- **approve all (a)**: proceed with all gaps
+- **select (s)**: pick which gaps to address
+- **edit (e)**: modify proposed doc outline for a specific gap before writing
+- **quit (q)**: abort, skip to Phase 6
 
-Present gaps to the user organized by severity:
+For each approved gap:
 
-```markdown
-## Documentation Gaps Found
+1. Determine action: **CREATE** new doc file or **UPDATE** existing section
+2. If UPDATE:
+   - Read full target doc file
+   - Locate target section (guided by Source Map)
+   - Check `auto-sync` flag in Doc Structure:
+     - `yes` → rewrite section entirely from source
+     - `partial` → edit only the specific subsection, preserve hand-written content
+   - Apply changes via Edit tool
+3. If CREATE:
+   - Read one sibling doc file for style calibration (tone, structure, heading conventions)
+   - Follow Style Guide from `doc-sync-context.md`
+   - Write complete doc with sections derived from source features
+4. After all writes:
+   - Sync index files: update README.md docs table if new files created
+   - Meta-doc consistency: update CLAUDE.md counts if skill/agent inventory changed
 
-### Critical (N)
-1. **<feature>** — <skill> defines it but no doc covers it
-   - Proposed: new `docs/<name>.md`
-   - Outline: [section1, section2, ...]
+## Phase 4: Live Probe
 
-### Warning (N)
-2. **<flag>** — listed in commands.md but no explanation
-   - Proposed: expand `docs/commands.md`
+**Skip if**: doc-probe agent was not scaffolded (Light variant) or `--check` mode.
 
-### Info (N)
-3. **<topic>** — documented in one place but not cross-referenced
-   - Proposed: add section to `docs/<file>.md`
+1. **Extract behavioral claims** — Read each doc written/updated in Phase 3. Identify sentences asserting observable behavior ("X shows Y", "when you run X, Y happens", "X supports Y"). For each claim, generate structured claim object: assertion text, probe command (from Probe Config), expected output signals. This is LLM judgment, not regex.
+2. Filter claims to `method: cli` only (skip claims for skills marked `skip` in Probe Config)
+3. Write claims to `/tmp/e2e-doc-probe/claims.json`
+4. Dispatch `doc-probe` agent:
+   - plugin_root: `${CLAUDE_PLUGIN_ROOT}` (standard Claude Code env var, auto-available in plugin skill context)
+   - claims_path: `/tmp/e2e-doc-probe/claims.json`
+   - report_dir: `/tmp/e2e-doc-probe/report`
+5. Read `probe-results.json`:
+   - All pass → proceed to Phase 5
+   - Any `fail`:
+     a. Read source code for the failing skill to understand actual behavior
+     b. Fix the doc to match actual behavior (docs conform to code)
+     c. Re-extract claims for fixed sections only
+     d. Re-dispatch probe (max 3 total rounds — if still failing after 3, log and move on)
+   - `error:env_dependent` → log, don't retry, note in report
+   - `error:crash` → log, suggest manual investigation
 
-Approve all? (a = all, s = select individually, e = edit outlines, q = quit)
-```
+If `--section <doc-file>`: only extract claims from that doc file.
 
-**User interaction**:
-- `a` → approve all, proceed to write
-- `s` → present each gap for individual y/n
-- `e` → user edits outlines inline, then approve
-- `q` → stop, no writes
+## Phase 5: Self-Update Reference
 
-## Phase 3 — Write Documentation
+1. Compare current skills/agents/hooks inventory (from Phase 1) vs `doc-sync-context.md`
+2. New source files found → append to Source Map with inferred Doc Target
+3. Removed source files → mark as deprecated in Source Map (warn user, don't auto-delete)
+4. New skills → classify probe safety using Probe Safety Heuristic → add to Probe Config
+5. Skills that probed as `error:env_dependent` → update Probe Config to `skip` (self-correcting)
+6. Update frontmatter: `last_sync` date, `version` to current plugin version
 
-For approved gaps, dispatch the doc-scanner agent in write mode:
+## Phase 6: Report + Knowledge Loop
 
-```
-Agent(subagent_type="e2e-pipeline:e2e-doc-scanner"):
-  "Write documentation updates:
-   plugin_root: ${CLAUDE_PLUGIN_ROOT}
-   mode: write
-   approved_gaps: <JSON list of approved gaps with outlines>
-   style_guide:
-     - Practical examples over abstract explanations
-     - Each doc ends with contributing CTA (PR link + /e2e-help --feedback)
-     - Cross-reference related docs in a Related section
-     - Include troubleshooting table for complex topics
-     - Match tone and depth of existing docs"
-```
+1. Output summary:
+   | Metric | Value |
+   |--------|-------|
+   | Gaps found | N |
+   | Gaps fixed | N |
+   | Accuracy risks found | N |
+   | Probes run | N |
+   | Probe pass rate | N% |
+   | Docs created | N |
+   | Docs updated | N |
+   | Reference self-updated | yes/no |
 
-The agent:
-1. Reads source files (skills/agents) for authoritative content
-2. Reads existing docs for style matching
-3. Writes new docs or updates existing ones
-4. Updates README.md docs table if new files were created
-5. Updates `docs/commands.md` flag descriptions if new flags were found
-6. Returns list of files created/modified
+2. D1 learning: check for reusable patterns worth capturing:
+   - Probe found mismatch static scan missed → doc described removed/changed feature
+   - History enrichment found risk confirmed by probe → user-reported issue validated
+   - New skill had no doc coverage → expansion rule for doc structure
+   - Retry loop needed >1 round → initial generation quality insight
+   If pattern found and plugin has D1 evolution enabled → append to `reference/learned-patterns.md`
 
-## Phase 4 — Verify & Report
+3. Auto-issue: if unfixed gaps remain (user declined, env_dependent probes, crash errors):
+   - Offer to create GitHub issue with gap details
+   - Format: title = "Doc sync: N gaps remaining", body = gap list with severity
 
-After writing:
+4. Post-sync hooks: read and execute plugin-specific actions from `doc-sync-context.md` Post-Sync Hooks section
 
-1. **Link check**: Grep all docs for `](docs/` and `](./` references, verify targets exist
-2. **README sync**: Verify README.md docs table includes all `docs/*.md` files
-3. **Dispatch routing**: If new skills were added, check `skills/e2e-dispatch/SKILL.md` routing table
-4. **CLAUDE.md counts**: Verify skill/agent counts in CLAUDE.md match actual directories
+## Rules
 
-Present summary:
-
-```markdown
-## Doc Sync Complete
-
-| Action | File | Status |
-|--------|------|--------|
-| Created | docs/multi-site-testing.md | ✅ |
-| Updated | docs/commands.md | ✅ |
-| Verified | README.md docs table | ✅ |
-
-### Remaining
-- No remaining gaps (or: N gaps deferred by user)
-
-Run `/e2e-doc-sync --check` to verify no remaining gaps.
-```
-
-## Phase 5 — Knowledge Loop Triggers
-
-After completing a doc sync, check:
-
-1. **e2e-help topic map**: If new docs were created, verify the topic-to-file mapping in `skills/e2e-help/SKILL.md` Phase 3 includes them
-2. **Feedback log**: Read `.claude/e2e/reports/feedback-log.md` (if exists) for unresolved user feedback that the new docs might address
-3. **Suggest closing issues**: If gaps were filled that match open GitHub issues tagged `documentation`, suggest closing them
-
-## When to Run
-
-This skill should be invoked:
-- After bumping the plugin version (features changed)
-- After adding/removing/renaming skills or agents
-- After adding new flags or modes to existing skills
-- Before `/kc-marketplace-sync` (ensure docs match what's published)
-- Periodically as maintenance (monthly or after major changes)
-
-## Common Patterns
-
-### After a feature PR
-
-```
-# 1. Implement feature
-# 2. Run doc sync
-/e2e-doc-sync --fix
-
-# 3. Review generated docs
-# 4. Commit docs alongside feature
-```
-
-### CI check mode
-
-```
-/e2e-doc-sync --check
-# Returns: "3 gaps found" or "All docs in sync"
-# Non-zero conceptual exit if gaps exist
-```
+- **Docs conform to Code** — when behavior and docs disagree, fix the docs, not the code
+- **Probe Config is optimistic** — default to `cli`, let `env_dependent` self-correct to `skip`
+- **Phase 2 graceful degradation** — MCP unavailable → skip history, run static-only
+- **Max 3 probe rounds** — prevent infinite fix→probe loop
+- **Preserve hand-written content** — check `auto-sync` flag before overwriting
+- **Report first, fix second** — `--check` and `--probe-only` never write docs

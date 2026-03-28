@@ -8,18 +8,17 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 
 ## Architecture
 
-**Skills** (11) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
+**Skills** (10) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
 
-**Agents** (9) run as subagents for heavy work, keeping verbose data out of main context:
+**Agents** (8) run as subagents for heavy work, keeping verbose data out of main context:
 - `e2e-mapper` -- explores pages, generates YAML mappings
 - `e2e-flow-writer` -- analyzes codebase + mapping to generate flow YAML (no browser)
 - `e2e-flow-verifier` -- runs flows in browser, auto-repairs selectors/steps, produces reports
 - `e2e-test-runner` -- executes flow files, validates expectations
 - `e2e-trace-analyzer` -- parses Playwright trace.zip for API failures and console errors
 - `e2e-media-processor` -- blank-frame-trimmed GIF, MP4 video, thumbnail from screenshots/recordings
-- `e2e-doc-scanner` -- scans skills/agents vs docs for gaps, writes doc updates
-- `doc-probe` -- verifies documentation accuracy via live behavioral probes (dispatched by e2e-pipeline-doc-sync)
-- `e2e-debug-observe` -- executes reproduction steps in browser, collects [E2E-DBG] console logs for debug pipeline
+- `doc-probe` -- verifies documentation accuracy via live behavioral probes (dispatched by e2e-doc-sync)
+- `e2e-debug-observe` -- executes reproduction steps in browser, collects [E2E-DBG] console logs for debug pipeline. Supports **Teams mode**: persistent browser session across hypothesis-verify rounds (requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`)
 
 ```
 skills/e2e-dispatch/     -> router (auth gate + skill selection)
@@ -30,10 +29,9 @@ skills/e2e-flow/         -> generate & verify flows -> dispatches flow-writer + 
 skills/e2e-compile/      -> compile flow YAML to standalone bash test scripts (requires npm deps)
 skills/e2e-skill-ops/    -> meta-skill for debugging/maintaining the pipeline itself
 skills/e2e-help/         -> interactive help guide, topic deep-dive, feedback collection
-skills/e2e-doc-sync/     -> documentation gap scanner & writer -> dispatches e2e-doc-scanner agent
-skills/e2e-pipeline-doc-sync/ -> forge-template doc sync with live probe verification (coexists with e2e-doc-sync)
-skills/e2e-debug/        -> debug orchestrator: inject logs → dispatch e2e-debug-observe → diagnose → cleanup
-agents/                  -> subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor, e2e-doc-scanner, doc-probe, e2e-debug-observe)
+skills/e2e-doc-sync/     -> doc sync: diff-aware scan + history enrichment + write + live probe verification
+skills/e2e-debug/        -> debug orchestrator: inject logs → dispatch e2e-debug-observe → diagnose → cleanup (Teams mode: persistent observer)
+agents/                  -> subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor, doc-probe, e2e-debug-observe)
 hooks/                   -> E2E pipeline hooks (SessionStart context + pre-commit check + plan E2E check)
 references/              -> agent-browser CLI commands, common browser testing patterns, knowledge capture framework
 ```
@@ -152,15 +150,13 @@ Rule: if a layer has the tools to attempt a step, it MUST attempt it (best-effor
 
 - **`e2e-debug` -> `systematic-debugging`** (superpowers plugin): Phase 0 Path B invokes `Skill("systematic-debugging")` for hypothesis generation when bug description is vague. Graceful fallback: if unavailable, best-effort grep + user confirmation. Debug skill works fully without it.
 - **`e2e-debug` -> `feature-dev:code-explorer`** (feature-dev plugin): Phase 0 Path A dispatches `code-explorer` agent for codebase tracing when the bug description is clear (maps architecture layers, data flow, dependencies). Graceful fallback: if unavailable, grep + direct file reads. Debug skill works fully without it.
+- **Agent Teams** (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`): Skills with browser agents can spawn persistent teammates instead of one-shot subagents. Shared protocol in `references/agent-teams.md`. Currently supported: `e2e-debug` (persistent observer for hypothesis loop), `e2e-test` (multi-role parallel + cross-site coordination). Graceful fallback to subagent mode when Teams unavailable. Use `--no-teams` to force subagent mode.
 
 ## Documentation Maintenance
 
-### Doc Sync -- Coexistence (Migration Step 1)
+### Doc Sync
 
-Both `e2e-doc-sync` (original, plugin-specific) and `e2e-pipeline-doc-sync` (forge template, generic) coexist:
-- **`/e2e-doc-sync`**: Plugin-specific orchestrator + e2e-doc-scanner agent. Coverage gaps only.
-- **`/e2e-pipeline-doc-sync`**: Generic template with history enrichment + live probe verification. Coverage + accuracy.
-- Use `/e2e-pipeline-doc-sync --check` to compare gap detection with `/e2e-doc-sync --check`.
+`/e2e-doc-sync` is the unified doc sync skill combining diff-aware scanning, history enrichment, doc writing, and live probe verification. The `doc-probe` agent handles behavioral verification.
 
 ### Pre-Publish Gate (read by `/kc-marketplace-sync`)
 
