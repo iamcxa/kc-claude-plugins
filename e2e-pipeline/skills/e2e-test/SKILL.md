@@ -212,6 +212,7 @@ Agent(
   team_name="e2e-test",
   name="runner",
   subagent_type="e2e-pipeline:e2e-test-runner",
+  model="haiku",
   prompt="TEAMS MODE. Execute E2E flow.
           flow_path: <path>  mapping_path: <path>  auth_profile: <path>
           base_url: <url>  app: <name>  report_dir: <path>
@@ -239,6 +240,7 @@ for site in sites:
     team_name="e2e-test",
     name="runner-<site.alias>",
     subagent_type="e2e-pipeline:e2e-test-runner",
+    model="haiku",
     prompt="TEAMS MODE. Role: <site.alias>.
             auth_profile: <site.auth>  mapping_path: <site.mapping>
             base_url: <site.base_url>  app: <site.app>

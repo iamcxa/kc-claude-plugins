@@ -30,7 +30,7 @@ Debug frontend runtime bugs by injecting `console.log` probes into suspect code,
 | `--steps "..."` | Reproduction steps as semicolon-separated string (experiment mode only) |
 | `--headed` | Open visible browser — user can see and optionally log in before agent continues |
 | `--headless` | Force headless browser (override Teams mode default) |
-| `--model sonnet\|haiku\|opus` | Model for observer agent (default: `sonnet`). Observer does browser interaction, not reasoning — sonnet is cost-effective. |
+| `--model sonnet\|haiku\|opus` | Model for observer agent (default: `haiku`). Observer does browser interaction, not reasoning — haiku is cost-effective. Use `--model sonnet` for diagnostic-heavy sessions. |
 | `--continue` | Resume from previous round's conclusions |
 | `--cleanup` | Force cleanup — skip all phases, run Phase 4 only |
 | `--no-teams` | Force subagent mode even when Agent Teams is available |
@@ -189,7 +189,7 @@ Build from manifest + Phase 0 outputs:
 | `report_dir` | `.claude/e2e/debug/` (absolute path) |
 | `auth_profile` | Detect from `.agent-browser/` profiles if auth is needed for the URL |
 | `headed` | Teams mode: `true` by default (user can see browser). Override with `--headless`. Subagent mode: `true` only if `--headed` flag provided. |
-| `model` | From `--model` flag. Default: `sonnet`. Observer does browser interaction, not deep reasoning. |
+| `model` | From `--model` flag. Default: `haiku`. Observer does browser interaction, not deep reasoning. Use `sonnet` for diagnostic-heavy sessions. |
 | `log_tags` | `["E2E-DBG"]` (always) |
 | `network_filters` | Extract from manifest `network_filters` if present |
 
@@ -214,7 +214,7 @@ Agent(
   team_name="e2e-debug",
   name="observer",
   subagent_type="e2e-pipeline:e2e-debug-observe",
-  model=<model>,          # default: "sonnet"
+  model=<model>,          # default: "haiku"
   prompt="TEAMS MODE. Open browser at <target_url> --headed [with --profile <auth_profile>].
           Report dir: <report_dir>.
           After browser is ready, send message to lead: 'BROWSER_READY'.

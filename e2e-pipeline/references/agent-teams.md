@@ -279,4 +279,23 @@ browser teammate instead of a one-shot subagent.
 - Go idle between commands (lead controls pace)
 ```
 
-<!-- Last updated: 2026-03-27 -->
+## 9. Model Guidelines
+
+Browser-operating teammates do navigation, fill, click, and visibility checks — not deep reasoning. Use the cheapest model that can handle the task.
+
+| Role | Default model | When to upgrade |
+|------|--------------|-----------------|
+| Test runner (`e2e-test`) | `haiku` | Complex assertion logic or multi-step data extraction |
+| Debug observer (`e2e-debug`) | `haiku` | Diagnostic-heavy sessions (`--model sonnet`) |
+| Flow verifier (`e2e-flow`) | inherit | Verifier does selector repair — needs more reasoning |
+
+**Rationale** (A/B tested 2026-03-29 on carlove login-flow):
+- Haiku: 7/7 pass, 44K tokens, 258s, 59 tool calls
+- Sonnet: 4/7 pass, 40K tokens, 322s, 41 tool calls
+- Haiku was faster, cheaper, and more successful for browser interaction
+- Sonnet produced better diagnostic detail (listed all stale selectors with correct values)
+- Conclusion: haiku for execution, sonnet for diagnosis
+
+**Override**: Skills expose `--model` flag. Lead passes model choice to `Agent(model=...)` at spawn time.
+
+<!-- Last updated: 2026-03-29 -->
