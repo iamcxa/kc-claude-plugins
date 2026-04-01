@@ -74,7 +74,7 @@ Use loaded patterns to:
 | Step identifier | `id:` | `name:` | SKIP |
 | Expect entries | strings | objects | SKIP |
 
-If ANY fail: warn with migration guidance (`app:`->`mapping:`, `name:`->`id:`, structured->`grammar strings`). All v1 -> stop.
+If ANY fail: warn with migration guidance (`app:`->`mapping:`, `name:`->`id:`, structured->`grammar strings`). All v1 -> stop execution of this flow. **In batch mode**: mark as ERROR in results table with "v1 format" reason, continue with remaining flows (per Multi-Flow Execution rule).
 
 **Flow/Mapping Mismatch Guard (mandatory):** If the flow has a `mapping:` field, compare it to the resolved mapping filename (without `.yaml`). If they differ, stop: `"Flow '<flow>' targets mapping '<flow.mapping>' but resolved mapping is '<resolved>'. Use '--mapping <flow.mapping>' or fix the flow's 'mapping:' field."` This catches app mismatches before dispatching the agent, avoiding wasted execution time.
 
@@ -137,6 +137,7 @@ preconditions:
       Expected: <expect>, Got: <actual>
    ```
 8. All pass → `✅ Preconditions passed (N/N checks)` → proceed to Phase 1.
+9. Zero checks after filtering (all checks have `site:` but site context = none) → `ℹ️ Preconditions: 0 checks applicable (all checks are site-specific). Use --site <alias> to run them.` → proceed (not a failure).
 
 **Multi-Flow Execution** (batch mode): alphabetical order, navigate to `base_url` between flows, each gets `$REPORT_DIR/<flow-name>/`, failed flow does NOT abort remaining. If a flow has invalid YAML or fails schema validation, mark it as ERROR in results table with the parse reason, skip it, and continue with remaining flows.
 
@@ -472,7 +473,7 @@ If `trace.zip` doesn't exist (e.g., trace was never started), skip this phase.
 
 ## Phase 1.8 -- Auto-Compile and Compiled Run
 
-> Default ON. Skip entirely when `--no-compile` was passed.
+> Default ON. Skip entirely when `--no-compile` was passed or flow is **CLI-only** (all steps are `Execute external` / `Verify external`). CLI-only flows have no browser actions for the compiler to translate — compilation would produce zero executable steps, making divergence analysis meaningless. Note: `"Phase 1.8 skipped — CLI-only flow (no compilable browser steps)."`
 
 After trace analysis, auto-compile and run the same flow as a compiled script to detect divergence between LLM and deterministic execution.
 

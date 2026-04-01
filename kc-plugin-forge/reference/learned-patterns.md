@@ -61,3 +61,10 @@ Subagents communicate only via their return value to the orchestrator skill. The
 
 **Applies to**: Any agent definition that requires user interaction mid-execution
 **Action**: Never reference `AskUserQuestion` in agent system prompts. Design a return-status protocol instead: agent returns structured status → skill presents to user → skill re-dispatches after confirmation.
+
+## Filter-to-zero produces vacuous truth that looks like a pass (2026-04-01)
+
+When a validation pipeline applies contextual filters (e.g., site-specific checks, mode-specific gates) before evaluating items, the filter can eliminate ALL items, leaving zero checks to run. "0/0 passed" is technically true but semantically empty — it gives the appearance of validation without any actual checks executing. Found in e2e-test preconditions: all checks had `site:` fields but Route A without `--site` filters to site context = none → zero checks run → "Preconditions passed" reported with no actual validation. Fix: detect the zero-after-filter case and emit an informational note (not a failure) explaining why no checks ran and how to make them apply.
+
+**Applies to**: Any skill with filtered validation steps (preconditions, gates, assertions) where the filter criteria come from invocation context
+**Action**: After filtering, check `len(filtered_items) == 0 AND len(unfiltered_items) > 0`. If true, emit an advisory instead of a silent pass. Include the filter criteria and how to change them.
