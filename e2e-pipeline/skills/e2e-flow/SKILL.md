@@ -165,7 +165,18 @@ Agent(
 
 Verifier opens browser in parallel while the writer generates the flow. By the time the writer returns, the verifier's browser is already warm.
 
+**If TeamCreate or Agent spawn fails**: see `references/agent-teams.md` § 4. Clean up partial state, fall back to subagent mode for Phase 2.
+
 If `--no-verify`: skip verifier spawn (no browser needed).
+
+### Verifier health check (after writer returns)
+
+After the flow-writer subagent returns, verify the pre-warmed verifier is still alive before proceeding to Phase 2:
+
+1. Check `~/.claude/teams/e2e-flow/config.json` — verifier member still present?
+2. If verifier is gone (crashed during pre-warm): log warning, `TeamDelete()`, fall back to subagent mode for Phase 2
+3. If verifier sent `BROWSER_READY` during writer execution: proceed to Phase 2b directly
+4. If verifier hasn't sent `BROWSER_READY` yet: wait up to 30s. No response → treat as crash (step 2)
 
 ### Generate
 
@@ -242,7 +253,14 @@ SendMessage(
 
 Wait for verifier's `VERIFICATION COMPLETE` response containing corrections, results, and report path.
 
-For `--verify-only` with existing team: detect existing team (`references/agent-teams.md` § 2). If verifier alive → send `VERIFY_FLOW` directly (no browser restart).
+**Verifier crash/failure in Teams mode** (no response within 30s or error response):
+1. Log warning with verifier's error output (if any)
+2. **Delete flow-write sentinel immediately** (cleanup — don't rely on 10-minute staleness timeout)
+3. `TeamDelete()` to clean up the team
+4. Report error to user — suggest re-running with `--no-teams` to use subagent mode
+5. Skip remaining phases (Phase 2c, 2d, 2.5, 3)
+
+For `--verify-only` with existing team: detect existing team (`references/agent-teams.md` § 2). If verifier alive → check if the new flow's `base_url` and `auth_profile` match the verifier's current session. If they differ, include `base_url` and `auth_profile` in the `VERIFY_FLOW` command so the verifier can close and reopen the browser (see `references/agent-teams.md` § 5 — Browser state isolation on reuse). If same → send `VERIFY_FLOW` directly (no browser restart).
 
 ---
 

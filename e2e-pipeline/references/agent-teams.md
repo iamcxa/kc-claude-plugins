@@ -247,6 +247,21 @@ Agent `.md` files include both modes:
 
 The agent detects mode from the prompt prefix. No runtime detection needed.
 
+## 7.5. Cross-Skill Teams Coexistence
+
+Multiple e2e-pipeline skills can have **independent teams alive simultaneously**. Each skill uses a unique team name (`e2e-debug`, `e2e-test`, `e2e-flow`) — no name collisions by convention.
+
+**Resource awareness**: Each team with a browser teammate holds an open browser instance. Multiple headed browsers consume significant memory and can confuse users (multiple windows). Skills should:
+- Check for existing teams from OTHER skills before spawning: `ls ~/.claude/teams/ 2>/dev/null`
+- If other teams exist, inform the user: `"Note: team '<name>' is also active (from a prior /<skill> invocation). Multiple browser windows may be open."`
+- Do NOT auto-teardown other skills' teams — the user may want both alive
+
+**Transition pattern**: After `/e2e-test` finds a failure, the lead may offer `/e2e-debug`. If the user accepts:
+- `e2e-test` team can stay alive (browser at the failing page)
+- `e2e-debug` creates its own team with observer
+- Two browsers open simultaneously is acceptable (debug observes different data than test runner)
+- On debug completion, user decides which teams to tear down
+
 ## 8. Agent Team Mode Template
 
 Standard section to add to any browser-operating agent `.md` file:

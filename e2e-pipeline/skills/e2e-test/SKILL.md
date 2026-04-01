@@ -201,6 +201,21 @@ Teams mode spawns persistent runner teammates. Benefits:
 - **Mixed environments** — browser + CLI teammates in the same test session
 - **Fail-fast** — on failure, lead can immediately transition to `/e2e-debug` (same browser)
 
+#### Scenario Routing (decision tree)
+
+Evaluate conditions in this order (first match wins):
+
+| # | Condition | Scenario |
+|---|-----------|----------|
+| 1 | Flow has CLI steps (`Execute external`) mixed with browser steps | **D** (Mixed browser + CLI) |
+| 2 | Flow has `sites:` (cross-site) | **C** (Cross-site step routing) |
+| 3 | `--all-sites` or `--suite` with multiple single-site flows | **B** (Multi-site parallel) |
+| 4 | Single flow, single site (default) | **A** (Single-site) |
+
+**Priority rule**: Scenario D takes precedence over C because CLI steps require a `general-purpose` teammate that Scenario C doesn't spawn. A cross-site flow with CLI steps uses Scenario D's runner spawn (browser runners per site + CLI runner) with Scenario C's step-level routing logic.
+
+**Suite with mixed flow types** (`--suite` containing both single-site and cross-site flows): Spawn runners for all unique sites across all flows (union of single-site mappings + cross-site `sites:` entries). Dispatch single-site flows as `EXECUTE_FLOW` to their respective runners (Scenario B pattern). Dispatch cross-site flows with step-level routing (Scenario C pattern). Both patterns coexist within the same team.
+
 #### Scenario A: Single-site, single-flow
 
 One persistent runner teammate.
@@ -291,6 +306,12 @@ for step in flow.steps:
 - Independent steps (no data dependency on the failed step) proceed normally
 - Log cascade in the final report: `"Steps skipped due to dependency: <list>"`
 
+**Runner crash** (no response within 30s — see `references/agent-teams.md` § 4):
+- If a runner crashes mid-flow, mark ALL remaining steps assigned to that runner as `SKIP` with reason `"runner crashed: <runner-name>"`
+- Steps assigned to OTHER runners continue normally (their browsers are unaffected)
+- Do NOT attempt to respawn a replacement runner — fall back to subagent dispatch for skipped steps if the user requests a re-run
+- Log in final report: `"Runner <name> crashed after step <id>. N steps skipped."`
+
 **Data passing between roles**:
 When a step produces data needed by a subsequent cross-site step, the runner includes it in the response:
 
@@ -322,13 +343,21 @@ Agent(
   subagent_type="general-purpose",
   prompt="TEAMS MODE. You are a CLI test runner.
           report_dir: <report_dir>/cli/
-          Execute CLI commands and report results.
+
+          STARTUP: Create report_dir with mkdir -p. Then send:
+            SendMessage(to='lead', message='CLI_READY\nrole: runner-cli', summary='CLI runner ready')
+          Then STOP and wait for commands.
+
           On EXECUTE_STEP: run the command via Bash, capture stdout/stderr/exit code.
           PASS/FAIL rule: exit code 0 = PASS, non-zero = FAIL. stderr alone does NOT mean FAIL (many CLI tools write progress to stderr).
           Persist output: write stdout to <report_dir>/cli/<step-id>.stdout.txt, stderr to <step-id>.stderr.txt.
-          Send STEP COMPLETE with result (include exit_code in data:)."
+          Send STEP COMPLETE with result (include exit_code in data:).
+
+          On shutdown_request: respond with shutdown_response approve=true."
 )
 ```
+
+**CLI runner ready signal**: Wait for `CLI_READY` (analogous to `BROWSER_READY` for browser runners) before dispatching steps. The CLI runner uses `CLI_READY` (not `BROWSER_READY`) since it doesn't open a browser.
 
 Lead coordinates: "CLI runner executes `recce run ...`" → "browser runner verifies result appears in UI."
 

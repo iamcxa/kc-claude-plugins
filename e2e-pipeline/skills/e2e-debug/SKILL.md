@@ -224,6 +224,8 @@ Agent(
 
 **Teams mode defaults to `--headed`** (user can see browser). Add `--headless` to the spawn prompt only if `--headless` flag was explicitly provided.
 
+**If TeamCreate or Agent spawn fails**: see `references/agent-teams.md` § 4. Clean up partial state, fall back to subagent mode, and set diagnosis mode to **interactive** (auto-loop requires a persistent observer).
+
 Wait for `BROWSER_READY` or handle `WAITING_FOR_AUTH` (`references/agent-teams.md` § 3).
 `WAITING_FOR_AUTH` is only sent when `auth_profile` is provided — headed-without-auth proceeds directly to `BROWSER_READY`.
 
@@ -351,6 +353,13 @@ After analyzing observation results, determine verdict:
   5. Re-run Phase 1 (inject new points)
   6. Re-run Phase 2 (SendMessage VERIFY to existing observer — no browser restart)
   7. Re-run Phase 3 (this section — re-evaluate verdict)
+
+- **Observer hard crash mid-round** (no response within 30s — see `references/agent-teams.md` § 4):
+  1. Log warning: `"Observer crashed during round N. Falling back to subagent mode."`
+  2. Switch diagnosis mode from **auto-loop** to **interactive** (auto-loop requires persistent observer)
+  3. Attempt `TeamDelete()` to clean up
+  4. **Still proceed to Phase 4** (cleanup injections from this round)
+  5. Present current round's partial results (if any) and suggest: `"Observer lost. Use --continue to resume in interactive/subagent mode."`
 
 - **Loop limit (3 rounds without `confirmed`)** → stop and present to user:
   ```markdown
