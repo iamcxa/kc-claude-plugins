@@ -10,7 +10,7 @@ Claude Code plugin marketplace by [Kent Chen](https://github.com/iamcxa).
 
 ## Available Plugins
 
-### [e2e-pipeline](./e2e-pipeline/) `v2.4.0`
+### [e2e-pipeline](./e2e-pipeline/) `v2.5.0`
 
 Browser & CLI E2E testing with context-isolating subagents. Map your app's UI, generate test flows from plans, verify in browser with auto-repair, run tests with video recording, and record CLI-only flows via terminal recording (asciinema).
 
@@ -22,7 +22,7 @@ Browser & CLI E2E testing with context-isolating subagents. Map your app's UI, g
 /plugin install e2e-pipeline@kc-claude-plugins
 ```
 
-### [kc-plugin-forge](./kc-plugin-forge/) `v1.4.0`
+### [kc-plugin-forge](./kc-plugin-forge/) `v1.6.0`
 
 One-command plugin quality pipeline. Validates structure, TDD-tests skills under pressure, smoke-tests skills in clean profile (`--bare` mode, ~$0.025/test), verifies agent definitions, and scaffolds self-improvement (D1/D2 learning) and doc-sync capabilities into your plugins.
 
