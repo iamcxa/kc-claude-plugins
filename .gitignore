@@ -12,3 +12,9 @@ e2e-reports/**/trace.zip
 .claude/e2e/reports/**/*.webm
 .claude/e2e/reports/**/*.mp4
 .claude/e2e/reports/**/trace.zip
+
+# Nightwatch runtime logs (may contain secrets)
+kc-nightwatch/runs/
+
+# Catch-all: trace.zip anywhere
+**/trace.zip
