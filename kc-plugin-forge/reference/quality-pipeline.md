@@ -118,3 +118,12 @@ After TDD passes for each skill, verify self-improvement capability per `skill-e
 - **Reference auto-sync default is `partial`**: When generating Doc Structure, default to `partial` (preserve hand-written content). Only set `yes` for files that are clearly auto-generated (e.g., commands reference tables).
 - **Template `{{PLUGIN_NAME}}` replacement is global**: Use exact string replace, not regex. Plugin names with hyphens are fine. Don't replace inside code examples that show the template syntax itself.
 - **Post-Sync Hooks section starts empty**: Forge scaffolds an empty Post-Sync Hooks section. Plugin authors add entries manually based on their plugin's needs (e.g., e2e-pipeline adds help topic map update).
+
+### Phase 1.5 C (Agent Teams) gotchas
+
+- **Teams is experimental** — `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` is required. The API may change. Reference files should note "based on Teams v1 protocol" and be updated when the API stabilizes.
+- **Analysis-only agents don't benefit from Teams** — agents that only Read/Grep/Glob have no persistent state worth preserving across commands. Teams adds complexity (lifecycle management, fallback paths) without benefit. Skip unless the agent operates a browser or manages long-running resources.
+- **Fallback > function** — the most critical Teams verification is the fallback path (T1: TeamCreate unavailable). A skill that works perfectly with Teams but hangs without it is worse than a skill with imperfect Teams orchestration but solid subagent fallback.
+- **Mode detection is prompt-based, not tool-based** — agents detect Teams mode from their spawn prompt prefix ("TEAMS MODE"), not from tool availability. An agent spawned via `Agent(team_name=...)` but without the prefix will run in subagent mode — confusing but by design.
+- **SendMessage is not available in subagents** — agent code that unconditionally calls SendMessage fails in subagent mode. The Team Mode Protocol section must be conditional on the prompt prefix. Verify A4 carefully.
+- **Orphaned teams survive session end** — if skill exits without teardown (crash, context exceeded), teams persist in `~/.claude/teams/`. Phase 3 S4 (shutdown protocol) prevents this, but can't cover all crash scenarios. Document cleanup in plugin README.

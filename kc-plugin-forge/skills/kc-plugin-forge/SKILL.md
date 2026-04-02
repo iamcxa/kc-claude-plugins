@@ -92,6 +92,7 @@ digraph forge {
 - **`dreaming --all`** → Multi-plugin discovery + Phase 2.7 per plugin + commit + PR offer + report. Discovery order: `$KC_WORKSPACE` → `~/.claude/plugins/local/` → manual fallback.
 - **`dreaming --dry-run`** → Phase 2.7 analysis only, no changes applied. Combinable with `<path>` or `--all`.
 - **Bare or vague input** (no path, no keyword, or ambiguous scope) → **DISAMBIGUATE**: list available plugins, confirm target + scope (full pipeline vs. validate-only) before proceeding. Never infer a default plugin.
+- **Phase 1.5 C follows Phase 1.5 B** on routes that include Phase 1.5 (`<path>`, `new <name>`). Phase 1.5 C skipped on `self-forge`, `skill-tdd-only`, `agent-verify-only`, `validate-only`, and plugins with no agents.
 - **Phase 2.7 follows Phase 2** on all routes that include Phase 2 (`<path>`, `skill-tdd-only`, `self-forge`; also `new <name>` but skipped via entry gate — new plugins have 0 patterns). **Phase 2.5 follows Phase 2.7** on routes that include Phase 2.5 (`<path>`, `skill-tdd-only`, `new <name>`). Phase 2.5 skipped on `self-forge`, `validate-only`, `agent-verify-only`.
 
 ## Phase 1: Structure
@@ -235,6 +236,53 @@ When scaffolding `reference/doc-sync-context.md`:
    - File contains narrative/tutorial content → `partial`
    - Default → `partial` (safe: preserves hand-written content)
 
+## Phase 1.5 C: Agent Teams Capability Decision
+
+Determine Agent Teams support for the target plugin. Runs after B (Doc Self-Iteration), before Phase 2.
+
+**Skip when**: `self-forge` route, `skill-tdd-only` route, `agent-verify-only` route, `validate-only` route, plugin has no agents.
+
+### C — Auto-Detection
+
+| Signal | → Full Teams | → Skip |
+|--------|-------------|--------|
+| Plugin has browser-operating agents (tools include Bash) | ✓ | |
+| Plugin has multi-agent dispatch (skill dispatches 2+ agents) | ✓ | |
+| Plugin has only analysis agents (Read/Grep only) | | ✓ |
+| Plugin has no agents | | ✓ |
+
+### C — User Choice
+
+```
+Agent Teams capability for <plugin-name>:
+
+  1. Full — Teams protocol + fallback + per-agent Team Mode section
+     Best for: browser-operating agents, multi-agent orchestration
+  2. Skip — no Teams support (pure subagent mode)
+     Best for: analysis-only agents, single-agent plugins
+
+  Detected: <Full/Skip based on signals>
+  Recommended: <1/2>
+
+  Your choice:
+```
+
+### C — Scaffold Actions
+
+| Choice | Actions |
+|--------|---------|
+| **1 (Full)** | Create `references/agent-teams.md` from template in `agent-teams-quality.md`; add Team Mode Protocol section to each browser-operating agent; add Teams mode detection + `--no-teams` flag + fallback path to dispatch skills |
+| **2 (Skip)** | No Teams components created. Phase 4 report notes "Teams: skipped (user choice)" |
+
+Templates: see `${CLAUDE_PLUGIN_ROOT}/reference/agent-teams-quality.md`.
+
+### C — Existing Plugin Retrofit
+
+When forging an existing plugin (not `new`):
+- Plugin already has `references/agent-teams.md` → verify setup matches in Phase 3 step 6
+- Plugin has agents with `## Team Mode Protocol` but no shared reference → warn: missing shared protocol
+- Plugin has neither → present the two choices above
+
 ## Phase 2: Skill TDD
 
 For EACH skill in the plugin's `skills/` directory:
@@ -249,6 +297,11 @@ For EACH skill in the plugin's `skills/` directory:
    - **Full or D1**: Learning step present at end of skill? Setup reads `learned-patterns.md`? Rules include appropriate D1/D2 entries? "Nothing novel is valid" explicitly stated?
    - **Skip**: note in report, move on.
    - Reference: `${CLAUDE_PLUGIN_ROOT}/reference/skill-evolution.md`.
+7. **Verify Teams Setup** (if applicable):
+   - **Determining level**: (a) Phase 1.5 C choice from this session → use it. (b) Phase 1.5 C did not run → auto-detect: plugin has `references/agent-teams.md` + agents have Team Mode Protocol → Full; neither → Skip.
+   - **Full**: For each skill that dispatches agents: Teams mode detection present? `--no-teams` flag documented? Fallback path explicit? Error handling covers TeamCreate failure? Add Teams-specific pressure scenarios (T1-T4 from `agent-teams-quality.md`) to the RED phase.
+   - **Skip**: note in report, move on.
+   - Reference: `${CLAUDE_PLUGIN_ROOT}/reference/agent-teams-quality.md`.
 
 Skip if plugin has no skills.
 
@@ -441,6 +494,11 @@ For EACH agent in the plugin's `agents/` directory:
 3. Verify: system prompt in 2nd person, input/output contract, rules + anti-patterns
 4. Verify: reference paths use `${CLAUDE_PLUGIN_ROOT}`
 5. Run 1 dispatch test: simulate a scenario matching the agent's trigger — must verify the agent produces a meaningful response (not just "starts without error"). For simple wrapper agents, verify it correctly invokes its target tool/skill.
+6. **Verify Agent Teams Readiness** (if applicable):
+   - **Determining level**: same as Phase 2 step 7.
+   - **Full**: For each agent, run checklist A1-A4 from `agent-teams-quality.md`. For plugin-level, run P1-P3. For each dispatch skill, verify S1-S5.
+   - **Skip**: note in report, move on.
+   - Reference: `${CLAUDE_PLUGIN_ROOT}/reference/agent-teams-quality.md`.
 
 Skip if plugin has no agents.
 
@@ -462,6 +520,7 @@ Dreaming:   N candidates → M promoted, K cleanup
             Promoted: <file> §<section>, ...
             Cleanup: K patterns already covered
 Agents:     N agents verified
+Teams:      Full (N agents Teams-ready, M skills with fallback) / Skipped
 Evolution:  N skills with self-improvement
             Level: Full (D1+D2) / D1 only / Skipped
             This run: M new patterns captured, K "nothing novel"
@@ -543,3 +602,5 @@ Overall:    PASS / CONDITIONAL PASS / FAIL
 - **No new reference files in dreaming** — if a plugin has no reference files to promote into, report an advisory and skip. Creating reference files is Phase 1.5's responsibility.
 - **Standalone dreaming is independent** — `dreaming <path>` and `dreaming --all` do not run Phase 1/2/2.5/3/4. They are pure knowledge curation operations with their own commit + PR flow.
 - **Discovery falls through gracefully** — `dreaming --all` tries `$KC_WORKSPACE` → `~/.claude/plugins/local/` → manual. If no strategy succeeds, ask user for explicit paths. Never silently skip discovery failure.
+- **Agent Teams is progressive enhancement** — Teams support is optional and must never break subagent mode. Phase 1.5 C presents Full/Skip choice. Phase 2 step 7 adds Teams-specific pressure scenarios (T1-T4). Phase 3 step 6 verifies agent + skill + plugin-level Teams readiness. All checks reference `agent-teams-quality.md`. When Teams is skipped, report notes "Teams: skipped" and no Teams checks run.
+- **Teams fallback is the critical path** — the most important Teams verification is not "does it work with Teams" but "does it survive without Teams." T1 (TeamCreate unavailable) and T3 (--no-teams) are higher priority than T2 (teammate crash). A skill that hangs when TeamCreate is missing is worse than a skill with imperfect Teams orchestration.
