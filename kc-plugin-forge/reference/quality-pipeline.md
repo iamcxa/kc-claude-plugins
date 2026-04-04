@@ -127,3 +127,12 @@ After TDD passes for each skill, verify self-improvement capability per `skill-e
 - **Mode detection is prompt-based, not tool-based** — agents detect Teams mode from their spawn prompt prefix ("TEAMS MODE"), not from tool availability. An agent spawned via `Agent(team_name=...)` but without the prefix will run in subagent mode — confusing but by design.
 - **SendMessage is not available in subagents** — agent code that unconditionally calls SendMessage fails in subagent mode. The Team Mode Protocol section must be conditional on the prompt prefix. Verify A4 carefully.
 - **Orphaned teams survive session end** — if skill exits without teardown (crash, context exceeded), teams persist in `~/.claude/teams/`. Phase 3 S4 (shutdown protocol) prevents this, but can't cover all crash scenarios. Document cleanup in plugin README.
+
+## Parallel Mode (`--parallel`) Gotchas
+
+- **Cross-skill learning lost**: In sequential mode, skill A's TDD findings can inform skill B's TDD. Parallel mode trades this for speed. If findings from one skill affect shared references, lead handles writes after all teammates complete — but skill B's TDD already ran without that knowledge. Acceptable for most plugins; consider sequential for tightly-coupled skills.
+- **Cost multiplier**: N teammates × ~120K tokens per TDD cycle. A 9-skill plugin costs ~1M tokens in parallel (same total as sequential, but consumed faster). Show estimate and confirm before spawning.
+- **Rate limit risk**: Parallel teammates increase API call density. The circuit breaker (2nd rate limit → drain + sequential) prevents runaway costs but may leave some skills untested until the sequential fallback completes.
+- **Teammate spawn stagger**: 2-second delay between spawns avoids API burst. For 9 skills, this adds ~16s of overhead — negligible vs the ~50min saved.
+- **Shared file writes must go through lead**: Teammates writing to `learned-patterns.md` concurrently causes data loss (last writer wins). The "return findings, lead writes" pattern adds ~30s of sequential D1 processing after all teammates complete — negligible overhead.
+- **`self-forge` is inherently sequential**: Forge has 1 skill (kc-plugin-forge) — no parallelism benefit. `--parallel` is silently ignored on self-forge route.

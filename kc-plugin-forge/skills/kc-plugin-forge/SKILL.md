@@ -91,6 +91,7 @@ digraph forge {
 - **`dreaming <path>`** → Phase 2.7 only + commit + PR offer + report. Pure knowledge curation — does NOT run Phase 1/2/2.5/3/4.
 - **`dreaming --all`** → Multi-plugin discovery + Phase 2.7 per plugin + commit + PR offer + report. Discovery order: `$KC_WORKSPACE` → `~/.claude/plugins/local/` → manual fallback.
 - **`dreaming --dry-run`** → Phase 2.7 analysis only, no changes applied. Combinable with `<path>` or `--all`.
+- **`--parallel`** — combinable with `<path>`, `skill-tdd-only`, or `new <name>`. Enables teammate dispatch for Phase 2 and Phase 3. Requires `TeamCreate` tool (Teams experimental flag). Falls back to sequential if unavailable. Not compatible with `self-forge` (forge has only 1 skill), `validate-only`, `agent-verify-only`, or `dreaming` routes.
 - **Bare or vague input** (no path, no keyword, or ambiguous scope) → **DISAMBIGUATE**: list available plugins, confirm target + scope (full pipeline vs. validate-only) before proceeding. Never infer a default plugin.
 - **Phase 1.5 C follows Phase 1.5 B** on routes that include Phase 1.5 (`<path>`, `new <name>`). Phase 1.5 C skipped on `self-forge`, `skill-tdd-only`, `agent-verify-only`, `validate-only`, and plugins with no agents.
 - **Phase 2.7 follows Phase 2** on all routes that include Phase 2 (`<path>`, `skill-tdd-only`, `self-forge`; also `new <name>` but skipped via entry gate — new plugins have 0 patterns). **Phase 2.5 follows Phase 2.7** on routes that include Phase 2.5 (`<path>`, `skill-tdd-only`, `new <name>`). Phase 2.5 skipped on `self-forge`, `validate-only`, `agent-verify-only`.
@@ -248,7 +249,7 @@ Determine Agent Teams support for the target plugin. Runs after B (Doc Self-Iter
 |--------|-------------|--------|
 | Plugin has browser-operating agents (tools include Bash) | ✓ | |
 | Plugin has multi-agent dispatch (skill dispatches 2+ agents) | ✓ | |
-| Plugin has only analysis agents (Read/Grep only) | | ✓ |
+| Plugin has only analysis agents (Read/Grep/Glob — no Bash) | | ✓ |
 | Plugin has no agents | | ✓ |
 
 ### C — User Choice
@@ -285,6 +286,24 @@ When forging an existing plugin (not `new`):
 
 ## Phase 2: Skill TDD
 
+### Parallel mode (`--parallel`)
+
+When `--parallel` is set AND `TeamCreate` is available, Phase 2 runs all skills concurrently:
+
+1. **Minimum threshold**: If plugin has ≤1 skill AND ≤1 agent, `--parallel` silently degrades to sequential (log: "Parallel skipped — N=1, no parallelism benefit"). Do not create a team.
+2. `TeamCreate("forge-<plugin-name>")` (if not already created)
+3. For each skill, spawn a teammate: `Agent(team_name="forge-<plugin>", name="tdd-<skill-name>", prompt=<Phase 2 teammate template from parallel-forge.md>)`
+   - Stagger spawns by 2 seconds to avoid API burst
+   - Show cost estimate before spawning: `"Parallel: N teammates × ~120K tokens. Proceed?"`
+4. Collect all `SKILL_TDD_COMPLETE` messages from teammates
+5. Process findings: apply three-question test → write qualifying D1 entries to `learned-patterns.md` sequentially
+6. Shutdown Phase 2 teammates
+7. If any teammate failed to report → run that skill sequentially as fallback
+
+Reference: `${CLAUDE_PLUGIN_ROOT}/reference/parallel-forge.md`
+
+### Sequential mode (default)
+
 For EACH skill in the plugin's `skills/` directory:
 
 1. **Invoke `Skill: "superpowers:writing-skills"`** — follow its RED/GREEN/REFACTOR cycle
@@ -308,6 +327,12 @@ Skip if plugin has no skills.
 ## Phase 2.5: Clean Profile Smoke Test
 
 Runs after Phase 2 TDD passes. Verifies skill works without user-specific context (no MEMORY.md, no user CLAUDE.md, no other plugin hooks).
+
+### Parallel mode (`--parallel`)
+
+When `--parallel` is set, run all smoke tests as background Bash processes (no teammates needed — each is an independent `claude --bare` process). See `parallel-forge.md` § Phase 2.5 for the shell pattern. Collect exit codes and metrics after all complete.
+
+### Sequential / Parallel common steps
 
 For EACH skill that passed Phase 2:
 
@@ -487,6 +512,19 @@ Skills that read `learned-patterns.md` (e.g., kc-pr-review Step 5a-k) do NOT nee
 
 ## Phase 3: Agent Verify
 
+### Parallel mode (`--parallel`)
+
+When `--parallel` is set AND `TeamCreate` is available (team already created in Phase 2):
+
+1. For each agent, spawn a teammate: `Agent(team_name="forge-<plugin>", name="verify-<agent-name>", prompt=<Phase 3 teammate template from parallel-forge.md>)`
+2. Collect all `AGENT_VERIFY_COMPLETE` messages
+3. Shutdown Phase 3 teammates
+4. If any teammate failed to report → run that agent sequentially as fallback
+
+Reference: `${CLAUDE_PLUGIN_ROOT}/reference/parallel-forge.md`
+
+### Sequential mode (default)
+
 For EACH agent in the plugin's `agents/` directory:
 
 1. **Invoke `Skill: "plugin-dev:agent-development"`** — use as validation checklist
@@ -524,6 +562,7 @@ Teams:      Full (N agents Teams-ready, M skills with fallback) / Skipped
 Evolution:  N skills with self-improvement
             Level: Full (D1+D2) / D1 only / Skipped
             This run: M new patterns captured, K "nothing novel"
+Parallel:   N teammates, wall time Xmin (vs ~Ymin sequential est.)
 Overall:    PASS / CONDITIONAL PASS / FAIL
 ```
 
@@ -582,7 +621,7 @@ Overall:    PASS / CONDITIONAL PASS / FAIL
 ## Rules
 
 - **Follow each marketplace skill's own process** — don't shortcut writing-skills TDD or skip validator FAIL items
-- **One skill at a time** in Phase 2 — complete full TDD cycle before moving to next
+- **One skill at a time** in Phase 2 sequential mode — complete full TDD cycle before moving to next. In `--parallel` mode, each skill gets its own teammate running concurrently. Cross-skill learning is traded for speed; lead handles D1 writes after all teammates complete.
 - **GATE before structural changes** — confirm with user before creating/deleting files
 - **Reference first** — always read `quality-pipeline.md` before starting any phase
 - **Accumulate lessons** — new gotchas discovered during forge go back into reference file
@@ -604,3 +643,6 @@ Overall:    PASS / CONDITIONAL PASS / FAIL
 - **Discovery falls through gracefully** — `dreaming --all` tries `$KC_WORKSPACE` → `~/.claude/plugins/local/` → manual. If no strategy succeeds, ask user for explicit paths. Never silently skip discovery failure.
 - **Agent Teams is progressive enhancement** — Teams support is optional and must never break subagent mode. Phase 1.5 C presents Full/Skip choice. Phase 2 step 7 adds Teams-specific pressure scenarios (T1-T4). Phase 3 step 6 verifies agent + skill + plugin-level Teams readiness. All checks reference `agent-teams-quality.md`. When Teams is skipped, report notes "Teams: skipped" and no Teams checks run.
 - **Teams fallback is the critical path** — the most important Teams verification is not "does it work with Teams" but "does it survive without Teams." T1 (TeamCreate unavailable) and T3 (--no-teams) are higher priority than T2 (teammate crash). A skill that hangs when TeamCreate is missing is worse than a skill with imperfect Teams orchestration.
+- **Parallel mode is opt-in** — `--parallel` flag enables teammate dispatch for Phase 2/3. Default is sequential. When TeamCreate is unavailable, `--parallel` silently degrades to sequential with a log message.
+- **Teammates don't write shared resources** — Phase 2 teammates must NOT write to `learned-patterns.md` or any shared reference file. They return findings to the lead, who writes D1 entries sequentially. This prevents concurrent append corruption.
+- **Rate limit circuit breaker** — 2nd rate limit across any teammate → stop spawning, drain existing teammates, process remaining work sequentially. Show cost estimate before spawning teammates.

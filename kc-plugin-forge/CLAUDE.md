@@ -22,7 +22,7 @@ skills/kc-plugin-forge-doc-sync/ -> documentation gap scanner & writer (Light �
 hooks/hooks.json                 -> SessionStart reminder of forge availability
 ```
 
-**References** (7) — knowledge base read by the orchestrator skill:
+**References** (8) — knowledge base read by the orchestrator skill:
 
 ```
 reference/quality-pipeline.md      -> phase gotchas, cross-phase lessons (grows over time)
@@ -32,6 +32,7 @@ reference/learned-patterns.md      -> cross-project patterns from forge runs (gr
 reference/clean-profile-test.sh    -> execution isolator for Phase 2.5 clean profile smoke test
 reference/doc-sync-context.md      -> doc-sync domain knowledge (self-maintained by doc-sync skill)
 reference/agent-teams-quality.md   -> Agent Teams verification patterns, templates, TDD scenarios
+reference/parallel-forge.md        -> Teammate dispatch templates, coordination, error recovery for --parallel mode
 ```
 
 ## Self-Improvement
