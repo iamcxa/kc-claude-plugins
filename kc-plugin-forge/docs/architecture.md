@@ -22,6 +22,8 @@ kc-plugin-forge/
 │   ├── skill-evolution.md         # D1/D2 self-improvement framework
 │   ├── doc-sync-templates.md      # templates for scaffolding doc-sync into plugins
 │   ├── doc-sync-context.md        # doc-sync domain knowledge (self-maintained)
+│   ├── agent-teams-quality.md    # Agent Teams verification patterns, TDD scenarios
+│   ├── parallel-forge.md         # teammate dispatch templates, coordination, error recovery
 │   └── clean-profile-test.sh      # Phase 2.5 execution isolator script
 ├── docs/
 │   ├── getting-started.md         # prerequisites, install, first run
@@ -42,9 +44,11 @@ Phase 1 ─── plugin-dev:plugin-validator
         │
 Phase 1.5 ── A: Self-Learning choice (D1+D2 / D1 / Skip)
         │    B: Doc Self-Iteration choice (Full / Light / Skip)
+        │    C: Agent Teams capability (Full / Skip)
         │
 Phase 2 ─── superpowers:writing-skills
         │   (RED/GREEN/REFACTOR per skill)
+        │   + step 7: Teams Setup verification (if Full Teams chosen)
         │
 Phase 2.7 ── Dreaming (pattern promotion)
         │    (promote mature learned-patterns.md entries → reference files)
@@ -54,6 +58,7 @@ Phase 2.5 ── clean-profile-test.sh
         │
 Phase 3 ─── plugin-dev:agent-development
         │   (verify each agent)
+        │   + step 6: Agent Teams Readiness (if Full Teams chosen)
         │
 Phase 4 ─── plugin-dev:plugin-validator (re-validate)
             + Summary Report

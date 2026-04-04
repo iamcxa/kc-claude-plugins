@@ -17,6 +17,7 @@ Main orchestrator — runs the quality pipeline on a target plugin.
 | `dreaming <path>` | 2.7 | Pattern promotion only — pure knowledge curation |
 | `dreaming --all` | 2.7 × N | Multi-plugin discovery + promotion per plugin |
 | `dreaming --dry-run` | 2.7 (analysis) | Show promotion plan without executing (combinable) |
+| `--parallel` | (modifier) | Enable teammate dispatch for Phase 2/3. Combinable with `<path>`, `skill-tdd-only`, `new`. Falls back to sequential if TeamCreate unavailable or ≤1 skill+agent. |
 | *(bare)* | — | Disambiguate: list plugins, confirm target + scope |
 
 ### Phase Reference
@@ -24,7 +25,7 @@ Main orchestrator — runs the quality pipeline on a target plugin.
 | Phase | What it does | Marketplace skill |
 |-------|-------------|-------------------|
 | 1 | Validate plugin.json, file layout, agent frontmatter | `plugin-dev:plugin-validator` |
-| 1.5 | A: Self-Learning level (D1/D2/Skip) + B: Doc Self-Iteration level | — |
+| 1.5 | A: Self-Learning level (D1/D2/Skip) + B: Doc Self-Iteration level + C: Agent Teams capability (Full/Skip) | — |
 | 2 | RED/GREEN/REFACTOR TDD cycle per skill | `superpowers:writing-skills` |
 | 2.5 | Clean profile smoke test per skill | `clean-profile-test.sh` |
 | 2.7 | Dreaming — promote mature patterns from `learned-patterns.md` into reference files | — (LLM analysis) |
@@ -121,7 +122,23 @@ Forge counts docs and skills to recommend a level:
 | Light | `<plugin>-doc-sync` skill + `doc-sync-context.md` (no live probing) |
 | Skip | No doc-sync capability |
 
-**Existing plugin retrofit**: When forging an existing plugin, forge checks for pre-existing `learned-patterns.md` (A) and `*-doc-sync/` skill (B). If found → verifies setup matches level. If not found → presents the same choices above.
+**C — Agent Teams Capability:**
+
+Forge detects whether the plugin's agents would benefit from Agent Teams (persistent teammates):
+
+| Signal | → Full Teams | → Skip |
+|--------|-------------|--------|
+| Browser-operating agents (tools include Bash) | Full | |
+| Multi-agent dispatch (2+ agents from one skill) | Full | |
+| Analysis-only agents (Read/Grep/Glob — no Bash) | | Skip |
+| No agents | | Skip |
+
+| Level | What's scaffolded |
+|-------|-------------------|
+| Full | `references/agent-teams.md` + Team Mode Protocol per agent + `--no-teams` fallback in skills |
+| Skip | No Teams components |
+
+**Existing plugin retrofit**: When forging an existing plugin, forge checks for pre-existing `learned-patterns.md` (A), `*-doc-sync/` skill (B), and `references/agent-teams.md` (C). If found → verifies setup matches level. If not found → presents the choices above.
 
 ### Phase 2.5 Configuration
 

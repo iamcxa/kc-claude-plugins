@@ -35,6 +35,9 @@ Required marketplace plugins (runtime dependencies):
 # Forge audits itself
 /kc-plugin-forge self-forge
 
+# Parallel mode — concurrent skill TDD + agent verify via teammates
+/kc-plugin-forge path/to/my-plugin --parallel
+
 # Get help
 /kc-plugin-forge-help
 ```
@@ -114,7 +117,7 @@ After 8 forge runs across 6 plugins, the knowledge base has **9 cross-project pa
 | Phase | What it does | Marketplace skill used |
 |-------|-------------|----------------------|
 | 1. Structure | Validate plugin.json, file layout, agent frontmatter | `plugin-dev:plugin-validator` |
-| 1.5 Autonomy | A: Self-Learning level (D1/D2) + B: Doc Self-Iteration level | — |
+| 1.5 Autonomy | A: Self-Learning (D1/D2) + B: Doc Self-Iteration + C: Agent Teams | — |
 | 2. Skill TDD | RED/GREEN/REFACTOR cycle per skill | `superpowers:writing-skills` |
 | 2.5 Clean Profile | Smoke test each skill in isolated `--bare` context | `clean-profile-test.sh` |
 | 3. Agent Verify | Check examples, tools, prompts per agent | `plugin-dev:agent-development` |
@@ -124,7 +127,7 @@ After 8 forge runs across 6 plugins, the knowledge base has **9 cross-project pa
 
 | Input | Phases run |
 |-------|-----------|
-| `<path>` | 1 → 1.5 → 2 → 2.5 → 3 → 4 (full pipeline) |
+| `<path>` | 1 → 1.5 → 2 → 2.5 → 3 → 4 (full pipeline, add `--parallel` for concurrent Phase 2/3) |
 | `new <name>` | scaffold → 1.5 → 2 → 2.5 → 3 → 4 |
 | `validate-only` | 1 only |
 | `skill-tdd-only` | 2 → 2.5 |
@@ -182,6 +185,8 @@ Each skill runs in `claude --bare --effort low` (~$0.025/test). API key is confi
 | `reference/doc-sync-templates.md` | Templates for scaffolding doc-sync into plugins |
 | `reference/learned-patterns.md` | Cross-project patterns accumulated from forge runs |
 | `reference/doc-sync-context.md` | Doc-sync domain knowledge (self-maintained) |
+| `reference/agent-teams-quality.md` | Agent Teams verification patterns, TDD scenarios |
+| `reference/parallel-forge.md` | Teammate dispatch templates, coordination for `--parallel` mode |
 | `reference/clean-profile-test.sh` | Phase 2.5 execution isolator script |
 
 ## Contributing
