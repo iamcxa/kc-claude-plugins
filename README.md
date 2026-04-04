@@ -22,9 +22,9 @@ Browser & CLI E2E testing with context-isolating subagents. Map your app's UI, g
 /plugin install e2e-pipeline@kc-claude-plugins
 ```
 
-### [kc-plugin-forge](./kc-plugin-forge/) `v1.6.0`
+### [kc-plugin-forge](./kc-plugin-forge/) `v1.7.0`
 
-One-command plugin quality pipeline. Validates structure, TDD-tests skills under pressure, smoke-tests skills in clean profile (`--bare` mode, ~$0.025/test), verifies agent definitions, and scaffolds self-improvement (D1/D2 learning) and doc-sync capabilities into your plugins.
+One-command plugin quality pipeline. Validates structure, TDD-tests skills under pressure, smoke-tests skills in clean profile (`--bare` mode, ~$0.025/test), verifies agent definitions, detects Agent Teams capability, and scaffolds self-improvement (D1/D2 learning) and doc-sync capabilities. Supports `--parallel` mode for concurrent Phase 2/3 execution via teammates.
 
 **Use when:** You're building or maintaining Claude Code plugins and want automated quality assurance.
 
