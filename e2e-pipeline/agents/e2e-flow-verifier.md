@@ -1,6 +1,6 @@
 ---
 name: e2e-flow-verifier
-description: Adaptive flow validator. Runs E2E flows in browser, auto-repairs selector/URL/flow issues, enriches assertions, and produces PR-ready reports. Two rounds — Round 1 fixes, Round 2 captures clean evidence (screenshots + trace). Operates in isolated subagent context.
+description: Adaptive flow validator. Runs E2E flows in browser, auto-repairs selector/URL/flow issues, enriches assertions, and produces PR-ready reports. Two rounds — Round 1 fixes, Round 2 captures clean evidence (screenshots + trace). Operates in subagent context or as a persistent teammate with multi-turn round control.
 tools: Bash, Read, Grep, Write
 model: inherit
 color: blue
@@ -412,14 +412,31 @@ Parse `flow_path`, `mapping_path`, `base_url`, `auth_profile`, `record` from the
 
 **State isolation check** (see `references/agent-teams.md` § 5): if `base_url` or `auth_profile` differs from the current browser session → close and reopen browser with the new profile before starting verification.
 
-Then execute the full verification procedure (Round 1 + Round 2) as in subagent mode.
-
-After completion, send results:
+Execute **Round 1 only** (Phase 2 — Fix Run). After Round 1 completes, send status to lead:
 
 ```
 SendMessage(
   to="lead",
-  message="VERIFICATION COMPLETE\nstatus: PASS|PARTIAL|FAIL\ntotal_steps: N\ncorrections: N (R repair, A adapt, E enrich)\nunfixable: N\ncheckpoints: N pass, M fail, K skip\nflow_updated: true|false\nmapping_updated: true|false\nreport_path: <path>\ntrace_path: <path>\n\nCorrections:\n- <step>: <type> (<details>)\n\nUnfixable:\n- <step>: <reason>",
+  message="ROUND_1_STATUS\nstatus: <all_pass|has_corrections|has_unfixable>\ntotal_steps: N\npassed: N\ncorrections: N (R repair, A adapt, E enrich)\nunfixable: N\ncheckpoints: N pass, M fail, K skip\n\nCorrections:\n- <step>: <type> (<details>)\n\nUnfixable:\n- <step>: <reason>\n\nflow_updated: true|false\nmapping_updated: true|false",
+  summary="Round 1: <status>, N corrections, M unfixable"
+)
+```
+
+**Stop turn — wait for guidance.** The lead analyzes Round 1 results and sends one of:
+
+| Guidance | Meaning | Action |
+|----------|---------|--------|
+| `PROCEED_ROUND_2` | Run full Round 2 | Execute all steps as clean evidence run (Phase 3) |
+| `SKIP_ROUND_2` | Round 1 is sufficient | Skip Round 2, proceed directly to Phase 4 output |
+
+**Timeout fallback (60 seconds):** If no guidance arrives within 60s, proceed autonomously with default logic: run Round 2 if `corrections > 0 && unfixable == 0`; skip Round 2 if `all_pass` or `has_unfixable`. This ensures the agent never hangs if the lead crashes or loses context.
+
+After Round 2 (or skip), write reports (Phase 4) and send final results:
+
+```
+SendMessage(
+  to="lead",
+  message="VERIFICATION COMPLETE\nstatus: PASS|PARTIAL|FAIL\ntotal_steps: N\ncorrections: N (R repair, A adapt, E enrich)\nunfixable: N\ncheckpoints: N pass, M fail, K skip\nflow_updated: true|false\nmapping_updated: true|false\nreport_path: <path>\ntrace_path: <path>\nrounds: <1|2>\n\nCorrections:\n- <step>: <type> (<details>)\n\nUnfixable:\n- <step>: <reason>",
   summary="Verify: <status>, N corrections"
 )
 ```
@@ -436,6 +453,9 @@ SendMessage(
 | Aspect | Subagent mode | Teams mode |
 |--------|--------------|------------|
 | Browser startup | After flow generation (serial) | During flow generation (parallel pre-warm) |
+| Round 1→2 control | Agent decides internally | Lead receives ROUND_1_STATUS, sends guidance |
+| Round 2 skip | Only when all_pass or has_unfixable | Lead can SKIP_ROUND_2 for any reason |
+| Timeout safety | N/A (single execution) | 60s fallback to autonomous decision |
 | Results delivery | Return summary at end | SendMessage with structured results |
 | Re-verify | Full re-dispatch + new browser | SendMessage VERIFY_FLOW (same browser) |
 | Browser lifecycle | Leave open at end | Stay open until shutdown_request |

@@ -241,7 +241,7 @@ Dev server must be running. Auth profile should exist (run `/e2e-map` or `/e2e-w
 
 **Teams mode** (verifier already spawned and browser ready):
 
-Send flow to the pre-warmed verifier:
+**Step 1 — Send VERIFY_FLOW:**
 
 ```
 SendMessage(
@@ -251,11 +251,41 @@ SendMessage(
 )
 ```
 
-Wait for verifier's `VERIFICATION COMPLETE` response containing corrections, results, and report path.
+**Step 2 — Wait for ROUND_1_STATUS** (verifier sends after Round 1 completes):
 
-**Verifier crash/failure in Teams mode** (no response within 30s or error response):
-1. Log warning with verifier's error output (if any)
-2. **Delete flow-write sentinel immediately** (cleanup — don't rely on 10-minute staleness timeout)
+Parse the status field: `all_pass`, `has_corrections`, `has_unfixable`. Also parse corrections count, unfixable count, and per-step details.
+
+**Step 3 — Present Round 1 summary to user:**
+
+```
+Round 1 complete:
+  Status: <all_pass | has_corrections | has_unfixable>
+  Corrections: N (R repair, A adapt, E enrich)
+  Unfixable: N
+  {if corrections} Details: <top 3 corrections> {endif}
+```
+
+**Step 4 — Decide and send guidance:**
+
+| Round 1 status | Guidance | Rationale |
+|----------------|----------|-----------|
+| `all_pass` (0 corrections, 0 unfixable) | `SKIP_ROUND_2` | Round 1 is already clean evidence |
+| `has_corrections` (corrections > 0, unfixable == 0) | `PROCEED_ROUND_2` | Need clean evidence without repair noise |
+| `has_unfixable` (unfixable > 0) | `SKIP_ROUND_2` | Unfixable issues mean Round 2 would also fail at the same spots |
+
+```
+SendMessage(
+  to="verifier",
+  message="<PROCEED_ROUND_2 | SKIP_ROUND_2>",
+  summary="Round 2: <proceed | skip>"
+)
+```
+
+**Step 5 — Wait for VERIFICATION COMPLETE** containing final results (report path, trace path, corrections, status).
+
+**Timeout/crash handling**: If no `ROUND_1_STATUS` within 120s, or no `VERIFICATION COMPLETE` within 120s after sending guidance:
+1. Log warning with verifier's last known state
+2. **Delete flow-write sentinel immediately**
 3. `TeamDelete()` to clean up the team
 4. Report error to user — suggest re-running with `--no-teams` to use subagent mode
 5. Skip remaining phases (Phase 2c, 2d, 2.5, 3)

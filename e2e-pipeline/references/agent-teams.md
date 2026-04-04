@@ -112,6 +112,8 @@ Command types are skill-specific:
 - `e2e-debug`: `VERIFY` (steps + log_tags + filters)
 - `e2e-test`: `EXECUTE_STEP` (step definition + context)
 - `e2e-test`: `EXECUTE_FLOW` (full flow for parallel suite mode)
+- `e2e-flow`: `VERIFY_FLOW` (flow path + mapping + auth + base_url)
+- `e2e-flow`: `PROCEED_ROUND_2` / `SKIP_ROUND_2` (guidance after Round 1)
 
 ### Teammate → Lead (response)
 
@@ -127,6 +129,8 @@ Response types are skill-specific, but always start with a keyword line for easy
 - `OBSERVATION COMPLETE` (e2e-debug)
 - `STEP COMPLETE` (e2e-test, per-step)
 - `FLOW COMPLETE` (e2e-test, full flow)
+- `ROUND_1_STATUS` (e2e-flow verifier, after Round 1 — lead sends guidance before Round 2)
+- `VERIFICATION COMPLETE` (e2e-flow verifier, final results after Round 2 or skip)
 
 ### Error responses
 
