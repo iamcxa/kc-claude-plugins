@@ -34,11 +34,13 @@ Debug frontend runtime bugs by injecting `console.log` probes into suspect code,
 | `--continue` | Resume from previous round's conclusions |
 | `--cleanup` | Force cleanup — skip all phases, run Phase 4 only |
 | `--no-teams` | Force subagent mode even when Agent Teams is available |
-| `--teardown` | With `--cleanup`: also shutdown observer teammate and delete team |
+| `--teardown` | With `--cleanup`: also shutdown observer teammate and delete team. **Ignored without `--cleanup`.** |
 
 **No args:** Ask user to describe the bug or provide `--experiment` parameters. Do not proceed without input.
 
 **Experiment mode validation:** When `--experiment` is set, all three are required: `--inject`, `--steps`, `--url`. If any is missing, ask the user for the missing parameter(s) before proceeding. Do NOT skip Phase 0 as a fallback — experiment mode means the caller already did the analysis.
+
+**Flag conflicts:** `--experiment` and `--continue` are mutually exclusive. If both are passed, reject with: "Cannot use --experiment with --continue. Experiment mode uses caller-provided injection points; --continue loads from prior session history."
 
 ## Knowledge Bootstrap (before Phase 0)
 
@@ -83,6 +85,7 @@ Use loaded patterns to:
 ### Path C: `--continue` mode
 
 1. Read latest history from `.claude/e2e/debug/history/` — find most recent `*-r<N>.yaml`
+   - **If no history files found:** tell user "No prior debug session found. Use `/e2e-debug "<description>"` to start a new session." and stop.
 2. Load its `session_id`, `hypothesis`, `observations`, `verdict`, `next_investigation`
 3. If `manifest.yaml` exists (previous round didn't cleanup): run Phase 4 cleanup first
 4. Build new injection points based on `next_investigation` and prior observations
@@ -93,6 +96,8 @@ Use loaded patterns to:
 ---
 
 ## Phase 1 — Inject
+
+**Skip condition:** `--cleanup` (jump directly to Phase 4)
 
 ### Pre-check: Residual detection
 
@@ -347,7 +352,7 @@ After analyzing observation results, determine verdict:
 
 - **`inconclusive` or `unconfirmed` (round < 3)** → **auto-continue** (no user interaction):
   1. Save history for current round
-  2. Phase 4: cleanup injections only (observer stays alive)
+  2. Phase 4: cleanup injections only (observer stays alive). If Layer 3 verification finds residual `[E2E-DBG]` markers that couldn't be removed, **stop auto-loop** — present the residual list to user and suggest `git checkout -- <file>` before continuing. Do NOT proceed to next round with dirty source.
   3. Show brief status: `Round N: <verdict>. <1-line summary of what was observed>. Forming next hypothesis...`
   4. Re-run Phase 0 (Path C: `--continue` logic — load history, form new hypothesis based on prior observations)
   5. Re-run Phase 1 (inject new points)
@@ -358,8 +363,9 @@ After analyzing observation results, determine verdict:
   1. Log warning: `"Observer crashed during round N. Falling back to subagent mode."`
   2. Switch diagnosis mode from **auto-loop** to **interactive** (auto-loop requires persistent observer)
   3. Attempt `TeamDelete()` to clean up
-  4. **Still proceed to Phase 4** (cleanup injections from this round)
-  5. Present current round's partial results (if any) and suggest: `"Observer lost. Use --continue to resume in interactive/subagent mode."`
+  4. **Save history for current round** — write to `.claude/e2e/debug/history/<session_id>-r<N>.yaml` with `verdict: inconclusive` and `next_investigation: "observer crashed — re-run same hypothesis"`. This ensures `--continue` can find the round context.
+  5. **Still proceed to Phase 4** (cleanup injections from this round)
+  6. Present current round's partial results (if any) and suggest: `"Observer lost. Use --continue to resume in interactive/subagent mode."`
 
 - **Loop limit (3 rounds without `confirmed`)** → stop and present to user:
   ```markdown
@@ -461,7 +467,7 @@ Grep for '\[E2E-DBG\]' across apps/ src/ lib/ components/
 
 ### Post-cleanup
 
-- Delete `.claude/e2e/debug/manifest.yaml`
+- Delete `.claude/e2e/debug/manifest.yaml` (if exists — may already be absent for `--cleanup` without prior injection)
 - Delete `.claude/e2e/debug/report.md` (if exists)
 - Keep history files (`.claude/e2e/debug/history/`) — needed for `--continue`
 
@@ -494,6 +500,8 @@ If all three = yes, auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-pat
 **Root cause**: <what's actually wrong>
 **Detection**: <which [E2E-DBG] tag reveals it>
 ```
+
+"Nothing novel" is a valid and encouraged outcome — most debug sessions are project-specific one-offs.
 
 ---
 

@@ -19,7 +19,7 @@ Generate and verify E2E flows — browser UI, CLI commands, or API checkpoints. 
 ## Invocation
 
 ```
-/e2e-flow [--from <source>] [--smoke] [--verify-only] [--mapping <name>] [--issue ID] [--no-verify] [--no-video] [--no-pr]
+/e2e-flow [--from <source>] [--smoke] [--verify-only] [--mapping <name>] [--issue ID] [--no-verify] [--no-video] [--no-pr] [--no-teams]
 ```
 
 | Arg | Effect |
@@ -34,6 +34,7 @@ Generate and verify E2E flows — browser UI, CLI commands, or API checkpoints. 
 | `--no-verify` | Generate flow only, skip browser verification |
 | `--no-video` | Skip video recording during verification |
 | `--no-pr` | Skip PR auto-detection, commit, and PR comment posting |
+| `--no-teams` | Force subagent mode even when Agent Teams is available |
 
 ### PR Mode (default)
 
@@ -133,7 +134,7 @@ A PreToolUse hook blocks direct writes to `.claude/e2e/flows/*.yaml`. The `/e2e-
 - `--no-verify`: create before Phase 1 → delete after Phase 1
 - `--verify-only`: create before Phase 2b → delete after Phase 2d
 
-The sentinel has a 10-minute staleness timeout as safety net.
+The sentinel has a 10-minute staleness timeout as safety net — enforced by the PreToolUse hook. If the sentinel's timestamp is older than 10 minutes, the hook treats it as absent (stale sentinel = no authorization). This covers skill crashes where the sentinel is never explicitly deleted.
 
 ## Phase 1 — Generate (dispatch flow-writer agent)
 
@@ -194,7 +195,11 @@ Dispatch `e2e-pipeline:e2e-flow-writer` (always as subagent — no browser, read
 
 See [reference.md](./reference.md) § Agent Dispatch Patterns for exact dispatch message format.
 
-**On return:** Read the generated flow YAML. **Validate mapping field**: if `flow_mode: browser`, verify the flow's `mapping:` field matches the `app` value from the loaded mapping. If mismatch → treat as generation error (same cleanup path as invalid YAML below).
+**On return:** Read the generated flow YAML.
+
+**Post-generation validation:**
+1. If `flow_mode: browser`: verify the flow's `mapping:` field matches the `app` value from the loaded mapping. If mismatch → treat as generation error (same cleanup path as invalid YAML below).
+2. If `flow_mode: cli-only`: verify ALL steps use `action: "Execute external"` or `action: "Verify external"` only. If any step has a browser action (Click, Navigate, Type, etc.) → treat as generation error. A CLI-only flow with browser steps is invalid — the writer was given `cli_only: true` but produced mixed output.
 
 Present summary to user:
 
@@ -240,6 +245,8 @@ Dev server must be running. Auth profile should exist (run `/e2e-map` or `/e2e-w
 ---
 
 **Teams mode** (verifier already spawned and browser ready):
+
+**Step 0 — Liveness re-check** (before sending any command): Verify the verifier member still exists in `~/.claude/teams/e2e-flow/config.json`. If the verifier disappeared between `BROWSER_READY` and now (e.g., crashed while idle), fall back to subagent mode immediately — do NOT send VERIFY_FLOW to a dead teammate.
 
 **Step 1 — Send VERIFY_FLOW:**
 
@@ -287,10 +294,17 @@ SendMessage(
 1. Log warning with verifier's last known state
 2. **Delete flow-write sentinel immediately**
 3. `TeamDelete()` to clean up the team
-4. Report error to user — suggest re-running with `--no-teams` to use subagent mode
-5. Skip remaining phases (Phase 2c, 2d, 2.5, 3)
+4. Skip Phase 2c, 2d, 2.5 (no verifier output to process)
+5. **Still present Phase 3 results** — show error status with the generated flow path and suggest re-running with `--no-teams`:
+   ```
+   E2E Flow: <flow-name>
+   Status: ERROR (verifier crash/timeout)
+   Flow:    .claude/e2e/flows/<name>.yaml (generated, unverified)
+   Suggestion: Re-run `/e2e-flow --verify-only <flow-name> --no-teams`
+   ```
+   The generated flow YAML is kept on disk — it may be valid and only needs re-verification.
 
-For `--verify-only` with existing team: detect existing team (`references/agent-teams.md` § 2). If verifier alive → check if the new flow's `base_url` and `auth_profile` match the verifier's current session. If they differ, include `base_url` and `auth_profile` in the `VERIFY_FLOW` command so the verifier can close and reopen the browser (see `references/agent-teams.md` § 5 — Browser state isolation on reuse). If same → send `VERIFY_FLOW` directly (no browser restart).
+For `--verify-only` with existing team: detect existing team (`references/agent-teams.md` § 2). If verifier alive → check if the new flow's `base_url` and `auth_profile` match the verifier's current session. If they differ, include `base_url` and `auth_profile` in the `VERIFY_FLOW` command so the verifier can close and reopen the browser (see `references/agent-teams.md` § 5 — Browser state isolation on reuse). If same → send `VERIFY_FLOW` directly (no browser restart). **Sentinel**: create flow-write sentinel BEFORE sending VERIFY_FLOW to the existing verifier (same as new-verifier path).
 
 ---
 
@@ -372,6 +386,8 @@ Agent returns: `gif_path`, `mp4_path`, `thumbnail_path`. Use these in Phase 3 re
 **Teams mode: Teardown verifier** — After media processing, shutdown the verifier teammate and delete team (`references/agent-teams.md` § 2). For `--verify-only` re-runs, keep verifier alive (user may re-verify).
 
 ### Phase 2.6 — Commit Flow (PR mode only)
+
+**Skip entirely** when `--no-pr` is set or no PR was detected in the auto-detection step.
 
 When PR mode is active (PR detected and `--no-pr` not set), commit the finalized flow YAML:
 
@@ -521,3 +537,5 @@ Auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "
 | Adding browser steps to CLI-only flow | CLI-only mode generates ONLY Execute external / Verify external. If browser steps are needed, mapping is required — re-run with `/e2e-map` first. |
 | Bypassing flow-writer for cross-boundary flows | Always dispatch flow-writer — it supports `Execute external` and `Verify external` steps for non-browser actions (CLI, API, analytics). Runner limits ≠ writer limits. Never hand-write flows to avoid the agent. |
 | Duplicate D1 entry | Search learned-patterns.md before appending |
+| Sending VERIFY_FLOW to dead verifier | Always re-check `config.json` for verifier presence immediately before sending VERIFY_FLOW — a verifier can crash between BROWSER_READY and the next command |
+| Deleting unverified flow after crash | Keep the generated flow YAML — it may be valid. Suggest `--verify-only --no-teams` to re-verify. |

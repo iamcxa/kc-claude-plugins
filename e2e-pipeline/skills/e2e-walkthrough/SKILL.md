@@ -42,12 +42,14 @@ For smoke testing → `/e2e-flow --smoke`
 | `--sites admin,portal` | Cross-site walkthrough using named mappings |
 | `--no-video` | Skip screen recording (default: recording ON) |
 
+**Not a walkthrough flag:** `--verify`, `--verify-only`, `--smoke` → redirect to `/e2e-flow` with appropriate flag. Walkthrough is interactive exploration, not automated verification.
+
 ## Discover Mapping (BLOCKING — must complete before proceeding)
 
 1. Look for `.claude/e2e/mappings/*.yaml`
 2. One file: use it. Read `app`, `base_url`, `auth` from the mapping.
 3. Multiple files: list them (show filename, `app`, `base_url` for each), ask user which to use (or accept `--mapping <name>`). **After selection, use ONLY the chosen mapping — do not reference pages/elements from other mapping files.**
-4. None: "No mapping files found in `.claude/e2e/mappings/`. Mappings define page structure, selectors, and auth config that walkthroughs depend on. Run `/e2e-map` to create one first." **Stop — do NOT continue to Pre-Flight.**
+4. None: "No mapping files found in `.claude/e2e/mappings/`. Mappings define page structure, selectors, and auth config that walkthroughs depend on. Run `/e2e-map` to create one first." **Stop — do NOT continue to Pre-Flight.** "Exploration mode" and "discovery" are NOT reasons to skip mapping — mappings provide `base_url`, `auth` config, and page structure that walkthroughs depend on even for open-ended exploration.
 5. If mapping YAML fails to parse: report the parse error with line number and stop. "Mapping file `<path>` has invalid YAML at line N. Fix the syntax error or re-run `/e2e-map` to regenerate."
 
 ### Multi-Site Discovery (when `--sites` provided)
@@ -279,7 +281,7 @@ Next steps:
 | Running `console --json` at any point during walkthrough | Never used in Phase 3 — not once, not "just for this error." Trace.zip captures complete console with better coverage. `errors --json` is the only per-step check. If user asks to "pay attention to console," use `errors --json` — that IS the console error check. |
 | Using full `snapshot` instead of `snapshot -i` | Per-step loops always use `snapshot -i`. Full snapshot only for `--smoke` post-walkthrough selector sweep or when user explicitly requests element discovery. |
 | Skipping step-log.json write | MANDATORY at end of Phase 3. Trace analyzer needs it for step correlation. Without it, cross-reference sections are absent. |
-| Skipping Phase 4 checklist items | Phase 4 has 13 items. Print checklist, complete ALL. "Context pressure" is NOT a valid reason to skip. |
+| Skipping Phase 4 checklist items | Phase 4 has 14 items (items 2 and 8 are reserved/merged — 12 actionable). Print checklist, complete ALL actionable items. "Context pressure" is NOT a valid reason to skip. If context is genuinely critical, finish the current item fully, then ask user: "Context building up — continue remaining N items or pause?" Never silently drop items. |
 
 **agent-browser gotchas (see also `references/commands.md`):**
 
@@ -296,3 +298,4 @@ Next steps:
 | Assuming snapshot shows `data-testid` | a11y snapshot does NOT expose `data-testid`/`aria-label`. Use `is visible` |
 | `--profile` silently ignored | Daemon already running without profile. `agent-browser close` → wait 3s → re-open |
 | Checkpoint steps interact with browser | `verify-external` steps do NOT touch browser — skip snapshot, skip element resolution |
+| Browser crash mid-walkthrough | Write step-log.json with steps completed so far → proceed to Phase 4 with partial data. Do NOT restart from step 1 — offer user: "Browser lost at step N. Resume from step N, or proceed to Phase 4 with partial results?" |

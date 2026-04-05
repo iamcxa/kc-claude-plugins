@@ -10,7 +10,7 @@ Resolve browser E2E test flows and dispatch the `e2e-test-runner` agent for exec
 ## Invocation
 
 ```
-/e2e-test [flow-name|--tag tag|--all] [--mapping name] [--site alias] [--all-sites] [--suite name] [--pr NUMBER] [--issue ISSUE-ID] [--video] [--no-compile]
+/e2e-test [flow-name|--tag tag|--all] [--mapping name] [--site alias] [--all-sites] [--suite name] [--pr NUMBER] [--issue ISSUE-ID] [--video] [--no-compile] [--no-teams] [--model MODEL]
 ```
 
 | Arg | Effect |
@@ -26,6 +26,8 @@ Resolve browser E2E test flows and dispatch the `e2e-test-runner` agent for exec
 | `--suite name` | Run a specific suite from `.claude/e2e/suites/<name>.yaml` |
 | `--video` | Enable screen recording + GIF generation (auto-enabled when `--pr` is used) |
 | `--no-compile` | Skip auto-compile and compiled script run after LLM execution |
+| `--no-teams` | Force subagent mode even when Agent Teams is available |
+| `--model MODEL` | Override default agent model (e.g., `--model sonnet`). Default: `haiku` for test runners |
 
 ## Prerequisites
 
@@ -238,7 +240,9 @@ Agent(
 )
 ```
 
-Wait for `BROWSER_READY` → runner executes flow → `FLOW COMPLETE` with results.
+Wait for `BROWSER_READY` (30s timeout per `references/agent-teams.md` § 4 — applies to startup). If no `BROWSER_READY` within 30s → treat as hard crash, fall back to subagent dispatch.
+
+Runner executes flow → `FLOW COMPLETE` with results.
 
 On failure: offer `"Investigate with /e2e-debug? (browser is still open)"`
 On re-run: `SendMessage(to="runner", message="RE-RUN\nflow_path: <path>")` — no browser restart.
@@ -266,7 +270,7 @@ for site in sites:
   )
 ```
 
-Wait for all `BROWSER_READY` messages. Handle `WAITING_FOR_AUTH` per `references/agent-teams.md` § 3.
+Wait for all `BROWSER_READY` messages (30s timeout per runner per `references/agent-teams.md` § 4 — applies to startup). Handle `WAITING_FOR_AUTH` per `references/agent-teams.md` § 3. If a runner fails to send `BROWSER_READY` within 30s → mark as crashed, skip flows assigned to it, continue with remaining runners. If ALL runners fail startup → fall back to subagent dispatch entirely.
 
 Then dispatch flows in parallel:
 
@@ -358,7 +362,7 @@ Agent(
 )
 ```
 
-**CLI runner ready signal**: Wait for `CLI_READY` (analogous to `BROWSER_READY` for browser runners) before dispatching steps. The CLI runner uses `CLI_READY` (not `BROWSER_READY`) since it doesn't open a browser.
+**CLI runner ready signal**: Wait for `CLI_READY` (analogous to `BROWSER_READY` for browser runners) before dispatching steps. The CLI runner uses `CLI_READY` (not `BROWSER_READY`) since it doesn't open a browser. Same 30s startup timeout applies — if no `CLI_READY` within 30s, treat as hard crash and skip CLI steps.
 
 Lead coordinates: "CLI runner executes `recce run ...`" → "browser runner verifies result appears in UI."
 
@@ -402,7 +406,7 @@ Proceed to Phase 1.5 as normal.
 #### Dispatch
 
 ```
-Agent(subagent_type="e2e-test-runner"):
+Agent(subagent_type="e2e-test-runner", model="haiku"):  # override with --model if provided
   "Execute E2E flow:
    flow_path: <path>  mapping_path: <path>  auth_profile: <path>
    base_url: <url>  app: <name>  report_dir: <path>  headed: true
@@ -754,7 +758,9 @@ Scan test results for general patterns:
 - Agent-browser behavior discoveries
 - Flow design patterns that improve reliability
 
-Auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "Appended pattern: [title]"
+Before appending, search `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md` for existing coverage — if the pattern is already documented (same root cause, even if different wording), skip it.
+
+Auto-append new patterns to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "Appended pattern: [title]"
 
 ### D2 candidates (gated — e2e-test only)
 

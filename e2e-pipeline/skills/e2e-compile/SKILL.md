@@ -51,6 +51,14 @@ find ~/.claude/plugins -name "e2e-compile.js" -path "*/e2e-pipeline/bin/*" -prin
 
 If the binary is not found, stop: "Cannot find e2e-compile.js. Ensure the e2e-pipeline plugin is installed."
 
+After locating the binary, verify npm dependencies are installed:
+
+```bash
+node -e "require('<compiler_dir>/compiler/compiler.js')" 2>&1
+```
+
+Where `<compiler_dir>` is the parent directory of `bin/`. If this fails with `Cannot find module`, stop: "Compiler dependencies missing. Run `npm install` in `<compiler_dir>` first."
+
 ## Phase 2 — Invoke Compiler
 
 Run via Bash tool from the **project root** (so default directory paths resolve correctly):
@@ -151,7 +159,7 @@ For dry-run errors, present the ERROR lines from stderr.
 
 ### No flows found
 
-If the flows directory has no YAML files, suggest next steps:
+If the flows directory does not exist (compiler stderr: `ERROR: cannot read flows directory`), or has no YAML files, suggest next steps:
 "No flow files found in `.claude/e2e/flows/`. Create flows with `/e2e-flow` (from a plan or spec) or `/e2e-walkthrough` (interactive browser exploration)."
 
 ### Coverage report (when --coverage)
@@ -190,3 +198,5 @@ If coverage regression warning appears (::warning:: line), present prominently:
 | Recompile overwrites eval patches | Login flows with manual `agent-browser eval` workarounds (for headless CI) are overwritten by recompile. **Re-apply eval patches after recompiling `gate-login-flow`**. See [Headless CI Limitations](../../docs/ci-integration.md#headless-ci-limitations). |
 | Compiled script fails in CI but passes locally | Playwright `fill`/`click`/`is visible` fail in headless Chrome on Linux CI. Visibility checks use `_poll_snapshot_contains` (auto-generated). Fill/click need manual eval patches for login flows. |
 | `combobox` pattern too broad in a11y grep | `role=combobox >> nth=0` converts to grep pattern `combobox` which matches any combobox. Acceptable when page has only one; add accessible name to mapping selector for disambiguation. |
+| `Cannot find module` on first run | npm dependencies not installed. Run `npm install` in the e2e-pipeline plugin directory. |
+| Unsupported action type (e.g., `Drag`, `Hover`) | Compiler emits `# Unknown action type` comment in output script. Supported types: Navigate, Click, Fill, Wait, Take snapshot, Verify, Execute external, Verify external. Rewrite the step using a supported action or use `Execute external` with a CLI command. |

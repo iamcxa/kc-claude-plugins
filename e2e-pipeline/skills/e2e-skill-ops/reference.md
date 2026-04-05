@@ -115,6 +115,12 @@ This log becomes part of the finding record and prevents future developers from 
 
 Structured gap analysis after running e2e tests.
 
+### Prerequisite Check
+
+Before starting the checklist, scan `.claude/e2e/reports/` for report files (`report.md`, `*-report.md`). If no reports exist:
+- Tell user: "No E2E test reports found. Run `/e2e-test <flow>` or `/e2e-test --suite smoke` first, then re-run `--evaluate`."
+- STOP. Do NOT produce an empty findings report — "0 flows, 0 findings" is vacuous truth, not evaluation.
+
 ### Evaluation Checklist
 
 1. **Collect results**: suite/flow output, pass/fail per step, error messages

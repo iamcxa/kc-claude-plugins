@@ -49,6 +49,13 @@ Which mode? (or describe what happened — I'll pick the right one)
 Unknown mode (e.g., `--fix`): show the same menu.
 Multiple modes (e.g., `--debug --maintain`): run in the order given, sequentially.
 
+**Mode selection from description**: When the user describes a problem instead of picking a mode, select using this priority:
+1. Single recent failure with error message → `--debug`
+2. "I just edited skill X" or recent skill file changes → `--maintain`
+3. Systemic failures across multiple flows/runs → `--evaluate`
+4. "Add X to the pipeline" → `--add-feature`
+5. Ambiguous → **show the menu and ask**, do NOT guess. "I'll pick the right one" means pick from this table, not bypass the menu.
+
 ## The 5 Rules (apply to ALL modes)
 
 Every mode enforces these. Skipping any one is a violation.
@@ -59,7 +66,7 @@ Every mode enforces these. Skipping any one is a violation.
 | 2 | **3-skill impact scan** — check all files in the Impact Matrix below | Prevents silent drift between skills |
 | 3 | **Verify after fix** — run the failing scenario (or subagent pressure test) after changes | Prevents "fix and forget" |
 | 4 | **Write back findings (D1+D2)** — append to `skill-quality-findings.md` + journal. **D1**: general patterns → auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. **D2** (--evaluate mode): project-specific patterns → gated write to `.claude/e2e-lessons.md` or project `CLAUDE.md` (see `${CLAUDE_PLUGIN_ROOT}/references/knowledge-capture.md`). | Prevents session amnesia + accumulates knowledge |
-| 5 | **Propose, don't ship SKILL.md changes** — present skill file changes for human approval before writing. Mapping/flow fixes can be applied directly. | Skills are shared infrastructure |
+| 5 | **Propose, don't ship plugin file changes** — present changes to any file under `e2e-pipeline/skills/`, `e2e-pipeline/agents/`, or `e2e-pipeline/references/` for human approval before writing. Only project-local files (`.claude/e2e/`) can be applied directly. "It's just reference.md, not SKILL.md" is not an exemption — reference files are read by agents and affect execution. | Skills, agents, and references are shared infrastructure |
 
 ## Impact Matrix (mandatory scan)
 
@@ -77,6 +84,8 @@ When ANY e2e skill changes, scan every row:
 | `<project>/.claude/e2e/mappings/*.yaml` | Selector conventions match skill guidance |
 | `<project>/.claude/e2e/reports/skill-quality-findings.md` | Past findings for this exact pattern |
 
+**Missing file rule**: If a matrix row target doesn't exist at the expected path, that is a finding — record it in `skill-quality-findings.md` as a structural gap. Do NOT silently skip missing rows. Verify the file was intentionally removed or relocated before dismissing.
+
 **Quick skip rule**: Purely cosmetic changes (typo, formatting) — scan only "common mistakes" in the other two skills. All other changes require full scan.
 
 ## Modes — Summary
@@ -88,7 +97,7 @@ Each mode has detailed checklists in [reference.md](./reference.md).
 | `--debug` | Diagnose e2e failure | Search known → classify symptom → fix → verify → write back |
 | `--maintain` | Sync after skill edit | Describe change → impact scan → propose all → verify → record |
 | `--add-feature` | Extend pipeline | Feasibility PoC → impact scan → design → implement → RED test → evaluate |
-| `--evaluate` | Gap analysis post-run | Collect results → classify failures → identify skill gaps → prioritize → report. For comprehensive skill/agent re-verification, cross-reference `VERIFICATION-SOP.md` checklists. |
+| `--evaluate` | Gap analysis post-run | **Prerequisite**: scan `.claude/e2e/reports/` for report files. If no reports exist, STOP — tell user to run `/e2e-test` first, do NOT produce an empty findings report. Then: collect results → classify failures → identify skill gaps → prioritize → report. For comprehensive skill/agent re-verification, cross-reference `VERIFICATION-SOP.md` checklists. |
 
 ## Completion Gate (mandatory)
 
@@ -119,6 +128,10 @@ If verification fails, loop back to `--debug`. Write-back is not optional — at
 | "This is just a mapping fix, not a skill issue" | Mapping patterns come from skill guidance. Check if the skill taught the wrong pattern. |
 | "I proposed the fix, human can verify later" | Proposing is step 4 of 7. You own verification. |
 | "Context is running low, skip write-back" | Journal entry is ~500 tokens. Always enough. No excuse. |
+| "It's just reference.md, not SKILL.md" | Reference files are read by agents at startup. A bad reference = bad agent behavior. Same approval gate. |
+| "No test results exist, so evaluate is done" | No results = prerequisite not met. Tell user to run tests first. An empty report is not a findings report. |
+| "This file doesn't exist, skip this matrix row" | Missing file IS a finding. Record it. Don't silently skip. |
+| "User described a problem, I know which mode" | Unless it clearly matches the selection table, show the menu and ask. Guessing wrong wastes the entire workflow. |
 
 ## Quick Reference
 
@@ -133,4 +146,4 @@ If verification fails, loop back to `--debug`. Write-back is not optional — at
 | Verify full suite | `/e2e-test --suite smoke` |
 | View trace interactively | `npx playwright show-trace <trace.zip>` |
 
-<!-- Last updated: 2026-03-17 -->
+<!-- Last updated: 2026-04-04 -->

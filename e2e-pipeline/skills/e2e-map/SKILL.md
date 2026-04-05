@@ -34,7 +34,22 @@ When `--page <name>` is specified:
 - Ask user for `app` name (e.g., "What should I call this app?")
 - Skip auth — it will be discovered by the mapper agent.
 
-**If mapping exists**, read `base_url` and `app` from it.
+**If mapping exists**, read `base_url` and `app` from it. **Capture the file content at this point** (store as `loaded_mapping_content`) — used in Phase 5 for concurrent modification detection.
+
+### Update Scope Decision (mapping exists + no `--page` flag)
+
+When a mapping already exists and the user invoked bare `/e2e-map` (no `--page`):
+
+> "A mapping already exists for **<app>** (<N> pages mapped). Would you like to:
+> 1. **Re-scan all pages** — full exploration, merges changes into existing mapping
+> 2. **Update a specific page** — `/e2e-map --page <name>` (faster, preserves other pages)
+> 3. **Start fresh** — delete current mapping and re-explore from scratch"
+
+Do NOT default to full re-scan without asking. Full re-scan is slow and may lose manual refinements.
+
+If user chooses "Start fresh": rename the current mapping to `<app>.yaml.bak` (preserving as backup), then proceed as first-time mapping.
+
+If `--page` or `--scope full` was explicitly provided, skip this decision — the user already chose scope.
 
 ```bash
 agent-browser --version
@@ -146,6 +161,8 @@ Agent returns:
 
 **If agent fails** (no Summary block, or reports 0 pages found): Report the agent's output to the user with: `"Mapper agent did not return a valid mapping. Check the report at <report_dir> for details. Common causes: server went down during exploration, auth session expired, or no navigable pages found."` Ask user whether to retry or switch to `--interactive` mode.
 
+**If agent returns partial results** (pages_found < expected routes from Phase 1): Report what was mapped and what was missed. `"Mapped <N>/<M> pages. Missing: <list>. Possible causes: server became unreachable, page requires specific navigation state, or route is dynamic."` Ask user: (1) Accept partial mapping and explore missing pages via Phase 4, (2) Retry failed pages only, (3) Switch to `--interactive` for the missing pages.
+
 **If `--interactive` flag:** Skip agent dispatch. Run browser exploration in main context using `agent-browser` directly — navigate each route, snapshot, extract elements, build mapping inline. Use `Skill: "agent-browser"` patterns.
 
 After Phase 2 completes (agent returns summary or interactive exploration finishes), proceed to Phase 4.
@@ -165,7 +182,7 @@ Repeat until user says "done." After user confirms done, proceed to Phase 5.
 
 1. Write mapping YAML to `.claude/e2e/mappings/<app>.yaml`. **If the file already exists** (re-mapping with `--page`), read the current mapping first and **merge** — update changed elements, add new elements, preserve unchanged pages. Never overwrite the entire file.
    - **No changes detected:** If comparison with existing mapping shows no differences, report `"Mapping for <page> is up to date. No changes needed."` Skip writing the file and proceed to step 3.
-   - **Mapping file safety:** Before writing, re-read the file to check for concurrent modifications (compare with the version loaded at skill start). If the file has changed since loading, present both versions and ask the user which to keep.
+   - **Mapping file safety:** Before writing, re-read the file and compare against `loaded_mapping_content` (captured during Prerequisites). If the content differs, another process modified the file — present a diff summary and ask the user which version to keep. If `loaded_mapping_content` was never captured (first-time mapping), skip this check.
 2. Present the final mapping for review
 3. Ask: "Which flow would you like to test first?" — suggest 2-3 candidates
 4. Ask: "Want me to create a flow YAML in `.claude/e2e/flows/` and run `/e2e-test`?"
@@ -212,12 +229,15 @@ Scan mapping exploration for general patterns:
 - Framework-specific route discovery patterns
 - Codebase analysis shortcuts that yielded better coverage
 
-Auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "Appended pattern: [title]"
+Before appending, **search `learned-patterns.md` for existing entries** covering the same pattern. If already covered (same concept, even with different wording), skip with note: "covered by: [existing pattern title]".
+
+Auto-append new entries to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "Appended pattern: [title]"
 
 ### Skip conditions
 
 - Re-mapping single page with no new selector insights → skip
 - No framework or selector discoveries beyond what's already in learned-patterns.md → skip
+- "Nothing novel" is a valid outcome — zero learning output is encouraged over forced entries
 
 ## Common Mistakes
 
@@ -227,3 +247,6 @@ Auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "
 | Missing hidden elements | Phase 4 exists for this — list what needs interaction to reveal |
 | Agent returns stale auth | Check profile exists in pre-flight; re-auth before dispatch if needed |
 | Skipping codebase analysis | Phase 1 gives the agent a route list — without it, exploration is slower and may miss pages |
+| Full re-scan when user wanted page update | Always show Update Scope Decision when mapping exists and no `--page` flag |
+| Silently accepting partial agent results | Compare pages_found against expected routes; report gaps and offer options |
+| Appending duplicate D1 pattern | Search learned-patterns.md before appending; skip if concept already covered |
