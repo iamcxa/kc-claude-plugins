@@ -6,48 +6,6 @@ Curate periodically and PR valuable entries back to the origin repo.
 
 ---
 
-## B3 escape carrying to B4 — layered requirements need independence declarations (2026-03-19)
-
-When two steps (B3 and B4) both require TDD, and B3 has an escape hatch, agents argue the escape "carries over" to B4 via vacuous satisfaction ("B3 said no tests → B4 TDD is satisfied with zero tests"). Fix: explicitly declare each requirement as **independent** — "B3's TDD-skip escape does NOT carry over to B4. B4 must independently validate."
-
-**Applies to**: Any skill where multiple steps impose overlapping requirements with different escape clauses
-**Action**: Add explicit "does NOT inherit exemptions from step X" language
-
-## Brainstorm intent resists output gates stronger than execute intent (2026-03-19)
-
-When a skill requires a mandatory output block (e.g., Assessment Output) before proceeding, agents comply for execute/non-task intents but skip it for brainstorm intent. Root cause: brainstorm intent's natural behavior ("explore and understand code") feels inherently useful, so agents rationalize skipping the gate as "I'm already doing what the skill asks." The gate works for execute because execution has clear consequences (wrong scale → wrong workflow), but brainstorming's consequence (missing formal classification) feels low-stakes. Fix: in the routing description for brainstorm, explicitly separate "classify intent" from "start exploring" — "routing to brainstorming skill means INVOKE the skill, not start reading files." Session-level skill loading provides stronger enforcement than subagent prompt injection.
-
-**Applies to**: Any routing/classification skill with mandatory output gates across multiple intent types
-**Action**: Add intent-specific routing clarification for low-consequence intents (brainstorm, review) where the default behavior overlaps with the routed action
-
-## Help skill template blocks dominate over live-read instructions (2026-03-20)
-
-When a help skill says "Read live data from skills/*.md" but then provides a hardcoded output template immediately after, agents emit the template verbatim instead of populating it from live reads. The template's specificity dominates the abstract instruction. Fix: add an explicit "formatting guide only — populate from live reads" directive immediately before the template block. Without this, new skills added to the plugin won't appear in the help output.
-
-**Applies to**: Any help/guide skill with example output templates
-**Action**: Always insert a "format guide only" directive before template blocks that should be populated dynamically
-
-## Global prerequisites block mode-specific paths (2026-03-21)
-
-When a skill supports multiple flow modes (e.g., browser + CLI-only), a "BLOCKING" prerequisite that only applies to one mode silently prevents the others. e2e-flow's "Discover Mapping" was a hard gate that blocked CLI-only flows — even though CLI-only flows use zero mapping references. Fix: prerequisites must be mode-aware. Check mode signals BEFORE enforcing the gate. If the prerequisite is irrelevant to the detected mode, skip it with an informational message instead of blocking.
-
-**Applies to**: Any skill with multi-mode pipelines sharing a common preamble (e.g., browser/CLI, sync/async, interactive/batch)
-**Action**: Audit each "BLOCKING" / "must complete before proceeding" gate — does it apply to ALL modes or only some? Mode-specific gates need early intent detection before enforcement.
-
-## PreToolUse block is bypassed by Bash — warn beats block for hooks (2026-03-22)
-
-A `PreToolUse:Write` hook that returns `{"decision": "block"}` only blocks the Write tool. Agents bypass it by using Bash (`echo > file`, `cat <<EOF > file`) — the hook never fires on Bash tool calls to the same path. Result: the agent learns to avoid Write, not to avoid the prohibited action. Worse: Bash writes get zero warning, so the bypass is completely silent. **Fix**: replace `"decision": "block"` with plain text warning output (cat <<'WARN'). PreToolUse hooks that output text (not JSON) inject that text as a warning into agent context without blocking. This is cooperative (agent gets consequences, decides) vs adversarial (agent finds workaround). Keep sentinel mechanisms for authorized paths — sentinel present → `exit 0` (silent), sentinel absent → warning text.
-
-**Applies to**: Any PreToolUse hook that uses `"decision": "block"` on Write/Edit tools. Bash tool can perform the same filesystem operations.
-**Action**: Prefer warn over block for file-write guards. Reserve block for truly dangerous operations where Bash bypass is also covered (e.g., matching both Write and Bash tools for the same path pattern).
-
-## Bare skill name ≠ skill invocation in isolated mode (2026-03-23)
-
-When running LLM in isolated mode (`claude --bare`), passing a skill name as a prompt (e.g., `"kc-sentry-insight"`) does NOT trigger the skill — the LLM treats it as an informational query and produces a topic summary. Adding a slash prefix (`"/kc-sentry-insight"`) signals invocation intent and triggers the skill's routing. This matters for any automated testing that invokes skills via CLI prompts (e.g., smoke tests, CI verification). The slash is an LLM convention, not a Claude Code feature — it's how agents distinguish "tell me about X" from "run X".
-
-**Applies to**: Any automated test or script that invokes a skill via `claude -p` or similar CLI prompt
-**Action**: Always use `/<skill-name>` (with slash) when the intent is to invoke the skill, not describe it. For smoke tests, prefer first-clause extraction from description; use `/<name>` as fallback only.
-
 ## Mode-specific required fields need explicit validation blocks (2026-03-23)
 
 When a skill has multiple invocation modes (standalone, experiment, continue), each mode may require a different set of fields. If a mode skips an earlier phase (e.g., `--experiment` skips Phase 0), fields that would normally be generated by that phase must be provided by the caller. Without explicit validation ("when mode X, fields A, B, C are required — if missing, ask"), partial input creates an unhandled state downstream. Found in e2e-debug: `--experiment` without `--steps` caused Phase 2 dispatch with undefined `reproduction_steps` because Phase 0 (which generates steps) was skipped.
