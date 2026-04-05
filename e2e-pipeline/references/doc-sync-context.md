@@ -1,7 +1,7 @@
 ---
 plugin: e2e-pipeline
-version: 2.3.0
-last_sync: 2026-03-20 (Phase 5 self-update)
+version: 2.5.0
+last_sync: 2026-04-05 (Phase 5 self-update — forge doc-sync)
 ---
 
 # Doc-Sync Domain Context
@@ -24,6 +24,7 @@ defines sync levels, probe classification, and style defaults.
 | `skills/e2e-skill-ops/SKILL.md` | `docs/commands.md` (e2e-skill-ops row) | `docs/debugging.md` (pipeline debugging) |
 | `skills/e2e-help/SKILL.md` | `docs/commands.md` (e2e-help row) | — |
 | `skills/e2e-doc-sync/SKILL.md` | `docs/commands.md` (e2e-doc-sync row) | `docs/architecture.md` (doc maintenance) |
+| `skills/e2e-debug/SKILL.md` | `docs/commands.md` (e2e-debug row) | `docs/debugging.md` (debug pipeline) |
 
 ### Agents → Doc Targets
 
@@ -36,6 +37,7 @@ defines sync levels, probe classification, and style defaults.
 | `agents/e2e-trace-analyzer.md` | `docs/architecture.md` (Agent table) |
 | `agents/e2e-media-processor.md` | `docs/architecture.md` (Agent table) |
 | `agents/doc-probe.md` | `docs/architecture.md` (Agent table) |
+| `agents/e2e-debug-observe.md` | `docs/architecture.md` (Agent table) |
 
 ### Hooks → Doc Targets
 
@@ -104,6 +106,7 @@ Classifies each skill for automated doc-sync probing (can the scanner invoke it 
 | `e2e-test` | skip | Requires browser + live application + test data |
 | `e2e-walkthrough` | skip | Requires browser + live application |
 | `e2e-skill-ops` | skip | Requires failure context or specific debug target |
+| `e2e-debug` | skip | Requires browser + live application + bug context |
 
 ## Post-Sync Hooks
 

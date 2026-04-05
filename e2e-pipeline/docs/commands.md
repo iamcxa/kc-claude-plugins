@@ -18,6 +18,8 @@
 | `/e2e-test <flow> --pr 940` | Run flow, record, post results to PR |
 | `/e2e-test <flow> --issue DRC-2779` | Include issue context in test report header |
 | `/e2e-test <flow> --no-compile` | Skip auto-compile and compiled script run after LLM execution |
+| `/e2e-test <flow> --no-teams` | Force subagent mode even when Agent Teams is available |
+| `/e2e-test <flow> --model <model>` | Override agent model (e.g., `sonnet`, `haiku`) for this run |
 | `/e2e-walkthrough` | Interactive walkthrough (records by default) |
 | `/e2e-walkthrough --mode guided` | Default mode: show plan + one-line per-step reports |
 | `/e2e-walkthrough --mode step` | Pause between steps, wait for "go" before each |
@@ -31,6 +33,7 @@
 | `/e2e-flow --mapping <name>` | Target a specific mapping file (skip selection when multiple exist) |
 | `/e2e-flow --no-verify` | Generate flow only, skip browser verification |
 | `/e2e-flow --no-pr` | Skip PR auto-detection, commit, and PR comment posting |
+| `/e2e-flow --no-teams` | Force subagent mode even when Agent Teams is available |
 | `/e2e-flow --issue DRC-2779` | Include issue context in report header |
 | `/e2e-compile <flow>` | Compile one flow YAML to a standalone bash script |
 | `/e2e-compile --all` | Compile all flows in the flows directory |
@@ -41,6 +44,7 @@
 | `/e2e-debug --experiment --inject '[...]' --steps "..." --url <url>` | Experiment mode -- caller pre-specifies injection points (used by systematic-debugging) |
 | `/e2e-debug --continue` | Resume from previous round's conclusions (multi-round debugging) |
 | `/e2e-debug --cleanup` | Force cleanup of residual `[E2E-DBG]` injections from a crashed session |
+| `/e2e-debug --no-teams` | Force subagent mode even when Agent Teams is available |
 | `/e2e-dispatch` | Unified entry point (routes to the right skill) |
 | `/e2e-dispatch --test <flow> --fg` | Force foreground execution (override background default) |
 | `/e2e-skill-ops` | Show available modes, then pick one (or describe the problem) |
