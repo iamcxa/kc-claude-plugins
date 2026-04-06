@@ -50,13 +50,19 @@ From conversation: completed work, decisions, remaining work, blockers, Linear i
 
 ### 2. Write Journal & Capture Handoff ID
 
-Load journal tools:
+Load journal tools (try built-in first, fall back to standalone):
 
 ```
-ToolSearch → "select:mcp__private-journal__process_thoughts,mcp__private-journal__list_recent_entries"
+ToolSearch → "+context-lake process_thoughts"
 ```
 
-Call `mcp__private-journal__process_thoughts` with these fields:
+If no match, fall back:
+
+```
+ToolSearch → "select:mcp__private-journal__process_thoughts"
+```
+
+Call `process_thoughts` with these fields:
 
 | Field | Content |
 |-------|---------|

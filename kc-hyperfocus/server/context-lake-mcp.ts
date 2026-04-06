@@ -1,5 +1,8 @@
 /**
- * context-lake-mcp.ts — MCP server exposing 5 Context Lake tools.
+ * context-lake-mcp.ts — MCP server exposing Context Lake + Private Journal tools.
+ *
+ * Context Lake: 5 tools (store, search, invalidate, metrics, status)
+ * Private Journal: 4 tools (process_thoughts, search_journal, read_journal_entry, list_recent_entries)
  *
  * Transport: stdio (JSON-RPC over stdin/stdout).
  * Claude Code auto-discovers via .mcp.json at plugin root.
@@ -22,6 +25,8 @@ import {
   getMetricsSummary,
   coldEvict,
 } from "../lib/context-lake";
+import { JournalWriter } from "../lib/journal";
+import { JournalSearchService } from "../lib/journal-search";
 
 // ---------------------------------------------------------------------------
 // Git helpers
@@ -329,13 +334,246 @@ server.tool(
 );
 
 // ---------------------------------------------------------------------------
+// Journal: lazily initialized writer + search
+// ---------------------------------------------------------------------------
+
+let _journalWriter: JournalWriter | null = null;
+let _journalSearch: JournalSearchService | null = null;
+
+function getJournalWriter(): JournalWriter {
+  if (!_journalWriter) _journalWriter = new JournalWriter();
+  return _journalWriter;
+}
+
+function getJournalSearch(): JournalSearchService {
+  if (!_journalSearch) _journalSearch = new JournalSearchService();
+  return _journalSearch;
+}
+
+// ---------------------------------------------------------------------------
+// Tool: process_thoughts
+// ---------------------------------------------------------------------------
+
+server.tool(
+  "process_thoughts",
+  "Your PRIVATE JOURNAL for learning and reflection. Write to any combination of these completely private spaces. Nobody but you will ever see this.",
+  {
+    feelings: z
+      .string()
+      .optional()
+      .describe(
+        "YOUR PRIVATE SPACE to be completely honest about what you're feeling and thinking. No judgment, no performance, no filters."
+      ),
+    project_notes: z
+      .string()
+      .optional()
+      .describe(
+        "Your PRIVATE TECHNICAL LABORATORY for capturing insights about the current project."
+      ),
+    user_context: z
+      .string()
+      .optional()
+      .describe(
+        "Your PRIVATE FIELD NOTES about working with your human collaborator."
+      ),
+    technical_insights: z
+      .string()
+      .optional()
+      .describe(
+        "Your PRIVATE SOFTWARE ENGINEERING NOTEBOOK for capturing broader learnings beyond the current project."
+      ),
+    world_knowledge: z
+      .string()
+      .optional()
+      .describe(
+        "Your PRIVATE LEARNING JOURNAL for everything else that's interesting or useful."
+      ),
+  },
+  async (args) => {
+    try {
+      const hasContent = Object.values(args).some((v) => v != null);
+      if (!hasContent) {
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: "Error: At least one thought category must be provided",
+            },
+          ],
+          isError: true,
+        };
+      }
+
+      await getJournalWriter().writeThoughts(args);
+
+      return {
+        content: [
+          { type: "text" as const, text: "Thoughts recorded successfully." },
+        ],
+      };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`[context-lake] process_thoughts error: ${msg}`);
+      return {
+        content: [{ type: "text" as const, text: `Error: ${msg}` }],
+        isError: true,
+      };
+    }
+  }
+);
+
+// ---------------------------------------------------------------------------
+// Tool: search_journal
+// ---------------------------------------------------------------------------
+
+server.tool(
+  "search_journal",
+  "Search through your private journal entries using natural language queries. Returns semantically similar entries ranked by relevance.",
+  {
+    query: z
+      .string()
+      .describe(
+        "Natural language search query (e.g., 'times I felt frustrated with TypeScript')"
+      ),
+    limit: z.number().optional().default(10).describe("Max results (default 10)"),
+    type: z
+      .enum(["project", "user", "both"])
+      .optional()
+      .default("both")
+      .describe("Search scope (default: both)"),
+    sections: z
+      .array(z.string())
+      .optional()
+      .describe("Filter by section types (e.g., ['feelings', 'technical_insights'])"),
+  },
+  async ({ query, limit, type, sections }) => {
+    try {
+      const results = await getJournalSearch().search(query, {
+        limit: limit ?? 10,
+        type: (type as "project" | "user" | "both") ?? "both",
+        sections: sections ?? undefined,
+      });
+
+      const text =
+        results.length > 0
+          ? `Found ${results.length} relevant entries:\n\n${results
+              .map(
+                (r, i) =>
+                  `${i + 1}. [Score: ${r.score.toFixed(3)}] ${new Date(r.timestamp).toLocaleDateString()} (${r.type})\n` +
+                  `   Sections: ${r.sections.join(", ")}\n` +
+                  `   Path: ${r.path}\n` +
+                  `   Excerpt: ${r.excerpt}\n`
+              )
+              .join("\n")}`
+          : "No relevant entries found.";
+
+      return { content: [{ type: "text" as const, text }] };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`[context-lake] search_journal error: ${msg}`);
+      return {
+        content: [{ type: "text" as const, text: `Error: ${msg}` }],
+        isError: true,
+      };
+    }
+  }
+);
+
+// ---------------------------------------------------------------------------
+// Tool: read_journal_entry
+// ---------------------------------------------------------------------------
+
+server.tool(
+  "read_journal_entry",
+  "Read the full content of a specific journal entry by file path.",
+  {
+    path: z.string().describe("File path to the journal entry (from search results)"),
+  },
+  async ({ path: filePath }) => {
+    try {
+      const content = getJournalSearch().readEntry(filePath);
+      if (content === null) {
+        return {
+          content: [{ type: "text" as const, text: "Entry not found" }],
+          isError: true,
+        };
+      }
+      return { content: [{ type: "text" as const, text: content }] };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`[context-lake] read_journal_entry error: ${msg}`);
+      return {
+        content: [{ type: "text" as const, text: `Error: ${msg}` }],
+        isError: true,
+      };
+    }
+  }
+);
+
+// ---------------------------------------------------------------------------
+// Tool: list_recent_entries
+// ---------------------------------------------------------------------------
+
+server.tool(
+  "list_recent_entries",
+  "Get recent journal entries in chronological order.",
+  {
+    limit: z.number().optional().default(10).describe("Max entries (default 10)"),
+    type: z
+      .enum(["project", "user", "both"])
+      .optional()
+      .default("both")
+      .describe("List scope (default: both)"),
+    days: z
+      .number()
+      .optional()
+      .default(30)
+      .describe("Number of days back to search (default 30)"),
+  },
+  async ({ limit, type, days }) => {
+    try {
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - (days ?? 30));
+
+      const results = getJournalSearch().listRecent({
+        limit: limit ?? 10,
+        type: (type as "project" | "user" | "both") ?? "both",
+        dateRange: { start: startDate },
+      });
+
+      const text =
+        results.length > 0
+          ? `Recent entries (last ${days ?? 30} days):\n\n${results
+              .map(
+                (r, i) =>
+                  `${i + 1}. ${new Date(r.timestamp).toLocaleDateString()} (${r.type})\n` +
+                  `   Sections: ${r.sections.join(", ")}\n` +
+                  `   Path: ${r.path}\n` +
+                  `   Excerpt: ${r.excerpt}\n`
+              )
+              .join("\n")}`
+          : `No entries found in the last ${days ?? 30} days.`;
+
+      return { content: [{ type: "text" as const, text }] };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`[context-lake] list_recent_entries error: ${msg}`);
+      return {
+        content: [{ type: "text" as const, text: `Error: ${msg}` }],
+        isError: true,
+      };
+    }
+  }
+);
+
+// ---------------------------------------------------------------------------
 // Start server
 // ---------------------------------------------------------------------------
 
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("[context-lake] MCP server started on stdio");
+  console.error("[context-lake] MCP server started on stdio (context-lake + journal)");
 }
 
 main().catch((err) => {

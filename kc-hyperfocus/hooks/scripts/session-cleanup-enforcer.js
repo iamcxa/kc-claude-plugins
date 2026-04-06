@@ -106,11 +106,11 @@ process.stdin.on('end', () => {
       );
     } else if (!state.journal_has_feelings) {
       instructions.push(
-        'Journal feelings missing: Call mcp__private-journal__process_thoughts again with the feelings field (1-2 sentences about your current state).'
+        'Journal feelings missing: Call process_thoughts again with the feelings field (1-2 sentences about your current state).'
       );
     } else if (!state.journal_has_project_notes) {
       instructions.push(
-        'Journal project_notes missing: Call mcp__private-journal__process_thoughts again with project_notes field (what was done, remaining work, key decisions — this is your session handoff).'
+        'Journal project_notes missing: Call process_thoughts again with project_notes field (what was done, remaining work, key decisions — this is your session handoff).'
       );
     }
 

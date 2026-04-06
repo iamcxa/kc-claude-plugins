@@ -65,7 +65,7 @@ process.stdin.on('end', () => {
     }
 
     // Track journal tool calls (feelings + project_notes fields)
-    if (toolName === 'mcp__private-journal__process_thoughts') {
+    if (toolName === 'mcp__private-journal__process_thoughts' || toolName.endsWith('context-lake__process_thoughts')) {
       state.journal_done = true;
       const feelings = typeof toolInput === 'object' ? (toolInput.feelings || '') : '';
       if (feelings.trim().length > 0) {

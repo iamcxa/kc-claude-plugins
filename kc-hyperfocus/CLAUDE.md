@@ -59,7 +59,7 @@ Context Lake:
 ## External Dependencies
 
 - **Statusline bridge file** (`/tmp/claude-ctx-{session_id}.json`): Written by `hyperfocus-statusline.js` or a compatible statusline (e.g., GSD statusline). If absent, hooks degrade gracefully (no warnings, no enforcement).
-- **Private journal MCP** (`mcp__private-journal__*`): Skills use journal tools for writing/reading handoff entries.
+- **Private journal**: Built-in (v1.4.0+). Journal tools (`process_thoughts`, `list_recent_entries`, `read_journal_entry`, `search_journal`) are integrated into the context-lake MCP server. Standalone `private-journal-mcp` is no longer required but still supported via ToolSearch fallback.
 - **GSD** (soft): Context monitor customizes messages when `.planning/STATE.md` exists. Resume skill checks for GSD checkpoints. Neither is required — the plugin works without GSD.
 
 ## Migration Guide

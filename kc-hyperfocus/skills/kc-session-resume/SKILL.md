@@ -53,7 +53,13 @@ Go to step 2B (list mode).
 
 ### 2A. Direct Lookup (with Handoff ID)
 
-Load journal read tool:
+Load journal read tool (try built-in first, fall back to standalone):
+
+```
+ToolSearch → "+context-lake read_journal_entry"
+```
+
+If no match, fall back:
 
 ```
 ToolSearch → "select:mcp__private-journal__read_journal_entry"
@@ -62,7 +68,7 @@ ToolSearch → "select:mcp__private-journal__read_journal_entry"
 Reconstruct full path and read directly:
 
 ```
-mcp__private-journal__read_journal_entry:
+read_journal_entry:
   path: "{cwd}/.private-journal/{handoff-id}.md"
 ```
 
@@ -70,7 +76,13 @@ This is an O(1) lookup — no search needed. Skip to step 3.
 
 ### 2B. List Mode (no Handoff ID)
 
-Load journal list tool:
+Load journal list tool (try built-in first, fall back to standalone):
+
+```
+ToolSearch → "+context-lake list_recent_entries"
+```
+
+If no match, fall back:
 
 ```
 ToolSearch → "select:mcp__private-journal__list_recent_entries"
@@ -79,7 +91,7 @@ ToolSearch → "select:mcp__private-journal__list_recent_entries"
 Fetch recent project entries:
 
 ```
-mcp__private-journal__list_recent_entries:
+list_recent_entries:
   days: 7
   limit: 5
   type: "project"
