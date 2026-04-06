@@ -157,7 +157,7 @@ Context Lake exposes 5 tools via MCP:
 - Claude Code CLI
 - Bun runtime (hooks and MCP server use Bun)
 
-> **Note:** Private journal tools are built-in since v1.4.0. The standalone [private-journal-mcp](https://github.com/obra/private-journal-mcp) is no longer required but still supported via ToolSearch fallback.
+> **Note:** Journal tools are built-in since v1.4.0. Based on [private-journal-mcp](https://github.com/obra/private-journal-mcp) by obra — integrated into the context-lake MCP server.
 
 ### Post-Install
 
@@ -203,7 +203,7 @@ Default: insights older than 30 days with no hits in the last 7 days are evicted
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.4.0 | 2026-04-06 | Private journal integrated into context-lake MCP (4 tools: process_thoughts, search_journal, read_journal_entry, list_recent_entries). Vector embedding search via MiniLM. Standalone private-journal-mcp no longer required. |
+| 1.4.0 | 2026-04-06 | Journal tools integrated into context-lake MCP (process_thoughts, search_journal, read_journal_entry, list_recent_entries). Vector embedding search via MiniLM. Based on [private-journal-mcp](https://github.com/obra/private-journal-mcp). |
 | 1.3.0 | 2026-04-06 | Statusline setup skill, SessionStart handoff detection, forge TDD (14 edits across 3 skills), published to public marketplace |
 | 1.2.1 | 2026-04-05 | Explore: deny→allow+suggest, read-based nudge, worktree path normalization, fileLines savings tracking |
 | 1.2.0 | 2026-04-02 | Context Lake: SQLite cache, 4 hooks, MCP server, /kc-cache-insight skill |
