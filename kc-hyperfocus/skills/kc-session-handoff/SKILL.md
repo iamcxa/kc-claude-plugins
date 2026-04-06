@@ -50,16 +50,10 @@ From conversation: completed work, decisions, remaining work, blockers, Linear i
 
 ### 2. Write Journal & Capture Handoff ID
 
-Load journal tools (try built-in first, fall back to standalone):
+Load journal tools:
 
 ```
-ToolSearch → "+context-lake process_thoughts"
-```
-
-If no match, fall back:
-
-```
-ToolSearch → "select:mcp__private-journal__process_thoughts"
+ToolSearch → "select:mcp__plugin_kc-hyperfocus_context-lake__process_thoughts,mcp__plugin_kc-hyperfocus_context-lake__list_recent_entries"
 ```
 
 Call `process_thoughts` with these fields:
