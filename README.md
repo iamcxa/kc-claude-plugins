@@ -44,6 +44,25 @@ Autonomous nightly plugin improvement cycle. Runs forge validation, harvests sig
 /plugin install kc-nightwatch@kc-claude-plugins
 ```
 
+### [kc-hyperfocus](./kc-hyperfocus/) `v1.3.0`
+
+Session lifecycle & context efficiency. Detects context pressure and enforces cleanup before session end. Cross-session handoff/resume via journal entries with one-command restore. Context Lake (SQLite FTS5) caches codebase insights for faster exploration. Includes a standalone statusline with Anthropic 5h/7d usage quota display.
+
+| Skills | Purpose |
+|--------|---------|
+| `/kc-session-handoff` | Write journal + produce resume prompt with handoff ID |
+| `/kc-session-resume` | Restore context from journal handoff entry (O(1) with ID) |
+| `/kc-cache-insight` | Manual cache insight + lake status + metrics view |
+| `/kc-statusline-setup` | Install statusline with model, branch, context bar, usage quota |
+
+**Use when:** You want automatic context pressure warnings, enforced session handoff, cross-session context restoration, and codebase insight caching.
+
+**Requires:** `bun` runtime (for Context Lake MCP server and hooks).
+
+```bash
+/plugin install kc-hyperfocus@kc-claude-plugins
+```
+
 ## Adding to Your Project
 
 Add to `.claude/settings.json`:
@@ -61,7 +80,8 @@ Add to `.claude/settings.json`:
   "enabledPlugins": {
     "e2e-pipeline@kc-claude-plugins": true,
     "kc-plugin-forge@kc-claude-plugins": true,
-    "kc-nightwatch@kc-claude-plugins": true
+    "kc-nightwatch@kc-claude-plugins": true,
+    "kc-hyperfocus@kc-claude-plugins": true
   }
 }
 ```
