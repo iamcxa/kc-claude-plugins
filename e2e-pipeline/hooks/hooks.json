@@ -1,18 +1,6 @@
 {
-  "description": "E2E pipeline hooks: SessionStart context + pre-commit check + plan E2E check + flow write guard",
+  "description": "E2E pipeline hooks: pre-commit check + plan E2E check + flow write guard",
   "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-e2e-context.sh\"",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "Bash",

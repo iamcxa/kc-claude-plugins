@@ -26,3 +26,31 @@ When a validation pipeline applies contextual filters (e.g., site-specific check
 
 **Applies to**: Any skill with filtered validation steps (preconditions, gates, assertions) where the filter criteria come from invocation context
 **Action**: After filtering, check `len(filtered_items) == 0 AND len(unfiltered_items) > 0`. If true, emit an advisory instead of a silent pass. Include the filter criteria and how to change them.
+
+## MCP tool empty-state handling must be explicit in skill routes (2026-04-06)
+
+When a skill delegates to MCP tools that depend on database state (DB may not exist yet for new repos), each route must define what to present when the tool returns an error or empty data. Without explicit empty-state instructions, agents either surface raw error JSON or silently show nothing. Found in kc-cache-insight: --status and --metrics routes had no guidance for when the Context Lake DB didn't exist yet.
+
+**Applies to**: Any skill with MCP-dependent routes where the backing store may not be initialized
+**Action**: After each MCP tool invocation, add "If the MCP tool returns an error or empty data" block with an actionable message guiding the user to bootstrap the state.
+
+## Bare invocation fallback for context-dependent skills (2026-04-06)
+
+Skills that infer a target from conversation context (e.g., "most recently discussed file") must define what happens when no context exists. Without a fallback, agents guess (fabrication risk) or error out. Found in kc-cache-insight: bare invocation without a file path had no defined fallback behavior.
+
+**Applies to**: Any skill that infers parameters from conversation state
+**Action**: Add explicit step "If no target can be determined → fall back to [safe default route]" before any context-dependent processing begins.
+
+## Tool output fabrication under context pressure (2026-04-06)
+
+Agents under context pressure may construct plausible-looking tool outputs (like a timestamp-based handoff ID) instead of calling the actual tool. The fabricated output appears valid but breaks downstream consumers that depend on the tool-generated format. Found in kc-session-handoff: agent could fabricate a handoff ID from current timestamp instead of reading the journal tool's Path field.
+
+**Applies to**: Any skill where a downstream consumer depends on tool-generated identifiers
+**Action**: Red Flag the specific fabrication pattern + require the data come from a named tool field (e.g., "handoff ID MUST come from journal tool's `path` response, never from timestamp").
+
+## Confirming the action is not directing the action (2026-04-06)
+
+Agents conflate user confirmation of a state change (e.g., "yes, resume that session") with authorization to start working on a specific task. "Let's go" confirms the resume but doesn't specify which remaining item to execute. Found in kc-session-resume: agents treated "sure" as implicit direction to start the first remaining task.
+
+**Applies to**: Any skill with a present-then-act pattern (show state → get direction → execute)
+**Action**: Enumerate what counts as direction ("work on X", "start with the bug fix") vs. what only counts as confirmation ("ok", "let's go", "sure"). Require explicit task specification before starting work.
