@@ -156,6 +156,7 @@ Context Lake exposes 5 tools via MCP:
 
 - Claude Code CLI
 - Bun runtime (hooks and MCP server use Bun)
+- **Private Journal MCP server** (for handoff/resume) — provides `mcp__private-journal__process_thoughts`, `list_recent_entries`, and `read_journal_entry` tools. Without it, `/kc-session-handoff` and `/kc-session-resume` are unavailable. Context Lake and context pressure features work independently without this dependency.
 
 ### Post-Install
 
