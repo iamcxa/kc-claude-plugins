@@ -157,8 +157,6 @@ Context Lake exposes 5 tools via MCP:
 - Claude Code CLI
 - Bun runtime (hooks and MCP server use Bun)
 
-> **Note:** Journal tools are built-in since v1.4.0. Based on [private-journal-mcp](https://github.com/obra/private-journal-mcp) by obra — integrated into the context-lake MCP server.
-
 ### Post-Install
 
 Install dependencies for the MCP server:
