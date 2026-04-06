@@ -85,7 +85,78 @@ console.log(JSON.stringify(rows));
 "
 ```
 
-Present the JSON output as TWO markdown tables:
+Then run a **second** Bash command for journal statistics:
+
+```bash
+bun -e "
+import { readdirSync, statSync, readFileSync, existsSync } from 'fs';
+import { join } from 'path';
+const HOME = process.env.HOME || '/tmp';
+const CWD = process.cwd();
+const sources = [];
+
+// User-level journal
+const userDir = join(HOME, '.private-journal');
+if (existsSync(userDir)) sources.push({ type: 'user', path: userDir, label: '~/.private-journal' });
+
+// Project-level journal (CWD)
+const projDir = join(CWD, '.private-journal');
+if (existsSync(projDir)) sources.push({ type: 'project', path: projDir, label: CWD.split('/').pop() });
+
+// Scan other project dirs for journals
+const projectRoot = join(HOME, 'Project');
+if (existsSync(projectRoot)) {
+  try {
+    for (const d of readdirSync(projectRoot)) {
+      const jp = join(projectRoot, d, '.private-journal');
+      if (existsSync(jp) && jp !== projDir) {
+        sources.push({ type: 'project', path: jp, label: d });
+      }
+    }
+  } catch {}
+}
+
+const results = [];
+for (const src of sources) {
+  try {
+    const dayDirs = readdirSync(src.path).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d));
+    let totalEntries = 0, totalEmbeddings = 0, totalSections = { feelings: 0, project_notes: 0, technical_insights: 0, user_context: 0, world_knowledge: 0 };
+    const now = Date.now();
+    let last7d = 0, last30d = 0;
+    for (const dd of dayDirs) {
+      const dp = join(src.path, dd);
+      try {
+        const files = readdirSync(dp);
+        const mds = files.filter(f => f.endsWith('.md'));
+        const embs = files.filter(f => f.endsWith('.embedding'));
+        totalEntries += mds.length;
+        totalEmbeddings += embs.length;
+        // Parse date from dir name for recency
+        const dirDate = new Date(dd + 'T00:00:00');
+        const age = now - dirDate.getTime();
+        if (age <= 7 * 86400000) last7d += mds.length;
+        if (age <= 30 * 86400000) last30d += mds.length;
+        // Count sections in md files (sample up to 20 per day)
+        for (const md of mds.slice(0, 20)) {
+          try {
+            const content = readFileSync(join(dp, md), 'utf8');
+            if (content.includes('## Feelings')) totalSections.feelings++;
+            if (content.includes('## Project Notes')) totalSections.project_notes++;
+            if (content.includes('## Technical Insights')) totalSections.technical_insights++;
+            if (content.includes('## User Context')) totalSections.user_context++;
+            if (content.includes('## World Knowledge')) totalSections.world_knowledge++;
+          } catch {}
+        }
+      } catch {}
+    }
+    results.push({ label: src.label, type: src.type, entries: totalEntries, embeddings: totalEmbeddings, embeddingPct: totalEntries > 0 ? Math.round(totalEmbeddings / totalEntries * 100) : 0, last7d, last30d, ...totalSections });
+  } catch {}
+}
+console.log(JSON.stringify(results));
+"
+```
+
+Present the combined output as THREE markdown tables:
 
 **Table 1 — Context Lake (cache performance)**
 Columns: Repo, Insights (fresh/stale), Hit Rate, Hits, Misses, Nudges, Stores, Est. Saved Tokens.
@@ -95,7 +166,18 @@ Format `savedTokens` as `Nk` for thousands (e.g., `13500` → `13.5k`). Add a fo
 Columns: Repo, Handoffs, Resumes, Resume Rate, Est. Saved Tokens.
 Calculate resume rate as `resumes / handoffs * 100`. Format `resumeSaved` as `Nk`. Only show repos with handoffs > 0. Add a footnote: "Each resume saves ~15K tokens vs re-exploring from scratch. Handoff entry cost (~700 tokens avg) subtracted. Tracking started v1.2.1."
 
-**Empty state**: If the JSON output is `[]` (no DBs found), report: "No context lake databases found yet. Cache an insight with `/kc-cache-insight <file_path>` to get started."
+**Table 3 — Journal (entry statistics)**
+Columns: Source, Type, Entries, Last 7d, Last 30d, Embeddings %, Feelings, Project Notes, Tech Insights.
+- `Source` = the `label` field
+- `Type` = user or project
+- `Embeddings %` = `embeddingPct` (100% means all entries have vector embeddings for search)
+- Feelings/Project Notes/Tech Insights = section counts from `totalSections`
+- Skip `user_context` and `world_knowledge` columns if all zeros across all sources.
+- Add a footnote: "Embedding % shows how many entries have vector embeddings for semantic search. Run `search_journal` to trigger lazy embedding generation for entries without embeddings."
+
+**Empty state for journal**: If the journal JSON output is `[]`, report: "No journal entries found. Use `/kc-session-handoff` to write your first journal entry."
+
+**Empty state for context lake**: If the context lake JSON output is `[]` (no DBs found), report: "No context lake databases found yet. Cache an insight with `/kc-cache-insight <file_path>` to get started."
 
 ### `--status`
 
