@@ -179,7 +179,13 @@ resume {handoff-id} 繼續 {branch} 的 {description}
 
 ### 5. Record Handoff Metric
 
-Call `get_metrics` with `event: "handoff"` to record this handoff for dashboard tracking. Silent — no output needed.
+Estimate the journal entry size: count the characters in `project_notes` you wrote in step 2, divide by 4 to get approximate tokens.
+
+Call `get_metrics` with:
+- `event: "handoff"`
+- `event_details: { entryTokens: <estimated_tokens> }`
+
+Silent — no output needed.
 
 ## NOT DONE UNTIL
 

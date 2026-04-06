@@ -237,16 +237,25 @@ server.tool(
       .string()
       .optional()
       .describe(
-        "If provided, record this event type (hit, miss, store, explore_allowed) before returning metrics"
+        "If provided, record this event type (hit, miss, store, explore_allowed, handoff, resume) before returning metrics"
+      ),
+    event_details: z
+      .record(z.unknown())
+      .optional()
+      .describe(
+        "Optional metadata to attach to the recorded event (e.g., { entryTokens: 680 } for handoff)"
       ),
   },
-  async ({ since, event }) => {
+  async ({ since, event, event_details }) => {
     try {
       const db = getDb();
 
       // Optionally record a new event
       if (event) {
-        recordMetric(db, { event });
+        recordMetric(db, {
+          event,
+          details: event_details as Record<string, any> | undefined,
+        });
       }
 
       const summary = getMetricsSummary(db, {

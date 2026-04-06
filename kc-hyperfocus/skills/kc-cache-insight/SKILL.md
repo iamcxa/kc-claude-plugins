@@ -71,7 +71,12 @@ for (const f of dbs) {
     const savedTokens = Math.round(savedLines * 1.5);
     const handoffs = counts.handoff || 0;
     const resumes = counts.resume || 0;
-    rows.push({ repo: f.replace('.db',''), insights: ic.total||0, fresh: ic.fresh||0, stale: ic.stale||0, hits, misses, hitRate: rate, nudges: counts.nudge||0, stores: counts.store||0, savedTokens, handoffs, resumes });
+    // Handoff savings: each resume saves ~15K tokens vs re-exploring from scratch
+    // Subtract actual handoff entry size (entryTokens) if recorded
+    const ht = db.query("SELECT SUM(json_extract(details, '$.entryTokens')) as total FROM metrics WHERE event='handoff' AND details IS NOT NULL").get();
+    const handoffTokens = ht?.total || (handoffs * 700); // fallback: 700 tokens avg
+    const resumeSaved = resumes > 0 ? (resumes * 15000) - handoffTokens : 0;
+    rows.push({ repo: f.replace('.db',''), insights: ic.total||0, fresh: ic.fresh||0, stale: ic.stale||0, hits, misses, hitRate: rate, nudges: counts.nudge||0, stores: counts.store||0, savedTokens, handoffs, resumes, resumeSaved });
     db.close();
   } catch {}
 }
@@ -87,8 +92,8 @@ Columns: Repo, Insights (fresh/stale), Hit Rate, Hits, Misses, Nudges, Stores, E
 Format `savedTokens` as `Nk` for thousands (e.g., `13500` → `13.5k`). Add a footnote: "Est. saved = fileLines × 1.5 tokens reasoning overhead per hit. Only counts hits with recorded fileLines (tracking started v1.2.1)."
 
 **Table 2 — Session Lifecycle (handoff/resume)**
-Columns: Repo, Handoffs, Resumes, Resume Rate.
-Calculate resume rate as `resumes / handoffs * 100`. Only show repos with handoffs > 0. Add a footnote: "Handoff/resume tracking started v1.2.1 — historical handoffs via journal are not counted."
+Columns: Repo, Handoffs, Resumes, Resume Rate, Est. Saved Tokens.
+Calculate resume rate as `resumes / handoffs * 100`. Format `resumeSaved` as `Nk`. Only show repos with handoffs > 0. Add a footnote: "Each resume saves ~15K tokens vs re-exploring from scratch. Handoff entry cost (~700 tokens avg) subtracted. Tracking started v1.2.1."
 
 **Empty state**: If the JSON output is `[]` (no DBs found), report: "No context lake databases found yet. Cache an insight with `/kc-cache-insight <file_path>` to get started."
 
