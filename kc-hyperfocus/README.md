@@ -200,7 +200,7 @@ Default: insights older than 30 days with no hits in the last 7 days are evicted
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.3.0 | 2026-04-06 | Statusline setup skill, SessionStart handoff detection, forge TDD (14 edits across 3 skills), published to public marketplace |
+| 1.3.0 | 2026-04-06 | Statusline setup skill, SessionStart handoff detection, context lake protocol reference, handoff/resume metrics, forge TDD (14 edits across 3 skills), published to public marketplace |
 | 1.2.1 | 2026-04-05 | Explore: deny→allow+suggest, read-based nudge, worktree path normalization, fileLines savings tracking |
 | 1.2.0 | 2026-04-02 | Context Lake: SQLite cache, 4 hooks, MCP server, /kc-cache-insight skill |
 | 1.1.0 | 2026-03-17 | MCP summarizer agent, context firewall |
