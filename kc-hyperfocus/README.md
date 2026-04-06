@@ -1,6 +1,20 @@
 # kc-hyperfocus
 
-Session lifecycle and context efficiency plugin for Claude Code. Manages context pressure, session handoff/resume, and **Context Lake** — an intelligent cache that remembers what your agent learned across sessions.
+Session lifecycle and context efficiency plugin for Claude Code. Manages context pressure, session handoff/resume, **Context Lake** intelligent cache, and statusline with Anthropic usage quota.
+
+## Measured Impact
+
+Data from 9 repos over 4 days of real usage (2026-04-02 to 2026-04-06):
+
+| Metric | Value |
+|--------|-------|
+| Cache hits | 626 |
+| Lines of code NOT re-read | 96,929 |
+| Estimated tokens saved | ~145K |
+| Best repo hit rate | 41% (spacedock, 105 insights) |
+| Avg lines saved per hit | 256 |
+
+Each cache hit means the agent already knows what a file does before reading it. At 41% hit rate, nearly half of all file reads come with pre-loaded understanding.
 
 ## Features
 
@@ -8,180 +22,92 @@ Session lifecycle and context efficiency plugin for Claude Code. Manages context
 
 Monitors context window usage in real-time. Warns the agent when running low and enforces journal writing before session ends.
 
+| Level | Remaining | Action |
+|-------|-----------|--------|
+| WARNING | <=35% | Agent wraps up current task |
+| CRITICAL | <=25% | Agent stops new work, informs user |
+| Enforcer | <=17% | Blocks exit until journal complete (max 2 attempts) |
+
 ### Session Handoff & Resume
 
 Seamless cross-session continuity. Agent writes a journal entry at handoff; next session resumes with full context via a single handoff ID.
 
-### Context Lake (v1.2.0)
+```
+/kc-session-handoff  →  journal + Context Lake cache + resume prompt
+/kc-session-resume {id}  →  O(1) lookup → present context → wait for direction
+```
+
+At session start, the `stale-checker` hook automatically detects pending handoff entries from the last 3 days and surfaces them as a reminder.
+
+### Context Lake
 
 **The problem:** Agents repeatedly explore the same codebase areas, wasting tokens and time. A single Explore dispatch can cost 10-50 tool calls and tens of thousands of tokens.
 
-**The solution:** Context Lake caches file-level insights (3-8 sentence summaries of what a file does, how it's used, and what the gotchas are) in a local SQLite database. Next time the agent encounters the same files, it already knows.
+**The solution:** Context Lake caches file-level insights (3-8 sentence summaries of what a file does, how it's used, and what the gotchas are) in a local SQLite database with FTS5 full-text search. Next time the agent encounters the same files, it already knows.
+
+### Statusline with Usage Quota
+
+Standalone statusline showing model, git branch, context usage bar, and **Anthropic 5h/7d rolling quota utilization**. Also writes the bridge file that context pressure hooks depend on.
+
+```
+Opus 4.6 (1M context) | app main ███░░░░░░░ 34% | 5h:43% 7d:70%
+```
+
+Run `/kc-statusline-setup` to install. The wizard detects existing statuslines (e.g., GSD) and skips if usage display is already present.
 
 ---
 
-## Context Lake
+## Context Lake Details
 
 ### How It Works
 
 ```
 Session N:
-  Agent explores files → hooks track what was read
+  Agent reads files → hooks track what was read
   Agent calls store_insight() → insight saved to SQLite (FTS5)
   Session handoff → batch-cache remaining insights
 
 Session N+1:
-  SessionStart → stale-checker invalidates changed files
+  SessionStart → stale-checker invalidates changed files + detects pending handoffs
   Agent about to Read a file → hook injects cached insight as prior context
-  Agent about to Explore a module → hook denies if cache has enough coverage
-                                    (agent uses cached data instead)
-```
-
-### Architecture
-
-```
-                    ┌─────────────────────────┐
-                    │     Context Lake DB      │
-                    │  ~/.claude/context-lake/ │
-                    │    {repo-slug}.db        │
-                    │                          │
-                    │  Tables:                 │
-                    │   insights (FTS5)        │
-                    │   metrics                │
-                    └──────────┬──────────────┘
-                               │
-              ┌────────────────┼────────────────┐
-              │                │                 │
-     ┌────────▼────────┐  ┌───▼──────┐  ┌──────▼───────┐
-     │   Hook Layer     │  │ MCP      │  │  Skills      │
-     │                  │  │ Server   │  │              │
-     │ explore-         │  │          │  │ /kc-cache-   │
-     │  interceptor     │  │ 5 tools: │  │  insight     │
-     │ read-tracker     │  │ store    │  │              │
-     │ post-explore-    │  │ search   │  │ /kc-session- │
-     │  nudge           │  │ invalidate│ │  handoff     │
-     │ stale-checker    │  │ metrics  │  │  (modified)  │
-     └─────────────────┘  │ status   │  └──────────────┘
-                           └──────────┘
+  Agent about to Explore → hook suggests cached insights (never blocks)
 ```
 
 ### Hook Trigger Points
 
-Every tool call in Claude Code can trigger hooks. Context Lake uses 4 hook events:
-
 #### 1. PreToolUse:Read — `explore-interceptor.js`
 
-**When:** Every time the agent is about to read a file.
+When the agent is about to read a file, looks up the file in the cache. If found, injects the cached insight as `additionalContext` so the agent already knows what the file does before reading it.
 
-**What it does:** Looks up the file in the cache. If found, injects the cached insight into the agent's context so it already knows what the file does before reading it.
+- **Fresh hit** → inject insight (agent reads with prior understanding)
+- **Stale hit** → inject with warning (file changed since last cache)
+- **Miss** → no injection, agent reads normally
 
-```
-Agent: "I'll read src/mcp/impact.ts"
-  │
-  ▼
-Hook: Is src/mcp/impact.ts in cache?
-  │
-  ├── Yes (fresh) → Inject insight as additionalContext
-  │   "MCP tool for impact analysis. Key functions: analyzeImpact()..."
-  │   Agent reads the file WITH prior understanding
-  │
-  ├── Yes (stale) → Inject with warning
-  │   "⚠️ stale — file changed since last cache"
-  │   Agent reads with caution
-  │
-  └── No → Miss, no injection. Agent reads normally.
-```
-
-**Behavior:** `allow` — the Read always proceeds. Cache just adds context.
+The Read always proceeds. Cache just adds context.
 
 #### 2. PreToolUse:Agent(Explore) — `explore-interceptor.js`
 
-**When:** The agent is about to dispatch an Explore subagent.
+When the agent is about to dispatch an Explore subagent, searches the cache using keywords from the Explore prompt. If fresh insights exist, provides them alongside the Explore dispatch.
 
-**What it does:** Searches the cache using keywords from the Explore prompt. If enough fresh insights exist (>= 3), **denies** the Explore entirely and provides the cached insights instead.
-
-```
-Agent: "I need to explore the impact analysis module"
-  │
-  ▼
-Hook: FTS5 search for "impact analysis module"
-  │
-  ├── >= 3 fresh hits → DENY Explore + provide cached insights
-  │   "Found 3 cached insights covering your query:
-  │    1. src/mcp/impact.ts — MCP tool for impact analysis...
-  │    2. src/mcp/lineage.ts — Dependency graph builder...
-  │    3. src/routes/impact.ts — HTTP route handler..."
-  │   Agent uses cached data. Explore never runs.
-  │   >>> This is where the main token savings come from <<<
-  │
-  ├── < 3 fresh hits → ALLOW + partial context
-  │   Explore runs, but agent has some prior knowledge
-  │
-  └── No hits → Miss. Explore runs normally.
-```
-
-**Behavior:** `deny` when cache is sufficient (saves entire Explore cost), `allow` otherwise.
+**Behavior:** Always `allow` — Explore runs with cached hints injected. The cache supplements exploration, never blocks it. (Changed in v1.2.1 from deny to allow-and-suggest after FTS5 false positives caused premature denials.)
 
 #### 3. PostToolUse:Read — `read-tracker.js`
 
-**When:** After the agent finishes reading a file.
-
-**What it does:** Silently records the file path to a temp file. This list is used during session handoff to know which files the agent explored.
-
-```
-Agent reads src/foo.ts
-  │
-  ▼
-Hook: Append "src/foo.ts" to /tmp/claude-lake-touched-{session}.json
-      (silent — no output, no delay)
-```
-
-**Behavior:** Silent tracking. No visible effect.
+After the agent finishes reading a file, silently records the file path. Tracks uncached reads and nudges the agent with specific file paths at thresholds (15/30 uncached reads) to cache insights.
 
 #### 4. PostToolUse:Agent(Explore) — `post-explore-nudge.js`
 
-**When:** After an Explore subagent completes and returns results.
-
-**What it does:** Reminds the agent to cache the insights it just gained. Also records the Explore completion for the handoff safety net.
-
-```
-Explore agent returns results
-  │
-  ▼
-Hook: Inject nudge into agent context:
-      "You just completed an exploration. Consider calling
-       store_insight for key files you now understand."
-  │
-  ▼
-Agent may immediately cache insights (instant)
-  OR
-Agent caches them later during session handoff (safety net)
-```
-
-**Behavior:** Nudge — the agent decides what's worth caching.
+After an Explore subagent completes, reminds the agent to cache the insights it just gained.
 
 #### 5. SessionStart — `stale-checker.js`
 
-**When:** Every time a new Claude Code session starts.
-
-**What it does:**
-1. Runs `git diff` to find recently changed files → marks their cached insights as stale
-2. Evicts ancient insights (>30 days old with no recent hits)
-3. Syncs insights from journal entries
-
-```
-New session starts
-  │
-  ▼
-Hook: git diff HEAD~10..HEAD → ["src/foo.ts", "src/bar.ts"]
-      Mark insights for those files as stale
-      Evict insights older than 30 days
-      Sync technical_insights from recent journal entries
-```
+At session start:
+1. `git diff HEAD~10..HEAD` → marks cached insights for changed files as stale
+2. Evicts ancient insights (>30 days, no hits in 7 days)
+3. Syncs technical insights from journal entries (last 3 days)
+4. Detects pending session handoffs → surfaces as resume prompt
 
 ### Insight Quality
-
-Not all data sources produce equal quality insights:
 
 | Source | Quality | When |
 |--------|---------|------|
@@ -189,154 +115,58 @@ Not all data sources produce equal quality insights:
 | `handoff` (via session handoff) | High | Agent summarizes at session end, has full context |
 | `journal` (via journal sync) | Medium-High | Extracted from reflected technical insights |
 
-**Source priority guard:** Higher-quality sources can't be overwritten by lower ones. A `manual` insight will never be replaced by a `handoff` or `journal` insight.
-
-### Freshness & Staleness
-
-- Each insight records the `git_hash` at write time
-- At session start, `stale-checker` compares against recent git history
-- **Fresh** insights are injected normally
-- **Stale** insights are still injected but with a warning — the file's purpose and architecture usually survive small changes
-- After 30 days without use, insights are automatically evicted
+Higher-quality sources can't be overwritten by lower ones.
 
 ### MCP Tools
 
-Context Lake exposes 5 tools via MCP (auto-prefixed as `mcp__plugin_kc-hyperfocus_context-lake__<tool>`):
+Context Lake exposes 5 tools via MCP:
 
 | Tool | Purpose |
 |------|---------|
 | `store_insight` | Cache a 3-5 sentence file summary |
 | `search_insights` | Search by file path or keywords (FTS5) |
 | `invalidate_stale` | Mark insights as stale for changed files |
-| `get_metrics` | Query hit/miss/store/explore_allowed metrics |
+| `get_metrics` | Query hit/miss/store/explore metrics |
 | `lake_status` | Show DB stats: total, stale, hit rate, top files |
 
 ### Skills
 
-#### `/kc-cache-insight [file_path | --status | --metrics]`
-
-Manual control over the cache:
-
-```
-/kc-cache-insight                → Cache insight for most recently discussed file
-/kc-cache-insight src/foo.ts     → Cache insight for specific file
-/kc-cache-insight --status       → Show lake stats (total, stale, hit rate)
-/kc-cache-insight --metrics      → Show cache effectiveness metrics (last 7 days)
-```
-
-#### `/kc-session-handoff`
-
-At session end, automatically:
-1. Writes journal entry
-2. **Caches insights** for files explored during the session (safety net for anything not cached by the nudge hook)
-3. Produces resume prompt
-
-### Metrics & Demo
-
-Track cache effectiveness:
-
-```sql
--- Hit rate
-SELECT hit_rate_pct FROM lake_status;
-
--- Explore denials (primary ROI metric — each denial = entire Explore saved)
-SELECT COUNT(*) FROM metrics WHERE event = 'explore_allowed';
-
--- Top cached files
-SELECT file_path, COUNT(*) as hits FROM metrics
-WHERE event = 'hit' GROUP BY file_path ORDER BY hits DESC;
-```
-
-Access via `/kc-cache-insight --metrics` or the `get_metrics` MCP tool.
-
----
-
-## Context Pressure Management
-
-### How It Works
-
-```
-[Normal work] → context-pressure-monitor checks remaining context
-  │
-  ├── ≤35% → WARNING: "Wrap up current task"
-  ├── ≤25% → CRITICAL: "Stop new work, prepare handoff"
-  ├── ≤17% → Enforcer activates: blocks session stop until journal is written
-  │
-  ▼
-Agent runs /kc-session-handoff → journal + context lake cache + resume prompt
-```
-
-### Thresholds
-
-| Level | Remaining | Action |
-|-------|-----------|--------|
-| WARNING | ≤35% | Agent wraps up current task |
-| CRITICAL | ≤25% | Agent stops new work, informs user |
-| Enforcer | ≤17% | Blocks exit until journal complete (max 2 attempts) |
-
----
-
-## Session Handoff & Resume
-
-### Handoff
-
-```
-/kc-session-handoff
-  │
-  ├── Gather git state (branch, status, recent commits)
-  ├── Write journal (feelings + project notes)
-  ├── Cache insights to Context Lake (safety net)
-  ├── Capture handoff ID
-  └── Output: "resume {handoff-id} 繼續 ..."
-```
-
-### Resume
-
-```
-/kc-session-resume {handoff-id}
-  │
-  ├── Direct O(1) lookup by handoff ID
-  ├── Read journal entry
-  ├── Check MEMORY.md for related context
-  └── Present summary → wait for direction
-```
+| Skill | Usage |
+|-------|-------|
+| `/kc-cache-insight` | Cache insight for a file (or most recently discussed) |
+| `/kc-cache-insight --status` | Show lake stats (total, stale, hit rate) |
+| `/kc-cache-insight --metrics` | Show cache effectiveness metrics |
+| `/kc-cache-insight --search <query>` | Search cached insights |
+| `/kc-cache-insight --dashboard` | Cross-repo overview |
+| `/kc-session-handoff` | Write journal + cache insights + produce resume prompt |
+| `/kc-session-resume {id}` | Restore context from handoff entry |
+| `/kc-statusline-setup` | Install statusline with usage quota display |
 
 ---
 
 ## Installation
+
+### From Marketplace (recommended)
+
+```bash
+/plugin install kc-hyperfocus@kc-claude-plugins
+```
 
 ### Prerequisites
 
 - Claude Code CLI
 - Bun runtime (hooks and MCP server use Bun)
 
-### Setup
+### Post-Install
 
-1. Clone or symlink the plugin:
-   ```bash
-   ln -s /path/to/kc-hyperfocus ~/.claude/plugins/local/kc-hyperfocus
-   ```
+Install dependencies for the MCP server:
 
-2. Register in local marketplace:
-   ```json
-   // ~/.claude/plugins/local/.claude-plugin/marketplace.json
-   { "plugins": [..., "kc-hyperfocus"] }
-   ```
+```bash
+cd ~/.claude/plugins/cache/kc-claude-plugins/kc-hyperfocus/*/
+bun install
+```
 
-3. Enable in settings:
-   ```json
-   // ~/.claude/settings.json
-   { "enabledPlugins": { "kc-hyperfocus@local": true } }
-   ```
-
-4. Install dependencies (for MCP server):
-   ```bash
-   cd /path/to/kc-hyperfocus && bun install
-   ```
-
-5. Restart Claude Code.
-
-### Verify Installation
+### Verify
 
 ```
 /mcp                        → Should show "context-lake: Connected"
@@ -351,13 +181,9 @@ Agent runs /kc-session-handoff → journal + context lake cache + resume prompt
 
 DB files at `~/.claude/context-lake/{repo-slug}.db`. One DB per repo (auto-detected from `git rev-parse --show-toplevel`).
 
-### Explore Deny Threshold
-
-The default threshold for denying Explore dispatches is **3 fresh insights**. This is hardcoded in `explore-interceptor.js` as `EXPLORE_DENY_THRESHOLD`. Adjust if the deny rate is too aggressive or too passive.
-
 ### Cold Eviction Policy
 
-Default: insights older than **30 days** with no hits in the last **7 days** are evicted at session start. Configured in `stale-checker.js`.
+Default: insights older than 30 days with no hits in the last 7 days are evicted at session start. Configured in `stale-checker.js`.
 
 ---
 
@@ -374,6 +200,8 @@ Default: insights older than **30 days** with no hits in the last **7 days** are
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.3.0 | 2026-04-06 | Statusline setup skill, SessionStart handoff detection, forge TDD (14 edits across 3 skills), published to public marketplace |
+| 1.2.1 | 2026-04-05 | Explore: deny→allow+suggest, read-based nudge, worktree path normalization, fileLines savings tracking |
 | 1.2.0 | 2026-04-02 | Context Lake: SQLite cache, 4 hooks, MCP server, /kc-cache-insight skill |
 | 1.1.0 | 2026-03-17 | MCP summarizer agent, context firewall |
 | 1.0.0 | 2026-03-15 | Initial: context pressure, handoff/resume, cleanup enforcement |
