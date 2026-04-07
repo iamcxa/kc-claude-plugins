@@ -19,9 +19,9 @@
     {
       "name": "kc-plugin-forge",
       "source": "./kc-plugin-forge",
-      "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, doc self-iteration",
-      "version": "1.7.0",
-      "keywords": ["plugin", "quality", "tdd", "validation", "forge", "lifecycle", "audit", "agent-teams", "parallel"]
+      "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, audit frontmatter, optimize descriptions, doc self-iteration",
+      "version": "1.8.0",
+      "keywords": ["plugin", "quality", "tdd", "validation", "forge", "lifecycle", "audit", "agent-teams", "parallel", "frontmatter", "skill-creator"]
     },
     {
       "name": "kc-nightwatch",
@@ -34,8 +34,8 @@
       "name": "kc-hyperfocus",
       "source": "./kc-hyperfocus",
       "description": "Session lifecycle & context efficiency — context pressure detection, cleanup enforcement, cross-session handoff/resume, MCP context firewall, context lake cache, journal with vector search, and statusline with usage quota",
-      "version": "1.4.0",
-      "keywords": ["session", "context", "handoff", "resume", "journal", "embeddings", "statusline", "usage", "quota", "lifecycle", "pressure"]
+      "version": "1.5.0",
+      "keywords": ["session", "context", "handoff", "resume", "journal", "embeddings", "fuzzy-search", "statusline", "usage", "quota", "lifecycle", "pressure"]
     }
   ]
 }

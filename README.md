@@ -22,13 +22,13 @@ Browser & CLI E2E testing with context-isolating subagents. Map your app's UI, g
 /plugin install e2e-pipeline@kc-claude-plugins
 ```
 
-### [kc-plugin-forge](./kc-plugin-forge/) `v1.7.0`
+### [kc-plugin-forge](./kc-plugin-forge/) `v1.8.0`
 
-One-command plugin quality pipeline. Validates structure, TDD-tests skills under pressure, smoke-tests skills in clean profile (`--bare` mode, ~$0.025/test), verifies agent definitions, detects Agent Teams capability, and scaffolds self-improvement (D1/D2 learning) and doc-sync capabilities. Supports `--parallel` mode for concurrent Phase 2/3 execution via teammates.
+One-command plugin quality pipeline. Validates structure, TDD-tests skills under pressure (or via `skill-creator` benchmarking with `--use-skill-creator`), audits SKILL.md frontmatter against the official Claude Code spec (Phase 2.4), smoke-tests skills in clean profile (`--bare` mode, ~$0.025/test), optionally optimizes skill descriptions for trigger reliability (Phase 2.6 via `--optimize-desc`), verifies agent definitions, detects Agent Teams capability, and scaffolds self-improvement (D1/D2 learning) and doc-sync capabilities. Supports `--parallel` mode for concurrent Phase 2/3 execution via teammates.
 
 **Use when:** You're building or maintaining Claude Code plugins and want automated quality assurance.
 
-**Prerequisites:** `superpowers` + `plugin-dev` marketplace plugins.
+**Prerequisites:** `superpowers` + `plugin-dev` marketplace plugins. Optional: `skill-creator` for `--use-skill-creator` and `--optimize-desc` modes.
 
 ```bash
 /plugin install kc-plugin-forge@kc-claude-plugins
@@ -44,7 +44,7 @@ Autonomous nightly plugin improvement cycle. Runs forge validation, harvests sig
 /plugin install kc-nightwatch@kc-claude-plugins
 ```
 
-### [kc-hyperfocus](./kc-hyperfocus/) `v1.4.0`
+### [kc-hyperfocus](./kc-hyperfocus/) `v1.5.0`
 
 Session lifecycle & context efficiency. Detects context pressure and enforces cleanup before session end. Cross-session handoff/resume via integrated journal (with vector embedding search via MiniLM). Context Lake (SQLite FTS5) caches codebase insights for faster exploration. Includes a standalone statusline with Anthropic 5h/7d usage quota display.
 
