@@ -5,10 +5,12 @@ import {
   openLake,
   storeInsight,
   searchInsights,
+  searchInsightsByEmbedding,
   invalidateStale,
   recordMetric,
   getMetricsSummary,
   coldEvict,
+  normalizeFilePath,
 } from "./context-lake";
 
 const TEST_DIR = "/tmp/context-lake-test";
@@ -291,5 +293,392 @@ describe("context-lake", () => {
 
     // format.ts should NOT appear in the AND query
     expect(paths).not.toContain("src/utils/format.ts");
+  });
+
+  // ---------------------------------------------------------------------------
+  // Path normalization (2026-04-07)
+  // ---------------------------------------------------------------------------
+
+  describe("normalizeFilePath", () => {
+    const REPO = "/Users/kent/Project/kc-claude-workspace";
+
+    it("strips repoRoot prefix from absolute path inside repo", () => {
+      expect(
+        normalizeFilePath(
+          "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/kc-hyperfocus/lib/journal.ts",
+          REPO
+        )
+      ).toBe("kc-claude-plugins/kc-hyperfocus/lib/journal.ts");
+    });
+
+    it("passes through absolute path outside repo unchanged", () => {
+      expect(
+        normalizeFilePath(
+          "/Users/kent/.claude/plugins/cache/foo/bar.md",
+          REPO
+        )
+      ).toBe("/Users/kent/.claude/plugins/cache/foo/bar.md");
+    });
+
+    it("passes through already-relative path unchanged", () => {
+      expect(normalizeFilePath("src/components/Button.tsx", REPO)).toBe(
+        "src/components/Button.tsx"
+      );
+    });
+
+    it("strips .worktrees/<name>/ prefix from relative path", () => {
+      expect(
+        normalizeFilePath(".worktrees/ensign-foo/docs/bar.md", REPO)
+      ).toBe("docs/bar.md");
+    });
+
+    it("strips both repoRoot and .worktrees prefix from absolute worktree path", () => {
+      expect(
+        normalizeFilePath(
+          "/Users/kent/Project/kc-claude-workspace/.worktrees/ensign-foo/docs/bar.md",
+          REPO
+        )
+      ).toBe("docs/bar.md");
+    });
+
+    it("is idempotent — normalizing twice produces same result", () => {
+      const once = normalizeFilePath(
+        "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/foo.ts",
+        REPO
+      );
+      const twice = normalizeFilePath(once, REPO);
+      expect(once).toBe(twice);
+      expect(once).toBe("kc-claude-plugins/foo.ts");
+    });
+
+    it("does not strip a path that only partially matches repoRoot (no trailing slash)", () => {
+      // "/Users/kent/Project/kc-claude-workspace2" must not match repo "/Users/kent/Project/kc-claude-workspace"
+      expect(
+        normalizeFilePath(
+          "/Users/kent/Project/kc-claude-workspace2/foo.ts",
+          REPO
+        )
+      ).toBe("/Users/kent/Project/kc-claude-workspace2/foo.ts");
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // storeInsight + searchInsights with repoRoot auto-normalization (2026-04-07)
+  // ---------------------------------------------------------------------------
+
+  it("storeInsight with repoRoot normalizes absolute path before storage", () => {
+    const repoRoot = "/fake/repo/my-project";
+
+    storeInsight(
+      db,
+      {
+        filePath: "/fake/repo/my-project/src/auth/login.ts",
+        content: "Login handler with OAuth2 integration.",
+        source: "handoff",
+        gitHash: "normalize1",
+      },
+      repoRoot
+    );
+
+    // Lookup by relative path succeeds (storage was canonicalized)
+    const relResults = searchInsights(db, {
+      filePath: "src/auth/login.ts",
+    });
+    expect(relResults).toHaveLength(1);
+    expect(relResults[0].filePath).toBe("src/auth/login.ts");
+
+    // Lookup by absolute path WITHOUT repoRoot fails (because DB key is relative now)
+    const absNoNorm = searchInsights(db, {
+      filePath: "/fake/repo/my-project/src/auth/login.ts",
+    });
+    expect(absNoNorm).toHaveLength(0);
+
+    // Lookup by absolute path WITH repoRoot succeeds (search normalizes too)
+    const absWithNorm = searchInsights(
+      db,
+      { filePath: "/fake/repo/my-project/src/auth/login.ts" },
+      repoRoot
+    );
+    expect(absWithNorm).toHaveLength(1);
+    expect(absWithNorm[0].filePath).toBe("src/auth/login.ts");
+  });
+
+  it("storeInsight without repoRoot preserves input path as-is (backward compat)", () => {
+    // Tests that don't pass repoRoot must continue to work with whatever path format they use
+    storeInsight(db, {
+      filePath: "/absolute/path/without/normalization.ts",
+      content: "Test insight",
+      source: "manual",
+      gitHash: "nohint",
+    });
+
+    const results = searchInsights(db, {
+      filePath: "/absolute/path/without/normalization.ts",
+    });
+    expect(results).toHaveLength(1);
+    expect(results[0].filePath).toBe("/absolute/path/without/normalization.ts");
+  });
+
+  it("invalidateStale with repoRoot normalizes absolute paths before matching", () => {
+    const repoRoot = "/fake/repo/my-project";
+
+    storeInsight(
+      db,
+      {
+        filePath: "/fake/repo/my-project/src/stale.ts",
+        content: "Will be invalidated",
+        source: "handoff",
+        gitHash: "stale1",
+      },
+      repoRoot
+    );
+
+    // Invalidate using absolute path + repoRoot → matches normalized row
+    const count = invalidateStale(
+      db,
+      ["/fake/repo/my-project/src/stale.ts"],
+      repoRoot
+    );
+    expect(count).toBe(1);
+
+    const r = searchInsights(db, { filePath: "src/stale.ts" });
+    expect(r[0].stale).toBe(1);
+  });
+
+  // ---------------------------------------------------------------------------
+  // Embedding storage + cosine similarity search (2026-04-07)
+  // ---------------------------------------------------------------------------
+
+  describe("embedding search", () => {
+    // Helper: make a 4-dim test vector (real MiniLM is 384-dim, but cosine math
+    // is dimension-agnostic — 4-dim is easier to reason about in tests).
+    const vec = (a: number, b: number, c: number, d: number) =>
+      new Float32Array([a, b, c, d]);
+
+    it("openLake ALTER TABLE is idempotent (reopening existing DB doesn't error)", () => {
+      // Close the current DB and reopen it — should not throw due to
+      // duplicate column
+      db.close();
+      db = openLake("/fake/repo/my-project", { basePath: TEST_DIR });
+
+      // Verify the column exists
+      const col = db
+        .query(
+          "SELECT name FROM pragma_table_info('insights') WHERE name = 'content_embedding'"
+        )
+        .get() as { name: string } | null;
+      expect(col?.name).toBe("content_embedding");
+    });
+
+    it("storeInsight persists content_embedding, searchInsightsByEmbedding finds exact match", () => {
+      storeInsight(db, {
+        filePath: "src/auth/login.ts",
+        content: "OAuth2 login flow",
+        source: "manual",
+        gitHash: "emb1",
+        embedding: vec(1, 0, 0, 0),
+      });
+
+      const results = searchInsightsByEmbedding(db, vec(1, 0, 0, 0));
+      expect(results).toHaveLength(1);
+      expect(results[0].filePath).toBe("src/auth/login.ts");
+      expect(results[0].similarity).toBeCloseTo(1.0, 5);
+    });
+
+    it("searchInsightsByEmbedding ranks results by cosine similarity desc", () => {
+      // Three rows with known vectors — query vec(1,0,0,0) should rank:
+      // row A (identical) > row B (45°) > row C (90°, perpendicular)
+      storeInsight(db, {
+        filePath: "a.ts",
+        content: "A",
+        source: "manual",
+        gitHash: "a",
+        embedding: vec(1, 0, 0, 0),
+      });
+      storeInsight(db, {
+        filePath: "b.ts",
+        content: "B",
+        source: "manual",
+        gitHash: "b",
+        embedding: vec(1, 1, 0, 0), // ~0.707 similarity to (1,0,0,0)
+      });
+      storeInsight(db, {
+        filePath: "c.ts",
+        content: "C",
+        source: "manual",
+        gitHash: "c",
+        embedding: vec(0, 1, 0, 0), // 0.0 similarity (perpendicular)
+      });
+
+      const results = searchInsightsByEmbedding(db, vec(1, 0, 0, 0), {
+        minSimilarity: 0.0,
+      });
+
+      expect(results.map((r) => r.filePath)).toEqual(["a.ts", "b.ts", "c.ts"]);
+      expect(results[0].similarity).toBeCloseTo(1.0, 5);
+      expect(results[1].similarity).toBeCloseTo(0.7071, 3);
+      expect(results[2].similarity).toBeCloseTo(0.0, 5);
+    });
+
+    it("searchInsightsByEmbedding filters by minSimilarity threshold", () => {
+      storeInsight(db, {
+        filePath: "close.ts",
+        content: "close",
+        source: "manual",
+        gitHash: "c",
+        embedding: vec(1, 0.2, 0, 0),
+      });
+      storeInsight(db, {
+        filePath: "far.ts",
+        content: "far",
+        source: "manual",
+        gitHash: "f",
+        embedding: vec(0, 0, 1, 0),
+      });
+
+      // minSimilarity 0.5 → only "close" qualifies
+      const results = searchInsightsByEmbedding(db, vec(1, 0, 0, 0), {
+        minSimilarity: 0.5,
+      });
+
+      expect(results).toHaveLength(1);
+      expect(results[0].filePath).toBe("close.ts");
+    });
+
+    it("searchInsightsByEmbedding respects limit parameter", () => {
+      for (let i = 0; i < 5; i++) {
+        storeInsight(db, {
+          filePath: `file${i}.ts`,
+          content: `file ${i}`,
+          source: "manual",
+          gitHash: `g${i}`,
+          embedding: vec(1, i * 0.1, 0, 0),
+        });
+      }
+
+      const results = searchInsightsByEmbedding(db, vec(1, 0, 0, 0), {
+        limit: 2,
+        minSimilarity: 0.0,
+      });
+
+      expect(results).toHaveLength(2);
+    });
+
+    it("searchInsightsByEmbedding excludes stale rows by default, includes when excludeStale=false", () => {
+      storeInsight(db, {
+        filePath: "fresh.ts",
+        content: "fresh",
+        source: "manual",
+        gitHash: "f",
+        embedding: vec(1, 0, 0, 0),
+      });
+      storeInsight(db, {
+        filePath: "stale.ts",
+        content: "stale",
+        source: "manual",
+        gitHash: "s",
+        embedding: vec(1, 0, 0, 0),
+      });
+      invalidateStale(db, ["stale.ts"]);
+
+      const defaultResults = searchInsightsByEmbedding(db, vec(1, 0, 0, 0));
+      expect(defaultResults.map((r) => r.filePath)).toEqual(["fresh.ts"]);
+
+      const allResults = searchInsightsByEmbedding(db, vec(1, 0, 0, 0), {
+        excludeStale: false,
+      });
+      const paths = allResults.map((r) => r.filePath).sort();
+      expect(paths).toEqual(["fresh.ts", "stale.ts"]);
+    });
+
+    it("searchInsightsByEmbedding ignores rows without embeddings", () => {
+      storeInsight(db, {
+        filePath: "with.ts",
+        content: "with",
+        source: "manual",
+        gitHash: "w",
+        embedding: vec(1, 0, 0, 0),
+      });
+      storeInsight(db, {
+        filePath: "without.ts",
+        content: "without",
+        source: "manual",
+        gitHash: "wo",
+        // no embedding
+      });
+
+      const results = searchInsightsByEmbedding(db, vec(1, 0, 0, 0));
+      expect(results).toHaveLength(1);
+      expect(results[0].filePath).toBe("with.ts");
+    });
+
+    it("searchInsightsByEmbedding returns [] for zero query vector", () => {
+      storeInsight(db, {
+        filePath: "a.ts",
+        content: "a",
+        source: "manual",
+        gitHash: "a",
+        embedding: vec(1, 0, 0, 0),
+      });
+
+      const results = searchInsightsByEmbedding(db, vec(0, 0, 0, 0));
+      expect(results).toHaveLength(0);
+    });
+
+    it("storeInsight upsert preserves existing embedding when new embedding omitted", () => {
+      // Initial store with embedding
+      storeInsight(db, {
+        filePath: "preserve.ts",
+        content: "v1",
+        source: "journal",
+        gitHash: "v1",
+        embedding: vec(1, 0, 0, 0),
+      });
+
+      // Update without embedding (same or higher priority)
+      storeInsight(db, {
+        filePath: "preserve.ts",
+        content: "v2",
+        source: "handoff",
+        gitHash: "v2",
+        // no embedding — should inherit from v1
+      });
+
+      // Can still be found by embedding search
+      const results = searchInsightsByEmbedding(db, vec(1, 0, 0, 0));
+      expect(results).toHaveLength(1);
+      expect(results[0].filePath).toBe("preserve.ts");
+      expect(results[0].content).toBe("v2"); // content updated
+      expect(results[0].source).toBe("handoff");
+    });
+
+    it("storeInsight upsert replaces embedding when new one supplied", () => {
+      storeInsight(db, {
+        filePath: "replace.ts",
+        content: "v1",
+        source: "journal",
+        gitHash: "v1",
+        embedding: vec(1, 0, 0, 0),
+      });
+
+      // Update with a DIFFERENT embedding
+      storeInsight(db, {
+        filePath: "replace.ts",
+        content: "v2",
+        source: "handoff",
+        gitHash: "v2",
+        embedding: vec(0, 1, 0, 0),
+      });
+
+      // Old vector should no longer match; new vector should
+      const oldMatch = searchInsightsByEmbedding(db, vec(1, 0, 0, 0), {
+        minSimilarity: 0.5,
+      });
+      expect(oldMatch).toHaveLength(0);
+
+      const newMatch = searchInsightsByEmbedding(db, vec(0, 1, 0, 0));
+      expect(newMatch).toHaveLength(1);
+      expect(newMatch[0].filePath).toBe("replace.ts");
+    });
   });
 });

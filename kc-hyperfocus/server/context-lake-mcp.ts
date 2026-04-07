@@ -20,6 +20,7 @@ import {
   openLake,
   storeInsight,
   searchInsights,
+  searchInsightsByEmbedding,
   invalidateStale,
   recordMetric,
   getMetricsSummary,
@@ -27,6 +28,7 @@ import {
 } from "../lib/context-lake";
 import { JournalWriter } from "../lib/journal";
 import { JournalSearchService } from "../lib/journal-search";
+import { EmbeddingService } from "../lib/embeddings";
 
 // ---------------------------------------------------------------------------
 // Git helpers
@@ -85,12 +87,30 @@ server.tool(
       const db = getDb();
       const gitHash = getGitHash();
 
-      storeInsight(db, {
-        filePath: file_path,
-        content,
-        source,
-        gitHash,
-      });
+      // Compute content embedding for fuzzy search (2026-04-07).
+      // Best-effort: if embedding generation fails (model not loaded, OOM,
+      // etc.) we still store the insight so exact-path lookup continues to
+      // work. Fuzzy search just won't find this row until next rewrite.
+      let embedding: number[] | undefined;
+      try {
+        embedding = await EmbeddingService.getInstance().generateEmbedding(content);
+      } catch (embErr) {
+        console.error(
+          `[context-lake] embedding failed for ${file_path}: ${embErr instanceof Error ? embErr.message : embErr}`
+        );
+      }
+
+      storeInsight(
+        db,
+        {
+          filePath: file_path,
+          content,
+          source,
+          gitHash,
+          embedding,
+        },
+        _repoRoot ?? undefined
+      );
 
       recordMetric(db, { event: "store", filePath: file_path });
 
@@ -124,25 +144,91 @@ server.tool(
 
 server.tool(
   "search_insights",
-  "Search stored insights by full-text query and/or exact file path. Returns matching insights sorted by freshness.",
+  "Search stored insights by full-text query (FTS5), exact file path, or fuzzy semantic similarity (embedding cosine). Fuzzy mode is best for natural-language queries that may not keyword-match but are semantically related.",
   {
-    query: z.string().optional().describe("FTS5 full-text search query"),
+    query: z
+      .string()
+      .optional()
+      .describe(
+        "Search query. Interpreted as FTS5 full-text (default) or semantic/embedding (when fuzzy=true)."
+      ),
     file_path: z.string().optional().describe("Exact file path to look up"),
     freshness_days: z
       .number()
       .optional()
       .default(7)
-      .describe("Only return insights updated within N days (default 7)"),
+      .describe("Only return insights updated within N days (default 7). Ignored in fuzzy mode."),
+    fuzzy: z
+      .boolean()
+      .optional()
+      .default(false)
+      .describe(
+        "Use embedding-based cosine similarity instead of FTS5 keyword matching. Requires `query` to be set. Returns semantically related insights even without keyword overlap."
+      ),
+    limit: z
+      .number()
+      .optional()
+      .default(5)
+      .describe("Max rows to return in fuzzy mode (default 5). Ignored in FTS/exact-path mode."),
+    min_similarity: z
+      .number()
+      .optional()
+      .default(0.4)
+      .describe(
+        "Minimum cosine similarity in fuzzy mode (0..1, default 0.4). Lower = more permissive."
+      ),
   },
-  async ({ query, file_path, freshness_days }) => {
+  async ({ query, file_path, freshness_days, fuzzy, limit, min_similarity }) => {
     try {
       const db = getDb();
 
-      const results = searchInsights(db, {
-        query: query ?? undefined,
-        filePath: file_path ?? undefined,
-        freshnessDays: freshness_days,
-      });
+      // Fuzzy mode: compute query embedding, do cosine similarity search
+      if (fuzzy && query) {
+        const queryEmbedding = await EmbeddingService.getInstance().generateEmbedding(
+          query
+        );
+        const results = searchInsightsByEmbedding(db, queryEmbedding, {
+          limit,
+          minSimilarity: min_similarity,
+        });
+
+        recordMetric(db, {
+          event: results.length > 0 ? "fuzzy_hit" : "fuzzy_miss",
+          details: { query, limit, min_similarity, count: results.length },
+        });
+
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify({
+                mode: "fuzzy",
+                count: results.length,
+                insights: results.map((r) => ({
+                  file_path: r.filePath,
+                  content: r.content,
+                  source: r.source,
+                  stale: r.stale === 1,
+                  git_hash: r.gitHash,
+                  updated_at: r.updatedAt,
+                  similarity: Number(r.similarity.toFixed(4)),
+                })),
+              }),
+            },
+          ],
+        };
+      }
+
+      // Exact-path or FTS5 mode (default)
+      const results = searchInsights(
+        db,
+        {
+          query: query ?? undefined,
+          filePath: file_path ?? undefined,
+          freshnessDays: freshness_days,
+        },
+        _repoRoot ?? undefined
+      );
 
       // Record hit or miss metric
       const eventType = results.length > 0 ? "hit" : "miss";
@@ -157,6 +243,7 @@ server.tool(
           {
             type: "text" as const,
             text: JSON.stringify({
+              mode: query ? "fts" : "path",
               count: results.length,
               insights: results.map((r) => ({
                 file_path: r.filePath,
@@ -196,7 +283,7 @@ server.tool(
   async ({ changed_files }) => {
     try {
       const db = getDb();
-      const updated = invalidateStale(db, changed_files);
+      const updated = invalidateStale(db, changed_files, _repoRoot ?? undefined);
 
       return {
         content: [
@@ -240,10 +327,25 @@ server.tool(
         "If provided, record this event type (hit, miss, store, explore_allowed, handoff, resume) before returning metrics"
       ),
     event_details: z
-      .record(z.unknown())
+      .preprocess(
+        (val) => {
+          // Accept both object and JSON-stringified object — agents frequently
+          // send a string by mistake ({"entryTokens":680} vs '{"entryTokens":680}').
+          // Preprocess normalizes to object before record validation.
+          if (typeof val === "string") {
+            try {
+              return JSON.parse(val);
+            } catch {
+              return { raw: val };
+            }
+          }
+          return val;
+        },
+        z.record(z.string(), z.unknown())
+      )
       .optional()
       .describe(
-        "Optional metadata to attach to the recorded event (e.g., { entryTokens: 680 } for handoff)"
+        "Optional metadata to attach to the recorded event. Pass as an OBJECT, e.g. { entryTokens: 680 }. Stringified JSON is also accepted and auto-parsed."
       ),
   },
   async ({ since, event, event_details }) => {
@@ -413,11 +515,24 @@ server.tool(
         };
       }
 
-      await getJournalWriter().writeThoughts(args);
+      const { projectPath, userPath, entryId } = await getJournalWriter().writeThoughts(
+        args
+      );
 
+      // entryId is the relative handoff identifier (dateStr/timeStr) shared by
+      // both project + user writes. kc-session-handoff consumes this directly,
+      // eliminating the round-trip via list_recent_entries.
       return {
         content: [
-          { type: "text" as const, text: "Thoughts recorded successfully." },
+          {
+            type: "text" as const,
+            text: JSON.stringify({
+              status: "recorded",
+              handoff_id: entryId,
+              project_path: projectPath ?? null,
+              user_path: userPath ?? null,
+            }),
+          },
         ],
       };
     } catch (err) {

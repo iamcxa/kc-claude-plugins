@@ -1,0 +1,8 @@
+# Dev build artifacts — bundle + compiled binary from `bun build` benchmarking
+dist/
+
+# Private journal data (user-scoped, not for repo)
+.private-journal/
+
+# Local node_modules (each fresh install via `bun install`)
+node_modules/

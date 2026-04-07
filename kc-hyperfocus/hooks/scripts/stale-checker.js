@@ -14,7 +14,7 @@
 import { openLake, invalidateStale, coldEvict, storeInsight } from "../../lib/context-lake.ts";
 import { execFileSync } from "node:child_process";
 import { readdirSync, readFileSync, existsSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 
 // ---------------------------------------------------------------------------
 // Stdin reader (async, same pattern as other hooks)
@@ -80,7 +80,11 @@ function main(rawInput) {
   // Step 2: Open DB
   const db = openLake(repoRoot);
 
-  // Step 3: Invalidate stale insights for recently changed files
+  // Step 3: Invalidate stale insights for recently changed files.
+  // git diff --name-only returns repo-relative paths, which is already the
+  // canonical format after the normalizeFilePath contract (2026-04-07).
+  // Pass repoRoot so invalidateStale normalizes defensively (no-op for
+  // already-relative paths, idempotent for safety).
   try {
     const diffOutput = execFileSync(
       "git",
@@ -92,9 +96,8 @@ function main(rawInput) {
       const changedFiles = diffOutput
         .split("\n")
         .map((f) => f.trim())
-        .filter(Boolean)
-        .map((f) => resolve(repoRoot, f));
-      invalidateStale(db, changedFiles);
+        .filter(Boolean);
+      invalidateStale(db, changedFiles, repoRoot);
     }
   } catch {
     // git diff may fail if fewer than 10 commits — that's fine
@@ -104,7 +107,7 @@ function main(rawInput) {
   coldEvict(db, { maxAgeDays: 30, minIdleDays: 7 });
 
   // Step 5: Journal sync — scan last 3 days
-  syncJournalInsights(db, gitHash);
+  syncJournalInsights(db, gitHash, repoRoot);
 
   // Step 6: Close DB
   db.close();
@@ -181,8 +184,10 @@ function detectPendingHandoff(projectDir) {
 /**
  * Scans ~/.private-journal/ for entries from the last 3 days.
  * Parses "## Technical Insights" sections and extracts file-associated insights.
+ * Passes repoRoot through to storeInsight so extracted paths get canonicalized
+ * (e.g. absolute paths under the repo get stripped to repo-relative form).
  */
-function syncJournalInsights(db, gitHash) {
+function syncJournalInsights(db, gitHash, repoRoot) {
   try {
     const home = process.env.HOME || process.env.USERPROFILE || "/tmp";
     const journalDir = join(home, ".private-journal");
@@ -217,12 +222,16 @@ function syncJournalInsights(db, gitHash) {
 
           for (const insight of insights) {
             for (const filePath of insight.filePaths) {
-              storeInsight(db, {
-                filePath,
-                content: insight.text,
-                source: "journal",
-                gitHash,
-              });
+              storeInsight(
+                db,
+                {
+                  filePath,
+                  content: insight.text,
+                  source: "journal",
+                  gitHash,
+                },
+                repoRoot
+              );
             }
           }
         } catch {

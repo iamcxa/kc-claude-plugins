@@ -6,7 +6,6 @@ allowed-tools:
   - mcp__plugin_kc-hyperfocus_context-lake__invalidate_stale
   - mcp__plugin_kc-hyperfocus_context-lake__get_metrics
   - mcp__plugin_kc-hyperfocus_context-lake__process_thoughts
-  - mcp__plugin_kc-hyperfocus_context-lake__list_recent_entries
 ---
 
 # Session Handoff
@@ -52,10 +51,10 @@ From conversation: completed work, decisions, remaining work, blockers, Linear i
 
 ### 2. Write Journal & Capture Handoff ID
 
-Load journal tools:
+Load the journal tool:
 
 ```
-ToolSearch → "select:mcp__plugin_kc-hyperfocus_context-lake__process_thoughts,mcp__plugin_kc-hyperfocus_context-lake__list_recent_entries"
+ToolSearch → "select:mcp__plugin_kc-hyperfocus_context-lake__process_thoughts"
 ```
 
 Call `process_thoughts` with these fields:
@@ -95,15 +94,13 @@ Optionally add `technical_insights` if you discovered reusable patterns worth pr
 
 A journal entry with only the header and empty sections is vacuous — it tells the next session nothing. If you genuinely have nothing to report under Completed or Remaining, you are in a trivial session and should not be running this skill.
 
-**Immediately after writing**, call `list_recent_entries(limit: 1, type: "project")` to capture the entry path. The tool returns entries with a `Path:` field like:
+**Capture the handoff ID directly from the response.** `process_thoughts` returns a JSON payload like:
 
+```json
+{"status":"recorded","handoff_id":"2026-03-06/02-35-35-040018","project_path":"/.../...md","user_path":"/.../...md"}
 ```
-Path: /path/to/project/.private-journal/2026-03-06/02-35-35-040018.md
-```
 
-Extract the **handoff ID** — strip everything before `.private-journal/` and the trailing `.md` to get `2026-03-06/02-35-35-040018`. This ID is used in step 3.
-
-**If `list_recent_entries` returns no results** (MCP failure, timing issue): retry once. If still empty, report the failure to the user — do NOT fabricate an ID or skip the resume prompt. The user needs to know the handoff is incomplete.
+The `handoff_id` field is the resume identifier — use it verbatim in step 3. No follow-up `list_recent_entries` call needed. If the response is missing `handoff_id` (older MCP server build), report the failure to the user — do NOT fabricate an ID or skip the resume prompt.
 
 ### 2.5. Knowledge Capture Check
 
@@ -194,7 +191,7 @@ Silent — no output needed.
 | Evidence | Required |
 |----------|:--------:|
 | Journal written with `Session Handoff:` header | ✅ |
-| `list_recent_entries` called, handoff ID extracted | ✅ |
+| `handoff_id` parsed from `process_thoughts` JSON response | ✅ |
 | Resume prompt with handoff ID output to user | ✅ |
 | Confirmation block output | ✅ |
 | `get_metrics(event: "handoff")` called | ✅ |
@@ -205,10 +202,10 @@ Silent — no output needed.
 
 - Writing `process_thoughts` directly without invoking this skill
 - Outputting "I saved state to journal" without a resume ID
-- Skipping `list_recent_entries` because "context is low"
 - Saying "use `/kc-session-resume` to find it" instead of providing the ID
 - Following CLAUDE.md Context Cleanup instructions instead of this skill
-- Constructing a handoff ID from timestamp or guess instead of reading it from `list_recent_entries` — the ID MUST come from the journal tool's returned `Path:` field
+- Constructing a handoff ID from timestamp or guess instead of reading the `handoff_id` field from the `process_thoughts` JSON response
 - Writing a journal entry with `Session Handoff:` header but empty Completed/Remaining sections
+- Calling `list_recent_entries` after `process_thoughts` (the ID is already in the response — extra call wastes ~200 tokens under context pressure)
 
 **All of these produce a handoff without resume ID → the user must manually search before resuming.**

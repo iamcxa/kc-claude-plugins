@@ -35,6 +35,14 @@ export interface StoreInsightInput {
   sourceSession?: string;
   sourceModel?: string;
   gitHash: string;
+  /**
+   * Pre-computed content embedding for fuzzy similarity search.
+   * 384-dim vector from MiniLM-L6-v2 (or compatible). Caller is responsible
+   * for generation — context-lake is pure DB logic and doesn't depend on
+   * any embedding provider. If omitted, the row is still stored (exact-path
+   * lookup still works) but excluded from embedding-based search.
+   */
+  embedding?: Float32Array | number[];
 }
 
 export interface SearchInsightsInput {
@@ -74,6 +82,41 @@ export const SOURCE_PRIORITY: Record<string, number> = {
 };
 
 // ---------------------------------------------------------------------------
+// Path normalization
+// ---------------------------------------------------------------------------
+
+/**
+ * Canonical file_path format for insights is **repo-relative** with worktree
+ * prefixes stripped. Absolute paths outside the repo are passed through as-is
+ * (e.g. ~/.claude/plugins/... references).
+ *
+ * Idempotent: calling twice on the same result is a no-op. Safe for callers
+ * that may have already pre-normalized (e.g. hooks that did inline conversion
+ * before the lib-layer normalization was added).
+ *
+ * Rules:
+ * 1. Strip `repoRoot + "/"` prefix if present → relative
+ * 2. Strip `.worktrees/<name>/` prefix → canonical repo path
+ * 3. Leave everything else untouched
+ */
+export function normalizeFilePath(filePath: string, repoRoot: string): string {
+  let path = filePath;
+
+  // Step 1: absolute path inside repo → strip prefix
+  if (path.startsWith(repoRoot + "/")) {
+    path = path.slice(repoRoot.length + 1);
+  }
+
+  // Step 2: strip .worktrees/<name>/ prefix (only if at the start)
+  const worktreeMatch = path.match(/^\.worktrees\/[^/]+\/(.+)$/);
+  if (worktreeMatch) {
+    path = worktreeMatch[1];
+  }
+
+  return path;
+}
+
+// ---------------------------------------------------------------------------
 // Schema DDL
 // ---------------------------------------------------------------------------
 
@@ -88,7 +131,8 @@ CREATE TABLE IF NOT EXISTS insights (
   git_hash TEXT NOT NULL,
   stale INTEGER DEFAULT 0,
   created_at TEXT DEFAULT (datetime('now')),
-  updated_at TEXT DEFAULT (datetime('now'))
+  updated_at TEXT DEFAULT (datetime('now')),
+  content_embedding BLOB
 );
 
 CREATE INDEX IF NOT EXISTS idx_insights_file ON insights(file_path);
@@ -145,6 +189,16 @@ export function openLake(repoRoot: string, options?: OpenLakeOptions): Database 
   // Schema
   db.exec(SCHEMA_DDL);
 
+  // Schema migration: content_embedding column (added 2026-04-07).
+  // Old DBs created before this column existed need ALTER TABLE; new DBs
+  // already get it from SCHEMA_DDL. Idempotent — skipped if column exists.
+  const hasEmbeddingCol = db
+    .query("SELECT 1 FROM pragma_table_info('insights') WHERE name = 'content_embedding'")
+    .get();
+  if (!hasEmbeddingCol) {
+    db.query("ALTER TABLE insights ADD COLUMN content_embedding BLOB").run();
+  }
+
   // FTS5 — check if the virtual table already exists
   const ftsExists = db
     .query(
@@ -167,14 +221,39 @@ export function openLake(repoRoot: string, options?: OpenLakeOptions): Database 
  * - Source priority guard: won't overwrite higher-priority sources
  * - FTS5 manual sync (external content mode)
  * - Last-write-wins for equal or higher priority
+ *
+ * If `repoRoot` is provided, the input file_path is canonicalized via
+ * normalizeFilePath before any DB operation. Callers that do not pass repoRoot
+ * get pass-through behavior (for backward compat with tests using relative
+ * paths directly).
  */
-export function storeInsight(db: Database, input: StoreInsightInput): void {
-  const { filePath, content, source, sourceSession, sourceModel, gitHash } = input;
+export function storeInsight(
+  db: Database,
+  input: StoreInsightInput,
+  repoRoot?: string
+): void {
+  const filePath = repoRoot
+    ? normalizeFilePath(input.filePath, repoRoot)
+    : input.filePath;
+  const { content, source, sourceSession, sourceModel, gitHash, embedding } = input;
+
+  // Serialize embedding to BLOB (Float32Array → Uint8Array). Preserved across
+  // upserts: an update with no embedding keeps the old one; an update WITH a
+  // new embedding replaces it.
+  const embeddingBlob = embedding ? embeddingToBlob(embedding) : null;
 
   // Check existing insight for source priority guard
   const existing = db
-    .query("SELECT id, source, file_path, content FROM insights WHERE file_path = ?")
-    .get(filePath) as { id: number; source: string; file_path: string; content: string } | null;
+    .query(
+      "SELECT id, source, file_path, content, content_embedding FROM insights WHERE file_path = ?"
+    )
+    .get(filePath) as {
+    id: number;
+    source: string;
+    file_path: string;
+    content: string;
+    content_embedding: Uint8Array | null;
+  } | null;
 
   if (existing) {
     const existingPriority = SOURCE_PRIORITY[existing.source] ?? 0;
@@ -184,6 +263,9 @@ export function storeInsight(db: Database, input: StoreInsightInput): void {
     if (existingPriority > newPriority) {
       return;
     }
+
+    // Preserve existing embedding if caller didn't supply a new one
+    const finalEmbedding = embeddingBlob ?? existing.content_embedding;
 
     // Wrap FTS delete + UPDATE + FTS insert in a transaction for atomicity
     const txn = db.transaction(() => {
@@ -196,9 +278,18 @@ export function storeInsight(db: Database, input: StoreInsightInput): void {
       db.query(
         `UPDATE insights
          SET content = ?, source = ?, source_session = ?, source_model = ?,
-             git_hash = ?, stale = 0, updated_at = datetime('now')
+             git_hash = ?, stale = 0, updated_at = datetime('now'),
+             content_embedding = ?
          WHERE file_path = ?`
-      ).run(content, source, sourceSession ?? null, sourceModel ?? null, gitHash, filePath);
+      ).run(
+        content,
+        source,
+        sourceSession ?? null,
+        sourceModel ?? null,
+        gitHash,
+        finalEmbedding,
+        filePath
+      );
 
       // Get the updated row for FTS sync
       const updated = db
@@ -215,9 +306,17 @@ export function storeInsight(db: Database, input: StoreInsightInput): void {
     // No existing row — wrap INSERT + FTS insert in a transaction for atomicity
     const txn = db.transaction(() => {
       db.query(
-        `INSERT INTO insights (file_path, content, source, source_session, source_model, git_hash)
-         VALUES (?, ?, ?, ?, ?, ?)`
-      ).run(filePath, content, source, sourceSession ?? null, sourceModel ?? null, gitHash);
+        `INSERT INTO insights (file_path, content, source, source_session, source_model, git_hash, content_embedding)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
+      ).run(
+        filePath,
+        content,
+        source,
+        sourceSession ?? null,
+        sourceModel ?? null,
+        gitHash,
+        embeddingBlob
+      );
 
       // Get the inserted row for FTS sync
       const inserted = db
@@ -234,15 +333,57 @@ export function storeInsight(db: Database, input: StoreInsightInput): void {
 }
 
 // ---------------------------------------------------------------------------
+// Embedding serialization helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Serialize a Float32Array / number[] embedding to a binary BLOB for SQLite
+ * storage. Stores as the raw Float32Array byte representation — ~1.5KB per
+ * 384-dim vector, vs ~4KB if JSON-stringified.
+ */
+function embeddingToBlob(
+  embedding: Float32Array | number[]
+): Uint8Array {
+  const f32 = embedding instanceof Float32Array
+    ? embedding
+    : new Float32Array(embedding);
+  return new Uint8Array(f32.buffer, f32.byteOffset, f32.byteLength);
+}
+
+/**
+ * Deserialize a BLOB back to a Float32Array. Inverse of embeddingToBlob.
+ */
+function blobToEmbedding(blob: Uint8Array): Float32Array {
+  // Create a new Float32Array that shares the BLOB's memory
+  return new Float32Array(
+    blob.buffer,
+    blob.byteOffset,
+    blob.byteLength / Float32Array.BYTES_PER_ELEMENT
+  );
+}
+
+// ---------------------------------------------------------------------------
 // searchInsights
 // ---------------------------------------------------------------------------
 
 /**
  * Search insights by exact file path or FTS5 full-text query.
  * Returns matching Insight[] sorted by updated_at desc.
+ *
+ * If `repoRoot` is provided, the input filePath (if any) is normalized via
+ * normalizeFilePath before the lookup. This matches the normalization applied
+ * at storeInsight time, ensuring lookup/storage contract alignment.
  */
-export function searchInsights(db: Database, input: SearchInsightsInput): Insight[] {
-  const { query, filePath, freshnessDays } = input;
+export function searchInsights(
+  db: Database,
+  input: SearchInsightsInput,
+  repoRoot?: string
+): Insight[] {
+  const { query, freshnessDays } = input;
+  const filePath =
+    input.filePath && repoRoot
+      ? normalizeFilePath(input.filePath, repoRoot)
+      : input.filePath;
 
   let rows: RawInsightRow[];
 
@@ -296,23 +437,123 @@ export function searchInsights(db: Database, input: SearchInsightsInput): Insigh
 }
 
 // ---------------------------------------------------------------------------
+// searchInsightsByEmbedding — cosine similarity fuzzy search
+// ---------------------------------------------------------------------------
+
+export interface SearchByEmbeddingOptions {
+  /** Max rows to return (default 5) */
+  limit?: number;
+  /** Minimum cosine similarity threshold (default 0.4, range -1..1) */
+  minSimilarity?: number;
+  /** Exclude stale insights (default true) */
+  excludeStale?: boolean;
+}
+
+export interface InsightWithSimilarity extends Insight {
+  similarity: number;
+}
+
+/**
+ * Fuzzy search insights by cosine similarity against a query embedding.
+ *
+ * Loads ALL rows with non-null content_embedding, computes cosine similarity
+ * against the query vector, filters by threshold, sorts desc, returns top-k.
+ * This is a linear scan — fine for hundreds of insights, would need a vector
+ * index (HNSW/IVF) beyond ~10k rows.
+ *
+ * The embedding column must already be populated — this function does NOT
+ * compute embeddings, it only searches. Callers are responsible for providing
+ * a pre-computed query vector from a compatible model (must match the model
+ * used at storeInsight time, typically MiniLM-L6-v2 384-dim).
+ */
+export function searchInsightsByEmbedding(
+  db: Database,
+  queryEmbedding: Float32Array | number[],
+  options?: SearchByEmbeddingOptions
+): InsightWithSimilarity[] {
+  const limit = options?.limit ?? 5;
+  const minSimilarity = options?.minSimilarity ?? 0.4;
+  const excludeStale = options?.excludeStale ?? true;
+
+  const query =
+    queryEmbedding instanceof Float32Array
+      ? queryEmbedding
+      : new Float32Array(queryEmbedding);
+
+  // Precompute query norm once
+  let queryNorm = 0;
+  for (let i = 0; i < query.length; i++) queryNorm += query[i] * query[i];
+  queryNorm = Math.sqrt(queryNorm);
+  if (queryNorm === 0) return []; // zero vector, nothing matches
+
+  // Load candidate rows (non-null embeddings)
+  const whereClause = excludeStale
+    ? "WHERE content_embedding IS NOT NULL AND stale = 0"
+    : "WHERE content_embedding IS NOT NULL";
+  const rows = db
+    .query(
+      `SELECT id, file_path, content, source, source_session, source_model,
+              git_hash, stale, created_at, updated_at, content_embedding
+       FROM insights
+       ${whereClause}`
+    )
+    .all() as (RawInsightRow & { content_embedding: Uint8Array })[];
+
+  // Compute cosine similarity for each row
+  const scored: InsightWithSimilarity[] = [];
+  for (const row of rows) {
+    const rowVec = blobToEmbedding(row.content_embedding);
+    if (rowVec.length !== query.length) continue; // dimension mismatch, skip
+
+    let dot = 0;
+    let rowNorm = 0;
+    for (let i = 0; i < rowVec.length; i++) {
+      dot += query[i] * rowVec[i];
+      rowNorm += rowVec[i] * rowVec[i];
+    }
+    rowNorm = Math.sqrt(rowNorm);
+    if (rowNorm === 0) continue;
+
+    const similarity = dot / (queryNorm * rowNorm);
+    if (similarity >= minSimilarity) {
+      scored.push({ ...rowToInsight(row), similarity });
+    }
+  }
+
+  // Sort desc by similarity, take top-k
+  scored.sort((a, b) => b.similarity - a.similarity);
+  return scored.slice(0, limit);
+}
+
+// ---------------------------------------------------------------------------
 // invalidateStale
 // ---------------------------------------------------------------------------
 
 /**
  * Marks insights for the given file paths as stale (stale=1).
  * Returns the number of rows actually updated.
+ *
+ * If `repoRoot` is provided, each changed file is canonicalized via
+ * normalizeFilePath before the UPDATE, matching storeInsight's contract.
  */
-export function invalidateStale(db: Database, changedFiles: string[]): number {
+export function invalidateStale(
+  db: Database,
+  changedFiles: string[],
+  repoRoot?: string
+): number {
   if (changedFiles.length === 0) return 0;
 
-  const placeholders = changedFiles.map(() => "?").join(",");
+  const normalized = repoRoot
+    ? changedFiles.map((f) => normalizeFilePath(f, repoRoot))
+    : changedFiles;
+
+  const placeholders = normalized.map(() => "?").join(",");
   const result = db
     .query(
       `UPDATE insights SET stale = 1, updated_at = datetime('now')
        WHERE file_path IN (${placeholders}) AND stale = 0`
     )
-    .run(...changedFiles);
+    .run(...normalized);
 
   return result.changes;
 }

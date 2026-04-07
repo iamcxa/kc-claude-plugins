@@ -54,15 +54,33 @@ export class JournalWriter {
     this.embeddingService = EmbeddingService.getInstance();
   }
 
-  async writeThoughts(thoughts: ThoughtsInput): Promise<void> {
+  async writeThoughts(
+    thoughts: ThoughtsInput
+  ): Promise<{ projectPath?: string; userPath?: string; entryId: string }> {
     const timestamp = new Date();
+    // Compute timestamp parts ONCE — formatTimestamp uses Math.random for the
+    // microsecond suffix, so calling it multiple times produces different file
+    // names. We need a single deterministic ID shared across project + user
+    // writes so the returned handoff_id corresponds to the actual files on disk.
+    const dateStr = this.formatDate(timestamp);
+    const timeStr = this.formatTimestamp(timestamp);
 
-    // Split: project_notes → project dir, rest → user dir
+    // Kick off project + user writes in parallel. Before 2026-04-07 these were
+    // sequential (project.await → user.await), doubling latency when a single
+    // process_thoughts call wrote to both paths (the typical handoff shape).
+    // Promise.all halves dual-write latency without changing the public return
+    // shape.
+    const writes: Array<Promise<{ kind: "project" | "user"; path: string }>> = [];
+
     if (thoughts.project_notes) {
-      await this.writeToLocation(
-        { project_notes: thoughts.project_notes },
-        timestamp,
-        this.projectPath
+      writes.push(
+        this.writeToLocation(
+          { project_notes: thoughts.project_notes },
+          timestamp,
+          this.projectPath,
+          dateStr,
+          timeStr
+        ).then((path) => ({ kind: "project" as const, path }))
       );
     }
 
@@ -74,18 +92,31 @@ export class JournalWriter {
     };
     const hasUserContent = Object.values(userThoughts).some((v) => v != null);
     if (hasUserContent) {
-      await this.writeToLocation(userThoughts, timestamp, this.userPath);
+      writes.push(
+        this.writeToLocation(
+          userThoughts,
+          timestamp,
+          this.userPath,
+          dateStr,
+          timeStr
+        ).then((path) => ({ kind: "user" as const, path }))
+      );
     }
+
+    const results = await Promise.all(writes);
+    const projectPath = results.find((r) => r.kind === "project")?.path;
+    const userPath = results.find((r) => r.kind === "user")?.path;
+
+    return { projectPath, userPath, entryId: `${dateStr}/${timeStr}` };
   }
 
   private async writeToLocation(
     thoughts: ThoughtsInput,
     timestamp: Date,
-    basePath: string
-  ): Promise<void> {
-    const dateStr = this.formatDate(timestamp);
-    const timeStr = this.formatTimestamp(timestamp);
-
+    basePath: string,
+    dateStr: string,
+    timeStr: string
+  ): Promise<string> {
     const dayDir = join(basePath, dateStr);
     if (!existsSync(dayDir)) mkdirSync(dayDir, { recursive: true });
 
@@ -93,12 +124,20 @@ export class JournalWriter {
     const content = this.formatThoughts(thoughts, timestamp);
     writeFileSync(filePath, content, "utf8");
 
-    // Best-effort embedding generation
-    try {
-      await this.generateEmbeddingForEntry(filePath, content, timestamp);
-    } catch {
-      // Don't fail write if embedding fails
-    }
+    // Fire-and-forget embedding generation (2026-04-07 perf fix).
+    // Previously this was `await`-ed, blocking the write response on
+    // MiniLM-L6-v2 inference (~30-100ms per call). The try/catch was there
+    // but the await was unnecessary — embedding failures are non-fatal and
+    // search_journal for very recent entries is acceptable-to-miss.
+    // The returned file path is safe to use immediately; embedding populates
+    // the search index in the background.
+    void this.generateEmbeddingForEntry(filePath, content, timestamp).catch(
+      () => {
+        // Silent — search just won't find this entry until a retry/next write
+      }
+    );
+
+    return filePath;
   }
 
   private formatDate(d: Date): string {
