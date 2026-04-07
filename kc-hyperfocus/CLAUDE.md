@@ -24,9 +24,12 @@ Skills:
   /kc-cache-insight      →  manual cache + status + metrics view
   /kc-statusline-setup   →  detect existing statusline → install hyperfocus-statusline.js if needed
 
-Context Lake:
+Context Lake + Journal (unified MCP server):
   context-lake.ts      →  shared SQLite module (schema, CRUD, FTS5, metrics)
-  context-lake-mcp.ts  →  MCP server: 5 tools (insight store/search/metrics)
+  embeddings.ts        →  MiniLM-L6-v2 vector embedding service for journal
+  journal.ts           →  journal write (dual-write project + user dirs)
+  journal-search.ts    →  vector search, list recent, read entry
+  context-lake-mcp.ts  →  MCP server: 9 tools (5 cache + 4 journal)
 
   [Read/Explore] → explore-interceptor.js (PreToolUse)
                     inject cached insights on Read; suggest cached insights before Explore (never deny)
@@ -47,7 +50,10 @@ Context Lake:
 | Hook | session-cleanup-enforcer.js | Stop | Block exit if CRITICAL triggered but journal incomplete |
 | Agent | mcp-summarizer | — | Context firewall: summarize MCP/file data to prevent context bloat |
 | Lib | context-lake.ts | — | Shared SQLite module: DB schema, CRUD, FTS5, metrics |
-| MCP | context-lake-mcp.ts | — | MCP server: 5 tools for insight store/search/metrics |
+| Lib | embeddings.ts | — | MiniLM-L6-v2 vector embedding service (journal semantic search) |
+| Lib | journal.ts | — | Journal write: dual-write project + user dirs, embedding generation |
+| Lib | journal-search.ts | — | Journal search: vector similarity, list recent, read entry |
+| MCP | context-lake-mcp.ts | — | MCP server: 9 tools (5 cache + 4 journal — process_thoughts, search_journal, read_journal_entry, list_recent_entries) |
 | Hook | explore-interceptor.js | PreToolUse | Inject cached insights on Read; suggest (never deny) cached insights before Explore |
 | Hook | read-tracker.js | PostToolUse | Record touched files + track uncached reads → nudge Claude to cache insights |
 | Hook | post-explore-nudge.js | PostToolUse | Nudge Claude to cache insights after Explore completes |
@@ -62,57 +68,24 @@ Context Lake:
 - **Journal**: Built-in (v1.4.0+). Journal tools (`process_thoughts`, `list_recent_entries`, `read_journal_entry`, `search_journal`) are integrated into the context-lake MCP server. Data stored in `.private-journal/` directories (project-level + user-level).
 - **GSD** (soft): Context monitor customizes messages when `.planning/STATE.md` exists. Resume skill checks for GSD checkpoints. Neither is required — the plugin works without GSD.
 
-## Migration Guide
+## Installation
 
-This plugin replaces user-level skills and hooks. Migration steps:
+```bash
+/plugin install kc-hyperfocus@kc-claude-plugins
+```
 
-### Phase 1: Test (parallel operation)
+After install, the MCP server needs `node_modules`:
 
-1. Plugin is created but NOT in `enabledPlugins`
-2. Test skills: `cd kc-hyperfocus && ccp` then try `/kc-session-handoff`
-3. User-level skills (`~/.claude/skills/kc-session-handoff/`, `~/.claude/skills/kc-session-resume/`) continue to work
+```bash
+cd ~/.claude/plugins/cache/kc-claude-plugins/kc-hyperfocus/*/
+bun install
+```
 
-### Phase 2: Switch
+Restart Claude Code. Verify with `/mcp` (should show `context-lake: Connected`) and `/kc-cache-insight --status`.
 
-1. Register in local marketplace:
-   ```json
-   // ~/.claude/plugins/local/.claude-plugin/marketplace.json
-   { "plugins": [..., "kc-hyperfocus"] }
-   ```
-   And symlink:
-   ```bash
-   ln -s ~/Project/kc-claude-workspace/kc-claude-plugins/kc-hyperfocus ~/.claude/plugins/local/kc-hyperfocus
-   ```
+### Migration from user-level skills
 
-2. Enable in settings:
-   ```json
-   // ~/.claude/settings.json → enabledPlugins
-   "kc-hyperfocus@local": true
-   ```
-
-3. Remove user-level hooks from `~/.claude/settings.json`:
-   - PostToolUse: `gsd-context-monitor.js` entry
-   - PostToolUse: `session-cleanup-tracker.js` entry
-   - Stop: `session-cleanup-enforcer.js` entry
-
-4. Remove (or rename) user-level skills:
-   ```bash
-   mv ~/.claude/skills/kc-session-handoff ~/.claude/skills-backup/kc-session-handoff
-   mv ~/.claude/skills/kc-session-resume ~/.claude/skills-backup/kc-session-resume
-   ```
-
-5. Remove (or rename) user-level hook files:
-   ```bash
-   mv ~/.claude/hooks/gsd-context-monitor.js ~/.claude/hooks/gsd-context-monitor.js.bak
-   mv ~/.claude/hooks/session-cleanup-tracker.js ~/.claude/hooks/session-cleanup-tracker.js.bak
-   mv ~/.claude/hooks/session-cleanup-enforcer.js ~/.claude/hooks/session-cleanup-enforcer.js.bak
-   ```
-
-6. Restart Claude Code session
-
-### Rollback
-
-Reverse steps: remove from enabledPlugins, restore user-level hooks in settings.json, rename `.bak` files back.
+If you previously had `~/.claude/skills/kc-session-handoff`, `~/.claude/hooks/session-cleanup-*.js`, etc. — remove them after installing this plugin to avoid duplicate hook execution.
 
 ## Key Gotchas
 
