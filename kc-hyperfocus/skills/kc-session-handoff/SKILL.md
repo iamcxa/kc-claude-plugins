@@ -5,6 +5,8 @@ allowed-tools:
   - mcp__plugin_kc-hyperfocus_context-lake__store_insight
   - mcp__plugin_kc-hyperfocus_context-lake__invalidate_stale
   - mcp__plugin_kc-hyperfocus_context-lake__get_metrics
+  - mcp__plugin_kc-hyperfocus_context-lake__process_thoughts
+  - mcp__plugin_kc-hyperfocus_context-lake__list_recent_entries
 ---
 
 # Session Handoff

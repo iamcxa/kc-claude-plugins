@@ -3,6 +3,9 @@ name: kc-session-resume
 description: Use when user says 'resume', 'continue', '繼續', 'pick up where I left off', or mentions a branch name to resume previous work. Triggers on session handoff resume prompts.
 allowed-tools:
   - mcp__plugin_kc-hyperfocus_context-lake__get_metrics
+  - mcp__plugin_kc-hyperfocus_context-lake__read_journal_entry
+  - mcp__plugin_kc-hyperfocus_context-lake__list_recent_entries
+  - mcp__plugin_kc-hyperfocus_context-lake__search_journal
 ---
 
 # Session Resume
