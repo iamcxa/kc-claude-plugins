@@ -1,6 +1,7 @@
 ---
 name: kc-cache-insight
 description: Manually cache an insight about a file or module to the context lake. Use when you want to preserve understanding about code you just explored. Also shows lake status and metrics.
+argument-hint: "[file_path | --dashboard | --search | --status | --metrics]"
 allowed-tools:
   - mcp__plugin_kc-hyperfocus_context-lake__store_insight
   - mcp__plugin_kc-hyperfocus_context-lake__search_insights

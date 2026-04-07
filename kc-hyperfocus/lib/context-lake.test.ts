@@ -682,3 +682,36 @@ describe("context-lake", () => {
     });
   });
 });
+
+// ---------------------------------------------------------------------------
+// MCP-level source enum coercion (server/schemas.ts)
+// Tests the .catch().default() contract: invalid/missing → "manual"
+// ---------------------------------------------------------------------------
+
+import { sourceSchema } from "../server/schemas";
+
+describe("sourceSchema", () => {
+  it("passes through valid enum values unchanged", () => {
+    expect(sourceSchema.parse("handoff")).toBe("handoff");
+    expect(sourceSchema.parse("read")).toBe("read");
+    expect(sourceSchema.parse("journal")).toBe("journal");
+    expect(sourceSchema.parse("manual")).toBe("manual");
+  });
+
+  it("coerces undefined to 'manual' via default", () => {
+    expect(sourceSchema.parse(undefined)).toBe("manual");
+  });
+
+  it("coerces invalid string to 'manual' via catch", () => {
+    expect(sourceSchema.parse("Junk-Value-Not-In-Enum")).toBe("manual");
+    expect(sourceSchema.parse("Manual")).toBe("manual"); // wrong case
+    expect(sourceSchema.parse("")).toBe("manual");
+    expect(sourceSchema.parse("HANDOFF")).toBe("manual"); // case-sensitive
+  });
+
+  it("coerces non-string types to 'manual' via catch", () => {
+    expect(sourceSchema.parse(42)).toBe("manual");
+    expect(sourceSchema.parse(null)).toBe("manual");
+    expect(sourceSchema.parse(true)).toBe("manual");
+  });
+});

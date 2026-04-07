@@ -29,6 +29,7 @@ import {
 import { JournalWriter } from "../lib/journal";
 import { JournalSearchService } from "../lib/journal-search";
 import { EmbeddingService } from "../lib/embeddings";
+import { sourceSchema } from "./schemas";
 
 // ---------------------------------------------------------------------------
 // Git helpers
@@ -78,8 +79,8 @@ server.tool(
   {
     file_path: z.string().describe("Relative or absolute path to the file"),
     content: z.string().describe("The insight content (summary, annotation, etc.)"),
-    source: z.enum(["handoff", "read", "journal", "manual"]).describe(
-      "How this insight was generated"
+    source: sourceSchema.describe(
+      "How this insight was generated. Defaults to 'manual' if missing or invalid (silently coerced — never errors on this field)."
     ),
   },
   async ({ file_path, content, source }) => {
