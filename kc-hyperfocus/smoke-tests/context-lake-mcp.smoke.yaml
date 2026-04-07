@@ -1,0 +1,9 @@
+skill: context-lake-mcp
+trigger: "Call the get_metrics tool to show context lake metrics summary"
+timeout: 90
+assertions:
+  - contains: "hit"
+  - contains: "store"
+  - not_contains: "tool not found"
+  - not_contains: "not available"
+  - not_contains: "disconnected"

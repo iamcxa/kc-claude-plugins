@@ -1,0 +1,8 @@
+skill: kc-cache-insight
+trigger: "/kc-cache-insight --status"
+timeout: 90
+assertions:
+  - contains: "context"
+  - contains: "insight"
+  - not_contains: "MEMORY.md"
+  - not_contains: "previous session"
