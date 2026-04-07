@@ -79,6 +79,7 @@ export const SOURCE_PRIORITY: Record<string, number> = {
   manual: 3,
   handoff: 2,
   journal: 1,
+  auto: 0,
 };
 
 // ---------------------------------------------------------------------------

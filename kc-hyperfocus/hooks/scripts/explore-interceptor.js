@@ -111,12 +111,20 @@ try {
             ? insight.content.slice(0, 300) + "..."
             : insight.content;
 
+        const isAuto = insight.source === "auto";
+        const label = isAuto
+          ? `Auto-summary for ${relativePath} (upgradeable)`
+          : `Prior insight for ${relativePath} (${insight.source}, ${insight.stale ? "stale" : "fresh"})`;
+        const suffix = isAuto
+          ? "\nThis is an auto-extracted summary. Call store_insight with a richer description to upgrade."
+          : "";
+
         console.log(
           JSON.stringify({
             hookSpecificOutput: {
               hookEventName: "PreToolUse",
               permissionDecision: "allow",
-              additionalContext: `[context-lake] Prior insight for ${relativePath} (${insight.source}, ${insight.stale ? "stale" : "fresh"}):\n${snippet}`,
+              additionalContext: `[context-lake] ${label}:\n${snippet}${suffix}`,
             },
           })
         );

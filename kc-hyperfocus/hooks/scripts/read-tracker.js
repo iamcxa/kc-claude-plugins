@@ -13,7 +13,7 @@
 
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
-import { openLake, searchInsights, recordMetric } from "../../lib/context-lake.ts";
+import { openLake, searchInsights, recordMetric, storeInsight } from "../../lib/context-lake.ts";
 
 // ---------------------------------------------------------------------------
 // Config
@@ -93,6 +93,90 @@ function isCodePath(relativePath) {
 }
 
 // ---------------------------------------------------------------------------
+// Auto-extract: lightweight insight from file content
+// ---------------------------------------------------------------------------
+
+const MAX_SCAN_LINES = 50;
+const MAX_INSIGHT_CHARS = 600;
+
+// Patterns that indicate structural declarations across languages
+const DECLARATION_RE =
+  /^(?:export\s+(?:default\s+)?(?:function|class|const|let|type|interface|enum)|(?:def|class|async def)\s+\w|(?:func|fn)\s+\w|pub\s+(?:fn|struct|enum|trait)\s+\w)/;
+
+function autoExtract(filePath) {
+  try {
+    const text = readFileSync(filePath, "utf8");
+    const lines = text.split("\n").slice(0, MAX_SCAN_LINES);
+
+    const parts = [];
+
+    // 1. Extract leading comment block (first consecutive comment lines)
+    const commentLines = [];
+    let inBlock = false;
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!inBlock && commentLines.length === 0) {
+        // Skip shebangs and empty lines at top
+        if (trimmed === "" || trimmed.startsWith("#!")) continue;
+        if (
+          trimmed.startsWith("//") ||
+          trimmed.startsWith("/*") ||
+          trimmed.startsWith("*") ||
+          trimmed.startsWith('"""') ||
+          trimmed.startsWith("#")
+        ) {
+          inBlock = trimmed.startsWith("/*") && !trimmed.includes("*/");
+          commentLines.push(trimmed);
+          continue;
+        }
+        break; // First non-comment line — stop
+      }
+      if (inBlock) {
+        commentLines.push(trimmed);
+        if (trimmed.includes("*/")) inBlock = false;
+        continue;
+      }
+      if (
+        trimmed.startsWith("//") ||
+        trimmed.startsWith("*") ||
+        trimmed.startsWith("#")
+      ) {
+        commentLines.push(trimmed);
+        continue;
+      }
+      break;
+    }
+
+    if (commentLines.length > 0) {
+      parts.push(commentLines.slice(0, 8).join("\n"));
+    }
+
+    // 2. Extract declarations (exports, functions, classes)
+    const decls = [];
+    for (const line of lines) {
+      if (DECLARATION_RE.test(line.trim())) {
+        // Clean up: take signature only (strip body opener)
+        const sig = line.trim().replace(/\s*\{.*$/, "").replace(/\s*:.*$/, "");
+        if (sig.length > 10) decls.push(sig);
+      }
+    }
+    if (decls.length > 0) {
+      parts.push("Declarations: " + decls.slice(0, 10).join(", "));
+    }
+
+    if (parts.length === 0) return null;
+
+    let content = parts.join("\n");
+    if (content.length > MAX_INSIGHT_CHARS) {
+      content = content.slice(0, MAX_INSIGHT_CHARS) + "…";
+    }
+    return content;
+  } catch {
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
@@ -155,6 +239,27 @@ try {
       const results = searchInsights(db, { filePath: relativePath });
       if (results.length === 0) {
         data.uncachedCount++;
+
+        // Auto-extract: store a lightweight insight so future reads are cache hits.
+        // source: "auto" (priority 0) — any manual/handoff/journal write overwrites.
+        const content = autoExtract(filePath);
+        if (content) {
+          let gitHash = "";
+          try {
+            gitHash = execFileSync("git", ["rev-parse", "HEAD"], {
+              cwd: repoRoot,
+              encoding: "utf-8",
+            }).trim();
+          } catch {
+            // Non-critical — store without hash
+          }
+          storeInsight(db, {
+            filePath: relativePath,
+            content,
+            source: "auto",
+            gitHash,
+          }, repoRoot);
+        }
       }
     } finally {
       db.close();
@@ -178,35 +283,43 @@ try {
 
     if (codePaths.length === 0) process.exit(0);
 
-    // Batch check which files have cached insights
+    // Find files with auto-only insights (upgradeable) or no insights at all
     const db = openLake(repoRoot);
     try {
       const placeholders = codePaths.map(() => "?").join(",");
       const cachedRows = db
         .query(
-          `SELECT file_path FROM insights WHERE file_path IN (${placeholders})`
+          `SELECT file_path, source FROM insights WHERE file_path IN (${placeholders})`
         )
         .all(...codePaths);
-      const cachedSet = new Set(cachedRows.map((r) => r.file_path));
-      const uncachedPaths = codePaths.filter((f) => !cachedSet.has(f));
+      const cachedMap = new Map(cachedRows.map((r) => [r.file_path, r.source]));
 
-      if (uncachedPaths.length === 0) process.exit(0);
+      // Files with auto insights that could be upgraded
+      const autoOnlyPaths = codePaths.filter((f) => cachedMap.get(f) === "auto");
+      // Files with no insight at all (auto-extract may have failed)
+      const uncachedPaths = codePaths.filter((f) => !cachedMap.has(f));
 
-      // List top 5 specific files, then summarize the rest by directory
-      const topFiles = uncachedPaths.slice(0, 5);
-      const remaining = uncachedPaths.length - topFiles.length;
+      const upgradeable = [...autoOnlyPaths, ...uncachedPaths];
+      if (upgradeable.length === 0) process.exit(0);
+
+      const topFiles = upgradeable.slice(0, 5);
+      const remaining = upgradeable.length - topFiles.length;
       const fileList = topFiles
-        .map((f) => `  - ${f}`)
+        .map((f) => {
+          const src = cachedMap.get(f);
+          return src === "auto" ? `  - ${f} (auto — upgrade)` : `  - ${f} (no cache)`;
+        })
         .join("\n");
       const remainingSummary =
         remaining > 0
           ? `\n  (+ ${remaining} more)`
           : "";
 
-      // Record nudge metric for conversion tracking (nudge → store)
+      // Record nudge metric
       recordMetric(db, {
         event: "nudge",
         details: {
+          autoFiles: autoOnlyPaths.length,
           uncachedFiles: uncachedPaths.length,
           topFiles,
           sessionNudgeCount: data.nudgeCount + 1,
@@ -219,7 +332,6 @@ try {
       data.nudgeCount++;
       writeFileSync(touchedPath, JSON.stringify(data));
 
-      // Pick the first uncached file to make a concrete call example
       const exampleFile = topFiles[0];
 
       process.stdout.write(
@@ -227,11 +339,11 @@ try {
           hookSpecificOutput: {
             hookEventName: "PostToolUse",
             additionalContext: [
-              `[context-lake] ACTION NEEDED: ${uncachedPaths.length} code files read without cached insights this session.`,
-              `Cache these files NOW (before you forget their context):\n${fileList}${remainingSummary}`,
-              `For each file, call store_insight with: file_path, content (English, 3-8 sentences: purpose, key functions, dependencies, gotchas), source: "manual", git_hash (from git rev-parse HEAD).`,
-              `Example — store_insight({ file_path: "${exampleFile}", content: "...", source: "manual", git_hash: "..." })`,
-              `Do this immediately for the top 3 files, then continue your work.`,
+              `[context-lake] ${upgradeable.length} files have auto-generated or missing insights. Upgrade the most important ones:`,
+              fileList + remainingSummary,
+              `Call store_insight with: file_path, content (English, 3-8 sentences: purpose, key patterns, dependencies, gotchas), source: "manual".`,
+              `Example — store_insight({ file_path: "${exampleFile}", content: "...", source: "manual" })`,
+              `Upgrade top 3 when you have a natural pause, then continue your work.`,
             ].join("\n"),
           },
         })

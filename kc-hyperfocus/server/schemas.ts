@@ -6,7 +6,7 @@ import { z } from "zod";
  * send malformed source values (e.g., XML tag drop → empty string).
  */
 export const sourceSchema = z
-  .enum(["handoff", "read", "journal", "manual"])
+  .enum(["auto", "handoff", "read", "journal", "manual"])
   .catch("manual")
   .default("manual");
 
