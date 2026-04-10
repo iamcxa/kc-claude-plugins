@@ -673,8 +673,16 @@ server.tool(
       .optional()
       .default(30)
       .describe("Number of days back to search (default 30)"),
+    repo_slug: z
+      .string()
+      .optional()
+      .describe("Filter to entries with this repo_slug in frontmatter."),
+    session_handoff_only: z
+      .boolean()
+      .optional()
+      .describe("Only return entries with session_handoff: true in frontmatter."),
   },
-  async ({ limit, type, days }) => {
+  async ({ limit, type, days, repo_slug, session_handoff_only }) => {
     try {
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - (days ?? 30));
@@ -683,6 +691,8 @@ server.tool(
         limit: limit ?? 10,
         type: (type as "project" | "user" | "both") ?? "both",
         dateRange: { start: startDate },
+        repoSlug: repo_slug,
+        sessionHandoffOnly: session_handoff_only,
       });
 
       const text =

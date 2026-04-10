@@ -115,8 +115,11 @@ export class JournalSearchService {
   // listRecent — chronological
   // -------------------------------------------------------------------------
 
-  listRecent(options: SearchOptions = {}): SearchResult[] {
-    const { limit = 10, type = "both", dateRange } = options;
+  listRecent(options: SearchOptions & {
+    repoSlug?: string;
+    sessionHandoffOnly?: boolean;
+  } = {}): SearchResult[] {
+    const { limit = 10, type = "both", dateRange, repoSlug, sessionHandoffOnly } = options;
 
     let all = this.collectEmbeddings(type);
 
@@ -125,6 +128,16 @@ export class JournalSearchService {
         const d = new Date(e.timestamp);
         if (dateRange.start && d < dateRange.start) return false;
         if (dateRange.end && d > dateRange.end) return false;
+        return true;
+      });
+    }
+
+    // Apply frontmatter-based filters
+    if (repoSlug || sessionHandoffOnly) {
+      all = all.filter((e) => {
+        const fm = this.readFrontmatter(e.path);
+        if (repoSlug && fm.repo_slug !== repoSlug) return false;
+        if (sessionHandoffOnly && fm.session_handoff !== "true") return false;
         return true;
       });
     }
@@ -170,9 +183,50 @@ export class JournalSearchService {
     }
     if (type === "both" || type === "user") {
       result.push(...this.loadEmbeddingsFromPath(this.userPath, "user"));
+      // Also scan _repos/* slug dirs under user path
+      const reposDir = join(this.userPath, "_repos");
+      if (existsSync(reposDir)) {
+        try {
+          const slugDirs = readdirSync(reposDir);
+          for (const slug of slugDirs) {
+            const slugPath = join(reposDir, slug);
+            try {
+              if (!statSync(slugPath).isDirectory()) continue;
+            } catch { continue; }
+            result.push(...this.loadEmbeddingsFromPath(slugPath, "project"));
+          }
+        } catch {
+          // Skip unreadable _repos dir
+        }
+      }
     }
 
     return result;
+  }
+
+  private readFrontmatter(embeddingPath: string): Record<string, string> {
+    const mdPath = embeddingPath.replace(/\.embedding$/, ".md");
+    try {
+      const content = readFileSync(mdPath, "utf8");
+      const lines = content.split("\n");
+      if (lines[0]?.trim() !== "---") return {};
+      const meta: Record<string, string> = {};
+      for (let i = 1; i < lines.length; i++) {
+        if (lines[i].trim() === "---") break;
+        const colonIdx = lines[i].indexOf(":");
+        if (colonIdx === -1) continue;
+        const key = lines[i].slice(0, colonIdx).trim();
+        let value = lines[i].slice(colonIdx + 1).trim();
+        if ((value.startsWith('"') && value.endsWith('"')) ||
+            (value.startsWith("'") && value.endsWith("'"))) {
+          value = value.slice(1, -1);
+        }
+        meta[key] = value;
+      }
+      return meta;
+    } catch {
+      return {};
+    }
   }
 
   private loadEmbeddingsFromPath(
