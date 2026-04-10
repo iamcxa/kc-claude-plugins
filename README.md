@@ -44,9 +44,9 @@ Autonomous nightly plugin improvement cycle. Runs forge validation, harvests sig
 /plugin install kc-nightwatch@kc-claude-plugins
 ```
 
-### [kc-hyperfocus](./kc-hyperfocus/) `v1.5.0`
+### [kc-hyperfocus](./kc-hyperfocus/) `v1.6.0`
 
-Session lifecycle & context efficiency. Detects context pressure and enforces cleanup before session end. Cross-session handoff/resume via integrated journal (with vector embedding search via MiniLM). Context Lake (SQLite FTS5) caches codebase insights for faster exploration. Includes a standalone statusline with Anthropic 5h/7d usage quota display.
+Session lifecycle & context efficiency. Detects context pressure and enforces cleanup before session end. Cross-session handoff/resume via integrated journal (with vector embedding search via MiniLM). Context Lake (SQLite FTS5) caches codebase insights for faster exploration. MCP context firewall: the `mcp-summarizer` subagent keeps raw payloads from Linear/Sentry/Notion/Supabase/Figma/Slack/Langfuse out of main context, and a PreToolUse nudge proactively suggests it on first read-op per MCP family per session. Includes a standalone statusline with Anthropic 5h/7d usage quota display.
 
 | Skills | Purpose |
 |--------|---------|

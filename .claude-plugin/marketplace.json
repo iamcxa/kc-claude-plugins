@@ -34,7 +34,7 @@
       "name": "kc-hyperfocus",
       "source": "./kc-hyperfocus",
       "description": "Session lifecycle & context efficiency — context pressure detection, cleanup enforcement, cross-session handoff/resume, MCP context firewall, context lake cache, journal with vector search, and statusline with usage quota",
-      "version": "1.5.0",
+      "version": "1.6.0",
       "keywords": ["session", "context", "handoff", "resume", "journal", "embeddings", "fuzzy-search", "statusline", "usage", "quota", "lifecycle", "pressure"]
     }
   ]
