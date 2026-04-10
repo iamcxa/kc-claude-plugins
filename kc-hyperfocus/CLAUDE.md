@@ -49,6 +49,7 @@ Context Lake + Journal (unified MCP server):
 | Hook | session-cleanup-tracker.js | PostToolUse | Track journal/GSD calls during CRITICAL sessions |
 | Hook | session-cleanup-enforcer.js | Stop | Block exit if CRITICAL triggered but journal incomplete |
 | Agent | mcp-summarizer | — | Context firewall: summarize MCP/file data to prevent context bloat |
+| Hook | mcp-firewall-nudge.js | PreToolUse | Nudge main agent to dispatch `mcp-summarizer` on first read-op per MCP family per session (Linear/Sentry/Notion/Supabase/Figma/Slack/Langfuse/episodic-memory) |
 | Lib | context-lake.ts | — | Shared SQLite module: DB schema, CRUD, FTS5, metrics |
 | Lib | embeddings.ts | — | MiniLM-L6-v2 vector embedding service (journal semantic search) |
 | Lib | journal.ts | — | Journal write: dual-write project + user dirs, embedding generation |
