@@ -40,6 +40,36 @@ export interface ThoughtsInput {
 }
 
 // ---------------------------------------------------------------------------
+// Corruption detection — catches LLM XML emit errors before writing
+// ---------------------------------------------------------------------------
+
+const XML_POLLUTION_PATTERNS: RegExp[] = [
+  /<\/parameter>/,
+  /<parameter\s+name=/,
+  /<\/feelings>/,
+  /<\/project_notes>/,
+  /<\/technical_insights>/,
+  /<\/user_context>/,
+  /<\/world_knowledge>/,
+  /<invoke\s+name=/,
+  /<function_calls>/,
+];
+
+export function detectFieldCorruption(thoughts: ThoughtsInput): void {
+  for (const [field, value] of Object.entries(thoughts)) {
+    if (typeof value !== "string") continue;
+    for (const pattern of XML_POLLUTION_PATTERNS) {
+      if (pattern.test(value)) {
+        throw new Error(
+          `Field '${field}' contains tool-call XML marker (${pattern}). ` +
+          `This indicates an LLM emit parse error. Retry the call.`
+        );
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Journal writer
 // ---------------------------------------------------------------------------
 
