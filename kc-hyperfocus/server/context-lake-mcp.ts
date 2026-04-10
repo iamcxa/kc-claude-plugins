@@ -500,10 +500,31 @@ server.tool(
       .describe(
         "Your PRIVATE LEARNING JOURNAL for everything else that's interesting or useful."
       ),
+    repo_slug: z
+      .string()
+      .optional()
+      .describe(
+        "Repo identifier (e.g., 'carlove'). When provided, writes all fields to ~/.private-journal/_repos/{slug}/."
+      ),
+    session_handoff: z
+      .boolean()
+      .optional()
+      .describe(
+        "Tag entry as session handoff in frontmatter. Used by kc-session-resume to filter."
+      ),
+    branch: z
+      .string()
+      .optional()
+      .describe("Git branch name — recorded in frontmatter metadata."),
+    description: z
+      .string()
+      .optional()
+      .describe("Short description for list display and resume prompts."),
   },
   async (args) => {
     try {
-      const hasContent = Object.values(args).some((v) => v != null);
+      const contentFields = ['feelings', 'project_notes', 'user_context', 'technical_insights', 'world_knowledge'];
+      const hasContent = contentFields.some((f) => args[f as keyof typeof args] != null);
       if (!hasContent) {
         return {
           content: [
@@ -516,22 +537,20 @@ server.tool(
         };
       }
 
-      const { projectPath, userPath, entryId } = await getJournalWriter().writeThoughts(
-        args
-      );
+      const result = await getJournalWriter().writeThoughts(args);
 
-      // entryId is the relative handoff identifier (dateStr/timeStr) shared by
-      // both project + user writes. kc-session-handoff consumes this directly,
-      // eliminating the round-trip via list_recent_entries.
       return {
         content: [
           {
             type: "text" as const,
             text: JSON.stringify({
               status: "recorded",
-              handoff_id: entryId,
-              project_path: projectPath ?? null,
-              user_path: userPath ?? null,
+              handoff_id: result.entryId,
+              path: result.path,
+              repo_slug: result.repoSlug,
+              // Deprecated but kept for backward compat:
+              project_path: result.projectPath ?? null,
+              user_path: result.userPath ?? result.path,
             }),
           },
         ],
