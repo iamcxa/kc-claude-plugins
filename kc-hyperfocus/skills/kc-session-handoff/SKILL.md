@@ -1,6 +1,7 @@
 ---
 name: kc-session-handoff
 description: Use when user says 'handoff', 'prepare handoff', '準備交接', or when context pressure is high and work state needs preservation before session ends.
+argument-hint: "[focus note]"
 allowed-tools:
   - mcp__plugin_kc-hyperfocus_context-lake__store_insight
   - mcp__plugin_kc-hyperfocus_context-lake__invalidate_stale
@@ -18,6 +19,10 @@ Write a journal entry and produce a minimal resume prompt for the next session.
 
 - Trivial sessions (pure Q&A, no code changes)
 - Active GSD phase — use `/gsd:pause-work` instead
+
+## Focus Note (optional argument)
+
+If the user provided text after `/kc-session-handoff` (e.g., `/kc-session-handoff 重點記錄 auth middleware 決策`), treat it as a **focus note** — emphasize these topics in the journal's `## Completed` / `## Remaining` / `## Decisions` sections. This does NOT replace git/conversation state gathering — it supplements it with explicit user intent about what matters most for the next session.
 
 ## Primary Trigger
 
@@ -49,6 +54,19 @@ If `--show-toplevel` differs from the first line of `worktree list` → you are 
 
 From conversation: completed work, decisions, remaining work, blockers, Linear issue (if any).
 
+### 1.5. Derive Repo Slug
+
+Derive the repo slug for `_repos/` routing:
+
+```bash
+# git-common-dir handles linked worktrees (all point to same .git)
+REPO_SLUG=$(basename "$(git rev-parse --git-common-dir 2>/dev/null | sed 's|/\.git$||')" 2>/dev/null | tr '[:upper:]' '[:lower:]')
+# Fallback: basename of cwd
+REPO_SLUG=${REPO_SLUG:-$(basename "$(pwd)" | tr '[:upper:]' '[:lower:]')}
+```
+
+Use this slug in Step 2 as `repo_slug` parameter.
+
 ### 2. Write Journal & Capture Handoff ID
 
 Load the journal tool:
@@ -61,6 +79,10 @@ Call `process_thoughts` with these fields:
 
 | Field | Content |
 |-------|---------|
+| `repo_slug` | Derived slug from Step 1.5 (mandatory for handoffs) |
+| `session_handoff` | `true` |
+| `branch` | Git branch from Step 1 |
+| `description` | One-line summary of session work |
 | `feelings` | 1-2 honest sentences about your current state (mandatory) |
 | `project_notes` | Structured handoff using template below |
 
@@ -101,6 +123,22 @@ A journal entry with only the header and empty sections is vacuous — it tells 
 ```
 
 The `handoff_id` field is the resume identifier — use it verbatim in step 3. No follow-up `list_recent_entries` call needed. If the response is missing `handoff_id` (older MCP server build), report the failure to the user — do NOT fabricate an ID or skip the resume prompt.
+
+### 2.1. Verify Write Success
+
+Parse the `process_thoughts` response JSON. Check:
+
+1. `path` field contains `_repos/{slug}/` (confirms repo-scoped write)
+2. `handoff_id` field is present and non-empty
+3. `repo_slug` field echoes back the slug you sent
+
+If ANY check fails:
+- Retry the `process_thoughts` call (max 3 attempts)
+- Log: "Handoff write verification failed (attempt N/3): {what failed}"
+- After 3 failures → report error to user: "Handoff 寫入失敗，process_thoughts 回傳不符預期。請手動檢查 ~/.private-journal/_repos/{slug}/ 目錄。"
+- Do NOT output a success confirmation or resume prompt
+
+**Only proceed to Step 2.5 after verification passes.**
 
 ### 2.5. Knowledge Capture Check
 
@@ -195,6 +233,7 @@ Silent — no output needed.
 | Resume prompt with handoff ID output to user | ✅ |
 | Confirmation block output | ✅ |
 | `get_metrics(event: "handoff")` called | ✅ |
+| `path` contains `_repos/{slug}/` | ✅ |
 
 **Any missing row = incomplete handoff.** The user cannot resume without the handoff ID. Writing journal alone is NOT a handoff — it's just a journal entry.
 
