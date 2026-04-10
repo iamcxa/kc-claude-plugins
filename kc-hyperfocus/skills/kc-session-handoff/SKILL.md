@@ -59,8 +59,9 @@ From conversation: completed work, decisions, remaining work, blockers, Linear i
 Derive the repo slug for `_repos/` routing:
 
 ```bash
+# --path-format=absolute required: default is relative (".git" literal from repo root → basename bug)
 # git-common-dir handles linked worktrees (all point to same .git)
-REPO_SLUG=$(basename "$(git rev-parse --git-common-dir 2>/dev/null | sed 's|/\.git$||')" 2>/dev/null | tr '[:upper:]' '[:lower:]')
+REPO_SLUG=$(basename "$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null | sed 's|/\.git$||')" 2>/dev/null | tr '[:upper:]' '[:lower:]')
 # Fallback: basename of cwd
 REPO_SLUG=${REPO_SLUG:-$(basename "$(pwd)" | tr '[:upper:]' '[:lower:]')}
 ```

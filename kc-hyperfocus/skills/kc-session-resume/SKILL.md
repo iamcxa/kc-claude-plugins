@@ -56,7 +56,7 @@ git rev-parse --show-toplevel
 Derive repo slug (same logic as kc-session-handoff Step 1.5):
 
 ```bash
-REPO_SLUG=$(basename "$(git rev-parse --git-common-dir 2>/dev/null | sed 's|/\.git$||')" 2>/dev/null | tr '[:upper:]' '[:lower:]')
+REPO_SLUG=$(basename "$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null | sed 's|/\.git$||')" 2>/dev/null | tr '[:upper:]' '[:lower:]')
 REPO_SLUG=${REPO_SLUG:-$(basename "$(pwd)" | tr '[:upper:]' '[:lower:]')}
 ```
 
