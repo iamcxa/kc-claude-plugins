@@ -1,7 +1,6 @@
 ---
 name: e2e-debug-observe
-description: Opens a browser, executes reproduction steps, and collects debug observations (console logs, JS errors, network requests, screenshots). Produces a structured report.md. Runs in isolated subagent context to keep verbose browser data out of main conversation. Never modifies code — observation only.
-
+description: Opens a browser, runs repro steps, collects console/network/JS-error/screenshot observations into report.md. Dispatched by e2e-debug. Observation only — never modifies code.
 tools: Bash, Read, Write
 model: sonnet
 color: cyan

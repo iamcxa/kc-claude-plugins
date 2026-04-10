@@ -1,6 +1,6 @@
 ---
 name: e2e-trace-analyzer
-description: Parses agent-browser trace.zip files to extract API failures and console errors. Produces trace-analysis.md summary. Supports custom noise filtering, step-log correlation for anomaly cross-reference, and graceful handling of missing trace files. Runs in isolated context.
+description: Parses agent-browser trace.zip into a concise trace-analysis.md (API failures, console errors). Dispatched by e2e-test and e2e-flow.
 tools: Bash, Read, Grep, Write
 model: inherit
 color: yellow

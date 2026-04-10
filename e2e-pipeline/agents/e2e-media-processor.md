@@ -1,6 +1,6 @@
 ---
 name: e2e-media-processor
-description: Autonomous media post-processor for E2E test artifacts. Browser mode (screenshots → GIF + MP4 + thumbnail) and CLI mode (asciinema .cast → GIF + MP4 + thumbnail via agg + ffmpeg). Blank frame detection, step-paced video. Shared by e2e-test, e2e-flow, and e2e-walkthrough skills.
+description: Post-processes E2E artifacts into GIF/MP4/thumbnail (browser screenshots or asciinema .cast). Dispatched by e2e-test, e2e-flow, e2e-walkthrough.
 tools: Bash, Read, Write
 model: inherit
 color: magenta

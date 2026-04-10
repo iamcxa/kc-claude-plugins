@@ -1,6 +1,6 @@
 ---
 name: e2e-flow-verifier
-description: Adaptive flow validator. Runs E2E flows in browser, auto-repairs selector/URL/flow issues, enriches assertions, and produces PR-ready reports. Two rounds — Round 1 fixes, Round 2 captures clean evidence (screenshots + trace). Operates in subagent context or as a persistent teammate with multi-turn round control.
+description: Runs E2E flows in browser, auto-repairs broken selectors/URLs, and produces PR-ready reports with screenshots + trace. Dispatched by e2e-flow.
 tools: Bash, Read, Grep, Write
 model: inherit
 color: blue

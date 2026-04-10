@@ -1,6 +1,6 @@
 ---
 name: e2e-test-runner
-description: Autonomous E2E flow executor. Runs browser-based test flows against web apps using agent-browser CLI. Returns structured pass/fail results with screenshots and trace recording. Supports multi-site session isolation (suite_context). Operates in isolated subagent context.
+description: Executes browser E2E flow YAML via agent-browser CLI; returns pass/fail results with screenshots and trace. Dispatched by e2e-test.
 tools: Bash, Read, Grep, Write
 model: inherit
 color: cyan

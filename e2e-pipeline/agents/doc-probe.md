@@ -1,6 +1,6 @@
 ---
 name: doc-probe
-description: Verifies documentation accuracy by executing live probes against plugin skills. Receives behavioral claims extracted from docs, runs each probe command, compares output against expected signals, returns structured pass/fail report. Dispatched by e2e-doc-sync skill during Phase 4 (Live Probe).
+description: Verifies documentation claims via live probe commands; returns structured pass/fail report. Dispatched by e2e-doc-sync (Phase 4).
 model: sonnet
 color: yellow
 tools: Bash, Read, Grep, Write

@@ -1,6 +1,6 @@
 ---
 name: e2e-flow-writer
-description: Autonomous flow YAML generator. Analyzes codebase context and mapping files to produce E2E test flows without browser interaction. Supports browser flows, CLI-only flows (Execute external), cross-boundary flows (browser + API + Verify external), and smoke tests. Never opens a browser.
+description: Generates E2E flow YAML from codebase context and mapping files. Dispatched by e2e-flow. Never opens a browser (no Bash tool — intentional).
 tools: Read, Write, Grep, Glob
 model: inherit
 color: magenta

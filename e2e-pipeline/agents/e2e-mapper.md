@@ -1,6 +1,6 @@
 ---
 name: e2e-mapper
-description: Autonomous UI element mapper. Explores web pages using agent-browser CLI and generates/updates YAML mapping files for E2E testing. Supports full exploration, incremental single-page update, and browser-only discovery mode. Returns page inventory with elements, selectors, and unexplored areas.
+description: Explores web pages via agent-browser CLI and generates/updates E2E YAML mapping files. Dispatched by e2e-map.
 tools: Bash, Read, Grep, Write
 model: inherit
 color: green
