@@ -37,6 +37,11 @@ export interface ThoughtsInput {
   user_context?: string;
   technical_insights?: string;
   world_knowledge?: string;
+  // Repo-scope routing
+  repo_slug?: string;
+  session_handoff?: boolean;
+  branch?: string;
+  description?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -86,7 +91,16 @@ export class JournalWriter {
 
   async writeThoughts(
     thoughts: ThoughtsInput
-  ): Promise<{ projectPath?: string; userPath?: string; entryId: string }> {
+  ): Promise<{
+    path: string;
+    entryId: string;
+    repoSlug: string | null;
+    projectPath?: string;
+    userPath?: string;
+  }> {
+    // Corruption check BEFORE any file writes
+    detectFieldCorruption(thoughts);
+
     const timestamp = new Date();
     // Compute timestamp parts ONCE — formatTimestamp uses Math.random for the
     // microsecond suffix, so calling it multiple times produces different file
@@ -94,12 +108,27 @@ export class JournalWriter {
     // writes so the returned handoff_id corresponds to the actual files on disk.
     const dateStr = this.formatDate(timestamp);
     const timeStr = this.formatTimestamp(timestamp);
+    const entryId = `${dateStr}/${timeStr}`;
 
-    // Kick off project + user writes in parallel. Before 2026-04-07 these were
-    // sequential (project.await → user.await), doubling latency when a single
-    // process_thoughts call wrote to both paths (the typical handoff shape).
-    // Promise.all halves dual-write latency without changing the public return
-    // shape.
+    // ── Repo-scoped write: ALL fields → single file under _repos/{slug}/ ──
+    if (thoughts.repo_slug) {
+      const repoBasePath = join(this.userPath, "_repos", thoughts.repo_slug);
+      const filePath = await this.writeToLocation(
+        thoughts,
+        timestamp,
+        repoBasePath,
+        dateStr,
+        timeStr
+      );
+      return {
+        path: filePath,
+        entryId,
+        repoSlug: thoughts.repo_slug,
+        userPath: filePath,
+      };
+    }
+
+    // ── Legacy dual-write: project_notes → project dir, others → user dir ──
     const writes: Array<Promise<{ kind: "project" | "user"; path: string }>> = [];
 
     if (thoughts.project_notes) {
@@ -137,7 +166,13 @@ export class JournalWriter {
     const projectPath = results.find((r) => r.kind === "project")?.path;
     const userPath = results.find((r) => r.kind === "user")?.path;
 
-    return { projectPath, userPath, entryId: `${dateStr}/${timeStr}` };
+    return {
+      path: userPath ?? projectPath ?? "",
+      entryId,
+      repoSlug: null,
+      projectPath,
+      userPath,
+    };
   }
 
   private async writeToLocation(
@@ -213,10 +248,28 @@ export class JournalWriter {
     if (thoughts.world_knowledge)
       sections.push(`## World Knowledge\n\n${thoughts.world_knowledge}`);
 
+    // Build optional frontmatter fields for repo-scope routing
+    const extraFrontmatter: string[] = [];
+    if (thoughts.repo_slug) {
+      extraFrontmatter.push(`repo_slug: ${thoughts.repo_slug}`);
+    }
+    if (thoughts.session_handoff) {
+      extraFrontmatter.push(`session_handoff: true`);
+    }
+    if (thoughts.branch) {
+      extraFrontmatter.push(`branch: ${thoughts.branch}`);
+    }
+    if (thoughts.description) {
+      extraFrontmatter.push(`description: "${thoughts.description}"`);
+    }
+    const extraBlock = extraFrontmatter.length > 0
+      ? "\n" + extraFrontmatter.join("\n")
+      : "";
+
     return `---
 title: "${timeDisplay} - ${dateDisplay}"
 date: ${timestamp.toISOString()}
-timestamp: ${timestamp.getTime()}
+timestamp: ${timestamp.getTime()}${extraBlock}
 ---
 
 ${sections.join("\n\n")}
