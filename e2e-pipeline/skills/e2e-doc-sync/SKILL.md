@@ -1,13 +1,6 @@
 ---
 name: e2e-doc-sync
-description: >
-  Use when plugin documentation needs updating after feature changes,
-  when verifying existing docs accurately reflect actual skill/agent behavior,
-  or for periodic documentation maintenance. Scans source code with diff-aware
-  detection, enriches with usage history from journal and memory, writes or
-  updates docs, then verifies accuracy via live behavioral probes.
-  Triggers on "sync e2e docs", "update e2e documentation", "doc sync",
-  "e2e-doc-sync", "check doc coverage".
+description: Use when syncing E2E plugin documentation after skill/agent changes. Diff-aware scan, history enrichment, and live probe verification. Triggers on "e2e doc sync", "/e2e-doc-sync", "check doc coverage".
 ---
 
 # E2E Doc Sync — Documentation Gap Scanner, Writer & Verifier

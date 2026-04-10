@@ -1,6 +1,6 @@
 ---
 name: e2e-test
-description: Use when running browser E2E tests against web apps — executing flow files, running smoke suites, testing specific features, recording test runs with video, or batch-testing across sites. Triggers on "run e2e", "browser test", "test the flow", "smoke test", "e2e test", "playwright test", "run the suite", "test this feature in browser", "record test run", "e2e video", "test with video".
+description: Use when running browser E2E tests — executing flow files, batch-testing across sites, or recording runs with video. Triggers on "run e2e", "e2e test", "browser test", "test with video".
 ---
 
 # E2E Test Orchestrator

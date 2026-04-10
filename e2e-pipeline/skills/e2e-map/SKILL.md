@@ -1,6 +1,6 @@
 ---
 name: e2e-map
-description: Use when creating or updating UI element mappings for E2E testing — mapping page selectors, capturing app structure, or refreshing stale mappings. Triggers on "e2e map", "map the UI", "update mapping", "refresh mapping", "map selectors", "create mapping".
+description: Use when creating or updating UI element mappings for E2E testing — capturing app structure or refreshing stale mappings. Triggers on "e2e map", "map the UI", "update mapping".
 ---
 
 # E2E Map — Orchestrator

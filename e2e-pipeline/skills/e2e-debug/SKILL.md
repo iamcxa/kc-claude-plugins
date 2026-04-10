@@ -1,6 +1,6 @@
 ---
 name: e2e-debug
-description: Use when debugging frontend runtime bugs by injecting console.log, observing in browser, and auto-cleaning up. Triggers on "e2e debug", "e2e-debug", "debug in browser", "inject logs", "runtime debug", "why is this empty", "data shape bug". Also triggered by /e2e-dispatch menu or systematic-debugging experiment dispatch.
+description: Use when debugging frontend runtime bugs by injecting console.log, observing in browser, and auto-cleaning up. Triggers on "e2e debug", "debug in browser", "inject logs", "runtime debug".
 ---
 
 # E2E Debug — Inject-Observe-Cleanup Orchestrator

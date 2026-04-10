@@ -1,6 +1,6 @@
 ---
 name: e2e-help
-description: Use when users need help with E2E pipeline commands, want to discover available skills, or report documentation gaps. Triggers on "e2e help", "how do I e2e", "what e2e commands", "e2e-help", "help with e2e testing", "what can e2e do", "e2e pipeline help".
+description: Use when users need help discovering E2E pipeline commands or want to report doc gaps. Triggers on "e2e help", "/e2e-help", "how do I e2e".
 ---
 
 # E2E Help -- Interactive Pipeline Guide

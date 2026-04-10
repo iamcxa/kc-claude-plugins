@@ -1,6 +1,6 @@
 ---
 name: e2e-compile
-description: Use when compiling E2E flow YAML files to standalone bash test scripts — invoke with "/e2e-compile <flow-name>" or "/e2e-compile --all". Triggers on "/e2e-compile", "compile flow", "e2e compile", "compile the flow", "generate test script", "compile e2e", "recompile flow".
+description: Use when compiling E2E flow YAML to standalone bash test scripts. Triggers on "/e2e-compile", "compile flow", "recompile flow".
 ---
 
 # E2E Compile — Flow YAML to Bash Script

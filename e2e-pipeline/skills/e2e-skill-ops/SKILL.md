@@ -1,6 +1,6 @@
 ---
 name: e2e-skill-ops
-description: Use when debugging e2e-test/e2e-map/e2e-walkthrough failures, maintaining or adding features to these skills, or evaluating execution results against skill expectations. Triggers on "e2e skill broke", "fix e2e skill", "update e2e skill", "add feature to e2e", "e2e gap analysis", "skill drift", "e2e pipeline issue".
+description: Use when debugging e2e-test/e2e-map/e2e-walkthrough failures, maintaining these skills, or evaluating execution results. Triggers on "fix e2e skill", "e2e skill broke", "e2e gap analysis".
 ---
 
 # E2E Skill Operations — Debug, Maintain, Extend, Evaluate

@@ -1,6 +1,6 @@
 ---
 name: e2e-walkthrough
-description: Use when walking through UI flows interactively, exploring features with human guidance, visual QA, debugging in browser, or recording demos. Records video by default. Triggers on "walkthrough", "explore this feature", "walk the UI", "step through", "browse the app", "guided e2e", "interactive walkthrough", "explore pages", "visual QA", "debug in browser", "demo recording".
+description: Use when walking through UI flows interactively with human guidance — visual QA, exploring features, or recording demos. Records video by default. Triggers on "walkthrough", "walk the UI", "visual QA", "demo recording".
 ---
 
 # E2E Walkthrough — Interactive UI Exploration

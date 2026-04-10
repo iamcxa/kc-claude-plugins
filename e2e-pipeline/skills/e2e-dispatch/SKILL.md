@@ -1,6 +1,6 @@
 ---
 name: e2e-dispatch
-description: Use when the user explicitly invokes /e2e-dispatch or asks for the E2E operations menu without specifying a particular operation. This is a unified router — for specific operations, prefer e2e-test, e2e-map, e2e-walkthrough, or e2e-skill-ops directly.
+description: Use when the user invokes /e2e-dispatch or asks for the E2E operations menu. Router — prefer e2e-test, e2e-map, e2e-walkthrough, e2e-skill-ops directly for specific operations.
 ---
 
 # E2E Dispatch — Unified Entry Point
