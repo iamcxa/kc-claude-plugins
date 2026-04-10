@@ -1,30 +1,6 @@
 ---
 name: mcp-summarizer
-description: >
-  Context firewall for summarizing large MCP responses, file-based data, and codebase analysis.
-  Prevents raw payloads from consuming main context. Dispatch when querying MCP tools
-  (Linear, Sentry, Notion, Supabase, Figma, etc.) or summarizing large grep/file results.
-
-  <example>
-  Context: Main agent needs to query Linear for a batch of issues but raw response would bloat context.
-  user: "Summarize all open issues in project INGEST with priority High or above"
-  assistant: "Querying Linear for INGEST high-priority issues and returning a concise summary table."
-  <commentary>MCP query that would return large JSON — firewall extracts essentials only.</commentary>
-  </example>
-
-  <example>
-  Context: Main agent needs Sentry error data but full stacktraces would consume too much context.
-  user: "Get the top 5 unresolved Sentry issues for recce-python with event counts"
-  assistant: "Searching Sentry for top unresolved issues and summarizing with event/user counts."
-  <commentary>Sentry responses include breadcrumbs, tags, full traces — firewall strips to essentials.</commentary>
-  </example>
-
-  <example>
-  Context: Main agent needs to scan a large codebase directory for patterns.
-  user: "Grep all files under src/ for 'deprecated' and summarize which modules are affected"
-  assistant: "Scanning src/ for deprecated markers and grouping results by module."
-  <commentary>Large grep results compressed into a module-level summary.</commentary>
-  </example>
+description: Context firewall that summarizes large MCP responses and file/grep data into concise structured output, preventing raw payloads from bloating main context. Dispatch proactively before the first MCP read-op (Linear/Sentry/Notion/Supabase/Figma/Slack/Langfuse/episodic-memory) or when summarizing large grep/file results.
 tools: ToolSearch, Read, Grep, mcp__claude_ai_Linear__*, mcp__plugin_linear_linear__*, mcp__claude_ai_Sentry__*, mcp__plugin_sentry_sentry__*, mcp__claude_ai_Notion__*, mcp__claude_ai_Supabase__*, mcp__plugin_episodic-memory_episodic-memory__*, mcp__claude_ai_Figma__*, mcp__claude_ai_Slack__*, mcp__langfuse-docs__*
 model: sonnet
 color: cyan

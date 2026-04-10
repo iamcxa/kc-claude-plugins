@@ -1,23 +1,6 @@
 ---
 name: e2e-scanner
-description: |
-  Scan E2E test reports for failure trends, coverage gaps, and stale mappings.
-  Returns structured YAML with confidence-rated findings. Dispatched by
-  kc-nightwatch orchestrator during Phase 2 for targets with `e2e-reports` in sources.
-
-  <example>
-  Context: kc-nightwatch orchestrator needs E2E signals for my-app
-  user: "Scan E2E reports for my-app. Path: ~/Project/my-app. Keywords: [checkout, order]. North star: Checkout flow completes with zero friction. Proxy signals: e2e-coverage."
-  assistant: "Scanning E2E report directories for failure trends and coverage gaps."
-  <commentary>Scans .claude/e2e/ and e2e-reports/ for test results and mapping staleness.</commentary>
-  </example>
-
-  <example>
-  Context: kc-nightwatch orchestrator scans a project with no E2E infrastructure
-  user: "Scan E2E reports for my-service. Path: ~/Project/my-service. Keywords: [api, validation]. North star: API validation with zero config. Proxy signals: validation-coverage."
-  assistant: "No e2e-reports/ or .claude/e2e/ directories found — returning empty signals."
-  <commentary>Graceful with missing dirs: projects without E2E infrastructure get empty signals, not errors.</commentary>
-  </example>
+description: Scans E2E test reports for failure trends, coverage gaps, and stale mappings. Returns confidence-rated YAML. Dispatched by kc-nightwatch (Phase 2) for targets with `e2e-reports` in sources. Graceful when no e2e infrastructure.
 model: sonnet
 color: cyan
 tools:

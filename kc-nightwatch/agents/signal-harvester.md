@@ -1,21 +1,6 @@
 ---
 name: signal-harvester
-description: |
-  Search journal, episodic memory, and MEMORY.md for plugin improvement signals aligned with north star goals. Returns structured YAML with confidence-rated findings. Dispatched by kc-nightwatch orchestrator during Phase 2 (Signal Harvest).
-
-  <example>
-  Context: kc-nightwatch orchestrator is running Phase 2 and needs improvement signals for kc-pr-flow
-  user: "Harvest signals for kc-pr-flow. Keywords: [PR, review, pr-flow, create-pr, code review]. North star: PR lifecycle from creation to review response. Proxy signals: skill-coverage, review-friction. Plugin path: ~/Project/my-workspace/kc-pr-flow. Repo: my-plugins."
-  assistant: "Searching journal, episodic memory, and MEMORY.md for kc-pr-flow improvement signals."
-  <commentary>Phase 2 dispatches one harvester per plugin with keywords and north star context from nightwatch-targets.yaml.</commentary>
-  </example>
-
-  <example>
-  Context: kc-nightwatch orchestrator needs signals for e2e-pipeline (different repo)
-  user: "Harvest signals for e2e-pipeline. Keywords: [e2e, browser test, mapping, walkthrough, flow, selector]. North star: Browser E2E testing is fully automated. Proxy signals: mapping-freshness, flow-coverage, pipeline-friction. Plugin path: ~/Project/my-workspace/e2e-pipeline. Repo: my-plugins."
-  assistant: "Searching all three sources for e2e-pipeline improvement signals."
-  <commentary>Harvester works the same regardless of which repo the plugin is in — repo field is passed through to output.</commentary>
-  </example>
+description: Searches journal, episodic memory, and MEMORY.md for plugin improvement signals aligned with north star goals. Returns confidence-rated YAML. Dispatched by kc-nightwatch (Phase 2).
 model: sonnet
 color: green
 tools:

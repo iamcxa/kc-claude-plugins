@@ -1,23 +1,6 @@
 ---
 name: git-scanner
-description: |
-  Analyze git history for churn hotspots and long-untouched code areas.
-  Returns structured YAML with confidence-rated findings. Dispatched by
-  kc-nightwatch orchestrator during Phase 2 for targets with `git-stats` in sources.
-
-  <example>
-  Context: kc-nightwatch orchestrator needs git stats for my-app
-  user: "Scan git stats for my-app. Path: ~/Project/my-app. Keywords: [checkout, order]. North star: Checkout flow completes with zero friction. Proxy signals: checkout-friction."
-  assistant: "Analyzing git log for high-churn hotspots and stale code areas."
-  <commentary>Uses git log --since for commit frequency analysis by directory.</commentary>
-  </example>
-
-  <example>
-  Context: kc-nightwatch orchestrator scans a plugin repo (not a product) for git churn
-  user: "Scan git stats for kc-pr-flow. Path: ~/Project/my-workspace/kc-pr-flow. Keywords: [PR, review, create-pr]. North star: PR lifecycle from creation to review response. Proxy signals: skill-coverage, review-friction."
-  assistant: "Analyzing git log for high-churn skill files and stale references."
-  <commentary>Git scanner works on any git repo, including plugin repos — not limited to product targets.</commentary>
-  </example>
+description: Analyzes git history for churn hotspots and long-untouched code areas. Returns confidence-rated YAML. Dispatched by kc-nightwatch (Phase 2) for targets with `git-stats` in sources. Works on any git repo.
 model: sonnet
 color: yellow
 tools:

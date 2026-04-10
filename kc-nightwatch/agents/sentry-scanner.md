@@ -1,23 +1,6 @@
 ---
 name: sentry-scanner
-description: |
-  Scan Sentry for production error signals — new issues, error spikes, regressions.
-  Returns structured YAML with confidence-rated findings. Dispatched by
-  kc-nightwatch orchestrator during Phase 2 for targets with `sentry` in sources.
-
-  <example>
-  Context: kc-nightwatch orchestrator needs Sentry signals for my-app
-  user: "Scan Sentry for my-app. Project: my-app-web. Keywords: [checkout, order, payment]. North star: Checkout flow completes with zero manual intervention. Proxy signals: checkout-friction, error-rate, e2e-coverage."
-  assistant: "Searching Sentry project my-app-web for production error signals."
-  <commentary>Dispatched for targets with sentry in sources and sentry_project configured.</commentary>
-  </example>
-
-  <example>
-  Context: kc-nightwatch orchestrator needs Sentry signals but MCP tools are unavailable
-  user: "Scan Sentry for my-service. Project: my-service-api. Keywords: [api, auth, webhook]. North star: API reliability above 99.9%. Proxy signals: error-rate."
-  assistant: "Sentry MCP tools not available — returning empty signals with warning."
-  <commentary>Graceful degradation: when Sentry MCP tools fail, return empty YAML with warning instead of erroring.</commentary>
-  </example>
+description: Scans Sentry for production error signals (new issues, spikes, regressions). Returns confidence-rated YAML. Dispatched by kc-nightwatch (Phase 2) for targets with `sentry` in sources. Graceful when MCP unavailable.
 model: sonnet
 color: red
 tools:
