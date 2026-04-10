@@ -1,6 +1,7 @@
 ---
 name: kc-session-resume
 description: Use when user says 'resume', 'continue', '繼續', 'pick up where I left off', or mentions a branch name to resume previous work. Triggers on session handoff resume prompts.
+argument-hint: "[handoff-id] [description]"
 allowed-tools:
   - mcp__plugin_kc-hyperfocus_context-lake__get_metrics
   - mcp__plugin_kc-hyperfocus_context-lake__read_journal_entry
@@ -52,24 +53,35 @@ git log --oneline -3
 git rev-parse --show-toplevel
 ```
 
+Derive repo slug (same logic as kc-session-handoff Step 1.5):
+
+```bash
+REPO_SLUG=$(basename "$(git rev-parse --git-common-dir 2>/dev/null | sed 's|/\.git$||')" 2>/dev/null | tr '[:upper:]' '[:lower:]')
+REPO_SLUG=${REPO_SLUG:-$(basename "$(pwd)" | tr '[:upper:]' '[:lower:]')}
+```
+
 Go to step 2B (list mode).
 
 ### 2A. Direct Lookup (with Handoff ID)
 
-Load journal read tool:
+Load the journal read tool:
 
 ```
 ToolSearch → "select:mcp__plugin_kc-hyperfocus_context-lake__read_journal_entry"
 ```
 
-Reconstruct full path and read directly:
+Try paths in order (stop at first success):
 
-```
-read_journal_entry:
-  path: "{cwd}/.private-journal/{handoff-id}.md"
-```
+1. **Repo-scoped (new):** `~/.private-journal/_repos/{REPO_SLUG}/{handoff-id}.md`
+2. **Flat legacy:** `~/.private-journal/{handoff-id}.md`
+3. **Project-dir legacy:** `{git-toplevel}/.private-journal/{handoff-id}.md`
 
-This is an O(1) lookup — no search needed. Skip to step 3.
+If all three return "Entry not found":
+- Report: "Handoff `{handoff-id}` not found in repo '{REPO_SLUG}'."
+- Offer: "要搜尋其他 repo 的 handoff 嗎？"
+- If user says yes → list all entries in `~/.private-journal/_repos/` subdirs matching the handoff-id date prefix
+
+Skip to step 3.
 
 ### 2B. List Mode (no Handoff ID)
 
@@ -79,22 +91,26 @@ Load journal list tool:
 ToolSearch → "select:mcp__plugin_kc-hyperfocus_context-lake__list_recent_entries"
 ```
 
-Fetch recent project entries:
+Fetch recent handoffs scoped to current repo:
 
 ```
 list_recent_entries:
   days: 7
   limit: 5
-  type: "project"
+  type: "both"
+  repo_slug: {REPO_SLUG}
+  session_handoff_only: true
 ```
+
+If zero results → widen: drop `session_handoff_only`, keep `repo_slug`. Still zero → drop `repo_slug` too (show all repos with warning).
 
 Filter results for entries containing "Session Handoff:" in the excerpt. Present up to 3 matches as a numbered list:
 
 ```
 找到 N 筆交接紀錄：
 
-1. [2026-03-06/02-35-35-040018] SC-571 Phase B — tenant switching race fix
-2. [2026-03-06/02-25-41-156665] SC-571 Phase B — 服務清單不更新
+1. [{handoff-id}] {branch} — {description}
+2. [{handoff-id}] {branch} — {description}
 
 選哪一筆？(1/2)
 ```
