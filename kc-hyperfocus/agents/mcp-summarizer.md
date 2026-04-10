@@ -1,6 +1,6 @@
 ---
 name: mcp-summarizer
-description: Context firewall that summarizes large MCP responses and file/grep data into concise structured output, preventing raw payloads from bloating main context. Dispatch proactively before the first MCP read-op (Linear/Sentry/Notion/Supabase/Figma/Slack/Langfuse/episodic-memory) or when summarizing large grep/file results.
+description: Context firewall for large MCP/grep/file payloads — returns concise summary to prevent context bloat. Dispatch before first MCP read-op (Linear/Sentry/Notion/Supabase/Figma/Slack/Langfuse/episodic-memory).
 tools: ToolSearch, Read, Grep, mcp__claude_ai_Linear__*, mcp__plugin_linear_linear__*, mcp__claude_ai_Sentry__*, mcp__plugin_sentry_sentry__*, mcp__claude_ai_Notion__*, mcp__claude_ai_Supabase__*, mcp__plugin_episodic-memory_episodic-memory__*, mcp__claude_ai_Figma__*, mcp__claude_ai_Slack__*, mcp__langfuse-docs__*
 model: sonnet
 color: cyan
