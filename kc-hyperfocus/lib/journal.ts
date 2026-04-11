@@ -74,6 +74,76 @@ export function detectFieldCorruption(thoughts: ThoughtsInput): void {
   }
 }
 
+// Fields whose values the LLM can corrupt by collapsing adjacent parameter
+// blocks. Routing fields (repo_slug, session_handoff, branch, description)
+// are excluded — they aren't content and don't contain multi-line strings.
+const CORRUPTIBLE_FIELDS = [
+  "feelings",
+  "project_notes",
+  "user_context",
+  "technical_insights",
+  "world_knowledge",
+] as const;
+type CorruptibleField = (typeof CORRUPTIBLE_FIELDS)[number];
+
+function isCorruptibleField(s: string): s is CorruptibleField {
+  return (CORRUPTIBLE_FIELDS as readonly string[]).includes(s);
+}
+
+// Salvages data from LLM XML emit corruption before validation.
+//
+// When the LLM emits a tool call with multiple parameter blocks, it sometimes
+// collapses the closing tag of one parameter with the opening of the next,
+// producing bled content like:
+//
+//   feelings: "real feelings</feelings>\n<parameter name=\"project_notes\">real notes"
+//
+// This function detects `</SOURCE>\s*<parameter name="TARGET">` boundaries,
+// splits the content, and re-routes the bled fragment to TARGET. Subsequent
+// `</parameter>\s*<parameter name="...">` transitions inside the bled
+// fragment are also walked. Called before detectFieldCorruption so only
+// truly unsalvageable corruption still throws.
+export function repairFieldCorruption(thoughts: ThoughtsInput): ThoughtsInput {
+  const repaired: ThoughtsInput = { ...thoughts };
+
+  for (const source of CORRUPTIBLE_FIELDS) {
+    const value = repaired[source];
+    if (typeof value !== "string") continue;
+
+    const firstBleed = value.match(
+      new RegExp(`</${source}>\\s*<parameter\\s+name="([^"]+)">`)
+    );
+    if (!firstBleed || firstBleed.index === undefined) continue;
+
+    repaired[source] = value.slice(0, firstBleed.index);
+
+    let currentField: string = firstBleed[1];
+    let rest = value.slice(firstBleed.index + firstBleed[0].length);
+
+    while (true) {
+      const nextBoundary = rest.match(
+        /<\/parameter>\s*<parameter\s+name="([^"]+)">/
+      );
+      if (!nextBoundary || nextBoundary.index === undefined) {
+        const content = rest.replace(/<\/parameter>\s*$/, "");
+        if (isCorruptibleField(currentField)) {
+          repaired[currentField] = content;
+        }
+        break;
+      }
+
+      const content = rest.slice(0, nextBoundary.index);
+      if (isCorruptibleField(currentField)) {
+        repaired[currentField] = content;
+      }
+      currentField = nextBoundary[1];
+      rest = rest.slice(nextBoundary.index + nextBoundary[0].length);
+    }
+  }
+
+  return repaired;
+}
+
 // ---------------------------------------------------------------------------
 // Journal writer
 // ---------------------------------------------------------------------------
@@ -90,7 +160,7 @@ export class JournalWriter {
   }
 
   async writeThoughts(
-    thoughts: ThoughtsInput
+    rawThoughts: ThoughtsInput
   ): Promise<{
     path: string;
     entryId: string;
@@ -98,7 +168,9 @@ export class JournalWriter {
     projectPath?: string;
     userPath?: string;
   }> {
-    // Corruption check BEFORE any file writes
+    // Repair LLM XML emit corruption before validation — salvages data that
+    // would otherwise be rejected. Unsalvageable corruption still throws.
+    const thoughts = repairFieldCorruption(rawThoughts);
     detectFieldCorruption(thoughts);
 
     const timestamp = new Date();
