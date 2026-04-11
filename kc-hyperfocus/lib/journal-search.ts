@@ -12,6 +12,7 @@ import {
   existsSync,
 } from "node:fs";
 import { join } from "node:path";
+import { homedir } from "node:os";
 import { EmbeddingService, type EmbeddingData } from "./embeddings.ts";
 import {
   resolveProjectJournalPath,
@@ -161,8 +162,15 @@ export class JournalSearchService {
   // -------------------------------------------------------------------------
 
   readEntry(filePath: string): string | null {
+    // Expand ~/ prefix — Node's readFileSync does not do shell-style tilde
+    // expansion, so paths like `~/.private-journal/foo.md` would always
+    // ENOENT without this. kc-session-resume's path-fallback chain hands
+    // tilde paths to this method directly.
+    const resolved = filePath.startsWith("~/")
+      ? join(homedir(), filePath.slice(2))
+      : filePath;
     try {
-      return readFileSync(filePath, "utf8");
+      return readFileSync(resolved, "utf8");
     } catch (e: any) {
       if (e?.code === "ENOENT") return null;
       throw e;
