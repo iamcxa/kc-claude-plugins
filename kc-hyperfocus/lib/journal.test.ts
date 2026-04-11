@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from "bun:test";
-import { detectFieldCorruption, JournalWriter, type ThoughtsInput } from "./journal.ts";
+import {
+  detectFieldCorruption,
+  repairFieldCorruption,
+  JournalWriter,
+  type ThoughtsInput,
+} from "./journal.ts";
 import { mkdirSync, readFileSync, rmSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
@@ -48,6 +53,86 @@ describe("detectFieldCorruption", () => {
         world_knowledge: "some text </parameter> more text",
       })
     ).toThrow("world_knowledge");
+  });
+});
+
+describe("repairFieldCorruption", () => {
+  it("splits feelings when </feelings><parameter name='project_notes'> bleed occurs", () => {
+    const corrupted: ThoughtsInput = {
+      feelings:
+        'Good session.</feelings>\n<parameter name="project_notes">Session Handoff: test',
+    };
+    const repaired = repairFieldCorruption(corrupted);
+    expect(repaired.feelings).toBe("Good session.");
+    expect(repaired.project_notes).toBe("Session Handoff: test");
+  });
+
+  it("strips trailing </parameter> from the bled field", () => {
+    const corrupted: ThoughtsInput = {
+      feelings:
+        'Good.</feelings>\n<parameter name="project_notes">Notes here</parameter>',
+    };
+    const repaired = repairFieldCorruption(corrupted);
+    expect(repaired.feelings).toBe("Good.");
+    expect(repaired.project_notes).toBe("Notes here");
+  });
+
+  it("preserves fields not affected by bleed", () => {
+    const corrupted: ThoughtsInput = {
+      feelings:
+        'Curious.</feelings>\n<parameter name="project_notes">Handoff notes',
+      technical_insights: "Already passed cleanly",
+    };
+    const repaired = repairFieldCorruption(corrupted);
+    expect(repaired.feelings).toBe("Curious.");
+    expect(repaired.project_notes).toBe("Handoff notes");
+    expect(repaired.technical_insights).toBe("Already passed cleanly");
+  });
+
+  it("handles multi-field bleed across three parameter blocks", () => {
+    const corrupted: ThoughtsInput = {
+      feelings:
+        'Good.</feelings>\n<parameter name="project_notes">Handoff</parameter>\n<parameter name="technical_insights">Learned X',
+    };
+    const repaired = repairFieldCorruption(corrupted);
+    expect(repaired.feelings).toBe("Good.");
+    expect(repaired.project_notes).toBe("Handoff");
+    expect(repaired.technical_insights).toBe("Learned X");
+  });
+
+  it("is a no-op when no corruption markers present", () => {
+    const clean: ThoughtsInput = {
+      feelings: "All good",
+      project_notes: "Handoff notes",
+    };
+    const repaired = repairFieldCorruption(clean);
+    expect(repaired.feelings).toBe("All good");
+    expect(repaired.project_notes).toBe("Handoff notes");
+  });
+
+  it("leaves detectFieldCorruption passing after repair", () => {
+    const corrupted: ThoughtsInput = {
+      feelings:
+        'Good.</feelings>\n<parameter name="project_notes">Handoff notes',
+    };
+    const repaired = repairFieldCorruption(corrupted);
+    expect(() => detectFieldCorruption(repaired)).not.toThrow();
+  });
+
+  it("preserves non-routing fields through repair", () => {
+    const corrupted: ThoughtsInput = {
+      feelings:
+        'Good.</feelings>\n<parameter name="project_notes">Handoff',
+      repo_slug: "spacedock",
+      session_handoff: true,
+      branch: "main",
+      description: "test",
+    };
+    const repaired = repairFieldCorruption(corrupted);
+    expect(repaired.repo_slug).toBe("spacedock");
+    expect(repaired.session_handoff).toBe(true);
+    expect(repaired.branch).toBe("main");
+    expect(repaired.description).toBe("test");
   });
 });
 
@@ -122,11 +207,27 @@ describe("JournalWriter repo-scope routing", () => {
     expect(content).not.toContain("session_handoff:");
   });
 
-  it("runs corruption detection before writing", async () => {
+  it("repairs XML-bled fields before writing and persists both cleanly", async () => {
+    const writer = new JournalWriter(join(TEST_BASE, "project"), TEST_USER_PATH);
+    const result = await writer.writeThoughts({
+      feelings:
+        'Productive session.</feelings>\n<parameter name="project_notes">Session Handoff: repaired',
+      repo_slug: "carlove",
+    });
+
+    expect(existsSync(result.path)).toBe(true);
+    const content = readFileSync(result.path, "utf8");
+    expect(content).toContain("## Feelings\n\nProductive session.");
+    expect(content).toContain("## Project Notes\n\nSession Handoff: repaired");
+    expect(content).not.toContain("<parameter");
+    expect(content).not.toContain("</feelings>");
+  });
+
+  it("still throws when corruption is unsalvageable (bare </parameter>)", async () => {
     const writer = new JournalWriter(join(TEST_BASE, "project"), TEST_USER_PATH);
     await expect(
       writer.writeThoughts({
-        feelings: 'test</feelings><parameter name="project_notes">leaked',
+        feelings: "just closing tag </parameter> mid-sentence",
         repo_slug: "carlove",
       })
     ).rejects.toThrow("tool-call XML marker");

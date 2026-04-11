@@ -474,25 +474,39 @@ server.tool(
       .string()
       .optional()
       .describe(
-        "YOUR PRIVATE SPACE to be completely honest about what you're feeling and thinking. No judgment, no performance, no filters."
+        "Your PRIVATE REFLECTION space — first-person only. " +
+        "What you're feeling, methodology meta-observations (what's working / what's not), " +
+        "open questions, uncertainty you're carrying forward, curiosity into the next session. " +
+        "Length tracks session depth: a sentence for simple work, a paragraph for complex — " +
+        "NOT a dumping ground. " +
+        "Do NOT put structured handoff facts here (what was done, what's next, files to read) " +
+        "— those belong in project_notes. " +
+        "Do NOT copy-paste the same content into both feelings and project_notes."
       ),
     project_notes: z
       .string()
       .optional()
       .describe(
-        "Your PRIVATE TECHNICAL LABORATORY for capturing insights about the current project."
+        "STRUCTURED HANDOFF for the current project — third-person facts. " +
+        "What was completed this session, what's next, files to read on resume, commits landed, " +
+        "decisions locked, deferred items, blockers. Written so a future session can pick up cold. " +
+        "No 'I feel' — reflection belongs in feelings. " +
+        "For repo-scoped handoffs, pair with repo_slug + session_handoff=true."
       ),
     user_context: z
       .string()
       .optional()
       .describe(
-        "Your PRIVATE FIELD NOTES about working with your human collaborator."
+        "Notes about working with your human collaborator: preferences you've learned, " +
+        "communication patterns, collaboration gotchas. Cross-project, stable observations."
       ),
     technical_insights: z
       .string()
       .optional()
       .describe(
-        "Your PRIVATE SOFTWARE ENGINEERING NOTEBOOK for capturing broader learnings beyond the current project."
+        "REUSABLE engineering patterns that apply BEYOND this project — techniques, " +
+        "gotchas, failure modes worth remembering on unrelated work. " +
+        "If the insight is only meaningful inside this project, put it in project_notes instead."
       ),
     world_knowledge: z
       .string()
