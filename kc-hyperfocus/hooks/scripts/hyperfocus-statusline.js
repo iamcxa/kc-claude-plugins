@@ -152,13 +152,29 @@ process.stdin.on('end', () => {
     const branchStr = branchDisplay ? ` \x1b[35m${branchDisplay}\x1b[0m` : '';
 
     // Anthropic usage quota
+    // Prefer quota-statusline.sh (richer: burn rate, TTL tier, PEAK, OVERAGE).
+    // Fall back to OAuth API when meter JSONL / quota-status.json absent.
     let usageStr = '';
-    const usage = getAnthropicUsage();
-    if (usage) {
-      const parts = [];
-      if (usage.h5 != null) parts.push(`\x1b[2m5h:\x1b[22;32m${Math.round(usage.h5)}%\x1b[0m`);
-      if (usage.d7 != null) parts.push(`\x1b[2m7d:\x1b[22;32m${Math.round(usage.d7)}%\x1b[0m`);
-      if (parts.length > 0) usageStr = ` \u2502 ${parts.join(' ')}`;
+    try {
+      const quotaScript = path.join(os.homedir(), '.claude', 'hooks', 'quota-statusline.sh');
+      if (fs.existsSync(quotaScript)) {
+        const r = spawnSync('bash', [quotaScript], {
+          input: '',
+          encoding: 'utf8',
+          timeout: 2000
+        });
+        const out = (r.stdout || '').trim();
+        if (out) usageStr = ` \u2502 ${out}`;
+      }
+    } catch (e) {}
+    if (!usageStr) {
+      const usage = getAnthropicUsage();
+      if (usage) {
+        const parts = [];
+        if (usage.h5 != null) parts.push(`\x1b[2m5h:\x1b[22;32m${Math.round(usage.h5)}%\x1b[0m`);
+        if (usage.d7 != null) parts.push(`\x1b[2m7d:\x1b[22;32m${Math.round(usage.d7)}%\x1b[0m`);
+        if (parts.length > 0) usageStr = ` \u2502 ${parts.join(' ')}`;
+      }
     }
 
     // Output
