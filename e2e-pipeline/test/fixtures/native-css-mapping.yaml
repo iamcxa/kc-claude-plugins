@@ -1,0 +1,49 @@
+# native-css-mapping.yaml
+# TEST FIXTURE — canonical selector forms only
+#
+# Contains ONLY agent-browser-native selector grammar per design.md Candidate 1 decision.
+# Used by lint-mapping.sh T1.1 tests to verify that valid selectors pass without error.
+#
+# After T1.1 lands: `lint-mapping.sh native-css-mapping.yaml` must exit 0.
+#
+# Canonical forms (per design.md Captain Decision 2026-05-04):
+#   - [data-testid="..."]             CSS attribute selector
+#   - find role <r> --name "<v>"      agent-browser find subcommand (Candidate 1)
+#   - [role="<r>"][aria-label="<v>"]  CSS attribute fallback (when aria-label is explicit)
+#   - .SomeClass:nth-of-type(N)       CSS nth pseudo for repeated elements
+
+version: "2"
+base_url: "http://localhost:3000"
+
+elements:
+  # CSS data-testid attribute selector (preferred when testid is available)
+  email_input:
+    selector: '[data-testid="email-input"]'
+    name: Email input field
+
+  # agent-browser find role subcommand (Candidate 1 — canonical for accessible-name lookup)
+  # Covers RNW components where aria-label may be missing but accessible name is computed
+  submit_button:
+    selector: 'find role button --name "Submit"'
+    name: Submit button
+
+  # agent-browser find role for tab-like elements
+  lineage_tab:
+    selector: 'find role tab --name "Lineage"'
+    name: Lineage tab
+
+  # CSS attribute fallback — only when element has explicit aria-label in DOM
+  # (not for textContent-named or aria-labelledby elements — use find role for those)
+  nav_close_button:
+    selector: '[role="button"][aria-label="Close navigation"]'
+    name: Navigation close button
+
+  # CSS nth-of-type for repeated elements (replaces banned >> nth=N chord)
+  third_list_item:
+    selector: '.RecordList-item:nth-of-type(3)'
+    name: Third list item
+
+  # Nested CSS selector — pure CSS, no banned tokens
+  modal_title:
+    selector: '[data-testid="confirm-modal"] h2'
+    name: Confirm modal title heading

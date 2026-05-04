@@ -1,0 +1,46 @@
+# legacy-playwright-mapping.yaml
+# TEST FIXTURE — DO NOT USE IN PRODUCTION
+#
+# Contains all 4 banned Playwright-style selector token classes.
+# Used by lint-mapping.sh T1.1 tests to verify detection logic (RED phase).
+#
+# After T1.1 lands: `lint-mapping.sh legacy-playwright-mapping.yaml` must exit 2.
+
+version: "2"
+base_url: "http://localhost:3000"
+
+elements:
+  # CLASS 1 — Playwright role attr-style: role=<word>[name=...]
+  # Expected fix: find role textbox --name "Email"
+  email_input:
+    selector: 'role=textbox[name="Email"]'
+    name: Email input field
+
+  # CLASS 2 — Playwright nth chord: >> nth=<N>
+  # Expected fix: .MuiButton-root:nth-of-type(3)
+  third_action_button:
+    selector: '.MuiButton-root >> nth=2'
+    name: Third action button (0-indexed nth=2)
+
+  # CLASS 3 — Playwright text engine: bare text= at selector start
+  # Expected fix: find text "Submit"
+  submit_button:
+    selector: 'text=Submit'
+    name: Submit button
+
+  # CLASS 4 — Playwright has-text: :has-text( (broken in agent-browser, no replacement)
+  # Expected fix: restructure using data-testid or find role/text
+  confirm_dialog_heading:
+    selector: '.MuiDialog >> :has-text("Confirm deletion")'
+    name: Confirm dialog heading
+
+  # Additional element using CLASS 1 variant with different role
+  # to verify the regex matches more than one role type
+  password_input:
+    selector: 'role=textbox[name="Password"]'
+    name: Password input field
+
+  # Additional element using CLASS 3 variant inside a quoted attribute-style context
+  cancel_link:
+    selector: '"text=Cancel"'
+    name: Cancel link
