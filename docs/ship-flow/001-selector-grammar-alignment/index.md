@@ -1,7 +1,7 @@
 ---
 id: "001"
 title: "e2e-pipeline selector grammar alignment (mapper ↔ agent-browser runtime)"
-status: execute
+status: verify
 pattern: pitch
 appetite: "medium-batch"
 layout: folder
@@ -10,6 +10,7 @@ stage_outputs:
   design: design.md
   plan: plan.md
   execute: execute.md
+  verify: verify.md
 ---
 
 <!-- section:stage-artifact-links -->
@@ -18,4 +19,5 @@ stage_outputs:
 | design | [design.md](design.md) |
 | plan | [plan.md](plan.md) |
 | execute | [execute.md](execute.md) |
+| verify | [verify.md](verify.md) |
 <!-- /section:stage-artifact-links -->
