@@ -6,6 +6,8 @@ pattern: pitch
 appetite: "medium-batch"
 layout: folder
 answers_density: "high"
+stage_outputs:
+  plan: plan.md
 ---
 
 <!-- section:stage-artifact-links -->
