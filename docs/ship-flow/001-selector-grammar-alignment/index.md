@@ -9,6 +9,7 @@ answers_density: "high"
 stage_outputs:
   design: design.md
   plan: plan.md
+  execute: execute.md
 ---
 
 <!-- section:stage-artifact-links -->
