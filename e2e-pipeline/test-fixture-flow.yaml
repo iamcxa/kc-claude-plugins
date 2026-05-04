@@ -1,0 +1,45 @@
+name: selector-grammar-fixture-flow
+mapping: ./compiler/test/fixtures/test-app.yaml
+description: |
+  Smoke flow exercising native selector forms against fixture mapping.
+  Used by T3.1 integration smoke and as the in-tree example of post-001
+  selector grammar. All selectors use the canonical native contract:
+  - find role/text/button --name "<v>" subcommand form
+  - CSS attribute forms ([data-testid=...], input[type="password"])
+  No banned Playwright forms (role=X[name=Y], >> nth=N, bare text=, has-text()).
+
+steps:
+  - id: visit_root
+    action: navigate
+    url: http://localhost:8000
+
+  - id: assert_login_visible
+    action: assert
+    selector_key: email_input
+    expect: visible
+
+  - id: fill_email
+    action: fill
+    selector_key: email_input
+    value: test@example.com
+
+  - id: fill_password
+    action: fill
+    selector_key: password_input
+    value: testpassword
+
+  - id: click_login
+    action: click
+    selector_key: login_button
+    expect:
+      - url contains /dashboard
+
+  - id: assert_dashboard_heading
+    action: assert
+    selector_key: heading
+    expect: visible
+
+  - id: assert_sidebar_home
+    action: assert
+    selector_key: sidebar_home
+    expect: visible

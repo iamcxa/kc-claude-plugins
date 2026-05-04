@@ -472,7 +472,7 @@ You MUST end your response with this exact structured block (the orchestrator pa
 
 ## Eval-Fallback Accounting
 
-Every dispatch run MUST track how many times the runner fell back to `agent-browser eval` because a native selector command returned an unexpected result. This is the observability layer introduced in plan 001 (T2.1). T2.2 will REMOVE the fallback path; T0.2 baselines hit counts before removal.
+Every dispatch run MUST track how many times the runner fell back to `agent-browser eval` because a native selector command returned an unexpected result. This is the observability layer introduced in plan 001 (T2.1). Eval fallback REMOVED for native selectors (T2.2 landed). Banned Playwright forms also fail loud.
 
 ### Counter State
 
@@ -535,17 +535,43 @@ Also add the metric row to the `## Summary` table in `report.md` (§ 3c):
 | Eval Fallback Hits | N |
 ```
 
-### Strict Mode
+### Removal Policy (T2.2)
 
-When the runner receives a `--strict-native-selectors` flag (passed through from `/e2e-test`):
+**Eval fallback is REMOVED for native selectors.** The following rules are now in effect:
 
-- If `eval_fallback_hits > 0` at run end → emit a FAIL marker in the structured summary block:
+**Rule 1 — Native form returns 0/false/not-found → fail loud, no eval bypass.**
+
+When a selector matches a NATIVE form — CSS attribute form (`[data-testid=...]`, `[aria-label="..."]`, `input[type="password"]`, etc.) OR canonical `find role|text|testid|label <r> [--name <v>]` subcommand — and `agent-browser is visible/wait/click` returns 0/false/not-found:
+- **DO NOT fall back to eval.**
+- Return the explicit failure to the flow runner immediately.
+- Increment `eval_fallback_hits` as the failure counter (still tracked for observability) but do NOT execute the eval bypass.
+
+**Rule 2 — Banned Playwright forms → emit warning + fail loud.**
+
+When a selector matches a BANNED Playwright form (`role=X[name=Y]`, `>> nth=N`, bare `text=`, `has-text(`):
+- Emit a warning line: `⚠ banned-selector: <step-id> selector=<selector> form=<banned-pattern>`
+- Increment `eval_fallback_hits`.
+- Return failure (no silent eval bypass).
+- Banned forms should not exist post-T1.x; transitional flows may still carry them. Surface them loudly so they can be fixed.
+
+**Rule 3 — Flag polarity flip.**
+
+`--strict-native-selectors` is now the DEFAULT behavior (eval fallback removed). For rare debug/investigation cases where you must allow eval bypass, use the explicit opt-in flag `--allow-eval-fallback`. Without `--allow-eval-fallback`, any attempt to use eval as a selector workaround is a hard failure.
+
+### Strict Mode (legacy — now default)
+
+The former `--strict-native-selectors` flag behavior is now the default (T2.2). For backwards compatibility, the flag is still accepted but is a no-op (strict mode is always on).
+
+When `--allow-eval-fallback` is explicitly provided (rare debug case):
+
+- Eval fallback is re-enabled for native selectors.
+- `eval_fallback_hits > 0` at run end → emit a WARN marker (not FAIL) in the structured summary block:
   ```
-  STRICT-FAIL: eval-fallback hits > 0
+  WARN: eval-fallback hits > 0 (--allow-eval-fallback mode)
   ```
-  This flips the overall run verdict to FAIL regardless of whether individual step assertions passed.
+- This is intentionally visible: any run with eval fallback hits under `--allow-eval-fallback` must be reviewed before treating results as reliable.
 
-Without `--strict-native-selectors`, fallback hits are counted and reported but do **not** change the run verdict (transitional state during T0.2 baseline → T2.2 removal).
+Without `--allow-eval-fallback`, any eval bypass attempt is a hard FAIL (banned-selector or native-fail).
 
 ---
 
@@ -566,7 +592,7 @@ These rules are non-negotiable. Violating them causes flaky or broken tests.
 11. **Multi-site flows**: When `suite_context` is provided, use `--session {{app}}` on all agent-browser commands to keep sessions separate.
 12. **Timeout values** in flow YAML are in seconds. Convert to milliseconds (`* 1000`) for `--timeout` flags.
 13. **Checkpoint best-effort**. `verify-external` steps execute via Bash/curl only. Complex checks needing MCP (Slack, database) → mark SKIP. For full verification, use `/e2e-walkthrough --verify` (main context, full tool access).
-14. **Eval fallback is observable, not silent**. Always count and report. Never use `agent-browser eval` to bypass a selector-engine mismatch without incrementing `eval_fallback_hits`. Plan T2.2 will REMOVE eval fallback for visibility checks; T0.2 baselines hits before that happens.
+14. **Eval fallback REMOVED for native selectors (T2.2 landed). Banned Playwright forms also fail loud.** When a native selector returns 0/false/not-found, return the explicit failure — do NOT fall back to eval. Banned Playwright forms (`role=X[name=Y]`, `>> nth=N`, bare `text=`, `has-text(`) must also fail loud with a warning. Use `--allow-eval-fallback` only for explicit debug investigation (rare opt-in). Always increment `eval_fallback_hits` on any fallback attempt, even under `--allow-eval-fallback`.
 
 ---
 

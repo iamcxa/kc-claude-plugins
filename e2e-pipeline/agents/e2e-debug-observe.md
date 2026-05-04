@@ -157,11 +157,12 @@ agent-browser snapshot -i
 - If the step mentions a specific element, use `agent-browser get text @ref` to extract its displayed value.
 - If the step hints at runtime state inspection (e.g., "check the data", "inspect state"), use `agent-browser eval` to read relevant JS state:
   ```bash
-  agent-browser eval "JSON.stringify(document.querySelector('[data-testid=target]')?.textContent)"
+  agent-browser eval "JSON.stringify(document.querySelector('[data-testid=\"target\"]')?.textContent)"
   ```
   Record the eval result in the report as additional context.
+  **Note:** `eval` here is for reading JS runtime state (observability), NOT as a selector-engine bypass. If an element cannot be found by native selector, surface that as an explicit failure — do NOT use eval as a workaround to locate/interact with elements (see Critical Rule 7 below).
 
-**Element not found**: If the target element cannot be located in the snapshot, record the step as `FAILED: element not found` and continue to the next step. Do NOT abort.
+**Element not found**: If the target element cannot be located in the snapshot, record the step as `FAILED: element not found` and surface this explicitly — do NOT use eval to locate or interact with the element. Continue to the next step. Do NOT abort.
 
 ### 3c: Post-step collection
 
@@ -379,6 +380,7 @@ This warning helps the orchestrator distinguish "no data to observe" from "injec
 4. **Use Write tool for the report.** Do NOT use Bash echo/redirect to write `report.md`. The Write tool provides better error handling and user visibility.
 5. **Absolute paths only** for all file operations -- screenshots, report, profile. Any path not starting with `/` or `$` (variable resolving to absolute) is wrong.
 6. **Close browser even if steps fail.** Step 5 runs unconditionally. The only exception is a confirmed browser crash (process already dead). **Exception in Teams mode:** do NOT close browser unless explicitly told to — see Team Mode Protocol below.
+7. **debug-observe never falls back to eval for selectors.** `agent-browser eval` in this agent is strictly for reading JS runtime state (observability). If a selector doesn't resolve in the snapshot (element not found), surface that explicitly to the captain: record the step as `FAILED: element not found — selector did not resolve, cannot interact`. Do NOT attempt to locate or click elements via `eval` as a workaround. If the browser cannot find an element via native snapshot+@ref, the captain needs to know — that IS the debug observation.
 
 ---
 
