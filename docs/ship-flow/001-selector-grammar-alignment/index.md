@@ -1,7 +1,7 @@
 ---
 id: "001"
 title: "e2e-pipeline selector grammar alignment (mapper ↔ agent-browser runtime)"
-status: plan
+status: execute
 pattern: pitch
 appetite: "medium-batch"
 layout: folder
