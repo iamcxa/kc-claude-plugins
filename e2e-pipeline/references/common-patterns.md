@@ -44,27 +44,30 @@ Patterns and gotchas for E2E testing agents. For project-specific patterns, chec
 
 ## React Native Web (Expo)
 
-- Text elements render TWICE in DOM (nth=0 hidden, nth=1 visible) — use `>> nth=1` for `text=` selectors
-- `text=` does substring match — use `text="exact"` with quotes for exact match
-- Tab bars get proper `role=tab[name="..."]` attributes — prefer over `text=`
-- Multi-row table elements need `>> nth=0` for "at least one exists" assertion
+- Text elements render TWICE in DOM (nth=0 hidden, nth=1 visible) — use `:nth-of-type(2)` CSS pseudo or `find text "<v>"` subcommand; `>> nth=1` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
+- `text=` does substring match — use `find text "<v>"` subcommand form for reliable matching
+- Tab bars get proper role attributes — prefer `find role tab --name "..."` over bare `text=`
+- Multi-row table elements need `:nth-of-type(1)` for "at least one exists" assertion; `>> nth=0` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
 
 ## Repeated Elements (Tables, Lists)
 
 - Multiple matches -> strict mode violation
-- Use `>> nth=0` for "at least one exists" check
-- Use `>> nth=N` for specific row/item
-- Per-row buttons (edit, delete) all share same selector — must use nth or @ref
+- Use `:nth-of-type(1)` CSS pseudo for "at least one exists" check; `>> nth=0` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
+- Use `:nth-of-type(N)` for specific row/item; `>> nth=N` is BANNED
+- Per-row buttons (edit, delete) all share same selector — must use `:nth-of-type(N)` or @ref
 
 ## Selector Priority (for mapping files)
 
 1. `data-testid` — best stability, explicit test anchor
-2. `role=button[name="..."]` — good, accessible, reliable
-3. `role=button[name=/pattern/]` — regex partial match
+2. `find role <r> --name "<v>"` subcommand form — good, accessible, reliable (e.g., `find role button --name "Submit"`)
+3. `find role <r> --name "/<pattern>/"` — regex partial match (e.g., `find role button --name "/切換/"`)
 4. `css=[aria-label="..."]` — semantic
 5. NEVER use `css=...has-text('...')` — broken in agent-browser, times out
+6. BANNED: `role=<r>[name="<v>"]` Playwright attr syntax → use `find role <r> --name "<v>"` (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
+7. BANNED: ` >> nth=N` Playwright nth chord → use `:nth-of-type(N)` CSS pseudo
+8. BANNED: bare `text=<v>` at selector start → use `find text "<v>"` subcommand
 
-**Regex selector → literal prefix for grep**: When converting `role=X[name=/pattern/]` to a grep pattern (e.g., for compiled scripts using `grep -F`), extract the longest literal prefix before the first regex metacharacter. E.g., `/切換為.*模式/` → `切換為`. Using the full regex string with `grep -F` causes false negatives because `.*` is treated literally.
+**Regex selector → literal prefix for grep**: When converting `find role <r> --name "/<pattern>/"` to a grep pattern (e.g., for compiled scripts using `grep -F`), extract the longest literal prefix before the first regex metacharacter. E.g., `/切換為.*模式/` → `切換為`. Using the full regex string with `grep -F` causes false negatives because `.*` is treated literally. Former form `role=X[name=/pattern/]` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
 
 ## Snapshot vs is visible
 
