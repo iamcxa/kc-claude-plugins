@@ -102,16 +102,19 @@ Using `app:` or `name:` in steps means v1 format -- rejected by the test runner.
 ## Selector Priority
 
 1. `data-testid="value"` -- best stability
-2. `role=button[name="..."]` -- good semantic match
+2. `find role <r> --name "<v>"` subcommand form -- good semantic match (e.g., `find role button --name "Submit"`)
 3. `aria-label="..."` -- acceptable
 4. Never use `has-text()` -- broken in agent-browser, causes timeout
+5. BANNED: `role=<r>[name="<v>"]` Playwright attr syntax → use `find role <r> --name "<v>"` (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
+6. BANNED: ` >> nth=N` Playwright nth chord → use `:nth-of-type(N)` CSS pseudo
+7. BANNED: bare `text=<v>` at selector start → use `find text "<v>"` subcommand
 
 ## Key Gotchas
 
 - **`e2e-flow-writer` has no Bash tool**: intentional -- it does pure codebase analysis, never opens a browser. Adding Bash would break isolation.
 - **`@ref` is ephemeral**: snapshot `@ref` values change on every DOM mutation. Mappings store stable selectors, not `@ref`.
 - **`is visible` exit code is always 0**: check stdout text `"true"`/`"false"`, not exit code.
-- **React Native Web**: text elements render twice. Use `>> nth=1` for `text=` selectors.
+- **React Native Web**: text elements render twice. Use `:nth-of-type(2)` CSS pseudo or `find text "<v>"` subcommand instead of bare `text=` with `>> nth=1` (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
 - **Ant Design CSS-hidden inputs**: `is visible` returns false for functional elements. Verify via snapshot a11y tree presence instead.
 - **Snapshot doesn't expose `data-testid`/`aria-label`**: use `agent-browser is visible "<selector>"` for attribute-based verification.
 - **Don't pass-through what you can execute**: If an agent has the tools to attempt a step (e.g., verifier has Bash -> can run CLI commands), it should attempt it best-effort rather than blindly skipping. Silent skip = the user discovers broken commands only at execution time, not verification time. External checkpoint failures in the verifier use `on_fail: warn` override so they never block browser verification.

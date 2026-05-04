@@ -133,8 +133,8 @@ Visual anomalies are always listed individually. JS error counts replace individ
 **Smoke mode**: Skip steps 5-6 per step. Run `agent-browser errors --json` once at the end after all navigation steps. Smoke focus is selector verification, not runtime health. If the batch check returns errors, record them as anomalies on the **last step** in the step log with `source: "errors --json (batch)"`. These count toward the Phase 4 anomaly review threshold — batch errors mean non-zero anomalies, so the Phase 4 skip condition does NOT apply.
 
 **Selector verification strategy:**
-- `text=` selectors: verify by comparing snapshot a11y tree text content against mapping values. Snapshot is the source of truth.
-- `data-testid` / `aria-label` / `role=` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `agent-browser is visible "<selector>"` for DOM-level verification.
+- `find text "<v>"` subcommand selectors: verify by comparing snapshot a11y tree text content against mapping values. Snapshot is the source of truth. Bare `text=<v>` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
+- `data-testid` / `aria-label` / `find role <r> --name "<v>"` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `agent-browser is visible "<selector>"` for DOM-level verification. Bare `role=<r>[name="<v>"]` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
 
 ### Anomaly Observation Rules
 
@@ -192,7 +192,7 @@ All anomalies are recorded to the step log and reported inline. The walkthrough 
 Maintain an in-memory list of mapping discrepancies throughout Phase 3. Each entry: `{type, page, element, details}`.
 
 **Detection mechanisms:**
-- **Stale selector**: `snapshot` a11y tree text differs from mapping's expected text for a `text=` selector, OR `is visible` returns `false` for a `data-testid`/`aria-label` selector
+- **Stale selector**: `snapshot` a11y tree text differs from mapping's expected text for a `find text "<v>"` selector, OR `is visible` returns `false` for a `data-testid`/`aria-label` selector. Bare `text=<v>` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
 - **Missing element**: element listed in mapping is absent from both snapshot and `is visible` check
 - **Trigger mismatch**: action on mapped element produces unexpected intermediate state (e.g., dropdown instead of direct dialog) — detected by post-action snapshot showing unexpected structure
 - **New element**: element found in snapshot that has no entry in the current mapping page
