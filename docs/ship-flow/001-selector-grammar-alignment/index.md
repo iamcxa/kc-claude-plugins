@@ -13,5 +13,5 @@ stage_outputs:
 <!-- section:stage-artifact-links -->
 | Stage | File |
 |-------|------|
-| spec | [spec.md](spec.md) |
+| plan | [plan.md](plan.md) |
 <!-- /section:stage-artifact-links -->
