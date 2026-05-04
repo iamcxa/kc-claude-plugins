@@ -64,3 +64,17 @@ graph LR
 如果 (2) 不成立（出現 ≥1 筆合法 use case 被誤殺），這個 pitch 對 **「eval fallback 純粹是 crutch、沒有 load-bearing 用途」** 是錯的——pre-mortem 裡的 *wrong-dcs* 失敗模式應驗。
 
 **Retro 時點：** ship + 2 週。回答 YES / NO / PARTIAL。
+
+<!-- section:hand_off_to_plan -->
+### Hand-off to Plan
+
+- design-skipped: false (retrofitted 2026-05-04 — see `design.md`)
+- canonical_selector_form: `find role <r> --name "<v>"` (Candidate 1, captain decision in design.md)
+- breaks: ban `role=X[name=...]`, `>> nth=N`, bare `text=`, `has-text(`
+- repeated_elements_form: `:nth-of-type(N)` CSS pseudo (NOT `>> nth=N`)
+- compiler_translation: extend `selectorToA11yPattern` with `find role <r> --name "<v>"` parse branch (~30 LOC)
+- ui_surfaces: []
+- framework_detected: n/a
+- open_design_questions: []
+- routing_gap_filed: `docs/ship-flow/todos/ship-flow-non-ui-design-routing-gap.md`
+<!-- /section:hand_off_to_plan -->

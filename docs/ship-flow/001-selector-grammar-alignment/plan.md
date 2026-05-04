@@ -1,6 +1,14 @@
 <!-- section:plan-report -->
 # 001-selector-grammar-alignment — Plan
 
+## Design Source
+
+This plan was originally authored with `design-skipped: true` in spec.md (per ship-shape Phase 8 routing — pitch is non-UI). Mid-flight, captain caught that the selector grammar canonical form (`find role <r> --name "<v>"` vs CSS attr vs structured object) was a real cross-component contract decision that should have hit a design gate. **Retrofit applied 2026-05-04**: `design.md` authored, captain decision recorded as Candidate 1, spec.md `### Hand-off to Plan` updated. Design-stage routing gap filed at `docs/ship-flow/todos/ship-flow-non-ui-design-routing-gap.md` for ship-flow maintainer evaluation.
+
+**Canonical selector form (per design.md):** `find role <r> --name "<v>"` subcommand string. Bans: `role=X[name=...]`, `>> nth=N`, bare `text=`, `has-text(`. Repeated elements: `:nth-of-type(N)`.
+
+T1.2 / T2.4 / T0.1 in this plan were already written aligned with Candidate 1 (pre-alignment with the recommended path), so post-retrofit no plan-task content drift — only this `## Design Source` reference and the Captain Decision attribution upstream in design.md.
+
 ## Research Summary
 
 L0 evidence inherited from shape stage (no re-dispatch — 2026-05-04 findings still load-bearing; assumptions A1/A2/A3 from `spec.md` re-validated below).
