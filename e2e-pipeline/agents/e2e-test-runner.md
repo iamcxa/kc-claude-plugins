@@ -470,6 +470,85 @@ You MUST end your response with this exact structured block (the orchestrator pa
 
 ---
 
+## Eval-Fallback Accounting
+
+Every dispatch run MUST track how many times the runner fell back to `agent-browser eval` because a native selector command returned an unexpected result. This is the observability layer introduced in plan 001 (T2.1). T2.2 will REMOVE the fallback path; T0.2 baselines hit counts before removal.
+
+### Counter State
+
+Initialize at the start of every run (before Phase 1):
+
+```
+eval_fallback_hits = 0
+```
+
+Increment `eval_fallback_hits` by 1 **each time** the runner falls back to `agent-browser eval` because any of the following native commands returned 0 / false / not-found on a selector that matches `role=` / `text=` / `>> nth=` / `has-text(` patterns:
+
+- `agent-browser is visible "<selector>"` → returned `"false"` unexpectedly (element present in a11y tree but not detected)
+- `agent-browser wait "<selector>"` → returned 0 or timed out
+- `agent-browser click "<selector>"` → returned not-found / failed
+- `agent-browser get count "<selector>"` → returned 0
+
+### Per-Hit Log Line
+
+Each time `eval_fallback_hits` is incremented, emit the following line to trace (before executing the eval fallback):
+
+```
+⚠ eval-fallback: <step-id> selector=<selector> reason=<is-visible|wait|click|get-count> returned-zero; falling back to eval(offsetParent !== null)
+```
+
+Where:
+- `<step-id>` is the flow step's `id:` field
+- `<selector>` is the exact selector string that failed native detection
+- `reason` is one of `is-visible`, `wait`, `click`, `get-count` matching the command that triggered the fallback
+
+### Final Report
+
+At run end, `eval_fallback_hits` MUST appear in **both** of the following places:
+
+**1. Trace summary** — append to the trace stop output section:
+
+```
+eval_fallback_hits: <N>
+```
+
+**2. Structured PASS/FAIL block** (§ 3d) — add as a mandatory field:
+
+```
+## Summary
+- total_steps: N
+- passed: N
+- failed: N
+- skipped: N
+- console_errors: N
+- api_failures: N
+- eval_fallback_hits: N
+- report_path: {{report_dir}}/report.md
+- video: true|false
+- key_findings:
+  - "finding 1"
+```
+
+Also add the metric row to the `## Summary` table in `report.md` (§ 3c):
+
+```markdown
+| Eval Fallback Hits | N |
+```
+
+### Strict Mode
+
+When the runner receives a `--strict-native-selectors` flag (passed through from `/e2e-test`):
+
+- If `eval_fallback_hits > 0` at run end → emit a FAIL marker in the structured summary block:
+  ```
+  STRICT-FAIL: eval-fallback hits > 0
+  ```
+  This flips the overall run verdict to FAIL regardless of whether individual step assertions passed.
+
+Without `--strict-native-selectors`, fallback hits are counted and reported but do **not** change the run verdict (transitional state during T0.2 baseline → T2.2 removal).
+
+---
+
 ## Critical Rules
 
 These rules are non-negotiable. Violating them causes flaky or broken tests.
@@ -487,6 +566,7 @@ These rules are non-negotiable. Violating them causes flaky or broken tests.
 11. **Multi-site flows**: When `suite_context` is provided, use `--session {{app}}` on all agent-browser commands to keep sessions separate.
 12. **Timeout values** in flow YAML are in seconds. Convert to milliseconds (`* 1000`) for `--timeout` flags.
 13. **Checkpoint best-effort**. `verify-external` steps execute via Bash/curl only. Complex checks needing MCP (Slack, database) → mark SKIP. For full verification, use `/e2e-walkthrough --verify` (main context, full tool access).
+14. **Eval fallback is observable, not silent**. Always count and report. Never use `agent-browser eval` to bypass a selector-engine mismatch without incrementing `eval_fallback_hits`. Plan T2.2 will REMOVE eval fallback for visibility checks; T0.2 baselines hits before that happens.
 
 ---
 
