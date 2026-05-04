@@ -64,52 +64,10 @@ function singleQuote(str) {
 
 // ---------------------------------------------------------------------------
 // Selector → a11y tree pattern conversion (for snapshot-based visibility checks)
+// Canonical translator lives in lib/selector-translate.js (single definition site).
 // ---------------------------------------------------------------------------
 
-/**
- * selectorToA11yPattern(selector) — convert a Playwright role selector to a grep
- * pattern that matches the agent-browser snapshot (a11y tree) output.
- *
- * agent-browser snapshot outputs lines like:
- *   - textbox "電子郵件" [required, ref=e9]
- *   - button "登 入" [ref=e4]
- *   - heading "每日看板" [ref=e14]
- *   - menuitem "dashboard 營運概況" [ref=e1]
- *
- * Conversion rules:
- *   role=textbox[name="X"]  → textbox "X"    (exact name match)
- *   role=button[name="X"]   → button "X"     (exact name match)
- *   role=heading[name=/X/]  → X              (regex → literal text, grep -F)
- *   role=menuitem[name=/X/] → X              (regex → literal text, grep -F)
- *   role=textbox >> nth=0   → textbox         (role only)
- *   css=...                 → null            (can't convert to a11y pattern)
- *
- * Returns: string pattern for grep -Fq, or null if conversion not possible.
- */
-function selectorToA11yPattern(selector) {
-  // role=X[name="Y"] → X "Y"
-  var exactMatch = selector.match(/^role=(\w+)\[name="([^"]+)"\]/);
-  if (exactMatch) return exactMatch[1] + ' "' + exactMatch[2] + '"';
-
-  // role=X[name=/Y/] → extract longest literal prefix before first regex metachar
-  var regexMatch = selector.match(/^role=\w+\[name=\/([^/]+)\/\]/);
-  if (regexMatch) {
-    // Strip regex metacharacters — take literal prefix up to first . * + ? [ ( { |
-    var literal = regexMatch[1].replace(/[.*+?[\](){}|\\].*$/, '');
-    return literal || regexMatch[1].replace(/[.*+?[\](){}|\\]/g, '');
-  }
-
-  // role=X >> nth=N → X (role name only)
-  var nthMatch = selector.match(/^role=(\w+)\s*>>/);
-  if (nthMatch) return nthMatch[1];
-
-  // role=X (bare role, no attributes) → X
-  var bareMatch = selector.match(/^role=(\w+)$/);
-  if (bareMatch) return bareMatch[1];
-
-  // css= or other formats → can't convert
-  return null;
-}
+const { selectorToA11yPattern } = require('./lib/selector-translate.js');
 
 // ---------------------------------------------------------------------------
 // Variable handling
