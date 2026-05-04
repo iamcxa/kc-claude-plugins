@@ -3,6 +3,31 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.7.0] - 2026-05-04 — Selector Grammar Alignment
+
+Aligns mapper output with agent-browser CLI runtime contract per issue #7.
+
+### Changed
+- **e2e-mapper**: Selector Priority rewritten to emit native agent-browser forms (`find role <r> --name "<v>"` subcommand strings, CSS attribute selectors, `:nth-of-type(N)` pseudo-class). Banned Playwright vocabulary: `role=X[name=Y]`, `>> nth=N`, bare `text=`, `has-text(`.
+- **e2e-test-runner**: Removed silent eval-fallback for selector mismatches. Native-form selectors that fail to resolve now fail loud. New `eval_fallback_hits` counter in trace + final report.
+- **e2e-flow-verifier / e2e-debug-observe**: Aligned to new contract; do not accept eval-fallback as silent-pass evidence.
+- **compiler**: Promoted `selectorToA11yPattern` to canonical translator at `compiler/lib/selector-translate.js`. Single definition site across the plugin.
+- **fixtures**: Regenerated to canonical form. Backward-compat retained in translator.
+
+### Added
+- **scripts/lint-mapping.sh** — linter rejects 4 banned Playwright token classes from mapping YAMLs. Use in CI to prevent regression.
+- **scripts/measure-fallback-baseline.sh** — orchestrates per-flow eval_fallback_hits measurement; emits baseline JSON for regression bounds.
+- **test/integration-smoke.sh** — full /e2e-map → linter → /e2e-test smoke pipeline.
+- **test-fixture-flow.yaml** — self-contained smoke flow using canonical mapping forms.
+
+### Captain Bet
+After ship: captain observes `eval_fallback_hits = 0` on a fresh `/e2e-map → /e2e-test` cycle (within 1 week). Pre-mortem mitigation: baseline measured pre-T2.2 to bound regression wave.
+
+### References
+- Issue: https://github.com/iamcxa/kc-claude-plugins/issues/7
+- Pitch: docs/ship-flow/001-selector-grammar-alignment/
+- Design: design.md (Candidate 1 chosen — find role <r> --name "<v>" subcommand)
+
 ## [Unreleased]
 
 ## [2.4.0] - 2026-03-20
