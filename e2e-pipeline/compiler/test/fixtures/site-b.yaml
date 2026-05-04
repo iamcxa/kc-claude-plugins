@@ -6,5 +6,5 @@ pages:
     url_pattern: "/home"
     elements:
       button_b:
-        selector: 'role=button[name="App Button"]'
+        selector: 'find role button --name "App Button"'
         description: "App button"

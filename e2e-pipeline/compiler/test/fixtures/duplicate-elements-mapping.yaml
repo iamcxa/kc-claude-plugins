@@ -6,7 +6,7 @@ pages:
     url_pattern: "/a"
     elements:
       data_table:
-        selector: "role=table"
+        selector: "find role table"
         description: "Table on page A"
       unique_a:
         selector: ".unique-a"
@@ -15,7 +15,7 @@ pages:
     url_pattern: "/b"
     elements:
       data_table:
-        selector: "role=grid"
+        selector: "find role grid"
         description: "Table on page B"
       unique_b:
         selector: ".unique-b"
