@@ -15,7 +15,7 @@ stage_outputs:
 <!-- section:stage-artifact-links -->
 | Stage | File |
 |-------|------|
-| spec | [spec.md](spec.md) |
-| design | [design.md](design.md) (retrofit 2026-05-04) |
+| design | [design.md](design.md) |
 | plan | [plan.md](plan.md) |
+| execute | [execute.md](execute.md) |
 <!-- /section:stage-artifact-links -->
