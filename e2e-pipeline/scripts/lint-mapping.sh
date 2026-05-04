@@ -67,9 +67,47 @@ if [[ ! -f "$MAPPING_FILE" ]]; then
   exit 1
 fi
 
-# FIX-ME T1.1: Replace this skeleton body with the actual 4-class matcher.
-# The skeleton always exits 0 so T1.1's GREEN test can fail against the
-# legacy-playwright-mapping.yaml fixture (which should exit 2 after T1.1 lands).
+errors=0
+lineno=0
 
-echo "lint-mapping: $MAPPING_FILE — OK (skeleton, no checks yet)"
+while IFS= read -r line; do
+  lineno=$((lineno + 1))
+
+  # CLASS 1 — Playwright role attr-style: role=<word>[name=...]
+  # Matches: role=textbox[name="Email"]
+  # Does NOT match: find role tab --name "Lineage"  (no '=' adjacent to role name)
+  if echo "$line" | grep -qE 'role=[A-Za-z]+\[name='; then
+    echo "${MAPPING_FILE}:${lineno}: role-attr: ${line}" >&2
+    errors=$((errors + 1))
+  fi
+
+  # CLASS 2 — Playwright nth chord: >> nth=<N>
+  # Matches: .MuiButton-root >> nth=2
+  if echo "$line" | grep -qE '>>[[:space:]]*nth=[0-9]+'; then
+    echo "${MAPPING_FILE}:${lineno}: >>nth: ${line}" >&2
+    errors=$((errors + 1))
+  fi
+
+  # CLASS 3 — Playwright text engine: bare text= at start of selector value
+  # Matches: 'text=Submit'  "text=Cancel"  (text= immediately after a quote)
+  # Does NOT match: find text "value"  (text= not preceded by quote)
+  if echo "$line" | grep -qE "['\"]text="; then
+    echo "${MAPPING_FILE}:${lineno}: text=: ${line}" >&2
+    errors=$((errors + 1))
+  fi
+
+  # CLASS 4 — Playwright has-text: :has-text(
+  if echo "$line" | grep -qE ':has-text\('; then
+    echo "${MAPPING_FILE}:${lineno}: has-text: ${line}" >&2
+    errors=$((errors + 1))
+  fi
+
+done < "$MAPPING_FILE"
+
+if [[ $errors -gt 0 ]]; then
+  echo "lint-mapping: $MAPPING_FILE — FAIL ($errors banned token(s) found)" >&2
+  exit 2
+fi
+
+echo "lint-mapping: $MAPPING_FILE — OK"
 exit 0
