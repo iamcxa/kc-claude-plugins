@@ -151,17 +151,42 @@ For each route:
 
 ### Selector Priority
 
+> **Why native forms matter:** agent-browser CLI drives Chrome/Chromium directly via CDP — it is NOT Playwright. Its selector engine accepts native CSS selectors, `@eN` snapshot snapshot-ref handles, and `find role|text|testid|label` semantic-locator subcommands. Mapping files emitting Playwright vocabulary (e.g., `role=tab[name="Lineage"]`, `>> nth=N`, bare `text=`, `has-text()`) will be silently mishandled at runtime (fallback eval path → false positive risk). Always emit native forms. The `scripts/lint-mapping.sh` linter enforces the banned token list; any mapping that sneaks Playwright forms past the mapper will be caught at lint time. See issue #7 and `docs/ship-flow/001-selector-grammar-alignment/design.md` for full rationale.
+
 When generating selectors for the mapping output, prefer in this order:
 
-1. `data-testid` -> `[data-testid="value"]` — best stability
-2. Role + name -> `role=button[name="Submit"]` — good, accessible
-3. Role + regex -> `role=button[name=/Open App/]` — partial match
-4. `aria-label` -> `css=[aria-label="value"]` — semantic
-5. **NEVER** use `has-text()` — broken in agent-browser
+1. **`data-testid` → `[data-testid="value"]`** — best stability. No logic, pure attribute identity. Always prefer when the element carries a test ID.
 
-**Repeated elements** (table rows, list items): Use `>> nth=0` for "at least one exists" pattern.
+2. **Role + name → `find role <r> --name "<v>"`** — agent-browser semantic-locator subcommand. Emit in mapping YAML as:
+   ```yaml
+   selector: 'find role button --name "Submit"'
+   ```
+   Use this for buttons, tabs, links, inputs, and any element with a meaningful accessible name. The `find role` subcommand invokes agent-browser's native WAI-ARIA accessible-name computation, which handles `aria-label`, `aria-labelledby` chains, and textContent fallback — far broader than what a plain CSS attribute selector can cover. Examples:
+   - Tab bar tab: `find role tab --name "Lineage"`
+   - Submit button: `find role button --name "Submit"`
+   - Search input: `find role searchbox --name "Search"`
+   - Navigation link: `find role link --name "Customers"`
 
-**React Native Web**: Text renders twice in DOM. Use `>> nth=1` for `text=` selectors. Prefer `role=tab[name="..."]` for tab bars.
+3. **CSS attribute fallback → `[role="<r>"][aria-label="<v>"]`** — use ONLY when `find role` doesn't fit (e.g., the element's accessible name is purely from `aria-label` and no WAI-ARIA role is registered in the a11y tree). Document the reason in a `note:` field. Always try Priority 2 first.
+
+4. **`aria-label` alone → `[aria-label="value"]`** — acceptable when no role is useful for disambiguation.
+
+5. **`find text "<v>"`** — agent-browser text-search subcommand. Use when the element has no stable role or test-id and the visible text is the only unique signal. Emit as:
+   ```yaml
+   selector: 'find text "Dashboard"'
+   ```
+
+**Repeated elements** (table rows, list items): Use `:nth-of-type(N)` CSS pseudo-class for positional targeting. Example: `[data-testid="row"]:nth-of-type(2)`. NEVER use `>> nth=N` — that is Playwright chord syntax, not supported by agent-browser.
+
+**React Native Web**: Text renders twice in DOM (hidden + visible). Prefer `find role <r> --name "<v>"` for RNW components — it resolves to the correct accessible element via accessible-name computation, skipping the hidden duplicate. For tab bars specifically, use `find role tab --name "TabName"` instead of any text-based selector.
+
+**Banned forms (linter-enforced via `scripts/lint-mapping.sh`)**:
+- `role=<r>[name="<v>"]` — Playwright role attr-style → REPLACE with `find role <r> --name "<v>"`
+- ` >> nth=N` — Playwright nth chord → REPLACE with `:nth-of-type(N)` CSS pseudo-class
+- bare `text=` at selector start — Playwright text prefix → REPLACE with `find text "<v>"` subcommand
+- `has-text(` — broken in agent-browser, causes timeouts → NO direct replacement; use `find role <r> --name "<v>"` or `find text "<v>"` depending on the element type
+
+See issue #7 and `docs/ship-flow/001-selector-grammar-alignment/design.md` for the full decision record.
 
 ### Discovery Mode Details
 
@@ -226,7 +251,7 @@ For parameterized elements (where the selector varies by a value):
 
 ```yaml
 branch_item:
-  selector: "role=button[name=\"${branchName}\"]"
+  selector: 'find role button --name "${branchName}"'
   description: "Branch option by name. ${branchName} is the display name."
 ```
 
@@ -236,9 +261,14 @@ Add a `note:` field when there's a non-obvious selector choice:
 
 ```yaml
 page_title:
-  selector: "text=洗車預約 >> nth=1"
+  selector: 'find text "洗車預約"'
   description: "Page title"
-  note: "RN web renders text twice (nth=0 hidden, nth=1 visible)"
+  note: "RN web renders text twice; find text resolves to the first accessible match automatically"
+
+car_wash_tab:
+  selector: 'find role tab --name "洗車預約"'
+  description: "Car wash booking tab"
+  note: "Preferred over find text — role+name avoids RNW duplicate-render ambiguity"
 ```
 
 ### Merge Strategy (Incremental Updates)
@@ -296,10 +326,10 @@ End your response with this exact structured block (the orchestrator parses it):
 2. **Use absolute paths** for all screenshots. Agent-browser sandbox CWD differs from shell. Always use `{{report_dir}}/filename` (which is already absolute), never bare `./filename`.
 3. **Click via @ref** for interaction during exploration. Write **selectors** (not @refs) into mapping YAML.
 4. **@ref values are session-scoped** — NEVER write @ref into mapping YAML. They are ephemeral.
-5. **Prefer `role=button[name="..."]`** selectors over text-based selectors.
-6. **Never use `has-text()`** selectors — broken in agent-browser, causes timeouts.
-7. **Repeated elements**: Use `>> nth=0` for "at least one exists" assertions in mapping.
-8. **React Native Web**: Text renders twice — use `>> nth=1` for `text=` selectors.
+5. **Prefer `find role <r> --name "<v>"`** selectors over text-based selectors. Example: `find role button --name "Submit"`. NEVER use Playwright attr-style `role=button[name="Submit"]` — that is a banned form (linter-enforced).
+6. **Never use `has-text()`** selectors — broken in agent-browser, causes timeouts. Use `find role <r> --name "<v>"` or `find text "<v>"` instead.
+7. **Repeated elements**: Use `:nth-of-type(N)` CSS pseudo-class in mapping (e.g., `[data-testid="row"]:nth-of-type(2)`). NEVER use `>> nth=N` — Playwright chord syntax, not supported by agent-browser.
+8. **React Native Web**: Text renders twice — use `find role <r> --name "<v>"` for RNW tab bars and interactive elements. The `find role` subcommand's WAI-ARIA accessible-name computation resolves correctly without hitting the hidden duplicate.
 9. **Do NOT close browser** after mapping. Human may want to explore further.
 10. **`is visible` exit code is always 0**. Check stdout text "true"/"false" when verifying selectors.
 11. **Snapshot before any interaction**. @refs invalidate after ANY DOM change.
