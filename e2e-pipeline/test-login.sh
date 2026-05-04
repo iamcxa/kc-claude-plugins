@@ -307,7 +307,7 @@ _STEP_START=$SECONDS
 _retry=0
 _step_ok=true
 while true; do
-  agent-browser fill 'role=textbox[name="Email"]' 'test@example.com' && break
+  agent-browser fill 'find role textbox --name "Email"' 'test@example.com' && break
   _retry=$((_retry + 1))
   if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then
     _step_ok=false
@@ -329,14 +329,14 @@ else
   _STEP_TIMES+=("$_elapsed")
   _handle_failure "fill-email" "fill action failed"
 fi
-_poll_visible 'role=textbox[name="Email"]' "fill-email" "${WAIT_TIMEOUT:-10}" "" || _handle_failure "fill-email" "email_input not visible after "${WAIT_TIMEOUT:-10}"s"
+_poll_visible 'find role textbox --name "Email"' "fill-email" "${WAIT_TIMEOUT:-10}" "" || _handle_failure "fill-email" "email_input not visible after "${WAIT_TIMEOUT:-10}"s"
 
 echo "[3/6] click-submit: Click login_button on login"
 _STEP_START=$SECONDS
 _retry=0
 _step_ok=true
 while true; do
-  agent-browser click 'role=button[name="Sign In"]' && break
+  agent-browser click 'find role button --name "Sign In"' && break
   _retry=$((_retry + 1))
   if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then
     _step_ok=false

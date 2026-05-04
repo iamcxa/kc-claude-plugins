@@ -6,5 +6,5 @@ pages:
     url_pattern: "/dashboard"
     elements:
       heading_a:
-        selector: 'role=heading[name="Office Dashboard"]'
+        selector: 'find role heading --name "Office Dashboard"'
         description: "Office dashboard heading"
