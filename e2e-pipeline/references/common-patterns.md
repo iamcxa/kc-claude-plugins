@@ -46,7 +46,7 @@ Patterns and gotchas for E2E testing agents. For project-specific patterns, chec
 
 - Text elements render TWICE in DOM (nth=0 hidden, nth=1 visible) — use `:nth-of-type(2)` CSS pseudo or `find text "<v>"` subcommand; `>> nth=1` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
 - `text=` does substring match — use `find text "<v>"` subcommand form for reliable matching
-- Tab bars get proper role attributes — prefer `find role tab --name "..."` over bare `text=`
+- Tab bars get proper role attributes — use `[role="tab"][aria-label="..."]` CSS attribute selector (Cand 2, canonical since PR #8); do NOT emit `find role tab --name "..."` as a `selector:` value — that is a subcommand chain, not a selector string
 - Multi-row table elements need `:nth-of-type(1)` for "at least one exists" assertion; `>> nth=0` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
 
 ## Repeated Elements (Tables, Lists)
@@ -58,16 +58,17 @@ Patterns and gotchas for E2E testing agents. For project-specific patterns, chec
 
 ## Selector Priority (for mapping files)
 
-1. `data-testid` — best stability, explicit test anchor
-2. `find role <r> --name "<v>"` subcommand form — good, accessible, reliable (e.g., `find role button --name "Submit"`)
-3. `find role <r> --name "/<pattern>/"` — regex partial match (e.g., `find role button --name "/切換/"`)
-4. `css=[aria-label="..."]` — semantic
+1. `[data-testid="value"]` — best stability, explicit test anchor
+2. `[role="<r>"][aria-label="<v>"]` — CSS attribute selector (Cand 2, canonical since PR #8); e.g., `[role="button"][aria-label="Submit"]`
+3. `[role="<r>"]` — role only; combine with `:nth-of-type(N)` if repeated
+4. `[aria-label="<v>"]` — when role isn't stable
 5. NEVER use `css=...has-text('...')` — broken in agent-browser, times out
-6. BANNED: `role=<r>[name="<v>"]` Playwright attr syntax → use `find role <r> --name "<v>"` (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
+6. BANNED: `role=<r>[name="<v>"]` Playwright attr syntax → use `[role="<r>"][aria-label="<v>"]` (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
 7. BANNED: ` >> nth=N` Playwright nth chord → use `:nth-of-type(N)` CSS pseudo
 8. BANNED: bare `text=<v>` at selector start → use `find text "<v>"` subcommand
+9. DEPRECATED as `selector:` value: `find role <r> --name "<v>"` — subcommand chain, not selector grammar (PR #8 Copilot review; see design.md addendum)
 
-**Regex selector → literal prefix for grep**: When converting `find role <r> --name "/<pattern>/"` to a grep pattern (e.g., for compiled scripts using `grep -F`), extract the longest literal prefix before the first regex metacharacter. E.g., `/切換為.*模式/` → `切換為`. Using the full regex string with `grep -F` causes false negatives because `.*` is treated literally. Former form `role=X[name=/pattern/]` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
+**Regex selector note**: Former form `find role <r> --name "/<pattern>/"` with regex partial match is also DEPRECATED as a `selector:` value (same reason — subcommand chain). For pattern-based matching, use `[aria-label*="prefix"]` (CSS substring attribute selector) or add `data-testid`. Former form `role=X[name=/pattern/]` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
 
 ## Snapshot vs is visible
 

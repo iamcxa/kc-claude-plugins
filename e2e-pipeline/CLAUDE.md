@@ -101,13 +101,15 @@ Using `app:` or `name:` in steps means v1 format -- rejected by the test runner.
 
 ## Selector Priority
 
-1. `data-testid="value"` -- best stability
-2. `find role <r> --name "<v>"` subcommand form -- good semantic match (e.g., `find role button --name "Submit"`)
-3. `aria-label="..."` -- acceptable
-4. Never use `has-text()` -- broken in agent-browser, causes timeout
-5. BANNED: `role=<r>[name="<v>"]` Playwright attr syntax → use `find role <r> --name "<v>"` (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
-6. BANNED: ` >> nth=N` Playwright nth chord → use `:nth-of-type(N)` CSS pseudo
-7. BANNED: bare `text=<v>` at selector start → use `find text "<v>"` subcommand
+1. `[data-testid="value"]` -- best stability
+2. `[role="<r>"][aria-label="<v>"]` -- CSS attribute selector (Cand 2, canonical since PR #8) e.g., `[role="button"][aria-label="Submit"]`
+3. `[role="<r>"]` -- role only; combine with `:nth-of-type(N)` if repeated
+4. `[aria-label="<v>"]` -- when role isn't stable
+5. Never use `has-text()` -- broken in agent-browser, causes timeout
+6. BANNED: `role=<r>[name="<v>"]` Playwright attr syntax → use `[role="<r>"][aria-label="<v>"]` (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
+7. BANNED: ` >> nth=N` Playwright nth chord → use `:nth-of-type(N)` CSS pseudo
+8. BANNED: bare `text=<v>` at selector start → use `find text "<v>"` subcommand
+9. DEPRECATED as `selector:` value: `find role <r> --name "<v>"` -- subcommand chain, not selector grammar (PR #8 course correction; see design.md addendum)
 
 ## Key Gotchas
 

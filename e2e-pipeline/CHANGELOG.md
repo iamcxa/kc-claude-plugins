@@ -28,6 +28,10 @@ After ship: captain observes `eval_fallback_hits = 0` on a fresh `/e2e-map → /
 - Pitch: docs/ship-flow/001-selector-grammar-alignment/
 - Design: design.md (Candidate 1 chosen — find role <r> --name "<v>" subcommand)
 
+### Course correction (PR #8 review)
+
+Copilot static-contract review of PR #8 caught that the Priority 2 canonical form originally chosen — `find role <r> --name "<v>"` as a `selector:` value in mapping YAML — is a **subcommand chain** parsed by the agent-browser CLI, not a selector string. Passing it to selector-accepting commands (e.g., `is visible`, `wait`, compiled script grep patterns) causes silent mishandling. The canonical Priority 2 form is updated to **Candidate 2**: `[role="<r>"][aria-label="<v>"]` (CSS attribute selector). All agent prompts, skill docs, and references updated accordingly. The old form is now marked DEPRECATED in the Selector Priority sections; the linter already rejects the BANNED Playwright `role=X[name=Y]` form and is unaffected by this change.
+
 ## [Unreleased]
 
 ## [2.4.0] - 2026-03-20

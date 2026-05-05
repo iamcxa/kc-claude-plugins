@@ -753,7 +753,7 @@ Read → `${CLAUDE_PLUGIN_ROOT}/references/knowledge-capture.md`
 ### D1 candidates (auto-append)
 
 Scan test results for general patterns:
-- Selector strategies that consistently pass/fail (e.g., `data-testid` vs `find role button --name "..."` subcommand form)
+- Selector strategies that consistently pass/fail (e.g., `[data-testid="value"]` vs `[role="button"][aria-label="..."]` CSS attribute form)
 - Divergence patterns between LLM and compiled execution
 - Agent-browser behavior discoveries
 - Flow design patterns that improve reliability

@@ -307,7 +307,7 @@ _STEP_START=$SECONDS
 _retry=0
 _step_ok=true
 while true; do
-  agent-browser click 'find role button --name "Sign In"' && break
+  agent-browser click '[role="button"][aria-label="Sign In"]' && break
   _retry=$((_retry + 1))
   if [ "$_retry" -ge "$RETRIES" ] || [ "$RETRIES" -eq 0 ]; then
     _step_ok=false
