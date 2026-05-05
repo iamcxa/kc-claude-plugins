@@ -21,4 +21,5 @@ stage_outputs:
 | plan | [plan.md](plan.md) |
 | execute | [execute.md](execute.md) |
 | verify | [verify.md](verify.md) |
+| review | [review.md](review.md) |
 <!-- /section:stage-artifact-links -->
