@@ -127,6 +127,11 @@ CAPTAIN_ACTION_REQUIRED=0
 
 append_note() { NOTES="${NOTES}${NOTES:+ | }$1"; }
 
+# Ensure output directory exists before any phase can attempt to write a report
+# (PR #8 R2 fix — caller may pass --output to a new directory; pre-create so
+# Phase 1 failure path can produce the promised JSON failure report).
+mkdir -p "$(dirname "$OUTPUT_PATH")"
+
 # ── Phase 1 — Pre-checks ──────────────────────────────────────────────────────
 
 section "Phase 1 — Pre-checks"
@@ -164,7 +169,7 @@ fi
 
 if [[ $phase1_ok -eq 0 ]]; then
   append_note "Phase 1 pre-checks failed"
-  # Write a minimal failure report and exit
+  # Write a minimal failure report and exit (output dir pre-created above)
   cat > "$OUTPUT_PATH" <<JSON
 {
   "smoked_at": "$SMOKED_AT",
@@ -328,7 +333,11 @@ else
       # Attempt to extract eval_fallback_hits from most recent report
       FALLBACK_LINE="$(grep -r 'eval_fallback_hits' "${LATEST_REPORT_DIR}" 2>/dev/null | head -1 || true)"
       if [[ -n "$FALLBACK_LINE" ]]; then
-        HITS="$(echo "$FALLBACK_LINE" | grep -oE '[0-9]+' | tail -1 || true)"
+        # PR #8 R3 fix — extract digit IMMEDIATELY after `eval_fallback_hits:` only.
+        # Prior pattern `[0-9]+ | tail -1` could pick up trailing digits from
+        # paths/timestamps in the report line (e.g., `eval_fallback_hits: 3 (measured 2026)`
+        # would extract `2026`, not `3`).
+        HITS="$(echo "$FALLBACK_LINE" | sed -nE 's/.*eval_fallback_hits[[:space:]]*:[[:space:]]*([0-9]+).*/\1/p' | head -1)"
         if [[ -n "$HITS" ]]; then
           TEST_EVAL_FALLBACK_HITS="$HITS"
           if [[ "$HITS" -eq 0 ]]; then

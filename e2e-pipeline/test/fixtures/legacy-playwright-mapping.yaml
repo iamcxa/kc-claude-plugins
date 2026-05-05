@@ -1,10 +1,15 @@
 # legacy-playwright-mapping.yaml
 # TEST FIXTURE — DO NOT USE IN PRODUCTION
 #
-# Contains all 4 banned Playwright-style selector token classes.
-# Used by lint-mapping.sh T1.1 tests to verify detection logic (RED phase).
+# Contains all 5 banned selector token classes:
+#   1. Playwright role attr-style (role=<r>[name=...])
+#   2. Playwright nth chord (>> nth=N)
+#   3. Playwright text engine (bare text=)
+#   4. Playwright has-text (:has-text()
+#   5. agent-browser find subcommand chain in selector value (find role/text/label/testid ...)
+# Used by lint-mapping.sh tests to verify detection logic.
 #
-# After T1.1 lands: `lint-mapping.sh legacy-playwright-mapping.yaml` must exit 2.
+# `lint-mapping.sh legacy-playwright-mapping.yaml` must exit 2.
 
 version: "2"
 base_url: "http://localhost:3000"
@@ -44,3 +49,15 @@ elements:
   cancel_link:
     selector: '"text=Cancel"'
     name: Cancel link
+
+  # CLASS 5 — agent-browser find-subcommand string in selector value (PR #8 R1 fix)
+  # `find role|text|label|testid` is a CLI subcommand chain, not selector grammar.
+  # Expected fix: [role="button"][aria-label="Sign In"] CSS attribute selector
+  signin_button_findrole:
+    selector: 'find role button --name "Sign In"'
+    name: Sign In button (banned find-subcommand form)
+
+  # CLASS 5 variant — find text subcommand
+  search_label_findtext:
+    selector: 'find text "Search results"'
+    name: Search results label (banned find-subcommand form)
