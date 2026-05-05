@@ -134,7 +134,7 @@ Visual anomalies are always listed individually. JS error counts replace individ
 
 **Selector verification strategy:**
 - `find text "<v>"` subcommand selectors: verify by comparing snapshot a11y tree text content against mapping values. Snapshot is the source of truth. Bare `text=<v>` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
-- `data-testid` / `aria-label` / `find role <r> --name "<v>"` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `agent-browser is visible "<selector>"` for DOM-level verification. Bare `role=<r>[name="<v>"]` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
+- `data-testid` / `aria-label` / `[role="<r>"][aria-label="<v>"]` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `agent-browser is visible "<selector>"` for DOM-level verification. Bare `role=<r>[name="<v>"]` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh). DEPRECATED as `selector:` value: `find role <r> --name "<v>"` — subcommand chain, not selector grammar (PR #8 course correction).
 
 ### Anomaly Observation Rules
 

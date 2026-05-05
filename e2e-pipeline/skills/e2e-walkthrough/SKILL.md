@@ -288,8 +288,8 @@ Next steps:
 | Mistake | Fix |
 |---------|-----|
 | Acting without snapshot | `snapshot -i` before every action — a11y tree is source of truth |
-| CSS selectors for clicks | Use `@ref` from snapshot. For visibility checks use `find role <r> --name "<v>"` subcommand form |
-| `has-text()` selectors | BROKEN in agent-browser — times out. Use `find role button --name "..."` or `find text "..."` subcommand |
+| CSS selectors for clicks | Use `@ref` from snapshot. For visibility checks use `[role="<r>"][aria-label="<v>"]` CSS attribute selector (Cand 2) |
+| `has-text()` selectors | BROKEN in agent-browser — times out. Use `[role="button"][aria-label="..."]` CSS attribute selector or `find text "..."` subcommand |
 | Screenshot relative paths | agent-browser needs absolute paths (sandbox CWD differs) |
 | Forgetting `trace stop` | Trace data lost if browser closes without stopping |
 | `scroll` to element | `scroll` only accepts direction (up/down). Use `hover "@ref"` to auto-scroll |

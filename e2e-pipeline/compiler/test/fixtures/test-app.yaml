@@ -6,23 +6,23 @@ pages:
     url_pattern: "/login"
     elements:
       email_input:
-        selector: 'find role textbox --name "Email"'
+        selector: '[role="textbox"][aria-label="Email"]'
         description: "Email input"
       password_input:
         selector: "input[type='password']"
         description: "Password input"
       login_button:
-        selector: 'find role button --name "Sign In"'
+        selector: '[role="button"][aria-label="Sign In"]'
         description: "Login button"
   dashboard:
     url_pattern: "/dashboard"
     elements:
       heading:
-        selector: 'find role heading --name "Dashboard"'
+        selector: '[role="heading"][aria-label="Dashboard"]'
         description: "Dashboard heading"
   _global:
     description: "Global elements"
     elements:
       sidebar_home:
-        selector: 'find role menuitem --name "Home"'
+        selector: '[role="menuitem"][aria-label="Home"]'
         description: "Sidebar home link"
