@@ -142,9 +142,11 @@ Per Step 4.0 invariant, "conditional pass / API offline / artifact-only" is forb
 <!-- section:verdict -->
 ## Verdict
 
-**status: prompt_captain**
+**status: passed** (with captain-acked runtime-DC deferral)
 
-Quality + review findings are clean (0 BLOCKING, 2 WARNING with rabbit-hole defer, 3 NIT defer). 8 file-level DCs PASS via spot-check. **3 runtime DCs (DC-1.1, DC-2.1, DC-OBS) DEFERRED** because preflight (Step 4.0) failed: jaffle-shop-golden requires Snowflake env vars not in this session.
+**Captain decision (2026-05-05):** Option 2 — Captain Bet observation window IS the runtime gate by design. DC-OBS at ship+1w is the bet observation; DC-1.1 + DC-2.1 are essentially redundant pre-merge duplicates of the same observation. Linter (DC-1.3) prevents regression continuously between now and the bet retro. Verify advances to ship; runtime DCs deferred to bet observation window with explicit captain ack.
+
+Quality + review findings are clean (0 BLOCKING, 2 WARNING with rabbit-hole defer, 3 NIT defer). 8 file-level DCs PASS via spot-check. **3 runtime DCs (DC-1.1, DC-2.1, DC-OBS) DEFERRED** to Captain Bet retro window per captain decision above. (Preflight Step 4.0 was blocked by missing jaffle-shop-golden Snowflake env vars; captain chose deferral over running runtime DCs in a separate session.)
 
 Per Step 4.0 invariant, dev-server-unavailable maps to BLOCKED. But the strict invariant is calibrated for application-code pitches with project-level dev servers; this is a plugin-internal pitch (LLM agent prompts + linter + compiler) where "live runtime" means LLM-agent dispatch against an arbitrary target site that captain owns. The 3 deferred DCs all map cleanly to the Captain Bet observation window (post-merge ship+1w) — DC-OBS *is* that window by design.
 
@@ -167,7 +169,7 @@ Captain's choice. Default to option 2 (lowest friction; the bet itself was desig
 <!-- section:hand_off_to_review -->
 ## Hand-off to Review
 
-- **verify_verdict:** `prompt_captain` — pending captain decision on runtime-DC deferral path. Will become `passed` once captain confirms one of the three options or completes runtime DCs themselves.
+- **verify_verdict:** `passed` (captain-acked runtime-DC deferral 2026-05-05; option 2 — bet observation window is the de-facto runtime gate by design).
 - **blocking_issues:** none. Quality + code review found 0 BLOCKING (after 100% spot-check; 2 misframed CRITICAL/BLOCKING reduced to NIT, 1 hallucinated WARNING dropped, 2 WARNING deferred as rabbit-holes, 3 NIT deferred).
 - **canonical_docs_touched:**
   - `e2e-pipeline/CLAUDE.md` Selector Priority block — updated by T1.3, verified clean.
