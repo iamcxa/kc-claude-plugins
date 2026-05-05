@@ -41,4 +41,5 @@ Workflow-level roadmap for ship-flow pitches in this repo.
 
 | Pitch | Title | Shipped At |
 |-------|-------|------------|
+| 001-selector-grammar-alignment | e2e-pipeline selector grammar alignment (mapper ↔ agent-browser runtime) | 2026-05-05 |
 <!-- /section:shipped -->
