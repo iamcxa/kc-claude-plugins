@@ -4,38 +4,39 @@
 # Usage: lint-mapping.sh <mapping-yaml-path>
 #
 # Exit codes:
-#   0  — no banned tokens found (or skeleton mode: always 0 before T1.1)
-#   1  — usage error (no arguments)
-#   2  — banned tokens found (after T1.1 implements the matcher)
+#   0  — no banned tokens found in any selector value
+#   1  — usage error (no arguments) or file not found
+#   2  — banned tokens found
 #
-# FIX-ME T1.1: implement matcher
-# ─────────────────────────────────────────────────────────────────────────────
-# Add four grep passes over the selector values extracted from the YAML.
-# Each pass targets one banned token class:
+# Scope: only `selector:` field VALUES are scanned. Comments, descriptions,
+# and migration notes that mention banned forms (e.g., a `description:` field
+# explaining what NOT to use) are deliberately ignored — those are documentation,
+# not contract violations. This narrowing was added in response to PR #8 Copilot
+# review C2 (line-by-line scan flagged comments as errors, unsafe as CI gate).
+#
+# Banned token classes (each replaces with a Cand 2 native form):
 #
 #   CLASS 1 — Playwright role attr-style:
-#     regex:  role=[A-Za-z]+\[name=
+#     regex:  role=<word>[name=...]
 #     example: role=textbox[name="Email"]
-#     replace with: find role <r> --name "<v>"
-#     (agent-browser's `find role` subcommand; WAI-ARIA accessible-name aware)
+#     replace with: [role="<r>"][aria-label="<v>"] CSS attribute selector
+#     (Cand 2 canonical per docs/ship-flow/001-selector-grammar-alignment/design.md)
 #
 #   CLASS 2 — Playwright nth chord:
-#     regex:  >>\s*nth=[0-9]+
+#     regex:  >>\s*nth=<N>
 #     example: .MuiButton-root >> nth=2
 #     replace with: :nth-of-type(N) CSS pseudo-class
-#     (e.g., .MuiButton-root:nth-of-type(3))
 #
-#   CLASS 3 — Playwright text engine (bare text= at start of selector):
-#     regex:  (^|['"])\s*text=
-#     example: text=Submit, "text=Cancel"
-#     replace with: find text "<v>" subcommand
-#     (agent-browser's `find text` subcommand)
+#   CLASS 3 — Playwright text engine (bare text= at start of selector value):
+#     regex:  ^text=
+#     example: text=Submit  (or 'text=Submit' / "text=Submit" — quotes stripped)
+#     replace with: data-testid attribute or [role="..."][aria-label="..."]
 #
 #   CLASS 4 — Playwright has-text (broken in agent-browser, no equivalent):
 #     regex:  :has-text\(
 #     example: .MuiDialog >> :has-text("Confirm")
-#     note: no direct replacement — restructure selector using data-testid or find role/text
-# ─────────────────────────────────────────────────────────────────────────────
+#     no direct replacement — restructure selector using data-testid or
+#     CSS attribute form
 
 set -euo pipefail
 
@@ -46,10 +47,10 @@ usage() {
   echo ""
   echo "  mapping-yaml-path  Path to the e2e mapping YAML file to lint."
   echo ""
-  echo "  Checks selector values for banned Playwright-style token classes:"
-  echo "    - role=<word>[name=...]  (use: find role <r> --name \"<v>\")"
+  echo "  Checks selector field values (only) for banned Playwright-style tokens:"
+  echo "    - role=<word>[name=...]  (use: [role=\"<r>\"][aria-label=\"<v>\"] CSS attr)"
   echo "    - >> nth=<N>             (use: :nth-of-type(N))"
-  echo "    - text= (bare prefix)    (use: find text \"<v>\")"
+  echo "    - text= (bare prefix)    (use: data-testid or CSS attr selector)"
   echo "    - :has-text(             (no replacement — restructure selector)"
   echo ""
   exit 1
@@ -70,34 +71,67 @@ fi
 errors=0
 lineno=0
 
+# Strip surrounding quotes (single or double) from a YAML scalar value
+strip_quotes() {
+  local v="$1"
+  # Single-quoted
+  if [[ "$v" =~ ^\'(.*)\'$ ]]; then
+    printf '%s' "${BASH_REMATCH[1]}"
+    return
+  fi
+  # Double-quoted
+  if [[ "$v" =~ ^\"(.*)\"$ ]]; then
+    printf '%s' "${BASH_REMATCH[1]}"
+    return
+  fi
+  printf '%s' "$v"
+}
+
 while IFS= read -r line; do
   lineno=$((lineno + 1))
 
-  # CLASS 1 — Playwright role attr-style: role=<word>[name=...]
-  # Matches: role=textbox[name="Email"]
-  # Does NOT match: find role tab --name "Lineage"  (no '=' adjacent to role name)
-  if echo "$line" | grep -qE 'role=[A-Za-z]+\[name='; then
+  # Only scan lines that define a `selector:` field value.
+  # YAML inline value form: `<indent>selector: <value>` (block scalars / multi-line not supported — rare for selectors).
+  if [[ ! "$line" =~ ^[[:space:]]*selector:[[:space:]]*(.*)$ ]]; then
+    continue
+  fi
+
+  selector_value="${BASH_REMATCH[1]}"
+
+  # Strip trailing inline comment (YAML allows ` # comment` after the value)
+  selector_value="$(printf '%s' "$selector_value" | sed -E 's/[[:space:]]+#.*$//')"
+
+  # Trim trailing whitespace
+  selector_value="$(printf '%s' "$selector_value" | sed -E 's/[[:space:]]+$//')"
+
+  # Strip outer quotes if present
+  selector_value="$(strip_quotes "$selector_value")"
+
+  # Skip empty values (e.g., `selector:` with no inline value — block scalar follows)
+  if [[ -z "$selector_value" ]]; then
+    continue
+  fi
+
+  # CLASS 1 — Playwright role attr-style
+  if echo "$selector_value" | grep -qE 'role=[A-Za-z]+\[name='; then
     echo "${MAPPING_FILE}:${lineno}: role-attr: ${line}" >&2
     errors=$((errors + 1))
   fi
 
-  # CLASS 2 — Playwright nth chord: >> nth=<N>
-  # Matches: .MuiButton-root >> nth=2
-  if echo "$line" | grep -qE '>>[[:space:]]*nth=[0-9]+'; then
+  # CLASS 2 — Playwright nth chord
+  if echo "$selector_value" | grep -qE '>>[[:space:]]*nth=[0-9]+'; then
     echo "${MAPPING_FILE}:${lineno}: >>nth: ${line}" >&2
     errors=$((errors + 1))
   fi
 
-  # CLASS 3 — Playwright text engine: bare text= at start of selector value
-  # Matches: 'text=Submit'  "text=Cancel"  (text= immediately after a quote)
-  # Does NOT match: find text "value"  (text= not preceded by quote)
-  if echo "$line" | grep -qE "['\"]text="; then
+  # CLASS 3 — bare text= at start of selector value (post quote-strip)
+  if echo "$selector_value" | grep -qE '^text='; then
     echo "${MAPPING_FILE}:${lineno}: text=: ${line}" >&2
     errors=$((errors + 1))
   fi
 
-  # CLASS 4 — Playwright has-text: :has-text(
-  if echo "$line" | grep -qE ':has-text\('; then
+  # CLASS 4 — Playwright has-text
+  if echo "$selector_value" | grep -qE ':has-text\('; then
     echo "${MAPPING_FILE}:${lineno}: has-text: ${line}" >&2
     errors=$((errors + 1))
   fi
