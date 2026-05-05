@@ -14,7 +14,6 @@ Workflow-level roadmap for ship-flow pitches in this repo.
 
 | Pitch | Title | Status | Appetite |
 |-------|-------|--------|----------|
-| 001-selector-grammar-alignment | e2e-pipeline selector grammar alignment (mapper ↔ agent-browser runtime) | (pitch) | medium-batch |
 <!-- /section:next -->
 
 <!-- section:later -->
