@@ -11,6 +11,7 @@ stage_outputs:
   plan: plan.md
   execute: execute.md
   verify: verify.md
+  review: review.md
 ---
 
 <!-- section:stage-artifact-links -->
