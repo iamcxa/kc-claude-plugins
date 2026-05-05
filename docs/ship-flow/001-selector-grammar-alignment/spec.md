@@ -69,10 +69,13 @@ graph LR
 ### Hand-off to Plan
 
 - design-skipped: false (retrofitted 2026-05-04 — see `design.md`)
-- canonical_selector_form: `find role <r> --name "<v>"` (Candidate 1, captain decision in design.md)
+- canonical_selector_form: `[role="<r>"][aria-label="<v>"]` (Candidate 2 — course-corrected 2026-05-05 from Cand 1 after PR #8 Copilot review; see design.md `## Course Correction`)
+- canonical_selector_form_history:
+  - 2026-05-04: Candidate 1 (`find role <r> --name "<v>"`) — wrong; subcommand chain not selector
+  - 2026-05-05: Candidate 2 (`[role="<r>"][aria-label="<v>"]`) — current canonical
 - breaks: ban `role=X[name=...]`, `>> nth=N`, bare `text=`, `has-text(`
 - repeated_elements_form: `:nth-of-type(N)` CSS pseudo (NOT `>> nth=N`)
-- compiler_translation: extend `selectorToA11yPattern` with `find role <r> --name "<v>"` parse branch (~30 LOC)
+- compiler_translation: extend `selectorToA11yPattern` with `[role="<r>"][aria-label="<v>"]` parse branch (snapshot-literal `<role> "<name>"` output to match grep -F format)
 - ui_surfaces: []
 - framework_detected: n/a
 - open_design_questions: []
