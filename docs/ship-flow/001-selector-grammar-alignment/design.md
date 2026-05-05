@@ -138,3 +138,36 @@ Reasoning weights (in order):
 >
 > **Date:** 2026-05-04
 > **Approval method:** captain delegated to agent recommendation ("按你建議") — this is documented as agent-drafted-captain-endorsed rather than captain-original-authored, per ship-shape Captain Bet discipline (cf. INVARIANTS Principle 6 Rule C ABC clause). Future retro: if Bet outcome falls on the contract-form decision, this attribution informs whether the rationale was load-bearing.
+
+## Course Correction (Post-PR-Review, 2026-05-05)
+
+**Trigger:** Copilot pull-request review on PR #8 generated 7 inline findings; 5 of them (C1, C4, C5, C6, C7 — see https://github.com/iamcxa/kc-claude-plugins/pull/8) cited the same root contract bug.
+
+**Root cause:** `find role <r> --name "<v>"` is documented in agent-browser as a **subcommand chain** family (`agent-browser find role X click --name Y "value"`), NOT a selector grammar. Storing it in mapping yaml `selector:` fields and passing it to `agent-browser is visible/click/fill '<string>'` was structurally wrong — agent-browser would interpret the entire `find role X --name Y` string as a CSS selector and fail at runtime, OR fall back to eval (the very fallback this PR was removing).
+
+**Why design.md missed this:** Candidate 1 analysis treated `find role <r> --name "<v>"` as if agent-browser had a unified "selector engine" that accepts both CSS strings and `find role` subcommand strings. agent-browser actually treats `find role` as a verb-prefix subcommand family — the action verb (`click`/`fill`/`is visible`) is the CHILD command, not a separate command consuming the find-role-string as input.
+
+**Pre-mortem fired exactly as expected.** Captain Bet retro condition (1) — "agent-browser native CSS + `find role` subcommand sufficient to replace Playwright forms" — was wrong. Specifically: native CSS attribute form is sufficient; `find role` subcommand strings are NOT a viable selector representation.
+
+**Course correction: switch canonical form to Candidate 2** (CSS attribute, `[role="<r>"][aria-label="<v>"]`). This was the option danyelf (issue reporter) listed as 1a in the original issue body, originally rejected here for RNW edge cases. The rejection rationale stands (RNW components frequently emit `role` without `aria-label`), but it's a SOFT limitation (rabbit-hole: add `data-testid` to those components) compared to Cand 1's HARD failure (selector strings that agent-browser cannot parse).
+
+### Updated rationale weights
+
+1. **Structural correctness (new)** — Cand 2 strings parse as native CSS in agent-browser. Cand 1 strings DO NOT parse as anything valid; they cause runtime failures.
+2. **Scope discipline (unchanged)** — Cand 2 fits medium-batch appetite; Cand 3 still scope-blowout.
+3. **RNW correctness** — DOWNGRADED from "heavy weight" to "soft limitation". Components without aria-label add `data-testid` (rabbit-hole; not a structural blocker).
+4. **Compiler additions** — Cand 2 needs translator branches for `[role="X"][aria-label="Y"]` → snapshot-literal `<role> "<name>"` format. Smaller delta than Cand 1's invalid translation patterns.
+5. **Door open for Cand 3** — unchanged. Cand 2 → Cand 3 migration is mechanical regex parse later if/when schema migration is in scope.
+
+### Captain Decision (revised)
+
+> **Revised Decision:** Candidate 2 — `[role="<r>"][aria-label="<v>"]` CSS attribute form.
+>
+> Approval method: Copilot static-contract review on PR #8 supplied evidence equivalent to the deferred runtime DCs (DC-1.1, DC-2.1). Captain accepted Path C (in-PR fixup) on 2026-05-05 after reading the 7-finding summary. RNW edge cases captured as separate rabbit-hole.
+>
+> Date: 2026-05-05
+
+### Knowledge captures (D1 / D2)
+
+- **[D1] Subcommand-chain vs selector-grammar confusion** — when an external CLI exposes a `find <kind> <args> <action>` subcommand family, that command structure is NOT interchangeable with a selector-string grammar. A "selector" in mapping yaml expects a string consumable by single-shot action commands; a subcommand chain expects multi-arg orchestration. Confusing the two leads to runtime failures where stored "selectors" can't actually be invoked. Future schema design must distinguish these layers explicitly.
+- **[D2] PR-review-as-runtime-DC equivalence** — when verify-stage runtime DCs are deferred to post-merge bet observation, external static contract review (Copilot, manual reviewer) can supply equivalent gating evidence pre-merge. The Captain Bet's "(1) failed → assumption wrong" condition is what Copilot caught; effectively the bet's pre-merge equivalent ran via diff-aware static analysis instead of live runtime. Worth recording as a fallback gate for plugin-internal pitches that lack a project dev server.
