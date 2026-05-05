@@ -1,12 +1,22 @@
 name: selector-grammar-fixture-flow
-mapping: ./compiler/test/fixtures/test-app.yaml
+mapping: test-app
 description: |
-  Smoke flow exercising native selector forms against fixture mapping.
-  Used by T3.1 integration smoke and as the in-tree example of post-001
-  selector grammar. All selectors use the canonical native contract:
-  - find role/text/button --name "<v>" subcommand form
-  - CSS attribute forms ([data-testid=...], input[type="password"])
+  Smoke flow exercising native (Cand 2 CSS attribute) selector forms against the
+  test-app mapping. Used by T3.1 integration smoke and as the in-tree example of
+  post-001 selector grammar.
+
+  All selectors in the referenced mapping use the canonical native contract:
+  - [data-testid="<id>"]              (preferred — most stable)
+  - [role="<r>"][aria-label="<v>"]    (CSS attribute form for role-named elements)
+  - .Class:nth-of-type(N)             (replaces banned `>> nth=N`)
+
   No banned Playwright forms (role=X[name=Y], >> nth=N, bare text=, has-text()).
+
+  Note: the runner resolves `mapping: test-app` to `.claude/e2e/mappings/test-app.yaml`
+  per e2e-pipeline convention. This flow assumes captain has copied or symlinked
+  the compiler test fixture (e2e-pipeline/compiler/test/fixtures/test-app.yaml)
+  into that location, OR provides an alternate mapping with the same element keys
+  (email_input / password_input / login_button / heading / sidebar_home).
 
 steps:
   - id: visit_root

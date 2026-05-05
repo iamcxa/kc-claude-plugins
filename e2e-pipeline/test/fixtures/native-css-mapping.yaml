@@ -1,16 +1,23 @@
 # native-css-mapping.yaml
 # TEST FIXTURE — canonical selector forms only
 #
-# Contains ONLY agent-browser-native selector grammar per design.md Candidate 1 decision.
-# Used by lint-mapping.sh T1.1 tests to verify that valid selectors pass without error.
+# Contains ONLY agent-browser-native selector grammar per design.md Candidate 2
+# decision (course-corrected from Cand 1 after PR #8 Copilot review caught the
+# subcommand-vs-selector confusion in Cand 1).
 #
-# After T1.1 lands: `lint-mapping.sh native-css-mapping.yaml` must exit 0.
+# `lint-mapping.sh native-css-mapping.yaml` must exit 0.
 #
-# Canonical forms (per design.md Captain Decision 2026-05-04):
-#   - [data-testid="..."]             CSS attribute selector
-#   - find role <r> --name "<v>"      agent-browser find subcommand (Candidate 1)
-#   - [role="<r>"][aria-label="<v>"]  CSS attribute fallback (when aria-label is explicit)
+# Canonical forms (per design.md Captain Decision 2026-05-04, course-corrected 2026-05-05):
+#   - [data-testid="..."]             CSS attribute selector (preferred — most stable)
+#   - [role="<r>"][aria-label="<v>"]  CSS attribute selector for role+aria-label elements
+#   - [role="<r>"]                    CSS role only (fallback when aria-label not stable)
 #   - .SomeClass:nth-of-type(N)       CSS nth pseudo for repeated elements
+#
+# RNW edge case (rabbit-hole): components emitting `role` without matching
+# `aria-label` (accessible name from textContent / aria-labelledby) — for those,
+# add `data-testid` to the component instead. Pure-`find role` subcommand
+# resolution can't be expressed as a yaml selector string (it's a CLI subcommand
+# chain, not a selector grammar). Migrating those is a separate pitch.
 
 version: "2"
 base_url: "http://localhost:3000"
@@ -21,19 +28,17 @@ elements:
     selector: '[data-testid="email-input"]'
     name: Email input field
 
-  # agent-browser find role subcommand (Candidate 1 — canonical for accessible-name lookup)
-  # Covers RNW components where aria-label may be missing but accessible name is computed
+  # CSS role + aria-label attribute selector
   submit_button:
-    selector: 'find role button --name "Submit"'
+    selector: '[role="button"][aria-label="Submit"]'
     name: Submit button
 
-  # agent-browser find role for tab-like elements
+  # CSS role + aria-label for tab-like elements
   lineage_tab:
-    selector: 'find role tab --name "Lineage"'
+    selector: '[role="tab"][aria-label="Lineage"]'
     name: Lineage tab
 
-  # CSS attribute fallback — only when element has explicit aria-label in DOM
-  # (not for textContent-named or aria-labelledby elements — use find role for those)
+  # CSS attribute fallback — explicit aria-label always works as native selector
   nav_close_button:
     selector: '[role="button"][aria-label="Close navigation"]'
     name: Navigation close button

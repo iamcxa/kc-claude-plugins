@@ -6,46 +6,66 @@
  * This module is the single definition site for selectorToA11yPattern().
  * codegen.js and any future consumer must import from here.
  *
+ * Output format note: agent-browser's snapshot output formats role+name
+ * elements as literal lines like `textbox "Email" [ref=e7]`. The a11y-grep
+ * pattern returned by this function is consumed by `_poll_snapshot_contains`
+ * via `grep -F` (fixed-string), so the output MUST match the literal
+ * snapshot line format `<role> "<name>"` — not `role="<r>" name="<v>"`.
+ *
  * Supported input forms:
  *
- *   Playwright role-selector forms (backward compat):
- *     role=X[name="Y"]        → X "Y"          (exact name match)
- *     role=X[name=/Y/]        → Y              (regex literal prefix)
- *     role=X >> nth=N         → X              (role only)
- *     role=X                  → X              (bare role)
- *     css=...                 → null           (can't convert)
+ *   Canonical Cand 2 CSS attribute forms (post-issue-#7-fix):
+ *     [role="X"][aria-label="Y"]     → X "Y"          (snapshot literal)
+ *     [role="X"]                     → X              (role only)
+ *     [data-testid="X"]              → null           (can't a11y-grep; runner uses CSS attr selector directly)
+ *     [aria-label="X"]               → null           (no role context for a11y grep)
  *
- *   Canonical Cand 1 subcommand forms (T2.3):
- *     find role <r> --name "<v>"  → role="<r>" name=/<v>/i
- *     find role <r>               → role="<r>"
- *     find text "<v>"             → text=/<v>/i
+ *   Playwright role-selector forms (backward compat — UNCHANGED):
+ *     role=X[name="Y"]               → X "Y"          (exact name match)
+ *     role=X[name=/Y/]               → Y              (regex literal prefix)
+ *     role=X >> nth=N                → X              (role only)
+ *     role=X                         → X              (bare role)
+ *     css=...                        → null           (can't convert)
  *
- * Returns: string pattern for a11y tree grep, or null if conversion not possible.
+ * Returns: string pattern for a11y tree grep, or null if conversion not
+ * possible (caller falls back to _poll_visible against the raw selector).
+ *
+ * NOTE: `find role <r> --name "<v>"` subcommand strings are NOT supported —
+ * those are agent-browser CLI subcommand chains, not selector grammar; they
+ * cannot appear in mapping yaml `selector:` fields. See
+ * docs/ship-flow/001-selector-grammar-alignment/design.md (Cand 1 → Cand 2
+ * course correction triggered by Copilot pre-merge review on PR #8).
  */
 function selectorToA11yPattern(selector) {
   if (typeof selector !== 'string') return null;
 
   // ------------------------------------------------------------------
-  // Cand 1 subcommand forms
+  // Cand 2 CSS attribute forms (canonical post-issue-#7)
   // ------------------------------------------------------------------
 
-  // find role <r> --name "<v>"  →  role="<r>" name=/<v>/i
-  var findRoleName = selector.match(/^find\s+role\s+(\S+)\s+--name\s+"([^"]+)"$/);
-  if (findRoleName) {
-    return 'role="' + findRoleName[1] + '" name=/' + findRoleName[2] + '/i';
+  // [role="X"][aria-label="Y"]  →  X "Y"  (snapshot-literal format)
+  var roleAriaLabel = selector.match(/^\[role="([^"]+)"\]\[aria-label="([^"]+)"\]$/);
+  if (roleAriaLabel) {
+    return roleAriaLabel[1] + ' "' + roleAriaLabel[2] + '"';
   }
 
-  // find role <r>  →  role="<r>"
-  var findRoleBare = selector.match(/^find\s+role\s+(\S+)$/);
-  if (findRoleBare) {
-    return 'role="' + findRoleBare[1] + '"';
+  // Permit reversed attribute order: [aria-label="Y"][role="X"]
+  var ariaLabelRole = selector.match(/^\[aria-label="([^"]+)"\]\[role="([^"]+)"\]$/);
+  if (ariaLabelRole) {
+    return ariaLabelRole[2] + ' "' + ariaLabelRole[1] + '"';
   }
 
-  // find text "<v>"  →  text=/<v>/i
-  var findText = selector.match(/^find\s+text\s+"([^"]+)"$/);
-  if (findText) {
-    return 'text=/' + findText[1] + '/i';
+  // [role="X"]  →  X  (role-only; falls back to count-by-role)
+  var roleOnly = selector.match(/^\[role="([^"]+)"\]$/);
+  if (roleOnly) {
+    return roleOnly[1];
   }
+
+  // [data-testid="X"] / [aria-label="X"] (no role) → null
+  // Compiler falls back to _poll_visible (CSS attr selector resolves natively
+  // in agent-browser; no a11y-grep equivalent worth asserting against snapshot).
+  if (selector.match(/^\[data-testid="[^"]+"\]$/)) return null;
+  if (selector.match(/^\[aria-label="[^"]+"\]$/)) return null;
 
   // ------------------------------------------------------------------
   // Playwright role-selector forms (backward compat — UNCHANGED)
