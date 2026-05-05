@@ -1,8 +1,15 @@
 ---
 name: pr-merge
 description: Push branches and create/track GitHub PRs for workflow entities
-version: 0.11.0
+version: 0.11.1
 changelog:
+  0.11.1:
+    - Privacy redaction rule added to the PR body template — never include absolute
+      home-dir paths (`/Users/<name>/`, `/home/<name>/`, `~/Project/...`) or local
+      shell paths in PR descriptions, comments, or review bodies. Includes a
+      grep-based pre-flight check the FO MUST run before invoking gh pr create /
+      gh pr comment / gh pr review --body-file. Triggered by an actual leak on
+      iamcxa/kc-claude-plugins#10 caught at post-create review.
   0.11.0:
     - Replaced Hook post-create with carlove-derived two-track review pattern
       (Copilot reviewer-request + 6-min mandatory wait, parallel local kc-pr-review
@@ -102,6 +109,36 @@ Lead with motivation + end-user value; audit metadata goes at the bottom. The go
 | Related | Explicit "related task" / "follow-up" mentions in stage reports | 1 line. **Omit if none.** |
 
 Target total length: **60-120 words**.
+
+**Privacy / personal-info redaction (mandatory for ALL PR bodies + comments + reviews — version 0.11.1):**
+
+PR descriptions, comments, and review bodies are public artifacts on github.com (or gitlab.com). Never include:
+
+| Leak class | Example | Replacement |
+|---|---|---|
+| Absolute home-dir paths | `/Users/<name>/Project/foo/bar.md` | `foo:bar.md` (cross-repo) or `bar.md` (same repo) |
+| `~/` prefixes referencing local layout | `~/Project/<repo>/...` | same as above |
+| Linux/Windows user shell paths | `/home/<user>/...`, `C:\Users\<user>\...` | strip to repo-relative |
+| Real-name email in prose | inline references in body | use github login (`@<handle>`) |
+
+**Pre-flight check (MUST run before `gh pr create --body-file` / `gh pr comment` / `gh pr review --body-file`)**:
+
+```bash
+grep -nE '/Users/|/home/|~/Project|@gmail|@yahoo|@hotmail|C:\\\\Users' "$BODY_FILE"
+# MUST return 0 lines. Any hit = redact before sending.
+```
+
+Discipline: write PR bodies into `/tmp/pr-N-body.md`, run the grep, then send. Same check applies to follow-up comments and review bodies.
+
+If a leak ships to a public artifact, redact via:
+- PR body: `gh pr edit <N> --body-file <redacted-file>`
+- PR/issue comment: GraphQL `updateIssueComment` API (`gh issue edit` doesn't cover individual comment bodies cleanly)
+- Review body: cannot edit a posted review on GitHub — post a follow-up review/comment with the redacted content + delete the leaked one if possible
+
+This redaction rule is enforced by:
+1. The FO at PR-create time (Hook: merge step before `gh pr create`)
+2. The pr-reviewer teammate at review-post time (Hook: post-create Step 2 before posting the review body)
+3. Any kc-pr-flow:kc-pr-review or kc-pr-review-resolve skill invocation BEFORE writing to a public artifact
 
 **Key design decisions:**
 
