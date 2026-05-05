@@ -1,7 +1,7 @@
 ---
 id: "001"
 title: "e2e-pipeline selector grammar alignment (mapper ↔ agent-browser runtime)"
-status: ship
+status: done
 pattern: pitch
 appetite: "medium-batch"
 layout: folder
@@ -12,6 +12,9 @@ stage_outputs:
   execute: execute.md
   verify: verify.md
   review: review.md
+verdict: PASSED
+completed: 2026-05-05T15:11:59Z
+archived: 2026-05-05T15:12:01Z
 ---
 
 <!-- section:stage-artifact-links -->
