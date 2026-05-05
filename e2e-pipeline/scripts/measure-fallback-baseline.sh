@@ -66,11 +66,12 @@ usage() {
 # ── arg parse ─────────────────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --flows-dir)  FLOWS_DIR="$2";  shift 2 ;;
-    --target-url) TARGET_URL="$2"; shift 2 ;;
-    --output)     OUTPUT="$2";     shift 2 ;;
-    --auth-token) AUTH_TOKEN="$2"; shift 2 ;;
-    --help|-h)    usage ;;
+    --flows-dir)         FLOWS_DIR="$2";          shift 2 ;;
+    --target-url)        TARGET_URL="$2";         shift 2 ;;
+    --output)            OUTPUT="$2";             shift 2 ;;
+    --auth-token)        AUTH_TOKEN="$2";         shift 2 ;;
+    --strict-target-url) STRICT_TARGET_URL=1;     shift   ;;
+    --help|-h)           usage ;;
     *)
       echo "ERROR: unknown option: $1" >&2
       echo "Run with --help for usage." >&2
@@ -93,6 +94,21 @@ if [[ ! -d "$FLOWS_DIR" ]]; then
   exit 1
 fi
 
+# PR #8 R5 fix — validate target URL reachability so caller can't silently
+# baseline against a wrong env. Default: warn-and-continue (captain may run
+# offline / against fixtures); --strict-target-url makes it a hard error.
+TARGET_REACHABLE=1
+if ! curl -sf --max-time 5 "$TARGET_URL" > /dev/null 2>&1; then
+  TARGET_REACHABLE=0
+  echo "WARNING: target URL not reachable: $TARGET_URL" >&2
+  echo "  baseline JSON will record target_url_reachable: false." >&2
+  echo "  re-run with --strict-target-url to make this fatal." >&2
+  if [[ "${STRICT_TARGET_URL:-0}" == "1" ]]; then
+    echo "ERROR: --strict-target-url set; aborting." >&2
+    exit 1
+  fi
+fi
+
 # ── detect mode ───────────────────────────────────────────────────────────────
 CLAUDE_BIN="$(command -v claude 2>/dev/null || true)"
 if [[ -n "$CLAUDE_BIN" && -n "${ANTHROPIC_API_KEY:-}" ]]; then
@@ -109,7 +125,11 @@ echo "mode       : $MODE"
 echo ""
 
 # ── collect flow files ────────────────────────────────────────────────────────
-mapfile -t FLOW_FILES < <(find "$FLOWS_DIR" -maxdepth 3 -name "*.yaml" -o -name "*.yml" | sort)
+# PR #8 R4 fix — parenthesize the alternation. Prior form
+#   `find ... -maxdepth 3 -name '*.yaml' -o -name '*.yml'`
+# applied -maxdepth only to the first branch (-o has lower precedence than the
+# implicit AND), so deeply-nested *.yml files were swept in unexpectedly.
+mapfile -t FLOW_FILES < <(find "$FLOWS_DIR" -maxdepth 3 \( -name "*.yaml" -o -name "*.yml" \) | sort)
 
 if [[ ${#FLOW_FILES[@]} -eq 0 ]]; then
   echo "WARNING: No flow YAML files found in: $FLOWS_DIR"
@@ -181,10 +201,13 @@ EOF
   FLOWS_JSON+="
   ]"
 
+  REACHABLE_FLAG=$([[ "$TARGET_REACHABLE" == "1" ]] && echo "true" || echo "false")
+  mkdir -p "$(dirname "$OUTPUT")"
   cat > "$OUTPUT" <<JSONEOF
 {
   "measured_at": "${MEASURED_AT}",
   "target_url": "${TARGET_URL}",
+  "target_url_reachable": ${REACHABLE_FLAG},
   "runner_version": "${RUNNER_VERSION}",
   "mode": "skeleton — hits unmeasured, fill in after manual /e2e-test runs",
   "flows": ${FLOWS_JSON}
@@ -269,10 +292,14 @@ echo "Writing baseline JSON to: $OUTPUT"
 
 FLOWS_JSON="$(printf '%s,\n' "${FLOWS_RESULTS[@]}" | sed '$ s/,$//')"
 
+REACHABLE_FLAG=$([[ "$TARGET_REACHABLE" == "1" ]] && echo "true" || echo "false")
+mkdir -p "$(dirname "$OUTPUT")"
+
 cat > "$OUTPUT" <<JSONEOF
 {
   "measured_at": "${MEASURED_AT}",
   "target_url": "${TARGET_URL}",
+  "target_url_reachable": ${REACHABLE_FLAG},
   "runner_version": "${RUNNER_VERSION}",
   "flows": [
 ${FLOWS_JSON}

@@ -37,6 +37,17 @@
 #     example: .MuiDialog >> :has-text("Confirm")
 #     no direct replacement — restructure selector using data-testid or
 #     CSS attribute form
+#
+#   CLASS 5 — agent-browser find-subcommand string in selector value (post-PR-#8):
+#     regex:  ^find\s+(role|text|label|testid)\b
+#     example: find role button --name "Submit"
+#     replace with: [role="<r>"][aria-label="<v>"] CSS attribute selector
+#     reason: `find role|text|label|testid` is an agent-browser CLI SUBCOMMAND
+#     CHAIN, not a selector grammar. Storing it as a `selector:` value and
+#     passing it to `agent-browser is visible|click|fill '<value>'` makes
+#     agent-browser try to parse the entire string as CSS and fail.
+#     Caught by Copilot review on PR #8 (R1 finding) — the linter MUST gate
+#     this form pre-merge or CI green-lights mappings the runner cannot consume.
 
 set -euo pipefail
 
@@ -47,11 +58,13 @@ usage() {
   echo ""
   echo "  mapping-yaml-path  Path to the e2e mapping YAML file to lint."
   echo ""
-  echo "  Checks selector field values (only) for banned Playwright-style tokens:"
-  echo "    - role=<word>[name=...]  (use: [role=\"<r>\"][aria-label=\"<v>\"] CSS attr)"
-  echo "    - >> nth=<N>             (use: :nth-of-type(N))"
-  echo "    - text= (bare prefix)    (use: data-testid or CSS attr selector)"
-  echo "    - :has-text(             (no replacement — restructure selector)"
+  echo "  Checks selector field values (only) for banned tokens:"
+  echo "    - role=<word>[name=...]   (Playwright; use: [role=\"<r>\"][aria-label=\"<v>\"] CSS attr)"
+  echo "    - >> nth=<N>              (Playwright; use: :nth-of-type(N))"
+  echo "    - text= (bare prefix)     (Playwright; use: data-testid or CSS attr)"
+  echo "    - :has-text(              (Playwright; no replacement — restructure)"
+  echo "    - find role|text|label|testid <args>  (agent-browser subcommand chain;"
+  echo "                                          NOT a selector grammar — use CSS attr)"
   echo ""
   exit 1
 }
@@ -133,6 +146,14 @@ while IFS= read -r line; do
   # CLASS 4 — Playwright has-text
   if echo "$selector_value" | grep -qE ':has-text\('; then
     echo "${MAPPING_FILE}:${lineno}: has-text: ${line}" >&2
+    errors=$((errors + 1))
+  fi
+
+  # CLASS 5 — agent-browser find subcommand chain in selector value (PR #8 R1 fix)
+  # Matches: find role button --name "Submit"  /  find text "Submit"  /  find testid "X"
+  # `find <role|text|label|testid>` is a CLI subcommand chain, not selector grammar.
+  if echo "$selector_value" | grep -qE '^find[[:space:]]+(role|text|label|testid)\b'; then
+    echo "${MAPPING_FILE}:${lineno}: find-subcommand: ${line}" >&2
     errors=$((errors + 1))
   fi
 
