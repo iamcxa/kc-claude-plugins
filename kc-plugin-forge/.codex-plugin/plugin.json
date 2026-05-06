@@ -1,0 +1,40 @@
+{
+  "name": "kc-plugin-forge",
+  "version": "1.7.0",
+  "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, doc self-iteration",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "homepage": "https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-plugin-forge",
+  "repository": "https://github.com/iamcxa/kc-claude-plugins",
+  "license": "MIT",
+  "keywords": [
+    "plugin",
+    "quality",
+    "tdd",
+    "validation",
+    "forge",
+    "lifecycle",
+    "audit"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "KC Plugin Forge",
+    "shortDescription": "Plugin quality pipeline for scaffolding, validating, and improving plugins",
+    "longDescription": "One-command plugin development and quality pipeline for Codex and Claude Code. Provides skills to scaffold plugins, validate structure, TDD-test skills, verify agent definitions, smoke-test clean profiles, capture learned patterns, and sync docs.",
+    "developerName": "Kent Chen",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-plugin-forge",
+    "defaultPrompt": [
+      "Forge this plugin with kc-plugin-forge",
+      "Validate this plugin with kc-plugin-forge validate-only",
+      "Show kc-plugin-forge help"
+    ],
+    "brandColor": "#F97316"
+  }
+}
