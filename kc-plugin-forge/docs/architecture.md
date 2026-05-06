@@ -7,6 +7,7 @@ kc-plugin-forge is a skill-only plugin (no agents) that orchestrates marketplace
 ```
 kc-plugin-forge/
 ├── .claude-plugin/plugin.json     # metadata only
+├── .codex-plugin/plugin.json      # Codex metadata, skills -> ./skills/
 ├── skills/
 │   ├── kc-plugin-forge/           # main orchestrator (7-phase pipeline + dreaming)
 │   │   └── SKILL.md

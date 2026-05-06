@@ -24,7 +24,7 @@ Browser & CLI E2E testing with context-isolating subagents. Map your app's UI, g
 
 ### [kc-plugin-forge](./kc-plugin-forge/) `v1.8.0`
 
-One-command plugin quality pipeline. Validates structure, TDD-tests skills under pressure (or via `skill-creator` benchmarking with `--use-skill-creator`), audits SKILL.md frontmatter against the official Claude Code spec (Phase 2.4), smoke-tests skills in clean profile (`--bare` mode, ~$0.025/test), optionally optimizes skill descriptions for trigger reliability (Phase 2.6 via `--optimize-desc`), verifies agent definitions, detects Agent Teams capability, and scaffolds self-improvement (D1/D2 learning) and doc-sync capabilities. Supports `--parallel` mode for concurrent Phase 2/3 execution via teammates.
+One-command plugin quality pipeline. Validates structure, TDD-tests skills under pressure (or via `skill-creator` benchmarking with `--use-skill-creator`), audits SKILL.md frontmatter against the official Claude Code spec (Phase 2.4), smoke-tests skills in clean profile (`--bare` mode, ~$0.025/test), optionally optimizes skill descriptions for trigger reliability (Phase 2.6 via `--optimize-desc`), verifies agent definitions, detects Agent Teams capability, and scaffolds self-improvement (D1/D2 learning) and doc-sync capabilities. Supports `--parallel` mode for concurrent Phase 2/3 execution via teammates. Codex platform manifest ships alongside Claude Code.
 
 **Use when:** You're building or maintaining Claude Code plugins and want automated quality assurance.
 

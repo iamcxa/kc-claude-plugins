@@ -12,6 +12,40 @@ claude plugin add iamcxa/kc-claude-plugins/kc-plugin-forge
 claude --plugin-dir path/to/kc-plugin-forge
 ```
 
+## Codex Support
+
+Codex can use the same plugin through `kc-plugin-forge/.codex-plugin/plugin.json`; skills are discovered from `./skills/`. Keep the Claude install path above when you still use Claude Code.
+
+For a local Codex install, use the home-local plugin convention:
+
+```bash
+ln -s /path/to/kc-plugin-forge ~/plugins/kc-plugin-forge
+```
+
+Add a marketplace entry to `~/.agents/plugins/marketplace.json`:
+
+```json
+{
+  "name": "kc-plugin-forge",
+  "source": {
+    "source": "local",
+    "path": "./plugins/kc-plugin-forge"
+  },
+  "policy": {
+    "installation": "AVAILABLE",
+    "authentication": "ON_INSTALL"
+  },
+  "category": "Developer Tools"
+}
+```
+
+Enable the plugin in `~/.codex/config.toml`:
+
+```toml
+[plugins."kc-plugin-forge@kent-local"]
+enabled = true
+```
+
 ## Prerequisites
 
 Required marketplace plugins (runtime dependencies):
