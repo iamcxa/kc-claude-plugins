@@ -1,6 +1,6 @@
 {
   "name": "e2e-pipeline",
-  "description": "Browser & CLI E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video, terminal recording for CLI-only flows",
+  "description": "Browser & CLI E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video, terminal recording for CLI-only flows, static UI computed-style verification",
   "version": "2.8.0",
   "author": {
     "name": "Kent Chen",
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/iamcxa/claude-e2e-pipeline",
   "repository": "https://github.com/iamcxa/claude-e2e-pipeline",
   "license": "MIT",
-  "keywords": ["e2e", "browser-testing", "agent-browser", "ui-mapping", "flow-generation", "flow-verification", "video-recording", "subagents"]
+  "keywords": ["e2e", "browser-testing", "agent-browser", "ui-mapping", "ui-verify", "flow-generation", "flow-verification", "video-recording", "cli-recording", "subagents"]
 }
