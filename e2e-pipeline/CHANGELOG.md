@@ -3,6 +3,21 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.8.0] - 2026-05-06 — UI Verify skill + Codex manifest
+
+Adds a deterministic static-UI verification skill and ships the Codex platform manifest alongside the existing Claude Code plugin manifest.
+
+### Added
+- **`ui-verify` skill** — declarative computed-style regression check. YAML-driven, browser-driven via `agent-browser`, machine-judged pass/fail per check. Pseudo-element checks supported. Reuses `.claude/e2e/mappings/<app>.yaml` for `base_url` + `auth.test_accounts`. Runner at `skills/ui-verify/bin/run.js` (Node, uses plugin's `js-yaml` dep). Report at `.claude/e2e/reports/ui-verify-<stem>-<ts>.md`.
+- **Codex plugin manifest** (`.codex-plugin/plugin.json`) — enables installation in Codex alongside Claude Code. Auto-discovers skills under `./skills/`.
+
+### Changed
+- **Skill count**: 10 → 11 (CLAUDE.md Architecture section + skills directory listing updated).
+
+### Notes
+- Scope of `ui-verify` is intentionally Mode B only (fixed selectors × fixed expected values). Forensics / dynamic queries deliberately defer to `agent-browser` REPL.
+- Complements rather than replaces `e2e-flow` — flow checks dynamic behavior, ui-verify checks static computed style.
+
 ## [2.7.0] - 2026-05-04 — Selector Grammar Alignment
 
 Aligns mapper output with agent-browser CLI runtime contract per issue #7.
