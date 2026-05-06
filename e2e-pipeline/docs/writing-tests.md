@@ -18,7 +18,7 @@ pages:
     elements:
       email_input: { selector: "[data-testid='email']" }
       password_input: { selector: "[data-testid='password']" }
-      submit_button: { selector: "button[role='button'][name='Sign In']" }
+      submit_button: { selector: "[role='button'][aria-label='Sign In']" }
   dashboard:
     url_pattern: "/dashboard"
     elements:

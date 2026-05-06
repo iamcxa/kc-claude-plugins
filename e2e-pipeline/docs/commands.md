@@ -63,6 +63,9 @@
 | `/e2e-doc-sync --auto` | Full sync, skip user confirmation |
 | `/e2e-doc-sync --section <doc>` | Targeted sync for one doc file |
 | `/e2e-doc-sync --diff <ref>` | Use explicit git diff base instead of auto-detect |
+| `/ui-verify <yaml>` | Run static UI computed-style checks defined in YAML against a live app. See [UI Verify](ui-verify.md). |
+| `/ui-verify <yaml> --no-screenshot` | Skip per-check screenshots (faster) |
+| `/ui-verify <yaml> --bail-on-first-fail` | Stop on first failed check (default: run all, report aggregate) |
 
 **CLI-only flow triggers**: `/e2e-flow` also responds to natural language like "cli flow", "backend e2e", "api test flow", and "cli recording". When no mapping exists and the source material contains CLI signals (shell commands, API endpoints, database queries), the skill auto-detects CLI-only intent and generates a flow using only `Execute external` / `Verify external` steps -- no mapping required. See [Cross-Boundary Testing -- CLI-Only Flows](cross-boundary-testing.md#cli-only-flows-no-mapping-required) for details.
 

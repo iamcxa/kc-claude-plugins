@@ -204,6 +204,44 @@ Quarantine thresholds are stored in `quarantine.json`:
 
 ---
 
+## Mapping Linter (`scripts/lint-mapping.sh`)
+
+`scripts/lint-mapping.sh` is a 4-token-class linter that rejects banned Playwright vocabulary from mapping YAML files. It exists to keep mappings on the canonical Cand 2 grammar (`[role="X"][aria-label="Y"]`, CSS `:nth-of-type(N)`, `find role` subcommand, etc.) and prevent regression after the 2.7.0 selector-grammar realignment.
+
+| Banned token | Why | Use instead |
+|---|---|---|
+| `role=X[name="Y"]` | Playwright role-selector attribute syntax | `[role="X"][aria-label="Y"]` |
+| ` >> nth=N` | Playwright chord nth selector | `:nth-of-type(N)` (CSS) |
+| bare `text=...` at selector start | Playwright text shorthand | `find text "..."` (subcommand) |
+| `has-text(...)` | Playwright pseudo (broken in agent-browser) | role + name match |
+
+Usage:
+
+```bash
+# Lint a single mapping
+bash scripts/lint-mapping.sh .claude/e2e/mappings/my-app.yaml
+
+# Lint every mapping in a project (CI-friendly: exit 1 on any violation)
+find .claude/e2e/mappings -name '*.yaml' -print0 \
+  | xargs -0 -n1 bash scripts/lint-mapping.sh
+```
+
+Exit codes: `0` clean · `1` one or more banned tokens detected (path + line printed to stderr).
+
+Wire into CI as a fast pre-flight gate before the browser job spins up.
+
+## Fallback Counter Baseline (`scripts/measure-fallback-baseline.sh`)
+
+The 2.7.0 release added an `eval_fallback_hits` counter to `/e2e-test` traces and reports — every silent eval-fallback the runner used to mask is now tallied loudly. To bound regressions, capture a baseline:
+
+```bash
+bash scripts/measure-fallback-baseline.sh \
+  --flows .claude/e2e/flows \
+  --output .claude/e2e/baselines/fallback-hits.json
+```
+
+The script invokes `/e2e-test` per flow, parses each report's `eval_fallback_hits` field, and emits an aggregate JSON (per-flow + total). Compare future runs against this baseline; a non-trivial increase indicates either a selector regression in the mapping or a fall-out in agent-browser locator handling.
+
 ## Mapping Staleness Detection
 
 The `auth-setup` job includes a staleness check that compares mapping file dates against UI source changes:
@@ -389,15 +427,19 @@ FLOWS=$(ls .claude/e2e/compiled/gate-*.sh | xargs -I{} basename {} .sh \
 
 ### Workarounds (applied by the compiler)
 
-**Visibility checks**: The compiler generates `_poll_snapshot_contains` (grepping the a11y tree) instead of `_poll_visible` (Playwright's `isVisible()`). The `selectorToA11yPattern()` function converts ARIA selectors to grep patterns:
+**Visibility checks**: The compiler generates `_poll_snapshot_contains` (grepping the a11y tree) instead of `_poll_visible` (Playwright's `isVisible()`). The `selectorToA11yPattern()` function (canonical: `compiler/lib/selector-translate.js`) converts both the post-2.7.0 native CSS attribute selectors and the legacy Playwright role-selector forms (kept for backward compat):
 
-| Selector | Grep pattern |
-|----------|-------------|
-| `role=textbox[name="電子郵件"]` | `textbox "電子郵件"` |
-| `role=button[name="登 入"]` | `button "登 入"` |
-| `role=heading[name=/每日看板/]` | `每日看板` (literal prefix) |
-| `role=menuitem[name=/營運概況/]` | `營運概況` |
-| `role=combobox >> nth=0` | `combobox` (role only -- may be broad) |
+| Input selector | Form | Grep pattern |
+|---|---|---|
+| `[role="textbox"][aria-label="電子郵件"]` | Cand 2 canonical (post-2.7.0) | `textbox "電子郵件"` |
+| `[role="button"][aria-label="登 入"]` | Cand 2 canonical | `button "登 入"` |
+| `[role="combobox"]` | role-only | `combobox` (broad) |
+| `[data-testid="…"]` | data-testid | `null` (runner uses CSS attr selector directly) |
+| `role=textbox[name="電子郵件"]` | Playwright legacy (BANNED in new mappings; translator still accepts) | `textbox "電子郵件"` |
+| `role=heading[name=/每日看板/]` | Playwright regex (BANNED) | `每日看板` (literal prefix) |
+| `role=combobox >> nth=0` | Playwright nth chord (BANNED) | `combobox` (role only) |
+
+> The mapping linter (`scripts/lint-mapping.sh`) rejects all four banned Playwright token classes (`role=X[name=Y]`, `>> nth=N`, bare `text=`, `has-text(`) at the mapping layer. New mappings produced by `/e2e-map` (2.7.0+) emit only canonical Cand 2 forms.
 
 **Fill and click** (login flows only): Replace `agent-browser fill`/`click` with `agent-browser eval` using JavaScript:
 
