@@ -8,7 +8,7 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 
 ## Architecture
 
-**Skills** (10) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
+**Skills** (11) run in main conversation context as thin orchestrators. They handle pre-flight checks, codebase analysis, user interaction, and media post-processing.
 
 **Agents** (8) run as subagents for heavy work, keeping verbose data out of main context:
 - `e2e-mapper` -- explores pages, generates YAML mappings
@@ -31,6 +31,7 @@ skills/e2e-skill-ops/    -> meta-skill for debugging/maintaining the pipeline it
 skills/e2e-help/         -> interactive help guide, topic deep-dive, feedback collection
 skills/e2e-doc-sync/     -> doc sync: diff-aware scan + history enrichment + write + live probe verification
 skills/e2e-debug/        -> debug orchestrator: inject logs → dispatch e2e-debug-observe → diagnose → cleanup (Teams mode: persistent observer)
+skills/ui-verify/        -> static UI computed-style verification (declarative YAML, deterministic Node runner)
 agents/                  -> subagent definitions (e2e-mapper, e2e-flow-writer, e2e-flow-verifier, e2e-test-runner, e2e-trace-analyzer, e2e-media-processor, doc-probe, e2e-debug-observe)
 hooks/                   -> E2E pipeline hooks (SessionStart context + pre-commit check + plan E2E check)
 references/              -> agent-browser CLI commands, common browser testing patterns, knowledge capture framework
