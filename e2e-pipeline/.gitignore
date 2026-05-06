@@ -10,3 +10,6 @@ node_modules/
 # Runtime E2E reports (keep findings file)
 .claude/e2e/reports/*
 !.claude/e2e/reports/skill-quality-findings.md
+
+# Integration smoke runtime artifact (overwritten per run)
+test/integration-smoke-report.json
