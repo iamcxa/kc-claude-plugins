@@ -42,6 +42,7 @@ Skills run in main context as thin orchestrators. Heavy browser work is delegate
 | `e2e-dispatch` | *(none)* | Router to the right skill |
 | `e2e-help` | *(none)* | Interactive help, topic guide, feedback collection |
 | `e2e-doc-sync` | `doc-probe` | Unified doc sync: diff-aware scan + history enrichment (journal + memory) + write + live behavioral probe verification |
+| `ui-verify` | *(none)* | Static UI computed-style checks via deterministic Node runner (`skills/ui-verify/bin/run.js`); no subagent dispatch |
 
 **`e2e-doc-sync` details**: This skill runs a 6-phase pipeline: diff-aware static scan (git diff + inventory sources vs docs), history enrichment (search journal + memory for usage patterns), doc write/update, live probe verification (dispatches `doc-probe` agent to execute CLI probes against behavioral claims), self-update of its reference config, and knowledge loop reporting.
 
@@ -131,7 +132,8 @@ runs:
 
 ```
 e2e-pipeline/
-|- .claude-plugin/plugin.json   # Plugin manifest
+|- .claude-plugin/plugin.json   # Claude Code plugin manifest
+|- .codex-plugin/plugin.json    # Codex platform plugin manifest
 |- skills/
 |   |- e2e-dispatch/            # Router (auth gate + skill selection)
 |   |- e2e-map/                 # Mapping orchestrator -> e2e-mapper agent
@@ -142,7 +144,8 @@ e2e-pipeline/
 |   |- e2e-skill-ops/           # Meta-skill for pipeline maintenance
 |   |- e2e-help/                # Interactive help guide, topic deep-dive, feedback
 |   |- e2e-doc-sync/            # Unified doc sync: diff-aware scan + history + write + live probe
-|   +-- e2e-debug/              # Runtime debug: inject -> observe -> diagnose -> cleanup
+|   |- e2e-debug/               # Runtime debug: inject -> observe -> diagnose -> cleanup
+|   +-- ui-verify/              # Static UI verify: declarative computed-style checks
 |- agents/
 |   |- e2e-mapper.md            # UI exploration subagent
 |   |- e2e-test-runner.md       # Flow execution subagent
@@ -152,12 +155,16 @@ e2e-pipeline/
 |   |- e2e-media-processor.md   # Media post-processing subagent
 |   |- doc-probe.md             # Documentation accuracy verifier (live probes)
 |   +-- e2e-debug-observe.md    # Browser observation for debug pipeline
-|- hooks/                       # SessionStart + PreToolUse hooks
+|- hooks/                       # PreToolUse (pre-commit + flow-guard) + PostToolUse (plan-check)
 |- references/                  # agent-browser CLI docs, patterns, knowledge capture
-|- compiler/                    # Node.js compiler modules
+|- compiler/                    # Node.js compiler modules (selector-translate, action handlers)
 |- bin/                         # CLI entry points
 |   |- e2e-compile.js           # Compiler CLI
 |   +-- e2e-quarantine.js       # Quarantine evaluator CLI
+|- scripts/                     # Auxiliary CLI helpers
+|   |- lint-mapping.sh          # Mapping YAML banned-token linter (CI gate)
+|   +-- measure-fallback-baseline.sh  # eval_fallback_hits baseline orchestrator
+|- test/                        # Integration smoke pipeline + fixtures + baselines
 |- templates/
 |   +-- browser-e2e.yml         # GitHub Actions workflow template
 +-- docs/                       # Documentation (you are here)
@@ -171,6 +178,7 @@ e2e-pipeline/
 - [Getting Started](getting-started.md) -- install and first run
 - [Cross-Boundary Testing](cross-boundary-testing.md) -- CLI-only flows, mixed browser + CLI tests
 - [Debugging](debugging.md) -- runtime debugging with `/e2e-debug`
+- [UI Verify](ui-verify.md) -- static UI computed-style checks via `/ui-verify`
 
 ---
 

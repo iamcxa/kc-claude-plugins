@@ -1,7 +1,7 @@
 ---
 plugin: e2e-pipeline
-version: 2.5.0
-last_sync: 2026-04-05 (Phase 5 self-update — forge doc-sync)
+version: 2.8.0
+last_sync: 2026-05-06 (Phase 5 self-update — ui-verify + 2.7.0 backfill)
 ---
 
 # Doc-Sync Domain Context
@@ -25,6 +25,7 @@ defines sync levels, probe classification, and style defaults.
 | `skills/e2e-help/SKILL.md` | `docs/commands.md` (e2e-help row) | — |
 | `skills/e2e-doc-sync/SKILL.md` | `docs/commands.md` (e2e-doc-sync row) | `docs/architecture.md` (doc maintenance) |
 | `skills/e2e-debug/SKILL.md` | `docs/commands.md` (e2e-debug row) | `docs/debugging.md` (debug pipeline) |
+| `skills/ui-verify/SKILL.md` | `docs/commands.md` (ui-verify row) | `docs/ui-verify.md` (full schema + workflow) |
 
 ### Agents → Doc Targets
 
@@ -76,6 +77,7 @@ defines sync levels, probe classification, and style defaults.
 | `docs/debugging.md` | Troubleshooting test failures | **partial** | Mix of generated patterns + user-contributed tips |
 | `docs/self-improvement.md` | D1/D2 knowledge capture framework | **partial** | Conceptual; dimension table is syncable |
 | `docs/pr-workflow.md` | PR comment template, evidence workflow | **partial** | Template is syncable; workflow is narrative |
+| `docs/ui-verify.md` | Static UI verify YAML schema, setup actions, examples | **partial** | Schema section is syncable; examples curated |
 
 ## Style Guide
 
@@ -107,6 +109,7 @@ Classifies each skill for automated doc-sync probing (can the scanner invoke it 
 | `e2e-walkthrough` | skip | Requires browser + live application |
 | `e2e-skill-ops` | skip | Requires failure context or specific debug target |
 | `e2e-debug` | skip | Requires browser + live application + bug context |
+| `ui-verify` | skip | Requires browser + live application + auth |
 
 ## Post-Sync Hooks
 

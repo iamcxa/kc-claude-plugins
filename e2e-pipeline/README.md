@@ -1,6 +1,6 @@
 # e2e-pipeline
 
-Browser E2E testing pipeline for Claude Code. Maps UI elements, generates and verifies test flows, runs automated tests, and walks through apps interactively -- all with context-isolating subagents that keep browser data out of your main conversation.
+Browser E2E testing pipeline for Claude Code and Codex. Maps UI elements, generates and verifies test flows, runs automated tests, walks through apps interactively, and validates static UI computed styles -- all with context-isolating subagents that keep browser data out of your main conversation.
 
 ## Install
 
@@ -8,6 +8,8 @@ Browser E2E testing pipeline for Claude Code. Maps UI elements, generates and ve
 /plugin marketplace add iamcxa/kc-claude-plugins
 /plugin install e2e-pipeline@kc-claude-plugins
 ```
+
+Codex users can install the same plugin via `.codex-plugin/plugin.json` -- skills auto-discover under `./skills/`.
 
 **Prerequisite:** [agent-browser](https://github.com/nicobrinkkemper/agent-browser) CLI installed globally.
 
@@ -22,7 +24,8 @@ Browser E2E testing pipeline for Claude Code. Maps UI elements, generates and ve
 /e2e-test --all-sites       # 6. Run flows across all mapped sites
 /e2e-walkthrough            # 7. Walk through interactively (exploration, QA, debug)
 /e2e-compile --all          # 8. Compile to standalone bash scripts for CI
-/e2e-help                   # 9. Interactive help & topic guide
+/ui-verify <yaml>           # 9. Static UI check: computed CSS vs expected tokens
+/e2e-help                   # 10. Interactive help & topic guide
 ```
 
 ## The Pipeline
@@ -54,6 +57,7 @@ When selectors break, re-map the page. When flows change, re-walk. The pipeline 
 | [Recording & Evidence](docs/recording-evidence.md) | Video, screenshots, traces, media processing pipeline |
 | [PR Workflow](docs/pr-workflow.md) | End-to-end guide for posting E2E evidence to pull requests |
 | [Debugging](docs/debugging.md) | Static/dynamic/intermittent issues, troubleshooting table |
+| [UI Verify](docs/ui-verify.md) | Static UI computed-style checks via `/ui-verify` (declarative YAML, machine-judged) |
 | [Architecture](docs/architecture.md) | Pipeline design, skill->agent model, file structure |
 | [Self-Improvement](docs/self-improvement.md) | Knowledge bootstrap, D1/D2 patterns, PR-back flow |
 
