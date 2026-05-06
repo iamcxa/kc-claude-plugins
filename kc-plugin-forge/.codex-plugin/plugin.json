@@ -1,6 +1,6 @@
 {
   "name": "kc-plugin-forge",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, doc self-iteration",
   "author": {
     "name": "Kent Chen",
