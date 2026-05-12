@@ -1,4 +1,4 @@
-# Case Study: DRC-3288 / PR #1241
+# Case Study: <TICKET-CASE> / PR #X
 
 **Context**: Bug where Snowflake connections failed because dbt-snowflake appends `.snowflakecomputing.com` to the `account` field. If the user entered the full domain, the final URL had the suffix twice. The fix adds `normalize_snowflake_account()` that strips the suffix before YAML profile generation.
 
@@ -8,7 +8,7 @@
 
 ---
 
-## Sample output for PR #1241
+## Sample output for PR #X
 
 ```yaml
 break_point:
@@ -29,13 +29,13 @@ failure_chain:
     description: Backend encrypts and stores config (encrypted_config column)
     layer: storage
   - step: 4
-    description: Recce session launch fetches config via get_warehouse_connection_config
+    description: <workflow> session launch fetches config via get_warehouse_connection_config
     layer: domain
   - step: 5
     description: warehouse_config_to_profile_yml generates profiles.yml content  # FIX HERE
     layer: domain
   - step: 6
-    description: Recce instance container reads profiles.yml
+    description: <workflow> instance container reads profiles.yml
     layer: infra
   - step: 7
     description: dbt-snowflake appends .snowflakecomputing.com to account
@@ -54,7 +54,7 @@ runtime_gap:
     Not exercised:
       - step 1-2: frontend → API wire (does the frontend preprocess the account field?)
       - step 3: storage round-trip (does decrypt yield the same dict shape?)
-      - step 4: caller wiring in recce_task_func.py (3 call sites) and recce_share_instance_func.py (1)
+      - step 4: caller wiring in <task_func>.py (3 call sites) and <share_instance_func>.py (1)
       - step 6: profiles.yml is actually what the container reads
 
 probe_decision:
@@ -67,9 +67,9 @@ probe_decision:
       Verified SnowflakeAdapter.tsx handleInputChange passes raw value to form state
       (no .replace, no URL parsing).
   evidence:
-    - "api_server/apis/recce_task_func.py:199 calls with warehouse_connection_config unchanged"
-    - "api_server/apis/recce_task_func.py:1239 same pattern"
-    - "api_server/apis/recce_share_instance_func.py:351 same pattern"
+    - "api_server/apis/<task_func>.py:199 calls with warehouse_connection_config unchanged"
+    - "api_server/apis/<task_func>.py:1239 same pattern"
+    - "api_server/apis/<share_instance_func>.py:351 same pattern"
     - "pytest tests/test_warehouse.py: 39 passed in 0.42s"
     - "SnowflakeAdapter.tsx:102 — value={config.account}, no preprocessing"
   degrade_reason: |
@@ -97,14 +97,14 @@ recommended_human_probe:
   - action: |
       1. make start (brings up local stack)
       2. Create Snowflake warehouse connection via UI with account="myacct.snowflakecomputing.com"
-      3. Trigger a recce session that uses this connection
-      4. `docker exec <recce-instance-container> cat /tmp/profiles.yml | grep account`
+      3. Trigger a <workflow> session that uses this connection
+      4. `docker exec <workflow-instance-container> cat /tmp/profiles.yml | grep account`
       5. Expect: `account: myacct` (no suffix)
     covers_steps: [1, 2, 3, 4, 6]
     cost: "10-15 min if stack warm, 30 min cold"
     confidence_gain: "B→C"
   - action: |
-      Full Level D verification: do the above, then actually connect via recce session
+      Full Level D verification: do the above, then actually connect via <workflow> session
       and run a query against Snowflake. Requires real Snowflake test account credentials.
     covers_steps: [7, 8]
     cost: "30+ min + Snowflake test creds"

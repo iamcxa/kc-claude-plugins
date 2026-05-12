@@ -41,7 +41,7 @@ Linear computes milestone progress from issue completion ratio. A milestone at 1
 ### Scope changes affect health
 Moving issues between milestones is a legitimate planning tool, not a failure signal. **Evaluate health against the post-adjustment scope**, not the original scope. But when issues move *out* of a milestone to meet a deadline, note it explicitly. If >50% of original scope was moved out, default to atRisk regardless of remaining progress — the scope reduction itself is a signal.
 
-> DRC-2869 moved to M2 — not feasible in this cycle. DRC-2868 provides the primary error visibility needed for now.
+> PROJ-101 moved to M2 — not feasible in this cycle. PROJ-102 provides the primary error visibility needed for now.
 
 ### atRisk is the most useful signal
 Teams benefit most from early atRisk signals. Waiting until offTrack reduces options. Default to atRisk when uncertain between onTrack and atRisk.
@@ -55,16 +55,16 @@ When recommending a target shift, always include:
 ## Examples
 
 ### onTrack despite low %
-> M1 at 50% but the only remaining item (DRC-2920, E2E validation) is assigned and scoped. Core plugin + MCP work complete. On track to close this week.
+> M1 at 50% but the only remaining item (PROJ-103, E2E validation) is assigned and scoped. Core plugin + MCP work complete. On track to close this week.
 
 **Why onTrack:** Progress % misleading because completed items were the heavy work.
 
 ### atRisk with active work
-> M1 at 25% with target tomorrow. DRC-2689 and DRC-2879 are in flight but won't close before cycle ends. Moving target to Cycle 26-7.
+> M1 at 25% with target tomorrow. PROJ-104 and PROJ-105 are in flight but won't close before cycle ends. Moving target to Cycle N+1.
 
 **Why atRisk:** Work is progressing but timeline needs adjustment. Team should know.
 
 ### onTrack after scope adjustment
-> M1's primary goal achieved with DRC-2868. DRC-2869 moved to M2. M1 ready to close.
+> M1's primary goal achieved with PROJ-102. PROJ-101 moved to M2. M1 ready to close.
 
 **Why onTrack:** Scope was adjusted, but the adjusted scope is delivered. Transparent about what moved.

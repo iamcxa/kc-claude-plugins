@@ -77,7 +77,7 @@ flowchart TD
     subgraph STEP2["Step 2: Title"]
         T1["Conventional commit format<br>type(scope): description<br>< 70 chars"]
         T1 --> T2{"Ticket count?"}
-        T2 -->|"1 ticket"| T3["scope = ticket ID<br>fix(DRC-2652):"]
+        T2 -->|"1 ticket"| T3["scope = ticket ID<br>fix(PROJ-201):"]
         T2 -->|"2 tickets"| T4["scope = primary ticket<br>mention other in body"]
         T2 -->|"3+ or none"| T5["scope = module name<br>feat(mcp):"]
         T3 --> B1

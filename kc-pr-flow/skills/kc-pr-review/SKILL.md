@@ -104,7 +104,7 @@ Build a **verification matrix**:
 
 | # | Concern | Source | Verified? |
 |---|---------|--------|-----------|
-| V1 | DRC-2785 must not be affected | PR body | ⬜ |
+| V1 | PROJ-202 must not be affected | PR body | ⬜ |
 | V2 | Langfuse tracing hierarchy preserved | User request | ⬜ |
 | V3 | Prompt dual-path (Langfuse + fallback) | PR body | ⬜ |
 ```
@@ -286,7 +286,7 @@ Detection (any of):
 - The specific artifact the diff leaves orphaned
 - Suggested fix (strip the artifact, or add a test with realistic input)
 
-**Example (DRC-3245)**: PR strips a JSON fenced block from agent output and delegates rendering to a builder. But the agent also writes a heading before the JSON block. The heading is not in the diff — it's runtime behavior from a different repo's prompt. Result: orphaned heading + builder section = duplicate. Fix: strip the heading too.
+**Example (PROJ-203)**: PR strips a JSON fenced block from agent output and delegates rendering to a builder. But the agent also writes a heading before the JSON block. The heading is not in the diff — it's runtime behavior from a different repo's prompt. Result: orphaned heading + builder section = duplicate. Fix: strip the heading too.
 
 ### 4.5f. Lint Gate
 

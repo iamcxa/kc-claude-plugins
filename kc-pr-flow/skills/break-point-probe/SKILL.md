@@ -43,15 +43,15 @@ Accept any of:
 
 Read diff + PR description + linked issue. Trace the bug's **full path from user action to observable symptom**. Write it as an ordered list.
 
-Example (DRC-3288, PR #1241):
+Example (<TICKET-CASE>, PR #X):
 
 ```
 1. User types "xxx.snowflakecomputing.com" in Snowflake Account field       [layer: ui]
 2. Frontend POST to /warehouse-connections with config dict                  [layer: api]
 3. Backend encrypts + stores config in DB                                    [layer: storage]
-4. Later, recce session launch fetches config via get_warehouse_connection   [layer: domain]
+4. Later, <workflow> session launch fetches config via get_warehouse_connection   [layer: domain]
 5. warehouse_config_to_profile_yml() generates profiles.yml                  [layer: domain]  ← FIX HERE
-6. Recce instance container reads profiles.yml                               [layer: infra]
+6. <workflow> instance container reads profiles.yml                               [layer: infra]
 7. dbt-snowflake appends ".snowflakecomputing.com" to account field          [layer: external]
 8. Connects to "xxx.snowflakecomputing.com.snowflakecomputing.com" → fails   [layer: external]  ← SYMPTOM
 ```
@@ -81,7 +81,7 @@ runtime_gap:
   reason: |
     Unit tests construct the config dict inline and call warehouse_config_to_profile_yml
     directly. They do not exercise the API POST path, storage encryption round-trip, or
-    the caller wiring in recce_task_func.py / recce_share_instance_func.py.
+    the caller wiring in <task_func>.py / <share_instance_func>.py.
 ```
 
 ### Step 4 — Select and execute probe
@@ -201,7 +201,7 @@ Recommended human follow-up:
 ## Reference documents
 
 - `reference/precision-ladder.md` — detailed guidance for each probe level, including stack-warm detection and recipe template
-- `reference/case-study-drc-3288.md` — walkthrough of PR #1241 showing the pattern in practice
+- `reference/case-study-<ticket-case>.md` — walkthrough of PR #X showing the pattern in practice
 
 ## Invocation by kc-pr-review
 

@@ -93,7 +93,7 @@ E2E verification creates a repeatable flow proving the feature works.
 
 | Mode | When | Examples |
 |------|------|---------|
-| **Issue** | 1 primary ticket | scope = ticket ID: `fix(DRC-2652):`, `feat(issue-335):` |
+| **Issue** | 1 primary ticket | scope = ticket ID: `fix(PROJ-201):`, `feat(issue-335):` |
 | **Code** | No ticket, or 3+ tickets | scope = module name: `feat(mcp):`, `chore(deps):` |
 
 **2-ticket PR**: use Issue scope with the primary ticket. Mention the other in body.

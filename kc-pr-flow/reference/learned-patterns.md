@@ -36,7 +36,7 @@ When REST API and MCP API use different param key conventions for the same conce
 
 ## Cross-plugin state file override must respect explicit user config (2026-03-30)
 
-When two scripts (e.g., a SessionStart hook and a startup script) communicate via a shared state file in `/tmp/`, the script that reads the state file must not unconditionally override values that the user explicitly set (env vars, config files). PR #16 (recce-claude-plugin) had `start-mcp.sh` reading a hook-written state file that silently overrode `RECCE_MCP_PORT` env var. The state file protocol should be: `explicit user config (env var) > state file > layered settings > defaults`. **Rule**: When reviewing state file handoffs between scripts, verify the reader guards the state file read with a check for explicit overrides (e.g., `[ -z "${ENV_VAR:-}" ] && [ -f "$STATE_FILE" ]`). The writer's output should never outrank the user's explicit intent.
+When two scripts (e.g., a SessionStart hook and a startup script) communicate via a shared state file in `/tmp/`, the script that reads the state file must not unconditionally override values that the user explicitly set (env vars, config files). PR #16 (<plugin-repo>) had `start-mcp.sh` reading a hook-written state file that silently overrode `<APP>_MCP_PORT` env var. The state file protocol should be: `explicit user config (env var) > state file > layered settings > defaults`. **Rule**: When reviewing state file handoffs between scripts, verify the reader guards the state file read with a check for explicit overrides (e.g., `[ -z "${ENV_VAR:-}" ] && [ -f "$STATE_FILE" ]`). The writer's output should never outrank the user's explicit intent.
 
 ## Python str-Enum comparison is NOT broken — AI reviewers flag it incorrectly (2026-03-30)
 
@@ -52,7 +52,7 @@ When a plugin commits a config file (e.g., `.mcp.json`) that a hook rewrites at 
 
 ## Rewrite PRs need regression-aware review against old implementation (2026-04-02)
 
-When a PR rewrites a function (not just modifies it), standard code review validates the new code in isolation — "does the new implementation look correct?" — but misses behavioral regressions relative to the old implementation. PR #1134 rewrote `resetTracing()` with empty catch blocks (`/* best effort */`) that looked reasonable in isolation, but the old code on main had `console.debug` logging. The reviewer (even-wei) caught this by comparing against main. **Rule**: When reviewing a PR that rewrites (not just edits) a function, fetch the old implementation from the base branch and diff behaviors: error handling, logging levels, resource cleanup, return value semantics. "Looks correct" is not the same as "preserves all prior behaviors that matter."
+When a PR rewrites a function (not just modifies it), standard code review validates the new code in isolation — "does the new implementation look correct?" — but misses behavioral regressions relative to the old implementation. PR #1134 rewrote `resetTracing()` with empty catch blocks (`/* best effort */`) that looked reasonable in isolation, but the old code on main had `console.debug` logging. The reviewer (<reviewer-B>) caught this by comparing against main. **Rule**: When reviewing a PR that rewrites (not just edits) a function, fetch the old implementation from the base branch and diff behaviors: error handling, logging levels, resource cleanup, return value semantics. "Looks correct" is not the same as "preserves all prior behaviors that matter."
 
 ## One-shot error suppression defeats the observability it claims to add (2026-04-02)
 
@@ -84,7 +84,7 @@ Standard code review — even multi-pass with correctness, security, and cross-r
 
 ## Pre-ship review must check commit structure, not just aggregate diff (2026-04-08)
 
-When a PR has multiple commits with deliberate separation-of-concerns, reviews that only see the aggregate diff can't judge whether orthogonal changes are properly isolated. PR #1143 had `strictMcpConfig: true` correctly isolated in its own commit (5e6bdefa), but a review Pass F flagged it as "orthogonal bundled change — should be a separate commit" because it only saw the final diff. This is a false positive that wastes author time responding. **Rule**: When reviewing PRs with 5+ commits, read `git log --oneline` before filing "this should be a separate commit" feedback. If the change IS already a separate commit, the review pass should note "already isolated in commit X" rather than flagging it.
+When a PR has multiple commits with deliberate separation-of-concerns, reviews that only see the aggregate diff can't judge whether orthogonal changes are properly isolated. PR #1143 had `strictMcpConfig: true` correctly isolated in its own commit (<sha>), but a review Pass F flagged it as "orthogonal bundled change — should be a separate commit" because it only saw the final diff. This is a false positive that wastes author time responding. **Rule**: When reviewing PRs with 5+ commits, read `git log --oneline` before filing "this should be a separate commit" feedback. If the change IS already a separate commit, the review pass should note "already isolated in commit X" rather than flagging it.
 
 ## Defensive parsing needs type check, not truthy check (2026-04-08)
 
@@ -104,23 +104,23 @@ When changing the semantics of a function (not just renaming or moving it), thre
 
 ## kc-pr-create and kc-pr-review have asymmetric agent coverage (2026-04-09)
 
-`kc-pr-create` Step 10a ("Self-Review & Fix Loop") dispatches only 2 of the 5 `pr-review-toolkit` agents: `code-reviewer` and `comment-analyzer`. The remaining 3 — `silent-failure-hunter`, `type-design-analyzer`, `pr-test-analyzer` — are not run during PR creation, but ARE run when `kc-pr-review` (or `claude-code-review`) fires post-PR. PR #1145 shipped with 7 CRITICAL/HIGH silent-failure findings and 1 HIGH type-design finding that were not caught during pre-PR self-review but were caught when @even-wei ran a post-PR review with the full toolkit. This is the wrong direction: from an author perspective, pre-PR review should be **stricter** than post-PR review (catch problems before they become reviewer feedback), but the current skill wiring makes it weaker. **Rule**: (1) When handling pre-PR self-review via `kc-pr-create`, manually supplement by dispatching `silent-failure-hunter`, `type-design-analyzer`, and `pr-test-analyzer` before marking the PR ready — don't rely on the skill's default 2-agent set. (2) When a post-PR review surfaces items that a pre-PR review should have caught, check whether they come from one of the three missing agents; if so, this is a skill coverage gap, not an author oversight. **Skill fix candidate**: add at minimum `silent-failure-hunter` to `kc-pr-create` Step 10a — silent failures have the highest blast radius and are exactly the kind of bug that becomes embarrassing if caught by a reviewer.
+`kc-pr-create` Step 10a ("Self-Review & Fix Loop") dispatches only 2 of the 5 `pr-review-toolkit` agents: `code-reviewer` and `comment-analyzer`. The remaining 3 — `silent-failure-hunter`, `type-design-analyzer`, `pr-test-analyzer` — are not run during PR creation, but ARE run when `kc-pr-review` (or `claude-code-review`) fires post-PR. PR #1145 shipped with 7 CRITICAL/HIGH silent-failure findings and 1 HIGH type-design finding that were not caught during pre-PR self-review but were caught when @<reviewer-B> ran a post-PR review with the full toolkit. This is the wrong direction: from an author perspective, pre-PR review should be **stricter** than post-PR review (catch problems before they become reviewer feedback), but the current skill wiring makes it weaker. **Rule**: (1) When handling pre-PR self-review via `kc-pr-create`, manually supplement by dispatching `silent-failure-hunter`, `type-design-analyzer`, and `pr-test-analyzer` before marking the PR ready — don't rely on the skill's default 2-agent set. (2) When a post-PR review surfaces items that a pre-PR review should have caught, check whether they come from one of the three missing agents; if so, this is a skill coverage gap, not an author oversight. **Skill fix candidate**: add at minimum `silent-failure-hunter` to `kc-pr-create` Step 10a — silent failures have the highest blast radius and are exactly the kind of bug that becomes embarrassing if caught by a reviewer.
 
 ## Cross-reference external agents against your own findings, not just the PR (2026-04-09)
 
-When a reviewer posts a multi-agent review summary (e.g., "Reviewed with 5 specialized agents"), independently dispatch the same agents against the PR yourself before responding. This catches two things: (1) items the reviewer's run missed (different random seeds, partial file reads, single-agent-per-dispatch vs batched), (2) items where the reviewer's agent surfaced a valid finding but a different agent would have caught additional related items. PR #1145: @even-wei's review had 8 important items; running the same 3 agents independently surfaced 7 more HIGH/CRITICAL items across the same files (including H7 `InputKey` brand type and C4 mock MCP stderr invisibility). Neither the reviewer nor I would have caught all of these alone. **Rule**: When a reviewer uses multi-agent tooling, treat their output as a starting point — dispatch the same tools yourself with full file context, diff the findings, address the union. This also uncovers skill coverage gaps (see above — we'd never have spotted the kc-pr-create / kc-pr-review asymmetry without running the missing agents manually).
+When a reviewer posts a multi-agent review summary (e.g., "Reviewed with 5 specialized agents"), independently dispatch the same agents against the PR yourself before responding. This catches two things: (1) items the reviewer's run missed (different random seeds, partial file reads, single-agent-per-dispatch vs batched), (2) items where the reviewer's agent surfaced a valid finding but a different agent would have caught additional related items. PR #1145: @<reviewer-B>'s review had 8 important items; running the same 3 agents independently surfaced 7 more HIGH/CRITICAL items across the same files (including H7 `InputKey` brand type and C4 mock MCP stderr invisibility). Neither the reviewer nor I would have caught all of these alone. **Rule**: When a reviewer uses multi-agent tooling, treat their output as a starting point — dispatch the same tools yourself with full file context, diff the findings, address the union. This also uncovers skill coverage gaps (see above — we'd never have spotted the kc-pr-create / kc-pr-review asymmetry without running the missing agents manually).
 
 ## AI reviewers flag advisory `engines.node` mismatches as blockers (2026-04-11)
 
-npm/pnpm `engines.node` is advisory metadata unless `engine-strict=true` is set in `.npmrc`. AI reviewers (Copilot on PR #1177) flag cases where a transitive dep declares a stricter floor than the declaring package (e.g., `chevrotain@12.0.0` declares `engines: {node: '>=22.0.0'}` but `recce_instance_launcher/recce_agent/package.json` declares `>=20`) as install/runtime risk — but the package's code doesn't actually use any Node 22-specific runtime API, CI/Docker both run Node 24, and local tests pass cleanly on Node 20.19.6. Bumping `engines.node` to match would introduce phantom `pnpm install` warnings on the only environment actually on the lower version for zero functional gain. **Validation heuristic for any "dep X requires Node Y but we declare Z" flag**: (1) grep for `.npmrc` with `engine-strict` — no strict-engine means install can only warn, never fail; (2) check CI workflows' `node-version` pin and production Dockerfile `FROM node:*`; (3) trace whether the complaining dep is reachable from the production entry point (esbuild bundle from `src/index.ts`) versus test-only utilities; (4) actually run the affected module on the lower Node version via `tsx --test` or equivalent to verify runtime behavior. If (1)–(4) all clear, classify as advisory-metadata false positive and reply with evidence instead of bumping the floor. Corollary: the fact that a reviewer's suggestion is technically grounded (the dep *does* declare >=22) does not make it actionable — empirical verification always beats declaration comparison.
+npm/pnpm `engines.node` is advisory metadata unless `engine-strict=true` is set in `.npmrc`. AI reviewers (Copilot on PR #1177) flag cases where a transitive dep declares a stricter floor than the declaring package (e.g., `chevrotain@12.0.0` declares `engines: {node: '>=22.0.0'}` but `<service>/<agent>/package.json` declares `>=20`) as install/runtime risk — but the package's code doesn't actually use any Node 22-specific runtime API, CI/Docker both run Node 24, and local tests pass cleanly on Node 20.19.6. Bumping `engines.node` to match would introduce phantom `pnpm install` warnings on the only environment actually on the lower version for zero functional gain. **Validation heuristic for any "dep X requires Node Y but we declare Z" flag**: (1) grep for `.npmrc` with `engine-strict` — no strict-engine means install can only warn, never fail; (2) check CI workflows' `node-version` pin and production Dockerfile `FROM node:*`; (3) trace whether the complaining dep is reachable from the production entry point (esbuild bundle from `src/index.ts`) versus test-only utilities; (4) actually run the affected module on the lower Node version via `tsx --test` or equivalent to verify runtime behavior. If (1)–(4) all clear, classify as advisory-metadata false positive and reply with evidence instead of bumping the floor. Corollary: the fact that a reviewer's suggestion is technically grounded (the dep *does* declare >=22) does not make it actionable — empirical verification always beats declaration comparison.
 
 ## Spacedock parent/child workflow: PR code lives on ensign worktree, not FO tracking branch (2026-04-11)
 
-When a spacedock workflow is commissioned with a custom PR-create mod (e.g., `_mods/kc-pr-create.md`), the PR branch and the first-officer (FO) tracking branch are separate git refs on separate worktrees. FO commits carry workflow state (`dispatch:`, `bounce(uat→fix):`, `pr-review:`, `review-resolve(round-1):`) while the ensign worktree carries the actual PR code on a `spacedock-ensign/<entity-slug>` branch. Running `kc-pr-review-resolve` from the FO worktree causes all file reads to miss — the files Copilot reviewed live on the ensign branch at a different SHA (PR #1177 example: FO branch `feature/drc-3204-mermaid-error-may-come-from-generation-code` at `0ee831c3` vs ensign branch `spacedock-ensign/anita-ly-mermaid-syntax-error` at `c10f6c03`, and Copilot's review `commit_id` matched the ensign HEAD). **Rule**: Before validating AI reviewer claims against files, run `git worktree list | grep spacedock-ensign` to check whether the PR is being managed by a spacedock workflow. If it is, cd into the ensign worktree (`.worktrees/spacedock-ensign-<entity-slug>`) and do all file reads, edits, commits, and pushes from there. The FO branch only gets commits for entity-state updates (e.g., writing `review_feedback:` back into `docs/<workflow>/<entity>.md`). Review commit SHA (`reviews[].commit_id` from the GitHub API) always matches the ensign worktree HEAD, never the FO HEAD — use that as a fast "am I in the right worktree?" check.
+When a spacedock workflow is commissioned with a custom PR-create mod (e.g., `_mods/kc-pr-create.md`), the PR branch and the first-officer (FO) tracking branch are separate git refs on separate worktrees. FO commits carry workflow state (`dispatch:`, `bounce(uat→fix):`, `pr-review:`, `review-resolve(round-1):`) while the ensign worktree carries the actual PR code on a `spacedock-ensign/<entity-slug>` branch. Running `kc-pr-review-resolve` from the FO worktree causes all file reads to miss — the files Copilot reviewed live on the ensign branch at a different SHA (PR #1177 example: FO branch `feature/<ticket-b>-<feature-slug>` at `<sha>` vs ensign branch `spacedock-ensign/<author>-mermaid-syntax-error` at `<sha>`, and Copilot's review `commit_id` matched the ensign HEAD). **Rule**: Before validating AI reviewer claims against files, run `git worktree list | grep spacedock-ensign` to check whether the PR is being managed by a spacedock workflow. If it is, cd into the ensign worktree (`.worktrees/spacedock-ensign-<entity-slug>`) and do all file reads, edits, commits, and pushes from there. The FO branch only gets commits for entity-state updates (e.g., writing `review_feedback:` back into `docs/<workflow>/<entity>.md`). Review commit SHA (`reviews[].commit_id` from the GitHub API) always matches the ensign worktree HEAD, never the FO HEAD — use that as a fast "am I in the right worktree?" check.
 
 ## Review agents without Bash access produce false positives on cross-branch PRs (2026-04-14)
 
-When dispatching `pr-review-toolkit:code-reviewer` or `pr-review-toolkit:comment-analyzer` for a PR on a branch not currently checked out, these agents cannot run `git show FETCH_HEAD:<file>` or any git commands because they lack Bash access. They attempt to read the PR branch files via the Read tool on `.git/objects/` pack files (creative but fails on binary data). The result: agents reason about code they cannot see, producing findings based on assumptions about the PR changes rather than actual code. PR #1187 (recce-cloud-infra) had 3/5 code-reviewer findings as false positives — `flag_modified` usage (confirmed present), `actions_marker` addition (confirmed present), and `detail=str(e)` leak (confirmed safe) — all because the agent couldn't verify its assumptions. **Mitigation options**: (1) Use `general-purpose` agent type instead (has Bash), with review-focused prompt instructions. (2) Create a worktree for the PR branch before dispatching, so agents can Read files at a known path. (3) Pre-fetch all changed files into a temp directory and include file paths in the agent prompt. (4) Accept the false-positive rate and rely on Step 5c baseline validation to filter — this is what the current skill does, but it wastes agent tokens. Option (2) is most reliable if worktree setup cost is acceptable.
+When dispatching `pr-review-toolkit:code-reviewer` or `pr-review-toolkit:comment-analyzer` for a PR on a branch not currently checked out, these agents cannot run `git show FETCH_HEAD:<file>` or any git commands because they lack Bash access. They attempt to read the PR branch files via the Read tool on `.git/objects/` pack files (creative but fails on binary data). The result: agents reason about code they cannot see, producing findings based on assumptions about the PR changes rather than actual code. PR #1187 (<infra-repo>) had 3/5 code-reviewer findings as false positives — `flag_modified` usage (confirmed present), `actions_marker` addition (confirmed present), and `detail=str(e)` leak (confirmed safe) — all because the agent couldn't verify its assumptions. **Mitigation options**: (1) Use `general-purpose` agent type instead (has Bash), with review-focused prompt instructions. (2) Create a worktree for the PR branch before dispatching, so agents can Read files at a known path. (3) Pre-fetch all changed files into a temp directory and include file paths in the agent prompt. (4) Accept the false-positive rate and rely on Step 5c baseline validation to filter — this is what the current skill does, but it wastes agent tokens. Option (2) is most reliable if worktree setup cost is acceptable.
 
 ## ToB security reviewer provides positive verification value beyond finding bugs (2026-04-14)
 
@@ -128,11 +128,11 @@ The `tob-security-reviewer` agent's 12 `clean_patterns` entries provided concret
 
 ## Seed/test credentials in committed E2E files are not credential leaks if documented (2026-04-09)
 
-AI reviewers (Copilot on PR #552) reliably flag hardcoded credentials in E2E flow files as "sensitive info leaking via git history" — even when the credentials are for seed/dev accounts that only exist in local/preview databases and are publicly documented in the project's own CLAUDE.md. Example: `staff@bw.tw` / `pwd123` appears in `verify-phase22-media.yaml`, but the same account and password are already listed in `apps/supabase/CLAUDE.md` Test Users table (with an explicit "Default Password: pwd123 (all users)" note). Templating these to env vars would add zero real security — the same credentials are already checked in as team documentation. **Validation heuristic**: When an AI reviewer flags hardcoded credentials in a test/seed/E2E file, grep the project's CLAUDE.md and docs/ for the same values. If they appear as documented seed/test users, classify as false positive — reply explaining the context rather than refactoring. The refactor would make the flow harder to run locally without any production safety benefit. **Exception**: If the credentials look like real production values (company email domains, complex passwords, API keys matching secret formats), treat as valid even without documentation cross-check.
+AI reviewers (Copilot on PR #552) reliably flag hardcoded credentials in E2E flow files as "sensitive info leaking via git history" — even when the credentials are for seed/dev accounts that only exist in local/preview databases and are publicly documented in the project's own CLAUDE.md. Example: `seed-user@example.com` / `seedpass` appears in `verify-phase22-media.yaml`, but the same account and password are already listed in `<app>/CLAUDE.md` Test Users table (with an explicit "Default Password: seedpass (all users)" note). Templating these to env vars would add zero real security — the same credentials are already checked in as team documentation. **Validation heuristic**: When an AI reviewer flags hardcoded credentials in a test/seed/E2E file, grep the project's CLAUDE.md and docs/ for the same values. If they appear as documented seed/test users, classify as false positive — reply explaining the context rather than refactoring. The refactor would make the flow harder to run locally without any production safety benefit. **Exception**: If the credentials look like real production values (company email domains, complex passwords, API keys matching secret formats), treat as valid even without documentation cross-check.
 
 ## "Flag without consumer" — adding a type field without updating readers (2026-04-22)
 
-When a PR adds an optional flag to a shared type (e.g., `error?: boolean` on `JudgeResult`), verify that at least one consumer reads the flag and changes behavior. The type system does not enforce reads — `r.passed` still compiles without checking `r.error`, so the flag is dead on arrival. PR #1216 (DRC-3195) added `JudgeResult.error` with a JSDoc saying "Don't trust `passed` when true" — but `cli.ts` and `bq/runner.ts` still dispatched purely on `r.passed`, making API-error judge results indistinguishable from real content failures. **Validation heuristic**: when reviewing a PR that adds an optional field to a type, grep for all `.fieldName` reads in the codebase. If zero consumers exist and none are added by the PR, flag it: "field added but never read — intent declared but not realized." This is distinct from "unused export" (which the type checker can catch with `noUnusedLocals`) because optional fields on existing types are invisible to unused-detection.
+When a PR adds an optional flag to a shared type (e.g., `error?: boolean` on `JudgeResult`), verify that at least one consumer reads the flag and changes behavior. The type system does not enforce reads — `r.passed` still compiles without checking `r.error`, so the flag is dead on arrival. PR #1216 (<TICKET-A>) added `JudgeResult.error` with a JSDoc saying "Don't trust `passed` when true" — but `cli.ts` and `bq/runner.ts` still dispatched purely on `r.passed`, making API-error judge results indistinguishable from real content failures. **Validation heuristic**: when reviewing a PR that adds an optional field to a type, grep for all `.fieldName` reads in the codebase. If zero consumers exist and none are added by the PR, flag it: "field added but never read — intent declared but not realized." This is distinct from "unused export" (which the type checker can catch with `noUnusedLocals`) because optional fields on existing types are invisible to unused-detection.
 
 ## Feature-removal PRs produce predictable doc drift that AI reviewers catch (2026-04-21)
 
@@ -156,9 +156,9 @@ The skill's Step 7 Option 2 ("re-request AI review safely") prescribes `gh pr ed
 
 ## kc-pr-review misses "mundane but important" quality gates that multi-pass reviewers catch (2026-04-24)
 
-PR #1213 (recce-cloud-infra, 48 files) was reviewed by both `/kc-pr-review` and gcko (Claude Code running an 8-pass systematic review: Correctness → Security → Cross-Ref → Error Handling → Test Coverage → Diff-Specific → Performance → Async). kc-pr-review found 3 valid code-logic findings (detached ORM objects, DRY bypass). gcko found those same logic issues PLUS 10 additional findings across 6 categories that kc-pr-review completely missed:
+PR #1213 (<infra-repo>, 48 files) was reviewed by both `/kc-pr-review` and <reviewer-A> (Claude Code running an 8-pass systematic review: Correctness → Security → Cross-Ref → Error Handling → Test Coverage → Diff-Specific → Performance → Async). kc-pr-review found 3 valid code-logic findings (detached ORM objects, DRY bypass). <reviewer-A> found those same logic issues PLUS 10 additional findings across 6 categories that kc-pr-review completely missed:
 
-| Category | gcko found | kc-pr-review gap |
+| Category | <reviewer-A> found | kc-pr-review gap |
 |----------|-----------|-----------------|
 | Config file security | cozempic hooks in shared settings.json (BLOCKER) | Doesn't review config/dotfiles |
 | Accidentally committed files | .bak, .lock, .pid ephemeral files (BLOCKER) | Doesn't scan for non-code artifacts |
@@ -167,11 +167,11 @@ PR #1213 (recce-cloud-infra, 48 files) was reviewed by both `/kc-pr-review` and 
 | Dead code | 74 lines of orphaned judge criteria (zero imports) | Doesn't grep for unused exports |
 | Comment ↔ code consistency | Comment claims "Passed/Analyzed" but builder only uses run_status for Error | Doesn't verify that code comments match actual behavior |
 
-**Root cause**: kc-pr-review is a single-pass "read diff, find code bugs" flow. It excels at logic-level review but has no structured passes for: (a) running linters/formatters on changed files, (b) scanning non-code files (config, fixtures, gitignore), (c) verifying comment claims against referenced code, (d) detecting dead code via import analysis. **Improvement plan**: Add 3 optional verification passes to kc-pr-review Step 4.5 (Pre-scan): **(1) Lint gate (4.5f)** — run project linter on changed TS/Python files, report violations as findings. **(2) Non-code scan (4.5g)** — check config files, test fixtures for PII, gitignore consistency with committed files, accidentally committed ephemeral files. **(3) Dead code check (4.5h)** — for new exports in the diff, grep for imports; flag zero-import exports. These are mechanical checks that don't require LLM reasoning — they're tool-output verification, the exact class kc-pr-review currently skips. **Status**: Steps 4.5f/g/h implemented in commit `d922917` (2026-04-24).
+**Root cause**: kc-pr-review is a single-pass "read diff, find code bugs" flow. It excels at logic-level review but has no structured passes for: (a) running linters/formatters on changed files, (b) scanning non-code files (config, fixtures, gitignore), (c) verifying comment claims against referenced code, (d) detecting dead code via import analysis. **Improvement plan**: Add 3 optional verification passes to kc-pr-review Step 4.5 (Pre-scan): **(1) Lint gate (4.5f)** — run project linter on changed TS/Python files, report violations as findings. **(2) Non-code scan (4.5g)** — check config files, test fixtures for PII, gitignore consistency with committed files, accidentally committed ephemeral files. **(3) Dead code check (4.5h)** — for new exports in the diff, grep for imports; flag zero-import exports. These are mechanical checks that don't require LLM reasoning — they're tool-output verification, the exact class kc-pr-review currently skips. **Status**: Steps 4.5f/g/h implemented in commit `<sha>` (2026-04-24).
 
 ## Silent mock gaps in exception-swallowing code paths are invisible to diff-only review (2026-04-24)
 
-When a PR adds a new function call (e.g., `get_recce_state_json_by_session(sa_session)`) inside a `with` block that is wrapped in a broad `except Exception` handler, existing tests pass silently even without mocking the new call — the exception is swallowed and the fallback path produces correct-looking output. PR #1213 added S3-based `run_status` enrichment to both `_rerender_pr_comment` handlers. The existing tests mocked `get_db_session` (to provide `sa_session`) but not the new `get_recce_state_json_by_session` call. Since `sa_session` is a `MagicMock`, `cast(str, MagicMock())` produces garbage S3 bucket names → boto3 throws → exception handler catches → `run_status` enrichment silently skipped → tests pass because `is_checked`-based rendering works independently. The `run_status="error"` → `"❌ Error"` rendering path was **completely untested** across 8 rerender tests.
+When a PR adds a new function call (e.g., `get_session_state(sa_session)`) inside a `with` block that is wrapped in a broad `except Exception` handler, existing tests pass silently even without mocking the new call — the exception is swallowed and the fallback path produces correct-looking output. PR #1213 added S3-based `run_status` enrichment to both `_rerender_pr_comment` handlers. The existing tests mocked `get_db_session` (to provide `sa_session`) but not the new `get_session_state` call. Since `sa_session` is a `MagicMock`, `cast(str, MagicMock())` produces garbage S3 bucket names → boto3 throws → exception handler catches → `run_status` enrichment silently skipped → tests pass because `is_checked`-based rendering works independently. The `run_status="error"` → `"❌ Error"` rendering path was **completely untested** across 8 rerender tests.
 
 **Why LLM reviewers miss this**: Discovering the gap requires **3-hop reasoning**: (1) identify the new production call, (2) trace its dependency chain to an external service (S3), (3) check whether the test mocks cover that chain, (4) determine whether the exception handler masks the failure. Diff-only review sees `mock_sa_session = MagicMock()` and assumes mock coverage is complete. CI green reinforces the assumption. Review agents without Bash (pr-review-toolkit:code-reviewer) can't run tests with `mock.assert_called_once()` or coverage analysis to surface the gap.
 
@@ -181,19 +181,19 @@ When a PR adds a new function call (e.g., `get_recce_state_json_by_session(sa_se
 
 ## Dead-export check must include scenario `assertions:` arrays, not just imports (2026-04-27)
 
-Pre-scan 4.5h (Dead Export Detection) currently greps for `import.*NAME` to confirm a new export is wired. PR #1245 (recce-cloud-infra) added `createCheckDescriptionsNeutral` BQ assertion: exported from `tool-usage.ts`, re-exported via `assertions/index.ts` barrel, AND imported by its own unit test in `tool-usage.test.ts`. By import-grep alone the export looked wired. **But no BQ scenario actually included the assertion in its `assertions:` array** — all scenarios in `src/tests/bq/scenarios/*.ts` use `DISALLOWED_TOOLS_ASSERTIONS`, `subagentDelegated`, `toolWasCalled`, etc. The PR claimed "BQ assertion validates tool call inputs against forbidden patterns" but mock/real BQ runs would never invoke it. Dead at the framework level despite passing import-grep.
+Pre-scan 4.5h (Dead Export Detection) currently greps for `import.*NAME` to confirm a new export is wired. PR #1245 (<infra-repo>) added `createCheckDescriptionsNeutral` BQ assertion: exported from `tool-usage.ts`, re-exported via `assertions/index.ts` barrel, AND imported by its own unit test in `tool-usage.test.ts`. By import-grep alone the export looked wired. **But no BQ scenario actually included the assertion in its `assertions:` array** — all scenarios in `src/tests/bq/scenarios/*.ts` use `DISALLOWED_TOOLS_ASSERTIONS`, `subagentDelegated`, `toolWasCalled`, etc. The PR claimed "BQ assertion validates tool call inputs against forbidden patterns" but mock/real BQ runs would never invoke it. Dead at the framework level despite passing import-grep.
 
 **Detection heuristic**: For test-framework code (BQ scenarios, Jest test factories, registered hooks), the wiring step that matters is **registration into a runner-consumed array**, not just importing the symbol. After import-grep passes, do a second-pass grep for the symbol's name appearing as a *value* in array literals (`assertions: [..., NAME(), ...]`, `hooks: [NAME, ...]`, `cases: [..., NAME, ...]`). If found in barrels but not in any consumer-array position → still dead at the framework level. Surface as HIGH (not NIT) when the PR's claimed regression coverage depends on the registration. **Implementation note**: extend 4.5h to flag `import { NAME }` followed by zero appearances in array-literal positions across registry/scenario/factory-shaped files.
 
 ## Defense-in-depth comments referencing companion-PR pre-fix behavior become lies post-merge (2026-04-27)
 
-PR #1245 (recce-cloud-infra) fixed DRC-3307 with a defense-in-depth `_auto_approve_successful_checks` whose docstring said: *"Catches two known gaps in the MCP server's auto-approve: 1. submit_run race condition (run_coroutine_threadsafe in recce/apis/run_func.py) causes run.status to stay RUNNING..."*. Companion PR `recce#1342` is the root-cause fix for exactly that race. **Post-companion-merge, the docstring describes a bug that no longer exists** — gap #1 disappears, "two known gaps" becomes "one", and a future maintainer reading the docstring will look in `run_func.py` for `run_coroutine_threadsafe`, not find it, and conclude the function is dead defense-in-depth (then delete it, reintroducing fragility).
+PR #1245 (<infra-repo>) fixed <TICKET-C> with a defense-in-depth `_auto_approve_successful_checks` whose docstring said: *"Catches two known gaps in the MCP server's auto-approve: 1. submit_run race condition (run_coroutine_threadsafe in <core-repo>/apis/run_func.py) causes run.status to stay RUNNING..."*. Companion PR `<core-repo>#1342` is the root-cause fix for exactly that race. **Post-companion-merge, the docstring describes a bug that no longer exists** — gap #1 disappears, "two known gaps" becomes "one", and a future maintainer reading the docstring will look in `run_func.py` for `run_coroutine_threadsafe`, not find it, and conclude the function is dead defense-in-depth (then delete it, reintroducing fragility).
 
 **Review heuristic**: When a PR's defense-in-depth justification references a companion PR's pre-fix state, flag the comment for reframing as a *historical guard* rather than a *current bug narrative*. Pattern: rewrite "X causes Y" → "Historical: X (DRC-NNNN, fixed upstream in repo#PR). The guard remains because [orthogonal-reason]." This survives the companion merge: the historical reference is timestamped + locator-stable, and the guard's continued existence has independent justification. Bonus: any cross-repo `file.py:LINE` citation in the docstring is also flagged for replacement with a search-anchor (e.g., `search for "auto_approve_on_success"`) — line numbers across repo boundaries rot in one release cycle.
 
 ## Cross-session UUID lookups in code reading external state files widen the trust boundary (2026-04-27)
 
-PR #1245 added `_import_checks_from_state` is_checked sync that reads `recce_state.json` from S3 and uses `get_check_by_id(check_id)` (UUID-only lookup, no session filter) to fetch + write to a check. The original code used `if existing_check: continue` — read-only, so cross-session lookup was harmless. Adding a write path turned an "implicit but unused" trust-on-state into "implicit and exploitable" — a crafted state file containing a `check_id` from another session could now flip `is_checked=True` on a check owned by a different project/org. The session-scoped variant `get_check_by_check_id_and_session()` exists in the same module but wasn't reached for.
+PR #1245 added `_import_checks_from_state` is_checked sync that reads `<session-state>.json` from S3 and uses `get_check_by_id(check_id)` (UUID-only lookup, no session filter) to fetch + write to a check. The original code used `if existing_check: continue` — read-only, so cross-session lookup was harmless. Adding a write path turned an "implicit but unused" trust-on-state into "implicit and exploitable" — a crafted state file containing a `check_id` from another session could now flip `is_checked=True` on a check owned by a different project/org. The session-scoped variant `get_check_by_check_id_and_session()` exists in the same module but wasn't reached for.
 
 **Review heuristic for state-file consumers**: When a PR converts a previously read-only or skip-only path that processes external-state IDs into a write path, run an explicit "session-scope audit": for every UUID/ID lookup in the new write path, ask *"is this ID always valid for the current session/tenant scope, or is the lookup unscoped?"*. Specifically grep the file for sibling functions whose names include `_by_*_and_session` / `_by_session` / `*_scoped_by_*` — these are usually the secured variants. If the new write path uses the unscoped lookup while a scoped variant exists in the same module, flag as HIGH (not MEDIUM) regardless of how hard exploitation is, because the trust-boundary widening is permanent and grows over time.
 
@@ -211,7 +211,7 @@ PR #1245 had two code paths that could both flip `is_checked=True`: (a) `_import
 
 ## Race-condition fixes that move work from event-loop to executor introduce new cross-thread store-ordering windows (2026-04-27)
 
-PR #1342 (DataRecce/recce) fixed DRC-3307 by changing `update_run_result` from `async def` (scheduled via `run_coroutine_threadsafe` onto the event loop thread) to plain `def` called synchronously inside the executor thread `fn()`. This correctly eliminates the original race (callers seeing stale `run.status` after `await future`). But it introduces a new, smaller race: the body has multi-field stores (`run.result = result` THEN `run.status = FINISHED`; `run.error = e` THEN `run.status = FAILED`). Async-loop readers (`wait_run_handler`, `list_run_handler`) can interleave between the two stores and observe `result is not None` with `status == RUNNING`, which is exactly the symptom-shape the consumer-side defense in PR #1245 was protecting against.
+PR #1342 (<org>/<core-repo>) fixed <TICKET-C> by changing `update_run_result` from `async def` (scheduled via `run_coroutine_threadsafe` onto the event loop thread) to plain `def` called synchronously inside the executor thread `fn()`. This correctly eliminates the original race (callers seeing stale `run.status` after `await future`). But it introduces a new, smaller race: the body has multi-field stores (`run.result = result` THEN `run.status = FINISHED`; `run.error = e` THEN `run.status = FAILED`). Async-loop readers (`wait_run_handler`, `list_run_handler`) can interleave between the two stores and observe `result is not None` with `status == RUNNING`, which is exactly the symptom-shape the consumer-side defense in PR #1245 was protecting against.
 
 Pre-fix: writes serialized on the loop thread, readers same thread → consistent state, single race symptom (status stuck on RUNNING).
 Post-fix: writes on executor thread, readers on loop thread → CPython GIL covers per-store atomicity but multi-store sequence is no longer atomic. Sub-µs window where partial state is visible.
@@ -220,13 +220,13 @@ Post-fix: writes on executor thread, readers on loop thread → CPython GIL cove
 
 ## Cloud-side exception classes that don't inherit base exception → narrow `except` silently leaks (2026-04-27)
 
-PR #1342's `_tool_run_check` wrapped `_tool_lineage_diff` + `_create_metadata_run` + auto-approve in `try / except RecceException`, intending to surface DB errors as `ValueError` to the MCP caller. But `update_check_by_id` in cloud mode raises `RecceCloudException`, which inherits directly from `Exception` — NOT from `RecceException`. The narrow `except` clause does not catch it, and the cloud-side error propagates unwrapped to the MCP caller, breaking the consistent error contract.
+PR #1342's `_tool_run_check` wrapped `_tool_lineage_diff` + `_create_metadata_run` + auto-approve in `try / except DomainException`, intending to surface DB errors as `ValueError` to the MCP caller. But `update_check_by_id` in cloud mode raises `CloudSpecificException`, which inherits directly from `Exception` — NOT from `DomainException`. The narrow `except` clause does not catch it, and the cloud-side error propagates unwrapped to the MCP caller, breaking the consistent error contract.
 
 **Review heuristic for cloud/local mode pairs**: When a function uses `try / except <SpecificException>` around a DAO/repository operation, check whether the operation has a cloud-mode variant that raises a DIFFERENT exception class. Specifically: (1) read the DAO method's body to find all `raise` statements, (2) check the inheritance chain of each raised type (`Foo.__bases__` in REPL or via grep `class Foo`), (3) confirm the `except` clause covers all plausible types. Cloud / local mode is a common factory pattern where two implementations raise unrelated exception classes — `except <LocalOnlyException>` then misses every cloud-mode failure. Same pattern applies to: filesystem vs S3 backends, in-memory vs Redis cache, SQLite vs Postgres adapters.
 
 ## Defense-in-depth comments and load-bearing docstrings: cross-repo coupling makes "obvious cleanup" dangerous (2026-04-27)
 
-PR #1342 (root-cause fix in `recce`) and PR #1245 (defense-in-depth in `recce-cloud-infra`) form a coupled pair. The root-cause repo's `update_run_result` docstring contains the historical narrative — "Previously this was async + scheduled via run_coroutine_threadsafe..." — that the consumer-side `derive_check_run_status` workaround in #1245 cites as its *canonical justification*. If a future maintainer reads only the recce repo, the docstring looks like a "describes a fixed bug — safe to remove" candidate. Removing it leaves the consumer-side defense without explanation, then the consumer-side defense looks like dead code, then someone removes it, then the original race re-emerges if anyone reverts the fix.
+PR #1342 (root-cause fix in `<core-repo>`) and PR #1245 (defense-in-depth in `<infra-repo>`) form a coupled pair. The root-cause repo's `update_run_result` docstring contains the historical narrative — "Previously this was async + scheduled via run_coroutine_threadsafe..." — that the consumer-side `derive_check_run_status` workaround in #1245 cites as its *canonical justification*. If a future maintainer reads only the <core-repo> repo, the docstring looks like a "describes a fixed bug — safe to remove" candidate. Removing it leaves the consumer-side defense without explanation, then the consumer-side defense looks like dead code, then someone removes it, then the original race re-emerges if anyone reverts the fix.
 
 **Review heuristic for cross-repo defense-in-depth pairs**: When reviewing either side of a coupled root-cause + consumer-defense pair, document **sunset conditions** explicitly. Add to docstrings: "Safe to remove once X in repo#PR is removed (those guards depend on this rationale being preserved here as canonical justification)." This way the load-bearing nature of the comment is visible to anyone editing it. Same applies to: deprecated-API shims that exist for a specific consumer's migration window, fallback code paths that exist because a downstream service has known unreliable behavior, version-pin overrides that exist because a transitive dependency has a known regression. Sunset conditions transform "looks like dead code" into "this stays until X removes their dependency on it" — much harder to delete by accident.
 
@@ -339,7 +339,7 @@ grep -n '^\$[A-Z_]\+=' detection_block
 
 **Fix pattern**: Make action blocks self-contained — either re-compute the value inline, or restructure so the full logic runs in one bash block.
 
-**Source**: PR #24 (DataRecce/recce-claude-plugin) — `$MARKER` set in detection block, used in Branch C marker write block; marker write silently failed because `$MARKER` was undefined in the new shell.
+**Source**: PR #24 (<org>/<plugin-repo>) — `$MARKER` set in detection block, used in Branch C marker write block; marker write silently failed because `$MARKER` was undefined in the new shell.
 
 ## [2026-04-29] Re-review verification matrix when author pushes "address review" commits
 
@@ -355,7 +355,7 @@ grep -n '^\$[A-Z_]\+=' detection_block
 
 **When to skip**: First review on a PR (no prior concerns to match against) — use standard flow.
 
-**Source**: PR #24 (DataRecce/recce-claude-plugin) re-review — V1 (`$MARKER` fresh-shell bug) and V2 (echo cosmetic) were both addressed in 73a24a3 with author adopting suggested fix code verbatim. Verification matrix in review body served as transparent record of what was checked.
+**Source**: PR #24 (<org>/<plugin-repo>) re-review — V1 (`$MARKER` fresh-shell bug) and V2 (echo cosmetic) were both addressed in <sha> with author adopting suggested fix code verbatim. Verification matrix in review body served as transparent record of what was checked.
 
 ## [2026-05-04] Partial fix doesn't auto-close a finding — re-read each clause
 
@@ -369,7 +369,7 @@ grep -n '^\$[A-Z_]\+=' detection_block
 
 **Anti-pattern**: Marking finding as ✅ FIXED based on commit message claiming it's fixed, without re-reading the finding's full clause set.
 
-**Source**: PR #21 (DataRecce/recce-team) round 2 — prior round's `#1 regex re-compile` was fully fixed by WeakMap cache, but prior `#2 diagnostic loop` had two clauses (perf + attribution) and only perf became moot; attribution had to be re-issued as round-2 #9 with explicit "(Replaces prior round's withdrawn #2.)" framing.
+**Source**: PR #21 (<org>/<team-repo>) round 2 — prior round's `#1 regex re-compile` was fully fixed by WeakMap cache, but prior `#2 diagnostic loop` had two clauses (perf + attribution) and only perf became moot; attribution had to be re-issued as round-2 #9 with explicit "(Replaces prior round's withdrawn #2.)" framing.
 
 ## [2026-05-04] PR description test/type-check claims must be verified by actual run
 
@@ -386,7 +386,7 @@ grep -n '^\$[A-Z_]\+=' detection_block
 
 **Concrete reporting**: Write the actual numbers in verification summary, with the author's claim quoted: `Unit tests | 78/81 pass — PR description claims 81/81. See #N`. The discrepancy itself becomes an inline finding.
 
-**Source**: PR #21 (DataRecce/recce-team) round 2 — PR description claimed `81/81 pass`. Actual `npm test` produced `78 pass / 1 fail / 2 cancelled`, deterministic across 3 runs in fresh clone of HEAD `4371f4a5`. Failing test was the `[ack-error]` security path test the author had explicitly added in commit `48b58f9e` to address Copilot's review — meaning the security claim was unverified by automation.
+**Source**: PR #21 (<org>/<team-repo>) round 2 — PR description claimed `81/81 pass`. Actual `npm test` produced `78 pass / 1 fail / 2 cancelled`, deterministic across 3 runs in fresh clone of HEAD `<sha>`. Failing test was the `[ack-error]` security path test the author had explicitly added in commit `<sha>` to address Copilot's review — meaning the security claim was unverified by automation.
 
 ## [2026-05-04] ToB security agents systematically upgrade reviewer's "config typo" findings to HIGH
 
@@ -398,7 +398,7 @@ grep -n '^\$[A-Z_]\+=' detection_block
 
 **Pre-emptive correction**: For findings touching (a) values that flow from external systems into security-relevant decisions, (b) silent default behavior under edge-case API responses, (c) operator-controllable knobs that affect threat model — assume reviewer's instinct underestimates by one severity level. Run ToB security agent before finalizing classification.
 
-**Source**: PR #21 (DataRecce/recce-team) round 2 — `#10 emitter override` upgraded MEDIUM → HIGH (S1), `#11 bot_id undefined` upgraded LOW → HIGH (S2). Both upgrades came with concrete attack scenarios the manual review hadn't articulated.
+**Source**: PR #21 (<org>/<team-repo>) round 2 — `#10 emitter override` upgraded MEDIUM → HIGH (S1), `#11 bot_id undefined` upgraded LOW → HIGH (S2). Both upgrades came with concrete attack scenarios the manual review hadn't articulated.
 
 ## [2026-05-04] Recurring test-env-fragility: re-verify same class of finding every round
 
@@ -411,7 +411,7 @@ grep -n '^\$[A-Z_]\+=' detection_block
 2. Re-run `npm test` in fresh worktree at every subsequent round, even if commit message claims `X/X pass`.
 3. When found, frame it as "recurring pattern" not "isolated bug" — author needs to fix the env-coupling, not just the failing test.
 
-**Source**: PR #21 (DataRecce/recce-team) — round 2 caught `slack.test.ts` async race failing on Node 22 (passing on Node 25). Round 3 caught `regex.test.ts:33` failing on Node 22 (asserting `(?i:foo)bar` is valid JS regex, which it isn't on any Node version). Same author, same env-fragility, different test — only re-running tests at round 3 caught it.
+**Source**: PR #21 (<org>/<team-repo>) — round 2 caught `slack.test.ts` async race failing on Node 22 (passing on Node 25). Round 3 caught `regex.test.ts:33` failing on Node 22 (asserting `(?i:foo)bar` is valid JS regex, which it isn't on any Node version). Same author, same env-fragility, different test — only re-running tests at round 3 caught it.
 
 ## [2026-05-04] Variant detection compounds across rounds — siblings of round-N fixes appear in round-N+1
 
@@ -477,7 +477,7 @@ Place between the opening framing paragraph and the new-findings inline section.
 
 **When to skip**: Single-round PRs (no trajectory to show), or PRs where round count was driven by author churn (rebases, scope changes) rather than findings response — in those cases the table can mislead.
 
-**Source**: PR #21 (DataRecce/recce-team) DRC-3350 — 4 rounds: round-2 introduced parallel agent dispatch (24 findings vs round-1's 9), then converged 8→3→0 block-merge as author addressed each round comprehensively.
+**Source**: PR #21 (<org>/<team-repo>) <TICKET-D> — 4 rounds: round-2 introduced parallel agent dispatch (24 findings vs round-1's 9), then converged 8→3→0 block-merge as author addressed each round comprehensively.
 
 ## [2026-05-04] APPROVE event can carry LOW inline comments — don't downgrade verdict to keep findings
 
@@ -498,7 +498,7 @@ Place between the opening framing paragraph and the new-findings inline section.
 - 0 block-merge, 1+ medium → COMMENT (medium implies meaningful follow-up)
 - 1+ block-merge → REQUEST_CHANGES
 
-**Source**: PR #21 (DataRecce/recce-team) round-4 — sent APPROVE with 3 LOW inline comments (NEL char gap, sanitizeLogMessage doc, semver CLI output unvalidated). Author can address them as follow-up without merge being blocked.
+**Source**: PR #21 (<org>/<team-repo>) round-4 — sent APPROVE with 3 LOW inline comments (NEL char gap, sanitizeLogMessage doc, semver CLI output unvalidated). Author can address them as follow-up without merge being blocked.
 
 ## GitHub review API: inline comment line must be inside a diff hunk (2026-05-05)
 
@@ -508,7 +508,7 @@ Posting a PR review via `POST /repos/{owner}/{repo}/pulls/{n}/reviews` with `com
 
 **Detection**: before submitting, sanity-check that each `comments[].line` falls within a `+++` hunk window from `git diff main...PR_HEAD -- <file>`. If not, either move the line or convert to body advisory.
 
-**Source**: PR #25 (DataRecce/recce-claude-plugin) — `paste -sd ', '` bug at hooks/scripts/{suggest-review.sh:30, pre-commit-guard.sh:33} was outside the md5-fix diff hunks; first POST returned 422, second POST pinned to lines 21 and 20 (last line of md5 fix block) with body note pointing to the real target.
+**Source**: PR #25 (<org>/<plugin-repo>) — `paste -sd ', '` bug at hooks/scripts/{suggest-review.sh:30, pre-commit-guard.sh:33} was outside the md5-fix diff hunks; first POST returned 422, second POST pinned to lines 21 and 20 (last line of md5 fix block) with body note pointing to the real target.
 
 ## Advisory items need "concrete impact" gate, not just "claim is true" (2026-05-05)
 
@@ -527,7 +527,7 @@ Two failure modes when writing PR review advisory items:
 
 Any unanswered → rewrite with fuzzy quantifier, downgrade to NIT, or drop entirely.
 
-**Source**: PR #25 (DataRecce/recce-claude-plugin) self-correction at issue #4377084101 — "11 items" was actually 20 (count never run); SC2034 advisory was retracted (no shellcheck CI in repo, no `disable=SC2034` convention to break, zero impact path).
+**Source**: PR #25 (<org>/<plugin-repo>) self-correction at issue #<comment-id> — "11 items" was actually 20 (count never run); SC2034 advisory was retracted (no shellcheck CI in repo, no `disable=SC2034` convention to break, zero impact path).
 
 ## Cross-PR producer/consumer review surfaces stale prompts (2026-05-05)
 
@@ -541,7 +541,7 @@ When two PRs form a producer/consumer contract (e.g., MCP server + plugin agent 
 
 **Why agents miss this**: an LLM reading the agent file sees plausible field names and doesn't grep the producer to verify they still exist. The compiler doesn't catch it (Markdown). Tests don't catch it (they mock the response shape, often unwittingly using the same stale names).
 
-**Source**: PR #1349 (DataRecce/recce) cross-PR validation against PR #25 (DataRecce/recce-claude-plugin) — `recce-reviewer.md` referenced `impacted_models` / `not_impacted_models` / `suggested_deep_dives`, but server returned `confirmed_*` (since commit d4d08228) and per-model `next_action` (since dd22795f). Both renames months old, never propagated to the plugin doc.
+**Source**: PR #1349 (<org>/<core-repo>) cross-PR validation against PR #25 (<org>/<plugin-repo>) — `<reviewer-doc>.md` referenced `impacted_models` / `not_impacted_models` / `suggested_deep_dives`, but server returned `confirmed_*` (since commit <sha>) and per-model `next_action` (since <sha>). Both renames months old, never propagated to the plugin doc.
 
 ## Producer-side review must scan log/persistence sites for new sensitive args (2026-05-05)
 
@@ -556,7 +556,7 @@ Both are ALWAYS-on in their respective modes. Once a sensitive arg lands in eith
 
 **Suggested fix shape**: `SENSITIVE_ARG_KEYS = {"api_token"}` constant + dict-comprehension redaction once at the dispatcher, reused by both log sinks.
 
-**Source**: PR #1349 (DataRecce/recce) review — `set_backend(api_token=...)` schema added without redaction; both `logger.info(f"[MCP] Arguments: {json.dumps(arguments)}")` (always-on stderr) and `MCPLogger.log_tool_call(name, arguments, ...)` (persistent JSON when `--debug`) wrote the raw token.
+**Source**: PR #1349 (<org>/<core-repo>) review — `set_backend(api_token=...)` schema added without redaction; both `logger.info(f"[MCP] Arguments: {json.dumps(arguments)}")` (always-on stderr) and `MCPLogger.log_tool_call(name, arguments, ...)` (persistent JSON when `--debug`) wrote the raw token.
 
 ## Token-leak triage: entry path, not just logger presence (2026-05-05)
 
@@ -570,12 +570,12 @@ When checking for sensitive-arg leaks across a multi-file producer (e.g., MCP se
 
 A finding only applies where (entry path = LLM-supplied) ∧ (logger touches args/headers/kwargs). Both conditions must hold. Skip all log calls in trusted-path modules (constructor-injected, env-read).
 
-**Process for a `recce`-shaped review** (MCP tool dispatcher + multiple cloud client utility files):
+**Process for a `<core-repo>`-shaped review** (MCP tool dispatcher + multiple cloud client utility files):
 1. Identify the LLM-args dispatcher (`call_tool` / `handle_request`). Its log calls are first-class targets.
 2. For other cloud client files, check the constructor signature: if the token comes from a typed parameter (not from kwargs/dict), and the file has no `logger.info(... self.token ...)` / `logger.info(... headers ...)`, it's safe. Skip.
 3. For env-var reads: grep for `os.environ.get("...TOKEN..."` and verify no startup banner echoes it.
 
-**Source**: PR #1349 (DataRecce/recce) follow-up scan of `util/cloud/base.py` after the inline HIGH was posted on `mcp_server.py`. `CloudBase._request` builds `Authorization: Bearer {self.token}` header but the file has zero logger calls; token enters via constructor from trusted callers (CLI config / startup), never via tool args. Confirmed safe without flagging. The leak was uniquely in the MCP dispatcher because that's the only place LLM-supplied args meet a logger.
+**Source**: PR #1349 (<org>/<core-repo>) follow-up scan of `util/cloud/base.py` after the inline HIGH was posted on `mcp_server.py`. `CloudBase._request` builds `Authorization: Bearer {self.token}` header but the file has zero logger calls; token enters via constructor from trusted callers (CLI config / startup), never via tool args. Confirmed safe without flagging. The leak was uniquely in the MCP dispatcher because that's the only place LLM-supplied args meet a logger.
 
 ## Stale-prompt scan must include hook scripts that inject LLM context (2026-05-05)
 
@@ -588,11 +588,11 @@ Extends the cross-PR stale-prompt pattern: when checking consumer-side prompt dr
 
 **Why this is easy to miss**: hooks live in a different directory (`hooks/scripts/`) from the agent (`agents/`). A reviewer focused on the agent's prompt won't think to grep the hook scripts. The first round of cross-PR validation only caught the agent definition; the hook re-injection of the same stale strings was uncovered later when the author touched the hook file for an unrelated paste-bug fix.
 
-**Source**: PR #25 (DataRecce/recce-claude-plugin) re-check after `f3b2c8b7` — `suggest-review.sh:31` injects "MANDATORY: You MUST call impact_analysis to get the authoritative impacted_models and not_impacted_models lists" into PostToolUse `additionalContext` after every `dbt run/build/test`. Same stale field-name pollution as `recce-reviewer.md`, fires on a completely different trigger surface.
+**Source**: PR #25 (<org>/<plugin-repo>) re-check after `<sha>` — `suggest-review.sh:31` injects "MANDATORY: You MUST call impact_analysis to get the authoritative impacted_models and not_impacted_models lists" into PostToolUse `additionalContext` after every `dbt run/build/test`. Same stale field-name pollution as `<reviewer-doc>.md`, fires on a completely different trigger surface.
 
 ## Self-defeating regression test: silent skip on missing precondition
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-05):** When a regression test is specifically built to catch a class of bug that ONLY manifests under a particular environmental condition (a built artifact, an env var, an external dependency), check whether its skip-when-absent path silently passes. If yes, the test is a self-defeating decoration — it provides false confidence while re-introducing the very failure mode it exists to prevent.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-05):** When a regression test is specifically built to catch a class of bug that ONLY manifests under a particular environmental condition (a built artifact, an env var, an external dependency), check whether its skip-when-absent path silently passes. If yes, the test is a self-defeating decoration — it provides false confidence while re-introducing the very failure mode it exists to prevent.
 
 **Concrete case:** PR #1269 added `mermaid-lint-cjs-shim.test.ts` to lock down a CJS-bundle-only DOMPurify shim regression. The test loads `dist/mermaid-lint-mcp.cjs` via spawn-child-node. When the dist is absent, the test logs `SKIP: ...` and `return`s — green. There is no `pretest` hook running `pnpm build`. Anyone running `pnpm test` cold (clean checkout, post-`rm -rf dist/`, CI config drift) gets the regression test silently noop'd. The original case-015 failure mode ("passes locally because src/ ESM tests are fine, breaks in Docker because dist/*.cjs is broken") is exactly what the test was built to prevent — and the silent skip re-opens that exact gap.
 
@@ -609,7 +609,7 @@ Extends the cross-PR stale-prompt pattern: when checking consumer-side prompt dr
 
 ## Run full biome check, not just lint, in pre-scan
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-05):** Project pre-commit hooks often run `biome lint` (errors only) for speed. `biome check` runs both lint and formatter. Format violations slip through pre-commit but fail CI's `pnpm lint:check` (which includes formatter). Pre-scan in PR review must run full `biome check` on changed files to catch format-only issues that committed clean.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-05):** Project pre-commit hooks often run `biome lint` (errors only) for speed. `biome check` runs both lint and formatter. Format violations slip through pre-commit but fail CI's `pnpm lint:check` (which includes formatter). Pre-scan in PR review must run full `biome check` on changed files to catch format-only issues that committed clean.
 
 **Concrete case:** `mermaid-lint-cjs-shim.test.ts:73-77` had a format violation (multi-line `execFileAsync` args biome wants inlined). `pnpm exec biome lint <file>` returned 0 errors (only checks lint rules); `pnpm exec biome check <file>` returned 1 error (format). Ensign reported "biome lint clean" and pushed; CI would have caught it on the format pass.
 
@@ -617,7 +617,7 @@ Extends the cross-PR stale-prompt pattern: when checking consumer-side prompt dr
 
 ## Cleanup-after-import patterns need try/finally for global mutation
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-05):** When code mutates a global (`globalThis.window`, `process.env`, `Object.prototype`) before an `await import(...)` and cleans up after, the cleanup MUST be in a `finally` block. Otherwise an import failure (network/ENOENT/module-init throw) leaks the global mutation forever — and if the import is memoised (singleton promise, lazy-init cache), the leak latches permanently across the entire process.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-05):** When code mutates a global (`globalThis.window`, `process.env`, `Object.prototype`) before an `await import(...)` and cleans up after, the cleanup MUST be in a `finally` block. Otherwise an import failure (network/ENOENT/module-init throw) leaks the global mutation forever — and if the import is memoised (singleton promise, lazy-init cache), the leak latches permanently across the entire process.
 
 **Concrete case:** `loadMermaid()` in `mermaid-lint.ts` did:
 ```ts
@@ -637,7 +637,7 @@ If `import('mermaid')` throws once, `globalThis.window` permanently pollutes the
 
 ## Memoised promise + global mutation = double-latch failure trap
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-05, Copilot re-review):** When a function memoises a promise (`let x: Promise<T> | null = null; if (x === null) x = ...`) AND that promise mutates global state inside its body, you must handle BOTH:
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-05, Copilot re-review):** When a function memoises a promise (`let x: Promise<T> | null = null; if (x === null) x = ...`) AND that promise mutates global state inside its body, you must handle BOTH:
 1. **Cleanup-on-rejection** — try/finally so the global mutation is torn down even when the promise rejects (covers leaked stub/global pollution).
 2. **Reset-on-rejection** — `.catch()` handler that resets the memo to `null` so the next caller can retry, guarded by `memo === thisPromise` to avoid racing with another caller that already cleared and replaced.
 
@@ -670,7 +670,7 @@ memo = promise;
 
 ## Sentinel-input health checks must throw on ANY findings, not just expected-shape findings
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-05, Copilot re-review):** When a startup health-check uses a hand-crafted "known-good" input and inspects the result for a specific error shape (e.g. `findings.find(f => f.message.includes('addHook'))`), the early-return path on "no matching shape" silently passes any other regression class. The sentinel input was crafted to lint clean — ANY finding is a regression.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-05, Copilot re-review):** When a startup health-check uses a hand-crafted "known-good" input and inspects the result for a specific error shape (e.g. `findings.find(f => f.message.includes('addHook'))`), the early-return path on "no matching shape" silently passes any other regression class. The sentinel input was crafted to lint clean — ANY finding is a regression.
 
 **Anti-pattern:**
 ```ts
@@ -699,7 +699,7 @@ throw new Error(`unexpected lint failure on known-good input: ${findings[0].mess
 
 ## Failure-path assertions must surface both stdout and stderr
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-05, Copilot round-3 re-review):** Tests that spawn child processes (`execFile`, `spawn`, `exec`) and surface failure via `assert.fail` or `expect.fail` MUST include both `stdout` and `stderr` in the failure message. Many process patterns write progress/diagnostics to stdout and only the fatal error to stderr; surfacing only one drops half the signal in CI logs.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-05, Copilot round-3 re-review):** Tests that spawn child processes (`execFile`, `spawn`, `exec`) and surface failure via `assert.fail` or `expect.fail` MUST include both `stdout` and `stderr` in the failure message. Many process patterns write progress/diagnostics to stdout and only the fatal error to stderr; surfacing only one drops half the signal in CI logs.
 
 **Anti-pattern:**
 ```ts
@@ -723,7 +723,7 @@ throw new Error(`unexpected lint failure on known-good input: ${findings[0].mess
 
 ## Sentry capture_message and traces_sample_rate are independent
 
-**Pattern (PR #1270 / DataRecce/recce-cloud-infra, 2026-05-06):** When reviewing observability/telemetry PRs that mix `set_measurement` and `capture_message`, verify the sampling story for each:
+**Pattern (PR #1270 / <org>/<infra-repo>, 2026-05-06):** When reviewing observability/telemetry PRs that mix `set_measurement` and `capture_message`, verify the sampling story for each:
 
 - `traces_sample_rate` controls **transaction** sampling. `set_measurement(name, value, unit)` attaches data to the current transaction, so it rides whatever sample rate the transaction was selected by.
 - `sample_rate` (default `1.0`) controls **event** sampling — applies to `capture_message`, `capture_exception`, `capture_event`. NOT controlled by `traces_sample_rate`.
@@ -736,7 +736,7 @@ throw new Error(`unexpected lint failure on known-good input: ${findings[0].mess
 
 ## Starlette add_middleware is LIFO — last added = outermost
 
-**Pattern (PR #1270 / DataRecce/recce-cloud-infra, 2026-05-06):** When reviewing PRs that add or reorder ASGI middleware in a Starlette/FastAPI app:
+**Pattern (PR #1270 / <org>/<infra-repo>, 2026-05-06):** When reviewing PRs that add or reorder ASGI middleware in a Starlette/FastAPI app:
 
 - `app.add_middleware(MiddlewareCls)` performs `user_middleware.insert(0, ...)` — the LAST `add_middleware` call ends up at index 0.
 - `build_middleware_stack` then iterates `reversed(middleware)` to wrap, so the FIRST `add_middleware` call ends up innermost (closest to the router) and the LAST is outermost.
@@ -749,7 +749,7 @@ throw new Error(`unexpected lint failure on known-good input: ${findings[0].mess
 
 ## # noqa on non-violating lines misleads readers
 
-**Pattern (PR #1270 / DataRecce/recce-cloud-infra, 2026-05-06):** A `# noqa: <RULE>` comment placed on a line that does NOT trigger the rule is a code smell — it suggests the author either misunderstood the rule or copy-pasted the suppression. Specifically for ruff:
+**Pattern (PR #1270 / <org>/<infra-repo>, 2026-05-06):** A `# noqa: <RULE>` comment placed on a line that does NOT trigger the rule is a code smell — it suggests the author either misunderstood the rule or copy-pasted the suppression. Specifically for ruff:
 
 - `S110` is "try-except-pass" — only fires when the `except` block contains literal `pass`. A block that logs and re-raises does NOT trigger S110.
 - A `# noqa: S110` on a logging-and-raising block falsely signals to readers that exceptions are silently swallowed.
@@ -760,7 +760,7 @@ throw new Error(`unexpected lint failure on known-good input: ${findings[0].mess
 
 ## Roman numeral phase labels invert reading order
 
-**Pattern (PR #1270 / DataRecce/recce-cloud-infra, 2026-05-06):** When reviewing telemetry/event payloads with phase or stage identifiers, prefer self-documenting strings (`"s3_hit"`, `"proxy_fallback"`, `"cloud_fallback"`) over Roman numerals or sequence numbers (`"I"/"II"/"III"`, `"phase_1"/"phase_2"/"phase_3"`).
+**Pattern (PR #1270 / <org>/<infra-repo>, 2026-05-06):** When reviewing telemetry/event payloads with phase or stage identifiers, prefer self-documenting strings (`"s3_hit"`, `"proxy_fallback"`, `"cloud_fallback"`) over Roman numerals or sequence numbers (`"I"/"II"/"III"`, `"phase_1"/"phase_2"/"phase_3"`).
 
 **Why this matters:** In observability data — Sentry events, Langfuse traces, Datadog metrics — labels are queried out of code context. A dashboard filtered on `phase_detected: I` requires the viewer to know which code path emitted it. Roman numerals are particularly bad because they imply ordering ("I came before III") that often inverts the actual code flow (in PR #1270, "III" is the newest preferred path and "I" is the legacy fallback).
 
@@ -770,7 +770,7 @@ throw new Error(`unexpected lint failure on known-good input: ${findings[0].mess
 
 ## error_message=str(e) leaks infrastructure to third-party SaaS
 
-**Pattern (PR #1270 / DataRecce/recce-cloud-infra, 2026-05-06):** Many codebases already flag the HTTP `detail=str(e)` anti-pattern (leaks credentials/internal info to API clients). The same anti-pattern applies to telemetry: `capture_message(extras={"error_message": str(e)})` exfiltrates exception strings to a third-party SaaS (Sentry, Datadog, Langfuse).
+**Pattern (PR #1270 / <org>/<infra-repo>, 2026-05-06):** Many codebases already flag the HTTP `detail=str(e)` anti-pattern (leaks credentials/internal info to API clients). The same anti-pattern applies to telemetry: `capture_message(extras={"error_message": str(e)})` exfiltrates exception strings to a third-party SaaS (Sentry, Datadog, Langfuse).
 
 `boto3` exceptions embed bucket ARNs, IAM role ARNs, internal hostnames; SQLAlchemy exceptions can embed connection strings; subprocess exceptions can embed full file paths. Sending these verbatim to an external observability service is information disclosure with a much wider audience than HTTP error responses.
 
@@ -780,7 +780,7 @@ throw new Error(`unexpected lint failure on known-good input: ${findings[0].mess
 
 ## Cascade workflow self-review evidence paths often don't exist in repo
 
-**Pattern (PR #1270 / DataRecce/recce-cloud-infra, 2026-05-06):** PRs generated by cascade-style workflows (or similar agentic pipelines) often cite trace files in PR bodies — e.g., `spacedock-ops/docs/cascade/001-lineage-api-telemetry/_trace/`. Verify the directory actually exists in the repo at HEAD before treating the trace path as authoritative evidence.
+**Pattern (PR #1270 / <org>/<infra-repo>, 2026-05-06):** PRs generated by cascade-style workflows (or similar agentic pipelines) often cite trace files in PR bodies — e.g., `<workspace>/docs/<trace-id>/_trace/`. Verify the directory actually exists in the repo at HEAD before treating the trace path as authoritative evidence.
 
 **Failure mode:** Reviewer follows the trace path, gets 404, treats the cascade self-review claims as unverifiable, then either rejects the PR or approves on faith. Both are wrong responses to a fixable problem.
 
@@ -790,11 +790,11 @@ throw new Error(`unexpected lint failure on known-good input: ${findings[0].mess
 
 ## CI gap: dist-level regression test exists but no workflow runs it
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-06, even-wei human review):** When a PR adds a regression test that targets a deployed artifact (`dist/*.cjs`, `target/release/*`, compiled binary, generated proto/code), check whether ANY GitHub Actions workflow actually invokes `pnpm test` (or equivalent) for that subdirectory. The existence of a test file that hard-fails on missing artifact in CI does NOT mean CI runs that test — it just means that IF the test is invoked, the artifact must exist.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-06, <reviewer-B> human review):** When a PR adds a regression test that targets a deployed artifact (`dist/*.cjs`, `target/release/*`, compiled binary, generated proto/code), check whether ANY GitHub Actions workflow actually invokes `pnpm test` (or equivalent) for that subdirectory. The existence of a test file that hard-fails on missing artifact in CI does NOT mean CI runs that test — it just means that IF the test is invoked, the artifact must exist.
 
 **Concrete case:** PR #1269 added `mermaid-lint-cjs-shim.test.ts` with `if (process.env.CI) { assert.fail("dist missing — pnpm build must run"); }`. The intent was "CI catches drift." But:
-- `build-recce-instance-launcher.yml` builds Docker images, never runs `pnpm test`
-- No other workflow exists for `recce_instance_launcher/recce_agent/**`
+- `build-<service>.yml` builds Docker images, never runs `pnpm test`
+- No other workflow exists for `<service>/<agent>/**`
 - Result: the regression test only catches drift when a developer remembers to `pnpm test` locally before pushing
 
 The runtime startup health-check provided fail-loud-on-boot protection, but that's first-prod-startup-time loudness, not pre-merge loudness. The PR's stated lesson — "code paths that only run in deployed bundle need dist-level tests" — only holds if the test is invoked somewhere automated.
@@ -807,22 +807,22 @@ If empty: file as inline comment severity HIGH/Important — "test exists but no
 
 Bonus detection: also check `Dockerfile*` for `pnpm test` — sometimes test-on-build is wired into the Docker layer rather than a workflow. If neither the workflow nor the Dockerfile invokes test, the regression coverage is purely manual.
 
-**Generalisable to:** any project with monorepo subdirectories where some directories have CI test workflows and others don't. The asymmetry is the smell — if `recce-cloud/` has `web-unittest.yaml`, `api_server/` has `server-unittest.yaml`, and a new test lands under `recce_instance_launcher/recce_agent/`, ask "is there an `agent-unittest.yaml` for this directory?"
+**Generalisable to:** any project with monorepo subdirectories where some directories have CI test workflows and others don't. The asymmetry is the smell — if `<cloud-app>/` has `web-unittest.yaml`, `api_server/` has `server-unittest.yaml`, and a new test lands under `<service>/<agent>/`, ask "is there an `agent-unittest.yaml` for this directory?"
 
 ## CI silent-skip via git pathspec / working-directory mismatch
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-06, even-wei round 5):** When a CI workflow step uses `git diff --name-only ... -- '<pathspec>'` to compute a list of changed files for downstream tools (lint, test runner, formatter), git interprets `<pathspec>` **relative to cwd**, not the repo root. If the step runs with `working-directory:` set to a subdirectory AND the pathspec includes the same subdirectory prefix, the pathspec resolves to a non-existent nested path and matches nothing — the step silently no-ops.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-06, <reviewer-B> round 5):** When a CI workflow step uses `git diff --name-only ... -- '<pathspec>'` to compute a list of changed files for downstream tools (lint, test runner, formatter), git interprets `<pathspec>` **relative to cwd**, not the repo root. If the step runs with `working-directory:` set to a subdirectory AND the pathspec includes the same subdirectory prefix, the pathspec resolves to a non-existent nested path and matches nothing — the step silently no-ops.
 
 **Concrete case:** PR #1269 round 5 lint step:
 ```yaml
-working-directory: ./recce_instance_launcher/recce_agent
+working-directory: ./<service>/<agent>
 run: |
   CHANGED=$(git diff --name-only "$BASE_REF...HEAD" -- \
-    'recce_instance_launcher/recce_agent/**/*.ts' \
+    '<service>/<agent>/**/*.ts' \
     ...) | sed ... | grep ... || true
   if [ -z "$CHANGED" ]; then exit 0; fi
 ```
-From inside `recce_instance_launcher/recce_agent/`, the pathspec `'recce_instance_launcher/recce_agent/**/*.ts'` resolves to `./recce_instance_launcher/recce_agent/**/*.ts` which doesn't exist. git diff matches nothing → CHANGED empty → step exits 0 with zero coverage. Every PR's lint step printed "No agent source files changed — skipping biome" and ran no biome at all.
+From inside `<service>/<agent>/`, the pathspec `'<service>/<agent>/**/*.ts'` resolves to `./<service>/<agent>/**/*.ts` which doesn't exist. git diff matches nothing → CHANGED empty → step exits 0 with zero coverage. Every PR's lint step printed "No agent source files changed — skipping biome" and ran no biome at all.
 
 **Three failure-amplifying patterns combined:**
 1. Pathspec was repo-root-relative-looking (matches what `gh pr diff --name-only` outputs), seducing the author into thinking it's correct
@@ -837,8 +837,8 @@ git diff --name-only <base>...HEAD -- '<one of the pathspec entries>'
 ```
 
 **Three correct patterns (any one):**
-- (a) **Drop the prefix, use cwd-relative pathspecs** (`'src/**/*.ts'` instead of `'recce_instance_launcher/recce_agent/src/**/*.ts'`). git diff's output is still repo-root-relative, so any downstream `sed | grep` for repo-relative paths still works.
-- (b) **Use git's `:(top)` magic prefix** to make pathspec absolute regardless of cwd: `':(top)recce_instance_launcher/recce_agent/**/*.ts'`.
+- (a) **Drop the prefix, use cwd-relative pathspecs** (`'src/**/*.ts'` instead of `'<service>/<agent>/src/**/*.ts'`). git diff's output is still repo-root-relative, so any downstream `sed | grep` for repo-relative paths still works.
+- (b) **Use git's `:(top)` magic prefix** to make pathspec absolute regardless of cwd: `':(top)<service>/<agent>/**/*.ts'`.
 - (c) **Run from repo root** via `git -C "$GITHUB_WORKSPACE" diff --name-only -- '<pathspec>'`.
 
 Option (a) is smallest diff and matches the project's pre-commit `--staged` pattern most directly.
@@ -849,7 +849,7 @@ Option (a) is smallest diff and matches the project's pre-commit `--staged` patt
 
 ## AI reviewers and human reviewers operate at different abstraction layers
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-06, observed across 5 review rounds):** Copilot and human reviewers find systematically different classes of bugs. They are NOT redundant — they are complementary. A "modern" PR review pipeline that drops one in favor of the other will leak the dropped layer's bug class.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-06, observed across 5 review rounds):** Copilot and human reviewers find systematically different classes of bugs. They are NOT redundant — they are complementary. A "modern" PR review pipeline that drops one in favor of the other will leak the dropped layer's bug class.
 
 **Concrete observation across 5 rounds on PR #1269:**
 
@@ -858,8 +858,8 @@ Option (a) is smallest diff and matches the project's pre-commit `--staged` patt
 | 1 | Copilot | function-level robustness: missing stack trace in fatal handler, `findings[0]` too narrow, ESM `__dirname` ReferenceError |
 | 2 | Copilot re-review | deeper trace of round-1 fix: rejected promise latching, health-check still too narrow |
 | 3 | Copilot round 3 | information loss: `assert.fail` only surfaced stderr, not stdout |
-| 4 | Human (even-wei) | **system-level wiring: CI doesn't actually run the test the PR was built to ensure** |
-| 5 | Human (even-wei) | **system-level wiring: lint step's git pathspec resolves wrong relative to working-directory, silently no-ops** |
+| 4 | Human (<reviewer-B>) | **system-level wiring: CI doesn't actually run the test the PR was built to ensure** |
+| 5 | Human (<reviewer-B>) | **system-level wiring: lint step's git pathspec resolves wrong relative to working-directory, silently no-ops** |
 
 The human reviewer sat with the diff, asked "what does this protect against if it's ever exercised?" and discovered a chain of unwired CI gaps the AI never surfaced. Three rounds of AI review didn't find them because they're not visible inside individual files.
 
@@ -875,13 +875,13 @@ The human reviewer sat with the diff, asked "what does this protect against if i
 
 ## Local state vs CI state asymmetry — local pass ≠ CI pass
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-06, two distinct CI failures in the same PR):** A development environment accumulates state — built artifacts from prior `pnpm build`, IDE-compiled type info, cached `node_modules`, hand-curated `.env` files, manually `source`d shell variables. CI starts from zero. **Local "all green" provides ~zero evidence that CI will be green** for any change that depends on environment state.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-06, two distinct CI failures in the same PR):** A development environment accumulates state — built artifacts from prior `pnpm build`, IDE-compiled type info, cached `node_modules`, hand-curated `.env` files, manually `source`d shell variables. CI starts from zero. **Local "all green" provides ~zero evidence that CI will be green** for any change that depends on environment state.
 
 **Concrete cases on PR #1269 (both authored by FO, both caught only by CI red):**
 
-1. **TS2307 in CI but not local**: My new `recce-agent-unittest.yaml` ran `pnpm exec tsc --noEmit`. Locally clean (tsc 0 errors). CI red with 5x `Cannot find module '@recce/trace-extraction'`. Reason: my worktree had `packages/trace-extraction/dist/index.d.ts` built from prior development; CI fresh checkout doesn't build the workspace package automatically. Fix needed `pnpm --filter @recce/trace-extraction build` step.
+1. **TS2307 in CI but not local**: My new `<agent>-unittest.yaml` ran `pnpm exec tsc --noEmit`. Locally clean (tsc 0 errors). CI red with 5x `Cannot find module '@<org>/<workspace-pkg>'`. Reason: my worktree had `packages/trace-extraction/dist/index.d.ts` built from prior development; CI fresh checkout doesn't build the workspace package automatically. Fix needed `pnpm --filter @<org>/<workspace-pkg> build` step.
 
-2. **Lint step silent-skip in CI**: My next iteration scoped biome to changed files via `git diff --name-only -- 'recce_instance_launcher/recce_agent/**/*.ts'`. Locally I tested by running the equivalent command from repo root — it worked. The CI step ran with `working-directory: ./recce_instance_launcher/recce_agent` and the pathspec resolved relative to that cwd, matching nothing. I had not reproduced from inside the cwd before pushing.
+2. **Lint step silent-skip in CI**: My next iteration scoped biome to changed files via `git diff --name-only -- '<service>/<agent>/**/*.ts'`. Locally I tested by running the equivalent command from repo root — it worked. The CI step ran with `working-directory: ./<service>/<agent>` and the pathspec resolved relative to that cwd, matching nothing. I had not reproduced from inside the cwd before pushing.
 
 **The deeper rule:** any CI variation must be reproduced under conditions the CI runner will face — `cd` to the actual `working-directory`, start from a fresh git clone or `git stash` everything first, unset cached env vars. The local "I ran it and it worked" is testing a different system than CI.
 
@@ -904,7 +904,7 @@ The human reviewer sat with the diff, asked "what does this protect against if i
 
 ## Fix-Guard-Name-Check-the-Guard: four-step closure for silent-failure bug fixes
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-06, observed across 5 review rounds on a single bug):** When fixing a silent-failure-class bug (production was wrong but CI/tests/users didn't notice), the discipline that ACTUALLY closes the bug class — not just the instance — has four steps. Most PRs stop after step 2.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-06, observed across 5 review rounds on a single bug):** When fixing a silent-failure-class bug (production was wrong but CI/tests/users didn't notice), the discipline that ACTUALLY closes the bug class — not just the instance — has four steps. Most PRs stop after step 2.
 
 **The four steps:**
 
@@ -919,7 +919,7 @@ The human reviewer sat with the diff, asked "what does this protect against if i
 |-------|---------------------|-----------|
 | Original bug (`mermaid-lint.ts` shim CJS branch) | early-return on `import.meta.url !== 'string'` assumed inlined DOMPurify had `addHook`; in fact `valid:false` returned for every prod call → agent silently used ASCII tree | Customer screenshot, after ~18 days |
 | First guard (`mermaid-lint-cjs-shim.test.ts`) | `if (!existsSync(distPath)) { console.log('SKIP'); return; }` re-introduced silent skip when CI didn't `pnpm build` first | FO self-review (cycle 2) |
-| Second guard (`recce-agent-unittest.yaml` lint step) | `git diff -- 'recce_instance_launcher/recce_agent/**/*.ts'` from inside that very subdirectory matched nothing → `if [ -z "$CHANGED" ]; then echo "skipping"; exit 0` printed friendly skip on every PR | even-wei human review (round 5) |
+| Second guard (`<agent>-unittest.yaml` lint step) | `git diff -- '<service>/<agent>/**/*.ts'` from inside that very subdirectory matched nothing → `if [ -z "$CHANGED" ]; then echo "skipping"; exit 0` printed friendly skip on every PR | <reviewer-B> human review (round 5) |
 
 **The smell that should trigger step 4:** any "skip if N/A" branch in the guard's logic. Be especially suspicious of:
 - `if (!existsSync(...)) skip`
@@ -930,15 +930,15 @@ The human reviewer sat with the diff, asked "what does this protect against if i
 
 **The four-step closure question to ask in review:** "If this guard's skip-branch fired on every run for a year, would the green-check still create false confidence?" If yes, the guard has the original bug's shape and step 4 isn't done.
 
-**Reference fixes for "I caught my own guard's silent failure":** PR #1269 commits `e707687e` (CI hard-fail when bundle missing under `process.env.CI`), `7b3e8f3c` (cwd-relative pathspec). Both are step-4 closures retroactively applied after step-3 reviewers spotted the recursive irony.
+**Reference fixes for "I caught my own guard's silent failure":** PR #1269 commits `<sha>` (CI hard-fail when bundle missing under `process.env.CI`), `<sha>` (cwd-relative pathspec). Both are step-4 closures retroactively applied after step-3 reviewers spotted the recursive irony.
 
 ## Library override + assumed behavior = two-commit implicit-contract bomb
 
-**Pattern (PR #1269 / DataRecce/recce-cloud-infra, 2026-05-06, the original case 015 root cause):** Bug class that single-commit code review structurally cannot catch: **commit A** introduces code that assumes library X behaves a certain way; **commit B** (often unrelated, often a dependency upgrade) breaks that assumption. The bug only exists at the intersection of A + B; reading either commit in isolation looks correct.
+**Pattern (PR #1269 / <org>/<infra-repo>, 2026-05-06, the original case 015 root cause):** Bug class that single-commit code review structurally cannot catch: **commit A** introduces code that assumes library X behaves a certain way; **commit B** (often unrelated, often a dependency upgrade) breaks that assumption. The bug only exists at the intersection of A + B; reading either commit in isolation looks correct.
 
 **Concrete case on PR #1269:**
-- `1c6ad48c` (DRC-3204 feat) — `mermaid-lint.ts` CJS branch did `if (typeof import.meta.url !== 'string') return; // bundled — DOMPurify already has addHook` based on `dompurify@<3.4.0`'s observed CJS export shape. Single-commit review: the early return looks like an optimisation with a sensible-sounding comment.
-- `b717bfed` (CVE batch) — added `pnpm overrides: { "dompurify": ">=3.4.0" }` to satisfy a security advisory. Single-commit review: a routine version bump, sensible.
+- `<sha>` (<TICKET-B> feat) — `mermaid-lint.ts` CJS branch did `if (typeof import.meta.url !== 'string') return; // bundled — DOMPurify already has addHook` based on `dompurify@<3.4.0`'s observed CJS export shape. Single-commit review: the early return looks like an optimisation with a sensible-sounding comment.
+- `<sha>` (CVE batch) — added `pnpm overrides: { "dompurify": ">=3.4.0" }` to satisfy a security advisory. Single-commit review: a routine version bump, sensible.
 - A + B together: `dompurify@3.4.0` added a stricter DOM guard that early-returns from `createDOMPurify()` without defining `addHook` when `getGlobal()` is null (Node). The shim's "DOMPurify already has addHook" assumption silently falsified. `validate_mermaid` returned `valid:false` for every prod call for ~18 days.
 
 **Why neither commit's review caught it:**
@@ -954,11 +954,11 @@ The human reviewer sat with the diff, asked "what does this protect against if i
 - For B-style PRs: review the changelog of every bumped library for behavioral changes (not just security fixes). For `>=` overrides especially, check the upper bound — what's the worst-case behavior change in the version range you opened?
 - Across-the-board: any code that mutates global state assuming a library's behavior should have a startup health-check that exercises the assumption. PR #1269's `runStartupHealthCheck` is the reference shape.
 
-**Reference:** PR #1269 case 015 (commits `1c6ad48c` + `b717bfed` → 18-day silent prod regression).
+**Reference:** PR #1269 case 015 (commits `<sha>` + `<sha>` → 18-day silent prod regression).
 
 ## Telemetry safety helper completeness — wrap ALL related calls or none (2026-05-06)
 
-**Pattern (PR #1270 / DataRecce/recce-cloud-infra re-review, 2026-05-06):** When a PR introduces a "telemetry must never crash production" helper module wrapping selected Sentry calls in try/except (e.g., `emit_measurement`, `emit_event`), audit the call-site files for OTHER related Sentry APIs that are still called raw — especially `set_tag`, `set_user`, `set_context`, `add_breadcrumb`. Half-wrapping creates an inconsistency that's hard to spot in review:
+**Pattern (PR #1270 / <org>/<infra-repo> re-review, 2026-05-06):** When a PR introduces a "telemetry must never crash production" helper module wrapping selected Sentry calls in try/except (e.g., `emit_measurement`, `emit_event`), audit the call-site files for OTHER related Sentry APIs that are still called raw — especially `set_tag`, `set_user`, `set_context`, `add_breadcrumb`. Half-wrapping creates an inconsistency that's hard to spot in review:
 
 - `emit_measurement` → wrapped in try/except (helper)
 - `set_measurement` → never called raw (good)
@@ -972,7 +972,7 @@ In Sentry SDK 2.x, `set_tag` IS documented as safe-on-uninit, so the practical r
 
 ## Re-review trust-but-verify discipline (2026-05-06)
 
-**Pattern (PR #1270 / DataRecce/recce-cloud-infra re-review, 2026-05-06):** When re-reviewing a PR after the author claims "all findings fixed in <SHA>", do NOT trust the commit message. The reviewer's job is to verify each fix at code level by:
+**Pattern (PR #1270 / <org>/<infra-repo> re-review, 2026-05-06):** When re-reviewing a PR after the author claims "all findings fixed in <SHA>", do NOT trust the commit message. The reviewer's job is to verify each fix at code level by:
 
 1. Building a one-row-per-prior-finding verification table (✅ / ⚠️ / ❌) BEFORE reading the new diff
 2. For each prior finding, anchor on the ORIGINAL identifier (function name, variable, label) and grep the current HEAD to verify the change is real (e.g., removed identifier returns 0 hits, renamed event uses the new name in expected paths)
@@ -983,11 +983,11 @@ This trust-but-verify discipline produces an evidence-rich re-review body where 
 
 **Anti-pattern:** "I read the new diff and it looks fine, approving" — this is the failure mode where Claude or human reviewers approve fixes that didn't actually land (case feedback_teammate_trust_verify.md, MEMORY.md project knowledge).
 
-**Reference:** PR #1270 re-review (commit 4a284fc verified against original 13-finding review).
+**Reference:** PR #1270 re-review (commit <sha> verified against original 13-finding review).
 
 ## Sampled-metric alert sensitivity blind spot (2026-05-11)
 
-**Pattern (PR #1270 Round-4 / DataRecce/recce-cloud-infra, 2026-05-11):** When a PR introduces Bernoulli sampling around a metric (e.g., gating `json.loads` deep-parse behind a 1% probability), check every downstream alert that depends on that metric.
+**Pattern (PR #1270 Round-4 / <org>/<infra-repo>, 2026-05-11):** When a PR introduces Bernoulli sampling around a metric (e.g., gating `json.loads` deep-parse behind a 1% probability), check every downstream alert that depends on that metric.
 
 The failure mode: sampling code and alert config are individually correct, but their interaction silently breaks "any occurrence triggers" alert semantics. Effective sensitivity drops by `1 / sample_rate`. The code reviewer sees the sampling block, says "looks right", and sees the alert config, says "looks right" — but never reasons about the composition.
 
@@ -1023,6 +1023,6 @@ The failure mode: sampling code and alert config are individually correct, but t
 
 If the warning count and call-sites are identical, classify as **pre-existing** and either omit from the review or explicitly call out "unchanged from `origin/main`" so the next reviewer doesn't re-investigate.
 
-**Example (PR #1303, recce-cloud-infra)**: `esbuild@0.28.0` build emitted `[WARNING] "import.meta" is not available with the "cjs" output format` on `src/utils/mermaid-lint.ts:152,184`. Initial suspicion: new esbuild diagnostic. Verification by rebuilding on `origin/main` with `esbuild@0.27.3` showed the exact same warnings → pre-existing, not a regression. Final review explicitly stated "unchanged from `0.27.3`" so the PR could be approved without that finding blocking merge.
+**Example (PR #1303, <infra-repo>)**: `esbuild@0.28.0` build emitted `[WARNING] "import.meta" is not available with the "cjs" output format` on `src/utils/mermaid-lint.ts:152,184`. Initial suspicion: new esbuild diagnostic. Verification by rebuilding on `origin/main` with `esbuild@0.27.3` showed the exact same warnings → pre-existing, not a regression. Final review explicitly stated "unchanged from `0.27.3`" so the PR could be approved without that finding blocking merge.
 
-**Corollary — workspace-dep build for type-check**: When the consumer package declares `"types": "dist/index.d.ts"` in `package.json` (e.g., `@recce/trace-extraction` → `recce_instance_launcher/recce_agent`), the workspace dep MUST be built before the consumer's `tsc --noEmit` runs. Fresh worktrees that only ran `pnpm install` will report `TS2307: Cannot find module '@recce/...'` even though the lockfile is correct. Build chain: `pnpm --filter @recce/trace-extraction build` first, then type-check the consumer.
+**Corollary — workspace-dep build for type-check**: When the consumer package declares `"types": "dist/index.d.ts"` in `package.json` (e.g., `@<org>/<workspace-pkg>` → `<service>/<agent>`), the workspace dep MUST be built before the consumer's `tsc --noEmit` runs. Fresh worktrees that only ran `pnpm install` will report `TS2307: Cannot find module '@<org>/...'` even though the lockfile is correct. Build chain: `pnpm --filter @<org>/<workspace-pkg> build` first, then type-check the consumer.
