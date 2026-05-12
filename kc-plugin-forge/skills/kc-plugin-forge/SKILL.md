@@ -444,7 +444,7 @@ For each not-covered candidate, LLM determines promotion target. **Early-stage**
 
 | Stage | Placement decision | Required transformation |
 |-------|-------------------|------------------------|
-| **Early** | Target is fixed: `<plugin>/reference/learned-patterns.md` (the relevant section, e.g. `## Review Patterns`) | LLM rewrites the entry: strip org names (DataRecce/Acme/etc), ticket IDs (DRC-NNNN), real PR numbers, internal package names (@org/pkg), SHAs, real emails. Replace with generic placeholders OR rephrase the rule abstractly so the org context isn't necessary. The output is a **generalized rule**, not a sanitized story. |
+| **Early** | Target is fixed: `<plugin>/reference/learned-patterns.md` (the relevant section, e.g. `## Review Patterns`) | LLM rewrites the entry: strip org names (from `~/.claude/kc-plugins-config/sanitize-rules.yaml` `block_literals`), ticket IDs (regex `[A-Z]{2,5}-\d+`), real PR numbers, internal package names (`@<org>/...`), SHAs, real emails. Replace with generic placeholders OR rephrase the rule abstractly so the org context isn't necessary. The output is a **generalized rule**, not a sanitized story. |
 | **Late** | LLM picks among existing structured refs (`quality-pipeline.md`, `compliance-audit.md`, `strategic-lens.md`, etc.) OR `SKILL.md` Rules | LLM adapts to the target section's style; existing behavior. |
 
 For each not-covered candidate, LLM determines promotion target:
