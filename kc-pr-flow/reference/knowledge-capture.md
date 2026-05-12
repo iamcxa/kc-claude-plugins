@@ -2,18 +2,28 @@
 
 Post-review learning for kc-pr-flow skills (kc-pr-review + kc-pr-review-resolve). Two dimensions of knowledge accumulation.
 
-## Dimension 1: Skill-Level (auto-append, no gate)
+## Dimension 1: Skill-Level (auto-append to LOCAL, no gate)
 
-General review patterns discovered during this review session. Written to the plugin's own reference files.
+General review patterns discovered during this review session. Auto-appended to the per-user LOCAL store — NOT directly to the public plugin reference file.
 
 | Insight type | Target |
 |-------------|--------|
-| New review pattern | `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` |
-| New false-positive pattern | `${CLAUDE_PLUGIN_ROOT}/reference/compliance-audit.md` → Red Flags |
-| New triage heuristic | `${CLAUDE_PLUGIN_ROOT}/reference/review-triage.md` |
-| Agent prompt improvement | `${CLAUDE_PLUGIN_ROOT}/reference/review-triage.md` → agent focus |
+| New review pattern | `~/.claude/kc-plugins-config/learned-patterns-local/kc-pr-flow.md` → `## Review Patterns` |
+| New false-positive pattern | `~/.claude/kc-plugins-config/learned-patterns-local/kc-pr-flow.md` → `## False-positive Patterns` |
+| New triage heuristic | `~/.claude/kc-plugins-config/learned-patterns-local/kc-pr-flow.md` → `## Triage Heuristics` |
+| Agent prompt improvement | `${CLAUDE_PLUGIN_ROOT}/reference/review-triage.md` → agent focus (direct edit; not D1) |
 
-**Write mode**: Auto-append. Briefly notify user: "Appended pattern to learned-patterns.md: [title]"
+**Read mode**: when applying patterns during a review, skills read BOTH:
+1. `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` (public, curated — distilled rules)
+2. `~/.claude/kc-plugins-config/learned-patterns-local/kc-pr-flow.md` (local, raw — full org-specific detail)
+
+The author sees both at runtime; only #1 ships to the marketplace.
+
+**Write mode**: Auto-append to LOCAL only. Briefly notify user: "Appended pattern to LOCAL kc-pr-flow.md: [title]. Run `/kc-plugin-forge dreaming kc-pr-flow` to promote to public when ready."
+
+**Two-stage Dreaming**: LOCAL → public `learned-patterns.md` is the early-stage Dreaming gate (sanitize + generalize). The existing late-stage Dreaming (`learned-patterns.md` → structured refs like `compliance-audit.md`, `review-triage.md`) is unchanged. Both stages are human-gated via `/kc-plugin-forge dreaming`.
+
+If `~/.claude/kc-plugins-config/learned-patterns-local/kc-pr-flow.md` does not exist yet, create it from the template at `kc-pr-flow/reference/learned-patterns-local-template.md` (or `~/.claude/kc-plugins-config/learned-patterns-local/` skeletons added at plugin install time).
 
 ### D1 entry format
 

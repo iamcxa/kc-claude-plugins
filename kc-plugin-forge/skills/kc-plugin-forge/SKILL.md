@@ -358,21 +358,45 @@ Skip when: `self-forge` route, `validate-only` route, `agent-verify-only` route.
 
 ## Phase 2.7: Dreaming — Pattern Promotion
 
-Analyzes mature patterns in `learned-patterns.md` and promotes them into structured reference files. Runs after Phase 2 TDD on all routes that include Phase 2.
+Human-gated distillation that moves patterns up a knowledge ladder. Runs after Phase 2 TDD on all routes that include Phase 2.
 
 **Skip when**: `new <name>` route (no patterns yet), `validate-only` route, `agent-verify-only` route.
 
+### Two Stages
+
+Dreaming is a single mechanism (interactive distill + categorize) applied at two positions in the knowledge ladder:
+
+| Stage | Source | Target | Purpose | Applies to |
+|-------|--------|--------|---------|------------|
+| **Early-stage** (sanitize gate) | `~/.claude/kc-plugins-config/learned-patterns-local/<plugin>.md` | `<plugin>/reference/learned-patterns.md` | Distill raw org-specific entries into shareable rules — privacy + generalization gate | Plugins that adopt LOCAL D1 capture (kc-pr-flow, kc-team-ops) |
+| **Late-stage** (taxonomy gate) | `<plugin>/reference/learned-patterns.md` | `<plugin>/reference/<structured-ref>.md` or `SKILL.md` Rules | Promote mature curated rules into a taxonomy (e.g., `quality-pipeline.md`, `strategic-lens.md`) | All plugins (existing behavior) |
+
+Both stages use the same distill+approve flow described below. A single `dreaming` invocation runs Early first (if a LOCAL store exists and has dated candidates), then Late. Each stage has its own confirmation pass — the user can approve one and skip the other.
+
+**Detection**: if `~/.claude/kc-plugins-config/learned-patterns-local/<plugin>.md` exists with dated entries, Early-stage activates. Otherwise the run is Late-stage only (existing behavior, fully back-compatible).
+
 ### Entry Gate
 
+Run independently per stage:
+
 ```
-dated_patterns = [h for h in "##" and "###" headings if heading contains "(YYYY-MM-DD)" or "[YYYY-MM-DD]" suffix]
+# Early stage gate (per plugin with a LOCAL store)
+local_dated = scan(~/.claude/kc-plugins-config/learned-patterns-local/<plugin>.md, "##" and "###" headings with date suffix)
+if len(local_dated) < 1:
+    log "Dreaming (early): skipped — no dated entries in LOCAL"
+    skip Early stage, proceed to Late
+
+# Late stage gate (existing behavior)
+dated_patterns = scan(<plugin>/reference/learned-patterns.md, "##" and "###" headings with date suffix)
 if len(dated_patterns) < 5:
-    log "Dreaming: skipped (only {N} dated patterns, minimum 5)"
+    log "Dreaming (late): skipped (only {N} dated patterns, minimum 5)"
     → in-pipeline: proceed to next phase (Phase 2.5 or Phase 3)
     → standalone: report "skipped" and move to next plugin (or exit)
 ```
 
-Age filter: among dated patterns, only those **≥ 7 days old** become candidates. If zero candidates after age filter → skip with log.
+Early stage has **no minimum count** — even a single LOCAL entry can be promoted (sanitize gate cares about each leak risk, not maturity).
+
+Age filter: **Late stage only** — candidates must be ≥ 7 days old. Early stage has no age filter (privacy/generalization decision should not wait).
 
 Note: The spec's entry gate pseudocode shows only `"##"` headings. This implementation intentionally scans both `##` and `###` to support structured-format plugins (e.g., kc-team-ops uses `## Section` with potential `### Pattern (date)` sub-entries).
 
@@ -387,12 +411,21 @@ Two `learned-patterns.md` formats exist. Detection is **date-suffix-based**, not
 
 ### Step 2.7.1: Inventory
 
-For each dated heading in `learned-patterns.md`:
-- Extract: title, date, full content
-- Apply age filter (≥ 7 days)
-- Build candidate list
+Build two candidate lists, one per stage.
 
-Note: If Phase 2 TDD's Learning step just wrote a new D1 pattern, its age is 0 days → excluded by age filter. No special handling needed.
+**Early-stage inventory** (only if LOCAL exists for this plugin):
+- Scan `~/.claude/kc-plugins-config/learned-patterns-local/<plugin>.md` for dated headings
+- For each: extract title, date, full content
+- **No age filter** — privacy gate is decision-based, not maturity-based
+- Tag each candidate `stage=early, target=<plugin>/reference/learned-patterns.md`
+
+**Late-stage inventory** (existing behavior):
+- Scan `<plugin>/reference/learned-patterns.md` for dated headings
+- For each: extract title, date, full content
+- Apply age filter (≥ 7 days)
+- Tag each candidate `stage=late, target=<structured-ref or skill_rule>`
+
+Note: If Phase 2 TDD's Learning step just wrote a new D1 pattern to LOCAL, it shows up as an Early candidate immediately (no age filter). If the run promotes it to public via Early-stage now, it later flows into Late-stage candidates after the 7-day age filter — not in the same Dreaming invocation.
 
 ### Step 2.7.2: Duplicate Detection
 
@@ -406,6 +439,13 @@ For each candidate, check against all reference files in `{plugin}/reference/*.m
 Cleanup is **automatic** (low-risk). Does NOT count toward max promotions limit.
 
 ### Step 2.7.3: Placement Analysis
+
+For each not-covered candidate, LLM determines promotion target. **Early-stage** candidates have a fixed target (public `learned-patterns.md`) but require a **distill rewrite**, not just a copy:
+
+| Stage | Placement decision | Required transformation |
+|-------|-------------------|------------------------|
+| **Early** | Target is fixed: `<plugin>/reference/learned-patterns.md` (the relevant section, e.g. `## Review Patterns`) | LLM rewrites the entry: strip org names (DataRecce/Acme/etc), ticket IDs (DRC-NNNN), real PR numbers, internal package names (@org/pkg), SHAs, real emails. Replace with generic placeholders OR rephrase the rule abstractly so the org context isn't necessary. The output is a **generalized rule**, not a sanitized story. |
+| **Late** | LLM picks among existing structured refs (`quality-pipeline.md`, `compliance-audit.md`, `strategic-lens.md`, etc.) OR `SKILL.md` Rules | LLM adapts to the target section's style; existing behavior. |
 
 For each not-covered candidate, LLM determines promotion target:
 
@@ -433,10 +473,32 @@ For each not-covered candidate, LLM determines promotion target:
 
 ### Step 2.7.4: Confirm & Execute
 
-Present plan:
+Present two plans (Early first if active, then Late) — each confirmed separately so user can approve one and skip the other.
+
+**Early-stage plan** (only shown if Early candidates exist):
 
 ```
-## Dreaming — <plugin-name> (N candidates, M already covered)
+## Dreaming Early-stage — <plugin-name> (N LOCAL entries)
+
+Each entry will be rewritten to remove org-specific identifiers before promotion to <plugin>/reference/learned-patterns.md.
+
+| # | LOCAL entry (title + date) | Distilled rule (preview) | Action |
+|---|----------------------------|--------------------------|--------|
+| 1 | "..." (2026-05-01) | "When reviewing PRs that add defense-in-depth..." | promote |
+
+Apply which? [all / <numbers> / none / edit-N]
+```
+
+`edit-N` opens the distilled draft of entry N for the user to refine before commit.
+
+After approval:
+- Append distilled rule to `<plugin>/reference/learned-patterns.md` under the appropriate section
+- In LOCAL file, mark the original entry header with `[PROMOTED YYYY-MM-DD]` (don't delete — retain author's verification trace)
+
+**Late-stage plan** (existing behavior):
+
+```
+## Dreaming Late-stage — <plugin-name> (N candidates, M already covered)
 
 Cleanup (auto):
   - "pattern title" → already in <file> §<section>
@@ -470,13 +532,16 @@ After approval:
 
 | Limit | Value |
 |-------|-------|
-| Max promotions per plugin per run | 5 (oldest first if exceeded) |
+| Max Late-stage promotions per plugin per run | 5 (oldest first if exceeded) |
+| Max Early-stage promotions per plugin per run | unlimited (each entry is a separate privacy decision) |
 | Max `skill_rule` promotions per plugin | 2 |
-| Min pattern age | 7 days |
-| Min dated pattern count (entry gate) | 5 |
+| Min pattern age (Late stage only) | 7 days |
+| Min dated pattern count (Late stage entry gate) | 5 |
+| Min dated pattern count (Early stage entry gate) | 1 |
 | Conflict | Block + ask user |
-| Cleanup | Unlimited (auto, no cap) |
+| Cleanup | Unlimited (auto, no cap) — Late stage only |
 | `skill_rule` target | Target plugin's SKILL.md, never forge's (unless self-forge) |
+| Early-stage source file behavior | Mark with `[PROMOTED <date>]`, do NOT delete (preserve author verification trace) |
 
 ### Standalone `dreaming` Route
 

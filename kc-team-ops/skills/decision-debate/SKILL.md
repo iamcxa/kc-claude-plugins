@@ -13,7 +13,8 @@ Structured debate for technical decisions — eliminates confirmation bias and s
 
 **Setup:**
 - `Read → ${CLAUDE_PLUGIN_ROOT}/reference/decision-debate-reference.md`
-- `Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` (Debate Patterns section)
+- `Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` (Debate Patterns section — public, curated)
+- `Read → ~/.claude/kc-plugins-config/learned-patterns-local/kc-team-ops.md` (Debate Patterns section — local, raw; optional/may not exist yet)
 
 ## Step 0: Triage
 
@@ -116,7 +117,9 @@ After completing a debate, scan for hard signals:
 | Evaluator used sunk-cost reasoning despite ban | Anti-bias gap |
 | Same debate pattern seen 2+ times across projects | Recurring decision archetype |
 
-Hard signals → check against `learned-patterns.md` Debate Patterns section → append if not covered. No hard signals → done. "Nothing novel" is valid — do not create filler entries.
+Hard signals → check against LOCAL `~/.claude/kc-plugins-config/learned-patterns-local/kc-team-ops.md` Debate Patterns section → append if not covered. Notify user: "Appended to LOCAL kc-team-ops.md. Promote via `/kc-plugin-forge dreaming kc-team-ops` when generalizable." No hard signals → done. "Nothing novel" is valid — do not create filler entries.
+
+**Do NOT write directly to** `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` — that file is curated-only, entered via early-stage Dreaming.
 
 ## Reference
 

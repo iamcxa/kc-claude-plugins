@@ -8,12 +8,13 @@ A Claude Code plugin (`kc-plugin-forge`) that provides a one-command quality pip
 
 ## Architecture
 
-**Skills** (3) run in main conversation context:
+**Skills** (4) run in main conversation context:
 
 ```
-skills/kc-plugin-forge/          -> main orchestrator (7-phase pipeline + routes: 1→1.5→2→2.7→2.5→3→4 + dreaming)
-skills/kc-plugin-forge-help/     -> interactive help guide, topic deep-dive, feedback collection
-skills/kc-plugin-forge-doc-sync/ -> documentation gap scanner & writer (Light — static scan + history)
+skills/kc-plugin-forge/                -> main orchestrator (7-phase pipeline + routes: 1→1.5→2→2.7→2.5→3→4 + dreaming)
+skills/kc-plugin-forge-help/           -> interactive help guide, topic deep-dive, feedback collection
+skills/kc-plugin-forge-doc-sync/       -> documentation gap scanner & writer (Light — static scan + history)
+skills/kc-plugin-forge-sanitize-check/ -> prepublish safety-net grep (REJECT/BLOCK/WARN classes) — backstop to Early-stage Dreaming
 ```
 
 **Hooks** (1):
@@ -46,7 +47,16 @@ The orchestrator skill accumulates lessons via Phase 4 Learning:
 
 Both files grow over time. `learned-patterns.md` benefits all users via PR-back flow. `quality-pipeline.md` is forge-internal knowledge.
 
-Phase 2.7 (Dreaming) promotes mature D1 patterns from `learned-patterns.md` into structured reference files, completing the knowledge flywheel: learn → accumulate → promote → lean file.
+Phase 2.7 (Dreaming) is **two-stage**:
+
+- **Early-stage** (sanitize gate): LOCAL store `~/.claude/kc-plugins-config/learned-patterns-local/<plugin>.md` → public `<plugin>/reference/learned-patterns.md`. Required for plugins with PII concerns (kc-pr-flow, kc-team-ops). Each LOCAL entry rewritten to remove org identifiers + generalized.
+- **Late-stage** (taxonomy gate): public `learned-patterns.md` → structured refs (`quality-pipeline.md`, etc.). Existing behavior, mature-pattern promotion.
+
+Knowledge flywheel: capture (LOCAL, raw) → Early Dreaming (sanitize) → public learned-patterns.md (flat, curated) → Late Dreaming (taxonomize) → structured refs.
+
+Forge itself does not adopt the LOCAL layer (no PII concerns for its own learned-patterns.md). Plugins opt in by updating their D1 capture step to target LOCAL.
+
+Adjacent skill: `kc-plugin-forge-sanitize-check` is a prepublish safety net — greps for known leak patterns in case Dreaming missed something. Not a replacement for Dreaming.
 
 ## Editing Skills
 

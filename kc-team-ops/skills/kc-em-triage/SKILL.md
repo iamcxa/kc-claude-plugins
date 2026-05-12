@@ -197,7 +197,11 @@ These feed into Cost of Inaction synthesis at Step 4.5.
 
 ### 3. Explore (Multi-Layer)
 
-**Before dispatching**: Read `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` for accumulated triage patterns (depth routing, estimate calibration, deliberation heuristics, exploration anti-patterns). Apply relevant patterns as context for this exploration.
+**Before dispatching**: Read BOTH of these for accumulated triage patterns (depth routing, estimate calibration, deliberation heuristics, exploration anti-patterns):
+1. `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` — public, curated rules
+2. `~/.claude/kc-plugins-config/learned-patterns-local/kc-team-ops.md` — local, raw entries with full org-specific detail (may be absent on first run)
+
+Apply relevant patterns from either source as context for this exploration.
 
 Dispatch parallel agents across layers:
 
@@ -366,17 +370,21 @@ D1 captures patterns useful across ANY project. Low friction — auto-append wit
 
 **Action** (for each triggered pattern):
 
-Read `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md`. If the pattern is NOT already listed:
-- Append under the appropriate section (Depth Routing / Estimate Calibration / Deliberation Heuristics / Exploration Anti-Patterns):
+Read `~/.claude/kc-plugins-config/learned-patterns-local/kc-team-ops.md` (NOT the public reference file). If the file does not exist yet, create it from the template comment block (Depth Routing / Estimate Calibration / Deliberation Heuristics / Exploration Anti-Patterns / Debate Patterns sections).
+
+If the pattern is NOT already listed:
+- Append under the appropriate section (entry may include real project names, Linear ticket IDs, member handles — this file is LOCAL_ONLY, not committed anywhere):
 ```markdown
 ### <pattern description> (YYYY-MM-DD)
 - Signal: <what was observed>
 - Seen in: <project name or context>
 - Recommendation: <how to adjust future triage>
 ```
-- Notify user: "D1 Learning: added '<pattern>' to learned-patterns.md"
+- Notify user: "D1 Learning: appended '<pattern>' to LOCAL kc-team-ops.md. Run `/kc-plugin-forge dreaming kc-team-ops` to promote to public when generalizable."
 
-**Frequency gate**: Only append if the pattern adds new information. If a similar entry already exists, update it (add the new project to "Seen in") rather than duplicating.
+**Frequency gate**: Only append if the pattern adds new information. If a similar entry already exists in LOCAL, update it (add the new project to "Seen in") rather than duplicating.
+
+**Two-stage Dreaming**: LOCAL → `${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` is the early-stage Dreaming gate (sanitize + generalize). The later stage promotes mature curated rules into structured refs like `strategic-lens.md`. Both stages are human-gated.
 
 #### D2 — Project-Specific Patterns (gated write to CLAUDE.md)
 
