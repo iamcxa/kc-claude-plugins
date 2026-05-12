@@ -1,0 +1,11 @@
+{
+  "name": "kc-pr-flow",
+  "description": "PR lifecycle workflow: create, review, resolve reviews, commit reorg, automated daemon",
+  "version": "1.3.0",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "keywords": ["pr", "review", "linear", "commit", "workflow", "announcement", "slack", "daemon", "automated"],
+  "license": "MIT"
+}

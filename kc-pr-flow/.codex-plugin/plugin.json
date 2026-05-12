@@ -1,0 +1,40 @@
+{
+  "name": "kc-pr-flow",
+  "version": "1.3.0",
+  "description": "PR lifecycle workflow: create, review, resolve reviews, commit reorg, automated daemon, and break-point runtime-path probes.",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "pr",
+    "review",
+    "linear",
+    "commit",
+    "workflow",
+    "announcement",
+    "daemon",
+    "automated",
+    "break-point",
+    "verification"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "KC PR Flow",
+    "shortDescription": "PR creation, review, feedback resolution, and break-point verification",
+    "longDescription": "Local PR lifecycle workflow for Codex and Claude Code. Provides skills for PR creation, review, feedback resolution, commit cleanup, announcements, daemon workflows, and break-point runtime-path probes for bugfix verification.",
+    "developerName": "Kent Chen",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Create a PR with kc-pr-create",
+      "Review this PR with kc-pr-review",
+      "Pressure-test this fix with break-point-probe"
+    ],
+    "brandColor": "#7C3AED"
+  }
+}

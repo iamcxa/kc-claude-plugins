@@ -63,6 +63,30 @@ Session lifecycle & context efficiency. Detects context pressure and enforces cl
 /plugin install kc-hyperfocus@kc-claude-plugins
 ```
 
+### [kc-team-ops](./kc-team-ops/) `v1.2.0`
+
+Team operations pipeline for engineering managers. EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, and structured Linear management.
+
+**Use when:** You're an EM running triage on Linear issues, drafting weekly pulse updates, or decomposing oversized issues with team context.
+
+**Prerequisite:** Linear MCP enabled.
+
+```bash
+/plugin install kc-team-ops@kc-claude-plugins
+```
+
+### [kc-pr-flow](./kc-pr-flow/) `v1.3.0`
+
+End-to-end PR lifecycle workflow. Create (full ship chain: draft → review → fix → ready → announce), review (with Trail of Bits security subagents for differential review, supply chain audit, and GitHub Actions security), resolve review threads, commit reorg, announce on Slack, and an automated PR daemon.
+
+**Use when:** You want a one-command PR workflow that handles creation, review, resolving feedback, and announcements consistently.
+
+**Prerequisite:** `gh` CLI authenticated. Optional: `pr-review-toolkit`, `feature-dev`, `superpowers` marketplace plugins for graceful enhancement.
+
+```bash
+/plugin install kc-pr-flow@kc-claude-plugins
+```
+
 ## Adding to Your Project
 
 Add to `.claude/settings.json`:
@@ -81,7 +105,9 @@ Add to `.claude/settings.json`:
     "e2e-pipeline@kc-claude-plugins": true,
     "kc-plugin-forge@kc-claude-plugins": true,
     "kc-nightwatch@kc-claude-plugins": true,
-    "kc-hyperfocus@kc-claude-plugins": true
+    "kc-hyperfocus@kc-claude-plugins": true,
+    "kc-team-ops@kc-claude-plugins": true,
+    "kc-pr-flow@kc-claude-plugins": true
   }
 }
 ```
