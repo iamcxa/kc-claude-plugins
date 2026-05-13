@@ -29,7 +29,7 @@ Built-in subagents dispatched by kc-pr-review for security analysis. Based on Tr
 | Skill | Triggers |
 |-------|----------|
 | `kc-pr-create` | "create pr", "open pr", "建立 PR", "開 PR", "發 PR", "送審", implementation complete. Default: full ship chain (draft → review → fix → ready → announce). `--draft-only` for PR-only. `--ci` for CI + AI reviewer gate. |
-| `kc-pr-review` | "review pr", "review this PR", PR number/URL, "review current branch". `--full-pass` / `--pass-all` (aliases: "8-pass review", "full pass", "全面複查", "deep review") forces 8-pass coverage; auto-active for bugfix cross-layer or cross-stack PRs. |
+| `kc-pr-review` | "review pr", "review this PR", PR number/URL, "review current branch". `--full-pass` / `--pass-all` (aliases: "8-pass review", "full pass", "全面複查", "deep review") forces 8-pass coverage; auto-active for bugfix cross-layer or cross-stack PRs. `--codex` (aliases: "codex review", "second opinion", "cross-model review") dispatches Codex as a cross-model second-opinion agent; auto-active for bugfix cross-stack PRs when `codex` is on PATH. |
 | `kc-pr-review-resolve` | "resolve reviews", "address feedback", "fix review comments", PR has unresolved threads |
 | `kc-pr-reorg` | "squash commits", "clean up history", "reorganize commits", "reorder commits", 5+ messy commits |
 | `kc-pr-announce` | "announce", "post to product", "draft product message", "公告", after PR + demo completion |

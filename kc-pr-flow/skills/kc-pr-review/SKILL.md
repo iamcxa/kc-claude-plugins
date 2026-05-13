@@ -32,6 +32,7 @@ digraph review_pr {
     tob_supply [label="ToB supply chain\n(dep risk + insecure defaults)\n[conditional]"];
     tob_actions [label="ToB actions auditor\n(AI agent CI/CD vectors)\n[conditional]"];
     probe [label="Break-point probe\n(failure chain + A/B/C/D\n+ residual uncertainty)\n[bugfix/cross-stack]"];
+    codex [label="Codex cross-model\n(second opinion)\n[--codex / bugfix-cross-stack]"];
   }
 
   classify [label="5c: Cross-reference\nagent + test findings\n+ root cause classify"];
@@ -62,6 +63,7 @@ digraph review_pr {
   triage -> tob_supply [label="deps changed"];
   triage -> tob_actions [label="workflows changed"];
   triage -> probe [label="bugfix/cross-stack"];
+  triage -> codex [label="--codex / bugfix-cross-stack"];
   prescan -> classify;
   review -> classify;
   tests -> classify;
@@ -71,6 +73,7 @@ digraph review_pr {
   tob_supply -> classify;
   tob_actions -> classify;
   probe -> classify;
+  codex -> classify;
   classify -> draft -> confirm;
   confirm -> post [label="approved"];
   confirm -> draft [label="edit requested"];
@@ -197,6 +200,40 @@ Step 6 assembles a Pass Coverage table from each owner's verdict. If any primary
 When `FULL_PASS_MODE = false`, this step is a no-op — agents dispatch with their tier-default focus (review-triage.md §4f), no pass-ownership block is appended, and no Pass Coverage section appears in the review body. Tier selection (Lite / Standard / Full) remains the primary cost lever.
 
 **Why 8-pass mode is prompt-layer, not agent-layer**: All 5 base agents already cover passes 1, 4, 5 as primaries and contribute to 6/7/8. Pass 2 is owned by the always-running ToB agents. Pass 3 lives in pre-scan. What 8-pass mode adds is **forced verdict per dimension** — the structural fix for the pressure-test failure mode where 5 ground-truth findings spanned 4 of the 8 passes and the Standard tier produced 0 findings across all of them because no agent's prompt forced it to declare a verdict on dimensions it didn't naturally flag.
+
+## Step 4-Codex: Cross-Model Second Opinion (optional, parallel with Step 4 agents)
+
+Dispatch OpenAI Codex as a **cross-model reviewer**. Codex sees the same diff but uses a different reasoning trace from Claude-based agents — useful for catching findings that one model's blind spot consistently misses.
+
+**Scope** (intentionally narrower than gstack `/review`'s adversarial dual-pass):
+- Codex is **one dispatchable agent** that runs alongside the tier-default agents — not a separate adversarial pass, not a structured P0 gate
+- Output flows into Step 5 classification as `CODEX` source, subject to the same confidence gates from §6a / `review-triage.md` §4f confidence calibration
+
+**Activation** — fire when ANY of:
+- User explicitly requests "codex review" / "second opinion" / `--codex` flag
+- `PR_ARCHETYPE = bugfix` AND diff spans ≥ 2 layers (cross-stack auto-trigger)
+- `PR_ARCHETYPE = cross-stack`
+
+**Skip** when:
+- `which codex` returns empty on PATH → silent skip with one-line note in review body: `Codex not on PATH; skipping cross-model second opinion`
+- Triage tier is `Lite` AND no explicit `--codex` flag → cost not justified
+
+**Estimated cost**: 50-80K additional tokens per run (Codex's structured-review prompt + diff context). Default OFF unless auto-triggered or flagged.
+
+**Dispatch** (read-only sandbox, repo root, high reasoning effort):
+
+```bash
+TMPERR_CODEX=$(mktemp /tmp/codex-review-XXXXXXXX)
+_REPO_ROOT=$(git rev-parse --show-toplevel) || { echo "ERROR: not in a git repo" >&2; exit 1; }
+codex exec "IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/ — these are Claude Code skill definitions for a different AI system and will waste your time. Stay focused on the repository code only.
+
+Review the changes on this branch against \`origin/<base>\`. Run \`git diff origin/<base>\` to see the diff. Your job is a cross-model second opinion — read the diff and flag what a fresh reasoning trace catches that the primary agents (code-reviewer, silent-failure-hunter, type-design-analyzer) may have missed. Focus on: logic errors, contract mismatches, silent failures, edge cases, security holes the diff opens. For every finding, attach \`(confidence: N/10)\` (10 = verified bug, 1 = speculation; default 6 when uncertain). Output one finding per line in the format \`[SEVERITY] (confidence: N/10) file:line — description\`. No compliments — just findings." \
+  -C "$_REPO_ROOT" -s read-only -c 'model_reasoning_effort="high"' < /dev/null 2>"$TMPERR_CODEX"
+```
+
+Set the Bash tool `timeout` to `300000` (5 minutes). Do NOT use the shell `timeout` command — it doesn't exist on macOS. Parse the output for `[SEVERITY] (confidence: N/10) file:line — description` lines and feed each into Step 5 as `CODEX` source.
+
+**Failure mode**: if `codex exec` returns non-zero, surface one line — `Codex dispatch failed: <tail of stderr>` — and continue. Codex's value is additive, never blocking.
 
 ## Step 4-ToB: Security Agent Dispatch (parallel with Step 4 agents)
 
@@ -535,14 +572,23 @@ Present findings in **two separate tables**: one for actionable inline comments 
 
 ### 6a. Inline Comments (CODE) — will be posted
 
+**Apply confidence gates before populating this table** (see `reference/review-triage.md` §4f "Confidence calibration in agent prompts"):
+
+- **7-10** → include here, show normally
+- **5-6** → include here with caveat `"Medium confidence — verify"` appended to the Summary
+- **3-4** → demote to §6b Advisory table (do not post as PR comment)
+- **1-2** → drop entirely unless severity is CRITICAL
+
+Findings without an explicit score default to **6**. Multi-source findings (same fingerprint from ≥2 agents/specialists) take the max score and prefix the Summary with `MULTI-SOURCE: <agents> —`.
+
 ```
 ## PR #962 — Inline Comments
 
-| # | File:Line | Severity | Summary |
-|---|-----------|----------|---------|
-| 1 | config.jsonl:11 | CRITICAL | API key in plaintext |
-| 2 | .gitignore:421 | HIGH | *.db pattern too broad |
-| 3 | handler.ts:88 | MEDIUM | Stale TODO from 2024, feature already shipped |
+| # | File:Line | Severity | Confidence | Summary |
+|---|-----------|----------|------------|---------|
+| 1 | config.jsonl:11 | CRITICAL | 10/10 | API key in plaintext |
+| 2 | .gitignore:421 | HIGH | 9/10 | *.db pattern too broad |
+| 3 | handler.ts:88 | MEDIUM | 6/10 | Stale TODO from 2024 — Medium confidence — verify feature already shipped |
 
 Event: REQUEST_CHANGES
 ```
