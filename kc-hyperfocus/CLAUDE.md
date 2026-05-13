@@ -82,6 +82,10 @@ cd ~/.claude/plugins/cache/kc-claude-plugins/kc-hyperfocus/*/
 bun install
 ```
 
+`bun install` runs the bundled `scripts/verify-install.sh` postinstall hook, which imports `@xenova/transformers` to confirm the platform's prebuilt binaries (notably `sharp` via prebuild-install) downloaded successfully. The script prints a clear warning if the import fails but does NOT block the install — text-only MCP tools remain usable even when image-processing libs are unavailable.
+
+**Why this matters**: bun blocks postinstall scripts of dependencies by default. `sharp` (transitive via `@xenova/transformers`) downloads its platform-specific native binary in its postinstall. Without `trustedDependencies` coverage, install reports success but the binary is missing and the first import crashes. `package.json` lists `sharp` and `onnxruntime-node` in `trustedDependencies` so bun runs their postinstalls automatically. CI verifies install + import on `ubuntu-22.04`, `macos-14` (arm64), and `macos-13` (x64) via `.github/workflows/kc-hyperfocus-install.yml`.
+
 Restart Claude Code. Verify with `/mcp` (should show `context-lake: Connected`) and `/kc-cache-insight --status`.
 
 ### Migration from user-level skills

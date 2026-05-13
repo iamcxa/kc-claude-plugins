@@ -1,0 +1,71 @@
+name: kc-hyperfocus install verification
+
+# Verifies that `bun install` for the kc-hyperfocus MCP server succeeds
+# AND that its dependency chain (notably @xenova/transformers → sharp,
+# whose prebuilt binary varies per platform) loads at runtime.
+#
+# Catches the failure mode where bun's default postinstall-blocking
+# behavior silently skips sharp's prebuild-install download, leading
+# to an "install succeeded" report but a runtime ENOENT on first
+# import. The verify-install.sh script is invoked here exactly as it
+# would run during a user's `bun install`.
+
+on:
+  pull_request:
+    paths:
+      - 'kc-hyperfocus/package.json'
+      - 'kc-hyperfocus/bun.lock'
+      - 'kc-hyperfocus/scripts/verify-install.sh'
+      - '.github/workflows/kc-hyperfocus-install.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'kc-hyperfocus/package.json'
+      - 'kc-hyperfocus/bun.lock'
+      - 'kc-hyperfocus/scripts/verify-install.sh'
+      - '.github/workflows/kc-hyperfocus-install.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: bun install + verify (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04        # linux-x64
+          - macos-14            # darwin-arm64 (M-series)
+          - macos-13            # darwin-x64 (Intel)
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: bun install
+        working-directory: kc-hyperfocus
+        run: bun install --frozen-lockfile
+
+      - name: Verify runtime import
+        working-directory: kc-hyperfocus
+        run: |
+          # Re-run verify in standalone mode (the postinstall already
+          # ran it, but we want a fresh signal independent of bun's
+          # output buffering).
+          sh ./scripts/verify-install.sh
+
+      - name: Bundle MCP server (syntax check, no spawn)
+        working-directory: kc-hyperfocus
+        run: |
+          # `bun build` parses + bundles without executing the
+          # top-level main() call. Catches lockfile / import-resolution
+          # gaps that smoke-importing @xenova/transformers would miss.
+          bun build server/context-lake-mcp.ts --target=node --outfile=/tmp/mcp-bundle-check.js
+          test -s /tmp/mcp-bundle-check.js
