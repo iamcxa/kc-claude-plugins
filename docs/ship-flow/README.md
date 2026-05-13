@@ -33,7 +33,6 @@ stages:
       skill: ship-flow:ship-execute
       model: sonnet
     - name: verify
-      gate: true
       worktree: false
       skill: ship-flow:ship-verify
       model: sonnet
