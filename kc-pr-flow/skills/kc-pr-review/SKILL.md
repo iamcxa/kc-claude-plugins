@@ -151,7 +151,7 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/review-triage.md
 
 ## Step 4-Pass: 8-Pass Mode (when `FULL_PASS_MODE = true`)
 
-Triage (Step 4 / `review-triage.md` §4d-passmode) sets `FULL_PASS_MODE`. When `true`, organize agent dispatch and output around 8 review dimensions. Same agents from Step 4's selected tier — what 8-pass mode adds is **forced verdict per dimension**, closing the "agent fired but said nothing about dimension X, so X looks clean" silent-miss trap.
+Triage (Step 4 / `reference/review-triage.md` §4d-passmode) sets `FULL_PASS_MODE`. When `true`, organize agent dispatch and output around 8 review dimensions. Same agents from Step 4's selected tier — what 8-pass mode adds is **forced verdict per dimension**, closing the "agent fired but said nothing about dimension X, so X looks clean" silent-miss trap.
 
 The discipline: **every owned pass produces a verdict** — findings OR an explicit "Clean — verified by `<evidence>`" line, OR (for passes 7/8 only) `N/A` with justification. A pass with no findings AND no verdict line is a coverage gap, not a clean result.
 
@@ -197,7 +197,7 @@ Step 6 assembles a Pass Coverage table from each owner's verdict. If any primary
 
 ### 4-Pass-d. Skip behavior
 
-When `FULL_PASS_MODE = false`, this step is a no-op — agents dispatch with their tier-default focus (review-triage.md §4f), no pass-ownership block is appended, and no Pass Coverage section appears in the review body. Tier selection (Lite / Standard / Full) remains the primary cost lever.
+When `FULL_PASS_MODE = false`, this step is a no-op — agents dispatch with their tier-default focus (`reference/review-triage.md` §4f), no pass-ownership block is appended, and no Pass Coverage section appears in the review body. Tier selection (Lite / Standard / Full) remains the primary cost lever.
 
 **Why 8-pass mode is prompt-layer, not agent-layer**: All 5 base agents already cover passes 1, 4, 5 as primaries and contribute to 6/7/8. Pass 2 is owned by the always-running ToB agents. Pass 3 lives in pre-scan. What 8-pass mode adds is **forced verdict per dimension** — the structural fix for the pressure-test failure mode where 5 ground-truth findings spanned 4 of the 8 passes and the Standard tier produced 0 findings across all of them because no agent's prompt forced it to declare a verdict on dimensions it didn't naturally flag.
 
@@ -207,7 +207,7 @@ Dispatch OpenAI Codex as a **cross-model reviewer**. Codex sees the same diff bu
 
 **Scope** (intentionally narrower than gstack `/review`'s adversarial dual-pass):
 - Codex is **one dispatchable agent** that runs alongside the tier-default agents — not a separate adversarial pass, not a structured P0 gate
-- Output flows into Step 5 classification as `CODEX` source, subject to the same confidence gates from §6a / `review-triage.md` §4f confidence calibration
+- Output flows into Step 5 classification as `CODEX` source, subject to the same confidence gates from §6a / `reference/review-triage.md` §4f confidence calibration
 
 **Activation** — fire when ANY of:
 - User explicitly requests "codex review" / "second opinion" / `--codex` flag
@@ -225,7 +225,7 @@ Dispatch OpenAI Codex as a **cross-model reviewer**. Codex sees the same diff bu
 ```bash
 TMPERR_CODEX=$(mktemp /tmp/codex-review-XXXXXXXX)
 _REPO_ROOT=$(git rev-parse --show-toplevel) || { echo "ERROR: not in a git repo" >&2; exit 1; }
-codex exec "IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, .claude/skills/, or agents/ — these are Claude Code skill definitions for a different AI system and will waste your time. Stay focused on the repository code only.
+codex exec "IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, or .claude/skills/ — these are Claude Code skill definitions for a different AI system and will waste your time. Real source-code directories in the target repo (including any `agents/` directory under the repo root) ARE part of your review scope. Stay focused on the repository code only.
 
 Review the changes on this branch against \`origin/<base>\`. Run \`git diff origin/<base>\` to see the diff. Your job is a cross-model second opinion — read the diff and flag what a fresh reasoning trace catches that the primary agents (code-reviewer, silent-failure-hunter, type-design-analyzer) may have missed. Focus on: logic errors, contract mismatches, silent failures, edge cases, security holes the diff opens. For every finding, attach \`(confidence: N/10)\` (10 = verified bug, 1 = speculation; default 6 when uncertain). Output one finding per line in the format \`[SEVERITY] (confidence: N/10) file:line — description\`. No compliments — just findings." \
   -C "$_REPO_ROOT" -s read-only -c 'model_reasoning_effort="high"' < /dev/null 2>"$TMPERR_CODEX"
@@ -483,7 +483,7 @@ Process:
 
 1. **Resolve each cited subject** via grep:
    - Path-like → `git ls-files | grep -F "<subject>"`
-   - Identifier in backticks → `git grep -n "<subject>" -- '*.ts' '*.py' '*.md'` (language-aware)
+   - Identifier in backticks → `git grep -nF "<subject>" -- '*.ts' '*.py' '*.md'` (literal / fixed-string; identifiers like `functionName()` and paths with `.` contain regex metacharacters and must NOT be regex-evaluated)
    - Commit SHA → `git rev-parse <sha>` + `git show --stat <sha>` to confirm it exists and touched the cited area
 2. **Verify the claim** against grep results:
    - **Zero matches** → cited subject does not exist. Severity: **MEDIUM**, source `PRESCAN`. Message: ``Doc claim at `file:line` cites `<subject>` — 0 matches in repo``
