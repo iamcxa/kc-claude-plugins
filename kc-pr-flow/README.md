@@ -8,8 +8,8 @@ PR lifecycle workflow plugin for Claude Code. Covers the full PR lifecycle: crea
 |-------|---------|---------|
 | [`kc-pr-create`](#kc-pr-create-flow) | `create pr`, `open pr`, `建立 PR`, `開 PR`, `送審` | Create PR with self-review annotations + Linear comment + optional announcement |
 | `kc-pr-announce` | `announce`, `post to product`, `公告` | Draft Slack announcement for completed features with demo artifacts |
-| `kc-pr-review` | `review pr`, PR number/URL | Agent-dispatched inline code review |
-| `kc-pr-review-resolve` | `resolve reviews`, `address feedback` | Triage & resolve review threads |
+| `kc-pr-review` | `review pr`, PR number/URL, `--full-pass`, `--pass-all`, "8-pass review" | Agent-dispatched inline code review with optional 8-pass coverage for cross-layer/cross-stack PRs |
+| `kc-pr-review-resolve` | `resolve reviews`, `address feedback` | Triage & resolve review threads with cross-AI duplicate issue grouping |
 | `kc-pr-reorg` | `squash commits`, `reorganize commits` | Reorganize messy commit history into logical groups |
 | `break-point-probe` | `pressure-test this fix`, `break-point check`, `verify the break-point` | Verify whether a bugfix reaches the real runtime break-point path |
 | [`kc-pr-daemon`](docs/daemon.md) | `start daemon`, `daemon status`, `pr daemon` | Manage automated PR review daemon |
@@ -39,6 +39,7 @@ Use natural-language triggers rather than slash commands in Codex, for example:
 | Guide | What it covers |
 |-------|---------------|
 | [Daemon](docs/daemon.md) | Architecture, configuration, classification logic, notifications, usage tracking |
+| [Review triage](reference/review-triage.md) | Agent tiering, 8-pass activation, security dispatch, and pre-scan rules |
 
 ## Shared Config
 

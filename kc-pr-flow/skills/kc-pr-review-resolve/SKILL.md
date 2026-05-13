@@ -17,6 +17,7 @@ digraph resolve_pr {
   detect [label="Detect PR\n(from args or current branch)"];
   fetch [label="Fetch unresolved threads\n+ PR-level reviews\n+ reviewer metadata"];
   validate [label="Dispatch review agents\nto validate each thread"];
+  dedup [label="Cross-AI dedup\ngroup by (file, conceptual issue)"];
   triage [label="Triage & classify threads\n(AI reviewer annotations)"];
   report [label="Report findings to user"];
 
@@ -30,7 +31,7 @@ digraph resolve_pr {
   resolve_threads [label="Resolve fixed threads"];
   rereview [label="Smart re-review\n(AI-aware tagging)"];
 
-  detect -> fetch -> validate -> triage -> report -> confirm;
+  detect -> fetch -> validate -> dedup -> triage -> report -> confirm;
   confirm -> fix [label="yes"];
   confirm -> report [label="no, adjust"];
   fix -> push -> reply -> resolve_threads -> rereview;
@@ -137,6 +138,43 @@ When a suggestion contradicts an established codebase convention, classify it as
 
 > **AI detection vs. validation**: The reviewer map from Step 2 is used ONLY for re-review routing (Step 7) — determining who to notify and how to re-trigger reviews. It does NOT affect validation here. All comments are evaluated on technical merit regardless of whether the author is human or AI.
 
+## Step 3.5: Cross-AI Thread Dedup
+
+When multiple AI reviewers (e.g., `copilot` + `<custom-bot>` + Sentry) review the same PR, they reliably duplicate coverage on high-signal items. Presenting each thread as its own row inflates the work estimate and invites duplicate fix commits.
+
+**Group threads by `(file, conceptual_issue)`** — NOT by `(file, line, author)`. Two threads collapse to one issue when:
+
+- They reference the same file with overlapping line ranges (±5 lines tolerance), AND
+- Their **Step 3 validation summary** (root cause / suggested fix, not raw thread text) describes the same conceptual issue, regardless of reviewer voice
+
+Use the Step 3 validated analysis as the `conceptual_issue` axis. Raw thread text varies by reviewer style (`copilot` writes terse English; an AI bot may write multi-paragraph rationale; Sentry posts stack trace excerpts) — those surface differences don't change whether they're the same issue.
+
+### Issue grouping output
+
+After dedup, produce an `Issues` array. Each entry has:
+
+| Field | Description |
+|-------|-------------|
+| `issue_id` | `I1`, `I2`, ... (sequential) |
+| `file` | Primary file (most-referenced when threads span multiple) |
+| `line_range` | Smallest enclosing range across grouped threads |
+| `conceptual_issue` | One-line description from Step 3 validation |
+| `threads` | List of `thread_id` + author pairs (T1@copilot, T2@sentry-io, ...) |
+| `verdict` | Group-level classification (Valid Bug / Suggestion / False Positive / Pre-existing / Informational) |
+| `fix` | Single proposed action |
+
+Groups with one thread = singleton issue (no behavioral change vs prior triage). Groups with ≥2 threads = real dedup — surface the parallel-agreement signal in the verdict (e.g., `Valid Bug (2 reviewers)`).
+
+### When reviewers disagree
+
+If two threads on the same `(file, line_range)` validate to **different** conceptual issues or contradicting fixes, do **NOT** group them. Present as separate rows in Step 4 and flag the contradiction in the Action column (e.g., `⚠ contradicts I1 — needs decision`). Reviewer disagreement is rare and high-signal; collapsing it loses information.
+
+### Reply discipline (preserved)
+
+Grouping affects the **triage report** (Step 4) and the **fix commit count** (Step 5 — one commit may close multiple grouped threads), but does **NOT** affect reply behavior. Reply to each thread **individually** in Step 6 — reviewers don't see cross-thread acknowledgment, and per-thread replies keep the action plan auditable. Step 6's "never batch replies" rule still holds.
+
+Reference: `reference/learned-patterns.md` "Cross-AI-reviewer thread deduplication — same issue, two voices (2026-04-23)" for origin pattern and field-tested examples.
+
 ## Step 4: Triage & Report
 
 Present a structured report to the user:
@@ -149,20 +187,22 @@ Present a structured report to the user:
 |----------|------|--------------|
 | copilot  | AI   | @kentwelcome |
 
-### Inline Threads
-| # | Author | File:Line | Category | Action |
-|---|--------|-----------|----------|--------|
-| 1 | sentry-io | ProCRUDList.tsx:1050 | Valid Bug | Fix: use controlledPagination.total |
-| 2 | greptile | ProCRUDList.tsx:1050 | Valid Bug (dup of #1) | Same fix |
-| 3 | copilot [AI] | pagination.ts:15 | Informational | Reply: explain design intent |
-| 4 | copilot [AI] | data-provider.ts:400 | Pre-existing | Reply: out of scope |
+### Inline Issues (after Step 3.5 dedup)
+
+| Issue | Threads | File:Line | Verdict | Action |
+|-------|---------|-----------|---------|--------|
+| I1 | T1@sentry-io, T2@greptile | ProCRUDList.tsx:1050 | Valid Bug (2 reviewers) | Fix: use controlledPagination.total |
+| I2 | T3@copilot [AI] | pagination.ts:15 | Informational | Reply: explain design intent |
+| I3 | T4@copilot [AI] | data-provider.ts:400 | Pre-existing | Reply: out of scope |
+
+Singleton issues (one thread) display as a single `T#@author` cell. Grouped issues (≥2 threads) show all threads + reviewers; the `(N reviewers)` annotation in Verdict surfaces parallel-agreement strength.
 
 ### PR-Level Reviews
 | # | Author | Review State | Category | Action |
 |---|--------|-------------|----------|--------|
 | 5 | ducker-agent [AI] | COMMENTED | Valid — docs gap | Fix: update CLAUDE.md |
 
-Proposed: Fix 2 code issues + 1 docs gap, reply to all 5 items.
+Proposed: Fix 1 code issue (I1, closes 2 threads) + 1 docs gap (PR-level), reply to all 5 threads.
 Re-review: tag @kentwelcome (requested copilot) + offer to re-trigger copilot review.
 ```
 

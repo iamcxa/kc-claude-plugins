@@ -146,6 +146,58 @@ Calculate filtered diff size (noise files excluded), detect security-sensitive f
 
 Read → ${CLAUDE_PLUGIN_ROOT}/reference/review-triage.md
 
+## Step 4-Pass: 8-Pass Mode (when `FULL_PASS_MODE = true`)
+
+Triage (Step 4 / `review-triage.md` §4d-passmode) sets `FULL_PASS_MODE`. When `true`, organize agent dispatch and output around 8 review dimensions. Same agents from Step 4's selected tier — what 8-pass mode adds is **forced verdict per dimension**, closing the "agent fired but said nothing about dimension X, so X looks clean" silent-miss trap.
+
+The discipline: **every owned pass produces a verdict** — findings OR an explicit "Clean — verified by `<evidence>`" line, OR (for passes 7/8 only) `N/A` with justification. A pass with no findings AND no verdict line is a coverage gap, not a clean result.
+
+### 4-Pass-a. Pass-to-agent mapping
+
+| # | Pass | Focus | Owner |
+|---|------|-------|-------|
+| 1 | Correctness | Logic errors, broken invariants, asymmetric contracts, type misuse | `code-reviewer` + `type-design-analyzer` (Std+) |
+| 2 | Security | Credentials, injection, RLS, supply chain, CI/CD attack vectors | `tob-security-reviewer` (always) + `tob-supply-chain-checker` / `tob-actions-auditor` if files match |
+| 3 | Cross-Ref | Helper rollout completeness, stale refs, dep chain, CLAUDE.md rule compliance | Pre-scan §4.5a / §4.5b / §4.5c / §4.5i |
+| 4 | Error Handling | Silent failures, swallow scope, refactor side-effects, observability gaps | `silent-failure-hunter` |
+| 5 | Test Coverage | Edge cases, sibling parity, import-time/module-load gaps, happy-path forwarding | `pr-test-analyzer` (Std+) |
+| 6 | Diff-Specific | Convention drift vs unchanged code, baseline consistency, in-diff stylistic issues | `code-reviewer` (with baseline-context instruction from §4f) |
+| 7 | Performance | Algorithmic complexity, hot paths, allocations in tight loops | `code-reviewer` (current scope; may be `N/A`) |
+| 8 | Async/Concurrency | Race conditions, deadlocks, missing await, unsafe shared state | `code-reviewer` (current scope; may be `N/A`) |
+
+Lite tier doesn't dispatch `type-design-analyzer` / `pr-test-analyzer`. When `FULL_PASS_MODE = true` on a Lite-sized PR, promote dispatch to Standard tier — passes 1 and 5 require their dedicated owners. Display the upgrade in the triage banner: `Lite → Standard (8-pass mode requires type-design + pr-test owners)`.
+
+### 4-Pass-b. Per-agent pass directive
+
+In each owner agent's dispatch prompt, append a "Pass ownership" block:
+
+```
+PASS OWNERSHIP (8-pass mode):
+- Pass <N>: <focus> [primary]
+- Pass <M>: <focus> [contributing]
+
+For each pass you own as primary, produce one of:
+- Findings (file:line + severity + summary), OR
+- "Pass <N>: Clean — <one-line evidence of what was verified>"
+
+Do NOT omit a primary pass. An omitted primary pass is a coverage gap
+and will block APPROVE in the final review event.
+For contributing passes, produce findings only when they exceed
+the primary owner's coverage (cross-validation).
+```
+
+Passes 3 (pre-scan) and 2 (ToB agents) emit verdicts directly from their own output paths — no separate prompt directive needed; their output already declares what was checked.
+
+### 4-Pass-c. Output requirement
+
+Step 6 assembles a Pass Coverage table from each owner's verdict. If any primary pass has neither findings nor an explicit Clean/N/A verdict, Step 6 surfaces it as a coverage gap and the default review event becomes COMMENT (not APPROVE) until the gap is resolved or the user explicitly accepts it at the confirmation gate.
+
+### 4-Pass-d. Skip behavior
+
+When `FULL_PASS_MODE = false`, this step is a no-op — agents dispatch with their tier-default focus (review-triage.md §4f), no pass-ownership block is appended, and no Pass Coverage section appears in the review body. Tier selection (Lite / Standard / Full) remains the primary cost lever.
+
+**Why 8-pass mode is prompt-layer, not agent-layer**: All 5 base agents already cover passes 1, 4, 5 as primaries and contribute to 6/7/8. Pass 2 is owned by the always-running ToB agents. Pass 3 lives in pre-scan. What 8-pass mode adds is **forced verdict per dimension** — the structural fix for the pressure-test failure mode where 5 ground-truth findings spanned 4 of the 8 passes and the Standard tier produced 0 findings across all of them because no agent's prompt forced it to declare a verdict on dimensions it didn't naturally flag.
+
 ## Step 4-ToB: Security Agent Dispatch (parallel with Step 4 agents)
 
 Dispatch Trail of Bits security agents alongside existing review agents. Each agent returns structured YAML that feeds into Step 5 classification as `TOB` source.
@@ -346,6 +398,35 @@ Report findings as MEDIUM (PII, credentials) or HIGH (auto-install hooks in shar
 
 **Why agents miss this**: TypeScript compiles successfully with unused exports. LLM reviewers see the export and assume it's used — they don't grep for import counts.
 
+### 4.5i. Helper Rollout Cross-File Pre-scan
+
+**Activate when**: diff adds a new helper function whose body wraps a single underlying API call, AND the same diff replaces ≥3 existing call sites of that underlying API with the helper.
+
+Detection:
+
+1. From `git diff --unified=0`, find added function definitions (`+def NAME(`, `+function NAME(`, `+const NAME = (`, `+async function NAME(`, etc.)
+2. For each added function, identify the wrapped call inside the function body — a single dominant API call the helper is a thin wrapper for (e.g. `sentry_sdk.set_tag`, `logger.info`, `httpx.get`). Skip helpers that wrap multiple distinct APIs (too noisy for auto-detection)
+3. Count diff-level replacements: lines where the underlying API appears as removed (`^-`) and the helper appears on a corresponding added line (`^+`). Threshold: **≥3 replacements** in the diff itself
+4. If the threshold is met, the diff is performing a **helper rollout**
+
+Process:
+
+1. **Grep the rest of the repo for remaining direct calls** to the underlying API:
+   - `git grep -n "<api-call-pattern>" -- '<language-glob>'`
+   - Exclude the helper-defining file (where the wrapped call legitimately lives inside the helper body)
+   - Exclude files already touched by the diff (rollout's own context)
+2. **For each remaining direct call**, report as a candidate "missed rollout" finding:
+   - File:line, exact line content
+   - Severity: **LOW** (the direct call may be intentional — protected by surrounding context, lives in a different abstraction layer, or is deliberately exempt)
+   - Message: ``Helper `NAME` replaces `<api-call>` at N sites in this diff; `file:line` still calls `<api-call>` directly — verify intentional or part of follow-up rollout``
+3. Report findings as source `PRESCAN`
+
+**Why agents miss this**: `silent-failure-hunter` and `code-reviewer` analyze the diff and the files it touches, not the rest of the repo. This is a **cross-file consistency** check that requires the diff to define what "consistency" means (the new helper), then grep beyond the diff. Pure pre-scan — zero LLM tokens.
+
+**Example pattern**: PR introduces `_set_tag(name, value)` wrapping `sentry_sdk.set_tag` in try/except. Diff replaces 14 of 17 call sites in the API layer. 3 remaining `sentry_sdk.set_tag` calls in a middleware file are NOT touched — they were always there, protected by a different outer try/except. The PR's "all sites use helper now" claim doesn't survive a cross-file grep. Whether to fix is an author judgment call; surfacing the inconsistency is the pre-scan job.
+
+**Related pattern**: see `reference/learned-patterns.md` "Telemetry safety helper completeness — wrap ALL related calls or none (2026-05-06)" for the broader D1 class this operationalizes.
+
 ### Pre-scan output
 
 Findings feed into Step 5 classification as `PRESCAN` source (alongside agent findings). They follow the same CODE/DOC/NEW classification in Step 5d.
@@ -484,6 +565,31 @@ Recommended follow-up (optional, before merge):
 Placement: between Verification Summary and the advisory section.
 
 **Event modifier**: If `probe_decision.verified_at` ∈ {A, B} AND failure chain touches an external system (third-party API, DB/cache with its own semantics, CI/CD), the default event becomes COMMENT instead of APPROVE. User can override at the confirmation gate if they explicitly accept the residual uncertainty.
+
+### 6b⅞. Pass Coverage (when `FULL_PASS_MODE` was active)
+
+When Step 4-Pass ran, include a pass-coverage summary in the review body:
+
+```
+### Pass Coverage (8-pass mode)
+
+| # | Pass | Verdict | Evidence |
+|---|------|---------|----------|
+| 1 | Correctness | Findings: N | code-reviewer + type-design-analyzer (refs above) |
+| 2 | Security | Clean | tob-security-reviewer: no CRITICAL/HIGH; supply-chain N/A (no dep changes) |
+| 3 | Cross-Ref | Findings: N | pre-scan §4.5b/§4.5i (refs above) |
+| 4 | Error Handling | Clean | silent-failure-hunter: all new catch blocks log or rethrow |
+| 5 | Test Coverage | Findings: N | pr-test-analyzer (refs above) |
+| 6 | Diff-Specific | Clean | code-reviewer baseline check: matches sibling-handler convention |
+| 7 | Performance | N/A | no hot paths in diff (all changes in CLI startup) |
+| 8 | Async/Concurrency | Clean | no shared state introduced; await chain unchanged |
+```
+
+Placement: between Break-point Coverage and the advisory section.
+
+**Coverage gap rule**: If any primary pass has neither findings nor a Clean/N/A verdict, list it under a "Coverage gaps" subsection and **downgrade the review event from APPROVE to COMMENT**. User can override at the confirmation gate if they explicitly accept the gap.
+
+Passes 7 and 8 may legitimately be `N/A` (no hot paths; no async/shared state in the diff) — that is a valid verdict and does not count as a gap. Passes 1–6 cannot be `N/A` for any non-trivial diff; if they have no findings, the verdict must be `Clean` with explicit evidence.
 
 ### 6c. User confirmation gate
 
