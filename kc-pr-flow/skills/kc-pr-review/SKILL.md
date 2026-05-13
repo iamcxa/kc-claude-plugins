@@ -346,6 +346,35 @@ Report findings as MEDIUM (PII, credentials) or HIGH (auto-install hooks in shar
 
 **Why agents miss this**: TypeScript compiles successfully with unused exports. LLM reviewers see the export and assume it's used — they don't grep for import counts.
 
+### 4.5i. Helper Rollout Cross-File Pre-scan
+
+**Activate when**: diff adds a new helper function whose body wraps a single underlying API call, AND the same diff replaces ≥3 existing call sites of that underlying API with the helper.
+
+Detection:
+
+1. From `git diff --unified=0`, find added function definitions (`+def NAME(`, `+function NAME(`, `+const NAME = (`, `+async function NAME(`, etc.)
+2. For each added function, identify the wrapped call inside the function body — a single dominant API call the helper is a thin wrapper for (e.g. `sentry_sdk.set_tag`, `logger.info`, `httpx.get`). Skip helpers that wrap multiple distinct APIs (too noisy for auto-detection)
+3. Count diff-level replacements: lines where the underlying API appears as removed (`^-`) and the helper appears on a corresponding added line (`^+`). Threshold: **≥3 replacements** in the diff itself
+4. If the threshold is met, the diff is performing a **helper rollout**
+
+Process:
+
+1. **Grep the rest of the repo for remaining direct calls** to the underlying API:
+   - `git grep -n "<api-call-pattern>" -- '<language-glob>'`
+   - Exclude the helper-defining file (where the wrapped call legitimately lives inside the helper body)
+   - Exclude files already touched by the diff (rollout's own context)
+2. **For each remaining direct call**, report as a candidate "missed rollout" finding:
+   - File:line, exact line content
+   - Severity: **LOW** (the direct call may be intentional — protected by surrounding context, lives in a different abstraction layer, or is deliberately exempt)
+   - Message: ``Helper `NAME` replaces `<api-call>` at N sites in this diff; `file:line` still calls `<api-call>` directly — verify intentional or part of follow-up rollout``
+3. Report findings as source `PRESCAN`
+
+**Why agents miss this**: `silent-failure-hunter` and `code-reviewer` analyze the diff and the files it touches, not the rest of the repo. This is a **cross-file consistency** check that requires the diff to define what "consistency" means (the new helper), then grep beyond the diff. Pure pre-scan — zero LLM tokens.
+
+**Example pattern**: PR introduces `_set_tag(name, value)` wrapping `sentry_sdk.set_tag` in try/except. Diff replaces 14 of 17 call sites in the API layer. 3 remaining `sentry_sdk.set_tag` calls in a middleware file are NOT touched — they were always there, protected by a different outer try/except. The PR's "all sites use helper now" claim doesn't survive a cross-file grep. Whether to fix is an author judgment call; surfacing the inconsistency is the pre-scan job.
+
+**Related pattern**: see `reference/learned-patterns.md` "Telemetry safety helper completeness — wrap ALL related calls or none (2026-05-06)" for the broader D1 class this operationalizes.
+
 ### Pre-scan output
 
 Findings feed into Step 5 classification as `PRESCAN` source (alongside agent findings). They follow the same CODE/DOC/NEW classification in Step 5d.
