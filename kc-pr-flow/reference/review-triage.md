@@ -184,4 +184,39 @@ When refactoring, also add this to each agent prompt:
 
 This prevents agents from producing false positives where new code follows established conventions that happen to be imperfect.
 
+**Baseline-convention check at meta level (extension):** apply the same primitive at a wider scope when reviewing SKILL.md output, reference docs, or cross-skill claims — not just code diffs. Before flagging a pattern in a `*.md` / `skills/**` / `reference/**` / `agents/**` file as an issue:
+
+1. Grep the rest of the plugin (and adjacent plugins under the same repo / `~/.claude/skills/`) for the same pattern. Bound the search to ≤500 matches; if more, the pattern is unambiguously established
+2. Count occurrences in unchanged code — if **3+ sibling sites** already use the pattern, treat it as an established convention, NOT a violation. Note it as "follows existing convention; consider standardizing or documenting if intentional"
+3. **Explicit-instruction trump card**: if the pattern is documented as the convention in the same skill or a parent doc (e.g., a "use placeholder `OWNER/REPO` for examples" line in the skill body), treat as intentional regardless of sibling count
+
+This suppresses false positives when one skill (e.g. `/review` from gstack) reviews another skill's output and the apparent "inconsistency" is actually the codebase's standard. **Example (kc-pr-flow PR #18 F1):** `/review` flagged `OWNER/REPO` placeholder usage as inconsistent; grep showed 7+ existing sites + an explicit instruction at SKILL.md L67 → false positive. The meta-level check catches this automatically.
+
+**Confidence calibration in agent prompts:** When dispatching each agent, append this instruction to the prompt:
+
+> For every finding you report, attach a **confidence score** (1-10):
+>
+> | Score | Meaning |
+> |-------|---------|
+> | 9-10  | Verified by reading specific code; concrete bug / exploit / contract violation demonstrated |
+> | 7-8   | High-confidence pattern match; very likely correct given the code you read |
+> | 5-6   | Moderate; could be a false positive given surrounding code you did not read |
+> | 3-4   | Low confidence; pattern is suspicious but may be fine |
+> | 1-2   | Speculation; only report if severity would be CRITICAL |
+>
+> Use the format: `[SEVERITY] (confidence: N/10) file:line — description`. If you cannot read enough surrounding context to attach a calibrated score, default to **6** with a "verify" caveat note.
+
+The Step 6 collator applies these gates before populating the inline comments / advisory tables:
+
+| Confidence | Destination |
+|------------|-------------|
+| 7-10       | Inline Comments (CODE) — show normally |
+| 5-6        | Inline Comments (CODE) — show with caveat `"Medium confidence — verify"` |
+| 3-4        | Advisory (DOC) — do not post as a PR comment |
+| 1-2        | Drop entirely (exception: CRITICAL severity bypasses the drop) |
+
+Findings without an explicit confidence score default to **6**. When the same finding appears from multiple sources (e.g. `code-reviewer` + `silent-failure-hunter`), take the **max** score and tag `MULTI-SOURCE: <sources>` to surface specialist agreement.
+
+**Why this matters:** Agents over-report low-confidence patterns when they cannot read the full context window. The confidence dimension lets the collator suppress noise without losing real findings — preserving recall at high scores while filtering precision-misses at low scores.
+
 **Timeout expectations:** Agents typically finish in 1-3 min for <500 lines. For 1,000+ filtered lines, expect 3-6 min per agent. If an agent exceeds 8 min, check its output file directly.
