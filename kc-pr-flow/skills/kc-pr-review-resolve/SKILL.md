@@ -433,19 +433,32 @@ HEAD_SHA=$(git rev-parse --short=10 HEAD)
 TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 # For each Issue from Step 3.5/Step 4:
 #   FINGERPRINT=$(printf '%s|%s' "$FILE" "$NORMALIZED_CONCEPTUAL_ISSUE" | shasum -a 256 | cut -d' ' -f1)
-#   # MUST use a proper JSON encoder — conceptual_issue may contain quotes, backslashes,
-#   # newlines, or other characters that break printf-formatted JSON. jq -nc is the
-#   # canonical bash approach; python3 -c 'import json,sys; ...' is the fallback.
-#   jq -nc \
-#     --arg ts "$TS" \
-#     --arg commit_sha "$HEAD_SHA" \
-#     --arg fingerprint "$FINGERPRINT" \
-#     --arg file "$FILE" \
-#     --arg line_range "$LINE_RANGE" \
-#     --arg conceptual_issue "$CONCEPTUAL_ISSUE" \
-#     --arg action "$ACTION" \
-#     '{ts:$ts,commit_sha:$commit_sha,fingerprint:$fingerprint,file:$file,line_range:$line_range,conceptual_issue:$conceptual_issue,action:$action}' \
-#     >> "$STATE_FILE"
+#   # Persist with a proper JSON encoder — conceptual_issue may contain quotes,
+#   # backslashes, or newlines that would break printf-formatted JSON. jq is
+#   # preferred when available; python3 is the fallback (stock macOS and minimal
+#   # Linux containers often lack jq, but ship python3).
+#   if command -v jq >/dev/null 2>&1; then
+#     jq -nc \
+#       --arg ts "$TS" \
+#       --arg commit_sha "$HEAD_SHA" \
+#       --arg fingerprint "$FINGERPRINT" \
+#       --arg file "$FILE" \
+#       --arg line_range "$LINE_RANGE" \
+#       --arg conceptual_issue "$CONCEPTUAL_ISSUE" \
+#       --arg action "$ACTION" \
+#       '{ts:$ts,commit_sha:$commit_sha,fingerprint:$fingerprint,file:$file,line_range:$line_range,conceptual_issue:$conceptual_issue,action:$action}' \
+#       >> "$STATE_FILE"
+#   elif command -v python3 >/dev/null 2>&1; then
+#     python3 -c 'import json, sys
+# keys = ["ts","commit_sha","fingerprint","file","line_range","conceptual_issue","action"]
+# sys.stdout.write(json.dumps(dict(zip(keys, sys.argv[1:])), ensure_ascii=False) + "\n")' \
+#       "$TS" "$HEAD_SHA" "$FINGERPRINT" "$FILE" "$LINE_RANGE" "$CONCEPTUAL_ISSUE" "$ACTION" \
+#       >> "$STATE_FILE"
+#   else
+#     printf 'ERROR: neither jq nor python3 available; cannot persist verdict for %s\n' "$FILE" >&2
+#     # Step 3.6 dedup degrades gracefully — missing records simply mean no
+#     # suppression on the next cycle, not a hard failure.
+#   fi
 ```
 
 Persistence writes happen **after** the user-confirmed verdict on each Issue, regardless of whether learning capture (D1/D2) fires. Even trivial issues get verdict records — that's what powers Step 3.6's dedup on the next cycle.
