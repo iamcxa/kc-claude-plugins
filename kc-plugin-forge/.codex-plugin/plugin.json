@@ -1,7 +1,7 @@
 {
   "name": "kc-plugin-forge",
-  "version": "1.8.0",
-  "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, doc self-iteration",
+  "version": "1.9.0",
+  "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, audit frontmatter, optimize descriptions, doc self-iteration, two-stage Dreaming (LOCAL→public sanitize gate + public→structured taxonomy gate), prepublish sanitize-check",
   "author": {
     "name": "Kent Chen",
     "url": "https://github.com/iamcxa"
