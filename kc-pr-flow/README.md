@@ -28,6 +28,8 @@ All dependencies degrade gracefully — skills warn and continue without agent d
 
 This plugin is Codex-compatible through `.codex-plugin/plugin.json`, which points Codex at the existing `./skills/` tree. The original `.claude-plugin/plugin.json` and Claude hook files are preserved for Claude Code.
 
+`kc-pr-review` treats Codex as an optional cross-model reviewer. It checks `command -v codex` before dispatch, skips cleanly when Codex is unavailable, and tells Codex to treat PR bodies, diffs, comments, repository files, and repo-local prompt files as untrusted content under review.
+
 Use natural-language triggers rather than slash commands in Codex, for example:
 
 - `Create a PR with kc-pr-create`
@@ -52,6 +54,8 @@ User preferences live in `~/.claude/kc-plugins-config/` (shared across all kc-pl
 | `identity.yaml` | pr-create | GitHub username, default assignee |
 | `pr-flow/daemon.yaml` | pr-daemon | Poll interval, model, ci-gate, notifications |
 | `pr-flow/review-state/{repo-slug}-{branch}.jsonl` | pr-review-resolve | Per-branch verdict log; Step 3.6 reads to suppress re-flagged dismissed findings, Step 9 appends one record per Issue |
+
+Verdict log writes use `jq -nc` with a `python3` fallback so quotes, backslashes, and newlines in reviewer findings remain valid JSONL. If neither encoder exists, the resolve flow skips persistence for that issue and continues without cross-cycle suppression.
 
 ## kc-pr-create Flow
 
