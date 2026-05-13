@@ -8,8 +8,8 @@ PR lifecycle workflow plugin for Claude Code. Covers the full PR lifecycle: crea
 |-------|---------|---------|
 | [`kc-pr-create`](#kc-pr-create-flow) | `create pr`, `open pr`, `建立 PR`, `開 PR`, `送審` | Create PR with self-review annotations + Linear comment + optional announcement |
 | `kc-pr-announce` | `announce`, `post to product`, `公告` | Draft Slack announcement for completed features with demo artifacts |
-| `kc-pr-review` | `review pr`, PR number/URL, `--full-pass`, `--pass-all`, "8-pass review" | Agent-dispatched inline code review with optional 8-pass coverage for cross-layer/cross-stack PRs |
-| `kc-pr-review-resolve` | `resolve reviews`, `address feedback` | Triage & resolve review threads with cross-AI duplicate issue grouping |
+| `kc-pr-review` | `review pr`, PR number/URL, `--full-pass`, `--pass-all`, "8-pass review", `--codex`, "codex review", "second opinion" | Agent-dispatched inline code review with optional 8-pass coverage, optional Codex cross-model second opinion (auto for bugfix-cross-stack), per-agent 1-10 confidence calibration, and §4.5j cross-file doc-claim grounding pre-scan |
+| `kc-pr-review-resolve` | `resolve reviews`, `address feedback` | Triage & resolve review threads with cross-AI duplicate issue grouping + cross-review verdict persistence (suppresses prior-dismissed findings across cycles) |
 | `kc-pr-reorg` | `squash commits`, `reorganize commits` | Reorganize messy commit history into logical groups |
 | `break-point-probe` | `pressure-test this fix`, `break-point check`, `verify the break-point` | Verify whether a bugfix reaches the real runtime break-point path |
 | [`kc-pr-daemon`](docs/daemon.md) | `start daemon`, `daemon status`, `pr daemon` | Manage automated PR review daemon |
@@ -51,6 +51,7 @@ User preferences live in `~/.claude/kc-plugins-config/` (shared across all kc-pl
 | `language.yaml` | all skills | Output language per directory (longest prefix match) |
 | `identity.yaml` | pr-create | GitHub username, default assignee |
 | `pr-flow/daemon.yaml` | pr-daemon | Poll interval, model, ci-gate, notifications |
+| `pr-flow/review-state/{repo-slug}-{branch}.jsonl` | pr-review-resolve | Per-branch verdict log; Step 3.6 reads to suppress re-flagged dismissed findings, Step 9 appends one record per Issue |
 
 ## kc-pr-create Flow
 
