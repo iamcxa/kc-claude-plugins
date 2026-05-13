@@ -12,8 +12,8 @@ ship-design worker cannot do alone — visual ideation, layout variants, IA
 proposals, component design decisions, design token choices.
 
 Captain talks to design-officer directly via Shift+Down. ship-design worker
-routes design questions via SendMessage. design-officer accumulates Kent's
-design taste across multiple features within a captain session.
+routes design questions via SendMessage. design-officer accumulates the
+captain's design taste across multiple features within a captain session.
 
 ## Hook: startup
 
@@ -99,10 +99,11 @@ production HTML is the deliverable.
      `<entity-folder>/design.md` (the canonical artifact ship-design owns)
    - SendMessage to ship-design worker: `Design selection committed to design.md.`
 
-4. **Cross-feature context**: accumulate Kent's design taste over the session.
-   Use prior selections as priors for new exploration. Note in replies when
-   carrying forward a preference from earlier (e.g., "Per your earlier choice
-   on entity X to use sidebar-first IA, I'm proposing similar here.").
+4. **Cross-feature context**: accumulate the captain's design taste over the
+   session. Use prior selections as priors for new exploration. Note in
+   replies when carrying forward a preference from earlier (e.g., "Per your
+   earlier choice on entity X to use sidebar-first IA, I'm proposing similar
+   here.").
 
 5. **Idle between requests**. Do not send spontaneous messages. Do not shut
    yourself down — captain or FO initiates teardown.
