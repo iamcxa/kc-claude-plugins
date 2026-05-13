@@ -18,14 +18,6 @@ When an endpoint proxies to an internal service and enriches the response (e.g.,
 
 When a function returns a fixed set of string values (e.g., `"success" | "error" | "pending" | "info"`), every consumer that dispatches on those values must handle ALL of them explicitly. PR #1099 had `derive_check_run_status` returning 4 values but `_build_checks_section` only had 3 explicit branches — `"pending"` fell into an `else` clause that used a different field (`is_checked`), silently showing the wrong icon. The producer had a docstring listing all values, but the consumer was written before `"pending"` was added and was never updated. **Rule**: When reviewing code that adds a new return value to a string-union function, grep for all consumers and verify each has a branch for the new value. An `else` clause that "works" for the new value by accident is a bug — it may produce correct output for some inputs but wrong output for others (e.g., `is_checked=True` + `pending` → ✅ instead of ⏳).
 
-## PR-level summary reviews may contain unique cross-referenced insights (2026-03-28)
-
-AI summary reviewers (e.g., <ai-summary-reviewer>) don't just restate inline thread findings — they cross-reference multiple reviewers' comments and can elevate severity or identify impact patterns that individual inline comments miss. Example: Sentry flagged "negative discount total" as advisory (acknowledged), Copilot discussed the same area from a type perspective, but <ai-summary-reviewer> cross-referenced both and elevated to CRITICAL with concrete impact: "SUM(settlements.total) revenue aggregates will be corrupted." **Rule**: When triaging PR-level reviews, always read the full body even if the author appears to be a summary bot. Skip only when the body is pure restatement with no new analysis. "No inline threads from this reviewer" is NOT a valid reason to skip their PR-level review.
-
-## Cross-domain saga placeholder values are intentional — not UUID violations (2026-03-28)
-
-In event-sourced systems with ActionPublisher enrichment, sagas intentionally emit commands with empty-string placeholders for fields that require cross-domain lookups (e.g., `customer_id: ''`, `branch_id: ''`). The ActionPublisher enriches these to real UUIDs before dispatching to the target domain. AI reviewers (Copilot in PR #535) consistently flag these as UUID validation violations across multiple files (middleware Zod schema, view evolve, router response mapping) — producing 4 threads that are all the same architectural decision viewed from different angles. **Validation heuristic**: When an AI reviewer flags empty-string/placeholder values in a saga command as a type violation, check whether an ActionPublisher or equivalent infrastructure adapter enriches those values before they reach the domain boundary. If enrichment exists, the middleware Zod schema intentionally uses `z.string()` (not `z.string().uuid()`) to allow the placeholder through.
-
 ## Branch names with special characters break GitHub Actions (2026-03-28)
 
 Branch name `pr/phase-12+12.1` caused multiple GitHub Actions workflows to fail. The `+` character is URL-encoded differently across contexts and breaks `${{ github.head_ref }}` in workflow expressions. **Rule**: Use only alphanumeric characters, hyphens, underscores, dots, and forward slashes in branch names. Avoid `+`, `@`, spaces, and other special characters.
@@ -1063,6 +1055,67 @@ The failure mode: sampling code and alert config are individually correct, but t
 If the warning count and call-sites are identical, classify as **pre-existing** and either omit from the review or explicitly call out "unchanged from `origin/main`" so the next reviewer doesn't re-investigate.
 
 **Example (PR #1303, <infra-repo>)**: `esbuild@0.28.0` build emitted `[WARNING] "import.meta" is not available with the "cjs" output format` on `src/utils/mermaid-lint.ts:152,184`. Initial suspicion: new esbuild diagnostic. Verification by rebuilding on `origin/main` with `esbuild@0.27.3` showed the exact same warnings → pre-existing, not a regression. Final review explicitly stated "unchanged from `0.27.3`" so the PR could be approved without that finding blocking merge.
+
+---
+
+## Pattern: Cross-repo SOT-first sync when fix targets shared content (2026-05-13)
+
+**When**: PR review finds an issue in a file that's byte-identical across a plugin SOT + N instance copies (typical of ship-flow's `plugins/ship-flow/_mods/` SOT + `docs/ship-flow/_mods/` instances across captain's repos).
+
+**Default pattern** when fix is approved for cross-repo sync:
+
+1. **Edit in plugin SOT first** (the canonical copy). Verify with `grep` that all occurrences are caught.
+2. **Propagate via `cp`** to each instance — never re-edit. cp preserves byte-identity, eliminates drift risk from "fixing it differently" in each copy.
+3. **md5 check after propagation**: `md5 file1 file2 file3 file4` — all hashes must match before any commit.
+4. **One commit per repo** (cross-repo can't be atomic). Commit message names the SOT commit explicitly for archeology: `fix(ship-flow): ... (sync from spacedock-ui SOT, ${context})`.
+5. **Push order**: SOT first, then instances. If SOT push is blocked by branch protection, fall back to feature-branch + PR per the rejected repo's flow.
+
+**Anti-pattern**: editing the same fix in each instance independently. Even with a simple find/replace, prose context can drift (different surrounding lines, different quote style, slightly different rewording). The cp-from-SOT discipline eliminates this.
+
+**Example (PR #710, carlove)**: Copilot flagged "Kent's design taste" in `_mods/design-officer.md` as hard-coded personal name. Same content existed in 4 byte-identical files: plugin SOT (`spacedock-ui/plugins/ship-flow/_mods/`), spacedock-ui instance (`spacedock-ui/docs/ship-flow/_mods/`), carlove instance, kc-claude-plugins instance. Fix landed in SOT first (commit `a8089508`), then cp-propagated + committed per repo. md5 check confirmed byte-identity. Reply on the inline thread named all 4 commit SHAs across 3 repos for cross-repo traceability.
+
+---
+
+## Pattern: chained `git checkout && git add && git commit` lands on wrong branch when checkout silently fails (2026-05-13)
+
+**When**: Multi-step bash command does `git checkout BRANCH && cp FILE TARGET && git add ... && git commit ...` to apply a cross-branch fix.
+
+**Failure mode**: If `git checkout BRANCH` fails (e.g., working tree has a file that conflicts with the branch switch — git says "Please move or remove them before you switch branches. Aborting"), bash continues to the next chained command. The `cp` overwrites the file in the CURRENT (wrong) branch. `git add` stages it. `git commit` lands the commit on the ORIGINAL branch.
+
+The commit message looks correct, the file content looks correct, but the commit is on the wrong branch. `git push BRANCH` reports "Everything up-to-date" because the target branch has nothing new — the commit is on the OLD branch.
+
+**Diagnosis (after the fact)**:
+- `git branch --show-current` shows the unintended branch
+- `git log --oneline -1` shows the fix commit on the unintended branch
+- `git log INTENDED_BRANCH --oneline -1` shows the intended branch unchanged
+- `git reflog | head -3` shows the checkout-attempt didn't move HEAD
+
+**Recovery**: `git reset --hard origin/INTENDED_BRANCH` on the wrong branch (drops the orphan commit; preserved in reflog for safety). Then `git checkout` (now succeeds because working tree is clean post-reset). Then reapply the fix on the correct branch.
+
+**Prevention**: Before any chained `git checkout && [stateful ops]`, either:
+- Use `&&` exclusively (not `;` or newlines between commands) — `&&` halts on checkout failure
+- OR: separate into two steps and verify `git branch --show-current` between them
+- OR: use `git switch -C` (force-switch, creates branch if needed) for unambiguous intent
+
+**Example (PR #710 review-resolve, carlove)**: Chained `git checkout kent/ship-flow-overhaul-phase-5-6 && cp PLUGIN_SOT INSTANCE && git add + commit + push`. Checkout failed (working tree had design-officer.md from a prior `cp` that the branch checkout would clobber). Bash continued, commit landed on `main` (unintended). Push to feature branch reported "Everything up-to-date" — misleading. Recovery: `git reset --hard origin/main` (orphan commit `98bab1ec1` preserved in reflog), checkout succeeded on clean tree, reapplied fix on feature branch as `46b35f2d7`, pushed cleanly.
+
+---
+
+## Pattern: Cost-benefit triage when one review flags N issues with M-repo blast radius (2026-05-13)
+
+**When**: Reviewer (human or AI) leaves N comments on a single file that's propagated across M repos via SOT+instance discipline. Fixing K of N issues requires K × M file edits + K × M commits + K × M pushes.
+
+**Triage by criticality × blast radius**:
+
+- **Substantive issues** (correctness, template portability, security, broken UX) — fix across all M copies regardless of M's size. Cross-repo discipline matters here.
+- **Minor style** (gerund-on-CamelCase, possessive-on-keychord, prose readability) — fix only when M=1. When M≥2, **acknowledge + defer** with explicit reasoning in the thread reply. Batch with future readability-pass commit if more style issues accumulate.
+- **False positives** — reply explaining why the suggestion doesn't apply here; never auto-fix.
+
+**Rationale**: 4-repo prose-only sync = ~4 minute work for ~0 user-visible value. The same 4 minutes spent on a substantive fix (template portability, broken link, broken example) delivers actual user value. Captain's repo personalization (acknowledged-as-is style) is a legitimate stop point.
+
+**Reply discipline for deferred-style threads**: Be specific about WHY deferred. "Acknowledged — minor style, deferred from cross-repo sync this round. Will batch with future readability pass." Vague "will fix later" replies frustrate AI reviewers (they re-flag next round) and human reviewers (looks like dismissal).
+
+**Example (PR #710, carlove)**: Copilot flagged 3 inline issues in `_mods/design-officer.md` — #1 hard-coded personal name (template portability, substantive), #2 `SendMessage'ing` gerund (minor style), #3 `Shift+Down's` possessive (minor style). Option C selected: #1 synced across 4 repos (substantive + portability matters for marketplace adopters); #2/#3 reply-only with explicit "deferred from cross-repo sync, minor style" rationale. PR merged after captain reviewed the 4-repo sync for #1. AI re-trigger skipped (would re-flag #2/#3 → noise loop).
 
 **Corollary — workspace-dep build for type-check**: When the consumer package declares `"types": "dist/index.d.ts"` in `package.json` (e.g., `@<org>/<workspace-pkg>` → `<service>/<agent>`), the workspace dep MUST be built before the consumer's `tsc --noEmit` runs. Fresh worktrees that only ran `pnpm install` will report `TS2307: Cannot find module '@<org>/...'` even though the lockfile is correct. Build chain: `pnpm --filter @<org>/<workspace-pkg> build` first, then type-check the consumer.
 

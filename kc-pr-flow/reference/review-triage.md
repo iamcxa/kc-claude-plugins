@@ -220,3 +220,19 @@ Findings without an explicit confidence score default to **6**. When the same fi
 **Why this matters:** Agents over-report low-confidence patterns when they cannot read the full context window. The confidence dimension lets the collator suppress noise without losing real findings — preserving recall at high scores while filtering precision-misses at low scores.
 
 **Timeout expectations:** Agents typically finish in 1-3 min for <500 lines. For 1,000+ filtered lines, expect 3-6 min per agent. If an agent exceeds 8 min, check its output file directly.
+
+## Triage Heuristics — AI Reviewer Patterns
+
+Triage refinements for handling AI-reviewer output (Copilot, summary bots, code-reviewer agents). These rules apply during Step 3 (review collection) and Step 4 (agent selection) — and equally to post-review comment triage in `kc-pr-review-resolve`.
+
+### PR-level summary reviewer bodies are not noise
+
+AI summary reviewers cross-reference multiple inline-thread findings and can elevate severity, surface impact patterns, or identify second-order effects that individual inline comments miss. Example seen in production: one reviewer flagged a "negative discount total" as advisory, another discussed the same area from a type perspective, and the summary bot cross-referenced both and elevated to CRITICAL with concrete impact ("revenue aggregates will be corrupted"). Treating "no inline threads from this reviewer" as a signal to skip their PR-level body discards real cross-reviewer synthesis.
+
+**Triage rule**: Always read PR-level review bodies in full, even from summary bots. Skip only when the body is pure restatement of inline findings with no new cross-reference, severity adjustment, or impact analysis. The "summary" label is descriptive, not a quality signal.
+
+### Empty-string placeholders in event-sourced sagas may be intentional
+
+In event-sourced systems with an enrichment adapter (e.g., a publisher that resolves cross-domain references between emit and dispatch), sagas legitimately emit commands with empty-string placeholders for fields that require cross-domain lookups (`customer_id: ''`, `branch_id: ''`). The adapter enriches them to real values before they reach the target domain. AI reviewers commonly flag these as UUID/type-validation violations across multiple files (middleware schema, view evolve, router response mapping) — surfacing what looks like 4 distinct bugs but is one architectural decision viewed from different angles.
+
+**Triage rule**: When an AI reviewer flags empty-string or placeholder values in a saga command as a type violation, trace the dispatch path for an enrichment adapter. If enrichment exists, the upstream schema intentionally uses lenient validation (e.g., `z.string()` not `z.string().uuid()`) and the AI finding is a false positive at the upstream layer. Group all related threads as one decision, reply once with the architectural rationale, and mark the cluster resolved together rather than litigating each thread independently.
