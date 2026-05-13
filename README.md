@@ -75,9 +75,9 @@ Team operations pipeline for engineering managers. EM triage with strategic lens
 /plugin install kc-team-ops@kc-claude-plugins
 ```
 
-### [kc-pr-flow](./kc-pr-flow/) `v1.4.0`
+### [kc-pr-flow](./kc-pr-flow/) `v1.5.0`
 
-End-to-end PR lifecycle workflow. Create (full ship chain: draft → review → fix → ready → announce), review with tiered multi-agent dispatch (5 `pr-review-toolkit` agents covering correctness, comments, silent failures, type design, and test coverage — plus Trail of Bits security subagents for differential review, supply chain audit, and GitHub Actions security), resolve review threads, commit reorg, announce on Slack, and an automated PR daemon. `kc-pr-create` Step 10a pre-PR self-review uses the same tiering as `kc-pr-review` so self-review is never weaker than post-PR review.
+End-to-end PR lifecycle workflow. Create (full ship chain: draft → review → fix → ready → announce), review with tiered multi-agent dispatch (5 `pr-review-toolkit` agents covering correctness, comments, silent failures, type design, and test coverage — plus Trail of Bits security subagents for differential review, supply chain audit, and GitHub Actions security) and **optional 8-pass mode** for bugfix-cross-layer / cross-stack PRs (forced verdict per review dimension to prevent silent misses), resolve review threads with **cross-AI thread dedup** (groups parallel findings from multiple bots into single issues), commit reorg, announce on Slack, and an automated PR daemon. Pre-scan includes helper-rollout cross-file consistency check (§4.5i). `kc-pr-create` Step 10a pre-PR self-review uses the same tiering as `kc-pr-review` so self-review is never weaker than post-PR review.
 
 **Use when:** You want a one-command PR workflow that handles creation, review, resolving feedback, and announcements consistently.
 
