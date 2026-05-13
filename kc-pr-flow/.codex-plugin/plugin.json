@@ -1,6 +1,6 @@
 {
   "name": "kc-pr-flow",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "PR lifecycle workflow: create, review, resolve reviews, commit reorg, automated daemon, and break-point runtime-path probes.",
   "author": {
     "name": "Kent Chen",

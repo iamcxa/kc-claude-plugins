@@ -48,7 +48,7 @@
       "name": "kc-pr-flow",
       "source": "./kc-pr-flow",
       "description": "PR lifecycle workflow — create (ship chain), review (incl. Trail of Bits security subagents + 5 pr-review-toolkit agents covering correctness/comments/silent-failure/type-design/test-coverage, optional Codex cross-model second opinion, cross-file doc-claim verification, per-agent 1-10 confidence calibration), resolve review threads with cross-review verdict persistence (suppress prior-dismissed findings across review cycles), commit reorg, announce, and automated daemon",
-      "version": "1.6.0",
+      "version": "1.6.1",
       "keywords": ["pr", "review", "linear", "commit", "workflow", "announcement", "slack", "daemon", "automated", "trail-of-bits", "security", "codex", "cross-model", "confidence-calibration", "verdict-persistence"]
     }
   ]

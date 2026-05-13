@@ -26,10 +26,19 @@ Local state alignment with the squash-merged `main` commit.
 |--------|------------|----------------------------|
 | Auto-tag `<plugin>-v<version>` | `kc-marketplace-sync` Step 2.5 | Tag must point at the squash-merge commit on `main`. Tagging a feature-branch commit orphans the tag after squash-merge. |
 | Local install rsync (`~/.claude/plugins/local/<plugin>`) | Step 3 | Subagents read references from local install; if it mirrors the feature branch instead of `main`, dispatched agents see uncommitted state. |
-| Codex local install (`~/.codex/local-plugins/<plugin>`) | Step 3.1 | Codex CLI parallel of the above. |
+| Codex local install (`~/.codex/local-plugins/<plugin>`) | Step 3.1 | Codex CLI parallel of the above. See **Codex install conventions** note below. |
 | Clear stale cache | Step 4 | Forces cache rebuild on next plugin load. |
 
-Run via: `Skill: kc-marketplace-sync <plugin>` from `$KC_WORKSPACE/kc-claude-plugins` (= `~/Project/kc-claude-workspace/kc-claude-plugins`). The skill auto-routes Phase 2 steps when invoked post-merge.
+**Codex install conventions** — two layouts coexist on a typical machine and both are valid:
+
+| Layout | Path | Use case |
+|--------|------|----------|
+| Rsync copy (recommended for new plugins) | `~/.codex/local-plugins/<plugin>/` | Snapshots `main` per Phase 2 sync. Defeats the "subagent sees uncommitted state" failure mode by definition. |
+| Symlink to source | `~/plugins/<plugin>` (with `~/.agents/plugins/marketplace.json` entry; documented in `kc-plugin-forge/README.md`) | Live-edit during plugin development. Skips the Phase 2 rsync but loses the "main only" guarantee. |
+
+Codex resolves both via `~/.agents/plugins/marketplace.json` `source.path` (relative to `$HOME`). The `kc-marketplace-sync` skill writes to the rsync layout; older plugins (e.g. `kc-plugin-forge`) still ship the symlink convention. Migration is optional; do not break working symlinks.
+
+Run via: `Skill: kc-marketplace-sync <plugin>` from the main workspace checkout (NOT a Conductor / feature-branch worktree). On this machine the canonical path is set via `$KC_WORKSPACE`; on other machines it is wherever you cloned `kc-claude-plugins`. The skill auto-routes Phase 2 steps when invoked post-merge.
 
 ### Why not collapse into one phase?
 

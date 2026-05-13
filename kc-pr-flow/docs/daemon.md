@@ -81,6 +81,12 @@ Environment variables override config values:
 
 Note: `plugin_dir` is read from config only (no env var override). `bot_pattern` is defined in the review prompt (`reference/pr-review-loop.md`), not in daemon config.
 
+## Review-State Persistence
+
+`kc-pr-review-resolve` writes per-branch verdict records to `~/.claude/kc-plugins-config/pr-flow/review-state/{repo-slug}-{branch}.jsonl`. The daemon relies on those records across cycles to avoid re-surfacing issues the user already dismissed as `wont_fix` or `false_positive` when the referenced file has not changed.
+
+Records must be emitted through a JSON encoder, not string-formatted `printf`, because reviewer findings can contain quotes, backslashes, or newlines. The skill uses `jq -nc` when available and falls back to `python3`; if neither exists, persistence degrades gracefully and the next daemon cycle simply loses that suppression hint.
+
 ## Quick Start
 
 ### With project wrapper (recommended for teams)
