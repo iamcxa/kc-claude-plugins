@@ -178,7 +178,7 @@ Reference: `reference/learned-patterns.md` "Cross-AI-reviewer thread deduplicati
 
 ## Step 3.6: Cross-Review Verdict Persistence (suppress re-flagged dismissed findings)
 
-Iterative review cycles (and especially daemon mode) re-surface the same Copilot / Sentry / AI-bot comments on every poll. After the user has dismissed an Issue as `won't_fix` / `false_positive` in a prior cycle, suppress it from the current triage as long as the underlying file hasn't changed.
+Iterative review cycles (and especially daemon mode) re-surface the same Copilot / Sentry / AI-bot comments on every poll. After the user has dismissed an Issue as `wont_fix` / `false_positive` in a prior cycle, suppress it from the current triage as long as the underlying file hasn't changed.
 
 **State file**: `~/.claude/kc-plugins-config/pr-flow/review-state/{repo-slug}-{branch}.jsonl`
 
@@ -433,8 +433,19 @@ HEAD_SHA=$(git rev-parse --short=10 HEAD)
 TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 # For each Issue from Step 3.5/Step 4:
 #   FINGERPRINT=$(printf '%s|%s' "$FILE" "$NORMALIZED_CONCEPTUAL_ISSUE" | shasum -a 256 | cut -d' ' -f1)
-#   printf '{"ts":"%s","commit_sha":"%s","fingerprint":"%s","file":"%s","line_range":"%s","conceptual_issue":"%s","action":"%s"}\n' \
-#     "$TS" "$HEAD_SHA" "$FINGERPRINT" "$FILE" "$LINE_RANGE" "$CONCEPTUAL_ISSUE" "$ACTION" >> "$STATE_FILE"
+#   # MUST use a proper JSON encoder — conceptual_issue may contain quotes, backslashes,
+#   # newlines, or other characters that break printf-formatted JSON. jq -nc is the
+#   # canonical bash approach; python3 -c 'import json,sys; ...' is the fallback.
+#   jq -nc \
+#     --arg ts "$TS" \
+#     --arg commit_sha "$HEAD_SHA" \
+#     --arg fingerprint "$FINGERPRINT" \
+#     --arg file "$FILE" \
+#     --arg line_range "$LINE_RANGE" \
+#     --arg conceptual_issue "$CONCEPTUAL_ISSUE" \
+#     --arg action "$ACTION" \
+#     '{ts:$ts,commit_sha:$commit_sha,fingerprint:$fingerprint,file:$file,line_range:$line_range,conceptual_issue:$conceptual_issue,action:$action}' \
+#     >> "$STATE_FILE"
 ```
 
 Persistence writes happen **after** the user-confirmed verdict on each Issue, regardless of whether learning capture (D1/D2) fires. Even trivial issues get verdict records — that's what powers Step 3.6's dedup on the next cycle.
