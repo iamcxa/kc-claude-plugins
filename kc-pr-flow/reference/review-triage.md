@@ -90,6 +90,33 @@ Break-point probe (Step 4.5p) prevents approving a fix based on unit tests alone
   Estimated additional cost: ~10-25K tokens (level A/B) or ~30-50K (level C if stack warm)
 ```
 
+### 4d-passmode. Detect 8-pass mode activation
+
+8-pass mode forces structured coverage across 8 review dimensions, ensuring no dimension is silently skipped. Each dimension either produces findings or an explicit "Clean — verified by `<evidence>`" verdict. Same agents as the selected tier; pass-framing is a prompt-layer addition with ~0 token overhead.
+
+**Set `FULL_PASS_MODE = true` when ANY of**:
+
+1. User explicitly requests it: `--full-pass` / `--pass-all` flag, OR phrases like "8-pass review", "full pass", "全面複查", "do all passes", "deep review".
+2. `PR_ARCHETYPE = bugfix` AND the diff touches files across ≥ 2 of: `ui`, `api`, `domain`, `storage`, `external-adapter` layers (same criteria as Step 4.5p probe activation).
+3. `PR_ARCHETYPE = cross-stack` (frontend + backend changes in the same PR).
+4. User accepted a "deep review" recommendation from a prior failure analysis or daemon report.
+
+**Set `FULL_PASS_MODE = false` when ANY of**:
+
+- `PR_ARCHETYPE = docs`, `refactor`, or `style`.
+- `FILTERED_CHANGED < 100` AND no security files AND no probe activation.
+- User explicitly says "skip passes" / "lite review" / "quick review".
+
+**Display** when 8-pass mode is activated:
+
+```
+⚙ Full-pass mode: ACTIVATED (reason: <bugfix cross-layer | cross-stack | user request>)
+  Will run 8-pass coverage in Step 4-Pass; review body will include Pass Coverage table
+  Additional cost: ~0 tokens (same agents; pass-framing is prompt-layer)
+```
+
+8-pass mode and break-point probe (Step 4.5p) share an activation profile by design — both respond to the "this is a real cross-layer change, not a refactor" signal. They are complementary: probe verifies the fix reaches the bug's break-point at runtime; 8-pass mode ensures every review dimension produces a verdict instead of a silent gap.
+
 ### 4e. Select agent tier
 
 Use **filtered** line count (after noise removal) for tier selection:
@@ -105,6 +132,8 @@ Use **filtered** line count (after noise removal) for tier selection:
 **Security coverage**: `tob-security-reviewer` always dispatches via Step 4-ToB-a regardless of tier — it is not part of the table above. `tob-supply-chain-checker` and `tob-actions-auditor` activate conditionally per Step 4-ToB-b/c. There is no separate `security-reviewer` in `pr-review-toolkit`; do not reference one.
 
 **Override**: User can request a specific tier (e.g., "full review" or "quick review") regardless of PR size.
+
+**8-pass mode tier floor**: When `FULL_PASS_MODE = true` (set in §4d-passmode) AND the size-based tier would be `Lite`, promote to `Standard`. Passes 1 (Correctness) and 5 (Test Coverage) require `type-design-analyzer` and `pr-test-analyzer` as primary owners — Lite tier doesn't dispatch them. Display the promotion: `Lite → Standard (8-pass mode requires type-design + pr-test owners)`.
 
 **Display the triage decision** before dispatching:
 
