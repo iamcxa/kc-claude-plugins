@@ -3,7 +3,9 @@ name: kc-pr-review
 description: Use when reviewing a GitHub PR and posting inline review comments. Triggered by PR number, PR URL, 'review this PR', 'review current branch PR'.
 ---
 
-All text output follows unified language preference. See plugin CLAUDE.md for query flow.
+**Language rule (two layers)**:
+- **Conversation-facing text** (status updates, confirmation prompts, findings tables shown to the user) — follows unified language preference. See plugin CLAUDE.md for query flow.
+- **PR-facing artifacts** (review body, inline comment bodies, anything POSTed to GitHub) — **default to English** regardless of the conversation language, matching the convention for PR title / commit messages / code comments. Override only if the target repo's CLAUDE.md explicitly requires otherwise.
 
 ## Process Flow
 
@@ -537,6 +539,7 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md
 - **Comment-analyzer always runs** — abnormal comments (stale TODOs, commented-out code, debug leftovers) are first-class findings, not afterthoughts
 - **Skills are reference only** — during compliance audit, read skill descriptions to understand best practices but do NOT invoke skills
 - **Tag the PR author** — always include `@PR_AUTHOR` in the review body to ensure GitHub notification delivery. Fetch author login in Step 2 via `gh pr view NUMBER --json author --jq '.author.login'`
+- **PR-facing artifacts in English** — the review body and every inline comment body POSTed to GitHub default to English regardless of the user's conversation language. This matches the convention for PR title / commit messages / code comments and keeps non-Chinese-speaking reviewers / authors unblocked. Conversation summaries, confirmation prompts, and findings tables shown to the user still use the conversation language. Override only if the target repo's CLAUDE.md explicitly requires the review body in another language. **Apply at draft time, not after posting** — translating in place via API is possible but leaves "edited" markers on every comment.
 - **Refactoring PRs — behavioral equivalence first** — when `PR_ARCHETYPE = refactor`, prioritize verifying that moved code is functionally identical. Style suggestions on moved-but-unchanged code are noise; only flag actual behavioral changes hidden in the move
 - **Refactoring PRs — consumer audit** — verify all importers of moved symbols have been updated. Use `Grep` to find all imports of the original module and confirm they now point to the new location (or a re-export barrel)
 - **Refactoring PRs — API surface diff** — list any symbols that became newly public (exported from a new module that were previously file-private). Flag unintentional exposure
