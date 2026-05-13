@@ -8,7 +8,7 @@ External runtime dependencies — marketplace plugins whose agents/skills are di
 
 | Dependency | Used by | Purpose |
 |-----------|---------|---------|
-| `pr-review-toolkit` (code-reviewer, comment-analyzer, silent-failure-hunter, security-reviewer) | pr-create (ship mode), pr-review, pr-review-resolve | Code review analysis |
+| `pr-review-toolkit` (code-reviewer, comment-analyzer, silent-failure-hunter, type-design-analyzer, pr-test-analyzer) | pr-create (ship mode), pr-review, pr-review-resolve | Code review analysis. See `reference/review-triage.md` §4e for per-tier dispatch. |
 | `feature-dev` (code-reviewer) | pr-review-resolve | Complex thread validation |
 | `superpowers` (receiving-code-review) | pr-review-resolve | Evaluation mindset |
 

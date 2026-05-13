@@ -197,9 +197,20 @@ Dispatch review agents to identify code issues, fix all findings (including sugg
 
 ### 10a. Dispatch Review Agents
 
-Run in parallel:
-- `pr-review-toolkit:code-reviewer` — code quality, bugs, security on the PR diff
-- `pr-review-toolkit:comment-analyzer` — comment accuracy, stale references
+Run in parallel — use the same tiering as `kc-pr-review` Step 4 (see `reference/review-triage.md` §4e). Pre-PR self-review must be **at least as strict as** post-PR review, never weaker.
+
+**Lite tier** (`FILTERED_CHANGED < 200` AND no security files):
+- `pr-review-toolkit:code-reviewer` — code quality, bugs on the PR diff
+- `pr-review-toolkit:comment-analyzer` — comment accuracy, stale references, scope-of-claim docstring verification
+- `pr-review-toolkit:silent-failure-hunter` — silent error swallowing, refactor side-effects (try/except now-overbroad), observability gaps in new helpers
+
+**Standard tier** (`200 ≤ FILTERED_CHANGED ≤ 500` OR security files): Lite + 
+- `pr-review-toolkit:type-design-analyzer` — asymmetric contracts, redundant sentinels, weak return signatures, sentinel-string overloading
+- `pr-review-toolkit:pr-test-analyzer` — missing edge case tests, sibling-site test parity, import-time test gaps
+
+**Full tier** (`> 500 LOC` OR `> 20 files`): Standard with extended context budget (agents may read full files, not just diff).
+
+**Rationale**: pre-PR self-review weaker than post-PR review is the wrong direction — finding bugs after the PR opens means a round trip with the reviewer. The historic 2-agent dispatch caused this gap; PR #1145 shipped with 7 CRITICAL/HIGH silent-failure findings + 1 HIGH type-design finding caught by post-PR review (learned-patterns.md L107). Pressure test on PR #1307 confirmed the same pattern (pressure-test-pr1307.md).
 
 If `pr-review-toolkit` unavailable: run lightweight main-context pre-scan only (CLAUDE.md compliance, stale refs, unused imports). Warn and continue.
 

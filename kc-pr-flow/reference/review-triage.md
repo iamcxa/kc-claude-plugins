@@ -96,13 +96,13 @@ Use **filtered** line count (after noise removal) for tier selection:
 
 | Tier | Condition | Agents | Est. cost (base) |
 |------|-----------|--------|-------------------|
-| **Lite** | `FILTERED_CHANGED < 200` AND no security files | `code-reviewer` + `comment-analyzer` | ~100K tokens |
-| **Standard** | `200 ≤ FILTERED_CHANGED ≤ 500` OR security files | `code-reviewer` + `comment-analyzer` | ~140K tokens |
-| **Full** | `FILTERED_CHANGED > 500` OR `CHANGED_FILES > 20` | `code-reviewer` + `comment-analyzer` + `security-reviewer` | ~210K tokens |
+| **Lite** | `FILTERED_CHANGED < 200` AND no security files | `code-reviewer` + `comment-analyzer` + `silent-failure-hunter` (3) | ~140K tokens |
+| **Standard** | `200 ≤ FILTERED_CHANGED ≤ 500` OR security files | Lite + `type-design-analyzer` + `pr-test-analyzer` (5) | ~200K tokens |
+| **Full** | `FILTERED_CHANGED > 500` OR `CHANGED_FILES > 20` | Standard with extended context budget (full-file reads enabled per agent) | ~240K tokens |
 
-**Cost scaling caveat:** Base estimates assume ~200 lines. For larger PRs, expect ~1K tokens per 100 lines of diff per agent. A 4,000-line filtered diff with 3 agents ≈ 120K + overhead ≈ **150-200K tokens**. Add ~15K for pre-scan + ~20K for compliance audit.
+**Cost scaling caveat:** Base estimates assume ~200 lines. For larger PRs, expect ~1K tokens per 100 lines of diff per agent. A 4,000-line filtered diff with 5 agents ≈ 200K + overhead ≈ **230-280K tokens**. Add ~15K for pre-scan + ~20K for compliance audit.
 
-**Note:** Error handling patterns (formerly `silent-failure-hunter`) are merged into `code-reviewer`'s prompt — same coverage, one fewer agent dispatch.
+**Security coverage**: `tob-security-reviewer` always dispatches via Step 4-ToB-a regardless of tier — it is not part of the table above. `tob-supply-chain-checker` and `tob-actions-auditor` activate conditionally per Step 4-ToB-b/c. There is no separate `security-reviewer` in `pr-review-toolkit`; do not reference one.
 
 **Override**: User can request a specific tier (e.g., "full review" or "quick review") regardless of PR size.
 
@@ -112,33 +112,36 @@ Use **filtered** line count (after noise removal) for tier selection:
 ## Triage Result
 - PR size: 142 lines changed (8 files)
 - Security files: none detected
-- Agent tier: **Lite** (code-reviewer + comment-analyzer)
-- Estimated context cost: ~120K tokens
+- Agent tier: **Lite** (code-reviewer + comment-analyzer + silent-failure-hunter)
+- Estimated context cost: ~140K tokens
 
 Proceeding with Lite review. Say "full review" to override.
 ```
 
 ### 4f. Dispatch selected agents
 
-Use `pr-review-toolkit:code-reviewer` and `pr-review-toolkit:comment-analyzer` as base agents (always dispatched). Add others per tier.
+Lite tier base agents (always dispatched): `pr-review-toolkit:code-reviewer`, `pr-review-toolkit:comment-analyzer`, `pr-review-toolkit:silent-failure-hunter`. Standard and Full add `pr-review-toolkit:type-design-analyzer` and `pr-review-toolkit:pr-test-analyzer`.
 
 Dispatch all agents in parallel. **Also start Step 5a and 5b in parallel** — they only need the file list and project docs, not agent results.
 
 **Default focus areas** (feature / bugfix / mixed):
-- **code-reviewer**: Logic errors, bugs, style/convention violations, documentation accuracy. **Also check error handling**: empty catch/except blocks, swallowed errors (catch + log but no re-throw in critical paths), inappropriate fallbacks (returning default data instead of propagating errors), `continue-on-error` / `|| true` that silently mask failures. **GitHub Actions specific**: step sets output indicating failure but does NOT `exit 1` — downstream `if: success()` / `if: failure()` won't reflect actual status; the job always "succeeds" even when the step's output says failure.
-- **comment-analyzer**: Stale TODOs/FIXMEs, commented-out code, misleading comments, debug leftovers, comment rot
-- **security-reviewer**: Credential leaks, injection, OWASP top 10, RLS policy gaps
+- **code-reviewer**: Logic errors, bugs, style/convention violations, documentation accuracy. **GitHub Actions specific**: step sets output indicating failure but does NOT `exit 1` — downstream `if: success()` / `if: failure()` won't reflect actual status; the job always "succeeds" even when the step's output says failure.
+- **comment-analyzer**: Stale TODOs/FIXMEs, commented-out code, misleading comments, debug leftovers, comment rot. **Scope-of-claim verification** (mandatory): for every "function X does Y" docstring or comment, ask **is Y actually possible at the point in the data flow where X operates?** Example: a docstring claims to strip tokens/emails/session-IDs but the implementation only extracts hostnames — those leak vectors live in path/query, not hostnames, so the claim's described capability is a no-op given the function's scope. This is *not* the same as "does the function do what the doc says" — it's "does the doc's claim even apply to the input X sees?" Also catch: count-drift in banner comments ("Five tests" when 4 follow), ephemeral identifiers in long-lived comments ("Round-1 review", "the new helper" — replace with PR# / commit SHA / stable anchor), endpoint enumerations in generic helpers (drift as callers change), dead defensive try/except clauses whose stated exception types can never fire.
+- **silent-failure-hunter**: Empty catch/except blocks, swallowed errors (catch + log but no re-throw in critical paths), inappropriate fallbacks (returning default data instead of propagating errors), `continue-on-error` / `|| true` that silently mask failures, broad exception catching, mock/fake implementations leaking into production paths, **observability gaps in new helpers** (e.g. a new `_set_tag` that swallows without logging), **refactor side-effects** (existing outer `try/except` blocks that became over-broad after inner calls were moved into a self-swallowing helper — they now hide coding bugs instead of safety failures).
+- **type-design-analyzer** (Standard+): Asymmetric contracts (parameters clamped/validated but defaults bypass the same guard), redundant sentinel members in allowlists, weak return signatures where a `Literal` would enforce the invariant, sentinel string overloading on real value channels (e.g. `"none"` / `"invalid"` mixed with real hostnames), tag-name + tag-value co-variance (each tag name has a tight value vocabulary).
+- **pr-test-analyzer** (Standard+): Missing edge case tests for documented behavior (especially when the docstring promises stripping/protection but the test exercises a happier path), **sibling-site parity** (when a PR fixes a regression class on site A, are siblings B/C/D pinned with the same test? if not, the regression class is open at the unfixed sites), import-time / module-load test gaps (test calls helper, not the import site the helper was extracted from), happy-path forwarding tests for new helpers, `BaseException` propagation.
 
 **Docs focus overrides** (when `PR_ARCHETYPE = docs`):
 - **comment-analyzer** (PRIMARY): Terminology consistency with tool/API reference names, cross-reference completeness (Next Steps, See Also links), naming gaps between narrative and formal definitions. This agent catches text-accuracy issues that code-reviewer deprioritizes.
 - **code-reviewer**: Validate code snippets in markdown against actual API (async/await, imports, param types). Check structural consistency between categorization tables and workflow/usage sections (items in wrong steps relative to their category).
-- **security-reviewer**: Skip unless docs contain credential examples or config samples.
+- **silent-failure-hunter / type-design-analyzer / pr-test-analyzer**: Skip — no code paths to audit.
 
 **Refactor focus overrides** (when `PR_ARCHETYPE = refactor`):
 - **code-reviewer**: Behavioral equivalence (function bodies byte-identical after move), import graph correctness, re-export completeness, no accidental API surface expansion (newly-public symbols must be intentional)
 - **comment-analyzer**: JSDoc/comment accuracy after move — file path references, cross-module `@see` links, section banners that reference old locations
-- **code-reviewer error handling focus**: Skip error handling patterns unless error handling was restructured (check commit messages). For pure code-move refactors, error handling review adds noise.
-- **security-reviewer**: Only if moved code touches auth/RLS paths
+- **silent-failure-hunter**: Restrict to error handling that was actually restructured (check commit messages). For pure code-move refactors, error handling review adds noise. **But always run** the refactor-side-effect check — outer `try/except` blocks around now-moved code are the #1 silent regression class in refactors.
+- **type-design-analyzer**: Only when types are moved or re-exported. Flag API surface widening.
+- **pr-test-analyzer**: Verify moved tests still cover the same behaviors at the new location; no new test coverage required.
 
 When refactoring, also add this to each agent prompt:
 

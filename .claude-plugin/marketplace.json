@@ -47,8 +47,8 @@
     {
       "name": "kc-pr-flow",
       "source": "./kc-pr-flow",
-      "description": "PR lifecycle workflow — create (ship chain), review (incl. Trail of Bits security subagents), resolve review threads, commit reorg, announce, and automated daemon",
-      "version": "1.3.0",
+      "description": "PR lifecycle workflow — create (ship chain), review (incl. Trail of Bits security subagents + 5 pr-review-toolkit agents covering correctness/comments/silent-failure/type-design/test-coverage), resolve review threads, commit reorg, announce, and automated daemon",
+      "version": "1.4.0",
       "keywords": ["pr", "review", "linear", "commit", "workflow", "announcement", "slack", "daemon", "automated", "trail-of-bits", "security"]
     }
   ]
