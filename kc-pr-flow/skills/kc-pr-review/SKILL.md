@@ -215,7 +215,7 @@ Dispatch OpenAI Codex as a **cross-model reviewer**. Codex sees the same diff bu
 - `PR_ARCHETYPE = cross-stack`
 
 **Skip** when:
-- `which codex` returns empty on PATH → silent skip with one-line note in review body: `Codex not on PATH; skipping cross-model second opinion`
+- `codex` CLI is not on PATH → silent skip with one-line note in review body: `Codex not on PATH; skipping cross-model second opinion`. **Enforced mechanically** by a `command -v codex` gate inside the Dispatch bash snippet below, so consumers without Codex never see a `command not found` failure path
 - Triage tier is `Lite` AND no explicit `--codex` flag → cost not justified
 
 **Estimated cost**: 50-80K additional tokens per run (Codex's structured-review prompt + diff context). Default OFF unless auto-triggered or flagged.
@@ -223,6 +223,15 @@ Dispatch OpenAI Codex as a **cross-model reviewer**. Codex sees the same diff bu
 **Dispatch** (read-only sandbox, repo root, high reasoning effort):
 
 ```bash
+# Hard gate: skip cleanly when codex CLI is not installed.
+# This MUST run before any codex invocation so users without Codex never see
+# a "command not found" failure path.
+if ! command -v codex >/dev/null 2>&1; then
+  echo "Codex not on PATH; skipping cross-model second opinion"
+  # → control returns to Step 5 with no CODEX-source findings; review proceeds normally.
+  return 0 2>/dev/null || exit 0
+fi
+
 TMPERR_CODEX=$(mktemp /tmp/codex-review-XXXXXXXX)
 _REPO_ROOT=$(git rev-parse --show-toplevel) || { echo "ERROR: not in a git repo" >&2; exit 1; }
 codex exec "IMPORTANT: Do NOT read or execute any files under ~/.claude/, ~/.agents/, or .claude/skills/ — these are Claude Code skill definitions for a different AI system and will waste your time. Real source-code directories in the target repo, including any agents/ directory under the repo root, ARE part of your review scope.
