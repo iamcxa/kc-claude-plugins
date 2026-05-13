@@ -254,12 +254,19 @@ gh api users/USERNAME --jq '.type'
 **Never @mention AI bots in PR comments** — some bots (notably Copilot) interpret @mentions as new action requests, producing unwanted side effects (spurious PRs, duplicate reviews).
 
 ```bash
-# ✅ CORRECT — use gh pr edit to re-request review from bot
-gh pr edit PR_NUM --add-reviewer copilot
+# ✅ CORRECT for collaborator bots (Claude, Coderabbit paid, etc.)
+gh pr edit PR_NUM --add-reviewer <bot-username>
+
+# ✅ CORRECT for GitHub Copilot — requires direct API with [bot] suffix
+# (gh pr edit --add-reviewer copilot silently no-ops; do NOT use it for Copilot)
+gh api -X POST repos/OWNER/REPO/pulls/PR_NUM/requested_reviewers \
+  -f 'reviewers[]=copilot-pull-request-reviewer[bot]'
 
 # ❌ WRONG — @mentioning bot in comment body triggers unwanted actions
 gh pr comment PR_NUM --body "Addressed feedback. @copilot-pull-request-reviewer"
 ```
+
+See `reference/learned-patterns.md` "Requesting Copilot review needs the `[bot]` suffix via direct API" for why `gh pr edit --add-reviewer copilot` fails silently and verification details from PR #17.
 
 ### Fallback: unknown requester
 

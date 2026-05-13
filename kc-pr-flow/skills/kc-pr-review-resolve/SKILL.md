@@ -273,7 +273,10 @@ gh pr comment PR_NUM --body "All review feedback addressed — please see indivi
 @kentwelcome @senior-dev @claude"
 
 # If user chose to re-trigger AI review:
-gh pr edit PR_NUM --add-reviewer copilot
+# - Collaborator bots (Claude, Coderabbit paid): gh pr edit --add-reviewer <bot>
+# - Copilot: requires direct API with [bot] suffix (gh CLI silently no-ops)
+gh api -X POST repos/OWNER/REPO/pulls/PR_NUM/requested_reviewers \
+  -f 'reviewers[]=copilot-pull-request-reviewer[bot]'
 ```
 
 ### Anti-pattern: NEVER @mention AI bots in comments
@@ -290,7 +293,9 @@ gh pr comment PR_NUM --body "All feedback addressed.
 # ✅ CORRECT — comment tags humans only, API re-requests bot separately
 gh pr comment PR_NUM --body "All feedback addressed.
 @kentwelcome @claude"
-gh pr edit PR_NUM --add-reviewer copilot
+# For Copilot specifically: gh pr edit --add-reviewer silently no-ops; use direct API
+gh api -X POST repos/OWNER/REPO/pulls/PR_NUM/requested_reviewers \
+  -f 'reviewers[]=copilot-pull-request-reviewer[bot]'
 ```
 
 ### Summary comment format
@@ -388,7 +393,7 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md
 - **Dynamic repo detection** — use `gh repo view`, never hardcode owner/repo
 - **Conventional commits** — `fix(SC-###): address review - <description>`
 - **AI reviewer detection** — identify bot reviewers via timeline API, trace back to the human who requested them
-- **Never @mention AI bots in comments** — use `gh pr edit --add-reviewer` to re-request AI reviews; @mentions trigger unwanted bot actions (duplicate reviews, spurious PRs)
+- **Never @mention AI bots in comments** — re-request AI review via the API instead (collaborator bots: `gh pr edit --add-reviewer <bot>`; Copilot: direct API with `[bot]` suffix). @mentions trigger unwanted bot actions (duplicate reviews, spurious PRs)
 - **Human accountability** — when an AI reviewer's feedback is addressed, notify the human who requested the AI review, not the bot
 - **AI detection does not affect validation** — Step 3 evaluates all comments on technical merit regardless of author identity; AI detection only affects Step 7 notification routing
 - **Offer AI monitoring after re-trigger** — when AI reviewers are re-requested in Step 7, always offer to monitor for their response. Don't assume the user wants it or doesn't — ask every time

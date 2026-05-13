@@ -150,9 +150,48 @@ When a PR's execute phase goes through multiple iterations that reverse decision
 
 AI reviewers (Copilot on PR #571) reliably flag unfamiliar lockfile-shaped JSON files (e.g., `skills-lock.json`, `.agents/skills/*`) as "generated/agent-local, not referenced anywhere, should be gitignored." For genuinely local artifacts (`.claude/settings.*.bak`, `.cozempic-init.lock`) this is correct. For **tool-lockfiles that pin team-shared resources** (find-skills' `skills-lock.json` pinning an externally-sourced skill with a computed hash, similar to `package-lock.json`), gitignoring would delete the team's version-lock mechanism. **Triage heuristic before gitignoring**: (1) does the file have a `version` field + per-item hash/source/SHA? — lockfile smell, (2) does the sibling directory contain actual content (not just cache)? — shared-source smell, (3) does the tool that generates it have a "team mode" or multi-user use case? — tool-config smell. If any → ask user "this looks like a team-shared lockfile; keep + document, or gitignore?" before recommending removal. Corollary: when keeping, reply to the reviewer with the intentionality rationale so future AI reviews can learn the pattern. Copilot specifically has no persistent memory across PRs, but human readers of the thread discussion benefit.
 
-## `gh pr edit --add-reviewer` cannot re-request GitHub Copilot review (2026-04-23)
+## Requesting Copilot review needs the `[bot]` suffix via direct API, not `gh pr edit` (2026-04-23, updated 2026-05-13)
 
-The skill's Step 7 Option 2 ("re-request AI review safely") prescribes `gh pr edit PR_NUM --add-reviewer <bot>` to re-trigger AI reviewers without @mentioning them in PR comments. This works for bots registered as repo collaborators (e.g., Claude via `claude-review.yaml` workflow). **It fails for GitHub Copilot's PR review bot with `HTTP 422: Reviews may only be requested from collaborators`** — Copilot's PR review is a GitHub-native integration, not a collaborator account, so it has no reviewer-request API surface. PR #569 (PROJ-302 design-tokens) hit this when re-requesting `copilot-pull-request-reviewer` after pushing review fixes. **Fallback options for Copilot re-review**: (a) human clicks "Re-request review" on Copilot's avatar in the PR page UI, (b) wait for auto-review-on-push if the repo has that setting enabled, (c) push an empty commit to force a new commit event. Skill should surface this limitation up-front when AI reviewers are detected: distinguish "collaborator bots" (Claude, Coderabbit paid, etc.) from "GitHub integrations" (Copilot, Ducker-agent) and only offer `--add-reviewer` for the former. For integrations, route to UI-click or push-trigger options.
+The skill's Step 7 Option 2 ("re-request AI review safely") originally prescribed `gh pr edit PR_NUM --add-reviewer <bot>` to re-trigger AI reviewers without @mentioning them in PR comments. This works for bots registered as repo collaborators (e.g., Claude via `claude-review.yaml` workflow).
+
+**For GitHub Copilot specifically, the gh CLI surface is broken** — but the underlying REST API DOES work if you use the literal `[bot]` suffix in the reviewer name. Originally documented (PR #569, 2026-04-23) as "Copilot cannot be re-requested at all"; PR #17 (2026-05-13) discovered the working API call:
+
+```bash
+# ✅ WORKS — direct API with literal [bot] suffix
+gh api -X POST repos/OWNER/REPO/pulls/PR_NUM/requested_reviewers \
+  -f 'reviewers[]=copilot-pull-request-reviewer[bot]'
+
+# ❌ FAILS silently — gh CLI returns "ok edited" but Copilot is NOT in requested_reviewers
+gh pr edit PR_NUM --add-reviewer copilot
+
+# ❌ FAILS with HTTP 422 — same name without [bot] suffix
+gh api -X POST repos/OWNER/REPO/pulls/PR_NUM/requested_reviewers \
+  -f 'reviewers[]=copilot-pull-request-reviewer'
+```
+
+Verified twice on PR #17: initial-request AND re-request after a follow-up push both succeed via the `[bot]`-suffix API call. The `HTTP 422: Reviews may only be requested from collaborators` error still applies to the unsuffixed variant — what GitHub actually requires is the bot's full identifier including `[bot]`.
+
+**Implementation note**: `kc-pr-review-resolve` uses the direct API call for Copilot (per Step 7 re-request flow, 2026-05-13). `kc-pr-create` does NOT currently request Copilot reviewers — it only polls for auto-triggered review responses (Step 12 `--ci` flow); when it eventually adds an explicit reviewer-request, adopt the same direct-API pattern. `gh pr edit --add-reviewer` remains correct for collaborator bots (Claude, Coderabbit paid). The author's `login` field for the resulting Copilot review will be `copilot-pull-request-reviewer` (NOT `Copilot` as it appears in `requested_reviewers`) — see the next entry below.
+
+**Fallback if even the API call fails** (haven't seen it, but for safety): (a) human clicks "Re-request review" on Copilot's avatar in the PR UI, (b) wait for auto-review-on-push if the repo enables it, (c) push an empty commit to force a new commit event.
+
+## Copilot's author.login varies by GitHub API endpoint (2026-05-13)
+
+When monitoring or filtering for Copilot reviews, the bot's `login` string differs across endpoints — a filter built for one endpoint silently misses on another:
+
+| Endpoint | Field | Returns |
+|---|---|---|
+| `/pulls/{n}` → `requested_reviewers[]` | `.login` | `Copilot` (capital C) |
+| `/pulls/{n}` → `reviews[]` | `.author.login` | `copilot-pull-request-reviewer` |
+| Inline review comments (`/pulls/{n}/comments`) | `.user.login` | `copilot-pull-request-reviewer[bot]` |
+
+PR #17 monitor used `select(.author.login == "Copilot")` and silently reported "no Copilot review" for an hour while Copilot had reviewed within 5 minutes. Safest jq filter form: `select(.author.login | startswith("copilot") or . == "Copilot")` — robust to GitHub adding new variants.
+
+## Copilot's "low confidence" suppressed comments are often correct (2026-05-13)
+
+When Copilot's PR review body contains a `<details><summary>Comments suppressed due to low confidence</summary>` section, READ the suppressed comments. PR #17 had exactly one suppressed comment about `verify-install.sh` strict-mode handling — verified against actual code, it was a real bug (CI strict-mode env var was only consulted on the import-failure branch, not on bun-missing). Fix landed as commit `f3aed43` before merge.
+
+**Rule**: same trust-but-verify discipline as for non-suppressed Copilot comments. "Low confidence" is Copilot's miscalibration, not a reliable signal of finding quality. Sample size is small (n=1); re-evaluate after more PR cycles, but default to read.
 
 ## kc-pr-review misses "mundane but important" quality gates that multi-pass reviewers catch (2026-04-24)
 
