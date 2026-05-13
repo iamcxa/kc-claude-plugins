@@ -30,6 +30,10 @@ if ! command -v bun >/dev/null 2>&1; then
 [kc-hyperfocus verify] WARN: bun not found on PATH; skipping load check.
 The MCP server requires bun at runtime — install from https://bun.sh.
 EOF
+  if [ "${KC_HYPERFOCUS_VERIFY_STRICT:-}" = "1" ]; then
+    echo "[kc-hyperfocus verify] FAIL: strict mode enabled; bun must be reachable." >&2
+    exit 1
+  fi
   exit 0
 fi
 
