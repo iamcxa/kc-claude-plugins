@@ -184,4 +184,12 @@ When refactoring, also add this to each agent prompt:
 
 This prevents agents from producing false positives where new code follows established conventions that happen to be imperfect.
 
+**Baseline-convention check at meta level (extension):** apply the same primitive at a wider scope when reviewing SKILL.md output, reference docs, or cross-skill claims — not just code diffs. Before flagging a pattern in a `*.md` / `skills/**` / `reference/**` / `agents/**` file as an issue:
+
+1. Grep the rest of the plugin (and adjacent plugins under the same repo / `~/.claude/skills/`) for the same pattern. Bound the search to ≤500 matches; if more, the pattern is unambiguously established
+2. Count occurrences in unchanged code — if **3+ sibling sites** already use the pattern, treat it as an established convention, NOT a violation. Note it as "follows existing convention; consider standardizing or documenting if intentional"
+3. **Explicit-instruction trump card**: if the pattern is documented as the convention in the same skill or a parent doc (e.g., a "use placeholder `OWNER/REPO` for examples" line in the skill body), treat as intentional regardless of sibling count
+
+This suppresses false positives when one skill (e.g. `/review` from gstack) reviews another skill's output and the apparent "inconsistency" is actually the codebase's standard. **Example (kc-pr-flow PR #18 F1):** `/review` flagged `OWNER/REPO` placeholder usage as inconsistent; grep showed 7+ existing sites + an explicit instruction at SKILL.md L67 → false positive. The meta-level check catches this automatically.
+
 **Timeout expectations:** Agents typically finish in 1-3 min for <500 lines. For 1,000+ filtered lines, expect 3-6 min per agent. If an agent exceeds 8 min, check its output file directly.

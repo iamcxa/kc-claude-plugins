@@ -1065,3 +1065,34 @@ If the warning count and call-sites are identical, classify as **pre-existing** 
 **Example (PR #1303, <infra-repo>)**: `esbuild@0.28.0` build emitted `[WARNING] "import.meta" is not available with the "cjs" output format` on `src/utils/mermaid-lint.ts:152,184`. Initial suspicion: new esbuild diagnostic. Verification by rebuilding on `origin/main` with `esbuild@0.27.3` showed the exact same warnings → pre-existing, not a regression. Final review explicitly stated "unchanged from `0.27.3`" so the PR could be approved without that finding blocking merge.
 
 **Corollary — workspace-dep build for type-check**: When the consumer package declares `"types": "dist/index.d.ts"` in `package.json` (e.g., `@<org>/<workspace-pkg>` → `<service>/<agent>`), the workspace dep MUST be built before the consumer's `tsc --noEmit` runs. Fresh worktrees that only ran `pnpm install` will report `TS2307: Cannot find module '@<org>/...'` even though the lockfile is correct. Build chain: `pnpm --filter @<org>/<workspace-pkg> build` first, then type-check the consumer.
+
+## Cross-file doc claim verification (2026-05-13)
+
+**Pattern (kc-pr-flow PR #18, 2026-05-13):** When a docs PR adds or modifies normative claims about other files/symbols ("X works", "all sites use Y", "see `path:NN`", "fixed in commit `<sha>`"), grep the cited subjects to verify the claim is grounded. Forward-looking claims that anticipate a future state are common during multi-commit rollouts and create silent doc drift if not caught.
+
+**Detection signals:**
+
+- Added doc lines containing both a normative auxiliary (`uses`, `should`, `must`, `all`, `every`, `works`, `broken`, `correct`, `fixed`) and a cited subject (backtick token, path, or commit SHA)
+- Cited subject lives outside the diff (i.e., the claim references unchanged or separately-changed code)
+
+**Why it slips review:** Doc-only changes read as standalone prose. Diff-scoped reviewers (agents and humans alike) don't reflexively grep for cited subjects unless prompted per-claim. The cost of grep is near-zero; the cost of merging a wrong doc claim is real — the next reader trusts the entry and bases work on it.
+
+**Rule for review:** Operationalized as kc-pr-review §4.5j. Pure pre-scan, zero LLM tokens. Severity: MEDIUM when cited subject is missing; LOW when it exists but contradicts the claim (could be intentional gap).
+
+**Reference:** kc-pr-flow PR #18 F2 (forward-looking claim about `gh-api-patterns.md` reviewer-add behavior) — caught manually during /review dogfood; §4.5j surfaces it automatically.
+
+## Baseline-convention check at meta level (2026-05-13)
+
+**Pattern (kc-pr-flow PR #18, 2026-05-13):** kc-pr-flow's §4f baseline-convention rule ("Before flagging a pattern as an issue, check whether the SAME pattern exists in unchanged code in the same file") works as a primitive at the code level. The same primitive applies at the **meta level** when one skill reviews another skill's output: before flagging a pattern in a SKILL.md / reference / agent file, grep the plugin (and adjacent plugins) for sibling usage.
+
+**Detection signals:**
+
+- Reviewer flags a pattern in a `*.md` / `skills/**` / `reference/**` / `agents/**` file as inconsistent or unsafe
+- The pattern is mechanical / stylistic (placeholder convention, terminology, ordering), not a true correctness issue
+- The flagged file is part of a multi-site convention that the reviewer's diff-scoped context doesn't see
+
+**Rule for review:** Operationalized as `reference/review-triage.md` §4f extension. Threshold: **3+ sibling sites** in unchanged code = established convention. Explicit-instruction trump card: a documented "use placeholder X" line in the skill body overrides sibling count.
+
+**Why it slips review:** Cross-skill review reads the target skill's diff as standalone prose. The reviewer's prompt context doesn't pre-load the whole plugin's convention surface, so patterns that are "obviously the standard" to the plugin author look like inconsistencies to a fresh-context reviewer.
+
+**Reference:** kc-pr-flow PR #18 F1 (OWNER/REPO placeholder convention, 7+ sibling sites + SKILL.md L67 explicit instruction) — false-positive flagged by /review; the meta-level baseline check would have suppressed it. Complements §4.5j: §4.5j catches *forward-looking claims*, §4f-meta catches *retrospective false positives on established conventions*.

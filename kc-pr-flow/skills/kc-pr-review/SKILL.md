@@ -158,7 +158,7 @@ The discipline: **every owned pass produces a verdict** — findings OR an expli
 |---|------|-------|-------|
 | 1 | Correctness | Logic errors, broken invariants, asymmetric contracts, type misuse | `code-reviewer` + `type-design-analyzer` (Std+) |
 | 2 | Security | Credentials, injection, RLS, supply chain, CI/CD attack vectors | `tob-security-reviewer` (always) + `tob-supply-chain-checker` / `tob-actions-auditor` if files match |
-| 3 | Cross-Ref | Helper rollout completeness, stale refs, dep chain, CLAUDE.md rule compliance | Pre-scan §4.5a / §4.5b / §4.5c / §4.5i |
+| 3 | Cross-Ref | Helper rollout completeness, stale refs, dep chain, CLAUDE.md rule compliance, doc claim grounding | Pre-scan §4.5a / §4.5b / §4.5c / §4.5i / §4.5j |
 | 4 | Error Handling | Silent failures, swallow scope, refactor side-effects, observability gaps | `silent-failure-hunter` |
 | 5 | Test Coverage | Edge cases, sibling parity, import-time/module-load gaps, happy-path forwarding | `pr-test-analyzer` (Std+) |
 | 6 | Diff-Specific | Convention drift vs unchanged code, baseline consistency, in-diff stylistic issues | `code-reviewer` (with baseline-context instruction from §4f) |
@@ -427,6 +427,39 @@ Process:
 
 **Related pattern**: see `reference/learned-patterns.md` "Telemetry safety helper completeness — wrap ALL related calls or none (2026-05-06)" for the broader D1 class this operationalizes.
 
+### 4.5j. Cross-file Doc Claim Verification
+
+**Activate when**: diff modifies `.md`, `.txt`, `.rst`, comment blocks, or docstrings AND the changed lines make **normative claims** about other files/symbols in the repo — phrases like "uses X", "all sites use X", "X is correct", "X is broken", "see `path/to/file.ts:NN`", "fixed in commit `<sha>`".
+
+Skip when the diff is pure prose with no cited subjects, or when the claim is purely aspirational ("we should use X going forward" — no cited subject to grep).
+
+Detection:
+
+1. From `git diff --unified=0`, find added lines (`^+`) in doc files (`.md`, `.txt`, `.rst`) or in code-comment / docstring regions
+2. For each added line, look for the pair **(normative auxiliary, cited subject)**:
+   - Normative auxiliary: `uses`, `use`, `should`, `must`, `always`, `never`, `all`, `every`, `only`, `works`, `broken`, `correct`, `fixed`
+   - Cited subject: backtick-quoted token (`` `path/to/file` ``, `` `functionName()` ``), bare path-like string (`a/b/c.ext`), or commit SHA (`[0-9a-f]{7,40}`)
+3. Skip pairs where the cited subject is defined in the same diff (self-referential — the new code IS the source of truth)
+4. Record each (claim-line, cited-subject) pair for verification
+
+Process:
+
+1. **Resolve each cited subject** via grep:
+   - Path-like → `git ls-files | grep -F "<subject>"`
+   - Identifier in backticks → `git grep -n "<subject>" -- '*.ts' '*.py' '*.md'` (language-aware)
+   - Commit SHA → `git rev-parse <sha>` + `git show --stat <sha>` to confirm it exists and touched the cited area
+2. **Verify the claim** against grep results:
+   - **Zero matches** → cited subject does not exist. Severity: **MEDIUM**, source `PRESCAN`. Message: ``Doc claim at `file:line` cites `<subject>` — 0 matches in repo``
+   - **Subject exists but contradicts claim** (claim says "all X use Y" but grep finds untouched legacy sites; claim says "fixed in `<sha>`" but file content at HEAD still has the bug) → Severity: **LOW**, source `PRESCAN`. Surface for author confirmation; the gap may be intentional / part of follow-up rollout
+   - **Subject matches claim** → suppress
+3. Report each surviving finding with file:line of the claim, quoted claim text, and grep evidence (count + first 3 matches OR "0 matches")
+
+**Why agents miss this**: Diff-scoped reviewers read changed `.md` lines as natural language. They do not grep cited subjects per-claim. This is a **cross-file consistency** primitive that mirrors §4.5i (code helper rollouts) but applied to documentation. Pure pre-scan — zero LLM tokens.
+
+**Example pattern**: A docs PR adds a learned-pattern entry stating ``gh pr edit --add-reviewer copilot works for re-request — see `gh-api-patterns.md` L213``. Grep of `gh-api-patterns.md:213` shows the cited section still describes the form as broken. The new claim is forward-looking (depends on a fix the author has not yet pushed to `gh-api-patterns.md`). A cross-file grep surfaces the mismatch automatically; an in-diff-only review reads the new entry as a freestanding statement and misses the contradiction.
+
+**Related pattern**: see `reference/learned-patterns.md` "Cross-file doc claim verification (2026-05-13)" for the broader D1 class. Complements §4.5i: §4.5i verifies *code helper rollouts* are complete; §4.5j verifies *doc claims* are grounded against the codebase they describe.
+
 ### Pre-scan output
 
 Findings feed into Step 5 classification as `PRESCAN` source (alongside agent findings). They follow the same CODE/DOC/NEW classification in Step 5d.
@@ -577,7 +610,7 @@ When Step 4-Pass ran, include a pass-coverage summary in the review body:
 |---|------|---------|----------|
 | 1 | Correctness | Findings: N | code-reviewer + type-design-analyzer (refs above) |
 | 2 | Security | Clean | tob-security-reviewer: no CRITICAL/HIGH; supply-chain N/A (no dep changes) |
-| 3 | Cross-Ref | Findings: N | pre-scan §4.5b/§4.5i (refs above) |
+| 3 | Cross-Ref | Findings: N | pre-scan §4.5b/§4.5i/§4.5j (refs above) |
 | 4 | Error Handling | Clean | silent-failure-hunter: all new catch blocks log or rethrow |
 | 5 | Test Coverage | Findings: N | pr-test-analyzer (refs above) |
 | 6 | Diff-Specific | Clean | code-reviewer baseline check: matches sibling-handler convention |
