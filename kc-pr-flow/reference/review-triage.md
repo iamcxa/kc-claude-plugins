@@ -101,7 +101,9 @@ Break-point probe (Step 4.5p) prevents approving a fix based on unit tests alone
 3. `PR_ARCHETYPE = cross-stack` (frontend + backend changes in the same PR).
 4. User accepted a "deep review" recommendation from a prior failure analysis or daemon report.
 
-**Set `FULL_PASS_MODE = false` when ANY of**:
+**Precedence**: explicit user intent wins. If the user requests `--full-pass` / `--pass-all` / "8-pass review", keep `FULL_PASS_MODE = true` even for small, docs, refactor, or style PRs. Only an explicit "skip passes" / "lite review" / "quick review" request can override an explicit full-pass request.
+
+**Set `FULL_PASS_MODE = false` when no true condition above matched AND ANY of**:
 
 - `PR_ARCHETYPE = docs`, `refactor`, or `style`.
 - `FILTERED_CHANGED < 100` AND no security files AND no probe activation.

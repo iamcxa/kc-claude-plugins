@@ -55,10 +55,13 @@ jobs:
 
       - name: Verify runtime import
         working-directory: kc-hyperfocus
+        env:
+          KC_HYPERFOCUS_VERIFY_STRICT: "1"
         run: |
           # Re-run verify in standalone mode (the postinstall already
           # ran it, but we want a fresh signal independent of bun's
-          # output buffering).
+          # output buffering). Strict mode makes import failures fatal
+          # in CI while keeping user postinstall warnings non-blocking.
           sh ./scripts/verify-install.sh
 
       - name: Bundle MCP server (syntax check, no spawn)

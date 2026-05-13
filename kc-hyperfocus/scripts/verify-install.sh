@@ -14,11 +14,11 @@
 # the import path that the MCP server itself takes, so any deferred
 # failure surfaces here instead of at first MCP tool call.
 #
-# Exit policy: always exit 0. A failed import warns loudly but does NOT
-# block install — text-only embedding workflows may still function if
-# the user does not use the image-processing code paths. Hard-failing
-# would prevent install on platforms where sharp's prebuilt binary is
-# legitimately unavailable (some Alpine variants, etc.).
+# Exit policy: postinstall mode always exits 0. A failed import warns
+# loudly but does NOT block user installs — text-only embedding workflows
+# may still function if the user does not use the image-processing code
+# paths. CI can set KC_HYPERFOCUS_VERIFY_STRICT=1 to turn the same probe
+# into a hard failure.
 
 PLUGIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PLUGIN_DIR" || exit 0
@@ -71,5 +71,10 @@ themselves continue to function. File an issue at:
 
 Install will continue; this is a warning, not a fatal error.
 EOF
+
+if [ "${KC_HYPERFOCUS_VERIFY_STRICT:-}" = "1" ]; then
+  echo "[kc-hyperfocus verify] FAIL: strict mode enabled; import failure is fatal." >&2
+  exit 1
+fi
 
 exit 0
