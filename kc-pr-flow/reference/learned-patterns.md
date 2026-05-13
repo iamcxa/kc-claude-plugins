@@ -1064,6 +1064,67 @@ If the warning count and call-sites are identical, classify as **pre-existing** 
 
 **Example (PR #1303, <infra-repo>)**: `esbuild@0.28.0` build emitted `[WARNING] "import.meta" is not available with the "cjs" output format` on `src/utils/mermaid-lint.ts:152,184`. Initial suspicion: new esbuild diagnostic. Verification by rebuilding on `origin/main` with `esbuild@0.27.3` showed the exact same warnings → pre-existing, not a regression. Final review explicitly stated "unchanged from `0.27.3`" so the PR could be approved without that finding blocking merge.
 
+---
+
+## Pattern: Cross-repo SOT-first sync when fix targets shared content (2026-05-13)
+
+**When**: PR review finds an issue in a file that's byte-identical across a plugin SOT + N instance copies (typical of ship-flow's `plugins/ship-flow/_mods/` SOT + `docs/ship-flow/_mods/` instances across captain's repos).
+
+**Default pattern** when fix is approved for cross-repo sync:
+
+1. **Edit in plugin SOT first** (the canonical copy). Verify with `grep` that all occurrences are caught.
+2. **Propagate via `cp`** to each instance — never re-edit. cp preserves byte-identity, eliminates drift risk from "fixing it differently" in each copy.
+3. **md5 check after propagation**: `md5 file1 file2 file3 file4` — all hashes must match before any commit.
+4. **One commit per repo** (cross-repo can't be atomic). Commit message names the SOT commit explicitly for archeology: `fix(ship-flow): ... (sync from spacedock-ui SOT, ${context})`.
+5. **Push order**: SOT first, then instances. If SOT push is blocked by branch protection, fall back to feature-branch + PR per the rejected repo's flow.
+
+**Anti-pattern**: editing the same fix in each instance independently. Even with a simple find/replace, prose context can drift (different surrounding lines, different quote style, slightly different rewording). The cp-from-SOT discipline eliminates this.
+
+**Example (PR #710, carlove)**: Copilot flagged "Kent's design taste" in `_mods/design-officer.md` as hard-coded personal name. Same content existed in 4 byte-identical files: plugin SOT (`spacedock-ui/plugins/ship-flow/_mods/`), spacedock-ui instance (`spacedock-ui/docs/ship-flow/_mods/`), carlove instance, kc-claude-plugins instance. Fix landed in SOT first (commit `a8089508`), then cp-propagated + committed per repo. md5 check confirmed byte-identity. Reply on the inline thread named all 4 commit SHAs across 3 repos for cross-repo traceability.
+
+---
+
+## Pattern: chained `git checkout && git add && git commit` lands on wrong branch when checkout silently fails (2026-05-13)
+
+**When**: Multi-step bash command does `git checkout BRANCH && cp FILE TARGET && git add ... && git commit ...` to apply a cross-branch fix.
+
+**Failure mode**: If `git checkout BRANCH` fails (e.g., working tree has a file that conflicts with the branch switch — git says "Please move or remove them before you switch branches. Aborting"), bash continues to the next chained command. The `cp` overwrites the file in the CURRENT (wrong) branch. `git add` stages it. `git commit` lands the commit on the ORIGINAL branch.
+
+The commit message looks correct, the file content looks correct, but the commit is on the wrong branch. `git push BRANCH` reports "Everything up-to-date" because the target branch has nothing new — the commit is on the OLD branch.
+
+**Diagnosis (after the fact)**:
+- `git branch --show-current` shows the unintended branch
+- `git log --oneline -1` shows the fix commit on the unintended branch
+- `git log INTENDED_BRANCH --oneline -1` shows the intended branch unchanged
+- `git reflog | head -3` shows the checkout-attempt didn't move HEAD
+
+**Recovery**: `git reset --hard origin/INTENDED_BRANCH` on the wrong branch (drops the orphan commit; preserved in reflog for safety). Then `git checkout` (now succeeds because working tree is clean post-reset). Then reapply the fix on the correct branch.
+
+**Prevention**: Before any chained `git checkout && [stateful ops]`, either:
+- Use `&&` exclusively (not `;` or newlines between commands) — `&&` halts on checkout failure
+- OR: separate into two steps and verify `git branch --show-current` between them
+- OR: use `git switch -C` (force-switch, creates branch if needed) for unambiguous intent
+
+**Example (PR #710 review-resolve, carlove)**: Chained `git checkout kent/ship-flow-overhaul-phase-5-6 && cp PLUGIN_SOT INSTANCE && git add + commit + push`. Checkout failed (working tree had design-officer.md from a prior `cp` that the branch checkout would clobber). Bash continued, commit landed on `main` (unintended). Push to feature branch reported "Everything up-to-date" — misleading. Recovery: `git reset --hard origin/main` (orphan commit `98bab1ec1` preserved in reflog), checkout succeeded on clean tree, reapplied fix on feature branch as `46b35f2d7`, pushed cleanly.
+
+---
+
+## Pattern: Cost-benefit triage when one review flags N issues with M-repo blast radius (2026-05-13)
+
+**When**: Reviewer (human or AI) leaves N comments on a single file that's propagated across M repos via SOT+instance discipline. Fixing K of N issues requires K × M file edits + K × M commits + K × M pushes.
+
+**Triage by criticality × blast radius**:
+
+- **Substantive issues** (correctness, template portability, security, broken UX) — fix across all M copies regardless of M's size. Cross-repo discipline matters here.
+- **Minor style** (gerund-on-CamelCase, possessive-on-keychord, prose readability) — fix only when M=1. When M≥2, **acknowledge + defer** with explicit reasoning in the thread reply. Batch with future readability-pass commit if more style issues accumulate.
+- **False positives** — reply explaining why the suggestion doesn't apply here; never auto-fix.
+
+**Rationale**: 4-repo prose-only sync = ~4 minute work for ~0 user-visible value. The same 4 minutes spent on a substantive fix (template portability, broken link, broken example) delivers actual user value. Captain's repo personalization (acknowledged-as-is style) is a legitimate stop point.
+
+**Reply discipline for deferred-style threads**: Be specific about WHY deferred. "Acknowledged — minor style, deferred from cross-repo sync this round. Will batch with future readability pass." Vague "will fix later" replies frustrate AI reviewers (they re-flag next round) and human reviewers (looks like dismissal).
+
+**Example (PR #710, carlove)**: Copilot flagged 3 inline issues in `_mods/design-officer.md` — #1 hard-coded personal name (template portability, substantive), #2 `SendMessage'ing` gerund (minor style), #3 `Shift+Down's` possessive (minor style). Option C selected: #1 synced across 4 repos (substantive + portability matters for marketplace adopters); #2/#3 reply-only with explicit "deferred from cross-repo sync, minor style" rationale. PR merged after captain reviewed the 4-repo sync for #1. AI re-trigger skipped (would re-flag #2/#3 → noise loop).
+
 **Corollary — workspace-dep build for type-check**: When the consumer package declares `"types": "dist/index.d.ts"` in `package.json` (e.g., `@<org>/<workspace-pkg>` → `<service>/<agent>`), the workspace dep MUST be built before the consumer's `tsc --noEmit` runs. Fresh worktrees that only ran `pnpm install` will report `TS2307: Cannot find module '@<org>/...'` even though the lockfile is correct. Build chain: `pnpm --filter @<org>/<workspace-pkg> build` first, then type-check the consumer.
 
 ## Cross-file doc claim verification (2026-05-13)
