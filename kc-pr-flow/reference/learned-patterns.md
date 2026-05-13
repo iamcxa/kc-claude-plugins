@@ -1096,3 +1096,19 @@ If the warning count and call-sites are identical, classify as **pre-existing** 
 **Why it slips review:** Cross-skill review reads the target skill's diff as standalone prose. The reviewer's prompt context doesn't pre-load the whole plugin's convention surface, so patterns that are "obviously the standard" to the plugin author look like inconsistencies to a fresh-context reviewer.
 
 **Reference:** kc-pr-flow PR #18 F1 (OWNER/REPO placeholder convention, 7+ sibling sites + SKILL.md L67 explicit instruction) — false-positive flagged by /review; the meta-level baseline check would have suppressed it. Complements §4.5j: §4.5j catches *forward-looking claims*, §4f-meta catches *retrospective false positives on established conventions*.
+
+## Cross-review verdict persistence (2026-05-13)
+
+**Pattern:** Iterative review cycles — and especially daemon mode polling — re-surface the same AI-reviewer comments on every cycle. Once the user has dismissed an Issue as `wont_fix` or `false_positive`, re-presenting it on the next cycle is pure noise. Persist verdicts per-branch with a stable fingerprint, suppress on re-encounter as long as the underlying file is unchanged.
+
+**Detection signals:**
+
+- Same `(file, conceptual_issue)` Issue appears in N consecutive review cycles on the same branch
+- User dismissed the Issue in a prior cycle (`wont_fix` / `false_positive`)
+- The file the Issue references has NOT been touched between the dismissal commit and `HEAD`
+
+**Why it slips review:** Cross-AI dedup (Step 3.5) handles *within-cycle* duplication across reviewers. It does NOT handle *across-cycle* duplication of the same finding. Without persistence, every re-review surfaces previously-dismissed issues as if they were new — frustrating for the user and the reviewer (who also sees a fresh thread reply on an issue they thought was settled).
+
+**Rule for review:** Operationalized as kc-pr-review-resolve Step 3.6 with persistence at `~/.claude/kc-plugins-config/pr-flow/review-state/{repo-slug}-{branch}.jsonl`. Fingerprint: `sha256(file + "|" + normalized_conceptual_issue)`. Suppress only `wont_fix` / `false_positive` verdicts (NOT `fixed` — fixes can regress and need re-validation).
+
+**Reference:** Adapted from gstack `/review` Step 5.0 cross-review finding dedup (originally for self-review findings). Most valuable in daemon mode where polls amplify the re-surfacing problem. Complements §4.5j (forward-looking doc claims) and §4f-meta (retrospective baseline convention): all three operationalize "use the codebase's own state as the source of truth before flagging anything".

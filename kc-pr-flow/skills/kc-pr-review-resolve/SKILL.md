@@ -18,6 +18,7 @@ digraph resolve_pr {
   fetch [label="Fetch unresolved threads\n+ PR-level reviews\n+ reviewer metadata"];
   validate [label="Dispatch review agents\nto validate each thread"];
   dedup [label="Cross-AI dedup\ngroup by (file, conceptual issue)"];
+  verdict_dedup [label="Cross-review verdict dedup\n(suppress prior-dismissed\nunless file changed)"];
   triage [label="Triage & classify threads\n(AI reviewer annotations)"];
   report [label="Report findings to user"];
 
@@ -31,7 +32,7 @@ digraph resolve_pr {
   resolve_threads [label="Resolve fixed threads"];
   rereview [label="Smart re-review\n(AI-aware tagging)"];
 
-  detect -> fetch -> validate -> dedup -> triage -> report -> confirm;
+  detect -> fetch -> validate -> dedup -> verdict_dedup -> triage -> report -> confirm;
   confirm -> fix [label="yes"];
   confirm -> report [label="no, adjust"];
   fix -> push -> reply -> resolve_threads -> rereview;
@@ -174,6 +175,48 @@ If two threads on the same `(file, line_range)` validate to **different** concep
 Grouping affects the **triage report** (Step 4) and the **fix commit count** (Step 5 — one commit may close multiple grouped threads), but does **NOT** affect reply behavior. Reply to each thread **individually** in Step 6 — reviewers don't see cross-thread acknowledgment, and per-thread replies keep the action plan auditable. Step 6's "never batch replies" rule still holds.
 
 Reference: `reference/learned-patterns.md` "Cross-AI-reviewer thread deduplication — same issue, two voices (2026-04-23)" for origin pattern and field-tested examples.
+
+## Step 3.6: Cross-Review Verdict Persistence (suppress re-flagged dismissed findings)
+
+Iterative review cycles (and especially daemon mode) re-surface the same Copilot / Sentry / AI-bot comments on every poll. After the user has dismissed an Issue as `won't_fix` / `false_positive` in a prior cycle, suppress it from the current triage as long as the underlying file hasn't changed.
+
+**State file**: `~/.claude/kc-plugins-config/pr-flow/review-state/{repo-slug}-{branch}.jsonl`
+
+`repo-slug` is `basename(git-toplevel)` lowercased; `branch` is the current branch with `/` replaced by `__`.
+
+Each line is one verdict record (JSONL):
+
+```json
+{"ts": "2026-05-13T12:00:00Z", "commit_sha": "abc1234", "fingerprint": "<sha256>", "file": "path/to/file", "line_range": "42-47", "conceptual_issue": "stale TODO from 2024", "action": "wont_fix"}
+```
+
+`fingerprint = sha256(file + "|" + normalized_conceptual_issue)`, where `normalized_conceptual_issue` is the Step 3.5 `conceptual_issue` lowercased + whitespace-collapsed. This makes the fingerprint stable across reviewer voices (Copilot vs Sentry vs custom-bot phrasing for the same conceptual issue).
+
+**Suppress when ALL of**:
+
+1. Issue's `fingerprint` matches a prior record with `action: "wont_fix" | "false_positive"`
+2. The Issue's `file` has NOT changed between the prior record's `commit_sha` and `HEAD`:
+   ```bash
+   git diff --name-only <prior_commit_sha> HEAD | grep -Fxq "<file>"   # exits 0 → file changed → DO NOT suppress
+   ```
+3. (Collision guard) The prior record's `conceptual_issue` matches the current one when both are normalized — protects against rare hash collisions
+
+**Do NOT suppress** records with `action: "fixed"`. Fixes can regress and must be re-validated on each review.
+
+**Output a one-line suppression summary** in the Step 4 report header:
+
+> `Suppressed N issues from prior reviews (previously dismissed by user, file unchanged since <short-sha>)`
+
+If `N == 0` or the state file does not exist, skip the summary silently.
+
+**Persist new verdicts**: After Step 4 triage and Step 5 fix decisions, append one record per Issue to the state file with its final `action` (`fixed` / `wont_fix` / `false_positive` / `skipped`). Persistence happens in Step 9 (Learning) alongside D1/D2 capture — see Step 9 for write-time code.
+
+**State-file lifecycle**:
+- Created on first review cycle for a branch
+- Appended on every cycle (one line per Issue verdict)
+- Not auto-pruned; the file is bounded by `review_cycles × issues_per_cycle` so growth stays manageable. Manual cleanup is acceptable when a branch is deleted
+
+Reference: `reference/learned-patterns.md` "Cross-review verdict persistence (2026-05-13)" for the broader D1 class. Adapted from gstack `/review` Step 5.0 (cross-review finding dedup, originally applied to self-review findings) to incoming AI-reviewer feedback in kc-pr-review-resolve.
 
 ## Step 4: Triage & Report
 
@@ -377,6 +420,24 @@ After all threads are resolved and re-review is complete, evaluate what the revi
 **Dimension 2 (project-level)**: The reviewer's feedback reveals a project-specific pattern. Apply write threshold: "This feedback points to a recurring issue — should it become a CLAUDE.md rule to catch it earlier?"
 
 **Skip when**: All threads were trivial (typos, style) or all patterns already documented.
+
+**Cross-review verdict persistence (from Step 3.6)**: Append one record per Issue to `~/.claude/kc-plugins-config/pr-flow/review-state/{repo-slug}-{branch}.jsonl` with the final user-decided action. Create the directory and file on first write if they don't exist.
+
+```bash
+STATE_DIR="$HOME/.claude/kc-plugins-config/pr-flow/review-state"
+mkdir -p "$STATE_DIR"
+REPO_SLUG=$(basename "$(git rev-parse --show-toplevel)" | tr '[:upper:]' '[:lower:]')
+BRANCH_SAFE=$(git branch --show-current | tr '/' '__')
+STATE_FILE="$STATE_DIR/${REPO_SLUG}-${BRANCH_SAFE}.jsonl"
+HEAD_SHA=$(git rev-parse --short=10 HEAD)
+TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+# For each Issue from Step 3.5/Step 4:
+#   FINGERPRINT=$(printf '%s|%s' "$FILE" "$NORMALIZED_CONCEPTUAL_ISSUE" | shasum -a 256 | cut -d' ' -f1)
+#   printf '{"ts":"%s","commit_sha":"%s","fingerprint":"%s","file":"%s","line_range":"%s","conceptual_issue":"%s","action":"%s"}\n' \
+#     "$TS" "$HEAD_SHA" "$FINGERPRINT" "$FILE" "$LINE_RANGE" "$CONCEPTUAL_ISSUE" "$ACTION" >> "$STATE_FILE"
+```
+
+Persistence writes happen **after** the user-confirmed verdict on each Issue, regardless of whether learning capture (D1/D2) fires. Even trivial issues get verdict records — that's what powers Step 3.6's dedup on the next cycle.
 
 Read → ${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md
 

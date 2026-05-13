@@ -57,6 +57,7 @@ Built-in subagents dispatched by kc-pr-review for security analysis. Based on Tr
 | `~/.claude/kc-plugins-config/language.yaml` | all skills | Output language per directory (longest prefix match) |
 | `~/.claude/kc-plugins-config/identity.yaml` | pr-create | GitHub username, default assignee |
 | `~/.claude/kc-plugins-config/pr-flow/daemon.yaml` | pr-daemon | Poll interval, model, ci-gate, notifications |
+| `~/.claude/kc-plugins-config/pr-flow/review-state/{repo-slug}-{branch}.jsonl` | pr-review-resolve | Per-branch verdict log (JSONL). Step 3.6 reads to suppress re-flagged dismissed findings; Step 9 appends one record per Issue. |
 
 ## Language Preference
 
