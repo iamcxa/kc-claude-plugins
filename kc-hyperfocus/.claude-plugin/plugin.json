@@ -1,7 +1,7 @@
 {
   "name": "kc-hyperfocus",
   "description": "Session lifecycle & context efficiency plugin: context pressure detection, cleanup enforcement, cross-session handoff/resume, MCP context firewall, context lake cache, journal, and statusline.",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "author": {"name": "Kent"},
   "license": "MIT"
 }
