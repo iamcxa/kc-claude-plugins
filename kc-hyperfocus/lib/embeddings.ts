@@ -4,9 +4,14 @@
  * Stores embeddings as .embedding sidecar files alongside .md journal entries.
  *
  * Ported from obra/private-journal-mcp, adapted for Bun runtime.
+ *
+ * @xenova/transformers is loaded via dynamic import inside doInitialize() so
+ * that this module — and the MCP server that imports it — can load even when
+ * sharp's native binary is missing (e.g. a plugin install that skipped
+ * prebuild-install). Embedding-related tools degrade gracefully; FTS5,
+ * insights, and journal tools keep working.
  */
 
-import { pipeline, type FeatureExtractionPipeline } from "@xenova/transformers";
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 
 export interface EmbeddingData {
@@ -17,9 +22,16 @@ export interface EmbeddingData {
   path: string;
 }
 
+// Loose pipeline type — the real one comes from @xenova/transformers, which
+// we only resolve at runtime to keep top-level imports sharp-free.
+type Extractor = (
+  text: string,
+  options: { pooling: "mean"; normalize: boolean },
+) => Promise<{ data: Float32Array }>;
+
 export class EmbeddingService {
   private static instance: EmbeddingService;
-  private extractor: FeatureExtractionPipeline | null = null;
+  private extractor: Extractor | null = null;
   private readonly modelName = "Xenova/all-MiniLM-L6-v2";
   private initPromise: Promise<void> | null = null;
 
@@ -41,10 +53,19 @@ export class EmbeddingService {
   private async doInitialize(): Promise<void> {
     try {
       console.error("Loading embedding model...");
-      this.extractor = await pipeline("feature-extraction", this.modelName);
+      // Dynamic import so that top-level module load does not pull in sharp.
+      const { pipeline } = await import("@xenova/transformers");
+      this.extractor = (await pipeline(
+        "feature-extraction",
+        this.modelName,
+      )) as unknown as Extractor;
       console.error("Embedding model loaded successfully");
     } catch (error) {
       console.error("Failed to load embedding model:", error);
+      // Reset initPromise so callers can retry after fixing the environment
+      // (e.g. installing sharp). Otherwise every future getInstance().initialize()
+      // returns the same rejected promise forever.
+      this.initPromise = null;
       throw error;
     }
   }

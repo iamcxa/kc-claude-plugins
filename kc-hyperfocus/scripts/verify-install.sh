@@ -1,24 +1,28 @@
 #!/bin/sh
-# Verifies that kc-hyperfocus's MCP-server dependencies are loadable
-# after `bun install`.
+# Verifies — and best-effort repairs — kc-hyperfocus's MCP-server runtime
+# dependencies after `bun install`.
 #
-# Why this exists: bun >= 1.0 blocks postinstall scripts of dependencies
-# unless they're listed in the consumer's `trustedDependencies` array.
-# @xenova/transformers transitively requires `sharp`, which uses
-# `prebuild-install` in its postinstall to download a platform-specific
-# native binary. Without trusted-deps coverage, the install reports
-# success but the binary is missing, and the first `import` at runtime
-# crashes with an opaque ENOENT or "Cannot find module" error.
+# The hard dependency that breaks plugin installs in practice is `sharp`'s
+# native binary, pulled by `@xenova/transformers`. sharp ships its actual
+# `.node` artifact via `prebuild-install` in its postinstall hook. bun >= 1.0
+# blocks transitive lifecycle scripts unless listed in `trustedDependencies`
+# (this package.json lists sharp + onnxruntime-node) — but Claude Code's
+# plugin-install pipeline does not always rerun `bun install` against the
+# cached copy, so the prebuild-install step can still be skipped silently.
+# When that happens the MCP server crashes on first import with:
+#   "Cannot find module '../build/Release/sharp-darwin-arm64v8.node'"
 #
-# This script runs as kc-hyperfocus's own postinstall hook. It exercises
-# the import path that the MCP server itself takes, so any deferred
-# failure surfaces here instead of at first MCP tool call.
+# This script:
+#   1. Probes whether sharp resolves and loads.
+#   2. If not, runs sharp's own `prebuild-install` to download the
+#      platform-specific binary. (Self-heal.)
+#   3. Re-probes; reports OK or warns with actionable next steps.
 #
-# Exit policy: postinstall mode always exits 0. A failed import warns
-# loudly but does NOT block user installs — text-only embedding workflows
-# may still function if the user does not use the image-processing code
-# paths. CI can set KC_HYPERFOCUS_VERIFY_STRICT=1 to turn the same probe
-# into a hard failure.
+# Exit policy: postinstall mode always exits 0 — a missing sharp degrades
+# only the embedding tools (fuzzy semantic search). FTS5 search, insights,
+# journal, and statusline keep working because lib/embeddings.ts loads
+# @xenova/transformers via dynamic import (v1.6.3+). CI can set
+# KC_HYPERFOCUS_VERIFY_STRICT=1 to treat the probe as a hard failure.
 
 PLUGIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PLUGIN_DIR" || exit 0
@@ -37,47 +41,102 @@ EOF
   exit 0
 fi
 
-# ─── Probe @xenova/transformers import ───────────────────────────
+# ─── probe_sharp: returns 0 if sharp loads, non-zero otherwise ──
+probe_sharp() {
+  bun -e "import('sharp').then(() => process.exit(0)).catch(e => { console.error(e?.message || e); process.exit(1); })" 2>"$1"
+}
+
+# ─── First probe ────────────────────────────────────────────────
 ERR_FILE="$(mktemp)"
-if bun -e "import('@xenova/transformers').then(() => process.exit(0)).catch(e => { console.error(e?.message || e); process.exit(1); })" 2>"$ERR_FILE"; then
+if probe_sharp "$ERR_FILE"; then
   rm -f "$ERR_FILE"
-  echo "[kc-hyperfocus verify] OK — embedding deps loadable."
+  echo "[kc-hyperfocus verify] OK — sharp native binary loadable."
   exit 0
 fi
 
-ERR_MSG="$(cat "$ERR_FILE")"
+INITIAL_ERR="$(cat "$ERR_FILE")"
 rm -f "$ERR_FILE"
 
+# ─── Self-heal: run sharp's prebuild-install if available ───────
+SHARP_DIR="$PLUGIN_DIR/node_modules/sharp"
+if [ -d "$SHARP_DIR" ]; then
+  echo "[kc-hyperfocus verify] sharp not loadable — attempting self-heal via bun install --force..." >&2
+
+  # Self-heal strategy:
+  #   1. `bun install --force` — most reliable: rebuilds both
+  #      sharp/build/Release/*.node AND sharp/vendor/<libvips>/. Standalone
+  #      prebuild-install only restores the .node and leaves vendor empty,
+  #      so sharp still fails to load (Library not loaded: libvips-cpp).
+  #   2. prebuild-install — fallback if bun install can't be re-run.
+  #   3. install/check.js — last-resort heuristic.
+  HEAL_LOG="$(mktemp)"
+  HEAL_OK=0
+
+  (cd "$PLUGIN_DIR" && bun install --force) >"$HEAL_LOG" 2>&1 && HEAL_OK=1
+
+  if [ "$HEAL_OK" -eq 0 ] && [ -x "$PLUGIN_DIR/node_modules/.bin/prebuild-install" ]; then
+    (cd "$SHARP_DIR" && "$PLUGIN_DIR/node_modules/.bin/prebuild-install") >>"$HEAL_LOG" 2>&1 && HEAL_OK=1
+  fi
+
+  if [ "$HEAL_OK" -eq 0 ] && [ -f "$SHARP_DIR/install/check.js" ]; then
+    (cd "$SHARP_DIR" && bun run install/check.js) >>"$HEAL_LOG" 2>&1 && HEAL_OK=1
+  fi
+
+  HEAL_OUTPUT="$(cat "$HEAL_LOG")"
+  rm -f "$HEAL_LOG"
+
+  # Re-probe regardless of heal step exit code — what matters is the result.
+  ERR_FILE="$(mktemp)"
+  if probe_sharp "$ERR_FILE"; then
+    rm -f "$ERR_FILE"
+    echo "[kc-hyperfocus verify] OK — self-heal restored sharp."
+    exit 0
+  fi
+  RECHECK_ERR="$(cat "$ERR_FILE")"
+  rm -f "$ERR_FILE"
+
+  cat >&2 <<EOF
+[kc-hyperfocus verify] WARN: self-heal could not restore sharp.
+
+Self-heal output:
+$HEAL_OUTPUT
+
+Re-probe error:
+$RECHECK_ERR
+EOF
+else
+  cat >&2 <<EOF
+[kc-hyperfocus verify] WARN: sharp not loadable, and node_modules/sharp is missing.
+
+Initial error:
+$INITIAL_ERR
+EOF
+fi
+
 cat >&2 <<EOF
-[kc-hyperfocus verify] WARN: @xenova/transformers failed to import.
 
-Underlying error:
-$ERR_MSG
+What this means for you:
+- The MCP server WILL still start (v1.6.3+ uses lazy import).
+- FTS5 search, insights cache, journal entries, and statusline keep working.
+- Only the embedding-based fuzzy semantic search will fail until sharp is fixed.
 
-Most common cause: bun blocked sharp's postinstall (prebuild-install),
-so its native binary was never downloaded. This package.json already
-lists "sharp" in trustedDependencies; if you're seeing this anyway:
-
+To fix manually:
   cd $PLUGIN_DIR
   rm -rf node_modules bun.lock
   bun install
 
-If the error mentions libvips, install the system library:
+If the error mentions libvips, install the system library first:
   macOS:    brew install vips
   Ubuntu:   apt-get install libvips-dev
   Fedora:   dnf install vips-devel
   Alpine:   apk add vips-dev
 
-If problems persist on this platform, the kc-hyperfocus journal-search
-MCP tools will not work until resolved. The plugin's skills and hooks
-themselves continue to function. File an issue at:
+If problems persist, file an issue with this script's output:
   https://github.com/iamcxa/kc-claude-plugins/issues
-
-Install will continue; this is a warning, not a fatal error.
 EOF
 
 if [ "${KC_HYPERFOCUS_VERIFY_STRICT:-}" = "1" ]; then
-  echo "[kc-hyperfocus verify] FAIL: strict mode enabled; import failure is fatal." >&2
+  echo "[kc-hyperfocus verify] FAIL: strict mode enabled; sharp must be loadable." >&2
   exit 1
 fi
 
