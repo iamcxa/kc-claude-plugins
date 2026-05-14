@@ -7,6 +7,19 @@ All text output follows unified language preference. See plugin CLAUDE.md for qu
 
 **REQUIRED SUB-SKILL:** Use `superpowers:receiving-code-review` for evaluation mindset — verify before implementing, push back on incorrect suggestions, no performative agreement. This skill handles mechanics; that skill governs judgment.
 
+## Configuration
+
+This skill respects `pr_review_resolve.auto_confirm` in the adopter's workflow config (project CLAUDE.md or workflow README):
+
+| Value | Behavior |
+|-------|----------|
+| `off` (default) | Always wait for user confirmation at Step 4 GATE (current behavior, no change for adopters who don't set the flag) |
+| `reply_only` | Skip confirmation gate when ALL conditions hold: (a) every inline issue verdict ∈ {`False Positive`, `Pre-existing`, `Informational`}, (b) every PR-level review action is reply-only (no `Fix:`), (c) total reply count ≤ 10. See **Step 4.5: Auto-Confirm Check** for full logic. |
+
+Rationale: `reply_only` mode addresses the daily-pain segment "captain must confirm action plan even when all findings are nits/FP" without granting the skill authority to push controversial fixes. Any issue requiring code change still gates on captain confirmation.
+
+Future extension (separate entity): `trivial_fix` mode for single-line typo / null-check / unused-import auto-fixes. Out of scope for this revision.
+
 ## Process Flow
 
 ```dot
@@ -251,7 +264,43 @@ Re-review: tag @kentwelcome (requested copilot) + offer to re-trigger copilot re
 
 When AI reviewers are present, annotate the Author column with `[AI]` and add the "AI Reviewers" section showing the human-to-AI mapping. This gives the user visibility into the re-review routing before they confirm.
 
-**GATE — Wait for user confirmation before proceeding.** User may reclassify threads or skip fixes.
+**GATE — Wait for user confirmation before proceeding** (unless Step 4.5 auto-confirms). User may reclassify threads or skip fixes.
+
+## Step 4.5: Auto-Confirm Check (conditional, runs before GATE)
+
+Read `pr_review_resolve.auto_confirm` from the adopter's workflow config (see **Configuration** section above). Resolution order: workflow README frontmatter → project CLAUDE.md `pr_review_resolve:` block → unset (treat as `off`).
+
+### When `auto_confirm: off` (default)
+
+Skip Step 4.5 entirely. Proceed to GATE as today. No log line.
+
+### When `auto_confirm: reply_only`
+
+Evaluate the three auto-confirm conditions against the triage report from Step 4:
+
+1. **All inline issue verdicts are reply-only**: every row in the "Inline Issues" table has `Verdict ∈ {False Positive, Pre-existing, Informational}`. ANY `Valid Bug` / `Suggestion` row → fail condition 1.
+2. **All PR-level reviews are reply-only**: every row in the "PR-Level Reviews" table has Action prefixed `Reply` / `Acknowledge` (no `Fix:` prefix). ANY `Fix:` action → fail condition 2.
+3. **Reply count sanity cap**: total threads requiring a reply ≤ 10. More than 10 → fail condition 3 (likely a noisy / wrong-batch situation worth captain eyeballing).
+
+### When all three hold
+
+Log a single line (visible to captain):
+
+```
+AUTO-CONFIRMED (reply_only): N replies, 0 fixes — skipping confirmation gate per pr_review_resolve.auto_confirm=reply_only
+```
+
+Skip the GATE. Skip Step 5 (no fixes to apply since all verdicts are reply-only). Proceed directly to **Step 6: Push & Reply** (Push step is a no-op when there are no fix commits — proceed to the reply phase).
+
+### When any condition fails
+
+Log which condition blocked + fall through to GATE as today:
+
+```
+auto-confirm blocked: <condition-1|2|3> — <one-line reason, e.g., "1 Valid Bug issue requires fix">
+```
+
+This makes it audit-clear to captain why their `reply_only` flag did not engage on this PR, so they can decide whether to override at the gate or refine the flag's coverage criteria in a future revision.
 
 ## Step 5: Fix Valid Issues
 

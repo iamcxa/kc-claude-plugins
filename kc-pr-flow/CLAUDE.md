@@ -38,11 +38,33 @@ Built-in subagents dispatched by kc-pr-review for security analysis. Based on Tr
 |-------|----------|
 | `kc-pr-create` | "create pr", "open pr", "建立 PR", "開 PR", "發 PR", "送審", implementation complete. Default: full ship chain (draft → review → fix → ready → announce). `--draft-only` for PR-only. `--ci` for CI + AI reviewer gate. |
 | `kc-pr-review` | "review pr", "review this PR", PR number/URL, "review current branch". `--full-pass` / `--pass-all` (aliases: "8-pass review", "full pass", "全面複查", "deep review") forces 8-pass coverage; auto-active for bugfix cross-layer or cross-stack PRs. `--codex` (aliases: "codex review", "second opinion", "cross-model review") dispatches Codex as a cross-model second-opinion agent; auto-active for bugfix cross-stack PRs when `codex` is on PATH. |
-| `kc-pr-review-resolve` | "resolve reviews", "address feedback", "fix review comments", PR has unresolved threads |
+| `kc-pr-review-resolve` | "resolve reviews", "address feedback", "fix review comments", PR has unresolved threads. Respects `pr_review_resolve.auto_confirm` config (see **Configuration** below). |
 | `kc-pr-reorg` | "squash commits", "clean up history", "reorganize commits", "reorder commits", 5+ messy commits |
 | `kc-pr-announce` | "announce", "post to product", "draft product message", "公告", after PR + demo completion |
 | `kc-pr-daemon` | "start daemon", "stop daemon", "daemon status", "pr daemon", "daemon config", "啟動 daemon", "停止 daemon" |
 | `break-point-probe` | "pressure-test this fix", "break-point check", "verify the break-point", bugfix / cross-stack PR review |
+
+## Configuration
+
+### `pr_review_resolve.auto_confirm`
+
+Adopter-controlled flag governing when `kc-pr-review-resolve` skips its post-triage confirmation gate. Read from project CLAUDE.md or workflow README. Default = `off` (current behavior, no change for existing adopters).
+
+| Value | Behavior |
+|-------|----------|
+| `off` (default) | Always wait for user confirmation after Step 4 triage report. Preserves current behavior. |
+| `reply_only` | Auto-confirm and skip the gate when ALL conditions hold: (1) every inline issue verdict ∈ {`False Positive`, `Pre-existing`, `Informational`} — i.e., no code change needed; (2) every PR-level review action is reply-only (no `Fix:` prefix); (3) total reply count ≤ 10 (sanity cap). When any condition fails, falls through to the gate with audit log explaining which condition blocked. |
+
+Future extension (separate revision): `trivial_fix` mode covering single-line typo / null-check / unused-import fixes with same auto-confirm semantics. Out of scope for this revision.
+
+Adopter example (project CLAUDE.md):
+```markdown
+## kc-pr-flow Configuration
+pr_review_resolve:
+  auto_confirm: reply_only
+```
+
+Rationale + design notes: `kc-pr-flow/skills/kc-pr-review-resolve/SKILL.md` → "Configuration" + "Step 4.5" sections.
 
 ## Reference Index
 
