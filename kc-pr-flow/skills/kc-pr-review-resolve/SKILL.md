@@ -36,6 +36,7 @@ digraph resolve_pr {
   report [label="Report findings to user"];
 
   node [shape=diamond];
+  auto_confirm_check [label="Step 4.5:\nauto_confirm config?\n(reply_only mode\n+ all conditions met)"];
   confirm [label="User confirms\naction plan?"];
 
   node [shape=box];
@@ -45,10 +46,13 @@ digraph resolve_pr {
   resolve_threads [label="Resolve fixed threads"];
   rereview [label="Smart re-review\n(AI-aware tagging)"];
 
-  detect -> fetch -> validate -> dedup -> verdict_dedup -> triage -> report -> confirm;
+  detect -> fetch -> validate -> dedup -> verdict_dedup -> triage -> report -> auto_confirm_check;
+  auto_confirm_check -> confirm [label="off / blocked"];
+  auto_confirm_check -> reply [label="reply_only\nauto-confirmed\n(skip fix)"];
   confirm -> fix [label="yes"];
   confirm -> report [label="no, adjust"];
   fix -> push -> reply -> resolve_threads -> rereview;
+  reply -> resolve_threads;
 
   node [shape=diamond];
   has_ai [label="AI reviewer\nre-triggered?"];
@@ -280,7 +284,7 @@ Evaluate the three auto-confirm conditions against the triage report from Step 4
 
 1. **All inline issue verdicts are reply-only**: every row in the "Inline Issues" table has `Verdict ∈ {False Positive, Pre-existing, Informational}`. ANY `Valid Bug` / `Suggestion` row → fail condition 1.
 2. **All PR-level reviews are reply-only**: every row in the "PR-Level Reviews" table has Action prefixed `Reply` / `Acknowledge` (no `Fix:` prefix). ANY `Fix:` action → fail condition 2.
-3. **Reply count sanity cap**: total threads requiring a reply ≤ 10. More than 10 → fail condition 3 (likely a noisy / wrong-batch situation worth captain eyeballing).
+3. **Reply count sanity cap**: total replies ≤ 10. Formula: `total = (inline review threads requiring reply) + (PR-level reviews requiring reply)`. Both surfaces count because both produce a thread reply (inline) or a PR comment (PR-level review reply) at Step 6. More than 10 → fail condition 3 (likely a noisy / wrong-batch situation worth captain eyeballing).
 
 ### When all three hold
 

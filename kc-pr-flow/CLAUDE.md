@@ -48,7 +48,9 @@ Built-in subagents dispatched by kc-pr-review for security analysis. Based on Tr
 
 ### `pr_review_resolve.auto_confirm`
 
-Adopter-controlled flag governing when `kc-pr-review-resolve` skips its post-triage confirmation gate. Read from project CLAUDE.md or workflow README. Default = `off` (current behavior, no change for existing adopters).
+Adopter-controlled flag governing when `kc-pr-review-resolve` skips its post-triage confirmation gate. Default = `off` (current behavior, no change for existing adopters).
+
+**Resolution precedence** (first match wins): workflow README YAML frontmatter → project CLAUDE.md `pr_review_resolve:` block → unset (treat as `off`). The skill resolves at Step 4.5 boot. See `kc-pr-flow/skills/kc-pr-review-resolve/SKILL.md` → "Configuration" + "Step 4.5" for full semantics + condition gates + audit log behavior on engage / block.
 
 | Value | Behavior |
 |-------|----------|
