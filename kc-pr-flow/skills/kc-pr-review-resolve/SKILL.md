@@ -15,6 +15,7 @@ This skill respects `pr_review_resolve.auto_confirm` in the adopter's workflow c
 |-------|----------|
 | `off` (default) | Always wait for user confirmation at Step 4 GATE (current behavior, no change for adopters who don't set the flag) |
 | `reply_only` | Skip confirmation gate when ALL conditions hold: (a) every inline issue verdict ∈ {`False Positive`, `Pre-existing`, `Informational`}, (b) every PR-level review action is reply-only (no `Fix:`), (c) total reply count ≤ 10. See **Step 4.5: Auto-Confirm Check** for full logic. |
+| `preapproved` | Skip confirmation gate only when the user explicitly directs autonomous resolution in the current request (for example, "fix all review issues" / "address every valid review comment"). Validation still runs first; invalid or risky feedback is replied to with evidence, not blindly fixed. |
 
 Rationale: `reply_only` mode addresses the daily-pain segment "captain must confirm action plan even when all findings are nits/FP" without granting the skill authority to push controversial fixes. Any issue requiring code change still gates on captain confirmation.
 
@@ -306,18 +307,49 @@ auto-confirm blocked: <condition-1|2|3> — <one-line reason, e.g., "1 Valid Bug
 
 This makes it audit-clear to captain why their `reply_only` flag did not engage on this PR, so they can decide whether to override at the gate or refine the flag's coverage criteria in a future revision.
 
+### When `auto_confirm: preapproved`
+
+This mode activates only when the user's current message explicitly delegates the full loop, e.g. "fix all review issues", "address every valid review comment", or "resolve all reviewer feedback". Do not infer preapproval from prior habits or project ownership.
+
+Validation is still mandatory:
+
+1. Complete Steps 2–4 and classify every thread/review on technical merit.
+2. Fix only `Valid Bug` / accepted `Suggestion` items that are low-to-medium risk and have a clear local patch.
+3. For false positives, pre-existing issues, risky architectural changes, or ambiguous requests, reply with the validation evidence instead of changing code.
+4. If a fix would change public API, data migration semantics, auth/security policy, or production operations, stop at the GATE and ask for explicit approval.
+
+Log the mode before acting:
+
+```
+AUTO-CONFIRMED (preapproved): explicit user directive detected — validated issues will be fixed, risky/invalid items will receive evidence replies
+```
+
 ## Step 5: Fix Valid Issues
 
-For each confirmed fix:
+For each confirmed or preapproved fix, group work by surface before editing:
+
+- **Code/runtime**: product logic, API handlers, workflow scripts, generated clients
+- **Tests/evals**: unit tests, fixtures, eval scenarios, CI assertions
+- **Docs/runbooks/SQL examples**: markdown, operational steps, smoke-test snippets, comments
+
+Dispatch or sequence fixes by surface group so code changes, verification changes, and documentation corrections do not blur into one patch. Keep one commit per logical fix; a grouped issue with multiple reviewer threads can share a commit when it addresses the same root cause.
 
 1. Edit the file
 2. Run quality checks (type-check / lint for the affected app)
-3. Commit with format: `fix(SC-###): address review - <description>`
-4. One commit per logical fix (related threads can share a commit)
+3. Run targeted verification for the exact surface changed (related tests for code, eval/scenario check for tests, command or syntax smoke for SQL/shell snippets when available)
+4. Commit with format: `fix(SC-###): address review - <description>`
 
 ## Step 6: Push & Reply
 
-Push all commits, then reply to each item in-place — never batch replies into a single comment.
+Push all commits, then reply to each item in-place — never batch replies into a single comment. The completion order is fixed:
+
+1. Validate feedback (Steps 2–4)
+2. Fix confirmed/preapproved issues (Step 5)
+3. Run targeted verification for each changed surface
+4. Push commits
+5. Reply to every inline thread / PR-level review
+6. Resolve fixed inline threads via GraphQL
+7. Re-query unresolved threads and assert `unresolved=[]` for fixed/resolved items
 
 ### Inline threads
 Use GraphQL thread reply mutation. Resolve threads that were fixed; leave unfixed threads unresolved with an explanation reply.
@@ -328,6 +360,10 @@ Use GraphQL thread reply mutation. Resolve threads that were fixed; leave unfixe
 Reply using `gh pr comment` quoting the original review's key point. PR-level reviews cannot be "resolved" — the reply itself serves as acknowledgment.
 
 `Read → ${CLAUDE_PLUGIN_ROOT}/reference/gh-api-patterns.md` § "GraphQL Mutations" → "Reply to a PR-level comment"
+
+### Completion assertion
+
+After GraphQL resolve mutations, re-query the PR's unresolved review threads. Completion requires the expected fixed threads to be absent from the unresolved set. If any fixed thread remains unresolved, retry the resolve mutation once; if it still remains, report the thread ID and do not claim completion.
 
 ## Step 7: Request Re-review
 
