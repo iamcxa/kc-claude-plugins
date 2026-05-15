@@ -98,6 +98,12 @@ Fetch title, body, diff, additions/deletions, changed files, commits, and author
 
 Read → ${CLAUDE_PLUGIN_ROOT}/reference/gh-api-patterns.md § "PR Metadata Fetch"
 
+### Step 2.1: PR Head Freshness
+
+Record the PR head SHA after fetching metadata. Before drafting the final review and again immediately before posting, re-query the PR head SHA. If it changed, the previously fetched diff is stale: fetch the new commits/diff, run an unseen-delta review on only the new commits, and merge those results into Step 5/6 before any APPROVE or clean COMMENT.
+
+This is mandatory when prior review feedback caused new commits during the session. "All previously reviewed findings are addressed" is not enough; the final verdict must cover the current head.
+
 ## Step 2.5: Extract User Concerns
 
 Scan the PR body, linked issue descriptions, and user's review request message for **explicit verification concerns** — things the author or reviewer specifically calls out as "must not break", "should be unaffected", or "please verify".
@@ -154,6 +160,8 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/review-triage.md
 Triage (Step 4 / `reference/review-triage.md` §4d-passmode) sets `FULL_PASS_MODE`. When `true`, organize agent dispatch and output around 8 review dimensions. Same agents from Step 4's selected tier — what 8-pass mode adds is **forced verdict per dimension**, closing the "agent fired but said nothing about dimension X, so X looks clean" silent-miss trap.
 
 The discipline: **every owned pass produces a verdict** — findings OR an explicit "Clean — verified by `<evidence>`" line, OR (for passes 7/8 only) `N/A` with justification. A pass with no findings AND no verdict line is a coverage gap, not a clean result.
+
+For large cross-layer PRs, force pass verdicts even when the default tier would otherwise rely on free-form reviewer output. Cross-layer changes create too many silent omission paths; APPROVE requires explicit evidence per active pass, not just absence of findings.
 
 ### 4-Pass-a. Pass-to-agent mapping
 
@@ -426,6 +434,8 @@ Detection (any of):
    - `*.bak`, `*.swp`, `*.pid`, `*.lock` (non-package-manager locks)
    - Files under `.remember/`, temp directories
    - Settings backup files (`settings.*.bak`)
+5. **History-aware secret scan** — for every changed non-code surface, scan both current content and removed diff lines for secrets. A PR that "moves" or "documents" a token still leaks if the secret appears in git history or deleted hunks. Treat real-looking credentials in docs/runbooks/SQL smoke examples as security findings unless they are clearly documented seed/test credentials and match existing project guidance.
+6. **Security-sensitive docs surfaces** — review docs/runbooks/SQL snippets as executable guidance, not inert prose. Smoke-test SQL, shell one-liners, `.env` examples, and incident runbooks can leak credentials, weaken auth defaults, or teach unsafe production operations.
 
 Report findings as MEDIUM (PII, credentials) or HIGH (auto-install hooks in shared config) with source `PRESCAN`.
 
@@ -581,6 +591,8 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/compliance-audit.md
 ## Step 6: Draft Review & Confirm
 
 Present findings in **two separate tables**: one for actionable inline comments (CODE), one for advisory items (DOC/NEW). This prevents DOC/NEW items from being accidentally posted.
+
+Before presenting a clean APPROVE/COMMENT, perform the Step 2.1 head freshness check. If the head moved since the main review pass, add an "Unseen Delta" line to the verification summary describing which new commit range was reviewed. If the unseen delta has not been reviewed, do not offer APPROVE.
 
 ### 6a. Inline Comments (CODE) — will be posted
 
