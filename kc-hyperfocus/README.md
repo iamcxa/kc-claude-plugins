@@ -79,37 +79,25 @@ Session N:
 
 Session N+1:
   SessionStart → stale-checker invalidates changed files + detects pending handoffs
-  Agent about to Read a file → hook injects cached insight as prior context
-  Agent about to Explore → hook suggests cached insights (never blocks)
+  Cache is queried explicitly via /kc-cache-insight or context-lake MCP tools
+  (no automatic injection — agents read normally and decide when to consult the cache)
 ```
 
 ### Hook Trigger Points
 
-#### 1. PreToolUse:Read — `explore-interceptor.js`
+> **v1.6.4 change** — the PreToolUse Read/Explore injector (`explore-interceptor.js`) and
+> the PostToolUse Explore nudge (`post-explore-nudge.js`) have been removed to stop
+> unsolicited interference with agent context. The cache is now consulted on demand
+> via the `/kc-cache-insight` skill and the context-lake MCP tools.
 
-When the agent is about to read a file, looks up the file in the cache. If found, injects the cached insight as `additionalContext` so the agent already knows what the file does before reading it.
+#### 1. PostToolUse:Read — `read-tracker.js`
 
-- **Fresh hit** → inject insight (agent reads with prior understanding)
-- **Stale hit** → inject with warning (file changed since last cache)
-- **Miss** → no injection, agent reads normally
+After the agent finishes reading a file, silently records the file path to
+`/tmp/claude-lake-touched-{session_id}.json` (consumed by `/kc-session-handoff`)
+and silently auto-extracts a lightweight insight from uncached code files so the
+cache grows in the background. Produces no agent-visible output.
 
-The Read always proceeds. Cache just adds context.
-
-#### 2. PreToolUse:Agent(Explore) — `explore-interceptor.js`
-
-When the agent is about to dispatch an Explore subagent, searches the cache using keywords from the Explore prompt. If fresh insights exist, provides them alongside the Explore dispatch.
-
-**Behavior:** Always `allow` — Explore runs with cached hints injected. The cache supplements exploration, never blocks it. (Changed in v1.2.1 from deny to allow-and-suggest after FTS5 false positives caused premature denials.)
-
-#### 3. PostToolUse:Read — `read-tracker.js`
-
-After the agent finishes reading a file, silently records the file path. Tracks uncached reads and nudges the agent with specific file paths at thresholds (15/30 uncached reads) to cache insights.
-
-#### 4. PostToolUse:Agent(Explore) — `post-explore-nudge.js`
-
-After an Explore subagent completes, reminds the agent to cache the insights it just gained.
-
-#### 5. SessionStart — `stale-checker.js`
+#### 2. SessionStart — `stale-checker.js`
 
 At session start:
 1. `git diff HEAD~10..HEAD` → marks cached insights for changed files as stale
@@ -224,6 +212,7 @@ Default: insights older than 30 days with no hits in the last 7 days are evicted
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.6.4 | 2026-05-23 | Remove cache hook injection: dropped PreToolUse Read/Explore injector (`explore-interceptor.js`) and PostToolUse Explore nudge (`post-explore-nudge.js`); stripped `read-tracker.js` to silent touched-file recording + background auto-extract. Cache is now consulted on demand via `/kc-cache-insight` and context-lake MCP tools. |
 | 1.4.0 | 2026-04-06 | Journal tools integrated into context-lake MCP (process_thoughts, search_journal, read_journal_entry, list_recent_entries). Vector embedding search via MiniLM. Based on [private-journal-mcp](https://github.com/obra/private-journal-mcp). |
 | 1.3.0 | 2026-04-06 | Statusline setup skill, SessionStart handoff detection, forge TDD (14 edits across 3 skills), published to public marketplace |
 | 1.2.1 | 2026-04-05 | Explore: deny→allow+suggest, read-based nudge, worktree path normalization, fileLines savings tracking |

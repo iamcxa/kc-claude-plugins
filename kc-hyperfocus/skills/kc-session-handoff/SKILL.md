@@ -170,16 +170,13 @@ If the journal entry you just wrote includes `technical_insights`:
 If the context lake MCP server is available (check by attempting to call `store_insight`):
 
 1. Read `/tmp/claude-lake-touched-{session_id}.json` — list of files Read during this session
-2. Read `/tmp/claude-lake-explores-{session_id}.json` — list of completed Explore dispatches
-3. Combine both sources. Deduplicate the file list.
-4. **Safety net check**: For each completed Explore, check if the key files from that exploration already have `store_insight` calls in this session (the post-explore-nudge hook prompted you to cache during the session). If insights were already stored → skip those files.
-5. For remaining files you explored deeply enough to summarize (analyzed, explained, modified, or debugged — not merely glanced at):
+2. For files you explored deeply enough to summarize (analyzed, explained, modified, or debugged — not merely glanced at):
    - Produce a 3-5 sentence insight **in English** answering: What does this file do? Key functions/classes? Dependencies and gotchas?
    - Call `store_insight` for each with `source: "handoff"`
-6. Report: "Cached N insights to context lake (M already cached during session, K skipped — no deep analysis)"
-7. Delete both temp files (`/tmp/claude-lake-touched-{session_id}.json`, `/tmp/claude-lake-explores-{session_id}.json`)
+3. Report: "Cached N insights to context lake (K skipped — no deep analysis)"
+4. Delete the temp file (`/tmp/claude-lake-touched-{session_id}.json`)
 
-**Skip conditions**: Neither temp file exists, no files with meaningful analysis in this session, or MCP server not available.
+**Skip conditions**: Temp file doesn't exist, no files with meaningful analysis in this session, or MCP server not available.
 
 ### 3. Resume Prompt
 

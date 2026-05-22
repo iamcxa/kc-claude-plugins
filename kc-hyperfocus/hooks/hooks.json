@@ -3,26 +3,6 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Read",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/explore-interceptor.js\"",
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "Agent",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/explore-interceptor.js\"",
-            "timeout": 10
-          }
-        ]
-      },
-      {
         "matcher": "mcp__claude_ai_Linear__|mcp__plugin_linear_linear__|mcp__claude_ai_Sentry__|mcp__plugin_sentry_sentry__|mcp__claude_ai_Notion__|mcp__claude_ai_Supabase__|mcp__plugin_episodic-memory_episodic-memory__|mcp__claude_ai_Figma__|mcp__claude_ai_Slack__|mcp__langfuse-docs__",
         "hooks": [
           {
@@ -58,16 +38,6 @@
           {
             "type": "command",
             "command": "bun \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/read-tracker.js\"",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Agent",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/post-explore-nudge.js\"",
             "timeout": 5
           }
         ]
