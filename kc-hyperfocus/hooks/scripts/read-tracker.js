@@ -4,24 +4,18 @@
 // 1. Records file paths read during a session to /tmp/claude-lake-touched-{session_id}.json.
 //    This data is consumed by session-handoff to know which files the agent explored.
 //
-// 2. Checks context lake for cached insight. Tracks uncached-read count.
+// 2. Silently auto-extracts a lightweight insight from uncached code files so the
+//    context-lake cache grows in the background. No agent-visible output.
 //
-// 3. When uncached reads cross a threshold, nudges Claude to cache insights
-//    for the most-read uncached modules.
-//
-// Silent unless nudge threshold crossed. Always exits 0.
+// Silent hook — never writes to stdout. Always exits 0.
 
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
-import { openLake, searchInsights, recordMetric, storeInsight } from "../../lib/context-lake.ts";
+import { openLake, searchInsights, storeInsight } from "../../lib/context-lake.ts";
 
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
-
-const NUDGE_FIRST = 15; // uncached reads before first nudge
-const NUDGE_INTERVAL = 30; // uncached reads between subsequent nudges
-const NUDGE_MAX = 3; // max nudges per session
 
 const SKIP_EXTENSIONS = new Set([
   ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".svg", ".webp",
@@ -199,18 +193,12 @@ try {
   const basename = filePath.slice(filePath.lastIndexOf("/") + 1);
   if (SKIP_LOCK_FILES.has(basename)) process.exit(0);
 
-  // Load session state
+  // Load session state (touched-file list only)
   const touchedPath = `/tmp/claude-lake-touched-${sessionId}.json`;
-  let data = { files: [], uncachedCount: 0, lastNudgeAt: 0, nudgeCount: 0 };
+  let data = { files: [] };
   try {
     const existing = JSON.parse(readFileSync(touchedPath, "utf8"));
     data.files = Array.isArray(existing.files) ? existing.files : [];
-    data.uncachedCount =
-      typeof existing.uncachedCount === "number" ? existing.uncachedCount : 0;
-    data.lastNudgeAt =
-      typeof existing.lastNudgeAt === "number" ? existing.lastNudgeAt : 0;
-    data.nudgeCount =
-      typeof existing.nudgeCount === "number" ? existing.nudgeCount : 0;
   } catch {
     // File doesn't exist yet — use defaults
   }
@@ -232,16 +220,13 @@ try {
 
   const relativePath = toRelativePath(filePath, repoRoot);
 
-  // Only track cache status for code paths
+  // Silently auto-extract for code paths so future reads have cache coverage.
+  // No agent-visible output — cache grows in the background.
   if (isCodePath(relativePath)) {
     const db = openLake(repoRoot);
     try {
       const results = searchInsights(db, { filePath: relativePath });
       if (results.length === 0) {
-        data.uncachedCount++;
-
-        // Auto-extract: store a lightweight insight so future reads are cache hits.
-        // source: "auto" (priority 0) — any manual/handoff/journal write overwrites.
         const content = autoExtract(filePath);
         if (content) {
           let gitHash = "";
@@ -266,92 +251,7 @@ try {
     }
   }
 
-  // Save state before potential nudge
   writeFileSync(touchedPath, JSON.stringify(data));
-
-  // Check nudge threshold
-  if (data.nudgeCount >= NUDGE_MAX) process.exit(0);
-
-  const threshold =
-    data.lastNudgeAt === 0 ? NUDGE_FIRST : data.lastNudgeAt + NUDGE_INTERVAL;
-
-  if (data.uncachedCount >= threshold) {
-    // Find uncached code files from this session
-    const codePaths = data.files
-      .map((f) => toRelativePath(f, repoRoot))
-      .filter(isCodePath);
-
-    if (codePaths.length === 0) process.exit(0);
-
-    // Find files with auto-only insights (upgradeable) or no insights at all
-    const db = openLake(repoRoot);
-    try {
-      const placeholders = codePaths.map(() => "?").join(",");
-      const cachedRows = db
-        .query(
-          `SELECT file_path, source FROM insights WHERE file_path IN (${placeholders})`
-        )
-        .all(...codePaths);
-      const cachedMap = new Map(cachedRows.map((r) => [r.file_path, r.source]));
-
-      // Files with auto insights that could be upgraded
-      const autoOnlyPaths = codePaths.filter((f) => cachedMap.get(f) === "auto");
-      // Files with no insight at all (auto-extract may have failed)
-      const uncachedPaths = codePaths.filter((f) => !cachedMap.has(f));
-
-      const upgradeable = [...autoOnlyPaths, ...uncachedPaths];
-      if (upgradeable.length === 0) process.exit(0);
-
-      const topFiles = upgradeable.slice(0, 5);
-      const remaining = upgradeable.length - topFiles.length;
-      const fileList = topFiles
-        .map((f) => {
-          const src = cachedMap.get(f);
-          return src === "auto" ? `  - ${f} (auto — upgrade)` : `  - ${f} (no cache)`;
-        })
-        .join("\n");
-      const remainingSummary =
-        remaining > 0
-          ? `\n  (+ ${remaining} more)`
-          : "";
-
-      // Record nudge metric
-      recordMetric(db, {
-        event: "nudge",
-        details: {
-          autoFiles: autoOnlyPaths.length,
-          uncachedFiles: uncachedPaths.length,
-          topFiles,
-          sessionNudgeCount: data.nudgeCount + 1,
-        },
-        sessionId: sessionId ?? undefined,
-      });
-
-      // Update nudge state
-      data.lastNudgeAt = data.uncachedCount;
-      data.nudgeCount++;
-      writeFileSync(touchedPath, JSON.stringify(data));
-
-      const exampleFile = topFiles[0];
-
-      process.stdout.write(
-        JSON.stringify({
-          hookSpecificOutput: {
-            hookEventName: "PostToolUse",
-            additionalContext: [
-              `[context-lake] ${upgradeable.length} files have auto-generated or missing insights. Upgrade the most important ones:`,
-              fileList + remainingSummary,
-              `Call store_insight with: file_path, content (English, 3-8 sentences: purpose, key patterns, dependencies, gotchas), source: "manual".`,
-              `Example — store_insight({ file_path: "${exampleFile}", content: "...", source: "manual" })`,
-              `Upgrade top 3 when you have a natural pause, then continue your work.`,
-            ].join("\n"),
-          },
-        })
-      );
-    } finally {
-      db.close();
-    }
-  }
 } catch {
   // Never crash — silent exit
 }

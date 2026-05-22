@@ -65,48 +65,30 @@ Session Start
 
 ## Context Lake Data Flow
 
+> **v1.6.4 change** — the PreToolUse Read/Explore injector and the PostToolUse
+> Explore nudge have been removed. The cache is now consulted on demand via the
+> `/kc-cache-insight` skill and the context-lake MCP tools. Reads still record
+> their target paths for handoff and trigger silent background auto-extraction.
+
 ```
 [Agent reads a file]
     │
-    ├── PreToolUse:Read — explore-interceptor.js
-    │     query cache by exact file_path
-    │     fresh hit → allow + additionalContext (inject insight)
-    │     stale hit → allow + additionalContext + ⚠️ warning
-    │     miss → recordMetric('miss'), no injection
-    │
-    ├── PostToolUse:Read — read-tracker.js
+    ├── PostToolUse:Read — read-tracker.js (silent — no agent-visible output)
     │     append file_path to /tmp/claude-lake-touched-{session}.json
-    │     check cache → uncachedCount++
-    │     threshold (15/30/30, max 3/session) → NUDGE:
-    │       "ACTION NEEDED: Cache these files NOW"
-    │       lists top 5 uncached file paths + store_insight example
-    │     records 'nudge' metric with topFiles
+    │     uncached code file → autoExtract → storeInsight(source: "auto")
     │
     ▼
-[Agent dispatches Explore]
+[Agent explicitly consults the cache]
     │
-    ├── PreToolUse:Agent(Explore) — explore-interceptor.js
-    │     FTS5 search against prompt keywords (stop words filtered)
-    │     always ALLOW — never deny based on keyword matching
-    │     results found → allow + additionalContext (cached hints)
-    │     miss → Explore runs normally
-    │
-    ▼
-[Explore completes]
-    │
-    ├── PostToolUse:Agent(Explore) — post-explore-nudge.js
-    │     inject nudge: "call store_insight for key files"
-    │     record explore completion to /tmp/claude-lake-explores-{session}.json
-    │
-    ├── Agent may call store_insight immediately (nudge effect)
+    ├── /kc-cache-insight skill (manual cache + status + metrics)
+    ├── MCP context-lake tools (search_insights, store_insight, ...)
     │
     ▼
 [Session handoff]
     │
-    ├── Read touched files + completed explores
-    ├── Cross-check: what was already cached by nudge?
-    ├── Batch-cache remaining deeply-understood files
-    └── Cleanup temp files
+    ├── Read /tmp/claude-lake-touched-{session}.json
+    ├── Batch-cache remaining deeply-understood files (source: "handoff")
+    └── Cleanup temp file
 ```
 
 ## Context Lake Storage
@@ -175,7 +157,6 @@ Higher-priority insights are never overwritten by lower-priority ones.
 | `/tmp/claude-ctx-{session}-warned.json` | monitor | monitor | Session (debounce) |
 | `/tmp/claude-cleanup-{session}.json` | tracker | enforcer | Session (5min stale) |
 | `/tmp/claude-lake-touched-{session}.json` | read-tracker | session-handoff | Session |
-| `/tmp/claude-lake-explores-{session}.json` | post-explore-nudge | session-handoff | Session |
 
 ## Threshold Design
 
@@ -185,7 +166,6 @@ Higher-priority insights are never overwritten by lower-priority ones.
 | Monitor CRITICAL | ≤25% remaining | Agent stops new work, informs user |
 | Tracker CRITICAL | ≤17% remaining | Triggers enforcement (journal required before stop) |
 | Enforcer safety valve | 2 attempts | Prevents infinite enforcement loop |
-| Read nudge | 15 uncached reads | Suggest caching top uncached files (max 3/session) |
 | Cold eviction | >30 days + 7 days idle | Remove unused insights |
 
 The gap between Monitor CRITICAL (25%) and Tracker CRITICAL (17%) gives the agent ~8% of context to perform handoff gracefully before enforcement kicks in.

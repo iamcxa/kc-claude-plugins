@@ -31,10 +31,8 @@ Context Lake + Journal (unified MCP server):
   journal-search.ts    →  vector search, list recent, read entry
   context-lake-mcp.ts  →  MCP server: 9 tools (5 cache + 4 journal)
 
-  [Read/Explore] → explore-interceptor.js (PreToolUse)
-                    inject cached insights on Read; suggest cached insights before Explore (never deny)
   [Read]         → read-tracker.js (PostToolUse)
-                    record touched files + track uncached reads → nudge at threshold
+                    record touched files + silently auto-extract insights (no nudge)
   [SessionStart] → stale-checker.js
                     invalidate stale insights, cold eviction, journal sync
 ```
@@ -55,9 +53,7 @@ Context Lake + Journal (unified MCP server):
 | Lib | journal.ts | — | Journal write: dual-write project + user dirs, embedding generation |
 | Lib | journal-search.ts | — | Journal search: vector similarity, list recent, read entry |
 | MCP | context-lake-mcp.ts | — | MCP server: 9 tools (5 cache + 4 journal — process_thoughts, search_journal, read_journal_entry, list_recent_entries) |
-| Hook | explore-interceptor.js | PreToolUse | Inject cached insights on Read; suggest (never deny) cached insights before Explore |
-| Hook | read-tracker.js | PostToolUse | Record touched files + track uncached reads → nudge Claude to cache insights |
-| Hook | post-explore-nudge.js | PostToolUse | Nudge Claude to cache insights after Explore completes |
+| Hook | read-tracker.js | PostToolUse | Record touched files (consumed by kc-session-handoff) + silently auto-extract insights into the cache. No agent-visible output. |
 | Hook | stale-checker.js | SessionStart | Invalidate stale insights, cold eviction, journal sync |
 | Skill | kc-cache-insight | — | Manual cache + status + metrics view |
 | Skill | kc-statusline-setup | — | Install statusline with model, branch, context bar, Anthropic 5h/7d usage quota |

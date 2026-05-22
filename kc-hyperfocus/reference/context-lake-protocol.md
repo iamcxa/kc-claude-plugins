@@ -5,10 +5,16 @@
 
 ## Why This Matters
 
-The context lake caches file-level insights (purpose, patterns, gotchas) in a per-repo SQLite DB. When Claude reads a file that has a cached insight, the insight is injected as `additionalContext` — giving Claude instant understanding without re-analyzing the file.
+The context lake caches file-level insights (purpose, patterns, gotchas) in a per-repo SQLite DB. Insights are consulted on demand via the `/kc-cache-insight` skill and the context-lake MCP tools (`search_insights`, `store_insight`, …).
 
-**Without protocol**: nudge fires → Claude ignores → 0% store conversion → cache stays empty.
-**With protocol**: store is part of the workflow → cache grows → hits compound over sessions.
+> **v1.6.4 change** — the PreToolUse Read/Explore injector and the PostToolUse
+> Explore nudge have been removed to stop unsolicited interference with agent
+> context. The cache no longer auto-injects on Read or pre-Explore. Treat the
+> protocol below as a workflow you opt into when you genuinely need cached
+> understanding, not as a hook-driven prompt.
+
+**Without protocol**: cache never gets consulted → re-analyze the same files every session.
+**With protocol**: search before deep analysis, store after deep understanding → cache grows → hits compound over sessions.
 
 ## Core Principles
 
@@ -92,14 +98,13 @@ This makes store_insight a **mandatory step**, not a suggestion.
 
 ### For general sessions (carlove, recce, etc.)
 
-The read-tracker hook nudges after 15+ uncached reads. When the nudge fires:
+No hook will prompt you to cache. Build the habit yourself:
 
-1. **Stop current work briefly** (the nudge says "ACTION NEEDED")
-2. **Pick the top 3 files** from the nudge list
-3. **Call `store_insight`** for each with what you know
-4. **Continue your work**
+1. **Search before deep analysis** — `search_insights(file_path: "...")` for files you're about to study in depth.
+2. **Store after deep understanding** — `store_insight(...)` for files you analyzed, modified, or debugged. Skip glances.
+3. **Use `/kc-cache-insight` for batch caching** — at natural pauses, cache the 3-5 files you understood best this session.
 
-The nudge lists specific file paths and includes a call example. If you skip the nudge, the same files will keep missing — costing comprehension overhead every session.
+If you never store, the same files keep missing — costing comprehension overhead every session. The discipline lives in the workflow, not in a hook.
 
 ### For CLAUDE.md integration
 
