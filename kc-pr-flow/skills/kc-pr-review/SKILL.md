@@ -124,6 +124,31 @@ Each concern becomes a **mandatory verification item** that must be addressed in
 
 If no explicit concerns are found, skip this step. Do NOT invent concerns.
 
+## Step 2.6: PR Intent Summary
+
+**Always produce this summary** — it is the conversation-facing answer to "what / why / did it work?" that the user reads before any findings tables. Distinct from Step 2.5: Step 2.5 builds a verification gate from explicit concerns; Step 2.6 builds a contextual summary regardless of whether concerns exist.
+
+Extract from PR body, linked Linear/Jira issue (parse issue IDs like `DRC-1234`, `PROJ-202` from PR title, body, branch name, or commit messages), and the diff itself:
+
+- **What this PR changes** — 1-3 bullets at behaviour level (not file-level). "Adds slug-shape validation at 3 wrapper boundaries" is behaviour; "Modifies 3 files in scripts/spacedock-ask/src/" is not.
+- **Why (per author)** — root cause / motivation cited by the author. Quote or paraphrase from PR body. If absent, write `Not stated by author`.
+- **Claimed goal** — what the PR body / linked issue says it achieves (e.g., "stop opaque `Invalid slug in result.json` failures"). If neither states a goal, write `Not stated`.
+- **Linked issue** — first issue ID found, plus title if fetchable. If `linear-mcp` is available and the issue is in Linear, fetch the issue title and acceptance criteria; otherwise just record the ID.
+
+Then **render a goal-achievement verdict** — your independent reviewer call, with evidence:
+
+| Verdict | When to use |
+|---------|-------------|
+| ✅ Achieved | Diff implements the stated goal AND verification (tests / probe / code-path read) confirms it |
+| ⚠️ Partially | Diff implements part of the stated goal, OR achieves the spirit but leaves a follow-up gap |
+| ❌ Not achieved | Stated goal is not realised by the diff (orthogonal change, wrong layer, etc.) |
+| 🟡 Unverifiable | Cannot determine — no tests, no probe possible, claim is hand-wavy (`improve UX`) |
+| ➖ N/A | PR has no stated goal (rare; flag this explicitly so the user notices the gap) |
+
+**Evidence is mandatory** for ✅/⚠️/❌. Point at specific verifications (test results, file:line, grep outputs, probe output) — never assert without evidence.
+
+This summary is rendered at the head of the Step 6 draft (see § 6-pre).
+
 ## Step 3: Check Repo Ownership
 
 Determine `IS_MY_REPO` to decide which CLAUDE.md rule scope applies. **MUST execute the commands below — never infer ownership from PR authorship, branch name, or any other context.**
@@ -594,6 +619,38 @@ Present findings in **two separate tables**: one for actionable inline comments 
 
 Before presenting a clean APPROVE/COMMENT, perform the Step 2.1 head freshness check. If the head moved since the main review pass, add an "Unseen Delta" line to the verification summary describing which new commit range was reviewed. If the unseen delta has not been reviewed, do not offer APPROVE.
 
+### 6-pre. PR Summary (always render first)
+
+Render the Step 2.6 PR Intent Summary at the **top of the draft**, before the inline comments and advisory tables. This is what the user reads first — it answers "what is this PR, why does it exist, and did it work?" without forcing them to infer from findings tables.
+
+Format (conversation-facing language, not the English review-body language):
+
+```
+## PR #NNN — <PR title>
+
+**What this PR changes:**
+- <behaviour-level bullet>
+- <behaviour-level bullet>
+
+**Why (per author):**
+<motivation / root cause, quoted or paraphrased from PR body; "Not stated by author" if absent>
+
+**Claimed goal:** <stated goal from PR body or linked issue; "Not stated" if absent>
+**Linked issue:** <ID + title if fetchable; "None" if no issue linked>
+
+**Goal-achievement verdict:** ✅ Achieved | ⚠️ Partially | ❌ Not achieved | 🟡 Unverifiable | ➖ N/A
+**Evidence:**
+- <pointer to specific verification — test results, file:line, grep output, probe output>
+- <additional evidence rows as needed>
+```
+
+**Hard rules:**
+- This block is **mandatory on every run** — never skip, never collapse into a single sentence.
+- Verdict is **your independent call**, not the author's claim. If the author says "this fixes X" but verification shows X still broken, the verdict is ❌, not ✅.
+- ✅/⚠️/❌ verdicts must cite at least one piece of concrete evidence. "Looks reasonable" is not evidence.
+- 🟡 Unverifiable is acceptable but must explain why (no tests, requires production data, claim is too vague to test).
+- ➖ N/A flags a gap — explicitly tell the user the PR has no stated goal so they can decide whether to push back on the author.
+
 ### 6a. Inline Comments (CODE) — will be posted
 
 **Apply confidence gates before populating this table** (see `reference/review-triage.md` §4f "Confidence calibration in agent prompts"):
@@ -737,6 +794,7 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md
 
 ## Rules
 
+- **PR Summary always rendered first** — Step 6 draft must begin with the §6-pre PR Summary block (what / why / claimed-goal / verdict + evidence) before any findings tables. The goal-achievement verdict is mandatory and is your independent reviewer call (✅/⚠️/❌/🟡/➖), not a restatement of the author's claim. If author claims success but evidence contradicts, the verdict must reflect evidence
 - **Confirm before posting** — never submit a review without user approval
 - **Dynamic repo detection** — use `gh repo view`, never hardcode owner/repo
 - **Ownership check** — only apply personal CLAUDE.md rules to repos you own (personal or org admin)
