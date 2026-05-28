@@ -10,7 +10,7 @@ Claude Code plugin marketplace by [Kent Chen](https://github.com/iamcxa).
 
 ## Available Plugins
 
-### [e2e-pipeline](./e2e-pipeline/) `v2.8.0`
+### [e2e-pipeline](./e2e-pipeline/) `v2.8.1`
 
 Browser & CLI E2E testing with context-isolating subagents. Map your app's UI, generate test flows from plans, verify in browser with auto-repair, run tests with video recording, record CLI-only flows via terminal recording (asciinema), and verify static UI computed styles via the new declarative `/ui-verify` skill. Codex platform manifest ships alongside Claude Code.
 
