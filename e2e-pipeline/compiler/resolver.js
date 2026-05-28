@@ -117,13 +117,21 @@ var EXPECT_PATTERNS = [
   // Phase 2 — element visibility without page qualifier
   { re: /^(\w+) visible$/, type: 'element-visible' },
 
-  // Phase 2 — element not visible
+  // Phase 2 — element not visible WITH page qualifier (more specific, before bare form)
+  { re: /^(\w+) is not visible on [\w-]+$/, type: 'element-not-visible' },
+  { re: /^(\w+) not visible on [\w-]+$/, type: 'element-not-visible' },
+
+  // Phase 2 — element not visible (bare form)
   { re: /^(\w+) is not visible$/, type: 'element-not-visible' },
   { re: /^(\w+) not visible$/, type: 'element-not-visible' },
 
   // Phase 2 — URL checks (url-does-not-contain must come before url-contains)
   { re: /^url does not contain (.+)$/, type: 'url-not-contains' },
   { re: /^url contains (.+)$/, type: 'url-contains' },
+
+  // Phase 2 — text NOT visible (negated; must come before positive text-visible)
+  { re: /^text '(.+)' not on page$/, type: 'text-not-visible' },
+  { re: /^text "(.+)" not visible$/, type: 'text-not-visible' },
 
   // Phase 2 — text visibility (single-quote and double-quote variants)
   { re: /^text '(.+)' on page$/, type: 'text-visible' },
@@ -220,6 +228,9 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
         activeCount++;
       } else if (type === 'text-visible') {
         resolvedExpects.push({ type: 'text-visible', raw: expectStr, text: match[1] });
+        activeCount++;
+      } else if (type === 'text-not-visible') {
+        resolvedExpects.push({ type: 'text-not-visible', raw: expectStr, text: match[1] });
         activeCount++;
       } else if (type === 'or-visible') {
         var elemA = match[1];

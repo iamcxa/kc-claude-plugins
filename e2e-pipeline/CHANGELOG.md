@@ -3,6 +3,19 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.8.1] - 2026-05-28 — Negation grammar: text-not-visible + page-qualified element-not-visible
+
+Closes 2 of 3 grammar gaps in compile-ready flow expects. Previously these forms fell through to `deferred` (runtime echoed `TODO`, no actual assertion).
+
+### Added
+- **`text 'X' not on page`** / **`text "X" not visible`** — new `text-not-visible` expect type. Codegen emits an inverted snapshot grep (fails if the text IS found).
+- **`element not visible on <page>`** / **`element is not visible on <page>`** — page-qualified variants of the existing `element-not-visible` type. Routes to the same codegen path; symmetric with the positive `element visible on <page>` form.
+
+### Notes
+- Surfaced by a downstream compile experiment for `DataRecce/recce-cloud-infra#1383` (`signin-error-handling.yaml` went from 12 active / 3 deferred to 15 active / 0 deferred after this patch).
+- `element href = 'X'` attribute equality (the third gap) remains out of scope — grammar design pending.
+- Pattern ordering preserves the precedence convention: page-qualified before bare, negated before positive (mirrors existing `url-not-contains` listed before `url-contains`).
+
 ## [2.8.0] - 2026-05-06 — UI Verify skill + Codex manifest
 
 Adds a deterministic static-UI verification skill and ships the Codex platform manifest alongside the existing Claude Code plugin manifest.

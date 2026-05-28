@@ -539,6 +539,56 @@ test('resolveExpects Phase 2: text with double-quote format resolves type text-v
   assert.equal(result.stats.deferredExpects, 0);
 });
 
+test("resolveExpects Phase 2: \"text 'X' not on page\" resolves type text-not-visible", () => {
+  const flow = flowWithExpects(["text 'Sign-in failed' not on page"]);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'text-not-visible');
+  assert.equal(exp.text, 'Sign-in failed');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: text with double-quote "not visible" format resolves type text-not-visible', () => {
+  const flow = flowWithExpects(['text "Dashboard" not visible']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'text-not-visible');
+  assert.equal(exp.text, 'Dashboard');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: "element not visible on page" resolves type element-not-visible with page qualifier', () => {
+  const flow = flowWithExpects(['heading not visible on dashboard']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'element-not-visible');
+  assert.equal(exp.elementName, 'heading');
+  assert.equal(exp.selector, 'role=heading[name="Dashboard"]');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects Phase 2: "element is not visible on page" resolves type element-not-visible with page qualifier', () => {
+  const flow = flowWithExpects(['heading is not visible on dashboard']);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'element-not-visible');
+  assert.equal(exp.elementName, 'heading');
+  assert.equal(exp.selector, 'role=heading[name="Dashboard"]');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
 test('resolveExpects Phase 2: or-visible resolves both elements with correct selectors', () => {
   const flow = flowWithExpects(['email_input visible or login_button visible']);
   const result = resolve(flow, SIMPLE_MAPPING);

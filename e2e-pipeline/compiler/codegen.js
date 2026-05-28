@@ -960,6 +960,14 @@ function generateExpects(step) {
       lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' not found on page"');
       lines.push('fi');
 
+    } else if (expect.type === 'text-not-visible') {
+      // Inverted snapshot grep — fail if the text IS found on page.
+      var quotedText = singleQuote(expect.text);
+      lines.push('_snapshot=$(agent-browser snapshot) || true');
+      lines.push('if echo "$_snapshot" | grep -qF ' + quotedText + '; then');
+      lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' should NOT be on page but was found"');
+      lines.push('fi');
+
     } else if (expect.type === 'or-visible') {
       // Poll until either element is visible (CODEGEN-01)
       var elements = expect.elements;

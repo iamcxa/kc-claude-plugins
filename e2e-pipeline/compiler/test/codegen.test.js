@@ -1021,6 +1021,67 @@ describe('generateExpects() — text-visible', function() {
   });
 });
 
+describe('generateExpects() — text-not-visible', function() {
+  test("text-not-visible generates agent-browser snapshot capture", function() {
+    const step = makeSnapshot('verify-text-absent', 'Take snapshot');
+    step.expects = [{ type: 'text-not-visible', raw: "text 'Sign-in failed' not on page", text: 'Sign-in failed' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_snapshot=$(agent-browser snapshot) || true'),
+      'text-not-visible must capture snapshot. Got: ' + script
+    );
+  });
+
+  test("text-not-visible uses grep -qF for fixed-string matching (CJK safe)", function() {
+    const step = makeSnapshot('verify-text-absent', 'Take snapshot');
+    step.expects = [{ type: 'text-not-visible', raw: "text '每日看板' not on page", text: '每日看板' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("grep -qF '每日看板'"),
+      'text-not-visible must use grep -qF for fixed string match. Got: ' + script
+    );
+  });
+
+  test("text-not-visible uses inverted if pattern (fail when text IS found)", function() {
+    const step = makeSnapshot('verify-text-absent', 'Take snapshot');
+    step.expects = [{ type: 'text-not-visible', raw: "text 'Sign-in failed' not on page", text: 'Sign-in failed' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    // inverted: positive grep (no leading `!`); failure when grep DOES find the text
+    assert.ok(
+      script.includes('if echo "$_snapshot" | grep -qF'),
+      'text-not-visible must use positive `if echo ... | grep -qF` pattern (no leading !). Got: ' + script
+    );
+    assert.ok(
+      !script.includes('if ! echo "$_snapshot" | grep -qF \'Sign-in failed\''),
+      'text-not-visible must NOT use `if !` (that is the positive text-visible pattern). Got: ' + script
+    );
+  });
+
+  test("text-not-visible FAIL message names the text, step id, and 'should NOT' phrasing (via _handle_failure)", function() {
+    const step = makeSnapshot('verify-text-absent', 'Take snapshot');
+    step.expects = [{ type: 'text-not-visible', raw: "text 'Sign-in failed' not on page", text: 'Sign-in failed' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes('_handle_failure "verify-text-absent"'),
+      'text-not-visible FAIL must dispatch via _handle_failure. Got: ' + script
+    );
+    assert.ok(
+      script.includes("Sign-in failed' should NOT be on page but was found"),
+      'text-not-visible FAIL message must include "should NOT be on page but was found". Got: ' + script
+    );
+  });
+
+  test("text-not-visible with ASCII double-quoted text works correctly", function() {
+    const step = makeSnapshot('verify-title-absent', 'Take snapshot');
+    step.expects = [{ type: 'text-not-visible', raw: 'text "Dashboard" not visible', text: 'Dashboard' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.ok(
+      script.includes("grep -qF 'Dashboard'"),
+      'text-not-visible with ASCII text uses grep -qF. Got: ' + script
+    );
+  });
+});
+
 describe('generateExpects() — or-visible', function() {
   test("or-visible uses _poll_or_visible call (v2.0 poll-until)", function() {
     const step = makeSnapshot('check-or', 'Take snapshot');
