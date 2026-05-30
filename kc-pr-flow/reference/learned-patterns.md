@@ -1138,6 +1138,24 @@ The commit message looks correct, the file content looks correct, but the commit
 
 **Reference:** kc-pr-flow PR #18 F2 (forward-looking claim about `gh-api-patterns.md` reviewer-add behavior) — caught manually during /review dogfood; §4.5j surfaces it automatically.
 
+## Intra-doc rule-vs-example self-consistency (2026-05-28)
+
+**Pattern (recce PR #1406, 2026-05-28):** When a docs PR adds a normative rule prohibiting pattern X (e.g. "There is no root `package.json`; pnpm commands from the repo root will fail"), the same diff often leaves untouched example commands elsewhere in the same file that violate the new rule. Multi-round AI/human review masks this: a first-round reviewer flags one offending line; the author fixes that line; the new rule lands in the diff; but other instances of pattern X in the same file are never grepped for. A second-round reviewer catches the contradiction, or worse, the wrong example survives merge and propagates to downstream agents.
+
+**Detection signals:**
+
+- Added doc lines containing a prohibitive-rule signature: `<X> will fail`, `<X> fails`, `never <X>`, `do not <X>`, `There is no <X>`, `MUST NOT <X>`, `<X> instead of <Y>`
+- The prohibited pattern X is a concrete grep-able token (bare command, specific path, syntax form)
+- Same file (or same diff) contains other example commands matching pattern X without the prescribed mitigation
+
+**Why it slips review:** Reviewers (human and LLM) attend to each diff hunk in isolation. A rule landing in hunk A and an example violating it in hunk B is structurally invisible to per-hunk attention. Confirmation bias amplifies the miss: after verifying the new rule "looks correct," the reviewer doesn't pressure-test the rule against the rest of the same diff. Mid-PR fixups (reviewer-A flags one site, author fixes only that site) create a clean-on-paper PR with stranded counter-examples.
+
+**Rule for review:** Operationalized as kc-pr-review §4.5k. Pure pre-scan — extract pattern X from the new rule, grep the same file/diff for remaining matches, filter the rule-statement line itself + already-compliant lines. Severity: MEDIUM when the offender is in the same diff (PR introduces the contradiction); LOW when offender is unchanged context (pre-existing, PR merely exposes it).
+
+**Reference:** recce PR #1406 (2026-05-28) — `CLAUDE.md:16` adds "pnpm from repo root fails" rule; `CLAUDE.md:52` modified by same PR still issued bare `pnpm install && pnpm lint ... && pnpm build`. Copilot flagged L16, author fixed L16 only, @even-wei caught L52, kc-pr-review approved without spotting. §4.5k would have surfaced L52 automatically.
+
+Complements §4.5i + §4.5j: §4.5i = code helper rollouts grep the *rest of the repo* for direct API calls; §4.5j = doc claims grep the *codebase* for cited subjects; §4.5k = doc rules grep the *same diff/file* for violating examples. Three cells of the same consistency-matrix primitive.
+
 ## Baseline-convention check at meta level (2026-05-13)
 
 **Pattern (kc-pr-flow PR #18, 2026-05-13):** kc-pr-flow's §4f baseline-convention rule ("Before flagging a pattern as an issue, check whether the SAME pattern exists in unchanged code in the same file") works as a primitive at the code level. The same primitive applies at the **meta level** when one skill reviews another skill's output: before flagging a pattern in a SKILL.md / reference / agent file, grep the plugin (and adjacent plugins) for sibling usage.
