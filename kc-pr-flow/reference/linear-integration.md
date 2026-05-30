@@ -41,7 +41,7 @@ PR #{number} — {one-line summary of how it was handled}
 ```
 PR #456 — 移除所有 Supabase security advisor 警告的 RLS policy，新增 8 個 migration files
 
-https://github.com/duckbase-co/qnow/pull/456
+https://github.com/OWNER/REPO/pull/456
 ```
 
 ## Posting Fallback (3-Tier)
