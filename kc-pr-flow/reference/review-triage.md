@@ -206,6 +206,14 @@ This suppresses false positives when one skill (e.g. `/review` from gstack) revi
 >
 > Use the format: `[SEVERITY] (confidence: N/10) file:line — description`. If you cannot read enough surrounding context to attach a calibrated score, default to **6** with a "verify" caveat note.
 
+**Pre-emit evidence requirement (append to every agent prompt):**
+
+> For EACH finding, before you report it, quote the exact motivating line(s): `file:line` plus the verbatim source text that triggered the finding. Then re-read your own quote and ask: *does the quoted code actually say what my finding claims?*
+> - "X doesn't exist" → quote the class/type/schema/`Meta` block where X would live.
+> - "this branch/probe is dead/unreachable" → quote BOTH the guard you assume AND the decider/handler it duplicates; if they read different stores (e.g. a materialized view vs an event store in CQRS), they can diverge and the path IS reachable — do not report it as dead.
+> - "this was reformatted / newly introduced" → quote the pre-PR line via `git show <base>:<file>`; if it pre-existed, do not report it.
+> If you cannot produce a motivating quote that survives this self-check, set confidence to **4-5** and mark it `unverified`. Do NOT inflate to 7+ to bypass this. A finding with no surviving quote is a coverage note, not a defect.
+
 The Step 6 collator applies these gates before populating the inline comments / advisory tables:
 
 | Confidence | Destination |
