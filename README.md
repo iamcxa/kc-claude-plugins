@@ -44,7 +44,7 @@ Autonomous nightly plugin improvement cycle. Runs forge validation, harvests sig
 /plugin install kc-nightwatch@kc-claude-plugins
 ```
 
-### [kc-hyperfocus](./kc-hyperfocus/) `v1.6.2`
+### [kc-hyperfocus](./kc-hyperfocus/) `v1.6.4`
 
 Session lifecycle & context efficiency. Detects context pressure and enforces cleanup before session end. Cross-session handoff/resume via integrated journal (with vector embedding search via MiniLM). Context Lake (SQLite FTS5) caches codebase insights for faster exploration. MCP context firewall: the `mcp-summarizer` subagent keeps raw payloads from Linear/Sentry/Notion/Supabase/Figma/Slack/Langfuse out of main context, and a PreToolUse nudge proactively suggests it on first read-op per MCP family per session. Includes a standalone statusline with Anthropic 5h/7d usage quota display. Cross-platform install verified by CI matrix (linux-x64, darwin-arm64, darwin-x64) via the new postinstall verify step.
 
@@ -75,7 +75,7 @@ Team operations pipeline for engineering managers. EM triage with strategic lens
 /plugin install kc-team-ops@kc-claude-plugins
 ```
 
-### [kc-pr-flow](./kc-pr-flow/) `v1.6.1`
+### [kc-pr-flow](./kc-pr-flow/) `v1.7.0`
 
 End-to-end PR lifecycle workflow. Create (full ship chain: draft → review → fix → ready → announce), review with tiered multi-agent dispatch (5 `pr-review-toolkit` agents covering correctness, comments, silent failures, type design, and test coverage — plus Trail of Bits security subagents for differential review, supply chain audit, and GitHub Actions security; **optional Codex cross-model second opinion** for bugfix-cross-stack PRs) and **optional 8-pass mode** for bugfix-cross-layer / cross-stack PRs (forced verdict per review dimension to prevent silent misses). Every finding carries a **1-10 confidence score** — collator gates suppress noise (3-4 demoted to advisory, 1-2 dropped) without losing high-signal recall. Resolve review threads with **cross-AI thread dedup** (groups parallel findings from multiple bots into single issues) AND **cross-review verdict persistence** (suppress prior-dismissed findings across review cycles, most valuable in daemon mode). Pre-scan includes helper-rollout cross-file consistency check (§4.5i) and **doc-claim grounding check** (§4.5j — greps cited subjects to catch forward-looking / ungrounded claims in diffs). Plus commit reorg, Slack announcement, and an automated PR daemon. `kc-pr-create` Step 10a pre-PR self-review uses the same tiering as `kc-pr-review` so self-review is never weaker than post-PR review.
 
