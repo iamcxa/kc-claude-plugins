@@ -30,3 +30,8 @@ Updated automatically by each skill's D1 Learning step when a recurring pattern 
 
 <!-- D1 auto-appended decision-debate patterns will appear here -->
 <!-- Format: ### <pattern> (YYYY-MM-DD) \n - Signal: <what was observed> \n - Impact: <consequence for decision quality> \n - Action: <how to improve future debates> -->
+
+## Plan Review Patterns
+
+<!-- D1 auto-appended plan/project review patterns will appear here (from kc-em-plan-review) -->
+<!-- Format: ### <pattern> (YYYY-MM-DD) \n - Signal: <what the plan looked like> \n - Keystone: <load-bearing assumption that turned out wrong/right on verification> \n - Lesson: <how to review this class of plan better next time> -->
