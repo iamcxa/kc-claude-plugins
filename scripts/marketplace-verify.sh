@@ -37,6 +37,17 @@ echo ""
 FAIL=0
 RESULTS=()
 
+# ─── L0: Version Parity (cheap; fails fast before slow install tests) ───
+echo "--- L0: Version Parity ---"
+if "$SCRIPT_DIR/version-parity-check.sh"; then
+  RESULTS+=("L0 parity: PASS")
+else
+  echo "  ✗ version parity mismatch (see table above)"
+  RESULTS+=("L0 parity: FAIL")
+  FAIL=1
+fi
+echo ""
+
 # ─── L1: Schema Validation ───────────────────────────────────
 echo "--- L1: Schema Validation ---"
 if HOME="$TEMP_HOME" claude plugin marketplace add "$MARKETPLACE_DIR" 2>&1; then
