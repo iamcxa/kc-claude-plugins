@@ -56,6 +56,7 @@ Adopter-controlled flag governing when `kc-pr-review-resolve` skips its post-tri
 |-------|----------|
 | `off` (default) | Always wait for user confirmation after Step 4 triage report. Preserves current behavior. |
 | `reply_only` | Auto-confirm and skip the gate when ALL conditions hold: (1) every inline issue verdict ∈ {`False Positive`, `Pre-existing`, `Informational`} — i.e., no code change needed; (2) every PR-level review action is reply-only (no `Fix:` prefix); (3) total reply count ≤ 10 (sanity cap). When any condition fails, falls through to the gate with audit log explaining which condition blocked. |
+| `preapproved` | Skip the confirmation gate only when the user's current request explicitly directs autonomous resolution (e.g. "fix all review issues" / "address every valid review comment"). Validation still runs first — invalid or risky feedback gets an evidence reply, not a blind fix. See the resolve skill's "When `auto_confirm: preapproved`" section for the full directive-detection + safety semantics. |
 
 Future extension (separate revision): `trivial_fix` mode covering single-line typo / null-check / unused-import fixes with same auto-confirm semantics. Out of scope for this revision.
 

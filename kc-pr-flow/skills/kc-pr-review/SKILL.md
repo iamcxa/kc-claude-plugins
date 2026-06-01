@@ -23,7 +23,7 @@ digraph review_pr {
   subgraph cluster_parallel {
     label="Parallel dispatch";
     style=dashed;
-    prescan [label="Pre-scan (main context)\nCLAUDE.md rules\n+ stale refs\n+ dependency chains\n+ prompt consistency\n+ runtime data shape\n+ lint gate\n+ non-code scan\n+ dead export detection"];
+    prescan [label="Pre-scan (main context)\nCLAUDE.md rules\n+ stale refs\n+ dependency chains\n+ prompt consistency\n+ runtime data shape\n+ lint gate\n+ non-code scan\n+ dead export detection\n+ helper rollout completeness\n+ doc claim verification\n+ intra-doc rule-vs-example"];
     review [label="Review agents\n(code-reviewer,\ncomment-analyzer)"];
     tests [label="Test execution\n(worktree)\nunit + eval"];
     audit_prep [label="Compliance prep\n(5a: read docs,\n5b: match skills)"];
@@ -100,7 +100,12 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/gh-api-patterns.md § "PR Metadata Fetc
 
 ### Step 2.1: PR Head Freshness
 
-Record the PR head SHA after fetching metadata. Before drafting the final review and again immediately before posting, re-query the PR head SHA. If it changed, the previously fetched diff is stale: fetch the new commits/diff, run an unseen-delta review on only the new commits, and merge those results into Step 5/6 before any APPROVE or clean COMMENT.
+Record the PR head SHA after fetching metadata. Before drafting the final review and again immediately before posting, re-query the PR head SHA. If it changed, the previously fetched diff is stale. **Before doing a delta-only review, prove the old head is still an ancestor of the new head** (`git merge-base --is-ancestor <old_head> <new_head>`):
+
+- **Ancestor (history only appended)** → fetch the new commits and run an unseen-delta review on just that range, then merge results into Step 5/6.
+- **Not an ancestor (head was force-pushed / rebased / amended — history rewritten)** → the prior review no longer maps to the current commits; a delta-only pass would miss edits *inside* rewritten commits. Re-review the **full current PR diff** (`git diff <base>...<new_head>`) instead.
+
+Merge the results into Step 5/6 before any APPROVE or clean COMMENT.
 
 This is mandatory when prior review feedback caused new commits during the session. "All previously reviewed findings are addressed" is not enough; the final verdict must cover the current head.
 
@@ -194,7 +199,7 @@ For large cross-layer PRs, force pass verdicts even when the default tier would 
 |---|------|-------|-------|
 | 1 | Correctness | Logic errors, broken invariants, asymmetric contracts, type misuse | `code-reviewer` + `type-design-analyzer` (Std+) |
 | 2 | Security | Credentials, injection, RLS, supply chain, CI/CD attack vectors | `tob-security-reviewer` (always) + `tob-supply-chain-checker` / `tob-actions-auditor` if files match |
-| 3 | Cross-Ref | Helper rollout completeness, stale refs, dep chain, CLAUDE.md rule compliance, doc claim grounding | Pre-scan §4.5a / §4.5b / §4.5c / §4.5i / §4.5j |
+| 3 | Cross-Ref | Helper rollout completeness, stale refs, dep chain, CLAUDE.md rule compliance, doc claim grounding, intra-doc rule-vs-example self-consistency | Pre-scan §4.5a / §4.5b / §4.5c / §4.5i / §4.5j / §4.5k |
 | 4 | Error Handling | Silent failures, swallow scope, refactor side-effects, observability gaps | `silent-failure-hunter` |
 | 5 | Test Coverage | Edge cases, sibling parity, import-time/module-load gaps, happy-path forwarding | `pr-test-analyzer` (Std+) |
 | 6 | Diff-Specific | Convention drift vs unchanged code, baseline consistency, in-diff stylistic issues | `code-reviewer` (with baseline-context instruction from §4f) |
@@ -544,6 +549,46 @@ Process:
 
 **Related pattern**: see `reference/learned-patterns.md` "Cross-file doc claim verification (2026-05-13)" for the broader D1 class. Complements §4.5i: §4.5i verifies *code helper rollouts* are complete; §4.5j verifies *doc claims* are grounded against the codebase they describe.
 
+### 4.5k. Intra-doc Rule-vs-Example Self-Consistency
+
+**Activate when**: diff modifies a docs / agent-context file (`.md`, `.txt`, `.rst`, `.mdc`, `.cursorrules`, `AGENTS.md`, `CLAUDE.md`, `*.instructions.md`) AND added lines contain a **normative rule** that prohibits, forbids, or warns about a specific command/path/syntax pattern.
+
+Detection:
+
+1. From `git diff --unified=0`, find added lines (`^+`) in doc files that match a **prohibitive-rule signature**:
+   - `<X> will fail` / `<X> fails` / `<X> does not work`
+   - `never <X>` / `do not <X>` / `don't <X>`
+   - `There is no <X>` / `no <X> exists`
+   - `MUST NOT <X>` / `forbidden` / `prohibited`
+   - `<prescribed> instead of <X>` / `use <prescribed>, not <X>` (here `<X>` — the token *after* "instead of" / "not" — is the prohibited form; the replacement is the compliant one)
+2. For each prohibitive rule, extract **pattern X** — the concrete command/path/syntax token being forbidden. For "instead of" / "not" rules, X is the token *after* "instead of" / "not", never the prescribed replacement (grepping the compliant form would invert the check). Common shapes:
+   - Bare command without a CWD prefix (e.g. "`pnpm install` from root fails" → pattern = `pnpm install` not preceded by `cd <dir> && `)
+   - Specific path/identifier (e.g. "never import from `ui/src` internal paths" → pattern = `from .*ui/src/`)
+   - Specific syntax form (e.g. "use space-separated `rgb()`, not comma-separated" → pattern = `rgba?\([0-9]+,`)
+3. If pattern X cannot be extracted as a concrete grep-able token, skip (rule is too abstract for this primitive)
+
+Process:
+
+1. **Grep the same file for remaining instances of pattern X** in:
+   - Added lines (`^+`) of the same diff (most important — diff is contradicting itself)
+   - Unchanged context lines of the same file (file is contradicting itself, even if pre-existing)
+   - Other files touched by the same diff (cross-file contradiction within the PR)
+2. **Filter false positives**:
+   - The rule statement itself (the prohibitive sentence will contain pattern X as the cited example — exclude its own line)
+   - Lines that already comply (e.g. `pnpm install` preceded by `cd js && ` on the same line is compliant)
+   - Code blocks explicitly labeled as anti-pattern (`# Wrong:`, `// Don't do this:`, etc.)
+3. **Report each surviving match** as candidate "rule-vs-example contradiction":
+   - File:line, exact line content, quoted rule text the line violates
+   - Severity: **MEDIUM** when the offending line is in the same diff (PR introduces the contradiction); **LOW** when the offending line is unchanged context (pre-existing, PR exposes it)
+   - Source `PRESCAN`
+   - Message: ``Rule at `file:line_rule` prohibits `<pattern>`; `file:line_offender` still contains `<offending_line>``
+
+**Why agents miss this**: Reviewers (human and LLM) read each diff hunk in isolation. A rule landing in hunk A and an example violating it in hunk B (or unchanged context) is structurally invisible to per-hunk attention. This is the **docs analog of §4.5i** (Helper Rollout Cross-File Pre-scan): §4.5i greps the rest of the *repo* for direct API calls after a helper rollout; §4.5k greps the rest of the *same diff/file* for example commands after a rule addition. Pure pre-scan — zero LLM tokens; works off `git diff` + `git grep` of the extracted pattern.
+
+**Example pattern (recce PR #1406, 2026-05-28)**: PR adds `CLAUDE.md:16` rule "There is no root `package.json`; pnpm commands from the repo root will fail." Same PR modifies `CLAUDE.md:52` (Dependency Update Workflow Verify step) which still reads `pnpm install && pnpm lint && pnpm type:check && pnpm test && pnpm build` with no `cd js && ` prefix. The rule's pattern X is "bare `pnpm <verb>` without preceding `cd js &&`". A grep of the same file for `pnpm (install|test|lint|build|type:check)` not on a line containing `cd js` or `pnpm --dir js` surfaces L52 immediately. First-round reviewer (Copilot) had flagged L16, author fixed only L16, second-round reviewer (@even-wei) caught L52, kc-pr-review approved without spotting it. §4.5k would have surfaced it pre-confirmation.
+
+**Related pattern**: see `reference/learned-patterns.md` "Intra-doc rule-vs-example self-consistency (2026-05-28)" for the broader D1 class. Complements §4.5i and §4.5j: §4.5i = code rollout completeness; §4.5j = doc claims grounded in code; §4.5k = doc rules consistent with doc examples (the diagonal cell of the consistency matrix).
+
 ### Pre-scan output
 
 Findings feed into Step 5 classification as `PRESCAN` source (alongside agent findings). They follow the same CODE/DOC/NEW classification in Step 5d.
@@ -617,7 +662,7 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/compliance-audit.md
 
 Present findings in **two separate tables**: one for actionable inline comments (CODE), one for advisory items (DOC/NEW). This prevents DOC/NEW items from being accidentally posted.
 
-Before presenting a clean APPROVE/COMMENT, perform the Step 2.1 head freshness check. If the head moved since the main review pass, add an "Unseen Delta" line to the verification summary describing which new commit range was reviewed. If the unseen delta has not been reviewed, do not offer APPROVE.
+Before presenting a clean APPROVE/COMMENT, perform the Step 2.1 head freshness check. If the head moved since the main review pass, add an "Unseen Delta" line to the verification summary describing which new commit range was reviewed (or, when the head was rewritten and the old head is no longer an ancestor, note that a **full re-review** was performed instead of a delta). If the unseen delta — or the full re-review for a rewritten head — has not been done, do not offer APPROVE.
 
 ### 6-pre. PR Summary (always render first)
 
@@ -752,7 +797,7 @@ When Step 4-Pass ran, include a pass-coverage summary in the review body:
 |---|------|---------|----------|
 | 1 | Correctness | Findings: N | code-reviewer + type-design-analyzer (refs above) |
 | 2 | Security | Clean | tob-security-reviewer: no CRITICAL/HIGH; supply-chain N/A (no dep changes) |
-| 3 | Cross-Ref | Findings: N | pre-scan §4.5b/§4.5i/§4.5j (refs above) |
+| 3 | Cross-Ref | Findings: N | pre-scan §4.5b/§4.5i/§4.5j/§4.5k (refs above) |
 | 4 | Error Handling | Clean | silent-failure-hunter: all new catch blocks log or rethrow |
 | 5 | Test Coverage | Findings: N | pr-test-analyzer (refs above) |
 | 6 | Diff-Specific | Clean | code-reviewer baseline check: matches sibling-handler convention |
