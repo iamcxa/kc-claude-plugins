@@ -63,7 +63,7 @@ Session lifecycle & context efficiency. Detects context pressure and enforces cl
 /plugin install kc-hyperfocus@kc-claude-plugins
 ```
 
-### [kc-team-ops](./kc-team-ops/) `v1.2.0`
+### [kc-team-ops](./kc-team-ops/) `v1.3.0`
 
 Team operations pipeline for engineering managers. EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, and structured Linear management.
 
