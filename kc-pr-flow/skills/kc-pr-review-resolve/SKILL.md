@@ -37,7 +37,7 @@ digraph resolve_pr {
   report [label="Report findings to user"];
 
   node [shape=diamond];
-  auto_confirm_check [label="Step 4.5:\nauto_confirm config?\n(reply_only mode\n+ all conditions met)"];
+  auto_confirm_check [label="Step 4.5:\nauto_confirm config?\n(reply_only: skip-fix if\nconditions met;\npreapproved: fix if\ndirective given)"];
   confirm [label="User confirms\naction plan?"];
 
   node [shape=box];
@@ -50,6 +50,7 @@ digraph resolve_pr {
   detect -> fetch -> validate -> dedup -> verdict_dedup -> triage -> report -> auto_confirm_check;
   auto_confirm_check -> confirm [label="off / blocked"];
   auto_confirm_check -> reply [label="reply_only\nauto-confirmed\n(skip fix)"];
+  auto_confirm_check -> fix [label="preapproved\nauto-confirmed\n(directive detected)"];
   confirm -> fix [label="yes"];
   confirm -> report [label="no, adjust"];
   fix -> push -> reply -> resolve_threads -> rereview;

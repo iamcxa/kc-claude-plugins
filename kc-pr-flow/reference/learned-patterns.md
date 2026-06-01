@@ -1144,7 +1144,7 @@ The commit message looks correct, the file content looks correct, but the commit
 
 **Detection signals:**
 
-- Added doc lines containing a prohibitive-rule signature: `<X> will fail`, `<X> fails`, `never <X>`, `do not <X>`, `There is no <X>`, `MUST NOT <X>`, `<X> instead of <Y>`
+- Added doc lines containing a prohibitive-rule signature: `<X> will fail`, `<X> fails`, `never <X>`, `do not <X>`, `There is no <X>`, `MUST NOT <X>`, `<prescribed> instead of <X>` / `<prescribed>, not <X>` (X is always the prohibited token — for "instead of" / "not" rules it is the token *after* "instead of" / "not")
 - The prohibited pattern X is a concrete grep-able token (bare command, specific path, syntax form)
 - Same file (or same diff) contains other example commands matching pattern X without the prescribed mitigation
 

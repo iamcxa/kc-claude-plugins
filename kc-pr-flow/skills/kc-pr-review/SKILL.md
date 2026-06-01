@@ -100,7 +100,12 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/gh-api-patterns.md § "PR Metadata Fetc
 
 ### Step 2.1: PR Head Freshness
 
-Record the PR head SHA after fetching metadata. Before drafting the final review and again immediately before posting, re-query the PR head SHA. If it changed, the previously fetched diff is stale: fetch the new commits/diff, run an unseen-delta review on only the new commits, and merge those results into Step 5/6 before any APPROVE or clean COMMENT.
+Record the PR head SHA after fetching metadata. Before drafting the final review and again immediately before posting, re-query the PR head SHA. If it changed, the previously fetched diff is stale. **Before doing a delta-only review, prove the old head is still an ancestor of the new head** (`git merge-base --is-ancestor <old_head> <new_head>`):
+
+- **Ancestor (history only appended)** → fetch the new commits and run an unseen-delta review on just that range, then merge results into Step 5/6.
+- **Not an ancestor (head was force-pushed / rebased / amended — history rewritten)** → the prior review no longer maps to the current commits; a delta-only pass would miss edits *inside* rewritten commits. Re-review the **full current PR diff** (`git diff <base>...<new_head>`) instead.
+
+Merge the results into Step 5/6 before any APPROVE or clean COMMENT.
 
 This is mandatory when prior review feedback caused new commits during the session. "All previously reviewed findings are addressed" is not enough; the final verdict must cover the current head.
 
@@ -555,8 +560,8 @@ Detection:
    - `never <X>` / `do not <X>` / `don't <X>`
    - `There is no <X>` / `no <X> exists`
    - `MUST NOT <X>` / `forbidden` / `prohibited`
-   - `<X> instead of <Y>` (where Y is the prohibited form)
-2. For each prohibitive rule, extract **pattern X** — the concrete command/path/syntax token being forbidden. Common shapes:
+   - `<prescribed> instead of <X>` / `use <prescribed>, not <X>` (here `<X>` — the token *after* "instead of" / "not" — is the prohibited form; the replacement is the compliant one)
+2. For each prohibitive rule, extract **pattern X** — the concrete command/path/syntax token being forbidden. For "instead of" / "not" rules, X is the token *after* "instead of" / "not", never the prescribed replacement (grepping the compliant form would invert the check). Common shapes:
    - Bare command without a CWD prefix (e.g. "`pnpm install` from root fails" → pattern = `pnpm install` not preceded by `cd <dir> && `)
    - Specific path/identifier (e.g. "never import from `ui/src` internal paths" → pattern = `from .*ui/src/`)
    - Specific syntax form (e.g. "use space-separated `rgb()`, not comma-separated" → pattern = `rgba?\([0-9]+,`)
@@ -657,7 +662,7 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/compliance-audit.md
 
 Present findings in **two separate tables**: one for actionable inline comments (CODE), one for advisory items (DOC/NEW). This prevents DOC/NEW items from being accidentally posted.
 
-Before presenting a clean APPROVE/COMMENT, perform the Step 2.1 head freshness check. If the head moved since the main review pass, add an "Unseen Delta" line to the verification summary describing which new commit range was reviewed. If the unseen delta has not been reviewed, do not offer APPROVE.
+Before presenting a clean APPROVE/COMMENT, perform the Step 2.1 head freshness check. If the head moved since the main review pass, add an "Unseen Delta" line to the verification summary describing which new commit range was reviewed (or, when the head was rewritten and the old head is no longer an ancestor, note that a **full re-review** was performed instead of a delta). If the unseen delta — or the full re-review for a rewritten head — has not been done, do not offer APPROVE.
 
 ### 6-pre. PR Summary (always render first)
 
