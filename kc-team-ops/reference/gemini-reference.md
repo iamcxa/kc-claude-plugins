@@ -171,35 +171,55 @@ user's account and Google's current lineup.
 
 ## GStack Integration (Optional)
 
-When working with gstack for cross-model dashboard aggregation, `/gemini` automatically
-participates if gstack infrastructure is installed. No configuration needed — the skill
-detects `gstack-review-log` in your PATH and calls it after synthesis.
+When gstack is installed, `/gemini` participates in its cross-model review dashboard with no
+configuration. The integration is fire-and-forget: a guarded hook after the review/challenge
+verdict, a no-op (and no errors) when gstack is absent. The skill works identically either way.
+
+**Verified interface — do not use flag syntax.** gstack bins live at
+`~/.claude/skills/gstack/bin/` and are **NOT on `$PATH`**, so a `command -v gstack-review-log`
+guard would silently never fire — reference the absolute path. `gstack-review-log` takes a
+**single JSON-string argument** (it validates JSON via `bun` and appends one line to the
+project's per-branch `reviews.jsonl`), not `--vendor=` / `--findings=` flags.
+`gstack-review-read` takes **no arguments**.
 
 **How it looks from the user perspective:**
 
-1. Run `/gemini review` (or challenge/consult).
+1. Run `/gemini review` (or challenge).
 2. Gemini output appears verbatim, followed by the synthesis recommendation.
-3. In the background, the skill also feeds the finding summary to gstack's dashboard via
-   `gstack-review-log --vendor=gemini <findings>`.
-4. If gstack isn't installed, the skill works identically — fire-and-forget integration,
-   no errors.
+3. The skill logs the verdict (gate + finding count) to gstack's per-branch review log.
+4. If gstack isn't installed, the skill works identically — no errors, no UX change.
 
-**Example flow:**
+**Verified hook (matches the SKILL.md helper):**
 
 ```bash
-# After synthesis recommendation is presented, internally:
-if command -v gstack-review-log >/dev/null 2>&1; then
-  gstack-review-log --vendor=gemini --findings="$GEMINI_OUT" --tokens="$GEMINI_TOK" --session-id="$GEMINI_SID"
+GSTACK_BIN="$HOME/.claude/skills/gstack/bin"
+# Guard on the absolute path (bins are not on PATH). Single JSON arg. Never blocks output.
+if [ -x "$GSTACK_BIN/gstack-review-log" ]; then
+  ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  commit=$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+  "$GSTACK_BIN/gstack-review-log" \
+    "{\"skill\":\"gemini-review\",\"timestamp\":\"$ts\",\"status\":\"clean\",\"gate\":\"pass\",\"findings\":0,\"findings_fixed\":0,\"commit\":\"$commit\"}" \
+    >/dev/null 2>&1 || true
 fi
 ```
 
-**When to use both /gemini and /codex with gstack:**
+The `skill` field is `gemini-review` or `gemini-challenge` so gstack's dashboard renders the
+Gemini row alongside `codex-review` and Claude's own `*-review` entries on the same commit.
 
-- `/codex review` (OpenAI) + `/gemini review` (Google) → two independent vendors' opinions
-  feed to gstack, enabling side-by-side cross-model analysis.
+**Reading prior reviews for cross-model comparison:**
+
+```bash
+"$HOME/.claude/skills/gstack/bin/gstack-review-read" 2>/dev/null   # JSONL of prior reviews + config + HEAD
+```
+
+**Why run both /gemini and /codex with gstack:**
+
+- `/codex review` (OpenAI) + `/gemini review` (Google) → two independent vendors' verdicts
+  land in the same per-branch log, enabling side-by-side cross-model analysis.
 - Findings both vendors flag = high-confidence (agreement).
 - Findings only one flags = investigate deeper (different blind spots).
-- gstack dashboard shows vendor-colored findings for easy comparison.
 
-This is the core value of `/gemini` in a gstack workflow — an independent voice that
-catches different bugs than its same-vendor counterpart.
+**Scope boundary:** these two hooks are the whole integration. Do NOT port gstack's preamble,
+telemetry, upgrade-check, or plan-mode report machinery into `/gemini` — that would turn a
+kc-team-ops skill into a gstack skill (double-bookkeeping, surprising prompts, bin-API
+coupling). The dashboard participation above is the entire "works with gstack" value.

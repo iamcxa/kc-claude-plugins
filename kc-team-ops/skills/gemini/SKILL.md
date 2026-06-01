@@ -155,6 +155,36 @@ After every run, check `$GEMINI_EXIT`:
 - non-zero, non-124 → print `[gemini exit $GEMINI_EXIT]` + first 20 lines of `$TMPERR`.
 - empty `.response` → "Gemini returned no response. Check stderr." + show `$TMPERR`.
 
+### Optional gstack hooks (fire-and-forget)
+
+Define these once too. They are **no-ops without gstack** and never block the skill. They
+let `/gemini` participate in gstack's cross-model review dashboard when gstack is installed
+(the goal of "I run /gemini alongside /codex and /review in a gstack flow"). gstack bins are
+**NOT on `$PATH`** — reference them by absolute path; that is why a `command -v` guard would
+silently never fire. The real `gstack-review-log` takes a **single JSON-string argument**
+(it validates JSON via `bun` and appends one line to the project's per-branch
+`reviews.jsonl`); `gstack-review-read` takes **no arguments** and cats that log.
+
+```bash
+GSTACK_BIN="$HOME/.claude/skills/gstack/bin"
+
+gstack_log_review() {  # $1 = skill (gemini-review|gemini-challenge), $2 = gate (PASS|FAIL), $3 = findings count
+  [ -x "$GSTACK_BIN/gstack-review-log" ] || return 0
+  # NOTE: variable is rstatus, NOT status — `status` is a read-only special var in zsh.
+  local ts gate commit rstatus
+  ts=$(date -u +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || echo "")
+  gate=$(printf '%s' "$2" | tr '[:upper:]' '[:lower:]')
+  [ "$gate" = "fail" ] && rstatus="issues_found" || rstatus="clean"
+  commit=$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+  "$GSTACK_BIN/gstack-review-log" "{\"skill\":\"$1\",\"timestamp\":\"$ts\",\"status\":\"$rstatus\",\"gate\":\"$gate\",\"findings\":${3:-0},\"findings_fixed\":0,\"commit\":\"$commit\"}" >/dev/null 2>&1 || true
+}
+
+gstack_read_reviews() {  # echoes prior same-branch review JSONL (for cross-model), or nothing
+  [ -x "$GSTACK_BIN/gstack-review-read" ] || return 0
+  "$GSTACK_BIN/gstack-review-read" 2>/dev/null
+}
+```
+
 ---
 
 ## Step 2A: Review Mode
@@ -217,8 +247,14 @@ GATE: PASS                    Tokens: <$GEMINI_TOK>
 
 or `GATE: FAIL (N critical findings)`.
 
-Then emit the synthesis recommendation (see "Synthesis recommendation" below) and clean up:
-`rm -f "$TMPERR"`.
+Then emit the synthesis recommendation (see "Synthesis recommendation" below), log the
+verdict to gstack's dashboard (no-op without gstack), and clean up:
+
+```bash
+GEMINI_FINDINGS=$(printf '%s' "$GEMINI_OUT" | grep -oE '\[P1\]|\[P2\]' | wc -l | tr -d ' ')
+gstack_log_review "gemini-review" "$GATE" "$GEMINI_FINDINGS"
+rm -f "$TMPERR"
+```
 
 ---
 
@@ -249,7 +285,15 @@ GEMINI_TOK=$(gemini_field "$GEMINI_JSON" tokens)
 ```
 
 Present verbatim under `GEMINI SAYS (adversarial challenge):` with the same box format and
-`Tokens: <$GEMINI_TOK>` line, then the synthesis recommendation. Clean up `$TMPERR`.
+`Tokens: <$GEMINI_TOK>` line, then the synthesis recommendation. Log the result (no-op
+without gstack) and clean up:
+
+```bash
+CHAL_GATE=$(printf '%s' "$GEMINI_OUT" | grep -qE '^[[:space:]]*[-*]?[[:space:]]*\[P1\]' && echo FAIL || echo PASS)
+CHAL_FINDINGS=$(printf '%s' "$GEMINI_OUT" | grep -oE '\[P1\]|\[P2\]' | wc -l | tr -d ' ')
+gstack_log_review "gemini-challenge" "$CHAL_GATE" "$CHAL_FINDINGS"
+rm -f "$TMPERR"
+```
 
 ---
 
@@ -289,6 +333,7 @@ and `Session: <$GEMINI_SID> — run /gemini again and choose Continue to follow 
 
 If Gemini's analysis disagrees with your own understanding, flag it explicitly:
 "Note: I disagree with Gemini on X because Y." Then emit the synthesis recommendation.
+(Consult is not a pass/fail gate, so it is not logged to the gstack review dashboard.)
 
 ---
 
@@ -322,6 +367,17 @@ CROSS-MODEL ANALYSIS:
   Agreement rate:   X% (N/M unique findings overlap)
 ```
 
+**With gstack present**, the prior `/review` and `/codex` verdicts are already logged to the
+shared per-branch review log — pull them instead of relying on conversation memory:
+
+```bash
+gstack_read_reviews   # JSONL: {skill, gate, findings, commit, ...} per prior review
+```
+
+Match entries by `skill` (`codex-review`, `*-review`) and `commit` to populate the
+overlap / agreement-rate rows. Without gstack, derive the comparison from this
+conversation's earlier review output.
+
 Findings two independent vendors both flag are high-confidence. Disagreements are where you
 look hardest. Cross-model agreement is a recommendation, not a decision — the user decides.
 
@@ -340,6 +396,9 @@ look hardest. Cross-model agreement is a recommendation, not a decision — the 
   appears to have read skill-definition files instead of your code. Consider re-running."
 - **Stay model-agnostic on version.** Do not hardcode a model. The account default is used
   unless the user passes `-m`.
+- **gstack hooks are optional.** They no-op without gstack and never block output. They
+  exist so `/gemini` joins the cross-model dashboard in a gstack flow — not to turn this
+  into a gstack skill. Do NOT port gstack's preamble / telemetry / upgrade machinery here.
 
 ---
 
@@ -354,49 +413,9 @@ look hardest. Cross-model agreement is a recommendation, not a decision — the 
 | Empty `.response` | "Gemini returned no response. Check stderr." + show `$TMPERR` |
 | `jq` absent | Helper falls back to `python3` automatically |
 | Session resume fails | Drop `-r latest`, run a fresh session |
+| gstack hook fails | Silent no-op (`|| true`) — never blocks the review output |
 
 ---
-
-
-
----
-
-## GStack Integration (Optional)
-
-If you use gstack for cross-model result aggregation, /gemini can optionally feed findings
-back to the gstack review dashboard. This is transparent — the skill works fine standalone,
-but integrates seamlessly if gstack infrastructure is available.
-
-**How it works:**
-
-1. After Step 4 (Synthesis recommendation) is presented, the skill checks if
-   `~/.claude/skills/gstack/bin/gstack-review-log` exists.
-2. If it does, `/gemini` calls `gstack-review-log` with the Gemini review summary and
-   model name (`gemini`).
-3. If it doesn't, the skill continues silently — no errors, no UX change.
-
-**To enable gstack integration:**
-
-- Install gstack in your Claude plugins directory (if not already present).
-- No additional configuration needed — the skill auto-detects.
-
-**Example gstack integration call (internal, automatic):**
-
-```bash
-# Called after synthesis recommendation if gstack-review-log is available
-if command -v gstack-review-log >/dev/null 2>&1; then
-  gstack-review-log \
-    --vendor=gemini \
-    --findings="$GEMINI_OUT" \
-    --tokens="$GEMINI_TOK" \
-    --session-id="$GEMINI_SID"
-fi
-```
-
-The call is fire-and-forget — failures in gstack integration do NOT block the skill's
-output. If you want to verify integration is working, check your gstack dashboard or
-run `gstack-review-read --session-id=$GEMINI_SID` after the skill completes.
-
 
 ## Reference
 
