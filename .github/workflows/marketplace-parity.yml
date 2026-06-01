@@ -1,0 +1,45 @@
+name: marketplace version parity
+
+# Asserts every plugin's version is consistent across all sources:
+#   plugin.json (canonical) == marketplace.json entry
+#                           == .codex-plugin/plugin.json (when git-tracked)
+#                           == README badge (### [<plugin>](...) `vX.Y.Z`)
+#
+# Catches the half-published version bump where plugin.json is bumped but the
+# marketplace entry / README badge / Codex manifest are left stale (the
+# kc-marketplace-sync Steps 1.5 + 2 are prose-level and easy to skip). Cheap —
+# python3 + grep only, no `claude` CLI — so it runs on every relevant PR.
+
+on:
+  pull_request:
+    paths:
+      - '**/.claude-plugin/plugin.json'
+      - '**/.codex-plugin/plugin.json'
+      - '.claude-plugin/marketplace.json'
+      - 'README.md'
+      - 'scripts/version-parity-check.sh'
+      - '.github/workflows/marketplace-parity.yml'
+  push:
+    branches: [main]
+    paths:
+      - '**/.claude-plugin/plugin.json'
+      - '**/.codex-plugin/plugin.json'
+      - '.claude-plugin/marketplace.json'
+      - 'README.md'
+      - 'scripts/version-parity-check.sh'
+      - '.github/workflows/marketplace-parity.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  parity:
+    name: version parity (plugin.json / marketplace.json / codex / README)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check version parity
+        run: ./scripts/version-parity-check.sh
