@@ -63,11 +63,11 @@ Session lifecycle & context efficiency. Detects context pressure and enforces cl
 /plugin install kc-hyperfocus@kc-claude-plugins
 ```
 
-### [kc-team-ops](./kc-team-ops/) `v1.3.0`
+### [kc-team-ops](./kc-team-ops/) `v1.4.1`
 
-Team operations pipeline for engineering managers. EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, and structured Linear management.
+Team operations pipeline for engineering managers. EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, and **cross-model second opinion** via the Gemini CLI (`/gemini review|challenge|consult` — same usage as `/codex`, routed through Google Gemini for a non-OpenAI outside voice; participates in a gstack cross-model review dashboard when gstack is installed).
 
-**Use when:** You're an EM running triage on Linear issues, drafting weekly pulse updates, or decomposing oversized issues with team context.
+**Use when:** You're an EM running triage on Linear issues, drafting weekly pulse updates, decomposing oversized issues with team context, or want an independent cross-model review / adversarial challenge / consult from Gemini.
 
 **Prerequisite:** Linear MCP enabled.
 
