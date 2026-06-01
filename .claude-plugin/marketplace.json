@@ -40,9 +40,9 @@
     {
       "name": "kc-team-ops",
       "source": "./kc-team-ops",
-      "description": "Team operations pipeline — EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, and structured Linear management",
-      "version": "1.3.0",
-      "keywords": ["team-ops", "em", "triage", "linear", "project-pulse", "issue-decomposition", "research", "subagents", "strategic-lens", "context-cache"]
+      "description": "Team operations pipeline — EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review, and on-demand cross-model second opinion via the Gemini CLI (/gemini review|challenge|consult)",
+      "version": "1.4.0",
+      "keywords": ["team-ops", "em", "triage", "linear", "project-pulse", "issue-decomposition", "research", "subagents", "strategic-lens", "context-cache", "plan-review", "gemini", "cross-model", "second-opinion"]
     },
     {
       "name": "kc-pr-flow",
