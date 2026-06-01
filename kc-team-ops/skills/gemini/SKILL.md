@@ -357,6 +357,47 @@ look hardest. Cross-model agreement is a recommendation, not a decision — the 
 
 ---
 
+
+
+---
+
+## GStack Integration (Optional)
+
+If you use gstack for cross-model result aggregation, /gemini can optionally feed findings
+back to the gstack review dashboard. This is transparent — the skill works fine standalone,
+but integrates seamlessly if gstack infrastructure is available.
+
+**How it works:**
+
+1. After Step 4 (Synthesis recommendation) is presented, the skill checks if
+   `~/.claude/skills/gstack/bin/gstack-review-log` exists.
+2. If it does, `/gemini` calls `gstack-review-log` with the Gemini review summary and
+   model name (`gemini`).
+3. If it doesn't, the skill continues silently — no errors, no UX change.
+
+**To enable gstack integration:**
+
+- Install gstack in your Claude plugins directory (if not already present).
+- No additional configuration needed — the skill auto-detects.
+
+**Example gstack integration call (internal, automatic):**
+
+```bash
+# Called after synthesis recommendation if gstack-review-log is available
+if command -v gstack-review-log >/dev/null 2>&1; then
+  gstack-review-log \
+    --vendor=gemini \
+    --findings="$GEMINI_OUT" \
+    --tokens="$GEMINI_TOK" \
+    --session-id="$GEMINI_SID"
+fi
+```
+
+The call is fire-and-forget — failures in gstack integration do NOT block the skill's
+output. If you want to verify integration is working, check your gstack dashboard or
+run `gstack-review-read --session-id=$GEMINI_SID` after the skill completes.
+
+
 ## Reference
 
 Extended prompt templates, synthesis examples, and advanced session usage:

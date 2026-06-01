@@ -166,3 +166,40 @@ skill keeps working as Google ships newer models. Override only when the user as
 Verify a model name is valid before relying on it (`gemini -p "ok" -m <name> -o json
 --approval-mode plan < /dev/null`) rather than guessing — model availability tracks the
 user's account and Google's current lineup.
+
+---
+
+## GStack Integration (Optional)
+
+When working with gstack for cross-model dashboard aggregation, `/gemini` automatically
+participates if gstack infrastructure is installed. No configuration needed — the skill
+detects `gstack-review-log` in your PATH and calls it after synthesis.
+
+**How it looks from the user perspective:**
+
+1. Run `/gemini review` (or challenge/consult).
+2. Gemini output appears verbatim, followed by the synthesis recommendation.
+3. In the background, the skill also feeds the finding summary to gstack's dashboard via
+   `gstack-review-log --vendor=gemini <findings>`.
+4. If gstack isn't installed, the skill works identically — fire-and-forget integration,
+   no errors.
+
+**Example flow:**
+
+```bash
+# After synthesis recommendation is presented, internally:
+if command -v gstack-review-log >/dev/null 2>&1; then
+  gstack-review-log --vendor=gemini --findings="$GEMINI_OUT" --tokens="$GEMINI_TOK" --session-id="$GEMINI_SID"
+fi
+```
+
+**When to use both /gemini and /codex with gstack:**
+
+- `/codex review` (OpenAI) + `/gemini review` (Google) → two independent vendors' opinions
+  feed to gstack, enabling side-by-side cross-model analysis.
+- Findings both vendors flag = high-confidence (agreement).
+- Findings only one flags = investigate deeper (different blind spots).
+- gstack dashboard shows vendor-colored findings for easy comparison.
+
+This is the core value of `/gemini` in a gstack workflow — an independent voice that
+catches different bugs than its same-vendor counterpart.
