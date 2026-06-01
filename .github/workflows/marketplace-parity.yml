@@ -8,26 +8,17 @@ name: marketplace version parity
 # Catches the half-published version bump where plugin.json is bumped but the
 # marketplace entry / README badge / Codex manifest are left stale (the
 # kc-marketplace-sync Steps 1.5 + 2 are prose-level and easy to skip). Cheap —
-# python3 + grep only, no `claude` CLI — so it runs on every relevant PR.
+# python3 + grep only, no `claude` CLI.
+#
+# Runs on EVERY pull request — intentionally no `paths:` filter. This is the
+# required status check on `main`: a required check that a path filter skips
+# stays "pending / expected" forever and blocks unrelated PRs from merging.
+# Always running it (≈7s) is the correct pattern for a required gate.
 
 on:
   pull_request:
-    paths:
-      - '**/.claude-plugin/plugin.json'
-      - '**/.codex-plugin/plugin.json'
-      - '.claude-plugin/marketplace.json'
-      - 'README.md'
-      - 'scripts/version-parity-check.sh'
-      - '.github/workflows/marketplace-parity.yml'
   push:
     branches: [main]
-    paths:
-      - '**/.claude-plugin/plugin.json'
-      - '**/.codex-plugin/plugin.json'
-      - '.claude-plugin/marketplace.json'
-      - 'README.md'
-      - 'scripts/version-parity-check.sh'
-      - '.github/workflows/marketplace-parity.yml'
 
 permissions:
   contents: read
