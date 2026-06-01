@@ -438,12 +438,13 @@ Detection (any of):
    - `biome.json` or `biome.jsonc` → `biome check` (TS/JS files only)
    - `.eslintrc*` or `eslint.config.*` → `eslint` (TS/JS files only)
    - `pyproject.toml` with `[tool.ruff]` → `ruff check` (Python files only)
+   - `deno.json` / `deno.jsonc` with a `fmt` block → `deno fmt --check` (format violations, Deno projects). **Pass the project's config explicitly**: `deno fmt --check --config <path/to/deno.json> <changed-files>`. With explicit file paths but no `--config`, `deno fmt` may fail to load the project's `deno.json` — especially in a monorepo where the config is nested under `apps/<x>/` — silently reverting to deno defaults and emitting false `'`→`"` / `lineWidth` "not formatted" positives. (Equivalent alternative: run config-mode from the config's dir with no path args, then intersect the reported dirty files with `gh pr diff --name-only`.) Note `src/**/__tests__` is often `lint`-excluded but still `fmt`-included, so test files get format-checked even when they skip lint.
    - Multiple linters → run each on its respective file types
 2. **Run linter on changed files only** — filter `gh pr diff --name-only` by file extension, pass to linter
 3. **Report violations as findings** with severity MEDIUM and source `PRESCAN`
 4. **Non-null assertion special case**: if the project's CLAUDE.md explicitly disallows non-null assertions (`!`), flag biome `noNonNullAssertion` warnings as MEDIUM (not just info)
 
-**Why agents miss this**: Review agents read code but don't execute linters. Format violations and lint errors are invisible to LLM-based analysis — they require tool output.
+**Why agents miss this**: Review agents read code but don't execute linters **or formatters**. Format violations (e.g. a new line exceeding `deno fmt`'s `lineWidth`, or quote-style drift) and lint errors are invisible to LLM-based analysis — they require running the tool. A review that skips the formatter will APPROVE a PR that then fails the CI format gate: a full multi-agent panel can still miss a couple of new lines that exceed `deno fmt`'s configured `lineWidth` precisely because no agent ran `deno fmt --check`.
 
 ### 4.5g. Non-Code File Scan
 
