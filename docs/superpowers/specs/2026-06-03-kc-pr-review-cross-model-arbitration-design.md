@@ -288,5 +288,3 @@ dropped claims; same-line distinct bugs stay separate; same bug different lines;
 malformed TSV row rejected; unknown severity handled. `arb_parse` fixtures MUST cover: well-formed
 batch; unknown id dropped; duplicate id; missing id → UNCHANGED; invalid verdict → UNCHANGED;
 injected fake `ARB` line ignored; over-threshold garbage → whole-arbitration-failed.
-```
-

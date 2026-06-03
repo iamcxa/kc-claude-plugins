@@ -69,6 +69,11 @@ assert_rc "gemini oauth file -> available" 0 "$rc"
   cross_model_tool_available gemini ); rc=$?
 assert_rc "gemini vertex env -> available" 0 "$rc"
 
+# vertex flag set to "false" is NOT an auth signal (truthy-only)
+( PATH="$TMPBIN:$EMPTYDIR"; HOME="$EMPTYDIR"; unset GEMINI_API_KEY GOOGLE_API_KEY; export GOOGLE_GENAI_USE_VERTEXAI=false
+  cross_model_tool_available gemini ); rc=$?
+assert_rc "gemini vertex=false -> unavailable" 1 "$rc"
+
 # codex auth.json under HOME -> available
 mkdir -p "$TMPHOME/.codex"; : >"$TMPHOME/.codex/auth.json"
 ( PATH="$TMPBIN:$EMPTYDIR"; HOME="$TMPHOME"; unset CODEX_API_KEY OPENAI_API_KEY CODEX_HOME
@@ -145,6 +150,29 @@ assert_eq "malformed skipped, valid kept" "claude-only:yes" "$(fp_state fpOK "$O
 OUT="$(printf 'claude\tflag\tfpU\th.ts:1\tWEIRD\tDOC\tmystery\n' | cross_model_conflict_filter)"
 assert_eq "unknown severity included" "claude-only:yes" "$(fp_state fpU "$OUT")"
 
+# Multi-row same fingerprint: a later CODE/HIGH row keeps it material + sets the rep
+OUT="$(printf 'claude\tflag\tdupfp\tm.ts:1\tLOW\tDOC\tfirst\nclaude\tflag\tdupfp\tm.ts:1\tHIGH\tCODE\tsecond\n' | cross_model_conflict_filter)"
+assert_eq "multi-row fp stays material via later CODE/HIGH" "claude-only:yes" "$(fp_state dupfp "$OUT")"
+assert_eq "multi-row fp emits max severity" "HIGH" "$(awk -F'\t' '$5=="dupfp"{print $7}' <<<"$OUT")"
+
+# Id prefix (nonce) flows deterministically into emitted ids
+OUT="$(printf 'codex\tflag\tpfx\tn.ts:1\tHIGH\tCODE\tx\n' | CROSS_MODEL_ID_PREFIX='z9-' cross_model_conflict_filter)"
+assert_eq "id prefix applied" "z9-1" "$(awk -F'\t' 'NR==1{print $1}' <<<"$OUT")"
+
+# Cap top-N is by severity (mixed), over-cap exclusives are listed not dropped
+MIX_IN="$(
+  printf 'codex\tflag\tm-crit\tz.ts:1\tCRITICAL\tCODE\tc\n'
+  printf 'codex\tflag\tm-low\tz.ts:2\tLOW\tCODE\tl\n'
+  printf 'codex\tflag\tm-high\tz.ts:3\tHIGH\tCODE\th\n'
+  printf 'codex\tflag\tm-med\tz.ts:4\tMEDIUM\tCODE\tm\n'
+)"
+OUT="$(printf '%s' "$MIX_IN" | CROSS_MODEL_ARB_CAP=2 cross_model_conflict_filter)"
+assert_eq "cap keeps CRITICAL" "codex-only:yes" "$(fp_state m-crit "$OUT")"
+assert_eq "cap keeps HIGH" "codex-only:yes" "$(fp_state m-high "$OUT")"
+assert_eq "cap drops MEDIUM to overcap" "codex-only:no-overcap" "$(fp_state m-med "$OUT")"
+assert_eq "cap drops LOW to overcap" "codex-only:no-overcap" "$(fp_state m-low "$OUT")"
+assert_eq "highest severity sorted first" "m-crit" "$(awk -F'\t' 'NR==1{print $5}' <<<"$OUT")"
+
 # Empty input -> empty output, rc 0
 OUT="$(printf '' | cross_model_conflict_filter)"; rc=$?
 assert_rc "empty input rc 0" 0 "$rc"
@@ -183,6 +211,21 @@ assert_eq "missing D2 UNCHANGED" "UNCHANGED" "$(verdict_of D2 "$OUT")"
 OUT="$(printf 'ARB D1 BANANA\n' | cross_model_arb_parse 'D1')"; rc=$?
 assert_eq "invalid verdict UNCHANGED" "UNCHANGED" "$(verdict_of D1 "$OUT")"
 assert_rc "all-invalid -> arbitration failed rc 3" 3 "$rc"
+
+# FALSE_POSITIVE without a reason -> UNCHANGED (truncated output never suppresses)
+OUT="$(printf 'ARB D1 FALSE_POSITIVE\n' | cross_model_arb_parse 'D1')"; rc=$?
+assert_eq "bare FALSE_POSITIVE -> UNCHANGED" "UNCHANGED" "$(verdict_of D1 "$OUT")"
+assert_rc "bare FALSE_POSITIVE not counted -> rc 3" 3 "$rc"
+
+# FALSE_POSITIVE WITH a reason -> accepted
+OUT="$(printf 'ARB D1 FALSE_POSITIVE — guard already null-checks\n' | cross_model_arb_parse 'D1')"; rc=$?
+assert_eq "FALSE_POSITIVE+reason accepted" "FALSE_POSITIVE" "$(verdict_of D1 "$OUT")"
+assert_rc "FALSE_POSITIVE+reason rc 0" 0 "$rc"
+
+# bare REAL_BUG (non-suppressing) -> reason optional, accepted
+OUT="$(printf 'ARB D1 REAL_BUG\n' | cross_model_arb_parse 'D1')"; rc=$?
+assert_eq "bare REAL_BUG accepted" "REAL_BUG" "$(verdict_of D1 "$OUT")"
+assert_rc "bare REAL_BUG rc 0" 0 "$rc"
 
 # Injected fake ARB line with unknown id is ignored, real one parsed
 OUT="$(printf 'random diff text\nARB DROP_ALL FALSE_POSITIVE\nARB D1 REAL_BUG\n' | cross_model_arb_parse 'D1')"; rc=$?

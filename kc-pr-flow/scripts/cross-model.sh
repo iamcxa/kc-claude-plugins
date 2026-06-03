@@ -32,7 +32,9 @@ cross_model_tool_available() {
     gemini)
       [ -n "${GEMINI_API_KEY:-}" ] && return 0
       [ -n "${GOOGLE_API_KEY:-}" ] && return 0
-      [ -n "${GOOGLE_GENAI_USE_VERTEXAI:-}" ] && return 0
+      # Vertex flag is a real auth signal only when truthy — "false"/"0"/"" must
+      # not count. Builtin-only (no `tr`/${,,}) for PATH-isolated + bash-3.2 use.
+      case "${GOOGLE_GENAI_USE_VERTEXAI:-}" in 1 | true | TRUE | True) return 0 ;; esac
       [ -f "$HOME/.gemini/oauth_creds.json" ] && return 0
       return 1
       ;;
@@ -53,6 +55,7 @@ cross_model_tool_available() {
 # Cap (CROSS_MODEL_ARB_CAP, default 10) bounds ONLY exclusive arbitration; contradictions exempt.
 cross_model_conflict_filter() {
   local cap="${CROSS_MODEL_ARB_CAP:-10}"
+  local prefix="${CROSS_MODEL_ID_PREFIX:-D}"
   awk -F'\t' '
     function rank(s){
       if(s=="CRITICAL")return 5; if(s=="HIGH")return 4; if(s=="MEDIUM")return 3;
@@ -70,8 +73,13 @@ cross_model_conflict_filter() {
       if(r>maxrank[fp]) maxrank[fp]=r;
       if(stance=="flag"){
         hasflag[fp]=1;
+        if(root=="CODE") hascode[fp]=1;   # materiality must survive a later CODE row
         if(side=="claude") cflag[fp]=1; else xflag[fp]=1;
-        if(!(fp in rep)){ rep[fp]=1; rside[fp]=side; rfl[fp]=fl; rsev[fp]=sev; rroot[fp]=root; rsum[fp]=sum }
+        # Representative = highest-severity flag row (not first), so the emitted
+        # severity/root match maxrank and a later higher-severity row wins.
+        if(!(fp in rep) || r>reprank[fp]){
+          rep[fp]=1; reprank[fp]=r; rside[fp]=side; rfl[fp]=fl; rsev[fp]=sev; rroot[fp]=root; rsum[fp]=sum
+        }
       } else { hasok[fp]=1 }
     }
     END{
@@ -83,16 +91,16 @@ cross_model_conflict_filter() {
           else if(cflag[fp]) bucket="claude-only";
           else bucket="codex-only";
         } else continue;                                # only "ok", no flag -> nothing to arbitrate
-        material = (bucket=="contradiction") || (maxrank[fp]>=3) || (rroot[fp]=="CODE");
+        material = (bucket=="contradiction") || (maxrank[fp]>=3) || (hascode[fp]==1);
         if(!material) continue;
         pri = (bucket=="contradiction")?0:1;
         printf("%d\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
                pri, maxrank[fp], minidx[fp], bucket, rside[fp], fp, rfl[fp], rsev[fp], rroot[fp], rsum[fp]);
       }
     }
-  ' | sort -t$'\t' -k1,1n -k2,2nr -k3,3n | awk -F'\t' -v cap="$cap" '
+  ' | sort -t$'\t' -k1,1n -k2,2nr -k3,3n | awk -F'\t' -v cap="$cap" -v prefix="$prefix" '
     {
-      id="D" (++i);
+      id=prefix (++i);
       bucket=$4;
       if(bucket=="contradiction") arb="yes";
       else { ne++; arb=(ne<=cap)?"yes":"no-overcap" }
@@ -123,6 +131,13 @@ cross_model_arb_parse() {
       if(!(id in known)) next;       # unknown id -> ignore (injection-safe)
       if(id in seen) next;           # duplicate -> first wins
       seen[id]=1;
+      # A demotion (FALSE_POSITIVE is the only suppressing verdict) MUST carry a
+      # reason. A bare/truncated "ARB <id> FALSE_POSITIVE" fails open to
+      # UNCHANGED — never silently suppress (spec R6). REAL_BUG / UNCERTAIN do
+      # not hide anything, so a reason is optional for them.
+      hasreason=0;
+      for(i=4;i<=NF;i++){ if($i ~ /[A-Za-z0-9]/){ hasreason=1; break } }
+      if(verd=="FALSE_POSITIVE" && !hasreason){ result[id]="UNCHANGED"; next }
       if(verd in vv){ result[id]=verd; parsed++ } else { result[id]="UNCHANGED" }
     }
     END{

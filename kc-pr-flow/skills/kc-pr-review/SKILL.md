@@ -755,8 +755,12 @@ The parser accepts **only known ids** (injected fake `ARB` lines are ignored), f
 duplicates, and maps missing/invalid verdicts to `UNCHANGED`. If it exits non-zero (fewer than half
 the ids parsed), treat the **whole arbitration as failed**: surface
 `Gemini arbitration failed / unparseable; conflicts surfaced unresolved` and leave every finding's
-confidence unchanged. **Fail-open to no-change, never to suppression.** Generate `KNOWN_IDS_CSV` with
-a per-run nonce prefix (e.g. `<nonce>-1,<nonce>-2`) so diff-embedded `ARB` lines cannot guess a valid id.
+confidence unchanged. **Fail-open to no-change, never to suppression.** A `FALSE_POSITIVE` verdict
+is the only suppressing one, so the parser requires it to carry a reason — a bare/truncated
+`ARB <id> FALSE_POSITIVE` becomes `UNCHANGED`. Use a per-run nonce as the id prefix so diff-embedded
+`ARB` lines cannot guess a valid id: set `CROSS_MODEL_ID_PREFIX="<nonce>-"` on the Step 5.5c
+`cross_model_conflict_filter` call so its emitted ids (`<nonce>-1`, `<nonce>-2`, …) match the
+`KNOWN_IDS_CSV` passed to `cross_model_arb_parse`.
 
 ### 5.6c. Apply verdicts through the existing §6a gate
 
