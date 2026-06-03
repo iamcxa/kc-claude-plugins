@@ -1,0 +1,43 @@
+name: kc-pr-flow cross-model tests
+
+# Unit tests for the deterministic cross-model reconciliation + Gemini
+# arbitration helpers (kc-pr-flow/scripts/cross-model.sh), exercised by
+# cross-model.test.sh. These are the reusable ci-gate for kc-pr-review's
+# Step 5.5 / 5.6 logic: set-algebra, severity/cap filtering, and the
+# injection-resistant arbitration-output parser.
+#
+# Path-filtered (not a required check) so it runs only when the helper, its
+# tests, or the consuming skill change. Plain bash + awk + sort — no deps.
+
+on:
+  pull_request:
+    paths:
+      - "kc-pr-flow/scripts/cross-model.sh"
+      - "kc-pr-flow/scripts/cross-model.test.sh"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - ".github/workflows/cross-model-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-pr-flow/scripts/cross-model.sh"
+      - "kc-pr-flow/scripts/cross-model.test.sh"
+
+permissions:
+  contents: read
+
+jobs:
+  cross-model:
+    name: cross-model.sh unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Syntax check
+        run: |
+          bash -n kc-pr-flow/scripts/cross-model.sh
+          bash -n kc-pr-flow/scripts/cross-model.test.sh
+
+      - name: Run unit tests
+        run: bash kc-pr-flow/scripts/cross-model.test.sh
