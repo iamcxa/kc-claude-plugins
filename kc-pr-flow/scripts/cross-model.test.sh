@@ -119,6 +119,14 @@ assert_eq "codex-only LOW+CODE included" "codex-only:yes" "$(fp_state fpC "$OUT"
 OUT="$(printf 'claude\tflag\tfpX\te.ts:5\tHIGH\tCODE\trace\ncodex\tok\tfpX\te.ts:5\tHIGH\tCODE\tno race\n' | cross_model_conflict_filter)"
 assert_eq "contradiction included" "contradiction:yes" "$(fp_state fpX "$OUT")"
 
+# Contradiction sorts by the CLAIM (flag) severity, not a higher-severity "ok" row.
+# cA: flag HIGH / ok HIGH (claim rank 4). cB: flag LOW / ok CRITICAL (claim rank 2,
+# but maxrank 5 from the ok row). Sorting by maxrank would put cB first (the bug);
+# sorting by the claim rank keeps cA first and emits cB's claim severity (LOW).
+OUT="$(printf 'claude\tflag\tcA\tr.ts:1\tHIGH\tCODE\ta\ncodex\tok\tcA\tr.ts:1\tHIGH\tCODE\tx\nclaude\tflag\tcB\tr.ts:2\tLOW\tCODE\tb\ncodex\tok\tcB\tr.ts:2\tCRITICAL\tCODE\ty\n' | cross_model_conflict_filter)"
+assert_eq "contradiction sorts by claim severity, not ok-row" "cA" "$(awk -F'\t' 'NR==1{print $5}' <<<"$OUT")"
+assert_eq "contradiction emits claim-row severity" "LOW" "$(awk -F'\t' '$5=="cB"{print $7}' <<<"$OUT")"
+
 # Same file:line, distinct issue keyword -> two separate fingerprints, both kept
 OUT="$(printf 'claude\tflag\tf.ts:9|null\tf.ts:9\tHIGH\tCODE\tnull\ncodex\tflag\tf.ts:9|leak\tf.ts:9\tHIGH\tCODE\tleak\n' | cross_model_conflict_filter)"
 n=$(awk -F'\t' '$6=="f.ts:9"' <<<"$OUT" | wc -l | tr -d ' ')

@@ -94,8 +94,11 @@ cross_model_conflict_filter() {
         material = (bucket=="contradiction") || (maxrank[fp]>=3) || (hascode[fp]==1);
         if(!material) continue;
         pri = (bucket=="contradiction")?0:1;
+        # Sort by the representative (claim/flag row) rank so the sort key matches
+        # the EMITTED severity. maxrank can include an "ok" row that outranks the
+        # claim (contradictions), which would sort high while displaying low.
         printf("%d\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
-               pri, maxrank[fp], minidx[fp], bucket, rside[fp], fp, rfl[fp], rsev[fp], rroot[fp], rsum[fp]);
+               pri, reprank[fp], minidx[fp], bucket, rside[fp], fp, rfl[fp], rsev[fp], rroot[fp], rsum[fp]);
       }
     }
   ' | sort -t$'\t' -k1,1n -k2,2nr -k3,3n | awk -F'\t' -v cap="$cap" -v prefix="$prefix" '
