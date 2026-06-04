@@ -1,0 +1,40 @@
+name: release-please
+
+# Owns version propagation + tagging + changelogs for every plugin (monorepo
+# manifest mode, one independent component per plugin). On each push to main it
+# maintains a Release PR that bumps the changed plugins' versions across
+# plugin.json + .codex-plugin/plugin.json + the marketplace.json entry, and on
+# merge cuts a `<plugin>-vX.Y.Z` tag + GitHub Release + per-plugin CHANGELOG.
+#
+# Config: release-please-config.json + .release-please-manifest.json (repo root).
+# Version source of truth = the manifest; the bespoke marketplace.json
+# description/keywords are NOT touched (extra-files only rewrites the version
+# string of the matched array entry).
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          # IMPORTANT: use a PAT so the bot-opened Release PR fires the required
+          # status checks (marketplace version parity). With the default
+          # GITHUB_TOKEN, GitHub suppresses workflow runs on a PR opened by the
+          # token, so the required check never reports and the Release PR cannot
+          # be merged. Create a fine-grained PAT (contents: write,
+          # pull-requests: write) and store it as the repo secret
+          # RELEASE_PLEASE_TOKEN. Until that secret exists this falls back to
+          # GITHUB_TOKEN — the Release PR still opens, but you must close+reopen
+          # it once to trigger the required checks before merging.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
