@@ -2,59 +2,54 @@
 
 Public marketplace repo containing six plugins: `e2e-pipeline`, `kc-plugin-forge`, `kc-nightwatch`, `kc-hyperfocus`, `kc-team-ops`, `kc-pr-flow`. Each plugin keeps its own `CLAUDE.md` for plugin-internal conventions. This file documents **repo-wide rules** that apply to PRs touching any plugin or the marketplace manifest.
 
-## Plugin Version Bump — Two-Phase Sync (MANDATORY)
+## Plugin Versioning & Release — release-please (MANDATORY)
 
-When a PR bumps any plugin's version (e.g. `1.5.0 → 1.6.0`), the marketplace must be synced in **two phases** around the merge. Skipping pre-merge gates risks landing leaked secrets or broken `marketplace.json` to public main; skipping post-merge actions leaves the author's local install pointing at the pre-merge state.
+Versioning, tagging, and changelogs are owned by **release-please** (monorepo manifest mode, one independent component per plugin — see `release-please-config.json` + `.release-please-manifest.json`). **Do not hand-bump versions in a feature PR.** A feature PR touches only its plugin's files (`<plugin>/**`) using Conventional Commits; the version bump is proposed automatically.
 
-### Phase 1 — Pre-merge (run on the feature branch before opening PR for review)
+### How a release happens
 
-Validation gates. Block the PR if any fails.
+1. **Feature PR** — implement under `<plugin>/`, Conventional-Commit scoped to that plugin (`feat(<plugin>): …` / `fix(<plugin>): …`). **No version edits**, no marketplace / codex manifest edits for versioning. Squash-merge to `main`.
+2. **Release PR (automatic)** — on push to `main`, `.github/workflows/release-please.yml` opens/updates a Release PR that, per changed plugin, bumps the version across `<plugin>/.claude-plugin/plugin.json`, `<plugin>/.codex-plugin/plugin.json`, and that plugin's `.claude-plugin/marketplace.json` entry (**version string only** — the bespoke marketplace `description`/`keywords` are never touched), and writes `<plugin>/CHANGELOG.md`.
+3. **Merge the Release PR** — release-please cuts the `<plugin>-vX.Y.Z` tag + GitHub Release. A `RELEASE_PLEASE_TOKEN` PAT is required so the bot-opened Release PR fires the required status checks — see the comment in `release-please.yml`.
 
-| Gate | Skill / Script | Why it must run before merge |
-|------|---------------|------------------------------|
+Version lives in **one canonical place per plugin** (`<plugin>/.claude-plugin/plugin.json`, tracked by the manifest); the codex manifest + marketplace entry are propagated by release-please, and the README no longer carries per-plugin version badges (marketplace.json / tags / Releases are the source).
+
+### Pre-merge gates (apply to feature PRs and the Release PR)
+
+| Gate | Skill / Script | Why |
+|------|---------------|-----|
 | Sanitize-check | `Skill: kc-plugin-forge:kc-plugin-forge-sanitize-check <plugin>` | Public plugins must not leak internal org markers / secrets / paths. BLOCK class halts publish; REJECT class triggers incident response (rotate credential + scrub history). |
-| Codex manifest drift | `kc-marketplace-sync` Step 1.5 (drift check section) | `.codex-plugin/plugin.json` must match `.claude-plugin/plugin.json` on `version` / `description` / `keywords` / `license`. `interface.*` block is Codex-specific — do not touch. |
-| Marketplace schema + installability | `scripts/marketplace-verify.sh` (L1 + L2) | Schema validates `marketplace.json`; install test confirms each plugin is resolvable from a clean `HOME`. Catches `source` field typos and orphaned entries before publish. |
+| Marketplace schema + installability | `scripts/marketplace-verify.sh` (L1 + L2) | Schema validates `marketplace.json`; install test confirms each plugin is resolvable from a clean `HOME`. Catches `source` typos and orphaned entries before publish. |
+| Version parity guard | `scripts/version-parity-check.sh` (CI: `marketplace-parity.yml`, required check) | Backstop that release-please wrote `plugin.json` / `.codex-plugin/plugin.json` / marketplace entry consistently, and catches accidental manual drift. Does not block — it validates. |
 
-If all three pass → open Draft PR (per user-preferences workflow), `gh pr ready` after CI green.
+### Post-merge — LOCAL install sync (run from the **main workspace**, NOT a Conductor / feature-branch worktree)
 
-### Phase 2 — Post-merge (run from the **main workspace**, NOT a Conductor / feature-branch worktree)
+release-please owns versioning + tagging in the cloud, but it **cannot touch your machine's local install**. After the Release PR merges, mirror `main` into the author's local plugin installs so dispatched subagents read current references:
 
-Local state alignment with the squash-merged `main` commit.
+| Action | Why |
+|--------|-----|
+| Local install rsync (`~/.claude/plugins/local/<plugin>`) | Subagents read references from local install; stale local = agents see old state. |
+| Codex local install (`~/.codex/local-plugins/<plugin>`) | Codex CLI parallel of the above. See **Codex install conventions** below. |
+| Clear stale cache (`~/.claude/plugins/cache/local/<plugin>`) | Forces cache rebuild on next plugin load. |
 
-| Action | Skill step | Why it must run after merge |
-|--------|------------|----------------------------|
-| Auto-tag `<plugin>-v<version>` | `kc-marketplace-sync` Step 2.5 | Tag must point at the squash-merge commit on `main`. Tagging a feature-branch commit orphans the tag after squash-merge. |
-| Local install rsync (`~/.claude/plugins/local/<plugin>`) | Step 3 | Subagents read references from local install; if it mirrors the feature branch instead of `main`, dispatched agents see uncommitted state. |
-| Codex local install (`~/.codex/local-plugins/<plugin>`) | Step 3.1 | Codex CLI parallel of the above. See **Codex install conventions** note below. |
-| Clear stale cache | Step 4 | Forces cache rebuild on next plugin load. |
+Run the local-sync subset via `Skill: kc-marketplace-sync <plugin>` from the main workspace (`$KC_WORKSPACE` on this machine; wherever you cloned `kc-claude-plugins` elsewhere). The skill's tagging / marketplace / README steps are **superseded by release-please** — only its local-install steps remain relevant.
 
 **Codex install conventions** — two layouts coexist on a typical machine and both are valid:
 
 | Layout | Path | Use case |
 |--------|------|----------|
-| Rsync copy (recommended for new plugins) | `~/.codex/local-plugins/<plugin>/` | Snapshots `main` per Phase 2 sync. Defeats the "subagent sees uncommitted state" failure mode by definition. |
-| Symlink to source | `~/plugins/<plugin>` (with `~/.agents/plugins/marketplace.json` entry; documented in `kc-plugin-forge/README.md`) | Live-edit during plugin development. Skips the Phase 2 rsync but loses the "main only" guarantee. |
+| Rsync copy (recommended for new plugins) | `~/.codex/local-plugins/<plugin>/` | Snapshots `main` post-merge. Defeats the "subagent sees uncommitted state" failure mode by definition. |
+| Symlink to source | `~/plugins/<plugin>` (with `~/.agents/plugins/marketplace.json` entry; documented in `kc-plugin-forge/README.md`) | Live-edit during plugin development. Skips the rsync but loses the "main only" guarantee. |
 
 Codex resolves both via `~/.agents/plugins/marketplace.json` `source.path` (relative to `$HOME`). The `kc-marketplace-sync` skill writes to the rsync layout; older plugins (e.g. `kc-plugin-forge`) still ship the symlink convention. Migration is optional; do not break working symlinks.
 
-Run via: `Skill: kc-marketplace-sync <plugin>` from the main workspace checkout (NOT a Conductor / feature-branch worktree). On this machine the canonical path is set via `$KC_WORKSPACE`; on other machines it is wherever you cloned `kc-claude-plugins`. The skill auto-routes Phase 2 steps when invoked post-merge.
-
-### Why not collapse into one phase?
-
-- **Pre-merge gates are validation** — must run *before* untrusted state hits `main`.
-- **Post-merge actions depend on the merge commit existing** (auto-tag) or mirror `main` into local install — running them pre-merge on a feature branch contaminates local state with uncommitted code.
-
-If you skip Phase 2 after merge, the author's machine ends up serving stale subagent references — symptoms include "the new skill change isn't taking effect" until the next `/kc-marketplace-sync` run.
+If you skip the post-merge local sync, the author's machine serves stale subagent references — symptoms include "the new skill change isn't taking effect" until the next `/kc-marketplace-sync` run.
 
 ## Commit / PR Conventions (per user-preferences)
 
 - **Commit format**: `<type>(<plugin-or-scope>): <description>` — types: `feat / fix / docs / chore / refactor / test / style / perf / ci`. Scope is plugin slug (e.g. `feat(e2e-pipeline):`, `chore(kc-pr-flow):`) for plugin-local changes, or `readme / scripts / marketplace` for repo-wide changes.
 - **Stage explicitly** — never `git add .`; always name touched files. Pre-commit hooks honor this.
-- **Version parity** — when bumping any plugin's version, all three sources must end at the same value:
-  - `<plugin>/.claude-plugin/plugin.json`
-  - `<plugin>/.codex-plugin/plugin.json` (if Codex-enabled)
-  - `.claude-plugin/marketplace.json` entry for that plugin
+- **Versioning is release-please-owned** — do not hand-bump versions in a feature PR (see "Plugin Versioning & Release"). release-please propagates the version across `<plugin>/.claude-plugin/plugin.json`, `<plugin>/.codex-plugin/plugin.json`, and the `.claude-plugin/marketplace.json` entry; `version-parity-check.sh` guards that the three stay consistent.
 - **Default PR mode**: Draft. Convert with `gh pr ready` after CI green.
 - **Output language**: Chinese for explanations to user; English for `SKILL.md`, agent `.md`, hooks scripts, commit messages, PR body. Match per-plugin conventions when they differ.
 
