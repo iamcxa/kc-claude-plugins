@@ -18,6 +18,7 @@
       "component": "kc-plugin-forge",
       "extra-files": [
         { "type": "json", "path": "kc-plugin-forge/.claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "kc-plugin-forge/.codex-plugin/plugin.json", "jsonpath": "$.version" },
         { "type": "json", "path": ".claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-plugin-forge\")].version" }
       ]
     },

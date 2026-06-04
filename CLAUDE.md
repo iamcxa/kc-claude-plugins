@@ -20,7 +20,7 @@ Version lives in **one canonical place per plugin** (`<plugin>/.claude-plugin/pl
 |------|---------------|-----|
 | Sanitize-check | `Skill: kc-plugin-forge:kc-plugin-forge-sanitize-check <plugin>` | Public plugins must not leak internal org markers / secrets / paths. BLOCK class halts publish; REJECT class triggers incident response (rotate credential + scrub history). |
 | Marketplace schema + installability | `scripts/marketplace-verify.sh` (L1 + L2) | Schema validates `marketplace.json`; install test confirms each plugin is resolvable from a clean `HOME`. Catches `source` typos and orphaned entries before publish. |
-| Version parity guard | `scripts/version-parity-check.sh` (CI: `marketplace-parity.yml`, required check) | Backstop that release-please wrote `plugin.json` / `.codex-plugin/plugin.json` / marketplace entry consistently, and catches accidental manual drift. Does not block — it validates. |
+| Version parity guard | `scripts/version-parity-check.sh` (CI: `marketplace-parity.yml`, required check) | Backstop that release-please wrote `plugin.json` / `.codex-plugin/plugin.json` / marketplace entry consistently, and catches accidental manual drift. As a required check it **blocks merge on a real mismatch** (including the Release PR), so release-please must propagate the version to every tracked source — including each Codex-enabled plugin's `.codex-plugin/plugin.json`. |
 
 ### Post-merge — LOCAL install sync (run from the **main workspace**, NOT a Conductor / feature-branch worktree)
 
