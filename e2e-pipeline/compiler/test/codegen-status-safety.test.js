@@ -728,6 +728,27 @@ describe('metrics flow identity safety', function() {
   });
 });
 
+describe('metrics failure diagnostic safety', function() {
+  test('metrics JSON round-trips failure messages with JSON control characters', function() {
+    const hostile = 'quote " slash \\ line\nreturn\rtab\tbackspace\bformfeed\fcontrol\u0001';
+    withFakeBrowser(snapshotBrowserScript(), function(binDir) {
+      const metricsPath = path.join(binDir, 'metrics.json');
+      const script = generate(makeTextFlow({
+        type: 'text-visible',
+        raw: 'hostile text visible',
+        text: hostile,
+      }), 'metrics-failure-message');
+      const result = runBash(script, binDir, {
+        AGENT_BROWSER_LOG: path.join(binDir, 'browser.log'),
+        SNAPSHOT_OUTPUT: '- document "safe"',
+      }, ['--continue-on-error', '--metrics-output', metricsPath]);
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      const metrics = JSON.parse(fs.readFileSync(metricsPath, 'utf8'));
+      assert.equal(metrics.steps[0].failure_msg, "text '" + hostile + "' not found on page");
+    });
+  });
+});
+
 describe('text assertion runtime status safety', function() {
   test('treats hostile session command substitution as a literal value', function() {
     const hostileSession = '$(printf exploited > "$SESSION_MARKER")';
