@@ -177,7 +177,7 @@ const { generate } = require('../codegen');
 
 describe('Integration: JUnit XML codegen (FLAG-01)', function() {
 
-  test('compiled script with CJK step names has valid UTF-8 in _STEP_NAMES', function() {
+  test('compiled script keeps CJK step identity in all report forms', function() {
     var resolved = {
       name: 'cjk-flow',
       description: 'CJK step test',
@@ -190,8 +190,8 @@ describe('Integration: JUnit XML codegen (FLAG-01)', function() {
     };
     var script = generate(resolved, 'cjk-flow');
     assert.ok(
-      script.includes('_STEP_NAMES+=("登入-login")'),
-      'CJK step id must appear as UTF-8 in _STEP_NAMES. Got snippet: ' + script
+      script.includes('_record_step_name "登入-login" "登入-login" "登入-login"'),
+      'CJK step id must appear as UTF-8 in all identity forms. Got snippet: ' + script
     );
     assert.ok(
       !script.includes('&#'),
@@ -199,7 +199,7 @@ describe('Integration: JUnit XML codegen (FLAG-01)', function() {
     );
   });
 
-  test('compiled script with XML-special step names has escaped values in _STEP_NAMES', function() {
+  test('compiled script XML-escapes only the JUnit step identity', function() {
     var resolved = {
       name: 'xml-special-flow',
       description: 'XML special chars test',
@@ -212,8 +212,10 @@ describe('Integration: JUnit XML codegen (FLAG-01)', function() {
     };
     var script = generate(resolved, 'xml-special-flow');
     assert.ok(
-      script.includes('_STEP_NAMES+=("check-&lt;input&gt;-field")'),
-      'Angle bracket step id must be XML-escaped in _STEP_NAMES. Got snippet: ' + script
+      script.includes(
+        '_record_step_name "check-<input>-field" "check-<input>-field" "check-&lt;input&gt;-field"'
+      ),
+      'Angle bracket step id must keep raw/JSON identity and XML-escape JUnit identity. Got snippet: ' + script
     );
   });
 

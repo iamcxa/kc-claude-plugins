@@ -164,6 +164,29 @@ function runPollingAssertion(expect, options) {
   });
 }
 
+const COMPLEX_STEP_ID = '步驟<&"\'\nline\rreturn\ttab$()../path/`tick`';
+
+function withIdentityReports(stepId, callback) {
+  return withFakeBrowser('#!/usr/bin/env bash\nexit 0\n', function(binDir) {
+    const metricsPath = path.join(binDir, 'metrics.json');
+    const junitPath = path.join(binDir, 'junit.xml');
+    const script = generate({
+      name: 'step-identity-round-trip',
+      steps: [{
+        id: stepId,
+        action: 'Wait 0',
+        type: 'wait',
+        operands: { seconds: 0 },
+      }],
+    }, 'step-identity-round-trip');
+    const result = runBash(script, binDir, {}, [
+      '--metrics-output', metricsPath,
+      '--junit', junitPath,
+    ]);
+    return callback({ result, metricsPath, junitPath });
+  });
+}
+
 describe('cross-site polling assertion runtime safety', function() {
   test('convertible element-visible snapshots use the named session', function() {
     const result = runPollingAssertion({
@@ -479,6 +502,106 @@ describe('named-session failure diagnostics', function() {
       });
       assert.equal(result.status, 1, result.stdout + result.stderr);
       assertOnlyNamedDiagnosticCalls(fs.readFileSync(logPath, 'utf8'));
+    });
+  });
+});
+
+describe('step ID runtime and artifact safety', function() {
+  test('metrics JSON decodes the exact raw step ID', function() {
+    withIdentityReports(COMPLEX_STEP_ID, function(report) {
+      assert.equal(report.result.status, 0, report.result.stdout + report.result.stderr);
+      const metrics = JSON.parse(fs.readFileSync(report.metricsPath, 'utf8'));
+      assert.equal(metrics.steps[0].id, COMPLEX_STEP_ID);
+    });
+  });
+
+  test('JUnit XML decodes the exact raw step ID including control whitespace', function() {
+    withIdentityReports(COMPLEX_STEP_ID, function(report) {
+      assert.equal(report.result.status, 0, report.result.stdout + report.result.stderr);
+      const xpath = childProcess.spawnSync(
+        '/usr/bin/xmllint',
+        ['--xpath', 'string(/testsuites/testsuite/testcase/@name)', report.junitPath],
+        { encoding: 'utf8' }
+      );
+      assert.equal(xpath.status, 0, xpath.stdout + xpath.stderr);
+      assert.equal(xpath.stdout.slice(0, -1), COMPLEX_STEP_ID);
+    });
+  });
+
+  test('hostile step IDs remain literal and failure screenshots stay inside the artifact directory', function() {
+    withFakeBrowser([
+      '#!/usr/bin/env bash',
+      'printf \'%s\\n\' "$*" >> "${AGENT_BROWSER_LOG:?}"',
+      'for _arg in "$@"; do [ "$_arg" = "open" ] && exit 1; done',
+      'exit 0',
+    ].join('\n'), function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const screenshotDir = path.join(binDir, 'screenshots');
+      const markerPath = path.join(binDir, 'step-id-expanded');
+      const hostileId = 'x/../../owned$(touch "$STEP_MARKER")\nnext-line';
+      const script = generate({
+        name: 'hostile-step-id',
+        variables: { base_url: 'https://example.test' },
+        steps: [{
+          id: hostileId,
+          action: 'Navigate to /home',
+          type: 'navigate',
+          operands: { urlPath: '/home' },
+        }],
+      }, 'hostile-step-id');
+      const result = runBash(script, binDir, {
+        AGENT_BROWSER_LOG: logPath,
+        E2E_SCREENSHOT_DIR: screenshotDir,
+        STEP_MARKER: markerPath,
+      });
+
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assert.equal(fs.existsSync(markerPath), false, 'step ID command substitution must remain literal');
+      assert.match(result.stdout, /owned\$\(touch/);
+      assert.match(result.stdout, /next-line/);
+      const screenshotLine = fs.readFileSync(logPath, 'utf8').split('\n').find(line => line.includes('screenshot '));
+      assert.ok(screenshotLine, 'failure diagnostics must request a screenshot');
+      const screenshotPath = screenshotLine.slice(screenshotLine.indexOf('screenshot ') + 'screenshot '.length);
+      assert.ok(
+        path.resolve(screenshotPath).startsWith(path.resolve(screenshotDir) + path.sep),
+        'failure screenshot escaped artifact directory: ' + screenshotPath
+      );
+    });
+  });
+
+  test('requested step screenshots sanitize only the artifact filename', function() {
+    withFakeBrowser([
+      '#!/usr/bin/env bash',
+      'printf \'%s\\n\' "$*" >> "${AGENT_BROWSER_LOG:?}"',
+      'exit 0',
+    ].join('\n'), function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const screenshotDir = path.join(binDir, 'screenshots');
+      const stepId = 'x/../../post-shot';
+      const script = generate({
+        name: 'requested-step-screenshot',
+        steps: [{
+          id: stepId,
+          action: 'Wait 0',
+          type: 'wait',
+          operands: { seconds: 0 },
+          screenshot: true,
+        }],
+      }, 'requested-step-screenshot');
+      const result = runBash(script, binDir, {
+        AGENT_BROWSER_LOG: logPath,
+        E2E_SCREENSHOT_DIR: screenshotDir,
+      });
+
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      assert.match(result.stdout, /x\/\.\.\/\.\.\/post-shot/);
+      const screenshotLine = fs.readFileSync(logPath, 'utf8').split('\n').find(line => line.includes('screenshot '));
+      assert.ok(screenshotLine, 'step must request its configured screenshot');
+      const screenshotPath = screenshotLine.slice(screenshotLine.indexOf('screenshot ') + 'screenshot '.length);
+      assert.ok(
+        path.resolve(screenshotPath).startsWith(path.resolve(screenshotDir) + path.sep),
+        'requested screenshot escaped artifact directory: ' + screenshotPath
+      );
     });
   });
 });

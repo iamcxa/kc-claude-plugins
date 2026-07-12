@@ -2522,12 +2522,12 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — per-step timing bookkeeping (navi
     assert.ok(stepStartIdx < navIdx, '_STEP_START must appear before agent-browser open. stepStartIdx=' + stepStartIdx + ' navIdx=' + navIdx);
   });
 
-  test("navigate success path appends step id to _STEP_NAMES", function() {
+  test("navigate success path records raw and format-specific step identities", function() {
     const step = makeNavigate('nav-login', '/login');
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_STEP_NAMES+=("nav-login")'),
-      'Expected _STEP_NAMES+= with step id nav-login. Got snippet containing STEP_NAMES: ' + script.slice(script.indexOf('_STEP_NAMES'), script.indexOf('_STEP_NAMES') + 100)
+      script.includes('_record_step_name "nav-login" "nav-login" "nav-login"'),
+      'Expected raw, JSON, and XML step identity arguments. Got snippet: ' + script
     );
   });
 
@@ -2767,8 +2767,8 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — xmlAttrEscape', function() {
   });
 });
 
-describe('v2.0 JUnit XML codegen (FLAG-01) — CJK step name as UTF-8 in _STEP_NAMES', function() {
-  test("flow with CJK step ID has UTF-8 in _STEP_NAMES (not numeric entities)", function() {
+describe('v2.0 JUnit XML codegen (FLAG-01) — CJK step identity encoding', function() {
+  test("flow with CJK step ID keeps UTF-8 in raw, JSON, and XML forms", function() {
     const step = {
       id: '登入頁面',
       action: 'Navigate to login',
@@ -2777,8 +2777,8 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — CJK step name as UTF-8 in _STEP_N
     };
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_STEP_NAMES+=("登入頁面")'),
-      'Expected CJK step id as UTF-8 in _STEP_NAMES. Got snippet: ' + script
+      script.includes('_record_step_name "登入頁面" "登入頁面" "登入頁面"'),
+      'Expected CJK step id as UTF-8 in all identity forms. Got snippet: ' + script
     );
     assert.ok(
       !script.includes('&#'),
@@ -2787,8 +2787,8 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — CJK step name as UTF-8 in _STEP_N
   });
 });
 
-describe('v2.0 JUnit XML codegen (FLAG-01) — angle bracket step names XML-escaped in _STEP_NAMES', function() {
-  test("flow with angle bracket step ID has escaped values in _STEP_NAMES", function() {
+describe('v2.0 JUnit XML codegen (FLAG-01) — format-specific step identity encoding', function() {
+  test("flow with angle bracket step ID keeps raw identity and XML-escapes only the XML form", function() {
     const step = {
       id: 'check-<input>-field',
       action: 'Check input field',
@@ -2797,8 +2797,10 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — angle bracket step names XML-esca
     };
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_STEP_NAMES+=("check-&lt;input&gt;-field")'),
-      'Expected &lt; and &gt; escaping in _STEP_NAMES for angle bracket step ID. Got snippet: ' + script
+      script.includes(
+        '_record_step_name "check-<input>-field" "check-<input>-field" "check-&lt;input&gt;-field"'
+      ),
+      'Expected raw/JSON identity plus XML-specific escaping. Got snippet: ' + script
     );
   });
 });

@@ -18,36 +18,34 @@
  *   - Compiled scripts accept --junit <path> flag at runtime
  *   - Step-level timing/result tracking arrays always emitted
  *   - _emit_junit() bash function writes valid JUnit XML with pre-escaped values
- *   - xmlbuilder2 used for compile-time XML escaping (no bash XML escaping)
  */
 
-const { create: xmlCreate } = require('xmlbuilder2');
-
 // ---------------------------------------------------------------------------
-// XML attribute escaping helper (compile-time, using xmlbuilder2)
+// Report encoding helpers (compile-time)
 // ---------------------------------------------------------------------------
 
 /**
  * xmlAttrEscape(str) — escape a string for safe embedding as XML attribute value.
  *
- * Uses xmlbuilder2 to perform canonical XML escaping:
- *   < → &lt;   > → &gt;   & → &amp;   " → &quot;
+ * Escapes XML attribute syntax and preserves control whitespace with numeric
+ * character references so XML parsers do not normalize identity to spaces.
  *
  * CJK and other Unicode characters pass through as valid UTF-8.
  * Returns the escaped string (no surrounding quotes).
  */
 function xmlAttrEscape(str) {
-  if (str === '') return '';
-  // Build a minimal XML document with the value as an attribute
-  // Extract the escaped attribute value via regex
-  var doc = xmlCreate({ version: '1.0' }).ele('r').att('v', str).end({ headless: true });
-  // doc is like: <r v="escaped-value"/>  or  <r v="escaped-value"></r>
-  var match = doc.match(/v="([\s\S]*?)"/);
-  if (match) {
-    return match[1];
-  }
-  // Fallback: manual escaping if regex fails
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/\t/g, '&#x9;')
+    .replace(/\n/g, '&#xA;')
+    .replace(/\r/g, '&#xD;');
+}
+
+function jsonStringContent(str) {
+  return JSON.stringify(str).slice(1, -1);
 }
 
 // ---------------------------------------------------------------------------
@@ -60,6 +58,24 @@ function xmlAttrEscape(str) {
  */
 function singleQuote(str) {
   return "'" + str.replace(/'/g, "'\\''") + "'";
+}
+
+/** Wrap str in double quotes while preserving it as literal shell data. */
+function escapeDoubleQuoted(str) {
+  return str
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\$/g, '\\$')
+    .replace(/`/g, '\\`');
+}
+
+function doubleQuote(str) {
+  return '"' + escapeDoubleQuoted(str) + '"';
+}
+
+/** Produce a path component that cannot traverse outside an artifact directory. */
+function artifactFileComponent(str) {
+  return str.replace(/[^A-Za-z0-9._-]/g, '_');
 }
 
 // ---------------------------------------------------------------------------
@@ -281,12 +297,20 @@ function generateRuntimeSupport() {
     '_ATTEMPT_NUM=1',
     '# JUnit step tracking arrays (FLAG-01)',
     '_STEP_NAMES=()',
+    '_STEP_JSON_NAMES=()',
+    '_STEP_XML_NAMES=()',
     '_STEP_RESULTS=()',
     '_STEP_FAILURES=()',
     '_STEP_TIMES=()',
     '_FLOW_START=$SECONDS',
     '_SCREENSHOT_DIR="${E2E_SCREENSHOT_DIR:-/tmp/e2e-screenshots}"',
     'mkdir -p "$_SCREENSHOT_DIR"',
+    '',
+    '_record_step_name() {',
+    '  _STEP_NAMES+=("$1")',
+    '  _STEP_JSON_NAMES+=("$2")',
+    '  _STEP_XML_NAMES+=("$3")',
+    '}',
     '',
     '_diagnostic_browser() {',
     '  local _session="$1"',
@@ -298,14 +322,21 @@ function generateRuntimeSupport() {
     '  fi',
     '}',
     '',
+    '_artifact_name() {',
+    "  printf '%s' \"$1\" | LC_ALL=C tr -c 'A-Za-z0-9._-' '_'",
+    '}',
+    '',
     '_handle_failure() {',
     '  local _step_id="$1"',
     '  local _msg="$2"',
     '  local _session="${3:-}"',
+    '  local _step_file',
+    '  _step_file=$(_artifact_name "$_step_id")',
     '  echo "FAIL: $_step_id -- $_msg"',
     '  # Capture diagnostic artifacts on failure',
     '  echo "--- Diagnostic: screenshot ---"',
-    '  _diagnostic_browser "$_session" screenshot "$_SCREENSHOT_DIR/fail-${_step_id}.png" 2>&1 || echo "(screenshot failed)"',
+    '  _diagnostic_browser "$_session" screenshot "$_SCREENSHOT_DIR/fail-$' +
+      '{_step_file}.png" 2>&1 || echo "(screenshot failed)"',
     '  echo "--- Diagnostic: current URL ---"',
     '  _diagnostic_browser "$_session" get url 2>&1 || echo "(get url failed)"',
     '  echo "--- Diagnostic: a11y snapshot (first 80 lines) ---"',
@@ -602,7 +633,7 @@ function generateJUnitEmitter(flowName) {
     '    printf \'  <testsuite name="' + escapedFlow + '" tests="%s" failures="%s" skipped="%s" time="%s" timestamp="%s">\\n\' \\',
     '      "$_total" "$_failures" "$_skipped" "$_duration" "$(date -u +%Y-%m-%dT%H:%M:%SZ)"',
     '    for _i in "${!_STEP_NAMES[@]}"; do',
-    '      local _sname="${_STEP_NAMES[$_i]}"',
+    '      local _sname="${_STEP_XML_NAMES[$_i]}"',
     '      local _sresult="${_STEP_RESULTS[$_i]}"',
     '      local _stime="${_STEP_TIMES[$_i]}"',
     '      local _sfail="${_STEP_FAILURES[$_i]}"',
@@ -681,7 +712,7 @@ function generateMetricsEmitter(flowName) {
     '    printf \'"steps":[\' ',
     '    local _first=true',
     '    for _i in "${!_STEP_NAMES[@]}"; do',
-    '      local _sname="${_STEP_NAMES[$_i]}"',
+    '      local _sname="${_STEP_JSON_NAMES[$_i]}"',
     '      local _sresult="${_STEP_RESULTS[$_i]}"',
     '      local _stime="${_STEP_TIMES[$_i]}"',
     '      local _sfail="${_STEP_FAILURES[$_i]}"',
@@ -752,7 +783,7 @@ function generateAction(step, stepIndex, totalSteps) {
   var t = totalSteps;
 
   // Step progress log — always first
-  lines.push('echo "[' + n + '/' + t + '] ' + step.id + ': ' + step.action + '"');
+  lines.push('echo ' + doubleQuote('[' + n + '/' + t + '] ' + step.id + ': ' + step.action));
 
   // Cross-site: compute session prefix for all agent-browser invocations
   var session = step.session;
@@ -763,6 +794,9 @@ function generateAction(step, stepIndex, totalSteps) {
 
   // Pre-escape step id for XML attribute embedding (compile-time)
   var escapedId = xmlAttrEscape(step.id);
+  var quotedId = doubleQuote(step.id);
+  var recordStepName = '_record_step_name ' + quotedId + ' ' +
+    doubleQuote(jsonStringContent(step.id)) + ' ' + doubleQuote(escapedId);
 
   switch (step.type) {
     case 'navigate': {
@@ -780,20 +814,20 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('    break');
       lines.push('  fi');
       lines.push('  _HAD_RETRIES=true');
-      lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
+      lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + escapeDoubleQuoted(step.id) + '"');
       lines.push('  sleep 2');
       lines.push('done');
       lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
       lines.push('if [ "$_step_ok" = "true" ]; then');
-      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  ' + recordStepName);
       lines.push('  _STEP_RESULTS+=("pass")');
       lines.push('  _STEP_FAILURES+=("")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
       lines.push('else');
-      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  ' + recordStepName);
       lines.push('  _STEP_RESULTS+=("fail")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
-      lines.push('  _handle_failure "' + step.id + '" "' + navMsg + '"' + failureSessionArg);
+      lines.push('  _handle_failure ' + quotedId + ' "' + navMsg + '"' + failureSessionArg);
       lines.push('fi');
       break;
     }
@@ -830,22 +864,22 @@ function generateAction(step, stepIndex, totalSteps) {
         lines.push('    break');
         lines.push('  fi');
         lines.push('  _HAD_RETRIES=true');
-        lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
+        lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + escapeDoubleQuoted(step.id) + '"');
         lines.push('  sleep 2');
         lines.push('done');
       }
 
       lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
       lines.push('if [ "$_step_ok" = "true" ]; then');
-      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  ' + recordStepName);
       lines.push('  _STEP_RESULTS+=("pass")');
       lines.push('  _STEP_FAILURES+=("")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
       lines.push('else');
-      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  ' + recordStepName);
       lines.push('  _STEP_RESULTS+=("fail")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
-      lines.push('  _handle_failure "' + step.id + '" "click action failed"' + failureSessionArg);
+      lines.push('  _handle_failure ' + quotedId + ' "click action failed"' + failureSessionArg);
       lines.push('fi');
       break;
     }
@@ -885,29 +919,29 @@ function generateAction(step, stepIndex, totalSteps) {
         lines.push('    break');
         lines.push('  fi');
         lines.push('  _HAD_RETRIES=true');
-        lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + step.id + '"');
+        lines.push('  echo "RETRY [$_retry/$RETRIES]: ' + escapeDoubleQuoted(step.id) + '"');
         lines.push('  sleep 2');
         lines.push('done');
       }
 
       lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
       lines.push('if [ "$_step_ok" = "true" ]; then');
-      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  ' + recordStepName);
       lines.push('  _STEP_RESULTS+=("pass")');
       lines.push('  _STEP_FAILURES+=("")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
       lines.push('else');
-      lines.push('  _STEP_NAMES+=("' + escapedId + '")');
+      lines.push('  ' + recordStepName);
       lines.push('  _STEP_RESULTS+=("fail")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
-      lines.push('  _handle_failure "' + step.id + '" "fill action failed"' + failureSessionArg);
+      lines.push('  _handle_failure ' + quotedId + ' "fill action failed"' + failureSessionArg);
       lines.push('fi');
       break;
     }
 
     case 'snapshot': {
       lines.push('agent-browser ' + sessionPrefix + 'snapshot');
-      lines.push('_STEP_NAMES+=("' + escapedId + '")');
+      lines.push(recordStepName);
       lines.push('_STEP_RESULTS+=("pass")');
       lines.push('_STEP_FAILURES+=("")');
       lines.push('_STEP_TIMES+=("0")');
@@ -916,7 +950,7 @@ function generateAction(step, stepIndex, totalSteps) {
 
     case 'wait': {
       lines.push('sleep ' + step.operands.seconds);
-      lines.push('_STEP_NAMES+=("' + escapedId + '")');
+      lines.push(recordStepName);
       lines.push('_STEP_RESULTS+=("pass")');
       lines.push('_STEP_FAILURES+=("")');
       lines.push('_STEP_TIMES+=("' + step.operands.seconds + '")');
@@ -924,8 +958,8 @@ function generateAction(step, stepIndex, totalSteps) {
     }
 
     case 'verify-external': {
-      lines.push('echo "SKIP: ' + step.id + ' -- external verification (no human in CI)"');
-      lines.push('_STEP_NAMES+=("' + escapedId + '")');
+      lines.push('echo ' + doubleQuote('SKIP: ' + step.id + ' -- external verification (no human in CI)'));
+      lines.push(recordStepName);
       lines.push('_STEP_RESULTS+=("skip")');
       lines.push('_STEP_FAILURES+=("")');
       lines.push('_STEP_TIMES+=("0")');
@@ -933,8 +967,8 @@ function generateAction(step, stepIndex, totalSteps) {
     }
 
     case 'execute-external': {
-      lines.push('echo "SKIP: ' + step.id + ' -- external execution (no human in CI)"');
-      lines.push('_STEP_NAMES+=("' + escapedId + '")');
+      lines.push('echo ' + doubleQuote('SKIP: ' + step.id + ' -- external execution (no human in CI)'));
+      lines.push(recordStepName);
       lines.push('_STEP_RESULTS+=("skip")');
       lines.push('_STEP_FAILURES+=("")');
       lines.push('_STEP_TIMES+=("0")');
@@ -973,6 +1007,7 @@ function generateExpects(step) {
   var lines = [];
   var session = step.session || '';
   var quotedSession = singleQuote(session);
+  var quotedId = doubleQuote(step.id);
   var sessionArg = ' ' + quotedSession;
   var failureSessionArg = session ? ' ' + quotedSession : '';
 
@@ -987,21 +1022,21 @@ function generateExpects(step) {
       var a11yPattern = selectorToA11yPattern(expect.selector);
       if (a11yPattern) {
         var failMsg = expect.elementName + ' not in a11y tree after ' + timeoutArg + 's';
-        lines.push('if _poll_snapshot_contains ' + singleQuote(a11yPattern) + ' "' + step.id + '" ' + timeoutArg + sessionArg + '; then');
+        lines.push('if _poll_snapshot_contains ' + singleQuote(a11yPattern) + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
         lines.push('  :');
         lines.push('else');
         lines.push('  _probe_status=$?');
         lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-        lines.push('    _handle_failure "' + step.id + '" "agent-browser snapshot probe failed for ' + expect.elementName + '"' + failureSessionArg);
+        lines.push('    _handle_failure ' + quotedId + ' "agent-browser snapshot probe failed for ' + expect.elementName + '"' + failureSessionArg);
         lines.push('  else');
-        lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"' + failureSessionArg);
+        lines.push('    _handle_failure ' + quotedId + ' "' + failMsg + '"' + failureSessionArg);
         lines.push('  fi');
         lines.push('fi');
       } else {
         // Fallback to _poll_visible for non-convertible selectors (e.g., css=)
         var sel = singleQuote(expect.selector);
         var failMsg = expect.elementName + ' not visible after ' + timeoutArg + 's';
-        lines.push('_poll_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"' + failureSessionArg);
+        lines.push('_poll_visible ' + sel + ' ' + quotedId + ' ' + timeoutArg + sessionArg + ' || _handle_failure ' + quotedId + ' "' + failMsg + '"' + failureSessionArg);
       }
 
     } else if (expect.type === 'element-not-visible') {
@@ -1009,42 +1044,42 @@ function generateExpects(step) {
       // Keep _poll_not_visible — headless CI issue is less critical for "not visible" checks
       var sel = singleQuote(expect.selector);
       var failMsg = expect.elementName + ' still visible after ' + timeoutArg + 's (expected not visible)';
-      lines.push('if _poll_not_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + '; then');
+      lines.push('if _poll_not_visible ' + sel + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
       lines.push('  :');
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    _handle_failure "' + step.id + '" "agent-browser visibility probe failed for ' + expect.elementName + '"' + failureSessionArg);
+      lines.push('    _handle_failure ' + quotedId + ' "agent-browser visibility probe failed for ' + expect.elementName + '"' + failureSessionArg);
       lines.push('  else');
-      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"' + failureSessionArg);
+      lines.push('    _handle_failure ' + quotedId + ' "' + failMsg + '"' + failureSessionArg);
       lines.push('  fi');
       lines.push('fi');
 
     } else if (expect.type === 'url-contains') {
       // Poll until URL contains value (CODEGEN-01)
       var failMsg = 'url does not contain ' + expect.value + ' after ' + timeoutArg + 's';
-      lines.push('if _poll_url_contains ' + singleQuote(expect.value) + ' "' + step.id + '" ' + timeoutArg + sessionArg + '; then');
+      lines.push('if _poll_url_contains ' + singleQuote(expect.value) + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
       lines.push('  :');
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    _handle_failure "' + step.id + '" "agent-browser URL probe failed"' + failureSessionArg);
+      lines.push('    _handle_failure ' + quotedId + ' "agent-browser URL probe failed"' + failureSessionArg);
       lines.push('  else');
-      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"' + failureSessionArg);
+      lines.push('    _handle_failure ' + quotedId + ' "' + failMsg + '"' + failureSessionArg);
       lines.push('  fi');
       lines.push('fi');
 
     } else if (expect.type === 'url-not-contains') {
       // Poll until URL does NOT contain value — redirects (e.g., login → dashboard) need time
       var failMsg = 'url still contains ' + expect.value + ' after ' + timeoutArg + 's';
-      lines.push('if _poll_url_not_contains ' + singleQuote(expect.value) + ' "' + step.id + '" ' + timeoutArg + sessionArg + '; then');
+      lines.push('if _poll_url_not_contains ' + singleQuote(expect.value) + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
       lines.push('  :');
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    _handle_failure "' + step.id + '" "agent-browser URL probe failed"' + failureSessionArg);
+      lines.push('    _handle_failure ' + quotedId + ' "agent-browser URL probe failed"' + failureSessionArg);
       lines.push('  else');
-      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"' + failureSessionArg);
+      lines.push('    _handle_failure ' + quotedId + ' "' + failMsg + '"' + failureSessionArg);
       lines.push('  fi');
       lines.push('fi');
 
@@ -1052,18 +1087,18 @@ function generateExpects(step) {
       // Instant check — snapshot + grep is too heavy for polling.
       var quotedText = singleQuote(expect.text);
       lines.push('if ! _snapshot=$(_capture_snapshot ' + quotedSession + '); then');
-      lines.push('  _handle_failure "' + step.id + '" "agent-browser snapshot failed"' + failureSessionArg);
+      lines.push('  _handle_failure ' + quotedId + ' "agent-browser snapshot failed"' + failureSessionArg);
       lines.push('elif ! echo "$_snapshot" | grep -qF ' + quotedText + '; then');
-      lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' not found on page"' + failureSessionArg);
+      lines.push('  _handle_failure ' + quotedId + ' "text \'' + expect.text + '\' not found on page"' + failureSessionArg);
       lines.push('fi');
 
     } else if (expect.type === 'text-not-visible') {
       // Inverted snapshot grep — fail if the text IS found on page.
       var quotedText = singleQuote(expect.text);
       lines.push('if ! _snapshot=$(_capture_snapshot ' + quotedSession + '); then');
-      lines.push('  _handle_failure "' + step.id + '" "agent-browser snapshot failed"' + failureSessionArg);
+      lines.push('  _handle_failure ' + quotedId + ' "agent-browser snapshot failed"' + failureSessionArg);
       lines.push('elif echo "$_snapshot" | grep -qF ' + quotedText + '; then');
-      lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' should NOT be on page but was found"' + failureSessionArg);
+      lines.push('  _handle_failure ' + quotedId + ' "text \'' + expect.text + '\' should NOT be on page but was found"' + failureSessionArg);
       lines.push('fi');
 
     } else if (expect.type === 'or-visible') {
@@ -1072,7 +1107,7 @@ function generateExpects(step) {
       var elemNames = elements.map(function(e) { return e.elementName; });
       var neitherMsg = 'neither ' + elemNames.join(' nor ') + ' visible after ' + timeoutArg + 's';
       var selectorArgs = elements.map(function(e) { return singleQuote(e.selector); }).join(' ');
-      lines.push('_poll_or_visible "' + step.id + '" ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + ' || _handle_failure "' + step.id + '" "' + neitherMsg + '"' + failureSessionArg);
+      lines.push('_poll_or_visible ' + quotedId + ' ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + ' || _handle_failure ' + quotedId + ' "' + neitherMsg + '"' + failureSessionArg);
 
     } else if (expect.type === 'deferred') {
       lines.push('echo "TODO: expect \'' + expect.raw + '\' not compiled (Phase 2)"');
@@ -1157,7 +1192,11 @@ function generate(resolved, flowName, meta) {
     if (step.screenshot) {
       var session = step.session;
       var sessionPrefix = session ? '--session ' + singleQuote(session) + ' ' : '';
-      parts.push('agent-browser ' + sessionPrefix + 'screenshot "$_SCREENSHOT_DIR/' + step.id + '.png" 2>/dev/null || echo "(screenshot ' + step.id + ' skipped)"');
+      var screenshotName = artifactFileComponent(step.id);
+      parts.push(
+        'agent-browser ' + sessionPrefix + 'screenshot "$_SCREENSHOT_DIR/' + screenshotName +
+        '.png" 2>/dev/null || echo ' + doubleQuote('(screenshot ' + step.id + ' skipped)')
+      );
     }
 
     parts.push('');
