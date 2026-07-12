@@ -773,6 +773,49 @@ describe('JUnit failure diagnostic safety', function() {
       assert.equal(xpath.stdout.slice(0, -1), "text '" + hostile + "' not found on page");
     });
   });
+
+  test('metrics and JUnit preserve a trailing LF in a probe-failure message', XMLLINT_TEST_OPTIONS, function() {
+    const elementName = 'hostile-__E2E_PIPELINE_MSG_END_7f3a9c__-trailing-newline\n';
+    const expectedFailure = 'agent-browser snapshot probe failed for ' + elementName;
+    withFakeBrowser(snapshotBrowserScript(), function(binDir) {
+      const metricsPath = path.join(binDir, 'metrics.json');
+      const junitPath = path.join(binDir, 'junit.xml');
+      const script = generate({
+        name: 'trailing-newline-failure',
+        steps: [{
+          id: 'probe-failure',
+          action: 'Wait 0',
+          type: 'wait',
+          operands: { seconds: 0 },
+          expects: [{
+            type: 'element-visible',
+            elementName,
+            selector: 'role=heading[name="Home"]',
+          }],
+        }],
+      }, 'trailing-newline-failure');
+      const result = runBash(script, binDir, {
+        AGENT_BROWSER_LOG: path.join(binDir, 'browser.log'),
+        SNAPSHOT_STATUS: '7',
+      }, [
+        '--continue-on-error',
+        '--metrics-output', metricsPath,
+        '--junit', junitPath,
+      ]);
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+
+      const metrics = JSON.parse(fs.readFileSync(metricsPath, 'utf8'));
+      assert.equal(metrics.steps[0].failure_msg, expectedFailure);
+
+      const xpath = childProcess.spawnSync(
+        XMLLINT_COMMAND,
+        ['--xpath', 'string(/testsuites/testsuite/testcase/failure/@message)', junitPath],
+        { encoding: 'utf8' }
+      );
+      assert.equal(xpath.status, 0, xpath.stdout + xpath.stderr);
+      assert.equal(xpath.stdout.slice(0, -1), expectedFailure);
+    });
+  });
 });
 
 describe('text assertion runtime status safety', function() {
