@@ -204,6 +204,22 @@ describe('cross-site polling assertion runtime safety', function() {
     assert.doesNotMatch(result.stdout, /not in a11y tree after/);
   });
 
+  test('empty or malformed snapshot output is reported as infrastructure failure', function() {
+    for (const snapshotOutput of [
+      '',
+      'agent-browser internal error',
+      'agent-browser internal error\nheading "Dashboard" [ref=e1]',
+    ]) {
+      const result = runPollingAssertion({
+        type: 'element-visible', raw: 'Dashboard heading visible', elementName: 'Dashboard heading',
+        selector: 'role=heading[name="Dashboard"]',
+      }, { snapshotOutput });
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assert.match(result.stdout, /agent-browser snapshot probe failed/);
+      assert.doesNotMatch(result.stdout, /not in a11y tree after/);
+    }
+  });
+
   test('url probe failure and malformed or noisy output are infrastructure failures', function() {
     const invalidEvidence = [
       { urlStatus: 7 },
@@ -346,7 +362,7 @@ describe('text assertion runtime status safety', function() {
       const result = runBash(script, binDir, {
         AGENT_BROWSER_LOG: logPath,
         SESSION_MARKER: markerPath,
-        SNAPSHOT_OUTPUT: 'Dashboard',
+        SNAPSHOT_OUTPUT: 'heading "Dashboard" [ref=e1]',
         SNAPSHOT_STATUS: '0',
       });
       assert.equal(result.status, 0, result.stdout + result.stderr);
@@ -397,6 +413,22 @@ describe('text assertion runtime status safety', function() {
     assert.equal(result.status, 1, result.stdout + result.stderr);
     assert.match(result.stdout, /agent-browser snapshot failed/);
     assert.doesNotMatch(result.stdout, /text 'Dashboard' not found on page/);
+  });
+
+  test('text-visible rejects empty and malformed snapshot evidence', function() {
+    for (const snapshotOutput of [
+      '',
+      'agent-browser internal error',
+      'agent-browser internal error\ntext "Dashboard"',
+    ]) {
+      const result = runTextFlow(
+        { type: 'text-visible', raw: "text 'Dashboard' on page", text: 'Dashboard' },
+        { snapshotOutput }
+      );
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assert.match(result.stdout, /agent-browser snapshot failed/);
+      assert.doesNotMatch(result.stdout, /text 'Dashboard' not found on page/);
+    }
   });
 
   test('text-not-visible cannot pass when the snapshot command fails', function() {
@@ -450,7 +482,7 @@ describe('text assertion runtime status safety', function() {
   test('text snapshots preserve the optional session argument', function() {
     const result = runTextFlow(
       { type: 'text-visible', raw: "text 'Dashboard' on page", text: 'Dashboard' },
-      { snapshotOutput: 'Dashboard', session: 'office' }
+      { snapshotOutput: 'heading "Dashboard" [ref=e1]', session: 'office' }
     );
     assert.equal(result.status, 0, result.stdout + result.stderr);
     assert.match(result.browserLog, /--session office snapshot/);
@@ -459,11 +491,11 @@ describe('text assertion runtime status safety', function() {
   test('preserves successful visible and not-visible assertions', function() {
     const visible = runTextFlow(
       { type: 'text-visible', raw: "text 'Dashboard' on page", text: 'Dashboard' },
-      { snapshotOutput: 'Dashboard' }
+      { snapshotOutput: '- document:\n  - heading "Dashboard" [ref=e1]' }
     );
     const notVisible = runTextFlow(
       { type: 'text-not-visible', raw: "text 'Failure' not on page", text: 'Failure' },
-      { snapshotOutput: 'Dashboard' }
+      { snapshotOutput: 'text "Dashboard"' }
     );
     assert.equal(visible.status, 0, visible.stdout + visible.stderr);
     assert.equal(notVisible.status, 0, notVisible.stdout + notVisible.stderr);
