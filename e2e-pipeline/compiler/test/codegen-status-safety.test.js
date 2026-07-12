@@ -176,20 +176,22 @@ describe('cross-site polling assertion runtime safety', function() {
   });
 
   test('url contains and url not contains use the named session', function() {
-    const contains = runPollingAssertion(
-      { type: 'url-contains', raw: 'url contains dashboard', value: 'dashboard' },
-      { urlOutput: 'https://example.test/dashboard' }
-    );
-    const notContains = runPollingAssertion(
-      { type: 'url-not-contains', raw: 'url does not contain login', value: 'login' },
-      { urlOutput: 'https://example.test/dashboard' }
-    );
-    assert.equal(contains.status, 0, contains.stdout + contains.stderr);
-    assert.equal(notContains.status, 0, notContains.stdout + notContains.stderr);
-    assert.match(contains.browserLog, /--session office get url/);
-    assert.match(notContains.browserLog, /--session office get url/);
-    assert.doesNotMatch(contains.browserLog, /^get url$/m);
-    assert.doesNotMatch(notContains.browserLog, /^get url$/m);
+    for (const urlOutput of ['http://example.test/dashboard', 'https://example.test/dashboard']) {
+      const contains = runPollingAssertion(
+        { type: 'url-contains', raw: 'url contains dashboard', value: 'dashboard' },
+        { urlOutput }
+      );
+      const notContains = runPollingAssertion(
+        { type: 'url-not-contains', raw: 'url does not contain login', value: 'login' },
+        { urlOutput }
+      );
+      assert.equal(contains.status, 0, contains.stdout + contains.stderr);
+      assert.equal(notContains.status, 0, notContains.stdout + notContains.stderr);
+      assert.match(contains.browserLog, /--session office get url/);
+      assert.match(notContains.browserLog, /--session office get url/);
+      assert.doesNotMatch(contains.browserLog, /^get url$/m);
+      assert.doesNotMatch(notContains.browserLog, /^get url$/m);
+    }
   });
 
   test('snapshot command failure is reported as infrastructure failure', function() {
@@ -202,15 +204,26 @@ describe('cross-site polling assertion runtime safety', function() {
     assert.doesNotMatch(result.stdout, /not in a11y tree after/);
   });
 
-  test('url probe failure and invalid output are infrastructure failures', function() {
-    for (const options of [{ urlStatus: 7 }, { urlOutput: 'not-a-url' }]) {
-      const result = runPollingAssertion(
-        { type: 'url-not-contains', raw: 'url does not contain login', value: 'login' },
-        options
-      );
-      assert.equal(result.status, 1, result.stdout + result.stderr);
-      assert.match(result.stdout, /agent-browser URL probe failed/);
-      assert.doesNotMatch(result.stdout, /url still contains/);
+  test('url probe failure and malformed or noisy output are infrastructure failures', function() {
+    const invalidEvidence = [
+      { urlStatus: 7 },
+      { urlOutput: 'not-a-url' },
+      { urlOutput: 'agent-browser error: websocket:// disconnected' },
+      { urlOutput: 'https://example.test/dashboard warning' },
+      { urlOutput: 'diagnostic noise\nhttps://example.test/dashboard' },
+      { urlOutput: 'https://example.test/dashboard\nagent-browser warning' },
+    ];
+    const expectations = [
+      { type: 'url-contains', raw: 'url contains dashboard', value: 'dashboard' },
+      { type: 'url-not-contains', raw: 'url does not contain login', value: 'login' },
+    ];
+    for (const expect of expectations) {
+      for (const options of invalidEvidence) {
+        const result = runPollingAssertion(expect, options);
+        assert.equal(result.status, 1, result.stdout + result.stderr);
+        assert.match(result.stdout, /agent-browser URL probe failed/);
+        assert.doesNotMatch(result.stdout, /url (still contains|does not contain)/);
+      }
     }
   });
 });

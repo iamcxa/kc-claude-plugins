@@ -1976,15 +1976,15 @@ describe('v2.0 poll-until — poll helpers emitted in generateRuntimeSupport', f
     );
   });
 
-  test("_poll_url_contains checks agent-browser get url", function() {
+  test("_poll_url_contains uses the shared status-safe URL capture", function() {
     const step = makeNavigate('nav', '/home');
     const script = generate(makeResolved([step]), 'test-flow');
     const pollStart = script.indexOf('_poll_url_contains()');
     const pollEnd = script.indexOf('\n}', pollStart);
     const pollBody = script.slice(pollStart, pollEnd + 2);
     assert.ok(
-      pollBody.includes('agent-browser get url'),
-      'Expected _poll_url_contains to call agent-browser get url. Got body: ' + pollBody
+      pollBody.includes('_capture_url "$_session"'),
+      'Expected _poll_url_contains to use _capture_url. Got body: ' + pollBody
     );
   });
 
