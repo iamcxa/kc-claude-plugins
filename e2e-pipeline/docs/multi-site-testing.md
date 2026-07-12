@@ -105,13 +105,12 @@ steps:
 
 | Rule | Error if violated |
 |------|-------------------|
-| Every step must have `site:` | `"Missing site: on step <id>"` |
-| `site:` value must exist in `sites:` keys | `"Unknown site: <alias>"` |
+| Every step must have `site:` | `Step '<step-id>': cross-site flow step must have a 'site:' qualifier` |
+| `site:` value must exist in `sites:` keys | `Step '<step-id>': unknown site '<alias>' (not in sites: block)` |
 | Site aliases must be shell identifiers (`^[A-Za-z_][A-Za-z0-9_]*$`) | `Invalid site name '<alias>' in sites: block: expected shell identifier matching ^[A-Za-z_][A-Za-z0-9_]*$` |
 | Site aliases cannot be `__proto__`, `prototype`, or `constructor` | `Invalid site name '<alias>' in sites: block: alias is reserved` |
 | Aliases must not normalize to the same `<ALIAS>_BASE_URL` key | `Site aliases '<first>' and '<second>' collide on normalized base URL variable '<NORMALIZED>_BASE_URL'` |
-| `sites:` and `mapping:` are mutually exclusive | `"Cannot use both"` |
-| Same mapping under two aliases | Ambiguous resolution error |
+| `sites:` and `mapping:` are mutually exclusive | `Flow has both 'mapping:' and 'sites:' — use one or the other in <flow-path>` |
 
 ## Running Cross-Site Tests
 
