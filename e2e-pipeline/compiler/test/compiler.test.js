@@ -726,6 +726,16 @@ describe('compile() — step identity validation', function() {
         ],
         expected: "Duplicate step id 'same'",
       },
+      {
+        name: 'nul-step-id', mapping: 'site-a',
+        steps: [{ id: 'nul\u0000byte', type: 'snapshot', action: 'Take snapshot' }],
+        expected: 'must not contain NUL',
+      },
+      {
+        name: 'unpaired-surrogate-step-id', mapping: 'site-a',
+        steps: [{ id: 'lone-\uD800', type: 'snapshot', action: 'Take snapshot' }],
+        expected: 'must not contain an unpaired surrogate',
+      },
     ];
 
     for (const testCase of cases) {

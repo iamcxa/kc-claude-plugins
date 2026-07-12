@@ -36,6 +36,33 @@ test('parse: every step id must be a non-empty string', function() {
   }
 });
 
+test('parse: step ids reject values that cannot round-trip through Bash and UTF-8', function() {
+  const invalidIds = [
+    { id: 'nul\u0000byte', label: 'NUL' },
+    { id: 'lone-high-\uD800', label: 'unpaired surrogate' },
+    { id: 'lone-low-\uDC00', label: 'unpaired surrogate' },
+  ];
+
+  for (const invalid of invalidIds) {
+    const result = parseTemporaryFlow({
+      name: 'invalid-runtime-step-id',
+      mapping: 'site-a',
+      steps: [{ id: invalid.id, type: 'snapshot', action: 'Take snapshot' }],
+    });
+    assert.ok(
+      result.errors.some(error => error.includes('Step at index 0') && error.includes(invalid.label)),
+      invalid.label + ' id must be rejected clearly: ' + JSON.stringify(result.errors)
+    );
+  }
+
+  const validAstral = parseTemporaryFlow({
+    name: 'valid-astral-step-id',
+    mapping: 'site-a',
+    steps: [{ id: 'launch-🚀', type: 'snapshot', action: 'Take snapshot' }],
+  });
+  assert.deepEqual(validAstral.errors, []);
+});
+
 test('parse: duplicate step ids are rejected in single-site and cross-site flows', function() {
   for (const flow of [
     {

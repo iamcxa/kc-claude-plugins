@@ -64,6 +64,20 @@ function validateFlowVariables(flow, errors) {
   }
 }
 
+function hasUnpairedSurrogate(value) {
+  for (var i = 0; i < value.length; i++) {
+    var code = value.charCodeAt(i);
+    if (code >= 0xD800 && code <= 0xDBFF) {
+      var next = value.charCodeAt(i + 1);
+      if (!(next >= 0xDC00 && next <= 0xDFFF)) return true;
+      i++;
+    } else if (code >= 0xDC00 && code <= 0xDFFF) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /**
  * Load and parse a YAML file, returning the parsed object or null on error.
  * Errors are pushed into the provided errors array.
@@ -125,6 +139,14 @@ function validateFlow(flow, filePath, errors) {
       var stepId = step && step.id;
       if (typeof stepId !== 'string' || stepId.trim().length === 0) {
         errors.push('Step at index ' + stepIndex + ' must have an id that is a non-empty string in ' + filePath);
+        continue;
+      }
+      if (stepId.includes('\u0000')) {
+        errors.push('Step at index ' + stepIndex + ' id must not contain NUL in ' + filePath);
+        continue;
+      }
+      if (hasUnpairedSurrogate(stepId)) {
+        errors.push('Step at index ' + stepIndex + ' id must not contain an unpaired surrogate in ' + filePath);
         continue;
       }
       if (stepIndexesById.has(stepId)) {
