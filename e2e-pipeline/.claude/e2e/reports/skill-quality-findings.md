@@ -183,3 +183,18 @@ Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + su
 **Files changed**: `agents/e2e-test-runner.md` (§ 1b-1f), `skills/e2e-walkthrough/reference.md` (Startup), `references/commands.md` (Recording rules).
 
 **Also investigated (rejected)**: Using trace screencast frames for video. Trace captures at 800×450 / ~1fps (event-driven) — too low quality for PR reviews. `record start` remains the correct approach for video.
+
+### 2026-07-12: Compiler negative assertions masked browser failures
+
+**Problem**: Generated `element-not-visible` assertions collapsed unavailable browser evidence into an ordinary timeout, while `text-not-visible` could treat a failed snapshot as confirmed absence and pass.
+
+**Root cause**: `|| true` erased the command-status channel before the assertion interpreted stdout. This is unsafe for negative assertions because empty output can look like evidence that the target is absent.
+
+**Fix**:
+- `_poll_not_visible` succeeds only on literal `false`, times out with status 1 for literal `true`, and returns status 2 for command or protocol failure.
+- Text assertions use a session-aware snapshot helper and route snapshot failure through `_handle_failure` before grep evaluation.
+- Added runtime tests with a fake `agent-browser` for command failure, invalid output, session routing, and successful positive/negative assertions.
+
+**Verification**: `node --test compiler/test/*.test.js` -> 507/507 PASS. `npm run lint` -> exit 0 with warnings and no errors.
+
+**Impact scan**: Reviewed e2e-test, e2e-map, e2e-walkthrough, e2e-flow, their references, all browser agents, and shared command/common-pattern references. No action grammar or agent execution contract changed, so no skill or agent edits were required. This plugin repo has no project mapping fixtures in the impact-matrix locations; compiler fixtures cover the behavior instead.

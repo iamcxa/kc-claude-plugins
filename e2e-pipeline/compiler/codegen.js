@@ -8,7 +8,7 @@
  *
  * All agent-browser commands use positional args (not flags) per commands.md.
  * Selectors are wrapped in single quotes using the singleQuote() escape pattern.
- * Visibility assertions use stdout capture (|| true), never exit code.
+ * Negative visibility and text assertions preserve command/protocol failures.
  *
  * Cross-site support (Phase 2 Plan 02):
  *   - When step.session is set, all agent-browser commands get --session <name> prefix
@@ -265,8 +265,8 @@ function generateRuntimeFlagBlock() {
  *   - Use $((_count + 1)) arithmetic (no let, no (( )))
  *   - Use sleep 1 between iterations
  *   - Use 2>/dev/null on agent-browser calls
- *   - Use || true after $() capture to prevent set -e abort
- *   - Return 1 on deadline (callers use || _handle_failure)
+ *   - Capture commands without letting set -e abort the polling loop
+ *   - Return 1 on deadline; _poll_not_visible returns 2 on command/protocol failure
  *
  * Returns: string (multi-line bash block)
  */
@@ -345,15 +345,29 @@ function generateRuntimeSupport() {
     '  local _result',
     '  while [ "$_count" -lt "$_timeout" ]; do',
     '    if [ -n "$_session" ]; then',
-    '      _result=$(agent-browser --session "$_session" is visible "$_sel" 2>/dev/null) || true',
+    '      if ! _result=$(agent-browser --session "$_session" is visible "$_sel" 2>/dev/null); then return 2; fi',
     '    else',
-    '      _result=$(agent-browser is visible "$_sel" 2>/dev/null) || true',
+    '      if ! _result=$(agent-browser is visible "$_sel" 2>/dev/null); then return 2; fi',
     '    fi',
-    '    [ "$_result" = "false" ] && return 0',
+    '    case "$_result" in',
+    '      false) return 0 ;;',
+    '      true) ;;',
+    '      *) return 2 ;;',
+    '    esac',
     '    sleep 1',
     '    _count=$((_count + 1))',
     '  done',
     '  return 1',
+    '}',
+    '',
+    '# Status-safe snapshot capture for text assertions.',
+    '_capture_snapshot() {',
+    '  local _session="$' + '{1:-}"',
+    '  if [ -n "$_session" ]; then',
+    '    agent-browser --session "$_session" snapshot',
+    '  else',
+    '    agent-browser snapshot',
+    '  fi',
     '}',
     '',
     '_poll_url_contains() {',
@@ -955,16 +969,18 @@ function generateExpects(step) {
     } else if (expect.type === 'text-visible') {
       // Instant check — snapshot + grep is too heavy for polling.
       var quotedText = singleQuote(expect.text);
-      lines.push('_snapshot=$(agent-browser snapshot) || true');
-      lines.push('if ! echo "$_snapshot" | grep -qF ' + quotedText + '; then');
+      lines.push('if ! _snapshot=$(_capture_snapshot "' + session + '"); then');
+      lines.push('  _handle_failure "' + step.id + '" "agent-browser snapshot failed"');
+      lines.push('elif ! echo "$_snapshot" | grep -qF ' + quotedText + '; then');
       lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' not found on page"');
       lines.push('fi');
 
     } else if (expect.type === 'text-not-visible') {
       // Inverted snapshot grep — fail if the text IS found on page.
       var quotedText = singleQuote(expect.text);
-      lines.push('_snapshot=$(agent-browser snapshot) || true');
-      lines.push('if echo "$_snapshot" | grep -qF ' + quotedText + '; then');
+      lines.push('if ! _snapshot=$(_capture_snapshot "' + session + '"); then');
+      lines.push('  _handle_failure "' + step.id + '" "agent-browser snapshot failed"');
+      lines.push('elif echo "$_snapshot" | grep -qF ' + quotedText + '; then');
       lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' should NOT be on page but was found"');
       lines.push('fi');
 

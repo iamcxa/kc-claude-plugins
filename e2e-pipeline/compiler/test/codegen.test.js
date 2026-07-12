@@ -975,7 +975,7 @@ describe('generateExpects() — text-visible', function() {
     step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_snapshot=$(agent-browser snapshot) || true'),
+      script.includes('if ! _snapshot=$(_capture_snapshot ""); then'),
       'text-visible must capture snapshot. Got: ' + script
     );
   });
@@ -995,7 +995,7 @@ describe('generateExpects() — text-visible', function() {
     step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("if ! echo \"$_snapshot\" | grep -qF"),
+      script.includes("elif ! echo \"$_snapshot\" | grep -qF"),
       'text-visible must use if ! pattern for failure detection. Got: ' + script
     );
   });
@@ -1027,7 +1027,7 @@ describe('generateExpects() — text-not-visible', function() {
     step.expects = [{ type: 'text-not-visible', raw: "text 'Sign-in failed' not on page", text: 'Sign-in failed' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_snapshot=$(agent-browser snapshot) || true'),
+      script.includes('if ! _snapshot=$(_capture_snapshot ""); then'),
       'text-not-visible must capture snapshot. Got: ' + script
     );
   });
@@ -1048,11 +1048,11 @@ describe('generateExpects() — text-not-visible', function() {
     const script = generate(makeResolved([step]), 'test-flow');
     // inverted: positive grep (no leading `!`); failure when grep DOES find the text
     assert.ok(
-      script.includes('if echo "$_snapshot" | grep -qF'),
+      script.includes('elif echo "$_snapshot" | grep -qF'),
       'text-not-visible must use positive `if echo ... | grep -qF` pattern (no leading !). Got: ' + script
     );
     assert.ok(
-      !script.includes('if ! echo "$_snapshot" | grep -qF \'Sign-in failed\''),
+      !script.includes('elif ! echo "$_snapshot" | grep -qF \'Sign-in failed\''),
       'text-not-visible must NOT use `if !` (that is the positive text-visible pattern). Got: ' + script
     );
   });
@@ -1964,7 +1964,7 @@ describe('v2.0 poll-until — poll helpers emitted in generateRuntimeSupport', f
     const pollEnd = script.indexOf('\n}', pollStart);
     const pollBody = script.slice(pollStart, pollEnd + 2);
     assert.ok(
-      pollBody.includes('"false"'),
+      pollBody.includes('false) return 0'),
       'Expected _poll_not_visible to check for "false" return. Got body: ' + pollBody
     );
   });
@@ -2086,7 +2086,7 @@ describe('v2.0 poll-until — generateExpects uses poll helpers (CODEGEN-01)', f
     const script = generate(makeResolved([step]), 'test-flow');
     // text-visible stays as instant snapshot + grep (no poll)
     assert.ok(
-      script.includes('_snapshot=$(agent-browser snapshot) || true'),
+      script.includes('if ! _snapshot=$(_capture_snapshot ""); then'),
       'text-visible must still use snapshot capture. Got: ' + script
     );
     // The step section must NOT call _poll_visible for text checks
