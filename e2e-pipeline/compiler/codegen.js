@@ -255,7 +255,7 @@ function generateRuntimeFlagBlock() {
  * generateRuntimeSupport() — produce _FAILED_STEPS array, _handle_failure() function,
  * and poll-until helper functions.
  *
- * _handle_failure "step_id" "msg":
+ * _handle_failure "step_id" "msg" [session]:
  *   - Echoes FAIL line
  *   - If CONTINUE_ON_ERROR=true: accumulates each step_id once in _FAILED_STEPS
  *   - If CONTINUE_ON_ERROR=false: calls exit 1 (v1.0 backward compat)
@@ -288,17 +288,28 @@ function generateRuntimeSupport() {
     '_SCREENSHOT_DIR="${E2E_SCREENSHOT_DIR:-/tmp/e2e-screenshots}"',
     'mkdir -p "$_SCREENSHOT_DIR"',
     '',
+    '_diagnostic_browser() {',
+    '  local _session="$1"',
+    '  shift',
+    '  if [ -n "$_session" ]; then',
+    '    agent-browser --session "$_session" "$@"',
+    '  else',
+    '    agent-browser "$@"',
+    '  fi',
+    '}',
+    '',
     '_handle_failure() {',
     '  local _step_id="$1"',
     '  local _msg="$2"',
+    '  local _session="${3:-}"',
     '  echo "FAIL: $_step_id -- $_msg"',
     '  # Capture diagnostic artifacts on failure',
     '  echo "--- Diagnostic: screenshot ---"',
-    '  agent-browser screenshot "$_SCREENSHOT_DIR/fail-${_step_id}.png" 2>&1 || echo "(screenshot failed)"',
+    '  _diagnostic_browser "$_session" screenshot "$_SCREENSHOT_DIR/fail-${_step_id}.png" 2>&1 || echo "(screenshot failed)"',
     '  echo "--- Diagnostic: current URL ---"',
-    '  agent-browser get url 2>&1 || echo "(get url failed)"',
+    '  _diagnostic_browser "$_session" get url 2>&1 || echo "(get url failed)"',
     '  echo "--- Diagnostic: a11y snapshot (first 80 lines) ---"',
-    '  agent-browser snapshot 2>&1 | head -80 || echo "(snapshot failed)"',
+    '  _diagnostic_browser "$_session" snapshot 2>&1 | head -80 || echo "(snapshot failed)"',
     '  echo "--- End diagnostic ---"',
     '  local _msg_clean',
     "  _msg_clean=$(printf '%s' \"$_msg\" | sed 's/\\x1b\\[[0-9;]*m//g' | tr -d '\\000-\\010\\013\\014\\016-\\037')",
@@ -744,6 +755,7 @@ function generateAction(step, stepIndex, totalSteps) {
   // Cross-site: compute session prefix for all agent-browser invocations
   var session = step.session;
   var sessionPrefix = session ? '--session ' + singleQuote(session) + ' ' : '';
+  var failureSessionArg = session ? ' ' + singleQuote(session) : '';
   // Cross-site: compute base URL variable name (OFFICE_BASE_URL, APP_BASE_URL, etc.)
   var baseUrlVar = session ? '${' + siteBaseUrlVariable(session) + '}' : '${BASE_URL}';
 
@@ -779,7 +791,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('  _STEP_NAMES+=("' + escapedId + '")');
       lines.push('  _STEP_RESULTS+=("fail")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
-      lines.push('  _handle_failure "' + step.id + '" "' + navMsg + '"');
+      lines.push('  _handle_failure "' + step.id + '" "' + navMsg + '"' + failureSessionArg);
       lines.push('fi');
       break;
     }
@@ -831,7 +843,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('  _STEP_NAMES+=("' + escapedId + '")');
       lines.push('  _STEP_RESULTS+=("fail")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
-      lines.push('  _handle_failure "' + step.id + '" "click action failed"');
+      lines.push('  _handle_failure "' + step.id + '" "click action failed"' + failureSessionArg);
       lines.push('fi');
       break;
     }
@@ -886,7 +898,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('  _STEP_NAMES+=("' + escapedId + '")');
       lines.push('  _STEP_RESULTS+=("fail")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
-      lines.push('  _handle_failure "' + step.id + '" "fill action failed"');
+      lines.push('  _handle_failure "' + step.id + '" "fill action failed"' + failureSessionArg);
       lines.push('fi');
       break;
     }
@@ -960,6 +972,7 @@ function generateExpects(step) {
   var session = step.session || '';
   var quotedSession = singleQuote(session);
   var sessionArg = ' ' + quotedSession;
+  var failureSessionArg = session ? ' ' + quotedSession : '';
 
   // Timeout argument: literal number if step.timeout set, else env var default
   var timeoutArg = (step.timeout != null) ? String(step.timeout) : '"${WAIT_TIMEOUT:-10}"';
@@ -977,16 +990,16 @@ function generateExpects(step) {
         lines.push('else');
         lines.push('  _probe_status=$?');
         lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-        lines.push('    _handle_failure "' + step.id + '" "agent-browser snapshot probe failed for ' + expect.elementName + '"');
+        lines.push('    _handle_failure "' + step.id + '" "agent-browser snapshot probe failed for ' + expect.elementName + '"' + failureSessionArg);
         lines.push('  else');
-        lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"');
+        lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"' + failureSessionArg);
         lines.push('  fi');
         lines.push('fi');
       } else {
         // Fallback to _poll_visible for non-convertible selectors (e.g., css=)
         var sel = singleQuote(expect.selector);
         var failMsg = expect.elementName + ' not visible after ' + timeoutArg + 's';
-        lines.push('_poll_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
+        lines.push('_poll_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"' + failureSessionArg);
       }
 
     } else if (expect.type === 'element-not-visible') {
@@ -999,9 +1012,9 @@ function generateExpects(step) {
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    _handle_failure "' + step.id + '" "agent-browser visibility probe failed for ' + expect.elementName + '"');
+      lines.push('    _handle_failure "' + step.id + '" "agent-browser visibility probe failed for ' + expect.elementName + '"' + failureSessionArg);
       lines.push('  else');
-      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"');
+      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"' + failureSessionArg);
       lines.push('  fi');
       lines.push('fi');
 
@@ -1013,9 +1026,9 @@ function generateExpects(step) {
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    _handle_failure "' + step.id + '" "agent-browser URL probe failed"');
+      lines.push('    _handle_failure "' + step.id + '" "agent-browser URL probe failed"' + failureSessionArg);
       lines.push('  else');
-      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"');
+      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"' + failureSessionArg);
       lines.push('  fi');
       lines.push('fi');
 
@@ -1027,9 +1040,9 @@ function generateExpects(step) {
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    _handle_failure "' + step.id + '" "agent-browser URL probe failed"');
+      lines.push('    _handle_failure "' + step.id + '" "agent-browser URL probe failed"' + failureSessionArg);
       lines.push('  else');
-      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"');
+      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"' + failureSessionArg);
       lines.push('  fi');
       lines.push('fi');
 
@@ -1037,18 +1050,18 @@ function generateExpects(step) {
       // Instant check — snapshot + grep is too heavy for polling.
       var quotedText = singleQuote(expect.text);
       lines.push('if ! _snapshot=$(_capture_snapshot ' + quotedSession + '); then');
-      lines.push('  _handle_failure "' + step.id + '" "agent-browser snapshot failed"');
+      lines.push('  _handle_failure "' + step.id + '" "agent-browser snapshot failed"' + failureSessionArg);
       lines.push('elif ! echo "$_snapshot" | grep -qF ' + quotedText + '; then');
-      lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' not found on page"');
+      lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' not found on page"' + failureSessionArg);
       lines.push('fi');
 
     } else if (expect.type === 'text-not-visible') {
       // Inverted snapshot grep — fail if the text IS found on page.
       var quotedText = singleQuote(expect.text);
       lines.push('if ! _snapshot=$(_capture_snapshot ' + quotedSession + '); then');
-      lines.push('  _handle_failure "' + step.id + '" "agent-browser snapshot failed"');
+      lines.push('  _handle_failure "' + step.id + '" "agent-browser snapshot failed"' + failureSessionArg);
       lines.push('elif echo "$_snapshot" | grep -qF ' + quotedText + '; then');
-      lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' should NOT be on page but was found"');
+      lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' should NOT be on page but was found"' + failureSessionArg);
       lines.push('fi');
 
     } else if (expect.type === 'or-visible') {
@@ -1057,7 +1070,7 @@ function generateExpects(step) {
       var elemNames = elements.map(function(e) { return e.elementName; });
       var neitherMsg = 'neither ' + elemNames.join(' nor ') + ' visible after ' + timeoutArg + 's';
       var selectorArgs = elements.map(function(e) { return singleQuote(e.selector); }).join(' ');
-      lines.push('_poll_or_visible "' + step.id + '" ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + ' || _handle_failure "' + step.id + '" "' + neitherMsg + '"');
+      lines.push('_poll_or_visible "' + step.id + '" ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + ' || _handle_failure "' + step.id + '" "' + neitherMsg + '"' + failureSessionArg);
 
     } else if (expect.type === 'deferred') {
       lines.push('echo "TODO: expect \'' + expect.raw + '\' not compiled (Phase 2)"');

@@ -349,6 +349,97 @@ describe('generated cleanup session deduplication', function() {
   });
 });
 
+function diagnosticBrowserScript() {
+  return [
+    '#!/usr/bin/env bash',
+    'printf \'%s\\n\' "$*" >> "${AGENT_BROWSER_LOG:?}"',
+    'case " $* " in',
+    '  *" click "*) exit "${ACTION_STATUS:-0}" ;;',
+    '  *" get url "*) printf \'%s\\n\' "${URL_OUTPUT:-https://example.test/login}" ;;',
+    '  *" snapshot "*) printf \'%s\\n\' \'- document:\' \'  - heading "Login" [ref=e1]\' ;;',
+    'esac',
+    'exit 0',
+  ].join('\n');
+}
+
+function assertOnlyNamedDiagnosticCalls(log) {
+  assert.match(log, /--session office screenshot \/tmp\/e2e-screenshots\/fail-/);
+  assert.match(log, /--session office get url/);
+  assert.match(log, /--session office snapshot/);
+  assert.doesNotMatch(log, /^screenshot /m);
+  assert.doesNotMatch(log, /^get url$/m);
+  assert.doesNotMatch(log, /^snapshot$/m);
+}
+
+describe('named-session failure diagnostics', function() {
+  test('every generated cross-site action and assertion failure passes the session explicitly', function() {
+    const steps = [
+      { id: 'nav', action: 'Navigate', type: 'navigate', operands: { urlPath: '/home' }, session: 'office' },
+      { id: 'click', action: 'Click', type: 'click', operands: { selector: 'css=.submit' }, session: 'office' },
+      { id: 'fill', action: 'Fill', type: 'fill', operands: { selector: 'css=input', value: 'value' }, session: 'office' },
+      {
+        id: 'assertions', action: 'Wait 0', type: 'wait', operands: { seconds: 0 }, session: 'office',
+        expects: [
+          { type: 'element-visible', elementName: 'heading', selector: 'role=heading[name="Home"]' },
+          { type: 'element-visible', elementName: 'custom', selector: 'css=.custom' },
+          { type: 'element-not-visible', elementName: 'dialog', selector: 'role=dialog' },
+          { type: 'url-contains', value: 'home' },
+          { type: 'url-not-contains', value: 'login' },
+          { type: 'text-visible', text: 'Home' },
+          { type: 'text-not-visible', text: 'Error' },
+          {
+            type: 'or-visible',
+            elements: [
+              { elementName: 'heading', selector: 'role=heading' },
+              { elementName: 'dialog', selector: 'role=dialog' },
+            ],
+          },
+        ],
+      },
+    ];
+    const script = generate({ name: 'all-named-failures', steps }, 'all-named-failures');
+    const stepSection = script.slice(script.indexOf('echo "[1/4]'), script.indexOf('# Emit metrics JSON'));
+    const failureLines = stepSection.split('\n').filter(line => line.includes('_handle_failure "'));
+    assert.ok(failureLines.length >= 13, 'expected every failure path in generated step section');
+    failureLines.forEach(function(line) {
+      assert.match(line, / 'office'$/, 'failure call must end with explicit named session: ' + line);
+    });
+  });
+
+  test('action failures keep screenshot, URL, and snapshot diagnostics in the named session', function() {
+    withFakeBrowser(diagnosticBrowserScript(), function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const script = generate({
+        name: 'named-action-failure',
+        steps: [{
+          id: 'click-submit', action: 'Click submit', type: 'click',
+          operands: { selector: 'role=button[name="Submit"]' }, session: 'office',
+        }],
+      }, 'named-action-failure');
+      const result = runBash(script, binDir, {
+        ACTION_STATUS: '7', AGENT_BROWSER_LOG: logPath,
+      });
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assertOnlyNamedDiagnosticCalls(fs.readFileSync(logPath, 'utf8'));
+    });
+  });
+
+  test('assertion failures keep screenshot, URL, and snapshot diagnostics in the named session', function() {
+    withFakeBrowser(diagnosticBrowserScript(), function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const script = generate(makeTextFlow(
+        { type: 'url-contains', raw: 'url contains dashboard', value: 'dashboard' },
+        'office'
+      ), 'named-assertion-failure');
+      const result = runBash(script, binDir, {
+        AGENT_BROWSER_LOG: logPath, URL_OUTPUT: 'https://example.test/login', WAIT_TIMEOUT: '1',
+      });
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assertOnlyNamedDiagnosticCalls(fs.readFileSync(logPath, 'utf8'));
+    });
+  });
+});
+
 describe('text assertion runtime status safety', function() {
   test('treats hostile session command substitution as a literal value', function() {
     const hostileSession = '$(printf exploited > "$SESSION_MARKER")';
