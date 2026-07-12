@@ -563,6 +563,90 @@ describe('compile() — cross-site site-name validation', function() {
   });
 });
 
+describe('compile() — normalized flow variable validation', function() {
+  test('accepts a valid variable key that shadows an Object prototype method', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'prototype-method-variable.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'prototype-method-variable',
+      variables: { hasOwnProperty: 'literal-value' },
+      sites: { office: { mapping: 'site-a' } },
+      steps: [{ id: 'office-home', site: 'office', type: 'navigate', action: 'Navigate to /dashboard' }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, true, 'valid shell identifier must not break own-key lookup: ' + JSON.stringify(result.errors));
+      assert.ok(fs.existsSync(result.outputPath));
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('rejects a flow variable that collides with an injected site base URL', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'site-variable-collision.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'site-variable-collision',
+      variables: { office_base_url: 'https://override.invalid' },
+      sites: { office: { mapping: 'site-a' } },
+      steps: [{ id: 'office-home', site: 'office', type: 'navigate', action: 'Navigate to /dashboard' }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, false, 'site variable collision must fail before codegen');
+      assert.ok(
+        result.errors.some(error =>
+          error.includes('office_base_url') && error.includes('office') && error.includes('OFFICE_BASE_URL')
+        ),
+        'error must name both sources and normalized key: ' + JSON.stringify(result.errors)
+      );
+      assert.equal(fs.existsSync(path.join(tmpDir, 'site-variable-collision.sh')), false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('rejects user variable case collisions and invalid or reserved keys', async function() {
+    const cases = [
+      {
+        name: 'user-variable-collision',
+        variables: { token: 'one', TOKEN: 'two' },
+        expected: ['token', 'TOKEN'],
+      },
+      { name: 'invalid-variable', variables: { 'api-token': 'secret' }, expected: ['api-token', 'shell identifier'] },
+      {
+        name: 'reserved-variable',
+        variables: JSON.parse('{"__proto__":"secret"}'),
+        expected: ['__proto__', 'reserved'],
+      },
+    ];
+
+    for (const testCase of cases) {
+      const tmpDir = makeTmpDir();
+      const flowPath = path.join(tmpDir, testCase.name + '.json');
+      fs.writeFileSync(flowPath, JSON.stringify({
+        name: testCase.name,
+        variables: testCase.variables,
+        mapping: 'site-a',
+        steps: [{ id: 'home', type: 'navigate', action: 'Navigate to /dashboard' }],
+      }), 'utf8');
+      try {
+        const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+        assert.equal(result.success, false, testCase.name + ' must fail before codegen');
+        assert.ok(
+          result.errors.some(error => testCase.expected.every(part => error.includes(part))),
+          testCase.name + ' error must explain the offending keys: ' + JSON.stringify(result.errors)
+        );
+        assert.equal(fs.existsSync(path.join(tmpDir, testCase.name + '.sh')), false);
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    }
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Phase 2 Plan 03 Task 1: compile() dryRun and verbose options
 // ---------------------------------------------------------------------------

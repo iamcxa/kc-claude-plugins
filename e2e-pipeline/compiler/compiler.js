@@ -78,7 +78,7 @@ async function compile(flowPath, mappingDir, outputDir, options) {
       var siteName = siteNames[i];
       var siteData = parseResult.sites[siteName];
       var siteVarName = siteBaseUrlVariable(siteName);
-      if (!resolveResult.resolved.variables.hasOwnProperty(siteVarName)) {
+      if (!Object.prototype.hasOwnProperty.call(resolveResult.resolved.variables, siteVarName)) {
         resolveResult.resolved.variables[siteVarName] = (siteData.mapping && siteData.mapping.base_url) || '';
       }
     }

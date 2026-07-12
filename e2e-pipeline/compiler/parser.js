@@ -3,7 +3,65 @@
 const yaml = require('js-yaml');
 const fs = require('node:fs');
 const path = require('node:path');
-const { isValidSiteName, validateSiteNames } = require('./site-name');
+const { isValidSiteName, siteBaseUrlVariable, validateSiteNames } = require('./site-name');
+
+const VARIABLE_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
+const VARIABLE_NAME_FORMAT = '^[A-Za-z_][A-Za-z0-9_]*$';
+const RESERVED_VARIABLE_NAMES = new Set(['__proto__', 'prototype', 'constructor']);
+
+function validateFlowVariables(flow, errors) {
+  if (flow.variables !== undefined && (
+    flow.variables === null || typeof flow.variables !== 'object' || Array.isArray(flow.variables)
+  )) {
+    errors.push('Flow variables must be an object');
+    return;
+  }
+
+  var variables = flow.variables || {};
+  var variableKeys = Object.keys(variables);
+  var sourcesByNormalizedKey = new Map();
+
+  function register(sourceKey, sourceLabel, normalizedKey) {
+    var prior = sourcesByNormalizedKey.get(normalizedKey);
+    if (prior) {
+      errors.push(
+        prior.label + " '" + prior.key + "' and " + sourceLabel + " '" + sourceKey +
+        "' collide on normalized shell variable '" + normalizedKey + "'"
+      );
+      return;
+    }
+    sourcesByNormalizedKey.set(normalizedKey, { key: sourceKey, label: sourceLabel });
+  }
+
+  for (var i = 0; i < variableKeys.length; i++) {
+    var variableKey = variableKeys[i];
+    if (RESERVED_VARIABLE_NAMES.has(variableKey)) {
+      errors.push("Invalid flow variable key '" + variableKey + "': key is reserved");
+      continue;
+    }
+    if (!VARIABLE_NAME_PATTERN.test(variableKey)) {
+      errors.push(
+        "Invalid flow variable key '" + variableKey +
+        "': expected shell identifier matching " + VARIABLE_NAME_FORMAT
+      );
+      continue;
+    }
+    register(variableKey, 'Flow variable key', variableKey.toUpperCase());
+  }
+
+  if (flow.sites && typeof flow.sites === 'object' && !Array.isArray(flow.sites)) {
+    var siteNames = Object.keys(flow.sites);
+    for (var siteIndex = 0; siteIndex < siteNames.length; siteIndex++) {
+      var siteName = siteNames[siteIndex];
+      var siteVariable = siteBaseUrlVariable(siteName);
+      if (!Object.prototype.hasOwnProperty.call(variables, siteVariable)) {
+        register(siteName, 'Injected site variable for', siteVariable);
+      }
+    }
+  } else if (flow.mapping && !Object.prototype.hasOwnProperty.call(variables, 'base_url')) {
+    register('base_url', 'Injected mapping variable', 'BASE_URL');
+  }
+}
 
 /**
  * Load and parse a YAML file, returning the parsed object or null on error.
@@ -60,6 +118,7 @@ function validateFlow(flow, filePath, errors) {
   if (!Array.isArray(flow.steps) || flow.steps.length === 0) {
     errors.push('Flow missing required field "steps" (must be non-empty array) in ' + filePath);
   }
+  validateFlowVariables(flow, errors);
 }
 
 /**
