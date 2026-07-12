@@ -137,7 +137,7 @@ describe('generate() — navigate action', function() {
     const step = makeNavigate('nav-login', '/login');
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('agent-browser open "${BASE_URL}/login"'),
+      script.includes('agent-browser open "${BASE_URL}"\'/login\''),
       'Expected agent-browser open with BASE_URL. Got snippet: ' + script
     );
   });
@@ -145,7 +145,7 @@ describe('generate() — navigate action', function() {
   test("navigate to /dashboard emits correct URL", function() {
     const step = makeNavigate('nav-dashboard', '/dashboard');
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('agent-browser open "${BASE_URL}/dashboard"'));
+    assert.ok(script.includes('agent-browser open "${BASE_URL}"\'/dashboard\''));
   });
 
   test("navigate failure block calls _handle_failure with step id and message", function() {
@@ -266,7 +266,7 @@ describe('generate() — eval-based click (cssSelector)', function() {
     const step = makeEvalClick('click-submit', 'login_button', 'role=button[name="Sign In"]', 'button[type="submit"]');
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('agent-browser eval "'),
+      script.includes("agent-browser eval '"),
       'Expected agent-browser eval command. Got: ' + script
     );
     assert.ok(
@@ -334,7 +334,7 @@ describe('generate() — eval-based fill (cssSelector)', function() {
     const step = makeEvalFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'input[name="email"]', 'test@example.com');
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('agent-browser eval "'),
+      script.includes("agent-browser eval '"),
       'Expected agent-browser eval command. Got: ' + script
     );
     assert.ok(
@@ -461,13 +461,15 @@ describe('generate() — expect: visible', function() {
     );
   });
 
-  test("visible expect uses || _handle_failure pattern (no inline exit 1)", function() {
+  test("visible expect uses status-aware _handle_failure paths (no inline exit 1)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('|| _handle_failure "click-btn"'),
-      'Expected || _handle_failure for poll failure. Got: ' + script
+      script.includes('if _poll_snapshot_contains') &&
+        script.includes('if [ "$_probe_status" -eq 2 ]') &&
+        script.includes('_handle_failure "click-btn"'),
+      'Expected status-aware _handle_failure paths. Got: ' + script
     );
   });
 
@@ -842,13 +844,15 @@ describe('generateExpects() — element-visible (no is keyword)', function() {
     );
   });
 
-  test("element-visible uses || _handle_failure pattern (no inline exit 1)", function() {
+  test("element-visible uses status-aware _handle_failure paths (no inline exit 1)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('|| _handle_failure "click-btn"'),
-      'element-visible must use || _handle_failure. Got: ' + script
+      script.includes('if _poll_snapshot_contains') &&
+        script.includes('if [ "$_probe_status" -eq 2 ]') &&
+        script.includes('_handle_failure "click-btn"'),
+      'element-visible must use status-aware _handle_failure paths. Got: ' + script
     );
   });
 
@@ -874,13 +878,14 @@ describe('generateExpects() — element-not-visible', function() {
     );
   });
 
-  test("element-not-visible uses || _handle_failure pattern", function() {
+  test("element-not-visible uses status-aware _handle_failure paths", function() {
     const step = makeSnapshot('check-dialog', 'Take snapshot');
     step.expects = [{ type: 'element-not-visible', raw: 'dialog not visible', elementName: 'dialog', selector: 'role=dialog' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('|| _handle_failure "check-dialog"'),
-      'element-not-visible must use || _handle_failure. Got: ' + script
+      script.includes('if [ "$_probe_status" -eq 2 ]; then') &&
+        script.includes('_handle_failure "check-dialog" ' + singleQuote('agent-browser visibility probe failed for dialog')),
+      'element-not-visible must distinguish infrastructure failure. Got: ' + script
     );
   });
 
@@ -916,13 +921,15 @@ describe('generateExpects() — url-contains', function() {
     );
   });
 
-  test("url-contains uses || _handle_failure pattern with step id", function() {
+  test("url-contains uses status-aware _handle_failure paths with step id", function() {
     const step = makeNavigate('nav-dashboard', '/dashboard');
     step.expects = [{ type: 'url-contains', raw: 'url contains /dashboard', value: '/dashboard' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('|| _handle_failure "nav-dashboard"'),
-      'url-contains must use || _handle_failure. Got: ' + script
+      script.includes('if _poll_url_contains') &&
+        script.includes('if [ "$_probe_status" -eq 2 ]') &&
+        script.includes('_handle_failure "nav-dashboard"'),
+      'url-contains must use status-aware _handle_failure paths. Got: ' + script
     );
   });
 
@@ -975,7 +982,7 @@ describe('generateExpects() — text-visible', function() {
     step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_snapshot=$(agent-browser snapshot) || true'),
+      script.includes("if ! _snapshot=$(_capture_snapshot ''); then"),
       'text-visible must capture snapshot. Got: ' + script
     );
   });
@@ -995,7 +1002,7 @@ describe('generateExpects() — text-visible', function() {
     step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("if ! echo \"$_snapshot\" | grep -qF"),
+      script.includes("elif ! echo \"$_snapshot\" | grep -qF"),
       'text-visible must use if ! pattern for failure detection. Got: ' + script
     );
   });
@@ -1005,7 +1012,7 @@ describe('generateExpects() — text-visible', function() {
     step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("_handle_failure \"verify-text\"") && script.includes("每日看板' not found on page"),
+      script.includes('_handle_failure "verify-text" ' + singleQuote("text '每日看板' not found on page")),
       'text-visible FAIL must name the text via _handle_failure. Got: ' + script
     );
   });
@@ -1027,7 +1034,7 @@ describe('generateExpects() — text-not-visible', function() {
     step.expects = [{ type: 'text-not-visible', raw: "text 'Sign-in failed' not on page", text: 'Sign-in failed' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_snapshot=$(agent-browser snapshot) || true'),
+      script.includes("if ! _snapshot=$(_capture_snapshot ''); then"),
       'text-not-visible must capture snapshot. Got: ' + script
     );
   });
@@ -1048,11 +1055,11 @@ describe('generateExpects() — text-not-visible', function() {
     const script = generate(makeResolved([step]), 'test-flow');
     // inverted: positive grep (no leading `!`); failure when grep DOES find the text
     assert.ok(
-      script.includes('if echo "$_snapshot" | grep -qF'),
+      script.includes('elif echo "$_snapshot" | grep -qF'),
       'text-not-visible must use positive `if echo ... | grep -qF` pattern (no leading !). Got: ' + script
     );
     assert.ok(
-      !script.includes('if ! echo "$_snapshot" | grep -qF \'Sign-in failed\''),
+      !script.includes('elif ! echo "$_snapshot" | grep -qF \'Sign-in failed\''),
       'text-not-visible must NOT use `if !` (that is the positive text-visible pattern). Got: ' + script
     );
   });
@@ -1066,7 +1073,7 @@ describe('generateExpects() — text-not-visible', function() {
       'text-not-visible FAIL must dispatch via _handle_failure. Got: ' + script
     );
     assert.ok(
-      script.includes("Sign-in failed' should NOT be on page but was found"),
+      script.includes(singleQuote("text 'Sign-in failed' should NOT be on page but was found")),
       'text-not-visible FAIL message must include "should NOT be on page but was found". Got: ' + script
     );
   });
@@ -1134,7 +1141,7 @@ describe('generateExpects() — or-visible', function() {
     );
   });
 
-  test("or-visible uses || _handle_failure pattern with step id", function() {
+  test("or-visible uses status-aware _handle_failure paths with step id", function() {
     const step = makeSnapshot('check-or', 'Take snapshot');
     step.expects = [{
       type: 'or-visible',
@@ -1146,8 +1153,10 @@ describe('generateExpects() — or-visible', function() {
     }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('|| _handle_failure "check-or"'),
-      'or-visible must use || _handle_failure. Got: ' + script
+      script.includes('if _poll_or_visible "check-or"') &&
+        script.includes('_probe_status=$?') &&
+        script.includes('_handle_failure "check-or"'),
+      'or-visible must distinguish probe failure from timeout. Got: ' + script
     );
   });
 
@@ -1261,7 +1270,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     const step = makeCrossSiteNavigate('office-nav', 'office', '/dashboard');
     const script = generate(makeResolved([step]), 'cross-site-test');
     assert.ok(
-      script.includes('agent-browser --session office open'),
+      script.includes("agent-browser --session 'office' open"),
       'cross-site navigate must use --session prefix. Got: ' + script
     );
   });
@@ -1270,7 +1279,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     const step = makeCrossSiteNavigate('office-nav', 'office', '/dashboard');
     const script = generate(makeResolved([step]), 'cross-site-test');
     assert.ok(
-      script.includes('"${OFFICE_BASE_URL}/dashboard"'),
+      script.includes('"${OFFICE_BASE_URL}"\'/dashboard\''),
       'cross-site navigate must use OFFICE_BASE_URL. Got: ' + script
     );
   });
@@ -1279,7 +1288,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     const step = makeCrossSiteNavigate('app-nav', 'app', '/home');
     const script = generate(makeResolved([step]), 'cross-site-test');
     assert.ok(
-      script.includes('"${APP_BASE_URL}/home"'),
+      script.includes('"${APP_BASE_URL}"\'/home\''),
       'cross-site navigate for app site must use APP_BASE_URL. Got: ' + script
     );
   });
@@ -1288,7 +1297,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     const step = makeCrossSiteClick('app-click', 'app', 'button_b', 'role=button[name="App Button"]');
     const script = generate(makeResolved([step]), 'cross-site-test');
     assert.ok(
-      script.includes("agent-browser --session app click"),
+      script.includes("agent-browser --session 'app' click"),
       'cross-site click must use --session prefix. Got: ' + script
     );
   });
@@ -1297,7 +1306,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     const step = makeCrossSiteSnapshot('office-snap', 'office');
     const script = generate(makeResolved([step]), 'cross-site-test');
     assert.ok(
-      script.includes('agent-browser --session office snapshot'),
+      script.includes("agent-browser --session 'office' snapshot"),
       'cross-site snapshot must use --session prefix. Got: ' + script
     );
   });
@@ -1933,15 +1942,15 @@ describe('v2.0 poll-until — poll helpers emitted in generateRuntimeSupport', f
     );
   });
 
-  test("poll helpers use || true after $() capture to prevent set -e abort", function() {
+  test("positive visibility polling preserves command failures instead of masking them", function() {
     const step = makeNavigate('nav', '/home');
     const script = generate(makeResolved([step]), 'test-flow');
     const pollStart = script.indexOf('_poll_visible()');
     const pollEnd = script.indexOf('\n}', pollStart);
     const pollBody = script.slice(pollStart, pollEnd + 2);
     assert.ok(
-      pollBody.includes('|| true'),
-      'Expected || true after $() capture in poll helper. Got body: ' + pollBody
+      pollBody.includes('if ! _result=$(') && pollBody.includes('then return 2; fi'),
+      'Expected status-safe command capture in poll helper. Got body: ' + pollBody
     );
   });
 
@@ -1964,20 +1973,20 @@ describe('v2.0 poll-until — poll helpers emitted in generateRuntimeSupport', f
     const pollEnd = script.indexOf('\n}', pollStart);
     const pollBody = script.slice(pollStart, pollEnd + 2);
     assert.ok(
-      pollBody.includes('"false"'),
+      pollBody.includes('false) return 0'),
       'Expected _poll_not_visible to check for "false" return. Got body: ' + pollBody
     );
   });
 
-  test("_poll_url_contains checks agent-browser get url", function() {
+  test("_poll_url_contains uses the shared status-safe URL capture", function() {
     const step = makeNavigate('nav', '/home');
     const script = generate(makeResolved([step]), 'test-flow');
     const pollStart = script.indexOf('_poll_url_contains()');
     const pollEnd = script.indexOf('\n}', pollStart);
     const pollBody = script.slice(pollStart, pollEnd + 2);
     assert.ok(
-      pollBody.includes('agent-browser get url'),
-      'Expected _poll_url_contains to call agent-browser get url. Got body: ' + pollBody
+      pollBody.includes('_capture_url "$_session"'),
+      'Expected _poll_url_contains to use _capture_url. Got body: ' + pollBody
     );
   });
 
@@ -2086,7 +2095,7 @@ describe('v2.0 poll-until — generateExpects uses poll helpers (CODEGEN-01)', f
     const script = generate(makeResolved([step]), 'test-flow');
     // text-visible stays as instant snapshot + grep (no poll)
     assert.ok(
-      script.includes('_snapshot=$(agent-browser snapshot) || true'),
+      script.includes("if ! _snapshot=$(_capture_snapshot ''); then"),
       'text-visible must still use snapshot capture. Got: ' + script
     );
     // The step section must NOT call _poll_visible for text checks
@@ -2107,14 +2116,15 @@ describe('v2.0 poll-until — generateExpects uses poll helpers (CODEGEN-01)', f
     );
   });
 
-  test("active expect uses _poll_visible || _handle_failure pattern (no inline exit 1)", function() {
+  test("active expect uses status-aware _handle_failure paths (no inline exit 1)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
-    // Must use || _handle_failure (not inline exit 1)
     assert.ok(
-      script.includes('|| _handle_failure'),
-      'Expected || _handle_failure pattern on _poll_visible call. Got: ' + script
+      script.includes('if _poll_snapshot_contains') &&
+        script.includes('if [ "$_probe_status" -eq 2 ]') &&
+        script.includes('_handle_failure "click-btn"'),
+      'Expected status-aware _handle_failure paths. Got: ' + script
     );
   });
 
@@ -2381,11 +2391,11 @@ describe('v2.0 BASE_URL normalization and cleanup', function() {
     };
     const script = generate(resolved, 'cross-site-test');
     assert.ok(
-      script.includes('agent-browser --session office close 2>/dev/null || true'),
+      script.includes("agent-browser --session 'office' close 2>/dev/null || true"),
       'Expected --session office close in cross-site cleanup. Got snippet: ' + script.slice(0, 1000)
     );
     assert.ok(
-      script.includes('agent-browser --session app close 2>/dev/null || true'),
+      script.includes("agent-browser --session 'app' close 2>/dev/null || true"),
       'Expected --session app close in cross-site cleanup. Got snippet: ' + script.slice(0, 1000)
     );
   });
@@ -2514,12 +2524,12 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — per-step timing bookkeeping (navi
     assert.ok(stepStartIdx < navIdx, '_STEP_START must appear before agent-browser open. stepStartIdx=' + stepStartIdx + ' navIdx=' + navIdx);
   });
 
-  test("navigate success path appends step id to _STEP_NAMES", function() {
+  test("navigate success path records raw and format-specific step identities", function() {
     const step = makeNavigate('nav-login', '/login');
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_STEP_NAMES+=("nav-login")'),
-      'Expected _STEP_NAMES+= with step id nav-login. Got snippet containing STEP_NAMES: ' + script.slice(script.indexOf('_STEP_NAMES'), script.indexOf('_STEP_NAMES') + 100)
+      script.includes('_record_step_name "nav-login" "nav-login" "nav-login"'),
+      'Expected raw, JSON, and XML step identity arguments. Got snippet: ' + script
     );
   });
 
@@ -2602,15 +2612,15 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — _handle_failure records to _STEP_
     );
   });
 
-  test("_handle_failure contains control char strip (tr -d)", function() {
+  test("_handle_failure preserves control characters for format-specific report encoders", function() {
     const step = makeNavigate('nav', '/home');
     const script = generate(makeResolved([step]), 'test-flow');
     const fnStart = script.indexOf('_handle_failure()');
     const fnEnd = script.indexOf('\n}', fnStart);
     const fnBody = script.slice(fnStart, fnEnd + 2);
     assert.ok(
-      fnBody.includes('tr -d'),
-      'Expected tr -d control char strip in _handle_failure. Got fn body: ' + fnBody
+      !fnBody.includes('tr -d') && script.includes('_json_escape()') && script.includes('_xml_attr_escape()'),
+      'Expected report encoders to own control-character handling. Got fn body: ' + fnBody
     );
   });
 
@@ -2704,6 +2714,16 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — _emit_junit function in compiled 
 });
 
 describe('v2.0 JUnit XML codegen (FLAG-01) — xmlAttrEscape', function() {
+  test("xmlAttrEscape replaces NUL and XML-illegal C0 controls", function() {
+    const illegal = String.fromCharCode(
+      0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+      0x0b, 0x0c,
+      0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+      0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
+    );
+    assert.equal(xmlAttrEscape(illegal), '\ufffd'.repeat(29));
+  });
+
   test("xmlAttrEscape escapes < as &lt;", function() {
     const result = xmlAttrEscape('a<b');
     assert.ok(
@@ -2759,8 +2779,8 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — xmlAttrEscape', function() {
   });
 });
 
-describe('v2.0 JUnit XML codegen (FLAG-01) — CJK step name as UTF-8 in _STEP_NAMES', function() {
-  test("flow with CJK step ID has UTF-8 in _STEP_NAMES (not numeric entities)", function() {
+describe('v2.0 JUnit XML codegen (FLAG-01) — CJK step identity encoding', function() {
+  test("flow with CJK step ID keeps UTF-8 in raw, JSON, and XML forms", function() {
     const step = {
       id: '登入頁面',
       action: 'Navigate to login',
@@ -2769,18 +2789,16 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — CJK step name as UTF-8 in _STEP_N
     };
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_STEP_NAMES+=("登入頁面")'),
-      'Expected CJK step id as UTF-8 in _STEP_NAMES. Got snippet: ' + script
+      script.includes('_record_step_name "登入頁面" "登入頁面" "登入頁面"'),
+      'Expected CJK step id as UTF-8 in all identity forms. Got snippet: ' + script
     );
-    assert.ok(
-      !script.includes('&#'),
-      'CJK must not appear as numeric entities. Got snippet: ' + script
-    );
+    const recordLine = script.split('\n').find(line => line.includes('_record_step_name "登入頁面"'));
+    assert.ok(recordLine && !recordLine.includes('&#'), 'CJK step identity must not use numeric entities. Got: ' + recordLine);
   });
 });
 
-describe('v2.0 JUnit XML codegen (FLAG-01) — angle bracket step names XML-escaped in _STEP_NAMES', function() {
-  test("flow with angle bracket step ID has escaped values in _STEP_NAMES", function() {
+describe('v2.0 JUnit XML codegen (FLAG-01) — format-specific step identity encoding', function() {
+  test("flow with angle bracket step ID keeps raw identity and XML-escapes only the XML form", function() {
     const step = {
       id: 'check-<input>-field',
       action: 'Check input field',
@@ -2789,8 +2807,10 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — angle bracket step names XML-esca
     };
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('_STEP_NAMES+=("check-&lt;input&gt;-field")'),
-      'Expected &lt; and &gt; escaping in _STEP_NAMES for angle bracket step ID. Got snippet: ' + script
+      script.includes(
+        '_record_step_name "check-<input>-field" "check-<input>-field" "check-&lt;input&gt;-field"'
+      ),
+      'Expected raw/JSON identity plus XML-specific escaping. Got snippet: ' + script
     );
   });
 });

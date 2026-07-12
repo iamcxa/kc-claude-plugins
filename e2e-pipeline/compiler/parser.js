@@ -3,6 +3,80 @@
 const yaml = require('js-yaml');
 const fs = require('node:fs');
 const path = require('node:path');
+const { isValidSiteName, siteBaseUrlVariable, validateSiteNames } = require('./site-name');
+
+const VARIABLE_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
+const VARIABLE_NAME_FORMAT = '^[A-Za-z_][A-Za-z0-9_]*$';
+const RESERVED_VARIABLE_NAMES = new Set(['__proto__', 'prototype', 'constructor']);
+
+function validateFlowVariables(flow, errors) {
+  if (flow.variables !== undefined && (
+    flow.variables === null || typeof flow.variables !== 'object' || Array.isArray(flow.variables)
+  )) {
+    errors.push('Flow variables must be an object');
+    return;
+  }
+
+  var variables = flow.variables || {};
+  var variableKeys = Object.keys(variables);
+  var sourcesByNormalizedKey = new Map();
+
+  function register(sourceKey, sourceLabel, normalizedKey) {
+    var prior = sourcesByNormalizedKey.get(normalizedKey);
+    if (prior) {
+      errors.push(
+        prior.label + " '" + prior.key + "' and " + sourceLabel + " '" + sourceKey +
+        "' collide on normalized shell variable '" + normalizedKey + "'"
+      );
+      return;
+    }
+    sourcesByNormalizedKey.set(normalizedKey, { key: sourceKey, label: sourceLabel });
+  }
+
+  for (var i = 0; i < variableKeys.length; i++) {
+    var variableKey = variableKeys[i];
+    if (RESERVED_VARIABLE_NAMES.has(variableKey)) {
+      errors.push("Invalid flow variable key '" + variableKey + "': key is reserved");
+      continue;
+    }
+    if (!VARIABLE_NAME_PATTERN.test(variableKey)) {
+      errors.push(
+        "Invalid flow variable key '" + variableKey +
+        "': expected shell identifier matching " + VARIABLE_NAME_FORMAT
+      );
+      continue;
+    }
+    register(variableKey, 'Flow variable key', variableKey.toUpperCase());
+  }
+
+  if (flow.sites && typeof flow.sites === 'object' && !Array.isArray(flow.sites)) {
+    var siteNames = Object.keys(flow.sites);
+    for (var siteIndex = 0; siteIndex < siteNames.length; siteIndex++) {
+      var siteName = siteNames[siteIndex];
+      if (!isValidSiteName(siteName)) continue;
+      var siteVariable = siteBaseUrlVariable(siteName);
+      if (!Object.prototype.hasOwnProperty.call(variables, siteVariable)) {
+        register(siteName, 'Injected site variable for', siteVariable);
+      }
+    }
+  } else if (flow.mapping && !sourcesByNormalizedKey.has('BASE_URL')) {
+    register('base_url', 'Injected mapping variable', 'BASE_URL');
+  }
+}
+
+function hasUnpairedSurrogate(value) {
+  for (var i = 0; i < value.length; i++) {
+    var code = value.charCodeAt(i);
+    if (code >= 0xD800 && code <= 0xDBFF) {
+      var next = value.charCodeAt(i + 1);
+      if (!(next >= 0xDC00 && next <= 0xDFFF)) return true;
+      i++;
+    } else if (code >= 0xDC00 && code <= 0xDFFF) {
+      return true;
+    }
+  }
+  return false;
+}
 
 /**
  * Load and parse a YAML file, returning the parsed object or null on error.
@@ -58,7 +132,34 @@ function validateFlow(flow, filePath, errors) {
   }
   if (!Array.isArray(flow.steps) || flow.steps.length === 0) {
     errors.push('Flow missing required field "steps" (must be non-empty array) in ' + filePath);
+  } else {
+    var stepIndexesById = new Map();
+    for (var stepIndex = 0; stepIndex < flow.steps.length; stepIndex++) {
+      var step = flow.steps[stepIndex];
+      var stepId = step && step.id;
+      if (typeof stepId !== 'string' || stepId.trim().length === 0) {
+        errors.push('Step at index ' + stepIndex + ' must have an id that is a non-empty string in ' + filePath);
+        continue;
+      }
+      if (stepId.includes('\u0000')) {
+        errors.push('Step at index ' + stepIndex + ' id must not contain NUL in ' + filePath);
+        continue;
+      }
+      if (hasUnpairedSurrogate(stepId)) {
+        errors.push('Step at index ' + stepIndex + ' id must not contain an unpaired surrogate in ' + filePath);
+        continue;
+      }
+      if (stepIndexesById.has(stepId)) {
+        errors.push(
+          "Duplicate step id '" + stepId + "' at indexes " +
+          stepIndexesById.get(stepId) + ' and ' + stepIndex + ' in ' + filePath
+        );
+      } else {
+        stepIndexesById.set(stepId, stepIndex);
+      }
+    }
   }
+  validateFlowVariables(flow, errors);
 }
 
 /**
@@ -111,11 +212,16 @@ function parse(flowPath, mappingDir) {
   if (flow.sites && !flow.mapping) {
     var sitesMap = {};
     var siteNames = Object.keys(flow.sites);
+    errors.push.apply(errors, validateSiteNames(siteNames));
 
     for (var i = 0; i < siteNames.length; i++) {
       var siteName = siteNames[i];
       var siteEntry = flow.sites[siteName];
       var mappingName = siteEntry && siteEntry.mapping;
+
+      if (!isValidSiteName(siteName)) {
+        continue;
+      }
 
       if (!mappingName) {
         errors.push("Site '" + siteName + "' in sites: block has no mapping field in " + flowPath);

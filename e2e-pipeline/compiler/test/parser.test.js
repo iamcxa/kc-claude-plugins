@@ -2,12 +2,137 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 
 // The parse function under test
 const { parse } = require('../parser');
 
 const FIXTURES = path.join(__dirname, 'fixtures');
+
+function parseTemporaryFlow(flow) {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-parser-step-id-'));
+  const flowPath = path.join(tmpDir, 'flow.json');
+  fs.writeFileSync(flowPath, JSON.stringify(flow), 'utf8');
+  try {
+    return parse(flowPath, FIXTURES);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+}
+
+test('parse: every step id must be a non-empty string', function() {
+  for (const invalidId of [undefined, '', 42]) {
+    const step = { type: 'snapshot', action: 'Take snapshot' };
+    if (invalidId !== undefined) step.id = invalidId;
+    const result = parseTemporaryFlow({
+      name: 'invalid-step-id', mapping: 'site-a', steps: [step],
+    });
+    assert.ok(
+      result.errors.some(error => error.includes('Step at index 0') && error.includes('non-empty string')),
+      'invalid id must be rejected clearly: ' + JSON.stringify(result.errors)
+    );
+  }
+});
+
+test('parse: step ids reject values that cannot round-trip through Bash and UTF-8', function() {
+  const invalidIds = [
+    { id: 'nul\u0000byte', label: 'NUL' },
+    { id: 'lone-high-\uD800', label: 'unpaired surrogate' },
+    { id: 'lone-low-\uDC00', label: 'unpaired surrogate' },
+  ];
+
+  for (const invalid of invalidIds) {
+    const result = parseTemporaryFlow({
+      name: 'invalid-runtime-step-id',
+      mapping: 'site-a',
+      steps: [{ id: invalid.id, type: 'snapshot', action: 'Take snapshot' }],
+    });
+    assert.ok(
+      result.errors.some(error => error.includes('Step at index 0') && error.includes(invalid.label)),
+      invalid.label + ' id must be rejected clearly: ' + JSON.stringify(result.errors)
+    );
+  }
+
+  const validAstral = parseTemporaryFlow({
+    name: 'valid-astral-step-id',
+    mapping: 'site-a',
+    steps: [{ id: 'launch-🚀', type: 'snapshot', action: 'Take snapshot' }],
+  });
+  assert.deepEqual(validAstral.errors, []);
+});
+
+test('parse: duplicate step ids are rejected in single-site and cross-site flows', function() {
+  for (const flow of [
+    {
+      name: 'duplicate-single', mapping: 'site-a',
+      steps: [
+        { id: 'same', type: 'snapshot', action: 'Take snapshot' },
+        { id: 'same', type: 'snapshot', action: 'Take snapshot' },
+      ],
+    },
+    {
+      name: 'duplicate-cross', sites: { office: { mapping: 'site-a' } },
+      steps: [
+        { id: 'same', site: 'office', type: 'snapshot', action: 'Take snapshot' },
+        { id: 'same', site: 'office', type: 'snapshot', action: 'Take snapshot' },
+      ],
+    },
+  ]) {
+    const result = parseTemporaryFlow(flow);
+    assert.ok(
+      result.errors.some(error => error.includes("Duplicate step id 'same'") && error.includes('indexes 0 and 1')),
+      'duplicate id must identify the id and both positions: ' + JSON.stringify(result.errors)
+    );
+  }
+});
+
+test('parse: invalid site aliases do not register injected variable collisions', function() {
+  const cases = [
+    {
+      flow: {
+        name: 'reserved-alias-variable',
+        variables: { constructor_base_url: 'https://example.test' },
+        sites: { constructor: { mapping: 'site-a' } },
+        steps: [{ id: 'reserved', site: 'constructor', type: 'snapshot', action: 'Take snapshot' }],
+      },
+      primary: error => error.includes('constructor') && error.includes('reserved'),
+      forbidden: 'CONSTRUCTOR_BASE_URL',
+    },
+    {
+      flow: {
+        name: 'invalid-alias-variable',
+        variables: { 'admin-panel_base_url': 'https://example.test' },
+        sites: { 'admin-panel': { mapping: 'site-a' } },
+        steps: [{ id: 'invalid', site: 'admin-panel', type: 'snapshot', action: 'Take snapshot' }],
+      },
+      primary: error => error.includes('admin-panel') && error.includes('shell identifier'),
+      forbidden: 'ADMIN-PANEL_BASE_URL',
+    },
+  ];
+
+  for (const testCase of cases) {
+    const result = parseTemporaryFlow(testCase.flow);
+    assert.ok(result.errors.some(testCase.primary), JSON.stringify(result.errors));
+    assert.equal(
+      result.errors.some(error => error.includes('collide') && error.includes(testCase.forbidden)),
+      false,
+      'invalid alias must not create an injected-variable collision: ' + JSON.stringify(result.errors)
+    );
+  }
+});
+
+test('parse: explicit uppercase BASE_URL owns the single-site injected variable', function() {
+  const result = parseTemporaryFlow({
+    name: 'uppercase-base-url',
+    mapping: 'site-a',
+    variables: { BASE_URL: 'https://override.test' },
+    steps: [{ id: 'home', type: 'navigate', action: 'Navigate to /dashboard' }],
+  });
+
+  assert.deepEqual(result.errors, [], JSON.stringify(result.errors));
+});
 
 test('parse: happy path — loads simple-flow.yaml and resolves mapping', async () => {
   const flowPath = path.join(FIXTURES, 'simple-flow.yaml');

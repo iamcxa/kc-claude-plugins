@@ -183,3 +183,34 @@ Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + su
 **Files changed**: `agents/e2e-test-runner.md` (§ 1b-1f), `skills/e2e-walkthrough/reference.md` (Startup), `references/commands.md` (Recording rules).
 
 **Also investigated (rejected)**: Using trace screencast frames for video. Trace captures at 800×450 / ~1fps (event-driven) — too low quality for PR reviews. `record start` remains the correct approach for video.
+
+### 2026-07-12: Compiler negative assertions masked browser failures
+
+**Problem**: Generated `element-not-visible` assertions collapsed unavailable browser evidence into an ordinary timeout, while `text-not-visible` could treat a failed snapshot as confirmed absence and pass.
+
+**Root cause**: `|| true` erased the command-status channel before the assertion interpreted stdout. This is unsafe for negative assertions because empty output can look like evidence that the target is absent.
+
+**Fix**:
+- `_poll_not_visible` succeeds only on literal `false`, times out with status 1 for literal `true`, and returns status 2 for command or protocol failure.
+- Generated callers map status 2 to a visibility-probe infrastructure message while retaining the ordinary timeout message for status 1.
+- Text assertions use a session-aware snapshot helper and route snapshot failure through `_handle_failure` before grep evaluation.
+- Continue-on-error failure accumulation deduplicates repeated expectation failures by step ID without collapsing failures from different steps.
+- The dedup loop checks array length before expanding an empty array, avoiding Bash 3.2 `set -u` failure and EXIT-trap status masking.
+- Added runtime tests forced through `/bin/bash` when available, with a fake `agent-browser` for command failure, invalid output, session routing, cleanup exit status, and successful positive/negative assertions.
+- All generated `step.session` command arguments use canonical single-quote escaping; hostile command substitution remains a literal agent-browser argument across actions, assertions, screenshots, and cleanup.
+- Cross-site aliases are centrally validated as shell identifiers at parser and direct-resolver boundaries before compiler variable generation; invalid aliases cannot reach codegen.
+- Prototype-reserved aliases are rejected explicitly, and case-folded `<ALIAS>_BASE_URL` collisions name both aliases and the normalized key before output generation.
+- Generated cleanup deduplicates valid session aliases with `Set`, so Object.prototype names such as `toString` are closed exactly once instead of falling back to default-session cleanup.
+- Cross-site resolver tables use `Map`, so undeclared inherited keys such as `toString` and `valueOf` produce unknown-site errors while explicitly declared aliases with those names remain valid.
+- Snapshot-backed visibility and URL polling preserve the named session and return a distinct infrastructure status for browser-command or protocol failure; negative URL checks cannot pass on missing or invalid evidence.
+- URL evidence is accepted only as one clean RFC-style URI line beginning at stdout offset zero; standard browser schemes, custom schemes, and an empty scheme remainder are valid, while websocket diagnostics, malformed text, empty output, and multiline noise return infrastructure status.
+- Snapshot-backed checks share one session-aware capture contract that accepts the exact `(empty page)` sentinel or a dash-prefixed accessibility-tree entry; empty output and protocol/error prose cannot degrade into an ordinary missing-element result.
+- `_handle_failure` accepts an optional session and uses it for diagnostic screenshot, URL, and snapshot calls across every generated cross-site action and assertion failure path.
+- Flow variable keys are validated as shell identifiers before codegen, rejected when reserved, and checked after uppercase normalization against both other user keys and compiler-injected site variables.
+- Invalid or reserved site aliases are excluded from injected-variable collision analysis, leaving `validateSiteNames` as the primary alias diagnostic owner without cascading normalized-key errors.
+- Every step ID is validated centrally as a non-empty string and must be unique before mapping resolution or output generation, preserving unambiguous failure bookkeeping.
+- The package test entrypoint uses an explicit `*.test.js` glob so Node 24 can execute `npm test` and `npm run check` reliably.
+
+**Verification**: `npm test` (`node --test compiler/test/*.test.js`) -> 543/543 PASS. `npm run check` -> PASS with lint warnings and no errors.
+
+**Impact scan**: Reviewed e2e-test, e2e-map, e2e-walkthrough, e2e-flow, their references, all browser agents, and shared command/common-pattern references. No action grammar or agent execution contract changed, so no skill or agent edits were required. This plugin repo has no project mapping fixtures in the impact-matrix locations; compiler fixtures cover the behavior instead.

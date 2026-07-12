@@ -7,6 +7,7 @@ const crypto = require('node:crypto');
 const { parse } = require('./parser');
 const { resolve, resolveMultiSite } = require('./resolver');
 const { generate } = require('./codegen');
+const { siteBaseUrlVariable } = require('./site-name');
 
 var COMPILER_VERSION = require('../package.json').version;
 
@@ -76,8 +77,8 @@ async function compile(flowPath, mappingDir, outputDir, options) {
     for (var i = 0; i < siteNames.length; i++) {
       var siteName = siteNames[i];
       var siteData = parseResult.sites[siteName];
-      var siteVarName = siteName.toUpperCase() + '_BASE_URL';
-      if (!resolveResult.resolved.variables.hasOwnProperty(siteVarName)) {
+      var siteVarName = siteBaseUrlVariable(siteName);
+      if (!Object.prototype.hasOwnProperty.call(resolveResult.resolved.variables, siteVarName)) {
         resolveResult.resolved.variables[siteVarName] = (siteData.mapping && siteData.mapping.base_url) || '';
       }
     }
@@ -103,7 +104,11 @@ async function compile(flowPath, mappingDir, outputDir, options) {
 
     // Auto-inject base_url from mapping when flow has no variables block
     // Prevents unbound ${BASE_URL} in navigate commands under set -u
-    if (!resolveResult.resolved.variables || !('base_url' in resolveResult.resolved.variables)) {
+    var singleSiteVariables = resolveResult.resolved.variables;
+    var hasBaseUrl = singleSiteVariables && Object.keys(singleSiteVariables).some(function(variableName) {
+      return variableName.toUpperCase() === 'BASE_URL';
+    });
+    if (!hasBaseUrl) {
       if (!resolveResult.resolved.variables) {
         resolveResult.resolved.variables = {};
       }

@@ -352,17 +352,17 @@ describe('compile() — cross-site flow integration', function() {
     assert.ok(fs.existsSync(outputPath), 'output file must exist');
   });
 
-  test("compiled output contains --session office prefix", function() {
+  test("compiled output contains shell-quoted office session prefix", function() {
     assert.ok(
-      outputContent.includes('--session office'),
-      'Expected --session office in output. Got snippet: ' + outputContent.slice(0, 500)
+      outputContent.includes("--session 'office'"),
+      "Expected --session 'office' in output. Got snippet: " + outputContent.slice(0, 500)
     );
   });
 
-  test("compiled output contains --session app prefix", function() {
+  test("compiled output contains shell-quoted app session prefix", function() {
     assert.ok(
-      outputContent.includes('--session app'),
-      'Expected --session app in output. Got snippet: ' + outputContent.slice(0, 500)
+      outputContent.includes("--session 'app'"),
+      "Expected --session 'app' in output. Got snippet: " + outputContent.slice(0, 500)
     );
   });
 
@@ -383,6 +383,374 @@ describe('compile() — cross-site flow integration', function() {
   test("cross-site compiled script passes bash -n syntax check", function() {
     const result = spawnSync('bash', ['-n', outputPath], { encoding: 'utf8' });
     assert.equal(result.status, 0, 'bash -n failed. stderr: ' + result.stderr);
+  });
+});
+
+describe('compile() — cross-site site-name validation', function() {
+  test('rejects inherited Object prototype names when they are not declared sites', async function() {
+    for (const undeclaredSite of ['toString', 'valueOf']) {
+      const tmpDir = makeTmpDir();
+      const flowPath = path.join(tmpDir, 'undeclared-' + undeclaredSite + '.json');
+      fs.writeFileSync(flowPath, JSON.stringify({
+        name: 'undeclared-' + undeclaredSite,
+        sites: { office: { mapping: 'site-a' } },
+        steps: [{
+          id: 'check-' + undeclaredSite,
+          site: undeclaredSite,
+          type: 'snapshot',
+          action: 'Take snapshot',
+        }],
+      }), 'utf8');
+
+      try {
+        const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+        assert.equal(result.success, false, undeclaredSite + ' must be rejected without throwing');
+        assert.ok(
+          result.errors.some(error => error.includes("unknown site '" + undeclaredSite + "'")),
+          'error must identify the undeclared site: ' + JSON.stringify(result.errors)
+        );
+        assert.equal(
+          fs.existsSync(path.join(tmpDir, 'undeclared-' + undeclaredSite + '.sh')),
+          false,
+          'rejected flow must not produce output'
+        );
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    }
+  });
+
+  test('accepts an explicitly declared toString site alias', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'declared-tostring.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'declared-tostring',
+      sites: { toString: { mapping: 'site-a' } },
+      steps: [{ id: 'declared-site', site: 'toString', type: 'snapshot', action: 'Take snapshot' }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, true, 'declared valid alias must compile: ' + JSON.stringify(result.errors));
+      assert.ok(fs.existsSync(result.outputPath), 'declared valid alias must produce output');
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('rejects a hostile site name before code generation or execution', async function() {
+    const tmpDir = makeTmpDir();
+    const hostileSite = 'x:-$(/usr/bin/touch "$SITE_MARKER")';
+    const flowPath = path.join(tmpDir, 'hostile-site.json');
+    const markerPath = path.join(tmpDir, 'site-expanded');
+    const binDir = path.join(tmpDir, 'bin');
+    fs.mkdirSync(binDir);
+    const browserPath = path.join(binDir, 'agent-browser');
+    fs.writeFileSync(browserPath, '#!/bin/bash\nexit 0\n', 'utf8');
+    fs.chmodSync(browserPath, 0o755);
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'hostile-site-name',
+      sites: { [hostileSite]: { mapping: 'site-b' } },
+      steps: [{
+        id: 'navigate-home',
+        site: hostileSite,
+        type: 'navigate',
+        action: 'Navigate to /home',
+      }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      if (result.success && result.outputPath) {
+        spawnSync('/bin/bash', [result.outputPath], {
+          encoding: 'utf8',
+          env: Object.assign({}, process.env, {
+            PATH: binDir + path.delimiter + process.env.PATH,
+            SITE_MARKER: markerPath,
+          }),
+        });
+      }
+      assert.equal(result.success, false, 'hostile site name must be rejected before codegen');
+      assert.ok(
+        result.errors.some(error =>
+          error.includes(hostileSite) && error.includes('^[A-Za-z_][A-Za-z0-9_]*$')
+        ),
+        'validation error must name the site and accepted format: ' + JSON.stringify(result.errors)
+      );
+      assert.equal(fs.existsSync(markerPath), false, 'hostile site name must never execute');
+      assert.equal(fs.existsSync(path.join(tmpDir, 'hostile-site-name.sh')), false, 'rejected flow must not produce a script');
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('accepts shell-identifier site names including underscore forms', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'valid-sites.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'valid-site-names',
+      sites: {
+        _office: { mapping: 'site-a' },
+        app_2: { mapping: 'site-b' },
+      },
+      steps: [
+        { id: 'office-home', site: '_office', type: 'navigate', action: 'Navigate to /dashboard' },
+        { id: 'app-home', site: 'app_2', type: 'navigate', action: 'Navigate to /home' },
+      ],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, true, 'valid site names must compile: ' + JSON.stringify(result.errors));
+      const output = fs.readFileSync(result.outputPath, 'utf8');
+      assert.match(output, /_OFFICE_BASE_URL/);
+      assert.match(output, /APP_2_BASE_URL/);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('rejects the reserved __proto__ alias before producing output', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'reserved-site.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'reserved-site-name',
+      sites: JSON.parse('{"__proto__":{"mapping":"site-b"}}'),
+      steps: [{ id: 'reserved-home', site: '__proto__', type: 'navigate', action: 'Navigate to /home' }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, false, '__proto__ must be rejected before codegen');
+      assert.ok(
+        result.errors.some(error => error.includes('__proto__') && error.includes('reserved')),
+        'error must name the reserved alias: ' + JSON.stringify(result.errors)
+      );
+      assert.equal(fs.existsSync(path.join(tmpDir, 'reserved-site-name.sh')), false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('rejects aliases that collide on normalized base URL variable', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'colliding-sites.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'colliding-site-names',
+      sites: {
+        office: { mapping: 'site-a' },
+        OFFICE: { mapping: 'site-b' },
+      },
+      steps: [
+        { id: 'lower-office', site: 'office', type: 'navigate', action: 'Navigate to /dashboard' },
+        { id: 'upper-office', site: 'OFFICE', type: 'navigate', action: 'Navigate to /home' },
+      ],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, false, 'normalized env-key collision must be rejected');
+      assert.ok(
+        result.errors.some(error =>
+          error.includes('office') && error.includes('OFFICE') && error.includes('OFFICE_BASE_URL')
+        ),
+        'error must name both aliases and normalized key: ' + JSON.stringify(result.errors)
+      );
+      assert.equal(fs.existsSync(path.join(tmpDir, 'colliding-site-names.sh')), false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('compile() — normalized flow variable validation', function() {
+  test('accepts explicit uppercase BASE_URL without injecting a duplicate assignment', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'uppercase-base-url.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'uppercase-base-url',
+      variables: { BASE_URL: 'https://override.test' },
+      mapping: 'site-a',
+      steps: [{ id: 'home', type: 'navigate', action: 'Navigate to /dashboard' }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, true, JSON.stringify(result.errors));
+      const output = fs.readFileSync(result.outputPath, 'utf8');
+      assert.equal(output.match(/^BASE_URL="\$\{1:/gm).length, 1, output);
+      assert.match(output, /E2E_BASE_URL:-https:\/\/override\.test/);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('reports invalid site aliases without cascading injected-variable collisions', async function() {
+    const cases = [
+      {
+        name: 'reserved-constructor-alias',
+        variables: { constructor_base_url: 'https://example.test' },
+        sites: { constructor: { mapping: 'site-a' } },
+        site: 'constructor',
+        forbidden: 'CONSTRUCTOR_BASE_URL',
+      },
+      {
+        name: 'invalid-admin-panel-alias',
+        variables: { 'admin-panel_base_url': 'https://example.test' },
+        sites: { 'admin-panel': { mapping: 'site-a' } },
+        site: 'admin-panel',
+        forbidden: 'ADMIN-PANEL_BASE_URL',
+      },
+    ];
+
+    for (const testCase of cases) {
+      const tmpDir = makeTmpDir();
+      const flowPath = path.join(tmpDir, testCase.name + '.json');
+      fs.writeFileSync(flowPath, JSON.stringify({
+        name: testCase.name,
+        variables: testCase.variables,
+        sites: testCase.sites,
+        steps: [{ id: 'check-site', site: testCase.site, type: 'snapshot', action: 'Take snapshot' }],
+      }), 'utf8');
+      try {
+        const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+        assert.equal(result.success, false);
+        assert.equal(
+          result.errors.some(error => error.includes('collide') && error.includes(testCase.forbidden)),
+          false,
+          'compile errors must not include cascading collision: ' + JSON.stringify(result.errors)
+        );
+        assert.equal(fs.existsSync(path.join(tmpDir, testCase.name + '.sh')), false);
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    }
+  });
+
+  test('accepts a valid variable key that shadows an Object prototype method', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'prototype-method-variable.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'prototype-method-variable',
+      variables: { hasOwnProperty: 'literal-value' },
+      sites: { office: { mapping: 'site-a' } },
+      steps: [{ id: 'office-home', site: 'office', type: 'navigate', action: 'Navigate to /dashboard' }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, true, 'valid shell identifier must not break own-key lookup: ' + JSON.stringify(result.errors));
+      assert.ok(fs.existsSync(result.outputPath));
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('rejects a flow variable that collides with an injected site base URL', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'site-variable-collision.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'site-variable-collision',
+      variables: { office_base_url: 'https://override.invalid' },
+      sites: { office: { mapping: 'site-a' } },
+      steps: [{ id: 'office-home', site: 'office', type: 'navigate', action: 'Navigate to /dashboard' }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, false, 'site variable collision must fail before codegen');
+      assert.ok(
+        result.errors.some(error =>
+          error.includes('office_base_url') && error.includes('office') && error.includes('OFFICE_BASE_URL')
+        ),
+        'error must name both sources and normalized key: ' + JSON.stringify(result.errors)
+      );
+      assert.equal(fs.existsSync(path.join(tmpDir, 'site-variable-collision.sh')), false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('rejects user variable case collisions and invalid or reserved keys', async function() {
+    const cases = [
+      {
+        name: 'user-variable-collision',
+        variables: { token: 'one', TOKEN: 'two' },
+        expected: ['token', 'TOKEN'],
+      },
+      { name: 'invalid-variable', variables: { 'api-token': 'secret' }, expected: ['api-token', 'shell identifier'] },
+      {
+        name: 'reserved-variable',
+        variables: JSON.parse('{"__proto__":"secret"}'),
+        expected: ['__proto__', 'reserved'],
+      },
+    ];
+
+    for (const testCase of cases) {
+      const tmpDir = makeTmpDir();
+      const flowPath = path.join(tmpDir, testCase.name + '.json');
+      fs.writeFileSync(flowPath, JSON.stringify({
+        name: testCase.name,
+        variables: testCase.variables,
+        mapping: 'site-a',
+        steps: [{ id: 'home', type: 'navigate', action: 'Navigate to /dashboard' }],
+      }), 'utf8');
+      try {
+        const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+        assert.equal(result.success, false, testCase.name + ' must fail before codegen');
+        assert.ok(
+          result.errors.some(error => testCase.expected.every(part => error.includes(part))),
+          testCase.name + ' error must explain the offending keys: ' + JSON.stringify(result.errors)
+        );
+        assert.equal(fs.existsSync(path.join(tmpDir, testCase.name + '.sh')), false);
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    }
+  });
+});
+
+describe('compile() — step identity validation', function() {
+  test('rejects missing and duplicate step ids before writing single-site or cross-site output', async function() {
+    const cases = [
+      {
+        name: 'missing-single-step-id', mapping: 'site-a',
+        steps: [{ type: 'snapshot', action: 'Take snapshot' }],
+        expected: 'non-empty string',
+      },
+      {
+        name: 'duplicate-cross-step-id', sites: { office: { mapping: 'site-a' } },
+        steps: [
+          { id: 'same', site: 'office', type: 'snapshot', action: 'Take snapshot' },
+          { id: 'same', site: 'office', type: 'snapshot', action: 'Take snapshot' },
+        ],
+        expected: "Duplicate step id 'same'",
+      },
+      {
+        name: 'nul-step-id', mapping: 'site-a',
+        steps: [{ id: 'nul\u0000byte', type: 'snapshot', action: 'Take snapshot' }],
+        expected: 'must not contain NUL',
+      },
+      {
+        name: 'unpaired-surrogate-step-id', mapping: 'site-a',
+        steps: [{ id: 'lone-\uD800', type: 'snapshot', action: 'Take snapshot' }],
+        expected: 'must not contain an unpaired surrogate',
+      },
+    ];
+
+    for (const testCase of cases) {
+      const tmpDir = makeTmpDir();
+      const flowPath = path.join(tmpDir, testCase.name + '.json');
+      fs.writeFileSync(flowPath, JSON.stringify(testCase), 'utf8');
+      try {
+        const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+        assert.equal(result.success, false, testCase.name + ' must fail before codegen');
+        assert.ok(result.errors.some(error => error.includes(testCase.expected)), JSON.stringify(result.errors));
+        assert.equal(fs.existsSync(path.join(tmpDir, testCase.name + '.sh')), false);
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    }
   });
 });
 
