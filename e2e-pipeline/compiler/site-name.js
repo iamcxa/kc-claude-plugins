@@ -48,9 +48,7 @@ function validateSiteNames(siteNames) {
 }
 
 module.exports = {
-  SITE_NAME_FORMAT,
   isValidSiteName,
   siteBaseUrlVariable,
-  siteNameValidationError,
   validateSiteNames,
 };

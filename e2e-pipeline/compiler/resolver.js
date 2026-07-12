@@ -394,7 +394,7 @@ function resolveMultiSite(flow, siteMappings) {
   var errors = [];
 
   // Build per-site symbol tables
-  var siteTables = {};
+  var siteTables = new Map();
   var siteNames = Object.keys(siteMappings);
   errors.push.apply(errors, validateSiteNames(siteNames));
   for (var siteIndex = 0; siteIndex < siteNames.length; siteIndex++) {
@@ -404,7 +404,7 @@ function resolveMultiSite(flow, siteMappings) {
     }
     var siteData = siteMappings[siteName];
     if (siteData && siteData.mapping) {
-      siteTables[siteName] = buildSymbolTable(siteData.mapping);
+      siteTables.set(siteName, buildSymbolTable(siteData.mapping));
     }
   }
 
@@ -425,7 +425,7 @@ function resolveMultiSite(flow, siteMappings) {
     }
 
     var siteName = step.site;
-    var siteTableResult = siteTables[siteName];
+    var siteTableResult = siteTables.get(siteName);
     if (!siteTableResult) {
       errors.push("Step '" + stepId + "': unknown site '" + siteName + "' (not in sites: block)");
       continue;

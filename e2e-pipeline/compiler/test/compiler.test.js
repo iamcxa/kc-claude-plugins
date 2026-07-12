@@ -387,6 +387,57 @@ describe('compile() — cross-site flow integration', function() {
 });
 
 describe('compile() — cross-site site-name validation', function() {
+  test('rejects inherited Object prototype names when they are not declared sites', async function() {
+    for (const undeclaredSite of ['toString', 'valueOf']) {
+      const tmpDir = makeTmpDir();
+      const flowPath = path.join(tmpDir, 'undeclared-' + undeclaredSite + '.json');
+      fs.writeFileSync(flowPath, JSON.stringify({
+        name: 'undeclared-' + undeclaredSite,
+        sites: { office: { mapping: 'site-a' } },
+        steps: [{
+          id: 'check-' + undeclaredSite,
+          site: undeclaredSite,
+          type: 'snapshot',
+          action: 'Take snapshot',
+        }],
+      }), 'utf8');
+
+      try {
+        const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+        assert.equal(result.success, false, undeclaredSite + ' must be rejected without throwing');
+        assert.ok(
+          result.errors.some(error => error.includes("unknown site '" + undeclaredSite + "'")),
+          'error must identify the undeclared site: ' + JSON.stringify(result.errors)
+        );
+        assert.equal(
+          fs.existsSync(path.join(tmpDir, 'undeclared-' + undeclaredSite + '.sh')),
+          false,
+          'rejected flow must not produce output'
+        );
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    }
+  });
+
+  test('accepts an explicitly declared toString site alias', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'declared-tostring.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'declared-tostring',
+      sites: { toString: { mapping: 'site-a' } },
+      steps: [{ id: 'declared-site', site: 'toString', type: 'snapshot', action: 'Take snapshot' }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, true, 'declared valid alias must compile: ' + JSON.stringify(result.errors));
+      assert.ok(fs.existsSync(result.outputPath), 'declared valid alias must produce output');
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   test('rejects a hostile site name before code generation or execution', async function() {
     const tmpDir = makeTmpDir();
     const hostileSite = 'x:-$(/usr/bin/touch "$SITE_MARKER")';
