@@ -107,9 +107,9 @@ steps:
 |------|-------------------|
 | Every step must have `site:` | `"Missing site: on step <id>"` |
 | `site:` value must exist in `sites:` keys | `"Unknown site: <alias>"` |
-| Site aliases must be shell identifiers (`^[A-Za-z_][A-Za-z0-9_]*$`) | `"Invalid site name '<alias>'"` |
-| Site aliases cannot be `__proto__`, `prototype`, or `constructor` | `"Alias is reserved"` |
-| Aliases must not normalize to the same `<ALIAS>_BASE_URL` key | `"Aliases 'a' and 'A' collide on 'A_BASE_URL'"` |
+| Site aliases must be shell identifiers (`^[A-Za-z_][A-Za-z0-9_]*$`) | `Invalid site name '<alias>' in sites: block: expected shell identifier matching ^[A-Za-z_][A-Za-z0-9_]*$` |
+| Site aliases cannot be `__proto__`, `prototype`, or `constructor` | `Invalid site name '<alias>' in sites: block: alias is reserved` |
+| Aliases must not normalize to the same `<ALIAS>_BASE_URL` key | `Site aliases '<first>' and '<second>' collide on normalized base URL variable '<NORMALIZED>_BASE_URL'` |
 | `sites:` and `mapping:` are mutually exclusive | `"Cannot use both"` |
 | Same mapping under two aliases | Ambiguous resolution error |
 
