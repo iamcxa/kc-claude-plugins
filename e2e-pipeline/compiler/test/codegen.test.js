@@ -874,13 +874,14 @@ describe('generateExpects() — element-not-visible', function() {
     );
   });
 
-  test("element-not-visible uses || _handle_failure pattern", function() {
+  test("element-not-visible uses status-aware _handle_failure paths", function() {
     const step = makeSnapshot('check-dialog', 'Take snapshot');
     step.expects = [{ type: 'element-not-visible', raw: 'dialog not visible', elementName: 'dialog', selector: 'role=dialog' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('|| _handle_failure "check-dialog"'),
-      'element-not-visible must use || _handle_failure. Got: ' + script
+      script.includes('if [ "$_probe_status" -eq 2 ]; then') &&
+        script.includes('_handle_failure "check-dialog" "agent-browser visibility probe failed for dialog"'),
+      'element-not-visible must distinguish infrastructure failure. Got: ' + script
     );
   });
 

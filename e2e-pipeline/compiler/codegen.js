@@ -256,7 +256,7 @@ function generateRuntimeFlagBlock() {
  *
  * _handle_failure "step_id" "msg":
  *   - Echoes FAIL line
- *   - If CONTINUE_ON_ERROR=true: accumulates step_id into _FAILED_STEPS
+ *   - If CONTINUE_ON_ERROR=true: accumulates each step_id once in _FAILED_STEPS
  *   - If CONTINUE_ON_ERROR=false: calls exit 1 (v1.0 backward compat)
  *   - Always returns 0 so the || operator satisfies set -e
  *
@@ -306,7 +306,12 @@ function generateRuntimeSupport() {
     '  _STEP_RESULTS[$_last_idx]="fail"',
     '  _STEP_FAILURES[$_last_idx]="$_msg_clean"',
     '  if [ "$CONTINUE_ON_ERROR" = "true" ]; then',
-    '    _FAILED_STEPS+=("$_step_id")',
+    '    local _already_failed=false',
+    '    local _failed_step',
+    '    for _failed_step in "$' + '{_FAILED_STEPS[@]}"; do',
+    '      if [ "$_failed_step" = "$_step_id" ]; then _already_failed=true; break; fi',
+    '    done',
+    '    if [ "$_already_failed" = "false" ]; then _FAILED_STEPS+=("$_step_id"); fi',
     '  else',
     '    exit 1',
     '  fi',
@@ -954,7 +959,16 @@ function generateExpects(step) {
       // Keep _poll_not_visible — headless CI issue is less critical for "not visible" checks
       var sel = singleQuote(expect.selector);
       var failMsg = expect.elementName + ' still visible after ' + timeoutArg + 's (expected not visible)';
-      lines.push('_poll_not_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
+      lines.push('if _poll_not_visible ' + sel + ' "' + step.id + '" ' + timeoutArg + sessionArg + '; then');
+      lines.push('  :');
+      lines.push('else');
+      lines.push('  _probe_status=$?');
+      lines.push('  if [ "$_probe_status" -eq 2 ]; then');
+      lines.push('    _handle_failure "' + step.id + '" "agent-browser visibility probe failed for ' + expect.elementName + '"');
+      lines.push('  else');
+      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"');
+      lines.push('  fi');
+      lines.push('fi');
 
     } else if (expect.type === 'url-contains') {
       // Poll until URL contains value (CODEGEN-01)

@@ -76,10 +76,37 @@ function makeTextFlow(expect, session) {
       action: 'Wait 0',
       type: 'wait',
       operands: { seconds: 0 },
-      expects: [expect],
+      expects: Array.isArray(expect) ? expect : [expect],
       session: session || undefined,
     }],
   };
+}
+
+function runNotVisibleFlow(output, status) {
+  return withFakeBrowser(visibilityBrowserScript(), function(binDir) {
+    const logPath = path.join(binDir, 'browser.log');
+    const script = generate({
+      name: 'status-safe-not-visible',
+      description: 'Runtime visibility status propagation regression',
+      steps: [{
+        id: 'check-dialog',
+        action: 'Wait 0',
+        type: 'wait',
+        operands: { seconds: 0 },
+        expects: [{
+          type: 'element-not-visible',
+          raw: 'dialog not visible',
+          elementName: 'dialog',
+          selector: 'role=dialog',
+        }],
+      }],
+    }, 'status-safe-not-visible');
+    return runBash(script, binDir, {
+      AGENT_BROWSER_OUTPUT: output,
+      AGENT_BROWSER_STATUS: String(status),
+      AGENT_BROWSER_LOG: logPath,
+    });
+  });
 }
 
 function snapshotBrowserScript() {
@@ -135,6 +162,22 @@ describe('_poll_not_visible runtime status safety', function() {
   });
 });
 
+describe('generated element-not-visible status reporting', function() {
+  test('reports command failure as infrastructure failure', function() {
+    const result = runNotVisibleFlow('', 7);
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stdout, /agent-browser visibility probe failed/);
+    assert.doesNotMatch(result.stdout, /still visible/);
+  });
+
+  test('retains the ordinary still-visible message on timeout', function() {
+    const result = runNotVisibleFlow('true', 0);
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stdout, /still visible/);
+    assert.doesNotMatch(result.stdout, /visibility probe failed/);
+  });
+});
+
 describe('text assertion runtime status safety', function() {
   test('text-visible reports snapshot command failure as infrastructure failure', function() {
     const result = runTextFlow(
@@ -163,6 +206,35 @@ describe('text assertion runtime status safety', function() {
     assert.equal(result.status, 1, result.stdout + result.stderr);
     assert.match(result.stdout, /FAIL: 1 steps failed: verify-text/);
     assert.match(result.stdout, /agent-browser snapshot failed/);
+  });
+
+  test('counts multiple failed expectations on one step only once', function() {
+    const result = runTextFlow([
+      { type: 'text-visible', raw: "text 'Dashboard' on page", text: 'Dashboard' },
+      { type: 'text-not-visible', raw: "text 'Failure' not on page", text: 'Failure' },
+    ], { snapshotStatus: 7, scriptArgs: ['--continue-on-error'] });
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stdout, /FAIL: 1 steps failed: verify-text/);
+    assert.doesNotMatch(result.stdout, /FAIL: 2 steps failed: verify-text verify-text/);
+  });
+
+  test('still counts genuinely different failed steps separately', function() {
+    const expect = { type: 'text-not-visible', raw: "text 'Failure' not on page", text: 'Failure' };
+    const flow = makeTextFlow(expect);
+    flow.steps = [
+      Object.assign({}, flow.steps[0], { id: 'first' }),
+      Object.assign({}, flow.steps[0], { id: 'second' }),
+    ];
+    const result = withFakeBrowser(snapshotBrowserScript(), function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      return runBash(generate(flow, flow.name), binDir, {
+        AGENT_BROWSER_LOG: logPath,
+        SNAPSHOT_OUTPUT: '',
+        SNAPSHOT_STATUS: '7',
+      }, ['--continue-on-error']);
+    });
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stdout, /FAIL: 2 steps failed: first second/);
   });
 
   test('text snapshots preserve the optional session argument', function() {

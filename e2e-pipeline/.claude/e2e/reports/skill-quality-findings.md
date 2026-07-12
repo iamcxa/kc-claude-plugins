@@ -192,9 +192,11 @@ Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + su
 
 **Fix**:
 - `_poll_not_visible` succeeds only on literal `false`, times out with status 1 for literal `true`, and returns status 2 for command or protocol failure.
+- Generated callers map status 2 to a visibility-probe infrastructure message while retaining the ordinary timeout message for status 1.
 - Text assertions use a session-aware snapshot helper and route snapshot failure through `_handle_failure` before grep evaluation.
+- Continue-on-error failure accumulation deduplicates repeated expectation failures by step ID without collapsing failures from different steps.
 - Added runtime tests with a fake `agent-browser` for command failure, invalid output, session routing, and successful positive/negative assertions.
 
-**Verification**: `node --test compiler/test/*.test.js` -> 507/507 PASS. `npm run lint` -> exit 0 with warnings and no errors.
+**Verification**: `node --test compiler/test/*.test.js` -> 511/511 PASS. `npm run lint` -> exit 0 with warnings and no errors.
 
 **Impact scan**: Reviewed e2e-test, e2e-map, e2e-walkthrough, e2e-flow, their references, all browser agents, and shared command/common-pattern references. No action grammar or agent execution contract changed, so no skill or agent edits were required. This plugin repo has no project mapping fixtures in the impact-matrix locations; compiler fixtures cover the behavior instead.
