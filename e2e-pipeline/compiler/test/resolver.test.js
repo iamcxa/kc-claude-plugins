@@ -746,6 +746,38 @@ describe('cross-site sites: block — resolver', function() {
     );
   });
 
+  test('resolveMultiSite: rejects reserved prototype aliases when called directly', function() {
+    const siteMappings = Object.create(null);
+    siteMappings.__proto__ = SITE_MAPPINGS.office;
+    const result = resolveMultiSite({
+      name: 'reserved-site-alias',
+      steps: [{ id: 'reserved', site: '__proto__', type: 'snapshot', action: 'Take snapshot' }],
+    }, siteMappings);
+    assert.ok(
+      result.errors.some(error => error.includes('__proto__') && error.includes('reserved')),
+      'direct resolver must reject prototype-reserved aliases: ' + result.errors.join('; ')
+    );
+  });
+
+  test('resolveMultiSite: rejects normalized base URL variable collisions', function() {
+    const result = resolveMultiSite({
+      name: 'colliding-site-aliases',
+      steps: [
+        { id: 'lower', site: 'office', type: 'snapshot', action: 'Take snapshot' },
+        { id: 'upper', site: 'OFFICE', type: 'snapshot', action: 'Take snapshot' },
+      ],
+    }, {
+      office: SITE_MAPPINGS.office,
+      OFFICE: SITE_MAPPINGS.app,
+    });
+    assert.ok(
+      result.errors.some(error =>
+        error.includes('office') && error.includes('OFFICE') && error.includes('OFFICE_BASE_URL')
+      ),
+      'direct resolver must reject normalized env-key collisions: ' + result.errors.join('; ')
+    );
+  });
+
   test('resolveMultiSite: all 4 steps resolve without errors using inline mappings', function() {
     const result = resolveMultiSite(CROSS_SITE_FLOW, SITE_MAPPINGS);
     assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));

@@ -7,6 +7,7 @@ const crypto = require('node:crypto');
 const { parse } = require('./parser');
 const { resolve, resolveMultiSite } = require('./resolver');
 const { generate } = require('./codegen');
+const { siteBaseUrlVariable } = require('./site-name');
 
 var COMPILER_VERSION = require('../package.json').version;
 
@@ -76,7 +77,7 @@ async function compile(flowPath, mappingDir, outputDir, options) {
     for (var i = 0; i < siteNames.length; i++) {
       var siteName = siteNames[i];
       var siteData = parseResult.sites[siteName];
-      var siteVarName = siteName.toUpperCase() + '_BASE_URL';
+      var siteVarName = siteBaseUrlVariable(siteName);
       if (!resolveResult.resolved.variables.hasOwnProperty(siteVarName)) {
         resolveResult.resolved.variables[siteVarName] = (siteData.mapping && siteData.mapping.base_url) || '';
       }

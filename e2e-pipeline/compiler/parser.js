@@ -3,7 +3,7 @@
 const yaml = require('js-yaml');
 const fs = require('node:fs');
 const path = require('node:path');
-const { isValidSiteName, siteNameValidationError } = require('./site-name');
+const { isValidSiteName, validateSiteNames } = require('./site-name');
 
 /**
  * Load and parse a YAML file, returning the parsed object or null on error.
@@ -112,6 +112,7 @@ function parse(flowPath, mappingDir) {
   if (flow.sites && !flow.mapping) {
     var sitesMap = {};
     var siteNames = Object.keys(flow.sites);
+    errors.push.apply(errors, validateSiteNames(siteNames));
 
     for (var i = 0; i < siteNames.length; i++) {
       var siteName = siteNames[i];
@@ -119,7 +120,6 @@ function parse(flowPath, mappingDir) {
       var mappingName = siteEntry && siteEntry.mapping;
 
       if (!isValidSiteName(siteName)) {
-        errors.push(siteNameValidationError(siteName));
         continue;
       }
 

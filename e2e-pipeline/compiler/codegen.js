@@ -68,6 +68,7 @@ function singleQuote(str) {
 // ---------------------------------------------------------------------------
 
 const { selectorToA11yPattern } = require('./lib/selector-translate.js');
+const { siteBaseUrlVariable } = require('./site-name');
 
 // ---------------------------------------------------------------------------
 // Variable handling
@@ -722,7 +723,7 @@ function generateAction(step, stepIndex, totalSteps) {
   var session = step.session;
   var sessionPrefix = session ? '--session ' + singleQuote(session) + ' ' : '';
   // Cross-site: compute base URL variable name (OFFICE_BASE_URL, APP_BASE_URL, etc.)
-  var baseUrlVar = session ? '${' + session.toUpperCase() + '_BASE_URL}' : '${BASE_URL}';
+  var baseUrlVar = session ? '${' + siteBaseUrlVariable(session) + '}' : '${BASE_URL}';
 
   // Pre-escape step id for XML attribute embedding (compile-time)
   var escapedId = xmlAttrEscape(step.id);

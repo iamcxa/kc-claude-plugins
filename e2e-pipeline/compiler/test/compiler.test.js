@@ -458,6 +458,58 @@ describe('compile() — cross-site site-name validation', function() {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
   });
+
+  test('rejects the reserved __proto__ alias before producing output', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'reserved-site.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'reserved-site-name',
+      sites: JSON.parse('{"__proto__":{"mapping":"site-b"}}'),
+      steps: [{ id: 'reserved-home', site: '__proto__', type: 'navigate', action: 'Navigate to /home' }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, false, '__proto__ must be rejected before codegen');
+      assert.ok(
+        result.errors.some(error => error.includes('__proto__') && error.includes('reserved')),
+        'error must name the reserved alias: ' + JSON.stringify(result.errors)
+      );
+      assert.equal(fs.existsSync(path.join(tmpDir, 'reserved-site-name.sh')), false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('rejects aliases that collide on normalized base URL variable', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'colliding-sites.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'colliding-site-names',
+      sites: {
+        office: { mapping: 'site-a' },
+        OFFICE: { mapping: 'site-b' },
+      },
+      steps: [
+        { id: 'lower-office', site: 'office', type: 'navigate', action: 'Navigate to /dashboard' },
+        { id: 'upper-office', site: 'OFFICE', type: 'navigate', action: 'Navigate to /home' },
+      ],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, false, 'normalized env-key collision must be rejected');
+      assert.ok(
+        result.errors.some(error =>
+          error.includes('office') && error.includes('OFFICE') && error.includes('OFFICE_BASE_URL')
+        ),
+        'error must name both aliases and normalized key: ' + JSON.stringify(result.errors)
+      );
+      assert.equal(fs.existsSync(path.join(tmpDir, 'colliding-site-names.sh')), false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
 });
 
 // ---------------------------------------------------------------------------
