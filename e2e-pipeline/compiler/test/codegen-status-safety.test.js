@@ -749,6 +749,32 @@ describe('metrics failure diagnostic safety', function() {
   });
 });
 
+describe('JUnit failure diagnostic safety', function() {
+  test('JUnit XML round-trips failure messages with XML specials and control whitespace', XMLLINT_TEST_OPTIONS, function() {
+    const hostile = 'quote " less < greater > amp & line\nreturn\rtab\t';
+    withFakeBrowser(snapshotBrowserScript(), function(binDir) {
+      const junitPath = path.join(binDir, 'junit.xml');
+      const script = generate(makeTextFlow({
+        type: 'text-visible',
+        raw: 'hostile XML text visible',
+        text: hostile,
+      }), 'junit-failure-message');
+      const result = runBash(script, binDir, {
+        AGENT_BROWSER_LOG: path.join(binDir, 'browser.log'),
+        SNAPSHOT_OUTPUT: '- document "safe"',
+      }, ['--continue-on-error', '--junit', junitPath]);
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      const xpath = childProcess.spawnSync(
+        XMLLINT_COMMAND,
+        ['--xpath', 'string(/testsuites/testsuite/testcase/failure/@message)', junitPath],
+        { encoding: 'utf8' }
+      );
+      assert.equal(xpath.status, 0, xpath.stdout + xpath.stderr);
+      assert.equal(xpath.stdout.slice(0, -1), "text '" + hostile + "' not found on page");
+    });
+  });
+});
+
 describe('text assertion runtime status safety', function() {
   test('treats hostile session command substitution as a literal value', function() {
     const hostileSession = '$(printf exploited > "$SESSION_MARKER")';
