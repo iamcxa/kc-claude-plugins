@@ -183,6 +183,7 @@ function runPollingAssertion(expect, options) {
 }
 
 const COMPLEX_STEP_ID = '步驟<&"\'\nline\rreturn\ttab$()../path/`tick`';
+const COMPLEX_FLOW_NAME = '流程 "quoted" \\ path\nline\rreturn\ttab\bbackspace\fformfeed';
 
 function withIdentityReports(stepId, callback) {
   return withFakeBrowser('#!/usr/bin/env bash\nexit 0\n', function(binDir) {
@@ -707,6 +708,22 @@ describe('step ID runtime and artifact safety', function() {
         path.resolve(screenshotPath).startsWith(path.resolve(screenshotDir) + path.sep),
         'requested screenshot escaped artifact directory: ' + screenshotPath
       );
+    });
+  });
+});
+
+describe('metrics flow identity safety', function() {
+  test('metrics JSON round-trips the exact flow name', function() {
+    withFakeBrowser('#!/usr/bin/env bash\nexit 0\n', function(binDir) {
+      const metricsPath = path.join(binDir, 'metrics.json');
+      const script = generate({
+        name: COMPLEX_FLOW_NAME,
+        steps: [{ id: 'wait', action: 'Wait 0', type: 'wait', operands: { seconds: 0 } }],
+      }, COMPLEX_FLOW_NAME);
+      const result = runBash(script, binDir, {}, ['--metrics-output', metricsPath]);
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      const metrics = JSON.parse(fs.readFileSync(metricsPath, 'utf8'));
+      assert.equal(metrics.flow, COMPLEX_FLOW_NAME);
     });
   });
 });

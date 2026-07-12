@@ -677,6 +677,7 @@ function generateJUnitEmitter(flowName) {
  * Returns: string (multi-line bash block)
  */
 function generateMetricsEmitter(flowName) {
+  var escapedFlow = doubleQuote(jsonStringContent(flowName));
   var lines = [
     '_emit_metrics() {',
     '  local _out="$1"',
@@ -703,7 +704,7 @@ function generateMetricsEmitter(flowName) {
     '    _flaky_pass=true',
     '  fi',
     '  {',
-    '    printf \'{"flow":"\' ; printf \'%s\' "' + flowName + '" ; printf \'",\'',
+    '    printf \'{"flow":"\' ; printf \'%s\' ' + escapedFlow + ' ; printf \'",\'',
     '    printf \'"timestamp":"%s",\' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"',
     '    printf \'"attempt":%s,\' "$_ATTEMPT_NUM"',
     '    printf \'"total_attempts":%s,\' "$_TOTAL_ATTEMPTS"',
