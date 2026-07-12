@@ -195,7 +195,8 @@ Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + su
 - Generated callers map status 2 to a visibility-probe infrastructure message while retaining the ordinary timeout message for status 1.
 - Text assertions use a session-aware snapshot helper and route snapshot failure through `_handle_failure` before grep evaluation.
 - Continue-on-error failure accumulation deduplicates repeated expectation failures by step ID without collapsing failures from different steps.
-- Added runtime tests with a fake `agent-browser` for command failure, invalid output, session routing, and successful positive/negative assertions.
+- The dedup loop checks array length before expanding an empty array, avoiding Bash 3.2 `set -u` failure and EXIT-trap status masking.
+- Added runtime tests forced through `/bin/bash` when available, with a fake `agent-browser` for command failure, invalid output, session routing, cleanup exit status, and successful positive/negative assertions.
 
 **Verification**: `node --test compiler/test/*.test.js` -> 511/511 PASS. `npm run lint` -> exit 0 with warnings and no errors.
 

@@ -9,6 +9,8 @@ const path = require('node:path');
 
 const { generate, generateRuntimeSupport } = require('../codegen.js');
 
+const RUNTIME_BASH = fs.existsSync('/bin/bash') ? '/bin/bash' : 'bash';
+
 function writeExecutable(filePath, contents) {
   fs.writeFileSync(filePath, contents, 'utf8');
   fs.chmodSync(filePath, 0o755);
@@ -26,7 +28,7 @@ function withFakeBrowser(browserScript, callback) {
 }
 
 function runBash(script, binDir, extraEnv, scriptArgs) {
-  return childProcess.spawnSync('bash', ['-c', script, 'generated-test'].concat(scriptArgs || []), {
+  return childProcess.spawnSync(RUNTIME_BASH, ['-c', script, 'generated-test'].concat(scriptArgs || []), {
     encoding: 'utf8',
     env: Object.assign({}, process.env, extraEnv, {
       PATH: binDir + path.delimiter + process.env.PATH,
@@ -198,7 +200,7 @@ describe('text assertion runtime status safety', function() {
     assert.match(result.stdout, /agent-browser snapshot failed/);
   });
 
-  test('snapshot infrastructure failure remains failed with continue-on-error', function() {
+  test('snapshot infrastructure failure remains nonzero despite EXIT cleanup', function() {
     const result = runTextFlow(
       { type: 'text-not-visible', raw: "text 'Failure' not on page", text: 'Failure' },
       { snapshotStatus: 7, scriptArgs: ['--continue-on-error'] }
