@@ -169,7 +169,7 @@ describe('cross-site polling assertion runtime safety', function() {
     const result = runPollingAssertion({
       type: 'element-visible', raw: 'Dashboard heading visible', elementName: 'Dashboard heading',
       selector: 'role=heading[name="Dashboard"]',
-    }, { snapshotOutput: 'heading "Dashboard"' });
+    }, { snapshotOutput: '- heading "Dashboard" [ref=e1]' });
     assert.equal(result.status, 0, result.stdout + result.stderr);
     assert.match(result.browserLog, /--session office snapshot/);
     assert.doesNotMatch(result.browserLog, /^snapshot$/m);
@@ -194,6 +194,25 @@ describe('cross-site polling assertion runtime safety', function() {
     }
   });
 
+  test('one clean generic URI line is accepted as URL evidence', function() {
+    for (const urlOutput of [
+      'about:blank',
+      'data:text/html,<h1>Dashboard</h1>',
+      'file:///tmp/dashboard.html',
+      'chrome://settings/dashboard',
+      'myapp+test.v2:dashboard',
+      'custom:',
+    ]) {
+      const notContains = runPollingAssertion(
+        { type: 'url-not-contains', raw: 'url does not contain forbidden', value: 'forbidden' },
+        { urlOutput }
+      );
+      assert.equal(notContains.status, 0, notContains.stdout + notContains.stderr);
+      assert.match(notContains.browserLog, /--session office get url/);
+      assert.doesNotMatch(notContains.browserLog, /^get url$/m);
+    }
+  });
+
   test('snapshot command failure is reported as infrastructure failure', function() {
     const result = runPollingAssertion({
       type: 'element-visible', raw: 'Dashboard heading visible', elementName: 'Dashboard heading',
@@ -204,11 +223,35 @@ describe('cross-site polling assertion runtime safety', function() {
     assert.doesNotMatch(result.stdout, /not in a11y tree after/);
   });
 
+  test('real agent-browser snapshot first-line shapes are valid evidence', function() {
+    const snapshots = [
+      '(empty page)',
+      '- application "App"',
+      '- article',
+      '- toolbar "Tools"',
+    ];
+    for (const snapshotOutput of snapshots) {
+      const result = withFakeBrowser(snapshotBrowserScript(), function(binDir) {
+        const support = generateRuntimeSupport();
+        return runBash([
+          'set -uo pipefail',
+          support,
+          '_capture_snapshot "office" >/dev/null',
+        ].join('\n'), binDir, {
+          AGENT_BROWSER_LOG: path.join(binDir, 'browser.log'),
+          SNAPSHOT_OUTPUT: snapshotOutput,
+          SNAPSHOT_STATUS: '0',
+        });
+      });
+      assert.equal(result.status, 0, snapshotOutput + ': ' + result.stdout + result.stderr);
+    }
+  });
+
   test('empty or malformed snapshot output is reported as infrastructure failure', function() {
     for (const snapshotOutput of [
       '',
       'agent-browser internal error',
-      'agent-browser internal error\nheading "Dashboard" [ref=e1]',
+      'agent-browser internal error\n- heading "Dashboard" [ref=e1]',
     ]) {
       const result = runPollingAssertion({
         type: 'element-visible', raw: 'Dashboard heading visible', elementName: 'Dashboard heading',
@@ -453,7 +496,7 @@ describe('text assertion runtime status safety', function() {
       const result = runBash(script, binDir, {
         AGENT_BROWSER_LOG: logPath,
         SESSION_MARKER: markerPath,
-        SNAPSHOT_OUTPUT: 'heading "Dashboard" [ref=e1]',
+        SNAPSHOT_OUTPUT: '- heading "Dashboard" [ref=e1]',
         SNAPSHOT_STATUS: '0',
       });
       assert.equal(result.status, 0, result.stdout + result.stderr);
@@ -510,7 +553,7 @@ describe('text assertion runtime status safety', function() {
     for (const snapshotOutput of [
       '',
       'agent-browser internal error',
-      'agent-browser internal error\ntext "Dashboard"',
+      'agent-browser internal error\n- text "Dashboard"',
     ]) {
       const result = runTextFlow(
         { type: 'text-visible', raw: "text 'Dashboard' on page", text: 'Dashboard' },
@@ -573,7 +616,7 @@ describe('text assertion runtime status safety', function() {
   test('text snapshots preserve the optional session argument', function() {
     const result = runTextFlow(
       { type: 'text-visible', raw: "text 'Dashboard' on page", text: 'Dashboard' },
-      { snapshotOutput: 'heading "Dashboard" [ref=e1]', session: 'office' }
+      { snapshotOutput: '- heading "Dashboard" [ref=e1]', session: 'office' }
     );
     assert.equal(result.status, 0, result.stdout + result.stderr);
     assert.match(result.browserLog, /--session office snapshot/);
@@ -586,7 +629,7 @@ describe('text assertion runtime status safety', function() {
     );
     const notVisible = runTextFlow(
       { type: 'text-not-visible', raw: "text 'Failure' not on page", text: 'Failure' },
-      { snapshotOutput: 'text "Dashboard"' }
+      { snapshotOutput: '- text "Dashboard"' }
     );
     assert.equal(visible.status, 0, visible.stdout + visible.stderr);
     assert.equal(notVisible.status, 0, notVisible.stdout + notVisible.stderr);
