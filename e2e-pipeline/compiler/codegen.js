@@ -35,6 +35,14 @@
  */
 function xmlAttrEscape(str) {
   return str
+    .split('')
+    .map(function(char) {
+      var code = char.charCodeAt(0);
+      var isIllegalC0 = code <= 0x08 || code === 0x0B || code === 0x0C ||
+        (code >= 0x0E && code <= 0x1F);
+      return isIllegalC0 ? '\uFFFD' : char;
+    })
+    .join('')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')

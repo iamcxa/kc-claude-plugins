@@ -818,6 +818,50 @@ describe('JUnit failure diagnostic safety', function() {
   });
 });
 
+describe('compile-time JUnit XML control-character policy', function() {
+  test('flow and step attributes replace every XML-illegal C0 byte while preserving legal text', XMLLINT_TEST_OPTIONS, function() {
+    const illegalCodes = [
+      0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+      0x0b, 0x0c,
+      0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+      0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,
+    ];
+    const illegalC0 = String.fromCharCode.apply(String, illegalCodes);
+    const legalTail = '\tline\nreturn\r<&>" 中文';
+    const flowName = 'flow-' + illegalC0 + legalTail;
+    const stepId = 'step-' + illegalC0 + legalTail;
+    const expectedControls = '\ufffd'.repeat(illegalCodes.length);
+    const expectedFlow = 'flow-' + expectedControls + legalTail;
+    const expectedStep = 'step-' + expectedControls + legalTail;
+
+    withFakeBrowser('#!/usr/bin/env bash\nexit 0\n', function(binDir) {
+      const junitPath = path.join(binDir, 'junit.xml');
+      const script = generate({
+        name: flowName,
+        steps: [{ id: stepId, action: 'Wait 0', type: 'wait', operands: { seconds: 0 } }],
+      }, flowName);
+      const result = runBash(script, binDir, {}, ['--junit', junitPath]);
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+
+      const flowXpath = childProcess.spawnSync(
+        XMLLINT_COMMAND,
+        ['--xpath', 'string(/testsuites/testsuite/@name)', junitPath],
+        { encoding: 'utf8' }
+      );
+      assert.equal(flowXpath.status, 0, flowXpath.stdout + flowXpath.stderr);
+      assert.equal(flowXpath.stdout.slice(0, -1), expectedFlow);
+
+      const stepXpath = childProcess.spawnSync(
+        XMLLINT_COMMAND,
+        ['--xpath', 'string(/testsuites/testsuite/testcase/@name)', junitPath],
+        { encoding: 'utf8' }
+      );
+      assert.equal(stepXpath.status, 0, stepXpath.stdout + stepXpath.stderr);
+      assert.equal(stepXpath.stdout.slice(0, -1), expectedStep);
+    });
+  });
+});
+
 describe('text assertion runtime status safety', function() {
   test('treats hostile session command substitution as a literal value', function() {
     const hostileSession = '$(printf exploited > "$SESSION_MARKER")';
