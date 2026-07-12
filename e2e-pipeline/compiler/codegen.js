@@ -83,7 +83,8 @@ function doubleQuote(str) {
 
 /** Produce a path component that cannot traverse outside an artifact directory. */
 function artifactFileComponent(str) {
-  return str.replace(/[^A-Za-z0-9._-]/g, '_');
+  if (/^[A-Za-z0-9._-]*$/.test(str)) return str;
+  return '%' + Buffer.from(str, 'utf8').toString('hex');
 }
 
 // ---------------------------------------------------------------------------
@@ -291,7 +292,7 @@ function generateRuntimeFlagBlock() {
  *   - Use sleep 1 between iterations
  *   - Use 2>/dev/null on agent-browser calls
  *   - Capture commands without letting set -e abort the polling loop
- *   - Return 1 on deadline; _poll_not_visible returns 2 on command/protocol failure
+ *   - Return 1 on deadline; visibility helpers return 2 on command/protocol failure
  *
  * Returns: string (multi-line bash block)
  */
@@ -331,7 +332,15 @@ function generateRuntimeSupport() {
     '}',
     '',
     '_artifact_name() {',
-    "  printf '%s' \"$1\" | LC_ALL=C tr -c 'A-Za-z0-9._-' '_'",
+    '  local _raw="$1"',
+    '  local _safe',
+    "  _safe=$(printf '%s' \"$_raw\" | LC_ALL=C tr -c 'A-Za-z0-9._-' '_')",
+    '  if [ "$_safe" = "$_raw" ]; then',
+    "    printf '%s' \"$_raw\"",
+    '  else',
+    "    printf '%%'",
+    "    printf '%s' \"$_raw\" | LC_ALL=C od -An -v -t x1 | tr -d ' \\n'",
+    '  fi',
     '}',
     '',
     '_json_escape() {',
@@ -429,11 +438,15 @@ function generateRuntimeSupport() {
     '  local _result',
     '  while [ "$_count" -lt "$_timeout" ]; do',
     '    if [ -n "$_session" ]; then',
-    '      _result=$(agent-browser --session "$_session" is visible "$_sel" 2>/dev/null) || true',
+    '      if ! _result=$(agent-browser --session "$_session" is visible "$_sel" 2>/dev/null); then return 2; fi',
     '    else',
-    '      _result=$(agent-browser is visible "$_sel" 2>/dev/null) || true',
+    '      if ! _result=$(agent-browser is visible "$_sel" 2>/dev/null); then return 2; fi',
     '    fi',
-    '    [ "$_result" = "true" ] && return 0',
+    '    case "$_result" in',
+    '      true) return 0 ;;',
+    '      false) ;;',
+    '      *) return 2 ;;',
+    '    esac',
     '    sleep 1',
     '    _count=$((_count + 1))',
     '  done',
@@ -537,11 +550,15 @@ function generateRuntimeSupport() {
     '    _found=false',
     '    for _sel in "$@"; do',
     '      if [ -n "$_session" ]; then',
-    '        _result=$(agent-browser --session "$_session" is visible "$_sel" 2>/dev/null) || true',
+    '        if ! _result=$(agent-browser --session "$_session" is visible "$_sel" 2>/dev/null); then return 2; fi',
     '      else',
-    '        _result=$(agent-browser is visible "$_sel" 2>/dev/null) || true',
+    '        if ! _result=$(agent-browser is visible "$_sel" 2>/dev/null); then return 2; fi',
     '      fi',
-    '      if [ "$_result" = "true" ]; then _found=true; break; fi',
+    '      case "$_result" in',
+    '        true) _found=true; break ;;',
+    '        false) ;;',
+    '        *) return 2 ;;',
+    '      esac',
     '    done',
     '    [ "$_found" = "true" ] && return 0',
     '    sleep 1',
@@ -858,7 +875,7 @@ function generateAction(step, stepIndex, totalSteps) {
   switch (step.type) {
     case 'navigate': {
       var urlPath = step.operands.urlPath || step.operands.target;
-      var navCmd = 'agent-browser ' + sessionPrefix + 'open "' + baseUrlVar + urlPath + '"';
+      var navCmd = 'agent-browser ' + sessionPrefix + 'open "' + baseUrlVar + '"' + singleQuote(urlPath);
       var navMsg = 'navigate to ' + urlPath + ' failed';
       lines.push('_STEP_START=$SECONDS');
       lines.push('_retry=0');
@@ -884,7 +901,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('  ' + recordStepName);
       lines.push('  _STEP_RESULTS+=("fail")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
-      lines.push('  _handle_failure ' + quotedId + ' "' + navMsg + '"' + failureSessionArg);
+      lines.push('  _handle_failure ' + quotedId + ' ' + singleQuote(navMsg) + failureSessionArg);
       lines.push('fi');
       break;
     }
@@ -897,14 +914,13 @@ function generateAction(step, stepIndex, totalSteps) {
 
       if (cssSel) {
         // eval-based click: querySelector + .click() — reliable in headless CI
-        // Use JS single quotes for string delimiters; shell \" for CSS attr quotes
-        var shellCss = cssSel.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        var jsCss = JSON.stringify(cssSel);
         var clickEval = "(()=>{"
-          + "const el=document.querySelector('" + shellCss + "');"
-          + "if(!el)throw new Error('element not found: " + shellCss + "');"
+          + "const el=document.querySelector(" + jsCss + ");"
+          + "if(!el)throw new Error('element not found: '+" + jsCss + ");"
           + "el.click();"
           + "})()";
-        var evalClickCmd = 'agent-browser ' + sessionPrefix + 'eval "' + clickEval + '"';
+        var evalClickCmd = 'agent-browser ' + sessionPrefix + 'eval ' + singleQuote(clickEval);
         lines.push(evalClickCmd + ' || _step_ok=false');
         // Fallback: try Playwright click if eval fails
         lines.push('if [ "$_step_ok" = "false" ]; then');
@@ -950,20 +966,19 @@ function generateAction(step, stepIndex, totalSteps) {
 
       if (fillCssSel) {
         // eval-based fill: nativeInputValueSetter — bypasses React controlled inputs
-        // Use JS single quotes for string delimiters; shell \" for CSS attr quotes
-        var shellFillCss = fillCssSel.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-        var shellFillVal = fillVal.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        var jsFillCss = JSON.stringify(fillCssSel);
+        var jsFillVal = JSON.stringify(fillVal);
         var fillEval = "(()=>{"
-          + "const el=document.querySelector('" + shellFillCss + "');"
-          + "if(!el)throw new Error('element not found: " + shellFillCss + "');"
+          + "const el=document.querySelector(" + jsFillCss + ");"
+          + "if(!el)throw new Error('element not found: '+" + jsFillCss + ");"
           + "el.focus();"
           + "const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;"
-          + "s.call(el,'" + shellFillVal + "');"
+          + "s.call(el," + jsFillVal + ");"
           + "const t=el._valueTracker;if(t)t.setValue('');"
           + "el.dispatchEvent(new Event('input',{bubbles:true}));"
           + "el.dispatchEvent(new Event('change',{bubbles:true}));"
           + "})()";
-        var evalFillCmd = 'agent-browser ' + sessionPrefix + 'eval "' + fillEval + '"';
+        var evalFillCmd = 'agent-browser ' + sessionPrefix + 'eval ' + singleQuote(fillEval);
         lines.push(evalFillCmd + ' || _step_ok=false');
       } else {
         // Playwright fill with retry loop
@@ -1100,7 +1115,16 @@ function generateExpects(step) {
       } else {
         // Fallback to _poll_visible for non-convertible selectors (e.g., css=)
         var sel = singleQuote(expect.selector);
-        lines.push('_poll_visible ' + sel + ' ' + quotedId + ' ' + timeoutArg + sessionArg + ' || ' + timedFailureCall(expect.elementName + ' not visible'));
+        lines.push('if _poll_visible ' + sel + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
+        lines.push('  :');
+        lines.push('else');
+        lines.push('  _probe_status=$?');
+        lines.push('  if [ "$_probe_status" -eq 2 ]; then');
+        lines.push('    ' + failureCall('agent-browser visibility probe failed for ' + expect.elementName));
+        lines.push('  else');
+        lines.push('    ' + timedFailureCall(expect.elementName + ' not visible'));
+        lines.push('  fi');
+        lines.push('fi');
       }
 
     } else if (expect.type === 'element-not-visible') {
@@ -1167,7 +1191,16 @@ function generateExpects(step) {
       var elements = expect.elements;
       var elemNames = elements.map(function(e) { return e.elementName; });
       var selectorArgs = elements.map(function(e) { return singleQuote(e.selector); }).join(' ');
-      lines.push('_poll_or_visible ' + quotedId + ' ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + ' || ' + timedFailureCall('neither ' + elemNames.join(' nor ') + ' visible'));
+      lines.push('if _poll_or_visible ' + quotedId + ' ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + '; then');
+      lines.push('  :');
+      lines.push('else');
+      lines.push('  _probe_status=$?');
+      lines.push('  if [ "$_probe_status" -eq 2 ]; then');
+      lines.push('    ' + failureCall('agent-browser visibility probe failed for ' + elemNames.join(' or ')));
+      lines.push('  else');
+      lines.push('    ' + timedFailureCall('neither ' + elemNames.join(' nor ') + ' visible'));
+      lines.push('  fi');
+      lines.push('fi');
 
     } else if (expect.type === 'deferred') {
       lines.push('echo "TODO: expect \'' + expect.raw + '\' not compiled (Phase 2)"');

@@ -137,7 +137,7 @@ describe('generate() — navigate action', function() {
     const step = makeNavigate('nav-login', '/login');
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('agent-browser open "${BASE_URL}/login"'),
+      script.includes('agent-browser open "${BASE_URL}"\'/login\''),
       'Expected agent-browser open with BASE_URL. Got snippet: ' + script
     );
   });
@@ -145,7 +145,7 @@ describe('generate() — navigate action', function() {
   test("navigate to /dashboard emits correct URL", function() {
     const step = makeNavigate('nav-dashboard', '/dashboard');
     const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(script.includes('agent-browser open "${BASE_URL}/dashboard"'));
+    assert.ok(script.includes('agent-browser open "${BASE_URL}"\'/dashboard\''));
   });
 
   test("navigate failure block calls _handle_failure with step id and message", function() {
@@ -266,7 +266,7 @@ describe('generate() — eval-based click (cssSelector)', function() {
     const step = makeEvalClick('click-submit', 'login_button', 'role=button[name="Sign In"]', 'button[type="submit"]');
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('agent-browser eval "'),
+      script.includes("agent-browser eval '"),
       'Expected agent-browser eval command. Got: ' + script
     );
     assert.ok(
@@ -334,7 +334,7 @@ describe('generate() — eval-based fill (cssSelector)', function() {
     const step = makeEvalFill('fill-email', 'email_input', 'role=textbox[name="Email"]', 'input[name="email"]', 'test@example.com');
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('agent-browser eval "'),
+      script.includes("agent-browser eval '"),
       'Expected agent-browser eval command. Got: ' + script
     );
     assert.ok(
@@ -1141,7 +1141,7 @@ describe('generateExpects() — or-visible', function() {
     );
   });
 
-  test("or-visible uses || _handle_failure pattern with step id", function() {
+  test("or-visible uses status-aware _handle_failure paths with step id", function() {
     const step = makeSnapshot('check-or', 'Take snapshot');
     step.expects = [{
       type: 'or-visible',
@@ -1153,8 +1153,10 @@ describe('generateExpects() — or-visible', function() {
     }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('|| _handle_failure "check-or"'),
-      'or-visible must use || _handle_failure. Got: ' + script
+      script.includes('if _poll_or_visible "check-or"') &&
+        script.includes('_probe_status=$?') &&
+        script.includes('_handle_failure "check-or"'),
+      'or-visible must distinguish probe failure from timeout. Got: ' + script
     );
   });
 
@@ -1277,7 +1279,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     const step = makeCrossSiteNavigate('office-nav', 'office', '/dashboard');
     const script = generate(makeResolved([step]), 'cross-site-test');
     assert.ok(
-      script.includes('"${OFFICE_BASE_URL}/dashboard"'),
+      script.includes('"${OFFICE_BASE_URL}"\'/dashboard\''),
       'cross-site navigate must use OFFICE_BASE_URL. Got: ' + script
     );
   });
@@ -1286,7 +1288,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     const step = makeCrossSiteNavigate('app-nav', 'app', '/home');
     const script = generate(makeResolved([step]), 'cross-site-test');
     assert.ok(
-      script.includes('"${APP_BASE_URL}/home"'),
+      script.includes('"${APP_BASE_URL}"\'/home\''),
       'cross-site navigate for app site must use APP_BASE_URL. Got: ' + script
     );
   });
@@ -1940,15 +1942,15 @@ describe('v2.0 poll-until — poll helpers emitted in generateRuntimeSupport', f
     );
   });
 
-  test("poll helpers use || true after $() capture to prevent set -e abort", function() {
+  test("positive visibility polling preserves command failures instead of masking them", function() {
     const step = makeNavigate('nav', '/home');
     const script = generate(makeResolved([step]), 'test-flow');
     const pollStart = script.indexOf('_poll_visible()');
     const pollEnd = script.indexOf('\n}', pollStart);
     const pollBody = script.slice(pollStart, pollEnd + 2);
     assert.ok(
-      pollBody.includes('|| true'),
-      'Expected || true after $() capture in poll helper. Got body: ' + pollBody
+      pollBody.includes('if ! _result=$(') && pollBody.includes('then return 2; fi'),
+      'Expected status-safe command capture in poll helper. Got body: ' + pollBody
     );
   });
 

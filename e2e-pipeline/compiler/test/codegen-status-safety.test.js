@@ -87,6 +87,42 @@ function runPollNotVisible(output, status, session) {
   });
 }
 
+function runVisiblePoll(helper, output, status, session) {
+  return withFakeBrowser(visibilityBrowserScript(), function(binDir) {
+    const logPath = path.join(binDir, 'browser.log');
+    const support = generateRuntimeSupport();
+    const invocation = helper === '_poll_or_visible'
+      ? '_poll_or_visible "check-choice" 1 "' + (session || '') + '" "#first" "#second"'
+      : '_poll_visible "#dialog" "check-dialog" 1 "' + (session || '') + '"';
+    const result = runBash([
+      'set -uo pipefail',
+      'CONTINUE_ON_ERROR=false',
+      support,
+      'set +e',
+      invocation,
+      'exit $?',
+    ].join('\n'), binDir, {
+      AGENT_BROWSER_OUTPUT: output,
+      AGENT_BROWSER_STATUS: String(status),
+      AGENT_BROWSER_LOG: logPath,
+    });
+    result.browserLog = fs.existsSync(logPath) ? fs.readFileSync(logPath, 'utf8') : '';
+    return result;
+  });
+}
+
+function artifactName(stepId) {
+  return withFakeBrowser('#!/usr/bin/env bash\nexit 0\n', function(binDir) {
+    const result = runBash([
+      'set -uo pipefail',
+      generateRuntimeSupport(),
+      '_artifact_name "$STEP_ID"',
+    ].join('\n'), binDir, { STEP_ID: stepId });
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    return result.stdout;
+  });
+}
+
 function makeTextFlow(expect, session) {
   return {
     name: 'status-safe-text-assertion',
@@ -125,6 +161,29 @@ function runNotVisibleFlow(output, status) {
       AGENT_BROWSER_OUTPUT: output,
       AGENT_BROWSER_STATUS: String(status),
       AGENT_BROWSER_LOG: logPath,
+    });
+  });
+}
+
+function runVisibleFlow(expect, output, status) {
+  return withFakeBrowser(visibilityBrowserScript(), function(binDir) {
+    const logPath = path.join(binDir, 'browser.log');
+    const script = generate({
+      name: 'status-safe-visible',
+      description: 'Runtime positive visibility status propagation regression',
+      steps: [{
+        id: 'check-choice',
+        action: 'Wait 0',
+        type: 'wait',
+        operands: { seconds: 0 },
+        expects: [expect],
+      }],
+    }, 'status-safe-visible');
+    return runBash(script, binDir, {
+      AGENT_BROWSER_OUTPUT: output,
+      AGENT_BROWSER_STATUS: String(status),
+      AGENT_BROWSER_LOG: logPath,
+      WAIT_TIMEOUT: '1',
     });
   });
 }
@@ -401,6 +460,46 @@ describe('_poll_not_visible runtime status safety', function() {
   });
 });
 
+describe('positive visibility polling runtime status safety', function() {
+  for (const helper of ['_poll_visible', '_poll_or_visible']) {
+    test(helper + ' returns status 2 when agent-browser command fails', function() {
+      const result = runVisiblePoll(helper, '', 7);
+      assert.equal(result.status, 2, result.stderr);
+    });
+
+    test(helper + ' returns status 2 when agent-browser output is invalid', function() {
+      const result = runVisiblePoll(helper, 'unexpected', 0);
+      assert.equal(result.status, 2, result.stderr);
+    });
+  }
+
+  const positiveExpects = [
+    {
+      label: 'element-visible',
+      value: { type: 'element-visible', elementName: 'custom', selector: 'css=.custom' },
+    },
+    {
+      label: 'or-visible',
+      value: {
+        type: 'or-visible',
+        elements: [
+          { elementName: 'first', selector: 'css=.first' },
+          { elementName: 'second', selector: 'css=.second' },
+        ],
+      },
+    },
+  ];
+
+  for (const expect of positiveExpects) {
+    test('generated ' + expect.label + ' reports command failure as infrastructure failure', function() {
+      const result = runVisibleFlow(expect.value, '', 7);
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assert.match(result.stdout, /agent-browser visibility probe failed/);
+      assert.doesNotMatch(result.stdout, /after 1s/);
+    });
+  }
+});
+
 describe('generated element-not-visible status reporting', function() {
   test('reports command failure as infrastructure failure', function() {
     const result = runNotVisibleFlow('', 7);
@@ -559,6 +658,91 @@ describe('named-session failure diagnostics', function() {
   });
 });
 
+describe('generated action shell-data safety', function() {
+  test('navigate keeps hostile URL paths and failure messages literal', function() {
+    withFakeBrowser([
+      '#!/usr/bin/env bash',
+      'printf \'%s\\n\' "$*" >> "${AGENT_BROWSER_LOG:?}"',
+      'for _arg in "$@"; do [ "$_arg" = "open" ] && exit 7; done',
+      'exit 0',
+    ].join('\n'), function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const markerPath = path.join(binDir, 'navigate-expanded');
+      const hostilePath = '/owned"$(touch "$ACTION_MARKER")`touch "$ACTION_MARKER"`$ACTION_MARKER';
+      const script = generate({
+        name: 'hostile-navigate-data',
+        variables: { base_url: 'https://example.test' },
+        steps: [{
+          id: 'navigate-hostile', action: 'Navigate hostile path', type: 'navigate',
+          operands: { urlPath: hostilePath },
+        }],
+      }, 'hostile-navigate-data');
+      const result = runBash(script, binDir, {
+        ACTION_MARKER: markerPath,
+        AGENT_BROWSER_LOG: logPath,
+      });
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assert.equal(fs.existsSync(markerPath), false, 'navigate shell data must not execute');
+      assert.match(fs.readFileSync(logPath, 'utf8'), /\$\(touch/);
+      assert.ok(result.stdout.includes('navigate to ' + hostilePath + ' failed'));
+    });
+  });
+
+  test('eval click keeps a hostile CSS selector literal', function() {
+    withFakeBrowser('#!/usr/bin/env bash\nprintf \'%s\\n\' "$*" >> "${AGENT_BROWSER_LOG:?}"\nfor _arg in "$@"; do [ "$_arg" = "eval" ] && printf \'%s\' "${!#}" > "${LAST_ARGUMENT_LOG:?}"; done\nexit 0\n', function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const lastArgumentPath = path.join(binDir, 'last-argument.log');
+      const markerPath = path.join(binDir, 'click-expanded');
+      const hostileSelector = '[data-value="$(touch \\"$ACTION_MARKER\\")`touch "$ACTION_MARKER"`$ACTION_MARKER\'s"]';
+      const script = generate({
+        name: 'hostile-click-data',
+        steps: [{
+          id: 'click-hostile', action: 'Click hostile selector', type: 'click',
+          operands: { selector: 'css=' + hostileSelector, cssSelector: hostileSelector },
+        }],
+      }, 'hostile-click-data');
+      const result = runBash(script, binDir, {
+        ACTION_MARKER: markerPath,
+        AGENT_BROWSER_LOG: logPath,
+        LAST_ARGUMENT_LOG: lastArgumentPath,
+      });
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      assert.equal(fs.existsSync(markerPath), false, 'click selector shell data must not execute');
+      assert.match(fs.readFileSync(logPath, 'utf8'), /\$\(touch/);
+      assert.ok(fs.readFileSync(lastArgumentPath, 'utf8').includes(JSON.stringify(hostileSelector)));
+    });
+  });
+
+  test('eval fill keeps hostile CSS selector and value literal', function() {
+    withFakeBrowser('#!/usr/bin/env bash\nprintf \'%s\\n\' "$*" >> "${AGENT_BROWSER_LOG:?}"\nfor _arg in "$@"; do [ "$_arg" = "eval" ] && printf \'%s\' "${!#}" > "${LAST_ARGUMENT_LOG:?}"; done\nexit 0\n', function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const lastArgumentPath = path.join(binDir, 'last-argument.log');
+      const markerPath = path.join(binDir, 'fill-expanded');
+      const hostileSelector = 'input[data-value="$(touch \\"$ACTION_MARKER\\")`touch "$ACTION_MARKER"`"]';
+      const hostileValue = 'value\'"$(touch "$ACTION_MARKER")`touch "$ACTION_MARKER"`$ACTION_MARKER\\tail';
+      const script = generate({
+        name: 'hostile-fill-data',
+        steps: [{
+          id: 'fill-hostile', action: 'Fill hostile data', type: 'fill',
+          operands: { selector: 'css=' + hostileSelector, cssSelector: hostileSelector, value: hostileValue },
+        }],
+      }, 'hostile-fill-data');
+      const result = runBash(script, binDir, {
+        ACTION_MARKER: markerPath,
+        AGENT_BROWSER_LOG: logPath,
+        LAST_ARGUMENT_LOG: lastArgumentPath,
+      });
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      assert.equal(fs.existsSync(markerPath), false, 'fill shell data must not execute');
+      const browserLog = fs.readFileSync(logPath, 'utf8');
+      assert.match(browserLog, /\$\(touch/);
+      const evalSource = fs.readFileSync(lastArgumentPath, 'utf8');
+      assert.ok(evalSource.includes(JSON.stringify(hostileSelector)));
+      assert.ok(evalSource.includes(JSON.stringify(hostileValue)));
+    });
+  });
+});
+
 describe('generated assertion failure-message shell safety', function() {
   test('quotes every user-controlled assertion diagnostic as literal shell data', function() {
     const hostile = 'literal "quote" \'single\' $EXPAND $(touch "$FAILURE_MARKER") `touch "$FAILURE_MARKER"` \\slash\nnext-line';
@@ -613,6 +797,20 @@ describe('generated assertion failure-message shell safety', function() {
 });
 
 describe('step ID runtime and artifact safety', function() {
+  test('distinct unsafe step IDs produce distinct path-safe artifact names', function() {
+    const first = artifactName('checkout/payment');
+    const second = artifactName('checkout?payment');
+    assert.notEqual(first, second);
+    for (const name of [first, second]) {
+      assert.doesNotMatch(name, /[\\/]/);
+      assert.doesNotMatch(name, /^\.\.?$/);
+    }
+  });
+
+  test('already-safe step IDs keep their readable artifact names', function() {
+    assert.equal(artifactName('checkout-payment_2.0'), 'checkout-payment_2.0');
+  });
+
   test('metrics JSON decodes the exact raw step ID', function() {
     withIdentityReports(COMPLEX_STEP_ID, function(report) {
       assert.equal(report.result.status, 0, report.result.stdout + report.result.stderr);
@@ -708,6 +906,36 @@ describe('step ID runtime and artifact safety', function() {
         path.resolve(screenshotPath).startsWith(path.resolve(screenshotDir) + path.sep),
         'requested screenshot escaped artifact directory: ' + screenshotPath
       );
+    });
+  });
+
+  test('requested screenshots for distinct unsafe step IDs do not overwrite each other', function() {
+    withFakeBrowser([
+      '#!/usr/bin/env bash',
+      'printf \'%s\\n\' "$*" >> "${AGENT_BROWSER_LOG:?}"',
+      'exit 0',
+    ].join('\n'), function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const script = generate({
+        name: 'distinct-requested-screenshots',
+        steps: ['checkout/payment', 'checkout?payment'].map(function(id) {
+          return {
+            id,
+            action: 'Wait 0',
+            type: 'wait',
+            operands: { seconds: 0 },
+            screenshot: true,
+          };
+        }),
+      }, 'distinct-requested-screenshots');
+      const result = runBash(script, binDir, { AGENT_BROWSER_LOG: logPath });
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      const screenshotPaths = fs.readFileSync(logPath, 'utf8')
+        .split('\n')
+        .filter(line => line.includes('screenshot '))
+        .map(line => line.slice(line.indexOf('screenshot ') + 'screenshot '.length));
+      assert.equal(screenshotPaths.length, 2);
+      assert.notEqual(screenshotPaths[0], screenshotPaths[1]);
     });
   });
 });
