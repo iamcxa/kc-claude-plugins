@@ -11,6 +11,24 @@ const { generate, generateRuntimeSupport } = require('../codegen.js');
 
 const RUNTIME_BASH = fs.existsSync('/bin/bash') ? '/bin/bash' : 'bash';
 
+function resolveXmllint(env) {
+  const commands = env.XMLLINT ? [env.XMLLINT] : ['xmllint'];
+
+  for (const command of commands) {
+    const probe = childProcess.spawnSync(command, ['--version'], {
+      env,
+      stdio: 'ignore',
+    });
+    if (!probe.error && probe.status === 0) return command;
+  }
+  return null;
+}
+
+const XMLLINT_COMMAND = resolveXmllint(process.env);
+const XMLLINT_TEST_OPTIONS = XMLLINT_COMMAND
+  ? {}
+  : { skip: 'xmllint is unavailable via XMLLINT or PATH' };
+
 function writeExecutable(filePath, contents) {
   fs.writeFileSync(filePath, contents, 'utf8');
   fs.chmodSync(filePath, 0o755);
@@ -186,6 +204,40 @@ function withIdentityReports(stepId, callback) {
     return callback({ result, metricsPath, junitPath });
   });
 }
+
+describe('xmllint test dependency discovery', function() {
+  test('uses a PATH-provided xmllint when no fixed absolute path is available', function() {
+    const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-xmllint-path-'));
+    try {
+      writeExecutable(path.join(binDir, 'xmllint'), '#!/bin/sh\nexit 0\n');
+      assert.equal(resolveXmllint({ PATH: binDir }), 'xmllint');
+    } finally {
+      fs.rmSync(binDir, { recursive: true, force: true });
+    }
+  });
+
+  test('reports xmllint unavailable when neither override nor PATH can provide it', function() {
+    const emptyBinDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-xmllint-empty-'));
+    try {
+      assert.equal(resolveXmllint({ PATH: emptyBinDir }), null);
+    } finally {
+      fs.rmSync(emptyBinDir, { recursive: true, force: true });
+    }
+  });
+
+  test('treats an explicit unavailable XMLLINT override as authoritative', function() {
+    const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-xmllint-override-'));
+    try {
+      writeExecutable(path.join(binDir, 'xmllint'), '#!/bin/sh\nexit 0\n');
+      assert.equal(resolveXmllint({
+        PATH: binDir,
+        XMLLINT: path.join(binDir, 'missing-xmllint'),
+      }), null);
+    } finally {
+      fs.rmSync(binDir, { recursive: true, force: true });
+    }
+  });
+});
 
 describe('cross-site polling assertion runtime safety', function() {
   test('convertible element-visible snapshots use the named session', function() {
@@ -515,11 +567,11 @@ describe('step ID runtime and artifact safety', function() {
     });
   });
 
-  test('JUnit XML decodes the exact raw step ID including control whitespace', function() {
+  test('JUnit XML decodes the exact raw step ID including control whitespace', XMLLINT_TEST_OPTIONS, function() {
     withIdentityReports(COMPLEX_STEP_ID, function(report) {
       assert.equal(report.result.status, 0, report.result.stdout + report.result.stderr);
       const xpath = childProcess.spawnSync(
-        '/usr/bin/xmllint',
+        XMLLINT_COMMAND,
         ['--xpath', 'string(/testsuites/testsuite/testcase/@name)', report.junitPath],
         { encoding: 'utf8' }
       );
