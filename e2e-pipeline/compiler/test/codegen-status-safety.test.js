@@ -7,7 +7,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 
-const { generate, generateRuntimeSupport } = require('../codegen.js');
+const { generate, generateRuntimeSupport, singleQuote } = require('../codegen.js');
 
 const RUNTIME_BASH = fs.existsSync('/bin/bash') ? '/bin/bash' : 'bash';
 
@@ -555,6 +555,59 @@ describe('named-session failure diagnostics', function() {
       assert.equal(result.status, 1, result.stdout + result.stderr);
       assertOnlyNamedDiagnosticCalls(fs.readFileSync(logPath, 'utf8'));
     });
+  });
+});
+
+describe('generated assertion failure-message shell safety', function() {
+  test('quotes every user-controlled assertion diagnostic as literal shell data', function() {
+    const hostile = 'literal "quote" \'single\' $EXPAND $(touch "$FAILURE_MARKER") `touch "$FAILURE_MARKER"` \\slash\nnext-line';
+    const step = {
+      id: 'hostile-assertion-messages',
+      action: 'Wait 0',
+      type: 'wait',
+      operands: { seconds: 0 },
+      expects: [
+        { type: 'element-visible', elementName: hostile, selector: 'role=heading[name="Home"]' },
+        { type: 'element-visible', elementName: hostile, selector: 'css=.home' },
+        { type: 'element-not-visible', elementName: hostile, selector: 'role=dialog' },
+        { type: 'url-contains', value: hostile },
+        { type: 'url-not-contains', value: hostile },
+        { type: 'text-visible', text: hostile },
+        { type: 'text-not-visible', text: hostile },
+        {
+          type: 'or-visible',
+          elements: [
+            { elementName: hostile, selector: 'role=heading' },
+            { elementName: hostile, selector: 'role=dialog' },
+          ],
+        },
+      ],
+    };
+    const script = generate({ name: 'hostile-assertion-messages', steps: [step] }, 'hostile-assertion-messages');
+    const failureLines = script.split('\n').filter(line => line.includes('_handle_failure "hostile-assertion-messages"'));
+    const timeout = '"${WAIT_TIMEOUT:-10}"';
+    const expectedShellMessages = [
+      singleQuote('agent-browser snapshot probe failed for ' + hostile),
+      singleQuote(hostile + ' not in a11y tree after ') + timeout + singleQuote('s'),
+      singleQuote(hostile + ' not visible after ') + timeout + singleQuote('s'),
+      singleQuote('agent-browser visibility probe failed for ' + hostile),
+      singleQuote(hostile + ' still visible after ') + timeout + singleQuote('s (expected not visible)'),
+      singleQuote('url does not contain ' + hostile + ' after ') + timeout + singleQuote('s'),
+      singleQuote('url still contains ' + hostile + ' after ') + timeout + singleQuote('s'),
+      singleQuote("text '" + hostile + "' not found on page"),
+      singleQuote("text '" + hostile + "' should NOT be on page but was found"),
+      singleQuote('neither ' + hostile + ' nor ' + hostile + ' visible after ') + timeout + singleQuote('s'),
+    ];
+
+    expectedShellMessages.forEach(function(message) {
+      assert.ok(
+        script.includes(message),
+        'expected shell-quoted literal failure message: ' + message + '\nGenerated failure calls:\n' + failureLines.join('\n')
+      );
+    });
+
+    const syntax = childProcess.spawnSync(RUNTIME_BASH, ['-n'], { input: script, encoding: 'utf8' });
+    assert.equal(syntax.status, 0, syntax.stdout + syntax.stderr);
   });
 });
 

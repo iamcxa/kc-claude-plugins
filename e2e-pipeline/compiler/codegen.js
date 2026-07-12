@@ -1014,6 +1014,15 @@ function generateExpects(step) {
   // Timeout argument: literal number if step.timeout set, else env var default
   var timeoutArg = (step.timeout != null) ? String(step.timeout) : '"${WAIT_TIMEOUT:-10}"';
 
+  function failureCall(message) {
+    return '_handle_failure ' + quotedId + ' ' + singleQuote(message) + failureSessionArg;
+  }
+
+  function timedFailureCall(prefix, suffix) {
+    return '_handle_failure ' + quotedId + ' ' + singleQuote(prefix + ' after ') +
+      timeoutArg + singleQuote('s' + (suffix || '')) + failureSessionArg;
+  }
+
   for (var i = 0; i < step.expects.length; i++) {
     var expect = step.expects[i];
 
@@ -1021,65 +1030,60 @@ function generateExpects(step) {
       // Prefer snapshot-based check (agent-browser "is visible" fails in headless CI on Linux)
       var a11yPattern = selectorToA11yPattern(expect.selector);
       if (a11yPattern) {
-        var failMsg = expect.elementName + ' not in a11y tree after ' + timeoutArg + 's';
         lines.push('if _poll_snapshot_contains ' + singleQuote(a11yPattern) + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
         lines.push('  :');
         lines.push('else');
         lines.push('  _probe_status=$?');
         lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-        lines.push('    _handle_failure ' + quotedId + ' "agent-browser snapshot probe failed for ' + expect.elementName + '"' + failureSessionArg);
+        lines.push('    ' + failureCall('agent-browser snapshot probe failed for ' + expect.elementName));
         lines.push('  else');
-        lines.push('    _handle_failure ' + quotedId + ' "' + failMsg + '"' + failureSessionArg);
+        lines.push('    ' + timedFailureCall(expect.elementName + ' not in a11y tree'));
         lines.push('  fi');
         lines.push('fi');
       } else {
         // Fallback to _poll_visible for non-convertible selectors (e.g., css=)
         var sel = singleQuote(expect.selector);
-        var failMsg = expect.elementName + ' not visible after ' + timeoutArg + 's';
-        lines.push('_poll_visible ' + sel + ' ' + quotedId + ' ' + timeoutArg + sessionArg + ' || _handle_failure ' + quotedId + ' "' + failMsg + '"' + failureSessionArg);
+        lines.push('_poll_visible ' + sel + ' ' + quotedId + ' ' + timeoutArg + sessionArg + ' || ' + timedFailureCall(expect.elementName + ' not visible'));
       }
 
     } else if (expect.type === 'element-not-visible') {
       // Poll until element is not visible (inverted logic — CODEGEN-01 Pitfall 4)
       // Keep _poll_not_visible — headless CI issue is less critical for "not visible" checks
       var sel = singleQuote(expect.selector);
-      var failMsg = expect.elementName + ' still visible after ' + timeoutArg + 's (expected not visible)';
       lines.push('if _poll_not_visible ' + sel + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
       lines.push('  :');
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    _handle_failure ' + quotedId + ' "agent-browser visibility probe failed for ' + expect.elementName + '"' + failureSessionArg);
+      lines.push('    ' + failureCall('agent-browser visibility probe failed for ' + expect.elementName));
       lines.push('  else');
-      lines.push('    _handle_failure ' + quotedId + ' "' + failMsg + '"' + failureSessionArg);
+      lines.push('    ' + timedFailureCall(expect.elementName + ' still visible', ' (expected not visible)'));
       lines.push('  fi');
       lines.push('fi');
 
     } else if (expect.type === 'url-contains') {
       // Poll until URL contains value (CODEGEN-01)
-      var failMsg = 'url does not contain ' + expect.value + ' after ' + timeoutArg + 's';
       lines.push('if _poll_url_contains ' + singleQuote(expect.value) + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
       lines.push('  :');
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    _handle_failure ' + quotedId + ' "agent-browser URL probe failed"' + failureSessionArg);
+      lines.push('    ' + failureCall('agent-browser URL probe failed'));
       lines.push('  else');
-      lines.push('    _handle_failure ' + quotedId + ' "' + failMsg + '"' + failureSessionArg);
+      lines.push('    ' + timedFailureCall('url does not contain ' + expect.value));
       lines.push('  fi');
       lines.push('fi');
 
     } else if (expect.type === 'url-not-contains') {
       // Poll until URL does NOT contain value — redirects (e.g., login → dashboard) need time
-      var failMsg = 'url still contains ' + expect.value + ' after ' + timeoutArg + 's';
       lines.push('if _poll_url_not_contains ' + singleQuote(expect.value) + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
       lines.push('  :');
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    _handle_failure ' + quotedId + ' "agent-browser URL probe failed"' + failureSessionArg);
+      lines.push('    ' + failureCall('agent-browser URL probe failed'));
       lines.push('  else');
-      lines.push('    _handle_failure ' + quotedId + ' "' + failMsg + '"' + failureSessionArg);
+      lines.push('    ' + timedFailureCall('url still contains ' + expect.value));
       lines.push('  fi');
       lines.push('fi');
 
@@ -1087,27 +1091,26 @@ function generateExpects(step) {
       // Instant check — snapshot + grep is too heavy for polling.
       var quotedText = singleQuote(expect.text);
       lines.push('if ! _snapshot=$(_capture_snapshot ' + quotedSession + '); then');
-      lines.push('  _handle_failure ' + quotedId + ' "agent-browser snapshot failed"' + failureSessionArg);
+      lines.push('  ' + failureCall('agent-browser snapshot failed'));
       lines.push('elif ! echo "$_snapshot" | grep -qF ' + quotedText + '; then');
-      lines.push('  _handle_failure ' + quotedId + ' "text \'' + expect.text + '\' not found on page"' + failureSessionArg);
+      lines.push('  ' + failureCall("text '" + expect.text + "' not found on page"));
       lines.push('fi');
 
     } else if (expect.type === 'text-not-visible') {
       // Inverted snapshot grep — fail if the text IS found on page.
       var quotedText = singleQuote(expect.text);
       lines.push('if ! _snapshot=$(_capture_snapshot ' + quotedSession + '); then');
-      lines.push('  _handle_failure ' + quotedId + ' "agent-browser snapshot failed"' + failureSessionArg);
+      lines.push('  ' + failureCall('agent-browser snapshot failed'));
       lines.push('elif echo "$_snapshot" | grep -qF ' + quotedText + '; then');
-      lines.push('  _handle_failure ' + quotedId + ' "text \'' + expect.text + '\' should NOT be on page but was found"' + failureSessionArg);
+      lines.push('  ' + failureCall("text '" + expect.text + "' should NOT be on page but was found"));
       lines.push('fi');
 
     } else if (expect.type === 'or-visible') {
       // Poll until either element is visible (CODEGEN-01)
       var elements = expect.elements;
       var elemNames = elements.map(function(e) { return e.elementName; });
-      var neitherMsg = 'neither ' + elemNames.join(' nor ') + ' visible after ' + timeoutArg + 's';
       var selectorArgs = elements.map(function(e) { return singleQuote(e.selector); }).join(' ');
-      lines.push('_poll_or_visible ' + quotedId + ' ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + ' || _handle_failure ' + quotedId + ' "' + neitherMsg + '"' + failureSessionArg);
+      lines.push('_poll_or_visible ' + quotedId + ' ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + ' || ' + timedFailureCall('neither ' + elemNames.join(' nor ') + ' visible'));
 
     } else if (expect.type === 'deferred') {
       lines.push('echo "TODO: expect \'' + expect.raw + '\' not compiled (Phase 2)"');
