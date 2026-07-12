@@ -96,6 +96,17 @@ test('parse: invalid site aliases do not register injected variable collisions',
   }
 });
 
+test('parse: explicit uppercase BASE_URL owns the single-site injected variable', function() {
+  const result = parseTemporaryFlow({
+    name: 'uppercase-base-url',
+    mapping: 'site-a',
+    variables: { BASE_URL: 'https://override.test' },
+    steps: [{ id: 'home', type: 'navigate', action: 'Navigate to /dashboard' }],
+  });
+
+  assert.deepEqual(result.errors, [], JSON.stringify(result.errors));
+});
+
 test('parse: happy path — loads simple-flow.yaml and resolves mapping', async () => {
   const flowPath = path.join(FIXTURES, 'simple-flow.yaml');
   const result = parse(flowPath, FIXTURES);

@@ -59,7 +59,7 @@ function validateFlowVariables(flow, errors) {
         register(siteName, 'Injected site variable for', siteVariable);
       }
     }
-  } else if (flow.mapping && !Object.prototype.hasOwnProperty.call(variables, 'base_url')) {
+  } else if (flow.mapping && !sourcesByNormalizedKey.has('BASE_URL')) {
     register('base_url', 'Injected mapping variable', 'BASE_URL');
   }
 }

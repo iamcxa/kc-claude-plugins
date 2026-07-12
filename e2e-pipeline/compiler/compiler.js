@@ -104,7 +104,11 @@ async function compile(flowPath, mappingDir, outputDir, options) {
 
     // Auto-inject base_url from mapping when flow has no variables block
     // Prevents unbound ${BASE_URL} in navigate commands under set -u
-    if (!resolveResult.resolved.variables || !('base_url' in resolveResult.resolved.variables)) {
+    var singleSiteVariables = resolveResult.resolved.variables;
+    var hasBaseUrl = singleSiteVariables && Object.keys(singleSiteVariables).some(function(variableName) {
+      return variableName.toUpperCase() === 'BASE_URL';
+    });
+    if (!hasBaseUrl) {
       if (!resolveResult.resolved.variables) {
         resolveResult.resolved.variables = {};
       }

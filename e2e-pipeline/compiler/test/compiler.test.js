@@ -564,6 +564,27 @@ describe('compile() — cross-site site-name validation', function() {
 });
 
 describe('compile() — normalized flow variable validation', function() {
+  test('accepts explicit uppercase BASE_URL without injecting a duplicate assignment', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'uppercase-base-url.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'uppercase-base-url',
+      variables: { BASE_URL: 'https://override.test' },
+      mapping: 'site-a',
+      steps: [{ id: 'home', type: 'navigate', action: 'Navigate to /dashboard' }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, true, JSON.stringify(result.errors));
+      const output = fs.readFileSync(result.outputPath, 'utf8');
+      assert.equal(output.match(/^BASE_URL="\$\{1:/gm).length, 1, output);
+      assert.match(output, /E2E_BASE_URL:-https:\/\/override\.test/);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   test('reports invalid site aliases without cascading injected-variable collisions', async function() {
     const cases = [
       {
