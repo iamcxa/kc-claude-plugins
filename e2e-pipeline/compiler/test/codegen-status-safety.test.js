@@ -126,6 +126,95 @@ function snapshotBrowserScript() {
   ].join('\n');
 }
 
+function assertionBrowserScript() {
+  return [
+    '#!/usr/bin/env bash',
+    'printf \'%s\\n\' "$*" >> "${AGENT_BROWSER_LOG:?}"',
+    'for _arg in "$@"; do',
+    '  if [ "$_arg" = "snapshot" ]; then',
+    '    if [ "${SNAPSHOT_STATUS:-0}" -ne 0 ]; then exit "$SNAPSHOT_STATUS"; fi',
+    '    printf \'%s\\n\' "${SNAPSHOT_OUTPUT:-}"',
+    '    exit 0',
+    '  fi',
+    'done',
+    'if [ "${*: -2}" = "get url" ]; then',
+    '  if [ "${URL_STATUS:-0}" -ne 0 ]; then exit "$URL_STATUS"; fi',
+    '  printf \'%s\\n\' "${URL_OUTPUT:-}"',
+    '  exit 0',
+    'fi',
+    'exit 0',
+  ].join('\n');
+}
+
+function runPollingAssertion(expect, options) {
+  const opts = options || {};
+  return withFakeBrowser(assertionBrowserScript(), function(binDir) {
+    const logPath = path.join(binDir, 'browser.log');
+    const script = generate(makeTextFlow(expect, opts.session || 'office'), 'status-safe-polling-assertion');
+    const result = runBash(script, binDir, {
+      AGENT_BROWSER_LOG: logPath,
+      SNAPSHOT_OUTPUT: opts.snapshotOutput || '',
+      SNAPSHOT_STATUS: String(opts.snapshotStatus || 0),
+      URL_OUTPUT: opts.urlOutput || '',
+      URL_STATUS: String(opts.urlStatus || 0),
+      WAIT_TIMEOUT: '1',
+    });
+    result.browserLog = fs.existsSync(logPath) ? fs.readFileSync(logPath, 'utf8') : '';
+    return result;
+  });
+}
+
+describe('cross-site polling assertion runtime safety', function() {
+  test('convertible element-visible snapshots use the named session', function() {
+    const result = runPollingAssertion({
+      type: 'element-visible', raw: 'Dashboard heading visible', elementName: 'Dashboard heading',
+      selector: 'role=heading[name="Dashboard"]',
+    }, { snapshotOutput: 'heading "Dashboard"' });
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.match(result.browserLog, /--session office snapshot/);
+    assert.doesNotMatch(result.browserLog, /^snapshot$/m);
+  });
+
+  test('url contains and url not contains use the named session', function() {
+    const contains = runPollingAssertion(
+      { type: 'url-contains', raw: 'url contains dashboard', value: 'dashboard' },
+      { urlOutput: 'https://example.test/dashboard' }
+    );
+    const notContains = runPollingAssertion(
+      { type: 'url-not-contains', raw: 'url does not contain login', value: 'login' },
+      { urlOutput: 'https://example.test/dashboard' }
+    );
+    assert.equal(contains.status, 0, contains.stdout + contains.stderr);
+    assert.equal(notContains.status, 0, notContains.stdout + notContains.stderr);
+    assert.match(contains.browserLog, /--session office get url/);
+    assert.match(notContains.browserLog, /--session office get url/);
+    assert.doesNotMatch(contains.browserLog, /^get url$/m);
+    assert.doesNotMatch(notContains.browserLog, /^get url$/m);
+  });
+
+  test('snapshot command failure is reported as infrastructure failure', function() {
+    const result = runPollingAssertion({
+      type: 'element-visible', raw: 'Dashboard heading visible', elementName: 'Dashboard heading',
+      selector: 'role=heading[name="Dashboard"]',
+    }, { snapshotStatus: 7 });
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stdout, /agent-browser snapshot probe failed/);
+    assert.doesNotMatch(result.stdout, /not in a11y tree after/);
+  });
+
+  test('url probe failure and invalid output are infrastructure failures', function() {
+    for (const options of [{ urlStatus: 7 }, { urlOutput: 'not-a-url' }]) {
+      const result = runPollingAssertion(
+        { type: 'url-not-contains', raw: 'url does not contain login', value: 'login' },
+        options
+      );
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assert.match(result.stdout, /agent-browser URL probe failed/);
+      assert.doesNotMatch(result.stdout, /url still contains/);
+    }
+  });
+});
+
 function runTextFlow(expect, options) {
   const opts = options || {};
   return withFakeBrowser(snapshotBrowserScript(), function(binDir) {

@@ -382,10 +382,16 @@ function generateRuntimeSupport() {
     '  local _value="$1"',
     '  local _step_id="$2"',
     '  local _timeout="${3:-10}"',
+    '  local _session="${4:-}"',
     '  local _count=0',
     '  local _url',
     '  while [ "$_count" -lt "$_timeout" ]; do',
-    '    _url=$(agent-browser get url 2>/dev/null) || true',
+    '    if [ -n "$_session" ]; then',
+    '      if ! _url=$(agent-browser --session "$_session" get url 2>/dev/null); then return 2; fi',
+    '    else',
+    '      if ! _url=$(agent-browser get url 2>/dev/null); then return 2; fi',
+    '    fi',
+    '    case "$_url" in *://*|about:*|data:*|file:*) ;; *) return 2 ;; esac',
     '    [[ "$_url" == *"$_value"* ]] && return 0',
     '    sleep 1',
     '    _count=$((_count + 1))',
@@ -397,10 +403,16 @@ function generateRuntimeSupport() {
     '  local _value="$1"',
     '  local _step_id="$2"',
     '  local _timeout="${3:-10}"',
+    '  local _session="${4:-}"',
     '  local _count=0',
     '  local _url',
     '  while [ "$_count" -lt "$_timeout" ]; do',
-    '    _url=$(agent-browser get url 2>/dev/null) || true',
+    '    if [ -n "$_session" ]; then',
+    '      if ! _url=$(agent-browser --session "$_session" get url 2>/dev/null); then return 2; fi',
+    '    else',
+    '      if ! _url=$(agent-browser get url 2>/dev/null); then return 2; fi',
+    '    fi',
+    '    case "$_url" in *://*|about:*|data:*|file:*) ;; *) return 2 ;; esac',
     '    [[ "$_url" != *"$_value"* ]] && return 0',
     '    sleep 1',
     '    _count=$((_count + 1))',
@@ -439,9 +451,16 @@ function generateRuntimeSupport() {
     '  local _pattern="$1"',
     '  local _step_id="$2"',
     '  local _timeout="${3:-10}"',
+    '  local _session="${4:-}"',
     '  local _count=0',
+    '  local _snapshot',
     '  while [ "$_count" -lt "$_timeout" ]; do',
-    '    if agent-browser snapshot 2>/dev/null | grep -Fq "$_pattern"; then',
+    '    if [ -n "$_session" ]; then',
+    '      if ! _snapshot=$(agent-browser --session "$_session" snapshot 2>/dev/null); then return 2; fi',
+    '    else',
+    '      if ! _snapshot=$(agent-browser snapshot 2>/dev/null); then return 2; fi',
+    '    fi',
+    '    if printf \'%s\\n\' "$_snapshot" | grep -Fq "$_pattern"; then',
     '      return 0',
     '    fi',
     '    sleep 1',
@@ -927,7 +946,7 @@ function generateAction(step, stepIndex, totalSteps) {
  * (threaded from YAML wait: field via resolver), defaulting to ${WAIT_TIMEOUT:-10}.
  *
  * Cross-site: when step.session is set, poll helpers receive session as argument.
- * url-not-contains and text-visible remain instant checks (no poll).
+ * Text assertions remain instant checks; URL assertions poll the named session.
  */
 function generateExpects(step) {
   if (!step.expects || step.expects.length === 0) {
@@ -950,7 +969,16 @@ function generateExpects(step) {
       var a11yPattern = selectorToA11yPattern(expect.selector);
       if (a11yPattern) {
         var failMsg = expect.elementName + ' not in a11y tree after ' + timeoutArg + 's';
-        lines.push('_poll_snapshot_contains ' + singleQuote(a11yPattern) + ' "' + step.id + '" ' + timeoutArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
+        lines.push('if _poll_snapshot_contains ' + singleQuote(a11yPattern) + ' "' + step.id + '" ' + timeoutArg + sessionArg + '; then');
+        lines.push('  :');
+        lines.push('else');
+        lines.push('  _probe_status=$?');
+        lines.push('  if [ "$_probe_status" -eq 2 ]; then');
+        lines.push('    _handle_failure "' + step.id + '" "agent-browser snapshot probe failed for ' + expect.elementName + '"');
+        lines.push('  else');
+        lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"');
+        lines.push('  fi');
+        lines.push('fi');
       } else {
         // Fallback to _poll_visible for non-convertible selectors (e.g., css=)
         var sel = singleQuote(expect.selector);
@@ -977,12 +1005,30 @@ function generateExpects(step) {
     } else if (expect.type === 'url-contains') {
       // Poll until URL contains value (CODEGEN-01)
       var failMsg = 'url does not contain ' + expect.value + ' after ' + timeoutArg + 's';
-      lines.push('_poll_url_contains ' + singleQuote(expect.value) + ' "' + step.id + '" ' + timeoutArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
+      lines.push('if _poll_url_contains ' + singleQuote(expect.value) + ' "' + step.id + '" ' + timeoutArg + sessionArg + '; then');
+      lines.push('  :');
+      lines.push('else');
+      lines.push('  _probe_status=$?');
+      lines.push('  if [ "$_probe_status" -eq 2 ]; then');
+      lines.push('    _handle_failure "' + step.id + '" "agent-browser URL probe failed"');
+      lines.push('  else');
+      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"');
+      lines.push('  fi');
+      lines.push('fi');
 
     } else if (expect.type === 'url-not-contains') {
       // Poll until URL does NOT contain value — redirects (e.g., login → dashboard) need time
       var failMsg = 'url still contains ' + expect.value + ' after ' + timeoutArg + 's';
-      lines.push('_poll_url_not_contains ' + singleQuote(expect.value) + ' "' + step.id + '" ' + timeoutArg + ' || _handle_failure "' + step.id + '" "' + failMsg + '"');
+      lines.push('if _poll_url_not_contains ' + singleQuote(expect.value) + ' "' + step.id + '" ' + timeoutArg + sessionArg + '; then');
+      lines.push('  :');
+      lines.push('else');
+      lines.push('  _probe_status=$?');
+      lines.push('  if [ "$_probe_status" -eq 2 ]; then');
+      lines.push('    _handle_failure "' + step.id + '" "agent-browser URL probe failed"');
+      lines.push('  else');
+      lines.push('    _handle_failure "' + step.id + '" "' + failMsg + '"');
+      lines.push('  fi');
+      lines.push('fi');
 
     } else if (expect.type === 'text-visible') {
       // Instant check — snapshot + grep is too heavy for polling.

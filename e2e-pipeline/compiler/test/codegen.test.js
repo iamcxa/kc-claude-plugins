@@ -461,13 +461,15 @@ describe('generate() — expect: visible', function() {
     );
   });
 
-  test("visible expect uses || _handle_failure pattern (no inline exit 1)", function() {
+  test("visible expect uses status-aware _handle_failure paths (no inline exit 1)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('|| _handle_failure "click-btn"'),
-      'Expected || _handle_failure for poll failure. Got: ' + script
+      script.includes('if _poll_snapshot_contains') &&
+        script.includes('if [ "$_probe_status" -eq 2 ]') &&
+        script.includes('_handle_failure "click-btn"'),
+      'Expected status-aware _handle_failure paths. Got: ' + script
     );
   });
 
@@ -842,13 +844,15 @@ describe('generateExpects() — element-visible (no is keyword)', function() {
     );
   });
 
-  test("element-visible uses || _handle_failure pattern (no inline exit 1)", function() {
+  test("element-visible uses status-aware _handle_failure paths (no inline exit 1)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'element-visible', raw: 'login_button visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('|| _handle_failure "click-btn"'),
-      'element-visible must use || _handle_failure. Got: ' + script
+      script.includes('if _poll_snapshot_contains') &&
+        script.includes('if [ "$_probe_status" -eq 2 ]') &&
+        script.includes('_handle_failure "click-btn"'),
+      'element-visible must use status-aware _handle_failure paths. Got: ' + script
     );
   });
 
@@ -917,13 +921,15 @@ describe('generateExpects() — url-contains', function() {
     );
   });
 
-  test("url-contains uses || _handle_failure pattern with step id", function() {
+  test("url-contains uses status-aware _handle_failure paths with step id", function() {
     const step = makeNavigate('nav-dashboard', '/dashboard');
     step.expects = [{ type: 'url-contains', raw: 'url contains /dashboard', value: '/dashboard' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('|| _handle_failure "nav-dashboard"'),
-      'url-contains must use || _handle_failure. Got: ' + script
+      script.includes('if _poll_url_contains') &&
+        script.includes('if [ "$_probe_status" -eq 2 ]') &&
+        script.includes('_handle_failure "nav-dashboard"'),
+      'url-contains must use status-aware _handle_failure paths. Got: ' + script
     );
   });
 
@@ -2108,14 +2114,15 @@ describe('v2.0 poll-until — generateExpects uses poll helpers (CODEGEN-01)', f
     );
   });
 
-  test("active expect uses _poll_visible || _handle_failure pattern (no inline exit 1)", function() {
+  test("active expect uses status-aware _handle_failure paths (no inline exit 1)", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'active', raw: 'login_button is visible', elementName: 'login_button', selector: 'role=button[name="Sign In"]' }];
     const script = generate(makeResolved([step]), 'test-flow');
-    // Must use || _handle_failure (not inline exit 1)
     assert.ok(
-      script.includes('|| _handle_failure'),
-      'Expected || _handle_failure pattern on _poll_visible call. Got: ' + script
+      script.includes('if _poll_snapshot_contains') &&
+        script.includes('if [ "$_probe_status" -eq 2 ]') &&
+        script.includes('_handle_failure "click-btn"'),
+      'Expected status-aware _handle_failure paths. Got: ' + script
     );
   });
 
