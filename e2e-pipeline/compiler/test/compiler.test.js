@@ -564,6 +564,48 @@ describe('compile() — cross-site site-name validation', function() {
 });
 
 describe('compile() — normalized flow variable validation', function() {
+  test('reports invalid site aliases without cascading injected-variable collisions', async function() {
+    const cases = [
+      {
+        name: 'reserved-constructor-alias',
+        variables: { constructor_base_url: 'https://example.test' },
+        sites: { constructor: { mapping: 'site-a' } },
+        site: 'constructor',
+        forbidden: 'CONSTRUCTOR_BASE_URL',
+      },
+      {
+        name: 'invalid-admin-panel-alias',
+        variables: { 'admin-panel_base_url': 'https://example.test' },
+        sites: { 'admin-panel': { mapping: 'site-a' } },
+        site: 'admin-panel',
+        forbidden: 'ADMIN-PANEL_BASE_URL',
+      },
+    ];
+
+    for (const testCase of cases) {
+      const tmpDir = makeTmpDir();
+      const flowPath = path.join(tmpDir, testCase.name + '.json');
+      fs.writeFileSync(flowPath, JSON.stringify({
+        name: testCase.name,
+        variables: testCase.variables,
+        sites: testCase.sites,
+        steps: [{ id: 'check-site', site: testCase.site, type: 'snapshot', action: 'Take snapshot' }],
+      }), 'utf8');
+      try {
+        const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+        assert.equal(result.success, false);
+        assert.equal(
+          result.errors.some(error => error.includes('collide') && error.includes(testCase.forbidden)),
+          false,
+          'compile errors must not include cascading collision: ' + JSON.stringify(result.errors)
+        );
+        assert.equal(fs.existsSync(path.join(tmpDir, testCase.name + '.sh')), false);
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    }
+  });
+
   test('accepts a valid variable key that shadows an Object prototype method', async function() {
     const tmpDir = makeTmpDir();
     const flowPath = path.join(tmpDir, 'prototype-method-variable.json');

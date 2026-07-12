@@ -53,6 +53,7 @@ function validateFlowVariables(flow, errors) {
     var siteNames = Object.keys(flow.sites);
     for (var siteIndex = 0; siteIndex < siteNames.length; siteIndex++) {
       var siteName = siteNames[siteIndex];
+      if (!isValidSiteName(siteName)) continue;
       var siteVariable = siteBaseUrlVariable(siteName);
       if (!Object.prototype.hasOwnProperty.call(variables, siteVariable)) {
         register(siteName, 'Injected site variable for', siteVariable);

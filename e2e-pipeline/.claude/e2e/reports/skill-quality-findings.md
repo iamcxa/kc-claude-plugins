@@ -207,9 +207,10 @@ Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + su
 - Snapshot-backed checks share one session-aware capture contract that accepts the exact `(empty page)` sentinel or a dash-prefixed accessibility-tree entry; empty output and protocol/error prose cannot degrade into an ordinary missing-element result.
 - `_handle_failure` accepts an optional session and uses it for diagnostic screenshot, URL, and snapshot calls across every generated cross-site action and assertion failure path.
 - Flow variable keys are validated as shell identifiers before codegen, rejected when reserved, and checked after uppercase normalization against both other user keys and compiler-injected site variables.
+- Invalid or reserved site aliases are excluded from injected-variable collision analysis, leaving `validateSiteNames` as the primary alias diagnostic owner without cascading normalized-key errors.
 - Every step ID is validated centrally as a non-empty string and must be unique before mapping resolution or output generation, preserving unambiguous failure bookkeeping.
 - The package test entrypoint uses an explicit `*.test.js` glob so Node 24 can execute `npm test` and `npm run check` reliably.
 
-**Verification**: `npm test` (`node --test compiler/test/*.test.js`) -> 541/541 PASS. `npm run check` -> PASS with lint warnings and no errors.
+**Verification**: `npm test` (`node --test compiler/test/*.test.js`) -> 543/543 PASS. `npm run check` -> PASS with lint warnings and no errors.
 
 **Impact scan**: Reviewed e2e-test, e2e-map, e2e-walkthrough, e2e-flow, their references, all browser agents, and shared command/common-pattern references. No action grammar or agent execution contract changed, so no skill or agent edits were required. This plugin repo has no project mapping fixtures in the impact-matrix locations; compiler fixtures cover the behavior instead.

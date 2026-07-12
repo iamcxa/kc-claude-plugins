@@ -61,6 +61,41 @@ test('parse: duplicate step ids are rejected in single-site and cross-site flows
   }
 });
 
+test('parse: invalid site aliases do not register injected variable collisions', function() {
+  const cases = [
+    {
+      flow: {
+        name: 'reserved-alias-variable',
+        variables: { constructor_base_url: 'https://example.test' },
+        sites: { constructor: { mapping: 'site-a' } },
+        steps: [{ id: 'reserved', site: 'constructor', type: 'snapshot', action: 'Take snapshot' }],
+      },
+      primary: error => error.includes('constructor') && error.includes('reserved'),
+      forbidden: 'CONSTRUCTOR_BASE_URL',
+    },
+    {
+      flow: {
+        name: 'invalid-alias-variable',
+        variables: { 'admin-panel_base_url': 'https://example.test' },
+        sites: { 'admin-panel': { mapping: 'site-a' } },
+        steps: [{ id: 'invalid', site: 'admin-panel', type: 'snapshot', action: 'Take snapshot' }],
+      },
+      primary: error => error.includes('admin-panel') && error.includes('shell identifier'),
+      forbidden: 'ADMIN-PANEL_BASE_URL',
+    },
+  ];
+
+  for (const testCase of cases) {
+    const result = parseTemporaryFlow(testCase.flow);
+    assert.ok(result.errors.some(testCase.primary), JSON.stringify(result.errors));
+    assert.equal(
+      result.errors.some(error => error.includes('collide') && error.includes(testCase.forbidden)),
+      false,
+      'invalid alias must not create an injected-variable collision: ' + JSON.stringify(result.errors)
+    );
+  }
+});
+
 test('parse: happy path — loads simple-flow.yaml and resolves mapping', async () => {
   const flowPath = path.join(FIXTURES, 'simple-flow.yaml');
   const result = parse(flowPath, FIXTURES);
