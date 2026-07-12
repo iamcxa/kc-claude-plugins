@@ -2,12 +2,64 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 
 // The parse function under test
 const { parse } = require('../parser');
 
 const FIXTURES = path.join(__dirname, 'fixtures');
+
+function parseTemporaryFlow(flow) {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-parser-step-id-'));
+  const flowPath = path.join(tmpDir, 'flow.json');
+  fs.writeFileSync(flowPath, JSON.stringify(flow), 'utf8');
+  try {
+    return parse(flowPath, FIXTURES);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+}
+
+test('parse: every step id must be a non-empty string', function() {
+  for (const invalidId of [undefined, '', 42]) {
+    const step = { type: 'snapshot', action: 'Take snapshot' };
+    if (invalidId !== undefined) step.id = invalidId;
+    const result = parseTemporaryFlow({
+      name: 'invalid-step-id', mapping: 'site-a', steps: [step],
+    });
+    assert.ok(
+      result.errors.some(error => error.includes('Step at index 0') && error.includes('non-empty string')),
+      'invalid id must be rejected clearly: ' + JSON.stringify(result.errors)
+    );
+  }
+});
+
+test('parse: duplicate step ids are rejected in single-site and cross-site flows', function() {
+  for (const flow of [
+    {
+      name: 'duplicate-single', mapping: 'site-a',
+      steps: [
+        { id: 'same', type: 'snapshot', action: 'Take snapshot' },
+        { id: 'same', type: 'snapshot', action: 'Take snapshot' },
+      ],
+    },
+    {
+      name: 'duplicate-cross', sites: { office: { mapping: 'site-a' } },
+      steps: [
+        { id: 'same', site: 'office', type: 'snapshot', action: 'Take snapshot' },
+        { id: 'same', site: 'office', type: 'snapshot', action: 'Take snapshot' },
+      ],
+    },
+  ]) {
+    const result = parseTemporaryFlow(flow);
+    assert.ok(
+      result.errors.some(error => error.includes("Duplicate step id 'same'") && error.includes('indexes 0 and 1')),
+      'duplicate id must identify the id and both positions: ' + JSON.stringify(result.errors)
+    );
+  }
+});
 
 test('parse: happy path — loads simple-flow.yaml and resolves mapping', async () => {
   const flowPath = path.join(FIXTURES, 'simple-flow.yaml');

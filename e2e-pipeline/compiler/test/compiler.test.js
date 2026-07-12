@@ -647,6 +647,40 @@ describe('compile() — normalized flow variable validation', function() {
   });
 });
 
+describe('compile() — step identity validation', function() {
+  test('rejects missing and duplicate step ids before writing single-site or cross-site output', async function() {
+    const cases = [
+      {
+        name: 'missing-single-step-id', mapping: 'site-a',
+        steps: [{ type: 'snapshot', action: 'Take snapshot' }],
+        expected: 'non-empty string',
+      },
+      {
+        name: 'duplicate-cross-step-id', sites: { office: { mapping: 'site-a' } },
+        steps: [
+          { id: 'same', site: 'office', type: 'snapshot', action: 'Take snapshot' },
+          { id: 'same', site: 'office', type: 'snapshot', action: 'Take snapshot' },
+        ],
+        expected: "Duplicate step id 'same'",
+      },
+    ];
+
+    for (const testCase of cases) {
+      const tmpDir = makeTmpDir();
+      const flowPath = path.join(tmpDir, testCase.name + '.json');
+      fs.writeFileSync(flowPath, JSON.stringify(testCase), 'utf8');
+      try {
+        const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+        assert.equal(result.success, false, testCase.name + ' must fail before codegen');
+        assert.ok(result.errors.some(error => error.includes(testCase.expected)), JSON.stringify(result.errors));
+        assert.equal(fs.existsSync(path.join(tmpDir, testCase.name + '.sh')), false);
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    }
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Phase 2 Plan 03 Task 1: compile() dryRun and verbose options
 // ---------------------------------------------------------------------------

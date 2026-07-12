@@ -117,6 +117,24 @@ function validateFlow(flow, filePath, errors) {
   }
   if (!Array.isArray(flow.steps) || flow.steps.length === 0) {
     errors.push('Flow missing required field "steps" (must be non-empty array) in ' + filePath);
+  } else {
+    var stepIndexesById = new Map();
+    for (var stepIndex = 0; stepIndex < flow.steps.length; stepIndex++) {
+      var step = flow.steps[stepIndex];
+      var stepId = step && step.id;
+      if (typeof stepId !== 'string' || stepId.trim().length === 0) {
+        errors.push('Step at index ' + stepIndex + ' must have an id that is a non-empty string in ' + filePath);
+        continue;
+      }
+      if (stepIndexesById.has(stepId)) {
+        errors.push(
+          "Duplicate step id '" + stepId + "' at indexes " +
+          stepIndexesById.get(stepId) + ' and ' + stepIndex + ' in ' + filePath
+        );
+      } else {
+        stepIndexesById.set(stepId, stepIndex);
+      }
+    }
   }
   validateFlowVariables(flow, errors);
 }
