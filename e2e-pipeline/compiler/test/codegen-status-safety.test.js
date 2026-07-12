@@ -181,6 +181,61 @@ describe('generated element-not-visible status reporting', function() {
 });
 
 describe('text assertion runtime status safety', function() {
+  test('treats hostile session command substitution as a literal value', function() {
+    const hostileSession = '$(printf exploited > "$SESSION_MARKER")';
+    withFakeBrowser(snapshotBrowserScript(), function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const markerPath = path.join(binDir, 'session-executed');
+      const script = generate(makeTextFlow(
+        { type: 'text-visible', raw: "text 'Dashboard' on page", text: 'Dashboard' },
+        hostileSession
+      ), 'status-safe-text-assertion');
+      const result = runBash(script, binDir, {
+        AGENT_BROWSER_LOG: logPath,
+        SESSION_MARKER: markerPath,
+        SNAPSHOT_OUTPUT: 'Dashboard',
+        SNAPSHOT_STATUS: '0',
+      });
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      assert.equal(fs.existsSync(markerPath), false, 'session command substitution must not execute');
+      const browserLog = fs.readFileSync(logPath, 'utf8');
+      assert.ok(
+        browserLog.includes('--session ' + hostileSession + ' snapshot'),
+        'agent-browser must receive the literal session. Log: ' + browserLog
+      );
+    });
+  });
+
+  test('single-quotes session arguments across generated expectation helpers', function() {
+    const hostileSession = '$(printf exploited)';
+    const step = {
+      id: 'hostile-session-expects',
+      action: 'Wait 0',
+      type: 'wait',
+      operands: { seconds: 0 },
+      session: hostileSession,
+      expects: [
+        { type: 'element-visible', raw: 'thing visible', elementName: 'thing', selector: 'css=.thing' },
+        { type: 'element-not-visible', raw: 'dialog not visible', elementName: 'dialog', selector: 'role=dialog' },
+        { type: 'text-visible', raw: "text 'Dashboard' on page", text: 'Dashboard' },
+        {
+          type: 'or-visible',
+          raw: 'thing visible or dialog visible',
+          elements: [
+            { elementName: 'thing', selector: 'css=.thing' },
+            { elementName: 'dialog', selector: 'role=dialog' },
+          ],
+        },
+      ],
+    };
+    const script = generate({ name: 'hostile-session-expects', steps: [step] }, 'hostile-session-expects');
+    const quotedSession = "'$(printf exploited)'";
+    assert.ok(script.includes('_poll_visible \'css=.thing\' "hostile-session-expects" "${WAIT_TIMEOUT:-10}" ' + quotedSession));
+    assert.ok(script.includes('_poll_not_visible \'role=dialog\' "hostile-session-expects" "${WAIT_TIMEOUT:-10}" ' + quotedSession));
+    assert.ok(script.includes('_capture_snapshot ' + quotedSession));
+    assert.ok(script.includes('_poll_or_visible "hostile-session-expects" "${WAIT_TIMEOUT:-10}" ' + quotedSession));
+  });
+
   test('text-visible reports snapshot command failure as infrastructure failure', function() {
     const result = runTextFlow(
       { type: 'text-visible', raw: "text 'Dashboard' on page", text: 'Dashboard' },

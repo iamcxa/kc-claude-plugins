@@ -517,7 +517,7 @@ function generateCleanupTrap(steps) {
   } else {
     // Cross-site: close each named session
     for (var j = 0; j < sessions.length; j++) {
-      lines.push('  agent-browser --session ' + sessions[j] + ' close 2>/dev/null || true');
+      lines.push('  agent-browser --session ' + singleQuote(sessions[j]) + ' close 2>/dev/null || true');
     }
   }
 
@@ -720,7 +720,7 @@ function generateAction(step, stepIndex, totalSteps) {
 
   // Cross-site: compute session prefix for all agent-browser invocations
   var session = step.session;
-  var sessionPrefix = session ? '--session ' + session + ' ' : '';
+  var sessionPrefix = session ? '--session ' + singleQuote(session) + ' ' : '';
   // Cross-site: compute base URL variable name (OFFICE_BASE_URL, APP_BASE_URL, etc.)
   var baseUrlVar = session ? '${' + session.toUpperCase() + '_BASE_URL}' : '${BASE_URL}';
 
@@ -935,7 +935,8 @@ function generateExpects(step) {
 
   var lines = [];
   var session = step.session || '';
-  var sessionArg = session ? ' "' + session + '"' : ' ""';
+  var quotedSession = singleQuote(session);
+  var sessionArg = ' ' + quotedSession;
 
   // Timeout argument: literal number if step.timeout set, else env var default
   var timeoutArg = (step.timeout != null) ? String(step.timeout) : '"${WAIT_TIMEOUT:-10}"';
@@ -985,7 +986,7 @@ function generateExpects(step) {
     } else if (expect.type === 'text-visible') {
       // Instant check — snapshot + grep is too heavy for polling.
       var quotedText = singleQuote(expect.text);
-      lines.push('if ! _snapshot=$(_capture_snapshot "' + session + '"); then');
+      lines.push('if ! _snapshot=$(_capture_snapshot ' + quotedSession + '); then');
       lines.push('  _handle_failure "' + step.id + '" "agent-browser snapshot failed"');
       lines.push('elif ! echo "$_snapshot" | grep -qF ' + quotedText + '; then');
       lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' not found on page"');
@@ -994,7 +995,7 @@ function generateExpects(step) {
     } else if (expect.type === 'text-not-visible') {
       // Inverted snapshot grep — fail if the text IS found on page.
       var quotedText = singleQuote(expect.text);
-      lines.push('if ! _snapshot=$(_capture_snapshot "' + session + '"); then');
+      lines.push('if ! _snapshot=$(_capture_snapshot ' + quotedSession + '); then');
       lines.push('  _handle_failure "' + step.id + '" "agent-browser snapshot failed"');
       lines.push('elif echo "$_snapshot" | grep -qF ' + quotedText + '; then');
       lines.push('  _handle_failure "' + step.id + '" "text \'' + expect.text + '\' should NOT be on page but was found"');
@@ -1006,7 +1007,7 @@ function generateExpects(step) {
       var elemNames = elements.map(function(e) { return e.elementName; });
       var neitherMsg = 'neither ' + elemNames.join(' nor ') + ' visible after ' + timeoutArg + 's';
       var selectorArgs = elements.map(function(e) { return singleQuote(e.selector); }).join(' ');
-      lines.push('_poll_or_visible "' + step.id + '" ' + timeoutArg + ' "' + session + '" ' + selectorArgs + ' || _handle_failure "' + step.id + '" "' + neitherMsg + '"');
+      lines.push('_poll_or_visible "' + step.id + '" ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + ' || _handle_failure "' + step.id + '" "' + neitherMsg + '"');
 
     } else if (expect.type === 'deferred') {
       lines.push('echo "TODO: expect \'' + expect.raw + '\' not compiled (Phase 2)"');
@@ -1090,7 +1091,7 @@ function generate(resolved, flowName, meta) {
     // Post-step screenshot capture (flow YAML screenshot: true)
     if (step.screenshot) {
       var session = step.session;
-      var sessionPrefix = session ? '--session ' + session + ' ' : '';
+      var sessionPrefix = session ? '--session ' + singleQuote(session) + ' ' : '';
       parts.push('agent-browser ' + sessionPrefix + 'screenshot "$_SCREENSHOT_DIR/' + step.id + '.png" 2>/dev/null || echo "(screenshot ' + step.id + ' skipped)"');
     }
 

@@ -352,17 +352,17 @@ describe('compile() — cross-site flow integration', function() {
     assert.ok(fs.existsSync(outputPath), 'output file must exist');
   });
 
-  test("compiled output contains --session office prefix", function() {
+  test("compiled output contains shell-quoted office session prefix", function() {
     assert.ok(
-      outputContent.includes('--session office'),
-      'Expected --session office in output. Got snippet: ' + outputContent.slice(0, 500)
+      outputContent.includes("--session 'office'"),
+      "Expected --session 'office' in output. Got snippet: " + outputContent.slice(0, 500)
     );
   });
 
-  test("compiled output contains --session app prefix", function() {
+  test("compiled output contains shell-quoted app session prefix", function() {
     assert.ok(
-      outputContent.includes('--session app'),
-      'Expected --session app in output. Got snippet: ' + outputContent.slice(0, 500)
+      outputContent.includes("--session 'app'"),
+      "Expected --session 'app' in output. Got snippet: " + outputContent.slice(0, 500)
     );
   });
 

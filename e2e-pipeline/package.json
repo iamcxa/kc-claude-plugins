@@ -4,7 +4,7 @@
   "private": true,
   "description": "Browser E2E testing plugin compiler",
   "scripts": {
-    "test": "node --test compiler/test/",
+    "test": "node --test compiler/test/*.test.js",
     "lint": "biome lint compiler/ bin/",
     "lint:fix": "biome lint --write compiler/ bin/",
     "check": "npm run lint && npm test"

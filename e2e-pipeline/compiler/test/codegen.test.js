@@ -976,7 +976,7 @@ describe('generateExpects() — text-visible', function() {
     step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('if ! _snapshot=$(_capture_snapshot ""); then'),
+      script.includes("if ! _snapshot=$(_capture_snapshot ''); then"),
       'text-visible must capture snapshot. Got: ' + script
     );
   });
@@ -1028,7 +1028,7 @@ describe('generateExpects() — text-not-visible', function() {
     step.expects = [{ type: 'text-not-visible', raw: "text 'Sign-in failed' not on page", text: 'Sign-in failed' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes('if ! _snapshot=$(_capture_snapshot ""); then'),
+      script.includes("if ! _snapshot=$(_capture_snapshot ''); then"),
       'text-not-visible must capture snapshot. Got: ' + script
     );
   });
@@ -1262,7 +1262,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     const step = makeCrossSiteNavigate('office-nav', 'office', '/dashboard');
     const script = generate(makeResolved([step]), 'cross-site-test');
     assert.ok(
-      script.includes('agent-browser --session office open'),
+      script.includes("agent-browser --session 'office' open"),
       'cross-site navigate must use --session prefix. Got: ' + script
     );
   });
@@ -1289,7 +1289,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     const step = makeCrossSiteClick('app-click', 'app', 'button_b', 'role=button[name="App Button"]');
     const script = generate(makeResolved([step]), 'cross-site-test');
     assert.ok(
-      script.includes("agent-browser --session app click"),
+      script.includes("agent-browser --session 'app' click"),
       'cross-site click must use --session prefix. Got: ' + script
     );
   });
@@ -1298,7 +1298,7 @@ describe('cross-site codegen — --session prefix on agent-browser commands', fu
     const step = makeCrossSiteSnapshot('office-snap', 'office');
     const script = generate(makeResolved([step]), 'cross-site-test');
     assert.ok(
-      script.includes('agent-browser --session office snapshot'),
+      script.includes("agent-browser --session 'office' snapshot"),
       'cross-site snapshot must use --session prefix. Got: ' + script
     );
   });
@@ -2087,7 +2087,7 @@ describe('v2.0 poll-until — generateExpects uses poll helpers (CODEGEN-01)', f
     const script = generate(makeResolved([step]), 'test-flow');
     // text-visible stays as instant snapshot + grep (no poll)
     assert.ok(
-      script.includes('if ! _snapshot=$(_capture_snapshot ""); then'),
+      script.includes("if ! _snapshot=$(_capture_snapshot ''); then"),
       'text-visible must still use snapshot capture. Got: ' + script
     );
     // The step section must NOT call _poll_visible for text checks
@@ -2382,11 +2382,11 @@ describe('v2.0 BASE_URL normalization and cleanup', function() {
     };
     const script = generate(resolved, 'cross-site-test');
     assert.ok(
-      script.includes('agent-browser --session office close 2>/dev/null || true'),
+      script.includes("agent-browser --session 'office' close 2>/dev/null || true"),
       'Expected --session office close in cross-site cleanup. Got snippet: ' + script.slice(0, 1000)
     );
     assert.ok(
-      script.includes('agent-browser --session app close 2>/dev/null || true'),
+      script.includes("agent-browser --session 'app' close 2>/dev/null || true"),
       'Expected --session app close in cross-site cleanup. Got snippet: ' + script.slice(0, 1000)
     );
   });
