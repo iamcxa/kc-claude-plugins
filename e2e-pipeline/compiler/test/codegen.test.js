@@ -884,7 +884,7 @@ describe('generateExpects() — element-not-visible', function() {
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
       script.includes('if [ "$_probe_status" -eq 2 ]; then') &&
-        script.includes('_handle_failure "check-dialog" "agent-browser visibility probe failed for dialog"'),
+        script.includes('_handle_failure "check-dialog" ' + singleQuote('agent-browser visibility probe failed for dialog')),
       'element-not-visible must distinguish infrastructure failure. Got: ' + script
     );
   });
@@ -1012,7 +1012,7 @@ describe('generateExpects() — text-visible', function() {
     step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("_handle_failure \"verify-text\"") && script.includes("每日看板' not found on page"),
+      script.includes('_handle_failure "verify-text" ' + singleQuote("text '每日看板' not found on page")),
       'text-visible FAIL must name the text via _handle_failure. Got: ' + script
     );
   });
@@ -1073,7 +1073,7 @@ describe('generateExpects() — text-not-visible', function() {
       'text-not-visible FAIL must dispatch via _handle_failure. Got: ' + script
     );
     assert.ok(
-      script.includes("Sign-in failed' should NOT be on page but was found"),
+      script.includes(singleQuote("text 'Sign-in failed' should NOT be on page but was found")),
       'text-not-visible FAIL message must include "should NOT be on page but was found". Got: ' + script
     );
   });
@@ -2610,15 +2610,15 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — _handle_failure records to _STEP_
     );
   });
 
-  test("_handle_failure contains control char strip (tr -d)", function() {
+  test("_handle_failure preserves control characters for format-specific report encoders", function() {
     const step = makeNavigate('nav', '/home');
     const script = generate(makeResolved([step]), 'test-flow');
     const fnStart = script.indexOf('_handle_failure()');
     const fnEnd = script.indexOf('\n}', fnStart);
     const fnBody = script.slice(fnStart, fnEnd + 2);
     assert.ok(
-      fnBody.includes('tr -d'),
-      'Expected tr -d control char strip in _handle_failure. Got fn body: ' + fnBody
+      !fnBody.includes('tr -d') && script.includes('_json_escape()') && script.includes('_xml_attr_escape()'),
+      'Expected report encoders to own control-character handling. Got fn body: ' + fnBody
     );
   });
 
@@ -2780,10 +2780,8 @@ describe('v2.0 JUnit XML codegen (FLAG-01) — CJK step identity encoding', func
       script.includes('_record_step_name "登入頁面" "登入頁面" "登入頁面"'),
       'Expected CJK step id as UTF-8 in all identity forms. Got snippet: ' + script
     );
-    assert.ok(
-      !script.includes('&#'),
-      'CJK must not appear as numeric entities. Got snippet: ' + script
-    );
+    const recordLine = script.split('\n').find(line => line.includes('_record_step_name "登入頁面"'));
+    assert.ok(recordLine && !recordLine.includes('&#'), 'CJK step identity must not use numeric entities. Got: ' + recordLine);
   });
 });
 

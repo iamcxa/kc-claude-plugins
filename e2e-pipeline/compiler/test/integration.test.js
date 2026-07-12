@@ -193,10 +193,10 @@ describe('Integration: JUnit XML codegen (FLAG-01)', function() {
       script.includes('_record_step_name "登入-login" "登入-login" "登入-login"'),
       'CJK step id must appear as UTF-8 in all identity forms. Got snippet: ' + script
     );
-    assert.ok(
-      !script.includes('&#'),
-      'CJK must not be encoded as numeric entities. Got snippet: ' + script
-    );
+    var recordLine = script.split('\n').find(function(line) {
+      return line.includes('_record_step_name "登入-login"');
+    });
+    assert.ok(recordLine && !recordLine.includes('&#'), 'CJK step identity must not use numeric entities. Got: ' + recordLine);
   });
 
   test('compiled script XML-escapes only the JUnit step identity', function() {
@@ -258,9 +258,8 @@ describe('Integration: JUnit XML codegen (FLAG-01)', function() {
         script.slice(script.indexOf('_handle_failure()'), script.indexOf('_handle_failure()') + 300)
     );
     assert.ok(
-      script.includes('tr -d'),
-      'Expected tr -d control char strip in compiled output. Got fn snippet: ' +
-        script.slice(script.indexOf('_handle_failure()'), script.indexOf('_handle_failure()') + 300)
+      script.includes('_json_escape()') && script.includes('_xml_attr_escape()'),
+      'Expected format-specific control-character encoders in compiled output.'
     );
   });
 
