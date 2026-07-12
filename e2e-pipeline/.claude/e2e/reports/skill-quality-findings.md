@@ -198,8 +198,9 @@ Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + su
 - The dedup loop checks array length before expanding an empty array, avoiding Bash 3.2 `set -u` failure and EXIT-trap status masking.
 - Added runtime tests forced through `/bin/bash` when available, with a fake `agent-browser` for command failure, invalid output, session routing, cleanup exit status, and successful positive/negative assertions.
 - All generated `step.session` command arguments use canonical single-quote escaping; hostile command substitution remains a literal agent-browser argument across actions, assertions, screenshots, and cleanup.
+- Cross-site aliases are centrally validated as shell identifiers at parser and direct-resolver boundaries before compiler variable generation; invalid aliases cannot reach codegen.
 - The package test entrypoint uses an explicit `*.test.js` glob so Node 24 can execute `npm test` and `npm run check` reliably.
 
-**Verification**: `npm test` (`node --test compiler/test/*.test.js`) -> 513/513 PASS. `npm run check` -> PASS with lint warnings and no errors.
+**Verification**: `npm test` (`node --test compiler/test/*.test.js`) -> 516/516 PASS. `npm run check` -> PASS with lint warnings and no errors.
 
 **Impact scan**: Reviewed e2e-test, e2e-map, e2e-walkthrough, e2e-flow, their references, all browser agents, and shared command/common-pattern references. No action grammar or agent execution contract changed, so no skill or agent edits were required. This plugin repo has no project mapping fixtures in the impact-matrix locations; compiler fixtures cover the behavior instead.

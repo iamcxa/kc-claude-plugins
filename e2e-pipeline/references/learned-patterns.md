@@ -65,3 +65,7 @@ Running `agent-browser trace start` and `record start` simultaneously causes ext
 ## Negative assertions must preserve probe status (2026-07-12)
 
 Never use `|| true` around a probe whose empty output can satisfy a negative assertion. A status-safe negative check has three distinct outcomes: literal `false` means the asserted absence is confirmed, literal `true` may be retried until timeout, and a nonzero command status or any other output is an infrastructure/protocol failure. Snapshot-backed text assertions need the same separation: capture the snapshot status before grepping so a failed snapshot cannot become an empty tree that passes `text-not-visible`. Preserve session arguments when routing probes through shared helpers. **Applies to**: generated tests and wrappers where absence, emptiness, or negation can otherwise convert missing evidence into a pass.
+
+## Validate identifiers before shell code generation (2026-07-12)
+
+Shell-quoting an input at argv boundaries is not sufficient when the same value also becomes part of a variable name, assignment, or parameter expansion. Validate identifier-bearing inputs once at the parser/resolver boundary before generating any code. For shell identifiers, use `^[A-Za-z_][A-Za-z0-9_]*$`, reject invalid values with a format-bearing error, and retain argv quoting as defense in depth. **Applies to**: aliases, site/session names, environment-variable stems, and other user-defined values used in both data and syntax positions.

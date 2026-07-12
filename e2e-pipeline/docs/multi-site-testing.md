@@ -107,6 +107,7 @@ steps:
 |------|-------------------|
 | Every step must have `site:` | `"Missing site: on step <id>"` |
 | `site:` value must exist in `sites:` keys | `"Unknown site: <alias>"` |
+| Site aliases must be shell identifiers (`^[A-Za-z_][A-Za-z0-9_]*$`) | `"Invalid site name '<alias>'"` |
 | `sites:` and `mapping:` are mutually exclusive | `"Cannot use both"` |
 | Same mapping under two aliases | Ambiguous resolution error |
 

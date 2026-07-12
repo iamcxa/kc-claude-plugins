@@ -386,6 +386,80 @@ describe('compile() — cross-site flow integration', function() {
   });
 });
 
+describe('compile() — cross-site site-name validation', function() {
+  test('rejects a hostile site name before code generation or execution', async function() {
+    const tmpDir = makeTmpDir();
+    const hostileSite = 'x:-$(/usr/bin/touch "$SITE_MARKER")';
+    const flowPath = path.join(tmpDir, 'hostile-site.json');
+    const markerPath = path.join(tmpDir, 'site-expanded');
+    const binDir = path.join(tmpDir, 'bin');
+    fs.mkdirSync(binDir);
+    const browserPath = path.join(binDir, 'agent-browser');
+    fs.writeFileSync(browserPath, '#!/bin/bash\nexit 0\n', 'utf8');
+    fs.chmodSync(browserPath, 0o755);
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'hostile-site-name',
+      sites: { [hostileSite]: { mapping: 'site-b' } },
+      steps: [{
+        id: 'navigate-home',
+        site: hostileSite,
+        type: 'navigate',
+        action: 'Navigate to /home',
+      }],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      if (result.success && result.outputPath) {
+        spawnSync('/bin/bash', [result.outputPath], {
+          encoding: 'utf8',
+          env: Object.assign({}, process.env, {
+            PATH: binDir + path.delimiter + process.env.PATH,
+            SITE_MARKER: markerPath,
+          }),
+        });
+      }
+      assert.equal(result.success, false, 'hostile site name must be rejected before codegen');
+      assert.ok(
+        result.errors.some(error =>
+          error.includes(hostileSite) && error.includes('^[A-Za-z_][A-Za-z0-9_]*$')
+        ),
+        'validation error must name the site and accepted format: ' + JSON.stringify(result.errors)
+      );
+      assert.equal(fs.existsSync(markerPath), false, 'hostile site name must never execute');
+      assert.equal(fs.existsSync(path.join(tmpDir, 'hostile-site-name.sh')), false, 'rejected flow must not produce a script');
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('accepts shell-identifier site names including underscore forms', async function() {
+    const tmpDir = makeTmpDir();
+    const flowPath = path.join(tmpDir, 'valid-sites.json');
+    fs.writeFileSync(flowPath, JSON.stringify({
+      name: 'valid-site-names',
+      sites: {
+        _office: { mapping: 'site-a' },
+        app_2: { mapping: 'site-b' },
+      },
+      steps: [
+        { id: 'office-home', site: '_office', type: 'navigate', action: 'Navigate to /dashboard' },
+        { id: 'app-home', site: 'app_2', type: 'navigate', action: 'Navigate to /home' },
+      ],
+    }), 'utf8');
+
+    try {
+      const result = await compile(flowPath, FIXTURES_DIR, tmpDir);
+      assert.equal(result.success, true, 'valid site names must compile: ' + JSON.stringify(result.errors));
+      const output = fs.readFileSync(result.outputPath, 'utf8');
+      assert.match(output, /_OFFICE_BASE_URL/);
+      assert.match(output, /APP_2_BASE_URL/);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Phase 2 Plan 03 Task 1: compile() dryRun and verbose options
 // ---------------------------------------------------------------------------

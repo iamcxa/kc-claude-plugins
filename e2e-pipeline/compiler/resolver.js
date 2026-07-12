@@ -1,5 +1,7 @@
 'use strict';
 
+const { isValidSiteName, siteNameValidationError } = require('./site-name');
+
 const ACTION_PARSERS = {
   navigate: {
     pattern: /Navigate to\s+(.+)/i,
@@ -394,6 +396,10 @@ function resolveMultiSite(flow, siteMappings) {
   // Build per-site symbol tables
   var siteTables = {};
   for (var siteName in siteMappings) {
+    if (!isValidSiteName(siteName)) {
+      errors.push(siteNameValidationError(siteName));
+      continue;
+    }
     var siteData = siteMappings[siteName];
     if (siteData && siteData.mapping) {
       siteTables[siteName] = buildSymbolTable(siteData.mapping);

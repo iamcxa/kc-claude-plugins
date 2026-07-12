@@ -730,6 +730,22 @@ describe('cross-site sites: block — resolver', function() {
     assert.ok(err, 'error should name the step and mention site. Errors: ' + result.errors.join('; '));
   });
 
+  test('resolveMultiSite: rejects invalid site names when called directly', function() {
+    const invalidSite = 'admin-panel';
+    const result = resolveMultiSite({
+      name: 'invalid-site-name',
+      steps: [{ id: 'bad-site', site: invalidSite, type: 'snapshot', action: 'Take snapshot' }],
+    }, {
+      [invalidSite]: SITE_MAPPINGS.office,
+    });
+    assert.ok(
+      result.errors.some(error =>
+        error.includes(invalidSite) && error.includes('^[A-Za-z_][A-Za-z0-9_]*$')
+      ),
+      'direct resolver call must enforce the central site-name contract: ' + result.errors.join('; ')
+    );
+  });
+
   test('resolveMultiSite: all 4 steps resolve without errors using inline mappings', function() {
     const result = resolveMultiSite(CROSS_SITE_FLOW, SITE_MAPPINGS);
     assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));

@@ -3,6 +3,7 @@
 const yaml = require('js-yaml');
 const fs = require('node:fs');
 const path = require('node:path');
+const { isValidSiteName, siteNameValidationError } = require('./site-name');
 
 /**
  * Load and parse a YAML file, returning the parsed object or null on error.
@@ -116,6 +117,11 @@ function parse(flowPath, mappingDir) {
       var siteName = siteNames[i];
       var siteEntry = flow.sites[siteName];
       var mappingName = siteEntry && siteEntry.mapping;
+
+      if (!isValidSiteName(siteName)) {
+        errors.push(siteNameValidationError(siteName));
+        continue;
+      }
 
       if (!mappingName) {
         errors.push("Site '" + siteName + "' in sites: block has no mapping field in " + flowPath);
