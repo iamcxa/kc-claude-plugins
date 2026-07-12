@@ -180,6 +180,57 @@ describe('generated element-not-visible status reporting', function() {
   });
 });
 
+describe('generated cleanup session deduplication', function() {
+  test('closes inherited-property session aliases exactly once without default close', function() {
+    const aliases = ['toString', 'hasOwnProperty', 'valueOf'];
+    withFakeBrowser(snapshotBrowserScript(), function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const steps = [];
+      aliases.forEach(function(alias) {
+        steps.push({ id: alias + '-first', action: 'Wait 0', type: 'wait', operands: { seconds: 0 }, session: alias });
+        steps.push({ id: alias + '-second', action: 'Wait 0', type: 'wait', operands: { seconds: 0 }, session: alias });
+      });
+      const script = generate({ name: 'cleanup-inherited-aliases', steps }, 'cleanup-inherited-aliases');
+      const result = runBash(script, binDir, {
+        AGENT_BROWSER_LOG: logPath,
+        SNAPSHOT_OUTPUT: '',
+        SNAPSHOT_STATUS: '0',
+      });
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      const logLines = fs.readFileSync(logPath, 'utf8').trim().split('\n');
+      aliases.forEach(function(alias) {
+        assert.equal(
+          logLines.filter(line => line === '--session ' + alias + ' close').length,
+          1,
+          'cleanup must close session ' + alias + ' exactly once. Log: ' + logLines.join(' | ')
+        );
+      });
+      assert.equal(
+        logLines.filter(line => line === 'close').length,
+        0,
+        'cross-site cleanup must not emit default close. Log: ' + logLines.join(' | ')
+      );
+    });
+  });
+
+  test('keeps one default close for a flow without named sessions', function() {
+    withFakeBrowser(snapshotBrowserScript(), function(binDir) {
+      const logPath = path.join(binDir, 'browser.log');
+      const script = generate({
+        name: 'cleanup-default-session',
+        steps: [{ id: 'wait', action: 'Wait 0', type: 'wait', operands: { seconds: 0 } }],
+      }, 'cleanup-default-session');
+      const result = runBash(script, binDir, {
+        AGENT_BROWSER_LOG: logPath,
+        SNAPSHOT_OUTPUT: '',
+        SNAPSHOT_STATUS: '0',
+      });
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      assert.deepEqual(fs.readFileSync(logPath, 'utf8').trim().split('\n'), ['close']);
+    });
+  });
+});
+
 describe('text assertion runtime status safety', function() {
   test('treats hostile session command substitution as a literal value', function() {
     const hostileSession = '$(printf exploited > "$SESSION_MARKER")';

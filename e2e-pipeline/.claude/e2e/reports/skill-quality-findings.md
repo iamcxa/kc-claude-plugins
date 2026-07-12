@@ -200,8 +200,9 @@ Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + su
 - All generated `step.session` command arguments use canonical single-quote escaping; hostile command substitution remains a literal agent-browser argument across actions, assertions, screenshots, and cleanup.
 - Cross-site aliases are centrally validated as shell identifiers at parser and direct-resolver boundaries before compiler variable generation; invalid aliases cannot reach codegen.
 - Prototype-reserved aliases are rejected explicitly, and case-folded `<ALIAS>_BASE_URL` collisions name both aliases and the normalized key before output generation.
+- Generated cleanup deduplicates valid session aliases with `Set`, so Object.prototype names such as `toString` are closed exactly once instead of falling back to default-session cleanup.
 - The package test entrypoint uses an explicit `*.test.js` glob so Node 24 can execute `npm test` and `npm run check` reliably.
 
-**Verification**: `npm test` (`node --test compiler/test/*.test.js`) -> 520/520 PASS. `npm run check` -> PASS with lint warnings and no errors.
+**Verification**: `npm test` (`node --test compiler/test/*.test.js`) -> 522/522 PASS. `npm run check` -> PASS with lint warnings and no errors.
 
 **Impact scan**: Reviewed e2e-test, e2e-map, e2e-walkthrough, e2e-flow, their references, all browser agents, and shared command/common-pattern references. No action grammar or agent execution contract changed, so no skill or agent edits were required. This plugin repo has no project mapping fixtures in the impact-matrix locations; compiler fixtures cover the behavior instead.

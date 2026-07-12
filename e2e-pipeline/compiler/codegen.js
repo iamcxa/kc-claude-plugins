@@ -501,11 +501,11 @@ function generateBaseUrlNormalization(variables) {
 function generateCleanupTrap(steps) {
   // Collect distinct session names (excluding falsy/empty)
   var sessions = [];
-  var seen = {};
+  var seen = new Set();
   for (var i = 0; i < steps.length; i++) {
     var s = steps[i].session;
-    if (s && !seen[s]) {
-      seen[s] = true;
+    if (s && !seen.has(s)) {
+      seen.add(s);
       sessions.push(s);
     }
   }
