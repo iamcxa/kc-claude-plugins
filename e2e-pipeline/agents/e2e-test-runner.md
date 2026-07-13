@@ -160,6 +160,12 @@ Action string formats and their handling:
 | `"Verify <el1>, <el2>, ... on <location>"` | Verify multiple elements -- just snapshot + run expects |
 | `"Verify external"` | External verification checkpoint — see § 2m below |
 | `"Execute external"` | External execution checkpoint — see § 2n below |
+| `type: capture-url-query` | Use the compiler path: browser `URLSearchParams.getAll`, exact-one non-empty capture, then typed validation and `save_as` reuse. |
+
+`runtime_values` are required environment declarations, not positional arguments or loggable
+flow variables. Sensitive fills use `runtime_ref` and stdin. After normal steps, execute `finally`
+HTTP steps in declaration order on success and failure. Their status and readback assertions are
+reported as ordinary step results, and any failure forces the run to fail.
 
 ### 2c. Element Resolution
 

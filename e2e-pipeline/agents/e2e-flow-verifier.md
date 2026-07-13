@@ -76,6 +76,12 @@ step_results = []
 
 **For each step in the flow:**
 
+**Compiler runtime-state steps:** For `capture-url-query`, execute the compiler-generated path
+and require exactly one non-empty value that passes its validator. Do not repair it into ad hoc
+shell parsing. Treat `runtime_values` as environment-backed only and never print their values.
+Run ordered `finally` HTTP steps even after a browser-step failure; cleanup/readback failures are
+authoritative failures and must appear in the same result/report model.
+
 **External checkpoint handling**: If the step has `action: "Verify external"` or `action: "Execute external"`, skip all browser interaction (no snapshot, no element resolution, no click). Instead, attempt best-effort execution — see **§ External Checkpoint Execution** below. External checkpoint failures are **never counted as `unfixable`** and never block Round 2.
 
 #### External Checkpoint Execution

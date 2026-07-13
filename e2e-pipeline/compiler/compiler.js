@@ -96,7 +96,9 @@ async function compile(flowPath, mappingDir, outputDir, options) {
 
   } else {
     // --- Single-site flow path ---
-    resolveResult = resolve(parseResult.flow, parseResult.mapping);
+    resolveResult = resolve(parseResult.flow, parseResult.mapping, {
+      runtimeValues: parseResult.flow.runtime_values || null,
+    });
     if (resolveResult.errors.length > 0) {
       resolveResult.errors.forEach(function(e) { console.error('ERROR: ' + e); });
       return { success: false, errors: resolveResult.errors };

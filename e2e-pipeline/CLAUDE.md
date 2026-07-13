@@ -148,6 +148,10 @@ Trace the full chain and update EVERY layer. No layer may be skipped:
 
 Rule: if a layer has the tools to attempt a step, it MUST attempt it (best-effort). "Skip because another layer handles it" is only valid when the layer genuinely lacks the capability.
 
+Runtime-state compiler actions follow the same chain. Keep `runtime_values` environment-backed,
+use typed `runtime_ref` edges, require exact-one `capture-url-query`, and run ordered `finally`
+HTTP cancellation/readback before metrics and JUnit emission. Finalizer failure is lane failure.
+
 **Removing a skill or agent:**
 1. Delete the directory/file
 2. Run: `grep -rn "<name>" e2e-pipeline/ --include="*.md" --include="*.json" --include="*.sh" | grep -v skill-quality-findings | grep -v node_modules | grep -v docs/superpowers/`
