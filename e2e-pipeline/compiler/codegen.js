@@ -337,7 +337,7 @@ function generateRuntimeFlagBlock() {
  *
  * Returns: string (multi-line bash block)
  */
-function generateRuntimeSupport() {
+function generateRuntimeSupport(includeRuntimeStateSupport) {
   var lines = [
     '# Failure accumulator',
     '_FAILED_STEPS=()',
@@ -423,8 +423,114 @@ function generateRuntimeSupport() {
     '}',
     '',
     '_curl_config_escape() {',
-    "  case \"$1\" in *$'\\n'*|*$'\\r'*|*$'\\t'*) return 1 ;; esac",
+    '  local _byte',
+    "  if ! printf '%s' \"$1\" | LC_ALL=C od -An -v -t u1 | tr -s ' ' '\\n' | while IFS= read -r _byte; do",
+    '    [ -z "$_byte" ] && continue',
+    '    case "$_byte" in',
+    '      0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|127) exit 1 ;;',
+    '    esac',
+    '  done; then',
+    '    return 1',
+    '  fi',
     "  printf '%s' \"$1\" | sed 's/\\\\/\\\\\\\\/g; s/\"/\\\\\"/g'",
+    '}',
+    '',
+    '_json_top_level_string_equals() {',
+    '  local _json_file="$1"',
+    '  local _json_field="$2"',
+    '  local _json_expected="$3"',
+    '  node - "$_json_file" "$_json_field" "$_json_expected" <<\'__E2E_JSON_ASSERT__\'',
+    "'use strict';",
+    "const fs = require('fs');",
+    'const source = fs.readFileSync(process.argv[2], \'utf8\');',
+    'const field = process.argv[3];',
+    'const expected = process.argv[4];',
+    'let offset = 0;',
+    'function invalid() { throw new Error(\'invalid JSON response\'); }',
+    'function whitespace() { while (/\\s/.test(source[offset] || \'\')) offset += 1; }',
+    'function stringValue() {',
+    '  const start = offset;',
+    '  if (source[offset] !== \'"\') invalid();',
+    '  offset += 1;',
+    '  while (offset < source.length) {',
+    '    const code = source.charCodeAt(offset);',
+    '    if (source[offset] === \'"\') {',
+    '      offset += 1;',
+    '      return JSON.parse(source.slice(start, offset));',
+    '    }',
+    '    if (source[offset] === \'\\\\\') {',
+    '      offset += 1;',
+    '      if (offset >= source.length) invalid();',
+    '      if (source[offset] === \'u\') {',
+    '        if (!/^[0-9a-fA-F]{4}$/.test(source.slice(offset + 1, offset + 5))) invalid();',
+    '        offset += 5;',
+    '      } else {',
+    '        if (!/["\\\\/bfnrt]/.test(source[offset])) invalid();',
+    '        offset += 1;',
+    '      }',
+    '    } else {',
+    '      if (code <= 0x1f) invalid();',
+    '      offset += 1;',
+    '    }',
+    '  }',
+    '  invalid();',
+    '}',
+    'function value() {',
+    '  whitespace();',
+    '  if (source[offset] === \'"\') return stringValue();',
+    '  if (source[offset] === \'{\') {',
+    '    const object = Object.create(null);',
+    '    const keys = new Set();',
+    '    offset += 1;',
+    '    whitespace();',
+    '    if (source[offset] === \'}\') { offset += 1; return object; }',
+    '    while (true) {',
+    '      whitespace();',
+    '      const key = stringValue();',
+    '      if (keys.has(key)) invalid();',
+    '      keys.add(key);',
+    '      whitespace();',
+    '      if (source[offset] !== \':\') invalid();',
+    '      offset += 1;',
+    '      object[key] = value();',
+    '      whitespace();',
+    '      if (source[offset] === \'}\') { offset += 1; return object; }',
+    '      if (source[offset] !== \',\') invalid();',
+    '      offset += 1;',
+    '    }',
+    '  }',
+    '  if (source[offset] === \'[\') {',
+    '    const array = [];',
+    '    offset += 1;',
+    '    whitespace();',
+    '    if (source[offset] === \']\') { offset += 1; return array; }',
+    '    while (true) {',
+    '      array.push(value());',
+    '      whitespace();',
+    '      if (source[offset] === \']\') { offset += 1; return array; }',
+    '      if (source[offset] !== \',\') invalid();',
+    '      offset += 1;',
+    '    }',
+    '  }',
+    '  const rest = source.slice(offset);',
+    '  const number = rest.match(/^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?/);',
+    '  if (number) { offset += number[0].length; return Number(number[0]); }',
+    '  if (rest.startsWith(\'true\')) { offset += 4; return true; }',
+    '  if (rest.startsWith(\'false\')) { offset += 5; return false; }',
+    '  if (rest.startsWith(\'null\')) { offset += 4; return null; }',
+    '  invalid();',
+    '}',
+    'try {',
+    '  const document = value();',
+    '  whitespace();',
+    '  if (offset !== source.length) invalid();',
+    '  if (document === null || Array.isArray(document) || typeof document !== \'object\') invalid();',
+    '  if (!Object.prototype.hasOwnProperty.call(document, field)) invalid();',
+    '  if (typeof document[field] !== \'string\' || document[field] !== expected) invalid();',
+    '} catch (_error) {',
+    '  process.exit(1);',
+    '}',
+    '__E2E_JSON_ASSERT__',
     '}',
     '',
     '_xml_attr_escape() {',
@@ -650,6 +756,11 @@ function generateRuntimeSupport() {
     '}',
     '',
   ];
+  if (!includeRuntimeStateSupport) {
+    var runtimeSupportStart = lines.indexOf('_base64_no_wrap() {');
+    var runtimeSupportEnd = lines.indexOf('_xml_attr_escape() {');
+    lines.splice(runtimeSupportStart, runtimeSupportEnd - runtimeSupportStart);
+  }
   return lines.join('\n');
 }
 
@@ -703,15 +814,32 @@ function generateBaseUrlNormalization(variables) {
  *
  * Returns: string (multi-line bash block)
  */
-function generateCleanupTrap(steps, finallySteps) {
+function generateCleanupTrap(steps, finallySteps, summary) {
   var sessions = [];
   var seen = new Set();
+  var hasFinalizers = Array.isArray(finallySteps) && finallySteps.length > 0;
   for (var i = 0; i < steps.length; i++) {
     var s = steps[i].session;
     if (s && !seen.has(s)) {
       seen.add(s);
       sessions.push(s);
     }
+  }
+
+  if (!hasFinalizers) {
+    var legacyLines = ['cleanup() {'];
+    if (sessions.length === 0) {
+      legacyLines.push('  agent-browser close 2>/dev/null || true');
+    } else {
+      for (var legacyIndex = 0; legacyIndex < sessions.length; legacyIndex++) {
+        legacyLines.push(
+          '  agent-browser --session ' + singleQuote(sessions[legacyIndex]) + ' close 2>/dev/null || true'
+        );
+      }
+    }
+    legacyLines.push('}');
+    legacyLines.push('trap cleanup EXIT');
+    return legacyLines.join('\n');
   }
 
   var lines = [
@@ -721,7 +849,18 @@ function generateCleanupTrap(steps, finallySteps) {
     '  trap - EXIT',
   ];
 
-  if (Array.isArray(finallySteps) && finallySteps.length > 0) {
+  if (hasFinalizers) {
+    lines.push('  _FINALIZER_TMPDIR=""');
+    lines.push('  _FINALIZER_OLD_UMASK=$(umask)');
+    lines.push('  umask 077');
+    lines.push('  if _FINALIZER_TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/e2e-finalizer.XXXXXX"); then');
+    lines.push('    if ! chmod 700 "$_FINALIZER_TMPDIR"; then');
+    lines.push('      rm -rf -- "$_FINALIZER_TMPDIR" 2>/dev/null || true');
+    lines.push('      _FINALIZER_TMPDIR=""');
+    lines.push('    fi');
+    lines.push('  else');
+    lines.push('    _FINALIZER_TMPDIR=""');
+    lines.push('  fi');
     for (var fi = 0; fi < finallySteps.length; fi++) {
       var fStep = finallySteps[fi];
       if (fStep.type !== 'http') continue;
@@ -734,30 +873,63 @@ function generateCleanupTrap(steps, finallySteps) {
       lines.push('  _FINALIZER_START=$SECONDS');
       lines.push('  _FINALIZER_OK=true');
       lines.push('  _FINALIZER_FAILURE=""');
-      lines.push('  _FINALIZER_URL="${' + op.baseEnv + '%/}"');
+      lines.push('  _FINALIZER_URL="${' + op.baseEnv + '-}"');
+      lines.push('  if [ -z "$_FINALIZER_URL" ]; then');
+      lines.push('    _FINALIZER_OK=false');
+      lines.push('    _FINALIZER_FAILURE=' + singleQuote("finalizer base URL environment '" + op.baseEnv + "' is unavailable"));
+      lines.push('  else');
+      lines.push('    _FINALIZER_URL="${_FINALIZER_URL%/}"');
+      lines.push('  fi');
       for (var pi = 0; pi < op.pathSegments.length; pi++) {
         var segment = op.pathSegments[pi];
+        lines.push('  if [ "$_FINALIZER_OK" = true ]; then');
         if (segment.literal !== undefined) {
-          lines.push('  _FINALIZER_SEGMENT=' + singleQuote(segment.literal));
+          lines.push('    _FINALIZER_SEGMENT=' + singleQuote(segment.literal));
+          lines.push('    _FINALIZER_ENCODED=$(_url_encode "$_FINALIZER_SEGMENT")');
+          lines.push('    _FINALIZER_URL="$_FINALIZER_URL/$_FINALIZER_ENCODED"');
         } else {
-          lines.push('  _FINALIZER_SEGMENT="${' + segment.runtime_ref.env + '}"');
+          lines.push('    _FINALIZER_SEGMENT="${' + segment.runtime_ref.env + '-}"');
+          lines.push('    if [ -z "$_FINALIZER_SEGMENT" ]; then');
+          lines.push('      _FINALIZER_OK=false');
+          lines.push('      _FINALIZER_FAILURE=' + singleQuote(
+            "runtime state '" + segment.runtime_ref.state_key + "' is unavailable"
+          ));
+          lines.push('    else');
+          lines.push('      _FINALIZER_ENCODED=$(_url_encode "$_FINALIZER_SEGMENT")');
+          lines.push('      _FINALIZER_URL="$_FINALIZER_URL/$_FINALIZER_ENCODED"');
+          lines.push('    fi');
         }
-        lines.push('  _FINALIZER_ENCODED=$(_url_encode "$_FINALIZER_SEGMENT")');
-        lines.push('  _FINALIZER_URL="$_FINALIZER_URL/$_FINALIZER_ENCODED"');
+        lines.push('  fi');
       }
-      lines.push('  _FINALIZER_CONFIG="${TMPDIR:-/tmp}/e2e-finalizer-$$-' + fi + '.cfg"');
-      lines.push('  _FINALIZER_RESPONSE="${TMPDIR:-/tmp}/e2e-finalizer-$$-' + fi + '.body"');
-      lines.push('  (umask 077; : > "$_FINALIZER_CONFIG"; : > "$_FINALIZER_RESPONSE")');
+      lines.push('  _FINALIZER_CONFIG=""');
+      lines.push('  _FINALIZER_RESPONSE=""');
+      lines.push('  if [ "$_FINALIZER_OK" = true ] && [ -z "$_FINALIZER_TMPDIR" ]; then');
+      lines.push('    _FINALIZER_OK=false');
+      lines.push('    _FINALIZER_FAILURE=' + singleQuote('private finalizer temporary directory creation failed'));
+      lines.push('  fi');
+      lines.push('  if [ "$_FINALIZER_OK" = true ]; then');
+      lines.push('    _FINALIZER_CONFIG="$_FINALIZER_TMPDIR/' + fi + '.cfg"');
+      lines.push('    _FINALIZER_RESPONSE="$_FINALIZER_TMPDIR/' + fi + '.body"');
+      lines.push('    if ! (umask 077; : > "$_FINALIZER_CONFIG" && : > "$_FINALIZER_RESPONSE"); then');
+      lines.push('      _FINALIZER_OK=false');
+      lines.push('      _FINALIZER_FAILURE=' + singleQuote('finalizer temporary artifact creation failed'));
+      lines.push('    fi');
+      lines.push('  fi');
       var headerKeys = op.headers ? Object.keys(op.headers) : [];
       for (var hi = 0; hi < headerKeys.length; hi++) {
         var hKey = headerKeys[hi];
         var header = op.headers[hKey];
-        lines.push('  if _FINALIZER_HEADER=$(_curl_config_escape "${' + header.runtime_ref.env + '}"); then');
-        lines.push('    printf ' + singleQuote('header = "' + hKey + ': ' + header.scheme + ' %s"\n') +
-          ' "$_FINALIZER_HEADER" >> "$_FINALIZER_CONFIG"');
-        lines.push('  else');
-        lines.push('    _FINALIZER_OK=false');
-        lines.push('    _FINALIZER_FAILURE=' + singleQuote('finalizer header contains forbidden control characters'));
+        lines.push('  if [ "$_FINALIZER_OK" = true ]; then');
+        lines.push('    if _FINALIZER_HEADER=$(_curl_config_escape "${' + header.runtime_ref.env + '-}"); then');
+        lines.push('      if ! printf ' + singleQuote('header = "' + hKey + ': ' + header.scheme + ' %s"\n') +
+          ' "$_FINALIZER_HEADER" >> "$_FINALIZER_CONFIG"; then');
+        lines.push('        _FINALIZER_OK=false');
+        lines.push('        _FINALIZER_FAILURE=' + singleQuote('finalizer credential artifact write failed'));
+        lines.push('      fi');
+        lines.push('    else');
+        lines.push('      _FINALIZER_OK=false');
+        lines.push('      _FINALIZER_FAILURE=' + singleQuote('finalizer header contains forbidden control characters'));
+        lines.push('    fi');
         lines.push('  fi');
       }
       var curlCommand = 'curl -s -X ' + singleQuote(method) +
@@ -781,15 +953,15 @@ function generateCleanupTrap(steps, finallySteps) {
         lines.push('  fi');
       }
       if (op.expectedBody && op.expectedBody.field && op.expectedBody.equals !== undefined) {
-        var bodyPattern = '"' + String(op.expectedBody.field).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
-          '"[[:space:]]*:[[:space:]]*"' + String(op.expectedBody.equals).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"';
-        lines.push('  if [ "$_FINALIZER_OK" = true ] && ! grep -Eq ' + singleQuote(bodyPattern) +
-          ' "$_FINALIZER_RESPONSE"; then');
+        lines.push('  if [ "$_FINALIZER_OK" = true ] && ! _json_top_level_string_equals ' +
+          '"$_FINALIZER_RESPONSE" ' + singleQuote(String(op.expectedBody.field)) + ' ' +
+          singleQuote(String(op.expectedBody.equals)) + ' 2>/dev/null; then');
         lines.push('    _FINALIZER_OK=false');
         lines.push('    _FINALIZER_FAILURE=' + singleQuote('HTTP response body assertion failed'));
         lines.push('  fi');
       }
-      lines.push('  rm -f "$_FINALIZER_CONFIG" "$_FINALIZER_RESPONSE"');
+      lines.push('  if [ -n "$_FINALIZER_CONFIG" ]; then rm -f -- "$_FINALIZER_CONFIG" 2>/dev/null || true; fi');
+      lines.push('  if [ -n "$_FINALIZER_RESPONSE" ]; then rm -f -- "$_FINALIZER_RESPONSE" 2>/dev/null || true; fi');
       lines.push('  _FINALIZER_ELAPSED=$(( SECONDS - _FINALIZER_START ))');
       lines.push('  ' + recordName);
       lines.push('  if [ "$_FINALIZER_OK" = true ]; then');
@@ -803,6 +975,8 @@ function generateCleanupTrap(steps, finallySteps) {
       lines.push('  fi');
       lines.push('  _STEP_TIMES+=("$_FINALIZER_ELAPSED")');
     }
+    lines.push('  if [ -n "$_FINALIZER_TMPDIR" ]; then rm -rf -- "$_FINALIZER_TMPDIR" 2>/dev/null || true; fi');
+    lines.push('  umask "$_FINALIZER_OLD_UMASK"');
   }
 
   if (sessions.length === 0) {
@@ -815,10 +989,28 @@ function generateCleanupTrap(steps, finallySteps) {
 
   lines.push('  if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi');
   lines.push('  if [ -n "$JUNIT_OUTPUT" ]; then _emit_junit "$JUNIT_OUTPUT"; fi');
-  lines.push('  if [ "$_FINALIZER_FAILED" -ne 0 ]; then');
-  lines.push('    exit 1');
+  lines.push('  _FINAL_EXIT="$_prev_exit"');
+  lines.push('  if [ "$_FINALIZER_FAILED" -ne 0 ] && [ "$_prev_exit" -eq 0 ]; then');
+  lines.push('    _FINAL_EXIT=1');
   lines.push('  fi');
-  lines.push('  exit "$_prev_exit"');
+  if (summary) {
+    lines.push('  if [ "$' + '{#_FAILED_STEPS[@]}" -gt 0 ]; then');
+    lines.push('    echo "FAIL: $' + '{#_FAILED_STEPS[@]} steps failed: $' + '{_FAILED_STEPS[*]}"');
+    lines.push('  elif [ "$_FINAL_EXIT" -eq 0 ]; then');
+    lines.push('    if [ "$_HAD_RETRIES" = "true" ]; then');
+    lines.push('      echo ' + singleQuote(
+      'PASS (FLAKY): ' + summary.flowName + ' (' + summary.totalSteps + '/' + summary.totalSteps +
+      ' steps, ' + summary.skipped + ' skipped)'
+    ));
+    lines.push('    else');
+    lines.push('      echo ' + singleQuote(
+      'PASS: ' + summary.flowName + ' (' + summary.totalSteps + '/' + summary.totalSteps +
+      ' steps, ' + summary.skipped + ' skipped)'
+    ));
+    lines.push('    fi');
+    lines.push('  fi');
+  }
+  lines.push('  exit "$_FINAL_EXIT"');
   lines.push('}');
   lines.push('trap cleanup EXIT');
 
@@ -978,8 +1170,23 @@ function generateMetricsEmitter(flowName) {
  *
  * Returns: string (multi-line bash block)
  */
-function generateFooter(flowName, totalSteps, skipped) {
-  var lines = [
+function generateFooter(flowName, totalSteps, skipped, deferReportsToCleanup) {
+  if (deferReportsToCleanup) {
+    return [
+      '# Exit summary deferred until finalizers complete',
+      'if [ ${#_FAILED_STEPS[@]} -gt 0 ]; then',
+      '  exit 1',
+      'fi',
+      'exit 0',
+    ].join('\n');
+  }
+
+  var lines = [];
+  lines.push('# Emit metrics JSON if --metrics-output path was provided (FLAKY-02)');
+  lines.push('if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi');
+  lines.push('# Emit JUnit XML if --junit path was provided (FLAG-01)');
+  lines.push('if [ -n "$JUNIT_OUTPUT" ]; then _emit_junit "$JUNIT_OUTPUT"; fi');
+  lines.push(
     '# Exit summary',
     'if [ ${#_FAILED_STEPS[@]} -gt 0 ]; then',
     '  echo "FAIL: ${#_FAILED_STEPS[@]} steps failed: ${_FAILED_STEPS[*]}"',
@@ -990,8 +1197,8 @@ function generateFooter(flowName, totalSteps, skipped) {
     'else',
     '  echo "PASS: ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
     'fi',
-    'exit 0',
-  ];
+    'exit 0'
+  );
   return lines.join('\n');
 }
 
@@ -1471,6 +1678,10 @@ function generate(resolved, flowName, meta) {
   var steps = resolved.steps || [];
   var totalSteps = steps.length;
   var skipped = 0;
+  var hasFinalizers = Array.isArray(resolved.finally) && resolved.finally.length > 0;
+  var hasRuntimeState = hasFinalizers ||
+    Boolean(resolved.runtimeValues && Object.keys(resolved.runtimeValues).length > 0) ||
+    steps.some(function(step) { return step.type === 'capture-url-query'; });
 
   // Count verify-external and execute-external steps for PASS summary
   for (var i = 0; i < steps.length; i++) {
@@ -1509,7 +1720,7 @@ function generate(resolved, flowName, meta) {
   }
 
   // 5. Runtime support functions (_handle_failure, _FAILED_STEPS, poll helpers)
-  parts.push(generateRuntimeSupport());
+  parts.push(generateRuntimeSupport(hasRuntimeState));
 
   // 5b. JUnit emitter function (FLAG-01) — defined here, called in footer
   parts.push(generateJUnitEmitter(flowName));
@@ -1519,7 +1730,11 @@ function generate(resolved, flowName, meta) {
 
   // 6. Cleanup trap — registers agent-browser close on EXIT (CI-06)
   // SC-1032: pass finallySteps so cleanup() runs HTTP finalizers before browser close
-  parts.push(generateCleanupTrap(steps, resolved.finally));
+  parts.push(generateCleanupTrap(steps, resolved.finally, {
+    flowName: flowName,
+    totalSteps: totalSteps,
+    skipped: skipped,
+  }));
   parts.push('');
 
   // 7. Per-step action blocks
@@ -1549,7 +1764,7 @@ function generate(resolved, flowName, meta) {
   }
 
   // 8. Structured footer (replaces inline PASS/exit 0)
-  parts.push(generateFooter(flowName, totalSteps, skipped));
+  parts.push(generateFooter(flowName, totalSteps, skipped, hasFinalizers));
 
   return parts.join('\n');
 }
