@@ -9,6 +9,10 @@ const VARIABLE_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const VARIABLE_NAME_FORMAT = '^[A-Za-z_][A-Za-z0-9_]*$';
 const RESERVED_VARIABLE_NAMES = new Set(['__proto__', 'prototype', 'constructor']);
 
+// Allowed validate types for capture-url-query steps (SC-1032)
+const CAPTURE_VALIDATE_TYPES = new Set(['uuid']);
+// Allowed on_fail values for finally steps (SC-1032)
+
 function validateFlowVariables(flow, errors) {
   if (flow.variables !== undefined && (
     flow.variables === null || typeof flow.variables !== 'object' || Array.isArray(flow.variables)
@@ -160,6 +164,129 @@ function validateFlow(flow, filePath, errors) {
     }
   }
   validateFlowVariables(flow, errors);
+  validateRuntimeValues(flow, errors);
+  validateFlowSteps(flow, filePath, errors);
+}
+
+/**
+ * Validate runtime_values block — each entry must be null (required env) or string (optional env).
+ * Array values and numeric values are rejected.
+ *
+ * @param {object} flow - Parsed flow object
+ * @param {string[]} errors - Error accumulator array (mutated in place)
+ */
+function validateRuntimeValues(flow, errors) {
+  if (flow.runtime_values === undefined) return;
+  if (flow.runtime_values === null ||
+      typeof flow.runtime_values !== 'object' ||
+      Array.isArray(flow.runtime_values)) {
+    errors.push('Flow runtime_values must be an object of typed environment declarations');
+    return;
+  }
+  var keys = Object.keys(flow.runtime_values);
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var val = flow.runtime_values[key];
+    if (!VARIABLE_NAME_PATTERN.test(key)) {
+      errors.push(
+        "Flow runtime_value key '" + key + "' is not a valid shell identifier"
+      );
+    }
+    if (!val || typeof val !== 'object' || Array.isArray(val)) {
+      errors.push("Flow runtime_value '" + key + "' must be an object with from_env and sensitive");
+      continue;
+    }
+    if (typeof val.from_env !== 'string' || !/^[A-Z_][A-Z0-9_]*$/.test(val.from_env)) {
+      errors.push("Flow runtime_value '" + key + "' from_env must be an uppercase environment identifier");
+    }
+    if (typeof val.sensitive !== 'boolean') {
+      errors.push("Flow runtime_value '" + key + "' sensitive must be boolean");
+    }
+  }
+}
+
+/**
+ * Validate per-step fields that require new types (SC-1032: capture-url-query, finally http).
+ *
+ * @param {object} flow - Parsed flow object
+ * @param {string} filePath - Source file path (for error messages)
+ * @param {string[]} errors - Error accumulator array (mutated in place)
+ */
+function validateFlowSteps(flow, filePath, errors) {
+  // Validate capture-url-query steps
+  var steps = Array.isArray(flow.steps) ? flow.steps : [];
+  for (var i = 0; i < steps.length; i++) {
+    var step = steps[i];
+    if (!step || step.type !== 'capture-url-query') continue;
+    validateCaptureUrlQueryStep(step, filePath, errors);
+  }
+
+  // Validate finally block
+  if (flow.finally !== undefined) {
+    if (!Array.isArray(flow.finally)) {
+      errors.push('Flow finally must be an array of steps in ' + filePath);
+      return;
+    }
+    for (var j = 0; j < flow.finally.length; j++) {
+      validateFinallyStep(flow.finally[j], j, filePath, errors);
+    }
+  }
+}
+
+/**
+ * Validate a capture-url-query step.
+ */
+function validateCaptureUrlQueryStep(step, filePath, errors) {
+  var stepId = step.id || '(unnamed)';
+  if (!step.query || typeof step.query !== 'string') {
+    errors.push(
+      "Step '" + stepId + "': capture-url-query must have 'query:' (string) in " + filePath
+    );
+  }
+  if (!step.save_as || typeof step.save_as !== 'string') {
+    errors.push(
+      "Step '" + stepId + "': capture-url-query must have 'save_as:' (string) in " + filePath
+    );
+  }
+  if (step.validate !== undefined) {
+    if (!CAPTURE_VALIDATE_TYPES.has(step.validate)) {
+      errors.push(
+        "Step '" + stepId + "': capture-url-query validate type '" + step.validate +
+        "' is not supported. Supported: " + Array.from(CAPTURE_VALIDATE_TYPES).join(', ') +
+        " in " + filePath
+      );
+    }
+  }
+}
+
+/**
+ * Validate a finally step.
+ */
+function validateFinallyStep(step, index, filePath, errors) {
+  if (!step || typeof step !== 'object') {
+    errors.push('Finally step at index ' + index + ' must be an object in ' + filePath);
+    return;
+  }
+  var stepId = step.id || '(unnamed)';
+  if (step.type === 'http') {
+    var http = step.request;
+    if (!http || typeof http !== 'object') {
+      errors.push(
+        "Finally step '" + stepId + "': http type step must have a 'request:' block in " + filePath
+      );
+      return;
+    }
+    if (!http.url || typeof http.url !== 'object' || !http.url.base_from_env || !Array.isArray(http.url.path_segments)) {
+      errors.push(
+        "Finally step '" + stepId + "': request.url must have base_from_env and path_segments in " + filePath
+      );
+    }
+    if (!http.method || typeof http.method !== 'string') {
+      errors.push(
+        "Finally step '" + stepId + "': http block must have 'method:' (string) in " + filePath
+      );
+    }
+  }
 }
 
 /**

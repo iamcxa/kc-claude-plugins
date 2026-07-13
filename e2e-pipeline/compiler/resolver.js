@@ -12,8 +12,10 @@ const ACTION_PARSERS = {
     extract: function(m) { return { element: m[1], page: m[2] || null }; },
   },
   fill: {
-    pattern: /Fill\s+(\w+)\s+with\s+'([^']+)'(?:\s+on\s+([\w-]+))?/i,
-    extract: function(m) { return { element: m[1], value: m[2], page: m[3] || null }; },
+    pattern: /^Fill\s+(\w+)(?:\s+with\s+'([^']*)')?(?:\s+on\s+([\w-]+))?$/i,
+    extract: function(m) {
+      return { element: m[1], value: m[2] || null, page: m[3] || null };
+    },
   },
   snapshot: {
     // Matches "Take snapshot", "snapshot", and "Verify <element>" (element verification is observe-then-assert)
@@ -31,6 +33,11 @@ const ACTION_PARSERS = {
   'execute-external': {
     pattern: /Execute external/i,
     extract: function() { return {}; },
+  },
+  // SC-1032: capture-url-query — extracts a named query param from the current URL
+  'capture-url-query': {
+    pattern: /Capture\s+(\w+)\s+from\s+url\s+query/i,
+    extract: function(m) { return { param: m[1] }; },
   },
 };
 
@@ -264,8 +271,9 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
   return { resolvedExpects: resolvedExpects, activeCount: activeCount, deferredCount: deferredCount, errors: errors };
 }
 
-function resolve(flow, mapping) {
+function resolve(flow, mapping, options) {
   var errors = [];
+  var runtimeValues = (options && options.runtimeValues) || null;
 
   var symbolResult = buildSymbolTable(mapping);
   var table = symbolResult.table;
@@ -283,6 +291,25 @@ function resolve(flow, mapping) {
 
     if (!step.type) {
       errors.push("Step '" + stepId + "' has no type field — run migration tool first");
+      continue;
+    }
+
+    // SC-1032: capture-url-query — pass capture block through operands directly
+    if (step.type === 'capture-url-query') {
+      var capOp = {
+        param: step.query,
+        as: step.save_as.toUpperCase(),
+        state_key: step.save_as,
+        validate: step.validate || null,
+      };
+      var capStep = {
+        id: stepId,
+        action: step.action,
+        type: 'capture-url-query',
+        operands: capOp,
+      };
+      if (step.wait != null) capStep.timeout = Number(step.wait);
+      resolvedSteps.push(capStep);
       continue;
     }
 
@@ -325,6 +352,21 @@ function resolve(flow, mapping) {
           }
         }
       }
+      // SC-1032: thread runtime_ref from step YAML into operands for sensitive fill
+      if (step.type === 'fill' && step.value && step.value.runtime_ref) {
+        var runtimeKey = step.value.runtime_ref;
+        var runtimeDecl = runtimeValues && runtimeValues[runtimeKey];
+        if (!runtimeDecl) {
+          errors.push("Step '" + stepId + "': unknown runtime_ref '" + runtimeKey + "'");
+          skipStep = true;
+        } else {
+          resolvedOperands.runtime_ref = runtimeKey;
+          resolvedOperands.runtime_env = runtimeDecl.from_env;
+        }
+        // Clear plain value when using runtime_ref to avoid literal embedding
+        resolvedOperands.value = null;
+        resolvedOperands.sensitive = runtimeDecl && runtimeDecl.sensitive;
+      }
 
     } else if (step.type === 'verify-external' || step.type === 'execute-external') {
       skipped++;
@@ -345,7 +387,9 @@ function resolve(flow, mapping) {
 
     var resolvedStep = {
       id: stepId,
-      action: step.action,
+      action: resolvedOperands.runtime_ref
+        ? 'Fill ' + resolvedOperands.element + ' with sensitive runtime value'
+        : step.action,
       type: step.type,
       operands: resolvedOperands,
     };
@@ -363,6 +407,45 @@ function resolve(flow, mapping) {
     resolvedSteps.push(resolvedStep);
   }
 
+  // SC-1032: resolve finally steps
+  var resolvedFinally = null;
+  if (Array.isArray(flow.finally) && flow.finally.length > 0) {
+    resolvedFinally = [];
+    for (var fi = 0; fi < flow.finally.length; fi++) {
+      var fStep = flow.finally[fi];
+      var fStepId = fStep.id || '(unnamed-finally-' + fi + ')';
+      if (fStep.type === 'http') {
+        var request = fStep.request;
+        function refTemplate(ref) {
+          if (runtimeValues && runtimeValues[ref]) return '${' + runtimeValues[ref].from_env + '}';
+          return '${' + ref.toUpperCase() + '}';
+        }
+        var pathSegments = request.url.path_segments.map(function(segment) {
+          return typeof segment === 'object' ? refTemplate(segment.runtime_ref) : String(segment);
+        });
+        var headers = {};
+        Object.keys(request.headers || {}).forEach(function(headerName) {
+          var header = request.headers[headerName];
+          headers[headerName] = header.scheme + ' ' + refTemplate(header.runtime_ref);
+        });
+        var httpOp = {
+          method: request.method,
+          url: '${' + request.url.base_from_env + '}/' + pathSegments.join('/'),
+          headers: headers,
+          body: request.json ? JSON.stringify(request.json) : null,
+          expectedStatus: fStep.expect && fStep.expect.status,
+        };
+        resolvedFinally.push({
+          id: fStepId,
+          action: fStep.action,
+          type: 'http',
+          on_fail: 'fail',
+          operands: httpOp,
+        });
+      }
+    }
+  }
+
   var stats = {
     total: (flow.steps || []).length,
     activeExpects: activeExpects,
@@ -374,7 +457,9 @@ function resolve(flow, mapping) {
     name: flow.name,
     description: flow.description,
     variables: flow.variables,
+    runtimeValues: runtimeValues,
     steps: resolvedSteps,
+    finally: resolvedFinally,
   };
 
   return { resolved: resolved, stats: stats, errors: errors };

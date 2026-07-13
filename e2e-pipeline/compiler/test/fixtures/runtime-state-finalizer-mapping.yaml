@@ -1,0 +1,23 @@
+version: 2
+app: booking-app
+base_url: "http://localhost:3000"
+pages:
+  checkout:
+    url_pattern: "/checkout"
+    elements:
+      password_input:
+        selector: "input[type='password']"
+        css_selector: "input[type='password']"
+        description: "Sensitive password field"
+      confirm_button:
+        selector: '[role="button"][aria-label="Confirm Booking"]'
+        description: "Confirm booking button"
+      booking_id_display:
+        selector: '[data-testid="booking-id"]'
+        description: "Booking ID display"
+  confirmation:
+    url_pattern: "/confirmation"
+    elements:
+      confirmation_heading:
+        selector: '[role="heading"][aria-label="Booking Confirmed"]'
+        description: "Confirmation heading"

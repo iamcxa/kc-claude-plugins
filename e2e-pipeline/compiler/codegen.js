@@ -161,6 +161,47 @@ function generateVariables(variables, flowName) {
 }
 
 // ---------------------------------------------------------------------------
+// Runtime values block (SC-1032) — required env variables, not positional args
+// ---------------------------------------------------------------------------
+
+/**
+ * generateRuntimeValuesBlock(runtimeValues, flowName) — emit env-based required variable checks.
+ *
+ * Unlike generateVariables() which reads positional args ($1, $2, ...),
+ * runtime_values entries are always read from the environment (never from argv).
+ * This is mandatory for secrets: passing secrets via argv leaks them into
+ * process lists, shell history, and log files.
+ *
+ * Each entry:
+ *   - null => required env: VAR="${VAR:?Usage: set VAR env for flowName}"
+ *   - string => optional env with default: VAR="${VAR:-default}"
+ *
+ * Returns: string (multi-line bash block), or '' if runtimeValues is empty/absent
+ */
+function generateRuntimeValuesBlock(runtimeValues, flowName) {
+  if (!runtimeValues) return '';
+  var entries = Object.entries(runtimeValues);
+  if (entries.length === 0) return '';
+
+  var lines = ['# Runtime values (required env vars — never pass secrets via argv)'];
+  for (var i = 0; i < entries.length; i++) {
+    var varName = entries[i][0];
+    var declaration = entries[i][1];
+    var bashName = declaration.from_env;
+    lines.push(bashName + '="${' + bashName + ':?Error: ' + bashName +
+      ' must be set in environment for ' + flowName + '}"');
+  }
+  return lines.join('\n');
+}
+
+function runtimeTemplateDoubleQuote(value) {
+  return '"' + escapeDoubleQuoted(String(value)).replace(
+    /\\\$\{([A-Za-z_][A-Za-z0-9_]*)\}/g,
+    '${$1}'
+  ) + '"';
+}
+
+// ---------------------------------------------------------------------------
 // Header generation
 // ---------------------------------------------------------------------------
 
@@ -624,18 +665,24 @@ function generateBaseUrlNormalization(variables) {
 // ---------------------------------------------------------------------------
 
 /**
- * generateCleanupTrap(steps) — produce cleanup() function and trap cleanup EXIT.
+ * generateCleanupTrap(steps, finallySteps) — produce cleanup() function and trap cleanup EXIT.
  *
  * Collects unique step.session values from resolved steps.
  * - Single-site (no sessions): emits default agent-browser close
  * - Cross-site (sessions present): emits per-session close for each distinct session
  *
+ * SC-1032: if finallySteps is provided, the cleanup() function also runs HTTP finalizer
+ * steps before closing the browser. Each http finalizer uses curl. If on_fail=fail
+ * and the HTTP call fails, the finalizer sets _FINALIZER_FAILED=1 so the trap
+ * can exit with non-zero even when all test steps passed.
+ *
  * The trap ensures agent-browser is closed on PASS, FAIL, and unexpected exit.
- * Uses || true to prevent cleanup failure from overriding the script's exit code.
+ * Uses || true to prevent cleanup failure from overriding the script's exit code
+ * (EXCEPT when on_fail=fail in a finally step — that IS supposed to override).
  *
  * Returns: string (multi-line bash block)
  */
-function generateCleanupTrap(steps) {
+function generateCleanupTrap(steps, finallySteps) {
   // Collect distinct session names (excluding falsy/empty)
   var sessions = [];
   var seen = new Set();
@@ -647,7 +694,54 @@ function generateCleanupTrap(steps) {
     }
   }
 
-  var lines = ['cleanup() {'];
+  var lines = [
+    '_FINALIZER_FAILED=0',
+    'cleanup() {',
+    '  local _prev_exit=$?',
+    '  trap - EXIT',
+  ];
+
+  // SC-1032: HTTP finally steps — run before browser close so BOOKING_ID is still in scope
+  if (Array.isArray(finallySteps) && finallySteps.length > 0) {
+    for (var fi = 0; fi < finallySteps.length; fi++) {
+      var fStep = finallySteps[fi];
+      if (fStep.type !== 'http') continue;
+
+      var op = fStep.operands;
+      var method = op.method || 'POST';
+      var url = op.url;
+      var onFail = fStep.on_fail || 'fail';
+
+      // Build curl command — headers and body
+      var curlParts = ['curl', '-s', '-f', '-X', singleQuote(method)];
+
+      // Headers
+      var headerKeys = op.headers ? Object.keys(op.headers) : [];
+      for (var hi = 0; hi < headerKeys.length; hi++) {
+        var hKey = headerKeys[hi];
+        var hVal = op.headers[hKey];
+        // Expand shell variables in header values at runtime
+        curlParts.push('-H', runtimeTemplateDoubleQuote(hKey + ': ' + hVal));
+      }
+
+      // Body (if present) — use --data-raw, expand shell vars at runtime
+      if (op.body) {
+        curlParts.push('--data-raw', runtimeTemplateDoubleQuote(op.body));
+      }
+
+      // URL — expand shell vars at runtime
+      curlParts.push(runtimeTemplateDoubleQuote(url));
+
+      var curlCmd = '  ' + curlParts.join(' ');
+
+      lines.push('  echo ' + doubleQuote('[finally] ' + fStep.id + ': ' + fStep.action));
+      if (onFail === 'fail') {
+        lines.push(curlCmd + ' || _FINALIZER_FAILED=1');
+      } else {
+        lines.push(curlCmd + ' || true');
+      }
+    }
+  }
 
   if (sessions.length === 0) {
     // Single-site: default session close
@@ -659,6 +753,10 @@ function generateCleanupTrap(steps) {
     }
   }
 
+  lines.push('  if [ "$_FINALIZER_FAILED" -ne 0 ]; then');
+  lines.push('    exit 1');
+  lines.push('  fi');
+  lines.push('  exit "$_prev_exit"');
   lines.push('}');
   lines.push('trap cleanup EXIT');
 
@@ -961,23 +1059,51 @@ function generateAction(step, stepIndex, totalSteps) {
       var fillSel = singleQuote(step.operands.selector);
       var fillVal = step.operands.value;
       var fillCssSel = step.operands.cssSelector || null;
+      var fillRuntimeRef = step.operands.runtime_ref || null;
+      var fillRuntimeEnv = step.operands.runtime_env || null;
       lines.push('_STEP_START=$SECONDS');
       lines.push('_step_ok=true');
 
-      if (fillCssSel) {
+      if (fillRuntimeRef) {
+        // SC-1032: sensitive fill — read value from stdin (read -s) to avoid argv leakage.
+        // The secret name is the runtime_ref var; we read into a local temp var.
+        var secretVar = '_E2E_SECRET_' + fillRuntimeRef.toUpperCase();
+        lines.push('# Sensitive fill: read value from env (never argv) — SC-1032');
+        lines.push('# Use declared env for runtime key ' + fillRuntimeRef + ' (never echo or log it)');
+        // If env var is set, use it directly; otherwise prompt via read -s on stderr
+        lines.push(secretVar + '="${' + fillRuntimeEnv + ':-}"');
+        lines.push('if [ -z "$' + secretVar + '" ]; then');
+        lines.push('  # Prompt for secret via stdin (stderr prompt, no echo)');
+        lines.push('  printf \'Enter runtime value: \' >&2');
+        lines.push('  read -rs ' + secretVar);
+        lines.push('  printf \'\\n\' >&2');
+        lines.push('fi');
+        if (!fillCssSel) throw new Error('runtime_ref fill requires mapping css_selector');
+        var sensitiveCss = JSON.stringify(fillCssSel);
+        var sensitivePrefix = "(()=>{const el=document.querySelector(" + sensitiveCss + ");" +
+          "if(!el)throw new Error('element not found');el.focus();" +
+          "const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;s.call(el,\"";
+        var sensitiveSuffix = "\");const t=el._valueTracker;if(t)t.setValue('');" +
+          "el.dispatchEvent(new Event('input',{bubbles:true}));" +
+          "el.dispatchEvent(new Event('change',{bubbles:true}));})()";
+        lines.push('_E2E_SECRET_JSON=$(_json_escape "$' + secretVar + '")');
+        lines.push('{ printf \'%s\' ' + singleQuote(sensitivePrefix) +
+          '; printf \'%s\' "$_E2E_SECRET_JSON"; printf \'%s\' ' + singleQuote(sensitiveSuffix) +
+          '; } | agent-browser ' + sessionPrefix + 'eval --stdin || _step_ok=false');
+      } else if (fillCssSel) {
         // eval-based fill: nativeInputValueSetter — bypasses React controlled inputs
         var jsFillCss = JSON.stringify(fillCssSel);
         var jsFillVal = JSON.stringify(fillVal);
-        var fillEval = "(()=>{"
-          + "const el=document.querySelector(" + jsFillCss + ");"
-          + "if(!el)throw new Error('element not found: '+" + jsFillCss + ");"
-          + "el.focus();"
-          + "const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;"
-          + "s.call(el," + jsFillVal + ");"
-          + "const t=el._valueTracker;if(t)t.setValue('');"
-          + "el.dispatchEvent(new Event('input',{bubbles:true}));"
-          + "el.dispatchEvent(new Event('change',{bubbles:true}));"
-          + "})()";
+        var fillEval = "(()=>{" +
+          "const el=document.querySelector(" + jsFillCss + ");" +
+          "if(!el)throw new Error('element not found: '+" + jsFillCss + ");" +
+          "el.focus();" +
+          "const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;" +
+          "s.call(el," + jsFillVal + ");" +
+          "const t=el._valueTracker;if(t)t.setValue('');" +
+          "el.dispatchEvent(new Event('input',{bubbles:true}));" +
+          "el.dispatchEvent(new Event('change',{bubbles:true}));" +
+          "})()";
         var evalFillCmd = 'agent-browser ' + sessionPrefix + 'eval ' + singleQuote(fillEval);
         lines.push(evalFillCmd + ' || _step_ok=false');
       } else {
@@ -1007,6 +1133,56 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('  _STEP_RESULTS+=("fail")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
       lines.push('  _handle_failure ' + quotedId + ' "fill action failed"' + failureSessionArg);
+      lines.push('fi');
+      break;
+    }
+
+    case 'capture-url-query': {
+      // SC-1032: capture a named query parameter from the current URL.
+      // validate: uuid checks exact-one UUID format (RFC 4122 lowercase).
+      var capParam = step.operands.param;
+      var capAs = step.operands.as;
+      var capValidate = step.operands.validate;
+      var uuidPattern = '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$';
+
+      lines.push('# uuid validation for capture-url-query');
+      lines.push('_STEP_START=$SECONDS');
+      lines.push('_step_ok=true');
+      // Get current URL
+      lines.push('_capture_raw_url=""');
+      lines.push('if ! _capture_raw_url=$(_capture_url "' + (step.session || '') + '"); then');
+      lines.push('  _step_ok=false');
+      lines.push('else');
+      // Extract query parameter value using sed — POSIX-compatible
+      // Pattern: extract ?param=VALUE or &param=VALUE, stop at & or end
+      lines.push('  ' + capAs + '=""');
+      lines.push('  ' + capAs + '=$(printf \'%s\' "$_capture_raw_url" | ' +
+        'sed -n ' + singleQuote('s/.*[?&]' + capParam + '=\\([^&]*\\).*/\\1/p') + ')');
+      lines.push('  if [ -z "$' + capAs + '" ]; then');
+      lines.push('    _step_ok=false');
+      lines.push('    _CAPTURE_FAIL_MSG=' + singleQuote('capture-url-query: param "' + capParam + '" not found in URL'));
+      lines.push('  else');
+      if (capValidate === 'uuid') {
+        // UUID exact-one validation: must match RFC 4122 pattern
+        lines.push('    if ! printf \'%s\' "$' + capAs + '" | grep -Eq ' + singleQuote(uuidPattern) + '; then');
+        lines.push('      _step_ok=false');
+        lines.push('      _CAPTURE_FAIL_MSG=' + singleQuote('capture-url-query: param "' + capParam + '" value is not a valid UUID'));
+        lines.push('    fi');
+      }
+      lines.push('  fi');
+      lines.push('fi');
+      lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
+      lines.push('if [ "$_step_ok" = "true" ]; then');
+      lines.push('  ' + recordStepName);
+      lines.push('  _STEP_RESULTS+=("pass")');
+      lines.push('  _STEP_FAILURES+=("")');
+      lines.push('  _STEP_TIMES+=("$_elapsed")');
+      lines.push('else');
+      lines.push('  ' + recordStepName);
+      lines.push('  _STEP_RESULTS+=("fail")');
+      lines.push('  _STEP_TIMES+=("$_elapsed")');
+      // Use the step-local failure message variable if set
+      lines.push('  _handle_failure ' + quotedId + ' "${_CAPTURE_FAIL_MSG:-capture-url-query failed}"' + failureSessionArg);
       lines.push('fi');
       break;
     }
@@ -1249,6 +1425,13 @@ function generate(resolved, flowName, meta) {
     parts.push('');
   }
 
+  // 3b. SC-1032: Runtime values (required env vars — never positional args)
+  var runtimeValuesBlock = generateRuntimeValuesBlock(resolved.runtimeValues, flowName);
+  if (runtimeValuesBlock) {
+    parts.push(runtimeValuesBlock);
+    parts.push('');
+  }
+
   // 4. BASE_URL normalization — strips trailing slash from all *_BASE_URL variables (CODEGEN-03)
   var normBlock = generateBaseUrlNormalization(resolved.variables);
   if (normBlock) {
@@ -1266,7 +1449,8 @@ function generate(resolved, flowName, meta) {
   parts.push(generateMetricsEmitter(flowName));
 
   // 6. Cleanup trap — registers agent-browser close on EXIT (CI-06)
-  parts.push(generateCleanupTrap(steps));
+  // SC-1032: pass finallySteps so cleanup() runs HTTP finalizers before browser close
+  parts.push(generateCleanupTrap(steps, resolved.finally));
   parts.push('');
 
   // 7. Per-step action blocks
@@ -1311,6 +1495,7 @@ module.exports = {
   singleQuote: singleQuote,
   selectorToA11yPattern: selectorToA11yPattern,
   generateVariables: generateVariables,
+  generateRuntimeValuesBlock: generateRuntimeValuesBlock,
   generateBaseUrlNormalization: generateBaseUrlNormalization,
   generateCleanupTrap: generateCleanupTrap,
   generateJUnitEmitter: generateJUnitEmitter,
