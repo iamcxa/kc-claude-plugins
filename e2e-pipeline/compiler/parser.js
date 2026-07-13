@@ -172,10 +172,11 @@ function validateFlow(flow, filePath, errors) {
 
 function validateCrossSiteRuntimeFeatures(flow, errors) {
   if (!flow.sites) return;
+  var steps = Array.isArray(flow.steps) ? flow.steps : [];
   if (flow.runtime_values !== undefined) {
     errors.push('Cross-site flows do not support runtime_values');
   }
-  if ((flow.steps || []).some(function(step) { return step && step.type === 'capture-url-query'; })) {
+  if (steps.some(function(step) { return step && step.type === 'capture-url-query'; })) {
     errors.push('Cross-site flows do not support capture-url-query');
   }
   if (flow.finally !== undefined) {

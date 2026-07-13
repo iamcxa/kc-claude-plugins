@@ -863,6 +863,32 @@ describe('SC-1032 vertical seam', function () {
       }
     });
 
+    test('cross-site malformed steps returns structured parse and compile errors without throwing', async function () {
+      const yaml = require('js-yaml');
+      const tmpDir = makeTmpDir();
+      const flowPath = path.join(tmpDir, 'cross-site-malformed-steps.yaml');
+      fs.writeFileSync(flowPath, yaml.dump({
+        name: 'cross-site-malformed-steps',
+        sites: { app: { mapping: 'runtime-state-finalizer-mapping' } },
+        steps: { bad: 'shape' },
+      }));
+
+      let parseResult;
+      assert.doesNotThrow(function () {
+        parseResult = parse(flowPath, MAPPING_DIR);
+      });
+      assert.ok(parseResult.errors.some(function (error) {
+        return error.includes('steps') && error.includes('array');
+      }), parseResult.errors.join('; '));
+
+      const compileResult = await compile(flowPath, MAPPING_DIR, path.join(tmpDir, 'out'));
+      assert.equal(compileResult.success, false);
+      assert.ok(compileResult.errors.some(function (error) {
+        return error.includes('steps') && error.includes('array');
+      }), compileResult.errors.join('; '));
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    });
+
     test('runtime value block does not embed hostile flow names in shell', function () {
       const hostileFlowName = 'flow}\necho REVIEW_BLOCKER_EXECUTED\n${';
       const block = generateRuntimeValuesBlock({
