@@ -2,6 +2,14 @@
 
 Patterns and gotchas for E2E testing agents. For project-specific patterns, check `<project>/.claude/skills/agent-browser/references/`.
 
+## Run-Scoped Runtime State and Cleanup
+
+- Declare runtime inputs as `{from_env, sensitive}` under `runtime_values`; do not put secret values in flow YAML or argv.
+- Use `value: {runtime_ref: key}` for a sensitive mapped fill. The compiler sends encoded bytes through `agent-browser eval --stdin`.
+- Use `type: capture-url-query` with an ASCII `query`, identifier `save_as`, and `validate: uuid`. Capture requires exactly one non-empty value via browser `URLSearchParams.getAll`.
+- Reuse only declared/captured names through `runtime_ref`. Ordered `finally` HTTP steps must cancel then read back state when cleanup is authoritative.
+- `finally` always runs, records into the same metrics/JUnit arrays, and overrides success when cleanup or readback fails.
+
 ## Environment Setup
 
 - **PATH**: `agent-browser` is installed globally via npm at `~/.npm-global/bin/`. After context reset or in subagent contexts, this path may not be in `$PATH`. Always verify availability before first use:

@@ -169,8 +169,7 @@ function validateFlow(flow, filePath, errors) {
 }
 
 /**
- * Validate runtime_values block — each entry must be null (required env) or string (optional env).
- * Array values and numeric values are rejected.
+ * Validate typed, environment-backed runtime values.
  *
  * @param {object} flow - Parsed flow object
  * @param {string[]} errors - Error accumulator array (mutated in place)
@@ -191,6 +190,9 @@ function validateRuntimeValues(flow, errors) {
       errors.push(
         "Flow runtime_value key '" + key + "' is not a valid shell identifier"
       );
+    }
+    if (RESERVED_VARIABLE_NAMES.has(key)) {
+      errors.push("Flow runtime_value key '" + key + "' is reserved");
     }
     if (!val || typeof val !== 'object' || Array.isArray(val)) {
       errors.push("Flow runtime_value '" + key + "' must be an object with from_env and sensitive");
@@ -221,6 +223,16 @@ function validateFlowSteps(flow, filePath, errors) {
     validateCaptureUrlQueryStep(step, filePath, errors);
   }
 
+  var stateKeys = new Set(Object.keys(flow.runtime_values || {}));
+  for (var stateIndex = 0; stateIndex < steps.length; stateIndex++) {
+    var capture = steps[stateIndex];
+    if (!capture || capture.type !== 'capture-url-query' || typeof capture.save_as !== 'string') continue;
+    if (stateKeys.has(capture.save_as)) {
+      errors.push("Step '" + capture.id + "': save_as '" + capture.save_as + "' collides with an existing runtime state key");
+    }
+    stateKeys.add(capture.save_as);
+  }
+
   // Validate finally block
   if (flow.finally !== undefined) {
     if (!Array.isArray(flow.finally)) {
@@ -228,7 +240,7 @@ function validateFlowSteps(flow, filePath, errors) {
       return;
     }
     for (var j = 0; j < flow.finally.length; j++) {
-      validateFinallyStep(flow.finally[j], j, filePath, errors);
+      validateFinallyStep(flow.finally[j], j, filePath, stateKeys, errors);
     }
   }
 }
@@ -243,10 +255,17 @@ function validateCaptureUrlQueryStep(step, filePath, errors) {
       "Step '" + stepId + "': capture-url-query must have 'query:' (string) in " + filePath
     );
   }
+  if (typeof step.query === 'string' && !/^[A-Za-z0-9._~-]+$/.test(step.query)) {
+    errors.push("Step '" + stepId + "': capture-url-query query must be a non-empty ASCII URL query key in " + filePath);
+  }
   if (!step.save_as || typeof step.save_as !== 'string') {
     errors.push(
       "Step '" + stepId + "': capture-url-query must have 'save_as:' (string) in " + filePath
     );
+  }
+  if (typeof step.save_as === 'string' &&
+      (!VARIABLE_NAME_PATTERN.test(step.save_as) || RESERVED_VARIABLE_NAMES.has(step.save_as))) {
+    errors.push("Step '" + stepId + "': capture-url-query save_as must be a non-reserved identifier in " + filePath);
   }
   if (step.validate !== undefined) {
     if (!CAPTURE_VALIDATE_TYPES.has(step.validate)) {
@@ -262,7 +281,7 @@ function validateCaptureUrlQueryStep(step, filePath, errors) {
 /**
  * Validate a finally step.
  */
-function validateFinallyStep(step, index, filePath, errors) {
+function validateFinallyStep(step, index, filePath, stateKeys, errors) {
   if (!step || typeof step !== 'object') {
     errors.push('Finally step at index ' + index + ' must be an object in ' + filePath);
     return;
@@ -286,6 +305,36 @@ function validateFinallyStep(step, index, filePath, errors) {
         "Finally step '" + stepId + "': http block must have 'method:' (string) in " + filePath
       );
     }
+    if (http.url && typeof http.url === 'object') {
+      if (!/^[A-Z_][A-Z0-9_]*$/.test(http.url.base_from_env || '')) {
+        errors.push("Finally step '" + stepId + "': request.url.base_from_env must be an uppercase environment identifier");
+      }
+      (http.url.path_segments || []).forEach(function(segment) {
+        if (segment && typeof segment === 'object') validateRuntimeRef(segment, stepId, stateKeys, errors);
+      });
+    }
+    Object.keys(http.headers || {}).forEach(function(headerName) {
+      if (!/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(headerName)) {
+        errors.push("Finally step '" + stepId + "': invalid HTTP header name '" + headerName + "'");
+      }
+      var header = http.headers[headerName];
+      if (!header || typeof header !== 'object' || typeof header.scheme !== 'string') {
+        errors.push("Finally step '" + stepId + "': header '" + headerName + "' must declare scheme and runtime_ref");
+      } else {
+        validateRuntimeRef(header, stepId, stateKeys, errors);
+      }
+    });
+    if (step.expect && step.expect.status !== undefined &&
+        (!Number.isInteger(step.expect.status) || step.expect.status < 100 || step.expect.status > 599)) {
+      errors.push("Finally step '" + stepId + "': expect.status must be an HTTP status integer");
+    }
+  }
+}
+
+function validateRuntimeRef(value, stepId, stateKeys, errors) {
+  if (!value || typeof value.runtime_ref !== 'string' || !stateKeys.has(value.runtime_ref)) {
+    errors.push("Finally step '" + stepId + "': unknown runtime_ref '" +
+      (value && value.runtime_ref ? value.runtime_ref : '') + "'");
   }
 }
 

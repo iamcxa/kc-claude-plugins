@@ -55,3 +55,19 @@ finally:
         reason: sc-1032-test
     expect:
       status: 200
+
+  - id: verify-booking-cancelled-finalizer
+    type: http
+    action: "Read back cancelled booking state"
+    request:
+      method: GET
+      url:
+        base_from_env: E2E_API_BASE_URL
+        path_segments: [api, admin, bookings, { runtime_ref: booking_id }]
+      headers:
+        Authorization: { scheme: Bearer, runtime_ref: admin_token }
+    expect:
+      status: 200
+      body:
+        field: status
+        equals: cancelled

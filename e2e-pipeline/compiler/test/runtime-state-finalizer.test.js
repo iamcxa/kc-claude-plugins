@@ -46,6 +46,47 @@ function writeExecutable(filePath, contents) {
   fs.chmodSync(filePath, 0o755);
 }
 
+function writeAgentBrowserStub(filePath, uuid, snapshotExit) {
+  writeExecutable(filePath, [
+    '#!/usr/bin/env bash',
+    'if [ "$*" = "eval --stdin" ]; then',
+    '  _program=$(cat)',
+    '  case "$_program" in',
+    '    *"searchParams.getAll"*) printf \'%s\\n\' ' + JSON.stringify('__E2E_CAPTURE__' + uuid) + ' ;;',
+    '    *) exit 0 ;;',
+    '  esac',
+    '  exit 0',
+    'fi',
+    'case "$*" in',
+    '  *"open "*|*"click "*|*"close"*) exit 0 ;;',
+    '  *"snapshot"*) ' + (snapshotExit ? 'exit 1' : 'echo "- button Confirm Booking"') + ' ;;',
+    '  *) exit 0 ;;',
+    'esac',
+  ].join('\n'));
+}
+
+function writeCurlStub(filePath, logPath) {
+  writeExecutable(filePath, [
+    '#!/usr/bin/env bash',
+    logPath ? 'printf \'%s\\n\' "$*" >> ' + singleShellLiteral(logPath) : ':',
+    '_out=""',
+    'while [ "$#" -gt 0 ]; do',
+    '  if [ "$1" = "-o" ]; then _out="$2"; shift 2; else shift; fi',
+    'done',
+    '[ -z "$_out" ] || printf \'%s\\n\' \'{"status":"cancelled"}\' > "$_out"',
+    'printf \'200\'',
+  ].join('\n'));
+}
+
+function parseInlineFlow(flow) {
+  const yaml = require('js-yaml');
+  const tmpFlow = path.join(makeTmpDir(), 'flow.yaml');
+  fs.writeFileSync(tmpFlow, yaml.dump(flow));
+  const result = parse(tmpFlow, MAPPING_DIR);
+  fs.rmSync(path.dirname(tmpFlow), { recursive: true, force: true });
+  return result;
+}
+
 // ---------------------------------------------------------------------------
 // Bash execution helper
 // ---------------------------------------------------------------------------
@@ -56,7 +97,7 @@ function runScript(scriptPath, opts) {
   if (opts.binDir) {
     env.PATH = opts.binDir + path.delimiter + (env.PATH || '');
   }
-  return childProcess.spawnSync(RUNTIME_BASH, [scriptPath], {
+  return childProcess.spawnSync(RUNTIME_BASH, [scriptPath].concat(opts.args || []), {
     encoding: 'utf8',
     env: env,
     input: opts.stdin || '',
@@ -211,7 +252,7 @@ describe('SC-1032 vertical seam', function () {
       const result = parse(FLOW_PATH, MAPPING_DIR);
       assert.ok(result.flow.finally, 'Expected flow.finally to be present');
       assert.ok(Array.isArray(result.flow.finally), 'Expected flow.finally to be an array');
-      assert.equal(result.flow.finally.length, 1);
+      assert.equal(result.flow.finally.length, 2);
     });
 
     test('parse() rejects finally step of type http missing http.url', function () {
@@ -312,10 +353,11 @@ describe('SC-1032 vertical seam', function () {
 
       assert.ok(resolved.resolved.finally, 'Expected finally in resolved output');
       assert.ok(Array.isArray(resolved.resolved.finally), 'Expected finally to be array');
-      assert.equal(resolved.resolved.finally.length, 1);
+      assert.equal(resolved.resolved.finally.length, 2);
       const finStep = resolved.resolved.finally[0];
       assert.equal(finStep.type, 'http');
-      assert.ok(finStep.operands.url, 'Expected url in finally step operands');
+      assert.equal(finStep.operands.baseEnv, 'E2E_API_BASE_URL');
+      assert.equal(finStep.operands.pathSegments[3].runtime_ref.state_key, 'booking_id');
       assert.equal(finStep.operands.method, 'POST');
     });
   });
@@ -457,24 +499,9 @@ describe('SC-1032 vertical seam', function () {
         // Stub agent-browser: navigate succeeds, snapshot succeeds,
         // get url returns URL with bookingId UUID
         const testUuid = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
-        writeExecutable(path.join(binDir, 'agent-browser'), [
-          '#!/usr/bin/env bash',
-          'case "$*" in',
-          '  *"get url"*) echo "http://localhost:3000/confirmation?bookingId=' + testUuid + '" ;;',
-          '  *"open "*) exit 0 ;;',
-          '  *"click "*) exit 0 ;;',
-          '  *"fill "*) exit 0 ;;',
-          '  *"snapshot"*) echo "- button Confirm Booking" ;;',
-          '  *"close"*) exit 0 ;;',
-          '  *) exit 0 ;;',
-          'esac',
-        ].join('\n'));
+        writeAgentBrowserStub(path.join(binDir, 'agent-browser'), testUuid, false);
         // Stub curl: always succeeds
-        writeExecutable(path.join(binDir, 'curl'), [
-          '#!/usr/bin/env bash',
-          'echo \'{"status":"cancelled"}\'',
-          'exit 0',
-        ].join('\n'));
+        writeCurlStub(path.join(binDir, 'curl'));
         // Stub sleep: no-op
         writeExecutable(path.join(binDir, 'sleep'), '#!/usr/bin/env bash\nexit 0\n');
 
@@ -507,26 +534,9 @@ describe('SC-1032 vertical seam', function () {
       const finalizerLog = path.join(binDir, 'finalizer-calls.log');
       try {
         const testUuid = 'deadbeef-dead-beef-dead-beefdeadbeef';
-        writeExecutable(path.join(binDir, 'agent-browser'), [
-          '#!/usr/bin/env bash',
-          'case "$*" in',
-          '  *"get url"*) echo "http://localhost:3000/confirmation?bookingId=' + testUuid + '" ;;',
-          '  *"open "*) exit 0 ;;',
-          '  *"click "*) exit 0 ;;',
-          '  *"fill "*) exit 0 ;;',
-          // snapshot fails AFTER capture — simulating post-capture failure
-          '  *"snapshot"*) exit 1 ;;',
-          '  *"close"*) exit 0 ;;',
-          '  *) exit 0 ;;',
-          'esac',
-        ].join('\n'));
+        writeAgentBrowserStub(path.join(binDir, 'agent-browser'), testUuid, true);
         // Stub curl: logs calls with BOOKING_ID from body, always succeeds
-        writeExecutable(path.join(binDir, 'curl'), [
-          '#!/usr/bin/env bash',
-          'echo "$@" >> ' + finalizerLog,
-          'echo \'{"status":"cancelled"}\'',
-          'exit 0',
-        ].join('\n'));
+        writeCurlStub(path.join(binDir, 'curl'), finalizerLog);
         writeExecutable(path.join(binDir, 'sleep'), '#!/usr/bin/env bash\nexit 0\n');
 
         const result = runScript(compiledScript, {
@@ -563,19 +573,7 @@ describe('SC-1032 vertical seam', function () {
       const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-sc1032-finfail-bin-'));
       try {
         const testUuid = 'cafebabe-cafe-babe-cafe-babecafebabe';
-        writeExecutable(path.join(binDir, 'agent-browser'), [
-          '#!/usr/bin/env bash',
-          'case "$*" in',
-          '  *"get url"*) echo "http://localhost:3000/confirmation?bookingId=' + testUuid + '" ;;',
-          '  *"open "*) exit 0 ;;',
-          '  *"click "*) exit 0 ;;',
-          '  *"fill "*) exit 0 ;;',
-          '  *"snapshot"*) echo "- heading Booking Confirmed" ;;',
-          '  *"is visible"*) echo "true" ;;',
-          '  *"close"*) exit 0 ;;',
-          '  *) exit 0 ;;',
-          'esac',
-        ].join('\n'));
+        writeAgentBrowserStub(path.join(binDir, 'agent-browser'), testUuid, false);
         // curl FAILS — finalizer HTTP failure
         writeExecutable(path.join(binDir, 'curl'), [
           '#!/usr/bin/env bash',
@@ -618,4 +616,153 @@ describe('SC-1032 vertical seam', function () {
         'Must not echo $BOOKING_PASSWORD value to stdout');
     });
   });
+
+  describe('T2 hostile sink and lifecycle coverage', function () {
+    test('parser rejects hostile query/state identifiers, collisions, and unknown finalizer refs', function () {
+      const base = {
+        name: 'hostile-schema',
+        mapping: 'runtime-state-finalizer-mapping',
+        runtime_values: {
+          booking_id: { from_env: 'E2E_BOOKING_ID', sensitive: false },
+        },
+        steps: [{
+          id: 'capture', type: 'capture-url-query', action: 'Capture bookingId from URL query',
+          query: 'bookingId;$(touch pwned)', save_as: 'booking_id', validate: 'uuid',
+        }],
+        finally: [{
+          id: 'cleanup', type: 'http', action: 'cleanup',
+          request: {
+            method: 'POST',
+            url: { base_from_env: 'E2E_API_BASE_URL', path_segments: [{ runtime_ref: 'missing' }] },
+          },
+        }],
+      };
+      const result = parseInlineFlow(base);
+      assert.ok(result.errors.some(function (e) { return e.includes('ASCII URL query key'); }));
+      assert.ok(result.errors.some(function (e) { return e.includes('collides'); }));
+      assert.ok(result.errors.some(function (e) { return e.includes("unknown runtime_ref 'missing'"); }));
+
+      base.steps[0].query = 'bookingId';
+      base.steps[0].save_as = 'bad;state';
+      const badState = parseInlineFlow(base);
+      assert.ok(badState.errors.some(function (e) { return e.includes('non-reserved identifier'); }));
+    });
+
+    test('generated sinks use stdin, exact-one browser parsing, encoding, and post-finalizer reports', function () {
+      const parsed = parse(FLOW_PATH, MAPPING_DIR);
+      const resolved = resolve(parsed.flow, parsed.mapping, { runtimeValues: parsed.flow.runtime_values });
+      const script = generate(resolved.resolved, parsed.flow.name);
+      assert.ok(script.includes('searchParams.getAll("bookingId")'));
+      assert.ok(script.includes('values.length!==1'));
+      assert.ok(script.includes('eval --stdin'));
+      assert.ok(script.includes('_base64_no_wrap'));
+      assert.ok(script.includes('--config "$_FINALIZER_CONFIG"'));
+      assert.ok(script.includes('--data-binary @-'));
+      const cleanup = script.match(/cleanup\(\) \{([\s\S]*?)\n\}/)[1];
+      assert.ok(cleanup.indexOf('cancel-booking-finalizer') < cleanup.indexOf('verify-booking-cancelled-finalizer'));
+      assert.ok(cleanup.indexOf('verify-booking-cancelled-finalizer') < cleanup.indexOf('_emit_metrics'));
+    });
+
+    test('capture rejects missing, duplicate/empty, invalid UUID, and multiline protocol output', async function () {
+      const tmpDir = makeTmpDir();
+      const compiled = await compile(FLOW_PATH, MAPPING_DIR, tmpDir);
+      const cases = [
+        { name: 'missing', output: '', status: 1 },
+        { name: 'duplicate', output: '', status: 1 },
+        { name: 'empty', output: '__E2E_CAPTURE__', status: 0 },
+        { name: 'invalid', output: '__E2E_CAPTURE__not-a-uuid', status: 0 },
+        { name: 'multiline', output: '__E2E_CAPTURE__a1b2c3d4-e5f6-7890-abcd-ef1234567890\nnoise', status: 0 },
+      ];
+      for (const hostile of cases) {
+        const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-sc1032-capture-'));
+        writeExecutable(path.join(binDir, 'agent-browser'), [
+          '#!/usr/bin/env bash',
+          'if [ "$*" = "eval --stdin" ]; then',
+          '  _program=$(cat)',
+          '  case "$_program" in',
+          '    *"searchParams.getAll"*) printf ' + singleShellLiteral('%s\n') + ' ' +
+            singleShellLiteral(hostile.output) + '; exit ' + hostile.status + ' ;;',
+          '    *) exit 0 ;;',
+          '  esac',
+          'fi',
+          'case "$*" in *snapshot*) echo ok ;; *) exit 0 ;; esac',
+        ].join('\n'));
+        writeCurlStub(path.join(binDir, 'curl'));
+        writeExecutable(path.join(binDir, 'sleep'), '#!/usr/bin/env bash\nexit 0\n');
+        const result = runScript(compiled.outputPath, {
+          binDir: binDir,
+          env: {
+            E2E_BOOKING_PASSWORD: 'secret', E2E_ADMIN_TOKEN: 'token',
+            E2E_API_BASE_URL: 'http://localhost', BASE_URL: 'http://localhost',
+            CONTINUE_ON_ERROR: 'true', E2E_SCREENSHOT_DIR: path.join(tmpDir, hostile.name),
+          },
+        });
+        assert.notEqual(result.status, 0, hostile.name + ' capture must fail');
+        fs.rmSync(binDir, { recursive: true, force: true });
+      }
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    });
+
+    test('hostile secret is literal, absent from argv/output, and cannot execute shell text', async function () {
+      const tmpDir = makeTmpDir();
+      const compiled = await compile(FLOW_PATH, MAPPING_DIR, tmpDir);
+      const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-sc1032-secret-'));
+      const marker = path.join(tmpDir, 'executed');
+      const argvLog = path.join(tmpDir, 'argv.log');
+      const secret = 'quote\'" `touch ' + marker + '` $(touch ' + marker + ') / % space\n\tend';
+      writeAgentBrowserStub(path.join(binDir, 'agent-browser'), 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', false);
+      writeExecutable(path.join(binDir, 'curl'), '#!/usr/bin/env bash\nprintf \'%s\\n\' "$*" >> ' +
+        singleShellLiteral(argvLog) + '\necho \'{"status":"cancelled"}\'\n');
+      writeExecutable(path.join(binDir, 'sleep'), '#!/usr/bin/env bash\nexit 0\n');
+      const result = runScript(compiled.outputPath, {
+        binDir: binDir,
+        env: {
+          E2E_BOOKING_PASSWORD: secret, E2E_ADMIN_TOKEN: secret,
+          E2E_API_BASE_URL: 'http://localhost', BASE_URL: 'http://localhost',
+          E2E_SCREENSHOT_DIR: path.join(tmpDir, 'shots'),
+        },
+      });
+      assert.notEqual(result.status, 0, 'header control whitespace must fail the finalizer');
+      assert.equal(fs.existsSync(marker), false);
+      assert.equal((result.stdout + result.stderr).includes(secret), false);
+      assert.equal(fs.existsSync(argvLog) && fs.readFileSync(argvLog, 'utf8').includes(secret), false);
+      fs.rmSync(binDir, { recursive: true, force: true });
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    });
+
+    test('ordered finalizers land in reports and combined failure remains authoritative', async function () {
+      const tmpDir = makeTmpDir();
+      const compiled = await compile(FLOW_PATH, MAPPING_DIR, tmpDir);
+      const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-sc1032-report-'));
+      const metrics = path.join(tmpDir, 'metrics.json');
+      const junit = path.join(tmpDir, 'junit.xml');
+      writeAgentBrowserStub(path.join(binDir, 'agent-browser'), 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', true);
+      writeExecutable(path.join(binDir, 'curl'), '#!/usr/bin/env bash\nexit 1\n');
+      writeExecutable(path.join(binDir, 'sleep'), '#!/usr/bin/env bash\nexit 0\n');
+      const result = runScript(compiled.outputPath, {
+        binDir: binDir,
+        args: ['--continue-on-error', '--metrics-output', metrics, '--junit', junit],
+        env: {
+          E2E_BOOKING_PASSWORD: 'secret', E2E_ADMIN_TOKEN: 'token',
+          E2E_API_BASE_URL: 'http://localhost', BASE_URL: 'http://localhost',
+          E2E_SCREENSHOT_DIR: path.join(tmpDir, 'shots'),
+        },
+      });
+      assert.notEqual(result.status, 0);
+      const report = JSON.parse(fs.readFileSync(metrics, 'utf8'));
+      const finalizerSteps = report.steps.slice(-2);
+      assert.deepEqual(finalizerSteps.map(function (step) { return step.id; }), [
+        'cancel-booking-finalizer', 'verify-booking-cancelled-finalizer',
+      ]);
+      assert.deepEqual(finalizerSteps.map(function (step) { return step.result; }), ['fail', 'fail']);
+      const xml = fs.readFileSync(junit, 'utf8');
+      assert.ok(xml.indexOf('cancel-booking-finalizer') < xml.indexOf('verify-booking-cancelled-finalizer'));
+      fs.rmSync(binDir, { recursive: true, force: true });
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    });
+  });
 });
+
+function singleShellLiteral(value) {
+  return "'" + String(value).replace(/'/g, "'\\''") + "'";
+}

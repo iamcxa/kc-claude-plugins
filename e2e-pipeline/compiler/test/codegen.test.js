@@ -3,7 +3,7 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert/strict');
 
-const { generate, generateHeader, singleQuote } = require('../codegen.js');
+const { generate, generateHeader, singleQuote, generateCleanupTrap } = require('../codegen.js');
 
 // ---------------------------------------------------------------------------
 // Test helpers — build minimal resolved step objects matching resolver output
@@ -3072,33 +3072,33 @@ describe('metrics codegen (FLAKY-02) — generate() integration', function() {
   });
 });
 
-describe('metrics codegen (FLAKY-02) — generateFooter() integration', function() {
-  test("footer contains conditional _emit_metrics call", function() {
-    const footer = generateFooter('my-flow', 3, 0);
+describe('metrics codegen (FLAKY-02) — cleanup integration', function() {
+  test("cleanup contains conditional _emit_metrics call", function() {
+    const cleanup = generateCleanupTrap([], []);
     assert.ok(
-      footer.includes('_emit_metrics'),
-      'Expected _emit_metrics call in footer. Got: ' + footer
+      cleanup.includes('_emit_metrics'),
+      'Expected _emit_metrics call in cleanup. Got: ' + cleanup
     );
   });
 
-  test("footer _emit_metrics call is guarded by METRICS_OUTPUT check", function() {
-    const footer = generateFooter('my-flow', 3, 0);
-    const metricsIdx = footer.indexOf('_emit_metrics');
+  test("cleanup _emit_metrics call is guarded by METRICS_OUTPUT check", function() {
+    const cleanup = generateCleanupTrap([], []);
+    const metricsIdx = cleanup.indexOf('_emit_metrics');
     // Find the surrounding context
-    const context = footer.slice(Math.max(0, metricsIdx - 60), metricsIdx + 60);
+    const context = cleanup.slice(Math.max(0, metricsIdx - 60), metricsIdx + 60);
     assert.ok(
       context.includes('METRICS_OUTPUT'),
       'Expected METRICS_OUTPUT guard near _emit_metrics call. Got context: ' + context
     );
   });
 
-  test("footer _emit_metrics call appears before JUnit emission", function() {
-    const footer = generateFooter('my-flow', 3, 0);
-    const metricsIdx = footer.indexOf('_emit_metrics');
-    const junitIdx = footer.indexOf('_emit_junit');
+  test("cleanup _emit_metrics call appears before JUnit emission", function() {
+    const cleanup = generateCleanupTrap([], []);
+    const metricsIdx = cleanup.indexOf('_emit_metrics');
+    const junitIdx = cleanup.indexOf('_emit_junit');
     assert.ok(
       metricsIdx < junitIdx,
-      'Expected _emit_metrics before _emit_junit in footer. metricsIdx=' + metricsIdx + ' junitIdx=' + junitIdx
+      'Expected _emit_metrics before _emit_junit in cleanup. metricsIdx=' + metricsIdx + ' junitIdx=' + junitIdx
     );
   });
 });

@@ -416,24 +416,33 @@ function resolve(flow, mapping, options) {
       var fStepId = fStep.id || '(unnamed-finally-' + fi + ')';
       if (fStep.type === 'http') {
         var request = fStep.request;
-        function refTemplate(ref) {
-          if (runtimeValues && runtimeValues[ref]) return '${' + runtimeValues[ref].from_env + '}';
-          return '${' + ref.toUpperCase() + '}';
+        function resolveRuntimeRef(ref) {
+          if (runtimeValues && runtimeValues[ref]) {
+            return { state_key: ref, env: runtimeValues[ref].from_env, sensitive: runtimeValues[ref].sensitive };
+          }
+          return { state_key: ref, env: ref.toUpperCase(), sensitive: false };
         }
         var pathSegments = request.url.path_segments.map(function(segment) {
-          return typeof segment === 'object' ? refTemplate(segment.runtime_ref) : String(segment);
+          return typeof segment === 'object'
+            ? { runtime_ref: resolveRuntimeRef(segment.runtime_ref) }
+            : { literal: String(segment) };
         });
         var headers = {};
         Object.keys(request.headers || {}).forEach(function(headerName) {
           var header = request.headers[headerName];
-          headers[headerName] = header.scheme + ' ' + refTemplate(header.runtime_ref);
+          headers[headerName] = {
+            scheme: header.scheme,
+            runtime_ref: resolveRuntimeRef(header.runtime_ref),
+          };
         });
         var httpOp = {
           method: request.method,
-          url: '${' + request.url.base_from_env + '}/' + pathSegments.join('/'),
+          baseEnv: request.url.base_from_env,
+          pathSegments: pathSegments,
           headers: headers,
-          body: request.json ? JSON.stringify(request.json) : null,
+          body: request.json || null,
           expectedStatus: fStep.expect && fStep.expect.status,
+          expectedBody: fStep.expect && fStep.expect.body,
         };
         resolvedFinally.push({
           id: fStepId,

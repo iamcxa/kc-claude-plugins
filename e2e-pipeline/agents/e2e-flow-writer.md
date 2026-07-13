@@ -78,6 +78,13 @@ Map the description (or extracted criteria) to concrete flow steps:
 - `Eval document.querySelector('<sel>').scrollIntoView()` — scroll to element
 - `Verify external` — external service verification checkpoint (no browser interaction)
 - `Execute external` — external execution checkpoint: trigger non-browser actions (CLI, API calls, scripts)
+- `capture-url-query` — compiler action that captures exactly one named URL query value into `save_as`
+
+**Compiler runtime state:** Declare secret or run-scoped inputs under `runtime_values` with
+`from_env` and `sensitive`. A fill may use `value: { runtime_ref: <key> }`; never place the
+value itself in YAML. A `capture-url-query` step requires an ASCII `query`, identifier
+`save_as`, and `validate: uuid`. Ordered `finally` HTTP steps may reuse declared or captured
+state through `runtime_ref`; include cancellation followed by readback when cleanup is authoritative.
 
 **Expect types** (must match test-runner grammar):
 - `<element_name> visible on <page_name>` — element exists

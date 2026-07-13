@@ -406,6 +406,27 @@ function generateRuntimeSupport() {
     '  done',
     '}',
     '',
+    '_base64_no_wrap() {',
+    "  printf '%s' \"$1\" | base64 | tr -d '\\r\\n'",
+    '}',
+    '',
+    '_url_encode() {',
+    '  local _byte',
+    "  printf '%s' \"$1\" | LC_ALL=C od -An -v -t u1 | tr -s ' ' '\\n' | while IFS= read -r _byte; do",
+    '    [ -z "$_byte" ] && continue',
+    '    case "$_byte" in',
+    '      45|46|48|49|50|51|52|53|54|55|56|57|65|66|67|68|69|70|71|72|73|74|75|76|77|78|79|80|81|82|83|84|85|86|87|88|89|90|95|97|98|99|100|101|102|103|104|105|106|107|108|109|110|111|112|113|114|115|116|117|118|119|120|121|122|126)',
+    "        printf \"\\\\$(printf '%03o' \"$_byte\")\" ;;",
+    "      *) printf '%%%02X' \"$_byte\" ;;",
+    '    esac',
+    '  done',
+    '}',
+    '',
+    '_curl_config_escape() {',
+    "  case \"$1\" in *$'\\n'*|*$'\\r'*|*$'\\t'*) return 1 ;; esac",
+    "  printf '%s' \"$1\" | sed 's/\\\\/\\\\\\\\/g; s/\"/\\\\\"/g'",
+    '}',
+    '',
     '_xml_attr_escape() {',
     '  local _byte',
     "  printf '%s' \"$1\" | LC_ALL=C od -An -v -t u1 | tr -s ' ' '\\n' | while IFS= read -r _byte; do",
@@ -683,7 +704,6 @@ function generateBaseUrlNormalization(variables) {
  * Returns: string (multi-line bash block)
  */
 function generateCleanupTrap(steps, finallySteps) {
-  // Collect distinct session names (excluding falsy/empty)
   var sessions = [];
   var seen = new Set();
   for (var i = 0; i < steps.length; i++) {
@@ -701,58 +721,100 @@ function generateCleanupTrap(steps, finallySteps) {
     '  trap - EXIT',
   ];
 
-  // SC-1032: HTTP finally steps — run before browser close so BOOKING_ID is still in scope
   if (Array.isArray(finallySteps) && finallySteps.length > 0) {
     for (var fi = 0; fi < finallySteps.length; fi++) {
       var fStep = finallySteps[fi];
       if (fStep.type !== 'http') continue;
-
       var op = fStep.operands;
       var method = op.method || 'POST';
-      var url = op.url;
-      var onFail = fStep.on_fail || 'fail';
+      var recordName = '_record_step_name ' + singleQuote(fStep.id) + ' ' +
+        singleQuote(jsonStringContent(fStep.id)) + ' ' + singleQuote(xmlAttrEscape(fStep.id));
 
-      // Build curl command — headers and body
-      var curlParts = ['curl', '-s', '-f', '-X', singleQuote(method)];
-
-      // Headers
+      lines.push('  echo ' + doubleQuote('[finally] ' + fStep.id + ': ' + fStep.action));
+      lines.push('  _FINALIZER_START=$SECONDS');
+      lines.push('  _FINALIZER_OK=true');
+      lines.push('  _FINALIZER_FAILURE=""');
+      lines.push('  _FINALIZER_URL="${' + op.baseEnv + '%/}"');
+      for (var pi = 0; pi < op.pathSegments.length; pi++) {
+        var segment = op.pathSegments[pi];
+        if (segment.literal !== undefined) {
+          lines.push('  _FINALIZER_SEGMENT=' + singleQuote(segment.literal));
+        } else {
+          lines.push('  _FINALIZER_SEGMENT="${' + segment.runtime_ref.env + '}"');
+        }
+        lines.push('  _FINALIZER_ENCODED=$(_url_encode "$_FINALIZER_SEGMENT")');
+        lines.push('  _FINALIZER_URL="$_FINALIZER_URL/$_FINALIZER_ENCODED"');
+      }
+      lines.push('  _FINALIZER_CONFIG="${TMPDIR:-/tmp}/e2e-finalizer-$$-' + fi + '.cfg"');
+      lines.push('  _FINALIZER_RESPONSE="${TMPDIR:-/tmp}/e2e-finalizer-$$-' + fi + '.body"');
+      lines.push('  (umask 077; : > "$_FINALIZER_CONFIG"; : > "$_FINALIZER_RESPONSE")');
       var headerKeys = op.headers ? Object.keys(op.headers) : [];
       for (var hi = 0; hi < headerKeys.length; hi++) {
         var hKey = headerKeys[hi];
-        var hVal = op.headers[hKey];
-        // Expand shell variables in header values at runtime
-        curlParts.push('-H', runtimeTemplateDoubleQuote(hKey + ': ' + hVal));
+        var header = op.headers[hKey];
+        lines.push('  if _FINALIZER_HEADER=$(_curl_config_escape "${' + header.runtime_ref.env + '}"); then');
+        lines.push('    printf ' + singleQuote('header = "' + hKey + ': ' + header.scheme + ' %s"\n') +
+          ' "$_FINALIZER_HEADER" >> "$_FINALIZER_CONFIG"');
+        lines.push('  else');
+        lines.push('    _FINALIZER_OK=false');
+        lines.push('    _FINALIZER_FAILURE=' + singleQuote('finalizer header contains forbidden control characters'));
+        lines.push('  fi');
       }
-
-      // Body (if present) — use --data-raw, expand shell vars at runtime
+      var curlCommand = 'curl -s -X ' + singleQuote(method) +
+        ' --config "$_FINALIZER_CONFIG" -o "$_FINALIZER_RESPONSE" -w ' +
+        singleQuote('%{http_code}') + ' "$_FINALIZER_URL"';
       if (op.body) {
-        curlParts.push('--data-raw', runtimeTemplateDoubleQuote(op.body));
-      }
-
-      // URL — expand shell vars at runtime
-      curlParts.push(runtimeTemplateDoubleQuote(url));
-
-      var curlCmd = '  ' + curlParts.join(' ');
-
-      lines.push('  echo ' + doubleQuote('[finally] ' + fStep.id + ': ' + fStep.action));
-      if (onFail === 'fail') {
-        lines.push(curlCmd + ' || _FINALIZER_FAILED=1');
+        lines.push('  if [ "$_FINALIZER_OK" = true ] && ! _FINALIZER_STATUS=$(printf ' +
+          singleQuote('%s') + ' ' + singleQuote(JSON.stringify(op.body)) + ' | ' +
+          curlCommand.replace('curl ', 'curl --data-binary @- ') + '); then');
       } else {
-        lines.push(curlCmd + ' || true');
+        lines.push('  if [ "$_FINALIZER_OK" = true ] && ! _FINALIZER_STATUS=$(' + curlCommand + '); then');
       }
+      lines.push('    _FINALIZER_OK=false');
+      lines.push('    _FINALIZER_FAILURE=' + singleQuote('HTTP request failed'));
+      lines.push('  fi');
+      if (op.expectedStatus !== undefined) {
+        lines.push('  if [ "$_FINALIZER_OK" = true ] && [ "$_FINALIZER_STATUS" != ' +
+          singleQuote(String(op.expectedStatus)) + ' ]; then');
+        lines.push('    _FINALIZER_OK=false');
+        lines.push('    _FINALIZER_FAILURE=' + singleQuote('HTTP status assertion failed'));
+        lines.push('  fi');
+      }
+      if (op.expectedBody && op.expectedBody.field && op.expectedBody.equals !== undefined) {
+        var bodyPattern = '"' + String(op.expectedBody.field).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
+          '"[[:space:]]*:[[:space:]]*"' + String(op.expectedBody.equals).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"';
+        lines.push('  if [ "$_FINALIZER_OK" = true ] && ! grep -Eq ' + singleQuote(bodyPattern) +
+          ' "$_FINALIZER_RESPONSE"; then');
+        lines.push('    _FINALIZER_OK=false');
+        lines.push('    _FINALIZER_FAILURE=' + singleQuote('HTTP response body assertion failed'));
+        lines.push('  fi');
+      }
+      lines.push('  rm -f "$_FINALIZER_CONFIG" "$_FINALIZER_RESPONSE"');
+      lines.push('  _FINALIZER_ELAPSED=$(( SECONDS - _FINALIZER_START ))');
+      lines.push('  ' + recordName);
+      lines.push('  if [ "$_FINALIZER_OK" = true ]; then');
+      lines.push('    _STEP_RESULTS+=("pass")');
+      lines.push('    _STEP_FAILURES+=("")');
+      lines.push('  else');
+      lines.push('    _STEP_RESULTS+=("fail")');
+      lines.push('    _STEP_FAILURES+=("$_FINALIZER_FAILURE")');
+      lines.push('    _FAILED_STEPS+=(' + singleQuote(fStep.id) + ')');
+      lines.push('    _FINALIZER_FAILED=1');
+      lines.push('  fi');
+      lines.push('  _STEP_TIMES+=("$_FINALIZER_ELAPSED")');
     }
   }
 
   if (sessions.length === 0) {
-    // Single-site: default session close
     lines.push('  agent-browser close 2>/dev/null || true');
   } else {
-    // Cross-site: close each named session
     for (var j = 0; j < sessions.length; j++) {
       lines.push('  agent-browser --session ' + singleQuote(sessions[j]) + ' close 2>/dev/null || true');
     }
   }
 
+  lines.push('  if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi');
+  lines.push('  if [ -n "$JUNIT_OUTPUT" ]; then _emit_junit "$JUNIT_OUTPUT"; fi');
   lines.push('  if [ "$_FINALIZER_FAILED" -ne 0 ]; then');
   lines.push('    exit 1');
   lines.push('  fi');
@@ -918,10 +980,6 @@ function generateMetricsEmitter(flowName) {
  */
 function generateFooter(flowName, totalSteps, skipped) {
   var lines = [
-    '# Emit metrics JSON if --metrics-output path was provided (FLAKY-02)',
-    'if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi',
-    '# Emit JUnit XML if --junit path was provided (FLAG-01)',
-    'if [ -n "$JUNIT_OUTPUT" ]; then _emit_junit "$JUNIT_OUTPUT"; fi',
     '# Exit summary',
     'if [ ${#_FAILED_STEPS[@]} -gt 0 ]; then',
     '  echo "FAIL: ${#_FAILED_STEPS[@]} steps failed: ${_FAILED_STEPS[*]}"',
@@ -1082,13 +1140,16 @@ function generateAction(step, stepIndex, totalSteps) {
         var sensitiveCss = JSON.stringify(fillCssSel);
         var sensitivePrefix = "(()=>{const el=document.querySelector(" + sensitiveCss + ");" +
           "if(!el)throw new Error('element not found');el.focus();" +
-          "const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;s.call(el,\"";
-        var sensitiveSuffix = "\");const t=el._valueTracker;if(t)t.setValue('');" +
+          "const b=atob('";
+        var sensitiveSuffix = "');const a=Uint8Array.from(b,c=>c.charCodeAt(0));" +
+          "const v=new TextDecoder().decode(a);" +
+          "const s=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;s.call(el,v);" +
+          "const t=el._valueTracker;if(t)t.setValue('');" +
           "el.dispatchEvent(new Event('input',{bubbles:true}));" +
           "el.dispatchEvent(new Event('change',{bubbles:true}));})()";
-        lines.push('_E2E_SECRET_JSON=$(_json_escape "$' + secretVar + '")');
+        lines.push('_E2E_SECRET_B64=$(_base64_no_wrap "$' + secretVar + '")');
         lines.push('{ printf \'%s\' ' + singleQuote(sensitivePrefix) +
-          '; printf \'%s\' "$_E2E_SECRET_JSON"; printf \'%s\' ' + singleQuote(sensitiveSuffix) +
+          '; printf \'%s\' "$_E2E_SECRET_B64"; printf \'%s\' ' + singleQuote(sensitiveSuffix) +
           '; } | agent-browser ' + sessionPrefix + 'eval --stdin || _step_ok=false');
       } else if (fillCssSel) {
         // eval-based fill: nativeInputValueSetter — bypasses React controlled inputs
@@ -1148,16 +1209,24 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('# uuid validation for capture-url-query');
       lines.push('_STEP_START=$SECONDS');
       lines.push('_step_ok=true');
-      // Get current URL
-      lines.push('_capture_raw_url=""');
-      lines.push('if ! _capture_raw_url=$(_capture_url "' + (step.session || '') + '"); then');
+      var captureJs = "(()=>{const values=new URL(location.href).searchParams.getAll(" +
+        JSON.stringify(capParam) + ");if(values.length!==1)throw new Error('expected exactly one query value');" +
+        "if(values[0].length===0)throw new Error('query value is empty');return '__E2E_CAPTURE__'+values[0]})()";
+      lines.push('_CAPTURE_FAIL_MSG=""');
+      lines.push('_capture_result=""');
+      lines.push('if ! _capture_result=$(printf \'%s\' ' + singleQuote(captureJs) +
+        ' | agent-browser ' + sessionPrefix + 'eval --stdin 2>/dev/null); then');
       lines.push('  _step_ok=false');
+      lines.push('  _CAPTURE_FAIL_MSG=' + singleQuote('capture-url-query: browser URL parse failed or query was not exact-one'));
       lines.push('else');
-      // Extract query parameter value using sed — POSIX-compatible
-      // Pattern: extract ?param=VALUE or &param=VALUE, stop at & or end
       lines.push('  ' + capAs + '=""');
-      lines.push('  ' + capAs + '=$(printf \'%s\' "$_capture_raw_url" | ' +
-        'sed -n ' + singleQuote('s/.*[?&]' + capParam + '=\\([^&]*\\).*/\\1/p') + ')');
+      lines.push("  case \"$_capture_result\" in *$'\\n'*|*$'\\r'*) _step_ok=false; " +
+        '_CAPTURE_FAIL_MSG=' + singleQuote('capture-url-query: multiline browser protocol output') + ' ;; esac');
+      lines.push('  case "$_capture_result" in');
+      lines.push('    __E2E_CAPTURE__*) ' + capAs + '="${_capture_result#__E2E_CAPTURE__}" ;;');
+      lines.push('    *) _step_ok=false; _CAPTURE_FAIL_MSG=' +
+        singleQuote('capture-url-query: malformed browser protocol output') + ' ;;');
+      lines.push('  esac');
       lines.push('  if [ -z "$' + capAs + '" ]; then');
       lines.push('    _step_ok=false');
       lines.push('    _CAPTURE_FAIL_MSG=' + singleQuote('capture-url-query: param "' + capParam + '" not found in URL'));

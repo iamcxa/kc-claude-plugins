@@ -525,6 +525,13 @@ Auto-append to `${CLAUDE_PLUGIN_ROOT}/references/learned-patterns.md`. Notify: "
 
 ## Common Mistakes
 
+### Compiler runtime state
+
+Flows that must clean up a run-scoped resource may declare typed `runtime_values`, fill with a
+`runtime_ref`, capture one URL query value using `type: capture-url-query`, and reuse the named
+capture from ordered `finally` HTTP cancellation/readback steps. Secrets stay environment-backed;
+finalizer outcomes are included in metrics/JUnit and can turn an otherwise passing run into failure.
+
 | Mistake | Fix |
 |---------|-----|
 | Running verify without dev server | Pre-flight checks catch this — but verify base_url is accessible |
