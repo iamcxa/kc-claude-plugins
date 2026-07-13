@@ -28,7 +28,7 @@ const childProcess = require('node:child_process');
 // Units under test
 const { parse } = require('../parser.js');
 const { resolve } = require('../resolver.js');
-const { generate } = require('../codegen.js');
+const { generate, generateRuntimeValuesBlock } = require('../codegen.js');
 const { compile } = require('../compiler.js');
 
 const FIXTURES_DIR = path.join(__dirname, 'fixtures');
@@ -759,6 +759,117 @@ describe('SC-1032 vertical seam', function () {
       assert.ok(xml.indexOf('cancel-booking-finalizer') < xml.indexOf('verify-booking-cancelled-finalizer'));
       fs.rmSync(binDir, { recursive: true, force: true });
       fs.rmSync(tmpDir, { recursive: true, force: true });
+    });
+  });
+
+  describe('SC-1032 review blockers', function () {
+    function baseSingleSiteFlow() {
+      return {
+        name: 'review-blocker',
+        mapping: 'runtime-state-finalizer-mapping',
+        runtime_values: {
+          admin_token: { from_env: 'E2E_ADMIN_TOKEN', sensitive: true },
+        },
+        steps: [{ id: 'snapshot', type: 'snapshot', action: 'Take snapshot' }],
+      };
+    }
+
+    test('parser rejects hostile HTTP auth schemes before curl config codegen', function () {
+      const hostileSchemes = [
+        'Bearer"',
+        'Bearer\nheader = "X-Injected: yes"',
+        'Bear er',
+        'Bearer\tInjected',
+        'Bearer\u0001',
+      ];
+      for (const scheme of hostileSchemes) {
+        const flow = baseSingleSiteFlow();
+        flow.finally = [{
+          id: 'cleanup', type: 'http', action: 'cleanup',
+          request: {
+            method: 'POST',
+            url: { base_from_env: 'E2E_API_BASE_URL', path_segments: ['cleanup'] },
+            headers: { Authorization: { scheme: scheme, runtime_ref: 'admin_token' } },
+          },
+        }];
+        const result = parseInlineFlow(flow);
+        assert.ok(result.errors.some(function (error) {
+          return error.includes('auth scheme');
+        }), JSON.stringify(scheme) + ' must be rejected: ' + result.errors.join('; '));
+      }
+    });
+
+    test('parser rejects every unsupported finally type', function () {
+      const flow = baseSingleSiteFlow();
+      flow.finally = [{ id: 'cleanup', type: 'htp', action: 'typo must fail' }];
+      const result = parseInlineFlow(flow);
+      assert.ok(result.errors.some(function (error) {
+        return error.includes("unsupported type 'htp'");
+      }), result.errors.join('; '));
+    });
+
+    test('malformed path_segments returns validation errors without throwing', function () {
+      const flow = baseSingleSiteFlow();
+      flow.finally = [{
+        id: 'cleanup', type: 'http', action: 'cleanup',
+        request: {
+          method: 'POST',
+          url: { base_from_env: 'E2E_API_BASE_URL', path_segments: { bad: 'shape' } },
+        },
+      }];
+      assert.doesNotThrow(function () { parseInlineFlow(flow); });
+      const result = parseInlineFlow(flow);
+      assert.ok(result.errors.some(function (error) {
+        return error.includes('path_segments');
+      }), result.errors.join('; '));
+    });
+
+    test('cross-site parse and compile fail closed for runtime values, capture, and finally', async function () {
+      function crossSiteFlow() {
+        return {
+          name: 'cross-site-review-blocker',
+          sites: { app: { mapping: 'runtime-state-finalizer-mapping' } },
+          steps: [{ id: 'snapshot', site: 'app', type: 'snapshot', action: 'Take snapshot' }],
+        };
+      }
+      const runtimeFlow = crossSiteFlow();
+      runtimeFlow.runtime_values = {
+        secret: { from_env: 'E2E_SECRET', sensitive: true },
+      };
+      const captureFlow = crossSiteFlow();
+      captureFlow.mapping = 'runtime-state-finalizer-mapping';
+      captureFlow.steps = [{
+        id: 'capture', site: 'app', type: 'capture-url-query',
+        action: 'Capture bookingId from URL query', query: 'bookingId', save_as: 'booking_id', validate: 'uuid',
+      }];
+      const finallyFlow = crossSiteFlow();
+      finallyFlow.finally = [];
+
+      for (const testCase of [runtimeFlow, captureFlow, finallyFlow]) {
+        const yaml = require('js-yaml');
+        const tmpDir = makeTmpDir();
+        const flowPath = path.join(tmpDir, 'cross-site.yaml');
+        fs.writeFileSync(flowPath, yaml.dump(testCase));
+        const parseResult = parse(flowPath, MAPPING_DIR);
+        assert.ok(parseResult.errors.some(function (error) {
+          return error.includes('Cross-site flows do not support');
+        }), parseResult.errors.join('; '));
+        const compileResult = await compile(flowPath, MAPPING_DIR, path.join(tmpDir, 'out'));
+        assert.equal(compileResult.success, false);
+        assert.ok(compileResult.errors.some(function (error) {
+          return error.includes('Cross-site flows do not support');
+        }), compileResult.errors.join('; '));
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    });
+
+    test('runtime value block does not embed hostile flow names in shell', function () {
+      const hostileFlowName = 'flow}\necho REVIEW_BLOCKER_EXECUTED\n${';
+      const block = generateRuntimeValuesBlock({
+        secret: { from_env: 'E2E_SECRET', sensitive: true },
+      }, hostileFlowName);
+      assert.equal(block.includes(hostileFlowName), false);
+      assert.equal(block.includes('REVIEW_BLOCKER_EXECUTED'), false);
     });
   });
 });

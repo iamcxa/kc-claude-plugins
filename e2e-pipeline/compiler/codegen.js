@@ -178,7 +178,7 @@ function generateVariables(variables, flowName) {
  *
  * Returns: string (multi-line bash block), or '' if runtimeValues is empty/absent
  */
-function generateRuntimeValuesBlock(runtimeValues, flowName) {
+function generateRuntimeValuesBlock(runtimeValues, _flowName) {
   if (!runtimeValues) return '';
   var entries = Object.entries(runtimeValues);
   if (entries.length === 0) return '';
@@ -189,7 +189,7 @@ function generateRuntimeValuesBlock(runtimeValues, flowName) {
     var declaration = entries[i][1];
     var bashName = declaration.from_env;
     lines.push(bashName + '="${' + bashName + ':?Error: ' + bashName +
-      ' must be set in environment for ' + flowName + '}"');
+      ' must be set in environment}"');
   }
   return lines.join('\n');
 }

@@ -8,6 +8,7 @@ const { isValidSiteName, siteBaseUrlVariable, validateSiteNames } = require('./s
 const VARIABLE_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const VARIABLE_NAME_FORMAT = '^[A-Za-z_][A-Za-z0-9_]*$';
 const RESERVED_VARIABLE_NAMES = new Set(['__proto__', 'prototype', 'constructor']);
+const HTTP_AUTH_SCHEME_PATTERN = /^[A-Za-z][A-Za-z0-9._~+-]*$/;
 
 // Allowed validate types for capture-url-query steps (SC-1032)
 const CAPTURE_VALIDATE_TYPES = new Set(['uuid']);
@@ -166,6 +167,20 @@ function validateFlow(flow, filePath, errors) {
   validateFlowVariables(flow, errors);
   validateRuntimeValues(flow, errors);
   validateFlowSteps(flow, filePath, errors);
+  validateCrossSiteRuntimeFeatures(flow, errors);
+}
+
+function validateCrossSiteRuntimeFeatures(flow, errors) {
+  if (!flow.sites) return;
+  if (flow.runtime_values !== undefined) {
+    errors.push('Cross-site flows do not support runtime_values');
+  }
+  if ((flow.steps || []).some(function(step) { return step && step.type === 'capture-url-query'; })) {
+    errors.push('Cross-site flows do not support capture-url-query');
+  }
+  if (flow.finally !== undefined) {
+    errors.push('Cross-site flows do not support finally');
+  }
 }
 
 /**
@@ -287,47 +302,54 @@ function validateFinallyStep(step, index, filePath, stateKeys, errors) {
     return;
   }
   var stepId = step.id || '(unnamed)';
-  if (step.type === 'http') {
-    var http = step.request;
-    if (!http || typeof http !== 'object') {
-      errors.push(
-        "Finally step '" + stepId + "': http type step must have a 'request:' block in " + filePath
-      );
-      return;
+  if (step.type !== 'http') {
+    errors.push("Finally step '" + stepId + "': unsupported type '" + (step.type || '') + "'");
+    return;
+  }
+  var http = step.request;
+  if (!http || typeof http !== 'object') {
+    errors.push(
+      "Finally step '" + stepId + "': http type step must have a 'request:' block in " + filePath
+    );
+    return;
+  }
+  if (!http.url || typeof http.url !== 'object' || !http.url.base_from_env || !Array.isArray(http.url.path_segments)) {
+    errors.push(
+      "Finally step '" + stepId + "': request.url must have base_from_env and path_segments in " + filePath
+    );
+  }
+  if (!http.method || typeof http.method !== 'string') {
+    errors.push(
+      "Finally step '" + stepId + "': http block must have 'method:' (string) in " + filePath
+    );
+  }
+  if (http.url && typeof http.url === 'object') {
+    if (!/^[A-Z_][A-Z0-9_]*$/.test(http.url.base_from_env || '')) {
+      errors.push("Finally step '" + stepId + "': request.url.base_from_env must be an uppercase environment identifier");
     }
-    if (!http.url || typeof http.url !== 'object' || !http.url.base_from_env || !Array.isArray(http.url.path_segments)) {
-      errors.push(
-        "Finally step '" + stepId + "': request.url must have base_from_env and path_segments in " + filePath
-      );
-    }
-    if (!http.method || typeof http.method !== 'string') {
-      errors.push(
-        "Finally step '" + stepId + "': http block must have 'method:' (string) in " + filePath
-      );
-    }
-    if (http.url && typeof http.url === 'object') {
-      if (!/^[A-Z_][A-Z0-9_]*$/.test(http.url.base_from_env || '')) {
-        errors.push("Finally step '" + stepId + "': request.url.base_from_env must be an uppercase environment identifier");
-      }
-      (http.url.path_segments || []).forEach(function(segment) {
+    if (Array.isArray(http.url.path_segments)) {
+      http.url.path_segments.forEach(function(segment) {
         if (segment && typeof segment === 'object') validateRuntimeRef(segment, stepId, stateKeys, errors);
       });
     }
-    Object.keys(http.headers || {}).forEach(function(headerName) {
-      if (!/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(headerName)) {
-        errors.push("Finally step '" + stepId + "': invalid HTTP header name '" + headerName + "'");
-      }
-      var header = http.headers[headerName];
-      if (!header || typeof header !== 'object' || typeof header.scheme !== 'string') {
-        errors.push("Finally step '" + stepId + "': header '" + headerName + "' must declare scheme and runtime_ref");
-      } else {
-        validateRuntimeRef(header, stepId, stateKeys, errors);
-      }
-    });
-    if (step.expect && step.expect.status !== undefined &&
-        (!Number.isInteger(step.expect.status) || step.expect.status < 100 || step.expect.status > 599)) {
-      errors.push("Finally step '" + stepId + "': expect.status must be an HTTP status integer");
+  }
+  Object.keys(http.headers || {}).forEach(function(headerName) {
+    if (!/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(headerName)) {
+      errors.push("Finally step '" + stepId + "': invalid HTTP header name '" + headerName + "'");
     }
+    var header = http.headers[headerName];
+    if (!header || typeof header !== 'object' || typeof header.scheme !== 'string') {
+      errors.push("Finally step '" + stepId + "': header '" + headerName + "' must declare scheme and runtime_ref");
+    } else {
+      if (!HTTP_AUTH_SCHEME_PATTERN.test(header.scheme)) {
+        errors.push("Finally step '" + stepId + "': header '" + headerName + "' auth scheme is invalid");
+      }
+      validateRuntimeRef(header, stepId, stateKeys, errors);
+    }
+  });
+  if (step.expect && step.expect.status !== undefined &&
+      (!Number.isInteger(step.expect.status) || step.expect.status < 100 || step.expect.status > 599)) {
+    errors.push("Finally step '" + stepId + "': expect.status must be an HTTP status integer");
   }
 }
 
