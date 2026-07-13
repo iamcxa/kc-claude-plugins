@@ -352,6 +352,11 @@ function validateFinallyStep(step, index, filePath, stateKeys, errors) {
       (!Number.isInteger(step.expect.status) || step.expect.status < 100 || step.expect.status > 599)) {
     errors.push("Finally step '" + stepId + "': expect.status must be an HTTP status integer");
   }
+  if (step.expect && step.expect.body !== undefined && step.expect.body_field !== undefined) {
+    errors.push(
+      "Finally step '" + stepId + "': expect.body and expect.body_field are mutually exclusive"
+    );
+  }
   if (step.expect && step.expect.body_field !== undefined) {
     var bodyField = step.expect.body_field;
     if (!bodyField || typeof bodyField !== 'object' || Array.isArray(bodyField) ||

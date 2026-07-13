@@ -368,6 +368,18 @@ describe('SC-1032 vertical seam', function () {
       });
     });
 
+    test('parse() rejects finally expectations that declare both body and body_field', function () {
+      const flow = require('js-yaml').load(fs.readFileSync(FLOW_PATH, 'utf8'));
+      flow.finally[1].expect.body = { field: 'status', equals: 'cancelled' };
+
+      const result = parseInlineFlow(flow);
+
+      assert.ok(result.errors.some(function (error) {
+        return error.includes('expect.body and expect.body_field are mutually exclusive');
+      }), 'Expected mutually exclusive body/body_field validation error; got: ' +
+        JSON.stringify(result.errors));
+    });
+
     test('parse() rejects incomplete or wrongly typed body_field contracts', function () {
       const invalidContracts = [
         { field: 'status', equals_literal: 'cancelled' },
