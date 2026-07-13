@@ -443,6 +443,7 @@ function resolve(flow, mapping, options) {
           body: request.json || null,
           expectedStatus: fStep.expect && fStep.expect.status,
           expectedBody: fStep.expect && fStep.expect.body,
+          expectedBodyField: fStep.expect && fStep.expect.body_field,
         };
         resolvedFinally.push({
           id: fStepId,

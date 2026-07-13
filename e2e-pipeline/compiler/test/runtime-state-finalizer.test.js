@@ -131,7 +131,7 @@ function writeCurlStub(filePath, logPath) {
     'while [ "$#" -gt 0 ]; do',
     '  if [ "$1" = "-o" ]; then _out="$2"; shift 2; else shift; fi',
     'done',
-    '[ -z "$_out" ] || printf \'%s\\n\' \'{"status":"cancelled"}\' > "$_out"',
+    '[ -z "$_out" ] || printf \'%s\\n\' \'{"data":{"status":"cancelled"}}\' > "$_out"',
     'printf \'200\'',
   ].join('\n'));
 }
@@ -359,6 +359,46 @@ describe('SC-1032 vertical seam', function () {
       }), 'Expected error about request method. Got: ' + result.errors.join('; '));
       fs.unlinkSync(tmpFlow);
     });
+
+    test('parse() accepts the exact one-level body_field contract', function () {
+      const result = parse(FLOW_PATH, MAPPING_DIR);
+      assert.equal(result.errors.length, 0, result.errors.join('; '));
+      assert.deepEqual(result.flow.finally[1].expect.body_field, {
+        object: 'data', field: 'status', equals_literal: 'cancelled',
+      });
+    });
+
+    test('parse() rejects finally expectations that declare both body and body_field', function () {
+      const flow = require('js-yaml').load(fs.readFileSync(FLOW_PATH, 'utf8'));
+      flow.finally[1].expect.body = { field: 'status', equals: 'cancelled' };
+
+      const result = parseInlineFlow(flow);
+
+      assert.ok(result.errors.some(function (error) {
+        return error.includes('expect.body and expect.body_field are mutually exclusive');
+      }), 'Expected mutually exclusive body/body_field validation error; got: ' +
+        JSON.stringify(result.errors));
+    });
+
+    test('parse() rejects incomplete or wrongly typed body_field contracts', function () {
+      const invalidContracts = [
+        { field: 'status', equals_literal: 'cancelled' },
+        { object: 42, field: 'status', equals_literal: 'cancelled' },
+        { object: 'data', equals_literal: 'cancelled' },
+        { object: 'data', field: false, equals_literal: 'cancelled' },
+        { object: 'data', field: 'status' },
+        { object: 'data', field: 'status', equals_literal: { value: 'cancelled' } },
+      ];
+      for (const bodyField of invalidContracts) {
+        const flow = require('js-yaml').load(fs.readFileSync(FLOW_PATH, 'utf8'));
+        flow.finally[1].expect.body_field = bodyField;
+        const result = parseInlineFlow(flow);
+        assert.ok(result.errors.some(function (error) {
+          return error.includes('body_field');
+        }), 'Expected body_field validation error for ' + JSON.stringify(bodyField) +
+          '; got: ' + JSON.stringify(result.errors));
+      }
+    });
   });
 
   // -------------------------------------------------------------------------
@@ -420,6 +460,9 @@ describe('SC-1032 vertical seam', function () {
       assert.equal(finStep.operands.baseEnv, 'E2E_API_BASE_URL');
       assert.equal(finStep.operands.pathSegments[3].runtime_ref.state_key, 'booking_id');
       assert.equal(finStep.operands.method, 'POST');
+      assert.deepEqual(resolved.resolved.finally[1].operands.expectedBodyField, {
+        object: 'data', field: 'status', equals_literal: 'cancelled',
+      });
     });
   });
 
@@ -1087,21 +1130,73 @@ describe('SC-1032 vertical seam', function () {
       }
     });
 
-    test('readback structurally requires one exact top-level string field', async function () {
+    test('readback structurally requires exact data.status despite a hostile top-level decoy', async function () {
       const tmpDir = makeTmpDir();
       const compiled = await compile(FLOW_PATH, MAPPING_DIR, tmpDir);
       const cases = [
-        { name: 'valid', body: '{"status":"cancelled"}', expectedStatus: 0 },
-        { name: 'malformed', body: '{"status":"cancelled"', expectedStatus: 1 },
-        { name: 'missing', body: '{"result":"cancelled"}', expectedStatus: 1 },
-        { name: 'wrong-type', body: '{"status":{"value":"cancelled"}}', expectedStatus: 1 },
-        { name: 'wrong-top-level', body: '{"status":"active","data":{"status":"cancelled"}}', expectedStatus: 1 },
-        { name: 'nested-decoy', body: '{"data":{"status":"cancelled"}}', expectedStatus: 1 },
-        { name: 'duplicate', body: '{"status":"active","status":"cancelled"}', expectedStatus: 1 },
+        { name: 'valid', body: '{"status":"active","data":{"status":"cancelled"}}', expectedStatus: 0 },
+        { name: 'malformed', body: '{"data":{"status":"cancelled"}', expectedStatus: 1 },
+        { name: 'top-level-decoy', body: '{"status":"cancelled","data":{"status":"active"}}', expectedStatus: 1 },
+        { name: 'missing-object', body: '{"status":"cancelled"}', expectedStatus: 1 },
+        { name: 'wrong-object', body: '{"status":"cancelled","data":[]}', expectedStatus: 1 },
+        { name: 'missing-field', body: '{"status":"cancelled","data":{"result":"cancelled"}}', expectedStatus: 1 },
+        { name: 'wrong-field-type', body: '{"status":"cancelled","data":{"status":{"value":"cancelled"}}}', expectedStatus: 1 },
+        { name: 'duplicate-object', body: '{"data":{"status":"active"},"data":{"status":"cancelled"}}', expectedStatus: 1 },
+        { name: 'duplicate-field', body: '{"data":{"status":"active","status":"cancelled"}}', expectedStatus: 1 },
       ];
       try {
         for (const testCase of cases) {
           const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-sc1032-json-'));
+          writeAgentBrowserStub(
+            path.join(binDir, 'agent-browser'),
+            'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+            false
+          );
+          writeExecutable(path.join(binDir, 'curl'), [
+            '#!/usr/bin/env bash',
+            '_out=""',
+            'while [ "$#" -gt 0 ]; do',
+            '  if [ "$1" = "-o" ]; then _out="$2"; shift 2; else shift; fi',
+            'done',
+            'printf \'%s\' ' + singleShellLiteral(testCase.body) + ' > "$_out"',
+            'printf 200',
+          ].join('\n'));
+          writeExecutable(path.join(binDir, 'sleep'), '#!/usr/bin/env bash\nexit 0\n');
+
+          const result = runScript(compiled.outputPath, {
+            binDir: binDir,
+            env: {
+              E2E_BOOKING_PASSWORD: 'secret', E2E_ADMIN_TOKEN: 'token',
+              E2E_API_BASE_URL: 'http://localhost', BASE_URL: 'http://localhost',
+              E2E_SCREENSHOT_DIR: path.join(tmpDir, testCase.name),
+            },
+          });
+          assert.equal(result.status, testCase.expectedStatus,
+            testCase.name + ' body produced unexpected status; stdout:\n' + result.stdout +
+            '\nstderr:\n' + result.stderr);
+          fs.rmSync(binDir, { recursive: true, force: true });
+        }
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    });
+
+    test('legacy top-level body field assertions remain executable', async function () {
+      const tmpDir = makeTmpDir();
+      const flow = require('js-yaml').load(fs.readFileSync(FLOW_PATH, 'utf8'));
+      flow.name = 'legacy-top-level-readback';
+      delete flow.finally[1].expect.body_field;
+      flow.finally[1].expect.body = { field: 'status', equals: 'cancelled' };
+      const flowPath = path.join(tmpDir, 'legacy-top-level-readback.yaml');
+      fs.writeFileSync(flowPath, require('js-yaml').dump(flow));
+      const compiled = await compile(flowPath, MAPPING_DIR, path.join(tmpDir, 'compiled'));
+      const cases = [
+        { name: 'valid', body: '{"status":"cancelled","data":{"status":"active"}}', expectedStatus: 0 },
+        { name: 'nested-only', body: '{"data":{"status":"cancelled"}}', expectedStatus: 1 },
+      ];
+      try {
+        for (const testCase of cases) {
+          const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-sc1032-legacy-json-'));
           writeAgentBrowserStub(
             path.join(binDir, 'agent-browser'),
             'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
@@ -1186,7 +1281,7 @@ describe('SC-1032 vertical seam', function () {
           '  if [ -L "$_out" ]; then echo response_symlink=true; else echo response_symlink=false; fi',
           '  printf \'argv=%s\\n\' "$_argv"',
           '} >> ' + singleShellLiteral(evidence),
-          'printf \'%s\' \'{"status":"cancelled"}\' > "$_out"',
+          'printf \'%s\' \'{"data":{"status":"cancelled"}}\' > "$_out"',
           'printf 200',
         ].join('\n'));
         writeExecutable(path.join(binDir, 'sleep'), '#!/usr/bin/env bash\nexit 0\n');
