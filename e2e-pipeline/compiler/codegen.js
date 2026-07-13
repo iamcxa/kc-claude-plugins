@@ -423,7 +423,15 @@ function generateRuntimeSupport(includeRuntimeStateSupport) {
     '}',
     '',
     '_curl_config_escape() {',
-    "  case \"$1\" in *$'\\n'*|*$'\\r'*|*$'\\t'*) return 1 ;; esac",
+    '  local _byte',
+    "  if ! printf '%s' \"$1\" | LC_ALL=C od -An -v -t u1 | tr -s ' ' '\\n' | while IFS= read -r _byte; do",
+    '    [ -z "$_byte" ] && continue',
+    '    case "$_byte" in',
+    '      0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|127) exit 1 ;;',
+    '    esac',
+    '  done; then',
+    '    return 1',
+    '  fi',
     "  printf '%s' \"$1\" | sed 's/\\\\/\\\\\\\\/g; s/\"/\\\\\"/g'",
     '}',
     '',
@@ -806,7 +814,7 @@ function generateBaseUrlNormalization(variables) {
  *
  * Returns: string (multi-line bash block)
  */
-function generateCleanupTrap(steps, finallySteps) {
+function generateCleanupTrap(steps, finallySteps, summary) {
   var sessions = [];
   var seen = new Set();
   var hasFinalizers = Array.isArray(finallySteps) && finallySteps.length > 0;
@@ -981,10 +989,28 @@ function generateCleanupTrap(steps, finallySteps) {
 
   lines.push('  if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi');
   lines.push('  if [ -n "$JUNIT_OUTPUT" ]; then _emit_junit "$JUNIT_OUTPUT"; fi');
+  lines.push('  _FINAL_EXIT="$_prev_exit"');
   lines.push('  if [ "$_FINALIZER_FAILED" -ne 0 ] && [ "$_prev_exit" -eq 0 ]; then');
-  lines.push('    exit 1');
+  lines.push('    _FINAL_EXIT=1');
   lines.push('  fi');
-  lines.push('  exit "$_prev_exit"');
+  if (summary) {
+    lines.push('  if [ "$' + '{#_FAILED_STEPS[@]}" -gt 0 ]; then');
+    lines.push('    echo "FAIL: $' + '{#_FAILED_STEPS[@]} steps failed: $' + '{_FAILED_STEPS[*]}"');
+    lines.push('  elif [ "$_FINAL_EXIT" -eq 0 ]; then');
+    lines.push('    if [ "$_HAD_RETRIES" = "true" ]; then');
+    lines.push('      echo ' + singleQuote(
+      'PASS (FLAKY): ' + summary.flowName + ' (' + summary.totalSteps + '/' + summary.totalSteps +
+      ' steps, ' + summary.skipped + ' skipped)'
+    ));
+    lines.push('    else');
+    lines.push('      echo ' + singleQuote(
+      'PASS: ' + summary.flowName + ' (' + summary.totalSteps + '/' + summary.totalSteps +
+      ' steps, ' + summary.skipped + ' skipped)'
+    ));
+    lines.push('    fi');
+    lines.push('  fi');
+  }
+  lines.push('  exit "$_FINAL_EXIT"');
   lines.push('}');
   lines.push('trap cleanup EXIT');
 
@@ -1145,13 +1171,21 @@ function generateMetricsEmitter(flowName) {
  * Returns: string (multi-line bash block)
  */
 function generateFooter(flowName, totalSteps, skipped, deferReportsToCleanup) {
-  var lines = [];
-  if (!deferReportsToCleanup) {
-    lines.push('# Emit metrics JSON if --metrics-output path was provided (FLAKY-02)');
-    lines.push('if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi');
-    lines.push('# Emit JUnit XML if --junit path was provided (FLAG-01)');
-    lines.push('if [ -n "$JUNIT_OUTPUT" ]; then _emit_junit "$JUNIT_OUTPUT"; fi');
+  if (deferReportsToCleanup) {
+    return [
+      '# Exit summary deferred until finalizers complete',
+      'if [ ${#_FAILED_STEPS[@]} -gt 0 ]; then',
+      '  exit 1',
+      'fi',
+      'exit 0',
+    ].join('\n');
   }
+
+  var lines = [];
+  lines.push('# Emit metrics JSON if --metrics-output path was provided (FLAKY-02)');
+  lines.push('if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi');
+  lines.push('# Emit JUnit XML if --junit path was provided (FLAG-01)');
+  lines.push('if [ -n "$JUNIT_OUTPUT" ]; then _emit_junit "$JUNIT_OUTPUT"; fi');
   lines.push(
     '# Exit summary',
     'if [ ${#_FAILED_STEPS[@]} -gt 0 ]; then',
@@ -1696,7 +1730,11 @@ function generate(resolved, flowName, meta) {
 
   // 6. Cleanup trap — registers agent-browser close on EXIT (CI-06)
   // SC-1032: pass finallySteps so cleanup() runs HTTP finalizers before browser close
-  parts.push(generateCleanupTrap(steps, resolved.finally));
+  parts.push(generateCleanupTrap(steps, resolved.finally, {
+    flowName: flowName,
+    totalSteps: totalSteps,
+    skipped: skipped,
+  }));
   parts.push('');
 
   // 7. Per-step action blocks

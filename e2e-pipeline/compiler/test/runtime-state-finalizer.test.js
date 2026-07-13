@@ -28,7 +28,11 @@ const childProcess = require('node:child_process');
 // Units under test
 const { parse } = require('../parser.js');
 const { resolve } = require('../resolver.js');
-const { generate, generateRuntimeValuesBlock } = require('../codegen.js');
+const {
+  generate,
+  generateRuntimeSupport,
+  generateRuntimeValuesBlock,
+} = require('../codegen.js');
 const { compile } = require('../compiler.js');
 
 const FIXTURES_DIR = path.join(__dirname, 'fixtures');
@@ -888,6 +892,143 @@ describe('SC-1032 vertical seam', function () {
         assert.throws(function () { process.kill(childPid, 0); }, /ESRCH/,
           'runner descendants must be gone after timeout');
       } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    });
+
+    test('curl config escaping rejects representable C0 controls and DEL but preserves UTF-8', function () {
+      const tmpDir = makeTmpDir();
+      const scriptPath = path.join(tmpDir, 'curl-config-escape.sh');
+      try {
+        writeExecutable(scriptPath, [
+          '#!/usr/bin/env bash',
+          generateRuntimeSupport(true),
+          'if _curl_config_escape "$TOKEN"; then exit 0; else exit 1; fi',
+        ].join('\n'));
+
+        const forbidden = [];
+        for (let code = 1; code <= 31; code++) forbidden.push(code);
+        forbidden.push(127);
+        for (const code of forbidden) {
+          const token = 'abc' + String.fromCharCode(code) + 'def';
+          const result = runScript(scriptPath, { env: { TOKEN: token }, timeout: 2000 });
+          assert.equal(result.status, 1,
+            'control byte 0x' + code.toString(16).padStart(2, '0') + ' must be rejected');
+          assert.equal((result.stdout + result.stderr).includes(token), false,
+            'rejected token must not leak for byte 0x' + code.toString(16));
+        }
+
+        assert.throws(function () {
+          runScript(scriptPath, { env: { TOKEN: 'abc\0def' }, timeout: 2000 });
+        }, /null bytes/, 'NUL is rejected by the process environment boundary');
+
+        const utf8Token = 'token-\u5bc6\u78bc-\u00e9-\ud83d\udd10';
+        const utf8Result = runScript(scriptPath, { env: { TOKEN: utf8Token }, timeout: 2000 });
+        assert.equal(utf8Result.status, 0, utf8Result.stderr);
+        assert.equal(utf8Result.stdout, utf8Token);
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    });
+
+    test('unsafe credential control bytes fail before curl without leaking the secret', async function () {
+      const tmpDir = makeTmpDir();
+      const compiled = await compile(FLOW_PATH, MAPPING_DIR, path.join(tmpDir, 'compiled'));
+      const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-sc1032-c0-secret-'));
+      const curlLog = path.join(tmpDir, 'curl.log');
+      const secret = 'abc\x01def';
+      try {
+        writeAgentBrowserStub(
+          path.join(binDir, 'agent-browser'),
+          'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+          false
+        );
+        writeCurlStub(path.join(binDir, 'curl'), curlLog);
+        writeExecutable(path.join(binDir, 'sleep'), '#!/usr/bin/env bash\nexit 0\n');
+
+        const result = runScript(compiled.outputPath, {
+          binDir: binDir,
+          env: {
+            E2E_BOOKING_PASSWORD: 'password', E2E_ADMIN_TOKEN: secret,
+            E2E_API_BASE_URL: 'http://localhost', BASE_URL: 'http://localhost',
+            E2E_SCREENSHOT_DIR: path.join(tmpDir, 'shots'),
+          },
+        });
+
+        assert.equal(result.status, 1, result.stdout + '\n' + result.stderr);
+        assert.equal(fs.existsSync(curlLog), false, 'curl must not run for an unsafe credential');
+        assert.equal((result.stdout + result.stderr).includes(secret), false,
+          'unsafe credential must not appear in output');
+      } finally {
+        fs.rmSync(binDir, { recursive: true, force: true });
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    });
+
+    test('successful finalizers emit exactly one deferred success summary', async function () {
+      const tmpDir = makeTmpDir();
+      const compiled = await compile(FLOW_PATH, MAPPING_DIR, path.join(tmpDir, 'compiled'));
+      const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-sc1032-summary-ok-'));
+      try {
+        const script = fs.readFileSync(compiled.outputPath, 'utf8');
+        const cleanupStart = script.indexOf('cleanup() {');
+        const trapStart = script.indexOf('trap cleanup EXIT');
+        const successSummary = 'PASS: runtime-state-finalizer-flow (5/5 steps, 0 skipped)';
+        assert.ok(script.slice(cleanupStart, trapStart).includes(successSummary),
+          'finalizer success summary must be emitted by cleanup');
+        assert.equal(script.slice(trapStart).includes(successSummary), false,
+          'ordinary footer must not print success before finalizers');
+
+        writeAgentBrowserStub(
+          path.join(binDir, 'agent-browser'),
+          'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+          false
+        );
+        writeCurlStub(path.join(binDir, 'curl'));
+        writeExecutable(path.join(binDir, 'sleep'), '#!/usr/bin/env bash\nexit 0\n');
+        const result = runScript(compiled.outputPath, {
+          binDir: binDir,
+          env: {
+            E2E_BOOKING_PASSWORD: 'password', E2E_ADMIN_TOKEN: 'token',
+            E2E_API_BASE_URL: 'http://localhost', BASE_URL: 'http://localhost',
+            E2E_SCREENSHOT_DIR: path.join(tmpDir, 'shots'),
+          },
+        });
+        assert.equal(result.status, 0, result.stdout + '\n' + result.stderr);
+        const summaries = result.stdout.split('\n').filter(function (line) {
+          return line.startsWith('PASS:') || line.startsWith('PASS (FLAKY):');
+        });
+        assert.deepEqual(summaries, [successSummary]);
+      } finally {
+        fs.rmSync(binDir, { recursive: true, force: true });
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    });
+
+    test('finalizer failure emits no PASS or flaky PASS summary', async function () {
+      const tmpDir = makeTmpDir();
+      const compiled = await compile(FLOW_PATH, MAPPING_DIR, path.join(tmpDir, 'compiled'));
+      const binDir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-sc1032-summary-fail-'));
+      try {
+        writeAgentBrowserStub(
+          path.join(binDir, 'agent-browser'),
+          'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+          false
+        );
+        writeExecutable(path.join(binDir, 'curl'), '#!/usr/bin/env bash\nexit 1\n');
+        writeExecutable(path.join(binDir, 'sleep'), '#!/usr/bin/env bash\nexit 0\n');
+        const result = runScript(compiled.outputPath, {
+          binDir: binDir,
+          env: {
+            E2E_BOOKING_PASSWORD: 'password', E2E_ADMIN_TOKEN: 'token',
+            E2E_API_BASE_URL: 'http://localhost', BASE_URL: 'http://localhost',
+            E2E_SCREENSHOT_DIR: path.join(tmpDir, 'shots'),
+          },
+        });
+        assert.equal(result.status, 1, result.stdout + '\n' + result.stderr);
+        assert.equal(/PASS(?: \(FLAKY\))?:/.test(result.stdout), false, result.stdout);
+      } finally {
+        fs.rmSync(binDir, { recursive: true, force: true });
         fs.rmSync(tmpDir, { recursive: true, force: true });
       }
     });
