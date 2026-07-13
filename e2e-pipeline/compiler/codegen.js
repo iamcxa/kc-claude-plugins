@@ -439,12 +439,14 @@ function generateRuntimeSupport(includeRuntimeStateSupport) {
     '  local _json_file="$1"',
     '  local _json_field="$2"',
     '  local _json_expected="$3"',
-    '  node - "$_json_file" "$_json_field" "$_json_expected" <<\'__E2E_JSON_ASSERT__\'',
+    '  local _json_object="${4-}"',
+    '  node - "$_json_file" "$_json_field" "$_json_expected" "$_json_object" <<\'__E2E_JSON_ASSERT__\'',
     "'use strict';",
     "const fs = require('fs');",
     'const source = fs.readFileSync(process.argv[2], \'utf8\');',
     'const field = process.argv[3];',
     'const expected = process.argv[4];',
+    'const object = process.argv[5];',
     'let offset = 0;',
     'function invalid() { throw new Error(\'invalid JSON response\'); }',
     'function whitespace() { while (/\\s/.test(source[offset] || \'\')) offset += 1; }',
@@ -525,8 +527,14 @@ function generateRuntimeSupport(includeRuntimeStateSupport) {
     '  whitespace();',
     '  if (offset !== source.length) invalid();',
     '  if (document === null || Array.isArray(document) || typeof document !== \'object\') invalid();',
-    '  if (!Object.prototype.hasOwnProperty.call(document, field)) invalid();',
-    '  if (typeof document[field] !== \'string\' || document[field] !== expected) invalid();',
+    '  let target = document;',
+    '  if (object) {',
+    '    if (!Object.prototype.hasOwnProperty.call(document, object)) invalid();',
+    '    target = document[object];',
+    '    if (target === null || Array.isArray(target) || typeof target !== \'object\') invalid();',
+    '  }',
+    '  if (!Object.prototype.hasOwnProperty.call(target, field)) invalid();',
+    '  if (typeof target[field] !== \'string\' || target[field] !== expected) invalid();',
     '} catch (_error) {',
     '  process.exit(1);',
     '}',
@@ -952,7 +960,16 @@ function generateCleanupTrap(steps, finallySteps, summary) {
         lines.push('    _FINALIZER_FAILURE=' + singleQuote('HTTP status assertion failed'));
         lines.push('  fi');
       }
-      if (op.expectedBody && op.expectedBody.field && op.expectedBody.equals !== undefined) {
+      if (op.expectedBodyField && op.expectedBodyField.object && op.expectedBodyField.field &&
+          op.expectedBodyField.equals_literal !== undefined) {
+        lines.push('  if [ "$_FINALIZER_OK" = true ] && ! _json_top_level_string_equals ' +
+          '"$_FINALIZER_RESPONSE" ' + singleQuote(String(op.expectedBodyField.field)) + ' ' +
+          singleQuote(String(op.expectedBodyField.equals_literal)) + ' ' +
+          singleQuote(String(op.expectedBodyField.object)) + ' 2>/dev/null; then');
+        lines.push('    _FINALIZER_OK=false');
+        lines.push('    _FINALIZER_FAILURE=' + singleQuote('HTTP response body assertion failed'));
+        lines.push('  fi');
+      } else if (op.expectedBody && op.expectedBody.field && op.expectedBody.equals !== undefined) {
         lines.push('  if [ "$_FINALIZER_OK" = true ] && ! _json_top_level_string_equals ' +
           '"$_FINALIZER_RESPONSE" ' + singleQuote(String(op.expectedBody.field)) + ' ' +
           singleQuote(String(op.expectedBody.equals)) + ' 2>/dev/null; then');

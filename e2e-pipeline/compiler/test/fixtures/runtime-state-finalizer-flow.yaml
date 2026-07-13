@@ -68,6 +68,7 @@ finally:
         Authorization: { scheme: Bearer, runtime_ref: admin_token }
     expect:
       status: 200
-      body:
+      body_field:
+        object: data
         field: status
-        equals: cancelled
+        equals_literal: cancelled
