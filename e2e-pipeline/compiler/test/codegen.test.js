@@ -2,6 +2,7 @@
 
 const { test, describe } = require('node:test');
 const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
 
 const { generate, generateHeader, singleQuote, generateCleanupTrap } = require('../codegen.js');
 
@@ -125,6 +126,84 @@ describe('generate() — shell header', function() {
   test("output includes LC_ALL export", function() {
     const script = generate(makeResolved([]), 'test-flow');
     assert.ok(script.includes('export LC_ALL=en_US.UTF-8'), 'Missing LC_ALL export');
+  });
+});
+
+describe('PR-38 legacy output parity', function() {
+  test('non-SC-1032 flows remain byte-compatible with 56f43e7 codegen', function() {
+    const corpus = [
+      {
+        name: 'legacy-empty',
+        expected: 'e3a058590754036aa47dab80356931e9a6e32aea606c8697de89254f4c8923f8',
+        resolved: { name: 'legacy-empty', description: 'No steps', steps: [] },
+      },
+      {
+        name: 'legacy-single-site',
+        expected: 'c84d1fec537a84480b87dd7cc227b135ff185a56960eb0d2a88a281c2310ced4',
+        resolved: {
+          name: 'legacy-single-site',
+          description: 'Representative legacy actions',
+          variables: { base_url: 'http://localhost:3000' },
+          steps: [
+            {
+              id: 'navigate', action: 'Navigate to /login', type: 'navigate',
+              operands: { target: '/login', urlPath: '/login' },
+              expects: [{ type: 'url-contains', value: '/login' }],
+            },
+            {
+              id: 'fill', action: 'Fill email', type: 'fill',
+              operands: {
+                element: 'email', selector: '[name="email"]', cssSelector: '[name="email"]',
+                value: 'user@example.com',
+              },
+            },
+            {
+              id: 'click', action: 'Click submit', type: 'click',
+              operands: {
+                element: 'submit', selector: '[role="button"]', cssSelector: '[role="button"]',
+              },
+            },
+            { id: 'snapshot', action: 'Take snapshot', type: 'snapshot', operands: {} },
+            { id: 'wait', action: 'Wait 2', type: 'wait', operands: { seconds: 2 } },
+            { id: 'verify', action: 'Verify external', type: 'verify-external', operands: {} },
+          ],
+        },
+      },
+      {
+        name: 'legacy-cross-site',
+        expected: 'ed38f0a7fa01bc4f64aac9c2092d6edf88dc57d3bcfae7b58aff9aa5c5cbe56e',
+        resolved: {
+          name: 'legacy-cross-site',
+          description: 'Named browser sessions',
+          variables: {
+            OFFICE_BASE_URL: 'http://localhost:3000', APP_BASE_URL: 'http://localhost:8081',
+          },
+          steps: [
+            {
+              id: 'office-nav', action: 'Navigate office', type: 'navigate',
+              session: 'office', site: 'office',
+              operands: { target: '/customers', urlPath: '/customers' },
+            },
+            {
+              id: 'app-click', action: 'Click app submit', type: 'click',
+              session: 'app', site: 'app',
+              operands: { element: 'submit', selector: '[role="button"]' },
+            },
+            {
+              id: 'office-snapshot', action: 'Take office snapshot', type: 'snapshot',
+              session: 'office', site: 'office', operands: {},
+            },
+          ],
+        },
+      },
+    ];
+
+    for (const entry of corpus) {
+      const actual = crypto.createHash('sha256')
+        .update(generate(entry.resolved, entry.name))
+        .digest('hex');
+      assert.equal(actual, entry.expected, entry.name + ' drifted from PR-38 output');
+    }
   });
 });
 
@@ -3073,8 +3152,19 @@ describe('metrics codegen (FLAKY-02) — generate() integration', function() {
 });
 
 describe('metrics codegen (FLAKY-02) — cleanup integration', function() {
+  function makeFinalizer() {
+    return {
+      id: 'cleanup-record',
+      action: 'Finalize record',
+      type: 'http',
+      operands: {
+        method: 'GET', baseEnv: 'API_BASE_URL', pathSegments: [], headers: {},
+      },
+    };
+  }
+
   test("cleanup contains conditional _emit_metrics call", function() {
-    const cleanup = generateCleanupTrap([], []);
+    const cleanup = generateCleanupTrap([], [makeFinalizer()]);
     assert.ok(
       cleanup.includes('_emit_metrics'),
       'Expected _emit_metrics call in cleanup. Got: ' + cleanup
@@ -3082,7 +3172,7 @@ describe('metrics codegen (FLAKY-02) — cleanup integration', function() {
   });
 
   test("cleanup _emit_metrics call is guarded by METRICS_OUTPUT check", function() {
-    const cleanup = generateCleanupTrap([], []);
+    const cleanup = generateCleanupTrap([], [makeFinalizer()]);
     const metricsIdx = cleanup.indexOf('_emit_metrics');
     // Find the surrounding context
     const context = cleanup.slice(Math.max(0, metricsIdx - 60), metricsIdx + 60);
@@ -3093,7 +3183,7 @@ describe('metrics codegen (FLAKY-02) — cleanup integration', function() {
   });
 
   test("cleanup _emit_metrics call appears before JUnit emission", function() {
-    const cleanup = generateCleanupTrap([], []);
+    const cleanup = generateCleanupTrap([], [makeFinalizer()]);
     const metricsIdx = cleanup.indexOf('_emit_metrics');
     const junitIdx = cleanup.indexOf('_emit_junit');
     assert.ok(
