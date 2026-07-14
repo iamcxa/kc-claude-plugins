@@ -11,6 +11,7 @@ python3 - "$REPO_DIR" "$CONFIG_JSON" <<'PY'
 import json
 import os
 import re
+import subprocess
 import sys
 
 repo_dir = os.path.realpath(sys.argv[1])
@@ -55,6 +56,29 @@ for package, package_config in packages.items():
         else:
             effective_path = os.path.join(package, configured_path)
 
+        illegal_segment = next(
+            (
+                segment
+                for segment in configured_path.split("/")
+                if segment in {".", ".."} or segment.startswith("~")
+            ),
+            None,
+        )
+        if illegal_segment is not None:
+            failures.append(
+                f"{package}: illegal path segment {illegal_segment!r}: {configured_path}"
+            )
+            rows.append((package, configured_path, effective_path, "INVALID"))
+            continue
+
+        extra_file_type = extra_file.get("type")
+        if extra_file_type != "json":
+            failures.append(
+                f"{package}: unsupported extra-file type {extra_file_type!r}; expected 'json'"
+            )
+            rows.append((package, configured_path, effective_path, "INVALID"))
+            continue
+
         absolute_path = os.path.realpath(os.path.join(repo_dir, effective_path))
         try:
             inside_repo = os.path.commonpath([repo_dir, absolute_path]) == repo_dir
@@ -74,41 +98,92 @@ for package, package_config in packages.items():
             rows.append((package, configured_path, effective_path, "MISSING"))
             continue
 
-        if extra_file.get("type") == "json":
-            try:
-                with open(absolute_path, encoding="utf-8") as handle:
-                    document = json.load(handle)
-            except (OSError, json.JSONDecodeError) as exc:
-                failures.append(f"{package}: invalid JSON at {effective_path}: {exc}")
-                rows.append((package, configured_path, effective_path, "INVALID"))
-                continue
+        try:
+            with open(absolute_path, encoding="utf-8") as handle:
+                document = json.load(handle)
+        except (OSError, json.JSONDecodeError) as exc:
+            failures.append(f"{package}: invalid JSON at {effective_path}: {exc}")
+            rows.append((package, configured_path, effective_path, "INVALID"))
+            continue
 
-            jsonpath = extra_file.get("jsonpath")
-            match_count = 0
-            if jsonpath == "$.version":
-                match_count = int(isinstance(document, dict) and "version" in document)
-            elif isinstance(jsonpath, str):
-                selector_match = marketplace_selector.fullmatch(jsonpath)
-                if selector_match and isinstance(document, dict):
-                    plugin_name = selector_match.group(1)
-                    plugins = document.get("plugins", [])
-                    if isinstance(plugins, list):
-                        match_count = sum(
-                            1
-                            for plugin in plugins
-                            if isinstance(plugin, dict)
-                            and plugin.get("name") == plugin_name
-                            and "version" in plugin
-                        )
+        jsonpath = extra_file.get("jsonpath")
+        match_count = 0
+        if jsonpath == "$.version":
+            match_count = int(isinstance(document, dict) and "version" in document)
+        elif isinstance(jsonpath, str):
+            selector_match = marketplace_selector.fullmatch(jsonpath)
+            if selector_match and isinstance(document, dict):
+                plugin_name = selector_match.group(1)
+                plugins = document.get("plugins", [])
+                if isinstance(plugins, list):
+                    match_count = sum(
+                        1
+                        for plugin in plugins
+                        if isinstance(plugin, dict)
+                        and plugin.get("name") == plugin_name
+                        and "version" in plugin
+                    )
 
-            if match_count != 1:
-                failures.append(
-                    f"{package}: JSONPath {jsonpath!r} matches {match_count} fields in {effective_path}; expected 1"
-                )
-                rows.append((package, configured_path, effective_path, "NO MATCH"))
-                continue
+        if match_count != 1:
+            failures.append(
+                f"{package}: JSONPath {jsonpath!r} matches {match_count} fields in {effective_path}; expected 1"
+            )
+            rows.append((package, configured_path, effective_path, "NO MATCH"))
+            continue
 
         rows.append((package, configured_path, effective_path, "ok"))
+
+    claude_targets = [
+        extra_file
+        for extra_file in extra_files
+        if isinstance(extra_file, dict)
+        and extra_file.get("type") == "json"
+        and extra_file.get("path") == ".claude-plugin/plugin.json"
+        and extra_file.get("jsonpath") == "$.version"
+    ]
+    if len(claude_targets) != 1:
+        qualifier = "missing" if not claude_targets else "duplicate"
+        failures.append(f"{package}: {qualifier} required Claude manifest target")
+
+    codex_repo_path = os.path.join(package, ".codex-plugin", "plugin.json")
+    tracked_codex = subprocess.run(
+        ["git", "-C", repo_dir, "ls-files", "--error-unmatch", codex_repo_path],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    ).returncode == 0
+    codex_targets = [
+        extra_file
+        for extra_file in extra_files
+        if isinstance(extra_file, dict)
+        and extra_file.get("type") == "json"
+        and extra_file.get("path") == ".codex-plugin/plugin.json"
+        and extra_file.get("jsonpath") == "$.version"
+    ]
+    if tracked_codex and len(codex_targets) != 1:
+        qualifier = "missing" if not codex_targets else "duplicate"
+        failures.append(f"{package}: {qualifier} required Codex manifest target")
+
+    marketplace_targets = [
+        extra_file
+        for extra_file in extra_files
+        if isinstance(extra_file, dict)
+        and extra_file.get("type") == "json"
+        and extra_file.get("path") == "/.claude-plugin/marketplace.json"
+    ]
+    if len(marketplace_targets) != 1:
+        qualifier = "missing" if not marketplace_targets else "duplicate"
+        failures.append(f"{package}: {qualifier} required marketplace target")
+    elif marketplace_targets:
+        selector = marketplace_targets[0].get("jsonpath")
+        selector_match = (
+            marketplace_selector.fullmatch(selector) if isinstance(selector, str) else None
+        )
+        selected_package = selector_match.group(1) if selector_match else None
+        if selected_package != package:
+            failures.append(
+                f"{package}: marketplace selector must target package {package!r}; got {selected_package!r}"
+            )
 
 print(f"{'PACKAGE':18} {'CONFIGURED PATH':52} {'RESULT':9} EFFECTIVE PATH")
 for package, configured_path, effective_path, result in rows:
