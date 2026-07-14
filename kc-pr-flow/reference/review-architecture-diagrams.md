@@ -141,7 +141,7 @@ flowchart TB
     Future["Future or outside this PR"]
     Outcome["Implemented and verified outcome"]
 
-    Goal --> Trigger
+    Goal -.-> Trigger
     Trigger --> Core
     Core --> Current
     Current --> Finding
@@ -175,14 +175,27 @@ Flowchart-specific rules:
 
 ## 6. Preview and review-body assembly
 
-Preview both complete Mermaid blocks and this mapping before requesting posting authorization:
+Write exactly the two complete Mermaid blocks to a temporary Markdown file and validate that file
+before previewing it:
+
+```bash
+bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-architecture-diagrams-validate.sh" "$DIAGRAM_PAIR_FILE"
+```
+
+Validation is fail-closed. A missing validator, unreadable file, malformed fence, unsupported line,
+unsafe construct, wrong diagram count or type, or exceeded size cap stops the D flow. Regenerate the
+pair and re-run the validator; never preview or post a pair that did not return exit code 0. The
+validator accepts only the documented sequence and flowchart grammar used by these templates.
+
+After validation, preview both complete Mermaid blocks and this mapping before requesting posting
+authorization:
 
 | Marker | Review finding |
 |---|---|
 | F1 | `path:line` — concise summary matching Step 6a |
 
-State the exact head SHA used for grounding. Then return to Step 6c; option D itself causes no
-GitHub mutation.
+State the full 40-character head SHA used for grounding. Then return to Step 6c; option D itself
+causes no GitHub mutation.
 
 When the user selects option 5 or 6, append this pair to the review body under:
 
@@ -205,7 +218,9 @@ product decisions, and work outside this PR. Finding markers map to the inline f
 
 Place the section after verification, break-point, pass-coverage, and cross-model material, and
 before advisory. Post the exact previewed pair; any edit requires another preview. Immediately
-before posting, re-check the head. A moved head invalidates both diagrams and returns to generation.
+before posting, re-check the head and re-run the validator against the exact previewed pair. A moved
+head invalidates both diagrams and returns to generation; a validation failure blocks posting and
+returns to regeneration.
 
 For forward-testing scenarios that exercise these behavioral gates, see
 `reference/review-architecture-diagrams-evals.md`.

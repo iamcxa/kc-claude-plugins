@@ -975,7 +975,11 @@ When the user chooses **D**:
    evidence ledger, sanitization, status, size, and two-template contract.
 3. Generate and preview exactly two PR-facing artifacts in the target repo's PR language:
    a runtime sequence diagram and an overall architecture/implementation-status flowchart.
-4. Return to §6c. **Generating diagrams is not authorization to post them.** The user must
+4. Write exactly those two Mermaid blocks to a temporary Markdown file and run
+   `bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-architecture-diagrams-validate.sh" "$DIAGRAM_PAIR_FILE"`.
+   Validation is fail-closed: any non-zero exit blocks preview and returns to regeneration.
+5. Preview the validated pair with the full 40-character head SHA, then return to §6c.
+   **Generating diagrams is not authorization to post them.** The user must
    separately choose option 5 or 6 after seeing the exact diagrams.
 
 The diagrams are explanatory artifacts, not a second classification channel. They never change the review event,
@@ -1021,7 +1025,7 @@ Then re-present the tables and options.
 
 ## Step 7: Post Review
 
-Prefer `gh pr review` CLI. Use `gh api` as fallback for inline comments (CLI lacks native inline support). Write JSON payload to temp file to avoid shell escaping issues; always tag `@PR_AUTHOR` in the review body. For option 5 or 6, append both exact previewed diagrams to the same review body after verification / break-point / pass / cross-model sections and before advisory. Re-run the Step 2.1 head check immediately before posting; a moved head invalidates the diagrams and returns to §6b-arch.
+Prefer `gh pr review` CLI. Use `gh api` as fallback for inline comments (CLI lacks native inline support). Write JSON payload to temp file to avoid shell escaping issues; always tag `@PR_AUTHOR` in the review body. For option 5 or 6, append both exact previewed diagrams to the same review body after verification / break-point / pass / cross-model sections and before advisory. Re-run the Step 2.1 head check and `review-architecture-diagrams-validate.sh` against the exact previewed pair immediately before posting; a moved head invalidates the diagrams and returns to §6b-arch, while a validation failure blocks posting and returns to regeneration.
 
 Read → ${CLAUDE_PLUGIN_ROOT}/reference/gh-api-patterns.md § "Review Payload"
 
@@ -1044,6 +1048,7 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md
 - **PR Summary always rendered first** — Step 6 draft must begin with the §6-pre PR Summary block (what / why / claimed-goal / verdict + evidence) before any findings tables. The goal-achievement verdict is mandatory and is your independent reviewer call (✅/⚠️/❌/🟡/➖), not a restatement of the author's claim. If author claims success but evidence contradicts, the verdict must reflect evidence
 - **Confirm before posting** — never submit a review without user approval
 - **Architecture diagrams are opt-in and preview-first** — option D generates exactly two grounded Mermaid artifacts without posting; only a later option 5 or 6 authorizes attaching both to the review body
+- **Architecture diagram validation is fail-closed** — validate the exact generated pair before preview and again before posting with `review-architecture-diagrams-validate.sh`; never continue after a validator error or non-zero result
 - **Dynamic repo detection** — use `gh repo view`, never hardcode owner/repo
 - **Ownership check** — only apply personal CLAUDE.md rules to repos you own (personal or org admin)
 - **Temp file for JSON** — avoid `--raw-field` for complex payloads; use `--input`

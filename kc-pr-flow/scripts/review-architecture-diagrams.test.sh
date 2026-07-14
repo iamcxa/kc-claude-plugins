@@ -11,6 +11,7 @@ EVALS="$PLUGIN_ROOT/reference/review-architecture-diagrams-evals.md"
 DOC="$PLUGIN_ROOT/docs/review-architecture-diagrams.md"
 PLUGIN_GUIDE="$PLUGIN_ROOT/CLAUDE.md"
 PLUGIN_README="$PLUGIN_ROOT/README.md"
+VALIDATOR="$PLUGIN_ROOT/scripts/review-architecture-diagrams-validate.sh"
 
 PASS=0
 FAIL=0
@@ -53,6 +54,7 @@ assert_count() {
 assert_file "reference exists" "$REFERENCE"
 assert_file "behavioral pressure spec exists" "$EVALS"
 assert_file "user guide exists" "$DOC"
+assert_file "runtime diagram validator exists" "$VALIDATOR"
 
 assert_contains "skill links the on-demand reference" 'reference/review-architecture-diagrams.md' "$SKILL"
 assert_contains "skill keeps D preview-only" 'D. Generate and preview two architecture diagrams (does not post)' "$SKILL"
@@ -62,6 +64,7 @@ assert_contains "skill says diagram generation is not posting authority" 'Genera
 assert_contains "skill invalidates diagrams when head moves" 'invalidate the diagrams' "$SKILL"
 assert_contains "skill routes new findings back to classification" 'return to Step 5 and §6a' "$SKILL"
 assert_contains "skill keeps diagram output verdict-neutral" 'never change the review event' "$SKILL"
+assert_contains "skill validates generated pair before preview" 'review-architecture-diagrams-validate.sh' "$SKILL"
 
 if [[ -f "$REFERENCE" ]]; then
   assert_count "reference contains exactly two Mermaid templates" 2 '```mermaid' "$REFERENCE"
@@ -78,6 +81,8 @@ if [[ -f "$REFERENCE" ]]; then
   assert_contains "reference excludes all source-derived Mermaid strings" 'Never place source-derived names or strings inside Mermaid.' "$REFERENCE"
   assert_contains "reference keeps exact identifiers outside Mermaid" 'Keep exact identifiers outside Mermaid' "$REFERENCE"
   assert_contains "reference rejects structural breakout characters" 'brackets, quotes, arrows, or Mermaid control syntax' "$REFERENCE"
+  assert_contains "claimed goal relationship uses dotted edge" 'Goal -.-> Trigger' "$REFERENCE"
+  assert_contains "preview records full head SHA" 'State the full 40-character head SHA used for grounding.' "$REFERENCE"
   assert_contains "posted template records full head SHA" 'Grounded at PR head: <full 40-character SHA>' "$REFERENCE"
 
   MERMAID_BLOCKS="$(mktemp)"
@@ -92,6 +97,20 @@ if [[ -f "$REFERENCE" ]]; then
     fail "Mermaid templates exclude executable/external constructs"
   else
     pass "Mermaid templates exclude executable/external constructs"
+  fi
+
+  CANONICAL_PAIR="$(mktemp)"
+  trap 'rm -f "$MERMAID_BLOCKS" "$CANONICAL_PAIR"' EXIT
+  awk '
+    /^```mermaid[[:space:]]*$/ { in_mermaid = 1; print; next }
+    in_mermaid { print }
+    in_mermaid && /^```[[:space:]]*$/ { in_mermaid = 0; print "" }
+  ' "$REFERENCE" > "$CANONICAL_PAIR"
+
+  if [[ -x "$VALIDATOR" ]] && "$VALIDATOR" "$CANONICAL_PAIR" >/dev/null; then
+    pass "runtime validator accepts canonical templates"
+  else
+    fail "runtime validator accepts canonical templates"
   fi
 fi
 

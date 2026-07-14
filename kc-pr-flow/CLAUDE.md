@@ -26,6 +26,13 @@ arbiter. The dispatch path must stay additive and non-blocking:
 - **Arbitration (Step 5.6)**: material conflicts (exclusive findings `severity ≥ MEDIUM OR root == CODE`, plus contradictions) are sent in a **single** Gemini call only when `gemini` is available. Gemini's verdict adjusts confidence through the existing §6a gate; it never auto-posts and never drops a finding from view. Parsing is injection-resistant and fails open to no-change.
 - The deterministic reconciliation + parsing logic lives in `kc-pr-flow/scripts/cross-model.sh`, unit-tested by `cross-model.test.sh` (CI gate `cross-model-tests.yml`).
 
+### Architecture Diagram Validation
+
+The optional review-diagram path validates the exact generated Mermaid pair before preview and
+again before posting. `scripts/review-architecture-diagrams-validate.sh` is fail-closed and accepts
+only the documented two-diagram grammar; `review-architecture-diagrams-validator.test.sh` covers
+malformed structure, unsafe constructs, breakout payloads, and size caps.
+
 ## Internal Agents
 
 Built-in subagents dispatched by kc-pr-review for security analysis. Based on Trail of Bits methodologies.

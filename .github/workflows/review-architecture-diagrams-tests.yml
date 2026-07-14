@@ -12,6 +12,8 @@ on:
       - "kc-pr-flow/reference/review-architecture-diagrams-evals.md"
       - "kc-pr-flow/docs/review-architecture-diagrams.md"
       - "kc-pr-flow/scripts/review-architecture-diagrams.test.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validate.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh"
       - "kc-pr-flow/CLAUDE.md"
       - "kc-pr-flow/README.md"
       - ".github/workflows/review-architecture-diagrams-tests.yml"
@@ -23,6 +25,8 @@ on:
       - "kc-pr-flow/reference/review-architecture-diagrams-evals.md"
       - "kc-pr-flow/docs/review-architecture-diagrams.md"
       - "kc-pr-flow/scripts/review-architecture-diagrams.test.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validate.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh"
       - "kc-pr-flow/CLAUDE.md"
       - "kc-pr-flow/README.md"
       - ".github/workflows/review-architecture-diagrams-tests.yml"
@@ -40,7 +44,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Syntax check
-        run: bash -n kc-pr-flow/scripts/review-architecture-diagrams.test.sh
+        run: |
+          bash -n kc-pr-flow/scripts/review-architecture-diagrams.test.sh
+          bash -n kc-pr-flow/scripts/review-architecture-diagrams-validate.sh
+          bash -n kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh
 
       - name: Run contract tests
         run: bash kc-pr-flow/scripts/review-architecture-diagrams.test.sh
+
+      - name: Run generated diagram validator tests
+        run: bash kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh

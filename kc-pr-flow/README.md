@@ -42,7 +42,7 @@ Use natural-language triggers rather than slash commands in Codex, for example:
 |-------|---------------|
 | [Daemon](docs/daemon.md) | Architecture, configuration, classification logic, notifications, usage tracking |
 | [Review triage](reference/review-triage.md) | Agent tiering, 8-pass activation, security dispatch, and pre-scan rules |
-| [Review architecture diagrams](docs/review-architecture-diagrams.md) | Optional sequence and architecture/status diagrams, confirmation flow, evidence colors, and freshness rules |
+| [Review architecture diagrams](docs/review-architecture-diagrams.md) | Optional sequence and architecture/status diagrams, fail-closed generated-output validation, confirmation flow, evidence colors, and freshness rules |
 
 ## Shared Config
 

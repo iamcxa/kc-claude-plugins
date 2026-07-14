@@ -32,6 +32,9 @@ attach them to the GitHub review body:
 ```
 
 Options 5 and 6 always attach the pair. Editing either diagram returns to preview before posting.
+Before preview and again before posting, `review-architecture-diagrams-validate.sh` validates the
+exact generated pair. It fails closed unless the file contains exactly one sequence diagram and one
+flowchart using the documented safe grammar and size limits.
 
 ## Read the status colors
 
@@ -54,8 +57,9 @@ or a linked issue. Author claims and reviewer inferences remain visibly separate
 implementation. Unsupported future architecture and speculative completion percentages are not
 included.
 
-The preview records the PR head SHA. If the author pushes again, both diagrams become stale along
-with the review draft and must be regenerated after the unseen delta or rewritten head is reviewed.
+The preview records the full 40-character PR head SHA. If the author pushes again, both diagrams
+become stale along with the review draft and must be regenerated after the unseen delta or rewritten
+head is reviewed.
 
 ## Safety and readability
 
