@@ -60,13 +60,14 @@ for package, package_config in packages.items():
             (
                 segment
                 for segment in configured_path.split("/")
-                if segment in {".", ".."} or segment.startswith("~")
+                if segment in {".", ".."}
             ),
             None,
         )
-        if illegal_segment is not None:
+        if illegal_segment is not None or effective_path.startswith("~"):
+            illegal_value = illegal_segment if illegal_segment is not None else "~"
             failures.append(
-                f"{package}: illegal path segment {illegal_segment!r}: {configured_path}"
+                f"{package}: illegal path segment {illegal_value!r}: {configured_path}"
             )
             rows.append((package, configured_path, effective_path, "INVALID"))
             continue

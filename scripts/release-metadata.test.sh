@@ -135,14 +135,20 @@ expect_failure_contains "rejects current-directory path segments" "illegal path 
 
 TILDE_PATH="$TMP_DIR/tilde-path"
 cp -R "$VALID" "$TILDE_PATH"
+mkdir -p "$TILDE_PATH/alpha/~cache"
+cat > "$TILDE_PATH/alpha/~cache/version.json" <<'EOF'
+{"version":"1.0.0"}
+EOF
 python3 - "$TILDE_PATH/release-please-config.json" <<'PY'
 import json, sys
 path = sys.argv[1]
 data = json.load(open(path))
-data["packages"]["alpha"]["extra-files"][0]["path"] = "~cache/.claude-plugin/plugin.json"
+data["packages"]["alpha"]["extra-files"].append(
+    {"type": "json", "path": "~cache/version.json", "jsonpath": "$.version"}
+)
 json.dump(data, open(path, "w"))
 PY
-expect_failure_contains "rejects tilde-prefixed path segments" "illegal path segment" \
+expect_success "accepts package-relative tilde paths allowed by release-please" \
   env REPO_DIR_OVERRIDE="$TILDE_PATH" bash "$CONFIG_CHECK"
 
 UNKNOWN_TYPE="$TMP_DIR/unknown-type"
