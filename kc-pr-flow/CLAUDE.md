@@ -26,6 +26,13 @@ arbiter. The dispatch path must stay additive and non-blocking:
 - **Arbitration (Step 5.6)**: material conflicts (exclusive findings `severity ≥ MEDIUM OR root == CODE`, plus contradictions) are sent in a **single** Gemini call only when `gemini` is available. Gemini's verdict adjusts confidence through the existing §6a gate; it never auto-posts and never drops a finding from view. Parsing is injection-resistant and fails open to no-change.
 - The deterministic reconciliation + parsing logic lives in `kc-pr-flow/scripts/cross-model.sh`, unit-tested by `cross-model.test.sh` (CI gate `cross-model-tests.yml`).
 
+### Architecture Diagram Validation
+
+The optional review-diagram path validates the exact generated Mermaid pair before preview and
+again before posting. `scripts/review-architecture-diagrams-validate.sh` is fail-closed and accepts
+only the documented two-diagram grammar; `review-architecture-diagrams-validator.test.sh` covers
+malformed structure, unsafe constructs, breakout payloads, and size caps.
+
 ## Internal Agents
 
 Built-in subagents dispatched by kc-pr-review for security analysis. Based on Trail of Bits methodologies.
@@ -41,7 +48,7 @@ Built-in subagents dispatched by kc-pr-review for security analysis. Based on Tr
 | Skill | Triggers |
 |-------|----------|
 | `kc-pr-create` | "create pr", "open pr", "建立 PR", "開 PR", "發 PR", "送審", implementation complete. Default: full ship chain (draft → review → fix → ready → announce). `--draft-only` for PR-only. `--ci` for CI + AI reviewer gate. |
-| `kc-pr-review` | "review pr", "review this PR", PR number/URL, "review current branch". `--full-pass` / `--pass-all` (aliases: "8-pass review", "full pass", "全面複查", "deep review") forces 8-pass coverage; auto-active for bugfix cross-layer or cross-stack PRs. `--codex` (aliases: "codex review", "second opinion", "cross-model review") dispatches Codex as a cross-model second-opinion agent; auto-active for bugfix cross-stack PRs when `codex` is on PATH. When Codex runs, Step 5.5 reconciles Claude vs Codex findings and Step 5.6 asks Gemini to arbitrate material conflicts (when `gemini` is available). |
+| `kc-pr-review` | "review pr", "review this PR", PR number/URL, "review current branch". `--full-pass` / `--pass-all` (aliases: "8-pass review", "full pass", "全面複查", "deep review") forces 8-pass coverage; auto-active for bugfix cross-layer or cross-stack PRs. `--codex` (aliases: "codex review", "second opinion", "cross-model review") dispatches Codex as a cross-model second-opinion agent; auto-active for bugfix cross-stack PRs when `codex` is on PATH. When Codex runs, Step 5.5 reconciles Claude vs Codex findings and Step 5.6 asks Gemini to arbitrate material conflicts (when `gemini` is available). At the posting gate, option D can preview two grounded architecture diagrams; later options 5/6 attach both to the review body. |
 | `kc-pr-review-resolve` | "resolve reviews", "address feedback", "fix review comments", PR has unresolved threads. Respects `pr_review_resolve.auto_confirm` config (see **Configuration** below). |
 | `kc-pr-reorg` | "squash commits", "clean up history", "reorganize commits", "reorder commits", 5+ messy commits |
 | `kc-pr-announce` | "announce", "post to product", "draft product message", "公告", after PR + demo completion |
@@ -83,6 +90,8 @@ Rationale + design notes: `kc-pr-flow/skills/kc-pr-review-resolve/SKILL.md` → 
 | `compliance-audit.md` | pr-review | Domain mapping, baseline validation, CODE/DOC/NEW classification |
 | `knowledge-capture.md` | pr-review, pr-review-resolve | Two-dimension learning: skill patterns (D1) + project knowledge (D2) with write threshold |
 | `learned-patterns.md` | pr-review, pr-review-resolve | Accumulated cross-project review patterns (D1 auto-append target) |
+| `review-architecture-diagrams.md` | pr-review (on demand) | Evidence ledger, safe Mermaid templates, status vocabulary, size caps, and preview/post contract |
+| `review-architecture-diagrams-evals.md` | pr-review maintainers | Behavioral pressure scenarios for preview authorization, label breakout, and head freshness |
 | `e2e-verification.md` | pr-create | Layer classification patterns for E2E integration detection |
 | `pr-review-loop.md` | pr-daemon (iteration prompt) | Classification logic, risk tiers, safety rules for daemon |
 

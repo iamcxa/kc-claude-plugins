@@ -1,0 +1,56 @@
+name: kc-pr-flow review architecture diagram tests
+
+# Static contract checks for kc-pr-review's opt-in, preview-first Mermaid flow.
+# Plain Bash: validates skill wiring, documentation sync, two-template shape,
+# confirmation semantics, and exclusion of executable/external Mermaid syntax.
+
+on:
+  pull_request:
+    paths:
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/reference/review-architecture-diagrams.md"
+      - "kc-pr-flow/reference/review-architecture-diagrams-evals.md"
+      - "kc-pr-flow/docs/review-architecture-diagrams.md"
+      - "kc-pr-flow/scripts/review-architecture-diagrams.test.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validate.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh"
+      - "kc-pr-flow/CLAUDE.md"
+      - "kc-pr-flow/README.md"
+      - ".github/workflows/review-architecture-diagrams-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/reference/review-architecture-diagrams.md"
+      - "kc-pr-flow/reference/review-architecture-diagrams-evals.md"
+      - "kc-pr-flow/docs/review-architecture-diagrams.md"
+      - "kc-pr-flow/scripts/review-architecture-diagrams.test.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validate.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh"
+      - "kc-pr-flow/CLAUDE.md"
+      - "kc-pr-flow/README.md"
+      - ".github/workflows/review-architecture-diagrams-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  review-architecture-diagrams:
+    name: review architecture diagram contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Syntax check
+        run: |
+          bash -n kc-pr-flow/scripts/review-architecture-diagrams.test.sh
+          bash -n kc-pr-flow/scripts/review-architecture-diagrams-validate.sh
+          bash -n kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh
+
+      - name: Run contract tests
+        run: bash kc-pr-flow/scripts/review-architecture-diagrams.test.sh
+
+      - name: Run generated diagram validator tests
+        run: bash kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh
