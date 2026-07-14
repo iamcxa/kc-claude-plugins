@@ -44,6 +44,7 @@ digraph review_pr {
   confirm [label="User confirms\nreview?"];
 
   node [shape=box];
+  diagrams [label="Generate + preview\nsequence + architecture/status\ndiagrams (optional)"];
   post [label="Post review via\ngh pr review"];
   review_url [label="Return review URL"];
 
@@ -81,6 +82,8 @@ digraph review_pr {
   reconcile -> draft [label="no conflict / no gemini"];
   arbitrate -> draft;
   draft -> confirm;
+  confirm -> diagrams [label="D: preview only"];
+  diagrams -> confirm [label="no post"];
   confirm -> post [label="approved"];
   confirm -> draft [label="edit requested"];
   post -> review_url -> has_learning;
@@ -960,6 +963,29 @@ Arbitrated disputes (Gemini): M / cap 10     [or: Gemini unavailable — dispute
 - This section is conversation-facing context; **all** confidence changes still pass through the
   §6c gate before any `gh pr review`. Gemini never auto-posts.
 
+### 6b-arch. Optional Architecture Explanation
+
+Do not generate architecture diagrams by default. Offer them at the §6c gate as an on-demand
+aid for understanding cross-layer behavior and the implementation boundary.
+
+When the user chooses **D**:
+
+1. Re-run the Step 2.1 head check. Record the exact head used to ground the diagrams.
+2. Read → `${CLAUDE_PLUGIN_ROOT}/reference/review-architecture-diagrams.md` and follow its
+   evidence ledger, sanitization, status, size, and two-template contract.
+3. Generate and preview exactly two PR-facing artifacts in the target repo's PR language:
+   a runtime sequence diagram and an overall architecture/implementation-status flowchart.
+4. Return to §6c. **Generating diagrams is not authorization to post them.** The user must
+   separately choose option 5 or 6 after seeing the exact diagrams.
+
+The diagrams are explanatory artifacts, not a second classification channel. They never change the review event,
+severity, confidence, or CODE/DOC/NEW root. If drawing exposes a new potential finding, stop and
+return to Step 5 and §6a; verify and classify it before regenerating the diagrams.
+
+Any subsequent head movement must **invalidate the diagrams** together with the rest of the review
+draft. Re-review the unseen delta (or full rewritten head) and regenerate the diagrams before
+offering options 5 or 6.
+
 ### 6c. User confirmation gate
 
 **GATE — Do not post without user confirmation.** Always present both tables and then offer structured options:
@@ -971,19 +997,31 @@ Ready to post. Choose an option:
 2. Post inline comments + advisory (CODE + DOC/NEW in review body)
 3. Edit — move/remove/reword items, change event
 4. Cancel — don't post
+D. Generate and preview two architecture diagrams (does not post)
 ```
 
-Wait for explicit selection. If user picks **3**, let them:
+Wait for explicit selection. If the user picks **D**, follow §6b-arch and then re-present the
+unchanged options 1–4 plus:
+
+```
+5. Post current review + both previewed diagrams
+6. Post current review + advisory + both previewed diagrams
+7. Edit or regenerate diagrams
+```
+
+Options 5 and 6 are unavailable until both diagrams have been previewed. Always attach the pair;
+never post only one diagram. If the user picks **3** or **7**, let them:
 - Move items between tables (e.g., reclassify DOC → CODE to post it)
 - Remove comments they disagree with
 - Edit comment text
 - Change the review event (APPROVE / REQUEST_CHANGES / COMMENT)
+- Edit diagram labels or request regeneration without changing evidence status
 
 Then re-present the tables and options.
 
 ## Step 7: Post Review
 
-Prefer `gh pr review` CLI. Use `gh api` as fallback for inline comments (CLI lacks native inline support). Write JSON payload to temp file to avoid shell escaping issues; always tag `@PR_AUTHOR` in the review body.
+Prefer `gh pr review` CLI. Use `gh api` as fallback for inline comments (CLI lacks native inline support). Write JSON payload to temp file to avoid shell escaping issues; always tag `@PR_AUTHOR` in the review body. For option 5 or 6, append both exact previewed diagrams to the same review body after verification / break-point / pass / cross-model sections and before advisory. Re-run the Step 2.1 head check immediately before posting; a moved head invalidates the diagrams and returns to §6b-arch.
 
 Read → ${CLAUDE_PLUGIN_ROOT}/reference/gh-api-patterns.md § "Review Payload"
 
@@ -1005,6 +1043,7 @@ Read → ${CLAUDE_PLUGIN_ROOT}/reference/knowledge-capture.md
 
 - **PR Summary always rendered first** — Step 6 draft must begin with the §6-pre PR Summary block (what / why / claimed-goal / verdict + evidence) before any findings tables. The goal-achievement verdict is mandatory and is your independent reviewer call (✅/⚠️/❌/🟡/➖), not a restatement of the author's claim. If author claims success but evidence contradicts, the verdict must reflect evidence
 - **Confirm before posting** — never submit a review without user approval
+- **Architecture diagrams are opt-in and preview-first** — option D generates exactly two grounded Mermaid artifacts without posting; only a later option 5 or 6 authorizes attaching both to the review body
 - **Dynamic repo detection** — use `gh repo view`, never hardcode owner/repo
 - **Ownership check** — only apply personal CLAUDE.md rules to repos you own (personal or org admin)
 - **Temp file for JSON** — avoid `--raw-field` for complex payloads; use `--input`
