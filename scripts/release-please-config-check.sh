@@ -53,6 +53,8 @@ for package, package_config in packages.items():
 
         if configured_path.startswith("/"):
             effective_path = configured_path.lstrip("/")
+        elif package == ".":
+            effective_path = configured_path
         else:
             effective_path = os.path.join(package, configured_path)
 

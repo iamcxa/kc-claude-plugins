@@ -151,6 +151,37 @@ PY
 expect_success "accepts package-relative tilde paths allowed by release-please" \
   env REPO_DIR_OVERRIDE="$TILDE_PATH" bash "$CONFIG_CHECK"
 
+ROOT_TILDE="$TMP_DIR/root-tilde"
+cp -R "$VALID" "$ROOT_TILDE"
+rm -rf "$ROOT_TILDE/alpha"
+mkdir -p "$ROOT_TILDE/~"
+cat > "$ROOT_TILDE/.claude-plugin/plugin.json" <<'EOF'
+{"name":".","version":"1.0.0"}
+EOF
+cat > "$ROOT_TILDE/~/version.json" <<'EOF'
+{"version":"1.0.0"}
+EOF
+python3 - "$ROOT_TILDE/release-please-config.json" "$ROOT_TILDE/.claude-plugin/marketplace.json" <<'PY'
+import json, sys
+config_path, marketplace_path = sys.argv[1:]
+config = {
+    "packages": {
+        ".": {
+            "release-type": "simple",
+            "extra-files": [
+                {"type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version"},
+                {"type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\".\")].version"},
+                {"type": "json", "path": "~/version.json", "jsonpath": "$.version"},
+            ],
+        }
+    }
+}
+json.dump(config, open(config_path, "w"))
+json.dump({"plugins": [{"name": ".", "version": "1.0.0"}]}, open(marketplace_path, "w"))
+PY
+expect_failure_contains "rejects root-package tilde paths rejected by release-please" "illegal path segment" \
+  env REPO_DIR_OVERRIDE="$ROOT_TILDE" bash "$CONFIG_CHECK"
+
 UNKNOWN_TYPE="$TMP_DIR/unknown-type"
 cp -R "$VALID" "$UNKNOWN_TYPE"
 python3 - "$UNKNOWN_TYPE/release-please-config.json" <<'PY'
