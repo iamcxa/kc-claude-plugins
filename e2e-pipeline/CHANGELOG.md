@@ -3,6 +3,13 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.9.1](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v2.9.0...e2e-pipeline-v2.9.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* **marketplace:** repair release version propagation ([#45](https://github.com/iamcxa/kc-claude-plugins/issues/45)) ([4f8b44c](https://github.com/iamcxa/kc-claude-plugins/commit/4f8b44cfe3df0fde7f2b4ab3f1414561e149e427))
+
 ## [2.9.0](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v2.8.1...e2e-pipeline-v2.9.0) (2026-07-14)
 
 

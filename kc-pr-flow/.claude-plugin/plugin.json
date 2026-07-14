@@ -1,11 +1,23 @@
 {
   "name": "kc-pr-flow",
   "description": "PR lifecycle workflow: create, review, resolve reviews, commit reorg, automated daemon, and break-point runtime-path probes.",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "author": {
     "name": "Kent Chen",
     "url": "https://github.com/iamcxa"
   },
-  "keywords": ["pr", "review", "linear", "commit", "workflow", "announcement", "slack", "daemon", "automated", "break-point", "verification"],
+  "keywords": [
+    "pr",
+    "review",
+    "linear",
+    "commit",
+    "workflow",
+    "announcement",
+    "slack",
+    "daemon",
+    "automated",
+    "break-point",
+    "verification"
+  ],
   "license": "MIT"
 }
