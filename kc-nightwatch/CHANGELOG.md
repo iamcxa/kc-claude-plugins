@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-nightwatch-v0.5.0...kc-nightwatch-v0.5.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* **marketplace:** repair release version propagation ([#45](https://github.com/iamcxa/kc-claude-plugins/issues/45)) ([4f8b44c](https://github.com/iamcxa/kc-claude-plugins/commit/4f8b44cfe3df0fde7f2b4ab3f1414561e149e427))
+
 ## [0.5.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-nightwatch-v0.4.0...kc-nightwatch-v0.5.0) (2026-07-14)
 
 
