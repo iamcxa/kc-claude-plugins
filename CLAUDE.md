@@ -12,7 +12,7 @@ Versioning, tagging, and changelogs are owned by **release-please** (monorepo ma
 2. **Release PR (automatic)** — on push to `main`, `.github/workflows/release-please.yml` opens/updates a Release PR that, per changed plugin, bumps the version across `<plugin>/.claude-plugin/plugin.json`, `<plugin>/.codex-plugin/plugin.json`, and that plugin's `.claude-plugin/marketplace.json` entry (**version string only** — the bespoke marketplace `description`/`keywords` are never touched), and writes `<plugin>/CHANGELOG.md`.
 3. **Merge the Release PR** — release-please cuts the `<plugin>-vX.Y.Z` tag + GitHub Release. A `RELEASE_PLEASE_TOKEN` PAT is required so the bot-opened Release PR fires the required status checks — see the comment in `release-please.yml`.
 
-Version lives in **one canonical place per plugin** (`<plugin>/.claude-plugin/plugin.json`, tracked by the manifest); the codex manifest + marketplace entry are propagated by release-please, and the README no longer carries per-plugin version badges (marketplace.json / tags / Releases are the source).
+Version lives in release-please's component manifest and is propagated to `<plugin>/.claude-plugin/plugin.json`, the Codex manifest, and the marketplace entry. In `extra-files`, plugin files are package-relative (for example `.claude-plugin/plugin.json`), while repo-root files require a leading `/` (for example `/.claude-plugin/marketplace.json`). The README no longer carries per-plugin version badges (marketplace.json / tags / Releases are the source).
 
 ### Pre-merge gates (apply to feature PRs and the Release PR)
 
@@ -20,7 +20,7 @@ Version lives in **one canonical place per plugin** (`<plugin>/.claude-plugin/pl
 |------|---------------|-----|
 | Sanitize-check | `Skill: kc-plugin-forge:kc-plugin-forge-sanitize-check <plugin>` | Public plugins must not leak internal org markers / secrets / paths. BLOCK class halts publish; REJECT class triggers incident response (rotate credential + scrub history). |
 | Marketplace schema + installability | `scripts/marketplace-verify.sh` (L1 + L2) | Schema validates `marketplace.json`; install test confirms each plugin is resolvable from a clean `HOME`. Catches `source` typos and orphaned entries before publish. |
-| Version parity guard | `scripts/version-parity-check.sh` (CI: `marketplace-parity.yml`, required check) | Backstop that release-please wrote `plugin.json` / `.codex-plugin/plugin.json` / marketplace entry consistently, and catches accidental manual drift. As a required check it **blocks merge on a real mismatch** (including the Release PR), so release-please must propagate the version to every tracked source — including each Codex-enabled plugin's `.codex-plugin/plugin.json`. |
+| Release config + version parity guard | `scripts/version-parity-check.sh` (CI: `marketplace-parity.yml`, required check) | Validates every resolved `extra-files` path and JSONPath target, then compares the release manifest / `plugin.json` / `.codex-plugin/plugin.json` / marketplace entry. As a required check it **blocks merge on invalid propagation config or real version drift** (including the Release PR). |
 
 ### Post-merge — LOCAL install sync (run from the **main workspace**, NOT a Conductor / feature-branch worktree)
 
@@ -49,7 +49,7 @@ If you skip the post-merge local sync, the author's machine serves stale subagen
 
 - **Commit format**: `<type>(<plugin-or-scope>): <description>` — types: `feat / fix / docs / chore / refactor / test / style / perf / ci`. Scope is plugin slug (e.g. `feat(e2e-pipeline):`, `chore(kc-pr-flow):`) for plugin-local changes, or `readme / scripts / marketplace` for repo-wide changes.
 - **Stage explicitly** — never `git add .`; always name touched files. Pre-commit hooks honor this.
-- **Versioning is release-please-owned** — do not hand-bump versions in a feature PR (see "Plugin Versioning & Release"). release-please propagates the version across `<plugin>/.claude-plugin/plugin.json`, `<plugin>/.codex-plugin/plugin.json`, and the `.claude-plugin/marketplace.json` entry; `version-parity-check.sh` guards that the three stay consistent.
+- **Versioning is release-please-owned** — do not hand-bump versions in a feature PR (see "Plugin Versioning & Release"). release-please propagates the component manifest version across `<plugin>/.claude-plugin/plugin.json`, `<plugin>/.codex-plugin/plugin.json`, and the `.claude-plugin/marketplace.json` entry; `version-parity-check.sh` guards the config and all tracked values.
 - **Default PR mode**: Draft. Convert with `gh pr ready` after CI green.
 - **Output language**: Chinese for explanations to user; English for `SKILL.md`, agent `.md`, hooks scripts, commit messages, PR body. Match per-plugin conventions when they differ.
 
