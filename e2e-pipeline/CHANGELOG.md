@@ -3,6 +3,20 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.9.0](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v2.8.1...e2e-pipeline-v2.9.0) (2026-07-14)
+
+
+### Features
+
+* **e2e-pipeline:** add secure runtime capture and finalizers ([#41](https://github.com/iamcxa/kc-claude-plugins/issues/41)) ([390a16d](https://github.com/iamcxa/kc-claude-plugins/commit/390a16d5916f9d6fe901c5c1fc08bc2a9efe7c17))
+
+
+### Bug Fixes
+
+* **e2e-pipeline:** close SC-1032 verify gaps ([#42](https://github.com/iamcxa/kc-claude-plugins/issues/42)) ([267d499](https://github.com/iamcxa/kc-claude-plugins/commit/267d499f5803ba4709c4e9649fbdcf339d97c7c1))
+* **e2e-pipeline:** enforce nested readback contracts ([#43](https://github.com/iamcxa/kc-claude-plugins/issues/43)) ([e9dd6d2](https://github.com/iamcxa/kc-claude-plugins/commit/e9dd6d28b54287879db2af5841db7071b5f80630))
+* **e2e-pipeline:** preserve assertion probe failures ([#38](https://github.com/iamcxa/kc-claude-plugins/issues/38)) ([56f43e7](https://github.com/iamcxa/kc-claude-plugins/commit/56f43e7cecde4881bbd59a91350b05e04a021f55))
+
 ## [2.8.1] - 2026-05-28 — Negation grammar: text-not-visible + page-qualified element-not-visible
 
 Closes 2 of 3 grammar gaps in compile-ready flow expects. Previously these forms fell through to `deferred` (runtime echoed `TODO`, no actual assertion).
