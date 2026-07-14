@@ -1,14 +1,13 @@
 name: marketplace version parity
 
-# Asserts every plugin's version is consistent across all sources:
-#   plugin.json (canonical) == marketplace.json entry
-#                           == .codex-plugin/plugin.json (when git-tracked)
-#                           == README badge (### [<plugin>](...) `vX.Y.Z`)
+# Asserts every plugin's version is consistent across all tracked sources and
+# validates that every release-please extra-file resolves to exactly one target:
+#   release manifest == plugin.json == marketplace.json entry
+#                                   == .codex-plugin/plugin.json (when tracked)
 #
-# Catches the half-published version bump where plugin.json is bumped but the
-# marketplace entry / README badge / Codex manifest are left stale (the
-# kc-marketplace-sync Steps 1.5 + 2 are prose-level and easy to skip). Cheap —
-# python3 + grep only, no `claude` CLI.
+# Catches invalid extra-file paths before release and half-published bumps where
+# the release manifest changes but a plugin / marketplace / Codex manifest is
+# left stale. Cheap by design: Bash + Python only, no `claude` CLI.
 #
 # Runs on EVERY pull request — intentionally no `paths:` filter. This is the
 # required status check on `main`: a required check that a path filter skips
@@ -25,6 +24,7 @@ permissions:
 
 jobs:
   parity:
+    # Keep this legacy context name stable because branch protection requires it.
     name: version parity (plugin.json / marketplace.json / codex / README)
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -32,5 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check version parity
-        run: ./scripts/version-parity-check.sh
+      - name: Validate release config and version parity
+        run: |
+          ./scripts/release-metadata.test.sh
+          ./scripts/version-parity-check.sh

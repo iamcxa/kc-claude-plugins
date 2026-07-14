@@ -1,6 +1,6 @@
 {
   "name": "e2e-pipeline",
-  "version": "2.8.1",
+  "version": "2.9.0",
   "description": "Browser & CLI E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video, terminal recording for CLI-only flows, static UI computed-style verification",
   "author": {
     "name": "Kent Chen",

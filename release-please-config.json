@@ -8,51 +8,51 @@
       "release-type": "simple",
       "component": "e2e-pipeline",
       "extra-files": [
-        { "type": "json", "path": "e2e-pipeline/.claude-plugin/plugin.json", "jsonpath": "$.version" },
-        { "type": "json", "path": "e2e-pipeline/.codex-plugin/plugin.json", "jsonpath": "$.version" },
-        { "type": "json", "path": ".claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"e2e-pipeline\")].version" }
+        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": ".codex-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"e2e-pipeline\")].version" }
       ]
     },
     "kc-plugin-forge": {
       "release-type": "simple",
       "component": "kc-plugin-forge",
       "extra-files": [
-        { "type": "json", "path": "kc-plugin-forge/.claude-plugin/plugin.json", "jsonpath": "$.version" },
-        { "type": "json", "path": "kc-plugin-forge/.codex-plugin/plugin.json", "jsonpath": "$.version" },
-        { "type": "json", "path": ".claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-plugin-forge\")].version" }
+        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": ".codex-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-plugin-forge\")].version" }
       ]
     },
     "kc-nightwatch": {
       "release-type": "simple",
       "component": "kc-nightwatch",
       "extra-files": [
-        { "type": "json", "path": "kc-nightwatch/.claude-plugin/plugin.json", "jsonpath": "$.version" },
-        { "type": "json", "path": ".claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-nightwatch\")].version" }
+        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-nightwatch\")].version" }
       ]
     },
     "kc-hyperfocus": {
       "release-type": "simple",
       "component": "kc-hyperfocus",
       "extra-files": [
-        { "type": "json", "path": "kc-hyperfocus/.claude-plugin/plugin.json", "jsonpath": "$.version" },
-        { "type": "json", "path": ".claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-hyperfocus\")].version" }
+        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-hyperfocus\")].version" }
       ]
     },
     "kc-team-ops": {
       "release-type": "simple",
       "component": "kc-team-ops",
       "extra-files": [
-        { "type": "json", "path": "kc-team-ops/.claude-plugin/plugin.json", "jsonpath": "$.version" },
-        { "type": "json", "path": ".claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-team-ops\")].version" }
+        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-team-ops\")].version" }
       ]
     },
     "kc-pr-flow": {
       "release-type": "simple",
       "component": "kc-pr-flow",
       "extra-files": [
-        { "type": "json", "path": "kc-pr-flow/.claude-plugin/plugin.json", "jsonpath": "$.version" },
-        { "type": "json", "path": "kc-pr-flow/.codex-plugin/plugin.json", "jsonpath": "$.version" },
-        { "type": "json", "path": ".claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-pr-flow\")].version" }
+        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": ".codex-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-pr-flow\")].version" }
       ]
     }
   }
