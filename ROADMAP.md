@@ -14,6 +14,7 @@ Workflow-level roadmap for ship-flow pitches in this repo.
 
 | Pitch | Title | Status | Appetite |
 |-------|-------|--------|----------|
+| 2-agent-native-pr-review-runtime | Agent-native PR review runtime | (pitch) | medium-batch: 10 working days; 8 planned days with 20% headroom |
 <!-- /section:next -->
 
 <!-- section:later -->
@@ -34,6 +35,9 @@ Workflow-level roadmap for ship-flow pitches in this repo.
 | Switch runtime from agent-browser to Playwright wholesale (issue's option 2) | Loses agent-browser's CDP-only lightweight model (~50MB vs Playwright ~300MB); breaks existing CI compile path; abandons 50+ documented agent-browser invocations across 8 agents. High cost, low marginal value over option 1+3 hybrid. |
 | Pure runtime translation layer with mapper still emitting Playwright forms (issue's option 3 standalone) | Leaves source-of-truth (e2e-mapper Selector Priority) emitting forms the runtime can't natively parse; translation hides the contract violation rather than fixing it; every selector-engine change becomes a translation-layer maintenance burden. |
 | Document the mismatch as intentional and accept eval-fallback as canonical (issue's option labeled but explicitly rejected by author) | Silent false-positive risk persists; compiled-script divergence remains; defeats the purpose of having a deterministic compiled CI path. |
+| Rewrite reviewer intelligence and prompts before adding runtime state. | Prompt-only changes cannot provide durable resume, coverage accounting, or posting idempotency. |
+| Make typed lifecycle the default in the first PR. | The baseline and recall evidence do not exist yet, so immediate defaulting would be unsafe. |
+| Build a server, database, dashboard, or MCP runtime. | A Bash and jq local harness is sufficient for this appetite and keeps rollback simple. |
 <!-- /section:not-doing -->
 
 <!-- section:shipped -->

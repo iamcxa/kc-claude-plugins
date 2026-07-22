@@ -194,6 +194,127 @@ Calculate filtered diff size (noise files excluded), detect security-sensitive f
 
 Read → ${CLAUDE_PLUGIN_ROOT}/reference/review-triage.md
 
+### 4-shadow. Typed Shadow Ledger (when shadow is on)
+
+Only when `KC_PR_FLOW_REVIEW_SHADOW=on`, establish a provider-neutral in-memory ledger before
+dispatch. This ledger records the typed projection of work the legacy flow already performs; it
+never changes which agents run or how findings are judged.
+
+- Assign `lane_id` at dispatch from a stable safe source slug matching
+  `^[a-z][a-z0-9._-]{0,63}$`; never derive it from completion order or free-form model text.
+  Map each lane to its typed review capability, not its provider name. Record `provider_family` only when a
+  stable safe family is known; otherwise omit it and keep `usage.provider_family=null`.
+- Close each dispatched lane exactly once as `succeeded`, `failed`, or `unavailable`: succeeded
+  means its typed result was returned, failed means execution returned a terminal error, and
+  unavailable means it could not dispatch. Usage is reported only when all provider token counts are complete;
+  otherwise use `unavailable` with all counts and `usage.provider_family=null`. Preserve a known
+  lane `provider_family`; omit it only when the provider is unknown. An adapter may retain D4
+  `estimated` provenance only for an explicit bounded estimate—never relabel
+  an estimate as reported or coerce absent counts to zero.
+- Every provider observation becomes one candidate. Before assigning ordinals within a lane,
+  normalize its repository-relative path, `LEFT|RIGHT|FILE` side, side-bound object SHA, verified
+  evidence `content_sha256`, anchor hash, constrained category, and constrained `claim_key`. Store
+  no excerpt, prompt, diff, body, comment, rationale, or provider raw text. Apply a stable sort by `path`, `side`, `anchor_sha256`, `category`, `claim_key`, and evidence `content_sha256`, then assign
+  deterministic 1-based `ordinal` values.
+- During synthesis, merged observations become finding `candidate_refs`. Route every non-merged,
+  rejected, ambiguous, or uncertain observation to `uncertain_candidate_refs`; these two sets must
+  be disjoint and partition every candidate exactly once. A rejection means the legacy finding is
+  not posted, not that its typed candidate disappears from shadow evidence.
+
+After legacy collation is frozen, serialize the ledger through the runtime-authoritative config hash
+and review key described in §6b-shadow. Use `jq` with typed arguments—never string interpolation—to
+construct the exact closed observation:
+
+```bash
+# shadow-ledger-recipe:start
+shadow_ledger_init() {
+  SHADOW_LANES_JSON='[]'
+  SHADOW_SYNTHESIS_JSON='{"findings":[],"uncertain_candidate_refs":[]}'
+  SHADOW_BEHAVIOR_HASHES_JSON=''
+  SHADOW_TMP_DIR=''
+  SHADOW_OBSERVATION_FILE=''
+  SHADOW_OBSERVATION_READY='false'
+}
+
+shadow_ledger_register_lane() { # lane_id capability provider_family-or-empty
+  local lane_id="$1" capability="$2" provider_family="$3"
+  SHADOW_LANES_JSON="$(printf '%s' "$SHADOW_LANES_JSON" | jq -c \
+    --arg lane_id "$lane_id" --arg capability "$capability" --arg provider_family "$provider_family" '
+    if any(.[]; .lane_id == $lane_id) then error("duplicate lane_id") else
+      . + [({lane_id:$lane_id,capability:$capability,terminal_status:"unavailable",
+        usage:{input_tokens:null,output_tokens:null,total_tokens:null,provenance:"unavailable",provider_family:null,scope:"lane"},candidates:[]} +
+        (if $provider_family == "" then {} else {provider_family:$provider_family} end))]
+      | sort_by(.lane_id)
+    end')" || return
+}
+
+shadow_ledger_finish_lane() { # lane_id status provider_family-or-empty usage-json candidates-without-ordinals-json
+  local lane_id="$1" terminal_status="$2" provider_family="$3" usage_json="$4" candidates_json="$5"
+  local ordered_candidates
+  ordered_candidates="$(printf '%s' "$candidates_json" | jq -c '
+    sort_by([.path,.side,.anchor_sha256,.category,.claim_key,.evidence.content_sha256]) |
+    to_entries | map(.value + {ordinal:(.key + 1)})')" || return
+  SHADOW_LANES_JSON="$(printf '%s' "$SHADOW_LANES_JSON" | jq -c \
+    --arg lane_id "$lane_id" --arg terminal_status "$terminal_status" --arg provider_family "$provider_family" \
+    --argjson usage "$usage_json" --argjson candidates "$ordered_candidates" '
+    if ([.[] | select(.lane_id == $lane_id)] | length) != 1 then error("unknown lane_id") else
+      map(if .lane_id == $lane_id then
+        del(.provider_family) + {terminal_status:$terminal_status,usage:$usage,candidates:$candidates} +
+        (if $provider_family == "" then {} else {provider_family:$provider_family} end)
+      else . end) | sort_by(.lane_id)
+    end')" || return
+}
+
+shadow_ledger_finalize_synthesis() { # findings-json uncertain-candidate-refs-json
+  local findings_json="$1" uncertain_json="$2"
+  SHADOW_SYNTHESIS_JSON="$(jq -c -n --argjson findings "$findings_json" --argjson uncertain "$uncertain_json" '
+    {findings:($findings |
+      map(.candidate_refs |= sort_by([.lane_id,.ordinal])) |
+      sort_by([.path,.side,.anchor_sha256,.category,.claim_key,.evidence.content_sha256])),
+     uncertain_candidate_refs:($uncertain | sort_by([.lane_id,.ordinal]))}')" || return
+}
+
+shadow_ledger_finalize_behavior_hashes() { # body comments event options confirmation github-log hashes
+  SHADOW_BEHAVIOR_HASHES_JSON="$(jq -c -n \
+    --arg body "$1" --arg comments "$2" --arg event "$3" --arg options "$4" --arg confirmation "$5" --arg github "$6" \
+    '{body_sha256:$body,inline_comments_sha256:$comments,event_sha256:$event,options_sha256:$options,confirmation_input_sha256:$confirmation,github_call_log_sha256:$github}')" || return
+}
+
+shadow_ledger_write_observation() {
+  local shadow_tmp_candidate
+  if shadow_tmp_candidate="$(mktemp -d "${TMPDIR:-/tmp}/kc-pr-flow.shadow.XXXXXX")"; then
+    SHADOW_TMP_DIR="$shadow_tmp_candidate"
+    SHADOW_OBSERVATION_FILE="$SHADOW_TMP_DIR/observation.json"
+    if chmod 0700 "$SHADOW_TMP_DIR" &&
+      jq -S -c -n \
+        --arg repository "$SHADOW_REPOSITORY" --argjson pr_number "$SHADOW_PR_NUMBER" \
+        --arg base_sha "$SHADOW_BASE_SHA" --arg head_sha "$REVIEWED_HEAD_SHA" \
+        --arg config_hash "$SHADOW_CONFIG_HASH" --arg occurred_at "$SHADOW_OCCURRED_AT" \
+        --argjson behavior_hashes "$SHADOW_BEHAVIOR_HASHES_JSON" \
+        --argjson lanes "$SHADOW_LANES_JSON" --argjson synthesis "$SHADOW_SYNTHESIS_JSON" \
+        '{schema:"kc-pr-flow.shadow-observation/v1",identity:{repository:$repository,pr_number:$pr_number,base_sha:$base_sha,head_sha:$head_sha,config_hash:$config_hash,occurred_at:$occurred_at},behavior_hashes:$behavior_hashes,lanes:$lanes,synthesis:$synthesis}' \
+        >"$SHADOW_OBSERVATION_FILE" && chmod 0600 "$SHADOW_OBSERVATION_FILE"; then
+      SHADOW_OBSERVATION_READY='true'
+    fi
+  fi
+}
+
+shadow_ledger_cleanup() {
+  [ -z "$SHADOW_OBSERVATION_FILE" ] || rm -f "$SHADOW_OBSERVATION_FILE"
+  [ -z "$SHADOW_TMP_DIR" ] || rmdir "$SHADOW_TMP_DIR" 2>/dev/null || true
+}
+
+shadow_ledger_init
+# shadow-ledger-recipe:end
+```
+
+Call `shadow_ledger_register_lane` at dispatch. Call `shadow_ledger_finish_lane` exactly once when
+that lane reaches a terminal result, passing typed candidate objects without ordinals; the helper
+performs the stable sort and assigns them. After collation, call both finalizers with the frozen
+six hashes plus finding/uncertain refs, then call `shadow_ledger_write_observation`. After the sole
+§6b-shadow collector call, always call `shadow_ledger_cleanup`; it removes only the preserved exact
+file and directory handles, never recursively.
+
 ## Step 4-Pass: 8-Pass Mode (when `FULL_PASS_MODE = true`)
 
 Triage (Step 4 / `reference/review-triage.md` §4d-passmode) sets `FULL_PASS_MODE`. When `true`, organize agent dispatch and output around 8 review dimensions. Same agents from Step 4's selected tier — what 8-pass mode adds is **forced verdict per dimension**, closing the "agent fired but said nothing about dimension X, so X looks clean" silent-miss trap.
@@ -989,6 +1110,133 @@ return to Step 5 and §6a; verify and classify it before regenerating the diagra
 Any subsequent head movement must **invalidate the diagrams** together with the rest of the review
 draft. Re-review the unseen delta (or full rewritten head) and regenerate the diagrams before
 offering options 5 or 6.
+
+### 6b-shadow. Best-effort Shadow Receipt Collector
+
+This is the single post-collation shadow seam. Run it only after every confidence gate, event
+modifier, pass-coverage check, reconciliation result, review-body section, candidate set, and
+uncertain-match decision has reached its final pre-confirmation value. It serializes that
+already-computed state; it is not another review pass.
+
+**Activation:** KC_PR_FLOW_REVIEW_SHADOW defaults to `off`. Only the exact value `on` enables
+this seam. An unset, empty, or unknown value is `off` and proceeds directly to §6c with no runtime
+call or receipt write.
+
+When enabled:
+
+1. Freeze six final legacy artifacts as separate immutable byte sequences: rendered review body,
+   inline comments, effective review event, confirmation options, confirmation input, and the
+   read-only GitHub call log accumulated so far. The shadow path must never rewrite, normalize,
+   reorder, replace, or store those bytes. Hash each exact byte sequence with SHA-256 and retain only
+   `body_sha256`, `inline_comments_sha256`, `event_sha256`, `options_sha256`,
+   `confirmation_input_sha256`, and `github_call_log_sha256` in the sanitized projection. Also
+   freeze the reviewed head SHA and the already-collated typed lane candidates/findings. Do not
+   dispatch a second review, model, network read, or mutation to produce the projection.
+2. Define every bounded shadow identity before serialization:
+
+   - SHADOW_REPOSITORY = normalized `owner/repo` captured by Step 1.
+   - `SHADOW_PR_NUMBER` = the detected PR number.
+   - `SHADOW_BASE_SHA` = the exact base commit used for the final reviewed diff.
+   - `REVIEWED_HEAD_SHA` = the exact head covered by the final Step 5/6 result.
+   - SHADOW_CONFIG_HASH = SHA-256 produced only by the runtime config-hash authority below. Its v1
+     canonical JSON default instance and key shape are exactly:
+
+     ```json
+     {"capabilities":[],"modes":{"agent_tier":"lite","cross_model":false,"full_pass":false,"noise_filter":false,"pr_archetype":"mixed","probe_required":false},"schema":"kc-pr-flow.review-config/v1"}
+     ```
+
+     The exhaustive v1 mode keys and normalized defaults/types are:
+
+     | Key | Type and accepted values | Default | Effective source |
+     |-----|--------------------------|---------|------------------|
+     | `agent_tier` | string enum: `lite`, `standard`, `full` | `lite` | final tier after the full-pass floor or user override |
+     | `pr_archetype` | string enum: `bugfix`, `cross_stack`, `docs`, `feature`, `mixed`, `refactor`, `style` | `mixed` | normalized Step 4d archetype (`cross-stack` becomes `cross_stack`) |
+     | `full_pass` | JSON boolean | `false` | final `FULL_PASS_MODE` |
+     | `probe_required` | JSON boolean | `false` | final `PROBE_REQUIRED` |
+     | `cross_model` | JSON boolean | `false` | `true` only when the Codex second-opinion lane actually dispatched |
+     | `noise_filter` | JSON boolean | `false` | `true` only when Step 4b filtered the dispatched diff |
+
+     Define `SHADOW_CAPABILITIES` as comma-separated safe identifiers matching
+     `^[a-z][a-z0-9._-]{0,63}$` from the typed review capabilities actually activated for this run
+     (empty when none). The helper rejects invalid
+     enums/booleans/identifiers, sorts and deduplicates capabilities, serializes with `jq -S -c`,
+     and hashes the compact bytes with no trailing newline. It uses macOS `shasum -a 256`, with
+     `sha256sum` as the portable fallback. Prompts, source, diff, body, comments, and model output
+     are never config inputs.
+
+     Normalize the effective values into `SHADOW_AGENT_TIER`, `SHADOW_PR_ARCHETYPE`,
+     `SHADOW_FULL_PASS`, `SHADOW_PROBE_REQUIRED`, `SHADOW_CROSS_MODEL`, and
+     `SHADOW_NOISE_FILTER`, then execute the sole construction/hash command:
+
+     ```bash
+     SHADOW_CONFIG_HASH="$("$CLAUDE_PLUGIN_ROOT/scripts/review-runtime.sh" config-hash --agent-tier "${SHADOW_AGENT_TIER:-lite}" --pr-archetype "${SHADOW_PR_ARCHETYPE:-mixed}" --full-pass "${SHADOW_FULL_PASS:-false}" --probe-required "${SHADOW_PROBE_REQUIRED:-false}" --cross-model "${SHADOW_CROSS_MODEL:-false}" --noise-filter "${SHADOW_NOISE_FILTER:-false}" --capabilities "${SHADOW_CAPABILITIES:-}")" || SHADOW_CONFIG_HASH=''
+     ```
+
+     A missing/invalid hash is a shadow dependency failure and follows **Fail open**; never invent a
+     substitute hash.
+   - `SHADOW_OCCURRED_AT` = the current UTC RFC3339 timestamp.
+
+   Derive the review key only through the executable runtime authority, then use that exact value in
+   every sanitized evidence pointer. This is a local hash construction, not a second collector call:
+
+   ```bash
+   SHADOW_REVIEW_KEY="$("$CLAUDE_PLUGIN_ROOT/scripts/review-runtime.sh" review-key --repo "$SHADOW_REPOSITORY" --pr "$SHADOW_PR_NUMBER" --base "$SHADOW_BASE_SHA" --head "$REVIEWED_HEAD_SHA" --config-hash "$SHADOW_CONFIG_HASH")" || SHADOW_REVIEW_KEY=''
+   ```
+
+   A missing/invalid key follows **Fail open**. Never calculate a competing identity formula.
+3. Perform a **fresh read-only Step 2.1 exact-head check** and record `SHADOW_HEAD_STATUS=ok` plus
+   `FRESH_HEAD_SHA`, or `SHADOW_HEAD_STATUS=failed` plus an empty `FRESH_HEAD_SHA`. This read is not
+   posting authorization. A failed or moved-head result prevents receipt observation inside the
+   production seam, and the final Step 7 exact-head check remains authoritative.
+4. Serialize one closed `kc-pr-flow.shadow-observation/v1` JSON object into a newly-created `0600`
+   private temporary file. `SHADOW_OBSERVATION_FILE` = that one file. The exact top-level and nested
+   shape is:
+
+   ```json
+   {
+     "schema": "kc-pr-flow.shadow-observation/v1",
+     "identity": {"repository": "owner/repo", "pr_number": 42, "base_sha": "<40 hex>", "head_sha": "<40 hex>", "config_hash": "<64 hex>", "occurred_at": "<UTC RFC3339>"},
+     "behavior_hashes": {"body_sha256": "<64 hex>", "inline_comments_sha256": "<64 hex>", "event_sha256": "<64 hex>", "options_sha256": "<64 hex>", "confirmation_input_sha256": "<64 hex>", "github_call_log_sha256": "<64 hex>"},
+     "lanes": [{"lane_id": "code_correctness", "capability": "code_correctness", "provider_family": "claude", "terminal_status": "succeeded", "usage": {"input_tokens": 1, "output_tokens": 1, "total_tokens": 2, "provenance": "reported", "provider_family": "claude", "scope": "lane"}, "candidates": [{"ordinal": 1, "path": "src/app.ts", "side": "RIGHT", "anchor_sha256": "<64 hex>", "category": "correctness", "claim_key": "missing_guard", "evidence": {"schema": "kc-pr-flow.evidence-pointer/v1", "kind": "git_blob", "repository": "owner/repo", "review_key": "<64 hex>", "base_sha": "<40 hex>", "head_sha": "<40 hex>", "object_sha": "<head SHA>", "content_sha256": "<64 hex>", "path": "src/app.ts", "side": "RIGHT", "line": 7, "locator": null}}]}],
+     "synthesis": {"findings": [{"path": "src/app.ts", "side": "RIGHT", "anchor_sha256": "<64 hex>", "category": "correctness", "claim_key": "missing_guard", "evidence": {"schema": "kc-pr-flow.evidence-pointer/v1", "kind": "git_blob", "repository": "owner/repo", "review_key": "<64 hex>", "base_sha": "<40 hex>", "head_sha": "<40 hex>", "object_sha": "<head SHA>", "content_sha256": "<64 hex>", "path": "src/app.ts", "side": "RIGHT", "line": 7, "locator": null}, "candidate_refs": [{"lane_id": "code_correctness", "ordinal": 1}]}], "uncertain_candidate_refs": []}
+   }
+   ```
+
+   Every object has exactly the shown keys, except that lane `provider_family` is optional. A lane
+   without it must use `null` in `usage.provider_family`. Lanes are non-empty and unique by
+   `lane_id`; candidates are ordered and unique by positive `ordinal`. Candidates contain no
+   runtime-generated IDs. Every finding has non-empty unique resolvable `candidate_refs`; uncertain
+   refs are resolvable, disjoint from findings, and are never silently promoted or dropped. The two
+   sets partition every candidate. Candidate/finding merge fields and evidence-content hashes must
+   agree. Evidence pointers carry the exact review key/base/head identity and obey LEFT/base plus
+   RIGHT-or-FILE/head object binding. Never add excerpts, prompts, diffs, bodies, comments, model
+   output, provider payloads, arbitrary values, or extra keys.
+
+5. Make exactly one production shadow call after collation whenever the gate is explicitly `on`.
+   Pass only the closed observation, gate result, and live head through the executable collector seam:
+
+   ```bash
+   if [ "${SHADOW_OBSERVATION_READY:-false}" = true ]; then
+     SHADOW_STATUS="$("$CLAUDE_PLUGIN_ROOT/scripts/review-runtime.sh" shadow --enabled on --head-check-status "$SHADOW_HEAD_STATUS" --live-head "$FRESH_HEAD_SHA" --observation-file "$SHADOW_OBSERVATION_FILE" 2>/dev/null)" || SHADOW_STATUS=''
+   else
+     SHADOW_STATUS=''
+   fi
+   ```
+
+   Remove only that known private temporary file after the call. The collector validates the whole
+   projection before starting a run, emits `run.started`, then for each lane `lane.started`, ordered
+   `finding.observed` candidates, and `lane.finished`, followed by `synthesis.finished` and
+   `run.finished`. It reports `observed` only after complete exact-head replay. Identity-only,
+   incomplete, invalid, unresolved, or inconsistent input is typed `not_observed`.
+6. Treat the typed observer status as diagnostic-only. It cannot choose or adjust the review event,
+   confidence, findings, body, comments, options, or posting payload. Never dispatch another reviewer, model lane, or arbiter from this seam. Never call a GitHub mutation or posting API from the
+   observer or in response to its result.
+
+**Fail open:** Every missing dependency, invalid receipt, state error, head mismatch, or observer
+failure is a bounded best-effort skip. At most, show one concise diagnostic note outside the review
+body. Then present the byte-identical legacy draft, comments, options, and effective event at §6c.
+Do not retry a model lane, retry the observer, change confirmation behavior, or infer posting
+authorization from either success or failure.
 
 ### 6c. User confirmation gate
 

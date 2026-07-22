@@ -83,6 +83,8 @@ End-to-end PR lifecycle workflow. Create (full ship chain: draft → review → 
 
 **Prerequisite:** `gh` CLI authenticated. Optional: `pr-review-toolkit` (provides the 5 review agents), `feature-dev`, `superpowers` marketplace plugins for graceful enhancement. Optional CLIs: `codex` (cross-model second opinion) and `gemini` (conflict arbitration) — both degrade to a silent skip when absent.
 
+Repository-level [product](./PRODUCT.md) and [architecture](./ARCHITECTURE.md) contracts define the staged agent-native review runtime, its evidence gates, and its authority boundaries.
+
 ```bash
 /plugin install kc-pr-flow@kc-claude-plugins
 ```

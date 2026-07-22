@@ -1,0 +1,160 @@
+name: kc-pr-flow review runtime tests
+
+# Path-filtered validation for the local shadow receipt runtime. Keep this
+# workflow non-required because path-filtered required checks can remain pending.
+# The suites are deterministic and do not invoke models, the network, or GitHub.
+
+on:
+  pull_request:
+    paths:
+      - "kc-pr-flow/scripts/review-runtime.sh"
+      - "kc-pr-flow/scripts/review-runtime-safe-io.py"
+      - "kc-pr-flow/scripts/review-runtime.test.sh"
+      - "kc-pr-flow/scripts/review-shadow.test.sh"
+      - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
+      - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
+      - "kc-pr-flow/scripts/cross-model.sh"
+      - "kc-pr-flow/scripts/cross-model.test.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validate.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams.test.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh"
+      - "kc-pr-flow/test/fixtures/review-runtime/**"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/reference/review-runtime.md"
+      - "kc-pr-flow/docs/review-runtime.md"
+      - "kc-pr-flow/README.md"
+      - "kc-pr-flow/CLAUDE.md"
+      - "kc-pr-flow/.claude-plugin/plugin.json"
+      - "kc-pr-flow/.codex-plugin/plugin.json"
+      - ".claude-plugin/marketplace.json"
+      - "PRODUCT.md"
+      - "ARCHITECTURE.md"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/**"
+      - "docs/ship-flow/2.1-shadow-review-receipt/plan.md"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.jsonl"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.txt"
+      - "docs/ship-flow/tools/validate-tdd-ledger.py"
+      - ".github/workflows/review-runtime-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-pr-flow/scripts/review-runtime.sh"
+      - "kc-pr-flow/scripts/review-runtime-safe-io.py"
+      - "kc-pr-flow/scripts/review-runtime.test.sh"
+      - "kc-pr-flow/scripts/review-shadow.test.sh"
+      - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
+      - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
+      - "kc-pr-flow/scripts/cross-model.sh"
+      - "kc-pr-flow/scripts/cross-model.test.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validate.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams.test.sh"
+      - "kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh"
+      - "kc-pr-flow/test/fixtures/review-runtime/**"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/reference/review-runtime.md"
+      - "kc-pr-flow/docs/review-runtime.md"
+      - "kc-pr-flow/README.md"
+      - "kc-pr-flow/CLAUDE.md"
+      - "kc-pr-flow/.claude-plugin/plugin.json"
+      - "kc-pr-flow/.codex-plugin/plugin.json"
+      - ".claude-plugin/marketplace.json"
+      - "PRODUCT.md"
+      - "ARCHITECTURE.md"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/**"
+      - "docs/ship-flow/2.1-shadow-review-receipt/plan.md"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.jsonl"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.txt"
+      - "docs/ship-flow/tools/validate-tdd-ledger.py"
+      - ".github/workflows/review-runtime-tests.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: review-runtime-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review-runtime:
+    name: shadow receipt runtime contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Validate documentation safety contracts
+        run: |
+          grep -Fq 'Python 3.8+ providing the fail-closed safe-I/O boundary' kc-pr-flow/reference/review-runtime.md
+          grep -Fq 'ShadowObservation/v1' kc-pr-flow/reference/review-runtime.md
+          grep -Fq 'metadata-only quarantine' kc-pr-flow/reference/review-runtime.md
+          grep -Fq 'receipt_id = sha256(run_id|review_key|content_sha256)' kc-pr-flow/reference/review-runtime.md
+          grep -Fq "done < <(find \"\$STATE_ROOT\" -mindepth 4 -maxdepth 4 -type f" kc-pr-flow/docs/review-runtime.md
+          grep -Fq -- "-path \"*/pr-\$PR_NUMBER/run-*/events.jsonl\" -print0)" kc-pr-flow/docs/review-runtime.md
+          grep -Fq 'do not guess the newest' kc-pr-flow/docs/review-runtime.md
+          grep -Fq 'uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1' .github/workflows/review-runtime-tests.yml
+
+      - name: Install shell dependencies
+        run: sudo apt-get update && sudo apt-get install --yes jq shellcheck
+
+      - name: Audit remediation evidence
+        run: |
+          for task in T6 T7 T8 T9 T10; do
+            jq -se --arg task "$task" '
+              map(select(.task_id == $task)) as $records |
+              ["RED", "GREEN", "REFACTOR"] |
+              map(. as $phase | $records | map(select(.phase == $phase)) | max_by(.recorded_at)) as $latest |
+              ($latest | length == 3) and
+              all($latest[];
+                (.command | type == "string" and length > 0) and
+                (.command | test("^(bash|python3)( |$)")) and
+                (.command | test("benchmark\\+test|focused authority-binding|full benchmark suite|fixture JSONL audit|score twice") | not) and
+                (.expected | type == "string" and length > 0) and
+                (.output_excerpt | type == "string" and length > 0) and
+                (.output_sha256 | type == "string" and test("^[0-9a-f]{64}$")) and
+                (.recorded_at | type == "string" and test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")) and
+                (.exit_code | type == "number") and
+                (if .phase == "RED" then .exit_code != 0 else .exit_code == 0 end) and
+                .matched_expectation == true) and
+              ($latest[0].recorded_at < $latest[1].recorded_at) and
+              ($latest[1].recorded_at < $latest[2].recorded_at)
+            ' "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/${task}.jsonl"
+          done
+
+      - name: Validate plan TDD ledger
+        run: |
+          python3 docs/ship-flow/tools/validate-tdd-ledger.py \
+            --plan docs/ship-flow/2.1-shadow-review-receipt/plan.md \
+            --require-ledger-jsonl docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.jsonl
+
+      - name: Syntax check
+        run: |
+          python3 -m py_compile kc-pr-flow/scripts/review-runtime-safe-io.py
+          bash -n kc-pr-flow/scripts/review-runtime.sh
+          bash -n kc-pr-flow/scripts/review-runtime.test.sh
+          bash -n kc-pr-flow/scripts/review-shadow.test.sh
+          bash -n kc-pr-flow/scripts/review-runtime-benchmark.sh
+          bash -n kc-pr-flow/scripts/review-runtime-benchmark.test.sh
+
+      - name: ShellCheck
+        run: |
+          shellcheck kc-pr-flow/scripts/review-runtime.sh
+          shellcheck kc-pr-flow/scripts/review-runtime.test.sh
+          shellcheck kc-pr-flow/scripts/review-shadow.test.sh
+          shellcheck kc-pr-flow/scripts/review-runtime-benchmark.sh
+          shellcheck kc-pr-flow/scripts/review-runtime-benchmark.test.sh
+
+      - name: Run runtime contract tests
+        run: bash kc-pr-flow/scripts/review-runtime.test.sh
+
+      - name: Run shadow parity tests
+        run: bash kc-pr-flow/scripts/review-shadow.test.sh
+
+      - name: Run paired benchmark tests
+        run: bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh
+
+      - name: Run compatibility regressions
+        run: |
+          bash kc-pr-flow/scripts/cross-model.test.sh
+          bash kc-pr-flow/scripts/review-architecture-diagrams.test.sh
+          bash kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh
