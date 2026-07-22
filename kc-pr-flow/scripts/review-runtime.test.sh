@@ -8,15 +8,26 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 RUNTIME="$HERE/review-runtime.sh"
 FIXTURE="$HERE/../test/fixtures/review-runtime/valid-events.jsonl"
 TEST_STATE_ROOT="$(mktemp -d)"
+TEST_INPUT_ROOT="$(mktemp -d)"
 cleanup() {
   chmod -R u+rwX "$TEST_STATE_ROOT" 2>/dev/null || true
-  rm -rf "$TEST_STATE_ROOT"
+  chmod -R u+rwX "$TEST_INPUT_ROOT" 2>/dev/null || true
+  rm -rf "$TEST_STATE_ROOT" "$TEST_INPUT_ROOT"
 }
 trap cleanup EXIT
 export KC_PR_FLOW_STATE_DIR="$TEST_STATE_ROOT"
 
 PASS=0
 FAIL=0
+
+CASE_FILTER='all'
+if [ "$#" -gt 0 ]; then
+  if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
+    printf 'usage: %s [--case privacy-envelope]\n' "$0" >&2
+    exit 2
+  fi
+  CASE_FILTER="$2"
+fi
 
 pass() {
   PASS=$((PASS + 1))
@@ -99,6 +110,193 @@ HEAD_SHA="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 CONFIG_HASH="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 OCCURRED_AT="2026-07-22T00:00:00Z"
 EXPECTED_REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
+
+run_privacy_envelope_tests() {
+  local fixture_event extension_event maximum_extension_event unsafe_count_event
+  local unknown_event unknown_file unknown_output unknown_rc
+  local raw_event raw_file raw_output raw_rc raw_hash raw_bytes quarantine_dir metadata_file
+  local successor_event top_duplicate payload_duplicate extension_duplicate duplicate_event duplicate_index
+  local duplicate_file duplicate_output duplicate_rc fresh_events successor_events
+  local bad_extension dependency_state dependency_rc
+
+  fixture_event="$(sed -n '1p' "$FIXTURE")"
+  extension_event="$(rehash_event "$(jq -c '
+    .sequence=2 |
+    .extensions=[{
+      namespace:"com.acme.review",
+      key:"provider_receipt",
+      value_sha256:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      byte_count:128
+    }]' <<<"$fixture_event")")"
+  printf '%s\n' "$extension_event" >"$TEST_INPUT_ROOT/valid-extension.jsonl"
+  bash "$RUNTIME" validate --event-file "$TEST_INPUT_ROOT/valid-extension.jsonl" >/dev/null 2>&1
+  assert_eq "typed hash-only extension validates" "0" "$?"
+
+  maximum_extension_event="$(rehash_event "$(jq -c '
+    .sequence=2 |
+    .extensions=[{
+      namespace:"com.acme.review",
+      key:"maximum_receipt",
+      value_sha256:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      byte_count:9007199254740991
+    }]' <<<"$fixture_event")")"
+  printf '%s\n' "$maximum_extension_event" >"$TEST_INPUT_ROOT/maximum-extension.jsonl"
+  bash "$RUNTIME" validate --event-file "$TEST_INPUT_ROOT/maximum-extension.jsonl" >/dev/null 2>&1
+  assert_eq "maximum jq-safe extension byte count validates" "0" "$?"
+
+  unsafe_count_event="$(rehash_event "$(jq -c '
+    .sequence=2 |
+    .extensions=[{
+      namespace:"com.acme.review",
+      key:"unsafe_count_receipt",
+      value_sha256:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      byte_count:9007199254740992
+    }]' <<<"$fixture_event")")"
+  printf '%s\n' "$unsafe_count_event" >"$TEST_INPUT_ROOT/unsafe-count-extension.jsonl"
+  bash "$RUNTIME" validate --event-file "$TEST_INPUT_ROOT/unsafe-count-extension.jsonl" >/dev/null 2>&1
+  assert_eq "extension byte count above jq-safe maximum is rejected" "1" "$?"
+
+  unknown_event="$(rehash_event "$(jq -c '.sequence=2 | .future_optional={mode:"preserve"}' <<<"$fixture_event")")"
+  unknown_file="$TEST_INPUT_ROOT/unknown-envelope.jsonl"
+  printf '%s\n' "$unknown_event" >"$unknown_file"
+  unknown_output="$(bash "$RUNTIME" validate --event-file "$unknown_file" 2>"$TEST_STATE_ROOT/unknown-envelope.stderr")"
+  unknown_rc=$?
+  assert_eq "unknown top-level event key is rejected" "1" "$unknown_rc"
+  assert_eq "unknown top-level event key counts invalid" "1" "$(jq -r '.invalid' <<<"$unknown_output")"
+  assert_match "unknown top-level event key has a typed reason" 'unsupported_event_envelope' "$(cat "$TEST_STATE_ROOT/unknown-envelope.stderr")"
+
+  for bad_extension in \
+    '{"namespace":"com.acme.review","key":"provider_receipt","value_sha256":"not-a-hash","byte_count":128}' \
+    '{"namespace":"com.acme.review","key":"provider_receipt","value_sha256":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","byte_count":-1}' \
+    '{"namespace":"com.acme.review","key":"provider_receipt","value_sha256":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","byte_count":128,"value":"raw provider bytes"}' \
+    '{"namespace":"com.acme.review","key":"provider_receipt","value_sha256":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","byte_count":128,"payload":{"raw":"raw provider bytes"}}'; do
+    raw_event="$(rehash_event "$(jq -c --argjson extension "$bad_extension" '.sequence=2 | .extensions=[$extension]' <<<"$fixture_event")")"
+    raw_file="$TEST_INPUT_ROOT/invalid-extension.jsonl"
+    printf '%s\n' "$raw_event" >"$raw_file"
+    bash "$RUNTIME" validate --event-file "$raw_file" >/dev/null 2>&1
+    assert_eq "malformed or semantic extension is rejected" "1" "$?"
+  done
+
+  bash "$RUNTIME" append --event-file "$FIXTURE" >/dev/null
+  cp "$TEST_STATE_ROOT/$(sha256_text "$REPOSITORY")/pr-$PR_NUMBER/run-fixture-fresh/events.jsonl" "$TEST_STATE_ROOT/before-private-rejection.jsonl"
+  raw_event="$(rehash_event "$(jq -c '.sequence=2 | .extensions=[{namespace:"com.acme.review",key:"provider_receipt",value_sha256:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",byte_count:128,content:"secret rejected bytes"}]' <<<"$fixture_event")")"
+  raw_file="$TEST_INPUT_ROOT/private-rejection.jsonl"
+  printf '%s\n' "$raw_event" >"$raw_file"
+  raw_output="$(bash "$RUNTIME" append --event-file "$raw_file")"
+  raw_rc=$?
+  assert_eq "semantic extension append is quarantined" "1" "$raw_rc"
+  assert_eq "semantic extension reports one quarantine" "1" "$(jq -r '.quarantined' <<<"$raw_output")"
+  if cmp -s "$TEST_STATE_ROOT/before-private-rejection.jsonl" "$TEST_STATE_ROOT/$(sha256_text "$REPOSITORY")/pr-$PR_NUMBER/run-fixture-fresh/events.jsonl"; then
+    pass
+  else
+    fail "rejected extension leaves accepted state byte-identical"
+  fi
+
+  raw_hash="$(sha256_text "$raw_event")"
+  raw_bytes="$(printf '%s' "$raw_event" | wc -c | tr -d ' ')"
+  if [ -d "$TEST_STATE_ROOT/quarantine" ]; then
+    quarantine_dir="$(find "$TEST_STATE_ROOT/quarantine" -mindepth 1 -maxdepth 1 -type d -name "$raw_hash-*" -print)"
+  else
+    quarantine_dir=''
+  fi
+  if [ -n "$quarantine_dir" ]; then
+    metadata_file="$quarantine_dir/metadata.json"
+    assert_eq "quarantine publishes metadata only" "1" "$(find "$quarantine_dir" -mindepth 1 -maxdepth 1 -type f | wc -l | tr -d ' ')"
+    assert_eq "quarantine metadata has exactly four keys" '["byte_count","input_sha256","quarantined_at","reason_code"]' "$(jq -c 'keys | sort' "$metadata_file")"
+    assert_eq "quarantine records typed reason" "unsupported_event_envelope" "$(jq -r '.reason_code' "$metadata_file")"
+    assert_eq "quarantine records rejected input hash" "$raw_hash" "$(jq -r '.input_sha256' "$metadata_file")"
+    assert_eq "quarantine records rejected input byte count" "$raw_bytes" "$(jq -r '.byte_count' "$metadata_file")"
+    if grep -R -E 'secret rejected bytes|raw provider bytes' "$TEST_STATE_ROOT" >/dev/null 2>&1; then
+      fail "managed state never stores rejected content"
+    elif grep -R -F "$raw_file" "$TEST_STATE_ROOT" >/dev/null 2>&1; then
+      fail "managed state never stores the rejected input path"
+    elif [ "$(find "$TEST_STATE_ROOT" -type l | wc -l | tr -d ' ')" != '0' ]; then
+      fail "managed state never contains a link to rejected input"
+    else
+      pass
+    fi
+  else
+    fail "rejected input produces metadata-only quarantine"
+  fi
+
+  successor_event="$(sed -n '2p' "$FIXTURE")"
+  top_duplicate='{"extensions":[{"content":"hidden top-level secret"}],"extensions":[],'"${fixture_event#\{}"
+  payload_duplicate="$(printf '%s' "$successor_event" | sed 's/"payload":{/"payload":{"successor_reason":"hidden payload secret",/')"
+  extension_duplicate="$(printf '%s' "$successor_event" | sed 's/"key":"fixture_receipt"/"key":"hidden extension secret","key":"fixture_receipt"/')"
+  fresh_events="$TEST_STATE_ROOT/$(sha256_text "$REPOSITORY")/pr-$PR_NUMBER/run-fixture-fresh/events.jsonl"
+  successor_events="$TEST_STATE_ROOT/$(sha256_text "$REPOSITORY")/pr-$PR_NUMBER/run-fixture-successor/events.jsonl"
+  cp "$fresh_events" "$TEST_STATE_ROOT/before-duplicate-fresh.jsonl"
+  cp "$successor_events" "$TEST_STATE_ROOT/before-duplicate-successor.jsonl"
+  duplicate_index=0
+  for duplicate_event in "$top_duplicate" "$payload_duplicate" "$extension_duplicate"; do
+    duplicate_index=$((duplicate_index + 1))
+    duplicate_file="$TEST_INPUT_ROOT/duplicate-member-$duplicate_index.jsonl"
+    printf '%s\n' "$duplicate_event" >"$duplicate_file"
+    bash "$RUNTIME" validate --event-file "$duplicate_file" >"$TEST_INPUT_ROOT/duplicate-validate-$duplicate_index.out" 2>"$TEST_INPUT_ROOT/duplicate-validate-$duplicate_index.err"
+    assert_eq "duplicate JSON member $duplicate_index fails validation" "1" "$?"
+    assert_match "duplicate JSON member $duplicate_index has a typed validation reason" 'duplicate_json_member' "$(cat "$TEST_INPUT_ROOT/duplicate-validate-$duplicate_index.err")"
+    duplicate_output="$(bash "$RUNTIME" append --event-file "$duplicate_file")"
+    duplicate_rc=$?
+    assert_eq "duplicate JSON member $duplicate_index append is quarantined" "1" "$duplicate_rc"
+    assert_eq "duplicate JSON member $duplicate_index reports one quarantine" "1" "$(jq -r '.quarantined' <<<"$duplicate_output")"
+  done
+  assert_eq "all duplicate-member inputs use the typed quarantine reason" "3" "$(grep -l 'duplicate_json_member' "$TEST_STATE_ROOT"/quarantine/*/metadata.json | wc -l | tr -d ' ')"
+  if cmp -s "$TEST_STATE_ROOT/before-duplicate-fresh.jsonl" "$fresh_events" &&
+    cmp -s "$TEST_STATE_ROOT/before-duplicate-successor.jsonl" "$successor_events"; then
+    pass
+  else
+    fail "duplicate-member rejection leaves all accepted state byte-identical"
+  fi
+  if grep -R -E 'hidden (top-level|payload|extension) secret' "$TEST_STATE_ROOT" >/dev/null 2>&1; then
+    fail "managed state never stores hidden duplicate-member content"
+  else
+    pass
+  fi
+  assert_eq "duplicate-member quarantines are metadata-only" "0" "$(find "$TEST_STATE_ROOT/quarantine" -mindepth 2 -type f ! -name metadata.json | wc -l | tr -d ' ')"
+
+  dependency_state="$(mktemp -d)"
+  (
+    export KC_PR_FLOW_STATE_DIR="$dependency_state"
+    review_runtime_require_python() { return 69; }
+    review_runtime_validate_line "$fixture_event" >/dev/null 2>&1
+  )
+  dependency_rc=$?
+  assert_eq "direct validation returns 69 when duplicate checker dependency is absent" "69" "$dependency_rc"
+  (
+    export KC_PR_FLOW_STATE_DIR="$dependency_state"
+    review_runtime_require_python() { return 69; }
+    review_runtime_validate_file "$FIXTURE" >/dev/null 2>&1
+  )
+  dependency_rc=$?
+  assert_eq "file validation returns 69 when duplicate checker dependency is absent" "69" "$dependency_rc"
+  (
+    export KC_PR_FLOW_STATE_DIR="$dependency_state"
+    review_runtime_require_python() { return 69; }
+    review_runtime_append_file "$FIXTURE" >/dev/null 2>&1
+  )
+  dependency_rc=$?
+  assert_eq "append returns 69 before state mutation when duplicate checker dependency is absent" "69" "$dependency_rc"
+  assert_eq "dependency failure creates no managed state" "0" "$(find "$dependency_state" -mindepth 1 | wc -l | tr -d ' ')"
+  (
+    export KC_PR_FLOW_STATE_DIR="$dependency_state"
+    review_runtime_require_python() { return 69; }
+    review_runtime_replay "$FIXTURE" >/dev/null 2>&1
+  )
+  dependency_rc=$?
+  assert_eq "replay returns 69 when duplicate checker dependency is absent" "69" "$dependency_rc"
+  chmod -R u+rwX "$dependency_state" 2>/dev/null || true
+  rm -rf "$dependency_state"
+}
+
+if [ "$CASE_FILTER" = 'privacy-envelope' ]; then
+  run_privacy_envelope_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+elif [ "$CASE_FILTER" != 'all' ]; then
+  printf 'unknown test case: %s\n' "$CASE_FILTER" >&2
+  exit 2
+fi
 
 control_repository=$'acme/widgets\tunexpected'
 control_repo_key="$(sha256_text "$control_repository")"
@@ -200,24 +398,24 @@ assert_eq "duplicate append reports both records" "2" "$(jq -r '.duplicate' <<<"
 assert_eq "duplicate append does not add lines" "1" "$(wc -l <"$FRESH_EVENTS" | tr -d ' ')"
 
 fresh_fixture="$(sed -n '1p' "$FIXTURE")"
-future_event="$(rehash_integrity "$(jq -c '.future_optional={mode:"preserve"}' <<<"$fresh_fixture")")"
+future_event="$(rehash_integrity "$(jq -c '.occurred_at="2026-07-22T00:00:01Z"' <<<"$fresh_fixture")")"
 future_event="$(printf '%s' "$future_event" | sed 's/,"config_hash"/,  "config_hash"/')"
 printf '%s\n' "$future_event" >"$TEST_STATE_ROOT/future-event.jsonl"
 future_output="$(bash "$RUNTIME" append --event-file "$TEST_STATE_ROOT/future-event.jsonl")"
 future_rc=$?
-assert_eq "supported-v1 unknown optional field reaches duplicate identity check" "1" "$future_rc"
+assert_eq "same event ID with changed envelope reaches duplicate identity check" "1" "$future_rc"
 assert_eq "different event with reused event_id is quarantined" "1" "$(jq -r '.quarantined' <<<"$future_output")"
 assert_eq "event_id conflict does not mutate accepted events" "1" "$(wc -l <"$FRESH_EVENTS" | tr -d ' ')"
 
-# A new event ID with an additive optional field is accepted byte-for-byte.
+# A new event ID with an unknown top-level field is rejected before append.
 optional_new="$(rehash_event "$(jq -c '.sequence=2 | .future_optional={mode:"preserve"}' <<<"$fresh_fixture")")"
 optional_new="$(printf '%s' "$optional_new" | sed 's/,"config_hash"/,  "config_hash"/')"
 printf '%s\n' "$optional_new" >"$TEST_STATE_ROOT/optional-new.jsonl"
 optional_output="$(bash "$RUNTIME" append --event-file "$TEST_STATE_ROOT/optional-new.jsonl")"
 optional_rc=$?
-assert_eq "additive-v1 event appends" "0" "$optional_rc"
-assert_eq "additive-v1 append reports one record" "1" "$(jq -r '.appended' <<<"$optional_output")"
-assert_eq "additive-v1 original bytes are retained" "$optional_new" "$(sed -n '2p' "$FRESH_EVENTS")"
+assert_eq "unknown top-level v1 event is quarantined" "1" "$optional_rc"
+assert_eq "unknown top-level v1 event reports one quarantine" "1" "$(jq -r '.quarantined' <<<"$optional_output")"
+assert_eq "unknown top-level v1 event leaves accepted events unchanged" "1" "$(wc -l <"$FRESH_EVENTS" | tr -d ' ')"
 
 # Direct validation calls must not overwrite same-named caller variables.
 reason='sentinel'
@@ -241,7 +439,7 @@ locked_rc=$?
 rmdir "$early_reservation"
 assert_eq "busy append lock returns temporary-failure status" "75" "$locked_rc"
 assert_eq "busy append lock reports one blocked record" "1" "$(jq -r '.blocked' <<<"$locked_output")"
-assert_eq "busy append lock leaves accepted state unchanged" "2" "$(wc -l <"$FRESH_EVENTS" | tr -d ' ')"
+assert_eq "busy append lock leaves accepted state unchanged" "1" "$(wc -l <"$FRESH_EVENTS" | tr -d ' ')"
 
 # Each invalid trust-boundary case is rejected and copied to typed quarantine.
 unknown_major="$(rehash_integrity "$(jq -c '.schema="kc-pr-flow.review-event/v2"' <<<"$fresh_fixture")")"
@@ -263,7 +461,7 @@ for invalid_case in "$unknown_major" "$unknown_type" "$missing_required" "$hash_
 done
 
 QUARANTINE_ROOT="$TEST_STATE_ROOT/quarantine"
-assert_eq "all invalid/conflicting records have separate quarantine entries" "7" "$(find "$QUARANTINE_ROOT" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
+assert_eq "all invalid/conflicting records have separate quarantine entries" "8" "$(find "$QUARANTINE_ROOT" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
 assert_eq "quarantine records unsupported major reason" "1" "$(grep -l 'unsupported_schema_major' "$QUARANTINE_ROOT"/*/metadata.json | wc -l | tr -d ' ')"
 assert_eq "quarantine records unknown event reason" "1" "$(grep -l 'unknown_event_type' "$QUARANTINE_ROOT"/*/metadata.json | wc -l | tr -d ' ')"
 assert_eq "quarantine records missing-field reason" "1" "$(grep -l 'missing_required_field' "$QUARANTINE_ROOT"/*/metadata.json | wc -l | tr -d ' ')"
@@ -271,8 +469,8 @@ assert_eq "quarantine records hash mismatch reason" "1" "$(grep -l 'payload_hash
 assert_eq "quarantine records successor enum reason" "1" "$(grep -l 'invalid_successor_reason' "$QUARANTINE_ROOT"/*/metadata.json | wc -l | tr -d ' ')"
 assert_eq "quarantine records unsupported payload schema reason" "1" "$(grep -l 'unsupported_payload_schema' "$QUARANTINE_ROOT"/*/metadata.json | wc -l | tr -d ' ')"
 conflict_dir="$(grep -l 'event_id_conflict' "$QUARANTINE_ROOT"/*/metadata.json | xargs dirname)"
-assert_eq "quarantine preserves conflicting original bytes" "$future_event" "$(sed -n '1p' "$conflict_dir/event.jsonl")"
-assert_eq "quarantined event file is read-only" "400" "$(file_mode "$conflict_dir/event.jsonl")"
+assert_eq "quarantine stores one metadata file only" "metadata.json" "$(find "$conflict_dir" -mindepth 1 -maxdepth 1 -type f -exec basename {} \;)"
+assert_eq "quarantine metadata uses the closed four-key envelope" '["byte_count","input_sha256","quarantined_at","reason_code"]' "$(jq -c 'keys | sort' "$conflict_dir/metadata.json")"
 assert_eq "quarantine metadata is read-only" "400" "$(file_mode "$conflict_dir/metadata.json")"
 
 # T1 payload schemas are closed: innocuous keys cannot smuggle raw content.
@@ -440,9 +638,8 @@ mismatch_quarantine_line='{"case":"mismatched quarantine"}'
 mismatch_quarantine_hash="$(sha256_text "$mismatch_quarantine_line")"
 mismatch_quarantine_dir="$QUARANTINE_ROOT/$mismatch_quarantine_hash-invalid_json"
 mkdir "$mismatch_quarantine_dir"
-printf '%s\n' '{"wrong":"event"}' >"$mismatch_quarantine_dir/event.jsonl"
 printf '%s\n' '{"reason":"invalid_json","event_sha256":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff","quarantined_at":"2026-07-22T00:00:00Z"}' >"$mismatch_quarantine_dir/metadata.json"
-chmod 0400 "$mismatch_quarantine_dir/event.jsonl" "$mismatch_quarantine_dir/metadata.json"
+chmod 0400 "$mismatch_quarantine_dir/metadata.json"
 chmod 0500 "$mismatch_quarantine_dir"
 review_runtime_quarantine "$mismatch_quarantine_line" invalid_json >/dev/null 2>&1
 mismatch_quarantine_rc=$?
@@ -453,15 +650,13 @@ idempotent_quarantine_hash="$(sha256_text "$idempotent_quarantine_line")"
 idempotent_quarantine_dir="$QUARANTINE_ROOT/$idempotent_quarantine_hash-invalid_json"
 review_runtime_quarantine "$idempotent_quarantine_line" invalid_json >/dev/null 2>&1
 idempotent_first_rc=$?
-idempotent_event_hash_before="$(review_runtime_sha256 <"$idempotent_quarantine_dir/event.jsonl")"
 idempotent_metadata_hash_before="$(review_runtime_sha256 <"$idempotent_quarantine_dir/metadata.json")"
 review_runtime_quarantine "$idempotent_quarantine_line" invalid_json >/dev/null 2>&1
 idempotent_second_rc=$?
 assert_eq "first complete quarantine publication succeeds" "0" "$idempotent_first_rc"
 assert_eq "matching complete quarantine is idempotent" "0" "$idempotent_second_rc"
-assert_eq "idempotent quarantine preserves event bytes" "$idempotent_event_hash_before" "$(review_runtime_sha256 <"$idempotent_quarantine_dir/event.jsonl")"
 assert_eq "idempotent quarantine preserves metadata bytes" "$idempotent_metadata_hash_before" "$(review_runtime_sha256 <"$idempotent_quarantine_dir/metadata.json")"
-assert_eq "idempotent quarantine event stays read-only" "400" "$(file_mode "$idempotent_quarantine_dir/event.jsonl")"
+assert_eq "idempotent quarantine remains metadata-only" "1" "$(find "$idempotent_quarantine_dir" -mindepth 1 -maxdepth 1 -type f | wc -l | tr -d ' ')"
 assert_eq "idempotent quarantine metadata stays read-only" "400" "$(file_mode "$idempotent_quarantine_dir/metadata.json")"
 assert_eq "idempotent quarantine directory stays read-only" "500" "$(file_mode "$idempotent_quarantine_dir")"
 
@@ -482,7 +677,7 @@ assert_eq "forced quarantine failure leaves no private temp" "0" "$(find "$force
 ( export KC_PR_FLOW_STATE_DIR="$forced_quarantine_state"; review_runtime_quarantine "$forced_quarantine_line" invalid_json >/dev/null 2>&1 )
 forced_quarantine_retry_rc=$?
 assert_eq "retry publishes complete quarantine receipt" "0" "$forced_quarantine_retry_rc"
-assert_eq "retry event is read-only" "400" "$(file_mode "$forced_quarantine_dir/event.jsonl")"
+assert_eq "retry receipt contains metadata only" "1" "$(find "$forced_quarantine_dir" -mindepth 1 -maxdepth 1 -type f | wc -l | tr -d ' ')"
 assert_eq "retry metadata is read-only" "400" "$(file_mode "$forced_quarantine_dir/metadata.json")"
 assert_eq "retry receipt is read-only" "500" "$(file_mode "$forced_quarantine_dir")"
 
@@ -694,8 +889,14 @@ assert_eq "quarantine writes nothing through managed symlink" "0" "$(find "$quar
 # Two first publishers for the same caller-supplied run_id serialize on one
 # pr-level reservation. One publishes; the follower observes an exact duplicate.
 concurrent_state="$(mktemp -d)"
-concurrent_optional="$(awk 'BEGIN { for (i=0; i<60000; i++) printf "x" }')"
-concurrent_event="$(rehash_event "$(jq -c --arg optional "$concurrent_optional" '.run_id="run-concurrent-first" | .future_optional=$optional' <<<"$fresh_fixture")")"
+concurrent_event="$(rehash_event "$(jq -c '
+  .run_id="run-concurrent-first" |
+  .extensions=[range(0; 300) as $index | {
+    namespace:"org.kc.concurrency",
+    key:("probe_" + ($index | tostring)),
+    value_sha256:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    byte_count:$index
+  }]' <<<"$fresh_fixture")")"
 concurrent_file="$TEST_STATE_ROOT/concurrent-first.jsonl"
 printf '%s\n' "$concurrent_event" >"$concurrent_file"
 KC_PR_FLOW_STATE_DIR="$concurrent_state" bash "$RUNTIME" append --event-file "$concurrent_file" >"$TEST_STATE_ROOT/concurrent-one.out" 2>"$TEST_STATE_ROOT/concurrent-one.err" &

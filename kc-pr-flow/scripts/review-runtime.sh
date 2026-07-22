@@ -23,6 +23,39 @@ review_runtime_require_jq() {
   fi
 }
 
+review_runtime_safe_io_helper() {
+  local runtime_source="${BASH_SOURCE[0]}"
+  local runtime_dir
+  runtime_dir="$(cd "$(dirname "$runtime_source")" && pwd)" || return 69
+  printf '%s\n' "$runtime_dir/review-runtime-safe-io.py"
+}
+
+review_runtime_require_python() {
+  local helper
+  if ! command -v python3 >/dev/null 2>&1; then
+    printf 'review-runtime: python3 is required\n' >&2
+    return 69
+  fi
+  helper="$(review_runtime_safe_io_helper)" || return 69
+  if [ ! -f "$helper" ] || [ -L "$helper" ] || [ ! -r "$helper" ]; then
+    printf 'review-runtime: safe I/O helper is unavailable\n' >&2
+    return 69
+  fi
+}
+
+review_runtime_json_has_unique_members() {
+  local line="$1"
+  local helper rc
+  review_runtime_require_python || return 69
+  helper="$(review_runtime_safe_io_helper)" || return 69
+  printf '%s' "$line" | python3 "$helper" unique-json >/dev/null 2>&1
+  rc=$?
+  case "$rc" in
+    0 | 1 | 2) return "$rc" ;;
+    *) return 69 ;;
+  esac
+}
+
 review_runtime_snapshot_regular_file() {
   local source_file="$1"
   local snapshot_file="$2"
@@ -338,6 +371,7 @@ review_runtime_start() (
   local review_key payload event rc
 
   review_runtime_require_jq || return
+  review_runtime_require_python || return
   review_runtime_validate_start_input "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$occurred_at" "$predecessor_run_id" "$successor_reason" || return
 
   umask 077
@@ -405,9 +439,34 @@ review_runtime_event_type_valid() {
   esac
 }
 
-# The event envelope is additive within v1, but payloads are closed at their
-# owning event boundary. This prevents provider adapters from smuggling review
-# authority or raw model/source content into the durable receipt.
+# The v1 event envelope is closed. Same-major evolution is limited to typed,
+# hash-only extensions which never participate in replay or review authority.
+review_runtime_event_envelope_matches_v1_schema() {
+  printf '%s' "$1" | jq -e '
+    def exact_keys($required; $optional):
+      ((keys - ($required + $optional)) | length) == 0 and
+      (($required - keys) | length) == 0;
+    def sha256: type == "string" and test("^[0-9a-f]{64}$");
+    def extension_token: type == "string" and test("^[a-z][a-z0-9._-]{0,127}$");
+    def byte_count: type == "number" and floor == . and . >= 0 and . <= 9007199254740991;
+    exact_keys(
+      ["base_sha","config_hash","event_id","event_type","head_sha","integrity_sha256","occurred_at","payload","payload_sha256","pr_number","repository","review_key","run_id","schema","sequence"];
+      ["extensions"]
+    ) and
+    ((has("extensions") | not) or
+      (.extensions | type == "array" and all(
+        type == "object" and
+        exact_keys(["byte_count","key","namespace","value_sha256"]; []) and
+        (.namespace | extension_token) and
+        (.key | extension_token) and
+        (.value_sha256 | sha256) and
+        (.byte_count | byte_count)
+      )))' >/dev/null 2>&1
+}
+
+# Payloads are closed at their owning event boundary. This prevents provider
+# adapters from smuggling review authority or raw model/source content into the
+# durable receipt.
 review_runtime_payload_matches_v1_schema() {
   local line="$1"
   local event_type="$2"
@@ -586,9 +645,20 @@ review_runtime_validate_line() {
   local base_sha head_sha config_hash sequence occurred_at payload payload_sha256
   local expected_payload_sha256 expected_event_id expected_review_key
   local without_integrity expected_integrity_sha256 integrity_sha256
-  local has_predecessor has_reason predecessor_run_id successor_reason reason
+  local has_predecessor has_reason predecessor_run_id successor_reason reason duplicate_rc
 
   review_runtime_require_jq || return
+  review_runtime_json_has_unique_members "$line"
+  duplicate_rc=$?
+  case "$duplicate_rc" in
+    0) ;;
+    1)
+      printf '%s' 'duplicate_json_member'
+      return 1
+      ;;
+    2) ;;
+    *) return "$duplicate_rc" ;;
+  esac
   if ! printf '%s' "$line" | jq -e 'type == "object"' >/dev/null 2>&1; then
     printf '%s' 'invalid_json'
     return 1
@@ -608,6 +678,11 @@ review_runtime_validate_line() {
       kc-pr-flow.review-event/v*) printf '%s' 'unsupported_schema_major' ;;
       *) printf '%s' 'invalid_schema' ;;
     esac
+    return 1
+  fi
+
+  if ! review_runtime_event_envelope_matches_v1_schema "$line"; then
+    printf '%s' 'unsupported_event_envelope'
     return 1
   fi
 
@@ -735,11 +810,14 @@ review_runtime_same_run_identity() {
 
 review_runtime_validate_authoritative_log() {
   local events_file="$1"
-  local line reason authority_line='' sequence expected_sequence=1 count=0
+  local line reason authority_line='' sequence expected_sequence=1 count=0 rc
   [ -f "$events_file" ] && [ ! -L "$events_file" ] || return 74
   while IFS= read -r line || [ -n "$line" ]; do
     count=$((count + 1))
-    if ! reason="$(review_runtime_validate_line "$line")"; then
+    reason="$(review_runtime_validate_line "$line")"
+    rc=$?
+    if [ "$rc" -ne 0 ]; then
+      [ "$rc" -eq 69 ] && return 69
       printf 'review-runtime: existing event %s failed validation: %s\n' "$count" "$reason" >&2
       return 74
     fi
@@ -777,23 +855,23 @@ review_runtime_quarantine_complete() {
   local line="$2"
   local reason="$3"
   local line_sha="$4"
-  local expected_event_file_sha actual_event_file_sha
+  local expected_byte_count
 
   [ -d "$quarantine_dir" ] && [ ! -L "$quarantine_dir" ] || return 1
-  [ -f "$quarantine_dir/event.jsonl" ] && [ ! -L "$quarantine_dir/event.jsonl" ] || return 1
   [ -f "$quarantine_dir/metadata.json" ] && [ ! -L "$quarantine_dir/metadata.json" ] || return 1
   [ "$(review_runtime_file_mode "$quarantine_dir")" = '500' ] || return 1
-  [ "$(review_runtime_file_mode "$quarantine_dir/event.jsonl")" = '400' ] || return 1
   [ "$(review_runtime_file_mode "$quarantine_dir/metadata.json")" = '400' ] || return 1
+  [ "$(find "$quarantine_dir" -mindepth 1 -maxdepth 1 | wc -l | tr -d ' ')" = '1' ] || return 1
 
-  expected_event_file_sha="$(printf '%s\n' "$line" | review_runtime_sha256)" || return
-  actual_event_file_sha="$(review_runtime_sha256 <"$quarantine_dir/event.jsonl")" || return
-  [ "$expected_event_file_sha" = "$actual_event_file_sha" ] || return 1
+  expected_byte_count="$(printf '%s' "$line" | wc -c | tr -d ' ')" || return
   jq -e \
-    --arg reason "$reason" \
-    --arg event_sha256 "$line_sha" \
-    '.reason == $reason and
-     .event_sha256 == $event_sha256 and
+    --arg reason_code "$reason" \
+    --arg input_sha256 "$line_sha" \
+    --argjson byte_count "$expected_byte_count" \
+    '(keys | sort) == ["byte_count","input_sha256","quarantined_at","reason_code"] and
+     .reason_code == $reason_code and
+     .input_sha256 == $input_sha256 and
+     .byte_count == $byte_count and
      (.quarantined_at | type == "string" and test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"))' \
     "$quarantine_dir/metadata.json" >/dev/null 2>&1
 }
@@ -802,25 +880,22 @@ review_runtime_remove_quarantine_temp() {
   local temp_dir="$1"
   [ -d "$temp_dir" ] || return 0
   chmod 0700 "$temp_dir" 2>/dev/null || true
-  chmod 0600 "$temp_dir/event.jsonl" "$temp_dir/metadata.json" 2>/dev/null || true
-  rm -f "$temp_dir/event.jsonl" "$temp_dir/metadata.json"
+  chmod 0600 "$temp_dir/metadata.json" 2>/dev/null || true
+  rm -f "$temp_dir/metadata.json"
   rmdir "$temp_dir" 2>/dev/null || true
 }
 
 review_runtime_quarantine_size_within_limit() {
-  local event_file="$1"
-  local metadata_file="$2"
+  local metadata_file="$1"
   local limit="${KC_PR_FLOW_MAX_QUARANTINE_BYTES:-4194304}"
-  local event_size metadata_size total_size
+  local metadata_size
   [[ "$limit" =~ ^[1-9][0-9]*$ ]] || {
     printf 'review-runtime: invalid quarantine size limit\n' >&2
     return 73
   }
-  event_size="$(wc -c <"$event_file" | tr -d ' ')" || return
   metadata_size="$(wc -c <"$metadata_file" | tr -d ' ')" || return
-  total_size=$((event_size + metadata_size))
-  if [ "$total_size" -gt "$limit" ]; then
-    printf 'review-runtime: quarantine size limit exceeded (%s > %s)\n' "$total_size" "$limit" >&2
+  if [ "$metadata_size" -gt "$limit" ]; then
+    printf 'review-runtime: quarantine size limit exceeded (%s > %s)\n' "$metadata_size" "$limit" >&2
     return 73
   fi
 }
@@ -829,7 +904,7 @@ review_runtime_quarantine() (
   local line="$1"
   local reason="$2"
   local state_root line_sha quarantine_root quarantine_dir quarantine_lock
-  local temp_dir='' metadata lock_owner_pid rc
+  local temp_dir='' metadata lock_owner_pid rc byte_count
 
   case "$reason" in
     *[!a-z0-9_]*) reason='validation_failed' ;;
@@ -860,23 +935,22 @@ review_runtime_quarantine() (
   temp_dir="$(mktemp -d "$quarantine_root/.$line_sha-$reason.tmp.XXXXXX")" || {
     return 1
   }
-  if ! printf '%s\n' "$line" >"$temp_dir/event.jsonl"; then
-    return 1
-  fi
+  byte_count="$(printf '%s' "$line" | wc -c | tr -d ' ')" || return
   metadata="$(jq -S -c -n \
-    --arg reason "$reason" \
-    --arg event_sha256 "$line_sha" \
+    --arg reason_code "$reason" \
+    --arg input_sha256 "$line_sha" \
+    --argjson byte_count "$byte_count" \
     --arg quarantined_at "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" \
-    '{reason:$reason,event_sha256:$event_sha256,quarantined_at:$quarantined_at}')" || {
+    '{reason_code:$reason_code,input_sha256:$input_sha256,byte_count:$byte_count,quarantined_at:$quarantined_at}')" || {
     return 1
   }
   if ! printf '%s\n' "$metadata" >"$temp_dir/metadata.json"; then
     return 1
   fi
-  review_runtime_quarantine_size_within_limit "$temp_dir/event.jsonl" "$temp_dir/metadata.json"
+  review_runtime_quarantine_size_within_limit "$temp_dir/metadata.json"
   rc=$?
   [ "$rc" -eq 0 ] || return "$rc"
-  if ! chmod 0400 "$temp_dir/event.jsonl" "$temp_dir/metadata.json" ||
+  if ! chmod 0400 "$temp_dir/metadata.json" ||
     ! chmod 0500 "$temp_dir"; then
     return 1
   fi
@@ -977,9 +1051,12 @@ review_runtime_append_line() (
   local state_root repo_dir pr_dir run_dir events_file lock_dir lock_owner_pid=''
   local existing_line existing_id existing_integrity event_id integrity_sha256
   local authority_line last_sequence expected_sequence duplicate_integrity=''
-  local temp_events='' temp_run_dir='' rc
+  local temp_events='' temp_run_dir='' rc validation_rc
 
-  if ! reason="$(review_runtime_validate_line "$line")"; then
+  reason="$(review_runtime_validate_line "$line")"
+  validation_rc=$?
+  if [ "$validation_rc" -ne 0 ]; then
+    [ "$validation_rc" -eq 69 ] && return 69
     review_runtime_quarantine "$line" "$reason" || return
     printf '%s\n' 'quarantined'
     return 1
@@ -1019,7 +1096,9 @@ review_runtime_append_line() (
       printf 'review-runtime: unsafe events path for %s\n' "$run_id" >&2
       return 74
     fi
-    last_sequence="$(review_runtime_validate_authoritative_log "$events_file")" || return 74
+    last_sequence="$(review_runtime_validate_authoritative_log "$events_file")"
+    rc=$?
+    [ "$rc" -eq 0 ] || return "$rc"
     authority_line="$(sed -n '1p' "$events_file")"
     if ! review_runtime_same_run_identity "$authority_line" "$line"; then
       review_runtime_quarantine "$line" 'run_identity_mismatch' || return
@@ -1054,7 +1133,9 @@ review_runtime_append_line() (
     if ! cat "$events_file" >"$temp_events" || ! printf '%s\n' "$line" >>"$temp_events"; then
       return 74
     fi
-    review_runtime_validate_authoritative_log "$temp_events" >/dev/null || return 74
+    review_runtime_validate_authoritative_log "$temp_events" >/dev/null
+    rc=$?
+    [ "$rc" -eq 0 ] || return "$rc"
     review_runtime_events_size_within_limit "$temp_events"
     rc=$?
     [ "$rc" -eq 0 ] || return "$rc"
@@ -1093,7 +1174,9 @@ review_runtime_append_line() (
 review_runtime_validate_file() {
   local event_file="$1"
   local line reason line_number=0 valid=0 invalid=0
-  local input_file cleanup_file=''
+  local input_file cleanup_file='' rc
+
+  review_runtime_require_python || return
 
   if [ "$event_file" = '-' ]; then
     input_file="$(mktemp)" || return
@@ -1112,9 +1195,15 @@ review_runtime_validate_file() {
   fi
   while IFS= read -r line || [ -n "$line" ]; do
     line_number=$((line_number + 1))
-    if reason="$(review_runtime_validate_line "$line")"; then
+    reason="$(review_runtime_validate_line "$line")"
+    rc=$?
+    if [ "$rc" -eq 0 ]; then
       valid=$((valid + 1))
     else
+      if [ "$rc" -eq 69 ]; then
+        [ -n "$cleanup_file" ] && rm -f "$cleanup_file"
+        return 69
+      fi
       invalid=$((invalid + 1))
       printf 'review-runtime: line %s: %s\n' "$line_number" "$reason" >&2
     fi
@@ -1128,6 +1217,8 @@ review_runtime_append_file() {
   local event_file="$1"
   local input_file cleanup_file='' line status rc
   local appended=0 duplicate=0 quarantined=0 blocked=0 overall_rc=0
+
+  review_runtime_require_python || return
 
   if [ "$event_file" = '-' ]; then
     input_file="$(mktemp)" || return
@@ -1156,7 +1247,11 @@ review_runtime_append_file() {
         ;;
       *)
         blocked=$((blocked + 1))
-        [ "$rc" -eq 75 ] && overall_rc=75 || overall_rc=74
+        case "$rc" in
+          69) overall_rc=69 ;;
+          75) overall_rc=75 ;;
+          *) overall_rc=74 ;;
+        esac
         ;;
     esac
   done <"$input_file"
@@ -1346,6 +1441,7 @@ review_runtime_replay() (
   local event_file="$1"
   local event_snapshot=''
   review_runtime_require_jq || return
+  review_runtime_require_python || return
   umask 077
   event_snapshot="$(mktemp)" || return
   trap '[ -z "$event_snapshot" ] || rm -f "$event_snapshot"' EXIT
