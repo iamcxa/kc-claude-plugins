@@ -33,6 +33,23 @@ again before posting. `scripts/review-architecture-diagrams-validate.sh` is fail
 only the documented two-diagram grammar; `review-architecture-diagrams-validator.test.sh` covers
 malformed structure, unsafe constructs, breakout payloads, and size caps.
 
+### Shadow Review Runtime
+
+`kc-pr-review` has one post-collation observer seam before its existing confirmation gate. It is off
+by default and enabled only by `KC_PR_FLOW_REVIEW_SHADOW=on`. The Bash 3.2 + `jq` runtime records
+typed exact-head JSONL receipts, replays provider-neutral lane and finding observations, verifies
+hashed evidence pointers, and scores sanitized paired runs. It has no model, verdict, confirmation,
+posting, GitHub, resume, or garbage-collection authority; every shadow failure preserves the
+byte-identical legacy review path.
+
+Maintainer checks:
+
+```bash
+bash scripts/review-runtime.test.sh
+bash scripts/review-shadow.test.sh
+bash scripts/review-runtime-benchmark.test.sh
+```
+
 ## Internal Agents
 
 Built-in subagents dispatched by kc-pr-review for security analysis. Based on Trail of Bits methodologies.
@@ -92,6 +109,7 @@ Rationale + design notes: `kc-pr-flow/skills/kc-pr-review-resolve/SKILL.md` → 
 | `learned-patterns.md` | pr-review, pr-review-resolve | Accumulated cross-project review patterns (D1 auto-append target) |
 | `review-architecture-diagrams.md` | pr-review (on demand) | Evidence ledger, safe Mermaid templates, status vocabulary, size caps, and preview/post contract |
 | `review-architecture-diagrams-evals.md` | pr-review maintainers | Behavioral pressure scenarios for preview authorization, label breakout, and head freshness |
+| `review-runtime.md` | pr-review maintainers and runtime adapters | Typed receipt lifecycle, exact-head identity, storage, evidence, provenance, CLI, and recovery boundaries |
 | `e2e-verification.md` | pr-create | Layer classification patterns for E2E integration detection |
 | `pr-review-loop.md` | pr-daemon (iteration prompt) | Classification logic, risk tiers, safety rules for daemon |
 

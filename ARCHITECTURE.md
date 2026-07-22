@@ -33,6 +33,28 @@ The state root is configurable and defaults to the platform state directory unde
 | Remote mutation | GitHub review identity, reconciled to a deterministic local intent |
 | Provider-specific invocation | Adapter only; it cannot mutate core lifecycle state directly |
 
+### Shadow increment components and data flow
+
+```mermaid
+flowchart LR
+    Legacy[Legacy review collation] --> Frozen[Final body, comments, event, options]
+    Frozen --> Gate{Shadow gate exactly on?}
+    Gate -->|off| Confirm[Existing user confirmation]
+    Gate -->|on| Fresh[Fresh read-only exact-head check]
+    Fresh --> Seam[Fail-open shadow seam]
+    Seam --> Log[Typed append-only local receipt]
+    Log --> Validate[Validate and replay]
+    Validate --> Observe[Diagnostic observer status]
+    Log --> Pair[Sanitized paired corpus]
+    Pair --> Report[Deterministic benchmark report]
+    Observe -. no authority .-> Confirm
+    Report -. no authority .-> Confirm
+```
+
+The production gate is evaluated once after final legacy collation and before confirmation. With the gate off, control goes directly to existing confirmation with no runtime call and no shadow head check. With the gate on, a caller-owned fresh head check supplies a bounded observation input, not posting authorization; the seam then reuses an existing exact-head log or creates a minimal identity-only run, invokes the read-only observer once, and converts every runtime failure into a diagnostic-only skip.
+
+Accepted state is fail-closed and uses owned reservations, private rebuild plus atomic rename, immutable run identity, contiguous sequence, and read-only content-addressed quarantine for rejected append input. Replay and other complete-read helpers use private snapshots; validate and append stream candidate input. The shadow integration is fail-open because it cannot alter the frozen legacy body, comments, options, event, confirmation, or posting payload.
+
 ### Run and event identity
 
 The review key hashes full repository identity, PR number, base SHA, head SHA, and effective configuration hash. Each fresh execution receives a unique run ID. Event IDs are deterministic over run, sequence, type, and canonical payload hash; appending the same event ID is a no-op.

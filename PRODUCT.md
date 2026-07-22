@@ -45,6 +45,12 @@ The capability ships in three reversible increments:
 
 The first increment must not change verdict selection, user confirmation, or GitHub mutation behavior. The daemon must not issue an approval in the initial runtime.
 
+### Current increment
+
+The shadow increment provides an off-by-default, fail-open observer over a local typed exact-head event log. Maintainers can validate, replay, summarize, and compare sanitized paired receipts across provider-neutral lanes. The paired report puts expected-finding recall first, then capability coverage, external behavior parity, stability/disagreement, and strictly comparable provider-reported usage.
+
+This increment is measurement infrastructure, not an adaptive reviewer. It does not change lane selection, model routing, finding synthesis authority, the confirmation gate, or GitHub output. Disabling the gate stops new observation while preserving existing receipts for inspection and comparison.
+
 ### Non-goals
 
 - Rewriting reviewer intelligence or prompts before the runtime contract is measurable.

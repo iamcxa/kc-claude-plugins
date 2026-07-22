@@ -8,7 +8,7 @@ PR lifecycle workflow plugin for Claude Code. Covers the full PR lifecycle: crea
 |-------|---------|---------|
 | [`kc-pr-create`](#kc-pr-create-flow) | `create pr`, `open pr`, `建立 PR`, `開 PR`, `送審` | Create PR with self-review annotations + Linear comment + optional announcement |
 | `kc-pr-announce` | `announce`, `post to product`, `公告` | Draft Slack announcement for completed features with demo artifacts |
-| `kc-pr-review` | `review pr`, PR number/URL, `--full-pass`, `--pass-all`, "8-pass review", `--codex`, "codex review", "second opinion" | Agent-dispatched inline code review with optional 8-pass coverage, optional Codex cross-model second opinion (auto for bugfix-cross-stack), per-agent 1-10 confidence calibration, §4.5j/§4.5k doc-consistency pre-scans (cross-file claim grounding + intra-doc rule-vs-example self-consistency), and optional preview-first architecture diagrams that can be attached to the review body |
+| `kc-pr-review` | `review pr`, PR number/URL, `--full-pass`, `--pass-all`, "8-pass review", `--codex`, "codex review", "second opinion" | Agent-dispatched inline code review with optional 8-pass coverage, optional Codex cross-model second opinion (auto for bugfix-cross-stack), per-agent 1-10 confidence calibration, §4.5j/§4.5k doc-consistency pre-scans, optional preview-first architecture diagrams, and an off-by-default fail-open shadow receipt observer |
 | `kc-pr-review-resolve` | `resolve reviews`, `address feedback` | Triage & resolve review threads with cross-AI duplicate issue grouping + cross-review verdict persistence (suppresses prior-dismissed findings across cycles) |
 | `kc-pr-reorg` | `squash commits`, `reorganize commits` | Reorganize messy commit history into logical groups |
 | `break-point-probe` | `pressure-test this fix`, `break-point check`, `verify the break-point` | Verify whether a bugfix reaches the real runtime break-point path |
@@ -41,8 +41,24 @@ Use natural-language triggers rather than slash commands in Codex, for example:
 | Guide | What it covers |
 |-------|---------------|
 | [Daemon](docs/daemon.md) | Architecture, configuration, classification logic, notifications, usage tracking |
+| [Shadow review runtime](docs/review-runtime.md) | Enablement, receipt inspection, paired benchmark measurement, rollback, and troubleshooting |
 | [Review triage](reference/review-triage.md) | Agent tiering, 8-pass activation, security dispatch, and pre-scan rules |
 | [Review architecture diagrams](docs/review-architecture-diagrams.md) | Optional sequence and architecture/status diagrams, fail-closed generated-output validation, confirmation flow, evidence colors, and freshness rules |
+
+### Shadow Runtime Architecture
+
+`KC_PR_FLOW_REVIEW_SHADOW=on` enables one fail-open observer after final review collation and before
+the existing confirmation gate. The local Bash + `jq` runtime records typed exact-head receipts and
+can replay or measure them, but it cannot change review content, dispatch models, choose an event,
+or call GitHub. The gate is off by default; disabling it preserves existing receipts for inspection.
+
+Maintainer checks:
+
+```bash
+bash scripts/review-runtime.test.sh
+bash scripts/review-shadow.test.sh
+bash scripts/review-runtime-benchmark.test.sh
+```
 
 ## Shared Config
 
@@ -179,6 +195,7 @@ flowchart TD
 | `reference/learned-patterns.md` | Accumulated cross-project review patterns (D1 auto-append target) |
 | `reference/review-architecture-diagrams.md` | Evidence ledger, safe Mermaid templates, implementation-status vocabulary, and preview/post contract |
 | `reference/review-architecture-diagrams-evals.md` | Behavioral pressure scenarios for preview-only authorization, label breakout rejection, and moved-head regeneration |
+| `reference/review-runtime.md` | Normative typed event, identity, storage, evidence, provenance, command, and failure contracts |
 | `reference/e2e-verification.md` | Layer classification patterns for E2E integration detection |
 | `reference/pr-review-loop.md` | Daemon iteration prompt: classification, risk tiers, safety rules |
 
