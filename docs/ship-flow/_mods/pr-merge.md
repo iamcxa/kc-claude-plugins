@@ -1,30 +1,43 @@
 ---
 name: pr-merge
 description: Push branches and create/track GitHub PRs for workflow entities
-version: 0.11.1
+version: 0.12.2+kc.1
+upstream-version: 0.12.2
 changelog:
+  0.12.2+kc.1:
+    - >-
+      Rebased the repository-owned GitHub/GitLab and two-track review policy on
+      Spacedock pr-merge 0.12.2. Adds dynamic trunk resolution, exact pre-push PR
+      body approval, short entity ids, and two-step mod-block terminalization.
   0.11.1:
-    - Privacy redaction rule added to the PR body template — never include absolute
+    - >-
+      Privacy redaction rule added to the PR body template — never include absolute
       home-dir paths (`/Users/<name>/`, `/home/<name>/`, `~/Project/...`) or local
       shell paths in PR descriptions, comments, or review bodies. Includes a
       grep-based pre-flight check the FO MUST run before invoking gh pr create /
       gh pr comment / gh pr review --body-file. Triggered by an actual leak on
       iamcxa/kc-claude-plugins#10 caught at post-create review.
   0.11.0:
-    - Replaced Hook post-create with carlove-derived two-track review pattern
+    - >-
+      Replaced Hook post-create with carlove-derived two-track review pattern
       (Copilot reviewer-request + 6-min mandatory wait, parallel local kc-pr-review
       with skill-resolution chain and always-post-advisory rule, gated triage via
       kc-pr-review-resolve combining both review streams).
-    - Confidence assessment kept but downgraded to informational (does NOT gate);
+    - >-
+      Confidence assessment kept but downgraded to informational (does NOT gate);
       bot-driven review gates replace the old confidence-tier ≥90 threshold.
-    - Added classification heuristic for FO to decide CLEAN / BLOCKING / PROMPT_CAPTAIN
+    - >-
+      Added classification heuristic for FO to decide CLEAN / BLOCKING / PROMPT_CAPTAIN
       from posted comment severity tags (no re-reading skill output).
-    - Self-PR caveat documented: GitHub blocks self-APPROVE; review posts as comment
+    - >-
+      Self-PR caveat documented: GitHub blocks self-APPROVE; review posts as comment
       with explicit would-be-APPROVE note when author == reviewer.
-    - D2 auto-accept under workflow dispatch (captain pre-approved at adopt time;
+    - >-
+      D2 auto-accept under workflow dispatch (captain pre-approved at adopt time;
       no per-PR confirmation gate that blocks autonomous flow).
   0.10.1:
-    - Initial post-create hook with Copilot request + assign + confidence ≥90 gate.
+    - >-
+      Initial post-create hook with Copilot request + assign + confidence ≥90 gate.
 ---
 
 # PR Merge
@@ -39,7 +52,11 @@ Scan all entity files (in the workflow directory only, not `_archive/`) for enti
 - **GitHub**: `gh pr view {number} --json state --jq '.state'`
 - **GitLab**: `glab mr view {number} --output json | jq -r '.state'`
 
-If `MERGED` (GitHub) or `merged` (GitLab), advance the entity to its terminal stage: set `status` to the terminal stage, `completed` to ISO 8601 now, `verdict: PASSED`, clear `worktree`, archive the file, and clean up any worktree/branch. Report each auto-advanced entity to the captain.
+If `MERGED` (GitHub) or `merged` (GitLab), advance the entity to its terminal stage. Because a `mod-block` may be set while the PR is pending, clearing the block and terminalizing are separate operations:
+1. Run `spacedock status --workflow-dir {dir} --set {slug} mod-block=` when `mod-block` is non-empty.
+2. Run `spacedock status --workflow-dir {dir} --set {slug} status={terminal} completed verdict=PASSED worktree=` and then `spacedock status --workflow-dir {dir} --archive {slug}`.
+
+Clean up any worktree/branch only after both state operations succeed. Report each auto-advanced entity to the captain.
 
 If `CLOSED` (closed without merge), report to the captain: "{entity title} has PR {pr number} which was closed without merging. How to proceed? Options: reopen the PR, create a new PR from the same branch, or clear `pr` and fall back to local merge." Wait for the captain's direction before taking action.
 
@@ -49,30 +66,43 @@ If the VCS CLI tool (`gh` for GitHub, `glab` for GitLab) is not available, warn 
 
 ## Hook: idle
 
-Check PR-pending entities using the same logic as the startup hook: scan entity files for non-empty `pr` and non-terminal status, run the VCS-detected PR view command for each, and advance merged PRs. This provides a periodic re-check in case the event loop's built-in PR scan missed a state change (defense in depth). Report any advanced entities to the captain.
+Check PR-pending entities using the same logic as the startup hook: scan entity files for non-empty `pr` and non-terminal status, run the VCS-detected PR view command for each, and advance merged PRs using the same two-step `mod-block=` clear then terminalize sequence. This hook owns the workflow's PR-pending scan; the generic event loop must not perform a competing PR scan. Report any advanced entities to the captain.
 
 ## Hook: merge
 
-**PR APPROVAL GUARDRAIL — Do NOT push or create a PR without explicit captain approval.** Before pushing, present a draft PR summary to the captain:
+Resolve the integration trunk once:
+
+```bash
+BASE=$(spacedock dispatch trunk --workflow-dir {dir})
+```
+
+`dispatch trunk` emits a bare branch name. Quote `"$BASE"` for every push, rebase, draft, and PR-create operation.
+
+Before requesting approval, compute all audit-link inputs:
+
+- Short SHA: `git rev-parse --short HEAD` in the worktree. If it fails, use the literal `main` and report the fallback.
+- Repository: use `gh repo view --json nameWithOwner --jq '.nameWithOwner'` for GitHub or `glab repo view --output json | jq -r '.path_with_namespace'` for GitLab.
+- Entity id: `spacedock status --workflow-dir {dir} --short-id {entity ref}`.
+
+Construct the complete PR body according to **PR body resolution** below, append the audit link and tracker references, write it to a temporary body file, and run the mandatory privacy pre-flight. The exact body shown to the captain must be the body sent to the VCS provider; do not reconstruct it after approval.
+
+**PR APPROVAL GUARDRAIL — Do NOT push or create a PR without explicit captain approval.** Present:
 
 - **Title:** {entity title}
-- **Branch:** {branch} -> main
+- **Branch:** {branch} -> $BASE
 - **Changes:** {N} file(s) changed across {N} commit(s)
 - **Files:** {list of changed files}
+- **Body:** the complete constructed PR body
 
 Wait for the captain's explicit approval before pushing. Do NOT infer approval from silence, acknowledgment of the summary, or the gate approval that preceded this step — only an explicit "push it", "go ahead", "yes", or equivalent counts.
 
-**On approval:** First, push main to ensure the remote is up to date with local state commits: `git push origin main`. Then rebase the worktree branch onto main: `git rebase main` (from the worktree directory). Then push the worktree branch: `git push origin {branch}`. If any step fails (no remote, auth error, rebase conflict), report to the captain and fall back to local merge.
-
-Before constructing the PR body, compute the short SHA for the audit link by running `git rev-parse --short HEAD` in the worktree directory. If the command exits non-zero (no commits, detached HEAD), substitute the literal string `main` into the audit-link template instead and report the fallback to the captain. Resolve the owner/repo via:
-- **GitHub**: `gh repo view --json nameWithOwner --jq '.nameWithOwner'`
-- **GitLab**: `glab repo view --output json | jq -r '.path_with_namespace'`
+**On approval:** First push the integration trunk with `git push origin "$BASE"`. Rebase the worktree branch with `git rebase "$BASE"`, then push the worktree branch with `git push origin {branch}`. If any step fails because of remote, authentication, or rebase state, stop and report the exact failure; do not silently fall back to local merge.
 
 Create a PR using the VCS-detected command:
-- **GitHub**: `gh pr create --base main --head {branch} --title "{entity title}" --body "{constructed body}"`
-- **GitLab**: `glab mr create --source-branch {branch} --target-branch main --title "{entity title}" --description "{constructed body}"`
+- **GitHub**: `gh pr create --base "$BASE" --head {branch} --title "{entity title}" --body-file "$BODY_FILE"`
+- **GitLab**: `glab mr create --source-branch {branch} --target-branch "$BASE" --title "{entity title}" --description "$(cat "$BODY_FILE")"`
 
-If the VCS CLI tool (`gh` for GitHub, `glab` for GitLab) is not available, warn the captain and fall back to local merge. If `vcs=unknown` → warn the captain and fall back to local merge.
+If the VCS CLI tool is missing or `vcs=unknown`, report the blocked external action and ask the captain how to proceed. Do not infer authorization for a local merge.
 
 ### PR body resolution
 
@@ -104,7 +134,7 @@ Lead with motivation + end-user value; audit metadata goes at the bottom. The go
 | What changed | Implementation stage report's `[x]` DONE items | One action-verb bullet per meaningful unit. Collapse sibling bullets that describe the same thing. Drop `[x]` markers. Do NOT include "what we deliberately did NOT change" bullets — scope boundaries belong in the task body, not the PR, unless a validation stage report flagged them as risk. |
 | Evidence | Validation stage report items that assert AC verification (typically rerun-test items) | One bullet per suite with `N/N passed` format. Include any quantitative result the stage report explicitly called out (wallclock delta, size %, perf). Fallback to implementation report's self-test items if no validation stage exists. |
 | Review guidance | Explicit "focus on X" / "risk here" notes in either stage report | 1 line. **Omit if no such note exists.** |
-| Audit link | Entity id from frontmatter, path from the file's repo-relative location, short SHA from `git rev-parse --short HEAD` run in the worktree directory | Format as `[{id}](/{owner}/{repo}/blob/{short-sha}/{path})` |
+| Audit link | Short entity id from `spacedock status --workflow-dir {dir} --short-id {entity ref}`, path from the file's repo-relative location, short SHA from `git rev-parse --short HEAD` run in the worktree directory | Format as `[{short-id}](/{owner}/{repo}/blob/{short-sha}/{path})` |
 | Closes | Entity frontmatter `issue` field (exactly as written) | Prefix `Closes ` |
 | Related | Explicit "related task" / "follow-up" mentions in stage reports | 1 line. **Omit if none.** |
 
