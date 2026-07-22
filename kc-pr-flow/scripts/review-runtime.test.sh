@@ -24,7 +24,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope|safe-io]\n' "$0" >&2
+    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -882,6 +882,148 @@ PY
   assert_eq "reverse durability and quarantine counts remain visible" '{"appended":0,"duplicate":0,"quarantined":1,"blocked":1}' "$batch_output"
 }
 
+run_evidence_binding_tests() {
+  local fixture_event pointer candidate candidate_id candidate_event
+  local merge_key finding_id finding finding_event evidence_hash changed_hash
+  local mutation_name mutation_filter mutated_event reason validator_probe
+  local old_candidate_id old_merge_key old_finding_id
+  local scoped_kind scoped_pointer scoped_candidate scoped_finding scoped_event standalone_pointer
+
+  fixture_event="$(sed -n '1p' "$FIXTURE")"
+  evidence_hash='dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd'
+  changed_hash='eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+  candidate_id="$(sha256_text "run-fixture-fresh|security-1|1|$evidence_hash")"
+  merge_key="src/review.sh|RIGHT|$evidence_hash|security|unchecked-boundary"
+  finding_id="$(sha256_text "$EXPECTED_REVIEW_KEY|$merge_key")"
+  pointer="$(jq -S -c -n \
+    --arg review_key "$EXPECTED_REVIEW_KEY" --arg repository "$REPOSITORY" \
+    --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" \
+    --arg content_sha256 "$evidence_hash" \
+    '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,path:"src/review.sh",side:"RIGHT",line:7,locator:"review-anchor",content_sha256:$content_sha256}')"
+  candidate="$(jq -S -c -n \
+    --arg candidate_id "$candidate_id" --arg review_key "$EXPECTED_REVIEW_KEY" \
+    --argjson evidence "$pointer" \
+    '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$candidate_id,run_id:"run-fixture-fresh",review_key:$review_key,lane_id:"security-1",ordinal:1,path:"src/review.sh",side:"RIGHT",anchor_sha256:"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",category:"security",claim_key:"unchecked-boundary",evidence:$evidence}')"
+  candidate_event="$(rehash_event "$(jq -c --argjson candidate "$candidate" '.sequence=2 | .event_type="finding.observed" | .payload={candidate:$candidate}' <<<"$fixture_event")")"
+  finding="$(jq -S -c -n \
+    --arg finding_id "$finding_id" --arg review_key "$EXPECTED_REVIEW_KEY" \
+    --arg merge_key "$merge_key" --argjson evidence "$pointer" \
+    --arg candidate_id "$candidate_id" \
+    '{schema:"kc-pr-flow.review-finding/v1",finding_id:$finding_id,review_key:$review_key,merge_key:$merge_key,path:"src/review.sh",side:"RIGHT",anchor_sha256:"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",category:"security",claim_key:"unchecked-boundary",candidate_ids:[$candidate_id],evidence:$evidence}')"
+  finding_event="$(rehash_event "$(jq -c --argjson finding "$finding" '.sequence=3 | .event_type="synthesis.finished" | .payload={findings:[$finding],uncertain_candidate_ids:[]}' <<<"$fixture_event")")"
+
+  if review_runtime_evidence_pointer_valid "$pointer"; then
+    pass
+  else
+    fail "shared evidence validator accepts one exact-head RIGHT pointer"
+  fi
+  reason="$(review_runtime_validate_line "$candidate_event")"
+  assert_eq "exact-head candidate event validates" "" "$reason"
+  reason="$(review_runtime_validate_line "$finding_event")"
+  assert_eq "evidence-hash-bound finding event validates" "" "$reason"
+  mutated_event="$(rehash_event "$(jq -c '.payload.findings[0].evidence.review_key="eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"' <<<"$finding_event")")"
+  reason="$(review_runtime_validate_line "$mutated_event")"
+  assert_eq "finding evidence review key must equal containing event" "evidence_identity_mismatch" "$reason"
+
+  for scoped_kind in pr_body review_comment; do
+    if [ "$scoped_kind" = 'pr_body' ]; then
+      scoped_pointer="$(jq -S -c -n \
+        --arg review_key "$EXPECTED_REVIEW_KEY" --arg repository "$REPOSITORY" \
+        --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" \
+        --arg content_sha256 "$evidence_hash" \
+        '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"pr_body",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,pr_number:42,locator:"body",content_sha256:$content_sha256}')"
+    else
+      scoped_pointer="$(jq -S -c -n \
+        --arg review_key "$EXPECTED_REVIEW_KEY" --arg repository "$REPOSITORY" \
+        --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" \
+        --arg content_sha256 "$evidence_hash" \
+        '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"review_comment",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,pr_number:42,comment_id:9001,path:"src/review.sh",side:"RIGHT",line:7,locator:"comment",content_sha256:$content_sha256}')"
+    fi
+
+    scoped_candidate="$(jq -c --argjson evidence "$scoped_pointer" '.evidence=$evidence' <<<"$candidate")"
+    scoped_event="$(rehash_event "$(jq -c --argjson candidate "$scoped_candidate" '.sequence=2 | .event_type="finding.observed" | .payload={candidate:$candidate}' <<<"$fixture_event")")"
+    reason="$(review_runtime_validate_line "$scoped_event")"
+    assert_eq "$scoped_kind candidate accepts matching PR locator" "" "$reason"
+    mutated_event="$(rehash_event "$(jq -c '.payload.candidate.evidence.pr_number=43' <<<"$scoped_event")")"
+    standalone_pointer="$(jq -c '.payload.candidate.evidence' <<<"$mutated_event")"
+    if review_runtime_evidence_pointer_valid "$standalone_pointer"; then
+      pass
+    else
+      fail "$scoped_kind standalone pointer keeps its own typed PR locator"
+    fi
+    reason="$(review_runtime_validate_line "$mutated_event")"
+    assert_eq "$scoped_kind candidate rejects another PR locator" "evidence_identity_mismatch" "$reason"
+
+    scoped_finding="$(jq -c --argjson evidence "$scoped_pointer" '.evidence=$evidence' <<<"$finding")"
+    scoped_event="$(rehash_event "$(jq -c --argjson finding "$scoped_finding" '.sequence=3 | .event_type="synthesis.finished" | .payload={findings:[$finding],uncertain_candidate_ids:[]}' <<<"$fixture_event")")"
+    reason="$(review_runtime_validate_line "$scoped_event")"
+    assert_eq "$scoped_kind finding accepts matching PR locator" "" "$reason"
+    mutated_event="$(rehash_event "$(jq -c '.payload.findings[0].evidence.pr_number=43' <<<"$scoped_event")")"
+    reason="$(review_runtime_validate_line "$mutated_event")"
+    assert_eq "$scoped_kind finding rejects another PR locator" "evidence_identity_mismatch" "$reason"
+  done
+
+  scoped_pointer="$(jq -S -c -n \
+    --arg review_key "$EXPECTED_REVIEW_KEY" --arg repository "$REPOSITORY" \
+    --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" \
+    --arg content_sha256 "$evidence_hash" \
+    '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"issue",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,issue_number:43,locator:"issue",content_sha256:$content_sha256}')"
+  scoped_candidate="$(jq -c --argjson evidence "$scoped_pointer" '.evidence=$evidence' <<<"$candidate")"
+  scoped_event="$(rehash_event "$(jq -c --argjson candidate "$scoped_candidate" '.sequence=2 | .event_type="finding.observed" | .payload={candidate:$candidate}' <<<"$fixture_event")")"
+  reason="$(review_runtime_validate_line "$scoped_event")"
+  assert_eq "issue candidate locator remains independent from PR number" "" "$reason"
+  scoped_finding="$(jq -c --argjson evidence "$scoped_pointer" '.evidence=$evidence' <<<"$finding")"
+  scoped_event="$(rehash_event "$(jq -c --argjson finding "$scoped_finding" '.sequence=3 | .event_type="synthesis.finished" | .payload={findings:[$finding],uncertain_candidate_ids:[]}' <<<"$fixture_event")")"
+  reason="$(review_runtime_validate_line "$scoped_event")"
+  assert_eq "issue finding locator remains independent from PR number" "" "$reason"
+
+  while IFS='|' read -r mutation_name mutation_filter; do
+    [ -n "$mutation_name" ] || continue
+    mutated_event="$(rehash_event "$(jq -c "$mutation_filter" <<<"$candidate_event")")"
+    reason="$(review_runtime_validate_line "$mutated_event")"
+    assert_eq "$mutation_name" "evidence_identity_mismatch" "$reason"
+  done <<'MUTATIONS'
+nested review key must equal containing event|.payload.candidate.evidence.review_key="eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+nested base SHA must equal containing event|.payload.candidate.evidence.base_sha="1111111111111111111111111111111111111111"
+nested head SHA must equal containing event|.payload.candidate.evidence.head_sha="2222222222222222222222222222222222222222"
+RIGHT git blob must bind object SHA to head|.payload.candidate.evidence.object_sha=.base_sha
+FILE git blob must bind object SHA to head|.payload.candidate.side="FILE" | .payload.candidate.evidence.side="FILE" | .payload.candidate.evidence.object_sha=.base_sha
+LEFT git blob must bind object SHA to base|.payload.candidate.side="LEFT" | .payload.candidate.evidence.side="LEFT" | .payload.candidate.evidence.object_sha=.head_sha
+MUTATIONS
+
+  validator_probe="$TEST_STATE_ROOT/evidence-validator-probe"
+  (
+    export T8_VALIDATOR_PROBE="$validator_probe"
+    review_runtime_evidence_pointer_valid() {
+      : >"$T8_VALIDATOR_PROBE"
+      return 1
+    }
+    review_runtime_validate_line "$candidate_event" >/dev/null
+  )
+  if [ -f "$validator_probe" ]; then
+    pass
+  else
+    fail "event validation and verify-evidence share one pointer validator"
+  fi
+
+  old_candidate_id="$candidate_id"
+  mutated_event="$(rehash_event "$(jq -c --arg hash "$changed_hash" '.payload.candidate.evidence.content_sha256=$hash' <<<"$candidate_event")")"
+  reason="$(review_runtime_validate_line "$mutated_event")"
+  assert_eq "candidate identity changes with evidence content hash" "candidate_id_mismatch" "$reason"
+  assert_eq "candidate test retains the original identity for the drift probe" "$old_candidate_id" "$(jq -r '.payload.candidate.candidate_id' <<<"$mutated_event")"
+
+  old_merge_key="$merge_key"
+  old_finding_id="$finding_id"
+  mutated_event="$(rehash_event "$(jq -c --arg hash "$changed_hash" '.payload.findings[0].evidence.content_sha256=$hash' <<<"$finding_event")")"
+  reason="$(review_runtime_validate_line "$mutated_event")"
+  assert_eq "merge identity changes with evidence content hash" "merge_key_mismatch" "$reason"
+  assert_eq "finding drift probe retains the old merge key" "$old_merge_key" "$(jq -r '.payload.findings[0].merge_key' <<<"$mutated_event")"
+  assert_eq "finding drift probe retains the old finding id" "$old_finding_id" "$(jq -r '.payload.findings[0].finding_id' <<<"$mutated_event")"
+  mutated_event="$(rehash_event "$(jq -c --arg hash "$changed_hash" --arg merge_key "src/review.sh|RIGHT|$changed_hash|security|unchecked-boundary" '.payload.findings[0].evidence.content_sha256=$hash | .payload.findings[0].merge_key=$merge_key' <<<"$finding_event")")"
+  reason="$(review_runtime_validate_line "$mutated_event")"
+  assert_eq "finding identity changes after evidence-bound merge key changes" "finding_id_mismatch" "$reason"
+}
+
 if [ "$CASE_FILTER" = 'privacy-envelope' ]; then
   run_privacy_envelope_tests
   printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
@@ -889,6 +1031,11 @@ if [ "$CASE_FILTER" = 'privacy-envelope' ]; then
   exit $?
 elif [ "$CASE_FILTER" = 'safe-io' ]; then
   run_safe_io_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+elif [ "$CASE_FILTER" = 'evidence-binding' ]; then
+  run_evidence_binding_tests
   printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
   [ "$FAIL" -eq 0 ]
   exit $?
@@ -1578,12 +1725,13 @@ t2_anchor_one="$(sha256_text 'evidence.txt|RIGHT|2')"
 t2_anchor_two="$(sha256_text 'evidence.txt|RIGHT|1')"
 t2_candidate_one_id="$(sha256_text "run-fixture-fresh|security-1|1|$t2_evidence_hash")"
 t2_candidate_two_id="$(sha256_text "run-fixture-fresh|security-1|2|$t2_evidence_hash")"
-t2_merge_key="evidence.txt|RIGHT|$t2_anchor_one|security|unchecked-boundary"
+t2_merge_key="evidence.txt|RIGHT|$t2_evidence_hash|security|unchecked-boundary"
 t2_finding_id="$(sha256_text "$EXPECTED_REVIEW_KEY|$t2_merge_key")"
 t2_pointer="$(jq -S -c -n \
-  --arg repository "$REPOSITORY" --arg object_sha "$t2_object_sha" \
+  --arg review_key "$EXPECTED_REVIEW_KEY" --arg repository "$REPOSITORY" \
+  --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" \
   --arg content_sha256 "$t2_evidence_hash" \
-  '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",repository:$repository,object_sha:$object_sha,path:"evidence.txt",side:"RIGHT",line:2,locator:"review-anchor",content_sha256:$content_sha256}')"
+  '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,path:"evidence.txt",side:"RIGHT",line:2,locator:"review-anchor",content_sha256:$content_sha256}')"
 t2_candidate_one="$(jq -S -c -n \
   --arg candidate_id "$t2_candidate_one_id" --arg review_key "$EXPECTED_REVIEW_KEY" \
   --arg anchor_sha256 "$t2_anchor_one" --argjson evidence "$t2_pointer" \
@@ -1753,7 +1901,11 @@ assert_eq "authority smuggling is a typed invalid payload" "1" "$(jq -r '.invali
 assert_match "authority smuggling names closed schema" 'unsupported_payload_schema' "$(cat "$TEST_STATE_ROOT/t2-authority.stderr")"
 
 # Evidence verification hashes exact git object bytes and never emits content.
-printf '%s\n' "$t2_pointer" >"$TEST_STATE_ROOT/t2-pointer.json"
+t2_verify_pointer="$(jq -S -c -n \
+  --arg review_key "$EXPECTED_REVIEW_KEY" --arg repository "$REPOSITORY" \
+  --arg object_sha "$t2_object_sha" --arg content_sha256 "$t2_evidence_hash" \
+  '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$review_key,repository:$repository,base_sha:$object_sha,head_sha:$object_sha,object_sha:$object_sha,path:"evidence.txt",side:"RIGHT",line:2,locator:"review-anchor",content_sha256:$content_sha256}')"
+printf '%s\n' "$t2_verify_pointer" >"$TEST_STATE_ROOT/t2-pointer.json"
 t2_verified="$(bash "$RUNTIME" verify-evidence --pointer-json "$TEST_STATE_ROOT/t2-pointer.json" --repo "$t2_repo")"
 t2_verified_rc=$?
 assert_eq "git_blob evidence verifies exact bytes" "0" "$t2_verified_rc"
@@ -1762,8 +1914,8 @@ if printf '%s' "$t2_verified" | grep -F 'line one' >/dev/null 2>&1; then fail "e
 
 t2_pointer_swap_source="$TEST_STATE_ROOT/t2-pointer-swap.json"
 t2_pointer_swap_replacement="$TEST_STATE_ROOT/t2-pointer-swap-replacement.json"
-printf '%s\n' "$t2_pointer" >"$t2_pointer_swap_source"
-jq -c '.content_sha256="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$t2_pointer" >"$t2_pointer_swap_replacement"
+printf '%s\n' "$t2_verify_pointer" >"$t2_pointer_swap_source"
+jq -c '.content_sha256="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$t2_verify_pointer" >"$t2_pointer_swap_replacement"
 t2_pointer_swap_output="$(
   export T2_POINTER_SWAP_SOURCE="$t2_pointer_swap_source" T2_POINTER_SWAP_REPLACEMENT="$t2_pointer_swap_replacement"
   eval "$(declare -f review_runtime_evidence_pointer_valid | sed '1s/review_runtime_evidence_pointer_valid/review_runtime_evidence_pointer_valid_original/')"
@@ -1802,20 +1954,20 @@ for t2_origin_url in 'https://github.com/acme/widgets.git' 'ssh://git@github.com
   assert_eq "normalized GitHub origin returns verified: $t2_origin_url" "verified" "$(jq -r '.status' <<<"$t2_origin_output")"
 done
 
-t2_tree_pointer="$(jq -c '.path="dir" | .line=null | .locator="tree-probe"' <<<"$t2_pointer")"
+t2_tree_pointer="$(jq -c '.path="dir" | .line=null | .locator="tree-probe"' <<<"$t2_verify_pointer")"
 printf '%s\n' "$t2_tree_pointer" >"$TEST_STATE_ROOT/t2-tree-pointer.json"
 t2_tree_output="$(bash "$RUNTIME" verify-evidence --pointer-json "$TEST_STATE_ROOT/t2-tree-pointer.json" --repo "$t2_repo")"
 t2_tree_rc=$?
 assert_eq "tree evidence is not accepted as a blob" "3" "$t2_tree_rc"
 assert_eq "tree evidence returns typed not-blob status" "not_blob" "$(jq -r '.status' <<<"$t2_tree_output")"
 
-t2_drift_pointer="$(jq -c '.content_sha256="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$t2_pointer")"
+t2_drift_pointer="$(jq -c '.content_sha256="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$t2_verify_pointer")"
 printf '%s\n' "$t2_drift_pointer" >"$TEST_STATE_ROOT/t2-drift-pointer.json"
 t2_drift="$(bash "$RUNTIME" verify-evidence --pointer-json "$TEST_STATE_ROOT/t2-drift-pointer.json" --repo "$t2_repo")"
 t2_drift_rc=$?
 assert_eq "evidence hash drift is nonzero" "1" "$t2_drift_rc"
 assert_eq "evidence hash drift is typed" "hash_mismatch" "$(jq -r '.status' <<<"$t2_drift")"
-t2_nonlocal="$(jq -S -c -n --arg repository "$REPOSITORY" --arg object_sha "$HEAD_SHA" --arg hash "$t2_evidence_hash" '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"pr_body",repository:$repository,object_sha:$object_sha,pr_number:42,locator:"body",content_sha256:$hash}')"
+t2_nonlocal="$(jq -S -c -n --arg review_key "$EXPECTED_REVIEW_KEY" --arg repository "$REPOSITORY" --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" --arg hash "$t2_evidence_hash" '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"pr_body",review_key:$review_key,repository:$repository,base_sha:$base_sha,head_sha:$head_sha,object_sha:$head_sha,pr_number:42,locator:"body",content_sha256:$hash}')"
 printf '%s\n' "$t2_nonlocal" >"$TEST_STATE_ROOT/t2-nonlocal-pointer.json"
 t2_unavailable="$(bash "$RUNTIME" verify-evidence --pointer-json "$TEST_STATE_ROOT/t2-nonlocal-pointer.json" --repo "$t2_repo")"
 t2_unavailable_rc=$?

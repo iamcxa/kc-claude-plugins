@@ -613,30 +613,6 @@ review_runtime_payload_matches_v1_schema() {
       (.provider_family == null or (.provider_family | safe_token)) and
       ([.input_tokens,.output_tokens,.total_tokens] | all(. == null or (type == "number" and floor == . and . >= 0 and . <= 9007199254740991))) and
       (if .provenance == "unavailable" then [.input_tokens,.output_tokens,.total_tokens] | all(. == null) else true end);
-    def evidence:
-      type == "object" and .schema == "kc-pr-flow.evidence-pointer/v1" and
-      (.kind == "git_blob" or .kind == "pr_body" or .kind == "issue" or .kind == "review_comment" or .kind == "command" or .kind == "test") and
-      (.repository | type == "string" and length > 0 and (test("[[:cntrl:]]") | not)) and
-      (.object_sha | sha1) and (.content_sha256 | sha256) and
-      if .kind == "git_blob" then
-        exact_keys(["content_sha256","kind","line","locator","object_sha","path","repository","schema","side"]; []) and
-        (.path | safe_path) and (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
-        (.line == null or (.line | positive_integer)) and (.locator | nullable_token)
-      elif .kind == "pr_body" then
-        exact_keys(["content_sha256","kind","locator","object_sha","pr_number","repository","schema"]; []) and
-        (.pr_number | positive_integer) and (.locator | safe_token)
-      elif .kind == "issue" then
-        exact_keys(["content_sha256","issue_number","kind","locator","object_sha","repository","schema"]; []) and
-        (.issue_number | positive_integer) and (.locator | safe_token)
-      elif .kind == "review_comment" then
-        exact_keys(["comment_id","content_sha256","kind","line","locator","object_sha","path","pr_number","repository","schema","side"]; []) and
-        (.pr_number | positive_integer) and (.comment_id | positive_integer) and (.path | safe_path) and
-        (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
-        (.line == null or (.line | positive_integer)) and (.locator | safe_token)
-      else
-        exact_keys(["content_sha256","kind","locator","object_sha","path","repository","schema"]; []) and
-        (.path | safe_path) and (.locator | safe_token)
-      end;
     def review_task:
       type == "object" and
       exact_keys(["base_sha","capability","config_hash","head_sha","lane_id","pr_number","repository","review_key","run_id","schema"]; ["provider_hint"]) and
@@ -663,7 +639,7 @@ review_runtime_payload_matches_v1_schema() {
       (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$")) and (.review_key | sha256) and
       (.lane_id | safe_token) and (.ordinal | positive_integer) and (.path | safe_path) and
       (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
-      (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and (.evidence | evidence);
+      (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and (.evidence | type == "object");
     def finding:
       type == "object" and
       exact_keys(["anchor_sha256","candidate_ids","category","claim_key","evidence","finding_id","merge_key","path","review_key","schema","side"]; []) and
@@ -671,7 +647,7 @@ review_runtime_payload_matches_v1_schema() {
       (.merge_key | type == "string" and length > 0 and length <= 1400 and (test("[[:cntrl:]]") | not)) and
       (.path | safe_path) and (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
       (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and
-      (.candidate_ids | type == "array" and length > 0 and all(sha256) and (unique | length) == length) and (.evidence | evidence);
+      (.candidate_ids | type == "array" and length > 0 and all(sha256) and (unique | length) == length) and (.evidence | type == "object");
     if $event_type == "run.started" then
       (.payload == {}) or ((.payload | keys | sort) == ["predecessor_run_id","successor_reason"])
     elif $event_type == "lane.started" then
@@ -689,11 +665,37 @@ review_runtime_payload_matches_v1_schema() {
     end' >/dev/null 2>&1
 }
 
+review_runtime_candidate_id() {
+  printf '%s|%s|%s|%s' "$1" "$2" "$3" "$4" | review_runtime_sha256
+}
+
+review_runtime_merge_key() {
+  printf '%s' "$1" | jq -r '[.path,.side,.evidence.content_sha256,.category,.claim_key] | join("|")'
+}
+
+review_runtime_finding_id() {
+  printf '%s|%s' "$1" "$2" | review_runtime_sha256
+}
+
+review_runtime_evidence_pointer_matches_event() {
+  local pointer="$1"
+  local event="$2"
+  review_runtime_evidence_pointer_valid "$pointer" || return 1
+  jq -e -n --argjson pointer "$pointer" --argjson event "$event" '
+    [$pointer.review_key,$pointer.repository,$pointer.base_sha,$pointer.head_sha]
+    == [$event.review_key,$event.repository,$event.base_sha,$event.head_sha] and
+    (if $pointer.kind == "pr_body" or $pointer.kind == "review_comment" then
+      $pointer.pr_number == $event.pr_number
+    else
+      true
+    end)' >/dev/null 2>&1
+}
+
 review_runtime_validate_t2_identity() {
   local line="$1"
   local event_type="$2"
   local expected actual run_id lane_id ordinal evidence_hash candidate_id
-  local finding_count finding index merge_key finding_id
+  local finding_count finding index merge_key finding_id evidence
   case "$event_type" in
     lane.started)
       printf '%s' "$line" | jq -e '
@@ -721,11 +723,16 @@ review_runtime_validate_t2_identity() {
         printf '%s' 'candidate_identity_mismatch'
         return 1
       fi
+      evidence="$(printf '%s' "$line" | jq -c '.payload.candidate.evidence')" || return
+      if ! review_runtime_evidence_pointer_matches_event "$evidence" "$line"; then
+        printf '%s' 'evidence_identity_mismatch'
+        return 1
+      fi
       run_id="$(printf '%s' "$line" | jq -r '.run_id')"
       lane_id="$(printf '%s' "$line" | jq -r '.payload.candidate.lane_id')"
       ordinal="$(printf '%s' "$line" | jq -r '.payload.candidate.ordinal')"
       evidence_hash="$(printf '%s' "$line" | jq -r '.payload.candidate.evidence.content_sha256')"
-      candidate_id="$(printf '%s|%s|%s|%s' "$run_id" "$lane_id" "$ordinal" "$evidence_hash" | review_runtime_sha256)" || return
+      candidate_id="$(review_runtime_candidate_id "$run_id" "$lane_id" "$ordinal" "$evidence_hash")" || return
       actual="$(printf '%s' "$line" | jq -r '.payload.candidate.candidate_id')"
       if [ "$actual" != "$candidate_id" ]; then
         printf '%s' 'candidate_id_mismatch'
@@ -737,18 +744,22 @@ review_runtime_validate_t2_identity() {
       index=0
       while [ "$index" -lt "$finding_count" ]; do
         finding="$(printf '%s' "$line" | jq -c --argjson index "$index" '.payload.findings[$index]')" || return
-        if [ "$(printf '%s' "$finding" | jq -r '.review_key')" != "$(printf '%s' "$line" | jq -r '.review_key')" ] ||
-          [ "$(printf '%s' "$finding" | jq -r '.evidence.repository')" != "$(printf '%s' "$line" | jq -r '.repository')" ]; then
+        if [ "$(printf '%s' "$finding" | jq -r '.review_key')" != "$(printf '%s' "$line" | jq -r '.review_key')" ]; then
           printf '%s' 'finding_identity_mismatch'
           return 1
         fi
-        merge_key="$(printf '%s' "$finding" | jq -r '[.path,.side,.anchor_sha256,.category,.claim_key] | join("|")')" || return
+        evidence="$(printf '%s' "$finding" | jq -c '.evidence')" || return
+        if ! review_runtime_evidence_pointer_matches_event "$evidence" "$line"; then
+          printf '%s' 'evidence_identity_mismatch'
+          return 1
+        fi
+        merge_key="$(review_runtime_merge_key "$finding")" || return
         actual="$(printf '%s' "$finding" | jq -r '.merge_key')"
         if [ "$actual" != "$merge_key" ]; then
           printf '%s' 'merge_key_mismatch'
           return 1
         fi
-        expected="$(printf '%s|%s' "$(printf '%s' "$line" | jq -r '.review_key')" "$merge_key" | review_runtime_sha256)" || return
+        expected="$(review_runtime_finding_id "$(printf '%s' "$line" | jq -r '.review_key')" "$merge_key")" || return
         finding_id="$(printf '%s' "$finding" | jq -r '.finding_id')"
         if [ "$finding_id" != "$expected" ]; then
           printf '%s' 'finding_id_mismatch'
@@ -1438,9 +1449,9 @@ review_runtime_append_file() (
 )
 
 review_runtime_evidence_pointer_valid() {
-  local pointer_file="$1"
-  review_runtime_json_has_unique_members "$(cat "$pointer_file")" || return 1
-  jq -e '
+  local pointer="$1"
+  review_runtime_json_has_unique_members "$pointer" || return 1
+  printf '%s' "$pointer" | jq -e '
     def exact_keys($required): (keys | sort) == ($required | sort);
     def sha256: type == "string" and test("^[0-9a-f]{64}$");
     def sha1: type == "string" and test("^[0-9a-f]{40}$");
@@ -1453,26 +1464,28 @@ review_runtime_evidence_pointer_valid() {
     type == "object" and .schema == "kc-pr-flow.evidence-pointer/v1" and
     (.kind == "git_blob" or .kind == "pr_body" or .kind == "issue" or .kind == "review_comment" or .kind == "command" or .kind == "test") and
     (.repository | type == "string" and length > 0 and (test("[[:cntrl:]]") | not)) and
+    (.review_key | sha256) and (.base_sha | sha1) and (.head_sha | sha1) and
     (.object_sha | sha1) and (.content_sha256 | sha256) and
     if .kind == "git_blob" then
-      exact_keys(["content_sha256","kind","line","locator","object_sha","path","repository","schema","side"]) and
+      exact_keys(["base_sha","content_sha256","head_sha","kind","line","locator","object_sha","path","repository","review_key","schema","side"]) and
       (.path | safe_path) and (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
       (.line == null or (.line | positive_integer)) and (.locator == null or (.locator | safe_token))
+      and (if .side == "LEFT" then .object_sha == .base_sha else .object_sha == .head_sha end)
     elif .kind == "pr_body" then
-      exact_keys(["content_sha256","kind","locator","object_sha","pr_number","repository","schema"]) and
+      exact_keys(["base_sha","content_sha256","head_sha","kind","locator","object_sha","pr_number","repository","review_key","schema"]) and
       (.pr_number | positive_integer) and (.locator | safe_token)
     elif .kind == "issue" then
-      exact_keys(["content_sha256","issue_number","kind","locator","object_sha","repository","schema"]) and
+      exact_keys(["base_sha","content_sha256","head_sha","issue_number","kind","locator","object_sha","repository","review_key","schema"]) and
       (.issue_number | positive_integer) and (.locator | safe_token)
     elif .kind == "review_comment" then
-      exact_keys(["comment_id","content_sha256","kind","line","locator","object_sha","path","pr_number","repository","schema","side"]) and
+      exact_keys(["base_sha","comment_id","content_sha256","head_sha","kind","line","locator","object_sha","path","pr_number","repository","review_key","schema","side"]) and
       (.pr_number | positive_integer) and (.comment_id | positive_integer) and (.path | safe_path) and
       (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
       (.line == null or (.line | positive_integer)) and (.locator | safe_token)
     else
-      exact_keys(["content_sha256","kind","locator","object_sha","path","repository","schema"]) and
+      exact_keys(["base_sha","content_sha256","head_sha","kind","locator","object_sha","path","repository","review_key","schema"]) and
       (.path | safe_path) and (.locator | safe_token)
-    end' "$pointer_file" >/dev/null 2>&1
+    end' >/dev/null 2>&1
 }
 
 review_runtime_github_repository_identity() {
@@ -1511,11 +1524,12 @@ review_runtime_verify_evidence() (
   temp_file="$snapshot_dir/evidence-content"
   trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$pointer_snapshot" "$temp_file"' EXIT
   review_runtime_snapshot_regular_file "$pointer_file" "$pointer_snapshot" 'pointer JSON' 1048576 || return
-  review_runtime_evidence_pointer_valid "$pointer_snapshot" || {
+  pointer="$(cat "$pointer_snapshot")" || return
+  review_runtime_evidence_pointer_valid "$pointer" || {
     printf 'review-runtime: invalid evidence pointer\n' >&2
     return 2
   }
-  pointer="$(jq -S -c . "$pointer_snapshot")" || return
+  pointer="$(printf '%s' "$pointer" | jq -S -c .)" || return
   kind="$(printf '%s' "$pointer" | jq -r '.kind')"
   if [ "$kind" != 'git_blob' ]; then
     jq -S -c -n --arg kind "$kind" '{schema:"kc-pr-flow.evidence-verification/v1",status:"unavailable",kind:$kind,content_sha256:null}'
@@ -1650,7 +1664,7 @@ review_runtime_replay() (
           .candidates[$candidate.candidate_id] = {
             lane_id:$candidate.lane_id,
             sequence:$event.sequence,
-            merge_key:([$candidate.path,$candidate.side,$candidate.anchor_sha256,$candidate.category,$candidate.claim_key] | join("|"))
+            merge_key:([$candidate.path,$candidate.side,$candidate.evidence.content_sha256,$candidate.category,$candidate.claim_key] | join("|"))
           }
         end
       elif $event.event_type == "lane.finished" then
