@@ -4,7 +4,9 @@ This reference defines the current `kc-pr-review` shadow receipt runtime. It is 
 
 ## Runtime boundary
 
-The implementation is source-safe Bash 3.2 plus `jq`. Sourcing either runtime script declares functions without executing its CLI or changing the caller's options, traps, working directory, variables, or `umask`.
+The implementation is source-safe Bash 3.2 plus `jq`, with Python 3.8+ providing the fail-closed safe-I/O boundary. Sourcing either runtime script declares functions without executing its CLI or changing the caller's options, traps, working directory, variables, or `umask`.
+
+Each receipt-runtime file consumer first creates one private mode-0600 snapshot from a no-follow regular-file descriptor. The helper requires `O_NOFOLLOW` and `O_CLOEXEC`, rejects non-regular and oversize sources, reads through the descriptor only, and requires matching pre-open, before-read, and after-read device, inode, size, mtime, and ctime identity. It also rejects duplicate JSON members, floats, integers outside jq's exact range, and impossible RFC 3339 UTC calendar values. Missing Python or platform support returns dependency status 69; path replacement, concurrent mutation, and durability failures return closed errors before accepted-state mutation. The production shadow seam converts such failures to typed `not_observed` diagnostics because only the unchanged legacy flow has behavioral authority.
 
 The runtime has no network, model, GitHub, posting, authorization, resume, or garbage-collection authority. In this increment, the legacy `kc-pr-review` flow remains authoritative for review analysis, rendering, confirmation, and posting.
 
@@ -63,17 +65,16 @@ Accepted logs use this layout:
         events.jsonl
   quarantine/
     <event-sha256>-<reason>/
-      event.jsonl
       metadata.json
 ```
 
 Managed directory components must be real directories, never symlinks. Run directories are mode `0700`; accepted event logs are mode `0600`. The default accepted-log size limit is 16 MiB and can be lowered with `KC_PR_FLOW_MAX_EVENTS_BYTES`.
 
-Publication uses private temporary files or directories followed by rename. Appends validate each envelope plus the existing log's immutable run identity, hashes, and contiguous sequence; they do not enforce lane chronology. An append reserves the run at the PR directory, builds the next complete log privately, and renames it over the accepted log. Concurrent duplicate appends converge on one accepted event; conflicting or blocked appends do not modify accepted bytes.
+Publication uses private temporary files or directories followed by rename. Every `validate`, `append`, `replay`, `show`, `observe`, evidence, usage, and collector file is parsed only from its bounded private snapshot. Appends validate each envelope plus the existing log's immutable run identity, hashes, and contiguous sequence; they do not enforce lane chronology. An append reserves the run at the PR directory, builds the next complete log privately, and renames it over the accepted log. Concurrent duplicate appends converge on one accepted event; conflicting or blocked appends do not modify accepted bytes.
 
 Reservation and quarantine locks are owned `mkdir` locks with one `owner.pid`. A live or malformed owner fails closed with temporary-failure status. A provably dead owner is reclaimed once. `KC_PR_FLOW_RESERVATION_WAIT_ATTEMPTS` controls the bounded reservation wait.
 
-Only rejected append input is copied to content-addressed quarantine with a typed reason. Read-only `validate`, `replay`, `show`, and `observe` operations do not quarantine an already-invalid receipt. Quarantine event and metadata files are mode `0400`, and their directory is `0500`. Complete matching quarantine publication is idempotent; incomplete or conflicting artifacts fail closed. The default combined quarantine-record limit is 4 MiB and can be lowered with `KC_PR_FLOW_MAX_QUARANTINE_BYTES`.
+Only rejected append input creates content-addressed metadata-only quarantine. The sole mode-0400 `metadata.json` contains exactly `reason_code`, rejected `input_sha256`, `byte_count`, and `quarantined_at`; rejected bytes, links, excerpts, and raw values are never retained. The containing directory is mode `0500`. Read-only `validate`, `replay`, `show`, and `observe` operations do not quarantine an already-invalid receipt. Complete matching publication is idempotent; incomplete or conflicting artifacts fail closed. The default metadata-record limit is 4 MiB and can be lowered with `KC_PR_FLOW_MAX_QUARANTINE_BYTES`.
 
 ## Event envelope and lifecycle
 
@@ -96,10 +97,11 @@ run.started
   -> lane.started
   -> finding.observed (zero or more, before that lane finishes)
   -> lane.finished
-  -> synthesis.finished (optional while observation is partial)
+  -> synthesis.finished
+  -> run.finished
 ```
 
-`lane.started` carries a provider-neutral `kc-pr-flow.review-task/v1`. `finding.observed` carries a `kc-pr-flow.review-candidate/v1` whose ID binds run, lane, ordinal, and evidence hash. `lane.finished` carries a `kc-pr-flow.lane-result/v1` and must account for exactly the candidates observed for that lane. `synthesis.finished` carries unique `kc-pr-flow.review-finding/v1` records plus uncertain candidate IDs; together they must partition every observed candidate exactly once. Finding IDs bind the review key and constrained merge key.
+`lane.started` carries a provider-neutral `kc-pr-flow.review-task/v1`. `finding.observed` carries a `kc-pr-flow.review-candidate/v1` whose ID binds run, lane, ordinal, and evidence hash. `lane.finished` carries a `kc-pr-flow.lane-result/v1` and must account for exactly the candidates observed for that lane. `synthesis.finished` carries unique `kc-pr-flow.review-finding/v1` records plus uncertain candidate IDs; together they must partition every observed candidate exactly once. Finding IDs bind the review key and evidence-sensitive constrained merge key. `run.finished` carries exactly the six SHA-256 hashes of the frozen legacy body, inline comments, event, options, confirmation input, and GitHub-call log. A shadow receipt is complete only when every declared lane is terminal, synthesis partitions all candidates, `run.finished` is last, and those behavior hashes are present.
 
 Enforcement is intentionally layered. `validate` checks individual event envelopes and hashes, not
 cross-event ordering. `append` additionally protects accepted run identity and contiguous sequence,
@@ -108,9 +110,9 @@ authoritative chronological lifecycle and candidate/finding relationships; `obse
 enforcement by delegating to replay. A log is not trustworthy as a receipt merely because
 `validate` or `append` accepted every line.
 
-The v1 validator also recognizes `head.observed`, `authorization.granted`, `post.intent`, `post.result`, `run.invalidated`, and `run.finished` with empty payloads. They are reserved envelope types in this increment and do not grant the shadow runtime the corresponding authority.
+The v1 validator also recognizes `head.observed`, `authorization.granted`, `post.intent`, `post.result`, and `run.invalidated` with empty payloads. An empty `run.finished` remains syntactically reserved for forward compatibility but cannot make a shadow observation complete. These event names grant the shadow runtime no interactive, authorization, or posting authority.
 
-Payload schemas are closed. Unknown event types, unsupported schema majors, missing fields, identity or hash mismatches, and raw or opaque payload fields fail individual validation and are quarantined when submitted through append. Mixed-run identity or noncontiguous sequence blocks accepted-log mutation. Chronologically invalid lane or synthesis relationships fail `replay`/`show` without creating quarantine. Additive envelope fields participate in the integrity hash.
+Payload schemas are closed. Unknown event types, unsupported schema majors, missing fields, identity or hash mismatches, and raw or opaque payload fields fail individual validation and create metadata-only quarantine when submitted through append. Mixed-run identity or noncontiguous sequence blocks accepted-log mutation. Chronologically invalid lane or synthesis relationships fail `replay`/`show` without creating quarantine. The only optional envelope field is `extensions`: a closed array whose entries contain exactly a safe namespace, safe key, SHA-256 of the external value, and jq-safe byte count. Extensions participate in record integrity but have no replay or semantic authority.
 
 ## Provider-neutral observations
 
@@ -139,11 +141,12 @@ All commands print compact JSON except `config-hash`, which prints a hash, and C
 | `show --event-file FILE` | Return a compact `review-summary/v1` with exact run identity and lane, candidate, finding, uncertain, and usage counts. |
 | `config-hash ...` | Normalize the effective v1 review configuration and return its canonical hash. Options are `--agent-tier`, `--pr-archetype`, `--full-pass`, `--probe-required`, `--cross-model`, `--noise-filter`, and comma-separated `--capabilities`; omitted options use the defaults above. |
 | `observe --event-file FILE --expected-head SHA --expected-review-key HASH` | Read-only replay plus exact-head/key check. Returns typed `observed` or `not_observed` status and never mutates the log. |
-| `shadow ...` | Best-effort production seam. `--enabled` overrides `KC_PR_FLOW_REVIEW_SHADOW`. When enabled it accepts `--head-check-status`, `--live-head`, `--repo`, `--pr`, `--base`, `--head`, `--config-hash`, optional `--occurred-at`, and optional `--event-file`. It reuses a supplied exact-head log or creates one identity-only run and calls the observer once. Every dependency or observation failure fails open. |
+| `review-key ...` | Validate repository, PR, base, head, and config inputs and print their canonical review key. It uses the same construction as events, evidence, and the collector. |
+| `shadow --observation-file FILE ...` | Best-effort production seam. `--enabled` overrides `KC_PR_FLOW_REVIEW_SHADOW`; enabled collection also requires `--head-check-status` and, when successful, `--live-head`. It accepts exactly one closed `ShadowObservation/v1` (`kc-pr-flow.shadow-observation/v1`) file, persists a fresh `run.started`, builds and preflight-replays the remaining complete lifecycle before appending those events, then observes once. Every dependency, validation, head, append, or replay failure returns typed `not_observed` and fails open only to the unchanged legacy review. A post-start failure may leave an incomplete non-authoritative run for increment 2.3 recovery. |
 | `verify-evidence --pointer-json FILE --repo DIR` | Verify one pointer from a private snapshot against the local repository. |
 | `compare-usage --left-json FILE --right-json FILE` | Compare two private usage snapshots under the provenance rules above. |
 
-The same operations are available as `review_runtime_*` functions after sourcing the script. Snapshot guarantees are operation-specific: `replay` and therefore `show`/`observe`, evidence verification, usage comparison, and paired benchmark scoring use private regular-file snapshots for their complete read. `validate` and `append` stream regular-file candidate input line by line and do not promise one immutable input snapshot; `-` is first copied to a temporary input file. Append still builds the accepted next log privately and publishes it with atomic rename.
+The same operations are available as `review_runtime_*` functions after sourcing the script. Runtime file and standard-input consumers read one bounded safe snapshot. The serialized `ShadowObservation/v1` file is the sole collector input authority; replay of its emitted JSONL is the sole receipt projection authority. Evidence verification uses the exact pointer snapshot plus the reviewed Git object and content hash, never a caller-supplied excerpt.
 
 The paired scorer is a separate source-safe CLI:
 
@@ -151,16 +154,16 @@ The paired scorer is a separate source-safe CLI:
 bash scripts/review-runtime-benchmark.sh score --corpus <sanitized-pairs.jsonl>
 ```
 
-It validates a closed `kc-pr-flow.review-benchmark-pair/v1` corpus and emits a deterministic `kc-pr-flow.review-benchmark-report/v1`. Measurement order is evidence recall, capability coverage, external behavior parity, finding/candidate stability, then usage comparability. The scorer has no model or release-gate authority.
+It snapshots and validates a closed `kc-pr-flow.review-benchmark-pair/v1` corpus and emits a deterministic `kc-pr-flow.review-benchmark-report/v1`. Each pair recomputes the exact-head review key. Each arm recomputes candidate fingerprints and run-bound candidate IDs, then `content_sha256` over canonical behavior, lanes, candidates, findings, uncertain candidate refs, and usage, followed by `receipt_id = sha256(run_id|review_key|content_sha256)`. Expected and observed findings must resolve through candidates with the same evidence hash before recall is scored. Measurement order is evidence recall, capability coverage, external behavior parity, finding/candidate stability, then usage comparability. The scorer has no model or release-gate authority.
 
 ## Shadow failure policy
 
-Normal receipt mutation is fail closed: unsafe storage, invalid input, noncontiguous state, active locks, or integrity failures cannot change accepted state. Rejected append input is observable through status codes and quarantine. Read-only validation or replay failures report errors or typed observer status without creating quarantine artifacts.
+Normal receipt mutation is fail closed: unavailable safe-I/O support, unsafe storage, invalid input, noncontiguous state, active locks, or integrity failures cannot change accepted state. Rejected append input is observable through status codes and metadata-only quarantine. Read-only validation or replay failures report errors or typed observer status without creating quarantine artifacts.
 
 The production shadow seam is deliberately fail open because it has no behavioral authority. An unset gate performs no runtime call. When enabled, a failed dependency, invalid receipt, stale head, missing state, or observer error may produce one diagnostic outside the review body, then the byte-identical legacy draft, comments, options, event, confirmation, and posting flow continue. Shadow status must never cause a retry, another model dispatch, a content rewrite, or a GitHub mutation.
 
 ## Operational inspection
 
-Use `validate` to diagnose individual envelopes. Use `show` before trusting a receipt because it also enforces the authoritative lifecycle; use `replay` when the complete typed projection is needed. Preserve rejected append bytes from quarantine for diagnosis, but do not copy them into accepted logs. A moved head or configuration change requires a new exact-head review identity.
+Use `validate` to diagnose individual envelopes. Use `show` before trusting a receipt because it also enforces the authoritative lifecycle; use `replay` when the complete typed projection is needed. Quarantine intentionally cannot recover rejected input: diagnose from its bounded reason, input hash, byte count, and timestamp. A moved head or configuration change requires a new exact-head review identity.
 
-This increment intentionally has no adaptive lane scheduling, model routing, resumable execution, retention/garbage collection, posting intent, remote reconciliation, or once-only GitHub mutation.
+This increment intentionally has no adaptive lane scheduling, model routing, resumable execution, retention/garbage collection, posting intent, remote reconciliation, or once-only GitHub mutation. Increment 2.3 owns crash-safe lock recovery and PID-reuse handling, predecessor-lineage verification, append/compaction performance, resume, retention, once-only posting, remote reconciliation, and daemon mutation.

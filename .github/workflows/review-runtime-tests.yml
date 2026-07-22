@@ -8,6 +8,7 @@ on:
   pull_request:
     paths:
       - "kc-pr-flow/scripts/review-runtime.sh"
+      - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime.test.sh"
       - "kc-pr-flow/scripts/review-shadow.test.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
@@ -28,11 +29,13 @@ on:
       - ".claude-plugin/marketplace.json"
       - "PRODUCT.md"
       - "ARCHITECTURE.md"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/**"
       - ".github/workflows/review-runtime-tests.yml"
   push:
     branches: [main]
     paths:
       - "kc-pr-flow/scripts/review-runtime.sh"
+      - "kc-pr-flow/scripts/review-runtime-safe-io.py"
       - "kc-pr-flow/scripts/review-runtime.test.sh"
       - "kc-pr-flow/scripts/review-shadow.test.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
@@ -53,6 +56,7 @@ on:
       - ".claude-plugin/marketplace.json"
       - "PRODUCT.md"
       - "ARCHITECTURE.md"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/**"
       - ".github/workflows/review-runtime-tests.yml"
 
 permissions:
@@ -73,10 +77,10 @@ jobs:
 
       - name: Validate documentation safety contracts
         run: |
-          grep -Fq 'hashes repository bytes exactly as supplied' kc-pr-flow/reference/review-runtime.md
-          grep -Fq "Only \`replay\` and \`show\` enforce" kc-pr-flow/reference/review-runtime.md
-          grep -Fq "\`validate\` and \`append\` stream regular-file candidate input" kc-pr-flow/reference/review-runtime.md
-          grep -Fq 'Only rejected append input is copied' kc-pr-flow/reference/review-runtime.md
+          grep -Fq 'Python 3.8+ providing the fail-closed safe-I/O boundary' kc-pr-flow/reference/review-runtime.md
+          grep -Fq 'ShadowObservation/v1' kc-pr-flow/reference/review-runtime.md
+          grep -Fq 'metadata-only quarantine' kc-pr-flow/reference/review-runtime.md
+          grep -Fq 'receipt_id = sha256(run_id|review_key|content_sha256)' kc-pr-flow/reference/review-runtime.md
           grep -Fq "done < <(find \"\$STATE_ROOT\" -mindepth 4 -maxdepth 4 -type f" kc-pr-flow/docs/review-runtime.md
           grep -Fq -- "-path \"*/pr-\$PR_NUMBER/run-*/events.jsonl\" -print0)" kc-pr-flow/docs/review-runtime.md
           grep -Fq 'do not guess the newest' kc-pr-flow/docs/review-runtime.md
@@ -85,8 +89,27 @@ jobs:
       - name: Install shell dependencies
         run: sudo apt-get update && sudo apt-get install --yes jq shellcheck
 
+      - name: Audit remediation evidence
+        run: |
+          for task in T6 T7 T8 T9 T10; do
+            jq -se --arg task "$task" '
+              all(.[];
+                .task_id == $task and
+                (.phase == "RED" or .phase == "GREEN" or .phase == "REFACTOR") and
+                (.command | type == "string" and length > 0) and
+                (.exit_code | type == "number") and
+                .matched_expectation == true) and
+              (map(.phase) | index("RED")) as $red |
+              (map(.phase) | index("GREEN")) as $green |
+              (map(.phase) | index("REFACTOR")) as $refactor |
+              $red != null and $green != null and $refactor != null and
+              $red < $green and $green < $refactor
+            ' "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/${task}.jsonl"
+          done
+
       - name: Syntax check
         run: |
+          python3 -m py_compile kc-pr-flow/scripts/review-runtime-safe-io.py
           bash -n kc-pr-flow/scripts/review-runtime.sh
           bash -n kc-pr-flow/scripts/review-runtime.test.sh
           bash -n kc-pr-flow/scripts/review-shadow.test.sh

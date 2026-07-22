@@ -8,11 +8,12 @@ This first increment is observation and measurement only. It does not adapt lane
 
 - Bash 3.2 or newer
 - `jq`
+- Python 3.8 or newer with `O_NOFOLLOW` and `O_CLOEXEC`
 - `shasum` or `sha256sum`
 - Git for local `git_blob` evidence verification
 - a writable user-local state directory
 
-The runtime itself does not call models, the network, or GitHub. The review skill still performs its existing read-only head checks and retains all confirmation and posting authority.
+The runtime itself does not call models, the network, or GitHub. Python provides fail-closed safe I/O: every runtime file is read from one no-follow regular-file descriptor into a bounded private snapshot only when its file identity remains stable. Missing support, symlinks, path replacement, concurrent mutation, oversize data, duplicate JSON keys, unsafe integers, or impossible UTC dates stop runtime collection before accepted-state mutation. The review skill still performs its existing read-only head checks and retains all confirmation and posting authority.
 
 Run the CLI examples below from the `kc-pr-flow` plugin root.
 
@@ -27,6 +28,8 @@ export KC_PR_FLOW_REVIEW_SHADOW=on
 Only the exact value `on` enables it. Unset, empty, and unknown values are off. The seam runs after the legacy review body, comments, event modifiers, and confirmation options are final, but before the existing user confirmation gate.
 
 When enabled, the skill performs a fresh read-only exact-head check. A moved head, failed check, invalid receipt, or local runtime failure skips observation and leaves the legacy review byte-identical. Shadow success also cannot change the review.
+
+The seam serializes exactly one closed `ShadowObservation/v1` (`kc-pr-flow.shadow-observation/v1`) after the legacy body, inline comments, event, options, confirmation input, and GitHub-call log are frozen. It contains only exact-head identity, six hashes of those frozen artifacts, typed lane/candidate observations, evidence pointers and hashes, synthesis, uncertainty, and usage provenance. Unknown fields, excerpts, prompts, diffs, comments, rationale, provider raw text, and other opaque values are rejected. The collector reports `observed` only after it emits and replays a complete lane/candidate/synthesis/`run.finished` lifecycle; all other outcomes are typed `not_observed` diagnostics. If collection fails after `run.started`, an incomplete diagnostic run may remain, but it is never observed or authoritative; increment 2.3 owns recovery.
 
 State defaults to `${XDG_STATE_HOME:-$HOME/.local/state}/kc-pr-flow`. To isolate an evaluation:
 
@@ -130,7 +133,7 @@ bash scripts/review-runtime.sh observe \
   --expected-review-key "<64-character-review-key>"
 ```
 
-Do not edit accepted JSONL by hand. Rejected append input is quarantined, but read-only validation or replay of an already-invalid receipt is not. Unsafe storage or inconsistent accepted state fails closed.
+Do not edit accepted JSONL by hand. The event envelope and every event payload are closed. The only same-major extension is a closed hash-only record containing namespace, key, value SHA-256, and byte count; it cannot affect replay. Rejected append input creates metadata-only quarantine containing its reason, input SHA-256, byte count, and timestamp, never the rejected bytes. Read-only validation or replay of an already-invalid receipt is not quarantined. Unsafe storage or inconsistent accepted state fails closed.
 
 ## Build an exact configuration hash
 
@@ -181,7 +184,14 @@ bash scripts/review-runtime-benchmark.sh score \
   --corpus test/fixtures/review-runtime/paired-runs.jsonl | jq .
 ```
 
-The deterministic report presents measures in this order:
+Before scoring, the benchmark recomputes the exact-head review key, every candidate fingerprint and run-bound candidate ID, and each arm's canonical receipt authority:
+
+```text
+content_sha256 = sha256(canonical behavior, lanes, candidates, findings, uncertain candidate refs, and usage)
+receipt_id = sha256(run_id|review_key|content_sha256)
+```
+
+Expected and observed findings must resolve through a canonical candidate carrying the same evidence hash. A removed candidate, drifted evidence hash, or stale receipt hash makes the corpus invalid rather than inflating recall. The deterministic report then presents measures in this order:
 
 1. Evidence recall against explicit expected finding IDs. Model silence is not truth.
 2. Expected capability coverage and each lane's terminal status.
@@ -190,6 +200,10 @@ The deterministic report presents measures in this order:
 5. Usage comparability under the provenance rule above.
 
 The report is a measurement artifact, not an improvement claim or release gate. Establish a trustworthy paired corpus before setting thresholds.
+
+## Deferred capabilities
+
+This shadow increment deliberately stops at observation and measurement. Increment 2.3 owns crash-safe lock recovery and PID-reuse handling, verified predecessor lineage, append/compaction performance, resume, retention/garbage collection, once-only posting, remote reconciliation, and daemon mutation. Do not interpret a shadow receipt, reserved event name, or successor hint as authority for any of those actions.
 
 ## Roll back
 
@@ -205,10 +219,10 @@ You may also set the variable to any value other than `on`. Existing receipts re
 
 | Symptom | Meaning and action |
 |---|---|
-| No receipt appears | Confirm the gate is exactly `on`, `jq` and a SHA-256 tool are available, the state root is writable, and the final review reached the shadow seam. The review itself should still continue. |
+| No receipt appears | Confirm the gate is exactly `on`; Python 3.8+, `jq`, and a SHA-256 tool are available; the state root is writable; and the final review reached the shadow seam. Inspect the typed `not_observed` reason. The review itself should still continue. |
 | `exact_head_mismatch` | The PR moved after review collation. Do not reuse the receipt; refresh and review the unseen delta or rewritten head. |
 | `review_key_mismatch` | Repository, PR, base, head, or effective configuration differs. Recompute the canonical configuration and use the matching run. |
-| `invalid_receipt` | Run `validate` for envelope diagnostics and `show` or `replay` for lifecycle diagnostics. Inspect quarantine only when the invalid record came through rejected append input; read-only inspection does not create quarantine. |
+| `invalid_receipt` | Run `validate` for envelope diagnostics and `show` or `replay` for lifecycle diagnostics. Inspect metadata-only quarantine only when the invalid record came through rejected append input; read-only inspection does not create quarantine, and rejected bytes are intentionally unavailable. |
 | append reports `blocked` | Another live owner holds the run reservation, storage is unsafe, the accepted log is inconsistent, or a size limit was reached. Preserve state and investigate; do not bypass the lock. |
 | usage is unavailable | One side is missing, estimated, incomplete, cross-provider, or cross-scope. Collect comparable provider-reported data rather than substituting zero. |
 | evidence is unavailable or mismatched | Confirm the local GitHub repository identity, object and path, blob type, and content hash. A mismatch cannot support a finding. |

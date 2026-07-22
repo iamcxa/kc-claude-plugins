@@ -48,9 +48,19 @@ Use natural-language triggers rather than slash commands in Codex, for example:
 ### Shadow Runtime Architecture
 
 `KC_PR_FLOW_REVIEW_SHADOW=on` enables one fail-open observer after final review collation and before
-the existing confirmation gate. The local Bash + `jq` runtime records typed exact-head receipts and
-can replay or measure them, but it cannot change review content, dispatch models, choose an event,
-or call GitHub. The gate is off by default; disabling it preserves existing receipts for inspection.
+the existing confirmation gate. The local Bash 3.2 + `jq` runtime uses a Python 3.8+ fail-closed
+safe-I/O helper to consume one closed `ShadowObservation/v1`
+(`kc-pr-flow.shadow-observation/v1`), record a complete typed exact-head receipt, and replay or
+measure it. Accepted envelopes allow only closed hash-only extensions;
+rejected input produces metadata-only quarantine and never stores the rejected bytes. The collector
+cannot change review content, dispatch models, choose an event, authorize posting, or call GitHub.
+The gate is off by default; disabling it preserves existing receipts for inspection.
+
+The paired benchmark validates exact-head review keys, evidence-bound candidates and findings,
+canonical receipt content hashes, and receipt IDs before scoring recall or usage. The legacy review
+remains the only behavioral authority in this increment. Resume, once-only posting, remote
+reconciliation, robust lock recovery, verified predecessor lineage, and append-performance work are
+explicitly deferred to increment 2.3.
 
 Maintainer checks:
 
