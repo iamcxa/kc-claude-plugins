@@ -2270,10 +2270,10 @@ review_runtime_main_observe() {
         ;;
     esac
   done
-  [ -n "$event_file" ] && [ -n "$expected_head" ] && [ -n "$expected_review_key" ] || {
+  if [ -z "$event_file" ] || [ -z "$expected_head" ] || [ -z "$expected_review_key" ]; then
     printf 'review-runtime: --event-file, --expected-head, and --expected-review-key are required\n' >&2
     return 2
-  }
+  fi
   review_runtime_observe "$event_file" "$expected_head" "$expected_review_key"
 }
 
@@ -2304,10 +2304,10 @@ review_runtime_main_shadow() {
   done
 
   if [ "$enabled" = 'on' ]; then
-    [ -n "$head_check_status" ] && [ -n "$observation_file" ] || {
+    if [ -z "$head_check_status" ] || [ -z "$observation_file" ]; then
       printf 'review-runtime: enabled shadow requires head status and one observation file\n' >&2
       return 2
-    }
+    fi
     if [ "$head_check_status" = 'ok' ] && [ -z "$live_head" ]; then
       printf 'review-runtime: successful head check requires --live-head\n' >&2
       return 2
@@ -2421,10 +2421,10 @@ review_runtime_main_verify_evidence() {
         ;;
     esac
   done
-  [ -n "$pointer_json" ] && [ -n "$repository_path" ] || {
+  if [ -z "$pointer_json" ] || [ -z "$repository_path" ]; then
     printf 'review-runtime: --pointer-json and --repo are required\n' >&2
     return 2
-  }
+  fi
   review_runtime_verify_evidence "$pointer_json" "$repository_path"
 }
 
@@ -2450,10 +2450,10 @@ review_runtime_main_compare_usage() {
         ;;
     esac
   done
-  [ -n "$left_json" ] && [ -n "$right_json" ] || {
+  if [ -z "$left_json" ] || [ -z "$right_json" ]; then
     printf 'review-runtime: --left-json and --right-json are required\n' >&2
     return 2
-  }
+  fi
   review_runtime_compare_usage "$left_json" "$right_json"
 }
 
