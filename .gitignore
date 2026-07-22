@@ -13,6 +13,9 @@ e2e-reports/**/trace.zip
 .claude/e2e/reports/**/*.mp4
 .claude/e2e/reports/**/trace.zip
 
+# Ship Flow isolated worktrees
+.claude/worktrees/
+
 # Nightwatch runtime logs (may contain secrets)
 kc-nightwatch/runs/
 
