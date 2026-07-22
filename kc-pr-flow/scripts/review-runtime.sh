@@ -605,6 +605,10 @@ review_runtime_payload_matches_v1_schema() {
       (test("(^|/)\\.\\.?(/|$)|[[:cntrl:]\\\\]") | not);
     def nullable_token: . == null or safe_token;
     def positive_integer: type == "number" and floor == . and . > 0 and . <= 9007199254740991;
+    def behavior_hashes:
+      type == "object" and
+      exact_keys(["body_sha256","confirmation_input_sha256","event_sha256","github_call_log_sha256","inline_comments_sha256","options_sha256"]; []) and
+      all(.[]; sha256);
     def usage:
       type == "object" and
       exact_keys(["input_tokens","output_tokens","provenance","provider_family","scope","total_tokens"]; []) and
@@ -660,6 +664,9 @@ review_runtime_payload_matches_v1_schema() {
       (.payload | exact_keys(["findings","uncertain_candidate_ids"]; []) and
         (.findings | type == "array" and all(finding)) and
         (.uncertain_candidate_ids | type == "array" and all(sha256) and (unique | length) == length))
+    elif $event_type == "run.finished" then
+      (.payload == {}) or
+      (.payload | exact_keys(["behavior_hashes"]; []) and (.behavior_hashes | behavior_hashes))
     else
       .payload == {}
     end' >/dev/null 2>&1
@@ -710,7 +717,13 @@ review_runtime_validate_t2_identity() {
       printf '%s' "$line" | jq -e '
         .payload.lane_result as $result |
         [$result.run_id,$result.review_key] == [.run_id,.review_key] and
-        ((($result | has("provider_family")) | not) or $result.provider_family == $result.usage.provider_family)' >/dev/null 2>&1 || {
+        (if $result.usage.provenance == "unavailable" then
+          $result.usage.provider_family == null
+        elif $result | has("provider_family") then
+          $result.provider_family == $result.usage.provider_family
+        else
+          $result.usage.provider_family == null
+        end)' >/dev/null 2>&1 || {
         printf '%s' 'provider_envelope_identity_mismatch'
         return 1
       }
@@ -1639,8 +1652,10 @@ review_runtime_replay() (
   review_runtime_validate_authoritative_log "$event_snapshot" >/dev/null || return
   if ! jq -e -s '
     reduce .[] as $event (
-      {ok:true,synthesized:false,tasks:{},results:{},candidates:{}};
+      {ok:true,synthesized:false,run_finished:false,tasks:{},results:{},candidates:{}};
       if (.ok | not) then .
+      elif .run_finished then
+        .ok = false
       elif .synthesized and
         ($event.event_type == "lane.started" or
          $event.event_type == "lane.finished" or
@@ -1707,6 +1722,14 @@ review_runtime_replay() (
         else
           .synthesized = true
         end
+      elif $event.event_type == "run.finished" then
+        if (.synthesized | not) or
+          ((.tasks | keys | sort) != (.results | keys | sort))
+        then
+          .ok = false
+        else
+          .run_finished = true
+        end
       else . end
     ) | .ok' "$event_snapshot" >/dev/null 2>&1; then
     printf 'review-runtime: event relationships are inconsistent\n' >&2
@@ -1731,7 +1754,9 @@ review_runtime_replay() (
       candidates:[],
       findings:[],
       uncertain_candidate_ids:[],
-      usage_observations:[]
+      usage_observations:[],
+      behavior_hashes:null,
+      lifecycle:{synthesis_finished:false,run_finished:false,unexpected_event:false,complete:false}
     };
       if $event.event_type == "lane.started" then
         .lanes += [{
@@ -1748,8 +1773,22 @@ review_runtime_replay() (
         .candidates += [$event.payload.candidate]
       elif $event.event_type == "synthesis.finished" then
         .findings = $event.payload.findings |
-        .uncertain_candidate_ids = $event.payload.uncertain_candidate_ids
-      else . end
+        .uncertain_candidate_ids = $event.payload.uncertain_candidate_ids |
+        .lifecycle.synthesis_finished = true
+      elif $event.event_type == "run.finished" then
+        .lifecycle.run_finished = true |
+        .behavior_hashes = ($event.payload.behavior_hashes // null)
+      else
+        .lifecycle.unexpected_event = true
+      end
+    ) |
+    .lifecycle.complete = (
+      (.lanes | length) > 0 and
+      all(.lanes[]; .result != null) and
+      .lifecycle.synthesis_finished and
+      .lifecycle.run_finished and
+      .behavior_hashes != null and
+      (.lifecycle.unexpected_event | not)
     )' "$event_snapshot"
 )
 
@@ -1806,6 +1845,10 @@ review_runtime_observe() (
     jq -S -c -n '{schema:"kc-pr-flow.review-observer-status/v1",status:"not_observed",reason:"review_key_mismatch"}'
     return 3
   fi
+  if [ "$(printf '%s' "$projection" | jq -r '.lifecycle.complete')" != 'true' ]; then
+    jq -S -c -n '{schema:"kc-pr-flow.review-observer-status/v1",status:"not_observed",reason:"incomplete_receipt"}'
+    return 3
+  fi
 
   printf '%s' "$projection" | jq -S -c '
     {
@@ -1814,6 +1857,7 @@ review_runtime_observe() (
       run_id:.run.run_id,
       review_key:.run.review_key,
       head_sha:.run.head_sha,
+      behavior_hashes:.behavior_hashes,
       counts:{
         lanes:(.lanes | length),
         candidates:(.candidates | length),
@@ -1824,69 +1868,350 @@ review_runtime_observe() (
     }'
 )
 
-# Production shadow seam. The caller owns the read-only remote head check and
-# passes only its bounded result. This seam owns no network or review authority:
-# it derives the exact review key, prepares a minimal typed run when no existing
-# event log was supplied, invokes the read-only observer once, and always fails
-# open to a typed diagnostic status.
+review_runtime_shadow_status() {
+  local status="$1"
+  local reason="$2"
+  if command -v jq >/dev/null 2>&1; then
+    jq -S -c -n --arg status "$status" --arg reason "$reason" \
+      '{schema:"kc-pr-flow.review-observer-status/v1",status:$status,reason:$reason}'
+  else
+    case "$status:$reason" in
+      disabled:shadow_disabled)
+        printf '%s\n' '{"reason":"shadow_disabled","schema":"kc-pr-flow.review-observer-status/v1","status":"disabled"}'
+        ;;
+      *)
+        printf '%s\n' '{"reason":"collector_error","schema":"kc-pr-flow.review-observer-status/v1","status":"not_observed"}'
+        ;;
+    esac
+  fi
+}
+
+# Validate the complete sanitized projection before creating any managed state.
+# Structural predicates are deliberately closed; pointer semantics delegate to
+# the same exact-head validator used by event validation and verify-evidence.
+review_runtime_shadow_observation_valid() {
+  local observation_file="$1"
+  local observation duplicate_rc repository pr_number base_sha head_sha config_hash
+  local review_key identity_event pointer_count pointer_index pointer
+
+  observation="$(cat "$observation_file")" || return 1
+  review_runtime_json_has_unique_members "$observation"
+  duplicate_rc=$?
+  [ "$duplicate_rc" -eq 0 ] || return "$duplicate_rc"
+  jq -e '
+    def exact_keys($required; $optional):
+      ((keys - ($required + $optional)) | length) == 0 and
+      (($required - keys) | length) == 0;
+    def sha256: type == "string" and test("^[0-9a-f]{64}$");
+    def sha1: type == "string" and test("^[0-9a-f]{40}$");
+    def safe_token: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
+    def safe_path:
+      type == "string" and length > 0 and length <= 1024 and
+      (startswith("/") | not) and (endswith("/") | not) and (contains("//") | not) and
+      (test("(^|/)\\.\\.?(/|$)|[[:cntrl:]\\\\]") | not);
+    def positive_integer: type == "number" and floor == . and . > 0 and . <= 9007199254740991;
+    def token_count: . == null or (type == "number" and floor == . and . >= 0 and . <= 9007199254740991);
+    def reference:
+      type == "object" and exact_keys(["lane_id","ordinal"]; []) and
+      (.lane_id | safe_token) and (.ordinal | positive_integer);
+    def usage:
+      type == "object" and exact_keys(["input_tokens","output_tokens","provenance","provider_family","scope","total_tokens"]; []) and
+      (.provenance == "reported" or .provenance == "estimated" or .provenance == "unavailable") and
+      .scope == "lane" and (.provider_family == null or (.provider_family | safe_token)) and
+      ([.input_tokens,.output_tokens,.total_tokens] | all(token_count)) and
+      (if .provenance == "unavailable" then [.input_tokens,.output_tokens,.total_tokens] | all(. == null) else true end);
+    def candidate:
+      type == "object" and exact_keys(["anchor_sha256","category","claim_key","evidence","ordinal","path","side"]; []) and
+      (.ordinal | positive_integer) and (.path | safe_path) and
+      (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
+      (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and
+      (.evidence | type == "object");
+    def finding:
+      type == "object" and exact_keys(["anchor_sha256","candidate_refs","category","claim_key","evidence","path","side"]; []) and
+      (.path | safe_path) and (.side == "LEFT" or .side == "RIGHT" or .side == "FILE") and
+      (.anchor_sha256 | sha256) and (.category | safe_token) and (.claim_key | safe_token) and
+      (.evidence | type == "object") and
+      (.candidate_refs | type == "array" and length > 0 and all(reference) and (unique | length) == length);
+    . as $observation |
+    type == "object" and exact_keys(["behavior_hashes","identity","lanes","schema","synthesis"]; []) and
+    .schema == "kc-pr-flow.shadow-observation/v1" and
+    (.identity | type == "object" and exact_keys(["base_sha","config_hash","head_sha","occurred_at","pr_number","repository"]; []) and
+      (.repository | type == "string" and test("^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$")) and
+      (.pr_number | positive_integer) and (.base_sha | sha1) and (.head_sha | sha1) and
+      (.config_hash | sha256) and
+      (.occurred_at | type == "string" and test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"))) and
+    (.behavior_hashes | type == "object" and
+      exact_keys(["body_sha256","confirmation_input_sha256","event_sha256","github_call_log_sha256","inline_comments_sha256","options_sha256"]; []) and
+      all(.[]; sha256)) and
+    (.lanes | type == "array" and length > 0 and
+      all(type == "object" and exact_keys(["candidates","capability","lane_id","terminal_status","usage"]; ["provider_family"]) and
+        (.lane_id | safe_token) and (.capability | safe_token) and
+        (.terminal_status == "succeeded" or .terminal_status == "failed" or .terminal_status == "unavailable") and
+        (.usage | usage) and
+        ((has("provider_family") | not) or (.provider_family | safe_token)) and
+        (if .usage.provenance == "unavailable" then
+          .usage.provider_family == null
+        elif has("provider_family") then
+          .provider_family == .usage.provider_family
+        else
+          .usage.provider_family == null
+        end) and
+        (.candidates | type == "array" and all(candidate) and (map(.ordinal) | unique | length) == length and . == sort_by(.ordinal))) and
+      (map(.lane_id) | unique | length) == length) and
+    (.synthesis | type == "object" and exact_keys(["findings","uncertain_candidate_refs"]; []) and
+      (.findings | type == "array" and all(finding)) and
+      (.uncertain_candidate_refs | type == "array" and all(reference) and (unique | length) == length)) and
+    ([$observation.lanes[] as $lane | $lane.candidates[] | {ref:[$lane.lane_id,.ordinal],candidate:.}]) as $candidates |
+    ($candidates | map(.ref)) as $candidate_refs |
+    ([$observation.synthesis.findings[].candidate_refs[] | [.lane_id,.ordinal]]) as $finding_refs |
+    ([$observation.synthesis.uncertain_candidate_refs[] | [.lane_id,.ordinal]]) as $uncertain_refs |
+    (($finding_refs + $uncertain_refs) | unique | length) == (($finding_refs + $uncertain_refs) | length) and
+    (($finding_refs + $uncertain_refs) | sort) == ($candidate_refs | sort) and
+    ($observation.synthesis.findings | map([.path,.side,.evidence.content_sha256,.category,.claim_key]) | unique | length) == ($observation.synthesis.findings | length) and
+    all($observation.synthesis.findings[];
+      . as $finding |
+      all($finding.candidate_refs[];
+        . as $reference |
+        any($candidates[];
+          .ref == [$reference.lane_id,$reference.ordinal] and
+          [.candidate.path,.candidate.side,.candidate.evidence.content_sha256,.candidate.category,.candidate.claim_key] ==
+          [$finding.path,$finding.side,$finding.evidence.content_sha256,$finding.category,$finding.claim_key])))
+  ' "$observation_file" >/dev/null 2>&1 || return 1
+
+  repository="$(jq -r '.identity.repository' "$observation_file")" || return
+  pr_number="$(jq -r '.identity.pr_number' "$observation_file")" || return
+  base_sha="$(jq -r '.identity.base_sha' "$observation_file")" || return
+  head_sha="$(jq -r '.identity.head_sha' "$observation_file")" || return
+  config_hash="$(jq -r '.identity.config_hash' "$observation_file")" || return
+  review_runtime_rfc3339_utc_valid "$(jq -r '.identity.occurred_at' "$observation_file")" || return 1
+  review_key="$(review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash")" || return
+  identity_event="$(jq -S -c -n --arg repository "$repository" --argjson pr_number "$pr_number" \
+    --arg base_sha "$base_sha" --arg head_sha "$head_sha" --arg review_key "$review_key" \
+    '{repository:$repository,pr_number:$pr_number,base_sha:$base_sha,head_sha:$head_sha,review_key:$review_key}')" || return
+  pointer_count="$(jq '[.lanes[].candidates[].evidence,.synthesis.findings[].evidence] | length' "$observation_file")" || return
+  pointer_index=0
+  while [ "$pointer_index" -lt "$pointer_count" ]; do
+    pointer="$(jq -c --argjson index "$pointer_index" \
+      '[.lanes[].candidates[].evidence,.synthesis.findings[].evidence][$index]' "$observation_file")" || return
+    review_runtime_evidence_pointer_matches_event "$pointer" "$identity_event" || return 1
+    pointer_index=$((pointer_index + 1))
+  done
+}
+
+# Convert one validated projection into a complete append-only event lifecycle.
+# The input is snapshotted once, fully validated, and preflight-replayed before
+# any event after run.started is appended to managed state.
+review_runtime_collect_shadow_observation() (
+  local observation_file="$1"
+  local live_head="$2"
+  local snapshot_dir='' observation_snapshot='' pending_events='' candidate_refs=''
+  local repository pr_number base_sha head_sha config_hash occurred_at review_key
+  local start_event run_id state_root repo_key event_file sequence=1 event payload
+  local lane_count lane_index=0 lane lane_id capability provider_family terminal_status usage
+  local candidate_count candidate_index candidate ordinal evidence_hash candidate_id
+  local candidate_ids ref_record finding_count finding_index finding candidate_ref_count reference_index reference
+  local referenced_candidate_id candidate_id_list findings merge_key finding_id uncertain_count uncertain_index
+  local uncertain_ids append_status observer_output rc
+  local collector_status_emitted='false'
+
+  if ! review_runtime_require_jq; then
+    review_runtime_shadow_status not_observed dependency_unavailable
+    return 0
+  fi
+
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || {
+    review_runtime_shadow_status not_observed collector_error
+    return 0
+  }
+  observation_snapshot="$snapshot_dir/observation.json"
+  pending_events="$snapshot_dir/events.jsonl"
+  candidate_refs="$snapshot_dir/candidate-refs.jsonl"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$observation_snapshot" "$pending_events" "$candidate_refs"' EXIT
+  if ! review_runtime_snapshot_regular_file "$observation_file" "$observation_snapshot" 'shadow observation' 1048576; then
+    review_runtime_shadow_status not_observed invalid_observation
+    return 0
+  fi
+  if ! review_runtime_shadow_observation_valid "$observation_snapshot"; then
+    review_runtime_shadow_status not_observed invalid_observation
+    return 0
+  fi
+
+  repository="$(jq -r '.identity.repository' "$observation_snapshot")" || return
+  pr_number="$(jq -r '.identity.pr_number' "$observation_snapshot")" || return
+  base_sha="$(jq -r '.identity.base_sha' "$observation_snapshot")" || return
+  head_sha="$(jq -r '.identity.head_sha' "$observation_snapshot")" || return
+  config_hash="$(jq -r '.identity.config_hash' "$observation_snapshot")" || return
+  occurred_at="$(jq -r '.identity.occurred_at' "$observation_snapshot")" || return
+  if ! [[ "$live_head" =~ ^[0-9a-f]{40}$ ]] || [ "$live_head" != "$head_sha" ]; then
+    review_runtime_shadow_status not_observed exact_head_mismatch
+    return 0
+  fi
+  review_key="$(review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash")" || {
+    review_runtime_shadow_status not_observed collector_error
+    return 0
+  }
+  start_event="$(review_runtime_start "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$occurred_at" '' '')" || {
+    review_runtime_shadow_status not_observed collector_error
+    return 0
+  }
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$observation_snapshot" "$pending_events" "$candidate_refs"; if [ "$collector_status_emitted" != "true" ]; then review_runtime_shadow_status not_observed collector_error; fi; trap - EXIT; exit 0' EXIT
+  run_id="$(printf '%s' "$start_event" | jq -r '.run_id')" || return
+  state_root="$(review_runtime_state_root)" || return
+  repo_key="$(review_runtime_repo_key "$repository")" || return
+  event_file="$state_root/$repo_key/pr-$pr_number/$run_id/events.jsonl"
+  printf '%s\n' "$start_event" >"$pending_events" || return
+  : >"$candidate_refs" || return
+
+  lane_count="$(jq '.lanes | length' "$observation_snapshot")" || return
+  while [ "$lane_index" -lt "$lane_count" ]; do
+    lane="$(jq -c --argjson index "$lane_index" '.lanes[$index]' "$observation_snapshot")" || return
+    lane_id="$(printf '%s' "$lane" | jq -r '.lane_id')" || return
+    capability="$(printf '%s' "$lane" | jq -r '.capability')" || return
+    provider_family="$(printf '%s' "$lane" | jq -r '.provider_family // empty')" || return
+    terminal_status="$(printf '%s' "$lane" | jq -r '.terminal_status')" || return
+    usage="$(printf '%s' "$lane" | jq -c '.usage')" || return
+    sequence=$((sequence + 1))
+    payload="$(jq -S -c -n --arg run_id "$run_id" --arg review_key "$review_key" \
+      --arg lane_id "$lane_id" --arg capability "$capability" --arg repository "$repository" \
+      --argjson pr_number "$pr_number" --arg base_sha "$base_sha" --arg head_sha "$head_sha" \
+      --arg config_hash "$config_hash" '
+      {review_task:{schema:"kc-pr-flow.review-task/v1",run_id:$run_id,review_key:$review_key,
+       lane_id:$lane_id,capability:$capability,repository:$repository,pr_number:$pr_number,
+       base_sha:$base_sha,head_sha:$head_sha,config_hash:$config_hash}}')" || return
+    event="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$sequence" "$occurred_at" lane.started "$payload")" || return
+    printf '%s\n' "$event" >>"$pending_events" || return
+
+    candidate_ids='[]'
+    candidate_count="$(printf '%s' "$lane" | jq '.candidates | length')" || return
+    candidate_index=0
+    while [ "$candidate_index" -lt "$candidate_count" ]; do
+      candidate="$(printf '%s' "$lane" | jq -c --argjson index "$candidate_index" '.candidates[$index]')" || return
+      ordinal="$(printf '%s' "$candidate" | jq -r '.ordinal')" || return
+      evidence_hash="$(printf '%s' "$candidate" | jq -r '.evidence.content_sha256')" || return
+      candidate_id="$(review_runtime_candidate_id "$run_id" "$lane_id" "$ordinal" "$evidence_hash")" || return
+      candidate_ids="$(printf '%s' "$candidate_ids" | jq -c --arg candidate_id "$candidate_id" '. + [$candidate_id]')" || return
+      ref_record="$(jq -S -c -n --arg lane_id "$lane_id" --argjson ordinal "$ordinal" --arg candidate_id "$candidate_id" \
+        '{lane_id:$lane_id,ordinal:$ordinal,candidate_id:$candidate_id}')" || return
+      printf '%s\n' "$ref_record" >>"$candidate_refs" || return
+      payload="$(printf '%s' "$candidate" | jq -S -c --arg run_id "$run_id" --arg review_key "$review_key" \
+        --arg lane_id "$lane_id" --arg candidate_id "$candidate_id" '
+        {candidate:(. + {schema:"kc-pr-flow.review-candidate/v1",run_id:$run_id,review_key:$review_key,lane_id:$lane_id,candidate_id:$candidate_id})}')" || return
+      sequence=$((sequence + 1))
+      event="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$sequence" "$occurred_at" finding.observed "$payload")" || return
+      printf '%s\n' "$event" >>"$pending_events" || return
+      candidate_index=$((candidate_index + 1))
+    done
+
+    payload="$(jq -S -c -n --arg run_id "$run_id" --arg review_key "$review_key" \
+      --arg lane_id "$lane_id" --arg capability "$capability" --arg terminal_status "$terminal_status" \
+      --arg provider_family "$provider_family" --argjson usage "$usage" --argjson candidates "$candidate_ids" '
+      {lane_result:({schema:"kc-pr-flow.lane-result/v1",run_id:$run_id,review_key:$review_key,
+       lane_id:$lane_id,capability:$capability,terminal_status:$terminal_status,usage:$usage,candidates:$candidates} +
+       (if $provider_family == "" then {} else {provider_family:$provider_family} end))}')" || return
+    sequence=$((sequence + 1))
+    event="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$sequence" "$occurred_at" lane.finished "$payload")" || return
+    printf '%s\n' "$event" >>"$pending_events" || return
+    lane_index=$((lane_index + 1))
+  done
+
+  findings='[]'
+  finding_count="$(jq '.synthesis.findings | length' "$observation_snapshot")" || return
+  finding_index=0
+  while [ "$finding_index" -lt "$finding_count" ]; do
+    finding="$(jq -c --argjson index "$finding_index" '.synthesis.findings[$index]' "$observation_snapshot")" || return
+    candidate_id_list='[]'
+    candidate_ref_count="$(printf '%s' "$finding" | jq '.candidate_refs | length')" || return
+    reference_index=0
+    while [ "$reference_index" -lt "$candidate_ref_count" ]; do
+      reference="$(printf '%s' "$finding" | jq -c --argjson index "$reference_index" '.candidate_refs[$index]')" || return
+      lane_id="$(printf '%s' "$reference" | jq -r '.lane_id')" || return
+      ordinal="$(printf '%s' "$reference" | jq -r '.ordinal')" || return
+      referenced_candidate_id="$(jq -r --arg lane_id "$lane_id" --argjson ordinal "$ordinal" \
+        'select(.lane_id == $lane_id and .ordinal == $ordinal) | .candidate_id' "$candidate_refs")" || return
+      [ -n "$referenced_candidate_id" ] || return
+      candidate_id_list="$(printf '%s' "$candidate_id_list" | jq -c --arg candidate_id "$referenced_candidate_id" '. + [$candidate_id]')" || return
+      reference_index=$((reference_index + 1))
+    done
+    merge_key="$(review_runtime_merge_key "$finding")" || return
+    finding_id="$(review_runtime_finding_id "$review_key" "$merge_key")" || return
+    finding="$(printf '%s' "$finding" | jq -S -c --arg review_key "$review_key" --arg merge_key "$merge_key" \
+      --arg finding_id "$finding_id" --argjson candidate_ids "$candidate_id_list" '
+      del(.candidate_refs) + {schema:"kc-pr-flow.review-finding/v1",review_key:$review_key,
+      merge_key:$merge_key,finding_id:$finding_id,candidate_ids:$candidate_ids}')" || return
+    findings="$(printf '%s' "$findings" | jq -c --argjson finding "$finding" '. + [$finding]')" || return
+    finding_index=$((finding_index + 1))
+  done
+
+  uncertain_ids='[]'
+  uncertain_count="$(jq '.synthesis.uncertain_candidate_refs | length' "$observation_snapshot")" || return
+  uncertain_index=0
+  while [ "$uncertain_index" -lt "$uncertain_count" ]; do
+    reference="$(jq -c --argjson index "$uncertain_index" '.synthesis.uncertain_candidate_refs[$index]' "$observation_snapshot")" || return
+    lane_id="$(printf '%s' "$reference" | jq -r '.lane_id')" || return
+    ordinal="$(printf '%s' "$reference" | jq -r '.ordinal')" || return
+    referenced_candidate_id="$(jq -r --arg lane_id "$lane_id" --argjson ordinal "$ordinal" \
+      'select(.lane_id == $lane_id and .ordinal == $ordinal) | .candidate_id' "$candidate_refs")" || return
+    [ -n "$referenced_candidate_id" ] || return
+    uncertain_ids="$(printf '%s' "$uncertain_ids" | jq -c --arg candidate_id "$referenced_candidate_id" '. + [$candidate_id]')" || return
+    uncertain_index=$((uncertain_index + 1))
+  done
+  payload="$(jq -S -c -n --argjson findings "$findings" --argjson uncertain "$uncertain_ids" \
+    '{findings:$findings,uncertain_candidate_ids:$uncertain}')" || return
+  sequence=$((sequence + 1))
+  event="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$sequence" "$occurred_at" synthesis.finished "$payload")" || return
+  printf '%s\n' "$event" >>"$pending_events" || return
+  sequence=$((sequence + 1))
+  payload="$(jq -S -c '{behavior_hashes:.behavior_hashes}' "$observation_snapshot")" || return
+  event="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$sequence" "$occurred_at" run.finished "$payload")" || return
+  printf '%s\n' "$event" >>"$pending_events" || return
+
+  if ! review_runtime_replay "$pending_events" | jq -e '.lifecycle.complete' >/dev/null 2>&1; then
+    collector_status_emitted='true'
+    review_runtime_shadow_status not_observed invalid_collector_projection
+    return 0
+  fi
+  while IFS= read -r event || [ -n "$event" ]; do
+    [ "$(printf '%s' "$event" | jq -r '.sequence')" = '1' ] && continue
+    append_status="$(review_runtime_append_line "$event")"
+    rc=$?
+    if [ "$rc" -ne 0 ] || { [ "$append_status" != 'appended' ] && [ "$append_status" != 'duplicate' ]; }; then
+      collector_status_emitted='true'
+      review_runtime_shadow_status not_observed collector_append_failed
+      return 0
+    fi
+  done <"$pending_events"
+  observer_output="$(review_runtime_observe "$event_file" "$head_sha" "$review_key")"
+  rc=$?
+  if [ "$rc" -eq 0 ] && [ -n "$observer_output" ]; then
+    collector_status_emitted='true'
+    printf '%s\n' "$observer_output"
+  else
+    collector_status_emitted='true'
+    review_runtime_shadow_status not_observed incomplete_receipt
+  fi
+  return 0
+)
+
+# Production shadow seam: one closed input, one local collector, no model,
+# network, verdict, confirmation, authorization, or mutation capability.
 review_runtime_shadow() (
   local enabled="${1:-}"
   local head_check_status="${2:-}"
   local live_head="${3:-}"
-  local repository="${4:-}"
-  local pr_number="${5:-}"
-  local base_sha="${6:-}"
-  local reviewed_head="${7:-}"
-  local config_hash="${8:-}"
-  local occurred_at="${9:-}"
-  local event_file="${10:-}"
-  local review_key='' start_output='' run_id='' state_root='' repo_key=''
-  local observer_output='' observer_rc=0
-
+  local observation_file="${4:-}"
   if [ "$enabled" != 'on' ]; then
-    printf '%s\n' '{"reason":"shadow_disabled","schema":"kc-pr-flow.review-observer-status/v1","status":"disabled"}'
+    review_runtime_shadow_status disabled shadow_disabled
     return 0
   fi
   if [ "$head_check_status" != 'ok' ]; then
-    printf '%s\n' '{"reason":"head_check_failed","schema":"kc-pr-flow.review-observer-status/v1","status":"not_observed"}'
+    review_runtime_shadow_status not_observed head_check_failed
     return 0
   fi
-  if ! [[ "$live_head" =~ ^[0-9a-f]{40}$ ]] || [ "$live_head" != "$reviewed_head" ]; then
-    printf '%s\n' '{"reason":"exact_head_mismatch","schema":"kc-pr-flow.review-observer-status/v1","status":"not_observed"}'
+  if [ -z "$observation_file" ]; then
+    review_runtime_shadow_status not_observed missing_observation
     return 0
   fi
-
-  if ! review_runtime_validate_start_input \
-    "$repository" "$pr_number" "$base_sha" "$reviewed_head" "$config_hash" "$occurred_at" '' ''; then
-    printf '%s\n' '{"reason":"invalid_shadow_identity","schema":"kc-pr-flow.review-observer-status/v1","status":"not_observed"}'
-    return 0
-  fi
-  review_key="$(review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$reviewed_head" "$config_hash")" || review_key=''
-
-  if [ -z "$event_file" ]; then
-    if start_output="$(review_runtime_start \
-      "$repository" "$pr_number" "$base_sha" "$reviewed_head" "$config_hash" "$occurred_at" '' '')"; then
-      run_id="$(printf '%s' "$start_output" | jq -r '.run_id' 2>/dev/null)" || run_id=''
-      state_root="$(review_runtime_state_root)" || state_root=''
-      repo_key="$(review_runtime_repo_key "$repository")" || repo_key=''
-      if [ -n "$state_root" ] && [ -n "$repo_key" ] && [[ "$run_id" =~ ^run-[A-Za-z0-9._-]+$ ]]; then
-        event_file="$state_root/$repo_key/pr-$pr_number/$run_id/events.jsonl"
-      fi
-    fi
-    if [ -z "$event_file" ]; then
-      state_root="$(review_runtime_state_root 2>/dev/null)" || state_root='.'
-      event_file="$state_root/.shadow-unavailable-${review_key:-unknown}/events.jsonl"
-    fi
-  fi
-
-  observer_output="$(review_runtime_observe "$event_file" "$reviewed_head" "$review_key")"
-  observer_rc=$?
-  if [ -n "$observer_output" ]; then
-    printf '%s\n' "$observer_output"
-  else
-    printf '%s\n' '{"reason":"observer_error","schema":"kc-pr-flow.review-observer-status/v1","status":"not_observed"}'
-  fi
-  [ "$observer_rc" -eq 0 ] || return 0
+  review_runtime_collect_shadow_observation "$observation_file" "$live_head"
 )
 
 review_runtime_main_event_file() {
@@ -1954,12 +2279,11 @@ review_runtime_main_observe() {
 
 review_runtime_main_shadow() {
   local enabled="${KC_PR_FLOW_REVIEW_SHADOW:-}"
-  local head_check_status='' live_head='' repository='' pr_number=''
-  local base_sha='' reviewed_head='' config_hash='' occurred_at='' event_file=''
+  local head_check_status='' live_head='' observation_file=''
 
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --enabled | --head-check-status | --live-head | --repo | --pr | --base | --head | --config-hash | --occurred-at | --event-file)
+      --enabled | --head-check-status | --live-head | --observation-file)
         [ "$#" -ge 2 ] || {
           printf 'review-runtime: missing value for %s\n' "$1" >&2
           return 2
@@ -1968,13 +2292,7 @@ review_runtime_main_shadow() {
           --enabled) enabled="$2" ;;
           --head-check-status) head_check_status="$2" ;;
           --live-head) live_head="$2" ;;
-          --repo) repository="$2" ;;
-          --pr) pr_number="$2" ;;
-          --base) base_sha="$2" ;;
-          --head) reviewed_head="$2" ;;
-          --config-hash) config_hash="$2" ;;
-          --occurred-at) occurred_at="$2" ;;
-          --event-file) event_file="$2" ;;
+          --observation-file) observation_file="$2" ;;
         esac
         shift 2
         ;;
@@ -1986,22 +2304,17 @@ review_runtime_main_shadow() {
   done
 
   if [ "$enabled" = 'on' ]; then
-    [ -n "$head_check_status" ] && [ -n "$repository" ] && [ -n "$pr_number" ] &&
-      [ -n "$base_sha" ] && [ -n "$reviewed_head" ] && [ -n "$config_hash" ] || {
-      printf 'review-runtime: enabled shadow requires head status and exact review identity\n' >&2
+    [ -n "$head_check_status" ] && [ -n "$observation_file" ] || {
+      printf 'review-runtime: enabled shadow requires head status and one observation file\n' >&2
       return 2
     }
     if [ "$head_check_status" = 'ok' ] && [ -z "$live_head" ]; then
       printf 'review-runtime: successful head check requires --live-head\n' >&2
       return 2
     fi
-    if [ -z "$occurred_at" ]; then
-      occurred_at="$(date -u '+%Y-%m-%dT%H:%M:%SZ')" || return
-    fi
   fi
 
-  review_runtime_shadow "$enabled" "$head_check_status" "$live_head" \
-    "$repository" "$pr_number" "$base_sha" "$reviewed_head" "$config_hash" "$occurred_at" "$event_file"
+  review_runtime_shadow "$enabled" "$head_check_status" "$live_head" "$observation_file"
 }
 
 review_runtime_main_config_hash() {
@@ -2036,6 +2349,54 @@ review_runtime_main_config_hash() {
 
   review_runtime_config_hash "$agent_tier" "$pr_archetype" "$full_pass" \
     "$probe_required" "$cross_model" "$noise_filter" "$capabilities"
+}
+
+review_runtime_main_review_key() {
+  local repository='' pr_number='' base_sha='' head_sha='' config_hash=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --repo | --pr | --base | --head | --config-hash)
+        [ "$#" -ge 2 ] || {
+          printf 'review-runtime: missing value for %s\n' "$1" >&2
+          return 2
+        }
+        case "$1" in
+          --repo) repository="$2" ;;
+          --pr) pr_number="$2" ;;
+          --base) base_sha="$2" ;;
+          --head) head_sha="$2" ;;
+          --config-hash) config_hash="$2" ;;
+        esac
+        shift 2
+        ;;
+      *)
+        printf 'review-runtime: unknown review-key option: %s\n' "$1" >&2
+        return 2
+        ;;
+    esac
+  done
+  review_runtime_repository_identity_valid "$repository" || {
+    printf 'review-runtime: invalid repository identity\n' >&2
+    return 2
+  }
+  review_runtime_positive_safe_integer "$pr_number" || {
+    printf 'review-runtime: invalid PR number\n' >&2
+    return 2
+  }
+  [[ "$base_sha" =~ ^[0-9a-f]{40}$ ]] || {
+    printf 'review-runtime: invalid base SHA\n' >&2
+    return 2
+  }
+  [[ "$head_sha" =~ ^[0-9a-f]{40}$ ]] || {
+    printf 'review-runtime: invalid head SHA\n' >&2
+    return 2
+  }
+  [[ "$config_hash" =~ ^[0-9a-f]{64}$ ]] || {
+    printf 'review-runtime: invalid config hash\n' >&2
+    return 2
+  }
+  review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash"
+  printf '\n'
 }
 
 review_runtime_main_verify_evidence() {
@@ -2097,7 +2458,7 @@ review_runtime_main_compare_usage() {
 }
 
 review_runtime_usage() {
-  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|shadow ...|verify-evidence ...|compare-usage ...}' >&2
+  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
 }
 
 review_runtime_main_start() {
@@ -2142,6 +2503,7 @@ review_runtime_main() {
   case "$command" in
     start) review_runtime_main_start "$@" ;;
     config-hash) review_runtime_main_config_hash "$@" ;;
+    review-key) review_runtime_main_review_key "$@" ;;
     validate | append | replay | show) review_runtime_main_event_file "$command" "$@" ;;
     observe) review_runtime_main_observe "$@" ;;
     shadow) review_runtime_main_shadow "$@" ;;
