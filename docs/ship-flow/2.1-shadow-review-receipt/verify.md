@@ -27,6 +27,9 @@ Review lenses preserved the five task questions from `plan.md`: schema-contract,
 - format/safety: PASS — `git diff --check`, fixture forbidden-key scan, changed-line secret scan, executable modes, and documentation assertions exited 0.
 - version parity: PASS — no plugin or marketplace version file changed.
 
+<details>
+<summary>Required claim record — scoped mechanical contract and DC-2</summary>
+
 #### Verification Claim: Scoped mechanical contract and DC-2 fixture behavior
 | Field | Value |
 |---|---|
@@ -40,6 +43,8 @@ Review lenses preserved the five task questions from `plan.md`: schema-contract,
 | comparison | exact match; no confound observed |
 | verdict | `VERIFIED` |
 | route_to | `proceed` |
+
+</details>
 <!-- /section:quality-gate -->
 
 <!-- section:review-findings -->
@@ -65,6 +70,9 @@ Scope: 17 files, 4,693 changed lines, eight owned lenses plus red-team. All cite
 | WARNING | `kc-pr-flow/scripts/review-runtime.sh:97` | Oversized numeric limit configuration can exceed Bash integer range and bypass the cap. | red-team | execute |
 | WARNING | `kc-pr-flow/scripts/review-runtime.sh:264` | Timestamp validation accepts impossible calendar/time values. | red-team | execute |
 
+<details>
+<summary>TDD evidence audit details</summary>
+
 #### TDD Evidence Audit
 | Task | RED evidence | GREEN evidence | REFACTOR | Severity | route_to |
 |---|---|---|---|---|---|
@@ -74,7 +82,12 @@ Scope: 17 files, 4,693 changed lines, eight owned lenses plus red-team. All cite
 | T4 | 0/1, 5/0, then 6 pass/12 fail recorded | 133/0 | bash-n PASS | WARNING: no durable RED transcript | execute |
 | T5 | documented docs/canon/CI skip | all scoped gates PASS | actionlint/yq PASS | NIT | none |
 
+</details>
+
 Canonical drift: PRODUCT and ARCHITECTURE actions landed; ROADMAP skip remains justified. The design itself must reconcile additive/original-byte preservation with the no-raw durable-state boundary before execute can be judged.
+
+<details>
+<summary>Required claim records — rejected DC groups</summary>
 
 #### Verification Claim: Complete typed receipt and provider-neutral measurement
 | Field | Value |
@@ -131,6 +144,8 @@ Canonical drift: PRODUCT and ARCHITECTURE actions landed; ROADMAP skip remains j
 | comparison | same recall despite evidence removal |
 | verdict | `NOT VERIFIED` |
 | route_to | `execute` |
+
+</details>
 <!-- /section:review-findings -->
 
 <!-- section:uat -->
