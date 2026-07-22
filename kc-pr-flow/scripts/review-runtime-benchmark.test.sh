@@ -16,12 +16,12 @@ CASE='all'
 if [ "${1:-}" = '--case' ] && [ "$#" -eq 2 ]; then
   CASE="$2"
 elif [ "$#" -ne 0 ]; then
-  printf 'usage: review-runtime-benchmark.test.sh [--case authority-binding]\n' >&2
+  printf 'usage: review-runtime-benchmark.test.sh [--case authority-binding|path-replacement]\n' >&2
   exit 2
 fi
 
 case "$CASE" in
-  all|authority-binding) ;;
+  all|authority-binding|path-replacement) ;;
   *)
     printf 'review-runtime-benchmark.test.sh: unknown case: %s\n' "$CASE" >&2
     exit 2
@@ -100,6 +100,42 @@ if [ ! -x "$BENCHMARK" ]; then
   exit 1
 fi
 
+run_path_replacement_case() {
+  local original_report replacement_report replacement_rc real_cat
+  original_report="$("$BENCHMARK" score --corpus "$FIXTURE")"
+  cp "$FIXTURE" "$TEST_ROOT/path-replacement.jsonl"
+  tail -n +2 "$FIXTURE" >"$TEST_ROOT/path-replacement.valid.jsonl"
+  mkdir "$TEST_ROOT/path-replacement-bin"
+  real_cat="$(command -v cat)"
+  # The wrapper deterministically replaces the already-prechecked path at the
+  # vulnerable reopen. A descriptor snapshot never invokes this path reader.
+  # shellcheck disable=SC2016 # Wrapper variables expand only when the probe runs.
+  printf '%s\n' \
+    '#!/usr/bin/env bash' \
+    'if [ "${1:-}" = "$REPLACEMENT_SOURCE" ] && [ ! -e "$REPLACEMENT_MARKER" ]; then' \
+    '  : >"$REPLACEMENT_MARKER"' \
+    '  mv "$REPLACEMENT_VALID" "$REPLACEMENT_SOURCE"' \
+    'fi' \
+    'exec "$REPLACEMENT_REAL_CAT" "$@"' >"$TEST_ROOT/path-replacement-bin/cat"
+  chmod +x "$TEST_ROOT/path-replacement-bin/cat"
+  replacement_report="$(PATH="$TEST_ROOT/path-replacement-bin:$PATH" \
+    REPLACEMENT_SOURCE="$TEST_ROOT/path-replacement.jsonl" \
+    REPLACEMENT_VALID="$TEST_ROOT/path-replacement.valid.jsonl" \
+    REPLACEMENT_MARKER="$TEST_ROOT/path-replacement.marker" \
+    REPLACEMENT_REAL_CAT="$real_cat" \
+    "$BENCHMARK" score --corpus "$TEST_ROOT/path-replacement.jsonl" 2>"$TEST_ROOT/path-replacement.err")"
+  replacement_rc=$?
+  assert_eq "valid-corpus path replacement probe scores" "0" "$replacement_rc"
+  assert_eq "one bounded descriptor snapshot preserves the originally selected corpus" "$original_report" "$replacement_report"
+}
+
+if [ "$CASE" = 'path-replacement' ]; then
+  run_path_replacement_case
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit
+fi
+
 if [ "$CASE" = 'authority-binding' ]; then
   head -n 1 "$FIXTURE" >"$TEST_ROOT/authority-source.jsonl"
 
@@ -160,6 +196,7 @@ assert_eq "measure order starts with recall" "evidence_recall" "$(jq -r '.measur
 assert_eq "baseline recall is computed against truth labels" "1/2" "$(jq -r '.pairs[] | select(.pair_id=="pair-a") | .evidence_recall.baseline | "\(.matched_count)/\(.expected_count)"' <<<"$report")"
 second_report="$("$BENCHMARK" score --corpus "$FIXTURE")"
 assert_eq "repeated scoring is byte-identical" "$report" "$second_report"
+run_path_replacement_case
 
 assert_eq "measure order follows product success-measure order" \
   "evidence_recall,lane_capability_coverage,external_behavior_parity,finding_candidate_stability,usage_comparability" \

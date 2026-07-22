@@ -10,6 +10,50 @@ review_benchmark_require_jq() {
   fi
 }
 
+review_benchmark_safe_io_helper() {
+  local benchmark_source="${BASH_SOURCE[0]}"
+  local benchmark_dir
+  benchmark_dir="$(cd "$(dirname "$benchmark_source")" && pwd)" || return 69
+  printf '%s\n' "$benchmark_dir/review-runtime-safe-io.py"
+}
+
+review_benchmark_snapshot_corpus() {
+  local source_file="$1" snapshot_file="$2" helper rc
+  if ! command -v python3 >/dev/null 2>&1; then
+    printf 'review-runtime-benchmark: python3 is required for safe corpus ingestion\n' >&2
+    return 69
+  fi
+  helper="$(review_benchmark_safe_io_helper)" || return 69
+  if [ ! -f "$helper" ] || [ -L "$helper" ] || [ ! -r "$helper" ]; then
+    printf 'review-runtime-benchmark: safe I/O helper is unavailable\n' >&2
+    return 69
+  fi
+  python3 "$helper" snapshot \
+    --source "$source_file" \
+    --destination "$snapshot_file" \
+    --limit-bytes 16777216 >/dev/null 2>&1
+  rc=$?
+  case "$rc" in
+    0) return 0 ;;
+    2)
+      printf 'review-runtime-benchmark: corpus is not a safe regular file: %s\n' "$source_file" >&2
+      return 2
+      ;;
+    69)
+      printf 'review-runtime-benchmark: safe corpus ingestion is unsupported\n' >&2
+      return 69
+      ;;
+    73)
+      printf 'review-runtime-benchmark: corpus exceeds the 16777216-byte limit\n' >&2
+      return 73
+      ;;
+    *)
+      printf 'review-runtime-benchmark: unable to create private corpus snapshot\n' >&2
+      return 74
+      ;;
+  esac
+}
+
 review_benchmark_sha256() {
   if command -v shasum >/dev/null 2>&1; then
     shasum -a 256 | awk '{print $1}'
@@ -230,21 +274,24 @@ review_benchmark_validate_authority() {
 
 review_benchmark_score() (
   local corpus_file="$1"
-  local snapshot_file=''
+  local snapshot_dir='' snapshot_file='' snapshot_rc
 
   review_benchmark_require_jq || return
-  if [ ! -f "$corpus_file" ] || [ -L "$corpus_file" ]; then
-    printf 'review-runtime-benchmark: corpus is not a safe regular file: %s\n' "$corpus_file" >&2
-    return 2
+  if [ ! -d "${TMPDIR:-/tmp}" ] || [ -L "${TMPDIR:-/tmp}" ]; then
+    printf 'review-runtime-benchmark: temporary directory is unavailable\n' >&2
+    return 74
   fi
-  umask 077
-  snapshot_file="$(mktemp "${TMPDIR:-/tmp}/kc-pr-flow-review-benchmark.XXXXXX")" || return 74
-  trap '[ -z "$snapshot_file" ] || rm -f "$snapshot_file"' EXIT
-  if ! cat "$corpus_file" >"$snapshot_file" || ! chmod 0600 "$snapshot_file" ||
-    [ ! -f "$snapshot_file" ] || [ -L "$snapshot_file" ]; then
+  snapshot_dir="$(mktemp -d "${TMPDIR:-/tmp}/kc-pr-flow-review-benchmark.XXXXXX")" || return 74
+  if ! chmod 0700 "$snapshot_dir" || [ ! -d "$snapshot_dir" ] || [ -L "$snapshot_dir" ]; then
+    [ -d "$snapshot_dir" ] && [ ! -L "$snapshot_dir" ] && rmdir "$snapshot_dir" 2>/dev/null || true
     printf 'review-runtime-benchmark: unable to create private corpus snapshot\n' >&2
     return 74
   fi
+  snapshot_file="$snapshot_dir/corpus.jsonl"
+  trap 'if [ -d "$snapshot_dir" ] && [ ! -L "$snapshot_dir" ]; then rm -f "$snapshot_file" 2>/dev/null || true; rmdir "$snapshot_dir" 2>/dev/null || true; fi' EXIT
+  review_benchmark_snapshot_corpus "$corpus_file" "$snapshot_file"
+  snapshot_rc=$?
+  [ "$snapshot_rc" -eq 0 ] || return "$snapshot_rc"
   if ! review_benchmark_validate_corpus "$snapshot_file"; then
     printf 'review-runtime-benchmark: invalid sanitized corpus\n' >&2
     return 2
