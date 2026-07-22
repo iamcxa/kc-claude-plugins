@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Contract tests for the closed kc-pr-review production shadow collector.
 # shellcheck disable=SC2016 # Assertions intentionally match literal skill/runtime text.
+# shellcheck disable=SC2317 # The dependency probe invokes this dynamic command override indirectly.
 
 set -uo pipefail
 

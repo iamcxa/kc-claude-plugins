@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Unit tests for the append-only kc-pr-review shadow receipt runtime.
-# shellcheck disable=SC2030,SC2031,SC2329 # Intentional probe subshells and dynamic function overrides.
+# shellcheck disable=SC2002,SC2030,SC2031,SC2317,SC2329 # Intentional stdin probes, subshells, and dynamic function overrides across supported ShellCheck versions.
 
 set -uo pipefail
 

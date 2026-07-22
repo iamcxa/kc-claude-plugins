@@ -283,7 +283,9 @@ review_benchmark_score() (
   fi
   snapshot_dir="$(mktemp -d "${TMPDIR:-/tmp}/kc-pr-flow-review-benchmark.XXXXXX")" || return 74
   if ! chmod 0700 "$snapshot_dir" || [ ! -d "$snapshot_dir" ] || [ -L "$snapshot_dir" ]; then
-    [ -d "$snapshot_dir" ] && [ ! -L "$snapshot_dir" ] && rmdir "$snapshot_dir" 2>/dev/null || true
+    if [ -d "$snapshot_dir" ] && [ ! -L "$snapshot_dir" ]; then
+      rmdir "$snapshot_dir" 2>/dev/null || true
+    fi
     printf 'review-runtime-benchmark: unable to create private corpus snapshot\n' >&2
     return 74
   fi
