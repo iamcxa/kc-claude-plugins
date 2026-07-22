@@ -30,6 +30,10 @@ on:
       - "PRODUCT.md"
       - "ARCHITECTURE.md"
       - "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/**"
+      - "docs/ship-flow/2.1-shadow-review-receipt/plan.md"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.jsonl"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.txt"
+      - "docs/ship-flow/tools/validate-tdd-ledger.py"
       - ".github/workflows/review-runtime-tests.yml"
   push:
     branches: [main]
@@ -57,6 +61,10 @@ on:
       - "PRODUCT.md"
       - "ARCHITECTURE.md"
       - "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/**"
+      - "docs/ship-flow/2.1-shadow-review-receipt/plan.md"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.jsonl"
+      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.txt"
+      - "docs/ship-flow/tools/validate-tdd-ledger.py"
       - ".github/workflows/review-runtime-tests.yml"
 
 permissions:
@@ -93,19 +101,31 @@ jobs:
         run: |
           for task in T6 T7 T8 T9 T10; do
             jq -se --arg task "$task" '
-              all(.[];
-                .task_id == $task and
-                (.phase == "RED" or .phase == "GREEN" or .phase == "REFACTOR") and
+              map(select(.task_id == $task)) as $records |
+              ["RED", "GREEN", "REFACTOR"] |
+              map(. as $phase | $records | map(select(.phase == $phase)) | max_by(.recorded_at)) as $latest |
+              ($latest | length == 3) and
+              all($latest[];
                 (.command | type == "string" and length > 0) and
+                (.command | test("^(bash|python3)( |$)")) and
+                (.command | test("benchmark\\+test|focused authority-binding|full benchmark suite|fixture JSONL audit|score twice") | not) and
+                (.expected | type == "string" and length > 0) and
+                (.output_excerpt | type == "string" and length > 0) and
+                (.output_sha256 | type == "string" and test("^[0-9a-f]{64}$")) and
+                (.recorded_at | type == "string" and test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")) and
                 (.exit_code | type == "number") and
+                (if .phase == "RED" then .exit_code != 0 else .exit_code == 0 end) and
                 .matched_expectation == true) and
-              (map(.phase) | index("RED")) as $red |
-              (map(.phase) | index("GREEN")) as $green |
-              (map(.phase) | index("REFACTOR")) as $refactor |
-              $red != null and $green != null and $refactor != null and
-              $red < $green and $green < $refactor
+              ($latest[0].recorded_at < $latest[1].recorded_at) and
+              ($latest[1].recorded_at < $latest[2].recorded_at)
             ' "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/${task}.jsonl"
           done
+
+      - name: Validate plan TDD ledger
+        run: |
+          python3 docs/ship-flow/tools/validate-tdd-ledger.py \
+            --plan docs/ship-flow/2.1-shadow-review-receipt/plan.md \
+            --require-ledger-jsonl docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.jsonl
 
       - name: Syntax check
         run: |

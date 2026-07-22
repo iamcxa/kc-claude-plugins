@@ -4,6 +4,8 @@
 <!-- section:execution-log -->
 ### Execution Log
 
+The T1-T5 table below is retained as the original execution history. The remediation table that follows is the current execution record for verification.
+
 | Task | Wave | Model | Status | Files Changed | Retries | Review | Commit | Est. Cost |
 |---|---|---|---|---|---:|---|---|---|
 | T1 | W1 | sonnet | done | runtime, runtime tests, valid fixture | 1 | Spec and quality APPROVED after lock-owner fix | `b8e5b13` | not metered |
@@ -11,6 +13,17 @@
 | T3 | W3 | sonnet | done | review skill, runtime, shadow tests | 1 | Spec fixes then quality APPROVED | `03d8b2f` | not metered |
 | T4 | W3 | sonnet | done | benchmark, tests, paired corpus | 1 | Identity/path/precision fixes then APPROVED | `fd6b29f` | not metered |
 | T5 | W4 | sonnet | done | user/contributor docs, canon, CI | 1 | Accuracy and cold-reader fixes then APPROVED | `0e8704b` | not metered |
+
+#### Verify-Return Remediation Log (Current)
+
+| Task | Wave | Status | Shipped Surface | Commit | Verification Disposition |
+|---|---|---|---|---|---|
+| T6 | W1 | done | Closed durable envelopes and metadata-only quarantine | `0b0ecca` | Privacy-envelope RED/GREEN/REFACTOR receipts complete |
+| T7 | W2 | done | Fail-closed safe I/O, limits, dates, and batch precedence | `a100447` | Safe-I/O RED/GREEN/REFACTOR receipts complete |
+| T8 | W3 | done | Exact-head evidence, candidate, merge, and finding identity binding | `b5d8374` | Final focused 29/0; exact executable REFACTOR receipt appended |
+| T9 | W4 | done | Serialized production collector with complete lifecycle and deterministic collation | `1828238` | Final shadow 155/0; exact executable REFACTOR receipt appended |
+| T10 | W4 | done | Canonical benchmark/receipt authority and descriptor snapshot | `a14dd91`, `26846ce` | Authority binding 6/0, path replacement 2/0, full benchmark 135/0 |
+| T11 | W5 | done | Canonical docs, CI, and durable execute evidence | `995aa82` | Contract sync and static gates passed; post-T11 verifier repairs are recorded above |
 
 #### Execute Dispatch Manifest
 
@@ -42,6 +55,8 @@
 - T1 false dead-owner reclaim from a short-lived command-substitution PID was fixed before `b8e5b13`; concurrent cold-start coverage now proves one append and one duplicate.
 - T3 observer contract gaps and T4 identity/path/precision findings were fixed before their commits; T5 documentation accuracy and cold-reader findings were fixed before `0e8704b`.
 - No terminal blockers, `--no-verify`, version bump, or new issue entity; all findings remained inside planned scope.
+- The verify-return found one additional in-scope T10 TOCTOU seam after T11: the benchmark reopened its corpus after validation. `26846ce` now scores one bounded `O_NOFOLLOW` descriptor snapshot and adds path-replacement coverage.
+- Scope remains anchored: lock crash/PID reuse recovery, predecessor lineage, and quadratic append are unchanged and remain owned by child 2.3; required-coverage enforcement, approval-eligibility changes, and token-improvement claims are not part of this entity.
 <!-- /section:issues-found -->
 
 <!-- section:knowledge-captures -->
@@ -92,6 +107,8 @@ commit_count: 5
 <!-- section:hand-off-to-verify -->
 ### Hand-off to Verify
 
+#### Original T1-T5 Handoff (Historical)
+
 - commit_list: `git log 12f3e7d..HEAD`; T1 `b8e5b13` event runtime; T2 `7698ac5` replay; T3 `03d8b2f` observer; T4 `fd6b29f` benchmark; T5 `0e8704b` docs/CI.
 - dc_status: DC-1 PASS (`b8e5b13`,`7698ac5`); DC-2 PASS (`7698ac5`); DC-3 PASS (`7698ac5`); DC-4 PASS (`7698ac5`); DC-5 PASS (`03d8b2f`); DC-6 PASS (`fd6b29f`).
 - tdd_evidence_summary: T1/T2 runtime RED-before-GREEN; T3 observer RED-before-GREEN; T4 scorer and expanded-metric RED-before-GREEN; T5 `TDD: skip -- documentation, canonical synchronization, and CI wiring use completed tests and syntax checks`.
@@ -100,4 +117,15 @@ commit_count: 5
 - skills_needed_used: T1/T2/T4 test+tdd+best-practices; T3 test+tdd+write-docs+best-practices; T5 write-docs+github-workflows.
 - context_read_receipts: T1-T5 read `kc-pr-flow/CLAUDE.md`; no non-root folder skill was routed; root agent instructions remained session context.
 - static_receipt: `bash -n`, shellcheck, actionlint, yq, `git diff --check 12f3e7d..HEAD`, and forbidden-content scan all exit 0; TDD ledger reports `status=pass records=5`.
+
+#### T6-T11 Verify-Return Handoff (Latest and Authoritative)
+
+- commit_list: T6 `0b0ecca`; T7 `a100447`; T8 `b5d8374`; T9 `1828238`; T10 `a14dd91`; T11 `995aa82`; bounded post-T11 T10 snapshot repair `26846ce`.
+- wave_order: W1 T6 -> W2 T7 -> W3 T8 -> W4 (T9 || T10) -> W5 T11; `26846ce` is a verify-return repair to T10, not a new task or expanded product surface.
+- dc_status: DC-1 through DC-6 remain PASS; DC-7 PASS because every serialized lane emits started/candidates/finished before synthesis and run terminals while incomplete or identity-only state is `not_observed`; DC-8 PASS because no-follow safe I/O, exit precedence, bound benchmark authority, synchronized canon, ledger validation, and durable receipts pass.
+- exact_final_counts: runtime 279 passed, 0 failed; shadow 155 passed, 0 failed; benchmark 135 passed, 0 failed; cross-model 62 passed, 0 failed; architecture diagrams 43 passed, 0 failed; architecture diagram validator 34 passed, 0 failed.
+- tdd_evidence_summary: T6-T10 retain ordered append-only RED/GREEN/REFACTOR history. The latest T8 and T9 REFACTOR rows contain literal commands whose captured outputs hash to their recorded SHA-256 values. T10 retains the superseded pseudo-command as history and appends a literal executable replacement; CI must reject the pseudo record while accepting the latest authoritative receipt for each phase.
+- scope_deferrals: child 2.3 retains lock crash/PID reuse recovery, predecessor lineage, and quadratic append. Required-coverage enforcement, approval-eligibility changes, and token-improvement claims remain outside PR1. No new GitHub issue is required because the recovery/performance work already has entity ownership.
+- render_fidelity_evidence: N/A — non-UI entity.
+- handoff_authority: this subsection supersedes the historical T1-T5 handoff above for the next Verify run.
 <!-- /section:hand-off-to-verify -->
