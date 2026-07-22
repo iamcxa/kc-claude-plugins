@@ -11,6 +11,22 @@ trap 'rm -rf "$TEST_ROOT"' EXIT
 
 PASS=0
 FAIL=0
+CASE='all'
+
+if [ "${1:-}" = '--case' ] && [ "$#" -eq 2 ]; then
+  CASE="$2"
+elif [ "$#" -ne 0 ]; then
+  printf 'usage: review-runtime-benchmark.test.sh [--case authority-binding]\n' >&2
+  exit 2
+fi
+
+case "$CASE" in
+  all|authority-binding) ;;
+  *)
+    printf 'review-runtime-benchmark.test.sh: unknown case: %s\n' "$CASE" >&2
+    exit 2
+    ;;
+esac
 
 pass() { PASS=$((PASS + 1)); }
 fail() { FAIL=$((FAIL + 1)); printf 'FAIL: %s\n' "$1"; }
@@ -39,10 +55,88 @@ sha256_text() {
   fi
 }
 
+assert_rejected() { # $1=description $2=corpus
+  local description="$1" corpus="$2" output rc
+  output="$("$BENCHMARK" score --corpus "$corpus" 2>&1)"
+  rc=$?
+  assert_eq "$description" "2" "$rc"
+  if [[ "$output" == *"invalid sanitized corpus"* || "$output" == *"invalid canonical identity"* || "$output" == *"malformed corpus"* || "$output" == *"safe regular file"* ]]; then
+    pass
+  else
+    fail "$description emits a typed validation error"
+  fi
+}
+
+arm_content_sha256() { # $1=arm JSON
+  local canonical
+  canonical="$(printf '%s' "$1" | jq -S -c '{
+    behavior,
+    lanes:(.lanes | sort_by(.capability,.lane_id)),
+    candidates:(.observed_candidates | sort_by(.candidate_id)),
+    findings:((.observed_findings // []) | sort_by(.finding_id,.candidate_id)),
+    uncertain_candidate_refs:(.uncertain_candidate_ids | sort),
+    usage
+  }')" || return
+  sha256_text "$canonical"
+}
+
+rehash_arm_receipt() { # $1=input corpus $2=arm name $3=output corpus
+  local input="$1" arm_name="$2" output="$3" line arm_json content_sha256 run_id review_key receipt_id
+  line="$(<"$input")" || return
+  arm_json="$(printf '%s' "$line" | jq -c --arg arm "$arm_name" '.[$arm]')" || return
+  content_sha256="$(arm_content_sha256 "$arm_json")" || return
+  run_id="$(printf '%s' "$arm_json" | jq -r '.receipt.run_id')" || return
+  review_key="$(printf '%s' "$arm_json" | jq -r '.receipt.review_key')" || return
+  receipt_id="$(sha256_text "$run_id|$review_key|$content_sha256")" || return
+  printf '%s' "$line" | jq -c --arg arm "$arm_name" --arg content_sha256 "$content_sha256" --arg receipt_id "$receipt_id" '
+    .[$arm].receipt.content_sha256=$content_sha256 |
+    .[$arm].receipt.receipt_id=$receipt_id
+  ' >"$output"
+}
+
 if [ ! -x "$BENCHMARK" ]; then
   fail "review-runtime-benchmark.sh exists and is executable"
   printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
   exit 1
+fi
+
+if [ "$CASE" = 'authority-binding' ]; then
+  head -n 1 "$FIXTURE" >"$TEST_ROOT/authority-source.jsonl"
+
+  jq -c '
+    .baseline.observed_candidates=[] |
+    .baseline.uncertain_candidate_ids=[] |
+    .shadow.observed_candidates=[] |
+    .shadow.uncertain_candidate_ids=[] |
+    .disagreement_candidate_fingerprint_ids=[]
+  ' "$TEST_ROOT/authority-source.jsonl" >"$TEST_ROOT/candidates-removed.raw.jsonl"
+  rehash_arm_receipt "$TEST_ROOT/candidates-removed.raw.jsonl" baseline "$TEST_ROOT/candidates-removed.baseline.jsonl"
+  rehash_arm_receipt "$TEST_ROOT/candidates-removed.baseline.jsonl" shadow "$TEST_ROOT/candidates-removed.jsonl"
+  assert_rejected "truth-labeled recall cannot survive removal of all canonical candidates and evidence" "$TEST_ROOT/candidates-removed.jsonl"
+
+  changed_evidence='abababababababababababababababababababababababababababababababab'
+  drifted="$(jq -c --arg evidence "$changed_evidence" '.baseline.observed_candidates[0].fingerprint.evidence_sha256=$evidence' "$TEST_ROOT/authority-source.jsonl")"
+  drifted_fingerprint="$(printf '%s' "$drifted" | jq -c '.baseline.observed_candidates[0].fingerprint')"
+  drifted_fingerprint_canonical="$(printf '%s' "$drifted_fingerprint" | jq -S -c 'del(.fingerprint_id)')"
+  drifted_fingerprint_id="$(sha256_text "$drifted_fingerprint_canonical")"
+  drifted_run_id="$(printf '%s' "$drifted" | jq -r '.baseline.receipt.run_id')"
+  drifted_candidate_id="$(sha256_text "$drifted_run_id|$drifted_fingerprint_id")"
+  printf '%s' "$drifted" | jq -c --arg fingerprint_id "$drifted_fingerprint_id" --arg candidate_id "$drifted_candidate_id" --arg evidence "$changed_evidence" '
+    .baseline.observed_candidates[0].fingerprint.fingerprint_id=$fingerprint_id |
+    .baseline.observed_candidates[0].candidate_id=$candidate_id |
+    .baseline.observed_findings[0].candidate_id=$candidate_id |
+    .baseline.observed_findings[0].evidence_sha256=$evidence
+  ' >"$TEST_ROOT/evidence-drift.raw.jsonl"
+  rehash_arm_receipt "$TEST_ROOT/evidence-drift.raw.jsonl" baseline "$TEST_ROOT/evidence-drift.jsonl"
+  assert_rejected "truth-labeled observed finding must match the expected canonical candidate and evidence" "$TEST_ROOT/evidence-drift.jsonl"
+
+  jq -c '.baseline.usage.input_tokens += 1 | .baseline.usage.total_tokens += 1' \
+    "$TEST_ROOT/authority-source.jsonl" >"$TEST_ROOT/stale-content-hash.jsonl"
+  assert_rejected "receipt content and identity hashes cannot remain stale after canonical arm content changes" "$TEST_ROOT/stale-content-hash.jsonl"
+
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit
 fi
 
 report="$("$BENCHMARK" score --corpus "$FIXTURE" 2>"$TEST_ROOT/score.err")"
@@ -118,46 +212,40 @@ assert_eq "mismatched provider family is unavailable" "unavailable" \
 assert_eq "mismatched measurement scope is unavailable" "unavailable" \
   "$(jq -r '.pairs[] | select(.pair_id=="pair-e") | .usage_comparability.efficiency_verdict' <<<"$report")"
 
-assert_rejected() { # $1=description $2=corpus
-  local description="$1" corpus="$2" output rc
-  output="$("$BENCHMARK" score --corpus "$corpus" 2>&1)"
-  rc=$?
-  assert_eq "$description" "2" "$rc"
-  if [[ "$output" == *"invalid sanitized corpus"* || "$output" == *"invalid canonical identity"* || "$output" == *"malformed corpus"* || "$output" == *"safe regular file"* ]]; then
-    pass
-  else
-    fail "$description emits a typed validation error"
-  fi
-}
-
 head -n 1 "$FIXTURE" >"$TEST_ROOT/one.jsonl"
 
 write_path_variant() { # $1=path $2=output corpus; rehashes the typed fingerprint canonically
-  local path="$1" output="$2" line fingerprint canonical fingerprint_id run_id candidate_id
-  line="$(jq -c --arg path "$path" '.baseline.observed_candidates[0].fingerprint.path=$path' "$TEST_ROOT/one.jsonl")" || return
-  fingerprint="$(jq -c '.baseline.observed_candidates[0].fingerprint' <<<"$line")" || return
+  local path="$1" output="$2" raw="$2.raw" line fingerprint canonical fingerprint_id run_id candidate_id old_candidate_id
+  line="$(jq -c --arg path "$path" '.baseline.observed_candidates[1].fingerprint.path=$path' "$TEST_ROOT/one.jsonl")" || return
+  fingerprint="$(jq -c '.baseline.observed_candidates[1].fingerprint' <<<"$line")" || return
   canonical="$(jq -S -c 'del(.fingerprint_id)' <<<"$fingerprint")" || return
   fingerprint_id="$(sha256_text "$canonical")" || return
-  run_id="$(jq -r '.baseline.observed_candidates[0].run_id' <<<"$line")" || return
+  run_id="$(jq -r '.baseline.observed_candidates[1].run_id' <<<"$line")" || return
+  old_candidate_id="$(jq -r '.baseline.observed_candidates[1].candidate_id' <<<"$line")" || return
   candidate_id="$(sha256_text "$run_id|$fingerprint_id")" || return
-  jq -c --arg fingerprint_id "$fingerprint_id" --arg candidate_id "$candidate_id" '
-    .baseline.observed_candidates[0].fingerprint.fingerprint_id=$fingerprint_id |
-    .baseline.observed_candidates[0].candidate_id=$candidate_id
-  ' <<<"$line" >"$output"
+  jq -c --arg fingerprint_id "$fingerprint_id" --arg candidate_id "$candidate_id" --arg old_candidate_id "$old_candidate_id" '
+    .baseline.observed_candidates[1].fingerprint.fingerprint_id=$fingerprint_id |
+    .baseline.observed_candidates[1].candidate_id=$candidate_id |
+    .baseline.observed_findings |= map(if .candidate_id == $old_candidate_id then .candidate_id=$candidate_id else . end)
+  ' <<<"$line" >"$raw"
+  rehash_arm_receipt "$raw" baseline "$output"
 }
 
 write_side_variant() { # $1=side $2=output corpus; rehashes the typed fingerprint canonically
-  local side="$1" output="$2" line fingerprint canonical fingerprint_id run_id candidate_id
-  line="$(jq -c --arg side "$side" '.baseline.observed_candidates[0].fingerprint.side=$side' "$TEST_ROOT/one.jsonl")" || return
-  fingerprint="$(jq -c '.baseline.observed_candidates[0].fingerprint' <<<"$line")" || return
+  local side="$1" output="$2" raw="$2.raw" line fingerprint canonical fingerprint_id run_id candidate_id old_candidate_id
+  line="$(jq -c --arg side "$side" '.baseline.observed_candidates[1].fingerprint.side=$side' "$TEST_ROOT/one.jsonl")" || return
+  fingerprint="$(jq -c '.baseline.observed_candidates[1].fingerprint' <<<"$line")" || return
   canonical="$(jq -S -c 'del(.fingerprint_id)' <<<"$fingerprint")" || return
   fingerprint_id="$(sha256_text "$canonical")" || return
-  run_id="$(jq -r '.baseline.observed_candidates[0].run_id' <<<"$line")" || return
+  run_id="$(jq -r '.baseline.observed_candidates[1].run_id' <<<"$line")" || return
+  old_candidate_id="$(jq -r '.baseline.observed_candidates[1].candidate_id' <<<"$line")" || return
   candidate_id="$(sha256_text "$run_id|$fingerprint_id")" || return
-  jq -c --arg fingerprint_id "$fingerprint_id" --arg candidate_id "$candidate_id" '
-    .baseline.observed_candidates[0].fingerprint.fingerprint_id=$fingerprint_id |
-    .baseline.observed_candidates[0].candidate_id=$candidate_id
-  ' <<<"$line" >"$output"
+  jq -c --arg fingerprint_id "$fingerprint_id" --arg candidate_id "$candidate_id" --arg old_candidate_id "$old_candidate_id" '
+    .baseline.observed_candidates[1].fingerprint.fingerprint_id=$fingerprint_id |
+    .baseline.observed_candidates[1].candidate_id=$candidate_id |
+    .baseline.observed_findings |= map(if .candidate_id == $old_candidate_id then .candidate_id=$candidate_id else . end)
+  ' <<<"$line" >"$raw"
+  rehash_arm_receipt "$raw" baseline "$output"
 }
 
 path_case=0
@@ -185,7 +273,9 @@ sed \
   -e 's/"input_tokens":100/"input_tokens":9007199254740991/' \
   -e 's/"total_tokens":120/"total_tokens":9007199254740991/' \
   -e 's/"total_tokens":105/"total_tokens":9007199254740990/' \
-  "$TEST_ROOT/one.jsonl" >"$TEST_ROOT/max-safe-usage.jsonl"
+  "$TEST_ROOT/one.jsonl" >"$TEST_ROOT/max-safe-usage.raw.jsonl"
+rehash_arm_receipt "$TEST_ROOT/max-safe-usage.raw.jsonl" baseline "$TEST_ROOT/max-safe-usage.baseline.jsonl"
+rehash_arm_receipt "$TEST_ROOT/max-safe-usage.baseline.jsonl" shadow "$TEST_ROOT/max-safe-usage.jsonl"
 max_safe_report="$("$BENCHMARK" score --corpus "$TEST_ROOT/max-safe-usage.jsonl" 2>/dev/null)"
 max_safe_rc=$?
 assert_eq "maximum IEEE-754 safe usage integer is accepted" "0" "$max_safe_rc"
@@ -223,7 +313,7 @@ done
 jq -c 'del(.exact_head.head_sha)' "$TEST_ROOT/one.jsonl" >"$TEST_ROOT/missing.jsonl"
 assert_rejected "missing exact-head identity fails closed" "$TEST_ROOT/missing.jsonl"
 
-jq -c '.expected_finding_ids += [.expected_finding_ids[0]]' "$TEST_ROOT/one.jsonl" >"$TEST_ROOT/duplicate-findings.jsonl"
+jq -c '.expected_findings += [.expected_findings[0]]' "$TEST_ROOT/one.jsonl" >"$TEST_ROOT/duplicate-findings.jsonl"
 assert_rejected "duplicate truth labels fail closed" "$TEST_ROOT/duplicate-findings.jsonl"
 
 jq -c '.baseline.usage.input_tokens="100"' "$TEST_ROOT/one.jsonl" >"$TEST_ROOT/string-usage.jsonl"
@@ -253,8 +343,8 @@ assert_rejected "candidate IDs cannot map to distinct run IDs" "$TEST_ROOT/candi
 jq -c '.baseline.observed_candidates[0].candidate_id="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$TEST_ROOT/one.jsonl" >"$TEST_ROOT/noncanonical-candidate-id.jsonl"
 assert_rejected "arbitrary candidate IDs fail canonical validation" "$TEST_ROOT/noncanonical-candidate-id.jsonl"
 
-jq -c '.shadow.receipt.receipt_sha256=.baseline.receipt.receipt_sha256' "$TEST_ROOT/one.jsonl" >"$TEST_ROOT/paired-receipt-hash-reuse.jsonl"
-assert_rejected "paired receipt hashes must differ" "$TEST_ROOT/paired-receipt-hash-reuse.jsonl"
+jq -c '.shadow.receipt.content_sha256=.baseline.receipt.content_sha256' "$TEST_ROOT/one.jsonl" >"$TEST_ROOT/paired-receipt-hash-reuse.jsonl"
+assert_rejected "a receipt content hash must match the shadow arm canonical content" "$TEST_ROOT/paired-receipt-hash-reuse.jsonl"
 
 jq -c '.shadow.receipt.receipt_id=.baseline.receipt.receipt_id' "$TEST_ROOT/one.jsonl" >"$TEST_ROOT/paired-receipt-id-reuse.jsonl"
 assert_rejected "paired receipt IDs must differ" "$TEST_ROOT/paired-receipt-id-reuse.jsonl"
@@ -265,8 +355,8 @@ assert_rejected "identical typed claims cannot use different fingerprint IDs" "$
 jq -s '.[0] as $first | .[1].baseline.receipt.run_id=$first.baseline.receipt.run_id | .[1].baseline.observed_candidates |= map(.run_id=$first.baseline.receipt.run_id) | .[]' "$FIXTURE" >"$TEST_ROOT/run-id-reuse.jsonl"
 assert_rejected "one run ID cannot map to distinct exact-head identities" "$TEST_ROOT/run-id-reuse.jsonl"
 
-jq -s '.[0] as $first | .[1].baseline.receipt.receipt_sha256=$first.baseline.receipt.receipt_sha256 | .[]' "$FIXTURE" >"$TEST_ROOT/receipt-hash-reuse.jsonl"
-assert_rejected "receipt hashes cannot be reused across distinct identities" "$TEST_ROOT/receipt-hash-reuse.jsonl"
+jq -s '.[0] as $first | .[1].baseline.receipt.content_sha256=$first.baseline.receipt.content_sha256 | .[]' "$FIXTURE" >"$TEST_ROOT/receipt-hash-reuse.jsonl"
+assert_rejected "a reused content hash must still match each arm canonical content" "$TEST_ROOT/receipt-hash-reuse.jsonl"
 
 jq -s '.[0] as $first | .[1].baseline.receipt.receipt_id=$first.baseline.receipt.receipt_id | .[]' "$FIXTURE" >"$TEST_ROOT/receipt-id-reuse.jsonl"
 assert_rejected "receipt IDs cannot be reused across distinct identities" "$TEST_ROOT/receipt-id-reuse.jsonl"
@@ -344,7 +434,7 @@ awk '{line[NR]=$0} END {for (i=NR;i>0;i--) print line[i]}' "$FIXTURE" >"$TEST_RO
 reversed_report="$("$BENCHMARK" score --corpus "$TEST_ROOT/reversed.jsonl")"
 assert_eq "corpus input order does not change sorted report bytes" "$report" "$reversed_report"
 assert_eq "sanitized fixture has an exact expected report" \
-  "f5155484d63bf27ad0aad17c5677a1207040dc7f67b5516d895469d813844d78" \
+  "ba424ec4a677c26d1941f50be76c81ae51b7daea8176d26eff5683d7c1d94fa1" \
   "$(sha256_text "$report")"
 
 if jq -r '.. | strings' <<<"$report" | grep -Ei '(improved|release[_ -]?gate|pass[_ -]?threshold)' >/dev/null; then

@@ -40,6 +40,19 @@ review_benchmark_receipt_id() {
   printf '%s|%s|%s' "$1" "$2" "$3" | review_benchmark_sha256
 }
 
+review_benchmark_arm_content_sha256() {
+  local canonical
+  canonical="$(jq -S -c '{
+    behavior,
+    lanes:(.lanes | sort_by(.capability,.lane_id)),
+    candidates:(.observed_candidates | sort_by(.candidate_id)),
+    findings:(.observed_findings | sort_by(.finding_id,.candidate_id)),
+    uncertain_candidate_refs:(.uncertain_candidate_ids | sort),
+    usage
+  }')" || return
+  printf '%s' "$canonical" | review_benchmark_sha256
+}
+
 review_benchmark_validate_corpus() {
   local corpus_file="$1"
 
@@ -78,10 +91,10 @@ review_benchmark_validate_corpus() {
       exact_keys(["body_sha256","event_sha256","payload_sha256"]; []) and
       (.body_sha256 | sha256) and (.event_sha256 | sha256) and (.payload_sha256 | sha256);
     def receipt:
-      exact_keys(["receipt_id","receipt_sha256","review_key","run_id","schema"]; []) and
+      exact_keys(["content_sha256","receipt_id","review_key","run_id","schema"]; []) and
       .schema == "kc-pr-flow.review-receipt-identity/v1" and
       (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$")) and
-      (.review_key | sha256) and (.receipt_id | sha256) and (.receipt_sha256 | sha256);
+      (.review_key | sha256) and (.receipt_id | sha256) and (.content_sha256 | sha256);
     def fingerprint:
       exact_keys(["anchor_sha256","category","claim_key","evidence_sha256","fingerprint_id","path","schema","side"]; []) and
       .schema == "kc-pr-flow.review-candidate-fingerprint/v1" and
@@ -94,16 +107,28 @@ review_benchmark_validate_corpus() {
       (.candidate_id | sha256) and
       (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$")) and
       (.fingerprint | fingerprint);
+    def observed_finding:
+      exact_keys(["candidate_id","evidence_sha256","finding_id"]; []) and
+      (.candidate_id | sha256) and (.evidence_sha256 | sha256) and (.finding_id | sha256);
+    def expected_finding:
+      exact_keys(["candidate_fingerprint_id","evidence_sha256","finding_id"]; []) and
+      (.candidate_fingerprint_id | sha256) and (.evidence_sha256 | sha256) and (.finding_id | sha256);
     def arm:
       . as $arm |
-      exact_keys(["behavior","lanes","observed_candidates","observed_finding_ids","receipt","uncertain_candidate_ids","usage"]; []) and
+      exact_keys(["behavior","lanes","observed_candidates","observed_findings","receipt","uncertain_candidate_ids","usage"]; []) and
       (.behavior | behavior) and (.receipt | receipt) and
       (.lanes | type == "array" and all(.[]; lane) and ((map(.lane_id) | unique | length) == length)) and
       (.observed_candidates | type == "array" and all(.[]; candidate) and
         ((map(.candidate_id) | unique | length) == length) and
         ((map(.fingerprint.fingerprint_id) | unique | length) == length)) and
       all(.observed_candidates[]; .run_id == $arm.receipt.run_id) and
-      (.observed_finding_ids | unique_sha_array) and
+      (.observed_findings | type == "array" and all(.[]; observed_finding) and
+        ((map(.finding_id) | unique | length) == length)) and
+      all(.observed_findings[]; . as $finding |
+        ($arm.observed_candidates | map(select(
+          .candidate_id == $finding.candidate_id and
+          .fingerprint.evidence_sha256 == $finding.evidence_sha256
+        )) | length) == 1) and
       (.uncertain_candidate_ids | unique_sha_array) and
       all(.uncertain_candidate_ids[]; . as $id | ($arm.observed_candidates | map(.candidate_id)) | index($id) != null) and
       (.usage | usage);
@@ -114,10 +139,12 @@ review_benchmark_validate_corpus() {
       (.base_sha | sha40) and (.head_sha | sha40) and (.config_hash | sha256) and (.review_key | sha256);
     def pair:
       . as $pair |
-      exact_keys(["baseline","disagreement_candidate_fingerprint_ids","exact_head","expected_capability_ids","expected_finding_ids","pair_id","schema","shadow","stability_group"]; []) and
+      exact_keys(["baseline","disagreement_candidate_fingerprint_ids","exact_head","expected_capability_ids","expected_findings","pair_id","schema","shadow","stability_group"]; []) and
       .schema == "kc-pr-flow.review-benchmark-pair/v1" and
       (.pair_id | safe_token) and (.stability_group | safe_token) and
-      (.exact_head | exact_head) and (.expected_finding_ids | unique_sha_array) and
+      (.exact_head | exact_head) and
+      (.expected_findings | type == "array" and all(.[]; expected_finding) and
+        ((map(.finding_id) | unique | length) == length)) and
       (.expected_capability_ids | type == "array" and length > 0 and all(.[]; safe_token) and
         . == (sort | unique)) and
       (.baseline | arm) and (.shadow | arm) and
@@ -127,7 +154,22 @@ review_benchmark_validate_corpus() {
       .shadow.receipt.review_key == .exact_head.review_key and
       .baseline.receipt.run_id != .shadow.receipt.run_id and
       .baseline.receipt.receipt_id != .shadow.receipt.receipt_id and
-      .baseline.receipt.receipt_sha256 != .shadow.receipt.receipt_sha256 and
+      all(.expected_findings[]; . as $finding |
+        (($pair.baseline.observed_candidates + $pair.shadow.observed_candidates) |
+          map(select(
+            .fingerprint.fingerprint_id == $finding.candidate_fingerprint_id and
+            .fingerprint.evidence_sha256 == $finding.evidence_sha256
+          )) | length) > 0) and
+      all([$pair.baseline,$pair.shadow][]; . as $arm |
+        all($arm.observed_findings[]; . as $observed |
+          ($pair.expected_findings | map(select(.finding_id == $observed.finding_id))) as $expected |
+          if ($expected | length) == 0 then true
+          else
+            ($arm.observed_candidates | map(select(.candidate_id == $observed.candidate_id)) | first) as $candidate |
+            $observed.evidence_sha256 == $expected[0].evidence_sha256 and
+            $candidate.fingerprint.evidence_sha256 == $expected[0].evidence_sha256 and
+            $candidate.fingerprint.fingerprint_id == $expected[0].candidate_fingerprint_id
+          end)) and
       (($pair.baseline.observed_candidates + $pair.shadow.observed_candidates |
         group_by(.fingerprint.fingerprint_id)) |
         all(.[]; (map(.fingerprint) | unique | length) == 1)) and
@@ -142,16 +184,14 @@ review_benchmark_validate_corpus() {
       . + {exact_head_review_key:$pair.exact_head.review_key}] |
       group_by(.run_id) | all(.[]; (map(.exact_head_review_key) | unique | length) == 1)) and
     ([.[] | .baseline.receipt,.shadow.receipt] |
-      group_by(.receipt_id) | all(.[]; (map([.run_id,.review_key,.receipt_sha256]) | unique | length) == 1)) and
-    ([.[] | .baseline.receipt,.shadow.receipt] |
-      group_by(.receipt_sha256) | all(.[]; (map([.run_id,.review_key,.receipt_id]) | unique | length) == 1))
+      group_by(.receipt_id) | all(.[]; (map([.run_id,.review_key,.content_sha256]) | unique | length) == 1))
   ' "$corpus_file" >/dev/null 2>&1
 }
 
 review_benchmark_validate_authority() {
   local corpus_file="$1"
   local repository pr_number base_sha head_sha config_hash actual expected
-  local candidate candidate_id fingerprint fingerprint_id run_id review_key receipt_sha256 receipt_id
+  local candidate candidate_id fingerprint fingerprint_id run_id review_key content_sha256 receipt_id arm
   local records
 
   records="$(jq -r '[.exact_head.repository,.exact_head.pr_number,.exact_head.base_sha,.exact_head.head_sha,.exact_head.config_hash,.exact_head.review_key] | @tsv' "$corpus_file")" || return
@@ -174,9 +214,16 @@ review_benchmark_validate_authority() {
     [ "$candidate_id" = "$expected" ] || return 1
   done <<<"$records"
 
-  records="$(jq -r '[.baseline.receipt,.shadow.receipt][] | [.run_id,.review_key,.receipt_sha256,.receipt_id] | @tsv' "$corpus_file")" || return
-  while IFS=$'\t' read -r run_id review_key receipt_sha256 receipt_id; do
-    expected="$(review_benchmark_receipt_id "$run_id" "$review_key" "$receipt_sha256")" || return
+  records="$(jq -c '.baseline,.shadow' "$corpus_file")" || return
+  while IFS= read -r arm; do
+    [ -n "$arm" ] || continue
+    run_id="$(printf '%s' "$arm" | jq -r '.receipt.run_id')" || return
+    review_key="$(printf '%s' "$arm" | jq -r '.receipt.review_key')" || return
+    content_sha256="$(printf '%s' "$arm" | jq -r '.receipt.content_sha256')" || return
+    expected="$(printf '%s' "$arm" | review_benchmark_arm_content_sha256)" || return
+    [ "$content_sha256" = "$expected" ] || return 1
+    receipt_id="$(printf '%s' "$arm" | jq -r '.receipt.receipt_id')" || return
+    expected="$(review_benchmark_receipt_id "$run_id" "$review_key" "$content_sha256")" || return
     [ "$receipt_id" = "$expected" ] || return 1
   done <<<"$records"
 }
@@ -238,15 +285,17 @@ review_benchmark_score() (
         markers:{baseline:$baseline,shadow:$shadow}
       };
     def stability($pair):
+      ($pair.baseline.observed_findings | map(.finding_id) | sort) as $baseline_finding_ids |
+      ($pair.shadow.observed_findings | map(.finding_id) | sort) as $shadow_finding_ids |
       ($pair.baseline.observed_candidates | map(.candidate_id) | sort) as $baseline_candidate_ids |
       ($pair.shadow.observed_candidates | map(.candidate_id) | sort) as $shadow_candidate_ids |
       ($pair.baseline.observed_candidates | map(.fingerprint.fingerprint_id) | sort) as $baseline_fingerprints |
       ($pair.shadow.observed_candidates | map(.fingerprint.fingerprint_id) | sort) as $shadow_fingerprints |
       {
         stability_group:$pair.stability_group,
-        common_finding_ids:intersection($pair.baseline.observed_finding_ids; $pair.shadow.observed_finding_ids),
-        baseline_only_finding_ids:difference($pair.baseline.observed_finding_ids; $pair.shadow.observed_finding_ids),
-        shadow_only_finding_ids:difference($pair.shadow.observed_finding_ids; $pair.baseline.observed_finding_ids),
+        common_finding_ids:intersection($baseline_finding_ids; $shadow_finding_ids),
+        baseline_only_finding_ids:difference($baseline_finding_ids; $shadow_finding_ids),
+        shadow_only_finding_ids:difference($shadow_finding_ids; $baseline_finding_ids),
         baseline_candidate_ids:$baseline_candidate_ids,
         shadow_candidate_ids:$shadow_candidate_ids,
         common_candidate_fingerprint_ids:intersection($baseline_fingerprints; $shadow_fingerprints),
@@ -284,9 +333,9 @@ review_benchmark_score() (
         exact_head:$pair.exact_head,
         receipts:{baseline:$pair.baseline.receipt,shadow:$pair.shadow.receipt},
         evidence_recall:{
-          expected_finding_ids:($pair.expected_finding_ids | sort),
-          baseline:recall($pair.expected_finding_ids; $pair.baseline.observed_finding_ids),
-          shadow:recall($pair.expected_finding_ids; $pair.shadow.observed_finding_ids)
+          expected_finding_ids:($pair.expected_findings | map(.finding_id) | sort),
+          baseline:recall(($pair.expected_findings | map(.finding_id)); ($pair.baseline.observed_findings | map(.finding_id))),
+          shadow:recall(($pair.expected_findings | map(.finding_id)); ($pair.shadow.observed_findings | map(.finding_id)))
         },
         lane_capability_coverage:{
           baseline:lane_coverage($pair.baseline; $pair.expected_capability_ids),
