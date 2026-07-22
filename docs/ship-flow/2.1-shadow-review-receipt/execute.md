@@ -1,4 +1,3 @@
-<!-- section:execute-report -->
 <!-- section:execute-output -->
 ## Execute Output
 
@@ -54,6 +53,7 @@
 <!-- /section:knowledge-captures -->
 <!-- /section:execute-output -->
 
+<!-- section:execute-report -->
 ## Execute Report
 
 status: passed
@@ -63,6 +63,7 @@ knowledge_capture: D1: 1, D2: 1
 started_at: 2026-07-22T08:20:06Z
 completed_at: 2026-07-22T11:50:00Z
 
+<!-- section:execute-report-metrics -->
 ### Metrics
 
 status: passed
@@ -72,6 +73,8 @@ task_count: 5
 tasks_done: 5
 tasks_blocked: 0
 commit_count: 5
+<!-- /section:execute-report-metrics -->
+<!-- /section:execute-report -->
 
 <!-- section:execute-uat -->
 ## Execute UAT
@@ -98,5 +101,3 @@ commit_count: 5
 - context_read_receipts: T1-T5 read `kc-pr-flow/CLAUDE.md`; no non-root folder skill was routed; root agent instructions remained session context.
 - static_receipt: `bash -n`, shellcheck, actionlint, yq, `git diff --check 12f3e7d..HEAD`, and forbidden-content scan all exit 0; TDD ledger reports `status=pass records=5`.
 <!-- /section:hand-off-to-verify -->
-
-<!-- /section:execute-report -->
