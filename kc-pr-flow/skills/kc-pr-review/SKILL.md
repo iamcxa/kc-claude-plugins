@@ -990,6 +990,95 @@ Any subsequent head movement must **invalidate the diagrams** together with the 
 draft. Re-review the unseen delta (or full rewritten head) and regenerate the diagrams before
 offering options 5 or 6.
 
+### 6b-shadow. Best-effort Shadow Receipt Observer
+
+This is the single post-collation shadow seam. Run it only after every confidence gate, event
+modifier, pass-coverage check, reconciliation result, and review-body section has reached its final
+pre-confirmation value. It observes that already-computed state; it is not another review pass.
+
+**Activation:** KC_PR_FLOW_REVIEW_SHADOW defaults to `off`. Only the exact value `on` enables
+this seam. An unset, empty, or unknown value is `off` and proceeds directly to §6c with no runtime
+call or receipt write.
+
+When enabled:
+
+1. Freeze the final legacy values as immutable inputs: rendered review body, inline comments,
+   advisory items, confirmation options, effective review event, and the reviewed head SHA. The
+   shadow path must never rewrite, normalize, reorder, or replace any of them.
+2. Define every bounded shadow input before calling the runtime:
+
+   - SHADOW_REPOSITORY = normalized `owner/repo` captured by Step 1.
+   - `SHADOW_PR_NUMBER` = the detected PR number.
+   - `SHADOW_BASE_SHA` = the exact base commit used for the final reviewed diff.
+   - `REVIEWED_HEAD_SHA` = the exact head covered by the final Step 5/6 result.
+   - SHADOW_CONFIG_HASH = SHA-256 produced only by the runtime config-hash authority below. Its v1
+     canonical JSON default instance and key shape are exactly:
+
+     ```json
+     {"capabilities":[],"modes":{"agent_tier":"lite","cross_model":false,"full_pass":false,"noise_filter":false,"pr_archetype":"mixed","probe_required":false},"schema":"kc-pr-flow.review-config/v1"}
+     ```
+
+     The exhaustive v1 mode keys and normalized defaults/types are:
+
+     | Key | Type and accepted values | Default | Effective source |
+     |-----|--------------------------|---------|------------------|
+     | `agent_tier` | string enum: `lite`, `standard`, `full` | `lite` | final tier after the full-pass floor or user override |
+     | `pr_archetype` | string enum: `bugfix`, `cross_stack`, `docs`, `feature`, `mixed`, `refactor`, `style` | `mixed` | normalized Step 4d archetype (`cross-stack` becomes `cross_stack`) |
+     | `full_pass` | JSON boolean | `false` | final `FULL_PASS_MODE` |
+     | `probe_required` | JSON boolean | `false` | final `PROBE_REQUIRED` |
+     | `cross_model` | JSON boolean | `false` | `true` only when the Codex second-opinion lane actually dispatched |
+     | `noise_filter` | JSON boolean | `false` | `true` only when Step 4b filtered the dispatched diff |
+
+     Define `SHADOW_CAPABILITIES` as comma-separated safe identifiers matching
+     `^[a-z][a-z0-9._-]{0,63}$` from the typed review capabilities actually activated for this run
+     (empty when none). The helper rejects invalid
+     enums/booleans/identifiers, sorts and deduplicates capabilities, serializes with `jq -S -c`,
+     and hashes the compact bytes with no trailing newline. It uses macOS `shasum -a 256`, with
+     `sha256sum` as the portable fallback. Prompts, source, diff, body, comments, and model output
+     are never config inputs.
+
+     Normalize the effective values into `SHADOW_AGENT_TIER`, `SHADOW_PR_ARCHETYPE`,
+     `SHADOW_FULL_PASS`, `SHADOW_PROBE_REQUIRED`, `SHADOW_CROSS_MODEL`, and
+     `SHADOW_NOISE_FILTER`, then execute the sole construction/hash command:
+
+     ```bash
+     SHADOW_CONFIG_HASH="$("$CLAUDE_PLUGIN_ROOT/scripts/review-runtime.sh" config-hash --agent-tier "${SHADOW_AGENT_TIER:-lite}" --pr-archetype "${SHADOW_PR_ARCHETYPE:-mixed}" --full-pass "${SHADOW_FULL_PASS:-false}" --probe-required "${SHADOW_PROBE_REQUIRED:-false}" --cross-model "${SHADOW_CROSS_MODEL:-false}" --noise-filter "${SHADOW_NOISE_FILTER:-false}" --capabilities "${SHADOW_CAPABILITIES:-}")" || SHADOW_CONFIG_HASH=''
+     ```
+
+     A missing/invalid hash is a shadow dependency failure and follows **Fail open**; never invent a
+     substitute hash.
+   - `SHADOW_OCCURRED_AT` = the current UTC RFC3339 timestamp.
+   - `SHADOW_EVENT_FILE` = the existing exact-head event-log path when a typed collector already
+     created it through runtime `start` plus `append`; otherwise define it as the empty string.
+
+   The production seam derives `SHADOW_REVIEW_KEY` from
+   `SHADOW_REPOSITORY|SHADOW_PR_NUMBER|SHADOW_BASE_SHA|REVIEWED_HEAD_SHA|SHADOW_CONFIG_HASH` using
+   the runtime's canonical hash function. Do not calculate a competing key in the skill.
+3. Perform a **fresh read-only Step 2.1 exact-head check** and record `SHADOW_HEAD_STATUS=ok` plus
+   `FRESH_HEAD_SHA`, or `SHADOW_HEAD_STATUS=failed` plus an empty `FRESH_HEAD_SHA`. This read is not
+   posting authorization. A failed or moved-head result prevents receipt observation inside the
+   production seam, and the final Step 7 exact-head check remains authoritative.
+4. Make exactly one production shadow call whenever the gate is explicitly `on`, including when the
+   typed receipt is missing or invalid. Pass the empty `SHADOW_EVENT_FILE` value when no collector
+   output exists; the seam then creates one minimal identity-only `run.started` receipt through the
+   existing `start` authority, resolves that run's managed event-log path, and invokes the existing
+   read-only observer exactly once. When a collector path exists, the seam reuses its `start`/`append`
+   log and never creates a second receipt authority:
+
+   ```bash
+   SHADOW_STATUS="$("$CLAUDE_PLUGIN_ROOT/scripts/review-runtime.sh" shadow --enabled on --head-check-status "$SHADOW_HEAD_STATUS" --live-head "$FRESH_HEAD_SHA" --repo "$SHADOW_REPOSITORY" --pr "$SHADOW_PR_NUMBER" --base "$SHADOW_BASE_SHA" --head "$REVIEWED_HEAD_SHA" --config-hash "$SHADOW_CONFIG_HASH" --occurred-at "$SHADOW_OCCURRED_AT" --event-file "$SHADOW_EVENT_FILE" 2>/dev/null)" || SHADOW_STATUS=''
+   ```
+
+5. Treat the typed observer status as diagnostic-only. It cannot choose or adjust the review event,
+   confidence, findings, body, comments, options, or posting payload. Never dispatch another reviewer, model lane, or arbiter from this seam. Never call a GitHub mutation or posting API from the
+   observer or in response to its result.
+
+**Fail open:** Every missing dependency, invalid receipt, state error, head mismatch, or observer
+failure is a bounded best-effort skip. At most, show one concise diagnostic note outside the review
+body. Then present the byte-identical legacy draft, comments, options, and effective event at §6c.
+Do not retry a model lane, retry the observer, change confirmation behavior, or infer posting
+authorization from either success or failure.
+
 ### 6c. User confirmation gate
 
 **GATE — Do not post without user confirmation.** Always present both tables and then offer structured options:

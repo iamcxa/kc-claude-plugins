@@ -126,6 +126,95 @@ review_runtime_review_key() {
   printf '%s|%s|%s|%s|%s' "$1" "$2" "$3" "$4" "$5" | review_runtime_sha256
 }
 
+review_runtime_boolean_valid() {
+  case "$1" in
+    true | false) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# Canonical review configuration v1. Arguments are normalized effective values,
+# not request text: tier, archetype, four booleans, and comma-separated active
+# capability identifiers. jq -S -c provides deterministic compact key ordering;
+# capabilities are sorted and deduplicated before serialization.
+review_runtime_config_canonical() {
+  local agent_tier='lite'
+  local pr_archetype='mixed'
+  local full_pass='false'
+  local probe_required='false'
+  local cross_model='false'
+  local noise_filter='false'
+  local capabilities=''
+
+  if [ "$#" -gt 7 ]; then
+    printf 'review-runtime: too many config arguments\n' >&2
+    return 2
+  fi
+  [ "$#" -lt 1 ] || agent_tier="$1"
+  [ "$#" -lt 2 ] || pr_archetype="$2"
+  [ "$#" -lt 3 ] || full_pass="$3"
+  [ "$#" -lt 4 ] || probe_required="$4"
+  [ "$#" -lt 5 ] || cross_model="$5"
+  [ "$#" -lt 6 ] || noise_filter="$6"
+  [ "$#" -lt 7 ] || capabilities="$7"
+
+  case "$agent_tier" in
+    lite | standard | full) ;;
+    *)
+      printf 'review-runtime: invalid agent tier\n' >&2
+      return 2
+      ;;
+  esac
+  case "$pr_archetype" in
+    bugfix | cross_stack | docs | feature | mixed | refactor | style) ;;
+    *)
+      printf 'review-runtime: invalid PR archetype\n' >&2
+      return 2
+      ;;
+  esac
+  if ! review_runtime_boolean_valid "$full_pass" ||
+    ! review_runtime_boolean_valid "$probe_required" ||
+    ! review_runtime_boolean_valid "$cross_model" ||
+    ! review_runtime_boolean_valid "$noise_filter"; then
+    printf 'review-runtime: config mode flags must be true or false\n' >&2
+    return 2
+  fi
+  if [ -n "$capabilities" ] &&
+    ! [[ "$capabilities" =~ ^[a-z][a-z0-9._-]{0,63}(,[a-z][a-z0-9._-]{0,63})*$ ]]; then
+    printf 'review-runtime: invalid capability identifiers\n' >&2
+    return 2
+  fi
+
+  review_runtime_require_jq || return
+  jq -S -c -n \
+    --arg agent_tier "$agent_tier" \
+    --arg pr_archetype "$pr_archetype" \
+    --arg full_pass "$full_pass" \
+    --arg probe_required "$probe_required" \
+    --arg cross_model "$cross_model" \
+    --arg noise_filter "$noise_filter" \
+    --arg capabilities "$capabilities" '
+      ($capabilities | if . == "" then [] else split(",") | sort | unique end) as $normalized_capabilities |
+      {
+        schema:"kc-pr-flow.review-config/v1",
+        modes:{
+          agent_tier:$agent_tier,
+          pr_archetype:$pr_archetype,
+          full_pass:($full_pass == "true"),
+          probe_required:($probe_required == "true"),
+          cross_model:($cross_model == "true"),
+          noise_filter:($noise_filter == "true")
+        },
+        capabilities:$normalized_capabilities
+      }'
+}
+
+review_runtime_config_hash() {
+  local canonical
+  canonical="$(review_runtime_config_canonical "$@")" || return
+  printf '%s' "$canonical" | review_runtime_sha256
+}
+
 review_runtime_repository_identity_valid() {
   [ -n "$1" ] || return 1
   ! printf '%s' "$1" | LC_ALL=C grep '[[:cntrl:]]' >/dev/null 2>&1
@@ -1396,6 +1485,124 @@ review_runtime_show() {
     }'
 }
 
+# Read-only shadow observer. It deliberately delegates validation and state
+# reconstruction to replay rather than creating a second receipt authority.
+# The caller supplies the exact head and review key that it just observed; a
+# mismatch produces a typed non-observation and never mutates the event log.
+review_runtime_observe() (
+  local event_file="$1"
+  local expected_head="$2"
+  local expected_review_key="$3"
+  local projection observed_head observed_review_key
+
+  review_runtime_require_jq || return
+  [[ "$expected_head" =~ ^[0-9a-f]{40}$ ]] || {
+    printf 'review-runtime: invalid expected head SHA\n' >&2
+    return 2
+  }
+  [[ "$expected_review_key" =~ ^[0-9a-f]{64}$ ]] || {
+    printf 'review-runtime: invalid expected review key\n' >&2
+    return 2
+  }
+
+  if ! projection="$(review_runtime_replay "$event_file")"; then
+    jq -S -c -n '{schema:"kc-pr-flow.review-observer-status/v1",status:"not_observed",reason:"invalid_receipt"}'
+    return 3
+  fi
+  observed_head="$(printf '%s' "$projection" | jq -r '.run.head_sha')" || return
+  observed_review_key="$(printf '%s' "$projection" | jq -r '.run.review_key')" || return
+
+  if [ "$observed_head" != "$expected_head" ]; then
+    jq -S -c -n '{schema:"kc-pr-flow.review-observer-status/v1",status:"not_observed",reason:"exact_head_mismatch"}'
+    return 3
+  fi
+  if [ "$observed_review_key" != "$expected_review_key" ]; then
+    jq -S -c -n '{schema:"kc-pr-flow.review-observer-status/v1",status:"not_observed",reason:"review_key_mismatch"}'
+    return 3
+  fi
+
+  printf '%s' "$projection" | jq -S -c '
+    {
+      schema:"kc-pr-flow.review-observer-status/v1",
+      status:"observed",
+      run_id:.run.run_id,
+      review_key:.run.review_key,
+      head_sha:.run.head_sha,
+      counts:{
+        lanes:(.lanes | length),
+        candidates:(.candidates | length),
+        findings:(.findings | length),
+        uncertain_candidates:(.uncertain_candidate_ids | length),
+        usage_observations:(.usage_observations | length)
+      }
+    }'
+)
+
+# Production shadow seam. The caller owns the read-only remote head check and
+# passes only its bounded result. This seam owns no network or review authority:
+# it derives the exact review key, prepares a minimal typed run when no existing
+# event log was supplied, invokes the read-only observer once, and always fails
+# open to a typed diagnostic status.
+review_runtime_shadow() (
+  local enabled="${1:-}"
+  local head_check_status="${2:-}"
+  local live_head="${3:-}"
+  local repository="${4:-}"
+  local pr_number="${5:-}"
+  local base_sha="${6:-}"
+  local reviewed_head="${7:-}"
+  local config_hash="${8:-}"
+  local occurred_at="${9:-}"
+  local event_file="${10:-}"
+  local review_key='' start_output='' run_id='' state_root='' repo_key=''
+  local observer_output='' observer_rc=0
+
+  if [ "$enabled" != 'on' ]; then
+    printf '%s\n' '{"reason":"shadow_disabled","schema":"kc-pr-flow.review-observer-status/v1","status":"disabled"}'
+    return 0
+  fi
+  if [ "$head_check_status" != 'ok' ]; then
+    printf '%s\n' '{"reason":"head_check_failed","schema":"kc-pr-flow.review-observer-status/v1","status":"not_observed"}'
+    return 0
+  fi
+  if ! [[ "$live_head" =~ ^[0-9a-f]{40}$ ]] || [ "$live_head" != "$reviewed_head" ]; then
+    printf '%s\n' '{"reason":"exact_head_mismatch","schema":"kc-pr-flow.review-observer-status/v1","status":"not_observed"}'
+    return 0
+  fi
+
+  if ! review_runtime_validate_start_input \
+    "$repository" "$pr_number" "$base_sha" "$reviewed_head" "$config_hash" "$occurred_at" '' ''; then
+    printf '%s\n' '{"reason":"invalid_shadow_identity","schema":"kc-pr-flow.review-observer-status/v1","status":"not_observed"}'
+    return 0
+  fi
+  review_key="$(review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$reviewed_head" "$config_hash")" || review_key=''
+
+  if [ -z "$event_file" ]; then
+    if start_output="$(review_runtime_start \
+      "$repository" "$pr_number" "$base_sha" "$reviewed_head" "$config_hash" "$occurred_at" '' '')"; then
+      run_id="$(printf '%s' "$start_output" | jq -r '.run_id' 2>/dev/null)" || run_id=''
+      state_root="$(review_runtime_state_root)" || state_root=''
+      repo_key="$(review_runtime_repo_key "$repository")" || repo_key=''
+      if [ -n "$state_root" ] && [ -n "$repo_key" ] && [[ "$run_id" =~ ^run-[A-Za-z0-9._-]+$ ]]; then
+        event_file="$state_root/$repo_key/pr-$pr_number/$run_id/events.jsonl"
+      fi
+    fi
+    if [ -z "$event_file" ]; then
+      state_root="$(review_runtime_state_root 2>/dev/null)" || state_root='.'
+      event_file="$state_root/.shadow-unavailable-${review_key:-unknown}/events.jsonl"
+    fi
+  fi
+
+  observer_output="$(review_runtime_observe "$event_file" "$reviewed_head" "$review_key")"
+  observer_rc=$?
+  if [ -n "$observer_output" ]; then
+    printf '%s\n' "$observer_output"
+  else
+    printf '%s\n' '{"reason":"observer_error","schema":"kc-pr-flow.review-observer-status/v1","status":"not_observed"}'
+  fi
+  [ "$observer_rc" -eq 0 ] || return 0
+)
+
 review_runtime_main_event_file() {
   local operation="$1"
   shift
@@ -1426,6 +1633,123 @@ review_runtime_main_event_file() {
     replay) review_runtime_replay "$event_file" ;;
     show) review_runtime_show "$event_file" ;;
   esac
+}
+
+review_runtime_main_observe() {
+  local event_file=''
+  local expected_head=''
+  local expected_review_key=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --event-file | --expected-head | --expected-review-key)
+        [ "$#" -ge 2 ] || {
+          printf 'review-runtime: missing value for %s\n' "$1" >&2
+          return 2
+        }
+        case "$1" in
+          --event-file) event_file="$2" ;;
+          --expected-head) expected_head="$2" ;;
+          --expected-review-key) expected_review_key="$2" ;;
+        esac
+        shift 2
+        ;;
+      *)
+        printf 'review-runtime: unknown observe option: %s\n' "$1" >&2
+        return 2
+        ;;
+    esac
+  done
+  [ -n "$event_file" ] && [ -n "$expected_head" ] && [ -n "$expected_review_key" ] || {
+    printf 'review-runtime: --event-file, --expected-head, and --expected-review-key are required\n' >&2
+    return 2
+  }
+  review_runtime_observe "$event_file" "$expected_head" "$expected_review_key"
+}
+
+review_runtime_main_shadow() {
+  local enabled="${KC_PR_FLOW_REVIEW_SHADOW:-}"
+  local head_check_status='' live_head='' repository='' pr_number=''
+  local base_sha='' reviewed_head='' config_hash='' occurred_at='' event_file=''
+
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --enabled | --head-check-status | --live-head | --repo | --pr | --base | --head | --config-hash | --occurred-at | --event-file)
+        [ "$#" -ge 2 ] || {
+          printf 'review-runtime: missing value for %s\n' "$1" >&2
+          return 2
+        }
+        case "$1" in
+          --enabled) enabled="$2" ;;
+          --head-check-status) head_check_status="$2" ;;
+          --live-head) live_head="$2" ;;
+          --repo) repository="$2" ;;
+          --pr) pr_number="$2" ;;
+          --base) base_sha="$2" ;;
+          --head) reviewed_head="$2" ;;
+          --config-hash) config_hash="$2" ;;
+          --occurred-at) occurred_at="$2" ;;
+          --event-file) event_file="$2" ;;
+        esac
+        shift 2
+        ;;
+      *)
+        printf 'review-runtime: unknown shadow option: %s\n' "$1" >&2
+        return 2
+        ;;
+    esac
+  done
+
+  if [ "$enabled" = 'on' ]; then
+    [ -n "$head_check_status" ] && [ -n "$repository" ] && [ -n "$pr_number" ] &&
+      [ -n "$base_sha" ] && [ -n "$reviewed_head" ] && [ -n "$config_hash" ] || {
+      printf 'review-runtime: enabled shadow requires head status and exact review identity\n' >&2
+      return 2
+    }
+    if [ "$head_check_status" = 'ok' ] && [ -z "$live_head" ]; then
+      printf 'review-runtime: successful head check requires --live-head\n' >&2
+      return 2
+    fi
+    if [ -z "$occurred_at" ]; then
+      occurred_at="$(date -u '+%Y-%m-%dT%H:%M:%SZ')" || return
+    fi
+  fi
+
+  review_runtime_shadow "$enabled" "$head_check_status" "$live_head" \
+    "$repository" "$pr_number" "$base_sha" "$reviewed_head" "$config_hash" "$occurred_at" "$event_file"
+}
+
+review_runtime_main_config_hash() {
+  local agent_tier='lite' pr_archetype='mixed'
+  local full_pass='false' probe_required='false'
+  local cross_model='false' noise_filter='false' capabilities=''
+
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --agent-tier | --pr-archetype | --full-pass | --probe-required | --cross-model | --noise-filter | --capabilities)
+        [ "$#" -ge 2 ] || {
+          printf 'review-runtime: missing value for %s\n' "$1" >&2
+          return 2
+        }
+        case "$1" in
+          --agent-tier) agent_tier="$2" ;;
+          --pr-archetype) pr_archetype="$2" ;;
+          --full-pass) full_pass="$2" ;;
+          --probe-required) probe_required="$2" ;;
+          --cross-model) cross_model="$2" ;;
+          --noise-filter) noise_filter="$2" ;;
+          --capabilities) capabilities="$2" ;;
+        esac
+        shift 2
+        ;;
+      *)
+        printf 'review-runtime: unknown config-hash option: %s\n' "$1" >&2
+        return 2
+        ;;
+    esac
+  done
+
+  review_runtime_config_hash "$agent_tier" "$pr_archetype" "$full_pass" \
+    "$probe_required" "$cross_model" "$noise_filter" "$capabilities"
 }
 
 review_runtime_main_verify_evidence() {
@@ -1487,7 +1811,7 @@ review_runtime_main_compare_usage() {
 }
 
 review_runtime_usage() {
-  printf '%s\n' 'usage: review-runtime.sh {start ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|verify-evidence ...|compare-usage ...}' >&2
+  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|shadow ...|verify-evidence ...|compare-usage ...}' >&2
 }
 
 review_runtime_main_start() {
@@ -1531,7 +1855,10 @@ review_runtime_main() {
   [ "$#" -gt 0 ] && shift
   case "$command" in
     start) review_runtime_main_start "$@" ;;
+    config-hash) review_runtime_main_config_hash "$@" ;;
     validate | append | replay | show) review_runtime_main_event_file "$command" "$@" ;;
+    observe) review_runtime_main_observe "$@" ;;
+    shadow) review_runtime_main_shadow "$@" ;;
     verify-evidence) review_runtime_main_verify_evidence "$@" ;;
     compare-usage) review_runtime_main_compare_usage "$@" ;;
     *)
