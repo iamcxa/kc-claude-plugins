@@ -6,6 +6,7 @@ set -uo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 RUNTIME="$HERE/review-runtime.sh"
+SAFE_IO="$HERE/review-runtime-safe-io.py"
 FIXTURE="$HERE/../test/fixtures/review-runtime/valid-events.jsonl"
 TEST_STATE_ROOT="$(mktemp -d)"
 TEST_INPUT_ROOT="$(mktemp -d)"
@@ -23,7 +24,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope]\n' "$0" >&2
+    printf 'usage: %s [--case privacy-envelope|safe-io]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -288,8 +289,606 @@ run_privacy_envelope_tests() {
   rm -rf "$dependency_state"
 }
 
+run_safe_io_tests() {
+  local source_file destination_file helper_output helper_rc
+  local empty_file exact_file fifo_file socket_file socket_ready socket_pid socket_rc
+  local race_source race_destination race_rc capability_open_rc unknown_open_rc missing_source
+  local oversized_file existing_contents mutation_rc capability_rc durability_rc flags_rc cleanup_swap_rc
+  local fixture_event impossible_event leap_event invalid_limit_state dependency_state
+  local batch_file batch_output batch_rc maximum_usage unsafe_usage float_usage exponent_usage usage_output
+  local one_review_key integer_event float_event exponent_event fixture_bytes oversize_limit stdin_state
+  local rfc_state rfc_rc
+  local runtime_snapshot_root runtime_snapshot_observation fake_helper runtime_snapshot_rc
+
+  source_file="$TEST_INPUT_ROOT/safe-source.json"
+  destination_file="$TEST_INPUT_ROOT/safe-destination.json"
+  printf '%s' '{"safe":true}' >"$source_file"
+  helper_output="$(python3 "$SAFE_IO" snapshot --source "$source_file" --destination "$destination_file" --limit-bytes 64 2>"$TEST_INPUT_ROOT/snapshot.stderr")"
+  helper_rc=$?
+  assert_eq "descriptor snapshot succeeds" "0" "$helper_rc"
+  assert_eq "descriptor snapshot writes no stdout" "" "$helper_output"
+  assert_eq "descriptor snapshot preserves bytes" '{"safe":true}' "$(cat "$destination_file" 2>/dev/null)"
+  assert_eq "descriptor snapshot destination is mode 0600" "600" "$(file_mode "$destination_file" 2>/dev/null)"
+
+  empty_file="$TEST_INPUT_ROOT/empty-source.json"
+  : >"$empty_file"
+  rm -f "$destination_file"
+  python3 "$SAFE_IO" snapshot --source "$empty_file" --destination "$destination_file" --limit-bytes 1 >/dev/null 2>&1
+  assert_eq "empty regular source snapshots successfully" "0" "$?"
+  assert_eq "empty source produces an empty destination" "0" "$(wc -c <"$destination_file" | tr -d ' ')"
+
+  exact_file="$TEST_INPUT_ROOT/exact-limit-source.json"
+  printf '%064d' 0 >"$exact_file"
+  rm -f "$destination_file"
+  python3 "$SAFE_IO" snapshot --source "$exact_file" --destination "$destination_file" --limit-bytes 64 >/dev/null 2>&1
+  assert_eq "source exactly at the limit snapshots successfully" "0" "$?"
+  assert_eq "exact-limit snapshot preserves all bytes" "64" "$(wc -c <"$destination_file" | tr -d ' ')"
+
+  rm -f "$destination_file"
+  python3 - "$SAFE_IO" "$source_file" "$destination_file" <<'PY'
+import importlib.util
+import os
+import sys
+
+helper_path, source, destination = sys.argv[1:]
+spec = importlib.util.spec_from_file_location("review_runtime_safe_io_flags", helper_path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+real_open = module.os.open
+source_opens = []
+
+def tracked_open(path, flags, *args):
+    if path == source:
+        source_opens.append(flags)
+    return real_open(path, flags, *args)
+
+module.os.open = tracked_open
+rc = module.main(["snapshot", "--source", source, "--destination", destination, "--limit-bytes", "64"])
+required = module.os.O_NOFOLLOW | module.os.O_CLOEXEC
+valid = (
+    rc == 0
+    and len(source_opens) == 1
+    and (source_opens[0] & module.os.O_ACCMODE) == module.os.O_RDONLY
+    and (source_opens[0] & required) == required
+)
+raise SystemExit(0 if valid else 1)
+PY
+  flags_rc=$?
+  assert_eq "source is opened exactly once with read-only no-follow close-on-exec flags" "0" "$flags_rc"
+
+  rm -f "$destination_file"
+  ln -s "$source_file" "$TEST_INPUT_ROOT/source-link.json"
+  python3 "$SAFE_IO" snapshot --source "$TEST_INPUT_ROOT/source-link.json" --destination "$destination_file" --limit-bytes 64 >/dev/null 2>&1
+  assert_eq "symlink source is rejected as unsafe" "2" "$?"
+  assert_eq "symlink rejection creates no destination" "false" "$([ -e "$destination_file" ] && printf true || printf false)"
+
+  python3 "$SAFE_IO" snapshot --source "$TEST_INPUT_ROOT" --destination "$destination_file" --limit-bytes 64 >/dev/null 2>&1
+  assert_eq "non-regular source is rejected as unsafe" "2" "$?"
+
+  fifo_file="$TEST_INPUT_ROOT/source-fifo"
+  mkfifo "$fifo_file"
+  python3 "$SAFE_IO" snapshot --source "$fifo_file" --destination "$destination_file" --limit-bytes 64 >/dev/null 2>&1
+  assert_eq "FIFO source is rejected without blocking" "2" "$?"
+
+  socket_file="$TEST_INPUT_ROOT/source.sock"
+  socket_ready="$TEST_INPUT_ROOT/source-socket.ready"
+  python3 - "$socket_file" "$socket_ready" <<'PY' &
+import os
+import socket
+import sys
+import time
+
+socket_path, ready_path = sys.argv[1:]
+server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+try:
+    server.bind(socket_path)
+    server.listen(1)
+    with open(ready_path, "x", encoding="utf-8") as ready:
+        ready.write("ready\n")
+    time.sleep(10)
+finally:
+    server.close()
+    for path in (ready_path, socket_path):
+        try:
+            os.unlink(path)
+        except FileNotFoundError:
+            pass
+PY
+  socket_pid=$!
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    [ -S "$socket_file" ] && [ -f "$socket_ready" ] && break
+    sleep 0.05
+  done
+  python3 "$SAFE_IO" snapshot --source "$socket_file" --destination "$destination_file" --limit-bytes 64 >/dev/null 2>&1
+  socket_rc=$?
+  kill "$socket_pid" 2>/dev/null || true
+  wait "$socket_pid" 2>/dev/null || true
+  rm -f "$socket_file" "$socket_ready"
+  assert_eq "Unix-domain socket source is rejected as non-regular" "2" "$socket_rc"
+
+  missing_source="$TEST_INPUT_ROOT/missing-source.json"
+  python3 "$SAFE_IO" snapshot --source "$missing_source" --destination "$destination_file" --limit-bytes 64 >/dev/null 2>&1
+  assert_eq "initially missing source is rejected as unsafe input" "2" "$?"
+
+  race_source="$TEST_INPUT_ROOT/regular-then-missing.json"
+  race_destination="$TEST_INPUT_ROOT/regular-then-missing.snapshot"
+  printf '%s' '{"race":true}' >"$race_source"
+  python3 - "$SAFE_IO" "$race_source" "$race_destination" <<'PY'
+import importlib.util
+import os
+import sys
+
+helper_path, source, destination = sys.argv[1:]
+spec = importlib.util.spec_from_file_location("review_runtime_safe_io_race", helper_path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+real_lstat = module.os.lstat
+
+def disappearing_lstat(path):
+    result = real_lstat(path)
+    if path == source:
+        os.unlink(source)
+    return result
+
+module.os.lstat = disappearing_lstat
+raise SystemExit(module.main(["snapshot", "--source", source, "--destination", destination, "--limit-bytes", "64"]))
+PY
+  race_rc=$?
+  assert_eq "regular source disappearing after preclassification is a race" "74" "$race_rc"
+  assert_eq "regular-to-missing race creates no snapshot" "false" "$([ -e "$race_destination" ] && printf true || printf false)"
+
+  python3 - "$SAFE_IO" "$source_file" "$destination_file" <<'PY'
+import errno
+import importlib.util
+import sys
+
+helper_path, source, destination = sys.argv[1:]
+spec = importlib.util.spec_from_file_location("review_runtime_safe_io_unsupported", helper_path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+real_open = module.os.open
+source_opens = {"count": 0}
+
+def unsupported_open(path, flags, *args):
+    if path == source:
+        source_opens["count"] += 1
+        raise OSError(errno.EOPNOTSUPP, "injected O_NOFOLLOW capability failure")
+    return real_open(path, flags, *args)
+
+module.os.open = unsupported_open
+rc = module.main(["snapshot", "--source", source, "--destination", destination, "--limit-bytes", "64"])
+raise SystemExit(0 if rc == 69 and source_opens["count"] == 1 else 1)
+PY
+  capability_open_rc=$?
+  assert_eq "regular-file EOPNOTSUPP is a missing no-follow capability" "0" "$capability_open_rc"
+
+  python3 - "$SAFE_IO" "$source_file" "$destination_file" <<'PY'
+import errno
+import importlib.util
+import sys
+
+helper_path, source, destination = sys.argv[1:]
+spec = importlib.util.spec_from_file_location("review_runtime_safe_io_eio", helper_path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+real_open = module.os.open
+
+def failed_open(path, flags, *args):
+    if path == source:
+        raise OSError(errno.EIO, "injected unknown source I/O failure")
+    return real_open(path, flags, *args)
+
+module.os.open = failed_open
+raise SystemExit(0 if module.main(["snapshot", "--source", source, "--destination", destination, "--limit-bytes", "64"]) == 74 else 1)
+PY
+  unknown_open_rc=$?
+  assert_eq "unknown regular-file open EIO remains a durability failure" "0" "$unknown_open_rc"
+
+  printf '%s' 'existing destination bytes' >"$destination_file"
+  existing_contents="$(cat "$destination_file")"
+  python3 "$SAFE_IO" snapshot --source "$source_file" --destination "$destination_file" --limit-bytes 64 >/dev/null 2>&1
+  assert_eq "pre-existing destination fails closed" "74" "$?"
+  assert_eq "pre-existing destination is not overwritten" "$existing_contents" "$(cat "$destination_file")"
+  rm -f "$destination_file"
+
+  oversized_file="$TEST_INPUT_ROOT/oversized.json"
+  printf '%065d' 0 >"$oversized_file"
+  python3 "$SAFE_IO" snapshot --source "$oversized_file" --destination "$destination_file" --limit-bytes 64 >/dev/null 2>&1
+  assert_eq "oversized source returns configuration status" "73" "$?"
+  assert_eq "oversized source creates no destination" "false" "$([ -e "$destination_file" ] && printf true || printf false)"
+  python3 "$SAFE_IO" snapshot --source "$source_file" --destination "$destination_file" --limit-bytes 9007199254740992 >/dev/null 2>&1
+  assert_eq "jq-unsafe snapshot limit is rejected" "73" "$?"
+
+  python3 - "$SAFE_IO" "$source_file" "$destination_file" <<'PY'
+import importlib.util
+import os
+import sys
+
+helper_path, source, destination = sys.argv[1:]
+spec = importlib.util.spec_from_file_location("review_runtime_safe_io", helper_path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+real_fstat = module.os.fstat
+calls = {"count": 0}
+
+def changed_fstat(fd):
+    stat_result = real_fstat(fd)
+    calls["count"] += 1
+    if calls["count"] == 2:
+        os.utime(source, ns=(stat_result.st_atime_ns, stat_result.st_mtime_ns + 1_000_000_000))
+        return real_fstat(fd)
+    return stat_result
+
+module.os.fstat = changed_fstat
+raise SystemExit(module.main(["snapshot", "--source", source, "--destination", destination, "--limit-bytes", "64"]))
+PY
+  mutation_rc=$?
+  assert_eq "descriptor mutation is detected" "74" "$mutation_rc"
+  assert_eq "mutation failure creates no destination" "false" "$([ -e "$destination_file" ] && printf true || printf false)"
+
+  python3 - "$SAFE_IO" "$source_file" "$TEST_INPUT_ROOT" <<'PY'
+import errno
+import importlib.util
+import os
+import stat
+import sys
+
+helper_path, source, root = sys.argv[1:]
+base_open = os.open
+base_write = os.write
+base_fsync = os.fsync
+base_close = os.close
+
+def load(name):
+    spec = importlib.util.spec_from_file_location(name, helper_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+for operation in ("write", "fsync", "close"):
+    os.open = base_open
+    os.write = base_write
+    os.fsync = base_fsync
+    os.close = base_close
+    module = load("review_runtime_safe_io_" + operation)
+    destination = os.path.join(root, "failed-" + operation + ".json")
+    destination_fd = {"value": None}
+    raised = {"value": False}
+
+    def tracked_open(path, flags, *args):
+        fd = base_open(path, flags, *args)
+        if path == destination:
+            destination_fd["value"] = fd
+        return fd
+
+    module.os.open = tracked_open
+    if operation == "write":
+        module.os.write = lambda *_: (_ for _ in ()).throw(OSError(errno.EIO, "injected write failure"))
+    elif operation == "fsync":
+        module.os.fsync = lambda *_: (_ for _ in ()).throw(OSError(errno.EIO, "injected fsync failure"))
+    else:
+        def failed_close(fd):
+            if fd == destination_fd["value"] and not raised["value"]:
+                raised["value"] = True
+                raise OSError(errno.EIO, "injected close failure")
+            return base_close(fd)
+        module.os.close = failed_close
+
+    rc = module.snapshot(source, destination, 64)
+    valid_partial = (
+        rc == 74
+        and os.path.isfile(destination)
+        and stat.S_IMODE(os.lstat(destination).st_mode) == 0o600
+    )
+    if not valid_partial:
+        raise SystemExit(1)
+    os.unlink(destination)
+os.open = base_open
+os.write = base_write
+os.fsync = base_fsync
+os.close = base_close
+raise SystemExit(0)
+PY
+  durability_rc=$?
+  assert_eq "write fsync and close failures return 74 and leave mode-0600 partial destinations" "0" "$durability_rc"
+
+  python3 - "$SAFE_IO" "$source_file" "$destination_file" "$TEST_INPUT_ROOT/saved-owned-partial.json" <<'PY'
+import errno
+import importlib.util
+import os
+import sys
+
+helper_path, source, destination, saved = sys.argv[1:]
+spec = importlib.util.spec_from_file_location("review_runtime_safe_io_cleanup_swap", helper_path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+real_lstat = module.os.lstat
+real_write = module.os.write
+swapped = {"value": False}
+
+def cleanup_swap_lstat(path):
+    result = real_lstat(path)
+    if path == destination and not swapped["value"]:
+        os.replace(destination, saved)
+        with open(destination, "wb") as replacement:
+            replacement.write(b"replacement-must-survive")
+        swapped["value"] = True
+    return result
+
+def failed_write(fd, content):
+    raise OSError(errno.EIO, "injected write failure")
+
+module.os.lstat = cleanup_swap_lstat
+module.os.write = failed_write
+rc = module.snapshot(source, destination, 64)
+if not swapped["value"]:
+    if os.path.lexists(destination):
+        os.replace(destination, saved)
+    with open(destination, "wb") as replacement:
+        replacement.write(b"replacement-must-survive")
+replacement_survived = False
+try:
+    try:
+        with open(destination, "rb") as replacement:
+            replacement_survived = replacement.read() == b"replacement-must-survive"
+    except FileNotFoundError:
+        replacement_survived = False
+finally:
+    module.os.lstat = real_lstat
+    module.os.write = real_write
+    for path in (destination, saved):
+        try:
+            os.unlink(path)
+        except FileNotFoundError:
+            pass
+raise SystemExit(0 if rc == 74 and replacement_survived else 1)
+PY
+  cleanup_swap_rc=$?
+  assert_eq "helper failure never deletes a pathname replacement during cleanup" "0" "$cleanup_swap_rc"
+
+  runtime_snapshot_root="$TEST_STATE_ROOT/runtime-snapshot-temp"
+  runtime_snapshot_observation="$TEST_INPUT_ROOT/runtime-snapshot-observation.txt"
+  fake_helper="$TEST_INPUT_ROOT/failing-safe-io.py"
+  mkdir "$runtime_snapshot_root"
+  printf '%s\n' \
+    '#!/usr/bin/env python3' \
+    'import os' \
+    'import stat' \
+    'import sys' \
+    'command = sys.argv[1]' \
+    'if command in ("rfc3339-utc", "unique-json"):' \
+    '    raise SystemExit(0)' \
+    'if command not in ("snapshot", "snapshot-stdin"):' \
+    '    raise SystemExit(2)' \
+    'destination = sys.argv[sys.argv.index("--destination") + 1]' \
+    'parent = os.path.dirname(destination)' \
+    'mode = stat.S_IMODE(os.stat(parent).st_mode)' \
+    'with open(os.environ["T7_HELPER_OBSERVATION"], "w", encoding="utf-8") as receipt:' \
+    '    receipt.write("private-700" if mode == 0o700 and os.path.dirname(parent) == os.environ["TMPDIR"] else "unsafe-parent")' \
+    'fd = os.open(destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)' \
+    'os.fchmod(fd, 0o600)' \
+    'os.write(fd, b"partial")' \
+    'os.close(fd)' \
+    'raise SystemExit(74)' >"$fake_helper"
+  chmod 0700 "$fake_helper"
+  (
+    export TMPDIR="$runtime_snapshot_root" T7_HELPER_OBSERVATION="$runtime_snapshot_observation"
+    review_runtime_safe_io_helper() { printf '%s\n' "$fake_helper"; }
+    review_runtime_validate_file "$FIXTURE" >/dev/null 2>&1
+  )
+  runtime_snapshot_rc=$?
+  assert_eq "runtime propagates helper snapshot failure" "74" "$runtime_snapshot_rc"
+  assert_eq "runtime passes helper a destination in a private mode-0700 directory" "private-700" "$(cat "$runtime_snapshot_observation" 2>/dev/null)"
+  assert_eq "runtime removes its private snapshot directory and partial contents after failure" "0" "$(find "$runtime_snapshot_root" -mindepth 1 | wc -l | tr -d ' ')"
+
+  python3 - "$SAFE_IO" "$source_file" "$destination_file" <<'PY'
+import importlib.util
+import sys
+
+helper_path, source, destination = sys.argv[1:]
+spec = importlib.util.spec_from_file_location("review_runtime_safe_io", helper_path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+delattr(module.os, "O_NOFOLLOW")
+raise SystemExit(module.main(["snapshot", "--source", source, "--destination", destination, "--limit-bytes", "64"]))
+PY
+  capability_rc=$?
+  assert_eq "missing O_NOFOLLOW capability returns dependency status" "69" "$capability_rc"
+
+  dependency_state="$(mktemp -d)"
+  (
+    export KC_PR_FLOW_STATE_DIR="$dependency_state"
+    review_runtime_safe_io_helper() { printf '%s\n' "$TEST_INPUT_ROOT/missing-helper.py"; }
+    review_runtime_append_file "$FIXTURE" >/dev/null 2>&1
+  )
+  assert_eq "missing helper fails before append mutation" "69" "$?"
+  assert_eq "dependency failure leaves managed state empty" "0" "$(find "$dependency_state" -mindepth 1 | wc -l | tr -d ' ')"
+  rm -rf "$dependency_state"
+
+  fixture_event="$(sed -n '1p' "$FIXTURE")"
+  (
+    review_runtime_rfc3339_utc_valid() { return 69; }
+    review_runtime_validate_start_input "$REPOSITORY" "$PR_NUMBER" "$BASE_SHA" "$HEAD_SHA" "$CONFIG_HASH" "$OCCURRED_AT" '' '' >/dev/null 2>&1
+  )
+  rfc_rc=$?
+  assert_eq "direct start-input validation propagates RFC dependency status" "69" "$rfc_rc"
+  (
+    review_runtime_rfc3339_utc_valid() { return 69; }
+    review_runtime_validate_line "$fixture_event" >/dev/null 2>&1
+  )
+  rfc_rc=$?
+  assert_eq "direct event validation propagates RFC dependency status" "69" "$rfc_rc"
+
+  rfc_state="$TEST_STATE_ROOT/rfc-validate-file"
+  mkdir "$rfc_state"
+  (
+    export KC_PR_FLOW_STATE_DIR="$rfc_state"
+    review_runtime_rfc3339_utc_valid() { return 69; }
+    review_runtime_validate_file "$FIXTURE" >/dev/null 2>&1
+  )
+  rfc_rc=$?
+  assert_eq "file validation propagates RFC dependency status" "69" "$rfc_rc"
+  assert_eq "RFC dependency failure during file validation creates no managed state" "0" "$(find "$rfc_state" -mindepth 1 | wc -l | tr -d ' ')"
+
+  rfc_state="$TEST_STATE_ROOT/rfc-append-line"
+  mkdir "$rfc_state"
+  (
+    export KC_PR_FLOW_STATE_DIR="$rfc_state"
+    review_runtime_rfc3339_utc_valid() { return 69; }
+    review_runtime_append_line "$fixture_event" >/dev/null 2>&1
+  )
+  rfc_rc=$?
+  assert_eq "direct append propagates RFC dependency status" "69" "$rfc_rc"
+  assert_eq "RFC dependency failure during direct append creates no state or quarantine" "0" "$(find "$rfc_state" -mindepth 1 | wc -l | tr -d ' ')"
+
+  rfc_state="$TEST_STATE_ROOT/rfc-append-file"
+  mkdir "$rfc_state"
+  (
+    export KC_PR_FLOW_STATE_DIR="$rfc_state"
+    review_runtime_rfc3339_utc_valid() { return 69; }
+    review_runtime_append_file "$FIXTURE" >/dev/null 2>&1
+  )
+  rfc_rc=$?
+  assert_eq "file append propagates RFC dependency status" "69" "$rfc_rc"
+  assert_eq "RFC dependency failure during file append creates no state or quarantine" "0" "$(find "$rfc_state" -mindepth 1 | wc -l | tr -d ' ')"
+
+  invalid_limit_state="$(mktemp -d)"
+  (
+    export KC_PR_FLOW_STATE_DIR="$invalid_limit_state" KC_PR_FLOW_MAX_EVENTS_BYTES=9007199254740992
+    review_runtime_append_file "$FIXTURE" >/dev/null 2>&1
+  )
+  assert_eq "jq-unsafe configured event limit returns 73" "73" "$?"
+  assert_eq "invalid event limit fails before state mutation" "0" "$(find "$invalid_limit_state" -mindepth 1 | wc -l | tr -d ' ')"
+  rm -rf "$invalid_limit_state"
+
+  fixture_bytes="$(wc -c <"$FIXTURE" | tr -d ' ')"
+  oversize_limit=$((fixture_bytes - 1))
+  stdin_state="$TEST_STATE_ROOT/stdin-validate-exact"
+  mkdir "$stdin_state"
+  ( export KC_PR_FLOW_STATE_DIR="$stdin_state" KC_PR_FLOW_MAX_EVENTS_BYTES="$fixture_bytes"; cat "$FIXTURE" | bash "$RUNTIME" validate --event-file - >/dev/null 2>&1 )
+  assert_eq "stdin event input exactly at the limit validates" "0" "$?"
+  assert_eq "stdin validation does not mutate managed state" "0" "$(find "$stdin_state" -mindepth 1 | wc -l | tr -d ' ')"
+
+  stdin_state="$TEST_STATE_ROOT/stdin-append-exact"
+  mkdir "$stdin_state"
+  ( export KC_PR_FLOW_STATE_DIR="$stdin_state" KC_PR_FLOW_MAX_EVENTS_BYTES="$fixture_bytes"; cat "$FIXTURE" | bash "$RUNTIME" append --event-file - >/dev/null 2>&1 )
+  assert_eq "stdin event input exactly at the limit appends" "0" "$?"
+  assert_eq "exact-limit stdin append writes both accepted run logs" "2" "$(find "$stdin_state" -name events.jsonl -type f | wc -l | tr -d ' ')"
+
+  stdin_state="$TEST_STATE_ROOT/stdin-validate-oversize"
+  mkdir "$stdin_state"
+  ( export KC_PR_FLOW_STATE_DIR="$stdin_state" KC_PR_FLOW_MAX_EVENTS_BYTES="$oversize_limit"; cat "$FIXTURE" | bash "$RUNTIME" validate --event-file - >/dev/null 2>&1 )
+  assert_eq "stdin validation limit plus one returns 73" "73" "$?"
+  assert_eq "oversized stdin validation creates no state or quarantine" "0" "$(find "$stdin_state" -mindepth 1 | wc -l | tr -d ' ')"
+
+  stdin_state="$TEST_STATE_ROOT/stdin-append-oversize"
+  mkdir "$stdin_state"
+  ( export KC_PR_FLOW_STATE_DIR="$stdin_state" KC_PR_FLOW_MAX_EVENTS_BYTES="$oversize_limit"; cat "$FIXTURE" | bash "$RUNTIME" append --event-file - >/dev/null 2>&1 )
+  assert_eq "stdin append limit plus one returns 73" "73" "$?"
+  assert_eq "oversized stdin append creates no accepted state or quarantine" "0" "$(find "$stdin_state" -mindepth 1 | wc -l | tr -d ' ')"
+
+  maximum_usage='{"provenance":"reported","scope":"lane","provider_family":"claude","input_tokens":9007199254740991,"output_tokens":0,"total_tokens":9007199254740991}'
+  unsafe_usage='{"provenance":"reported","scope":"lane","provider_family":"claude","input_tokens":9007199254740992,"output_tokens":0,"total_tokens":9007199254740992}'
+  printf '%s\n' "$maximum_usage" >"$TEST_INPUT_ROOT/maximum-usage.json"
+  printf '%s\n' "$maximum_usage" >"$TEST_INPUT_ROOT/maximum-usage-peer.json"
+  usage_output="$(bash "$RUNTIME" compare-usage --left-json "$TEST_INPUT_ROOT/maximum-usage.json" --right-json "$TEST_INPUT_ROOT/maximum-usage-peer.json")"
+  assert_eq "maximum jq-safe usage remains comparable" "true" "$(jq -r '.comparable' <<<"$usage_output")"
+  printf '%s\n' "$unsafe_usage" >"$TEST_INPUT_ROOT/unsafe-usage.json"
+  bash "$RUNTIME" compare-usage --left-json "$TEST_INPUT_ROOT/unsafe-usage.json" --right-json "$TEST_INPUT_ROOT/maximum-usage.json" >/dev/null 2>&1
+  assert_eq "adjacent jq-unsafe usage integer is rejected before comparison" "2" "$?"
+  float_usage='{"provenance":"reported","scope":"lane","provider_family":"claude","input_tokens":1.00000000000000001,"output_tokens":0,"total_tokens":1.00000000000000001}'
+  exponent_usage='{"provenance":"reported","scope":"lane","provider_family":"claude","input_tokens":1e0,"output_tokens":0,"total_tokens":1e0}'
+  printf '%s\n' "$float_usage" >"$TEST_INPUT_ROOT/float-usage.json"
+  printf '%s\n' "$exponent_usage" >"$TEST_INPUT_ROOT/exponent-usage.json"
+  bash "$RUNTIME" compare-usage --left-json "$TEST_INPUT_ROOT/float-usage.json" --right-json "$TEST_INPUT_ROOT/maximum-usage.json" >/dev/null 2>&1
+  assert_eq "fractional usage lexeme that collapses to an integer is rejected losslessly" "2" "$?"
+  bash "$RUNTIME" compare-usage --left-json "$TEST_INPUT_ROOT/exponent-usage.json" --right-json "$TEST_INPUT_ROOT/maximum-usage.json" >/dev/null 2>&1
+  assert_eq "exponent usage lexeme is rejected before jq normalization" "2" "$?"
+
+  one_review_key="$(sha256_text "$REPOSITORY|1|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
+  integer_event="$(rehash_integrity "$(jq -c --arg review_key "$one_review_key" '.pr_number=1 | .review_key=$review_key' <<<"$fixture_event")")"
+  float_event="$(printf '%s' "$integer_event" | sed 's/"pr_number":1/"pr_number":1.00000000000000001/')"
+  exponent_event="$(printf '%s' "$integer_event" | sed 's/"pr_number":1/"pr_number":1e0/')"
+  printf '%s\n' "$float_event" >"$TEST_INPUT_ROOT/float-event.jsonl"
+  printf '%s\n' "$exponent_event" >"$TEST_INPUT_ROOT/exponent-event.jsonl"
+  bash "$RUNTIME" validate --event-file "$TEST_INPUT_ROOT/float-event.jsonl" >/dev/null 2>&1
+  assert_eq "fractional event lexeme that collapses to an integer is rejected losslessly" "1" "$?"
+  bash "$RUNTIME" validate --event-file "$TEST_INPUT_ROOT/exponent-event.jsonl" >/dev/null 2>&1
+  assert_eq "exponent event lexeme is rejected before jq normalization" "1" "$?"
+  impossible_event="$(rehash_integrity "$(jq -c '.occurred_at="2026-02-30T12:00:00Z"' <<<"$fixture_event")")"
+  printf '%s\n' "$impossible_event" >"$TEST_INPUT_ROOT/impossible-date.jsonl"
+  bash "$RUNTIME" validate --event-file "$TEST_INPUT_ROOT/impossible-date.jsonl" >/dev/null 2>&1
+  assert_eq "impossible calendar timestamp is rejected" "1" "$?"
+  leap_event="$(rehash_integrity "$(jq -c '.occurred_at="2024-02-29T23:59:59.123Z"' <<<"$fixture_event")")"
+  printf '%s\n' "$leap_event" >"$TEST_INPUT_ROOT/leap-date.jsonl"
+  bash "$RUNTIME" validate --event-file "$TEST_INPUT_ROOT/leap-date.jsonl" >/dev/null 2>&1
+  assert_eq "real leap-day RFC3339 UTC timestamp validates" "0" "$?"
+
+  printf '%s\n' temporary quarantine >"$TEST_INPUT_ROOT/mixed-batch.txt"
+  batch_file="$TEST_INPUT_ROOT/mixed-batch.txt"
+  batch_output="$({
+    review_runtime_append_line() {
+      case "$1" in
+        temporary) printf '%s\n' blocked; return 75 ;;
+        quarantine) printf '%s\n' quarantined; return 1 ;;
+      esac
+    }
+    review_runtime_append_file "$batch_file"
+  })"
+  batch_rc=$?
+  assert_eq "later quarantine cannot downgrade temporary block" "75" "$batch_rc"
+  assert_eq "temporary and quarantine counts remain visible" '{"appended":0,"duplicate":0,"quarantined":1,"blocked":1}' "$batch_output"
+
+  printf '%s\n' quarantine temporary >"$TEST_INPUT_ROOT/mixed-batch-reverse.txt"
+  batch_output="$({
+    review_runtime_append_line() {
+      case "$1" in
+        temporary) printf '%s\n' blocked; return 75 ;;
+        quarantine) printf '%s\n' quarantined; return 1 ;;
+      esac
+    }
+    review_runtime_append_file "$TEST_INPUT_ROOT/mixed-batch-reverse.txt"
+  })"
+  batch_rc=$?
+  assert_eq "earlier quarantine cannot mask a later temporary block" "75" "$batch_rc"
+  assert_eq "reverse temporary and quarantine counts remain visible" '{"appended":0,"duplicate":0,"quarantined":1,"blocked":1}' "$batch_output"
+
+  printf '%s\n' durable quarantine >"$TEST_INPUT_ROOT/mixed-durable-batch.txt"
+  batch_output="$({
+    review_runtime_append_line() {
+      case "$1" in
+        durable) printf '%s\n' blocked; return 74 ;;
+        quarantine) printf '%s\n' quarantined; return 1 ;;
+      esac
+    }
+    review_runtime_append_file "$TEST_INPUT_ROOT/mixed-durable-batch.txt"
+  })"
+  batch_rc=$?
+  assert_eq "later quarantine cannot downgrade durability block" "74" "$batch_rc"
+  assert_eq "durability and quarantine counts remain visible" '{"appended":0,"duplicate":0,"quarantined":1,"blocked":1}' "$batch_output"
+
+  printf '%s\n' quarantine durable >"$TEST_INPUT_ROOT/mixed-durable-batch-reverse.txt"
+  batch_output="$({
+    review_runtime_append_line() {
+      case "$1" in
+        durable) printf '%s\n' blocked; return 74 ;;
+        quarantine) printf '%s\n' quarantined; return 1 ;;
+      esac
+    }
+    review_runtime_append_file "$TEST_INPUT_ROOT/mixed-durable-batch-reverse.txt"
+  })"
+  batch_rc=$?
+  assert_eq "earlier quarantine cannot mask a later durability block" "74" "$batch_rc"
+  assert_eq "reverse durability and quarantine counts remain visible" '{"appended":0,"duplicate":0,"quarantined":1,"blocked":1}' "$batch_output"
+}
+
 if [ "$CASE_FILTER" = 'privacy-envelope' ]; then
   run_privacy_envelope_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+elif [ "$CASE_FILTER" = 'safe-io' ]; then
+  run_safe_io_tests
   printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
   [ "$FAIL" -eq 0 ]
   exit $?
@@ -837,7 +1436,7 @@ cp "$sequence_events" "$atomic_before"
 atomic_limit="$(wc -c <"$sequence_events" | tr -d ' ')"
 atomic_append_output="$(KC_PR_FLOW_STATE_DIR="$sequence_state" KC_PR_FLOW_MAX_EVENTS_BYTES="$atomic_limit" bash "$RUNTIME" append --event-file "$TEST_STATE_ROOT/active-owner-candidate.jsonl" 2>"$TEST_STATE_ROOT/atomic-append.stderr")"
 atomic_append_rc=$?
-assert_eq "oversized next log fails closed" "74" "$atomic_append_rc"
+assert_eq "oversized next log returns the typed oversize status" "73" "$atomic_append_rc"
 assert_eq "oversized next log reports blocked" "1" "$(jq -r '.blocked' <<<"$atomic_append_output")"
 if cmp -s "$atomic_before" "$sequence_events"; then pass; else fail "failed atomic append changes original events bytes"; fi
 assert_eq "failed atomic append leaves no partial temp" "0" "$(find "$sequence_run_dir" -maxdepth 1 -name '.events.next.*' | wc -l | tr -d ' ')"

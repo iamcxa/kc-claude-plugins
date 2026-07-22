@@ -43,6 +43,51 @@ review_runtime_require_python() {
   fi
 }
 
+review_runtime_positive_safe_integer() {
+  local value="$1"
+  [[ "$value" =~ ^[1-9][0-9]*$ ]] || return 1
+  [ "${#value}" -lt 16 ] && return 0
+  [ "${#value}" -eq 16 ] || return 1
+  [ "$value" -gt 9007199254740991 ] && return 1
+  return 0
+}
+
+review_runtime_validate_runtime_config() {
+  review_runtime_positive_safe_integer "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || {
+    printf 'review-runtime: invalid events size limit\n' >&2
+    return 73
+  }
+  review_runtime_positive_safe_integer "${KC_PR_FLOW_MAX_QUARANTINE_BYTES:-4194304}" || {
+    printf 'review-runtime: invalid quarantine size limit\n' >&2
+    return 73
+  }
+  review_runtime_positive_safe_integer "${KC_PR_FLOW_RESERVATION_WAIT_ATTEMPTS:-120}" || {
+    printf 'review-runtime: invalid reservation wait limit\n' >&2
+    return 73
+  }
+}
+
+review_runtime_rfc3339_utc_valid() {
+  local helper
+  review_runtime_require_python || return 69
+  helper="$(review_runtime_safe_io_helper)" || return 69
+  python3 "$helper" rfc3339-utc "$1" >/dev/null 2>&1
+}
+
+review_runtime_require_rfc3339_validation() {
+  local rc
+  review_runtime_rfc3339_utc_valid '2000-01-01T00:00:00Z'
+  rc=$?
+  case "$rc" in
+    0) return 0 ;;
+    69) return 69 ;;
+    *)
+      printf 'review-runtime: RFC3339 validation helper is unavailable\n' >&2
+      return 69
+      ;;
+  esac
+}
+
 review_runtime_json_has_unique_members() {
   local line="$1"
   local helper rc
@@ -60,14 +105,82 @@ review_runtime_snapshot_regular_file() {
   local source_file="$1"
   local snapshot_file="$2"
   local label="$3"
-  if [ ! -f "$source_file" ] || [ -L "$source_file" ]; then
-    printf 'review-runtime: %s is not a safe regular file: %s\n' "$label" "$source_file" >&2
-    return 2
-  fi
-  if ! cat "$source_file" >"$snapshot_file" || ! chmod 0600 "$snapshot_file"; then
-    printf 'review-runtime: unable to snapshot %s\n' "$label" >&2
+  local limit="${4:-16777216}"
+  local helper rc
+  review_runtime_require_python || return 69
+  review_runtime_positive_safe_integer "$limit" || {
+    printf 'review-runtime: invalid %s size limit\n' "$label" >&2
+    return 73
+  }
+  if [ -e "$snapshot_file" ] || [ -L "$snapshot_file" ]; then
+    printf 'review-runtime: snapshot destination already exists for %s\n' "$label" >&2
     return 74
   fi
+  helper="$(review_runtime_safe_io_helper)" || return 69
+  python3 "$helper" snapshot \
+    --source "$source_file" \
+    --destination "$snapshot_file" \
+    --limit-bytes "$limit" >/dev/null 2>&1
+  rc=$?
+  case "$rc" in
+    0) return 0 ;;
+    2)
+      printf 'review-runtime: %s is not a safe regular file: %s\n' "$label" "$source_file" >&2
+      return 2
+      ;;
+    69 | 73 | 74) return "$rc" ;;
+    *) return 74 ;;
+  esac
+}
+
+review_runtime_snapshot_stdin() {
+  local snapshot_file="$1"
+  local label="$2"
+  local limit="$3"
+  local helper rc
+  review_runtime_require_python || return 69
+  review_runtime_positive_safe_integer "$limit" || {
+    printf 'review-runtime: invalid %s size limit\n' "$label" >&2
+    return 73
+  }
+  if [ -e "$snapshot_file" ] || [ -L "$snapshot_file" ]; then
+    printf 'review-runtime: snapshot destination already exists for %s\n' "$label" >&2
+    return 74
+  fi
+  helper="$(review_runtime_safe_io_helper)" || return 69
+  python3 "$helper" snapshot-stdin \
+    --destination "$snapshot_file" \
+    --limit-bytes "$limit" >/dev/null 2>&1
+  rc=$?
+  case "$rc" in
+    0 | 69 | 73 | 74) return "$rc" ;;
+    *) return 74 ;;
+  esac
+}
+
+review_runtime_private_snapshot_dir() {
+  local temp_root="${TMPDIR:-/tmp}"
+  local snapshot_dir
+  [ -d "$temp_root" ] && [ ! -L "$temp_root" ] || return 74
+  snapshot_dir="$(mktemp -d "${temp_root%/}/kc-pr-flow.snapshot.XXXXXX")" || return 74
+  if ! chmod 0700 "$snapshot_dir" || ! review_runtime_real_directory "$snapshot_dir"; then
+    rmdir "$snapshot_dir" 2>/dev/null || true
+    return 74
+  fi
+  printf '%s\n' "$snapshot_dir"
+}
+
+review_runtime_remove_private_snapshot_dir() {
+  local snapshot_dir="$1"
+  shift
+  local snapshot_file
+  [ -d "$snapshot_dir" ] && [ ! -L "$snapshot_dir" ] || return 0
+  for snapshot_file in "$@"; do
+    [ -n "$snapshot_file" ] || continue
+    [ "$(dirname "$snapshot_file")" = "$snapshot_dir" ] || return 74
+    rm -f "$snapshot_file" 2>/dev/null || true
+  done
+  rmdir "$snapshot_dir" 2>/dev/null || true
 }
 
 review_runtime_state_root() {
@@ -131,7 +244,7 @@ review_runtime_events_size_within_limit() {
   local events_file="$1"
   local limit="${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}"
   local size
-  [[ "$limit" =~ ^[1-9][0-9]*$ ]] || {
+  review_runtime_positive_safe_integer "$limit" || {
     printf 'review-runtime: invalid events size limit\n' >&2
     return 73
   }
@@ -273,12 +386,13 @@ review_runtime_validate_start_input() {
   local occurred_at="$6"
   local predecessor_run_id="$7"
   local successor_reason="$8"
+  local timestamp_rc
 
   review_runtime_repository_identity_valid "$repository" || {
     printf 'review-runtime: invalid repository identity\n' >&2
     return 2
   }
-  [[ "$pr_number" =~ ^[1-9][0-9]*$ ]] || {
+  review_runtime_positive_safe_integer "$pr_number" || {
     printf 'review-runtime: invalid PR number\n' >&2
     return 2
   }
@@ -294,10 +408,16 @@ review_runtime_validate_start_input() {
     printf 'review-runtime: invalid config hash\n' >&2
     return 2
   }
-  [[ "$occurred_at" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z$ ]] || {
-    printf 'review-runtime: invalid occurred_at; expected RFC3339 UTC\n' >&2
-    return 2
-  }
+  review_runtime_rfc3339_utc_valid "$occurred_at"
+  timestamp_rc=$?
+  case "$timestamp_rc" in
+    0) ;;
+    69) return 69 ;;
+    *)
+      printf 'review-runtime: invalid occurred_at; expected RFC3339 UTC\n' >&2
+      return 2
+      ;;
+  esac
 
   if [ -n "$predecessor_run_id" ] || [ -n "$successor_reason" ]; then
     [[ "$predecessor_run_id" =~ ^run-[A-Za-z0-9._-]+$ ]] || {
@@ -372,6 +492,7 @@ review_runtime_start() (
 
   review_runtime_require_jq || return
   review_runtime_require_python || return
+  review_runtime_validate_runtime_config || return
   review_runtime_validate_start_input "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" "$occurred_at" "$predecessor_run_id" "$successor_reason" || return
 
   umask 077
@@ -483,14 +604,14 @@ review_runtime_payload_matches_v1_schema() {
       (startswith("/") | not) and (endswith("/") | not) and (contains("//") | not) and
       (test("(^|/)\\.\\.?(/|$)|[[:cntrl:]\\\\]") | not);
     def nullable_token: . == null or safe_token;
-    def positive_integer: type == "number" and floor == . and . > 0;
+    def positive_integer: type == "number" and floor == . and . > 0 and . <= 9007199254740991;
     def usage:
       type == "object" and
       exact_keys(["input_tokens","output_tokens","provenance","provider_family","scope","total_tokens"]; []) and
       (.provenance == "reported" or .provenance == "estimated" or .provenance == "unavailable") and
       (.scope == "lane" or .scope == "run") and
       (.provider_family == null or (.provider_family | safe_token)) and
-      ([.input_tokens,.output_tokens,.total_tokens] | all(. == null or (type == "number" and floor == . and . >= 0))) and
+      ([.input_tokens,.output_tokens,.total_tokens] | all(. == null or (type == "number" and floor == . and . >= 0 and . <= 9007199254740991))) and
       (if .provenance == "unavailable" then [.input_tokens,.output_tokens,.total_tokens] | all(. == null) else true end);
     def evidence:
       type == "object" and .schema == "kc-pr-flow.evidence-pointer/v1" and
@@ -645,7 +766,7 @@ review_runtime_validate_line() {
   local base_sha head_sha config_hash sequence occurred_at payload payload_sha256
   local expected_payload_sha256 expected_event_id expected_review_key
   local without_integrity expected_integrity_sha256 integrity_sha256
-  local has_predecessor has_reason predecessor_run_id successor_reason reason duplicate_rc
+  local has_predecessor has_reason predecessor_run_id successor_reason reason duplicate_rc timestamp_rc
 
   review_runtime_require_jq || return
   review_runtime_json_has_unique_members "$line"
@@ -656,7 +777,10 @@ review_runtime_validate_line() {
       printf '%s' 'duplicate_json_member'
       return 1
       ;;
-    2) ;;
+    2)
+      printf '%s' 'invalid_json'
+      return 1
+      ;;
     *) return "$duplicate_rc" ;;
   esac
   if ! printf '%s' "$line" | jq -e 'type == "object"' >/dev/null 2>&1; then
@@ -692,11 +816,11 @@ review_runtime_validate_line() {
     (.run_id | type == "string") and
     (.review_key | type == "string") and
     (.repository | type == "string" and length > 0) and
-    (.pr_number | type == "number" and (floor == .) and . > 0) and
+    (.pr_number | type == "number" and (floor == .) and . > 0 and . <= 9007199254740991) and
     (.base_sha | type == "string") and
     (.head_sha | type == "string") and
     (.config_hash | type == "string") and
-    (.sequence | type == "number" and (floor == .) and . > 0) and
+    (.sequence | type == "number" and (floor == .) and . > 0 and . <= 9007199254740991) and
     (.occurred_at | type == "string") and
     (.event_type | type == "string") and
     (.payload | type == "object") and
@@ -725,11 +849,20 @@ review_runtime_validate_line() {
     ! [[ "$head_sha" =~ ^[0-9a-f]{40}$ ]] ||
     ! [[ "$config_hash" =~ ^[0-9a-f]{64}$ ]] ||
     ! [[ "$payload_sha256" =~ ^[0-9a-f]{64}$ ]] ||
-    ! [[ "$integrity_sha256" =~ ^[0-9a-f]{64}$ ]] ||
-    ! [[ "$occurred_at" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z$ ]]; then
+    ! [[ "$integrity_sha256" =~ ^[0-9a-f]{64}$ ]]; then
     printf '%s' 'invalid_field_value'
     return 1
   fi
+  review_runtime_rfc3339_utc_valid "$occurred_at"
+  timestamp_rc=$?
+  case "$timestamp_rc" in
+    0) ;;
+    69) return 69 ;;
+    *)
+      printf '%s' 'invalid_field_value'
+      return 1
+      ;;
+  esac
   if ! review_runtime_repository_identity_valid "$repository"; then
     printf '%s' 'invalid_repository_identity'
     return 1
@@ -889,7 +1022,7 @@ review_runtime_quarantine_size_within_limit() {
   local metadata_file="$1"
   local limit="${KC_PR_FLOW_MAX_QUARANTINE_BYTES:-4194304}"
   local metadata_size
-  [[ "$limit" =~ ^[1-9][0-9]*$ ]] || {
+  review_runtime_positive_safe_integer "$limit" || {
     printf 'review-runtime: invalid quarantine size limit\n' >&2
     return 73
   }
@@ -906,6 +1039,7 @@ review_runtime_quarantine() (
   local state_root line_sha quarantine_root quarantine_dir quarantine_lock
   local temp_dir='' metadata lock_owner_pid rc byte_count
 
+  review_runtime_validate_runtime_config || return
   case "$reason" in
     *[!a-z0-9_]*) reason='validation_failed' ;;
   esac
@@ -1034,7 +1168,7 @@ review_runtime_acquire_run_reservation() {
   local lock_dir="$1"
   local attempts=0
   local max_attempts="${KC_PR_FLOW_RESERVATION_WAIT_ATTEMPTS:-120}"
-  [[ "$max_attempts" =~ ^[1-9][0-9]*$ ]] || return 75
+  review_runtime_positive_safe_integer "$max_attempts" || return 73
   while [ "$attempts" -lt "$max_attempts" ]; do
     if review_runtime_acquire_owned_lock "$lock_dir"; then
       return 0
@@ -1053,6 +1187,9 @@ review_runtime_append_line() (
   local authority_line last_sequence expected_sequence duplicate_integrity=''
   local temp_events='' temp_run_dir='' rc validation_rc
 
+  review_runtime_require_python || return
+  review_runtime_validate_runtime_config || return
+  review_runtime_require_rfc3339_validation || return
   reason="$(review_runtime_validate_line "$line")"
   validation_rc=$?
   if [ "$validation_rc" -ne 0 ]; then
@@ -1171,22 +1308,34 @@ review_runtime_append_line() (
   printf '%s\n' 'appended'
 )
 
-review_runtime_validate_file() {
+review_runtime_validate_file() (
   local event_file="$1"
   local line reason line_number=0 valid=0 invalid=0
-  local input_file cleanup_file='' rc
+  local input_file cleanup_file='' snapshot_dir='' rc
 
   review_runtime_require_python || return
+  review_runtime_validate_runtime_config || return
+  review_runtime_require_rfc3339_validation || return
+
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  input_file="$snapshot_dir/events.jsonl"
+  cleanup_file="$input_file"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$input_file"' EXIT
 
   if [ "$event_file" = '-' ]; then
-    input_file="$(mktemp)" || return
-    cleanup_file="$input_file"
-    cat >"$input_file" || {
+    review_runtime_snapshot_stdin \
+      "$input_file" 'stdin event input' "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || {
+      rc=$?
       rm -f "$cleanup_file"
-      return 1
+      return "$rc"
     }
   else
-    input_file="$event_file"
+    review_runtime_snapshot_regular_file \
+      "$event_file" "$input_file" 'event file' "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || {
+      rc=$?
+      rm -f "$cleanup_file"
+      return "$rc"
+    }
   fi
   if [ ! -f "$input_file" ] || [ -L "$input_file" ]; then
     printf 'review-runtime: event file is not a safe regular file: %s\n' "$event_file" >&2
@@ -1211,24 +1360,36 @@ review_runtime_validate_file() {
   [ -n "$cleanup_file" ] && rm -f "$cleanup_file"
   jq -c -n --argjson valid "$valid" --argjson invalid "$invalid" '{valid:$valid,invalid:$invalid}'
   [ "$invalid" -eq 0 ]
-}
+)
 
-review_runtime_append_file() {
+review_runtime_append_file() (
   local event_file="$1"
-  local input_file cleanup_file='' line status rc
+  local input_file cleanup_file='' snapshot_dir='' line status rc
   local appended=0 duplicate=0 quarantined=0 blocked=0 overall_rc=0
 
   review_runtime_require_python || return
+  review_runtime_validate_runtime_config || return
+  review_runtime_require_rfc3339_validation || return
+
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  input_file="$snapshot_dir/events.jsonl"
+  cleanup_file="$input_file"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$input_file"' EXIT
 
   if [ "$event_file" = '-' ]; then
-    input_file="$(mktemp)" || return
-    cleanup_file="$input_file"
-    cat >"$input_file" || {
+    review_runtime_snapshot_stdin \
+      "$input_file" 'stdin event input' "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || {
+      rc=$?
       rm -f "$cleanup_file"
-      return 1
+      return "$rc"
     }
   else
-    input_file="$event_file"
+    review_runtime_snapshot_regular_file \
+      "$event_file" "$input_file" 'event file' "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || {
+      rc=$?
+      rm -f "$cleanup_file"
+      return "$rc"
+    }
   fi
   if [ ! -f "$input_file" ] || [ -L "$input_file" ]; then
     printf 'review-runtime: event file is not a safe regular file: %s\n' "$event_file" >&2
@@ -1243,14 +1404,25 @@ review_runtime_append_file() {
       duplicate) duplicate=$((duplicate + 1)) ;;
       quarantined)
         quarantined=$((quarantined + 1))
-        overall_rc=1
+        [ "$overall_rc" -eq 0 ] && overall_rc=1
         ;;
       *)
         blocked=$((blocked + 1))
         case "$rc" in
           69) overall_rc=69 ;;
           75) overall_rc=75 ;;
-          *) overall_rc=74 ;;
+          74)
+            [ "$overall_rc" -ne 69 ] && [ "$overall_rc" -ne 75 ] && overall_rc=74
+            ;;
+          73)
+            case "$overall_rc" in
+              69 | 75 | 74) ;;
+              *) overall_rc=73 ;;
+            esac
+            ;;
+          *)
+            [ "$overall_rc" -ne 69 ] && [ "$overall_rc" -ne 75 ] && overall_rc=74
+            ;;
         esac
         ;;
     esac
@@ -1263,9 +1435,11 @@ review_runtime_append_file() {
     --argjson blocked "$blocked" \
     '{appended:$appended,duplicate:$duplicate,quarantined:$quarantined,blocked:$blocked}'
   return "$overall_rc"
-}
+)
 
 review_runtime_evidence_pointer_valid() {
+  local pointer_file="$1"
+  review_runtime_json_has_unique_members "$(cat "$pointer_file")" || return 1
   jq -e '
     def exact_keys($required): (keys | sort) == ($required | sort);
     def sha256: type == "string" and test("^[0-9a-f]{64}$");
@@ -1275,7 +1449,7 @@ review_runtime_evidence_pointer_valid() {
       type == "string" and length > 0 and length <= 1024 and
       (startswith("/") | not) and (endswith("/") | not) and (contains("//") | not) and
       (test("(^|/)\\.\\.?(/|$)|[[:cntrl:]\\\\]") | not);
-    def positive_integer: type == "number" and floor == . and . > 0;
+    def positive_integer: type == "number" and floor == . and . > 0 and . <= 9007199254740991;
     type == "object" and .schema == "kc-pr-flow.evidence-pointer/v1" and
     (.kind == "git_blob" or .kind == "pr_body" or .kind == "issue" or .kind == "review_comment" or .kind == "command" or .kind == "test") and
     (.repository | type == "string" and length > 0 and (test("[[:cntrl:]]") | not)) and
@@ -1298,7 +1472,7 @@ review_runtime_evidence_pointer_valid() {
     else
       exact_keys(["content_sha256","kind","locator","object_sha","path","repository","schema"]) and
       (.path | safe_path) and (.locator | safe_token)
-    end' "$1" >/dev/null 2>&1
+    end' "$pointer_file" >/dev/null 2>&1
 }
 
 review_runtime_github_repository_identity() {
@@ -1328,13 +1502,15 @@ review_runtime_github_repository_identity() {
 review_runtime_verify_evidence() (
   local pointer_file="$1"
   local repository_path="$2"
-  local pointer_snapshot='' temp_file=''
+  local snapshot_dir='' pointer_snapshot='' temp_file=''
   local pointer kind object_sha path expected_hash actual_hash
   local pointer_repository repository_identity object_type
   umask 077
-  pointer_snapshot="$(mktemp)" || return
-  trap '[ -z "$temp_file" ] || rm -f "$temp_file"; [ -z "$pointer_snapshot" ] || rm -f "$pointer_snapshot"' EXIT
-  review_runtime_snapshot_regular_file "$pointer_file" "$pointer_snapshot" 'pointer JSON' || return
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  pointer_snapshot="$snapshot_dir/pointer.json"
+  temp_file="$snapshot_dir/evidence-content"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$pointer_snapshot" "$temp_file"' EXIT
+  review_runtime_snapshot_regular_file "$pointer_file" "$pointer_snapshot" 'pointer JSON' 1048576 || return
   review_runtime_evidence_pointer_valid "$pointer_snapshot" || {
     printf 'review-runtime: invalid evidence pointer\n' >&2
     return 2
@@ -1370,14 +1546,12 @@ review_runtime_verify_evidence() (
     jq -S -c -n --arg kind "$kind" --arg expected "$expected_hash" '{schema:"kc-pr-flow.evidence-verification/v1",status:"not_blob",kind:$kind,content_sha256:$expected}'
     return 3
   fi
-  temp_file="$(mktemp)" || return
   if ! git -C "$repository_path" show "$object_sha:$path" >"$temp_file" 2>/dev/null; then
     jq -S -c -n --arg kind "$kind" --arg expected "$expected_hash" '{schema:"kc-pr-flow.evidence-verification/v1",status:"unavailable",kind:$kind,content_sha256:$expected}'
     return 3
   fi
   actual_hash="$(review_runtime_sha256 <"$temp_file")" || return
   rm -f "$temp_file"
-  temp_file=''
   if [ "$actual_hash" != "$expected_hash" ]; then
     jq -S -c -n --arg kind "$kind" --arg expected "$expected_hash" --arg actual "$actual_hash" \
       '{schema:"kc-pr-flow.evidence-verification/v1",status:"hash_mismatch",kind:$kind,expected_content_sha256:$expected,actual_content_sha256:$actual}'
@@ -1388,30 +1562,30 @@ review_runtime_verify_evidence() (
 )
 
 review_runtime_usage_valid() {
+  local usage_file="$1"
+  review_runtime_json_has_unique_members "$(cat "$usage_file")" || return 1
   jq -e '
     type == "object" and
     (keys | sort) == ["input_tokens","output_tokens","provenance","provider_family","scope","total_tokens"] and
     (.provenance == "reported" or .provenance == "estimated" or .provenance == "unavailable") and
     (.scope == "lane" or .scope == "run") and
     (.provider_family == null or (.provider_family | type == "string" and test("^[a-z][a-z0-9._-]{0,63}$"))) and
-    ([.input_tokens,.output_tokens,.total_tokens] | all(. == null or (type == "number" and floor == . and . >= 0))) and
-    (if .provenance == "unavailable" then [.input_tokens,.output_tokens,.total_tokens] | all(. == null) else true end)' "$1" >/dev/null 2>&1
+    ([.input_tokens,.output_tokens,.total_tokens] | all(. == null or (type == "number" and floor == . and . >= 0 and . <= 9007199254740991))) and
+    (if .provenance == "unavailable" then [.input_tokens,.output_tokens,.total_tokens] | all(. == null) else true end)' "$usage_file" >/dev/null 2>&1
 }
 
 review_runtime_compare_usage() (
   local left_file="$1"
   local right_file="$2"
-  local left_snapshot='' right_snapshot=''
+  local snapshot_dir='' left_snapshot='' right_snapshot=''
   local left right usage_file comparable='false'
   umask 077
-  left_snapshot="$(mktemp)" || return
-  right_snapshot="$(mktemp)" || {
-    rm -f "$left_snapshot"
-    return 74
-  }
-  trap '[ -z "$left_snapshot" ] || rm -f "$left_snapshot"; [ -z "$right_snapshot" ] || rm -f "$right_snapshot"' EXIT
-  review_runtime_snapshot_regular_file "$left_file" "$left_snapshot" 'left usage JSON' || return
-  review_runtime_snapshot_regular_file "$right_file" "$right_snapshot" 'right usage JSON' || return
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  left_snapshot="$snapshot_dir/left-usage.json"
+  right_snapshot="$snapshot_dir/right-usage.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$left_snapshot" "$right_snapshot"' EXIT
+  review_runtime_snapshot_regular_file "$left_file" "$left_snapshot" 'left usage JSON' 1048576 || return
+  review_runtime_snapshot_regular_file "$right_file" "$right_snapshot" 'right usage JSON' 1048576 || return
   for usage_file in "$left_snapshot" "$right_snapshot"; do
     review_runtime_usage_valid "$usage_file" || {
       printf 'review-runtime: invalid usage observation\n' >&2
@@ -1439,13 +1613,15 @@ review_runtime_compare_usage() (
 
 review_runtime_replay() (
   local event_file="$1"
-  local event_snapshot=''
+  local snapshot_dir='' event_snapshot=''
   review_runtime_require_jq || return
   review_runtime_require_python || return
   umask 077
-  event_snapshot="$(mktemp)" || return
-  trap '[ -z "$event_snapshot" ] || rm -f "$event_snapshot"' EXIT
-  review_runtime_snapshot_regular_file "$event_file" "$event_snapshot" 'event file' || return
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  event_snapshot="$snapshot_dir/events.jsonl"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$event_snapshot"' EXIT
+  review_runtime_snapshot_regular_file \
+    "$event_file" "$event_snapshot" 'event file' "${KC_PR_FLOW_MAX_EVENTS_BYTES:-16777216}" || return
   review_runtime_validate_authoritative_log "$event_snapshot" >/dev/null || return
   if ! jq -e -s '
     reduce .[] as $event (
