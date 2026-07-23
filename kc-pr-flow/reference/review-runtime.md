@@ -1,14 +1,14 @@
 # Review Runtime Contract
 
-This reference defines the current `kc-pr-review` shadow receipt runtime. It is a compatibility boundary for maintainers and adapter authors. The runtime records and inspects review observations; it does not choose findings, verdicts, confirmation options, or GitHub mutations.
+This reference defines the current `kc-pr-review` receipt and typed interactive runtime. It is a compatibility boundary for maintainers and adapter authors. The runtime records review observations and derives coverage, approval eligibility, effective-event precedence, and confirmation input from one terminal exact-identity receipt. It does not choose findings, bypass confirmation, authorize posting, or mutate GitHub.
 
 ## Runtime boundary
 
 The implementation is source-safe Bash 3.2 plus `jq`, with Python 3.8+ providing the fail-closed safe-I/O boundary. Sourcing either runtime script declares functions without executing its CLI or changing the caller's options, traps, working directory, variables, or `umask`.
 
-Each receipt-runtime file consumer first creates one private mode-0600 snapshot from a no-follow regular-file descriptor. The helper requires `O_NOFOLLOW` and `O_CLOEXEC`, rejects non-regular and oversize sources, reads through the descriptor only, and requires matching pre-open, before-read, and after-read device, inode, size, mtime, and ctime identity. It also rejects duplicate JSON members, floats, integers outside jq's exact range, and impossible RFC 3339 UTC calendar values. Missing Python or platform support returns dependency status 69; path replacement, concurrent mutation, and durability failures return closed errors before accepted-state mutation. The production shadow seam converts such failures to typed `not_observed` diagnostics because only the unchanged legacy flow has behavioral authority.
+Each receipt-runtime file consumer first creates one private mode-0600 snapshot from a no-follow regular-file descriptor. The helper requires `O_NOFOLLOW` and `O_CLOEXEC`, rejects non-regular and oversize sources, reads through the descriptor only, and requires matching pre-open, before-read, and after-read device, inode, size, mtime, and ctime identity. It also rejects duplicate JSON members, floats, integers outside jq's exact range, and impossible RFC 3339 UTC calendar values. Missing Python or platform support returns dependency status 69; path replacement, concurrent mutation, and durability failures return closed errors before accepted-state mutation. The diagnostic shadow seam converts such failures to typed `not_observed`; enabled typed authority converts them to an explicit non-approval decision.
 
-The runtime has no network, model, GitHub, posting, authorization, resume, or garbage-collection authority. In this increment, the legacy `kc-pr-review` flow remains authoritative for review analysis, rendering, confirmation, and posting.
+The runtime has no network, model, GitHub, posting, authorization, resume, or garbage-collection authority. In typed mode its derived decision is authoritative only for interactive coverage, approval eligibility, event precedence, and confirmation input. The existing `kc-pr-review` flow remains authoritative for review analysis, rendering, mandatory human confirmation, and posting.
 
 ## Exact-head identity
 
@@ -120,6 +120,16 @@ Review tasks describe capability and lane identity, exact head, and optional pro
 
 Usage records have `input_tokens`, `output_tokens`, `total_tokens`, `provenance`, `provider_family`, and `scope`. Provenance is `reported`, `estimated`, or `unavailable`; scope is `lane` or `run`. Unavailable usage requires null token values. A comparison is available only when both observations are complete, provider-reported, from the same non-null provider family, and at the same scope. Missing or incomparable usage is never interpreted as zero.
 
+## Typed interactive authority
+
+`KC_PR_FLOW_REVIEW_TYPED` is sampled once before provider dispatch. Only the exact value `on` selects typed mode; unset, off, and unknown values select legacy mode for that fresh invocation. Once typed mode starts, an invalid, incomplete, unsupported, or stale typed result cannot switch the same invocation back to legacy.
+
+The capability policy is closed and provider-neutral. Each capability is required or optional and ends in exactly one of `clean`, `findings`, `evidence_backed_na`, `incomplete_required`, or `incomplete_optional`. A required transient adapter failure permits exactly one retry. If it still lacks terminal evidence, an evidence-bound interactive manual result may provide the terminal state. Required gaps forbid approval; optional gaps remain visible without blocking on their own. Confirmed blockers always take precedence and select REQUEST_CHANGES.
+
+`InteractiveCollationDecision/v1` (`kc-pr-flow.interactive-collation-decision/v1`) is a closed derived projection with exact review identity, typed capability terminals, required-gap and blocker references, coverage, approval eligibility, effective event, and confirmation input. It is derived only by replaying one complete terminal receipt and verifying its exact identity and evidence. It grants no authorization or posting authority.
+
+`rehydrate-interactive` is terminal-only and read-only. It rejects incomplete lifecycle state, moved identity, invalid policy, unsupported terminal state, extra retry, unbound fallback, or mismatched evidence. It does not append, repair, resume, recover a lock, establish predecessor lineage, retain or collect state, dispatch a model, contact a remote service, create authorization, or post.
+
 ## Evidence pointers
 
 Durable observations store `kc-pr-flow.evidence-pointer/v1` metadata and a SHA-256 content hash, never source excerpts. Supported kinds are `git_blob`, `pr_body`, `issue`, `review_comment`, `command`, and `test`.
@@ -141,6 +151,7 @@ All commands print compact JSON except `config-hash`, which prints a hash, and C
 | `show --event-file FILE` | Return a compact `review-summary/v1` with exact run identity and lane, candidate, finding, uncertain, and usage counts. |
 | `config-hash ...` | Normalize the effective v1 review configuration and return its canonical hash. Options are `--agent-tier`, `--pr-archetype`, `--full-pass`, `--probe-required`, `--cross-model`, `--noise-filter`, and comma-separated `--capabilities`; omitted options use the defaults above. |
 | `observe --event-file FILE --expected-head SHA --expected-review-key HASH` | Read-only replay plus exact-head/key check. Returns typed `observed` or `not_observed` status and never mutates the log. |
+| `rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID` | Replay one complete terminal receipt, verify exact identity and evidence, and emit one closed `InteractiveCollationDecision/v1`. It never appends or performs recovery or remote behavior. |
 | `review-key ...` | Validate repository, PR, base, head, and config inputs and print their canonical review key. It uses the same construction as events, evidence, and the collector. |
 | `shadow --observation-file FILE ...` | Best-effort production seam. `--enabled` overrides `KC_PR_FLOW_REVIEW_SHADOW`; enabled collection also requires `--head-check-status` and, when successful, `--live-head`. It accepts exactly one closed `ShadowObservation/v1` (`kc-pr-flow.shadow-observation/v1`) file, persists a fresh `run.started`, builds and preflight-replays the remaining complete lifecycle before appending those events, then observes once. Every dependency, validation, head, append, or replay failure returns typed `not_observed` and fails open only to the unchanged legacy review. A post-start failure may leave an incomplete non-authoritative run for increment 2.3 recovery. |
 | `verify-evidence --pointer-json FILE --repo DIR` | Verify one pointer from a private snapshot against the local repository. |
@@ -151,16 +162,22 @@ The same operations are available as `review_runtime_*` functions after sourcing
 The paired scorer is a separate source-safe CLI:
 
 ```bash
-bash scripts/review-runtime-benchmark.sh score --corpus <sanitized-pairs.jsonl>
+bash scripts/review-runtime-benchmark.sh score \
+  --corpus <sanitized-pairs.jsonl> \
+  [--local-costs <bound-rehydration-measurements.json>]
 ```
 
-It snapshots and validates a closed `kc-pr-flow.review-benchmark-pair/v1` corpus and emits a deterministic `kc-pr-flow.review-benchmark-report/v1`. Each pair recomputes the exact-head review key. Each arm recomputes candidate fingerprints and run-bound candidate IDs, then `content_sha256` over canonical behavior, lanes, candidates, findings, uncertain candidate refs, and usage, followed by `receipt_id = sha256(run_id|review_key|content_sha256)`. Expected and observed findings must resolve through candidates with the same evidence hash before recall is scored. Measurement order is evidence recall, capability coverage, external behavior parity, finding/candidate stability, then usage comparability. The scorer has no model or release-gate authority.
+It snapshots and validates a closed `kc-pr-flow.review-benchmark-pair/v1` corpus and emits a deterministic `kc-pr-flow.review-benchmark-report/v1` with one ordered promotion report. Each pair recomputes the exact-head review key. Each arm recomputes candidate fingerprints and run-bound candidate IDs, then `content_sha256` over canonical behavior, lanes, candidates, findings, uncertain candidate refs, and usage, followed by `receipt_id = sha256(run_id|review_key|content_sha256)`. Expected and observed findings must resolve through candidates with the same evidence hash before recall is scored.
 
-## Shadow failure policy
+Promotion is fail-closed and ordered: G1 valid bound inputs, G2 complete required capability coverage, G3 external behavior parity, G4 zero lost expected must-fix findings, then G5 efficiency. G5 branch A requires complete same-provider/scope reported usage and median token reduction of at least 20%. Branch B requires median local terminal-collation cost no greater than 60% of a full rerun. Every Branch B observation binds run, review, receipt ID, receipt content hash, and a recomputed closed interactive decision to the paired terminal receipt and declares a fresh `terminal-collator-rehydration` operation with zero model and remote calls. Later gates cannot repair an earlier failure.
+
+## Failure policy
 
 Normal receipt mutation is fail closed: unavailable safe-I/O support, unsafe storage, invalid input, noncontiguous state, active locks, or integrity failures cannot change accepted state. Rejected append input is observable through status codes and metadata-only quarantine. Read-only validation or replay failures report errors or typed observer status without creating quarantine artifacts.
 
 The production shadow seam is deliberately fail open because it has no behavioral authority. An unset gate performs no runtime call. When enabled, a failed dependency, invalid receipt, stale head, missing state, or observer error may produce one diagnostic outside the review body, then the byte-identical legacy draft, comments, options, event, confirmation, and posting flow continue. Shadow status must never cause a retry, another model dispatch, a content rewrite, or a GitHub mutation.
+
+Typed mode is fail closed within the selected invocation. Invalid typed state produces an explicit COMMENT ceiling unless confirmed blockers require REQUEST_CHANGES. It cannot approve and cannot silently use the legacy result. Both modes still require the existing human confirmation before any GitHub action.
 
 ## Operational inspection
 

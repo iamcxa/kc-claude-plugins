@@ -33,7 +33,7 @@ again before posting. `scripts/review-architecture-diagrams-validate.sh` is fail
 only the documented two-diagram grammar; `review-architecture-diagrams-validator.test.sh` covers
 malformed structure, unsafe constructs, breakout payloads, and size caps.
 
-### Shadow Review Runtime
+### Typed Review Runtime
 
 `kc-pr-review` has one post-collation observer seam before its existing confirmation gate. It is off
 by default and enabled only by `KC_PR_FLOW_REVIEW_SHADOW=on`. The Bash 3.2 + `jq` runtime uses a
@@ -42,10 +42,21 @@ Python 3.8+ fail-closed safe-I/O helper to consume one closed `ShadowObservation
 complete typed exact-head JSONL receipt, replay provider-neutral lane and evidence-bound finding
 observations, and score authority-bound sanitized paired runs. Event envelopes allow only closed
 hash-only extensions, and rejected append input creates metadata-only quarantine without retaining
-the rejected bytes. It has no model, verdict, confirmation, posting, GitHub, resume, or
-garbage-collection authority; every shadow failure preserves the byte-identical legacy review path.
-Crash-safe lock recovery, predecessor-lineage proof, append/compaction performance, resume,
-retention, once-only posting, remote reconciliation, and daemon mutation remain increment 2.3 work.
+the rejected bytes.
+
+`KC_PR_FLOW_REVIEW_TYPED=on` is sampled once before dispatch and selects typed authority only for
+that fresh invocation. Typed mode accepts one complete terminal exact-identity receipt, replays it,
+verifies evidence, and derives the closed `InteractiveCollationDecision/v1`. The projection owns
+capability coverage, approval eligibility, event precedence, and confirmation input only. Required
+gaps cap the event at COMMENT unless confirmed blockers require REQUEST_CHANGES. It has no posting
+or GitHub authority, and both typed and legacy modes preserve mandatory human confirmation. Typed
+invalid or incomplete state fails closed without an in-run legacy fallback.
+
+Terminal rehydration is local and read-only: no append, resume, recovery, retention, model, network,
+authorization, or remote mutation. Benchmark promotion is ordered G1-G5, requires zero lost
+expected must-fix findings before efficiency, and admits only the documented 20% reported-token or
+60% bound local-rehydration branch. Crash-safe recovery, predecessor lineage, append/compaction,
+resume, retention, once-only posting, reconciliation, and daemon mutation remain increment 2.3.
 
 Maintainer checks:
 

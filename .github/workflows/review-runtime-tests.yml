@@ -1,6 +1,6 @@
 name: kc-pr-flow review runtime tests
 
-# Path-filtered validation for the local shadow receipt runtime. Keep this
+# Path-filtered validation for the local typed review runtime. Keep this
 # workflow non-required because path-filtered required checks can remain pending.
 # The suites are deterministic and do not invoke models, the network, or GitHub.
 
@@ -29,10 +29,13 @@ on:
       - ".claude-plugin/marketplace.json"
       - "PRODUCT.md"
       - "ARCHITECTURE.md"
-      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/**"
-      - "docs/ship-flow/2.1-shadow-review-receipt/plan.md"
-      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.jsonl"
-      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.txt"
+      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-evidence/**"
+      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/plan.md"
+      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-ledger.jsonl"
+      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-ledger.txt"
+      - "docs/ship-flow/2.2-typed-interactive-lifecycle/plan.md"
+      - "docs/ship-flow/2.2-typed-interactive-lifecycle/tdd-ledger.jsonl"
+      - "docs/ship-flow/2.2-typed-interactive-lifecycle/tdd-ledger.txt"
       - "docs/ship-flow/tools/validate-tdd-ledger.py"
       - ".github/workflows/review-runtime-tests.yml"
   push:
@@ -60,10 +63,13 @@ on:
       - ".claude-plugin/marketplace.json"
       - "PRODUCT.md"
       - "ARCHITECTURE.md"
-      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/**"
-      - "docs/ship-flow/2.1-shadow-review-receipt/plan.md"
-      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.jsonl"
-      - "docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.txt"
+      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-evidence/**"
+      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/plan.md"
+      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-ledger.jsonl"
+      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-ledger.txt"
+      - "docs/ship-flow/2.2-typed-interactive-lifecycle/plan.md"
+      - "docs/ship-flow/2.2-typed-interactive-lifecycle/tdd-ledger.jsonl"
+      - "docs/ship-flow/2.2-typed-interactive-lifecycle/tdd-ledger.txt"
       - "docs/ship-flow/tools/validate-tdd-ledger.py"
       - ".github/workflows/review-runtime-tests.yml"
 
@@ -76,7 +82,7 @@ concurrency:
 
 jobs:
   review-runtime:
-    name: shadow receipt runtime contract
+    name: typed review runtime contract
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -87,6 +93,8 @@ jobs:
         run: |
           grep -Fq 'Python 3.8+ providing the fail-closed safe-I/O boundary' kc-pr-flow/reference/review-runtime.md
           grep -Fq 'ShadowObservation/v1' kc-pr-flow/reference/review-runtime.md
+          grep -Fq 'InteractiveCollationDecision/v1' kc-pr-flow/reference/review-runtime.md
+          grep -Fq 'G1 valid bound inputs' kc-pr-flow/reference/review-runtime.md
           grep -Fq 'metadata-only quarantine' kc-pr-flow/reference/review-runtime.md
           grep -Fq 'receipt_id = sha256(run_id|review_key|content_sha256)' kc-pr-flow/reference/review-runtime.md
           grep -Fq "done < <(find \"\$STATE_ROOT\" -mindepth 4 -maxdepth 4 -type f" kc-pr-flow/docs/review-runtime.md
@@ -118,14 +126,17 @@ jobs:
                 .matched_expectation == true) and
               ($latest[0].recorded_at < $latest[1].recorded_at) and
               ($latest[1].recorded_at < $latest[2].recorded_at)
-            ' "docs/ship-flow/2.1-shadow-review-receipt/tdd-evidence/${task}.jsonl"
+            ' "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-evidence/${task}.jsonl"
           done
 
       - name: Validate plan TDD ledger
         run: |
           python3 docs/ship-flow/tools/validate-tdd-ledger.py \
-            --plan docs/ship-flow/2.1-shadow-review-receipt/plan.md \
-            --require-ledger-jsonl docs/ship-flow/2.1-shadow-review-receipt/tdd-ledger.jsonl
+            --plan docs/ship-flow/_archive/2.1-shadow-review-receipt/plan.md \
+            --require-ledger-jsonl docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-ledger.jsonl
+          python3 docs/ship-flow/tools/validate-tdd-ledger.py \
+            --plan docs/ship-flow/2.2-typed-interactive-lifecycle/plan.md \
+            --require-ledger-jsonl docs/ship-flow/2.2-typed-interactive-lifecycle/tdd-ledger.jsonl
 
       - name: Syntax check
         run: |
