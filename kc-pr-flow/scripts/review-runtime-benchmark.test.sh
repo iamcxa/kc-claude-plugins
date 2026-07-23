@@ -55,6 +55,14 @@ sha256_text() {
   fi
 }
 
+seal_local_costs() {
+  local costs="$1" observation hash
+  observation="$(jq -S -c '.observations[0] | del(.producer_receipt_sha256)' <<<"$costs")"
+  hash="$(printf '%s' "$observation" | review_benchmark_sha256)"
+  jq -S -c --arg hash "$hash" \
+    '.observations[0].producer_receipt_sha256=$hash' <<<"$costs"
+}
+
 assert_rejected() { # $1=description $2=corpus
   local description="$1" corpus="$2" output rc
   output="$("$BENCHMARK" score --corpus "$corpus" 2>&1)"
@@ -72,6 +80,7 @@ run_interactive_gates_case() {
   local costs_wrong_operation costs_model_call costs_remote_call result repeated
   local decision canonical_decision decision_hash costs_tampered_decision costs_tampered_hash
   local costs_wrong_content costs_copied_ids copied_decision copied_decision_hash
+  local costs_asserted producer_payload producer_hash measurement target mock_runtime operation_log
   local branch_a_20 branch_a_19 lost_recall g3_fail g2_fail g1_fail
   local fixture_report
   # shellcheck source=/dev/null
@@ -86,7 +95,8 @@ run_interactive_gates_case() {
   decision='{"schema":"kc-pr-flow.interactive-collation-decision/v1","review_identity":{"repository":"acme/widgets","pr_number":42,"base_sha":"1111111111111111111111111111111111111111","head_sha":"2222222222222222222222222222222222222222","config_hash":"3333333333333333333333333333333333333333333333333333333333333333","review_key":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","run_id":"run-gate-shadow"},"mode":"typed","coverage":"complete","approve_eligible":true,"effective_event":"APPROVE","capabilities":[],"confirmed_blocker_refs":[],"capability_gap_refs":[],"confirmation_input":{"identity_summary":"typed-derived","coverage_summary":"typed-derived","verdict_summary":"typed-derived","blocker_refs":[],"gap_refs":[]}}'
   canonical_decision="$(printf '%s' "$decision" | jq -S -c .)"
   decision_hash="$(printf '%s' "$canonical_decision" | review_benchmark_sha256)"
-  costs_60="$(jq -S -c -n --argjson decision "$decision" --arg decision_hash "$decision_hash" \
+  producer_payload="$(jq -S -c -n --argjson decision "$decision" --arg decision_hash "$decision_hash" \
+    --arg raw_event_sha256 "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" \
     '{schema:"kc-pr-flow.local-rehydration-costs/v1",observations:[{
       pair_id:"gate-pair",run_id:"run-gate-shadow",
       review_key:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -94,12 +104,20 @@ run_interactive_gates_case() {
       terminal_receipt_content_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       decision:$decision,decision_sha256:$decision_hash,
       operation:"terminal-collator-rehydration",invocation:"fresh",model_calls:0,remote_calls:0,
+      counter:"canonical-output-bytes/v1",control_operation:"local-full-review-replay",
+      raw_event_sha256:$raw_event_sha256,
+      producer:"kc-pr-flow.local-rehydration-measurement/v1",
       terminal_rehydration_units:60,full_review_rerun_units:100
     }]}')"
-  costs_61="$(jq -c '.observations[0].terminal_rehydration_units=61' <<<"$costs_60")"
+  costs_60="$(seal_local_costs "$producer_payload")"
+  costs_61="$(seal_local_costs \
+    "$(jq -c '.observations[0].terminal_rehydration_units=61' <<<"$costs_60")")"
+  costs_asserted='{"schema":"kc-pr-flow.local-rehydration-costs/v1","observations":[{"pair_id":"gate-pair","review_key":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","terminal_receipt_id":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","decision_sha256":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","operation":"terminal-collator-rehydration","invocation":"fresh","model_calls":0,"remote_calls":0,"terminal_rehydration_units":60,"full_review_rerun_units":100}]}'
   costs_unbound='{"schema":"kc-pr-flow.local-rehydration-costs/v1","observations":[{"pair_id":"gate-pair","terminal_rehydration_units":60,"full_review_rerun_units":100}]}'
-  costs_wrong_identity="$(jq -c '.observations[0].terminal_receipt_id="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$costs_60")"
-  costs_wrong_content="$(jq -c '.observations[0].terminal_receipt_content_sha256="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$costs_60")"
+  costs_wrong_identity="$(seal_local_costs \
+    "$(jq -c '.observations[0].terminal_receipt_id="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$costs_60")")"
+  costs_wrong_content="$(seal_local_costs \
+    "$(jq -c '.observations[0].terminal_receipt_content_sha256="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$costs_60")")"
   costs_tampered_decision="$(jq -c '.observations[0].decision.effective_event="COMMENT"' <<<"$costs_60")"
   costs_tampered_hash="$(jq -c '.observations[0].decision_sha256="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$costs_60")"
   costs_copied_ids="$(jq -c '.observations[0].decision.review_identity.run_id="run-copied"' <<<"$costs_60")"
@@ -107,9 +125,13 @@ run_interactive_gates_case() {
   copied_decision_hash="$(printf '%s' "$copied_decision" | review_benchmark_sha256)"
   costs_copied_ids="$(jq -c --arg hash "$copied_decision_hash" \
     '.observations[0].decision_sha256=$hash' <<<"$costs_copied_ids")"
-  costs_wrong_operation="$(jq -c '.observations[0].operation="full-review-rerun"' <<<"$costs_60")"
-  costs_model_call="$(jq -c '.observations[0].model_calls=1' <<<"$costs_60")"
-  costs_remote_call="$(jq -c '.observations[0].remote_calls=1' <<<"$costs_60")"
+  costs_copied_ids="$(seal_local_costs "$costs_copied_ids")"
+  costs_wrong_operation="$(seal_local_costs \
+    "$(jq -c '.observations[0].operation="full-review-rerun"' <<<"$costs_60")")"
+  costs_model_call="$(seal_local_costs \
+    "$(jq -c '.observations[0].model_calls=1' <<<"$costs_60")")"
+  costs_remote_call="$(seal_local_costs \
+    "$(jq -c '.observations[0].remote_calls=1' <<<"$costs_60")")"
 
   branch_a_20="$(jq -c '.pairs[0].usage_comparability={comparable:true,provider_family:"claude",scope:"run",baseline:{total_tokens:100},shadow:{total_tokens:80}}' <<<"$base_report")"
   result="$(review_benchmark_promotion_from_report "$branch_a_20" "$costs_none")"
@@ -126,6 +148,9 @@ run_interactive_gates_case() {
   assert_eq '61 percent local terminal rehydration cost fails branch B' fail "$(jq -r '.verdict' <<<"$result")"
   result="$(review_benchmark_promotion_from_report "$base_report" "$costs_unbound")"
   assert_eq 'unbound claimed local costs cannot promote branch B' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_asserted")"
+  assert_eq 'hand-authored costs without executable producer receipt cannot promote branch B' fail \
+    "$(jq -r '.verdict' <<<"$result")"
   result="$(review_benchmark_promotion_from_report "$base_report" "$costs_wrong_identity")"
   assert_eq 'costs bound to a different terminal receipt cannot promote branch B' fail "$(jq -r '.verdict' <<<"$result")"
   result="$(review_benchmark_promotion_from_report "$base_report" "$costs_wrong_content")"
@@ -161,6 +186,39 @@ run_interactive_gates_case() {
   assert_eq 'promotion report is byte-stable across repeated evaluation' "$result" "$repeated"
   assert_eq 'promotion report preserves fixed G1 through G5 order' g1,g2,g3,g4,g5 \
     "$(jq -r '.gate_order | join(",")' <<<"$result")"
+
+  target="$TEST_ROOT/local-measurement-target.json"
+  operation_log="$TEST_ROOT/local-measurement-operations.log"
+  mock_runtime="$TEST_ROOT/local-measurement-runtime.sh"
+  printf '%s\n' "$base_report" | jq -S -c '
+    .pairs[0] |
+    {schema:"kc-pr-flow.local-measurement-target/v1",pair_id,
+     exact_head,receipt:.receipts.shadow}' >"$target"
+  : >"$TEST_ROOT/local-events.jsonl"
+  : >"$TEST_ROOT/local-policy.json"
+  mkdir -p "$TEST_ROOT/local-repo"
+  cat >"$mock_runtime" <<'MOCK_MEASURE'
+#!/usr/bin/env bash
+printf '%s\n' "$1" >>"$MEASURE_OPERATION_LOG"
+case "$1" in
+  rehydrate-interactive) printf '%s\n' "$MEASURE_DECISION" ;;
+  replay) printf '%s\n' '{"schema":"kc-pr-flow.review-projection/v1","full":["local","replay","control","payload"]}' ;;
+  *) exit 2 ;;
+esac
+MOCK_MEASURE
+  chmod 0700 "$mock_runtime"
+  measurement="$(MEASURE_OPERATION_LOG="$operation_log" MEASURE_DECISION="$decision" \
+    "$BENCHMARK" measure-local --runtime "$mock_runtime" \
+      --target "$target" --event-file "$TEST_ROOT/local-events.jsonl" \
+      --policy-file "$TEST_ROOT/local-policy.json" \
+      --repo-worktree "$TEST_ROOT/local-repo")"
+  assert_eq 'measurement harness invokes terminal rehydration then local full replay' \
+    'rehydrate-interactive,replay' "$(paste -sd, "$operation_log")"
+  assert_eq 'measurement harness emits executable producer receipt' \
+    kc-pr-flow.local-rehydration-measurement/v1 \
+    "$(jq -r '.observations[0].producer' <<<"$measurement")"
+  assert_eq 'measurement harness records zero model and remote calls' '0,0' \
+    "$(jq -r '.observations[0] | [.model_calls,.remote_calls] | join(",")' <<<"$measurement")"
 }
 
 if [ "$CASE" = 'interactive-gates' ]; then
