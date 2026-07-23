@@ -933,9 +933,12 @@ review_benchmark_main() {
     [ -n "$corpus_file" ] || { review_benchmark_usage; return 2; }
     review_benchmark_score "$corpus_file" "$local_costs_file"
   else
-    [ -n "$runtime" ] && [ -n "$target_file" ] && [ -n "$event_file" ] &&
-      [ -n "$control_file" ] && [ -n "$policy_file" ] && [ -n "$repository_path" ] ||
-      { review_benchmark_usage; return 2; }
+    if [ -z "$runtime" ] || [ -z "$target_file" ] || [ -z "$event_file" ] ||
+      [ -z "$control_file" ] || [ -z "$policy_file" ] ||
+      [ -z "$repository_path" ]; then
+      review_benchmark_usage
+      return 2
+    fi
     review_benchmark_measure_local "$runtime" "$target_file" "$event_file" \
       "$policy_file" "$repository_path" "$control_file"
   fi
