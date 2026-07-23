@@ -36,12 +36,22 @@ assert_match() {
   if [[ "$3" =~ $2 ]]; then pass; else fail "$1 ([$3] does not match [$2])"; fi
 }
 
+test_sha256() {
+  if command -v shasum >/dev/null 2>&1; then
+    printf '%s' "$1" | shasum -a 256 | awk '{print $1}'
+  else
+    printf '%s' "$1" | sha256sum | awk '{print $1}'
+  fi
+}
+
 run_typed_interactive_seam_tests() {
   local recipe="$TEST_ROOT/typed-interactive-recipe.sh"
   local mock_runtime="$TEST_ROOT/mock-typed-runtime.sh"
   local typed_log="$TEST_ROOT/typed.log"
   local mutation_log="$TEST_ROOT/typed-mutation.log"
-  local sampled result decision forged_confirmation post_block
+  local sampled result decision forged_confirmation post_block identity
+  local evidence evidence_binding bare_evidence drifted_evidence hash_drift_evidence
+  local matching_evidence inconsistent_evidence post_gate
 
   sed -n '/^# typed-interactive-recipe:start$/,/^# typed-interactive-recipe:end$/p' "$SKILL" |
     sed '1d;$d' >"$recipe"
@@ -80,6 +90,29 @@ MOCK
   : >"$typed_log"
   : >"$mutation_log"
   export MOCK_TYPED_LOG="$typed_log"
+  identity='{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"}'
+  evidence='{"blockers":[{"evidence_sha256":"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee","finding_id":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}],"confirmed_at":"2026-07-23T00:00:00Z","confirmed_by":"interactive-human","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.confirmed-blocker-evidence/v1"}'
+  evidence_binding="$(test_sha256 "$(jq -S -c . <<<"$evidence")")"
+  evidence="$(jq -S -c --arg binding "$evidence_binding" \
+    '. + {binding_sha256:$binding}' <<<"$evidence")"
+  bare_evidence='["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]'
+  drifted_evidence="$(jq -S -c \
+    '.review_identity.head_sha="9999999999999999999999999999999999999999" |
+     del(.binding_sha256)' <<<"$evidence")"
+  evidence_binding="$(test_sha256 "$drifted_evidence")"
+  drifted_evidence="$(jq -S -c --arg binding "$evidence_binding" \
+    '. + {binding_sha256:$binding}' <<<"$drifted_evidence")"
+  hash_drift_evidence="$(jq -S -c \
+    '.binding_sha256="9999999999999999999999999999999999999999999999999999999999999999"' \
+    <<<"$evidence")"
+  matching_evidence="$evidence"
+  inconsistent_evidence="$(jq -S -c \
+    '.blockers=[{"evidence_sha256":"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                 "finding_id":"9999999999999999999999999999999999999999999999999999999999999999"}] |
+     del(.binding_sha256)' <<<"$evidence")"
+  evidence_binding="$(test_sha256 "$inconsistent_evidence")"
+  inconsistent_evidence="$(jq -S -c --arg binding "$evidence_binding" \
+    '. + {binding_sha256:$binding}' <<<"$inconsistent_evidence")"
 
   for mode in unset off unknown; do
     case "$mode" in
@@ -88,7 +121,8 @@ MOCK
     esac
     sampled="$(review_interactive_sample_mode)"
     assert_eq "$mode samples legacy before dispatch" legacy "$sampled"
-    result="$(review_interactive_prepare_confirmation "$sampled" COMMENT "$mock_runtime")"
+    result="$(review_interactive_prepare_confirmation \
+      "$sampled" COMMENT null null "$mock_runtime")"
     assert_eq "$mode preserves legacy confirmation source" legacy "$(jq -r '.source' <<<"$result")"
     assert_eq "$mode keeps confirmation mandatory" true "$(jq -r '.confirmation_required' <<<"$result")"
   done
@@ -100,7 +134,7 @@ MOCK
   KC_PR_FLOW_REVIEW_TYPED=off
   export KC_PR_FLOW_REVIEW_TYPED
   result="$(MOCK_TYPED_RESULT=valid review_interactive_prepare_confirmation \
-    "$sampled" COMMENT "$mock_runtime")"
+    "$sampled" COMMENT "$identity" null "$mock_runtime")"
   assert_eq 'enabled mode consumes typed authority' typed "$(jq -r '.source' <<<"$result")"
   assert_eq 'mid-run switch cannot change sampled typed mode' REQUEST_CHANGES "$(jq -r '.effective_event' <<<"$result")"
   assert_eq 'typed valid path keeps confirmation mandatory' true "$(jq -r '.confirmation_required' <<<"$result")"
@@ -110,14 +144,14 @@ MOCK
   review_interactive_decision_valid "$decision"
   assert_eq 'decision blocker authority does not require a duplicate expected array' 0 "$?"
   result="$(MOCK_TYPED_RESULT=valid review_interactive_prepare_confirmation \
-    "$sampled" COMMENT "$mock_runtime")"
+    "$sampled" COMMENT "$identity" null "$mock_runtime")"
   assert_eq 'omitting duplicate blocker input cannot erase a valid decision blocker' REQUEST_CHANGES \
     "$(jq -r '.effective_event' <<<"$result")"
   assert_eq 'valid blocker decision remains the confirmation authority' \
     kc-pr-flow.interactive-collation-decision/v1 "$(jq -r '.decision.schema // empty' <<<"$result")"
 
   result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
-    "$sampled" APPROVE "$mock_runtime")"
+    "$sampled" APPROVE "$identity" null "$mock_runtime")"
   assert_eq 'typed invalid state stays typed instead of legacy fallback' typed "$(jq -r '.source' <<<"$result")"
   assert_eq 'typed invalid state cannot trust a bare expected-blocker array' COMMENT \
     "$(jq -r '.effective_event' <<<"$result")"
@@ -127,31 +161,71 @@ MOCK
     "$(jq -r '.capability_gap_refs[0]' <<<"$result")"
   assert_eq 'typed invalid path keeps confirmation mandatory' true "$(jq -r '.confirmation_required' <<<"$result")"
   result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
-    "$sampled" APPROVE "$mock_runtime")"
+    "$sampled" APPROVE "$identity" "$evidence" "$mock_runtime")"
+  assert_eq 'valid independent blocker evidence preserves REQUEST_CHANGES' REQUEST_CHANGES \
+    "$(jq -r '.effective_event' <<<"$result")"
+  assert_eq 'valid independent blocker evidence remains bound in confirmation' \
+    kc-pr-flow.confirmed-blocker-evidence/v1 \
+    "$(jq -r '.blocker_evidence.schema // empty' <<<"$result")"
+  assert_eq 'valid independent blocker evidence derives blocker references' \
+    ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff \
+    "$(jq -r '.confirmed_blocker_refs[0]' <<<"$result")"
+  post_gate="$(review_interactive_confirm_post "$result" REQUEST_CHANGES confirmed)"
+  review_interactive_post_gate_valid "$post_gate"
+  assert_eq 'post gate accepts decisionless REQUEST_CHANGES only with bound evidence' 0 "$?"
+
+  result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
+    "$sampled" APPROVE "$identity" "$bare_evidence" "$mock_runtime")"
+  assert_eq 'bare blocker array cannot preserve REQUEST_CHANGES' COMMENT \
+    "$(jq -r '.effective_event' <<<"$result")"
+  assert_eq 'bare blocker array is discarded rather than retained' null \
+    "$(jq -r '.blocker_evidence | type' <<<"$result")"
+  result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
+    "$sampled" APPROVE "$identity" "$drifted_evidence" "$mock_runtime")"
+  assert_eq 'exact-identity drift discards independent blocker authority' COMMENT \
+    "$(jq -r '.effective_event' <<<"$result")"
+  result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
+    "$sampled" APPROVE "$identity" "$hash_drift_evidence" "$mock_runtime")"
+  assert_eq 'binding hash drift discards independent blocker authority' COMMENT \
+    "$(jq -r '.effective_event' <<<"$result")"
+
+  result="$(MOCK_TYPED_RESULT=valid review_interactive_prepare_confirmation \
+    "$sampled" COMMENT "$identity" "$matching_evidence" "$mock_runtime")"
+  assert_eq 'consistent valid decision and evidence retain decision authority' REQUEST_CHANGES \
+    "$(jq -r '.effective_event' <<<"$result")"
+  result="$(MOCK_TYPED_RESULT=valid review_interactive_prepare_confirmation \
+    "$sampled" COMMENT "$identity" "$inconsistent_evidence" "$mock_runtime")"
+  assert_eq 'inconsistent valid decision and evidence fail closed at COMMENT' COMMENT \
+    "$(jq -r '.effective_event' <<<"$result")"
+  assert_eq 'inconsistent parallel evidence cannot leave decision authority' true \
+    "$(jq '.decision == null and .confirmed_blocker_refs == []' <<<"$result")"
+
+  result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
+    "$sampled" APPROVE "$identity" null "$mock_runtime")"
   assert_eq 'typed invalid state without blockers has COMMENT ceiling' COMMENT \
     "$(jq -r '.effective_event' <<<"$result")"
   result="$(MOCK_TYPED_RESULT=malformed review_interactive_prepare_confirmation \
-    "$sampled" APPROVE "$mock_runtime")"
+    "$sampled" APPROVE "$identity" null "$mock_runtime")"
   assert_eq 'malformed typed decision has no independent blocker authority' COMMENT \
     "$(jq -r '.effective_event' <<<"$result")"
   result="$(MOCK_TYPED_RESULT=inconsistent review_interactive_prepare_confirmation \
-    "$sampled" APPROVE "$mock_runtime")"
+    "$sampled" APPROVE "$identity" null "$mock_runtime")"
   assert_eq 'same-schema identity and reference inconsistency fails closed' COMMENT \
     "$(jq -r '.effective_event' <<<"$result")"
   assert_eq 'same-schema inconsistent decision is not retained as authority' true \
     "$(jq '.decision == null' <<<"$result")"
 
   result="$(MOCK_TYPED_RESULT=valid review_interactive_prepare_confirmation \
-    "$sampled" COMMENT "$mock_runtime")"
+    "$sampled" COMMENT "$identity" null "$mock_runtime")"
   review_interactive_apply_event_edit "$result" APPROVE >/dev/null 2>&1
   assert_eq 'typed blocker decision cannot be edited to APPROVE' 3 "$?"
   result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
-    "$sampled" APPROVE "$mock_runtime")"
+    "$sampled" APPROVE "$identity" null "$mock_runtime")"
   review_interactive_apply_event_edit "$result" APPROVE >/dev/null 2>&1
   assert_eq 'typed invalid COMMENT ceiling cannot be edited to APPROVE' 3 "$?"
 
   result="$(MOCK_TYPED_RESULT=approve review_interactive_prepare_confirmation \
-    "$sampled" COMMENT "$mock_runtime")"
+    "$sampled" COMMENT "$identity" null "$mock_runtime")"
   review_interactive_confirm_post "$result" APPROVE pending >/dev/null 2>&1
   assert_eq 'typed post gate requires explicit human confirmation' 3 "$?"
   result="$(review_interactive_confirm_post "$result" APPROVE confirmed)"
@@ -159,7 +233,7 @@ MOCK
     "$(jq -r '.effective_event' <<<"$result")"
   assert_eq 'post gate receipt records human confirmation' true \
     "$(jq -r '.human_confirmed' <<<"$result")"
-  forged_confirmation='{"schema":"kc-pr-flow.interactive-confirmation/v1","source":"typed","confirmation_required":true,"effective_event":"APPROVE","capability_gap_refs":["required-gap"],"confirmed_blocker_refs":[],"decision":null}'
+  forged_confirmation='{"blocker_evidence":null,"capability_gap_refs":["required-gap"],"confirmation_required":true,"confirmed_blocker_refs":[],"decision":null,"effective_event":"APPROVE","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.interactive-confirmation/v1","source":"typed"}'
   review_interactive_confirm_post "$forged_confirmation" APPROVE confirmed >/dev/null 2>&1
   assert_eq 'typed post gate rejects a decisionless forged confirmation' 3 "$?"
   post_block="$(sed -n '/^## Step 7: Post Review$/,/^## Step 8: Learning/p' "$SKILL")"
