@@ -28,7 +28,7 @@ The state root is configurable and defaults to the platform state directory unde
 |---|---|
 | Typed run history | Valid append-only events |
 | Rebuilt receipt and CLI display | Replay projection; never an independent source of truth |
-| Coverage, approval eligibility, and event precedence in typed mode | Closed `InteractiveCollationDecision/v1` derived from one terminal exact-identity receipt |
+| Coverage, approval eligibility, and event precedence in typed mode | A closed `InteractiveCollationDecision/v1` is primary authority; invalid decision production may preserve REQUEST_CHANGES only through independently confirmed exact-identity `confirmed-blocker-evidence/v1`, and inconsistency fails closed |
 | Human confirmation and remote posting | Existing interactive review flow; the runtime cannot bypass or execute either |
 | Required coverage | Capability terminal states plus explicit evidence-bound fallback |
 | Remote mutation | GitHub review identity, reconciled to a deterministic local intent |
