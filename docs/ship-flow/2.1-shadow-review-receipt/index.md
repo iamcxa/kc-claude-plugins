@@ -35,3 +35,16 @@ The receipt binds full repository identity, PR number, base/head SHA, schema/con
 ### Next
 
 Blocks `2.2-typed-interactive-lifecycle` until exact-head rehydration, recall preservation, complete lane accounting, and external-behavior parity pass.
+
+## Stage Report: verify
+
+- DONE: Re-evaluate every prior 2.1 blocker against merged PR #48 and exact evidence.
+  `verify.md` supersedes the historical VETO and closes all nine blockers against head `22f04047` / merge tree `56b6e7c`.
+- DONE: Produce the authoritative current verify artifact with schema-domain `## Intent Match Findings` and truthful test/CI receipts.
+  Current `verify.md` records PASS, fresh local counts, five successful exact-head GitHub checks, intent-match findings, and reviewer dispositions.
+- SKIPPED: Advance only if the Done Signal / T6-T11 handoff is fully satisfied without product code changes.
+  Done Signal and T6-T11 are verified and no product code changed, but `advance-stage.sh` requires an absent delegated cooperative lease (`SHIP_FLOW_COMPLETION_LEASE_FILE`, token, and worker ID); index remains at `status: verify` without manual frontmatter mutation.
+
+### Summary
+
+Merged PR #48 is independently verified PASS at its exact reviewed tree. The current verify artifact is durable; completion registration is intentionally left to the lease-owning First Officer.
