@@ -6,10 +6,15 @@ parent_pitch: "2"
 harvest_required: true
 layout: folder
 appetite: "3 working days"
+affects_ui: false
+design_required: true
+contract_decision_required: false
+domain: schema
 depends_on:
     - "2.1"
-status: shape
-stage_outputs: {}
+status: design
+stage_outputs:
+    shape: shape.md
 started: 2026-07-23T01:58:42Z
 ---
 
