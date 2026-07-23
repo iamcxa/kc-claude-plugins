@@ -21,6 +21,7 @@ stage_outputs:
   execute: execute.md
   verify: verify.md
   review: review.md
+  ship: ship.md
 ---
 
 ### Vertical Slice
