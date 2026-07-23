@@ -11,13 +11,19 @@ design_required: true
 contract_decision_required: false
 domain: schema
 depends_on: []
-status: verify
+status: done
 stage_outputs:
     shape: shape.md
     design: design.md
     plan: plan.md
     execute: execute.md
+    verify: verify.md
 started: 2026-07-23T01:31:40Z
+pr: "#48"
+completed: 2026-07-23T01:58:02Z
+verdict: PASSED
+worktree:
+archived: 2026-07-23T01:58:02Z
 ---
 
 ### Vertical Slice
