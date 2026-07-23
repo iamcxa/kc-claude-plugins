@@ -20,6 +20,7 @@ Typed interactive review now derives coverage, approval eligibility, blocker pre
 
 status: shipped
 stage_cost: not metered
+pr: "#50" — Typed interactive authority is exact-head, fail-closed, and still human-confirmed.
 token_budget: not metered
 token_actual: not metered
 tasks: 4/4 complete; 0 blocked
