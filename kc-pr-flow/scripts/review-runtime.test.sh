@@ -24,7 +24,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding]\n' "$0" >&2
+    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -111,6 +111,275 @@ HEAD_SHA="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 CONFIG_HASH="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 OCCURRED_AT="2026-07-22T00:00:00Z"
 EXPECTED_REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
+
+run_interactive_decision_tests() {
+  local receipt policy repo output rc before_hash after_hash
+  local run_id content_hash anchor candidate_id merge_key finding_id pointer candidate
+  local task usage result finding behavior_hashes start lane_started observed lane_finished synthesized finished
+  local types_task_one types_task_two types_result_one types_result_two types_started_one types_started_two types_finished_one types_finished_two
+  local interactive_head interactive_base interactive_key identity manual_clean manual_na
+  local bad_policy bad_receipt mutated identity_case bad_repo bad_pr bad_base bad_head bad_config bad_key bad_run
+  receipt="$TEST_INPUT_ROOT/interactive-terminal.jsonl"
+  policy="$TEST_INPUT_ROOT/interactive-policy.json"
+  repo="$TEST_INPUT_ROOT/interactive-repo"
+  run_id='run-interactive-terminal'
+  mkdir -p "$repo/src"
+  git -C "$repo" init -q
+  printf 'evidence bound review\n' >"$repo/src/review.sh"
+  git -C "$repo" add src/review.sh
+  git -C "$repo" -c user.name='Runtime Test' -c user.email='runtime@example.invalid' commit -qm seed
+  git -C "$repo" remote add origin 'https://github.com/acme/widgets.git'
+  interactive_head="$(git -C "$repo" rev-parse HEAD)"
+  interactive_base="$interactive_head"
+  interactive_key="$(sha256_text "$REPOSITORY|$PR_NUMBER|$interactive_base|$interactive_head|$CONFIG_HASH")"
+  content_hash="$(review_runtime_sha256 <"$repo/src/review.sh")"
+  anchor='eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+  candidate_id="$(review_runtime_candidate_id "$run_id" security-1 1 "$content_hash")"
+  pointer="$(jq -S -c -n --arg key "$interactive_key" --arg repo "$REPOSITORY" \
+    --arg base "$interactive_base" --arg head "$interactive_head" --arg hash "$content_hash" \
+    '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$key,repository:$repo,
+      base_sha:$base,head_sha:$head,object_sha:$head,path:"src/review.sh",side:"RIGHT",line:1,
+      locator:"review-anchor",content_sha256:$hash}')"
+  candidate="$(jq -S -c -n --arg id "$candidate_id" --arg key "$interactive_key" \
+    --arg run "$run_id" --arg anchor "$anchor" --argjson evidence "$pointer" \
+    '{schema:"kc-pr-flow.review-candidate/v1",candidate_id:$id,run_id:$run,review_key:$key,
+      lane_id:"security-1",ordinal:1,path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,
+      category:"security",claim_key:"unchecked-boundary",evidence:$evidence}')"
+  task="$(jq -S -c -n --arg run "$run_id" --arg key "$interactive_key" \
+    --arg repo "$REPOSITORY" --arg base "$interactive_base" --arg head "$interactive_head" --arg config "$CONFIG_HASH" \
+    '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:"security-1",
+      capability:"security",repository:$repo,pr_number:42,base_sha:$base,head_sha:$head,config_hash:$config}')"
+  usage='{"input_tokens":100,"output_tokens":25,"provenance":"reported","provider_family":"claude","scope":"lane","total_tokens":125}'
+  result="$(jq -S -c -n --arg run "$run_id" --arg key "$interactive_key" \
+    --arg id "$candidate_id" --argjson usage "$usage" \
+    '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:"security-1",
+      capability:"security",terminal_status:"succeeded",candidates:[$id],usage:$usage,provider_family:"claude"}')"
+  merge_key="src/review.sh|RIGHT|$content_hash|security|unchecked-boundary"
+  finding_id="$(review_runtime_finding_id "$interactive_key" "$merge_key")"
+  finding="$(jq -S -c -n --arg id "$finding_id" --arg key "$interactive_key" \
+    --arg merge "$merge_key" --arg anchor "$anchor" --arg candidate "$candidate_id" \
+    --argjson evidence "$pointer" \
+    '{schema:"kc-pr-flow.review-finding/v1",finding_id:$id,review_key:$key,merge_key:$merge,
+      path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,category:"security",
+      claim_key:"unchecked-boundary",candidate_ids:[$candidate],evidence:$evidence}')"
+  behavior_hashes="$(jq -S -c -n --arg hash "$content_hash" \
+    '{body_sha256:$hash,confirmation_input_sha256:$hash,event_sha256:$hash,
+      github_call_log_sha256:$hash,inline_comments_sha256:$hash,options_sha256:$hash}')"
+  types_task_one="$(jq -c '.lane_id="types-1" | .capability="types"' <<<"$task")"
+  types_task_two="$(jq -c '.lane_id="types-2" | .capability="types"' <<<"$task")"
+  types_result_one="$(jq -c '.lane_id="types-1" | .capability="types" | .terminal_status="failed" | .candidates=[]' <<<"$result")"
+  types_result_two="$(jq -c '.lane_id="types-2" | .capability="types" | .terminal_status="succeeded" | .candidates=[]' <<<"$result")"
+  start="$(review_runtime_build_event "$run_id" "$interactive_key" "$REPOSITORY" "$PR_NUMBER" \
+    "$interactive_base" "$interactive_head" "$CONFIG_HASH" 1 "$OCCURRED_AT" run.started '{}')"
+  lane_started="$(review_runtime_build_event "$run_id" "$interactive_key" "$REPOSITORY" "$PR_NUMBER" \
+    "$interactive_base" "$interactive_head" "$CONFIG_HASH" 2 "$OCCURRED_AT" lane.started \
+    "$(jq -S -c -n --argjson value "$task" '{review_task:$value}')")"
+  observed="$(review_runtime_build_event "$run_id" "$interactive_key" "$REPOSITORY" "$PR_NUMBER" \
+    "$interactive_base" "$interactive_head" "$CONFIG_HASH" 3 "$OCCURRED_AT" finding.observed \
+    "$(jq -S -c -n --argjson value "$candidate" '{candidate:$value}')")"
+  lane_finished="$(review_runtime_build_event "$run_id" "$interactive_key" "$REPOSITORY" "$PR_NUMBER" \
+    "$interactive_base" "$interactive_head" "$CONFIG_HASH" 4 "$OCCURRED_AT" lane.finished \
+    "$(jq -S -c -n --argjson value "$result" '{lane_result:$value}')")"
+  types_started_one="$(review_runtime_build_event "$run_id" "$interactive_key" "$REPOSITORY" "$PR_NUMBER" \
+    "$interactive_base" "$interactive_head" "$CONFIG_HASH" 5 "$OCCURRED_AT" lane.started \
+    "$(jq -S -c -n --argjson value "$types_task_one" '{review_task:$value}')")"
+  types_finished_one="$(review_runtime_build_event "$run_id" "$interactive_key" "$REPOSITORY" "$PR_NUMBER" \
+    "$interactive_base" "$interactive_head" "$CONFIG_HASH" 6 "$OCCURRED_AT" lane.finished \
+    "$(jq -S -c -n --argjson value "$types_result_one" '{lane_result:$value}')")"
+  types_started_two="$(review_runtime_build_event "$run_id" "$interactive_key" "$REPOSITORY" "$PR_NUMBER" \
+    "$interactive_base" "$interactive_head" "$CONFIG_HASH" 7 "$OCCURRED_AT" lane.started \
+    "$(jq -S -c -n --argjson value "$types_task_two" '{review_task:$value}')")"
+  types_finished_two="$(review_runtime_build_event "$run_id" "$interactive_key" "$REPOSITORY" "$PR_NUMBER" \
+    "$interactive_base" "$interactive_head" "$CONFIG_HASH" 8 "$OCCURRED_AT" lane.finished \
+    "$(jq -S -c -n --argjson value "$types_result_two" '{lane_result:$value}')")"
+  synthesized="$(review_runtime_build_event "$run_id" "$interactive_key" "$REPOSITORY" "$PR_NUMBER" \
+    "$interactive_base" "$interactive_head" "$CONFIG_HASH" 9 "$OCCURRED_AT" synthesis.finished \
+    "$(jq -S -c -n --argjson value "$finding" '{findings:[$value],uncertain_candidate_ids:[]}')")"
+  finished="$(review_runtime_build_event "$run_id" "$interactive_key" "$REPOSITORY" "$PR_NUMBER" \
+    "$interactive_base" "$interactive_head" "$CONFIG_HASH" 10 "$OCCURRED_AT" run.finished \
+    "$(jq -S -c -n --argjson value "$behavior_hashes" '{behavior_hashes:$value}')")"
+  printf '%s\n' "$start" "$lane_started" "$observed" "$lane_finished" \
+    "$types_started_one" "$types_finished_one" "$types_started_two" "$types_finished_two" \
+    "$synthesized" "$finished" >"$receipt"
+
+  identity="$(jq -S -c -n --arg repo "$REPOSITORY" --argjson pr "$PR_NUMBER" \
+    --arg base "$interactive_base" --arg head "$interactive_head" --arg config "$CONFIG_HASH" \
+    --arg key "$interactive_key" --arg run "$run_id" \
+    '{repository:$repo,pr_number:$pr,base_sha:$base,head_sha:$head,config_hash:$config,review_key:$key,run_id:$run}')"
+  manual_clean="$(jq -S -c -n --argjson identity "$identity" --argjson evidence "$pointer" \
+    '{schema:"kc-pr-flow.manual-capability-result/v1",review_identity:$identity,capability:"manual-clean",
+      terminal_assessment:"clean",candidate_ids:[],evidence:[$evidence],recorded_by:"interactive-human",
+      recorded_at:"2026-07-23T00:00:00Z"}')"
+  manual_na="$(jq -S -c -n --argjson identity "$identity" --argjson evidence "$pointer" \
+    '{schema:"kc-pr-flow.manual-capability-result/v1",review_identity:$identity,capability:"manual-na",
+      terminal_assessment:"evidence_backed_na",candidate_ids:[],evidence:[$evidence],recorded_by:"interactive-human",
+      recorded_at:"2026-07-23T00:00:00Z"}')"
+  jq -S -c -n --argjson identity "$identity" --argjson evidence "$pointer" \
+    --argjson manual_clean "$manual_clean" --argjson manual_na "$manual_na" --arg blocker "$finding_id" '
+    {
+      schema:"kc-pr-flow.capability-policy/v1",
+      review_identity:$identity,
+      confirmed_blocker_refs:[$blocker],
+      obligations:[
+        {capability:"security",required:true,activation_condition:"always",
+         adapter_attempts:[{ordinal:1,result:"succeeded",lane_result_ref:"security-1"}],
+         evidence:[$evidence],fallback:{status:"not_needed",result:null},terminal_state:"findings"},
+        {capability:"types",required:true,activation_condition:"always",
+         adapter_attempts:[{ordinal:1,result:"transient_failure",lane_result_ref:"types-1"},
+                           {ordinal:2,result:"succeeded",lane_result_ref:"types-2"}],
+         evidence:[$evidence],fallback:{status:"not_needed",result:null},terminal_state:"clean"},
+        {capability:"manual-clean",required:true,activation_condition:"always",adapter_attempts:[],
+         evidence:[],fallback:{status:"provided",result:$manual_clean},terminal_state:"clean"},
+        {capability:"manual-na",required:true,activation_condition:"always",adapter_attempts:[],
+         evidence:[],fallback:{status:"provided",result:$manual_na},terminal_state:"evidence_backed_na"},
+        {capability:"required-gap",required:true,activation_condition:"always",adapter_attempts:[],
+         evidence:[],fallback:{status:"unavailable",result:null},terminal_state:"incomplete_required"},
+        {capability:"optional-gap",required:false,activation_condition:"always",adapter_attempts:[],
+         evidence:[],fallback:{status:"unavailable",result:null},terminal_state:"incomplete_optional"}
+      ]
+    }' >"$policy"
+  before_hash="$(sha256_text "$(cat "$receipt")")"
+  output="$(bash "$RUNTIME" rehydrate-interactive \
+    --event-file "$receipt" --policy-file "$policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" \
+    --base "$interactive_base" --head "$interactive_head" \
+    --config-hash "$CONFIG_HASH" --review-key "$interactive_key" \
+    --run-id run-interactive-terminal 2>&1)"
+  rc=$?
+  assert_eq "rehydrate-interactive command exists" "0" "$rc"
+  assert_eq "interactive decision uses the closed schema" \
+    "kc-pr-flow.interactive-collation-decision/v1" \
+    "$(jq -r '.schema // empty' <<<"$output" 2>/dev/null)"
+  assert_eq "decision has exact closed top-level keys" \
+    "approve_eligible,capabilities,capability_gap_refs,confirmation_input,confirmed_blocker_refs,coverage,effective_event,mode,review_identity,schema" \
+    "$(jq -r 'keys | sort | join(",")' <<<"$output")"
+  assert_eq "required gap makes coverage incomplete" "incomplete" "$(jq -r '.coverage' <<<"$output")"
+  assert_eq "blocker precedence selects REQUEST_CHANGES" "REQUEST_CHANGES" "$(jq -r '.effective_event' <<<"$output")"
+  assert_eq "blocker prevents approval" "false" "$(jq -r '.approve_eligible' <<<"$output")"
+  assert_eq "all five terminal states are reachable" \
+    "clean,evidence_backed_na,findings,incomplete_optional,incomplete_required" \
+    "$(jq -r '[.capabilities[].terminal_state] | unique | sort | join(",")' <<<"$output")"
+  assert_eq "optional failure remains visible without becoming a required gap" \
+    "optional-gap|false|incomplete_optional" \
+    "$(jq -r '.capabilities[] | select(.capability=="optional-gap") | [.capability,.required,.terminal_state] | join("|")' <<<"$output")"
+  assert_eq "transient failure has exactly one retry and no inferred result" \
+    "transient_failure,succeeded" \
+    "$(jq -r '.capabilities[] | select(.capability=="types") | [.adapter_attempts[].result] | join(",")' <<<"$output")"
+  assert_eq "valid evidence-bound manual fallback satisfies clean" "clean" \
+    "$(jq -r '.capabilities[] | select(.capability=="manual-clean") | .terminal_state' <<<"$output")"
+  assert_eq "decision retains exact run identity" "run-interactive-terminal" "$(jq -r '.review_identity.run_id' <<<"$output")"
+  assert_eq "confirmation input is derived from decision refs" \
+    "$(jq -c '[.confirmed_blocker_refs,.capability_gap_refs]' <<<"$output")" \
+    "$(jq -c '[.confirmation_input.blocker_refs,.confirmation_input.gap_refs]' <<<"$output")"
+  if grep -E 'prompt|raw_(diff|output)|source_excerpt|line one|line two' <<<"$output" >/dev/null 2>&1; then
+    fail "interactive decision persists forbidden raw content"
+  else
+    pass
+  fi
+  after_hash="$(sha256_text "$(cat "$receipt")")"
+  assert_eq "rehydration never appends or rewrites the receipt" "$before_hash" "$after_hash"
+
+  bad_policy="$TEST_INPUT_ROOT/no-blocker-policy.json"
+  jq '.confirmed_blocker_refs=[]' "$policy" >"$bad_policy"
+  output="$(bash "$RUNTIME" rehydrate-interactive --event-file "$receipt" --policy-file "$bad_policy" \
+    --repo-worktree "$repo" --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$interactive_base" \
+    --head "$interactive_head" --config-hash "$CONFIG_HASH" --review-key "$interactive_key" --run-id "$run_id")"
+  assert_eq "required gap without blocker has COMMENT ceiling" "COMMENT" "$(jq -r '.effective_event' <<<"$output")"
+
+  bad_receipt="$TEST_INPUT_ROOT/second-transient.jsonl"
+  identity_case="$(rehash_event "$(jq -c '.payload.lane_result.terminal_status="failed"' <<<"$types_finished_two")")"
+  { head -n 7 "$receipt"; printf '%s\n' "$identity_case"; tail -n +9 "$receipt"; } >"$bad_receipt"
+  bad_policy="$TEST_INPUT_ROOT/second-transient-policy.json"
+  jq '.obligations[] |= if .capability=="types" then
+    .adapter_attempts[1].result="transient_failure" |
+    .fallback={status:"unavailable",result:null} |
+    .terminal_state="incomplete_required" |
+    .evidence=[]
+    else . end' "$policy" >"$bad_policy"
+  output="$(bash "$RUNTIME" rehydrate-interactive --event-file "$bad_receipt" --policy-file "$bad_policy" \
+    --repo-worktree "$repo" --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$interactive_base" \
+    --head "$interactive_head" --config-hash "$CONFIG_HASH" --review-key "$interactive_key" --run-id "$run_id")"
+  assert_eq "second transient failure closes after exactly one retry" "incomplete_required" \
+    "$(jq -r '.capabilities[] | select(.capability=="types") | .terminal_state' <<<"$output")"
+
+  for identity_case in repository pr base head config review_key run; do
+    bad_repo="$REPOSITORY"; bad_pr="$PR_NUMBER"; bad_base="$interactive_base"; bad_head="$interactive_head"
+    bad_config="$CONFIG_HASH"; bad_key="$interactive_key"; bad_run="$run_id"
+    case "$identity_case" in
+      repository) bad_repo='other/repo' ;;
+      pr) bad_pr=43 ;;
+      base) bad_base='1111111111111111111111111111111111111111' ;;
+      head) bad_head='2222222222222222222222222222222222222222' ;;
+      config) bad_config='eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' ;;
+      review_key) bad_key='ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' ;;
+      run) bad_run='run-other' ;;
+    esac
+    bash "$RUNTIME" rehydrate-interactive --event-file "$receipt" --policy-file "$policy" \
+      --repo-worktree "$repo" --repo "$bad_repo" --pr "$bad_pr" --base "$bad_base" \
+      --head "$bad_head" --config-hash "$bad_config" --review-key "$bad_key" --run-id "$bad_run" >/dev/null 2>&1
+    assert_eq "$identity_case identity mutation fails closed" "3" "$?"
+  done
+
+  for mutated in missing-obligation third-attempt missing-fallback-disposition invalid-fallback invalid-recorded-at fake-fallback-finding pointer pointer-base pointer-head pointer-review-key object content; do
+    bad_policy="$TEST_INPUT_ROOT/$mutated-policy.json"
+    case "$mutated" in
+      missing-obligation) jq '.obligations |= map(select(.capability!="types"))' "$policy" >"$bad_policy" ;;
+      third-attempt) jq '.obligations[] |= if .capability=="types" then .adapter_attempts += [{ordinal:3,result:"succeeded",lane_result_ref:"types-2"}] else . end' "$policy" >"$bad_policy" ;;
+      missing-fallback-disposition) jq '.obligations[] |= if .capability=="required-gap" then .fallback={status:"not_needed",result:null} else . end' "$policy" >"$bad_policy" ;;
+      invalid-fallback) jq '.obligations[] |= if .capability=="manual-clean" then .fallback.result.evidence=[] else . end' "$policy" >"$bad_policy" ;;
+      invalid-recorded-at) jq '.obligations[] |= if .capability=="manual-clean" then .fallback.result.recorded_at="2026-99-99T99:99:99Z" else . end' "$policy" >"$bad_policy" ;;
+      fake-fallback-finding) jq '.obligations[] |= if .capability=="manual-clean" then
+        .terminal_state="findings" |
+        .fallback.result.terminal_assessment="findings" |
+        .fallback.result.candidate_ids=["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]
+        else . end' "$policy" >"$bad_policy" ;;
+      pointer) jq '.obligations[1].evidence[0].path="missing.sh"' "$policy" >"$bad_policy" ;;
+      pointer-base) jq '.obligations[1].evidence[0].base_sha="1111111111111111111111111111111111111111"' "$policy" >"$bad_policy" ;;
+      pointer-head) jq '.obligations[1].evidence[0].head_sha="2222222222222222222222222222222222222222"' "$policy" >"$bad_policy" ;;
+      pointer-review-key) jq '.obligations[1].evidence[0].review_key="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$policy" >"$bad_policy" ;;
+      object) jq '.obligations[1].evidence[0].object_sha="1111111111111111111111111111111111111111"' "$policy" >"$bad_policy" ;;
+      content) jq '.obligations[1].evidence[0].content_sha256="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' "$policy" >"$bad_policy" ;;
+    esac
+    bash "$RUNTIME" rehydrate-interactive --event-file "$receipt" --policy-file "$bad_policy" \
+      --repo-worktree "$repo" --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$interactive_base" \
+      --head "$interactive_head" --config-hash "$CONFIG_HASH" --review-key "$interactive_key" --run-id "$run_id" >/dev/null 2>&1
+    assert_eq "$mutated policy mutation fails closed" "3" "$?"
+  done
+
+  bad_receipt="$TEST_INPUT_ROOT/bad-event.jsonl"
+  { head -n 9 "$receipt"; } >"$bad_receipt"
+  bash "$RUNTIME" rehydrate-interactive --event-file "$bad_receipt" --policy-file "$policy" \
+    --repo-worktree "$repo" --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$interactive_base" \
+    --head "$interactive_head" --config-hash "$CONFIG_HASH" --review-key "$interactive_key" --run-id "$run_id" >/dev/null 2>&1
+  assert_eq "incomplete event mutation fails closed" "3" "$?"
+
+  for mutated in candidate finding; do
+    bad_receipt="$TEST_INPUT_ROOT/bad-$mutated.jsonl"
+    if [ "$mutated" = candidate ]; then
+      identity_case="$(rehash_event "$(jq -c '.payload.candidate.candidate_id="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' <<<"$observed")")"
+      { head -n 2 "$receipt"; printf '%s\n' "$identity_case"; tail -n +4 "$receipt"; } >"$bad_receipt"
+    else
+      identity_case="$(rehash_event "$(jq -c '.payload.findings[0].finding_id="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"' <<<"$synthesized")")"
+      { head -n 8 "$receipt"; printf '%s\n' "$identity_case"; tail -n +10 "$receipt"; } >"$bad_receipt"
+    fi
+    bash "$RUNTIME" rehydrate-interactive --event-file "$bad_receipt" --policy-file "$policy" \
+      --repo-worktree "$repo" --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$interactive_base" \
+      --head "$interactive_head" --config-hash "$CONFIG_HASH" --review-key "$interactive_key" --run-id "$run_id" >/dev/null 2>&1
+    assert_eq "$mutated identity mutation fails closed" "3" "$?"
+  done
+
+  for forbidden_command in resume lock-recover gc retain authorize post; do
+    bash "$RUNTIME" "$forbidden_command" >/dev/null 2>&1
+    assert_eq "$forbidden_command remains outside runtime authority" "2" "$?"
+  done
+}
+
+if [ "$CASE_FILTER" = 'interactive-decision' ]; then
+  run_interactive_decision_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit
+fi
 
 run_privacy_envelope_tests() {
   local fixture_event extension_event maximum_extension_event unsafe_count_event

@@ -1868,6 +1868,283 @@ review_runtime_observe() (
     }'
 )
 
+review_runtime_interactive_invalid() {
+  jq -S -c -n --arg reason "$1" \
+    '{schema:"kc-pr-flow.interactive-collation-status/v1",status:"invalid",reason:$reason}'
+}
+
+review_runtime_interactive_verify_pointer() {
+  local pointer="$1" repository_path="$2" pointer_file="$3"
+  printf '%s\n' "$pointer" >"$pointer_file" || return
+  chmod 0600 "$pointer_file" || return
+  review_runtime_verify_evidence "$pointer_file" "$repository_path" >/dev/null 2>&1
+}
+
+# Terminal-only, read-only projection for the existing interactive confirmation
+# seam. Replay remains the sole receipt authority; this function derives no
+# durable state and grants no authorization or posting capability.
+review_runtime_rehydrate_interactive() (
+  local event_file="$1" repository="$2" pr_number="$3" base_sha="$4"
+  local head_sha="$5" config_hash="$6" review_key="$7" run_id="$8"
+  local policy_file="$9" repository_path="${10}"
+  local expected_review_key projection snapshot_dir policy_snapshot pointer_file
+  local pointer_count pointer_index pointer identity_event manual_count manual_index recorded_at
+
+  review_runtime_repository_identity_valid "$repository" &&
+    review_runtime_positive_safe_integer "$pr_number" &&
+    [[ "$base_sha" =~ ^[0-9a-f]{40}$ ]] &&
+    [[ "$head_sha" =~ ^[0-9a-f]{40}$ ]] &&
+    [[ "$config_hash" =~ ^[0-9a-f]{64}$ ]] &&
+    [[ "$review_key" =~ ^[0-9a-f]{64}$ ]] &&
+    [[ "$run_id" =~ ^run-[A-Za-z0-9._-]+$ ]] || {
+      review_runtime_interactive_invalid unsafe_identity
+      return 3
+    }
+  expected_review_key="$(review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash")" || return
+  [ "$review_key" = "$expected_review_key" ] || {
+    review_runtime_interactive_invalid review_key_mismatch
+    return 3
+  }
+  projection="$(review_runtime_replay "$event_file")" || {
+    review_runtime_interactive_invalid invalid_receipt
+    return 3
+  }
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  policy_snapshot="$snapshot_dir/capability-policy.json"
+  pointer_file="$snapshot_dir/evidence-pointer.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$policy_snapshot" "$pointer_file"' EXIT
+  review_runtime_snapshot_regular_file "$policy_file" "$policy_snapshot" 'capability policy' 1048576 || {
+    review_runtime_interactive_invalid invalid_capability_policy
+    return 3
+  }
+  review_runtime_json_has_unique_members "$(cat "$policy_snapshot")" || {
+    review_runtime_interactive_invalid invalid_capability_policy
+    return 3
+  }
+  if ! printf '%s' "$projection" | jq -e \
+    --arg repository "$repository" --argjson pr_number "$pr_number" \
+    --arg base_sha "$base_sha" --arg head_sha "$head_sha" \
+    --arg config_hash "$config_hash" --arg review_key "$review_key" --arg run_id "$run_id" \
+    --slurpfile policy "$policy_snapshot" '
+      def exact_keys($required; $optional):
+        ((keys - ($required + $optional)) | length) == 0 and
+        (($required - keys) | length) == 0;
+      def sha256: type == "string" and test("^[0-9a-f]{64}$");
+      def sha1: type == "string" and test("^[0-9a-f]{40}$");
+      def token: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
+      def run_token: type == "string" and test("^run-[A-Za-z0-9._-]+$");
+      def identity:
+        type == "object" and
+        exact_keys(["base_sha","config_hash","head_sha","pr_number","repository","review_key","run_id"]; []) and
+        (.repository | test("^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$")) and
+        (.pr_number | type == "number" and floor == . and . > 0) and
+        (.base_sha | sha1) and (.head_sha | sha1) and (.config_hash | sha256) and
+        (.review_key | sha256) and (.run_id | run_token);
+      def attempt:
+        type == "object" and exact_keys(["lane_result_ref","ordinal","result"]; []) and
+        (.lane_result_ref | token) and
+        (.ordinal | type == "number" and floor == . and . > 0 and . <= 2) and
+        (.result == "succeeded" or .result == "transient_failure" or
+         .result == "terminal_failure" or .result == "unavailable");
+      def manual_result:
+        type == "object" and
+        exact_keys(["candidate_ids","capability","evidence","recorded_at","recorded_by","review_identity","schema","terminal_assessment"]; []) and
+        .schema == "kc-pr-flow.manual-capability-result/v1" and
+        (.review_identity | identity) and (.capability | token) and
+        (.terminal_assessment == "clean" or .terminal_assessment == "findings" or .terminal_assessment == "evidence_backed_na") and
+        (.candidate_ids | type == "array" and all(sha256) and (unique | length) == length) and
+        (.evidence | type == "array" and length > 0 and all(type == "object")) and
+        .recorded_by == "interactive-human" and
+        (.recorded_at | type == "string" and test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"));
+      def fallback:
+        type == "object" and exact_keys(["result","status"]; []) and
+        (.status == "not_needed" or .status == "provided" or .status == "declined" or
+         .status == "failed" or .status == "unavailable") and
+        (if .status == "provided" then (.result | manual_result) else .result == null end);
+      def obligation:
+        type == "object" and
+        exact_keys(["activation_condition","adapter_attempts","capability","evidence","fallback","required","terminal_state"]; []) and
+        (.activation_condition | token) and (.capability | token) and (.required | type == "boolean") and
+        (.adapter_attempts | type == "array" and length <= 2 and all(attempt) and
+          (map(.ordinal) == [range(1; length + 1)]) and
+          (if length == 2 then
+             .[0].result == "transient_failure"
+           elif length == 1 then .[0].result != "transient_failure"
+           else true end)) and
+        (.evidence | type == "array" and all(type == "object")) and
+        (.fallback | fallback) and
+        (.terminal_state == "clean" or .terminal_state == "findings" or
+         .terminal_state == "evidence_backed_na" or
+         .terminal_state == "incomplete_required" or .terminal_state == "incomplete_optional");
+      ($policy[0]) as $p |
+      . as $projection |
+      $projection.lifecycle.complete == true and
+      [$projection.run.repository,$projection.run.pr_number,$projection.run.base_sha,$projection.run.head_sha,
+       $projection.run.config_hash,$projection.run.review_key,$projection.run.run_id] ==
+      [$repository,$pr_number,$base_sha,$head_sha,$config_hash,$review_key,$run_id] and
+      ($p | type == "object" and exact_keys(["confirmed_blocker_refs","obligations","review_identity","schema"]; []) and
+        .schema == "kc-pr-flow.capability-policy/v1" and
+        (.review_identity | identity) and
+        [.review_identity.repository,.review_identity.pr_number,.review_identity.base_sha,.review_identity.head_sha,
+         .review_identity.config_hash,.review_identity.review_key,.review_identity.run_id] ==
+        [$repository,$pr_number,$base_sha,$head_sha,$config_hash,$review_key,$run_id] and
+        (.obligations | type == "array" and length > 0 and all(obligation) and
+          (map(.capability) | unique | length) == length) and
+        (.confirmed_blocker_refs | type == "array" and all(sha256) and
+          (unique | length) == length)) and
+      ($p.obligations) as $obligations |
+      ((([$projection.lanes[].capability] | unique) - [$obligations[].capability]) | length == 0) and
+      all($p.confirmed_blocker_refs[]; . as $finding_id |
+        any($projection.findings[]; .finding_id == $finding_id)) and
+      ([$obligations[].adapter_attempts[].lane_result_ref] | sort) ==
+        ([$projection.lanes[].result.lane_id] | sort) and
+      all($obligations[];
+        . as $obligation |
+        all(.adapter_attempts[];
+          . as $attempt |
+          any($projection.lanes[];
+            .capability == $obligation.capability and
+            .result.lane_id == $attempt.lane_result_ref and
+            ((.result.terminal_status == "succeeded" and $attempt.result == "succeeded") or
+             (.result.terminal_status == "failed" and
+               ($attempt.result == "transient_failure" or $attempt.result == "terminal_failure")) or
+             (.result.terminal_status == "unavailable" and $attempt.result == "unavailable")))) and
+        (.adapter_attempts | map(.lane_result_ref) | unique | length) == (.adapter_attempts | length) and
+        (if .fallback.status == "provided" then
+          ((.adapter_attempts | length) == 0 or .adapter_attempts[-1].result != "succeeded") and
+          .fallback.result.capability == .capability and
+          .fallback.result.review_identity == $p.review_identity and
+          (if .fallback.result.terminal_assessment == "findings" then
+            (.fallback.result.candidate_ids | length > 0) and
+            all(.fallback.result.candidate_ids[];
+              . as $candidate_id |
+              any($projection.candidates[];
+                (.candidate_id == $candidate_id and
+                 .run_id == $p.review_identity.run_id and
+                 .review_key == $p.review_identity.review_key) and
+                (.lane_id as $lane_id |
+                  any($projection.lanes[];
+                    .result.lane_id == $lane_id and .capability == $obligation.capability))) and
+              any($projection.findings[].candidate_ids[]; . == $candidate_id))
+           else true end)
+         else true end) and
+        ((((.adapter_attempts | length) > 0 and .adapter_attempts[-1].result == "succeeded") or
+          .fallback.status == "provided") as $satisfied |
+        if $satisfied then
+          (.terminal_state == "clean" or .terminal_state == "findings" or .terminal_state == "evidence_backed_na") and
+          (if .fallback.status == "provided" then
+            .terminal_state == .fallback.result.terminal_assessment and
+            (if .terminal_state == "findings" then (.fallback.result.candidate_ids | length > 0)
+             else (.fallback.result.candidate_ids | length == 0) end)
+           else
+            (.evidence | length > 0) and
+            (.adapter_attempts[-1].lane_result_ref) as $lane_ref |
+            ([$projection.lanes[] | select(.result.lane_id == $lane_ref) | .result.candidates[]]) as $candidate_ids |
+            (if .terminal_state == "findings" then
+              ($candidate_ids | length > 0) and
+              all($candidate_ids[]; . as $candidate_id |
+                any($projection.findings[].candidate_ids[]; . == $candidate_id))
+             else ($candidate_ids | length == 0) end)
+           end)
+         else
+          (if .required then .terminal_state == "incomplete_required"
+           else .terminal_state == "incomplete_optional" end) and
+          (.fallback.status == "declined" or .fallback.status == "failed" or
+           .fallback.status == "unavailable")
+         end)
+      )
+    ' >/dev/null 2>&1; then
+    review_runtime_interactive_invalid invalid_policy_or_terminal_state
+    return 3
+  fi
+
+  manual_count="$(jq '[.obligations[] | select(.fallback.status == "provided")] | length' "$policy_snapshot")" || return
+  manual_index=0
+  while [ "$manual_index" -lt "$manual_count" ]; do
+    recorded_at="$(jq -r --argjson index "$manual_index" \
+      '[.obligations[] | select(.fallback.status == "provided")][$index].fallback.result.recorded_at' \
+      "$policy_snapshot")" || return
+    if ! review_runtime_rfc3339_utc_valid "$recorded_at"; then
+      review_runtime_interactive_invalid invalid_manual_fallback_time
+      return 3
+    fi
+    manual_index=$((manual_index + 1))
+  done
+
+  pointer_count="$(jq -n --argjson projection "$projection" --slurpfile policy "$policy_snapshot" '
+    [$projection.candidates[].evidence,$projection.findings[].evidence,
+     $policy[0].obligations[].evidence[],
+     $policy[0].obligations[].fallback.result?.evidence[]?] | length')" || return
+  identity_event="$(jq -S -c -n --arg repository "$repository" --argjson pr_number "$pr_number" \
+    --arg base_sha "$base_sha" --arg head_sha "$head_sha" --arg review_key "$review_key" \
+    '{repository:$repository,pr_number:$pr_number,base_sha:$base_sha,head_sha:$head_sha,review_key:$review_key}')" || return
+  pointer_index=0
+  while [ "$pointer_index" -lt "$pointer_count" ]; do
+    pointer="$(jq -c -n --argjson projection "$projection" --slurpfile policy "$policy_snapshot" \
+      --argjson index "$pointer_index" '
+      [$projection.candidates[].evidence,$projection.findings[].evidence,
+       $policy[0].obligations[].evidence[],
+       $policy[0].obligations[].fallback.result?.evidence[]?][$index]')" || return
+    if ! review_runtime_evidence_pointer_matches_event "$pointer" "$identity_event"; then
+      review_runtime_interactive_invalid evidence_identity_mismatch
+      return 3
+    fi
+    if ! review_runtime_interactive_verify_pointer "$pointer" "$repository_path" "$pointer_file"; then
+      review_runtime_interactive_invalid evidence_verification_failed
+      return 3
+    fi
+    pointer_index=$((pointer_index + 1))
+  done
+
+  jq -S -c -n --argjson projection "$projection" --slurpfile policy "$policy_snapshot" '
+    ($policy[0]) as $p |
+    ($p.confirmed_blocker_refs | sort) as $blockers |
+    ($p.obligations | map(
+      . as $obligation |
+      (if .fallback.status == "provided" then .fallback.result.candidate_ids
+       elif (.adapter_attempts | length > 0) then
+        (.adapter_attempts[-1].lane_result_ref) as $lane_ref |
+        [$projection.lanes[] | select(.result.lane_id == $lane_ref) | .result.candidates[]]
+       else [] end) as $candidate_ids |
+      ([$projection.findings[] |
+        select([.candidate_ids[] as $candidate_id |
+          select(($candidate_ids | index($candidate_id)) != null)] | length > 0) |
+        .finding_id] | unique | sort) as $finding_refs |
+      {
+        schema:"kc-pr-flow.capability-terminal/v1",
+        review_identity:$p.review_identity,
+        capability:.capability,
+        required:.required,
+        activation_condition:.activation_condition,
+        owner:"core-collator",
+        adapter_attempts:.adapter_attempts,
+        fallback:.fallback,
+        terminal_state:.terminal_state,
+        finding_refs:$finding_refs
+      }
+    )) as $capabilities |
+    ($capabilities | map(select(.terminal_state == "incomplete_required") | .capability) | sort) as $gaps |
+    ($gaps | length == 0) as $coverage_complete |
+    {
+      schema:"kc-pr-flow.interactive-collation-decision/v1",
+      review_identity:$p.review_identity,
+      mode:"typed",
+      coverage:(if $coverage_complete then "complete" else "incomplete" end),
+      approve_eligible:($coverage_complete and ($blockers | length == 0)),
+      effective_event:(if ($blockers | length) > 0 then "REQUEST_CHANGES" elif $coverage_complete then "APPROVE" else "COMMENT" end),
+      capabilities:$capabilities,
+      confirmed_blocker_refs:$blockers,
+      capability_gap_refs:$gaps,
+      confirmation_input:{
+        identity_summary:"typed-derived",
+        coverage_summary:"typed-derived",
+        verdict_summary:"typed-derived",
+        blocker_refs:$blockers,
+        gap_refs:$gaps
+      }
+    }'
+)
+
 review_runtime_shadow_status() {
   local status="$1"
   local reason="$2"
@@ -2277,6 +2554,47 @@ review_runtime_main_observe() {
   review_runtime_observe "$event_file" "$expected_head" "$expected_review_key"
 }
 
+review_runtime_main_rehydrate_interactive() {
+  local event_file='' repository='' pr_number='' base_sha='' head_sha=''
+  local config_hash='' review_key='' run_id='' policy_file='' repository_path=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --event-file | --repo | --pr | --base | --head | --config-hash | --review-key | --run-id | --policy-file | --repo-worktree)
+        [ "$#" -ge 2 ] || {
+          printf 'review-runtime: missing value for %s\n' "$1" >&2
+          return 2
+        }
+        case "$1" in
+          --event-file) event_file="$2" ;;
+          --repo) repository="$2" ;;
+          --pr) pr_number="$2" ;;
+          --base) base_sha="$2" ;;
+          --head) head_sha="$2" ;;
+          --config-hash) config_hash="$2" ;;
+          --review-key) review_key="$2" ;;
+          --run-id) run_id="$2" ;;
+          --policy-file) policy_file="$2" ;;
+          --repo-worktree) repository_path="$2" ;;
+        esac
+        shift 2
+        ;;
+      *)
+        printf 'review-runtime: unknown rehydrate-interactive option: %s\n' "$1" >&2
+        return 2
+        ;;
+    esac
+  done
+  if [ -z "$event_file" ] || [ -z "$repository" ] || [ -z "$pr_number" ] ||
+    [ -z "$base_sha" ] || [ -z "$head_sha" ] || [ -z "$config_hash" ] ||
+    [ -z "$review_key" ] || [ -z "$run_id" ] || [ -z "$policy_file" ] ||
+    [ -z "$repository_path" ]; then
+    printf 'review-runtime: rehydrate-interactive requires one receipt, one policy, one worktree, and exact identity\n' >&2
+    return 2
+  fi
+  review_runtime_rehydrate_interactive "$event_file" "$repository" "$pr_number" \
+    "$base_sha" "$head_sha" "$config_hash" "$review_key" "$run_id" "$policy_file" "$repository_path"
+}
+
 review_runtime_main_shadow() {
   local enabled="${KC_PR_FLOW_REVIEW_SHADOW:-}"
   local head_check_status='' live_head='' observation_file=''
@@ -2458,7 +2776,7 @@ review_runtime_main_compare_usage() {
 }
 
 review_runtime_usage() {
-  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
+  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
 }
 
 review_runtime_main_start() {
@@ -2506,6 +2824,7 @@ review_runtime_main() {
     review-key) review_runtime_main_review_key "$@" ;;
     validate | append | replay | show) review_runtime_main_event_file "$command" "$@" ;;
     observe) review_runtime_main_observe "$@" ;;
+    rehydrate-interactive) review_runtime_main_rehydrate_interactive "$@" ;;
     shadow) review_runtime_main_shadow "$@" ;;
     verify-evidence) review_runtime_main_verify_evidence "$@" ;;
     compare-usage) review_runtime_main_compare_usage "$@" ;;
