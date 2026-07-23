@@ -1,159 +1,167 @@
 <!-- section:verify -->
 ## Verify
 
-Verification target: `6274585371c51df562fd6ea518da78a715a93e24..80a6f7ab346ee8055d17b155c14a84a5adcdfcc2` (15 files, +1380/-78, non-UI CLI/docs).
+Round 2 target: `6274585371c51df562fd6ea518da78a715a93e24..4b1832e02aac85c6456913aecbb3b30d9b207309` (16 files, +2004/-83); repair delta `b7a8a51..4b1832e` (7 files, +534/-74).
 
 <!-- section:quality-gate -->
 ### Quality Gate
 
-- tests: PASS (runtime 279/0; shadow 155/0; benchmark 135/0; cross-model 62/0; architecture 43/0; architecture validator 34/0)
-- lint: PASS (`shellcheck` on changed shell files; `actionlint` on workflow)
-- typecheck: PASS (`bash -n` on changed shell files; Python safe-I/O module compiles)
-- build: PASS (no compiled product; workflow, shell, and ledger validators pass)
-- format: PASS (`git diff --check`)
-- ledgers: PASS (archived 2.1 `records=6`; current 2.2 `records=4`)
+- tests: PARTIAL PASS — fresh shadow focused `30/0`, benchmark focused `27/0`, cross-model `62/0`, architecture `43/0`, validator `34/0`; runtime focused was SIGTERM-bounded after reaching the authority mutation matrix.
+- lint: FAIL — `shellcheck` reports execute-introduced unused `producer_hash` at `review-runtime-benchmark.test.sh:83` (SC2034).
+- typecheck/build: PASS — `bash -n`, `actionlint`, current ledger `records=4`, archived ledger `records=6`.
+- format/CI paths: PASS — `git diff --check`; workflow uses archived 2.1 and current 2.2 paths.
+
+#### Verification Claim: Scoped mechanical gate
+
+| Field | Value |
+|---|---|
+| claim_source | `quality-gate:scoped-shell-and-CI` |
+| condition | changed shell, workflow, and evidence files pass their configured gates |
+| metric_or_observable | focused suites plus ShellCheck, syntax, actionlint, ledgers, and diff check |
+| threshold | all exit 0 |
+| smallest_disproving_surface | `shellcheck review-runtime-benchmark.test.sh` |
+| baseline | round-1 scoped gates passed |
+| treatment | SC2034 at line 83; remaining completed checks pass |
+| comparison | repair introduced one unused local |
+| verdict | `NOT VERIFIED` |
+| route_to | `execute` |
 <!-- /section:quality-gate -->
 
 <!-- section:review-findings -->
 ### Review Findings
 
-- Scope: 15 changed files; one independent reviewer covered six requested lenses after the dispatch thread-limit circuit breaker.
-- Prescan: stale references none; plan consistency failed on D5/G5 authority; canonical-doc actions present; root and `kc-pr-flow/CLAUDE.md` read.
-- Spot-check: 4/4 blocking citations independently reproduced.
+- Prescan: task/file scope matches T1-T3 plus `execute.md`; full range includes expected stage and T4 canon/CI files. No PR3 authority appeared.
+- Citation audit: 100% of reviewer citations reproduced at exact head. Review verdict: VETO.
 
-| Severity | File:Line | Description | Source |
-|---|---|---|---|
-| BLOCKING | `review-runtime.sh:1964-1978,2049-2053,2125-2134` | Caller-supplied `required:false` can downgrade required coverage and make APPROVE eligible; no core-derived closed requiredness map exists. | security/general |
-| BLOCKING | `kc-pr-review/SKILL.md:1287-1322` | Invalid typed state is forced to COMMENT and discards independently confirmed blocker precedence required by design. | silent-failure |
-| BLOCKING | `kc-pr-review/SKILL.md:1334-1361` | The confirmation edit path permits changing a non-approvable typed decision to APPROVE. | interaction |
-| BLOCKING | `review-runtime-benchmark.sh:275-296,355-393,429-438` | G5 Branch B validates caller-asserted units but never invokes or measures terminal rehydration. | schema-intent/benchmark |
-| WARNING | `kc-pr-review/SKILL.md:1289-1315` | The adapter's partial validator admits same-schema semantic inconsistencies. | silent-failure |
-| WARNING | `review-runtime.test.sh:217-240,323-346` | Negative tests omit the four authority bypasses above. | testing |
-| WARNING | runtime/skill/benchmark validators | Three independently maintained decision predicates already disagree. | maintainability |
+| Severity | Confidence | File:Line | Finding | route_to | Disposition |
+|---|---:|---|---|---|---|
+| BLOCKING | 10 | `kc-pr-review/SKILL.md:1363-1408` | A valid typed REQUEST_CHANGES decision becomes COMMENT when the duplicated expected-blocker array is empty. | execute | accepted |
+| BLOCKING | 10 | `kc-pr-review/SKILL.md:1418-1445` | The shallow post gate accepts a forged typed APPROVE confirmation with gaps and no decision; Step 7 does not require its receipt. | execute | accepted |
+| BLOCKING | 10 | `review-runtime-benchmark.sh:390-423,478-520` | A caller can self-author and self-hash arbitrary Branch-B costs; `raw_event_sha256` is not bound to the paired receipt. | execute | accepted |
+| BLOCKING | 10 | `review-runtime-benchmark.test.sh:83` | Scoped ShellCheck fails on unused `producer_hash`. | execute | accepted |
+| WARNING | 9 | `kc-pr-review/SKILL.md:1273-1445` | Runtime, adapter, benchmark, and shallow post validators still duplicate different semantic subsets. | execute | accepted |
+| WARNING | 9 | `reference/review-runtime.md:172` | Canon overstates Branch-B binding and omits the producer/counter contract. | execute | accepted |
 
 #### TDD Evidence Audit
 
 | Task | RED Evidence | GREEN Evidence | REFACTOR Check | Severity | route_to |
 |---|---|---|---|---|---|
-| T1 | focused absence failure | 44/0 | runtime 279/0 | WARNING: missing downgrade RED | execute |
-| T2 | seam 0/1 | 21/0 | shadow 155/0 | BLOCKING: missing blocker/edit bypass RED | execute |
-| T3 | gates 1/11 plus adversarial RED | 23/0 | benchmark 135/0 | BLOCKING: asserted measurement | execute |
-| T4 | plan-approved skip | ledger 4/4 | docs/CI/full suites pass | NIT | none |
+| T1 repair | focused `44/2` | `46/0` recorded; mutation trace inspected | config binding/source proof | NIT | none |
+| T2 repairs | focused `18/5`, `24/5` | shadow `30/0` | direct probes still bypass | BLOCKING | execute |
+| T3 repair | focused `19/8` | benchmark `27/0` | direct self-authored receipt passes | BLOCKING | execute |
+| T4/canon | plan-approved skip | prior full suites | stale producer/post contract | WARNING | execute |
 
 #### Claim Records
 
 | Claim | Required | Status | Evidence | route_to |
 |---|---:|---|---|---|
-| D5 requiredness is core-owned and cannot be downgraded | yes | NOT VERIFIED | caller policy controls `.required` | execute |
-| Confirmed blockers outrank invalid/gapped typed state | yes | NOT VERIFIED | invalid adapter result hard-codes COMMENT | execute |
-| Typed COMMENT ceiling cannot be edited to APPROVE | yes | NOT VERIFIED | confirmation option permits unrestricted event edit | execute |
-| G5-B is a measured terminal-rehydration cost claim | yes | NOT VERIFIED | tests construct unit JSON directly | execute |
-| Exact-head replay, privacy, one retry, manual evidence, mode sampling, and no pre-confirmation mutation | yes | VERIFIED | focused/full suites and static review | none |
-
-Review verdict: NEEDS_FIX.
+| Config-bound capability membership derives requiredness and activation | yes | VERIFIED | `review-runtime.sh:1925-2037`; downgrade/activation mutations `test.sh:363-388` | proceed |
+| Typed invalid/valid blocker state cannot downgrade REQUEST_CHANGES | yes | NOT VERIFIED | direct probe returned COMMENT, `decision=null`, zero blockers | execute |
+| Typed confirmation and local post gate cannot escalate to APPROVE | yes | NOT VERIFIED | forged decisionless/gapped confirmation returned APPROVE, `human_confirmed=true` | execute |
+| G5-B accepts only executable, receipt-bound measured costs | yes | NOT VERIFIED | self-authored/self-hashed arbitrary units returned promotion PASS | execute |
+| Unaffected exact-head/privacy/retry/mode/no-mutation contracts remain intact | yes | VERIFIED | source audit plus completed focused/compatibility suites | proceed |
 <!-- /section:review-findings -->
 
 <!-- section:verify-knowledge-captures -->
 ### Knowledge Captures
 
-- [D1] Closed-key validation is not authority ownership when security-relevant booleans remain caller-controlled.
-- [D2-candidate] Promotion receipts must be produced by the measured operation, not merely hash a supplied decision beside supplied costs.
+- [D1] A self-hash proves internal consistency, not producer provenance.
+- [D2-candidate] Executable helper functions are not gates until every production transition is required to consume their closed output.
 - skipped: false
 <!-- /section:verify-knowledge-captures -->
 
 <!-- section:uat -->
 ### UAT
 
-Mode: full-rerun plus source adjudication.
+Mode: round-2 focused rerun, direct adversarial probes, and execute-evidence review.
 
 | DC | Verify Procedure | Execute 1st | Verify | Evidence |
 |---|---|---|---|---|
-| DC-1..4 | plan commands | PASS | re-run | runtime 279/0; source review |
-| DC-5 | terminal-state matrix + authority mutation | PASS | failed | requiredness downgrade accepted |
-| DC-6 | retry/fallback matrix | PASS | re-run | runtime 279/0 |
-| DC-7 | gap/blocker precedence plus edit path | PASS | failed | invalid state loses blocker; edit permits APPROVE |
-| DC-8..11 | shadow/runtime matrices | PASS | re-run | shadow 155/0; runtime 279/0 |
-| DC-12 | ordered-gate fixtures | PASS | re-run | benchmark 135/0 |
-| DC-13 | A/B boundary plus receipt provenance | PASS | failed | Branch-B units are asserted, not measured |
+| DC-1..6 | runtime/source matrices | PASS | DC-1..6 PASS | requiredness fixed; replay/privacy/retry unchanged |
+| DC-7 | blocker/gap precedence probe | PASS | DC-7 FAIL | valid blocker decision downgraded to COMMENT |
+| DC-8..10 | seam/post/mode probes | PASS | DC-8 FAIL; DC-9..10 PASS | forged typed APPROVE passes post gate |
+| DC-11..12 | source and ordered-gate review | PASS | PASS | terminal-only scope and G1-G4 order retained |
+| DC-13 | G5 boundary and provenance probe | PASS | FAIL | self-authored Branch-B receipt promotes |
 <!-- /section:uat -->
 
 <!-- section:verify-verdict -->
 ### Verdict
 
 status: failed
-stage_cost: not metered (1 reviewer dispatch plus verifier integration)
-quality: 5/5 pass
-review: NEEDS_FIX
-uat: DC-5, DC-7, and DC-13 failed
+stage_cost: not metered (1 independent panel plus verifier probes)
+quality: 4/5; lint failed
+review: VETO
+uat: DC-7, DC-8, and DC-13 failed
 blocking_issues: 4
 knowledge_capture: D1: 1, D2: 1
-claim_records: required VERIFIED=1 NOT VERIFIED=4 INCONCLUSIVE=0; advisory VERIFIED=0 NOT VERIFIED=3 INCONCLUSIVE=0
+claim_records: required VERIFIED=2 NOT VERIFIED=4 INCONCLUSIVE=0; advisory VERIFIED=0 NOT VERIFIED=2 INCONCLUSIVE=0
 auto_fixes: 0
-started_at: 2026-07-23T12:10:00+08:00
-completed_at: 2026-07-23T12:45:00+08:00
-duration_minutes: 35
+started_at: 2026-07-23T13:24:58+08:00
+completed_at: 2026-07-23T13:43:00+08:00
+duration_minutes: 18
 
-#### Metrics
+<!-- section:verify-verdict-metrics -->
+### Metrics
 
 status: failed
-duration_minutes: 35
-iteration_count: 1
+duration_minutes: 18
+iteration_count: 2
 claim_records_required_not_verified: 4
 blocking_findings_count: 4
-warning_findings_count: 3
-runtime_checks_count: 6
+warning_findings_count: 2
+runtime_checks_count: 8
+<!-- /section:verify-verdict-metrics -->
 <!-- /section:verify-verdict -->
 <!-- /section:verify -->
 
 <!-- section:panel-coverage -->
 ## Panel Coverage
 
-| Lens | Source | Verdict | Finding | route_to | Confidence | Disposition |
-|---|---|---|---|---|---:|---|
-| general/security | baseline | FAIL | caller can downgrade requiredness | execute | 10 | accepted |
-| silent-failure | baseline | FAIL | invalid state loses blockers | execute | 10 | accepted |
-| testing | scope-detection | WARN | missing authority negatives | execute | 10 | accepted |
-| maintainability | scope-detection | WARN | divergent validators | execute | 10 | accepted |
-| schema-intent | design I1-I7 | FAIL | I2/I4/I7 fail | execute | 10 | accepted |
-| benchmark | reviewer questions | FAIL | G5-B not measured | execute | 10 | accepted |
-
-Tier B single-model fallback: external-host diversity was unavailable and the global dispatch limit triggered the authorized circuit breaker.
+- Tier: B single-model; cross-model host unavailable, independent fallback reviewer ran.
+- Specialists: general FAIL; silent-failure FAIL; testing FAIL; maintainability WARN; security FAIL; schema-intent FAIL; benchmark FAIL; workflow WARN.
+- Pass ownership: worker ownership PASS; workflow_ci BLOCKING; type_design BLOCKING; silent_failure BLOCKING; test_adequacy BLOCKING; security BLOCKING; cross_model_challenge DEGRADED; runtime_uat BLOCKING.
+- PR Quality Score: 2/10. Cross-model: NO; degradation does not affect this already-failed verdict.
 <!-- /section:panel-coverage -->
 
 <!-- section:runtime-verification -->
 ### Runtime Verification
 
-- Preflight: PASS (`bash`, `jq`, `python3`, and `git` available); dev server, API probe, browser E2E, and render checks not applicable to this CLI/docs entity.
-- Fresh full runs: runtime `279/0`; shadow `155/0`; benchmark `135/0`; cross-model `62/0`; architecture `43/0`; validator `34/0`.
-- Source probes: four required authority claims NOT VERIFIED despite green suites.
+| Probe | Command/surface | Result | Verdict |
+|---|---|---|---|
+| config authority | runtime source + downgrade matrix | config hash/membership derives requiredness | PASS |
+| blocker preservation | valid REQUEST_CHANGES with empty duplicate list | COMMENT, null decision, zero blockers | FAIL |
+| typed post ceiling | forged gapped decisionless typed confirmation | rc=0, APPROVE, human confirmed | FAIL |
+| G5 provenance | self-authored/self-hashed arbitrary costs | promotion PASS, Branch B selected | FAIL |
+| compatibility | cross-model/architecture/validator | `62/0`, `43/0`, `34/0` | PASS |
+
+Preflight: CLI dependencies available; dev server, API, browser, and render checks are not applicable.
 <!-- /section:runtime-verification -->
 
 <!-- section:intent-match-findings -->
 ## Intent Match Findings
 
-- I1, I3, I5, and I6 match. I2 fails core-owned requiredness, I4 fails immutable blocker/gap/approval precedence, and I7 fails executable G5-B measurement provenance.
-- G1, G3, and G4 pass; G2 and G5 fail.
+- I2 now passes. I4 still fails blocker and approval-ceiling authority. I7/G5 still fails measurement provenance. I1, I3, I5, and I6 remain matched.
 <!-- /section:intent-match-findings -->
 
 <!-- section:bounce-tasks -->
 ## Bounce Tasks
 
-- T1: derive and bind capability activation/requiredness in core; reject mismatch; add downgrade RED.
-- T2: preserve blockers on invalid state, constrain event edits by `approve_eligible`, centralize semantic validation, and add RED fixtures.
-- T3: generate Branch-B receipts with an executable rehydration measurement harness; reject asserted-only costs.
+1. Make one closed typed decision/gate receipt the sole authority: preserve blockers without a duplicate bare array, reject decisionless/inconsistent confirmations, constrain edits, and require the post-gate receipt before Step 7.
+2. Make G5-B evidence producer-verifiable: bind the actual raw terminal receipt, prevent caller-resealed arbitrary units, and measure against the designed full-rerun control rather than serialized replay output.
+3. Add RED fixtures for all probes, remove unused `producer_hash`, centralize validator semantics, and re-sync PRODUCT/reference/operator docs plus CI assertions.
 <!-- /section:bounce-tasks -->
 
 <!-- section:hand-off-to-review -->
 ### Hand-off to Review
 
 - verify_verdict: failed
-- blocking_issues: core-requiredness downgrade; invalid-state blocker loss; COMMENT-to-APPROVE edit; asserted G5-B costs
-- canonical_docs_touched: `PRODUCT.md`, `ARCHITECTURE.md`, `kc-pr-flow/README.md`, `kc-pr-flow/CLAUDE.md`, runtime docs/reference, workflow
+- blocking_issues: blocker downgrade; forged typed post approval; self-authored G5 costs; scoped ShellCheck failure
+- canonical_docs_touched: PRODUCT, ARCHITECTURE, plugin README/CLAUDE, runtime docs/reference, workflow
 - render_fidelity_status: not-applicable
 <!-- /section:hand-off-to-review -->
 
 <!-- section:deferred-to-todo -->
 ## Deferred to TODO
 
-Zero findings deferred. All four blockers route to execute.
+Deferred to TODO: 0 findings this round. All findings route to execute.
 <!-- /section:deferred-to-todo -->
