@@ -2,180 +2,140 @@
 <!-- section:verify -->
 ## Verify
 
+This cycle supersedes the historical VETO recorded against `7506546`. PR #48 is merged at exact head `22f04047b75a10f289cf94ee41668335eca70b51`; squash merge `536be3e7d7d8371a9e84b693804407ea1b54bc60` has the identical tree `56b6e7c524fb7cd198965a7807eb2abbd4c42676`.
+
 <!-- section:verify-check-manifest -->
 ### Verify Check Manifest
 
 | Check | Input | Owner | Parallel | Evidence required |
 |---|---|---|---|---|
-| scoped tests | six shell suites at `7506546` | verifier | yes | exact pass/fail counts |
-| static and CI | changed shell/workflow files | verifier | yes | bash-n, shellcheck, actionlint, yq, pin/path audit |
-| safety probes | runtime and corpus at `12f3e7d..7506546` | verifier | yes | smallest falsifying CLI transcript |
-| schema intent | D1-D4/D7 and six child constraints | schema/general reviewer | yes | file:line contract comparison |
-| panel | general, silent, testing, maintainability, security, concurrency/performance | named reviewers | yes | exact context and file:line findings |
-| adversarial | 4,693-line diff and merged candidates | adversarial + red-team | waves | independent missed-failure search |
-| UI/runtime preflight | `affects_ui: false`; CLI-only DCs | verifier | no | explicit N/A; no dev server |
-
-Review lenses preserved the five task questions from `plan.md`: schema-contract, data-contract, parity-contract, benchmark, and documentation. The extracted context-routing manifest required D1-D4/D7, shadow-only behavior, and the schema generalist marker; registry resolution had no required module or skill.
+| exact authority | PR #48 head/merge | verifier | yes | head, merge, tree, checks |
+| scoped tests | runtime/shadow/benchmark/compatibility suites | verifier | yes | fresh counts, zero failures |
+| static/CI | Python, Bash, shellcheck, workflow, docs, ledger | verifier | yes | every command exit 0 |
+| blocker replay | nine historical VETO classes | verifier | yes | smallest falsifying focused suite/source check |
+| review | general, silent-failure fallback, testing, security, type/design | read-only reviewers | yes | exact-context matrix and disposition |
+| schema intent | repaired D1-D4/D7 | schema reviewer + verifier | yes | typed intent comparison |
 <!-- /section:verify-check-manifest -->
 
 <!-- section:quality-gate -->
 ### Quality Gate
 
-- tests: PASS — runtime 280/0; shadow 68/0; benchmark 133/0; cross-model 62/0; diagrams 43/0 and 34/0.
-- lint/syntax: PASS — bash-n, shellcheck, actionlint, and yq exited 0.
-- workflow/supply chain: PASS — pull/push consumer filters present, `contents: read`, checkout pinned to `34e114876b0b11c390a56381ad16ebd13914f8d5`.
-- format/safety: PASS — `git diff --check`, fixture forbidden-key scan, changed-line secret scan, executable modes, and documentation assertions exited 0.
-- version parity: PASS — no plugin or marketplace version file changed.
+- tests: PASS — runtime 279/0; shadow 155/0; benchmark 135/0; cross-model 62/0; diagrams 43/0; diagram validator 34/0.
+- focused falsifiers: PASS — privacy-envelope 40/0; safe-I/O 68/0; evidence-binding 29/0; authority-binding 6/0; path-replacement 2/0.
+- lint/type/static: PASS — `py_compile`, `bash -n`, shellcheck, actionlint, yq, canonical-doc assertions, evidence JSONL audit, both TDD-ledger validators, and exact PR diff-check exited 0.
+- GitHub CI: PASS — all five exact-head checks are `SUCCESS`, including `shadow receipt runtime contract`.
+- merge fidelity: PASS — reviewed head and squash merge tree IDs are byte-identical; closeout changed no product code.
 
-<details>
-<summary>Required claim record — scoped mechanical contract and DC-2</summary>
+#### Verification Claim: Done Signal and repaired T6-T11 contract
 
-#### Verification Claim: Scoped mechanical contract and DC-2 fixture behavior
 | Field | Value |
 |---|---|
-| claim_source | `quality-gate:scoped; DC-2` |
-| condition | all planned suites and static checks run at exact head |
-| metric_or_observable | 620 new-suite assertions plus 139 compatibility assertions; all static commands exit 0 |
-| threshold | zero failures and deterministic duplicate/replay/quarantine coverage |
-| smallest_disproving_surface | any listed suite or static command exits non-zero |
-| baseline | execute hand-off claimed the same counts |
-| treatment | fresh verifier runs reproduced every count |
-| comparison | exact match; no confound observed |
+| claim_source | `DC-1..DC-8; quality-gate; review:general,test,security,schema` |
+| condition | merged PR #48 must close every historical blocker and satisfy repaired D1-D4/D7 without legacy behavior authority |
+| metric_or_observable | six full suites, five focused falsifiers, static gates, exact-head CI, and source-level intent review |
+| threshold | zero required failures; identical reviewed/merged tree; no unresolved BLOCKING finding |
+| smallest_disproving_surface | any focused suite failure, non-success exact-head check, tree mismatch, or accepted blocker |
+| baseline | historical verify at `7506546`: nine BLOCKING classes and four NOT VERIFIED claims |
+| treatment | merged tree `56b6e7c...` after T6-T11 plus bounded T10/evidence/CI repairs |
+| comparison | every historical falsifier now rejects the bad state; full receipts and CI reproduce green |
 | verdict | `VERIFIED` |
 | route_to | `proceed` |
-
-</details>
 <!-- /section:quality-gate -->
 
 <!-- section:review-findings -->
 ### Review Findings
 
-Scope: 17 files, 4,693 changed lines, eight owned lenses plus red-team. All cited lines were read at exact head; duplicate findings were merged by failure class.
-
-| Severity | File:Line | Finding | Owner | Claim / disposition |
-|---|---|---|---|---|
-| BLOCKING | `kc-pr-flow/scripts/review-runtime.sh:1581` | Production fallback creates one `run.started` event, then `observe` reports success with zero lanes/findings/evidence/usage. | general + silent + testing | RC-1 -> execute |
-| BLOCKING | `kc-pr-flow/scripts/review-runtime.sh:597` | Integrity-valid additive envelope fields accept and persist arbitrary raw provider content. | schema/type-design | RC-2 -> design (D3/D7 conflict) |
-| BLOCKING | `kc-pr-flow/scripts/review-runtime.sh:863` | Rejected prompt/raw-diff input is copied verbatim into durable quarantine. | security | RC-2 -> design (D3/quarantine conflict) |
-| BLOCKING | `kc-pr-flow/scripts/review-runtime.sh:565` | Finding identity omits evidence-content hash; evidence object SHA is also not bound to event base/head (`:1267`). | type-design + security | RC-1 -> execute |
-| BLOCKING | `kc-pr-flow/scripts/review-runtime.sh:26` | Regular-file check and later path reopen permit a symlink-swap snapshot TOCTOU. | concurrency/adversarial | RC-2 -> execute after design resolves storage |
-| BLOCKING | `kc-pr-flow/scripts/review-runtime.sh:1302` | jq-unsafe adjacent token integers compare as equal, producing a false zero delta. | testing/type-design | RC-1 -> execute |
-| BLOCKING | `kc-pr-flow/scripts/review-shadow.test.sh:159` | Parity sentinels are not inputs to the shadow call, so body/options/event/comments/GitHub parity is tautological. | testing + silent | RC-3 -> execute |
-| BLOCKING | `kc-pr-flow/scripts/review-runtime-benchmark.sh:99` | Recall uses unbound finding IDs and still reports 2/2 after all candidates/evidence are removed. | silent + adversarial | RC-4 -> execute |
-| BLOCKING | `kc-pr-flow/scripts/review-runtime.sh:1147` | A later quarantined row overwrites a prior blocked batch exit, masking retryable work. | red-team | RC-1 -> execute |
-| WARNING | `kc-pr-flow/scripts/review-runtime.sh:912` | Crash windows and PID reuse can strand an owned lock; PR1 excludes GC/recovery, so route to the later recovery child. | concurrency | follow-up |
-| WARNING | `kc-pr-flow/scripts/review-runtime.sh:1022` | Per-event full-log validation/copy is quadratic near the 16 MiB cap. | performance | follow-up |
-| WARNING | `kc-pr-flow/scripts/review-runtime.sh:411` | Evidence-pointer predicates are duplicated without validator-parity coverage. | maintainability | execute while touching pointer validation |
-| WARNING | `kc-pr-flow/scripts/review-runtime.sh:269` | Successor reason does not prove predecessor lineage; non-blocking because PR1 excludes resume/GC. | type-design | later recovery child |
-| WARNING | `kc-pr-flow/scripts/review-runtime.sh:97` | Oversized numeric limit configuration can exceed Bash integer range and bypass the cap. | red-team | execute |
-| WARNING | `kc-pr-flow/scripts/review-runtime.sh:264` | Timestamp validation accepts impossible calendar/time values. | red-team | execute |
+Scope: 38-file PR diff; current closeout tree differs from the merged product tree only in Ship-Flow state/artifacts.
 
 <details>
-<summary>TDD evidence audit details</summary>
+<summary>Historical VETO re-evaluation — all nine blockers closed</summary>
 
-#### TDD Evidence Audit
-| Task | RED evidence | GREEN evidence | REFACTOR | Severity | route_to |
+| Prior blocker | Current evidence | Disposition |
+|---|---|---|
+| identity-only observation | `review-shadow.test.sh:193-228`; production-collector 155/0 | CLOSED |
+| arbitrary additive/raw envelope | `review-runtime.test.sh:123-179`; privacy 40/0 | CLOSED |
+| rejected bytes retained | `review-runtime.test.sh:181-256`; exact four-key quarantine | CLOSED |
+| evidence/finding not exact-head bound | `review-runtime.test.sh:896-1034`; evidence 29/0 | CLOSED |
+| snapshot TOCTOU | `review-runtime.test.sh:328-438`; safe-I/O 68/0 | CLOSED |
+| jq-unsafe integers | `review-runtime.test.sh:790-825`; runtime 279/0 | CLOSED |
+| disconnected parity oracle | `review-shadow.test.sh:130-237,386-405`; shadow 155/0 | CLOSED |
+| recall survives missing evidence | `review-runtime-benchmark.test.sh:139-167`; authority 6/0 | CLOSED |
+| batch status downgrade | `review-runtime.test.sh:827-882`; safe-I/O 68/0 | CLOSED |
+
+</details>
+
+| Lens | Verdict | Evidence | Verifier disposition |
+|---|---|---|---|
+| general external | NO_FINDINGS | exact 38-file tree, D1-D4/D7, T6-T11, nine blockers | accepted |
+| testing/security/type-design | NO_FINDINGS | focused false-pass, privacy, descriptor, identity, and CI surfaces | accepted |
+| schema intent | BLOCKING proposal | outer claim coordinates may differ from nested evidence coordinates | discarded: D3 requires nested pointer/event identity and separately defines outer merge coordinates; equality would expand the contract |
+| silent failure | INVALID_CONTEXT | reviewer required ancestry despite squash and reported stale generated cache | discarded; accepted DEGRADED fallback is general + testing specialist + fresh blocker probes |
+
+<details>
+<summary>TDD Evidence Audit</summary>
+
+| Task | RED | GREEN | REFACTOR | Severity | route_to |
 |---|---|---|---|---|---|
-| T1 | expected absence failures recorded | 203/0 then 280/0 | bash-n PASS | WARNING: no durable RED transcript | execute |
-| T2 | expected replay/provider failures recorded | 280/0 | bash-n PASS | WARNING: no durable RED transcript | execute |
-| T3 | 23 pass/21 expected fail recorded | 68/0 | bash-n PASS | WARNING: no durable RED transcript | execute |
-| T4 | 0/1, 5/0, then 6 pass/12 fail recorded | 133/0 | bash-n PASS | WARNING: no durable RED transcript | execute |
-| T5 | documented docs/canon/CI skip | all scoped gates PASS | actionlint/yq PASS | NIT | none |
+| T6 | ordered privacy/envelope RED records | privacy 40/0 | full runtime 279/0 | NIT | none |
+| T7 | ordered safe-I/O/race/limits RED records | safe-I/O 68/0 | py_compile + full runtime | NIT | none |
+| T8 | ordered exact-head mutation RED records | evidence 29/0 | literal full chain recorded | NIT | none |
+| T9 | ordered collector/parity RED records | shadow 155/0 | literal full chain recorded | NIT | none |
+| T10 | ordered authority/path RED records | authority 6/0; path 2/0 | benchmark 135/0 deterministic | NIT | none |
+| T11 | explicit docs/workflow/evidence `TDD: skip` | N/A | fresh static/CI gates PASS | NIT | none |
 
 </details>
 
-Canonical drift: PRODUCT and ARCHITECTURE actions landed; ROADMAP skip remains justified. The design itself must reconcile additive/original-byte preservation with the no-raw durable-state boundary before execute can be judged.
-
-<details>
-<summary>Required claim records — rejected DC groups</summary>
-
-#### Verification Claim: Complete typed receipt and provider-neutral measurement
-| Field | Value |
-|---|---|
-| claim_source | `DC-1; DC-4; review:general,type-design,silent` |
-| condition | enabled unchanged review emits complete exact-head receipt and sound usage |
-| metric_or_observable | `status=observed`, one event, all five counts zero; adjacent unsafe integers yield zero deltas |
-| threshold | complete lane/finding/evidence/usage projection; exact numeric comparison |
-| smallest_disproving_surface | direct `shadow` and `compare-usage` CLI probes |
-| baseline | shape/design require complete provider-neutral receipt |
-| treatment | identity-only success and lossy integer arithmetic |
-| comparison | required fields absent; distinct values collapse |
-| verdict | `NOT VERIFIED` |
-| route_to | `execute` |
-
-#### Verification Claim: Durable sensitive-state boundary
-| Field | Value |
-|---|---|
-| claim_source | `DC-3; review:schema,security,concurrency` |
-| condition | accepted and quarantined state contains pointers/hashes, never raw content |
-| metric_or_observable | additive raw field validates; rejected prompt/raw_diff remains in quarantine; snapshot swap succeeds |
-| threshold | no raw durable content and immutable safe snapshot |
-| smallest_disproving_surface | recomputed-integrity validate, rejected append scan, symlink-swap probe |
-| baseline | D3 bans raw content; D7/additive and quarantine text preserve original bytes |
-| treatment | all three falsifying probes succeeded |
-| comparison | design obligations conflict and implementation exposes both paths |
-| verdict | `NOT VERIFIED` |
-| route_to | `design` |
-
-#### Verification Claim: Shadow external-behavior parity
-| Field | Value |
-|---|---|
-| claim_source | `DC-5; review:test-adequacy,silent-failure` |
-| condition | off/on/failure exercise actual frozen legacy outputs and mutation transcript |
-| metric_or_observable | sentinels are never passed to `run_shadow` |
-| threshold | executable byte comparison of body/options/event/comments/GitHub calls |
-| smallest_disproving_surface | `review-shadow.test.sh:159-205` data-flow inspection |
-| baseline | DC-5 requires unchanged external behavior |
-| treatment | unrelated files remain unchanged |
-| comparison | test cannot observe the asserted boundary |
-| verdict | `NOT VERIFIED` |
-| route_to | `execute` |
-
-#### Verification Claim: Trustworthy paired-run baseline
-| Field | Value |
-|---|---|
-| claim_source | `DC-6; review:benchmark,red-team` |
-| condition | recall derives from truth-labeled findings bound to candidates/evidence |
-| metric_or_observable | scorer exit 0; baseline 1/2 and shadow 2/2 with zero candidates |
-| threshold | missing evidence cannot satisfy recall |
-| smallest_disproving_surface | one-pair corpus with candidates removed |
-| baseline | expected IDs and shipped candidate/evidence records |
-| treatment | IDs retained without evidence |
-| comparison | same recall despite evidence removal |
-| verdict | `NOT VERIFIED` |
-| route_to | `execute` |
-
-</details>
+Canonical drift: PRODUCT and ARCHITECTURE match repaired D2/D3/D7; ROADMAP remains intentionally unchanged. Deferred lock recovery, predecessor lineage, and append complexity remain explicitly owned by child 2.3 and do not weaken PR1 acceptance.
 <!-- /section:review-findings -->
+
+<!-- section:intent-match-findings -->
+## Intent Match Findings
+
+| Intent | Result | Evidence |
+|---|---|---|
+| D1 exact-head fresh identity | PASS | runtime 279/0 and exact reviewed/merged tree |
+| D2 closed envelope and complete lifecycle | PASS | privacy 40/0; shadow 155/0 |
+| D3 bound evidence/candidate/finding identity | PASS | evidence-binding 29/0; authority-binding 6/0 |
+| D4 provider-neutral null usage | PASS | runtime 279/0 and benchmark 135/0 |
+| D7 metadata-only rejection | PASS | privacy 40/0 and state-root forbidden-content assertions |
+<!-- /section:intent-match-findings -->
 
 <!-- section:uat -->
 ### UAT
 
-Mode: spot-check (DC-5 highest-risk, DC-6 deterministic random); reviewer blocker probes are recorded above, not counted as extra UAT sampling.
+Mode: full-rerun because the historical VETO made execute-only evidence insufficient.
 
 | DC | Verify Procedure | Execute 1st | Verify | Evidence |
 |---|---|---|---|---|
-| DC-1 | plan runtime suite plus RC-1 probe | PASS | FAIL (RC-1) | identity-only production observation |
-| DC-2 | runtime suite | PASS | trust (QG claim) | 280/0 |
-| DC-3 | plan ban scan plus RC-2 probes | PASS | FAIL (RC-2) | raw accepted/quarantined; snapshot swap |
-| DC-4 | runtime suite plus RC-1 usage probe | PASS | FAIL (RC-1) | distinct token counts collapse |
-| DC-5 | `bash review-shadow.test.sh` plus data-flow audit | PASS | spot-checked FAIL (RC-3) | 68/0 but disconnected parity oracle |
-| DC-6 | scorer twice plus candidate-removal mutation | PASS | spot-checked FAIL (RC-4) | byte-stable report; recall survives zero evidence |
+| DC-1 | full runtime | PASS | re-run (fallback) | 279/0; fresh/successor identity |
+| DC-2 | privacy + full runtime | PASS | re-run (fallback) | 40/0; 279/0 |
+| DC-3 | evidence/privacy probes | PASS | re-run (fallback) | 29/0; forbidden-content assertions |
+| DC-4 | full runtime + benchmark | PASS | re-run (fallback) | 279/0; 135/0 |
+| DC-5 | production collector/full shadow | PASS | re-run (fallback) | 155/0; six frozen hashes; empty mutation log |
+| DC-6 | full benchmark | PASS | re-run (fallback) | 135/0; repeatable authority-bound report |
+| DC-7 | production collector/full shadow | PASS | re-run (fallback) | 155/0; complete lifecycle; incomplete is not_observed |
+| DC-8 | safe-I/O + authority/path + static/CI | PASS | re-run (fallback) | 68/0; 6/0; 2/0; all five CI checks SUCCESS |
 <!-- /section:uat -->
+
+<!-- section:runtime-verification -->
+### Runtime Verification
+
+Not applicable to a dev server: all Done Criteria are CLI contracts. The executable CLI/runtime probes are recorded in Quality Gate and UAT.
+<!-- /section:runtime-verification -->
 
 <!-- section:verify-knowledge-captures -->
 ### Knowledge Captures
 
-- [D1] Green contract suites do not establish production integration when fixtures bypass the actual skill boundary.
-- [D2-candidate] Additive event tolerance and forensic quarantine need a typed sensitive-data policy before original bytes can be durable.
+- [D1] Squash merge fidelity must be proven by tree identity; ancestry is intentionally false.
+- [D2-candidate] Reviewer self-checks must distinguish product-tree equality from workflow-only closeout commits.
 - skipped: false
 <!-- /section:verify-knowledge-captures -->
 
 <!-- section:hand-off-to-review -->
 ### Hand-off to Review
 
-- verify_verdict: failed
-- blocking_issues: RC-1, RC-2, RC-3, RC-4
+- verify_verdict: passed
+- blocking_issues: []
 - canonical_docs_touched: PRODUCT.md, ARCHITECTURE.md, plugin README/reference/docs
 - render_fidelity_status: not-applicable
 <!-- /section:hand-off-to-review -->
@@ -183,28 +143,28 @@ Mode: spot-check (DC-5 highest-risk, DC-6 deterministic random); reviewer blocke
 <!-- section:verify-verdict -->
 ### Verdict
 
-status: failed
-stage_cost: not metered (eight owned review lenses, one red-team, local gates/probes)
-claim_records: required VERIFIED=1 NOT VERIFIED=4 INCONCLUSIVE=0; advisory VERIFIED=0 NOT VERIFIED=0 INCONCLUSIVE=0
-quality: mechanical gates pass; semantic/contract gates fail
-review: VETO
-uat: 1/6 accepted; 5/6 failed
-blocking_issues: 9 merged blocking classes
+status: passed
+stage_cost: not metered (four read-only review lanes plus local checks)
+claim_records: required VERIFIED=1 NOT VERIFIED=0 INCONCLUSIVE=0; advisory VERIFIED=0 NOT VERIFIED=0 INCONCLUSIVE=0
+quality: all scoped mechanical, static, exact-head CI, and merge-fidelity gates pass
+review: PROCEED; no accepted blocking findings
+uat: 8/8 re-run PASS
+blocking_issues: none
 auto_fixes: none
-started_at: 2026-07-22T11:52:00Z
-completed_at: 2026-07-22T12:24:00Z
-duration_minutes: 32
+started_at: 2026-07-23T01:31:40Z
+completed_at: 2026-07-23T01:44:48Z
+duration_minutes: 13
 
 <!-- section:verify-verdict-metrics -->
 ### Metrics
 
-status: failed
-duration_minutes: 32
+status: passed
+duration_minutes: 13
 iteration_count: 1
-claim_records_required_not_verified: 4
-blocking_findings_count: 9
-warning_findings_count: 10
-runtime_checks_count: 2
+claim_records_required_not_verified: 0
+blocking_findings_count: 0
+warning_findings_count: 0
+runtime_checks_count: 11
 <!-- /section:verify-verdict-metrics -->
 <!-- /section:verify-verdict -->
 <!-- /section:verify -->
@@ -212,17 +172,17 @@ runtime_checks_count: 2
 <!-- section:panel-coverage -->
 ## Panel Coverage
 
-- Tier: B (single-model independent agents; external cross-model pass not required to establish this VETO).
-- Specialists: general/type-design FAIL; silent-failure FAIL; testing FAIL; maintainability WARN; security FAIL; concurrency/performance FAIL; schema/domain-intent FAIL; adversarial/red-team FAIL.
-- Pass ownership: verify_agent_worker_ownership PASS; workflow_ci PASS; type_design BLOCKING; silent_failure BLOCKING; test_adequacy BLOCKING; security BLOCKING; cross_model_challenge DEGRADED; runtime_uat BLOCKING; domain_intent BLOCKING.
-- Semantic packet dimensions: security, type_design, test_adequacy, silent_failure, workflow_ci, verify_agent_worker_ownership, cross_model_challenge.
-- PR Quality Score: 0/10 under the panel formula; cross-model: NO.
+- Tier: B (single-model; bounded merged-closeout).
+- Specialists: general NO_FINDINGS; testing NO_FINDINGS; security NO_FINDINGS; type-design NO_FINDINGS; schema intent PASS after verifier disposition; silent-failure DEGRADED with accepted general/testing/falsifier fallback.
+- Pass ownership: verify_agent_worker_ownership PASS; workflow_ci PASS; type_design NO_FINDINGS; silent_failure DEGRADED (accepted); test_adequacy NO_FINDINGS; security NO_FINDINGS; cross_model_challenge DEGRADED (accepted); runtime_uat PASS; domain_intent PASS.
+- Semantic packet dimensions: security, type_design, test_adequacy, silent_failure, workflow_ci, verify_agent_worker_ownership, cross_model_challenge, domain_intent.
+- PR Quality Score: 10/10; cross-model: NO — allowed for this bounded exact-tree closeout.
 <!-- /section:panel-coverage -->
 
 <!-- section:deferred-to-todo -->
 ## Deferred to TODO
 
-Deferred to TODO: 0 findings this round. Warnings stay attached to the execute/design feedback because the entity is already VETOed; no GitHub issue was created.
+Deferred to TODO: 0 findings this round. Existing recovery/performance deferrals remain owned by child 2.3.
 <!-- /section:deferred-to-todo -->
 
 <!-- /section:verify-report -->
