@@ -5,6 +5,7 @@ entity-type: feature
 entity-label: feature
 entity-label-plural: features
 id-style: slug
+state: .spacedock-state
 stages:
   defaults:
     worktree: true
@@ -59,6 +60,13 @@ Ship-focused delivery pipeline for `kc-claude-plugins`. The captain shapes and
 accepts the problem boundary once; agents then design, plan, execute, verify,
 and prepare the change for review through durable stage artifacts.
 
+This workflow runs [split-root state](https://spacedock.md/docs/advanced/split-root-state/):
+the README and stage declarations live on the code branch, while mutable entity
+state (entities, `_archive/`, `_debriefs/`) lives in a `.spacedock-state`
+checkout — an orphan `spacedock-state/ship-flow` branch, gitignored on the code
+branch. Routine stage transitions never churn the code branch. On a fresh clone
+the checkout is absent; run `spacedock state init` to restore it.
+
 > **Bad news early, no surprises.** Surface violated assumptions, ambiguous
 > contracts, scope growth, state races, and incomplete evidence when discovered.
 
@@ -81,10 +89,12 @@ draft -> shape -> design -> plan -> execute -> verify -> ship -> done
 
 ## Entity Layout
 
-New entities use a folder so decisions and evidence survive context resets:
+New entities use a folder so decisions and evidence survive context resets.
+Under split-root state the entity root is the `.spacedock-state` checkout, not
+the definition dir:
 
 ```text
-docs/ship-flow/<slug>/
+docs/ship-flow/.spacedock-state/<slug>/
   index.md      # entity metadata and artifact links
   shape.md      # problem, appetite, constraints, DAG, and assumptions
   design.md     # design intent and design-dispatch-manifest
