@@ -1,8 +1,8 @@
-# Shadow Review Runtime
+# Typed Review Runtime
 
-The shadow review runtime lets maintainers observe and measure `kc-pr-review` without changing the review users see or the action posted to GitHub. It is off by default and safe to disable at any time.
+The review runtime lets maintainers collect exact-head receipts and lets interactive review derive typed coverage, approval eligibility, event precedence, and confirmation input from one terminal receipt. It never bypasses human confirmation or posts to GitHub.
 
-This first increment is observation and measurement only. It does not adapt lane scheduling, route models, choose findings or verdicts, post reviews, resume interrupted execution, or garbage-collect state.
+It does not adapt lane scheduling, route models, choose findings, post reviews, resume interrupted execution, or garbage-collect state.
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ This first increment is observation and measurement only. It does not adapt lane
 - Git for local `git_blob` evidence verification
 - a writable user-local state directory
 
-The runtime itself does not call models, the network, or GitHub. Python provides fail-closed safe I/O: every runtime file is read from one no-follow regular-file descriptor into a bounded private snapshot only when its file identity remains stable. Missing support, symlinks, path replacement, concurrent mutation, oversize data, duplicate JSON keys, unsafe integers, or impossible UTC dates stop runtime collection before accepted-state mutation. The review skill still performs its existing read-only head checks and retains all confirmation and posting authority.
+The runtime itself does not call models, the network, or GitHub. Python provides fail-closed safe I/O: every runtime file is read from one no-follow regular-file descriptor into a bounded private snapshot only when its file identity remains stable. Missing support, symlinks, path replacement, concurrent mutation, oversize data, duplicate JSON keys, unsafe integers, or impossible UTC dates stop runtime collection before accepted-state mutation. The review skill retains mandatory confirmation and all posting authority.
 
 Run the CLI examples below from the `kc-pr-flow` plugin root.
 
@@ -30,6 +30,20 @@ Only the exact value `on` enables it. Unset, empty, and unknown values are off. 
 When enabled, the skill performs a fresh read-only exact-head check. A moved head, failed check, invalid receipt, or local runtime failure skips observation and leaves the legacy review byte-identical. Shadow success also cannot change the review.
 
 The seam serializes exactly one closed `ShadowObservation/v1` (`kc-pr-flow.shadow-observation/v1`) after the legacy body, inline comments, event, options, confirmation input, and GitHub-call log are frozen. It contains only exact-head identity, six hashes of those frozen artifacts, typed lane/candidate observations, evidence pointers and hashes, synthesis, uncertainty, and usage provenance. Unknown fields, excerpts, prompts, diffs, comments, rationale, provider raw text, and other opaque values are rejected. The collector reports `observed` only after it emits and replays a complete lane/candidate/synthesis/`run.finished` lifecycle; all other outcomes are typed `not_observed` diagnostics. If collection fails after `run.started`, an incomplete diagnostic run may remain, but it is never observed or authoritative; increment 2.3 owns recovery.
+
+## Select typed interactive mode
+
+Enable typed authority for a fresh invocation:
+
+```bash
+export KC_PR_FLOW_REVIEW_TYPED=on
+```
+
+Only the exact value `on` enables it. The skill samples the value once before dispatch. Unset, empty, `off`, and unknown values select the legacy path. Changing the variable mid-run has no effect.
+
+Typed mode consumes a closed `InteractiveCollationDecision/v1` derived from one complete terminal receipt. Required capabilities must end with typed terminal evidence. One transient failure permits one retry; a remaining required gap needs an evidence-bound manual fallback or stays incomplete. Incomplete required coverage cannot approve and selects COMMENT unless a confirmed blocker requires REQUEST_CHANGES. The existing human confirmation gate remains mandatory.
+
+If typed state is invalid, incomplete, stale, or unsupported after dispatch, the current invocation fails closed to explicit non-approval. It does not silently switch to legacy mode. Disable typed behavior before starting a new invocation to roll back.
 
 State defaults to `${XDG_STATE_HOME:-$HOME/.local/state}/kc-pr-flow`. To isolate an evaluation:
 
@@ -133,6 +147,26 @@ bash scripts/review-runtime.sh observe \
   --expected-review-key "<64-character-review-key>"
 ```
 
+## Rehydrate a terminal interactive decision
+
+After selecting one complete receipt whose exact identity matches the fresh review inputs, rebuild the collator decision locally:
+
+```bash
+bash scripts/review-runtime.sh rehydrate-interactive \
+  --event-file "$EVENT_FILE" \
+  --policy-file "<closed-capability-policy.json>" \
+  --repo-worktree "<matching-local-worktree>" \
+  --repo "<owner/repository>" \
+  --pr "<positive-pr-number>" \
+  --base "<40-character-base-sha>" \
+  --head "<40-character-reviewed-head>" \
+  --config-hash "<64-character-config-hash>" \
+  --review-key "<64-character-review-key>" \
+  --run-id "<terminal-run-id>" | jq .
+```
+
+The command validates replay, complete lifecycle state, full identity, capability policy, retry and fallback rules, and every evidence pointer and content hash. Its only output is the in-memory decision. It does not append, repair, resume, recover locks, dispatch a model, contact GitHub, retain state, authorize a payload, or post.
+
 Do not edit accepted JSONL by hand. The event envelope and every event payload are closed. The only same-major extension is a closed hash-only record containing namespace, key, value SHA-256, and byte count; it cannot affect replay. Rejected append input creates metadata-only quarantine containing its reason, input SHA-256, byte count, and timestamp, never the rejected bytes. Read-only validation or replay of an already-invalid receipt is not quarantined. Unsafe storage or inconsistent accepted state fails closed.
 
 ## Build an exact configuration hash
@@ -199,11 +233,21 @@ Expected and observed findings must resolve through a canonical candidate carryi
 4. Finding and candidate stability, including disagreements and uncertain candidates.
 5. Usage comparability under the provenance rule above.
 
-The report is a measurement artifact, not an improvement claim or release gate. Establish a trustworthy paired corpus before setting thresholds.
+The report also contains an ordered promotion verdict:
+
+1. G1: valid bound inputs.
+2. G2: complete required capability coverage.
+3. G3: external behavior parity.
+4. G4: zero lost expected must-fix findings.
+5. G5: either median complete same-provider/scope reported token reduction of at least 20%, or median local terminal-collation cost no greater than 60% of a full review rerun.
+
+For the local branch, first capture one closed `full-review-rerun-control/v1` receipt from the designed full rerun. It records the exact review identity, the sanitized full-review artifact hash, and that artifact's `canonical-artifact-bytes/v1` units. Add its hash, the raw terminal artifact hash, the expected decision hash, both unit values, and their canonical binding hash to the pair's `local-measurement-binding/v1`.
+
+Run the executable producer with `measure-local --runtime ... --target ... --event-file ... --control-file ... --policy-file ... --repo-worktree ...`, then pass its receipt through `--local-costs`. The producer safe-snapshots both artifacts, invokes only fresh `rehydrate-interactive`, counts the canonical decision bytes with the same counter, and requires every measured value to equal the target binding. The scorer rechecks decision, producer, measurement-binding, run, review, receipt, raw-event, and control hashes against the paired corpus. Unbound or caller-resealed numbers, copied identities, replay-output controls, tampered decisions, and later efficiency evidence cannot produce a passing verdict.
 
 ## Deferred capabilities
 
-This shadow increment deliberately stops at observation and measurement. Increment 2.3 owns crash-safe lock recovery and PID-reuse handling, verified predecessor lineage, append/compaction performance, resume, retention/garbage collection, once-only posting, remote reconciliation, and daemon mutation. Do not interpret a shadow receipt, reserved event name, or successor hint as authority for any of those actions.
+This increment deliberately stops at terminal interactive collation and measurement. Increment 2.3 owns crash-safe lock recovery and PID-reuse handling, verified predecessor lineage, append/compaction performance, resume, retention/garbage collection, once-only posting, remote reconciliation, and daemon mutation. Do not interpret a receipt, decision, reserved event name, or successor hint as authority for any of those actions.
 
 ## Roll back
 
@@ -211,9 +255,10 @@ Disable future observation without deleting evidence:
 
 ```bash
 unset KC_PR_FLOW_REVIEW_SHADOW
+unset KC_PR_FLOW_REVIEW_TYPED
 ```
 
-You may also set the variable to any value other than `on`. Existing receipts remain available for validation and paired analysis. Keeping them makes rollback reversible and preserves evidence for debugging.
+You may also set either variable to any value other than `on`. The change affects only a fresh invocation. Existing receipts remain available for validation and paired analysis. Keeping them makes rollback reversible and preserves evidence for debugging.
 
 ## Troubleshooting
 
@@ -226,5 +271,7 @@ You may also set the variable to any value other than `on`. Existing receipts re
 | append reports `blocked` | Another live owner holds the run reservation, storage is unsafe, the accepted log is inconsistent, or a size limit was reached. Preserve state and investigate; do not bypass the lock. |
 | usage is unavailable | One side is missing, estimated, incomplete, cross-provider, or cross-scope. Collect comparable provider-reported data rather than substituting zero. |
 | evidence is unavailable or mismatched | Confirm the local GitHub repository identity, object and path, blob type, and content hash. A mismatch cannot support a finding. |
+| typed mode returns COMMENT unexpectedly | Inspect required capability terminals, retry count, fallback evidence, exact identity, and evidence hashes. Typed failure cannot fall through to legacy for the current invocation. |
+| local efficiency branch is ineligible | Confirm the measurement receipt binds the paired terminal run, review key, receipt ID/content hash, and recomputed decision, and records a fresh collator-only operation with zero model and remote calls. |
 
 For schemas, identities, storage rules, command contracts, and failure semantics, see the [normative runtime reference](../reference/review-runtime.md).

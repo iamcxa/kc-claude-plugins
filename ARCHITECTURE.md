@@ -15,7 +15,7 @@ The state root is configurable and defaults to the platform state directory unde
 | ID | Decision |
 |---|---|
 | D1 | A stable exact-head review key groups unique runs. Compatible interruption resumes the same run; reruns and head or configuration changes create typed successors. |
-| D2 | Versioned append-only JSONL events are authoritative for typed run records. The v1 envelope and payloads are closed; same-major extension is limited to typed hash-only metadata with no replay authority. Replayed projections are caches. The legacy flow retains verdict, confirmation, and posting authority until the typed interactive stage ships. |
+| D2 | Versioned append-only JSONL events are authoritative for typed run records. The v1 envelope and payloads are closed; same-major extension is limited to typed hash-only metadata with no replay authority. Replayed projections are caches. A closed derived interactive decision may govern coverage, event precedence, and confirmation input, but never posting. |
 | D3 | Provider observations remain candidates. Merged findings use exact-head, source-location, evidence-hash, category, and constrained-claim identity. Durable evidence stores typed pointers and hashes, not excerpts. |
 | D4 | Core lifecycle contracts are provider-neutral. Adapters cannot own lifecycle, verdict, authorization, or posting. Usage provenance is reported, estimated, or unavailable; missing values remain null. |
 | D5 | Requiredness is capability-based. Every required capability needs typed terminal evidence. Remaining gaps forbid approval but cannot dilute confirmed blockers. |
@@ -28,32 +28,33 @@ The state root is configurable and defaults to the platform state directory unde
 |---|---|
 | Typed run history | Valid append-only events |
 | Rebuilt receipt and CLI display | Replay projection; never an independent source of truth |
-| Verdict and confirmation in the shadow increment | Legacy interactive review flow |
-| Required coverage after typed interactive activation | Capability terminal states plus explicit fallback evidence |
+| Coverage, approval eligibility, and event precedence in typed mode | A closed `InteractiveCollationDecision/v1` is primary authority; invalid decision production may preserve REQUEST_CHANGES only through independently confirmed exact-identity `confirmed-blocker-evidence/v1`, and inconsistency fails closed |
+| Human confirmation and remote posting | Existing interactive review flow; the runtime cannot bypass or execute either |
+| Required coverage | Capability terminal states plus explicit evidence-bound fallback |
 | Remote mutation | GitHub review identity, reconciled to a deterministic local intent |
 | Provider-specific invocation | Adapter only; it cannot mutate core lifecycle state directly |
 
-### Shadow increment components and data flow
+### Interactive components and data flow
 
 ```mermaid
 flowchart LR
-    Legacy[Legacy review collation] --> Frozen[Final body, comments, event, options]
-    Frozen --> Gate{Shadow gate exactly on?}
-    Gate -->|off| Confirm[Existing user confirmation]
-    Gate -->|on| Fresh[Fresh read-only exact-head check]
-    Fresh --> Seam[Fail-open shadow seam]
-    Seam --> Log[Typed append-only local receipt]
-    Log --> Validate[Validate and replay]
-    Validate --> Observe[Diagnostic observer status]
+    Start[Fresh invocation] --> Switch{Typed gate exactly on?}
+    Switch -->|no| Legacy[Legacy collation]
+    Switch -->|yes| Lanes[Provider-neutral capability work]
+    Lanes --> Log[Terminal typed exact-head receipt]
+    Log --> Replay[Safe snapshot, validate, replay, verify evidence]
+    Replay --> Decision[Closed interactive decision]
+    Decision --> Confirm[Existing human confirmation]
+    Legacy --> Confirm
     Log --> Pair[Sanitized paired corpus]
-    Pair --> Report[Deterministic benchmark report]
-    Observe -. no authority .-> Confirm
-    Report -. no authority .-> Confirm
+    Pair --> Gates[Ordered G1-G5 promotion report]
+    Confirm --> Post[Existing posting path]
+    Decision -. no posting authority .-> Post
 ```
 
-The production gate is evaluated once after final legacy collation and before confirmation. With the gate off, control goes directly to existing confirmation with no runtime call and no shadow head check. With the gate on, a caller-owned fresh head check and one closed `ShadowObservation/v1` (`kc-pr-flow.shadow-observation/v1`) input reach the collector. The collector snapshots and validates that serialization once, creates a fresh exact-head `run.started`, builds and preflight-replays the remaining complete lane/candidate/synthesis/terminal lifecycle, appends those remaining events, and invokes the read-only observer once. Only complete replay with all six frozen-behavior hashes reports `observed`; every incomplete or failed path becomes a typed diagnostic-only `not_observed` result. A post-start failure may leave an incomplete diagnostic run, but it never becomes observed or authoritative; recovery belongs to increment 2.3.
+The typed gate is sampled once before dispatch. With the gate unset, off, or unknown, one fresh invocation follows the legacy path. With the gate exactly on, the runtime may derive interactive authority only from one complete terminal receipt whose repository, PR, base, head, configuration, review key, and run identity match the caller's fresh inputs. Typed failure stays typed for that invocation and yields an explicit non-approval decision; it cannot fall through to legacy behavior after dispatch.
 
-Accepted state is fail-closed and uses owned reservations, private rebuild plus atomic rename, immutable run identity, contiguous sequence, and content-addressed metadata-only quarantine. Python 3.8+ safe I/O opens a no-follow regular-file descriptor, proves stable file identity around a bounded descriptor read, and publishes a private mode-0600 snapshot before every runtime consumer parses file input. Missing Python or `O_NOFOLLOW`, unsafe types, path races, concurrent mutation, oversize input, invalid JSON members, unsafe integers, or impossible UTC dates fail before accepted-state mutation. The shadow integration is fail-open because it cannot alter the frozen legacy body, comments, options, event, confirmation, or posting payload.
+Accepted state is fail-closed and uses owned reservations, private rebuild plus atomic rename, immutable run identity, contiguous sequence, and content-addressed metadata-only quarantine. Python 3.8+ safe I/O opens a no-follow regular-file descriptor, proves stable file identity around a bounded descriptor read, and publishes a private mode-0600 snapshot before every runtime consumer parses file input. Missing Python or `O_NOFOLLOW`, unsafe types, path races, concurrent mutation, oversize input, invalid JSON members, unsafe integers, or impossible UTC dates fail before accepted-state mutation. The separate shadow observer remains fail open because it has no behavioral authority.
 
 ### Run and event identity
 
@@ -72,6 +73,10 @@ Evidence pointers identify a review key, base and head, source kind, exact repos
 Capabilities, not provider names, define required coverage. A required transient failure receives one retry and then a typed manual fallback opportunity. If required coverage remains incomplete, the run has an explicit comment ceiling and is not approval-eligible. Confirmed blockers may still produce a request for changes.
 
 Optional provider failures remain recorded evidence and do not independently block completion.
+
+`InteractiveCollationDecision/v1` is a closed replay-derived projection. It contains capability terminal records, required-gap and confirmed-blocker references, approval eligibility, effective event, and typed confirmation input. Confirmed blockers take precedence over coverage gaps; otherwise incomplete required coverage selects COMMENT, and only complete blocker-free coverage is approval-eligible. Terminal rehydration verifies exact identity and evidence and returns this projection in memory without append, recovery, resume, retention, authorization, model, network, or GitHub behavior.
+
+The benchmark reports G1 valid bound inputs, G2 required capability coverage, G3 external behavior parity, G4 zero lost expected must-fix findings, and G5 efficiency in that order. G5 passes only through complete same-provider/scope reported usage with median token reduction of at least 20%, or a receipt-bound fresh local terminal-collation measurement with median cost no greater than 60% of a designed full review rerun and zero model or remote calls. Branch B uses a corpus-owned `local-measurement-binding/v1`: it binds raw terminal, decision, and `full-review-rerun-control/v1` hashes plus both `canonical-artifact-bytes/v1` unit values. The producer executes rehydration only; it never labels replay output as the full-rerun control.
 
 ### Authorization and posting
 

@@ -1,15 +1,30 @@
 ---
 id: "2.2"
 title: "Typed interactive lifecycle"
+slug: typed-interactive-lifecycle
 pattern: shaped-child
 parent_pitch: "2"
 harvest_required: true
 layout: folder
 appetite: "3 working days"
+affects_ui: false
+design_required: true
+contract_decision_required: false
+domain: schema
 depends_on:
   - "2.1"
-status: sharp
-stage_outputs: {}
+started: 2026-07-23T02:33:13Z
+status: ship
+stage_outputs:
+  shape: shape.md
+  design: design.md
+  plan: plan.md
+  execute: execute.md
+  verify: verify.md
+  review: review.md
+  ship: ship.md
+pr: "#50"
+closeout_owner: true
 ---
 
 ### Vertical Slice

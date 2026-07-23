@@ -1238,6 +1238,423 @@ body. Then present the byte-identical legacy draft, comments, options, and effec
 Do not retry a model lane, retry the observer, change confirmation behavior, or infer posting
 authorization from either success or failure.
 
+### 6b-typed. Typed Interactive Confirmation Authority
+
+Sample `KC_PR_FLOW_REVIEW_TYPED` exactly once before review dispatch begins. Only the exact value
+`on` selects typed mode. Unset, empty, `off`, and unknown values select the existing legacy path
+for that fresh invocation. Store the sampled value in `INTERACTIVE_REVIEW_MODE`; never re-read the
+environment while the invocation is running.
+
+Legacy mode keeps the existing Step 5/6 derivation unchanged. Typed mode must call
+`review-runtime.sh rehydrate-interactive` exactly once after final collation and the fresh Step 2.1
+head check, passing the terminal receipt, closed capability policy, safe repository worktree, and
+the exact repository/PR/base/head/config/review-key/run identity. The returned
+`kc-pr-flow.interactive-collation-decision/v1` is the sole source for coverage,
+`approve_eligible`, effective-event precedence, blocker/gap references, and confirmation input.
+Do not reconstruct those fields from prose.
+
+Typed runtime failure, unsupported state, incomplete receipt, or identity/evidence mismatch stays
+typed for the current invocation. It produces an explicit `typed-runtime-invalid` coverage gap and
+a COMMENT ceiling; it never falls through to legacy APPROVE. Only a validated typed decision can
+carry blocker authority and select REQUEST_CHANGES; a parallel caller-supplied blocker list has no
+authority. Changing the switch can select legacy only for a new invocation.
+
+Use this executable adapter at the pre-confirmation seam:
+
+```bash
+# typed-interactive-recipe:start
+review_interactive_sample_mode() {
+  case "${KC_PR_FLOW_REVIEW_TYPED:-}" in
+    on) printf '%s\n' typed ;;
+    *) printf '%s\n' legacy ;;
+  esac
+}
+
+review_interactive_decision_valid() {
+  local decision_json="$1"
+  printf '%s' "$decision_json" | jq -e '
+    def exact_keys($required):
+      ((keys - $required) | length) == 0 and
+      (($required - keys) | length) == 0;
+    def sha256: type == "string" and test("^[0-9a-f]{64}$");
+    def sha1: type == "string" and test("^[0-9a-f]{40}$");
+    def token: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
+    def identity:
+      type == "object" and
+      exact_keys(["base_sha","config_hash","head_sha","pr_number","repository",
+                  "review_key","run_id"]) and
+      (.repository | type == "string" and
+        test("^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$")) and
+      (.pr_number | type == "number" and floor == . and . > 0) and
+      (.base_sha | sha1) and (.head_sha | sha1) and
+      (.config_hash | sha256) and (.review_key | sha256) and
+      (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$"));
+    def attempt:
+      type == "object" and
+      exact_keys(["lane_result_ref","ordinal","result"]) and
+      (.lane_result_ref | token) and
+      (.ordinal | type == "number" and floor == . and . > 0 and . <= 2) and
+      (.result == "succeeded" or .result == "transient_failure" or
+       .result == "terminal_failure" or .result == "unavailable");
+    def fallback:
+      type == "object" and exact_keys(["result","status"]) and
+      (.status == "not_needed" or .status == "provided" or
+       .status == "declined" or .status == "failed" or
+       .status == "unavailable") and
+      (if .status == "provided" then (.result | type == "object")
+       else .result == null end);
+    . as $decision |
+    type == "object" and
+    exact_keys(["approve_eligible","capabilities","capability_gap_refs",
+                "confirmation_input","confirmed_blocker_refs","coverage",
+                "effective_event","mode","review_identity","schema"]) and
+    .schema == "kc-pr-flow.interactive-collation-decision/v1" and
+    .mode == "typed" and (.review_identity | identity) and
+    (.capabilities | type == "array" and
+      (map(.capability) | unique | length) == length and
+      all(type == "object" and
+        exact_keys(["activation_condition","adapter_attempts","capability",
+                    "fallback","finding_refs","owner","required",
+                    "review_identity","schema","terminal_state"]) and
+        .schema == "kc-pr-flow.capability-terminal/v1" and
+        .review_identity == $decision.review_identity and
+        (.capability | token) and (.required | type == "boolean") and
+        .activation_condition ==
+          (if .required then "configured" else "observed_optional" end) and
+        .owner == "core-collator" and
+        (.adapter_attempts | type == "array" and length <= 2 and all(attempt)) and
+        (.fallback | fallback) and
+        (.finding_refs | type == "array" and all(sha256) and
+          (unique | length) == length) and
+        (.terminal_state == "clean" or .terminal_state == "findings" or
+         .terminal_state == "evidence_backed_na" or
+         .terminal_state == "incomplete_required" or
+         .terminal_state == "incomplete_optional") and
+        (if .terminal_state == "incomplete_required" then .required
+         elif .terminal_state == "incomplete_optional" then (.required | not)
+         else true end))) and
+    (.confirmed_blocker_refs | type == "array" and all(sha256) and
+      (unique | length) == length and . == sort) and
+    (.capability_gap_refs | type == "array" and all(token) and
+      (unique | length) == length and
+      . == ([$decision.capabilities[] |
+        select(.terminal_state == "incomplete_required") |
+        .capability] | sort)) and
+    (.confirmation_input | type == "object" and
+      exact_keys(["blocker_refs","coverage_summary","gap_refs",
+                  "identity_summary","verdict_summary"]) and
+      .identity_summary == "typed-derived" and
+      .coverage_summary == "typed-derived" and
+      .verdict_summary == "typed-derived" and
+      .blocker_refs == $decision.confirmed_blocker_refs and
+      .gap_refs == $decision.capability_gap_refs) and
+    .coverage ==
+      (if (.capability_gap_refs | length) == 0 then "complete" else "incomplete" end) and
+    .approve_eligible ==
+      ((.coverage == "complete") and
+       ((.confirmed_blocker_refs | length) == 0)) and
+    .effective_event ==
+      (if (.confirmed_blocker_refs | length) > 0 then "REQUEST_CHANGES"
+       elif .approve_eligible then "APPROVE" else "COMMENT" end)
+  ' >/dev/null 2>&1
+}
+
+review_interactive_identity_valid() {
+  local identity_json="$1"
+  printf '%s' "$identity_json" | jq -e '
+    def exact_keys($required):
+      ((keys - $required) | length) == 0 and
+      (($required - keys) | length) == 0;
+    def sha256: type == "string" and test("^[0-9a-f]{64}$");
+    def sha1: type == "string" and test("^[0-9a-f]{40}$");
+    type == "object" and
+    exact_keys(["base_sha","config_hash","head_sha","pr_number","repository",
+                "review_key","run_id"]) and
+    (.repository | type == "string" and
+      test("^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$")) and
+    (.pr_number | type == "number" and floor == . and . > 0) and
+    (.base_sha | sha1) and (.head_sha | sha1) and
+    (.config_hash | sha256) and (.review_key | sha256) and
+    (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$"))
+  ' >/dev/null 2>&1
+}
+
+review_interactive_sha256() {
+  if command -v shasum >/dev/null 2>&1; then
+    printf '%s' "$1" | shasum -a 256 | awk '{print $1}'
+  else
+    printf '%s' "$1" | sha256sum | awk '{print $1}'
+  fi
+}
+
+review_interactive_blocker_evidence_valid() {
+  local evidence_json="$1"
+  local expected_identity_json="$2"
+  local evidence_identity canonical provided_binding computed_binding
+  review_interactive_identity_valid "$expected_identity_json" || return 3
+  if ! printf '%s' "$evidence_json" | jq -e '
+    def exact_keys($required):
+      ((keys - $required) | length) == 0 and
+      (($required - keys) | length) == 0;
+    def sha256: type == "string" and test("^[0-9a-f]{64}$");
+    type == "object" and
+    exact_keys(["binding_sha256","blockers","confirmed_at","confirmed_by",
+                "review_identity","schema"]) and
+    .schema == "kc-pr-flow.confirmed-blocker-evidence/v1" and
+    (.binding_sha256 | sha256) and
+    .confirmed_by == "interactive-human" and
+    (.confirmed_at | type == "string" and
+      test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")) and
+    (.blockers | type == "array" and length > 0 and
+      (map(.finding_id) | unique | length) == length and
+      all(type == "object" and exact_keys(["evidence_sha256","finding_id"]) and
+          (.finding_id | sha256) and (.evidence_sha256 | sha256)))
+  ' >/dev/null 2>&1; then
+    return 3
+  fi
+  evidence_identity="$(jq -S -c '.review_identity' <<<"$evidence_json")" || return 3
+  review_interactive_identity_valid "$evidence_identity" || return 3
+  jq -e -n --argjson actual "$evidence_identity" \
+    --argjson expected "$expected_identity_json" '$actual == $expected' \
+    >/dev/null 2>&1 || return 3
+  canonical="$(jq -S -c 'del(.binding_sha256)' <<<"$evidence_json")" || return 3
+  provided_binding="$(jq -r '.binding_sha256' <<<"$evidence_json")" || return 3
+  computed_binding="$(review_interactive_sha256 "$canonical")" || return 3
+  [ "$provided_binding" = "$computed_binding" ]
+}
+
+review_interactive_blocker_refs() {
+  printf '%s' "$1" | jq -S -c '[.blockers[].finding_id] | sort'
+}
+
+review_interactive_invalid_confirmation() {
+  local review_identity_json="$1"
+  local evidence_json="$2"
+  local blocker_refs
+  if review_interactive_blocker_evidence_valid \
+    "$evidence_json" "$review_identity_json"; then
+    blocker_refs="$(review_interactive_blocker_refs "$evidence_json")" || return 3
+    jq -S -c -n --argjson identity "$review_identity_json" \
+      --argjson evidence "$evidence_json" --argjson blockers "$blocker_refs" \
+      '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
+        confirmation_required:true,effective_event:"REQUEST_CHANGES",
+        capability_gap_refs:["typed-runtime-invalid"],
+        confirmed_blocker_refs:$blockers,review_identity:$identity,
+        blocker_evidence:$evidence,decision:null}'
+    return
+  fi
+  jq -S -c -n --argjson identity "$review_identity_json" \
+    '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
+      confirmation_required:true,effective_event:"COMMENT",
+      capability_gap_refs:["typed-runtime-invalid"],
+      confirmed_blocker_refs:[],review_identity:$identity,
+      blocker_evidence:null,decision:null}'
+}
+
+review_interactive_prepare_confirmation() {
+  local sampled_mode="$1"
+  local legacy_event="$2"
+  local expected_identity_json="$3"
+  local evidence_json="$4"
+  shift 4
+  local decision decision_identity decision_refs evidence_refs rc
+
+  if [ "$sampled_mode" != typed ]; then
+    jq -S -c -n --arg event "$legacy_event" \
+      '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"legacy",
+        confirmation_required:true,effective_event:$event,
+        capability_gap_refs:[],decision:null}'
+    return
+  fi
+
+  if ! review_interactive_identity_valid "$expected_identity_json"; then
+    jq -S -c -n \
+      '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
+        confirmation_required:true,effective_event:"COMMENT",
+        capability_gap_refs:["typed-runtime-invalid"],
+        confirmed_blocker_refs:[],review_identity:null,
+        blocker_evidence:null,decision:null}'
+    return
+  fi
+
+  decision="$(bash "$@" 2>/dev/null)"
+  rc=$?
+  if [ "$rc" -eq 0 ] && review_interactive_decision_valid "$decision"; then
+    decision_identity="$(jq -S -c '.review_identity' <<<"$decision")" || return 3
+    if jq -e -n --argjson actual "$decision_identity" \
+      --argjson expected "$expected_identity_json" '$actual == $expected' \
+      >/dev/null 2>&1; then
+      if [ "$evidence_json" != null ]; then
+        if ! review_interactive_blocker_evidence_valid \
+          "$evidence_json" "$expected_identity_json"; then
+          review_interactive_invalid_confirmation "$expected_identity_json" null
+          return
+        fi
+        decision_refs="$(jq -S -c '.confirmed_blocker_refs' <<<"$decision")" ||
+          return 3
+        evidence_refs="$(review_interactive_blocker_refs "$evidence_json")" || return 3
+        if [ "$decision_refs" != "$evidence_refs" ]; then
+          review_interactive_invalid_confirmation "$expected_identity_json" null
+          return
+        fi
+      fi
+      jq -S -c -n --argjson decision "$decision" \
+        --argjson identity "$expected_identity_json" \
+        --argjson evidence "$evidence_json" '
+      {schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
+       confirmation_required:true,effective_event:$decision.effective_event,
+       capability_gap_refs:$decision.capability_gap_refs,
+       confirmed_blocker_refs:$decision.confirmed_blocker_refs,
+       review_identity:$identity,blocker_evidence:$evidence,decision:$decision}'
+      return
+    fi
+  fi
+
+  review_interactive_invalid_confirmation "$expected_identity_json" "$evidence_json"
+}
+
+review_interactive_confirmation_valid() {
+  local confirmation_json="$1"
+  local source decision evidence identity decision_refs evidence_refs
+  if ! printf '%s' "$confirmation_json" | jq -e '
+    type == "object" and
+    .schema == "kc-pr-flow.interactive-confirmation/v1" and
+    .confirmation_required == true and
+    (.source == "legacy" or .source == "typed")
+  ' >/dev/null 2>&1; then
+    return 3
+  fi
+  source="$(jq -r '.source' <<<"$confirmation_json")"
+  if [ "$source" = legacy ]; then
+    printf '%s' "$confirmation_json" | jq -e '
+      (keys | sort) ==
+        ["capability_gap_refs","confirmation_required","decision",
+         "effective_event","schema","source"] and
+      (.effective_event == "APPROVE" or .effective_event == "COMMENT" or
+       .effective_event == "REQUEST_CHANGES") and
+      .capability_gap_refs == [] and .decision == null
+    ' >/dev/null 2>&1
+    return
+  fi
+  if ! printf '%s' "$confirmation_json" | jq -e '
+    (keys | sort) ==
+      ["blocker_evidence","capability_gap_refs","confirmation_required",
+       "confirmed_blocker_refs","decision","effective_event","review_identity",
+       "schema","source"]
+  ' >/dev/null 2>&1; then
+    return 3
+  fi
+  identity="$(jq -S -c '.review_identity' <<<"$confirmation_json")" || return 3
+  review_interactive_identity_valid "$identity" || return 3
+  if [ "$(jq -r '.decision | type' <<<"$confirmation_json")" = null ]; then
+    if ! printf '%s' "$confirmation_json" | jq -e '
+      .capability_gap_refs == ["typed-runtime-invalid"] and
+      .decision == null
+    ' >/dev/null 2>&1; then
+      return 3
+    fi
+    if [ "$(jq -r '.blocker_evidence | type' <<<"$confirmation_json")" = null ]; then
+      printf '%s' "$confirmation_json" | jq -e '
+        .effective_event == "COMMENT" and .confirmed_blocker_refs == []
+      ' >/dev/null 2>&1
+      return
+    fi
+    evidence="$(jq -S -c '.blocker_evidence' <<<"$confirmation_json")" || return 3
+    review_interactive_blocker_evidence_valid "$evidence" "$identity" || return 3
+    evidence_refs="$(review_interactive_blocker_refs "$evidence")" || return 3
+    printf '%s' "$confirmation_json" | jq -e --argjson refs "$evidence_refs" '
+      .effective_event == "REQUEST_CHANGES" and
+      .confirmed_blocker_refs == $refs
+    ' >/dev/null 2>&1
+    return
+  fi
+  if [ "$(jq -r '.decision | type' <<<"$confirmation_json")" != object ]; then
+    return 3
+  fi
+  decision="$(jq -S -c '.decision' <<<"$confirmation_json")" || return 3
+  review_interactive_decision_valid "$decision" || return 3
+  if ! printf '%s' "$confirmation_json" | jq -e '
+    .review_identity == .decision.review_identity and
+    .effective_event == .decision.effective_event and
+    .capability_gap_refs == .decision.capability_gap_refs and
+    .confirmed_blocker_refs == .decision.confirmed_blocker_refs
+  ' >/dev/null 2>&1; then
+    return 3
+  fi
+  if [ "$(jq -r '.blocker_evidence | type' <<<"$confirmation_json")" = null ]; then
+    return
+  fi
+  evidence="$(jq -S -c '.blocker_evidence' <<<"$confirmation_json")" || return 3
+  review_interactive_blocker_evidence_valid "$evidence" "$identity" || return 3
+  decision_refs="$(jq -S -c '.confirmed_blocker_refs' <<<"$decision")" || return 3
+  evidence_refs="$(review_interactive_blocker_refs "$evidence")" || return 3
+  [ "$decision_refs" = "$evidence_refs" ]
+}
+
+review_interactive_apply_event_edit() {
+  local confirmation_json="$1"
+  local requested_event="$2"
+  case "$requested_event" in
+    APPROVE | COMMENT | REQUEST_CHANGES) ;;
+    *) return 3 ;;
+  esac
+  review_interactive_confirmation_valid "$confirmation_json" || return 3
+  if [ "$(jq -r '.source' <<<"$confirmation_json")" = legacy ]; then
+    jq -S -c --arg event "$requested_event" '.effective_event=$event' \
+      <<<"$confirmation_json"
+    return
+  fi
+  [ "$(jq -r '.effective_event' <<<"$confirmation_json")" = "$requested_event" ] ||
+    return 3
+  printf '%s\n' "$confirmation_json"
+}
+
+review_interactive_confirm_post() {
+  local confirmation_json="$1"
+  local requested_event="$2"
+  local confirmation_state="$3"
+  local gated
+  [ "$confirmation_state" = confirmed ] || return 3
+  gated="$(review_interactive_apply_event_edit \
+    "$confirmation_json" "$requested_event")" || return 3
+  jq -S -c -n --arg event "$requested_event" --argjson confirmation "$gated" \
+    '{schema:"kc-pr-flow.interactive-post-gate/v1",human_confirmed:true,
+      effective_event:$event,confirmation:$confirmation}'
+}
+
+review_interactive_post_gate_valid() {
+  local gate_json="$1"
+  local confirmation
+  if ! printf '%s' "$gate_json" | jq -e '
+    type == "object" and
+    (keys | sort) ==
+      ["confirmation","effective_event","human_confirmed","schema"] and
+    .schema == "kc-pr-flow.interactive-post-gate/v1" and
+    .human_confirmed == true and
+    .effective_event == .confirmation.effective_event
+  ' >/dev/null 2>&1; then
+    return 3
+  fi
+  confirmation="$(jq -S -c '.confirmation' <<<"$gate_json")" || return 3
+  review_interactive_confirmation_valid "$confirmation"
+}
+# typed-interactive-recipe:end
+```
+
+`review_interactive_prepare_confirmation` is read-only and has no GitHub client, posting payload,
+authorization, idempotency, resume, lock-recovery, retention, or daemon surface. Its result only
+renders the existing mandatory §6c gate. It must not call `gh`, post a review, create a pending
+payload, or mutate any remote or accepted state.
+
+Typed callers pass the sampled mode, legacy event, exact current review identity, and either
+`null` or one closed `kc-pr-flow.confirmed-blocker-evidence/v1` receipt before the runtime command.
+The receipt binds unique finding IDs and their evidence hashes to the exact repository, PR, base,
+head, config, review key, run, and explicit human confirmation. A valid decision remains primary
+authority. If typed decision production fails, only a valid matching receipt may preserve
+`REQUEST_CHANGES`; absent, malformed, bare-array, hash-drifted, or identity-drifted evidence yields
+`COMMENT` with no blockers. Parallel evidence inconsistent with a valid decision invalidates the
+whole typed confirmation. The same validator protects event editing and the post gate.
+
 ### 6c. User confirmation gate
 
 **GATE — Do not post without user confirmation.** Always present both tables and then offer structured options:
@@ -1272,6 +1689,13 @@ never post only one diagram. If the user picks **3** or **7**, let them:
 Then re-present the tables and options.
 
 ## Step 7: Post Review
+
+Before any GitHub mutation, require the exact closed receipt returned by
+`review_interactive_confirm_post` and validate it with
+`review_interactive_post_gate_valid`. Its schema must be
+`kc-pr-flow.interactive-post-gate/v1`; its effective event and complete nested decision-bound
+confirmation are the sole posting authority. A missing, decisionless, malformed, or event-edited
+receipt blocks Step 7. Never reconstruct posting authority from the selected option or prose.
 
 Prefer `gh pr review` CLI. Use `gh api` as fallback for inline comments (CLI lacks native inline support). Write JSON payload to temp file to avoid shell escaping issues; always tag `@PR_AUTHOR` in the review body. For option 5 or 6, append both exact previewed diagrams to the same review body after verification / break-point / pass / cross-model sections and before advisory. Re-run the Step 2.1 head check and `review-architecture-diagrams-validate.sh` against the exact previewed pair immediately before posting; a moved head invalidates the diagrams and returns to §6b-arch, while a validation failure blocks posting and returns to regeneration.
 

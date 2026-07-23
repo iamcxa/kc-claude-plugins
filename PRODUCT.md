@@ -30,10 +30,8 @@ Measures are evaluated in this order:
 1. Must-fix finding recall is non-inferior to the legacy review flow.
 2. Shadow mode preserves the legacy verdict, confirmation, and GitHub output exactly.
 3. Repeated equivalent runs produce compatible coverage and finding identities, with disagreements remaining visible.
-4. Efficiency claims use only comparable, provider-reported usage from the same provider family and measurement scope. Missing usage is unknown, never zero.
+4. Efficiency claims require either a median provider-reported token reduction of at least 20% across complete same-provider/scope pairs, or a median local terminal-receipt collation cost no greater than 60% of a full review rerun. Missing or unbound measurements are unknown, never zero.
 5. Interrupted and ambiguous runs recover without stale-head reuse or duplicate posting.
-
-No numeric improvement threshold is implied until the paired-run corpus provides a trustworthy baseline.
 
 ### Delivery boundary
 
@@ -47,15 +45,15 @@ The first increment must not change verdict selection, user confirmation, or Git
 
 ### Current increment
 
-The shadow increment provides an off-by-default, fail-open observer over a local typed exact-head event log. Maintainers can validate, replay, summarize, and compare sanitized paired receipts across provider-neutral lanes. The paired report puts expected-finding recall first, then capability coverage, external behavior parity, stability/disagreement, and strictly comparable provider-reported usage.
+The typed interactive increment derives one closed `InteractiveCollationDecision/v1` from a complete, exact-identity terminal receipt. Capability terminal state—not provider silence—now governs coverage, approval eligibility, effective-event precedence, and the input shown at the existing human confirmation gate. Required gaps impose a COMMENT ceiling, while confirmed blockers still produce REQUEST_CHANGES. A required transient failure receives exactly one retry and then an evidence-bound manual fallback opportunity.
 
-The observer accepts one closed `ShadowObservation/v1` (`kc-pr-flow.shadow-observation/v1`) projection after legacy collation. A complete observation records every declared lane, evidence-bound candidates and findings, synthesis, six hashes of the frozen legacy behavior, and a terminal run event. Unknown fields and raw values cannot enter accepted state: same-major extensions are closed hash-only metadata, and rejected append input creates a metadata-only quarantine record containing its reason, hash, byte count, and timestamp rather than the rejected bytes.
+`KC_PR_FLOW_REVIEW_TYPED=on` is sampled once before dispatch. Only that exact value selects typed authority for the fresh invocation; unset, off, and unknown values retain the legacy path. A valid closed decision remains primary authority. Invalid decision production without a valid independently confirmed exact-identity `confirmed-blocker-evidence/v1` receipt fails closed to COMMENT rather than silently switching to legacy behavior; a valid receipt preserves REQUEST_CHANGES, while evidence inconsistent with a valid decision invalidates the whole typed confirmation. Neither mode bypasses confirmation or posts to GitHub.
 
-The receipt runtime's event, observation, pointer, and usage file ingestion uses a Python 3.8+ fail-closed safe-I/O boundary before parsing: one no-follow regular-file descriptor, a bounded read, stable pre/post file identity, and a new private mode-0600 snapshot. Missing support, path replacement, concurrent mutation, or oversize input cannot mutate accepted state. The production observer remains fail open only with respect to the legacy review: it reports a typed non-observation and the byte-identical legacy flow continues.
+Terminal rehydration validates the complete lifecycle, exact repository/PR/base/head/config/run identity, and every evidence pointer and content hash before rebuilding the decision in memory. It never appends, resumes, repairs, recovers locks, retains state, authorizes a payload, or contacts a remote service. The safe-I/O and metadata-only quarantine contracts from the shadow increment remain in force.
 
-The paired scorer accepts only closed serialized corpus records whose exact-head review key, candidate/evidence identities, receipt content hash, and receipt ID recompute successfully. Recall is therefore measured from bound evidence rather than unverified labels. This increment is measurement infrastructure, not an adaptive reviewer. It does not change lane selection, model routing, finding synthesis authority, the confirmation gate, or GitHub output. Disabling the gate stops new observation while preserving existing receipts for inspection and comparison.
+The paired scorer evaluates promotion in fixed G1–G5 order: valid bound inputs, complete required capability coverage, external behavior parity, zero lost expected must-fix findings, then one of the two efficiency branches above. Later efficiency evidence cannot repair an earlier safety or recall failure. A local-cost pair must pre-bind the raw terminal artifact, recomputed decision, and a captured designed-full-rerun control receipt. The executable producer invokes only fresh terminal collation, applies `canonical-artifact-bytes/v1` to the decision and the control's bound sanitized full-review artifact, and records zero model and remote calls. The scorer rechecks that complete binding; a caller-resealed number or self-hash is not evidence.
 
-Increment 2.3 remains the owner of crash-safe lock recovery and PID-reuse handling, verified predecessor lineage, append/compaction performance, resume and retention, once-only posting, remote reconciliation, and daemon mutation. None of those capabilities are implied by the shadow receipt.
+Increment 2.3 remains the owner of crash-safe lock recovery and PID-reuse handling, verified predecessor lineage, append/compaction performance, resume and retention, once-only posting, remote reconciliation, and daemon mutation.
 
 ### Non-goals
 
