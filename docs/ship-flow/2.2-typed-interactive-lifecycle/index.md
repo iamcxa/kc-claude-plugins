@@ -20,6 +20,7 @@ stage_outputs:
   plan: plan.md
   execute: execute.md
   verify: verify.md
+  review: review.md
 ---
 
 ### Vertical Slice
