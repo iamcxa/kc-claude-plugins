@@ -7,9 +7,10 @@ harvest_required: true
 layout: folder
 appetite: "3 working days"
 depends_on:
-  - "2.1"
-status: sharp
+    - "2.1"
+status: shape
 stage_outputs: {}
+started: 2026-07-23T01:58:42Z
 ---
 
 ### Vertical Slice
