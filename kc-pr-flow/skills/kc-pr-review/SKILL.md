@@ -1238,6 +1238,97 @@ body. Then present the byte-identical legacy draft, comments, options, and effec
 Do not retry a model lane, retry the observer, change confirmation behavior, or infer posting
 authorization from either success or failure.
 
+### 6b-typed. Typed Interactive Confirmation Authority
+
+Sample `KC_PR_FLOW_REVIEW_TYPED` exactly once before review dispatch begins. Only the exact value
+`on` selects typed mode. Unset, empty, `off`, and unknown values select the existing legacy path
+for that fresh invocation. Store the sampled value in `INTERACTIVE_REVIEW_MODE`; never re-read the
+environment while the invocation is running.
+
+Legacy mode keeps the existing Step 5/6 derivation unchanged. Typed mode must call
+`review-runtime.sh rehydrate-interactive` exactly once after final collation and the fresh Step 2.1
+head check, passing the terminal receipt, closed capability policy, safe repository worktree, and
+the exact repository/PR/base/head/config/review-key/run identity. The returned
+`kc-pr-flow.interactive-collation-decision/v1` is the sole source for coverage,
+`approve_eligible`, effective-event precedence, blocker/gap references, and confirmation input.
+Do not reconstruct those fields from prose.
+
+Typed runtime failure, unsupported state, incomplete receipt, or identity/evidence mismatch stays
+typed for the current invocation. It produces an explicit `typed-runtime-invalid` coverage gap and
+a COMMENT ceiling; it never falls through to legacy APPROVE. A validated typed blocker still
+selects REQUEST_CHANGES over any coverage gap. Changing the switch can select legacy only for a
+new invocation.
+
+Use this executable adapter at the pre-confirmation seam:
+
+```bash
+# typed-interactive-recipe:start
+review_interactive_sample_mode() {
+  case "${KC_PR_FLOW_REVIEW_TYPED:-}" in
+    on) printf '%s\n' typed ;;
+    *) printf '%s\n' legacy ;;
+  esac
+}
+
+review_interactive_prepare_confirmation() {
+  local sampled_mode="$1"
+  local legacy_event="$2"
+  shift 2
+  local decision rc
+
+  if [ "$sampled_mode" != typed ]; then
+    jq -S -c -n --arg event "$legacy_event" \
+      '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"legacy",
+        confirmation_required:true,effective_event:$event,
+        capability_gap_refs:[],decision:null}'
+    return
+  fi
+
+  decision="$(bash "$@" 2>/dev/null)"
+  rc=$?
+  if [ "$rc" -eq 0 ] && printf '%s' "$decision" | jq -e '
+    type == "object" and
+    (keys | sort) ==
+      ["approve_eligible","capabilities","capability_gap_refs","confirmation_input",
+       "confirmed_blocker_refs","coverage","effective_event","mode","review_identity","schema"] and
+    .schema == "kc-pr-flow.interactive-collation-decision/v1" and
+    .mode == "typed" and
+    (.coverage == "complete" or .coverage == "incomplete") and
+    (.approve_eligible | type == "boolean") and
+    (.effective_event == "APPROVE" or .effective_event == "COMMENT" or
+      .effective_event == "REQUEST_CHANGES") and
+    (.capabilities | type == "array") and
+    (.confirmed_blocker_refs | type == "array") and
+    (.capability_gap_refs | type == "array") and
+    (.confirmation_input | type == "object") and
+    (if .effective_event == "APPROVE" then
+      .coverage == "complete" and .approve_eligible == true and
+      (.confirmed_blocker_refs | length) == 0 and
+      (.capability_gap_refs | length) == 0
+     elif .effective_event == "REQUEST_CHANGES" then
+      .approve_eligible == false and (.confirmed_blocker_refs | length) > 0
+     else .approve_eligible == false end)
+  ' >/dev/null 2>&1; then
+    printf '%s' "$decision" | jq -S -c '
+      {schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
+       confirmation_required:true,effective_event:.effective_event,
+       capability_gap_refs:.capability_gap_refs,decision:.}'
+    return
+  fi
+
+  jq -S -c -n \
+    '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
+      confirmation_required:true,effective_event:"COMMENT",
+      capability_gap_refs:["typed-runtime-invalid"],decision:null}'
+}
+# typed-interactive-recipe:end
+```
+
+`review_interactive_prepare_confirmation` is read-only and has no GitHub client, posting payload,
+authorization, idempotency, resume, lock-recovery, retention, or daemon surface. Its result only
+renders the existing mandatory §6c gate. It must not call `gh`, post a review, create a pending
+payload, or mutate any remote or accepted state.
+
 ### 6c. User confirmation gate
 
 **GATE — Do not post without user confirmation.** Always present both tables and then offer structured options:

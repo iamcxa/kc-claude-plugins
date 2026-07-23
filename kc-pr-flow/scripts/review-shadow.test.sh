@@ -14,12 +14,13 @@ trap 'chmod -R u+rwX "$TEST_ROOT" 2>/dev/null || true; rm -rf "$TEST_ROOT"' EXIT
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case production-collector]\n' "$0" >&2
+    printf 'usage: %s [--case production-collector|typed-interactive-seam]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
 fi
-if [ "$CASE_FILTER" != 'all' ] && [ "$CASE_FILTER" != 'production-collector' ]; then
+if [ "$CASE_FILTER" != 'all' ] && [ "$CASE_FILTER" != 'production-collector' ] &&
+  [ "$CASE_FILTER" != 'typed-interactive-seam' ]; then
   printf 'unknown test case: %s\n' "$CASE_FILTER" >&2
   exit 2
 fi
@@ -34,6 +35,85 @@ assert_eq() {
 assert_match() {
   if [[ "$3" =~ $2 ]]; then pass; else fail "$1 ([$3] does not match [$2])"; fi
 }
+
+run_typed_interactive_seam_tests() {
+  local recipe="$TEST_ROOT/typed-interactive-recipe.sh"
+  local mock_runtime="$TEST_ROOT/mock-typed-runtime.sh"
+  local typed_log="$TEST_ROOT/typed.log"
+  local mutation_log="$TEST_ROOT/typed-mutation.log"
+  local sampled result
+
+  sed -n '/^# typed-interactive-recipe:start$/,/^# typed-interactive-recipe:end$/p' "$SKILL" |
+    sed '1d;$d' >"$recipe"
+  # shellcheck source=/dev/null
+  . "$recipe"
+  if ! declare -F review_interactive_sample_mode >/dev/null ||
+    ! declare -F review_interactive_prepare_confirmation >/dev/null; then
+    fail 'typed interactive recipe exposes executable mode and confirmation functions'
+    printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+    return 1
+  fi
+  pass
+
+  cat >"$mock_runtime" <<'MOCK'
+#!/usr/bin/env bash
+printf 'typed\n' >>"$MOCK_TYPED_LOG"
+if [ "${MOCK_TYPED_RESULT:-valid}" = invalid ]; then
+  printf '%s\n' '{"reason":"invalid_receipt","schema":"kc-pr-flow.interactive-collation-status/v1","status":"invalid"}'
+  exit 3
+fi
+if [ "${MOCK_TYPED_RESULT:-valid}" = malformed ]; then
+  printf '%s\n' '{"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
+  exit 0
+fi
+printf '%s\n' '{"approve_eligible":false,"capabilities":[],"capability_gap_refs":[],"confirmation_input":{"blocker_refs":["blocker-1"],"coverage_summary":"typed-derived","gap_refs":[],"identity_summary":"typed-derived","verdict_summary":"typed-derived"},"confirmed_blocker_refs":["blocker-1"],"coverage":"complete","effective_event":"REQUEST_CHANGES","mode":"typed","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
+MOCK
+  chmod 0700 "$mock_runtime"
+  : >"$typed_log"
+  : >"$mutation_log"
+  export MOCK_TYPED_LOG="$typed_log"
+
+  for mode in unset off unknown; do
+    case "$mode" in
+      unset) unset KC_PR_FLOW_REVIEW_TYPED ;;
+      *) KC_PR_FLOW_REVIEW_TYPED="$mode"; export KC_PR_FLOW_REVIEW_TYPED ;;
+    esac
+    sampled="$(review_interactive_sample_mode)"
+    assert_eq "$mode samples legacy before dispatch" legacy "$sampled"
+    result="$(review_interactive_prepare_confirmation "$sampled" COMMENT "$mock_runtime")"
+    assert_eq "$mode preserves legacy confirmation source" legacy "$(jq -r '.source' <<<"$result")"
+    assert_eq "$mode keeps confirmation mandatory" true "$(jq -r '.confirmation_required' <<<"$result")"
+  done
+  assert_eq 'legacy modes never invoke typed runtime' 0 "$(wc -l <"$typed_log" | tr -d ' ')"
+
+  KC_PR_FLOW_REVIEW_TYPED=on
+  export KC_PR_FLOW_REVIEW_TYPED
+  sampled="$(review_interactive_sample_mode)"
+  KC_PR_FLOW_REVIEW_TYPED=off
+  export KC_PR_FLOW_REVIEW_TYPED
+  result="$(MOCK_TYPED_RESULT=valid review_interactive_prepare_confirmation "$sampled" COMMENT "$mock_runtime")"
+  assert_eq 'enabled mode consumes typed authority' typed "$(jq -r '.source' <<<"$result")"
+  assert_eq 'mid-run switch cannot change sampled typed mode' REQUEST_CHANGES "$(jq -r '.effective_event' <<<"$result")"
+  assert_eq 'typed valid path keeps confirmation mandatory' true "$(jq -r '.confirmation_required' <<<"$result")"
+  assert_eq 'typed valid path invokes runtime exactly once' 1 "$(wc -l <"$typed_log" | tr -d ' ')"
+
+  result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation "$sampled" APPROVE "$mock_runtime")"
+  assert_eq 'typed invalid state stays typed instead of legacy fallback' typed "$(jq -r '.source' <<<"$result")"
+  assert_eq 'typed invalid state fails closed to COMMENT' COMMENT "$(jq -r '.effective_event' <<<"$result")"
+  assert_eq 'typed invalid state exposes an explicit coverage gap' typed-runtime-invalid \
+    "$(jq -r '.capability_gap_refs[0]' <<<"$result")"
+  assert_eq 'typed invalid path keeps confirmation mandatory' true "$(jq -r '.confirmation_required' <<<"$result")"
+  result="$(MOCK_TYPED_RESULT=malformed review_interactive_prepare_confirmation "$sampled" APPROVE "$mock_runtime")"
+  assert_eq 'malformed typed decision also fails closed' COMMENT "$(jq -r '.effective_event' <<<"$result")"
+  assert_eq 'no posting mutation occurs before confirmation' 0 "$(wc -c <"$mutation_log" | tr -d ' ')"
+}
+
+if [ "$CASE_FILTER" = 'typed-interactive-seam' ]; then
+  run_typed_interactive_seam_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit
+fi
 
 sha256_text() {
   if command -v shasum >/dev/null 2>&1; then
