@@ -1891,16 +1891,16 @@ review_runtime_rehydrate_interactive() (
   local pointer_count pointer_index pointer identity_event manual_count manual_index recorded_at
   local policy_config policy_config_hash
 
-  review_runtime_repository_identity_valid "$repository" &&
-    review_runtime_positive_safe_integer "$pr_number" &&
-    [[ "$base_sha" =~ ^[0-9a-f]{40}$ ]] &&
-    [[ "$head_sha" =~ ^[0-9a-f]{40}$ ]] &&
-    [[ "$config_hash" =~ ^[0-9a-f]{64}$ ]] &&
-    [[ "$review_key" =~ ^[0-9a-f]{64}$ ]] &&
-    [[ "$run_id" =~ ^run-[A-Za-z0-9._-]+$ ]] || {
-      review_runtime_interactive_invalid unsafe_identity
-      return 3
-    }
+  if ! review_runtime_repository_identity_valid "$repository" ||
+    ! review_runtime_positive_safe_integer "$pr_number" ||
+    ! [[ "$base_sha" =~ ^[0-9a-f]{40}$ ]] ||
+    ! [[ "$head_sha" =~ ^[0-9a-f]{40}$ ]] ||
+    ! [[ "$config_hash" =~ ^[0-9a-f]{64}$ ]] ||
+    ! [[ "$review_key" =~ ^[0-9a-f]{64}$ ]] ||
+    ! [[ "$run_id" =~ ^run-[A-Za-z0-9._-]+$ ]]; then
+    review_runtime_interactive_invalid unsafe_identity
+    return 3
+  fi
   expected_review_key="$(review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash")" || return
   [ "$review_key" = "$expected_review_key" ] || {
     review_runtime_interactive_invalid review_key_mismatch
