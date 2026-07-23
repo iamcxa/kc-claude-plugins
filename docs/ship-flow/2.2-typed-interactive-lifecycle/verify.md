@@ -1,41 +1,39 @@
 <!-- section:verify -->
 ## Verify
 
-Round 3 target: `6274585371c51df562fd6ea518da78a715a93e24..84c2ca3ebd58a35cd9727ef20bc11d6f65983a96` (16 files, +2321/-85); repair delta `e34c254..84c2ca3` (12 files, +413/-106).
+Round 4 target: implementation source `65a723c836b16743f6c8728517632d3e8b96eb62`; verification head `cfceeabc725c8c5d09347791e01b321841b1d261`; bounded delta `6fe78ef808de8f776b1a46b87bb44e5bb0b09fb2..cfceeab` (6 files, +307/-40).
 
 <!-- section:verify-check-manifest -->
 ### Verify Check Manifest
 
-| Check | Input | Owner | Can Run Parallel | Evidence Required |
-|---|---|---|---|---|
-| focused probes / static-canon / panel | three round-2 blockers / repair delta / exact bundle | verifier / verifier / bounded reviewer | yes / yes / yes | mutation counts / clean scans / cited exact-head verdict |
-| Lens | Source | Reviewer Question | Affected Path Family | Required Skills | Input Bundle | Evidence Required | Fallback |
-| blocker-post / benchmark-provenance / schema-intent | reviewer_questions / reviewer_questions / domain_acceptance_checklist | sole authority? / corpus-bound? / canon aligned? | skill+shadow / benchmark / docs+runtime | test,TDD / test,security / schema | exact base..head | focused mutation / forged-input rejection / canon scan | verifier probe |
-| Lens | Source | Scope | Reviewer Question | Affected Path Family | Required Skills | Verdict | Finding | file_line | route_to | Evidence Required | Evidence | confidence | disposition | disposition_reason |
-| blocker-post / benchmark-provenance / schema-intent / external | reviewer_questions / reviewer_questions / domain_acceptance_checklist / baseline | repaired exact-head surfaces | three blocker questions | skill+tests / benchmark / canon / full diff | test,TDD / test,security / schema / review | PASS / PASS / PASS / DEGRADED | none / none / none / timeout | null | review / review / review / none | mutations / binding / scan / verdict | `35/0` / `30/0` / PASS / circuit-break | 10 / 10 / 10 / null | accepted / accepted / accepted / discarded | verified / verified / verified / exceeded 2m |
+| Check | Input | Owner | Evidence Required |
+|---|---|---|---|
+| confirmed-blocker probe | exact skill/test repair | verifier | `46/0` plus adversarial cases |
+| static/scope/canon | six-file delta and execute receipt | verifier | lint, syntax, diff, no-PR3 scan |
+| review source | external final-review VETO | external reviewer | exact invalid-state blocker finding |
 <!-- /section:verify-check-manifest -->
 
 <!-- section:quality-gate -->
 ### Quality Gate
 
-- tests: PASS — fresh shadow `35/0`, benchmark `30/0`; execute full-suite receipts `279/0`, `155/0`, `135/0`, `62/0`, `43/0`, `34/0`.
-- lint: PASS — scoped ShellCheck.
-- typecheck: PASS — `bash -n` on changed shell.
-- build: PASS — no compiled build surface; architecture and validator receipts are `43/0` and `34/0`.
-- format: PASS — `git diff --check` and canonical-contract scan.
+- tests: PASS — fresh shadow typed-interactive seam `46/0`.
+- lint: PASS — ShellCheck on the changed shell test.
+- typecheck: PASS — `bash -n` on the changed shell test.
+- build: PASS — no compiled build surface; prior architecture/validator receipts `43/0`, `34/0`.
+- format: PASS — `git diff --check`; bounded canon/scope scan clean.
+- regression receipts reused: shadow `155/0`, runtime `279/0`, benchmark `135/0`, cross-model `62/0`.
 
-#### Verification Claim: Quality and regression surface
+#### Verification Claim: Round-4 blocker precedence
 
 | Field | Value |
 |---|---|
-| claim_source | `quality-gate:round-three-authority-repairs` |
-| condition | three returned blockers pass fresh focused probes without regressing the recorded full suites |
-| metric_or_observable | focused tests, full-suite receipts, static gates, canon manifest |
-| threshold | every gate exits zero and no stale counter/replay term remains |
-| smallest_disproving_surface | shadow typed seam or benchmark interactive-gates case |
-| baseline | round-2 verification failed blocker, post-gate, G5 provenance, and ShellCheck |
-| treatment | decision-bound authority, closed post receipt, corpus-owned G5 binding, lint repair |
-| comparison | all round-2 blockers now falsified by focused mutations |
+| claim_source | external final-review VETO |
+| condition | invalid typed state preserves blockers only through canonical independently confirmed evidence |
+| metric_or_observable | focused adversarial seam cases |
+| threshold | all 46 assertions pass |
+| baseline | round-3 decisionless path always collapsed to COMMENT |
+| treatment | bound `confirmed-blocker-evidence/v1` plus centralized validator |
+| comparison | valid evidence retains REQUEST_CHANGES; every unbound or inconsistent form fails closed |
 | verdict | `VERIFIED` |
 | route_to | `review` |
 <!-- /section:quality-gate -->
@@ -43,86 +41,77 @@ Round 3 target: `6274585371c51df562fd6ea518da78a715a93e24..84c2ca3ebd58a35cd9727
 <!-- section:review-findings -->
 ### Review Findings
 
-- Scope/prescan: 12 repair files; exact source head and repair delta are clean, plan-consistent, constraint-safe, and limited to T2, T3, canon, tests, and evidence.
-- Spot-check: all cited repair surfaces reproduced at exact head. Review verdict: SHIP IT.
-- Blocking findings: none. Round-2 blockers and warnings have direct repair evidence.
-- Panel: the single bounded reviewer self-checked the exact bundle but exceeded the two-minute circuit breaker before a verdict; verification proceeded from independent adversarial probes and preserved full-suite receipts.
+- Scope/prescan: exact six-file delta is plan-consistent and limited to blocker evidence, focused tests, canon, and stage receipts.
+- Spot-check: every claim below reproduced at `cfceeab`; implementation source is `65a723c`. No PR3 resume, recovery, retention, reconciliation, or daemon authority was added.
+- Findings: none. The external VETO is closed by the exact focused mutation matrix. Review verdict: SHIP IT.
 
 #### TDD Evidence Audit
 
 | Task | RED Evidence | GREEN Evidence | REFACTOR Check | Severity | route_to |
 |---|---|---|---|---|---|
-| T2 authority/post repair | shadow `28/7` | focused `35/0` | full shadow `155/0` | none | review |
-| T3 G5 binding repair | benchmark `24/6` | focused `30/0`; real-runtime `49/0` | full benchmark `135/0` | none | review |
-| canon/lint repair | plan-approved docs skip | architecture `43/0`; validator `34/0` | static/canon scan PASS | none | review |
+| invalid-state blocker precedence | focused `35/11` | fresh focused `46/0` | reused shadow `155/0`, runtime `279/0` | none | review |
+| canon/scope | reviewer VETO | docs commit `65a723c` | ShellCheck, syntax, diff, no-PR3 scan PASS | none | review |
 
 #### Claim Records
 
 | Claim | Required | Status | Evidence | route_to |
 |---|---:|---|---|---|
-| Quality, lint, and exact-head regression gates pass | yes | VERIFIED | fresh `35/0`, `30/0`; reused six full-suite receipts; static gates PASS | review |
-| A valid typed decision is the sole blocker authority | yes | VERIFIED | `SKILL.md:1362-1392`; invalid/decisionless mutation yields COMMENT, `blockers=[]`, `decision=null` | review |
-| Posting requires an explicit, complete, canonical confirmation receipt | yes | VERIFIED | `SKILL.md:1394-1479,1522-1531`; decisionless/event-edited receipts rejected | review |
-| G5 measurement is bound to corpus raw, decision, control, units, and binding hashes | yes | VERIFIED | benchmark producer/scorer binding plus forged unit/raw/control mutations | review |
-| Unaffected privacy, retry, exact-head, mode, and no-mutation contracts remain intact | yes | VERIFIED | execute full-suite receipts and source audit | review |
+| Evidence is closed, exact-identity, hash-bound, UTC RFC3339, and human-confirmed | yes | VERIFIED | validator plus malformed/hash/identity/timestamp mutations | review |
+| Invalid decision plus valid independent evidence retains REQUEST_CHANGES | yes | VERIFIED | focused confirmation and post-gate cases | review |
+| Missing, bare, malformed, or mismatched evidence yields COMMENT with no blockers | yes | VERIFIED | focused omission/bare/hash/identity mutations | review |
+| A valid decision remains primary authority | yes | VERIFIED | valid blocker and APPROVE decision cases | review |
+| Evidence inconsistent with a valid decision fails closed | yes | VERIFIED | decision/evidence blocker-ref mismatch mutation | review |
+| Post gate accepts only canonical, consistent, explicitly confirmed forms | yes | VERIFIED | confirmation validator, edit gate, and post-gate mutations | review |
 <!-- /section:review-findings -->
 
 <!-- section:verify-knowledge-captures -->
 ### Knowledge Captures
 
-- [D1] One canonical decision must remain the sole authority through confirmation and posting.
-- [D2-candidate] A measurement self-hash is useful only when it binds corpus-owned input, decision, control, and units.
+- [D1] Independent blocker authority requires a complete confirmation receipt, never a parallel bare list.
+- [D2-candidate] Valid primary and secondary authorities must agree exactly or invalidate the typed confirmation.
 - skipped: false
 <!-- /section:verify-knowledge-captures -->
 
 <!-- section:uat -->
 ### UAT
 
-Mode: spot-check — round-3 focused rerun, adversarial source probes, static/canon manifest, and execute-receipt reuse.
+Mode: spot-check — fresh round-4 blocker matrix, bounded static/canon scan, and prior full-suite receipt reuse.
 
 | DC | Verify Procedure | Execute 1st | Verify | Evidence |
 |---|---|---|---|---|
-| DC-1 | runtime requiredness matrix | PASS | DC-1 PASS (runtime: runtime suite → `279/0`) | config-bound activation retained |
-| DC-2 | typed lifecycle matrix | PASS | DC-2 PASS (runtime: runtime suite → `279/0`) | closed terminal states retained |
-| DC-3 | replay/evidence matrix | PASS | DC-3 PASS (runtime: runtime suite → `279/0`) | canonical rehydration retained |
-| DC-4 | privacy mutation matrix | PASS | DC-4 PASS (runtime: runtime suite → `279/0`) | no raw-content persistence |
-| DC-5 | retry/idempotence matrix | PASS | DC-5 PASS (runtime: runtime suite → `279/0`) | retry contract retained |
-| DC-6 | identity/head matrix | PASS | DC-6 PASS (runtime: runtime suite → `279/0`) | exact-head binding retained |
-| DC-7 | blocker precedence mutations | PASS | DC-7 PASS (runtime: shadow focused → `35/0`) | valid decision preserves blockers |
-| DC-8 | confirmation/post mutations | PASS | DC-8 PASS (runtime: shadow focused → `35/0`) | forged decisionless receipt rejected |
-| DC-9 | mode seam matrix | PASS | DC-9 PASS (runtime: shadow full → `155/0`) | mode behavior retained |
-| DC-10 | no-mutation seam matrix | PASS | DC-10 PASS (runtime: shadow full → `155/0`) | no unauthorized posting |
-| DC-11 | terminal-only source audit | PASS | DC-11 PASS (runtime: benchmark focused → `30/0`) | terminal scope retained |
-| DC-12 | ordered-gate mutations | PASS | DC-12 PASS (runtime: benchmark full → `135/0`) | G1-G4 ordering retained |
-| DC-13 | G5 provenance mutations | PASS | DC-13 PASS (runtime: benchmark focused → `30/0`) | raw/decision/control binding required |
+| DC-1..6 | reuse runtime exact-identity/privacy/retry evidence | PASS | DC-1..6 PASS (runtime: prior runtime suite → `279/0`) | unaffected runtime contracts |
+| DC-7 | re-run confirmed-blocker mutation matrix | PASS | DC-7 PASS (runtime: shadow focused → `46/0`) | exact invalid-state precedence |
+| DC-8 | re-run confirmation/post mutations | PASS | DC-8 PASS (runtime: shadow focused → `46/0`) | canonical human-confirmed receipt |
+| DC-9..10 | reuse typed mode and no-mutation evidence | PASS | DC-9..10 PASS (runtime: prior shadow suite → `155/0`) | unaffected mode seam |
+| DC-11..13 | reuse terminal/ordered-gate/benchmark evidence | PASS | DC-11..13 PASS (runtime: prior benchmark suite → `135/0`) | no PR3 or G1-G5 drift |
 <!-- /section:uat -->
 
 <!-- section:verify-verdict -->
 ### Verdict
 
 status: passed
-stage_cost: not metered (one bounded panel attempt plus verifier probes)
+stage_cost: not metered (one verifier; no new panel)
 quality: 5/5
-review: PROCEED
+review: PROCEED to external final re-review
 uat: DC-1 through DC-13 passed
-blocking_issues: 0
+blocking_issues: none
 knowledge_capture: D1: 1, D2: 1
-claim_records: required VERIFIED=5 NOT VERIFIED=0 INCONCLUSIVE=0; advisory VERIFIED=0 NOT VERIFIED=0 INCONCLUSIVE=0
+claim_records: required VERIFIED=6 NOT VERIFIED=0 INCONCLUSIVE=0; advisory VERIFIED=0 NOT VERIFIED=0 INCONCLUSIVE=0
 auto_fixes: 0
-started_at: 2026-07-23T14:12:33+08:00
-completed_at: 2026-07-23T14:16:07+08:00
-duration_minutes: 4
+started_at: 2026-07-23T14:38:00+08:00
+completed_at: 2026-07-23T14:40:50+08:00
+duration_minutes: 3
 
 <!-- section:verify-verdict-metrics -->
 ### Metrics
 
 status: passed
-duration_minutes: 4
-iteration_count: 3
+duration_minutes: 3
+iteration_count: 4
 claim_records_required_not_verified: 0
 blocking_findings_count: 0
 warning_findings_count: 0
-runtime_checks_count: 8
+runtime_checks_count: 5
 <!-- /section:verify-verdict-metrics -->
 <!-- /section:verify-verdict -->
 <!-- /section:verify -->
@@ -130,13 +119,9 @@ runtime_checks_count: 8
 <!-- section:panel-coverage -->
 ## Panel Coverage
 
-- Tier: B single-model; bounded reviewer context self-check PASS, output discarded after the two-minute verdict timeout.
-- Specialists run: testing PASS; maintainability NO_FINDINGS; security NO_FINDINGS; schema-intent PASS; benchmark PASS; workflow PASS.
-- Adversarial: local verifier PASS; external bounded reviewer DEGRADED (timeout). Structured cross-model review: skipped at Tier B.
-- Pass ownership: verify_agent_worker_ownership PASS; workflow_ci PASS; type_design PASS; silent_failure PASS; test_adequacy PASS; security NO_FINDINGS; runtime_uat PASS; cross_model_challenge DEGRADED.
-- Semantic packet dimensions: security, type_design, test_adequacy, silent_failure, workflow_ci, verify_agent_worker_ownership, cross_model_challenge.
-- PR Quality Score: 10/10. Cross-model: NO.
-- Cross-model degradation is accepted because the compatibility suite receipt is `62/0` and every blocking contract has an independent focused mutation.
+- No new panel by round-4 instruction; the independent external final-review VETO is the source finding and owns the next re-review.
+- Pass ownership: verify_agent_worker_ownership PASS; workflow_ci PASS; type_design PASS; silent_failure PASS; test_adequacy PASS; security NO_FINDINGS; cross_model_challenge DEGRADED; runtime_uat PASS.
+- Cross-model: NO new run; prior compatibility receipt `62/0` reused.
 <!-- /section:panel-coverage -->
 
 <!-- section:runtime-verification -->
@@ -144,11 +129,10 @@ runtime_checks_count: 8
 
 | Probe | Command/surface | Result | Verdict |
 |---|---|---|---|
-| blocker authority | shadow typed-interactive seam | `35/0`; sole canonical decision | PASS |
-| confirmation/post gate | decisionless and event-edited mutations | both rejected | PASS |
-| G5 provenance | benchmark interactive gates | `30/0`; forged raw/control/units rejected | PASS |
-| compatibility | six execute full-suite receipts | `279/0`, `155/0`, `135/0`, `62/0`, `43/0`, `34/0` | PASS |
-| static/canon | ShellCheck, syntax, diff, term scan | no failure or stale counter/replay term | PASS |
+| blocker evidence | shadow typed-interactive seam | fresh `46/0` | PASS |
+| static | ShellCheck, Bash syntax, diff-check | all zero | PASS |
+| scope/canon | bounded positive-addition scan and execute receipt | no PR3 authority; canon aligned | PASS |
+| regression | prior full-suite receipts | `155/0`, `279/0`, `135/0`, `62/0`, `43/0`, `34/0` | PASS |
 
 Preflight: CLI dependencies available; dev server, API, browser, and render checks are not applicable.
 <!-- /section:runtime-verification -->
@@ -156,7 +140,7 @@ Preflight: CLI dependencies available; dev server, API, browser, and render chec
 <!-- section:intent-match-findings -->
 ## Intent Match Findings
 
-- I1-I7 and G1-G5 now match: typed authority remains closed through post, and the G5 treatment/control comparison is corpus-bound without mislabeling replay as a full review.
+- D5/DC-7 now matches: valid independent confirmed-blocker evidence preserves REQUEST_CHANGES during invalid typed decision production, while every unbound or inconsistent form fails closed.
 <!-- /section:intent-match-findings -->
 
 <!-- section:hand-off-to-review -->
@@ -164,8 +148,8 @@ Preflight: CLI dependencies available; dev server, API, browser, and render chec
 
 - verify_verdict: passed
 - blocking_issues: none
-- source_head: `84c2ca3ebd58a35cd9727ef20bc11d6f65983a96`
-- canonical_docs_touched: PRODUCT, ARCHITECTURE, plugin README/CLAUDE, runtime docs/reference
+- implementation_source: `65a723c836b16743f6c8728517632d3e8b96eb62`
+- verification_head: `cfceeabc725c8c5d09347791e01b321841b1d261`
 - render_fidelity_status: not-applicable
 <!-- /section:hand-off-to-review -->
 
