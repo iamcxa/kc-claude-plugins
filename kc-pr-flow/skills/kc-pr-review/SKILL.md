@@ -1273,8 +1273,17 @@ review_interactive_sample_mode() {
 review_interactive_prepare_confirmation() {
   local sampled_mode="$1"
   local legacy_event="$2"
-  shift 2
-  local decision rc
+  local confirmed_blockers_json="$3"
+  shift 3
+  local decision rc invalid_event
+
+  if ! printf '%s' "$confirmed_blockers_json" | jq -e '
+    type == "array" and
+    all(type == "string" and test("^[0-9a-f]{64}$")) and
+    (unique | length) == length
+  ' >/dev/null 2>&1; then
+    confirmed_blockers_json='[]'
+  fi
 
   if [ "$sampled_mode" != typed ]; then
     jq -S -c -n --arg event "$legacy_event" \
@@ -1312,14 +1321,22 @@ review_interactive_prepare_confirmation() {
     printf '%s' "$decision" | jq -S -c '
       {schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
        confirmation_required:true,effective_event:.effective_event,
-       capability_gap_refs:.capability_gap_refs,decision:.}'
+       capability_gap_refs:.capability_gap_refs,
+       confirmed_blocker_refs:.confirmed_blocker_refs,decision:.}'
     return
   fi
 
-  jq -S -c -n \
+  if [ "$(jq 'length' <<<"$confirmed_blockers_json")" -gt 0 ]; then
+    invalid_event='REQUEST_CHANGES'
+  else
+    invalid_event='COMMENT'
+  fi
+  jq -S -c -n --arg event "$invalid_event" \
+    --argjson blockers "$confirmed_blockers_json" \
     '{schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
-      confirmation_required:true,effective_event:"COMMENT",
-      capability_gap_refs:["typed-runtime-invalid"],decision:null}'
+      confirmation_required:true,effective_event:$event,
+      capability_gap_refs:["typed-runtime-invalid"],
+      confirmed_blocker_refs:$blockers,decision:null}'
 }
 # typed-interactive-recipe:end
 ```

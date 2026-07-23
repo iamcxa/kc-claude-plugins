@@ -66,7 +66,7 @@ if [ "${MOCK_TYPED_RESULT:-valid}" = malformed ]; then
   printf '%s\n' '{"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
   exit 0
 fi
-printf '%s\n' '{"approve_eligible":false,"capabilities":[],"capability_gap_refs":[],"confirmation_input":{"blocker_refs":["blocker-1"],"coverage_summary":"typed-derived","gap_refs":[],"identity_summary":"typed-derived","verdict_summary":"typed-derived"},"confirmed_blocker_refs":["blocker-1"],"coverage":"complete","effective_event":"REQUEST_CHANGES","mode":"typed","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
+printf '%s\n' '{"approve_eligible":false,"capabilities":[],"capability_gap_refs":[],"confirmation_input":{"blocker_refs":["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"],"coverage_summary":"typed-derived","gap_refs":[],"identity_summary":"typed-derived","verdict_summary":"typed-derived"},"confirmed_blocker_refs":["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"],"coverage":"complete","effective_event":"REQUEST_CHANGES","mode":"typed","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
 MOCK
   chmod 0700 "$mock_runtime"
   : >"$typed_log"
@@ -80,7 +80,7 @@ MOCK
     esac
     sampled="$(review_interactive_sample_mode)"
     assert_eq "$mode samples legacy before dispatch" legacy "$sampled"
-    result="$(review_interactive_prepare_confirmation "$sampled" COMMENT "$mock_runtime")"
+    result="$(review_interactive_prepare_confirmation "$sampled" COMMENT '[]' "$mock_runtime")"
     assert_eq "$mode preserves legacy confirmation source" legacy "$(jq -r '.source' <<<"$result")"
     assert_eq "$mode keeps confirmation mandatory" true "$(jq -r '.confirmation_required' <<<"$result")"
   done
@@ -91,20 +91,32 @@ MOCK
   sampled="$(review_interactive_sample_mode)"
   KC_PR_FLOW_REVIEW_TYPED=off
   export KC_PR_FLOW_REVIEW_TYPED
-  result="$(MOCK_TYPED_RESULT=valid review_interactive_prepare_confirmation "$sampled" COMMENT "$mock_runtime")"
+  result="$(MOCK_TYPED_RESULT=valid review_interactive_prepare_confirmation \
+    "$sampled" COMMENT '["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]' "$mock_runtime")"
   assert_eq 'enabled mode consumes typed authority' typed "$(jq -r '.source' <<<"$result")"
   assert_eq 'mid-run switch cannot change sampled typed mode' REQUEST_CHANGES "$(jq -r '.effective_event' <<<"$result")"
   assert_eq 'typed valid path keeps confirmation mandatory' true "$(jq -r '.confirmation_required' <<<"$result")"
   assert_eq 'typed valid path invokes runtime exactly once' 1 "$(wc -l <"$typed_log" | tr -d ' ')"
 
-  result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation "$sampled" APPROVE "$mock_runtime")"
+  result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
+    "$sampled" APPROVE '["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]' "$mock_runtime")"
   assert_eq 'typed invalid state stays typed instead of legacy fallback' typed "$(jq -r '.source' <<<"$result")"
-  assert_eq 'typed invalid state fails closed to COMMENT' COMMENT "$(jq -r '.effective_event' <<<"$result")"
+  assert_eq 'typed invalid state preserves confirmed blocker precedence' REQUEST_CHANGES \
+    "$(jq -r '.effective_event' <<<"$result")"
+  assert_eq 'typed invalid state preserves independent blocker references' \
+    ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff \
+    "$(jq -r '.confirmed_blocker_refs[0]' <<<"$result")"
   assert_eq 'typed invalid state exposes an explicit coverage gap' typed-runtime-invalid \
     "$(jq -r '.capability_gap_refs[0]' <<<"$result")"
   assert_eq 'typed invalid path keeps confirmation mandatory' true "$(jq -r '.confirmation_required' <<<"$result")"
-  result="$(MOCK_TYPED_RESULT=malformed review_interactive_prepare_confirmation "$sampled" APPROVE "$mock_runtime")"
-  assert_eq 'malformed typed decision also fails closed' COMMENT "$(jq -r '.effective_event' <<<"$result")"
+  result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
+    "$sampled" APPROVE '[]' "$mock_runtime")"
+  assert_eq 'typed invalid state without blockers has COMMENT ceiling' COMMENT \
+    "$(jq -r '.effective_event' <<<"$result")"
+  result="$(MOCK_TYPED_RESULT=malformed review_interactive_prepare_confirmation \
+    "$sampled" APPROVE '["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]' "$mock_runtime")"
+  assert_eq 'malformed typed decision also preserves blocker precedence' REQUEST_CHANGES \
+    "$(jq -r '.effective_event' <<<"$result")"
   assert_eq 'no posting mutation occurs before confirmation' 0 "$(wc -c <"$mutation_log" | tr -d ' ')"
 }
 
