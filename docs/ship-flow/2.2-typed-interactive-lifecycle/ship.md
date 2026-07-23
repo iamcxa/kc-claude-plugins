@@ -17,6 +17,7 @@ Typed interactive review now derives coverage, approval eligibility, blocker pre
 - ratio: not available
 
 ### Verdict
+merge_method_intent: squash
 
 status: shipped
 stage_cost: not metered

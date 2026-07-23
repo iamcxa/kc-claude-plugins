@@ -1,6 +1,7 @@
 ---
 id: "2.2"
 title: "Typed interactive lifecycle"
+slug: typed-interactive-lifecycle
 pattern: shaped-child
 parent_pitch: "2"
 harvest_required: true
@@ -23,6 +24,7 @@ stage_outputs:
   review: review.md
   ship: ship.md
 pr: "#50"
+closeout_owner: true
 ---
 
 ### Vertical Slice
