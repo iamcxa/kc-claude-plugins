@@ -19,6 +19,7 @@ stage_outputs:
   design: design.md
   plan: plan.md
   execute: execute.md
+  verify: verify.md
 ---
 
 ### Vertical Slice
