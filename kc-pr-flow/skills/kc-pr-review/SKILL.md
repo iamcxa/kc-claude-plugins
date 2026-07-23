@@ -1270,6 +1270,96 @@ review_interactive_sample_mode() {
   esac
 }
 
+review_interactive_decision_valid() {
+  local decision_json="$1"
+  local expected_blockers_json="${2:-[]}"
+  printf '%s' "$decision_json" | jq -e --argjson expected_blockers "$expected_blockers_json" '
+    def exact_keys($required):
+      ((keys - $required) | length) == 0 and
+      (($required - keys) | length) == 0;
+    def sha256: type == "string" and test("^[0-9a-f]{64}$");
+    def sha1: type == "string" and test("^[0-9a-f]{40}$");
+    def token: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
+    def identity:
+      type == "object" and
+      exact_keys(["base_sha","config_hash","head_sha","pr_number","repository",
+                  "review_key","run_id"]) and
+      (.repository | type == "string" and
+        test("^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$")) and
+      (.pr_number | type == "number" and floor == . and . > 0) and
+      (.base_sha | sha1) and (.head_sha | sha1) and
+      (.config_hash | sha256) and (.review_key | sha256) and
+      (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$"));
+    def attempt:
+      type == "object" and
+      exact_keys(["lane_result_ref","ordinal","result"]) and
+      (.lane_result_ref | token) and
+      (.ordinal | type == "number" and floor == . and . > 0 and . <= 2) and
+      (.result == "succeeded" or .result == "transient_failure" or
+       .result == "terminal_failure" or .result == "unavailable");
+    def fallback:
+      type == "object" and exact_keys(["result","status"]) and
+      (.status == "not_needed" or .status == "provided" or
+       .status == "declined" or .status == "failed" or
+       .status == "unavailable") and
+      (if .status == "provided" then (.result | type == "object")
+       else .result == null end);
+    . as $decision |
+    type == "object" and
+    exact_keys(["approve_eligible","capabilities","capability_gap_refs",
+                "confirmation_input","confirmed_blocker_refs","coverage",
+                "effective_event","mode","review_identity","schema"]) and
+    .schema == "kc-pr-flow.interactive-collation-decision/v1" and
+    .mode == "typed" and (.review_identity | identity) and
+    (.capabilities | type == "array" and
+      (map(.capability) | unique | length) == length and
+      all(type == "object" and
+        exact_keys(["activation_condition","adapter_attempts","capability",
+                    "fallback","finding_refs","owner","required",
+                    "review_identity","schema","terminal_state"]) and
+        .schema == "kc-pr-flow.capability-terminal/v1" and
+        .review_identity == $decision.review_identity and
+        (.capability | token) and (.required | type == "boolean") and
+        .activation_condition ==
+          (if .required then "configured" else "observed_optional" end) and
+        .owner == "core-collator" and
+        (.adapter_attempts | type == "array" and length <= 2 and all(attempt)) and
+        (.fallback | fallback) and
+        (.finding_refs | type == "array" and all(sha256) and
+          (unique | length) == length) and
+        (.terminal_state == "clean" or .terminal_state == "findings" or
+         .terminal_state == "evidence_backed_na" or
+         .terminal_state == "incomplete_required" or
+         .terminal_state == "incomplete_optional") and
+        (if .terminal_state == "incomplete_required" then .required
+         elif .terminal_state == "incomplete_optional" then (.required | not)
+         else true end))) and
+    (.confirmed_blocker_refs | type == "array" and all(sha256) and
+      (unique | length) == length and . == ($expected_blockers | sort)) and
+    (.capability_gap_refs | type == "array" and all(token) and
+      (unique | length) == length and
+      . == ([$decision.capabilities[] |
+        select(.terminal_state == "incomplete_required") |
+        .capability] | sort)) and
+    (.confirmation_input | type == "object" and
+      exact_keys(["blocker_refs","coverage_summary","gap_refs",
+                  "identity_summary","verdict_summary"]) and
+      .identity_summary == "typed-derived" and
+      .coverage_summary == "typed-derived" and
+      .verdict_summary == "typed-derived" and
+      .blocker_refs == $decision.confirmed_blocker_refs and
+      .gap_refs == $decision.capability_gap_refs) and
+    .coverage ==
+      (if (.capability_gap_refs | length) == 0 then "complete" else "incomplete" end) and
+    .approve_eligible ==
+      ((.coverage == "complete") and
+       ((.confirmed_blocker_refs | length) == 0)) and
+    .effective_event ==
+      (if (.confirmed_blocker_refs | length) > 0 then "REQUEST_CHANGES"
+       elif .approve_eligible then "APPROVE" else "COMMENT" end)
+  ' >/dev/null 2>&1
+}
+
 review_interactive_prepare_confirmation() {
   local sampled_mode="$1"
   local legacy_event="$2"
@@ -1295,29 +1385,8 @@ review_interactive_prepare_confirmation() {
 
   decision="$(bash "$@" 2>/dev/null)"
   rc=$?
-  if [ "$rc" -eq 0 ] && printf '%s' "$decision" | jq -e '
-    type == "object" and
-    (keys | sort) ==
-      ["approve_eligible","capabilities","capability_gap_refs","confirmation_input",
-       "confirmed_blocker_refs","coverage","effective_event","mode","review_identity","schema"] and
-    .schema == "kc-pr-flow.interactive-collation-decision/v1" and
-    .mode == "typed" and
-    (.coverage == "complete" or .coverage == "incomplete") and
-    (.approve_eligible | type == "boolean") and
-    (.effective_event == "APPROVE" or .effective_event == "COMMENT" or
-      .effective_event == "REQUEST_CHANGES") and
-    (.capabilities | type == "array") and
-    (.confirmed_blocker_refs | type == "array") and
-    (.capability_gap_refs | type == "array") and
-    (.confirmation_input | type == "object") and
-    (if .effective_event == "APPROVE" then
-      .coverage == "complete" and .approve_eligible == true and
-      (.confirmed_blocker_refs | length) == 0 and
-      (.capability_gap_refs | length) == 0
-     elif .effective_event == "REQUEST_CHANGES" then
-      .approve_eligible == false and (.confirmed_blocker_refs | length) > 0
-     else .approve_eligible == false end)
-  ' >/dev/null 2>&1; then
+  if [ "$rc" -eq 0 ] &&
+    review_interactive_decision_valid "$decision" "$confirmed_blockers_json"; then
     printf '%s' "$decision" | jq -S -c '
       {schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
        confirmation_required:true,effective_event:.effective_event,
@@ -1337,6 +1406,43 @@ review_interactive_prepare_confirmation() {
       confirmation_required:true,effective_event:$event,
       capability_gap_refs:["typed-runtime-invalid"],
       confirmed_blocker_refs:$blockers,decision:null}'
+}
+
+review_interactive_apply_event_edit() {
+  local confirmation_json="$1"
+  local requested_event="$2"
+  case "$requested_event" in
+    APPROVE | COMMENT | REQUEST_CHANGES) ;;
+    *) return 3 ;;
+  esac
+  if ! printf '%s' "$confirmation_json" | jq -e '
+    type == "object" and .schema == "kc-pr-flow.interactive-confirmation/v1" and
+    .confirmation_required == true and
+    (.source == "legacy" or .source == "typed")
+  ' >/dev/null 2>&1; then
+    return 3
+  fi
+  if [ "$(jq -r '.source' <<<"$confirmation_json")" = legacy ]; then
+    jq -S -c --arg event "$requested_event" '.effective_event=$event' \
+      <<<"$confirmation_json"
+    return
+  fi
+  [ "$(jq -r '.effective_event' <<<"$confirmation_json")" = "$requested_event" ] ||
+    return 3
+  printf '%s\n' "$confirmation_json"
+}
+
+review_interactive_confirm_post() {
+  local confirmation_json="$1"
+  local requested_event="$2"
+  local confirmation_state="$3"
+  local gated
+  [ "$confirmation_state" = confirmed ] || return 3
+  gated="$(review_interactive_apply_event_edit \
+    "$confirmation_json" "$requested_event")" || return 3
+  jq -S -c -n --arg event "$requested_event" --argjson confirmation "$gated" \
+    '{schema:"kc-pr-flow.interactive-post-gate/v1",human_confirmed:true,
+      effective_event:$event,confirmation:$confirmation}'
 }
 # typed-interactive-recipe:end
 ```

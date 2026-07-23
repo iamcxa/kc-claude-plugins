@@ -66,6 +66,14 @@ if [ "${MOCK_TYPED_RESULT:-valid}" = malformed ]; then
   printf '%s\n' '{"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
   exit 0
 fi
+if [ "${MOCK_TYPED_RESULT:-valid}" = inconsistent ]; then
+  printf '%s\n' '{"approve_eligible":true,"capabilities":[],"capability_gap_refs":["required-gap"],"confirmation_input":{"blocker_refs":[],"coverage_summary":"typed-derived","gap_refs":[],"identity_summary":"typed-derived","verdict_summary":"typed-derived"},"confirmed_blocker_refs":[],"coverage":"complete","effective_event":"APPROVE","mode":"typed","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
+  exit 0
+fi
+if [ "${MOCK_TYPED_RESULT:-valid}" = approve ]; then
+  printf '%s\n' '{"approve_eligible":true,"capabilities":[],"capability_gap_refs":[],"confirmation_input":{"blocker_refs":[],"coverage_summary":"typed-derived","gap_refs":[],"identity_summary":"typed-derived","verdict_summary":"typed-derived"},"confirmed_blocker_refs":[],"coverage":"complete","effective_event":"APPROVE","mode":"typed","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
+  exit 0
+fi
 printf '%s\n' '{"approve_eligible":false,"capabilities":[],"capability_gap_refs":[],"confirmation_input":{"blocker_refs":["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"],"coverage_summary":"typed-derived","gap_refs":[],"identity_summary":"typed-derived","verdict_summary":"typed-derived"},"confirmed_blocker_refs":["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"],"coverage":"complete","effective_event":"REQUEST_CHANGES","mode":"typed","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.interactive-collation-decision/v1"}'
 MOCK
   chmod 0700 "$mock_runtime"
@@ -117,6 +125,31 @@ MOCK
     "$sampled" APPROVE '["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]' "$mock_runtime")"
   assert_eq 'malformed typed decision also preserves blocker precedence' REQUEST_CHANGES \
     "$(jq -r '.effective_event' <<<"$result")"
+  result="$(MOCK_TYPED_RESULT=inconsistent review_interactive_prepare_confirmation \
+    "$sampled" APPROVE '[]' "$mock_runtime")"
+  assert_eq 'same-schema identity and reference inconsistency fails closed' COMMENT \
+    "$(jq -r '.effective_event' <<<"$result")"
+  assert_eq 'same-schema inconsistent decision is not retained as authority' true \
+    "$(jq '.decision == null' <<<"$result")"
+
+  result="$(MOCK_TYPED_RESULT=valid review_interactive_prepare_confirmation \
+    "$sampled" COMMENT '["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]' "$mock_runtime")"
+  review_interactive_apply_event_edit "$result" APPROVE >/dev/null 2>&1
+  assert_eq 'typed blocker decision cannot be edited to APPROVE' 3 "$?"
+  result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
+    "$sampled" APPROVE '[]' "$mock_runtime")"
+  review_interactive_apply_event_edit "$result" APPROVE >/dev/null 2>&1
+  assert_eq 'typed invalid COMMENT ceiling cannot be edited to APPROVE' 3 "$?"
+
+  result="$(MOCK_TYPED_RESULT=approve review_interactive_prepare_confirmation \
+    "$sampled" COMMENT '[]' "$mock_runtime")"
+  review_interactive_confirm_post "$result" APPROVE pending >/dev/null 2>&1
+  assert_eq 'typed post gate requires explicit human confirmation' 3 "$?"
+  result="$(review_interactive_confirm_post "$result" APPROVE confirmed)"
+  assert_eq 'eligible typed APPROVE survives explicit human post gate' APPROVE \
+    "$(jq -r '.effective_event' <<<"$result")"
+  assert_eq 'post gate receipt records human confirmation' true \
+    "$(jq -r '.human_confirmed' <<<"$result")"
   assert_eq 'no posting mutation occurs before confirmation' 0 "$(wc -c <"$mutation_log" | tr -d ' ')"
 }
 
