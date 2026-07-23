@@ -117,12 +117,16 @@ run_interactive_decision_tests() {
   local run_id content_hash anchor candidate_id merge_key finding_id pointer candidate
   local task usage result finding behavior_hashes start lane_started observed lane_finished synthesized finished
   local types_task_one types_task_two types_result_one types_result_two types_started_one types_started_two types_finished_one types_finished_two
-  local interactive_head interactive_base interactive_key identity manual_clean manual_na
+  local interactive_head interactive_base interactive_key identity manual_clean manual_na review_config
+  local CONFIG_HASH
   local bad_policy bad_receipt mutated identity_case bad_repo bad_pr bad_base bad_head bad_config bad_key bad_run
   receipt="$TEST_INPUT_ROOT/interactive-terminal.jsonl"
   policy="$TEST_INPUT_ROOT/interactive-policy.json"
   repo="$TEST_INPUT_ROOT/interactive-repo"
   run_id='run-interactive-terminal'
+  review_config="$(review_runtime_config_canonical lite mixed false false false false \
+    'manual-clean,manual-na,required-gap,security,types')"
+  CONFIG_HASH="$(printf '%s' "$review_config" | review_runtime_sha256)"
   mkdir -p "$repo/src"
   git -C "$repo" init -q
   printf 'evidence bound review\n' >"$repo/src/review.sh"
@@ -215,26 +219,28 @@ run_interactive_decision_tests() {
       terminal_assessment:"evidence_backed_na",candidate_ids:[],evidence:[$evidence],recorded_by:"interactive-human",
       recorded_at:"2026-07-23T00:00:00Z"}')"
   jq -S -c -n --argjson identity "$identity" --argjson evidence "$pointer" \
+    --argjson review_config "$review_config" \
     --argjson manual_clean "$manual_clean" --argjson manual_na "$manual_na" --arg blocker "$finding_id" '
     {
       schema:"kc-pr-flow.capability-policy/v1",
       review_identity:$identity,
+      review_config:$review_config,
       confirmed_blocker_refs:[$blocker],
       obligations:[
-        {capability:"security",required:true,activation_condition:"always",
+        {capability:"security",required:true,activation_condition:"configured",
          adapter_attempts:[{ordinal:1,result:"succeeded",lane_result_ref:"security-1"}],
          evidence:[$evidence],fallback:{status:"not_needed",result:null},terminal_state:"findings"},
-        {capability:"types",required:true,activation_condition:"always",
+        {capability:"types",required:true,activation_condition:"configured",
          adapter_attempts:[{ordinal:1,result:"transient_failure",lane_result_ref:"types-1"},
                            {ordinal:2,result:"succeeded",lane_result_ref:"types-2"}],
          evidence:[$evidence],fallback:{status:"not_needed",result:null},terminal_state:"clean"},
-        {capability:"manual-clean",required:true,activation_condition:"always",adapter_attempts:[],
+        {capability:"manual-clean",required:true,activation_condition:"configured",adapter_attempts:[],
          evidence:[],fallback:{status:"provided",result:$manual_clean},terminal_state:"clean"},
-        {capability:"manual-na",required:true,activation_condition:"always",adapter_attempts:[],
+        {capability:"manual-na",required:true,activation_condition:"configured",adapter_attempts:[],
          evidence:[],fallback:{status:"provided",result:$manual_na},terminal_state:"evidence_backed_na"},
-        {capability:"required-gap",required:true,activation_condition:"always",adapter_attempts:[],
+        {capability:"required-gap",required:true,activation_condition:"configured",adapter_attempts:[],
          evidence:[],fallback:{status:"unavailable",result:null},terminal_state:"incomplete_required"},
-        {capability:"optional-gap",required:false,activation_condition:"always",adapter_attempts:[],
+        {capability:"optional-gap",required:false,activation_condition:"observed_optional",adapter_attempts:[],
          evidence:[],fallback:{status:"unavailable",result:null},terminal_state:"incomplete_optional"}
       ]
     }' >"$policy"
@@ -320,9 +326,11 @@ run_interactive_decision_tests() {
     assert_eq "$identity_case identity mutation fails closed" "3" "$?"
   done
 
-  for mutated in missing-obligation third-attempt missing-fallback-disposition invalid-fallback invalid-recorded-at fake-fallback-finding pointer pointer-base pointer-head pointer-review-key object content; do
+  for mutated in requiredness-downgrade activation-drift missing-obligation third-attempt missing-fallback-disposition invalid-fallback invalid-recorded-at fake-fallback-finding pointer pointer-base pointer-head pointer-review-key object content; do
     bad_policy="$TEST_INPUT_ROOT/$mutated-policy.json"
     case "$mutated" in
+      requiredness-downgrade) jq '.obligations[] |= if .capability=="security" then .required=false else . end' "$policy" >"$bad_policy" ;;
+      activation-drift) jq '.obligations[] |= if .capability=="security" then .activation_condition="optional" else . end' "$policy" >"$bad_policy" ;;
       missing-obligation) jq '.obligations |= map(select(.capability!="types"))' "$policy" >"$bad_policy" ;;
       third-attempt) jq '.obligations[] |= if .capability=="types" then .adapter_attempts += [{ordinal:3,result:"succeeded",lane_result_ref:"types-2"}] else . end' "$policy" >"$bad_policy" ;;
       missing-fallback-disposition) jq '.obligations[] |= if .capability=="required-gap" then .fallback={status:"not_needed",result:null} else . end' "$policy" >"$bad_policy" ;;

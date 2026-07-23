@@ -1889,6 +1889,7 @@ review_runtime_rehydrate_interactive() (
   local policy_file="$9" repository_path="${10}"
   local expected_review_key projection snapshot_dir policy_snapshot pointer_file
   local pointer_count pointer_index pointer identity_event manual_count manual_index recorded_at
+  local policy_config policy_config_hash
 
   review_runtime_repository_identity_valid "$repository" &&
     review_runtime_positive_safe_integer "$pr_number" &&
@@ -1921,6 +1922,15 @@ review_runtime_rehydrate_interactive() (
     review_runtime_interactive_invalid invalid_capability_policy
     return 3
   }
+  policy_config="$(jq -S -c '.review_config' "$policy_snapshot" 2>/dev/null)" || {
+    review_runtime_interactive_invalid invalid_capability_policy
+    return 3
+  }
+  policy_config_hash="$(printf '%s' "$policy_config" | review_runtime_sha256)" || return
+  [ "$policy_config_hash" = "$config_hash" ] || {
+    review_runtime_interactive_invalid capability_policy_config_mismatch
+    return 3
+  }
   if ! printf '%s' "$projection" | jq -e \
     --arg repository "$repository" --argjson pr_number "$pr_number" \
     --arg base_sha "$base_sha" --arg head_sha "$head_sha" \
@@ -1933,6 +1943,24 @@ review_runtime_rehydrate_interactive() (
       def sha1: type == "string" and test("^[0-9a-f]{40}$");
       def token: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
       def run_token: type == "string" and test("^run-[A-Za-z0-9._-]+$");
+      def review_config:
+        type == "object" and
+        exact_keys(["capabilities","modes","schema"]; []) and
+        .schema == "kc-pr-flow.review-config/v1" and
+        (.capabilities | type == "array" and all(token) and
+          . == (sort | unique)) and
+        (.modes | type == "object" and
+          exact_keys(["agent_tier","cross_model","full_pass","noise_filter",
+                      "pr_archetype","probe_required"]; []) and
+          (.agent_tier == "lite" or .agent_tier == "standard" or .agent_tier == "full") and
+          (.pr_archetype == "bugfix" or .pr_archetype == "cross_stack" or
+           .pr_archetype == "docs" or .pr_archetype == "feature" or
+           .pr_archetype == "mixed" or .pr_archetype == "refactor" or
+           .pr_archetype == "style") and
+          (.full_pass | type == "boolean") and
+          (.probe_required | type == "boolean") and
+          (.cross_model | type == "boolean") and
+          (.noise_filter | type == "boolean"));
       def identity:
         type == "object" and
         exact_keys(["base_sha","config_hash","head_sha","pr_number","repository","review_key","run_id"]; []) and
@@ -1982,8 +2010,9 @@ review_runtime_rehydrate_interactive() (
       [$projection.run.repository,$projection.run.pr_number,$projection.run.base_sha,$projection.run.head_sha,
        $projection.run.config_hash,$projection.run.review_key,$projection.run.run_id] ==
       [$repository,$pr_number,$base_sha,$head_sha,$config_hash,$review_key,$run_id] and
-      ($p | type == "object" and exact_keys(["confirmed_blocker_refs","obligations","review_identity","schema"]; []) and
+      ($p | type == "object" and exact_keys(["confirmed_blocker_refs","obligations","review_config","review_identity","schema"]; []) and
         .schema == "kc-pr-flow.capability-policy/v1" and
+        (.review_config | review_config) and
         (.review_identity | identity) and
         [.review_identity.repository,.review_identity.pr_number,.review_identity.base_sha,.review_identity.head_sha,
          .review_identity.config_hash,.review_identity.review_key,.review_identity.run_id] ==
@@ -1993,6 +2022,7 @@ review_runtime_rehydrate_interactive() (
         (.confirmed_blocker_refs | type == "array" and all(sha256) and
           (unique | length) == length)) and
       ($p.obligations) as $obligations |
+      (($p.review_config.capabilities - [$obligations[].capability]) | length == 0) and
       ((([$projection.lanes[].capability] | unique) - [$obligations[].capability]) | length == 0) and
       all($p.confirmed_blocker_refs[]; . as $finding_id |
         any($projection.findings[]; .finding_id == $finding_id)) and
@@ -2000,6 +2030,11 @@ review_runtime_rehydrate_interactive() (
         ([$projection.lanes[].result.lane_id] | sort) and
       all($obligations[];
         . as $obligation |
+        (.capability as $capability |
+          ($p.review_config.capabilities | index($capability)) != null) as $configured |
+        .required == $configured and
+        .activation_condition ==
+          (if $configured then "configured" else "observed_optional" end) and
         all(.adapter_attempts[];
           . as $attempt |
           any($projection.lanes[];
