@@ -13,7 +13,7 @@ domain: schema
 depends_on:
   - "2.1"
 started: 2026-07-23T02:33:13Z
-status: plan
+status: execute
 stage_outputs:
   shape: shape.md
   design: design.md
