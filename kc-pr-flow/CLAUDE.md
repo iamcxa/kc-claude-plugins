@@ -50,8 +50,10 @@ verifies evidence, and derives the closed `InteractiveCollationDecision/v1`. The
 capability coverage, approval eligibility, event precedence, and confirmation input only. Required
 gaps cap the event at COMMENT, while blockers in that validated decision require REQUEST_CHANGES.
 It has no posting or GitHub authority, and both typed and legacy modes preserve mandatory human
-confirmation. Typed invalid or incomplete state has no separate blocker authority and fails closed
-at COMMENT without an in-run legacy fallback.
+confirmation. Invalid typed decision production may preserve REQUEST_CHANGES only through a
+complete independently confirmed blocker-evidence receipt bound to the exact review identity.
+Missing, malformed, drifted, or decision-inconsistent evidence fails closed at COMMENT with no
+blockers and no in-run legacy fallback.
 
 Terminal rehydration is local and read-only: no append, resume, recovery, retention, model, network,
 authorization, or remote mutation. Benchmark promotion is ordered G1-G5, requires zero lost

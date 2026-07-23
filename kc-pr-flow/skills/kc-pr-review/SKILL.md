@@ -1646,6 +1646,15 @@ authorization, idempotency, resume, lock-recovery, retention, or daemon surface.
 renders the existing mandatory §6c gate. It must not call `gh`, post a review, create a pending
 payload, or mutate any remote or accepted state.
 
+Typed callers pass the sampled mode, legacy event, exact current review identity, and either
+`null` or one closed `kc-pr-flow.confirmed-blocker-evidence/v1` receipt before the runtime command.
+The receipt binds unique finding IDs and their evidence hashes to the exact repository, PR, base,
+head, config, review key, run, and explicit human confirmation. A valid decision remains primary
+authority. If typed decision production fails, only a valid matching receipt may preserve
+`REQUEST_CHANGES`; absent, malformed, bare-array, hash-drifted, or identity-drifted evidence yields
+`COMMENT` with no blockers. Parallel evidence inconsistent with a valid decision invalidates the
+whole typed confirmation. The same validator protects event editing and the post gate.
+
 ### 6c. User confirmation gate
 
 **GATE — Do not post without user confirmation.** Always present both tables and then offer structured options:

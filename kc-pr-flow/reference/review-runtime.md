@@ -187,7 +187,15 @@ Normal receipt mutation is fail closed: unavailable safe-I/O support, unsafe sto
 
 The production shadow seam is deliberately fail open because it has no behavioral authority. An unset gate performs no runtime call. When enabled, a failed dependency, invalid receipt, stale head, missing state, or observer error may produce one diagnostic outside the review body, then the byte-identical legacy draft, comments, options, event, confirmation, and posting flow continue. Shadow status must never cause a retry, another model dispatch, a content rewrite, or a GitHub mutation.
 
-Typed mode is fail closed within the selected invocation. Invalid typed state produces an explicit COMMENT ceiling and carries no independent blocker authority. A validated closed decision is the sole typed source of confirmed blockers and may require REQUEST_CHANGES. Typed state cannot approve by falling back to legacy, and a decisionless confirmation cannot pass the post gate. Both modes still require the existing human confirmation and a valid closed post-gate receipt before any GitHub action.
+Typed mode is fail closed within the selected invocation. A validated closed decision is primary
+typed authority and may require REQUEST_CHANGES. If decision production is invalid, only a complete
+`confirmed-blocker-evidence/v1` receipt bound to the exact repository, PR, base, head, config,
+review key, and run may preserve independently confirmed blockers and pass a decisionless
+REQUEST_CHANGES post gate. Missing, malformed, bare-array, hash-drifted, or identity-drifted
+evidence produces COMMENT with no blockers. Evidence inconsistent with a valid decision
+invalidates the whole typed confirmation. Typed state cannot approve by falling back to legacy.
+Both modes still require the existing human confirmation and a valid closed post-gate receipt
+before any GitHub action.
 
 ## Operational inspection
 

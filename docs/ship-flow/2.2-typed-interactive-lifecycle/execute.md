@@ -43,6 +43,20 @@ The final parallel regression repeated all six suites: runtime `279/0`, shadow `
 
 Round 3 keeps one typed blocker authority: a semantically valid closed decision. Invalid or decisionless typed state carries no bare blocker list and cannot pass the post gate. Branch B now uses a corpus-owned `local-measurement-binding/v1` over raw terminal, decision, and designed-full-review control artifacts plus `canonical-artifact-bytes/v1` units; resealed numbers and replay-output controls are ineligible.
 
+#### Verify-Return Round 4
+
+| Repair | RED | GREEN | Commit |
+|---|---|---|---|
+| Preserve independently confirmed blockers through a complete exact-identity evidence receipt | shadow focused `35/11` | shadow focused `46/0`; full shadow `155/0`; runtime `279/0`; Bash syntax and ShellCheck pass | `91268e6` |
+
+Round 4 corrects the Round 3 overreach without restoring a bare blocker array. A closed
+`confirmed-blocker-evidence/v1` receipt binds unique finding IDs and evidence hashes to the exact
+repository, PR, base, head, config, review key, run, and human confirmation. Invalid decision
+production may retain REQUEST_CHANGES only through that receipt. Missing, malformed, hash-drifted,
+or identity-drifted evidence yields COMMENT with no blockers; evidence inconsistent with a valid
+decision invalidates the entire typed confirmation. The same centralized validator protects event
+editing and the post gate.
+
 - frontend_smoke: N/A; no UI surface changed.
 - versioning: no plugin version bump; release metadata remains unchanged.
 - posting/mutation: no GitHub review, posting, recovery, or daemon authority added.
@@ -55,7 +69,7 @@ Round 3 keeps one typed blocker authority: a semantically valid closed decision.
 - T1 review found incomplete capability-policy and fallback binding; T2 review found same-schema malformed decisions could fail silently; both were corrected before commit.
 - T3 review rejected self-asserted local cost numbers. The final Branch B accepts only the scorer-owned `measure-local` producer receipt, executes terminal rehydration without using replay as its control, and binds decision, exact-head, run, receipt, raw-event, and designed-full-rerun control artifacts with explicit zero model and remote calls.
 - Verify round 1 found four bounded contract defects: config-independent requiredness, blocker loss on typed failure, non-canonical confirmation validation/event escalation, and a non-executable Branch B cost claim. All four were repaired without crossing into entity 2.3 authority.
-- Verify round 2 proved that self-hashes were only consistency checks, not provenance, and that shallow confirmation validation left an alternate posting authority. Round 3 removed both alternate authorities and bound measurement evidence to the trusted paired corpus.
+- Verify round 2 proved that self-hashes were only consistency checks, not provenance, and that shallow confirmation validation left an unbound alternate posting authority. Round 3 removed those unbound authorities and bound measurement evidence to the trusted paired corpus. Round 4 restored the designed invalid-state blocker path only through a complete exact-identity evidence receipt.
 - The workflow referenced the pre-archive 2.1 location. T4 repaired every workflow reference and added current 2.2 path filters and ledger validation.
 - Scope did not drift. Resume, lock/PID recovery, predecessor lineage, retention, once-only posting, remote reconciliation, and daemon mutation remain owned by entity 2.3. No new issue is required.
 <!-- /section:issues-found -->
@@ -80,7 +94,7 @@ Round 3 keeps one typed blocker authority: a semantically valid closed decision.
 | DC-4 | PASS | Capability ownership is provider-neutral; unavailable usage remains null. |
 | DC-5 | PASS | All five terminal states, required/optional behavior, and silence-as-incomplete cases pass. |
 | DC-6 | PASS | Exactly one transient retry and evidence-bound manual fallback pass; third attempt fails. |
-| DC-7 | PASS | Required gaps forbid approval; confirmed blockers preserve REQUEST_CHANGES precedence. |
+| DC-7 | PASS | Required gaps forbid approval; decision-bound blockers or a complete exact-identity blocker-evidence receipt preserve REQUEST_CHANGES precedence. |
 | DC-8 | PASS | Typed and legacy paths both stop at mandatory confirmation with no prior mutation. |
 | DC-9 | PASS | Invalid, unsupported, incomplete, and same-schema malformed typed decisions fail closed. |
 | DC-10 | PASS | Off/unset/unknown/on and mid-run switch fixtures prove one pre-dispatch sample. |
@@ -95,18 +109,18 @@ Round 3 keeps one typed blocker authority: a semantically valid closed decision.
 status: passed
 stage_cost: not metered
 started_at: 2026-07-23T02:59:12Z
-completed_at: 2026-07-23T06:09:44Z
+completed_at: 2026-07-23T06:38:11Z
 
 <!-- section:execute-report-metrics -->
 ### Metrics
 
 status: passed
-duration_minutes: 191
-iteration_count: 4 task checkpoints plus 7 verify-return repairs
+duration_minutes: 219
+iteration_count: 4 task checkpoints plus 8 verify-return repairs
 task_count: 4
 tasks_done: 4
 tasks_blocked: 0
-commit_count: 11
+commit_count: 13
 <!-- /section:execute-report-metrics -->
 <!-- /section:execute-report -->
 
