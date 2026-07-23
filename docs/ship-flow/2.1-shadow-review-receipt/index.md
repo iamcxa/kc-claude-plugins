@@ -11,12 +11,13 @@ design_required: true
 contract_decision_required: false
 domain: schema
 depends_on: []
-status: execute
+status: verify
 stage_outputs:
-  shape: shape.md
-  design: design.md
-  plan: plan.md
-  execute: execute.md
+    shape: shape.md
+    design: design.md
+    plan: plan.md
+    execute: execute.md
+started: 2026-07-23T01:31:40Z
 ---
 
 ### Vertical Slice
