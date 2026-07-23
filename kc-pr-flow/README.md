@@ -69,8 +69,10 @@ The paired benchmark validates exact-head review keys, evidence-bound candidates
 canonical receipt identities, and any local rehydration measurement receipt. Promotion evaluates
 validity, coverage, behavior parity, and zero lost expected must-fix findings before either a median
 reported token reduction of at least 20% or a median local terminal-collation cost no greater than
-60%. Local measurements must bind the recomputed decision to the terminal receipt and prove zero
-model and remote calls. Resume, once-only posting, remote reconciliation, robust lock recovery,
+60%. A local measurement binds the raw terminal artifact, recomputed decision, and captured
+designed-full-review control receipt through `local-measurement-binding/v1`. The producer applies
+`canonical-artifact-bytes/v1` to both treatment and control, invokes no replay/model/remote work,
+and the scorer rejects resealed units outside the corpus binding. Resume, once-only posting, remote reconciliation, robust lock recovery,
 verified predecessor lineage, retention, and daemon mutation remain increment 2.3.
 
 Maintainer checks:

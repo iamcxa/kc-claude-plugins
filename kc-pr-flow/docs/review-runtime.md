@@ -241,7 +241,9 @@ The report also contains an ordered promotion verdict:
 4. G4: zero lost expected must-fix findings.
 5. G5: either median complete same-provider/scope reported token reduction of at least 20%, or median local terminal-collation cost no greater than 60% of a full review rerun.
 
-For the local branch, pass `--local-costs <measurement-receipt.json>`. Each observation must bind its run, review key, terminal receipt ID and content hash, and a recomputed closed interactive decision to the paired corpus. It must describe one fresh `terminal-collator-rehydration` invocation with zero model and remote calls. Unbound numbers, copied identities, tampered decisions, and later efficiency evidence cannot produce a passing verdict.
+For the local branch, first capture one closed `full-review-rerun-control/v1` receipt from the designed full rerun. It records the exact review identity, the sanitized full-review artifact hash, and that artifact's `canonical-artifact-bytes/v1` units. Add its hash, the raw terminal artifact hash, the expected decision hash, both unit values, and their canonical binding hash to the pair's `local-measurement-binding/v1`.
+
+Run the executable producer with `measure-local --runtime ... --target ... --event-file ... --control-file ... --policy-file ... --repo-worktree ...`, then pass its receipt through `--local-costs`. The producer safe-snapshots both artifacts, invokes only fresh `rehydrate-interactive`, counts the canonical decision bytes with the same counter, and requires every measured value to equal the target binding. The scorer rechecks decision, producer, measurement-binding, run, review, receipt, raw-event, and control hashes against the paired corpus. Unbound or caller-resealed numbers, copied identities, replay-output controls, tampered decisions, and later efficiency evidence cannot produce a passing verdict.
 
 ## Deferred capabilities
 

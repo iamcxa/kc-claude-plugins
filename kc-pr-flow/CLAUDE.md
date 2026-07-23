@@ -48,14 +48,17 @@ the rejected bytes.
 that fresh invocation. Typed mode accepts one complete terminal exact-identity receipt, replays it,
 verifies evidence, and derives the closed `InteractiveCollationDecision/v1`. The projection owns
 capability coverage, approval eligibility, event precedence, and confirmation input only. Required
-gaps cap the event at COMMENT unless confirmed blockers require REQUEST_CHANGES. It has no posting
-or GitHub authority, and both typed and legacy modes preserve mandatory human confirmation. Typed
-invalid or incomplete state fails closed without an in-run legacy fallback.
+gaps cap the event at COMMENT, while blockers in that validated decision require REQUEST_CHANGES.
+It has no posting or GitHub authority, and both typed and legacy modes preserve mandatory human
+confirmation. Typed invalid or incomplete state has no separate blocker authority and fails closed
+at COMMENT without an in-run legacy fallback.
 
 Terminal rehydration is local and read-only: no append, resume, recovery, retention, model, network,
 authorization, or remote mutation. Benchmark promotion is ordered G1-G5, requires zero lost
 expected must-fix findings before efficiency, and admits only the documented 20% reported-token or
-60% bound local-rehydration branch. Crash-safe recovery, predecessor lineage, append/compaction,
+60% bound local-rehydration branch. Its executable local producer binds raw terminal, decision,
+and designed-full-review control artifacts and applies `canonical-artifact-bytes/v1` to treatment
+and control; replay output is not a full-rerun control. Crash-safe recovery, predecessor lineage, append/compaction,
 resume, retention, once-only posting, reconciliation, and daemon mutation remain increment 2.3.
 
 Maintainer checks:

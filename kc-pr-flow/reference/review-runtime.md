@@ -165,11 +165,21 @@ The paired scorer is a separate source-safe CLI:
 bash scripts/review-runtime-benchmark.sh score \
   --corpus <sanitized-pairs.jsonl> \
   [--local-costs <bound-rehydration-measurements.json>]
+
+bash scripts/review-runtime-benchmark.sh measure-local \
+  --runtime scripts/review-runtime.sh \
+  --target <local-measurement-target.json> \
+  --event-file <terminal-events.jsonl> \
+  --control-file <full-review-rerun-control.json> \
+  --policy-file <capability-policy.json> \
+  --repo-worktree <reviewed-worktree>
 ```
 
 It snapshots and validates a closed `kc-pr-flow.review-benchmark-pair/v1` corpus and emits a deterministic `kc-pr-flow.review-benchmark-report/v1` with one ordered promotion report. Each pair recomputes the exact-head review key. Each arm recomputes candidate fingerprints and run-bound candidate IDs, then `content_sha256` over canonical behavior, lanes, candidates, findings, uncertain candidate refs, and usage, followed by `receipt_id = sha256(run_id|review_key|content_sha256)`. Expected and observed findings must resolve through candidates with the same evidence hash before recall is scored.
 
-Promotion is fail-closed and ordered: G1 valid bound inputs, G2 complete required capability coverage, G3 external behavior parity, G4 zero lost expected must-fix findings, then G5 efficiency. G5 branch A requires complete same-provider/scope reported usage and median token reduction of at least 20%. Branch B requires median local terminal-collation cost no greater than 60% of a full rerun. Every Branch B observation binds run, review, receipt ID, receipt content hash, and a recomputed closed interactive decision to the paired terminal receipt and declares a fresh `terminal-collator-rehydration` operation with zero model and remote calls. Later gates cannot repair an earlier failure.
+Promotion is fail-closed and ordered: G1 valid bound inputs, G2 complete required capability coverage, G3 external behavior parity, G4 zero lost expected must-fix findings, then G5 efficiency. G5 branch A requires complete same-provider/scope reported usage and median token reduction of at least 20%. Branch B requires median local terminal-collation cost no greater than 60% of a designed full rerun.
+
+Branch B uses one optional corpus-owned `local-measurement-binding/v1`. The binding covers the raw terminal artifact SHA, recomputed decision SHA, `full-review-rerun-control/v1` SHA, treatment and control units, `canonical-artifact-bytes/v1`, and a canonical binding SHA. The control receipt is captured from the designed full rerun and records the sanitized full-review artifact SHA and its canonical byte units. `measure-local` safe-snapshots the raw receipt and control, invokes only fresh `rehydrate-interactive`, counts the canonical decision bytes, and emits zero model and remote calls. It does not invoke replay as a full-rerun substitute. The scorer independently rechecks the decision, producer, and measurement-binding hashes and requires every observation field to equal the paired binding, so a caller-resealed self-hash or arbitrary unit value is ineligible. Later gates cannot repair an earlier failure.
 
 ## Failure policy
 
@@ -177,7 +187,7 @@ Normal receipt mutation is fail closed: unavailable safe-I/O support, unsafe sto
 
 The production shadow seam is deliberately fail open because it has no behavioral authority. An unset gate performs no runtime call. When enabled, a failed dependency, invalid receipt, stale head, missing state, or observer error may produce one diagnostic outside the review body, then the byte-identical legacy draft, comments, options, event, confirmation, and posting flow continue. Shadow status must never cause a retry, another model dispatch, a content rewrite, or a GitHub mutation.
 
-Typed mode is fail closed within the selected invocation. Invalid typed state produces an explicit COMMENT ceiling unless confirmed blockers require REQUEST_CHANGES. It cannot approve and cannot silently use the legacy result. Both modes still require the existing human confirmation before any GitHub action.
+Typed mode is fail closed within the selected invocation. Invalid typed state produces an explicit COMMENT ceiling and carries no independent blocker authority. A validated closed decision is the sole typed source of confirmed blockers and may require REQUEST_CHANGES. Typed state cannot approve by falling back to legacy, and a decisionless confirmation cannot pass the post gate. Both modes still require the existing human confirmation and a valid closed post-gate receipt before any GitHub action.
 
 ## Operational inspection
 
