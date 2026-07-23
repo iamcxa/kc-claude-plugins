@@ -16,12 +16,12 @@ CASE='all'
 if [ "${1:-}" = '--case' ] && [ "$#" -eq 2 ]; then
   CASE="$2"
 elif [ "$#" -ne 0 ]; then
-  printf 'usage: review-runtime-benchmark.test.sh [--case authority-binding|path-replacement]\n' >&2
+  printf 'usage: review-runtime-benchmark.test.sh [--case authority-binding|path-replacement|interactive-gates]\n' >&2
   exit 2
 fi
 
 case "$CASE" in
-  all|authority-binding|path-replacement) ;;
+  all|authority-binding|path-replacement|interactive-gates) ;;
   *)
     printf 'review-runtime-benchmark.test.sh: unknown case: %s\n' "$CASE" >&2
     exit 2
@@ -66,6 +66,109 @@ assert_rejected() { # $1=description $2=corpus
     fail "$description emits a typed validation error"
   fi
 }
+
+run_interactive_gates_case() {
+  local base_report costs_none costs_60 costs_61 costs_unbound costs_wrong_identity
+  local costs_wrong_operation costs_model_call costs_remote_call result repeated
+  local decision canonical_decision decision_hash costs_tampered_decision costs_tampered_hash
+  local costs_wrong_content costs_copied_ids copied_decision copied_decision_hash
+  local branch_a_20 branch_a_19 lost_recall g3_fail g2_fail g1_fail
+  local fixture_report
+  # shellcheck source=/dev/null
+  . "$BENCHMARK"
+  fixture_report="$("$BENCHMARK" score --corpus "$FIXTURE")"
+  assert_eq 'production scorer emits the ordered promotion report' \
+    kc-pr-flow.review-promotion-report/v1 "$(jq -r '.promotion.schema' <<<"$fixture_report")"
+  assert_eq 'production scorer evaluates gates in fixed order' g1,g2,g3,g4,g5 \
+    "$(jq -r '.promotion.gate_order | join(",")' <<<"$fixture_report")"
+  base_report='{"schema":"kc-pr-flow.review-benchmark-report/v1","pairs":[{"pair_id":"gate-pair","exact_head":{"repository":"acme/widgets","pr_number":42,"base_sha":"1111111111111111111111111111111111111111","head_sha":"2222222222222222222222222222222222222222","config_hash":"3333333333333333333333333333333333333333333333333333333333333333","review_key":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},"receipts":{"shadow":{"schema":"kc-pr-flow.review-receipt-identity/v1","run_id":"run-gate-shadow","review_key":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","receipt_id":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","content_sha256":"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}},"evidence_recall":{"expected_finding_ids":["must-fix"],"baseline":{"matched_finding_ids":["must-fix"]},"shadow":{"matched_finding_ids":["must-fix"]}},"lane_capability_coverage":{"shadow":{"incomplete_capabilities":[],"unavailable_capabilities":[]}},"external_behavior_parity":{"matches":true},"usage_comparability":{"comparable":false,"baseline":{"total_tokens":null},"shadow":{"total_tokens":null}}}]}'
+  costs_none='{"schema":"kc-pr-flow.local-rehydration-costs/v1","observations":[]}'
+  decision='{"schema":"kc-pr-flow.interactive-collation-decision/v1","review_identity":{"repository":"acme/widgets","pr_number":42,"base_sha":"1111111111111111111111111111111111111111","head_sha":"2222222222222222222222222222222222222222","config_hash":"3333333333333333333333333333333333333333333333333333333333333333","review_key":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","run_id":"run-gate-shadow"},"mode":"typed","coverage":"complete","approve_eligible":true,"effective_event":"APPROVE","capabilities":[],"confirmed_blocker_refs":[],"capability_gap_refs":[],"confirmation_input":{"identity_summary":"typed-derived","coverage_summary":"typed-derived","verdict_summary":"typed-derived","blocker_refs":[],"gap_refs":[]}}'
+  canonical_decision="$(printf '%s' "$decision" | jq -S -c .)"
+  decision_hash="$(printf '%s' "$canonical_decision" | review_benchmark_sha256)"
+  costs_60="$(jq -S -c -n --argjson decision "$decision" --arg decision_hash "$decision_hash" \
+    '{schema:"kc-pr-flow.local-rehydration-costs/v1",observations:[{
+      pair_id:"gate-pair",run_id:"run-gate-shadow",
+      review_key:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      terminal_receipt_id:"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      terminal_receipt_content_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      decision:$decision,decision_sha256:$decision_hash,
+      operation:"terminal-collator-rehydration",invocation:"fresh",model_calls:0,remote_calls:0,
+      terminal_rehydration_units:60,full_review_rerun_units:100
+    }]}')"
+  costs_61="$(jq -c '.observations[0].terminal_rehydration_units=61' <<<"$costs_60")"
+  costs_unbound='{"schema":"kc-pr-flow.local-rehydration-costs/v1","observations":[{"pair_id":"gate-pair","terminal_rehydration_units":60,"full_review_rerun_units":100}]}'
+  costs_wrong_identity="$(jq -c '.observations[0].terminal_receipt_id="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$costs_60")"
+  costs_wrong_content="$(jq -c '.observations[0].terminal_receipt_content_sha256="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$costs_60")"
+  costs_tampered_decision="$(jq -c '.observations[0].decision.effective_event="COMMENT"' <<<"$costs_60")"
+  costs_tampered_hash="$(jq -c '.observations[0].decision_sha256="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"' <<<"$costs_60")"
+  costs_copied_ids="$(jq -c '.observations[0].decision.review_identity.run_id="run-copied"' <<<"$costs_60")"
+  copied_decision="$(jq -S -c '.observations[0].decision' <<<"$costs_copied_ids")"
+  copied_decision_hash="$(printf '%s' "$copied_decision" | review_benchmark_sha256)"
+  costs_copied_ids="$(jq -c --arg hash "$copied_decision_hash" \
+    '.observations[0].decision_sha256=$hash' <<<"$costs_copied_ids")"
+  costs_wrong_operation="$(jq -c '.observations[0].operation="full-review-rerun"' <<<"$costs_60")"
+  costs_model_call="$(jq -c '.observations[0].model_calls=1' <<<"$costs_60")"
+  costs_remote_call="$(jq -c '.observations[0].remote_calls=1' <<<"$costs_60")"
+
+  branch_a_20="$(jq -c '.pairs[0].usage_comparability={comparable:true,provider_family:"claude",scope:"run",baseline:{total_tokens:100},shadow:{total_tokens:80}}' <<<"$base_report")"
+  result="$(review_benchmark_promotion_from_report "$branch_a_20" "$costs_none")"
+  assert_eq '20 percent reported token reduction passes branch A' pass "$(jq -r '.verdict' <<<"$result")"
+  assert_eq 'branch A is selected at the inclusive boundary' reported-token-reduction "$(jq -r '.gates.g5.selected_branch' <<<"$result")"
+  branch_a_19="$(jq -c '.pairs[0].usage_comparability={comparable:true,provider_family:"claude",scope:"run",baseline:{total_tokens:100},shadow:{total_tokens:81}}' <<<"$base_report")"
+  result="$(review_benchmark_promotion_from_report "$branch_a_19" "$costs_none")"
+  assert_eq '19 percent reported token reduction fails branch A' fail "$(jq -r '.verdict' <<<"$result")"
+
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_60")"
+  assert_eq '60 percent local terminal rehydration cost passes branch B' pass "$(jq -r '.verdict' <<<"$result")"
+  assert_eq 'branch B makes a local-cost claim only' local-terminal-rehydration "$(jq -r '.gates.g5.selected_branch' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_61")"
+  assert_eq '61 percent local terminal rehydration cost fails branch B' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_unbound")"
+  assert_eq 'unbound claimed local costs cannot promote branch B' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_wrong_identity")"
+  assert_eq 'costs bound to a different terminal receipt cannot promote branch B' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_wrong_content")"
+  assert_eq 'costs bound to different terminal receipt content cannot promote branch B' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_tampered_decision")"
+  assert_eq 'tampered decision content cannot promote branch B' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_tampered_hash")"
+  assert_eq 'tampered decision hash cannot promote branch B' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_copied_ids")"
+  assert_eq 'copied public pair IDs cannot bind a mismatched decision' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_wrong_operation")"
+  assert_eq 'non-collator operation costs cannot promote branch B' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_model_call")"
+  assert_eq 'model-backed rehydration costs cannot promote local-only branch B' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_remote_call")"
+  assert_eq 'remote-backed rehydration costs cannot promote local-only branch B' fail "$(jq -r '.verdict' <<<"$result")"
+
+  lost_recall="$(jq -c '.pairs[0].evidence_recall.shadow.matched_finding_ids=[]' <<<"$branch_a_20")"
+  result="$(review_benchmark_promotion_from_report "$lost_recall" "$costs_60")"
+  assert_eq 'lost must-fix recall stops before later passing efficiency data' g4 "$(jq -r '.failed_gate' <<<"$result")"
+  g3_fail="$(jq -c '.pairs[0].external_behavior_parity.matches=false' <<<"$branch_a_20")"
+  result="$(review_benchmark_promotion_from_report "$g3_fail" "$costs_60")"
+  assert_eq 'behavior parity failure stops before recall and efficiency' g3 "$(jq -r '.failed_gate' <<<"$result")"
+  g2_fail="$(jq -c '.pairs[0].lane_capability_coverage.shadow.incomplete_capabilities=["security"]' <<<"$branch_a_20")"
+  result="$(review_benchmark_promotion_from_report "$g2_fail" "$costs_60")"
+  assert_eq 'coverage safety failure stops before later gates' g2 "$(jq -r '.failed_gate' <<<"$result")"
+  g1_fail="$(jq -c '.schema="unknown"' <<<"$branch_a_20")"
+  result="$(review_benchmark_promotion_from_report "$g1_fail" "$costs_60")"
+  assert_eq 'invalid report identity stops at G1' g1 "$(jq -r '.failed_gate' <<<"$result")"
+
+  result="$(review_benchmark_promotion_from_report "$branch_a_20" "$costs_60")"
+  repeated="$(review_benchmark_promotion_from_report "$branch_a_20" "$costs_60")"
+  assert_eq 'promotion report is byte-stable across repeated evaluation' "$result" "$repeated"
+  assert_eq 'promotion report preserves fixed G1 through G5 order' g1,g2,g3,g4,g5 \
+    "$(jq -r '.gate_order | join(",")' <<<"$result")"
+}
+
+if [ "$CASE" = 'interactive-gates' ]; then
+  run_interactive_gates_case
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit
+fi
 
 arm_content_sha256() { # $1=arm JSON
   local canonical
@@ -471,7 +574,7 @@ awk '{line[NR]=$0} END {for (i=NR;i>0;i--) print line[i]}' "$FIXTURE" >"$TEST_RO
 reversed_report="$("$BENCHMARK" score --corpus "$TEST_ROOT/reversed.jsonl")"
 assert_eq "corpus input order does not change sorted report bytes" "$report" "$reversed_report"
 assert_eq "sanitized fixture has an exact expected report" \
-  "ba424ec4a677c26d1941f50be76c81ae51b7daea8176d26eff5683d7c1d94fa1" \
+  "605061c6e79b8062c1856626e0cf05957994d0df7d93ef2db395baecee9068c0" \
   "$(sha256_text "$report")"
 
 if jq -r '.. | strings' <<<"$report" | grep -Ei '(improved|release[_ -]?gate|pass[_ -]?threshold)' >/dev/null; then

@@ -272,9 +272,225 @@ review_benchmark_validate_authority() {
   done <<<"$records"
 }
 
+review_benchmark_promotion_from_report() {
+  local report_json="$1"
+  local costs_json="$2"
+  local decision_hashes_valid='true'
+  local observation_count=0 observation_index=0 decision expected_hash actual_hash
+
+  observation_count="$(jq -r '.observations | if type == "array" then length else 0 end' \
+    <<<"$costs_json" 2>/dev/null)" || decision_hashes_valid='false'
+  while [ "$decision_hashes_valid" = 'true' ] &&
+    [ "$observation_index" -lt "$observation_count" ]; do
+    decision="$(jq -S -c --argjson index "$observation_index" \
+      '.observations[$index].decision' <<<"$costs_json" 2>/dev/null)" ||
+      decision_hashes_valid='false'
+    expected_hash="$(jq -r --argjson index "$observation_index" \
+      '.observations[$index].decision_sha256 // empty' <<<"$costs_json" 2>/dev/null)" ||
+      decision_hashes_valid='false'
+    if [ "$decision_hashes_valid" = 'true' ]; then
+      actual_hash="$(printf '%s' "$decision" | review_benchmark_sha256)" ||
+        decision_hashes_valid='false'
+      [ "$actual_hash" = "$expected_hash" ] || decision_hashes_valid='false'
+    fi
+    observation_index=$((observation_index + 1))
+  done
+
+  jq -S -c -n --argjson report "$report_json" --argjson costs "$costs_json" \
+    --argjson decision_hashes_valid "$decision_hashes_valid" '
+    def exact_keys($required):
+      ((keys - $required) | length) == 0 and
+      (($required - keys) | length) == 0;
+    def sha256:
+      type == "string" and test("^[0-9a-f]{64}$");
+    def safe_token:
+      type == "string" and test("^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$");
+    def safe_number:
+      type == "number" and floor == . and . > 0 and . <= 9007199254740991;
+    def decision_valid($pair; $receipt):
+      type == "object" and
+      exact_keys(["approve_eligible","capabilities","capability_gap_refs",
+                  "confirmation_input","confirmed_blocker_refs","coverage",
+                  "effective_event","mode","review_identity","schema"]) and
+      .schema == "kc-pr-flow.interactive-collation-decision/v1" and
+      .mode == "typed" and
+      (.coverage == "complete" or .coverage == "incomplete") and
+      (.approve_eligible | type == "boolean") and
+      (.effective_event == "APPROVE" or .effective_event == "COMMENT" or
+       .effective_event == "REQUEST_CHANGES") and
+      (.capabilities | type == "array" and all(type == "object")) and
+      (.confirmed_blocker_refs | type == "array" and all(sha256)) and
+      (.capability_gap_refs | type == "array" and all(safe_token)) and
+      (.confirmation_input | type == "object" and
+        exact_keys(["blocker_refs","coverage_summary","gap_refs","identity_summary",
+                    "verdict_summary"]) and
+        .identity_summary == "typed-derived" and
+        .coverage_summary == "typed-derived" and
+        .verdict_summary == "typed-derived" and
+        (.blocker_refs | type == "array" and all(sha256)) and
+        (.gap_refs | type == "array" and all(safe_token))) and
+      (.review_identity | type == "object" and
+        exact_keys(["base_sha","config_hash","head_sha","pr_number","repository",
+                    "review_key","run_id"])) and
+      [.review_identity.repository,.review_identity.pr_number,
+       .review_identity.base_sha,.review_identity.head_sha,
+       .review_identity.config_hash,.review_identity.review_key,
+       .review_identity.run_id] ==
+      [$pair.exact_head.repository,$pair.exact_head.pr_number,
+       $pair.exact_head.base_sha,$pair.exact_head.head_sha,
+       $pair.exact_head.config_hash,$pair.exact_head.review_key,
+       $receipt.run_id];
+    def median:
+      sort as $values |
+      ($values | length) as $count |
+      if $count == 0 then null
+      elif ($count % 2) == 1 then $values[(($count / 2) | floor)]
+      else
+        (($values[($count / 2) - 1] + $values[$count / 2]) / 2)
+      end;
+    def report_valid:
+      type == "object" and
+      .schema == "kc-pr-flow.review-benchmark-report/v1" and
+      (.pairs | type == "array" and length > 0);
+    def costs_valid($pairs):
+      type == "object" and
+      .schema == "kc-pr-flow.local-rehydration-costs/v1" and
+      $decision_hashes_valid and
+      (.observations | type == "array") and
+      (.observations | all(
+        type == "object" and
+        (keys | sort) ==
+          ["decision","decision_sha256","full_review_rerun_units","invocation",
+           "model_calls","operation","pair_id","remote_calls","review_key","run_id",
+           "terminal_receipt_content_sha256","terminal_receipt_id",
+           "terminal_rehydration_units"] and
+        (.pair_id | safe_token) and
+        (.run_id | safe_token) and
+        (.review_key | type == "string" and test("^[0-9a-f]{64}$")) and
+        (.terminal_receipt_id | type == "string" and test("^[0-9a-f]{64}$")) and
+        (.terminal_receipt_content_sha256 | sha256) and
+        (.decision_sha256 | type == "string" and test("^[0-9a-f]{64}$")) and
+        .operation == "terminal-collator-rehydration" and
+        .invocation == "fresh" and
+        .model_calls == 0 and
+        .remote_calls == 0 and
+        (.terminal_rehydration_units | safe_number) and
+        (.full_review_rerun_units | safe_number) and
+        .terminal_rehydration_units <= .full_review_rerun_units and
+        (. as $observation |
+         any($pairs[];
+           . as $pair |
+           $pair.pair_id == $observation.pair_id and
+           $pair.receipts.shadow.run_id == $observation.run_id and
+           $pair.receipts.shadow.review_key == $observation.review_key and
+           $pair.exact_head.review_key == $observation.review_key and
+           $pair.receipts.shadow.receipt_id == $observation.terminal_receipt_id and
+           $pair.receipts.shadow.content_sha256 ==
+             $observation.terminal_receipt_content_sha256 and
+           ($observation.decision |
+             decision_valid($pair; $pair.receipts.shadow)))))) and
+      ((.observations | map(.pair_id) | unique | length) ==
+       (.observations | length));
+
+    (($report | report_valid) and
+      ($costs | costs_valid($report.pairs // []))) as $g1 |
+    (if $g1 then
+      all($report.pairs[];
+        (.lane_capability_coverage.shadow.incomplete_capabilities | type == "array" and length == 0) and
+        (.lane_capability_coverage.shadow.unavailable_capabilities | type == "array" and length == 0))
+     else false end) as $g2 |
+    (if $g1 and $g2 then
+      all($report.pairs[]; .external_behavior_parity.matches == true)
+     else false end) as $g3 |
+    (if $g1 and $g2 and $g3 then
+      [$report.pairs[] as $pair |
+       $pair.evidence_recall.expected_finding_ids[] as $finding_id |
+       select(($pair.evidence_recall.baseline.matched_finding_ids | index($finding_id)) != null) |
+       select(($pair.evidence_recall.shadow.matched_finding_ids | index($finding_id)) == null) |
+       {pair_id:$pair.pair_id,finding_id:$finding_id}]
+     else [] end) as $lost_must_fix |
+    (($g1 and $g2 and $g3) and ($lost_must_fix | length == 0)) as $g4 |
+    (if $g4 then
+      [$report.pairs[] |
+       select(.usage_comparability.comparable == true) |
+       select(.usage_comparability.baseline.total_tokens > 0) |
+       {
+         pair_id,
+         provider_family:.usage_comparability.provider_family,
+         scope:.usage_comparability.scope,
+         reduction_percent:
+           (((.usage_comparability.baseline.total_tokens -
+              .usage_comparability.shadow.total_tokens) * 100) /
+            .usage_comparability.baseline.total_tokens)
+       }]
+     else [] end) as $branch_a_observations |
+    ($branch_a_observations | map(.reduction_percent) | median) as $branch_a_median |
+    (($branch_a_observations | length) > 0 and $branch_a_median >= 20) as $branch_a_pass |
+    (if $g4 then
+      [$costs.observations[] |
+       {
+         pair_id,
+         cost_percent:
+           ((.terminal_rehydration_units * 100) / .full_review_rerun_units)
+       }]
+     else [] end) as $branch_b_observations |
+    ($branch_b_observations | map(.cost_percent) | median) as $branch_b_median |
+    (($branch_b_observations | length) > 0 and $branch_b_median <= 60) as $branch_b_pass |
+    (($branch_a_pass or $branch_b_pass) and $g4) as $g5 |
+    (if ($g1 | not) then "g1"
+     elif ($g2 | not) then "g2"
+     elif ($g3 | not) then "g3"
+     elif ($g4 | not) then "g4"
+     elif ($g5 | not) then "g5"
+     else null end) as $failed_gate |
+    {
+      schema:"kc-pr-flow.review-promotion-report/v1",
+      gate_order:["g1","g2","g3","g4","g5"],
+      verdict:(if $failed_gate == null then "pass" else "fail" end),
+      failed_gate:$failed_gate,
+      evaluated_through:(if $failed_gate == null then "g5" else $failed_gate end),
+      gates:{
+        g1:{passed:$g1},
+        g2:{evaluated:$g1,passed:$g2},
+        g3:{evaluated:($g1 and $g2),passed:$g3},
+        g4:{
+          evaluated:($g1 and $g2 and $g3),
+          passed:$g4,
+          lost_expected_must_fix_count:($lost_must_fix | length),
+          lost_expected_must_fix:$lost_must_fix
+        },
+        g5:{
+          evaluated:$g4,
+          passed:$g5,
+          selected_branch:
+            (if ($g4 | not) then null
+             elif $branch_a_pass then "reported-token-reduction"
+             elif $branch_b_pass then "local-terminal-rehydration"
+             else null end),
+          reported_token_reduction:{
+            eligible_pair_count:($branch_a_observations | length),
+            median_reduction_percent:$branch_a_median,
+            threshold_percent:20,
+            passed:($g4 and $branch_a_pass)
+          },
+          local_terminal_rehydration:{
+            eligible_pair_count:($branch_b_observations | length),
+            median_cost_percent:$branch_b_median,
+            maximum_percent:60,
+            passed:($g4 and $branch_b_pass),
+            claim:"local-cost-only"
+          }
+        }
+      }
+    }
+  '
+}
+
 review_benchmark_score() (
   local corpus_file="$1"
-  local snapshot_dir='' snapshot_file='' snapshot_rc
+  local local_costs_file="${2:-}"
+  local snapshot_dir='' snapshot_file='' costs_snapshot='' snapshot_rc
+  local base_report promotion costs_json
 
   review_benchmark_require_jq || return
   if [ ! -d "${TMPDIR:-/tmp}" ] || [ -L "${TMPDIR:-/tmp}" ]; then
@@ -290,7 +506,8 @@ review_benchmark_score() (
     return 74
   fi
   snapshot_file="$snapshot_dir/corpus.jsonl"
-  trap 'if [ -d "$snapshot_dir" ] && [ ! -L "$snapshot_dir" ]; then rm -f "$snapshot_file" 2>/dev/null || true; rmdir "$snapshot_dir" 2>/dev/null || true; fi' EXIT
+  costs_snapshot="$snapshot_dir/local-costs.json"
+  trap 'if [ -d "$snapshot_dir" ] && [ ! -L "$snapshot_dir" ]; then rm -f "$snapshot_file" "$costs_snapshot" 2>/dev/null || true; rmdir "$snapshot_dir" 2>/dev/null || true; fi' EXIT
   review_benchmark_snapshot_corpus "$corpus_file" "$snapshot_file"
   snapshot_rc=$?
   [ "$snapshot_rc" -eq 0 ] || return "$snapshot_rc"
@@ -302,8 +519,19 @@ review_benchmark_score() (
     printf 'review-runtime-benchmark: invalid canonical identity\n' >&2
     return 2
   fi
+  if [ -n "$local_costs_file" ]; then
+    review_benchmark_snapshot_corpus "$local_costs_file" "$costs_snapshot"
+    snapshot_rc=$?
+    [ "$snapshot_rc" -eq 0 ] || return "$snapshot_rc"
+    costs_json="$(jq -c . "$costs_snapshot" 2>/dev/null)" || {
+      printf 'review-runtime-benchmark: malformed local cost observations\n' >&2
+      return 2
+    }
+  else
+    costs_json='{"schema":"kc-pr-flow.local-rehydration-costs/v1","observations":[]}'
+  fi
 
-  jq -S -c -s '
+  base_report="$(jq -S -c -s '
     def intersection($left; $right):
       [$left[] as $item | select($right | index($item) != null) | $item] | unique | sort;
     def difference($left; $right):
@@ -395,19 +623,26 @@ review_benchmark_score() (
         usage_comparability:usage_comparison($pair.baseline.usage; $pair.shadow.usage)
       }))
     }
-  ' "$snapshot_file" || {
+  ' "$snapshot_file")" || {
     printf 'review-runtime-benchmark: malformed corpus\n' >&2
     return 2
   }
+  promotion="$(review_benchmark_promotion_from_report "$base_report" "$costs_json")" || {
+    printf 'review-runtime-benchmark: unable to evaluate promotion gates\n' >&2
+    return 2
+  }
+  jq -S -c -n --argjson report "$base_report" --argjson promotion "$promotion" \
+    '$report + {promotion:$promotion}'
 )
 
 review_benchmark_usage() {
-  printf '%s\n' 'usage: review-runtime-benchmark.sh score --corpus FILE' >&2
+  printf '%s\n' 'usage: review-runtime-benchmark.sh score --corpus FILE [--local-costs FILE]' >&2
 }
 
 review_benchmark_main() {
   local command="${1:-}"
   local corpus_file=''
+  local local_costs_file=''
   [ "$#" -gt 0 ] && shift
 
   if [ "$command" != 'score' ]; then
@@ -416,9 +651,12 @@ review_benchmark_main() {
   fi
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --corpus)
+      --corpus | --local-costs)
         [ "$#" -ge 2 ] || { review_benchmark_usage; return 2; }
-        corpus_file="$2"
+        case "$1" in
+          --corpus) corpus_file="$2" ;;
+          --local-costs) local_costs_file="$2" ;;
+        esac
         shift 2
         ;;
       *)
@@ -428,7 +666,7 @@ review_benchmark_main() {
     esac
   done
   [ -n "$corpus_file" ] || { review_benchmark_usage; return 2; }
-  review_benchmark_score "$corpus_file"
+  review_benchmark_score "$corpus_file" "$local_costs_file"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
