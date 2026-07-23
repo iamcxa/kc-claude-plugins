@@ -22,6 +22,7 @@ stage_outputs:
   verify: verify.md
   review: review.md
   ship: ship.md
+pr: "#50"
 ---
 
 ### Vertical Slice
