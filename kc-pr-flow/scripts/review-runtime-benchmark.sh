@@ -84,12 +84,21 @@ review_benchmark_receipt_id() {
   printf '%s|%s|%s' "$1" "$2" "$3" | review_benchmark_sha256
 }
 
+review_benchmark_measurement_binding_sha256() {
+  jq -S -c '{
+    counter,decision_sha256,full_review_control_sha256,
+    full_review_rerun_units,raw_event_sha256,terminal_rehydration_units
+  }' | review_benchmark_sha256
+}
+
 review_benchmark_measure_local() (
   local runtime="$1" target_file="$2" event_file="$3" policy_file="$4" repository_path="$5"
-  local snapshot_dir target_snapshot event_snapshot target_json fields
+  local control_file="$6"
+  local snapshot_dir target_snapshot event_snapshot control_snapshot target_json fields
   local pair_id repository pr_number base_sha head_sha config_hash review_key
-  local run_id receipt_id receipt_content_sha256 raw_event_sha256
+  local run_id receipt_id receipt_content_sha256 raw_event_sha256 control_sha256
   local treatment control treatment_units control_units observation producer_receipt_sha256
+  local measurement_binding measurement_binding_sha256
 
   review_benchmark_require_jq || return
   if [ ! -f "$runtime" ] || [ -L "$runtime" ] || [ ! -r "$runtime" ]; then
@@ -103,9 +112,11 @@ review_benchmark_measure_local() (
   snapshot_dir="$(mktemp -d "${TMPDIR:-/tmp}/kc-pr-flow-local-measurement.XXXXXX")" || return 74
   target_snapshot="$snapshot_dir/target.json"
   event_snapshot="$snapshot_dir/event.jsonl"
-  trap 'rm -f "$target_snapshot" "$event_snapshot" 2>/dev/null || true; rmdir "$snapshot_dir" 2>/dev/null || true' EXIT
+  control_snapshot="$snapshot_dir/control.json"
+  trap 'rm -f "$target_snapshot" "$event_snapshot" "$control_snapshot" 2>/dev/null || true; rmdir "$snapshot_dir" 2>/dev/null || true' EXIT
   review_benchmark_snapshot_corpus "$target_file" "$target_snapshot" || return
   review_benchmark_snapshot_corpus "$event_file" "$event_snapshot" || return
+  review_benchmark_snapshot_corpus "$control_file" "$control_snapshot" || return
   target_json="$(jq -S -c '
     def exact_keys($required):
       ((keys - $required) | length) == 0 and (($required - keys) | length) == 0;
@@ -114,7 +125,8 @@ review_benchmark_measure_local() (
     def token: type == "string" and test("^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$");
     . as $target |
     select(
-      type == "object" and exact_keys(["exact_head","pair_id","receipt","schema"]) and
+      type == "object" and
+      exact_keys(["exact_head","measurement_binding","pair_id","receipt","schema"]) and
       .schema == "kc-pr-flow.local-measurement-target/v1" and (.pair_id | token) and
       (.exact_head | type == "object" and
         exact_keys(["base_sha","config_hash","head_sha","pr_number","repository","review_key"]) and
@@ -127,7 +139,17 @@ review_benchmark_measure_local() (
         .schema == "kc-pr-flow.review-receipt-identity/v1" and
         (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$")) and
         (.review_key | sha256) and (.receipt_id | sha256) and (.content_sha256 | sha256) and
-        .review_key == $target.exact_head.review_key)
+        .review_key == $target.exact_head.review_key) and
+      (.measurement_binding | type == "object" and
+        exact_keys(["counter","decision_sha256","full_review_control_sha256",
+                    "full_review_rerun_units","measurement_binding_sha256",
+                    "raw_event_sha256","schema","terminal_rehydration_units"]) and
+        .schema == "kc-pr-flow.local-measurement-binding/v1" and
+        .counter == "canonical-artifact-bytes/v1" and
+        (.decision_sha256 | sha256) and (.full_review_control_sha256 | sha256) and
+        (.raw_event_sha256 | sha256) and (.measurement_binding_sha256 | sha256) and
+        (.terminal_rehydration_units | type == "number" and floor == . and . > 0) and
+        (.full_review_rerun_units | type == "number" and floor == . and . > 0))
     )
   ' "$target_snapshot" 2>/dev/null)" || {
     printf 'review-runtime-benchmark: invalid local measurement target\n' >&2
@@ -145,14 +167,46 @@ review_benchmark_measure_local() (
   IFS=$'\t' read -r pair_id repository pr_number base_sha head_sha config_hash review_key \
     run_id receipt_id receipt_content_sha256 <<<"$fields"
   raw_event_sha256="$(review_benchmark_sha256 <"$event_snapshot")" || return
+  control="$(jq -S -c '
+    def exact_keys($required):
+      ((keys - $required) | length) == 0 and (($required - keys) | length) == 0;
+    def sha40: type == "string" and test("^[0-9a-f]{40}$");
+    def sha256: type == "string" and test("^[0-9a-f]{64}$");
+    select(
+      type == "object" and
+      exact_keys(["artifact_sha256","counter","full_review_rerun_units",
+                  "operation","pair_id","review_identity","schema"]) and
+      .schema == "kc-pr-flow.full-review-rerun-control/v1" and
+      .operation == "designed-full-review-rerun" and
+      .counter == "canonical-artifact-bytes/v1" and
+      (.full_review_rerun_units | type == "number" and floor == . and . > 0) and
+      (.pair_id | type == "string" and test("^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")) and
+      (.artifact_sha256 | sha256) and
+      (.review_identity | type == "object" and
+        exact_keys(["base_sha","config_hash","head_sha","pr_number","repository",
+                    "review_key","run_id"]) and
+        (.base_sha | sha40) and (.head_sha | sha40) and
+        (.config_hash | sha256) and (.review_key | sha256))
+    )
+  ' "$control_snapshot" 2>/dev/null)" || return 2
+  [ -n "$control" ] || return 2
+  if ! jq -e --argjson target "$target_json" '
+    .pair_id == $target.pair_id and
+    [.review_identity.repository,.review_identity.pr_number,.review_identity.base_sha,
+     .review_identity.head_sha,.review_identity.config_hash,.review_identity.review_key] ==
+    [$target.exact_head.repository,$target.exact_head.pr_number,$target.exact_head.base_sha,
+     $target.exact_head.head_sha,$target.exact_head.config_hash,$target.exact_head.review_key]
+  ' <<<"$control" >/dev/null; then
+    printf 'review-runtime-benchmark: full-review control identity mismatch\n' >&2
+    return 2
+  fi
+  control_sha256="$(printf '%s' "$control" | review_benchmark_sha256)" || return
   treatment="$(bash "$runtime" rehydrate-interactive \
     --event-file "$event_snapshot" --policy-file "$policy_file" \
     --repo-worktree "$repository_path" --repo "$repository" --pr "$pr_number" \
     --base "$base_sha" --head "$head_sha" --config-hash "$config_hash" \
     --review-key "$review_key" --run-id "$run_id")" || return
-  control="$(bash "$runtime" replay --event-file "$event_snapshot")" || return
   treatment="$(jq -S -c . <<<"$treatment")" || return
-  control="$(jq -S -c . <<<"$control")" || return
   if ! jq -e --argjson target "$target_json" '
     .schema == "kc-pr-flow.interactive-collation-decision/v1" and
     [.review_identity.repository,.review_identity.pr_number,.review_identity.base_sha,
@@ -166,25 +220,49 @@ review_benchmark_measure_local() (
     return 2
   fi
   treatment_units="$(LC_ALL=C printf '%s' "$treatment" | wc -c | tr -d '[:space:]')"
-  control_units="$(LC_ALL=C printf '%s' "$control" | wc -c | tr -d '[:space:]')"
+  control_units="$(jq -r '.full_review_rerun_units' <<<"$control")"
   [ "$treatment_units" -gt 0 ] && [ "$control_units" -gt 0 ] || return 2
+  measurement_binding="$(jq -S -c -n \
+    --arg raw_event_sha256 "$raw_event_sha256" \
+    --arg decision_sha256 "$(printf '%s' "$treatment" | review_benchmark_sha256)" \
+    --arg full_review_control_sha256 "$control_sha256" \
+    --argjson terminal_rehydration_units "$treatment_units" \
+    --argjson full_review_rerun_units "$control_units" '
+    {
+      schema:"kc-pr-flow.local-measurement-binding/v1",
+      counter:"canonical-artifact-bytes/v1",
+      raw_event_sha256:$raw_event_sha256,
+      decision_sha256:$decision_sha256,
+      full_review_control_sha256:$full_review_control_sha256,
+      terminal_rehydration_units:$terminal_rehydration_units,
+      full_review_rerun_units:$full_review_rerun_units
+    }')" || return
+  measurement_binding_sha256="$(printf '%s' "$measurement_binding" |
+    review_benchmark_measurement_binding_sha256)" || return
+  measurement_binding="$(jq -S -c --arg hash "$measurement_binding_sha256" \
+    '.measurement_binding_sha256=$hash' <<<"$measurement_binding")"
+  if [ "$measurement_binding" != "$(jq -S -c '.measurement_binding' <<<"$target_json")" ]; then
+    printf 'review-runtime-benchmark: measured artifacts do not match the bound target\n' >&2
+    return 2
+  fi
   observation="$(jq -S -c -n \
     --arg pair_id "$pair_id" --arg run_id "$run_id" --arg review_key "$review_key" \
     --arg receipt_id "$receipt_id" --arg receipt_content "$receipt_content_sha256" \
-    --arg raw_event "$raw_event_sha256" --argjson decision "$treatment" \
-    --arg decision_sha256 "$(printf '%s' "$treatment" | review_benchmark_sha256)" \
-    --argjson treatment_units "$treatment_units" --argjson control_units "$control_units" '
+    --argjson decision "$treatment" --argjson binding "$measurement_binding" '
     {
       pair_id:$pair_id,run_id:$run_id,review_key:$review_key,
       terminal_receipt_id:$receipt_id,
       terminal_receipt_content_sha256:$receipt_content,
-      decision:$decision,decision_sha256:$decision_sha256,
+      decision:$decision,decision_sha256:$binding.decision_sha256,
       operation:"terminal-collator-rehydration",invocation:"fresh",
-      model_calls:0,remote_calls:0,counter:"canonical-output-bytes/v1",
-      control_operation:"local-full-review-replay",raw_event_sha256:$raw_event,
+      model_calls:0,remote_calls:0,counter:$binding.counter,
+      control_operation:"designed-full-review-rerun",
+      raw_event_sha256:$binding.raw_event_sha256,
       producer:"kc-pr-flow.local-rehydration-measurement/v1",
-      terminal_rehydration_units:$treatment_units,
-      full_review_rerun_units:$control_units
+      full_review_control_sha256:$binding.full_review_control_sha256,
+      measurement_binding_sha256:$binding.measurement_binding_sha256,
+      terminal_rehydration_units:$binding.terminal_rehydration_units,
+      full_review_rerun_units:$binding.full_review_rerun_units
     }')" || return
   producer_receipt_sha256="$(printf '%s' "$observation" | review_benchmark_sha256)" || return
   jq -S -c -n --argjson observation "$observation" \
@@ -291,12 +369,23 @@ review_benchmark_validate_corpus() {
       (.repository | type == "string" and length > 0 and (test("[\u0000-\u001f\u007f]") | not)) and
       (.pr_number | type == "number" and floor == . and . > 0) and
       (.base_sha | sha40) and (.head_sha | sha40) and (.config_hash | sha256) and (.review_key | sha256);
+    def local_measurement:
+      exact_keys(["counter","decision_sha256","full_review_control_sha256",
+                  "full_review_rerun_units","measurement_binding_sha256",
+                  "raw_event_sha256","schema","terminal_rehydration_units"]; []) and
+      .schema == "kc-pr-flow.local-measurement-binding/v1" and
+      .counter == "canonical-artifact-bytes/v1" and
+      (.decision_sha256 | sha256) and (.full_review_control_sha256 | sha256) and
+      (.raw_event_sha256 | sha256) and (.measurement_binding_sha256 | sha256) and
+      (.terminal_rehydration_units | type == "number" and floor == . and . > 0) and
+      (.full_review_rerun_units | type == "number" and floor == . and . > 0);
     def pair:
       . as $pair |
-      exact_keys(["baseline","disagreement_candidate_fingerprint_ids","exact_head","expected_capability_ids","expected_findings","pair_id","schema","shadow","stability_group"]; []) and
+      exact_keys(["baseline","disagreement_candidate_fingerprint_ids","exact_head","expected_capability_ids","expected_findings","pair_id","schema","shadow","stability_group"]; ["local_measurement"]) and
       .schema == "kc-pr-flow.review-benchmark-pair/v1" and
       (.pair_id | safe_token) and (.stability_group | safe_token) and
       (.exact_head | exact_head) and
+      ((has("local_measurement") | not) or (.local_measurement | local_measurement)) and
       (.expected_findings | type == "array" and all(.[]; expected_finding) and
         ((map(.finding_id) | unique | length) == length)) and
       (.expected_capability_ids | type == "array" and length > 0 and all(.[]; safe_token) and
@@ -387,7 +476,8 @@ review_benchmark_promotion_from_report() {
   local costs_json="$2"
   local decision_hashes_valid='true'
   local producer_hashes_valid='true'
-  local observation_count=0 observation_index=0 decision observation expected_hash actual_hash
+  local measurement_hashes_valid='true'
+  local observation_count=0 observation_index=0 decision observation binding expected_hash actual_hash
 
   observation_count="$(jq -r '.observations | if type == "array" then length else 0 end' \
     <<<"$costs_json" 2>/dev/null)" || decision_hashes_valid='false'
@@ -415,12 +505,28 @@ review_benchmark_promotion_from_report() {
         producer_hashes_valid='false'
       [ "$actual_hash" = "$expected_hash" ] || producer_hashes_valid='false'
     fi
+    binding="$(jq -S -c --argjson index "$observation_index" '
+      .observations[$index] |
+      {
+        counter,decision_sha256,full_review_control_sha256,
+        full_review_rerun_units,raw_event_sha256,terminal_rehydration_units
+      }
+    ' <<<"$costs_json" 2>/dev/null)" || measurement_hashes_valid='false'
+    expected_hash="$(jq -r --argjson index "$observation_index" \
+      '.observations[$index].measurement_binding_sha256 // empty' \
+      <<<"$costs_json" 2>/dev/null)" || measurement_hashes_valid='false'
+    if [ "$measurement_hashes_valid" = 'true' ]; then
+      actual_hash="$(printf '%s' "$binding" |
+        review_benchmark_measurement_binding_sha256)" || measurement_hashes_valid='false'
+      [ "$actual_hash" = "$expected_hash" ] || measurement_hashes_valid='false'
+    fi
     observation_index=$((observation_index + 1))
   done
 
   jq -S -c -n --argjson report "$report_json" --argjson costs "$costs_json" \
     --argjson decision_hashes_valid "$decision_hashes_valid" \
-    --argjson producer_hashes_valid "$producer_hashes_valid" '
+    --argjson producer_hashes_valid "$producer_hashes_valid" \
+    --argjson measurement_hashes_valid "$measurement_hashes_valid" '
     def exact_keys($required):
       ((keys - $required) | length) == 0 and
       (($required - keys) | length) == 0;
@@ -479,12 +585,14 @@ review_benchmark_promotion_from_report() {
       type == "object" and
       .schema == "kc-pr-flow.local-rehydration-costs/v1" and
       $decision_hashes_valid and $producer_hashes_valid and
+      $measurement_hashes_valid and
       (.observations | type == "array") and
       (.observations | all(
         type == "object" and
         (keys | sort) ==
           ["control_operation","counter","decision","decision_sha256",
-           "full_review_rerun_units","invocation","model_calls","operation","pair_id",
+           "full_review_control_sha256","full_review_rerun_units","invocation",
+           "measurement_binding_sha256","model_calls","operation","pair_id",
            "producer","producer_receipt_sha256","raw_event_sha256","remote_calls",
            "review_key","run_id",
            "terminal_receipt_content_sha256","terminal_receipt_id",
@@ -496,10 +604,12 @@ review_benchmark_promotion_from_report() {
         (.terminal_receipt_content_sha256 | sha256) and
         (.decision_sha256 | type == "string" and test("^[0-9a-f]{64}$")) and
         (.producer_receipt_sha256 | sha256) and
+        (.full_review_control_sha256 | sha256) and
+        (.measurement_binding_sha256 | sha256) and
         (.raw_event_sha256 | sha256) and
         .producer == "kc-pr-flow.local-rehydration-measurement/v1" and
-        .counter == "canonical-output-bytes/v1" and
-        .control_operation == "local-full-review-replay" and
+        .counter == "canonical-artifact-bytes/v1" and
+        .control_operation == "designed-full-review-rerun" and
         .operation == "terminal-collator-rehydration" and
         .invocation == "fresh" and
         .model_calls == 0 and
@@ -516,6 +626,19 @@ review_benchmark_promotion_from_report() {
            $pair.receipts.shadow.receipt_id == $observation.terminal_receipt_id and
            $pair.receipts.shadow.content_sha256 ==
              $observation.terminal_receipt_content_sha256 and
+           ($pair.local_measurement | type == "object") and
+           $pair.local_measurement.schema == "kc-pr-flow.local-measurement-binding/v1" and
+           $pair.local_measurement.counter == $observation.counter and
+           $pair.local_measurement.raw_event_sha256 == $observation.raw_event_sha256 and
+           $pair.local_measurement.decision_sha256 == $observation.decision_sha256 and
+           $pair.local_measurement.full_review_control_sha256 ==
+             $observation.full_review_control_sha256 and
+           $pair.local_measurement.terminal_rehydration_units ==
+             $observation.terminal_rehydration_units and
+           $pair.local_measurement.full_review_rerun_units ==
+             $observation.full_review_rerun_units and
+           $pair.local_measurement.measurement_binding_sha256 ==
+             $observation.measurement_binding_sha256 and
            ($observation.decision |
              decision_valid($pair; $pair.receipts.shadow)))))) and
       ((.observations | map(.pair_id) | unique | length) ==
@@ -750,7 +873,9 @@ review_benchmark_score() (
         external_behavior_parity:behavior_parity($pair.baseline.behavior; $pair.shadow.behavior),
         finding_candidate_stability:stability($pair),
         usage_comparability:usage_comparison($pair.baseline.usage; $pair.shadow.usage)
-      }))
+      } + (if ($pair | has("local_measurement"))
+           then {local_measurement:$pair.local_measurement}
+           else {} end)))
     }
   ' "$snapshot_file")" || {
     printf 'review-runtime-benchmark: malformed corpus\n' >&2
@@ -767,7 +892,7 @@ review_benchmark_score() (
 review_benchmark_usage() {
   printf '%s\n' \
     'usage: review-runtime-benchmark.sh score --corpus FILE [--local-costs FILE]' \
-    '       review-runtime-benchmark.sh measure-local --runtime FILE --target FILE --event-file FILE --policy-file FILE --repo-worktree DIR' >&2
+    '       review-runtime-benchmark.sh measure-local --runtime FILE --target FILE --event-file FILE --control-file FILE --policy-file FILE --repo-worktree DIR' >&2
 }
 
 review_benchmark_main() {
@@ -775,6 +900,7 @@ review_benchmark_main() {
   local corpus_file=''
   local local_costs_file=''
   local runtime='' target_file='' event_file='' policy_file='' repository_path=''
+  local control_file=''
   [ "$#" -gt 0 ] && shift
 
   case "$command" in
@@ -783,7 +909,7 @@ review_benchmark_main() {
   esac
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --corpus | --local-costs | --runtime | --target | --event-file | --policy-file | --repo-worktree)
+      --corpus | --local-costs | --runtime | --target | --event-file | --control-file | --policy-file | --repo-worktree)
         [ "$#" -ge 2 ] || { review_benchmark_usage; return 2; }
         case "$1" in
           --corpus) corpus_file="$2" ;;
@@ -791,6 +917,7 @@ review_benchmark_main() {
           --runtime) runtime="$2" ;;
           --target) target_file="$2" ;;
           --event-file) event_file="$2" ;;
+          --control-file) control_file="$2" ;;
           --policy-file) policy_file="$2" ;;
           --repo-worktree) repository_path="$2" ;;
         esac
@@ -807,10 +934,10 @@ review_benchmark_main() {
     review_benchmark_score "$corpus_file" "$local_costs_file"
   else
     [ -n "$runtime" ] && [ -n "$target_file" ] && [ -n "$event_file" ] &&
-      [ -n "$policy_file" ] && [ -n "$repository_path" ] ||
+      [ -n "$control_file" ] && [ -n "$policy_file" ] && [ -n "$repository_path" ] ||
       { review_benchmark_usage; return 2; }
     review_benchmark_measure_local "$runtime" "$target_file" "$event_file" \
-      "$policy_file" "$repository_path"
+      "$policy_file" "$repository_path" "$control_file"
   fi
 }
 

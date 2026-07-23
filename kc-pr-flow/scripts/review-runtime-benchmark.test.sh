@@ -80,7 +80,9 @@ run_interactive_gates_case() {
   local costs_wrong_operation costs_model_call costs_remote_call result repeated
   local decision canonical_decision decision_hash costs_tampered_decision costs_tampered_hash
   local costs_wrong_content costs_copied_ids copied_decision copied_decision_hash
-  local costs_asserted producer_payload producer_hash measurement target mock_runtime operation_log
+  local costs_asserted producer_payload measurement target mock_runtime operation_log
+  local costs_forged costs_raw_mismatch control_file control_artifact control_hash raw_event_hash
+  local measurement_binding measurement_binding_hash treatment_units control_units
   local branch_a_20 branch_a_19 lost_recall g3_fail g2_fail g1_fail
   local fixture_report
   # shellcheck source=/dev/null
@@ -104,12 +106,27 @@ run_interactive_gates_case() {
       terminal_receipt_content_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       decision:$decision,decision_sha256:$decision_hash,
       operation:"terminal-collator-rehydration",invocation:"fresh",model_calls:0,remote_calls:0,
-      counter:"canonical-output-bytes/v1",control_operation:"local-full-review-replay",
+      counter:"canonical-artifact-bytes/v1",control_operation:"designed-full-review-rerun",
       raw_event_sha256:$raw_event_sha256,
+      full_review_control_sha256:"9999999999999999999999999999999999999999999999999999999999999999",
       producer:"kc-pr-flow.local-rehydration-measurement/v1",
       terminal_rehydration_units:60,full_review_rerun_units:100
     }]}')"
+  measurement_binding_hash="$(jq -S -c '.observations[0]' <<<"$producer_payload" |
+    review_benchmark_measurement_binding_sha256)"
+  producer_payload="$(jq -S -c --arg hash "$measurement_binding_hash" \
+    '.observations[0].measurement_binding_sha256=$hash' <<<"$producer_payload")"
   costs_60="$(seal_local_costs "$producer_payload")"
+  measurement_binding="$(jq -S -c '
+    .observations[0] |
+    {
+      schema:"kc-pr-flow.local-measurement-binding/v1",
+      counter,decision_sha256,full_review_control_sha256,
+      full_review_rerun_units,measurement_binding_sha256,
+      raw_event_sha256,terminal_rehydration_units
+    }' <<<"$costs_60")"
+  base_report="$(jq -S -c --argjson binding "$measurement_binding" \
+    '.pairs[0].local_measurement=$binding' <<<"$base_report")"
   costs_61="$(seal_local_costs \
     "$(jq -c '.observations[0].terminal_rehydration_units=61' <<<"$costs_60")")"
   costs_asserted='{"schema":"kc-pr-flow.local-rehydration-costs/v1","observations":[{"pair_id":"gate-pair","review_key":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","terminal_receipt_id":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","decision_sha256":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","operation":"terminal-collator-rehydration","invocation":"fresh","model_calls":0,"remote_calls":0,"terminal_rehydration_units":60,"full_review_rerun_units":100}]}'
@@ -132,6 +149,11 @@ run_interactive_gates_case() {
     "$(jq -c '.observations[0].model_calls=1' <<<"$costs_60")")"
   costs_remote_call="$(seal_local_costs \
     "$(jq -c '.observations[0].remote_calls=1' <<<"$costs_60")")"
+  costs_forged="$(seal_local_costs \
+    "$(jq -c '.observations[0].terminal_rehydration_units=1 |
+      .observations[0].full_review_rerun_units=10000' <<<"$costs_60")")"
+  costs_raw_mismatch="$(seal_local_costs \
+    "$(jq -c '.observations[0].raw_event_sha256="abababababababababababababababababababababababababababababababab"' <<<"$costs_60")")"
 
   branch_a_20="$(jq -c '.pairs[0].usage_comparability={comparable:true,provider_family:"claude",scope:"run",baseline:{total_tokens:100},shadow:{total_tokens:80}}' <<<"$base_report")"
   result="$(review_benchmark_promotion_from_report "$branch_a_20" "$costs_none")"
@@ -167,6 +189,12 @@ run_interactive_gates_case() {
   assert_eq 'model-backed rehydration costs cannot promote local-only branch B' fail "$(jq -r '.verdict' <<<"$result")"
   result="$(review_benchmark_promotion_from_report "$base_report" "$costs_remote_call")"
   assert_eq 'remote-backed rehydration costs cannot promote local-only branch B' fail "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_forged")"
+  assert_eq 'caller-resealed arbitrary cost units cannot promote branch B' fail \
+    "$(jq -r '.verdict' <<<"$result")"
+  result="$(review_benchmark_promotion_from_report "$base_report" "$costs_raw_mismatch")"
+  assert_eq 'costs bound to a different raw terminal artifact cannot promote branch B' fail \
+    "$(jq -r '.verdict' <<<"$result")"
 
   lost_recall="$(jq -c '.pairs[0].evidence_recall.shadow.matched_finding_ids=[]' <<<"$branch_a_20")"
   result="$(review_benchmark_promotion_from_report "$lost_recall" "$costs_60")"
@@ -190,11 +218,40 @@ run_interactive_gates_case() {
   target="$TEST_ROOT/local-measurement-target.json"
   operation_log="$TEST_ROOT/local-measurement-operations.log"
   mock_runtime="$TEST_ROOT/local-measurement-runtime.sh"
-  printf '%s\n' "$base_report" | jq -S -c '
+  control_file="$TEST_ROOT/full-review-control.json"
+  control_artifact="$(jq -S -c -n --argjson identity "$(jq -c '.review_identity' <<<"$decision")" '
+    {schema:"kc-pr-flow.full-review-rerun-control/v1",pair_id:"gate-pair",
+     review_identity:$identity,operation:"designed-full-review-rerun",
+     counter:"canonical-artifact-bytes/v1",full_review_rerun_units:2048,
+     artifact_sha256:"9999999999999999999999999999999999999999999999999999999999999999"}')"
+  printf '%s\n' "$control_artifact" >"$control_file"
+  control_hash="$(printf '%s' "$control_artifact" | review_benchmark_sha256)"
+  : >"$TEST_ROOT/local-events.jsonl"
+  raw_event_hash="$(review_benchmark_sha256 <"$TEST_ROOT/local-events.jsonl")"
+  treatment_units="$(LC_ALL=C printf '%s' "$canonical_decision" | wc -c | tr -d '[:space:]')"
+  control_units="$(jq -r '.full_review_rerun_units' <<<"$control_artifact")"
+  measurement_binding="$(jq -S -c -n \
+    --arg raw_event_sha256 "$raw_event_hash" --arg decision_sha256 "$decision_hash" \
+    --arg control_sha256 "$control_hash" --argjson treatment_units "$treatment_units" \
+    --argjson control_units "$control_units" '
+    {
+      schema:"kc-pr-flow.local-measurement-binding/v1",
+      counter:"canonical-artifact-bytes/v1",
+      raw_event_sha256:$raw_event_sha256,decision_sha256:$decision_sha256,
+      full_review_control_sha256:$control_sha256,
+      terminal_rehydration_units:$treatment_units,
+      full_review_rerun_units:$control_units
+    }')"
+  measurement_binding_hash="$(printf '%s' "$measurement_binding" |
+    review_benchmark_measurement_binding_sha256)"
+  measurement_binding="$(jq -S -c --arg hash "$measurement_binding_hash" \
+    '.measurement_binding_sha256=$hash' <<<"$measurement_binding")"
+  printf '%s\n' "$base_report" | jq -S -c \
+    --argjson binding "$measurement_binding" '
     .pairs[0] |
     {schema:"kc-pr-flow.local-measurement-target/v1",pair_id,
-     exact_head,receipt:.receipts.shadow}' >"$target"
-  : >"$TEST_ROOT/local-events.jsonl"
+     exact_head,receipt:.receipts.shadow,
+     measurement_binding:$binding}' >"$target"
   : >"$TEST_ROOT/local-policy.json"
   mkdir -p "$TEST_ROOT/local-repo"
   cat >"$mock_runtime" <<'MOCK_MEASURE'
@@ -210,15 +267,18 @@ MOCK_MEASURE
   measurement="$(MEASURE_OPERATION_LOG="$operation_log" MEASURE_DECISION="$decision" \
     "$BENCHMARK" measure-local --runtime "$mock_runtime" \
       --target "$target" --event-file "$TEST_ROOT/local-events.jsonl" \
+      --control-file "$control_file" \
       --policy-file "$TEST_ROOT/local-policy.json" \
       --repo-worktree "$TEST_ROOT/local-repo")"
   assert_eq 'measurement harness invokes terminal rehydration then local full replay' \
-    'rehydrate-interactive,replay' "$(paste -sd, "$operation_log")"
+    'rehydrate-interactive' "$(paste -sd, "$operation_log")"
   assert_eq 'measurement harness emits executable producer receipt' \
     kc-pr-flow.local-rehydration-measurement/v1 \
     "$(jq -r '.observations[0].producer' <<<"$measurement")"
   assert_eq 'measurement harness records zero model and remote calls' '0,0' \
     "$(jq -r '.observations[0] | [.model_calls,.remote_calls] | join(",")' <<<"$measurement")"
+  assert_eq 'measurement harness binds the designed full-rerun control artifact' "$control_hash" \
+    "$(jq -r '.observations[0].full_review_control_sha256' <<<"$measurement")"
 }
 
 if [ "$CASE" = 'interactive-gates' ]; then

@@ -116,6 +116,8 @@ EXPECTED_REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$
 run_interactive_decision_tests() {
   local receipt policy repo output rc before_hash after_hash
   local measurement_target measurement receipt_content receipt_id
+  local control_file control_artifact control_hash raw_event_hash
+  local canonical_decision treatment_units control_units measurement_binding binding_hash
   local run_id content_hash anchor candidate_id merge_key finding_id pointer candidate
   local task usage result finding behavior_hashes start lane_started observed lane_finished synthesized finished
   local types_task_one types_task_two types_result_one types_result_two types_started_one types_started_two types_finished_one types_finished_two
@@ -288,14 +290,47 @@ run_interactive_decision_tests() {
   assert_eq "rehydration never appends or rewrites the receipt" "$before_hash" "$after_hash"
 
   measurement_target="$TEST_INPUT_ROOT/interactive-measurement-target.json"
+  control_file="$TEST_INPUT_ROOT/interactive-full-review-control.json"
   receipt_content="$(review_runtime_sha256 <"$receipt")"
   receipt_id="$(sha256_text "$run_id|$interactive_key|$receipt_content")"
+  canonical_decision="$(jq -S -c . <<<"$output")"
+  control_artifact="$(jq -S -c -n --argjson identity "$identity" --arg hash "$content_hash" '
+    {
+      schema:"kc-pr-flow.full-review-rerun-control/v1",
+      pair_id:"interactive-terminal",review_identity:$identity,
+      operation:"designed-full-review-rerun",counter:"canonical-artifact-bytes/v1",
+      full_review_rerun_units:4096,artifact_sha256:$hash
+    }')"
+  printf '%s\n' "$control_artifact" >"$control_file"
+  control_hash="$(sha256_text "$control_artifact")"
+  raw_event_hash="$(review_runtime_sha256 <"$receipt")"
+  treatment_units="$(LC_ALL=C printf '%s' "$canonical_decision" | wc -c | tr -d '[:space:]')"
+  control_units="$(jq -r '.full_review_rerun_units' <<<"$control_artifact")"
+  measurement_binding="$(jq -S -c -n \
+    --arg raw_event_sha256 "$raw_event_hash" \
+    --arg decision_sha256 "$(sha256_text "$canonical_decision")" \
+    --arg control_sha256 "$control_hash" \
+    --argjson treatment_units "$treatment_units" --argjson control_units "$control_units" '
+    {
+      schema:"kc-pr-flow.local-measurement-binding/v1",
+      counter:"canonical-artifact-bytes/v1",
+      raw_event_sha256:$raw_event_sha256,decision_sha256:$decision_sha256,
+      full_review_control_sha256:$control_sha256,
+      terminal_rehydration_units:$treatment_units,
+      full_review_rerun_units:$control_units
+    }')"
+  binding_hash="$(printf '%s' "$measurement_binding" | jq -S -c '{
+    counter,decision_sha256,full_review_control_sha256,
+    full_review_rerun_units,raw_event_sha256,terminal_rehydration_units
+  }' | review_runtime_sha256)"
+  measurement_binding="$(jq -S -c --arg hash "$binding_hash" \
+    '.measurement_binding_sha256=$hash' <<<"$measurement_binding")"
   jq -S -c -n --arg pair_id interactive-terminal \
     --arg repository "$REPOSITORY" --argjson pr_number "$PR_NUMBER" \
     --arg base_sha "$interactive_base" --arg head_sha "$interactive_head" \
     --arg config_hash "$CONFIG_HASH" --arg review_key "$interactive_key" \
     --arg run_id "$run_id" --arg receipt_id "$receipt_id" \
-    --arg content_sha256 "$receipt_content" '
+    --arg content_sha256 "$receipt_content" --argjson binding "$measurement_binding" '
     {
       schema:"kc-pr-flow.local-measurement-target/v1",pair_id:$pair_id,
       exact_head:{
@@ -305,18 +340,19 @@ run_interactive_decision_tests() {
       receipt:{
         schema:"kc-pr-flow.review-receipt-identity/v1",run_id:$run_id,
         review_key:$review_key,receipt_id:$receipt_id,content_sha256:$content_sha256
-      }
+      },
+      measurement_binding:$binding
     }' >"$measurement_target"
   measurement="$(bash "$BENCHMARK" measure-local --runtime "$RUNTIME" \
     --target "$measurement_target" --event-file "$receipt" --policy-file "$policy" \
-    --repo-worktree "$repo")"
+    --control-file "$control_file" --repo-worktree "$repo")"
   assert_eq "local measurement executes the real interactive rehydration runtime" \
     "kc-pr-flow.interactive-collation-decision/v1" \
     "$(jq -r '.observations[0].decision.schema' <<<"$measurement")"
   assert_eq "local measurement binds the exact runtime receipt" "$receipt_id" \
     "$(jq -r '.observations[0].terminal_receipt_id' <<<"$measurement")"
   assert_eq "local measurement records only deterministic local work" \
-    "canonical-output-bytes/v1|0|0" \
+    "canonical-artifact-bytes/v1|0|0" \
     "$(jq -r '.observations[0] | [.counter,.model_calls,.remote_calls] | join("|")' <<<"$measurement")"
 
   bad_policy="$TEST_INPUT_ROOT/no-blocker-policy.json"
