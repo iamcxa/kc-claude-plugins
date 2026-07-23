@@ -33,6 +33,16 @@ Additional compatibility evidence: cross-model `62/0`, architecture documentatio
 
 The final parallel regression repeated all six suites: runtime `279/0`, shadow `155/0`, benchmark `135/0`, cross-model `62/0`, architecture documentation `43/0`, and architecture validator `34/0`. Actionlint, Bash syntax, Python compile, both TDD ledger validators, and diff checks also passed.
 
+#### Verify-Return Round 3
+
+| Repair | RED | GREEN | Commit |
+|---|---|---|---|
+| Remove duplicate blocker authority and require a decision-bound post-gate receipt | shadow focused `28/7` | shadow focused `35/0`; full `155/0` | `0b7b5ad` |
+| Bind Branch B to raw, decision, and designed-full-rerun artifacts | benchmark focused `24/6` | benchmark focused `30/0`; real-runtime integration `49/0`; full benchmark `135/0` | `d8150c1` |
+| Synchronize canonical and operator documentation with the executable producer/counter contract | plan-approved documentation sync | architecture `43/0`; validator `34/0`; stale-contract scan clean | `ce1cddf` |
+
+Round 3 keeps one typed blocker authority: a semantically valid closed decision. Invalid or decisionless typed state carries no bare blocker list and cannot pass the post gate. Branch B now uses a corpus-owned `local-measurement-binding/v1` over raw terminal, decision, and designed-full-review control artifacts plus `canonical-artifact-bytes/v1` units; resealed numbers and replay-output controls are ineligible.
+
 - frontend_smoke: N/A; no UI surface changed.
 - versioning: no plugin version bump; release metadata remains unchanged.
 - posting/mutation: no GitHub review, posting, recovery, or daemon authority added.
@@ -43,8 +53,9 @@ The final parallel regression repeated all six suites: runtime `279/0`, shadow `
 
 - The T2 worker stalled and the global worker thread limit prevented the planned W2 parallel execution. The coordinator used the authorized sequential fallback while preserving disjoint task ownership and atomic commits.
 - T1 review found incomplete capability-policy and fallback binding; T2 review found same-schema malformed decisions could fail silently; both were corrected before commit.
-- T3 review rejected self-asserted local cost numbers. Branch B now accepts only the scorer-owned `measure-local` producer receipt, which executes terminal rehydration and local replay, applies one deterministic byte counter to both, and binds decision, exact-head, run, receipt, and raw-event hashes with explicit zero model and remote calls.
+- T3 review rejected self-asserted local cost numbers. The final Branch B accepts only the scorer-owned `measure-local` producer receipt, executes terminal rehydration without using replay as its control, and binds decision, exact-head, run, receipt, raw-event, and designed-full-rerun control artifacts with explicit zero model and remote calls.
 - Verify round 1 found four bounded contract defects: config-independent requiredness, blocker loss on typed failure, non-canonical confirmation validation/event escalation, and a non-executable Branch B cost claim. All four were repaired without crossing into entity 2.3 authority.
+- Verify round 2 proved that self-hashes were only consistency checks, not provenance, and that shallow confirmation validation left an alternate posting authority. Round 3 removed both alternate authorities and bound measurement evidence to the trusted paired corpus.
 - The workflow referenced the pre-archive 2.1 location. T4 repaired every workflow reference and added current 2.2 path filters and ledger validation.
 - Scope did not drift. Resume, lock/PID recovery, predecessor lineage, retention, once-only posting, remote reconciliation, and daemon mutation remain owned by entity 2.3. No new issue is required.
 <!-- /section:issues-found -->
@@ -84,29 +95,29 @@ The final parallel regression repeated all six suites: runtime `279/0`, shadow `
 status: passed
 stage_cost: not metered
 started_at: 2026-07-23T02:59:12Z
-completed_at: 2026-07-23T05:23:03Z
+completed_at: 2026-07-23T06:09:44Z
 
 <!-- section:execute-report-metrics -->
 ### Metrics
 
 status: passed
-duration_minutes: 144
-iteration_count: 4 task checkpoints plus 4 verify-return repairs
+duration_minutes: 191
+iteration_count: 4 task checkpoints plus 7 verify-return repairs
 task_count: 4
 tasks_done: 4
 tasks_blocked: 0
-commit_count: 8
+commit_count: 11
 <!-- /section:execute-report-metrics -->
 <!-- /section:execute-report -->
 
 <!-- section:hand-off-to-verify -->
 ### Hand-off to Verify
 
-- commit_list: T1 `2016faf`; T2 `fdebc67`; T3 `f9dcad5`; T4 `d538116`; verify-return repairs `989acc7`, `e0639c3`, `068eb83`, `666271c`.
+- commit_list: T1 `2016faf`; T2 `fdebc67`; T3 `f9dcad5`; T4 `d538116`; verify-return round 2 `989acc7`, `e0639c3`, `068eb83`, `666271c`; round 3 `0b7b5ad`, `d8150c1`, `ce1cddf`.
 - dc_status: DC-1 through DC-13 PASS with the evidence table above.
-- tdd_evidence_summary: T1-T3 and all four verify-return repairs preserve RED-before-GREEN with focused/full receipts; T4 uses the plan-approved documentation/config skip plus completed runtime and static gates.
+- tdd_evidence_summary: T1-T3 and all behavioral verify-return repairs preserve RED-before-GREEN with focused/full receipts; T4 documentation syncs use the plan-approved skip plus completed runtime and static gates.
 - final_counts: runtime `279/0`; shadow `155/0`; benchmark `135/0`; cross-model `62/0`; architecture docs `43/0`; architecture validator `34/0`.
-- static_receipt: actionlint, Bash syntax, archived 2.1 ledger, current 2.2 ledger, workflow stale-path scan, and `git diff --check` pass.
+- static_receipt: actionlint, ShellCheck, Bash syntax, archived 2.1 ledger, current 2.2 ledger, workflow stale-path scan, and `git diff --check` pass.
 - deviations: W2 executed sequentially after the worker stalled and the global thread limit blocked replacement dispatch; files, contracts, and task commits remained within plan.
 - render_fidelity_evidence: N/A; `affects_ui: false`.
 - skills_needed_used: ship-execute, test-driven-development, systematic-debugging, receiving-code-review, write-docs, and github-workflows.
