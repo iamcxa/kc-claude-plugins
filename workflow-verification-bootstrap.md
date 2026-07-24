@@ -9,7 +9,7 @@ verdict:
 score: 0.7
 worktree: .worktrees/spacedock-ensign-workflow-verification-bootstrap
 issue:
-pr:
+pr: "#52"
 design:
 ---
 
