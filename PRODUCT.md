@@ -2,6 +2,42 @@
 
 This document records durable product outcomes for repository capabilities. It is written for contributors who need to change a capability without rediscovering its purpose from implementation details.
 
+## Repository plugin catalog
+
+This monorepo publishes six plugins through the `kc-claude-plugins`
+marketplace (`.claude-plugin/marketplace.json`). Each entry states the
+outcome the plugin exists to deliver and who it serves; full skill lists
+live in each plugin's own `README.md`. `kc-pr-flow`'s agent-native review
+runtime has its own deep-dive entry below this catalog.
+
+- **`e2e-pipeline`** — Map, generate, verify, and run browser/CLI E2E flows
+  without hand-maintained selectors, with an LLM-judgment fallback when
+  compiled matching can't resolve a step. Serves teams testing a web app
+  end-to-end who need both a fast CI-friendly compiled path and
+  human-in-the-loop exploration.
+- **`kc-plugin-forge`** — One command validates plugin structure, TDD-tests
+  skills under pressure, audits `SKILL.md` frontmatter, and smoke-tests in
+  an isolated profile before publish. Serves plugin authors in this
+  monorepo who want automated quality assurance instead of manual review.
+- **`kc-nightwatch`** — Autonomous nightly cycle that runs forge
+  validation, harvests improvement signals from journal/Sentry/E2E/git,
+  and proposes north-star-aligned changes. Serves maintainers who want
+  continuous quality monitoring without manually triggering it.
+- **`kc-hyperfocus`** — Detects context pressure, enforces session
+  handoff/resume, and caches codebase insight in a local SQLite lake so
+  agents don't re-explore from zero. Serves agents (and their operators)
+  running long or multi-session work that needs durable cross-session
+  context.
+- **`kc-team-ops`** — EM triage with a strategic lens, project pulse
+  updates, issue decomposition, and structured Linear management, plus an
+  on-demand cross-model second opinion via Gemini/`agy`. Serves
+  engineering managers running Linear-based triage and reporting.
+- **`kc-pr-flow`** — End-to-end PR lifecycle (create → review → resolve →
+  announce) with tiered multi-agent review. Serves contributors who want a
+  one-command PR workflow with consistent review quality across model
+  providers. Its agent-native review runtime is detailed in the dedicated
+  entry below.
+
 ## kc-pr-flow: Agent-native PR review
 
 ### Outcome

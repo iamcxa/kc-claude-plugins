@@ -2,6 +2,56 @@
 
 This document records durable architecture decisions for repository capabilities. It is written for contributors implementing or reviewing changes that cross lifecycle, provider, persistence, or remote-mutation boundaries.
 
+## Repository layout
+
+The repo is a monorepo of six independent Claude Code plugins at top level
+(`e2e-pipeline/`, `kc-plugin-forge/`, `kc-nightwatch/`, `kc-hyperfocus/`,
+`kc-team-ops/`, `kc-pr-flow/`), each with its own `skills/` directory; five
+of the six also ship `agents/` (all but `kc-plugin-forge`), and (where
+applicable) `hooks/` directories, plus a repo-level `scripts/` directory and
+`.claude-plugin/marketplace.json` manifest. `docs/dev/` holds the lean
+ship-flow-style task workflow (split-root state under
+`docs/dev/.spacedock-state`) that governs how repo changes are proposed,
+built, and verified.
+
+## Marketplace publish flow
+
+`.claude-plugin/marketplace.json` is the published catalog; each plugin
+entry names its `source` path, `description`, `version`, and `keywords`.
+`scripts/marketplace-verify.sh` validates marketplace schema plus plugin
+installability (and optionally skill execution, `--smoke`) in an isolated
+temp `HOME`. `scripts/post-install-smoke.sh` runs the full post-install
+lifecycle (marketplace add → plugin install → MCP deps → smoke test) per
+plugin. `.github/workflows/marketplace-parity.yml` runs on every PR (no
+`paths:` filter, so it stays a valid required check) and enforces version
+parity plus skill-frontmatter well-formedness before merge.
+
+## Hooks and scripts surfaces
+
+Four plugins ship a `hooks/hooks.json`: `e2e-pipeline`, `kc-plugin-forge`,
+`kc-hyperfocus`, `kc-pr-flow`. `kc-nightwatch` and `kc-team-ops` currently
+ship no hooks. `.githooks/pre-commit` is an opt-in local pre-commit hook
+(`git config core.hooksPath .githooks`) that runs `e2e-pipeline`'s biome
+lint + tests only when `e2e-pipeline/` files are staged. Repo-level
+`scripts/` holds cross-plugin checks run in CI: `marketplace-verify.sh`,
+`post-install-smoke.sh`, `release-metadata.test.sh`,
+`release-please-config-check.sh`, `skill-frontmatter-lint.sh` (+ its
+test), `version-parity-check.sh`.
+
+## Versioning scheme
+
+Each plugin is an independent release-please component
+(`release-please-config.json`, manifest mode, `tag-separator: "-"`,
+`include-component-in-tag: true`) tracked in
+`.release-please-manifest.json`. On push to `main`,
+`.github/workflows/release-please.yml` maintains a Release PR that bumps
+the changed plugin(s) across `<plugin>/.claude-plugin/plugin.json`,
+`<plugin>/.codex-plugin/plugin.json` (only `e2e-pipeline`, `kc-plugin-forge`,
+`kc-pr-flow` ship a Codex manifest), and the matching `marketplace.json`
+array entry; merge cuts a `<plugin>-vX.Y.Z` tag, GitHub Release, and
+per-plugin `CHANGELOG.md`. `scripts/version-parity-check.sh` is the
+machine-enforced backstop asserting all tracked version sources agree.
+
 ## kc-pr-flow: Agent-native review runtime
 
 ### Context
