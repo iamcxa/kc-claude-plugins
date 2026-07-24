@@ -9,8 +9,9 @@ verdict:
 score: 0.6
 worktree: .worktrees/spacedock-ensign-product-architecture-baseline
 issue:
-pr:
+pr: "#55"
 design: trivial-pass
+mod-block: merge:pr-merge
 ---
 
 This repo has CLAUDE.md conventions but no PRODUCT.md or ARCHITECTURE.md,
