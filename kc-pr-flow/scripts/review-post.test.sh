@@ -117,6 +117,31 @@ assert_eq "resume after a truly-lost POST posts once" "posted" "$(jq -r '.status
 assert_eq "resume after a truly-lost POST ends with one review" "1" "$(store_count)"
 teardown_env
 
+# --- Definite non-retryable failure (design step 3, validation 4xx): posts
+# zero additional reviews, records a terminal failed result, resume replays
+# it without any further network call, and gc eventually reclaims the
+# leftover pending payload once its retention window passes. ---
+new_env; write_request; write_gate
+printf 'failed\n' >"$STUB_DIR/post-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+assert_eq "a definite 4xx failure is reported failed" "failed" "$(jq -r '.status' <<<"$out")"
+run_id="$(jq -r '.run_id' <<<"$out")"
+assert_eq "a definite failure records zero reviews" "0" "$(store_count)"
+assert_eq "a definite failure writes a failed terminal result" "failed" "$(run_events "$run_id" | jq -r 'select(.event_type=="post.result") | .payload.outcome')"
+pending_file="$(run_dir_for "$run_id")/pending-post.json"
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id")"
+assert_eq "resume replays the failed terminal result without retrying" "failed" "$(jq -r '.status' <<<"$resume_out")"
+assert_eq "resume after a definite failure still records zero reviews" "0" "$(store_count)"
+# The retention window still governs cleanup of the leftover pending file --
+# a terminal failure does not delete it immediately (only posted/reconciled
+# outcomes do), so the fail-safe GC invariant applies here too.
+gc_within="$(bash "$POST" gc --repo "$REPO" --pr "$PR" --now-epoch 2000)"
+assert_eq "within-window gc keeps a failed run's leftover pending payload" "true" "$([ -e "$pending_file" ] && printf true || printf false)"
+gc_expired="$(bash "$POST" gc --repo "$REPO" --pr "$PR" --now-epoch 605801)"
+assert_eq "past-window gc reclaims a failed run's leftover pending payload" "false" "$([ -e "$pending_file" ] && printf true || printf false)"
+assert_eq "past-window gc records run.invalidated{expired} for a failed run" "expired" "$(run_events "$run_id" | jq -r 'select(.event_type=="run.invalidated") | .payload.reason')"
+teardown_env
+
 # --- AC2: a head that moved after authorization never posts the stale payload. ---
 new_env; write_request; write_gate
 printf '%s\n' "$MOVED" >"$STUB_DIR/head"

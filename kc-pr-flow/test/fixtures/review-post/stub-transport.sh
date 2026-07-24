@@ -23,14 +23,12 @@ stub_dir="${KC_STUB_DIR:?KC_STUB_DIR must be set}"
 op="${1:-}"
 shift || true
 
-repo=''
-pr=''
-self=''
+# --repo/--pr/--self are part of the transport CLI contract but unused here:
+# this stub is driven entirely by files under $stub_dir (including self, read
+# from $stub_dir/self below), not by these arguments.
 while [ "$#" -gt 0 ]; do
   case "$1" in
-    --repo) repo="$2"; shift 2 ;;
-    --pr) pr="$2"; shift 2 ;;
-    --self) self="$2"; shift 2 ;;
+    --repo | --pr | --self) shift 2 ;;
     *) shift ;;
   esac
 done

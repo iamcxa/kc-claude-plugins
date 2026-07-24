@@ -245,9 +245,42 @@ For the local branch, first capture one closed `full-review-rerun-control/v1` re
 
 Run the executable producer with `measure-local --runtime ... --target ... --event-file ... --control-file ... --policy-file ... --repo-worktree ...`, then pass its receipt through `--local-costs`. The producer safe-snapshots both artifacts, invokes only fresh `rehydrate-interactive`, counts the canonical decision bytes with the same counter, and requires every measured value to equal the target binding. The scorer rechecks decision, producer, measurement-binding, run, review, receipt, raw-event, and control hashes against the paired corpus. Unbound or caller-resealed numbers, copied identities, replay-output controls, tampered decisions, and later efficiency evidence cannot produce a passing verdict.
 
+## Once-only posting
+
+`scripts/review-post.sh` posts the confirmed review at most once, even across a crash mid-POST. It
+is disabled by default; enable it per invocation with `KC_PR_FLOW_ONCE_ONLY_POST=on`:
+
+```bash
+KC_PR_FLOW_ONCE_ONLY_POST=on bash scripts/review-post.sh post \
+  --request-file request.json --gate-file gate.json
+```
+
+`request.json` carries the repo/PR/base/head/config identity plus the exact `commit_id`, `event`,
+`body`, and `comments` to post; `gate.json` is the existing `kc-pr-flow.interactive-post-gate/v1`
+receipt. A clean POST records `post.result{outcome: posted}` and removes the pending payload. An
+ambiguous outcome (timeout, dropped response, 5xx) leaves a mode-`0600` pending payload durable and
+posts nothing further; resume it with:
+
+```bash
+bash scripts/review-post.sh resume --repo OWNER/REPO --pr NUMBER --self BOT_LOGIN --run-id RUN_ID
+```
+
+Resume reconciles against `GET .../reviews` before ever retrying — if the earlier POST already
+landed, it records `post.result{outcome: posted_reconciled}` and posts nothing; only a marker-absent,
+head-unchanged pending payload gets one bounded retry. A pending payload past
+`KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 604800 / 7 days) is swept with `gc`, which never
+removes a within-window unreconciled payload.
+
 ## Deferred capabilities
 
-This increment deliberately stops at terminal interactive collation and measurement. Increment 2.3 owns crash-safe lock recovery and PID-reuse handling, verified predecessor lineage, append/compaction performance, resume, retention/garbage collection, once-only posting, remote reconciliation, and daemon mutation. Do not interpret a receipt, decision, reserved event name, or successor hint as authority for any of those actions.
+This increment deliberately stops at terminal interactive collation and measurement; the once-only
+posting protocol above is the increment-2.3 capability that was originally deferred here.
+Crash-safe lock recovery and PID-reuse handling, verified predecessor lineage, and append/compaction
+performance remain deferred, along with an *active* daemon preauthorization gate (typed decision
+state, required coverage, and a fresh head/idempotency recheck before an autonomous post) —
+`KC_PR_FLOW_ONCE_ONLY_POST` defaulting off is the entire daemon-safety mechanism today, by absence
+rather than an enforced allow-list. Do not interpret a receipt, decision, reserved event name, or
+successor hint as authority for any of those still-deferred actions.
 
 ## Roll back
 
@@ -256,9 +289,15 @@ Disable future observation without deleting evidence:
 ```bash
 unset KC_PR_FLOW_REVIEW_SHADOW
 unset KC_PR_FLOW_REVIEW_TYPED
+unset KC_PR_FLOW_ONCE_ONLY_POST
 ```
 
-You may also set either variable to any value other than `on`. The change affects only a fresh invocation. Existing receipts remain available for validation and paired analysis. Keeping them makes rollback reversible and preserves evidence for debugging.
+You may also set any variable to any value other than `on`. The change affects only a fresh
+invocation. Existing receipts, pending payloads, and posting-lifecycle events remain available for
+validation, reconciliation, and paired analysis. Keeping them makes rollback reversible and
+preserves evidence for debugging — `review-post.sh resume`/`gc` are never gated by
+`KC_PR_FLOW_ONCE_ONLY_POST`, so an uncertain remote result from a prior POST stays reconcilable
+after rollback.
 
 ## Troubleshooting
 

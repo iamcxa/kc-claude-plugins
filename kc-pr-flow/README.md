@@ -72,13 +72,28 @@ reported token reduction of at least 20% or a median local terminal-collation co
 60%. A local measurement binds the raw terminal artifact, recomputed decision, and captured
 designed-full-review control receipt through `local-measurement-binding/v1`. The producer applies
 `canonical-artifact-bytes/v1` to both treatment and control, invokes no replay/model/remote work,
-and the scorer rejects resealed units outside the corpus binding. Resume, once-only posting, remote reconciliation, robust lock recovery,
-verified predecessor lineage, retention, and daemon mutation remain increment 2.3.
+and the scorer rejects resealed units outside the corpus binding. Robust lock recovery, verified
+predecessor lineage, and append/compaction performance remain deferred.
+
+**Once-only posting (increment 2.3, shipped).** `scripts/review-post.sh` is the only component with
+posting/reconcile/network authority — `review-runtime.sh` never posts. It is off by default and
+enabled per invocation with `KC_PR_FLOW_ONCE_ONLY_POST=on`; off keeps `kc-pr-review` Step 7's
+existing `gh pr review` posting byte-identical to today. When on, a durable-before-mutate protocol
+(`authorization.granted` -> `post.intent` -> a mode-`0600` pending payload, all before any network
+call) means a crash mid-POST is always recoverable: `resume` reconciles a landed post via an
+embedded idempotency marker in the review body before ever retrying, a moved head or changed
+payload invalidates instead of posting stale content, and `gc` expires unreconciled pending payloads
+after `KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 7 days) but never within their window. Neither
+`resume` nor `gc` is gated by the rollback flag, so rolling back never deletes evidence needed to
+reconcile an uncertain remote result. There is no active daemon preauthorization gate yet — the
+rollback flag defaulting off is the entire daemon-safety mechanism today, by absence. See
+[Typed review runtime](docs/review-runtime.md) § "Once-only posting" for usage.
 
 Maintainer checks:
 
 ```bash
 bash scripts/review-runtime.test.sh
+bash scripts/review-post.test.sh
 bash scripts/review-shadow.test.sh
 bash scripts/review-runtime-benchmark.test.sh
 ```
@@ -218,7 +233,7 @@ flowchart TD
 | `reference/learned-patterns.md` | Accumulated cross-project review patterns (D1 auto-append target) |
 | `reference/review-architecture-diagrams.md` | Evidence ledger, safe Mermaid templates, implementation-status vocabulary, and preview/post contract |
 | `reference/review-architecture-diagrams-evals.md` | Behavioral pressure scenarios for preview-only authorization, label breakout rejection, and moved-head regeneration |
-| `reference/review-runtime.md` | Normative typed event, identity, storage, evidence, provenance, command, and failure contracts |
+| `reference/review-runtime.md` | Normative typed event, identity, storage, evidence, provenance, command, failure, and once-only posting contracts |
 | `reference/e2e-verification.md` | Layer classification patterns for E2E integration detection |
 | `reference/pr-review-loop.md` | Daemon iteration prompt: classification, risk tiers, safety rules |
 

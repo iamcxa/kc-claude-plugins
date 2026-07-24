@@ -60,13 +60,30 @@ authorization, or remote mutation. Benchmark promotion is ordered G1-G5, require
 expected must-fix findings before efficiency, and admits only the documented 20% reported-token or
 60% bound local-rehydration branch. Its executable local producer binds raw terminal, decision,
 and designed-full-review control artifacts and applies `canonical-artifact-bytes/v1` to treatment
-and control; replay output is not a full-rerun control. Crash-safe recovery, predecessor lineage, append/compaction,
-resume, retention, once-only posting, reconciliation, and daemon mutation remain increment 2.3.
+and control; replay output is not a full-rerun control. Crash-safe recovery, predecessor lineage, and
+append/compaction performance remain deferred.
+
+**Once-only posting (increment 2.3, shipped).** `scripts/review-post.sh` is the only component with
+posting/reconcile/network authority; `review-runtime.sh` still never posts. It is off by default,
+enabled per invocation with `KC_PR_FLOW_ONCE_ONLY_POST=on` (the rollback flag) — off means Step 7's
+existing `gh pr review` posting stays byte-identical to today. When on, `post` durably records
+`authorization.granted`/`post.intent` and the mode-`0600` `kc-pr-flow.pending-post/v1` payload before
+any network call, so a crash mid-POST is always recoverable. An ambiguous outcome (timeout, dropped
+response) never blind-retries: `resume` reconciles a landed post via the review body's embedded
+`idempotency_key` marker (`GET .../reviews`) before ever retrying, and a moved head or changed
+payload invalidates instead of posting the stale payload. `gc` expires an unreconciled pending
+payload after `KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 604800s / 7 days) but never within its
+window — `resume`/`gc` are never gated by the rollback flag, so rolling back never deletes evidence
+needed to reconcile an uncertain remote result. There is no *active* daemon preauthorization gate
+yet (typed decision state + coverage + fresh head/idempotency recheck before an autonomous post);
+the rollback flag defaulting off is the entire daemon-safety mechanism today, by absence.
+See `reference/review-runtime.md` § "Once-only posting" for the full protocol.
 
 Maintainer checks:
 
 ```bash
 bash scripts/review-runtime.test.sh
+bash scripts/review-post.test.sh
 bash scripts/review-shadow.test.sh
 bash scripts/review-runtime-benchmark.test.sh
 ```
@@ -130,7 +147,7 @@ Rationale + design notes: `kc-pr-flow/skills/kc-pr-review-resolve/SKILL.md` → 
 | `learned-patterns.md` | pr-review, pr-review-resolve | Accumulated cross-project review patterns (D1 auto-append target) |
 | `review-architecture-diagrams.md` | pr-review (on demand) | Evidence ledger, safe Mermaid templates, status vocabulary, size caps, and preview/post contract |
 | `review-architecture-diagrams-evals.md` | pr-review maintainers | Behavioral pressure scenarios for preview authorization, label breakout, and head freshness |
-| `review-runtime.md` | pr-review maintainers and runtime adapters | Typed receipt lifecycle, exact-head identity, storage, evidence, provenance, CLI, and recovery boundaries |
+| `review-runtime.md` | pr-review maintainers and runtime adapters | Typed receipt lifecycle, exact-head identity, storage, evidence, provenance, CLI, recovery boundaries, and once-only posting (resume, retention, rollback) |
 | `e2e-verification.md` | pr-create | Layer classification patterns for E2E integration detection |
 | `pr-review-loop.md` | pr-daemon (iteration prompt) | Classification logic, risk tiers, safety rules for daemon |
 

@@ -1697,7 +1697,49 @@ Before any GitHub mutation, require the exact closed receipt returned by
 confirmation are the sole posting authority. A missing, decisionless, malformed, or event-edited
 receipt blocks Step 7. Never reconstruct posting authority from the selected option or prose.
 
-Prefer `gh pr review` CLI. Use `gh api` as fallback for inline comments (CLI lacks native inline support). Write JSON payload to temp file to avoid shell escaping issues; always tag `@PR_AUTHOR` in the review body. For option 5 or 6, append both exact previewed diagrams to the same review body after verification / break-point / pass / cross-model sections and before advisory. Re-run the Step 2.1 head check and `review-architecture-diagrams-validate.sh` against the exact previewed pair immediately before posting; a moved head invalidates the diagrams and returns to §6b-arch, while a validation failure blocks posting and returns to regeneration.
+**Once-only posting path — `KC_PR_FLOW_ONCE_ONLY_POST=on` only.** Unset or any other value skips
+straight to "Legacy posting path" below, byte-identical to today. When `on`, `scripts/review-post.sh`
+is the only component with posting/reconcile/network authority and guarantees at most one GitHub
+review even across a crash mid-POST:
+
+1. Compute the review key: `bash scripts/review-runtime.sh review-key --repo "$REPO" --pr "$PR_NUMBER" --base "$BASE_SHA" --head "$HEAD_SHA" --config-hash "$CONFIG_HASH"`.
+2. **Rediscover, don't assume a fresh start.** A crash between Step 7 attempts left no run ID in
+   this session's memory, so scan for a resumable prior run before ever calling `post`: a run
+   whose first event's `review_key` matches this exact review and that has neither a terminal
+   `post.result` nor a `run.invalidated` event.
+   ```bash
+   STATE_ROOT="${KC_PR_FLOW_STATE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/kc-pr-flow}"
+   REPO_KEY=$(printf '%s' "$REPO" | shasum -a 256 | awk '{print $1}')
+   PR_DIR="$STATE_ROOT/$REPO_KEY/pr-$PR_NUMBER"
+   RESUME_RUN_ID=""
+   for d in "$PR_DIR"/*/; do
+     [ -f "${d}events.jsonl" ] || continue
+     jq -e --arg rk "$REVIEW_KEY" \
+       'select(.event_type=="run.started" and .review_key==$rk)' "${d}events.jsonl" \
+       >/dev/null 2>&1 || continue
+     [ -f "${d}pending-post.json" ] || continue
+     RESUME_RUN_ID=$(basename "${d%/}")
+   done
+   ```
+3. If `RESUME_RUN_ID` is non-empty, call `bash scripts/review-post.sh resume --repo "$REPO" --pr
+   "$PR_NUMBER" --self "$MY_LOGIN" --run-id "$RESUME_RUN_ID"` first and skip step 4 — its
+   `posted` / `posted_reconciled` / `failed` / `invalidated` status settles that prior attempt's
+   fate. Never also run a fresh `post` for the same payload once a resumable run exists.
+4. Otherwise, build the request JSON (`repo`, `pr`, `base_sha`, `head_sha`, `config_hash`,
+   `commit_id` == `head_sha`, `event`, `body`, `comments`, `self_login`) and the gate JSON from the
+   Step 6c receipt, then call `bash scripts/review-post.sh post --request-file request.json
+   --gate-file gate.json`.
+5. Interpret the JSON `status` from whichever of step 3/4 ran: `posted` / `posted_reconciled` —
+   done. `ambiguous` — the outcome is genuinely unconfirmed; leave the pending payload in place and
+   tell the user a later invocation will reconcile it (step 2-3 above finds it next time); never
+   retry within the same invocation. `invalidated` — report the `reason` (`head_moved` /
+   `payload_changed` / `identity_changed`) and return to re-confirmation; never post the stale
+   payload. `failed` — surface the failure; do not retry blindly.
+
+Read → ${CLAUDE_PLUGIN_ROOT}/reference/review-runtime.md § "Once-only posting" for the full protocol
+(idempotency key, marker, retention, rollback).
+
+**Legacy posting path (default).** Prefer `gh pr review` CLI. Use `gh api` as fallback for inline comments (CLI lacks native inline support). Write JSON payload to temp file to avoid shell escaping issues; always tag `@PR_AUTHOR` in the review body. For option 5 or 6, append both exact previewed diagrams to the same review body after verification / break-point / pass / cross-model sections and before advisory. Re-run the Step 2.1 head check and `review-architecture-diagrams-validate.sh` against the exact previewed pair immediately before posting; a moved head invalidates the diagrams and returns to §6b-arch, while a validation failure blocks posting and returns to regeneration.
 
 Read → ${CLAUDE_PLUGIN_ROOT}/reference/gh-api-patterns.md § "Review Payload"
 

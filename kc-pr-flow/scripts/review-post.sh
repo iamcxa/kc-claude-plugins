@@ -97,12 +97,14 @@ review_post_transport() {
 review_post_gh_transport() {
   local op="$1"
   shift
-  local repo='' pr='' self=''
+  local repo='' pr=''
   while [ "$#" -gt 0 ]; do
     case "$1" in
       --repo) repo="$2"; shift 2 ;;
       --pr) pr="$2"; shift 2 ;;
-      --self) self="$2"; shift 2 ;;
+      # --self is part of the shared transport CLI (the stub uses it); the gh
+      # adapter doesn't need it since the caller filters `list` by self login.
+      --self) shift 2 ;;
       *) shift ;;
     esac
   done
@@ -123,7 +125,7 @@ review_post_gh_transport() {
       jq -cn --argjson reviews "$reviews" '{reviews:$reviews}'
       ;;
     post)
-      local body_json response http_status remote_id
+      local body_json response remote_id
       body_json="$(cat)"
       local tmp
       tmp="$(mktemp)" || return 74
