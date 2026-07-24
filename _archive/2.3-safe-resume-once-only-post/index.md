@@ -7,9 +7,11 @@ harvest_required: true
 layout: folder
 appetite: "2 working days"
 depends_on:
-  - "2.2"
-status: sharp
+    - "2.2"
+status: done
 stage_outputs: {}
+completed: 2026-07-24T09:38:49Z
+archived: 2026-07-24T09:38:49Z
 ---
 
 ### Vertical Slice
@@ -27,3 +29,7 @@ Head or payload changes invalidate authorization; successful or stale payloads a
 ### Rollback
 
 The legacy path remains available while the new posting path is disabled; rollback never deletes evidence needed to reconcile an uncertain remote result.
+
+### Superseded
+
+Superseded — the agent-native PR review kit moved from ship-flow to the `docs/dev` workflow. This pitch is now built as the `docs/dev` task `safe-resume-once-only-post` (id `50n4g9vyzdd12h03r6wskfkq`), seeded from this body. No further work happens on this ship-flow entity.
