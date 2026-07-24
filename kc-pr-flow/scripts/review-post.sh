@@ -235,8 +235,10 @@ review_post_run_invalidated() {
 }
 
 review_post_next_sequence() {
+  # One past the last existing sequence number (sequences are 1-based), i.e.
+  # the sequence a caller must use for the NEXT event it appends.
   local events="$1"
-  printf '%s\n' "$events" | jq -s 'length'
+  printf '%s\n' "$events" | jq -s 'length + 1'
 }
 
 review_post_scan_marker() {
