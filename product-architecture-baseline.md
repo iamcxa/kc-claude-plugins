@@ -10,7 +10,7 @@ score: 0.6
 worktree:
 issue:
 pr:
-design:
+design: trivial-pass
 ---
 
 This repo has CLAUDE.md conventions but no PRODUCT.md or ARCHITECTURE.md,
