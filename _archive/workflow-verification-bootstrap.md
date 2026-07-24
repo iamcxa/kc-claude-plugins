@@ -1,16 +1,17 @@
 ---
 id: te82apnehg989v4enz9e6wf6
 title: Workflow verification bootstrap
-status: validation
+status: done
 source: commission seed (lean SD workflow, 2026-07-24)
 started: 2026-07-24T05:26:29Z
-completed:
-verdict:
+completed: 2026-07-24T07:56:46Z
+verdict: passed
 score: 0.7
 worktree: .worktrees/spacedock-ensign-workflow-verification-bootstrap
 issue:
-pr: "#52"
+pr: pr-merge:52
 design:
+archived: 2026-07-24T07:56:46Z
 ---
 
 ## Problem
