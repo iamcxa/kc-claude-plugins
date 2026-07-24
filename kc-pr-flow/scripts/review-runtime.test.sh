@@ -1627,7 +1627,7 @@ else
 fi
 
 # A new state file can only be established by run.started sequence 1.
-nonstart_first="$(rehash_event "$(jq -c '.run_id="run-first-nonstart" | .event_type="head.observed" | .sequence=1' <<<"$fresh_fixture")")"
+nonstart_first="$(rehash_event "$(jq -c '.run_id="run-first-nonstart" | .event_type="head.observed" | .sequence=1 | .payload={head_sha:.head_sha}' <<<"$fresh_fixture")")"
 bad_sequence_first="$(rehash_event "$(jq -c '.run_id="run-first-sequence-two" | .sequence=2' <<<"$fresh_fixture")")"
 for first_case in "$nonstart_first" "$bad_sequence_first"; do
   first_run_id="$(jq -r '.run_id' <<<"$first_case")"
@@ -1829,7 +1829,7 @@ assert_eq "sequence fixture seed succeeds" "0" "$sequence_seed_rc"
 assert_eq "sequence fixture seed appends one" "1" "$(jq -r '.appended' <<<"$sequence_seed_output")"
 sequence_events="$sequence_state/$REPO_KEY/pr-$PR_NUMBER/run-fixture-fresh/events.jsonl"
 
-sequence_two="$(rehash_event "$(jq -c '.event_type="head.observed" | .sequence=2 | .payload={}' <<<"$fresh_fixture")")"
+sequence_two="$(rehash_event "$(jq -c '.event_type="head.observed" | .sequence=2 | .payload={head_sha:.head_sha}' <<<"$fresh_fixture")")"
 printf '%s\n' "$sequence_two" >"$TEST_STATE_ROOT/sequence-two.jsonl"
 sequence_two_output="$(KC_PR_FLOW_STATE_DIR="$sequence_state" bash "$RUNTIME" append --event-file "$TEST_STATE_ROOT/sequence-two.jsonl")"
 sequence_two_rc=$?
@@ -1845,7 +1845,7 @@ assert_eq "exact duplicate reports duplicate" "1" "$(jq -r '.duplicate' <<<"$dup
 if cmp -s "$sequence_before_duplicate" "$sequence_events"; then pass; else fail "exact duplicate changes sequence log"; fi
 
 duplicate_sequence="$(rehash_event "$(jq -c '.event_type="run.finished" | .sequence=2 | .payload={}' <<<"$fresh_fixture")")"
-gap_sequence="$(rehash_event "$(jq -c '.event_type="run.invalidated" | .sequence=4 | .payload={}' <<<"$fresh_fixture")")"
+gap_sequence="$(rehash_event "$(jq -c '.event_type="run.invalidated" | .sequence=4 | .payload={reason:"head_moved"}' <<<"$fresh_fixture")")"
 backward_sequence="$(rehash_event "$(jq -c '.event_type="run.finished" | .sequence=1 | .payload={}' <<<"$fresh_fixture")")"
 for sequence_case in "$duplicate_sequence" "$gap_sequence" "$backward_sequence"; do
   sequence_case_id="$(jq -r '.event_id' <<<"$sequence_case")"
@@ -1894,7 +1894,7 @@ wait "$owner_shell_pid"; owner_shell_rc=$?
 assert_eq "background sourced-shell owner releases cleanly" "0" "$owner_shell_rc"
 if [ -d "$owner_pid_lock" ]; then rm -f "$owner_pid_lock/owner.pid"; rmdir "$owner_pid_lock"; fi
 
-dead_owner_candidate="$(rehash_event "$(jq -c '.event_type="head.observed" | .sequence=3 | .payload={}' <<<"$fresh_fixture")")"
+dead_owner_candidate="$(rehash_event "$(jq -c '.event_type="head.observed" | .sequence=3 | .payload={head_sha:.head_sha}' <<<"$fresh_fixture")")"
 printf '%s\n' "$dead_owner_candidate" >"$TEST_STATE_ROOT/dead-owner-candidate.jsonl"
 mkdir "$sequence_lock"
 printf '%s\n' '999999' >"$sequence_lock/owner.pid"
@@ -1940,11 +1940,11 @@ assert_eq "failed atomic append cleans owned lock" "false" "$([ -e "$sequence_lo
 malformed_state="$(mktemp -d)"
 malformed_run_dir="$malformed_state/$REPO_KEY/pr-$PR_NUMBER/run-fixture-fresh"
 mkdir -p "$malformed_run_dir"
-malformed_three="$(rehash_event "$(jq -c '.event_type="head.observed" | .sequence=3 | .payload={}' <<<"$fresh_fixture")")"
+malformed_three="$(rehash_event "$(jq -c '.event_type="head.observed" | .sequence=3 | .payload={head_sha:.head_sha}' <<<"$fresh_fixture")")"
 printf '%s\n%s\n' "$fresh_fixture" "$malformed_three" >"$malformed_run_dir/events.jsonl"
 chmod 0600 "$malformed_run_dir/events.jsonl"
 cp "$malformed_run_dir/events.jsonl" "$TEST_STATE_ROOT/malformed-before.jsonl"
-malformed_four="$(rehash_event "$(jq -c '.event_type="head.observed" | .sequence=4 | .payload={}' <<<"$fresh_fixture")")"
+malformed_four="$(rehash_event "$(jq -c '.event_type="head.observed" | .sequence=4 | .payload={head_sha:.head_sha}' <<<"$fresh_fixture")")"
 printf '%s\n' "$malformed_four" >"$TEST_STATE_ROOT/malformed-four.jsonl"
 malformed_output="$(KC_PR_FLOW_STATE_DIR="$malformed_state" bash "$RUNTIME" append --event-file "$TEST_STATE_ROOT/malformed-four.jsonl" 2>"$TEST_STATE_ROOT/malformed-existing.stderr")"
 malformed_rc=$?
@@ -2370,6 +2370,117 @@ for forbidden_command in resume gc authorize post; do
   forbidden_rc=$?
   assert_eq "$forbidden_command command is out of scope" "2" "$forbidden_rc"
 done
+
+# Once-only posting (increment 2.3): the five reserved receipt events close
+# their payload schema instead of accepting an empty placeholder, and
+# authorization.granted / post.intent additionally bind a T2 idempotency key
+# derived from review_key|commit_id|payload_sha256 (A2 design). The runtime
+# still grants these events no posting or GitHub authority — see the
+# "command is out of scope" assertions above, which stay unchanged.
+once_only_commit_id="$HEAD_SHA"
+once_only_payload_sha256="$(sha256_text 'kc-pr-flow.once-only-posting-payload-fixture')"
+once_only_idempotency_key="$(review_runtime_idempotency_key "$EXPECTED_REVIEW_KEY" "$once_only_commit_id" "$once_only_payload_sha256")"
+
+once_only_head_observed_valid="$(rehash_event "$(jq -c --arg head_sha "$HEAD_SHA" '.sequence=2 | .event_type="head.observed" | .payload={head_sha:$head_sha}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_head_observed_valid" >"$TEST_STATE_ROOT/once-only-head-observed-valid.jsonl"
+once_only_head_observed_valid_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-head-observed-valid.jsonl")"
+assert_eq "head.observed with a bound head_sha validates" "1" "$(jq -r '.valid' <<<"$once_only_head_observed_valid_output")"
+
+once_only_head_observed_empty="$(rehash_event "$(jq -c '.sequence=2 | .event_type="head.observed" | .payload={}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_head_observed_empty" >"$TEST_STATE_ROOT/once-only-head-observed-empty.jsonl"
+once_only_head_observed_empty_stderr="$TEST_STATE_ROOT/once-only-head-observed-empty.stderr"
+once_only_head_observed_empty_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-head-observed-empty.jsonl" 2>"$once_only_head_observed_empty_stderr")"
+assert_eq "head.observed no longer accepts an empty placeholder payload" "1" "$(jq -r '.invalid' <<<"$once_only_head_observed_empty_output")"
+assert_match "head.observed empty payload uses the closed schema reason" 'unsupported_payload_schema' "$(cat "$once_only_head_observed_empty_stderr")"
+
+once_only_authorization_granted_valid="$(rehash_event "$(jq -c --arg commit_id "$once_only_commit_id" --arg payload_sha256 "$once_only_payload_sha256" --arg idempotency_key "$once_only_idempotency_key" '.sequence=2 | .event_type="authorization.granted" | .payload={commit_id:$commit_id,event:"APPROVE",idempotency_key:$idempotency_key,payload_sha256:$payload_sha256}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_authorization_granted_valid" >"$TEST_STATE_ROOT/once-only-authorization-granted-valid.jsonl"
+once_only_authorization_granted_valid_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-authorization-granted-valid.jsonl")"
+assert_eq "authorization.granted with a bound idempotency key validates" "1" "$(jq -r '.valid' <<<"$once_only_authorization_granted_valid_output")"
+
+once_only_authorization_granted_mismatch="$(rehash_event "$(jq -c --arg commit_id "$once_only_commit_id" --arg payload_sha256 "$once_only_payload_sha256" --arg idempotency_key "$(sha256_text 'wrong-idempotency-key')" '.sequence=2 | .event_type="authorization.granted" | .payload={commit_id:$commit_id,event:"APPROVE",idempotency_key:$idempotency_key,payload_sha256:$payload_sha256}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_authorization_granted_mismatch" >"$TEST_STATE_ROOT/once-only-authorization-granted-mismatch.jsonl"
+once_only_authorization_granted_mismatch_stderr="$TEST_STATE_ROOT/once-only-authorization-granted-mismatch.stderr"
+once_only_authorization_granted_mismatch_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-authorization-granted-mismatch.jsonl" 2>"$once_only_authorization_granted_mismatch_stderr")"
+assert_eq "authorization.granted rejects a recomputed idempotency-key mismatch" "1" "$(jq -r '.invalid' <<<"$once_only_authorization_granted_mismatch_output")"
+assert_match "idempotency-key mismatch is T2-typed" 'idempotency_key_mismatch' "$(cat "$once_only_authorization_granted_mismatch_stderr")"
+
+once_only_moved_commit_id="dddddddddddddddddddddddddddddddddddddddd"
+once_only_moved_idempotency_key="$(review_runtime_idempotency_key "$EXPECTED_REVIEW_KEY" "$once_only_moved_commit_id" "$once_only_payload_sha256")"
+once_only_authorization_head_mismatch="$(rehash_event "$(jq -c --arg commit_id "$once_only_moved_commit_id" --arg payload_sha256 "$once_only_payload_sha256" --arg idempotency_key "$once_only_moved_idempotency_key" '.sequence=2 | .event_type="authorization.granted" | .payload={commit_id:$commit_id,event:"APPROVE",idempotency_key:$idempotency_key,payload_sha256:$payload_sha256}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_authorization_head_mismatch" >"$TEST_STATE_ROOT/once-only-authorization-head-mismatch.jsonl"
+once_only_authorization_head_mismatch_stderr="$TEST_STATE_ROOT/once-only-authorization-head-mismatch.stderr"
+once_only_authorization_head_mismatch_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-authorization-head-mismatch.jsonl" 2>"$once_only_authorization_head_mismatch_stderr")"
+assert_eq "authorization.granted binds commit_id to the exact reviewed head" "1" "$(jq -r '.invalid' <<<"$once_only_authorization_head_mismatch_output")"
+assert_match "authorization head mismatch is T2-typed" 'authorization_head_mismatch' "$(cat "$once_only_authorization_head_mismatch_stderr")"
+
+once_only_post_intent_valid="$(rehash_event "$(jq -c --arg commit_id "$once_only_commit_id" --arg payload_sha256 "$once_only_payload_sha256" --arg idempotency_key "$once_only_idempotency_key" '.sequence=2 | .event_type="post.intent" | .payload={commit_id:$commit_id,idempotency_key:$idempotency_key,payload_sha256:$payload_sha256}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_post_intent_valid" >"$TEST_STATE_ROOT/once-only-post-intent-valid.jsonl"
+once_only_post_intent_valid_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-post-intent-valid.jsonl")"
+assert_eq "post.intent with a bound idempotency key validates" "1" "$(jq -r '.valid' <<<"$once_only_post_intent_valid_output")"
+
+once_only_post_intent_mismatch="$(rehash_event "$(jq -c --arg commit_id "$once_only_commit_id" --arg payload_sha256 "$once_only_payload_sha256" --arg idempotency_key "$(sha256_text 'wrong-idempotency-key')" '.sequence=2 | .event_type="post.intent" | .payload={commit_id:$commit_id,idempotency_key:$idempotency_key,payload_sha256:$payload_sha256}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_post_intent_mismatch" >"$TEST_STATE_ROOT/once-only-post-intent-mismatch.jsonl"
+once_only_post_intent_mismatch_stderr="$TEST_STATE_ROOT/once-only-post-intent-mismatch.stderr"
+once_only_post_intent_mismatch_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-post-intent-mismatch.jsonl" 2>"$once_only_post_intent_mismatch_stderr")"
+assert_eq "post.intent rejects a recomputed idempotency-key mismatch" "1" "$(jq -r '.invalid' <<<"$once_only_post_intent_mismatch_output")"
+assert_match "post.intent idempotency-key mismatch is T2-typed" 'idempotency_key_mismatch' "$(cat "$once_only_post_intent_mismatch_stderr")"
+
+once_only_post_intent_head_mismatch="$(rehash_event "$(jq -c --arg commit_id "$once_only_moved_commit_id" --arg payload_sha256 "$once_only_payload_sha256" --arg idempotency_key "$once_only_moved_idempotency_key" '.sequence=2 | .event_type="post.intent" | .payload={commit_id:$commit_id,idempotency_key:$idempotency_key,payload_sha256:$payload_sha256}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_post_intent_head_mismatch" >"$TEST_STATE_ROOT/once-only-post-intent-head-mismatch.jsonl"
+once_only_post_intent_head_mismatch_stderr="$TEST_STATE_ROOT/once-only-post-intent-head-mismatch.stderr"
+once_only_post_intent_head_mismatch_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-post-intent-head-mismatch.jsonl" 2>"$once_only_post_intent_head_mismatch_stderr")"
+assert_eq "post.intent binds commit_id to the exact reviewed head" "1" "$(jq -r '.invalid' <<<"$once_only_post_intent_head_mismatch_output")"
+assert_match "post.intent head mismatch is T2-typed" 'authorization_head_mismatch' "$(cat "$once_only_post_intent_head_mismatch_stderr")"
+
+once_only_post_result_posted="$(rehash_event "$(jq -c --arg idempotency_key "$once_only_idempotency_key" '.sequence=2 | .event_type="post.result" | .payload={outcome:"posted",remote_review_id:987654321,idempotency_key:$idempotency_key}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_post_result_posted" >"$TEST_STATE_ROOT/once-only-post-result-posted.jsonl"
+once_only_post_result_posted_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-post-result-posted.jsonl")"
+assert_eq "post.result posted outcome with a remote review id validates" "1" "$(jq -r '.valid' <<<"$once_only_post_result_posted_output")"
+
+once_only_post_result_reconciled="$(rehash_event "$(jq -c --arg idempotency_key "$once_only_idempotency_key" '.sequence=2 | .event_type="post.result" | .payload={outcome:"posted_reconciled",remote_review_id:987654321,idempotency_key:$idempotency_key}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_post_result_reconciled" >"$TEST_STATE_ROOT/once-only-post-result-reconciled.jsonl"
+once_only_post_result_reconciled_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-post-result-reconciled.jsonl")"
+assert_eq "post.result posted_reconciled outcome with a remote review id validates" "1" "$(jq -r '.valid' <<<"$once_only_post_result_reconciled_output")"
+
+once_only_post_result_failed="$(rehash_event "$(jq -c --arg idempotency_key "$once_only_idempotency_key" '.sequence=2 | .event_type="post.result" | .payload={outcome:"failed",idempotency_key:$idempotency_key}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_post_result_failed" >"$TEST_STATE_ROOT/once-only-post-result-failed.jsonl"
+once_only_post_result_failed_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-post-result-failed.jsonl")"
+assert_eq "post.result failed outcome without a remote review id validates" "1" "$(jq -r '.valid' <<<"$once_only_post_result_failed_output")"
+
+once_only_post_result_failed_with_id="$(rehash_event "$(jq -c --arg idempotency_key "$once_only_idempotency_key" '.sequence=2 | .event_type="post.result" | .payload={outcome:"failed",remote_review_id:1,idempotency_key:$idempotency_key}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_post_result_failed_with_id" >"$TEST_STATE_ROOT/once-only-post-result-failed-with-id.jsonl"
+once_only_post_result_failed_with_id_stderr="$TEST_STATE_ROOT/once-only-post-result-failed-with-id.stderr"
+once_only_post_result_failed_with_id_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-post-result-failed-with-id.jsonl" 2>"$once_only_post_result_failed_with_id_stderr")"
+assert_eq "post.result rejects a failed outcome carrying a remote review id" "1" "$(jq -r '.invalid' <<<"$once_only_post_result_failed_with_id_output")"
+assert_match "failed-with-id uses the closed schema reason" 'unsupported_payload_schema' "$(cat "$once_only_post_result_failed_with_id_stderr")"
+
+once_only_post_result_posted_missing_id="$(rehash_event "$(jq -c --arg idempotency_key "$once_only_idempotency_key" '.sequence=2 | .event_type="post.result" | .payload={outcome:"posted",idempotency_key:$idempotency_key}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_post_result_posted_missing_id" >"$TEST_STATE_ROOT/once-only-post-result-posted-missing-id.jsonl"
+once_only_post_result_posted_missing_id_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-post-result-posted-missing-id.jsonl")"
+assert_eq "post.result rejects a posted outcome missing the remote review id" "1" "$(jq -r '.invalid' <<<"$once_only_post_result_posted_missing_id_output")"
+
+once_only_post_result_unknown_outcome="$(rehash_event "$(jq -c --arg idempotency_key "$once_only_idempotency_key" '.sequence=2 | .event_type="post.result" | .payload={outcome:"pending",idempotency_key:$idempotency_key}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_post_result_unknown_outcome" >"$TEST_STATE_ROOT/once-only-post-result-unknown-outcome.jsonl"
+once_only_post_result_unknown_outcome_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-post-result-unknown-outcome.jsonl")"
+assert_eq "post.result rejects an unenumerated outcome" "1" "$(jq -r '.invalid' <<<"$once_only_post_result_unknown_outcome_output")"
+
+for once_only_reason in head_moved payload_changed identity_changed expired; do
+  once_only_invalidated_valid="$(rehash_event "$(jq -c --arg reason "$once_only_reason" '.sequence=2 | .event_type="run.invalidated" | .payload={reason:$reason}' <<<"$fresh_fixture")")"
+  printf '%s\n' "$once_only_invalidated_valid" >"$TEST_STATE_ROOT/once-only-invalidated-$once_only_reason.jsonl"
+  once_only_invalidated_valid_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-invalidated-$once_only_reason.jsonl")"
+  assert_eq "run.invalidated accepts reason $once_only_reason" "1" "$(jq -r '.valid' <<<"$once_only_invalidated_valid_output")"
+done
+
+once_only_invalidated_unknown_reason="$(rehash_event "$(jq -c '.sequence=2 | .event_type="run.invalidated" | .payload={reason:"scope_creep"}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_invalidated_unknown_reason" >"$TEST_STATE_ROOT/once-only-invalidated-unknown.jsonl"
+once_only_invalidated_unknown_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-invalidated-unknown.jsonl")"
+assert_eq "run.invalidated rejects an unenumerated reason" "1" "$(jq -r '.invalid' <<<"$once_only_invalidated_unknown_output")"
+
+once_only_invalidated_extra_field="$(rehash_event "$(jq -c '.sequence=2 | .event_type="run.invalidated" | .payload={reason:"head_moved",note:"unexpected"}' <<<"$fresh_fixture")")"
+printf '%s\n' "$once_only_invalidated_extra_field" >"$TEST_STATE_ROOT/once-only-invalidated-extra-field.jsonl"
+once_only_invalidated_extra_field_output="$(bash "$RUNTIME" validate --event-file "$TEST_STATE_ROOT/once-only-invalidated-extra-field.jsonl")"
+assert_eq "run.invalidated payload is closed to extra fields" "1" "$(jq -r '.invalid' <<<"$once_only_invalidated_extra_field_output")"
 
 printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]
