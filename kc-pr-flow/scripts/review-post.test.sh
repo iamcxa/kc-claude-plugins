@@ -33,13 +33,16 @@ file_mode() {
   if stat -f '%Lp' "$1" >/dev/null 2>&1; then stat -f '%Lp' "$1"; else stat -c '%a' "$1"; fi
 }
 
-# Fresh isolated state + stub scenario per scenario.
+# Fresh isolated state + stub scenario per scenario. The rollback flag
+# defaults ON here so AC1-AC4/AC6 exercise the new path's own mechanics;
+# dedicated blocks below unset it to prove the default-deny/rollback gate.
 new_env() {
   STATE="$(mktemp -d)"
   STUB_DIR="$(mktemp -d)"
   export KC_PR_FLOW_STATE_DIR="$STATE"
   export KC_PR_FLOW_POST_TRANSPORT="$STUB"
   export KC_STUB_DIR="$STUB_DIR"
+  export KC_PR_FLOW_ONCE_ONLY_POST=on
   printf '%s\n' "$HEAD" >"$STUB_DIR/head"
   printf '%s\n' "$SELF" >"$STUB_DIR/self"
   : >"$STUB_DIR/reviews.jsonl"
@@ -47,6 +50,7 @@ new_env() {
 teardown_env() {
   chmod -R u+rwX "$STATE" 2>/dev/null || true
   rm -rf "$STATE" "$STUB_DIR"
+  unset KC_PR_FLOW_ONCE_ONLY_POST
 }
 
 write_request() {
@@ -173,6 +177,22 @@ assert_eq "post refuses an event-mismatched gate" "3" "$?"
 assert_eq "denied posts record zero reviews" "0" "$(store_count)"
 teardown_env
 
+# --- AC5/AC7: rollback flag is the operator-level default-deny kill switch,
+# distinct from and layered above the per-call human-confirmation gate. Off
+# (the default) denies EVERY caller -- daemon or interactive -- so "a daemon
+# iteration with no preauthorization takes the new posting path zero times"
+# holds by absence, with no daemon-specific code path to test separately. ---
+new_env; write_request; write_gate
+unset KC_PR_FLOW_ONCE_ONLY_POST
+printf 'posted\n' >"$STUB_DIR/post-plan"
+bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000 >/dev/null 2>&1
+assert_eq "post refuses when the rollback flag is off, even with a valid gate" "3" "$?"
+assert_eq "rollback-flag-off posts record zero reviews" "0" "$(store_count)"
+export KC_PR_FLOW_ONCE_ONLY_POST=on
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+assert_eq "the same request posts once the flag is enabled" "posted" "$(jq -r '.status' <<<"$out")"
+teardown_env
+
 # --- AC6: retention fail-safe — within-window pending survives; past-window is GC'd. ---
 new_env; write_request; write_gate
 printf 'lost\n' >"$STUB_DIR/post-plan"
@@ -197,12 +217,18 @@ printf 'ambiguous\n' >"$STUB_DIR/post-plan"
 out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
 run_id="$(jq -r '.run_id' <<<"$out")"
 pending_file="$(run_dir_for "$run_id")/pending-post.json"
-# Simulate rollback: the new posting path is simply not invoked again. The
-# durable evidence (post.intent + pending payload) MUST survive so an uncertain
-# remote result stays reconcilable.
+# Actually flip the rollback flag off -- the real mechanism, not a stand-in.
+# The durable evidence (post.intent + pending payload) MUST survive so an
+# uncertain remote result stays reconcilable, and resume/gc stay ungated.
+unset KC_PR_FLOW_ONCE_ONLY_POST
 assert_eq "rollback leaves the post.intent event intact" "1" "$(run_events "$run_id" | jq -s '[.[] | select(.event_type=="post.intent")] | length')"
 assert_eq "rollback leaves the pending payload intact" "true" "$([ -e "$pending_file" ] && printf true || printf false)"
-# And the preserved evidence is still enough to reconcile later.
+# A fresh post attempt with the flag off is refused -- rollback really did
+# disable the new path for fresh invocations.
+bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000 >/dev/null 2>&1
+assert_eq "rollback refuses a fresh post attempt" "3" "$?"
+# And the preserved evidence is still enough to reconcile later, even with
+# the flag off -- resume is never gated by the flag.
 resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id")"
 assert_eq "preserved evidence still reconciles after rollback" "posted_reconciled" "$(jq -r '.status' <<<"$resume_out")"
 assert_eq "reconcile-after-rollback keeps exactly one review" "1" "$(store_count)"

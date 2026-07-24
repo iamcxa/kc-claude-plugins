@@ -16,6 +16,13 @@
 #     reconciles to post.result{posted_reconciled} with NO second POST.
 #   A moved head or changed payload emits run.invalidated and never posts the
 #   stale payload.
+#
+# Rollback / default-deny: KC_PR_FLOW_ONCE_ONLY_POST (default off) gates only
+# `post` (fresh authorization + intent). Absence denies EVERY caller -- daemon
+# or interactive alike, since neither sets it -- so "the daemon never takes
+# the new posting path" holds by default with no daemon-specific code. `resume`
+# and `gc` are never gated: rollback must never block reconciling or expiring
+# evidence from a POST made while the flag was on.
 set -uo pipefail
 
 REVIEW_POST_MARKER_PREFIX='<!-- kc-pr-flow-post-receipt:'
@@ -173,6 +180,12 @@ review_post_gate_valid() {
     .effective_event == $event' >/dev/null 2>&1
 }
 
+# Operator-level kill switch, layered above the per-call gate above. Off
+# (the default) denies every caller with no daemon/interactive distinction.
+review_post_rollback_enabled() {
+  [ "${KC_PR_FLOW_ONCE_ONLY_POST:-off}" = on ]
+}
+
 review_post_run_dir() {
   local repository="$1" pr_number="$2" run_id="$3"
   local state_root repo_key
@@ -301,6 +314,10 @@ review_post_cmd_post() {
       *) printf 'review-post: unknown post option %s\n' "$1" >&2; return 2 ;;
     esac
   done
+  review_post_rollback_enabled || {
+    printf 'review-post: once-only posting is disabled (set KC_PR_FLOW_ONCE_ONLY_POST=on to enable)\n' >&2
+    return 3
+  }
   [ -n "$request_file" ] && [ -f "$request_file" ] || {
     printf 'review-post: --request-file is required\n' >&2
     return 2
