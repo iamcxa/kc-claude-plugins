@@ -29,13 +29,7 @@ on:
       - ".claude-plugin/marketplace.json"
       - "PRODUCT.md"
       - "ARCHITECTURE.md"
-      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-evidence/**"
-      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/plan.md"
-      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-ledger.jsonl"
-      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-ledger.txt"
-      - "docs/ship-flow/2.2-typed-interactive-lifecycle/plan.md"
-      - "docs/ship-flow/2.2-typed-interactive-lifecycle/tdd-ledger.jsonl"
-      - "docs/ship-flow/2.2-typed-interactive-lifecycle/tdd-ledger.txt"
+      - "kc-pr-flow/test/fixtures/review-tdd-evidence/**"
       - "docs/ship-flow/tools/validate-tdd-ledger.py"
       - ".github/workflows/review-runtime-tests.yml"
   push:
@@ -63,13 +57,7 @@ on:
       - ".claude-plugin/marketplace.json"
       - "PRODUCT.md"
       - "ARCHITECTURE.md"
-      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-evidence/**"
-      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/plan.md"
-      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-ledger.jsonl"
-      - "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-ledger.txt"
-      - "docs/ship-flow/2.2-typed-interactive-lifecycle/plan.md"
-      - "docs/ship-flow/2.2-typed-interactive-lifecycle/tdd-ledger.jsonl"
-      - "docs/ship-flow/2.2-typed-interactive-lifecycle/tdd-ledger.txt"
+      - "kc-pr-flow/test/fixtures/review-tdd-evidence/**"
       - "docs/ship-flow/tools/validate-tdd-ledger.py"
       - ".github/workflows/review-runtime-tests.yml"
 
@@ -126,17 +114,17 @@ jobs:
                 .matched_expectation == true) and
               ($latest[0].recorded_at < $latest[1].recorded_at) and
               ($latest[1].recorded_at < $latest[2].recorded_at)
-            ' "docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-evidence/${task}.jsonl"
+            ' "kc-pr-flow/test/fixtures/review-tdd-evidence/2.1-shadow-review-receipt/tdd-evidence/${task}.jsonl"
           done
 
       - name: Validate plan TDD ledger
         run: |
           python3 docs/ship-flow/tools/validate-tdd-ledger.py \
-            --plan docs/ship-flow/_archive/2.1-shadow-review-receipt/plan.md \
-            --require-ledger-jsonl docs/ship-flow/_archive/2.1-shadow-review-receipt/tdd-ledger.jsonl
+            --plan kc-pr-flow/test/fixtures/review-tdd-evidence/2.1-shadow-review-receipt/plan.md \
+            --require-ledger-jsonl kc-pr-flow/test/fixtures/review-tdd-evidence/2.1-shadow-review-receipt/tdd-ledger.jsonl
           python3 docs/ship-flow/tools/validate-tdd-ledger.py \
-            --plan docs/ship-flow/2.2-typed-interactive-lifecycle/plan.md \
-            --require-ledger-jsonl docs/ship-flow/2.2-typed-interactive-lifecycle/tdd-ledger.jsonl
+            --plan kc-pr-flow/test/fixtures/review-tdd-evidence/2.2-typed-interactive-lifecycle/plan.md \
+            --require-ledger-jsonl kc-pr-flow/test/fixtures/review-tdd-evidence/2.2-typed-interactive-lifecycle/tdd-ledger.jsonl
 
       - name: Syntax check
         run: |
