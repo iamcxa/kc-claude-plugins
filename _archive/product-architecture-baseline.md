@@ -1,17 +1,18 @@
 ---
 id: fdkcs3m8jp2wnxh8bfd1cgzq
 title: PRODUCT.md + ARCHITECTURE.md baseline
-status: validation
+status: done
 source: commission seed (lean SD workflow, 2026-07-24)
 started: 2026-07-24T08:52:51Z
-completed:
-verdict:
+completed: 2026-07-24T09:40:16Z
+verdict: passed
 score: 0.6
 worktree: .worktrees/spacedock-ensign-product-architecture-baseline
 issue:
-pr: "#55"
+pr: pr-merge:55
 design: trivial-pass
-mod-block: merge:pr-merge
+mod-block:
+archived: 2026-07-24T09:40:16Z
 ---
 
 This repo has CLAUDE.md conventions but no PRODUCT.md or ARCHITECTURE.md,
