@@ -12,19 +12,22 @@ design_required: true
 contract_decision_required: false
 domain: schema
 depends_on:
-  - "2.1"
+    - "2.1"
 started: 2026-07-23T02:33:13Z
-status: ship
+status: done
 stage_outputs:
-  shape: shape.md
-  design: design.md
-  plan: plan.md
-  execute: execute.md
-  verify: verify.md
-  review: review.md
-  ship: ship.md
+    shape: shape.md
+    design: design.md
+    plan: plan.md
+    execute: execute.md
+    verify: verify.md
+    review: review.md
+    ship: ship.md
 pr: "#50"
 closeout_owner: true
+verdict: PASSED
+completed: 2026-07-24T09:25:21Z
+archived: 2026-07-24T09:25:36Z
 ---
 
 ### Vertical Slice
