@@ -6,10 +6,11 @@ This document records durable architecture decisions for repository capabilities
 
 The repo is a monorepo of six independent Claude Code plugins at top level
 (`e2e-pipeline/`, `kc-plugin-forge/`, `kc-nightwatch/`, `kc-hyperfocus/`,
-`kc-team-ops/`, `kc-pr-flow/`), each with its own `skills/`, `agents/`, and
-(where applicable) `hooks/` directories, plus a repo-level `scripts/`
-directory and `.claude-plugin/marketplace.json` manifest. `docs/dev/` holds
-the lean ship-flow-style task workflow (split-root state under
+`kc-team-ops/`, `kc-pr-flow/`), each with its own `skills/` directory; five
+of the six also ship `agents/` (all but `kc-plugin-forge`), and (where
+applicable) `hooks/` directories, plus a repo-level `scripts/` directory and
+`.claude-plugin/marketplace.json` manifest. `docs/dev/` holds the lean
+ship-flow-style task workflow (split-root state under
 `docs/dev/.spacedock-state`) that governs how repo changes are proposed,
 built, and verified.
 
@@ -44,8 +45,8 @@ Each plugin is an independent release-please component
 `include-component-in-tag: true`) tracked in
 `.release-please-manifest.json`. On push to `main`,
 `.github/workflows/release-please.yml` maintains a Release PR that bumps
-the changed plugin(s) across `.claude-plugin/plugin.json`,
-`.codex-plugin/plugin.json` (only `e2e-pipeline`, `kc-plugin-forge`,
+the changed plugin(s) across `<plugin>/.claude-plugin/plugin.json`,
+`<plugin>/.codex-plugin/plugin.json` (only `e2e-pipeline`, `kc-plugin-forge`,
 `kc-pr-flow` ship a Codex manifest), and the matching `marketplace.json`
 array entry; merge cuts a `<plugin>-vX.Y.Z` tag, GitHub Release, and
 per-plugin `CHANGELOG.md`. `scripts/version-parity-check.sh` is the
