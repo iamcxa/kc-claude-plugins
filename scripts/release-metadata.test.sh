@@ -269,5 +269,41 @@ else
   fail "parity gate invokes the release-please config checker"
 fi
 
+# --- Fail-closed plugin-directory enumeration --------------------------------
+# The plugin set must come from BOTH marketplace.json AND a filesystem scan of
+# */.claude-plugin/plugin.json — an on-disk directory with no marketplace
+# entry (or vice versa) must fail loudly, never silently pass through unchecked.
+
+UNLISTED_DIR="$TMP_DIR/unlisted-dir"
+cp -R "$VALID" "$UNLISTED_DIR"
+mkdir -p "$UNLISTED_DIR/beta/.claude-plugin"
+cat > "$UNLISTED_DIR/beta/.claude-plugin/plugin.json" <<'EOF'
+{"name":"beta","version":"1.0.0"}
+EOF
+git -C "$UNLISTED_DIR" add beta/.claude-plugin/plugin.json
+expect_failure_contains "rejects an on-disk plugin directory with no marketplace.json entry" \
+  "UNLISTED on-disk plugin director" \
+  env REPO_DIR_OVERRIDE="$UNLISTED_DIR" bash "$PARITY"
+expect_failure_contains "names the specific unlisted directory (beta)" "  - beta" \
+  env REPO_DIR_OVERRIDE="$UNLISTED_DIR" bash "$PARITY"
+
+ORPHANED_ENTRY="$TMP_DIR/orphaned-entry"
+cp -R "$VALID" "$ORPHANED_ENTRY"
+python3 - "$ORPHANED_ENTRY/.claude-plugin/marketplace.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+data = json.load(open(path))
+data["plugins"].append({"name": "gamma", "version": "1.0.0"})
+json.dump(data, open(path, "w"))
+PY
+expect_failure_contains "rejects a marketplace.json entry with no matching on-disk plugin directory" \
+  "ORPHANED marketplace.json entr" \
+  env REPO_DIR_OVERRIDE="$ORPHANED_ENTRY" bash "$PARITY"
+expect_failure_contains "names the specific orphaned entry (gamma), not a raw traceback" "  - gamma" \
+  env REPO_DIR_OVERRIDE="$ORPHANED_ENTRY" bash "$PARITY"
+
+expect_success "enumeration passes when on-disk directories and marketplace entries match 1:1" \
+  env REPO_DIR_OVERRIDE="$VALID" bash "$PARITY"
+
 printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
 [[ "$FAIL" -eq 0 ]]

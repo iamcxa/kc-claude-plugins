@@ -22,3 +22,5 @@ kc-nightwatch/runs/
 # Catch-all: trace.zip anywhere
 **/trace.zip
 docs/ship-flow/.spacedock-state/
+.worktrees/
+docs/dev/.spacedock-state/
