@@ -1,13 +1,13 @@
 ---
 id: te82apnehg989v4enz9e6wf6
 title: Workflow verification bootstrap
-status: ideation
+status: implementation
 source: commission seed (lean SD workflow, 2026-07-24)
 started: 2026-07-24T05:26:29Z
 completed:
 verdict:
 score: 0.7
-worktree:
+worktree: .worktrees/spacedock-ensign-workflow-verification-bootstrap
 issue:
 pr:
 design:
