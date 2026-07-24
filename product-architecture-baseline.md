@@ -1,9 +1,9 @@
 ---
 id: fdkcs3m8jp2wnxh8bfd1cgzq
 title: PRODUCT.md + ARCHITECTURE.md baseline
-status: backlog
+status: ideation
 source: commission seed (lean SD workflow, 2026-07-24)
-started:
+started: 2026-07-24T08:52:51Z
 completed:
 verdict:
 score: 0.6
