@@ -1,9 +1,9 @@
 ---
 id: te82apnehg989v4enz9e6wf6
 title: Workflow verification bootstrap
-status: backlog
+status: ideation
 source: commission seed (lean SD workflow, 2026-07-24)
-started:
+started: 2026-07-24T05:26:29Z
 completed:
 verdict:
 score: 0.7
