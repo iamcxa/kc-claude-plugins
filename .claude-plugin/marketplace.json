@@ -12,7 +12,7 @@
     {
       "name": "e2e-pipeline",
       "source": "./e2e-pipeline",
-      "description": "Browser & CLI E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video, terminal recording for CLI-only flows, static UI computed-style verification",
+      "description": "Browser & CLI E2E testing pipeline with context-isolating subagents \u2014 map UI, generate flows, verify & test, walk through apps, record video, terminal recording for CLI-only flows, static UI computed-style verification",
       "version": "2.9.1",
       "keywords": [
         "e2e",
@@ -30,7 +30,7 @@
     {
       "name": "kc-plugin-forge",
       "source": "./kc-plugin-forge",
-      "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, audit frontmatter, optimize descriptions, doc self-iteration, two-stage Dreaming (LOCAL→public sanitize gate + public→structured taxonomy gate), prepublish sanitize-check",
+      "description": "One-command plugin development and quality pipeline \u2014 scaffold, TDD skills, verify agents, validate structure, audit frontmatter, optimize descriptions, doc self-iteration, two-stage Dreaming (LOCAL\u2192public sanitize gate + public\u2192structured taxonomy gate), prepublish sanitize-check",
       "version": "1.9.0",
       "keywords": [
         "plugin",
@@ -49,7 +49,7 @@
     {
       "name": "kc-nightwatch",
       "source": "./kc-nightwatch",
-      "description": "Autonomous nightly improvement — forge validation, multi-source signal discovery (journal, Sentry, E2E, git), north-star-aligned proposals and alerts",
+      "description": "Autonomous nightly improvement \u2014 forge validation, multi-source signal discovery (journal, Sentry, E2E, git), north-star-aligned proposals and alerts",
       "version": "0.5.1",
       "keywords": [
         "nightwatch",
@@ -63,7 +63,7 @@
     {
       "name": "kc-hyperfocus",
       "source": "./kc-hyperfocus",
-      "description": "Session lifecycle & context efficiency — context pressure detection, cleanup enforcement, cross-session handoff/resume, MCP context firewall, context lake cache, journal with vector search, and statusline with usage quota",
+      "description": "Session lifecycle & context efficiency \u2014 context pressure detection, cleanup enforcement, cross-session handoff/resume, MCP context firewall, context lake cache, journal with vector search, and statusline with usage quota",
       "version": "1.6.4",
       "keywords": [
         "session",
@@ -83,7 +83,7 @@
     {
       "name": "kc-team-ops",
       "source": "./kc-team-ops",
-      "description": "Team operations pipeline — EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review, and on-demand cross-model second opinion via Google's agy / Antigravity CLI (/gemini review|challenge|consult)",
+      "description": "Team operations pipeline \u2014 EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review, and on-demand cross-model second opinion via Google's agy / Antigravity CLI (/gemini review|challenge|consult)",
       "version": "1.5.0",
       "keywords": [
         "team-ops",
@@ -105,7 +105,7 @@
     {
       "name": "kc-pr-flow",
       "source": "./kc-pr-flow",
-      "description": "PR lifecycle workflow — create (ship chain), review (incl. Trail of Bits security subagents + 5 pr-review-toolkit agents covering correctness/comments/silent-failure/type-design/test-coverage, optional Codex cross-model second opinion, cross-file doc-claim verification, per-agent 1-10 confidence calibration), resolve review threads with cross-review verdict persistence (suppress prior-dismissed findings across review cycles), commit reorg, announce, and automated daemon",
+      "description": "PR lifecycle workflow \u2014 create (ship chain), review (incl. Trail of Bits security subagents + 5 pr-review-toolkit agents covering correctness/comments/silent-failure/type-design/test-coverage, optional Codex cross-model second opinion, cross-file doc-claim verification, per-agent 1-10 confidence calibration), resolve review threads with cross-review verdict persistence (suppress prior-dismissed findings across review cycles), commit reorg, announce, and automated daemon",
       "version": "1.9.1",
       "keywords": [
         "pr",
@@ -124,6 +124,11 @@
         "confidence-calibration",
         "verdict-persistence"
       ]
+    },
+    {
+      "name": "zzz-orphaned-probe",
+      "source": "./zzz-orphaned-probe",
+      "description": "probe orphaned entry"
     }
   ]
 }
