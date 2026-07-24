@@ -1,13 +1,13 @@
 ---
 id: fdkcs3m8jp2wnxh8bfd1cgzq
 title: PRODUCT.md + ARCHITECTURE.md baseline
-status: ideation
+status: implementation
 source: commission seed (lean SD workflow, 2026-07-24)
 started: 2026-07-24T08:52:51Z
 completed:
 verdict:
 score: 0.6
-worktree:
+worktree: .worktrees/spacedock-ensign-product-architecture-baseline
 issue:
 pr:
 design: trivial-pass
