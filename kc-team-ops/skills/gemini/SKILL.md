@@ -1,5 +1,6 @@
 ---
 name: gemini
+description: "Use when asked to 'gemini review', 'gemini challenge', 'ask gemini', or want an independent cross-model second opinion / adversarial review / consultation from a different AI vendor (Google's Antigravity CLI, `agy`) on a diff, plan, or codebase question."
 ---
 
 # /gemini — Cross-Model Second Opinion (Google Antigravity CLI `agy`)
