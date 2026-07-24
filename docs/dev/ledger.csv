@@ -1,2 +1,3 @@
 task_id, slug, dispatches, rework_rounds, wallclock_hours, tokens_if_known, diff_coverage, escaped_defects_7d
 te82apnehg989v4enz9e6wf6, workflow-verification-bootstrap, 3, 0, 2.5, ~461K, n/a, 
+fdkcs3m8jp2wnxh8bfd1cgzq, product-architecture-baseline, 5, 1, 0.8, ~550K, n/a, 
