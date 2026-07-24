@@ -322,3 +322,7 @@ Applied the ideation-approved Doc diff verbatim to both files after independentl
 ### Summary
 
 All three ACs PASS with evidence reproduced first-hand in the worktree: 6/6 PRODUCT.md plugin entries, 4/4 ARCHITECTURE.md surfaces, 0 deletions and byte-identical kc-pr-flow sections vs `origin/main`. An accuracy sweep across the checklist's named script/workflow/hook/versioning claims, extended to a sample of PRODUCT.md's plugin-outcome prose, found no overstated or fabricated claim. Cross-model review (agy/Gemini, since codex was out of usage credits) passed with two named, non-blocking P2 residuals confined to the lower-priority "Repository layout" paragraph — both real but minor, and accepted rather than routed to another round given they don't touch any AC's pass/fail condition. Verdict: PASS — no route-back to implementation.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — FO gate override of validator PASS: the two cross-model P2s (agy/Gemini, verified first-hand by the FO) hit AC-1's falsified-by clause (ARCHITECTURE.md:9 claims every plugin has its own `agents/` — kc-plugin-forge has none; ARCHITECTURE.md:47 cites `.claude-plugin/plugin.json` without the `<plugin>/` prefix — no root-level file exists); 2 confirmed → routed to implementation; surface ~5-min two-line fix vs estimate <90-min appetite (<10%); AC unchanged
