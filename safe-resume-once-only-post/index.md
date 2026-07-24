@@ -301,3 +301,42 @@ existing event log, safe-I/O, locks, and authorization receipt rather than a gre
 rebuild. Four gate decisions (retention window, E2E harness, rollback flag, scope-vs-appetite
 cut order) are left for the captain; the 2-day appetite is tight for the full Done Signal, so a
 non-destructive cut order (daemon preauth first, retention sweeper second) is proposed.
+
+## Stage Report: implementation
+
+- DONE: Every AC (AC1–AC7) is proven by a real test/exercise that CAN fail — especially AC1 exactly-once-under-fault via the D2 stub-transport E2E fault injection, NOT prose and NOT a presence-grep.
+  `kc-pr-flow/scripts/review-post.test.sh` (57 assertions) exercises all 7 ACs against `test/fixtures/review-post/stub-transport.sh`; AC1's ambiguous-then-landed fault (`post-plan: ambiguous`) asserts resume ends with exactly one remote review (a naive blind-retry baseline would assert 2). Also added coverage for the untested `failed` (4xx definite-failure) classification branch, which existed in shipped code with zero prior exercise.
+- DONE: `review-runtime.sh` stays network-free; ALL posting/reconcile/network authority lives in the new source-safe `scripts/review-post.sh` + `kc-pr-review` Step 7.
+  `grep -n 'curl\|wget\| gh ' kc-pr-flow/scripts/review-runtime.sh` → no matches; `review-runtime.sh` only gained the five closed receipt payload schemas (commit `c1f77cb`, 305/305 `review-runtime.test.sh` unaffected).
+- DONE: Rollback flag OFF ⇒ legacy posting path byte-identical (AC7); durable-before-mutate and reconcile-before-retry exercised against the stub transport's ambiguous-POST fault.
+  `KC_PR_FLOW_ONCE_ONLY_POST` (default off) gates `review-post.sh post` at the entry (exit 3, zero writes/network calls when off — commit `174dfb4`); `kc-pr-review` Step 7's existing `gh pr review` prose is untouched text, only relabeled "Legacy posting path (default)" and reached unconditionally when the flag is off/unset (commit `f92bb53`). Durable-before-mutate (`authorization.granted`→`post.intent`→pending file, all before the POST) and reconcile-before-retry (`GET .../reviews` marker match before any retry) are the mechanisms AC1/AC3 above exercise.
+- DONE: Source-safe (public marketplace repo): no secrets, no internal org markers, no real tokens in fixtures.
+  All new fixtures use synthetic placeholders (`acme/widgets`, `review-bot`, `aaaa…`/`bbbb…` hex SHAs); `shellcheck` and `bash -n` clean on `review-post.sh`, `review-post.test.sh`, and `stub-transport.sh`.
+- DONE: Part C — reconcile-before-retry + resume + authorization invalidation (AC1–AC3).
+  `review_post_cmd_resume` in `scripts/review-post.sh` reconciles via remote-marker scan before any retry, bounds the retry to one attempt, and re-reconciles after; head/payload/identity changes emit `run.invalidated` and drop the pending payload (commits `d250379`, `00e0ab7` fixed a sequence-numbering off-by-one that was failing all resume/gc paths — verified RED (34/45 failing) → GREEN (45/45, then 57/57 after further additions)).
+- DONE: Part D — daemon default-deny preauthorization (AC5) + retention/GC (AC6) + rollback flag (AC7).
+  Default-deny is satisfied by absence per the D4 cut order: `KC_PR_FLOW_ONCE_ONLY_POST` off denies every caller (daemon or interactive) with no daemon-specific gate to test separately (commit `174dfb4`). `review_post_cmd_gc` never removes a within-window unreconciled pending payload (fail-safe invariant) and expires past-window ones with `run.invalidated{expired}`.
+- DONE: Part E — wire `kc-pr-review` Step 7 to the new helper; apply the before/after doc diff.
+  Step 7 branches on the flag (commit `f92bb53`): on → build request/gate JSON, rediscover a resumable prior run by `review_key` before ever calling `post` fresh (crash-safety a naive re-dispatch would miss), then call `review-post.sh post`/`resume` and branch on status; off → the original `gh pr review` text, unchanged. Doc diff applied to `reference/review-runtime.md`, `docs/review-runtime.md`, `CLAUDE.md`, and `README.md` per the entity's proposed before/after.
+- DONE: Part F — full-suite regression.
+  All 7 kc-pr-flow test files green: `review-runtime.test.sh` 305, `review-post.test.sh` 57, `review-shadow.test.sh` 155, `review-runtime-benchmark.test.sh` 135, `cross-model.test.sh` 62, `review-architecture-diagrams.test.sh` 43, `review-architecture-diagrams-validator.test.sh` 34 — 791 passed, 0 failed. `git diff --stat origin/main...HEAD`: 11 files, +1370/-18, scoped to `kc-pr-flow/**` plus one CI workflow.
+- SKIPPED: Autonomous background retention sweeper (D4 cut-second item).
+  Shipped the bounded-expiry policy + an on-demand `review-post.sh gc` hook only, per the entity's explicit cut order; no cron/daemon wiring invokes it automatically. Flagged here as the surviving deferred item — not silently dropped.
+- SKIPPED: Active daemon preauthorization gate (D4 cut-first item; typed decision state + coverage + fresh head/idempotency recheck before an autonomous post).
+  Default-deny by absence (rollback flag off) is the entire daemon-safety mechanism today, documented explicitly in `CLAUDE.md`/`README.md`/`reference/review-runtime.md` as still-deferred rather than silently implied complete.
+
+### Summary
+
+Resumed from two prior checkpoints (Part A closed, Part B unverified WIP) and drove the remaining
+work — reconcile/resume (C), daemon default-deny + retention + rollback (D), Step 7 wiring + doc
+diff (E), full regression (F) — to a verified GREEN state: 791 tests passing across all 7
+kc-pr-flow suites, `review-runtime.sh` confirmed network-free, and all 7 ACs proven by fault-
+injection or gate-refusal tests rather than prose. Found and fixed one real coverage gap (the 4xx
+`failed` classification branch had zero prior test exercise) and traced an apparent "hang" during
+verification to a real off-by-one sequence-numbering bug that a concurrent session fixed
+mid-session (commit `00e0ab7`) — confirmed by re-running the suite clean after the fix landed. The
+two D4 cut-order items (autonomous retention sweeper, active daemon preauthorization) remain
+deferred exactly as scoped, documented rather than silently dropped. This worktree was actively
+co-edited by another session during this stage (commits `00e0ab7`, `174dfb4`, `f92bb53`, plus
+docs/CI work) — all changes were verified against the actual code and test suite before being
+counted as done here, not trusted on narration alone.
