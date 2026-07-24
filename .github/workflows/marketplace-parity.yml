@@ -4,6 +4,8 @@ name: marketplace version parity
 # validates that every release-please extra-file resolves to exactly one target:
 #   release manifest == plugin.json == marketplace.json entry
 #                                   == .codex-plugin/plugin.json (when tracked)
+# Also asserts every skills/*/SKILL.md has a well-formed frontmatter block with
+# a non-empty name and description (see scripts/skill-frontmatter-lint.sh).
 #
 # Catches invalid extra-file paths before release and half-published bumps where
 # the release manifest changes but a plugin / marketplace / Codex manifest is
@@ -36,3 +38,8 @@ jobs:
         run: |
           ./scripts/release-metadata.test.sh
           ./scripts/version-parity-check.sh
+
+      - name: Validate skill frontmatter
+        run: |
+          ./scripts/skill-frontmatter-lint.test.sh
+          ./scripts/skill-frontmatter-lint.sh
