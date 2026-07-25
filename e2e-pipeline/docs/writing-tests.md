@@ -341,8 +341,8 @@ The user journey itself changed -- new pages, different steps, removed features.
 
 Every `expect:` string is matched against an ordered list of regex patterns in
 `compiler/resolver.js`. The first pattern that matches wins; a string matching none
-of them is silently deferred (see the "Warnings" line in [Commands](commands.md) --
-it becomes a `TODO` echo at runtime instead of a real assertion). This table is the
+of them is silently deferred -- `/e2e-compile` reports it as a "Warnings" line and it
+becomes a `TODO` echo at runtime instead of a real assertion. This table is the
 canonical reference; no other doc enumerates the full grammar.
 
 | Form | Resolves to |
