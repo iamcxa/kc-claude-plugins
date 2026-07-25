@@ -43,3 +43,20 @@ expect shapes. Then delete the reformatting prose from the compile skill.
   hole — otherwise the "before" case can succeed by not failing.
 - Error codes should come from [[e2e-schema-contract]]'s vocabulary rather than a private
   enum invented here.
+
+## Sequencing note from the FO, 2026-07-25
+
+**Implement this before [[e2e-page-scoped-resolution]] and
+[[e2e-assertion-honesty-gate]], even though `3t` reached ideation first.**
+
+Both of those entities introduce new compile-time refusals. If the structured error
+channel exists first, each new refusal is born structured; if it does not, they emit
+prose that has to be converted afterwards — the same work, done twice, plus a window
+where the compiler speaks two error dialects.
+
+This does **not** ask anyone to discard `3t`'s ideation. Ideation produces a design
+and acceptance criteria, and neither is invalidated by landing `gz` first. The reorder
+is only at the implementation boundary, so nothing already done is wasted.
+
+If `3t` has already reached implementation by the time this is read, ignore this note
+and let it finish — the conversion cost is small and is not worth an interrupt.
