@@ -24,9 +24,9 @@ One narrower coupling remains. D1's ceiling has to be set by something outside t
 that mints the gate, and the seat identified at the backlog gate was
 `pr-review-daemon.sh:190`'s inline env prefix. 4p's parked directions (`spacedock claude`,
 or a spacedock+ACP harness) would change or remove that script. **The ceiling's ordering,
-cap-vs-refuse semantics, expiry, AC-3 symmetry, and schema version are all caller-agnostic
-and can be built now; only which process exports the ceiling should wait for the caller's
-shape to settle.** Do not over-fit the contract to today's `claude -p` daemon.
+cap-vs-refuse semantics, expiry, and schema version are all caller-agnostic and can be built
+now; only which process exports the ceiling should wait for the caller's shape to settle.**
+Do not over-fit the contract to today's `claude -p` daemon.
 
 `kc-pr-review` treats §6c human confirmation as the final authority before any `gh pr review`. In daemon mode that authority is supplied by an instruction in prose: `reference/pr-review-loop.md` tells the iteration "You are running in daemon mode with no interactive terminal ... Approve posting the review. Do NOT wait for user input — there is no user." So the autonomous path's authorization today is the loop asking the model to approve itself, with nothing typed, bounded, or auditable about it.
 
@@ -36,14 +36,14 @@ Scope: replace the prose self-approval with a typed preauthorization artifact th
 
 Out of scope: freshness and coverage rechecks (slice 3), and any change to daemon classification or fix behaviour.
 
-### Carried in from slice 1's validation (captain-assigned 2026-07-25)
+### AC-3 split out 2026-07-26 → `reconcile-degraded-mode-symmetry` (sv)
 
-`review_post_cmd_post`'s pre-POST reconcile **fails open** when the reviews-list read is unusable, where `resume` fails closed on the identical condition. Pre-existing from #56, not introduced by slice 1, and it needs two coincident conditions: local durable state unavailable (a wiped or reconfigured state dir) **and** an unusable remote list at that moment — the local cross-run check independently blocks the ordinary crash-then-retry case.
-
-It landed here rather than in slice 1 because making it symmetric would refuse even a genuinely first post while the reviews API is degraded, and would change availability for **every** caller rather than the daemon alone. That is a degraded-mode policy decision, and this slice is where the preauthorization contract that should express it is being built. Consider whether the answer is unconditional fail-closed or an operator-selectable degraded mode; do not leave it as an unremarked asymmetry between `post` and `resume`.
-
-**AC-3 — `post` and `resume` treat an unusable reconcile read the same way, or the difference is documented as deliberate with its reason.**
-Verified by: a test driving an unusable list read through both paths and asserting the chosen behaviour, plus the recorded rationale if they intentionally differ. Falsified by: the asymmetry persisting with no test and no stated reason.
+The `post`-fails-open / `resume`-fails-closed asymmetry the captain assigned here after slice
+1's validation is now its own entity. It turned out to be caller-agnostic — it predates the
+autonomous path and the interactive caller takes the same branch — so nothing about this
+slice constrains it, and holding it here would have made a cheap independent fix wait on an
+authorization arc whose caller shape is still moving. The corrected rationale (slice 1's
+stated availability cost is not real) travelled with it.
 
 ## Acceptance criteria
 
