@@ -1,13 +1,13 @@
 ---
 title: Route daemon posting through the once-only path
-status: validation
+status: done
 source: slice 1 of 3 for daemon posting safety; unblocks once-only-daemon-preauth-gate. Found while closing PR3 (#56), 2026-07-25
 started:
-completed:
-verdict:
+completed: 2026-07-25T15:29:15Z
+verdict: passed
 worktree: .worktrees/w7-daemon-once-only
 issue:
-pr: https://github.com/iamcxa/kc-claude-plugins/pull/59
+pr: pr-merge:59
 design:
 id: w7exen9fcfgbpz6c8z3j1kt9
 ---
