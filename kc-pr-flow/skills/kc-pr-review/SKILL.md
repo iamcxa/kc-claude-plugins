@@ -1667,6 +1667,39 @@ review_interactive_post_gate_valid() {
   confirmation="$(jq -S -c '.confirmation' <<<"$gate_json")" || return 3
   review_interactive_confirmation_valid "$confirmation"
 }
+
+review_autonomous_post_gate_valid() {
+  # Authorization for a post made with no human at the confirmation gate.
+  # Deliberately a sibling of interactive-post-gate/v1 rather than a variant of
+  # it: `human_confirmed` must stay a claim only the human path can make, so it
+  # is absent here rather than set false, and the closed key set refuses any
+  # attempt to smuggle it in. Binding review_key + head_sha is what lets the
+  # posting helper reject a gate minted for a different review or a moved head.
+  local gate_json="$1"
+  printf '%s' "$gate_json" | jq -e '
+    type == "object" and
+    (keys | sort) ==
+      ["authorized_by","effective_event","head_sha","review_key","schema"] and
+    .schema == "kc-pr-flow.autonomous-post-gate/v1" and
+    .authorized_by == "daemon" and
+    (.effective_event | . == "APPROVE" or . == "COMMENT" or . == "REQUEST_CHANGES") and
+    (.head_sha | test("^[0-9a-f]{40}$")) and
+    (.review_key | test("^[0-9a-f]{64}$"))
+  ' >/dev/null 2>&1 || return 3
+}
+
+review_autonomous_post_gate() {
+  # Validates its own output, so a producer can never mint a gate the validator
+  # would reject.
+  local review_key="$1" head_sha="$2" requested_event="$3" authorized_by="$4"
+  local gate
+  gate="$(jq -S -c -n --arg review_key "$review_key" --arg head_sha "$head_sha" \
+    --arg event "$requested_event" --arg by "$authorized_by" \
+    '{schema:"kc-pr-flow.autonomous-post-gate/v1",authorized_by:$by,
+      effective_event:$event,head_sha:$head_sha,review_key:$review_key}')" || return 3
+  review_autonomous_post_gate_valid "$gate" || return 3
+  printf '%s\n' "$gate"
+}
 # typed-interactive-recipe:end
 ```
 
