@@ -340,3 +340,42 @@ deferred exactly as scoped, documented rather than silently dropped. This worktr
 co-edited by another session during this stage (commits `00e0ab7`, `174dfb4`, `f92bb53`, plus
 docs/CI work) — all changes were verified against the actual code and test suite before being
 counted as done here, not trusted on narration alone.
+
+## Stage Report: validation
+
+Verdict: **REJECT → route back to implementation.** A confirmed exactly-once violation defeats the entity's Done Signal ("an approved payload is posted at most once"). Run coordinator-driven with two fresh-context reviewer subagents (correctness + silent-failure) plus independent primary-source code adjudication; every cited file:line was verified against the actual file (0 fabricated citations, so no reviewer round was discarded).
+
+### Findings (reconciled across both reviewers + code adjudication)
+
+- **P1 — CONFIRMED (empirical repro + code):** resume's reconcile-before-retry fails OPEN when the reconcile `list` GET under-reports a landed review. `review-post.sh:555` `|| return 74` only catches a non-zero transport exit; an exit-0 but stale/incomplete body — most realistically GitHub's read-after-write consistency lag returning a well-formed `{"reviews":[]}` that does not yet include the just-created review — makes `review_post_scan_marker` (`:259-266`) return empty, indistinguishable from "marker genuinely absent" (`:557`), so the code falls through to a blind retry POST (`:567-574`) → **duplicate GitHub review**. Reviewer drove real `review-post.sh` with a `list` returning `{"reviews":null}` + a POST that lands server-side but returns `http_status:0`: post → 1 review, resume → **2 reviews / post-count=2**; the `{"reviews":[]}` lag variant is the identical code path. `--paginate` + `--argjson` in the gh adapter close the malformed/paginated sub-cases but NOT the eventual-consistency lag. Fails open, invisible to the caller (jq errors go to stderr; returned JSON status looks normal).
+- **P2 (F2) — CONFIRMED:** the same reconcile scan (`:259-266`, consumed `:555-556`,`:578-579`) filters `.user == self_login`; a `--self` that differs from the identity the token actually posted under (bot vs user vs app-slug) misses the landed review → bounded retry → second review. `--self` is an unvalidated required input with no cross-check against the POST response author.
+- **P2 (F1) — CONFIRMED:** the `post` path (`:308-434`) never scans the remote for an existing landed marker (only `resume` does); `review_runtime_start` (`:375`) mints a fresh `run_id` per call, so two `post` calls for the same review_key take different per-run reservation locks (`review-runtime.sh:1288`) — no mutual exclusion — and a prior run that already reached terminal `posted` (pending removed) is invisible to the SKILL step-2 rediscover-scan (which only finds runs with a surviving `pending-post.json`). Repeat or concurrent `post` at the same head → duplicate review. Partially overlaps the deferred `once-only-daemon-preauth-gate` (7j/vf backlog) for the daemon case, but the single-writer repeat-`post` case is in-scope for the "never a blind second POST" invariant.
+- **P2 — CONFIRMED (silent-failure):** malformed `head` GET (exit 0, body lacking `head_sha`) → `jq -r '.head_sha'` yields literal `null` → `null != commit_id` → misclassified `head_moved` → review silently dropped (`:382-383` post, `:536-537` resume). Fails CLOSED (drop, not duplicate), less dangerous than P1.
+- **nit — CONFIRMED:** `gc` does not validate `now_epoch`; a non-numeric value makes `[ "$now_epoch" -lt "$expires_epoch" ]` (`:638`) error→false, skipping the within-window keep-guard → fail-open deletion of within-window reconcile evidence. Only reachable via a garbage `--now-epoch` arg; production default (`date -u +%s`) is always numeric.
+- **nit — CONFIRMED (perf, non-blocking):** each posting event append spawns multiple `python3` processes (`review-runtime.sh:928,1264`); ~0.47s python3 startup on this box makes a single `post` ~45s locally (CI python3 startup ~30ms → non-issue; append/compaction perf is already a documented deferral). This explains the local full-suite slowness observed during validation.
+
+### Checks that PASSED (confirmed against code)
+- Crash-resume exactly-once (the interrupted-then-resume case, distinct from the lag case above): reconcile hit → `posted_reconciled`, no second POST (`:555-565`); retry bounded to one (`:569-591`).
+- Durable-before-mutate: `head.observed`/`authorization.granted`/`post.intent`/pending all persist (`:396-419`) before the POST (`:424`); crash between intent and pending → resume refuses (`:510-513`) → under-post, never double-post.
+- Default-deny / rollback: `review_post_rollback_enabled` requires literal `on` (`:187-189`), checked before any write/network (`:319`); OFF leaves legacy `gh pr review` byte-identical.
+- GC fail-safe within-window keep (`:638-641`); classify defaults unknown/parse-failed/`http_status:0` → `ambiguous` (fail-safe, `:268-296`).
+- Idempotency key `sha256(review_key|commit_id|payload_sha256)` field order/quoting correct (`review-runtime.sh:714-716`, `review-post.sh:366`); pending mode 0600 in 0700 dir via temp+rename.
+- Source-safe: fixtures synthetic only (`acme/widgets`, `review-bot`, `aaaa/bbbb/cccc/dddd`); no secret/token/PII/internal-marker. `bash -n` + `shellcheck` clean. Full suite 791/0 (independently re-run by coordinator).
+
+### Test coverage gap (root cause the green suite hid P1)
+`stub-transport.sh` `list` always returns a faithful, immediately-consistent array (`:40-46`); no test exercises a `list` that under-reports a landed review (lag / `--self` mismatch), so exactly-once is only proven under a perfectly-consistent read. This gap is exactly what a claim-breaking adversarial probe targets — found here by analysis instead. New RED tests for the lag + `--self`-mismatch + repeat-`post` paths are required with the fix.
+
+### Deferred to re-validation (after the P1 fix)
+- Cross-model gate: codex out of usage credits (until ~Jul 29); agy/gemini non-interactive runs were flaky this session. Not gating this REJECT (P1 already empirically confirmed). Run one clean cross-model pass on the fixed diff before any approval.
+- Mechanical adversarial spot-check (claim-breaking edit → suite red): superseded for this round by the confirmed coverage gap above; run on the fixed suite.
+
+### Correction-round budget record
+- Round 1 (validation): estimate n/a (first pass) → actual 2 reviewer dispatches + coordinator adjudication. Findings disposition: 1 P1 + 3 P2 + 2 nits, ALL confirmed against code, 0 declined, 0 fabricated citations. Route-back to implementation with the file-anchored fixes below. (Not "nothing found" and not "all declined" — real defects, all actionable.)
+
+### Fix direction (file-anchored, for the implementation round)
+1. `review_post_scan_marker` / reconcile: distinguish "list unusable / not positively confirmable complete" (jq non-zero, `.reviews` not an array, or an empty list that could be consistency lag) from "list valid and marker genuinely absent"; on anything not positively confirmed, **fail closed** — emit `ambiguous`, keep pending, do NOT retry (`:555-574`, `:578-579`). Never blind-retry on a first empty reconcile given read-after-write lag.
+2. Validate `--self` against the POST response's author (or the token identity) before trusting a scan miss (`:259-266`).
+3. `post` path: rediscover-and-reconcile against the remote (or a durable per-`review_key` marker) before a fresh POST, covering terminal-`posted` prior runs, not just surviving-`pending` ones (`:308-434`, SKILL step 2).
+4. Validate `head_response` shape before the `head_moved` decision (`:382-383`, `:536-537`); a shape-invalid head GET should fail closed as ambiguous, not as `head_moved`.
+5. `gc`: validate `now_epoch` numeric before the window comparison (`:638`).
+6. Add RED tests: under-reporting/lagging `list`, `--self` mismatch, repeat/concurrent `post`, malformed `head`, non-numeric `now_epoch`.
