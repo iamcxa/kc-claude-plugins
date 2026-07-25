@@ -96,6 +96,18 @@ bash scripts/review-shadow.test.sh
 bash scripts/review-runtime-benchmark.test.sh
 ```
 
+**Lint with CI's ShellCheck, not yours.** `review-runtime-tests.yml` pins ShellCheck **v0.9.0**, and
+newer releases retire checks (0.11.0 dropped SC2015/SC2119/SC2120 outright), so a local `shellcheck`
+can report a file clean that CI then rejects. Run the pinned version from the repo root:
+
+```bash
+docker run --rm --platform linux/amd64 -v "$PWD:/mnt" -w /mnt koalaman/shellcheck:v0.9.0 \
+  kc-pr-flow/scripts/review-runtime.sh kc-pr-flow/scripts/review-post.sh \
+  kc-pr-flow/scripts/review-post.test.sh kc-pr-flow/test/fixtures/review-post/stub-transport.sh
+```
+
+Bump the pin in the workflow and this command together.
+
 ## Internal Agents
 
 Built-in subagents dispatched by kc-pr-review for security analysis. Based on Trail of Bits methodologies.

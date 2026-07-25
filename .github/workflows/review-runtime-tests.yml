@@ -96,8 +96,35 @@ jobs:
           grep -Fq 'do not guess the newest' kc-pr-flow/docs/review-runtime.md
           grep -Fq 'uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1' .github/workflows/review-runtime-tests.yml
 
+      # xz-utils is what unpacks the pinned ShellCheck tarball below; it is
+      # present on today's runner image but installing it keeps this job from
+      # depending on that.
       - name: Install shell dependencies
-        run: sudo apt-get update && sudo apt-get install --yes jq shellcheck
+        run: sudo apt-get update && sudo apt-get install --yes jq xz-utils
+
+      # Pinned by hash rather than left to apt. ShellCheck retires checks
+      # between releases -- 0.11.0 dropped SC2015/SC2119/SC2120 entirely -- so
+      # an unpinned runner silently changes what this gate enforces, and a
+      # contributor whose local ShellCheck is newer sees files reported clean
+      # that CI then rejects. Bump VERSION and SHA256 together; the
+      # local-parity command lives in kc-pr-flow/CLAUDE.md.
+      - name: Install pinned ShellCheck
+        env:
+          SHELLCHECK_VERSION: v0.9.0
+          SHELLCHECK_SHA256: 700324c6dd0ebea0117591c6cc9d7350d9c7c5c287acbad7630fa17b1d4d9e2f
+        run: |
+          curl -fsSL --retry 3 \
+            "https://github.com/koalaman/shellcheck/releases/download/${SHELLCHECK_VERSION}/shellcheck-${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" \
+            -o /tmp/shellcheck.tar.xz
+          printf '%s  /tmp/shellcheck.tar.xz\n' "$SHELLCHECK_SHA256" | sha256sum --check --strict
+          tar -xJf /tmp/shellcheck.tar.xz -C /tmp
+          sudo install -m 0755 "/tmp/shellcheck-${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin/shellcheck
+          installed="v$(shellcheck --version | awk '/^version:/ {print $2}')"
+          if [ "$installed" != "$SHELLCHECK_VERSION" ]; then
+            printf 'expected ShellCheck %s, got %s\n' "$SHELLCHECK_VERSION" "$installed" >&2
+            exit 1
+          fi
+          shellcheck --version
 
       - name: Audit remediation evidence
         run: |
