@@ -13,12 +13,15 @@ on:
       - "kc-pr-flow/scripts/review-shadow.test.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
+      - "kc-pr-flow/scripts/review-post.sh"
+      - "kc-pr-flow/scripts/review-post.test.sh"
       - "kc-pr-flow/scripts/cross-model.sh"
       - "kc-pr-flow/scripts/cross-model.test.sh"
       - "kc-pr-flow/scripts/review-architecture-diagrams-validate.sh"
       - "kc-pr-flow/scripts/review-architecture-diagrams.test.sh"
       - "kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh"
       - "kc-pr-flow/test/fixtures/review-runtime/**"
+      - "kc-pr-flow/test/fixtures/review-post/**"
       - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
       - "kc-pr-flow/reference/review-runtime.md"
       - "kc-pr-flow/docs/review-runtime.md"
@@ -41,12 +44,15 @@ on:
       - "kc-pr-flow/scripts/review-shadow.test.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
+      - "kc-pr-flow/scripts/review-post.sh"
+      - "kc-pr-flow/scripts/review-post.test.sh"
       - "kc-pr-flow/scripts/cross-model.sh"
       - "kc-pr-flow/scripts/cross-model.test.sh"
       - "kc-pr-flow/scripts/review-architecture-diagrams-validate.sh"
       - "kc-pr-flow/scripts/review-architecture-diagrams.test.sh"
       - "kc-pr-flow/scripts/review-architecture-diagrams-validator.test.sh"
       - "kc-pr-flow/test/fixtures/review-runtime/**"
+      - "kc-pr-flow/test/fixtures/review-post/**"
       - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
       - "kc-pr-flow/reference/review-runtime.md"
       - "kc-pr-flow/docs/review-runtime.md"
@@ -134,6 +140,9 @@ jobs:
           bash -n kc-pr-flow/scripts/review-shadow.test.sh
           bash -n kc-pr-flow/scripts/review-runtime-benchmark.sh
           bash -n kc-pr-flow/scripts/review-runtime-benchmark.test.sh
+          bash -n kc-pr-flow/scripts/review-post.sh
+          bash -n kc-pr-flow/scripts/review-post.test.sh
+          bash -n kc-pr-flow/test/fixtures/review-post/stub-transport.sh
 
       - name: ShellCheck
         run: |
@@ -142,6 +151,9 @@ jobs:
           shellcheck kc-pr-flow/scripts/review-shadow.test.sh
           shellcheck kc-pr-flow/scripts/review-runtime-benchmark.sh
           shellcheck kc-pr-flow/scripts/review-runtime-benchmark.test.sh
+          shellcheck kc-pr-flow/scripts/review-post.sh
+          shellcheck kc-pr-flow/scripts/review-post.test.sh
+          shellcheck kc-pr-flow/test/fixtures/review-post/stub-transport.sh
 
       - name: Run runtime contract tests
         run: bash kc-pr-flow/scripts/review-runtime.test.sh
@@ -151,6 +163,9 @@ jobs:
 
       - name: Run paired benchmark tests
         run: bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh
+
+      - name: Run once-only posting tests
+        run: bash kc-pr-flow/scripts/review-post.test.sh
 
       - name: Run compatibility regressions
         run: |

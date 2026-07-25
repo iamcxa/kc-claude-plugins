@@ -667,8 +667,31 @@ review_runtime_payload_matches_v1_schema() {
     elif $event_type == "run.finished" then
       (.payload == {}) or
       (.payload | exact_keys(["behavior_hashes"]; []) and (.behavior_hashes | behavior_hashes))
+    elif $event_type == "head.observed" then
+      (.payload | exact_keys(["head_sha"]; []) and (.head_sha | sha1))
+    elif $event_type == "authorization.granted" then
+      (.payload | exact_keys(["commit_id","event","idempotency_key","payload_sha256"]; []) and
+        (.commit_id | sha1) and
+        (.event == "APPROVE" or .event == "REQUEST_CHANGES" or .event == "COMMENT") and
+        (.idempotency_key | sha256) and
+        (.payload_sha256 | sha256))
+    elif $event_type == "post.intent" then
+      (.payload | exact_keys(["commit_id","idempotency_key","payload_sha256"]; []) and
+        (.commit_id | sha1) and
+        (.idempotency_key | sha256) and
+        (.payload_sha256 | sha256))
+    elif $event_type == "post.result" then
+      (.payload | exact_keys(["idempotency_key","outcome"]; ["remote_review_id"]) and
+        (.idempotency_key | sha256) and
+        (.outcome == "posted" or .outcome == "posted_reconciled" or .outcome == "failed") and
+        (if .outcome == "failed" then (has("remote_review_id") | not)
+         else (has("remote_review_id") and (.remote_review_id | positive_integer)) end))
+    elif $event_type == "run.invalidated" then
+      (.payload | exact_keys(["reason"]; []) and
+        (.reason == "head_moved" or .reason == "payload_changed" or
+         .reason == "identity_changed" or .reason == "expired"))
     else
-      .payload == {}
+      false
     end' >/dev/null 2>&1
 }
 
@@ -682,6 +705,14 @@ review_runtime_merge_key() {
 
 review_runtime_finding_id() {
   printf '%s|%s' "$1" "$2" | review_runtime_sha256
+}
+
+# Once-only posting idempotency key (design A2): binds the exact review
+# identity, the exact reviewed head, and the exact serialized review payload.
+# Any of the three changing yields a different key, so a moved head or a
+# changed payload can never collide with a prior GitHub review.
+review_runtime_idempotency_key() {
+  printf '%s|%s|%s' "$1" "$2" "$3" | review_runtime_sha256
 }
 
 review_runtime_evidence_pointer_matches_event() {
@@ -703,7 +734,24 @@ review_runtime_validate_t2_identity() {
   local event_type="$2"
   local expected actual run_id lane_id ordinal evidence_hash candidate_id
   local finding_count finding index merge_key finding_id evidence
+  local commit_id head_sha review_key payload_sha256_field idempotency_key expected_idempotency_key
   case "$event_type" in
+    authorization.granted | post.intent)
+      commit_id="$(printf '%s' "$line" | jq -r '.payload.commit_id')"
+      head_sha="$(printf '%s' "$line" | jq -r '.head_sha')"
+      if [ "$commit_id" != "$head_sha" ]; then
+        printf '%s' 'authorization_head_mismatch'
+        return 1
+      fi
+      review_key="$(printf '%s' "$line" | jq -r '.review_key')"
+      payload_sha256_field="$(printf '%s' "$line" | jq -r '.payload.payload_sha256')"
+      idempotency_key="$(printf '%s' "$line" | jq -r '.payload.idempotency_key')"
+      expected_idempotency_key="$(review_runtime_idempotency_key "$review_key" "$commit_id" "$payload_sha256_field")" || return
+      if [ "$idempotency_key" != "$expected_idempotency_key" ]; then
+        printf '%s' 'idempotency_key_mismatch'
+        return 1
+      fi
+      ;;
     lane.started)
       printf '%s' "$line" | jq -e '
         .payload.review_task as $task |
