@@ -840,3 +840,68 @@ for not-found, since its prose carries no list to begin with) rather than "is re
 error alone", the wording is reconcilable and AC-4 (b) should be re-read accordingly — but as
 literally stated the two classes are swapped, and writing the AC to match the ruling verbatim
 would have shipped an AC that its own verification would falsify.
+
+## Stage Report: validation
+
+- FAILED: Reproduce every AC's `Verified by:` clause yourself with actual command output
+  AC-2/3/4/5/6 PASS, independently reproduced (not the implementer's self-report):
+  `--json`/non-`--json` exit codes match at 0/1 for the same fixtures; the click-path ambiguous
+  push at `resolver.js:369` re-asserts `resolver.test.js`'s pre-existing `.includes()` check
+  unedited (confirmed by blame — line untouched in this commit's diff); `git show ac33dab:.../SKILL.md
+  | wc -l` → 202 vs current `wc -l` → 135 (AC-4a, AC-5, exact match); the 472/974/1133-byte
+  measurement correction reproduces verbatim via the two `node bin/e2e-compile.js` commands in
+  "Measurement correction"; the population harness (`spike-gz-error-classify.js`, `GZ_BEFORE_REF=529296d`)
+  reproduces `tier-1 9`/`tier-2 621`/`list-data-completeness.yaml: 3` exactly; `grep` confirms zero
+  `code` field anywhere in the emitted contract.
+  AC-1 FAILS its own falsification clause ("any non-JSON text present on stdout" / implicitly,
+  `JSON.parse(stdout)` succeeding at all). Three reproducible invocation shapes under `--json` do
+  NOT emit a JSON document, contradicting the Design section's unconditional claim ("stdout carries
+  exactly one JSON document and nothing else") that `skills/e2e-compile/SKILL.md` (rewritten in
+  this same commit) now depends on unconditionally:
+  1. `node bin/e2e-compile.js --all --json --flows-dir <nonexistent-dir>` → stdout is **empty**
+     (0 bytes), prose only on stderr. `bin/e2e-compile.js:76-81`'s `fs.readdirSync` catch never
+     checks `options.json`.
+  2. `node bin/e2e-compile.js --json <flow> --output-dir <unwritable-dir>` (EACCES on `mkdirSync`)
+     → stdout **empty**. `bin/e2e-compile.js:310-312`'s outer catch (the safety net around
+     `compile()`) never checks `options.json`.
+  3. `node bin/e2e-compile.js --json` (no flow name, no `--all`) → stdout is 23 lines of Commander
+     help prose, not JSON. `bin/e2e-compile.js:315-318`'s `program.help()` fallthrough never checks
+     `options.json`.
+  All three repro'd directly (not inferred from reading) with real exit codes/stdout/stderr
+  captured. Two independent Sonnet reviewer-lens subagents (`code-reviewer`, `silent-failure-hunter`)
+  converged on the same three sites unprompted with matching file:line citations, verified accurate
+  against the actual file; `agy` (cross-model gate, see below) independently confirmed the same
+  three on a targeted retry. This is this entity's own scope, not pre-existing: the catch bodies
+  predate this diff, but the `--json` contract they now violate does not, and the implementer added
+  `options.json` branches to every other exit path (empty-dir case, success/failure/coverage) except
+  these three.
+- DONE: Adversarial spot-check on the additive `errorDetails` strategy
+  Edited the click-path ambiguous push (`resolver.js:369`, `errors.push(ambigMsg)` →
+  `errors.push({message: ambigMsg})`) in the worktree, ran full suite: 5/647 failed, including
+  `resolver.test.js`'s exact pre-existing `.includes()` consumer test
+  (`TypeError: e.includes is not a function`) and `cli.test.js`'s CLI-08 prose/JSON cross-check
+  (caught `'[object Object]'` on stderr) — proves the five-consumer no-regression claim is
+  load-bearing, not vacuously green. Reverted via backup copy; full suite re-confirmed 647/647 green.
+- DONE: Confirm no `code` field ships anywhere, and the SKILL.md prose deletion actually happened
+  `grep -rn "code:" compiler/*.js bin/*.js` → zero matches (also zero for `'code'`/`"code"` string
+  literals). `skills/e2e-compile/SKILL.md` Phase 3's old six-shape regex-prose recipe is gone,
+  replaced by a single field→line table; no dual path (JSON table + surviving old prose) exists.
+- Cross-model gate: `codex exec review --commit 632f04c` failed on first attempt (usage-limit quota
+  error, recorded in `/tmp/codex-review-gz.log`) — fell back to `agy` per preference order. First
+  `agy` attempt also failed (`Error: timeout waiting for response`, ~500-word prompt); second,
+  narrower-scoped attempt succeeded and independently reproduced the AC-1 finding above with
+  matching file:line citations.
+
+### Summary
+
+AC-2/3/4/5/6 and the E2E-first acceptance all independently reproduce clean — real command output,
+not self-report, including AC-4's byte-cost re-scoping and the corpus population numbers. AC-1
+fails its own falsification clause: three real, cheaply-reachable invocation shapes (unreadable
+`--flows-dir`, an unwritable `--output-dir`, and bare `--json` with no flow argument) leave stdout
+empty or full of Commander help prose instead of the promised single JSON document, directly
+undermining the guarantee `skills/e2e-compile/SKILL.md`'s own rewrite (this same commit) now
+depends on unconditionally. Three independent reviewers (two Sonnet lens agents, one cross-vendor
+model) converged on the identical three file:line sites without prompting each other; all citations
+verified against the real file and all three failure modes reproduced live. Recommend: route back
+to implementation — the fix is small and mechanical (extend the existing `options.json` branching
+pattern, already used at the empty-flows-dir case, to these three exit paths), not a design change.
