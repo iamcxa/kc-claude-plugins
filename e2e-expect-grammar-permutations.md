@@ -8,7 +8,7 @@ verdict:
 worktree:
 issue:
 pr:
-design:
+design: required
 id: xnj27a2qnjtb61mqegdasm00
 ---
 
