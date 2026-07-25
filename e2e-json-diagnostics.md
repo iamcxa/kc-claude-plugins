@@ -1,7 +1,7 @@
 ---
 id: gzh8xe17fgnjpc03qk19n3xx
 title: Structured compiler diagnostics an agent can repair from
-status: implementation
+status: validation
 source: captain note — e2e-pipeline agent-native audit, 2026-07-25 (session analysis + agy cross-model review)
 started: 2026-07-25T16:12:08Z
 completed:
