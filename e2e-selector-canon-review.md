@@ -311,3 +311,77 @@ is necessary but not sufficient for "compiled behaviour unchanged". Branch selec
 depends on the translator's return value, so every `text=` selector moved from the
 `null → _poll_visible` fallback to `_poll_snapshot_contains` (`codegen.js:1572-1597`)
 without that file changing a line. Any future translator change needs this check.
+
+## Stage Report: implementation (cycle 2)
+
+Correction round 1. Both return-list items addressed; the ruling was not re-opened.
+Commit `15ffa84`, 3 files, +131-7. `codegen.js` untouched (verified in the diff).
+
+- DONE: Return item 1 — make the `text=` branch refuse what it cannot faithfully translate.
+  RED recorded first: 25 tests, 10 pass / **15 fail**, e.g. `non-null pattern
+  "\"預約詳情 >> nth=0\"" for text=預約詳情 >> nth=0 must match "- text \"預約詳情\" [ref=e9]"`.
+  GREEN 25/25. Chose **strip chords, refuse regex** — split rather than uniform,
+  and the split is evidence-driven, not taste: I ran the `role=` branch and it
+  emits `combobox` for `role=combobox >> nth=0` (a pattern that genuinely
+  matches) but `^Save$` for `/^Save$/` and `a` for `/a|b/` (patterns `grep -F`
+  can never match). So mirroring `:93-95` restores the invariant while mirroring
+  `:86-91` would have **recreated** it. Regex therefore returns null and takes
+  the documented `_poll_visible` fallback.
+- DONE: Add the corpus regex and chorded cases to `selector-translate.test.js`.
+  15 new assertions. The load-bearing one is `INVARIANT: every corpus text= shape
+  either returns null or greps its own snapshot line` — it pairs each real corpus
+  selector with the snapshot line `agent-browser` would emit and requires a
+  non-null pattern to hit it through the same `grep -F` the runtime uses. Falsified
+  by reverting the chord strip (the 5 chorded cases plus the invariant test go red);
+  a bare count could not catch that, which is why the pairing is asserted.
+- DONE: Return item 2 — MOVE the two forms into Rule 1 rather than delete from Rule 2.
+  `role=<r>[name="<v>"]` and `text=<v>` added to Rule 1's NATIVE list at `:550`;
+  Rule 2's list at `:557` reduced to `>> nth=N` / `has-text(` / find-subcommand-
+  stored-as-selector-value. Coverage re-checked form by form: every form now matches
+  exactly one rule, so nothing falls through to re-open the eval bypass. The
+  `find …` split is disjoint, not a gap — Rule 1 covers direct interactive CLI
+  invocation, Rule 2 covers it stored as a `selector:` value.
+- DONE: Fix `:596` and `:601`'s form lists.
+  `:596` no longer says *prefer* `[role][aria-label]` (it contradicted the demotion)
+  and no longer advises `find text "<v>"` as a selector value (CLASS 5 bans it).
+  `:601` edited **only** in its form-list sentence.
+- DONE: Falsifier — no change to any sentence containing `fall back to eval`,
+  `--allow-eval-fallback`, or `eval bypass`.
+  Verified mechanically at sentence granularity: 13 guarded sentences, old vs new
+  byte-identical, 0 removed / 0 added. A line-level grep reports a false positive
+  because `:601` packs the form-list sentence and three guarded sentences onto one
+  physical line; the sentence-level check is the one the falsifier specifies.
+- DONE: Carry-forward branch-mapping re-check after Fix 1.
+  Measured across 295 unique corpus selectors, comparing pre-entity baseline /
+  round 1 / after-fix: **regex forms return to the `_poll_visible` baseline**
+  (round 1 had wrongly routed them to snapshot-grep); **chorded stay on
+  `_poll_snapshot_contains` but with a matchable pattern** (`"預約詳情 >> nth=0"`
+  → `"預約詳情"`); plain literals move to snapshot-grep as intended; **0 non-text
+  selectors change branch**, confirming the `role=` branches are behaviourally
+  untouched, not merely absent from the diff.
+- DONE: Full suite once at the exit.
+  652/652 passing. Lint fixture contract re-verified unchanged: `native-css-mapping`
+  exit 0, `legacy-playwright-mapping` exit 2.
+
+### Summary
+
+Both fixes landed in `15ffa84` without re-opening the un-ban, the demotion, or the
+premise correction. The `text=` branch now refuses regex and strips chords, so a
+non-null return is always a matchable pattern; `e2e-test-runner.md` Rules 1/2 were
+rebalanced by moving the two native forms up rather than deleting them down, keeping
+every form covered by exactly one rule.
+
+Two notes for the gate. First, the chord strip is a deliberate **widening** — `>> nth=1`
+becomes "any match" rather than "the second match". I judged this sound for an
+existence assertion against the a11y snapshot (which does not carry the DOM duplicate
+the chord exists to disambiguate) and it matches what the `role=` branch already does,
+but it is a semantic choice, not a mechanical one, and worth a look. Note these
+selectors still fail lint CLASS 2 regardless, so they are flagged either way.
+
+Second, a scope-honesty note on the AC-3 numbers: the reviewer's corpus is 81 `text=`
+values with 10 regex / 18 chorded; the corpus reachable from this machine
+(`/Users/kent/Project/carlove`, 5 mapping files) has 48 with **20 chorded and 0 regex**.
+So the chorded fix is verified against real corpus data, while the regex refusal is
+verified by construction plus the reviewer's cited shape (`text=/Every \d+h/`) and four
+synthesised regex shapes — not against local corpus instances, because there are none.
+Flagging rather than implying both classes got the same grade of evidence.
