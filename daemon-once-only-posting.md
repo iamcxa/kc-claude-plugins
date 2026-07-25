@@ -1,11 +1,11 @@
 ---
 title: Route daemon posting through the once-only path
-status: ideation
+status: implementation
 source: slice 1 of 3 for daemon posting safety; unblocks once-only-daemon-preauth-gate. Found while closing PR3 (#56), 2026-07-25
 started:
 completed:
 verdict:
-worktree:
+worktree: .worktrees/w7-daemon-once-only
 issue:
 pr:
 design:
@@ -53,3 +53,25 @@ Rejected alternative: reuse the interactive gate with `human_confirmed: true` se
 2. RED for AC-2: with the flag off, the daemon's posting text and resulting review body are byte-identical to today.
 3. Negative: an autonomous gate presented for a different review key or head is refused; a malformed one is refused. (Full binding is slice 2, but refusal on obvious mismatch belongs with the schema that introduces it.)
 4. Verify with CI's pinned ShellCheck v0.9.0 (docker), not the local build — see kc-pr-flow/CLAUDE.md.
+
+## Stage Report: implementation
+
+- DONE: AC-1 — an interrupted daemon iteration does not produce a second review.
+  `review-post.test.sh` drives an autonomous-gated post whose POST lands and whose session records no result, then a second iteration: `posted_reconciled`, store count stays 1. The same fault injection #56 already proved, now reachable by an autonomous caller.
+- DONE: AC-2 — rollback still governs the autonomous path.
+  With `KC_PR_FLOW_ONCE_ONLY_POST` unset, a *valid* autonomous gate is refused (exit 3) and writes no review, so the flag stays the operator's kill switch rather than something a gate can re-enable.
+- DONE: Authorization is typed, not prose. `reference/pr-review-loop.md` no longer says "Approve posting the review"; it enables the once-only path and builds `review_autonomous_post_gate`, added as absolute safety rule 11. Step 7 documents both authorizations side by side.
+- DONE: `human_confirmed` stays unforgeable. The autonomous gate omits the field entirely (not `false`), and its closed key set refuses one smuggled in — tested from both the recipe side and through `review-post.sh`.
+- DONE: The gate authorizes one review, not any review. `review_post_gate_valid` compares `review_key` + `head_sha` against the request; gates bound elsewhere, claiming a non-daemon authorizer, or carrying an extra field are all refused, and none of them posts anything.
+- DONE: Docs state what exists and what does not. CLAUDE.md / README / reference / docs each record the bound gate **and** the still-missing event ceiling, expiry, fresh head recheck, and coverage refusal, so this is not readable as finished preauthorization.
+- DONE: Verification. 902 passed / 0 failed across all 7 suites. ShellCheck **v0.9.0 — CI's pinned version — clean on all eight files the workflow checks** (run from the release tarball natively; the Docker daemon was down, and the fallback is now documented). CI doc-safety greps all match; the shadow suite still sees exactly one interactive-post-gate reference in Step 7; skill frontmatter lint passes.
+- DONE: Corrected this entity's own premise during ideation — it could not be pure wiring, because the gate hard-requires `human_confirmed == true`. That correction is recorded in the Ideation section rather than quietly absorbed.
+
+### Found and fixed beyond the slice
+The `typed-interactive-seam` test group ran only when named explicitly (`--case typed-interactive-seam`). `CASE_FILTER` defaults to `all` and comes from a positional argument, and CI invokes the script with none — so **56 assertions never executed in CI**, covering interactive confirmation validity, post-gate authority, forged-confirmation rejection, and the Step 7 receipt requirement. `all` now includes the group. All 56 pass unchanged, so nothing was masked; the exposure was that a future regression in posting authority would have gone unseen. Without this, the slice's own new assertions would have been decoration too.
+
+### Not done, by scope
+No event ceiling and no expiry on the autonomous gate (slice 2, `once-only-daemon-preauth-gate`); no fresh head recheck or coverage refusal immediately before an autonomous post (slice 3, `daemon-preauth-freshness-coverage`). The concurrency residual named in #56 is unchanged and still tracked there.
+
+### Summary
+The daemon now posts under an authorization that says who granted it and which review it covers, instead of instructing a model to approve the human gate on the user's behalf — and it inherits #56's once-only machinery, so an interrupted iteration reconciles rather than reposting. Four commits: the gate schema plus the revived test group, the bound acceptance in `review-post.sh`, the daemon wiring and doc sync, and the Docker-free lint fallback.
