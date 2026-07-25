@@ -178,12 +178,74 @@ review_post_canonical_payload() {
 }
 
 review_post_gate_valid() {
-  local gate_json="$1" expected_event="$2"
-  printf '%s' "$gate_json" | jq -e --arg event "$expected_event" '
-    type == "object" and
-    .schema == "kc-pr-flow.interactive-post-gate/v1" and
-    .human_confirmed == true and
-    .effective_event == $event' >/dev/null 2>&1
+  # Two authorizations are accepted, and only two.
+  #
+  # The interactive gate means a human confirmed at §6c; its shape is unchanged,
+  # so `human_confirmed` keeps meaning exactly that and stays unforgeable by an
+  # autonomous caller.
+  #
+  # The autonomous gate is for a caller with no human at that gate (the daemon).
+  # It carries no `human_confirmed` field at all, and unlike the interactive gate
+  # it must name the review it authorizes: a gate minted for another review key
+  # or another head is refused here rather than trusted, which is what keeps a
+  # replayed or copied authorization from posting to the wrong PR or an old head.
+  local gate_json="${1:-}" expected_event="${2:-}" review_key="${3:-}"
+  local head_sha="${4:-}"
+  local schema
+  # Slurped and length-checked so the input is exactly one JSON object. Left as a
+  # stream, `jq -e` would take its status from the LAST document, which makes a
+  # concatenation of documents a shape nobody should have to reason about at an
+  # authorization boundary.
+  schema="$(jq -r -s '
+    if length == 1 and (.[0] | type == "object")
+    then (.[0].schema // empty) else empty end' <<<"$gate_json" 2>/dev/null)" || return 1
+  case "$schema" in
+    kc-pr-flow.interactive-post-gate/v1)
+      # The closed key set and the nested confirmation are checked HERE, not only
+      # by the skill's own validator. This is the sole component with posting
+      # authority, so a three-field hand-written object asserting
+      # `human_confirmed: true` must not be accepted just because a caller
+      # skipped that validator — "a human confirmed" has to cost more than
+      # writing the words.
+      printf '%s' "$gate_json" | jq -e -s --arg event "$expected_event" '
+        length == 1 and (.[0] |
+        type == "object" and
+        (keys | sort) ==
+          ["confirmation","effective_event","human_confirmed","schema"] and
+        .human_confirmed == true and
+        .effective_event == $event and
+        (.confirmation | type == "object") and
+        .confirmation.schema == "kc-pr-flow.interactive-confirmation/v1" and
+        .confirmation.effective_event == .effective_event)' >/dev/null 2>&1
+      ;;
+    kc-pr-flow.autonomous-post-gate/v1)
+      # The hex assertions keep the binding sound on its own. Without them an
+      # empty expected head (a request whose head_sha did not resolve) would be
+      # matched by an equally empty gate field, and the binding would hold
+      # vacuously while appearing to pass.
+      # The string type-guards come before test(): a non-string there is a jq
+      # runtime error, and while a non-zero exit still refuses, an authorization
+      # check should reach its verdict rather than crash into one.
+      printf '%s' "$gate_json" | jq -e -s \
+        --arg event "$expected_event" --arg review_key "$review_key" \
+        --arg head_sha "$head_sha" '
+        length == 1 and (.[0] |
+        type == "object" and
+        (keys | sort) ==
+          ["authorized_by","effective_event","head_sha","review_key","schema"] and
+        .authorized_by == "daemon" and
+        .effective_event == $event and
+        (.review_key | type == "string") and
+        (.head_sha | type == "string") and
+        (.review_key | test("^[0-9a-f]{64}$")) and
+        (.head_sha | test("^[0-9a-f]{40}$")) and
+        .review_key == $review_key and
+        .head_sha == $head_sha)' >/dev/null 2>&1
+      ;;
+    *)
+      return 1
+      ;;
+  esac
 }
 
 # Operator-level kill switch, layered above the per-call gate above. Off
@@ -423,17 +485,20 @@ review_post_cmd_post() {
   retention_seconds="$(jq -r '.retention_seconds // empty' <<<"$request")"
   [ -n "$retention_seconds" ] || retention_seconds="${KC_PR_FLOW_PENDING_RETENTION_SECONDS:-$REVIEW_POST_DEFAULT_RETENTION_SECONDS}"
 
-  if ! review_post_gate_valid "$gate" "$event"; then
-    printf 'review-post: invalid or event-mismatched post gate\n' >&2
-    return 3
-  fi
   if [ "$commit_id" != "$head_sha" ]; then
     printf 'review-post: commit_id must equal the reviewed head\n' >&2
     return 3
   fi
 
+  # The review key is derived before the gate check because an autonomous gate
+  # names the review it authorizes, and that binding is only checkable against
+  # the key this request actually resolves to.
   local review_key payload payload_sha256 idempotency_key
   review_key="$(review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash")" || return 1
+  if ! review_post_gate_valid "$gate" "$event" "$review_key" "$head_sha"; then
+    printf 'review-post: invalid, event-mismatched, or unbound post gate\n' >&2
+    return 3
+  fi
   payload="$(review_post_canonical_payload "$commit_id" "$event" "$body" "$comments")" || return 1
   payload_sha256="$(review_post_payload_sha256 "$commit_id" "$event" "$body" "$comments")" || return 1
   idempotency_key="$(review_runtime_idempotency_key "$review_key" "$commit_id" "$payload_sha256")" || return 1

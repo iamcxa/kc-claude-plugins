@@ -91,9 +91,12 @@ elapsed since `post.intent` — otherwise a lagging list would duplicate a revie
 `post` reconciles against the marker before its own POST too, so a repeat invocation of an
 already-landed payload reconciles instead of posting twice. Neither
 `resume` nor `gc` is gated by the rollback flag, so rolling back never deletes evidence needed to
-reconcile an uncertain remote result. There is no active daemon preauthorization gate yet — the
-rollback flag defaulting off is the entire daemon-safety mechanism today, by absence. See
-[Typed review runtime](docs/review-runtime.md) § "Once-only posting" for usage.
+reconcile an uncertain remote result. A caller with no human at the confirmation gate (the daemon)
+presents its own `kc-pr-flow.autonomous-post-gate/v1` — no `human_confirmed` field to forge, bound to
+the review key and head it authorizes — instead of approving the human gate on the user's behalf. The
+rest of a preauthorization contract is still deferred: no event ceiling, no expiry, no fresh head
+recheck or coverage refusal before an autonomous post, and the rollback flag off still denies every
+caller. See [Typed review runtime](docs/review-runtime.md) § "Once-only posting" for usage.
 
 Maintainer checks:
 

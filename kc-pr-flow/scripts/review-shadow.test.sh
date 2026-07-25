@@ -174,6 +174,42 @@ MOCK
   review_interactive_post_gate_valid "$post_gate"
   assert_eq 'post gate accepts decisionless REQUEST_CHANGES only with bound evidence' 0 "$?"
 
+  # --- autonomous (daemon) posting authorization -----------------------------
+  # A daemon iteration has no human at the confirmation gate. Its authorization
+  # is a sibling schema, never the interactive one: human_confirmed must stay
+  # unforgeable, so it is not a field an autonomous caller can set at all.
+  local auto_key auto_head auto_gate
+  auto_key=0000000000000000000000000000000000000000000000000000000000000001
+  auto_head=1111111111111111111111111111111111111111
+  auto_gate="$(review_autonomous_post_gate "$auto_key" "$auto_head" COMMENT daemon)"
+  review_autonomous_post_gate_valid "$auto_gate"
+  assert_eq 'autonomous gate produced for a daemon validates' 0 "$?"
+  assert_eq 'autonomous gate declares its own schema' \
+    kc-pr-flow.autonomous-post-gate/v1 "$(jq -r '.schema' <<<"$auto_gate")"
+  assert_eq 'autonomous gate carries no human_confirmed field at all' null \
+    "$(jq -r '.human_confirmed | type' <<<"$auto_gate")"
+  assert_eq 'autonomous gate binds the review key it authorizes' "$auto_key" \
+    "$(jq -r '.review_key' <<<"$auto_gate")"
+  assert_eq 'autonomous gate binds the head it authorizes' "$auto_head" \
+    "$(jq -r '.head_sha' <<<"$auto_gate")"
+
+  review_autonomous_post_gate "$auto_key" "$auto_head" COMMENT human >/dev/null 2>&1
+  assert_eq 'autonomous gate refuses an authorizer it does not know' 3 "$?"
+  # A short call must refuse, not abort on an unbound variable under set -u.
+  review_autonomous_post_gate "$auto_key" "$auto_head" >/dev/null 2>&1
+  assert_eq 'autonomous gate refuses a short call cleanly' 3 "$?"
+  review_autonomous_post_gate >/dev/null 2>&1
+  assert_eq 'autonomous gate refuses an argumentless call cleanly' 3 "$?"
+  review_autonomous_post_gate "$auto_key" not-a-sha COMMENT daemon >/dev/null 2>&1
+  assert_eq 'autonomous gate refuses a malformed head' 3 "$?"
+
+  review_autonomous_post_gate_valid "$(jq -c '.authorized_by = "human"' <<<"$auto_gate")" 2>/dev/null
+  assert_eq 'autonomous validator refuses a forged authorizer' 3 "$?"
+  review_autonomous_post_gate_valid "$(jq -c '. + {human_confirmed:true}' <<<"$auto_gate")" 2>/dev/null
+  assert_eq 'autonomous validator refuses a smuggled human_confirmed field' 3 "$?"
+  review_interactive_post_gate_valid "$auto_gate" 2>/dev/null
+  assert_eq 'the interactive validator never accepts an autonomous gate' 3 "$?"
+
   result="$(MOCK_TYPED_RESULT=invalid review_interactive_prepare_confirmation \
     "$sampled" APPROVE "$identity" "$bare_evidence" "$mock_runtime")"
   assert_eq 'bare blocker array cannot preserve REQUEST_CHANGES' COMMENT \
@@ -242,11 +278,16 @@ MOCK
   assert_eq 'no posting mutation occurs before confirmation' 0 "$(wc -c <"$mutation_log" | tr -d ' ')"
 }
 
-if [ "$CASE_FILTER" = 'typed-interactive-seam' ]; then
+# `all` has to mean all: this group was previously reachable only by naming it
+# explicitly, so its assertions never ran in CI (which invokes this script with
+# no arguments) — including every check on posting authority.
+if [ "$CASE_FILTER" = 'typed-interactive-seam' ] || [ "$CASE_FILTER" = 'all' ]; then
   run_typed_interactive_seam_tests
-  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
-  [ "$FAIL" -eq 0 ]
-  exit
+  if [ "$CASE_FILTER" = 'typed-interactive-seam' ]; then
+    printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+    [ "$FAIL" -eq 0 ]
+    exit
+  fi
 fi
 
 sha256_text() {

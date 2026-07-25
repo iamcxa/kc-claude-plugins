@@ -77,10 +77,19 @@ Skill("kc-pr-flow:kc-pr-review", "PR_NUMBER")
 
 **Important — non-interactive mode**: This skill normally presents findings and waits for user confirmation. You are running in daemon mode with no interactive terminal. When the skill asks for confirmation or presents options:
 - Accept defaults and proceed
-- Approve posting the review
 - Do NOT wait for user input — there is no user
 
-The skill's review post serves as the dedup signal — no separate marker comment needed. Future iterations detect it via the `submittedAt` timestamp check in REVIEW classification.
+**Do NOT "approve" the §6c gate on the user's behalf.** That receipt asserts that a human confirmed, and no human did. Take the autonomous path, which exists for exactly this caller:
+
+```bash
+export KC_PR_FLOW_ONCE_ONLY_POST=on
+```
+
+At Step 7, build the authorization with `review_autonomous_post_gate "$REVIEW_KEY" "$HEAD_SHA" "$EFFECTIVE_EVENT" daemon` and pass it as `--gate-file`. It is bound to the review key and head it authorizes — so it cannot post to another PR or an old head — and it has no `human_confirmed` field to forge.
+
+This is also what prevents a duplicate review. Every iteration is a fresh session, so "the POST landed but this session never recorded the outcome" is routine here rather than an edge case, and the `submittedAt` check in REVIEW classification cannot see a review that landed while the reviews list still lags. On the once-only path the posted body carries a durable idempotency marker, so a later iteration reconciles against it and settles instead of reviewing the PR again. Treat `submittedAt` as classification input, not as the duplicate guard.
+
+If a post reports `ambiguous`, leave it: a later iteration reconciles it. Never retry a post within one iteration.
 
 ### For FIX action:
 
@@ -129,6 +138,7 @@ Queued: #789, #101 (if any)
 8. **NEVER** close PRs
 9. **NEVER** modify `.env*` files, lock files, or migration files
 10. Commits from daemon MUST use format: `fix(review): <description>`
+11. **NEVER** confirm the §6c posting gate as if a human had — that receipt asserts human confirmation and there is no human here. Use the autonomous gate above, which says who actually authorized the post and which review it covers.
 
 ## Context Available
 
