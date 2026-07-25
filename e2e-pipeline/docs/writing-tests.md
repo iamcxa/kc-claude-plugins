@@ -337,6 +337,47 @@ The user journey itself changed -- new pages, different steps, removed features.
    /e2e-test login-flow
    ```
 
+## Expect Grammar Reference
+
+Every `expect:` string is matched against an ordered list of regex patterns in
+`compiler/resolver.js`. The first pattern that matches wins; a string matching none
+of them is silently deferred (see the "Warnings" line in [Commands](commands.md) --
+it becomes a `TODO` echo at runtime instead of a real assertion). This table is the
+canonical reference; no other doc enumerates the full grammar.
+
+| Form | Resolves to |
+|---|---|
+| `<element> is visible` | `active` |
+| `<element> visible on <page>` | `element-visible` |
+| `<element> visible` | `element-visible` |
+| `<element> is not visible on <page>` | `element-not-visible` |
+| `<element> not visible on <page>` | `element-not-visible` |
+| `<element> is not visible` | `element-not-visible` |
+| `<element> not visible` | `element-not-visible` |
+| `url does not contain <value>` | `url-not-contains` |
+| `url contains <value>` | `url-contains` |
+| `text '<value>' not on page` | `text-not-visible` |
+| `text "<value>" not visible` | `text-not-visible` |
+| `text '<value>' is not visible` (new) | `text-not-visible` |
+| `text '<value>' on page` | `text-visible` |
+| `text '<value>' is visible` (new) | `text-visible` |
+| `text "<value>" visible` | `text-visible` |
+| `<elemA> visible or <elemB> visible` | `or-visible` |
+
+`on <page>` is accepted but not verified -- element resolution is mapping-wide, not
+page-scoped (tracked separately).
+
+**Caution:** the cross-site example earlier in this doc ([Step 2](#step-2-generate-or-write-a-flow))
+uses `expect: ["text 'Created' on items-page"]`, which reads as if `items-page` were
+a page qualifier for the text assertion. It is not, and the effect is stronger than
+"the page name is ignored": the `text '<value>' on page` pattern's `on page` is a
+fixed literal, not `on <page-name>`, so this exact string matches none of the forms
+above and silently resolves as `deferred` -- it asserts nothing at runtime. There is
+no page-scoped text assertion in this grammar; only the element forms accept a
+qualifier, and even there it is parsed and discarded rather than verified (previous
+paragraph). Confirm with `/e2e-compile --verbose` and check whether a given `expect:`
+shows up as active or deferred in the printed summary.
+
 ## Element Coverage
 
 After compiling flows, you can check how well your tests cover the mapped UI:
