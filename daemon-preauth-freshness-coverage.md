@@ -12,6 +12,10 @@ design:
 id: x0fxzgrqcmtsbvp4c2cnp7z0
 ---
 
+**Blocked 2026-07-26 on `attended-pr-review-wait` (4p)**, transitively through slice 2
+(`once-only-daemon-preauth-gate`). If the unattended caller is removed, this slice has no
+caller to gate. Deferred, not dropped.
+
 Once a daemon iteration carries a typed preauthorization (slice 2), two checks remain before it may post autonomously, both of which a human at the §6c gate supplies implicitly today:
 
 - **Freshness.** The head may have moved between classification and posting. The interactive path already invalidates on `head_moved`; an autonomous post needs the same recheck immediately before the mutation, against the preauthorization's bound head and idempotency key.
