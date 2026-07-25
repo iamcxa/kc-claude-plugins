@@ -189,10 +189,16 @@ review_post_gate_valid() {
   # it must name the review it authorizes: a gate minted for another review key
   # or another head is refused here rather than trusted, which is what keeps a
   # replayed or copied authorization from posting to the wrong PR or an old head.
-  local gate_json="$1" expected_event="$2" review_key="$3" head_sha="$4"
+  local gate_json="${1:-}" expected_event="${2:-}" review_key="${3:-}"
+  local head_sha="${4:-}"
   local schema
-  schema="$(jq -r 'if type == "object" then (.schema // empty) else empty end' \
-    <<<"$gate_json" 2>/dev/null)" || return 1
+  # Slurped and length-checked so the input is exactly one JSON object. Left as a
+  # stream, `jq -e` would take its status from the LAST document, which makes a
+  # concatenation of documents a shape nobody should have to reason about at an
+  # authorization boundary.
+  schema="$(jq -r -s '
+    if length == 1 and (.[0] | type == "object")
+    then (.[0].schema // empty) else empty end' <<<"$gate_json" 2>/dev/null)" || return 1
   case "$schema" in
     kc-pr-flow.interactive-post-gate/v1)
       # The closed key set and the nested confirmation are checked HERE, not only
@@ -201,31 +207,40 @@ review_post_gate_valid() {
       # `human_confirmed: true` must not be accepted just because a caller
       # skipped that validator — "a human confirmed" has to cost more than
       # writing the words.
-      printf '%s' "$gate_json" | jq -e --arg event "$expected_event" '
+      printf '%s' "$gate_json" | jq -e -s --arg event "$expected_event" '
+        length == 1 and (.[0] |
+        type == "object" and
         (keys | sort) ==
           ["confirmation","effective_event","human_confirmed","schema"] and
         .human_confirmed == true and
         .effective_event == $event and
         (.confirmation | type == "object") and
         .confirmation.schema == "kc-pr-flow.interactive-confirmation/v1" and
-        .confirmation.effective_event == .effective_event' >/dev/null 2>&1
+        .confirmation.effective_event == .effective_event)' >/dev/null 2>&1
       ;;
     kc-pr-flow.autonomous-post-gate/v1)
       # The hex assertions keep the binding sound on its own. Without them an
       # empty expected head (a request whose head_sha did not resolve) would be
       # matched by an equally empty gate field, and the binding would hold
       # vacuously while appearing to pass.
-      printf '%s' "$gate_json" | jq -e \
+      # The string type-guards come before test(): a non-string there is a jq
+      # runtime error, and while a non-zero exit still refuses, an authorization
+      # check should reach its verdict rather than crash into one.
+      printf '%s' "$gate_json" | jq -e -s \
         --arg event "$expected_event" --arg review_key "$review_key" \
         --arg head_sha "$head_sha" '
+        length == 1 and (.[0] |
+        type == "object" and
         (keys | sort) ==
           ["authorized_by","effective_event","head_sha","review_key","schema"] and
         .authorized_by == "daemon" and
         .effective_event == $event and
+        (.review_key | type == "string") and
+        (.head_sha | type == "string") and
         (.review_key | test("^[0-9a-f]{64}$")) and
         (.head_sha | test("^[0-9a-f]{40}$")) and
         .review_key == $review_key and
-        .head_sha == $head_sha' >/dev/null 2>&1
+        .head_sha == $head_sha)' >/dev/null 2>&1
       ;;
     *)
       return 1

@@ -507,6 +507,22 @@ out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epo
 assert_eq "the genuine interactive receipt still authorizes" "posted" "$(jq -r '.status' <<<"$out")"
 teardown_env
 
+# --- The outer key set is closed; the confirmation's is deliberately NOT. A real
+# typed confirmation carries a decision and blocker evidence, so closing the
+# inner set too would reject the very path the typed runtime produces. ---
+new_env; write_request
+printf 'posted\n' >"$STUB_DIR/post-plan"
+RICH_GATE="$STUB_DIR/rich-gate.json"
+jq -S -c -n '{schema:"kc-pr-flow.interactive-post-gate/v1",human_confirmed:true,
+  effective_event:"COMMENT",
+  confirmation:{schema:"kc-pr-flow.interactive-confirmation/v1",source:"typed",
+    effective_event:"COMMENT",decision:{schema:"kc-pr-flow.interactive-collation-decision/v1"},
+    blocker_evidence:null,confirmed_blocker_refs:[]}}' >"$RICH_GATE"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$RICH_GATE" --now-epoch 1000)"
+assert_eq "a confirmation carrying extra typed fields still authorizes" "posted" "$(jq -r '.status' <<<"$out")"
+assert_eq "the richer receipt posted exactly one review" "1" "$(store_count)"
+teardown_env
+
 # --- The autonomous binding must be sound on its own, not by accident of a
 # later check: an unresolved (empty) head must not be matched by an equally
 # empty gate field. ---
@@ -532,6 +548,39 @@ rc_empty_key=$?
 set -e
 assert_eq "an empty review-key binding is refused" "3" "$rc_empty_key"
 assert_eq "an empty binding posted nothing" "0" "$(store_count)"
+teardown_env
+
+# --- One document, not a stream. Left unslurped, `jq -e` takes its status from
+# the LAST document, so a concatenation could carry a decoy ahead of a real gate.
+# Nothing valid is ever a stream, so a stream is refused outright. ---
+new_env; write_request
+printf 'posted\n' >"$STUB_DIR/post-plan"
+STREAM_GATE="$STUB_DIR/stream-gate.json"
+GOOD=$(jq -S -c -n --arg key "$(review_key_for)" --arg head "$HEAD" '
+  {schema:"kc-pr-flow.autonomous-post-gate/v1",authorized_by:"daemon",
+   effective_event:"COMMENT",head_sha:$head,review_key:$key}')
+printf '%s\n%s\n' '{"schema":null}' "$GOOD" >"$STREAM_GATE"
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$STREAM_GATE" --now-epoch 1000 >/dev/null 2>&1
+rc_stream=$?
+set -e
+assert_eq "a two-document gate file is refused" "3" "$rc_stream"
+printf '%s\n%s\n' "$GOOD" "$GOOD" >"$STREAM_GATE"
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$STREAM_GATE" --now-epoch 1000 >/dev/null 2>&1
+rc_dup=$?
+set -e
+assert_eq "even a repeated valid gate is refused as a stream" "3" "$rc_dup"
+# A non-string binding must reach a verdict, not depend on a jq runtime error.
+jq -S -c -n --arg key "$(review_key_for)" '
+  {schema:"kc-pr-flow.autonomous-post-gate/v1",authorized_by:"daemon",
+   effective_event:"COMMENT",head_sha:1234,review_key:$key}' >"$STREAM_GATE"
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$STREAM_GATE" --now-epoch 1000 >/dev/null 2>&1
+rc_numeric=$?
+set -e
+assert_eq "a numeric head binding is refused" "3" "$rc_numeric"
+assert_eq "no stream or mistyped gate posted anything" "0" "$(store_count)"
 teardown_env
 
 # --- Rollback still governs the autonomous path: the flag, not the gate, is the
