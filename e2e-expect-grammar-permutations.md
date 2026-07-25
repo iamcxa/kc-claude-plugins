@@ -464,9 +464,10 @@ proposals get scored against the corpus, never against prose.
 
 ### Summary
 
-Landed exactly the approved 2-line `resolver.js` patch (worktree commit `444e846`) plus 3 new
-`resolver.test.js` cases, the `docs/writing-tests.md` doc diff, and the `SKILL.md` link, with
-RED recorded before GREEN and the full suite green once (630/630) at exit. All 3 carried items
+Landed exactly the approved 2-line `resolver.js` patch (worktree commit `444e846`, doc
+cross-reference fixup `05e3d79`) plus 3 new `resolver.test.js` cases, the
+`docs/writing-tests.md` doc diff, and the `SKILL.md` link, with RED recorded before GREEN and
+the full suite green once (630/630) at exit. All 3 carried items
 closed: the AC1 harness survives the patch landing, the ACs are in the scannable template, and
 the stage-report ordering bug is fixed. One discrepancy surfaced and corrected rather than
 silently propagated: the entity's doc-diff note says `docs/writing-tests.md:238`'s
