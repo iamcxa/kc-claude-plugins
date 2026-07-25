@@ -187,22 +187,41 @@ this vocabulary without a re-shape — the whole reason this entity is sequenced
 
 Reused the sprint's shared corpus baseline (`.context/flow-corpus.txt`, 100 unique flows by
 content hash) and the real `resolve()` function (not a reimplementation), classifying all 630
-resolve-error strings by shape:
+resolve-error strings by shape. Harness persisted at `.context/spike-gz-error-classify.js`,
+following the sibling convention (`spike-xn-before-after.js`): it sources `resolver.js` from
+`git show <ref>:...` rather than the on-disk checkout, so the baseline stays valid after gz's own
+patch — and, more importantly, after [[e2e-page-scoped-resolution]] lands, since 3t adds two new
+error message shapes and collapses 3 of the ambiguity errors counted below. Ref override
+`GZ_BEFORE_REF`, checkout override `GZ_REPO_DIR`.
 
 ```
-node <spike>.js .context/flow-corpus.txt
-{
-  "total_errors": 630,
-  "by_shape": [
-    ["no_type_field", 565],
-    ["action_format_mismatch", 22],
-    ["unknown_step_type", 19],
-    ["unknown_runtime_ref", 15],
-    ["ambiguous_element", 5],
-    ["element_or_page_not_found", 4]
-  ]
-}
+node .context/spike-gz-error-classify.js .context/flow-corpus.txt
+
+ref: 529296d   corpus: 100 unique flows by content, 87 scored
+
+CODE                          TIER   COUNT
+no_type_field                 2      565
+action_format_mismatch        2      22
+unknown_step_type             2      19
+unknown_runtime_ref           2      15
+element_ambiguous             1      5
+element_or_page_not_found     1      4
+
+total resolve errors           630
+tier-1 (repairable: candidates already computed)  9
+tier-2 (structural: no candidate data exists)     621
+
+TIER-1 cases by flow (5 flows, 9 errors):
+  3  list-data-completeness.yaml
+  2  073-26-complaint-activity.yaml
+  2  smoke-war-room.yaml
+  1  billing-settlement.yaml
+  1  073-28-service-follow-up.yaml
 ```
+
+The harness's tier split is the same one the Design section uses, so the AC-3 boundary
+("`candidates` only where the compiler already computed them") is measured, not asserted:
+9 tier-1 vs 621 tier-2. `--detail` prints each tier-1 case with its full flow path.
 
 **Correction to this dispatch's own framing — measured, not assumed.** Section 3 cites "630
 resolve errors... These hard-fail today. Seed those" as the basis for choosing resolution-class
@@ -216,14 +235,17 @@ the symbol table — is **9 corpus-live cases** (5 ambiguous, 4 not-found), not 
 change section 2's core call; it changes how the value AC's evidence should be described, so a
 future reader doesn't inherit an inflated sense of how common this specific defect is.
 
-**Real corpus example selected for the value AC — `list-data-completeness.yaml` (mapping
-`secha-office`, project `carlove`)** already carries exactly 3 live ambiguous-element errors
-today, matching this entity's own "repair a flow carrying three seeded errors" measurement
-design without needing to seed anything synthetically:
+**Real corpus example selected for the value AC — `list-data-completeness.yaml`**, full path
+`/Users/kent/Project/carlove/.claude/e2e/flows/list-data-completeness.yaml`, mapping
+`secha-office` (project `carlove`). It is the highest-density tier-1 flow in the corpus and
+already carries exactly 3 live ambiguous-element errors today, matching this entity's own
+"repair a flow carrying three seeded errors" measurement design without seeding anything
+synthetically. Reproduce the three verbatim with
+`node .context/spike-gz-error-classify.js .context/flow-corpus.txt --detail`:
 ```
 Step 'navigate-to-service-schedule': expect element 'tab_all' is ambiguous -- found on: service-schedule, employee-profiles
-Step 'select-all-tab': element 'tab_all' is ambiguous -- found on: service-schedule, employee-profiles
 Step 'ensure-list-view': expect element 'data_table' is ambiguous -- found on: service-schedule, customer-profiles, branches, employee-profiles, workspaces, services, self-check-lists, audit-templates, report-step-templates
+Step 'select-all-tab': element 'tab_all' is ambiguous -- found on: service-schedule, employee-profiles
 ```
 `data_table`'s 9-way collision is exactly the case where today's prose forces an agent to either
 parse a 9-item comma list out of English text or re-open the mapping YAML to enumerate pages —
@@ -279,9 +301,15 @@ today's prose-only stderr. Scoped to `element_ambiguous`/`element_not_found` onl
 scope, see Corpus evidence: NOT `no_type_field` (this entity doesn't touch migration status) and
 NOT deferred-expect (still a silent-pass hole per [[e2e-typed-operands]]/[[e2e-assertion-honesty-gate]],
 which would let the "before" case succeed by not failing).
-Verified by: running the repair task twice (prose baseline vs `--json`) on the snapshotted
-fixture and recording token count + whether the mapping YAML was read in full. Falsified by: the
-`--json` condition using equal-or-more tokens, or still needing a full mapping re-read.
+Verified by: two steps, both re-runnable verbatim. (a) The population claim — that this class is
+9 corpus-live cases and that `list-data-completeness.yaml` carries exactly 3 of them — is
+reproduced by `node .context/spike-gz-error-classify.js .context/flow-corpus.txt --detail`
+(pinned to `GZ_BEFORE_REF=529296d`; expect `tier-1 ... 9` and `3  list-data-completeness.yaml`).
+(b) The cost claim is measured by running the repair task twice (prose baseline vs `--json`) on
+the fixture snapshotted from that flow, recording token count + whether the mapping YAML was read
+in full. Falsified by: the harness in (a) reporting a tier-1 count that no longer matches the
+3-error anchor the measurement is built on, or, in (b), the `--json` condition using
+equal-or-more tokens or still needing a full mapping re-read.
 
 **AC-5 — the SKILL.md prose is deleted, not supplemented (the pre-mortem's own guardrail).**
 `skills/e2e-compile/SKILL.md`'s Phase 3 "Present Results" (currently lines 94-189, 96 of 202
@@ -481,10 +509,11 @@ extended budget.
 - DONE: Design determination
   `design: required`, shape + additive `errorDetails` compatibility strategy in "Design".
 - DONE: Spike the riskiest unverified mechanism first
-  `/tmp/spike-gz-error-classify.js` (real `resolve()`, real corpus) classified all 630 resolve
-  errors: 565 `no_type_field`, 5 `ambiguous_element`, 4 `element_or_page_not_found`, rest
-  structural — corrected the dispatch's "630 hard-fail" framing to the true 9-case repairable
-  population, in "Corpus evidence".
+  `.context/spike-gz-error-classify.js` (real `resolve()` sourced from `git show 529296d:`, not
+  the on-disk checkout — sibling convention, survives 3t's error-string changes) classified all
+  630 resolve errors: 565 `no_type_field`, 5 `element_ambiguous`, 4 `element_or_page_not_found`,
+  rest structural — corrected the dispatch's "630 hard-fail" framing to the true 9-case
+  repairable population, in "Corpus evidence".
 - DONE: AC are end-state properties with falsifiable proof
   AC-1..AC-6, each with Verified-by/Falsified-by; AC-4 named as the value AC, re-scoped to the
   corrected 9-case population.
@@ -520,3 +549,27 @@ only 9 cases are the repairable class the value AC is about, and a real un-seede
 covers exactly that measurement. Escalated the error-code vocabulary with 3 costed options,
 surfacing a new sequencing conflict against `e2e-schema-contract`'s own notes. Six ACs, a full
 reverse-recovery audit, and a doc diff recorded; `design: required` for the gate to set.
+
+### Correction round 1 — spike durability (FO-requested, scoped)
+
+The first pass ran the classifier from `/tmp` and deleted it, leaving AC-4's load-bearing number
+as an unverifiable assertion — the same durability gap `xn`'s implementation was returned for.
+Repaired, design untouched:
+
+- Persisted to `.context/spike-gz-error-classify.js` on the sibling convention: sources
+  `resolver.js` via `git show <ref>:e2e-pipeline/compiler/resolver.js` rather than the on-disk
+  checkout, with `GZ_BEFORE_REF` / `GZ_REPO_DIR` overrides. Pinning is load-bearing here beyond
+  the usual patch-survival argument — [[e2e-page-scoped-resolution]] adds two new error message
+  shapes and collapses 3 of the ambiguity errors counted here, so a live-file harness would
+  silently re-baseline AC-4 against a different resolver after 3t lands.
+- Re-ran from the persisted path: **numbers unchanged** — 630 total (565 `no_type_field`, 22, 19,
+  15, 5 `element_ambiguous`, 4 `element_or_page_not_found`), 9 tier-1, and
+  `list-data-completeness.yaml` carrying exactly 3. The harness now also prints the tier-1/tier-2
+  split (9 vs 621) that AC-3's boundary rests on, and `--detail` prints each case with its full
+  flow path.
+- AC-4's `Verified by:` now cites the runnable command line and its expected output; the
+  Corpus-evidence section names the anchor flow's full path and the `--detail` reproduction.
+
+Design, ACs, the additive `errorDetails` strategy, the SKILL.md line range, and the escalation
+section are unchanged — per the FO, the escalation stays open and costed for the captain's ruling
+on the `e2e-schema-contract` sequencing conflict.
