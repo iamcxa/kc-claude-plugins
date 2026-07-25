@@ -72,3 +72,17 @@ it does NOT collapse — but that was a plain HTML fixture, not RNW, so it does 
 
 If the snapshot does carry both, the widening is a live wrong-element risk and not merely a
 loosened assertion.
+
+## Re-scoped, 2026-07-26 — the 18 `text=` chords do NOT belong here
+
+Correction to the extension recorded above. Measured: **all chorded `text=` values are
+`nth=0`**, and the translator is reached only from the existence-assertion path
+(`codegen.js:1572`, gated on `element-visible`/`active`). At index 0 the strip is a
+logical equivalence, not a widening, so folding those in would dilute the real defect.
+
+**This entity's actual scope is the non-zero-index chords** — 118 at `nth=1` plus 1 at
+`nth=2` across the corpus, all on `role=` forms. Those are the ones asserting something
+their author did not write. The `nth=0` population (220) is out of scope.
+
+The RNW snapshot experiment proposed above is no longer needed to settle the `text=`
+question; keep it only if it helps decide the non-zero cases.

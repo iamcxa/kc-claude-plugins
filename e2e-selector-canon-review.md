@@ -385,3 +385,42 @@ So the chorded fix is verified against real corpus data, while the regex refusal
 verified by construction plus the reviewer's cited shape (`text=/Every \d+h/`) and four
 synthesised regex shapes — not against local corpus instances, because there are none.
 Flagging rather than implying both classes got the same grade of evidence.
+
+### Cycle 1 accepted — gate verdict `proceed`, three record corrections applied here
+
+**The chord-strip justification is replaced.** The implementing worker defended
+`text=V >> nth=N` → `"V"` with an untested hypothesis (that the a11y snapshot does not
+carry the DOM duplicate the chord disambiguates). The reviewer found a proof that needs
+no snapshot, and it is confirmed: **every chorded `text=` value in the corpus is
+`nth=0`** (corpus-wide chords are 220 at nth=0, 118 at nth=1, 1 at nth=2 — all the
+non-zero ones are `role=` forms), and `selectorToA11yPattern`'s only call site is
+`codegen.js:1572`, gated on `element-visible`/`active`. For an existence assertion at
+index 0, "the first V exists" and "a V exists" are the same claim. So this is an
+equivalence, not a widening. `references/common-patterns.md:55` adds that under React
+Native Web `nth=0` is the *hidden* duplicate, so translating it away is arguably a
+correction.
+
+**One clause is withdrawn from the record**: that these selectors "still fail lint
+CLASS 2 regardless, so they are flagged either way". It is true on paper and empty in
+practice — `lint-mapping.sh` has zero references in the consuming repo's `.github` or
+`.githooks`, and inside this plugin only `test/integration-smoke.sh` invokes it. Citing
+an unenforced lint as mitigation is precisely the defect this entity was chartered to
+name, so it must not survive as one.
+
+**AC-3 provenance.** The worker disclosed, unprompted, that the corpus reachable from
+its worktree held 48 `text=` values with 20 chorded and **0 regex**, so its regex
+refusal rested on construction plus synthesised cases. That gap is closed from the
+FO side: the wider corpus scan sees 81 values including **10 real regex forms**, all
+verified to return `null` after the fix, and the reviewer independently re-ran the
+measurement (11 null / 71 matchable / 0 non-null-but-dead).
+
+**Residual, accepted rather than fixed:** `CLAUDE.md` § Selector Priority — the new
+single authority — still does not state that `text=/regex/` is refused and falls back,
+nor that `role=X[name=/Y/]` is supported. Two lines; not worth a third cycle. Carry as
+a doc follow-up or land before merge at the captain's discretion.
+
+**Spun out, not absorbed:** [[e2e-regex-prefix-false-match]] — the reviewer found that
+`selector-translate.js:86-91` emits bare, unquoted substring greps for `role=` regex
+values (`/holder.*關閉/` → `holder`, which `grep -F` matches inside `placeholder`).
+Pre-existing, false-PASS direction, and therefore more serious than the nth widening.
+Not caused by this entity and not fixed by it.
