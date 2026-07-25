@@ -1,5 +1,5 @@
 ---
-title: Refuse banned selectors at compile time, and migrate the ones already written
+title: "SUPERSEDED — refuse banned selectors at compile time (the ban was wrong)"
 status: backlog
 source: sprint-1 (compiler boundary) entity 4 of 5; split out of e2e-assertion-honesty-gate once the corpus violation count was measured
 started:
@@ -12,7 +12,27 @@ design:
 id: b4xpj6xrf8p7a9w0rvrxjchk
 ---
 
-## Problem
+## SUPERSEDED by [[e2e-selector-canon-review]], captain ruling 2026-07-25
+
+**Do not implement this entity.** It proposed enforcing a ban that the evidence
+below, followed to its end, showed to be wrong. Enforcing it would have rejected 26
+of 32 real mappings in favour of a form the target app cannot support, and the
+2,183 selectors it called violations were never broken on the compiled path —
+`compiler/lib/selector-translate.js` emits byte-identical output for the banned and
+canonical forms alike.
+
+Pulled from sprint 1 on that finding. The surviving work is in
+[[e2e-selector-canon-review]] and reverses this entity's direction: delete lint
+CLASS 1 rather than enforce it, and point CLASS 3 at a form that exists. Zero
+mappings migrate; the codemod this entity was sized around is not needed.
+
+The file is kept rather than deleted because the spike record below is the evidence
+that overturned it, and because the reasoning is worth reading before anyone
+proposes the ban again.
+
+---
+
+## Problem (as originally written — the premise is false, see above)
 
 `scripts/lint-mapping.sh` rejects five selector forms that the plugin's own mapper agent says
 are "silently mishandled at runtime (fallback eval path -> false positive risk)". The compiler
