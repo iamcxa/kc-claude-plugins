@@ -1,6 +1,6 @@
 ---
 title: Close the expect-grammar permutation holes
-status: implementation
+status: validation
 source: sprint-1 (compiler boundary) entity 1 of 5; measured this session, corroborated by the cross-model reviewer as the highest-ROI lowest-risk item in the codebase
 started: 2026-07-25T12:41:25Z
 completed:
