@@ -1,14 +1,14 @@
 ---
 title: Re-decide the canonical selector grammar — it has been declared for three months and adopted zero times
-status: backlog
+status: implementation
 source: captain approval 2026-07-25, escalated out of e2e-selector-lint-gate when the codemod spike showed the canonical form is unsupported by the target apps
-started:
+started: 2026-07-25T13:47:31Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-e2e-selector-canon-review
 issue:
 pr:
-design:
+design: required
 id: rd55vfpddtyvsbfqxqecj6cx
 ---
 
