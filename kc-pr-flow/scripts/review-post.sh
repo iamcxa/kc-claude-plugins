@@ -291,16 +291,20 @@ review_post_head_sha() {
   printf '%s' "$sha"
 }
 
-review_post_prior_live_attempt() {
-  # True when some OTHER run for this PR already authorized this exact payload
-  # and has not settled (no terminal post.result, not invalidated). Such a run
-  # may have landed a review whose response was lost, or be mid-POST right now,
-  # so the caller must resume it rather than race a second POST.
+review_post_prior_attempt_state() {
+  # What another run for this PR already knows about this exact payload's remote
+  # fate, as `kind|remote_review_id`:
+  #   posted|<id>   a terminal posted / posted_reconciled result — definitely live
+  #   unsettled|    authorized but never settled — may be live, may be mid-POST
+  # A prior run that ended `failed` or was invalidated landed nothing and prints
+  # nothing, so it never blocks a fresh post. Only the caller's own run is
+  # skipped, so this is the cross-run half of the exactly-once guarantee: the
+  # remote marker scan can miss a landed review (list lag), and this cannot.
   #
-  # Slurped deliberately: `jq -e` over a stream takes its exit status from the
-  # LAST value emitted, which would misreport a match followed by a non-match.
+  # Slurped deliberately: `jq -e`/`jq -r` over a stream reports per-line, so a
+  # match followed by a non-match would misreport the run.
   local repository="$1" pr_number="$2" current_run_id="$3" idempotency_key="$4"
-  local state_root repo_key pr_dir events_file
+  local state_root repo_key pr_dir events_file verdict
   state_root="$(review_runtime_prepare_state_root)" || return 1
   repo_key="$(review_runtime_repo_key "$repository")" || return 1
   pr_dir="$state_root/$repo_key/pr-$pr_number"
@@ -310,11 +314,24 @@ review_post_prior_live_attempt() {
     case "$events_file" in
       */"$current_run_id"/events.jsonl) continue ;;
     esac
-    if jq -e -s --arg key "$idempotency_key" '
-      any(.[]; .event_type == "post.intent" and .payload.idempotency_key == $key)
-      and (any(.[]; .event_type == "post.result") | not)
-      and (any(.[]; .event_type == "run.invalidated") | not)' \
-      "$events_file" >/dev/null 2>&1; then
+    verdict="$(jq -r -s --arg key "$idempotency_key" '
+      if (any(.[]; .event_type == "post.intent" and .payload.idempotency_key == $key) | not)
+      then empty
+      else
+        ([.[] | select(.event_type == "post.result")] | last) as $result |
+        (any(.[]; .event_type == "run.invalidated")) as $invalidated |
+        if $result != null then
+          if ($result.payload.outcome == "posted"
+              or $result.payload.outcome == "posted_reconciled")
+          then "posted|" + (($result.payload.remote_review_id // "") | tostring)
+          else empty
+          end
+        elif $invalidated then empty
+        else "unsettled|"
+        end
+      end' "$events_file" 2>/dev/null)"
+    if [ -n "$verdict" ]; then
+      printf '%s' "$verdict"
       return 0
     fi
   done < <(find "$pr_dir" -mindepth 2 -maxdepth 2 -type f -name events.jsonl 2>/dev/null)
@@ -376,14 +393,14 @@ review_post_cmd_post() {
     printf 'review-post: once-only posting is disabled (set KC_PR_FLOW_ONCE_ONLY_POST=on to enable)\n' >&2
     return 3
   }
-  [ -n "$request_file" ] && [ -f "$request_file" ] || {
+  if [ -z "$request_file" ] || [ ! -f "$request_file" ]; then
     printf 'review-post: --request-file is required\n' >&2
     return 2
-  }
-  [ -n "$gate_file" ] && [ -f "$gate_file" ] || {
+  fi
+  if [ -z "$gate_file" ] || [ ! -f "$gate_file" ]; then
     printf 'review-post: --gate-file is required\n' >&2
     return 2
-  }
+  fi
   review_runtime_require_jq || return
   review_runtime_require_python || return
 
@@ -496,11 +513,26 @@ review_post_cmd_post() {
       return 0
     fi
   fi
-  # No confirmed remote copy — but "not visible" is not "not posted". If another
-  # run already authorized this exact payload and never settled, it may have
-  # landed a review whose response was lost (or be mid-POST). Resume that run
-  # instead of racing a second POST.
-  if review_post_prior_live_attempt "$repository" "$pr_number" "$run_id" "$idempotency_key"; then
+  # No confirmed remote copy — but "not visible" is not "not posted". Consult
+  # local durable state for another run that authorized this exact payload: the
+  # remote scan above can miss a landed review while the list lags, and this
+  # cannot.
+  local prior_state prior_kind prior_remote
+  prior_state="$(review_post_prior_attempt_state "$repository" "$pr_number" "$run_id" "$idempotency_key")" || prior_state=''
+  if [ -n "$prior_state" ]; then
+    prior_kind="${prior_state%%|*}"
+    prior_remote="${prior_state#*|}"
+    if [ "$prior_kind" = posted ]; then
+      # A prior run definitively landed this payload. Settle against it rather
+      # than posting a second copy the lagging list simply cannot show us yet.
+      review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
+        "$base_sha" "$head_sha" "$config_hash" 5 "$occurred_at" post.result \
+        "$(jq -cn --argjson remote_review_id "$prior_remote" --arg idempotency_key "$idempotency_key" \
+          '{idempotency_key:$idempotency_key,outcome:"posted_reconciled",remote_review_id:$remote_review_id}')" || return 74
+      rm -f "$run_dir/pending-post.json"
+      review_post_emit posted_reconciled "$run_id" "$idempotency_key" '' "$prior_remote"
+      return 0
+    fi
     printf 'review-post: an unsettled prior attempt exists for this payload; resume it instead\n' >&2
     review_post_emit ambiguous "$run_id" "$idempotency_key" prior_attempt_unsettled ''
     return 0
@@ -564,10 +596,10 @@ review_post_cmd_resume() {
       *) printf 'review-post: unknown resume option %s\n' "$1" >&2; return 2 ;;
     esac
   done
-  [ -n "$repository" ] && [ -n "$pr_number" ] && [ -n "$self_login" ] && [ -n "$run_id" ] || {
+  if [ -z "$repository" ] || [ -z "$pr_number" ] || [ -z "$self_login" ] || [ -z "$run_id" ]; then
     printf 'review-post: resume requires --repo --pr --self --run-id\n' >&2
     return 2
-  }
+  fi
   review_runtime_require_jq || return
   review_runtime_require_python || return
 
@@ -595,10 +627,10 @@ review_post_cmd_resume() {
     return 0
   fi
 
-  [ -f "$run_dir/pending-post.json" ] && [ ! -L "$run_dir/pending-post.json" ] || {
+  if [ ! -f "$run_dir/pending-post.json" ] || [ -L "$run_dir/pending-post.json" ]; then
     printf 'review-post: no pending payload to resume for %s\n' "$run_id" >&2
     return 74
-  }
+  fi
   pending="$(cat "$run_dir/pending-post.json")" || return 74
 
   local review_key commit_id event idempotency_key payload_sha256 body comments base_sha head_sha config_hash
@@ -730,10 +762,10 @@ review_post_cmd_gc() {
       *) printf 'review-post: unknown gc option %s\n' "$1" >&2; return 2 ;;
     esac
   done
-  [ -n "$repository" ] && [ -n "$pr_number" ] || {
+  if [ -z "$repository" ] || [ -z "$pr_number" ]; then
     printf 'review-post: gc requires --repo --pr\n' >&2
     return 2
-  }
+  fi
   review_runtime_require_jq || return
   review_runtime_require_python || return
   [ -n "$now_epoch" ] || now_epoch="$(review_post_now_epoch)"

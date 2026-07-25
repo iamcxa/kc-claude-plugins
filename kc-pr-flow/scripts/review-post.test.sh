@@ -33,6 +33,12 @@ file_mode() {
   if stat -f '%Lp' "$1" >/dev/null 2>&1; then stat -f '%Lp' "$1"; else stat -c '%a' "$1"; fi
 }
 
+# Spelled out rather than `[ -e x ] && printf true || printf false`: that idiom
+# is an SC2015 finding on the ShellCheck versions CI installs.
+path_exists() {
+  if [ -e "$1" ]; then printf true; else printf false; fi
+}
+
 # Fresh isolated state + stub scenario per scenario. The rollback flag
 # defaults ON here so AC1-AC4/AC6 exercise the new path's own mechanics;
 # dedicated blocks below unset it to prove the default-deny/rollback gate.
@@ -81,7 +87,7 @@ assert_eq "clean post returns posted" "posted" "$(jq -r '.status' <<<"$out")"
 run_id="$(jq -r '.run_id' <<<"$out")"
 assert_eq "clean post records exactly one review" "1" "$(store_count)"
 assert_eq "clean post writes a posted result event" "posted" "$(run_events "$run_id" | jq -r 'select(.event_type=="post.result") | .payload.outcome')"
-assert_eq "clean post removes the pending payload" "false" "$([ -e "$(run_dir_for "$run_id")/pending-post.json" ] && printf true || printf false)"
+assert_eq "clean post removes the pending payload" "false" "$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
 teardown_env
 
 # --- AC1: exactly-once under an ambiguous POST fault (request lands, response lost). ---
@@ -91,14 +97,14 @@ out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epo
 assert_eq "ambiguous post is reported ambiguous" "ambiguous" "$(jq -r '.status' <<<"$out")"
 run_id="$(jq -r '.run_id' <<<"$out")"
 assert_eq "ambiguous post already landed one review remotely" "1" "$(store_count)"
-assert_eq "ambiguous post leaves the pending payload durable" "true" "$([ -e "$(run_dir_for "$run_id")/pending-post.json" ] && printf true || printf false)"
+assert_eq "ambiguous post leaves the pending payload durable" "true" "$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
 assert_eq "ambiguous post writes NO terminal result" "" "$(run_events "$run_id" | jq -r 'select(.event_type=="post.result") | .payload.outcome')"
 # Resume must reconcile the landed review and post NOTHING more.
 resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id")"
 assert_eq "resume reconciles the landed review" "posted_reconciled" "$(jq -r '.status' <<<"$resume_out")"
 assert_eq "resume ends with EXACTLY ONE review (no blind second POST)" "1" "$(store_count)"
 assert_eq "resume records a reconciled result" "posted_reconciled" "$(run_events "$run_id" | jq -r 'select(.event_type=="post.result") | .payload.outcome')"
-assert_eq "resume removes the pending payload" "false" "$([ -e "$(run_dir_for "$run_id")/pending-post.json" ] && printf true || printf false)"
+assert_eq "resume removes the pending payload" "false" "$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
 # AC3: replaying resume again is idempotent — still one review.
 resume_again="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id")"
 assert_eq "second resume is idempotent" "posted_reconciled" "$(jq -r '.status' <<<"$resume_again")"
@@ -142,9 +148,9 @@ assert_eq "resume after a definite failure still records zero reviews" "0" "$(st
 # a terminal failure does not delete it immediately (only posted/reconciled
 # outcomes do), so the fail-safe GC invariant applies here too.
 gc_within="$(bash "$POST" gc --repo "$REPO" --pr "$PR" --now-epoch 2000)"
-assert_eq "within-window gc keeps a failed run's leftover pending payload" "true" "$([ -e "$pending_file" ] && printf true || printf false)"
+assert_eq "within-window gc keeps a failed run's leftover pending payload" "true" "$(path_exists "$pending_file")"
 gc_expired="$(bash "$POST" gc --repo "$REPO" --pr "$PR" --now-epoch 605801)"
-assert_eq "past-window gc reclaims a failed run's leftover pending payload" "false" "$([ -e "$pending_file" ] && printf true || printf false)"
+assert_eq "past-window gc reclaims a failed run's leftover pending payload" "false" "$(path_exists "$pending_file")"
 assert_eq "past-window gc records run.invalidated{expired} for a failed run" "expired" "$(run_events "$run_id" | jq -r 'select(.event_type=="run.invalidated") | .payload.reason')"
 teardown_env
 
@@ -158,7 +164,7 @@ assert_eq "moved head reason is head_moved" "head_moved" "$(jq -r '.reason' <<<"
 run_id="$(jq -r '.run_id' <<<"$out")"
 assert_eq "moved head posts zero reviews" "0" "$(store_count)"
 assert_eq "moved head records run.invalidated" "head_moved" "$(run_events "$run_id" | jq -r 'select(.event_type=="run.invalidated") | .payload.reason')"
-assert_eq "moved head writes no pending payload" "false" "$([ -e "$(run_dir_for "$run_id")/pending-post.json" ] && printf true || printf false)"
+assert_eq "moved head writes no pending payload" "false" "$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
 teardown_env
 
 # --- AC2 (resume branch): a head move between POST and resume never posts stale. ---
@@ -170,7 +176,7 @@ printf '%s\n' "$MOVED" >"$STUB_DIR/head"
 resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id")"
 assert_eq "resume after a head move invalidates" "invalidated" "$(jq -r '.status' <<<"$resume_out")"
 assert_eq "resume head move posts zero reviews" "0" "$(store_count)"
-assert_eq "resume head move drops the stale pending payload" "false" "$([ -e "$(run_dir_for "$run_id")/pending-post.json" ] && printf true || printf false)"
+assert_eq "resume head move drops the stale pending payload" "false" "$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
 teardown_env
 
 # --- AC4: pending artifact hygiene (mode 0600 in a mode-0700 dir, closed schema). ---
@@ -234,11 +240,11 @@ pending_file="$(run_dir_for "$run_id")/pending-post.json"
 gc_within="$(bash "$POST" gc --repo "$REPO" --pr "$PR" --now-epoch 2000)"
 assert_eq "within-window gc keeps the pending payload" "1" "$(jq -r '.kept' <<<"$gc_within")"
 assert_eq "within-window gc removes nothing" "0" "$(jq -r '.removed' <<<"$gc_within")"
-assert_eq "within-window pending payload survives" "true" "$([ -e "$pending_file" ] && printf true || printf false)"
+assert_eq "within-window pending payload survives" "true" "$(path_exists "$pending_file")"
 # Past the window: expire and record run.invalidated{expired}.
 gc_expired="$(bash "$POST" gc --repo "$REPO" --pr "$PR" --now-epoch 605801)"
 assert_eq "past-window gc removes the pending payload" "1" "$(jq -r '.removed' <<<"$gc_expired")"
-assert_eq "past-window pending payload is gone" "false" "$([ -e "$pending_file" ] && printf true || printf false)"
+assert_eq "past-window pending payload is gone" "false" "$(path_exists "$pending_file")"
 assert_eq "past-window gc records run.invalidated{expired}" "expired" "$(run_events "$run_id" | jq -r 'select(.event_type=="run.invalidated") | .payload.reason')"
 teardown_env
 
@@ -253,7 +259,7 @@ pending_file="$(run_dir_for "$run_id")/pending-post.json"
 # uncertain remote result stays reconcilable, and resume/gc stay ungated.
 unset KC_PR_FLOW_ONCE_ONLY_POST
 assert_eq "rollback leaves the post.intent event intact" "1" "$(run_events "$run_id" | jq -s '[.[] | select(.event_type=="post.intent")] | length')"
-assert_eq "rollback leaves the pending payload intact" "true" "$([ -e "$pending_file" ] && printf true || printf false)"
+assert_eq "rollback leaves the pending payload intact" "true" "$(path_exists "$pending_file")"
 # A fresh post attempt with the flag off is refused -- rollback really did
 # disable the new path for fresh invocations.
 bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000 >/dev/null 2>&1
@@ -278,7 +284,7 @@ assert_eq "ambiguous post landed one review despite the lagging list" "1" "$(sto
 resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 1010)"
 assert_eq "a lagging reconcile list never blind-retries" "ambiguous" "$(jq -r '.status' <<<"$resume_out")"
 assert_eq "a lagging reconcile list leaves EXACTLY ONE review" "1" "$(store_count)"
-assert_eq "a lagging reconcile keeps the pending payload for a later retry" "true" "$([ -e "$(run_dir_for "$run_id")/pending-post.json" ] && printf true || printf false)"
+assert_eq "a lagging reconcile keeps the pending payload for a later retry" "true" "$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
 assert_eq "a lagging reconcile writes no terminal result" "" "$(run_events "$run_id" | jq -r 'select(.event_type=="post.result") | .payload.outcome')"
 teardown_env
 
@@ -306,7 +312,7 @@ assert_eq "ambiguous post landed one review before the unusable list" "1" "$(sto
 resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
 assert_eq "an unusable reconcile list fails closed" "ambiguous" "$(jq -r '.status' <<<"$resume_out")"
 assert_eq "an unusable reconcile list never retries" "1" "$(store_count)"
-assert_eq "an unusable reconcile keeps the pending payload" "true" "$([ -e "$(run_dir_for "$run_id")/pending-post.json" ] && printf true || printf false)"
+assert_eq "an unusable reconcile keeps the pending payload" "true" "$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
 teardown_env
 
 # --- AC1 (author identity is not load-bearing): the idempotency marker alone
@@ -351,6 +357,31 @@ assert_eq "a second post defers to the unsettled prior attempt" "prior_attempt_u
 assert_eq "a second post never races a duplicate" "1" "$(store_count)"
 teardown_env
 
+# --- A prior run that definitively landed this payload must settle a later post
+# even when the reconcile list cannot show it yet. ---
+new_env; write_request; write_gate
+printf 'posted\n' >"$STUB_DIR/post-plan"
+first="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+assert_eq "first post landed definitively" "posted" "$(jq -r '.status' <<<"$first")"
+assert_eq "first post recorded one review" "1" "$(store_count)"
+printf 'lag\nlag\nlag\nlag\n' >"$STUB_DIR/list-plan"
+second="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1100)"
+assert_eq "a post behind a lagging list settles against the landed prior run" "posted_reconciled" "$(jq -r '.status' <<<"$second")"
+assert_eq "a post behind a lagging list adds no duplicate" "1" "$(store_count)"
+teardown_env
+
+# --- ...but a prior run that landed NOTHING must not block a later post: the
+# cross-run guard has to be precise, not merely conservative. ---
+new_env; write_request; write_gate
+printf 'failed\nposted\n' >"$STUB_DIR/post-plan"
+first="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+assert_eq "first post failed definitively" "failed" "$(jq -r '.status' <<<"$first")"
+assert_eq "first post recorded no review" "0" "$(store_count)"
+second="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1100)"
+assert_eq "a definitively failed prior run does not block a later post" "posted" "$(jq -r '.status' <<<"$second")"
+assert_eq "a definitively failed prior run yields exactly one review" "1" "$(store_count)"
+teardown_env
+
 # --- Malformed head response must fail closed as a transport error, never be
 # misread as a moved head (which would silently discard a postable review). ---
 new_env; write_request; write_gate
@@ -378,7 +409,7 @@ bash "$POST" gc --repo "$REPO" --pr "$PR" --now-epoch not-a-number >/dev/null 2>
 gc_rc=$?
 set -e
 assert_eq "gc rejects a non-numeric --now-epoch" "2" "$gc_rc"
-assert_eq "a rejected gc clock never deletes reconcile evidence" "true" "$([ -e "$pending_file" ] && printf true || printf false)"
+assert_eq "a rejected gc clock never deletes reconcile evidence" "true" "$(path_exists "$pending_file")"
 teardown_env
 
 printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
