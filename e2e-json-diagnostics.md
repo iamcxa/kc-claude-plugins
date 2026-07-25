@@ -679,9 +679,9 @@ deletion, the reverse-recovery audit, sizing, and the persisted classifier.
 - DONE: No `code` field ships anywhere in the emitted contract
   tier1Detail = `{step_id, field, got, candidates, message}`, tier2Detail = `{message}`; every new
   test asserts `!('code' in detail)`. `e2e-schema-contract` still owns the vocabulary.
-- DONE: The SKILL.md deletion happens in this branch, verified by line count not eyeballed
+- DONE: AC-5 — the SKILL.md deletion happens in this branch, verified by line count not eyeballed
   Phase 3 was lines 94-189 (96 lines); is now lines 97-122 (26 lines) — `grep -n '^## Phase 3\|^##
-  Common Mistakes'` before/after, not assertion.
+  Common Mistakes'` before/after, not assertion. Under the AC-5 target of ~40 lines.
 - DONE: AC-1 (single JSON document, all three cases) + a real gap found and fixed
   `cli.test.js` CLI-08: success/resolve-error/parse-error each assert stdout is exactly one
   parseable line. Found (RED-confirmed) and fixed: `--all --json` on an empty flows directory
