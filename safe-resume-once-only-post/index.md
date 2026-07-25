@@ -379,3 +379,39 @@ Verdict: **REJECT → route back to implementation.** A confirmed exactly-once v
 4. Validate `head_response` shape before the `head_moved` decision (`:382-383`, `:536-537`); a shape-invalid head GET should fail closed as ambiguous, not as `head_moved`.
 5. `gc`: validate `now_epoch` numeric before the window comparison (`:638`).
 6. Add RED tests: under-reporting/lagging `list`, `--self` mismatch, repeat/concurrent `post`, malformed `head`, non-numeric `now_epoch`.
+
+## Correction Round 1: implementation (post-validation rework)
+
+Driven by the coordinator directly rather than a dispatched ensign: the findings were file-anchored and bounded, and three consecutive background workers had been lost to session/account interruptions.
+
+### Budget record (round 1)
+- Declared estimate: one implementation session (ideation sizing). Actual: one coordinator session, two commits (`b99e132`, `31340a8`) plus one cross-model round.
+- Findings disposition: 6 routed in (1 P1, 3 P2, 2 nits) → **4 fixed as real defects, 1 downgraded to hardening on evidence, 1 already-mitigated**. Cross-model added 6 more → **1 fixed (P1), 2 hardened, 1 refuted with reason, 2 accepted as benign**. Nothing silently dropped.
+- Deviation: within tolerance; no design reset required.
+
+### Re-anchor against the source requirement
+Re-read the entity's Vertical Slice / Boundary / Done Signal before touching code. The load-bearing sentence — "an approved payload is posted **at most once**" — is what the routed-back findings violated; no original constraint was dropped, and the AC set is unchanged except where the fix necessarily changes retry *timing* (recorded below).
+
+### RED → GREEN evidence
+RED was captured against the **pre-fix** helper (a scratch copy with `review-post.sh` restored from `f92bb53`, new tests applied): **15 failing / 65 passing**, including four `expected [1], got [2]` duplicate-review assertions — the P1 reproduced independently of the reviewer's own repro. GREEN after the fix: **review-post 86 passed / 0 failed**, full suite **820 passed / 0 failed** across all 7 kc-pr-flow suites (791 before this round), `shellcheck -S error` clean, CI doc-safety greps intact.
+
+### What changed
+- **P1 (lagging list)** — a retry now requires a reconcile read that positively confirms remote state. An absent marker only proves "never landed" after `KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS` (default 60) has elapsed since that run's `post.intent`; inside the window resume reports `ambiguous{reconcile_unconfirmed}`. Derived from the already-durable `post.intent.occurred_at` — deliberately **no new event type and no new pending field**, since both schemas are closed and CI-frozen (2.1/2.2 fixtures).
+- **P1 (unusable list)** — a `list` body that is not a reviews array fails closed as `ambiguous{reconcile_unavailable}`; it is never read as "marker absent".
+- **P2 (author mismatch)** — marker matching no longer filters on review author; the key already pins the payload.
+- **P2 (repeat post)** — `post` reconciles against the remote marker before its own POST, covering a prior run that reached terminal `posted` and so has no pending payload for the skill's rediscovery scan.
+- **P1 from cross-model (concurrent post race)** — when the pre-POST reconcile cannot confirm a remote copy, `post` also checks local durable state for another run that authorized this exact payload and never settled, and defers with `ambiguous{prior_attempt_unsettled}`.
+- **nit → real (gc clock)** — `gc` rejects a non-numeric `--now-epoch`; RED proved the old behavior actually deleted within-window reconcile evidence. Same class fixed for `KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS`, which failed OPEN into the very retry its window prevents.
+- Docs synced: `reference/review-runtime.md`, `docs/review-runtime.md` (operator reason table), `CLAUDE.md`, `README.md`, and `kc-pr-review` SKILL Step 7 (new `ambiguous` reasons; Step 7 already refuses to fall back to the legacy path on `ambiguous`, so no duplicate is introduced at the seam).
+
+### Corrections to the validation findings (evidence over report)
+- **Malformed `head` response was NOT a live defect.** The RED run's malformed-head assertions passed against the pre-fix helper: the runtime's `head.observed` payload validation already failed closed (exit 74) before any `head_moved` event was written. The added shape guard is defense-in-depth, not a bug fix.
+- **Cross-model "marker injection suppresses our post" is refuted.** `idempotency_key` is sha256 over `review_key|commit_id|payload_sha256`, and `payload_sha256` covers the not-yet-published review body, so a third party cannot derive the marker before we post. After we post, reusing it only suppresses a duplicate — the intended behavior.
+- **Cross-model "`jq -e` stream exit status" is real semantics but was unreachable** (one `post.intent` per run). Hardened anyway with a slurped `any()`.
+- Cross-model `occurred_at`-corruption lock-up is unreachable (the authoritative log is integrity-validated before replay) and bounded anyway: `gc` expires the pending payload after its retention window.
+
+### Behavior change the captain should know
+The truly-lost retry is no longer immediate. A payload whose POST was genuinely lost is retried on a resume **after** the confirm window, not on the first resume. This is the unavoidable cost of the P1 fix: at the moment of an empty list, "lagged but landed" and "never landed" are indistinguishable, so the only safe discriminator is elapsed time. The existing AC1 truly-lost assertion was updated to encode this, and a new assertion proves no retry happens inside the window. Window is operator-tunable via `KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS`.
+
+### Named residual (not solved, not hidden)
+Two `post` invocations that enter the pre-POST check before either records `post.intent` can still both post. Full mutual exclusion needs server-side idempotency (GitHub exposes none for reviews) or a cross-process lock, and a lock reopens the crash-safe-lock / PID-reuse scope this plugin explicitly defers. Accepted for this increment and tracked alongside the deferred active daemon preauthorization gate (`once-only-daemon-preauth-gate`), which is the realistic source of autonomous concurrency. The shipped default (`KC_PR_FLOW_ONCE_ONLY_POST` off) denies every caller, so the race is not reachable without explicit opt-in.
