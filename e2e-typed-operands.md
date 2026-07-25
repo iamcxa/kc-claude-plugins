@@ -38,10 +38,16 @@ compiler never calls it; the ban is enforced by restating it in 13 markdown file
 silence loud is [[e2e-assertion-honesty-gate]] and goes first; **this entity is the
 structural half and is sequenced after it** ("先做 A，B 應該落下一個 entity，保持敏捷").
 
-What remains here: promote operands out of the prose `action:` string into typed fields
-(`element:`, `page:`), demoting `action:` to a human-readable label, so both defects above
-become unrepresentable rather than merely rejected — and close the grammar permutation
-holes the spike found. Flows already carry a `type:` field (`parser.js` errors with "has no
+**Further reduced when sprint 1 was cut by boundary.** Three tactical pieces left this entity
+and ship earlier: the missing grammar permutations ([[e2e-expect-grammar-permutations]]), the
+discarded page qualifier ([[e2e-page-scoped-resolution]]), and the honesty gate itself
+([[e2e-assertion-honesty-gate]]).
+
+What remains here is only the structural move: promote operands out of the prose `action:`
+string into typed fields (`element:`, `page:`), demoting `action:` to a human-readable label,
+so these defects become unrepresentable rather than caught one regex at a time. Expect this to
+look smaller after sprint 1 lands — and re-triage it then, because if the tactical fixes hold,
+the structural rewrite may no longer earn its cost. Flows already carry a `type:` field (`parser.js` errors with "has no
 type field — run migration tool first") and a `migrate.js` already exists, so this is a
 repair of a half-built abstraction, not a greenfield build. The cross-model reviewer argued
 this is the real lever and that the gate alone patches symptoms; the captain's counter is

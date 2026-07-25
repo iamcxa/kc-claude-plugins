@@ -26,10 +26,17 @@ exit 0. Separately, `scripts/lint-mapping.sh` rejects 5 selector forms the plugi
 call "silently mishandled at runtime (false positive risk)", but the compiler never invokes
 it — the ban is enforced by restating it in 13 markdown files.
 
-Scope is the honesty gate only: make a deferred expect a compile failure, wire the mapping
-linter into the compile path, and give an intentionally-unautomated assertion a legal way to
-say so. Moving operands into typed fields and closing the grammar permutation holes is
-explicitly the next entity ([[e2e-typed-operands]]), cut here to keep this one small.
+Scope is the honesty gate only: make a deferred expect a compile failure, and give an
+intentionally-unautomated assertion a legal per-assertion way to say so. Three neighbours were
+split out and run earlier in the same sprint — the missing grammar permutations
+([[e2e-expect-grammar-permutations]]), the discarded page qualifier
+([[e2e-page-scoped-resolution]]), and the unenforced selector ban
+([[e2e-selector-lint-gate]]) — so this entity carries one narrowing, not four.
+
+**Runs last in sprint 1, and inherits a smaller blast radius because of it.** The grammar
+entity recovers ~66 of the 368 deferred assertions before this gate lands, so the population
+this must fail or hatch is ~302, and by then [[e2e-json-diagnostics]] is already emitting
+structured errors with repair candidates — every one of those failures arrives fixable.
 
 ## Captain scope (verbatim, 2026-07-25)
 
