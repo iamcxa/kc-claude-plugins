@@ -166,8 +166,14 @@ Recorded explicitly because the first ideation draft got this wrong and the gate
   bound the class to that string.
 
 Method correction now applied: patterns are scored by running the real resolver over the real
-corpus (`/tmp/xn-pattern-candidates.js`, mirroring `.context/spike-deferred-rate.js`), never by
-reading prose or reasoning about symmetry.
+corpus, never by reading prose or reasoning about symmetry. Harnesses left in `.context/`
+alongside the sibling spikes (git-excluded, same convention as `spike-deferred-rate.js`):
+
+    node .context/spike-xn-pattern-candidates.js .context/flow-corpus.txt
+    node .context/spike-xn-before-after.js       .context/flow-corpus.txt [text|element|hyphen]
+
+`spike-xn-before-after.js` builds its own patched resolver from the real `resolver.js` at run
+time, so every number in this body is re-derivable without a scratch copy having to survive.
 
 The FO's Q3 "what to cut if forced" recommendation (cut the element form, keep the text class)
 is **confirmed by measurement rather than by symmetry** — the element form is not merely
@@ -181,11 +187,11 @@ absorbable by 3t, it is actively harmful before 3t lands.
   Explicitly disclaims two things this entity does NOT deliver: (a) author feedback — that
   mechanism is [[e2e-assertion-honesty-gate]]; xn only shrinks the queue it will fail on;
   (b) page-scoped verification — `on <page>` remains parse-and-discard (see
-  [[e2e-page-scoped-resolution]]). **Verified by:** re-running
-  `node .context/spike-deferred-rate.js .context/flow-corpus.txt` from the
-  `montpellier-v1` checkout before and after the patch — a baseline that can move the wrong way
-  (a pattern that over-matches would raise the error count or drop the clean-flow count, and
-  both are asserted here, not just the deferred number).
+  [[e2e-page-scoped-resolution]]). **Verified by:**
+  `node .context/spike-xn-before-after.js .context/flow-corpus.txt text` from the
+  `montpellier-v1` checkout, which reports all four numbers in one run — a baseline that can
+  move the wrong way (a pattern that over-matches raises the error count or drops the
+  clean-flow count, and both are asserted here, not just the deferred number).
 - **AC2 (text positive).** `text '<value>' is visible` resolves to type `text-visible`.
   **Verified by:** `resolver.test.js` case; would fail if the pattern were dropped or shadowed
   by `^text '(.+)' on page$`.
@@ -231,7 +237,7 @@ aggregation unwired), not MISSING. Optional in this scope — see Dispatch sizin
 | Codegen | `codegen.js:1640` (`text-visible`), `:1640+` (`text-not-visible`) | WORKING, reused as-is | Both new patterns route to existing branches; **zero codegen changes** |
 | Element→page binding | `resolver.js:157-173` (`resolveElement`), collision error at 158-162 | EXISTS_BROKEN — **and now measured** | Mapping-wide symbol table ignores the page qualifier. Not repaired here (3t owns it), but it is the reason the element permutation is out of scope: adding it breaks 2 clean flows |
 | Compiler tests | `compiler/test/resolver.test.js:441-637` ("Phase 2" tests) | WORKING harness | Needs 3 new cases (2 new-form + 1 ordering), not new infra |
-| Corpus baseline | `.context/spike-deferred-rate.js` | WORKING (untracked) | Ran clean this session; reproduces 368/794 exactly |
+| Corpus baseline | `.context/spike-deferred-rate.js` (+ `spike-xn-*.js` added this session) | WORKING (git-excluded) | Ran clean; reproduces 368/794 exactly |
 | Batch corpus counter | `bin/e2e-compile.js:82-113` | EXISTS_BROKEN | Optional first-party replacement for the above |
 | Docs | see Doc diff below | MISSING (canonical reference) | No file enumerates the grammar; resolver.js source is the only true reference today |
 
@@ -271,7 +277,8 @@ printed per-step output and the `expects active / expects deferred` summary line
 spike exercised `resolve()` directly across the whole corpus, which is stronger evidence for the
 *counts* but does not prove the CLI path end to end; implementation must do the real
 `.claude/e2e/flows/*.yaml` compile, since ideation deliberately kept every patch off the tracked
-codebase (design-only stage — all spike copies live under `/tmp`).
+codebase (design-only stage — the spike harnesses build their patched resolver into a temp dir
+at run time and never write to `e2e-pipeline/`).
 
 ## Spike (result recorded)
 
