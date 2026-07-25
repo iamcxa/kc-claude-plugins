@@ -195,6 +195,11 @@ MOCK
 
   review_autonomous_post_gate "$auto_key" "$auto_head" COMMENT human >/dev/null 2>&1
   assert_eq 'autonomous gate refuses an authorizer it does not know' 3 "$?"
+  # A short call must refuse, not abort on an unbound variable under set -u.
+  review_autonomous_post_gate "$auto_key" "$auto_head" >/dev/null 2>&1
+  assert_eq 'autonomous gate refuses a short call cleanly' 3 "$?"
+  review_autonomous_post_gate >/dev/null 2>&1
+  assert_eq 'autonomous gate refuses an argumentless call cleanly' 3 "$?"
   review_autonomous_post_gate "$auto_key" not-a-sha COMMENT daemon >/dev/null 2>&1
   assert_eq 'autonomous gate refuses a malformed head' 3 "$?"
 

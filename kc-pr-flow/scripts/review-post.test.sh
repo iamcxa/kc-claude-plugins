@@ -477,6 +477,63 @@ assert_eq "an autonomous gate smuggling human_confirmed is refused" "3" "$rc_smu
 assert_eq "no refused autonomous gate posted anything" "0" "$(store_count)"
 teardown_env
 
+# --- "A human confirmed" must cost more than writing the words. This component
+# is the only one with posting authority, so it checks the closed key set and the
+# nested confirmation itself rather than assuming the caller ran the skill's
+# validator first. ---
+new_env; write_request
+printf 'posted\n' >"$STUB_DIR/post-plan"
+forge_gate() { printf '%s' "$1" >"$STUB_DIR/forged.json"; }
+try_forged() {
+  set +e
+  bash "$POST" post --request-file "$REQUEST" --gate-file "$STUB_DIR/forged.json" --now-epoch 1000 >/dev/null 2>&1
+  printf '%s' "$?"
+  set -e
+}
+forge_gate '{"effective_event":"COMMENT","human_confirmed":true,"schema":"kc-pr-flow.interactive-post-gate/v1"}'
+assert_eq "a hand-written interactive gate with no confirmation is refused" "3" "$(try_forged)"
+forge_gate '{"confirmation":null,"effective_event":"COMMENT","human_confirmed":true,"schema":"kc-pr-flow.interactive-post-gate/v1"}'
+assert_eq "a null confirmation is refused" "3" "$(try_forged)"
+forge_gate '{"confirmation":{"effective_event":"COMMENT","schema":"totally.made.up/v1"},"effective_event":"COMMENT","human_confirmed":true,"schema":"kc-pr-flow.interactive-post-gate/v1"}'
+assert_eq "a confirmation of the wrong schema is refused" "3" "$(try_forged)"
+forge_gate '{"confirmation":{"effective_event":"APPROVE","schema":"kc-pr-flow.interactive-confirmation/v1"},"effective_event":"COMMENT","human_confirmed":true,"schema":"kc-pr-flow.interactive-post-gate/v1"}'
+assert_eq "a confirmation disagreeing on the event is refused" "3" "$(try_forged)"
+forge_gate '{"confirmation":{"effective_event":"COMMENT","schema":"kc-pr-flow.interactive-confirmation/v1"},"effective_event":"COMMENT","extra":"x","human_confirmed":true,"schema":"kc-pr-flow.interactive-post-gate/v1"}'
+assert_eq "an interactive gate with an extra key is refused" "3" "$(try_forged)"
+assert_eq "no forged interactive gate posted anything" "0" "$(store_count)"
+# The genuine four-key receipt still authorizes, so this is not blanket refusal.
+write_gate
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+assert_eq "the genuine interactive receipt still authorizes" "posted" "$(jq -r '.status' <<<"$out")"
+teardown_env
+
+# --- The autonomous binding must be sound on its own, not by accident of a
+# later check: an unresolved (empty) head must not be matched by an equally
+# empty gate field. ---
+new_env; write_request
+printf 'posted\n' >"$STUB_DIR/post-plan"
+AUTO_GATE="$STUB_DIR/auto-gate.json"
+# Built directly: write_auto_gate's `${2:-$HEAD}` default would substitute a real
+# head for an empty one, so the helper cannot express this case.
+jq -S -c -n --arg key "$(review_key_for)" '
+  {schema:"kc-pr-flow.autonomous-post-gate/v1",authorized_by:"daemon",
+   effective_event:"COMMENT",head_sha:"",review_key:$key}' >"$AUTO_GATE"
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$AUTO_GATE" --now-epoch 1000 >/dev/null 2>&1
+rc_empty_head=$?
+set -e
+assert_eq "an empty head binding is refused rather than matched vacuously" "3" "$rc_empty_head"
+jq -S -c -n --arg head "$HEAD" '
+  {schema:"kc-pr-flow.autonomous-post-gate/v1",authorized_by:"daemon",
+   effective_event:"COMMENT",head_sha:$head,review_key:""}' >"$AUTO_GATE"
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$AUTO_GATE" --now-epoch 1000 >/dev/null 2>&1
+rc_empty_key=$?
+set -e
+assert_eq "an empty review-key binding is refused" "3" "$rc_empty_key"
+assert_eq "an empty binding posted nothing" "0" "$(store_count)"
+teardown_env
+
 # --- Rollback still governs the autonomous path: the flag, not the gate, is the
 # operator's kill switch, so a valid autonomous gate cannot re-enable it. ---
 new_env; write_request; write_auto_gate

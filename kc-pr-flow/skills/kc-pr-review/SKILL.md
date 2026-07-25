@@ -1690,8 +1690,11 @@ review_autonomous_post_gate_valid() {
 
 review_autonomous_post_gate() {
   # Validates its own output, so a producer can never mint a gate the validator
-  # would reject.
-  local review_key="$1" head_sha="$2" requested_event="$3" authorized_by="$4"
+  # would reject. Arguments are defaulted rather than required positionally: a
+  # short call under `set -u` would otherwise abort on an unbound variable
+  # instead of refusing cleanly, and a refusal is what the caller handles.
+  local review_key="${1:-}" head_sha="${2:-}" requested_event="${3:-}"
+  local authorized_by="${4:-}"
   local gate
   gate="$(jq -S -c -n --arg review_key "$review_key" --arg head_sha "$head_sha" \
     --arg event "$requested_event" --arg by "$authorized_by" \

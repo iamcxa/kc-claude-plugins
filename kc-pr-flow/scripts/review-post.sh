@@ -195,11 +195,26 @@ review_post_gate_valid() {
     <<<"$gate_json" 2>/dev/null)" || return 1
   case "$schema" in
     kc-pr-flow.interactive-post-gate/v1)
+      # The closed key set and the nested confirmation are checked HERE, not only
+      # by the skill's own validator. This is the sole component with posting
+      # authority, so a three-field hand-written object asserting
+      # `human_confirmed: true` must not be accepted just because a caller
+      # skipped that validator — "a human confirmed" has to cost more than
+      # writing the words.
       printf '%s' "$gate_json" | jq -e --arg event "$expected_event" '
+        (keys | sort) ==
+          ["confirmation","effective_event","human_confirmed","schema"] and
         .human_confirmed == true and
-        .effective_event == $event' >/dev/null 2>&1
+        .effective_event == $event and
+        (.confirmation | type == "object") and
+        .confirmation.schema == "kc-pr-flow.interactive-confirmation/v1" and
+        .confirmation.effective_event == .effective_event' >/dev/null 2>&1
       ;;
     kc-pr-flow.autonomous-post-gate/v1)
+      # The hex assertions keep the binding sound on its own. Without them an
+      # empty expected head (a request whose head_sha did not resolve) would be
+      # matched by an equally empty gate field, and the binding would hold
+      # vacuously while appearing to pass.
       printf '%s' "$gate_json" | jq -e \
         --arg event "$expected_event" --arg review_key "$review_key" \
         --arg head_sha "$head_sha" '
@@ -207,6 +222,8 @@ review_post_gate_valid() {
           ["authorized_by","effective_event","head_sha","review_key","schema"] and
         .authorized_by == "daemon" and
         .effective_event == $event and
+        (.review_key | test("^[0-9a-f]{64}$")) and
+        (.head_sha | test("^[0-9a-f]{40}$")) and
         .review_key == $review_key and
         .head_sha == $head_sha' >/dev/null 2>&1
       ;;
