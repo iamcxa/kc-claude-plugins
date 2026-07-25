@@ -293,6 +293,56 @@ the external path at test time — matching this repo's existing fixture convent
 `missing-element-flow.yaml` already covers not-found) and keeping the proof runnable on a machine
 that has never seen `carlove`.
 
+## Measurement correction — the repair-cost premise is false for the ambiguity class (captain, 2026-07-26)
+
+**Implementation measured AC-4's original cost claim and it did not hold.** Recorded here rather
+than folded silently into the re-scoped AC, because the correction is worth more than the AC it
+replaced: it falsifies a sentence in this entity's own Problem statement.
+
+Repairing the 3-error anchor flow, prose baseline vs `--json`, both at `632f04c`:
+
+```
+prose (deduped ERROR lines) bytes:  472
+json errors[] compact bytes:        974
+json full document bytes:          1133
+```
+
+Reproduce verbatim from `e2e-pipeline/` (both commands print the byte counts above):
+```bash
+node bin/e2e-compile.js --dry-run list-data-completeness \
+  --flows-dir compiler/test/fixtures --mappings-dir compiler/test/fixtures --output-dir /tmp/gz-a \
+  2>&1 1>/dev/null | grep '^ERROR' | sort -u | wc -c
+
+node bin/e2e-compile.js --json --dry-run list-data-completeness \
+  --flows-dir compiler/test/fixtures --mappings-dir compiler/test/fixtures --output-dir /tmp/gz-b \
+  2>/dev/null \
+  | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const e=JSON.parse(s).errors;console.log(JSON.stringify(e).length,s.trim().length)})'
+```
+(Byte counts include the newline each `wc -c` line carries; the comparison is like-for-like since
+both modes are counted as the bytes an agent actually receives.)
+
+**The structured channel is ~2x LARGER in bytes, not smaller** — `message` already carries the
+full "found on:" text, and the structured fields restate it rather than replacing it.
+
+**The premise that fails.** The Problem statement says *"the information needed to repair is
+sitting in the symbol table the resolver just built, and is thrown away with the error."* For the
+**ambiguity class that is false** — `resolveElement` already interpolates the exact collision list
+into the message string (`found on: X, Y, ...`), so the information was never thrown away; it was
+thrown away *as structure*, not as content. 5 of the 9 tier-1 corpus cases are that class.
+
+**Which class actually gains what** — this is the axis the re-scoped AC-4 rests on, and it is the
+inverse of the intuitive reading:
+
+| Class | Corpus cases | `candidates` | Repairable from the error alone? | What `--json` adds |
+|---|---|---|---|---|
+| Ambiguous element | 5 | Real page list | **Yes** — pick the right page from the list | The list as an array instead of a comma-list embedded in English |
+| Element/page not found | 4 | `[]` by design (Non-goal 5) | **No** — the real name is not in the error, in either mode | Structured `got`/`step_id`/`field` without regexing the message |
+
+So "repair without re-reading the mapping" holds for the **ambiguity** class (where a candidate
+list exists), and cannot hold for **not-found** (where `candidates: []` is correct, not a channel
+failure — this section's own counter-example above). Both classes gain parseability; only the
+ambiguity class gains repairability, and it gains it in *form* rather than in *content*.
+
 ## Acceptance Criteria
 
 **AC-1 — a single `--json` document, not prose plus JSON.** `e2e-compile --json <flow>` and
@@ -327,29 +377,49 @@ Both fixtures live in `compiler/test/fixtures/`, so this AC is CI-reproducible o
 Falsified by: `candidates` non-empty for a not-found error (proof of undisclosed fuzzy-matching),
 or an ambiguous error's `candidates` not matching `collisionsTable`'s pages.
 
-**AC-4 — the repair loop costs less, measured against a baseline that can move the wrong way, scoped to the class that genuinely fails today (value AC).**
-Repairing the 3 live
-ambiguous-element errors in `list-data-completeness.yaml` costs fewer tokens and does not
-require re-reading the full mapping YAML into context via `--json`'s `candidates`, versus
-today's prose-only stderr. Scoped to the tier-1 resolution class only — corrected scope, see
-Corpus evidence: NOT the no-type-field class (this entity doesn't touch migration status) and
-NOT deferred-expect (still a silent-pass hole per [[e2e-typed-operands]]/[[e2e-assertion-honesty-gate]],
-which would let the "before" case succeed by not failing).
-Verified by: two steps, both re-runnable verbatim. (a) The population claim — that this class is
-9 corpus-live cases and that `list-data-completeness.yaml` carries exactly 3 of them — is
-reproduced by `node .context/spike-gz-error-classify.js .context/flow-corpus.txt --detail`
-(pinned to `GZ_BEFORE_REF=529296d`; expect `tier-1 ... 9` and `3  list-data-completeness.yaml`).
-(b) The cost claim is measured by running the repair task twice (prose baseline vs `--json`) on
-the fixture snapshotted from that flow, recording token count + whether the mapping YAML was read
-in full. Falsified by: the harness in (a) reporting a tier-1 count that no longer matches the
-3-error anchor the measurement is built on, or, in (b), the `--json` condition using
-equal-or-more tokens or still needing a full mapping re-read.
-**Reproducibility scope:** step (a) is verifiable **on this machine at the stated paths only** —
-`flow-corpus.txt` is 3286 absolute paths into other repos under `/Users/kent/Project` and
-`/Users/kent/conductor`, so neither it nor the harness can run on a fresh clone or in CI. Step
-(b)'s snapshotted fixture is CI-reproducible. The numbers are real and were independently
-reproduced by the FO from the persisted harness at the pinned ref; the limitation is on where
-they can be re-derived, not on whether they hold.
+**AC-4 — the channel is consumed without regexing prose, and the skill text it replaces is a measured recurring saving (value AC, re-scoped by the captain 2026-07-26).**
+Re-scoped off byte cost: implementation measured the original cost claim and it was false — the
+structured channel is ~2x LARGER in bytes (974 vs 472), because the ambiguity class's prose
+already embeds its candidate list. See "Measurement correction" for the numbers and the premise
+they falsify. The two properties below are what is true, measured, and still worth having.
+Scoped to the tier-1 resolution class only, as before: NOT the no-type-field class (this entity
+doesn't touch migration status) and NOT deferred-expect (still a silent-pass hole per
+[[e2e-typed-operands]]/[[e2e-assertion-honesty-gate]], which would let a "before" case succeed by
+not failing).
+
+**(a) The skill-prose reduction is a recurring saving.** `skills/e2e-compile/SKILL.md` drops from
+202 to 135 lines (−67, −33%). That file is loaded on every compile invocation, so the reduction
+recurs per-invocation rather than being a one-off. This is also the pre-mortem's own guardrail:
+the channel is load-bearing precisely because the prose it replaced is gone (AC-5).
+Verified by: `git show ac33dab:e2e-pipeline/skills/e2e-compile/SKILL.md | wc -l` → 202, versus
+`wc -l` on the merged file → 135. CI-reproducible on a fresh clone. Falsified by: the merged file
+at or above 202 lines, or Phase 3's prose surviving alongside the JSON path.
+
+**(b) A tier-1 error is consumed structurally, not by regex — and the ambiguity class is
+repairable from the error alone.** Every tier-1 error exposes `step_id`/`field`/`got` as fields,
+so no consumer parses them out of English. For the ambiguity class specifically, `candidates` is
+a JSON array of the exact pages, so the repair (disambiguate to the right page) needs nothing but
+the error. Note the direction: this holds for **ambiguity**, and cannot hold for **not-found**,
+where `candidates: []` is correct by design (Non-goal 5) and the real name is absent from the
+error in either mode — see "Measurement correction"'s table.
+Verified by: `cli.test.js` CLI-08 asserts `tab_all`'s 2-way and `data_table`'s 9-way `candidates`
+arrays match today's "found on:" lists verbatim, and `missing-element-flow`'s `candidates: []`;
+each assertion reads parsed JSON fields, never a regex over `message`. CI-reproducible (repo
+fixtures only). Falsified by: a consumer needing to regex `message` to recover `got`/`candidates`,
+`candidates` non-empty for a not-found error, or an ambiguity error whose `candidates` does not
+match `collisionsTable`.
+
+**Population claim (unchanged, still load-bearing for the scope above).** That this class is 9
+corpus-live cases and that `list-data-completeness.yaml` carries exactly 3 is reproduced by
+`node .context/spike-gz-error-classify.js .context/flow-corpus.txt --detail` (pinned to
+`GZ_BEFORE_REF=529296d`; expect `tier-1 ... 9` and `3  list-data-completeness.yaml`). Falsified
+by: a tier-1 count that no longer matches the 3-error anchor the fixtures are built on.
+**Reproducibility scope:** this population step is verifiable **on this machine at the stated
+paths only** — `flow-corpus.txt` is 3286 absolute paths into other repos under
+`/Users/kent/Project` and `/Users/kent/conductor`, so neither it nor the harness can run on a
+fresh clone or in CI. Properties (a) and (b) are both CI-reproducible. The numbers are real and
+were independently reproduced by the FO from the persisted harness at the pinned ref; the
+limitation is on where they can be re-derived, not on whether they hold.
 
 **AC-5 — the SKILL.md prose is deleted, not supplemented (the pre-mortem's own guardrail).**
 `skills/e2e-compile/SKILL.md`'s Phase 3 "Present Results" (currently lines 94-189, 96 of 202
@@ -712,6 +782,8 @@ deletion, the reverse-recovery audit, sizing, and the persisted classifier.
   messages — CLI-08's third test). Recommend the gate re-scope AC-4 off raw byte count toward
   what's actually load-bearing: no-regex parseability/reliability, and serving `3t`/`5v`'s new
   message shapes, which won't have pre-existing prose candidates the way this one already did.
+  **Superseded — the captain accepted this and re-scoped AC-4 (2026-07-26). Both re-scoped
+  properties now pass; see "Correction round 3" below.**
 - DONE: Doc diff applied in this branch
   SKILL.md Phase 2 (`--json` always-on internally, not user-facing per Non-goal 8) + Phase 3
   rewrite (above); one `docs/commands.md` flags-table row.
@@ -725,5 +797,46 @@ SKILL.md prose-reformatting path is deleted and measured (96 → 26 lines). AC-1
 E2E-first acceptance are verified against a real, snapshotted production flow with exact-match
 corpus numbers. AC-4's value claim, measured honestly rather than asserted, does not hold on a raw
 byte-count reading for this specific ambiguous-only fixture — flagged for the gate to re-scope
-rather than silently passed. One pre-existing, out-of-scope stderr double-print bug was found
-during cross-checking and is recorded, not fixed.
+rather than silently passed (the captain accepted and re-scoped it; Correction round 3). One
+pre-existing, out-of-scope stderr double-print bug was found during cross-checking and is
+recorded, not fixed.
+
+### Correction round 3 — AC-4 re-scoped by captain ruling (scoped; no code change)
+
+The captain accepted the byte-measurement finding and ruled AC-4 re-scoped off cost onto the two
+properties that are true and measured. Applied, entity-only — **no source file was touched in this
+round**; the implementation commit stands unchanged at `632f04c`.
+
+- **New body section "Measurement correction"** records the numbers (472 prose vs 974 compact
+  JSON `errors[]`, 1133 full document) with two copy-pasteable commands that reproduce them, plus
+  the premise it falsifies: the Problem statement's "the information needed to repair is... thrown
+  away with the error" is false for the ambiguity class, where `resolveElement` already
+  interpolated the collision list into the message. It was thrown away as *structure*, not as
+  *content*. Recorded as its own section rather than folded into the AC, per the ruling.
+- **AC-4 rewritten** to (a) the recurring skill-prose saving — `SKILL.md` 202 → 135 lines (−67,
+  −33%) against `ac33dab`, verified by `git show ac33dab:... | wc -l` vs `wc -l`, CI-reproducible
+  — and (b) structural consumption without regex, with the ambiguity class repairable from the
+  error alone. Both pass. The population claim and its machine-local reproducibility caveat are
+  retained verbatim. Bold span opens/closes on one line; `--ac-scan` re-run, all six ACs resolve
+  unevidenced=false.
+- Unchanged per the ruling: the design, the other five ACs, the tier split, the absence of `code`,
+  and the SKILL.md range.
+
+**One deviation from the ruling's literal wording, flagged rather than silently applied.** The
+ruling says the "repair without re-reading the mapping" property "holds specifically for the
+not-found class." The evidence says the inverse, so AC-4 (b) attributes it to the **ambiguity**
+class instead:
+
+- Ambiguous (5 corpus cases): `candidates` = the real page list → the repair is available from the
+  error alone.
+- Not-found (4 corpus cases): `candidates: []` by design (Non-goal 5) → the real element name is
+  absent from the error in **both** prose and JSON, so a mapping read is still required. This
+  entity's own Corpus-evidence section already says exactly this: "`candidates: []` there is
+  correct, not a channel failure."
+
+What the not-found class *does* gain is structured `got`/`step_id`/`field` — parseability, not
+repairability. If the captain intended "gains new information relative to prose" (arguably true
+for not-found, since its prose carries no list to begin with) rather than "is repairable from the
+error alone", the wording is reconcilable and AC-4 (b) should be re-read accordingly — but as
+literally stated the two classes are swapped, and writing the AC to match the ruling verbatim
+would have shipped an AC that its own verification would falsify.
