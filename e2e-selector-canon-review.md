@@ -256,3 +256,58 @@ observability line 491. Only line 550 was named in the contradiction list;
 fixing 596/601 without touching the guarded Rule 2 would have split the file
 against itself, so I left all four in place. Flagging for the captain rather
 than silently leaving it invisible.
+
+## Feedback Cycles
+
+- Cycle 1: return — SO/EM gate; surface 2 commits / 14 files / +263-133 vs estimate none-declared (ideation recorded no appetite — a gap in this entity's own ideation, noted rather than back-filled); AC unchanged (scope not narrowed; the three findings are all inside approved scope).
+
+### AC re-score — the FO's earlier scoring was wrong, corrected here
+
+**AC-1 → PARTIAL** (was recorded PASS). The criterion reads "the rule and the corpus
+agree". New lint moves the corpus from 6/32 passing to 13/32; **19 still fail**. That is
+progress, not agreement. The residue is `>> nth=` (339 lines) and `has-text(` (25), both
+correctly still banned — ownership of the nth residue sits with
+[[e2e-nth-chord-widening]]. The hand-built login-page mapping that "passed" was written
+to the very rules under test and could not have failed; it evidences that the lint
+change works as intended, not that the criterion is met.
+
+**AC-3 → PARTIAL** (was recorded PASS). The headline "81/81 translate, zero pass
+through raw" is true by construction: `selector-translate.js:108` matches `^text=(.+)$`,
+so a non-null return is guaranteed and the metric cannot go below 100%. Re-measured
+against what the patterns can actually match: **28 of 81 compile to patterns that can
+never match** — 10 regex forms (`text=/Every \d+h/` → `"/Every \d+h/"`) and 18 chorded
+(`text=取消預約 >> nth=0` → the whole chord inside the quotes). The 6/6 live-snapshot
+round-trip with a negative control stands and is real, but it exercised only the
+plain-literal class.
+
+The sharp edge: the new lint **passes** those 28, where old CLASS 3 refused them. This
+commit removed a refusal without adding the matching translation — one fresh instance
+of the exact defect class the entity exists to remove.
+
+**AC-2 → PASS**, independently confirmed by the reviewer.
+
+### Return list (closed — no redesign; do NOT re-open the un-ban, the demotion, or the premise correction)
+
+1. **`compiler/lib/selector-translate.js` — make the `text=` branch refuse what it
+   cannot faithfully translate.** Either mirror the literal-prefix extraction the
+   `role=` branch already has at `:86-91`, or return `null` for regex and chorded forms
+   so they take the documented fallback. Invariant to restore: **a non-null return is a
+   pattern that can actually match.** Add the corpus regex and chorded cases to
+   `selector-translate.test.js`.
+2. **`agents/e2e-test-runner.md` — MOVE `role=<r>[name="<v>"]` and `text=<v>` into Rule
+   1's NATIVE list at `:550`; do not merely delete them from Rule 2's banned list at
+   `:557`.** Deleting alone leaves them matching neither rule, which re-opens the eval
+   bypass. Then fix `:596` (it still says *prefer* `[role][aria-label]`, contradicting
+   the demotion, and advises `find text "<v>"` as a selector value, which CLASS 5 bans)
+   and `:601`'s form list. The earlier justification for leaving these — that they sit
+   inside or adjacent to the guarded Eval-Fallback block — does not hold: `## Critical
+   Rules` starts at `:584`, so `:596` and `:601` are 35-45 lines outside the guard at
+   `:548-561`. Only `:557` is inside. Falsifier: `git diff` must show no change to any
+   sentence containing "fall back to eval", "--allow-eval-fallback", or "eval bypass".
+3. Nothing else. `codegen.js` stays untouched.
+
+**Check the reviewer named that the FO missed:** `codegen.js` being absent from the diff
+is necessary but not sufficient for "compiled behaviour unchanged". Branch selection
+depends on the translator's return value, so every `text=` selector moved from the
+`null → _poll_visible` fallback to `_poll_snapshot_contains` (`codegen.js:1572-1597`)
+without that file changing a line. Any future translator change needs this check.
