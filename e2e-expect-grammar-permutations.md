@@ -10,6 +10,7 @@ issue:
 pr:
 design: required
 id: xnj27a2qnjtb61mqegdasm00
+mod-block: merge:pr-merge
 ---
 
 ## Problem
