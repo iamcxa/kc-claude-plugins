@@ -54,6 +54,11 @@ cross_model_tool_available() {
       # not count. Builtin-only (no `tr`/${,,}) for PATH-isolated + bash-3.2 use.
       case "${GOOGLE_GENAI_USE_VERTEXAI:-}" in 1 | true | TRUE | True) return 0 ;; esac
       [ -f "$HOME/.gemini/oauth_creds.json" ] && return 0
+      # agy keeps its own token beside the shared Google OAuth cache above. A
+      # machine that only ever logged in through agy can have this and not
+      # oauth_creds.json, so checking only the shared file would report an
+      # authenticated arbiter as unavailable.
+      [ -f "$HOME/.gemini/antigravity-cli/antigravity-oauth-token" ] && return 0
       return 1
       ;;
     *)

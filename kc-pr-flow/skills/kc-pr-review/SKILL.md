@@ -868,7 +868,15 @@ ARB_BIN=$(cross_model_tool_binary gemini)
 TMPOUT_G=$(mktemp /tmp/gemini-arb-out-XXXXXXXX)
 TMPERR_G=$(mktemp /tmp/gemini-arb-err-XXXXXXXX)
 "$ARB_BIN" --print "$ARB_PROMPT" --print-timeout 4m </dev/null >"$TMPOUT_G" 2>"$TMPERR_G"
+# ... parse (5.6b), then:
+rm -f "$TMPOUT_G" "$TMPERR_G"
 ```
+
+The prompt travels as a command-line argument because that is the only form `agy --print` accepts,
+which puts two bounds on it: it must stay well clear of `ARG_MAX`, and it is visible in the local
+process table while the call runs. Both are already satisfied by the payload rules above — quoted
+snippets for at most `cap` disputes, never the full diff — so **do not** relax those to "just send
+more context" here.
 
 Three things about `agy` that are easy to get wrong — verify any change against `agy --help`, never
 against a blog or recall:

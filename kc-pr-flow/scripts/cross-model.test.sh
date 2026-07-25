@@ -86,6 +86,15 @@ mkdir -p "$TMPHOME/.gemini"; : >"$TMPHOME/.gemini/oauth_creds.json"
   cross_model_tool_available gemini ); rc=$?
 assert_rc "gemini oauth file -> available" 0 "$rc"
 
+# agy's own token, with no shared oauth_creds.json -> available (a machine that
+# only ever logged in through agy)
+AGYHOME="$(mktemp -d)"
+mkdir -p "$AGYHOME/.gemini/antigravity-cli"; : >"$AGYHOME/.gemini/antigravity-cli/antigravity-oauth-token"
+( PATH="$TMPBIN:$EMPTYDIR"; HOME="$AGYHOME"; unset GEMINI_API_KEY GOOGLE_API_KEY GOOGLE_GENAI_USE_VERTEXAI
+  cross_model_tool_available gemini ); rc=$?
+assert_rc "agy oauth token -> available" 0 "$rc"
+rm -rf "$AGYHOME"
+
 # vertex env -> available
 ( PATH="$TMPBIN:$EMPTYDIR"; HOME="$EMPTYDIR"; unset GEMINI_API_KEY GOOGLE_API_KEY; export GOOGLE_GENAI_USE_VERTEXAI=1
   cross_model_tool_available gemini ); rc=$?
