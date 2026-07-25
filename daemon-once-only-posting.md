@@ -7,7 +7,7 @@ completed:
 verdict:
 worktree: .worktrees/w7-daemon-once-only
 issue:
-pr:
+pr: https://github.com/iamcxa/kc-claude-plugins/pull/59
 design:
 id: w7exen9fcfgbpz6c8z3j1kt9
 ---
