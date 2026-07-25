@@ -34,15 +34,18 @@ declines to count a deferred expect toward `verified_count`, but coverage is opt
 are "silently mishandled at runtime (fallback eval path -> false positive risk)", but the
 compiler never calls it; the ban is enforced by restating it in 13 markdown files.
 
-Two candidate shapes for ideation to decide: (a) minimal — make deferred a compile error
-by default with an `--allow-deferred` escape hatch, make the page qualifier load-bearing,
-wire the linter into the compile path; (b) structural — promote operands out of the prose
-`action:` string into typed fields (`element:`, `page:`), demoting `action:` to a
-human-readable label, which makes both defects unrepresentable rather than rejected. Flows
-already carry a `type:` field (`parser.js` errors with "has no type field — run migration
-tool first") and a `migrate.js` already exists, so (b) is a repair of a half-built
-abstraction, not a greenfield build. The cross-model reviewer argued (b) is the real lever
-and that (a) alone is patching symptoms.
+**Scope cut by the captain, 2026-07-25.** This work split into two entities: making the
+silence loud is [[e2e-assertion-honesty-gate]] and goes first; **this entity is the
+structural half and is sequenced after it** ("先做 A，B 應該落下一個 entity，保持敏捷").
+
+What remains here: promote operands out of the prose `action:` string into typed fields
+(`element:`, `page:`), demoting `action:` to a human-readable label, so both defects above
+become unrepresentable rather than merely rejected — and close the grammar permutation
+holes the spike found. Flows already carry a `type:` field (`parser.js` errors with "has no
+type field — run migration tool first") and a `migrate.js` already exists, so this is a
+repair of a half-built abstraction, not a greenfield build. The cross-model reviewer argued
+this is the real lever and that the gate alone patches symptoms; the captain's counter is
+that the gate ships value sooner and this can follow, which the sequencing above records.
 
 ## Notes for ideation
 
