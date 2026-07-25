@@ -22,6 +22,15 @@ Scope: replace the prose self-approval with a typed preauthorization artifact th
 
 Out of scope: freshness and coverage rechecks (slice 3), and any change to daemon classification or fix behaviour.
 
+### Carried in from slice 1's validation (captain-assigned 2026-07-25)
+
+`review_post_cmd_post`'s pre-POST reconcile **fails open** when the reviews-list read is unusable, where `resume` fails closed on the identical condition. Pre-existing from #56, not introduced by slice 1, and it needs two coincident conditions: local durable state unavailable (a wiped or reconfigured state dir) **and** an unusable remote list at that moment — the local cross-run check independently blocks the ordinary crash-then-retry case.
+
+It landed here rather than in slice 1 because making it symmetric would refuse even a genuinely first post while the reviews API is degraded, and would change availability for **every** caller rather than the daemon alone. That is a degraded-mode policy decision, and this slice is where the preauthorization contract that should express it is being built. Consider whether the answer is unconditional fail-closed or an operator-selectable degraded mode; do not leave it as an unremarked asymmetry between `post` and `resume`.
+
+**AC-3 — `post` and `resume` treat an unusable reconcile read the same way, or the difference is documented as deliberate with its reason.**
+Verified by: a test driving an unusable list read through both paths and asserting the chosen behaviour, plus the recorded rationale if they intentionally differ. Falsified by: the asymmetry persisting with no test and no stated reason.
+
 ## Acceptance criteria
 
 **AC-1 — An autonomous post without a valid typed preauthorization is refused, and absence alone is enough to refuse.**
