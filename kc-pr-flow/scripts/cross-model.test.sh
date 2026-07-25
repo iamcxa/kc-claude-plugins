@@ -38,15 +38,37 @@ assert_rc() { # $1=desc $2=expected_rc $3=actual_rc
 TMPBIN="$(mktemp -d)"
 TMPHOME="$(mktemp -d)"
 EMPTYDIR="$(mktemp -d)"
-trap 'rm -rf "$TMPBIN" "$TMPHOME" "$EMPTYDIR"' EXIT
-printf '#!/bin/sh\nexit 0\n' >"$TMPBIN/gemini"
+LEGACYBIN="$(mktemp -d)"
+trap 'rm -rf "$TMPBIN" "$TMPHOME" "$EMPTYDIR" "$LEGACYBIN"' EXIT
+# The Gemini second opinion runs on Google's Antigravity CLI (`agy`).
+printf '#!/bin/sh\nexit 0\n' >"$TMPBIN/agy"
 printf '#!/bin/sh\nexit 0\n' >"$TMPBIN/codex"
-chmod +x "$TMPBIN/gemini" "$TMPBIN/codex"
+chmod +x "$TMPBIN/agy" "$TMPBIN/codex"
+# A machine that still has only the retired consumer CLI, and nothing else.
+printf '#!/bin/sh\nexit 0\n' >"$LEGACYBIN/gemini"
+chmod +x "$LEGACYBIN/gemini"
+
+# the logical tool name maps to the executable actually invoked
+assert_eq "gemini resolves to the agy binary" "agy" "$( unset CROSS_MODEL_GEMINI_BIN; cross_model_tool_binary gemini )"
+assert_eq "codex resolves to the codex binary" "codex" "$( unset CROSS_MODEL_CODEX_BIN; cross_model_tool_binary codex )"
+( unset CROSS_MODEL_GEMINI_BIN; cross_model_tool_binary nonesuch >/dev/null ); rc=$?
+assert_rc "unknown tool has no binary" 1 "$rc"
 
 # binary missing -> unavailable
 ( PATH="$EMPTYDIR"; HOME="$TMPHOME"; unset GEMINI_API_KEY GOOGLE_API_KEY GOOGLE_GENAI_USE_VERTEXAI CODEX_API_KEY OPENAI_API_KEY CODEX_HOME
   cross_model_tool_available gemini ); rc=$?
 assert_rc "gemini binary missing -> unavailable" 1 "$rc"
+
+# The retired consumer CLI alone is NOT usable: its flag surface does not match
+# the Step 5.6a invocation, so this must skip arbitration, not attempt it.
+( PATH="$LEGACYBIN:$EMPTYDIR"; HOME="$TMPHOME"; export GEMINI_API_KEY=x
+  cross_model_tool_available gemini ); rc=$?
+assert_rc "legacy gemini binary alone -> unavailable" 1 "$rc"
+
+# an adopter whose CLI is installed under another name can point at it
+( PATH="$LEGACYBIN:$EMPTYDIR"; HOME="$TMPHOME"; export GEMINI_API_KEY=x CROSS_MODEL_GEMINI_BIN=gemini
+  cross_model_tool_available gemini ); rc=$?
+assert_rc "CROSS_MODEL_GEMINI_BIN override -> available" 0 "$rc"
 
 # binary present, no auth -> unavailable
 ( PATH="$TMPBIN:$EMPTYDIR"; HOME="$TMPHOME"; unset GEMINI_API_KEY GOOGLE_API_KEY GOOGLE_GENAI_USE_VERTEXAI CODEX_HOME
