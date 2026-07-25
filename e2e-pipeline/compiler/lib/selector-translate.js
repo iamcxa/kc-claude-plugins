@@ -33,6 +33,8 @@
  *                                                        match; role= forms above use
  *                                                        the same snapshot line, just
  *                                                        with the role prefixed)
+ *     text=Y >> nth=N                → "Y"            (chord dropped, base translated)
+ *     text=/Y/                       → null           (no fixed-string image of a regex)
  *
  * Returns: string pattern for a11y tree grep, or null if conversion not
  * possible (caller falls back to _poll_visible against the raw selector).
@@ -105,11 +107,34 @@ function selectorToA11yPattern(selector) {
   // text=Y → "Y" (bare or quoted value; quotes stripped, then re-quoted to the
   // same snapshot-literal shape the role= forms above already produce, so
   // _poll_snapshot_contains greps it the same way)
+  //
+  // Invariant: a non-null return is a pattern that can actually match. Shapes that
+  // cannot be faithfully translated return null and take the documented
+  // _poll_visible fallback rather than a near-miss pattern that silently never hits.
   var textMatch = selector.match(/^text=(.+)$/);
   if (textMatch) {
-    var textValue = textMatch[1];
-    var quoted = textValue.match(/^"(.*)"$/) || textValue.match(/^'(.*)'$/);
-    if (quoted) textValue = quoted[1];
+    var textValue = textMatch[1].trim();
+
+    // Split a trailing chord off the value. A quoted value may itself contain `>>`
+    // (e.g. text="Next >> Step"), so only look for the chord past the closing quote.
+    var textQuoted = textValue.match(/^"([^"]*)"/) || textValue.match(/^'([^']*)'/);
+    if (textQuoted) {
+      var textTrailer = textValue.slice(textQuoted[0].length).trim();
+      // Anything other than a chord after the quote is unparseable — refuse.
+      if (textTrailer !== '' && textTrailer.indexOf('>>') !== 0) return null;
+      textValue = textQuoted[1];
+    } else {
+      var textChord = textValue.indexOf('>>');
+      if (textChord !== -1) textValue = textValue.slice(0, textChord).trim();
+    }
+
+    // Regex value → null. Deliberately NOT the literal-prefix extraction the role=
+    // branch uses above: that emits `^Save$` for /^Save$/ and `a` for /a|b/, which
+    // grep -F can never match. There is no fixed-string image of a regex.
+    if (/^\/.*\/$/.test(textValue)) return null;
+
+    if (textValue === '') return null;
+
     return '"' + textValue + '"';
   }
 

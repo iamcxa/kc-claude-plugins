@@ -755,14 +755,14 @@ Also add the metric row to the `## Summary` table in `report.md` (§ 3c):
 
 **Rule 1 — Native form returns 0/false/not-found → fail loud, no eval bypass.**
 
-When a selector matches a NATIVE form — CSS attribute form (`[data-testid=...]`, `[aria-label="..."]`, `input[type="password"]`, etc.) OR a `find role|text|testid|label <r> [--name <v>]` subcommand invoked directly (interactive CLI use only — never a stored `selector:` value, see `CLAUDE.md` § Selector Priority item 9) — and `{{browser_command}} is visible/wait/click` returns 0/false/not-found:
+When a selector matches a NATIVE form — CSS attribute form (`[data-testid=...]`, `[aria-label="..."]`, `input[type="password"]`, etc.), the role+name form `role=<r>[name="<v>"]`, the text form `text=<v>`, OR a `find role|text|testid|label <r> [--name <v>]` subcommand invoked directly (interactive CLI use only — never a stored `selector:` value, see `CLAUDE.md` § Selector Priority item 9) — and `{{browser_command}} is visible/wait/click` returns 0/false/not-found:
 - **DO NOT fall back to eval.**
 - Return the explicit failure to the flow runner immediately.
 - Increment `eval_fallback_hits` as the failure counter (still tracked for observability) but do NOT execute the eval bypass.
 
 **Rule 2 — Banned Playwright forms → emit warning + fail loud.**
 
-When a selector matches a BANNED Playwright form (`role=X[name=Y]`, `>> nth=N`, bare `text=`, `has-text(`):
+When a selector matches a BANNED form (`>> nth=N`, `has-text(`, or a `find role|text|testid|label ...` subcommand chain stored as a `selector:` value):
 - Emit a warning line: `⚠ banned-selector: <step-id> selector=<selector> form=<banned-pattern>`
 - Increment `eval_fallback_hits`.
 - Return failure (no silent eval bypass).
@@ -805,12 +805,12 @@ These rules are non-negotiable. Violating them causes flaky or broken tests.
    bounded finalizer first, then closes and cleans its owned ephemeral profile so evidence is
    preserved and the profile cannot be reused. On trace timeout/failure, preserve the independent
    trace infrastructure result and continue to owned profile cleanup/report generation.
-9. **React Native Web**: Text elements render twice in DOM (nth=0 is hidden). Prefer `[role="<r>"][aria-label="<v>"]` CSS attribute selector for tab bars and interactive elements (directly targets the correct accessible element). For text-only elements use `find text "<v>"` or `:nth-of-type(2)` CSS pseudo. BANNED: `>> nth=N` chord and `role=X[name=...]` Playwright forms — see `e2e-pipeline/scripts/lint-mapping.sh`. DEPRECATED as selector value: `find role <r> --name "<v>"` strings — these are subcommand chains, not selector grammar (PR #8 course correction).
+9. **React Native Web**: Text elements render twice in DOM (nth=0 is hidden). Prefer `role=<r>[name="<v>"]` for tab bars and interactive elements, and `text=<v>` for text-only elements — both match the computed accessible name once. `:nth-of-type(2)` CSS pseudo also works. BANNED: `>> nth=N` chord and `has-text(` — see `e2e-pipeline/scripts/lint-mapping.sh`. BANNED as a selector value: `find role|text|testid|label <r> [--name "<v>"]` strings — these are subcommand chains, not selector grammar (lint CLASS 5). Full grammar: `CLAUDE.md` § Selector Priority.
 10. **Ant Design**: CSS-hidden inputs (e.g., Segmented control radio buttons). `is visible` returns false even when the component is rendered. Verify via snapshot a11y tree instead.
 11. **Multi-site flows**: The shared runtime always supplies `--app {{app}}`, which maps to the isolated browser session. Do not add a second `--session` flag.
 12. **Timeout values** in flow YAML are in seconds. Convert to milliseconds (`* 1000`) for `--timeout` flags.
 13. **Checkpoint best-effort**. `verify-external` steps execute via Bash/curl only. Complex checks needing MCP (Slack, database) → mark SKIP. For full verification, use `/e2e-walkthrough --verify` (main context, full tool access).
-14. **Eval fallback REMOVED for native selectors (T2.2 landed). Banned Playwright forms also fail loud.** When a native selector returns 0/false/not-found, return the explicit failure — do NOT fall back to eval. Banned Playwright forms (`role=X[name=Y]`, `>> nth=N`, bare `text=`, `has-text(`) must also fail loud with a warning. Use `--allow-eval-fallback` only for explicit debug investigation (rare opt-in). Always increment `eval_fallback_hits` on any fallback attempt, even under `--allow-eval-fallback`.
+14. **Eval fallback REMOVED for native selectors (T2.2 landed). Banned Playwright forms also fail loud.** When a native selector returns 0/false/not-found, return the explicit failure — do NOT fall back to eval. Banned forms (`>> nth=N`, `has-text(`, `find ...` as a selector value) must also fail loud with a warning. Use `--allow-eval-fallback` only for explicit debug investigation (rare opt-in). Always increment `eval_fallback_hits` on any fallback attempt, even under `--allow-eval-fallback`.
 
 ---
 
