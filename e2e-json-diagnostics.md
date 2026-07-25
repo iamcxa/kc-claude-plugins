@@ -926,3 +926,66 @@ model) converged on the identical three file:line sites without prompting each o
 verified against the real file and all three failure modes reproduced live. Recommend: route back
 to implementation — the fix is small and mechanical (extend the existing `options.json` branching
 pattern, already used at the empty-flows-dir case, to these three exit paths), not a design change.
+
+## Stage Report: implementation (cycle 2)
+
+Scoped fix round for validation's AC-1 finding. Only `bin/e2e-compile.js` and
+`compiler/test/cli.test.js` were touched — no redesign, no new AC, no change to the tier split,
+the `code`-less shapes, or the SKILL.md range. Commit `1c3977d`; cycle-1 commit `632f04c` stands.
+
+- DONE: AC-1 — all three sites reproduced live before any fix
+  Confirmed independently rather than trusted: site 1 (unreadable flows dir) exit 1 / 0-byte
+  stdout; site 2 (EACCES output dir) exit 1 / 0-byte stdout; site 3 (`--json`, no flow, no
+  `--all`) **exit 0** with 1192 bytes of Commander help prose on stdout. Site 3 was worse than
+  reported — exit 0 tells a consumer the run succeeded.
+- DONE: AC-1 — RED before GREEN, per site
+  Three tests added to `cli.test.js` CLI-08, each asserting stdout parses as exactly one JSON
+  document via the existing `parseOnlyStdout` helper. Confirmed RED (3 fail / 32) against the
+  cycle-1 binary, then GREEN (32/32) after the fix. The falsifying change for each: revert its
+  `options.json` branch and stdout goes empty (sites 1-2) or prose (site 3). This closes AC-1's
+  own falsification clause ("any non-JSON text present on stdout"), which is what caught them.
+- DONE: Each condition got its own document shape, not one collapsed shape
+  **Site 1** — `{ok: false, flows: [], summary: {0,0}, errors: [{message}]}`, exit 1. Deliberately
+  NOT the empty-directory shape: an empty dir stays `ok: true` / exit 0 (nothing to compile), an
+  unreadable one is a failure (could not look). A regression test asserts both shapes side by side
+  so a future collapse fails. `errors` is additive at batch level — without it the enumeration
+  failure is literally unrepresentable in the document.
+  **Site 2** — the documented single-flow shape with the thrown text as a tier-2 error, mirroring
+  how batch mode already wraps a thrown `compile()` error.
+  **Site 3** — chose to emit a document (`ok: false`, `flow: null`), move the usage text to
+  **stderr**, and change exit 0 → 1. Rationale: this is a usage error, not a compile error, but
+  SKILL.md's Phase 3 now parses stdout unconditionally with no prose fallback left, so making the
+  guarantee conditional on argument validity reopens the exact hole being fixed. A human running
+  `--json` by hand still gets the usage text; exit 1 because nothing was compiled.
+- DONE: Swept for remaining unguarded stdout paths rather than assuming three was the whole set
+  Audited every `console.log` / `process.exit` / `program.help` in the file: all prose writes sit
+  behind `!options.json` or after a `--json` early-return. No further holes in the action handler.
+- FAILED (out of scope, flagged not fixed): AC-1 has a FOURTH class — Commander's own arg-parse errors
+  `--json --bogus-flag` and `--json --flows-dir` (missing value) both exit 1 with **0-byte stdout**,
+  error on stderr. Not fixed: it needs `program.exitOverride()` plus a try/catch around
+  `parseAsync`, which changes CLI-wide error handling for non-`--json` callers too — the scope
+  widening the captain's reconfirm explicitly forbade. Materially lower risk than the three fixed:
+  those are reachable from a *correct* skill invocation against a bad environment, whereas a
+  malformed command line means the skill's own fixed invocation template is broken. Gate's call.
+- DONE: AC-2, AC-3, AC-6 re-verified unchanged by the full suite at stage exit
+  650/650 pass (was 647; +3 new). This round edited no resolver/compiler source and no
+  `errors.push` call site, so AC-2's byte-identical default behavior holds by construction; AC-3's
+  ambiguous/not-found `candidates` assertions and AC-6's 0/1 exit-code assertions both re-ran
+  green. Lint on the two touched files shows only pre-existing findings (`allCoverageTotal`,
+  `execFileSync`, unused `var result`) — none introduced this round, verified by grepping the
+  added lines.
+- DONE: AC-4 and AC-5 re-verified unchanged — SKILL.md was not touched this round
+  `git diff --name-only 632f04c 1c3977d` returns only `bin/e2e-compile.js` and
+  `compiler/test/cli.test.js`; `git show HEAD:...SKILL.md | wc -l` is still 135, so AC-5's
+  deletion and AC-4(a)'s 202 → 135 recurring-saving measurement both stand. AC-4(b)'s
+  no-regex/candidates assertions re-ran green in the same suite.
+
+### Summary
+
+Validation's finding was correct and reproduced on all three sites; one was worse than reported
+(exit 0, not just empty stdout). Each site now emits a shape chosen for its condition rather than a
+uniform stub — the empty-vs-unreadable directory distinction is itself regression-tested, since
+collapsing them would make "nothing to compile" indistinguishable from "could not look". A fourth
+class (Commander arg-parse errors) was found during the sweep and deliberately left unfixed as
+out-of-scope, with its cost and risk stated for the gate. Diff is two files; everything that passed
+cycle-1 validation is untouched.
