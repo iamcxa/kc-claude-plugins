@@ -71,7 +71,15 @@ existing `gh pr review` posting stays byte-identical to today. When on, `post` d
 any network call, so a crash mid-POST is always recoverable. An ambiguous outcome (timeout, dropped
 response) never blind-retries: `resume` reconciles a landed post via the review body's embedded
 `idempotency_key` marker (`GET .../reviews`) before ever retrying, and a moved head or changed
-payload invalidates instead of posting the stale payload. `gc` expires an unreconciled pending
+payload invalidates instead of posting the stale payload. A retry needs a reconcile read that
+*positively confirms* remote state: a list response that is not a reviews array fails closed
+(`ambiguous{reconcile_unavailable}`), and because the reviews list is read-after-write eventually
+consistent, an absent marker only proves "never landed" once `KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS`
+(default 60) has elapsed since `post.intent` — inside that window resume reports
+`ambiguous{reconcile_unconfirmed}` instead of duplicating a review that did land. The marker match
+ignores review author on purpose (the key already pins the payload; the login a token posts under is
+not knowable here). `post` also reconciles against the marker *before* its own POST, so a repeat
+invocation of an already-landed payload settles as `posted_reconciled` rather than posting twice. `gc` expires an unreconciled pending
 payload after `KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 604800s / 7 days) but never within its
 window — `resume`/`gc` are never gated by the rollback flag, so rolling back never deletes evidence
 needed to reconcile an uncertain remote result. There is no *active* daemon preauthorization gate

@@ -1730,9 +1730,16 @@ review even across a crash mid-POST:
    Step 6c receipt, then call `bash scripts/review-post.sh post --request-file request.json
    --gate-file gate.json`.
 5. Interpret the JSON `status` from whichever of step 3/4 ran: `posted` / `posted_reconciled` —
-   done. `ambiguous` — the outcome is genuinely unconfirmed; leave the pending payload in place and
-   tell the user a later invocation will reconcile it (step 2-3 above finds it next time); never
-   retry within the same invocation. `invalidated` — report the `reason` (`head_moved` /
+   done (`posted_reconciled` from a fresh `post` means this exact payload was already live remotely
+   and was reconciled instead of posted twice — the backstop for a prior run that reached terminal
+   `posted` and so has no pending payload for step 2 to find). `ambiguous` — the outcome is genuinely
+   unconfirmed; leave the pending payload in place and tell the user a later invocation will
+   reconcile it (step 2-3 above finds it next time); never retry within the same invocation. Surface
+   the `reason` when present: `reconcile_unavailable` (the reviews list was unusable, so "marker
+   absent" was never established — resume once API access is healthy) or `reconcile_unconfirmed`
+   (marker absent but still inside `KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS`, where the read-after-write
+   lag on the reviews list makes an absent marker untrustworthy — resume after the window).
+   `invalidated` — report the `reason` (`head_moved` /
    `payload_changed` / `identity_changed`) and return to re-confirmation; never post the stale
    payload. `failed` — surface the failure; do not retry blindly.
 

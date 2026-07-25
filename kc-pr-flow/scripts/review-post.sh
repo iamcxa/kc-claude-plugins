@@ -28,6 +28,10 @@ set -uo pipefail
 REVIEW_POST_MARKER_PREFIX='<!-- kc-pr-flow-post-receipt:'
 REVIEW_POST_MARKER_SUFFIX='-->'
 REVIEW_POST_DEFAULT_RETENTION_SECONDS=604800
+# GitHub's review list is read-after-write eventually consistent: a review that
+# just landed can be missing from `GET .../reviews` for a short window. Inside
+# that window an absent marker proves nothing, so a retry must wait it out.
+REVIEW_POST_DEFAULT_RECONCILE_CONFIRM_SECONDS=60
 
 review_post_source_runtime() {
   local here
@@ -256,13 +260,58 @@ review_post_next_sequence() {
   printf '%s\n' "$events" | jq -s 'length + 1'
 }
 
+# A reconcile read is only trusted when it positively confirms remote state: an
+# exit-0 body that is not a reviews array must never be read as "marker absent",
+# which would license a blind retry of a payload that may already be live.
+review_post_reviews_usable() {
+  jq -e 'type == "object" and (.reviews | type == "array")' >/dev/null 2>&1 <<<"$1"
+}
+
 review_post_scan_marker() {
-  # Emits the remote review id whose author is self and whose body carries the
-  # exact idempotency marker; empty if none.
-  local reviews_json="$1" self_login="$2" marker="$3"
-  jq -r --arg self "$self_login" --arg marker "$marker" '
-    .reviews[] | select(.user == $self) |
-    select((.body // "") | contains($marker)) | .id' <<<"$reviews_json" | head -n1
+  # Emits the remote review id whose body carries the exact idempotency marker;
+  # empty if none. Author identity is deliberately NOT part of the match: the
+  # marker already pins this exact payload (sha256 over review_key, commit_id,
+  # and payload_sha256), while the login a token actually posts under (user vs
+  # bot vs app slug) is not knowable here — matching on it would turn an
+  # identity mismatch into a duplicate review.
+  local reviews_json="$1" marker="$2"
+  jq -r --arg marker "$marker" '
+    .reviews[] | select((.body // "") | contains($marker)) | .id' <<<"$reviews_json" | head -n1
+}
+
+review_post_head_sha() {
+  # Prints the head sha only when the response positively carries one. A
+  # shape-invalid head response must fail closed as a transport error, never be
+  # compared against the reviewed head (which would silently misreport it as a
+  # moved head and discard a postable review).
+  local response="$1" sha
+  sha="$(jq -r 'if type == "object" and ((.head_sha // "") | test("^[0-9a-f]{40}$"))
+    then .head_sha else empty end' <<<"$response" 2>/dev/null)" || return 1
+  [ -n "$sha" ] || return 1
+  printf '%s' "$sha"
+}
+
+review_post_prior_intent_exists() {
+  # True when some OTHER run for this PR already recorded a post.intent for the
+  # same idempotency key — i.e. this exact payload may already be live remotely.
+  local repository="$1" pr_number="$2" current_run_id="$3" idempotency_key="$4"
+  local state_root repo_key pr_dir events_file
+  state_root="$(review_runtime_prepare_state_root)" || return 1
+  repo_key="$(review_runtime_repo_key "$repository")" || return 1
+  pr_dir="$state_root/$repo_key/pr-$pr_number"
+  [ -d "$pr_dir" ] || return 1
+  while IFS= read -r events_file; do
+    [ -n "$events_file" ] || continue
+    case "$events_file" in
+      */"$current_run_id"/events.jsonl) continue ;;
+    esac
+    if jq -e --arg key "$idempotency_key" '
+      select(.event_type == "post.intent") |
+      .payload.idempotency_key == $key' "$events_file" >/dev/null 2>&1; then
+      return 0
+    fi
+  done < <(find "$pr_dir" -mindepth 2 -maxdepth 2 -type f -name events.jsonl 2>/dev/null)
+  return 1
 }
 
 review_post_classify() {
@@ -379,7 +428,10 @@ review_post_cmd_post() {
   # Fresh exact-head check before any mutation.
   local head_response current_head
   head_response="$(review_post_transport head --repo "$repository" --pr "$pr_number")" || return 74
-  current_head="$(jq -r '.head_sha' <<<"$head_response")"
+  current_head="$(review_post_head_sha "$head_response")" || {
+    printf 'review-post: head response carried no usable head sha\n' >&2
+    return 74
+  }
   if [ "$current_head" != "$commit_id" ]; then
     review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
       "$base_sha" "$head_sha" "$config_hash" 2 "$occurred_at" head.observed \
@@ -417,6 +469,30 @@ review_post_cmd_post() {
      commit_id:$commit_id,event:$event,payload:$payload,payload_sha256:$payload_sha256,
      idempotency_key:$idempotency_key,authorized_at:$authorized_at,expires_at:$expires_at}')" || return 1
   review_post_write_pending "$run_dir" "$pending" || return 74
+
+  # Exactly-once must survive a re-invocation, not only a crash-resume: a prior
+  # run's ambiguous POST may already be live remotely. Reconcile that instead of
+  # posting the identical payload again. When the read cannot confirm remote
+  # state, only a payload with no prior posting attempt may proceed.
+  local marker reviews_json existing_id
+  marker="$(review_post_marker "$idempotency_key")"
+  reviews_json="$(review_post_transport list --repo "$repository" --pr "$pr_number" --self "$self_login")" || return 74
+  if review_post_reviews_usable "$reviews_json"; then
+    existing_id="$(review_post_scan_marker "$reviews_json" "$marker")"
+    if [ -n "$existing_id" ]; then
+      review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
+        "$base_sha" "$head_sha" "$config_hash" 5 "$occurred_at" post.result \
+        "$(jq -cn --argjson remote_review_id "$existing_id" --arg idempotency_key "$idempotency_key" \
+          '{idempotency_key:$idempotency_key,outcome:"posted_reconciled",remote_review_id:$remote_review_id}')" || return 74
+      rm -f "$run_dir/pending-post.json"
+      review_post_emit posted_reconciled "$run_id" "$idempotency_key" '' "$existing_id"
+      return 0
+    fi
+  elif review_post_prior_intent_exists "$repository" "$pr_number" "$run_id" "$idempotency_key"; then
+    printf 'review-post: reconcile read unusable while a prior posting attempt exists; not posting\n' >&2
+    review_post_emit ambiguous "$run_id" "$idempotency_key" reconcile_unavailable ''
+    return 0
+  fi
 
   # POST the marker-bearing body; classify the (possibly ambiguous) outcome.
   local post_body response transport_rc classification
@@ -533,7 +609,10 @@ review_post_cmd_resume() {
   # payload.
   local head_response current_head
   head_response="$(review_post_transport head --repo "$repository" --pr "$pr_number")" || return 74
-  current_head="$(jq -r '.head_sha' <<<"$head_response")"
+  current_head="$(review_post_head_sha "$head_response")" || {
+    printf 'review-post: head response carried no usable head sha\n' >&2
+    return 74
+  }
   if [ "$current_head" != "$commit_id" ]; then
     review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
       "$base_sha" "$head_sha" "$config_hash" "$next_seq" "$occurred_at" head.observed \
@@ -550,10 +629,17 @@ review_post_cmd_resume() {
   marker="$(review_post_marker "$idempotency_key")"
 
   # Reconcile-before-retry: a landed review with our marker means the earlier
-  # POST succeeded; record it and post NOTHING.
+  # POST succeeded; record it and post NOTHING. A read that cannot positively
+  # confirm remote state fails closed — the pending payload stays durable for a
+  # later attempt rather than licensing a retry that could duplicate.
   local reviews_json remote_id
   reviews_json="$(review_post_transport list --repo "$repository" --pr "$pr_number" --self "$self_login")" || return 74
-  remote_id="$(review_post_scan_marker "$reviews_json" "$self_login" "$marker")"
+  review_post_reviews_usable "$reviews_json" || {
+    printf 'review-post: reconcile list was unusable; keeping the pending payload\n' >&2
+    review_post_emit ambiguous "$run_id" "$idempotency_key" reconcile_unavailable ''
+    return 0
+  }
+  remote_id="$(review_post_scan_marker "$reviews_json" "$marker")"
   if [ -n "$remote_id" ]; then
     review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
       "$base_sha" "$head_sha" "$config_hash" "$next_seq" "$occurred_at" post.result \
@@ -564,8 +650,28 @@ review_post_cmd_resume() {
     return 0
   fi
 
-  # Marker absent and head unchanged: retry the exact same payload once, then
-  # re-reconcile.
+  # Marker absent on a usable list. That only proves "never landed" once the
+  # read-after-write confirm window since post.intent has elapsed; inside it, an
+  # absent marker is indistinguishable from GitHub lag and a retry would
+  # duplicate a review that did land. Wait the window out instead.
+  local intent_at intent_epoch confirm_seconds
+  intent_at="$(printf '%s\n' "$events" | jq -r 'select(.event_type=="post.intent") | .occurred_at' | head -n1)"
+  confirm_seconds="${KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS:-$REVIEW_POST_DEFAULT_RECONCILE_CONFIRM_SECONDS}"
+  [ -n "$now_epoch" ] || now_epoch="$(review_post_now_epoch)"
+  case "$now_epoch" in
+    '' | *[!0-9]*)
+      printf 'review-post: --now-epoch must be a non-negative integer\n' >&2
+      return 2
+      ;;
+  esac
+  intent_epoch="$(review_post_rfc3339_to_epoch "$intent_at")" || intent_epoch=''
+  if [ -z "$intent_epoch" ] || [ "$((now_epoch - intent_epoch))" -lt "$confirm_seconds" ]; then
+    review_post_emit ambiguous "$run_id" "$idempotency_key" reconcile_unconfirmed ''
+    return 0
+  fi
+
+  # Confirm window elapsed with the marker still absent: retry the exact same
+  # payload once, then re-reconcile.
   local post_body response transport_rc classification
   post_body="$(review_post_body_with_marker "$body" "$idempotency_key")"
   response="$(printf '%s' "$(jq -cn --arg commit_id "$commit_id" --arg event "$event" \
@@ -576,7 +682,10 @@ review_post_cmd_resume() {
   classification="$(review_post_classify "$response" "$transport_rc")"
   if [ "$classification" = ambiguous ]; then
     reviews_json="$(review_post_transport list --repo "$repository" --pr "$pr_number" --self "$self_login")" || return 74
-    remote_id="$(review_post_scan_marker "$reviews_json" "$self_login" "$marker")"
+    remote_id=''
+    if review_post_reviews_usable "$reviews_json"; then
+      remote_id="$(review_post_scan_marker "$reviews_json" "$marker")"
+    fi
     if [ -n "$remote_id" ]; then
       review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
         "$base_sha" "$head_sha" "$config_hash" "$next_seq" "$occurred_at" post.result \
@@ -611,6 +720,14 @@ review_post_cmd_gc() {
   review_runtime_require_jq || return
   review_runtime_require_python || return
   [ -n "$now_epoch" ] || now_epoch="$(review_post_now_epoch)"
+  # An unvalidated clock makes the within-window comparison below error out and
+  # read as false, which would expire evidence that is still inside its window.
+  case "$now_epoch" in
+    '' | *[!0-9]*)
+      printf 'review-post: --now-epoch must be a non-negative integer\n' >&2
+      return 2
+      ;;
+  esac
 
   local state_root repo_key pr_dir removed=0 kept=0
   state_root="$(review_runtime_prepare_state_root)" || return 74

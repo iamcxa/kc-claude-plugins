@@ -83,7 +83,13 @@ existing `gh pr review` posting byte-identical to today. When on, a durable-befo
 call) means a crash mid-POST is always recoverable: `resume` reconciles a landed post via an
 embedded idempotency marker in the review body before ever retrying, a moved head or changed
 payload invalidates instead of posting stale content, and `gc` expires unreconciled pending payloads
-after `KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 7 days) but never within their window. Neither
+after `KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 7 days) but never within their window. Only a
+reconcile read that positively confirms remote state licenses a retry: an unusable list response
+fails closed, and since the reviews list is read-after-write eventually consistent, an absent marker
+is trusted as "never landed" only after `KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS` (default 60) has
+elapsed since `post.intent` — otherwise a lagging list would duplicate a review that did land.
+`post` reconciles against the marker before its own POST too, so a repeat invocation of an
+already-landed payload reconciles instead of posting twice. Neither
 `resume` nor `gc` is gated by the rollback flag, so rolling back never deletes evidence needed to
 reconcile an uncertain remote result. There is no active daemon preauthorization gate yet — the
 rollback flag defaulting off is the entire daemon-safety mechanism today, by absence. See

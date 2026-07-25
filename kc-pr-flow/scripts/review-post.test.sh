@@ -105,16 +105,22 @@ assert_eq "second resume is idempotent" "posted_reconciled" "$(jq -r '.status' <
 assert_eq "second resume still one review" "1" "$(store_count)"
 teardown_env
 
-# --- AC1 (truly-lost branch): request was lost, not landed — retry once posts one review. ---
+# --- AC1 (truly-lost branch): request was lost, not landed — retry posts one
+# review, but only once the read-after-write confirm window has passed. An
+# empty reviews list is only trustworthy as "never landed" after that window;
+# inside it, an empty list is indistinguishable from GitHub lag. ---
 new_env; write_request; write_gate
 printf 'lost\nposted\n' >"$STUB_DIR/post-plan"
 out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
 assert_eq "truly-lost post is ambiguous" "ambiguous" "$(jq -r '.status' <<<"$out")"
 run_id="$(jq -r '.run_id' <<<"$out")"
 assert_eq "truly-lost post recorded no review" "0" "$(store_count)"
-resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id")"
-assert_eq "resume after a truly-lost POST posts once" "posted" "$(jq -r '.status' <<<"$resume_out")"
-assert_eq "resume after a truly-lost POST ends with one review" "1" "$(store_count)"
+resume_early="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 1010)"
+assert_eq "resume inside the confirm window does not retry" "ambiguous" "$(jq -r '.status' <<<"$resume_early")"
+assert_eq "resume inside the confirm window posts nothing" "0" "$(store_count)"
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
+assert_eq "resume past the confirm window posts once" "posted" "$(jq -r '.status' <<<"$resume_out")"
+assert_eq "resume past the confirm window ends with one review" "1" "$(store_count)"
 teardown_env
 
 # --- Definite non-retryable failure (design step 3, validation 4xx): posts
@@ -257,6 +263,94 @@ assert_eq "rollback refuses a fresh post attempt" "3" "$?"
 resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id")"
 assert_eq "preserved evidence still reconciles after rollback" "posted_reconciled" "$(jq -r '.status' <<<"$resume_out")"
 assert_eq "reconcile-after-rollback keeps exactly one review" "1" "$(store_count)"
+teardown_env
+
+# --- AC1 (reconcile fail-closed, lagging list): the reconcile read is only
+# trusted when it positively confirms remote state. GitHub read-after-write lag
+# returns a well-formed but stale empty list for a review that DID land; a
+# blind retry there is exactly the duplicate-review bug. ---
+new_env; write_request; write_gate
+printf 'ambiguous\n' >"$STUB_DIR/post-plan"
+printf 'lag\nlag\nlag\nlag\n' >"$STUB_DIR/list-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+assert_eq "ambiguous post landed one review despite the lagging list" "1" "$(store_count)"
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 1010)"
+assert_eq "a lagging reconcile list never blind-retries" "ambiguous" "$(jq -r '.status' <<<"$resume_out")"
+assert_eq "a lagging reconcile list leaves EXACTLY ONE review" "1" "$(store_count)"
+assert_eq "a lagging reconcile keeps the pending payload for a later retry" "true" "$([ -e "$(run_dir_for "$run_id")/pending-post.json" ] && printf true || printf false)"
+assert_eq "a lagging reconcile writes no terminal result" "" "$(run_events "$run_id" | jq -r 'select(.event_type=="post.result") | .payload.outcome')"
+teardown_env
+
+# --- AC1 (reconcile fail-closed, unusable list): a transport that exits 0 with
+# a body that is not a reviews array must never be read as "marker absent". ---
+new_env; write_request; write_gate
+printf 'ambiguous\n' >"$STUB_DIR/post-plan"
+printf 'unusable\nunusable\nunusable\nunusable\n' >"$STUB_DIR/list-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+assert_eq "ambiguous post landed one review before the unusable list" "1" "$(store_count)"
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
+assert_eq "an unusable reconcile list fails closed" "ambiguous" "$(jq -r '.status' <<<"$resume_out")"
+assert_eq "an unusable reconcile list never retries" "1" "$(store_count)"
+assert_eq "an unusable reconcile keeps the pending payload" "true" "$([ -e "$(run_dir_for "$run_id")/pending-post.json" ] && printf true || printf false)"
+teardown_env
+
+# --- AC1 (author identity is not load-bearing): the idempotency marker alone
+# identifies our landed review. A self-login that differs from the identity the
+# token actually posted under must not cause a duplicate. ---
+new_env; write_request; write_gate
+printf 'other-bot\n' >"$STUB_DIR/self"
+printf 'ambiguous\n' >"$STUB_DIR/post-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+assert_eq "post landed one review under a different author login" "1" "$(store_count)"
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
+assert_eq "a mismatched author login still reconciles by marker" "posted_reconciled" "$(jq -r '.status' <<<"$resume_out")"
+assert_eq "a mismatched author login causes no duplicate" "1" "$(store_count)"
+teardown_env
+
+# --- AC1 (repeat fresh post): exactly-once must survive a re-invocation, not
+# only a crash-resume. A prior run that already landed the identical payload is
+# reconciled instead of posted again. ---
+new_env; write_request; write_gate
+printf 'ambiguous\n' >"$STUB_DIR/post-plan"
+first="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+assert_eq "first post landed one review" "1" "$(store_count)"
+assert_eq "first post is ambiguous" "ambiguous" "$(jq -r '.status' <<<"$first")"
+second="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1100)"
+assert_eq "a repeat fresh post reconciles instead of posting" "posted_reconciled" "$(jq -r '.status' <<<"$second")"
+assert_eq "a repeat fresh post leaves EXACTLY ONE review" "1" "$(store_count)"
+teardown_env
+
+# --- Malformed head response must fail closed as a transport error, never be
+# misread as a moved head (which would silently discard a postable review). ---
+new_env; write_request; write_gate
+printf 'malformed\n' >"$STUB_DIR/head-plan"
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000 >/dev/null 2>&1
+head_rc=$?
+set -e
+assert_eq "a malformed head response fails closed" "74" "$head_rc"
+assert_eq "a malformed head response posts nothing" "0" "$(store_count)"
+assert_eq "a malformed head response is never recorded as head_moved" "0" \
+  "$(grep -rl head_moved "$STATE" 2>/dev/null | wc -l | tr -d ' ')"
+teardown_env
+
+# --- gc must validate its clock input: a non-numeric --now-epoch previously
+# made the within-window comparison error out and fall through to deletion,
+# discarding the evidence needed to reconcile an uncertain remote result. ---
+new_env; write_request; write_gate
+printf 'lost\n' >"$STUB_DIR/post-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+pending_file="$(run_dir_for "$run_id")/pending-post.json"
+set +e
+bash "$POST" gc --repo "$REPO" --pr "$PR" --now-epoch not-a-number >/dev/null 2>&1
+gc_rc=$?
+set -e
+assert_eq "gc rejects a non-numeric --now-epoch" "2" "$gc_rc"
+assert_eq "a rejected gc clock never deletes reconcile evidence" "true" "$([ -e "$pending_file" ] && printf true || printf false)"
 teardown_env
 
 printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"

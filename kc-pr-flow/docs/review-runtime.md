@@ -267,9 +267,20 @@ bash scripts/review-post.sh resume --repo OWNER/REPO --pr NUMBER --self BOT_LOGI
 
 Resume reconciles against `GET .../reviews` before ever retrying — if the earlier POST already
 landed, it records `post.result{outcome: posted_reconciled}` and posts nothing; only a marker-absent,
-head-unchanged pending payload gets one bounded retry. A pending payload past
-`KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 604800 / 7 days) is swept with `gc`, which never
-removes a within-window unreconciled payload.
+head-unchanged pending payload gets one bounded retry. That retry additionally requires a reconcile
+read that positively confirms remote state, so resume can report `ambiguous` twice for reasons other
+than the original POST:
+
+| `reason` | Meaning | What to do |
+|----------|---------|-----------|
+| `reconcile_unavailable` | The `list` response was not a usable reviews array, so "marker absent" was never established. | Fix transport/API access, then resume again. Pending is kept. |
+| `reconcile_unconfirmed` | Marker absent, but less than `KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS` (default 60) has elapsed since `post.intent`. The reviews list is read-after-write eventually consistent, so an absent marker here may just be lag. | Resume again after the window; retrying now could duplicate a review that did land. |
+
+`post` performs the same marker reconcile *before* its own POST, so re-running `post` for a payload
+that already landed reports `posted_reconciled` instead of posting a second review. A pending payload
+past `KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 604800 / 7 days) is swept with `gc`, which never
+removes a within-window unreconciled payload and rejects a non-numeric `--now-epoch` rather than
+risk expiring evidence early.
 
 ## Deferred capabilities
 

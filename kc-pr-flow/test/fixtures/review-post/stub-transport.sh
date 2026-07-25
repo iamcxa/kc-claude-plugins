@@ -14,9 +14,22 @@
 #                     lost      -> do NOT record, return http_status 0
 #                     failed    -> do NOT record, return http_status 422
 #                   Missing/empty line defaults to `posted`.
+#   list-plan       one behavior per `list` call, consumed top-down. Models the
+#                   reconcile read failing to positively confirm remote state:
+#                     faithful -> return the recorded store (default)
+#                     lag      -> return {"reviews":[]} even though the store is
+#                                 non-empty (GitHub read-after-write lag: a just
+#                                 -created review is not visible yet)
+#                     unusable -> return {"reviews":null} (exit 0, unusable body)
+#                   Missing/empty line defaults to `faithful`.
+#   head-plan       one behavior per `head` call, consumed top-down:
+#                     faithful  -> return {"head_sha": <head>} (default)
+#                     malformed -> return {} (exit 0, no head_sha)
 #   reviews.jsonl   append-only store of recorded reviews (the "remote" state).
 #   self            the self login the stub attributes recorded reviews to.
 #   post-count      internal counter of POST attempts.
+#   list-count      internal counter of `list` calls.
+#   head-count      internal counter of `head` calls.
 set -uo pipefail
 
 stub_dir="${KC_STUB_DIR:?KC_STUB_DIR must be set}"
@@ -33,16 +46,44 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
+# Consume the next line of a per-call plan file, defaulting when absent.
+# $1 plan basename, $2 counter basename, $3 default behavior.
+next_plan() {
+  local plan_file="$stub_dir/$1" count_file="$stub_dir/$2" fallback="$3"
+  local count=0 behavior
+  [ -f "$count_file" ] && count="$(cat "$count_file")"
+  behavior="$fallback"
+  if [ -f "$plan_file" ]; then
+    behavior="$(sed -n "$((count + 1))p" "$plan_file")"
+    [ -n "$behavior" ] || behavior="$fallback"
+  fi
+  printf '%s\n' "$((count + 1))" >"$count_file"
+  printf '%s' "$behavior"
+}
+
 case "$op" in
   head)
-    printf '{"head_sha":%s}\n' "$(jq -Rn --arg h "$(cat "$stub_dir/head")" '$h')"
+    case "$(next_plan head-plan head-count faithful)" in
+      malformed) printf '{}\n' ;;
+      *) printf '{"head_sha":%s}\n' "$(jq -Rn --arg h "$(cat "$stub_dir/head")" '$h')" ;;
+    esac
     ;;
   list)
-    if [ -f "$stub_dir/reviews.jsonl" ]; then
-      jq -s '{reviews: .}' "$stub_dir/reviews.jsonl"
-    else
-      printf '{"reviews":[]}\n'
-    fi
+    case "$(next_plan list-plan list-count faithful)" in
+      lag)
+        printf '{"reviews":[]}\n'
+        ;;
+      unusable)
+        printf '{"reviews":null}\n'
+        ;;
+      *)
+        if [ -f "$stub_dir/reviews.jsonl" ]; then
+          jq -s '{reviews: .}' "$stub_dir/reviews.jsonl"
+        else
+          printf '{"reviews":[]}\n'
+        fi
+        ;;
+    esac
     ;;
   post)
     body="$(cat)"
