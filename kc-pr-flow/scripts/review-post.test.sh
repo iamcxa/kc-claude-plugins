@@ -60,7 +60,7 @@ teardown_env() {
 }
 
 write_request() {
-  local body="${1:-Looks good overall.}"
+  local body="Looks good overall."
   REQUEST="$STUB_DIR/request.json"
   jq -S -c -n --arg repo "$REPO" --argjson pr "$PR" --arg base "$BASE" \
     --arg head "$HEAD" --arg config "$CONFIG" --arg commit "$HEAD" \
