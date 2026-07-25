@@ -625,6 +625,18 @@ plumbing as the expensive half; the ruling removes part of the cheap half. Appet
 session with more headroom, not a smaller stated budget — per the stage-def's forcing-budget
 clause, a variance is a signal to investigate, not a number to hit.
 
+### Feedback Cycles
+
+- Cycle 1: REJECTED — validation reviewer panel (`code-reviewer` + `silent-failure-hunter`, converged unprompted on the same three sites; `agy` cross-model confirmed after `codex` failed on quota); surface ~1.64M subagent tokens vs estimate 1 session (~769K, [[e2e-expect-grammar-permutations]] being the only comparable that shipped) (213%); AC narrowed: AC-4 re-scoped mid-implementation from repair-loop token cost to the SKILL.md reduction plus structural consumption, after the byte measurement inverted (472 prose vs 974 compact JSON).
+
+Both design-reset triggers fired on this cycle — past the 2x tolerance and a narrowed AC — so
+the reset decision is recorded before any further round rather than after it. Where the budget
+went is the load-bearing fact: ~793K of the ~1.64M (48%) was spent in ideation across four
+correction rounds, against 363K to actually build it. This entity did not overrun on
+construction; it overran on deciding, and two of those four rounds existed only to correct
+first-officer errors (a wrong root-cause diagnosis of the AC-scan break, and a swapped
+attribution of which error class gains repairability).
+
 ## Stage Report: ideation
 
 - DONE: Reverse-recovery audit against merge target
