@@ -83,9 +83,21 @@ not knowable here). `post` also reconciles against the marker *before* its own P
 invocation of an already-landed payload settles as `posted_reconciled` rather than posting twice. `gc` expires an unreconciled pending
 payload after `KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 604800s / 7 days) but never within its
 window — `resume`/`gc` are never gated by the rollback flag, so rolling back never deletes evidence
-needed to reconcile an uncertain remote result. There is no *active* daemon preauthorization gate
-yet (typed decision state + coverage + fresh head/idempotency recheck before an autonomous post);
-the rollback flag defaulting off is the entire daemon-safety mechanism today, by absence.
+needed to reconcile an uncertain remote result.
+
+**Autonomous (daemon) posting.** A caller with no human at §6c cannot produce the interactive
+receipt — `human_confirmed` is a claim only the human path may make — so it presents
+`kc-pr-flow.autonomous-post-gate/v1` instead: no `human_confirmed` field, a closed key set that
+refuses one being smuggled in, and a binding to the `review_key` + `head_sha` it authorizes, which
+`review-post.sh` checks against the request and refuses on mismatch. `reference/pr-review-loop.md`
+directs the daemon to build that gate rather than approve §6c on the user's behalf, and to enable the
+once-only path so an interrupted iteration reconciles instead of reposting — the duplicate guard is
+the durable idempotency marker, not the next iteration's `submittedAt` observation. Rollback still
+governs: with the flag off, an autonomous gate authorizes nothing.
+
+Still deferred, so do not read the above as the full preauthorization gate: the autonomous gate
+carries no event ceiling and no expiry, and nothing rechecks a moved head or refuses an autonomous
+post whose typed decision reports required coverage gaps. Those are the remaining slices.
 See `reference/review-runtime.md` § "Once-only posting" for the full protocol.
 
 Maintainer checks:

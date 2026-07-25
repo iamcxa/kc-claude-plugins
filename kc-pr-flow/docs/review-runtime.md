@@ -287,11 +287,15 @@ risk expiring evidence early.
 This increment deliberately stops at terminal interactive collation and measurement; the once-only
 posting protocol above is the increment-2.3 capability that was originally deferred here.
 Crash-safe lock recovery and PID-reuse handling, verified predecessor lineage, and append/compaction
-performance remain deferred, along with an *active* daemon preauthorization gate (typed decision
-state, required coverage, and a fresh head/idempotency recheck before an autonomous post) —
-`KC_PR_FLOW_ONCE_ONLY_POST` defaulting off is the entire daemon-safety mechanism today, by absence
-rather than an enforced allow-list. Do not interpret a receipt, decision, reserved event name, or
-successor hint as authority for any of those still-deferred actions.
+performance remain deferred.
+
+An autonomous caller (the daemon) now has an authorization of its own rather than approving the human
+gate on the user's behalf: `kc-pr-flow.autonomous-post-gate/v1`, which has no `human_confirmed` field
+to forge and is bound to the `review_key` and `head_sha` it authorizes, refused on mismatch. What is
+still deferred is the rest of a preauthorization contract — **no event ceiling, no expiry**, no fresh
+head recheck immediately before the post, and no refusal when the typed decision reports required
+coverage gaps. `KC_PR_FLOW_ONCE_ONLY_POST` off still denies every caller. Do not interpret a receipt,
+decision, reserved event name, or successor hint as authority for any of those still-deferred actions.
 
 ## Roll back
 

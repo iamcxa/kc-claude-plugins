@@ -1752,12 +1752,22 @@ Then re-present the tables and options.
 
 ## Step 7: Post Review
 
-Before any GitHub mutation, require the exact closed receipt returned by
-`review_interactive_confirm_post` and validate it with
-`review_interactive_post_gate_valid`. Its schema must be
-`kc-pr-flow.interactive-post-gate/v1`; its effective event and complete nested decision-bound
-confirmation are the sole posting authority. A missing, decisionless, malformed, or event-edited
-receipt blocks Step 7. Never reconstruct posting authority from the selected option or prose.
+Before any GitHub mutation, require a closed authorization receipt. **Never reconstruct posting
+authority from the selected option or prose.**
+
+**Interactive (a human is at §6c).** Require the exact receipt returned by
+`review_interactive_confirm_post` and validate it with `review_interactive_post_gate_valid`. Its
+schema must be `kc-pr-flow.interactive-post-gate/v1`; its effective event and complete nested
+decision-bound confirmation are the sole posting authority. A missing, decisionless, malformed, or
+event-edited receipt blocks Step 7.
+
+**Autonomous (no human is at §6c — the daemon).** There is nobody to confirm, so the interactive
+receipt cannot honestly be produced: `human_confirmed` stays a claim only the human path may make.
+Build `review_autonomous_post_gate "$REVIEW_KEY" "$HEAD_SHA" "$EFFECTIVE_EVENT" daemon` instead. It
+names the review it authorizes, and `review-post.sh` refuses it if the review key or head does not
+match the request — an interactive gate has a human to notice it being used on the wrong thing, a
+replayed autonomous one has nobody. Autonomous posting is only reachable through the once-only path
+below; with the rollback flag off, an autonomous gate authorizes nothing at all.
 
 **Once-only posting path — `KC_PR_FLOW_ONCE_ONLY_POST=on` only.** Unset or any other value skips
 straight to "Legacy posting path" below, byte-identical to today. When `on`, `scripts/review-post.sh`
