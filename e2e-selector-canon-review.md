@@ -168,3 +168,91 @@ Verified by exercising them against a real snapshot, not by reading the branch.
 Path item 4 of the reviewed route — replacing raw `is visible` in the runner and
 verifier with the compiler's snapshot-grep — moved to
 [[e2e-guard-eval-fallback-removal]], which owns the divergence question.
+
+## Stage Report: implementation
+
+- DONE: `compiler/lib/selector-translate.js` — add the `text=V` branch.
+  RED recorded (10 tests, 7 failing on the new behavior) before implementing;
+  GREEN after — commit `4f72e49`. `compiler/test/selector-translate.test.js`
+  exercises `text=AlphaBtn`/`text=GammaLabel` against the entity's own
+  empirical-record snapshot fixture via a real `grep -F` subprocess (not a JS
+  string compare) plus a negative control (`text=NotPresent` must NOT hit) —
+  satisfies AC-3 by exercising, not by reading the branch.
+- DONE: `scripts/lint-mapping.sh` — remove CLASS 1, fix CLASS 3.
+  Both enforcement blocks deleted (kept CLASSES 2/4/5); header comment,
+  `usage()`, and the two test fixtures/smoke script that quoted the old class
+  list updated to match. Empirically re-verified against the 5 real carlove
+  mapping files: 3/5 pass outright, the 2 remaining failures are exclusively
+  `>> nth=N` (CLASS 2, still correctly banned) — zero failures from CLASS 1/3.
+- DONE: Full suite once at the exit, after scoped tests are green.
+  `npm test` (`node --test compiler/test/*.test.js`): 637/637 passing,
+  including the 122 backward-compat `role=X[name=Y]` assertions in
+  `codegen.test.js` (unchanged behavior — falsified by any edit to the
+  existing role-form branches, which were not touched).
+- DONE: Remove the executability claim.
+  `CLAUDE.md` § Selector Priority now states `selector:` is a locator DSL
+  translated by the compiler for `expect:`/visibility checks — and precisely
+  scopes the one place that's still literal: `click`/`fill` pass the raw
+  value to `agent-browser` unless `css_selector:` is set (verified by reading
+  `codegen.js`'s click/fill cases, not assumed — see Summary). Same statement
+  added to `agents/e2e-mapper.md`. AC-2 grep swept clean outside `CHANGELOG.md`
+  (release-please-owned, not hand-edited per repo convention).
+- DONE: Demote `[role][aria-label]`.
+  Now priority item 4 in `CLAUDE.md` and `agents/e2e-mapper.md`, "use ONLY
+  when the DOM genuinely carries a literal `aria-label`" — `role=<r>[name=…]`
+  and `text=<v>` are the new items 2-3 (primary/native).
+- DONE: Document `css_selector:`.
+  `CLAUDE.md` § Selector Priority: field, read site (`resolver.js:62`), and
+  both consumers (`click` eval-path, required for `runtime_ref` SC-1032
+  sensitive fills) — traced from `codegen.js:1291,1343,1363`.
+- DONE: Collapse the restatements.
+  `CLAUDE.md` is the sole authority; `agents/e2e-mapper.md` and
+  `references/common-patterns.md` now point at it (mapper.md keeps a short
+  emit-order summary since it's a live agent prompt, not idle prose — its
+  own executability/priority claims were still required to be correct
+  in-place, not just cite elsewhere). `agents/e2e-flow-verifier.md`,
+  `docs/ci-integration.md`, `docs/debugging.md`, `skills/e2e-compile/SKILL.md`,
+  `skills/e2e-walkthrough/reference.md` corrected in place (small, table-row
+  restatements). `CHANGELOG.md` left untouched (historical + release-please
+  owned). See Summary for one deliberately-deferred file.
+- DONE: Resolve the contradictions.
+  CLAUDE.md §8/§9 resolved by the priority-list rewrite (bare `text=` no
+  longer sits under the nth-chord/find-subcommand items). `e2e-flow-verifier.md`
+  Critical Rule 9 and the `data-testid="value"'` example (`:324-325`) fixed.
+  `e2e-test-runner.md:550` — narrow wording-only fix (dropped "canonical",
+  clarified CLI-only scope); lines 548-561 (Rule 1c, Rule 2, the guarded
+  Eval-Fallback Removal Policy) otherwise untouched per the Do-Not-Touch
+  boundary.
+
+### Summary
+
+Code: `selectorToA11yPattern()` gained a `text=V` → `"V"` branch (RED→GREEN,
+commit `4f72e49`), and `lint-mapping.sh` stopped banning `role=X[name=Y]`/bare
+`text=` while keeping CLASS 2/4/5 (nth chord, has-text, find-subcommand-as-
+value) banned. Docs: `CLAUDE.md` is now the single Selector Priority
+authority; the false "selector: is executed directly / silently mishandled"
+claim is gone from every live doc (commit `70926ed`). Zero mapping files
+touched — verified via `git status` in the external carlove corpus used for
+empirical checks.
+
+One finding surfaced during implementation, not in the approved scope: the
+"`selector:` is never executed directly" framing in the entity body is true
+for `expect:`/visibility checks (`codegen.js:1572`) but **not** for `click`/
+`fill` — those pass the raw `selector:` value straight to `agent-browser
+click|fill` unless `css_selector:` is set (`codegen.js` click/fill cases,
+unchanged, "Do NOT touch"). I wrote the CLAUDE.md claim scoped to what's
+actually true rather than repeat the broader claim as given — restating a
+false invariant is the exact defect class this entity exists to fix. Whether
+`role=X[name=Y]`/`text=V` reliably resolve on the click/fill path was not
+covered by this entity's browser spike (which tested a11y-grep and `find
+role … click`, not `agent-browser click 'role=…'` directly) and is worth a
+follow-up spike — possibly under [[e2e-guard-eval-fallback-removal]] or a new
+entity, captain's call.
+
+Also deliberately deferred: `agents/e2e-test-runner.md` still calls
+`role=X[name=Y]`/bare `text=` "BANNED Playwright forms" at line 557 (inside
+the guarded 548-561 Rule 2) and restates that at Critical Rules 9/601 and
+observability line 491. Only line 550 was named in the contradiction list;
+fixing 596/601 without touching the guarded Rule 2 would have split the file
+against itself, so I left all four in place. Flagging for the captain rather
+than silently leaving it invisible.
