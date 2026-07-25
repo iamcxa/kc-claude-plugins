@@ -75,3 +75,42 @@ No event ceiling and no expiry on the autonomous gate (slice 2, `once-only-daemo
 
 ### Summary
 The daemon now posts under an authorization that says who granted it and which review it covers, instead of instructing a model to approve the human gate on the user's behalf — and it inherits #56's once-only machinery, so an interrupted iteration reconciles rather than reposting. Four commits: the gate schema plus the revived test group, the bound acceptance in `review-post.sh`, the daemon wiring and doc sync, and the Docker-free lint fallback.
+
+## Stage Report: validation
+
+Verdict: **PASS, with one decision for the captain.** Coordinator-driven: two fresh-context reviewers on distinct lenses, my own adversarial probing of the real CLI path, a claim-breaking spot-check, a cross-model round, and citation verification. Six defects were found and fixed during the round; none survives.
+
+### Per-AC results
+- **AC-1 — an interrupted iteration does not produce a second review.** PASS. `review-post.test.sh` drives an autonomous-gated post whose POST lands with no recorded result, then a second iteration: `posted_reconciled`, store count 1. Proven to bite: deleting the binding comparison in a scratch copy turned three assertions red (`expected [3], got [0]` twice, `expected [0], got [1]`), so the tests guard the invariant rather than decorate it.
+- **AC-2 — rollback still governs.** PASS. With the flag unset, a *valid* autonomous gate is refused (rc 3, zero reviews) — verified both by suite assertion and by hand against the real CLI.
+
+### Adversarial probing (mine, through the real CLI, not the function in isolation)
+Eight refusals with zero reviews written: null binding fields, missing binding fields, non-JSON, empty input, a JSON array, a smuggled `human_confirmed`, schema confusion (autonomous payload under the interactive schema name), and a wrong head. A positive control (correctly bound gate → posted) proves these are real discriminations, not blanket refusal.
+
+### Defects found and fixed this round
+1. **P1 — a forgeable interactive gate.** `review_post_gate_valid`'s interactive branch checked three predicates, so any process could hand-write `{schema, human_confirmed: true, effective_event}` and obtain unbound posting authority. The strict validator lives in SKILL.md, which runs only if the calling agent chooses to run it. Pre-existing code — but **this entity newly asserted it as a security property**, so the documentation was claiming a guarantee only prose enforced. Fixed at the enforcement point (closed key set + a confirmation object of the right schema agreeing on the event) rather than by softening the claim.
+2. **P2 — the binding was sound only by accident.** An unresolved (empty) head would have been matched by an equally empty gate field, with the later live-head check as the only thing preventing consequences. The branch now asserts the 40/64-hex shapes itself.
+3. **nit — `review_autonomous_post_gate` aborted** on an unbound variable under `set -u` when called with fewer than four arguments, contradicting its own comment. Arguments defaulted.
+4. **Coverage gap I found by checking my own intent**, not from any review: the outer key set is closed while the confirmation's is deliberately open (a real typed confirmation carries a decision and blocker evidence). Nothing pinned that, so a future tightening of the inner object would have silently rejected the typed path. Now covered.
+5. **Single-document input.** Unslurped, `jq -e` takes its status from the last document of a stream. I could not construct an exploit — any accepted stream still had to contain a genuinely valid, correctly bound gate — but "safe if you follow this argument" is a poor property at an authorization boundary. Both stages now slurp and require `length == 1`.
+6. **Verdict, not crash.** String type-guards now precede the hex tests; a non-string binding was already refused, but via a jq runtime error rather than a decision.
+
+### Reviewer disagreement, adjudicated against code
+The two reviewers split on defect 1. `silent-failure-hunter` called it P1; `code-reviewer` reported no P1, reasoning that the interactive path's validation happens upstream in SKILL.md. I sided with the former: that upstream is **prose**, executed only if an agent complies, while `review-post.sh` is by its own header the sole holder of posting authority. Worth recording that **all three of us — both reviewers and me — first tested only smuggling `human_confirmed` into the *autonomous* schema** (correctly refused). The hole was in the path everyone assumed legitimate.
+
+The cross-model round mislabelled the unguarded `$3`/`$4` as a CRITICAL BUG; it is latent, since the sole caller passes four arguments. Fixed for consistency, severity corrected here. Its genuinely new contribution was the jq stream semantics in defect 5.
+
+### Citations verified
+Every load-bearing `file:line` from both reviewers was checked against the file: the three-predicate interactive branch, zero `.confirmation` references pre-fix, the unguarded positional parameters, and CI invoking `review-shadow.test.sh` with no arguments (workflow line 192). **Zero fabricated citations**, so no reviewer round was discarded.
+
+### A red test that was wrong
+My own "empty head binding is refused" assertion failed, and the cause was the test, not the code: `write_auto_gate`'s `${2:-$HEAD}` substitutes a real head for an empty one, so the test had been sending a perfectly valid gate. Rebuilt with jq directly. Recording it because acting on that red signal would have meant breaking correct code to satisfy a broken test.
+
+### Evidence
+review-post **122 passed / 0 failed** (106 before this round), shadow **213 / 0**, full suite green. ShellCheck **v0.9.0 — CI's pinned version — clean**, run from the release tarball natively since the Docker daemon was down. **CI green on every pushed commit**, including the final `0d3eaac`; the CI log confirms `Run shadow parity tests: 211 passed` at `3cf6a2a`, so the 56 previously-dead assertions genuinely execute on Linux.
+
+### Correction-round budget
+One round. Estimate: bounded fixes to a slice already implemented. Actual: two fix commits plus a cross-model pass. Disposition: 6 found, **6 fixed, 0 declined, 0 fabricated**. Within tolerance; no design reset.
+
+### Named residual for the captain
+`review_post_cmd_post`'s pre-POST reconcile **fails open** when the reviews list read is unusable, where `resume` fails closed for the identical condition. Pre-existing from #56 — not introduced here — and it requires two coincident conditions: local durable state unavailable (wiped or reconfigured state dir) **and** an unusable remote list at that moment. The local cross-run check independently blocks the common crash-then-retry case. Making it symmetric would refuse even a genuinely first post while the reviews API is degraded, and would change availability for **every** caller, not just the daemon. Recommendation: carry it into slice 2 (`once-only-daemon-preauth-gate`), which is already building the preauthorization contract and is the right place to decide degraded-mode behaviour. Captain's call.
