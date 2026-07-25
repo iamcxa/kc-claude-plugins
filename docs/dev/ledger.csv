@@ -2,3 +2,4 @@ task_id, slug, dispatches, rework_rounds, wallclock_hours, tokens_if_known, diff
 te82apnehg989v4enz9e6wf6, workflow-verification-bootstrap, 3, 0, 2.5, ~461K, n/a, 
 fdkcs3m8jp2wnxh8bfd1cgzq, product-architecture-baseline, 5, 1, 0.8, ~550K, n/a, 
 50n4g9vyzdd12h03r6wskfkq, safe-resume-once-only-post, 5, 1, 18.2, ~896K, n/a,
+w7exen9fcfgbpz6c8z3j1kt9, daemon-once-only-posting, 2, 1, 4.6, ~419K, n/a,
