@@ -107,7 +107,10 @@ jobs:
       # an unpinned runner silently changes what this gate enforces, and a
       # contributor whose local ShellCheck is newer sees files reported clean
       # that CI then rejects. Bump VERSION and SHA256 together; the
-      # local-parity command lives in kc-pr-flow/CLAUDE.md.
+      # local-parity command lives in kc-pr-flow/CLAUDE.md. The artifact is
+      # x86_64, matching this job's ubuntu-latest runner; moving to an arm64
+      # runner means changing the URL and the hash together (the version guard
+      # below turns a mismatch into a failed step, not a wrong lint).
       - name: Install pinned ShellCheck
         env:
           SHELLCHECK_VERSION: v0.9.0
