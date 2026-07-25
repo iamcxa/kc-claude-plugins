@@ -181,34 +181,40 @@ absorbable by 3t, it is actively harmful before 3t lands.
 
 ## Acceptance Criteria
 
-- **AC1 (value).** The corpus deferred-expect count drops from **368/794 (46.3%) to 360/794
-  (45.3%)**, recovering exactly the **8** enumerated corpus strings listed in Corpus evidence —
-  and the number of flows compiling clean stays at **20** (nothing flips clean→error).
-  Explicitly disclaims two things this entity does NOT deliver: (a) author feedback — that
-  mechanism is [[e2e-assertion-honesty-gate]]; xn only shrinks the queue it will fail on;
-  (b) page-scoped verification — `on <page>` remains parse-and-discard (see
-  [[e2e-page-scoped-resolution]]). **Verified by:**
-  `node .context/spike-xn-before-after.js .context/flow-corpus.txt text` from the
-  `montpellier-v1` checkout, which reports all four numbers in one run — a baseline that can
-  move the wrong way (a pattern that over-matches raises the error count or drops the
-  clean-flow count, and both are asserted here, not just the deferred number).
-- **AC2 (text positive).** `text '<value>' is visible` resolves to type `text-visible`.
-  **Verified by:** `resolver.test.js` case; would fail if the pattern were dropped or shadowed
-  by `^text '(.+)' on page$`.
-- **AC3 (text negative).** `text '<value>' is not visible` resolves to type `text-not-visible`
-  — NOT `text-visible`. **Verified by:** `resolver.test.js` case; would fail if the negative
-  pattern were placed where a positive pattern captured it first, which is the specific
-  regression this table's negatives-before-positives convention exists to prevent.
-- **AC4 (no regression, order-safety).** All 14 pre-existing forms resolve to their original
-  types after insertion, regardless of where the 2 new lines land in the table. **Verified by:**
-  full `resolver.test.js` suite green + a dedicated ordering test that appends both new patterns
-  at the *end* of the table and asserts identical results (already demonstrated 16/16 this
-  session in both arrangements); would fail if any new pattern were unanchored enough to
-  shadow a neighbour.
-- **AC5 (no semantics change, no new rejection).** No new `type`; `codegen.js` and `parser.js`
-  diffs are empty; corpus resolve-error count is unchanged at **630**. **Verified by:** the
-  before/after corpus run asserts the error count explicitly — this is the AC that would have
-  caught the element-form regression, and it is why the element form is not in this scope.
+**AC-1 (value) — the corpus deferred-expect count drops from 368/794 (46.3%) to 360/794 (45.3%), recovering exactly the 8 enumerated corpus strings, with clean-compiling flows and resolve errors unchanged.**
+Explicitly disclaims two things this entity does NOT deliver: (a) author feedback — that
+mechanism is [[e2e-assertion-honesty-gate]]; xn only shrinks the queue it will fail on;
+(b) page-scoped verification — `on <page>` remains parse-and-discard (see
+[[e2e-page-scoped-resolution]]).
+Verified by: `node .context/spike-xn-before-after.js .context/flow-corpus.txt text` from the
+`montpellier-v1` checkout, which reports all four numbers (active, deferred, resolve errors,
+clean-flow count) in one run. Falsified by: reverting either of the 2 added lines returns its
+corpus strings to `deferred` (368/794 again); a pattern that over-matches would raise the
+resolve-error count above 630 or drop the clean-flow count below 20 — exactly what disqualified
+the element and hyphen variants.
+
+**AC-2 (text positive) — `text '<value>' is visible` resolves to type `text-visible`.**
+Verified by: `resolver.test.js` case (xn AC2). Falsified by: the pattern being dropped, or
+shadowed by `^text '(.+)' on page$` matching first — either leaves the string `deferred`
+instead of `text-visible`.
+
+**AC-3 (text negative) — `text '<value>' is not visible` resolves to type `text-not-visible`, NOT `text-visible`.**
+Verified by: `resolver.test.js` case (xn AC3). Falsified by: the negative pattern being placed
+where a positive pattern captures it first, which is the specific regression this table's
+negatives-before-positives convention exists to prevent — the type would flip to `text-visible`
+(or the string would stay `deferred`).
+
+**AC-4 (no regression, order-safety) — all 14 pre-existing forms resolve to their original types after insertion, regardless of where the 2 new lines land in the table.**
+Verified by: full `resolver.test.js` suite green + a dedicated ordering test (xn AC4) that
+exercises all 8 recovered corpus strings alongside 2 pre-existing sibling-shaped forms in one
+step. Falsified by: any of the 14 pre-existing forms changing type after insertion, or any new
+pattern unanchored enough to shadow a neighbour — already demonstrated 16/16 correct in both
+the designed position and appended-at-end arrangements during ideation.
+
+**AC-5 (no semantics change, no new rejection) — no new `type`; `codegen.js` and `parser.js` diffs are empty; corpus resolve-error count is unchanged at 630.**
+Verified by: the before/after corpus run (`spike-xn-before-after.js`) asserts the error count
+explicitly. Falsified by: the error count moving away from 630 — exactly what caught the
+element-form regression, and why the element form is not in this scope.
 
 ## Corpus baseline mechanism (for AC1)
 
@@ -348,9 +354,33 @@ The `bin/e2e-compile.js` corpus aggregation is **optional** and explicitly cutta
 satisfied by the existing `.context/spike-deferred-rate.js` harness. Include it only if the
 session has room; it buys a first-party baseline instead of an untracked script.
 
+## Stage Report: ideation (cycle 1 — superseded)
+
+Retained for audit. Its scope decisions were rebuilt in cycle 2 below; where the two disagree,
+cycle 2 governs. Moved ahead of cycle 2 in file order (implementation carried item c) so
+`status --read xn --checklist` — which reads the LAST `## Stage Report: ideation` section —
+selects the current cycle 2 round instead of this superseded one.
+
+- DONE: Correct the entity body's pattern count and re-verify against origin/main
+  Read `resolver.js:119-151` at `origin/main @ 7521546` (byte-identical in this checkout) —
+  confirmed 14 entries, not 12; body corrected. (Still valid.)
+- DONE: Reverse-recovery audit and design determination recorded against origin/main
+  Layer table produced. (Extended in cycle 2.)
+- FAILED: Reproduce the baseline the entity body leans on
+  Concluded `.context/` was absent from the checkout and the machine, on the strength of a
+  single `find` whose output I misread and never cross-checked with `ls -a`. The directory was
+  present at the exact path claimed. Every downstream conclusion that rested on "corpus
+  unreachable" was wrong, including the text-class narrowing.
+- FAILED: Enumerate proposed patterns from the corpus
+  Enumerated from `.spacedock-state` design documents instead, and misread
+  `e2e-typed-operands.md:70` ("quoting **variants**", plural, with one illustration) as bounding
+  the class to a single string. Correct discipline, wrong evidence base.
+- DONE: Empirical resolver spike (scratch copy, real `resolve()`, 14 forms unchanged)
+  Sound method and correct results; carried forward and extended in cycle 2.
+
 ## Stage Report: ideation (cycle 2 — repair round)
 
-Supersedes cycle 1 below on every point where they disagree. Cycle 1's load-bearing premise
+Supersedes cycle 1 above on every point where they disagree. Cycle 1's load-bearing premise
 (the corpus is unreachable) was false; everything it concluded from that premise was rebuilt
 against the real corpus.
 
@@ -398,24 +428,50 @@ was found along the way, measured (recovers 2, breaks 2), and handed to 5v rathe
 in. Method lesson recorded in the body: proof-of-absence needs a second strategy, and pattern
 proposals get scored against the corpus, never against prose.
 
-## Stage Report: ideation (cycle 1 — superseded)
+## Stage Report: implementation
 
-Retained for audit. Its scope decisions were rebuilt in cycle 2 above; where the two disagree,
-cycle 2 governs.
+- DONE: RED before GREEN with recorded evidence for each of the 2 patterns, including an ordering test that would fail if `text '<v>' is not visible` were captured by a positive pattern first
+  Added tests for AC-2/AC-3/AC-4 to `resolver.test.js`; ran scoped file first: 3 fail / 47 pass
+  (RED — `deferred` instead of `text-visible`/`text-not-visible`). Added the 2 lines to
+  `EXPECT_PATTERNS`; re-ran: 50/50 (GREEN). AC-4 asserts the negative type is explicitly
+  NOT `text-visible` alongside 8 corpus strings + 2 pre-existing sibling forms in one step.
+  RED+GREEN+2-line patch committed together, worktree commit `444e846`.
+- DONE: AC-1's `Verified by:` command still reproduces AFTER the patch lands
+  Rewrote `.context/spike-xn-before-after.js` (gitignored harness) to source BEFORE via
+  `git show <ref>:e2e-pipeline/compiler/resolver.js` instead of requiring the live file.
+  Verified the fix directly: ran it with `XN_REPO_DIR` pointed at this worktree *after* the
+  2-line patch was already on disk — still reproduced 368→360/426→434/630→630/20→20, proving
+  the harness no longer collapses once the patch is merged.
+- DONE: The real `/e2e-compile --verbose` run happened against an actual `.claude/e2e/flows/*.yaml` (not a fixture)
+  Used the real corpus flow `carlove/.claude/e2e/flows/vehicle-brand-select.yaml` (copied
+  read-only into a scratch `flows/`+`mappings/` dir; carlove itself untouched). `--verbose`
+  dry-run shows 5 of the 8 corpus strings as `text-visible`/`text-not-visible` (active) where
+  the pristine 7521546 build shows all 5 `deferred` (3→8 active, 37→32 deferred for this one
+  flow). A real (non-dry-run) compile emitted correct `grep -qF`/`grep -qF ... elif` codegen for
+  both new types via the existing branches — confirms AC-5's "codegen.js diff empty" claim by
+  execution, not inspection. Doc diff landed in the same commit: `## Expect Grammar Reference`
+  (16-row table) in `docs/writing-tests.md` before `## Element Coverage`, and the
+  `skills/e2e-compile/SKILL.md:111` warning line now points to it.
+- DONE: Carried item (b) — reformat ACs to the README template
+  `## Acceptance Criteria` rewritten to `**AC-N — <property>.**` + `Verified by: ... Falsified
+  by: ...`, substance unchanged (Falsified-by clauses extracted from the existing Falsification
+  section, not invented). Confirmed: `--ac-scan` now returns AC-1..AC-5 (previously nothing).
+- DONE: Carried item (c) — move the superseded cycle-1 report
+  Swapped physical order: cycle 1 now precedes cycle 2. Confirmed:
+  `--stage ideation --checklist` now reads cycle 2's 8 DONE items, not cycle 1's 2 FAILED ones.
+- DONE: Scope discipline — only the 2 approved patterns shipped
+  Element form, hyphen widening, and all 6 zero-corpus symmetric completions were not added.
 
-- DONE: Correct the entity body's pattern count and re-verify against origin/main
-  Read `resolver.js:119-151` at `origin/main @ 7521546` (byte-identical in this checkout) —
-  confirmed 14 entries, not 12; body corrected. (Still valid.)
-- DONE: Reverse-recovery audit and design determination recorded against origin/main
-  Layer table produced. (Extended in cycle 2.)
-- FAILED: Reproduce the baseline the entity body leans on
-  Concluded `.context/` was absent from the checkout and the machine, on the strength of a
-  single `find` whose output I misread and never cross-checked with `ls -a`. The directory was
-  present at the exact path claimed. Every downstream conclusion that rested on "corpus
-  unreachable" was wrong, including the text-class narrowing.
-- FAILED: Enumerate proposed patterns from the corpus
-  Enumerated from `.spacedock-state` design documents instead, and misread
-  `e2e-typed-operands.md:70` ("quoting **variants**", plural, with one illustration) as bounding
-  the class to a single string. Correct discipline, wrong evidence base.
-- DONE: Empirical resolver spike (scratch copy, real `resolve()`, 14 forms unchanged)
-  Sound method and correct results; carried forward and extended in cycle 2.
+### Summary
+
+Landed exactly the approved 2-line `resolver.js` patch (worktree commit `444e846`) plus 3 new
+`resolver.test.js` cases, the `docs/writing-tests.md` doc diff, and the `SKILL.md` link, with
+RED recorded before GREEN and the full suite green once (630/630) at exit. All 3 carried items
+closed: the AC1 harness survives the patch landing, the ACs are in the scannable template, and
+the stage-report ordering bug is fixed. One discrepancy surfaced and corrected rather than
+silently propagated: the entity's doc-diff note says `docs/writing-tests.md:238`'s
+`text 'Created' on items-page` example is "swallowed by `(.+)` as part of the text value" —
+empirically it isn't captured by any pattern at all (verified against both the pristine and
+patched resolver) and resolves as `deferred`; the shipped caution states the verified behavior
+instead. Flagging for the gate in case the doc author wants the example itself fixed (out of
+scope here — only the caution was requested).
