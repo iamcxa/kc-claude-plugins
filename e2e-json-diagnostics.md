@@ -89,6 +89,11 @@ candidates would invert the sprint's dependency.
 
 ## Design — `--json` output shape, tiered structure, additive compatibility
 
+**Scope ruling, captain, 2026-07-26: NO `code` field in this entity.** The channel ships
+structured fields only; the error-code vocabulary belongs to [[e2e-schema-contract]] (1d) and a
+follow-up adds `code` once 1d lands. See "Escalation — RESOLVED" for the rationale and the
+follow-up's definition. Every shape below is `code`-less by ruling, not by oversight.
+
 **Shape (single-flow mode):**
 ```json
 {
@@ -97,7 +102,6 @@ candidates would invert the sprint's dependency.
   "stats": { "total": 12, "activeExpects": 9, "deferredExpects": 0, "resolveErrors": 3 },
   "errors": [
     {
-      "code": "element_ambiguous",
       "step_id": "select-all-tab",
       "field": "element",
       "got": "tab_all",
@@ -118,7 +122,10 @@ with prose on stdout is worse than either alone — an agent parsing stdout woul
 prose lines out of the very channel this entity exists to make trustworthy.
 
 **Exit codes are unchanged.** No per-class exit codes (Non-goal 3) — process exits 0 (success) /
-1 (failure) exactly as today; class distinction lives in `errors[].code`, not the exit code.
+1 (failure) exactly as today. Class distinction is not carried by the exit code, and (per the
+ruling) not yet by a `code` field either; until 1d lands, a consumer that must dispatch by class
+matches on `message`. That interim cost is named honestly in "Escalation — RESOLVED" rather than
+hidden — it is the accepted price of not improvising a vocabulary in 1d's territory.
 
 **Two-tier error structure, and why the split falls where it does.** Every error the compiler
 raises today falls into one of two families:
@@ -126,20 +133,24 @@ raises today falls into one of two families:
 - **Tier 1 — resolution errors about a named symbol that has a home in the symbol table**
   (`resolveNavigate`'s page lookup, `resolveElement`'s expect-side lookup, and the click/fill
   inline lookups in both `resolve()` and `resolveMultiSite()`). These are repairable FROM DATA
-  THE COMPILER ALREADY HAS — the whole point of this entity. Full shape: `code`, `step_id`,
-  `field`, `got`, `candidates`, `message`.
+  THE COMPILER ALREADY HAS — the whole point of this entity. Full shape: `step_id`, `field`,
+  `got`, `candidates`, `message`.
 - **Tier 2 — structural/type errors** (`parser.js`'s ~56 validation errors, plus
-  `resolver.js`'s `no_type_field`, `unknown_step_type`/`action_format_mismatch`
-  (`parseActionString`), `unknown_runtime_ref`, and `resolveMultiSite`'s
-  `missing_site_qualifier`/`unknown_site`). None of these name a symbol with a "did you mean"
-  answer sitting in a table. `{code, message}` only.
+  `resolver.js`'s no-type-field, unknown-step-type / action-format-mismatch
+  (`parseActionString`), unknown-runtime-ref, and `resolveMultiSite`'s
+  missing-site-qualifier / unknown-site). None of these name a symbol with a "did you mean"
+  answer sitting in a table. `{message}` only.
+
+The tier split survives the `code` ruling intact, because the split was never about codes — it
+is about **whether `candidates` has real data behind it**. Tier 1 carries five fields; tier 2
+carries one. When 1d lands, `code` is added to both tiers without re-shaping either.
 
 This is a semantic split, not a size-driven cut: **`candidates` only exists where the compiler
 already computed the closest-thing** (the collision table for ambiguous elements; nothing new is
 computed for anything else). This directly answers whether fuzzy matching belongs here: **no** —
-`candidates` for `element_not_found`/`page_not_found` is `[]` today and stays `[]` until (if
-ever) a fuzzy-match feature is separately scoped; Levenshtein-style suggestion is new detection
-logic, explicitly cut (Non-goals).
+`candidates` for the element-not-found and page-not-found branches is `[]` today and stays `[]`
+until (if ever) a fuzzy-match feature is separately scoped; Levenshtein-style suggestion is new
+detection logic, explicitly cut (Non-goals).
 
 **Additive compatibility strategy — the load-bearing implementation risk, flagged now.**
 `resolver.js`'s `errors` return field is an array of PLAIN STRINGS today, depended on
@@ -158,30 +169,37 @@ An object at any of these sites prints `ERROR: [object Object]` or throws
 `TypeError: e.includes is not a function`. The fix is **additive, not a type change**:
 `resolve()`/`resolveMultiSite()` gain a NEW parallel return field, `errorDetails` (same length
 and order as `errors` — Tier-1 sites populate the full shape, Tier-2 sites populate
-`{code, message}` only). `errors: string[]` is not edited at any existing call site, so all six
+`{message}` only). `errors: string[]` is not edited at any existing call site, so all six
 consumers above need zero changes and are safe by construction, not by care. `parser.js` stays
 untouched entirely: `compile()` already returns early on a parse failure before `resolve()`/
 `resolveMultiSite()` ever runs (`compiler.js:52-56`), so parse errors and resolve errors are
 never in the same array at the same time — the `--json` boundary wraps `parseResult.errors`
-generically as `errorDetails: parseResult.errors.map(m => ({code: 'compile_error', message: m}))`
-only at the point of building the JSON response, never touching `parser.js` itself.
+generically as `errorDetails: parseResult.errors.map(m => ({message: m}))` only at the point of
+building the JSON response, never touching `parser.js` itself.
 
-**Where `candidates` come from for `element_ambiguous` (today, no fuzzy match needed):**
+**Where `candidates` come from for the ambiguity branch (today, no fuzzy match needed):**
 `resolveElement` (`resolver.js:157-173`) already has `collisionsTable.get(elemName)` — the exact
 list of pages the ambiguous element is defined on. Today that list is interpolated into the
 message string ("found on: X, Y") and thrown away as structured data; `candidates` for this
 class is that same array, exposed as JSON instead of English — zero new computation.
 
-**Provisional code vocabulary (recommendation, not a decision — see Escalation).** Named
-descriptively after what the compiler already emits, not invented as a taxonomy:
-`page_not_found`, `no_url_pattern`, `element_ambiguous`, `element_not_found`,
-`unknown_runtime_ref`, `no_type_field`, `unknown_step_type`, `action_format_mismatch`,
-`missing_site_qualifier`, `unknown_site`, and a generic `compile_error` fallback for anything
-from `parser.js`. `[[e2e-page-scoped-resolution]]`'s two new message shapes (`page 'P' not found
-in mapping` for a stated-but-undefined page — reuses `page_not_found`; `element 'X' not found on
-page 'P' (found on: Y)` — a new `element_not_found_on_page` code, `candidates` = the union of the
-"found on" page(s) and any `collisions.get(elemName)` entries per 3t's own point 7) slot into
-this vocabulary without a re-shape — the whole reason this entity is sequenced first.
+**How `3t` and `5v` are born structured without a `code` field.** This is what the reorder
+actually needs, and it does not depend on a vocabulary. `[[e2e-page-scoped-resolution]]`'s two
+new message shapes populate the same five fields the moment they are raised: `page 'P' not found
+in mapping` → `{step_id, field: 'page', got: 'P', candidates: [], message}`; `element 'X' not
+found on page 'P' (found on: Y)` → `{step_id, field: 'element', got: 'X', candidates: [Y ∪
+collisions.get('X')], message}` (the union per 3t's own point 7). `[[e2e-assertion-honesty-gate]]`'s
+deferred-expect refusals arrive the same way, with `field: 'expect'` and `got` = the unmatched
+string. No re-shape is needed when `code` is added later — the field set is stable, and `code`
+is purely additive on top of it.
+
+**Follow-up entity, to be filed so it is not lost: add `code` to `--json` errors once
+[[e2e-schema-contract]] (1d) lands.** Scope: one `code` field on each `errorDetails` object,
+drawn from 1d's published validation vocabulary, at the ~10 `errors.push` sites this entity
+already touches plus whatever 3t/5v have added by then. It is a small, mechanical follow-up
+precisely because this entity establishes the field-population plumbing and the tier split
+first — the expensive half is done here, the naming half waits for its owner. The captain's
+ruling records this dependency direction explicitly (see "Escalation — RESOLVED").
 
 ## Corpus evidence — measured this session (and a correction to this dispatch's own framing)
 
@@ -222,6 +240,20 @@ TIER-1 cases by flow (5 flows, 9 errors):
 The harness's tier split is the same one the Design section uses, so the AC-3 boundary
 ("`candidates` only where the compiler already computed them") is measured, not asserted:
 9 tier-1 vs 621 tier-2. `--detail` prints each tier-1 case with its full flow path.
+
+**The `CODE` column above is the harness's own analysis label, NOT a field the compiler emits.**
+Per the captain's ruling this entity ships no `code` field (see "Escalation — RESOLVED"); the
+labels exist so the measurement can name what it counted. Do not read this table as evidence for
+a code vocabulary — it is evidence for the tier split and for the population size, which is what
+the ruling actually turned on.
+
+**Reproducibility scope — machine-local, stated plainly.** `flow-corpus.txt` is 3286 absolute
+paths into other repos on this machine (`/Users/kent/Project/...`, `/Users/kent/conductor/...`),
+so this measurement and its harness are reproducible **on this machine at the stated paths**, not
+on a fresh clone and not in CI. This is why the harnesses stay `.context/`-excluded rather than
+committed: committing them would make the corpus ACs *look* CI-reproducible when they cannot be,
+which is a worse failure than an honest gap. The numbers themselves were independently
+reproduced by the FO from the persisted harness at the pinned ref.
 
 **Correction to this dispatch's own framing — measured, not assumed.** Section 3 cites "630
 resolve errors... These hard-fail today. Seed those" as the basis for choosing resolution-class
@@ -283,13 +315,15 @@ Verified by: the full existing suite (`npm test`) passing with zero source edits
 an edit to keep passing, or a diff touching an existing `errors.push` call site's string
 argument.
 
-**AC-3 — Tier-1 `candidates` are real data, never invented.** `element_ambiguous` errors carry
-`candidates` = the exact pages already in `collisionsTable` (`resolver.js:157-173`);
-`element_not_found`/`page_not_found` carry `candidates: []` — no fuzzy-match/distance algorithm
-is added.
+**AC-3 — Tier-1 `candidates` are real data, never invented.** Errors raised from the ambiguity
+branch (`resolver.js:157-173`, where `collisionsTable.has(elemName)`) carry `candidates` = the
+exact pages already in `collisionsTable`; errors raised from the not-found branches (element or
+page absent entirely) carry `candidates: []` — no fuzzy-match/distance algorithm is added.
+Stated by call site rather than by class name, since this entity emits no `code` field (ruling).
 Verified by: `--json` against the snapshotted `list-data-completeness` fixture — the `tab_all`
 (2-way) and `data_table` (9-way) ambiguous errors show `candidates` matching today's "found on:"
 lists; the existing `missing-element-flow.yaml`'s `nonexistent_button` shows `candidates: []`.
+Both fixtures live in `compiler/test/fixtures/`, so this AC is CI-reproducible on a fresh clone.
 Falsified by: `candidates` non-empty for a not-found error (proof of undisclosed fuzzy-matching),
 or an ambiguous error's `candidates` not matching `collisionsTable`'s pages.
 
@@ -297,8 +331,8 @@ or an ambiguous error's `candidates` not matching `collisionsTable`'s pages.
 wrong way, scoped to the class that genuinely fails today.** Repairing the 3 live
 ambiguous-element errors in `list-data-completeness.yaml` costs fewer tokens and does not
 require re-reading the full mapping YAML into context via `--json`'s `candidates`, versus
-today's prose-only stderr. Scoped to `element_ambiguous`/`element_not_found` only — corrected
-scope, see Corpus evidence: NOT `no_type_field` (this entity doesn't touch migration status) and
+today's prose-only stderr. Scoped to the tier-1 resolution class only — corrected scope, see
+Corpus evidence: NOT the no-type-field class (this entity doesn't touch migration status) and
 NOT deferred-expect (still a silent-pass hole per [[e2e-typed-operands]]/[[e2e-assertion-honesty-gate]],
 which would let the "before" case succeed by not failing).
 Verified by: two steps, both re-runnable verbatim. (a) The population claim — that this class is
@@ -310,6 +344,12 @@ the fixture snapshotted from that flow, recording token count + whether the mapp
 in full. Falsified by: the harness in (a) reporting a tier-1 count that no longer matches the
 3-error anchor the measurement is built on, or, in (b), the `--json` condition using
 equal-or-more tokens or still needing a full mapping re-read.
+**Reproducibility scope:** step (a) is verifiable **on this machine at the stated paths only** —
+`flow-corpus.txt` is 3286 absolute paths into other repos under `/Users/kent/Project` and
+`/Users/kent/conductor`, so neither it nor the harness can run on a fresh clone or in CI. Step
+(b)'s snapshotted fixture is CI-reproducible. The numbers are real and were independently
+reproduced by the FO from the persisted harness at the pinned ref; the limitation is on where
+they can be re-derived, not on whether they hold.
 
 **AC-5 — the SKILL.md prose is deleted, not supplemented (the pre-mortem's own guardrail).**
 `skills/e2e-compile/SKILL.md`'s Phase 3 "Present Results" (currently lines 94-189, 96 of 202
@@ -321,10 +361,12 @@ exactly the pre-mortem's failure mode), or the replacement exceeding ~40 lines b
 same per-mode prose recipes against JSON fields instead of collapsing them.
 
 **AC-6 — exit-code semantics unchanged.** `--json` introduces no new exit codes; 0 on success /
-1 on failure exactly as today, class distinction living only in `errors[].code`.
+1 on failure exactly as today. Error class is not encoded in the exit status (nor, per the
+ruling, in a `code` field) — the exit code answers only "did compilation succeed".
 Verified by: a CLI test asserting `result.status` for a success case (0) and a resolve-error case
-(1) under `--json`, matching the non-`--json` exit codes for the same fixtures. Falsified by: any
-exit code other than 0/1, or a code varying by error class.
+(1) under `--json`, matching the non-`--json` exit codes for the same fixtures. CI-reproducible
+on a fresh clone (repo fixtures only). Falsified by: any exit code other than 0/1, or an exit
+code varying by error class.
 
 ## Reverse-recovery audit (against `origin/main @ 529296d`)
 
@@ -348,7 +390,7 @@ checkout (per this dispatch's section 3), matching the tip cited throughout.
 `--json`-first flow, target under 40 lines: Phase 2 always adds `--json` to the CLI invocation
 (the skill is the agent-facing consumer this entity is about; human-prose mode stays available
 directly via CLI for anyone invoking the compiler outside the skill). Phase 3 becomes: parse the
-single JSON document from stdout; map `ok`/`stats`/`errors[].code`/`.message`/`.candidates` to
+single JSON document from stdout; map `ok`/`stats`/`errors[].message`/`.got`/`.candidates` to
 the existing presentation shapes — one field->line table replaces six prose-shape recipes.
 Whether to also surface `--json` as a user-facing flag in the Invocation table, versus the skill
 always using it internally without exposing it, is left open for the gate (Non-goals).
@@ -375,8 +417,8 @@ disk exactly as in non-`--json` mode — proving `--json` changes reporting, not
 
 Falsifiable in the harmful direction, matching the sprint's established bar (`xn`/`3t`):
 reverting the `errorDetails` addition returns `--json` output to a parse failure (proves the
-feature is real, not a no-op); a deliberately-introduced fuzzy-match "helpful guess" for
-`element_not_found` would show a non-empty `candidates` on the corpus's `'the'`/`'customer'`
+feature is real, not a no-op); a deliberately-introduced fuzzy-match "helpful guess" on the
+not-found branch would show a non-empty `candidates` for the corpus's `'the'`/`'customer'`
 cases — AC-3's test catches it, the intended guardrail against silent scope creep into new
 detection logic. AC-4 (value) is falsified in the direction that matters: if the `--json`
 condition needs equal-or-more tokens or still needs a full mapping re-read, the channel has NOT
@@ -394,59 +436,63 @@ Frontmatter `design:` left blank per ensign rules — gate to set it.
 ## Non-goals ("Happily NOT doing")
 
 Transcribed from the FO-authored scope above, plus what emerged during design:
-1. Not inventing an error-code enum unilaterally — the provisional vocabulary is a
-   recommendation for the gate; [[e2e-schema-contract]] (1d) owns the final word (Escalation).
+1. Not emitting a `code` field at all — settled by the captain's ruling, not merely "not
+   inventing an enum unilaterally". [[e2e-schema-contract]] (1d) owns the vocabulary and a named
+   follow-up adds `code` once 1d lands (Design; "Escalation — RESOLVED").
 2. Not changing any error's *detection* — every classification wraps an EXISTING
    `errors.push(string)` call; no error newly raised, none stops being raised, no message text
    changes.
 3. Not touching exit-code semantics — 0/1 only, unchanged.
 4. Not building a repair loop or auto-fixer — this entity emits repairable information;
    consuming it is the agent's (or a future entity's) job.
-5. Not adding fuzzy/nearest-match suggestion logic for `element_not_found`/`page_not_found` —
-   `candidates` there is `[]` by design, not a placeholder oversight (Design's Tier split).
+5. Not adding fuzzy/nearest-match suggestion logic on the element-not-found / page-not-found
+   branches — `candidates` there is `[]` by design, not a placeholder oversight (Design's Tier
+   split).
 6. Not touching `parser.js` — its ~56 error strings are wrapped generically only at the
    JSON-boundary in `compiler.js`, never edited at the source.
-7. Not migrating `carlove`'s 565 un-migrated v1-format flows (the `no_type_field` majority of the
+7. Not migrating `carlove`'s 565 un-migrated v1-format flows (the no-type-field majority of the
    630) — a corpus-owner action in another repo, same non-goal class as
    [[e2e-page-scoped-resolution]]'s Non-goal 4.
 8. Not deciding whether the skill surfaces `--json` as a user-facing flag versus always using it
    internally — flagged in Doc diff for the gate.
 
-## Escalation — the error-code vocabulary, and a sequencing conflict this dispatch didn't have
+## Escalation — RESOLVED by the captain, 2026-07-26
 
-Per this dispatch's section 5: codes should come from [[e2e-schema-contract]] (1d)'s vocabulary,
-not a private enum invented here. **New finding this session: 1d's own "Notes for ideation"
-states the opposite sequencing** — *"this must land before [[e2e-json-diagnostics]], because the
-structured error codes should be derived from the schema's validation vocabulary rather than
-invented ad hoc and then migrated"* (a cross-model reviewer's recommendation, already adopted
-into 1d's body). That conflicts with the FO's sequencing note in this entity's own body (this
-entity before `3t`/`5v` at the implementation boundary) — 1d-vs-gz ordering was never explicitly
-re-litigated by the FO's reorder, and 1d asserts it should come first specifically for the reason
-this section escalates.
+**The conflict as escalated.** This dispatch's section 5 said codes should come from
+[[e2e-schema-contract]] (1d)'s vocabulary, not a private enum. Ideation then found that **1d's
+own body asserts the opposite sequencing** (`e2e-schema-contract.md:41-42`): *"this must land
+before [[e2e-json-diagnostics]], because the structured error codes should be derived from the
+schema's validation vocabulary rather than invented ad hoc and then migrated"* — a cross-model
+reviewer's argument already adopted into 1d. That collided with the FO's reorder putting this
+entity first, and with 1d's own dependency on [[e2e-typed-operands]] (g5, backlog). Three-way,
+and not self-adjudicable by the working agent per the README's Judgment Escalation clause.
 
-**The options, with costs (not settled here):**
+**The ruling: split the entity. Ship the structured channel WITHOUT a `code` enum.** Emit
+`{step_id, field, got, candidates, message}`. `code` is dropped from this entity's scope
+entirely; 1d owns the vocabulary; a named follow-up (defined in Design) adds `code` once 1d
+lands.
 
-1. **Wait for 1d.** Correct per 1d's own note; no private enum ever exists. Cost: 1d itself
-   depends on [[e2e-typed-operands]] (g5, backlog, itself deferred behind
-   [[e2e-assertion-honesty-gate]] per g5's own body) settling whether operands move to typed
-   fields — a multi-entity dependency chain, entirely in backlog. Waiting blocks the entire
-   reason this entity was reordered to go first (3t/5v keep emitting unstructured prose
-   meanwhile, recreating the "two error dialects" problem the reorder exists to prevent).
-2. **Define a minimal provisional vocabulary now, that 1d adopts and/or renames.** The
-   recommendation in Design: descriptive names for what already exists, explicitly marked
-   provisional in code and in `docs/commands.md`. Cost: a rename when 1d lands is a compatible
-   migration for any `--json` consumer keying on `code` (nobody depends on it yet — this entity
-   is the first consumer) — bounded, not free, but small relative to the alternative.
-3. **Ship structured fields with no `code` at all** (`step_id`/`field`/`got`/`candidates`/
-   `message` only), deferring code assignment entirely. Cost: a consumer has to pattern-match on
-   `message` text to dispatch by error class — reintroducing the "read prose to find the class"
-   problem this entity exists to remove, just relocated onto a JSON field instead of stderr.
+**Why this dissolves the conflict instead of picking a winner:**
+- **The reorder is satisfied.** `3t` and `5v` refusals are born structured, because what they
+  actually need is the *fields*, not the names — see "How `3t` and `5v` are born structured
+  without a `code` field" in Design.
+- **No schema is improvised in 1d's territory.** The "invented ad hoc and then migrated" cost
+  1d's note warns about is not paid at all, rather than merely mitigated.
+- **g5 is not needed.** The value measurement stays on the resolution class, which hard-fails
+  today, so nothing waits on the silent-pass hole being closed.
 
-**Recommendation: option 2.** It unblocks the reorder's stated purpose; the "invented ad hoc"
-risk 1d's note warns about is mitigated by naming codes after what already exists rather than a
-speculative taxonomy; the migration cost when 1d lands is bounded and compatible. This is a
-recommendation for the gate, not a decision made here — if the gate prefers option 1 or 3, say
-so; option 1 effectively re-reverses the sprint order back to a captain-level call.
+**The justification is this entity's own measurement, not taste:** tier-1 is **9 of 630**;
+tier-2 is **621**. The `candidates` machinery — the part that needs a vocabulary to be useful
+for dispatch — serves 9 cases. The channel itself serves **two downstream entities**. Channel
+first, vocabulary later, is the better trade, and the numbers that establish it are the ones
+this ideation corrected and the FO independently reproduced (Corpus evidence).
+
+**Known interim cost, recorded rather than hidden.** Until 1d lands, a consumer that must
+dispatch by error class matches on `message` text — the cost this ideation originally raised
+against its own option 3. The ruling accepts it knowingly: it is bounded (one follow-up removes
+it), it affects only class-dispatch (not repair, which uses `got`/`candidates`/`field`), and
+there is no consumer keying on class today because this entity is the first consumer. Recorded
+so the follow-up's value is legible and does not get quietly dropped as "nice to have".
 
 ## Appetite, cut priority, pre-mortem
 
@@ -501,6 +547,14 @@ emission is one seam, threaded through four files) but flagged as the larger end
 session" given the file count — if it runs long, the cut priority above gives the order, not an
 extended budget.
 
+**The captain's `code` ruling shrinks this, and the estimate stands unchanged rather than being
+re-padded to fit.** Dropping `code` removes the vocabulary-assignment decision from every one of
+the ~10 `errors.push` sites (each addition is now purely mechanical field population) and removes
+the `docs/commands.md` vocabulary documentation entirely. The sizing above already described the
+plumbing as the expensive half; the ruling removes part of the cheap half. Appetite stays 1
+session with more headroom, not a smaller stated budget — per the stage-def's forcing-budget
+clause, a variance is a signal to investigate, not a number to hit.
+
 ## Stage Report: ideation
 
 - DONE: Reverse-recovery audit against merge target
@@ -532,9 +586,10 @@ extended budget.
   `no_type_field` noise and the still-silent deferred-expect class); real corpus flow
   `list-data-completeness.yaml` has exactly 3 live ambiguous errors, no synthetic seeding needed.
 - DONE: The error-code vocabulary is brought to the gate as a decision, not settled
-  "Escalation" lays out 3 costed options, recommends provisional-vocabulary, and surfaces a NEW
-  conflict: [[e2e-schema-contract]]'s own notes assert the opposite sequencing (1d before this
-  entity) that the FO's reorder never addressed.
+  Escalated with 3 costed options and the NEW conflict finding ([[e2e-schema-contract]]:41-42
+  asserts the opposite sequencing). **Captain ruled 2026-07-26** — split the entity, ship the
+  channel `code`-less, 1d owns the vocabulary, follow-up adds `code`. Recorded as
+  "Escalation — RESOLVED"; see Correction round 2.
 - DONE: The prose deleted from `skills/e2e-compile/SKILL.md` is counted and named
   Phase 3 "Present Results" is exactly lines 94-189 (96 of 202 lines), not "roughly 100";
   replacement target <40 lines, in "Doc diff" and AC-5.
@@ -547,8 +602,11 @@ edits an existing `errors.push(string)` call site, protecting five identified ex
 from silent breakage. Corrected the dispatch's "630 hard-fail" framing via a real corpus spike:
 only 9 cases are the repairable class the value AC is about, and a real un-seeded corpus flow
 covers exactly that measurement. Escalated the error-code vocabulary with 3 costed options,
-surfacing a new sequencing conflict against `e2e-schema-contract`'s own notes. Six ACs, a full
-reverse-recovery audit, and a doc diff recorded; `design: required` for the gate to set.
+surfacing a new sequencing conflict against `e2e-schema-contract`'s own notes; **the captain
+ruled the entity split — the channel ships `code`-less, 1d owns the vocabulary, a named follow-up
+adds `code`** (applied in Correction round 2, justified by this entity's own 9-vs-621 tier
+split). Six ACs, a full reverse-recovery audit, and a doc diff recorded; `design: required` for
+the gate to set.
 
 ### Correction round 1 — spike durability (FO-requested, scoped)
 
@@ -573,3 +631,39 @@ Repaired, design untouched:
 Design, ACs, the additive `errorDetails` strategy, the SKILL.md line range, and the escalation
 section are unchanged — per the FO, the escalation stays open and costed for the captain's ruling
 on the `e2e-schema-contract` sequencing conflict.
+
+### Correction round 2 — captain's ruling applied: no `code` field (scoped)
+
+The captain ruled on the escalation: **split the entity, ship the structured channel without a
+code enum.** `code` is dropped from this entity's scope entirely; [[e2e-schema-contract]] (1d)
+owns the vocabulary; a named follow-up adds `code` once 1d lands. Applied:
+
+- **Escalation section rewritten as RESOLVED** with the ruling's rationale — the conflict is
+  dissolved rather than won: the reorder is satisfied (3t/5v need the *fields*, not the names),
+  no schema is improvised in 1d's territory, and g5 is not needed because the value measurement
+  stays on the resolution class. Justification recorded as an argument from this entity's own
+  data — tier-1 is 9 of 630, tier-2 is 621, so `candidates` serves 9 cases while the channel
+  serves two downstream entities.
+- **`code` removed from every shape**: the JSON example, tier-1 (`{step_id, field, got,
+  candidates, message}`), tier-2 (`{message}`), the `parser.js` boundary wrap, the SKILL.md
+  field mapping, AC-6's exit-code clause, and Non-goal 1. The tier split survives intact — it
+  was always about whether `candidates` has real data, never about codes.
+- **Class names replaced by call-site descriptions** in AC-3, AC-4, Non-goals, and Falsification,
+  so nothing reads as an emitted vocabulary. The Corpus-evidence table's `CODE` column now
+  carries an explicit note that it is the harness's analysis label, not a compiler field — that
+  table must not be misread as evidence for a code enum.
+- **Follow-up recorded in Design** so it is not lost: add `code` from 1d's published vocabulary
+  at the ~10 sites this entity already touches, plus whatever 3t/5v have added by then.
+- **Interim cost named, not hidden**: until 1d lands, class-dispatch means matching on `message`
+  — the exact cost this ideation raised against its own option 3. The ruling accepts it
+  knowingly; recording it keeps the follow-up's value legible.
+- **Machine-local reproducibility stated** on the corpus-measured AC (AC-4) and in Corpus
+  evidence: `flow-corpus.txt` is 3286 absolute paths into other repos on this machine, so step
+  (a) is verifiable on this machine at the stated paths only, never on a fresh clone or in CI.
+  This is also why the harnesses stay `.context/`-excluded — committing them would make the ACs
+  look CI-reproducible when they cannot be. AC-3 and AC-6, which use repo fixtures, are marked
+  CI-reproducible so the distinction is visible rather than blanket-hedged.
+
+Unchanged per the FO: the two-tier structure (now `code`-less at tier 1), the additive
+`errorDetails` strategy protecting the five identified consumers, the SKILL.md lines 94-189
+deletion, the reverse-recovery audit, sizing, and the persisted classifier.
