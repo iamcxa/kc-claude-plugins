@@ -2,9 +2,10 @@
 title: "Safe resume and once-only post"
 source: superseded ship-flow pitch 2.3-safe-resume-once-only-post (agent-native PR review kit PR3); builds on ship-flow 2.1 (PR #48) + 2.2 (PR #50)
 id: 50n4g9vyzdd12h03r6wskfkq
-status: implementation
+status: validation
 started: 2026-07-24T10:20:35Z
 worktree: .worktrees/spacedock-ensign-safe-resume-once-only-post
+pr: https://github.com/iamcxa/kc-claude-plugins/pull/56
 ---
 
 Appetite: 2 working days.
