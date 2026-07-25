@@ -638,6 +638,76 @@ test('resolveExpects Phase 2: Phase 1 "element is visible" still works (backward
 });
 
 // ---------------------------------------------------------------------------
+// xn (e2e-expect-grammar-permutations): 2 corpus-justified quoting permutations
+// the Phase 2 table forgot — both single-quote "is"-predicate forms. See
+// docs/writing-tests.md "Expect Grammar Reference" for the full table.
+// ---------------------------------------------------------------------------
+
+test("resolveExpects xn AC2: \"text '<value>' is visible\" resolves type text-visible", () => {
+  const flow = flowWithExpects(["text '請先選擇廠牌' is visible"]);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'text-visible');
+  assert.equal(exp.text, '請先選擇廠牌');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test("resolveExpects xn AC3: \"text '<value>' is not visible\" resolves type text-not-visible, NOT text-visible", () => {
+  const flow = flowWithExpects(["text '工單記錄' is not visible"]);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  // The specific regression the table's negatives-before-positives convention exists
+  // to prevent: the positive pattern (`^text '(.+)' is visible$`) capturing the negated
+  // string first. Assert the negative type explicitly rather than just absence of error —
+  // this assertion is what would fail if that shadowing regression were reintroduced.
+  assert.notEqual(exp.type, 'text-visible', 'negated form must not be captured by the positive pattern');
+  assert.equal(exp.type, 'text-not-visible');
+  assert.equal(exp.text, '工單記錄');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects xn AC4 (ordering): all 8 corpus strings the new patterns recover, plus 2 pre-existing sibling-shaped forms, resolve without shadowing', () => {
+  // Every corpus string the Design table's 2 new rows recover (Corpus evidence in the
+  // entity body), interleaved with a pre-existing element-not-visible form and a
+  // pre-existing text-visible (double-quote sibling) form. Table order is not being
+  // varied here in the array-position sense (that arrangement was proved
+  // order-independent 16/16 by the ideation-stage corpus spike, both at the designed
+  // position and appended at the very end of EXPECT_PATTERNS) — this test instead
+  // proves it in the running code: none of the 4 negative-form strings resolve as
+  // text-visible, none of the 4 positive-form strings resolve as text-not-visible,
+  // and neither pre-existing sibling form's type changes.
+  const expects = [
+    "text '請先選擇廠牌' is visible",
+    "text '請選擇車主' is visible",
+    "text '新增「hino」' is visible",
+    "text '廠牌' is visible",
+    "text '工單記錄' is not visible",
+    "text '建立提醒' is not visible",
+    "text '安排預約' is not visible",
+    "text '排程通知' is not visible",
+    'heading is not visible',
+    "text '每日看板' on page",
+  ];
+  const flow = flowWithExpects(expects);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const types = result.resolved.steps[0].expects.map((e) => e.type);
+  assert.deepEqual(types, [
+    'text-visible', 'text-visible', 'text-visible', 'text-visible',
+    'text-not-visible', 'text-not-visible', 'text-not-visible', 'text-not-visible',
+    'element-not-visible', 'text-visible',
+  ]);
+  assert.equal(result.stats.activeExpects, 10);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+// ---------------------------------------------------------------------------
 // Phase 2 Plan 02: cross-site sites: block — resolver
 // ---------------------------------------------------------------------------
 

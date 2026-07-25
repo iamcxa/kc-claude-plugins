@@ -108,7 +108,7 @@ Present as:
 Compiled: <flow-name>
   Output:   .claude/e2e/compiled/<flow-name>.sh
   Steps:    N (M expects active)
-  Warnings: K expects deferred (unrecognized format — will emit TODO echo at runtime)
+  Warnings: K expects deferred (unrecognized format — see docs/writing-tests.md#expect-grammar-reference for the full grammar; will emit TODO echo at runtime)
 ```
 
 Omit the "Warnings" line entirely when deferred count is 0.

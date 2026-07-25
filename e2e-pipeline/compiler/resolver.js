@@ -141,9 +141,11 @@ var EXPECT_PATTERNS = [
   // Phase 2 — text NOT visible (negated; must come before positive text-visible)
   { re: /^text '(.+)' not on page$/, type: 'text-not-visible' },
   { re: /^text "(.+)" not visible$/, type: 'text-not-visible' },
+  { re: /^text '(.+)' is not visible$/, type: 'text-not-visible' },
 
   // Phase 2 — text visibility (single-quote and double-quote variants)
   { re: /^text '(.+)' on page$/, type: 'text-visible' },
+  { re: /^text '(.+)' is visible$/, type: 'text-visible' },
   { re: /^text "(.+)" visible$/, type: 'text-visible' },
 
   // Phase 2 — or-syntax (two elements, any-true logic)
