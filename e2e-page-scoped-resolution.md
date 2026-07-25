@@ -241,6 +241,14 @@ not in CI.** This is a deliberate, recorded limitation, not an oversight. **AC-4
 CI-reproducible one** (`resolver.test.js`, tracked in-repo) and is what actually gates the merge;
 the corpus ACs are evidence for the gate's judgment, not automated merge protection.
 
+The limitation is **tracked, not merely disclaimed** — [[corpus-fixture-for-reproducible-acs]]
+owns the question of whether a vendored fixture corpus is worth building, and correctly flags
+that a maintainable fixture may be too clean to catch what the live distribution caught. This
+entity does not pre-empt that call. Its own contribution to closing the gap is narrower and
+already scoped: porting AC-3's shared-key case into the tracked `resolver.test.js` (see Dispatch
+sizing), so the one rule the FO ruled must never be cut is CI-protected even while the corpus
+measurement stays machine-local.
+
 **AC-1 (value, enforcement) — a step naming an existing element under the wrong stated page
 fails to compile instead of silently resolving to a different page's element.**
 Verified by: the scratch-migration demonstration above (BEFORE silently resolves to
