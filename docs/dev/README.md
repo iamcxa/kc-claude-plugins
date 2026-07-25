@@ -236,9 +236,13 @@ validator checks what was produced; it never finishes the work.
   acceptance reason instead of opening another round. Chasing irreducible
   residuals is gold-plating dressed as rigor.
 - **Cross-model gate before merge approval**: run one independent cross-model
-  review of the diff (e.g. `/codex review`). A P1 finding is fixed or
-  explicitly waived with a recorded reason at the gate — never silently
-  dropped.
+  review of the diff. The reviewer is whichever cross-vendor tool is actually
+  available, preferred in order `codex` → `agy`; no single vendor is required,
+  but skipping the second opinion entirely is not. Unavailability is
+  established by an attempted run that failed (quota, auth, missing binary),
+  never assumed — record which reviewer ran, and when the preferred one was
+  skipped, the observed failure. A P1 finding is fixed or explicitly waived
+  with a recorded reason at the gate — never silently dropped.
 - Exercise the E2E AC in the real runtime when one exists.
 - **Coverage is a ratchet, not a target — scoped to executable code only.**
   This repo is prose-heavy: coverage applies ONLY to executable surfaces
