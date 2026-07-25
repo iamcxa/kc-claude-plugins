@@ -152,18 +152,22 @@ above):
 
 ## Corpus evidence — measured this session
 
-Working prototype of the exact patch above, built by anchored string-replacement against
-`origin/main @ 529296d`'s real `resolver.js` (same patch-survival-safe technique as xn's
-harness — never requires whatever happens to be checked out on disk) and run over the real
-corpus: `.context/spike-3t-page-binding-before-after.js` (git-excluded, same convention as
+Working prototype of the exact patch above, built by anchored string-replacement against the
+real `resolver.js` at the merge target (same patch-survival-safe technique as xn's harness —
+never requires whatever happens to be checked out on disk) and run over the real corpus:
+`.context/spike-3t-page-binding-before-after.js` (git-excluded, same convention as
 `spike-deferred-rate.js` / `spike-xn-*.js`).
 
-    node .context/spike-3t-page-binding-before-after.js .context/flow-corpus.txt
+**Re-baselined after xn merged.** xn landed on `main` as PR #60 (`ed15247`) after this entity's
+first ideation run, moving the merge target. Re-ran against it (`XN_BEFORE_REF=ed15247`) rather
+than assuming the earlier numbers still held:
+
+    XN_BEFORE_REF=ed15247 node .context/spike-3t-page-binding-before-after.js .context/flow-corpus.txt
 
     (100 unique flows by content hash, 87 scored against their mapping)
                           BEFORE    AFTER     DELTA
-    active expects        426       432       +6
-    deferred expects      368       365       -3
+    active expects        434       440       +6
+    deferred expects      360       357       -3
     resolve errors        630       627       -3
     flows compiling clean 20        20        0
 
@@ -174,6 +178,13 @@ corpus: `.context/spike-3t-page-binding-before-after.js` (git-excluded, same con
       employee-profiles), 'data_table' ambiguous (1 expect step, 9-way collision) — all 3
       collapse because the stated page now disambiguates instead of erroring
     FLOWS FLIPPED clean -> error (0); FLOWS FLIPPED error -> clean (0)
+
+**The deltas are identical to the pre-xn run** (against `529296d`: 426→432 active, 368→365
+deferred, same 630→627 errors, same 20→20 clean flows, same 3 recovered strings). Only the
+baseline moved, by exactly xn's +8 recovered expects (426→434 active, 368→360 deferred) — which
+is independent evidence that the two changes compose cleanly and are genuinely orthogonal, as
+both entities predicted. The 3 strings this entity recovers are precisely the 3 xn was forced to
+defer.
 
 **Every number reconciles**: +6 active = 3 recovered (deferred→active) + 3 unerrored
 (error→active, previously counted in neither bucket); −3 deferred = the 3 recovered strings;
@@ -220,29 +231,46 @@ real mapping (`secha-office.yaml`) rather than only counted.
 
 ## Acceptance Criteria
 
+**Machine-local verification boundary — read before scoring any corpus-measured AC.** AC-1,
+AC-2, AC-3, and AC-5 are verified by harnesses in `.context/`, which is git-excluded and
+**stays** git-excluded by captain ruling: `flow-corpus.txt` is 3286 absolute paths under
+`/Users/kent/Project` and `/Users/kent/conductor`, i.e. other repos on this machine. Committing
+the scripts would make these ACs *look* CI-reproducible when they cannot be. Each affected AC
+therefore reproduces **on this machine, at the stated absolute paths — not on a fresh clone and
+not in CI.** This is a deliberate, recorded limitation, not an oversight. **AC-4 is the
+CI-reproducible one** (`resolver.test.js`, tracked in-repo) and is what actually gates the merge;
+the corpus ACs are evidence for the gate's judgment, not automated merge protection.
+
 **AC-1 (value, enforcement) — a step naming an existing element under the wrong stated page
 fails to compile instead of silently resolving to a different page's element.**
 Verified by: the scratch-migration demonstration above (BEFORE silently resolves to
 `[aria-label='返回']` with zero errors; AFTER raises a page-not-found error) plus the synthetic
 `tab_all on branches` case (BEFORE would silently resolve via the flat table; AFTER raises the
-named "not found on page" error with the shared-flag hint). Falsified by: reverting the patch
-and re-running either case returns to silent zero-error resolution.
+named "not found on page" error with the shared-flag hint). Reproduces on this machine at the
+stated `carlove` / `secha-*.yaml` paths only. Falsified by: reverting the patch and re-running
+either case returns to silent zero-error resolution.
 
 **AC-2 (no regression, corpus-measured) — resolve-error count and clean-flow count do not
 regress, and every delta is accounted for by shared-page ambiguity collapsing, never by breaking
 legitimate authoring.**
-Verified by: `node .context/spike-3t-page-binding-before-after.js .context/flow-corpus.txt`
-reproduces the table above exactly. Falsified by: any entry under "FLOWS FLIPPED clean -> error",
-or "NEW errors" containing a `_global`-referencing step, or the resolve-error delta not matching
-the 3 named collapsed ambiguities.
+Verified by: `XN_BEFORE_REF=ed15247 node .context/spike-3t-page-binding-before-after.js
+.context/flow-corpus.txt` reproduces the table above exactly. Reproduces on this machine at the
+stated paths only (`.context/` is git-excluded; the corpus is 3286 absolute paths into other
+local repos). Falsified by: any entry under "FLOWS FLIPPED clean -> error", or "NEW errors"
+containing a `_global`-referencing step, or the resolve-error delta not matching the 3 named
+collapsed ambiguities.
 
 **AC-3 (shared-page correctness, proven on real data) — an element defined only under a
 shared-marked page (or the grandfathered `_global`) resolves correctly regardless of which real
 page a step states.**
 Verified by: none of the corpus's `_global`-referencing steps appear in "NEW errors" (AC-2's
 harness); independently, the synthetic `sidebar_dashboard on branches` case above resolves to the
-`_global` selector against the real `secha-office.yaml` mapping. Falsified by: any `_global` step
-newly erroring, or the synthetic case failing to resolve.
+`_global` selector against the real `secha-office.yaml` mapping. Reproduces on this machine at
+the stated paths only. Falsified by: any `_global` step newly erroring, or the synthetic case
+failing to resolve. **Implementation must additionally port the synthetic case into
+`resolver.test.js`** against the tracked `EXTENDED_MAPPING` fixture (which already has a
+`_global` page), so the shared-key rule — the one thing the FO ruled must never be cut — has
+CI-reproducible protection and does not rest solely on a machine-local harness.
 
 **AC-4 (page-not-found is distinct from element-wrong-page) — a stated page absent from the
 mapping produces `"page 'P' not found in mapping"`; an element present under a different real
@@ -254,31 +282,33 @@ Verified by: `resolver.test.js` cases (implementation stage) against the existin
 → "found on: dashboard" branch), `heading visible on nonexistent-page` (page-not-found branch),
 `sidebar_home visible on login` (shared fallback, must resolve clean). Falsified by: either
 branch producing the other's message shape, or the existing `EXTENDED_MAPPING` test at
-`resolver.test.js:456` ("element visible on page" with matching page) changing behavior.
+`resolver.test.js:455` ("element visible on page" with matching page) changing behavior.
 
 **AC-5 (omission unaffected) — steps that omit the page qualifier keep byte-identical behavior:
 same resolution, same referenced-only-ambiguity semantics, same error text.**
 Verified by: AC-2's corpus diff — the only deltas are the 3 recovered strings and 3 collapsed
 ambiguities, all page-qualified; every omitted-qualifier step's output is unchanged between
-BEFORE and AFTER. Falsified by: any qualifier-omitting step's resolved selector or error text
-changing.
+BEFORE and AFTER. Reproduces on this machine at the stated paths only; the tracked
+`resolver.test.js` suite passing unchanged (AC-4's run) is the CI-side half of this claim.
+Falsified by: any qualifier-omitting step's resolved selector or error text changing.
 
-## Reverse-recovery audit (layer trace, against `origin/main @ 529296d`)
+## Reverse-recovery audit (layer trace, against `origin/main @ ed15247`)
 
-**Fetch note.** `origin/main` in this shared repo is already at `529296d` (fetched earlier
-today by a concurrent session — this checkout's `.git` object store is shared across the
-`kc-claude-plugins` worktrees). A fresh `git fetch origin main` this session timed out
-(`ssh: connect to host github.com port 22: Operation timed out` — the network flap the dispatch
-note warned about, still ongoing) but did not need to succeed: `529296d` already matches the
-tip the dispatch note named as "the remote," and `git diff origin/main -- e2e-pipeline/`
-against this checkout's `HEAD` (`3b7a1be`) is **empty** — `resolver.js`, `resolver.test.js`, and
-`docs/writing-tests.md` are byte-identical to the merge target. The audit below is current, not
-stale, and does not need a retry.
+**Re-audited after xn merged.** The first ideation run audited `529296d`; `git fetch origin main`
+succeeded this round (the network flap has cleared) and the merge target is now `ed15247`
+("Close the expect-grammar permutation holes (#60)"). Every line anchor below was **re-verified
+against `git show origin/main:...`**, not carried forward:
+`buildSymbolTable` (44-70) and the three page-bearing expect patterns (124, 130, 131) are
+unchanged — xn's 2 added rows land in the text-pattern block below them, so this entity's
+anchors were not disturbed. `resolveElement`, `resolveExpects`, and both click/fill branches
+shifted **+2** and are corrected in the table. `resolver.test.js`'s `EXTENDED_MAPPING` is still
+412-437; the pre-existing "element visible on page" test is at **455** (the first draft said 456
+— corrected). No verdict in the table changed; only line numbers moved.
 
 | Layer | File:line | Verdict | Note |
 |---|---|---|---|
 | Parser | `compiler/parser.js` | WORKING, out of blast radius | `expect:`/`action:` strings pass through raw; unrelated to this grammar (same finding as xn's audit) |
-| Resolver — the seam being fixed | `resolver.js:44-70` (`buildSymbolTable`), `157-173` (`resolveElement`), `335-354` & `558-576` (click/fill in `resolve`/`resolveMultiSite`) | EXISTS_BROKEN — parse-and-discard, now measured with a live prototype | Page group captured by the action regex (`resolver.js:11,15`) and by 3 of 7 expect patterns (`resolver.js:124,130,131`), discarded in every case; confirmed silently misrouting on a real (scratch-migrated) corpus flow above |
+| Resolver — the seam being fixed | `resolver.js:44-70` (`buildSymbolTable`), `159-175` (`resolveElement`), `337-356` & `560-578` (click/fill in `resolve`/`resolveMultiSite`) | EXISTS_BROKEN — parse-and-discard, now measured with a live prototype | Page group captured by the action regex (`resolver.js:11,15`) and by 3 of 7 expect patterns (`resolver.js:124,130,131` — unchanged by xn), discarded in every case; confirmed silently misrouting on a real (scratch-migrated) corpus flow above |
 | Codegen | `codegen.js` (`element-visible`/`element-not-visible`/`active` branches) | WORKING, unaffected | No new `type`, no codegen diff — only the *resolution* step changes, matching xn's zero-codegen precedent |
 | Compiler tests | `compiler/test/resolver.test.js:412-437` (`EXTENDED_MAPPING`, already has `_global`) | WORKING harness | Needs new cases per AC-4, not new fixture infra — the fixture already has the 3-page shape (2 real + 1 shared) this entity needs |
 | Mapper agent template | `agents/e2e-mapper.md:150,231` | WORKING (emits `_global` today), EXISTS_BROKEN re: the new flag | Already instructs "global elements... go into `_global` page"; doesn't yet emit `shared: true` — 1-line template addition so newly-generated mappings are self-documenting and don't lean on the grandfather default |
@@ -294,11 +324,13 @@ not fixed, per Non-goal 4.
 
 ## Doc diff
 
-**`e2e-pipeline/docs/writing-tests.md`** — two edits, both sequenced **after xn's PR merges**
-(xn's `## Expect Grammar Reference` section exists today only on the unmerged
-`spacedock-ensign/e2e-expect-grammar-permutations` branch, not on `origin/main`; if 3t's
-implementation starts before xn merges, rebase this diff onto xn's branch instead of writing it
-twice):
+**xn has MERGED — this diff is a REQUIRED edit in this entity's own PR, not a sequencing note.**
+PR #60 landed on `main` as `ed15247`, adding `## Expect Grammar Reference` to
+`e2e-pipeline/docs/writing-tests.md:340`. That section contains a sentence **this entity makes
+false**. Wording below was read from `git show origin/main:e2e-pipeline/docs/writing-tests.md`,
+not paraphrased. Note the landed prose uses ASCII `--`, not an em-dash; match it.
+
+**`e2e-pipeline/docs/writing-tests.md`** — three edits:
 
 1. **Step 1 (mapping structure example, `writing-tests.md:13-26`)** — add one line + one
    sentence showing the shared-page flag on the `_global` block, e.g.:
@@ -311,17 +343,45 @@ twice):
    *"Elements that appear on every page go in a page marked `shared: true` (by convention named
    `_global`, as `/e2e-map` already generates) — a step naming any other page still resolves
    them."*
-2. **`## Expect Grammar Reference` table** (currently at `writing-tests.md:340` on xn's branch)
-   — add a row for the new `<element> is visible on <page>` form, and replace the sentence
-   `"on <page>` is accepted but not verified -- element resolution is mapping-wide, not
-   page-scoped (tracked separately)."` with: *"`on <page>` is verified: the element must be
-   defined on the stated page, or on a page marked `shared: true` (e.g. `_global`) — a step
-   naming the wrong page fails to compile instead of silently resolving to a different page's
-   element. Omitting the qualifier keeps the mapping-wide 'any page' lookup."* Also fix the
-   "Caution" paragraph's clause *"even there it is parsed and discarded rather than verified
-   (previous paragraph)"* → *"even there it is now verified against the stated page (previous
-   paragraph)"* — that sentence becomes false the moment this entity ships and must not be left
-   stale (the exact failure mode this stage-def clause exists to prevent).
+
+2. **`## Expect Grammar Reference` table (`writing-tests.md:347-362`)** — add one row, placed
+   directly after the existing `<element> visible on <page>` row to match the table's
+   more-specific-first ordering:
+
+   | `<element> is visible on <page>` (new) | `element-visible` |
+
+3. **The false sentence (`writing-tests.md:369-370`) — REQUIRED, this is the one that breaks.**
+
+   Landed text, verbatim:
+   > ``on <page>`` is accepted but not verified -- element resolution is mapping-wide, not
+   > page-scoped (tracked separately).
+
+   Replacement:
+   > ``on <page>`` is verified -- the element must be defined on the stated page, or on a page
+   > marked ``shared: true`` (by convention ``_global``). A step naming a page the element is not
+   > on fails to compile instead of silently resolving to a different page's element. Omitting the
+   > qualifier keeps the mapping-wide "any page" lookup.
+
+**The Caution paragraph (`writing-tests.md:372-381`) — checked empirically, mostly SURVIVES.**
+The coordinator asked whether page binding changes the `text 'Created' on items-page` behavior.
+**It does not** — verified by running that exact string through both the stock and patched
+resolver (`/tmp/3t-text-check.js`, quoting-safe file rather than a shell `-e` one-liner, which
+silently ate the inner single quotes on the first attempt and produced a misleading result):
+
+    "text 'Created' on items-page"      BEFORE: deferred     | AFTER: deferred
+    "text 'Created' on page"            BEFORE: text-visible | AFTER: text-visible
+    "text 'Created' is visible"         BEFORE: text-visible | AFTER: text-visible   (xn's)
+    "email_input is visible on login"   BEFORE: deferred     | AFTER: element-visible (3t's)
+
+So the Caution's substance stands unchanged: `on page` remains a fixed literal for text
+assertions, that example still silently defers, and *"There is no page-scoped text assertion in
+this grammar; only the element forms accept a qualifier"* stays true — this entity binds the
+element forms only, and deliberately does not add a page-scoped text form (Non-goal 4 of xn's
+list, unchanged here). **Only its final cross-reference clause goes stale:**
+
+   *"...and even there it is parsed and discarded rather than verified (previous paragraph)."*
+   → *"...and even there the qualifier is now verified against the stated page (previous
+   paragraph)."*
 
 **`agents/e2e-mapper.md:231`** — add `shared: true` to the `_global:` block in the Phase 3
 structure template, so every newly-generated mapping is self-documenting from day one rather than
@@ -344,12 +404,32 @@ throwaway copy, one deliberately wrong-paged step (must show the compile fail wi
 text) — proving the CLI entry point, not just the `resolve()` function signature, carries the
 fix end to end.
 
+## Sequencing — held for [[e2e-json-diagnostics]] (gz)
+
+**This entity is HELD at ideation until gz lands**, by FO ruling: gz now implements first so this
+entity's refusals are *born* into a structured error channel rather than emitted as prose and
+converted afterwards. Nothing above is invalidated — the design, the ACs, and the spike all
+stand — but implementation should assume the structured channel exists and use it:
+
+- **The three error strings in Design point 3** (page-not-found, element-wrong-page-with-hint,
+  element-not-found-anywhere) are specified above as *prose*, matching today's resolver. When gz
+  has landed, emit them through its channel instead of minting new prose, and carry the
+  `shared: true` remedy as a structured repair field rather than a sentence fragment — the hint
+  is the most machine-actionable part of this entity's output and is wasted as free text.
+- This does **not** reopen Non-goal 3 (no private error-code enum). Using gz's channel is the
+  opposite of inventing one: it is the reason the enum was deferred to a shared owner.
+- The AC set is unaffected — every AC asserts *behavior* (does it refuse, what does it refuse,
+  what does it stop refusing), not error-string formatting. Implementation should re-read gz's
+  landed contract before writing the messages, since the exact prose above may become a
+  structured payload.
+
 ## Falsification
 
 Demonstrated, not hypothetical, in three independent ways this session: (1) the scratch-migrated
 `back_button` flow — reverting the patch returns it to silent zero-error resolution; (2) the
 corpus-wide run — reverting any of the anchored edits reproduces the exact BEFORE numbers
-(630 errors, 368 deferred, 20 clean flows); (3) the synthetic `tab_all`/`sidebar_dashboard`
+(post-xn baseline: 630 errors, 360 deferred, 20 clean flows); (3) the synthetic
+`tab_all`/`sidebar_dashboard`
 cases against real `secha-office.yaml` data. The AC set is falsifiable in the harmful direction
 too: AC-2's "flows flipped clean→error" and "NEW errors" checks are exactly what would catch a
 naive stated-page-vs-element-page-key comparison — the failure mode the FO's scope notes priced
@@ -408,15 +488,22 @@ not estimated:
   `.context/spike-3t-page-binding-before-after.js`, so implementation is substantially "land the
   validated patch," not open-ended design work.
 - `resolver.test.js`: new cases per AC-4 against the existing `EXTENDED_MAPPING` fixture (no new
-  fixture infrastructure needed) — wrong-real-page rejection, shared-page/`_global` resolution,
+  fixture infrastructure needed) — wrong-real-page rejection, shared-page/`_global` resolution
+  (**AC-3's ported synthetic case — the CI-side protection for the shared-key rule**),
   page-not-found-in-mapping distinct message, the new `is visible on <page>` form, one
   `resolveMultiSite` symmetry case, and a full-suite regression run for AC-5.
-- `docs/writing-tests.md` (2 edits, sequenced onto xn's branch or after xn merges),
+- `docs/writing-tests.md` — **3 edits, now required in this PR** (xn merged as `ed15247`; edit 3
+  fixes a sentence this entity makes false), plus the Caution's trailing clause;
   `agents/e2e-mapper.md:231` (1 line), `skills/e2e-test/SKILL.md:83` (1 clause).
 - E2E-first: one real `/e2e-compile --verbose` run per the E2E-first acceptance section above.
 
 Well under the 90-minute / 3-independent-behaviors split threshold — action-side and expect-side
-binding share one helper and one symbol-table shape, so they are one behavior, not two.
+binding share one helper and one symbol-table shape, so they are one behavior, not two. The gz
+hold (see Sequencing) does not change the sizing: routing the three refusals through gz's
+structured channel replaces prose strings rather than adding a behavior. Re-confirm against gz's
+landed contract at dispatch time; if gz's channel turns out to require per-call-site changes
+beyond message construction, that is a re-size signal to raise before starting, not to absorb
+silently.
 
 ## Stage Report: ideation
 
@@ -458,3 +545,50 @@ to be page-*name* typos (`booking-confirm`/`task-execution` are not real page ke
 wrong-page-for-a-real-element cases; demonstrated the actual silent-misroute-to-loud-error value
 on a scratch-migrated copy instead. Five ACs, a full reverse-recovery audit, and a doc diff
 (deliberately sequenced after xn's unmerged grammar-permutations PR) are recorded for the gate.
+
+## Stage Report: ideation (cycle 2 — coordinator correction round)
+
+Two scoped updates requested; no redesign. Design, ACs, and spike stand as ruled.
+
+- DONE: xn has MERGED — doc diff is now a concrete required edit
+  Fetched `origin/main` (succeeded this round — network flap cleared), read
+  `## Expect Grammar Reference` verbatim via `git show origin/main:...` rather than from the
+  paraphrase. Doc diff rewritten as 3 required in-PR edits with the exact landed text quoted
+  (including its ASCII `--`, not an em-dash) and the exact replacement wording.
+- DONE: check whether page binding changes the `text 'Created' on items-page` caution
+  It does NOT — verified by running that exact string through stock vs. patched resolver:
+  `deferred` before and after. The Caution's substance survives; only its trailing
+  cross-reference clause ("parsed and discarded rather than verified") goes stale. Recorded with
+  the 4-case evidence table.
+- DONE: name the machine-local limitation in the corpus ACs
+  Added a "Machine-local verification boundary" preamble plus a per-AC line on AC-1/2/3/5 stating
+  they reproduce on this machine at the stated paths, not a fresh clone. ACs otherwise unweakened;
+  AC-4 explicitly named as the CI-reproducible one that gates merge.
+- DONE: gz sequencing recorded where it matters
+  New "Sequencing — held for gz" section: the three refusal strings should be emitted through
+  gz's structured channel (carrying the `shared: true` remedy as a structured repair field, its
+  most machine-actionable output) rather than as prose; noted this does not reopen Non-goal 3,
+  and that no AC is affected since all assert behavior, not formatting.
+- DONE (not requested — self-initiated, flagged for the gate): re-baselined the spike against the
+  new merge target
+  xn's merge moved `main` out from under the recorded numbers. Re-ran with
+  `XN_BEFORE_REF=ed15247`: deltas are **identical** (+6/−3/−3/0), only the baseline shifted by
+  exactly xn's +8. Re-verified every `resolver.js` line anchor: `buildSymbolTable` and the 3
+  page-bearing expect patterns unchanged; `resolveElement`/`resolveExpects`/both click-fill
+  branches shifted +2 (corrected in the audit table); `resolver.test.js:456`→`455` corrected.
+- DONE: state committed path-scoped and push attempted
+  Stage-only commit of `e2e-page-scoped-resolution.md`; see push note below.
+
+### Summary
+
+Addressed both scoped updates without touching the design. Answered the coordinator's open
+question with evidence rather than reasoning: page binding does **not** disturb the
+`text 'Created' on items-page` caution, because this entity binds element forms only and adds no
+page-scoped text form — only that paragraph's trailing cross-reference needs the same one-clause
+fix already identified. Beyond the two requests, re-baselined the corpus run against the
+post-merge target and re-verified every line anchor, since xn's merge invalidated the recorded
+numbers' provenance; the deltas held exactly, which is independent evidence the two changes are
+orthogonal. One process note worth the gate's attention: the first attempt at the text-form check
+used a shell `-e` one-liner whose inner single quotes were eaten, producing a plausible but wrong
+"everything defers" result — caught by noticing the quotes missing in the echoed output, and
+redone via a file. The corrected result is what is recorded.
