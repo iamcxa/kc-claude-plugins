@@ -60,3 +60,44 @@ and it is still pending. The divergence it predicted is the one measured here.
   repeats the exact mistake being corrected.
 - Falsification for the guard: reintroduce the eval fallback in a scratch copy and
   confirm the suite goes red. A suite that stays green under that edit is not a guard.
+
+---
+
+## Measured during rd's implementation, 2026-07-25 — the divergence has a second half
+
+The implementing worker on [[e2e-selector-canon-review]] flagged that `selector:` is
+translated only on the `expect:`/visibility path; `click` and `fill` pass the value
+**raw** to agent-browser unless `css_selector:` is set (`codegen.js:1288-1320` — with
+`css_selector` it emits a `document.querySelector` eval; without it, a bare
+`agent-browser click <selector>` in a retry loop, failing loudly on exhaustion).
+
+Verified against a live agent-browser 0.21.4 with a positive control:
+
+```
+click 'button:nth-of-type(2)'      -> hits           # control: probe works
+click '[aria-label="BetaLabel"]'   -> hits           # CSS works on the click path
+click 'role=button[name="Beta…"]'  -> Element not found
+click 'text=AlphaBtn'              -> Element not found
+```
+
+And **0 of 32 corpus mappings set `css_selector:`** — the field is read by the
+compiler but documented nowhere, so `/e2e-map` never emits it.
+
+Net: on the compiled path the same mapping entry works for an `expect:` and fails for
+a `click`. The two halves are broken in opposite directions — expects pass silently
+without asserting, actions fail loudly without a usable selector.
+
+**This is pre-existing, not introduced by the canon correction.** It is the concrete
+shape of the divergence this entity exists to close, and it is what PR #8's own
+unrun `compiled-vs-llm-divergence-baseline` todo would have surfaced.
+
+**Not yet established:** whether it bites in practice. The compiled bash is the CI
+path; interactive runs go through the LLM `e2e-test-runner`, which adapts. Measuring
+which path real usage exercises — and what the LLM runner does with a Playwright-form
+selector on a click — is the first task here, before any fix. Do not assume from the
+CLI-level result above that end-to-end compiled runs are failing; that has not been
+run.
+
+Scope consequence: documenting `css_selector:` (done in the canon correction) is
+necessary but not sufficient — the mapper must *emit* it for any element a flow
+clicks or fills, or the click path has no working selector at all.
