@@ -14,6 +14,10 @@ id: vf88cvthkhh9je2ng71xbbs9
 
 Slice 2 of 3 for daemon posting safety. Depends on `daemon-once-only-posting` (slice 1); `daemon-preauth-freshness-coverage` (slice 3) depends on this.
 
+**Blocked 2026-07-26 on `attended-pr-review-wait` (4p).** That entity proposes removing the
+unattended caller rather than bounding it, which would delete this slice's reason to exist.
+Deferred, not dropped: if an unattended mode is ever wanted, this slice returns as written.
+
 `kc-pr-review` treats §6c human confirmation as the final authority before any `gh pr review`. In daemon mode that authority is supplied by an instruction in prose: `reference/pr-review-loop.md` tells the iteration "You are running in daemon mode with no interactive terminal ... Approve posting the review. Do NOT wait for user input — there is no user." So the autonomous path's authorization today is the loop asking the model to approve itself, with nothing typed, bounded, or auditable about it.
 
 Real guardrails do exist around it and are not in question here: the absolute rules (never merge, never force-push, never close, one PR per iteration, at most three cycles, no high-risk auto-fix, no `.env`/lock/migration edits), the `human-only` / `daemon-skip` labels, and the CI pre-flight gate. What is missing is at the posting seam itself — nothing states *who* authorized *which* review, for *which* head, with *what* ceiling, or for *how long*.
@@ -38,3 +42,51 @@ Verified by: a daemon-mode post attempt with no preauthorization is denied with 
 
 **AC-2 — A preauthorization cannot authorize more than it names.**
 Verified by: a preauthorization bound to one review key / head / event ceiling is rejected when presented for a different review key or head, and an attempt to post REQUEST_CHANGES under a COMMENT ceiling is capped or refused. Falsified by: any post exceeding the artifact's stated scope.
+
+## Backlog gate, 2026-07-26 — findings preserved
+
+The gate ran (EM on fresh context, plus one cross-vendor pass on `agy`) before the captain
+proposed `attended-pr-review-wait`. These findings hold whichever direction wins, so they are
+recorded here rather than lost with the slice. Baseline at the time: 920 passed / 0 failed
+across all 7 kc-pr-flow suites, matching #59's merge state.
+
+**Slice 1's stated reason for deferring AC-3 is wrong.** Its validation report argued that
+making `post` symmetric with `resume` "would refuse even a genuinely first post while the
+reviews API is degraded, and would change availability for EVERY caller". It would not.
+`review-post.sh:568` is `reviews_json="$(review_post_transport list ...)" || return 74`, and
+the production `gh` adapter returns non-zero on an API failure (`:127-128`), so a genuinely
+degraded reviews API already aborts `post` before the usability check is reached — with the
+pending payload (`:560`) and `post.intent` (`:545-549`) already durable. The fail-open path is
+reachable only when the transport exits 0 with a non-array body, which the `gh` adapter cannot
+produce. Symmetry therefore costs approximately nothing, and AC-3 should take the unconditional
+fail-closed branch rather than the documented-asymmetry escape hatch.
+
+**An event ceiling minted by the daemon would constrain nothing.** The ceiling has to come from
+outside the agent that mints the gate, or it is decoration. The seat exists and is already in
+use: `pr-review-daemon.sh:190` passes `PR_DAEMON_MODE=1 PR_DAEMON_AUDIT=1` as an inline env
+prefix on the `claude -p` call, and `read_config` (`:25-48`) already reads `daemon.yaml`. An
+earlier reading of "the daemon script sets no environment" came from grepping only for `export`
+and was too narrow.
+
+**Refusing an over-ceiling event silently deletes the daemon's most valuable output.** A typed
+decision carrying blockers forces `effective_event` to REQUEST_CHANGES
+(`skills/kc-pr-review/SKILL.md:1385-1387`), and the daemon mints its gate from that value
+(`reference/pr-review-loop.md:88`). Under a COMMENT ceiling with refuse-only semantics, every
+review that found a blocker fails to post at all, with nothing recording why. The resolution is
+to cap at the producer *and* mark the capping in the review body, keeping refusal at the
+enforcement point as a backstop — the failure to avoid is silence, in either direction.
+
+**Cross-vendor findings adjudicated against the code.** Accepted: implement the ceiling as
+explicit set membership rather than integer ranks (integers create an accidental total order
+between the two incomparable tops); type-guard the new fields before comparing, per the existing
+`type == "string"`-before-`test()` idiom; assert `now < expires` *before* the TTL upper bound,
+since `(( -50 <= 300 ))` is true and an expired gate would otherwise pass; validate a parsed
+epoch before arithmetic, per `resume`'s existing `case *[!0-9]*` guard. Refuted: the claim that
+gate expiry can strand a run — `resume` takes no `--gate-file` (it appears only in
+`review_post_cmd_post`, `:462-499`) and the gate is never persisted, so the chain does not
+exist. Refuted: clock skew between minter and enforcer — they share a process tree and a clock.
+
+**One documentation obligation the design had not named.** Expiry bounds the
+authorization-to-intent window only. Once `post.intent` is durable, `resume` may settle it hours
+later; that window is bounded instead by `resume`'s head recheck (`:725`) and retention GC. A
+reader who assumes an expired gate blocks a late resume would be wrong.
