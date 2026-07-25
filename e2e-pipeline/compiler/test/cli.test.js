@@ -622,4 +622,67 @@ describe('CLI-08: --json output', function() {
       fs.rmSync(emptyFlowsDir, { recursive: true, force: true });
     }
   });
+
+  // -------------------------------------------------------------------------
+  // AC-1 escape hatches: three --json invocation shapes that left stdout empty
+  // or prose-filled. SKILL.md's rewritten Phase 3 depends on the single-document
+  // guarantee unconditionally — it has no prose fallback left — so each of these
+  // is a silent break for the skill, not a cosmetic gap.
+  // -------------------------------------------------------------------------
+
+  test("--all --json with an UNREADABLE flows directory: JSON document, distinct from the empty-dir shape", function() {
+    var missingDir = path.join(makeTmpDir(), 'definitely-not-here');
+    var result = runCli([
+      '--all',
+      '--json',
+      '--flows-dir', missingDir,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    assert.equal(result.status, 1, 'an unreadable flows dir is a failure, unlike an empty one');
+    var doc = parseOnlyStdout(result);
+    assert.equal(doc.ok, false);
+    assert.deepEqual(doc.flows, []);
+    assert.deepEqual(doc.summary, { passed: 0, failed: 0 });
+    assert.equal(doc.errors.length, 1, 'the enumeration failure must be representable in the document');
+    assert.deepEqual(Object.keys(doc.errors[0]), ['message'], 'tier-2: no symbol, so message-only');
+    assert.ok(doc.errors[0].message.includes(missingDir), 'message names the directory it could not read');
+  });
+
+  test("--json single flow with an unwritable output dir: JSON document, not empty stdout", function() {
+    // Force a deterministic write failure by passing a path that already exists
+    // as a FILE — mkdirSync(recursive) throws EEXIST. Preferred over chmod 500,
+    // which is a no-op when tests run as root (CI containers commonly do).
+    var blocker = path.join(makeTmpDir(), 'not-a-directory');
+    fs.writeFileSync(blocker, 'blocker', 'utf8');
+    var result = runCli([
+      '--json',
+      'simple-flow',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', blocker,
+    ]);
+    assert.equal(result.status, 1);
+    var doc = parseOnlyStdout(result);
+    assert.equal(doc.ok, false);
+    assert.equal(doc.flow, 'simple-flow');
+    assert.ok(doc.stats && typeof doc.stats === 'object', 'stats present even when compile threw');
+    assert.equal(doc.errors.length, 1);
+    assert.deepEqual(Object.keys(doc.errors[0]), ['message'], 'a thrown write error is tier-2');
+    assert.ok(doc.errors[0].message.length > 0, 'the thrown error text must survive into the document');
+  });
+
+  test("--json with no flow name and no --all: JSON document on stdout, help prose on stderr, exit 1", function() {
+    var result = runCli(['--json']);
+    assert.equal(result.status, 1, 'nothing was compiled — must not report success (it exited 0 before)');
+    var doc = parseOnlyStdout(result);
+    assert.equal(doc.ok, false);
+    assert.equal(doc.errors.length, 1);
+    assert.deepEqual(Object.keys(doc.errors[0]), ['message']);
+    assert.ok(
+      /--all/.test(doc.errors[0].message) && /flow/i.test(doc.errors[0].message),
+      'the message must say what the caller failed to supply. Got: ' + doc.errors[0].message
+    );
+    assert.ok(result.stderr.includes('Usage:'), 'a human running --json by hand still gets the usage text, on stderr');
+  });
 });

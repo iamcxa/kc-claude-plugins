@@ -76,7 +76,20 @@ program
       try {
         files = fs.readdirSync(flowsDir).filter(function(f) { return f.endsWith('.yaml'); });
       } catch (err) {
-        console.error('ERROR: cannot read flows directory: ' + flowsDir + '\n' + err.message);
+        var readErrMessage = 'cannot read flows directory: ' + flowsDir + ' — ' + err.message;
+        console.error('ERROR: ' + readErrMessage);
+        // Deliberately NOT the empty-directory shape below: an unreadable
+        // directory is a failure (ok:false, exit 1), an empty one is a no-op
+        // (ok:true, exit 0). Collapsing them would make "nothing to compile"
+        // indistinguishable from "could not look".
+        if (options.json) {
+          console.log(JSON.stringify({
+            ok: false,
+            flows: [],
+            summary: { passed: 0, failed: 0 },
+            errors: [{ message: readErrMessage }],
+          }));
+        }
         process.exit(1);
         return;
       }
@@ -309,11 +322,45 @@ program
         }
       } catch (err) {
         console.error('ERROR: ' + err.message);
+        // A throw from compile() (unwritable output dir, unreadable source, …)
+        // still owes the --json caller a document: same single-flow shape, the
+        // thrown text as a tier-2 error. Mirrors how batch mode already wraps a
+        // thrown compile error.
+        if (options.json) {
+          var thrownErrors = [{ message: err.message }];
+          console.log(JSON.stringify({
+            ok: false,
+            flow: path.basename(flowName, '.yaml'),
+            stats: defaultStats(thrownErrors),
+            errors: thrownErrors,
+            coverage: null,
+          }));
+        }
         process.exit(1);
       }
 
     } else {
-      // No flow-name and no --all: show help
+      // No flow-name and no --all. This is a usage error rather than a compile
+      // error, but --json still emits a document: SKILL.md's Phase 3 was
+      // rewritten to parse stdout unconditionally and has no prose fallback
+      // left, so making the guarantee conditional on argument validity would
+      // reopen exactly the hole this branch is being fixed for. The human
+      // usage text moves to stderr so an interactive caller still sees it, and
+      // the exit code becomes 1 — nothing was compiled, and the previous exit 0
+      // told a consumer the run had succeeded.
+      if (options.json) {
+        var usageErrors = [{ message: 'no flow name given and --all not set: pass a flow name or --all' }];
+        console.error(program.helpInformation());
+        console.log(JSON.stringify({
+          ok: false,
+          flow: null,
+          stats: defaultStats(usageErrors),
+          errors: usageErrors,
+          coverage: null,
+        }));
+        process.exit(1);
+        return;
+      }
       program.help();
     }
   });
