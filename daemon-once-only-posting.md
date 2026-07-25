@@ -1,6 +1,6 @@
 ---
 title: Route daemon posting through the once-only path
-status: implementation
+status: validation
 source: slice 1 of 3 for daemon posting safety; unblocks once-only-daemon-preauth-gate. Found while closing PR3 (#56), 2026-07-25
 started:
 completed:
