@@ -327,8 +327,8 @@ Both fixtures live in `compiler/test/fixtures/`, so this AC is CI-reproducible o
 Falsified by: `candidates` non-empty for a not-found error (proof of undisclosed fuzzy-matching),
 or an ambiguous error's `candidates` not matching `collisionsTable`'s pages.
 
-**AC-4 (value AC) — the repair loop costs less, measured against a baseline that can move the
-wrong way, scoped to the class that genuinely fails today.** Repairing the 3 live
+**AC-4 — the repair loop costs less, measured against a baseline that can move the wrong way, scoped to the class that genuinely fails today (value AC).**
+Repairing the 3 live
 ambiguous-element errors in `list-data-completeness.yaml` costs fewer tokens and does not
 require re-reading the full mapping YAML into context via `--json`'s `candidates`, versus
 today's prose-only stderr. Scoped to the tier-1 resolution class only — corrected scope, see
