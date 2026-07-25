@@ -8,6 +8,7 @@
 # cross-model.test.sh.
 #
 # Functions:
+#   cross_model_tool_binary <codex|gemini>      -> prints the executable name
 #   cross_model_tool_available <codex|gemini>   -> exit 0 if usable, 1 otherwise
 #   cross_model_conflict_filter                 -> stdin TSV findings -> stdout dispute set
 #   cross_model_arb_parse "<known-ids-csv>"     -> stdin Gemini output -> stdout id<TAB>verdict
@@ -17,11 +18,28 @@
 # given and perform only deterministic set algebra + output parsing.
 
 # --- availability ----------------------------------------------------------
+# `gemini` is the logical tool name everywhere in the skill and its output, but
+# the executable is Google's Antigravity CLI (`agy`) — the consumer `gemini` CLI
+# was retired on 2026-06-18. A leftover `gemini` binary deliberately does NOT
+# satisfy the gate: its flag surface is incompatible with the Step 5.6a
+# invocation, so accepting it would fail mid-arbitration instead of skipping
+# cleanly, and this path is required to degrade rather than break. Override the
+# resolved name with CROSS_MODEL_GEMINI_BIN / CROSS_MODEL_CODEX_BIN.
+cross_model_tool_binary() {
+  case "${1:-}" in
+    codex) printf '%s' "${CROSS_MODEL_CODEX_BIN:-codex}" ;;
+    gemini) printf '%s' "${CROSS_MODEL_GEMINI_BIN:-agy}" ;;
+    *) return 1 ;;
+  esac
+}
+
 # Multi-signal: binary on PATH AND some auth signal. Uses only shell builtins so
 # it is testable by overriding PATH / HOME / env in a subshell.
 cross_model_tool_available() {
-  local tool="${1:-}"
-  command -v "$tool" >/dev/null 2>&1 || return 1
+  local tool="${1:-}" bin
+  bin="$(cross_model_tool_binary "$tool")" || return 1
+  [ -n "$bin" ] || return 1
+  command -v "$bin" >/dev/null 2>&1 || return 1
   case "$tool" in
     codex)
       [ -n "${CODEX_API_KEY:-}" ] && return 0
@@ -36,6 +54,11 @@ cross_model_tool_available() {
       # not count. Builtin-only (no `tr`/${,,}) for PATH-isolated + bash-3.2 use.
       case "${GOOGLE_GENAI_USE_VERTEXAI:-}" in 1 | true | TRUE | True) return 0 ;; esac
       [ -f "$HOME/.gemini/oauth_creds.json" ] && return 0
+      # agy keeps its own token beside the shared Google OAuth cache above. A
+      # machine that only ever logged in through agy can have this and not
+      # oauth_creds.json, so checking only the shared file would report an
+      # authenticated arbiter as unavailable.
+      [ -f "$HOME/.gemini/antigravity-cli/antigravity-oauth-token" ] && return 0
       return 1
       ;;
     *)
