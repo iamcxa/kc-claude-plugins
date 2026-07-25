@@ -989,3 +989,81 @@ collapsing them would make "nothing to compile" indistinguishable from "could no
 class (Commander arg-parse errors) was found during the sweep and deliberately left unfixed as
 out-of-scope, with its cost and risk stated for the gate. Diff is two files; everything that passed
 cycle-1 validation is untouched.
+
+## Stage Report: validation (cycle 2)
+
+Re-review of someone else's fix at `1c3977d`. Recommendation: **APPROVE with one recorded
+condition** (a one-line doc/skill fix, below) — not a rejection cycle.
+
+- DONE: Reproduce every AC's `Verified by:` clause with actual command output
+  Re-run against the NEW commit, not cycle-1 evidence. AC-1's three fixed sites each emit exactly
+  one parseable document (`parseOnlyStdout`, 32/32). AC-2/3/6 re-ran green in the 650/650 suite;
+  this round edited no `errors.push` site, so AC-2 holds by construction. AC-4(a)/AC-5:
+  `git show HEAD:...SKILL.md | wc -l` → 135 vs `ac33dab`'s 202, and `git diff --name-only
+  632f04c 1c3977d` returns only the two files, so SKILL.md is provably untouched this round.
+- DONE: Adversarial spot-check
+  Ran the three NEW tests against the cycle-1 binary (`git show 632f04c:...bin/e2e-compile.js`
+  into a scratch copy): exactly **3 fail / 32**, matching the report's RED claim precisely. The
+  cycle-1 `errorDetails` spot-check is unaffected — no resolver source changed.
+- DONE: Confirm no `code` field ships, and the SKILL.md prose deletion stands
+  Both unchanged this round; SKILL.md not in the diff.
+- DONE: JUDGED — the fourth class (Commander arg-parse) residual acceptance is **sound, but its
+  recorded justification is empirically wrong**
+  Reproduced: `--json --bogus-flag` and `--json --flows-dir` (no value) → exit 1, 0-byte stdout.
+  Two corrections to the record. (1) "A malformed command line means the skill's own template is
+  broken" is not quite right — the template is intact; only the substituted value need be hostile.
+  `node bin/e2e-compile.js --json --my-weird-flow` (a dash-leading *flow name* in the skill's own
+  fixed `--json <flow-name>` slot) reproduces the 0-byte stdout. Pathological, but reachable.
+  (2) "Needs `exitOverride()` … changing CLI-wide error handling for non-`--json` callers" is
+  disproved: a `--json`-gated `exitOverride` is ~14 lines, leaves non-`--json` byte-identical
+  (verified: `--bogus-flag` without `--json` still exits 1 with 0-byte stdout and prose on
+  stderr), and passes **650/650** in a scratch copy.
+  Accepting anyway, for a reason the report does not give: the class has an **irreducible tail** —
+  even with that fix, `--json --help` still emits no document (exit 0, help to stderr), so closing
+  the class requires deciding what `--json --help` *means*. That is a design question, not a
+  mechanical patch, and AC-1's letter covers only the two named invocation forms
+  (`--json <flow>`, `--json --all`). Recommend filing the follow-up with the gated-prototype
+  evidence attached so the next owner does not re-derive it.
+- FAILED: The new top-level batch `errors` key is undocumented and **unconsumed** (P2, new this round)
+  `bin/e2e-compile.js:86-91` puts the enumeration failure in a top-level `errors` array. The normal
+  batch document (`:170-175`) has no such key, and **both** consumers document the batch shape as
+  `{ok, flows, summary}` — `skills/e2e-compile/SKILL.md` Phase 3 and `docs/commands.md:170`.
+  Exercised rather than read: feeding the real unreadable-directory output through SKILL.md's
+  documented batch rule verbatim renders `Batch compilation complete: 0 OK, 0 failed` and lists
+  nothing — the directory error is never shown. So at the user-visible layer "could not look" still
+  collapses into "nothing to compile", which is the exact distinction the bespoke shape was built to
+  preserve; the distinction exists in JSON but dies at the consumer. This is the entity's own
+  pre-mortem (an unconsumed channel) in miniature. Fix is one line in each of SKILL.md and
+  `docs/commands.md`; no code change. Independently surfaced by both reviewers this round.
+- DONE: Verified the cycle-2 report's citations are true, not merely present
+  Checked the load-bearing one myself: the "swept every `console.log`/`process.exit`/`program.help`"
+  claim holds — every prose write sits behind `!options.json`, an `else`, or a `--json`
+  early-return with `process.exit` + `return`. It is also correctly *bounded*: it says "in the
+  action handler", and the fourth class lives outside it at `parseAsync`. 650/650, 32/32, 3-fail
+  RED, SKILL.md 135, and the two-file diff all reproduce.
+- SKIPPED: Treating the four dead bindings as a defect of this diff
+  All four are **pre-existing at `ac33dab`** (`execFileSync` plus the same three unread `var result`
+  at `cli.test.js:101,128,201`) — verified against the base file, not inferred. And the concern
+  behind the question does not hold: all three tests do assert, on filesystem side effects
+  (`fs.readdirSync(tmpDir)` length), so they are weak-but-real, not intended-and-never-written.
+  Context for a future cleanup, not this entity's.
+- Cross-model gate: `codex exec review --commit 1c3977d` attempted, failed again (exit 1, usage
+  limit until Jul 29) — recorded, not assumed. Fell back to `agy`, which ran and independently
+  reached the same top-level-`errors` inconsistency. Caveat on that round: `agy` rendered its
+  citations under a stale absolute path that resolves to a different 254-line checkout, but its
+  line numbers (350-360, 324-338, 83-91) only exist in the real 370-line worktree file and each
+  claim checks out there, so the substance is anchored correctly. Two of its five line cites were
+  near-miss region pointers. Reviewer-agent citations were verified individually and all four held.
+
+### Summary
+
+The fix is real and the rejection is discharged: all three sites now emit exactly one JSON
+document, RED-before-GREEN reproduced independently at exactly 3 fail/32, and nothing that passed
+cycle-1 validation moved. Two judgment calls go back to the gate rather than being inherited. The
+fourth-class deferral is the right call but for the wrong recorded reason — the widening it cites
+is disproved by a 14-line gated prototype that passes 650/650, while the real reason to defer is an
+irreducible `--json --help` tail that needs a design decision. And site 1's bespoke shape preserves
+the "could not look" vs "nothing to compile" distinction in JSON but not at the consumer: the
+documented skill mapping renders it as `0 OK, 0 failed` and drops the error, so that channel ships
+unconsumed unless one line is added to SKILL.md and `docs/commands.md`. Recommend approving on
+that condition, with the fourth class filed as a named residual carrying the prototype evidence.
