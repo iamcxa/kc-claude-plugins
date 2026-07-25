@@ -1,22 +1,23 @@
 # legacy-playwright-mapping.yaml
 # TEST FIXTURE — DO NOT USE IN PRODUCTION
 #
-# Contains all 5 banned selector token classes:
-#   1. Playwright role attr-style (role=<r>[name=...])
-#   2. Playwright nth chord (>> nth=N)
-#   3. Playwright text engine (bare text=)
-#   4. Playwright has-text (:has-text()
-#   5. agent-browser find subcommand chain in selector value (find role/text/label/testid ...)
+# Contains the 3 still-banned selector token classes, plus the 2 retired ones
+# (kept here so the fixture still exercises every element shape; retired classes
+# no longer contribute to the error count — see e2e-selector-canon-review):
+#   2. Playwright nth chord (>> nth=N)                              — BANNED
+#   4. Playwright has-text (:has-text()                             — BANNED
+#   5. agent-browser find subcommand chain in selector value        — BANNED
+#   1. Playwright role attr-style (role=<r>[name=...])              — RETIRED, native form
+#   3. Playwright text engine (bare text=)                          — RETIRED, native form
 # Used by lint-mapping.sh tests to verify detection logic.
 #
-# `lint-mapping.sh legacy-playwright-mapping.yaml` must exit 2.
+# `lint-mapping.sh legacy-playwright-mapping.yaml` must exit 2 (classes 2/4/5 alone).
 
 version: "2"
 base_url: "http://localhost:3000"
 
 elements:
-  # CLASS 1 — Playwright role attr-style: role=<word>[name=...]
-  # Expected fix: find role textbox --name "Email"
+  # CLASS 1 — RETIRED. role=<word>[name=...] is now a native form (no fix needed).
   email_input:
     selector: 'role=textbox[name="Email"]'
     name: Email input field
@@ -27,32 +28,31 @@ elements:
     selector: '.MuiButton-root >> nth=2'
     name: Third action button (0-indexed nth=2)
 
-  # CLASS 3 — Playwright text engine: bare text= at selector start
-  # Expected fix: find text "Submit"
+  # CLASS 3 — RETIRED. bare text= is now a native form (no fix needed).
   submit_button:
     selector: 'text=Submit'
     name: Submit button
 
   # CLASS 4 — Playwright has-text: :has-text( (broken in agent-browser, no replacement)
-  # Expected fix: restructure using data-testid or find role/text
+  # Expected fix: restructure using data-testid or role=/text= form
   confirm_dialog_heading:
     selector: '.MuiDialog >> :has-text("Confirm deletion")'
     name: Confirm dialog heading
 
-  # Additional element using CLASS 1 variant with different role
-  # to verify the regex matches more than one role type
+  # Additional element using retired CLASS 1 variant with a different role
+  # (still exercises the fixture's element-count shape; no longer flagged)
   password_input:
     selector: 'role=textbox[name="Password"]'
     name: Password input field
 
-  # Additional element using CLASS 3 variant inside a quoted attribute-style context
+  # Additional element using retired CLASS 3 variant inside a quoted attribute-style context
   cancel_link:
     selector: '"text=Cancel"'
     name: Cancel link
 
   # CLASS 5 — agent-browser find-subcommand string in selector value (PR #8 R1 fix)
   # `find role|text|label|testid` is a CLI subcommand chain, not selector grammar.
-  # Expected fix: [role="button"][aria-label="Sign In"] CSS attribute selector
+  # Expected fix: role="button"[name="Sign In"] (or [role="button"][aria-label="Sign In"])
   signin_button_findrole:
     selector: 'find role button --name "Sign In"'
     name: Sign In button (banned find-subcommand form)

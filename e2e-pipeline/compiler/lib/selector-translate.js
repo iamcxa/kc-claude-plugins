@@ -27,6 +27,13 @@
  *     role=X                         → X              (bare role)
  *     css=...                        → null           (can't convert)
  *
+ *   Native text form (e2e-selector-canon-review — largest codemod-spike refusal
+ *   class, 83 of 452 corpus selectors, `text-engine-not-a-selector`):
+ *     text=Y                         → "Y"            (role-agnostic snapshot-literal
+ *                                                        match; role= forms above use
+ *                                                        the same snapshot line, just
+ *                                                        with the role prefixed)
+ *
  * Returns: string pattern for a11y tree grep, or null if conversion not
  * possible (caller falls back to _poll_visible against the raw selector).
  *
@@ -90,6 +97,21 @@ function selectorToA11yPattern(selector) {
   // role=X (bare role, no attributes) → X
   var bareMatch = selector.match(/^role=(\w+)$/);
   if (bareMatch) return bareMatch[1];
+
+  // ------------------------------------------------------------------
+  // Native text form (e2e-selector-canon-review)
+  // ------------------------------------------------------------------
+
+  // text=Y → "Y" (bare or quoted value; quotes stripped, then re-quoted to the
+  // same snapshot-literal shape the role= forms above already produce, so
+  // _poll_snapshot_contains greps it the same way)
+  var textMatch = selector.match(/^text=(.+)$/);
+  if (textMatch) {
+    var textValue = textMatch[1];
+    var quoted = textValue.match(/^"(.*)"$/) || textValue.match(/^'(.*)'$/);
+    if (quoted) textValue = quoted[1];
+    return '"' + textValue + '"';
+  }
 
   // css= or other formats → can't convert
   return null;

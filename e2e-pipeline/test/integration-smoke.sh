@@ -261,10 +261,10 @@ else
   fail "The e2e-mapper agent may still be emitting Playwright-style selectors."
   fail ""
   fail "Banned token classes (from lint-mapping.sh):"
-  fail "  CLASS 1: role=<r>[name=...]   → replace with: find role <r> --name \"<v>\""
-  fail "  CLASS 2: >> nth=<N>           → replace with: :nth-of-type(N)"
-  fail "  CLASS 3: text=<v> (bare)      → replace with: find text \"<v>\""
-  fail "  CLASS 4: :has-text(           → restructure selector (no replacement)"
+  fail "  CLASS 2: >> nth=<N>                        → replace with: :nth-of-type(N)"
+  fail "  CLASS 4: :has-text(                        → restructure selector (no replacement)"
+  fail "  CLASS 5: find role|text|label|testid <..>  → replace with: role=<r>[name=\"<v>\"]"
+  fail "  (role=<r>[name=...] and bare text=<v> are native forms — see CLAUDE.md § Selector Priority)"
   append_note "lint=FAIL (exit $LINTER_EXIT) — banned tokens in mapping"
 fi
 

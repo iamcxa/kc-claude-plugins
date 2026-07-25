@@ -14,34 +14,40 @@
 # not contract violations. This narrowing was added in response to PR #8 Copilot
 # review C2 (line-by-line scan flagged comments as errors, unsafe as CI gate).
 #
-# Banned token classes (each replaces with a Cand 2 native form):
+# Banned token classes:
 #
-#   CLASS 1 — Playwright role attr-style:
-#     regex:  role=<word>[name=...]
-#     example: role=textbox[name="Email"]
-#     replace with: [role="<r>"][aria-label="<v>"] CSS attribute selector
-#     (Cand 2 canonical per docs/ship-flow/001-selector-grammar-alignment/design.md)
+#   CLASS 1 — RETIRED (e2e-selector-canon-review, see docs/dev/.spacedock-state/
+#     e2e-selector-canon-review.md). Formerly banned `role=<word>[name=...]`
+#     (Playwright role attr-style, e.g. `role=textbox[name="Email"]`) in favour of
+#     `[role="<r>"][aria-label="<v>"]`. Measured over 32 real mapping files, the
+#     "canonical" CSS form was emitted 0 times in three months and the "banned"
+#     form 2,183 times — because `compiler/lib/selector-translate.js` translates
+#     both to the identical a11y-grep pattern, and the CSS form alone requires
+#     literal `role`/`aria-label` attributes present in only ~2.8% of components.
+#     `role=<r>[name="<v>"]` is native, faithful to what the mapper's a11y
+#     snapshot actually observes, and no longer banned.
 #
 #   CLASS 2 — Playwright nth chord:
 #     regex:  >>\s*nth=<N>
 #     example: .MuiButton-root >> nth=2
 #     replace with: :nth-of-type(N) CSS pseudo-class
 #
-#   CLASS 3 — Playwright text engine (bare text= at start of selector value):
-#     regex:  ^text=
-#     example: text=Submit  (or 'text=Submit' / "text=Submit" — quotes stripped)
-#     replace with: data-testid attribute or [role="..."][aria-label="..."]
+#   CLASS 3 — RETIRED (e2e-selector-canon-review). Formerly banned bare `text=`
+#     at selector start and pointed authors at `find text "<v>"` — itself a CLASS
+#     5-banned subcommand chain, an unresolvable contradiction. `text=V` is now
+#     translated by `selector-translate.js` to the a11y-grep pattern `"V"` (same
+#     shape the role= forms produce), so it is a supported native form.
 #
 #   CLASS 4 — Playwright has-text (broken in agent-browser, no equivalent):
 #     regex:  :has-text\(
 #     example: .MuiDialog >> :has-text("Confirm")
 #     no direct replacement — restructure selector using data-testid or
-#     CSS attribute form
+#     role=/text= form
 #
 #   CLASS 5 — agent-browser find-subcommand string in selector value (post-PR-#8):
 #     regex:  ^find\s+(role|text|label|testid)\b
 #     example: find role button --name "Submit"
-#     replace with: [role="<r>"][aria-label="<v>"] CSS attribute selector
+#     replace with: role=<r>[name="<v>"] or [role="<r>"][aria-label="<v>"]
 #     reason: `find role|text|label|testid` is an agent-browser CLI SUBCOMMAND
 #     CHAIN, not a selector grammar. Storing it as a `selector:` value and
 #     passing it to `agent-browser is visible|click|fill '<value>'` makes
@@ -59,12 +65,13 @@ usage() {
   echo "  mapping-yaml-path  Path to the e2e mapping YAML file to lint."
   echo ""
   echo "  Checks selector field values (only) for banned tokens:"
-  echo "    - role=<word>[name=...]   (Playwright; use: [role=\"<r>\"][aria-label=\"<v>\"] CSS attr)"
   echo "    - >> nth=<N>              (Playwright; use: :nth-of-type(N))"
-  echo "    - text= (bare prefix)     (Playwright; use: data-testid or CSS attr)"
   echo "    - :has-text(              (Playwright; no replacement — restructure)"
   echo "    - find role|text|label|testid <args>  (agent-browser subcommand chain;"
-  echo "                                          NOT a selector grammar — use CSS attr)"
+  echo "                                          NOT a selector grammar — use role=/CSS attr)"
+  echo ""
+  echo "  role=<word>[name=...] and bare text= are NATIVE forms (translated by"
+  echo "  compiler/lib/selector-translate.js) and are no longer banned."
   echo ""
   exit 1
 }
@@ -125,11 +132,7 @@ while IFS= read -r line; do
     continue
   fi
 
-  # CLASS 1 — Playwright role attr-style
-  if echo "$selector_value" | grep -qE 'role=[A-Za-z]+\[name='; then
-    echo "${MAPPING_FILE}:${lineno}: role-attr: ${line}" >&2
-    errors=$((errors + 1))
-  fi
+  # CLASS 1 — RETIRED. role=<word>[name=...] is a native form; no longer scanned.
 
   # CLASS 2 — Playwright nth chord
   if echo "$selector_value" | grep -qE '>>[[:space:]]*nth=[0-9]+'; then
@@ -137,11 +140,8 @@ while IFS= read -r line; do
     errors=$((errors + 1))
   fi
 
-  # CLASS 3 — bare text= at start of selector value (post quote-strip)
-  if echo "$selector_value" | grep -qE '^text='; then
-    echo "${MAPPING_FILE}:${lineno}: text=: ${line}" >&2
-    errors=$((errors + 1))
-  fi
+  # CLASS 3 — RETIRED. bare text= is a native form (selector-translate.js
+  # translates it to an a11y-grep pattern); no longer scanned.
 
   # CLASS 4 — Playwright has-text
   if echo "$selector_value" | grep -qE ':has-text\('; then
