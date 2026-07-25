@@ -667,3 +667,63 @@ owns the vocabulary; a named follow-up adds `code` once 1d lands. Applied:
 Unchanged per the FO: the two-tier structure (now `code`-less at tier 1), the additive
 `errorDetails` strategy protecting the five identified consumers, the SKILL.md lines 94-189
 deletion, the reverse-recovery audit, sizing, and the persisted classifier.
+
+## Stage Report: implementation
+
+- DONE: RED before GREEN, and the additive `errorDetails` strategy is proven not to disturb the
+  five identified prose consumers
+  15 new tests (10 `resolver.test.js`, 5 `cli.test.js`) confirmed RED by `git stash`-reverting
+  `resolver.js`/`compiler.js`/`bin/e2e-compile.js` and re-running `node --test` before restoring;
+  GREEN after. `resolver.test.js` re-asserts the pre-existing `.includes()` check (line 127 before
+  this branch) verbatim, zero edits, alongside the new channel. Commit `632f04c`.
+- DONE: No `code` field ships anywhere in the emitted contract
+  tier1Detail = `{step_id, field, got, candidates, message}`, tier2Detail = `{message}`; every new
+  test asserts `!('code' in detail)`. `e2e-schema-contract` still owns the vocabulary.
+- DONE: The SKILL.md deletion happens in this branch, verified by line count not eyeballed
+  Phase 3 was lines 94-189 (96 lines); is now lines 97-122 (26 lines) — `grep -n '^## Phase 3\|^##
+  Common Mistakes'` before/after, not assertion.
+- DONE: AC-1 (single JSON document, all three cases) + a real gap found and fixed
+  `cli.test.js` CLI-08: success/resolve-error/parse-error each assert stdout is exactly one
+  parseable line. Found (RED-confirmed) and fixed: `--all --json` on an empty flows directory
+  still printed plain prose to stdout before this session's own second pass — same stdout-purity
+  bug class AC-1 exists to close, caught by writing the edge-case test rather than trusting the
+  happy-path ones.
+- DONE: AC-2 (default behavior byte-identical) / AC-6 (exit codes unchanged)
+  Full suite green (647 tests, zero edits to any `errors.push` site or the six string-array
+  consumers); CLI-08 asserts 0/1 exit codes under `--json` matching non-`--json` for the same
+  fixtures.
+- DONE: AC-3 (tier-1 candidates real, never invented) + E2E-first acceptance
+  Snapshotted `list-data-completeness`/`secha-office` fixtures reproduce the real corpus's 3 live
+  ambiguous errors byte-for-byte: `tab_all`'s 2-way and `data_table`'s 9-way "found on:" lists
+  match verbatim; `missing-element-flow`'s not-found case shows `candidates: []`. Cross-checked
+  `--json --dry-run` against the same flow compiled without `--json` (same `resolve()` call, not
+  independent parsing) — surfaced a pre-existing, unrelated bug in doing so: `compile()` prints
+  each resolve error to stderr AND `bin/e2e-compile.js`'s non-json failure branch prints the same
+  `errors` array again, so every prose ERROR line appears twice today. Out of this entity's scope
+  (Non-goal 2 — no change to existing prose/detection); noted here rather than fixed.
+- FAILED: AC-4 value measurement, step (b) — "costs fewer tokens... does not require re-reading
+  the mapping"
+  Measured, not assumed, and it does not hold as stated for this fixture: deduped prose for the
+  3-error case is 472 bytes; compact JSON `errors[]` is 974 bytes (full document 1133) — *larger*,
+  not smaller, because `message` already carries the full "found on:" text and the structured
+  fields mostly restate it. Neither mode requires a mapping re-read for this class either — the
+  ambiguous branch's collision list was already interpolated into prose before this entity existed
+  (Design's own point). Step (a) reproduces cleanly (9 tier-1 corpus-wide, 3 in this flow, exact
+  messages — CLI-08's third test). Recommend the gate re-scope AC-4 off raw byte count toward
+  what's actually load-bearing: no-regex parseability/reliability, and serving `3t`/`5v`'s new
+  message shapes, which won't have pre-existing prose candidates the way this one already did.
+- DONE: Doc diff applied in this branch
+  SKILL.md Phase 2 (`--json` always-on internally, not user-facing per Non-goal 8) + Phase 3
+  rewrite (above); one `docs/commands.md` flags-table row.
+
+### Summary
+
+The structured `--json` channel is built, tested, and additive: `errorDetails` threads through
+`resolveExpects`/`resolve`/`resolveMultiSite`/`compiler.js`/`bin/e2e-compile.js` without editing a
+single existing `errors.push` call site or its six consumers, ships no `code` field, and the
+SKILL.md prose-reformatting path is deleted and measured (96 → 26 lines). AC-1/2/3/5/6 and the
+E2E-first acceptance are verified against a real, snapshotted production flow with exact-match
+corpus numbers. AC-4's value claim, measured honestly rather than asserted, does not hold on a raw
+byte-count reading for this specific ambiguous-only fixture — flagged for the gate to re-scope
+rather than silently passed. One pre-existing, out-of-scope stderr double-print bug was found
+during cross-checking and is recorded, not fixed.
