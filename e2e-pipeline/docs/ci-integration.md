@@ -206,14 +206,16 @@ Quarantine thresholds are stored in `quarantine.json`:
 
 ## Mapping Linter (`scripts/lint-mapping.sh`)
 
-`scripts/lint-mapping.sh` is a 4-token-class linter that rejects banned Playwright vocabulary from mapping YAML files. It exists to keep mappings on the canonical Cand 2 grammar (`[role="X"][aria-label="Y"]`, CSS `:nth-of-type(N)`, `find role` subcommand, etc.) and prevent regression after the 2.7.0 selector-grammar realignment.
+`scripts/lint-mapping.sh` rejects the selector forms below from mapping YAML
+files. Grammar and rationale (what's banned and why `role=X[name="Y"]` and bare
+`text=` are native, not banned): `CLAUDE.md` § Selector Priority — the single
+authority.
 
 | Banned token | Why | Use instead |
 |---|---|---|
-| `role=X[name="Y"]` | Playwright role-selector attribute syntax | `[role="X"][aria-label="Y"]` |
 | ` >> nth=N` | Playwright chord nth selector | `:nth-of-type(N)` (CSS) |
-| bare `text=...` at selector start | Playwright text shorthand | `find text "..."` (subcommand) |
-| `has-text(...)` | Playwright pseudo (broken in agent-browser) | role + name match |
+| `has-text(...)` | Playwright pseudo (broken in agent-browser) | `role=<r>[name="<v>"]` or `text=<v>` |
+| `find role\|text\|label\|testid ...` as a `selector:` value | agent-browser CLI subcommand chain, not selector grammar | `role=<r>[name="<v>"]` |
 
 Usage:
 
@@ -226,7 +228,7 @@ find .claude/e2e/mappings -name '*.yaml' -print0 \
   | xargs -0 -n1 bash scripts/lint-mapping.sh
 ```
 
-Exit codes: `0` clean · `1` one or more banned tokens detected (path + line printed to stderr).
+Exit codes: `0` clean · `1` usage error / file not found · `2` one or more banned tokens detected (path + line printed to stderr).
 
 Wire into CI as a fast pre-flight gate before the browser job spins up.
 
@@ -427,19 +429,19 @@ FLOWS=$(ls .claude/e2e/compiled/gate-*.sh | xargs -I{} basename {} .sh \
 
 ### Workarounds (applied by the compiler)
 
-**Visibility checks**: The compiler generates `_poll_snapshot_contains` (grepping the a11y tree) instead of `_poll_visible` (Playwright's `isVisible()`). The `selectorToA11yPattern()` function (canonical: `compiler/lib/selector-translate.js`) converts both the post-2.7.0 native CSS attribute selectors and the legacy Playwright role-selector forms (kept for backward compat):
+**Visibility checks**: The compiler generates `_poll_snapshot_contains` (grepping the a11y tree) instead of `_poll_visible` (Playwright's `isVisible()`). The `selectorToA11yPattern()` function (`compiler/lib/selector-translate.js`) translates every supported selector form to the identical a11y-grep-pattern shape — this is why the role-attribute form and the CSS-attribute form below compile to the same output:
 
 | Input selector | Form | Grep pattern |
 |---|---|---|
-| `[role="textbox"][aria-label="電子郵件"]` | Cand 2 canonical (post-2.7.0) | `textbox "電子郵件"` |
-| `[role="button"][aria-label="登 入"]` | Cand 2 canonical | `button "登 入"` |
+| `role=textbox[name="電子郵件"]` | Role + name (primary native form) | `textbox "電子郵件"` |
+| `text=電子郵件` | Text only (native form) | `"電子郵件"` |
+| `[role="textbox"][aria-label="電子郵件"]` | Role + literal aria-label (secondary form) | `textbox "電子郵件"` |
 | `[role="combobox"]` | role-only | `combobox` (broad) |
 | `[data-testid="…"]` | data-testid | `null` (runner uses CSS attr selector directly) |
-| `role=textbox[name="電子郵件"]` | Playwright legacy (BANNED in new mappings; translator still accepts) | `textbox "電子郵件"` |
-| `role=heading[name=/每日看板/]` | Playwright regex (BANNED) | `每日看板` (literal prefix) |
-| `role=combobox >> nth=0` | Playwright nth chord (BANNED) | `combobox` (role only) |
+| `role=heading[name=/每日看板/]` | Playwright regex name (native) | `每日看板` (literal prefix) |
+| `role=combobox >> nth=0` | Role + nth chord — nth chord is BANNED (CLASS 2) regardless of what precedes it | `combobox` (role only) |
 
-> The mapping linter (`scripts/lint-mapping.sh`) rejects all four banned Playwright token classes (`role=X[name=Y]`, `>> nth=N`, bare `text=`, `has-text(`) at the mapping layer. New mappings produced by `/e2e-map` (2.7.0+) emit only canonical Cand 2 forms.
+> The mapping linter (`scripts/lint-mapping.sh`) rejects three token classes: ` >> nth=N`, `has-text(`, and `find role|text|label|testid ...` stored as a `selector:` value. `role=X[name=Y]` and bare `text=` are native forms, not banned — see `CLAUDE.md` § Selector Priority and `docs/dev/.spacedock-state/e2e-selector-canon-review.md`.
 
 **Fill and click** (login flows only): Replace `agent-browser fill`/`click` with `agent-browser eval` using JavaScript:
 

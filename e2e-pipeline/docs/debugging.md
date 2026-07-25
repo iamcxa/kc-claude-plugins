@@ -214,8 +214,8 @@ Storage and cookie diffing is particularly useful for diagnosing auth token muta
 | CLI recording skipped (agg/asciinema missing) | Install: `brew install asciinema agg`. Required only for CLI-only flows (zero browser steps). |
 | Residual `[E2E-DBG]` markers in source | Run `/e2e-debug --cleanup` to remove them. Nuclear option: `git checkout -- <file>` |
 | `/e2e-debug` cleanup missed some files | Check non-standard directories. Cleanup scans `apps/ src/ lib/ components/` by default. |
-| `eval_fallback_hits > 0` in test report | A step's selector failed native resolution and the runner fell through to JS eval. Re-run `/e2e-map` for the affected page or fix the selector to canonical Cand 2 form (`[role="…"][aria-label="…"]`). Bound the metric with `scripts/measure-fallback-baseline.sh` -- see [CI Integration](ci-integration.md#fallback-counter-baseline-scriptsmeasure-fallback-baselinesh). |
-| Mapping fails `lint-mapping.sh` | Banned Playwright token in mapping (`role=X[name=Y]`, `>> nth=N`, bare `text=`, `has-text(`). Replace per the [linter table](ci-integration.md#mapping-linter-scriptslint-mappingsh) and re-run `/e2e-map` to regenerate. |
+| `eval_fallback_hits > 0` in test report | A step's selector failed native resolution and the runner fell through to JS eval. Re-run `/e2e-map` for the affected page or fix the selector to a native form (`role=<r>[name="<v>"]`, `text=<v>`, or `[data-testid="…"]` — see `CLAUDE.md` § Selector Priority). Bound the metric with `scripts/measure-fallback-baseline.sh` -- see [CI Integration](ci-integration.md#fallback-counter-baseline-scriptsmeasure-fallback-baselinesh). |
+| Mapping fails `lint-mapping.sh` | Banned token in mapping (`>> nth=N`, `has-text(`, or `find role\|text\|label\|testid ...` stored as a `selector:` value). Replace per the [linter table](ci-integration.md#mapping-linter-scriptslint-mappingsh) and re-run `/e2e-map` to regenerate. |
 
 For deeper diagnostics: `/e2e-skill-ops --debug`
 

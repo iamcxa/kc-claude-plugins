@@ -755,7 +755,7 @@ Also add the metric row to the `## Summary` table in `report.md` (§ 3c):
 
 **Rule 1 — Native form returns 0/false/not-found → fail loud, no eval bypass.**
 
-When a selector matches a NATIVE form — CSS attribute form (`[data-testid=...]`, `[aria-label="..."]`, `input[type="password"]`, etc.) OR canonical `find role|text|testid|label <r> [--name <v>]` subcommand — and `{{browser_command}} is visible/wait/click` returns 0/false/not-found:
+When a selector matches a NATIVE form — CSS attribute form (`[data-testid=...]`, `[aria-label="..."]`, `input[type="password"]`, etc.) OR a `find role|text|testid|label <r> [--name <v>]` subcommand invoked directly (interactive CLI use only — never a stored `selector:` value, see `CLAUDE.md` § Selector Priority item 9) — and `{{browser_command}} is visible/wait/click` returns 0/false/not-found:
 - **DO NOT fall back to eval.**
 - Return the explicit failure to the flow runner immediately.
 - Increment `eval_fallback_hits` as the failure counter (still tracked for observability) but do NOT execute the eval bypass.
