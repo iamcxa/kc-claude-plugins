@@ -12,9 +12,10 @@ design:
 id: x0fxzgrqcmtsbvp4c2cnp7z0
 ---
 
-**Blocked 2026-07-26 on `attended-pr-review-wait` (4p)**, transitively through slice 2
-(`once-only-daemon-preauth-gate`). If the unattended caller is removed, this slice has no
-caller to gate. Deferred, not dropped.
+**Unblocked 2026-07-26.** `attended-pr-review-wait` (4p) briefly threatened this slice's
+premise by proposing to remove the unattended caller entirely; the captain parked it the
+same day because unattended operation is a standing daily need. This slice still depends on
+slice 2 (`once-only-daemon-preauth-gate`), and on nothing else.
 
 Once a daemon iteration carries a typed preauthorization (slice 2), two checks remain before it may post autonomously, both of which a human at the §6c gate supplies implicitly today:
 
