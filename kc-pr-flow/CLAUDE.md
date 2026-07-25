@@ -119,7 +119,15 @@ docker run --rm --platform linux/amd64 -v "$PWD:/mnt" -w /mnt koalaman/shellchec
   kc-pr-flow/scripts/review-post.test.sh kc-pr-flow/test/fixtures/review-post/stub-transport.sh
 ```
 
-Bump the pin in the workflow and this command together.
+No Docker running? Fetch the pinned binary instead — there is no darwin arm64 build for v0.9.0, but
+the x86_64 one runs under Rosetta:
+
+```bash
+curl -fsSL https://github.com/koalaman/shellcheck/releases/download/v0.9.0/shellcheck-v0.9.0.darwin.x86_64.tar.xz \
+  | tar -xJ -C /tmp && /tmp/shellcheck-v0.9.0/shellcheck <files>
+```
+
+Bump the pin in the workflow and both commands together.
 
 ## Internal Agents
 
