@@ -14,9 +14,19 @@ id: vf88cvthkhh9je2ng71xbbs9
 
 Slice 2 of 3 for daemon posting safety. Depends on `daemon-once-only-posting` (slice 1); `daemon-preauth-freshness-coverage` (slice 3) depends on this.
 
-**Blocked 2026-07-26 on `attended-pr-review-wait` (4p).** That entity proposes removing the
-unattended caller rather than bounding it, which would delete this slice's reason to exist.
-Deferred, not dropped: if an unattended mode is ever wanted, this slice returns as written.
+**Unblocked 2026-07-26 — premise survived a challenge.** `attended-pr-review-wait` (4p)
+briefly proposed removing the unattended caller rather than bounding it, which would have
+deleted this slice's reason to exist. The captain parked it the same day: unattended
+operation is a standing daily need, so a bounded autonomous authorization is still required
+and the four decisions below stand.
+
+One narrower coupling remains. D1's ceiling has to be set by something outside the agent
+that mints the gate, and the seat identified at the backlog gate was
+`pr-review-daemon.sh:190`'s inline env prefix. 4p's parked directions (`spacedock claude`,
+or a spacedock+ACP harness) would change or remove that script. **The ceiling's ordering,
+cap-vs-refuse semantics, expiry, AC-3 symmetry, and schema version are all caller-agnostic
+and can be built now; only which process exports the ceiling should wait for the caller's
+shape to settle.** Do not over-fit the contract to today's `claude -p` daemon.
 
 `kc-pr-review` treats §6c human confirmation as the final authority before any `gh pr review`. In daemon mode that authority is supplied by an instruction in prose: `reference/pr-review-loop.md` tells the iteration "You are running in daemon mode with no interactive terminal ... Approve posting the review. Do NOT wait for user input — there is no user." So the autonomous path's authorization today is the loop asking the model to approve itself, with nothing typed, bounded, or auditable about it.
 
