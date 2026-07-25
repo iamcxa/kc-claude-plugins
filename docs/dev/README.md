@@ -159,6 +159,16 @@ once. Discipline clauses:
   clause citing proof outside the task's own prose. At least one AC measures
   the end value the task exists for, against a baseline that can move the
   wrong way.
+- **Run `status --read <ref> --ac-scan` before presenting the ideation gate;
+  every AC must resolve.** The extractor is line-based, so a
+  `**AC-N — …**` heading whose bold span wraps onto a second line is invisible
+  to it — and house style wraps prose near 95 characters, so a long property
+  statement hits this by accident. Keep the bold heading short enough to open
+  and close on one line and put detail in the body underneath. This is not
+  formatting hygiene: the gate's AC cross-check reads that extractor's output,
+  so an unparsed AC set gives the cross-check nothing to anchor against and it
+  passes by absence. Three sprint-1 tasks shipped ideation with ACs invisible
+  this way, each found only downstream.
 - **E2E-first acceptance.** When the task changes full-stack or user-visible
   behavior, at least one AC is verified by exercising the real flow end to
   end (browser drive, CLI invocation, service round-trip). Unit-only proof is
