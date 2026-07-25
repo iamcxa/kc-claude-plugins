@@ -29,11 +29,34 @@ survive.
 
 ## Notes for ideation
 
-- Spike before choosing: the page group is optional in the pattern
-  (`(?:\s+on\s+([\w-]+))?`), so count how many corpus steps supply it and how many of those
-  currently resolve to an element on a different page. The first number sizes the migration;
-  the second is the live defect count. If the second is zero the change is cheap insurance; if
-  it is not, it is a bug fix with a blast radius.
+- Spike DONE, 2026-07-25 (`.context/spike-page-binding.js`, run over the 100-flow corpus). It
+  answers the sizing question and surfaces a design constraint that was not anticipated:
+
+  | | |
+  |---|---|
+  | page-bearing steps | 437 |
+  | supply the qualifier | **307 (70%)** |
+  | qualifier resolvable against the mapping | 288 |
+  | steps whose element is not on the stated page | 38 |
+  | — of those, element lives on `_global` | **36 (legitimate)** |
+  | — **genuine mismatches** | **2** |
+  | elements ambiguous across pages | 13 |
+
+  So: **this is cheap insurance, not a bug fix.** The live defect count is 2 — both the same
+  `back_button`, named on `booking-confirm` and `task-execution` while mapped only under
+  `service-order-detail`. Removing the qualifier from the grammar instead is not cheap: 70% of
+  qualified steps use it.
+
+- **The load-bearing design constraint, and it is not in the original brief.** 36 of the 38
+  apparent mismatches are elements stored under a shared page key (`_global`) and referenced by
+  the page the user is visiting — correct authoring, not error. A binding implementation that
+  compares the stated page against the element's own page key rejects all 36. That is **18×
+  more damage than the 2 defects it catches.** Shared/global page keys must resolve against any
+  stated page, and the set of such keys must be defined rather than pattern-matched on a leading
+  underscore.
+- The 13 ambiguous-across-pages elements are where binding buys something structural: today they
+  are only caught when a step happens to reference them, so the same defect errors on one corpus
+  and passes on another.
 - Binding it means element lookup becomes page-scoped with a defined fallback for steps that
   omit the qualifier — decide whether omission means "any page" (today's behaviour, kept for
   compatibility) or is itself rejected. The second is stricter and belongs with
