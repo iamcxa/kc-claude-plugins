@@ -7,7 +7,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-e2e-expect-grammar-permutations
 issue:
-pr:
+pr: "#60"
 design: required
 id: xnj27a2qnjtb61mqegdasm00
 mod-block: merge:pr-merge
