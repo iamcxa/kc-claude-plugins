@@ -47,3 +47,54 @@ gate that keeps the rest from coming back, and the migration is the larger half.
   delete the other — two copies of a ban is the disease being treated.
 - Falsification: a mapping carrying a banned form must fail compilation. Reverting the gate
   must make it compile again.
+
+## Spike result, 2026-07-25 — the premise above is wrong, re-cut before building
+
+A headless spike built the codemod and ran it over all 452 unique banned selector strings.
+Artefacts and evidence: `.context/mini-spike/` (report, codemod, 38 tests). The tests were
+independently confirmed non-vacuous — reintroducing the `nth` off-by-one turns 7 of 38 red and
+restoring it returns them to green.
+
+**Only 254 of 452 (56.2%) transform mechanically; 198 are refused.** The "~88% mechanical"
+figure in the Problem section counted *occurrences* (~2,500); this counts *unique strings*, and
+the unique count is the one that sizes the work, because each distinct string needs its own
+decision. Both numbers are true and the earlier one is the misleading one.
+
+Two findings invalidate "codemod, then flip the gate on" as the plan:
+
+1. **The canonical replacement is not a semantic equivalent, and it governs 249 of the 254
+   transforms.** Playwright's `role=X[name="Y"]` matches the *computed accessible name* and the
+   *implicit* ARIA role; CSS `[role="X"][aria-label="Y"]` matches two *literal attributes*. For a
+   plain `<button>Save</button>` the Playwright form matches and the CSS form matches nothing —
+   the element carries neither attribute. Playwright's quoted name match is also
+   case-insensitive and whitespace-normalised; CSS attribute matching is neither.
+
+   Read this against the runtime that actually exists: agent-browser drives Chrome over CDP and
+   is **not** Playwright, and the plugin's own docs say these Playwright forms are already
+   "silently mishandled at runtime (fallback eval path -> false positive risk)". So the migration
+   is not "working -> broken"; it is "silently mishandled -> matches nothing, loudly". That may
+   be an improvement. It may also be a fresh crop of false negatives. **Selector text cannot
+   settle it — only a browser against the real app can**, and the spike says so plainly rather
+   than claiming the migration is safe.
+
+   Consequence beyond this entity: `e2e-pipeline/CLAUDE.md` § Selector Priority documents
+   `[role="<r>"][aria-label="<v>"]` as the canonical form. If that only holds for apps that
+   literally spell out `role` and `aria-label`, the canon itself needs review — which is a
+   bigger question than this entity and should be escalated, not absorbed.
+
+2. **The largest refusal class is a schema change, not a rewrite.** 83 of the 198 refusals are
+   bare `text=`, whose canonical target `find text "<v>"` is an agent-browser *subcommand*, while
+   the mapping schema stores a `selector:` string. Twenty of those also carry an `nth=` chord.
+   No text substitution reaches them.
+
+Two smaller corrections to the framing: the `>> nth=N` off-by-one was named the riskiest
+mechanism in this entity's brief, but only 11 of 452 selectors survive to a Transform-2 rewrite
+— it governs 2.4% of the migration, not the bulk. And fixing the arithmetic does not make
+Transform 2 correct anyway: Playwright's `nth=N` indexes into the *matched set*, while CSS
+`:nth-of-type(N)` counts same-tag *siblings under a parent*. They coincide only in a special
+case.
+
+**What ideation should now decide**, given the above: whether this entity still belongs in
+sprint 1 at all, or splits into a browser-verified migration (which needs a target app and
+therefore a different sprint shape) plus a much narrower gate covering only the classes whose
+replacement is genuinely equivalent.
