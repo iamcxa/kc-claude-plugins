@@ -1,16 +1,17 @@
 ---
 title: Close the expect-grammar permutation holes
-status: validation
+status: done
 source: sprint-1 (compiler boundary) entity 1 of 5; measured this session, corroborated by the cross-model reviewer as the highest-ROI lowest-risk item in the codebase
 started: 2026-07-25T12:41:25Z
-completed:
-verdict:
+completed: 2026-07-25T16:35:43Z
+verdict: passed
 worktree: .worktrees/spacedock-ensign-e2e-expect-grammar-permutations
 issue:
-pr: "#60"
+pr: pr-merge:60
 design: required
 id: xnj27a2qnjtb61mqegdasm00
-mod-block: merge:pr-merge
+mod-block:
+archived: 2026-07-25T16:35:43Z
 ---
 
 ## Problem
