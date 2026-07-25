@@ -178,12 +178,42 @@ review_post_canonical_payload() {
 }
 
 review_post_gate_valid() {
-  local gate_json="$1" expected_event="$2"
-  printf '%s' "$gate_json" | jq -e --arg event "$expected_event" '
-    type == "object" and
-    .schema == "kc-pr-flow.interactive-post-gate/v1" and
-    .human_confirmed == true and
-    .effective_event == $event' >/dev/null 2>&1
+  # Two authorizations are accepted, and only two.
+  #
+  # The interactive gate means a human confirmed at §6c; its shape is unchanged,
+  # so `human_confirmed` keeps meaning exactly that and stays unforgeable by an
+  # autonomous caller.
+  #
+  # The autonomous gate is for a caller with no human at that gate (the daemon).
+  # It carries no `human_confirmed` field at all, and unlike the interactive gate
+  # it must name the review it authorizes: a gate minted for another review key
+  # or another head is refused here rather than trusted, which is what keeps a
+  # replayed or copied authorization from posting to the wrong PR or an old head.
+  local gate_json="$1" expected_event="$2" review_key="$3" head_sha="$4"
+  local schema
+  schema="$(jq -r 'if type == "object" then (.schema // empty) else empty end' \
+    <<<"$gate_json" 2>/dev/null)" || return 1
+  case "$schema" in
+    kc-pr-flow.interactive-post-gate/v1)
+      printf '%s' "$gate_json" | jq -e --arg event "$expected_event" '
+        .human_confirmed == true and
+        .effective_event == $event' >/dev/null 2>&1
+      ;;
+    kc-pr-flow.autonomous-post-gate/v1)
+      printf '%s' "$gate_json" | jq -e \
+        --arg event "$expected_event" --arg review_key "$review_key" \
+        --arg head_sha "$head_sha" '
+        (keys | sort) ==
+          ["authorized_by","effective_event","head_sha","review_key","schema"] and
+        .authorized_by == "daemon" and
+        .effective_event == $event and
+        .review_key == $review_key and
+        .head_sha == $head_sha' >/dev/null 2>&1
+      ;;
+    *)
+      return 1
+      ;;
+  esac
 }
 
 # Operator-level kill switch, layered above the per-call gate above. Off
@@ -423,17 +453,20 @@ review_post_cmd_post() {
   retention_seconds="$(jq -r '.retention_seconds // empty' <<<"$request")"
   [ -n "$retention_seconds" ] || retention_seconds="${KC_PR_FLOW_PENDING_RETENTION_SECONDS:-$REVIEW_POST_DEFAULT_RETENTION_SECONDS}"
 
-  if ! review_post_gate_valid "$gate" "$event"; then
-    printf 'review-post: invalid or event-mismatched post gate\n' >&2
-    return 3
-  fi
   if [ "$commit_id" != "$head_sha" ]; then
     printf 'review-post: commit_id must equal the reviewed head\n' >&2
     return 3
   fi
 
+  # The review key is derived before the gate check because an autonomous gate
+  # names the review it authorizes, and that binding is only checkable against
+  # the key this request actually resolves to.
   local review_key payload payload_sha256 idempotency_key
   review_key="$(review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash")" || return 1
+  if ! review_post_gate_valid "$gate" "$event" "$review_key" "$head_sha"; then
+    printf 'review-post: invalid, event-mismatched, or unbound post gate\n' >&2
+    return 3
+  fi
   payload="$(review_post_canonical_payload "$commit_id" "$event" "$body" "$comments")" || return 1
   payload_sha256="$(review_post_payload_sha256 "$commit_id" "$event" "$body" "$comments")" || return 1
   idempotency_key="$(review_runtime_idempotency_key "$review_key" "$commit_id" "$payload_sha256")" || return 1

@@ -75,6 +75,23 @@ write_gate() {
     effective_event:"COMMENT",confirmation:{schema:"kc-pr-flow.interactive-confirmation/v1",
     source:"legacy",effective_event:"COMMENT"}}' >"$GATE"
 }
+# The review key this request resolves to, mirroring review_runtime_review_key.
+review_key_for() {
+  printf '%s|%s|%s|%s|%s' "$REPO" "$PR" "$BASE" "$HEAD" "$CONFIG" |
+    shasum -a 256 | awk '{print $1}'
+}
+# Authorization for a caller with no human at the confirmation gate. The
+# overrides let a test bind it to the wrong review or forge a field.
+write_auto_gate() {
+  local key head by
+  key="${1:-}"; [ -n "$key" ] || key="$(review_key_for)"
+  head="${2:-$HEAD}"
+  by="${3:-daemon}"
+  AUTO_GATE="$STUB_DIR/auto-gate.json"
+  jq -S -c -n --arg key "$key" --arg head "$head" --arg by "$by" '
+    {schema:"kc-pr-flow.autonomous-post-gate/v1",authorized_by:$by,
+     effective_event:"COMMENT",head_sha:$head,review_key:$key}' >"$AUTO_GATE"
+}
 store_count() { jq -s 'length' "$STUB_DIR/reviews.jsonl"; }
 run_dir_for() { printf '%s/%s/pr-%s/%s' "$STATE" "$(printf '%s' "$REPO" | shasum -a 256 | awk '{print $1}')" "$PR" "$1"; }
 run_events() { cat "$(run_dir_for "$1")/events.jsonl"; }
@@ -410,6 +427,67 @@ gc_rc=$?
 set -e
 assert_eq "gc rejects a non-numeric --now-epoch" "2" "$gc_rc"
 assert_eq "a rejected gc clock never deletes reconcile evidence" "true" "$(path_exists "$pending_file")"
+teardown_env
+
+# --- Autonomous (daemon) authorization: an iteration with no human at the
+# confirmation gate gets the same once-only protection as an interactive post,
+# which is the whole point — a daemon session dies mid-POST as a matter of
+# routine, not as an edge case. ---
+new_env; write_request; write_auto_gate
+printf 'ambiguous\n' >"$STUB_DIR/post-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$AUTO_GATE" --now-epoch 1000)"
+assert_eq "an autonomous gate authorizes a post" "ambiguous" "$(jq -r '.status' <<<"$out")"
+run_id="$(jq -r '.run_id' <<<"$out")"
+assert_eq "the autonomous post landed one review" "1" "$(store_count)"
+assert_eq "the autonomous post left durable reconcile evidence" "true" "$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
+# The interrupted-iteration case: a second iteration must reconcile, not repost.
+second="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$AUTO_GATE" --now-epoch 1100)"
+assert_eq "a second autonomous iteration reconciles instead of reposting" "posted_reconciled" "$(jq -r '.status' <<<"$second")"
+assert_eq "a second autonomous iteration leaves EXACTLY ONE review" "1" "$(store_count)"
+teardown_env
+
+# --- An autonomous gate authorizes one review, not any review. ---
+new_env; write_request
+printf 'posted\n' >"$STUB_DIR/post-plan"
+write_auto_gate "0000000000000000000000000000000000000000000000000000000000000000"
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$AUTO_GATE" --now-epoch 1000 >/dev/null 2>&1
+rc_key=$?
+set -e
+assert_eq "an autonomous gate bound to another review key is refused" "3" "$rc_key"
+write_auto_gate "" "cccccccccccccccccccccccccccccccccccccccc"
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$AUTO_GATE" --now-epoch 1000 >/dev/null 2>&1
+rc_head=$?
+set -e
+assert_eq "an autonomous gate bound to another head is refused" "3" "$rc_head"
+write_auto_gate "" "$HEAD" human
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$AUTO_GATE" --now-epoch 1000 >/dev/null 2>&1
+rc_by=$?
+set -e
+assert_eq "an autonomous gate claiming a non-daemon authorizer is refused" "3" "$rc_by"
+write_auto_gate
+jq -c '. + {human_confirmed:true}' "$AUTO_GATE" >"$AUTO_GATE.tmp" && mv "$AUTO_GATE.tmp" "$AUTO_GATE"
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$AUTO_GATE" --now-epoch 1000 >/dev/null 2>&1
+rc_smuggle=$?
+set -e
+assert_eq "an autonomous gate smuggling human_confirmed is refused" "3" "$rc_smuggle"
+assert_eq "no refused autonomous gate posted anything" "0" "$(store_count)"
+teardown_env
+
+# --- Rollback still governs the autonomous path: the flag, not the gate, is the
+# operator's kill switch, so a valid autonomous gate cannot re-enable it. ---
+new_env; write_request; write_auto_gate
+printf 'posted\n' >"$STUB_DIR/post-plan"
+unset KC_PR_FLOW_ONCE_ONLY_POST
+set +e
+bash "$POST" post --request-file "$REQUEST" --gate-file "$AUTO_GATE" --now-epoch 1000 >/dev/null 2>&1
+rc_rollback=$?
+set -e
+assert_eq "rollback refuses an autonomous post too" "3" "$rc_rollback"
+assert_eq "a rolled-back autonomous post writes no review" "0" "$(store_count)"
 teardown_env
 
 printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
