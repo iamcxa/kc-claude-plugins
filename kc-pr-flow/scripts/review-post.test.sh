@@ -282,6 +282,19 @@ assert_eq "a lagging reconcile keeps the pending payload for a later retry" "tru
 assert_eq "a lagging reconcile writes no terminal result" "" "$(run_events "$run_id" | jq -r 'select(.event_type=="post.result") | .payload.outcome')"
 teardown_env
 
+# --- A malformed confirm-window knob must not fail open into the retry the
+# window exists to prevent (same class as the gc clock guard below). ---
+new_env; write_request; write_gate
+printf 'ambiguous\n' >"$STUB_DIR/post-plan"
+printf 'lag\nlag\nlag\nlag\n' >"$STUB_DIR/list-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+resume_out="$(KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS=not-a-number bash "$POST" resume \
+  --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 1010)"
+assert_eq "a malformed confirm window falls back to the safe default" "ambiguous" "$(jq -r '.status' <<<"$resume_out")"
+assert_eq "a malformed confirm window never licenses a retry" "1" "$(store_count)"
+teardown_env
+
 # --- AC1 (reconcile fail-closed, unusable list): a transport that exits 0 with
 # a body that is not a reviews array must never be read as "marker absent". ---
 new_env; write_request; write_gate
@@ -321,6 +334,21 @@ assert_eq "first post is ambiguous" "ambiguous" "$(jq -r '.status' <<<"$first")"
 second="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1100)"
 assert_eq "a repeat fresh post reconciles instead of posting" "posted_reconciled" "$(jq -r '.status' <<<"$second")"
 assert_eq "a repeat fresh post leaves EXACTLY ONE review" "1" "$(store_count)"
+teardown_env
+
+# --- "Not visible" is not "not posted": when the pre-POST reconcile cannot see
+# a landed review (lagging list) but another run already authorized this exact
+# payload and never settled, a second fresh post must defer to that run instead
+# of racing a duplicate. ---
+new_env; write_request; write_gate
+printf 'ambiguous\nposted\n' >"$STUB_DIR/post-plan"
+printf 'lag\nlag\nlag\nlag\n' >"$STUB_DIR/list-plan"
+first="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+assert_eq "first post landed one review behind a lagging list" "1" "$(store_count)"
+assert_eq "first post is ambiguous" "ambiguous" "$(jq -r '.status' <<<"$first")"
+second="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1100)"
+assert_eq "a second post defers to the unsettled prior attempt" "prior_attempt_unsettled" "$(jq -r '.reason // ""' <<<"$second")"
+assert_eq "a second post never races a duplicate" "1" "$(store_count)"
 teardown_env
 
 # --- Malformed head response must fail closed as a transport error, never be

@@ -291,9 +291,14 @@ review_post_head_sha() {
   printf '%s' "$sha"
 }
 
-review_post_prior_intent_exists() {
-  # True when some OTHER run for this PR already recorded a post.intent for the
-  # same idempotency key — i.e. this exact payload may already be live remotely.
+review_post_prior_live_attempt() {
+  # True when some OTHER run for this PR already authorized this exact payload
+  # and has not settled (no terminal post.result, not invalidated). Such a run
+  # may have landed a review whose response was lost, or be mid-POST right now,
+  # so the caller must resume it rather than race a second POST.
+  #
+  # Slurped deliberately: `jq -e` over a stream takes its exit status from the
+  # LAST value emitted, which would misreport a match followed by a non-match.
   local repository="$1" pr_number="$2" current_run_id="$3" idempotency_key="$4"
   local state_root repo_key pr_dir events_file
   state_root="$(review_runtime_prepare_state_root)" || return 1
@@ -305,9 +310,11 @@ review_post_prior_intent_exists() {
     case "$events_file" in
       */"$current_run_id"/events.jsonl) continue ;;
     esac
-    if jq -e --arg key "$idempotency_key" '
-      select(.event_type == "post.intent") |
-      .payload.idempotency_key == $key' "$events_file" >/dev/null 2>&1; then
+    if jq -e -s --arg key "$idempotency_key" '
+      any(.[]; .event_type == "post.intent" and .payload.idempotency_key == $key)
+      and (any(.[]; .event_type == "post.result") | not)
+      and (any(.[]; .event_type == "run.invalidated") | not)' \
+      "$events_file" >/dev/null 2>&1; then
       return 0
     fi
   done < <(find "$pr_dir" -mindepth 2 -maxdepth 2 -type f -name events.jsonl 2>/dev/null)
@@ -488,9 +495,14 @@ review_post_cmd_post() {
       review_post_emit posted_reconciled "$run_id" "$idempotency_key" '' "$existing_id"
       return 0
     fi
-  elif review_post_prior_intent_exists "$repository" "$pr_number" "$run_id" "$idempotency_key"; then
-    printf 'review-post: reconcile read unusable while a prior posting attempt exists; not posting\n' >&2
-    review_post_emit ambiguous "$run_id" "$idempotency_key" reconcile_unavailable ''
+  fi
+  # No confirmed remote copy — but "not visible" is not "not posted". If another
+  # run already authorized this exact payload and never settled, it may have
+  # landed a review whose response was lost (or be mid-POST). Resume that run
+  # instead of racing a second POST.
+  if review_post_prior_live_attempt "$repository" "$pr_number" "$run_id" "$idempotency_key"; then
+    printf 'review-post: an unsettled prior attempt exists for this payload; resume it instead\n' >&2
+    review_post_emit ambiguous "$run_id" "$idempotency_key" prior_attempt_unsettled ''
     return 0
   fi
 
@@ -657,6 +669,11 @@ review_post_cmd_resume() {
   local intent_at intent_epoch confirm_seconds
   intent_at="$(printf '%s\n' "$events" | jq -r 'select(.event_type=="post.intent") | .occurred_at' | head -n1)"
   confirm_seconds="${KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS:-$REVIEW_POST_DEFAULT_RECONCILE_CONFIRM_SECONDS}"
+  # An unvalidated window would make the comparison below error out and read as
+  # false — i.e. fail OPEN into the retry this window exists to prevent.
+  case "$confirm_seconds" in
+    '' | *[!0-9]*) confirm_seconds="$REVIEW_POST_DEFAULT_RECONCILE_CONFIRM_SECONDS" ;;
+  esac
   [ -n "$now_epoch" ] || now_epoch="$(review_post_now_epoch)"
   case "$now_epoch" in
     '' | *[!0-9]*)
