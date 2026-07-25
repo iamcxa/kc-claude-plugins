@@ -1,8 +1,8 @@
 ---
 title: Make the page qualifier bind, or drop it from the grammar
-status: backlog
+status: ideation
 source: sprint-1 (compiler boundary) entity 3 of 5; split out of e2e-typed-operands so the sprint stays inside the compiler
-started:
+started: 2026-07-25T15:42:55Z
 completed:
 verdict:
 worktree:
