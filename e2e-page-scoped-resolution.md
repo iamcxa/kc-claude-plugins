@@ -249,8 +249,9 @@ already scoped: porting AC-3's shared-key case into the tracked `resolver.test.j
 sizing), so the one rule the FO ruled must never be cut is CI-protected even while the corpus
 measurement stays machine-local.
 
-**AC-1 (value, enforcement) — a step naming an existing element under the wrong stated page
-fails to compile instead of silently resolving to a different page's element.**
+**AC-1 — a wrong-paged step fails to compile instead of silently resolving (value, enforcement).**
+A step naming an existing element under a stated page that element is not on is rejected, rather
+than resolving to a different page's element.
 Verified by: the scratch-migration demonstration above (BEFORE silently resolves to
 `[aria-label='返回']` with zero errors; AFTER raises a page-not-found error) plus the synthetic
 `tab_all on branches` case (BEFORE would silently resolve via the flat table; AFTER raises the
@@ -258,9 +259,9 @@ named "not found on page" error with the shared-flag hint). Reproduces on this m
 stated `carlove` / `secha-*.yaml` paths only. Falsified by: reverting the patch and re-running
 either case returns to silent zero-error resolution.
 
-**AC-2 (no regression, corpus-measured) — resolve-error count and clean-flow count do not
-regress, and every delta is accounted for by shared-page ambiguity collapsing, never by breaking
-legitimate authoring.**
+**AC-2 — no corpus regression: every delta is ambiguity collapsing (no regression, corpus-measured).**
+Resolve-error count and clean-flow count do not regress, and every delta is accounted for by
+shared-page ambiguity collapsing, never by breaking legitimate authoring.
 Verified by: `XN_BEFORE_REF=ed15247 node .context/spike-3t-page-binding-before-after.js
 .context/flow-corpus.txt` reproduces the table above exactly. Reproduces on this machine at the
 stated paths only (`.context/` is git-excluded; the corpus is 3286 absolute paths into other
@@ -268,9 +269,9 @@ local repos). Falsified by: any entry under "FLOWS FLIPPED clean -> error", or "
 containing a `_global`-referencing step, or the resolve-error delta not matching the 3 named
 collapsed ambiguities.
 
-**AC-3 (shared-page correctness, proven on real data) — an element defined only under a
-shared-marked page (or the grandfathered `_global`) resolves correctly regardless of which real
-page a step states.**
+**AC-3 — shared-page elements resolve from any stated page (shared-page correctness, real data).**
+An element defined only under a shared-marked page (or the grandfathered `_global`) resolves
+correctly regardless of which real page a step states.
 Verified by: none of the corpus's `_global`-referencing steps appear in "NEW errors" (AC-2's
 harness); independently, the synthetic `sidebar_dashboard on branches` case above resolves to the
 `_global` selector against the real `secha-office.yaml` mapping. Reproduces on this machine at
@@ -280,10 +281,10 @@ failing to resolve. **Implementation must additionally port the synthetic case i
 `_global` page), so the shared-key rule — the one thing the FO ruled must never be cut — has
 CI-reproducible protection and does not rest solely on a machine-local harness.
 
-**AC-4 (page-not-found is distinct from element-wrong-page) — a stated page absent from the
-mapping produces `"page 'P' not found in mapping"`; an element present under a different real
-page produces `"element 'X' not found on page 'P' (found on: Y)"` with the `shared: true` hint —
-never the same message for both.**
+**AC-4 — page-not-found and element-wrong-page are distinct errors, never the same message.**
+A stated page absent from the mapping produces `"page 'P' not found in mapping"`; an element
+present under a different real page produces `"element 'X' not found on page 'P' (found on: Y)"`
+carrying the `shared: true` hint.
 Verified by: `resolver.test.js` cases (implementation stage) against the existing
 `EXTENDED_MAPPING` fixture (`compiler/test/resolver.test.js:412-437`, already has `login` +
 `dashboard` + `_global` pages) — e.g. `sidebar_dashboard visible on login` (real page, wrong page
@@ -292,8 +293,8 @@ Verified by: `resolver.test.js` cases (implementation stage) against the existin
 branch producing the other's message shape, or the existing `EXTENDED_MAPPING` test at
 `resolver.test.js:455` ("element visible on page" with matching page) changing behavior.
 
-**AC-5 (omission unaffected) — steps that omit the page qualifier keep byte-identical behavior:
-same resolution, same referenced-only-ambiguity semantics, same error text.**
+**AC-5 — steps omitting the page qualifier keep byte-identical behavior (omission unaffected).**
+Same resolution, same referenced-only-ambiguity semantics, same error text as before the change.
 Verified by: AC-2's corpus diff — the only deltas are the 3 recovered strings and 3 collapsed
 ambiguities, all page-qualified; every omitted-qualifier step's output is unchanged between
 BEFORE and AFTER. Reproduces on this machine at the stated paths only; the tracked
