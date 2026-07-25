@@ -52,3 +52,23 @@ existing lines are live, and the ban does not repair them.
   implementation must fail it.
 - Do not treat the lint ban as coverage. CLASS 2 stops new instances; it does not make
   the existing ones mean what they say. That distinction is the whole entity.
+
+## Scope extended, 2026-07-26 — `text=` chords now widen too
+
+The correction round on [[e2e-selector-canon-review]] made `text=V >> nth=N` translate to
+`"V"`, mirroring the `role=` precedent at `selector-translate.js:93-95`. That was the right
+call for that entity — the alternative (mirroring the regex branch) would have produced
+patterns that can never match — but it means **this defect's blast radius now includes the
+18 corpus `text=` chords** on top of the 339 `role=` ones.
+
+The implementing worker argued the widening is sound because the accessibility snapshot does
+not carry the DOM duplicate the chord exists to disambiguate. **That argument is untested and
+this entity owns testing it.** React Native Web is the documented reason those chords exist
+(text renders twice, `nth=0` hidden), and an RNW app is available on `localhost:8081` — take
+a snapshot of a duplicated element there and see whether the a11y tree collapses the pair or
+carries both. A snapshot captured during this session showed the same string appearing on two
+separate node types (`button "AlphaBtn"` and `StaticText "AlphaBtn"`), which is suggestive that
+it does NOT collapse — but that was a plain HTML fixture, not RNW, so it does not settle it.
+
+If the snapshot does carry both, the widening is a live wrong-element risk and not merely a
+loosened assertion.
