@@ -637,6 +637,15 @@ construction; it overran on deciding, and two of those four rounds existed only 
 first-officer errors (a wrong root-cause diagnosis of the AC-scan break, and a swapped
 attribution of which error class gains repairability).
 
+**Design-reset decision, captain, 2026-07-26: RECONFIRM.** Scope stands; finish it. The sunk
+1.64M does not enter the decision — what enters is the cost to complete, and that is three
+located sites in one file. The channel is load-bearing for [[e2e-page-scoped-resolution]] and
+[[e2e-assertion-honesty-gate]], both of which are sequenced behind it precisely so their
+refusals are born structured; parking would strand that. Two constraints ride with the
+reconfirm: the correction round is scoped to the three sites with no redesign and no new AC,
+and any further FO-initiated correction round on this entity goes to the captain first rather
+than being dispatched on first-officer judgment.
+
 ## Stage Report: ideation
 
 - DONE: Reverse-recovery audit against merge target
