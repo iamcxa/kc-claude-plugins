@@ -443,3 +443,183 @@ describe('CLI-06: Commander basics', function() {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// CLI-08: --json output (e2e-json-diagnostics)
+//
+// AC-1: exactly one JSON document on stdout, {ok, flow, stats, errors,
+// coverage?} single-flow / {ok, flows, summary} batch, for success,
+// resolve-error, and parse-error cases alike.
+// ---------------------------------------------------------------------------
+
+describe('CLI-08: --json output', function() {
+  var tmpDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  function parseOnlyStdout(result) {
+    // AC-1 falsification: any non-JSON text on stdout must fail this, not just
+    // a JSON.parse() call that happens to tolerate a trailing partial match.
+    var trimmed = result.stdout.replace(/\n$/, '');
+    var lines = trimmed.split('\n');
+    assert.equal(lines.length, 1, 'stdout must be exactly one line (one JSON document). Got: ' + result.stdout);
+    return JSON.parse(lines[0]);
+  }
+
+  test("--json success case: single JSON document, ok:true, errors:[], stats present", function() {
+    var result = runCli([
+      '--json',
+      'simple-flow',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    assert.equal(result.status, 0, 'Expected exit 0. stderr: ' + result.stderr);
+    var doc = parseOnlyStdout(result);
+    assert.equal(doc.ok, true);
+    assert.equal(doc.flow, 'simple-flow');
+    assert.ok(doc.stats && typeof doc.stats === 'object', 'stats must be present');
+    assert.deepEqual(doc.errors, []);
+    assert.equal(doc.coverage, null);
+    // Proves --json changes reporting, not compilation: the .sh file is still written.
+    assert.ok(fs.existsSync(path.join(tmpDir, 'test-login.sh')), 'compiled .sh must still be written under --json');
+  });
+
+  test("--json resolve-error case (missing-element-flow): tier-1 errorDetails, candidates: []", function() {
+    var result = runCli([
+      '--json',
+      'missing-element-flow',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    assert.equal(result.status, 1, 'Expected exit 1. stdout: ' + result.stdout);
+    var doc = parseOnlyStdout(result);
+    assert.equal(doc.ok, false);
+    assert.ok(doc.stats && typeof doc.stats === 'object', 'stats must be present even for a resolve-error case');
+    assert.equal(doc.errors.length, 1);
+    assert.deepEqual(doc.errors[0], {
+      step_id: 'click-nonexistent',
+      field: 'element',
+      got: 'nonexistent_button',
+      candidates: [],
+      message: doc.errors[0].message,
+    });
+    assert.ok(doc.errors[0].message.includes("not found in mapping"));
+    assert.ok(!('code' in doc.errors[0]), 'no code field ships in this entity (captain ruling)');
+  });
+
+  test("--json parse-error case: message-only errorDetails, no step_id/field keys", function() {
+    var result = runCli([
+      '--json',
+      'parse-error-flow',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    assert.equal(result.status, 1, 'Expected exit 1. stdout: ' + result.stdout);
+    var doc = parseOnlyStdout(result);
+    assert.equal(doc.ok, false);
+    assert.ok(doc.stats && typeof doc.stats === 'object', 'stats must be present even for a parse-error case');
+    assert.ok(doc.errors.length >= 1, 'parse-error-flow.yaml fails multiple required-field checks');
+    doc.errors.forEach(function(e) {
+      assert.deepEqual(Object.keys(e), ['message'], 'parse errors are tier-2: message-only, no code');
+    });
+  });
+
+  test("--json AC-3/AC-4/E2E-first: ambiguous-element fixture shows real candidates, exactly 3 errors", function() {
+    var jsonResult = runCli([
+      '--json',
+      '--dry-run',
+      'list-data-completeness',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    assert.equal(jsonResult.status, 1, 'Expected exit 1. stdout: ' + jsonResult.stdout);
+    var doc = parseOnlyStdout(jsonResult);
+    assert.equal(doc.ok, false);
+    assert.equal(doc.errors.length, 3, 'exactly 3 tier-1 ambiguous errors (AC-4 population)');
+
+    var tabAllErrors = doc.errors.filter(function(e) { return e.got === 'tab_all'; });
+    var dataTableErrors = doc.errors.filter(function(e) { return e.got === 'data_table'; });
+    assert.equal(tabAllErrors.length, 2);
+    assert.equal(dataTableErrors.length, 1);
+    tabAllErrors.forEach(function(e) {
+      assert.deepEqual(e.candidates, ['service-schedule', 'employee-profiles'], "tab_all candidates must match today's found-on list verbatim");
+    });
+    assert.deepEqual(dataTableErrors[0].candidates, [
+      'service-schedule', 'customer-profiles', 'branches', 'employee-profiles',
+      'workspaces', 'services', 'self-check-lists', 'audit-templates', 'report-step-templates',
+    ], "data_table's 9-way candidates must match today's found-on list verbatim");
+
+    // E2E-first: cross-check against the SAME flow compiled without --json (prose mode) —
+    // proves both paths read the identical resolve() call, not merely parsing independently.
+    var prosResult = runCli([
+      '--dry-run',
+      'list-data-completeness',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    assert.equal(prosResult.status, 1);
+    // Pre-existing (unrelated to this entity): compile() itself prints each
+    // resolve error to stderr on failure, and bin/e2e-compile.js's non-json
+    // failure branch prints the same `errors` array again — every prose
+    // message appears twice today. Dedupe rather than assume single-print;
+    // fixing that duplication is out of this entity's scope (Non-goal 2: this
+    // entity changes error emission structure, not existing prose behavior).
+    var proseErrorLines = prosResult.stderr.split('\n').filter(function(l) { return l.indexOf('ERROR: ') === 0; });
+    var uniqueProseMessages = Array.from(new Set(proseErrorLines.map(function(l) { return l.slice('ERROR: '.length); })));
+    assert.equal(uniqueProseMessages.length, 3, 'prose mode must report the same 3 distinct errors. stderr: ' + prosResult.stderr);
+    var jsonMessages = doc.errors.map(function(e) { return e.message; });
+    assert.deepEqual(uniqueProseMessages.sort(), jsonMessages.sort(), 'prose and --json must report byte-identical messages from the same resolve() call');
+  });
+
+  test("--all --json: single aggregated JSON document, {ok, flows, summary}", function() {
+    var result = runCli([
+      '--all',
+      '--json',
+      '--flows-dir', FIXTURES_DIR,
+      '--mappings-dir', FIXTURES_DIR,
+      '--output-dir', tmpDir,
+    ]);
+    var doc = parseOnlyStdout(result);
+    assert.ok(Array.isArray(doc.flows), 'flows must be an array');
+    assert.ok(doc.flows.length > 0);
+    assert.ok(doc.summary && typeof doc.summary.passed === 'number' && typeof doc.summary.failed === 'number');
+    assert.equal(doc.summary.passed + doc.summary.failed, doc.flows.length);
+    doc.flows.forEach(function(entry) {
+      assert.ok(typeof entry.flow === 'string');
+      assert.ok(typeof entry.ok === 'boolean');
+      assert.ok(entry.stats && typeof entry.stats === 'object');
+      assert.ok(Array.isArray(entry.errors));
+    });
+    // FIXTURES_DIR includes missing-element-flow.yaml, which always fails.
+    assert.equal(result.status, doc.summary.failed > 0 ? 1 : 0, 'exit code must match failed count (AC-6: no new exit-code semantics)');
+  });
+
+  test("--all --json with an empty flows directory: still a single JSON document, not prose", function() {
+    var emptyFlowsDir = makeTmpDir();
+    try {
+      var result = runCli([
+        '--all',
+        '--json',
+        '--flows-dir', emptyFlowsDir,
+        '--mappings-dir', FIXTURES_DIR,
+        '--output-dir', tmpDir,
+      ]);
+      assert.equal(result.status, 0);
+      var doc = parseOnlyStdout(result);
+      assert.deepEqual(doc, { ok: true, flows: [], summary: { passed: 0, failed: 0 } });
+    } finally {
+      fs.rmSync(emptyFlowsDir, { recursive: true, force: true });
+    }
+  });
+});

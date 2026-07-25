@@ -48,11 +48,19 @@ async function compile(flowPath, mappingDir, outputDir, options) {
   var dryRun = (options && options.dryRun) || false;
   var verbose = (options && options.verbose) || false;
   var coverage = (options && options.coverage) || false;
+  var json = (options && options.json) || false;
   // Pass 1: Parse
   var parseResult = parse(flowPath, mappingDir);
   if (parseResult.errors.length > 0) {
     parseResult.errors.forEach(function(e) { console.error('ERROR: ' + e); });
-    return { success: false, errors: parseResult.errors };
+    // JSON boundary: wrap parser.js's plain-string errors generically as
+    // message-only errorDetails, without editing parser.js itself (parser
+    // errors are structural/type errors — no candidate data applies).
+    return {
+      success: false,
+      errors: parseResult.errors,
+      errorDetails: parseResult.errors.map(function(m) { return { message: m }; }),
+    };
   }
 
   var resolveResult;
@@ -65,7 +73,12 @@ async function compile(flowPath, mappingDir, outputDir, options) {
     resolveResult = resolveMultiSite(parseResult.flow, parseResult.sites);
     if (resolveResult.errors.length > 0) {
       resolveResult.errors.forEach(function(e) { console.error('ERROR: ' + e); });
-      return { success: false, errors: resolveResult.errors };
+      return {
+        success: false,
+        errors: resolveResult.errors,
+        errorDetails: resolveResult.errorDetails,
+        stats: resolveResult.stats,
+      };
     }
 
     // Auto-inject per-site base URL variables from each mapping's base_url
@@ -101,7 +114,12 @@ async function compile(flowPath, mappingDir, outputDir, options) {
     });
     if (resolveResult.errors.length > 0) {
       resolveResult.errors.forEach(function(e) { console.error('ERROR: ' + e); });
-      return { success: false, errors: resolveResult.errors };
+      return {
+        success: false,
+        errors: resolveResult.errors,
+        errorDetails: resolveResult.errorDetails,
+        stats: resolveResult.stats,
+      };
     }
 
     // Auto-inject base_url from mapping when flow has no variables block
@@ -183,14 +201,18 @@ async function compile(flowPath, mappingDir, outputDir, options) {
     fs.chmodSync(outPath, '755');
   }
 
-  // Print summary
-  console.log(
-    'Compiled: ' + s.total + ' steps, ' +
-    s.activeExpects + ' expects active, ' +
-    s.deferredExpects + ' expects deferred (Phase 2)'
-  );
+  // Print summary — suppressed under --json, where stdout must carry exactly
+  // one JSON document and nothing else (the CLI builds that document from the
+  // returned errorDetails/stats below instead).
+  if (!json) {
+    console.log(
+      'Compiled: ' + s.total + ' steps, ' +
+      s.activeExpects + ' expects active, ' +
+      s.deferredExpects + ' expects deferred (Phase 2)'
+    );
+  }
 
-  var returnVal = { success: true, outputPath: outPath, stats: s };
+  var returnVal = { success: true, outputPath: outPath, stats: s, errorDetails: resolveResult.errorDetails };
   if (coverage) {
     returnVal.coverage = coverageData;
   }
