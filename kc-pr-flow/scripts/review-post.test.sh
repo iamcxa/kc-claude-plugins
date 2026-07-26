@@ -319,10 +319,12 @@ assert_eq "a malformed confirm window never licenses a retry" "1" "$(store_count
 teardown_env
 
 # --- AC1 (reconcile fail-closed, unusable list): a transport that exits 0 with
-# a body that is not a reviews array must never be read as "marker absent". ---
+# a body that is not a reviews array must never be read as "marker absent". The
+# first `list` is faithful so the POST happens at all; the unusable body is what
+# resume then has to reconcile against. ---
 new_env; write_request; write_gate
 printf 'ambiguous\n' >"$STUB_DIR/post-plan"
-printf 'unusable\nunusable\nunusable\nunusable\n' >"$STUB_DIR/list-plan"
+printf 'faithful\nunusable\nunusable\nunusable\n' >"$STUB_DIR/list-plan"
 out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
 run_id="$(jq -r '.run_id' <<<"$out")"
 assert_eq "ambiguous post landed one review before the unusable list" "1" "$(store_count)"
@@ -330,6 +332,61 @@ resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run
 assert_eq "an unusable reconcile list fails closed" "ambiguous" "$(jq -r '.status' <<<"$resume_out")"
 assert_eq "an unusable reconcile list never retries" "1" "$(store_count)"
 assert_eq "an unusable reconcile keeps the pending payload" "true" "$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
+teardown_env
+
+# --- AC1 (post fails closed on the SAME condition resume does). The local intent
+# check `post` used to lean on is duplicate-safe only within ONE state root: a
+# wiped or reconfigured state dir, another machine, or a stateless runner leaves
+# it blind, and an unusable list hides the marker that would have caught the
+# duplicate. So local silence alone no longer licenses a POST. ---
+# One scenario walks the whole sequence -- refuse, refuse again, then settle --
+# because each `post`/`resume` invocation costs real CI seconds and this suite
+# runs close to the job's budget.
+new_env; write_request; write_gate
+printf 'posted\n' >"$STUB_DIR/post-plan"
+printf 'unusable\nunusable\n' >"$STUB_DIR/list-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+assert_eq "post fails closed on an unusable reconcile list" "ambiguous" "$(jq -r '.status' <<<"$out")"
+assert_eq "a refused post writes no review" "0" "$(store_count)"
+assert_eq "a refused post keeps the pending payload" "true" "$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
+assert_eq "a refused post writes no terminal result" "" "$(run_events "$run_id" | jq -r 'select(.event_type=="post.result") | .payload.outcome')"
+# Symmetry, pinned to the literal verdict on BOTH sides rather than to each
+# other: cross-comparing the two outputs holds in the pre-fix world too (both
+# said "posted"), so it would have been decoration.
+assert_eq "post names the reason resume names" "reconcile_unavailable" "$(jq -r '.reason' <<<"$out")"
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
+assert_eq "resume reaches the same status on the same body" "ambiguous" "$(jq -r '.status' <<<"$resume_out")"
+assert_eq "resume names the same reason" "reconcile_unavailable" "$(jq -r '.reason' <<<"$resume_out")"
+# AC2: refusing is not stranding. The intent and pending payload survived both
+# refusals, so the next usable read settles the run.
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5100)"
+assert_eq "a refused post settles on a later usable read" "posted" "$(jq -r '.status' <<<"$resume_out")"
+assert_eq "settling a refused post writes exactly one review" "1" "$(store_count)"
+teardown_env
+
+# --- Placement guard. The fail-closed check sits AFTER the local prior-attempt
+# consultation, so the two verdicts that local durable state can reach on its own
+# still win over the generic reconcile refusal. Moving the check earlier turns
+# both of these into reconcile_unavailable, which is why they are pinned. ---
+new_env; write_request; write_gate
+printf 'posted\n' >"$STUB_DIR/post-plan"
+printf 'faithful\nunusable\n' >"$STUB_DIR/list-plan"
+first="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+assert_eq "the first post landed" "posted" "$(jq -r '.status' <<<"$first")"
+second="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1100)"
+assert_eq "a definitively posted prior run still reconciles under an unusable list" "posted_reconciled" "$(jq -r '.status' <<<"$second")"
+assert_eq "reconciling against local state posts nothing further" "1" "$(store_count)"
+teardown_env
+
+new_env; write_request; write_gate
+printf 'ambiguous\n' >"$STUB_DIR/post-plan"
+printf 'faithful\nunusable\n' >"$STUB_DIR/list-plan"
+first="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+assert_eq "the first post ended unsettled" "ambiguous" "$(jq -r '.status' <<<"$first")"
+second="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1100)"
+assert_eq "an unsettled prior attempt keeps its own reason under an unusable list" "prior_attempt_unsettled" "$(jq -r '.reason' <<<"$second")"
+assert_eq "the unsettled prior attempt is not re-posted" "1" "$(store_count)"
 teardown_env
 
 # --- AC1 (author identity is not load-bearing): the idempotency marker alone

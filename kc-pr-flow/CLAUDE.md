@@ -80,7 +80,12 @@ consistent, an absent marker only proves "never landed" once `KC_PR_FLOW_RECONCI
 `ambiguous{reconcile_unconfirmed}` instead of duplicating a review that did land. The marker match
 ignores review author on purpose (the key already pins the payload; the login a token posts under is
 not knowable here). `post` also reconciles against the marker *before* its own POST, so a repeat
-invocation of an already-landed payload settles as `posted_reconciled` rather than posting twice. `gc` expires an unreconciled pending
+invocation of an already-landed payload settles as `posted_reconciled` rather than posting twice.
+The fail-closed rule is one rule with no per-command exception: an unusable list stops `post` too
+(`ambiguous{reconcile_unavailable}`, pending kept, nothing written), because the local intent check
+it used to lean on is blind once the state directory is wiped or the caller moves machines. The
+refusal is placed after that local check, so a definitively posted prior run still settles as
+`posted_reconciled` and an unsettled one still reports `prior_attempt_unsettled`. `gc` expires an unreconciled pending
 payload after `KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 604800s / 7 days) but never within its
 window — `resume`/`gc` are never gated by the rollback flag, so rolling back never deletes evidence
 needed to reconcile an uncertain remote result.
