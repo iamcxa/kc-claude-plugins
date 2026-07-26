@@ -7,7 +7,7 @@ completed:
 verdict:
 worktree: mini:~/mini-legs/dev-5vmvs9rf-honesty-impl
 issue:
-pr:
+pr: "#71"
 design:
 id: 5vmvs9rfzqa7raxjfqptkeey
 ---
