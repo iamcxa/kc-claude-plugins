@@ -1,11 +1,11 @@
 ---
 title: Fail loud on assertions that never run
-status: ideation
+status: implementation
 source: captain note — e2e-pipeline agent-native audit, 2026-07-25; scope cut A/B by the captain at ideation open (A = this entity, B = e2e-typed-operands)
 started: 2026-07-26T10:23:26Z
 completed:
 verdict:
-worktree:
+worktree: mini:~/mini-legs/dev-5vmvs9rf-honesty-impl
 issue:
 pr:
 design:
