@@ -947,3 +947,199 @@ test('resolveMultiSite: cross-site step with wait: also gets timeout threaded', 
   assert.ok(appNav, 'app-nav step should be resolved');
   assert.equal(appNav.timeout, undefined, 'app-nav without wait: should have no timeout');
 });
+
+// ---------------------------------------------------------------------------
+// errorDetails — additive structured channel (e2e-json-diagnostics)
+//
+// Every case below re-asserts the existing plain-string `errors` array
+// unchanged (AC-2's additive guarantee) alongside the new `errorDetails`
+// entries, so a regression that disturbs the string shape fails here too.
+// ---------------------------------------------------------------------------
+
+describe('errorDetails — additive structured channel', () => {
+  test('ambiguous element (click) produces tier-1 errorDetails with real candidates', () => {
+    const flow = {
+      name: 'test',
+      steps: [
+        { id: 'click-table', type: 'click', action: 'Click data_table on page-a' },
+      ],
+    };
+    const result = resolve(flow, DUPLICATE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.equal(result.errorDetails.length, 1, 'errorDetails must be same length as errors');
+    const detail = result.errorDetails[0];
+    assert.deepEqual(detail, {
+      step_id: 'click-table',
+      field: 'element',
+      got: 'data_table',
+      candidates: ['page-a', 'page-b'],
+      message: result.errors[0],
+    });
+    assert.ok(!('code' in detail), 'no code field ships in this entity (captain ruling)');
+  });
+
+  test('ambiguous element (expect) produces tier-1 errorDetails, distinct from click-path message', () => {
+    const flow = {
+      name: 'test',
+      steps: [
+        { id: 'click-unique', type: 'click', action: 'Click unique_a on page-a', expect: ['data_table visible'] },
+      ],
+    };
+    const result = resolve(flow, DUPLICATE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.equal(result.errorDetails.length, 1);
+    const detail = result.errorDetails[0];
+    assert.equal(detail.field, 'element');
+    assert.equal(detail.got, 'data_table');
+    assert.deepEqual(detail.candidates, ['page-a', 'page-b']);
+    assert.equal(detail.message, result.errors[0]);
+    assert.ok(detail.message.includes('expect element'), 'expect-path message text differs from click-path');
+  });
+
+  test('element not found produces tier-1 errorDetails with empty candidates (no fuzzy match)', () => {
+    const flow = {
+      name: 'test-missing',
+      steps: [
+        { id: 'click-nonexistent', type: 'click', action: 'Click nonexistent_button on login' },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.deepEqual(result.errorDetails[0], {
+      step_id: 'click-nonexistent',
+      field: 'element',
+      got: 'nonexistent_button',
+      candidates: [],
+      message: result.errors[0],
+    });
+  });
+
+  test('page not found produces tier-1 errorDetails with empty candidates', () => {
+    const flow = {
+      name: 'test-missing-page',
+      steps: [
+        { id: 'nav-missing', type: 'navigate', action: 'Navigate to nonexistent-page' },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.deepEqual(result.errorDetails[0], {
+      step_id: 'nav-missing',
+      field: 'page',
+      got: 'nonexistent-page',
+      candidates: [],
+      message: result.errors[0],
+    });
+  });
+
+  test('no-type-field step produces tier-2 errorDetails (message only, no code)', () => {
+    const flow = {
+      name: 'test-no-type',
+      steps: [
+        { id: 'untyped-step', action: 'Wait for networkidle' },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.deepEqual(result.errorDetails[0], { message: result.errors[0] });
+  });
+
+  test('unknown action type produces tier-2 errorDetails (message only)', () => {
+    const flow = {
+      name: 'test-unknown-type',
+      steps: [
+        { id: 'bogus-step', type: 'bogus', action: 'Do something' },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.deepEqual(result.errorDetails[0], { message: result.errors[0] });
+  });
+
+  test('unknown runtime_ref produces tier-2 errorDetails (message only)', () => {
+    const flow = {
+      name: 'test-bad-runtime-ref',
+      steps: [
+        {
+          id: 'fill-secret',
+          type: 'fill',
+          action: "Fill email_input on login",
+          value: { runtime_ref: 'NOT_DECLARED' },
+        },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING, { runtimeValues: {} });
+    assert.equal(result.errors.length, 1);
+    assert.deepEqual(result.errorDetails[0], { message: result.errors[0] });
+  });
+
+  test('multiple errors keep errors and errorDetails the same length and order', () => {
+    const flow = {
+      name: 'test-multi-error',
+      steps: [
+        { id: 'step-1', type: 'click', action: 'Click nonexistent_button on login' },
+        { id: 'step-2', action: 'no type here' },
+        { id: 'step-3', type: 'click', action: 'Click data_table on page-a' },
+      ],
+    };
+    const result = resolve(flow, DUPLICATE_MAPPING);
+    assert.equal(result.errors.length, 3);
+    assert.equal(result.errorDetails.length, 3);
+    for (let i = 0; i < result.errors.length; i++) {
+      assert.equal(result.errorDetails[i].message, result.errors[i], 'errorDetails[' + i + '] message must match errors[' + i + ']');
+    }
+    // step-1: not-found (tier-1), step-2: no-type (tier-2), step-3: ambiguous (tier-1)
+    assert.equal(result.errorDetails[0].field, 'element');
+    assert.ok(!('field' in result.errorDetails[1]), 'tier-2 detail has no field key');
+    assert.equal(result.errorDetails[2].field, 'element');
+  });
+
+  test('duplicate-elements mapping ambiguous error still matches by .includes() (existing consumer, zero edits)', () => {
+    // This is the exact assertion shape resolver.test.js:127 already used before this
+    // entity — re-asserted here to prove the additive errorDetails channel does not
+    // disturb it (AC-2 / completion checklist).
+    const flow = {
+      name: 'test',
+      steps: [
+        { id: 'click-table', type: 'click', action: 'Click data_table on page-a' },
+      ],
+    };
+    const result = resolve(flow, DUPLICATE_MAPPING);
+    const dupeError = result.errors.find(e => e.includes("'data_table' is ambiguous"));
+    assert.ok(dupeError, "should have ambiguous error for data_table. Errors: " + result.errors.join('; '));
+    assert.ok(dupeError.includes('page-a'), 'error should name page-a');
+    assert.ok(dupeError.includes('page-b'), 'error should name page-b');
+  });
+
+  test('resolveMultiSite: unknown site produces tier-2 errorDetails', () => {
+    const crossSiteFlow = {
+      name: 'cross-site-bad',
+      sites: { office: { mapping: 'site-a' } },
+      steps: [
+        { id: 'bad-site-step', site: 'nonexistent-site', type: 'navigate', action: 'Navigate to /dashboard' },
+      ],
+    };
+    const result = resolveMultiSite(crossSiteFlow, { office: { mappingName: 'site-a', mapping: SITE_MAPPINGS.office.mapping } });
+    assert.equal(result.errors.length, 1);
+    assert.deepEqual(result.errorDetails[0], { message: result.errors[0] });
+  });
+
+  test('resolveMultiSite: ambiguous click element produces tier-1 errorDetails', () => {
+    const crossSiteFlow = {
+      name: 'cross-site-ambiguous',
+      sites: { dupes: { mapping: 'test-app-dupes' } },
+      steps: [
+        { id: 'click-dupe', site: 'dupes', type: 'click', action: 'Click data_table on page-a' },
+      ],
+    };
+    const result = resolveMultiSite(crossSiteFlow, { dupes: { mappingName: 'test-app-dupes', mapping: DUPLICATE_MAPPING } });
+    assert.equal(result.errors.length, 1);
+    assert.deepEqual(result.errorDetails[0], {
+      step_id: 'click-dupe',
+      field: 'element',
+      got: 'data_table',
+      candidates: ['page-a', 'page-b'],
+      message: result.errors[0],
+    });
+  });
+});

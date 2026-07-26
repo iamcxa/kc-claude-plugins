@@ -35,6 +35,7 @@ program
   .option('--verbose', 'show resolved operands and expects per step')
   .option('--coverage', 'produce static coverage report after compilation')
   .option('--coverage-output <dir>', 'directory for coverage JSON output', '.claude/e2e/coverage')
+  .option('--json', 'emit a single machine-readable JSON document on stdout instead of prose (structured errors with repair candidates where available)')
   .option('--flows-dir <dir>', 'flows directory', '.claude/e2e/flows')
   .option('--mappings-dir <dir>', 'mappings directory', '.claude/e2e/mappings')
   .option('--output-dir <dir>', 'output directory', '.claude/e2e/compiled')
@@ -43,7 +44,25 @@ program
       dryRun: options.dryRun || false,
       verbose: options.verbose || false,
       coverage: options.coverage || false,
+      json: options.json || false,
     };
+
+    // Default stats shape for a JSON document whose compile() result has no
+    // `stats` (e.g. a parse failure, which never reaches the resolver).
+    function defaultStats(errorDetails) {
+      return { total: 0, activeExpects: 0, deferredExpects: 0, resolveErrors: (errorDetails || []).length };
+    }
+
+    // Stats for the --json document: the resolver's stats (when present) plus
+    // a resolveErrors count, so a JSON consumer never has to derive it from
+    // errors.length itself.
+    function jsonStats(result) {
+      var errCount = (result.errorDetails || []).length;
+      if (result.stats) {
+        return Object.assign({}, result.stats, { resolveErrors: errCount });
+      }
+      return defaultStats(result.errorDetails);
+    }
 
     if (options.all) {
       // -----------------------------------------------------------------------
@@ -57,13 +76,30 @@ program
       try {
         files = fs.readdirSync(flowsDir).filter(function(f) { return f.endsWith('.yaml'); });
       } catch (err) {
-        console.error('ERROR: cannot read flows directory: ' + flowsDir + '\n' + err.message);
+        var readErrMessage = 'cannot read flows directory: ' + flowsDir + ' — ' + err.message;
+        console.error('ERROR: ' + readErrMessage);
+        // Deliberately NOT the empty-directory shape below: an unreadable
+        // directory is a failure (ok:false, exit 1), an empty one is a no-op
+        // (ok:true, exit 0). Collapsing them would make "nothing to compile"
+        // indistinguishable from "could not look".
+        if (options.json) {
+          console.log(JSON.stringify({
+            ok: false,
+            flows: [],
+            summary: { passed: 0, failed: 0 },
+            errors: [{ message: readErrMessage }],
+          }));
+        }
         process.exit(1);
         return;
       }
 
       if (files.length === 0) {
-        console.log('No YAML files found in ' + flowsDir);
+        if (options.json) {
+          console.log(JSON.stringify({ ok: true, flows: [], summary: { passed: 0, failed: 0 } }));
+        } else {
+          console.log('No YAML files found in ' + flowsDir);
+        }
         process.exit(0);
         return;
       }
@@ -71,6 +107,7 @@ program
       var passed = 0;
       var failed = 0;
       var failures = [];
+      var flowResults = []; // --json accumulator: {flow, ok, stats, errors} per file
 
       // Aggregate coverage across all flows (for --all --coverage)
       var allCoverageElements = {};  // keyed by element name, accumulate verified/reached
@@ -87,8 +124,9 @@ program
         try {
           var result = await compile(flowPath, mappingsDir, outputDir, compileOptions);
           if (result.success) {
-            console.log('OK: ' + flowBaseName);
+            if (!options.json) console.log('OK: ' + flowBaseName);
             passed++;
+            flowResults.push({ flow: flowBaseName, ok: true, stats: jsonStats(result), errors: result.errorDetails || [] });
             // Aggregate coverage if available
             if (options.coverage && result.coverage) {
               coverageFlowCount++;
@@ -104,12 +142,38 @@ program
             console.error('FAIL: ' + flowBaseName + (result.errors ? ' — ' + result.errors.join(', ') : ''));
             failures.push(flowBaseName);
             failed++;
+            flowResults.push({
+              flow: flowBaseName,
+              ok: false,
+              stats: jsonStats(result),
+              errors: result.errorDetails || [],
+            });
           }
         } catch (err) {
           console.error('FAIL: ' + flowBaseName + ' — ' + err.message);
           failures.push(flowBaseName);
           failed++;
+          flowResults.push({
+            flow: flowBaseName,
+            ok: false,
+            stats: defaultStats(null),
+            errors: [{ message: err.message }],
+          });
         }
+      }
+
+      // --json: one aggregated document, nothing else on stdout. Skips the
+      // prose coverage-aggregate print/write below entirely (untested,
+      // unscoped combination with --coverage; the per-flow coverage data
+      // above is already discarded in that case).
+      if (options.json) {
+        console.log(JSON.stringify({
+          ok: failed === 0,
+          flows: flowResults,
+          summary: { passed: passed, failed: failed },
+        }));
+        process.exit(failed > 0 ? 1 : 0);
+        return;
       }
 
       // Emit aggregated coverage summary for --all --coverage
@@ -177,6 +241,24 @@ program
 
       try {
         var result = await compile(flowPath, mappingsDir, outputDir, compileOptions);
+
+        // --json: one document, nothing else on stdout. Returns before any of
+        // the existing prose/coverage presentation below runs (an untested,
+        // unscoped --json + --coverage combination skips coverage.json write
+        // as a result — the resolved flow + compiled output are unaffected).
+        if (options.json) {
+          var jsonDoc = {
+            ok: result.success,
+            flow: path.basename(flowName, '.yaml'),
+            stats: jsonStats(result),
+            errors: result.errorDetails || [],
+            coverage: (options.coverage && result.coverage) ? result.coverage : null,
+          };
+          console.log(JSON.stringify(jsonDoc));
+          process.exit(result.success ? 0 : 1);
+          return;
+        }
+
         if (result.success) {
           console.log('OK: ' + path.basename(flowName, '.yaml'));
 
@@ -240,11 +322,45 @@ program
         }
       } catch (err) {
         console.error('ERROR: ' + err.message);
+        // A throw from compile() (unwritable output dir, unreadable source, …)
+        // still owes the --json caller a document: same single-flow shape, the
+        // thrown text as a tier-2 error. Mirrors how batch mode already wraps a
+        // thrown compile error.
+        if (options.json) {
+          var thrownErrors = [{ message: err.message }];
+          console.log(JSON.stringify({
+            ok: false,
+            flow: path.basename(flowName, '.yaml'),
+            stats: defaultStats(thrownErrors),
+            errors: thrownErrors,
+            coverage: null,
+          }));
+        }
         process.exit(1);
       }
 
     } else {
-      // No flow-name and no --all: show help
+      // No flow-name and no --all. This is a usage error rather than a compile
+      // error, but --json still emits a document: SKILL.md's Phase 3 was
+      // rewritten to parse stdout unconditionally and has no prose fallback
+      // left, so making the guarantee conditional on argument validity would
+      // reopen exactly the hole this branch is being fixed for. The human
+      // usage text moves to stderr so an interactive caller still sees it, and
+      // the exit code becomes 1 — nothing was compiled, and the previous exit 0
+      // told a consumer the run had succeeded.
+      if (options.json) {
+        var usageErrors = [{ message: 'no flow name given and --all not set: pass a flow name or --all' }];
+        console.error(program.helpInformation());
+        console.log(JSON.stringify({
+          ok: false,
+          flow: null,
+          stats: defaultStats(usageErrors),
+          errors: usageErrors,
+          coverage: null,
+        }));
+        process.exit(1);
+        return;
+      }
       program.help();
     }
   });

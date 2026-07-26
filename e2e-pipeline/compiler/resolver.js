@@ -69,16 +69,33 @@ function buildSymbolTable(mapping) {
   return { table: table, collisions: collisions };
 }
 
+// ---------------------------------------------------------------------------
+// errorDetails — additive structured channel alongside the plain-string `errors`
+// array. Every `errors.push(string)` call site gains a parallel `errorDetails.push(...)`
+// with the SAME message, so the two arrays stay the same length and order. Tier-1
+// (a named symbol with a real "did you mean" answer already sitting in the symbol
+// table) carries the full shape; Tier-2 (structural/type errors) carries `{message}`
+// only. See docs/dev/.spacedock-state/e2e-json-diagnostics.md "Design" for the split.
+// ---------------------------------------------------------------------------
+
+function tier1Detail(stepId, field, got, candidates, message) {
+  return { step_id: stepId, field: field, got: got, candidates: candidates, message: message };
+}
+
+function tier2Detail(message) {
+  return { message: message };
+}
+
 function parseActionString(type, action, stepId) {
   var parser = ACTION_PARSERS[type];
   if (!parser) {
-    return { error: "Step '" + stepId + "': unknown type '" + type + "'" };
+    var unknownTypeMsg = "Step '" + stepId + "': unknown type '" + type + "'";
+    return { error: unknownTypeMsg, detail: tier2Detail(unknownTypeMsg) };
   }
   var match = parser.pattern.exec(action);
   if (!match) {
-    return {
-      error: "Step '" + stepId + "': action string does not match expected format for type '" + type + "'. Got: " + action,
-    };
+    var formatMsg = "Step '" + stepId + "': action string does not match expected format for type '" + type + "'. Got: " + action;
+    return { error: formatMsg, detail: tier2Detail(formatMsg) };
   }
   return { operands: parser.extract(match) };
 }
@@ -93,14 +110,12 @@ function resolveNavigate(operands, stepId, mapping) {
   var pages = mapping.pages || {};
   var page = pages[target];
   if (!page) {
-    return {
-      error: "Step '" + stepId + "': page '" + target + "' not found in mapping",
-    };
+    var notFoundMsg = "Step '" + stepId + "': page '" + target + "' not found in mapping";
+    return { error: notFoundMsg, detail: tier1Detail(stepId, 'page', target, [], notFoundMsg) };
   }
   if (!page.url_pattern) {
-    return {
-      error: "Step '" + stepId + "': cannot navigate to '" + target + "' (no url_pattern)",
-    };
+    var noUrlPatternMsg = "Step '" + stepId + "': cannot navigate to '" + target + "' (no url_pattern)";
+    return { error: noUrlPatternMsg, detail: tier2Detail(noUrlPatternMsg) };
   }
   return { operands: { target: target, urlPath: page.url_pattern } };
 }
@@ -156,10 +171,12 @@ var EXPECT_PATTERNS = [
  * Resolve a single element name using the symbol table, with built-in keyword fallback.
  * Returns { selector } on success, or pushes an error and returns null.
  */
-function resolveElement(elemName, symbolTable, collisionsTable, stepId, errors) {
+function resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, errorDetails) {
   if (collisionsTable.has(elemName)) {
     var colPages = collisionsTable.get(elemName);
-    errors.push("Step '" + stepId + "': expect element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', '));
+    var ambigMsg = "Step '" + stepId + "': expect element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', ');
+    errors.push(ambigMsg);
+    errorDetails.push(tier1Detail(stepId, 'element', elemName, colPages.slice(), ambigMsg));
     return null;
   }
   var entry = symbolTable.get(elemName);
@@ -170,7 +187,9 @@ function resolveElement(elemName, symbolTable, collisionsTable, stepId, errors) 
   if (BUILT_IN_KEYWORDS[elemName]) {
     return { selector: BUILT_IN_KEYWORDS[elemName] };
   }
-  errors.push("Step '" + stepId + "': expect element '" + elemName + "' not found in mapping");
+  var notFoundMsg = "Step '" + stepId + "': expect element '" + elemName + "' not found in mapping";
+  errors.push(notFoundMsg);
+  errorDetails.push(tier1Detail(stepId, 'element', elemName, [], notFoundMsg));
   return null;
 }
 
@@ -179,6 +198,7 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
   var activeCount = 0;
   var deferredCount = 0;
   var errors = [];
+  var errorDetails = [];
 
   for (var i = 0; i < expects.length; i++) {
     var expectStr = expects[i];
@@ -195,7 +215,7 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
       if (type === 'active') {
         // Phase 1 pattern: "element is visible"
         var elemName = match[1];
-        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors);
+        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, errorDetails);
         if (resolved) {
           resolvedExpects.push({
             type: 'active',
@@ -208,7 +228,7 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
       } else if (type === 'element-visible') {
         // "element visible" or "element visible on page"
         var elemName = match[1];
-        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors);
+        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, errorDetails);
         if (resolved) {
           resolvedExpects.push({
             type: 'element-visible',
@@ -221,7 +241,7 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
       } else if (type === 'element-not-visible') {
         // "element not visible" or "element is not visible"
         var elemName = match[1];
-        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors);
+        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, errorDetails);
         if (resolved) {
           resolvedExpects.push({
             type: 'element-not-visible',
@@ -246,8 +266,8 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
       } else if (type === 'or-visible') {
         var elemA = match[1];
         var elemB = match[2];
-        var resolvedA = resolveElement(elemA, symbolTable, collisionsTable, stepId, errors);
-        var resolvedB = resolveElement(elemB, symbolTable, collisionsTable, stepId, errors);
+        var resolvedA = resolveElement(elemA, symbolTable, collisionsTable, stepId, errors, errorDetails);
+        var resolvedB = resolveElement(elemB, symbolTable, collisionsTable, stepId, errors, errorDetails);
         if (resolvedA && resolvedB) {
           resolvedExpects.push({
             type: 'or-visible',
@@ -270,11 +290,12 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
     }
   }
 
-  return { resolvedExpects: resolvedExpects, activeCount: activeCount, deferredCount: deferredCount, errors: errors };
+  return { resolvedExpects: resolvedExpects, activeCount: activeCount, deferredCount: deferredCount, errors: errors, errorDetails: errorDetails };
 }
 
 function resolve(flow, mapping, options) {
   var errors = [];
+  var errorDetails = [];
   var runtimeValues = (options && options.runtimeValues) || null;
 
   var symbolResult = buildSymbolTable(mapping);
@@ -292,7 +313,9 @@ function resolve(flow, mapping, options) {
     var stepId = step.id || '(unnamed)';
 
     if (!step.type) {
-      errors.push("Step '" + stepId + "' has no type field — run migration tool first");
+      var noTypeMsg = "Step '" + stepId + "' has no type field — run migration tool first";
+      errors.push(noTypeMsg);
+      errorDetails.push(tier2Detail(noTypeMsg));
       continue;
     }
 
@@ -318,6 +341,7 @@ function resolve(flow, mapping, options) {
     var parseResult = parseActionString(step.type, step.action || '', stepId);
     if (parseResult.error) {
       errors.push(parseResult.error);
+      errorDetails.push(parseResult.detail);
       continue;
     }
 
@@ -329,6 +353,7 @@ function resolve(flow, mapping, options) {
       var navResult = resolveNavigate(rawOperands, stepId, mapping);
       if (navResult.error) {
         errors.push(navResult.error);
+        errorDetails.push(navResult.detail);
         skipStep = true;
       } else {
         resolvedOperands = navResult.operands;
@@ -340,12 +365,16 @@ function resolve(flow, mapping, options) {
         if (collisions.has(elemName)) {
           // Element exists but is ambiguous — fail only when referenced
           var colPages = collisions.get(elemName);
-          errors.push("Step '" + stepId + "': element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', '));
+          var ambigMsg = "Step '" + stepId + "': element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', ');
+          errors.push(ambigMsg);
+          errorDetails.push(tier1Detail(stepId, 'element', elemName, colPages.slice(), ambigMsg));
           skipStep = true;
         } else {
           var entry = table.get(elemName);
           if (!entry) {
-            errors.push("Step '" + stepId + "': element '" + elemName + "' not found in mapping");
+            var notFoundMsg = "Step '" + stepId + "': element '" + elemName + "' not found in mapping";
+            errors.push(notFoundMsg);
+            errorDetails.push(tier1Detail(stepId, 'element', elemName, [], notFoundMsg));
             skipStep = true;
           } else {
             var merged = { selector: entry.selector };
@@ -359,7 +388,9 @@ function resolve(flow, mapping, options) {
         var runtimeKey = step.value.runtime_ref;
         var runtimeDecl = runtimeValues && runtimeValues[runtimeKey];
         if (!runtimeDecl) {
-          errors.push("Step '" + stepId + "': unknown runtime_ref '" + runtimeKey + "'");
+          var runtimeRefMsg = "Step '" + stepId + "': unknown runtime_ref '" + runtimeKey + "'";
+          errors.push(runtimeRefMsg);
+          errorDetails.push(tier2Detail(runtimeRefMsg));
           skipStep = true;
         } else {
           resolvedOperands.runtime_ref = runtimeKey;
@@ -384,6 +415,7 @@ function resolve(flow, mapping, options) {
       deferredExpects += expectResult.deferredCount;
       for (var ei = 0; ei < expectResult.errors.length; ei++) {
         errors.push(expectResult.errors[ei]);
+        errorDetails.push(expectResult.errorDetails[ei]);
       }
     }
 
@@ -474,7 +506,7 @@ function resolve(flow, mapping, options) {
     finally: resolvedFinally,
   };
 
-  return { resolved: resolved, stats: stats, errors: errors };
+  return { resolved: resolved, stats: stats, errors: errors, errorDetails: errorDetails };
 }
 
 /**
@@ -489,11 +521,14 @@ function resolve(flow, mapping, options) {
  */
 function resolveMultiSite(flow, siteMappings) {
   var errors = [];
+  var errorDetails = [];
 
   // Build per-site symbol tables
   var siteTables = new Map();
   var siteNames = Object.keys(siteMappings);
-  errors.push.apply(errors, validateSiteNames(siteNames));
+  var siteNameErrors = validateSiteNames(siteNames);
+  errors.push.apply(errors, siteNameErrors);
+  siteNameErrors.forEach(function(m) { errorDetails.push(tier2Detail(m)); });
   for (var siteIndex = 0; siteIndex < siteNames.length; siteIndex++) {
     var siteName = siteNames[siteIndex];
     if (!isValidSiteName(siteName)) {
@@ -517,14 +552,18 @@ function resolveMultiSite(flow, siteMappings) {
 
     // Require site: qualifier on every step in a cross-site flow
     if (!step.site) {
-      errors.push("Step '" + stepId + "': cross-site flow step must have a 'site:' qualifier");
+      var noSiteMsg = "Step '" + stepId + "': cross-site flow step must have a 'site:' qualifier";
+      errors.push(noSiteMsg);
+      errorDetails.push(tier2Detail(noSiteMsg));
       continue;
     }
 
     var siteName = step.site;
     var siteTableResult = siteTables.get(siteName);
     if (!siteTableResult) {
-      errors.push("Step '" + stepId + "': unknown site '" + siteName + "' (not in sites: block)");
+      var unknownSiteMsg = "Step '" + stepId + "': unknown site '" + siteName + "' (not in sites: block)";
+      errors.push(unknownSiteMsg);
+      errorDetails.push(tier2Detail(unknownSiteMsg));
       continue;
     }
 
@@ -534,13 +573,16 @@ function resolveMultiSite(flow, siteMappings) {
     var siteMapping = siteMappings[siteName] && siteMappings[siteName].mapping;
 
     if (!step.type) {
-      errors.push("Step '" + stepId + "' has no type field — run migration tool first");
+      var noTypeMsg = "Step '" + stepId + "' has no type field — run migration tool first";
+      errors.push(noTypeMsg);
+      errorDetails.push(tier2Detail(noTypeMsg));
       continue;
     }
 
     var parseResult = parseActionString(step.type, step.action || '', stepId);
     if (parseResult.error) {
       errors.push(parseResult.error);
+      errorDetails.push(parseResult.detail);
       continue;
     }
 
@@ -552,6 +594,7 @@ function resolveMultiSite(flow, siteMappings) {
       var navResult = resolveNavigate(rawOperands, stepId, siteMapping);
       if (navResult.error) {
         errors.push(navResult.error);
+        errorDetails.push(navResult.detail);
         skipStep = true;
       } else {
         resolvedOperands = navResult.operands;
@@ -562,12 +605,16 @@ function resolveMultiSite(flow, siteMappings) {
       if (elemName) {
         if (collisions.has(elemName)) {
           var colPages = collisions.get(elemName);
-          errors.push("Step '" + stepId + "': element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', '));
+          var ambigMsg = "Step '" + stepId + "': element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', ');
+          errors.push(ambigMsg);
+          errorDetails.push(tier1Detail(stepId, 'element', elemName, colPages.slice(), ambigMsg));
           skipStep = true;
         } else {
           var entry = table.get(elemName);
           if (!entry) {
-            errors.push("Step '" + stepId + "': element '" + elemName + "' not found in mapping");
+            var notFoundMsg = "Step '" + stepId + "': element '" + elemName + "' not found in mapping";
+            errors.push(notFoundMsg);
+            errorDetails.push(tier1Detail(stepId, 'element', elemName, [], notFoundMsg));
             skipStep = true;
           } else {
             var merged = { selector: entry.selector };
@@ -591,6 +638,7 @@ function resolveMultiSite(flow, siteMappings) {
       deferredExpects += expectResult.deferredCount;
       for (var ei = 0; ei < expectResult.errors.length; ei++) {
         errors.push(expectResult.errors[ei]);
+        errorDetails.push(expectResult.errorDetails[ei]);
       }
     }
 
@@ -629,7 +677,7 @@ function resolveMultiSite(flow, siteMappings) {
     steps: resolvedSteps,
   };
 
-  return { resolved: resolved, stats: stats, errors: errors };
+  return { resolved: resolved, stats: stats, errors: errors, errorDetails: errorDetails };
 }
 
 module.exports = { resolve: resolve, resolveMultiSite: resolveMultiSite, buildSymbolTable: buildSymbolTable };

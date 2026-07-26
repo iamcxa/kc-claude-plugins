@@ -1,0 +1,95 @@
+name: list-data-completeness
+description: "Verify service-schedule list displays complete data: booking number (BK-YYYYMMDD-XXXX), scheduled date/time, vehicle plate, customer name and phone"
+tags:
+  - verification
+  - service-schedule
+  - data-completeness
+mapping: secha-office
+
+# Snapshotted from the real flow at carlove/.claude/e2e/flows/list-data-completeness.yaml
+# (e2e-json-diagnostics AC-3/AC-4/E2E-first fixtures) — a real, un-seeded production flow that
+# already carries exactly 3 live ambiguous-element errors against secha-office's real mapping.
+# One step from the source flow is intentionally dropped here: `wait-for-data` ("Wait for
+# networkidle") has no `type:` field in production, a pre-existing migration gap in that flow
+# unrelated to this entity's scope (this entity changes error *emission*, not detection — see
+# Non-goal 2) that would otherwise inject an unrelated 4th (tier-2, no_type_field) error into a
+# fixture whose whole point is isolating the tier-1 ambiguous-element class.
+
+steps:
+  # --- Auth ---
+  - id: navigate-to-login
+    action: Navigate to /login
+    expect:
+      - email_input visible on login
+    type: navigate
+
+  - id: fill-email
+    action: Fill email_input with 'admin@bw.tw' on login
+    type: fill
+
+  - id: fill-password
+    action: Fill password_input with 'pwd123' on login
+    type: fill
+
+  - id: submit-login
+    action: Click login_button on login
+    expect:
+      - url does not contain /login
+    type: click
+
+  # --- Navigate to service-schedule list ---
+  - id: navigate-to-service-schedule
+    action: Navigate to /operations/service-schedule
+    expect:
+      - url contains /service-schedule
+      - tab_all visible on service-schedule
+    type: navigate
+
+  # --- Ensure list view is active (default, but explicit) ---
+  - id: ensure-list-view
+    action: Click view_list on service-schedule
+    expect:
+      - data_table visible on service-schedule
+    type: click
+
+  # --- Select "全部" tab to see all orders ---
+  - id: select-all-tab
+    action: Click tab_all on service-schedule
+    expect:
+      - data_table visible on service-schedule
+    type: click
+
+  # --- Verify booking number format: BK-YYYYMMDD-XXXX ---
+  - id: verify-booking-number-format
+    action: Verify data_table on service-schedule
+    expect:
+      - "text matching /BK-\\d{8}-\\d{4}/ on page"
+    type: snapshot
+
+  # --- Verify no raw UUID order numbers ---
+  - id: verify-no-raw-uuid-numbers
+    action: Verify data_table on service-schedule
+    expect:
+      - "text matching /WO-[0-9a-f]{7,8}/ not on page"
+    type: snapshot
+
+  # --- Verify scheduled date column shows MM/DD format ---
+  - id: verify-date-column
+    action: Verify data_table on service-schedule
+    expect:
+      - "text matching /\\d{2}\\/\\d{2}/ on page"
+    type: snapshot
+
+  # --- Verify vehicle plate is displayed (not blank) ---
+  - id: verify-vehicle-plate
+    action: Verify data_table on service-schedule
+    expect:
+      - "text matching /[A-Z]{2,4}-\\d{3,4}/ on page"
+    type: snapshot
+
+  # --- Verify customer info is displayed (not blank) ---
+  - id: verify-customer-info
+    action: Verify data_table on service-schedule
+    expect:
+      - "column '客戶/電話' in data_table on service-schedule is not empty"
+    type: snapshot

@@ -19,8 +19,8 @@ Compile E2E flow YAML files into standalone bash test scripts using the e2e-comp
 | `--all` | Compile every flow in `.claude/e2e/flows/` |
 | `--dry-run` | Validate flow + mapping coherence without writing output |
 | `--verbose` | Show resolved step details (operands, expects) during compilation |
-| `--coverage` | Produce static coverage report (elements reached vs verified) after compilation |
-| `--coverage-output <dir>` | Output directory for coverage JSON (default: `.claude/e2e/coverage`) |
+| `--coverage` | Produce static coverage report (elements reached vs verified). Single flow: the data arrives in the JSON document's `coverage` key. Batch (`--all`): the batch document has no `coverage` key, so no coverage data reaches the skill |
+| `--coverage-output <dir>` | Directory for coverage JSON when the compiler is invoked directly. The skill's `--json` path writes no coverage files, so nothing is written here via `/e2e-compile` |
 
 ## Prerequisites
 
@@ -61,27 +61,30 @@ Where `<compiler_dir>` is the parent directory of `bin/`. If this fails with `Ca
 
 ## Phase 2 — Invoke Compiler
 
-Run via Bash tool from the **project root** (so default directory paths resolve correctly):
+Run via Bash tool from the **project root** (so default directory paths resolve correctly).
+Always add `--json` — it is this skill's internal contract with the compiler (a single parseable
+document on stdout, with repair candidates where the compiler already has them), not a
+user-facing option; humans invoking the compiler directly still get the prose default.
 
 **Single flow:**
 ```bash
-node "<compiler_path>" <flow-name>
+node "<compiler_path>" --json <flow-name>
 ```
 
 **Batch:**
 ```bash
-node "<compiler_path>" --all
+node "<compiler_path>" --json --all
 ```
 
 **Dry-run:**
 ```bash
-node "<compiler_path>" --dry-run <flow-name>
+node "<compiler_path>" --json --dry-run <flow-name>
 ```
 
 **Verbose (add to any mode):**
 ```bash
-node "<compiler_path>" --verbose <flow-name>
-node "<compiler_path>" --verbose --all
+node "<compiler_path>" --json --verbose <flow-name>
+node "<compiler_path>" --json --verbose --all
 ```
 
 Default directories (resolved relative to project root):
@@ -93,99 +96,38 @@ Default directories (resolved relative to project root):
 
 ## Phase 3 — Present Results
 
-Parse stdout/stderr from the compiler and present conversationally.
+For the two supported invocations (`--json <flow>` and `--json --all`) stdout carries one JSON
+document: single flow `{ok, flow, stats, errors, coverage}`; `--all` `{ok, flows: [...], summary:
+{passed, failed}}`, each entry shaped like the single-flow document, plus an optional top-level
+`errors` array when the batch could not start. Parse it and map fields to a conversational
+presentation — no prose regex-parsing needed. **If stdout does not parse as JSON** — a usage error
+such as `--json --help` or a malformed flag prints prose there instead — fall back to stderr and
+the exit code rather than assuming the run succeeded:
 
-### Single flow — success
+| Field | Presents as |
+|-------|-------------|
+| `ok: true` | `Compiled: <flow>` / `Output: .claude/e2e/compiled/<flow>.sh` / `Steps: stats.total (stats.activeExpects expects active)` |
+| `stats.deferredExpects > 0` | Add: `Warnings: N expects deferred (unrecognized format — see docs/writing-tests.md#expect-grammar-reference)` |
+| `ok: false` | `Compilation failed: <flow>`, then one line per `errors[]` entry |
+| `errors[].message` | The line text for that error |
+| `errors[].candidates` non-empty | Append: `did you mean: <candidates.join(', ')>?` — a repairable error (the compiler already found these); when empty, no such name exists in the mapping at all |
+| `coverage` non-null | `Coverage: X/Y elements (Z%) verified`; list `reached_but_not_verified` / `untouched` from `coverage.elements` |
 
-Compiler stdout:
-```
-Compiled: N steps, M expects active, K expects deferred (Phase 2)
-OK: <flow-name>
-```
+After a successful single-flow compile, mention: "You can run the compiled script directly: `bash .claude/e2e/compiled/<flow-name>.sh`"
 
-Present as:
-```
-Compiled: <flow-name>
-  Output:   .claude/e2e/compiled/<flow-name>.sh
-  Steps:    N (M expects active)
-  Warnings: K expects deferred (unrecognized format — see docs/writing-tests.md#expect-grammar-reference for the full grammar; will emit TODO echo at runtime)
-```
+Batch (`--all`): present as `Batch compilation complete: summary.passed OK, summary.failed
+failed`, then list each `flows[]` entry's `flow` name under "Succeeded" (`ok: true`) or under
+"Failed" with its first `errors[].message` (`ok: false`). If the document carries a **top-level**
+`errors` array, the batch never started — present those messages instead of the counts.
 
-Omit the "Warnings" line entirely when deferred count is 0.
+An **empty** flows directory returns `{ok: true, flows: [], summary: {passed: 0, failed: 0}}`,
+exit 0 — present as: "No flow files found in `.claude/e2e/flows/`. Create flows with `/e2e-flow`
+(from a plan or spec) or `/e2e-walkthrough` (interactive browser exploration)."
 
-After success, mention: "You can run the compiled script directly: `bash .claude/e2e/compiled/<flow-name>.sh`"
-
-### Single flow — error
-
-Compiler writes ERROR lines to stderr. Present them clearly:
-```
-Compilation failed: <flow-name>
-  ERROR: <message from stderr>
-```
-
-### Batch — success
-
-Compiler stdout (one line per flow):
-```
-OK: flow-a
-FAIL: flow-b — element 'bar' not found in mapping
-Batch complete: N OK, M failed
-```
-
-Present as:
-```
-Batch compilation complete: N OK, M failed
-
-  Succeeded (N):
-    - flow-a
-    - flow-c
-
-  Failed (M):
-    - flow-b — element 'bar' not found in mapping
-```
-
-### Dry-run
-
-Compiler writes to stderr: `DRY RUN: would write <path> (N bytes, M steps)`
-
-Present as:
-```
-Dry-run: <flow-name>
-  Validation: PASS (no output file written)
-  Would write: .claude/e2e/compiled/<flow-name>.sh (N steps)
-```
-
-For dry-run errors, present the ERROR lines from stderr.
-
-### No flows found
-
-If the flows directory does not exist (compiler stderr: `ERROR: cannot read flows directory`), or has no YAML files, suggest next steps:
-"No flow files found in `.claude/e2e/flows/`. Create flows with `/e2e-flow` (from a plan or spec) or `/e2e-walkthrough` (interactive browser exploration)."
-
-### Coverage report (when --coverage)
-
-Compiler stdout appends coverage summary after compilation output:
-```
-Compiled: N steps, M expects active, K expects deferred (Phase 2)
-Coverage: X/Y elements (Z%) verified across 1 flow
-  Reached (but not verified): elem_a, elem_b (N elements)
-  Untouched: elem_c, elem_d (N elements)
-OK: <flow-name>
-```
-
-Present as:
-```
-Compiled: <flow-name>
-  Output:   .claude/e2e/compiled/<flow-name>.sh
-  Steps:    N (M expects active)
-  Coverage: X/Y elements (Z%) verified
-    Reached but not verified: elem_a, elem_b
-    Untouched: elem_c, elem_d
-  Coverage JSON: .claude/e2e/coverage/coverage.json
-```
-
-If coverage regression warning appears (::warning:: line), present prominently:
-"Warning: Coverage dropped N% from previous run (was X%, now Y%)"
+A **missing or unreadable** flows directory is a different result: `{ok: false, flows: [],
+summary: {passed: 0, failed: 0}, errors: [{message}]}`, exit 1 — present the `errors[].message`
+(it names the path it could not read). Do not report this as "no flows found": that would hide a
+mistyped `--flows-dir` as an empty project.
 
 ## Common Mistakes
 

@@ -155,6 +155,7 @@ npx e2e-compile --all                    # compile all flows
 npx e2e-compile --all --coverage         # compile + coverage report
 npx e2e-compile --dry-run <flow-name>    # validate without writing output
 npx e2e-compile --verbose <flow-name>    # show resolved step details
+npx e2e-compile --json <flow-name>       # emit one machine-readable JSON document instead of prose
 ```
 
 **Flags:**
@@ -166,6 +167,7 @@ npx e2e-compile --verbose <flow-name>    # show resolved step details
 | `--verbose` | Show resolved operands and expects per step |
 | `--coverage` | Produce static element coverage report after compilation |
 | `--coverage-output <dir>` | Directory for coverage JSON (default: `.claude/e2e/coverage`) |
+| `--json` | Emit a single JSON document on stdout instead of prose -- `{ok, flow, stats, errors, coverage}` (batch: `{ok, flows, summary}`, plus a top-level `errors` array when the batch could not start, e.g. an unreadable `--flows-dir`); `errors[]` carries repair candidates where the compiler already has them (element/page lookups), `{message}` only for structural errors; no per-class exit code -- 0/1 exactly as the prose default. Usage errors (`--json --help`, a malformed flag) print prose on stdout, so a consumer should fall back to stderr and the exit code when stdout does not parse |
 | `--flows-dir <dir>` | Flows directory (default: `.claude/e2e/flows`) |
 | `--mappings-dir <dir>` | Mappings directory (default: `.claude/e2e/mappings`) |
 | `--output-dir <dir>` | Output directory (default: `.claude/e2e/compiled`) |

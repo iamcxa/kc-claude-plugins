@@ -1,0 +1,96 @@
+version: 2
+app: secha-office
+base_url: "http://localhost:5173"
+
+# Trimmed slice of a real production mapping (carlove/.claude/e2e/mappings/secha-office.yaml),
+# snapshotted for the e2e-json-diagnostics --json AC-3/AC-4/E2E-first fixtures. Keeps only the
+# pages needed to reproduce, byte-for-byte, the real `data_table` 9-way and `tab_all` 2-way
+# ambiguous-element collisions that list-data-completeness.yaml carries today — page order below
+# is load-bearing: buildSymbolTable()'s collision list order follows this file's page declaration
+# order, and the "found on:" lists this fixture asserts against were measured from the real file
+# in this exact order.
+pages:
+  login:
+    url_pattern: "/login"
+    elements:
+      email_input:
+        selector: "role=textbox[name=\"電子郵件\"]"
+        description: "Email input field"
+      password_input:
+        selector: "role=textbox[name=\"密碼\"]"
+        description: "Password input field"
+      login_button:
+        selector: "role=button[name=\"登入\"]"
+        description: "Login submit button"
+
+  service-schedule:
+    url_pattern: "/operations/service-schedule"
+    elements:
+      tab_all:
+        selector: "role=tab[name=\"全部\"]"
+        description: "Show all orders"
+      view_list:
+        selector: "role=radio[name=\"列表\"]"
+        description: "Switch to list view (default)"
+      data_table:
+        selector: "role=table"
+        description: "Service orders table"
+
+  customer-profiles:
+    url_pattern: "/operations/customer-profiles"
+    elements:
+      data_table:
+        selector: "role=table"
+        description: "Customer profiles table"
+
+  branches:
+    url_pattern: "/branches"
+    elements:
+      data_table:
+        selector: "role=table"
+        description: "Branches table"
+
+  employee-profiles:
+    url_pattern: "/branches/employee-profiles"
+    elements:
+      tab_all:
+        selector: "role=tab[name=\"全部\"]"
+        description: "Show all employees"
+      data_table:
+        selector: "role=table"
+        description: "Employee profiles table"
+
+  workspaces:
+    url_pattern: "/catalog/workspaces"
+    elements:
+      data_table:
+        selector: "role=table"
+        description: "Workspaces table"
+
+  services:
+    url_pattern: "/catalog/services"
+    elements:
+      data_table:
+        selector: "role=table"
+        description: "Services table with drag-to-reorder"
+
+  self-check-lists:
+    url_pattern: "/catalog/self-check-lists"
+    elements:
+      data_table:
+        selector: "role=table"
+        description: "Self-check lists table"
+
+  audit-templates:
+    url_pattern: "/catalog/audit-templates"
+    elements:
+      data_table:
+        selector: "role=table"
+        description: "Audit templates table"
+
+  report-step-templates:
+    url_pattern: "/catalog/report-step-templates"
+    elements:
+      data_table:
+        selector: "role=table"
+        description: "Report step templates table"
