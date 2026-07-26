@@ -38,6 +38,21 @@ function writeYaml(filePath, content) {
   fs.writeFileSync(filePath, content.trimStart() + '\n', 'utf8');
 }
 
+function writeMinimalMapping(dir) {
+  writeYaml(path.join(dir, 'test-app.yaml'), `
+version: 2
+app: test-app
+base_url: http://localhost:3000
+pages:
+  login:
+    url_pattern: /login
+    elements:
+      email_input:
+        selector: role=textbox[name="Email"]
+        description: Email input
+`);
+}
+
 // ---------------------------------------------------------------------------
 // CLI-01: Single flow compilation
 // ---------------------------------------------------------------------------
@@ -84,6 +99,108 @@ describe('CLI-01: single flow compilation', function() {
       '--output-dir', tmpDir,
     ]);
     assert.equal(result.status, 1, 'Expected exit 1 for missing element flow');
+  });
+});
+
+describe('CLI assertion honesty', function() {
+  var tmpDir;
+  var outputDir;
+
+  before(function() {
+    tmpDir = makeTmpDir();
+    outputDir = makeTmpDir();
+    writeMinimalMapping(tmpDir);
+    writeYaml(path.join(tmpDir, 'unmatched-expect.yaml'), `
+name: unmatched-expect
+mapping: test-app
+steps:
+  - id: check-login
+    type: snapshot
+    action: Take snapshot
+    expect:
+      - manual confirm checkout email arrived
+`);
+    writeYaml(path.join(tmpDir, 'not-automated-expect.yaml'), `
+name: not-automated-expect
+mapping: test-app
+steps:
+  - id: check-login
+    type: snapshot
+    action: Take snapshot
+    expect:
+      - email_input is visible
+      - not_automated: "Verify the legal disclaimer copy with product counsel."
+`);
+  });
+
+  after(function() {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    fs.rmSync(outputDir, { recursive: true, force: true });
+  });
+
+  test('unmatched expect exits 1 and does not write compiled output', function() {
+    var result = runCli([
+      'unmatched-expect',
+      '--flows-dir', tmpDir,
+      '--mappings-dir', tmpDir,
+      '--output-dir', outputDir,
+    ]);
+    assert.equal(result.status, 1, 'Expected exit 1. stdout: ' + result.stdout + ' stderr: ' + result.stderr);
+    assert.equal(fs.existsSync(path.join(outputDir, 'unmatched-expect.sh')), false);
+    assert.ok(result.stderr.includes('check-login'), result.stderr);
+    assert.ok(result.stderr.includes('manual confirm checkout email arrived'), result.stderr);
+  });
+
+  test('unmatched expect --json exits 1 with structured error and stats', function() {
+    var result = runCli([
+      '--json',
+      '--dry-run',
+      'unmatched-expect',
+      '--flows-dir', tmpDir,
+      '--mappings-dir', tmpDir,
+      '--output-dir', outputDir,
+    ]);
+    assert.equal(result.status, 1, 'Expected exit 1. stdout: ' + result.stdout + ' stderr: ' + result.stderr);
+    var doc = JSON.parse(result.stdout);
+    assert.equal(doc.ok, false);
+    assert.equal(doc.stats.deferredExpects, 1);
+    assert.equal(doc.errors[0].stepId, 'check-login');
+    assert.equal(doc.errors[0].raw, 'manual confirm checkout email arrived');
+  });
+
+  test('not_automated expect compiles with visible non-active count', function() {
+    var result = runCli([
+      'not-automated-expect',
+      '--flows-dir', tmpDir,
+      '--mappings-dir', tmpDir,
+      '--output-dir', outputDir,
+    ]);
+    assert.equal(result.status, 0, 'Expected exit 0. stdout: ' + result.stdout + ' stderr: ' + result.stderr);
+    assert.ok(result.stdout.includes('1 expects active'), result.stdout);
+    assert.ok(result.stdout.includes('1 expects not automated'), result.stdout);
+  });
+
+  test('not_automated expect --json exposes notAutomatedExpects', function() {
+    var result = runCli([
+      '--json',
+      '--dry-run',
+      'not-automated-expect',
+      '--flows-dir', tmpDir,
+      '--mappings-dir', tmpDir,
+      '--output-dir', outputDir,
+    ]);
+    assert.equal(result.status, 0, 'Expected exit 0. stdout: ' + result.stdout + ' stderr: ' + result.stderr);
+    var doc = JSON.parse(result.stdout);
+    assert.equal(doc.ok, true);
+    assert.equal(doc.stats.activeExpects, 1);
+    assert.equal(doc.stats.deferredExpects, 0);
+    assert.equal(doc.stats.notAutomatedExpects, 1);
+  });
+
+  test('help does not expose a flow-level deferred allow flag', function() {
+    var result = runCli(['--help']);
+    assert.equal(result.status, 0);
+    assert.equal(/allow-(deferred|manual|not-automated)/.test(result.stdout), false, result.stdout);
   });
 });
 

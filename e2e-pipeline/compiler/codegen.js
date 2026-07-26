@@ -1684,8 +1684,11 @@ function generateExpects(step) {
       lines.push('  fi');
       lines.push('fi');
 
+    } else if (expect.type === 'not-automated') {
+      // Deliberately no runtime assertion: this is reported in compile/runner summaries only.
+      continue;
     } else if (expect.type === 'deferred') {
-      lines.push('echo "TODO: expect \'' + expect.raw + '\' not compiled (Phase 2)"');
+      throw new Error('Unsupported deferred expect reached codegen: ' + expect.raw);
     }
   }
 

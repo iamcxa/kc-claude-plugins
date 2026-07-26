@@ -133,6 +133,18 @@ describe('analyzeCoverage() — expect assertion sets verified_count', function(
     var el = result.elements.find(function(e) { return e.name === 'heading'; });
     assert.equal(el.reached_count, 0, 'Expected reached_count=0 when only in expect');
   });
+
+  test('not-automated expect does not increment verified_count', function() {
+    var steps = [{
+      id: 's1', type: 'click', operands: {},
+      expects: [{ type: 'not-automated', raw: 'Verify with product counsel.', reason: 'Verify with product counsel.' }]
+    }];
+    var result = analyzeCoverage(MOCK_MAPPING, steps);
+    result.elements.forEach(function(el) {
+      assert.equal(el.verified_count, 0, el.name + ' should not be verified by not-automated expect');
+    });
+    assert.equal(result.summary.verified, 0);
+  });
 });
 
 describe('analyzeCoverage() — element with both click and expect', function() {

@@ -208,7 +208,7 @@ async function compile(flowPath, mappingDir, outputDir, options) {
     console.log(
       'Compiled: ' + s.total + ' steps, ' +
       s.activeExpects + ' expects active, ' +
-      s.deferredExpects + ' expects deferred (Phase 2)'
+      (s.notAutomatedExpects || 0) + ' expects not automated'
     );
   }
 

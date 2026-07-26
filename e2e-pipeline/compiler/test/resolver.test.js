@@ -733,14 +733,61 @@ test('resolveExpects Phase 2: or-visible resolves both elements with correct sel
   assert.equal(result.stats.deferredExpects, 0);
 });
 
-test('resolveExpects Phase 2: unrecognized format still becomes deferred', () => {
+test('resolveExpects: unrecognized expect string is a compile error', () => {
   const flow = flowWithExpects(['something completely unknown xyz123']);
   const result = resolve(flow, SIMPLE_MAPPING);
   const step = result.resolved.steps[0];
-  const exp = step.expects[0];
-  assert.equal(exp.type, 'deferred');
+  assert.equal(step.expects, undefined);
   assert.equal(result.stats.deferredExpects, 1);
   assert.equal(result.stats.activeExpects, 0);
+  assert.ok(result.errors.some(e => e.includes('step1') && e.includes('something completely unknown xyz123')));
+  assert.ok(result.errorDetails.some(e => e.stepId === 'step1' && e.raw === 'something completely unknown xyz123'));
+});
+
+test('resolveExpects: not_automated hatch is per assertion and not active', () => {
+  const flow = flowWithExpects([
+    'email_input is visible',
+    { not_automated: 'Verify the legal disclaimer copy with product counsel.' },
+  ]);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.deepEqual(result.errors, []);
+  const step = result.resolved.steps[0];
+  assert.equal(step.expects.length, 2);
+  assert.equal(step.expects[0].type, 'active');
+  assert.deepEqual(step.expects[1], {
+    type: 'not-automated',
+    raw: 'Verify the legal disclaimer copy with product counsel.',
+    reason: 'Verify the legal disclaimer copy with product counsel.',
+  });
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+  assert.equal(result.stats.notAutomatedExpects, 1);
+});
+
+test('resolveExpects: not_automated does not silence unrelated unmatched strings', () => {
+  const flow = flowWithExpects([
+    { not_automated: 'Verify one legal-only condition.' },
+    'manual confirm checkout email arrived',
+  ]);
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.equal(result.stats.notAutomatedExpects, 1);
+  assert.equal(result.stats.deferredExpects, 1);
+  assert.ok(result.errors.some(e => e.includes('manual confirm checkout email arrived')));
+});
+
+test('resolveExpects: malformed not_automated objects are rejected strictly', () => {
+  const cases = [
+    { label: 'empty', value: { not_automated: '' } },
+    { label: 'non-string', value: { not_automated: 123 } },
+    { label: 'extra-key', value: { not_automated: 'Verify manually.', severity: 'low' } },
+    { label: 'other-object', value: { manual: 'Verify manually.' } },
+  ];
+  cases.forEach(({ label, value }) => {
+    const result = resolve(flowWithExpects([value]), SIMPLE_MAPPING);
+    assert.equal(result.stats.activeExpects, 0, label);
+    assert.equal(result.stats.notAutomatedExpects, 0, label);
+    assert.ok(result.errors.length > 0, label);
+  });
 });
 
 test('resolveExpects Phase 2: nonexistent element in visible pattern returns error', () => {
