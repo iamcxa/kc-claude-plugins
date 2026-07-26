@@ -348,6 +348,7 @@ canonical reference; no other doc enumerates the full grammar.
 | Form | Resolves to |
 |---|---|
 | `<element> is visible` | `active` |
+| `<element> is visible on <page>` | `element-visible` |
 | `<element> visible on <page>` | `element-visible` |
 | `<element> visible` | `element-visible` |
 | `<element> is not visible on <page>` | `element-not-visible` |
@@ -364,8 +365,10 @@ canonical reference; no other doc enumerates the full grammar.
 | `text "<value>" visible` | `text-visible` |
 | `<elemA> visible or <elemB> visible` | `or-visible` |
 
-`on <page>` is accepted but not verified -- element resolution is mapping-wide, not
-page-scoped (tracked separately).
+For element action and expectation forms, `on <page>` binds resolution to that page.
+If the element is not on the stated page, resolution falls back only to shared pages:
+pages with `shared: true`, plus the literal `_global` page unless `_global.shared === false`.
+Steps that omit the page keep mapping-wide resolution for compatibility.
 
 **Caution:** the cross-site example earlier in this doc ([Step 2](#step-2-generate-or-write-a-flow))
 uses `expect: ["text 'Created' on items-page"]`, which reads as if `items-page` were
@@ -374,8 +377,7 @@ a page qualifier for the text assertion. It is not, and the effect is stronger t
 fixed literal, not `on <page-name>`, so this exact string matches none of the forms
 above and silently resolves as `deferred` -- it asserts nothing at runtime. There is
 no page-scoped text assertion in this grammar; only the element forms accept a
-qualifier, and even there it is parsed and discarded rather than verified (previous
-paragraph). Confirm with `/e2e-compile --verbose` and check whether a given `expect:`
+qualifier. Confirm with `/e2e-compile --verbose` and check whether a given `expect:`
 shows up as active or deferred in the printed summary.
 
 ## Element Coverage
