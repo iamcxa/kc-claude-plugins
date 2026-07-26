@@ -1,16 +1,17 @@
 ---
 id: gzh8xe17fgnjpc03qk19n3xx
 title: Structured compiler diagnostics an agent can repair from
-status: validation
+status: done
 source: captain note — e2e-pipeline agent-native audit, 2026-07-25 (session analysis + agy cross-model review)
 started: 2026-07-25T16:12:08Z
-completed:
-verdict:
+completed: 2026-07-26T07:13:13Z
+verdict: passed
 worktree: .worktrees/spacedock-ensign-e2e-json-diagnostics
 issue:
-pr: "#65"
+pr: pr-merge:65
 design:
-mod-block: merge:pr-merge
+mod-block:
+archived: 2026-07-26T07:13:13Z
 ---
 
 ## Problem
