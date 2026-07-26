@@ -22,6 +22,19 @@ Both commands share it byte-identically: `resume` passes at `:746` and errors at
 does the same at `:569`/`:570`. `sv` made the two commands agree on an unusable *shape*; this is
 the case where the shape is fine and the contents are not.
 
+**Element order decides the outcome, and one order reaches a live POST.** A silent-failure
+review during `sv`'s validation traced it: jq streams, so a bad element *after* the genuine
+marker match still yields the correct id by accident, while a bad element *before* it aborts the
+expression before the match is ever reached. In that second case `existing_id` comes back empty
+**and `reviews_ok` is still 1**, because the outer shape check cannot see the malformed element
+— so control falls past the marker branch, past `prior_state`, past `sv`'s new refusal, and into
+an actual POST. `sv`'s fail-closed guarantee is therefore only as strong as
+`review_post_reviews_usable`, which is the argument for fixing this rather than leaving it.
+
+Note also that `existing_id="$(review_post_scan_marker ...)"` (`:570`) is the one jq computation
+in that function carrying **no `|| return` guard**, so jq's exit status is discarded outright.
+Whatever shape the fix takes, that call site should stop swallowing failure.
+
 Not reachable through the shipped `gh` adapter, which cannot produce it — the exposure is a
 custom `KC_PR_FLOW_POST_TRANSPORT`, a proxy that rewrites the body, or a future adapter. It was
 deliberately not folded into `sv` because the fix (tightening `review_post_reviews_usable`,
