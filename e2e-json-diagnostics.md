@@ -8,7 +8,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-e2e-json-diagnostics
 issue:
-pr:
+pr: "#65"
 design:
 mod-block: merge:pr-merge
 ---
