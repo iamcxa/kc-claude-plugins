@@ -120,7 +120,7 @@ test('buildSymbolTable: duplicate elements mapping returns ambiguous error', () 
   const flow = {
     name: 'test',
     steps: [
-      { id: 'click-table', type: 'click', action: 'Click data_table on page-a' },
+      { id: 'click-table', type: 'click', action: 'Click data_table' },
     ],
   };
   const result = resolve(flow, DUPLICATE_MAPPING);
@@ -218,6 +218,103 @@ test('resolve: accumulates ALL missing element errors across all steps', () => {
   assert.equal(result.errors.length, 2, 'should have 2 errors for 2 missing elements');
   assert.ok(result.errors.some(e => e.includes('ghost_button')));
   assert.ok(result.errors.some(e => e.includes('phantom_link')));
+});
+
+test('resolve: explicit page qualifier rejects element found only on another real page', () => {
+  const flow = {
+    name: 'test-wrong-page',
+    steps: [
+      { id: 'click-heading-on-login', type: 'click', action: 'Click heading on login' },
+    ],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.equal(result.errors.length, 1);
+  assert.equal(
+    result.errors[0],
+    "Step 'click-heading-on-login': element 'heading' not found on page 'login' (found on: dashboard) -- if it should be visible from any page, mark page 'dashboard' with shared: true in the mapping"
+  );
+});
+
+test('resolve: explicit missing page qualifier returns page-not-found with page candidates', () => {
+  const flow = {
+    name: 'test-missing-page',
+    steps: [
+      { id: 'click-heading-on-typo', type: 'click', action: 'Click heading on dashbord' },
+    ],
+  };
+  const result = resolve(flow, SIMPLE_MAPPING);
+  assert.equal(result.errors.length, 1);
+  assert.equal(result.errors[0], "Step 'click-heading-on-typo': page 'dashbord' not found in mapping");
+  assert.deepEqual(result.errorDetails[0], {
+    step_id: 'click-heading-on-typo',
+    field: 'page',
+    got: 'dashbord',
+    candidates: ['login', 'dashboard', '_global'],
+    message: result.errors[0],
+  });
+});
+
+test('resolve: _global elements resolve from any explicit real page', () => {
+  const mapping = {
+    version: 2,
+    app: 'test-global-collision',
+    base_url: 'http://localhost:3000',
+    pages: {
+      login: { url_pattern: '/login', elements: {} },
+      dashboard: {
+        url_pattern: '/dashboard',
+        elements: {
+          sidebar_home: { selector: 'role=menuitem[name="Dashboard Home"]' },
+        },
+      },
+      _global: {
+        elements: {
+          sidebar_home: { selector: 'role=menuitem[name="Home"]' },
+        },
+      },
+    },
+  };
+  const flow = {
+    name: 'test-global-page',
+    steps: [
+      { id: 'click-global-on-login', type: 'click', action: 'Click sidebar_home on login' },
+    ],
+  };
+  const result = resolve(flow, mapping);
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.resolved.steps[0].operands.selector, 'role=menuitem[name="Home"]');
+});
+
+test('resolve: explicit shared:true page elements resolve from any explicit real page', () => {
+  const mapping = {
+    version: 2,
+    app: 'test-shared-page',
+    base_url: 'http://localhost:3000',
+    pages: {
+      login: { url_pattern: '/login', elements: {} },
+      dashboard: {
+        url_pattern: '/dashboard',
+        elements: {
+          nav_settings: { selector: 'role=link[name="Dashboard Settings"]' },
+        },
+      },
+      chrome: {
+        shared: true,
+        elements: {
+          nav_settings: { selector: 'role=link[name="Settings"]' },
+        },
+      },
+    },
+  };
+  const flow = {
+    name: 'test-shared-flag',
+    steps: [
+      { id: 'click-shared-on-login', type: 'click', action: 'Click nav_settings on login' },
+    ],
+  };
+  const result = resolve(flow, mapping);
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.resolved.steps[0].operands.selector, 'role=link[name="Settings"]');
 });
 
 // ---------------------------------------------------------------------------
@@ -463,6 +560,36 @@ test('resolveExpects Phase 2: "element visible on page" resolves type element-vi
   assert.equal(exp.selector, 'role=menuitem[name="Dashboard"]');
   assert.equal(result.stats.activeExpects, 1);
   assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects 3t: "element is visible on page" resolves and binds the page qualifier', () => {
+  const flow = flowWithExpects(['heading is visible on dashboard']);
+  const result = resolve(flow, EXTENDED_MAPPING);
+  assert.deepEqual(result.errors, [], 'no errors expected. Got: ' + result.errors.join('; '));
+  const step = result.resolved.steps[0];
+  const exp = step.expects[0];
+  assert.equal(exp.type, 'element-visible');
+  assert.equal(exp.elementName, 'heading');
+  assert.equal(exp.selector, 'role=heading[name="Dashboard"]');
+  assert.equal(result.stats.activeExpects, 1);
+  assert.equal(result.stats.deferredExpects, 0);
+});
+
+test('resolveExpects 3t: explicit page qualifier rejects expect element found only on another real page', () => {
+  const flow = flowWithExpects(['heading visible on login']);
+  const result = resolve(flow, EXTENDED_MAPPING);
+  assert.equal(result.errors.length, 1);
+  assert.equal(
+    result.errors[0],
+    "Step 'step1': element 'heading' not found on page 'login' (found on: dashboard) -- if it should be visible from any page, mark page 'dashboard' with shared: true in the mapping"
+  );
+});
+
+test('resolveExpects 3t: _global elements resolve from any explicit real page', () => {
+  const flow = flowWithExpects(['sidebar_home visible on login']);
+  const result = resolve(flow, EXTENDED_MAPPING);
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.resolved.steps[0].expects[0].selector, 'role=menuitem[name="Home"]');
 });
 
 test('resolveExpects Phase 2: "dialog not visible" resolves to built-in role=dialog', () => {
@@ -786,6 +913,42 @@ describe('cross-site sites: block — resolver', function() {
     assert.equal(officeCheck.expects[0].selector, 'role=heading[name="Office Dashboard"]', 'heading_a from site-a');
   });
 
+  test('resolveMultiSite: explicit page qualifier rejects element found only on another page within the same site', function() {
+    const siteMappings = {
+      office: {
+        mappingName: 'site-a',
+        mapping: {
+          version: 2,
+          app: 'site-a',
+          base_url: 'http://localhost:5173',
+          pages: {
+            dashboard: {
+              url_pattern: '/dashboard',
+              elements: {
+                heading_a: { selector: 'role=heading[name="Office Dashboard"]' },
+              },
+            },
+            reports: {
+              url_pattern: '/reports',
+              elements: {},
+            },
+          },
+        },
+      },
+    };
+    const result = resolveMultiSite({
+      name: 'cross-site-page-binding',
+      steps: [
+        { id: 'office-wrong-page', site: 'office', type: 'click', action: 'Click heading_a on reports' },
+      ],
+    }, siteMappings);
+    assert.equal(result.errors.length, 1);
+    assert.equal(
+      result.errors[0],
+      "Step 'office-wrong-page': element 'heading_a' not found on page 'reports' (found on: dashboard) -- if it should be visible from any page, mark page 'dashboard' with shared: true in the mapping"
+    );
+  });
+
   test('resolveMultiSite: error when step has no site: qualifier', function() {
     const flowNoSite = {
       name: 'bad-cross-site',
@@ -961,7 +1124,7 @@ describe('errorDetails — additive structured channel', () => {
     const flow = {
       name: 'test',
       steps: [
-        { id: 'click-table', type: 'click', action: 'Click data_table on page-a' },
+        { id: 'click-table', type: 'click', action: 'Click data_table' },
       ],
     };
     const result = resolve(flow, DUPLICATE_MAPPING);
@@ -1077,9 +1240,9 @@ describe('errorDetails — additive structured channel', () => {
     const flow = {
       name: 'test-multi-error',
       steps: [
-        { id: 'step-1', type: 'click', action: 'Click nonexistent_button on login' },
+        { id: 'step-1', type: 'click', action: 'Click nonexistent_button on page-a' },
         { id: 'step-2', action: 'no type here' },
-        { id: 'step-3', type: 'click', action: 'Click data_table on page-a' },
+        { id: 'step-3', type: 'click', action: 'Click data_table' },
       ],
     };
     const result = resolve(flow, DUPLICATE_MAPPING);
@@ -1101,7 +1264,7 @@ describe('errorDetails — additive structured channel', () => {
     const flow = {
       name: 'test',
       steps: [
-        { id: 'click-table', type: 'click', action: 'Click data_table on page-a' },
+        { id: 'click-table', type: 'click', action: 'Click data_table' },
       ],
     };
     const result = resolve(flow, DUPLICATE_MAPPING);
@@ -1129,7 +1292,7 @@ describe('errorDetails — additive structured channel', () => {
       name: 'cross-site-ambiguous',
       sites: { dupes: { mapping: 'test-app-dupes' } },
       steps: [
-        { id: 'click-dupe', site: 'dupes', type: 'click', action: 'Click data_table on page-a' },
+        { id: 'click-dupe', site: 'dupes', type: 'click', action: 'Click data_table' },
       ],
     };
     const result = resolveMultiSite(crossSiteFlow, { dupes: { mappingName: 'test-app-dupes', mapping: DUPLICATE_MAPPING } });

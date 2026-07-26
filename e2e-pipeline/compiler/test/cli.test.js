@@ -34,6 +34,10 @@ function runCli(args, opts) {
   return result;
 }
 
+function writeYaml(filePath, content) {
+  fs.writeFileSync(filePath, content.trimStart() + '\n', 'utf8');
+}
+
 // ---------------------------------------------------------------------------
 // CLI-01: Single flow compilation
 // ---------------------------------------------------------------------------
@@ -533,53 +537,133 @@ describe('CLI-08: --json output', function() {
     });
   });
 
-  test("--json AC-3/AC-4/E2E-first: ambiguous-element fixture shows real candidates, exactly 3 errors", function() {
-    var jsonResult = runCli([
-      '--json',
-      '--dry-run',
-      'list-data-completeness',
-      '--flows-dir', FIXTURES_DIR,
-      '--mappings-dir', FIXTURES_DIR,
-      '--output-dir', tmpDir,
-    ]);
-    assert.equal(jsonResult.status, 1, 'Expected exit 1. stdout: ' + jsonResult.stdout);
-    var doc = parseOnlyStdout(jsonResult);
-    assert.equal(doc.ok, false);
-    assert.equal(doc.errors.length, 3, 'exactly 3 tier-1 ambiguous errors (AC-4 population)');
+  test("--json AC-3/AC-4/E2E-first: unqualified ambiguous element shows real candidates", function() {
+    var localDir = makeTmpDir();
+    try {
+      writeYaml(path.join(localDir, 'ambiguous-map.yaml'), `
+version: 2
+app: ambiguous
+base_url: http://localhost:3000
+pages:
+  page-a:
+    url_pattern: /a
+    elements:
+      data_table:
+        selector: role=table[name="A"]
+  page-b:
+    url_pattern: /b
+    elements:
+      data_table:
+        selector: role=table[name="B"]
+`);
+      writeYaml(path.join(localDir, 'ambiguous-flow.yaml'), `
+name: ambiguous-flow
+mapping: ambiguous-map
+steps:
+  - id: click-table
+    type: click
+    action: Click data_table
+`);
+      var jsonResult = runCli([
+        '--json',
+        '--dry-run',
+        'ambiguous-flow',
+        '--flows-dir', localDir,
+        '--mappings-dir', localDir,
+        '--output-dir', tmpDir,
+      ]);
+      assert.equal(jsonResult.status, 1, 'Expected exit 1. stdout: ' + jsonResult.stdout);
+      var doc = parseOnlyStdout(jsonResult);
+      assert.equal(doc.ok, false);
+      assert.equal(doc.errors.length, 1, 'one tier-1 ambiguous error');
+      assert.deepEqual(doc.errors[0], {
+        step_id: 'click-table',
+        field: 'element',
+        got: 'data_table',
+        candidates: ['page-a', 'page-b'],
+        message: doc.errors[0].message,
+      });
 
-    var tabAllErrors = doc.errors.filter(function(e) { return e.got === 'tab_all'; });
-    var dataTableErrors = doc.errors.filter(function(e) { return e.got === 'data_table'; });
-    assert.equal(tabAllErrors.length, 2);
-    assert.equal(dataTableErrors.length, 1);
-    tabAllErrors.forEach(function(e) {
-      assert.deepEqual(e.candidates, ['service-schedule', 'employee-profiles'], "tab_all candidates must match today's found-on list verbatim");
-    });
-    assert.deepEqual(dataTableErrors[0].candidates, [
-      'service-schedule', 'customer-profiles', 'branches', 'employee-profiles',
-      'workspaces', 'services', 'self-check-lists', 'audit-templates', 'report-step-templates',
-    ], "data_table's 9-way candidates must match today's found-on list verbatim");
+      // E2E-first: cross-check against the SAME flow compiled without --json.
+      var prosResult = runCli([
+        '--dry-run',
+        'ambiguous-flow',
+        '--flows-dir', localDir,
+        '--mappings-dir', localDir,
+        '--output-dir', tmpDir,
+      ]);
+      assert.equal(prosResult.status, 1);
+      var proseErrorLines = prosResult.stderr.split('\n').filter(function(l) { return l.indexOf('ERROR: ') === 0; });
+      var uniqueProseMessages = Array.from(new Set(proseErrorLines.map(function(l) { return l.slice('ERROR: '.length); })));
+      assert.deepEqual(uniqueProseMessages, [doc.errors[0].message], 'prose and --json must report byte-identical messages from the same resolve() call');
+    } finally {
+      fs.rmSync(localDir, { recursive: true, force: true });
+    }
+  });
 
-    // E2E-first: cross-check against the SAME flow compiled without --json (prose mode) —
-    // proves both paths read the identical resolve() call, not merely parsing independently.
-    var prosResult = runCli([
-      '--dry-run',
-      'list-data-completeness',
-      '--flows-dir', FIXTURES_DIR,
-      '--mappings-dir', FIXTURES_DIR,
-      '--output-dir', tmpDir,
-    ]);
-    assert.equal(prosResult.status, 1);
-    // Pre-existing (unrelated to this entity): compile() itself prints each
-    // resolve error to stderr on failure, and bin/e2e-compile.js's non-json
-    // failure branch prints the same `errors` array again — every prose
-    // message appears twice today. Dedupe rather than assume single-print;
-    // fixing that duplication is out of this entity's scope (Non-goal 2: this
-    // entity changes error emission structure, not existing prose behavior).
-    var proseErrorLines = prosResult.stderr.split('\n').filter(function(l) { return l.indexOf('ERROR: ') === 0; });
-    var uniqueProseMessages = Array.from(new Set(proseErrorLines.map(function(l) { return l.slice('ERROR: '.length); })));
-    assert.equal(uniqueProseMessages.length, 3, 'prose mode must report the same 3 distinct errors. stderr: ' + prosResult.stderr);
-    var jsonMessages = doc.errors.map(function(e) { return e.message; });
-    assert.deepEqual(uniqueProseMessages.sort(), jsonMessages.sort(), 'prose and --json must report byte-identical messages from the same resolve() call');
+  test("--json 3t page binding: page and element diagnostics keep tier-1 keys and candidates", function() {
+    var localDir = makeTmpDir();
+    try {
+      writeYaml(path.join(localDir, 'page-binding-map.yaml'), `
+version: 2
+app: page-binding
+base_url: http://localhost:3000
+pages:
+  login:
+    url_pattern: /login
+    elements: {}
+  dashboard:
+    url_pattern: /dashboard
+    elements:
+      heading:
+        selector: role=heading[name="Dashboard"]
+`);
+      writeYaml(path.join(localDir, 'page-binding-flow.yaml'), `
+name: page-binding-flow
+mapping: page-binding-map
+steps:
+  - id: wrong-page
+    type: click
+    action: Click heading on login
+  - id: missing-page
+    type: click
+    action: Click heading on dashbord
+`);
+      var result = runCli([
+        '--json',
+        '--dry-run',
+        'page-binding-flow',
+        '--flows-dir', localDir,
+        '--mappings-dir', localDir,
+        '--output-dir', tmpDir,
+      ]);
+      assert.equal(result.status, 1, 'Expected exit 1. stdout: ' + result.stdout + ' stderr: ' + result.stderr);
+      var doc = parseOnlyStdout(result);
+      assert.equal(doc.ok, false);
+      assert.equal(doc.errors.length, 2);
+      assert.deepEqual(Object.keys(doc.errors[0]), ['step_id', 'field', 'got', 'candidates', 'message']);
+      assert.deepEqual(doc.errors[0], {
+        step_id: 'wrong-page',
+        field: 'element',
+        got: 'heading',
+        candidates: ['dashboard'],
+        message: doc.errors[0].message,
+      });
+      assert.ok(doc.errors[0].message.includes("not found on page 'login'"));
+      assert.ok(doc.errors[0].message.includes('shared: true'));
+
+      assert.deepEqual(Object.keys(doc.errors[1]), ['step_id', 'field', 'got', 'candidates', 'message']);
+      assert.deepEqual(doc.errors[1], {
+        step_id: 'missing-page',
+        field: 'page',
+        got: 'dashbord',
+        candidates: ['login', 'dashboard'],
+        message: doc.errors[1].message,
+      });
+      assert.ok(doc.errors[1].message.includes("page 'dashbord' not found in mapping"));
+    } finally {
+      fs.rmSync(localDir, { recursive: true, force: true });
+    }
   });
 
   test("--all --json: single aggregated JSON document, {ok, flows, summary}", function() {

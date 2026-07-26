@@ -44,13 +44,23 @@ const ACTION_PARSERS = {
 function buildSymbolTable(mapping) {
   var table = new Map();
   var collisions = new Map();
+  var byPage = new Map();
+  var sharedPages = [];
 
   var pages = mapping.pages || {};
   for (var pageName in pages) {
     var pageData = pages[pageName];
+    var pageTable = new Map();
+    byPage.set(pageName, pageTable);
+    if (isSharedPage(pageName, pageData)) {
+      sharedPages.push(pageName);
+    }
     var elements = pageData.elements || {};
     for (var elemName in elements) {
       var elemData = elements[elemName];
+      var entry = { selector: elemData.selector, page: pageName };
+      if (elemData.css_selector) entry.cssSelector = elemData.css_selector;
+      pageTable.set(elemName, entry);
       if (table.has(elemName)) {
         // Track collision but do NOT fail here — only fail if this element is referenced
         if (!collisions.has(elemName)) {
@@ -58,15 +68,19 @@ function buildSymbolTable(mapping) {
         }
         collisions.get(elemName).push(pageName);
       } else {
-        var entry = { selector: elemData.selector, page: pageName };
-        if (elemData.css_selector) entry.cssSelector = elemData.css_selector;
         table.set(elemName, entry);
       }
     }
   }
 
   // Return collisions map so resolve() can check only referenced elements
-  return { table: table, collisions: collisions };
+  return { table: table, collisions: collisions, byPage: byPage, sharedPages: sharedPages };
+}
+
+function isSharedPage(pageName, pageData) {
+  if (!pageData) return false;
+  if (pageData.shared === true) return true;
+  return pageName === '_global' && pageData.shared !== false;
 }
 
 // ---------------------------------------------------------------------------
@@ -135,15 +149,18 @@ var EXPECT_PATTERNS = [
   // Phase 1 — kept as 'active' type for full backwards compatibility
   { re: /^(\w+) is visible$/, type: 'active' },
 
+  // Phase 2 — element visibility with "is" and page qualifier
+  { re: /^(\w+) is visible on ([\w-]+)$/, type: 'element-visible' },
+
   // Phase 2 — element visibility with page qualifier (more specific, before plain visible)
-  { re: /^(\w+) visible on [\w-]+$/, type: 'element-visible' },
+  { re: /^(\w+) visible on ([\w-]+)$/, type: 'element-visible' },
 
   // Phase 2 — element visibility without page qualifier
   { re: /^(\w+) visible$/, type: 'element-visible' },
 
   // Phase 2 — element not visible WITH page qualifier (more specific, before bare form)
-  { re: /^(\w+) is not visible on [\w-]+$/, type: 'element-not-visible' },
-  { re: /^(\w+) not visible on [\w-]+$/, type: 'element-not-visible' },
+  { re: /^(\w+) is not visible on ([\w-]+)$/, type: 'element-not-visible' },
+  { re: /^(\w+) not visible on ([\w-]+)$/, type: 'element-not-visible' },
 
   // Phase 2 — element not visible (bare form)
   { re: /^(\w+) is not visible$/, type: 'element-not-visible' },
@@ -193,7 +210,71 @@ function resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, 
   return null;
 }
 
-function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
+function elementResultFromEntry(entry) {
+  var merged = { selector: entry.selector };
+  if (entry.cssSelector) merged.cssSelector = entry.cssSelector;
+  return merged;
+}
+
+function pageNames(mapping) {
+  return Object.keys(mapping.pages || {});
+}
+
+function allElementPages(elemName, symbolResult) {
+  var pages = [];
+  if (symbolResult.collisions.has(elemName)) {
+    pages = symbolResult.collisions.get(elemName).slice();
+  } else {
+    var entry = symbolResult.table.get(elemName);
+    if (entry) pages = [entry.page];
+  }
+  return pages;
+}
+
+function resolveElementOnPage(elemName, pageName, symbolResult, stepId, mapping, errors, errorDetails, label) {
+  if (!pageName) {
+    return resolveElement(elemName, symbolResult.table, symbolResult.collisions, stepId, errors, errorDetails);
+  }
+
+  var pages = mapping.pages || {};
+  if (!pages[pageName]) {
+    var pageMsg = "Step '" + stepId + "': page '" + pageName + "' not found in mapping";
+    errors.push(pageMsg);
+    errorDetails.push(tier1Detail(stepId, 'page', pageName, pageNames(mapping), pageMsg));
+    return null;
+  }
+
+  var ownPage = symbolResult.byPage.get(pageName);
+  var ownEntry = ownPage && ownPage.get(elemName);
+  if (ownEntry) return elementResultFromEntry(ownEntry);
+
+  for (var i = 0; i < symbolResult.sharedPages.length; i++) {
+    var sharedPageName = symbolResult.sharedPages[i];
+    var sharedPage = symbolResult.byPage.get(sharedPageName);
+    var sharedEntry = sharedPage && sharedPage.get(elemName);
+    if (sharedEntry) return elementResultFromEntry(sharedEntry);
+  }
+
+  if (BUILT_IN_KEYWORDS[elemName]) {
+    return { selector: BUILT_IN_KEYWORDS[elemName] };
+  }
+
+  var foundPages = allElementPages(elemName, symbolResult);
+  if (foundPages.length > 0) {
+    var foundOn = foundPages.join(', ');
+    var wrongPageMsg = "Step '" + stepId + "': " + label + " '" + elemName + "' not found on page '" + pageName + "' (found on: " + foundOn + ") -- if it should be visible from any page, mark page '" + foundPages[0] + "' with shared: true in the mapping";
+    errors.push(wrongPageMsg);
+    errorDetails.push(tier1Detail(stepId, 'element', elemName, foundPages, wrongPageMsg));
+    return null;
+  }
+
+  var notFoundMsg = "Step '" + stepId + "': " + label + " '" + elemName + "' not found in mapping";
+  errors.push(notFoundMsg);
+  errorDetails.push(tier1Detail(stepId, 'element', elemName, [], notFoundMsg));
+  return null;
+}
+
+function resolveExpects(expects, symbolResult, stepId, mapping) {
   var resolvedExpects = [];
   var activeCount = 0;
   var deferredCount = 0;
@@ -215,7 +296,7 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
       if (type === 'active') {
         // Phase 1 pattern: "element is visible"
         var elemName = match[1];
-        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, errorDetails);
+        var resolved = resolveElement(elemName, symbolResult.table, symbolResult.collisions, stepId, errors, errorDetails);
         if (resolved) {
           resolvedExpects.push({
             type: 'active',
@@ -228,7 +309,8 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
       } else if (type === 'element-visible') {
         // "element visible" or "element visible on page"
         var elemName = match[1];
-        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, errorDetails);
+        var pageName = match[2] || null;
+        var resolved = resolveElementOnPage(elemName, pageName, symbolResult, stepId, mapping, errors, errorDetails, 'element');
         if (resolved) {
           resolvedExpects.push({
             type: 'element-visible',
@@ -241,7 +323,8 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
       } else if (type === 'element-not-visible') {
         // "element not visible" or "element is not visible"
         var elemName = match[1];
-        var resolved = resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, errorDetails);
+        var pageName = match[2] || null;
+        var resolved = resolveElementOnPage(elemName, pageName, symbolResult, stepId, mapping, errors, errorDetails, 'element');
         if (resolved) {
           resolvedExpects.push({
             type: 'element-not-visible',
@@ -266,8 +349,8 @@ function resolveExpects(expects, symbolTable, collisionsTable, stepId) {
       } else if (type === 'or-visible') {
         var elemA = match[1];
         var elemB = match[2];
-        var resolvedA = resolveElement(elemA, symbolTable, collisionsTable, stepId, errors, errorDetails);
-        var resolvedB = resolveElement(elemB, symbolTable, collisionsTable, stepId, errors, errorDetails);
+        var resolvedA = resolveElement(elemA, symbolResult.table, symbolResult.collisions, stepId, errors, errorDetails);
+        var resolvedB = resolveElement(elemB, symbolResult.table, symbolResult.collisions, stepId, errors, errorDetails);
         if (resolvedA && resolvedB) {
           resolvedExpects.push({
             type: 'or-visible',
@@ -299,8 +382,6 @@ function resolve(flow, mapping, options) {
   var runtimeValues = (options && options.runtimeValues) || null;
 
   var symbolResult = buildSymbolTable(mapping);
-  var table = symbolResult.table;
-  var collisions = symbolResult.collisions;
 
   var resolvedSteps = [];
   var activeExpects = 0;
@@ -362,25 +443,11 @@ function resolve(flow, mapping, options) {
     } else if (step.type === 'click' || step.type === 'fill') {
       var elemName = rawOperands.element;
       if (elemName) {
-        if (collisions.has(elemName)) {
-          // Element exists but is ambiguous — fail only when referenced
-          var colPages = collisions.get(elemName);
-          var ambigMsg = "Step '" + stepId + "': element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', ');
-          errors.push(ambigMsg);
-          errorDetails.push(tier1Detail(stepId, 'element', elemName, colPages.slice(), ambigMsg));
+        var resolvedElement = resolveElementOnPage(elemName, rawOperands.page, symbolResult, stepId, mapping, errors, errorDetails, 'element');
+        if (!resolvedElement) {
           skipStep = true;
         } else {
-          var entry = table.get(elemName);
-          if (!entry) {
-            var notFoundMsg = "Step '" + stepId + "': element '" + elemName + "' not found in mapping";
-            errors.push(notFoundMsg);
-            errorDetails.push(tier1Detail(stepId, 'element', elemName, [], notFoundMsg));
-            skipStep = true;
-          } else {
-            var merged = { selector: entry.selector };
-            if (entry.cssSelector) merged.cssSelector = entry.cssSelector;
-            resolvedOperands = Object.assign({}, rawOperands, merged);
-          }
+          resolvedOperands = Object.assign({}, rawOperands, resolvedElement);
         }
       }
       // SC-1032: thread runtime_ref from step YAML into operands for sensitive fill
@@ -409,7 +476,7 @@ function resolve(flow, mapping, options) {
 
     var stepExpects = [];
     if (Array.isArray(step.expect) && step.expect.length > 0) {
-      var expectResult = resolveExpects(step.expect, table, collisions, stepId);
+      var expectResult = resolveExpects(step.expect, symbolResult, stepId, mapping);
       stepExpects = expectResult.resolvedExpects;
       activeExpects += expectResult.activeCount;
       deferredExpects += expectResult.deferredCount;
@@ -567,8 +634,6 @@ function resolveMultiSite(flow, siteMappings) {
       continue;
     }
 
-    var table = siteTableResult.table;
-    var collisions = siteTableResult.collisions;
     // Get site mapping for navigate resolution
     var siteMapping = siteMappings[siteName] && siteMappings[siteName].mapping;
 
@@ -603,24 +668,11 @@ function resolveMultiSite(flow, siteMappings) {
     } else if (step.type === 'click' || step.type === 'fill') {
       var elemName = rawOperands.element;
       if (elemName) {
-        if (collisions.has(elemName)) {
-          var colPages = collisions.get(elemName);
-          var ambigMsg = "Step '" + stepId + "': element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', ');
-          errors.push(ambigMsg);
-          errorDetails.push(tier1Detail(stepId, 'element', elemName, colPages.slice(), ambigMsg));
+        var resolvedElement = resolveElementOnPage(elemName, rawOperands.page, siteTableResult, stepId, siteMapping, errors, errorDetails, 'element');
+        if (!resolvedElement) {
           skipStep = true;
         } else {
-          var entry = table.get(elemName);
-          if (!entry) {
-            var notFoundMsg = "Step '" + stepId + "': element '" + elemName + "' not found in mapping";
-            errors.push(notFoundMsg);
-            errorDetails.push(tier1Detail(stepId, 'element', elemName, [], notFoundMsg));
-            skipStep = true;
-          } else {
-            var merged = { selector: entry.selector };
-            if (entry.cssSelector) merged.cssSelector = entry.cssSelector;
-            resolvedOperands = Object.assign({}, rawOperands, merged);
-          }
+          resolvedOperands = Object.assign({}, rawOperands, resolvedElement);
         }
       }
 
@@ -632,7 +684,7 @@ function resolveMultiSite(flow, siteMappings) {
 
     var stepExpects = [];
     if (Array.isArray(step.expect) && step.expect.length > 0) {
-      var expectResult = resolveExpects(step.expect, table, collisions, stepId);
+      var expectResult = resolveExpects(step.expect, siteTableResult, stepId, siteMapping);
       stepExpects = expectResult.resolvedExpects;
       activeExpects += expectResult.activeCount;
       deferredExpects += expectResult.deferredCount;
