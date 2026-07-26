@@ -21,6 +21,8 @@ Scope is the honesty gate only:
 - unmatched assertion strings become compiler errors;
 - intentionally human-only checks get a per-assertion, visible, non-passing hatch;
 - `/e2e-compile` prose and `--json` output expose the failure or hatch count;
+- `/e2e-test` accepts the same hatch without classifying the flow as v1, and reports it as
+  non-automated while continuing to run the flow's other assertions;
 - existing coverage analysis remains the source of truth for "verified" accounting.
 
 Out of scope:
@@ -68,6 +70,18 @@ Unmatched legacy strings such as `manual confirm checkout email arrived` must fa
 a structured error that points to the step id and the raw expect text. That preserves the useful
 part of the prior spike: authors get a repairable compiler diagnostic instead of an exit-0 script.
 
+The same contract must be wired through `/e2e-test`. The existing v1 detector should remain strict:
+plain structured expect objects are still legacy/v1, but the one exact object shape
+`{not_automated: <non-empty string>}` is recognized as v2. This is a narrow semantic carve-out, not
+general object acceptance. During runner execution, a `not_automated` item records an expectation
+result with status `not_automated`, reason text from the object, and no pass/fail assertion work.
+The surrounding step and flow continue executing other actions and expectations. Run summaries add a
+distinct `not_automated: N` count alongside passed/failed/skipped. Step status rules: action
+failure or active expectation failure still yields FAIL; at least one passing active expectation
+with no failures may yield PASS while also counting any hatches; a step with only non-automated
+expectations and no action failure yields NOT_AUTOMATED, not PASS, because no automated assertion
+proved it.
+
 ## Reverse-Recovery Audit Against origin/main
 
 Audit target: `origin/main`, fetched during ideation.
@@ -76,6 +90,9 @@ Audit target: `origin/main`, fetched during ideation.
 - Contract: EXISTS_BROKEN. `bin/e2e-compile.js:50-64` already carries stats into `--json`, and
   `bin/e2e-compile.js:107-114` maps stats/errors to skill presentation. The contract reports
   `deferredExpects` as a warning, which is the broken success semantics.
+- Test orchestration contract: EXISTS_BROKEN. `skills/e2e-test/SKILL.md:71-79` currently treats
+  all object expect entries as v1 and stops the whole flow. The sanctioned hatch would therefore be
+  compiler-legal but runner-illegal unless this schema row gains the exact `not_automated` carve-out.
 - Handler: EXISTS_BROKEN. `compiler/compiler.js:187-215` generates output and returns
   `success: true` even when `resolveResult.stats.deferredExpects` is nonzero.
 - Domain: EXISTS_BROKEN. `compiler/resolver.js:277-376` recognizes the unsupported state by
@@ -83,6 +100,9 @@ Audit target: `origin/main`, fetched during ideation.
   conversion and legal hatch classification.
 - Runtime/codegen: EXISTS_BROKEN. `compiler/codegen.js:1687-1688` emits a TODO echo for deferred
   expects, so an uncompiled assertion becomes output text rather than a failing condition.
+- LLM runner: EXISTS_BROKEN. `agents/e2e-test-runner.md:231-256` only describes string
+  expectations, and `agents/e2e-test-runner.md:458-470` returns passed/failed/skipped without a
+  non-automated count. It needs the same three-state expectation semantics as the compiler.
 - Persistence/readback: WORKING for the existing honest signal. `compiler/coverage.js:61-79`
   increments `verified_count` only for executable element expectations; deferred/non-automated
   expects already do not count as verified. This seam should be reused, not duplicated.
@@ -133,6 +153,15 @@ Verified by: validation comparing the implementation diff against the approved d
 running the doc-linked CLI fixture tests, not by prose-grep alone. Falsified by: docs still saying
 unmatched expects are silently deferred, recommending `manual ...` strings, or omitting the
 `not_automated` syntax and reporting semantics.
+
+**AC-7 — e2e-test keeps legal hatches out of v1 rejection.**
+Verified by: a fresh-context `/e2e-test` run or tracked prompt-behavior harness using a synthetic
+flow with one active expect, one `{not_automated: "..."}` expect, and one following executable step;
+the observed result must execute the following step, avoid the v1-format stop path, and report
+`not_automated: 1` separately from passed/failed/skipped. The fixture must also include a step whose
+only expectation is `not_automated` and observe that step as NOT_AUTOMATED rather than PASS.
+Falsified by: the same fixture being classified as v1, the surrounding flow being skipped, the hatch
+counted as PASS, or the non-automated count missing from the structured runner summary.
 
 ## Proposed Doc Diff
 
@@ -191,6 +220,48 @@ If a checkpoint is genuinely human-only and cannot be represented as `Execute ex
 `manual ...` as a plain expect string.
 ```
 
+`e2e-pipeline/skills/e2e-test/SKILL.md`
+
+Before:
+
+```markdown
+| Expect entries | strings | objects | SKIP |
+
+If ANY fail: warn with migration guidance (`app:`->`mapping:`, `name:`->`id:`, structured->`grammar strings`). All v1 -> stop execution of this flow.
+```
+
+After:
+
+```markdown
+| Expect entries | strings or `{not_automated: "<reason>"}` objects | other objects | SKIP |
+
+If ANY fail: warn with migration guidance (`app:`->`mapping:`, `name:`->`id:`, unsupported structured expects->grammar strings or `not_automated` only when genuinely human-only). All v1 -> stop execution of this flow.
+```
+
+Also update result presentation so single, batch, and multi-site summaries include
+`not_automated: N` when present, without treating it as pass/fail/skip.
+
+`e2e-pipeline/agents/e2e-test-runner.md`
+
+Add to expectation validation:
+
+```markdown
+| `{not_automated: "<reason>"}` | Record expectation status `not_automated` with the reason. Do not run browser assertion commands, do not mark it PASS, and continue validating the step's other expectations. Any other object-shaped expect remains invalid legacy/v1 input and should have been stopped by the orchestrator. |
+```
+
+Update the report template and structured summary:
+
+```markdown
+| Not automated | N |
+
+- not_automated: N
+```
+
+The runner's `FLOW COMPLETE` and `STEP COMPLETE` back-channel messages must carry the same
+`not_automated` count so the `/e2e-test` orchestrator can include it in final summaries. A step with
+only non-automated expectations reports result `NOT_AUTOMATED`; a step with passing active
+expectations may report `PASS` while still listing the non-automated expectation separately.
+
 ## Test Plan
 
 Implementation should run one RED/GREEN loop per behavior:
@@ -205,7 +276,12 @@ Implementation should run one RED/GREEN loop per behavior:
    increments `notAutomatedExpects`, and does not silence other unmatched strings.
 5. RED: add coverage/codegen tests proving `not_automated` is visible in stats but absent from
    `verified_count` and runtime assertion code. GREEN: stats and coverage agree.
-6. Exit check: run `cd e2e-pipeline && npm install && npm test`. The known local caveat is the
+6. RED: add a fresh-context `/e2e-test` behavioral fixture, or a tracked prompt-behavior harness
+   that invokes the real skill/runner contract, with active + `not_automated` expects and a later
+   executable step. GREEN: the run avoids v1 rejection, executes the later step, and reports
+   `not_automated` outside pass/fail/skip, including a hatch-only step reported as NOT_AUTOMATED.
+   A grep over `SKILL.md` or the agent prompt is not sufficient evidence.
+7. Exit check: run `cd e2e-pipeline && npm install && npm test`. The known local caveat is the
    five `Integration: migrate + compile real carlove flow` failures caused by a hardcoded absent
    project path; validation should report those separately if still present.
 
