@@ -33,6 +33,27 @@ The real fix, if it is worth doing, is a small fixture corpus vendored into the 
 enough real flow shapes to exercise the resolver's pattern table, ambiguity path, and
 page-qualifier behaviour — so the measured ACs can run in CI against a stable input.
 
+## Measured 2026-07-26 — the instrument is not merely machine-local, it is decaying
+
+Re-running the baseline against `origin/main` after the sprint's three entities merged gave
+deferred **185**, total expects **478**, clean flows **16** — against the 368 / 794 / 20 the
+sprint's ACs were written on. The merged changes account for roughly 11 of that gap; the rest is
+the corpus itself shrinking.
+
+Direct check: of `flow-corpus.txt`'s 3286 paths, **2760 (84%) no longer exist**, and every one
+of them is under `/Users/kent/conductor/workspaces` — transient Conductor workspaces created and
+recycled since the list was captured. The 526 survivors are mostly stable project checkouts
+(`Project/recce` 57, `Project/me-company` 50, `Project/carlove` 47).
+
+That reframes the problem. "Machine-local" was the diagnosis; the sharper statement is that the
+corpus was assembled mostly from ephemeral working directories, giving it a half-life measured in
+hours. Each sprint measurement was valid when taken and independently reproduced at the time;
+none is reproducible now, for reasons unrelated to any code change.
+
+The consequence to state plainly: an AC verified against this corpus cannot be re-verified, so it
+can no longer fail either. That is precisely the property the proof policy exists to require, and
+it means the sprint's corpus-backed ACs are historical records rather than standing guarantees.
+
 Open question this entity must answer first: whether that is worth it. A vendored fixture
 drifts from the live corpus, and the numbers that made xn/3t/gz decidable (368 deferred,
 630 errors, 9 tier-1 repairable, 20 of 100 flows clean) came precisely from the *real*
