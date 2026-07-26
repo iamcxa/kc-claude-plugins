@@ -561,12 +561,12 @@ review_post_cmd_post() {
 
   # Exactly-once must survive a re-invocation, not only a crash-resume: a prior
   # run's ambiguous POST may already be live remotely. Reconcile that instead of
-  # posting the identical payload again. When the read cannot confirm remote
-  # state, only a payload with no prior posting attempt may proceed.
-  local marker reviews_json existing_id
+  # posting the identical payload again.
+  local marker reviews_json existing_id reviews_ok=0
   marker="$(review_post_marker "$idempotency_key")"
   reviews_json="$(review_post_transport list --repo "$repository" --pr "$pr_number" --self "$self_login")" || return 74
   if review_post_reviews_usable "$reviews_json"; then
+    reviews_ok=1
     existing_id="$(review_post_scan_marker "$reviews_json" "$marker")"
     if [ -n "$existing_id" ]; then
       review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
@@ -600,6 +600,20 @@ review_post_cmd_post() {
     fi
     printf 'review-post: an unsettled prior attempt exists for this payload; resume it instead\n' >&2
     review_post_emit ambiguous "$run_id" "$idempotency_key" prior_attempt_unsettled ''
+    return 0
+  fi
+
+  # Neither source positively confirmed remote state, and the only reason the
+  # read could not is that it was unusable. Refuse exactly as `resume` does: one
+  # rule, no per-command exception. The local check above is duplicate-safe only
+  # within ONE state root -- a wiped or reconfigured state dir, another machine,
+  # or a stateless runner leaves it blind while an unusable list hides the marker
+  # that would have caught the duplicate. Deliberately placed AFTER that check so
+  # a definitively posted prior run still settles as posted_reconciled and an
+  # unsettled one still reports prior_attempt_unsettled.
+  if [ "$reviews_ok" -eq 0 ]; then
+    printf 'review-post: reconcile list was unusable; keeping the pending payload\n' >&2
+    review_post_emit ambiguous "$run_id" "$idempotency_key" reconcile_unavailable ''
     return 0
   fi
 
