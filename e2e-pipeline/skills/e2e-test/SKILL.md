@@ -74,9 +74,11 @@ Use loaded patterns to:
 |-------|-----------|-------------|--------|
 | Top-level key | `mapping:`/`sites:` | `app:` | SKIP |
 | Step identifier | `id:` | `name:` | SKIP |
-| Expect entries | strings | objects | SKIP |
+| Expect entries | strings or `{not_automated: "<reason>"}` objects | other objects | SKIP |
 
-If ANY fail: warn with migration guidance (`app:`->`mapping:`, `name:`->`id:`, structured->`grammar strings`). All v1 -> stop execution of this flow. **In batch mode**: mark as ERROR in results table with "v1 format" reason, continue with remaining flows (per Multi-Flow Execution rule).
+The `not_automated` object is valid only when it has exactly one key, `not_automated`, and the value is a non-empty string. Objects carrying `not_automated` plus any other key are v1/legacy input.
+
+If ANY fail: warn with migration guidance (`app:`->`mapping:`, `name:`->`id:`, unsupported structured expects->grammar strings or `not_automated` only when genuinely human-only). All v1 -> stop execution of this flow. **In batch mode**: mark as ERROR in results table with "v1 format" reason, continue with remaining flows (per Multi-Flow Execution rule).
 
 **Flow/Mapping Mismatch Guard (mandatory):** If the flow has a `mapping:` field, compare it to the resolved mapping filename (without `.yaml`). If they differ, stop: `"Flow '<flow>' targets mapping '<flow.mapping>' but resolved mapping is '<resolved>'. Use '--mapping <flow.mapping>' or fix the flow's 'mapping:' field."` This catches app mismatches before dispatching the agent, avoiding wasted execution time.
 
@@ -418,7 +420,7 @@ Batch mode: dispatch sequentially (session reuse). Multi-site: dispatch per-site
 
 #### Receive Results
 
-Agent returns: `total_steps, passed, failed, skipped, console_errors, api_failures, report_path, key_findings`.
+Agent returns: `total_steps, passed, failed, skipped, not_automated, console_errors, api_failures, report_path, key_findings`.
 
 ### Phase 1.5 — Media Post-Processing
 
@@ -540,7 +542,7 @@ If 0 diverged: "LLM and compiled runs agree on all steps."
 
 ## Phase 2 — Present Results
 
-**Single:** `Test complete: N/M PASS (X console errors, Y API failures) Report: <path> Browser still open.`
+**Single:** `Test complete: N/M PASS, Z not automated (X console errors, Y API failures) Report: <path> Browser still open.`
 
 If `--video` or `--pr` was used, append:
 - `Video: <path>/test-run.mp4` (step-paced, via media agent)
@@ -554,6 +556,8 @@ If `--video` or `--pr` was used, append:
 | bad-format | ERROR | — (invalid YAML) |
 
 **Multi-site:** Per-site summary + total.
+
+When present, include `not_automated: N` in single, batch, and multi-site summaries without counting it as passed, failed, or skipped.
 
 **Quick Re-Run (always shown after single-flow results):**
 
@@ -780,7 +784,7 @@ Apply severity gate + three-question test from `knowledge-capture.md`. Present c
 
 | Mistake | Fix |
 |---------|-----|
-| v1 flow in batch | Migrate: `app:`->`mapping:`, `name:`->`id:`, structured expects->grammar strings |
+| v1 flow in batch | Migrate: `app:`->`mapping:`, `name:`->`id:`, unsupported structured expects->grammar strings or exact `not_automated` objects |
 | Cross-site in Route A | Use `--all-sites`, `--suite`, or `--site <alias>` |
 | Missing `site:` in cross-site step | Required on every step |
 | Mixing `mapping:` and `sites:` | Mutually exclusive |

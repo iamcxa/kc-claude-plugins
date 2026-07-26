@@ -107,7 +107,8 @@ the exit code rather than assuming the run succeeded:
 | Field | Presents as |
 |-------|-------------|
 | `ok: true` | `Compiled: <flow>` / `Output: .claude/e2e/compiled/<flow>.sh` / `Steps: stats.total (stats.activeExpects expects active)` |
-| `stats.deferredExpects > 0` | Add: `Warnings: N expects deferred (unrecognized format — see docs/writing-tests.md#expect-grammar-reference)` |
+| `ok: false` with deferred assertion errors | Present as compilation failures and show the raw unsupported `expect:` text plus repair guidance |
+| `stats.notAutomatedExpects > 0` | Add: `Not automated: N expects declared with not_automated` |
 | `ok: false` | `Compilation failed: <flow>`, then one line per `errors[]` entry |
 | `errors[].message` | The line text for that error |
 | `errors[].candidates` non-empty | Append: `did you mean: <candidates.join(', ')>?` — a repairable error (the compiler already found these); when empty, no such name exists in the mapping at all |
