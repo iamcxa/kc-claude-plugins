@@ -1,101 +1,100 @@
-# kc-pr-flow Development Roadmap
+# Roadmap — `docs/dev`
 
-This document records sprint plans, strategy shifts, and sprint boundaries for kc-pr-flow development. Each sprint is sequenced to respect file collision constraints (split-root worktree discipline: entities editing the same file cannot run in parallel) and blocking dependencies between entities.
+Sprint boundaries and sequencing only. This file never tracks task state; that is
+`spacedock status --workflow-dir docs/dev`. Owner: captain, or the sprint commander
+writing on the captain's direction.
 
-## Sprint: prescan-review-consolidation (2026-07-26 to ~2026-08-09)
+## Sprint 2 — finish the once-only path, then open pre-scan honesty
 
-**Completed in Prior Session:**
-- Entity `sv` (reconcile-degraded-mode-symmetry) — merged PR #63, archive/ledger recorded
+Opened 2026-07-26, immediately after `sv` (`reconcile-degraded-mode-symmetry`) merged as
+PR #63 and recorded its ledger row.
 
-**This Sprint: 5 Entities**
+**Theme.** `sv` made `post` and `resume` agree on a degraded reconcile read, and in doing so
+exposed the rest of the once-only path: a pagination defect that makes the feature unusable
+on a busy PR, and a validator weak enough to bound the guarantee `sv` just shipped. This
+sprint closes those, pays down the test-loop tax that made `sv` expensive, then opens the
+largest honesty gap in the review kit.
 
-### Phase 1: Prerequisite (Non-Parallel)
-**Entity:** prescan-coverage-honesty (id: 2tpagghhkaqzfkq4wvs7f1nh)
-- **Purpose:** Wire typed-runtime payload shape for pre-scan reporting. Prerequisite for Phase 3.
-- **Impact:** Enables invisible-skip detection; unblocks two follow-on entities.
-- **Size:** Medium (3-4 AC)
-- **Files:** `skills/kc-pr-review/SKILL.md` (Step 4.5), `scripts/review-runtime.sh`, `reference/review-runtime.md`
-- **Risk:** Payload schema locked in after this lands — Phase 3 entities depend on final shape.
+Scope is the **kc-pr-flow track only**. The `e2e-*` entities (`gz`, `rd`, `3t`) are driven
+by a separate session and are deliberately untouched here.
 
-### Phase 2: Defect-Lane Parallelization (3 Entities Run in Parallel)
-**Entity:** review-post-suite-cost (id: qhr529c1ha214hbef794dm6v)
-- **Purpose:** Cut python3 overhead (565ms per launch × 65 per operation = 6-7 min per job). CI cap hit on recent commits.
-- **Impact:** Buys back ~6 minutes of CI headroom. Helps all future test-heavy PRs.
-- **Size:** Small (measured root cause, mechanical fix)
-- **Files:** `scripts/review-post.sh`, `.github/workflows/review-runtime-tests.yml`
-- **Defect-lane eligible:** YES (root cause identified with measurements, mechanical AC, single seam)
-- **Risk:** Low (runtime performance improvement, fail-safe direction)
+### Sequence
 
-**Entity:** reconcile-list-element-shape (id: 11785c6he7dv034qb970tqm0)
-- **Purpose:** Restore jq type-safety boundary in list reconciliation.
-- **Impact:** Prevents silent data shape divergence in daemon-posting edge cases.
-- **Size:** Small (identified seam, 1-2 AC)
-- **Files:** `kc-pr-flow/scripts/review-post.sh`
-- **Defect-lane eligible:** YES (root cause identified, mechanical AC, single seam)
-- **Risk:** Low (jq type-check hardening, fail-safe)
+| # | id | slug | why it sits here |
+|---|----|------|------------------|
+| 1 | `qh` | review-post-suite-cost | Holds both contended files. Must go first — see constraints. |
+| 2 | `11` | reconcile-list-element-shape | The named residual bounding `sv`'s shipped guarantee; fix already pinned to one shape. |
+| 3 | `n9` | gh-list-adapter-pagination | Once-only posting is unusable on any PR whose reviews list paginates. |
+| 4 | `2t` | prescan-coverage-honesty | Main course: eleven pre-scans that cannot distinguish "ran, found nothing" from "skipped". |
 
-**Entity:** gh-list-adapter-pagination (id: n9xjhpeza7q0hk3sepc6rxhc)
-- **Purpose:** Remove silent pagination failures in gh CLI adapter.
-- **Impact:** Gh-based queries now fail overtly if pagination misbehaves, not silently drop rows.
-- **Size:** Small (root cause known, needs test fixture)
-- **Files:** `scripts/gh-list-adapter.sh`, `.github/workflows/review-runtime-tests.yml` (new gh fixture)
-- **Defect-lane eligible:** YES (root cause identified, mechanical AC, single seam)
-- **Risk:** Low (failure-mode hardening, gh-specific test harness)
+Stretch, only if appetite survives the first four: `v5` (`learned-pattern-selection`) — the
+natural successor to `2t`, same file, next section, and the one backlog item that gets
+strictly worse on its own. Deferring costs time; starting it with no budget left costs a
+half-finished edit to an 1884-line skill.
 
-**Parallelization note:** All three defect-lane entities touch `scripts/review-post.sh` but at different semantic boundaries (post-cost is performance, reconcile is data shape, pagination is adapter behavior). Verify git diff segments to confirm no line-level collision; if none, safe to parallelize.
+### Why this order — two contended files, not four independent tasks
 
-### Phase 3: Implementation Follow-On (Sequential, Blocks Next Sprint)
-**Entity:** learned-pattern-selection (id: v52dgtngxnthwah7tvbeawsz)
-- **Purpose:** Add trigger metadata index to 104 learned patterns; select by relevance instead of reading all.
-- **Impact:** ~50% context reduction on typical reviews (measured in cross-vendor pass).
-- **Size:** Medium (3-4 AC including migration)
-- **Files:** `reference/learned-patterns.md`, `skills/kc-pr-review/SKILL.md` (Step 8), `skills/kc-pr-review-resolve/SKILL.md`
-- **Blocking:** Must sequence AFTER prescan-coverage-honesty (different sections of SKILL.md, but payload shape dependency)
-- **Risk:** Medium (index schema is a new construct; fallback to whole-file read on index corruption)
-- **Gates to next:** learned-pattern-append-bound cannot start until metadata schema is stable
+Sequencing here is dominated by same-file collisions, not by dependency arrows. Two files
+are contended by most of the backlog:
 
-**Sequencing rationale:** prescan-coverage-honesty lands first to set payload shape. Then 3 defect-lane entities run in parallel (no SKILL.md collision). Then learned-pattern-selection can safely modify Step 8 of SKILL.md without conflicting with Phase 1's Step 4.5 changes.
+- **`kc-pr-flow/scripts/review-post.sh`** — `qh`, `11`, `n9`, and later `vf`, `x0`, `7j`.
+- **`kc-pr-flow/skills/kc-pr-review/SKILL.md`** — `2t` (Step 4.5, `:468-728`), `v5` (Step 8,
+  `:1834`), `q0` (Step 4-Codex `:409`/`:413` and Step 5.5 `:794`), `1c` (Step 4.5), `3w`
+  (Step 8 D1).
 
-## Future Sprint Slate (Out of This Sprint)
+`qh` is the only entity touching **both** contended surfaces, verified by grep rather than
+inferred from its body: six `python3` call sites in `kc-pr-flow/scripts/review-runtime.sh`
+and two in `kc-pr-flow/scripts/review-post.sh` (`:53`, `:69`). `2t` touches
+`review-runtime.sh` as well — its capability-policy assertions live at `:1979` and `:2073`.
+Scheduled late, `qh` waits for every other slice to clear both files; scheduled first, it
+clears the way and makes each following slice's test loop cheaper. Its evidence is measured,
+not argued: `python3` costs 565 ms per launch on this machine at 0% CPU, and one `post`
+spawns 65 of them.
 
-**Held for Design Decision (attended-pr-review-wait, 4p):**
-- once-only-daemon-preauth-gate (slice 2 of daemon arc) — ceiling source location TBD by captain
-- daemon-preauth-freshness-coverage (slice 3, depends on slice 2)
+`11` before `n9`: `11`'s fix is already pinned to one shape
+(`all(.reviews[]; type == "object")`), while `n9` must still decide how a multi-page adapter
+composes. Cheapest known-shape work first, inside the same file visit.
 
-**Blocked by learned-pattern-selection Stability:**
-- learned-pattern-append-bound — depends on selection's metadata schema, implements write-side dedup
+`2t` last of the four because it opens the `SKILL.md` line that the next sprint continues.
 
-**Blocked by prescan-coverage-honesty Shape:**
-- reviewer-return-contract — inherits finding representation from prescan payload
-- review-citation-verifier — depends on return-contract finding model
+### Defect-lane determination
 
-**Post-Implementation (Measurement/Verification Tasks):**
-- benchmark-full-rerun-control — token-savings measurement (currently unproven replay vs. full re-run)
-- cross-model-arbitration-e2e — E2E proof of arbitration wiring (path has never reached verdict end-to-end)
-- executable-diff-coverage-ratchet — open question: worth building vs. adversarial spot-check?
-- corpus-fixture-for-reproducible-acs — open question: fixture fidelity vs. simplicity trade-off
+Under the README's four conditions, **none of these four qualifies for the lane**; all take
+the main line through `ideation`.
 
-**Low-Priority Independent (Typically Deferred):**
-- once-only-retention-sweeper — mechanical boundary for state retention window
-- pr-merge-audit-link-split-root — split-root workflow audit link
-- structural-check-hardening — minor validation improvements
+- `qh` — fails condition 4. Its own body lists four candidate fixes (long-lived helper
+  process, shell date math, batched safe-I/O, parallel-by-suite CI matrix). Four defensible
+  shapes is the textbook exclusion.
+- `n9` — fails condition 4. No fix mechanism is chosen yet.
+- `11` — fails condition 3. The fix changes both `post` and `resume`, so it is not a single
+  seam even though its shape is settled.
+- `2t` — fails conditions 3 and 4, and edits a closed schema.
 
-## Sprint Strategy Notes
+### Appetite
 
-**File Collision Enforcement:**
-- `skills/kc-pr-review/SKILL.md` is the hottest file. Edits segment by step (4.5, 8, etc.) but occupy same file. Sequential ordering of prescan → learned-pattern maintains isolation.
-- `reference/learned-patterns.md` has a chain: selection (read-side index) → append-bound (write-side dedup). Must sequence sequentially.
-- Defect-lane parallelization in Phase 2 requires git diff inspection before concurrent worktree dispatch.
+Four slices, one implementation session each. `qh` and `2t` are the two that can overrun —
+`qh` because ideation must pick one of its four candidates rather than try them all, `2t`
+because it edits a closed schema. On overrun, cut rather than extend: `qh` falls back to the
+parallel-by-suite CI matrix it already names, and `2t` defers the evidence payload `1c` is
+expected to fill.
 
-**Defect-Lane Criteria (All 3 Phase-2 Entities Meet All 4):**
-1. Root cause identified in current codebase (measured, not speculative)
-2. AC are mechanical and single-seam (no scattered refactor)
-3. No design decision pending (shape/strategy fixed)
-4. Bounded scope (fix doesn't cascade into adjacent areas)
+### Not in this sprint, on purpose
 
-**Baseline Measurement Requirement:**
-All entities touching `skills/kc-pr-review/SKILL.md` must re-measure suite baseline before starting. Main has moved past the 920/0 baseline recorded 2026-07-26 following PR #60, #61 merges. Use CI's pinned ShellCheck v0.9.0 (lint parity commands in `kc-pr-flow/CLAUDE.md`).
+- **`q0` (reviewer-return-contract)** — must inherit `2t`'s representation instead of
+  inventing a second one, and it edits `SKILL.md` too (`:409`, `:413`, `:794`), so it cannot
+  overlap `2t` or `v5`. Its own body says to cut it after `2t` lands. Precondition for `dk`.
+- **`vf` / `x0` (daemon preauthorization)** — still coupled to a caller whose shape the
+  captain has not settled (`4p` is parked; the two directions on record are `spacedock claude`
+  and a self-built SD+ACP harness). The caller-agnostic part of `vf` already shipped as `sv`.
+- **`1c`, `3w`** — downstream of `2t` and `v5`; scheduling them now means designing against a
+  representation that does not exist yet.
+- **`fn`, `24`, `qe`, `c3`, `w1`, `7j`, `dk`** — no forcing function this sprint. `w1` (dead
+  audit link under split-root) is the cheapest and the best candidate for any gap.
 
-**Known Risks:**
-- Daemon arc (Phase 4) may face scope change if captain's 4p decision favors removing unattended-caller path entirely.
-- Measurement tasks (benchmark-control, cross-model-e2e) produce proof only; do not count as implementation velocity.
+### Hazard carried in from the last sprint
+
+`spacedock status --ac-scan`'s citation counter is not trustworthy — an AC citing three paths
+scored `0` while one citing a single path scored `2`. The README makes that scan a hard
+precondition for the ideation gate, so `2t` will hit it. The captain deferred the
+spacedock-side fix; until then record the scan output and the discrepancy in the stage report
+rather than treating a `0` as a finding about the AC.
