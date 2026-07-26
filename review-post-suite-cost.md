@@ -19,16 +19,31 @@ the step was killed in the same second it printed its result, and the following 
 The cap has been raised to 20 minutes so the tree is not one commit away from red, but that
 buys time rather than fixing anything.
 
-Roughly two seconds per assertion is the real number to attack. Each recorded event forks
-`python3` (RFC3339 conversion, safe I/O) and several `jq` invocations, and each scenario pays
-two `mktemp -d` plus a state-root teardown. Nothing here is algorithmically expensive; it is
-process startup, paid hundreds of times.
+Measured on 2026-07-26 rather than guessed, and the first guess in this file was wrong:
+**`python3` is the entire problem and `jq` is innocent.**
 
-Worth measuring before choosing a fix — the cheapest candidates are batching the python3 date
-conversions (or replacing them with shell arithmetic where the format allows), reusing one
-state root across scenarios that do not need isolation, and collapsing the per-event `jq`
-pipelines. A parallel-by-suite CI matrix would cut wall-clock without touching the cost, and is
-the fallback if the per-assertion cost turns out to be irreducible.
+| binary | per call |
+|---|---|
+| `python3 -c 'pass'` | **565 ms** |
+| `shasum -a 256` | 18.7 ms |
+| `mktemp -d` | 14.2 ms |
+| `jq -n '1'` | **6.8 ms** |
+
+Read the CPU accounting, not just the clock: 50 python3 launches took 28.3s wall at **0% CPU**.
+Nothing computes — each `exec` blocks on interception (sandbox policy evaluation, signature
+verification, or an EDR hook). The same launch is ~20-30 ms on the Linux CI runner, which
+accounts for the whole 6-7x local/CI gap.
+
+The multiplier is the second half. One `review-post.sh post` — a single operation appending
+about four events — spawns **65 python3 processes**, roughly sixteen launches per recorded
+event, all for RFC3339 conversion and the safe-I/O helper. Both are small string operations.
+
+So the fix is high-leverage, cheap, and helps CI rather than only this machine: get 65 into
+single digits. Candidates, cheapest first — hold one long-lived helper process instead of one
+per call; do the date conversion in shell, where the fixed `%Y-%m-%dT%H:%M:%SZ` format allows
+it; batch the safe-I/O calls belonging to a single append. Reusing a state root across scenarios
+that need no isolation is a test-side win on top. A parallel-by-suite CI matrix cuts wall-clock
+without touching the cost and is the fallback if the per-call cost proves irreducible.
 
 This is maintenance economics, not correctness: every future entity in this area pays the tax,
 and the 10-minute cancellation showed the failure mode is a **silent** one — a suite that passes
