@@ -48,35 +48,128 @@ review_post_now_epoch() {
   date -u +%s
 }
 
+# Days from 1970-01-01 for a proleptic Gregorian date, and its inverse. These
+# are Howard Hinnant's civil-calendar algorithms, written for the
+# truncate-toward-zero division the shell gives us. They exist so the two
+# conversions below need no interpreter: the wire format is the fixed
+# `%Y-%m-%dT%H:%M:%SZ`, and a `post` used to launch python3 twice just to move
+# between it and an epoch.
+review_post_days_from_civil() {
+  local year="$1" month="$2" day="$3"
+  local era year_of_era day_of_year day_of_era
+  if [ "$month" -le 2 ]; then
+    year=$((year - 1))
+  fi
+  if [ "$year" -ge 0 ]; then
+    era=$((year / 400))
+  else
+    era=$(((year - 399) / 400))
+  fi
+  year_of_era=$((year - era * 400))
+  if [ "$month" -gt 2 ]; then
+    day_of_year=$(((153 * (month - 3) + 2) / 5 + day - 1))
+  else
+    day_of_year=$(((153 * (month + 9) + 2) / 5 + day - 1))
+  fi
+  day_of_era=$((year_of_era * 365 + year_of_era / 4 - year_of_era / 100 + day_of_year))
+  printf '%s' "$((era * 146097 + day_of_era - 719468))"
+}
+
 review_post_rfc3339_to_epoch() {
   local value="$1"
-  python3 - "$value" <<'PY'
-import datetime
-import sys
+  local year month day hour minute second days
+  # strptime("%Y-%m-%dT%H:%M:%SZ") accepts no fractional part, so neither does
+  # this; review_runtime_rfc3339_utc_valid is the laxer grammar and is not it.
+  if ! [[ "$value" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})Z$ ]]; then
+    return 2
+  fi
+  year=$((10#${BASH_REMATCH[1]}))
+  month=$((10#${BASH_REMATCH[2]}))
+  day=$((10#${BASH_REMATCH[3]}))
+  hour=$((10#${BASH_REMATCH[4]}))
+  minute=$((10#${BASH_REMATCH[5]}))
+  second=$((10#${BASH_REMATCH[6]}))
+  if ! review_post_calendar_date_valid "$year" "$month" "$day"; then
+    return 2
+  fi
+  if [ "$hour" -gt 23 ] || [ "$minute" -gt 59 ] || [ "$second" -gt 59 ]; then
+    return 2
+  fi
+  days="$(review_post_days_from_civil "$year" "$month" "$day")"
+  printf '%s\n' "$((days * 86400 + hour * 3600 + minute * 60 + second))"
+}
 
-value = sys.argv[1]
-try:
-    parsed = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
-except ValueError:
-    sys.exit(2)
-parsed = parsed.replace(tzinfo=datetime.timezone.utc)
-print(int(parsed.timestamp()))
-PY
+review_post_calendar_date_valid() {
+  local year="$1" month="$2" day="$3"
+  local month_days
+  if [ "$year" -lt 1 ] || [ "$month" -lt 1 ] || [ "$month" -gt 12 ]; then
+    return 1
+  fi
+  case "$month" in
+    1 | 3 | 5 | 7 | 8 | 10 | 12) month_days=31 ;;
+    4 | 6 | 9 | 11) month_days=30 ;;
+    *)
+      month_days=28
+      if [ $((year % 4)) -eq 0 ] && { [ $((year % 100)) -ne 0 ] || [ $((year % 400)) -eq 0 ]; }; then
+        month_days=29
+      fi
+      ;;
+  esac
+  if [ "$day" -lt 1 ] || [ "$day" -gt "$month_days" ]; then
+    return 1
+  fi
 }
 
 review_post_epoch_to_rfc3339() {
   local epoch="$1"
-  python3 - "$epoch" <<'PY'
-import datetime
-import sys
-
-try:
-    epoch = int(sys.argv[1])
-except ValueError:
-    sys.exit(2)
-moment = datetime.datetime.fromtimestamp(epoch, tz=datetime.timezone.utc)
-print(moment.strftime("%Y-%m-%dT%H:%M:%SZ"))
-PY
+  local days seconds_of_day z era day_of_era year_of_era year day_of_year
+  local month_prime month day hour minute second sign=1 digits
+  if ! [[ "$epoch" =~ ^([+-]?)([0-9]+)$ ]]; then
+    return 2
+  fi
+  if [ "${BASH_REMATCH[1]}" = '-' ]; then
+    sign=-1
+  fi
+  # 10# forces decimal: int("0012") is twelve, but bare shell arithmetic would
+  # read a leading zero as octal.
+  digits="${BASH_REMATCH[2]}"
+  epoch=$((sign * 10#$digits))
+  days=$((epoch / 86400))
+  seconds_of_day=$((epoch % 86400))
+  # Shell division truncates toward zero; a pre-epoch instant needs the floor.
+  if [ "$seconds_of_day" -lt 0 ]; then
+    seconds_of_day=$((seconds_of_day + 86400))
+    days=$((days - 1))
+  fi
+  z=$((days + 719468))
+  if [ "$z" -ge 0 ]; then
+    era=$((z / 146097))
+  else
+    era=$(((z - 146096) / 146097))
+  fi
+  day_of_era=$((z - era * 146097))
+  year_of_era=$(((day_of_era - day_of_era / 1460 + day_of_era / 36524 - day_of_era / 146096) / 365))
+  year=$((year_of_era + era * 400))
+  day_of_year=$((day_of_era - (365 * year_of_era + year_of_era / 4 - year_of_era / 100)))
+  month_prime=$(((5 * day_of_year + 2) / 153))
+  day=$((day_of_year - (153 * month_prime + 2) / 5 + 1))
+  if [ "$month_prime" -lt 10 ]; then
+    month=$((month_prime + 3))
+  else
+    month=$((month_prime - 9))
+  fi
+  if [ "$month" -le 2 ]; then
+    year=$((year + 1))
+  fi
+  # datetime.fromtimestamp cannot represent a year outside [1, 9999] either.
+  if [ "$year" -lt 1 ] || [ "$year" -gt 9999 ]; then
+    return 2
+  fi
+  hour=$((seconds_of_day / 3600))
+  minute=$((seconds_of_day % 3600 / 60))
+  second=$((seconds_of_day % 60))
+  printf '%04d-%02d-%02dT%02d:%02d:%02dZ\n' \
+    "$year" "$month" "$day" "$hour" "$minute" "$second"
 }
 
 # The transport is the sole network boundary. A test injects a recorded stub;

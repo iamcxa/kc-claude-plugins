@@ -48,11 +48,10 @@ def reject_float(_: str) -> None:
     raise UnsafeInteger
 
 
-def unique_json() -> int:
+def classify_unique_json(payload: bytes) -> int:
     try:
-        payload = sys.stdin.buffer.read().decode("utf-8")
         json.loads(
-            payload,
+            payload.decode("utf-8"),
             object_pairs_hook=unique_object,
             parse_constant=reject_nonstandard_constant,
             parse_float=reject_float,
@@ -62,6 +61,36 @@ def unique_json() -> int:
         return 1
     except (UnicodeDecodeError, ValueError, json.JSONDecodeError):
         return 2
+    return 0
+
+
+def unique_json() -> int:
+    return classify_unique_json(sys.stdin.buffer.read())
+
+
+def split_jsonl(raw: bytes) -> List[bytes]:
+    """Split exactly the way the shell's `read -r` loop does.
+
+    An empty input is zero records; a single trailing newline terminates the
+    last record rather than introducing an empty one; a record with no trailing
+    newline is still a record.
+    """
+    if raw == b"":
+        return []
+    if raw.endswith(b"\n"):
+        raw = raw[:-1]
+    return raw.split(b"\n")
+
+
+def unique_json_lines() -> int:
+    """Classify a whole JSONL stream in one launch, one status code per line.
+
+    Validating an append re-checks every existing line, so the per-line variant
+    above cost one interpreter launch per line per pass. Callers batch a whole
+    pass through here instead and read the verdicts back positionally.
+    """
+    verdicts = [classify_unique_json(line) for line in split_jsonl(sys.stdin.buffer.read())]
+    sys.stdout.write("".join("%d\n" % verdict for verdict in verdicts))
     return 0
 
 
@@ -268,6 +297,8 @@ def snapshot_stdin_command(argv: List[str]) -> int:
 def main(argv: List[str]) -> int:
     if argv == ["unique-json"]:
         return unique_json()
+    if argv == ["unique-json-lines"]:
+        return unique_json_lines()
     if len(argv) == 2 and argv[0] == "rfc3339-utc":
         return rfc3339_utc(argv[1])
     if argv[:1] == ["snapshot"]:
@@ -275,7 +306,8 @@ def main(argv: List[str]) -> int:
     if argv[:1] == ["snapshot-stdin"]:
         return snapshot_stdin_command(argv[1:])
     print(
-        "usage: review-runtime-safe-io.py unique-json | rfc3339-utc VALUE | "
+        "usage: review-runtime-safe-io.py unique-json | unique-json-lines | "
+        "rfc3339-utc VALUE | "
         "snapshot --source SOURCE --destination DEST --limit-bytes LIMIT | "
         "snapshot-stdin --destination DEST --limit-bytes LIMIT",
         file=sys.stderr,

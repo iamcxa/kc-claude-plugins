@@ -67,11 +67,53 @@ review_runtime_validate_runtime_config() {
   }
 }
 
+# RFC3339 UTC validation is a fixed-format string test, so it runs in the shell
+# rather than paying a python3 launch per timestamp. Every recorded event is
+# validated once per line per validation pass, which made this the single
+# largest interpreter cost in the runtime.
+#
+# The accepted grammar and the calendar rules below mirror
+# review-runtime-safe-io.py's `rfc3339-utc` exactly, and that subcommand stays
+# in the helper as the reference implementation:
+#   - the same anchored pattern, including optional fractional seconds
+#   - datetime.MINYEAR is 1, so year 0000 is not representable
+#   - hour <= 23, minute <= 59, second <= 59 (datetime rejects leap second 60)
+#   - a real calendar day, proleptic Gregorian leap years included
+# Return 2 for a rejected value, matching the helper's exit status; callers map
+# 69 to a dependency failure, which this shell path can no longer raise.
 review_runtime_rfc3339_utc_valid() {
-  local helper
-  review_runtime_require_python || return 69
-  helper="$(review_runtime_safe_io_helper)" || return 69
-  python3 "$helper" rfc3339-utc "$1" >/dev/null 2>&1
+  local value="$1"
+  local year month day hour minute second month_days
+  if ! [[ "$value" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(\.[0-9]+)?Z$ ]]; then
+    return 2
+  fi
+  # 10# keeps a zero-padded field out of octal interpretation.
+  year=$((10#${BASH_REMATCH[1]}))
+  month=$((10#${BASH_REMATCH[2]}))
+  day=$((10#${BASH_REMATCH[3]}))
+  hour=$((10#${BASH_REMATCH[4]}))
+  minute=$((10#${BASH_REMATCH[5]}))
+  second=$((10#${BASH_REMATCH[6]}))
+  if [ "$year" -lt 1 ] || [ "$month" -lt 1 ] || [ "$month" -gt 12 ]; then
+    return 2
+  fi
+  if [ "$hour" -gt 23 ] || [ "$minute" -gt 59 ] || [ "$second" -gt 59 ]; then
+    return 2
+  fi
+  case "$month" in
+    1 | 3 | 5 | 7 | 8 | 10 | 12) month_days=31 ;;
+    4 | 6 | 9 | 11) month_days=30 ;;
+    *)
+      month_days=28
+      if [ $((year % 4)) -eq 0 ] && { [ $((year % 100)) -ne 0 ] || [ $((year % 400)) -eq 0 ]; }; then
+        month_days=29
+      fi
+      ;;
+  esac
+  if [ "$day" -lt 1 ] || [ "$day" -gt "$month_days" ]; then
+    return 2
+  fi
+  return 0
 }
 
 review_runtime_require_rfc3339_validation() {
@@ -99,6 +141,50 @@ review_runtime_json_has_unique_members() {
     0 | 1 | 2) return "$rc" ;;
     *) return 69 ;;
   esac
+}
+
+# Duplicate-member verdicts for a whole JSONL file in one interpreter launch.
+#
+# Validating a log checks every line, and an append validates the log twice on
+# top of the incoming line, so the per-line call above used to cost one python3
+# launch per line per pass -- quadratic in the number of recorded events. This
+# is a pure optimization with no authority of its own: it prints one verdict per
+# line on success, and returns 1 for *any* anomaly (absent interpreter, absent
+# or unreadable helper, non-zero exit, a verdict that is not 0/1/2, or a count
+# that does not match the file) so the caller falls back to the per-line path
+# and every dependency, quarantine, and fail-closed status keeps coming from
+# exactly the code that produced it before.
+review_runtime_unique_json_verdicts() {
+  local events_file="$1"
+  local helper verdicts verdict expected=0 seen=0
+  if ! command -v python3 >/dev/null 2>&1; then
+    return 1
+  fi
+  helper="$(review_runtime_safe_io_helper)" || return 1
+  if [ ! -f "$helper" ] || [ -L "$helper" ] || [ ! -r "$helper" ]; then
+    return 1
+  fi
+  if [ ! -f "$events_file" ] || [ -L "$events_file" ]; then
+    return 1
+  fi
+  verdicts="$(python3 "$helper" unique-json-lines <"$events_file" 2>/dev/null)" || return 1
+  # Count the file the way every reader here does, so a batch that silently
+  # disagrees about record boundaries is rejected rather than trusted.
+  while IFS= read -r verdict || [ -n "$verdict" ]; do
+    expected=$((expected + 1))
+  done <"$events_file"
+  if [ -n "$verdicts" ]; then
+    while IFS= read -r verdict; do
+      case "$verdict" in
+        0 | 1 | 2) seen=$((seen + 1)) ;;
+        *) return 1 ;;
+      esac
+    done <<<"$verdicts"
+  fi
+  if [ "$seen" -ne "$expected" ]; then
+    return 1
+  fi
+  printf '%s' "$verdicts"
 }
 
 review_runtime_snapshot_regular_file() {
@@ -834,6 +920,11 @@ review_runtime_validate_t2_identity() {
 
 review_runtime_validate_line() {
   local line="$1"
+  # A caller validating a whole file batches the duplicate-member check for
+  # every line in one launch and hands each verdict back here. Absent, this
+  # falls through to the per-line check exactly as before -- which is also what
+  # keeps the dependency-failure status coming from the same place.
+  local known_unique="${2:-}"
   local required field schema event_type run_id review_key repository pr_number
   local base_sha head_sha config_hash sequence occurred_at payload payload_sha256
   local expected_payload_sha256 expected_event_id expected_review_key
@@ -841,8 +932,12 @@ review_runtime_validate_line() {
   local has_predecessor has_reason predecessor_run_id successor_reason reason duplicate_rc timestamp_rc
 
   review_runtime_require_jq || return
-  review_runtime_json_has_unique_members "$line"
-  duplicate_rc=$?
+  if [ -n "$known_unique" ]; then
+    duplicate_rc="$known_unique"
+  else
+    review_runtime_json_has_unique_members "$line"
+    duplicate_rc=$?
+  fi
   case "$duplicate_rc" in
     0) ;;
     1)
@@ -1015,11 +1110,31 @@ review_runtime_same_run_identity() {
 
 review_runtime_validate_authoritative_log() {
   local events_file="$1"
+  # Verdicts the caller already holds for exactly these lines, newline
+  # separated. An append validates the existing log and then the same log plus
+  # one line it has just validated, so the second pass reuses the first and
+  # costs no launch at all. Absent or short, the batch below fills the gap.
+  local known_verdicts="${2:-}"
   local line reason authority_line='' sequence expected_sequence=1 count=0 rc
+  local verdict verdict_count=0
+  local -a verdicts=()
   [ -f "$events_file" ] && [ ! -L "$events_file" ] || return 74
+  if [ -z "$known_verdicts" ]; then
+    known_verdicts="$(review_runtime_unique_json_verdicts "$events_file")" || known_verdicts=''
+  fi
+  if [ -n "$known_verdicts" ]; then
+    while IFS= read -r verdict; do
+      verdicts[verdict_count]="$verdict"
+      verdict_count=$((verdict_count + 1))
+    done <<<"$known_verdicts"
+  fi
   while IFS= read -r line || [ -n "$line" ]; do
     count=$((count + 1))
-    reason="$(review_runtime_validate_line "$line")"
+    if [ "$count" -le "$verdict_count" ]; then
+      reason="$(review_runtime_validate_line "$line" "${verdicts[$((count - 1))]}")"
+    else
+      reason="$(review_runtime_validate_line "$line")"
+    fi
     rc=$?
     if [ "$rc" -ne 0 ]; then
       [ "$rc" -eq 69 ] && return 69
@@ -1258,6 +1373,7 @@ review_runtime_append_line() (
   local existing_line existing_id existing_integrity event_id integrity_sha256
   local authority_line last_sequence expected_sequence duplicate_integrity=''
   local temp_events='' temp_run_dir='' rc validation_rc
+  local log_verdicts='' next_verdicts=''
 
   review_runtime_require_python || return
   review_runtime_validate_runtime_config || return
@@ -1305,7 +1421,10 @@ review_runtime_append_line() (
       printf 'review-runtime: unsafe events path for %s\n' "$run_id" >&2
       return 74
     fi
-    last_sequence="$(review_runtime_validate_authoritative_log "$events_file")"
+    # One batched duplicate-member pass serves this whole append: the existing
+    # log now, and below the same log plus the line already validated above.
+    log_verdicts="$(review_runtime_unique_json_verdicts "$events_file")" || log_verdicts=''
+    last_sequence="$(review_runtime_validate_authoritative_log "$events_file" "$log_verdicts")"
     rc=$?
     [ "$rc" -eq 0 ] || return "$rc"
     authority_line="$(sed -n '1p' "$events_file")"
@@ -1342,7 +1461,13 @@ review_runtime_append_line() (
     if ! cat "$events_file" >"$temp_events" || ! printf '%s\n' "$line" >>"$temp_events"; then
       return 74
     fi
-    review_runtime_validate_authoritative_log "$temp_events" >/dev/null
+    # temp_events is byte-for-byte the log validated above plus $line, whose
+    # own verdict is 0 or validate_line would have quarantined it already.
+    if [ -n "$log_verdicts" ]; then
+      next_verdicts="$log_verdicts
+0"
+    fi
+    review_runtime_validate_authoritative_log "$temp_events" "$next_verdicts" >/dev/null
     rc=$?
     [ "$rc" -eq 0 ] || return "$rc"
     review_runtime_events_size_within_limit "$temp_events"
@@ -1364,8 +1489,9 @@ review_runtime_append_line() (
   fi
   temp_run_dir="$(mktemp -d "$pr_dir/.run-new.XXXXXX")" || return 74
   review_runtime_real_directory "$temp_run_dir" || return 74
+  # The new log is exactly $line, already validated at the top of this append.
   if ! printf '%s\n' "$line" >"$temp_run_dir/events.jsonl" ||
-    ! review_runtime_validate_authoritative_log "$temp_run_dir/events.jsonl" >/dev/null; then
+    ! review_runtime_validate_authoritative_log "$temp_run_dir/events.jsonl" '0' >/dev/null; then
     return 74
   fi
   review_runtime_events_size_within_limit "$temp_run_dir/events.jsonl"
