@@ -341,9 +341,18 @@ The user journey itself changed -- new pages, different steps, removed features.
 
 Every `expect:` string is matched against an ordered list of regex patterns in
 `compiler/resolver.js`. The first pattern that matches wins; a string matching none
-of them is silently deferred -- `/e2e-compile` reports it as a "Warnings" line and it
-becomes a `TODO` echo at runtime instead of a real assertion. This table is the
-canonical reference; no other doc enumerates the full grammar.
+of them is a compile error, because it would not produce a runtime assertion.
+This table is the canonical reference; no other doc enumerates the full grammar.
+
+For assertions that are intentionally not automatable, use a per-assertion object:
+
+```yaml
+expect:
+  - not_automated: "Verify the legal disclaimer copy with product counsel."
+```
+
+`not_automated` items compile, appear in the compile summary, and never count as
+active or verified assertions.
 
 | Form | Resolves to |
 |---|---|
@@ -375,10 +384,10 @@ uses `expect: ["text 'Created' on items-page"]`, which reads as if `items-page` 
 a page qualifier for the text assertion. It is not, and the effect is stronger than
 "the page name is ignored": the `text '<value>' on page` pattern's `on page` is a
 fixed literal, not `on <page-name>`, so this exact string matches none of the forms
-above and silently resolves as `deferred` -- it asserts nothing at runtime. There is
-no page-scoped text assertion in this grammar; only the element forms accept a
-qualifier. Confirm with `/e2e-compile --verbose` and check whether a given `expect:`
-shows up as active or deferred in the printed summary.
+above and fails compilation. There is no page-scoped text assertion in this grammar;
+only the element forms accept a qualifier. Rewrite it to a supported text assertion
+such as `text 'Created' on page`, or use an element assertion with an `on <page>`
+qualifier when the page binding matters.
 
 ## Element Coverage
 

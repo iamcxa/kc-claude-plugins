@@ -234,6 +234,7 @@ For each entry in the step's `expect:` array, resolve and verify independently:
 
 | Expect Pattern | How to Verify |
 |---|---|
+| `{not_automated: "<reason>"}` | Record expectation status `not_automated` with the reason. Do not run browser assertion commands, do not mark it PASS, and continue validating the step's other expectations. Any other object-shaped expect remains invalid legacy/v1 input and should have been stopped by the orchestrator. |
 | `"<element> visible on <location>"` | Look up element in location mapping, then shared pages (`shared: true`, plus `_global` unless disabled). `agent-browser is visible "<selector>"` -- check stdout is "true" |
 | `"<element> is visible"` | Resolve from action's page context, then shared pages (`shared: true`, plus `_global` unless disabled). `is visible "<selector>"` |
 | `"<element> not visible"` / `"<element> not visible on <loc>"` | Resolve with the same page/shared fallback, then `is visible "<selector>"` -- check stdout is "false" |
@@ -251,9 +252,11 @@ For each entry in the step's `expect:` array, resolve and verify independently:
 | `"no console errors"` | `agent-browser errors --json` returns empty (after filtering noise) |
 | `"A or B"` | Split on ` or `, pass if ANY segment passes |
 
-**Variable resolution in expects**: `${key}` tokens resolve from flow `variables:` first, then from the current action's parsed parameters.
+**Variable resolution in expects**: `${key}` tokens resolve from flow `variables:` first, then from the current action's parsed parameters. Do not substitute inside `not_automated` reason text.
 
 **Important**: `is visible` always returns exit code 0. Check the stdout text "true" or "false". Do NOT chain with `&&`.
+
+**Step status with non-automated expectations**: action failure or active expectation failure yields `FAIL`; at least one passing active expectation with no failures may yield `PASS` while still listing non-automated expectations separately; a step with only `not_automated` expectations and no action failure yields `NOT_AUTOMATED`, not `PASS`.
 
 ### 2i. Screenshot
 
@@ -399,6 +402,7 @@ Write `{{report_dir}}/report.md` with the following structure:
 | Passed | N |
 | Failed | N |
 | Skipped | N |
+| Not Automated | N |
 | Console Errors | N |
 | API Failures | N |
 
@@ -465,6 +469,7 @@ You MUST end your response with this exact structured block (the orchestrator pa
 - passed: N
 - failed: N
 - skipped: N
+- not_automated: N
 - console_errors: N
 - api_failures: N
 - report_path: {{report_dir}}/report.md
@@ -624,7 +629,7 @@ Execute the full flow (Phase 2 + Phase 3 as normal). After completion, send resu
 ```
 SendMessage(
   to="lead",
-  message="FLOW COMPLETE\ntotal_steps: N\npassed: N\nfailed: N\nskipped: N\nconsole_errors: N\napi_failures: N\nreport_path: <path>\n\nStep Results:\n| Step | Result | Details |\n|------|--------|---------|\n| <id> | PASS | ... |\n| <id> | FAIL | <reason> |\n\nkey_findings:\n- <finding>",
+  message="FLOW COMPLETE\ntotal_steps: N\npassed: N\nfailed: N\nskipped: N\nnot_automated: N\nconsole_errors: N\napi_failures: N\nreport_path: <path>\n\nStep Results:\n| Step | Result | Details |\n|------|--------|---------|\n| <id> | PASS | ... |\n| <id> | FAIL | <reason> |\n| <id> | NOT_AUTOMATED | <reason> |\n\nkey_findings:\n- <finding>",
   summary="Flow: N/M PASS"
 )
 ```
@@ -643,8 +648,8 @@ Execute a SINGLE step from a cross-site flow (lead routes steps by `site:`):
 ```
 SendMessage(
   to="lead",
-  message="STEP COMPLETE\nid: <step-id>\nresult: PASS|FAIL|SKIP\ndetails: <description>\ndata:\n  <key>: <value extracted from page if applicable>",
-  summary="<step-id>: PASS|FAIL"
+  message="STEP COMPLETE\nid: <step-id>\nresult: PASS|FAIL|SKIP|NOT_AUTOMATED\nnot_automated: N\ndetails: <description>\ndata:\n  <key>: <value extracted from page if applicable>",
+  summary="<step-id>: PASS|FAIL|NOT_AUTOMATED"
 )
 ```
 
