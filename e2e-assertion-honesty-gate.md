@@ -1,6 +1,6 @@
 ---
 title: Fail loud on assertions that never run
-status: validation
+status: implementation
 source: captain note — e2e-pipeline agent-native audit, 2026-07-25; scope cut A/B by the captain at ideation open (A = this entity, B = e2e-typed-operands)
 started: 2026-07-26T10:23:26Z
 completed:
@@ -137,3 +137,28 @@ judgments the FO put to it rather than settling:
    the implementation makes it real in five places: CLI prose `expects not automated`, JSON
    `notAutomatedExpects`, `/e2e-compile` presentation, `/e2e-test` summary `not_automated: N`, and
    the runner keeping hatch-only steps at `NOT_AUTOMATED` rather than PASS.
+
+**Cycle 4 — validation gate reopened, 2026-07-27. Verdict: RETURN, blocks merge.**
+
+A cross-vendor pass (agy) was run before opening the PR and **its entire round was discarded**:
+four of five findings cited lines past the end of the file they named (`e2e-test-contract.js` is
+104 lines; it cited :134, :180, :201), and its central mechanism — "dual execution" in
+`skills/e2e-test/SKILL.md` Phase 1.5 — does not exist anywhere in `skills/` or `agents/`. Per the
+fabricated-citation rule the round was thrown out rather than triaged.
+
+One of the questions it had been asked was then investigated directly by the FO, and found a real
+defect by a different mechanism. Reproduced, not argued: a step whose only expect is a hatch
+compiles clean and the generated bash records `_STEP_RESULTS+=("pass")`. `_STEP_RESULTS` is only
+reassigned to `"fail"` on an assertion failure path, and `codegen.js:1687` deliberately emits no
+assertion for a hatch — so a flow of purely manual checks reports every step passing when replayed
+through the compiled script.
+
+The gate ruled this a defect, not design: compiled scripts are the deterministic replay/CI
+artifact, so their step status is part of the honesty contract. AC-4 avoided emitting assertion
+machinery but the compiled surface still violates the value AC-4 exists to protect. **Fourth
+instance of this sprint's recurring failure class** — semantic present at five consumers, absent at
+the sixth, and the sixth is the one CI actually runs.
+
+Scope of the fix is the hatch-only case only; a step with an active assertion plus a hatch
+correctly records `pass`.
+
