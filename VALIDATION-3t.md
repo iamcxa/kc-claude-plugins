@@ -1,6 +1,6 @@
 # Validation Report: 3t Page-Scoped Resolution
 
-Verdict: **pass**, pending adversarial spot-check completion.
+Verdict: **pass**.
 
 Validated branch: `origin/mini/dev-3tp0ym1m-page-scoped-impl` checked out locally as `review`.
 
@@ -49,4 +49,17 @@ The CLI test parses stdout through `parseOnlyStdout(result)` and asserts exact o
 
 ## Adversarial Spot-Check
 
-Pending.
+PASS. I created a detached scratch worktree at `/tmp/e2e-page-scoped-adversarial`, ran `npm install`, then made a claim-breaking edit in the scratch copy only:
+
+```diff
+-  for (var i = 0; i < symbolResult.sharedPages.length; i++) {
++  for (var i = 0; i < 0; i++) {
+```
+
+With the shared-page fallback disabled, `node --test compiler/test/resolver.test.js compiler/test/cli.test.js` exited 1 with `# tests 102`, `# pass 99`, `# fail 3`. The failures were the expected guard cases:
+
+- `resolve: _global elements resolve from any explicit real page`
+- `resolve: explicit shared:true page elements resolve from any explicit real page`
+- `resolveExpects 3t: _global elements resolve from any explicit real page`
+
+After reverting the scratch edit, the same command exited 0 with `# tests 102`, `# pass 102`, `# fail 0`.
