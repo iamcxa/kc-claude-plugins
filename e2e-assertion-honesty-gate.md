@@ -86,3 +86,35 @@ it silently passes. A ban with no legal alternative produced the hole it was mea
   does not by itself serve "消耗 token 更有效率" and may cost tokens short-term. Whether it
   still goes first is a captain call recorded at the gate, and the ledger row should carry a
   token baseline so the batch can be judged against the goal that motivated it.
+
+### Feedback Cycles
+
+**Cycle 1 — ideation gate, 2026-07-26. Verdict: RETURN.** Adjudicated on codex (mini leg
+`dev-5vmvs9rf-gate`, verdict at `origin/mini/dev-5vmvs9rf-gate:VERDICT-5v.md`).
+
+One material condition: the proposed per-assertion hatch is an object
+(`- not_automated: "..."`), and `skills/e2e-test/SKILL.md:77` classifies object expect entries as
+v1 format, with `:79` stopping execution of the **whole flow**. FO-verified from source. So a flow
+using the sanctioned escape hatch would compile cleanly and then be refused entirely by the test
+runner — worse than the silence this entity exists to remove.
+
+Third instance of one failure class in this sprint: a semantic constructed at one layer and lost
+at a consumer ([[e2e-json-diagnostics]] at the coverage consumer, [[e2e-page-scoped-resolution]] at
+the runner prompt, this one at the v1 detector). Treat it as this codebase's default failure mode.
+
+**Cycle 2 — re-gate, 2026-07-26. Verdict: PROCEED.** Same adjudicator, resumed in-session.
+
+The condition was closed by extending scope to `/e2e-test` and `agents/e2e-test-runner.md` while
+keeping the v1 detector strict — a carve-out for one exact shape rather than accepting objects
+generally — plus AC-7, verified behaviorally rather than by prose-grep.
+
+Three implementation guardrails carried from the verdict's "what would change my mind":
+
+1. Reject any object carrying `not_automated` **plus other keys**, and reject empty or non-string
+   reasons. The detector rule is "objects are rejected except the exact sanctioned hatch", never
+   "objects are mostly allowed".
+2. Do not update `/e2e-compile` docs while leaving `/e2e-test` schema validation or runner result
+   accounting unchanged — that is precisely the round-1 defect returning under a new name.
+3. Validation must not accept a diff or grep of the skill/agent prompt as AC-7 evidence. It needs
+   the synthetic fixture and an observed later-step execution; if a fresh-context run cannot be
+   made auditable, use the tracked harness the test plan already names.
