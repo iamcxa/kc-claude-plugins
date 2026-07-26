@@ -1242,3 +1242,201 @@ describe('text assertion runtime status safety', function() {
     assert.equal(notVisible.status, 0, notVisible.stdout + notVisible.stderr);
   });
 });
+
+// A `producer | grep -q` pipeline under `set -o pipefail` reports a SUCCESSFUL
+// match as a no-match: grep exits 0 the instant it can decide and closes the
+// pipe, the still-writing producer dies on SIGPIPE/EPIPE, and pipefail
+// publishes the producer's status. Both conditions are required — an early
+// decidable match AND a producer still writing — so the fixtures below pair
+// each defect payload with the controls that isolate them.
+//
+// Sized at 256KB of bulk-after-match on purpose. A fixture sized at the
+// intuitive pipe-buffer figure is GREEN before the fix on some hosts and would
+// prove nothing; measured locally the false negative starts between 48KB and
+// 64KB of bulk-after, and the ideation sweep on a different producer shape put
+// it near 96KB. 256KB clears every measured threshold.
+const SIGPIPE_BULK_BYTES = 256 * 1024;
+const SIGPIPE_NEEDLE = 'create_customer_button';
+
+function a11yFillerLines(byteBudget) {
+  const lines = [];
+  let total = 0;
+  let index = 0;
+  while (total < byteBudget) {
+    const line = '  - text "filler row ' + index + ' ' + 'x'.repeat(60) + '"';
+    lines.push(line);
+    total += line.length + 1;
+    index += 1;
+  }
+  return lines;
+}
+
+// The first line must satisfy _capture_snapshot's validator, otherwise capture
+// returns 2 and the poll returns 2 — a different failure wearing the same red.
+const A11Y_HEAD = '- generic [ref=e1]:';
+
+function sigpipeSnapshot(shape, needle) {
+  const hit = '  - button "' + needle + '" [ref=e9]';
+  const filler = a11yFillerLines(SIGPIPE_BULK_BYTES);
+  if (shape === 'early') return [A11Y_HEAD, '  - toolbar "Tools"', hit].concat(filler).join('\n');
+  if (shape === 'late') return [A11Y_HEAD, '  - toolbar "Tools"'].concat(filler).concat([hit]).join('\n');
+  if (shape === 'single') return A11Y_HEAD + ' ' + needle + ' ' + 'y'.repeat(SIGPIPE_BULK_BYTES);
+  if (shape === 'absent') return [A11Y_HEAD, '  - toolbar "Tools"'].concat(filler).join('\n');
+  if (shape === 'small') return [A11Y_HEAD, hit].join('\n');
+  if (shape === 'small-absent') return [A11Y_HEAD, '  - toolbar "Tools"'].join('\n');
+  throw new Error('unknown snapshot shape: ' + shape);
+}
+
+// Delivers the snapshot through a file rather than an env var: a 256KB
+// AGENT_BROWSER_OUTPUT risks ARG_MAX.
+function fileSnapshotBrowserScript() {
+  return [
+    '#!/usr/bin/env bash',
+    'printf \'%s\\n\' "$*" >> "${AGENT_BROWSER_LOG:?}"',
+    'for _arg in "$@"; do',
+    '  if [ "$_arg" = "snapshot" ]; then',
+    '    cat "${AGENT_BROWSER_SNAPSHOT_FILE:?}"',
+    '    exit 0',
+    '  fi',
+    'done',
+    'exit 0',
+  ].join('\n');
+}
+
+function withSnapshotFile(shape, needle, callback) {
+  return withFakeBrowser(fileSnapshotBrowserScript(), function(binDir) {
+    const snapshotPath = path.join(binDir, 'snapshot.txt');
+    fs.writeFileSync(snapshotPath, sigpipeSnapshot(shape, needle), 'utf8');
+    return callback(binDir, {
+      AGENT_BROWSER_LOG: path.join(binDir, 'browser.log'),
+      AGENT_BROWSER_SNAPSHOT_FILE: snapshotPath,
+    });
+  });
+}
+
+function runSnapshotPoll(shape, needle) {
+  return withSnapshotFile(shape, needle, function(binDir, env) {
+    return runBash([
+      'set -euo pipefail',
+      generateRuntimeSupport(),
+      'set +e',
+      '_poll_snapshot_contains ' + singleQuote(needle) + ' "sigpipe-step" 1 ""',
+      'exit $?',
+    ].join('\n'), binDir, env);
+  });
+}
+
+function runLargeTextFlow(expectType, shape, needle) {
+  return withSnapshotFile(shape, needle, function(binDir, env) {
+    const expect = expectType === 'text-visible'
+      ? { type: 'text-visible', raw: "text '" + needle + "' on page", text: needle }
+      : { type: 'text-not-visible', raw: "text '" + needle + "' not on page", text: needle };
+    const script = generate(makeTextFlow(expect), 'status-safe-large-snapshot');
+    return runBash(script, binDir, env);
+  });
+}
+
+describe('snapshot matching is status-safe on large pages (pipefail false negative)', function() {
+  test('_poll_snapshot_contains reports a match found on an early line of a large snapshot', function() {
+    const result = runSnapshotPoll('early', SIGPIPE_NEEDLE);
+    assert.equal(result.status, 0,
+      'pattern IS present on line 3; poll must report a match. ' + result.stdout + result.stderr);
+  });
+
+  test('CONTROL: a match on the last line of the same payload still reports a match', function() {
+    // Green before the fix by construction: with the match at the end the
+    // matcher must drain everything, so no early close is possible. Proves the
+    // evidence fixture needs an EARLY match, not merely a large payload.
+    assert.equal(runSnapshotPoll('late', SIGPIPE_NEEDLE).status, 0);
+  });
+
+  test('CONTROL: a single-line payload of the same size still reports a match', function() {
+    // Green before the fix by construction: without a line terminator the
+    // matcher cannot decide early. Proves the evidence fixture needs a line
+    // structure, not merely bytes.
+    assert.equal(runSnapshotPoll('single', SIGPIPE_NEEDLE).status, 0);
+  });
+
+  test('CONTROL: an absent pattern still reports no-match', function() {
+    // Green before the fix by construction, and the guard against a fix that
+    // returns 0 unconditionally.
+    assert.equal(runSnapshotPoll('absent', SIGPIPE_NEEDLE).status, 1);
+  });
+
+  test('text-visible passes when the text is on an early line of a large snapshot', function() {
+    const result = runLargeTextFlow('text-visible', 'early', SIGPIPE_NEEDLE);
+    assert.equal(result.status, 0,
+      'text IS on the page; the assertion must pass. ' + result.stdout + result.stderr);
+  });
+
+  test('text-not-visible fails when the forbidden text is on an early line of a large snapshot', function() {
+    // The silent one: pre-fix this exits 0, so `403 must not appear` style
+    // assertions degrade to unconditional passes as pages grow.
+    const result = runLargeTextFlow('text-not-visible', 'early', SIGPIPE_NEEDLE);
+    assert.equal(result.status, 1,
+      'text IS on the page; the assertion must fail. ' + result.stdout + result.stderr);
+    assert.match(result.stdout, /should NOT be on page but was found/);
+  });
+
+  test('CONTROL: text assertions keep their verdicts on a small snapshot', function() {
+    // Green before the fix by construction — small snapshots never reproduce.
+    assert.equal(runLargeTextFlow('text-visible', 'small', SIGPIPE_NEEDLE).status, 0);
+    assert.equal(runLargeTextFlow('text-not-visible', 'small-absent', SIGPIPE_NEEDLE).status, 0);
+    assert.equal(runLargeTextFlow('text-not-visible', 'small', SIGPIPE_NEEDLE).status, 1);
+  });
+
+  test('CONTROL: the pattern operand stays a fixed string, not a glob', function() {
+    // Green before the fix by construction (grep -F is also literal), and the
+    // guard against a fix that swaps fixed-string matching for glob matching.
+    const decoyHaystack = ['- generic [ref=e1]:', '  - text "a-b-c"'].join('\n');
+    const result = withFakeBrowser(fileSnapshotBrowserScript(), function(binDir) {
+      const snapshotPath = path.join(binDir, 'snapshot.txt');
+      fs.writeFileSync(snapshotPath, decoyHaystack, 'utf8');
+      return runBash([
+        'set -euo pipefail',
+        generateRuntimeSupport(),
+        'set +e',
+        '_poll_snapshot_contains ' + singleQuote('a*c') + ' "glob-decoy" 1 ""',
+        'exit $?',
+      ].join('\n'), binDir, {
+        AGENT_BROWSER_LOG: path.join(binDir, 'browser.log'),
+        AGENT_BROWSER_SNAPSHOT_FILE: snapshotPath,
+      });
+    });
+    assert.equal(result.status, 1,
+      'a*c must not match a-b-c — the pattern is a literal, not a glob. ' + result.stdout + result.stderr);
+  });
+
+  test('no emitted matcher pipes a producer into grep', function() {
+    // Class-level guard: the defect is the pipeline, not any one call site. A
+    // reintroduced `producer | grep` is caught here even if it happens to sit
+    // below today's payload threshold.
+    const flow = {
+      name: 'no-grep-pipelines',
+      steps: [
+        {
+          id: 'capture-booking-id',
+          type: 'capture-url-query',
+          action: 'Capture bookingId from URL query',
+          operands: { param: 'bookingId', as: 'booking_id', validate: 'uuid' },
+        },
+        {
+          id: 'verify-text',
+          action: 'Wait 0',
+          type: 'wait',
+          operands: { seconds: 0 },
+          expects: [
+            { type: 'text-visible', raw: "text 'Dashboard' on page", text: 'Dashboard' },
+            { type: 'text-not-visible', raw: "text 'Error' not on page", text: 'Error' },
+          ],
+        },
+      ],
+    };
+    const emitted = generateRuntimeSupport() + '\n' + generate(flow, 'no-grep-pipelines');
+    const offenders = emitted.split('\n').filter(function(line) {
+      return /\|\s*grep\b/.test(line);
+    });
+    assert.deepEqual(offenders, [],
+      'emitted script must not pipe into grep:\n' + offenders.join('\n'));
+  });
+});

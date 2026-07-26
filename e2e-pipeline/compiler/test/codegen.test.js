@@ -129,17 +129,28 @@ describe('generate() — shell header', function() {
   });
 });
 
+// Frozen-output receipt for the legacy (non-SC-1032) codegen path. Re-pinning
+// these hashes is only legitimate with a declared, line-level accounting of the
+// drift; an undeclared re-pin is indistinguishable from silently accepting
+// contamination.
+//
+// Declared drift ledger since 56f43e7:
+//   1. SIGPIPE/pipefail false-negative repair — the emitted runtime support
+//      block replaces three `producer | grep` matchers with subprocess-free
+//      bash forms. Verified per flow: exactly three changed lines
+//      (_capture_snapshot first-line validator, _capture_url validator,
+//      _poll_snapshot_contains matcher) and nothing else.
 describe('PR-38 legacy output parity', function() {
-  test('non-SC-1032 flows remain byte-compatible with 56f43e7 codegen', function() {
+  test('non-SC-1032 flows stay byte-frozen except for declared drift', function() {
     const corpus = [
       {
         name: 'legacy-empty',
-        expected: 'e3a058590754036aa47dab80356931e9a6e32aea606c8697de89254f4c8923f8',
+        expected: '9d88cc249ae3f07bbc4775697b49ffb16f441fdd62d606f6ddf5d4356e2097cc',
         resolved: { name: 'legacy-empty', description: 'No steps', steps: [] },
       },
       {
         name: 'legacy-single-site',
-        expected: 'c84d1fec537a84480b87dd7cc227b135ff185a56960eb0d2a88a281c2310ced4',
+        expected: '010f8ad0030cb048ea241e79f506209c899aec8cdba5c1861920209b2f61a48f',
         resolved: {
           name: 'legacy-single-site',
           description: 'Representative legacy actions',
@@ -171,7 +182,7 @@ describe('PR-38 legacy output parity', function() {
       },
       {
         name: 'legacy-cross-site',
-        expected: 'ed38f0a7fa01bc4f64aac9c2092d6edf88dc57d3bcfae7b58aff9aa5c5cbe56e',
+        expected: 'fe78ad5145cfb2500bb91d414f4da7ea7b52bc65a31416772f9458a578d95445',
         resolved: {
           name: 'legacy-cross-site',
           description: 'Named browser sessions',
@@ -1066,13 +1077,19 @@ describe('generateExpects() — text-visible', function() {
     );
   });
 
-  test("text-visible uses grep -qF for fixed-string matching (CJK safe)", function() {
+  test("text-visible uses a quoted [[ == ]] operand for fixed-string matching (CJK safe)", function() {
     const step = makeSnapshot('verify-text', 'Take snapshot');
     step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
+    // The quoted operand is what makes this a fixed-string match — an unquoted
+    // one would read the text as a glob pattern.
     assert.ok(
-      script.includes("grep -qF '每日看板'"),
-      'text-visible must use grep -qF for fixed string match. Got: ' + script
+      script.includes("*'每日看板'*"),
+      'text-visible must match the text as a quoted fixed string. Got: ' + script
+    );
+    assert.ok(
+      !/\|\s*grep\b/.test(script),
+      'text-visible must not pipe into grep (pipefail false negative). Got: ' + script
     );
   });
 
@@ -1081,7 +1098,7 @@ describe('generateExpects() — text-visible', function() {
     step.expects = [{ type: 'text-visible', raw: "text '每日看板' on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("elif ! echo \"$_snapshot\" | grep -qF"),
+      script.includes("elif ! [[ \"$_snapshot\" == *'每日看板'* ]]; then"),
       'text-visible must use if ! pattern for failure detection. Got: ' + script
     );
   });
@@ -1101,8 +1118,8 @@ describe('generateExpects() — text-visible', function() {
     step.expects = [{ type: 'text-visible', raw: 'text "Dashboard" visible', text: 'Dashboard' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("grep -qF 'Dashboard'"),
-      'text-visible with ASCII text uses grep -qF. Got: ' + script
+      script.includes("elif ! [[ \"$_snapshot\" == *'Dashboard'* ]]; then"),
+      'text-visible with ASCII text uses a quoted [[ == ]] operand. Got: ' + script
     );
   });
 });
@@ -1118,13 +1135,17 @@ describe('generateExpects() — text-not-visible', function() {
     );
   });
 
-  test("text-not-visible uses grep -qF for fixed-string matching (CJK safe)", function() {
+  test("text-not-visible uses a quoted [[ == ]] operand for fixed-string matching (CJK safe)", function() {
     const step = makeSnapshot('verify-text-absent', 'Take snapshot');
     step.expects = [{ type: 'text-not-visible', raw: "text '每日看板' not on page", text: '每日看板' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("grep -qF '每日看板'"),
-      'text-not-visible must use grep -qF for fixed string match. Got: ' + script
+      script.includes("*'每日看板'*"),
+      'text-not-visible must match the text as a quoted fixed string. Got: ' + script
+    );
+    assert.ok(
+      !/\|\s*grep\b/.test(script),
+      'text-not-visible must not pipe into grep (pipefail false negative). Got: ' + script
     );
   });
 
@@ -1132,13 +1153,13 @@ describe('generateExpects() — text-not-visible', function() {
     const step = makeSnapshot('verify-text-absent', 'Take snapshot');
     step.expects = [{ type: 'text-not-visible', raw: "text 'Sign-in failed' not on page", text: 'Sign-in failed' }];
     const script = generate(makeResolved([step]), 'test-flow');
-    // inverted: positive grep (no leading `!`); failure when grep DOES find the text
+    // inverted: positive test (no leading `!`); failure when the text IS found
     assert.ok(
-      script.includes('elif echo "$_snapshot" | grep -qF'),
-      'text-not-visible must use positive `if echo ... | grep -qF` pattern (no leading !). Got: ' + script
+      script.includes('elif [[ "$_snapshot" == *\'Sign-in failed\'* ]]; then'),
+      'text-not-visible must use the positive `elif [[ ... ]]` pattern (no leading !). Got: ' + script
     );
     assert.ok(
-      !script.includes('elif ! echo "$_snapshot" | grep -qF \'Sign-in failed\''),
+      !script.includes('elif ! [[ "$_snapshot" == *\'Sign-in failed\'* ]]'),
       'text-not-visible must NOT use `if !` (that is the positive text-visible pattern). Got: ' + script
     );
   });
@@ -1162,8 +1183,8 @@ describe('generateExpects() — text-not-visible', function() {
     step.expects = [{ type: 'text-not-visible', raw: 'text "Dashboard" not visible', text: 'Dashboard' }];
     const script = generate(makeResolved([step]), 'test-flow');
     assert.ok(
-      script.includes("grep -qF 'Dashboard'"),
-      'text-not-visible with ASCII text uses grep -qF. Got: ' + script
+      script.includes("elif [[ \"$_snapshot\" == *'Dashboard'* ]]; then"),
+      'text-not-visible with ASCII text uses a quoted [[ == ]] operand. Got: ' + script
     );
   });
 });
