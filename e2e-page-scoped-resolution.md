@@ -301,6 +301,20 @@ BEFORE and AFTER. Reproduces on this machine at the stated paths only; the track
 `resolver.test.js` suite passing unchanged (AC-4's run) is the CI-side half of this claim.
 Falsified by: any qualifier-omitting step's resolved selector or error text changing.
 
+**AC-6 — `--json` emits both new errors in gz's landed shape, with a usable `candidates` list.**
+`e2e-compile --json` emits, for the wrong-page case, a tier-1 detail
+`{step_id, field: "element", got: <element>, candidates: [<pages the element is on>], message}`
+whose `message` carries the `shared: true` remedy; and for the absent-page case, the same shape
+with `field: "page"`, `got: <stated page>`, and `candidates` listing the mapping's real page keys.
+No field outside gz's landed `{step_id, field, got, candidates, message}` is introduced.
+Verified by: a `compiler/test/cli.test.js` case (tracked, CI-reproducible — **not** machine-local)
+that compiles a fixture flow with one wrong-paged step and one absent-page step, parses stdout as
+JSON, and asserts both details key-by-key, including that `candidates` is non-empty. Falsified by:
+the remedy appearing only in `message` with `candidates: []` (the machine-actionable half lost —
+the exact regression this AC exists to catch); any key outside the landed five; or the wrong
+`field` discriminator, which would make the two error classes indistinguishable to a consumer and
+silently defeat AC-4 at the JSON layer.
+
 ## Reverse-recovery audit (layer trace, against `origin/main @ ed15247`)
 
 **Re-audited after xn merged.** The first ideation run audited `529296d`; `git fetch origin main`
@@ -322,8 +336,21 @@ shifted **+2** and are corrected in the table. `resolver.test.js`'s `EXTENDED_MA
 | Compiler tests | `compiler/test/resolver.test.js:412-437` (`EXTENDED_MAPPING`, already has `_global`) | WORKING harness | Needs new cases per AC-4, not new fixture infra — the fixture already has the 3-page shape (2 real + 1 shared) this entity needs |
 | Mapper agent template | `agents/e2e-mapper.md:150,231` | WORKING (emits `_global` today), EXISTS_BROKEN re: the new flag | Already instructs "global elements... go into `_global` page"; doesn't yet emit `shared: true` — 1-line template addition so newly-generated mappings are self-documenting and don't lean on the grandfather default |
 | Test-runner warning check | `skills/e2e-test/SKILL.md:83` | WORKING (informal, warning-only), EXISTS_BROKEN re: consistency | Already special-cases `_global.elements.<name>` by literal name for its own (separate, non-blocking) element-reference validation; doesn't know about `shared: true` — 1-line prose update for consistency, not required for correctness since this check is warning-only |
+| **Direct test-runner resolution order** — **MISSED by this audit's first two cycles; caught by the ratification gate** | `agents/e2e-test-runner.md:176,177,238` | **EXISTS_BROKEN — the material gap.** Hardcodes the literal `_global` in the LLM runner's own resolution order | This is a **second, independent resolver**: `/e2e-test` drives flows directly from the mapping without going through `compiler/resolver.js` at all. A page marked `shared: true` would compile clean under this entity's new contract, be documented as valid, and then fail to resolve here. Fixed in this entity's PR — see Doc diff |
 | Corpus baseline / spike harness | `.context/spike-3t-page-binding-before-after.js` (new, this session) | WORKING (git-excluded) | Modeled on `spike-xn-before-after.js`; reproduces every number above from the tracked file, not a reimplementation |
 | Docs | `docs/writing-tests.md` | MISSING (page-binding + `shared` schema never documented) — see Doc diff | The `_global` convention itself was never documented anywhere before this session (verified by grep); this entity is the first to write it down |
+
+**Audit self-correction, recorded rather than quietly patched.** The first two cycles of this
+table listed `skills/e2e-test/SKILL.md:83` and concluded the runner side was a
+consistency-only nicety. That was wrong, and the error was structural, not clerical: I traced
+*the compiler's* layers thoroughly and treated "the test runner" as one box, so I audited the
+skill that wraps it and never opened the agent prompt that **is** it. `agents/e2e-test-runner.md`
+is a second resolver implementing the same lookup independently, and a semantic change to
+mapping data has to land in both. The layer trace is only as good as its layer list — a box
+labelled with a component name, rather than with the behavior it performs, hides everything
+inside it. Verified complete this cycle: `git grep -n "_global" -- e2e-pipeline/` returns exactly
+4 files (mapper, test-runner, e2e-test skill, and the compiler), and all 4 are now in this
+entity's scope.
 
 Boundary with sibling entities: no new `type`, no codegen change, no semantics change for
 omitted-qualifier steps. Leaves [[e2e-assertion-honesty-gate]]'s hyphenated-element class and
@@ -400,6 +427,36 @@ depending on the grandfathered literal-name default.
 (or any page marked `shared: true`)..." for consistency with the compiler's new behavior; this
 check is warning-only, so the edit is a consistency nice-to-have, not a correctness requirement.
 
+**`agents/e2e-test-runner.md` — REQUIRED, and the material one. 3 edits.**
+
+`/e2e-test` resolves elements from the mapping **directly**, never calling
+`compiler/resolver.js`. It is a second implementation of the same lookup, so making
+`shared: true` a mapping semantic without updating it would ship a page that compiles clean,
+is documented as valid, and then fails to resolve at runtime.
+
+1. **Resolution order, item 3 (`:176`)**
+   `3. `pages._global.elements.<element>` -- global shared elements`
+   → `3. `pages.<name>.elements.<element>` for any page marked `shared: true` -- shared
+   elements (by convention `_global`, which is treated as shared even without the flag)`
+2. **Resolution order, item 4 (`:177`)**
+   `4. For location-less references, use the current action's page context, then fall back to
+   `_global``
+   → `4. For location-less references, use the current action's page context, then fall back to
+   any shared page`
+3. **Expect table row (`:238`)** — `Resolve from action's page context, fallback to _global.`
+   → `Resolve from action's page context, fallback to any shared page.`
+
+**Why carry it rather than narrow the entity (the two options, and the choice).** The
+alternative was to declare `shared: true` compiler-only, document the divergence, and file a
+follow-up. Rejected, for a reason specific to *this* entity rather than a general preference for
+thoroughness: this entity exists to kill enforcement theatre — a grammar that advertises a
+constraint it does not enforce. Shipping it with a *known* runtime divergence would create a
+second instance of exactly the defect it is closing, one layer over: the mapping would advertise
+`shared: true`, the compiler would honor it, and the runner would silently not. The cost of
+avoiding that is 3 line-level edits to an LLM prompt — no code, no tests, no new behavior. Paying
+a documented-divergence tax to save 3 doc lines would be a false economy, and it is the same
+trade [[e2e-json-diagnostics]] got wrong at a cost of ~1.9M tokens and a validation rejection.
+
 ## E2E-first acceptance
 
 This session's spike exercised `resolve()`/`resolveMultiSite()` directly against the real corpus
@@ -413,24 +470,55 @@ throwaway copy, one deliberately wrong-paged step (must show the compile fail wi
 text) — proving the CLI entry point, not just the `resolve()` function signature, carries the
 fix end to end.
 
-## Sequencing — held for [[e2e-json-diagnostics]] (gz)
+## Structured diagnostics — the exact shape, against gz's LANDED contract
 
-**This entity is HELD at ideation until gz lands**, by FO ruling: gz now implements first so this
-entity's refusals are *born* into a structured error channel rather than emitted as prose and
-converted afterwards. Nothing above is invalidated — the design, the ACs, and the spike all
-stand — but implementation should assume the structured channel exists and use it:
+gz ([[e2e-json-diagnostics]]) has **merged**. Its contract was read from source this cycle
+(`compiler/resolver.js:81-87` on `origin/main@ccaf028`), not assumed:
 
-- **The three error strings in Design point 3** (page-not-found, element-wrong-page-with-hint,
-  element-not-found-anywhere) are specified above as *prose*, matching today's resolver. When gz
-  has landed, emit them through its channel instead of minting new prose, and carry the
-  `shared: true` remedy as a structured repair field rather than a sentence fragment — the hint
-  is the most machine-actionable part of this entity's output and is wasted as free text.
-- This does **not** reopen Non-goal 3 (no private error-code enum). Using gz's channel is the
-  opposite of inventing one: it is the reason the enum was deferred to a shared owner.
-- The AC set is unaffected — every AC asserts *behavior* (does it refuse, what does it refuse,
-  what does it stop refusing), not error-string formatting. Implementation should re-read gz's
-  landed contract before writing the messages, since the exact prose above may become a
-  structured payload.
+    tier1Detail(stepId, field, got, candidates, message)
+      -> { step_id, field, got, candidates, message }
+    tier2Detail(message)
+      -> { message }
+
+**There is no `repair` field, and no `code` field** (the latter a captain ruling). The previous
+draft of this section promised the `shared: true` remedy would ride "a structured repair field."
+**That promise is withdrawn** — it named a field that does not exist, which is precisely the
+unmet-guarantee failure the gate flagged. Corrected below to use only landed fields.
+
+**The remedy needs no new field.** `candidates` is already the "did you mean" channel, and its
+existing semantics are an exact fit: at `resolver.js:179` the ambiguity error populates
+`candidates` with `colPages` — *the list of pages an element actually lives on*. That is the
+machine-actionable half of this entity's hint. The `shared: true` advice is the human half and
+belongs in `message`.
+
+Both new errors therefore map onto the landed shape with **zero contract change**:
+
+**Wrong-page (element exists, not on the stated page)** — mirrors the `:179` ambiguity precedent:
+
+    { step_id:   "select-all-tab",
+      field:     "element",
+      got:       "tab_all",
+      candidates: ["service-schedule"],
+      message:   "Step 'select-all-tab': element 'tab_all' not found on page 'branches' (found on: service-schedule) -- if it should be visible from any page, mark page 'service-schedule' with shared: true in the mapping" }
+
+**Stated page absent from the mapping** — mirrors `resolveNavigate`'s page error at `:114`,
+which uses `field: 'page'`:
+
+    { step_id:   "go-back-to-services-for-addon-test",
+      field:     "page",
+      got:       "booking-confirm",
+      candidates: ["welcome","login","home","profile","service","tasks","history","service-order-detail"],
+      message:   "Step 'go-back-to-services-for-addon-test': page 'booking-confirm' not found in mapping" }
+
+One deliberate divergence to flag at review: `:114` currently passes `candidates: []` for its
+page error, while this entity populates the real page keys. `candidates` means "did you mean",
+and for a mistyped page name the mapping's own page list *is* the answer — the corpus's two live
+defects are both mistyped page names, so an empty list would drop the one repair hint that
+actually helps. Populating it is additive and breaks no consumer. If gz's owner prefers strict
+symmetry with `:114`, downgrading to `[]` is acceptable and costs only hint quality.
+
+This does **not** reopen Non-goal 3 (no private error-code enum) — using gz's landed channel is
+the opposite of minting one, and is why the enum was deferred to a shared owner.
 
 ## Falsification
 
@@ -501,18 +589,26 @@ not estimated:
   (**AC-3's ported synthetic case — the CI-side protection for the shared-key rule**),
   page-not-found-in-mapping distinct message, the new `is visible on <page>` form, one
   `resolveMultiSite` symmetry case, and a full-suite regression run for AC-5.
+- `cli.test.js`: one new AC-6 case asserting the `--json` detail shape key-by-key for both new
+  error classes (tracked, CI-reproducible; the JSON-layer counterpart to AC-4's prose assertions).
 - `docs/writing-tests.md` — **3 edits, now required in this PR** (xn merged as `ed15247`; edit 3
   fixes a sentence this entity makes false), plus the Caution's trailing clause;
   `agents/e2e-mapper.md:231` (1 line), `skills/e2e-test/SKILL.md:83` (1 clause).
+- **`agents/e2e-test-runner.md:176,177,238` (3 line-level edits) — REQUIRED**, added after the
+  cycle-1 gate. Carries the shared-page rule into the direct `/e2e-test` execution path so a
+  `shared: true` mapping cannot compile clean and then fail at runtime. Prompt text only — no
+  code, no tests.
 - E2E-first: one real `/e2e-compile --verbose` run per the E2E-first acceptance section above.
 
-Well under the 90-minute / 3-independent-behaviors split threshold — action-side and expect-side
-binding share one helper and one symbol-table shape, so they are one behavior, not two. The gz
-hold (see Sequencing) does not change the sizing: routing the three refusals through gz's
-structured channel replaces prose strings rather than adding a behavior. Re-confirm against gz's
-landed contract at dispatch time; if gz's channel turns out to require per-call-site changes
-beyond message construction, that is a re-size signal to raise before starting, not to absorb
-silently.
+Still ONE session and still well under the 90-minute / 3-independent-behaviors threshold —
+action-side and expect-side binding share one helper and one symbol-table shape, so they are one
+behavior, not two. The two gate conditions did not add a behavior either: the runner fix is 3
+prompt lines, and the structured-diagnostics work is message *construction* against gz's landed
+contract with **zero new fields** (see Structured diagnostics), not a new error path. gz has
+merged, so its contract is now readable rather than anticipated — the earlier "re-confirm at
+dispatch time" caveat is discharged. The re-size signal stands: if wiring `errorDetails` through
+`resolveElementOnPage` turns out to need per-call-site restructuring beyond passing a detail
+object, raise it before starting rather than absorbing it silently.
 
 ### Feedback Cycles
 
@@ -626,3 +722,50 @@ orthogonal. One process note worth the gate's attention: the first attempt at th
 used a shell `-e` one-liner whose inner single quotes were eaten, producing a plausible but wrong
 "everything defers" result — caught by noticing the quotes missing in the echoed output, and
 redone via a file. The corrected result is what is recorded.
+
+## Stage Report: ideation (cycle 3 — gate RETURN, both conditions closed)
+
+- DONE: Condition 1 — `shared: true` carried into `agents/e2e-test-runner.md`
+  Verified the gate's claim from source before acting: `:176`, `:177`, `:238` hardcode `_global`,
+  and `git grep "shared: true" -- e2e-pipeline/agents/ e2e-pipeline/skills/` returns nothing.
+  Chose the carry-through option (not the narrow-and-document option) with the reasoning recorded
+  in the Doc diff: this entity exists to kill enforcement theatre, so shipping it with a known
+  compiler/runtime divergence would recreate its own target defect one layer up, and the fix is
+  3 prompt-line edits.
+- DONE: Condition 2 — structured shape specified against gz's LANDED contract
+  Read `tier1Detail`/`tier2Detail` from `origin/main@ccaf028:compiler/resolver.js:81-87` rather
+  than trusting the summary. **Withdrew the "structured repair field" promise** — no such field
+  exists. Found the remedy needs no new field: `candidates` already carries "pages this element
+  is on" at `:179`, which is exactly the machine-actionable payload. Both new errors now specified
+  as concrete JSON using only the landed five keys.
+- DONE: AC added verifying the JSON actually emits
+  AC-6, verified by a tracked `cli.test.js` case — deliberately CI-reproducible, unlike the
+  machine-local corpus ACs. Its falsifier is the precise regression the gate feared: remedy in
+  `message` with `candidates: []`.
+- DONE: audit table corrected and the miss recorded as a method error, not a typo
+  Added the `e2e-test-runner.md` row and wrote down *why* two cycles missed it — I audited "the
+  test runner" as one box and opened the wrapping skill instead of the agent prompt that is the
+  runner. Re-swept: exactly 4 files mention `_global`, all 4 now in scope.
+- DONE: Dispatch sizing re-confirmed, not silently re-cut
+  Still ONE session; both conditions add prompt text and message construction, no new behavior.
+  Discharged the now-obsolete "re-confirm gz at dispatch time" caveat and kept the re-size signal.
+- DONE: state committed path-scoped and pushed
+- SKIPPED: re-opening resolver mechanism, action/expect unification, omitted-qualifier
+  compatibility, `_global` grandfathering, `resolve()`/`resolveMultiSite()` symmetry, corpus
+  evidence, machine-local disclosure, AC-1..AC-5
+  Explicitly out of scope per the return: the verdict affirmed all of them. Untouched.
+
+### Summary
+
+Both conditions closed without reopening the design. The material one was real: `/e2e-test` is a
+second, independent resolver that never calls `compiler/resolver.js`, so making `shared: true` a
+mapping semantic without updating its prompt would have shipped a mapping that compiles clean,
+documents as valid, and fails at runtime — this entity's own target defect, one layer up. The
+second condition was an unmet guarantee in my own body: I had promised a "structured repair
+field" that gz's landed contract does not have. Withdrawn and replaced with concrete JSON using
+only the landed five keys, plus AC-6 to prove a consumer receives it. Worth noting for the
+record that the fix turned out to need **zero** contract change — `candidates` already meant
+exactly what the remedy needed — which is the outcome the reverse-recovery default predicts and
+which I would have missed had I specified a new field from the summary instead of reading gz's
+source. One divergence flagged for review rather than decided unilaterally: I populate
+`candidates` for the page-not-found case where gz's `:114` passes `[]`.
