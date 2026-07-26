@@ -112,6 +112,27 @@ Capturing a seed triggers NO design work — the gate is where the captain
 curates what advances. A seed too vague for the captain to triage is the only
 "bad" here.
 
+#### Defect lane — skip `ideation` for a bounded fix
+
+A known defect with a mechanical acceptance test does not need a design stage.
+When **all four** hold, the FO advances `backlog → implementation` directly and
+records the classification and its justification in the task body:
+
+1. The root cause is already identified and cited at `file:line`.
+2. Acceptance is mechanical — a test that fails before the fix and passes after.
+3. It is a single seam: one surface, no cross-layer ripple, no schema change.
+4. No design decision is open. If the fix has two defensible shapes, it is not
+   in this lane.
+
+Everything else still applies: RED-before-GREEN, the proof policy, the
+validation stage, and the merge bar. **The lane removes a design stage, never
+verification** — and a defect whose fix turns out to need a design decision
+goes back to `ideation` rather than being decided inside implementation.
+
+Any of the four failing means the main line. When in doubt it is the main line;
+the cost of over-shaping one fix is smaller than the cost of designing inside
+an implementation stage nobody is reviewing for design.
+
 ### `ideation` — one gate for design, plan, and acceptance
 
 The single judgment-heavy stage. Flesh out the problem, decide the approach,
@@ -197,6 +218,22 @@ once. Discipline clauses:
   failure output digest), then write the minimum code to pass. GREEN without
   recorded RED is treated by validation as unproven — tests written after the
   fact to confirm existing code do not count.
+- **Count new assertions against the RED output.** Every assertion added must
+  appear as a failure in that run. One that is green in RED holds in the
+  pre-fix world too, so it is decoration, not evidence — rewrite it to pin the
+  literal expected value, or delete it. This is the mechanical enforcement of
+  "evidence must be able to fail"; the RED record aims at it but does not check
+  it, and the tell is a RED count lower than the number of assertions written.
+- **When you change a behavior, audit the tests that arrange the old one.** A
+  suite that goes green after a behavior change can mean a fixture was silently
+  re-purposed rather than that coverage held. Grep the suite for scenarios that
+  *set up* the behavior under repair, and state per scenario whether the edit
+  restored its original intent or quietly narrowed it.
+- **A change that adds tests checks the CI job's remaining margin before
+  pushing.** Job-level cancellation presents as a red check with **no failing
+  assertion** — every suite reports passing and the step is killed anyway —
+  which reads like a flake and invites a retry instead of a diagnosis. Thin
+  margin is a gate-level disclosure, not a CI discovery.
 - **RED and GREEN close in the same session, and commit together.** Never
   commit failing tests as a handoff contract for a later worker: an agent
   handed a red suite optimizes for "make it green", and will drift the
@@ -234,6 +271,13 @@ validator checks what was produced; it never finishes the work.
   lens is **exercise-based**: actually invoke the changed skill/hook and
   observe behavior, applying `kc-plugin-forge`'s audit discipline — a prose
   change reviewed only by reading is not reviewed.
+- **A documented guarantee is a claim, and gets the AC treatment.** When a doc
+  diff states an absolute — "only", "always", "never", "exactly one" — name the
+  input or edit that would falsify it, and check it, exactly as an AC names its
+  falsifier. A guarantee the enforcement point does not make is a defect **in
+  the doc even when the code is correct**, and a worse one than an undocumented
+  gap, because the next reader builds on it. Validation verifies doc *claims*,
+  not just doc presence.
 - **Verify reviewer citations before acting on findings.** Check every cited
   `file:line` against the actual file — LLM reviewers fabricate plausible
   citations. If more than roughly a third of one reviewer's citations are
@@ -293,6 +337,64 @@ measurement ledger row (below) in the same transition.
   suite, a static PR approval, or "CI was green earlier" never substitutes
   for a live CI run observed green on the commit being merged. A red or
   running check at merge time blocks the merge — no exceptions by memory.
+
+## Gate Authority
+
+A gate is a decision point, not a status report. Who holds it depends on the
+kind of decision, not on which stage it sits at.
+
+| Seat | Holds | Examples |
+|------|-------|----------|
+| **Captain** | Direction and irreversibility | Scope authorship; what to work on next; schema / architecture / scope-cut / costly_no; accepting a documented residual against a red gate; any seat disagreement |
+| **EM** (`ship-flow:science-officer-em`) | Bounded judgment on completed work | The ideation and validation verdicts — proceed / narrow / return / block |
+| **FO** | Nothing adjudicative | Checklist accounting, AC-evidence presence, dispatch, merge mechanics, cleanup |
+
+**Default: EM holds the gate.** The FO assembles the review — checklist
+accounting, AC cross-check, reviewer findings — and routes it to EM for the
+verdict. The FO neither renders the verdict itself nor forwards a completed,
+findings-already-resolved stage to the captain for a rubber stamp.
+
+**Auto-advance.** When a gate has zero Material findings, every AC carries
+evidence, and the decision is reversible, EM approves and the FO advances
+immediately. The captain is *notified in one line*, not asked. A captain who
+wants it back says so; silence is not a gate.
+
+**Escalate to the captain only when one of these holds — and name which:**
+
+- The call is irreversible per Judgment Escalation below.
+- Scope is being authored or re-cut. Only the captain holds scope.
+- A Material finding survives EM review and changes what ships.
+- A gate is red and the ask is to accept the residual on record.
+- EM and FO disagree — that goes to the captain, never to a vote.
+
+Anything else reaching the captain is over-escalation, and it costs more than
+it protects: a captain pulled into six ceremonies per task stops reading the
+two that mattered.
+
+**Approval is scoped to the decision presented.** "The captain approved the
+previous gate" is never authority for a later one.
+
+**Speak consequence, not vocabulary.** A gate presented in the system's own
+terms — a migration, a claim path, a corpus freeze — is not a decision the
+captain can weigh; it is a request to trust the presenter. The tell is a
+captain who answers "go with your recommendation" every time: at that point the
+gate costs attention and returns nothing, and the seat has quietly moved back
+to the FO without anyone deciding that it should.
+
+Every escalation carries a plain restatement — literally "換句話說" — before it
+asks for anything:
+
+- **What breaks if this is wrong**, in terms of what a user or the team can no
+  longer do. Not the mechanism; the consequence.
+- **How expensive it is to reverse.** "Ships to production" and "one commit to
+  revert" are different decisions and must not read the same.
+- **What is actually being chosen.** Often it is narrower than the technical
+  framing suggests — "restore something that was dropped by accident" is not
+  "change how the system behaves", and the captain rules differently on each.
+
+If the restatement cannot be written, the escalation is not ready: either the
+FO does not yet understand the consequence, or there is no decision here and it
+belongs to EM.
 
 ## Judgment Escalation
 
