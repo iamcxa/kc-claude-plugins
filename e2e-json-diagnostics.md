@@ -388,12 +388,15 @@ doesn't touch migration status) and NOT deferred-expect (still a silent-pass hol
 not failing).
 
 **(a) The skill-prose reduction is a recurring saving.** `skills/e2e-compile/SKILL.md` drops from
-202 to 135 lines (−67, −33%). That file is loaded on every compile invocation, so the reduction
+202 to 144 lines (−58, −29%). That file is loaded on every compile invocation, so the reduction
 recurs per-invocation rather than being a one-off. This is also the pre-mortem's own guardrail:
 the channel is load-bearing precisely because the prose it replaced is gone (AC-5).
 Verified by: `git show ac33dab:e2e-pipeline/skills/e2e-compile/SKILL.md | wc -l` → 202, versus
-`wc -l` on the merged file → 135. CI-reproducible on a fresh clone. Falsified by: the merged file
+`wc -l` on the merged file → 144. CI-reproducible on a fresh clone. Falsified by: the merged file
 at or above 202 lines, or Phase 3's prose surviving alongside the JSON path.
+(The figure was 135 / −67 / −33% through cycle 2; the gate's doc-honesty conditions added 9 lines
+of bounded-claim and missing-vs-empty-directory correctness. Restated rather than left stale —
+the saving is smaller than first claimed and still real.)
 
 **(b) A tier-1 error is consumed structurally, not by regex — and the ambiguity class is
 repairable from the error alone.** Every tier-1 error exposes `step_id`/`field`/`got` as fields,
@@ -990,6 +993,50 @@ class (Commander arg-parse errors) was found during the sweep and deliberately l
 out-of-scope, with its cost and risk stated for the gate. Diff is two files; everything that passed
 cycle-1 validation is untouched.
 
+### Gate conditions C1–C4 applied (doc-only; no code, no new tests)
+
+Approved narrow on four doc conditions. Each premise was re-measured before editing rather than
+taken on report — two of the four were stated slightly wrong upstream, and one of those was C4,
+which exists precisely to correct a wrong premise.
+
+- DONE: C1 — AC-1's batch shapes are now documented as built, and the distinction survives to the user
+  `SKILL.md` Phase 3 claimed a *missing* flows directory returns `{ok:true, …}` exit 0. Measured:
+  `ok:false`, exit 1, with `errors[]`. Phase 3 now documents empty (`ok:true`/exit 0) and
+  missing-or-unreadable (`ok:false`/exit 1/`errors[]`) as separate results, tells the consumer to
+  present `errors[].message`, and warns against reporting it as "no flows found" — which would hide
+  a mistyped `--flows-dir` as an empty project. Optional top-level batch `errors` added to Phase
+  3's batch rule and to `docs/commands.md:170`. This closes the P2 finding that the bespoke shape's
+  distinction died at the consumer.
+- DONE: C2 — AC-1's absolute is bounded and a fallback exists
+  Phase 3 now scopes the one-document guarantee to the two supported invocations and adds: if
+  stdout does not parse, fall back to stderr and the exit code rather than assuming success.
+  **Phase 3 is 35 lines against AC-5's ~40-line ceiling** — 5 lines of headroom, so this does not
+  and cannot be refused on AC-5 grounds. (C2 quoted 26; that was the pre-condition count. C1+C2
+  added 9 lines. Stating the post-condition number, since the stale one is what a later reader
+  would check against.)
+- DONE: C3 — the coverage rows no longer promise what the skill's `--json` path does not do
+  `SKILL.md:22-23` only, descriptive, no flag removed and no capability decided. Reproduced the
+  EM's finding first: `--all --coverage` writes `coverage.json` + `coverage-history.json`; adding
+  `--json` leaves the directory non-existent, exit unchanged. Sharpened by measurement — batch and
+  single-flow differ, and the rows now say so: the **batch** document has no `coverage` key at all
+  (verified: `JSON.stringify(doc).includes("coverage")` is `false`), while **single-flow** `--json
+  --coverage` *does* carry populated `coverage` in the document but still writes no files.
+- DONE: AC-4 — the (a) measurement restated after these edits changed it
+  C1–C3 moved `SKILL.md` 135 → 144 lines, so AC-4(a)'s "202 → 135 (−67, −33%)" would have gone
+  stale the moment these conditions landed. Restated in AC-4 to **202 → 144 (−58, −29%)** with the
+  prior figure and the reason recorded. The saving is smaller than first claimed and still real;
+  leaving the old number would have made this the entity's fourth wrong premise.
+- DONE: C4 — the `--json --help` premise corrected, and the follow-up inference marked as one
+  Recorded in the validation (cycle 2) section where the wrong premise lives. Measured at
+  `1c3977d`: exit 0, **stdout 1192 bytes, stderr 0** — help on the contract channel, not an absent
+  document, which is AC-1's falsification clause verbatim and widens the follow-up's worst case
+  from "consumer sees nothing" to "consumer parses help text as a compile result". The
+  `exitOverride`-is-insufficient claim is filed as an **inference at ~75%, explicitly unverified**,
+  with a one-command disproof hook, because it is reasoned from Commander's write-then-exit
+  ordering rather than observed.
+- SKIPPED: `docs/commands.md:40` and `docs/writing-tests.md:386`
+  Named in C3 as out of scope for this round; they belong to follow-up (b). Left untouched.
+
 ## Stage Report: validation (cycle 2)
 
 Re-review of someone else's fix at `1c3977d`. Recommendation: **APPROVE with one recorded
@@ -1019,11 +1066,27 @@ condition** (a one-line doc/skill fix, below) — not a rejection cycle.
   (verified: `--bogus-flag` without `--json` still exits 1 with 0-byte stdout and prose on
   stderr), and passes **650/650** in a scratch copy.
   Accepting anyway, for a reason the report does not give: the class has an **irreducible tail** —
-  even with that fix, `--json --help` still emits no document (exit 0, help to stderr), so closing
-  the class requires deciding what `--json --help` *means*. That is a design question, not a
-  mechanical patch, and AC-1's letter covers only the two named invocation forms
-  (`--json <flow>`, `--json --all`). Recommend filing the follow-up with the gated-prototype
-  evidence attached so the next owner does not re-derive it.
+  even with that fix, `--json --help` is not covered, so closing the class requires deciding what
+  `--json --help` *means*. That is a design question, not a mechanical patch, and AC-1's letter
+  covers only the two named invocation forms (`--json <flow>`, `--json --all`). Recommend filing
+  the follow-up with the gated-prototype evidence attached so the next owner does not re-derive it.
+  **CORRECTION (gate condition C4, measured 2026-07-26).** The line above previously read
+  "`--json --help` still emits no document (exit 0, help to stderr)". That is wrong in the way that
+  matters. Measured at `1c3977d`: **exit 0, stdout 1192 bytes, stderr 0 bytes** — the help text
+  goes to **stdout**, and `JSON.parse` on it throws. So this is not an absent document; it is prose
+  on the contract channel, which is AC-1's falsification clause verbatim ("any non-JSON text
+  present on stdout"). It also changes the follow-up's scope rather than just its wording: the
+  worst case is a consumer parsing help text as a compile result, not a consumer seeing nothing.
+  Reproduce: `node bin/e2e-compile.js --json --help >/tmp/o 2>/tmp/e; wc -c </tmp/o </tmp/e`.
+  **INFERENCE, not a finding — confidence ~75%, unverified.** A `--json`-gated `exitOverride`
+  alone is likely insufficient for this tail, because Commander writes help through its output
+  writer *before* the exit path fires, so intercepting the exit does not unwrite what is already on
+  stdout; closing the class probably also needs `configureOutput`/`writeOut` redirection. Flagged
+  as an inference because it is reasoned from Commander's documented write-then-exit ordering, not
+  observed — and this record has now had three premises turn out wrong when a plausible-sounding
+  claim went unmarked. **Disproof hook (one command):** add `--json`-gated `exitOverride` to the
+  existing scratch prototype, run `--json --help`, and check stdout — if it is 0 bytes or valid
+  JSON, this inference is wrong and `exitOverride` alone suffices.
 - FAILED: The new top-level batch `errors` key is undocumented and **unconsumed** (P2, new this round)
   `bin/e2e-compile.js:86-91` puts the enumeration failure in a top-level `errors` array. The normal
   batch document (`:170-175`) has no such key, and **both** consumers document the batch shape as
