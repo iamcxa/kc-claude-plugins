@@ -1,14 +1,14 @@
 ---
 title: The shell suites cost ~2s per assertion, so CI time tracks assertion count
-status: backlog
+status: implementation
 source: found while landing reconcile-degraded-mode-symmetry (sv) on 2026-07-26 — its 16 new assertions cancelled CI at the 10-minute cap
-started:
+started: 2026-07-26T06:41:37Z
 completed:
 verdict:
-worktree:
+worktree: ~/mini-legs/dev-qhr529c1-suite-cost
 issue:
 pr:
-design:
+design: required
 id: qhr529c1ha214hbef794dm6v
 ---
 
@@ -53,3 +53,33 @@ and is killed anyway reads as a red X with no failing assertion to point at.
 Verified by: the job's wall-clock before and after on the same commit range, plus the
 per-assertion cost derived from the suite's own totals. Falsified by: no measurable improvement,
 or an improvement bought by running fewer assertions.
+
+**AC-2 — One `review-post.sh post` spawns fewer than ten `python3` processes.**
+Verified by: counting spawns for a single `post` on the same scenario before and after
+(`65` on `9ae5e81`). Falsified by: the count staying in double digits, or falling only because
+work moved into a different interpreter spawn.
+
+## Design determination: `required` — decided by the FO, not yet EM-reviewed
+
+Recorded 2026-07-26 when this was dispatched to the mini. **This is an FO design call made to
+unblock a headless leg; it has not passed an EM gate.** The validation gate must review the
+choice itself, not only its execution. If the choice is wrong, the leg's work is the cost.
+
+The entity named four candidates. Two are chosen, one is deferred, one is ruled out:
+
+- **Chosen — do the RFC3339 conversion in shell.** The format is fixed
+  (`%Y-%m-%dT%H:%M:%SZ`), so it needs no interpreter.
+- **Chosen — batch the safe-I/O calls belonging to a single append.** Sixteen spawns per
+  recorded event is the multiplier; one per append is the target.
+- **Deferred — a long-lived helper process.** It is the largest change and introduces process
+  lifecycle into a script that currently has none. Only if the two above miss AC-2.
+- **Ruled out — the parallel-by-suite CI matrix.** It cuts wall-clock without touching cost,
+  and it edits `.github/workflows/**`, which the mini's machine account cannot push (its token
+  has no `workflow` scope). It stays the fallback for a human-pushed follow-up, not this slice.
+
+Measured on the mini 2026-07-26 while siting this work: `python3` costs **25 ms** per launch
+there against this MacBook's **565 ms**, and `jq` 2.5 ms against 6.8 ms. That 22× gap confirms
+the 565 ms is MacBook-specific exec interception rather than a property of the suite — but it
+does **not** weaken the case, because at CI's comparable per-launch cost 65 spawns still
+dominate the ~2 s per assertion. It does mean the improvement ratio must be reported from a
+machine whose per-launch cost resembles CI's, and the mini is such a machine.
