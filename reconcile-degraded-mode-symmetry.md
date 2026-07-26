@@ -141,8 +141,12 @@ or to what a non-zero transport exit means.
 
 TL;DR — `post` now refuses an unusable reconcile read exactly as `resume` does, with the
 refusal placed after the local prior-attempt check so the two verdicts local durable state can
-positively reach still win. review-post 138/0 (122 before), full suite 936/0 against a
-re-measured 920/0 baseline, ShellCheck v0.9.0 clean. PR #63 (draft). One commit.
+positively reach still win. review-post **137/0** (122 before), full suite **935/0** against a
+re-measured 920/0 baseline, ShellCheck v0.9.0 clean. PR #63 (draft).
+
+(The 138/936 first written here was stale by one: the second commit merged two scenarios and
+dropped a duplicate assertion. Corrected after the fresh-context validator reproduced 137/935
+independently — a self-reported number nobody re-derives is exactly the kind that rots.)
 
 - **DONE: AC-1** — `post` and `resume` reach the same verdict. RED recorded first against the
   pre-change code: 130 passed / 8 failed, including
