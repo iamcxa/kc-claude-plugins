@@ -1,15 +1,16 @@
 ---
 title: post and resume disagree on an unusable reconcile read
-status: validation
+status: done
 source: split out of once-only-daemon-preauth-gate (vf) AC-3 on 2026-07-26 — caller-agnostic, so it should not wait on the daemon-authorization arc
 started: 2026-07-25T18:49:04Z
-completed:
-verdict:
+completed: 2026-07-26T05:44:07Z
+verdict: passed
 worktree: .worktrees/sv-reconcile-symmetry
 issue:
-pr: 63
+pr: pr-merge:63
 design: required
 id: svjp01d5dj7d9fpxacmj7qwz
+archived: 2026-07-26T05:44:07Z
 ---
 
 `review-post.sh` reaches opposite verdicts on the same degraded condition. `resume` fails
