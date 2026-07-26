@@ -241,6 +241,36 @@ function runPollingAssertion(expect, options) {
   });
 }
 
+function runHatchOnlyFlow() {
+  return withFakeBrowser('#!/usr/bin/env bash\nexit 0\n', function(binDir) {
+    const metricsPath = path.join(binDir, 'metrics.json');
+    const junitPath = path.join(binDir, 'junit.xml');
+    const script = generate({
+      name: 'hatchonly',
+      description: 'Hatch-only compiled replay honesty',
+      steps: [{
+        id: 'manual-only',
+        action: 'Take snapshot',
+        type: 'snapshot',
+        operands: {},
+        expects: [{
+          type: 'not-automated',
+          raw: 'Checked by counsel.',
+          reason: 'Checked by counsel.',
+        }],
+      }],
+    }, 'hatchonly');
+    const result = runBash(script, binDir, {}, [
+      '--metrics-output', metricsPath,
+      '--junit', junitPath,
+    ]);
+    result.generatedScript = script;
+    result.metricsJson = fs.existsSync(metricsPath) ? fs.readFileSync(metricsPath, 'utf8') : null;
+    result.junitXml = fs.existsSync(junitPath) ? fs.readFileSync(junitPath, 'utf8') : null;
+    return result;
+  });
+}
+
 const COMPLEX_STEP_ID = '步驟<&"\'\nline\rreturn\ttab$()../path/`tick`';
 const COMPLEX_FLOW_NAME = '流程 "quoted" \\ path\nline\rreturn\ttab\bbackspace\fformfeed';
 
@@ -953,6 +983,36 @@ describe('metrics flow identity safety', function() {
       const metrics = JSON.parse(fs.readFileSync(metricsPath, 'utf8'));
       assert.equal(metrics.flow, COMPLEX_FLOW_NAME);
     });
+  });
+});
+
+describe('hatch-only compiled replay honesty', function() {
+  test('hatch-only step records not_automated across footer, metrics, and JUnit', function() {
+    const report = runHatchOnlyFlow();
+    assert.equal(report.status, 0, report.stdout + report.stderr);
+
+    const stepStart = report.generatedScript.indexOf('_record_step_name "manual-only"');
+    const stepEnd = report.generatedScript.indexOf('_STEP_TIMES+=("0")', stepStart);
+    const stepBlock = report.generatedScript.slice(stepStart, stepEnd);
+    assert.ok(stepBlock.includes('_STEP_RESULTS+=("not_automated")'), stepBlock);
+    assert.equal(stepBlock.includes('_STEP_RESULTS+=("pass")'), false, stepBlock);
+
+    assert.ok(
+      report.stdout.includes('PASS: hatchonly (0/1 automated steps passed, 0 skipped, 1 not automated)'),
+      report.stdout
+    );
+
+    const metrics = JSON.parse(report.metricsJson);
+    assert.equal(metrics.steps[0].id, 'manual-only');
+    assert.equal(metrics.steps[0].result, 'not_automated');
+    assert.equal(metrics.summary.passed, 0);
+    assert.equal(metrics.summary.failed, 0);
+    assert.equal(metrics.summary.skipped, 0);
+    assert.equal(metrics.summary.not_automated, 1);
+
+    const junit = report.junitXml;
+    assert.match(junit, /<testsuite[^>]* tests="1" failures="0" skipped="1"/);
+    assert.match(junit, /<testcase[^>]* name="manual-only"[^>]*><skipped message="not automated"\/><\/testcase>/);
   });
 });
 
