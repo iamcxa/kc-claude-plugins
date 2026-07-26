@@ -316,3 +316,74 @@ Evidence that generated bash is explicitly not a supported reporting surface for
 or that CI never consumes `_STEP_RESULTS`, JUnit, metrics, or footer output from hatch-only flows.
 The current code and workflow do not support that reading: compiled scripts are the deterministic
 replay/CI artifact, so their step status is part of the honesty contract.
+
+---
+
+# Round 5 Final Validation Verdict: proceed
+
+## Verdict
+
+Proceed. The narrow hatch-only compiled replay defect is closed.
+
+No captain escalation trigger fired. This is still a bounded validation gate ruling: the returned
+defect was repaired directly, no scope was re-cut, no residual red condition is being accepted, and
+no seat disagreement is present.
+
+## Reasoning
+
+### Claim 1: The hatch-only predicate is correct
+
+Confidence: high.
+
+The implemented predicate is the right one:
+
+```js
+function stepSuccessResult(step) {
+  var expects = Array.isArray(step.expects) ? step.expects : [];
+  if (expects.length === 0) return 'pass';
+  return expects.every(function(expect) { return expect.type === 'not-automated'; })
+    ? 'not_automated'
+    : 'pass';
+}
+```
+
+That triggers only for non-empty expect lists where every resolved expect is `not-automated`.
+Steps with no expects remain unchanged as `pass`, and mixed active-plus-hatch steps remain `pass`
+when their active assertions pass. That matches the return ruling exactly.
+
+### Claim 2: The new status reaches the compiled-script consumers
+
+Confidence: high.
+
+I found the relevant `_STEP_RESULTS` readers and they now handle the new value:
+
+- `_handle_failure` overwrites the last result with `fail`, so action/assertion failures still win.
+- JUnit counts `not_automated` under skipped and emits `<skipped message="not automated"/>`.
+- Metrics preserves per-step `"result":"not_automated"` and adds `summary.not_automated`.
+- The normal footer counts `not_automated` and reports automated and non-automated counts.
+- The cleanup-trap footer carries the same count/reporting path for flows with finalizers.
+- Retry/flake and exit-code logic remain failure-driven through `_FAILED_STEPS`; `not_automated` is
+  visible but non-failing, which is the intended behavior.
+
+The other `_STEP_RESULTS` appends are not missing consumers: finalizers remain `pass`/`fail` because
+they are not normal resolved expect-bearing steps, and `verify-external`/`execute-external` remain
+the existing step-level `skip` path.
+
+### Claim 3: The regression test would fail on the original defect
+
+Confidence: high.
+
+The added test is anchored to the exposed defect. It generates a `hatchonly` flow with one
+`manual-only` snapshot step whose sole expect is `not-automated`, slices the generated script at
+that step's `_record_step_name "manual-only"` block, and asserts that block contains
+`_STEP_RESULTS+=("not_automated")` and not `_STEP_RESULTS+=("pass")`.
+
+It also executes the generated script with fake browser plumbing and checks all three returned
+surfaces: footer output, metrics JSON, and JUnit XML. A bare absence-of-string test could pass for
+the wrong reason; this one is tied to the specific step and to runtime output.
+
+## What Would Change My Mind
+
+Evidence of another `_STEP_RESULTS` consumer outside `compiler/codegen.js` that treats unknown
+values as passing, or a supported compiled-script output mode that bypasses JUnit, metrics, and both
+footer paths. I did not find one in the inspected codegen surface.
