@@ -257,3 +257,62 @@ hatch-only steps counted as passed/verified evidence.
 ## Conditions If Narrow
 
 Not applicable. This is a proceed verdict.
+
+---
+
+# Round 4 Reopened Validation Question: return
+
+## Ruling
+
+Defect. A hatch-only step recorded as `pass` in the compiled bash script is not correct design.
+
+This blocks the merge and returns to implementation for a narrow fix. The defect is bounded, but it
+is on the CI-facing runtime surface, which is the surface most likely to turn "not automated" back
+into green evidence.
+
+## Reasoning
+
+Confidence: high.
+
+The accepted design deliberately made hatches non-passing and visible. `/e2e-compile` is honest,
+JSON is honest, `/e2e-test` is honest, and the LLM runner reports hatch-only steps as
+`NOT_AUTOMATED`. The compiled bash script is now the inconsistent consumer: a snapshot/wait/browser
+step starts by recording `_STEP_RESULTS+=("pass")`, and `not-automated` emits no assertion path that
+can change that result. For a hatch-only step, the script therefore reports PASS even though no
+automated assertion proved the step.
+
+That is the same failure shape this entity exists to remove, one layer down: an assertion-like item
+that intentionally does no verification is represented as passing in the execution result. AC-4 was
+aimed at preventing the hatch from becoming runtime pass evidence; the current compiled-script
+surface violates the value of that AC even if it avoids emitting explicit assertion machinery.
+
+The fact that compile summaries expose `notAutomatedExpects` is not enough for this surface. A CI job
+or replay user can run the generated script later, read its JUnit/metrics/footer, and see a passed
+step. Visibility has to carry into the compiled runtime result for hatch-only steps.
+
+## Minimum Correct Fix
+
+For compiled bash output, a step with at least one active assertion and one or more hatches may still
+record `pass` when the active assertions pass. The defect is only the hatch-only case.
+
+Minimum fix:
+
+- Detect steps whose resolved `expects` are present and all have `type: 'not-automated'`.
+- Record those steps in `_STEP_RESULTS` as a distinct value, preferably `not_automated`, not `pass`.
+- Keep script exit code non-failing unless there are real failures; `not_automated` is not a failure.
+- Update runtime summaries that consume `_STEP_RESULTS`:
+  - metrics JSON counts `not_automated` separately and preserves per-step `"result":"not_automated"`;
+  - JUnit should not emit hatch-only steps as plain passing testcases. The least disruptive encoding
+    is `<skipped message="not automated"/>` while preserving a distinct internal result;
+  - footer/prose should include the count, e.g. `PASS: hatchonly (0/1 automated steps passed, 0
+    skipped, 1 not automated)`.
+- Add a tracked codegen/runtime test compiling a hatch-only fixture and asserting the generated
+  script/result surface does not contain `_STEP_RESULTS+=("pass")` for that step and does expose the
+  non-automated count/status.
+
+## What Would Change My Mind
+
+Evidence that generated bash is explicitly not a supported reporting surface for compiled flows,
+or that CI never consumes `_STEP_RESULTS`, JUnit, metrics, or footer output from hatch-only flows.
+The current code and workflow do not support that reading: compiled scripts are the deterministic
+replay/CI artifact, so their step status is part of the honesty contract.
