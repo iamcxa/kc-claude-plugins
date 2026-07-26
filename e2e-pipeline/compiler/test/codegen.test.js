@@ -140,17 +140,22 @@ describe('generate() — shell header', function() {
 //      bash forms. Verified per flow: exactly three changed lines
 //      (_capture_snapshot first-line validator, _capture_url validator,
 //      _poll_snapshot_contains matcher) and nothing else.
+//   2. Hatch-only replay honesty — the emitted runtime support gains
+//      _count_step_results, the footer/cleanup summaries include a conditional
+//      not_automated count, metrics summary includes not_automated, and JUnit
+//      emits not_automated steps as skipped testcases. Non-hatch flows preserve
+//      their existing pass/fail behavior and prose when the count is zero.
 describe('PR-38 legacy output parity', function() {
   test('non-SC-1032 flows stay byte-frozen except for declared drift', function() {
     const corpus = [
       {
         name: 'legacy-empty',
-        expected: '9d88cc249ae3f07bbc4775697b49ffb16f441fdd62d606f6ddf5d4356e2097cc',
+        expected: '13d70bdd69b2963a214acc2b076063e8135b6dc6a0b5bb70e7b8d09aba1ec027',
         resolved: { name: 'legacy-empty', description: 'No steps', steps: [] },
       },
       {
         name: 'legacy-single-site',
-        expected: '010f8ad0030cb048ea241e79f506209c899aec8cdba5c1861920209b2f61a48f',
+        expected: 'a1c38837a444295abf7cf4e3b2fc1b668d92e8b7f7334d5080328382a0287be2',
         resolved: {
           name: 'legacy-single-site',
           description: 'Representative legacy actions',
@@ -182,7 +187,7 @@ describe('PR-38 legacy output parity', function() {
       },
       {
         name: 'legacy-cross-site',
-        expected: 'fe78ad5145cfb2500bb91d414f4da7ea7b52bc65a31416772f9458a578d95445',
+        expected: 'f9d2c4921685784c744bc2356080a5885c132698d0039ff3f39d384b7959f83e',
         resolved: {
           name: 'legacy-cross-site',
           description: 'Named browser sessions',
