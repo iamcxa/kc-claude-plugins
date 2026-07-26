@@ -1,11 +1,11 @@
 ---
 title: Make the page qualifier bind, or drop it from the grammar
-status: ideation
+status: implementation
 source: sprint-1 (compiler boundary) entity 3 of 5; split out of e2e-typed-operands so the sprint stays inside the compiler
 started: 2026-07-25T15:42:55Z
 completed:
 verdict:
-worktree:
+worktree: mini:~/mini-legs/dev-3tp0ym1m-page-scoped-impl
 issue:
 pr:
 design:
@@ -634,6 +634,31 @@ coherent and adequately evidenced:
    an unstructured message.
 
 Effort: one codex leg, ~5.6K output tokens on a third quota pool, no Claude tokens consumed.
+
+**Cycle 2 — re-gate, 2026-07-26. Verdict: PROCEED.**
+
+Same adjudicator, resumed in-session (`codex exec resume`), verdict at
+`origin/mini/dev-3tp0ym1m-page-binding-gate:VERDICT-3t.md`. Both conditions judged actually
+closed, and both were closed by a better move than the one the condition implied: condition 1 by
+carrying the rule into `agents/e2e-test-runner.md` rather than documenting a divergence, and
+condition 2 by withdrawing a promise of a `repair` field that gz never defined, after reading
+gz's contract from source.
+
+**Escalated question ruled:** 3t populates `candidates` for page-not-found with the mapping's
+real page keys. This uses gz's existing "did you mean" field for the same class of payload and
+changes no contract; gz's `resolveNavigate` passing `[]` is the outlier to reconcile later, not
+a reason to weaken 3t's diagnostics. Implementation must not broaden scope to retrofit every
+existing page-not-found producer.
+
+Three implementation guardrails carried from the verdict's "what would change my mind":
+populating page candidates must not require changing gz's JSON schema or a broader diagnostics
+refactor; the runner prompt edits must state both the explicit-location and the location-less
+shared-page fallback; AC-6 must parse `--json` and check keys, never degrade to a prose or
+string-only assertion.
+
+The FO's `_global` count correction (five files, not four) was judged a reporting imprecision
+rather than a scope gap — the two extra hits are compiler tests implementation already expects
+to touch.
 
 ## Stage Report: ideation
 
