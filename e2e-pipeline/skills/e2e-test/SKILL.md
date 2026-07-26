@@ -80,7 +80,7 @@ If ANY fail: warn with migration guidance (`app:`->`mapping:`, `name:`->`id:`, s
 
 **Flow/Mapping Mismatch Guard (mandatory):** If the flow has a `mapping:` field, compare it to the resolved mapping filename (without `.yaml`). If they differ, stop: `"Flow '<flow>' targets mapping '<flow.mapping>' but resolved mapping is '<resolved>'. Use '--mapping <flow.mapping>' or fix the flow's 'mapping:' field."` This catches app mismatches before dispatching the agent, avoiding wasted execution time.
 
-**Element Reference Validation (warning-only):** Cross-check element names in `action:`/`expect:` against mapping (`pages.<page>.elements.<name>` or `_global.elements.<name>`). Report mismatches as warnings — do NOT stop execution. Warning format: `⚠ Element not in mapping: "<element>" (step <id>, page <page>). Test may fail at runtime.` Skip validation for `text '...'`, `url contains`, `dialog visible`, and non-element patterns.
+**Element Reference Validation (warning-only):** Cross-check element names in `action:`/`expect:` against mapping (`pages.<page>.elements.<name>`, any `pages.<name>` with `shared: true`, or `_global.elements.<name>` unless `_global.shared === false`). Report mismatches as warnings — do NOT stop execution. Warning format: `⚠ Element not in mapping: "<element>" (step <id>, page <page>). Test may fail at runtime.` Skip validation for `text '...'`, `url contains`, `dialog visible`, and non-element patterns.
 
 **Cross-site flow guard:** If any resolved flow has `sites:` and none of `--all-sites`, `--suite`, or `--site` is present, stop: "Use `--all-sites`, `--suite`, or `--site <alias>` for cross-site flows."
 

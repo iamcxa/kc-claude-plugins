@@ -229,6 +229,7 @@ codebase:
 
 pages:
   _global:
+    shared: true
     description: "Elements visible on all authenticated pages"
     elements:
       <name>:

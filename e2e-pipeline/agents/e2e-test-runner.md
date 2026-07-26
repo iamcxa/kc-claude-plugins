@@ -173,8 +173,8 @@ reported as ordinary step results, and any failure forces the run to fail.
 
 1. `pages.<location>.elements.<element>` -- explicit page
 2. `dialogs.<location>.elements.<element>` -- dialog
-3. `pages._global.elements.<element>` -- global shared elements
-4. For location-less references, use the current action's page context, then fall back to `_global`
+3. Shared page fallback for explicit locations: any `pages.<name>` with `shared: true`, plus the literal `_global` page unless `_global.shared === false`
+4. For location-less references, use the current action's page context, then the same shared page fallback (`shared: true` pages plus grandfathered `_global`)
 
 After finding the element definition, get its `selector` value and substitute any `${param}` template variables from the action's parameters.
 
@@ -234,9 +234,9 @@ For each entry in the step's `expect:` array, resolve and verify independently:
 
 | Expect Pattern | How to Verify |
 |---|---|
-| `"<element> visible on <location>"` | Look up element in location mapping. `agent-browser is visible "<selector>"` -- check stdout is "true" |
-| `"<element> is visible"` | Resolve from action's page context, fallback to _global. `is visible "<selector>"` |
-| `"<element> not visible"` / `"<element> not visible on <loc>"` | `is visible "<selector>"` -- check stdout is "false" |
+| `"<element> visible on <location>"` | Look up element in location mapping, then shared pages (`shared: true`, plus `_global` unless disabled). `agent-browser is visible "<selector>"` -- check stdout is "true" |
+| `"<element> is visible"` | Resolve from action's page context, then shared pages (`shared: true`, plus `_global` unless disabled). `is visible "<selector>"` |
+| `"<element> not visible"` / `"<element> not visible on <loc>"` | Resolve with the same page/shared fallback, then `is visible "<selector>"` -- check stdout is "false" |
 | `"<element(param=val)> visible on <loc>"` | Substitute params into selector, `is visible` |
 | `"<element> enabled on <location>"` | `is visible` returns "true" + snapshot shows no `[disabled]` |
 | `"<element> disabled on <location>"` | `is visible` returns "true" + snapshot shows `[disabled]` or `aria-disabled=true` |
