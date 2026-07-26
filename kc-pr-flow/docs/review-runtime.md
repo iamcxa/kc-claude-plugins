@@ -13,7 +13,7 @@ It does not adapt lane scheduling, route models, choose findings, post reviews, 
 - Git for local `git_blob` evidence verification
 - a writable user-local state directory
 
-The runtime itself does not call models, the network, or GitHub. Python provides fail-closed safe I/O: every runtime file is read from one no-follow regular-file descriptor into a bounded private snapshot only when its file identity remains stable. Missing support, symlinks, path replacement, concurrent mutation, oversize data, duplicate JSON keys, unsafe integers, or impossible UTC dates stop runtime collection before accepted-state mutation. The review skill retains mandatory confirmation and all posting authority.
+The runtime itself does not call models, the network, or GitHub. Python provides fail-closed safe I/O: every runtime file is read from one no-follow regular-file descriptor into a bounded private snapshot only when its file identity remains stable. Missing support, symlinks, path replacement, concurrent mutation, oversize data, duplicate JSON keys, unsafe integers, or impossible UTC dates stop runtime collection before accepted-state mutation. Duplicate-key checks are batched one JSONL stream per validation pass, and the UTC calendar check runs in the shell, so a recorded event costs a bounded number of interpreter launches rather than one per line. The review skill retains mandatory confirmation and all posting authority.
 
 Run the CLI examples below from the `kc-pr-flow` plugin root.
 
