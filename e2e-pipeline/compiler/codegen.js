@@ -615,6 +615,16 @@ function generateRuntimeSupport(includeRuntimeStateSupport) {
     '  return 0',
     '}',
     '',
+    '_count_step_results() {',
+    '  local _target="$1"',
+    '  local _count=0',
+    '  local _i',
+    '  for _i in "${!_STEP_RESULTS[@]}"; do',
+    '    if [ "${_STEP_RESULTS[$_i]}" = "$_target" ]; then _count=$(( _count + 1 )); fi',
+    '  done',
+    '  printf \'%s\' "$_count"',
+    '}',
+    '',
     '# Poll-until helpers (CODEGEN-01)',
     '# NOTE: _poll_visible uses agent-browser "is visible" which fails in headless CI on Linux.',
     '# Use _poll_snapshot_contains as the primary visibility check (grepping the a11y tree).',
@@ -1027,16 +1037,32 @@ function generateCleanupTrap(steps, finallySteps, summary) {
     lines.push('  if [ "$' + '{#_FAILED_STEPS[@]}" -gt 0 ]; then');
     lines.push('    echo "FAIL: $' + '{#_FAILED_STEPS[@]} steps failed: $' + '{_FAILED_STEPS[*]}"');
     lines.push('  elif [ "$_FINAL_EXIT" -eq 0 ]; then');
+    lines.push('    _not_automated=$(_count_step_results not_automated)');
+    lines.push('    _automated_total=$(( ' + summary.totalSteps + ' - ' + summary.skipped + ' - _not_automated ))');
     lines.push('    if [ "$_HAD_RETRIES" = "true" ]; then');
+    lines.push('      if [ "$_not_automated" -gt 0 ]; then');
+    lines.push('        echo ' + doubleQuote(
+      'PASS (FLAKY): ' + summary.flowName + ' ($_automated_total/' + summary.totalSteps +
+      ' automated steps passed, ' + summary.skipped + ' skipped, $_not_automated not automated)'
+    ));
+    lines.push('      else');
     lines.push('      echo ' + singleQuote(
       'PASS (FLAKY): ' + summary.flowName + ' (' + summary.totalSteps + '/' + summary.totalSteps +
       ' steps, ' + summary.skipped + ' skipped)'
     ));
+    lines.push('      fi');
     lines.push('    else');
+    lines.push('      if [ "$_not_automated" -gt 0 ]; then');
+    lines.push('        echo ' + doubleQuote(
+      'PASS: ' + summary.flowName + ' ($_automated_total/' + summary.totalSteps +
+      ' automated steps passed, ' + summary.skipped + ' skipped, $_not_automated not automated)'
+    ));
+    lines.push('      else');
     lines.push('      echo ' + singleQuote(
       'PASS: ' + summary.flowName + ' (' + summary.totalSteps + '/' + summary.totalSteps +
       ' steps, ' + summary.skipped + ' skipped)'
     ));
+    lines.push('      fi');
     lines.push('    fi');
     lines.push('  fi');
   }
@@ -1072,12 +1098,14 @@ function generateJUnitEmitter(flowName) {
     '  local _total=${#_STEP_NAMES[@]}',
     '  local _failures=0',
     '  local _skipped=0',
+    '  local _not_automated=0',
     '  local _duration=$(( SECONDS - _FLOW_START ))',
     '  local _i',
     '  for _i in "${!_STEP_RESULTS[@]}"; do',
     '    case "${_STEP_RESULTS[$_i]}" in',
     '      fail) _failures=$(( _failures + 1 )) ;;',
     '      skip) _skipped=$(( _skipped + 1 )) ;;',
+    '      not_automated) _not_automated=$(( _not_automated + 1 )); _skipped=$(( _skipped + 1 )) ;;',
     '    esac',
     '  done',
     '  {',
@@ -1092,7 +1120,10 @@ function generateJUnitEmitter(flowName) {
     '      local _sfail="${_STEP_FAILURES[$_i]}"',
     '      local _sfail_xml',
     '      _sfail_xml=$(_xml_attr_escape "$_sfail")',
-    '      if [ "$_sresult" = "skip" ]; then',
+    '      if [ "$_sresult" = "not_automated" ]; then',
+    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped message="not automated"/></testcase>\\n\' \\',
+    '          "$_sname" "$_stime"',
+    '      elif [ "$_sresult" = "skip" ]; then',
     '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped/></testcase>\\n\' \\',
     '          "$_sname" "$_stime"',
     '      elif [ "$_sresult" = "fail" ]; then',
@@ -1140,12 +1171,14 @@ function generateMetricsEmitter(flowName) {
     '  local _passed=0',
     '  local _failed=0',
     '  local _skipped=0',
+    '  local _not_automated=0',
     '  local _i',
     '  for _i in "${!_STEP_RESULTS[@]}"; do',
     '    case "${_STEP_RESULTS[$_i]}" in',
     '      pass) _passed=$(( _passed + 1 )) ;;',
     '      fail) _failed=$(( _failed + 1 )) ;;',
     '      skip) _skipped=$(( _skipped + 1 )) ;;',
+    '      not_automated) _not_automated=$(( _not_automated + 1 )) ;;',
     '    esac',
     '  done',
     '  local _exit_fail=0',
@@ -1178,8 +1211,8 @@ function generateMetricsEmitter(flowName) {
     '      printf \'{"id":"%s","result":"%s","time_s":%s,"failure_msg":"%s"}\' \\',
     '        "$_sname" "$_sresult" "$_stime" "$_sfail_esc"',
     '    done',
-    '    printf \'],"summary":{"total":%s,"passed":%s,"failed":%s,"skipped":%s,"flaky_pass":%s}}\' \\',
-    '      "$_total" "$_passed" "$_failed" "$_skipped" "$_flaky_pass"',
+    '    printf \'],"summary":{"total":%s,"passed":%s,"failed":%s,"skipped":%s,"not_automated":%s,"flaky_pass":%s}}\' \\',
+    '      "$_total" "$_passed" "$_failed" "$_skipped" "$_not_automated" "$_flaky_pass"',
     '    printf \'\\n\'',
     '  } > "$_out"',
     '}',
@@ -1222,10 +1255,20 @@ function generateFooter(flowName, totalSteps, skipped, deferReportsToCleanup) {
     '  echo "FAIL: ${#_FAILED_STEPS[@]} steps failed: ${_FAILED_STEPS[*]}"',
     '  exit 1',
     'fi',
+    '_not_automated=$(_count_step_results not_automated)',
+    '_automated_total=$(( ' + totalSteps + ' - ' + skipped + ' - _not_automated ))',
     'if [ "$_HAD_RETRIES" = "true" ]; then',
-    '  echo "PASS (FLAKY): ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    '  if [ "$_not_automated" -gt 0 ]; then',
+    '    echo "PASS (FLAKY): ' + flowName + ' ($_automated_total/' + totalSteps + ' automated steps passed, ' + skipped + ' skipped, $_not_automated not automated)"',
+    '  else',
+    '    echo "PASS (FLAKY): ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    '  fi',
     'else',
-    '  echo "PASS: ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    '  if [ "$_not_automated" -gt 0 ]; then',
+    '    echo "PASS: ' + flowName + ' ($_automated_total/' + totalSteps + ' automated steps passed, ' + skipped + ' skipped, $_not_automated not automated)"',
+    '  else',
+    '    echo "PASS: ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    '  fi',
     'fi',
     'exit 0'
   );
@@ -1235,6 +1278,14 @@ function generateFooter(flowName, totalSteps, skipped, deferReportsToCleanup) {
 // ---------------------------------------------------------------------------
 // Per-action bash block generation
 // ---------------------------------------------------------------------------
+
+function stepSuccessResult(step) {
+  var expects = Array.isArray(step.expects) ? step.expects : [];
+  if (expects.length === 0) return 'pass';
+  return expects.every(function(expect) { return expect.type === 'not-automated'; })
+    ? 'not_automated'
+    : 'pass';
+}
 
 /**
  * Generate bash lines for a single step action.
@@ -1264,6 +1315,7 @@ function generateAction(step, stepIndex, totalSteps) {
   var quotedId = doubleQuote(step.id);
   var recordStepName = '_record_step_name ' + quotedId + ' ' +
     doubleQuote(jsonStringContent(step.id)) + ' ' + doubleQuote(escapedId);
+  var successResult = stepSuccessResult(step);
 
   switch (step.type) {
     case 'navigate': {
@@ -1287,7 +1339,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
       lines.push('if [ "$_step_ok" = "true" ]; then');
       lines.push('  ' + recordStepName);
-      lines.push('  _STEP_RESULTS+=("pass")');
+      lines.push('  _STEP_RESULTS+=("' + successResult + '")');
       lines.push('  _STEP_FAILURES+=("")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
       lines.push('else');
@@ -1338,7 +1390,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
       lines.push('if [ "$_step_ok" = "true" ]; then');
       lines.push('  ' + recordStepName);
-      lines.push('  _STEP_RESULTS+=("pass")');
+      lines.push('  _STEP_RESULTS+=("' + successResult + '")');
       lines.push('  _STEP_FAILURES+=("")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
       lines.push('else');
@@ -1423,7 +1475,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
       lines.push('if [ "$_step_ok" = "true" ]; then');
       lines.push('  ' + recordStepName);
-      lines.push('  _STEP_RESULTS+=("pass")');
+      lines.push('  _STEP_RESULTS+=("' + successResult + '")');
       lines.push('  _STEP_FAILURES+=("")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
       lines.push('else');
@@ -1480,7 +1532,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('_elapsed=$(( SECONDS - _STEP_START ))');
       lines.push('if [ "$_step_ok" = "true" ]; then');
       lines.push('  ' + recordStepName);
-      lines.push('  _STEP_RESULTS+=("pass")');
+      lines.push('  _STEP_RESULTS+=("' + successResult + '")');
       lines.push('  _STEP_FAILURES+=("")');
       lines.push('  _STEP_TIMES+=("$_elapsed")');
       lines.push('else');
@@ -1496,7 +1548,7 @@ function generateAction(step, stepIndex, totalSteps) {
     case 'snapshot': {
       lines.push('agent-browser ' + sessionPrefix + 'snapshot');
       lines.push(recordStepName);
-      lines.push('_STEP_RESULTS+=("pass")');
+      lines.push('_STEP_RESULTS+=("' + successResult + '")');
       lines.push('_STEP_FAILURES+=("")');
       lines.push('_STEP_TIMES+=("0")');
       break;
@@ -1505,7 +1557,7 @@ function generateAction(step, stepIndex, totalSteps) {
     case 'wait': {
       lines.push('sleep ' + step.operands.seconds);
       lines.push(recordStepName);
-      lines.push('_STEP_RESULTS+=("pass")');
+      lines.push('_STEP_RESULTS+=("' + successResult + '")');
       lines.push('_STEP_FAILURES+=("")');
       lines.push('_STEP_TIMES+=("' + step.operands.seconds + '")');
       break;
