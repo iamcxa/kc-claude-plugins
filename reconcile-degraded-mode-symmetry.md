@@ -196,7 +196,7 @@ document claimed an invariant the code does not hold. CI green on `553f935`.
 
 - **AC-1 — `post` and `resume` reach the same verdict.** PASS, and stronger than the AC asks.
   Guard at `kc-pr-flow/scripts/review-post.sh:614-618`, asserted by
-  `kc-pr-flow/scripts/review-post.test.sh:336-356`. The validator drove both commands through the
+  `kc-pr-flow/scripts/review-post.test.sh:350-360`. The validator drove both commands through the
   CLI and got **byte-identical JSON**:
   `{"idempotency_key":"7530…","reason":"reconcile_unavailable","run_id":"run-piG63I","status":"ambiguous"}`,
   zero reviews in the store, pending payload kept, no `post.result` on the run. The pre-change
@@ -206,7 +206,7 @@ document claimed an invariant the code does not hold. CI green on `553f935`.
 - **AC-2 — a refused run is settleable, not stranded.** PASS. The intent and pending payload the
   refusal preserves are written at `kc-pr-flow/scripts/review-post.sh:545-549` and
   `kc-pr-flow/scripts/review-post.sh:560`; settlement asserted by
-  `kc-pr-flow/scripts/review-post.test.sh:357-360`. Three settlement paths exercised — `resume`
+  `kc-pr-flow/scripts/review-post.test.sh:363-365`. Three settlement paths exercised — `resume`
   against a usable list (`posted`, exactly one review, pending cleared, via
   `kc-pr-flow/scripts/review-post.sh:787-817`), `gc` inside and outside its window
   (`{"kept":1,"removed":0}` then `{"kept":0,"removed":1}` plus `run.invalidated{expired}`, via
