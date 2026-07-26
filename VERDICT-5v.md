@@ -174,3 +174,86 @@ manual transcript that does not include the synthetic fixture and observed later
 ## Conditions If Narrow
 
 Not applicable. This is a proceed verdict.
+
+---
+
+# Round 3 Validation Verdict: proceed
+
+## Verdict
+
+Proceed. The implementation satisfies the validated ACs, including the `/e2e-test` carry-through
+condition that caused the first return. No material finding remains.
+
+No captain escalation trigger fired. This is a validation verdict held by EM under Gate Authority;
+there is no residual red gate, no scope re-cut, no irreversible exception, and no EM/FO
+disagreement to escalate.
+
+## Reasoning
+
+### Claim 1: AC-7 is satisfied by the tracked harness
+
+Confidence: medium-high.
+
+The implementation did not use a fresh-context `/e2e-test` run; it used the alternative tracked
+harness route. That is acceptable here. `compiler/e2e-test-contract.js` is not a prose-grep and not
+a constant-only assertion: it applies the exact-shape detector to real expect entries, rejects
+legacy/malformed object entries, walks a synthetic flow, records executed step ids, and computes
+runner-style step/summary statuses.
+
+The validator's adversarial check is meaningful for the guardrail I named. Loosening
+`isNotAutomatedExpect` to accept any object carrying `not_automated` made the harness fail on the
+strict detector count, then reverting restored green. That proves the test would catch the forbidden
+weakening: accepting objects generally instead of carving out only the sanctioned shape.
+
+Residual risk: the harness is still a contract harness for a prompt-runner surface, not a live LLM
+execution. That is acceptable because both prompt consumers also moved with the same semantics, and
+the approved AC allowed a tracked harness route when the real runner contract was otherwise not a
+normal executable. I would not accept this evidence if the prompt files had not moved.
+
+What would change my mind: if `skills/e2e-test/SKILL.md` or `agents/e2e-test-runner.md` lacked the
+same exact-shape rule and `NOT_AUTOMATED` accounting, or if the harness only asserted literal text
+instead of running detector and summary logic.
+
+### Claim 2: Surviving `deferred` is diagnostic, not a green state
+
+Confidence: high.
+
+The old harmful behavior was "unmatched means deferred means TODO echo means green." That path is
+gone. Resolver still increments `deferredExpects`, but unmatched expect strings now also enter
+`errors`, cause compile failure, and are exposed in JSON with `ok:false`. Codegen retains only a
+defensive `deferred` branch that throws if such an item reaches generation.
+
+Keeping the old counter name is not a material residual because it no longer means runtime pass or
+warning-only success. It remains useful for compatibility and diagnostics.
+
+What would change my mind: any path where `deferredExpects > 0` returns `ok:true`, writes a script,
+or emits a TODO/runtime non-assertion instead of failing before codegen.
+
+### Claim 3: The social-risk mitigation is visible
+
+Confidence: high.
+
+The implementation cannot prevent authors from writing many `not_automated` entries, but that was
+accepted at ideation because the mitigation is per-assertion visibility. The implementation makes
+that visibility real: CLI prose reports `expects not automated`, JSON includes
+`notAutomatedExpects`, `/e2e-compile` presentation names `Not automated`, `/e2e-test` summaries carry
+`not_automated: N`, and the runner status model keeps hatch-only steps at `NOT_AUTOMATED` rather
+than PASS.
+
+What would change my mind: hatch counts being omitted from either CLI or `/e2e-test` summaries, or
+hatch-only steps counted as passed/verified evidence.
+
+## Evidence Checked
+
+- Implementation diff: 16 files, `+571/-32`, scoped to compiler, tests, and relevant docs/prompts.
+- Implementation report: scoped suite 415/415, full suite 675/680 with only known local carlove
+  failures on that machine.
+- Validation report: fresh validation pass, 680/680 on the machine where the corpus path resolves,
+  direct AC probes, and an adversarial edit that made the AC-7 harness fail.
+- Direct inspection: `isNotAutomatedExpect` requires exactly one key, exact key name, string value,
+  and non-empty trimmed reason; `codegen` throws on defensive `deferred`; `/e2e-test` and runner
+  prompts include exact-shape and `not_automated` result accounting.
+
+## Conditions If Narrow
+
+Not applicable. This is a proceed verdict.
