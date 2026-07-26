@@ -19,8 +19,8 @@ Compile E2E flow YAML files into standalone bash test scripts using the e2e-comp
 | `--all` | Compile every flow in `.claude/e2e/flows/` |
 | `--dry-run` | Validate flow + mapping coherence without writing output |
 | `--verbose` | Show resolved step details (operands, expects) during compilation |
-| `--coverage` | Produce static coverage report (elements reached vs verified) after compilation |
-| `--coverage-output <dir>` | Output directory for coverage JSON (default: `.claude/e2e/coverage`) |
+| `--coverage` | Produce static coverage report (elements reached vs verified). Single flow: the data arrives in the JSON document's `coverage` key. Batch (`--all`): the batch document has no `coverage` key, so no coverage data reaches the skill |
+| `--coverage-output <dir>` | Directory for coverage JSON when the compiler is invoked directly. The skill's `--json` path writes no coverage files, so nothing is written here via `/e2e-compile` |
 
 ## Prerequisites
 
@@ -96,9 +96,13 @@ Default directories (resolved relative to project root):
 
 ## Phase 3 — Present Results
 
-stdout is exactly one JSON document (single flow: `{ok, flow, stats, errors, coverage}`; `--all`:
-`{ok, flows: [...], summary: {passed, failed}}`, each entry shaped like the single-flow document).
-Parse it and map fields to a conversational presentation — no prose regex-parsing needed:
+For the two supported invocations (`--json <flow>` and `--json --all`) stdout carries one JSON
+document: single flow `{ok, flow, stats, errors, coverage}`; `--all` `{ok, flows: [...], summary:
+{passed, failed}}`, each entry shaped like the single-flow document, plus an optional top-level
+`errors` array when the batch could not start. Parse it and map fields to a conversational
+presentation — no prose regex-parsing needed. **If stdout does not parse as JSON** — a usage error
+such as `--json --help` or a malformed flag prints prose there instead — fall back to stderr and
+the exit code rather than assuming the run succeeded:
 
 | Field | Presents as |
 |-------|-------------|
@@ -113,12 +117,17 @@ After a successful single-flow compile, mention: "You can run the compiled scrip
 
 Batch (`--all`): present as `Batch compilation complete: summary.passed OK, summary.failed
 failed`, then list each `flows[]` entry's `flow` name under "Succeeded" (`ok: true`) or under
-"Failed" with its first `errors[].message` (`ok: false`).
+"Failed" with its first `errors[].message` (`ok: false`). If the document carries a **top-level**
+`errors` array, the batch never started — present those messages instead of the counts.
 
-An empty/missing flows directory still returns valid JSON (`{ok: true, flows: [], summary:
-{passed: 0, failed: 0}}`, exit 0) — present as: "No flow files found in `.claude/e2e/flows/`.
-Create flows with `/e2e-flow` (from a plan or spec) or `/e2e-walkthrough` (interactive browser
-exploration)."
+An **empty** flows directory returns `{ok: true, flows: [], summary: {passed: 0, failed: 0}}`,
+exit 0 — present as: "No flow files found in `.claude/e2e/flows/`. Create flows with `/e2e-flow`
+(from a plan or spec) or `/e2e-walkthrough` (interactive browser exploration)."
+
+A **missing or unreadable** flows directory is a different result: `{ok: false, flows: [],
+summary: {passed: 0, failed: 0}, errors: [{message}]}`, exit 1 — present the `errors[].message`
+(it names the path it could not read). Do not report this as "no flows found": that would hide a
+mistyped `--flows-dir` as an empty project.
 
 ## Common Mistakes
 
