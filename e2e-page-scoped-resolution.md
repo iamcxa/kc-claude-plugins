@@ -7,7 +7,7 @@ completed:
 verdict:
 worktree: mini:~/mini-legs/dev-3tp0ym1m-page-scoped-impl
 issue:
-pr:
+pr: "#69"
 design:
 id: 3tp0ym1mj0gcwssfxq9s4b0y
 ---
