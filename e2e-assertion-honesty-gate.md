@@ -118,3 +118,22 @@ Three implementation guardrails carried from the verdict's "what would change my
 3. Validation must not accept a diff or grep of the skill/agent prompt as AC-7 evidence. It needs
    the synthetic fixture and an observed later-step execution; if a fresh-context run cannot be
    made auditable, use the tracked harness the test plan already names.
+
+**Cycle 3 — validation gate, 2026-07-26. Verdict: PROCEED, no conditions.**
+
+Fresh codex validator reported pass; same adjudicator ruled on it, resumed in-session. Three
+judgments the FO put to it rather than settling:
+
+1. **AC-7 was satisfied by a route the gate did not specify.** It had accepted a fresh-context
+   `/e2e-test` run OR a tracked harness, flagging the former as possibly unauditable. The
+   implementation built `compiler/e2e-test-contract.js` — a tracked module runnable anywhere —
+   turning an LLM-prompt behavioral claim into executable code. Accepted, because the validator's
+   adversarial edit (loosening `isNotAutomatedExpect` to accept any object carrying the key) turned
+   the suite red at `1 !== 4`. The harness exercises the contract rather than restating constants.
+2. **`deferred` survives as a counter name.** Judged not a material residual: it no longer means
+   runtime pass. Falsifier recorded — any path where `deferredExpects > 0` returns `ok:true`, writes
+   a script, or emits a TODO-style non-assertion instead of failing before codegen.
+3. **The hatch's social risk is unresolvable by construction**, so the mitigation is visibility, and
+   the implementation makes it real in five places: CLI prose `expects not automated`, JSON
+   `notAutomatedExpects`, `/e2e-compile` presentation, `/e2e-test` summary `not_automated: N`, and
+   the runner keeping hatch-only steps at `NOT_AUTOMATED` rather than PASS.
