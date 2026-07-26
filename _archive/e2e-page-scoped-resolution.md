@@ -1,15 +1,16 @@
 ---
 title: Make the page qualifier bind, or drop it from the grammar
-status: validation
+status: done
 source: sprint-1 (compiler boundary) entity 3 of 5; split out of e2e-typed-operands so the sprint stays inside the compiler
 started: 2026-07-25T15:42:55Z
-completed:
-verdict:
+completed: 2026-07-26T09:57:45Z
+verdict: passed
 worktree: mini:~/mini-legs/dev-3tp0ym1m-page-scoped-impl
 issue:
-pr: "#69"
+pr: pr-merge:69
 design:
 id: 3tp0ym1mj0gcwssfxq9s4b0y
+archived: 2026-07-26T09:57:45Z
 ---
 
 ## Problem
