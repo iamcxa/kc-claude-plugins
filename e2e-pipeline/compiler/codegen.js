@@ -335,6 +335,19 @@ function generateRuntimeFlagBlock() {
  *   - Capture commands without letting set -e abort the polling loop
  *   - Return 1 on deadline; visibility helpers return 2 on command/protocol failure
  *
+ * Never emit a `producer | grep -q` text match. The compiled script runs under
+ * `set -euo pipefail`: grep exits 0 the instant it can decide and closes the
+ * pipe, the still-writing producer dies on SIGPIPE (or EPIPE where SIGPIPE is
+ * ignored), and pipefail publishes the producer's status — so a SUCCESSFUL
+ * match reads as a no-match. It needs an early-decidable match plus a producer
+ * still writing, which a11y snapshots satisfy once a page grows past the pipe
+ * buffer. Use the subprocess-free bash forms instead: `[[ "$s" == *"$p"* ]]`
+ * for fixed strings (a quoted pattern operand is literal, not a glob) and
+ * `[[ "$s" =~ re ]]` for anchored regexes. The `=~` conversions are exact
+ * because every input reaching them is already proven single-line upstream
+ * (`sed -n 1p`, or an explicit embedded-newline rejection), so grep's
+ * match-any-line semantics had nothing extra to match.
+ *
  * Returns: string (multi-line bash block)
  */
 function generateRuntimeSupport(includeRuntimeStateSupport) {
@@ -664,7 +677,7 @@ function generateRuntimeSupport(includeRuntimeStateSupport) {
     '    if ! _snapshot=$(agent-browser snapshot 2>/dev/null); then return 2; fi',
     '  fi',
     '  _first_line=$(printf \'%s\\n\' "$_snapshot" | sed -n \'1p\')',
-    '  if [ "$_first_line" != "(empty page)" ] && ! printf \'%s\\n\' "$_first_line" | grep -Eq \'^-[[:space:]]+[a-z][a-z0-9-]*([[:space:]:].*)?$\'; then return 2; fi',
+    '  if [ "$_first_line" != "(empty page)" ] && ! [[ "$_first_line" =~ ^-[[:space:]]+[a-z][a-z0-9-]*([[:space:]:].*)?$ ]]; then return 2; fi',
     '  printf \'%s\\n\' "$_snapshot"',
     '}',
     '',
@@ -678,7 +691,7 @@ function generateRuntimeSupport(includeRuntimeStateSupport) {
     '    if ! _url=$(agent-browser get url 2>/dev/null); then return 2; fi',
     '  fi',
     "  case \"$_url\" in *$'\\n'*) return 2 ;; esac",
-    '  if ! printf \'%s\\n\' "$_url" | grep -Eq \'^[A-Za-z][A-Za-z0-9+.-]*:[^[:space:]]*$\'; then return 2; fi',
+    '  if ! [[ "$_url" =~ ^[A-Za-z][A-Za-z0-9+.-]*:[^[:space:]]*$ ]]; then return 2; fi',
     '  printf \'%s\\n\' "$_url"',
     '}',
     '',
@@ -754,7 +767,7 @@ function generateRuntimeSupport(includeRuntimeStateSupport) {
     '  local _snapshot',
     '  while [ "$_count" -lt "$_timeout" ]; do',
     '    if ! _snapshot=$(_capture_snapshot "$_session"); then return 2; fi',
-    '    if printf \'%s\\n\' "$_snapshot" | grep -Fq "$_pattern"; then',
+    '    if [[ "$_snapshot" == *"$_pattern"* ]]; then',
     '      return 0',
     '    fi',
     '    sleep 1',
@@ -1457,7 +1470,7 @@ function generateAction(step, stepIndex, totalSteps) {
       lines.push('  else');
       if (capValidate === 'uuid') {
         // UUID exact-one validation: must match RFC 4122 pattern
-        lines.push('    if ! printf \'%s\' "$' + capAs + '" | grep -Eq ' + singleQuote(uuidPattern) + '; then');
+        lines.push('    if ! [[ "$' + capAs + '" =~ ' + uuidPattern + ' ]]; then');
         lines.push('      _step_ok=false');
         lines.push('      _CAPTURE_FAIL_MSG=' + singleQuote('capture-url-query: param "' + capParam + '" value is not a valid UUID'));
         lines.push('    fi');
@@ -1642,7 +1655,7 @@ function generateExpects(step) {
       var quotedText = singleQuote(expect.text);
       lines.push('if ! _snapshot=$(_capture_snapshot ' + quotedSession + '); then');
       lines.push('  ' + failureCall('agent-browser snapshot failed'));
-      lines.push('elif ! echo "$_snapshot" | grep -qF ' + quotedText + '; then');
+      lines.push('elif ! [[ "$_snapshot" == *' + quotedText + '* ]]; then');
       lines.push('  ' + failureCall("text '" + expect.text + "' not found on page"));
       lines.push('fi');
 
@@ -1651,7 +1664,7 @@ function generateExpects(step) {
       var quotedText = singleQuote(expect.text);
       lines.push('if ! _snapshot=$(_capture_snapshot ' + quotedSession + '); then');
       lines.push('  ' + failureCall('agent-browser snapshot failed'));
-      lines.push('elif echo "$_snapshot" | grep -qF ' + quotedText + '; then');
+      lines.push('elif [[ "$_snapshot" == *' + quotedText + '* ]]; then');
       lines.push('  ' + failureCall("text '" + expect.text + "' should NOT be on page but was found"));
       lines.push('fi');
 
