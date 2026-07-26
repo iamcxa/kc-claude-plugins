@@ -10,6 +10,7 @@ worktree: .worktrees/spacedock-ensign-e2e-json-diagnostics
 issue:
 pr:
 design:
+mod-block: merge:pr-merge
 ---
 
 ## Problem
