@@ -574,15 +574,23 @@ describe('generate() — expect: visible', function() {
   });
 });
 
-describe('generate() — expect: deferred', function() {
-  test("deferred expect emits TODO echo", function() {
+describe('generate() — expect: unsupported/non-automated', function() {
+  test("deferred expect fails code generation instead of emitting TODO echo", function() {
     const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
     step.expects = [{ type: 'deferred', raw: 'url contains /dashboard' }];
-    const script = generate(makeResolved([step]), 'test-flow');
-    assert.ok(
-      script.includes("echo \"TODO: expect 'url contains /dashboard' not compiled (Phase 2)\""),
-      'Expected TODO echo for deferred expect. Got: ' + script
+    assert.throws(
+      () => generate(makeResolved([step]), 'test-flow'),
+      /Unsupported deferred expect reached codegen: url contains \/dashboard/
     );
+  });
+
+  test("not-automated expect does not emit assertion pass/fail machinery", function() {
+    const step = makeClick('click-btn', 'login_button', 'role=button[name="Sign In"]');
+    step.expects = [{ type: 'not-automated', raw: 'Verify with product counsel.', reason: 'Verify with product counsel.' }];
+    const script = generate(makeResolved([step]), 'test-flow');
+    assert.equal(script.includes("TODO: expect 'Verify with product counsel.'"), false);
+    assert.equal(script.includes('Verify with product counsel.'), false);
+    assert.equal(script.includes('login_button not in a11y tree'), false);
   });
 });
 

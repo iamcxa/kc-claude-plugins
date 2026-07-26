@@ -100,6 +100,18 @@ function tier2Detail(message) {
   return { message: message };
 }
 
+function unmatchedExpectDetail(stepId, raw, message) {
+  return {
+    step_id: stepId,
+    stepId: stepId,
+    field: 'expect',
+    raw: raw,
+    got: raw,
+    candidates: [],
+    message: message,
+  };
+}
+
 function parseActionString(type, action, stepId) {
   var parser = ACTION_PARSERS[type];
   if (!parser) {
@@ -278,12 +290,42 @@ function resolveExpects(expects, symbolResult, stepId, mapping) {
   var resolvedExpects = [];
   var activeCount = 0;
   var deferredCount = 0;
+  var notAutomatedCount = 0;
   var errors = [];
   var errorDetails = [];
 
   for (var i = 0; i < expects.length; i++) {
     var expectStr = expects[i];
     var matched = false;
+
+    if (expectStr && typeof expectStr === 'object') {
+      var keys = Object.keys(expectStr);
+      var reason = expectStr.not_automated;
+      if (keys.length === 1 &&
+          keys[0] === 'not_automated' &&
+          typeof reason === 'string' &&
+          reason.trim().length > 0) {
+        var trimmedReason = reason.trim();
+        resolvedExpects.push({
+          type: 'not-automated',
+          raw: trimmedReason,
+          reason: trimmedReason,
+        });
+        notAutomatedCount++;
+      } else {
+        var objectMsg = "Step '" + stepId + "': invalid expect object " + JSON.stringify(expectStr) + " -- only {not_automated: <non-empty string>} is allowed";
+        errors.push(objectMsg);
+        errorDetails.push(unmatchedExpectDetail(stepId, expectStr, objectMsg));
+      }
+      continue;
+    }
+
+    if (typeof expectStr !== 'string') {
+      var typeMsg = "Step '" + stepId + "': unsupported expect value " + JSON.stringify(expectStr) + " -- expect entries must be strings or {not_automated: <non-empty string>}";
+      errors.push(typeMsg);
+      errorDetails.push(unmatchedExpectDetail(stepId, expectStr, typeMsg));
+      continue;
+    }
 
     for (var p = 0; p < EXPECT_PATTERNS.length; p++) {
       var pattern = EXPECT_PATTERNS[p];
@@ -368,12 +410,14 @@ function resolveExpects(expects, symbolResult, stepId, mapping) {
     }
 
     if (!matched) {
-      resolvedExpects.push({ type: 'deferred', raw: expectStr });
+      var unmatchedMsg = "Step '" + stepId + "': unsupported expect string '" + expectStr + "' -- rewrite it using docs/writing-tests.md#expect-grammar-reference or declare {not_automated: <reason>} when genuinely human-only";
+      errors.push(unmatchedMsg);
+      errorDetails.push(unmatchedExpectDetail(stepId, expectStr, unmatchedMsg));
       deferredCount++;
     }
   }
 
-  return { resolvedExpects: resolvedExpects, activeCount: activeCount, deferredCount: deferredCount, errors: errors, errorDetails: errorDetails };
+  return { resolvedExpects: resolvedExpects, activeCount: activeCount, deferredCount: deferredCount, notAutomatedCount: notAutomatedCount, errors: errors, errorDetails: errorDetails };
 }
 
 function resolve(flow, mapping, options) {
@@ -386,6 +430,7 @@ function resolve(flow, mapping, options) {
   var resolvedSteps = [];
   var activeExpects = 0;
   var deferredExpects = 0;
+  var notAutomatedExpects = 0;
   var skipped = 0;
 
   var steps = flow.steps || [];
@@ -480,6 +525,7 @@ function resolve(flow, mapping, options) {
       stepExpects = expectResult.resolvedExpects;
       activeExpects += expectResult.activeCount;
       deferredExpects += expectResult.deferredCount;
+      notAutomatedExpects += expectResult.notAutomatedCount;
       for (var ei = 0; ei < expectResult.errors.length; ei++) {
         errors.push(expectResult.errors[ei]);
         errorDetails.push(expectResult.errorDetails[ei]);
@@ -561,6 +607,7 @@ function resolve(flow, mapping, options) {
     total: (flow.steps || []).length,
     activeExpects: activeExpects,
     deferredExpects: deferredExpects,
+    notAutomatedExpects: notAutomatedExpects,
     skipped: skipped,
   };
 
@@ -610,6 +657,7 @@ function resolveMultiSite(flow, siteMappings) {
   var resolvedSteps = [];
   var activeExpects = 0;
   var deferredExpects = 0;
+  var notAutomatedExpects = 0;
   var skipped = 0;
 
   var steps = flow.steps || [];
@@ -688,6 +736,7 @@ function resolveMultiSite(flow, siteMappings) {
       stepExpects = expectResult.resolvedExpects;
       activeExpects += expectResult.activeCount;
       deferredExpects += expectResult.deferredCount;
+      notAutomatedExpects += expectResult.notAutomatedCount;
       for (var ei = 0; ei < expectResult.errors.length; ei++) {
         errors.push(expectResult.errors[ei]);
         errorDetails.push(expectResult.errorDetails[ei]);
@@ -719,6 +768,7 @@ function resolveMultiSite(flow, siteMappings) {
     total: (flow.steps || []).length,
     activeExpects: activeExpects,
     deferredExpects: deferredExpects,
+    notAutomatedExpects: notAutomatedExpects,
     skipped: skipped,
   };
 

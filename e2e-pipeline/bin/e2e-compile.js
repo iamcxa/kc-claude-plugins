@@ -50,7 +50,7 @@ program
     // Default stats shape for a JSON document whose compile() result has no
     // `stats` (e.g. a parse failure, which never reaches the resolver).
     function defaultStats(errorDetails) {
-      return { total: 0, activeExpects: 0, deferredExpects: 0, resolveErrors: (errorDetails || []).length };
+      return { total: 0, activeExpects: 0, deferredExpects: 0, notAutomatedExpects: 0, resolveErrors: (errorDetails || []).length };
     }
 
     // Stats for the --json document: the resolver's stats (when present) plus
