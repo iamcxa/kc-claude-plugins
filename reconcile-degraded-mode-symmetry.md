@@ -79,14 +79,16 @@ resume when the read is healthy), and the daemon already treats `ambiguous` that
 ## Acceptance criteria
 
 **AC-1 — `post` and `resume` reach the same verdict on an unusable reconcile read.**
-Verified by: one test driving an unusable list response through both commands and asserting
-the identical status, with no review written on either path. Falsified by: the two commands
-disagreeing, or agreement asserted only in prose.
+Verified by: a `kc-pr-flow/scripts/review-post.test.sh` scenario driving the stub transport's
+`unusable` list behaviour (`kc-pr-flow/test/fixtures/review-post/stub-transport.sh`) through both
+commands and asserting the identical status and reason, with no review written on either path.
+Falsified by: the two commands disagreeing, or agreement asserted only in prose.
 
 **AC-2 — A run that fails closed in `post` is still settleable, not stranded.**
-Verified by: after the refusal, `resume` on that run reconciles or retries to a terminal
-outcome once the list read is usable again, and the pending payload is still present when it
-does. Falsified by: a state no later command can settle, or evidence deleted at refusal time.
+Verified by: the same `kc-pr-flow/scripts/review-post.test.sh` scenario continuing past the
+refusal — `resume` reconciles or retries to a terminal outcome once the list read is usable
+again, with the pending payload written by `kc-pr-flow/scripts/review-post.sh` still present when
+it does. Falsified by: a state no later command can settle, or evidence deleted at refusal time.
 
 ## Test plan (RED before GREEN)
 
@@ -181,3 +183,123 @@ The shape-valid / content-invalid list (`{"reviews":[42]}`) is filed as
 `reconcile-list-element-shape`; it needs a fix that changes both commands. The inability to
 distinguish a `post` refusal from an ambiguous POST in the durable log is pre-existing and
 unchanged.
+
+## Stage Report: validation
+
+TL;DR — **PASS with findings, all fixed.** A fresh-context validator reproduced both ACs
+independently, a silent-failure lens and a codex cross-model round ran alongside, and 15 of 15
+entity citations resolved exactly. Four defects surfaced; three are fixed and one NIT is declined
+with a reason. The load-bearing one was mine: the sentence this task added to the protocol
+document claimed an invariant the code does not hold. CI green on `553f935`.
+
+### Per-AC results
+
+- **AC-1 — `post` and `resume` reach the same verdict.** PASS, and stronger than the AC asks.
+  Guard at `kc-pr-flow/scripts/review-post.sh:614-618`, asserted by
+  `kc-pr-flow/scripts/review-post.test.sh:336-356`. The validator drove both commands through the
+  CLI and got **byte-identical JSON**:
+  `{"idempotency_key":"7530…","reason":"reconcile_unavailable","run_id":"run-piG63I","status":"ambiguous"}`,
+  zero reviews in the store, pending payload kept, no `post.result` on the run. The pre-change
+  behaviour was reproduced too, not inferred: on `origin/main` the same input returns
+  `{"status":"posted"}` and writes a review, from the fall-through at
+  `kc-pr-flow/scripts/review-post.sh:569`.
+- **AC-2 — a refused run is settleable, not stranded.** PASS. The intent and pending payload the
+  refusal preserves are written at `kc-pr-flow/scripts/review-post.sh:545-549` and
+  `kc-pr-flow/scripts/review-post.sh:560`; settlement asserted by
+  `kc-pr-flow/scripts/review-post.test.sh:357-360`. Three settlement paths exercised — `resume`
+  against a usable list (`posted`, exactly one review, pending cleared, via
+  `kc-pr-flow/scripts/review-post.sh:787-817`), `gc` inside and outside its window
+  (`{"kept":1,"removed":0}` then `{"kept":0,"removed":1}` plus `run.invalidated{expired}`, via
+  `kc-pr-flow/scripts/review-post.sh:869-894`), and a subsequent `post`
+  (`prior_attempt_unsettled`, writes nothing, `kc-pr-flow/scripts/review-post.sh:601-603`).
+  Worst-case ordering also held: two refused runs, resume the second then the first, **one review
+  on the PR**.
+
+Suites: review-post **137/0**, full seven **935/0** (305/213/135/137/68/43/34), against a
+re-measured baseline of 920/0. Local and CI figures agree line by line.
+
+### Reviewer rounds and how they were adjudicated
+
+Three rounds ran: a fresh-context validator, `pr-review-toolkit:silent-failure-hunter`, and a
+codex cross-model pass the validator drove. **Zero fabricated citations** in any round — 15/15
+entity citations exact; codex 14/15 exact with one block-level imprecision, far under the
+one-third discard threshold, so no round was discarded.
+
+One finding was **adjudicated down against the code**. The silent-failure lens rated the
+durable-log ambiguity MEDIUM on the reasoning that "pre-diff, reaching the log-ends-at-post.intent
+signature required an actual network POST whose response was undecidable". That is false:
+`review-post.sh:601-603`'s `prior_attempt_unsettled` path already writes the intent, makes **no**
+POST, appends no event and returns 0. The equivalence class predates this change; this task adds
+one more path into it and does not create it. The gap itself remains a named residual, as before.
+
+### Defects found and fixed this round
+
+1. **The doc claimed a guarantee the code does not make — mine, and a repeat of slice 1's P1.**
+   The sentence added to `reference/review-runtime.md` said the refusal "leaves exactly one path
+   to the POST". Reproduced against the *fixed* code: a body of `{"reviews":[42]}` passes
+   `review_post_reviews_usable`, the marker scan errors mid-expression, its empty output reads as
+   "marker absent", and `post` returns `status:"posted"` with a `remote_review_id`. Fixed by
+   stating the guarantee as bounded by that validator's strength. The code-side gap stays
+   deferred (it changes both commands; the shipped `gh` adapter cannot construct such a body),
+   but an absolute claim in the document adapter authors treat as ground truth is not deferrable.
+2. **Self-reported suite numbers were stale by one.** The implementation report and PR body said
+   138/936; the second commit had merged two scenarios and dropped a duplicate assertion. 137/935
+   is what the validator and CI both reproduce. Corrected in both places.
+3. **`docs/review-runtime.md` was not synced.** Its reason table and `post` paragraph still
+   described the fail-closed rule as resume-only, contrary to this plugin's own
+   documentation-sync rule. Fixed.
+4. **Declined, NIT** — `review-post.sh:601`'s stderr says "resume it instead", which is unhelpful
+   when the list is still unusable, since resume would also refuse. No functional impact: the
+   caller-visible status is `ambiguous` either way and the skill handles both identically.
+   Declining rather than churning a message with no behavioural consequence.
+
+### Adversarial spot-checks
+
+Two, by different hands, both bit:
+
+- Mine: moving the guard before the local check turned exactly the two placement tests red
+  (`expected [posted_reconciled], got [ambiguous]`; `expected [prior_attempt_unsettled], got
+  [reconcile_unavailable]`) and nothing else.
+- The validator's, aimed at AC-2's own falsifier — injecting `rm -f pending-post.json` into the
+  refusal branch — produced 132/5, including `a refused post keeps the pending payload
+  (true→false)` and `settling a refused post writes exactly one review (1→0)`.
+
+It also independently reproduced the RED (130 passed / 7 failed against my recorded 130 / 8); the
+passed counts match exactly and the one-failure difference is precisely the assertion the second
+commit merged away. Self-consistent, not contradictory.
+
+### Correction-round budget
+
+One round. Ideation estimate: one implementation session inside ~90 minutes. Actual: the
+implementation commit plus two correction commits (CI budget, then the doc-honesty fix), inside
+tolerance, no design reset. Disposition: **4 found, 3 fixed, 1 declined with reason, 0
+fabricated**.
+
+### Named residuals, all filed
+
+- `reconcile-list-element-shape` — the shape-valid / content-invalid list. Sharpened this round:
+  element **order** decides the outcome, and a bad element *before* the match reaches a live POST,
+  so this task's fail-closed guarantee is bounded by `review_post_reviews_usable`'s strength.
+  `review-post.sh:570` is also the one jq call in that function with no `|| return` guard.
+- `gh-list-adapter-pagination` — found outside the blast radius: `gh api --paginate` combined with
+  `--jq` emits one array per page, so `--argjson` fails and the transport aborts. The once-only
+  path is therefore unusable on any PR whose reviews list paginates. Fail-closed, untouched here,
+  and invisible to CI because every suite drives the injected stub instead of the `gh` adapter.
+- `review-post-suite-cost` — measured this round rather than guessed: `python3` costs **565 ms**
+  per launch here at 0% CPU against `jq`'s 6.8 ms, and one `post` spawns **65** of them.
+
+### Other gates
+
+ShellCheck **v0.9.0** (CI's pin, via the pinned image) clean on all eight files the workflow
+checks. Cross-model gate satisfied by codex. Coverage: no diff-coverage tooling exists yet
+(`executable-diff-coverage-ratchet` is still backlog), so waived as precedent allows, with the
+manual check recorded — the three added executable lines (`:565`, `:569`, `:614-618`) are all
+executed, and the spot-checks prove that coverage is load-bearing rather than incidental.
+
+### Process miss, recorded
+
+This task never wrote a `## Stage Report: ideation`, because backlog and ideation were presented
+to the EM as one combined gate. The ideation content exists in the body as prose sections, but
+`status --ac-scan` reads stage reports, so the gate's AC cross-check had nothing to anchor
+against and passed by absence — exactly the failure the README's `--ac-scan` clause describes.
+The clause caught it only retrospectively here because the scan was run late.
