@@ -514,6 +514,31 @@ landed contract at dispatch time; if gz's channel turns out to require per-call-
 beyond message construction, that is a re-size signal to raise before starting, not to absorb
 silently.
 
+### Feedback Cycles
+
+**Cycle 1 — ideation gate, 2026-07-26. Verdict: RETURN.**
+
+Adjudicated independently on a different vendor (codex, mini leg
+`dev-3tp0ym1m-page-binding-gate`, verdict at `origin/mini/dev-3tp0ym1m-page-binding-gate:VERDICT-3t.md`).
+This gate exists because the FO approved this ideation itself, which Gate Authority does not
+permit; the pass was a ratification, not a dispute.
+
+Two layer-boundary conditions, neither touching the resolver design, which the verdict calls
+coherent and adequately evidenced:
+
+1. **`shared: true` does not carry through to `agents/e2e-test-runner.md`.** FO-verified: that
+   file names `_global` as a literal fallback key at `:176`, `:177` and `:238`, and
+   `grep -rl 'shared: true'` over `agents/` and `skills/` returns nothing — the semantic exists
+   in no consumer. A non-`_global` page marked `shared: true` would compile, be documented as
+   valid, and fail to resolve in the runner's direct execution path. Same failure shape as
+   [[e2e-json-diagnostics]], caught before implementation rather than after.
+2. **The structured repair field is under-specified against gz's landed contract**, which emits
+   `{step_id, field, got, candidates, message}` with no `repair` field. The ACs assert behavior
+   rather than formatting, so implementation could satisfy them while dropping the remedy into
+   an unstructured message.
+
+Effort: one codex leg, ~5.6K output tokens on a third quota pool, no Claude tokens consumed.
+
 ## Stage Report: ideation
 
 - DONE: Reverse-recovery audit against merge target
