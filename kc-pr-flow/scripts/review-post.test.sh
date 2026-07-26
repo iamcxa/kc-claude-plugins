@@ -339,7 +339,11 @@ teardown_env
 # wiped or reconfigured state dir, another machine, or a stateless runner leaves
 # it blind, and an unusable list hides the marker that would have caught the
 # duplicate. So local silence alone no longer licenses a POST. ---
+# One scenario walks the whole sequence -- refuse, refuse again, then settle --
+# because each `post`/`resume` invocation costs real CI seconds and this suite
+# runs close to the job's budget.
 new_env; write_request; write_gate
+printf 'posted\n' >"$STUB_DIR/post-plan"
 printf 'unusable\nunusable\n' >"$STUB_DIR/list-plan"
 out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
 run_id="$(jq -r '.run_id' <<<"$out")"
@@ -354,17 +358,9 @@ assert_eq "post names the reason resume names" "reconcile_unavailable" "$(jq -r 
 resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
 assert_eq "resume reaches the same status on the same body" "ambiguous" "$(jq -r '.status' <<<"$resume_out")"
 assert_eq "resume names the same reason" "reconcile_unavailable" "$(jq -r '.reason' <<<"$resume_out")"
-teardown_env
-
-# --- AC2: refusing is not stranding. The run keeps its intent and pending
-# payload, so a later resume against a usable list settles it. ---
-new_env; write_request; write_gate
-printf 'posted\n' >"$STUB_DIR/post-plan"
-printf 'unusable\n' >"$STUB_DIR/list-plan"
-out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
-run_id="$(jq -r '.run_id' <<<"$out")"
-assert_eq "the refusal wrote nothing to settle around" "0" "$(store_count)"
-resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
+# AC2: refusing is not stranding. The intent and pending payload survived both
+# refusals, so the next usable read settles the run.
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5100)"
 assert_eq "a refused post settles on a later usable read" "posted" "$(jq -r '.status' <<<"$resume_out")"
 assert_eq "settling a refused post writes exactly one review" "1" "$(store_count)"
 teardown_env

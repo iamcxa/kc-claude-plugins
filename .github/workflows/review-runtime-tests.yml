@@ -78,7 +78,13 @@ jobs:
   review-runtime:
     name: typed review runtime contract
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Measured 2026-07-26: this job ran 9m07s on main against the previous
+    # 10-minute cap, i.e. 53 seconds of margin, so the next change to add any
+    # meaningful number of assertions was guaranteed to cancel it mid-suite --
+    # and did. The suites are inherently slow (each recorded event forks python3
+    # and jq), so the cap has to leave room for growth rather than track the
+    # current runtime. Shrinking per-assertion cost is tracked separately.
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
