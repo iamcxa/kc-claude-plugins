@@ -1,9 +1,13 @@
 ---
 title: An absolute claim in prose needs an enforcement point or a bound
-status: backlog
+status: done
 source: EM validation gate on qh (#67), 2026-07-27 — third and fourth occurrence of the class in two days, across two different authoring agents
 design:
 id: 4nrx4be9bt2741zrwqase1nf
+started: 2026-07-27T17:27:03Z
+pr: direct-commit:2527c78
+verdict: passed
+completed: 2026-07-27T17:27:43Z
 ---
 
 Four times in two days a document or comment asserted a guarantee its enforcement point does not
@@ -70,3 +74,22 @@ written a wrong fix into the skill, inside the very slice about incomplete failu
 That is the only open scope; the rule itself no longer needs a slice. Arguments both ways are in
 the section above — cheap to build, and it would be this repo's first check that reads prose for
 a claim rather than a format.
+
+## Process note: this entity did not pass a validation gate
+
+Recorded because the alternative is a `done` that implies a ceremony which did not happen — the
+failure mode Proof Policy #6 itself exists to prevent.
+
+The rule landed as a **captain-approved direct commit to `main`** (`2527c78`), decided in session
+when the captain asked where the rule belonged. It had no PR, no CI gate beyond the repo-wide
+checks that run on `main`, and no validation stage. That is defensible for a canonical-doc
+revision the README already assigns to "captain-approved revision", and the change is prose with
+no executable surface — but it is not the `done` the README defines, which is "merge after a
+passed validation gate (merge policy: PR to `main`)".
+
+`status: done` is set with `--force` for that reason. The ledger row records 0 dispatches and 0
+rework rounds, which is accurate and also the tell: nothing reviewed this but the captain.
+
+Worth deciding separately, and not decided here: whether canonical-doc revisions should route
+through a PR at all, or whether the README should say plainly that captain-authored doc changes
+are exempt. Right now the flow has neither, so each one is improvised.
