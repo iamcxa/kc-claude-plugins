@@ -20,12 +20,12 @@ by a separate session and are deliberately untouched here.
 
 ### Sequence
 
-| # | id | slug | why it sits here |
-|---|----|------|------------------|
-| 1 | `qh` | review-post-suite-cost | Holds both contended files. Must go first — see constraints. |
-| 2 | `11` | reconcile-list-element-shape | The named residual bounding `sv`'s shipped guarantee; fix already pinned to one shape. |
-| 3 | `n9` | gh-list-adapter-pagination | Once-only posting is unusable on any PR whose reviews list paginates. |
-| 4 | `2t` | prescan-coverage-honesty | Main course: eleven pre-scans that cannot distinguish "ran, found nothing" from "skipped". |
+| # | id | slug | status | why it sits here |
+|---|----|------|--------|------------------|
+| 1 | `qh` | review-post-suite-cost | **done** (#67, `f7dd1a0`) | Held both contended files. 65 → 9 spawns; CI job 488s at 139 assertions against main's 512–598s at 137. |
+| 2 | `11` | reconcile-list-element-shape | next | The named residual bounding `sv`'s shipped guarantee; fix already pinned to one shape. |
+| 3 | `n9` | gh-list-adapter-pagination | | Once-only posting is unusable on any PR whose reviews list paginates. |
+| 4 | `2t` | prescan-coverage-honesty | | Main course: eleven pre-scans that cannot distinguish "ran, found nothing" from "skipped". |
 
 Stretch, only if appetite survives the first four: `v5` (`learned-pattern-selection`) — the
 natural successor to `2t`, same file, next section, and the one backlog item that gets
@@ -37,7 +37,7 @@ half-finished edit to an 1884-line skill.
 Sequencing here is dominated by same-file collisions, not by dependency arrows. Two files
 are contended by most of the backlog:
 
-- **`kc-pr-flow/scripts/review-post.sh`** — `qh`, `11`, `n9`, and later `vf`, `x0`, `7j`.
+- **`kc-pr-flow/scripts/review-post.sh`** — `qh`, `11`, `n9`, and later `vf`, `x0f`, `7j`.
 - **`kc-pr-flow/skills/kc-pr-review/SKILL.md`** — `2t` (Step 4.5, `:468-728`), `v5` (Step 8,
   `:1834`), `q0` (Step 4-Codex `:409`/`:413` and Step 5.5 `:794`), `1c` (Step 4.5), `3w`
   (Step 8 D1).
@@ -83,13 +83,31 @@ expected to fill.
 - **`q0` (reviewer-return-contract)** — must inherit `2t`'s representation instead of
   inventing a second one, and it edits `SKILL.md` too (`:409`, `:413`, `:794`), so it cannot
   overlap `2t` or `v5`. Its own body says to cut it after `2t` lands. Precondition for `dk`.
-- **`vf` / `x0` (daemon preauthorization)** — still coupled to a caller whose shape the
+- **`vf` / `x0f` (daemon preauthorization)** — still coupled to a caller whose shape the
   captain has not settled (`4p` is parked; the two directions on record are `spacedock claude`
   and a self-built SD+ACP harness). The caller-agnostic part of `vf` already shipped as `sv`.
 - **`1c`, `3w`** — downstream of `2t` and `v5`; scheduling them now means designing against a
   representation that does not exist yet.
 - **`fn`, `24`, `qe`, `c3`, `w1`, `7j`, `dk`** — no forcing function this sprint. `w1` (dead
   audit link under split-root) is the cheapest and the best candidate for any gap.
+
+### Filed mid-sprint, not scheduled into it
+
+Two entities arrived from maintainer feedback on a live `kc-pr-review` run (kc-pr-flow 1.9.1)
+after this sprint opened. Both edit `SKILL.md`, so both sit on the contended line above and
+cannot overlap `2t`.
+
+- **`zn` (review-kit-live-run-corrections)** — three prose fixes to one file. Its first item is
+  worth ~140K tokens per occurrence: `SKILL.md:405-413` prescribes plain `codex exec`, whose
+  output file is genuinely 0 bytes for the whole run, so an in-flight dispatch reads as a failed
+  one. Measured here: `--json` grows within four seconds (405 → 22474 bytes) where plain sits at
+  0 and writes 59 bytes at the end. That makes the fix an invocation change, not a note.
+- **`x0r` (mock-boundary-contract-prescan)** — the fourth cell of the §4.5 consistency matrix:
+  nothing checks a test's stub against the collaborator it replaces. Must follow `2t`, which
+  owns the coverage representation a twelfth pre-scan has to fill.
+
+`4n` (absolute-claims-need-an-enforcement-point) also arrived and closed inside the sprint: its
+rule shipped as Proof Policy #6, and the captain declined the optional diff-time lint.
 
 ### Hazard carried in from the last sprint
 
