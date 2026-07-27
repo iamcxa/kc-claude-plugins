@@ -15,28 +15,46 @@ fewer false ones; it buys more per token spent; it takes less wall-clock per rev
 agent-native, meaning an agent's claims are checkable or refusable by a mechanism rather than
 resting on the agent having followed prose.
 
-**The theme is the one shape that serves all four at once.** Those goals are not mutually
-exclusive, but they converge on a single move: take work that is mechanically decidable out of the
-model's context and give it to a script whose output the agent cannot overwrite. A grep costs no
-model tokens, does not skip under pressure, finishes faster than a dispatch, and produces evidence
-no agent authored. Pure subtraction — spending fewer tokens by reading less — is the one approach
-where these goals genuinely fight, and it is deliberately not the theme.
+**Theme: mechanize what is mechanically decidable at an enforceable boundary, and measure the
+quality, cost, and latency of the model work that remains.** Those goals are not mutually
+exclusive. Moving a decidable check out of the model serves several at once — it costs no model
+tokens and its output is not authored by the agent under review — but two conditions decide
+whether that holds, and both are earned rather than assumed:
+
+- **"Not agent-authored" depends on what the check inspects, not on it being a script.** Proof
+  Policy #1 already says this: a script run over a self-written artifact is a self-issued stamp.
+- **A check is only unskippable once a runtime boundary refuses its absence.** A grep written into
+  prose is as skippable as the prose. That refusal is exactly what `2t` builds, which is why it
+  gates `1c`.
+
+Pure subtraction — spending fewer tokens by reading less — is the one approach where these goals
+genuinely fight, and it is deliberately not the theme. Note also that not every item here is
+mechanization: `62` and `qe` measure the model work rather than removing it, and `zn` repairs
+orchestration. The theme names the direction, not a property every slice shares.
 
 ### Sequence
 
 | # | id | slug | why it sits here |
 |---|----|------|------------------|
-| 1 | `zn` | review-kit-live-run-corrections | The only item whose waste is already measured. `SKILL.md:405-413` prescribes a `codex exec` mode whose output file stays 0 bytes for the whole run, so an in-flight dispatch reads as a failed one; one live occurrence bought a duplicate ~140K-token review. Cheapest item here, and the only one arriving with a receipt. |
-| 2 | `62` | review-effectiveness-benchmark | Every slice below claims an improvement, and none of those claims can be computed today. Build the instrument before the three slices that will need it. |
-| 3 | `2t` | prescan-coverage-honesty | Eleven pre-scans cannot distinguish "ran, found nothing" from "skipped". It also owns the coverage representation `1c` and `x0r` must fill, so it gates both. |
-| 4 | `1c` | prescan-script-evidence | The cleanest four-goal item in the backlog: three mechanically decidable pre-scans stop needing a model at all, and their evidence can contradict the agent's own prose. |
-| 5 | `x0r` | mock-boundary-contract-prescan | Pure grep, zero LLM tokens, aimed at a defect class that survived a green 5600-test suite, `mypy`, `ruff`, and a passing mutation round. |
+| 1 | `zn` **item 1 only** | review-kit-live-run-corrections | Its first item is the only thing in this sprint arriving with a measurement: `SKILL.md:405-413` prescribes a `codex exec` mode whose output file stays 0 bytes for the whole run, so an in-flight dispatch reads as a failed one, and one live occurrence bought a duplicate ~140K-token review. Probed here: `--json` grows within 4s, plain writes 59 bytes at the end. Items 2 and 3 are prose corrections with no measurement — ideation splits or timeboxes them rather than carrying them along. |
+| 2 | `qe` | benchmark-full-rerun-control | The token denominator. Its body says it "should land before any work that claims a token win", and `62` depends on it for the cost half of the comparison. Dropping it from the first recut was an oversight. |
+| 3 | `62` | review-effectiveness-benchmark | The quality numerator, scoped as a **pilot**: pre-registered known defects on a frozen corpus, comparing two configurations that already exist. Every slice after it claims an improvement nobody can currently compute. |
+| 4 | `2t` | prescan-coverage-honesty | Eleven pre-scans cannot distinguish "ran, found nothing" from "skipped". It builds the runtime refusal that makes a check unskippable, and owns the coverage representation `1c` must fill — so it gates `1c`. |
+| 5 | `1c` | prescan-script-evidence | The cleanest four-goal item in the backlog: three mechanically decidable pre-scans stop needing a model, and their evidence can contradict the agent's own prose. |
 
-Stretch, and only once `62` and `qe` exist: `v5` (`learned-pattern-selection`). It is pure
-subtraction, its token win is currently unmeasurable, and the cross-model cost breakdown suggests
-it is second-order regardless — fan-out dominates (~140K for the 3-agent minimum tier, ~200K
-Standard, ~240K Full, +35K pre-scan, +50–80K optional Codex), so a 1193-line corpus is not where
-the budget goes.
+**Stretch**
+
+- `x0r` (`mock-boundary-contract-prescan`), **as a bounded fixture spike first**. It targets a real
+  defect class that survived a green 5600-test suite, `mypy`, `ruff`, and a passing mutation round.
+  But calling it "pure grep, zero tokens" overstates it, and its own entity says why: the detector
+  is not independently validated (`:53`), it is Python-shaped with TypeScript scope unresolved
+  (`:76`), and it carries a model-based companion check for the cases grep cannot reach (`:70`).
+  Prove a Python-only detector catches the recorded defect without noisy findings; schedule the
+  generalized version only after that.
+- `v5` (`learned-pattern-selection`), and only once `qe` and `62` exist. It is pure subtraction,
+  its token win is currently unmeasurable, and the cost breakdown suggests it is second-order
+  regardless — fan-out dominates (~140K for the 3-agent minimum tier, ~200K Standard, ~240K Full,
+  +35K pre-scan, +50–80K optional Codex), so a 1193-line corpus is not where the budget goes.
 
 ### Moved out of this sprint: once-only posting reliability
 
