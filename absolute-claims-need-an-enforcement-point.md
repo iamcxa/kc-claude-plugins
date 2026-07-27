@@ -43,3 +43,30 @@ claim rather than a format — that is either the point or the reason not to.
 
 **AC-1 — An absolute claim added to a reference, comment, or commit message names its enforcement point or is bounded.**
 Verified by: the rule stated in the canonical doc, plus a re-audit of the four sites above showing each now cites a test, a code path, or a stated exception. Falsified by: a new absolute landing with neither.
+
+## Rule landed 2026-07-27 — remaining scope is the lint question only
+
+The prose half shipped in `2527c78` as **Proof Policy #6** in `docs/dev/README.md`, with a
+one-line pointer in the repo-root `CLAUDE.md` (that file loads every session; commit messages
+pass through no gate). Placed in Proof Policy rather than the validation stage deliberately: it
+is rule 2 — *evidence must be able to fail* — applied to prose, and Proof Policy binds in every
+stage report rather than at one gate, which is what moves it from gate-side backstop to
+authoring-time control.
+
+All four originating sites are already corrected: `sv`'s "exactly one path" in its validation
+round, and `qh`'s "mirror exactly", "byte-for-byte", and "record count disagrees" in its EM
+return round.
+
+One clause was added that the original entity did not have, earned the same day: **a claim
+inherited from a report, a reviewer, or an external contributor is not exempt.** Maintainer
+feedback on `kc-pr-review` reported that a `codex exec` output file "stays 0 bytes for the whole
+run". Measuring it before adopting the wording showed that is true only for plain mode — with
+`--json` the file grows within four seconds — which relocated the fix from "document the
+ambiguity" to "stop prescribing the mode that has it". Adopting the claim unchecked would have
+written a wrong fix into the skill, inside the very slice about incomplete failure-mode docs.
+
+**What remains for the captain**: whether a diff-time lint should also grep added lines in
+`reference/**`, `*.md`, and comment bodies for the absolute vocabulary and demand a citation.
+That is the only open scope; the rule itself no longer needs a slice. Arguments both ways are in
+the section above — cheap to build, and it would be this repo's first check that reads prose for
+a claim rather than a format.
