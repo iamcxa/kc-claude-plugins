@@ -244,11 +244,29 @@ once. Discipline clauses:
   re-purposed rather than that coverage held. Grep the suite for scenarios that
   *set up* the behavior under repair, and state per scenario whether the edit
   restored its original intent or quietly narrowed it.
-- **A change that adds tests checks the CI job's remaining margin before
-  pushing.** Job-level cancellation presents as a red check with **no failing
-  assertion** — every suite reports passing and the step is killed anyway —
-  which reads like a flake and invites a retry instead of a diagnosis. Thin
-  margin is a gate-level disclosure, not a CI discovery.
+- **Name what CI will do differently, before pushing.** Local green is a fact
+  about your machine. Two failures here came from that gap and a third case is
+  documented as a hazard that has not bitten yet; each has its own cheap
+  check — run the one the diff earns, not all three:
+  - *Tests added, or materially slowed* → measure the job's remaining margin.
+    Job-level cancellation presents as a red check with **no failing
+    assertion** — every suite reports passing and the step is killed anyway —
+    which reads like a flake and invites a retry instead of a diagnosis. Thin
+    margin is a gate-level disclosure, not a CI discovery.
+  - *Behavior that depends on OS, libc, locale, or clock* → run that check on
+    CI's OS family. A differential's Python reference rendered year 1 as
+    `0001` on this macOS and `1` on glibc, so the suite read 139/0 locally and
+    red on CI.
+  - *A file governed by a CI-pinned tool* → run that exact version, not the
+    local one. A newer local ShellCheck retires checks CI still enforces
+    (`kc-pr-flow/CLAUDE.md`). This is the documented case, not the bitten one:
+    unlike the two above, no red CI here has been traced to it.
+
+  What this is **not**: a general "reproduce CI locally" obligation. The job
+  runs on mutable `ubuntu-latest`, so a local container reproduces the
+  platform and never the job — setup time, runner speed, and the job-wide cap
+  are not in it. Exact-head CI remains the merge authority; this clause only
+  moves a predictable red into the minute before the push.
 - **RED and GREEN close in the same session, and commit together.** Never
   commit failing tests as a handoff contract for a later worker: an agent
   handed a red suite optimizes for "make it green", and will drift the

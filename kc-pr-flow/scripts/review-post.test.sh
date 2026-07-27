@@ -720,10 +720,10 @@ while IFS= read -r case_line; do
 "
   fi
   # Format the fields explicitly rather than with strftime("%Y"): glibc renders
-  # year 1 as "1" while BSD/macOS renders "0001", so a strftime reference makes
-  # this assertion pass on one platform and fail on the other for a reason that
-  # has nothing to do with the code under test. RFC 3339 wants four digits, and
-  # that is what the shell emits on both.
+  # year 1 as "1" while the macOS libc this was measured on renders "0001", so a
+  # strftime reference makes this assertion pass on one platform and fail on the
+  # other for a reason that has nothing to do with the code under test. RFC 3339
+  # wants four digits, and that is what the shell emits on both.
   if epoch_out="$(EPOCH_CASE="$case_value" python3 -c '
 import datetime, os, sys
 try:
