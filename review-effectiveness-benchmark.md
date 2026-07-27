@@ -49,19 +49,36 @@ A fourth issue is corpus stability: `corpus-fixture-for-reproducible-acs` (24) r
 failure on the e2e side, where measured ACs referenced 3286 absolute paths under one machine's
 home directory and therefore could not be reproduced by anyone else or by CI.
 
-## Scope
+## Scope — a pilot, deliberately small enough to converge
 
-A paired benchmark that runs the current kit and one alternative configuration over the **same**
-PR corpus, and reports per review: findings emitted, findings surviving adjudication, false
-positives, tokens, and wall-clock. The alternative is a parameter, not a commitment — the first
-useful comparison is probably Standard tier against a leaner path, since the cross-model review
-argued the dominant cost is fan-out rather than context size.
+The first draft of this scope had a hole a cross-model review named: adjudicating the findings a
+run *emitted* measures precision, but a configuration can miss defects silently and still produce
+a respectable table. Recall needs a set of defects that *should* have been found, fixed before
+either run. So:
 
-Explicitly **not** in scope: deciding what the leaner path should be. This entity produces the
+- **Freeze a small corpus** — three real PR patches whose defects were already adjudicated, stored
+  in-repo so a second person reproduces them without this machine.
+- **Pre-register the known-defect set** before running either configuration. Written first, not
+  reconciled afterwards.
+- **Compare two configurations that already exist** (e.g. Standard against Minimum), not a
+  newly designed "lean path". Designing the alternative is a different task and would make this
+  one unfalsifiable.
+- **Take the token denominator from `qe`'s genuine full-rerun control**, or absorb that
+  requirement here explicitly — a replay is not a control.
+- **At least two paired repetitions**, and the output is labelled a pilot. Three patches do not
+  establish population-level recall and the report must not read as if they do.
+
+Per review it reports: known-defect hit rate, findings emitted, findings surviving adjudication,
+false positives, ambiguous verdicts, tokens, and wall-clock.
+
+Explicitly **not** in scope: deciding what a leaner path should be. This entity produces the
 instrument, not the verdict.
 
-**AC-1 — One PR corpus, two configurations, one table.**
-Verified by: a committed result table naming the corpus, both configurations, and per-review findings / adjudicated-true / false-positive / token / wall-clock figures, reproducible by a second person from the repo alone. Falsified by: numbers that cannot be regenerated, or a corpus that lives outside the repo.
+**AC-1 — One frozen corpus, two existing configurations, one table.**
+Verified by: a committed result table naming the corpus, both configurations, and per-review findings / adjudicated-true / false-positive / ambiguous / token / wall-clock figures, reproducible by a second person from the repo alone. Falsified by: numbers that cannot be regenerated, or a corpus that lives outside the repo.
+
+**AC-3 — A configuration that silently misses a pre-registered defect is visible in the table.**
+Verified by: the known-defect set committed before the first measured run, and a per-configuration hit rate computed against it — so a token reduction bought by a quality loss is distinguishable from a token reduction alone. Falsified by: a report that only counts what was emitted, or a known-defect set edited after a run.
 
 **AC-2 — The adjudication rule is written down before the runs, not after.**
 Verified by: the ground-truth source and the adjudication procedure committed ahead of the first measured run, with the count of findings whose verdict was ambiguous reported rather than silently resolved. Falsified by: a rubric authored or amended after seeing results.
