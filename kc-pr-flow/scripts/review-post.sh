@@ -123,7 +123,7 @@ review_post_calendar_date_valid() {
 review_post_epoch_to_rfc3339() {
   local epoch="$1"
   local days seconds_of_day z era day_of_era year_of_era year day_of_year
-  local month_prime month day hour minute second sign=1 digits
+  local month_prime month day hour minute second sign=1 digits magnitude
   if ! [[ "$epoch" =~ ^([+-]?)([0-9]+)$ ]]; then
     return 2
   fi
@@ -133,6 +133,21 @@ review_post_epoch_to_rfc3339() {
   # 10# forces decimal: int("0012") is twelve, but bare shell arithmetic would
   # read a leading zero as octal.
   digits="${BASH_REMATCH[2]}"
+  # Reject by magnitude BEFORE the arithmetic. Shell integers are fixed width,
+  # so a value past 2^63 wraps silently and lands inside the representable
+  # range: both 18446744073709551616 and its negation used to return
+  # 1970-01-01T00:00:00Z at status 0, where the Python reference raises
+  # OverflowError. The year check below cannot catch that -- it only ever sees
+  # the wrapped result. Twelve digits spans the whole representable range
+  # (year 9999 ends at epoch 253402300799), so anything longer is out of range
+  # whether or not it would have wrapped.
+  magnitude="$digits"
+  while [ "${#magnitude}" -gt 1 ] && [ "${magnitude:0:1}" = '0' ]; do
+    magnitude="${magnitude:1}"
+  done
+  if [ "${#magnitude}" -gt 12 ]; then
+    return 2
+  fi
   epoch=$((sign * 10#$digits))
   days=$((epoch / 86400))
   seconds_of_day=$((epoch % 86400))

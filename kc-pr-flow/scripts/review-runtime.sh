@@ -73,8 +73,11 @@ review_runtime_validate_runtime_config() {
 # largest interpreter cost in the runtime.
 #
 # The accepted grammar and the calendar rules below mirror
-# review-runtime-safe-io.py's `rfc3339-utc` exactly, and that subcommand stays
-# in the helper as the reference implementation:
+# review-runtime-safe-io.py's `rfc3339-utc`, and that subcommand stays in the
+# helper as the reference implementation. "Mirror" is a checked claim, not an
+# asserted one: review-post.test.sh drives both implementations over one case
+# table and fails on any divergence, so an edit here that drifts from the
+# helper goes red. The rules held in common:
 #   - the same anchored pattern, including optional fractional seconds
 #   - datetime.MINYEAR is 1, so year 0000 is not representable
 #   - hour <= 23, minute <= 59, second <= 59 (datetime rejects leap second 60)
@@ -1461,8 +1464,13 @@ review_runtime_append_line() (
     if ! cat "$events_file" >"$temp_events" || ! printf '%s\n' "$line" >>"$temp_events"; then
       return 74
     fi
-    # temp_events is byte-for-byte the log validated above plus $line, whose
-    # own verdict is 0 or validate_line would have quarantined it already.
+    # Reusing the verdicts computed above assumes temp_events is the log that
+    # was validated plus $line -- $line's own verdict is 0 or validate_line
+    # would have quarantined it already. The assumption holds for the length
+    # the count cross-check covers, but it is positional, not byte-bound: a
+    # same-length replacement of events_file between that validation and the
+    # copy above would be carried over rather than re-detected. Same-user
+    # mutation inside that window is out of this runtime's threat model.
     if [ -n "$log_verdicts" ]; then
       next_verdicts="$log_verdicts
 0"
