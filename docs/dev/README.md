@@ -245,8 +245,9 @@ once. Discipline clauses:
   *set up* the behavior under repair, and state per scenario whether the edit
   restored its original intent or quietly narrowed it.
 - **Name what CI will do differently, before pushing.** Local green is a fact
-  about your machine. Three failures here came from that gap, and each has its
-  own cheap check — run the one the diff earns, not all three:
+  about your machine. Two failures here came from that gap and a third case is
+  documented as a hazard that has not bitten yet; each has its own cheap
+  check — run the one the diff earns, not all three:
   - *Tests added, or materially slowed* → measure the job's remaining margin.
     Job-level cancellation presents as a red check with **no failing
     assertion** — every suite reports passing and the step is killed anyway —
@@ -257,7 +258,9 @@ once. Discipline clauses:
     `0001` on this macOS and `1` on glibc, so the suite read 139/0 locally and
     red on CI.
   - *A file governed by a CI-pinned tool* → run that exact version, not the
-    local one. A newer local ShellCheck retires checks CI still enforces.
+    local one. A newer local ShellCheck retires checks CI still enforces
+    (`kc-pr-flow/CLAUDE.md`). This is the documented case, not the bitten one:
+    unlike the two above, no red CI here has been traced to it.
 
   What this is **not**: a general "reproduce CI locally" obligation. The job
   runs on mutable `ubuntu-latest`, so a local container reproduces the
