@@ -1,13 +1,13 @@
 ---
 title: The shell suites cost ~2s per assertion, so CI time tracks assertion count
-status: implementation
+status: validation
 source: found while landing reconcile-degraded-mode-symmetry (sv) on 2026-07-26 — its 16 new assertions cancelled CI at the 10-minute cap
 started: 2026-07-26T06:41:37Z
 completed:
 verdict:
 worktree: ~/mini-legs/dev-qhr529c1-suite-cost
 issue:
-pr:
+pr: 67
 design: required
 id: qhr529c1ha214hbef794dm6v
 ---
