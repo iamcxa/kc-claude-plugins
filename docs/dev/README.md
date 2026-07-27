@@ -97,6 +97,21 @@ binding in every stage report and every gate review.
    must-pass check inside the inner loop turns "implement the behavior" into
    "make the check shut up", and the worker will drift the implementation —
    or the check's inputs — to satisfy it.
+6. **A claim must be able to fail, and it is checked when written.** An
+   absolute — "exactly", "only", "always", "never", "cannot", "byte-for-byte"
+   — written into a reference, a code comment, or a commit message either
+   names the enforcement point that makes it true, or is rewritten as the
+   bounded claim the code actually supports. This is rule 2 applied to prose:
+   the same discipline an AC's evidence gets, because a documented guarantee
+   *is* a claim and the next reader builds on it. Two consequences worth
+   stating outright. **It binds at authoring time**, not at the gate — the
+   validation-stage clause is a backstop for what slips through, and a
+   backstop that fires every time is a cost, not a control. And it covers
+   commit messages and code comments, which **no gate reads**: four of these
+   shipped in two days, and the two nobody caught until later were a commit
+   message and a comment. A claim inherited from a report, a reviewer, or an
+   external contributor is not exempt — adopt it only after checking it, and
+   say which.
 
 ## Stages
 

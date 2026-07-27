@@ -53,6 +53,7 @@ If you skip the post-merge local sync, the author's machine serves stale subagen
 - **Versioning is release-please-owned** — do not hand-bump versions in a feature PR (see "Plugin Versioning & Release"). release-please propagates the component manifest version across `<plugin>/.claude-plugin/plugin.json`, `<plugin>/.codex-plugin/plugin.json`, and the `.claude-plugin/marketplace.json` entry; `version-parity-check.sh` guards the config and all tracked values.
 - **Default PR mode**: Draft. Convert with `gh pr ready` after CI green.
 - **Output language**: Chinese for explanations to user; English for `SKILL.md`, agent `.md`, hooks scripts, commit messages, PR body. Match per-plugin conventions when they differ.
+- **An absolute claim names its enforcement point** — "exactly", "only", "always", "never", "cannot", "byte-for-byte" in a reference, a code comment, or a commit message must cite what makes it true, or be rewritten as the bounded claim the code supports. Full rule and rationale: `docs/dev/README.md` → Proof Policy #6. It is here too because commit messages and code comments pass through no gate.
 
 ## Per-Plugin CLAUDE.md (deeper conventions)
 
