@@ -19,18 +19,42 @@ tokens** in one sitting.
 
 The documented failure mode does not cover this. `SKILL.md:415` says: *"if `codex exec` returns
 non-zero, surface one line … and continue"* — verified present at 1.9.1. That is a rule about a
-run that **returned**. An empty output file is the normal in-flight state, and nothing tells the
-reader so.
+run that **returned**.
 
-Proposed, near the Step 4-Codex dispatch block:
+**Measured before adopting the reporter's wording, and the measurement changed the fix.** Two
+probes of one prompt on this machine, sampling output size every 2s:
 
-> Codex takes 2–7 minutes on a mid-size diff and writes its output only on completion. **An empty
-> output file means still running, not failed.** Check process liveness before concluding failure;
-> never re-dispatch on file size alone.
+| mode | size trace | final |
+|---|---|---|
+| `codex exec … --json` | `0s=0  4s=405  20s=686  32s=16779  48s=22474` | 22474 B |
+| `codex exec …` (plain) | `0s=0 … 14s=0` | 59 B |
 
-This composes with a hazard this repo has already recorded elsewhere: `ps` is sandbox-filtered on
-the maintainer's machine, so "no process visible" is also not evidence of death. Liveness is
-judged by artifact mtime or a task notification.
+The reporter's observation is correct **for the mode this skill prescribes**, and that is the root
+cause rather than a documentation gap: `SKILL.md:405-413` invokes `codex exec` with no `--json`,
+then tells the reader to "Parse the output for `[SEVERITY] (confidence: N/10) file:line —
+description` lines". Plain mode emits only the closing message, so the file really is 0 bytes for
+the whole run. With `--json` it is growing within four seconds and the ambiguity does not exist.
+
+Two candidate fixes, and the cheaper one is the worse one:
+
+- **Teach tolerance** — add "an empty output file means still running". Removes this
+  misdiagnosis but keeps a dispatch with no progress signal, so the next reader still cannot
+  distinguish a wedged run from a slow one.
+- **Remove the ambiguity** — switch the prescribed invocation to `--json` and parse findings from
+  the terminal `agent_message` event instead of raw stdout. Costs one parsing layer.
+
+The second is preferred, and this repo already holds the argument for it: `mini-dispatch` records
+the same lesson on the claude side — plain text "records what the leg *says* it did and nothing
+about what it *ran*", and `tool_use`/`tool_result` events are the only execution evidence. `--json`
+additionally puts a `thread.started` session id on the first line, which is the precondition for
+`codex exec resume` if steering a mid-flight review is ever wanted.
+
+This makes item 1 **not a pure prose correction** like items 2 and 3 — it changes an invocation
+and a parse. Ideation decides whether that keeps it in this slice or splits it out.
+
+Either way the liveness note stands, because this repo has an adjacent hazard on record: `ps` is
+sandbox-filtered on this machine, so "no process visible" is not evidence of death either.
+Liveness is judged by artifact growth or a task notification, never by a single size sample.
 
 ## 2. Mutation evidence must name the layer it covers
 
