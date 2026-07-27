@@ -653,5 +653,109 @@ assert_eq "rollback refuses an autonomous post too" "3" "$rc_rollback"
 assert_eq "a rolled-back autonomous post writes no review" "0" "$(store_count)"
 teardown_env
 
+# --- Differential: the shell date rules against the Python reference they
+# replaced on the hot path. `rfc3339-utc` stays in the helper as the reference
+# implementation, and this is what holds the shell to it. Without it the
+# equivalence rests on one-off manual runs CI never repeats -- which is how a
+# future edit to hand-rolled calendar arithmetic would ship unnoticed. Both
+# real implementations are driven; neither side is a restatement of the other.
+# ---
+# shellcheck source=/dev/null
+. "$POST"
+SAFE_IO="$(dirname "$POST")/review-runtime-safe-io.py"
+
+rfc_shell=''
+rfc_python=''
+while IFS= read -r case_line; do
+  case_value="${case_line#|}"
+  if review_runtime_rfc3339_utc_valid "$case_value" >/dev/null 2>&1; then
+    rfc_shell="${rfc_shell}valid
+"
+  else
+    rfc_shell="${rfc_shell}invalid
+"
+  fi
+  if python3 "$SAFE_IO" rfc3339-utc "$case_value" >/dev/null 2>&1; then
+    rfc_python="${rfc_python}valid
+"
+  else
+    rfc_python="${rfc_python}invalid
+"
+  fi
+done <<'RFC_CASES'
+|2023-01-01T00:00:00Z
+|2023-01-01T00:00:00.123Z
+|2000-02-29T00:00:00Z
+|2024-02-29T00:00:00Z
+|1900-02-29T00:00:00Z
+|2100-02-29T00:00:00Z
+|2023-13-01T00:00:00Z
+|2023-02-30T00:00:00Z
+|2023-00-01T00:00:00Z
+|2023-01-00T00:00:00Z
+|0001-01-01T00:00:00Z
+|0000-01-01T00:00:00Z
+|9999-12-31T23:59:59Z
+|2023-01-01T24:00:00Z
+|2023-01-01T00:60:00Z
+|2023-01-01T00:00:60Z
+|2023-01-01t00:00:00Z
+|2023-01-01T00:00:00z
+|2023-1-01T00:00:00Z
+|2023-01-01T00:00:00+00:00
+| 2023-01-01T00:00:00Z
+|
+RFC_CASES
+assert_eq "shell RFC3339 validation matches the retained Python reference" "$rfc_python" "$rfc_shell"
+
+epoch_shell=''
+epoch_python=''
+while IFS= read -r case_line; do
+  case_value="${case_line#|}"
+  if epoch_out="$(review_post_epoch_to_rfc3339 "$case_value" 2>/dev/null)"; then
+    epoch_shell="${epoch_shell}${epoch_out}
+"
+  else
+    epoch_shell="${epoch_shell}refused
+"
+  fi
+  # Format the fields explicitly rather than with strftime("%Y"): glibc renders
+  # year 1 as "1" while BSD/macOS renders "0001", so a strftime reference makes
+  # this assertion pass on one platform and fail on the other for a reason that
+  # has nothing to do with the code under test. RFC 3339 wants four digits, and
+  # that is what the shell emits on both.
+  if epoch_out="$(EPOCH_CASE="$case_value" python3 -c '
+import datetime, os, sys
+try:
+    moment = datetime.datetime.fromtimestamp(int(os.environ["EPOCH_CASE"]), datetime.timezone.utc)
+except Exception:
+    sys.exit(1)
+print("%04d-%02d-%02dT%02d:%02d:%02dZ" % (moment.year, moment.month, moment.day, moment.hour, moment.minute, moment.second))
+' 2>/dev/null)"; then
+    epoch_python="${epoch_python}${epoch_out}
+"
+  else
+    epoch_python="${epoch_python}refused
+"
+  fi
+done <<'EPOCH_CASES'
+|0
+|1000
+|01000
+|-1
+|253402300799
+|253402300800
+|-62135596800
+|-62135596801
+|999999999999
+|18446744073709551616
+|-18446744073709551616
+|9223372036854775808
+EPOCH_CASES
+# Fixed-width shell arithmetic wraps past 2^63 in either sign, so a value Python
+# refuses could otherwise land back inside the representable range and be
+# emitted as a real timestamp. This assertion is what pins that.
+assert_eq "shell epoch conversion matches Python at the overflow and range bounds" "$epoch_python" "$epoch_shell"
+
 printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]
