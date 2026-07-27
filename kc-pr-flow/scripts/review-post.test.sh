@@ -719,12 +719,18 @@ while IFS= read -r case_line; do
     epoch_shell="${epoch_shell}refused
 "
   fi
+  # Format the fields explicitly rather than with strftime("%Y"): glibc renders
+  # year 1 as "1" while BSD/macOS renders "0001", so a strftime reference makes
+  # this assertion pass on one platform and fail on the other for a reason that
+  # has nothing to do with the code under test. RFC 3339 wants four digits, and
+  # that is what the shell emits on both.
   if epoch_out="$(EPOCH_CASE="$case_value" python3 -c '
 import datetime, os, sys
 try:
-    print(datetime.datetime.fromtimestamp(int(os.environ["EPOCH_CASE"]), datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"))
+    moment = datetime.datetime.fromtimestamp(int(os.environ["EPOCH_CASE"]), datetime.timezone.utc)
 except Exception:
     sys.exit(1)
+print("%04d-%02d-%02dT%02d:%02d:%02dZ" % (moment.year, moment.month, moment.day, moment.hour, moment.minute, moment.second))
 ' 2>/dev/null)"; then
     epoch_python="${epoch_python}${epoch_out}
 "
