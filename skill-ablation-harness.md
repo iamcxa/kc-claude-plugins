@@ -111,48 +111,123 @@ instructing the gate — so AC-2 could fail for a reason unrelated to the harnes
 cut both sites, and the arm-builder must assert the removal took effect at both. This also sharpens
 `tm`: those recap restatements at `:1844+` are load-bearing duplicates, not free prose.
 
-Round 1 stopped at those two sites and that was still incomplete — the full enumeration is under
-`### The AC-2 ablation` below.
+Round 1 stopped at those two sites and that was still incomplete, and round 2's enumeration stopped
+at a file boundary — the full tree-wide enumeration is under `### The AC-2 ablation` below.
 
-### The AC-2 ablation — every site, cut or keep
+### The AC-2 ablation — every site across the loaded surface, cut or keep
 
-Enumerated by grep over `kc-pr-flow/skills/kc-pr-review/SKILL.md` (1884 lines) at `origin/main` =
-`f4f4840`, for `pre-emit` / `verification gate` / `quote-the-line` / `§6a quote`, then each hit read
-in context. Round 1's arm-B spec named two of these seven.
+**The captain ruled AC-2 is a real full-site removal (option a), not an injection control.** The
+deciding argument is the direction of the operation: this workflow's thesis is "subtraction needs
+more evidence than addition", every Sprint 4 cut is a removal, and certifying a removal-detector
+with an addition is a category mismatch. Also `sk` cuts reference-file *loading*, so an instrument
+validated only against `SKILL.md` could not judge it.
 
-| Site | Text | Cut or keep |
+**Scope: the whole `kc-pr-flow/` tree, not one file.** Round 2's defect was an enumeration that
+stopped at `SKILL.md`, which left arm B cutting the gate from the collator while every dispatched
+reviewer still received it verbatim from `reference/review-triage.md`. Enumerated by a tree-wide
+sweep at `origin/main` = `f4f4840` (`kc-pr-flow/` is byte-identical at `1ca0ed0`, verified by
+`git diff --stat f4f4840 HEAD -- kc-pr-flow/` returning empty), then every hit read in context.
+
+The sweep ran three ways rather than one, because a keyword sweep is the instrument this section
+exists to distrust: (1) the four gate keywords across every file type in the tree; (2) a bare
+`quot` sweep, to catch restatements that never use the project's vocabulary; (3) a phrase sweep for
+the gate's *semantics* without its name — `motivating line`, `verbatim source`, `self-refut`,
+`self-check`, `confidence to 4-5`, `adversarial fan-out`, `before you report`, `zero extra agent`.
+
+| id | Site | What it is | Disposition |
+|---|---|---|---|
+| S1 | `SKILL.md:975` | `**Pre-emit verification gate (run FIRST …)**` + the rule paragraph | **CUT** — the gate proper |
+| S2 | `SKILL.md:977-982` | the failure-class table (what must be quoted, self-refutes when) | **CUT** — the gate's operative content; leaving it leaves the instruction |
+| S3 | `SKILL.md:984` | the demotion rule (cannot quote a surviving line → confidence 4-5 → §6b) | **CUT** — the gate's consequence |
+| S4 | `SKILL.md:986` | **Framework-meta nudge** — "quote the meta-construct, not the class body" | **CUT** — a sub-rule; surviving, it re-instructs quote-the-source for the largest FP subclass |
+| S5 | `SKILL.md:988` | "This gate is **inline, zero extra agents**…" | **CUT** — dangling referent once S1 is gone, and it re-asserts the gate's existence |
+| S6 | `SKILL.md:990` | "Apply confidence gates **after the verification gate**" | **EDIT, not cut** — delete only the substring ` after the verification gate`, keeping `**Apply confidence gates**`. Cutting confidence gates outright would ablate a second, independent mechanism and confound AC-2 |
+| S7 | `SKILL.md:861-862` | §5.6a arbitration — "(reuse the **§6a quote-the-line evidence** — arbitrate on quoted code, not summaries)" | **CUT the parenthetical only** — instructs quote-the-line from the cross-model arbitration path |
+| S8 | `SKILL.md:1855` | Step-6 recap — "**Pre-emit verification gate before posting** — every CODE finding must quote its motivating `file:line` + verbatim source…" | **CUT** — the recap restatement |
+| S9 | `review-triage.md:221` | heading, verbatim: "**Pre-emit evidence requirement (append to every agent prompt):**" | **CUT** — names the append-to-every-prompt contract |
+| S10 | `review-triage.md:223-227` | the blockquote that contract appends: the same gate, the same failure classes, the same 4-5 demotion | **CUT** — **the site that made round 2's arm B measure almost nothing.** `SKILL.md:195` loads this file on the ordinary path, so it is in the loaded context of every run |
+| S11 | `learned-patterns.md:13-15` | "Pre-emit quote-the-line gate beats per-finding adversarial fan-out" — a third restatement as a named learned pattern | **CUT** — and it is the citation target of both S5 and S8 |
+| K1 | `SKILL.md:143` | "Step 2.5 builds a **verification gate** from explicit concerns" | **KEEP** — a *different* mechanism (Step 2.5's user-concern gate). A naive `verification gate` grep would cut it and ablate two mechanisms at once |
+| K2 | `review-triage.md:229-236` | the collator's confidence → destination table | **KEEP** — the same mechanism S6 deliberately preserves. Cutting it would ablate a second independent mechanism and confound AC-2 |
+| K3 | `learned-patterns.md:9-11` | "Cross-model arbitration: reconcile by source-set, fail open, **never per-finding**" | **KEEP** — a different pattern (arbitration shape), and a naming hazard exactly like K1: a canary widened to `per-finding` or `fan-out` would cut it |
+
+**Two things the sweep found that the round-3 dispatch's table did not name**, both recorded because
+a sweep that only confirms what it was told is not a sweep:
+
+- **K3 is a new KEEP.** `learned-patterns.md:9-11` carries "never per-finding" for the *arbitration*
+  mechanism. It is the same trap as K1 one file over: the obvious widening of the canary (add
+  `fan-out` or `per-finding`, since S5/S8/S11 all use those words) would silently ablate cross-model
+  arbitration along with the quote gate. Enumerating it as an explicit KEEP is what stops that.
+- **S11's file is not loaded on the ordinary path, and the effect model must not assume it is.**
+  There is no `Read → ${CLAUDE_PLUGIN_ROOT}/reference/learned-patterns.md` directive anywhere in
+  `SKILL.md`; `:1834` writes *to* it (D1 auto-append) and `:988`/`:1855` cite it as a "see". So S11
+  is a real restatement and worth cutting — it is the citation target the two surviving pointers
+  aim at — but unlike S10 it is not guaranteed to be in any given run's context. The honest
+  statement is that the ablation's effect rests on S1-S10, with S11 additive when the run follows
+  the pointer.
+
+The sweep found **no additional CUT site** in `agents/`, `scripts/`, `docs/`, `hooks/`,
+`reference/pr-review-loop.md`, or the other five skills. The nearest misses were read and rejected:
+`SKILL.md:677` and `:714` require quoted evidence for *doc-claim* and *lint-rule* findings (Steps
+4.5j / 4.5k, different mechanisms), and `break-point-probe`'s precision ladder is an evidence
+discipline for a different skill entirely.
+
+#### Arm-builder post-condition — verbatim span match, with the keyword grep demoted to a canary
+
+Round 2's post-condition asserted "zero residual hits" for the four keyword patterns. That proof is
+unsound, and unsound in this sprint's founding way — it classifies a region by pattern instead of by
+reading it. **Measured, not argued:** of the 11 CUT spans, **4 are invisible to the keyword grep** —
+S2, S3, S4, S10 — because none of those spans contains `pre-emit`, `quote-the-line`, `§6a quote`, or
+`verification gate`. An arm that removed only the 7 keyword-bearing spans would leave the gate's
+failure-class table, its demotion rule, its framework-meta sub-rule, and the entire per-agent
+instruction blockquote on disk, and the keyword post-condition would report it clean.
+
+The proof is therefore **verbatim span match, table-driven**. At build time the builder MUST:
+
+1. **Resolve** each enumerated span from the *baseline* tree by its line range, and check the
+   sha256 of the extracted text against a pinned sidecar. A drifted file fails here — this is what
+   keeps the table above from going stale silently, which was the original reason for deriving at
+   build time rather than reading the table.
+2. Assert the baseline hit set is **non-empty**, and record the resolved span set + hashes into the
+   arm manifest (this is what `arm_manifest_sha256` commits).
+3. Apply the ablation. A removal whose target text is not present exactly once exits non-zero — the
+   sprint's own silent-no-op failure, encoded.
+4. **Assert, per span, against the enumerated spec:** every CUT span's exact text is present in the
+   baseline and **absent** in arm B; every KEEP span's exact text is present and byte-identical in
+   both; and S6's surviving half (`**Apply confidence gates**`) is still there.
+5. Run the keyword grep as a **canary, not the proof**: a residual keyword hit outside the K1
+   whitelist means the table missed a site, and fails the build. A *clean* canary proves nothing on
+   its own.
+
+**The span set checked in step 4 is the enumerated spec, never the set the builder happened to
+apply.** Checking only what was applied is a check that cannot fail — it asks the builder to grade
+its own homework, which is the same defect shape as proving absence by the keywords you chose to
+grep for. This is not a hypothetical: the first draft of the demonstration script below made exactly
+that mistake, and its own must-fail case is what caught it.
+
+**Demonstrated, not asserted** (Proof Policy #7). `docs/dev/artifacts/skill-ablation-harness/span-match-demo.py`
+builds both arms from the real tree and runs both post-conditions against both. Output:
+
+| arm | keyword-grep post-condition | span-match post-condition |
 |---|---|---|
-| `:975` | `**Pre-emit verification gate (run FIRST — kills the "claim about code that isn't there" FP class).**` + the rule paragraph | **CUT** — the gate proper |
-| `:977-982` | the failure-class table (what must be quoted, self-refutes when) | **CUT** — the gate's operative content; leaving it leaves the instruction |
-| `:984` | the demotion rule ("cannot quote a motivating line that survives the quote → confidence 4-5 → §6b") | **CUT** — the gate's consequence |
-| `:986` | **Framework-meta nudge** — "quote the meta-construct, not the class body… the check is 'I read the source that creates this symbol'" | **CUT** — a sub-rule of the gate; surviving, it re-instructs quote-the-source for the largest FP subclass |
-| `:988` | "**This gate** is inline, zero extra agents…" | **CUT** — dangling referent once `:975` is gone, and it re-asserts the gate's existence |
-| `:990` | "Apply confidence gates **after the verification gate**" | **EDIT, not cut** — delete only the trailing clause, keeping "Apply confidence gates". Cutting the confidence gates entirely would ablate a second, independent mechanism and confound AC-2 |
-| `:861` | §5.6a arbitration dispatch — "(reuse the **§6a quote-the-line evidence** — arbitrate on quoted code, not summaries)" | **CUT the parenthetical only** — an independent third site that instructs quote-the-line from the cross-model arbitration path; round 1 missed it entirely |
-| `:1855` | Step-6 recap — "**Pre-emit verification gate before posting** — every CODE finding must quote its motivating `file:line` + verbatim source…" | **CUT** — the recap restatement |
-| `:143` | "Step 2.5 builds a **verification gate** from explicit concerns" | **KEEP** — a *different* mechanism (Step 2.5's user-concern gate), not the pre-emit quote gate. A naive `verification gate` grep would cut it and ablate two mechanisms at once |
+| `arm_keyword` — only the 7 keyword-bearing spans removed | **PASS** | **FAIL** — S2, S3, S4, S10 still present |
+| `arm_span` — all 11 CUT spans removed | PASS | PASS |
 
-**Arm-builder post-condition — derived at build time, never read off this table.** This table is
-provenance for the gate reviewer; it is not the arm spec's runtime input, because it goes stale the
-moment `SKILL.md` moves a line. The builder MUST, at build time:
-
-1. Grep the *baseline* tree for the site patterns (`pre-emit`, `quote-the-line`, `§6a quote`, and
-   `verification gate` minus the explicitly whitelisted Step-2.5 sentence, matched by its full text
-   rather than by line number) and record the hit set into the arm manifest.
-2. Apply the ablation.
-3. Assert the arm-B tree has **zero** residual hits for those patterns outside the whitelist, and
-   that the whitelisted Step-2.5 sentence is still present and unmodified.
-4. Assert the baseline hit set was non-empty and that every hit is accounted for as cut-or-edited —
-   an ablation that silently matched nothing must exit non-zero (test-plan item 2).
+Plus a fourth case so the KEEP half is not vacuous: an arm that ablates correctly *and* removes K2
+is rejected by span match. The script exits non-zero if any of the four claims stops holding, so it
+is the regression test for this defect rather than a one-time note. It is stdlib-only Python; `jq`
+and Python 3.8+ are already `kc-pr-flow` runtime dependencies (`review-runtime-safe-io.py`), so the
+production `review-ablation.sh arm` inherits no new one.
 
 ## Proposed approach
 
 Three seams to build, in order. Everything else is reuse.
 
-**1. Arm builder.** Copy `kc-pr-flow/` to a temp tree per arm; apply the arm's ablation patch to
-`skills/kc-pr-review/SKILL.md`; **assert the patch changed the file** (byte diff against baseline,
-plus a post-condition that the removed span is absent at every site named in the arm spec) before
-the arm is usable. Proof Policy #7 in its literal form: an adversarial edit must first prove it took
+**1. Arm builder.** Copy `kc-pr-flow/` to a temp tree per arm; apply the arm's ablation across every
+file the spec names (`skills/kc-pr-review/SKILL.md`, `reference/review-triage.md`,
+`reference/learned-patterns.md`); **assert the patch changed the files** (byte diff against
+baseline, plus the verbatim span-match post-condition of `### The AC-2 ablation` — every CUT span
+absent, every KEEP span byte-identical) before the arm is usable. Proof Policy #7 in its literal form: an adversarial edit must first prove it took
 effect. The sprint has already paid for a spot-check edit whose target string did not exist.
 
 Three arms are built per experiment. **A′ is a second, independently built copy of arm A** — same
@@ -298,6 +373,27 @@ of power, not for want of an effect, and the harness would have been declared un
 removal it can in fact see. N=2/M=4 clears the bar but needs a 4th corpus PR sourced and pilot-run;
 N=3/M=3 reuses the corpus already scoped and costs $7 more. Adopted: **N=3 / M=3**.
 
+**The effect the sizing was chosen against, restated for the treatment that is actually shipping.**
+`EFFECT_EXTRA_FINDINGS = 3` was written when arm B was a single-file ablation. Under the captain's
+option (a) the treatment spans three files and eleven spans, including `review-triage.md:223-227`,
+which is appended to *every dispatched reviewer's* prompt — so the plausible effect is larger, not
+smaller. Rather than assert that a larger effect is safely covered, the power curve was measured
+(`sizing-simulation.py --power-curve` path, same seed, 60 trials per point, N=3/M=3, α=0.05):
+
+| effect | power of the joint rule | median `p_joint` |
+|---|---|---|
+| +1 finding/run | **20/60 = 0.33** (Wilson 0.23–0.46) | 0.1125 |
+| +2 findings/run | 59/60 = 0.98 (Wilson 0.91–1.00) | 0.0010 |
+| +3 findings/run (the sizing model) | 60/60 (Wilson 0.94–1.00) | 0.0010 |
+| +4 / +6 / +9 findings/run | 60/60 each | 0.0010 |
+
+Two things this settles, neither of them by argument. **The sizing decision does not move**: power
+is flat at the ceiling from +2 upward, so a treatment larger than the model assumed is covered by
+the adopted cell — N=3/M=3 was not chosen on a fragile point estimate. And **the detection knee sits
+between +1 and +2 findings per run**, which is the number the residual below needed: a cut worth one
+extra finding per run is missed about two times in three. That is what "does not transfer to a small
+cut" means quantitatively, under this run model.
+
 **What the simulation is not.** The figures come from a Monte-Carlo model of the run process —
 a stable core plus independently sampled noise — not from real review runs. Two consequences, both
 against this design's interest:
@@ -372,6 +468,25 @@ cut that moves one finding on one PR will not clear the bar. The measured exampl
 an arm-B superset that adds one finding to each run but only in the *noisy* regime (`|D(p)|` ≈ 0.08)
 does not reach the bar at either sizing; the same superset applied consistently (`|D(p)|` = 0.33)
 clears it at both.
+
+**An AC-2 pass does not transfer to `tm`, and this residual travels with the artifact.** Option (a)'s
+ablation spans three files and eleven spans, so its effect is large — the measured power curve above
+is at the ceiling from +2 findings/run upward. **A passing AC-2 therefore certifies that the
+instrument detects a large multi-site removal; it does not establish sensitivity to a small one.**
+The knee is between +1 and +2 findings per run: a cut worth one extra finding per run is missed
+about two times in three. Sprint 4's first actual customer, `tm`, removes restatements that may be
+both small *and* inside the fingerprint projection's known blind spot (wording changed, anchor
+unmoved) — two independent reasons the transfer fails. So `tm` carries its own complementary check,
+or records acceptance of this residual at its own gate; it may not cite `5b`'s AC-2 as cover. This
+sentence is carried in the verdict's `certifies` field and in the `kc-pr-flow/CLAUDE.md` doc diff,
+so it travels with the artifact rather than living only in this document.
+
+**Option (b), the injection arm, is retained as a diagnostic fallback — not pre-paid.** The captain
+ruled (a) for AC-2. (b)'s real strength (single-sited by construction, so the missed-site class
+cannot recur) was answered at the root instead, by moving the absence proof from keyword grep to
+verbatim span match. No runs are budgeted for (b). Its trigger is specific: **if AC-2 under (a)
+reports `material: false`**, build an injection arm then — it is what distinguishes "the harness is
+blind" from "the ablation did not take", which the (a) result alone cannot separate.
 
 **Sprint item 4 (overconstrained-rule audit) is in-class, conditionally.** An overconstrained rule
 that fires too often produces *extra* findings, which moves the anchor set — detectable, *provided*
@@ -471,6 +586,18 @@ and model recorded in the verdict. It does **not** certify "no behavioral change
 rewords what a finding says while its anchor and `claim_key` hold is outside the instrument's range
 by construction, and so is any effect below the power floor. The verdict JSON carries this sentence
 verbatim in a `certifies` field so it travels with the artifact rather than living only here.
+
+`certifies` is a two-element object, because the AA and AB directions certify different things and a
+single sentence was letting the weaker one be read as the stronger:
+
+```json
+"certifies": {
+  "null_result": "material:false certifies no detected difference on the measured dimensions (anchor set, severity mix, tokens) at alpha=0.05 for the corpus, sizing, and model recorded in this verdict. It is never a certificate of 'no behavioral change': a cut that rewords a finding while its anchor and claim_key hold is outside the instrument's range by construction, as is any effect below the power floor.",
+  "detection_scope": "A material:true verdict on a multi-file, multi-span removal certifies detection of a LARGE removal only. It does not establish sensitivity to a small or wording-only cut: at N=3/M=3 the measured detection knee is between +1 and +2 findings per run, so an effect worth one extra finding per run is missed about two times in three. A downstream cut may not cite this verdict as evidence its own smaller cut would have been detected."
+}
+```
+
+The second field is what makes `tm` unable to inherit AC-2's pass by reading the artifact alone.
 
 **The decision is ONE joint permutation test, not three.** Round 1 left the entry rules undefined;
 the round-1 repair defined three of them and made `material` true iff any one crossed `p_perm` ≤
@@ -586,7 +713,7 @@ unit-testable against synthetic manifests and receipts with no model in the loop
 Verified by: `review-ablation.sh compare --mode AA --arms A,A_prime` over the arm-A and arm-A′ halves of one 27-run experiment (18 receipts plus their 18 runner-written manifests, 3 runs × 3 PRs per arm, both arms built from the unablated tree on the frozen corpus), emitting `material: false` under the pre-registered joint rule (`p_joint` > 0.05) with `flagged_dimensions` empty. Under `--mode AA` the two arms' `skill_sha256` are **required to be equal** and `compare` exits non-zero if they differ — the mis-arming check is a property of the invocation, not of the receipts, which is what lets AC-1 and AC-2 share arm A's nine runs and holds the acceptance at 27 runs. What this AC does and does not establish: a single pass is a **negative control** showing the instrument does not fire on nothing; it is not a measurement of the real false-positive rate, which would need tens of A/A comparisons. Falsified by: `material: true` — the statistic is then tracking run scheduling, not the skill, and no cut can be judged with it. Falsifying edit: order the runs arm-A-then-arm-A′ instead of randomizing slot assignment; if that flips the verdict, the noise model is wrong.
 
 **AC-2 — Removing the pre-emit quote gate is reported as a difference.**
-Verified by: an A/B run (`mode: "AB"`) whose arm B removes the pre-emit quote gate at **every site enumerated in `### The AC-2 ablation`** — `SKILL.md:975`, `:977-982`, `:984`, `:986`, `:988`, the trailing clause of `:990`, the `:861` parenthetical, and the `:1855` recap — with the arm manifest showing zero residual hits and the Step-2.5 sentence at `:143` intact; emitting `material: true` with at least one entry in `flagged_dimensions`. Falsified by: `material: false` for that ablation — the harness cannot catch the cuts this sprint intends. Falsifying edit: ablate only `:975-984` and leave `:861` and `:1855` in place; the design predicts a weaker or absent signal, and if the verdict is unchanged either way, the statistic is not reading the gate.
+Verified by: `review-ablation.sh compare --mode AB --arms A,B` over the arm-A and arm-B halves of the same 27-run experiment, where arm B removes the pre-emit quote gate at **every CUT span enumerated in `### The AC-2 ablation`**, across all three loaded files — `SKILL.md` (S1-S8: `:975`, `:977-982`, `:984`, `:986`, `:988`, the ` after the verification gate` substring of `:990`, the `:861-862` parenthetical, the `:1855` recap), `reference/review-triage.md` (S9 `:221`, S10 `:223-227`), and `reference/learned-patterns.md` (S11 `:13-15`) — with the arm manifest showing every CUT span **verbatim-absent** in arm B, every KEEP span (K1 `SKILL.md:143`, K2 `review-triage.md:229-236`, K3 `learned-patterns.md:9-11`) present and byte-identical, and a clean keyword canary; emitting `material: true` with at least one entry in `flagged_dimensions`. Falsified by: `material: false` for that ablation — the harness cannot catch the cuts this sprint intends. Falsifying edit: build the arm that removes only the 7 keyword-bearing spans and leaves S2/S3/S4/S10 in place; the design predicts a weaker or absent signal, and if the verdict is unchanged either way, the statistic is not reading the gate. What this AC does and does not establish: it certifies detection of a **large multi-site removal**, never sensitivity to a small or wording-only one — see the residual recorded under `### What this harness can and cannot detect`.
 
 **AC-3 — The harness cannot report a false null.**
 Verified by: five negative cases, each producing a non-zero exit and a named error rather than a `material: false` verdict — (a) a mis-armed pair under `compare --mode AB --arms A,B`, where both arms' `skill_sha256` are equal though built as A and B; (b) a failed run, where one arm's run produced no receipt at the manifest's `expected_receipt_path` (the case actually observed in spike 2); (c) a stale receipt at a reused output path, detected against the **runner-written manifest** — the receipt's `nonce` or `experiment_id` disagrees with the manifest's, or its `written_at` precedes the manifest's `run_started_at`; (d) two receipts equal under the duplicate projection (canonical receipt JSON minus `{run_index, slot_index, written_at}`), i.e. one receipt copied across runs to inflate agreement; (e) receipts whose `driver_prompt_sha256` or `model_id` disagree anywhere across the experiment's 27 receipts, not merely within the compared pair. Falsified by: `compare` emitting a normal verdict for any of them — the harness would then report "no difference" for a review that was never ablated, never finished, or never actually re-run. Falsifying edit: make the receipt loader default a missing file to `{"findings": []}`; AC-3(b) must go red.
@@ -596,7 +723,7 @@ Verified by: five negative cases, each producing a non-zero exit and a named err
 ## Test plan
 
 1. **Comparator unit tests**, no model in the loop, against synthetic receipts. Four fixtures, each pinned to a value computed by exact enumeration during ideation: identical fingerprint sets across arms → `T`=0, `p_perm`=1, `material:false`; disjoint sets with perfect within-arm agreement → `T`=1, `p_perm`=**1/1000** at N=3/M=3 (and **1/27** at N=2/M=3, asserted separately to pin the floor formula `(2/C(2N,N))^M`); a consistent superset (`A={x,y}`, `B={x,y,z}`) → `T`=1/3, `p_perm`=1/27 at N=2/M=3; and a **sign-flipped** case where between-arm agreement exceeds within-arm agreement by the same margin → identical `p_perm` as the positive case, which is the assertion that fails if anyone reverts `T` to the signed statistic. Together these are the "the check can fail" set required by Proof Policy #2 — fixture 1 fails if the statistic is inverted, fixture 2 if the permutation enumeration is wrong, fixture 2's N=2 variant if the label-swap collapse is not accounted for, and fixture 4 if the test is one-sided. Four further fixtures pin the **joint** rule to the values enumerated in `### Design determination`: all three dimensions moved → `p_joint` = 1/1000 with all three dimensions flagged; tokens moved alone → `p_joint` = 1/1000 with **only** `tokens` flagged (this one fails if the max-statistic flags every dimension whenever any moves); arms identical → `p_joint` = 1 and `flagged_dimensions` empty; and both arms all-empty (`findings: []`) → `p_joint` = 1 with no division by zero, which is the `severity_mix` `EMPTY`-category fixture. All eight expected values are printed by `docs/dev/artifacts/skill-ablation-harness/sizing-simulation.py`, so the fixtures are pinned to a script anyone can re-run rather than to numbers quoted in prose.
-2. **Arm-builder post-condition test**: build an arm whose ablation patch targets a string that does not exist; the builder must exit non-zero. Plus the grep-derivation assertions from `### The AC-2 ablation` — the builder must exit non-zero when the baseline hit set is empty, when a residual hit survives in arm B, and when the whitelisted Step-2.5 sentence at `:143` was removed. This is the sprint's own silent-no-op failure, encoded as a test.
+2. **Arm-builder post-condition test**, the span-match assertions from `### The AC-2 ablation`. The builder must exit non-zero on each of: an ablation patch targeting a string that does not exist (the sprint's own silent-no-op failure, encoded); an empty baseline hit set; a resolved span whose sha256 disagrees with its pin (the tree moved under the table); **a CUT span still verbatim-present in arm B**; a KEEP span (K1 `SKILL.md:143`, K2 `review-triage.md:229-236`, K3 `learned-patterns.md:9-11`) missing or modified; S6's surviving `**Apply confidence gates**` lost; and a residual keyword-canary hit outside the K1 whitelist, which means the table missed a site. The load-bearing case, already demonstrated at ideation by `span-match-demo.py`: **an arm that removes only the 7 keyword-bearing spans must be REJECTED**, where the round-2 keyword post-condition accepted it — S2, S3, S4 and S10 are invisible to all four keyword patterns. Its mirror is the positive control: the fully ablated arm must be accepted, so the check is not simply always-reject.
 3. **False-null guard tests** (AC-3), one per case, each built from synthetic manifest+receipt pairs: matching `skill_sha256` under `compare --mode AB --arms A,B`; a manifest whose `expected_receipt_path` holds no file; a receipt whose `nonce`/`experiment_id` disagrees with its manifest, and separately one whose `written_at` precedes the manifest's `run_started_at`; two receipts equal under the duplicate projection (identical except `run_index`/`slot_index`/`written_at`, which is constructible precisely because those three fields are projected out); and a 27-receipt set with one disagreeing `driver_prompt_sha256` / `model_id`. All must exit non-zero with a named error. A sixth, positive control: the arm-A and arm-A′ fixtures under `compare --mode AA --arms A,A_prime` with equal `skill_sha256` must be **accepted** and emit a verdict, which is what proves the mode-dependent check is not simply always-reject.
 4. **Lint**: CI's pinned ShellCheck v0.9.0 via docker, per `kc-pr-flow/CLAUDE.md:117-125` — `docker run --rm --platform linux/amd64 -v "$PWD:/mnt" -w /mnt koalaman/shellcheck:v0.9.0 …`; never the local build, which has retired checks CI still enforces.
 5. **Runtime/E2E** (the ACs proper): the 27 real headless runs. Unit tests prove the comparator's logic; only these prove the wiring (Proof Policy #3).
@@ -613,10 +740,15 @@ Verified by: five negative cases, each producing a non-zero exit and a named err
 > candidate-fingerprint sets, so it is blind to a cut that changes a finding's wording without
 > moving its anchor.
 >
-> Read the verdict for what it says. `material: false` certifies **no detected difference on the
-> measured dimensions (anchor set, severity mix, tokens)** for the corpus, sizing, and model in the
-> verdict — it is never a certificate of "no behavioral change". A wording-only cut is outside the
-> instrument's range by construction, as is any effect below its power floor.
+> Read the verdict for what it says, in both directions — the verdict's `certifies` object states
+> each one. `material: false` certifies **no detected difference on the measured dimensions (anchor
+> set, severity mix, tokens)** for the corpus, sizing, and model in the verdict — it is never a
+> certificate of "no behavioral change". A wording-only cut is outside the instrument's range by
+> construction, as is any effect below its power floor. And `material: true` on a large multi-file
+> removal certifies only that a **large** removal is detected: the measured detection knee is
+> between +1 and +2 findings per run, so **a passing verdict on someone else's bigger cut is not
+> evidence your smaller cut would have been caught.** Each cut earns its own verdict or records its
+> own accepted residual.
 
 No `PRODUCT.md` / `ARCHITECTURE.md` change — this adds a development instrument, not a product
 behavior.
@@ -625,20 +757,27 @@ behavior.
 
 One worker session: ~90 minutes of authoring, plus a metered compute budget for the acceptance runs.
 
-**The compute budget is restated here, not inherited.** Round 1 recorded **≤$60** on a measured
-basis of $2.53/run × 18 runs ≈ $45 plus re-run headroom. That sizing was underpowered — measured
-power 0.40 on the AC-2-shaped effect — so correcting it moves the envelope. At the adopted N=3/M=3
-the acceptance is 27 runs ≈ **$68**, which does not fit under $60. The workflow forbids extending a
-budget silently, so the budget is re-proposed explicitly for the gate to accept or refuse:
+**The compute budget: DECIDED by the captain, 2026-07-28 — N=3/M=3, envelope ≤$90.** Round 1
+recorded ≤$60 on a measured basis of $2.53/run × 18 runs ≈ $45 plus re-run headroom. That sizing was
+underpowered, so correcting it moved the envelope; the workflow forbids extending a budget silently,
+it was escalated, and this is the ruling:
 
 | | acceptance runs | run cost | re-run headroom | budget |
 |---|---|---|---|---|
 | Round 1 (recorded, underpowered) | 18 | $45 | $15 | ≤$60 |
-| **Round 2 (proposed, N=3/M=3)** | **27** | **$68** | **$22 (~1 wave of 9)** | **≤$90** |
+| N=2 / M=4 (the cheaper route, refused) | 24 | $60.72 | — | — |
+| **Adopted — N=3/M=3** | **27** | **$68.31** | **~$22 (~1 wave of 9)** | **≤$90** |
 
-The delta buys power 0.40 → 1.00 on the effect AC-2 is built to detect; the cheaper N=2/M=4 route
-(24 runs, ~$61, power 0.83) is available if the gate prefers to hold near the original number, at the
-cost of sourcing and pilot-running a 4th corpus PR.
+**The reasoning is expected cost, not absolute cost — recorded so a later reader sees why the
+cheaper route was refused rather than merely that it was.** The run-cost delta between the two
+routes is **$7.59** (27 × $2.53 = $68.31 against 24 × $2.53 = $60.72), not the ~$22 the FO's
+escalation first stated — that figure was an envelope difference, and the correction is on the
+record under Proof Policy #6. At its measured power of 0.72, the N=2/M=4 route fails AC-2 for want
+of power 28% of the time and must then be re-run at N=3/M=3 anyway, so its expected spend is
+`60.72 + 0.28 × 68.31 ≈ $80` — *above* the $68 of simply doing it once. It additionally needs a 4th
+corpus PR sourced and pilot-run. The cheaper route is not cheaper under any accounting tried.
+
+The delta buys measured power 0.43 → 60/60 (Wilson 0.94–1.00) on the effect AC-2 is built to detect.
 
 The recorded overrun fallback stands unchanged and is what answers a budget objection: on overrun,
 cut scope to AC-1 + AC-3 — the comparator is provably sound and the false-null guards hold — and park
@@ -1034,3 +1173,69 @@ customer, `tm`, removes restatements that may be both small and inside the finge
 known blind spot (wording changed, anchor unmoved). **An AC-2 pass does not transfer to `tm`**: `tm`
 carries its own complementary check or records acceptance of the residual at its own gate. This
 sentence travels in the verdict artifact's `certifies` field rather than living only here.
+
+## Stage Report: ideation (correction round 3)
+
+- DONE: AC-2's ablation covers the whole loaded surface, not one file: every gate site across `kc-pr-flow/` is enumerated cut-or-keep — `reference/review-triage.md:221-227` CUT, `reference/review-triage.md:229-234` KEEP, `reference/learned-patterns.md:13-15` CUT — and the arm builder derives the site set by a tree-wide sweep at build time rather than reading the table.
+  `### The AC-2 ablation` rewritten tree-wide: 11 CUT spans (S1-S11) + 3 KEEP spans (K1-K3) across three files, swept three ways (four gate keywords tree-wide; a bare `quot` sweep; a phrase sweep for the gate's semantics without its name). K2 is `review-triage.md:229-236`, wider than the dispatch's `:229-234`, because `:229-234` truncates the table it names: `:229` is the intro sentence, `:231-232` the header and separator, and the four destination rows run `:233-236`, so stopping at `:234` leaves the 3-4 and 1-2 rows outside the KEEP span and unprotected. The default-to-6 rule at `:238` is deliberately left outside it. No additional CUT site exists in `agents/`, `scripts/`, `docs/`, `hooks/`, `pr-review-loop.md`, or the other five skills; the nearest misses (`SKILL.md:677`, `:714`, `break-point-probe`) were read and rejected as different mechanisms. `kc-pr-flow/` is byte-identical between the audit SHA `f4f4840` and `HEAD`, verified by `git diff --stat f4f4840 HEAD -- kc-pr-flow/` returning empty.
+- DONE: The arm builder proves absence by verbatim span match (each span present in baseline, absent in arm B) with keyword grep demoted to a canary, so an arm that still instructs the gate at `SKILL.md:984` or `:986` cannot pass its post-condition.
+  Five-step build-time post-condition: resolve each span by line range and check its sha256 against a pinned sidecar (stale-table detection); assert the hit set non-empty; apply; assert per span against the **spec** — every CUT absent, every KEEP byte-identical; run the keyword grep as a canary that can only fail the build, never pass it. Demonstrated, not asserted: `docs/dev/artifacts/skill-ablation-harness/span-match-demo.py` (exit 0) builds `arm_keyword` (only the 7 keyword-bearing spans removed) and shows keyword-grep **PASS** / span-match **FAIL** with S2, S3, S4, S10 named; `arm_span` passes both. The measured scope of the old defect is worse than the dispatch stated: **4 of 11 CUT spans are invisible to all four keyword patterns** — not only `:984`/`:986` but the entire failure-class table at `:977-982` and the whole per-agent instruction blockquote at `review-triage.md:223-227`. Two must-fail cases keep the check falsifiable: removing K2 is rejected, and the fully ablated arm is accepted (not always-reject).
+- DONE: The captain's two rulings are propagated everywhere they bind: Appetite fixed at N=3/M=3 with the <=$90 envelope and the expected-cost reasoning recorded, AC-2's stale `mode: "AB"` notation replaced by `compare --mode AB --arms A,B`, and the verdict's `certifies` field stating that an AC-2 pass does not transfer to small or wording-only cuts.
+  `## Appetite` records the ruling with the corrected $7.59 run-cost delta (not the FO's ~$22, which was an envelope difference) and the expected-cost argument that decided it: N=2/M=4 at power 0.72 spends `60.72 + 0.28 × 68.31 ≈ $80`, above doing it once at $68. AC-2 now reads `compare --mode AB --arms A,B`; the only surviving `mode: "AB"` string is the round-2 report's record of the collision, correctly historical. `certifies` split into `null_result` + `detection_scope`, the second stating the non-transfer with its measured number; the same two-directional reading is in the `kc-pr-flow/CLAUDE.md` doc diff. Option (b) recorded as a diagnostic fallback with a specific trigger (`material: false` under (a)), explicitly not pre-paid.
+
+### The effect model was restated against a measurement, not an argument
+
+`EFFECT_EXTRA_FINDINGS = 3` was written for a single-file ablation, so leaving it attached to an
+eleven-span three-file treatment would have been a stale rationale on a changed treatment. Rather
+than argue that a larger effect is safely covered, `sizing-simulation.py` gained a `power_curve()`
+sweep (same `SEED = 20260728`, 60 trials/point, N=3/M=3, α=0.05) and the curve was run:
+
+```
+effect=+ 1 findings/run: power=20/60=0.33 (Wilson 0.23-0.46)  median p_joint=0.1125
+effect=+ 2 findings/run: power=59/60=0.98 (Wilson 0.91-1.00)  median p_joint=0.0010
+effect=+ 3 findings/run: power=60/60=1.00 (Wilson 0.94-1.00)  median p_joint=0.0010
+effect=+ 4/+6/+9        : power=60/60 each                     median p_joint=0.0010
+```
+
+Power is flat at the ceiling from +2 upward, so **the sizing decision does not move** under a larger
+treatment. The new number this buys is the detection knee, between +1 and +2 findings per run, which
+is what turns the `tm` non-transfer residual from prose into a quantity. The full re-run reproduced
+every previously recorded figure exactly (A/A 0.030 / 0.055 / 0.050, power 0.43 / 0.72 / 60-of-60),
+so the curve is an addition to the committed script, not a re-baselining of it.
+
+### `--ac-scan` output (re-run after correction round 3)
+
+```
+stage=ideation
+ac=AC-1 line=712 unevidenced=false citations=1
+ac=AC-2 line=715 unevidenced=false citations=4
+ac=AC-3 line=718 unevidenced=false citations=3
+```
+
+All three resolve, none `unevidenced`, all three bold headings still open and close on one line.
+`citations` recorded and not acted on, per the standing evidence that the counter is sensitive to
+document content outside the AC it reports on.
+
+### Summary
+
+Both captain-held items are applied and their consequences propagated. The ablation is now a
+tree-wide, span-level spec — 11 CUT and 3 KEEP spans across `SKILL.md`, `review-triage.md`, and
+`learned-patterns.md` — and the proof of removal is verbatim span match with the keyword grep
+demoted to a canary that can only fail a build, never pass one.
+
+Nothing here rests on an argument where a measurement was available. The keyword post-condition's
+unsoundness is not asserted but shown against the real tree: 4 of 11 CUT spans carry none of the
+four keywords, and the arm that removes only the keyword-bearing ones passes the old check while
+still shipping the gate's failure-class table and its append-to-every-agent-prompt blockquote. The
+restated effect model is likewise a curve that was run, and it answers both open directions at once
+— larger treatments are covered, and the knee at +1-to-+2 findings/run is the number the `tm`
+non-transfer residual needed.
+
+Two things the gate should rule on rather than accept silently. **The sweep found a KEEP the
+dispatch did not name**: `learned-patterns.md:9-11` ("never per-finding", for cross-model
+arbitration) is the same naming trap as `SKILL.md:143` one file over — the obvious widening of the
+canary to `fan-out` or `per-finding` would ablate arbitration alongside the quote gate. And **S11's
+file is not loaded on the ordinary path**: there is no `Read → …/learned-patterns.md` directive in
+`SKILL.md`, only a D1 auto-append target and two "see" pointers, so the ablation's effect properly
+rests on S1-S10 with S11 additive when a run follows the pointer. Both are corrections to premises
+this round was handed, recorded rather than quietly absorbed.
