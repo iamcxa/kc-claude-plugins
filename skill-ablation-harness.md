@@ -704,3 +704,55 @@ gate's to make, not mine. And **the power and calibration figures are from a mod
 process, not from real runs** — they are the right instrument for sizing a design before spending
 $68, but AC-1 is still what tests the real noise process, and if the real within-arm agreement is
 much noisier than the simulation assumed, N=3 may itself prove short.
+
+**Round 2 — ideation re-gate, 2026-07-28. Verdict: RETURN (correction round 2). Two items held for a captain ruling.**
+
+Gate assembled by the FO; verdict by `ship-flow:science-officer-em` (fresh context, model fable).
+Inputs: checklist (3 done / 0 skipped / 0 failed), `--ac-scan` (all three ACs resolve), a second
+cross-vendor pass against the *repaired* document (required — the schemas changed), and FO
+verification of the two findings the verdict rests on.
+
+Round-1 fix items: **4 FIXED** (two-sided statistic, AA/AB mode, neutral driver, fingerprint
+fields), **2 PARTIALLY FIXED** (the floor's derivation prose overstates "exactly two relabelings";
+the ablation enumeration stopped at a file boundary). The sizing change was *measured*, not argued —
+round-1's N=2/M=3 has power 0.40 on the AC-2-shaped effect, so it would have failed AC-2 three times
+in five for want of power rather than want of effect. The return paid for itself.
+
+New findings, the two load-bearing ones verified against source rather than adopted:
+
+- **F-A [P1] — the ablation never reached the loaded context.** `reference/review-triage.md:221` is
+  headed "Pre-emit evidence requirement (append to every agent prompt):" and `:223-227` restates the
+  same gate with the same failure classes; `SKILL.md:195` loads that file on the ordinary path, and
+  `reference/learned-patterns.md:13-15` is a third site. Arm B cut the gate from the collator while
+  every dispatched reviewer still received it verbatim, so the power model's "+3 findings per run"
+  premise was invalid and AC-2 could have returned `material: false` for a reason unrelated to the
+  harness. The EM confirmed and extended it (`review-triage.md:229-234` carries collator gates too)
+  and classed it an **incomplete round-1 fix — the enumeration boundary, not any single missed
+  line**.
+- **F-B [P1] — AC-1's calibration claim is unsupported.** `material` is true iff
+  `flagged_dimensions` is non-empty, and three dimensions each enter at `p_perm ≤ 0.05`, so the
+  family-wise rate is uncalibrated — bounded above by ~0.143 under independence, lower given the
+  statistics share runs. The reported 0.045 was measured on the anchor-set statistic alone. Fix is a
+  joint max-statistic permutation, which **costs zero additional runs**.
+
+Also carried into the fix list: the arm-builder's grep post-condition would report "zero residual
+hits" while `SKILL.md:984` and `:986` still instruct the gate, because neither line matches the
+keyword patterns — the sprint's founding error (classify a region by pattern rather than by reading)
+reproduced inside the instrument built to prevent it. Plus four spec-level defects: two AC-3 negative
+cases that cannot be constructed as written, `severity_mix` undefined on an empty run, and power
+figures that are not reproducible and probably optimistic.
+
+**Three FO assembly errors the EM corrected, recorded because the FO made them.** F-B's fix moves no
+budget (same receipts, comparator arithmetic only) — the FO wrote that it might. The 36-run/$91
+figure is avoidable: a single three-arm experiment (A, A′, B) holds 27 runs and ~$68, so the captain
+sees one stable number rather than a creeping one. And 0.143 is an independence *upper bound*, not a
+measured rate — the bounded claim is "uncalibrated, ≤ ~0.143" (Proof Policy #6).
+
+Seat split, ruled per pressure rather than collectively: opening round 2 is the EM's (every finding
+is new — the two-rejection rule bites on the same finding twice, and no compute has been spent).
+The budget extension and the F-A instrument-scope choice are the captain's. Recorded deviation:
+ideation has now consumed roughly twice its ~90-minute authoring appetite across three passes; the
+EM judged the round worth funding anyway because a paper round is the cheapest place these defects
+can die.
+
+Fix items 2-6 dispatched immediately; items 1 and 7 held pending the captain.
