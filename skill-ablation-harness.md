@@ -1002,3 +1002,35 @@ of 0.027-0.090 is consistent with alpha and is the honest precision available be
 it is not a measurement of the harness's real false-positive rate, and AC-1 — a single A/A
 comparison — is a negative control, not that measurement either. The body now says so in both
 places.
+
+**Captain rulings, 2026-07-28 — both held items decided as recommended.**
+
+**Decision 1 — compute budget: N=3/M=3 adopted, envelope ≤$90.** The FO's escalation initially framed
+the delta as ~$22; that was an envelope difference, and the corrected run-cost delta is **$7.59**
+(27 × $2.53 = $68.31 against 24 × $2.53 = $60.72). The argument that decided it is expected cost, not
+absolute cost: at power 0.72 the cheaper N=2/M=4 route fails AC-2 for want of power 28% of the time
+and then has to be re-run at N=3/M=3 anyway, so its expected spend is 60.72 + 0.28 × 68.31 ≈ **$80**,
+*above* the $68 of simply doing it once. N=2/M=4 additionally needs a 4th corpus PR sourced and
+pilot-run. The cheaper route is not cheaper under any accounting tried.
+
+**Decision 2 — AC-2 is a real full-site removal (option a), not an injection control.** The deciding
+argument is the direction of the operation. This workflow's own thesis is "subtraction needs more
+evidence than addition"; every Sprint 4 cut is a removal; certifying a removal-detector with an
+addition is a category mismatch that would leave the dispatch → reviewer → collate path — the exact
+path F-A showed everyone had mis-modelled — unexercised. Second: Sprint 4 item 3 (`sk`) cuts
+reference-file *loading*, so an instrument validated only against `SKILL.md` could not judge it, and
+`5b` is item 0 precisely so that everything downstream is judgeable.
+
+Option (b)'s real strength — single-sited by construction, so the F-A class cannot recur — was
+answered at the root instead: the arm-builder's absence proof moves from keyword grep to verbatim
+span match. (b) is retained as a **diagnostic fallback, not pre-paid**: if AC-2 under (a) reports
+`material: false`, an injection arm then distinguishes "the harness is blind" from "the ablation did
+not take".
+
+**Residual recorded before the money is spent, not after.** Option (a)'s ablation spans three files,
+so its effect is large. AC-2 passing therefore certifies that the instrument detects a *large
+multi-site removal* — it does **not** establish sensitivity to a small one. Sprint 4's first actual
+customer, `tm`, removes restatements that may be both small and inside the fingerprint projection's
+known blind spot (wording changed, anchor unmoved). **An AC-2 pass does not transfer to `tm`**: `tm`
+carries its own complementary check or records acceptance of the residual at its own gate. This
+sentence travels in the verdict artifact's `certifies` field rather than living only here.
