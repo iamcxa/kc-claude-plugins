@@ -1380,3 +1380,105 @@ dimension's observed z against the null of the **max** over dimensions — the c
 Westfall-Young max-T construction, which is what actually delivers FWER control. The reviewer declined
 to certify it beyond that and recommended a second statistician's read before the cost claims are
 relied on operationally.
+
+## Stage report: implementation correction cycle 3 — 2026-07-28
+
+**Code commit:** `0600f95` (`fix(kc-pr-flow): bind ablation runs to independent evidence`).
+This cycle repairs V1/V3/V4/V5/V6, supplies V2's exact frozen corpus, and stops before the
+27-run acceptance because the corrected pilot cost invalidates the captain's ≤$90 envelope.
+
+### Corrections made
+
+- **V1 / runner-owned provenance:** `run` validates `arm-manifest.json`, independently reads the
+  actual arm skill, hashes the fixed driver prompt, records the runtime-reported model, and writes
+  all four pins into `kc-pr-flow.ablation-manifest/v2`. The receipt must match the manifest on
+  `skill_sha256`, `arm_manifest_sha256`, `driver_prompt_sha256`, and `model_id`; `compare` reads
+  provenance and arm hashes from manifests, not receipts. Fabricating every receipt's four pins
+  consistently now fails.
+- **V2 / exact corpus and checkout:** `review-ablation-corpus.tsv` freezes exactly:
+  PR #17 `4489933ddf5237187c4866ab45bdecc5bdb2d0f0..f3aed43341d5fe4616d76ba02946bd4913ae260e`;
+  PR #19 `d62f2c6659d76799994482dd58be2dc2b05fb3ea..031b4908cf405724b2ed7d1b829f3c001eea7aa2`;
+  PR #50 `536be3e7d7d8371a9e84b693804407ea1b54bc60..7c448243c0512d137a47cdf36a9b255658f096a3`.
+  `run` rejects any other tuple before launch, creates a clean detached shared clone at the pinned
+  head, proves the base and head commits, hashes `base...head`, and fails if the agent changes HEAD
+  or the checkout.
+- **V3 / stale retry:** deterministic receipt and runner-output paths are cleared before launch;
+  every non-zero headless exit fails immediately; `is_error:true`, absent/unparseable receipts,
+  incomplete runtime usage, and missing/ambiguous runtime model IDs also fail.
+- **Runtime-owned accounting:** usage, cost, wall clock, and actual model are normalized from the
+  terminal Claude JSON into the receipt. Agent-authored values are not accepted as accounting.
+- **V4 / EOF removal:** `remove_span` validates and removes the same exact bytes, with an optional
+  trailing newline rather than assuming one exists.
+- **V5 / table-owned substring:** the span table now carries each `cut_sub` removal string. The
+  module constant is gone, and a second `cut_sub` in another file proves row-local behavior.
+- **V6 / bounded claim:** comments now say the manifest is a separate runner-authored path but not
+  an OS-enforced trust boundary. The receipt directory is explicitly added for the headless run;
+  no comment claims the manifest is "never writable".
+- Both workflow path filters include the new corpus file. `kc-pr-flow/CLAUDE.md` records the exact
+  corpus and checkout/provenance contract. Every changed file serves V1-V6 or V2's CI/documentation
+  surface; there is no unrelated implementation diff and no version bump.
+
+### RED → GREEN evidence
+
+- V1 provenance guard: **RED 10 passed / 4 failed**, then **GREEN 14 / 0** after receipts were checked
+  against runner-owned skill, arm-manifest, prompt, and model pins.
+- V4/V5 arm builder: **RED 16 / 2** on true-EOF removal and a second `cut_sub`, then
+  **GREEN 18 / 0**.
+- V3 and V6 runner group first exposed the missing arguments, accepted stale crashed receipt, and
+  unenforced absolute; runtime-accounting tests then went **RED 18 / 2**; changing into the pristine
+  checkout exposed relative arm/output paths at **RED 15 / 5**. Absolute runner paths, hard exit
+  checks, and terminal-JSON normalization finish at **GREEN 20 / 0**.
+- The complete model-free harness suite is now **80 passed / 0 failed** (up from 61 assertions).
+
+### Sequential corrected pilot gate
+
+All corrected pilots use one experiment (`50af1d49-dbe1-4e2f-9132-2a799e1a11e9`), one nonce
+(`b20928db-edc3-475c-b2d0-b2ee8470bb9b`), arm A skill
+`24aafc1f97b5c86704ce70ea94c0bc62ca4bfac7f29c6159c54a4f656bf1990d`, arm manifest
+`34788f7f25ff0ddab75974f3233559ba745b6527a3e8196f546de5ddf56793da`, driver prompt
+`4ca65d793b973d921b8956ea12ea6576d0e7b2c8a31ee8601192f2e11494d1fa`, and runtime model
+`claude-sonnet-5`. They ran sequentially and each produced at least one posted-tier finding:
+
+| frozen PR | findings | runner cost | wall clock | receipt sha256 | manifest sha256 | diff sha256 |
+|---|---:|---:|---:|---|---|---|
+| #17 | 9 (2 CRITICAL, 5 HIGH, 2 MEDIUM) | $9.016940700000003 | 1,514,908 ms | `9559ddd5a8e1802990930147a1b2678d30cd8e56d893184d3dea8de0162ff97a` | `e1500267c8c3c2211aca6da6c15bcc317d35d7812b34aad866058035c351e4eb` | `fdc80f1e7df0fe220f32b6cb89f403548acf6b791bfff044ef3e8b084d61b2a6` |
+| #19 | 1 MEDIUM | $4.329564000000001 | 580,736 ms | `d1b6380283a2c290c59147dd52a3698723b0c9374b8d0f3ac838585afb6f8e38` | `8959c41dc1ce2711a4a3321a26c213f20199e430de058f04d7f31fc3218655a4` | `1b8dd1659efb31ff496063dcd0655eddc070a1eeb372e23d922b1b2492a1d0f6` |
+| #50 | 4 (1 HIGH, 2 MEDIUM, 1 LOW) | $15.93819315000001 | 2,154,438 ms | `cf84f4547ffe8d55015b04dc4444b4b31584db793c82fa8c1d0b8d548dfd5c42` | `b3ea51d30d42b6eb0336d4dbd3cb1a6b9e86c6e1895b1eabcd480533afda414b` | `f70ffdb16f8cb0a79cba04e3c65123035afd66bc69559b9b0e6f31a975c34176` |
+
+The first attempted pilot series is **invalidated and retained only as failure evidence**. `run`
+changed into the frozen checkout while `--plugin-dir` was still relative, so Claude could load the
+installed skill (`ca15c6ec02dc965922e531da0a3371eaa985eea0193b803fc24b9c7cf8d0a1ed`)
+instead of arm A (`24aafc…`). PR #17 and #19 nevertheless cost $5.622738300000001 and
+$2.8017971999999993 according to terminal runner JSON. The invalid PR #50 attempt was interrupted;
+its runner file is zero bytes and its cost is therefore unknown. A later zero-finding receipt is
+untrusted residue, not a completed run. The corrected absolute-path test went RED before the fix and
+all three valid manifests record the intended arm hash after it.
+
+### Budget gate — acceptance not started
+
+- Corrected three-pilot total: **$29.284697850000015**; mean: **$9.761565950000005/run**.
+- Straight 27-run projection at that observed mean: **$263.56228065000016**. Even crediting these
+  three pilots toward the matrix leaves 24 projected runs at **$234.27758280000012**.
+- Known spend is at least **$40.239233350000015**: validation's earlier ~$2.53 pilot, the two
+  invalid completed attempts ($8.4245355), and the corrected pilots ($29.284697850000015), plus the
+  unpriced interrupted PR #50 attempt. Against ≤$90, remaining authority is no more than
+  **$49.760766649999985**, and is lower by that unknown charge.
+
+Therefore the 27-run AC-1/AC-2 acceptance was **not launched**. The pilot corpus gate passed, but
+the price gate did not. Validation must obtain an explicit captain budget reauthorization or apply
+the recorded cut-to-scope fallback; implementation does not silently extend the envelope.
+
+### Fresh exit verification
+
+- `review-ablation.test.sh`: **80 passed, 0 failed** after the final workflow correction.
+- `review-runtime.test.sh`: **305 passed, 0 failed**.
+- `review-post.test.sh`: exit **0** (the harness's expected reconcile diagnostics are on stderr).
+- `review-shadow.test.sh`: **213 passed, 0 failed**.
+- `review-runtime-benchmark.test.sh`: **135 passed, 0 failed**.
+- Docker `koalaman/shellcheck:v0.9.0` over the documented runtime files plus
+  `review-ablation.sh` and `review-ablation.test.sh`: exit **0**.
+- No-bytecode Python compile and native `git diff --check`: exit **0**.
+
+AC-3's corrected false-null machinery and the frozen pilot precondition are implementation-proven.
+AC-1 and AC-2 remain acceptance-pending because their required 27-run verdicts were intentionally
+not purchased outside the approved budget.
