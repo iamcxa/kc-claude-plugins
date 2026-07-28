@@ -4,123 +4,116 @@ Sprint boundaries and sequencing only. This file never tracks task state; that i
 `spacedock status --workflow-dir docs/dev`. Owner: captain, or the sprint commander
 writing on the captain's direction.
 
-## Sprint 3 — move deterministic work out of the model's context
+## Clear before either sprint starts
 
-Opened 2026-07-27, replacing the remainder of Sprint 2 after a cross-model review measured that
-sprint against the captain's actual goals and found it did not serve them. Sprint 2's record and
-the reason it was cut short are kept below rather than rewritten.
+Three items belong to neither track and should not wait for one.
 
-**The goals this sprint is graded on**, stated by the captain: the kit finds more real defects and
-fewer false ones; it buys more per token spent; it takes less wall-clock per review; and it is more
-agent-native, meaning an agent's claims are checkable or refusable by a mechanism rather than
-resting on the agent having followed prose.
+- **`zn` item 1** — `SKILL.md:405-413` prescribes a `codex exec` mode whose output file is 0 bytes
+  for the whole run, so an in-flight dispatch reads as failed. One live occurrence bought a
+  duplicate ~140K-token review. Measured here: `--json` grows within 4s, plain writes 59 bytes at
+  the end. Pure bug fix, unrelated to slimming or strengthening.
+- **`kj`** — `SKILL.md:1870` appends learned patterns to the public `learned-patterns.md`;
+  `knowledge-capture.md:7` says LOCAL only and not the public file. Decide this before `v5` is
+  scheduled: if LOCAL-then-promote was the intent, the 1193-line corpus is an accident and `v5`
+  and `3w` are treating a symptom.
+- **PR #75** — the tier estimate now says what it does not count. Already open.
 
-**Theme: mechanize what is mechanically decidable at an enforceable boundary, and measure the
-quality, cost, and latency of the model work that remains.** Those goals are not mutually
-exclusive. Moving a decidable check out of the model serves several at once — it costs no model
-tokens and its output is not authored by the agent under review — but two conditions decide
-whether that holds, and both are earned rather than assumed:
+## Sprint 4 — slim the kit
 
-- **"Not agent-authored" depends on what the check inspects, not on it being a script.** Proof
-  Policy #1 already says this: a script run over a self-written artifact is a self-issued stamp.
-- **A check is only unskippable once a runtime boundary refuses its absence.** A grep written into
-  prose is as skippable as the prose. That refusal is exactly what `2t` builds, which is why it
-  gates `1c`.
+Opened 2026-07-27 on captain direction: **make the kit smaller before adding to it**, so that the
+strengthening work lands on a smaller surface rather than being layered onto a 1884-line skill.
 
-Pure subtraction — spending fewer tokens by reading less — is the one approach where these goals
-genuinely fight, and it is deliberately not the theme. Note also that not every item here is
-mechanization: `62` and `qe` measure the model work rather than removing it, and `zn` repairs
-orchestration. The theme names the direction, not a property every slice shares.
+Two inputs support the order. Anthropic's context-engineering guidance for this model generation
+favours progressive disclosure, fewer worked examples, and expressive interfaces over instruction
+volume. And this workflow has already recorded that the kit's failure mode is accretion — it keeps
+adding mechanisms to prove its prose workflow ran.
+
+**Subtraction needs more evidence than addition, not less.** Adding a wrong mechanism wastes
+tokens; removing a load-bearing one breaks the review, and prose has no test to catch it. That
+asymmetry sets the sequence below: the harness comes first, and the cuts are ordered by how loudly
+they would fail.
 
 ### Sequence
 
-| # | id | slug | why it sits here |
-|---|----|------|------------------|
-| 1 | `zn` **item 1 only** | review-kit-live-run-corrections | Its first item is the only thing in this sprint arriving with a measurement: `SKILL.md:405-413` prescribes a `codex exec` mode whose output file stays 0 bytes for the whole run, so an in-flight dispatch reads as a failed one, and one live occurrence bought a duplicate ~140K-token review. Probed here: `--json` grows within 4s, plain writes 59 bytes at the end. Items 2 and 3 are prose corrections with no measurement — ideation splits or timeboxes them rather than carrying them along. |
-| 2 | `qe` | benchmark-full-rerun-control | The token denominator. Its body says it "should land before any work that claims a token win", and `62` depends on it for the cost half of the comparison. Dropping it from the first recut was an oversight. |
-| 3 | `62` | review-effectiveness-benchmark | The quality numerator, scoped as a **pilot**: pre-registered known defects on a frozen corpus, comparing two configurations that already exist. Every slice after it claims an improvement nobody can currently compute. |
-| 4 | `2t` | prescan-coverage-honesty | Eleven pre-scans cannot distinguish "ran, found nothing" from "skipped". It builds the runtime refusal that makes a check unskippable, and owns the coverage representation `1c` must fill — so it gates `1c`. |
-| 5 | `1c` | prescan-script-evidence | The cleanest four-goal item in the backlog: three mechanically decidable pre-scans stop needing a model, and their evidence can contradict the agent's own prose. |
+| # | id | slug | risk | why here |
+|---|----|------|------|----------|
+| 0 | `5b` | skill-ablation-harness | — | Nothing else in this sprint can be judged without it. Deleting prose leaves all 935 assertions green; the only protected region is the 415-line adapter `review-shadow.test.sh:56` extracts. |
+| 1 | `tm` | redundant-rule-removal | low | `SKILL.md:1844` onward restates Steps 5 and 6. Removing a restatement removes no information — and it is the natural first exercise of the harness: if A/A parity cannot be shown on a pure restatement cut, the harness is not ready. |
+| 2 | `fa` | presentation-renderer | medium | ~104 lines of fenced presentation examples become a renderer with a closed input schema. Follows the guidance's "design the interface" over "show an example", and makes the output shape enforceable rather than imitated. |
+| 3 | `sk` | reference-progressive-load | medium | Three references load whole on an ordinary path (246 + 162 + 1193 lines). `gh-api-patterns.md` already demonstrates named-section reads inside this same skill. First cut whose failure mode is a *quieter* review rather than a broken one. |
+| 4 | — | overconstrained-rule audit | **high** | Not filed yet, on purpose. The guidance says replace rigid rules with judgment — but this kit's prose partly constrains five dispatched subagents that cannot recover an omitted constraint from the parent context. File it only if the harness proves able to measure this class. |
 
-**Stretch**
+### What is not cut, and why
 
-- `x0r` (`mock-boundary-contract-prescan`), **as a bounded fixture spike first**. It targets a real
-  defect class that survived a green 5600-test suite, `mypy`, `ruff`, and a passing mutation round.
-  But calling it "pure grep, zero tokens" overstates it, and its own entity says why: the detector
-  is not independently validated (`:53`), it is Python-shaped with TypeScript scope unresolved
-  (`:76`), and it carries a model-based companion check for the cases grep cannot reach (`:70`).
-  Prove a Python-only detector catches the recorded defect without noisy findings; schedule the
-  generalized version only after that.
-- `v5` (`learned-pattern-selection`), and only once `qe` and `62` exist. It is pure subtraction,
-  its token win is currently unmeasurable, and the cost breakdown suggests it is second-order
-  regardless — fan-out dominates (~140K for the 3-agent minimum tier, ~200K Standard, ~240K Full,
-  +35K pre-scan, +50–80K optional Codex), so a 1193-line corpus is not where the budget goes.
+An earlier draft of this sprint proposed removing "544 lines of example output" from Step 6. **415
+of those lines are an executable Bash adapter** that `review-shadow.test.sh:56` extracts by
+sentinel and sources; cutting it would have broken 213 assertions. The real presentation-example
+total is ~104 lines.
 
-### Moved out of this sprint: once-only posting reliability
+Also staying, all of them load-bearing rather than decorative:
 
-`n9` (`gh-list-adapter-pagination`) then `11` (`reconcile-list-element-shape`) — **in that order**,
-which reverses Sprint 2. They belong to a separate once-only reliability track and should not be
-counted as review-quality work: neither serves any of the four goals, and presenting them as if
-they did would be false. Within their own track `n9` outranks `11`, because `n9` breaks the
-shipped `gh` adapter on any ordinary busy PR while `11` is reachable only through a custom
-transport, a body-rewriting proxy, or a future adapter. Sprint 2 had them backwards because it
-preferred the fix whose shape was already pinned over the one with impact.
+- the dispatched-agent output/coverage contract (`SKILL.md:341`)
+- the baseline instruction given to every reviewer (`review-triage.md:181`)
+- the pre-emit quote-the-source gate (`SKILL.md:973`)
+- the PR-summary evidence requirements (`SKILL.md:941`)
+- the confirmation menu and preview-before-post authorization boundary (`SKILL.md:1723`) — if this
+  is ever rendered, the rendering becomes part of the contract and needs its own test
+- the typed/shadow schemas
 
-### Sequencing constraint, unchanged
+## Sprint 5 — strengthen, on the smaller surface
 
-`SKILL.md` remains contended: `zn`, `2t`, `1c`, `x0r`, `v5`, `q0`, `3w` all edit it, so they run
-serially regardless of value. `62` is the exception — it adds a benchmark rather than editing the
-skill, so it is the one item here that can genuinely run in parallel, and the natural candidate if
-a second worker or a mini leg is available.
+The entities that were Sprint 3's core, deferred deliberately so they land after the cuts rather
+than before them.
 
-### Next tranche, not this sprint
+| # | id | slug | note |
+|---|----|------|------|
+| 1 | `2t` | prescan-coverage-honesty | Builds the runtime refusal that makes a check unskippable; owns the coverage representation `1c` fills. |
+| 2 | `1c` | prescan-script-evidence | Three mechanically decidable pre-scans stop needing a model; their evidence can contradict the agent's prose. |
+| 3 | `q0` | reviewer-return-contract | The only mechanism that can retire the duplicated baseline verification — agents assert it in prose today (`review-triage.md:181`) and Step 5c re-reads every file with a finding (`compliance-audit.md:65`). |
+| 4 | `v5` | learned-pattern-selection | After `kj` decides where D1 writes go. Pure subtraction, so it is the one item where fewer tokens genuinely fights finding defects. |
 
-`q0` (`reviewer-return-contract`) then `dk` (`review-citation-verifier`). `q0` gives reviewer
-returns a contract the orchestrator can reject instead of best-effort prose; `dk` mechanically
-verifies cited `file:line`, which needs `q0`'s structure to check against. `3w`
-(`learned-pattern-append-bound`) follows `v5`.
+Then the measurement track — `qe` (token denominator) and `62` (quality numerator, pre-registered
+known defects). They are **not** dropped, and the deferral has a cost stated below.
 
-### What Sprint 2 was, and why it was cut after one slice
+Following that: `x0r` as a bounded fixture spike, `dk` after `q0`, `3w` after `v5`.
 
-Sprint 2 opened 2026-07-26 as "finish the once-only path, then open pre-scan honesty", sequenced
-`qh` → `11` → `n9` → `2t`. **`qh` shipped** (#67, `f7dd1a0`): python3 spawns per `post` 65 → 9, CI
-job 488s at 139 assertions against main's 512–598s at 137.
+## The cost of this ordering, stated plainly
 
-Then the captain named the four goals above and asked whether the sprint served them. A
-cross-model review found it barely did: `11` and `n9` serve none of the four, `2t` serves two of
-them partially, and the only clear token item was stretch work. It also observed that the sprint's
-order came from same-file contention rather than goal value — collisions are a real constraint on
-*how* work runs serially, but they are not an argument for *which* work runs first, and Sprint 2
-let the constraint choose.
+`5b` answers "did this change move anything". It does **not** answer "how good is the kit". Only
+`qe` + `62` answer that, and they now come after the cuts. So Sprint 4 can prove it broke nothing
+measurable while remaining unable to prove the kit is any good — including unable to notice if it
+was already worse than believed.
 
-Two harder findings are recorded because they cost something to learn:
+That is an acceptable trade for a slimming pass, because the reference is the previous version
+rather than an absolute standard. It would **not** be acceptable for the strengthening work, which
+is why `qe` and `62` sit before the point where anyone claims the kit improved.
 
-- **`qh`'s own ledger row is the warning.** 6 dispatches, 33 hours, ~1M tokens, and the outcome is
-  a CI job number — not a measured reduction in any review's duration. Optimisation effort
-  outrunning user value, and it cleared a full gate because nothing measures the thing it claimed
-  to improve. That is why `62` sits second here and is not deferred again.
-- **The kit's failure mode is accretion.** It keeps adding mechanisms to prove its elaborate prose
-  workflow ran, instead of replacing prose and model work with a smaller executable core. The
-  duplicate-dispatch incident behind `zn` is the tell: the orchestration was complex enough to buy
-  the same 140K-token review twice by accident. This sprint's theme is chosen against that
-  gradient, but does not resolve it — see below.
+## Superseded: Sprint 3
 
-### The open question this sprint does not answer
+Sprint 3 (`zn item 1 → qe → 62 → 2t → 1c`) was committed 2026-07-27 and superseded the same day
+by captain direction. Its thesis was measure-then-mechanize; the captain's is slim-then-strengthen,
+on the reasoning that strengthening a 1884-line skill builds on the wrong base. No entity is lost
+— `2t` and `1c` move to Sprint 5, `zn item 1` moves to the pre-sprint clear, and `qe`/`62` move
+behind the cuts with the cost recorded above.
 
-The cross-model review argued the credible end state is a simplified default path —
-`deterministic preflight → one structured reviewer → evidence/citation verifier → conditional
-specialists only when the diff earns them → human confirmation` — with the full kit used less
-rather than improved more. That is captain-owned scope and is deliberately not decided here.
+A cross-model review argued against recutting twice in one day, and it was right about the
+evidence available at the time: the draft that prompted it contained two misclassifications,
+including the 415-line adapter. This recut rests on a captain scope decision rather than on that
+draft's analysis.
 
-This sprint is compatible with either answer: `1c` and `x0r` build the deterministic preflight a
-leaner path would need, and `62` builds the instrument that would let a leaner path be compared to
-the current one on evidence instead of argument. If the answer is "simplify", none of this is
-wasted; if it is "keep and improve", the same work applies.
+**Sprint 2** (`qh` → `11` → `n9` → `2t`) shipped `qh` only (#67, `f7dd1a0`): python3 spawns per
+`post` 65 → 9, CI job 488s at 139 assertions against main's 512–598s at 137. Its remaining items
+were resequenced when the captain named the four goals the kit is graded on.
 
-### Hazard carried forward
+## Not in either sprint: once-only posting reliability
+
+`n9` then `11`, in that order. Real posting-correctness repairs that serve none of the review-kit
+goals; `n9` breaks the shipped `gh` adapter on any ordinary busy PR, `11` needs a custom transport
+or a future adapter.
+
+## Hazard carried forward
 
 `spacedock status --ac-scan`'s citation counter is not trustworthy — an AC citing three paths
 scored `0` while one citing a single path scored `2`. The README makes that scan a hard
-precondition for the ideation gate, so `2t` will hit it. The captain deferred the spacedock-side
-fix; until then record the scan output and the discrepancy in the stage report rather than treating
-a `0` as a finding about the AC.
+precondition for the ideation gate, so the first entity through it will hit this. Record the scan
+output and the discrepancy in the stage report rather than treating a `0` as a finding about the AC.
