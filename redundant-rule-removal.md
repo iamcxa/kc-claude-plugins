@@ -1,11 +1,12 @@
 ---
 title: The skill's tail restates rules it already stated
-status: ideation
+status: implementation
 source: cross-model review of the kit, 2026-07-27 — the lowest-risk cut available
 design: required
 id: tmn8fgqy8390zepcp019td74
 lane: main
 started: 2026-07-28T16:32:16Z
+worktree: .worktrees/spacedock-ensign-redundant-rule-removal
 ---
 
 ## Problem
