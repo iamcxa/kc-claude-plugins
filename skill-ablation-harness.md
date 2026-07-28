@@ -1240,3 +1240,46 @@ file is not loaded on the ordinary path**: there is no `Read → …/learned-pat
 `SKILL.md`, only a D1 auto-append target and two "see" pointers, so the ablation's effect properly
 rests on S1-S10 with S11 additive when a run follows the pointer. Both are corrections to premises
 this round was handed, recorded rather than quietly absorbed.
+
+## Stage Report: implementation
+
+- DONE: `review-ablation.sh` exists with `arm` / `run` / `compare`, built RED-before-GREEN with the RED output recorded, and every assertion added appears as a failure in that RED run.
+  Commit `41d9573`. RED digest, taken with no implementation on disk: **`0 passed, 55 failed`**. The first RED run read `1 passed, 54 failed`; that single green assertion (`C2b`, which compared an empty verdict against an empty string) held in the pre-fix world too, so it was rewritten to pin the literal `runs_compared` = 18 and the digest re-taken. The `run` group (6 assertions) was added after GREEN and falsified separately — see the last checklist item. Final: `61 passed, 0 failed`.
+- DONE: Test-plan items 1-4 pass: the four comparator fixtures pinned to the exact enumerated values, the arm-builder span-match post-condition tests (including the arm that keyword-grep accepts and span-match must reject), the five false-null guards plus their must-accept positive control, and ShellCheck v0.9.0 via docker.
+  Item 1 (28 assertions): all eight fixtures pinned to `sizing-simulation.py`'s exact enumeration — floor `(2/20)^3`=0.001 and `(2/6)^3`=0.037037, superset `T`=1/3, joint must-flag/tokens-only/identical/all-empty. Item 2 (16): the keyword-only arm is rejected naming S2, S3, S4, S10. Item 3 (11). Item 4: `shellcheck v0.9.0` via docker exits 0 — it exited **1** on first run (two SC2015 at `review-ablation.sh:89,214`), which is the check the local build would not have caught. Full pre-existing suite unaffected: 305 / 139 / 213 / 135, 0 failed.
+- DONE: Every check written carries its two-line provenance record — the independent authority it reads and the defective artifact that must fail it — with that artifact constructed and the check observed RED on it before any GREEN is trusted.
+  Table below. Every negative case is a constructed defective artifact whose rejection is the assertion; each group also carries a positive control, so no check is merely always-reject.
+- DONE: Re-verify `kc-pr-flow/` against the audit SHA `f4f4840` before building arms.
+  `git diff --stat f4f4840 HEAD -- kc-pr-flow/` empty; `span-match-demo.py` re-run against the worktree tree — all 14 spans match their pins, no drift, no line number hand-adjusted.
+- DONE: Keep receipts and manifests durable as they land.
+  `run` writes the manifest before launch and collects to `<out-dir>/{manifests,receipts}/<arm>-<pr>-<run>.json`; `compare` reads a directory, so a part-finished experiment is re-enterable.
+- SKIPPED: Test-plan item 5 — the 27 real headless runs (~$68).
+  Out of scope for this stage by dispatch; it belongs to validation. No model was run, so nothing was drawn against the ≤$90 envelope.
+
+### Provenance record — what each check reads, and what must fail it
+
+| Check | Independent authority it reads | Defective artifact that must fail it |
+|---|---|---|
+| 8 comparator fixtures | `sizing-simulation.py` exact enumeration, a different implementation written at ideation | an inverted, one-sided, or mis-enumerated statistic — F1 fails if inverted, F2/F2b if the assignment space or label-swap collapse is wrong, F4 if `T` reverts to signed, F6 if max-T flags every dimension when one moves |
+| span pins | the generated `review-ablation-spans.tsv` sidecar, cross-checked against ideation's `span-pins.txt` | a tree reworded inside S10's range (B3) |
+| CUT-span absence | the **enumerated** span table, not the applied patch set | the arm removing only the 7 keyword-bearing spans (B4) |
+| KEEP-span survival | the enumerated K1/K2/K3 rows | an arm that also cuts K2, the collator table (B5) |
+| S6 surviving half | the literal `**Apply confidence gates**` in the spec | a span table whose S6 row is mistyped `cut` (B6) |
+| removal uniqueness | the baseline text's own occurrence count | a tree with S1's line duplicated (B1) |
+| keyword canary | the K1 whitelist | a gate sentence appended to a file the table does not enumerate (B7) |
+| receipt freshness / arm / experiment | the **runner-written manifest**, not writable by the receipt's author | receipts with a rewritten `nonce` (C3a) and with `written_at` before `run_started_at` (C3b) |
+| missing receipt | the manifest's `expected_receipt_path` | a deleted receipt (C2) and a stub agent that exits 0 writing nothing (R2) |
+| duplicate | canonical receipt JSON minus `{run_index, slot_index, written_at}` | a receipt copied across runs (C4) |
+| provenance | the whole experiment's receipt set, not the compared pair | one substituted `model_id` (C5), one rewritten `driver_prompt_sha256` (C5b) |
+| mis-arming | the `--mode` on the invocation | equal `skill_sha256` under AB (C1) and differing under AA (C1b) |
+
+**Falsification actually run, not asserted.** AC-3's own named falsifying edit — make the receipt loader default a missing file to `{"findings": []}` — was applied to `review-ablation.sh` and the suite re-run: C2 and both R2 assertions went **red**. The edit was then reverted. This is the evidence that the false-null guards are not passing by construction.
+
+### Two things to flag rather than quietly absorb
+
+- **The entity body misquotes K1.** It renders `SKILL.md:143` as "Step 2.5 builds a **verification gate** from explicit concerns"; the file has no bold — "Step 2.5 builds a verification gate from explicit concerns". The implementation matches the file, not the body, and the canary whitelist depends on that exact string. Verified: arm B has exactly one residual keyword hit, and it is this whitelisted line. The body's quotation should be corrected; nothing in the build is wrong.
+- **Two helper files, one CLI.** The design fixes "one script, `review-ablation.sh`". The CLI surface is one script; the numerics live in `review-ablation-core.py` (span builder + permutation test) because both need computation shell does not do, matching the existing `review-runtime-benchmark.sh` / `review-runtime-safe-io.py` pairing. This adds no dependency — the body already records Python 3.8+ and `jq` as current kc-pr-flow runtime dependencies. Flagged because it is a visible departure from a literal reading of the design.
+
+### Summary
+
+Built the harness the settled design specifies: `arm` proves its ablation by verbatim span match against the enumerated table (the keyword grep demoted to a canary that fails the build on a residual hit but proves nothing when clean), `run` writes the runner's manifest before launch and treats a receipt-absent run as FAILED rather than empty, and `compare` decides with one joint max-T permutation test over the full assignment space. The comparator's expected values come from ideation's enumeration script rather than from this harness's own output, and the span pins were regenerated independently and agree with ideation's sidecar on all 14. Test-plan items 1-4 pass (61 assertions), CI now runs that model-free half, and the 27-run acceptance is left to validation with the budget untouched.
