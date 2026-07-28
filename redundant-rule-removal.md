@@ -7,6 +7,7 @@ id: tmn8fgqy8390zepcp019td74
 lane: main
 started: 2026-07-28T16:32:16Z
 worktree: .worktrees/spacedock-ensign-redundant-rule-removal
+mod-block: merge:pr-merge
 ---
 
 ## Problem
