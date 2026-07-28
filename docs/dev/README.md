@@ -128,7 +128,11 @@ binding in every stage report and every gate review.
 1. **No prose-grep, and provenance decides independence.** A string match
    over an instruction file the model reads never proves a behavioral claim.
    A grep may serve as one-off evidence for an existence fact in a validation
-   report; the same grep committed as a test is banned — it cannot fail. And
+   report; the same grep committed as a test is banned. Not because it can
+   never go red — deleting the matched line turns it red — but because that is
+   the *only* edit that does: it tracks the wording and is blind to the
+   behavior, so it passes straight through the regression it was committed to
+   catch. And
    a check the author wrote to grade the author's own artifact is a self-issued
    stamp, not a gate. This is about what closes a gate, not about who may write
    a test: the worker's own RED-before-GREEN tests are exactly the evidence
@@ -233,6 +237,17 @@ ideation-declared X" reads it here. The lane's AC bar is that mechanical test
 alone — a bounded fix restores behavior rather than delivering new value, so the
 value-AC requirement does not apply, and a defect that needs one is not a bounded
 fix and belongs in the main line.
+
+**`design: trivial-pass` here does not contradict the ideation clause that makes
+`design: required` mandatory for a UI, contract, interface, schema, or visual
+surface.** That list asks whether the task *decides* something about the surface,
+not whether it touches one. A bounded repair restores behavior the surface
+already documents and decides nothing, so `trivial-pass` is the accurate
+determination even when the seam is a UI or a contract. A fix that would change
+the surface's shape has an open design decision by definition, which is condition
+four failing — so it was never in this lane, and the `required` clause reaches it
+in `ideation` where it belongs. If the two readings ever seem to both apply, that
+is the tell that condition four is not actually satisfied.
 
 **This attaches to the classification, not to capture.** Seed capture stays what
 the `backlog` clause says it is: title, `source`, one paragraph, under two
@@ -375,11 +390,17 @@ once. Discipline clauses:
   *able* to appear as a failure in that run. A case stops at its first failing
   assertion, so later assertions in the same case never execute — compare failing
   *cases* against the cases that should fail, and for the rest ask per assertion
-  whether any RED run could reach it. One that would be green in RED holds in the
-  pre-fix world too, so it is decoration, not evidence — rewrite it to pin the
-  literal expected value, or delete it. This is the mechanical enforcement of
-  "evidence must be able to fail"; the RED record aims at it but does not check
-  it, and the tell is an added assertion no RED run can reach.
+  whether any RED run could reach it. An assertion reachable in RED and green
+  anyway holds in the pre-fix world too, so **as evidence for the behavior** it
+  is decoration — rewrite it to pin the literal expected value, or delete it.
+  The exception is the assertion that is not claiming the behavior: a
+  precondition or arrangement check, green by construction in both worlds,
+  exists to prove the case exercised what it says it exercised, and deleting it
+  makes a later green less trustworthy, not more. Keep those, and say in the RED
+  record which they are — an unlabelled green assertion is read as a claim about
+  the behavior. This is the mechanical enforcement of "evidence must be able to
+  fail"; the RED record aims at it but does not check it, and the tell is an
+  added behavior-claiming assertion no RED run can reach.
 - **When you change a behavior, audit the tests that arrange the old one.** A
   suite that goes green after a behavior change can mean a fixture was silently
   re-purposed rather than that coverage held. Grep the suite for scenarios that
@@ -418,9 +439,12 @@ once. Discipline clauses:
   uncommitted and the stage report says exactly where the loop stopped.
 - **Scoped tests in the loop, full suite plus ripple at the exit.** During the
   build loop run only the tests scoped to the behavior under change (file,
-  module, or tagged subset). Run the full suite exactly once, after scoped
+  module, or tagged subset). Run the full suite once, after scoped
   tests are green, as the stage-exit regression check — not on every
-  iteration. For a change to a surface something else reads, also run the checks
+  iteration. Once is the *entry* count, not a cap: a failure that run surfaces
+  is fixed and the suite re-run, because the exit condition is a green
+  full-suite run on the code being handed over, and a rule that forbade the
+  second run would trade the regression for the ceremony. For a change to a surface something else reads, also run the checks
   that actually consume *that* surface — they are not interchangeable, so run
   the ones the diff earns, not all of them:
   - a version value or propagation target — `<plugin>/.claude-plugin/plugin.json`,
