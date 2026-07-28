@@ -155,6 +155,12 @@ plus a post-condition that the removed span is absent at every site named in the
 the arm is usable. Proof Policy #7 in its literal form: an adversarial edit must first prove it took
 effect. The sprint has already paid for a spot-check edit whose target string did not exist.
 
+Three arms are built per experiment. **A′ is a second, independently built copy of arm A** — same
+baseline tree, empty ablation — so the A/A comparison exercises the whole path (build, run, collect,
+compare) twice rather than comparing arm A against itself. `skill_sha256` is required to be equal
+across A and A′ and required to differ between A and B; both checks are made by `compare` from the
+mode it was invoked with.
+
 **2. Driver.** One headless review per run: `claude -p <driver-prompt> --plugin-dir <arm-tree>
 --model <pinned> --output-format json`, from a pristine clone at a pinned base SHA. The driver
 prompt imposes constraints that override the skill: never post to GitHub, never modify the tree
@@ -197,8 +203,18 @@ change that function, which stays correct for its own runtime-parity purpose.
 
 ### Pre-registered materiality rule — fixed now, before any cut
 
-**Sizing: N=3 runs per arm, M=3 corpus PRs.** Derived from the floor and the power measurement
-below, not assumed.
+**Sizing: N=3 runs per arm, M=3 corpus PRs, and one experiment with three arms.** Derived from the
+floor and the power measurement below, not assumed.
+
+**One experiment, three arms — A, A′, B.** A single `experiment_id` covers all 27 runs (3 arms × 3
+runs × 3 PRs). Arm A′ is a byte-identical second build of arm A; arm B carries the ablation. AC-1
+compares **A vs A′**, AC-2 compares **A vs B**, and both read the *same* arm-A receipts. The
+comparison mode is therefore a property of the `compare` invocation (`--mode AA` / `--mode AB`), not
+of a receipt: `compare --mode AA --arms A,A_prime` and `compare --mode AB --arms A,B` consume one
+27-receipt set and echo the mode into their verdicts. Round 1 put `mode` inside the receipt, which
+forced arm A's nine receipts to exist twice under two `experiment_id`s — 36 runs (~$91) — and the
+duplicate copies are exactly what AC-3(d)'s duplicate guard is built to reject. Moving `mode` out
+holds the acceptance at **27 runs / ~$68**.
 
 Per PR *p*, arm *X*, run *i*: `F(p,X,i)` = the set of candidate fingerprint IDs from that run.
 
@@ -217,8 +233,14 @@ and a change in either direction raises it.
 
 **Decision rule.** Exact permutation test on run labels, permuted independently within each PR.
 Each PR contributes 2N=6 runs; there are C(6,3)=20 relabelings per PR, so 20^M assignments in total.
-`p_perm` = the fraction of assignments whose recomputed `T` is ≥ `T_observed`. **A change is
-material iff `p_perm` ≤ 0.05.**
+`p_perm` = the fraction of assignments whose recomputed `T` is ≥ `T_observed`, at α = 0.05.
+
+This is the rule for **one dimension**. `anchor_set` is one of three the verdict measures, and
+combining three α-level tests by OR leaves the family-wise rate uncalibrated — so the verdict's
+`material` bit is decided by a single **joint max-statistic** permutation over the same assignment
+space, defined under `### Design determination`. Everything below in this section — the floor, the
+worked cases, the sizing — is unchanged by that, because the joint rule permutes the same labels and
+inherits the same floor.
 
 **The attainable floor, and why round 1's was wrong by 8×.** `D(p)` is invariant under swapping the
 A/B labels within a PR — the swap exchanges `J_within(p,A)` with `J_within(p,B)`, leaving their mean
@@ -239,43 +261,73 @@ exactly, in exact rational arithmetic, over the full assignment space:
 | Arms disjoint, perfect within-arm agreement | 2/3 | 216 | 1 | **1/27 = 0.0370** | material — and it *is* the floor, confirming the derivation |
 | Same, at the adopted sizing | 3/3 | 8000 | 1 | **1/1000 = 0.0010** | material |
 | Arm B a consistent superset of arm A (`A={x,y}`, `B={x,y,z}`) | 2/3 | 216 | 1/3 | **0.0370** | material |
-| A/A drawn from one noisy process, 200 independent trials | 3/3 | 8000 | — | fp rate **0.045** | not material — calibrated at α |
-| A/A, same, at N=2/M=3 | 2/3 | 216 | — | fp rate **0.005** | not material |
+| Arms identical (same fingerprint set every run) | 2/3 | 216 | 0 | **1.0000** | not material |
 
-The A/A rows are the "it can also not fire" half; the disjoint and superset rows are the "it can
-fire" half. A statistic that always fired would show fp ≈ 1 on the A/A rows, and an inverted one
-would show `p_perm` ≈ 1 on the disjoint row.
+The identical row is the "it can also not fire" half; the disjoint and superset rows are the "it can
+fire" half. A statistic that always fired would not reach `p_perm` = 1 on the identical row, and an
+inverted one would show `p_perm` ≈ 1 on the disjoint row. Every row is exact enumeration over the
+full assignment space, reproduced by the committed simulation (`sizing-simulation.py`, section
+*Worked verification, anchor-set statistic*). The A/A calibration rows that stood here in round 1
+moved to the joint-rule verification under `### Design determination`, because calibration is a
+property of the decision rule and the decision rule is no longer this single statistic.
 
-**Why N=3, measured rather than argued.** Simulating the AC-2-shaped effect (arm B systematically
-emits 3 extra findings per PR on top of the same noise process), power at α=0.05:
+**Why N=3, measured rather than argued — and now reproducible.** The simulation is committed at
+`docs/dev/artifacts/skill-ablation-harness/sizing-simulation.py` (stdlib-only Python, `SEED =
+20260728`, all parameters at the top of the file: stable core 6 findings/PR, noise pool 6 sampled
+independently at q=0.5, AC-2-shaped effect = arm B emits 3 extra findings per run, 200 A/A trials,
+60 power trials). Round 1's figures were produced by an ad-hoc script that was never committed, so
+nobody else could recompute them; the table below is what the committed script prints, and it
+supersedes them. Power is of **the joint decision rule** (`### Design determination`), which is what
+actually decides `material`, at α=0.05:
 
 | sizing | floor | power on the AC-2-shaped effect | acceptance runs | cost |
 |---|---|---|---|---|
-| N=2 / M=3 (round 1) | 0.037 | **0.40** | 18 | ~$46 |
-| N=2 / M=4 | 0.012 | 0.83 | 24 | ~$61 |
-| **N=3 / M=3 (adopted)** | **0.001** | **1.00** (median `p_perm` = 0.001) | **27** | **~$68** |
+| N=2 / M=3 (round 1 sizing) | 0.037 | **26/60 = 0.43** (Wilson 0.32–0.56) | 18 | ~$46 |
+| N=2 / M=4 | 0.012 | 43/60 = 0.72 (Wilson 0.59–0.81) | 24 | ~$61 |
+| **N=3 / M=3 (adopted)** | **0.001** | **60/60** (Wilson **0.94–1.00**), median `p_joint` = 0.001 | **27** | **~$68** |
 
-At N=2/M=3 AC-2 was a coin flip: the design would have failed roughly three times in five for want
+Round 1 recorded 0.40 / 0.83 / 1.00 for these three cells. The re-run gives 0.43 / 0.72 / 60-of-60;
+the two middle figures differ because the simulations are not the same one, and the ordering — which
+is the only thing the sizing decision rests on — is unchanged. **The adopted cell is stated as
+60/60 observed with a Wilson interval of ~0.94–1.00, not as a known 1.00.** Sixty trials cannot
+establish a power of exactly 1; they establish that the true power is very unlikely to be below 0.94
+*under this run model*.
+
+At N=2/M=3 AC-2 was close to a coin flip: the design would have failed more often than not for want
 of power, not for want of an effect, and the harness would have been declared unable to see a gate
 removal it can in fact see. N=2/M=4 clears the bar but needs a 4th corpus PR sourced and pilot-run;
 N=3/M=3 reuses the corpus already scoped and costs $7 more. Adopted: **N=3 / M=3**.
 
-The power and calibration figures come from a Monte-Carlo model of the run process (stable core
-findings plus sampled noise), not from real review runs — they size the design, they do not
-substitute for AC-1. AC-1 is what tests the real noise process against this rule.
+**What the simulation is not.** The figures come from a Monte-Carlo model of the run process —
+a stable core plus independently sampled noise — not from real review runs. Two consequences, both
+against this design's interest:
+
+- **The real noise is plausibly larger and more correlated than the model.** A kc-pr-review run
+  dispatches multiple agents, reads tool results whose content varies, can switch strategy wholesale
+  between runs, and rides a provider whose serving stack drifts. Independent per-finding Bernoulli
+  noise around a fixed core is the friendly case. If the real within-arm agreement is lower or the
+  run-to-run variation more structured, **AC-2's power at N=3/M=3 is lower than 60/60 suggests**,
+  and N=3 may itself prove short.
+- **A single AC-1 pass is a negative control, not a calibration measurement.** One A/A comparison
+  returning `material: false` is one draw from a distribution that should reject about 5% of the
+  time. It shows the instrument does not fire on nothing; it does **not** establish that the real
+  false-positive rate is ≈ 0.05. Establishing that would need tens of A/A comparisons, which is not
+  affordable and is not proposed.
+
+The simulation sizes the design; AC-1 tests the real noise process against the rule.
 
 This pre-registers a *decision procedure* with exactly one free parameter (α = 0.05), fixed here.
 There is no magic similarity number that a later result could renegotiate — which is the specific
 way "a slimming pass talks itself into 'that difference doesn't matter'".
 
-The rule is not circular against AC-1. Under A/A there is no true effect, so `p_perm` ≤ 0.05 should
+The rule is not circular against AC-1. Under A/A there is no true effect, so `p_joint` ≤ 0.05 should
 occur at about rate α. AC-1 can genuinely fail: if within-arm agreement is systematically higher
 than between-arm agreement for a reason that is not the skill — sequential drift, cache warming,
 time-of-day model variation — A/A reports "material" and the harness is measuring its own
 scheduling. That is exactly the failure AC-1 exists to catch. Mitigation baked into the design: the
-18 runs of a verdict are **interleaved by arm, and the arm-to-slot assignment within each PR is
-randomized and recorded per run** — interleaving alone fixes an ordering, which is a weaker
-guarantee than exchangeability, and the permutation test assumes exchangeability.
+27 runs of an experiment are **interleaved across the three arms, and the arm-to-slot assignment
+within each PR is randomized and recorded per run** — interleaving alone fixes an ordering, which is
+a weaker guarantee than exchangeability, and the permutation test assumes exchangeability.
 
 **Corpus precondition (guards the degenerate pass).** Each corpus PR must yield ≥1 posted-tier
 finding in a pilot run, or it is replaced. Without this, an all-empty corpus makes every Jaccard 1,
@@ -283,12 +335,15 @@ finding in a pilot run, or it is replaced. Without this, an all-empty corpus mak
 
 ### Cost — the number this gate should be judged on
 
-One A/B verdict = **2 arms × 3 runs × 3 PRs = 18 headless kc-pr-review runs.**
+One verdict compares two arms = **2 arms × 3 runs × 3 PRs = 18 headless kc-pr-review runs.**
 
 Measured, not assumed — one real headless run against a real PR was executed in the spike:
 **$2.53, 7.6 minutes, 5.21M raw tokens (~141K uncached).** So one verdict is **~$46 and ~2.3 hours
-of unattended compute**; the AC-1 and AC-2 acceptance runs share arm A's 9 runs, so proving both
-costs **27 runs, ~$68**, not 36 runs. Full reconciliation of the raw-vs-uncached token figures — and
+of unattended compute**. The acceptance needs two verdicts, and the three-arm design is what keeps
+that from doubling: one experiment builds **A, A′, B** — 3 arms × 3 runs × 3 PRs = **27 runs, ~$68**
+— and arm A's 9 runs are read by both the A-vs-A′ verdict (AC-1) and the A-vs-B verdict (AC-2). Two
+separate 18-run experiments would be 36 runs (~$91) and would put arm A's receipts on disk twice,
+which AC-3(d) rejects as duplicates. Full reconciliation of the raw-vs-uncached token figures — and
 why the workflow's earlier ~140K estimate is consistent with 5.21M — is in the Spike section.
 
 The consequence is a scoping fact, not a footnote: **this harness is a few-times-per-sprint
@@ -312,7 +367,7 @@ This covers the Sprint 4 majority.
 **Cannot detect** — a cut that changes only a finding's *wording* while its anchor and `claim_key`
 hold; this is the acknowledged price of the stable-projection choice, and it is the risk class
 closest to `tm`. Behavior on PR shapes absent from a 3-PR corpus (no security-tier PR means the
-`tob-*` instructions are unmeasured). Any effect too small to reach `p_perm` ≤ 0.05 at N=3/M=3 — a
+`tob-*` instructions are unmeasured). Any effect too small to reach `p_joint` ≤ 0.05 at N=3/M=3 — a
 cut that moves one finding on one PR will not clear the bar. The measured example of "too small":
 an arm-B superset that adds one finding to each run but only in the *noisy* regime (`|D(p)|` ≈ 0.08)
 does not reach the bar at either sizing; the same superset applied consistently (`|D(p)|` = 0.33)
@@ -330,9 +385,9 @@ conditioned on corpus selection rather than on the harness alone.
 **Receipt contract** (driver → comparator), one JSON object per run:
 
 ```json
-{"schema": "kc-pr-flow.ablation-run/v2",
- "mode": "AA|AB", "arm": "A|B", "run_index": 1, "slot_index": 0, "nonce": "<per-experiment uuid>",
- "experiment_id": "<uuid, identical across all runs of one verdict>",
+{"schema": "kc-pr-flow.ablation-run/v3",
+ "arm": "A|A_prime|B", "run_index": 1, "slot_index": 0, "nonce": "<per-experiment uuid>",
+ "experiment_id": "<uuid, identical across all 27 runs of one experiment>",
  "pr": {"repository": "...", "number": 63, "base_sha": "...", "head_sha": "..."},
  "skill_sha256": "<sha256 of the arm's SKILL.md>",
  "arm_manifest_sha256": "<sha256 of the arm-builder manifest: ablation spec + baseline hit set + post-condition result>",
@@ -345,7 +400,25 @@ conditioned on corpus selection rather than on the harness alone.
  "wallclock_ms": 0, "written_at": "<RFC3339>"}
 ```
 
-Four things changed from round 1's `v1`, each because `v1` did not actually work.
+**Run manifest** (runner → comparator), one JSON object per run, written by `review-ablation.sh run`
+**before** the agent is launched and never writable by it:
+
+```json
+{"schema": "kc-pr-flow.ablation-manifest/v1",
+ "experiment_id": "<uuid>", "nonce": "<per-experiment uuid>",
+ "arm": "A|A_prime|B", "run_index": 1, "slot_index": 0,
+ "pr": {"repository": "...", "number": 63, "base_sha": "...", "head_sha": "..."},
+ "run_started_at": "<RFC3339, taken by the runner before launch>",
+ "expected_receipt_path": "<absolute path the runner will read>"}
+```
+
+This exists because the receipt alone cannot answer "was this written by *this* run". The receipt is
+authored inside the agent's session; anything in it that claims recency is a self-report. The
+manifest is the runner's own record, `compare` is given the manifest set alongside the receipt set,
+and the two are joined on `(experiment_id, arm, run_index)`. Without it AC-3(c) has no run-start
+authority to compare against and cannot be built.
+
+Five things changed from round 1's `v1`, each because `v1` did not actually work.
 
 **The findings entry now carries what the reused canonicalization consumes.** `review_benchmark_fingerprint_id`
 canonicalizes `{path, side, anchor_sha256, evidence_sha256, category, claim_key}` and its validator
@@ -358,8 +431,15 @@ canonicalizes `{path, side, anchor_sha256, evidence_sha256, category, claim_key}
 LOW / NIT`. Round 1 invented `blocking|important|nit`, which would have needed a mapping nobody
 wrote and would have silently collapsed CRITICAL and HIGH.
 
-**`mode` is explicit.** See AC-1/AC-3 below — equal `skill_sha256` across arms is *required* under
-`mode: "AA"` and *forbidden* under `mode: "AB"`. Without this field the two ACs contradict.
+**`mode` moved out of the receipt into the comparison.** Equal `skill_sha256` across the compared
+pair is *required* under `AA` and *forbidden* under `AB` (AC-1 / AC-3(a)) — round 1 got that
+mode-dependence right but put the field in the wrong place. A receipt records **which arm produced
+it**; whether a given pair of arms is being read as an A/A or an A/B comparison is a property of the
+`compare` invocation, which is why `v3` drops `mode` and adds `A_prime` to `arm`. Round 1's placement
+made one arm-A receipt need to be simultaneously `"AA"` (for AC-1) and `"AB"` (for AC-2), so proving
+both ACs would have meant either 36 runs or copying nine receipts with rewritten metadata — and a
+copied receipt is precisely what AC-3(d) exists to reject. `compare` echoes the mode it was invoked
+with into the verdict, so a verdict is still self-describing.
 
 **Provenance is pinned.** `model_id` (as reported, not as requested — a silently-substituted model
 invalidates the comparison), `pr.base_sha`/`pr.head_sha` (corpus revision), `driver_prompt_sha256`,
@@ -373,10 +453,17 @@ post-condition result (fix 5, step 4); the hash comparison is the cheap cross-ch
 `slot_index` records the randomized arm-to-slot assignment, which is what the permutation test's
 exchangeability assumption actually needs.
 
-**Verdict contract** (comparator output): `kc-pr-flow.ablation-verdict/v2` carrying `mode`,
-`t_observed`, `p_perm`, `material` (bool), `flagged_dimensions` (subset of `anchor_set` /
-`severity_mix` / `tokens`), plus the per-PR `D(p)`, per-arm token totals, and the provenance pins
-echoed from the receipts (`model_id`, `driver_prompt_sha256`, corpus base/head SHAs).
+**The freshness authority left the receipt.** Round 1 asked the receipt to prove its own freshness,
+which it cannot; the run manifest above now carries `run_started_at` and the runner's `nonce`, and
+`compare` reads both. The receipt keeps `written_at` and `nonce` so the two can be *compared* — a
+self-report is evidence once there is an independent record to check it against.
+
+**Verdict contract** (comparator output): `kc-pr-flow.ablation-verdict/v3` carrying `mode`
+(`AA|AB`, from the invocation) and `arms` (e.g. `["A","A_prime"]`), `experiment_id`, `z_observed`
+and `t_observed` per dimension, `p_joint`, `p_dim` (the max-adjusted per-dimension p-values),
+`material` (bool), `flagged_dimensions` (subset of `anchor_set` / `severity_mix` / `tokens`), plus
+the per-PR `D(p)`, per-arm token totals, and the provenance pins echoed from the receipts
+(`model_id`, `driver_prompt_sha256`, corpus base/head SHAs).
 
 **What `material: false` certifies — and what it does not.** It certifies **no detected difference
 on the measured dimensions (anchor set, severity mix, tokens)** at α=0.05 for the corpus, sizing,
@@ -385,46 +472,132 @@ rewords what a finding says while its anchor and `claim_key` hold is outside the
 by construction, and so is any effect below the power floor. The verdict JSON carries this sentence
 verbatim in a `certifies` field so it travels with the artifact rather than living only here.
 
-**`flagged_dimensions` entry rules are computable, pre-registered here, not judgment.** Round 1 left
-them undefined, which let AC-2's "named dimension" condition be satisfied vacuously. A dimension is
-entered iff:
+**The decision is ONE joint permutation test, not three.** Round 1 left the entry rules undefined;
+the round-1 repair defined three of them and made `material` true iff any one crossed `p_perm` ≤
+0.05. That is an OR of three α=0.05 tests, so the family-wise false-positive rate is
+**uncalibrated — bounded above by ~0.143 under independence** (`1 − 0.95³`), and in fact lower than
+that bound because the three statistics are computed on the same runs and are positively correlated.
+Neither number is the rate; the point is that nothing in the design pinned it to α. The round-1
+figure of 0.045 was measured on the anchor-set statistic alone, so it never supported AC-1's
+calibration claim.
 
-- `anchor_set` — the primary test on fingerprint sets returns `p_perm` ≤ 0.05. (This is the same
-  statistic as the verdict; it is listed when it is what fired.)
-- `severity_mix` — the same permutation procedure, run on a per-PR distance between arms' severity
-  histograms over `CRITICAL/HIGH/MEDIUM/LOW/NIT` (total-variation distance on the normalized
-  histogram, averaged over runs), returns `p_perm` ≤ 0.05.
-- `tokens` — the same permutation procedure on per-run `usage.input_tokens + output_tokens +
+The three per-dimension statistics stay as they were:
+
+- `anchor_set` — `T` on candidate-fingerprint sets, exactly as pre-registered above.
+- `severity_mix` — the same `D(p)` construction with similarity `1 − TV(H_a, H_b)`, the
+  total-variation distance between two runs' normalized severity histograms over
+  `CRITICAL/HIGH/MEDIUM/LOW/NIT` plus the `EMPTY` category defined below.
+- `tokens` — `D(p)` = difference of arm mean per-run `usage.input_tokens + output_tokens +
   cache_creation_input_tokens` (the uncached total; cache-read is dominated by shared prefix and is
-  not an arm property), using mean absolute difference of arm means, returns `p_perm` ≤ 0.05.
+  not an arm property), and `T` = mean `|D(p)|`, i.e. mean absolute difference of arm means.
 
-All three are the identical permutation machinery on a different per-run scalar or set, so one
-implementation serves all three and one test covers all three. `material` is true iff
-`flagged_dimensions` is non-empty; a verdict reporting `material: true` with an empty
-`flagged_dimensions` is a comparator bug and must exit non-zero.
+What changes is how they are combined. Over the **same** `C(2N,N)^M` label assignments, each
+dimension's `T_d` is standardized by its own permutation mean and standard deviation to `z_d`, and
+the joint statistic is `max_d z_d`. Then
+
+    p_joint = fraction of assignments whose max_d z_d  >=  observed max_d z_d
+    p_d     = fraction of assignments whose max_d z_d  >=  observed z_d
+
+`material` is true iff `p_joint ≤ 0.05`; `flagged_dimensions` = `{ d : p_d ≤ 0.05 }`. Since
+`p_joint = min_d p_d`, a `material: true` verdict always names at least one dimension, and a verdict
+that reports `material: true` with an empty `flagged_dimensions` is a comparator bug and must exit
+non-zero. All three `T_d` are invariant under the within-PR A/B label swap, so the joint rule has the
+same attainable floor `(2/C(2N,N))^M` = 1/1000 at N=3/M=3.
+
+This is single-step max-T (Westfall–Young). It is chosen over Bonferroni because it **self-calibrates
+under whatever correlation the three statistics actually have**, which is unknown in advance and
+which Bonferroni would have to assume away — dividing α by 3 against three heavily correlated
+statistics is conservative by an amount nobody can state, and buying calibration with power is the
+wrong trade for a design whose power is already the binding constraint.
+
+**This fix costs zero additional runs.** It is arithmetic inside `compare`, over the same 27
+receipts, permuting the same labels. Nothing about the experiment, the corpus, the sizing, or the
+budget moves. (Recorded explicitly because the round-2 gate was told this fix might move the budget;
+it does not.)
+
+**Recalibration, re-run on the joint rule.** From the committed simulation, 200 A/A trials per
+sizing at α=0.05:
+
+| sizing | A/A false positives, joint rule | anchor-set statistic alone, same trials |
+|---|---|---|
+| N=2 / M=3 | 6/200 = **0.030** (Wilson 0.014–0.064) | 8/200 = 0.040 (Wilson 0.020–0.077) |
+| N=2 / M=4 | 11/200 = **0.055** (Wilson 0.031–0.096) | 11/200 = 0.055 (Wilson 0.031–0.096) |
+| **N=3 / M=3 (adopted)** | 10/200 = **0.050** (Wilson 0.027–0.090) | 13/200 = 0.065 (Wilson 0.038–0.108) |
+
+At the adopted sizing the joint rule's A/A rate is 0.050 with a Wilson interval of 0.027–0.090 —
+consistent with α under this run model. The bounded claim, and its enforcement point: the rule's
+calibration is *asserted* only to the precision 200 trials buy, and the enforcement is the committed
+script, which anyone can re-run with a different seed. The two columns are within each other's
+intervals, so this table does **not** claim the joint rule is better calibrated than the single
+statistic — it claims the joint rule is calibrated at all, which the OR-of-three was not.
+
+**Worked verification of the joint rule — cases it must flag and a case it must not** (Proof Policy
+#7), by exact enumeration over all 8000 assignments at N=3/M=3:
+
+| Case | `p_joint` | `flagged_dimensions` |
+|---|---|---|
+| All three dimensions moved (disjoint anchors, all-HIGH vs all-NIT, 100 vs 300 tokens) | **0.0010** (the floor) | `anchor_set`, `severity_mix`, `tokens` |
+| Tokens only — identical anchors and severities, 100 vs 300 tokens | **0.0010** | `tokens` only |
+| Arms are the same runs | **1.0000** | none |
+| Both arms all-empty runs (`findings: []`) | **1.0000** | none, and no division by zero |
+
+The tokens-only row is the one that proves the joint rule still *discriminates*: a max-statistic that
+flagged every dimension whenever any moved would name all three there. The last two rows are the
+"it can also not fire" half.
+
+**`severity_mix` on an empty run.** The histogram is over **six** categories — the five severities
+plus a dedicated `EMPTY`. A run with `findings: []` gets mass 1 on `EMPTY` and 0 elsewhere; a run
+with findings gets 0 on `EMPTY` and the normalized severity counts elsewhere. Without this the
+normalization divides by zero, and a legitimate zero-finding receipt would crash the comparator or,
+worse, be coerced to some default histogram. The corpus precondition (≥1 posted-tier finding) is a
+*pilot-time* property of a PR; it does not guarantee that every one of the 27 runs is non-empty, so
+this is a live path, not a hypothetical. With the `EMPTY` category the distance stays total: an empty
+run and a non-empty run are at TV distance 1 (similarity 0), two empty runs at distance 0
+(similarity 1). The fourth row of the table above is that case, enumerated.
+
+**Stale and duplicate, defined so each can actually be constructed.** Round 1 stated both guards in
+terms the data could not support; here is what each one computes.
+
+- **Stale** — a receipt at `expected_receipt_path` is stale iff its `nonce` ≠ the manifest's `nonce`,
+  or its `experiment_id` ≠ the manifest's, or its `written_at` is **earlier than the manifest's
+  `run_started_at`**. The manifest is written by the runner before launch and is not writable by the
+  agent, so this is a comparison against an authority outside the thing being checked. Constructing
+  the negative case is then a two-line fixture: write a receipt, then write a manifest whose
+  `run_started_at` is later.
+- **Duplicate** — the projection hashed is the receipt's canonical JSON **minus
+  `{run_index, slot_index, written_at}`**. Round 1 hashed the whole receipt including `run_index`,
+  so two receipts differing only in `run_index` hashed differently and the guard could never fire —
+  a check that cannot fail. With those three fields projected out, a receipt copied from run 1 to
+  run 2 hashes identically and is caught. Two receipts colliding under this projection are rejected
+  as duplicates regardless of arm; a genuine re-run differs in at least its `usage` and
+  `wallclock_ms`, so a legitimate collision would itself mean the runs were not independent.
+
+Both rules are stated as computations over fields that exist, which is the bar an AC-3 negative case
+has to clear: **an AC whose negative case cannot be constructed is an AC that cannot fail.**
 
 **CLI surface**: one script, `kc-pr-flow/scripts/review-ablation.sh`, subcommands `arm` (build an
-arm tree), `run` (one headless run → receipt), `compare` (receipts → verdict). Split this way so
-`compare` is unit-testable against synthetic receipts with no model in the loop.
+arm tree), `run` (write the manifest, execute one headless run, collect the receipt), `compare
+--mode AA|AB --arms X,Y` (manifests + receipts → verdict). Split this way so `compare` is
+unit-testable against synthetic manifests and receipts with no model in the loop.
 
 ## Acceptance criteria
 
-**AC-1 — An A/A run reports no material difference.**
-Verified by: `review-ablation.sh compare` over 18 receipts (2 arms × 3 runs × 3 PRs) from two identically-armed trees on the frozen corpus, every receipt carrying `mode: "AA"`, emitting `material: false` under the pre-registered rule (`p_perm` > 0.05) with `flagged_dimensions` empty. Under `mode: "AA"` the two arms' `skill_sha256` are **required to be equal** and `compare` exits non-zero if they differ — the mis-arming check is mode-dependent, which is what removes round 1's contradiction with AC-3(a). Falsified by: an A/A run emitting `material: true` — the statistic is then tracking run scheduling, not the skill, and no cut can be judged with it. Falsifying edit: order the runs arm-A-then-arm-B instead of randomizing slot assignment; if that flips the verdict, the noise model is wrong.
+**AC-1 — An A/A comparison reports no material difference.**
+Verified by: `review-ablation.sh compare --mode AA --arms A,A_prime` over the arm-A and arm-A′ halves of one 27-run experiment (18 receipts plus their 18 runner-written manifests, 3 runs × 3 PRs per arm, both arms built from the unablated tree on the frozen corpus), emitting `material: false` under the pre-registered joint rule (`p_joint` > 0.05) with `flagged_dimensions` empty. Under `--mode AA` the two arms' `skill_sha256` are **required to be equal** and `compare` exits non-zero if they differ — the mis-arming check is a property of the invocation, not of the receipts, which is what lets AC-1 and AC-2 share arm A's nine runs and holds the acceptance at 27 runs. What this AC does and does not establish: a single pass is a **negative control** showing the instrument does not fire on nothing; it is not a measurement of the real false-positive rate, which would need tens of A/A comparisons. Falsified by: `material: true` — the statistic is then tracking run scheduling, not the skill, and no cut can be judged with it. Falsifying edit: order the runs arm-A-then-arm-A′ instead of randomizing slot assignment; if that flips the verdict, the noise model is wrong.
 
 **AC-2 — Removing the pre-emit quote gate is reported as a difference.**
 Verified by: an A/B run (`mode: "AB"`) whose arm B removes the pre-emit quote gate at **every site enumerated in `### The AC-2 ablation`** — `SKILL.md:975`, `:977-982`, `:984`, `:986`, `:988`, the trailing clause of `:990`, the `:861` parenthetical, and the `:1855` recap — with the arm manifest showing zero residual hits and the Step-2.5 sentence at `:143` intact; emitting `material: true` with at least one entry in `flagged_dimensions`. Falsified by: `material: false` for that ablation — the harness cannot catch the cuts this sprint intends. Falsifying edit: ablate only `:975-984` and leave `:861` and `:1855` in place; the design predicts a weaker or absent signal, and if the verdict is unchanged either way, the statistic is not reading the gate.
 
 **AC-3 — The harness cannot report a false null.**
-Verified by: five negative cases, each producing a non-zero exit and a named error rather than a `material: false` verdict — (a) a mis-armed pair under `mode: "AB"`, where both arms' `skill_sha256` are equal though labelled A and B; (b) a failed run, where one arm's run produced no receipt (the case actually observed in spike 2); (c) a stale receipt at a reused output path, detected because its `nonce`/`experiment_id` does not match the current experiment or its `written_at`/mtime predates the run's start; (d) one receipt content-hash appearing under two `run_index` values, i.e. a duplicated receipt inflating agreement; (e) receipts whose `driver_prompt_sha256` or `model_id` disagree across the set. Falsified by: `compare` emitting a normal verdict for any of them — the harness would then report "no difference" for a review that was never ablated, never finished, or never actually re-run. Falsifying edit: make the receipt loader default a missing file to `{"findings": []}`; AC-3(b) must go red.
+Verified by: five negative cases, each producing a non-zero exit and a named error rather than a `material: false` verdict — (a) a mis-armed pair under `compare --mode AB --arms A,B`, where both arms' `skill_sha256` are equal though built as A and B; (b) a failed run, where one arm's run produced no receipt at the manifest's `expected_receipt_path` (the case actually observed in spike 2); (c) a stale receipt at a reused output path, detected against the **runner-written manifest** — the receipt's `nonce` or `experiment_id` disagrees with the manifest's, or its `written_at` precedes the manifest's `run_started_at`; (d) two receipts equal under the duplicate projection (canonical receipt JSON minus `{run_index, slot_index, written_at}`), i.e. one receipt copied across runs to inflate agreement; (e) receipts whose `driver_prompt_sha256` or `model_id` disagree anywhere across the experiment's 27 receipts, not merely within the compared pair. Falsified by: `compare` emitting a normal verdict for any of them — the harness would then report "no difference" for a review that was never ablated, never finished, or never actually re-run. Falsifying edit: make the receipt loader default a missing file to `{"findings": []}`; AC-3(b) must go red.
 
 **Residual degenerate paths, named and not closed.** Three failure shapes were raised and are *not* fully guarded by AC-3, recorded here rather than left unlisted: an early parseable `findings: []` written before the agent defers (indistinguishable from a genuine zero-finding run — the ≥1-finding corpus precondition makes it detectable at pilot time but not per-run); malformed individual findings silently dropped by the parser rather than failing the run (mitigated by failing the run on any unparseable entry, unmitigated for an entry that parses but is semantically wrong); and receipts mixed across experiments where `experiment_id` collides. These are the known residuals of the false-null guard, not oversights.
 
 ## Test plan
 
-1. **Comparator unit tests**, no model in the loop, against synthetic receipts. Four fixtures, each pinned to a value computed by exact enumeration during ideation: identical fingerprint sets across arms → `T`=0, `p_perm`=1, `material:false`; disjoint sets with perfect within-arm agreement → `T`=1, `p_perm`=**1/1000** at N=3/M=3 (and **1/27** at N=2/M=3, asserted separately to pin the floor formula `(2/C(2N,N))^M`); a consistent superset (`A={x,y}`, `B={x,y,z}`) → `T`=1/3, `p_perm`=1/27 at N=2/M=3; and a **sign-flipped** case where between-arm agreement exceeds within-arm agreement by the same margin → identical `p_perm` as the positive case, which is the assertion that fails if anyone reverts `T` to the signed statistic. Together these are the "the check can fail" set required by Proof Policy #2 — fixture 1 fails if the statistic is inverted, fixture 2 if the permutation enumeration is wrong, fixture 2's N=2 variant if the label-swap collapse is not accounted for, and fixture 4 if the test is one-sided.
+1. **Comparator unit tests**, no model in the loop, against synthetic receipts. Four fixtures, each pinned to a value computed by exact enumeration during ideation: identical fingerprint sets across arms → `T`=0, `p_perm`=1, `material:false`; disjoint sets with perfect within-arm agreement → `T`=1, `p_perm`=**1/1000** at N=3/M=3 (and **1/27** at N=2/M=3, asserted separately to pin the floor formula `(2/C(2N,N))^M`); a consistent superset (`A={x,y}`, `B={x,y,z}`) → `T`=1/3, `p_perm`=1/27 at N=2/M=3; and a **sign-flipped** case where between-arm agreement exceeds within-arm agreement by the same margin → identical `p_perm` as the positive case, which is the assertion that fails if anyone reverts `T` to the signed statistic. Together these are the "the check can fail" set required by Proof Policy #2 — fixture 1 fails if the statistic is inverted, fixture 2 if the permutation enumeration is wrong, fixture 2's N=2 variant if the label-swap collapse is not accounted for, and fixture 4 if the test is one-sided. Four further fixtures pin the **joint** rule to the values enumerated in `### Design determination`: all three dimensions moved → `p_joint` = 1/1000 with all three dimensions flagged; tokens moved alone → `p_joint` = 1/1000 with **only** `tokens` flagged (this one fails if the max-statistic flags every dimension whenever any moves); arms identical → `p_joint` = 1 and `flagged_dimensions` empty; and both arms all-empty (`findings: []`) → `p_joint` = 1 with no division by zero, which is the `severity_mix` `EMPTY`-category fixture. All eight expected values are printed by `docs/dev/artifacts/skill-ablation-harness/sizing-simulation.py`, so the fixtures are pinned to a script anyone can re-run rather than to numbers quoted in prose.
 2. **Arm-builder post-condition test**: build an arm whose ablation patch targets a string that does not exist; the builder must exit non-zero. Plus the grep-derivation assertions from `### The AC-2 ablation` — the builder must exit non-zero when the baseline hit set is empty, when a residual hit survives in arm B, and when the whitelisted Step-2.5 sentence at `:143` was removed. This is the sprint's own silent-no-op failure, encoded as a test.
-3. **False-null guard tests** (AC-3), one per case: synthetic receipts with matching `skill_sha256` under `mode: "AB"`; a run record whose receipt file is absent; a receipt whose `nonce`/`experiment_id` is stale or whose `written_at` predates the run start; one receipt content-hash under two `run_index` values; and a receipt set with disagreeing `driver_prompt_sha256` / `model_id`. All must exit non-zero with a named error. A sixth, positive control: the same fixtures with `mode: "AA"` and equal `skill_sha256` must be **accepted**, which is what proves the mode-dependent check is not simply always-reject.
+3. **False-null guard tests** (AC-3), one per case, each built from synthetic manifest+receipt pairs: matching `skill_sha256` under `compare --mode AB --arms A,B`; a manifest whose `expected_receipt_path` holds no file; a receipt whose `nonce`/`experiment_id` disagrees with its manifest, and separately one whose `written_at` precedes the manifest's `run_started_at`; two receipts equal under the duplicate projection (identical except `run_index`/`slot_index`/`written_at`, which is constructible precisely because those three fields are projected out); and a 27-receipt set with one disagreeing `driver_prompt_sha256` / `model_id`. All must exit non-zero with a named error. A sixth, positive control: the arm-A and arm-A′ fixtures under `compare --mode AA --arms A,A_prime` with equal `skill_sha256` must be **accepted** and emit a verdict, which is what proves the mode-dependent check is not simply always-reject.
 4. **Lint**: CI's pinned ShellCheck v0.9.0 via docker, per `kc-pr-flow/CLAUDE.md:117-125` — `docker run --rm --platform linux/amd64 -v "$PWD:/mnt" -w /mnt koalaman/shellcheck:v0.9.0 …`; never the local build, which has retired checks CI still enforces.
 5. **Runtime/E2E** (the ACs proper): the 27 real headless runs. Unit tests prove the comparator's logic; only these prove the wiring (Proof Policy #3).
 6. **CI delta**: the comparator unit tests are fast and jq-only, so no job-margin risk. The 27-run acceptance is **operator-run, never in CI** — it costs money and needs credentials. The PR carries the verdict JSON as evidence; CI runs items 1-4 only. Stated explicitly so nobody later "helpfully" wires the expensive path into a workflow.
@@ -491,7 +664,7 @@ parallelism the runs do not already have. Below all three split triggers.
 
 - Ground truth of any kind — that is `62`. This harness answers "did it move", never "is it good".
 - Judging whether a detected difference is an *improvement*. The statistic `T` = mean `|D(p)|` is
-  symmetric in the arms — swapping the A and B labels leaves `T` and `p_perm` unchanged — so the
+  symmetric in the arms — swapping the A and B labels leaves every `T_d`, the joint statistic, and `p_joint` unchanged — so the
   verdict carries no notion of better or worse; a human reads `flagged_dimensions` and the per-PR
   `D(p)` and decides. (Round 1 claimed the verdict was "directional-agnostic by construction" while
   the statistic was signed and the test one-sided. That claim was false; this is the bounded version
@@ -756,3 +929,76 @@ EM judged the round worth funding anyway because a paper round is the cheapest p
 can die.
 
 Fix items 2-6 dispatched immediately; items 1 and 7 held pending the captain.
+
+## Stage Report: ideation (correction round 2)
+
+- DONE: The acceptance is one three-arm experiment (A, A', B) at 27 runs with `mode` moved out of the receipt into the `compare` invocation, so AC-1 and AC-2 share arm A without a receipt needing two modes, and the budget table stays 27 runs / ~$68 / <=$90.
+  Fix item 2. `### Pre-registered materiality rule` opens with the three-arm paragraph (one `experiment_id`, A' a second unablated build, `compare --mode AA --arms A,A_prime` vs `--mode AB --arms A,B`); receipt bumped to `ablation-run/v3` — `mode` deleted, `arm` widened to `A|A_prime|B`; the schema notes explain why the round-1 placement forced 36 runs and collided with AC-3(d); `### Cost` restated as 3 arms x 3 runs x 3 PRs = 27; the exchangeability paragraph now says 27 runs interleaved across three arms; verdict contract carries `mode` + `arms`. `## Appetite` numbers untouched, as instructed.
+- DONE: `material` is decided by ONE joint max-statistic permutation rather than three independent alpha=0.05 entries, the A/A Monte-Carlo is re-run on the joint rule with the new false-positive figure recorded, and the text states explicitly that this fix costs zero additional runs.
+  Fix item 3. `### Design determination` replaces the three-way OR with single-step max-T (Westfall-Young): standardize each `T_d` against its own permutation distribution, `p_joint` = P(max_d z_d >= observed max), `p_d` = P(max_d z_d >= observed z_d), `material` iff `p_joint <= 0.05`, `flagged_dimensions` = {d : p_d <= 0.05}. The old rate is written as the bounded claim — "uncalibrated, bounded above by ~0.143 under independence" — never as a measured 0.143, and the note that round 1's 0.045 was measured on the anchor statistic alone is on the record. Re-run at 200 A/A trials: joint rule 10/200 = 0.050 (Wilson 0.027-0.090) at N=3/M=3, tabled beside the anchor-only column (13/200) with an explicit refusal to claim the joint rule is better calibrated — only that it is calibrated at all. The zero-additional-runs sentence is in the body verbatim: same 27 receipts, comparator arithmetic only.
+- DONE: The remaining spec defects are closed so every AC-3 negative case is constructible: a runner-authored run manifest gives `compare` a run-start authority outside the agent's control, the duplicate projection is defined, `severity_mix` is defined on an empty run, and the simulation is committed with seed and parameters with power restated as 60/60 (Wilson ~0.94-1.00) rather than a known 1.00.
+  Fix items 4, 5, 6-reproducibility. New `kc-pr-flow.ablation-manifest/v1` contract written by `review-ablation.sh run` before launch (`run_started_at`, nonce, `expected_receipt_path`), joined to receipts on `(experiment_id, arm, run_index)`; stale and duplicate each restated as a computation over fields that exist, with the duplicate projection = canonical receipt JSON minus `{run_index, slot_index, written_at}` (round 1 hashed `run_index` in, so that guard could never fire). `severity_mix` histogram widened to six categories with a dedicated `EMPTY` carrying mass 1. AC-3(a)/(c)/(d)/(e) and test-plan item 3 rewritten so each negative case is buildable; test-plan item 1 gains four joint-rule fixtures. Simulation committed at `docs/dev/artifacts/skill-ablation-harness/sizing-simulation.py` (stdlib-only, `SEED = 20260728`, all parameters at the top), power restated as **60/60 observed, Wilson 0.94-1.00**, and the caveat strengthened on both halves the EM named.
+- SKIPPED: Item 1 — the shape of AC-2's ablation, its scope, and the arm-builder span-level post-condition.
+  Held for the captain per the dispatch. `### The AC-2 ablation`, AC-2's text, and the arm-builder's post-condition steps are byte-unchanged; the span-level verbatim-match redesign is recorded as pending, not implemented.
+- SKIPPED: Item 7 — the compute budget.
+  Held for the captain per the dispatch. `## Appetite` is presented exactly as it stood: 27 runs, ~$68, <=$90, with the N=2/M=4 alternative priced beside it.
+
+### Coupling between the held items and the work done
+
+One concrete coupling, and it is a notation collision rather than a design one. **AC-2's `Verified by:`
+still reads `an A/B run (mode: "AB")`, which is the receipt field fix item 2 deleted.** The correct
+phrasing is `compare --mode AB --arms A,B`. I did not make that edit because the dispatch forbids
+touching AC-2's text and the captain's ruling rewrites that AC either way; whoever applies the ruling
+should fold the notation change into the same edit. Everything else in item 1's scope is independent
+of items 2-6: the three-arm restructure changes which receipts a comparison reads, not what arm B
+ablates, and the joint statistic changes how `material` is decided, not what the ablation removes.
+
+The second coupling is one-directional and already satisfied: item 2's arithmetic (27 runs, ~$68) is
+what item 7's budget table already assumes, so a captain ruling on the budget does not disturb the
+three-arm restructure, and the restructure is what keeps the number from creeping to 36/$91.
+
+The N=2/M=4 alternative's power figure moved on re-measurement (0.83 -> 43/60 = 0.72, Wilson
+0.59-0.81). That is inside item 7's decision surface, so it is flagged here rather than acted on: if
+the captain takes the cheaper route to hold nearer the original budget, the power it buys is lower
+than the round-1 table advertised.
+
+### `--ac-scan` output (re-run after correction round 2)
+
+```
+stage=ideation
+ac=AC-1 line=585 unevidenced=false citations=1
+ac=AC-2 line=588 unevidenced=false citations=4
+ac=AC-3 line=591 unevidenced=false citations=3
+```
+
+All three resolve, none `unevidenced`, all three bold headings still open and close on one line.
+`citations` recorded and not acted on. New evidence for why: the identical AC text scanned
+`AC-1 citations=2 / AC-3 citations=2` before this stage report was appended and
+`AC-1 citations=1 / AC-3 citations=3` after, with no AC line edited in between. The scan is
+deterministic on a fixed file (three consecutive runs agree); the counter is simply sensitive to
+document content outside the AC it reports on, so it cannot be read as a property of the AC.
+
+### Summary
+
+Five of the seven fix items applied; items 1 and 7 held for the captain and left byte-unchanged. The
+two structural fixes are the ones that mattered: moving `mode` out of the receipt turns two
+overlapping 18-run experiments into one three-arm 27-run experiment, which is what stops the budget
+creeping to 36 runs and stops arm A's receipts being duplicated into the teeth of their own
+duplicate guard; and replacing the OR-of-three-alpha-tests with a single max-T permutation gives the
+`material` bit a calibration it did not have, for zero additional runs.
+
+Nothing here was asserted without being run. The sizing simulation is now a committed, stdlib-only,
+seeded script rather than a lost ad-hoc one, and it prints every number the body quotes — the exact
+floor (1/27, 1/1000), the anchor-statistic worked cases, four joint-rule worked cases including one
+the rule must flag on a single dimension and two it must not fire on, and the A/A and power rates
+with Wilson intervals. Two of its figures disagree with round 1's (power 0.43 and 0.72 where round 1
+recorded 0.40 and 0.83); the disagreement is recorded in the body rather than smoothed over, the
+ordering that the sizing decision rests on is unchanged, and the adopted cell is now stated as 60/60
+with an interval rather than as a known 1.00.
+
+One thing the gate should rule on rather than accept silently: **the joint rule's calibration is
+established at 200 trials against a run model, not against real runs.** 0.050 with a Wilson interval
+of 0.027-0.090 is consistent with alpha and is the honest precision available before spending $68;
+it is not a measurement of the harness's real false-positive rate, and AC-1 — a single A/A
+comparison — is a negative control, not that measurement either. The body now says so in both
+places.
