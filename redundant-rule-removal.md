@@ -19,7 +19,7 @@ a second edit site where the two copies can drift.
 The original task treated the entire tail as redundant and made implementation depend on
 `skill-ablation-harness` (5b). Static inspection falsifies both assumptions:
 
-- The 41 bullets are not one equivalence class. Eight contain a unique clause, a stronger trigger,
+- The 41 bullets are not one equivalence class. Ten contain a unique clause, a stronger trigger,
   or a conflict with the alleged survivor.
 - A paid/model ablation cannot prove textual information preservation more directly than a
   clause-complete source mapping. For this pure-restatement cut, the mapping is the proof.
@@ -55,10 +55,10 @@ proof.
 ## Options considered
 
 1. **Clause-complete allowlist deletion (chosen).** Freeze the implementation head, re-resolve the
-   map below, delete only the 33 fully mapped bullets, and retain the eight fail-closed bullets.
+   map below, delete only the 31 fully mapped bullets, and retain the ten fail-closed bullets.
    This is the fastest path that satisfies the no-information-removal claim and the smallest safe
    cut.
-2. **Delete the entire `## Rules` section.** Fastest edit, rejected: eight bullets do not have a
+2. **Delete the entire `## Rules` section.** Fastest edit, rejected: ten bullets do not have a
    substantively complete, non-conflicting survivor.
 3. **Normalize all rules into a new canonical reference, then replace the tail with one pointer.**
    More thorough, rejected for this task: it rewrites authority boundaries and therefore becomes a
@@ -72,7 +72,7 @@ similarity; admission requires surviving text that already carries every clause.
 
 `design: required`. This changes the shape of an agent instruction contract. Before: a 41-bullet
 tail mixes duplicates with unique or conflicting rules. After: the ordered workflow and its
-explicit references remain authoritative, while `## Rules` retains only the eight bullets for
+explicit references remain authoritative, while `## Rules` retains only the ten bullets for
 which this audit cannot prove full equivalence. There is no new runtime interface or schema.
 
 Reverse-recovery audit is not applicable: the task removes duplicate prose and builds no
@@ -106,9 +106,7 @@ of its clauses are covered by the cited survivor.
 | 1862 | Discover skills as references; do not invoke | required `reference/compliance-audit.md` 39-64 |
 | 1863 | Fetch and tag the PR author | `SKILL.md` Step 2 (104-108), Step 7 (1824), and required `reference/gh-api-patterns.md` 107/299 |
 | 1865 | Refactor behavioral equivalence before style | required `reference/review-triage.md` 182-191 |
-| 1867 | Refactor API-surface audit | required `reference/review-triage.md` 182-191 |
 | 1868 | Refactor stale-reference audit | required `reference/review-triage.md` 182-191 |
-| 1869 | Completed verification matrix in review body | `SKILL.md` Step 2.5 (121-139) |
 | 1871 | D2 threshold plus user gate | Step 8 (1832-1840) and required `reference/knowledge-capture.md` 38-60/93-108 |
 | 1872 | Surgical knowledge edits | required `reference/knowledge-capture.md` 128-134 |
 | 1873 | Project-scoped `.claude/review-lessons.md` | required `reference/knowledge-capture.md` 38-71/83-91 |
@@ -131,6 +129,8 @@ of its clauses are covered by the cited survivor.
 | 1860 | Tested cross-model helper | The tail says four functions; the test header says three deterministic functions. The alleged survivors are not equivalent. |
 | 1864 | PR-facing English | The top language rule survives, but draft-time application and the edited-comment consequence are unique. |
 | 1866 | Refactor consumer audit | The reference requires import-graph correctness but not the exhaustive original-module grep procedure. |
+| 1867 | Refactor API-surface audit | The deleted rule requires listing every symbol that became newly public, then flagging unintentional exposure. Its cited survivor, `reference/review-triage.md:182-191`, tells agents to detect/flag accidental or unintentional API-surface widening, but never requires an exhaustive list of all newly public symbols. |
+| 1869 | Completed verification matrix in review body | The deleted rule requires the completed matrix table to appear in the review body and says it replaces ad-hoc prose. Its cited survivor, `SKILL.md:121-139`, only says to build an initial matrix and that each concern must be "addressed in the review body"; it does not require the completed table to be rendered there and does not exclude ad-hoc prose. |
 | 1870 | D1 auto-append | Step 8 names the public `reference/learned-patterns.md`; the required reference says LOCAL-only. Conflicting destinations cannot prove equivalence. |
 | 1879 | Eval failure confirmation | Earlier text requires two or more runs, but the four-consecutive-failures threshold is unique. |
 | 1881 | Break-point activation | The tail says any bugfix; Step 4.5p requires a bugfix spanning at least two layers. The tail is stronger. |
@@ -142,9 +142,9 @@ delete a row merely because its old line number still exists.
 
 1. Record the implementation-head blob SHA for `SKILL.md` and inventory the exact 41 tail bullet
    titles. If it differs from this audit, re-resolve every affected row before editing.
-2. Create an exact-text deletion allowlist from the 33 approved rows. Split compound bullets into
+2. Create an exact-text deletion allowlist from the 31 approved rows. Split compound bullets into
    normative clauses during review; a row is admitted only if every clause maps.
-3. Delete only allowlisted bullets. Keep the `## Rules` heading and the eight retained bullets
+3. Delete only allowlisted bullets. Keep the `## Rules` heading and the ten retained bullets
    byte-for-byte unless a separate task later resolves them.
 4. Compare `git diff --unified=0` against the allowlist. Fail if the diff deletes any retained
    title, changes an earlier authority, or contains any product change outside this one skill.
@@ -177,10 +177,10 @@ proposed. The edited skill is itself the only published instruction surface affe
 Verified by: the implementation `git diff --unified=0`, the frozen `kc-pr-flow/skills/kc-pr-review/SKILL.md` blob SHA, and direct reads of every survivor cited in the allowlist table (beginning at `SKILL.md:98`) showing that each deleted normative clause remains in a workflow or explicitly required reference at the exact implementation head. Falsified by one deleted clause with no survivor, a weaker/conditional survivor, a survivor inside the deleted region, or conflicting survivors.
 
 **AC-2 — Unique and stronger rules remain.**
-Verified by: an exact-title comparison of the post-edit `SKILL.md:Rules` section against the eight-title retention set at ideation lines 1852, 1854, 1860, 1864, 1866, 1870, 1879, and 1881, plus the implementation diff. Falsified by a missing retained title, a semantic rewrite hidden inside this deletion task, or a revised map not approved after implementation-head drift.
+Verified by: an exact-title comparison of the post-edit `SKILL.md:Rules` section against the ten-title retention set at ideation lines 1852, 1854, 1860, 1864, 1866, 1867, 1869, 1870, 1879, and 1881, plus the implementation diff. Falsified by a missing retained title, a semantic rewrite hidden inside this deletion task, or a revised map not approved after implementation-head drift.
 
 **AC-3 — The cut is measurably smaller without information removal.**
-Verified by: before/after bullet counts from `git show <base>:kc-pr-flow/skills/kc-pr-review/SKILL.md` and the worktree `SKILL.md:Rules` section showing 41 to 8 bullets at the audited head, plus `git diff --numstat` and the AC-1 map showing exactly 33 mapped restatements deleted and no earlier authority or required reference changed. Falsified by a non-33 deletion count without a documented head re-audit, added replacement prose, or a changed authority.
+Verified by: before/after bullet counts from `git show <base>:kc-pr-flow/skills/kc-pr-review/SKILL.md` and the worktree `SKILL.md:Rules` section showing 41 to 10 bullets at the audited head, plus `git diff --numstat` and the AC-1 map showing exactly 31 mapped restatements deleted and no earlier authority or required reference changed. Falsified by a non-31 deletion count without a documented head re-audit, added replacement prose, or a changed authority.
 
 **AC-4 — Existing skill contracts remain green.**
 Verified by: captured zero exit statuses from `bash scripts/skill-frontmatter-lint.sh`, `bash kc-pr-flow/scripts/cross-model.test.sh`, `bash kc-pr-flow/scripts/review-architecture-diagrams.test.sh`, and `bash kc-pr-flow/scripts/review-shadow.test.sh` at the implementation `SKILL.md:Rules` head. Falsified by any failure, skipped command, or test adjustment made only to accommodate the deletion.
@@ -196,11 +196,11 @@ previously supplied the only in-context instruction.
 
 ### Summary
 
-Replaced the 5b dependency with a zero-paid, clause-complete semantic audit; approved 33
-restatement deletions, retained eight unmatched or conflicting rules, and specified exact
+Replaced the 5b dependency with a zero-paid, clause-complete semantic audit; approved 31
+restatement deletions, retained ten unmatched or conflicting rules, and specified exact
 single-file validation evidence and stop conditions.
 
-## Stage Report: ideation
+## Stage Report: ideation (cycle 1 — superseded by cycle 2)
 
 - DONE: Replaced the hard dependency on 5b with a bounded, fail-closed semantic-equivalence
   proof. The implementation allowlist contains 33 tail bullets, each mapped to surviving workflow
@@ -381,3 +381,36 @@ AC-3 to the 31 clause-complete deletions. Restore `Verification matrix in review
 `Refactoring PRs — API surface diff` byte-for-byte. This is the captain-approved fail-closed
 boundary, not added scope: no replacement prose, paid/model path, 5b claim, fa, or sk work is
 authorized.
+
+## Stage Report: ideation (cycle 2 — design reset)
+
+- DONE: Verified both validation findings against exact rejected code head `ee127c1`. The
+  completed verification-matrix table requirement and the exhaustive newly-public API symbol
+  listing lack clause-complete surviving authority.
+- DONE: AC-1 — re-cut the deletion allowlist to the 31 rows whose normative clauses have complete
+  surviving workflow or explicitly required-reference authority.
+- DONE: AC-2 — moved parent lines 1867 and 1869 into the fail-closed retention table, making ten
+  retained rules; implementation must restore those two bullets byte-for-byte with the original
+  eight.
+- DONE: AC-3 — changed the governing end-value baseline from `41 -> 8` / 33 deletions to
+  `41 -> 10` / exactly 31 deletions, with non-31 deletion count remaining an explicit falsifier
+  unless fresh head drift is re-audited and approved.
+- DONE: AC-4 — preserved the same four SKILL-coupled local contract suites; no test, runtime, post,
+  benchmark, or replacement-authority work was added.
+- DONE: AC-5 — preserved the zero-paid/model/eval/ablation boundary and made no 5b acceptance
+  claim.
+- DONE: Kept the 30-minute implementation appetite plus 15-minute tolerance. Validation found the
+  original implementation used 17 minutes and the new cut is narrower, so the estimate is not
+  invalidated.
+- DONE: This correction narrows rather than expands the captain-approved task: two proposed
+  deletions are withdrawn, two original bullets are restored, and no new prose or authority is
+  introduced. fa, sk, and 5b remain parked.
+- SKIPPED: Product edits in this ideation turn. The rejected product commit remains evidence for
+  the next implementation correction; this stage changed only the split-root entity.
+
+### Summary
+
+Re-cut the pure-restatement plan from 33 deletions/eight retained rules to 31 deletions/ten
+retained rules after fresh validation proved two survivor mappings incomplete. The zero-paid,
+single-file, no-replacement-prose scope and the original 30-minute plus 15-minute appetite remain
+unchanged.
