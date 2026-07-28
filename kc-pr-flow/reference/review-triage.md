@@ -133,6 +133,17 @@ Use **filtered** line count (after noise removal) for tier selection:
 
 **Security coverage**: `tob-security-reviewer` always dispatches via Step 4-ToB-a regardless of tier — it is not part of the table above. `tob-supply-chain-checker` and `tob-actions-auditor` activate conditionally per Step 4-ToB-b/c. There is no separate `security-reviewer` in `pr-review-toolkit`; do not reference one.
 
+**What the table does not count.** The figures above are the `pr-review-toolkit` agents only. On an ordinary run at least two more dispatches happen and neither is in the estimate:
+
+| Not in the table | When | Where |
+|---|---|---|
+| `tob-security-reviewer` | always | Step 4-ToB-a |
+| `episodic-memory:search-conversations` | unless the PR is trivial (<50 lines, cosmetic) or the area has no review history | `compliance-audit.md` §5a-k |
+
+So a Lite run is **3 base + 1 ToB = 4 dispatches minimum**, and 5 on any PR with prior history in the touched area. Conditional paths (Codex, break-point probe, arbitration, the other two ToB agents) add further.
+
+No all-in token figure is given here on purpose: the add-ons have never been measured, and inventing a total would put a number in front of the user that nothing produced. Report base and add-ons separately until `review-effectiveness-benchmark` supplies measured figures.
+
 **Override**: User can request a specific tier (e.g., "full review" or "quick review") regardless of PR size.
 
 **8-pass mode tier floor**: When `FULL_PASS_MODE = true` (set in §4d-passmode) AND the size-based tier would be `Lite`, promote to `Standard`. Passes 1 (Correctness) and 5 (Test Coverage) require `type-design-analyzer` and `pr-test-analyzer` as primary owners — Lite tier doesn't dispatch them. Display the promotion: `Lite → Standard (8-pass mode requires type-design + pr-test owners)`.
@@ -144,7 +155,8 @@ Use **filtered** line count (after noise removal) for tier selection:
 - PR size: 142 lines changed (8 files)
 - Security files: none detected
 - Agent tier: **Lite** (code-reviewer + comment-analyzer + silent-failure-hunter)
-- Estimated context cost: ~140K tokens
+- Estimated context cost: ~140K tokens (base agents only)
+- Also dispatching: tob-security-reviewer (always), episodic-memory search — not costed
 
 Proceeding with Lite review. Say "full review" to override.
 ```
