@@ -224,3 +224,64 @@ single-file validation evidence and stop conditions.
   the existing SKILL-coupled contract tests.
 - SKIPPED: 5b acceptance and paid experiments. They remain explicitly parked and are not needed or
   claimed by this entity.
+
+## Stage Report: implementation
+
+### Summary
+
+Removed exactly the 33 approved restatement bullets from
+`kc-pr-flow/skills/kc-pr-review/SKILL.md` and preserved the eight-rule retention set
+byte-for-byte. No authority, reference, test, harness, or other product file changed.
+
+### Exact-head and diff evidence
+
+- DONE: Froze implementation head
+  `b87171c40d595c7c60d4efa3ee16d0b4249cd9d1` and target blob
+  `45ba8359f866f8d4b41c960b805230b3e7283579` before editing.
+- DONE: The live tail still contained the audited 41 bullets at ideation lines 1844-1884, with all
+  33 deletion titles and eight retention titles unchanged. Direct reads re-resolved the cited
+  workflow and required-reference survivor anchors at that head; no implementation-head drift
+  invalidated the allowlist.
+- DONE: The pre-edit retained-count contract failed for the intended reason:
+  `expected retained Rules bullets=8, actual=41` (`exit 1`).
+- DONE: Code commit
+  `ee127c1f6a33c8e31eebacfc75619efb4d9fad7a` on
+  `spacedock-ensign/redundant-rule-removal` produces target blob
+  `b8b87caea8c188615bae04dc7af39c30a9b22285`.
+- DONE: `git diff --unified=0` contains deletion hunks only inside `## Rules`;
+  `git diff --numstat` is exactly
+  `0  33  kc-pr-flow/skills/kc-pr-review/SKILL.md`.
+- DONE: Before/after Rules bullet count is exactly 41 to 8. The post-edit retained-count contract
+  reports `expected retained Rules bullets=8, actual=8` (`exit 0`).
+- DONE: A base-vs-worktree exact-line comparison produced no diff for the retained titles:
+  `Severity labels`, `DOC/NEW findings are advisory`,
+  `Cross-model logic lives in a tested helper`, `PR-facing artifacts in English`,
+  `Refactoring PRs — consumer audit`, `D1 auto-append`,
+  `Eval tests need double confirmation`, and `Break-point probe for bugfix/cross-stack`.
+- DONE: `git diff --check` exited 0, and the committed code worktree is clean.
+
+### Required local contract suites
+
+All commands ran from the repository root and exited 0:
+
+- DONE: `bash scripts/skill-frontmatter-lint.sh` — checked 35 `SKILL.md` files; all skill
+  directories have valid frontmatter.
+- DONE: `bash kc-pr-flow/scripts/cross-model.test.sh` — 68 passed, 0 failed.
+- DONE: `bash kc-pr-flow/scripts/review-architecture-diagrams.test.sh` — 43 passed, 0 failed.
+- DONE: `bash kc-pr-flow/scripts/review-shadow.test.sh` — 213 passed, 0 failed.
+
+### Acceptance and stop outcome
+
+- DONE: AC-1 — all 33 deleted clauses retain the approved workflow or required-reference
+  authority at the frozen implementation head.
+- DONE: AC-2 — all eight unique, stronger, or conflicting rules remain byte-for-byte.
+- DONE: AC-3 — the cut is exactly 33 deletions with zero replacement prose and no earlier
+  authority or required-reference change.
+- DONE: AC-4 — all four required local contract suites exited 0 without test adjustment.
+- DONE: AC-5 — the command log contains static inspection, the single allowlisted Markdown edit,
+  and the four named local suites only.
+- DONE: No stop/re-cut trigger fired: the head/title map had not drifted, every survivor mapping
+  remained complete, the deletion count was exactly 33, no retained title changed, and every
+  required suite passed on the first run. No repair round or scope expansion was used.
+- SKIPPED: Paid models, model calls, evals, E2E, runtime/post suites, benchmarks, the 5b ablation
+  harness, fa, and sk, as required by the zero-paid and single-seam scope boundary.
