@@ -129,10 +129,11 @@ binding in every stage report and every gate review.
    over an instruction file the model reads never proves a behavioral claim.
    A grep may serve as one-off evidence for an existence fact in a validation
    report; the same grep committed as a test is banned. Not because it can
-   never go red — deleting the matched line turns it red — but because that is
-   the *only* edit that does: it tracks the wording and is blind to the
-   behavior, so it passes straight through the regression it was committed to
-   catch. And
+   never go red — editing the matched wording, moving the file, or changing the
+   pattern all turn it red — but because every edit that turns it red is an edit
+   to the *text*: it tracks wording and is blind to behavior, so it passes
+   straight through the regression it was committed to catch and goes red on
+   rephrasings that broke nothing. And
    a check the author wrote to grade the author's own artifact is a self-issued
    stamp, not a gate. This is about what closes a gate, not about who may write
    a test: the worker's own RED-before-GREEN tests are exactly the evidence
@@ -167,14 +168,20 @@ binding in every stage report and every gate review.
    bounded claim the code actually supports. This is rule 2 applied to prose:
    the same discipline an AC's evidence gets, because a documented guarantee
    *is* a claim and the next reader builds on it. Two consequences worth
-   stating outright. **It binds at authoring time**, not at the gate — the
-   validation-stage clause is a backstop for what slips through, and a
-   backstop that fires every time is a cost, not a control. And it covers
-   commit messages and code comments, which **no gate reads**: four of these
-   shipped in two days, and the two nobody caught until later were a commit
-   message and a comment. A claim inherited from a report, a reviewer, or an
-   external contributor is not exempt — adopt it only after checking it, and
-   say which.
+   stating outright. **It binds at authoring time, and the author is the
+   enforcement point** — there is no mechanical check behind it, which is why
+   it is written as a rule the writer applies rather than a gate someone else
+   runs. The validation-stage clause is the backstop for what slips through,
+   and a backstop that fires every time is a cost, not a control.
+   **Coverage past the author is uneven, and that is the point.** A reference
+   or doc diff reaches validation. A code comment reaches it only
+   incidentally, inside a diff a reviewer happens to read closely. A commit
+   message reaches no gate at all. The thinner the downstream coverage, the
+   more the authoring moment is the only moment — four of these shipped in two
+   days, and the two nobody caught until later were a commit message and a
+   comment, which are exactly the two thin cases. A claim inherited from a
+   report, a reviewer, or an external contributor is not exempt — adopt it
+   only after checking it, and say which.
 7. **A negative result is a claim, and carries the same bar as a positive
    one.** "The search found nothing" is evidence about the search. "The file is
    unchanged" is evidence about the file, not about the failure. A number
@@ -309,10 +316,15 @@ once. Discipline clauses:
   hidden assumption, over-conviction}. This is an orthogonal
   future-failure check the AC rubric structurally cannot generate.
 - **Design determination is mandatory, never skipped.** Every task records
-  `design: required` (UI, contract, interface, schema, or visual surface
-  affected — attach the concrete design decision: wireframe reference, API
-  shape, before/after) or `design: trivial-pass` with a one-line reason. An
-  ideation gate presented without a design determination is returned unread.
+  `design: required` (the task **decides** something about a UI, contract,
+  interface, schema, or visual surface — its shape, not merely its behavior;
+  attach the concrete design decision: wireframe reference, API shape,
+  before/after) or `design: trivial-pass` with a one-line reason. **Touching
+  such a surface is not the trigger; deciding about it is** — a repair that
+  restores behavior the surface already documents decides nothing and is a
+  `trivial-pass`, which is what lets the Defect lane classify a single-seam UI
+  or contract fix without contradicting this clause. An ideation gate presented
+  without a design determination is returned unread.
 - **Reverse-recovery audit before any "build/add X"** (brownfield default):
   assume the abstraction may already exist. Layer-trace the path (UI →
   contract → handler → domain → persistence → readback) and classify each
@@ -338,8 +350,11 @@ once. Discipline clauses:
   waiting for status to be reported" until either the old name is restored so
   something reports that context again, or the protection is edited to require
   the new one. So a job rename is a change to the merge rules, which
-  Judgment Escalation puts on the captain, and it is caught by reading the
-  protection rather than by watching for a red check — there will not be one.
+  Judgment Escalation puts on the captain. And the symptom to look for is the
+  *missing* context, not a red one: the renamed job still runs and can fail on
+  its own merits, but nothing goes red merely because the required context
+  stopped being reported — which is why this is caught by reading the
+  protection rather than by watching the checks.
   The live-read matters more than usual in this repo because a required check's
   display name can outlive what it checks: the parity context still names the
   README even though per-plugin version badges were retired from it.
@@ -766,13 +781,17 @@ task_id, slug, dispatches, rework_rounds, wallclock_hours, tokens_if_known, diff
 the archived task bodies carries them, so a row left at `n/a` stays `n/a`.
 
 **The boundary is earlier than the row, so the counters need somewhere to live
-before the row exists.** The row is written once, at the terminal transition;
-the numbers accrue across every dispatch before it. They accumulate in the task
-body's `## Measurement` section (see the task template) — one line appended per
-dispatch, `dispatches` incremented at launch and the token figure filled in on
-return. The `done` transition sums that section into the row. A task whose body
-has no `## Measurement` lines has not been instrumented, and its row is `n/a` by
-construction rather than by accident.
+before the row exists.** The row is written once, at whichever terminal boundary
+the task reaches — the `done` transition, or archival for a task abandoned after
+implementation started; the numbers accrue across every dispatch before it. They
+accumulate in the task body's `## Measurement` section (see the task template) —
+one line appended per dispatch, `dispatches` incremented at launch and the token
+figure filled in on return. The terminal boundary sums that section into the row.
+A task reaching `done` with no `## Measurement` lines was never instrumented, and
+**that is a defect to repair before the transition, not a licensed `n/a`** — the
+invariant below says a `done` transition may not leave `tokens_if_known` at
+`n/a`, and this section carves no exception out of it. An abandoned row is the
+one that may close at `n/a`, because the work stopped rather than shipped.
 
 **Rolling up a mixed section has exactly one right answer**, and it is the `+`
 convention below rather than a judgment call: sum the dispatches whose tokens are
