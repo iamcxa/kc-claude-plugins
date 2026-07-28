@@ -747,7 +747,7 @@ rules; disagreement between seats goes to the captain, not to a vote.
 | File | Owner | Updated |
 |------|-------|---------|
 | PRODUCT.md / ARCHITECTURE.md | Task lifecycle (ideation proposes, implementation applies, validation verifies) | In the PR that changes the behavior |
-| ROADMAP.md / roadmap indexes | Captain (or sprint Commander) | Sprint boundaries, strategy shifts — never tracks task state (that's a `status --where` query) |
+| ROADMAP.md / roadmap indexes | Captain (or sprint Commander) | Sprint boundaries, strategy shifts — never tracks task state (that's a `status --where` query). The same pass sweeps overdue `pending:` cells in the ledger, per Measurement Ledger |
 | This README | Captain-approved revision | When ledger data says a clause needs tuning |
 
 ## Measurement Ledger
@@ -806,13 +806,20 @@ Recording is not checking — it writes a number at a stage boundary and gates
 nothing, so Proof Policy 5 does not apply to it.
 
 `escaped_defects_7d` is back-filled when a defect traced to the task surfaces
-within seven days of merge; until that window closes the cell reads `pending`,
-never `0` and never blank — an unobserved window and a clean one must not read
-alike. Record it as a Severity-1/2 count, because that is the only severity the
-bar reads; lower-severity escapes go in the task's archive note, where they
-inform without moving a threshold they were never meant to move.
+within seven days of merge; until that window closes the cell reads
+**`pending:<YYYY-MM-DD>`** — the date the window shuts, never a bare `pending`,
+never `0`, never blank. An unobserved window and a clean one must not read alike,
+and a bare `pending` cannot say which of the two it is *becoming*: it reads the
+same on the day it is written and a year later. Carrying the date makes
+overdueness a property of the file: a reader — or a one-line `awk` over the
+eighth column comparing the suffix against today — can tell at a glance which
+cells are owed, without reconstructing when anything merged.
+Record the closed value as a Severity-1/2 count, because that
+is the only severity the bar reads; lower-severity escapes go in the task's
+archive note, where they inform without moving a threshold they were never meant
+to move.
 
-Two cases where `pending` would never close, so it is not written: a task
+Two cases where a `pending:` cell would never close, so it is not written: a task
 **abandoned** after implementation started never merges, so its window never
 opens and the cell reads `n/a — abandoned`; and rows that predate this clause
 were filed with the cell blank, which is exactly the ambiguity the clause
@@ -821,16 +828,32 @@ forbids, but rewriting them now would assert a window state nobody observed.
 `docs/dev/ledger.csv` keep their blank cell, which is read as unknown, not as
 clean.
 
-**Two pieces of ledger upkeep happen after the row is written, and both belong
-to the FO at the *next* `done` transition** — that is the only recurring moment
-this workflow has, and an owner named nowhere is an owner nobody. Before writing
-its own row, the FO closes any `pending` cell whose seven-day window has since
-shut. Then it writes the row — and only then counts: if that row was the tenth
-qualifying one, the FO computes the two frozen medians *from the ten rows now
-present* and edits them into this section with the task ids and the date.
-Counting before the append reads nine rows and freezes the wrong number. Neither
-is a gate; both are bookkeeping that stops being possible if it is deferred
-indefinitely.
+**Two pieces of ledger upkeep happen after a row is written, and they need
+different triggers**, because only one of them can be reached by writing another
+row.
+
+**Closing a `pending:` cell needs a trigger independent of task completion.**
+The FO sweeps overdue cells before any ledger append — that covers the common
+case at no extra cost — but an append cannot be the *only* trigger: a queue that
+goes quiet, a sprint that ships nothing, or the last task of a cycle leaves
+`pending:` cells whose windows shut with nobody scheduled to look. So the sweep
+also belongs to the captain's sprint-boundary pass over `ROADMAP.md`, which the
+Canonical Docs Ownership table already schedules and which happens whether or not
+any task reached `done`. Either party sweeping is enough; the point is that the
+obligation does not depend on work arriving. This is why the cell carries its own
+due date — a sweeper needs to recognise an overdue cell from the file alone, not
+reconstruct merge dates.
+
+**Freezing the baseline medians does not need one.** The cohort can only complete
+when a qualifying row is *appended*, so the append is not merely a convenient
+trigger, it is the only event that can change the answer. The FO writes its row
+first and counts after: if that row was the tenth qualifying one, it computes the
+two medians *from the ten rows now present* and edits them into this section with
+the task ids and the date. Counting before the append reads nine rows and freezes
+the wrong number. If no further row ever arrives the cohort stays incomplete,
+which is the correct state and not a missed obligation.
+
+Neither is a gate; both are bookkeeping.
 
 This ledger is the experiment. **Its baseline is a prospective control cohort
 recorded here, not a historical record someone has to go find**: the first ten
@@ -873,7 +896,7 @@ through this ledger, never through argument. **That bar reads three columns —
 `tokens_if_known`, `wallclock_hours`, and `escaped_defects_7d`.** Only the first
 two are knowable at the transition, so **those two — not `dispatches` — are what
 a `done` transition may not leave at `n/a`**; `escaped_defects_7d` closes at
-`pending` by design and is back-filled when its window shuts.
+`pending:<date>` by design and is back-filled when that date passes.
 
 ## Task Template
 
