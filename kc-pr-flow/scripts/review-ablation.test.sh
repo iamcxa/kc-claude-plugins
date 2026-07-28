@@ -13,8 +13,9 @@
 #                sidecar (review-ablation-spans.tsv), never the set of spans the
 #                builder happened to apply.
 #   guard        the five false-null guards of AC-3 plus their positive control.
-#                The authority is the runner-written manifest, which the agent
-#                that authors a receipt cannot write.
+#                The authority is the runner-written manifest, whose provenance
+#                pins are derived from the arm, prompt, runtime, and checkout
+#                rather than copied from the agent-authored receipt.
 #
 # Every negative case constructs a defective artifact and requires a non-zero
 # exit with a named error. Every group carries a positive control, because a
@@ -88,6 +89,10 @@ require python3
 
 sha_of() { printf '%s' "$1" | shasum -a 256 | awk '{print $1}'; }
 
+ARM_MANIFEST_SHA="$(sha_of arm-manifest)"
+DRIVER_PROMPT_SHA="$(sha_of driver-prompt)"
+MODEL_ID='claude-test-1'
+
 # Emit one manifest + one receipt for a single run.
 #
 # emit_run <dir> <arm> <pr_number> <run_index> <claim_keys> <skill_sha> <tokens> <severity>
@@ -114,18 +119,28 @@ emit_run() {
   # timestamp necessarily precedes the receipt's. Fixtures respect that
   # ordering; the stale-receipt fixture below deliberately inverts it.
   jq -n --arg arm "$arm" --argjson pr "$pr" --argjson idx "$idx" \
-        --arg path "$receipt" \
-    '{schema:"kc-pr-flow.ablation-manifest/v1",
+        --arg path "$receipt" --arg skill "$skill_sha" \
+        --arg arm_manifest "$ARM_MANIFEST_SHA" \
+        --arg prompt "$DRIVER_PROMPT_SHA" --arg model "$MODEL_ID" \
+    '{schema:"kc-pr-flow.ablation-manifest/v2",
       experiment_id:"11111111-1111-1111-1111-111111111111",
       nonce:"22222222-2222-2222-2222-222222222222",
       arm:$arm, run_index:$idx, slot_index:$idx,
       pr:{repository:"acme/widgets",number:$pr,base_sha:("c"*40),head_sha:("d"*40)},
+      skill_sha256:$skill,
+      arm_manifest_sha256:$arm_manifest,
+      driver_prompt_sha256:$prompt,
+      model_id:$model,
+      checkout:{path:"/fixture",base_sha:("c"*40),head_sha:("d"*40),
+                diff_sha256:("7"*64)},
       run_started_at:"2026-07-28T00:00:00Z",
       expected_receipt_path:$path}' >"$manifest"
 
   stamp="2026-07-28T01:00:0${idx}Z"
   jq -n --arg arm "$arm" --argjson pr "$pr" --argjson idx "$idx" \
         --argjson findings "$findings" --arg skill "$skill_sha" \
+        --arg arm_manifest "$ARM_MANIFEST_SHA" \
+        --arg prompt "$DRIVER_PROMPT_SHA" --arg model "$MODEL_ID" \
         --argjson tokens "$tokens" --arg stamp "$stamp" \
     '{schema:"kc-pr-flow.ablation-run/v3",
       arm:$arm, run_index:$idx, slot_index:$idx,
@@ -133,9 +148,9 @@ emit_run() {
       nonce:"22222222-2222-2222-2222-222222222222",
       pr:{repository:"acme/widgets",number:$pr,base_sha:("c"*40),head_sha:("d"*40)},
       skill_sha256:$skill,
-      arm_manifest_sha256:("e"*64),
-      driver_prompt_sha256:("f"*64),
-      model_id:"claude-test-1",
+      arm_manifest_sha256:$arm_manifest,
+      driver_prompt_sha256:$prompt,
+      model_id:$model,
       findings:$findings,
       usage:{input_tokens:$tokens,output_tokens:0,cache_creation_input_tokens:0,
              cache_read_input_tokens:9999,total_cost_usd:2.53},
@@ -408,7 +423,8 @@ PY
   # produced.
   dir="$TEST_ROOT/arm-s6"
   mkdir -p "$dir"
-  sed 's/^S6\(.*\)cut_sub/S6\1cut/' "$HERE/review-ablation-spans.tsv" >"$dir/mistyped.tsv" 2>/dev/null
+  awk -F '\t' 'BEGIN {OFS="\t"} $1 == "S6" {$5="cut"; $6="-"} {print}' \
+    "$HERE/review-ablation-spans.tsv" >"$dir/mistyped.tsv" 2>/dev/null
   assert_rejects 'B6 S6 surviving half lost' 'Apply confidence gates' \
     "$ABLATION" arm --tree "$BASELINE" --dest "$dir/out" --arm B --table "$dir/mistyped.tsv"
 
@@ -422,13 +438,44 @@ PY
     >>"$dir/tree/reference/learned-patterns.md"
   assert_rejects 'B7 residual keyword canary hit fails the build' 'canary' \
     "$ABLATION" arm --tree "$dir/tree" --dest "$dir/out" --arm B
+
+  # B9 — remove_span must validate and mutate the same exact bytes. A CUT span
+  # at a true EOF has no trailing newline; the old implementation counted
+  # `text` but replaced `text + "\n"`, so it silently wrote the file unchanged.
+  dir="$TEST_ROOT/arm-eof"
+  mkdir -p "$dir/tree/skills/kc-pr-review"
+  printf 'header\ntrue eof span' >"$dir/tree/skills/kc-pr-review/SKILL.md"
+  printf 'E1\tskills/kc-pr-review/SKILL.md\t2\t2\tcut\t%s\n' \
+    "$(sha_of 'true eof span')" >"$dir/spans.tsv"
+  "$ABLATION" arm --tree "$dir/tree" --dest "$dir/out" --arm B \
+    --table "$dir/spans.tsv" >/dev/null 2>&1
+  assert_eq 'B9 EOF span without trailing newline is removed' 'header' \
+    "$(cat "$dir/out/skills/kc-pr-review/SKILL.md" 2>/dev/null)"
+
+  # B10 — every cut_sub row owns its removal text. A second cut_sub in another
+  # file must remove that row's text, never reuse S6's module-level constant.
+  dir="$TEST_ROOT/arm-cut-sub"
+  mkdir -p "$dir/tree/skills/kc-pr-review" "$dir/tree/reference"
+  printf '**Apply confidence gates** after the verification gate\n' \
+    >"$dir/tree/skills/kc-pr-review/SKILL.md"
+  printf 'Keep prefix and remove second clause\n' >"$dir/tree/reference/second.md"
+  {
+    printf 'S6\tskills/kc-pr-review/SKILL.md\t1\t1\tcut_sub\t after the verification gate\t%s\n' \
+      "$(sha_of '**Apply confidence gates** after the verification gate')"
+    printf 'S12\treference/second.md\t1\t1\tcut_sub\t and remove second clause\t%s\n' \
+      "$(sha_of 'Keep prefix and remove second clause')"
+  } >"$dir/spans.tsv"
+  "$ABLATION" arm --tree "$dir/tree" --dest "$dir/out" --arm B \
+    --table "$dir/spans.tsv" >/dev/null 2>&1
+  assert_eq 'B10 second cut_sub uses its own enumerated removal text' 'Keep prefix' \
+    "$(cat "$dir/out/reference/second.md" 2>/dev/null)"
 }
 
 # ----------------------------------------------------------- group: guard
 #
 # Authority: the runner-written manifest. It is written before the agent is
-# launched and is never writable by it, so every guard here compares a receipt
-# against a record the receipt's author could not have produced.
+# launched through a separate runner path, so every guard compares the receipt
+# against runner-authored state. This is not an OS-enforced trust boundary.
 
 run_guard_cases() {
   local dir
@@ -449,7 +496,7 @@ for f in sorted((root / "receipts").glob("B-*.json")):
     d = json.loads(f.read_text()); d["arm"] = "A_prime"; d["skill_sha256"] = skill_a
     f.rename(f.with_name(f.name.replace("B-", "A_prime-", 1))).write_text(json.dumps(d))
 for f in sorted((root / "manifests").glob("B-*.json")):
-    d = json.loads(f.read_text()); d["arm"] = "A_prime"
+    d = json.loads(f.read_text()); d["arm"] = "A_prime"; d["skill_sha256"] = skill_a
     d["expected_receipt_path"] = d["expected_receipt_path"].replace("/B-", "/A_prime-")
     f.rename(f.with_name(f.name.replace("B-", "A_prime-", 1))).write_text(json.dumps(d))
 PY
@@ -465,11 +512,13 @@ PY
   python3 - "$dir" <<'PY'
 import json, pathlib, sys
 root = pathlib.Path(sys.argv[1])
-skill_a = json.loads((root / "receipts" / "A-1-0.json").read_text())["skill_sha256"]
 for f in (root / "receipts").glob("B-*.json"):
-    d = json.loads(f.read_text()); d["skill_sha256"] = skill_a; f.write_text(json.dumps(d))
+    d = json.loads(f.read_text()); d["skill_sha256"] = "1" * 64; f.write_text(json.dumps(d))
+for f in (root / "receipts").glob("A-*.json"):
+    d = json.loads(f.read_text()); d["skill_sha256"] = "0" * 64; f.write_text(json.dumps(d))
 PY
-  assert_rejects 'C1 mis-armed AB pair (equal skill_sha256)' 'skill_sha256' verdict_of "$dir" AB A,B
+  assert_rejects 'C1 fabricated receipt-only skill hashes disagree with runner manifests' \
+    'skill_sha256 disagrees with its runner-written manifest' verdict_of "$dir" AB A,B
 
   # ...and the mirror: differing hashes under AA must also be rejected, or the
   # check is one-sided and AC-1 could be run on a genuinely ablated pair.
@@ -546,6 +595,42 @@ PY
   assert_rejects 'C5b driver_prompt_sha256 disagrees across the experiment' 'driver_prompt_sha256' \
     verdict_of "$dir" AB A,B
 
+  # V1's remaining pins are checked against the independent run manifest, not
+  # merely for receipt-to-receipt consistency. Each defect below rewrites every
+  # receipt consistently; the rejected implementation accepted all three.
+  dir="$TEST_ROOT/g-arm-manifest"
+  build_fixture "$dir" 3 'x y|x y|x y' 'u v|u v|u v'
+  python3 - "$dir" <<'PY'
+import json, pathlib, sys
+for f in (pathlib.Path(sys.argv[1]) / "receipts").glob("*.json"):
+    d = json.loads(f.read_text()); d["arm_manifest_sha256"] = "9" * 64
+    f.write_text(json.dumps(d))
+PY
+  assert_rejects 'C5c arm_manifest_sha256 must match the runner manifest' \
+    'arm_manifest_sha256 disagrees with its runner-written manifest' verdict_of "$dir" AB A,B
+
+  dir="$TEST_ROOT/g-prompt-authority"
+  build_fixture "$dir" 3 'x y|x y|x y' 'u v|u v|u v'
+  python3 - "$dir" <<'PY'
+import json, pathlib, sys
+for f in (pathlib.Path(sys.argv[1]) / "receipts").glob("*.json"):
+    d = json.loads(f.read_text()); d["driver_prompt_sha256"] = "8" * 64
+    f.write_text(json.dumps(d))
+PY
+  assert_rejects 'C5d driver_prompt_sha256 must match the runner manifest' \
+    'driver_prompt_sha256 disagrees with its runner-written manifest' verdict_of "$dir" AB A,B
+
+  dir="$TEST_ROOT/g-model-authority"
+  build_fixture "$dir" 3 'x y|x y|x y' 'u v|u v|u v'
+  python3 - "$dir" <<'PY'
+import json, pathlib, sys
+for f in (pathlib.Path(sys.argv[1]) / "receipts").glob("*.json"):
+    d = json.loads(f.read_text()); d["model_id"] = "fabricated-model"
+    f.write_text(json.dumps(d))
+PY
+  assert_rejects 'C5e model_id must match the runner manifest' \
+    'model_id disagrees with its runner-written manifest' verdict_of "$dir" AB A,B
+
   # The falsifying edit named in AC-3: if the receipt loader ever defaults a
   # missing file to {"findings": []}, C2 must go red. C2 covers the rejection;
   # this pins the positive half it is the complement of — the verdict reports
@@ -565,27 +650,91 @@ PY
 # receipt. These cases are model-free — KC_PR_FLOW_ABLATION_EXEC substitutes a
 # stub for the agent — and pin the two halves of that lesson.
 
+make_source_repo() {
+  local dir="$1"
+  mkdir -p "$dir"
+  git -C "$dir" init -q
+  git -C "$dir" config user.name 'Ablation Test'
+  git -C "$dir" config user.email 'ablation@example.invalid'
+  printf 'base\n' >"$dir/review.txt"
+  git -C "$dir" add review.txt
+  git -C "$dir" commit -qm base
+  TEST_BASE_SHA="$(git -C "$dir" rev-parse HEAD)"
+  printf 'head\n' >"$dir/review.txt"
+  git -C "$dir" commit -qam head
+  TEST_HEAD_SHA="$(git -C "$dir" rev-parse HEAD)"
+}
+
+make_arm() {
+  local dest="$1" arm="${2:-B}"
+  "$ABLATION" arm --tree "$BASELINE" --dest "$dest" --arm "$arm" >/dev/null
+}
+
+make_corpus() {
+  local path="$1"
+  printf 'acme/widgets\t63\t%s\t%s\n' "$TEST_BASE_SHA" "$TEST_HEAD_SHA" >"$path"
+}
+
+write_stub() {
+  local path="$1"
+  cat >"$path" <<'STUB'
+#!/usr/bin/env bash
+set -u
+pwd >"${KC_PR_FLOW_ABLATION_TEST_CWD:?}"
+git rev-parse HEAD >"${KC_PR_FLOW_ABLATION_TEST_HEAD:?}"
+jq -n \
+  --arg arm "$KC_PR_FLOW_ABLATION_ARM" \
+  --argjson run "$KC_PR_FLOW_ABLATION_RUN_INDEX" \
+  --argjson slot "$KC_PR_FLOW_ABLATION_SLOT_INDEX" \
+  --arg exp "$KC_PR_FLOW_ABLATION_EXPERIMENT_ID" \
+  --arg nonce "$KC_PR_FLOW_ABLATION_NONCE" \
+  --arg repo "$KC_PR_FLOW_ABLATION_REPOSITORY" \
+  --argjson pr "$KC_PR_FLOW_ABLATION_PR_NUMBER" \
+  --arg base "$KC_PR_FLOW_ABLATION_BASE_SHA" \
+  --arg head "$KC_PR_FLOW_ABLATION_HEAD_SHA" \
+  --arg skill "$KC_PR_FLOW_ABLATION_SKILL_SHA256" \
+  --arg arm_manifest "$KC_PR_FLOW_ABLATION_ARM_MANIFEST_SHA256" \
+  --arg prompt "$KC_PR_FLOW_ABLATION_DRIVER_PROMPT_SHA256" \
+  '{schema:"kc-pr-flow.ablation-run/v3",arm:$arm,run_index:$run,slot_index:$slot,
+    experiment_id:$exp,nonce:$nonce,
+    pr:{repository:$repo,number:$pr,base_sha:$base,head_sha:$head},
+    skill_sha256:$skill,arm_manifest_sha256:$arm_manifest,
+    driver_prompt_sha256:$prompt,model_id:"claude-test-1",findings:[],
+    usage:{input_tokens:1,output_tokens:1,cache_creation_input_tokens:1,
+      cache_read_input_tokens:0,total_cost_usd:0.01},
+    wallclock_ms:1,written_at:"2099-01-01T00:00:00Z"}' \
+  >"$KC_PR_FLOW_ABLATION_RECEIPT"
+printf '%s\n' '{"is_error":false,"duration_ms":3210,"total_cost_usd":0.12,"usage":{"input_tokens":11,"output_tokens":12,"cache_creation_input_tokens":13,"cache_read_input_tokens":14},"modelUsage":{"claude-test-1":{"canonicalModel":"claude-test-1"}}}'
+STUB
+  chmod +x "$path"
+}
+
 run_run_cases() {
-  local dir stub out manifest
+  local dir stub out manifest corpus
 
   # R1 — the ordinary path. The manifest must be written BEFORE the agent runs,
   # which is the whole reason it can serve as a freshness authority: a record
   # written afterwards could be back-dated by whatever it is checking.
   dir="$TEST_ROOT/run-ok"
-  mkdir -p "$dir/arm"
+  mkdir -p "$dir"
+  make_source_repo "$dir/source"
+  make_arm "$dir/arm"
+  corpus="$dir/corpus.tsv"
+  make_corpus "$corpus"
   stub="$dir/stub.sh"
-  cat >"$stub" <<'STUB'
-#!/usr/bin/env bash
-# Stands in for the headless agent: writes a minimal well-formed receipt.
-printf '{"schema":"kc-pr-flow.ablation-run/v3","arm":"%s","findings":[]}\n' \
-  "$KC_PR_FLOW_ABLATION_ARM" >"$KC_PR_FLOW_ABLATION_RECEIPT"
-printf '{"is_error":false}\n'
-STUB
-  chmod +x "$stub"
-  out="$(KC_PR_FLOW_ABLATION_EXEC="$stub" "$ABLATION" run \
-    --arm-dir "$dir/arm" --arm B --experiment-id e1 --nonce n1 \
-    --run-index 0 --slot-index 2 --repository acme/widgets --pr-number 63 \
-    --base-sha aaa --head-sha bbb --out-dir "$dir/out" --model test-model 2>&1)"
+  write_stub "$stub"
+  out="$(
+    cd "$TEST_ROOT" || exit 1
+    KC_PR_FLOW_ABLATION_EXEC="$stub" \
+      KC_PR_FLOW_ABLATION_TEST_CWD="$dir/agent-cwd" \
+      KC_PR_FLOW_ABLATION_TEST_HEAD="$dir/agent-head" \
+      "$ABLATION" run \
+      --arm-dir run-ok/arm --arm B --experiment-id e1 --nonce n1 \
+      --run-index 0 --slot-index 2 --repository acme/widgets --pr-number 63 \
+      --base-sha "$TEST_BASE_SHA" --head-sha "$TEST_HEAD_SHA" \
+      --source-repo run-ok/source --corpus run-ok/corpus.tsv \
+      --out-dir run-ok/out --model test-model 2>&1
+  )"
   assert_eq 'R1 run reports the receipt path it collected' "$dir/out/receipts/B-63-0.json" "$out"
 
   manifest="$dir/out/manifests/B-63-0.json"
@@ -595,13 +744,41 @@ STUB
     "$(jq -r '.slot_index' "$manifest")"
   assert_eq 'R1 manifest carries a run_started_at taken before launch' 'true' \
     "$(jq -r '(.run_started_at // "") | length > 0' "$manifest")"
+  assert_eq 'R1 manifest binds skill_sha256 from the arm manifest' \
+    "$(jq -r '.skill_sha256' "$dir/arm/arm-manifest.json")" \
+    "$(jq -r '.skill_sha256' "$manifest")"
+  assert_eq 'R1 manifest binds arm_manifest_sha256 from the arm manifest' \
+    "$(jq -r '.arm_manifest_sha256' "$dir/arm/arm-manifest.json")" \
+    "$(jq -r '.arm_manifest_sha256' "$manifest")"
+  assert_eq 'R1 manifest binds the independently hashed driver prompt' \
+    "$(shasum -a 256 "$HERE/review-ablation-driver-prompt.md" | awk '{print $1}')" \
+    "$(jq -r '.driver_prompt_sha256' "$manifest")"
+  assert_eq 'R1 manifest binds the runtime-reported model id' 'claude-test-1' \
+    "$(jq -r '.model_id' "$manifest")"
+  assert_eq 'R1 agent ran from a pristine checkout at the frozen head' "$TEST_HEAD_SHA" \
+    "$(cat "$dir/agent-head" 2>/dev/null)"
+  assert_eq 'R1 manifest records independently resolved checkout head' "$TEST_HEAD_SHA" \
+    "$(jq -r '.checkout.head_sha' "$manifest")"
+  assert_eq 'R1 manifest records a non-empty base-to-head diff hash' 'true' \
+    "$(jq -r '(.checkout.diff_sha256 // "") | test("^[0-9a-f]{64}$")' "$manifest")"
+  assert_eq 'R1 receipt usage comes from runner JSON, not agent self-report' \
+    '11 12 13 14 0.12' \
+    "$(jq -r '.usage | [.input_tokens,.output_tokens,
+      .cache_creation_input_tokens,.cache_read_input_tokens,.total_cost_usd]
+      | join(" ")' "$dir/out/receipts/B-63-0.json")"
+  assert_eq 'R1 receipt wallclock comes from runner JSON' '3210' \
+    "$(jq -r '.wallclock_ms' "$dir/out/receipts/B-63-0.json")"
 
   # R2 — THE SPIKE-2 SHAPE. The agent exits CLEAN and writes nothing. This must
   # be a failed run, never an empty finding set: if a missing receipt silently
   # became "0 findings", both arms would compare identical and the harness would
   # report "no material difference" for a review that never finished.
   dir="$TEST_ROOT/run-noreceipt"
-  mkdir -p "$dir/arm"
+  mkdir -p "$dir"
+  make_source_repo "$dir/source"
+  make_arm "$dir/arm"
+  corpus="$dir/corpus.tsv"
+  make_corpus "$corpus"
   stub="$dir/stub.sh"
   cat >"$stub" <<'STUB'
 #!/usr/bin/env bash
@@ -613,10 +790,75 @@ STUB
     env KC_PR_FLOW_ABLATION_EXEC="$stub" "$ABLATION" run \
     --arm-dir "$dir/arm" --arm B --experiment-id e1 --nonce n1 \
     --run-index 0 --slot-index 0 --repository acme/widgets --pr-number 63 \
-    --base-sha aaa --head-sha bbb --out-dir "$dir/out" --model test-model
+    --base-sha "$TEST_BASE_SHA" --head-sha "$TEST_HEAD_SHA" \
+    --source-repo "$dir/source" --corpus "$corpus" \
+    --out-dir "$dir/out" --model test-model
 
   assert_eq 'R2 no receipt file was invented on the failed path' 'absent' \
     "$([ -e "$dir/out/receipts/B-63-0.json" ] && echo present || echo absent)"
+
+  # R3 — deterministic outputs are cleared before launch and any non-zero
+  # headless exit fails immediately. The stale non-empty receipt must not turn
+  # a crashed retry into an apparent success.
+  dir="$TEST_ROOT/run-crash-stale"
+  mkdir -p "$dir"
+  make_source_repo "$dir/source"
+  make_arm "$dir/arm"
+  corpus="$dir/corpus.tsv"
+  make_corpus "$corpus"
+  stub="$dir/stub.sh"
+  cat >"$stub" <<'STUB'
+#!/usr/bin/env bash
+printf '{"is_error":true}\n'
+exit 42
+STUB
+  chmod +x "$stub"
+  mkdir -p "$dir/out/receipts"
+  printf '{"schema":"kc-pr-flow.ablation-run/v3","findings":[]}\n' \
+    >"$dir/out/receipts/B-63-0.json"
+  assert_rejects 'R3 crashed retry rejects a stale non-empty receipt' \
+    'headless review exited 42' \
+    env KC_PR_FLOW_ABLATION_EXEC="$stub" "$ABLATION" run \
+    --arm-dir "$dir/arm" --arm B --experiment-id e1 --nonce n1 \
+    --run-index 0 --slot-index 0 --repository acme/widgets --pr-number 63 \
+    --base-sha "$TEST_BASE_SHA" --head-sha "$TEST_HEAD_SHA" \
+    --source-repo "$dir/source" --corpus "$corpus" \
+    --out-dir "$dir/out" --model test-model
+  assert_eq 'R3 stale receipt was cleared before the crashed launch' 'absent' \
+    "$([ -e "$dir/out/receipts/B-63-0.json" ] && echo present || echo absent)"
+
+  # R4 — a tuple outside the frozen corpus is rejected before any model starts.
+  dir="$TEST_ROOT/run-corpus"
+  mkdir -p "$dir"
+  make_source_repo "$dir/source"
+  make_arm "$dir/arm"
+  corpus="$dir/corpus.tsv"
+  make_corpus "$corpus"
+  stub="$dir/stub.sh"
+  printf '#!/usr/bin/env bash\nexit 99\n' >"$stub"
+  chmod +x "$stub"
+  assert_rejects 'R4 runner refuses a revision outside the frozen corpus' \
+    'frozen corpus' \
+    env KC_PR_FLOW_ABLATION_EXEC="$stub" "$ABLATION" run \
+    --arm-dir "$dir/arm" --arm B --experiment-id e1 --nonce n1 \
+    --run-index 0 --slot-index 0 --repository acme/widgets --pr-number 63 \
+    --base-sha "$TEST_BASE_SHA" --head-sha "$(printf 'f%.0s' {1..40})" \
+    --source-repo "$dir/source" --corpus "$corpus" \
+    --out-dir "$dir/out" --model test-model
+
+  assert_eq 'R5 default corpus freezes the three approved snapshots exactly' \
+    "$(cat <<'EXPECTED'
+iamcxa/kc-claude-plugins	17	4489933ddf5237187c4866ab45bdecc5bdb2d0f0	f3aed43341d5fe4616d76ba02946bd4913ae260e
+iamcxa/kc-claude-plugins	19	d62f2c6659d76799994482dd58be2dc2b05fb3ea	031b4908cf405724b2ed7d1b829f3c001eea7aa2
+iamcxa/kc-claude-plugins	50	536be3e7d7d8371a9e84b693804407ea1b54bc60	7c448243c0512d137a47cdf36a9b255658f096a3
+EXPECTED
+)" "$(grep -v '^#' "$HERE/review-ablation-corpus.tsv" 2>/dev/null)"
+
+  # V6 — the implementation may claim only what it enforces. The runner writes
+  # the manifest independently and withholds its path, but it does not sandbox
+  # the agent from every writable ancestor.
+  assert_eq 'R6 source carries no unenforced never-writable absolute' '0' \
+    "$(grep -c 'never writable by it' "$ABLATION" || true)"
 }
 
 case "$CASE" in

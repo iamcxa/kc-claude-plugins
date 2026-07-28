@@ -159,6 +159,16 @@ one row per span with the sha256 of its exact text. That sidecar is generated
 the tree moved under the table: re-derive the enumeration, do not adjust line numbers until the
 pins pass.
 
+The frozen corpus is `scripts/review-ablation-corpus.tsv`: PR #17 at
+`4489933ddf5237187c4866ab45bdecc5bdb2d0f0..f3aed43341d5fe4616d76ba02946bd4913ae260e`,
+PR #19 at
+`d62f2c6659d76799994482dd58be2dc2b05fb3ea..031b4908cf405724b2ed7d1b829f3c001eea7aa2`,
+and PR #50 at
+`536be3e7d7d8371a9e84b693804407ea1b54bc60..7c448243c0512d137a47cdf36a9b255658f096a3`.
+`run` accepts only an exact corpus tuple, creates a clean detached checkout at
+the pinned head from `--source-repo`, hashes the pinned base-to-head diff, and
+records that proof with the arm/prompt/model pins in its runner manifest.
+
 ## Internal Agents
 
 Built-in subagents dispatched by kc-pr-review for security analysis. Based on Trail of Bits methodologies.

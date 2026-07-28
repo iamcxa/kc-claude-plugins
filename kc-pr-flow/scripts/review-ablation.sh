@@ -51,6 +51,7 @@ usage:
                          --nonce <uuid> --run-index <n> --slot-index <n>
                          --repository <owner/name> --pr-number <n>
                          --base-sha <sha> --head-sha <sha>
+                         --source-repo <git-dir> [--corpus <corpus.tsv>]
                          --out-dir <dir> --model <id> [--driver-prompt <file>]
   review-ablation.sh compare --mode AA|AB --arms X,Y --manifest-dir <dir>
                              [--alpha 0.05]
@@ -106,17 +107,23 @@ review_ablation_arm() {
 # ------------------------------------------------------------------------ run
 #
 # The manifest is the runner's own record of the run, written BEFORE the agent
-# is launched and never writable by it. Without it, a receipt's claim to be
-# recent is a self-report by the thing being checked; with it, `compare` has an
-# independent authority to check freshness against.
+# is launched. Its path is not passed directly to the agent, so under ordinary
+# operation it is a runner-authored authority for freshness and provenance.
+# This is not filesystem isolation: the agent receives a sibling receipt path
+# and the runner does not make the manifest or its ancestors unwritable.
 
 review_ablation_run() {
   local arm_dir='' arm='' experiment_id='' nonce='' run_index='' slot_index=''
   local repository='' pr_number='' base_sha='' head_sha='' out_dir='' model=''
-  local driver_prompt='' here manifest receipt started prompt_sha rc
+  local source_repo='' corpus='' driver_prompt='' here core manifest receipt
+  local started prompt_sha rc arm_pins skill_sha arm_manifest_sha checkout_root
+  local checkout checkout_head diff_sha runner_output runtime_json actual_model
+  local manifest_tmp receipt_tmp runtime_usage runtime_wallclock post_head
 
   here="$(review_ablation_here)" || return 69
+  core="$here/review-ablation-core.py"
   driver_prompt="$here/review-ablation-driver-prompt.md"
+  corpus="$here/review-ablation-corpus.tsv"
 
   while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -130,6 +137,8 @@ review_ablation_run() {
       --pr-number) pr_number="$2"; shift 2 ;;
       --base-sha) base_sha="$2"; shift 2 ;;
       --head-sha) head_sha="$2"; shift 2 ;;
+      --source-repo) source_repo="$2"; shift 2 ;;
+      --corpus) corpus="$2"; shift 2 ;;
       --out-dir) out_dir="$2"; shift 2 ;;
       --model) model="$2"; shift 2 ;;
       --driver-prompt) driver_prompt="$2"; shift 2 ;;
@@ -137,20 +146,79 @@ review_ablation_run() {
     esac
   done
 
-  review_ablation_require jq python3 || return 69
+  review_ablation_require git jq python3 shasum || return 69
   if [ -z "$arm_dir" ] || [ -z "$arm" ] || [ -z "$experiment_id" ] ||
     [ -z "$nonce" ] || [ -z "$run_index" ] || [ -z "$slot_index" ] ||
     [ -z "$repository" ] || [ -z "$pr_number" ] || [ -z "$base_sha" ] ||
-    [ -z "$head_sha" ] || [ -z "$out_dir" ] || [ -z "$model" ]; then
+    [ -z "$head_sha" ] || [ -z "$source_repo" ] || [ -z "$out_dir" ] ||
+    [ -z "$model" ]; then
     review_ablation_usage
     return 2
   fi
   [ -f "$driver_prompt" ] ||
     { review_ablation_die "driver prompt is missing: $driver_prompt"; return 1; }
+  [ -d "$arm_dir" ] ||
+    { review_ablation_die "arm directory is missing: $arm_dir"; return 1; }
+  [ -d "$source_repo" ] ||
+    { review_ablation_die "source repo directory is missing: $source_repo"; return 1; }
+  [ -f "$corpus" ] ||
+    { review_ablation_die "frozen corpus is missing: $corpus"; return 1; }
 
-  mkdir -p "$out_dir/manifests" "$out_dir/receipts" || return 1
+  arm_dir="$(cd "$arm_dir" && pwd)" || return 1
+  source_repo="$(cd "$source_repo" && pwd)" || return 1
+  driver_prompt="$(cd "$(dirname "$driver_prompt")" && pwd)/$(basename "$driver_prompt")" ||
+    return 1
+  corpus="$(cd "$(dirname "$corpus")" && pwd)/$(basename "$corpus")" || return 1
+  mkdir -p "$out_dir" || return 1
+  out_dir="$(cd "$out_dir" && pwd)" || return 1
+
+  python3 "$core" corpus --table "$corpus" --repository "$repository" \
+    --pr-number "$pr_number" --base-sha "$base_sha" --head-sha "$head_sha" ||
+    return 1
+  arm_pins="$(python3 "$core" arm-manifest --arm-dir "$arm_dir" --arm "$arm")" ||
+    return 1
+  skill_sha="$(printf '%s' "$arm_pins" | jq -r '.skill_sha256')" || return 1
+  arm_manifest_sha="$(printf '%s' "$arm_pins" | jq -r '.arm_manifest_sha256')" ||
+    return 1
+
+  if ! git -C "$source_repo" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    review_ablation_die "source repo is not a git worktree: $source_repo"
+    return 1
+  fi
+  if [ "$(git -C "$source_repo" rev-parse "$base_sha^{commit}" 2>/dev/null)" != "$base_sha" ]; then
+    review_ablation_die "frozen corpus base commit is unavailable from source repo: $base_sha"
+    return 1
+  fi
+  if [ "$(git -C "$source_repo" rev-parse "$head_sha^{commit}" 2>/dev/null)" != "$head_sha" ]; then
+    review_ablation_die "frozen corpus head commit is unavailable from source repo: $head_sha"
+    return 1
+  fi
+
+  mkdir -p "$out_dir/manifests" "$out_dir/receipts" "$out_dir/checkouts" || return 1
   manifest="$out_dir/manifests/$arm-$pr_number-$run_index.json"
   receipt="$out_dir/receipts/$arm-$pr_number-$run_index.json"
+  runner_output="$out_dir/receipts/$arm-$pr_number-$run_index.runner.json"
+
+  # These deterministic paths may contain a prior attempt. Clear them before
+  # launch so a crashed retry cannot be mistaken for a successful fresh run.
+  rm -f "$receipt" "$runner_output" || return 1
+
+  checkout_root="$out_dir/checkouts"
+  checkout="$(mktemp -d "$checkout_root/$arm-$pr_number-$run_index.XXXXXX")" ||
+    return 1
+  git clone --quiet --shared --no-checkout "$source_repo" "$checkout" || return 1
+  git -C "$checkout" checkout --quiet --detach "$head_sha" || return 1
+  checkout_head="$(git -C "$checkout" rev-parse HEAD)" || return 1
+  if [ "$checkout_head" != "$head_sha" ]; then
+    review_ablation_die "pristine checkout resolved HEAD $checkout_head, expected frozen head $head_sha"
+    return 1
+  fi
+  if [ -n "$(git -C "$checkout" status --porcelain)" ]; then
+    review_ablation_die "pristine checkout is dirty before launch: $checkout"
+    return 1
+  fi
+  diff_sha="$(git -C "$checkout" diff --binary "$base_sha...$head_sha" |
+    shasum -a 256 | awk '{print $1}')" || return 1
 
   # The driver prompt is a single fixed file, byte-identical across arms. Its
   # hash is pinned into every receipt so a verdict assembled from receipts with
@@ -162,26 +230,81 @@ review_ablation_run() {
     --argjson run "$run_index" --argjson slot "$slot_index" \
     --arg repo "$repository" --argjson num "$pr_number" \
     --arg base "$base_sha" --arg head "$head_sha" \
-    --arg started "$started" --arg receipt "$receipt" \
-    '{schema:"kc-pr-flow.ablation-manifest/v1",
+    --arg skill "$skill_sha" --arg arm_manifest "$arm_manifest_sha" \
+    --arg prompt "$prompt_sha" --arg requested_model "$model" \
+    --arg checkout "$checkout" --arg checkout_head "$checkout_head" \
+    --arg diff "$diff_sha" --arg started "$started" --arg receipt "$receipt" \
+    '{schema:"kc-pr-flow.ablation-manifest/v2",
       experiment_id:$exp, nonce:$nonce, arm:$arm,
       run_index:$run, slot_index:$slot,
       pr:{repository:$repo,number:$num,base_sha:$base,head_sha:$head},
+      skill_sha256:$skill, arm_manifest_sha256:$arm_manifest,
+      driver_prompt_sha256:$prompt, requested_model_id:$requested_model,
+      model_id:null,
+      checkout:{path:$checkout,base_sha:$base,head_sha:$checkout_head,
+                diff_sha256:$diff},
       run_started_at:$started, expected_receipt_path:$receipt}' >"$manifest" || return 1
 
-  # The agent is handed the receipt path and the pins it must echo back. It
-  # cannot see the manifest, which is what keeps the freshness check honest.
-  KC_PR_FLOW_ABLATION_RECEIPT="$receipt" \
-  KC_PR_FLOW_ABLATION_EXPERIMENT_ID="$experiment_id" \
-  KC_PR_FLOW_ABLATION_NONCE="$nonce" \
-  KC_PR_FLOW_ABLATION_ARM="$arm" \
-  KC_PR_FLOW_ABLATION_RUN_INDEX="$run_index" \
-  KC_PR_FLOW_ABLATION_SLOT_INDEX="$slot_index" \
-  KC_PR_FLOW_ABLATION_DRIVER_PROMPT_SHA256="$prompt_sha" \
-    "${KC_PR_FLOW_ABLATION_EXEC:-claude}" -p "$(cat "$driver_prompt")" \
-      --plugin-dir "$arm_dir" --model "$model" --output-format json \
-      >"$out_dir/receipts/$arm-$pr_number-$run_index.runner.json" 2>&1
+  # The agent gets the receipt path and the pins it must echo, but not the
+  # manifest path. The command runs from a runner-created pristine checkout at
+  # the corpus head, with the base-to-head diff independently hashed above.
+  (
+    cd "$checkout" || exit 1
+    KC_PR_FLOW_ABLATION_RECEIPT="$receipt" \
+    KC_PR_FLOW_ABLATION_EXPERIMENT_ID="$experiment_id" \
+    KC_PR_FLOW_ABLATION_NONCE="$nonce" \
+    KC_PR_FLOW_ABLATION_ARM="$arm" \
+    KC_PR_FLOW_ABLATION_RUN_INDEX="$run_index" \
+    KC_PR_FLOW_ABLATION_SLOT_INDEX="$slot_index" \
+    KC_PR_FLOW_ABLATION_REPOSITORY="$repository" \
+    KC_PR_FLOW_ABLATION_PR_NUMBER="$pr_number" \
+    KC_PR_FLOW_ABLATION_BASE_SHA="$base_sha" \
+    KC_PR_FLOW_ABLATION_HEAD_SHA="$head_sha" \
+    KC_PR_FLOW_ABLATION_SKILL_SHA256="$skill_sha" \
+    KC_PR_FLOW_ABLATION_ARM_MANIFEST_SHA256="$arm_manifest_sha" \
+    KC_PR_FLOW_ABLATION_DRIVER_PROMPT_SHA256="$prompt_sha" \
+      "${KC_PR_FLOW_ABLATION_EXEC:-claude}" -p "$(cat "$driver_prompt")" \
+        --add-dir "$out_dir/receipts" \
+        --plugin-dir "$arm_dir" --model "$model" --output-format json
+  ) >"$runner_output" 2>&1
   rc=$?
+
+  if [ "$rc" -ne 0 ]; then
+    review_ablation_die "headless review exited $rc; receipt discarded, runner output: $runner_output"
+    return 1
+  fi
+  if [ ! -s "$receipt" ]; then
+    review_ablation_die "run $arm/$pr_number/$run_index wrote no receipt at $receipt (exit $rc) — FAILED, not empty"
+    return 1
+  fi
+
+  runtime_json="$(awk 'NF { line=$0 } END { print line }' "$runner_output")"
+  if ! printf '%s' "$runtime_json" | jq -e 'type == "object"' >/dev/null 2>&1; then
+    review_ablation_die "headless review returned no parseable runtime JSON: $runner_output"
+    return 1
+  fi
+  if [ "$(printf '%s' "$runtime_json" | jq -r '.is_error // false')" = 'true' ]; then
+    review_ablation_die "headless review runtime reported is_error:true: $runner_output"
+    return 1
+  fi
+  actual_model="$(printf '%s' "$runtime_json" |
+    jq -r '(.modelUsage // {} | keys) as $k |
+      if ($k | length) == 1 then $k[0] else empty end')" || return 1
+  if [ -z "$actual_model" ]; then
+    review_ablation_die "headless review did not report exactly one model id: $runner_output"
+    return 1
+  fi
+  manifest_tmp="$manifest.tmp.$$"
+  jq --arg model "$actual_model" '.model_id=$model' "$manifest" >"$manifest_tmp" ||
+    return 1
+  mv "$manifest_tmp" "$manifest" || return 1
+
+  post_head="$(git -C "$checkout" rev-parse HEAD)" || return 1
+  if [ "$post_head" != "$head_sha" ] ||
+    [ -n "$(git -C "$checkout" status --porcelain)" ]; then
+    review_ablation_die "headless review changed the frozen checkout; expected clean HEAD $head_sha"
+    return 1
+  fi
 
   # A run that exited clean without writing a receipt is a FAILED run, never an
   # empty finding set. Observed for real in spike 2: the agent deferred on
@@ -189,10 +312,36 @@ review_ablation_run() {
   # that read as "0 findings", both arms would have compared identical and the
   # harness would have reported "no material difference" for a review that
   # never finished.
-  if [ ! -s "$receipt" ]; then
-    review_ablation_die "run $arm/$pr_number/$run_index wrote no receipt at $receipt (exit $rc) — FAILED, not empty"
+  if ! jq -e . "$receipt" >/dev/null 2>&1; then
+    review_ablation_die "receipt is not parseable JSON: $receipt — FAILED, never an empty finding set"
     return 1
   fi
+  runtime_usage="$(printf '%s' "$runtime_json" | jq -c '
+    {input_tokens:.usage.input_tokens,
+     output_tokens:.usage.output_tokens,
+     cache_creation_input_tokens:.usage.cache_creation_input_tokens,
+     cache_read_input_tokens:.usage.cache_read_input_tokens,
+     total_cost_usd:.total_cost_usd}
+    | if all([.input_tokens,.output_tokens,.cache_creation_input_tokens,
+              .cache_read_input_tokens,.total_cost_usd][]; type == "number")
+      then . else error("runtime usage is incomplete") end')" || {
+        review_ablation_die "headless review runtime usage is incomplete: $runner_output"
+        return 1
+      }
+  runtime_wallclock="$(printf '%s' "$runtime_json" |
+    jq -er '.duration_ms | select(type == "number")')" || {
+      review_ablation_die "headless review runtime duration_ms is missing: $runner_output"
+      return 1
+    }
+  receipt_tmp="$receipt.tmp.$$"
+  jq --arg model "$actual_model" --argjson usage "$runtime_usage" \
+    --argjson wallclock "$runtime_wallclock" \
+    '.model_id=$model | .usage=$usage | .wallclock_ms=$wallclock' \
+    "$receipt" >"$receipt_tmp" || return 1
+  mv "$receipt_tmp" "$receipt" || return 1
+  review_ablation_guard_record "$(jq -c -n --slurpfile m "$manifest" \
+    --slurpfile r "$receipt" --arg p "$receipt" \
+    '[{manifest:$m[0],receipt:$r[0],receipt_path:$p}]')" || return 1
   printf '%s\n' "$receipt"
 }
 
@@ -248,10 +397,10 @@ review_ablation_compare() {
   printf '%s' "$stats" | jq -S \
     --arg mode "$mode" --arg x "$arm_x" --arg y "$arm_y" \
     --argjson prov "$(printf '%s' "$joined" | jq -c '{
-        experiment_id: (map(.receipt.experiment_id) | unique | .[0]),
-        model_id: (map(.receipt.model_id) | unique | .[0]),
-        driver_prompt_sha256: (map(.receipt.driver_prompt_sha256) | unique | .[0]),
-        corpus: (map(.receipt.pr) | unique)
+        experiment_id: (map(.manifest.experiment_id) | unique | .[0]),
+        model_id: (map(.manifest.model_id) | unique | .[0]),
+        driver_prompt_sha256: (map(.manifest.driver_prompt_sha256) | unique | .[0]),
+        corpus: (map(.manifest.pr) | unique)
       }')" \
     '{schema:"kc-pr-flow.ablation-verdict/v3", mode:$mode, arms:[$x,$y]} + $prov + .'
 }
@@ -286,33 +435,14 @@ review_ablation_join() {
   printf '%s' "$out"
 }
 
-# The five AC-3 guards. Each compares a receipt against something the receipt's
-# author could not have written: the runner's manifest, the invocation's mode,
-# or the rest of the experiment.
+# The five AC-3 guards. Each compares a receipt against runner-authored state,
+# the invocation's mode, or the rest of the experiment. The manifest is an
+# independent write path in ordinary operation, not an OS-enforced trust
+# boundary; review_ablation_run's comment records that residual explicitly.
 review_ablation_guard() {
   local joined="$1" mode="$2" arm_x="$3" arm_y="$4" bad
 
-  # (c) stale — nonce / experiment_id / written_at against the runner's manifest.
-  bad="$(printf '%s' "$joined" | jq -r '
-    map(select(.receipt.nonce != .manifest.nonce)) | .[0].receipt_path // empty')"
-  [ -z "$bad" ] && bad="$(printf '%s' "$joined" | jq -r '
-    map(select(.receipt.arm != .manifest.arm)) | .[0].receipt_path // empty')"
-  if [ -n "$bad" ]; then
-    review_ablation_die "stale receipt: nonce or arm disagrees with its runner-written manifest: $bad"
-    return 1
-  fi
-  bad="$(printf '%s' "$joined" | jq -r '
-    map(select(.receipt.experiment_id != .manifest.experiment_id)) | .[0].receipt_path // empty')"
-  if [ -n "$bad" ]; then
-    review_ablation_die "stale receipt: experiment_id disagrees with its manifest (nonce chain broken): $bad"
-    return 1
-  fi
-  bad="$(printf '%s' "$joined" | jq -r '
-    map(select(.receipt.written_at < .manifest.run_started_at)) | .[0].receipt_path // empty')"
-  if [ -n "$bad" ]; then
-    review_ablation_die "stale receipt: written_at precedes the manifest run_started_at, so the file predates the run that claims it: $bad"
-    return 1
-  fi
+  review_ablation_guard_record "$joined" || return 1
 
   # (d) duplicate — canonical receipt JSON minus {run_index, slot_index,
   # written_at}. Those three are projected OUT precisely so a receipt copied
@@ -326,27 +456,28 @@ review_ablation_guard() {
     return 1
   fi
 
-  # (e) provenance — driver_prompt_sha256 and model_id must agree across the
-  # WHOLE experiment, not merely within the compared pair.
-  bad="$(printf '%s' "$joined" | jq -r 'map(.receipt.model_id) | unique | length')"
+  # (e) provenance — runner-derived driver_prompt_sha256 and runtime-reported
+  # model_id must agree across the WHOLE experiment.
+  bad="$(printf '%s' "$joined" | jq -r 'map(.manifest.model_id) | unique | length')"
   if [ "$bad" != '1' ]; then
     review_ablation_die "model_id disagrees across the experiment ($bad distinct values) — a silently substituted model invalidates the comparison"
     return 1
   fi
-  bad="$(printf '%s' "$joined" | jq -r 'map(.receipt.driver_prompt_sha256) | unique | length')"
+  bad="$(printf '%s' "$joined" | jq -r 'map(.manifest.driver_prompt_sha256) | unique | length')"
   if [ "$bad" != '1' ]; then
     review_ablation_die "driver_prompt_sha256 disagrees across the experiment ($bad distinct values) — the arms were not driven by the same prompt"
     return 1
   fi
 
-  # (a) mis-armed — a property of the INVOCATION, not of a receipt. Equal skill
+  # (a) mis-armed — a property of the INVOCATION and runner-read arm manifests.
+  # Equal skill
   # hashes are required under AA and forbidden under AB, which is what lets one
   # 27-run experiment serve both ACs without copying arm A's receipts.
   local x_sha y_sha
   x_sha="$(printf '%s' "$joined" | jq -r --arg a "$arm_x" \
-    'map(select(.receipt.arm == $a) | .receipt.skill_sha256) | unique | join(",")')"
+    'map(select(.manifest.arm == $a) | .manifest.skill_sha256) | unique | join(",")')"
   y_sha="$(printf '%s' "$joined" | jq -r --arg a "$arm_y" \
-    'map(select(.receipt.arm == $a) | .receipt.skill_sha256) | unique | join(",")')"
+    'map(select(.manifest.arm == $a) | .manifest.skill_sha256) | unique | join(",")')"
   if [ -z "$x_sha" ] || [ -z "$y_sha" ]; then
     review_ablation_die "no receipts for arm $arm_x or arm $arm_y in this experiment"
     return 1
@@ -360,6 +491,38 @@ review_ablation_guard() {
   fi
   if [ "$mode" = 'AA' ] && [ "$x_sha" != "$y_sha" ]; then
     review_ablation_die "arms $arm_x and $arm_y have differing skill_sha256 under --mode AA, so this is not an A/A comparison"
+    return 1
+  fi
+}
+
+review_ablation_guard_record() {
+  local joined="$1" field bad
+  for field in nonce arm experiment_id run_index slot_index pr skill_sha256 \
+    arm_manifest_sha256 driver_prompt_sha256 model_id; do
+    bad="$(printf '%s' "$joined" | jq -r --arg field "$field" '
+      map(select(.receipt[$field] != .manifest[$field]))
+      | .[0].receipt_path // empty')"
+    if [ -n "$bad" ]; then
+      review_ablation_die "$field disagrees with its runner-written manifest: $bad"
+      return 1
+    fi
+  done
+  bad="$(printf '%s' "$joined" | jq -r '
+    map(select(.receipt.written_at < .manifest.run_started_at))
+    | .[0].receipt_path // empty')"
+  if [ -n "$bad" ]; then
+    review_ablation_die "stale receipt: written_at precedes the manifest run_started_at, so the file predates the run that claims it: $bad"
+    return 1
+  fi
+  bad="$(printf '%s' "$joined" | jq -r '
+    map(select(
+      .manifest.schema != "kc-pr-flow.ablation-manifest/v2" or
+      .manifest.checkout.base_sha != .manifest.pr.base_sha or
+      .manifest.checkout.head_sha != .manifest.pr.head_sha or
+      ((.manifest.checkout.diff_sha256 // "") | test("^[0-9a-f]{64}$") | not)
+    )) | .[0].receipt_path // empty')"
+  if [ -n "$bad" ]; then
+    review_ablation_die "runner manifest lacks valid frozen-checkout proof: $bad"
     return 1
   fi
 }

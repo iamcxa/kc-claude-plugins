@@ -1,5 +1,9 @@
-Run `kc-pr-review` against the checked-out pull request in the current working
-directory.
+Run `kc-pr-review` against the frozen pull-request snapshot in the current
+working directory. The runner created this checkout at exactly
+`KC_PR_FLOW_ABLATION_HEAD_SHA`; review only
+`git diff KC_PR_FLOW_ABLATION_BASE_SHA...KC_PR_FLOW_ABLATION_HEAD_SHA`. The PR
+number in `KC_PR_FLOW_ABLATION_PR_NUMBER` is metadata, not permission to
+substitute GitHub's current PR head for the frozen revision.
 
 This is a measurement run, so the following constraints override anything the
 skill says. Where they conflict with the skill, they win.
@@ -15,6 +19,8 @@ skill says. Where they conflict with the skill, they win.
 4. Stop at the end of Step 6a. Do not proceed to posting or to any later step.
 5. Serialize, as JSON, the findings the flow approved for emission at that
    point, and write them to the path in `KC_PR_FLOW_ABLATION_RECEIPT`.
+6. Before reviewing, verify `git rev-parse HEAD` equals
+   `KC_PR_FLOW_ABLATION_HEAD_SHA`. If it does not, leave no receipt.
 
 The receipt is a single JSON object:
 
@@ -25,8 +31,8 @@ The receipt is a single JSON object:
      "experiment_id": "<KC_PR_FLOW_ABLATION_EXPERIMENT_ID>",
      "nonce": "<KC_PR_FLOW_ABLATION_NONCE>",
      "pr": {"repository": "...", "number": 0, "base_sha": "...", "head_sha": "..."},
-     "skill_sha256": "<sha256 of the loaded skills/kc-pr-review/SKILL.md>",
-     "arm_manifest_sha256": "<arm_manifest_sha256 from arm-manifest.json at the plugin root>",
+     "skill_sha256": "<KC_PR_FLOW_ABLATION_SKILL_SHA256>",
+     "arm_manifest_sha256": "<KC_PR_FLOW_ABLATION_ARM_MANIFEST_SHA256>",
      "driver_prompt_sha256": "<KC_PR_FLOW_ABLATION_DRIVER_PROMPT_SHA256>",
      "model_id": "<the model id the runtime reports, not the one requested>",
      "findings": [{"path": "...", "side": "LEFT|RIGHT|FILE",
