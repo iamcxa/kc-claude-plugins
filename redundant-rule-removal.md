@@ -285,3 +285,89 @@ All commands ran from the repository root and exited 0:
   required suite passed on the first run. No repair round or scope expansion was used.
 - SKIPPED: Paid models, model calls, evals, E2E, runtime/post suites, benchmarks, the 5b ablation
   harness, fa, and sk, as required by the zero-paid and single-seam scope boundary.
+
+## Stage Report: validation
+
+### TL;DR
+
+**REJECTED** at code commit `ee127c1f6a33c8e31eebacfc75619efb4d9fad7a`.
+The committed patch and all four required local suites are mechanically clean, and all eight
+retained rules are byte-for-byte unchanged. However, two of the 33 deleted bullets contain
+normative clauses that their cited survivors do not preserve. That fails AC-1 and therefore AC-3.
+No product file was modified during validation.
+
+### Evidence block
+
+- Lenses: Markdown-only instruction-contract diff. Correctness **FAIL** (2 findings);
+  manifest/back-compat **FAIL** (the same 2 information-loss findings). Security, silent-failure,
+  type-design, concurrency, and resource-lifecycle did not fire because the diff changes no auth,
+  error-handling, type, async/shared-state, process/handle, or executable surface.
+- Diff coverage: N/A — prose-only diff, no executable surface.
+- Adversarial: N/A — no executable behavioral guard to mutate; the stage-specific dispatch also
+  prohibits the parked 5b ablation harness, evals, runtime/post suites, and E2E.
+- Cross-model: NOT RUN — the stage-specific zero-paid boundary expressly prohibits model calls.
+  The required deterministic `cross-model.test.sh` contract suite ran and passed 68/68; no
+  cross-model or 5b acceptance is claimed.
+- E2E: N/A — ideation explicitly excludes E2E for this prompt-only de-duplication with no wiring
+  claim, and validation dispatch prohibits it.
+
+### Findings for feedback-to implementation
+
+1. **Restore `Verification matrix in review body` (parent `SKILL.md:1869`) or return the entity to
+   ideation for a smaller allowlist.** The deleted rule requires the completed matrix table to
+   appear in the review body and says it replaces ad-hoc prose. Its cited survivor,
+   `SKILL.md:121-139`, only says to build an initial matrix and that each concern must be
+   "addressed in the review body"; it does not require the completed table to be rendered there
+   and does not exclude ad-hoc prose. A direct
+   `rg -n 'Verification Matrix|verification matrix' kc-pr-flow/skills/kc-pr-review/SKILL.md`
+   finds no other surviving authority for those clauses.
+2. **Restore `Refactoring PRs — API surface diff` (parent `SKILL.md:1867`) or return the entity to
+   ideation for a smaller allowlist.** The deleted rule requires listing every symbol that became
+   newly public, then flagging unintentional exposure. Its cited survivor,
+   `reference/review-triage.md:182-191`, tells agents to detect/flag accidental or unintentional
+   API-surface widening, but never requires an exhaustive list of all newly public symbols.
+
+Restoring these exact two bullets is the bounded product fix for the information loss. Because
+that would change the measured cut from 33 deletions to 31, the current AC-3 exact-33 requirement
+must also be re-cut in ideation; adding replacement authority elsewhere is outside this
+deletion-only task and would violate the zero-addition criterion.
+
+### Acceptance criteria
+
+- **FAIL — AC-1, "Removed rules retain complete authority."** Direct reads at exact code head
+  `ee127c1` resolved 31 deletion rows to clause-complete survivors, but the two findings above
+  failed their cited mappings. One failed survivor is an explicit falsifier for AC-1.
+- **PASS — AC-2, "Unique and stronger rules remain."** The parent/head retained-line extraction
+  diff was empty for all eight titles. The retained lines at `ee127c1` hash to
+  `f5fd3ecf29e68cd79efcf6b37a36bff1b1375d8d8e63b81c072390c18a69b7ae`.
+- **FAIL — AC-3, "The cut is measurably smaller without information removal."** Mechanical size
+  evidence passes: Rules count is `41 -> 8`; commit stat is exactly one file with
+  `0 additions / 33 deletions`; `git diff --check` exits 0. The "without information removal"
+  half fails with the two AC-1 findings, so the criterion is not satisfied.
+- **PASS — AC-4, "Existing skill contracts remain green."** Fresh exact-head runs from the code
+  worktree exited 0: `skill-frontmatter-lint.sh` checked 35 skills; `cross-model.test.sh` reported
+  68 passed / 0 failed; `review-architecture-diagrams.test.sh` reported 43 passed / 0 failed;
+  `review-shadow.test.sh` reported 213 passed / 0 failed.
+- **PASS — AC-5, "The zero-paid boundary is preserved."** Validation used static git/source
+  inspection and the four named local suites only. It invoked no paid/model/eval/ablation,
+  runtime/post, benchmark, or E2E path and makes no 5b acceptance claim. The committed code diff
+  contains only the one `SKILL.md` deletion patch and no harness/test addition.
+
+### Exact-head and scope evidence
+
+- Code worktree branch: `spacedock-ensign/redundant-rule-removal`; exact clean head:
+  `ee127c1f6a33c8e31eebacfc75619efb4d9fad7a`.
+- Commit parent/target skill blobs:
+  `45ba8359f866f8d4b41c960b805230b3e7283579` ->
+  `b8b87caea8c188615bae04dc7af39c30a9b22285`.
+- `git diff-tree --name-status` reports only
+  `M kc-pr-flow/skills/kc-pr-review/SKILL.md`; `git diff --numstat` reports
+  `0  33  kc-pr-flow/skills/kc-pr-review/SKILL.md`.
+- Changed-file mapping: the sole changed file serves AC-1 through AC-4 by removing the audited
+  Rules bullets while preserving authorities and retained rules. No changed file is unmapped.
+
+### Recommendation
+
+**REJECTED — feedback-to implementation, with an ideation re-cut required before another
+implementation can satisfy the numeric AC.** Restore the two bullets named above byte-for-byte;
+do not add replacement prose or widen the task.
