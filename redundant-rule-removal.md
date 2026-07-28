@@ -478,3 +478,107 @@ All four commands ran from the code worktree repository root and exited 0:
   expansion.
 - SKIPPED: Paid models, model calls, evals, E2E, runtime/post suites, benchmarks, 5b, fa, and sk,
   as required.
+
+## Stage Report: validation (cycle 2)
+
+### TL;DR
+
+**PASSED** at exact code commit
+`ab2a6f6c98f5660bf3d81f5cf3718ea5992678ce`.
+No findings. Both prior material findings are **CLOSED**, all 31 remaining deletions have
+clause-complete surviving authority, all ten fail-closed rules match `origin/main`
+byte-for-byte, and the four required deterministic suites exited 0. No product file was
+modified during validation.
+
+### Evidence block
+
+- Lenses: Markdown-only installed skill-instruction contract. Correctness **PASS** (0 findings);
+  manifest/back-compat **PASS** (0 findings). Security, silent-failure, type-design, concurrency,
+  and resource-lifecycle did not fire because the diff changes no auth/trust boundary, error or
+  input handling, type, async/shared-state, process/handle, or executable surface.
+- Diff coverage: N/A — prose-only diff, no executable surface.
+- Adversarial: N/A — this deletion-only prose diff has no executable behavioral guard to break;
+  the stage-specific dispatch also prohibits model/eval/ablation, runtime/post, and E2E paths.
+- Cross-model: NOT RUN — the stage-specific zero-paid boundary prohibits model calls. The required
+  deterministic `cross-model.test.sh` contract suite ran and passed 68/68; no cross-model or 5b
+  acceptance is claimed.
+- E2E: N/A — ideation excludes E2E for this prompt-document de-duplication with no wiring claim,
+  and the stage-specific dispatch prohibits it.
+
+### Prior-finding disposition
+
+- **CLOSED — `Refactoring PRs — API surface diff`.** The full retained line from `origin/main`
+  and `ab2a6f6` has identical SHA-256
+  `3e20ddff950359e6edcecfc14028169a9f81806dfa577fc71849f4441bf57173`.
+  The exhaustive newly-public-symbol inventory and unintentional-exposure clauses are present
+  without replacement prose.
+- **CLOSED — `Verification matrix in review body`.** The full retained line from `origin/main`
+  and `ab2a6f6` has identical SHA-256
+  `d17678ce34ecb0d0b933f8777a54d169a301494486dd227c5f88449183d071c1`.
+  The completed-matrix-table and replaces-ad-hoc-prose clauses are present without replacement
+  prose.
+- **OPEN: none. NEW: none.**
+
+### Acceptance criteria
+
+- **PASS — AC-1, "Removed rules retain complete authority."** Fresh direct reads independently
+  re-resolved all 31 rows. The surviving groups are:
+  - main workflow: PR Summary (`Step 2.6` + `§6-pre`), confirmation (`§6c`), diagram opt-in and
+    validation (`§6b-arch` + Step 7), dynamic repo detection (Steps 1/3), ownership (Step 3),
+    CODE/DOC/NEW classification (Steps 5/6), cross-model reconciliation/arbitration/convergence
+    (`Step 4-Codex`, `§5.5`, `§5.6`, `§6b-cm`), non-deferrable learning (Step 8), tests as
+    verdict evidence (`§4.5t`), and external-system A/B COMMENT default (`§4.5p` + `§6b¾`);
+  - required `gh-api-patterns.md`: temp JSON with `--input`, one batched submission, and PR-author
+    tagging;
+  - required `review-triage.md`: always-dispatched comment analyzer, refactor behavioral
+    equivalence, and stale-reference audit;
+  - required `compliance-audit.md` / `learned-patterns.md`: skills-as-reference-only and the
+    zero-agent pre-emit gate plus at-most-one whole-diff adversarial pass;
+  - required `knowledge-capture.md`: D2 threshold/confirmation, surgical edits,
+    project-scoped `.claude/review-lessons.md`, separate D2 commit, and specific/testable rules;
+  - required `test-execution.md`: failure-to-event mapping and mandatory worktree cleanup;
+  - required `break-point-probe/SKILL.md`: evidence level, residual uncertainty, and honest
+    degradation requirements.
+  No cited survivor is weaker, conditional relative to the deleted rule, inside the deleted
+  region, or changed by this branch.
+- **PASS — AC-2, "Unique and stronger rules remain."** Baseline and target extraction found all
+  ten retained titles and compared each full line exactly. Both ordered ten-line sets hash to
+  `7e4563ed329506102d6a84262a5ade3fa2c6eee8420f30e41fdc593fb7faa30f`.
+- **PASS — AC-3, "The cut is measurably smaller without information removal."** Fresh
+  `origin/main...ab2a6f6` evidence is one file,
+  `0 additions / 31 deletions`; Rules bullets are exactly `41 -> 10`; `git diff --check` exits 0.
+  Baseline/target skill blobs are
+  `45ba8359f866f8d4b41c960b805230b3e7283579` ->
+  `8efe01ae3f89552fb3b24ad4a72ad8b9db71d090`.
+- **PASS — AC-4, "Existing skill contracts remain green."** Fresh runs from the exact code
+  worktree exited 0: `skill-frontmatter-lint.sh` checked 35 skills;
+  `cross-model.test.sh` reported 68 passed / 0 failed;
+  `review-architecture-diagrams.test.sh` reported 43 passed / 0 failed; and
+  `review-shadow.test.sh` reported 213 passed / 0 failed.
+- **PASS — AC-5, "The zero-paid boundary is preserved."** Validation used static git/source
+  inspection and the four named deterministic local suites only. It invoked no paid/model/eval/
+  ablation, runtime/post, benchmark, E2E, 5b, fa, or sk path and makes no 5b acceptance claim.
+
+### Exact-head and scope evidence
+
+- Code worktree branch: `spacedock-ensign/redundant-rule-removal`; clean exact head:
+  `ab2a6f6c98f5660bf3d81f5cf3718ea5992678ce`.
+- Fresh `origin/main` and merge base:
+  `b87171c40d595c7c60d4efa3ee16d0b4249cd9d1`.
+- `git diff-tree --name-status` reports only
+  `M kc-pr-flow/skills/kc-pr-review/SKILL.md`; `git diff --numstat` reports
+  `0  31  kc-pr-flow/skills/kc-pr-review/SKILL.md`.
+- Changed-file mapping: the sole changed file serves AC-1 through AC-4. No changed file is
+  unmapped; no test, harness, authority, reference, or other product surface changed.
+
+### Recommendation
+
+**PASSED.** Advance from validation. The corrected implementation closes both prior material
+findings without new findings or residual product risk inside the authorized zero-paid,
+single-file scope.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — two incomplete survivor mappings; design reset from 33 deletions/eight
+  retained rules to 31 deletions/ten retained rules.
+- Cycle 2: PASSED — `2 closed / 0 open / 0 new`; no further correction round requested.
