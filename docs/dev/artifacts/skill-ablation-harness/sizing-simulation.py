@@ -122,11 +122,13 @@ class Run:
         self.tokens = tokens
 
 
-def make_pr(rng, pr_id):
+def make_pr(rng, pr_id, n_extra=None):
     """Fixed per-PR structure: which findings exist, and each one's severity."""
+    if n_extra is None:
+        n_extra = EFFECT_EXTRA_FINDINGS
     core = [f"{pr_id}:core:{k}" for k in range(STABLE_CORE)]
     noise = [f"{pr_id}:noise:{k}" for k in range(NOISE_POOL)]
-    extra = [f"{pr_id}:effect:{k}" for k in range(EFFECT_EXTRA_FINDINGS)]
+    extra = [f"{pr_id}:effect:{k}" for k in range(n_extra)]
     severity = {f: rng.choice(SEVERITIES) for f in core + noise + extra}
     return core, noise, extra, severity
 
@@ -399,15 +401,48 @@ def joint_worked_cases(split_cache):
     print(f"  empty-runs : p_joint={p_joint:.4f} (no ZeroDivisionError)")
 
 
-def trial(rng, n, m, effect):
+def trial(rng, n, m, effect, n_extra=None):
     tables = []
     for p in range(m):
-        pr = make_pr(rng, p)
+        pr = make_pr(rng, p, n_extra)
         runs = [sample_run(rng, pr, False) for _ in range(n)] + [
             sample_run(rng, pr, effect) for _ in range(n)
         ]
         tables.append(per_pr_D_tables(runs, splits(2 * n, n)))
     return tables
+
+
+def power_curve(trials_pow, sizing_label="N=3 / M=3", effects=(1, 2, 3, 4, 6, 9)):
+    """Power of the joint rule as a function of effect size, at one sizing.
+
+    The body's headline power figure is quoted at effect=+3 findings/run, which
+    was written for a single-file ablation. A three-file removal is plausibly a
+    larger effect, and the residual this design carries is about SMALL effects.
+    Both directions are questions about the same curve, so measure the curve
+    rather than argue monotonicity in prose.
+    """
+    n, m = next((n, m) for lbl, n, m in SIZINGS if lbl == sizing_label)
+    print(f"\n== Power vs effect size, joint rule, {sizing_label} ==")
+    print(
+        f"   seed={SEED} trials={trials_pow} alpha={ALPHA} "
+        f"stable_core={STABLE_CORE} noise_pool={NOISE_POOL} q_noise={Q_NOISE}"
+    )
+    for k in effects:
+        rng = random.Random(SEED + 1)
+        hits = 0
+        pvals = []
+        for _ in range(trials_pow):
+            tables = trial(rng, n, m, effect=True, n_extra=k)
+            p = joint_test(tables)[0]
+            pvals.append(p)
+            if p <= ALPHA:
+                hits += 1
+        lo, hi = wilson(hits, trials_pow)
+        print(
+            f"  effect=+{k:>2} findings/run: power={hits}/{trials_pow}="
+            f"{hits/trials_pow:.2f} (Wilson {lo:.2f}-{hi:.2f})"
+            f"  median p_joint={statistics.median(pvals):.4f}"
+        )
 
 
 def calibration_and_power(trials_cal, trials_pow):
@@ -466,6 +501,7 @@ def main():
         20 if args.quick else CALIBRATION_TRIALS,
         10 if args.quick else POWER_TRIALS,
     )
+    power_curve(10 if args.quick else POWER_TRIALS)
 
 
 if __name__ == "__main__":
