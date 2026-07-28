@@ -1,9 +1,10 @@
 ---
 title: Cutting prose from a skill has no failure signal — build one before cutting
-status: backlog
+status: ideation
 source: precondition for the Sprint 4 slimming track, filed 2026-07-27 on captain direction
 design:
 id: 5b5gp68f2aq0bdrcf3q28jgg
+started: 2026-07-28T08:10:24Z
 ---
 
 The kit is going to be cut down before it is extended. The problem with that order is that
