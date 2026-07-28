@@ -112,6 +112,15 @@ binding in every stage report and every gate review.
    message and a comment. A claim inherited from a report, a reviewer, or an
    external contributor is not exempt — adopt it only after checking it, and
    say which.
+7. **Before trusting what a check found, confirm the check can fail.** A probe
+   that silently returns a plausible result where it should have errored is
+   worse than no probe, because its output reads as a conclusion. Two shapes
+   seen here: a spot-check edit whose target string did not exist, so "the
+   suite stayed green" meant the edit never happened rather than that the guard
+   was missing; and a section counter that read headings inside fenced code,
+   inventing a 742-line region that was not there. Run the check against a case
+   it must flag before running it against the case you care about — its silence
+   carries information only after you have seen it speak.
 
 ## Stages
 
