@@ -1,6 +1,6 @@
 ---
 title: Cutting prose from a skill has no failure signal — build one before cutting
-status: implementation
+status: validation
 source: precondition for the Sprint 4 slimming track, filed 2026-07-27 on captain direction
 design: required
 id: 5b5gp68f2aq0bdrcf3q28jgg
