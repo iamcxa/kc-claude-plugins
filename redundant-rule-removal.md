@@ -2,25 +2,224 @@
 title: The skill's tail restates rules it already stated
 status: ideation
 source: cross-model review of the kit, 2026-07-27 — the lowest-risk cut available
-design:
+design: required
 id: tmn8fgqy8390zepcp019td74
 lane: main
 started: 2026-07-28T16:32:16Z
 ---
 
-`SKILL.md:1844` onward restates rules already given authoritatively in Steps 5 and 6. Deleting a
-restatement removes no information, which makes this the one cut in the slimming track that does
-not need a behavioural argument — only proof that the earlier statement is genuinely the
-authoritative one and says the same thing.
+## Problem
 
-Ordering: after `skill-ablation-harness` (5b), because "removes no information" is a claim the
-harness should confirm rather than a claim the author asserts. This is the natural first real cut
-once the harness exists — if the harness cannot show A/A parity on a pure restatement removal,
-the harness is not ready.
+`kc-pr-flow/skills/kc-pr-review/SKILL.md` ends with a 41-bullet `## Rules` section. Many bullets
+repeat normative instructions already present in the ordered workflow or a reference that the
+workflow explicitly tells the reviewer to read. Repeating them makes the prompt longer and creates
+a second edit site where the two copies can drift.
 
-Method: for each candidate, cite the authoritative statement and the restatement, show they do
-not differ in substance, then cut the restatement. A restatement that turns out to say something
-the original does not is not redundant — it is an undocumented rule, and it stays.
+The original task treated the entire tail as redundant and made implementation depend on
+`skill-ablation-harness` (5b). Static inspection falsifies both assumptions:
 
-**AC-1 — Every removed line has a cited surviving statement that says the same thing.**
-Verified by: a table of removed-line → surviving-line pairs, and an ablation run showing no material difference. Falsified by: a removal with no cited survivor, or an ablation difference.
+- The 41 bullets are not one equivalence class. Eight contain a unique clause, a stronger trigger,
+  or a conflict with the alleged survivor.
+- A paid/model ablation cannot prove textual information preservation more directly than a
+  clause-complete source mapping. For this pure-restatement cut, the mapping is the proof.
+
+Scope questions are skipped because the captain supplied a single-file, no-information-removal
+scope, explicitly parked 5b, and prohibited paid experiments. There is no unresolved product
+choice to ask back.
+
+## Scope and appetite
+
+In scope:
+
+- Reshape only the `## Rules` tail in
+  `kc-pr-flow/skills/kc-pr-review/SKILL.md`.
+- Delete a bullet only when every normative clause has a surviving authoritative statement.
+- Treat an explicitly linked reference as authoritative only when the main workflow requires that
+  reference at the relevant step.
+- Retain any unmatched, stronger, conditional, or contradictory bullet unchanged.
+
+Out of scope:
+
+- `skill-ablation-harness` (5b), paid model calls, eval runs, and ablation experiments.
+- `presentation-renderer` (fa), `reference-progressive-load` (sk), or any other slimming entity.
+- Rewriting or consolidating the surviving authorities.
+- Resolving pre-existing contradictions found by the audit.
+
+Appetite: 30 minutes for the implementation edit and mechanical validation, with a 15-minute
+tolerance (one bounded repair round). Paid/model appetite is exactly zero. If the target skill has
+drifted enough that the approved map no longer resolves, or any required local suite remains red
+after one repair, stop and return the task for re-cut; do not widen scope or substitute thinner
+proof.
+
+## Options considered
+
+1. **Clause-complete allowlist deletion (chosen).** Freeze the implementation head, re-resolve the
+   map below, delete only the 33 fully mapped bullets, and retain the eight fail-closed bullets.
+   This is the fastest path that satisfies the no-information-removal claim and the smallest safe
+   cut.
+2. **Delete the entire `## Rules` section.** Fastest edit, rejected: eight bullets do not have a
+   substantively complete, non-conflicting survivor.
+3. **Normalize all rules into a new canonical reference, then replace the tail with one pointer.**
+   More thorough, rejected for this task: it rewrites authority boundaries and therefore becomes a
+   behavior-bearing prompt refactor rather than a pure restatement cut.
+
+Taking the cheap path: a static semantic-equivalence audit plus existing local contract suites.
+The more thorough model-ablation path is not needed because no candidate is admitted on behavioral
+similarity; admission requires surviving text that already carries every clause.
+
+## Design determination
+
+`design: required`. This changes the shape of an agent instruction contract. Before: a 41-bullet
+tail mixes duplicates with unique or conflicting rules. After: the ordered workflow and its
+explicit references remain authoritative, while `## Rules` retains only the eight bullets for
+which this audit cannot prove full equivalence. There is no new runtime interface or schema.
+
+Reverse-recovery audit is not applicable: the task removes duplicate prose and builds no
+abstraction. The brownfield recovery proof is the surviving-authority map itself.
+
+## Static semantic-equivalence audit
+
+Line numbers below are from the ideation head. Implementation must bind the audit to the exact
+target blob and re-resolve section anchors if line numbers move. A row is removable only when all
+of its clauses are covered by the cited survivor.
+
+### Approved deletion allowlist
+
+| Tail line | Rule | Surviving authority |
+|---:|---|---|
+| 1844 | PR Summary first and evidence-based | `SKILL.md` Step 2.6 (141-164) and §6-pre (941-971) |
+| 1845 | Confirm before posting | `SKILL.md` §6c (1723-1754) |
+| 1846 | Diagrams opt-in, preview-first, post only via 5/6 | `SKILL.md` §6b-arch (1116-1141) and §6c |
+| 1847 | Diagram validation before preview and posting | `SKILL.md` 1128-1131 and Step 7 at 1824 |
+| 1848 | Dynamic repository detection | `SKILL.md` Step 1 (98-102) and Step 3 (166-179) |
+| 1849 | Ownership-scoped personal rules | `SKILL.md` Step 3 (166-189) |
+| 1850 | Temp JSON plus `--input`, not `--raw-field` | required `reference/gh-api-patterns.md` 105-129 and 294 |
+| 1851 | One batched review submission | required `reference/gh-api-patterns.md` 129 and 298 |
+| 1853 | CODE/DOC/NEW classification and CODE-only inline posting | `SKILL.md` Step 5 (788-792) and Step 6 (935-1020) |
+| 1855 | Pre-emit quoted-source gate | `SKILL.md` §6a (973-988) |
+| 1856 | Source-set reconciliation, not silence-as-evidence | `SKILL.md` Step 4-Codex (417) and §5.5 (794-824) |
+| 1857 | Material-dispute arbitration and uncapped contradictions | `SKILL.md` §5.5c (826-844) |
+| 1858 | Fail-open arbitration with visible, human-gated demotion | `SKILL.md` §5.6b-c (898-927) and §6b-cm (1108-1114) |
+| 1859 | Homogenized-lens convergence caveat | `SKILL.md` 929-933 and §6b-cm (1094-1105) |
+| 1861 | Comment-analyzer always runs | required `reference/review-triage.md` 122-185 |
+| 1862 | Discover skills as references; do not invoke | required `reference/compliance-audit.md` 39-64 |
+| 1863 | Fetch and tag the PR author | `SKILL.md` Step 2 (104-108), Step 7 (1824), and required `reference/gh-api-patterns.md` 107/299 |
+| 1865 | Refactor behavioral equivalence before style | required `reference/review-triage.md` 182-191 |
+| 1867 | Refactor API-surface audit | required `reference/review-triage.md` 182-191 |
+| 1868 | Refactor stale-reference audit | required `reference/review-triage.md` 182-191 |
+| 1869 | Completed verification matrix in review body | `SKILL.md` Step 2.5 (121-139) |
+| 1871 | D2 threshold plus user gate | Step 8 (1832-1840) and required `reference/knowledge-capture.md` 38-60/93-108 |
+| 1872 | Surgical knowledge edits | required `reference/knowledge-capture.md` 128-134 |
+| 1873 | Project-scoped `.claude/review-lessons.md` | required `reference/knowledge-capture.md` 38-71/83-91 |
+| 1874 | Separate D2 knowledge commit | required `reference/knowledge-capture.md` 110-115 |
+| 1875 | Specific, testable knowledge only | required `reference/knowledge-capture.md` 53-60/128-130 |
+| 1876 | Step 8 cannot be deferred for an interruption | `SKILL.md` Step 8 (1828-1840) |
+| 1877 | Tests precede verdict when available | `SKILL.md` §4.5t (730-752) and required `reference/compliance-audit.md` 160 |
+| 1878 | Test failures override a clean static pass | `SKILL.md` 743-750 and required `reference/test-execution.md` 125-131 |
+| 1880 | Worktree cleanup after tests | required `reference/test-execution.md` 36-40 |
+| 1882 | Probe evidence must match A/B/C/D level | required `skills/break-point-probe/SKILL.md` 89-105/148-155 |
+| 1883 | Residual uncertainty required below complete D | required `skills/break-point-probe/SKILL.md` 148-152 |
+| 1884 | External-system A/B probe defaults to COMMENT | `SKILL.md` Step 4.5p (754-784) and §6b¾ (1061) |
+
+### Fail-closed retention set
+
+| Tail line | Rule | Why it stays |
+|---:|---|---|
+| 1852 | Severity labels | No earlier authority states the complete five-label vocabulary as a normative closed set. |
+| 1854 | DOC/NEW advisory action | Step 6 preserves non-posting, but not the full “separate issue or CLAUDE.md” action. |
+| 1860 | Tested cross-model helper | The tail says four functions; the test header says three deterministic functions. The alleged survivors are not equivalent. |
+| 1864 | PR-facing English | The top language rule survives, but draft-time application and the edited-comment consequence are unique. |
+| 1866 | Refactor consumer audit | The reference requires import-graph correctness but not the exhaustive original-module grep procedure. |
+| 1870 | D1 auto-append | Step 8 names the public `reference/learned-patterns.md`; the required reference says LOCAL-only. Conflicting destinations cannot prove equivalence. |
+| 1879 | Eval failure confirmation | Earlier text requires two or more runs, but the four-consecutive-failures threshold is unique. |
+| 1881 | Break-point activation | The tail says any bugfix; Step 4.5p requires a bugfix spanning at least two layers. The tail is stronger. |
+
+Any implementation-head drift changes this from an allowlist into a mandatory re-audit: do not
+delete a row merely because its old line number still exists.
+
+## Implementation plan
+
+1. Record the implementation-head blob SHA for `SKILL.md` and inventory the exact 41 tail bullet
+   titles. If it differs from this audit, re-resolve every affected row before editing.
+2. Create an exact-text deletion allowlist from the 33 approved rows. Split compound bullets into
+   normative clauses during review; a row is admitted only if every clause maps.
+3. Delete only allowlisted bullets. Keep the `## Rules` heading and the eight retained bullets
+   byte-for-byte unless a separate task later resolves them.
+4. Compare `git diff --unified=0` against the allowlist. Fail if the diff deletes any retained
+   title, changes an earlier authority, or contains any product change outside this one skill.
+5. Run the exact local evidence suite below. Do not run 5b, evals, model calls, or E2E.
+
+One worker session is sufficient: one behavior surface, one file, one dependent edit. No spike is
+needed; the mechanism is Markdown deletion plus existing static/contract tests.
+
+## Required mechanical evidence
+
+Implementation is not complete until all commands exit 0 from the repository root:
+
+```bash
+bash scripts/skill-frontmatter-lint.sh
+bash kc-pr-flow/scripts/cross-model.test.sh
+bash kc-pr-flow/scripts/review-architecture-diagrams.test.sh
+bash kc-pr-flow/scripts/review-shadow.test.sh
+```
+
+These are the existing suites that read or constrain this `SKILL.md`. Runtime, post, benchmark,
+paid eval, and ablation suites are outside the changed seam. E2E is skipped because this is a
+prompt-document de-duplication with no user-visible wiring claim.
+
+No published `PRODUCT.md` or `ARCHITECTURE.md` behavior changes, so no separate doc diff is
+proposed. The edited skill is itself the only published instruction surface affected.
+
+## Acceptance criteria
+
+**AC-1 — Removed rules retain complete authority.**
+Verified by: the implementation `git diff --unified=0`, the frozen `kc-pr-flow/skills/kc-pr-review/SKILL.md` blob SHA, and direct reads of every survivor cited in the allowlist table (beginning at `SKILL.md:98`) showing that each deleted normative clause remains in a workflow or explicitly required reference at the exact implementation head. Falsified by one deleted clause with no survivor, a weaker/conditional survivor, a survivor inside the deleted region, or conflicting survivors.
+
+**AC-2 — Unique and stronger rules remain.**
+Verified by: an exact-title comparison of the post-edit `SKILL.md:Rules` section against the eight-title retention set at ideation lines 1852, 1854, 1860, 1864, 1866, 1870, 1879, and 1881, plus the implementation diff. Falsified by a missing retained title, a semantic rewrite hidden inside this deletion task, or a revised map not approved after implementation-head drift.
+
+**AC-3 — The cut is measurably smaller without information removal.**
+Verified by: before/after bullet counts from `git show <base>:kc-pr-flow/skills/kc-pr-review/SKILL.md` and the worktree `SKILL.md:Rules` section showing 41 to 8 bullets at the audited head, plus `git diff --numstat` and the AC-1 map showing exactly 33 mapped restatements deleted and no earlier authority or required reference changed. Falsified by a non-33 deletion count without a documented head re-audit, added replacement prose, or a changed authority.
+
+**AC-4 — Existing skill contracts remain green.**
+Verified by: captured zero exit statuses from `bash scripts/skill-frontmatter-lint.sh`, `bash kc-pr-flow/scripts/cross-model.test.sh`, `bash kc-pr-flow/scripts/review-architecture-diagrams.test.sh`, and `bash kc-pr-flow/scripts/review-shadow.test.sh` at the implementation `SKILL.md:Rules` head. Falsified by any failure, skipped command, or test adjustment made only to accommodate the deletion.
+
+**AC-5 — The zero-paid boundary is preserved.**
+Verified by: the implementation command log containing only static inspection, the `kc-pr-flow/skills/kc-pr-review/SKILL.md:Rules` edit, and the four named local suites. Falsified by invoking any paid/model/eval/ablation path or claiming 5b acceptance.
+
+## Pre-mortem
+
+If this ships exactly per spec and still fails, the most likely cause is a hidden assumption: an
+earlier `Read →` reference is not actually loaded in a runtime path where the deleted tail bullet
+previously supplied the only in-context instruction.
+
+### Summary
+
+Replaced the 5b dependency with a zero-paid, clause-complete semantic audit; approved 33
+restatement deletions, retained eight unmatched or conflicting rules, and specified exact
+single-file validation evidence and stop conditions.
+
+## Stage Report: ideation
+
+- DONE: Replaced the hard dependency on 5b with a bounded, fail-closed semantic-equivalence
+  proof. The implementation allowlist contains 33 tail bullets, each mapped to surviving workflow
+  or explicitly required reference authority.
+- DONE: AC-1 — every approved deletion has a clause-complete survivor mapping in the static audit.
+- DONE: AC-2 — eight unmatched, stronger, or conflicting bullets are an explicit retention set.
+- DONE: AC-3 — the baseline and end value are measurable: 41 tail bullets become 8 by deleting
+  exactly 33 mapped restatements at the audited head.
+- DONE: AC-4 — the four existing SKILL-coupled local contract suites are named as mandatory
+  zero-exit evidence.
+- DONE: AC-5 — zero paid/model/eval/ablation work is both the appetite and a falsification
+  boundary; 5b acceptance is not claimed.
+- DONE: Recorded a zero-paid/model/eval/ablation appetite, a 30-minute implementation budget with
+  15-minute tolerance, `design: required`, one-worker sizing, scope exclusions, pre-mortem, and
+  stop/re-cut conditions.
+- DONE: Named the exact local evidence suite:
+  `skill-frontmatter-lint.sh`, `cross-model.test.sh`,
+  `review-architecture-diagrams.test.sh`, and `review-shadow.test.sh`.
+- SKIPPED: Reverse-recovery and E2E. This is a single-file duplicate-prose removal that builds no
+  abstraction and makes no wiring claim; its load-bearing proof is direct source equivalence plus
+  the existing SKILL-coupled contract tests.
+- SKIPPED: 5b acceptance and paid experiments. They remain explicitly parked and are not needed or
+  claimed by this entity.
