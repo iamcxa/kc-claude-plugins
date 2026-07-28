@@ -1,6 +1,6 @@
 ---
 title: The skill's tail restates rules it already stated
-status: validation
+status: ideation
 source: cross-model review of the kit, 2026-07-27 — the lowest-risk cut available
 design: required
 id: tmn8fgqy8390zepcp019td74
@@ -371,3 +371,13 @@ deletion-only task and would violate the zero-addition criterion.
 **REJECTED — feedback-to implementation, with an ideation re-cut required before another
 implementation can satisfy the numeric AC.** Restore the two bullets named above byte-for-byte;
 do not add replacement prose or widen the task.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — fresh validation; surface 17m implementation plus mechanical validation vs estimate 30m (57%); AC narrowed: deletion allowlist 33 -> 31 after two incomplete survivor mappings
+
+**Design reset — 2026-07-29.** Return to ideation and re-cut the allowlist, baseline, AC-1, and
+AC-3 to the 31 clause-complete deletions. Restore `Verification matrix in review body` and
+`Refactoring PRs — API surface diff` byte-for-byte. This is the captain-approved fail-closed
+boundary, not added scope: no replacement prose, paid/model path, 5b claim, fa, or sk work is
+authorized.
