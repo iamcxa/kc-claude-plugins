@@ -1326,3 +1326,43 @@ checklist accounting and the AC cross-check, which each verify their own stage.
 Spend against the ≤$90 envelope: **one pilot run** (~$2.53), bought deliberately to establish whether
 the runner works at all rather than assert it either way. The 27-run acceptance was never started, so
 ~$87 of the envelope remains. A probe was still executing when the stage reported.
+
+**Validation, reviewer panel — four further findings on `41d9573`.** Citations spot-checked against
+the on-disk files; the reviewer verified the `claude` CLI flags against `claude --help` rather than
+trusting the script's own comments.
+
+- **V3 [Important] — `run` never checks the headless invocation's exit code**
+  (`review-ablation.sh:181-196`). `rc` is captured only to decorate an error message when the receipt
+  is empty; it is never itself a failure condition. Because the receipt path is deterministic and is
+  not cleared before invocation, a retry whose `claude` call crashes while a prior attempt's non-empty
+  receipt is still on disk makes `run` **report success and print the stale path**. `compare`'s
+  staleness guard catches it at the end — which is the point: an operator can burn most of an 18- or
+  27-run budget believing each slot succeeded, then have the whole batch rejected. Operationally the
+  sharpest of the four, given the ≤$90 envelope.
+- **V4 [Important] — `remove_span`'s precondition validates a different string than it mutates**
+  (`review-ablation-core.py:166-176`). It asserts `body.count(text) == 1` but replaces `text + "\n"`.
+  A span that occurs once without a trailing newline (a span at true end-of-file) makes `.replace()`
+  match zero times and write the file back unchanged, with no exception. `span_postcondition` does
+  catch it, so no wrong verdict is produced — but it surfaces as "CUT span still present" and points
+  the diagnosis at the resolver rather than at a newline mismatch. Not reachable today (`SKILL.md`
+  ends with a newline and S8 is at `:1855`, well short of EOF); latent for any future EOF span.
+- **V5 [Important] — the S6 removal text is a module constant, not read from its span row**
+  (`review-ablation-core.py:50`, applied at `:278`). `S6_REMOVE` is applied to whatever row has
+  `kind == "cut_sub"`. One such row exists today, so it is harmless now; a second would silently
+  attempt to remove SKILL.md's text from the wrong file. It undercuts the design's own insistence that
+  the enumeration table is the single source of truth.
+- **V6 [Proof Policy #6] — an unenforced absolute in a code comment** (`review-ablation.sh:108-111`):
+  the manifest is "never writable by it". Nothing enforces that — the invocation at `:181-183` passes
+  no `--disallowedTools`, no `--add-dir` restriction, no sandbox flag. The only thing keeping the agent
+  out of the manifest is a **prose instruction in the driver prompt**. In an entity whose founding
+  premise is that prose has no test, the freshness authority is guarded by prose. Either name a real
+  enforcement point or write the bounded claim. Rule 6 binds code comments precisely because no gate
+  reads them, and this is the fifth instance in this entity of a check resting on something it does
+  not actually control.
+
+Statistics core reviewed end to end with no logic bug found: assignment 0 is genuinely the observed
+labelling, `agreement_D`/`scalar_D` are symmetric under label swap, and `p_dim` compares each
+dimension's observed z against the null of the **max** over dimensions — the correct single-step
+Westfall-Young max-T construction, which is what actually delivers FWER control. The reviewer declined
+to certify it beyond that and recommended a second statistician's read before the cost claims are
+relied on operationally.
