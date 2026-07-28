@@ -113,6 +113,7 @@ bash scripts/review-runtime.test.sh
 bash scripts/review-post.test.sh
 bash scripts/review-shadow.test.sh
 bash scripts/review-runtime-benchmark.test.sh
+bash scripts/review-ablation.test.sh
 ```
 
 **Lint with CI's ShellCheck, not yours.** `review-runtime-tests.yml` pins ShellCheck **v0.9.0**, and
@@ -134,6 +135,29 @@ curl -fsSL https://github.com/koalaman/shellcheck/releases/download/v0.9.0/shell
 ```
 
 Bump the pin in the workflow and both commands together.
+
+**Judging a cut to `SKILL.md`.** Prose has no test: deleting instruction text leaves the shell
+suites green. Before a cut to instruction text that could change what the review flags, run
+`scripts/review-ablation.sh` for an A/B verdict against the frozen corpus. One verdict costs 18
+headless review runs (~$46), so it is for load-bearing cuts, not mechanical ones. The verdict compares
+candidate-fingerprint sets, so it is blind to a cut that changes a finding's wording without
+moving its anchor.
+
+Read the verdict for what it says, in both directions — the verdict's `certifies` object states
+each one. `material: false` certifies **no detected difference on the measured dimensions (anchor
+set, severity mix, tokens)** for the corpus, sizing, and model in the verdict — it is never a
+certificate of "no behavioral change". A wording-only cut is outside the instrument's range by
+construction, as is any effect below its power floor. And `material: true` on a large multi-file
+removal certifies only that a **large** removal is detected: the measured detection knee is
+between +1 and +2 findings per run, so **a passing verdict on someone else's bigger cut is not
+evidence your smaller cut would have been caught.** Each cut earns its own verdict or records its
+own accepted residual.
+
+The ablation the harness is certified against is enumerated in `scripts/review-ablation-spans.tsv`,
+one row per span with the sha256 of its exact text. That sidecar is generated
+(`scripts/review-ablation.sh arm --write-pins`), never hand-typed. A pin that stops matching means
+the tree moved under the table: re-derive the enumeration, do not adjust line numbers until the
+pins pass.
 
 ## Internal Agents
 
