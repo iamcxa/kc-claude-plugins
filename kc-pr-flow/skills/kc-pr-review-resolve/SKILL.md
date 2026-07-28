@@ -201,7 +201,12 @@ Iterative review cycles (and especially daemon mode) re-surface the same Copilot
 
 **State file**: `~/.claude/kc-plugins-config/pr-flow/review-state/{repo-slug}-{branch}.jsonl`
 
-`repo-slug` is `basename(git-toplevel)` lowercased; `branch` is the current branch with `/` replaced by `__`.
+`repo-slug` is the **repository** directory name lowercased, derived from `--git-common-dir`. `branch` is the current branch with every `/` replaced by `__`.
+
+Derive the path with the Step 9 snippet rather than composing the filename by hand — two traps make a hand-built name land somewhere the next cycle does not read, and both fail silently because a missing state file is indistinguishable from a first cycle:
+
+- `--show-toplevel` returns the *worktree* directory in a linked worktree (`pr1587`, `pretoria`), while `--git-common-dir` resolves to the repository's own `.git` from either. Since the worktree directory name is chosen per checkout, a slug built from it is not reproducible from the repository's other checkouts.
+- `tr` maps character to character, so `tr '/' '__'` substitutes a single `_`. Use `sed 's|/|__|g'` for the two-character replacement this format specifies.
 
 Each line is one verdict record (JSONL):
 
@@ -516,8 +521,12 @@ After all threads are resolved and re-review is complete, evaluate what the revi
 ```bash
 STATE_DIR="$HOME/.claude/kc-plugins-config/pr-flow/review-state"
 mkdir -p "$STATE_DIR"
-REPO_SLUG=$(basename "$(git rev-parse --show-toplevel)" | tr '[:upper:]' '[:lower:]')
-BRANCH_SAFE=$(git branch --show-current | tr '/' '__')
+# --git-common-dir resolves to the repository's own .git even from a linked worktree;
+# --show-toplevel would yield the worktree directory name instead.
+REPO_SLUG=$(basename "$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null | sed 's|/\.git$||')" 2>/dev/null | tr '[:upper:]' '[:lower:]')
+REPO_SLUG=${REPO_SLUG:-$(basename "$(pwd)" | tr '[:upper:]' '[:lower:]')}
+# sed, not tr: tr maps character to character, so tr '/' '__' emits a single underscore.
+BRANCH_SAFE=$(git branch --show-current | sed 's|/|__|g')
 STATE_FILE="$STATE_DIR/${REPO_SLUG}-${BRANCH_SAFE}.jsonl"
 HEAD_SHA=$(git rev-parse --short=10 HEAD)
 TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
