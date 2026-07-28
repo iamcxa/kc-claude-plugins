@@ -1,6 +1,6 @@
 ---
 title: Cutting prose from a skill has no failure signal — build one before cutting
-status: validation
+status: implementation
 source: precondition for the Sprint 4 slimming track, filed 2026-07-27 on captain direction
 design: required
 id: 5b5gp68f2aq0bdrcf3q28jgg
@@ -979,6 +979,20 @@ fallback (cut to AC-1 + AC-3, park AC-2 re-enterably) stands.
 Cost of the round: one ideation dispatch, one cross-vendor pass, one EM verdict. No compute was spent
 against the pre-registration, so every fix above is a paper edit — which is the whole reason the gate
 sits before the runs rather than after them.
+
+- Cycle 3: REJECTED — validation / EM loop; surface 1 implementation worker session vs estimate 1 (100%); AC unchanged
+
+**Cycle-3 design reset — captain approved 2026-07-28.** Reconfirm the existing ACs without narrowing
+them and re-scope the missing corpus to three frozen snapshots: PR #17 at
+`4489933ddf5237187c4866ab45bdecc5bdb2d0f0..f3aed43341d5fe4616d76ba02946bd4913ae260e`,
+PR #19 at
+`d62f2c6659d76799994482dd58be2dc2b05fb3ea..031b4908cf405724b2ed7d1b829f3c001eea7aa2`,
+and PR #50 at
+`536be3e7d7d8371a9e84b693804407ea1b54bc60..7c448243c0512d137a47cdf36a9b255658f096a3`
+(the pre-ShellCheck-repair head). Repair V1/V3/V6; include V4/V5 because their bounded fixes are
+low-cost; then pilot the three snapshots sequentially. Any pilot that yields no posted-tier finding
+stops the run for captain review rather than consuming the 27-run acceptance budget. The `kj`
+evidence note remains outside this single-entity route.
 
 ## Stage Report: ideation (correction round 1)
 
