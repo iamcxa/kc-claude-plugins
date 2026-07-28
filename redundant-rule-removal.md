@@ -1,6 +1,6 @@
 ---
 title: The skill's tail restates rules it already stated
-status: implementation
+status: validation
 source: cross-model review of the kit, 2026-07-27 — the lowest-risk cut available
 design: required
 id: tmn8fgqy8390zepcp019td74
