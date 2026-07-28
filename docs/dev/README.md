@@ -129,11 +129,13 @@ binding in every stage report and every gate review.
    over an instruction file the model reads never proves a behavioral claim.
    A grep may serve as one-off evidence for an existence fact in a validation
    report; the same grep committed as a test is banned. Not because it can
-   never go red — editing the matched wording, moving the file, or changing the
-   pattern all turn it red — but because every edit that turns it red is an edit
-   to the *text*: it tracks wording and is blind to behavior, so it passes
-   straight through the regression it was committed to catch and goes red on
-   rephrasings that broke nothing. And
+   never go red — rewording the matched line, moving the file, or changing the
+   pattern all do that — but because **nothing about the behavior can**. It
+   reads text. A regression that leaves the wording intact passes straight
+   through it, and a rephrasing that broke nothing turns it red: it is
+   uncorrelated with the thing it was committed to catch, in both directions.
+   The falsifier is an edit to behavior alone that reddens it, and there is
+   none. And
    a check the author wrote to grade the author's own artifact is a self-issued
    stamp, not a gate. This is about what closes a gate, not about who may write
    a test: the worker's own RED-before-GREEN tests are exactly the evidence
@@ -173,15 +175,18 @@ binding in every stage report and every gate review.
    it is written as a rule the writer applies rather than a gate someone else
    runs. The validation-stage clause is the backstop for what slips through,
    and a backstop that fires every time is a cost, not a control.
-   **Coverage past the author is uneven, and that is the point.** A reference
-   or doc diff reaches validation. A code comment reaches it only
+   **Coverage past the author is uneven — and the distinction is read, versus
+   checked.** A reference or doc diff reaches validation, which has a clause
+   aimed squarely at its guarantees. A code comment reaches validation only
    incidentally, inside a diff a reviewer happens to read closely. A commit
-   message reaches no gate at all. The thinner the downstream coverage, the
-   more the authoring moment is the only moment — four of these shipped in two
-   days, and the two nobody caught until later were a commit message and a
-   comment, which are exactly the two thin cases. A claim inherited from a
-   report, a reviewer, or an external contributor is not exempt — adopt it
-   only after checking it, and say which.
+   message is *read* by tooling here — `kc-pr-review` parses issue IDs out of
+   it — but by nothing that evaluates a claim in it. So all three get read at
+   some rate, and only the first has anything downstream that would test an
+   absolute. The thinner that coverage, the more the authoring moment is the
+   only moment — four of these shipped in two days, and the two nobody caught
+   until later were a commit message and a comment, which are exactly the two
+   thin cases. A claim inherited from a report, a reviewer, or an external
+   contributor is not exempt — adopt it only after checking it, and say which.
 7. **A negative result is a claim, and carries the same bar as a positive
    one.** "The search found nothing" is evidence about the search. "The file is
    unchanged" is evidence about the file, not about the failure. A number
