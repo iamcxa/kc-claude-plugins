@@ -129,10 +129,13 @@ binding in every stage report and every gate review.
    over an instruction file the model reads never proves a behavioral claim.
    A grep may serve as one-off evidence for an existence fact in a validation
    report; the same grep committed as a test is banned. Not because it can
-   never go red — deleting the matched line turns it red — but because that is
-   the *only* edit that does: it tracks the wording and is blind to the
-   behavior, so it passes straight through the regression it was committed to
-   catch. And
+   never go red — rewording the matched line, moving the file, or changing the
+   pattern all do that — but because **nothing about the behavior can**. It
+   reads text. A regression that leaves the wording intact passes straight
+   through it, and a rephrasing that broke nothing turns it red: it is
+   uncorrelated with the thing it was committed to catch, in both directions.
+   The falsifier is an edit to behavior alone that reddens it, and there is
+   none. And
    a check the author wrote to grade the author's own artifact is a self-issued
    stamp, not a gate. This is about what closes a gate, not about who may write
    a test: the worker's own RED-before-GREEN tests are exactly the evidence
@@ -166,15 +169,30 @@ binding in every stage report and every gate review.
    names the enforcement point that makes it true, or is rewritten as the
    bounded claim the code actually supports. This is rule 2 applied to prose:
    the same discipline an AC's evidence gets, because a documented guarantee
-   *is* a claim and the next reader builds on it. Two consequences worth
-   stating outright. **It binds at authoring time**, not at the gate — the
-   validation-stage clause is a backstop for what slips through, and a
-   backstop that fires every time is a cost, not a control. And it covers
-   commit messages and code comments, which **no gate reads**: four of these
-   shipped in two days, and the two nobody caught until later were a commit
-   message and a comment. A claim inherited from a report, a reviewer, or an
-   external contributor is not exempt — adopt it only after checking it, and
-   say which.
+   *is* a claim and the next reader builds on it.
+   **An enforcement point is what makes the absolute true, not who believes
+   it.** The permission check, the schema constraint, the branch that cannot
+   be reached, the script that fails closed — those are enforcement points.
+   "I checked" is not one, and neither is the author. Where no such mechanism
+   exists the absolute is not defensible, and gets rewritten as the bounded
+   claim that is. Two consequences worth stating outright.
+   **This rule is itself a discipline, not a mechanism, and it does not claim
+   otherwise** — nothing checks it automatically, which is why it binds at
+   authoring time as something the writer applies rather than a gate someone
+   else runs. The validation-stage clause is the backstop for what slips
+   through, and a backstop that fires every time is a cost, not a control.
+   **Coverage past the author is uneven — and the distinction is read, versus
+   checked.** A reference or doc diff reaches validation, which has a clause
+   aimed squarely at its guarantees. A code comment reaches validation only
+   incidentally, inside a diff a reviewer happens to read closely. A commit
+   message is *read* by tooling here — `kc-pr-review` parses issue IDs out of
+   it — but by nothing that evaluates a claim in it. So all three get read at
+   some rate, and only the first has anything downstream that would test an
+   absolute. The thinner that coverage, the more the authoring moment is the
+   only moment — four of these shipped in two days, and the two nobody caught
+   until later were a commit message and a comment, which are exactly the two
+   thin cases. A claim inherited from a report, a reviewer, or an external
+   contributor is not exempt — adopt it only after checking it, and say which.
 7. **A negative result is a claim, and carries the same bar as a positive
    one.** "The search found nothing" is evidence about the search. "The file is
    unchanged" is evidence about the file, not about the failure. A number
@@ -309,10 +327,15 @@ once. Discipline clauses:
   hidden assumption, over-conviction}. This is an orthogonal
   future-failure check the AC rubric structurally cannot generate.
 - **Design determination is mandatory, never skipped.** Every task records
-  `design: required` (UI, contract, interface, schema, or visual surface
-  affected — attach the concrete design decision: wireframe reference, API
-  shape, before/after) or `design: trivial-pass` with a one-line reason. An
-  ideation gate presented without a design determination is returned unread.
+  `design: required` (the task **decides** something about a UI, contract,
+  interface, schema, or visual surface — its shape, not merely its behavior;
+  attach the concrete design decision: wireframe reference, API shape,
+  before/after) or `design: trivial-pass` with a one-line reason. **Touching
+  such a surface is not the trigger; deciding about it is** — a repair that
+  restores behavior the surface already documents decides nothing and is a
+  `trivial-pass`, which is what lets the Defect lane classify a single-seam UI
+  or contract fix without contradicting this clause. An ideation gate presented
+  without a design determination is returned unread.
 - **Reverse-recovery audit before any "build/add X"** (brownfield default):
   assume the abstraction may already exist. Layer-trace the path (UI →
   contract → handler → domain → persistence → readback) and classify each
@@ -338,8 +361,11 @@ once. Discipline clauses:
   waiting for status to be reported" until either the old name is restored so
   something reports that context again, or the protection is edited to require
   the new one. So a job rename is a change to the merge rules, which
-  Judgment Escalation puts on the captain, and it is caught by reading the
-  protection rather than by watching for a red check — there will not be one.
+  Judgment Escalation puts on the captain. And the symptom to look for is the
+  *missing* context, not a red one: the renamed job still runs and can fail on
+  its own merits, but nothing goes red merely because the required context
+  stopped being reported — which is why this is caught by reading the
+  protection rather than by watching the checks.
   The live-read matters more than usual in this repo because a required check's
   display name can outlive what it checks: the parity context still names the
   README even though per-plugin version badges were retired from it.
@@ -747,7 +773,7 @@ rules; disagreement between seats goes to the captain, not to a vote.
 | File | Owner | Updated |
 |------|-------|---------|
 | PRODUCT.md / ARCHITECTURE.md | Task lifecycle (ideation proposes, implementation applies, validation verifies) | In the PR that changes the behavior |
-| ROADMAP.md / roadmap indexes | Captain (or sprint Commander) | Sprint boundaries, strategy shifts — never tracks task state (that's a `status --where` query) |
+| ROADMAP.md / roadmap indexes | Captain (or sprint Commander) | Sprint boundaries, strategy shifts — never tracks task state (that's a `status --where` query). The same pass sweeps overdue `pending:` cells in the ledger, per Measurement Ledger |
 | This README | Captain-approved revision | When ledger data says a clause needs tuning |
 
 ## Measurement Ledger
@@ -766,13 +792,17 @@ task_id, slug, dispatches, rework_rounds, wallclock_hours, tokens_if_known, diff
 the archived task bodies carries them, so a row left at `n/a` stays `n/a`.
 
 **The boundary is earlier than the row, so the counters need somewhere to live
-before the row exists.** The row is written once, at the terminal transition;
-the numbers accrue across every dispatch before it. They accumulate in the task
-body's `## Measurement` section (see the task template) — one line appended per
-dispatch, `dispatches` incremented at launch and the token figure filled in on
-return. The `done` transition sums that section into the row. A task whose body
-has no `## Measurement` lines has not been instrumented, and its row is `n/a` by
-construction rather than by accident.
+before the row exists.** The row is written once, at whichever terminal boundary
+the task reaches — the `done` transition, or archival for a task abandoned after
+implementation started; the numbers accrue across every dispatch before it. They
+accumulate in the task body's `## Measurement` section (see the task template) —
+one line appended per dispatch, `dispatches` incremented at launch and the token
+figure filled in on return. The terminal boundary sums that section into the row.
+A task reaching `done` with no `## Measurement` lines was never instrumented, and
+**that is a defect to repair before the transition, not a licensed `n/a`** — the
+invariant below says a `done` transition may not leave `tokens_if_known` at
+`n/a`, and this section carves no exception out of it. An abandoned row is the
+one that may close at `n/a`, because the work stopped rather than shipped.
 
 **Rolling up a mixed section has exactly one right answer**, and it is the `+`
 convention below rather than a judgment call: sum the dispatches whose tokens are
@@ -806,13 +836,20 @@ Recording is not checking — it writes a number at a stage boundary and gates
 nothing, so Proof Policy 5 does not apply to it.
 
 `escaped_defects_7d` is back-filled when a defect traced to the task surfaces
-within seven days of merge; until that window closes the cell reads `pending`,
-never `0` and never blank — an unobserved window and a clean one must not read
-alike. Record it as a Severity-1/2 count, because that is the only severity the
-bar reads; lower-severity escapes go in the task's archive note, where they
-inform without moving a threshold they were never meant to move.
+within seven days of merge; until that window closes the cell reads
+**`pending:<YYYY-MM-DD>`** — the date the window shuts, never a bare `pending`,
+never `0`, never blank. An unobserved window and a clean one must not read alike,
+and a bare `pending` cannot say which of the two it is *becoming*: it reads the
+same on the day it is written and a year later. Carrying the date makes
+overdueness a property of the file: a reader — or a one-line `awk` over the
+eighth column comparing the suffix against today — can tell at a glance which
+cells are owed, without reconstructing when anything merged.
+Record the closed value as a Severity-1/2 count, because that
+is the only severity the bar reads; lower-severity escapes go in the task's
+archive note, where they inform without moving a threshold they were never meant
+to move.
 
-Two cases where `pending` would never close, so it is not written: a task
+Two cases where a `pending:` cell would never close, so it is not written: a task
 **abandoned** after implementation started never merges, so its window never
 opens and the cell reads `n/a — abandoned`; and rows that predate this clause
 were filed with the cell blank, which is exactly the ambiguity the clause
@@ -821,16 +858,32 @@ forbids, but rewriting them now would assert a window state nobody observed.
 `docs/dev/ledger.csv` keep their blank cell, which is read as unknown, not as
 clean.
 
-**Two pieces of ledger upkeep happen after the row is written, and both belong
-to the FO at the *next* `done` transition** — that is the only recurring moment
-this workflow has, and an owner named nowhere is an owner nobody. Before writing
-its own row, the FO closes any `pending` cell whose seven-day window has since
-shut. Then it writes the row — and only then counts: if that row was the tenth
-qualifying one, the FO computes the two frozen medians *from the ten rows now
-present* and edits them into this section with the task ids and the date.
-Counting before the append reads nine rows and freezes the wrong number. Neither
-is a gate; both are bookkeeping that stops being possible if it is deferred
-indefinitely.
+**Two pieces of ledger upkeep happen after a row is written, and they need
+different triggers**, because only one of them can be reached by writing another
+row.
+
+**Closing a `pending:` cell needs a trigger independent of task completion.**
+The FO sweeps overdue cells before any ledger append — that covers the common
+case at no extra cost — but an append cannot be the *only* trigger: a queue that
+goes quiet, a sprint that ships nothing, or the last task of a cycle leaves
+`pending:` cells whose windows shut with nobody scheduled to look. So the sweep
+also belongs to the captain's sprint-boundary pass over `ROADMAP.md`, which the
+Canonical Docs Ownership table already schedules and which happens whether or not
+any task reached `done`. Either party sweeping is enough; the point is that the
+obligation does not depend on work arriving. This is why the cell carries its own
+due date — a sweeper needs to recognise an overdue cell from the file alone, not
+reconstruct merge dates.
+
+**Freezing the baseline medians does not need one.** The cohort can only complete
+when a qualifying row is *appended*, so the append is not merely a convenient
+trigger, it is the only event that can change the answer. The FO writes its row
+first and counts after: if that row was the tenth qualifying one, it computes the
+two medians *from the ten rows now present* and edits them into this section with
+the task ids and the date. Counting before the append reads nine rows and freezes
+the wrong number. If no further row ever arrives the cohort stays incomplete,
+which is the correct state and not a missed obligation.
+
+Neither is a gate; both are bookkeeping.
 
 This ledger is the experiment. **Its baseline is a prospective control cohort
 recorded here, not a historical record someone has to go find**: the first ten
@@ -873,7 +926,7 @@ through this ledger, never through argument. **That bar reads three columns —
 `tokens_if_known`, `wallclock_hours`, and `escaped_defects_7d`.** Only the first
 two are knowable at the transition, so **those two — not `dispatches` — are what
 a `done` transition may not leave at `n/a`**; `escaped_defects_7d` closes at
-`pending` by design and is back-filled when its window shuts.
+`pending:<date>` by design and is back-filled when that date passes.
 
 ## Task Template
 
