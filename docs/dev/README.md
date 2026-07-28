@@ -105,6 +105,259 @@ else
 fi
 ```
 
+### Lifecycle-hook state prerequisite
+
+The detached worktree above is generic append guidance only. The `pr-merge`
+startup, idle, and merge hooks do not scan or mutate entity state from a
+non-holder or from a detached substitute. Before each lifecycle action — and
+again after an approval pause — run this complete check as a new command:
+
+```bash
+REPO_DISCOVERED=$(git rev-parse --show-toplevel) || exit 1
+REPO=$(cd "$REPO_DISCOVERED" && pwd -P) || exit 1
+WORKFLOW_LITERAL="$REPO/docs/dev"
+WORKFLOW_DIR=$(cd "$WORKFLOW_LITERAL" && pwd -P) || exit 1
+test "$WORKFLOW_DIR" = "$WORKFLOW_LITERAL" || exit 1
+STATE="$WORKFLOW_DIR/.spacedock-state"
+
+WORKTREES=$(git -C "$REPO" worktree list --porcelain) || exit 1
+HOLDERS=$(printf '%s\n' "$WORKTREES" | awk '
+  BEGIN { RS=""; FS="\n" }
+  {
+    path=""; branch=""
+    for (i = 1; i <= NF; i++) {
+      if ($i ~ /^worktree /) path=substr($i, 10)
+      if ($i ~ /^branch /) branch=substr($i, 8)
+    }
+    if (branch == "refs/heads/spacedock-state/dev") print path
+  }
+')
+HOLDER_COUNT=$(printf '%s\n' "$HOLDERS" |
+  awk 'NF { count++ } END { print count + 0 }') || exit 1
+if test "$HOLDER_COUNT" -ne 1 || test "$HOLDERS" != "$STATE"; then
+  echo "lifecycle requires the registered state holder: ${HOLDERS:-<none>}" >&2
+  exit 1
+fi
+if test -L "$STATE"; then
+  echo "lifecycle state path must not be a symlink: $STATE" >&2
+  exit 1
+fi
+
+STATE_TOP_DISCOVERED=$(git -C "$STATE" rev-parse --show-toplevel) || exit 1
+STATE_TOP=$(cd "$STATE_TOP_DISCOVERED" && pwd -P) || exit 1
+REPO_COMMON_DISCOVERED=$(git -C "$REPO" rev-parse \
+  --path-format=absolute --git-common-dir) || exit 1
+REPO_COMMON=$(cd "$REPO_COMMON_DISCOVERED" && pwd -P) || exit 1
+STATE_COMMON_DISCOVERED=$(git -C "$STATE" rev-parse \
+  --path-format=absolute --git-common-dir) || exit 1
+STATE_COMMON=$(cd "$STATE_COMMON_DISCOVERED" && pwd -P) || exit 1
+test "$STATE_TOP" = "$STATE" || exit 1
+test "$STATE_COMMON" = "$REPO_COMMON" || exit 1
+STATE_BRANCH=$(git -C "$STATE" symbolic-ref --quiet --short HEAD) || exit 1
+test "$STATE_BRANCH" = spacedock-state/dev || exit 1
+STATE_REF=refs/heads/spacedock-state/dev
+git -C "$STATE" fetch --no-tags origin "$STATE_REF" || exit 1
+REMOTE_TIP=$(git -C "$STATE" rev-parse 'FETCH_HEAD^{commit}') || exit 1
+LOCAL_HEAD=$(git -C "$STATE" rev-parse 'HEAD^{commit}') || exit 1
+if test "$LOCAL_HEAD" = "$REMOTE_TIP"; then
+  STATE_RELATION=equal
+elif git -C "$STATE" merge-base --is-ancestor "$REMOTE_TIP" "$LOCAL_HEAD"; then
+  STATE_RELATION=ahead
+elif git -C "$STATE" merge-base --is-ancestor "$LOCAL_HEAD" "$REMOTE_TIP"; then
+  STATE_RELATION=behind
+else
+  STATE_RELATION=diverged
+fi
+STATE_DIRTY=$(git -C "$STATE" status --porcelain) || exit 1
+if test -n "$STATE_DIRTY"; then
+  echo "dirty holder ($STATE_RELATION); run attributable recovery" >&2
+  exit 75
+fi
+case "$STATE_RELATION" in
+  equal) ;;
+  behind)
+    git -C "$STATE" merge --ff-only "$REMOTE_TIP" || exit 1
+    test "$(git -C "$STATE" rev-parse 'HEAD^{commit}')" = "$REMOTE_TIP" ||
+      exit 1
+    ;;
+  ahead)
+    echo "holder has unpushed commits; run outgoing recovery" >&2
+    exit 76
+    ;;
+  diverged)
+    echo "holder and remote state diverged; run outgoing recovery" >&2
+    exit 77
+    ;;
+esac
+```
+
+The exact `worktree`/subsequent `branch` record pairing in the exhaustive
+porcelain read identifies the holder. Any zero/multiple result, different
+registered path, symlink, inherited parent identity, wrong common directory,
+or wrong branch stops fail-closed and reports the holder path; a non-holder does
+not attach, mutate, or emulate that checkout. Cleanliness applies at the
+beginning of a fresh transaction. The exact state-ref fetch and relation check
+also run before every scan or outward action. A clean behind holder may move
+only by fast-forward; no entity is read until its `HEAD` equals the freshly
+observed remote tip. Exit 75 means the holder is dirty, 76 means clean
+local-ahead, and 77 means clean divergence. Each enters the attributable
+recovery below and must rerun this complete prerequisite to observed equality
+before normal lifecycle work resumes.
+
+For a non-archive state mutation, the idempotent write and its durability step
+are one self-contained operation:
+
+```bash
+spacedock status --workflow-dir "$WORKFLOW_DIR" \
+  --set "$SLUG" "${EXACT_FIELD_ASSIGNMENTS[@]}" &&
+  spacedock state commit "$SLUG"
+```
+
+Do not rerun the clean-holder prerequisite between these two commands: the
+successful `--set` is expected to make the holder dirty until its companion
+commit succeeds.
+
+On restart after `--set` but before commit, read staged, unstaged, and untracked
+paths from the exact holder. The one dirty flat path, or one dirty folder's
+`index.md`, is the entity-path anchor; do not discover identity by scanning
+body text. Decode its unpadded-base64url `pr_artifact_v1` or
+`ledger_artifact_v1` frontmatter value and require canonical JSON. Classify
+each field only against its own lifecycle markers:
+
+- `pr_artifact_v1` must hash to the product digest in a
+  `pr-merge:product-draft:v1:{digest}` or
+  `pr-merge:product-pr:v1:{digest}` `mod-block`, or in its pending/numbered
+  `pr` ref as applicable.
+- `ledger_artifact_v1` must hash to its
+  `ledger-pr:draft:artifact-v1:{digest}`,
+  `ledger-pr:pending:artifact-v1:{digest}`,
+  `ledger-pr:{number}:artifact-v1:{digest}`, or
+  `ledger-merge:{number}:artifact-v1:{digest}` `ledger_pr` ref. The product
+  `mod-block` intentionally carries the product digest and is never a ledger
+  artifact marker.
+
+Require the selected decoded artifact's `live_path` to equal this anchored
+index path outside `_archive/`.
+The explicit `pr=direct-commit:{sha}` legacy route instead authenticates that
+commit, task id, anchored path, and unique legacy ledger row and never invents
+an artifact field.
+Fresh host state must independently derive the same single pending action.
+For flat form, every changed path must equal that entity file; for folder form,
+every path must be inside its complete entity directory. Dirty setter recovery
+first attributes the dirty root to local `HEAD`. Direct rerun is permitted only
+when that commit equals the freshly fetched `REMOTE_TIP`; the safe local-behind
+case has the preservation and rebase-forward route below.
+
+Do not hand-list the bytes a setter may normalize. Create a private disposable
+workflow, copy this workflow `README.md`, extract the complete authenticated
+entity root from `REMOTE_TIP` into its plain `.spacedock-state`, and replay the
+exact intended assignment array with the same installed Spacedock 0.26 binary:
+
+```bash
+REPLAY=$(mktemp -d "${TMPDIR:-/tmp}/pr-merge-replay.XXXXXX") || exit 1
+REPLAY_WORKFLOW="$REPLAY/docs/dev"
+REPLAY_STATE="$REPLAY_WORKFLOW/.spacedock-state"
+mkdir -p "$REPLAY_STATE" || exit 1
+cp "$WORKFLOW_DIR/README.md" "$REPLAY_WORKFLOW/README.md" || exit 1
+DIRTY_PARENT="$LOCAL_HEAD"
+git -C "$STATE" archive "$DIRTY_PARENT" "$LIVE_ROOT" |
+  tar -x -C "$REPLAY_STATE" || exit 1
+SPACEDOCK_BIN=$(command -v spacedock) || exit 1
+test "$("$SPACEDOCK_BIN" --version | sed -n '1p')" = \
+  "spacedock 0.26.0 (contract 3)" || exit 1
+"$SPACEDOCK_BIN" status --workflow-dir "$REPLAY_WORKFLOW" \
+  --set "$SLUG" "${EXACT_FIELD_ASSIGNMENTS[@]}" || exit 1
+git diff --no-index --quiet -- \
+  "$REPLAY_STATE/$LIVE_ROOT" "$STATE/$LIVE_ROOT" || exit 1
+```
+
+Require every staged, unstaged, and untracked holder path to remain within
+that one root, and require the replayed complete root to equal the actual dirty
+root byte-for-byte. This exact replay deliberately accepts deterministic YAML
+normalization by the supported setter — including quote/comment/spacing
+normalization — while an unrelated body or frontmatter edit makes the root
+comparison fail. Only an exact replay permits rerunning the same `status
+--set` assignments followed immediately by `spacedock state commit "$SLUG"`.
+Corrupt encoding, non-canonical JSON, wrong digest, wrong entity/`live_path`,
+multiple roots, an untracked path outside the root, or any replay mismatch
+blocks with the index and worktree preserved. Remove the private replay after
+the verdict. An archive-shaped live deletion/archive addition goes to the
+archive recovery contract instead.
+
+An explicitly documented compound holder action uses the same rule for every
+deterministic setter prefix. Terminalization is the only such action: replay
+the clear-block setter as prefix one and clear-block plus terminal setter as
+prefix two, both from the freshly fetched terminal-ready parent. The dirty
+complete root must equal exactly one prefix output. Recovery then reruns the
+complete two-set sequence and makes one state commit; it never commits a
+matched prefix by itself.
+
+If that authenticated dirty setter or compound prefix sits on a local
+`HEAD` which is behind the fetched state tip, preserve intent before changing
+the holder. Create a mode-0700 private temporary recovery directory outside
+the repository and state checkout. Record the local parent commit, anchored
+slug, task id, live index/root, action class, exact ordered assignment arrays,
+authenticated artifact/ref and lifecycle preconditions, the complete dirty
+root bytes, and its path/digest manifest. The assignment record is data, not
+shell source, and must round-trip without evaluation. This record is created
+only after the local-parent replay above has matched the dirty root exactly.
+Unauthenticated dirt, dirty-ahead, and dirty-diverged holders have no restore
+route and remain untouched.
+
+With that record durable, restore tracked index and worktree bytes only for the
+authenticated `LIVE_ROOT` from `LOCAL_HEAD`. Remove only exact untracked paths
+already enumerated, authenticated, and copied into the record; never use a
+broad reset or clean, `ours`, or `theirs`. Require the complete holder to be
+clean, fetch the exact state ref again, require local `HEAD` to remain its
+ancestor, and fast-forward to that newly observed tip. Re-resolve the recorded
+path and require the same slug and task id. Re-authenticate the same artifacts,
+refs, host facts, and lifecycle source values consumed by the action. An
+unrelated entity append or a change to an unconsumed field is compatible. A
+deletion, move, identity change, or incompatible change to an action-read or
+action-written semantic field blocks on the clean remote tip and preserves the
+recovery directory; never put the saved dirty bytes back over the new tip.
+
+For a compatible tip, seed a new disposable replay from that tip and replay
+the full recorded ordered action: the single setter, or every compound setter
+even when the original dirt matched only a prefix. Save its complete expected
+root, run that same full sequence against the holder, and require byte-for-byte
+equality with the expected supported output before making one
+`spacedock state commit`. Keep the recovery directory until the exact push,
+fetch, and remote-equality observation succeeds; only then remove it. A failed
+commit or concurrent second advance enters the clean outgoing recovery with
+the record still available.
+
+A failed `spacedock state commit` may instead leave a clean local commit ahead
+of the fetched state tip. The lifecycle mod must inspect every commit in
+`REMOTE_TIP..LOCAL_HEAD`, its full path set, exact message, and the authenticated
+frontmatter transition. Only one `state: update {slug}` commit, changing the
+one anchored entity root exactly as one currently recognized pending lifecycle
+action would have done, may be retried. Push only `HEAD` to the exact state ref,
+fetch it again, and require observed equality. Unknown or multiple outgoing
+commits, another path/message, or an unauthenticated transition blocks.
+
+A terminal child whose parent is the authenticated blocked/non-terminal,
+numbered-product-plus-numbered-ledger state is recognized only as the compound
+terminalization action. Seed the disposable workflow from that commit parent,
+replay `mod-block=` and then the complete terminal field/ref setter, and require
+the resulting complete root to equal the committed root byte-for-byte. Never
+attempt or validate the terminal setter alone.
+
+For divergence, only that same recognized outgoing commit may be rebased onto
+the fetched tip; a conflict stops with both tips and the conflict preserved.
+Revalidate the rewritten commit before its exact push. For compound
+terminalization, seed from the rewritten commit's new parent and repeat both
+setters and exact-root comparison; prior-parent evidence is insufficient.
+Never use force, `ours`, or `theirs`. Archive commits use the stricter signed
+two-root range contract in `pr-merge`.
+
+Each non-archive holder mutation uses that self-contained Spacedock operation.
+Archive uses the path-scoped Git transaction in `pr-merge`, because Spacedock
+0.26 cannot resolve an already archived slug for `state commit` or stage both
+sides of the move. Lifecycle restart state lives in the entity's digest-bound
+artifacts and fields, not shell variables or locks carried across startup, idle,
+merge, or captain-approval invocations.
+
 ## Schema
 
 | Field | Type | Description |
@@ -113,10 +366,14 @@ fi
 | `title` | string | Human-readable task name |
 | `status` | enum | backlog, ideation, implementation, validation, done |
 | `source` | string | Where the task came from (captain note, defect, audit) |
-| `started` / `completed` | ISO 8601 | `started` at the first transition out of `backlog`, `completed` at the `done` transition — `wallclock_hours` is their difference, so a task that sits in the queue for a week does not bill that week |
+| `started` / `completed` | ISO 8601 | `started` at the first transition out of `backlog`; `completed` is the product-PR `mergedAt` timestamp, written explicitly when the ledger-finalization gate permits the `done` transition — `wallclock_hours` is their difference, so neither backlog wait nor post-merge bookkeeping delay is billed |
 | `verdict` | enum | PASSED or REJECTED — set at final stage |
 | `worktree` | string | Set on first worktree dispatch, cleared at terminal merge |
-| `issue` / `pr` | string | External references |
+| `issue` / `pr` | string | External references; `pr` remains empty while a product draft awaits approval, then uses digest-bound pending and numbered artifact forms during hosted delivery, and historically `direct-commit:{sha}` |
+| `ledger_pr` | string | Protected-main-safe follow-up PR that replaces the pre-merge ledger sentinels. Empty before finalization starts; then carries a digest-bound draft, pending, numbered, or merged ledger-PR artifact reference so restart can resume approval or reconcile exact create without duplication |
+| `pr_artifact_v1` | base64url string | Unpadded base64url of the exact canonical product approval JSON. Its decoded bytes must hash to the digest in `pr` or the product `mod-block`; blank before a product candidate exists. |
+| `ledger_artifact_v1` | base64url string | Unpadded base64url of the exact canonical ledger approval JSON. Its decoded bytes must hash to the digest in `ledger_pr`; blank before a ledger candidate exists. |
+| `mod-block` | string | Non-empty lifecycle guard. Product drafts use `pr-merge:product-draft:v1:{digest}`; explicit approval transitions the same artifact to `pr-merge:product-pr:v1:{digest}`. Either blocks terminalization until the verified ledger-finalization step clears it. |
 | `design` | enum | `required` or `trivial-pass` — set at ideation, or, for a `lane: defect` task that has no ideation stage, at the moment the FO classifies it into that lane. Empty during seed capture and through `backlog`; on the main line it is produced inside `ideation`, so the invariant starts at the ideation gate — never empty at that gate, and never empty in `implementation` or later |
 | `lane` | enum | `defect` or `main` — the FO's Defect-lane classification, written when the FO routes the task out of `backlog` (not at seed capture, which authors no classification), so it is queryable (`status --where lane=defect`) instead of re-derived by re-reading every body. `defect` asserts all four conditions in the Defect-lane section hold |
 
@@ -653,12 +910,44 @@ to.
   is real but before review rounds have compounded on it. A round spent
   reviewing machinery nobody wants is paid twice: once to find its defects, once
   to fix them.
+- **Accepted validation prepares the ledger row before the PR boundary.** After
+  EM accepts validation, and before the merge hook drafts or pushes the product
+  PR, the FO sums the live `## Measurement` lines and upserts this task's unique
+  row on the product branch. `dispatches`, `rework_rounds`,
+  `tokens_if_known`, and `diff_coverage` are final at this point. The two values
+  that do not exist until merge use the explicit pre-merge sentinels
+  `wallclock_hours=pending:done` and
+  `escaped_defects_7d=pending:merge`; neither sentinel means `n/a`. Run the
+  `premerge` verifier below before presenting the PR. Any route-back updates
+  the same `task_id` row before the next push — it never appends a second row.
 
 ### `done` — terminal
 
-Merge after a passed validation gate (merge policy: PR to `main`), set `completed` and `verdict`, archive the task. Record the
-measurement ledger row (below) in the same transition.
+Merge after a passed validation gate (merge policy: PR to `main`). A merged
+product PR is necessary but not sufficient for terminalization: replace the
+row's two pre-merge sentinels through the protected-main-safe ledger
+finalization described below, verify exactly one complete row from
+`origin/main`, then set `completed` to the product PR's `mergedAt`, set
+`verdict`, and archive the task. A missing, duplicate, incomplete, or
+still-sentinel row leaves the entity non-terminal and unarchived.
 
+- **Terminal state is not archival proof.** The `pr-merge` mod records
+  parseable product/ledger merge references in the live terminal entity, then
+  re-verifies both merged PRs and the exact landed row before cleanup and
+  archive. It first commits the terminal file durably at its live path; the
+  archive move is a second root-scoped state transaction and counts only after
+  that commit is durable. Flat tasks move one file; folder tasks move the full
+  `{slug}/` tree and verify every descendant, allowing only Spacedock's
+  deterministic archive stamp in `index.md`. A narrow `_archive/` recovery scan
+  restores any partial move from the durable live source, so restart never
+  excludes the only retry copy. Recovery repeats landed verification and
+  exact clean-worktree cleanup; safe local branch deletion is best-effort and
+  a squash-merge refusal is reported without blocking archive. Recovery never
+  reruns ledger finalization or PR creation.
+  Historical terminal `direct-commit:` tasks take a separate read-only route:
+  the commit must be reachable from current `origin/main` and exactly one
+  legacy ledger row must exist; that route archives without rewriting the row
+  or minting v0.13 sentinels.
 - **Merge only on observed green CI for the exact HEAD.** A passing local
   suite, a static PR approval, or "CI was green earlier" never substitutes
   for a live CI run observed green on the commit being merged. A red or
@@ -778,10 +1067,8 @@ rules; disagreement between seats goes to the captain, not to a vote.
 
 ## Measurement Ledger
 
-Every task that reaches `done` appends one row to `docs/dev/ledger.csv`. So does
-a task **abandoned** after implementation started — the FO writes that row in the
-same action that archives the task, since no later transition will come along to
-write it:
+Every task that reaches `done` contributes one row keyed by `task_id` to
+`docs/dev/ledger.csv`:
 
 ```
 task_id, slug, dispatches, rework_rounds, wallclock_hours, tokens_if_known, diff_coverage, escaped_defects_7d
@@ -791,18 +1078,40 @@ task_id, slug, dispatches, rework_rounds, wallclock_hours, tokens_if_known, diff
 `tokens_if_known` cannot be recovered after the fact — nothing in git history or
 the archived task bodies carries them, so a row left at `n/a` stays `n/a`.
 
-**The boundary is earlier than the row, so the counters need somewhere to live
-before the row exists.** The row is written once, at whichever terminal boundary
-the task reaches — the `done` transition, or archival for a task abandoned after
-implementation started; the numbers accrue across every dispatch before it. They
-accumulate in the task body's `## Measurement` section (see the task template) —
-one line appended per dispatch, `dispatches` incremented at launch and the token
-figure filled in on return. The terminal boundary sums that section into the row.
-A task reaching `done` with no `## Measurement` lines was never instrumented, and
-**that is a defect to repair before the transition, not a licensed `n/a`** — the
-invariant below says a `done` transition may not leave `tokens_if_known` at
-`n/a`, and this section carves no exception out of it. An abandoned row is the
-one that may close at `n/a`, because the work stopped rather than shipped.
+**The boundary is earlier than the final row, so the counters need somewhere to
+live before merge.** They accumulate in the task body's `## Measurement`
+section (see the task template) — one line appended per dispatch, `dispatches`
+incremented at launch and the token figure filled in on return. Accepted
+validation sums that section into the row on the product branch, applying the
+`+` floor convention below whenever any dispatch's figure is unknown. A task
+reaching accepted validation with no `## Measurement` lines was never
+instrumented, and **that is a defect to repair before the PR, not a licensed
+`n/a`**. This is the last boundary at which dispatch and token evidence is
+guaranteed to still be in the live session.
+
+Two columns are honestly unknowable then. `wallclock_hours` depends on the
+product PR's `mergedAt`, which becomes the explicit `completed` value, and
+`escaped_defects_7d` needs that merge date before its seven-day window has an
+end. The product branch therefore carries `pending:done` and `pending:merge`
+respectively. After the product PR merges, the `pr-merge` mod computes the
+wall-clock from `started` to `mergedAt`, computes the UTC merge date plus seven
+calendar days, replaces both sentinels on a branch cut from fresh
+`origin/main`, and opens a ledger-finalization PR recorded in `ledger_pr`.
+This second PR is the protected-main-safe write: the hook never writes directly
+to `main`, and the entity stays in its current non-terminal stage until that PR
+merges and the terminal verifier reads the complete row from `origin/main`.
+It is bookkeeping for the same task, not a new dev-flow task, so it does not
+create another entity or ledger row. If finalizing this row completes the
+ten-row baseline cohort, the same follow-up computes and freezes the README
+medians after updating the row; otherwise it changes only `ledger.csv`.
+
+**Abandonment after implementation is deferred, not implied by the shipped
+path.** This revision has no deterministic no-product-PR trigger that can
+supply `mergedAt` and land a protected-main ledger write. Such an entity
+therefore remains non-terminal and unarchived until a separate abandonment
+procedure is designed and approved. Preserve any historical abandonment row
+as recorded; do not reinterpret or normalize it under the shipped-task
+verifier below.
 
 **Rolling up a mixed section has exactly one right answer**, and it is the `+`
 convention below rather than a judgment call: sum the dispatches whose tokens are
@@ -849,39 +1158,308 @@ is the only severity the bar reads; lower-severity escapes go in the task's
 archive note, where they inform without moving a threshold they were never meant
 to move.
 
-Two cases where a `pending:` cell would never close, so it is not written: a task
-**abandoned** after implementation started never merges, so its window never
-opens and the cell reads `n/a — abandoned`; and rows that predate this clause
-were filed with the cell blank, which is exactly the ambiguity the clause
-forbids, but rewriting them now would assert a window state nobody observed.
-**The rule binds rows written from here on**; the pre-existing rows in
-`docs/dev/ledger.csv` keep their blank cell, which is read as unknown, not as
-clean.
+Bare `pending` cells already present before this dated contract are
+late-adoption records: preserve them byte-for-byte unless evidence supports a
+real closed count, exclude them from escaped-defect comparisons, and never
+normalize them to `0` or an invented date. The dated rule is prospective for
+new and reworked rows; the sprint-boundary sweep can act only on dated cells.
+Historical blank cells in `docs/dev/ledger.csv` remain grandfathered and read
+as unknown, not clean; do not rewrite them without observed evidence.
+
+### Ledger row command and gate
+
+Use the same line-preserving upsert at accepted validation, on every rework, and
+when constructing a finalization PR. It aborts on a duplicate instead of
+choosing one copy, and it changes no unrelated byte or row:
+
+```bash
+ledger_upsert() {
+  ledger=$1 task_id=$2 row=$3
+  python3 - "$ledger" "$task_id" "$row" <<'PY'
+import os
+import pathlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+task_id = sys.argv[2]
+row = sys.argv[3]
+if "\n" in row or "\r" in row or len(row.split(",")) != 8:
+    raise SystemExit("ledger:invalid-row")
+
+lines = path.read_bytes().splitlines(keepends=True)
+matches = [
+    i for i, line in enumerate(lines[1:], 1)
+    if line.decode("utf-8").split(",", 1)[0].strip() == task_id
+]
+if len(matches) > 1:
+    raise SystemExit("ledger:duplicate")
+
+encoded = row.encode("utf-8")
+if matches:
+    old = lines[matches[0]]
+    ending = b"\r\n" if old.endswith(b"\r\n") else b"\n"
+    lines[matches[0]] = encoded + ending
+else:
+    if lines and not lines[-1].endswith((b"\n", b"\r")):
+        raise SystemExit("ledger:invalid-final-newline")
+    lines.append(encoded + b"\n")
+
+tmp = path.with_name(path.name + ".tmp")
+tmp.write_bytes(b"".join(lines))
+os.replace(tmp, path)
+PY
+}
+```
+
+The lifecycle gate has three modes. `premerge` accepts only the two explicit
+sentinels; `terminal` rejects them and recomputes the wall-clock and dated
+observation window from `started` plus the product `mergedAt`. Before the
+deadline, `terminal` requires that exact `pending:<date>`; on or after it, it
+requires the observed integer count rather than permitting an overdue pending
+cell. `legacy` is read-only archive evidence for an already-terminal
+`direct-commit:` entity: it permits historical blank/`n/a` metrics but still
+requires the canonical header, one eight-cell row for the task id, and the
+exact slug. It never authorizes a row rewrite. Exit status `41`, `42`, and `43`
+mean missing, duplicate, and incomplete:
+
+```bash
+ledger_verify() {
+  mode=$1 task_id=$2 slug=$3 ledger=$4
+  started=${5-} ended=${6-}
+  python3 - "$mode" "$task_id" "$slug" "$ledger" "$started" "$ended" <<'PY'
+import csv
+import datetime
+import re
+import sys
+
+mode, task_id, slug, path, started, ended = sys.argv[1:]
+with open(path, newline="", encoding="utf-8") as handle:
+    rows = [[cell.strip() for cell in row] for row in csv.reader(handle)]
+
+header = [
+    "task_id", "slug", "dispatches", "rework_rounds", "wallclock_hours",
+    "tokens_if_known", "diff_coverage", "escaped_defects_7d",
+]
+if not rows or rows[0] != header:
+    print("ledger:incomplete:header")
+    raise SystemExit(43)
+matches = [row for row in rows[1:] if row and row[0] == task_id]
+if not matches:
+    print("ledger:missing")
+    raise SystemExit(41)
+if len(matches) != 1:
+    print("ledger:duplicate")
+    raise SystemExit(42)
+
+row = matches[0]
+if len(row) != 8:
+    print("ledger:incomplete")
+    raise SystemExit(43)
+if mode == "legacy":
+    if row[1] != slug:
+        print("ledger:incomplete")
+        raise SystemExit(43)
+    print("ledger:exact")
+    raise SystemExit(0)
+tokens_recorded = (
+    re.fullmatch(
+        r"(?:[0-9]+(?:\.[0-9]+)?|~[0-9]+(?:\.[0-9]+)?[KMG]?)\+?",
+        row[5],
+    )
+    is not None
+)
+valid_common = (
+    row[1] == slug
+    and re.fullmatch(r"[1-9][0-9]*", row[2]) is not None
+    and re.fullmatch(r"[0-9]+", row[3]) is not None
+    and (
+        re.fullmatch(r"(?:100(?:\.0+)?|[0-9]{1,2}(?:\.[0-9]+)?)", row[6])
+        is not None
+        or row[6] in {"n/a", "waived"}
+    )
+)
+if mode == "premerge":
+    valid_phase = (
+        tokens_recorded
+        and row[4] == "pending:done"
+        and row[7] == "pending:merge"
+    )
+elif mode == "terminal":
+    try:
+        start = datetime.datetime.fromisoformat(started.replace("Z", "+00:00"))
+        end = datetime.datetime.fromisoformat(ended.replace("Z", "+00:00"))
+        if end < start:
+            raise ValueError("end precedes start")
+        hours = f"{(end - start).total_seconds() / 3600:.2f}".rstrip("0").rstrip(".")
+        deadline = (end.astimezone(datetime.timezone.utc).date()
+                    + datetime.timedelta(days=7)).isoformat()
+        window_closed = (
+            datetime.datetime.now(datetime.timezone.utc).date()
+            >= datetime.date.fromisoformat(deadline)
+        )
+    except (TypeError, ValueError, OverflowError):
+        print("ledger:incomplete:timestamp")
+        raise SystemExit(43)
+    escaped = (
+        re.fullmatch(r"[0-9]+", row[7]) is not None
+        if window_closed
+        else row[7] == f"pending:{deadline}"
+    )
+    valid_phase = tokens_recorded and row[4] == hours and escaped
+else:
+    print("ledger:invalid-mode")
+    raise SystemExit(43)
+if not valid_common or not valid_phase:
+    print("ledger:incomplete")
+    raise SystemExit(43)
+print("ledger:exact")
+PY
+}
+```
+
+Exercise the lifecycle states before trusting the gate. This disposable
+fixture covers exact, missing, duplicate, incomplete, coverage bounds and
+waivers, KC token notation, phase-selected terminalization, a finalized row
+presented to `premerge`, reversed timestamps, and a unique historical
+blank/`n/a` direct-commit row accepted only in `legacy`. It never touches the
+real ledger:
+
+```bash
+expect_rc() {
+  want=$1
+  shift
+  set +e
+  "$@"
+  got=$?
+  set -e
+  test "$got" -eq "$want"
+}
+
+LEDGER_TEST=$(mktemp -d /tmp/dev-ledger-XXXXXX)
+TEST_ID=zzzzzzzzzzzzzzzzzzzzzzzz
+TEST_SLUG=ledger-lifecycle-fixture
+cp docs/dev/ledger.csv "$LEDGER_TEST/exact.csv"
+ledger_upsert "$LEDGER_TEST/exact.csv" "$TEST_ID" \
+  "$TEST_ID, $TEST_SLUG, 2, 1, pending:done, 12345+, 87.5, pending:merge"
+expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/exact.csv"
+
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/missing.csv"
+TEST_ID="$TEST_ID" perl -0pi -e \
+  's/^\Q$ENV{TEST_ID}\E[^\n]*\n//m' "$LEDGER_TEST/missing.csv"
+expect_rc 41 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/missing.csv"
+
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/duplicate.csv"
+TEST_ID="$TEST_ID" perl -0pi -e \
+  's/^(\Q$ENV{TEST_ID}\E[^\n]*\n)/$1$1/m' "$LEDGER_TEST/duplicate.csv"
+expect_rc 42 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/duplicate.csv"
+
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/incomplete.csv"
+perl -0pi -e 's/12345\+/n\/a/' "$LEDGER_TEST/incomplete.csv"
+expect_rc 43 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/incomplete.csv"
+
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/coverage-100.csv"
+perl -0pi -e 's/87\.5/100/' "$LEDGER_TEST/coverage-100.csv"
+expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/coverage-100.csv"
+
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/coverage-100.1.csv"
+perl -0pi -e 's/87\.5/100.1/' "$LEDGER_TEST/coverage-100.1.csv"
+expect_rc 43 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/coverage-100.1.csv"
+
+# With ledger_phase from the pr-merge startup hook loaded in this shell:
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/terminal.csv"
+ledger_upsert "$LEDGER_TEST/terminal.csv" "$TEST_ID" \
+  "$TEST_ID, $TEST_SLUG, 2, 1, 36, 12345+, 100, pending:2099-01-09"
+PHASE=$(ledger_phase \
+  "ledger-pr:999:artifact-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+  MERGED)
+test "$PHASE" = terminal
+expect_rc 0 ledger_verify "$PHASE" "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/terminal.csv" 2099-01-01T00:00:00Z 2099-01-02T12:00:00Z
+
+PENDING_PHASE=$(ledger_phase \
+  "ledger-pr:pending:artifact-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+  "")
+test "$PENDING_PHASE" = reconcile
+
+PREMERGE_PHASE=$(ledger_phase "" "")
+test "$PREMERGE_PHASE" = premerge
+expect_rc 43 ledger_verify "$PREMERGE_PHASE" "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/terminal.csv"
+
+INVALID_PHASE=$(ledger_phase "#999" MERGED)
+test "$INVALID_PHASE" = invalid
+
+expect_rc 43 ledger_verify "$PHASE" "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/terminal.csv" 2099-01-03T00:00:00Z 2099-01-02T12:00:00Z
+
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/legacy.csv"
+ledger_upsert "$LEDGER_TEST/legacy.csv" "$TEST_ID" \
+  "$TEST_ID, $TEST_SLUG, 0, 0, 0.3, n/a, n/a, "
+expect_rc 0 ledger_verify legacy "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/legacy.csv"
+expect_rc 43 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/legacy.csv"
+
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/coverage-na.csv"
+perl -0pi -e 's/87\.5/n\/a/' "$LEDGER_TEST/coverage-na.csv"
+expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/coverage-na.csv"
+
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/coverage-waived.csv"
+perl -0pi -e 's/87\.5/waived/' "$LEDGER_TEST/coverage-waived.csv"
+expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/coverage-waived.csv"
+
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/rounded-tokens.csv"
+perl -0pi -e 's/12345\+/~2.9M/' "$LEDGER_TEST/rounded-tokens.csv"
+expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/rounded-tokens.csv"
+rm -R "$LEDGER_TEST"
+```
+
+The file is append-only as a **set keyed by `task_id`**, not as a sequence that
+forbids correcting its own pending row. Rework and finalization replace that
+task's one row in place; unrelated rows are immutable. Before every push, fetch
+and rebase on the configured trunk. If `ledger.csv` conflicts, resolve it as a
+union: retain every unrelated row from both sides, then replay this task's
+latest upsert from its live Measurement source. Never resolve with whole-file
+`--ours` or `--theirs`; either one can erase a sibling task. Run
+`ledger_verify` after the union and inspect `git diff --word-diff=porcelain --
+docs/dev/ledger.csv` to prove only the target row changed and new unrelated
+rows were retained.
 
 **Two pieces of ledger upkeep happen after a row is written, and they need
 different triggers**, because only one of them can be reached by writing another
 row.
 
 **Closing a `pending:` cell needs a trigger independent of task completion.**
-The FO sweeps overdue cells before any ledger append — that covers the common
-case at no extra cost — but an append cannot be the *only* trigger: a queue that
-goes quiet, a sprint that ships nothing, or the last task of a cycle leaves
-`pending:` cells whose windows shut with nobody scheduled to look. So the sweep
-also belongs to the captain's sprint-boundary pass over `ROADMAP.md`, which the
-Canonical Docs Ownership table already schedules and which happens whether or not
-any task reached `done`. Either party sweeping is enough; the point is that the
-obligation does not depend on work arriving. This is why the cell carries its own
-due date — a sweeper needs to recognise an overdue cell from the file alone, not
-reconstruct merge dates.
+The FO sweeps overdue cells before any ledger write — that covers the common
+case at no extra cost — but a ledger write cannot be the *only* trigger: a
+queue that goes quiet, a sprint that ships nothing, or the last task of a cycle
+leaves `pending:` cells whose windows shut with nobody scheduled to look. So
+the sweep also belongs to the captain's sprint-boundary pass over `ROADMAP.md`,
+which the Canonical Docs Ownership table already schedules and which happens
+whether or not any task reached `done`. Either party sweeping is enough; the
+point is that the obligation does not depend on work arriving. This is why the
+cell carries its own due date — a sweeper needs to recognise an overdue cell
+from the file alone, not reconstruct merge dates.
 
 **Freezing the baseline medians does not need one.** The cohort can only complete
-when a qualifying row is *appended*, so the append is not merely a convenient
-trigger, it is the only event that can change the answer. The FO writes its row
-first and counts after: if that row was the tenth qualifying one, it computes the
-two medians *from the ten rows now present* and edits them into this section with
-the task ids and the date. Counting before the append reads nine rows and freezes
-the wrong number. If no further row ever arrives the cohort stays incomplete,
-which is the correct state and not a missed obligation.
+when ledger finalization replaces a target row's sentinels with qualifying
+values, so that follow-up is the only event in this lifecycle that can change
+the answer. The finalization commit updates its row first and counts after: if
+that row is the tenth qualifying one, the same commit computes the two medians
+*from the ten rows now present* and edits them into this section with the task
+ids and the date. Otherwise the finalization commit remains ledger-only.
+Counting before the replacement reads nine rows and freezes the wrong number.
+If no further row ever qualifies, the cohort stays incomplete, which is the
+correct state and not a missed obligation.
 
 Neither is a gate; both are bookkeeping.
 
@@ -942,6 +1520,10 @@ verdict:
 worktree:
 issue:
 pr:
+ledger_pr:
+pr_artifact_v1:
+ledger_artifact_v1:
+mod-block:
 design:
 lane:
 ---
@@ -975,5 +1557,7 @@ Verified by: <reproducible check outside this file>. Falsified by: <the edit tha
 ## Commit Discipline
 
 - Status changes commit at dispatch and merge boundaries (binary-owned).
-- State commits are path-scoped per entity in the state checkout — never bare `git add -A`.
+- State commits are transaction-root-scoped per entity in the state checkout:
+  one file for flat form, the complete task directory for folder form — never
+  bare `git add -A`.
 - Implementation commits land on the worktree branch; merge only after the validation gate passes.
