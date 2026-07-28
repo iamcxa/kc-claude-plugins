@@ -169,12 +169,18 @@ binding in every stage report and every gate review.
    names the enforcement point that makes it true, or is rewritten as the
    bounded claim the code actually supports. This is rule 2 applied to prose:
    the same discipline an AC's evidence gets, because a documented guarantee
-   *is* a claim and the next reader builds on it. Two consequences worth
-   stating outright. **It binds at authoring time, and the author is the
-   enforcement point** — there is no mechanical check behind it, which is why
-   it is written as a rule the writer applies rather than a gate someone else
-   runs. The validation-stage clause is the backstop for what slips through,
-   and a backstop that fires every time is a cost, not a control.
+   *is* a claim and the next reader builds on it.
+   **An enforcement point is what makes the absolute true, not who believes
+   it.** The permission check, the schema constraint, the branch that cannot
+   be reached, the script that fails closed — those are enforcement points.
+   "I checked" is not one, and neither is the author. Where no such mechanism
+   exists the absolute is not defensible, and gets rewritten as the bounded
+   claim that is. Two consequences worth stating outright.
+   **This rule is itself a discipline, not a mechanism, and it does not claim
+   otherwise** — nothing checks it automatically, which is why it binds at
+   authoring time as something the writer applies rather than a gate someone
+   else runs. The validation-stage clause is the backstop for what slips
+   through, and a backstop that fires every time is a cost, not a control.
    **Coverage past the author is uneven — and the distinction is read, versus
    checked.** A reference or doc diff reaches validation, which has a clause
    aimed squarely at its guarantees. A code comment reaches validation only
