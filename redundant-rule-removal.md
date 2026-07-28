@@ -1,9 +1,11 @@
 ---
 title: The skill's tail restates rules it already stated
-status: backlog
+status: ideation
 source: cross-model review of the kit, 2026-07-27 — the lowest-risk cut available
 design:
 id: tmn8fgqy8390zepcp019td74
+lane: main
+started: 2026-07-28T16:32:16Z
 ---
 
 `SKILL.md:1844` onward restates rules already given authoritatively in Steps 5 and 6. Deleting a
