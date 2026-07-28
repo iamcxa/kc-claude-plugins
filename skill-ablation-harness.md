@@ -1,11 +1,11 @@
 ---
 title: Cutting prose from a skill has no failure signal — build one before cutting
-status: implementation
+status: backlog
 source: precondition for the Sprint 4 slimming track, filed 2026-07-27 on captain direction
 design: required
 id: 5b5gp68f2aq0bdrcf3q28jgg
 started: 2026-07-28T08:10:24Z
-worktree: .worktrees/spacedock-ensign-skill-ablation-harness
+worktree:
 ---
 
 The kit is going to be cut down before it is extended. The problem with that order is that
@@ -993,6 +993,10 @@ and PR #50 at
 low-cost; then pilot the three snapshots sequentially. Any pilot that yields no posted-tier finding
 stops the run for captain review rather than consuming the 27-run acceptance budget. The `kj`
 evidence note remains outside this single-entity route.
+
+- Cycle 4: PARKED — captain budget stop; projected completion is at least $303.80 plus one unpriced aborted run against the $90 envelope (at least 337.6%); AC-1 and AC-2 remain acceptance-pending
+
+**Park decision — captain, 2026-07-29.** Return this entity to backlog without claiming completion. Preserve code commit `0600f95`, state report `24d9c73`, the three corrected pilot receipts, branch `spacedock-ensign/skill-ablation-harness`, and physical worktree `.worktrees/spacedock-ensign-skill-ablation-harness` as re-entry evidence. Clear only the active worktree binding. Open findings: AC-1 has no A/A verdict; AC-2 has no ablation-detection verdict; therefore this harness does not authorize `tm`, `fa`, or `sk`. Re-entry requires an explicit new compute envelope and fresh validation; do not compress or reorder the pre-registered 27-run experiment to fit a smaller budget.
 
 ## Stage Report: ideation (correction round 1)
 
