@@ -438,3 +438,51 @@ directive is off**: the gate is `:975-984` and is restated at `:1855`, so AC-2 t
 Residual risks named and not solved: the fingerprint projection is blind to wording-only cuts (the
 class closest to `tm`), and the receipt is authored by the agent under review — equal across arms, so
 it largely cancels in a difference statistic, but a differential self-report bias would not.
+
+### Feedback Cycles
+
+**Round 1 — ideation gate, 2026-07-28. Verdict: RETURN (repair inside ideation, not a re-cut).**
+
+Gate assembled by the FO, verdict by `ship-flow:science-officer-em` (fresh context, model fable).
+Inputs: the FO's checklist accounting (5 done / 0 skipped / 0 failed), `--ac-scan` (AC-1/2/3 all
+resolve, none `unevidenced`), one cross-vendor pass (`codex`, 12 findings, its own verdict "P1 /
+block implementation until corrected"), and independent FO verification of the findings the verdict
+rests on.
+
+Findings dispositioned: **8 accepted for repair, 1 accepted as a named residual, 1 FO claim corrected
+downward.** Nothing escalated to the captain — the EM ruled the call reversible (a pre-registration
+not yet spent against), scope not re-cut, and no Material finding surviving repair to change what
+ships.
+
+The load-bearing ones, all confirmed rather than adopted:
+
+- The permutation floor is misstated by 8× (`:166`). `D(p)` is invariant under swapping the A/B
+  labels within a PR, so 6 relabelings collapse to 3 partitions and each value is achieved by `2^M`
+  assignments. True floor at N=2/M=3 is 1/27 ≈ 0.037, not 1/216 — one notch under α=0.05, so "spare
+  resolution" is false. Established by exact enumeration with a negative control (A/A → `p`=1.0,
+  correctly not rejecting), and independently by the cross-vendor pass via label-swap invariance.
+- The statistic is signed and the test upper-tail only, so its behavior on a change that makes one
+  arm a superset of the other depends on the noise regime: `D = -0.083` in the noisy case,
+  `D = +0.333` in the consistent case. The `:311-312` claim of being "directional-agnostic by
+  construction" is false. **The FO's stronger framing — that AC-2 "would likely report
+  `material: false`" — was overstated and the EM corrected it**; the bounded version is recorded here
+  and is what the repair must write.
+- AC-1 (`:255`) and AC-3(a) (`:261`) demand opposite outcomes for a pair with equal `skill_sha256`.
+- The driver prompt (`:128`) names the pre-emit gate to both arms, reintroducing the ablated
+  instruction through the harness's own instrument.
+- The ablation misses a third live site at `SKILL.md:861` and leaves `:986`/`:988`/`:990` dangling.
+- The receipt schema (`:233`) carries only `line`, so the declared reuse of the fingerprint
+  canonicalization (`:145`) does not typecheck against its validator.
+
+Accepted as a named residual: the instrument is blind to wording-only cuts — the class closest to
+`tm`, which is the next entity in the sprint. Binding consequence: the verdict contract must state
+that `material: false` certifies "no detected difference on the measured dimensions", never "no
+behavioral change", and `tm`'s own gate inherits the residual.
+
+Budget: the power fix moves the acceptance envelope above the recorded ≤$60 appetite (~$61 at
+N=2/M=4, ~$68 at N=3/M=3). Restated explicitly rather than silently extended; the recorded overrun
+fallback (cut to AC-1 + AC-3, park AC-2 re-enterably) stands.
+
+Cost of the round: one ideation dispatch, one cross-vendor pass, one EM verdict. No compute was spent
+against the pre-registration, so every fix above is a paper edit — which is the whole reason the gate
+sits before the runs rather than after them.
