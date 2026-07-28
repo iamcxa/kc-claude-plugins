@@ -1283,3 +1283,46 @@ this round was handed, recorded rather than quietly absorbed.
 ### Summary
 
 Built the harness the settled design specifies: `arm` proves its ablation by verbatim span match against the enumerated table (the keyword grep demoted to a canary that fails the build on a residual hit but proves nothing when clean), `run` writes the runner's manifest before launch and treats a receipt-absent run as FAILED rather than empty, and `compare` decides with one joint max-T permutation test over the full assignment space. The comparator's expected values come from ideation's enumeration script rather than from this harness's own output, and the span pins were regenerated independently and agree with ideation's sidecar on all 14. Test-plan items 1-4 pass (61 assertions), CI now runs that model-free half, and the 27-run acceptance is left to validation with the budget untouched.
+
+**Round 3 — validation gate, 2026-07-28. Verdict: REJECTED, routes back to implementation.**
+
+Cheap gates all passed: 61/61 unit assertions, ShellCheck v0.9.0 via docker exit 0, the sizing
+simulation reproducing all eight pinned fixture values exactly, the span-match demo holding, and the
+shipped span pins agreeing with ideation's independently generated `span-pins.txt` on all 14 spans.
+The required adversarial spot-check was done correctly — the validator degraded `span_postcondition`
+to grade only the applied patch set instead of the enumerated spec, **proved the edit landed** with a
+unified diff plus a uniqueness assertion before running, and the suite went red on exactly the
+load-bearing case (B4, the arm removing only the seven keyword-visible spans). **The span
+post-condition is therefore not the fourth instance of the recurring defect.**
+
+**V1 [Material] — instance four is in the diff, one layer above where everyone was looking.**
+`cmd_arm` independently computes the true `skill_sha256` and writes it to `arm-manifest.json` before
+any agent runs — and neither `run` nor `compare` ever opens that file. The mis-arming guard therefore
+compares `receipt.skill_sha256` against `receipt.skill_sha256`: a value **self-reported by the agent
+under measurement**. Demonstrated, not argued — `compare --mode AB` emitted a clean verdict over 18
+receipts whose skill hashes were `000…0` and `111…1`, matching no arm tree ever built. AC-3(a)'s
+guard is vacuous as shipped. The runner-written manifest carries nine fields; the four that decide a
+verdict's validity — `skill_sha256`, `driver_prompt_sha256`, `model_id`, `arm_manifest_sha256` — are
+not among them, although the runner holds all four at launch.
+
+This is the fourth instance of the entity's structural attractor, and it landed **despite** a standing
+constraint written specifically to prevent it. The constraint asked each check to name the independent
+authority it reads; this check names a manifest that exists, is correct, and is never opened. The
+lesson to carry: naming an authority is not reading one, and only an executed negative case
+distinguishes them.
+
+**V2 [Blocker] — the frozen 3-PR corpus does not exist, so AC-1 and AC-2 cannot be run.** The
+reverse-recovery audit classified the corpus MISSING at ideation; the implementation commit ships no
+corpus; `run` never checks out the PR it names; and only one PR was ever identified, whose single real
+run wrote no receipt (the case that became AC-3(b)).
+
+**This gap is the FO's, not the worker's.** The implementation dispatch scoped the stage to "build and
+prove the machinery, do not run the 27-run acceptance" and never assigned the corpus to anyone;
+validation then inherited an acceptance it had no corpus to run. Ideation listed the corpus in
+`## Scope`, so the omission was in the dispatch, not the design. Recorded here because the failure
+mode — a deliverable named in scope falling between two stage dispatches — is invisible to both the
+checklist accounting and the AC cross-check, which each verify their own stage.
+
+Spend against the ≤$90 envelope: **one pilot run** (~$2.53), bought deliberately to establish whether
+the runner works at all rather than assert it either way. The 27-run acceptance was never started, so
+~$87 of the envelope remains. A probe was still executing when the stage reported.
