@@ -70,8 +70,10 @@ transitions never churn the code branch.
 
 ## Proof Policy
 
-Inherited from the spacedock proof discipline; the four rules below are
-binding in every stage report and every gate review.
+Inherited from the spacedock proof discipline; the rules below are binding
+in every stage report and every gate review. Numbered, not counted in the
+lead-in — a count in prose goes stale the first time one is added, and this
+one had said "four" since the fifth was written.
 
 1. **No prose-grep, and provenance decides independence.** A string match
    over an instruction file the model reads never proves a behavioral claim.
