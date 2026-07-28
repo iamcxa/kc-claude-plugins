@@ -414,3 +414,67 @@ Re-cut the pure-restatement plan from 33 deletions/eight retained rules to 31 de
 retained rules after fresh validation proved two survivor mappings incomplete. The zero-paid,
 single-file, no-replacement-prose scope and the original 30-minute plus 15-minute appetite remain
 unchanged.
+
+## Stage Report: implementation (cycle 2)
+
+### Summary
+
+Corrected rejected commit `ee127c1` narrowly by restoring the original
+`Refactoring PRs — API surface diff` and `Verification matrix in review body` bullets
+byte-for-byte. The final branch diff against `origin/main` changes only
+`kc-pr-flow/skills/kc-pr-review/SKILL.md`: 41 Rules bullets become ten through exactly 31
+deletions and zero additions.
+
+### RED/GREEN and exact-head evidence
+
+- DONE: Re-anchored the edit on the cycle-2 allowlist, ten-rule retention set, AC-1 through AC-5,
+  and the original no-information-removal boundary before editing.
+- DONE: The corrected pre-edit contract failed for the intended reasons at `ee127c1`:
+  `current Rules bullets=8`, `numstat=0 33`, and both validator-named retained titles were
+  missing (`exit 1`). No test or contract file was added or changed.
+- DONE: Restored only the two validator-named parent lines, in their original order and text. An
+  exact retained-line comparison against `origin/main` is empty for all ten rules; their extracted
+  lines hash to
+  `7e4563ed329506102d6a84262a5ade3fa2c6eee8420f30e41fdc593fb7faa30f`.
+- DONE: The corrected contract is GREEN: baseline/current Rules count is exactly `41 -> 10`;
+  `git diff --numstat origin/main...HEAD` is exactly
+  `0  31  kc-pr-flow/skills/kc-pr-review/SKILL.md`; `git diff --check` exits 0.
+- DONE: Final code commit is
+  `ab2a6f6c98f5660bf3d81f5cf3718ea5992678ce` on
+  `spacedock-ensign/redundant-rule-removal`. The baseline/target skill blobs are
+  `45ba8359f866f8d4b41c960b805230b3e7283579` ->
+  `8efe01ae3f89552fb3b24ad4a72ad8b9db71d090`.
+- DONE: Final name-status contains only
+  `M kc-pr-flow/skills/kc-pr-review/SKILL.md`; the committed code worktree is clean.
+
+### Prior-finding disposition
+
+- DONE: CLOSED — `Refactoring PRs — API surface diff` is restored byte-for-byte, so the
+  exhaustive newly-public-symbol inventory and unintentional-exposure clauses remain explicit.
+- DONE: CLOSED — `Verification matrix in review body` is restored byte-for-byte, so the completed
+  matrix-table and replaces-ad-hoc-prose clauses remain explicit.
+- DONE: No replacement prose, authority rewrite, or other rule edit was introduced.
+
+### Required local contract suites
+
+All four commands ran from the code worktree repository root and exited 0:
+
+- DONE: `bash scripts/skill-frontmatter-lint.sh` — checked 35 `SKILL.md` files; all valid.
+- DONE: `bash kc-pr-flow/scripts/cross-model.test.sh` — 68 passed, 0 failed.
+- DONE: `bash kc-pr-flow/scripts/review-architecture-diagrams.test.sh` — 43 passed, 0 failed.
+- DONE: `bash kc-pr-flow/scripts/review-shadow.test.sh` — 213 passed, 0 failed.
+
+### Acceptance and stop outcome
+
+- DONE: AC-1 — the cycle-2 allowlist contains only the 31 clause-complete deletions; the two
+  incomplete-survivor rows are no longer deleted, and no surviving authority or reference changed.
+- DONE: AC-2 — all ten fail-closed rules match their parent lines byte-for-byte.
+- DONE: AC-3 — the final cut is exactly 41 to ten Rules bullets and `0 additions / 31 deletions`
+  in one `SKILL.md`.
+- DONE: AC-4 — all four required local contract suites exited 0 without test adjustment.
+- DONE: AC-5 — implementation used static source/git inspection, the two-line restore, and the
+  four named deterministic local suites only.
+- DONE: No stop condition fired: the two exact restores satisfy the corrected plan without scope
+  expansion.
+- SKIPPED: Paid models, model calls, evals, E2E, runtime/post suites, benchmarks, 5b, fa, and sk,
+  as required.
