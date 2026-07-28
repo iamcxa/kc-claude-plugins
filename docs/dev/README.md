@@ -548,8 +548,11 @@ rewrite.
 
 ## Proof Policy
 
-Inherited from the spacedock proof discipline; the seven rules below are
-binding in every stage report and every gate review.
+Inherited from the spacedock proof discipline; the rules below are binding
+in every stage report and every gate review. Numbered, not counted in the
+lead-in — a count in prose goes stale the first time one is added, and this
+one has already been wrong twice: it said "four" while five existed, then
+"seven" until this rule was added.
 
 1. **No prose-grep, and provenance decides independence.** A string match
    over an instruction file the model reads never proves a behavioral claim.
@@ -633,6 +636,15 @@ binding in every stage report and every gate review.
    directory is never the population. And an unexplained signal is traced, never
    assigned an invented origin — "probably another session" is a story, not a
    cause.
+8. **Before trusting what a check found, confirm the check can fail.** A probe
+   that silently returns a plausible result where it should have errored is
+   worse than no probe, because its output reads as a conclusion. Two shapes
+   seen here: a spot-check edit whose target string did not exist, so "the
+   suite stayed green" meant the edit never happened rather than that the guard
+   was missing; and a section counter that read headings inside fenced code,
+   inventing a 742-line region that was not there. Run the check against a case
+   it must flag before running it against the case you care about — its silence
+   carries information only after you have seen it speak.
 
 ## Stages
 
