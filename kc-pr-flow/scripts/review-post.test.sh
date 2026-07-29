@@ -699,6 +699,23 @@ assert_eq "the gh list adapter combines every review from two pages" \
   "$adapter_expected" "$adapter_actual"
 unset -f gh
 
+# A sourced caller can change shell options after review-post.sh enables them.
+# The adapter must preserve gh's failure explicitly rather than depending on
+# file-level pipefail to reject a usable-looking partial response.
+gh() {
+  printf '%s\n' '{"id":101,"user":"alice","body":"partial page","commit_id":"1111111111111111111111111111111111111111"}'
+  return 1
+}
+set +e
+set +o pipefail
+adapter_partial_out="$(review_post_gh_transport list --repo "$REPO" --pr "$PR" --self "$SELF" 2>/dev/null)"
+adapter_partial_rc=$?
+set -o pipefail
+set -e
+assert_eq "the gh list adapter rejects partial output when gh fails without pipefail" \
+  "rc:74|out:" "rc:$adapter_partial_rc|out:$adapter_partial_out"
+unset -f gh
+
 rfc_shell=''
 rfc_python=''
 while IFS= read -r case_line; do

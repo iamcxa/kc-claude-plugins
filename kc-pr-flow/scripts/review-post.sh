@@ -231,9 +231,10 @@ review_post_gh_transport() {
       jq -cn --arg h "$head_sha" '{head_sha:$h}'
       ;;
     list)
-      gh api "repos/$repo/pulls/$pr/reviews" --paginate \
-        --jq '.[] | {id, user: .user.login, body, commit_id}' |
-        jq -sc '{reviews:.}' || return 74
+      local reviews
+      reviews="$(gh api "repos/$repo/pulls/$pr/reviews" --paginate \
+        --jq '.[] | {id, user: .user.login, body, commit_id}')" || return 74
+      jq -sc '{reviews:.}' <<<"$reviews" || return 74
       ;;
     post)
       local body_json response remote_id
