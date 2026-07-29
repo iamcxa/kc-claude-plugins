@@ -333,3 +333,48 @@ into entity 11.
 - Evidence accepted: exact head `0748cec`, scoped **142/0**, earned suite **940/0**, two
   independent claim-breaking mutations **141/1** each, diff coverage **100%**, ShellCheck v0.9.0
   clean, and cross-vendor review clean with verified citations.
+
+## Stage Report: validation (post-rebase premerge) — 2026-07-29
+
+- DONE: Verify current ownership and rebase the validated fix onto the prerequisite-complete trunk.
+  The clean isolated branch rebased from `0748cec` onto exact `origin/main`
+  `410a0096739ded9a23beb853be28243983be5c0f` with no conflict; exact new head is
+  `af465c42c41d334830472ed3f7d6f4348df16d3d`.
+- DONE: Preserve the validated product fix and stop on substantive conflict or scope drift.
+  Rewritten product commits are `13cd2e8` (pagination combination) and `fca5f2c` (explicit upstream
+  status); the product behavior diff remains the same three n9 files with no entity-11 spill.
+- DONE: Add the unique n9 accepted-validation premerge ledger row.
+  Commit `af465c4` adds only `n9xjhpeza7q0hk3sepc6rxhc, gh-list-adapter-pagination, 5, 1,
+  pending:done, n/a, 100, pending:merge`; the canonical premerge verifier returned
+  `ledger:exact`, and terminal verification is not applicable before the product merge.
+- DONE: Re-run exact-head scoped and earned verification after the rebase and ledger commit.
+  Direct probes returned ids `[101,102,201]` and rc 74/empty for pipefail-disabled partial failure;
+  scoped suite was **142/0** and the seven-script earned suite was **940/0**.
+- DONE: Re-run both independent claim-breaking mutations and executable diff coverage.
+  Pagination nesting and missing explicit status capture each made its named assertion red at
+  **141/1**; xtrace covered 3/3 changed executable statements plus the failure branch (**100%**).
+- DONE: Validate the workflow, ledger-only diff, and static gates.
+  Spacedock returned `VALID` with only pre-existing lowercase-verdict warnings on other entities;
+  the ledger word diff is one row, and `bash -n`, ShellCheck v0.9.0, and `git diff --check` are clean.
+- DONE: Run fresh cross-model and Claude EM gates.
+  `agy` 1.1.8 returned **CLEAN**, 0 P0-P3, self-reporting Gemini 3.6 Flash (High); all six cited
+  artifacts/ranges resolved. The first Claude attempt timed out after eight silent minutes and
+  produced no verdict; the bounded tool-free fresh Sonnet retry returned **PROCEED / HIGH**,
+  no material findings, and marked the prior pipefail brake **RESOLVED**.
+- SKIPPED: Push the product branch or create a PR.
+  Explicitly outside this worker assignment; the branch remains local-only for the FO merge flow.
+
+### Evidence block
+
+Lenses: executable Bash response-composition/error-path plus one ledger row; correctness PASS
+(0 findings), silent-failure PASS (0 findings), and ledger-contract PASS (0 findings).
+Diff coverage: 100% — 3/3 changed executable statements and the upstream-failure branch traced.
+Adversarial: PASS — two isolated mutations each produced its intended named **141/1** failure.
+Cross-model: Google CLEAN, 0 P0-P3 with six cited artifacts verified; Claude EM PROCEED/HIGH.
+E2E: N/A — ideation defines a recorded-page adapter replay; live GitHub mutation remains outside AC.
+
+### Summary
+
+Post-rebase premerge validation passes on exact base `410a009` and head `af465c4`. The four-file
+diff is the unchanged validated adapter fix/test/fixture plus its unique truthful ledger row; no
+conflict, scope drift, product push, or PR creation occurred.
