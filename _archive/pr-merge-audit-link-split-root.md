@@ -1,17 +1,18 @@
 ---
 id: w1py17w13ga14nd3k6sbp358
 title: pr-merge builds a dead audit link under split-root state
-status: validation
+status: done
 source: found by the FO while assembling xn's PR draft, 2026-07-25
 started: 2026-07-29T06:07:23Z
-completed:
-verdict:
+completed: 2026-07-29T07:40:59Z
+verdict: passed
 worktree: .worktrees/spacedock-ensign-pr-merge-audit-link-split-root
 issue:
 pr: pr-merge:83
 design: required
 lane: main
-mod-block: merge:pr-merge
+mod-block:
+archived: 2026-07-29T07:40:59Z
 ---
 
 ## Problem
