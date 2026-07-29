@@ -69,3 +69,76 @@ Validation remains a fresh-context gate.
 ## Measurement
 
 - D1 launched 2026-07-29T08:05:41Z | tokens: pending
+
+## Stage Report: implementation — 2026-07-29
+
+### Summary
+
+Implemented the bounded default-`gh` adapter repair in code commit `8a0d39f`
+(`fix(kc-pr-flow): combine paginated review listings`). The list operation now projects one review
+object per paginated item and slurps the complete stream into the existing single
+`{reviews:[...]}` transport value. No transport schema, once-only reconciliation behavior, entity
+11 work, documentation contract, version, or marketplace metadata changed.
+
+- DONE: Added `gh-reviews-two-pages.jsonl`, a recorded two-page GitHub reviews response with two
+  reviews on page one and one on page two.
+- DONE: Exercised `review_post_gh_transport list` itself by replaying GitHub's per-page `--jq`
+  behavior; the injected posting transport remains responsible for network-free post/reconcile
+  scenarios.
+- DONE: Preserved all three projected review fields plus author login for every page, including
+  review ids `101`, `102`, and `201`, in one usable transport object.
+- DONE: Final code commit is limited to `review-post.sh`, `review-post.test.sh`, and the recorded
+  two-page fixture.
+
+### RED → GREEN evidence
+
+- RED before the production edit: `bash kc-pr-flow/scripts/review-post.test.sh` returned
+  **140 passed / 1 failed**. The new behavior assertion
+  `the gh list adapter combines every review from two pages` expected one
+  `{reviews:[...]}` value containing review ids `101`, `102`, and `201`, but the adapter returned
+  `rc:2` when `jq --argjson` received the two adjacent per-page arrays.
+- Arrangement precondition: `the gh reviews fixture records two pages` passed in the same RED run.
+  This assertion is intentionally green before and after the fix; it proves the recorded response
+  exercised pagination and is not a behavior claim.
+- GREEN after the minimum production edit: the same command returned
+  **141 passed / 0 failed**. The adapter emitted exactly one object whose reviews array contained
+  all three literal expected projections.
+
+### Existing list-arrangement audit
+
+- Faithful/default stub-list scenarios were not edited. They still arrange one already-composed
+  `{reviews:[...]}` transport response and continue to cover normal posting, ambiguous recovery,
+  truly-lost retry, identity-independent marker matching, repeat posting, and authorization.
+- Lagging-list scenarios at the post/resume, malformed-window, unsettled-prior-run, and
+  definitively-landed-prior-run boundaries were not edited. They still arrange a usable but stale
+  empty array and retain their original duplicate-suppression and local-prior-state intent.
+- Unusable-list scenarios for resume, fresh post, definitively posted prior state, and unsettled
+  prior state were not edited. They still arrange `{reviews:null}` and retain their original
+  fail-closed and check-placement intent.
+- No existing fixture was narrowed or repurposed. The new recorded-page case is separate because it
+  tests production adapter composition before the shared transport contract those scenarios
+  intentionally begin from.
+
+### Verification evidence
+
+- Scoped RED/GREEN: `bash kc-pr-flow/scripts/review-post.test.sh` —
+  **140/1 RED**, then **141/0 GREEN**.
+- Full workflow-earned exit suite — **939 passed / 0 failed**:
+  - `review-runtime.test.sh` — **305/0**, 144.80s local.
+  - `review-shadow.test.sh` — **213/0**, 317.58s local.
+  - `review-runtime-benchmark.test.sh` — **135/0**, 29.78s local.
+  - `review-post.test.sh` — **141/0**, 411.28s local.
+  - `cross-model.test.sh` — **68/0**, 0.45s local.
+  - `review-architecture-diagrams.test.sh` — **43/0**, 0.75s local.
+  - `review-architecture-diagrams-validator.test.sh` — **34/0**, 0.87s local.
+- `bash -n` for `review-post.sh` and `review-post.test.sh` — exit 0.
+- CI-pinned ShellCheck v0.9.0 Docker command from `kc-pr-flow/CLAUDE.md` over
+  `review-runtime.sh`, `review-post.sh`, `review-post.test.sh`, and `stub-transport.sh` — clean.
+- `git diff --check` — exit 0. Committed scope is exactly the three n9 deliverable files above;
+  code worktree clean at `8a0d39f`.
+
+CI will newly execute the recorded two-page adapter case because both changed paths already select
+`review-runtime-tests.yml`. That case adds two assertions (one arrangement precondition and one
+behavior claim) and one small `jq` replay. The workflow records a 9m07s baseline under its current
+20-minute cap, leaving 10m53s before this change; the complete local earned suite took about
+15m06s. Exact-head CI remains the merge authority.
