@@ -1,6 +1,6 @@
 ---
 title: The once-only path cannot work on a PR with more than one page of reviews
-status: implementation
+status: validation
 source: found outside the blast radius during sv's fresh-context validation, 2026-07-26
 started: 2026-07-29T07:44:33Z
 completed:
@@ -69,6 +69,7 @@ Validation remains a fresh-context gate.
 ## Measurement
 
 - D1 launched 2026-07-29T08:05:41Z | tokens: n/a (Codex runtime did not expose per-worker usage)
+- D2 launched 2026-07-29T08:47:19Z | tokens: pending
 
 ## Stage Report: implementation — 2026-07-29
 
