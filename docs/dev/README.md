@@ -350,8 +350,11 @@ one commit; extra or unknown commits never enter either gate. Before any
 rollback restores live bytes or removes an archive root, a read-only preflight
 requires every dirty path inside the two authenticated roots, regular
 filesystem and Git modes, an exact remote live copy, and an exact archive
-comparator result. A byte, mode, special-file, symlink, gitlink, or path-scope
-mismatch leaves the index and worktree evidence untouched.
+comparator result. It independently requires the current index tree to equal
+the remote tree or one exact archive/live prefix derived in a disposable index
+from that validated working root. A byte, mode, special-file, symlink, gitlink,
+extra index entry, or path-scope mismatch leaves the index and worktree
+evidence untouched.
 
 A terminal child whose parent is the authenticated blocked/non-terminal,
 numbered-product-plus-numbered-ledger state is recognized only as the compound
@@ -959,8 +962,8 @@ still-sentinel row leaves the entity non-terminal and unarchived.
   reject symlink roots, symlink descendants, gitlinks, and other non-regular
   modes before Spacedock or the byte comparator can dereference them. Failed
   archive validation is rollback-eligible only after the same read-only guards,
-  exact comparator, and two-root dirty-scope check pass; otherwise the crash
-  evidence remains untouched. A narrow
+  exact comparator, two-root dirty-scope check, and whole-index prefix check
+  pass; otherwise the crash evidence remains untouched. A narrow
   `_archive/` recovery scan
   restores any partial move from the durable live source, so restart never
   excludes the only retry copy. Recovery repeats landed verification and

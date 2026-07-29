@@ -1104,9 +1104,13 @@ that remote commit. First extract `REMOTE_TIP:$LIVE_ROOT` to a fresh private
 `REMOTE_LIVE_COPY`. The rollback preflight is read-only: every dirty path must
 belong to the two authenticated roots, the remote Git root and extracted copy
 must be regular, any local live root must equal that copy byte-for-byte, and
-any archive root must pass both the filesystem guard and `archive_verify`.
-Missing, extra, mismatched, symlink, gitlink, or special-file evidence stops
-without changing the index or worktree:
+any archive root must pass both the filesystem guard and `archive_verify`. A
+disposable index seeded from `REMOTE_TIP` then derives the only allowed index
+trees from that validated working archive: unchanged live/no-archive,
+archive/no-live, or live+archive. The current index must equal one of those
+whole trees, including exact blob bytes, entries, root presence, and regular
+file modes. Missing, extra, mismatched, symlink, gitlink, or special-file
+evidence stops without changing the real index or worktree:
 
 ```bash
 archive_dirty_scope_verify() {
@@ -1171,6 +1175,96 @@ print("archive-rollback-scope:exact")
 PY
 }
 
+archive_index_prefix_verify() {
+  python3 - "$@" <<'PY'
+import os
+import pathlib
+import subprocess
+import sys
+import tempfile
+
+repo, remote_tip, live_root, archive_root = sys.argv[1:]
+
+
+def fail(message):
+    print(f"archive-rollback-index:mismatch:{message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+for root in (live_root, archive_root):
+    parsed = pathlib.PurePosixPath(root)
+    if parsed.is_absolute() or root in {"", "."} or ".." in parsed.parts:
+        fail("invalid-root")
+
+
+def run(*arguments, env=None, text=False, check=True):
+    result = subprocess.run(
+        ["git", "-C", repo, *arguments],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        env=env,
+        text=text,
+    )
+    if check and result.returncode != 0:
+        fail("git-query")
+    return result
+
+
+def tree(env=None):
+    return run("write-tree", env=env, text=True).stdout.strip()
+
+
+remote_commit = run(
+    "rev-parse", f"{remote_tip}^{{commit}}", text=True
+).stdout.strip()
+remote_tree = run(
+    "rev-parse", f"{remote_commit}^{{tree}}", text=True
+).stdout.strip()
+current_tree = tree()
+if current_tree == remote_tree:
+    print("archive-rollback-index:remote")
+    raise SystemExit(0)
+
+archive_path = pathlib.Path(repo) / archive_root
+if not archive_path.exists() and not archive_path.is_symlink():
+    fail("archive-root-unavailable")
+
+descriptor, replay_index = tempfile.mkstemp(prefix="archive-rollback-index-")
+os.close(descriptor)
+os.unlink(replay_index)
+replay_env = os.environ.copy()
+replay_env["GIT_INDEX_FILE"] = replay_index
+try:
+    run("read-tree", remote_commit, env=replay_env)
+    run("add", "-A", "--", archive_root, env=replay_env)
+    both_tree = tree(replay_env)
+    run(
+        "rm",
+        "-r",
+        "-f",
+        "--cached",
+        "--ignore-unmatch",
+        "--",
+        live_root,
+        env=replay_env,
+    )
+    archive_tree = tree(replay_env)
+finally:
+    try:
+        os.unlink(replay_index)
+    except FileNotFoundError:
+        pass
+
+if current_tree == archive_tree:
+    print("archive-rollback-index:archive")
+elif current_tree == both_tree:
+    print("archive-rollback-index:both")
+else:
+    fail("unknown-tree")
+PY
+}
+
 archive_inverse_finish() {
   test -n "${REMOTE_LIVE_COPY-}" || return 1
   test -e "$REMOTE_LIVE_COPY" || test -L "$REMOTE_LIVE_COPY" || return 1
@@ -1197,6 +1291,8 @@ archive_inverse_finish() {
   fi
   test "$live_present" = yes || test "$archive_present" = yes || return 1
 
+  archive_index_prefix_verify \
+    "$STATE" "$REMOTE_TIP" "$LIVE_ROOT" "$ARCHIVE_ROOT" || return 1
   git -C "$STATE" restore --source="$REMOTE_TIP" \
     --staged --worktree -- "$LIVE_ROOT" || return 1
   if test "$archive_present" = yes; then
@@ -1215,18 +1311,20 @@ missing path with `git add`. The exact archive root is then removed from index
 and worktree. `git clean` is permitted only for that already-authenticated
 archive root and only to remove an exact untracked partial-move residue.
 No restore or cleanup starts until the preflight has authenticated the whole
-visible prefix; failed preflight evidence remains byte-for-byte and mode-for-mode
-where the hook found it.
+visible prefix in both the working tree and current index; failed preflight
+evidence remains byte-for-byte and mode-for-mode where the hook found it.
 Require the index tree to equal `REMOTE_TIP^{tree}`, no staged, unstaged, or
 untracked root residue, live/no archive, and byte equality with the remote
 before calling this a restored-live terminal.
 
 The rollback-preservation fixture snapshots the index, porcelain status, and
-root evidence before attempting recovery with four invalid states: changed
+root evidence before attempting recovery with invalid working states (changed
 archive bytes, a symlink archive root, a FIFO descendant, and an unrelated
-dirty path. Each call must fail with the live root still absent and every
-snapshot unchanged. Exact flat and folder moves still restore live and remove
-only their authenticated archive roots.
+dirty path) and invalid index states (a differing staged blob, mode `120000`,
+and a gitlink/extra entry). Each call must fail with the live root still absent
+and every snapshot unchanged. Exact flat and folder moves still restore live
+and remove only their authenticated archive roots, including the legitimate
+unstaged/untracked move whose index remains the remote tree.
 
 #### Unpushed archive restoration pair
 
@@ -1669,12 +1767,12 @@ and archive transaction:
    remotely. Do not call `spacedock state commit` for this move.
 5. An archive move, commit, or durability failure returns through restored-live
    recovery above before the hook reports failure only when the read-only
-   rollback preflight authenticates an exact prefix. An archive validation,
-   root-mode, comparator, or dirty-scope mismatch remains untouched and blocks;
-   it never enters `restore`, `rm`, or `clean`. If the process crashes first,
-   the narrow `_archive/` scan supplies the same move, stage, commit, push, or
-   observation restart point. The hook may report archived only after step 4's
-   remote observation checks pass.
+   rollback preflight authenticates an exact working-tree and index prefix. An
+   archive validation, root-mode, comparator, dirty-scope, or index-tree
+   mismatch remains untouched and blocks; it never enters `restore`, `rm`, or
+   `clean`. If the process crashes first, the narrow `_archive/` scan supplies
+   the same move, stage, commit, push, or observation restart point. The hook
+   may report archived only after step 4's remote observation checks pass.
 
 This recovery path never calls `ledger_upsert`, prepares a finalization branch,
 pushes a product or ledger branch, opens a PR, or terminalizes again. Its only
