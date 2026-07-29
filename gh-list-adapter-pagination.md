@@ -72,7 +72,8 @@ Validation remains a fresh-context gate.
 - D1 launched 2026-07-29T08:05:41Z | tokens: n/a (Codex runtime did not expose per-worker usage)
 - D2 launched 2026-07-29T08:47:19Z | tokens: n/a (Codex runtime did not expose per-worker usage)
 - D3 launched 2026-07-29T09:16:25Z | tokens: n/a (Codex runtime did not expose per-worker usage)
-- D4 launched 2026-07-29T09:52:24Z | tokens: pending
+- D4 launched 2026-07-29T09:52:24Z | tokens: n/a (Codex runtime did not expose per-worker usage)
+- D5 launched 2026-07-29T13:25:12Z | tokens: pending
 
 ## Stage Report: implementation — 2026-07-29
 
@@ -229,3 +230,6 @@ above; it does not change the implementation verdict.
   correction budget and remaining within the 75-minute tolerance. Entity 11, transport schema,
   unrelated once-only behavior, docs outside this stage report, versions, and marketplace metadata
   were not touched.
+- Re-validation dispatch D4 produced no completion signal or durable report and disappeared from
+  the Codex roster with no test process remaining. It is recorded as infrastructure-incomplete,
+  not PASS or REJECT. D5 is a fresh replacement on the same exact head.
