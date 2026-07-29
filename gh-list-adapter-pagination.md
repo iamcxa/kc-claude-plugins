@@ -233,3 +233,89 @@ above; it does not change the implementation verdict.
 - Re-validation dispatch D4 produced no completion signal or durable report and disappeared from
   the Codex roster with no test process remaining. It is recorded as infrastructure-incomplete,
   not PASS or REJECT. D5 is a fresh replacement on the same exact head.
+
+## Stage Report: validation D5 — 2026-07-29
+
+### Summary
+
+Correction-cycle revalidation **PASS** on exact code head
+`0748cec6d37c8781181af6978ed0b880b21b2893`. A fresh direct adapter replay combined the recorded
+two-page response into one three-review array with ids `[101,102,201]`. With `pipefail` explicitly
+disabled, a fake `gh` that emitted one usable-looking partial review and then returned 1 produced
+adapter rc 74 and no output. The scoped suite returned **142 passed / 0 failed**, and the final
+earned seven-script suite returned **940 passed / 0 failed**.
+
+No implementation file was edited. The code worktree remained clean on
+`spacedock-ensign/gh-list-adapter-pagination` at the exact dispatched head.
+
+### Acceptance and correction evidence
+
+- **AC-1 PASS:** Directly sourced `review-post.sh`, replayed
+  `gh-reviews-two-pages.jsonl` through the adapter's requested per-page `--jq` filter, and invoked
+  `review_post_gh_transport list`. The fixture count was 2 pages; output was one
+  `{reviews:[...]}` object with array length 3 and ids `[101,102,201]`.
+- **Correction guarantee PASS:** After sourcing the production adapter, set `+o pipefail`; the
+  fake `gh` wrote review id 101 and returned 1. The adapter returned rc 74 with empty stdout, so
+  partial upstream output was not presented as a successful list.
+- **Scoped regression:** `bash kc-pr-flow/scripts/review-post.test.sh` —
+  **142 passed / 0 failed**.
+- **Final earned suite:** **940 passed / 0 failed**:
+  `review-runtime.test.sh` **305/0**, `review-shadow.test.sh` **213/0**,
+  `review-runtime-benchmark.test.sh` **135/0**, `review-post.test.sh` **142/0**,
+  `cross-model.test.sh` **68/0**, `review-architecture-diagrams.test.sh` **43/0**, and
+  `review-architecture-diagrams-validator.test.sh` **34/0**.
+- **Static checks:** `bash -n` for `review-post.sh` and `review-post.test.sh` exited 0;
+  CI-pinned ShellCheck v0.9.0 over the documented four-file command returned no diagnostics;
+  `git diff --check` exited 0.
+
+### Lens and citation verification
+
+- **Correctness PASS, 0 findings:** Successful paginated item output is captured completely and
+  slurped once into the existing flat `{reviews:[...]}` transport shape. The AC replay and
+  pagination mutation independently exercised the changed composition.
+- **Silent-failure PASS, 0 findings:** The `gh` command substitution's status is checked before
+  `jq` consumes captured output. The direct `pipefail`-disabled failure replay and status-capture
+  mutation independently exercised the guard.
+- No security/auth/permission, type-design, concurrency, resource-lifecycle, or
+  manifest/back-compat surface changed; the diff is limited to Bash response composition,
+  explicit upstream-error handling, its test, and the recorded fixture.
+- `agy` 1.1.8 returned **CLEAN**, 0 P0-P3. The CLI request named
+  `gemini-3.1-pro-high`; the response self-reported **Gemini 3.6 Flash**. Both are Google models,
+  so the run remains cross-vendor relative to Codex, and the model-name discrepancy is recorded
+  rather than normalized away.
+- All three reviewer citations were independently verified at exact head:
+  `review-post.sh:233-238`, `review-post.test.sh:666-717`, and the complete two-line
+  `gh-reviews-two-pages.jsonl` fixture. All cited code and test ranges matched the review; no
+  citation was wrong or discarded.
+
+### Claim-breaking mutations
+
+- **Pagination combination:** In an isolated scratch copy, changed the adapter projection back to
+  one array per page. The committed suite returned **141 passed / 1 failed**; the named two-page
+  assertion observed nested page arrays instead of one flat reviews array.
+- **Explicit upstream-error capture:** In a separate isolated scratch copy, restored the
+  pipefail-dependent `gh | jq` pipeline while leaving pagination combination intact. The committed
+  suite returned **141 passed / 1 failed**; the named partial-output assertion expected
+  `rc:74|out:` but observed rc 0 with the partial review wrapped as usable output.
+
+### Evidence block
+
+Lenses: executable Bash response-composition/error-path diff; correctness PASS (0 findings) and
+silent-failure PASS (0 findings); no other mechanical lens matched the changed surfaces.
+Diff coverage: 100% — xtrace exercised 3/3 changed executable statements (`local` declaration,
+explicit `gh` capture/status check, and successful `jq` slurp), including the upstream-failure
+return branch; above the 85% ratchet.
+Adversarial: PASS — two independent scratch mutations each made its named committed assertion red:
+pagination nesting **141/1**, and missing explicit upstream-status capture **141/1**.
+Cross-model: `agy` 1.1.8 / Google review CLEAN, 0 P0-P3; request specified
+`gemini-3.1-pro-high`, response self-reported Gemini 3.6 Flash; 3/3 cited artifacts verified.
+E2E: N/A — the ideation AC defines a network-free adapter replay against recorded GitHub pages;
+live GitHub review mutation is outside this bounded acceptance criterion.
+
+### Verdict
+
+**PASS for correction cycle 1.** AC-1 and the explicit upstream-failure guarantee are independently
+reproduced, both committed guards are claim-breaking, diff coverage is above policy, the
+cross-vendor review is clean with verified citations, and the exact-head earned suite is
+regression-clean. The correction remains within the declared one-commit budget and does not expand
+into entity 11.
