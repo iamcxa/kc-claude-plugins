@@ -1,6 +1,6 @@
 ---
 title: Let truthful all-unknown token rows pass the ledger lifecycle gate
-status: implementation
+status: validation
 source: blocked n9 at the accepted-validation boundary after PR #81 landed, 2026-07-29
 started: 2026-07-29T14:13:05Z
 completed:
@@ -61,7 +61,8 @@ Validation remains a fresh-context gate.
 
 ## Measurement
 
-- D1 launched 2026-07-29T14:13:26Z | tokens: pending
+- D1 launched 2026-07-29T14:13:26Z | tokens: n/a (Codex runtime did not expose per-worker usage)
+- D2 launched 2026-07-29T14:21:49Z | tokens: pending
 
 ## Stage Report: implementation
 
@@ -70,7 +71,7 @@ Validation remains a fresh-context gate.
   RED `all-unknown-terminal`: the isolated case reported `ledger:incomplete`, actual verifier rc 43 versus expected rc 0; rejecting `n/a` in terminal restores this failure.
   Guard `blank-tokens`: verifier rc 43 matched expected rc 43 before and after the fix; accepting a blank token cell falsifies AC-2.
 - DONE: Make the minimum docs/dev/README.md-only change that treats all-unknown n/a as a complete but baseline-excluded token cell in the verifier and prose, with no schema, sentinel, or lifecycle-stage change.
-  Code commit `cac584e` changes only `docs/dev/README.md`: the shared token-completeness predicate admits exact `n/a`, and prose keeps it outside baseline/bar comparisons.
+  Code commit `da74fd2` changes only `docs/dev/README.md`: the shared token-completeness predicate admits exact `n/a`, and prose keeps it outside baseline/bar comparisons.
   The former `incomplete.csv` n/a arrangement became the approved all-unknown case; `blank-tokens.csv` preserves its fail-closed intent, while the legacy and coverage-n/a arrangements retain their original purposes.
 - DONE: Run the complete disposable ledger lifecycle fixture, status --validate, consistency searches for contradictory n/a/done claims, and git diff --check; commit only docs/dev/README.md and report RED/GREEN plus changed-claim falsifiers.
   GREEN full lifecycle: both all-unknown phases emitted `ledger:exact`; blank, missing, duplicate, finalized-as-premerge, and reversed-timestamp cases retained their expected nonzero results.
@@ -80,4 +81,4 @@ Validation remains a fresh-context gate.
 
 ### Summary
 
-Implemented the approved ledger parity rule in `cac584e`: an exact populated `n/a` token cell now passes both premerge and terminal verification, while remaining excluded from token baselines and bar comparisons. The disposable lifecycle fixture proves both phases and preserves fail-closed blank evidence; fresh validation and consistency checks passed.
+Implemented the approved ledger parity rule in `da74fd2`: an exact populated `n/a` token cell now passes both premerge and terminal verification, while remaining excluded from token baselines and bar comparisons. The disposable lifecycle fixture proves both phases and preserves fail-closed blank evidence; fresh validation and consistency checks passed.
