@@ -62,3 +62,22 @@ Validation remains a fresh-context gate.
 ## Measurement
 
 - D1 launched 2026-07-29T14:13:26Z | tokens: pending
+
+## Stage Report: implementation
+
+- DONE: Before editing the contract, extend the shipped disposable lifecycle fixture so a fully populated tokens_if_known=n/a row proves the current premerge and terminal failures, while a blank token row remains fail-closed; record the expected RED evidence.
+  RED `all-unknown-premerge`: the full fixture exited 1 at the new expected-0 assertion after `ledger:incomplete`; changing the verifier to continue rejecting `n/a` restores this failure.
+  RED `all-unknown-terminal`: the isolated case reported `ledger:incomplete`, actual verifier rc 43 versus expected rc 0; rejecting `n/a` in terminal restores this failure.
+  Guard `blank-tokens`: verifier rc 43 matched expected rc 43 before and after the fix; accepting a blank token cell falsifies AC-2.
+- DONE: Make the minimum docs/dev/README.md-only change that treats all-unknown n/a as a complete but baseline-excluded token cell in the verifier and prose, with no schema, sentinel, or lifecycle-stage change.
+  Code commit `cac584e` changes only `docs/dev/README.md`: the shared token-completeness predicate admits exact `n/a`, and prose keeps it outside baseline/bar comparisons.
+  The former `incomplete.csv` n/a arrangement became the approved all-unknown case; `blank-tokens.csv` preserves its fail-closed intent, while the legacy and coverage-n/a arrangements retain their original purposes.
+- DONE: Run the complete disposable ledger lifecycle fixture, status --validate, consistency searches for contradictory n/a/done claims, and git diff --check; commit only docs/dev/README.md and report RED/GREEN plus changed-claim falsifiers.
+  GREEN full lifecycle: both all-unknown phases emitted `ledger:exact`; blank, missing, duplicate, finalized-as-premerge, and reversed-timestamp cases retained their expected nonzero results.
+  `status --workflow-dir docs/dev --validate ... --json` returned `{"command":"validate","valid":"true"}`; warnings referenced pre-existing verdict casing in other entities.
+  Positive policy search found complete all-unknown, `tokens_complete`, baseline exclusion, and blank guard clauses; the old token predicate, two-notation heading, legacy-only n/a clause, and done prohibition were absent.
+  `git diff --check` passed and the changed-file assertion was exactly `docs/dev/README.md`; no schema, sentinel, lifecycle-stage, or CI-enlisted test changed.
+
+### Summary
+
+Implemented the approved ledger parity rule in `cac584e`: an exact populated `n/a` token cell now passes both premerge and terminal verification, while remaining excluded from token baselines and bar comparisons. The disposable lifecycle fixture proves both phases and preserves fail-closed blank evidence; fresh validation and consistency checks passed.
