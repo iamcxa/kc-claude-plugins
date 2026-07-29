@@ -35,7 +35,7 @@ a slash (`spacedock-state/dev`); a commit SHA avoids that.
 
 D1 launched 2026-07-29T06:07:23Z | tokens: n/a (Codex runtime did not expose per-worker usage)
 D2 launched 2026-07-29T06:34:23Z | tokens: n/a (Codex runtime did not expose per-worker usage)
-D3 launched 2026-07-29T06:56:49Z | tokens: pending
+D3 launched 2026-07-29T06:56:49Z | tokens: n/a (Codex runtime did not expose per-worker usage)
 
 ## Ideation
 
