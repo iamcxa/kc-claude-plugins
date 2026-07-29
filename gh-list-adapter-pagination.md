@@ -14,7 +14,7 @@ lane: defect
 ---
 
 `review_post_gh_transport`'s `list` op (`scripts/review-post.sh:233-237` on
-`origin/main` at `097685af`) runs
+`origin/main` at `96fe7f3`) runs
 
 ```
 gh api "repos/$repo/pulls/$pr/reviews" --paginate --jq '[.[] | {id, user: .user.login, body, commit_id}]'
@@ -65,3 +65,7 @@ schema, changes the once-only reconciliation contract, or spills into `11`
 
 Implementation dispatch sizing: one fresh worker in one isolated worktree.
 Validation remains a fresh-context gate.
+
+## Measurement
+
+- D1 launched 2026-07-29T08:05:41Z | tokens: pending
