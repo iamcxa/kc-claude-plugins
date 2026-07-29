@@ -376,3 +376,42 @@ job sees no changed runtime file and was run locally as ripple evidence.
 
 Known limitation: owner/repo continues to resolve from the code repository; this cut does not
 guarantee a split-root state checkout hosted in a different GitHub repository.
+
+## Stage Report: validation — 2026-07-29
+
+- DONE: Re-anchor the clean exact implementation head against freshly fetched origin/main and independently verify the two-file authorized scope plus both commits' TDD meaning.
+  Fresh fetch kept `origin/main@85959dce`; clean head `38fa87489a19decce7d89b414187a66c7aadffd2` changes only the mod and direct test, while baseline `55031ae8985578cbb60294f61b23679baa5c4e5e` executes the old tuple and goes RED 7/35.
+- DONE: Freshly execute the direct contract, shadow regression, pinned ShellCheck v0.9.0, fail-closed negative cases, branch mutations, and local/remote blob probes without trusting implementation claims.
+  Final runs returned direct 35/35, shadow 213/213, `bash -n` clean, and both the documented CI Docker command and pinned checks of the added test/extracted recipe clean.
+- DONE: Map exact evidence to AC-1 through AC-5, disposition EM residuals, and return PASSED or concrete Material findings without modifying product files.
+  PASSED at exact head `38fa87489a19decce7d89b414187a66c7aadffd2`; no Material finding and no product-file edit occurred during validation.
+- DONE: AC-1 — Split-root links resolve.
+  The extracted recipe asserted the full state SHA/root-relative link; live `[w1]` used `23f0eef473ceffad73a8c88aae0f875ec2251aee:pr-merge-audit-link-split-root.md`, whose local and GitHub blobs both equal `102a9d2efaa0ccca19f358154cbde472879fcc6f`.
+- DONE: AC-2 — Single-root links retain their target.
+  The distinct-FO/code-head fixture asserted the code short-SHA/repo-relative link and `cat-file`; the reachable `origin/main` tuple's local and GitHub blobs both equal `9f46314864ec71948a159fc718c5b225a8a38714`.
+- DONE: AC-3 — The executable contract owns both cases.
+  The test extracted/sourced the marked recipe; committed baseline emitted the old code tuple before failing 28 assertions, while forced-inline, forced-split, and literal-main mutations failed 4, 1, and 2 assertions respectively.
+- DONE: AC-4 — Neighboring PR behavior is unchanged.
+  `git diff --check origin/main...HEAD` exited 0 and the diff names only `docs/dev/_mods/pr-merge.md` plus `kc-pr-flow/scripts/pr-merge-audit-link.test.sh`; mod hunks are the marked recipe and its three audit descriptions.
+- DONE: AC-5 — Resolver failures stop link construction.
+  Nonzero, malformed, missing, empty, and non-string workflow/path plus missing-blob cases each returned nonzero, emitted the case diagnostic, and emitted no tuple/link across 27 negative assertions.
+
+### Evidence block
+
+Lenses: executable Bash recipe embedded in a Markdown hook plus one Bash test; correctness PASS (0 findings), security PASS (0), and silent-failure PASS (0); type-design, concurrency, resource-lifecycle, and manifest/back-compat did not fire because no such surface changed.
+Diff coverage: 86.7% (117/135) of traceable command-start lines in the added `scripts/*.test.sh`; heredoc payload/structural lines were excluded, while the Markdown recipe used exercise-based proof.
+Adversarial: forced-inline was 31/35, forced-split 34/35, and literal-main fallback 33/35, so every claim-breaking scratch mutation turned the direct contract red.
+Cross-model: Codex attempted Gemini via `agy 1.1.8` (~180 seconds, no output, interrupted rc 130), then Claude Code `2.1.220` (~150 seconds, no output, interrupted rc 130); observed unavailability, no second-opinion findings produced.
+E2E: the live recipe emitted the immutable split-root link and GitHub returned the same state blob as local Git; the reachable code tuple also matched local/remote blobs.
+
+### EM residuals
+
+- DONE: False RED by recipe absence is closed: baseline extraction succeeded and emitted the actual old code-SHA/code-path tuple before RED.
+- DONE: Resolver fail-closed behavior is closed by nine negative modes and the literal-main fallback mutation.
+- DONE: AC scope is closed by the exact two-file diff including the marked recipe, its three descriptions, and direct test.
+- SKIPPED: Cross-repository state owner/repo support remains outside this cut; both spec and mod explicitly retain code-repository-derived owner/repo.
+- SKIPPED: Browser/full-stack E2E remains inapplicable by ideation; the changed PR-body value surface was exercised through the live recipe and GitHub API.
+
+### Summary
+
+Validation independently reproduced RED-to-GREEN provenance, all five ACs, the relevant correctness/security/silent-failure lenses, mutation sensitivity, coverage, and local/remote blob reachability at the exact clean repair head. Verdict: **PASSED**, with only the explicitly accepted cross-repository owner/repo boundary and observed cross-model tool unavailability.
