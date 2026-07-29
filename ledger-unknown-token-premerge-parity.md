@@ -174,3 +174,20 @@ expected failures.
 **PASS.** AC-1 through AC-3 are independently reproduced at exact head, both
 policy guards are claim-breaking, the cross-vendor review is clean with verified
 citations, and the change remains within the approved one-file contract seam.
+
+## Fresh Claude EM gate
+
+- Verdict: **PROCEED**
+- Confidence: **HIGH**
+- Material findings: **none**
+- AC evidence: both lifecycle phases have separate `n/a` fixtures; blank tokens
+  retain a distinct fail-closed fixture; the three conflicting prose sites now
+  state one policy.
+- Scope: the implementation diff is one predicate and its prose/fixture in
+  `docs/dev/README.md`; no schema, sentinel, mode, or exit-code change.
+- Fail-closed: exact literal equality admits only `n/a`; blank, malformed,
+  missing, duplicate, wrong-phase, and timestamp failures remain rejected.
+- Post-validation metadata: the workflow-mandated unique row in
+  `docs/dev/ledger.csv` is added by the FO after this gate and receives a
+  separate premerge verification plus PR-meta review. It is not an
+  implementation behavior expansion.
