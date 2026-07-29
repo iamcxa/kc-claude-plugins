@@ -1148,8 +1148,10 @@ verifier below.
 convention below rather than a judgment call: sum the dispatches whose tokens are
 known, suffix the total with `+`, and the row is a floor excluded from baseline
 and bar comparisons. Every dispatch unknown means there is nothing to sum, and
-the cell is `n/a`. Silently summing the known ones without the `+` is the one
-move that must not happen — it reports a floor as a measurement.
+the cell is `n/a`; that populated all-unknown cell is complete and may pass
+premerge and terminal verification, but is excluded from baseline and bar
+comparisons. Silently summing the known ones without the `+` is the one move
+that must not happen — it reports a floor as a measurement.
 
 **Both are the FO's to record, at opposite ends of the same dispatch.** The FO
 increments `dispatches` at the launch boundary, *before* control passes to the
@@ -1160,7 +1162,7 @@ law, and re-test it the next time a worker is asked. And a worker that dies
 before writing anything still consumed a dispatch that has to be counted, which
 no harness change fixes.
 
-**Two token notations, and they mean different things.** A leading `~` is a
+**The two numeric token notations mean different things.** A leading `~` is a
 rounded measurement (`~461K`) and still counts as a measurement. A trailing `+`
 marks a **floor** — a dispatch that died on a session limit reports no usage at
 all, so its tokens are unrecoverable and the row's total is a lower bound rather
@@ -1244,14 +1246,15 @@ PY
 
 The lifecycle gate has three modes. `premerge` accepts only the two explicit
 sentinels; `terminal` rejects them and recomputes the wall-clock and dated
-observation window from `started` plus the product `mergedAt`. Before the
-deadline, `terminal` requires that exact `pending:<date>`; on or after it, it
-requires the observed integer count rather than permitting an overdue pending
-cell. `legacy` is read-only archive evidence for an already-terminal
-`direct-commit:` entity: it permits historical blank/`n/a` metrics but still
-requires the canonical header, one eight-cell row for the task id, and the
-exact slug. It never authorizes a row rewrite. Exit status `41`, `42`, and `43`
-mean missing, duplicate, and incomplete:
+observation window from `started` plus the product `mergedAt`. Both modes treat
+a populated `tokens_if_known=n/a` cell as complete all-unknown evidence. Before
+the deadline, `terminal` requires that exact `pending:<date>`; on or after it,
+it requires the observed integer count rather than permitting an overdue
+pending cell. `legacy` is read-only archive evidence for an already-terminal
+`direct-commit:` entity: it additionally permits historical blank metrics but
+still requires the canonical header, one eight-cell row for the task id, and
+the exact slug. It never authorizes a row rewrite. Exit status `41`, `42`, and
+`43` mean missing, duplicate, and incomplete:
 
 ```bash
 ledger_verify() {
@@ -1292,12 +1295,15 @@ if mode == "legacy":
         raise SystemExit(43)
     print("ledger:exact")
     raise SystemExit(0)
-tokens_recorded = (
-    re.fullmatch(
-        r"(?:[0-9]+(?:\.[0-9]+)?|~[0-9]+(?:\.[0-9]+)?[KMG]?)\+?",
-        row[5],
+tokens_complete = (
+    row[5] == "n/a"
+    or (
+        re.fullmatch(
+            r"(?:[0-9]+(?:\.[0-9]+)?|~[0-9]+(?:\.[0-9]+)?[KMG]?)\+?",
+            row[5],
+        )
+        is not None
     )
-    is not None
 )
 valid_common = (
     row[1] == slug
@@ -1311,7 +1317,7 @@ valid_common = (
 )
 if mode == "premerge":
     valid_phase = (
-        tokens_recorded
+        tokens_complete
         and row[4] == "pending:done"
         and row[7] == "pending:merge"
     )
@@ -1336,7 +1342,7 @@ elif mode == "terminal":
         if window_closed
         else row[7] == f"pending:{deadline}"
     )
-    valid_phase = tokens_recorded and row[4] == hours and escaped
+    valid_phase = tokens_complete and row[4] == hours and escaped
 else:
     print("ledger:invalid-mode")
     raise SystemExit(43)
@@ -1350,10 +1356,10 @@ PY
 
 Exercise the lifecycle states before trusting the gate. This disposable
 fixture covers exact, missing, duplicate, incomplete, coverage bounds and
-waivers, KC token notation, phase-selected terminalization, a finalized row
-presented to `premerge`, reversed timestamps, and a unique historical
-blank/`n/a` direct-commit row accepted only in `legacy`. It never touches the
-real ledger:
+waivers, KC token notation, all-unknown and blank token evidence,
+phase-selected terminalization, a finalized row presented to `premerge`,
+reversed timestamps, and a unique historical blank/`n/a` direct-commit row
+accepted only in `legacy`. It never touches the real ledger:
 
 ```bash
 expect_rc() {
@@ -1387,10 +1393,15 @@ TEST_ID="$TEST_ID" perl -0pi -e \
 expect_rc 42 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
   "$LEDGER_TEST/duplicate.csv"
 
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/incomplete.csv"
-perl -0pi -e 's/12345\+/n\/a/' "$LEDGER_TEST/incomplete.csv"
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/all-unknown-premerge.csv"
+perl -0pi -e 's/12345\+/n\/a/' "$LEDGER_TEST/all-unknown-premerge.csv"
+expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/all-unknown-premerge.csv"
+
+cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/blank-tokens.csv"
+perl -0pi -e 's/12345\+//' "$LEDGER_TEST/blank-tokens.csv"
 expect_rc 43 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/incomplete.csv"
+  "$LEDGER_TEST/blank-tokens.csv"
 
 cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/coverage-100.csv"
 perl -0pi -e 's/87\.5/100/' "$LEDGER_TEST/coverage-100.csv"
@@ -1412,6 +1423,12 @@ PHASE=$(ledger_phase \
 test "$PHASE" = terminal
 expect_rc 0 ledger_verify "$PHASE" "$TEST_ID" "$TEST_SLUG" \
   "$LEDGER_TEST/terminal.csv" 2099-01-01T00:00:00Z 2099-01-02T12:00:00Z
+
+cp "$LEDGER_TEST/terminal.csv" "$LEDGER_TEST/all-unknown-terminal.csv"
+perl -0pi -e 's/12345\+/n\/a/' "$LEDGER_TEST/all-unknown-terminal.csv"
+expect_rc 0 ledger_verify "$PHASE" "$TEST_ID" "$TEST_SLUG" \
+  "$LEDGER_TEST/all-unknown-terminal.csv" \
+  2099-01-01T00:00:00Z 2099-01-02T12:00:00Z
 
 PENDING_PHASE=$(ledger_phase \
   "ledger-pr:pending:artifact-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
@@ -1567,9 +1584,11 @@ tokens and ≤70% of baseline wall-clock with no added Severity-1/2 escaped
 defects; complexity (extra stages, skills, mechanisms) earns its way back only
 through this ledger, never through argument. **That bar reads three columns —
 `tokens_if_known`, `wallclock_hours`, and `escaped_defects_7d`.** Only the first
-two are knowable at the transition, so **those two — not `dispatches` — are what
-a `done` transition may not leave at `n/a`**; `escaped_defects_7d` closes at
-`pending:<date>` by design and is back-filled when that date passes.
+two are complete at the transition, so **`wallclock_hours` may not remain
+`n/a`, while `tokens_if_known` must carry the exact roll-up: a measurement, a
+marked floor, or `n/a` only when every dispatch is unknown.** The all-unknown
+form closes but is excluded from the bar and baseline; `escaped_defects_7d`
+closes at `pending:<date>` by design and is back-filled when that date passes.
 
 ## Task Template
 
