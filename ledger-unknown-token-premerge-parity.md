@@ -82,3 +82,95 @@ Validation remains a fresh-context gate.
 ### Summary
 
 Implemented the approved ledger parity rule in `da74fd2`: an exact populated `n/a` token cell now passes both premerge and terminal verification, while remaining excluded from token baselines and bar comparisons. The disposable lifecycle fixture proves both phases and preserves fail-closed blank evidence; fresh validation and consistency checks passed.
+
+## Stage Report: validation — 2026-07-29
+
+### Summary
+
+Fresh-context validation **PASS** on exact code head
+`da74fd21ebe0b993832366d353854b2e806c49d5`. The complete embedded lifecycle
+fixture exited 0. Direct named cases returned `ledger:exact`/rc 0 for populated
+all-unknown `n/a` in both premerge and terminal, while blank and malformed token
+cells returned rc 43, a missing row returned rc 41, a duplicate row returned rc
+42, and a terminal row presented to premerge returned rc 43.
+
+No implementation file or README was edited. The code worktree remained clean on
+`spacedock-ensign/ledger-unknown-token-premerge-parity` at the dispatched head.
+
+### Acceptance evidence
+
+- **AC-1 PASS:** Loaded the exact-head embedded `ledger_upsert` and
+  `ledger_verify`, plus `ledger_phase` from the documented `pr-merge` hook, and
+  executed the complete disposable fixture. `all-unknown-premerge.csv` and
+  `all-unknown-terminal.csv` each emitted `ledger:exact` with rc 0.
+- **AC-2 PASS:** The complete fixture preserved the expected nonzero outcomes.
+  A separate named replay made the outcomes explicit: blank token rc 43,
+  missing row rc 41, malformed token `unknown` rc 43, duplicate row rc 42, and
+  terminal-as-premerge rc 43.
+- **AC-3 PASS:** The revised policy agrees at the roll-up, verifier, fixture,
+  baseline, and bar clauses. Searches found no residual `tokens_recorded`,
+  two-notation heading, done/terminal prohibition on token `n/a`, or claim that
+  `n/a` participates in the baseline. The parent citations resolve exactly at
+  `96fe7f3`: roll-up `README.md:1149-1152`, numeric-only predicate
+  `README.md:1295-1315`, and done prohibition `README.md:1569-1571`.
+- **Workflow validation PASS:** `spacedock status --workflow-dir
+  /Users/kent/conductor/workspaces/kc-claude-plugins/antananarivo/docs/dev
+  --validate --json` returned `{"command":"validate","valid":"true"}`. Its
+  warnings were pre-existing lowercase verdict values in other entities.
+- **Scope/static PASS:** `96fe7f3..da74fd2` changes exactly
+  `docs/dev/README.md` (47 insertions, 28 deletions); `git diff --check` returned
+  no diagnostics.
+
+### Lens and citation verification
+
+- **Correctness PASS, 0 findings:** The exact `n/a` branch feeds the shared
+  `tokens_complete` predicate used by premerge and terminal; the fixture and
+  direct named replay exercised both phases and all required failure classes.
+- **Silent-failure PASS, 0 findings:** Whitespace-only cells normalize to empty
+  and remain invalid; `unknown` remains malformed; missing, duplicate, wrong
+  phase, and reversed timestamps retain their distinct fail-closed results.
+- No security/auth/permission, type-design, concurrency, resource-lifecycle, or
+  manifest/back-compat surface changed.
+- `agy` 1.1.8 ran a Google cross-vendor review with
+  `gemini-3.1-pro-high` requested and returned **CLEAN**, 0 P0-P3. Its cited
+  ranges `README.md:920-960`, `1100-1245`, `1246-1355`, `1356-1506`, and
+  `1507-1600` were independently checked at exact head; all matched. Its only
+  residual noted possible out-of-diff verifier copies; repository search found
+  no second `ledger_verify` definition, and `_mods/pr-merge.md` explicitly
+  invokes the README verifier.
+
+### Claim-breaking mutations
+
+- **Reject `n/a` again:** In an isolated scratch copy, disabled the exact `n/a`
+  branch of `tokens_complete`. The committed `all-unknown-premerge` expectation
+  changed from green to red: verifier output `ledger:incomplete`, fixture
+  assertion command rc 1.
+- **Accept blank tokens:** In a separate scratch copy, admitted `""` alongside
+  `n/a`. The committed `blank-tokens` expectation changed from green to red:
+  verifier output `ledger:exact` instead of expected rc 43, fixture assertion
+  command rc 1.
+
+### Evidence block
+
+Lenses: Markdown contract with embedded Bash/Python input-validation behavior;
+correctness PASS (0 findings) and silent-failure PASS (0 findings); no other
+mechanical lens matched the changed surfaces.
+Diff coverage: N/A — the committed diff is `docs/dev/README.md` only, with no
+changed script, hook, MCP, or server file; the embedded verifier and complete
+lifecycle fixture were executed directly instead.
+Adversarial: PASS — rejecting `n/a` made `all-unknown-premerge` red, and
+accepting blank tokens made `blank-tokens` red; both scratch assertion commands
+returned rc 1 at the named expected-result check.
+Cross-model: `agy` 1.1.8 / Google `gemini-3.1-pro-high` requested, CLEAN with 0
+P0-P3; 5/5 cited README ranges verified, and its one residual was resolved by
+repository search.
+E2E: PASS — the exact-head embedded Bash/Python lifecycle ran end to end and
+exited 0; populated `n/a` produced `ledger:exact` in premerge and terminal while
+blank, missing, malformed, duplicate, and wrong-phase cases retained their
+expected failures.
+
+### Verdict
+
+**PASS.** AC-1 through AC-3 are independently reproduced at exact head, both
+policy guards are claim-breaking, the cross-vendor review is clean with verified
+citations, and the change remains within the approved one-file contract seam.
