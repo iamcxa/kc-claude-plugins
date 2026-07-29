@@ -68,7 +68,7 @@ Validation remains a fresh-context gate.
 
 ## Measurement
 
-- D1 launched 2026-07-29T08:05:41Z | tokens: pending
+- D1 launched 2026-07-29T08:05:41Z | tokens: n/a (Codex runtime did not expose per-worker usage)
 
 ## Stage Report: implementation — 2026-07-29
 
