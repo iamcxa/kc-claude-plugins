@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Behavioral tests for once-only GitHub review posting (increment 2.3).
 #
-# Every acceptance criterion is exercised against the recorded stub transport
+# Posting acceptance criteria are exercised against the recorded stub transport
 # (test/fixtures/review-post/stub-transport.sh) with NO real PR mutation. The
-# load-bearing case is AC1: an ambiguous POST that still lands remotely must
-# reconcile to exactly one review on resume, never a blind second POST.
+# default gh adapter also has a recorded-response case below. The load-bearing
+# posting case is AC1: an ambiguous POST that still lands remotely must reconcile
+# to exactly one review on resume, never a blind second POST.
 # shellcheck disable=SC2317,SC2329 # Helper functions are invoked indirectly.
 
 set -uo pipefail
@@ -12,6 +13,7 @@ set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 POST="$HERE/review-post.sh"
 STUB="$HERE/../test/fixtures/review-post/stub-transport.sh"
+GH_REVIEWS_TWO_PAGES="$HERE/../test/fixtures/review-post/gh-reviews-two-pages.jsonl"
 
 REPO="acme/widgets"
 PR="42"
@@ -663,6 +665,39 @@ teardown_env
 # shellcheck source=/dev/null
 . "$POST"
 SAFE_IO="$(dirname "$POST")/review-runtime-safe-io.py"
+
+# --- Default gh adapter: `gh --paginate --jq` evaluates the filter once per
+# page. Replay two recorded API response pages through that exact filter and
+# require the adapter to combine every projected review into one transport
+# value. This exercises the production adapter, not the injectable stub.
+assert_eq "the gh reviews fixture records two pages (arrangement precondition)" \
+  "2" "$(jq -s 'length' "$GH_REVIEWS_TWO_PAGES")"
+gh() {
+  local endpoint jq_filter=''
+  [ "${1:-}" = api ] || return 2
+  shift
+  endpoint="${1:-}"
+  shift || true
+  [ "$endpoint" = "repos/$REPO/pulls/$PR/reviews" ] || return 2
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --paginate) shift ;;
+      --jq) jq_filter="$2"; shift 2 ;;
+      *) return 2 ;;
+    esac
+  done
+  [ -n "$jq_filter" ] || return 2
+  jq -c "$jq_filter" "$GH_REVIEWS_TWO_PAGES"
+}
+adapter_expected='{"reviews":[{"id":101,"user":"alice","body":"page one first","commit_id":"1111111111111111111111111111111111111111"},{"id":102,"user":"bob","body":"page one second","commit_id":"2222222222222222222222222222222222222222"},{"id":201,"user":"carol","body":"page two only","commit_id":"3333333333333333333333333333333333333333"}]}'
+if adapter_out="$(review_post_gh_transport list --repo "$REPO" --pr "$PR" --self "$SELF" 2>/dev/null)"; then
+  adapter_actual="$adapter_out"
+else
+  adapter_actual="rc:$?"
+fi
+assert_eq "the gh list adapter combines every review from two pages" \
+  "$adapter_expected" "$adapter_actual"
+unset -f gh
 
 rfc_shell=''
 rfc_python=''

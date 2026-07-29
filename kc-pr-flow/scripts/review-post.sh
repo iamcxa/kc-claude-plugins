@@ -204,8 +204,8 @@ review_post_transport() {
   review_post_gh_transport "$op" "$@"
 }
 
-# Default production adapter. Never exercised by CI (network-free); the stub
-# transport replaces it there.
+# Default production adapter. CI exercises its response composition against
+# recorded GitHub pages; posting and live network behavior stay stubbed.
 review_post_gh_transport() {
   local op="$1"
   shift
@@ -231,10 +231,9 @@ review_post_gh_transport() {
       jq -cn --arg h "$head_sha" '{head_sha:$h}'
       ;;
     list)
-      local reviews
-      reviews="$(gh api "repos/$repo/pulls/$pr/reviews" --paginate \
-        --jq '[.[] | {id, user: .user.login, body, commit_id}]')" || return 74
-      jq -cn --argjson reviews "$reviews" '{reviews:$reviews}'
+      gh api "repos/$repo/pulls/$pr/reviews" --paginate \
+        --jq '.[] | {id, user: .user.login, body, commit_id}' |
+        jq -sc '{reviews:.}' || return 74
       ;;
     post)
       local body_json response remote_id
