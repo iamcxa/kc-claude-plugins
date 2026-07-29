@@ -58,3 +58,7 @@ Validation remains a fresh-context gate.
 - After: a populated `n/a` token cell is a complete, terminalizable
   all-unknown row; it remains excluded from token baselines and comparisons.
   Blank, malformed, missing, and duplicate evidence still fails closed.
+
+## Measurement
+
+- D1 launched 2026-07-29T14:13:26Z | tokens: pending
