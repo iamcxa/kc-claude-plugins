@@ -30,3 +30,7 @@ The FO worked around it by hand for xn (pointing at a `spacedock-state/dev` comm
 branch-root filename), but every future PR from a split-root workflow will hit the same thing.
 Whatever the fix is, note that using the branch NAME is ambiguous to GitHub because it contains
 a slash (`spacedock-state/dev`); a commit SHA avoids that.
+
+## Measurement
+
+D1 launched 2026-07-29T06:07:23Z | tokens: pending
