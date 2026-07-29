@@ -32,7 +32,8 @@ paginates**, which for a busy PR is not an exotic case. Nobody has hit it yet be
 `KC_PR_FLOW_ONCE_ONLY_POST` defaults off.
 
 CI cannot catch this: every suite drives the injected stub transport, and the `gh` adapter is
-explicitly never exercised there (`scripts/review-post.sh:99-100`). So the fix needs a test that
+explicitly never exercised there (`scripts/review-post.sh:206-207` at the cited pre-fix head). So
+the fix needs a test that
 exercises the adapter's own composition against a recorded multi-page response, not another stub
 scenario.
 
@@ -69,7 +70,7 @@ Validation remains a fresh-context gate.
 ## Measurement
 
 - D1 launched 2026-07-29T08:05:41Z | tokens: n/a (Codex runtime did not expose per-worker usage)
-- D2 launched 2026-07-29T08:47:19Z | tokens: pending
+- D2 launched 2026-07-29T08:47:19Z | tokens: n/a (Codex runtime did not expose per-worker usage)
 
 ## Stage Report: implementation — 2026-07-29
 
