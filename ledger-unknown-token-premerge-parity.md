@@ -7,7 +7,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-ledger-unknown-token-premerge-parity
 issue:
-pr: pr-merge:pending:artifact-v1:0a5c0718c04a91d69b7e83fb307e529c0016d2387376ae64befaf4e792811700
+pr: pr-merge:84:artifact-v1:0a5c0718c04a91d69b7e83fb307e529c0016d2387376ae64befaf4e792811700
 design: trivial-pass
 id: s6943mgrss28mygnm1wjb408
 lane: defect
