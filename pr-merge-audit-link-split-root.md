@@ -1,15 +1,16 @@
 ---
 id: w1py17w13ga14nd3k6sbp358
 title: pr-merge builds a dead audit link under split-root state
-status: backlog
+status: ideation
 source: found by the FO while assembling xn's PR draft, 2026-07-25
-started:
+started: 2026-07-29T06:07:23Z
 completed:
 verdict:
 worktree:
 issue:
 pr:
 design:
+lane: main
 ---
 
 ## Problem
