@@ -8,9 +8,10 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-pr-merge-audit-link-split-root
 issue:
-pr:
+pr: "#83"
 design: required
 lane: main
+mod-block: merge:pr-merge
 ---
 
 ## Problem
