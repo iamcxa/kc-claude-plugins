@@ -143,3 +143,45 @@ CI will newly execute the recorded two-page adapter case because both changed pa
 behavior claim) and one small `jq` replay. The workflow records a 9m07s baseline under its current
 20-minute cap, leaving 10m53s before this change; the complete local earned suite took about
 15m06s. Exact-head CI remains the merge authority.
+
+## Stage Report: validation — 2026-07-29
+
+- DONE: Independently reproduce AC-1 through `review_post_gh_transport list` with the recorded
+  two-page response; prove one reviews array preserves ids 101, 102, and 201, then run the earned
+  full suite from the exact implementation head.
+  Direct adapter replay emitted one object with ids `[101,102,201]`; scoped test was 141/0 and the
+  exact `8a0d39fdebbadb297f506ef431523d2bb1e86a11` seven-script suite was 939/0.
+- DONE: Fire correctness and silent-failure lenses, verify every citation, measure executable diff
+  coverage against the 85% policy, and perform a claim-breaking mutation in a scratch copy.
+  Partial-upstream failure and malformed JSON both returned rc 74; xtrace covered 2/2 changed
+  production commands (100%); restoring per-page arrays made the AC test red at 140/1.
+- DONE: Run an independent cross-vendor review (attempt `agy` first, then a real different-vendor
+  fallback if unavailable), fill all five evidence-block lines with actual outcomes, and report
+  PASS/REJECT without editing implementation files.
+  `agy` 1.1.8/Gemini returned CLEAN after an explicit worktree mount; every cited range was checked
+  against exact head, and no implementation file was edited.
+- DONE: Verify every citation.
+  Commit/root-cause and cross-vendor citations resolve; the entity's historical
+  `scripts/review-post.sh:99-100` citation is a non-blocking source typo—the relevant pre-fix
+  comment is at lines 206-207 of `96fe7f3`.
+- DONE: Report PASS/REJECT.
+  PASS — AC-1 is reproduced, falsifiable, above the diff-coverage ratchet, and regression-clean.
+
+### Evidence block
+
+Lenses: executable Bash response-composition/error-path diff; correctness PASS (0 findings) and
+silent-failure PASS (0 findings); no auth/permission, type, concurrency, resource, or manifest lens
+surface changed.
+Diff coverage: 100% (2/2 added production Bash command statements traced), above the 85% policy.
+Adversarial: PASS — changing the projection back to per-page arrays produced nested arrays and
+failed the named AC assertion, 140 passed / 1 failed.
+Cross-model: `agy` 1.1.8 (Gemini, Google) CLEAN, 0 P0-P3; four cited ranges independently verified.
+E2E: N/A — this bounded network-free adapter AC is exercised directly against recorded two-page
+GitHub responses; live GitHub mutation is outside this AC.
+
+### Summary
+
+Validation PASS on exact implementation head `8a0d39f`. AC-1 preserved all three reviews in one
+array, fail-closed behavior held under two upstream failure modes, the mutation proved the test is
+load-bearing, and the earned suite returned 939/0. One historical entity citation typo is recorded
+above; it does not change the implementation verdict.
