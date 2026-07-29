@@ -346,7 +346,12 @@ remote still has the authenticated live root, it accepts only a signed archive
 commit followed by its signed exact inverse, both rooted at that freshly
 fetched tip. The restored tree must equal the remote tree byte-for-byte before
 the pair is pushed atomically and observed. Normal archive push remains exactly
-one commit; extra or unknown commits never enter either gate.
+one commit; extra or unknown commits never enter either gate. Before any
+rollback restores live bytes or removes an archive root, a read-only preflight
+requires every dirty path inside the two authenticated roots, regular
+filesystem and Git modes, an exact remote live copy, and an exact archive
+comparator result. A byte, mode, special-file, symlink, gitlink, or path-scope
+mismatch leaves the index and worktree evidence untouched.
 
 A terminal child whose parent is the authenticated blocked/non-terminal,
 numbered-product-plus-numbered-ledger state is recognized only as the compound
@@ -952,7 +957,10 @@ still-sentinel row leaves the entity non-terminal and unarchived.
   `{slug}/` tree and verify every descendant, allowing only Spacedock's
   deterministic archive stamp in `index.md`. Filesystem and Git-tree guards
   reject symlink roots, symlink descendants, gitlinks, and other non-regular
-  modes before Spacedock or the byte comparator can dereference them. A narrow
+  modes before Spacedock or the byte comparator can dereference them. Failed
+  archive validation is rollback-eligible only after the same read-only guards,
+  exact comparator, and two-root dirty-scope check pass; otherwise the crash
+  evidence remains untouched. A narrow
   `_archive/` recovery scan
   restores any partial move from the durable live source, so restart never
   excludes the only retry copy. Recovery repeats landed verification and

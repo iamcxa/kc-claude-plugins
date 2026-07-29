@@ -1100,15 +1100,110 @@ state ref, then classify the remote tip, local `HEAD`, index, and worktree:
 
 If a partial move cannot safely finish and the remote still contains the
 authenticated complete live root, restore both index and worktree roots from
-that remote commit:
+that remote commit. First extract `REMOTE_TIP:$LIVE_ROOT` to a fresh private
+`REMOTE_LIVE_COPY`. The rollback preflight is read-only: every dirty path must
+belong to the two authenticated roots, the remote Git root and extracted copy
+must be regular, any local live root must equal that copy byte-for-byte, and
+any archive root must pass both the filesystem guard and `archive_verify`.
+Missing, extra, mismatched, symlink, gitlink, or special-file evidence stops
+without changing the index or worktree:
 
 ```bash
+archive_dirty_scope_verify() {
+  python3 - "$@" <<'PY'
+import pathlib
+import subprocess
+import sys
+
+repo, live_root, archive_root = sys.argv[1:]
+
+
+def fail(message):
+    print(f"archive-rollback-scope:mismatch:{message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+for root in (live_root, archive_root):
+    parsed = pathlib.PurePosixPath(root)
+    if parsed.is_absolute() or root in {"", "."} or ".." in parsed.parts:
+        fail("invalid-root")
+
+
+def changed(*arguments):
+    result = subprocess.run(
+        ["git", "-C", repo, *arguments],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    if result.returncode != 0:
+        fail("git-query")
+    return [
+        value.decode("utf-8", "surrogateescape")
+        for value in result.stdout.split(b"\0")
+        if value
+    ]
+
+
+paths = []
+paths.extend(changed("diff", "--name-only", "-z"))
+paths.extend(changed("diff", "--cached", "--name-only", "-z"))
+paths.extend(changed("ls-files", "--others", "--exclude-standard", "-z"))
+paths.extend(
+    changed(
+        "ls-files",
+        "--others",
+        "--ignored",
+        "--exclude-standard",
+        "-z",
+        "--",
+        live_root,
+        archive_root,
+    )
+)
+for path in paths:
+    if not any(
+        path == root or path.startswith(root.rstrip("/") + "/")
+        for root in (live_root, archive_root)
+    ):
+        fail(f"unscoped-path:{path}")
+print("archive-rollback-scope:exact")
+PY
+}
+
 archive_inverse_finish() {
+  test -n "${REMOTE_LIVE_COPY-}" || return 1
+  test -e "$REMOTE_LIVE_COPY" || test -L "$REMOTE_LIVE_COPY" || return 1
+  archive_dirty_scope_verify \
+    "$STATE" "$LIVE_ROOT" "$ARCHIVE_ROOT" || return 1
+  archive_root_guard "$REMOTE_LIVE_COPY" "$ROOT_FORM" || return 1
+  archive_git_root_verify \
+    "$STATE" "$REMOTE_TIP" "$LIVE_ROOT" "$ROOT_FORM" || return 1
+
+  live_present=no
+  if test -e "$STATE/$LIVE_ROOT" || test -L "$STATE/$LIVE_ROOT"; then
+    archive_root_guard "$STATE/$LIVE_ROOT" "$ROOT_FORM" || return 1
+    git diff --no-index --quiet -- \
+      "$REMOTE_LIVE_COPY" "$STATE/$LIVE_ROOT" || return 1
+    live_present=yes
+  fi
+
+  archive_present=no
+  if test -e "$STATE/$ARCHIVE_ROOT" || test -L "$STATE/$ARCHIVE_ROOT"; then
+    archive_root_guard "$STATE/$ARCHIVE_ROOT" "$ROOT_FORM" || return 1
+    archive_verify \
+      "$REMOTE_LIVE_COPY" "$STATE/$ARCHIVE_ROOT" || return 1
+    archive_present=yes
+  fi
+  test "$live_present" = yes || test "$archive_present" = yes || return 1
+
   git -C "$STATE" restore --source="$REMOTE_TIP" \
     --staged --worktree -- "$LIVE_ROOT" || return 1
-  git -C "$STATE" rm -r -f --ignore-unmatch -- \
-    "$ARCHIVE_ROOT" || return 1
-  git -C "$STATE" clean -fd -- "$ARCHIVE_ROOT" || return 1
+  if test "$archive_present" = yes; then
+    git -C "$STATE" rm -r -f --ignore-unmatch -- \
+      "$ARCHIVE_ROOT" || return 1
+    git -C "$STATE" clean -fd -- "$ARCHIVE_ROOT" || return 1
+  fi
 }
 
 archive_inverse_finish || exit 1
@@ -1119,9 +1214,19 @@ when that path is absent from current archive `HEAD`; never pre-stage the
 missing path with `git add`. The exact archive root is then removed from index
 and worktree. `git clean` is permitted only for that already-authenticated
 archive root and only to remove an exact untracked partial-move residue.
+No restore or cleanup starts until the preflight has authenticated the whole
+visible prefix; failed preflight evidence remains byte-for-byte and mode-for-mode
+where the hook found it.
 Require the index tree to equal `REMOTE_TIP^{tree}`, no staged, unstaged, or
 untracked root residue, live/no archive, and byte equality with the remote
 before calling this a restored-live terminal.
+
+The rollback-preservation fixture snapshots the index, porcelain status, and
+root evidence before attempting recovery with four invalid states: changed
+archive bytes, a symlink archive root, a FIFO descendant, and an unrelated
+dirty path. Each call must fail with the live root still absent and every
+snapshot unchanged. Exact flat and folder moves still restore live and remove
+only their authenticated archive roots.
 
 #### Unpushed archive restoration pair
 
@@ -1562,12 +1667,14 @@ and archive transaction:
    stage both complete roots, validate and create its signed path-scoped
    commit, push the exact state ref, and observe the archive commit and tree
    remotely. Do not call `spacedock state commit` for this move.
-5. Any archive move, validation, commit, or durability failure returns through
-   restored-live recovery above before the hook reports failure when the
-   authenticated remote still has the live terminal root. If the process
-   crashes first, the narrow `_archive/` scan supplies the same move, stage,
-   commit, push, or observation restart point. The hook may report archived
-   only after step 4's remote observation checks pass.
+5. An archive move, commit, or durability failure returns through restored-live
+   recovery above before the hook reports failure only when the read-only
+   rollback preflight authenticates an exact prefix. An archive validation,
+   root-mode, comparator, or dirty-scope mismatch remains untouched and blocks;
+   it never enters `restore`, `rm`, or `clean`. If the process crashes first,
+   the narrow `_archive/` scan supplies the same move, stage, commit, push, or
+   observation restart point. The hook may report archived only after step 4's
+   remote observation checks pass.
 
 This recovery path never calls `ledger_upsert`, prepares a finalization branch,
 pushes a product or ledger branch, opens a PR, or terminalizes again. Its only
