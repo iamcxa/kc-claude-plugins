@@ -1104,13 +1104,17 @@ that remote commit. First extract `REMOTE_TIP:$LIVE_ROOT` to a fresh private
 `REMOTE_LIVE_COPY`. The rollback preflight is read-only: every dirty path must
 belong to the two authenticated roots, the remote Git root and extracted copy
 must be regular, any local live root must equal that copy byte-for-byte, and
-any archive root must pass both the filesystem guard and `archive_verify`. A
-disposable index seeded from `REMOTE_TIP` then derives the only allowed index
-trees from that validated working archive: unchanged live/no-archive,
-archive/no-live, or live+archive. The current index must equal one of those
-whole trees, including exact blob bytes, entries, root presence, and regular
-file modes. Missing, extra, mismatched, symlink, gitlink, or special-file
-evidence stops without changing the real index or worktree:
+any archive root must pass both the filesystem guard and `archive_verify`.
+Before candidate trees are derived, translate `REMOTE_TIP:$LIVE_ROOT` to an
+exact relative path-to-mode map and require the extracted copy, each present
+working root, and each present index root to match it. The archive stamp may
+change only `index.md` bytes, never its mode. A disposable index seeded from
+`REMOTE_TIP` then derives the only allowed index trees from that validated
+working archive: unchanged live/no-archive, archive/no-live, or live+archive.
+The current index must equal one of those whole trees, including exact blob
+bytes, entries, root presence, and regular file modes. Missing, extra,
+mismatched, symlink, gitlink, special-file, or mode-drift evidence stops
+without changing the real index or worktree:
 
 ```bash
 archive_dirty_scope_verify() {
@@ -1172,6 +1176,200 @@ for path in paths:
     ):
         fail(f"unscoped-path:{path}")
 print("archive-rollback-scope:exact")
+PY
+}
+
+archive_mode_translation_verify() {
+  python3 - "$@" <<'PY'
+import os
+import pathlib
+import stat
+import subprocess
+import sys
+
+(
+    repo,
+    remote_tip,
+    remote_live_copy,
+    live_root,
+    archive_root,
+    form,
+) = sys.argv[1:]
+regular_modes = {b"100644", b"100755"}
+
+
+def fail(message):
+    print(
+        f"archive-rollback-modes:mismatch:{message}",
+        file=sys.stderr,
+    )
+    raise SystemExit(1)
+
+
+def validate_root(root):
+    parsed = pathlib.PurePosixPath(root)
+    if parsed.is_absolute() or root in {"", "."} or ".." in parsed.parts:
+        fail("invalid-root")
+
+
+if form not in {"flat", "folder"}:
+    fail("invalid-form")
+validate_root(live_root)
+validate_root(archive_root)
+
+
+def relative(path, root):
+    if form == "flat":
+        return "." if path == root else None
+    prefix = root.rstrip("/") + "/"
+    return path[len(prefix) :] if path.startswith(prefix) else None
+
+
+def remote_modes():
+    result = subprocess.run(
+        [
+            "git",
+            "-C",
+            repo,
+            "ls-tree",
+            "-r",
+            "-z",
+            remote_tip,
+            "--",
+            live_root,
+        ],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    if result.returncode != 0:
+        fail("remote-tree-unavailable")
+    modes = {}
+    for record in result.stdout.split(b"\0"):
+        if not record:
+            continue
+        try:
+            metadata, raw_path = record.split(b"\t", 1)
+            mode, kind, _oid = metadata.split(b" ", 2)
+            path = raw_path.decode("utf-8", "surrogateescape")
+        except ValueError:
+            fail("malformed-remote-entry")
+        translated = relative(path, live_root)
+        if (
+            translated is None
+            or translated in modes
+            or mode not in regular_modes
+            or kind != b"blob"
+        ):
+            fail(f"invalid-remote-entry:{path}")
+        modes[translated] = mode
+    if not modes or (form == "folder" and "index.md" not in modes):
+        fail("incomplete-remote-root")
+    return modes
+
+
+def filesystem_modes(root, label):
+    root_path = pathlib.Path(root)
+    try:
+        root_mode = root_path.lstat().st_mode
+    except OSError:
+        fail(f"{label}:root-unavailable")
+
+    if form == "flat":
+        if not stat.S_ISREG(root_mode):
+            fail(f"{label}:flat-not-regular")
+        return {
+            ".": b"100755" if root_mode & 0o111 else b"100644"
+        }
+
+    if not stat.S_ISDIR(root_mode):
+        fail(f"{label}:folder-not-directory")
+    modes = {}
+    pending = [root_path]
+    while pending:
+        directory = pending.pop()
+        try:
+            entries = list(os.scandir(directory))
+        except OSError:
+            fail(f"{label}:descendant-unavailable")
+        for entry in entries:
+            translated = (
+                pathlib.Path(entry.path)
+                .relative_to(root_path)
+                .as_posix()
+            )
+            try:
+                mode = entry.stat(follow_symlinks=False).st_mode
+            except OSError:
+                fail(f"{label}:descendant-unavailable:{translated}")
+            if stat.S_ISDIR(mode):
+                pending.append(pathlib.Path(entry.path))
+            elif stat.S_ISREG(mode):
+                modes[translated] = (
+                    b"100755" if mode & 0o111 else b"100644"
+                )
+            else:
+                fail(f"{label}:descendant-not-regular:{translated}")
+    return modes
+
+
+expected = remote_modes()
+filesystem_roots = [
+    (remote_live_copy, "remote-copy", True),
+    (str(pathlib.Path(repo) / live_root), "live", False),
+    (str(pathlib.Path(repo) / archive_root), "archive", False),
+]
+for root, label, required in filesystem_roots:
+    if required or os.path.lexists(root):
+        if filesystem_modes(root, label) != expected:
+            fail(f"{label}:translation")
+
+
+result = subprocess.run(
+    [
+        "git",
+        "-C",
+        repo,
+        "ls-files",
+        "--stage",
+        "-z",
+        "--",
+        live_root,
+        archive_root,
+    ],
+    check=False,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.DEVNULL,
+)
+if result.returncode != 0:
+    fail("index-unavailable")
+index_modes = {"live": {}, "archive": {}}
+for record in result.stdout.split(b"\0"):
+    if not record:
+        continue
+    try:
+        metadata, raw_path = record.split(b"\t", 1)
+        mode, _oid, stage = metadata.split(b" ", 2)
+        path = raw_path.decode("utf-8", "surrogateescape")
+    except ValueError:
+        fail("malformed-index-entry")
+    translated = relative(path, live_root)
+    label = "live"
+    if translated is None:
+        translated = relative(path, archive_root)
+        label = "archive"
+    if (
+        translated is None
+        or stage != b"0"
+        or translated in index_modes[label]
+    ):
+        fail(f"invalid-index-entry:{path}")
+    index_modes[label][translated] = mode
+
+for label, modes in index_modes.items():
+    if modes and modes != expected:
+        fail(f"{label}-index:translation")
+print("archive-rollback-modes:exact")
 PY
 }
 
@@ -1291,6 +1489,9 @@ archive_inverse_finish() {
   fi
   test "$live_present" = yes || test "$archive_present" = yes || return 1
 
+  archive_mode_translation_verify \
+    "$STATE" "$REMOTE_TIP" "$REMOTE_LIVE_COPY" \
+    "$LIVE_ROOT" "$ARCHIVE_ROOT" "$ROOT_FORM" || return 1
   archive_index_prefix_verify \
     "$STATE" "$REMOTE_TIP" "$LIVE_ROOT" "$ARCHIVE_ROOT" || return 1
   git -C "$STATE" restore --source="$REMOTE_TIP" \
@@ -1319,12 +1520,15 @@ before calling this a restored-live terminal.
 
 The rollback-preservation fixture snapshots the index, porcelain status, and
 root evidence before attempting recovery with invalid working states (changed
-archive bytes, a symlink archive root, a FIFO descendant, and an unrelated
-dirty path) and invalid index states (a differing staged blob, mode `120000`,
-and a gitlink/extra entry). Each call must fail with the live root still absent
-and every snapshot unchanged. Exact flat and folder moves still restore live
-and remove only their authenticated archive roots, including the legitimate
-unstaged/untracked move whose index remains the remote tree.
+archive bytes, a symlink archive root, a FIFO descendant, an unrelated dirty
+path, and working-only executable-bit drift) and invalid index states (a
+differing staged blob, mode `120000`, a gitlink/extra entry, and staged
+executable-bit drift). Exercise the mode cases for both flat and folder roots.
+Each call must fail with the live root still absent and every snapshot,
+including filesystem modes, unchanged. Exact flat and folder moves still
+restore live and remove only their authenticated archive roots, including the
+legitimate unstaged/untracked move whose index remains the remote tree and
+remote source files whose valid modes are either `100644` or `100755`.
 
 #### Unpushed archive restoration pair
 
