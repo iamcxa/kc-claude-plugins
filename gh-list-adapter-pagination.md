@@ -319,3 +319,17 @@ reproduced, both committed guards are claim-breaking, diff coverage is above pol
 cross-vendor review is clean with verified citations, and the exact-head earned suite is
 regression-clean. The correction remains within the declared one-commit budget and does not expand
 into entity 11.
+
+## Fresh Claude EM gate — correction cycle 1
+
+- Verdict: **PROCEED**
+- Confidence: **HIGH**
+- Material findings: **none**
+- Prior confidence brake: **resolved**. The adapter now checks the `gh` command substitution's
+  status explicitly before parsing captured output, and the committed regression disables
+  `pipefail` while proving partial output plus upstream failure returns 74 with empty stdout.
+- Scope: all three changed files serve AC-1; no transport schema, reconciliation contract,
+  sibling-entity, version, or marketplace surface changed.
+- Evidence accepted: exact head `0748cec`, scoped **142/0**, earned suite **940/0**, two
+  independent claim-breaking mutations **141/1** each, diff coverage **100%**, ShellCheck v0.9.0
+  clean, and cross-vendor review clean with verified citations.
