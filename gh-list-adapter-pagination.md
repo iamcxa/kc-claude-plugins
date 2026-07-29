@@ -73,7 +73,7 @@ Validation remains a fresh-context gate.
 - D2 launched 2026-07-29T08:47:19Z | tokens: n/a (Codex runtime did not expose per-worker usage)
 - D3 launched 2026-07-29T09:16:25Z | tokens: n/a (Codex runtime did not expose per-worker usage)
 - D4 launched 2026-07-29T09:52:24Z | tokens: n/a (Codex runtime did not expose per-worker usage)
-- D5 launched 2026-07-29T13:25:12Z | tokens: pending
+- D5 launched 2026-07-29T13:25:12Z | tokens: n/a (Codex runtime did not expose per-worker usage)
 
 ## Stage Report: implementation — 2026-07-29
 
