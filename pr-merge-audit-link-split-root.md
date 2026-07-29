@@ -315,3 +315,63 @@ recipe block.
   sizing, exclusions, and process-residue boundary.
 - SKIPPED: Product edits and measurement-ledger repair; this correction touched the ideation state
   artifact only.
+
+## Stage Report: implementation — 2026-07-29
+
+### Summary
+
+Implemented the marked audit-link recipe so inline workflows keep the code-worktree tuple while
+split-root workflows link the resolved state checkout's full commit SHA and root-relative entity
+path. Resolver and blob failures now stop link construction with case-specific diagnostics.
+
+**Code commits:** `55031ae` (`fix(kc-pr-flow): mark current audit link recipe`) records the
+representation-only buggy baseline; `38fa874` (`fix(kc-pr-flow): resolve split-root audit links`)
+contains the repair and direct contract test.
+
+- DONE: Added one extractable `pr-merge-audit-link-recipe` block and updated only the merge-hook
+  input description, PR-body template audit row, and audit extraction row.
+- DONE: Preserved inline owner/repo, short-id, code-short-SHA, and code-repository-relative-path
+  behavior with distinct FO and code worktrees in the fixture.
+- DONE: Split-root resolution now uses one canonical `status --resolve --json` call, a full state
+  SHA, a state-root-relative path, and `git cat-file -e` before emitting the Markdown link.
+- DONE: Nonzero resolution, malformed JSON, missing keys, empty strings, non-string values, and a
+  tracked-but-uncommitted missing blob all return nonzero, emit a case-specific diagnostic, and
+  emit no tuple or link.
+- DONE: Final code diff is limited to `docs/dev/_mods/pr-merge.md` and
+  `kc-pr-flow/scripts/pr-merge-audit-link.test.sh`; review convergence, parked lanes, and ledger
+  residue were not touched.
+
+### RED → GREEN evidence
+
+- Committed buggy baseline `55031ae`: the extracted recipe executed successfully for inline state
+  but emitted `[split](/acme/widgets/blob/<code-short-sha>/docs/dev-split/split.md)` for split-root
+  state. The arrangement check confirmed `git cat-file -e` failed for that exact old tuple.
+  Initial RED was **7 passed / 25 failed**: the split-root exact-link assertion failed for the
+  expected old tuple, and every resolver-error fixture still emitted a link.
+- First GREEN was **32 passed / 0 failed** after canonical resolution and fail-closed validation.
+- Blob-existence guard received its own loop: with the guard removed, a staged-only state entity
+  produced RED **32 passed / 3 failed** by emitting a full-SHA link to a blob absent from `HEAD`;
+  restoring the minimal `cat-file -e` guard produced final GREEN **35 passed / 0 failed**.
+
+### Verification evidence
+
+- `bash -n kc-pr-flow/scripts/pr-merge-audit-link.test.sh` — exit 0.
+- `bash kc-pr-flow/scripts/pr-merge-audit-link.test.sh` — **35 passed / 0 failed** on committed
+  head `38fa874`.
+- CI-pinned ShellCheck v0.9.0 Docker run over the direct test and extracted recipe — clean.
+- `bash kc-pr-flow/scripts/review-shadow.test.sh` — **213 passed / 0 failed**.
+- Forced-inline, forced-split, and literal-`main` fallback mutations each turned the direct
+  contract red.
+- Live recipe output:
+  `[w1](/iamcxa/kc-claude-plugins/blob/976612379bfa2b47a3e753fdfcac6274b7f6d198/pr-merge-audit-link-split-root.md)`.
+  Local and GitHub API state blob hashes both resolved to
+  `a21663ad70792200804deab5ee9e1f84bc255ca6`; the `origin/main` code-path probe matched remotely at
+  blob `9f46314864ec71948a159fc718c5b225a8a38714`.
+- `git diff --check origin/main` and the two-path scope assertion — exit 0.
+
+CI path filters were not widened: this task's approved scope excludes workflow edits, so fresh
+validation must run the direct contract command above explicitly. The existing shadow regression
+job sees no changed runtime file and was run locally as ripple evidence.
+
+Known limitation: owner/repo continues to resolve from the code repository; this cut does not
+guarantee a split-root state checkout hosted in a different GitHub repository.
