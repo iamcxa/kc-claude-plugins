@@ -36,6 +36,29 @@ Resolve the PR base once: `BASE=$(spacedock dispatch trunk --workflow-dir {dir})
 
 Compute the audit-link inputs first: short SHA via `git rev-parse --short HEAD` in the worktree directory (if it exits non-zero — no commits, detached HEAD — substitute the literal string `main` and report the fallback to the captain); owner/repo via `gh repo view --json nameWithOwner --jq '.nameWithOwner'`; short entity-id slot via `spacedock status --short-id {entity ref}` from the workflow directory (shortest-unique-prefix for sd-b32 workflows, literal stored ID for sequential and slug, matching the status table's ID column).
 
+Set `PR_MERGE_ENTITY_REPO_PATH` to the entity file's code-repository-relative path, then execute the marked recipe:
+
+```bash
+# pr-merge-audit-link-recipe:start
+pr_merge_audit_link() {
+  local worktree_dir="$1"
+  local workflow_dir="$2"
+  local entity_ref="$3"
+  local short_sha owner_repo short_id
+
+  if ! short_sha=$(git -C "$worktree_dir" rev-parse --short HEAD); then
+    short_sha=main
+    printf 'pr-merge audit link: worktree HEAD unavailable; using main\n' >&2
+  fi
+  owner_repo=$(cd "$worktree_dir" && gh repo view --json nameWithOwner --jq '.nameWithOwner') || return 1
+  short_id=$(spacedock status --workflow-dir "$workflow_dir" --short-id "$entity_ref") || return 1
+
+  printf '[%s](/%s/blob/%s/%s)\n' \
+    "$short_id" "$owner_repo" "$short_sha" "$PR_MERGE_ENTITY_REPO_PATH"
+}
+# pr-merge-audit-link-recipe:end
+```
+
 Build the full PR body using the template below — motivation lead, `## What changed`, `## Evidence`, `---` separator, `[{short-id}](...)` audit link, and `Closes {issue}` line if frontmatter `issue` is set. This is the body that will be passed to `gh pr create` verbatim; do not reconstruct it after approval.
 
 Then present the draft to the captain:
