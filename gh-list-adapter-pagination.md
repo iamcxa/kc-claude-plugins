@@ -1,6 +1,6 @@
 ---
 title: The once-only path cannot work on a PR with more than one page of reviews
-status: validation
+status: implementation
 source: found outside the blast radius during sv's fresh-context validation, 2026-07-26
 started: 2026-07-29T07:44:33Z
 completed:
@@ -71,6 +71,7 @@ Validation remains a fresh-context gate.
 
 - D1 launched 2026-07-29T08:05:41Z | tokens: n/a (Codex runtime did not expose per-worker usage)
 - D2 launched 2026-07-29T08:47:19Z | tokens: n/a (Codex runtime did not expose per-worker usage)
+- D3 launched 2026-07-29T09:16:25Z | tokens: pending
 
 ## Stage Report: implementation — 2026-07-29
 
@@ -186,3 +187,19 @@ Validation PASS on exact implementation head `8a0d39f`. AC-1 preserved all three
 array, fail-closed behavior held under two upstream failure modes, the mutation proved the test is
 load-bearing, and the earned suite returned 939/0. One historical entity citation typo is recorded
 above; it does not change the implementation verdict.
+
+### Feedback Cycles
+
+#### Cycle 1 — Claude EM high-confidence brake
+
+- Gate result: `PROCEED / MEDIUM`, zero material findings. The confidence brake was that the new
+  pipeline's upstream-error propagation depends on file-level `set -o pipefail`, while no committed
+  regression test pins that dependency.
+- FO verification: on exact head `8a0d39f`, disabling `pipefail` and making `gh` emit one partial
+  review before returning 1 produced `rc=0` with a usable `{reviews:[...]}` value. The concern is
+  real and directly within this adapter change's silent-failure scope.
+- Rework instruction: retain explicit `gh ... || return 74` handling while combining page items,
+  and add a test proving partial output plus upstream failure returns 74 rather than an incomplete
+  successful list. Do not expand into entity `11` or other once-only behavior.
+- Budget at route-back: one correction commit expected, within the declared one-correction and
+  75-minute tolerance. Findings disposition pending rework.
