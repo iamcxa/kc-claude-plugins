@@ -301,8 +301,14 @@ authenticated artifact/ref and lifecycle preconditions, the complete dirty
 root bytes, and its path/digest manifest. The assignment record is data, not
 shell source, and must round-trip without evaluation. This record is created
 only after the local-parent replay above has matched the dirty root exactly.
-Unauthenticated dirt, dirty-ahead, and dirty-diverged holders have no restore
-route and remain untouched.
+Unauthenticated dirt and dirty-diverged holders have no restore route and
+remain untouched. Dirty-ahead also blocks except for the archive mod's exact
+inverse-prefix recovery: local `HEAD` must be the sole authenticated signed
+archive commit above the freshly fetched live remote, and staged dirt must
+equal either live-root restoration alone or the complete two-root inverse
+replayed from that archive parent. That bounded route idempotently finishes
+the inverse and enters its separate signed two-commit recovery gate; unknown,
+extra, or same-root drift remains untouched.
 
 With that record durable, restore tracked index and worktree bytes only for the
 authenticated `LIVE_ROOT` from `LOCAL_HEAD`. Remove only exact untracked paths
@@ -335,6 +341,12 @@ one anchored entity root exactly as one currently recognized pending lifecycle
 action would have done, may be retried. Push only `HEAD` to the exact state ref,
 fetch it again, and require observed equality. Unknown or multiple outgoing
 commits, another path/message, or an unauthenticated transition blocks.
+Archive restoration is the sole separate two-commit recovery gate: when the
+remote still has the authenticated live root, it accepts only a signed archive
+commit followed by its signed exact inverse, both rooted at that freshly
+fetched tip. The restored tree must equal the remote tree byte-for-byte before
+the pair is pushed atomically and observed. Normal archive push remains exactly
+one commit; extra or unknown commits never enter either gate.
 
 A terminal child whose parent is the authenticated blocked/non-terminal,
 numbered-product-plus-numbered-ledger state is recognized only as the compound
@@ -938,7 +950,10 @@ still-sentinel row leaves the entity non-terminal and unarchived.
   archive move is a second root-scoped state transaction and counts only after
   that commit is durable. Flat tasks move one file; folder tasks move the full
   `{slug}/` tree and verify every descendant, allowing only Spacedock's
-  deterministic archive stamp in `index.md`. A narrow `_archive/` recovery scan
+  deterministic archive stamp in `index.md`. Filesystem and Git-tree guards
+  reject symlink roots, symlink descendants, gitlinks, and other non-regular
+  modes before Spacedock or the byte comparator can dereference them. A narrow
+  `_archive/` recovery scan
   restores any partial move from the durable live source, so restart never
   excludes the only retry copy. Recovery repeats landed verification and
   exact clean-worktree cleanup; safe local branch deletion is best-effort and
@@ -1387,13 +1402,47 @@ PENDING_PHASE=$(ledger_phase \
   "")
 test "$PENDING_PHASE" = reconcile
 
+DRAFT_PHASE=$(ledger_phase \
+  "ledger-pr:draft:artifact-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+  "")
+test "$DRAFT_PHASE" = draft
+
+OPEN_PHASE=$(ledger_phase \
+  "ledger-pr:999:artifact-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+  OPEN)
+test "$OPEN_PHASE" = wait
+
+MERGED_PHASE=$(ledger_phase \
+  "ledger-merge:999:artifact-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+  MERGED)
+test "$MERGED_PHASE" = terminal
+
 PREMERGE_PHASE=$(ledger_phase "" "")
 test "$PREMERGE_PHASE" = premerge
 expect_rc 43 ledger_verify "$PREMERGE_PHASE" "$TEST_ID" "$TEST_SLUG" \
   "$LEDGER_TEST/terminal.csv"
 
+set +e
 INVALID_PHASE=$(ledger_phase "#999" MERGED)
+INVALID_RC=$?
+set -e
 test "$INVALID_PHASE" = invalid
+test "$INVALID_RC" -eq 44
+
+expect_phase_invalid() {
+  set +e
+  INVALID_PHASE=$(ledger_phase "$1" "$2")
+  INVALID_RC=$?
+  set -e
+  test "$INVALID_PHASE" = invalid
+  test "$INVALID_RC" -eq 44
+}
+
+expect_phase_invalid \
+  "ledger-pr:banana:artifact-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+  OPEN
+expect_phase_invalid "ledger-pr:draft:artifact-v1:not-hex" ""
+expect_phase_invalid "ledger-merge::artifact-v1:" MERGED
 
 expect_rc 43 ledger_verify "$PHASE" "$TEST_ID" "$TEST_SLUG" \
   "$LEDGER_TEST/terminal.csv" 2099-01-03T00:00:00Z 2099-01-02T12:00:00Z

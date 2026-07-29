@@ -423,15 +423,41 @@ row of its own.
 
    ```bash
    ledger_phase() {
-     case "$1" in
-       "") echo premerge ;;
-       ledger-pr:draft:artifact-v1:*) echo draft ;;
-       ledger-pr:pending:artifact-v1:*) echo reconcile ;;
-       ledger-pr:*:artifact-v1:*|ledger-merge:*:artifact-v1:*)
-         if [ "$2" = MERGED ]; then echo terminal; else echo wait; fi
-         ;;
-       *) echo invalid ;;
-     esac
+     python3 - "$1" "${2-}" <<'PY'
+import re
+import sys
+
+ledger_ref, host_state = sys.argv[1:]
+digest = r"[0-9a-f]{64}"
+
+
+def invalid():
+    print("invalid")
+    raise SystemExit(44)
+
+
+if ledger_ref == "":
+    if host_state != "":
+        invalid()
+    print("premerge")
+elif re.fullmatch(rf"ledger-pr:draft:artifact-v1:{digest}", ledger_ref):
+    if host_state != "":
+        invalid()
+    print("draft")
+elif re.fullmatch(rf"ledger-pr:pending:artifact-v1:{digest}", ledger_ref):
+    if host_state != "":
+        invalid()
+    print("reconcile")
+elif re.fullmatch(
+    rf"(?:ledger-pr|ledger-merge):[1-9][0-9]*:artifact-v1:{digest}",
+    ledger_ref,
+):
+    if host_state not in {"OPEN", "CLOSED", "MERGED"}:
+        invalid()
+    print("terminal" if host_state == "MERGED" else "wait")
+else:
+    invalid()
+PY
    }
    ```
 
@@ -441,7 +467,10 @@ row of its own.
    `ledger_pr`, authenticate its ledger artifact first. A pending marker enters exact
    reconciliation without inventing a number. A numbered ref queries only its
    authenticated PR; `MERGED` sets `PHASE=terminal`, while `OPEN` or `CLOSED`
-   does not run either row verifier. Any other grammar is invalid and blocks.
+   does not run either row verifier. Every accepted digest is exactly 64
+   lowercase hexadecimal characters, and every numbered form uses a positive
+   decimal PR number with no empty or extra tokens. Any other grammar prints
+   `invalid`, returns `44`, and blocks before a verifier or host mutation.
 2. In `premerge`, extract the landed ledger without trusting the current
    checkout (`git show "origin/$BASE:docs/dev/ledger.csv" > {private-temp}`)
    and run the README's `ledger_verify premerge {task-id} {slug}
@@ -634,17 +663,165 @@ Use this byte-preserving root comparator. Spacedock either inserts its
 frontmatter delimiter, or replaces one existing blank `archived:` field in
 place in the entity index. For folder form it additionally requires the same
 relative descendant file set and byte-identical content for every file other
-than `index.md`; non-regular descendants fail closed. The comparator reverses
+than `index.md`; non-regular descendants fail closed. Before either comparator
+or `spacedock status --archive`, the filesystem guard rejects a symlink or
+special root and rejects every symlink or special folder descendant without
+dereferencing it. The independent Git-tree guard requires the flat root, or
+every tracked file below the folder root, to be mode `100644` or `100755`;
+mode `120000`, gitlinks, and other non-blob modes fail. The comparator reverses
 only the valid UTC-seconds stamp and therefore preserves the product and ledger
 refs, both canonical approval artifacts, the entity body, and every per-stage
 artifact byte:
 
 ```bash
+archive_root_guard() {
+  python3 - "$1" "$2" <<'PY'
+import os
+import pathlib
+import stat
+import sys
+
+root = pathlib.Path(sys.argv[1])
+form = sys.argv[2]
+
+
+def fail(message):
+    print(f"archive:unsafe-root:{message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+if form not in {"flat", "folder"}:
+    fail("invalid-form")
+if root.is_symlink():
+    fail("root-symlink")
+try:
+    root_mode = root.lstat().st_mode
+except OSError:
+    fail("root-unavailable")
+
+if form == "flat":
+    if not stat.S_ISREG(root_mode):
+        fail("flat-not-regular")
+else:
+    if not stat.S_ISDIR(root_mode):
+        fail("folder-not-directory")
+    found_index = False
+    pending = [root]
+    while pending:
+        directory = pending.pop()
+        try:
+            entries = list(os.scandir(directory))
+        except OSError:
+            fail("descendant-unavailable")
+        for entry in entries:
+            relative = pathlib.Path(entry.path).relative_to(root).as_posix()
+            try:
+                mode = entry.stat(follow_symlinks=False).st_mode
+            except OSError:
+                fail(f"descendant-unavailable:{relative}")
+            if stat.S_ISLNK(mode):
+                fail(f"descendant-symlink:{relative}")
+            if stat.S_ISDIR(mode):
+                pending.append(pathlib.Path(entry.path))
+            elif stat.S_ISREG(mode):
+                if relative == "index.md":
+                    found_index = True
+            else:
+                fail(f"descendant-not-regular:{relative}")
+    if not found_index:
+        fail("missing-index")
+print("archive-root:regular")
+PY
+}
+
+archive_git_root_verify() {
+  python3 - "$@" <<'PY'
+import pathlib
+import subprocess
+import sys
+
+repo, treeish, root, form = sys.argv[1:]
+regular_modes = {b"100644", b"100755"}
+
+
+def fail(message):
+    print(f"archive:unsafe-git-root:{message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+root_path = pathlib.PurePosixPath(root)
+if (
+    form not in {"flat", "folder"}
+    or root_path.is_absolute()
+    or root in {"", "."}
+    or ".." in root_path.parts
+):
+    fail("invalid-root")
+
+
+def ls_tree(*arguments):
+    result = subprocess.run(
+        ["git", "-C", repo, "ls-tree", "-z", *arguments],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    if result.returncode != 0:
+        fail("tree-unavailable")
+    return [record for record in result.stdout.split(b"\0") if record]
+
+
+def parse(record):
+    try:
+        metadata, raw_path = record.split(b"\t", 1)
+        mode, kind, _oid = metadata.split(b" ", 2)
+        path = raw_path.decode("utf-8", "surrogateescape")
+    except ValueError:
+        fail("malformed-tree-entry")
+    return mode, kind, path
+
+
+top = ls_tree(treeish, "--", root)
+if len(top) != 1:
+    fail("root-count")
+top_mode, top_kind, top_path = parse(top[0])
+if top_path != root:
+    fail("root-path")
+
+if form == "flat":
+    if top_mode not in regular_modes or top_kind != b"blob":
+        fail("flat-not-regular")
+else:
+    if top_mode != b"040000" or top_kind != b"tree":
+        fail("folder-not-tree")
+    descendants = ls_tree("-r", treeish, "--", root)
+    if not descendants:
+        fail("empty-folder")
+    found_index = False
+    prefix = root.rstrip("/") + "/"
+    for record in descendants:
+        mode, kind, path = parse(record)
+        if (
+            not path.startswith(prefix)
+            or mode not in regular_modes
+            or kind != b"blob"
+        ):
+            fail(f"descendant-not-regular:{path}")
+        if path == prefix + "index.md":
+            found_index = True
+    if not found_index:
+        fail("missing-index")
+print("archive-git-root:exact")
+PY
+}
+
 archive_verify() {
   python3 - "$1" "$2" <<'PY'
 import datetime
+import os
 import pathlib
 import re
+import stat
 import sys
 
 
@@ -716,25 +893,56 @@ def normalized_index(live, archived):
 
 def descendants(root, label):
     entries = {}
-    for path in root.rglob("*"):
-        relative = path.relative_to(root).as_posix()
-        if path.is_symlink():
-            fail(f"{label}:non-regular:{relative}")
-        if path.is_dir():
-            continue
-        if not path.is_file():
-            fail(f"{label}:non-regular:{relative}")
-        entries[relative] = path.read_bytes()
+    pending = [root]
+    while pending:
+        directory = pending.pop()
+        try:
+            children = list(os.scandir(directory))
+        except OSError:
+            fail(f"{label}:unavailable")
+        for child in children:
+            path = pathlib.Path(child.path)
+            relative = path.relative_to(root).as_posix()
+            try:
+                mode = child.stat(follow_symlinks=False).st_mode
+            except OSError:
+                fail(f"{label}:unavailable:{relative}")
+            if stat.S_ISLNK(mode):
+                fail(f"{label}:non-regular:{relative}")
+            if stat.S_ISDIR(mode):
+                pending.append(path)
+            elif stat.S_ISREG(mode):
+                entries[relative] = path.read_bytes()
+            else:
+                fail(f"{label}:non-regular:{relative}")
     return entries
 
 
 live_root = pathlib.Path(sys.argv[1])
 archive_root = pathlib.Path(sys.argv[2])
-if live_root.is_file() and archive_root.is_file():
+for root, label in ((live_root, "live"), (archive_root, "archive")):
+    if root.is_symlink():
+        fail(f"{label}:root-symlink")
+    try:
+        mode = root.lstat().st_mode
+    except OSError:
+        fail(f"{label}:root-unavailable")
+    if stat.S_ISREG(mode):
+        kind = "file"
+    elif stat.S_ISDIR(mode):
+        kind = "directory"
+    else:
+        fail(f"{label}:non-regular-root")
+    if label == "live":
+        live_kind = kind
+    else:
+        archive_kind = kind
+
+if live_kind == "file" and archive_kind == "file":
     live = live_root.read_bytes()
     if normalized_index(live, archive_root.read_bytes()) != live:
         fail("archive:unexpected-byte-change")
-elif live_root.is_dir() and archive_root.is_dir():
+elif live_kind == "directory" and archive_kind == "directory":
     live_entries = descendants(live_root, "live")
     archive_entries = descendants(archive_root, "archive")
     if live_entries.keys() != archive_entries.keys():
@@ -754,6 +962,14 @@ print("archive:exact")
 PY
 }
 ```
+
+The root-safety fixture runs both guards and the comparator against a normal
+tracked flat file and a normal tracked folder with `index.md` plus a nested
+artifact; both pass. It then replaces the flat root with a symlink and,
+separately, adds a symlink descendant whose target is outside the fixture.
+Both filesystem cases fail before any target bytes are read. Matching Git-tree
+cases with mode `120000` fail `archive_git_root_verify`, including when a
+separate working-tree path happens to look regular.
 
 ### Archive durability transaction (Spacedock 0.26)
 
@@ -777,12 +993,19 @@ and archive addition. Use this explicit holder Git transaction instead:
    Behind, ahead, or diverged state returns to the holder prerequisite's
    classification; the archive cannot bundle or hide a pre-existing commit.
    Re-authenticate the complete live root at `ARCHIVE_PARENT` and extract it to
-   a private temporary location before moving anything.
+   a private temporary location before moving anything. Set
+   `ROOT_FORM=flat|folder` from the authenticated index, then require
+   `archive_root_guard "$STATE/$LIVE_ROOT" "$ROOT_FORM"` and
+   `archive_git_root_verify "$STATE" "$ARCHIVE_PARENT" "$LIVE_ROOT"
+   "$ROOT_FORM"` to pass before invoking Spacedock. A filesystem root that is a
+   symlink, or a Git root/descendant with mode `120000` or another non-regular
+   mode, blocks before the archive command.
 2. Run `spacedock status --workflow-dir "$WORKFLOW_DIR" --archive "$SLUG"`.
    Locate exactly one archive index with the same task id and authenticated
    refs, derive the complete `ARCHIVE_ROOT`, and require `LIVE_ROOT` absent.
-   Require `archive_verify` over the extracted parent live root and working
-   archive root to print `archive:exact`.
+   Require `archive_root_guard "$STATE/$ARCHIVE_ROOT" "$ROOT_FORM"` before
+   `archive_verify` over the extracted parent live root and working archive
+   root. Both must pass; neither guard nor comparator follows a symlink.
 3. Stage the two whole roots, including untracked folder descendants, and
    prove the candidate commit is exactly the move:
 
@@ -793,6 +1016,11 @@ and archive addition. Use this explicit holder Git transaction instead:
    test -z "$(git -C "$STATE" ls-files --others --exclude-standard)" || exit 1
    git -C "$STATE" diff --cached --quiet && exit 1
    git -C "$STATE" diff --cached --name-only -z >"$CACHED_PATHS"
+   CANDIDATE_TREE=$(git -C "$STATE" write-tree) || exit 1
+   archive_git_root_verify \
+     "$STATE" "$ARCHIVE_PARENT" "$LIVE_ROOT" "$ROOT_FORM" || exit 1
+   archive_git_root_verify \
+     "$STATE" "$CANDIDATE_TREE" "$ARCHIVE_ROOT" "$ROOT_FORM" || exit 1
    ```
 
    Parse `CACHED_PATHS` as NUL-delimited repository-relative paths. Every path
@@ -816,11 +1044,12 @@ and archive addition. Use this explicit holder Git transaction instead:
 
    Require the commit diff to contain only the two complete roots, its parent
    to contain live/no archive, its tree to contain archive/no live, a valid DCO
-   sign-off, and `archive_verify` between roots extracted from the two commits
-   to print `archive:exact`. Immediately before push, freshly fetch the state
-   ref again and require the outgoing range from that observed tip to contain
-   exactly this one commit, with `ARCHIVE_COMMIT^` equal to the observed tip.
-   Any pre-existing or additional outgoing commit blocks.
+   sign-off, both corresponding `archive_git_root_verify` calls to pass, and
+   `archive_verify` between roots extracted from the two commits to print
+   `archive:exact`. Immediately before push, freshly fetch the state ref again
+   and require the outgoing range from that observed tip to contain exactly
+   this one commit, with `ARCHIVE_COMMIT^` equal to the observed tip. Any
+   pre-existing or additional outgoing commit blocks.
 5. Push only the exact state ref:
 
    ```bash
@@ -858,12 +1087,13 @@ state ref, then classify the remote tip, local `HEAD`, index, and worktree:
 - Remote live/no archive plus a dirty holder whose staged, unstaged, and
   untracked paths are exactly the two authenticated roots is a crash after the
   move or stage. Require the remote live root and local archive root to pass
-  `archive_verify`, stage both roots again, and resume at step 3. Any unrelated
-  path or byte blocks with evidence preserved.
+  both filesystem/Git regular-root guards and `archive_verify`, stage both
+  roots again, and resume at step 3. Any unrelated path, non-regular mode, or
+  byte blocks with evidence preserved.
 - Remote live/no archive plus a clean local `HEAD` ahead by exactly one valid
   root-scoped archive commit is a crash after commit but before push. Require
   the full outgoing range to be that commit alone, recheck its parent, roots,
-  DCO, and comparator, then resume at step 5.
+  regular Git modes, DCO, and comparator, then resume at step 5.
 - Remote live/no archive and local `HEAD` equal to it is either untouched or
   restored live. It may re-enter the third scan only after the complete live
   root matches the remote tree.
@@ -873,22 +1103,406 @@ authenticated complete live root, restore both index and worktree roots from
 that remote commit:
 
 ```bash
-RECOVERY_PATHS=("$LIVE_ROOT" "$ARCHIVE_ROOT")
-git -C "$STATE" add -A -- "${RECOVERY_PATHS[@]}" || exit 1
-git -C "$STATE" restore --source="$REMOTE_TIP" \
-  --staged --worktree -- "${RECOVERY_PATHS[@]}" || exit 1
+archive_inverse_finish() {
+  git -C "$STATE" restore --source="$REMOTE_TIP" \
+    --staged --worktree -- "$LIVE_ROOT" || return 1
+  git -C "$STATE" rm -r -f --ignore-unmatch -- \
+    "$ARCHIVE_ROOT" || return 1
+  git -C "$STATE" clean -fd -- "$ARCHIVE_ROOT" || return 1
+}
+
+archive_inverse_finish || exit 1
 ```
 
-Require live/no archive and byte equality with the remote before calling this a
-restored-live terminal. If an unpushed archive commit exists, first preserve it
-under a reported `refs/spacedock-recovery/archive/...` ref, then make a signed
-path-scoped restoration commit and use the same exact-ref push/rebase/remote
-observation discipline, with the final observation requiring that restoration
-commit/tree and exact live/no-archive roots. If that restoration cannot become
-durable, leave the remote live terminal untouched and the holder blocked; never
-report archive success or start another entity. A rebase conflict, remote state
-containing both roots or neither, changed descendants, multiple archive
-candidates, or unattributable dirt always stops for captain resolution.
+The live-root pathspec is matched against the explicit source tree, so it works
+when that path is absent from current archive `HEAD`; never pre-stage the
+missing path with `git add`. The exact archive root is then removed from index
+and worktree. `git clean` is permitted only for that already-authenticated
+archive root and only to remove an exact untracked partial-move residue.
+Require the index tree to equal `REMOTE_TIP^{tree}`, no staged, unstaged, or
+untracked root residue, live/no archive, and byte equality with the remote
+before calling this a restored-live terminal.
+
+#### Unpushed archive restoration pair
+
+An unpushed, already-committed archive needs a distinct recovery gate. The
+normal archive push above always requires exactly one outgoing commit and must
+never be relaxed to accept two. Enter this pair gate only when a fresh fetch
+still shows live/no archive at `REMOTE_TIP`, local `HEAD` is exactly one
+previously authenticated archive commit ahead, and no other outgoing commit
+exists. Preserve that commit under a reported
+`refs/spacedock-recovery/archive/...` ref before changing either root.
+
+A crash while building the inverse may leave that exact archive `HEAD` dirty
+at one of two deterministic prefixes: the remote live root has been restored
+while the archive root remains, or the remote live root has been restored and
+the archive root has been removed/staged. Validate only those states with this
+temporary-index replay:
+
+```bash
+archive_inverse_prefix_verify() {
+  python3 - "$@" <<'PY'
+import os
+import pathlib
+import subprocess
+import sys
+import tempfile
+
+repo, remote_tip, archive_commit, live_root, archive_root = sys.argv[1:]
+
+
+def fail(message):
+    print(f"archive-inverse-prefix:mismatch:{message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def run(*arguments, env=None, text=False, check=True):
+    result = subprocess.run(
+        ["git", "-C", repo, *arguments],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        env=env,
+        text=text,
+    )
+    if check and result.returncode != 0:
+        fail("git-query")
+    return result
+
+
+def commit(value):
+    return run("rev-parse", f"{value}^{{commit}}", text=True).stdout.strip()
+
+
+def tree(value, env=None):
+    return run("write-tree", env=env, text=True).stdout.strip()
+
+
+def exists(value, path):
+    return (
+        run("cat-file", "-e", f"{value}:{path}", check=False).returncode == 0
+    )
+
+
+for root in (live_root, archive_root):
+    parsed = pathlib.PurePosixPath(root)
+    if parsed.is_absolute() or root in {"", "."} or ".." in parsed.parts:
+        fail("invalid-root")
+
+remote_tip = commit(remote_tip)
+archive_commit = commit(archive_commit)
+if commit("HEAD") != archive_commit:
+    fail("head-not-archive")
+if commit(f"{archive_commit}^") != remote_tip:
+    fail("archive-parent")
+outgoing = run(
+    "rev-list", "--reverse", f"{remote_tip}..HEAD", text=True
+).stdout.splitlines()
+if outgoing != [archive_commit]:
+    fail("archive-not-only-outgoing")
+
+if run("diff", "--quiet", check=False).returncode != 0:
+    fail("unstaged-change")
+if run("ls-files", "--others", "--exclude-standard", "-z").stdout:
+    fail("untracked-change")
+ignored = run(
+    "ls-files",
+    "--others",
+    "--ignored",
+    "--exclude-standard",
+    "-z",
+    "--",
+    live_root,
+    archive_root,
+).stdout
+if ignored:
+    fail("ignored-root-residue")
+
+changed_raw = run(
+    "diff", "--cached", "--name-only", "-z", archive_commit
+).stdout
+changed = [
+    value.decode("utf-8", "surrogateescape")
+    for value in changed_raw.split(b"\0")
+    if value
+]
+if not changed:
+    fail("not-dirty-prefix")
+for path in changed:
+    if not any(
+        path == root or path.startswith(root.rstrip("/") + "/")
+        for root in (live_root, archive_root)
+    ):
+        fail(f"unscoped-path:{path}")
+
+descriptor, replay_index = tempfile.mkstemp(prefix="archive-inverse-index-")
+os.close(descriptor)
+os.unlink(replay_index)
+replay_env = os.environ.copy()
+replay_env["GIT_INDEX_FILE"] = replay_index
+try:
+    run("read-tree", archive_commit, env=replay_env)
+    run(
+        "restore",
+        f"--source={remote_tip}",
+        "--staged",
+        "--",
+        live_root,
+        env=replay_env,
+    )
+    live_restored_tree = tree(archive_commit, env=replay_env)
+finally:
+    try:
+        os.unlink(replay_index)
+    except FileNotFoundError:
+        pass
+
+current_tree = tree(archive_commit)
+remote_tree = run(
+    "rev-parse", f"{remote_tip}^{{tree}}", text=True
+).stdout.strip()
+if current_tree == live_restored_tree:
+    if (
+        not exists(current_tree, live_root)
+        or not exists(current_tree, archive_root)
+    ):
+        fail("live-restored-root-presence")
+    print("archive-inverse-prefix:live-restored")
+elif current_tree == remote_tree:
+    if not exists(current_tree, live_root) or exists(current_tree, archive_root):
+        fail("complete-root-presence")
+    print("archive-inverse-prefix:complete")
+else:
+    fail("unknown-prefix")
+PY
+}
+```
+
+Before accepting either prefix, re-run every archive-commit check: exact
+message and parent, DCO, two-root scope, regular Git modes, root presence, and
+`archive_verify` from `REMOTE_TIP:$LIVE_ROOT` to
+`ARCHIVE_COMMIT:$ARCHIVE_ROOT`. Require all staged paths to be inside the two
+roots, no unstaged or untracked path anywhere, and no ignored residue inside
+either root. An exact `archive-inverse-prefix:live-restored` or
+`archive-inverse-prefix:complete` result authorizes only idempotent completion
+of the full inverse:
+
+```bash
+archive_inverse_finish || exit 1
+test "$(archive_inverse_prefix_verify \
+  "$STATE" "$REMOTE_TIP" "$ARCHIVE_COMMIT" \
+  "$LIVE_ROOT" "$ARCHIVE_ROOT")" = \
+  archive-inverse-prefix:complete || exit 1
+CANDIDATE_RESTORE_TREE=$(git -C "$STATE" write-tree) || exit 1
+test "$CANDIDATE_RESTORE_TREE" = \
+  "$(git -C "$STATE" rev-parse "$REMOTE_TIP^{tree}")" || exit 1
+archive_root_guard "$STATE/$LIVE_ROOT" "$ROOT_FORM" || exit 1
+archive_git_root_verify \
+  "$STATE" "$CANDIDATE_RESTORE_TREE" "$LIVE_ROOT" "$ROOT_FORM" || exit 1
+test ! -e "$STATE/$ARCHIVE_ROOT" || exit 1
+```
+
+The same completion runs from a clean authenticated archive `HEAD`; prefix
+verification is required only when staged dirt is already present. The final
+candidate must change only the two exact roots relative to `ARCHIVE_COMMIT`,
+contain the complete remote live root byte-for-byte, contain no archive root,
+and have a whole-tree OID equal to `REMOTE_TIP^{tree}`. Then create exactly one
+signed inverse commit:
+
+```bash
+git -C "$STATE" commit -s --only \
+  -m "docs(dev): restore archive $SLUG" -- \
+  "$LIVE_ROOT" "$ARCHIVE_ROOT" || exit 1
+RESTORE_COMMIT=$(git -C "$STATE" rev-parse 'HEAD^{commit}') || exit 1
+```
+
+Validate the resulting pair with this structural gate:
+
+```bash
+archive_restore_pair_verify() {
+  python3 - "$@" <<'PY'
+import pathlib
+import re
+import subprocess
+import sys
+
+(
+    repo,
+    remote_tip,
+    archive_commit,
+    restore_commit,
+    live_root,
+    archive_root,
+    slug,
+) = sys.argv[1:]
+
+
+def fail(message):
+    print(f"archive-restore-pair:mismatch:{message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def git(*arguments, text=True):
+    result = subprocess.run(
+        ["git", "-C", repo, *arguments],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=text,
+    )
+    if result.returncode != 0:
+        fail("git-query")
+    return result.stdout
+
+
+def commit(value):
+    return git("rev-parse", f"{value}^{{commit}}").strip()
+
+
+def parent(value):
+    fields = git("rev-list", "--parents", "-n", "1", value).split()
+    if len(fields) != 2:
+        fail("parent-count")
+    return fields[1]
+
+
+def signed(value):
+    body = git("show", "-s", "--format=%B", value)
+    return re.search(r"^Signed-off-by: .+ <[^<>]+>$", body, re.MULTILINE) is not None
+
+
+def scoped(parent_commit, child_commit):
+    raw = git(
+        "diff-tree",
+        "-r",
+        "--no-commit-id",
+        "--name-only",
+        "-z",
+        parent_commit,
+        child_commit,
+        "--",
+        text=False,
+    )
+    paths = [
+        value.decode("utf-8", "surrogateescape")
+        for value in raw.split(b"\0")
+        if value
+    ]
+    if not paths:
+        fail("empty-commit")
+    for path in paths:
+        if not any(
+            path == root or path.startswith(root.rstrip("/") + "/")
+            for root in (live_root, archive_root)
+        ):
+            fail(f"unscoped-path:{path}")
+
+
+def exists(value, path):
+    result = subprocess.run(
+        ["git", "-C", repo, "cat-file", "-e", f"{value}:{path}"],
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    return result.returncode == 0
+
+
+for root in (live_root, archive_root):
+    parsed = pathlib.PurePosixPath(root)
+    if parsed.is_absolute() or root in {"", "."} or ".." in parsed.parts:
+        fail("invalid-root")
+
+remote_tip = commit(remote_tip)
+archive_commit = commit(archive_commit)
+restore_commit = commit(restore_commit)
+outgoing = git(
+    "rev-list", "--reverse", f"{remote_tip}..{restore_commit}"
+).splitlines()
+if outgoing != [archive_commit, restore_commit]:
+    fail("outgoing-not-exact-pair")
+if parent(archive_commit) != remote_tip or parent(restore_commit) != archive_commit:
+    fail("parent-chain")
+if git("show", "-s", "--format=%s", archive_commit).rstrip("\n") != (
+    f"docs(dev): archive {slug}"
+):
+    fail("archive-message")
+if git("show", "-s", "--format=%s", restore_commit).rstrip("\n") != (
+    f"docs(dev): restore archive {slug}"
+):
+    fail("restore-message")
+if not signed(archive_commit) or not signed(restore_commit):
+    fail("missing-signoff")
+scoped(remote_tip, archive_commit)
+scoped(archive_commit, restore_commit)
+
+if (
+    not exists(remote_tip, live_root)
+    or exists(remote_tip, archive_root)
+    or exists(archive_commit, live_root)
+    or not exists(archive_commit, archive_root)
+    or not exists(restore_commit, live_root)
+    or exists(restore_commit, archive_root)
+):
+    fail("root-presence")
+if commit(restore_commit) == archive_commit:
+    fail("restore-not-distinct")
+remote_tree = git("rev-parse", f"{remote_tip}^{{tree}}").strip()
+restore_tree = git("rev-parse", f"{restore_commit}^{{tree}}").strip()
+if restore_tree != remote_tree:
+    fail("restore-tree-not-exact-inverse")
+print("archive-restore-pair:exact")
+PY
+}
+```
+
+Freshly extract and compare `REMOTE_TIP:$LIVE_ROOT` with
+`ARCHIVE_COMMIT:$ARCHIVE_ROOT` using `archive_verify`, and require
+`archive_git_root_verify` for the remote live root, archived child root, and
+restored live root. Only `archive:exact`, three `archive-git-root:exact`
+results, and `archive-restore-pair:exact` permit the recovery push. Immediately
+refetch and require the same remote root and exact two-commit range before
+pushing the pair atomically:
+
+```bash
+git -C "$STATE" fetch --no-tags origin "$STATE_REF" || exit 1
+PAIR_PARENT=$(git -C "$STATE" rev-parse 'FETCH_HEAD^{commit}') || exit 1
+test "$PAIR_PARENT" = "$REMOTE_TIP" || exit 1
+test "$(git -C "$STATE" rev-list --count "$PAIR_PARENT..HEAD")" -eq 2 ||
+  exit 1
+test "$(git -C "$STATE" rev-parse 'HEAD^{commit}')" = \
+  "$RESTORE_COMMIT" || exit 1
+archive_restore_pair_verify \
+  "$STATE" "$PAIR_PARENT" "$ARCHIVE_COMMIT" "$RESTORE_COMMIT" \
+  "$LIVE_ROOT" "$ARCHIVE_ROOT" "$SLUG" || exit 1
+git -C "$STATE" push --atomic origin "$RESTORE_COMMIT:$STATE_REF" || exit 1
+git -C "$STATE" fetch --no-tags origin "$STATE_REF" || exit 1
+test "$(git -C "$STATE" rev-parse 'FETCH_HEAD^{commit}')" = \
+  "$RESTORE_COMMIT" || exit 1
+```
+
+The observed restored tree equals `REMOTE_TIP` byte-for-byte, so ordinary
+startup now sees a clean live terminal state and may retry the normal
+single-commit archive transaction. There is no rebase route for the pair: a
+moved remote, extra/unknown outgoing commit, wrong message or parent, failed
+archive comparator, non-regular Git mode, or non-exact inverse blocks with the
+recovery ref preserved. If restoration cannot become durable, leave the remote
+live terminal untouched and the holder blocked; never report archive success
+or start another entity.
+
+The restoration fixture runs flat and folder roots from an archive `HEAD` where
+the live path is absent. For each form it crashes after live restoration and
+again after archive removal/staging; prefix verification accepts the exact
+state, idempotent completion produces the same signed inverse, and the exact
+pair is observed through a disposable atomic push. Extra staged, unstaged, or
+untracked dirt and same-root byte drift fail. The pair is accepted only by
+`archive_restore_pair_verify`; the normal one-commit archive gate rejects it.
+Adding a third commit, changing either message/parent, or making the second
+commit anything other than the exact inverse tree also fails before push.
+
+A rebase conflict, remote state containing both roots or neither, changed
+descendants, multiple archive candidates, or unattributable dirt always stops
+for captain resolution.
 
 For the third scan set — terminal and live — perform this idempotent recovery
 and archive transaction:
