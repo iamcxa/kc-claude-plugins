@@ -53,8 +53,8 @@ There is no unresolved scope choice to ask back.
 
 In scope:
 
-- Change only audit-link input resolution and the three matching descriptions in
-  `docs/dev/_mods/pr-merge.md`.
+- Change only the marked executable audit-link recipe block and its three matching descriptions
+  in `docs/dev/_mods/pr-merge.md`.
 - Add one direct contract test beside the mod, or in the repository's existing shell-test
   surface, that executes the exact recipe against split-root and single-root fixtures.
 - Preserve the audit label, PR-body placement, owner/repo resolution, short-id resolution, and
@@ -117,6 +117,13 @@ name. The split-root tuple must pass
 body is accepted. No branch ref appears in the split-root URL, so archival or later branch movement
 cannot invalidate the original target.
 
+Resolver failure is fail-closed. A non-zero `status --resolve`, unparseable JSON, or a JSON object
+whose `workflow` or `path` key is missing, non-string, or empty stops audit-link construction and
+reports the exact resolver failure to the captain. None of those cases may fall back to the
+code-worktree SHA/path or to the neighboring literal `main` fallback used by the older
+worktree-`rev-parse` failure path. The PR body is not accepted until canonical entity resolution
+has produced both required keys and the chosen SHA/path tuple passes its blob-existence check.
+
 ### Reverse-recovery audit
 
 Audited against freshly fetched `origin/main @
@@ -151,11 +158,17 @@ two-case test file.
 1. Freeze the implementation head and re-run the resolver for this entity with
    `--workflow-dir docs/dev`; confirm the target mod has not drifted from the three audit-link
    descriptions at ideation lines 37, 71, and 83.
-2. Write the direct shell contract test first. It must extract and execute the audit-resolution
-   recipe from a fenced/marked block in `pr-merge.md`, following the tested-recipe pattern already
-   used by `review-shadow.test.sh`; it must not pass by grepping for new prose.
-3. Capture RED: the split-root fixture must produce the wrong code SHA/path (or lack the new
-   executable recipe) before the edit, while the single-root baseline remains green.
+2. First install and commit a marked executable recipe block that encodes the current buggy
+   code-worktree-short-SHA/code-repo-relative-path behavior byte-for-byte; this baseline commit
+   changes representation only, not resolution semantics.
+3. Write the direct shell contract test to extract and execute that committed baseline recipe,
+   following the tested-recipe pattern already used by `review-shadow.test.sh`; it must not pass by
+   grepping for new prose. Capture RED by running the extracted current recipe against the
+   split-root fixture and observing
+   `git cat-file -e "{code-short-sha}:{code-repo-relative-entity-path}"` exit non-zero. Mere absence
+   of the new recipe, an extraction failure, or a syntax error does not count as RED; the harness
+   must first prove that it executed the committed buggy baseline and produced the expected old
+   tuple. The single-root baseline remains green.
 4. Update the merge-hook input paragraph, template row, and extraction-rule row together. Resolve
    the entity once via `spacedock status --workflow-dir {dir} --resolve {entity ref} --json`.
    Keep the old worktree tuple for inline state; for a separate state root, compute full `HEAD`,
@@ -164,9 +177,13 @@ two-case test file.
    - split-root README plus a separate `.spacedock-state` git checkout containing a root entity;
    - inline README plus an entity tracked in the code repository.
    Assert the exact final Markdown link in each case, not only the intermediate SHA/path.
-6. Re-run `bash -n` and ShellCheck on the contract test. Run the split-root live probe against the
+6. Run negative resolver fixtures through the same extracted recipe: command exits non-zero,
+   malformed JSON, missing `workflow`, and missing `path`. Each must return non-zero, emit a
+   specific diagnostic, and emit no SHA/path tuple or Markdown link. A mutation that substitutes
+   the code tuple or literal `main` must turn these cases red.
+7. Re-run `bash -n` and ShellCheck on the contract test. Run the split-root live probe against the
    pushed state SHA and a single-root probe against a reachable code SHA/path. Confirm the product
-   diff contains only the mod and its direct test.
+   diff contains only the marked recipe block, its three descriptions, and the direct test.
 
 E2E browser/full-stack testing is skipped: this is an agent-instruction/PR-body contract, not a
 browser, service, or user-flow wiring change. The live GitHub API probe is the end-to-end check for
@@ -207,9 +224,18 @@ branch is neutralized.
 
 Only audit-link input resolution changes; owner/repo and short-id lookup, PR body ordering,
 approval, push/create, and merge tracking remain unchanged. Verified by: a path-scoped
-`git diff --check` and review of the final diff showing changes only in the audit recipe's three
-descriptions plus its direct test. Falsified by any edit to review convergence, lifecycle commands,
-templates outside the audit row, or unrelated tests/docs.
+`git diff --check` and review of the final diff showing changes only in the marked executable
+audit recipe block, its three matching descriptions, and its direct test. Falsified by any edit to
+review convergence, lifecycle commands, templates outside the audit row, or unrelated tests/docs.
+
+**AC-5 — Resolver failures stop link construction.**
+
+Audit-link construction stops when `status --resolve` exits non-zero, emits malformed JSON, or
+omits either required `workflow` or `path` key. Verified by: four negative fixtures executing the
+same marked recipe and asserting non-zero exit, a case-specific diagnostic, and zero emitted
+SHA/path tuples or Markdown links; a mutation that falls back to the code tuple or literal `main`
+must make the corresponding fixture fail. Falsified by any PR body containing an audit link after
+one of these resolver failures, or by a silent/ambiguous failure with no captain-facing reason.
 
 ### Risks and pre-mortem
 
@@ -219,6 +245,9 @@ templates outside the audit row, or unrelated tests/docs.
   can misclassify a single-root workflow with a separate code worktree.
 - A test that reimplements the Markdown recipe can stay green while the agent-facing contract
   regresses; recipe extraction is mandatory.
+- Resolver error handling that reuses the neighboring `main` fallback can turn a visible
+  resolution failure back into a plausible-looking dead link; negative fixtures require no output
+  tuple or link.
 
 If this ships exactly per spec and still fails, the most likely cause is a hidden assumption:
 `status --resolve` identifies the right entity checkout, but the state commit was not pushed to the
@@ -232,8 +261,9 @@ this task.
 
 ### Summary
 
-Specified a two-case audit-link contract that preserves inline behavior and binds split-root links
-to an immutable state commit, with executable RED/GREEN fixtures and live remote-resolution proof.
+Specified a fail-closed two-case audit-link contract that preserves inline behavior and binds
+split-root links to an immutable state commit, with an executed buggy-baseline RED, resolver
+negative fixtures, GREEN layout fixtures, and live remote-resolution proof.
 
 ## Stage Report: ideation
 
@@ -262,3 +292,25 @@ two-layout contract test, and no product edits during ideation.
 - SKIPPED: Browser/full-stack E2E because the changed value surface is a PR-body blob target; the
   direct recipe test and live GitHub API probe cover that surface end to end.
 - SKIPPED: Measurement-ledger repair. The `tm` residue is noted only, per dispatch.
+
+## Stage Report: ideation (cycle 2 — EM narrow repair)
+
+TL;DR: Tightened only the three reviewed seams: RED now requires executing a committed buggy
+baseline, resolver failures stop without fallback, and the declared diff scope includes the marked
+recipe block.
+
+- DONE: AC-1 — preserved the split-root full-state-SHA/state-relative-path contract and its local
+  plus live-remote resolution evidence.
+- DONE: AC-2 — preserved the distinct-FO/code-worktree inline fixture and unchanged PR-head target.
+- DONE: AC-3 — removed the missing-recipe escape hatch: implementation first commits the current
+  buggy recipe, then the extracted recipe must produce the old tuple and `git cat-file -e` must
+  fail against the split-root fixture before GREEN work begins.
+- DONE: AC-4 — reconciled scope everywhere to include the marked executable recipe block, its
+  three matching descriptions, and the direct contract test.
+- DONE: AC-5 — specified fail-closed handling and falsifiable negative fixtures for non-zero
+  resolver exit, malformed JSON, missing `workflow`, and missing `path`; none may emit a tuple/link
+  or fall back to the code tuple or literal `main`.
+- DONE: Preserved the existing design choice, 45-minute appetite, 15-minute tolerance, one-worker
+  sizing, exclusions, and process-residue boundary.
+- SKIPPED: Product edits and measurement-ledger repair; this correction touched the ideation state
+  artifact only.
