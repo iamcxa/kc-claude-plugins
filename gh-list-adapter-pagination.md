@@ -202,4 +202,29 @@ above; it does not change the implementation verdict.
   and add a test proving partial output plus upstream failure returns 74 rather than an incomplete
   successful list. Do not expand into entity `11` or other once-only behavior.
 - Budget at route-back: one correction commit expected, within the declared one-correction and
-  75-minute tolerance. Findings disposition pending rework.
+  75-minute tolerance.
+- Finding disposition: **accepted as a real silent-failure defect**. Correction RED before the
+  production edit was **141 passed / 1 failed**: with `pipefail` disabled, the fake `gh` emitted one
+  projected review and returned 1; the adapter expected `rc:74|out:` but instead returned
+  `rc:0|out:{"reviews":[...]}` with the partial review presented as usable.
+- Correction commit: `0748cec` (`fix(kc-pr-flow): preserve gh list failure status`). The adapter
+  now captures `gh` output and status first, explicitly returns 74 on upstream failure, and only
+  then slurps the successful per-item stream into the existing `{reviews:[...]}` value. This
+  preserves both the pagination repair and fail-closed behavior without relying on `pipefail`.
+- Correction GREEN: `bash kc-pr-flow/scripts/review-post.test.sh` returned
+  **142 passed / 0 failed**. The first GREEN attempt exited 74 before reaching the new assertion
+  because earlier cases leave test-level `errexit` enabled; the test arrangement was corrected to
+  disable `errexit` only while capturing the expected nonzero status, with no further production
+  change.
+- Correction exit verification:
+  - Full workflow-earned seven-script suite — **940 passed / 0 failed**, about 11m39s local:
+    runtime **305/0**, shadow **213/0**, benchmark **135/0**, once-only **142/0**, cross-model
+    **68/0**, architecture docs **43/0**, and architecture validator **34/0**.
+  - `bash -n` for both changed scripts — exit 0.
+  - CI-pinned ShellCheck v0.9.0 over the documented four-file command — clean.
+  - `git diff --check` — exit 0; correction commit contains only `review-post.sh` and
+    `review-post.test.sh`.
+- Final disposition: **resolved** in one correction commit, exactly matching the declared
+  correction budget and remaining within the 75-minute tolerance. Entity 11, transport schema,
+  unrelated once-only behavior, docs outside this stage report, versions, and marketplace metadata
+  were not touched.
