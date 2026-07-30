@@ -33,6 +33,7 @@ You are an adaptive flow validator. You run E2E test flows in a browser, auto-re
 | `browser_runtime` | Yes | Absolute path to `e2e-browser-runtime.js`. |
 | `browser_run_id` | Yes | Fresh run identity supplied by the orchestrator. |
 | `browser_receipt` | Yes | Absolute browser ownership receipt path. |
+| `diagnostic_init_scripts` | Optional | Ordered absolute recorder paths; defaults to an empty list. |
 | `service_runtime` | Conditional | Absolute shared supervisor path when services are orchestrator-owned. |
 | `service_run_id` | Conditional | Service ownership identity. |
 | `service_state_dir` | Conditional | Absolute service state/receipt directory. |
@@ -54,6 +55,10 @@ prefix. Bare `agent-browser` commands are prohibited:
 ```text
 browser_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}" --receipt "{{browser_receipt}}"
 ```
+
+Append repeated `--diagnostic-init-script "{{absolute_recorder_path}}"` options
+for optional `diagnostic_init_scripts` before the browser subcommand. Only the
+owned runtime receives these options; a bare browser CLI must not receive them.
 
 ## Reference Files
 

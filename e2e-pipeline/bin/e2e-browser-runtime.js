@@ -16,6 +16,7 @@ const ALLOWED_COMMANDS = new Set([
   'cleanup-flow-managed-profile',
   'console',
   'cookies',
+  'diagnostic-projection',
   'errors',
   'eval',
   'fill',
@@ -48,6 +49,7 @@ function parseArgs(argv) {
     executablePath: '',
     profile: '',
     receipt: '',
+    diagnosticInitScripts: [],
     headed: false,
     command: [],
   };
@@ -68,6 +70,8 @@ function parseArgs(argv) {
       options.profile = argv[++index] || '';
     } else if (value === '--receipt') {
       options.receipt = argv[++index] || '';
+    } else if (value === '--diagnostic-init-script') {
+      options.diagnosticInitScripts.push(argv[++index] || '');
     } else if (value === '--headed') {
       options.headed = true;
     } else {
@@ -77,6 +81,82 @@ function parseArgs(argv) {
   }
 
   return options;
+}
+
+function validateDiagnosticInitScript(filePath, expectedUid) {
+  if (!path.isAbsolute(filePath)) {
+    throw new Error(
+      'diagnostic init script path must be absolute: ' + (filePath || '(missing)')
+    );
+  }
+  const resolvedPath = path.resolve(filePath);
+  let pathStat;
+  try {
+    pathStat = fs.lstatSync(resolvedPath);
+  } catch (_error) {
+    throw new Error(
+      'diagnostic init script must be an existing regular file: ' + resolvedPath
+    );
+  }
+  if (pathStat.isSymbolicLink()) {
+    throw new Error('diagnostic init script must not be a symlink: ' + resolvedPath);
+  }
+  if (!pathStat.isFile()) {
+    throw new Error('diagnostic init script must be a regular file: ' + resolvedPath);
+  }
+  const runtimeUid =
+    expectedUid === undefined && typeof process.getuid === 'function'
+      ? process.getuid()
+      : expectedUid;
+  if (runtimeUid === undefined || pathStat.uid !== runtimeUid) {
+    throw new Error(
+      'diagnostic init script must be owned by the current user: ' + resolvedPath
+    );
+  }
+
+  const noFollow = fs.constants.O_NOFOLLOW || 0;
+  let descriptor;
+  try {
+    descriptor = fs.openSync(resolvedPath, fs.constants.O_RDONLY | noFollow);
+    const descriptorStat = fs.fstatSync(descriptor);
+    if (
+      !descriptorStat.isFile() ||
+      descriptorStat.uid !== runtimeUid ||
+      String(descriptorStat.dev) !== String(pathStat.dev) ||
+      String(descriptorStat.ino) !== String(pathStat.ino)
+    ) {
+      throw new Error('diagnostic init script identity changed during validation');
+    }
+    const contents = fs.readFileSync(descriptor);
+    return {
+      sourcePath: resolvedPath,
+      basename: path.basename(resolvedPath),
+      pathSha256: crypto
+        .createHash('sha256')
+        .update(resolvedPath)
+        .digest('hex'),
+      contentSha256: crypto
+        .createHash('sha256')
+        .update(contents)
+        .digest('hex'),
+      byteLength: contents.length,
+      device: String(descriptorStat.dev),
+      inode: String(descriptorStat.ino),
+      uid: descriptorStat.uid,
+      contents,
+    };
+  } catch (error) {
+    if (error.message.startsWith('diagnostic init script')) throw error;
+    throw new Error(
+      'diagnostic init script is unreadable: ' +
+        resolvedPath +
+        ' (' +
+        error.message +
+        ')'
+    );
+  } finally {
+    if (descriptor !== undefined) fs.closeSync(descriptor);
+  }
 }
 
 function socketHomeForBrowserHome(browserHome) {
@@ -943,6 +1023,470 @@ function firstNavigationFiles(receiptPath) {
   };
 }
 
+function diagnosticManifestPath(receiptPath) {
+  return receiptPath + '.diagnostic-manifest.json';
+}
+
+function diagnosticWrapperPath(receiptPath, index, pathSha256) {
+  return (
+    receiptPath +
+    '.diagnostic-' +
+    index +
+    '-' +
+    pathSha256.slice(0, 12) +
+    '.js'
+  );
+}
+
+function diagnosticPublicProvenance(script, index, status) {
+  return {
+    index,
+    basename: script.basename,
+    byte_length:
+      script.byte_length === undefined ? script.byteLength : script.byte_length,
+    content_sha256: script.content_sha256 || script.contentSha256,
+    path_sha256: script.path_sha256 || script.pathSha256,
+    marker_key: script.marker_key,
+    projection_key: script.projection_key,
+    status,
+  };
+}
+
+function diagnosticWrapperContents(script, markerKey, projectionKey) {
+  return [
+    '(function() {',
+    "  'use strict';",
+    '  var published = false;',
+    '  var projectionSchema = null;',
+    '  var projectionReader = null;',
+    '  function isPlainObject(value) {',
+    "    return value !== null && typeof value === 'object' && !Array.isArray(value);",
+    '  }',
+    '  function validateSchema(schema) {',
+    "    if (!isPlainObject(schema)) throw new Error('diagnostic projection schema must be an object');",
+    '    var keys = Object.keys(schema);',
+    "    if (keys.length < 1 || keys.length > 32) throw new Error('diagnostic projection schema must have 1 to 32 fields');",
+    '    keys.forEach(function(key) {',
+    "      if (!/^[a-z][a-z0-9_]{0,63}$/.test(key)) throw new Error('diagnostic projection field name is invalid');",
+    '      var descriptor = schema[key];',
+    "      if (!isPlainObject(descriptor)) throw new Error('diagnostic projection field descriptor is invalid');",
+    "      if (descriptor.type === 'boolean' || descriptor.type === 'sha256') return;",
+    "      if (descriptor.type === 'integer') {",
+    '        if (!Number.isSafeInteger(descriptor.min) || !Number.isSafeInteger(descriptor.max) || descriptor.min > descriptor.max) {',
+    "          throw new Error('diagnostic projection integer field must have safe min and max bounds');",
+    '        }',
+    '        return;',
+    '      }',
+    "      if (descriptor.type === 'enum') {",
+    '        if (!Array.isArray(descriptor.values) || descriptor.values.length < 1 || descriptor.values.length > 32 || descriptor.values.some(function(value) { return typeof value !== \'string\' || value.length < 1 || value.length > 64; })) {',
+    "          throw new Error('diagnostic projection enum field must have 1 to 32 bounded string values');",
+    '        }',
+    '        return;',
+    '      }',
+    "      throw new Error('diagnostic projection field type is not allowed');",
+    '    });',
+    '  }',
+    '  function projectValues(schema, values) {',
+    "    if (!isPlainObject(values)) throw new Error('diagnostic projection reader must return an object');",
+    '    var keys = Object.keys(schema);',
+    '    var projected = {};',
+    '    keys.forEach(function(key) {',
+    '      projected[key] = values[key];',
+    '    });',
+    '    return projected;',
+    '  }',
+    '  (function(publishDiagnosticProjection) {',
+    script.contents.toString('utf8'),
+    '  })(function(schema, reader) {',
+    "    if (published) throw new Error('diagnostic projection may only be published once');",
+    '    validateSchema(schema);',
+    "    if (typeof reader !== 'function') throw new Error('diagnostic projection reader must be a function');",
+    '    published = true;',
+    '    projectionSchema = schema;',
+    '    projectionReader = reader;',
+    '  });',
+    "  if (!published) throw new Error('diagnostic projection was not published');",
+    '  Object.defineProperty(globalThis, ' + JSON.stringify(markerKey) + ", { configurable: false, value: true });",
+    '  Object.defineProperty(globalThis, ' + JSON.stringify(projectionKey) + ', {',
+    '    configurable: false,',
+    '    value: function() {',
+    '      return { schema: projectionSchema, values: projectValues(projectionSchema, projectionReader()) };',
+    '    }',
+    '  });',
+    '})();',
+    '',
+  ].join('\n');
+}
+
+function prepareDiagnosticLifecycle(receiptPath, scripts) {
+  if (!scripts.length) return null;
+  ensureOwnedDirectory(path.dirname(receiptPath));
+  const prepared = [];
+  try {
+    scripts.forEach(function(script, index) {
+      const wrapperPath = diagnosticWrapperPath(
+        receiptPath,
+        index,
+        script.pathSha256
+      );
+      const markerKey =
+        '__E2E_DIAGNOSTIC_MARKER_' +
+        crypto.randomBytes(12).toString('hex').toUpperCase();
+      const projectionKey =
+        '__E2E_DIAGNOSTIC_PROJECTION_' +
+        crypto.randomBytes(12).toString('hex').toUpperCase();
+      const wrapperContents = diagnosticWrapperContents(
+        script,
+        markerKey,
+        projectionKey
+      );
+      fs.writeFileSync(wrapperPath, wrapperContents, {
+        flag: 'wx',
+        mode: 0o600,
+      });
+      prepared.push({
+        index,
+        source_path: script.sourcePath,
+        basename: script.basename,
+        byte_length: script.byteLength,
+        content_sha256: script.contentSha256,
+        path_sha256: script.pathSha256,
+        device: script.device,
+        inode: script.inode,
+        uid: script.uid,
+        marker_key: markerKey,
+        projection_key: projectionKey,
+        wrapper_path: wrapperPath,
+        wrapper_sha256: crypto
+          .createHash('sha256')
+          .update(wrapperContents)
+          .digest('hex'),
+      });
+    });
+    const manifest = {
+      version: 1,
+      status: 'pending',
+      receipt_path_sha256: crypto
+        .createHash('sha256')
+        .update(path.resolve(receiptPath))
+        .digest('hex'),
+      scripts: prepared,
+    };
+    writeJsonAtomic(diagnosticManifestPath(receiptPath), manifest, true);
+    return manifest;
+  } catch (error) {
+    for (const preparedScript of prepared) {
+      removePrivateLifecycleFile(preparedScript.wrapper_path);
+    }
+    throw error;
+  }
+}
+
+function readDiagnosticManifest(receiptPath) {
+  const manifest = readRegularJson(
+    diagnosticManifestPath(receiptPath),
+    'diagnostic init-script manifest'
+  );
+  if (
+    !manifest ||
+    manifest.version !== 1 ||
+    manifest.status !== 'pending' ||
+    manifest.receipt_path_sha256 !==
+      crypto
+        .createHash('sha256')
+        .update(path.resolve(receiptPath))
+        .digest('hex') ||
+    !Array.isArray(manifest.scripts)
+  ) {
+    throw new Error('diagnostic init-script manifest is unavailable or invalid');
+  }
+  return manifest;
+}
+
+function validateDiagnosticWrapper(script) {
+  let stat;
+  try {
+    stat = fs.lstatSync(script.wrapper_path);
+  } catch (_error) {
+    throw new Error(
+      'diagnostic wrapper ' + script.index + ' must be a regular file'
+    );
+  }
+  if (!stat.isFile() || stat.isSymbolicLink()) {
+    throw new Error(
+      'diagnostic wrapper ' + script.index + ' must be a regular non-symlink file'
+    );
+  }
+  const digest = crypto
+    .createHash('sha256')
+    .update(fs.readFileSync(script.wrapper_path))
+    .digest('hex');
+  if (digest !== script.wrapper_sha256) {
+    throw new Error('diagnostic wrapper ' + script.index + ' content changed');
+  }
+}
+
+function revalidateDiagnosticLifecycle(receiptPath, suppliedScripts) {
+  const manifest = readDiagnosticManifest(receiptPath);
+  if (manifest.scripts.length !== suppliedScripts.length) {
+    throw new Error('diagnostic init-script input count changed');
+  }
+  manifest.scripts.forEach(function(recorded, index) {
+    const supplied = suppliedScripts[index];
+    if (
+      supplied.pathSha256 !== recorded.path_sha256 ||
+      supplied.basename !== recorded.basename
+    ) {
+      throw new Error('diagnostic init script ' + index + ' path changed');
+    }
+    if (
+      supplied.contentSha256 !== recorded.content_sha256 ||
+      supplied.byteLength !== recorded.byte_length
+    ) {
+      throw new Error('diagnostic init script ' + index + ' content changed');
+    }
+    if (
+      supplied.device !== recorded.device ||
+      supplied.inode !== recorded.inode ||
+      supplied.uid !== recorded.uid
+    ) {
+      throw new Error('diagnostic init script ' + index + ' identity changed');
+    }
+    validateDiagnosticWrapper(recorded);
+  });
+  return manifest;
+}
+
+function cleanupDiagnosticLifecycle(receiptPath) {
+  const manifestPath = diagnosticManifestPath(receiptPath);
+  if (!fs.existsSync(manifestPath)) return 'not-applicable';
+  const manifest = readDiagnosticManifest(receiptPath);
+  for (const script of manifest.scripts) {
+    validateDiagnosticWrapper(script);
+  }
+  for (const script of manifest.scripts) {
+    removePrivateLifecycleFile(script.wrapper_path);
+  }
+  removePrivateLifecycleFile(manifestPath);
+  return 'removed';
+}
+
+function assertDiagnosticKey(key, prefix) {
+  const pattern = new RegExp('^' + prefix + '[A-F0-9]{24}$');
+  if (!pattern.test(key || '')) {
+    throw new Error('diagnostic projection receipt key is invalid');
+  }
+  return key;
+}
+
+function validateDiagnosticProjection(payload, index) {
+  const schema = payload?.schema;
+  const values = payload?.values;
+  if (
+    !schema ||
+    typeof schema !== 'object' ||
+    Array.isArray(schema) ||
+    !values ||
+    typeof values !== 'object' ||
+    Array.isArray(values)
+  ) {
+    throw new Error('diagnostic projection ' + index + ' payload is invalid');
+  }
+  const keys = Object.keys(schema);
+  const valueKeys = Object.keys(values);
+  if (
+    keys.length < 1 ||
+    keys.length > 32 ||
+    valueKeys.length !== keys.length ||
+    valueKeys.some(function(key) {
+      return !Object.hasOwn(schema, key);
+    })
+  ) {
+    throw new Error(
+      'diagnostic projection ' + index + ' values do not match its schema'
+    );
+  }
+  keys.forEach(function(key) {
+    if (!/^[a-z][a-z0-9_]{0,63}$/.test(key)) {
+      throw new Error(
+        'diagnostic projection ' + index + ' field name is invalid'
+      );
+    }
+    const descriptor = schema[key];
+    const value = values[key];
+    if (!descriptor || typeof descriptor !== 'object' || Array.isArray(descriptor)) {
+      throw new Error(
+        'diagnostic projection ' + index + ' field ' + key + ' is invalid'
+      );
+    }
+    if (descriptor.type === 'boolean') {
+      if (typeof value !== 'boolean') {
+        throw new Error(
+          'diagnostic projection ' + index + ' field ' + key + ' must be boolean'
+        );
+      }
+      return;
+    }
+    if (descriptor.type === 'integer') {
+      if (
+        !Number.isSafeInteger(descriptor.min) ||
+        !Number.isSafeInteger(descriptor.max) ||
+        descriptor.min > descriptor.max ||
+        !Number.isSafeInteger(value) ||
+        value < descriptor.min ||
+        value > descriptor.max
+      ) {
+        throw new Error(
+          'diagnostic projection ' + index + ' field ' + key + ' must be a bounded integer'
+        );
+      }
+      return;
+    }
+    if (descriptor.type === 'enum') {
+      if (
+        !Array.isArray(descriptor.values) ||
+        descriptor.values.length < 1 ||
+        descriptor.values.length > 32 ||
+        descriptor.values.some(function(candidate) {
+          return (
+            typeof candidate !== 'string' ||
+            candidate.length < 1 ||
+            candidate.length > 64
+          );
+        }) ||
+        !descriptor.values.includes(value)
+      ) {
+        throw new Error(
+          'diagnostic projection ' + index + ' field ' + key + ' must match enum'
+        );
+      }
+      return;
+    }
+    if (descriptor.type === 'sha256') {
+      if (typeof value !== 'string' || !/^[a-f0-9]{64}$/.test(value)) {
+        throw new Error(
+          'diagnostic projection ' + index + ' field ' + key + ' must be sha256'
+        );
+      }
+      return;
+    }
+    throw new Error(
+      'diagnostic projection ' + index + ' field ' + key + ' type is not allowed'
+    );
+  });
+  return { keys: keys.sort(), values };
+}
+
+function assertDiagnosticReceiptBinding(receipt, suppliedScripts) {
+  const recordedScripts = receipt.diagnostic_init_scripts || [];
+  if (recordedScripts.length !== suppliedScripts.length) {
+    throw new Error('diagnostic init-script input count changed');
+  }
+  recordedScripts.forEach(function(recorded, index) {
+    const supplied = suppliedScripts[index];
+    if (
+      recorded.basename !== supplied.basename ||
+      recorded.path_sha256 !== supplied.pathSha256
+    ) {
+      throw new Error('diagnostic init script ' + index + ' path changed');
+    }
+    if (
+      recorded.byte_length !== supplied.byteLength ||
+      recorded.content_sha256 !== supplied.contentSha256
+    ) {
+      throw new Error('diagnostic init script ' + index + ' content changed');
+    }
+  });
+}
+
+function diagnosticEval(options, expression, description) {
+  return parseAgentBrowserPayload(
+    runAgentBrowser(options, ['eval', expression, '--json']),
+    description
+  ).result;
+}
+
+function observeDiagnosticProjections(options, receipt, manifest) {
+  manifest.scripts.forEach(function(script, index) {
+    const markerKey = assertDiagnosticKey(
+      script.marker_key,
+      '__E2E_DIAGNOSTIC_MARKER_'
+    );
+    const projectionKey = assertDiagnosticKey(
+      script.projection_key,
+      '__E2E_DIAGNOSTIC_PROJECTION_'
+    );
+    const marker = diagnosticEval(
+      options,
+      'globalThis[' + JSON.stringify(markerKey) + '] === true',
+      'agent-browser diagnostic marker evidence'
+    );
+    if (marker !== true) {
+      throw new Error(
+        'diagnostic init script ' + index + ' was not observed after navigation'
+      );
+    }
+    const projection = diagnosticEval(
+      options,
+      'globalThis[' + JSON.stringify(projectionKey) + ']()',
+      'agent-browser diagnostic projection evidence'
+    );
+    const validated = validateDiagnosticProjection(projection, index);
+    receipt.diagnostic_init_scripts[index] = Object.assign(
+      {},
+      receipt.diagnostic_init_scripts[index],
+      {
+        allowlisted_keys: validated.keys,
+        projection_status: 'validated',
+        status: 'observed',
+      }
+    );
+  });
+}
+
+function readDiagnosticProjections(options, receipt) {
+  assertDiagnosticReceiptBinding(receipt, options.diagnosticScripts);
+  if (receipt.first_navigation?.status !== 'verified') {
+    throw new Error(
+      'diagnostic projections require a verified first-navigation receipt'
+    );
+  }
+  const projections = (receipt.diagnostic_init_scripts || []).map(function(
+    script,
+    index
+  ) {
+    if (script.status !== 'observed' || script.projection_status !== 'validated') {
+      throw new Error(
+        'diagnostic projection ' + index + ' is unavailable before observation'
+      );
+    }
+    const projectionKey = assertDiagnosticKey(
+      script.projection_key,
+      '__E2E_DIAGNOSTIC_PROJECTION_'
+    );
+    const projection = diagnosticEval(
+      options,
+      'globalThis[' + JSON.stringify(projectionKey) + ']()',
+      'agent-browser diagnostic projection'
+    );
+    const validated = validateDiagnosticProjection(projection, index);
+    if (
+      JSON.stringify(validated.keys) !==
+      JSON.stringify((script.allowlisted_keys || []).slice().sort())
+    ) {
+      throw new Error(
+        'diagnostic projection ' + index + ' schema changed after observation'
+      );
+    }
+    return {
+      index,
+      basename: script.basename,
+      values: validated.values,
+    };
+  });
+  return { projections };
+}
+
 function createInitProbe(receiptPath) {
   const files = firstNavigationFiles(receiptPath);
   ensureOwnedDirectory(path.dirname(files.initPath));
@@ -1031,6 +1575,7 @@ function performOwnedOpen(options) {
   let pre;
   let probeExpression = '';
   let initPath = '';
+  let diagnosticManifest = null;
   let lineage = receipt?.profile_lineage
     ? {
         actualProfile: receipt.actual_profile,
@@ -1053,6 +1598,10 @@ function performOwnedOpen(options) {
       options.receiptPath
     );
     const initProbe = createInitProbe(options.receiptPath);
+    diagnosticManifest = prepareDiagnosticLifecycle(
+      options.receiptPath,
+      options.diagnosticScripts
+    );
     initPath = initProbe.initPath;
     probeExpression = initProbe.probeExpression;
     const launch = [
@@ -1064,7 +1613,11 @@ function performOwnedOpen(options) {
       options.profile,
     ];
     if (options.headed) launch.push('--headed');
-    launch.push('--init-script', initProbe.initPath, 'open');
+    launch.push('--init-script', initProbe.initPath);
+    for (const diagnostic of diagnosticManifest?.scripts || []) {
+      launch.push('--init-script', diagnostic.wrapper_path);
+    }
+    launch.push('open');
     try {
       const stdout = runAgentBrowser(options, launch);
       if (stdout) process.stdout.write(stdout);
@@ -1130,12 +1683,24 @@ function performOwnedOpen(options) {
       har: { status: 'not-started', document_count: 0, entry_count: 0 },
       probe_expression: probeExpression,
     };
+    receipt.diagnostic_init_scripts = (diagnosticManifest?.scripts || []).map(function(
+      script,
+      index
+    ) {
+      return diagnosticPublicProvenance(script, index, 'registered');
+    });
     writeLifecycleReceipt(options.receiptPath, receipt);
   } else {
     if (!receipt.first_navigation) {
       throw new Error(
         'browser lifecycle receipt predates first-navigation evidence; close and reopen the owned session'
       );
+    }
+    if (
+      (receipt.diagnostic_init_scripts || []).length !==
+      options.diagnosticScripts.length
+    ) {
+      throw new Error('diagnostic init-script input count changed');
     }
     probeExpression = receipt.first_navigation.probe_expression || '';
     pre = captureNavigationEvidence(
@@ -1173,6 +1738,32 @@ function performOwnedOpen(options) {
         'browser lifecycle infrastructure failure: actual profile identity changed'
       );
     }
+  }
+
+  if (
+    options.diagnosticScripts.length &&
+    receipt.first_navigation.status === 'pending'
+  ) {
+    try {
+      diagnosticManifest = revalidateDiagnosticLifecycle(
+        options.receiptPath,
+        options.diagnosticScripts
+      );
+    } catch (error) {
+      failLifecycleReceipt(options.receiptPath, receipt, error, null);
+      try {
+        cleanupDiagnosticLifecycle(options.receiptPath);
+      } catch (_cleanupError) {
+        // Preserve the attributed source or wrapper failure.
+      }
+      throw error;
+    }
+  } else if (options.diagnosticScripts.length) {
+    assertDiagnosticReceiptBinding(receipt, options.diagnosticScripts);
+  } else if ((receipt.diagnostic_init_scripts || []).length) {
+    const error = new Error('diagnostic init-script input count changed');
+    failLifecycleReceipt(options.receiptPath, receipt, error, null);
+    throw error;
   }
 
   if (!targetUrl || targetUrl === 'about:blank') {
@@ -1225,6 +1816,9 @@ function performOwnedOpen(options) {
     }
     assertInitProbeObserved(options, probeExpression);
     post.recorder.init_script = 'observed';
+    if (diagnosticManifest?.scripts?.length) {
+      observeDiagnosticProjections(options, receipt, diagnosticManifest);
+    }
     runAgentBrowser(options, ['network', 'har', 'stop', files.harPath]);
     harStarted = false;
     const har = inspectFirstNavigationHar(files.harPath);
@@ -1237,6 +1831,7 @@ function performOwnedOpen(options) {
       har,
       verified_at: new Date().toISOString(),
     };
+    receipt.diagnostic_cleanup = cleanupDiagnosticLifecycle(options.receiptPath);
     writeLifecycleReceipt(options.receiptPath, receipt);
     return receipt;
   } catch (error) {
@@ -1248,6 +1843,11 @@ function performOwnedOpen(options) {
       }
     }
     failLifecycleReceipt(options.receiptPath, receipt, error, post);
+    try {
+      cleanupDiagnosticLifecycle(options.receiptPath);
+    } catch (_cleanupError) {
+      // Preserve the attributed observation or projection failure.
+    }
     throw error;
   } finally {
     removePrivateLifecycleFile(initPath);
@@ -1795,6 +2395,23 @@ function main(argv) {
     );
     return 2;
   }
+  const requestedOwnedClose =
+    options.command[0] === 'close' ||
+    options.command[0] === 'cleanup-flow-managed-profile';
+  if (requestedOwnedClose) {
+    options.diagnosticScripts = [];
+  } else {
+    try {
+      options.diagnosticScripts = options.diagnosticInitScripts.map(function(
+        scriptPath
+      ) {
+        return validateDiagnosticInitScript(scriptPath);
+      });
+    } catch (error) {
+      process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+      return 2;
+    }
+  }
   if (options.command[0] === 'prepare-flow-managed-profile') {
     if (options.authMode !== 'flow-managed') {
       process.stderr.write(
@@ -2134,6 +2751,21 @@ function main(argv) {
       return 2;
     }
   }
+  if (
+    existingReceipt &&
+    !isOwnedClose &&
+    options.command[0] !== 'open'
+  ) {
+    try {
+      assertDiagnosticReceiptBinding(
+        existingReceipt,
+        options.diagnosticScripts
+      );
+    } catch (error) {
+      process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+      return 2;
+    }
+  }
   if (existingReceipt && !isOwnedClose) {
     args.splice(
       0,
@@ -2146,6 +2778,32 @@ function main(argv) {
       configPath,
       ...options.command
     );
+  }
+  if (options.command[0] === 'diagnostic-projection') {
+    if (!existingReceipt) {
+      process.stderr.write(
+        'e2e-browser-runtime: diagnostic projection requires an ownership receipt\n'
+      );
+      return 2;
+    }
+    try {
+      const projections = readDiagnosticProjections(
+        {
+          agentBrowser,
+          app: options.app,
+          childEnvironment,
+          configPath,
+          diagnosticScripts: options.diagnosticScripts,
+          namespace,
+        },
+        existingReceipt
+      );
+      process.stdout.write(JSON.stringify(projections) + '\n');
+      return 0;
+    } catch (error) {
+      process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+      return 2;
+    }
   }
   if (
     options.command[0] === 'open' &&
@@ -2172,6 +2830,7 @@ function main(argv) {
         profile: path.resolve(options.profile),
         receiptPath,
         runId: options.runId,
+        diagnosticScripts: options.diagnosticScripts,
       });
       if (options.authMode === 'flow-managed') {
         const record = readFlowManagedState({
@@ -2406,6 +3065,9 @@ function main(argv) {
   }
   if (isOwnedClose) {
     try {
+      if (existingReceipt?.diagnostic_init_scripts?.length) {
+        cleanupDiagnosticLifecycle(receiptPath);
+      }
       cleanupClosedNamespaceState(socketHome, namespace, options.app);
       const profileCleanup = cleanupOwnedProfileSnapshot(existingReceipt);
       markBrowserOwnershipClosed(receiptPath, existingReceipt, profileCleanup);
@@ -2455,6 +3117,7 @@ module.exports = {
   markFlowManagedProfileActive,
   namespaceForRun,
   parseArgs,
+  validateDiagnosticInitScript,
   prepareFlowManagedProfile,
   protectedRuntimeArgument,
   socketHomeForBrowserHome,

@@ -31,6 +31,7 @@ You are a browser observation specialist. You open a browser, execute reproducti
 | `browser_runtime` | **Required** | Absolute path to `e2e-browser-runtime.js`. |
 | `browser_run_id` | **Required** | Fresh run identity from the runtime. |
 | `browser_receipt` | **Required** | Absolute ownership receipt path under `report_dir`. |
+| `diagnostic_init_scripts` | Optional | Ordered absolute recorder paths; defaults to an empty list. |
 | `app` | **Required** | Stable app/profile identity for this debug target. |
 | `auth_profile` | Optional | Absolute path to agent-browser auth profile directory. Passed as `--profile` to `open`. |
 | `log_tags` | Optional | List of console log tag prefixes to highlight (default: `[E2E-DBG]`). Tags are matched as prefix substrings. |
@@ -53,6 +54,10 @@ Use this immutable prefix for every browser command:
 ```text
 browser_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}" --receipt "{{browser_receipt}}"
 ```
+
+Append one `--diagnostic-init-script "{{absolute_recorder_path}}"` per optional
+`diagnostic_init_scripts` entry before the browser subcommand. Never pass these
+options to a bare browser CLI.
 
 Bare `agent-browser` commands are prohibited. They can attach to a current
 personal/default browser instead of the owned Chrome for Testing namespace.

@@ -4,7 +4,13 @@ const { test, describe } = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 
-const { generate, generateHeader, singleQuote, generateCleanupTrap } = require('../codegen.js');
+const {
+  generate,
+  generateBrowserRuntime,
+  generateHeader,
+  singleQuote,
+  generateCleanupTrap,
+} = require('../codegen.js');
 
 // ---------------------------------------------------------------------------
 // Test helpers — build minimal resolved step objects matching resolver output
@@ -80,6 +86,23 @@ function makeResolved(steps, name, description) {
   };
 }
 
+test('compiled browser runtime passes newline-delimited diagnostic scripts only to the owned runtime', function() {
+  const runtime = generateBrowserRuntime({ default: 'example-app' });
+
+  assert.match(runtime, /E2E_DIAGNOSTIC_INIT_SCRIPTS/);
+  assert.match(runtime, /_E2E_DIAGNOSTIC_ARGS=\(\)/);
+  assert.match(runtime, /_E2E_DIAGNOSTIC_ACTIVE=true/);
+  assert.match(runtime, /--diagnostic-init-script "\$_diagnostic_script"/);
+  assert.match(
+    runtime,
+    /node "\$E2E_BROWSER_RUNTIME"[\s\S]+?"\$\{_E2E_DIAGNOSTIC_ARGS\[@\]\}"/
+  );
+  assert.doesNotMatch(
+    runtime,
+    /agent-browser[^\n]*--(?:diagnostic-)?init-script/
+  );
+});
+
 // ---------------------------------------------------------------------------
 // singleQuote() tests
 // ---------------------------------------------------------------------------
@@ -146,19 +169,22 @@ describe('generate() — shell header', function() {
 //      emits not_automated steps as skipped testcases. Non-hatch flows preserve
 //      their existing pass/fail behavior and prose when the count is zero.
 //   3. Runtime ownership hardening — every compiled flow now emits an owned
-  //      browser wrapper plus optional local-service preflight/start/stop wiring;
-  //      cleanup failures remain visible and fail an otherwise successful run.
+//      browser wrapper plus optional local-service preflight/start/stop wiring;
+//      cleanup failures remain visible and fail an otherwise successful run.
+//   4. Runtime-owned diagnostic hooks — the browser wrapper converts the
+//      optional newline-delimited E2E_DIAGNOSTIC_INIT_SCRIPTS environment value
+//      into repeated runtime-only --diagnostic-init-script arguments.
 describe('PR-38 legacy output parity', function() {
   test('non-SC-1032 flows stay byte-frozen except for declared drift', function() {
     const corpus = [
       {
         name: 'legacy-empty',
-        expected: 'e3a60504c0cc273a805f5614879c757756f0f7515db94a13437a39f82f38cf8f',
+        expected: 'dc4361356d159cc89959df603ebb4654ae795edef1f7cf1e4c01db18043752e4',
         resolved: { name: 'legacy-empty', description: 'No steps', steps: [] },
       },
       {
         name: 'legacy-single-site',
-        expected: 'ea7bb46aa383c15f78af0bcabdacadd97a7cc4e55ea1399e85e85e52a5291f08',
+        expected: 'a63e7001e59f9dc30855ef43009f286e7c8a1857e09eefc1d80ace24c44f4f50',
         resolved: {
           name: 'legacy-single-site',
           description: 'Representative legacy actions',
@@ -190,7 +216,7 @@ describe('PR-38 legacy output parity', function() {
       },
       {
         name: 'legacy-cross-site',
-        expected: '475e064e97128db5fb7a61ab4a423b20ebd8f45fcb0dc4fadf1c2646a7337a60',
+        expected: '4e2bf1cb048844aa3ed6c13511f278268b30b5a4d7316565d21b7bf137d72fb9',
         resolved: {
           name: 'legacy-cross-site',
           description: 'Named browser sessions',

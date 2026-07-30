@@ -195,6 +195,7 @@ Build from manifest + Phase 0 outputs:
 | `browser_runtime` | `${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js` (absolute path) |
 | `browser_run_id` | Fresh runtime identity for a new observer; unchanged across same-observer rounds |
 | `browser_receipt` | `<report_dir>/browser-ownership.json` (absolute path) |
+| `diagnostic_init_scripts` | Optional ordered absolute recorder paths; defaults to an empty list |
 | `app` | `e2e-debug`, or the basename of a validated managed `auth_profile` |
 | `auth_profile` | Detect from `.agent-browser/` profiles if auth is needed for the URL |
 | `headed` | Teams mode: `true` by default (user can see browser). Override with `--headless`. Subagent mode: `true` only if `--headed` flag provided. |
@@ -209,6 +210,9 @@ observer browser command uses the same `browser_runtime`, `browser_run_id`,
 `browser_receipt`, and `app`. The initial open is ready only when
 `browser_receipt.first_navigation.status: verified`; any other lifecycle result
 is infrastructure failure.
+Pass `diagnostic_init_scripts` unchanged to the observer. It appends repeated
+`--diagnostic-init-script "<absolute recorder path>"` options only to the owned
+runtime prefix, never to a bare browser CLI.
 
 ---
 

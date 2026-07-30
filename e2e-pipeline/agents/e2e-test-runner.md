@@ -38,6 +38,7 @@ The orchestrator skill dispatches this agent with the following fields. Parse th
 | `browser_runtime` | Required | Absolute path to the plugin's `bin/e2e-browser-runtime.js` |
 | `browser_run_id` | Required | Run identity shared by every browser runner in this orchestrator invocation |
 | `browser_receipt` | Required | Absolute receipt path under this runner's `report_dir` |
+| `diagnostic_init_scripts` | Optional | Ordered list of absolute recorder paths; defaults to an empty list |
 | `service_runtime` | Conditional | Absolute shared supervisor path when local services are orchestrator-owned |
 | `service_run_id` | Conditional | Service ownership identity |
 | `service_state_dir` | Conditional | Absolute service state/receipt directory |
@@ -57,6 +58,11 @@ Every browser operation uses this command prefix:
 runtime_base_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}" --receipt "{{browser_receipt}}"
 browser_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}" --receipt "{{browser_receipt}}"
 ```
+
+For every entry in optional `diagnostic_init_scripts`, append
+`--diagnostic-init-script "{{absolute_recorder_path}}"` to both prefixes before
+the browser subcommand. Pass these arguments only to `browser_runtime`; never
+translate them into a bare browser CLI call.
 
 In flow-managed mode, append the lifecycle binding to that prefix:
 

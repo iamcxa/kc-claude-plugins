@@ -88,6 +88,11 @@ the entire walkthrough:
 browser_command: node "<browser_runtime>" --run-id "<browser_run_id>" --app "<app>" --receipt "<browser_receipt>"
 ```
 
+`diagnostic_init_scripts` is optional and defaults to an empty list. Append one
+`--diagnostic-init-script "<absolute recorder path>"` per entry to this
+owned-runtime prefix before browser subcommands. Never attach recorders through
+a bare browser CLI.
+
 Before auth or walkthrough steps, require
 `browser_receipt.first_navigation.status: verified`. A reset, unbound profile
 snapshot, missing init probe, or empty first-navigation HAR is infrastructure

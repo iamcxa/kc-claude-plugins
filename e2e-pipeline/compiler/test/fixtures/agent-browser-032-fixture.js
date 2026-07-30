@@ -4,6 +4,7 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const vm = require('node:vm');
 
 const statePath = process.env.E2E_AGENT_BROWSER_032_STATE;
 if (!statePath) {
@@ -49,6 +50,12 @@ if (args.length === 1 && args[0] === '--version') {
 function option(name) {
   const index = args.indexOf(name);
   return index === -1 ? '' : args[index + 1] || '';
+}
+
+function options(name) {
+  return args.flatMap(function(value, index) {
+    return value === name ? [args[index + 1] || ''] : [];
+  });
 }
 
 const commands = new Set([
@@ -181,7 +188,7 @@ if (command === 'network' && commandArgs[0] === 'requests') {
 
 if (command === 'open') {
   const requestedProfile = option('--profile');
-  const initScript = option('--init-script');
+  const initScripts = options('--init-script');
   const targetUrl = commandArgs[0] || '';
   if (!state.active) {
     state.active = true;
@@ -217,7 +224,30 @@ if (command === 'open') {
       }
     }
     state.url = 'about:blank';
-    state.initRegistered = Boolean(initScript);
+    state.initScripts = initScripts;
+    state.initRegistered = initScripts.length > 0;
+    state.diagnosticGlobals = {};
+    initScripts.forEach(function(initScriptPath, index) {
+      if (index > 0 && index - 1 === state.dropDiagnosticIndex) return;
+      const context = {};
+      context.globalThis = context;
+      try {
+        vm.runInNewContext(fs.readFileSync(initScriptPath, 'utf8'), context);
+        for (const key of Object.getOwnPropertyNames(context)) {
+          if (key.startsWith('__E2E_DIAGNOSTIC_MARKER_')) {
+            state.diagnosticGlobals[key] = context[key];
+          }
+          if (
+            key.startsWith('__E2E_DIAGNOSTIC_PROJECTION_') &&
+            typeof context[key] === 'function'
+          ) {
+            state.diagnosticGlobals[key] = context[key]();
+          }
+        }
+      } catch (error) {
+        state.diagnosticGlobals['fixture-error-' + index] = error.message;
+      }
+    });
   } else {
     state.reused = true;
   }
@@ -228,17 +258,20 @@ if (command === 'open') {
       state.tabId = 't-reset';
       state.url = 'about:blank';
       state.initRegistered = false;
+      state.diagnosticGlobals = {};
       state.requests = [];
     } else if (state.resetOnNavigation === 'browser') {
       state.browserPid += 1000;
       state.tabId = 't-reset';
       state.url = 'about:blank';
       state.initRegistered = false;
+      state.diagnosticGlobals = {};
       state.requests = [];
     } else if (state.resetOnNavigation === 'page') {
       state.tabId = 't-reset';
       state.url = 'about:blank';
       state.initRegistered = false;
+      state.diagnosticGlobals = {};
       state.requests = [];
     } else {
       state.url = targetUrl;
@@ -261,10 +294,24 @@ if (command === 'open') {
 
 if (command === 'eval') {
   writeState(state);
+  const expression = commandArgs[0] || '';
+  const globalMatch = expression.match(
+    /globalThis\[("(?:[^"\\]|\\.)*")\]/
+  );
+  let result = Boolean(state.initRegistered);
+  if (globalMatch) {
+    const key = JSON.parse(globalMatch[1]);
+    if (Object.hasOwn(state.diagnosticGlobals, key)) {
+      result = state.diagnosticGlobals[key];
+      if (expression.includes('=== true')) result = result === true;
+    } else if (key.startsWith('__E2E_DIAGNOSTIC_')) {
+      result = expression.includes('=== true') ? false : undefined;
+    }
+  }
   process.stdout.write(
     JSON.stringify({
       success: true,
-      data: { result: Boolean(state.initRegistered) },
+      data: { result },
     }) + '\n'
   );
   process.exit(0);

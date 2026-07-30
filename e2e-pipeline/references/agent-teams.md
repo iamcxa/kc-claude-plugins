@@ -75,6 +75,10 @@ and `browser_receipt`. Its Browser Command Contract takes precedence over the
 legacy bare `agent-browser` examples in this shared reference. Route startup,
 commands, reuse, and close through that runtime with the dispatched identity,
 app, and receipt.
+`diagnostic_init_scripts` is optional and defaults to an empty list. Dispatch it
+unchanged; the teammate appends repeated
+`--diagnostic-init-script "<absolute recorder path>"` options only to
+`browser_command`, never to a bare browser CLI.
 For a fresh `/e2e-test` invocation, teardown the prior team and recreate members
 with the full invocation fields; only a same-invocation `RE-RUN` may reuse them.
 
