@@ -34,6 +34,18 @@ Stdlib only, no network, no model. Run from anywhere:
 
     python3 span-match-demo.py [--tree <path to kc-pr-flow>]
 
+The site table below is pinned to `f4f4840`, so `--tree` must name a `kc-pr-flow/`
+at that revision, not today's worktree. Materialize one:
+
+    git archive f4f4840 kc-pr-flow | tar -x -C /tmp/base-f4f4840
+    python3 span-match-demo.py --tree /tmp/base-f4f4840/kc-pr-flow
+
+Run against a later tree it exits non-zero on the first drifted span, by design —
+`S8` in particular was deleted from `SKILL.md` by merged PR #82. This file records
+what was demonstrated at `f4f4840` and is not re-pinned forward; the harness's own
+live table (`kc-pr-flow/scripts/review-ablation-spans.tsv`) is the one that tracks
+the tree.
+
 Exit code 0 means the demonstration held: keyword-grep ACCEPTS arm_keyword while
 span-match REJECTS it. Non-zero means the demonstration itself failed and the
 claim in the entity body is not supported.

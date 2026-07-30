@@ -209,8 +209,8 @@ jobs:
           shellcheck kc-pr-flow/scripts/review-ablation.test.sh
 
       # Test-plan items 1-4 only. The 27-run acceptance is operator-run and
-      # never in CI: it costs money and needs credentials. The PR carries the
-      # verdict JSON as its evidence instead.
+      # never in CI: it costs money and needs credentials. A slimming PR that
+      # relies on the harness carries the verdict JSON as its own evidence.
       - name: Run ablation harness tests
         run: bash kc-pr-flow/scripts/review-ablation.test.sh
 

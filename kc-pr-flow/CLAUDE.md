@@ -138,10 +138,21 @@ Bump the pin in the workflow and both commands together.
 
 **Judging a cut to `SKILL.md`.** Prose has no test: deleting instruction text leaves the shell
 suites green. Before a cut to instruction text that could change what the review flags, run
-`scripts/review-ablation.sh` for an A/B verdict against the frozen corpus. One verdict costs 18
-headless review runs (~$46), so it is for load-bearing cuts, not mechanical ones. The verdict compares
+`scripts/review-ablation.sh` for an A/B verdict against the frozen corpus. The verdict compares
 candidate-fingerprint sets, so it is blind to a cut that changes a finding's wording without
 moving its anchor.
+
+**Price it before you launch it, from measured runs.** One verdict is the pre-registered three-arm
+experiment — A, A′, B over three PRs at three repetitions, 27 headless review runs, which cannot be
+compressed or reordered without breaking the pre-registration. Three valid pilots measured
+`$9.76/run` on average, so budget on the order of **$264** for one verdict. An earlier `$2.53/run`
+spike is what made this look like a `~$46` job; that spike loaded an already-installed skill instead
+of the experiment arm, so it is not a cost sample. This harness therefore has **no acceptance
+verdict yet** — the pilot corpus gate passed and the price gate did not. Do not read
+`scripts/review-ablation.sh` as a check that has already certified anything; treat a first run as
+paid work needing an explicit budget. The measured figures and the park decision are recorded on
+entity `5b` (`docs/dev/.spacedock-state/skill-ablation-harness.md`, `### Budget gate — acceptance
+not started`).
 
 Read the verdict for what it says, in both directions — the verdict's `certifies` object states
 each one. `material: false` certifies **no detected difference on the measured dimensions (anchor
