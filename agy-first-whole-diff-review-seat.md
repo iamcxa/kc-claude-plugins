@@ -149,7 +149,7 @@ The `InteractiveCollationDecision/v1` is deliberately **not** classified `MISSIN
 substantial existing review decision and the primary input to this task. Its incomplete fit for
 landing synthesis is the reason to add a narrow adapter above it, not to replace it.
 
-## Approaches considered
+## Initial approaches considered (superseded after validation cycle 2)
 
 ### Recommended — one pure decision adapter
 
@@ -177,7 +177,7 @@ multiple authorities and depends on `vf`/`x0f`; none is needed to prove the core
 **Taking the cheap path:** the pure adapter. No captain scope cut is being made; the more thorough
 program is already explicitly out of scope.
 
-## Design determination
+## Initial design determination (superseded after validation cycle 2)
 
 `design: required` because this task decides a new contract/interface shape.
 
@@ -293,9 +293,9 @@ negative evidence says nothing authoritative about the new head.
 - §6c remains the interactive review-post authority. Humans remain the only merge authority.
 - A consumer may display the decision but must never translate `READY` into an automatic merge.
 
-## Acceptance criteria
+## Initial acceptance criteria (superseded after validation cycle 2)
 
-**AC-1 — One exact-head input yields a closed readiness verdict.**
+**Superseded criterion 1 — One exact-head input yields a closed readiness verdict.**
 Verified by: `bash kc-pr-flow/scripts/review-runtime.test.sh` plus a direct `bash kc-pr-flow/scripts/review-runtime.sh decide-merge-readiness --input-file <fixture>` CLI round trip extending the existing decision fixture surface beside `kc-pr-flow/skills/kc-pr-review/SKILL.md:1270-1388` and asserting the complete positive, negative, and incomplete outputs. Falsified by: changing a positive fixture's CI status to `FAIL` while retaining expected `READY`, or deleting the production negative-evidence branch, makes the focused suite fail.
 
 For one valid exact-head input, the adapter emits exactly one closed decision: all required positive
@@ -304,7 +304,7 @@ yields `NOT_READY/HIGH`; and incomplete required evidence yields `UNKNOWN/LOW`. 
 `origin/main@9cc0d1f` has no such command or schema, so the first contract invocation is the required
 RED.
 
-**AC-2 — Identity failures cannot produce `READY`.**
+**Superseded criterion 2 — Identity failures cannot produce `READY`.**
 Verified by: the negative fixture matrix extending `kc-pr-flow/scripts/review-runtime.test.sh:261`, including one-field-at-a-time head mutations and duplicate-key input, plus a direct CLI assertion that no case emits `READY`.
 Falsified by: removing any one same-head equality check makes its targeted mutation fixture emit `READY` and fail the suite.
 
@@ -313,7 +313,7 @@ duplicate/unknown key, or invalid required/status pair cannot produce `READY`; e
 case yields `UNKNOWN/LOW` with the matching reason, while unreadable input exits nonzero and the
 documented caller behavior is `UNKNOWN`.
 
-**AC-3 — The decision adds no post or merge authority.**
+**Superseded criterion 3 — The decision adds no post or merge authority.**
 Verified by: `bash kc-pr-flow/scripts/review-post.test.sh`, a merge-readiness CLI test with failing `gh`/network stubs and an empty call ledger, and a path-scoped diff assertion protecting `kc-pr-flow/skills/kc-pr-review/SKILL.md:1723` and the gate negatives at `kc-pr-flow/scripts/review-post.test.sh:227`.
 Falsified by: adding any `gh` call populates the ledger and fails the focused test; changing §6c changes the protected recipe assertion.
 
@@ -321,7 +321,7 @@ The new decision is read-only and advisory. It neither creates a posting receipt
 network client, `gh pr review`, or `gh pr merge`; the existing §6c human confirmation and
 review-post gates remain unchanged and green.
 
-**AC-4 — The implementation remains one bounded adapter.**
+**Superseded criterion 4 — The implementation remains one bounded adapter.**
 Verified by: `git diff --name-only origin/main...HEAD`, `git diff --check`, the focused runtime/post suites, and consistency searches anchored at `kc-pr-flow/CLAUDE.md:45`, `kc-pr-flow/README.md:50`, and `kc-pr-flow/reference/review-runtime.md:123` plus the changed executable/test paths.
 Falsified by: any changed path or command implementing a listed out-of-scope system, or any published claim that `READY` authorizes merge, fails scope review.
 
@@ -329,7 +329,7 @@ Implementation adds only the deterministic adapter to the existing review-runtim
 direct tests, and the approved `kc-pr-flow` documentation updates. It does not add agy routing,
 daemon behavior, live evidence fetching, repair loops, cross-repo adoption, or a second runtime.
 
-## Test plan
+## Initial test plan (superseded after validation cycle 2)
 
 1. **RED before GREEN**
    - Add the final contract fixtures and assertions first.
@@ -362,7 +362,7 @@ daemon behavior, live evidence fetching, repair loops, cross-repo adoption, or a
    - Re-run the two absence searches before implementation; if the `MISSING` premise collapsed on
      fresh `origin/main`, stop instead of adding a duplicate adapter.
 
-## Proposed documentation diff
+## Initial proposed documentation diff (superseded after validation cycle 2)
 
 The behavior is published through `kc-pr-flow` runtime documentation, so docs land with the
 adapter:
@@ -382,7 +382,7 @@ No `PRODUCT.md` or `ARCHITECTURE.md` change is proposed: this is a bounded plugi
 already documented in the plugin-owned published surfaces. The §6c review-post wording is not
 changed.
 
-## Spike determination
+## Initial spike determination (superseded after validation cycle 2)
 
 No spike needed. The risky mechanism is closed JSON validation plus deterministic jq projection,
 and the existing component already proves it:
@@ -393,7 +393,7 @@ and the existing component already proves it:
 
 Implementation still rechecks the load-bearing `MISSING` claim on fresh `origin/main` before RED.
 
-## Pre-mortem
+## Initial pre-mortem (superseded after validation cycle 2)
 
 If this ships exactly per spec and still fails, the most likely cause is **criteria that pass without
 delivering value**: a fixture can claim `READY` while one CI/test observation is not actually bound
@@ -974,3 +974,420 @@ contradictions, preserves a real producer's positive result, remains read-only, 
 regression-green. It still does not validate the whole decision language emitted by the existing
 producer. Because directly inconsistent capability records can receive `READY/HIGH`, the
 re-review verdict is **REJECTED** with no waiver recommendation.
+
+## Active ideation reset after validation cycle 2
+
+This section supersedes the initial approach, contract, acceptance criteria, test plan,
+documentation proposal, spike determination, and pre-mortem above. The implementation and
+validation reports remain as evidence; rejected code head
+`8224cd45d36a73c7a3bc4ff4063cc4ed17dcb6ff` is not a passing baseline.
+
+The captain approved the reset after two consecutive validation rejections. The captain-authored
+problem, bounded `kc-pr-flow` scope, advisory-only authority, and exclusions remain unchanged. The
+reset changes only how the readiness reducer obtains its typed review decision.
+
+### Why the architecture must change
+
+The rejected adapter accepts a caller-supplied `InteractiveCollationDecision/v1` and then tries to
+recognize the producer's language with a second field-by-field jq grammar. Cycle 1 found stale
+`review_key` and terminal-satisfaction gaps. The repair added those predicates. Cycle 2 then found
+three more producer-only rules:
+
+- duplicate retry lane references are rejected by `rehydrate-interactive` but accepted by the
+  readiness validator;
+- a digit-shaped but impossible manual-fallback timestamp is rejected by the producer's semantic
+  RFC3339 check but accepted by the readiness validator; and
+- the readiness validator accepts zero capabilities although the producer requires at least one
+  obligation.
+
+Two of those inconsistent decisions emitted
+`READY/HIGH/all-required-evidence-positive` through the real rejected CLI. The recurring failure is
+therefore not “three missing predicates.” It is a producer/consumer language split: every copied
+validator can lag the producer again.
+
+### Live merge-target reverse-recovery refresh
+
+Refresh pin: `origin/main@6f51c552552cee56b09fc2b60983adbcedb7243d`, fetched on
+2026-07-31 before this reset.
+
+The `kc-pr-flow` delta from the original audit pin
+`9cc0d1faa49e786837342b88062181460f037ac3` to the live merge target is release metadata only:
+
+```text
+M kc-pr-flow/.claude-plugin/plugin.json
+M kc-pr-flow/.codex-plugin/plugin.json
+M kc-pr-flow/CHANGELOG.md
+```
+
+Neither `review-runtime.sh` nor its tests changed on the merge target. Re-running the original
+domain-vocabulary and structural searches against live `origin/main` still finds no
+`READY | NOT_READY | UNKNOWN` executable verdict and no merge-readiness command. It finds only the
+prose phrase in `reference/learned-patterns.md:531`.
+
+| Layer / seam | Classification at live merge target | Evidence and reset consequence |
+|---|---|---|
+| Terminal receipt replay, policy validation, and exact identity | `WORKING_UNIT_UNPROVEN` | `origin/main:kc-pr-flow/scripts/review-runtime.sh:2068-2314` rejects malformed receipt/policy, moved identity, impossible retry/fallback state, semantically invalid manual timestamps, and unbound or unverifiable evidence. Keep it as the only review-language authority. |
+| `InteractiveCollationDecision/v1` projection | `WORKING_UNIT_UNPROVEN` | `origin/main:kc-pr-flow/scripts/review-runtime.sh:2316-2362` constructs the decision only after the producer validations pass. The active design consumes this in-process return value and never reparses a caller-authored decision. |
+| Decision-only validators | `EXISTS_BROKEN` | The existing skill recipe at `kc-pr-flow/skills/kc-pr-review/SKILL.md:1302-1388` and rejected readiness code at `review-runtime.sh:2439-2603` describe weaker languages than the producer. The readiness reset removes its copy; changing the interactive recipe is not required for this bounded seam because its decision already comes directly from the producer call. |
+| Exact-head merge-readiness reducer on `origin/main` | `MISSING` | Live-main searches find no command or schema. Keep the narrow reducer, but feed it only the producer's successful in-process output. |
+| Rejected readiness reducer at `8224cd4` | `EXISTS_BROKEN` | The verdict table itself is deterministic, but its review input can be producer-impossible and still reach `READY`. Delete the duplicated review-decision grammar and change the input boundary. |
+| Review-post and human merge authority | `WORKING_UNIT_UNPROVEN` | The existing §6c and `review-post.sh` boundaries remain outside this implementation. No reset approach may add posting, authorization, or merge behavior. |
+
+The load-bearing classification is one broken seam above a recovered producer, not a missing
+producer. Implementation must re-fetch `origin/main` and stop if either runtime path changed since
+this pin.
+
+### Approaches compared
+
+#### Recommended — compose readiness directly with the existing producer
+
+Keep `review_runtime_rehydrate_interactive` as the sole canonical authority for the review
+decision. `decide-merge-readiness` accepts caller-supplied CI, test, and observed-head observations
+plus the same terminal receipt, policy, repository worktree, and exact identity arguments already
+accepted by `rehydrate-interactive`. Inside one runtime invocation it:
+
+1. safe-snapshots and validates the closed observation input;
+2. calls `review_runtime_rehydrate_interactive` exactly once with the supplied producer sources;
+3. maps any producer nonzero/invalid result to `UNKNOWN/LOW/invalid-review-evidence`;
+4. accepts review evidence only from the successful in-process decision returned by that call;
+5. binds that decision and the observations into the canonical input hash; and
+6. applies the existing exact-head negative/incomplete/positive verdict table.
+
+The external input has no `review_decision` member and no decision-file option. Unknown keys fail
+closed. The accepted review language is therefore the successful output language of the producer
+itself, not a consumer approximation of it.
+
+This is the cheapest sound reset because both functions already live in
+`kc-pr-flow/scripts/review-runtime.sh`; implementation removes the large copied decision grammar
+and threads the producer's existing arguments into one command. It needs no new runtime, schema
+authority, state store, secret, model, network access, or daemon.
+
+#### Not taken — shared canonical post-projection validator
+
+Extract one decision-only validator, run every producer result through it before emission, and call
+the same function from readiness. This is smaller in apparent call-surface change, and it would
+close the three cycle-2 fields if the validator required a non-empty capability set, unique retry
+lane references, and semantic timestamps.
+
+It is not the cheapest complete solution. Some producer guarantees bind a terminal to source-only
+facts that the projected decision does not retain: a lane reference must name the matching replay
+lane/result, finding references must come from replay findings, and evidence pointers must resolve
+against the supplied repository. A decision-only validator either accepts a broader language than
+the producer or enlarges the decision with enough source material to replay those checks. Moving
+all producer rules into a post-projection schema would also require reworking the typed interactive
+recipe's separate validator. That is a wider refactor than direct composition.
+
+#### Not taken — producer-generated validated receipt
+
+Wrap the decision in a new receipt containing a schema version, canonical decision hash, and
+producer/source hashes, then require readiness to consume the receipt. A self-asserted receipt is
+not provenance: any caller that can forge the decision can also recompute its unkeyed hashes and
+set a `validated` field. Making the receipt authoritative requires one of:
+
+- a secret/signature authority;
+- a protected durable state lookup; or
+- replaying the producer sources and byte-comparing the decision.
+
+The first two add new authority/runtime state and are out of scope. The third collapses to the
+recommended direct-composition design plus an unnecessary envelope. The receipt therefore adds
+schema and lifecycle cost without closing the gap more cheaply.
+
+**Fastest path:** add the three cycle-2 predicates to the copied jq validator. Rejected: it is the
+third field-by-field patch and leaves the language split intact.
+
+**Smallest cut that satisfies the active ACs:** remove caller-supplied review decisions and compose
+the reducer with the existing producer in the same runtime invocation.
+
+**Taking the cheap path:** direct in-process composition. No captain scope cut is being made. The
+more thorough signed/durable receipt program is unnecessary and explicitly excluded.
+
+### Design determination
+
+`design: required` because this reset changes the readiness command and input contract.
+
+#### External observation contract
+
+The caller supplies one closed `kc-pr-flow.merge-readiness-observations/v1` object:
+
+```json
+{
+  "schema": "kc-pr-flow.merge-readiness-observations/v1",
+  "observed_head_sha": "2222222222222222222222222222222222222222",
+  "ci": {
+    "required": true,
+    "status": "PASS",
+    "head_sha": "2222222222222222222222222222222222222222",
+    "evidence_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "tests": {
+    "required": true,
+    "status": "PASS",
+    "head_sha": "2222222222222222222222222222222222222222",
+    "evidence_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  }
+}
+```
+
+Status rules remain `PASS | FAIL | PENDING | UNKNOWN | UNAVAILABLE | NOT_REQUIRED`;
+`NOT_REQUIRED` is valid only when `required:false`. Duplicate members, unknown keys, malformed
+hashes, and contradictory status/required pairs are invalid.
+
+The command reuses the producer's existing source arguments:
+
+```text
+decide-merge-readiness
+  --observations-file FILE
+  --event-file FILE
+  --policy-file FILE
+  --repo-worktree DIR
+  --repo OWNER/REPO
+  --pr N
+  --base SHA
+  --head SHA
+  --config-hash HASH
+  --review-key HASH
+  --run-id ID
+```
+
+There is deliberately no `--decision-file` and no `review_decision` JSON member. The exact
+identity flags are passed unchanged to `review_runtime_rehydrate_interactive`. A successful
+producer result must repeat that identity exactly; a nonzero producer result or identity mismatch
+maps to `UNKNOWN/LOW` and cannot reach the verdict table.
+
+#### Internal binding and output
+
+After a successful producer call, the runtime constructs an internal canonical object:
+
+```json
+{
+  "schema": "kc-pr-flow.merge-readiness-binding/v1",
+  "observations": "<canonical observation object>",
+  "review_decision": "<successful in-process producer output>"
+}
+```
+
+`input_sha256` binds the canonical bytes of that internal object. The public
+`MergeReadinessDecision/v1` output shape and verdict/confidence vocabulary remain unchanged:
+`READY/HIGH`, `NOT_READY/HIGH`, or `UNKNOWN/LOW`, sorted unique reasons, and
+`advisory_only:true`.
+
+The ordered verdict table remains:
+
+1. malformed observations or producer rejection → `UNKNOWN/LOW`;
+2. observed/CI/test head mismatch with the producer identity → `UNKNOWN/LOW`;
+3. same-head CI/test failure or validated review blocker → `NOT_READY/HIGH`;
+4. required evidence incomplete or validated review incomplete → `UNKNOWN/LOW`;
+5. all required observations positive and validated review approval-eligible → `READY/HIGH`;
+6. unreachable remainder → `UNKNOWN/LOW/inconsistent-input`.
+
+## Acceptance criteria
+
+**AC-1 — Only producer output can drive review readiness.**
+
+The readiness command accepts no caller-supplied review decision. It invokes the existing
+`review_runtime_rehydrate_interactive` producer exactly once and uses only that successful
+in-process result. Duplicate retry lane identity, impossible manual timestamp, empty obligations,
+malformed/unbound manual evidence pointers, and the two cycle-1 contradictions cannot produce
+`READY`.
+
+Verified by: focused additions to `bash kc-pr-flow/scripts/review-runtime.test.sh --case
+merge-readiness` that run the real producer path, mutate the producer receipt/policy for every
+cycle-1 and cycle-2 counterexample, and require `UNKNOWN/LOW/invalid-review-evidence`; a contract
+negative adds `review_decision` to the observation JSON and requires
+`UNKNOWN/LOW/invalid-input`. Falsified by: replacing the producer call with a caller-provided
+decision makes the exact mutation matrix red. Baseline: at rejected head `8224cd4`, duplicate lane
+identity and impossible timestamp both emitted `READY/HIGH`; the active proof requires zero such
+false positives.
+
+**AC-2 — Exact-head evidence yields the closed verdict table.**
+
+One real producer-derived decision plus same-head observations yields `READY/HIGH` only when every
+required signal is positive. A same-head CI failure, test failure, or validated review blocker
+yields `NOT_READY/HIGH`; pending/unavailable required evidence or a validated review gap yields
+`UNKNOWN/LOW`; any observed/CI/test head mismatch yields `UNKNOWN/LOW`.
+
+Verified by: the focused truth-table matrix plus a direct regular-file CLI round trip that invokes
+the complete new command, parses stdout with `jq`, and checks the canonical internal binding hash.
+Falsified by: deleting one negative, incomplete, or identity branch makes its isolated fixture
+return the wrong verdict. End-value measurement: the cycle-2 producer-inconsistent false-positive
+count moves from 2 to 0 while a real producer positive remains `READY/HIGH`.
+
+**AC-3 — The decision remains advisory and side-effect free.**
+
+The reset performs no model, network, GitHub, posting, authorization, daemon, repair, or merge
+operation. `READY` remains advisory; §6c and human merge authority are unchanged.
+
+Verified by: `bash kc-pr-flow/scripts/review-post.test.sh` plus the real focused CLI with failing
+`gh`, `curl`, `wget`, `nc`, `ssh`, and `git` stubs and an empty call ledger; compare
+`kc-pr-flow/skills/kc-pr-review/SKILL.md`, `review-post.sh`, and `review-post.test.sh` to
+`origin/main`, anchored at the §6c authority in
+`kc-pr-flow/skills/kc-pr-review/SKILL.md:1723` and the posting-gate negatives in
+`kc-pr-flow/scripts/review-post.test.sh:227`. Falsified by: any call-ledger entry or protected-path
+diff fails the criterion.
+
+**AC-4 — One runtime cut replaces duplicated validation.**
+
+The implementation removes the readiness adapter's field-by-field
+`InteractiveCollationDecision/v1` grammar and adds no second decision validator or validation
+receipt. The whole feature remains one existing-runtime behavior with focused tests and plugin
+docs.
+
+Verified by: `bash kc-pr-flow/scripts/review-runtime.test.sh --case merge-readiness` plus
+`git diff --name-only origin/main...HEAD`, limited to `kc-pr-flow/scripts/review-runtime.sh`,
+`kc-pr-flow/scripts/review-runtime.test.sh`,
+`kc-pr-flow/reference/review-runtime.md`, `kc-pr-flow/README.md`, and
+`kc-pr-flow/CLAUDE.md`; searches show no readiness-side `def interactive_decision`, decision-file
+option, signature/state authority, or new executable, with the replacement boundary anchored at
+`kc-pr-flow/scripts/review-runtime.sh:2365` and its focused test entry at
+`kc-pr-flow/scripts/review-runtime.test.sh:118`. Run the focused/default runtime suites,
+review-post suite, pinned ShellCheck v0.9.0, Bash syntax, and `git diff --check`. Falsified by: a
+caller-supplied decision reaches the reducer, a second validator remains, or an excluded path or
+authority enters the diff.
+
+### RED proof and test plan
+
+1. **Pin the rejected RED baseline.**
+   - Fetch `origin/main`; pin product head `8224cd45...` and live base.
+   - Add the final source-mutation matrix before production edits.
+   - Against `8224cd4`, record that duplicate retry lane identity and impossible timestamp violate
+     AC-1 by emitting `READY/HIGH`; also record the new observation-only CLI contract failure.
+   - This is the active RED. The old missing-command RED is historical evidence only.
+2. **Producer-only review input.**
+   - Positive fixture must be created by the real `rehydrate-interactive` source path.
+   - Mutate source policy/receipt for coordinated stale key, unsatisfied-clean,
+     satisfied-incomplete, duplicate retry lane, impossible timestamp, empty obligations,
+     malformed pointer, pointer identity drift, and evidence verification failure.
+   - Every producer rejection maps to `UNKNOWN/LOW/invalid-review-evidence`.
+   - Supplying `review_decision`, `--decision-file`, or any unknown key/option is rejected.
+3. **Observation schema and identity.**
+   - Exercise every status enum, duplicate/unknown members, malformed hashes, invalid
+     required/status pairs, and one-at-a-time observed/CI/test head mutations.
+4. **Verdict table.**
+   - Real producer all-pass → `READY/HIGH`.
+   - Independent CI fail, test fail, and producer-derived review blocker →
+     `NOT_READY/HIGH`.
+   - Exact negative plus another pending signal stays `NOT_READY/HIGH`.
+   - Pending/unknown/unavailable required evidence and producer-derived required gap →
+     `UNKNOWN/LOW`.
+5. **Canonical binding.**
+   - Pretty/reordered observation JSON and the same producer result hash identically.
+   - Changing either an observation or producer source changes the internal binding hash.
+6. **Purity and regression.**
+   - Failing transport stubs plus empty call ledger.
+   - `bash kc-pr-flow/scripts/review-runtime.test.sh --case merge-readiness`
+   - `bash kc-pr-flow/scripts/review-runtime.test.sh --case interactive-decision`
+   - `bash kc-pr-flow/scripts/review-runtime.test.sh`
+   - `bash kc-pr-flow/scripts/review-post.test.sh`
+   - Bash syntax, pinned ShellCheck v0.9.0, `git diff --check`, exact changed-path review.
+7. **CLI E2E.**
+   - Invoke the committed command with real regular receipt, policy, repository worktree,
+     exact identity, and observation files; parse its decision and independently recompute the
+     internal binding hash.
+   - Browser/full-stack E2E remains skipped because there is no UI, service, or remote mutation.
+
+### Proposed documentation diff
+
+- `kc-pr-flow/reference/review-runtime.md`
+  - Before at rejected head: `decide-merge-readiness --input-file FILE` accepts a closed object
+    containing a caller-supplied review decision.
+  - After: `decide-merge-readiness` accepts closed CI/test/head observations plus the existing
+    terminal receipt, policy, repository worktree, and exact identity arguments; it calls
+    `rehydrate-interactive` in-process and accepts no decision file or decision JSON member.
+  - Add: producer rejection maps to advisory `UNKNOWN/LOW`; the canonical binding hashes the
+    successful producer output together with observations.
+- `kc-pr-flow/CLAUDE.md`
+  - Replace the claim that a mutation matrix validates a caller-provided decision with:
+    “Readiness consumes only the successful in-process `rehydrate-interactive` result; callers
+    supply observations and producer sources, never a review decision.”
+- `kc-pr-flow/README.md`
+  - Preserve the three verdict/confidence pairs and human-only merge authority.
+  - Add the bounded provenance statement: invalid producer sources or observations yield
+    `UNKNOWN`; no caller-authored decision can reach `READY`.
+
+No `PRODUCT.md`, `ARCHITECTURE.md`, §6c, skill recipe, review-post, daemon, or release metadata
+change is proposed.
+
+### Risk spike
+
+Read-only spike completed on rejected head `8224cd4`:
+
+- `review_runtime_rehydrate_interactive` and `review_runtime_decide_merge_readiness` are functions
+  in the same Bash runtime, so the reducer can capture the producer result and status without a
+  new executable or process authority.
+- The producer's current source validation already holds the cycle-2 rules at
+  `review-runtime.sh:2202` (non-empty obligations), `:2229` (unique lane references), and
+  `:2284-2286` (semantic timestamp), plus pointer shape/identity/content verification at
+  `:2291-2314`.
+- `bash kc-pr-flow/scripts/review-runtime.test.sh --case interactive-decision` passed
+  **51/0**. Its mutation matrix independently covers impossible timestamps, missing obligations,
+  fallback shape, pointer identity/content drift, retries, and exact identity.
+
+Spike result: direct composition relies on an existing exercised mechanism. No implementation
+spike or new schema authority is needed. The remaining risk is argument/input plumbing and
+canonical binding, covered by focused RED/GREEN and the real CLI round trip.
+
+### Fresh appetite and implementation sizing
+
+- **Ideation-declared estimate:** one implementation worker, **90 minutes**.
+- **Declared tolerance:** **15 minutes**. At **105 minutes**, stop and park with the focused RED,
+  current diff, and explicit open finding; do not compress validation or add another patch cycle.
+- **Hard stop/re-cut:** any need for a second runtime, signature/secret/state authority, live
+  GitHub fetching, daemon/posting changes, model routing, cross-repo adoption, or a caller-supplied
+  review-decision validator.
+- **Sizing:** ONE worker. This is one behavior seam and one RED→GREEN loop. No extra reviewer or
+  parallel dispatch is included in the appetite.
+
+### Active pre-mortem
+
+If this ships exactly per spec and still fails, the most likely cause is a **hidden assumption**:
+the reducer may accidentally hash only observations rather than the exact successful producer
+decision, allowing two distinct review results to share one advertised input binding.
+
+## Stage Report: ideation
+
+TL;DR — Cycle 2 is re-cut around one structural invariant: merge readiness no longer accepts or
+validates caller-supplied `InteractiveCollationDecision/v1`. The command composes directly with the
+existing `rehydrate-interactive` producer in the same runtime invocation, so only a successful
+producer result can drive `READY`, `NOT_READY`, or review-derived `UNKNOWN`. This removes the
+duplicated consumer language instead of adding a third field patch.
+
+- DONE: Treated rejected head `8224cd4` and its validation report as failure evidence, not a
+  baseline.
+- DONE: Refreshed `origin/main@6f51c55`; confirmed intervening `kc-pr-flow` changes are only
+  release manifests and changelog, with no runtime overlap.
+- DONE: Re-ran the reverse-recovery trace and classified the producer/projection
+  `WORKING_UNIT_UNPROVEN`, live-main readiness `MISSING`, and rejected decision-only consumer
+  `EXISTS_BROKEN`.
+- DONE: Compared direct producer composition, a shared post-projection validator, and a
+  producer-generated receipt.
+- DONE: Chose the cheap sound path: direct in-process composition with no caller decision member
+  or option. Rejected the decision-only validator because source-only producer guarantees are not
+  retained in the projection; rejected the receipt because unkeyed self-hashes add no provenance.
+- DONE: Defined the closed observation contract, reused producer source arguments, internal
+  producer+observation binding, ordered verdict table, and advisory-only output.
+- DONE: AC-1 — Re-cut producer-only review evidence around every cycle-1/cycle-2 counterexample.
+- DONE: AC-2 — Re-cut the exact-head verdict table around zero producer-inconsistent false
+  positives while preserving a real producer positive.
+- DONE: AC-3 — Preserved the advisory-only decision, §6c, empty side-effect ledger proof, and
+  human-only merge authority.
+- DONE: AC-4 — Bounded the reset to one existing runtime, its focused tests, and plugin docs, with
+  the duplicated consumer validator removed and no new receipt/runtime authority.
+- DONE: Defined a RED against exact rejected head `8224cd4`, not untouched main: both proven
+  producer-inconsistent positives and the new observation-only boundary must fail before GREEN.
+- DONE: Recorded the focused producer-mutation test plan, real CLI E2E, purity stubs, regression
+  gates, doc before/after wording, risk spike, and implementation boundary.
+- DONE: Ran the producer spike at `51 passed, 0 failed`, covering the existing source-validation
+  authority reused by the reset.
+- DONE: Set a fresh one-worker 90-minute appetite with 15-minute tolerance and explicit stop/re-cut
+  exclusions.
+- SKIPPED: Browser/full-stack E2E because the surface is a local CLI with no UI, service, or remote
+  mutation.
+- SKIPPED: Product code changes; ideation changes only this task state.
+
+### Summary
+
+The active design makes `rehydrate-interactive` the single review-language authority. The
+readiness reducer receives observations and producer sources, obtains the decision in-process,
+binds that exact result into its input hash, and never accepts a caller-authored decision. This is
+the smallest bounded reset that structurally prevents another producer/consumer validator drift
+while preserving advisory-only human merge authority.
