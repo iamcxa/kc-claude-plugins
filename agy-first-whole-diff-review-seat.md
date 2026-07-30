@@ -827,3 +827,149 @@ The exact-head advisory adapter now accepts only identities bound to their deriv
 only capability terminals consistent with the existing typed producer's attempt, fallback, and
 satisfaction rules. Both validator-reproduced false recommendations are closed, a real producer
 output remains positive, the code head is pushed, and the correction is ready for fresh validation.
+
+## Stage Report: validation
+
+TL;DR — **REJECTED** on re-review at exact code head
+`8224cd45d36a73c7a3bc4ff4063cc4ed17dcb6ff`. The two cycle-1 counterexamples are
+closed and a real `rehydrate-interactive` decision remains `READY/HIGH`. The broader producer
+compatibility claim is still false: two fresh inconsistent fixtures that the existing producer
+rejects — duplicate retry lane identity and an impossible manual-fallback timestamp — both emit
+`READY/HIGH/all-required-evidence-positive`. The committed positive unit fixture also has zero
+capabilities even though the producer requires at least one obligation.
+
+- DONE: Pin the exact product and base surfaces.
+  Product `HEAD` and upstream both equal
+  `8224cd45d36a73c7a3bc4ff4063cc4ed17dcb6ff`; current `origin/main` is
+  `dab82f697120f26de9e653d0b6561d66d67d73ba`; the merge-base is
+  `9cc0d1faa49e786837342b88062181460f037ac3`. Current-main changes overlap none
+  of the five feature paths. The product worktree remained clean.
+- FAILED: AC-1 — the closed verdict table still accepts invalid positive evidence.
+  The expected positive/negative/incomplete truth table passes **66/0**, and a real producer
+  decision passes both the focused and direct regular-file CLI paths. Fresh inconsistent fixtures
+  with duplicate retry lane identity and an impossible timestamp each nevertheless emitted
+  `READY/HIGH`, contradicting the documented rule that invalid evidence emits `UNKNOWN/LOW`.
+- FAILED: AC-2 — identity binding is repaired, but invalid typed decisions can still emit `READY`.
+  Coordinated repository drift now returns `UNKNOWN/LOW/invalid-input`; the runtime re-derives
+  `review_key` at `review-runtime.sh:2393-2405,2608-2613`, and the independent
+  `review-key` command derived `0fc1eb5c...3f09b` for `other/repo`. The prior
+  unsatisfied-clean and satisfied-incomplete mutations also fail closed. AC-2 remains failed
+  because `review-runtime.sh:2509-2514` omits the producer's unique-lane rule at `:2229`,
+  while `:2480-2481` checks timestamp shape but omits the semantic RFC3339 validation at
+  `:2284-2286`.
+- DONE: AC-3 — authority remains read-only and local.
+  Focused command stubs retained an empty call ledger. The base/head blobs for
+  `kc-pr-flow/skills/kc-pr-review/SKILL.md`, `review-post.sh`, and `review-post.test.sh`
+  match; the fresh review-post suite returned **156/0**. No fetch, network, post,
+  authorization, or merge path was added.
+- DONE: AC-4 — scope remains the approved adapter.
+  The whole feature diff is exactly five paths, **760 insertions / 5 deletions**. The
+  correction is exactly the runtime and its test. Current `origin/main` has zero overlap with
+  those five paths, and no daemon, routing, repair-loop, manifest, cross-repo, or merge
+  implementation entered the diff.
+- DONE: Prove both cycle-1 repairs independently.
+  The focused suite returned **66/0**. Replacing the review-key equality guard with an
+  unconditional success returned **65/1**, failing only coordinated identity drift. Treating a
+  claimed clean terminal as satisfied returned **65/1**, failing only the unsatisfied-required
+  capability case. Both mutations were isolated scratch copies.
+- DONE: Prove real producer compatibility.
+  `review-runtime.test.sh:606-644` invokes the actual `rehydrate-interactive` producer and feeds
+  its result through `decide-merge-readiness`; focused merge readiness returned **66/0** and
+  interactive decision returned **51/0**. A separately preserved **8,893-byte regular-file**
+  producer fixture emitted `READY/HIGH/all-required-evidence-positive`, and its canonical input
+  hash matched
+  `5999f4450557467a6272854587160c5628b49024d4a4116eee787a73d60abd1b`.
+- FAILED: Attack producer consistency beyond the supplied regressions.
+  An isolated test-only extension of the focused matrix returned **66 passed / 2 failed**:
+  duplicate attempts using `types-1` for both ordinals and a manual clean fallback dated
+  `2026-99-99T99:99:99Z` each actually returned `READY/HIGH/all-required-evidence-positive`
+  instead of `UNKNOWN/LOW/invalid-input`. In addition, the committed positive fixture at
+  `review-runtime.test.sh:127-145` has `capabilities:[]` and is expected to be `READY` at
+  `:182-188`, while `rehydrate-interactive` requires a non-empty obligation array at
+  `review-runtime.sh:2202`.
+- DONE: Reproduce the canonical-hash RED proof against untouched main.
+  The current focused test against the base runtime exited 1 at **17 passed / 49 failed**.
+  The reordered/pretty canonical-value precondition passed; the input-binding assertion failed
+  with expected `25e92b...022b` and actual empty. Exact head returned **66/0**.
+- DONE: Run complete and static validation.
+  Merge readiness **66/0**; interactive decision **51/0**; complete runtime **371/0**;
+  review-post **156/0**. Bash syntax, `git diff --check`, exact changed-path checks, and
+  CI-pinned ShellCheck v0.9.0 all exited 0.
+- DONE: Measure executable diff coverage.
+  Full-suite Bash xtrace observed **63/72 changed shell trace points = 87.50%**. The
+  denominator excludes comments, braces, continuation-only lines, and embedded jq program
+  bodies, counting each shell command that executes a jq program once. The nine uncovered
+  points are the unexpected duplicate-check return, malformed-canonical-input fallback, and
+  CLI argument-error branches at `review-runtime.sh:2432,2435-2436,3144-3145,3151-3152,
+  3157-3158`.
+- DONE: Run the mandatory different-vendor read-only review.
+  Antigravity `agy` 1.1.8 reviewed the exact
+  `9cc0d1f...8224cd4` five-path diff in sandbox/plan mode and returned `No findings.`
+  There were no citations to verify. The local adversarial counterexamples remain authoritative
+  for this verdict.
+- FAILED: Reconcile documentation absolutes.
+  `reference/review-runtime.md:129,135-149`, `README.md:68-74`, and
+  `CLAUDE.md:59-64` promise a validated producer decision and say invalid evidence cannot emit
+  `READY`; the two direct inconsistent-fixture results disprove those absolutes at this head.
+- SKIPPED: Browser/full-stack E2E.
+  This change has no UI, service, or remote mutation. The real regular-file CLI round trip is the
+  applicable E2E surface and passed.
+
+### Material finding
+
+1. **HIGH — the nested decision validator still accepts producer-impossible capability
+   records and can label them `READY/HIGH`.**
+   At `review-runtime.sh:2509-2514`, retry ordinals and the first transient result are checked,
+   but lane-result references need not be unique as required by the producer at `:2229`.
+   At `:2480-2481`, `recorded_at` needs only match a digit-shaped regex, whereas the producer
+   invokes semantic RFC3339 validation at `:2284-2286`. The same validator permits an empty
+   `capabilities` array at `:2497-2499`, although producer policy requires at least one
+   obligation at `:2202`. All three gaps can support an otherwise positive decision; the first
+   two were exercised through the real CLI and both returned
+   `READY/HIGH/all-required-evidence-positive`.
+
+Required repair: share or faithfully mirror one complete post-projection validator from
+`rehydrate-interactive`; at minimum require a non-empty capability set, unique retry lane
+references, and semantic manual-result timestamps, then add direct fail-closed mutations for each.
+Because manual fallback evidence is carried in the decision, its closed pointer shape and identity
+binding should be checked by that shared validator as well.
+
+### Evidence block
+
+- Lenses: correctness FAIL (1 HIGH finding with three producer-rule gaps); silent-failure FAIL
+  (inconsistent fixtures become positive without diagnostics); type-design FAIL (the consumer's
+  accepted language is wider than its named producer type); authority/scope PASS. Security and
+  resource-lifecycle triggers did not fire for this local contract-consistency re-review.
+- Diff coverage: **87.50%** — 63/72 changed shell trace points under the complete 371-case
+  runtime suite.
+- Adversarial: targeted guard removal **65/1**; terminal-satisfaction widening **65/1**;
+  fresh inconsistent-fixture matrix **66/2**, with both failures caused by unexpected
+  `READY/HIGH`.
+- Cross-model: `agy` 1.1.8 returned `No findings.` for the exact five-path diff; no citations
+  existed, and no cross-model finding was relied on.
+- E2E: PASS for the positive path — a real producer artifact in a regular file emitted
+  `READY/HIGH` and matched its canonical hash. FAIL for fail-closed compatibility — two
+  producer-inconsistent regular inputs also emitted `READY/HIGH`.
+
+### Feedback Cycles
+
+- Cycle 2: REJECTED — exact repaired-head re-review; both cycle-1 defects closed, broader
+  producer-compatibility gap remains; AC and design unchanged
+
+### `--ac-scan`
+
+```text
+stage=validation
+ac=AC-1 unevidenced=false citations=3
+ac=AC-2 unevidenced=false citations=4
+ac=AC-3 unevidenced=false citations=3
+ac=AC-4 unevidenced=false citations=2
+```
+
+### Summary
+
+The repaired head correctly binds `review_key`, rejects the two supplied terminal-state
+contradictions, preserves a real producer's positive result, remains read-only, and is fully
+regression-green. It still does not validate the whole decision language emitted by the existing
+producer. Because directly inconsistent capability records can receive `READY/HIGH`, the
+re-review verdict is **REJECTED** with no waiver recommendation.
