@@ -12,16 +12,20 @@ all teammates in that run:
 BROWSER_RUNTIME="${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js"
 BROWSER_RUN_ID=$(node "$BROWSER_RUNTIME" new-run-id)
 APP="<mapping app>"
+BROWSER_RECEIPT="<absolute report dir>/browser-ownership-$APP.json"
 
 e2e_browser() {
-  node "$BROWSER_RUNTIME" --run-id "$BROWSER_RUN_ID" --app "$APP" "$@"
+  node "$BROWSER_RUNTIME" --run-id "$BROWSER_RUN_ID" --app "$APP" \
+    --receipt "$BROWSER_RECEIPT" "$@"
 }
 ```
 
 The runtime creates an owned daemon namespace, selects the app session, discovers
 and pins the installed Chrome for Testing executable, and ignores inherited browser
-provider/config attachment settings. A fresh replay gets a fresh `BROWSER_RUN_ID`;
-teammates within one run reuse the same ID.
+provider/config attachment settings. On first open it verifies the daemon/session
+diagnostics and Chrome process/profile binding, requires `reused=false`, and writes
+the receipt. A fresh replay gets a fresh `BROWSER_RUN_ID`; teammates within one
+run reuse the same ID and matching receipt.
 
 Do not use `--auto-connect`, `--cdp`, or `connect`. The runtime rejects those escape
 hatches and rejects executables that are not Chrome for Testing. Close with
@@ -46,9 +50,11 @@ EPHEMERAL_PROFILE=$(node -e \
 e2e_flow_browser() {
   node "$BROWSER_RUNTIME" \
     --run-id "$BROWSER_RUN_ID" --app "$APP" \
+    --receipt "$BROWSER_RECEIPT" \
     --auth-mode flow-managed \
     --canonical-profile "$CANONICAL_PROFILE" \
-    --profile "$EPHEMERAL_PROFILE" "$@"
+    --profile "$EPHEMERAL_PROFILE" \
+    --receipt "$BROWSER_RECEIPT" "$@"
 }
 
 e2e_flow_browser --headed open <url>
@@ -131,6 +137,7 @@ e2e_browser trace start                         # Start recording (AFTER open)
   --browser-runtime "$BROWSER_RUNTIME" \
   --browser-run-id "$BROWSER_RUN_ID" \
   --app "$APP" \
+  --browser-receipt "$BROWSER_RECEIPT" \
   --trace-path "<abs-path>/trace.zip" \
   --flow-verdict "<PASS|PARTIAL|FAIL>"             # Bounded stop + validity gate
 e2e_browser console --json                      # Console messages as JSON
@@ -141,8 +148,9 @@ e2e_browser eval "<js>"                         # Execute JavaScript in page con
 e2e_browser eval -b "<base64>"                  # Execute base64-encoded JS (reliable escaping)
 ```
 
-Pass ownership as the three separate argv fields shown above. They are all-or-none. The finalizer invokes the executable directly with
-`--run-id`, `--app`, and the trace/close command; it never accepts or evaluates a shell command
+Pass the runtime, run ID, and app as all-or-none argv fields, and pass the
+matching receipt for every new consumer. The finalizer invokes the executable directly with
+`--run-id`, `--app`, `--receipt`, and the trace/close command; it never accepts or evaluates a shell command
 string. Browser-operating e2e-pipeline agents must not use the legacy direct/session mode.
 
 ## Recording (DEPRECATED)

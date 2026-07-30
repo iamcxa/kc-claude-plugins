@@ -8,10 +8,69 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
 const RUNTIME = path.join(__dirname, '..', '..', 'bin', 'e2e-browser-runtime.js');
+const OWNERSHIP_PS = path.join(
+  os.tmpdir(),
+  'e2e-browser-runtime-test-ps-' + process.pid
+);
 
 function makeExecutable(filePath, source) {
+  if (path.basename(filePath) === 'agent-browser') {
+    source =
+      [
+        '#!/usr/bin/env bash',
+        'namespace=""',
+        'session=""',
+        'executable=""',
+        'profile=""',
+        'previous=""',
+        'is_info=0',
+        'is_open=0',
+        'for value in "$@"; do',
+        '  case "$previous" in',
+        '    --namespace) namespace="$value" ;;',
+        '    --session) session="$value" ;;',
+        '    --executable-path) executable="$value" ;;',
+        '    --profile) profile="$value" ;;',
+        '  esac',
+        '  [ "$value" = "open" ] && is_open=1',
+        '  [ "$previous" = "session" ] && [ "$value" = "info" ] && is_info=1',
+        '  previous="$value"',
+        'done',
+        'if [ "$is_info" -eq 1 ]; then',
+        '  node -e \'const [namespace, session, socketHome] = process.argv.slice(1); const socketDir = `${socketHome}/namespaces/${namespace}/run`; process.stdout.write(JSON.stringify({success:true,data:{active:true,namespace,pid:321,session,socketDir,runtime:{browserLaunched:true,engine:"chrome",namespace,session,socketDir,effectiveLaunch:{browserLaunched:true,engine:"chrome"},lifecycle:{reused:false}}}}) + "\\n")\' "$namespace" "$session" "$AGENT_BROWSER_SOCKET_DIR"',
+        '  exit 0',
+        'fi',
+        'if [ "$is_open" -eq 1 ]; then',
+        '  [ -n "$profile" ] || profile="$E2E_AGENT_BROWSER_HOME/$session"',
+        '  printf \'%s\\n%s\\n\' "$executable" "$profile" > "$E2E_TEST_BROWSER_LOG.ownership"',
+        'fi',
+      ].join('\n') +
+      '\n' +
+      source.replace(/^#![^\n]*\n/, '');
+  }
   fs.writeFileSync(filePath, source, { mode: 0o755 });
 }
+
+fs.writeFileSync(
+  OWNERSHIP_PS,
+  [
+    '#!/usr/bin/env node',
+    "const fs = require('node:fs');",
+    "const [executable, profile] = fs.readFileSync(process.env.E2E_TEST_BROWSER_LOG + '.ownership', 'utf8').trim().split('\\n');",
+    "process.stdout.write('654 321 ' + executable + ' --user-data-dir=' + profile + '\\n');",
+    '',
+  ].join('\n'),
+  { mode: 0o755 }
+);
+process.env.E2E_PS_BIN = OWNERSHIP_PS;
+process.env.E2E_RUNTIME_TEST_MODE = '1';
+process.on('exit', function() {
+  try {
+    fs.unlinkSync(OWNERSHIP_PS);
+  } catch (_error) {
+    // The test helper is already absent.
+  }
+});
 
 function managedChromeForTesting(browserHome, relativeExecutable) {
   const executablePath = path.join(
@@ -78,7 +137,7 @@ test('open pins Chrome for Testing inside a run-scoped daemon namespace', functi
       '--run-id', 'run-123',
       '--app', 'storefront',
       '--executable-path', chromeForTesting,
-      '--profile', path.join(dir, 'profile'),
+      '--profile', path.join(dir, 'storefront'),
       '--headed',
       'open', 'https://example.test',
     ],
@@ -105,7 +164,7 @@ test('open pins Chrome for Testing inside a run-scoped daemon namespace', functi
     '--executable-path',
     chromeForTesting,
     '--profile',
-    path.join(dir, 'profile'),
+    path.join(dir, 'storefront'),
     '--headed',
     'open',
     'https://example.test',

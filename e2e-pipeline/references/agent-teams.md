@@ -68,26 +68,25 @@ Teardown procedure:
 
 ## 3. Browser Teammate Startup Protocol
 
-### e2e-test runtime precedence
+### Shared runtime precedence
 
-When a dispatch includes both `browser_runtime` and `browser_run_id`, the
-`e2e-test-runner` Browser Command Contract takes precedence over the bare
-`agent-browser` examples in this shared reference. Route startup, commands,
-reuse, and close through that runtime with the dispatched run identity and app.
+Every browser teammate dispatch includes `browser_runtime`, `browser_run_id`,
+and `browser_receipt`. Its Browser Command Contract takes precedence over the
+legacy bare `agent-browser` examples in this shared reference. Route startup,
+commands, reuse, and close through that runtime with the dispatched identity,
+app, and receipt.
 For a fresh `/e2e-test` invocation, teardown the prior team and recreate members
 with the full invocation fields; only a same-invocation `RE-RUN` may reuse them.
 
-Other consumers that do not provide both runtime fields continue to use the
-shared protocol below. This conditional does not imply that those consumers
-have migrated to the e2e-test runtime.
+The standard startup below uses the dispatched `browser_command`. Never fall back to a current/default browser daemon when ownership fields are missing; reject the dispatch instead.
 
 All browser-operating teammates follow this sequence on first spawn:
 
 ### Standard startup (headless)
 
-1. Open browser: `agent-browser open "<url>"`
-2. Wait for load: `agent-browser wait --load networkidle`
-3. Clear baseline: `agent-browser console --clear` + `agent-browser errors --clear`
+1. Open browser: `<browser_command> open "<url>"`
+2. Wait for load: `<browser_command> wait --load networkidle`
+3. Clear baseline: `<browser_command> console --clear` + `<browser_command> errors --clear`
 4. Send ready:
    ```
    SendMessage(to="lead", message="BROWSER_READY\ntarget_url: <url>\nrole: <role-name>", summary="<role> browser ready")
@@ -96,7 +95,7 @@ All browser-operating teammates follow this sequence on first spawn:
 
 ### Auth startup (headed / --headed)
 
-1. Open browser headed: `agent-browser open "<url>"` (with `--profile <path>` if applicable)
+1. Open browser headed: `<browser_command> --headed open "<url>"` (with the dispatched profile/auth mode)
 2. Send auth request:
    ```
    SendMessage(to="lead", message="WAITING_FOR_AUTH\nrole: <role-name>\ntarget_url: <url>", summary="<role> waiting for auth")
@@ -210,14 +209,20 @@ This ensures Teams is always a **progressive enhancement** — failure degrades 
 | Error during command | **Stay open**, report error, go idle |
 | Teammate idle timeout | **Stay open** (no auto-close) |
 | Shutdown request received | **Close browser**, then approve shutdown |
-| Session ends (process killed) | Browser daemon may survive — use `agent-browser close` on next session |
+| Session ends (process killed) | Browser daemon may survive — use `<browser_command> close` with the same receipt on next session |
 
-Key: `agent-browser open "<url>"` on an already-open browser **navigates within the existing session** (no new window). Teammates can just `open` each time without checking browser state.
+Key: `<browser_command> open "<url>"` on an already-open owned browser
+**navigates within the existing session** (no new window). Teammates can `open`
+again only after the runtime validates the matching receipt.
 
 ### Browser state isolation on reuse
 
 When reusing a teammate for a **different** flow/task (e.g., `--verify-only` after a prior run):
-- If `auth_profile` or `base_url` differs → teammate must close and reopen browser with new profile: `agent-browser close` → `agent-browser open "<new_url>"`. Lead should include `base_url` and `auth_profile` in every command so the teammate can detect mismatches.
+- If `auth_profile` or `base_url` differs → teammate must close and reopen through
+  the owned runtime: `<browser_command> close` → update the declared profile
+  lifecycle → `<browser_command> open "<new_url>"`. Lead should include
+  `base_url` and `auth_profile` in every command so the teammate can detect
+  mismatches.
 - If same auth + same base_url → navigate is sufficient. Cookies/localStorage carry over (usually desired — avoids re-login).
 - When in doubt → clear console/errors baseline at minimum. For full isolation, close + reopen.
 
@@ -354,7 +359,7 @@ browser teammate instead of a one-shot subagent.
 5. Stop turn — go idle
 
 ### On receiving shutdown_request
-1. Close browser: `agent-browser close`
+1. Close browser: `<browser_command> close`
 2. Respond with shutdown_response approve=true
 
 ### Key differences from subagent mode

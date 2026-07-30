@@ -87,9 +87,13 @@ async function compile(flowPath, mappingDir, outputDir, options) {
       resolveResult.resolved.variables = {};
     }
     var siteNames = Object.keys(parseResult.sites);
+    resolveResult.resolved.browserApps = {
+      default: parseResult.sites[siteNames[0]].mapping.app,
+    };
     for (var i = 0; i < siteNames.length; i++) {
       var siteName = siteNames[i];
       var siteData = parseResult.sites[siteName];
+      resolveResult.resolved.browserApps[siteName] = siteData.mapping.app;
       var siteVarName = siteBaseUrlVariable(siteName);
       if (!Object.prototype.hasOwnProperty.call(resolveResult.resolved.variables, siteVarName)) {
         resolveResult.resolved.variables[siteVarName] = (siteData.mapping && siteData.mapping.base_url) || '';
@@ -121,6 +125,9 @@ async function compile(flowPath, mappingDir, outputDir, options) {
         stats: resolveResult.stats,
       };
     }
+    resolveResult.resolved.browserApps = {
+      default: parseResult.mapping.app,
+    };
 
     // Auto-inject base_url from mapping when flow has no variables block
     // Prevents unbound ${BASE_URL} in navigate commands under set -u

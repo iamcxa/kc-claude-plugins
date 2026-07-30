@@ -40,6 +40,11 @@ const FLOW_PATH = path.join(FIXTURES_DIR, 'runtime-state-finalizer-flow.yaml');
 const MAPPING_DIR = FIXTURES_DIR;
 
 const RUNTIME_BASH = fs.existsSync('/bin/bash') ? '/bin/bash' : 'bash';
+const BROWSER_RUNTIME_SHIM = path.join(
+  __dirname,
+  'fixtures',
+  'browser-runtime-shim.js'
+);
 const RUNNER_WATCHDOG_SOURCE = [
   "'use strict';",
   "const { spawn } = require('node:child_process');",
@@ -152,6 +157,7 @@ function parseInlineFlow(flow) {
 function runScript(scriptPath, opts) {
   opts = opts || {};
   const env = Object.assign({}, process.env, opts.env || {});
+  env.E2E_BROWSER_RUNTIME = BROWSER_RUNTIME_SHIM;
   if (opts.binDir) {
     env.PATH = opts.binDir + path.delimiter + (env.PATH || '');
   }

@@ -150,6 +150,15 @@ The sentinel has a 10-minute staleness timeout as safety net — enforced by the
 - **Teams mode**: TeamCreate available AND `--no-teams` not set AND `flow_mode: browser` (CLI-only flows don't need Teams)
 - **Subagent mode**: TeamCreate unavailable OR `--no-teams` set OR `flow_mode: cli-only`
 
+For every browser flow, resolve
+`${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js` to the absolute
+`browser_runtime`, generate one fresh `browser_run_id`, create `report_dir`, and
+set `browser_receipt` to `<report_dir>/browser-ownership.json`. Pass all three
+fields unchanged to every verifier dispatch and `VERIFY_FLOW` message.
+When the owned local-service runtime is active, also pass `service_runtime`,
+`service_run_id`, and `service_state_dir` unchanged to every verifier dispatch
+and message; the verifier may run `status` but never owns start/stop.
+
 ### Teams mode: Defer verifier browser until auth mode is known
 
 > Shared protocol: `references/agent-teams.md` § 2-3
@@ -178,6 +187,12 @@ Agent(
           auth_mode: persistent
           base_url: <base_url>  auth_profile: <auth_profile>
           App: <app>. Report dir: <report_dir>.
+          browser_runtime: <absolute runtime path>
+          browser_run_id: <fresh invocation id>
+          browser_receipt: <report_dir>/browser-ownership.json
+          service_runtime: <absolute supervisor path, when active>
+          service_run_id: <owned service run id, when active>
+          service_state_dir: <report_dir>/local-services, when active
           After browser is ready, send BROWSER_READY and wait for VERIFY_FLOW command."
 )
 ```
@@ -247,11 +262,18 @@ If `--no-verify` → **delete flow-write sentinel** → if PR mode active, commi
 
 **CLI-only flows (`flow_mode: cli-only`)**: Skip Phase 2a-2d entirely. Jump directly to Phase 2.5 (CLI recording). Browser verifier is not dispatched — there are no browser steps to verify.
 
+For a browser flow with an explicit service manifest or
+`.claude/e2e/services.json`, resolve `service_runtime` to
+`${CLAUDE_PLUGIN_ROOT}/bin/e2e-local-service-runtime.js`, create one
+`service_run_id`, and use `<report_dir>/local-services` as the absolute
+`service_state_dir`. Run `preflight` and `start` before verifier preflight,
+then run `stop` after verifier trace/browser cleanup on every exit path.
+
 ### 2a. Pre-flight (browser flows only)
 
 ```bash
 python3 --version
-agent-browser --version
+node "$browser_runtime" --run-id "$browser_run_id" --app "$app" --receipt "$browser_receipt" --version
 curl -s -o /dev/null -w "%{http_code}" <base_url>
 ls ~/.agent-browser/<app>/ 2>/dev/null
 ```
@@ -277,7 +299,7 @@ verification, treat it as trace infrastructure failure, skip analysis, and prese
 ```
 SendMessage(
   to="verifier",
-  message="VERIFY_FLOW\nflow_path: <path>\nmapping_path: <path>\nbase_url: <url>\nauth_mode: persistent\nauth_profile: <path>\nrecord: <bool>",
+  message="VERIFY_FLOW\nflow_path: <path>\nmapping_path: <path>\nbase_url: <url>\nauth_mode: persistent\nauth_profile: <path>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <id>\nbrowser_receipt: <absolute path>\nservice_runtime: <absolute path, when active>\nservice_run_id: <id, when active>\nservice_state_dir: <absolute path, when active>\nrecord: <bool>",
   summary="Verify flow: <flow-name>"
 )
 ```
@@ -344,6 +366,9 @@ Dispatch `e2e-pipeline:e2e-flow-verifier` with:
 - `app`: From mapping
 - `report_dir`: `.claude/e2e/reports/<timestamp>/`
 - `record`: `true` (unless `--no-video`)
+- `browser_runtime`: Absolute shared runtime path
+- `browser_run_id`: Fresh invocation identity
+- `browser_receipt`: `<report_dir>/browser-ownership.json`
 
 See [reference.md](./reference.md) § Agent Dispatch Patterns for exact format.
 

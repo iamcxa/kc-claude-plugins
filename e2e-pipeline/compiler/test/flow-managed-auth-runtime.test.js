@@ -41,6 +41,74 @@ function fixture(t) {
   return { browserHome, canonicalProfile };
 }
 
+function ownedBrowserEnvironment(browserHome, materialization) {
+  const agentBrowser = path.join(browserHome, 'agent-browser');
+  const processProbe = path.join(browserHome, 'ps');
+  const ownership = path.join(browserHome, 'browser-ownership.json');
+  makeExecutable(
+    agentBrowser,
+    [
+      '#!/usr/bin/env node',
+      "'use strict';",
+      "const fs = require('node:fs');",
+      "const path = require('node:path');",
+      'const args = process.argv.slice(2);',
+      'function option(name) {',
+      '  const index = args.indexOf(name);',
+      "  return index === -1 ? '' : args[index + 1];",
+      '}',
+      "const namespace = option('--namespace');",
+      "const session = option('--session');",
+      "const executable = option('--executable-path');",
+      "const profile = option('--profile');",
+      "if (args.includes('session') && args.includes('info')) {",
+      "  const socketDir = path.join(process.env.AGENT_BROWSER_SOCKET_DIR, 'namespaces', namespace, 'run');",
+      '  process.stdout.write(JSON.stringify({',
+      '    success: true,',
+      '    data: {',
+      '      active: true, namespace, pid: 321, session, socketDir,',
+      '      runtime: {',
+      '        browserLaunched: true, engine: "chrome", namespace, session, socketDir,',
+      '        effectiveLaunch: { browserLaunched: true, engine: "chrome" },',
+      '        lifecycle: { reused: false },',
+      '      },',
+      '    },',
+      '  }) + "\\n");',
+      "  process.exit(0);",
+      '}',
+      "if (args.includes('open')) {",
+      "  if (process.env.E2E_TEST_MATERIALIZATION !== 'absent') fs.mkdirSync(profile, { recursive: true });",
+      "  if (process.env.E2E_TEST_MATERIALIZATION === 'full') {",
+      "    fs.mkdirSync(path.join(profile, 'Default'), { recursive: true });",
+      "    fs.writeFileSync(path.join(profile, 'Local State'), '{}');",
+      "    fs.writeFileSync(path.join(profile, 'Default', 'Preferences'), '{}');",
+      '  }',
+      '  fs.writeFileSync(process.env.E2E_TEST_OWNERSHIP, JSON.stringify({ executable, profile }));',
+      '}',
+      '',
+    ].join('\n')
+  );
+  makeExecutable(
+    processProbe,
+    [
+      '#!/usr/bin/env node',
+      "'use strict';",
+      "const fs = require('node:fs');",
+      "const binding = JSON.parse(fs.readFileSync(process.env.E2E_TEST_OWNERSHIP, 'utf8'));",
+      "process.stdout.write('654 321 ' + binding.executable + ' --user-data-dir=' + binding.profile + '\\n');",
+      '',
+    ].join('\n')
+  );
+  return {
+    E2E_AGENT_BROWSER_BIN: agentBrowser,
+    E2E_AGENT_BROWSER_HOME: browserHome,
+    E2E_PS_BIN: processProbe,
+    E2E_RUNTIME_TEST_MODE: '1',
+    E2E_TEST_MATERIALIZATION: materialization,
+    E2E_TEST_OWNERSHIP: ownership,
+  };
+}
+
 test('prepares a previously absent unique profile for every replay', function(t) {
   const { browserHome, canonicalProfile } = fixture(t);
   const first = runtime.prepareFlowManagedProfile({
@@ -138,25 +206,7 @@ test('rejects a symlinked canonical profile before browser interaction', functio
 test('flow-managed open verifies that Chrome adopted the requested profile', function(t) {
   const { browserHome, canonicalProfile } = fixture(t);
   const chromeForTesting = managedChromeForTesting(browserHome);
-  const agentBrowser = path.join(browserHome, 'agent-browser');
-  makeExecutable(
-    agentBrowser,
-    [
-      '#!/usr/bin/env bash',
-      'profile=""',
-      'previous=""',
-      'for value in "$@"; do',
-      '  if [ "$previous" = "--profile" ]; then profile="$value"; fi',
-      '  previous="$value"',
-      'done',
-      'if [ -n "$profile" ]; then',
-      '  mkdir -p "$profile/Default"',
-      '  printf "{}" > "$profile/Local State"',
-      '  printf "{}" > "$profile/Default/Preferences"',
-      'fi',
-      '',
-    ].join('\n')
-  );
+  const ownedEnvironment = ownedBrowserEnvironment(browserHome, 'full');
   const prepared = runtime.prepareFlowManagedProfile({
     browserHome,
     runId: 'run-123',
@@ -179,10 +229,7 @@ test('flow-managed open verifies that Chrome adopted the requested profile', fun
     ],
     {
       encoding: 'utf8',
-      env: Object.assign({}, process.env, {
-        E2E_AGENT_BROWSER_BIN: agentBrowser,
-        E2E_AGENT_BROWSER_HOME: browserHome,
-      }),
+      env: Object.assign({}, process.env, ownedEnvironment),
     }
   );
 
@@ -201,8 +248,7 @@ test('flow-managed open verifies that Chrome adopted the requested profile', fun
 test('flow-managed open fails when the daemon does not materialize the requested profile', function(t) {
   const { browserHome, canonicalProfile } = fixture(t);
   const chromeForTesting = managedChromeForTesting(browserHome);
-  const agentBrowser = path.join(browserHome, 'agent-browser');
-  makeExecutable(agentBrowser, '#!/usr/bin/env bash\nexit 0\n');
+  const ownedEnvironment = ownedBrowserEnvironment(browserHome, 'absent');
   const prepared = runtime.prepareFlowManagedProfile({
     browserHome,
     runId: 'run-123',
@@ -225,35 +271,31 @@ test('flow-managed open fails when the daemon does not materialize the requested
     ],
     {
       encoding: 'utf8',
-      env: Object.assign({}, process.env, {
-        E2E_AGENT_BROWSER_BIN: agentBrowser,
-        E2E_AGENT_BROWSER_HOME: browserHome,
-      }),
+      env: Object.assign({}, process.env, ownedEnvironment),
     }
   );
 
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /did not adopt requested profile/i);
+  const receipt = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        browserHome,
+        'ownership-receipts',
+        'run-123',
+        'storefront.json'
+      ),
+      'utf8'
+    )
+  );
+  assert.equal(receipt.status, 'failed');
+  assert.equal(receipt.cleanup, 'owned-session-closed-after-binding-failure');
 });
 
 test('binding failure closes and removes a partially materialized owned profile', function(t) {
   const { browserHome, canonicalProfile } = fixture(t);
   const chromeForTesting = managedChromeForTesting(browserHome);
-  const agentBrowser = path.join(browserHome, 'agent-browser');
-  makeExecutable(
-    agentBrowser,
-    [
-      '#!/usr/bin/env bash',
-      'profile=""',
-      'previous=""',
-      'for value in "$@"; do',
-      '  if [ "$previous" = "--profile" ]; then profile="$value"; fi',
-      '  previous="$value"',
-      'done',
-      'if [ -n "$profile" ]; then mkdir -p "$profile"; fi',
-      '',
-    ].join('\n')
-  );
+  const ownedEnvironment = ownedBrowserEnvironment(browserHome, 'partial');
   const prepared = runtime.prepareFlowManagedProfile({
     browserHome,
     runId: 'run-123',
@@ -276,15 +318,25 @@ test('binding failure closes and removes a partially materialized owned profile'
     ],
     {
       encoding: 'utf8',
-      env: Object.assign({}, process.env, {
-        E2E_AGENT_BROWSER_BIN: agentBrowser,
-        E2E_AGENT_BROWSER_HOME: browserHome,
-      }),
+      env: Object.assign({}, process.env, ownedEnvironment),
     }
   );
 
   assert.notEqual(result.status, 0);
   assert.equal(fs.existsSync(prepared.profile), false);
+  const receipt = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        browserHome,
+        'ownership-receipts',
+        'run-123',
+        'storefront.json'
+      ),
+      'utf8'
+    )
+  );
+  assert.equal(receipt.status, 'failed');
+  assert.equal(receipt.cleanup, 'owned-session-closed-after-binding-failure');
 });
 
 test('cleanup removes only the owned ephemeral profile and verifies canonical bytes', function(t) {

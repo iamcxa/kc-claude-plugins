@@ -71,6 +71,23 @@ Which page to start? >
 
 **After Discover Mapping completes, proceed to Pre-Flight.** These checks use `base_url` and `app` from the **selected** mapping.
 
+If an explicit service manifest is provided or `.claude/e2e/services.json`
+exists, resolve `service_runtime` to
+`${CLAUDE_PLUGIN_ROOT}/bin/e2e-local-service-runtime.js`, generate one
+`service_run_id`, and use `<report_dir>/local-services` as the absolute
+`service_state_dir`. Run `preflight` and `start` before the first browser
+attempt and `stop` after trace/browser cleanup.
+
+Create the absolute report directory, resolve
+`${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js` as `browser_runtime`,
+generate one fresh `browser_run_id`, and set `browser_receipt` to
+`<report_dir>/browser-ownership.json`. Use this immutable command contract for
+the entire walkthrough:
+
+```text
+browser_command: node "<browser_runtime>" --run-id "<browser_run_id>" --app "<app>" --receipt "<browser_receipt>"
+```
+
 1. **agent-browser** installed globally
 2. **Python 3** installed; run `python3 --version` before tracing
 3. **Dev server running** (read `base_url` from mapping)
@@ -79,7 +96,7 @@ Which page to start? >
 
 ```bash
 python3 --version
-agent-browser --version
+node "$browser_runtime" --run-id "$browser_run_id" --app "$app" --receipt "$browser_receipt" --version
 curl -s -o /dev/null -w "%{http_code}" <base_url>
 ls ~/.agent-browser/<app>/ 2>/dev/null && echo "OK" || echo "MISSING"
 ```
@@ -92,7 +109,7 @@ If agent-browser is not installed, stop and report: "agent-browser is required f
 
 - If `auth.type: none` in mapping: skip auth entirely. Profile auto-creates on first `open`.
 - **Automated OTP path**: If mapping has `auth.test_accounts` with phone numbers AND the project has Supabase `config.toml` with `[auth.sms.test_otp]` entries, automate login: navigate to signin path → fill phone number (strip country code if UI has country selector) → submit → fill OTP from config → submit → verify URL. This avoids blocking on human input for local dev environments.
-- **Manual path**: If no test accounts or OTP config available, open browser `agent-browser --profile ~/.agent-browser/<app> --headed open <base_url>`, read `auth.manual_prompt` from mapping and relay it to the user (e.g., "Please complete login in the browser"). After user confirms → `agent-browser get url` and verify using `auth.verification.url_not_contains` from mapping (`url_not_contains` performs a **substring check** on the full URL). If verification fails, re-prompt user. Repeat until verified or user aborts. Profile persists — login is one-time only.
+- **Manual path**: If no test accounts or OTP config available, open browser with `<browser_command> --profile ~/.agent-browser/<app> --headed open <base_url>`, read `auth.manual_prompt` from mapping and relay it to the user (e.g., "Please complete login in the browser"). After user confirms → `<browser_command> get url` and verify using `auth.verification.url_not_contains` from mapping (`url_not_contains` performs a **substring check** on the full URL). If verification fails, re-prompt user. Repeat until verified or user aborts. Profile persists — login is one-time only.
 
 Walkthrough uses the canonical persistent profile by default. When the user
 explicitly says authentication itself is under test, mark the generated flow with
@@ -363,6 +380,6 @@ Next steps:
 | `is visible` exit code always 0 | Check stdout text "true"/"false", NOT exit code. Don't chain with `&&` |
 | Large table snapshots consume context | Use targeted `is visible` checks instead of full snapshot for 10+ row tables |
 | Assuming snapshot shows `data-testid` | a11y snapshot does NOT expose `data-testid`/`aria-label`. Use `is visible` |
-| `--profile` silently ignored | Daemon already running without profile. `agent-browser close` → wait 3s → re-open |
+| `--profile` silently ignored | Wrong daemon ownership. Stop and let `<browser_command>` reject or close only the matching receipt; never repair through a bare default daemon. |
 | Checkpoint steps interact with browser | `verify-external` steps do NOT touch browser — skip snapshot, skip element resolution |
 | Browser crash mid-walkthrough | Write step-log.json with steps completed so far → proceed to Phase 4 with partial data. Do NOT restart from step 1 — offer user: "Browser lost at step N. Resume from step N, or proceed to Phase 4 with partial results?" |

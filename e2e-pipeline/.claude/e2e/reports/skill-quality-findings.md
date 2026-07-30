@@ -214,3 +214,27 @@ Writing-skills TDD REFACTOR with combined pressures (authority + exhaustion + su
 **Verification**: `npm test` (`node --test compiler/test/*.test.js`) -> 543/543 PASS. `npm run check` -> PASS with lint warnings and no errors.
 
 **Impact scan**: Reviewed e2e-test, e2e-map, e2e-walkthrough, e2e-flow, their references, all browser agents, and shared command/common-pattern references. No action grammar or agent execution contract changed, so no skill or agent edits were required. This plugin repo has no project mapping fixtures in the impact-matrix locations; compiler fixtures cover the behavior instead.
+
+### 2026-07-30: Shared browser ownership and local-service supervision
+
+**Problems**:
+- Mapper, runner, verifier, walkthrough, and generated scripts did not share one mechanically enforced `agent-browser` daemon bootstrap. A unique session/profile could still attach its first command to the wrong daemon or Chromium-based browser.
+- Workers could invent shell supervision for local services. macOS zsh interprets `wait -n` as a job named `-n`, exits 127, and can consume the only browser/replay attempt before Chrome starts.
+
+**Root causes**:
+- Browser isolation was mostly a prompt convention. It did not require a unique namespace/socket, Chrome for Testing executable, process/profile proof, `reused=false`, or a lifecycle receipt across every consumer.
+- Local-service startup had no shared executable contract for capability preflight, process-group ownership, listener ownership, bounded cleanup, or retained evidence.
+
+**Fix**:
+- Extended `bin/e2e-browser-runtime.js` into the shared bootstrap. It overrides inherited attachment variables, derives socket-safe namespaces, pins managed Chrome for Testing, accepts only the canonical non-symlink persistent app profile, validates `session info --json` plus OS process evidence, rejects first-launch reuse, writes atomic ownership receipts, revalidates the live receipt before every subsequent browser action, and closes/removes only owned session state after bounded daemon shutdown.
+- Added `bin/e2e-local-service-runtime.js`, a shell-free Node supervisor with strict versioned manifests, supported-platform/tool preflight, argv-only service commands, detached process groups, TCP plus `lsof` listener proof, command-bound supervisor receipts, drift-aware status, per-manifest startup budgets, bounded TERM/KILL cleanup, logs, and atomic receipts.
+- Routed e2e-test, e2e-map, e2e-flow, e2e-walkthrough, their agents, trace finalization, and compiler-generated scripts through the same browser and optional service runtimes.
+- Added test-only runtime shims so compiler tests preserve their fake `agent-browser` semantics without weakening the production ownership contract.
+
+**Verification**:
+- The macOS zsh control reproduces `wait -n` with exit 127.
+- Focused ownership, service, compiler, CarLove corpus, and trace tests pass.
+- `npm test` passes 779/779 tests across 156 suites. Biome reports zero
+  errors; its 195 warnings and two infos are the existing repository baseline.
+- Two simultaneous real `agent-browser 0.32.0` runs used distinct namespaces, sockets, daemon PIDs, browser PIDs, and profiles under the exact managed Chrome for Testing executable; both reported `initial_reused=false`.
+- Closing run A left run B live at `about:blank`. Final scoped closes stopped both owned browsers, marked both receipts `closed`, and removed both namespace state directories without touching another browser profile.

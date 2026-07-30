@@ -823,6 +823,90 @@ function generateBaseUrlNormalization(variables) {
   return lines.length > 0 ? lines.join('\n') : '';
 }
 
+function generateBrowserRuntime(browserApps) {
+  var apps = browserApps || {};
+  var defaultApp = apps.default || 'compiled-flow';
+  var lines = [
+    '# Owned browser runtime',
+    ': "${E2E_BROWSER_RUNTIME:?Error: E2E_BROWSER_RUNTIME must point to e2e-browser-runtime.js}"',
+    'if [ "${E2E_BROWSER_RUNTIME#/}" = "$E2E_BROWSER_RUNTIME" ] || [ ! -f "$E2E_BROWSER_RUNTIME" ] || [ -L "$E2E_BROWSER_RUNTIME" ]; then',
+    '  echo "ERROR: E2E_BROWSER_RUNTIME must be an absolute regular file"',
+    '  exit 2',
+    'fi',
+    'if [ -z "${E2E_BROWSER_RUN_ID:-}" ]; then',
+    '  E2E_BROWSER_RUN_ID=$(node "$E2E_BROWSER_RUNTIME" new-run-id)',
+    'fi',
+    'E2E_BROWSER_RECEIPT_DIR="${E2E_BROWSER_RECEIPT_DIR:-$_SCREENSHOT_DIR/browser-runtime}"',
+    'mkdir -p "$E2E_BROWSER_RECEIPT_DIR"',
+    '',
+    'agent-browser() {',
+    '  local _browser_session=""',
+    '  local _browser_app=' + singleQuote(defaultApp),
+    '  if [ "${1:-}" = "--session" ]; then',
+    '    if [ "$#" -lt 3 ]; then',
+    '      echo "ERROR: --session requires a session and browser command" >&2',
+    '      return 2',
+    '    fi',
+    '    _browser_session="$2"',
+    '    shift 2',
+    '    case "$_browser_session" in',
+  ];
+  var names = Object.keys(apps)
+    .filter(function(name) { return name !== 'default'; })
+    .sort();
+  for (var index = 0; index < names.length; index++) {
+    lines.push(
+      '      ' + singleQuote(names[index]) + ') _browser_app=' +
+        singleQuote(apps[names[index]]) + ' ;;'
+    );
+  }
+  lines.push(
+    '      *) _browser_app="$_browser_session" ;;',
+    '    esac',
+    '  fi',
+    '  E2E_COMPILED_BROWSER_ALIAS="$_browser_session" node "$E2E_BROWSER_RUNTIME" \\',
+    '    --run-id "$E2E_BROWSER_RUN_ID" \\',
+    '    --app "$_browser_app" \\',
+    '    --receipt "$E2E_BROWSER_RECEIPT_DIR/$_browser_app.json" \\',
+    '    "$@"',
+    '}',
+    ''
+  );
+  return lines.join('\n');
+}
+
+function generateLocalServiceRuntime() {
+  return [
+    '# Optional owned local-service runtime',
+    '_E2E_SERVICES_ACTIVE=false',
+    'E2E_SERVICE_MANIFEST="${E2E_SERVICE_MANIFEST:-}"',
+    'if [ -z "$E2E_SERVICE_MANIFEST" ] && [ -f "$(pwd)/.claude/e2e/services.json" ]; then',
+    '  E2E_SERVICE_MANIFEST="$(pwd)/.claude/e2e/services.json"',
+    'fi',
+    '_start_local_services() {',
+    '  if [ -z "$E2E_SERVICE_MANIFEST" ]; then return 0; fi',
+    '  : "${E2E_SERVICE_RUNTIME:?Error: E2E_SERVICE_RUNTIME must point to e2e-local-service-runtime.js}"',
+    '  if [ "${E2E_SERVICE_RUNTIME#/}" = "$E2E_SERVICE_RUNTIME" ] || [ ! -f "$E2E_SERVICE_RUNTIME" ] || [ -L "$E2E_SERVICE_RUNTIME" ]; then',
+    '    echo "ERROR: E2E_SERVICE_RUNTIME must be an absolute regular file"',
+    '    return 2',
+    '  fi',
+    '  E2E_SERVICE_STATE_DIR="${E2E_SERVICE_STATE_DIR:-$_SCREENSHOT_DIR/local-services}"',
+    '  mkdir -p "$E2E_SERVICE_STATE_DIR"',
+    '  E2E_SERVICE_STATE_DIR=$(cd "$E2E_SERVICE_STATE_DIR" && pwd)',
+    '  if [ -z "${E2E_SERVICE_RUN_ID:-}" ]; then',
+    '    E2E_SERVICE_RUN_ID=$(node "$E2E_SERVICE_RUNTIME" new-run-id)',
+    '  fi',
+    '  node "$E2E_SERVICE_RUNTIME" preflight --manifest "$E2E_SERVICE_MANIFEST"',
+    '  node "$E2E_SERVICE_RUNTIME" start \\',
+    '    --manifest "$E2E_SERVICE_MANIFEST" \\',
+    '    --run-id "$E2E_SERVICE_RUN_ID" \\',
+    '    --state-dir "$E2E_SERVICE_STATE_DIR"',
+    '  _E2E_SERVICES_ACTIVE=true',
+    '}',
+    '',
+  ].join('\n');
+}
+
 // ---------------------------------------------------------------------------
 // Cleanup trap (CI-06)
 // ---------------------------------------------------------------------------
@@ -840,8 +924,9 @@ function generateBaseUrlNormalization(variables) {
  * can exit with non-zero even when all test steps passed.
  *
  * The trap ensures agent-browser is closed on PASS, FAIL, and unexpected exit.
- * Uses || true to prevent cleanup failure from overriding the script's exit code
- * (EXCEPT when on_fail=fail in a finally step — that IS supposed to override).
+ * Browser-close failures remain best effort so they do not override the script's
+ * exit code. Local-service cleanup failures and on_fail=fail finalizer failures
+ * do override an otherwise successful run because they invalidate ownership proof.
  *
  * Returns: string (multi-line bash block)
  */
@@ -858,7 +943,12 @@ function generateCleanupTrap(steps, finallySteps, summary) {
   }
 
   if (!hasFinalizers) {
-    var legacyLines = ['cleanup() {'];
+    var legacyLines = [
+      'cleanup() {',
+      '  local _prev_exit=$?',
+      '  local _service_cleanup_failed=0',
+      '  trap - EXIT',
+    ];
     if (sessions.length === 0) {
       legacyLines.push('  agent-browser close 2>/dev/null || true');
     } else {
@@ -868,6 +958,16 @@ function generateCleanupTrap(steps, finallySteps, summary) {
         );
       }
     }
+    legacyLines.push('  if [ "$_E2E_SERVICES_ACTIVE" = true ]; then');
+    legacyLines.push('    if ! node "$E2E_SERVICE_RUNTIME" stop --run-id "$E2E_SERVICE_RUN_ID" --state-dir "$E2E_SERVICE_STATE_DIR" >/dev/null; then');
+    legacyLines.push('      echo "ERROR: local-service cleanup failed; inspect $E2E_SERVICE_STATE_DIR/$E2E_SERVICE_RUN_ID.json" >&2');
+    legacyLines.push('      _service_cleanup_failed=1');
+    legacyLines.push('    fi');
+    legacyLines.push('  fi');
+    legacyLines.push('  if [ "$_service_cleanup_failed" -ne 0 ] && [ "$_prev_exit" -eq 0 ]; then');
+    legacyLines.push('    _prev_exit=1');
+    legacyLines.push('  fi');
+    legacyLines.push('  exit "$_prev_exit"');
     legacyLines.push('}');
     legacyLines.push('trap cleanup EXIT');
     return legacyLines.join('\n');
@@ -877,6 +977,7 @@ function generateCleanupTrap(steps, finallySteps, summary) {
     '_FINALIZER_FAILED=0',
     'cleanup() {',
     '  local _prev_exit=$?',
+    '  local _service_cleanup_failed=0',
     '  trap - EXIT',
   ];
 
@@ -1026,11 +1127,20 @@ function generateCleanupTrap(steps, finallySteps, summary) {
       lines.push('  agent-browser --session ' + singleQuote(sessions[j]) + ' close 2>/dev/null || true');
     }
   }
+  lines.push('  if [ "$_E2E_SERVICES_ACTIVE" = true ]; then');
+  lines.push('    if ! node "$E2E_SERVICE_RUNTIME" stop --run-id "$E2E_SERVICE_RUN_ID" --state-dir "$E2E_SERVICE_STATE_DIR" >/dev/null; then');
+  lines.push('      echo "ERROR: local-service cleanup failed; inspect $E2E_SERVICE_STATE_DIR/$E2E_SERVICE_RUN_ID.json" >&2');
+  lines.push('      _service_cleanup_failed=1');
+  lines.push('    fi');
+  lines.push('  fi');
 
   lines.push('  if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi');
   lines.push('  if [ -n "$JUNIT_OUTPUT" ]; then _emit_junit "$JUNIT_OUTPUT"; fi');
   lines.push('  _FINAL_EXIT="$_prev_exit"');
   lines.push('  if [ "$_FINALIZER_FAILED" -ne 0 ] && [ "$_prev_exit" -eq 0 ]; then');
+  lines.push('    _FINAL_EXIT=1');
+  lines.push('  fi');
+  lines.push('  if [ "$_service_cleanup_failed" -ne 0 ] && [ "$_FINAL_EXIT" -eq 0 ]; then');
   lines.push('    _FINAL_EXIT=1');
   lines.push('  fi');
   if (summary) {
@@ -1807,10 +1917,16 @@ function generate(resolved, flowName, meta) {
   // 5. Runtime support functions (_handle_failure, _FAILED_STEPS, poll helpers)
   parts.push(generateRuntimeSupport(hasRuntimeState));
 
-  // 5b. JUnit emitter function (FLAG-01) — defined here, called in footer
+  // 5a. Route generated browser calls through the shared owned runtime.
+  parts.push(generateBrowserRuntime(resolved.browserApps));
+
+  // 5b. Configure optional local services before installing the cleanup trap.
+  parts.push(generateLocalServiceRuntime());
+
+  // 5c. JUnit emitter function (FLAG-01) — defined here, called in footer
   parts.push(generateJUnitEmitter(flowName));
 
-  // 5c. Metrics emitter function (FLAKY-02) — defined here, called in footer
+  // 5d. Metrics emitter function (FLAKY-02) — defined here, called in footer
   parts.push(generateMetricsEmitter(flowName));
 
   // 6. Cleanup trap — registers agent-browser close on EXIT (CI-06)
@@ -1820,6 +1936,7 @@ function generate(resolved, flowName, meta) {
     totalSteps: totalSteps,
     skipped: skipped,
   }));
+  parts.push('_start_local_services');
   parts.push('');
 
   // 7. Per-step action blocks
@@ -1866,6 +1983,8 @@ module.exports = {
   generateVariables: generateVariables,
   generateRuntimeValuesBlock: generateRuntimeValuesBlock,
   generateBaseUrlNormalization: generateBaseUrlNormalization,
+  generateBrowserRuntime: generateBrowserRuntime,
+  generateLocalServiceRuntime: generateLocalServiceRuntime,
   generateCleanupTrap: generateCleanupTrap,
   generateJUnitEmitter: generateJUnitEmitter,
   generateMetricsEmitter: generateMetricsEmitter,

@@ -2,6 +2,35 @@
 
 Patterns and gotchas for E2E testing agents. For project-specific patterns, check `<project>/.claude/skills/agent-browser/references/`.
 
+## Owned Local Services
+
+Browser orchestrators may receive an explicit service manifest or discover
+`.claude/e2e/services.json`. The version 1 manifest is shell-free:
+
+```json
+{
+  "version": 1,
+  "services": [
+    {
+      "name": "web",
+      "command": ["npm", "run", "dev"],
+      "cwd": "/absolute/project/path",
+      "host": "127.0.0.1",
+      "port": 3000,
+      "readiness_timeout_ms": 30000
+    }
+  ]
+}
+```
+
+The owning orchestrator resolves `service_runtime` to the absolute
+`bin/e2e-local-service-runtime.js`, creates one `service_run_id`, and uses an
+absolute `service_state_dir` inside its report directory. It runs `preflight`
+and `start` before consuming a browser attempt, passes those fields to workers
+as read-only ownership evidence, and runs `stop` after browser and trace
+cleanup. Workers never invent shell supervisors, adopt a listener, or
+terminate a PID absent from the ownership receipt.
+
 ## Run-Scoped Runtime State and Cleanup
 
 - Declare runtime inputs as `{from_env, sensitive}` under `runtime_values`; do not put secret values in flow YAML or argv.
