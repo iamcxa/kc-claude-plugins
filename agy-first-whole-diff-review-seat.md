@@ -713,3 +713,117 @@ The implementation is narrow, read-only, well exercised, and regression-clean, b
 the promised exact-head landing contract. Its own CLI proves that stale identity binding and a
 semantically invalid typed decision can be labeled `READY/HIGH`. Validation therefore returns
 **REJECTED** with concrete file-anchored repairs and no waiver recommendation.
+
+## Stage Report: implementation
+
+TL;DR — Feedback cycle 1 is repaired and pushed at exact code head
+`8224cd45d36a73c7a3bc4ff4063cc4ed17dcb6ff`. The readiness adapter now re-derives the
+`review_key` binding and rejects producer-impossible capability terminal states. A real
+`rehydrate-interactive` result remains `READY/HIGH`. Focused correction is **66/0**, full
+interactive rehydration is **51/0**, complete runtime is **371/0**, and review-post is **156/0**.
+
+- DONE: AC-1 — validated typed decisions still produce the closed readiness verdict.
+  `review-runtime.sh:2464-2560` now validates the manual fallback shape, bounded retry sequence,
+  fallback/identity relationship, provider satisfaction, terminal state, and finding-reference
+  relationship already enforced by terminal rehydration. `review-runtime.test.sh:603-645`
+  creates a complete capability policy, runs the real `rehydrate-interactive` producer, and proves
+  that its output remains `READY/HIGH/all-required-evidence-positive`.
+- DONE: AC-2 — both validation findings fail closed.
+  `review-runtime.sh:2393-2405,2608-2613` re-derives
+  `sha256(repository|pr_number|base_sha|head_sha|config_hash)` with the runtime's existing
+  `review_runtime_review_key` function. The coordinated repository mutation at
+  `review-runtime.test.sh:330-340` now returns `UNKNOWN/LOW/invalid-input`. The two bidirectional
+  impossible-terminal cases at `review-runtime.test.sh:342-385` now also return
+  `UNKNOWN/LOW/invalid-input`.
+- DONE: AC-3 — authority remains unchanged.
+  The focused suite's failing `gh`, `curl`, `wget`, `nc`, `ssh`, and `git` stubs retained an empty
+  call ledger. No network, fetch, post, authorization, merge, or daemon path was added.
+  `review-post.test.sh` remains unchanged and is green at **156/0**.
+- DONE: AC-4 — correction scope is exactly the two authorized runtime/test paths.
+  Feedback-cycle commit `8224cd4` changes only
+  `kc-pr-flow/scripts/review-runtime.sh` and
+  `kc-pr-flow/scripts/review-runtime.test.sh`. The whole feature diff remains the approved five
+  runtime/test/documentation paths; no published statement required correction.
+
+### Correction TDD evidence
+
+- **RED before production repair:** with the three correction assertions added against code head
+  `56864d5`, `bash kc-pr-flow/scripts/review-runtime.test.sh --case merge-readiness` exited 1 at
+  **63 passed / 3 failed**. The coordinated stale key and unsatisfied-clean cases each actually
+  emitted `READY|HIGH|all-required-evidence-positive`; the satisfied-incomplete case emitted
+  `UNKNOWN|LOW|review-incomplete` instead of failing input validation. Failure-output SHA-256:
+  `5e0eb38a82c232a84e564ebe3cf8b1a89e1b29b8eca273706d787b3557d0381d`.
+- **GREEN:** after the minimum runtime repair, the identical focused command returned
+  **66 passed / 0 failed**. All three new behavior assertions were reachable and red in the
+  recorded pre-fix run. The real-rehydration positive assertions were green preconditions:
+  they prove compatibility with the existing producer and are not claimed as RED evidence.
+- **Old-behavior fixture audit:** no historical case was repurposed. The three rejected inputs are
+  new isolated mutations. The real-producer fixture derives a separate complete policy from the
+  existing interactive fixture and leaves the historical incomplete/blocker scenario unchanged.
+
+### Correction verification
+
+From the code worktree/repository root:
+
+```bash
+bash kc-pr-flow/scripts/review-runtime.test.sh --case merge-readiness
+bash kc-pr-flow/scripts/review-runtime.test.sh --case interactive-decision
+bash kc-pr-flow/scripts/review-runtime.test.sh
+bash kc-pr-flow/scripts/review-post.test.sh
+bash -n kc-pr-flow/scripts/review-runtime.sh kc-pr-flow/scripts/review-runtime.test.sh
+shellcheck kc-pr-flow/scripts/review-runtime.sh kc-pr-flow/scripts/review-runtime.test.sh
+docker run --rm --platform linux/amd64 -v "$PWD:/mnt" -w /mnt \
+  koalaman/shellcheck:v0.9.0 \
+  kc-pr-flow/scripts/review-runtime.sh kc-pr-flow/scripts/review-runtime.test.sh
+git diff --check
+```
+
+- Focused merge readiness: **66 passed, 0 failed**.
+- Full interactive decision: **51 passed, 0 failed**.
+- Complete runtime: **371 passed, 0 failed**.
+- Unchanged review-post ripple: **156 passed, 0 failed**.
+- Bash syntax, `git diff --check`, local ShellCheck 0.11.0, and CI-pinned ShellCheck 0.9.0:
+  exit 0.
+- Direct E2E: a real regular input file passed through
+  `decide-merge-readiness --input-file FILE`; `jq` asserted schema, `READY`, `HIGH`, canonical
+  reason, advisory flag, exact head, and canonical input hash. Output SHA-256:
+  `63e7a101d38ff01debf9169bda076cf89472e8f1418e9e119f27fa80278e2036`.
+- CI margin: the correction adds three local adapter mutations and one terminal-rehydration
+  positive path. The complete runtime suite finished locally without timeout at **371/0**; live
+  exact-head CI remains the merge authority.
+
+### Scope and handoff
+
+- Code commit `8224cd45d36a73c7a3bc4ff4063cc4ed17dcb6ff` is pushed to
+  `origin/spacedock-ensign/agy-first-whole-diff-review-seat`; local HEAD equals upstream and the
+  code worktree is clean.
+- `origin/main` advanced during the final fetch to
+  `dab82f697120f26de9e653d0b6561d66d67d73ba`; the feature merge-base remains
+  `9cc0d1faa49e786837342b88062181460f037ac3`. The intervening `kc-pr-flow` changes are release
+  metadata only (`plugin.json` files and `CHANGELOG.md`), not either repaired runtime path.
+  Fresh validation should nevertheless pin both the new code head and current base.
+- No PR was created, no merge was performed, and no additional worker or reviewer was spawned.
+- SKIPPED by scope: browser/full-stack E2E, live GitHub/CI fetching, vf/x0f/agy/model routing,
+  daemon behavior, posting, merging, repair loops, and cross-repo adoption.
+
+### Feedback Cycles
+
+- Cycle 1: REPAIRED — same implementation worker/worktree; two HIGH validation findings closed;
+  AC and design unchanged; no scope or worker-count expansion
+
+### `--ac-scan`
+
+```text
+stage=implementation
+ac=AC-1 unevidenced=false citations=2
+ac=AC-2 unevidenced=false citations=3
+ac=AC-3 unevidenced=false citations=2
+ac=AC-4 unevidenced=false citations=2
+```
+
+### Summary
+
+The exact-head advisory adapter now accepts only identities bound to their derived review key and
+only capability terminals consistent with the existing typed producer's attempt, fallback, and
+satisfaction rules. Both validator-reproduced false recommendations are closed, a real producer
+output remains positive, the code head is pushed, and the correction is ready for fresh validation.
