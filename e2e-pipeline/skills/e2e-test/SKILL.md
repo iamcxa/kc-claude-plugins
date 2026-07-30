@@ -464,10 +464,11 @@ FLOW_RUN_ID="<validated unique id for this flow execution>"
 # First, for every participating browser runner:
 SendMessage(
   to="runner-<site.alias>",
-  message="BEGIN_FLOW\nflow_run_id: <flow_run_id>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <browser run id>\nsession: <site.app>\nauth_mode: <persistent|flow-managed>\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <ephemeral path or omit>\nauth_profile: <canonical or ephemeral path>\nauth_profile_freshness: <persistent-existing|verified-absent>\ntrace_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace.zip\ntrace_finalization_result_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace-finalization.env",
+  message="BEGIN_FLOW\nflow_run_id: <flow_run_id>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <browser run id>\nsession: <site.app>\nauth_mode: <persistent|flow-managed>\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <ephemeral path or omit>\nauth_profile: <canonical or ephemeral path>\nauth_profile_freshness: <persistent-existing|verified-absent>",
   summary="<site.alias>: begin <flow_run_id>"
 )
-# Wait for FLOW READY from every runner before routing any steps.
+# Wait for FLOW READY from every runner before routing any steps. Persist its detected trace_path,
+# trace_format, and trace_finalization_result_path for that flow_run_id.
 
 for step in flow.steps:
   target = f"runner-{step.site}"
@@ -525,14 +526,16 @@ skipped before dispatch:
 ```
 SendMessage(
   to="runner-<site.alias>",
-  message="FINALIZE_FLOW\nflow_run_id: <flow_run_id>\nflow_verdict: PASS|FAIL\nbrowser_runtime: <absolute path>\nbrowser_run_id: <browser run id>\nsession: <site.app>\nauth_mode: <persistent|flow-managed>\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <ephemeral path or omit>\nauth_profile: <canonical or ephemeral path>\nauth_profile_freshness: <persistent-existing|verified-absent>\ntrace_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace.zip\ntrace_finalization_result_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace-finalization.env",
+  message="FINALIZE_FLOW\nflow_run_id: <flow_run_id>\nflow_verdict: PASS|FAIL\nbrowser_runtime: <absolute path>\nbrowser_run_id: <browser run id>\nsession: <site.app>\nauth_mode: <persistent|flow-managed>\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <ephemeral path or omit>\nauth_profile: <canonical or ephemeral path>\nauth_profile_freshness: <persistent-existing|verified-absent>",
   summary="<site.alias>: finalize trace and profile"
 )
 ```
 
 The configured runner `report_dir` is `<report_dir>/<site.alias>/`, so each validated
-`flow_run_id` has a distinct `runs/<flow_run_id>/` trace and result path. `BEGIN_FLOW` starts a new
-named trace. Duplicate begin/finalize delivery for the same ID replays state/result; after one ID
+`flow_run_id` has a distinct `runs/<flow_run_id>/` trace and result path returned by `FLOW READY`.
+The lifecycle detects whether the installed producer writes `.json` or `.zip` before
+`BEGIN_FLOW` starts capture; the lead never supplies or guesses the extension. Duplicate
+begin/finalize delivery for the same ID replays state/result; after one ID
 is finalized, a new ID starts a fresh trace. Track `finalization_sent` per runner and run ID. Do not
 send `BEGIN_FLOW` or `FINALIZE_FLOW` to runners that use `EXECUTE_FLOW`: that command owns one fresh
 start/finalize lifecycle internally. In particular, Scenario B remains `EXECUTE_FLOW`-only and
@@ -713,17 +716,22 @@ When all three conditions hold, dispatch trace analysis:
 ```
 Agent(subagent_type="e2e-trace-analyzer"):
   trace_path: <trace_path returned by runner>
+  trace_format: <declared_format parsed from trace-finalization.env>
   report_dir: $REPORT_DIR
 ```
 
-Agent returns: `api_failures`, `console_errors`, `clean`, `analysis_path`. Merge these counts into the results (they may differ from the test-runner's per-step health counts, as trace analysis covers the full session including background requests).
+For Playwright ZIP, the agent returns `api_failures`, `console_errors`, `clean`, and
+`analysis_path`; merge those counts into the results. For Chrome Trace JSON it returns
+`analysis_scope: performance`, `performance_events`, `api_failures: unavailable`,
+`console_errors: unavailable`, `clean: unknown`, and `analysis_path`. Preserve unavailable/unknown
+values; never convert them to zero/true.
 
 For multiple step-routed browser runners, dispatch the analyzer once per eligible trace using that
 runner's distinct `trace_path` and `report_dir`, then aggregate counts. One ineligible or missing
 runner finalization does not suppress analysis for another eligible runner. Never reuse a
 `STEP COMPLETE` message as trace eligibility.
 
-For every other result, **Do NOT dispatch the trace-analyzer**. Presence of `trace.zip` is not a
+For every other result, **Do NOT dispatch the trace-analyzer**. Artifact presence is not a
 validity signal. Keep the runner's application `flow_verdict` unchanged, surface the independent
 trace infrastructure result, and continue to compile/present results. The report must include stop
 status/timeout, validation status, recovery status, artifact disposition/path, and analysis

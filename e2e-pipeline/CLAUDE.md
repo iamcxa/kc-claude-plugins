@@ -15,7 +15,7 @@ A Claude Code plugin (`e2e-pipeline`) that automates browser E2E testing via con
 - `e2e-flow-writer` -- analyzes codebase + mapping to generate flow YAML (no browser)
 - `e2e-flow-verifier` -- runs flows in browser, auto-repairs selectors/steps, produces reports
 - `e2e-test-runner` -- executes flow files, validates expectations
-- `e2e-trace-analyzer` -- parses Playwright trace.zip for API failures and console errors
+- `e2e-trace-analyzer` -- analyzes Playwright ZIP API/console evidence or bounded Chrome Trace JSON performance evidence
 - `e2e-media-processor` -- blank-frame-trimmed GIF, MP4 video, thumbnail from screenshots/recordings
 - `doc-probe` -- verifies documentation accuracy via live behavioral probes (dispatched by e2e-doc-sync)
 - `e2e-debug-observe` -- executes reproduction steps in browser, collects [E2E-DBG] console logs for debug pipeline. Supports **Teams mode**: persistent browser session across hypothesis-verify rounds (requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`)
@@ -65,7 +65,7 @@ PR-back flow: users curate local `learned-patterns.md` -> PR to plugin origin ->
 /e2e-map           -> .claude/e2e/mappings/<app>.yaml
 /e2e-walkthrough   -> .claude/e2e/flows/walkthrough-*.yaml + .claude/e2e/reports/<ts>/flow-report.md
 /e2e-flow          -> .claude/e2e/flows/<feature>.yaml + .claude/e2e/reports/<ts>/report.md
-/e2e-test <flow>   -> .claude/e2e/reports/<ts>/report.md, trace.zip, screenshots, video
+/e2e-test <flow>   -> .claude/e2e/reports/<ts>/report.md, detected trace artifact, screenshots, video
 /e2e-compile       -> .claude/e2e/compiled/<flow>.sh (standalone bash test scripts)
 /e2e-debug         -> .claude/e2e/debug/manifest.yaml, report.md, history/<session>-r<N>.yaml
 ```
@@ -209,7 +209,7 @@ Video is generated from step screenshots by the `e2e-media-processor` agent — 
 | CLI-only flows | ON (asciinema) | `--no-video` |
 | `/e2e-map` | No video | -- |
 
-All media post-processing (GIF, MP4, thumbnail) is handled by the `e2e-media-processor` agent, dispatched by each skill after browser work completes. Browser agents produce step screenshots + trace.zip only. `record start/stop` is no longer used — it caused instability when running alongside trace.
+All media post-processing (GIF, MP4, thumbnail) is handled by the `e2e-media-processor` agent, dispatched by each skill after browser work completes. Browser agents produce step screenshots plus the capability-detected trace artifact (`trace.json` for Chrome Trace Event JSON or `trace.zip` for a Playwright archive). `record start/stop` is no longer used — it caused instability when running alongside trace.
 
 ## Planning Integration (E2E-First Acceptance)
 

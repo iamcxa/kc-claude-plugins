@@ -291,7 +291,8 @@ Agent tool (e2e-pipeline:e2e-trace-analyzer):
   description: "Analyze trace from flow verification"
   prompt: |
     Analyze trace:
-      trace_path: <absolute path to trace.zip>
+      trace_path: <accepted artifact_path from trace-finalization.env>
+      trace_format: <declared_format from trace-finalization.env>
       report_dir: <same as verifier>
       step_log_path: <absolute path to step-log.json, if exists>
 ```
@@ -299,6 +300,10 @@ Agent tool (e2e-pipeline:e2e-trace-analyzer):
 If the prerequisite fails, do not dispatch. Preserve the application flow verdict and include
 stop/timeout, validation, bounded recovery, artifact disposition/path, and analysis eligibility in
 `report.md`.
+
+For `playwright-trace-zip`, consume API/console counts and boolean clean status. For
+`chrome-trace-json`, consume the performance summary and preserve API/console as `unavailable` and
+clean as `unknown`.
 
 When `round_1_trace_finalization_result_path` is present, include that contract as a separate
 round-history row even if the final Round 2 trace is valid.

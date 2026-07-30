@@ -12,8 +12,11 @@ usage() {
     'Options:' \
     '  --timeout <seconds>           Trace stop timeout (default: 60)' \
     '  --recovery-timeout <seconds>  Browser close timeout after stop failure (default: 15)' \
-    '  --validation-timeout <seconds> ZIP validation timeout (default: 30)' \
-    '  --result-file <path>          Result contract path (default: beside trace.zip)' \
+    '  --validation-timeout <seconds> Artifact validation timeout (default: 30)' \
+    '  --result-file <path>          Result contract path (default: beside trace artifact)' \
+    '  --trace-producer <name>       Producer identity from pre-capture detection' \
+    '  --trace-producer-version <v>  Producer version from pre-capture detection' \
+    '  --trace-format <format>       chrome-trace-json or playwright-trace-zip' \
     '  --session <name>              Named agent-browser session' \
     '  --browser-runtime <path>      Owned browser runtime executable' \
     '  --browser-run-id <id>         Owned browser run identity' \
@@ -28,6 +31,9 @@ stop_timeout=${E2E_TRACE_STOP_TIMEOUT:-60}
 recovery_timeout=${E2E_TRACE_RECOVERY_TIMEOUT:-15}
 validation_timeout=${E2E_TRACE_VALIDATION_TIMEOUT:-30}
 result_file=
+trace_producer=
+trace_producer_version=
+trace_format=
 session_name=
 browser_runtime=
 browser_run_id=
@@ -42,6 +48,7 @@ case "$0" in
 esac
 script_dir=$(CDPATH='' cd -- "$script_parent" && pwd)
 archive_validator=${E2E_TRACE_ARCHIVE_VALIDATOR:-"$script_dir/validate-trace-archive.py"}
+chrome_validator=${E2E_CHROME_TRACE_VALIDATOR:-"$script_dir/validate-chrome-trace.py"}
 identifier_validator="$script_dir/validate-trace-identifiers.sh"
 
 while [ "$#" -gt 0 ]; do
@@ -74,6 +81,21 @@ while [ "$#" -gt 0 ]; do
     --result-file)
       [ "$#" -ge 2 ] || { printf 'Missing value for --result-file\n' >&2; exit 64; }
       result_file=$2
+      shift 2
+      ;;
+    --trace-producer)
+      [ "$#" -ge 2 ] || { printf 'Missing value for --trace-producer\n' >&2; exit 64; }
+      trace_producer=$2
+      shift 2
+      ;;
+    --trace-producer-version)
+      [ "$#" -ge 2 ] || { printf 'Missing value for --trace-producer-version\n' >&2; exit 64; }
+      trace_producer_version=$2
+      shift 2
+      ;;
+    --trace-format)
+      [ "$#" -ge 2 ] || { printf 'Missing value for --trace-format\n' >&2; exit 64; }
+      trace_format=$2
       shift 2
       ;;
     --session)
@@ -113,8 +135,11 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
-if [ -z "$trace_path" ] || [ -z "$flow_verdict" ]; then
-  printf '%s\n' '--trace-path and --flow-verdict are required' >&2
+if [ -z "$trace_path" ] || [ -z "$flow_verdict" ] ||
+   [ -z "$trace_producer" ] || [ -z "$trace_producer_version" ] ||
+   [ -z "$trace_format" ]; then
+  printf '%s\n' \
+    '--trace-path, --flow-verdict, --trace-producer, --trace-producer-version, and --trace-format are required' >&2
   usage >&2
   exit 64
 fi
@@ -136,6 +161,9 @@ reject_line_break() {
 reject_line_break trace_path "$trace_path"
 reject_line_break flow_verdict "$flow_verdict"
 reject_line_break result_file "$result_file"
+reject_line_break trace_producer "$trace_producer"
+reject_line_break trace_producer_version "$trace_producer_version"
+reject_line_break trace_format "$trace_format"
 reject_line_break session "$session_name"
 reject_line_break browser_runtime "$browser_runtime"
 reject_line_break browser_run_id "$browser_run_id"
@@ -147,6 +175,35 @@ case "$flow_verdict" in
   PASS|PARTIAL|FAIL) ;;
   *)
     printf 'Unsupported flow verdict: %s\n' "$flow_verdict" >&2
+    exit 64
+    ;;
+esac
+
+case "$trace_producer" in
+  ''|[!A-Za-z0-9]*|*[!A-Za-z0-9._-]*)
+    printf 'Unsafe trace producer: %s\n' "$trace_producer" >&2
+    exit 64
+    ;;
+esac
+case "$trace_producer_version" in
+  ''|[!A-Za-z0-9]*|*[!A-Za-z0-9._+-]*)
+    printf 'Unsafe trace producer version: %s\n' "$trace_producer_version" >&2
+    exit 64
+    ;;
+esac
+if [ "${#trace_producer}" -gt 64 ] || [ "${#trace_producer_version}" -gt 64 ]; then
+  printf '%s\n' 'Trace producer and version must be at most 64 bytes' >&2
+  exit 64
+fi
+case "$trace_format" in
+  chrome-trace-json)
+    expected_extension=.json
+    ;;
+  playwright-trace-zip)
+    expected_extension=.zip
+    ;;
+  *)
+    printf 'Unsupported trace format: %s\n' "$trace_format" >&2
     exit 64
     ;;
 esac
@@ -257,6 +314,11 @@ write_dependency_failure_result() {
   dependency_result_tmp=$(mktemp "$result_dir/.${result_base}.tmp.XXXXXX") || return 1
   if ! {
     printf 'flow_verdict=%s\n' "$flow_verdict"
+    printf 'producer=%s\n' "$trace_producer"
+    printf 'producer_version=%s\n' "$trace_producer_version"
+    printf 'declared_format=%s\n' "$trace_format"
+    printf 'detected_format=not_run\n'
+    printf 'validator=not_run\n'
     printf 'infrastructure_result=FAIL\n'
     printf 'finalization_status=dependency_missing\n'
     printf 'stop_status=not_run\n'
@@ -320,10 +382,11 @@ handle_signal() {
   if [ -e "$trace_path" ]; then
     signal_stamp=$(date +%Y%m%d-%H%M%S)
     case "$trace_path" in
-      *.zip) signal_base=${trace_path%.zip} ;;
-      *) signal_base=$trace_path ;;
+      *.zip) signal_base=${trace_path%.zip}; signal_extension=.zip ;;
+      *.json) signal_base=${trace_path%.json}; signal_extension=.json ;;
+      *) signal_base=$trace_path; signal_extension=.artifact ;;
     esac
-    mv "$trace_path" "${signal_base}.invalid-signal-${signal_stamp}-$$.zip" 2>/dev/null ||
+    mv "$trace_path" "${signal_base}.invalid-signal-${signal_stamp}-$$${signal_extension}" 2>/dev/null ||
       rm -f "$trace_path"
   fi
   exit 130
@@ -410,10 +473,11 @@ quarantine_artifact() {
 
   quarantine_stamp=$(date +%Y%m%d-%H%M%S)
   case "$trace_path" in
-    *.zip) quarantine_base=${trace_path%.zip} ;;
-    *) quarantine_base=$trace_path ;;
+    *.zip) quarantine_base=${trace_path%.zip}; quarantine_extension=.zip ;;
+    *.json) quarantine_base=${trace_path%.json}; quarantine_extension=.json ;;
+    *) quarantine_base=$trace_path; quarantine_extension=.artifact ;;
   esac
-  quarantine_path="${quarantine_base}.invalid-${quarantine_reason}-${quarantine_stamp}-$$.zip"
+  quarantine_path="${quarantine_base}.invalid-${quarantine_reason}-${quarantine_stamp}-$$${quarantine_extension}"
 
   if mv "$trace_path" "$quarantine_path"; then
     artifact_disposition=quarantined
@@ -424,14 +488,103 @@ quarantine_artifact() {
   fi
 }
 
+write_result_contract() {
+  result_tmp=$(mktemp "$result_dir/.${result_base}.tmp.XXXXXX") || {
+    printf 'Cannot create trace finalization result temporary file in: %s\n' "$result_dir" >&2
+    return 70
+  }
+  if ! {
+    printf 'flow_verdict=%s\n' "$flow_verdict"
+    printf 'producer=%s\n' "$trace_producer"
+    printf 'producer_version=%s\n' "$trace_producer_version"
+    printf 'declared_format=%s\n' "$trace_format"
+    printf 'detected_format=%s\n' "$detected_format"
+    printf 'validator=%s\n' "$validator"
+    printf 'infrastructure_result=%s\n' "$infrastructure_result"
+    printf 'finalization_status=%s\n' "$finalization_status"
+    printf 'stop_status=%s\n' "$stop_status"
+    printf 'stop_exit_code=%s\n' "$stop_exit_code"
+    printf 'validation_status=%s\n' "$validation_status"
+    printf 'recovery_status=%s\n' "$recovery_status"
+    printf 'recovery_exit_code=%s\n' "$recovery_exit_code"
+    printf 'artifact_disposition=%s\n' "$artifact_disposition"
+    printf 'artifact_path=%s\n' "$artifact_path"
+    printf 'analysis_eligible=%s\n' "$analysis_eligible"
+    printf 'preexisting_artifact_path=%s\n' "$preexisting_artifact_path"
+  } > "$result_tmp"; then
+    rm -f "$result_tmp"
+    printf 'Cannot write trace finalization result temporary file: %s\n' "$result_tmp" >&2
+    return 70
+  fi
+
+  if ! python3 - "$result_tmp" "$result_file" <<'PY'
+import os
+import stat
+import sys
+
+source, destination = sys.argv[1:3]
+if os.path.lexists(destination) and not stat.S_ISREG(os.lstat(destination).st_mode):
+    raise SystemExit("destination is not a regular file")
+os.replace(source, destination)
+PY
+  then
+    rm -f "$result_tmp"
+    printf 'Cannot write trace finalization result: %s\n' "$result_file" >&2
+    return 70
+  fi
+
+  if [ ! -f "$result_file" ] || [ -L "$result_file" ] || [ ! -r "$result_file" ]; then
+    printf 'Trace finalization result is not a readable regular file: %s\n' "$result_file" >&2
+    return 70
+  fi
+  if ! cat "$result_file"; then
+    printf 'Cannot read trace finalization result: %s\n' "$result_file" >&2
+    return 70
+  fi
+}
+
 preexisting_artifact_path=
+case "$trace_path" in
+  *"$expected_extension") extension_matches=true ;;
+  *) extension_matches=false ;;
+esac
+if [ "$extension_matches" = false ]; then
+  stop_status=not_run
+  stop_exit_code=0
+  detected_format=not_run
+  validator=not_run
+  validation_status=format_mismatch
+  run_browser_bounded "$recovery_timeout" "$work_dir/recovery.log" close
+  recovery_command_result=$?
+  recovery_exit_code=$bounded_exit_code
+  recovery_was_timeout=$bounded_timed_out
+  if [ "$recovery_was_timeout" = true ]; then
+    recovery_status=timeout
+  elif [ "$recovery_command_result" -eq 0 ]; then
+    recovery_status=closed
+  else
+    recovery_status=failed
+  fi
+  artifact_disposition=missing
+  artifact_path=$trace_path
+  if [ -e "$trace_path" ] || [ -L "$trace_path" ]; then
+    artifact_disposition=retained_invalid
+  fi
+  analysis_eligible=false
+  infrastructure_result=FAIL
+  finalization_status=format_mismatch
+  write_result_contract || exit $?
+  exit 23
+fi
+
 if [ -e "$trace_path" ]; then
   quarantine_stamp=$(date +%Y%m%d-%H%M%S)
   case "$trace_path" in
-    *.zip) quarantine_base=${trace_path%.zip} ;;
-    *) quarantine_base=$trace_path ;;
+    *.zip) quarantine_base=${trace_path%.zip}; quarantine_extension=.zip ;;
+    *.json) quarantine_base=${trace_path%.json}; quarantine_extension=.json ;;
+    *) quarantine_base=$trace_path; quarantine_extension=.artifact ;;
   esac
-  preexisting_artifact_path="${quarantine_base}.invalid-preexisting-${quarantine_stamp}-$$.zip"
+  preexisting_artifact_path="${quarantine_base}.invalid-preexisting-${quarantine_stamp}-$$${quarantine_extension}"
   if ! mv "$trace_path" "$preexisting_artifact_path"; then
     printf 'Cannot quarantine pre-existing trace artifact: %s\n' "$trace_path" >&2
     exit 70
@@ -469,30 +622,76 @@ if [ "$stop_status" != completed ]; then
 fi
 
 validation_status=not_run
+detected_format=not_run
+validator=not_run
 if [ ! -e "$trace_path" ]; then
   validation_status=missing
 elif [ ! -f "$trace_path" ]; then
   validation_status=not_regular
 elif [ ! -s "$trace_path" ]; then
   validation_status=empty
-elif [ ! -f "$archive_validator" ]; then
+elif [ ! -f "$chrome_validator" ]; then
   validation_status=validator_unavailable
 else
-  run_bounded "$validation_timeout" "$work_dir/archive-validation.log" \
-    python3 "$archive_validator" validate "$trace_path"
-  archive_validation_result=$?
-  archive_validation_timed_out=$bounded_timed_out
-  if [ "$archive_validation_timed_out" = true ]; then
+  run_bounded "$validation_timeout" "$work_dir/format-detection.log" \
+    python3 "$chrome_validator" detect "$trace_path"
+  detection_result=$?
+  detection_timed_out=$bounded_timed_out
+  if [ "$detection_timed_out" = true ]; then
     validation_status=timeout
+  elif [ "$detection_result" -ne 0 ]; then
+    validation_status=validator_unavailable
   else
-    case "$archive_validation_result" in
-      0) validation_status=valid ;;
-      2) validation_status=invalid_zip ;;
-      3) validation_status=unsafe_archive ;;
-      4) validation_status=missing_playwright_content ;;
-      6) validation_status=resource_limit_exceeded ;;
-      *) validation_status=validator_unavailable ;;
+    detected_format=$(sed -n '1p' "$work_dir/format-detection.log")
+    case "$detected_format" in
+      chrome-trace-json|playwright-trace-zip|unknown) ;;
+      *)
+        detected_format=unknown
+        validation_status=validator_unavailable
+        ;;
     esac
+    if [ "$validation_status" = not_run ]; then
+      if [ "$detected_format" != "$trace_format" ]; then
+        validation_status=format_mismatch
+      elif [ "$trace_format" = chrome-trace-json ]; then
+        validator=$(basename "$chrome_validator")
+        run_bounded "$validation_timeout" "$work_dir/chrome-validation.log" \
+          python3 "$chrome_validator" validate "$trace_path"
+        chrome_validation_result=$?
+        chrome_validation_timed_out=$bounded_timed_out
+        if [ "$chrome_validation_timed_out" = true ]; then
+          validation_status=timeout
+        else
+          case "$chrome_validation_result" in
+            0) validation_status=valid ;;
+            2) validation_status=invalid_json ;;
+            3) validation_status=format_mismatch ;;
+            4) validation_status=resource_limit_exceeded ;;
+            *) validation_status=validator_unavailable ;;
+          esac
+        fi
+      elif [ ! -f "$archive_validator" ]; then
+        validation_status=validator_unavailable
+      else
+        validator=$(basename "$archive_validator")
+        run_bounded "$validation_timeout" "$work_dir/archive-validation.log" \
+          python3 "$archive_validator" validate "$trace_path"
+        archive_validation_result=$?
+        archive_validation_timed_out=$bounded_timed_out
+        if [ "$archive_validation_timed_out" = true ]; then
+          validation_status=timeout
+        else
+          case "$archive_validation_result" in
+            0) validation_status=valid ;;
+            2) validation_status=invalid_zip ;;
+            3) validation_status=unsafe_archive ;;
+            4) validation_status=missing_playwright_content ;;
+            6) validation_status=resource_limit_exceeded ;;
+            *) validation_status=validator_unavailable ;;
+          esac
+        fi
+      fi
+    fi
   fi
 fi
 
@@ -511,6 +710,10 @@ elif [ "$stop_status" = failed ]; then
   finalization_status=stop_failed
   quarantine_artifact stop_failed
   exit_code=21
+elif [ "$validation_status" = format_mismatch ]; then
+  finalization_status=format_mismatch
+  quarantine_artifact format_mismatch
+  exit_code=23
 elif [ "$validation_status" != valid ]; then
   finalization_status=invalid_artifact
   quarantine_artifact "$validation_status"
@@ -524,51 +727,5 @@ else
   exit_code=0
 fi
 
-result_tmp=$(mktemp "$result_dir/.${result_base}.tmp.XXXXXX") || {
-  printf 'Cannot create trace finalization result temporary file in: %s\n' "$result_dir" >&2
-  exit 70
-}
-if ! {
-  printf 'flow_verdict=%s\n' "$flow_verdict"
-  printf 'infrastructure_result=%s\n' "$infrastructure_result"
-  printf 'finalization_status=%s\n' "$finalization_status"
-  printf 'stop_status=%s\n' "$stop_status"
-  printf 'stop_exit_code=%s\n' "$stop_exit_code"
-  printf 'validation_status=%s\n' "$validation_status"
-  printf 'recovery_status=%s\n' "$recovery_status"
-  printf 'recovery_exit_code=%s\n' "$recovery_exit_code"
-  printf 'artifact_disposition=%s\n' "$artifact_disposition"
-  printf 'artifact_path=%s\n' "$artifact_path"
-  printf 'analysis_eligible=%s\n' "$analysis_eligible"
-  printf 'preexisting_artifact_path=%s\n' "$preexisting_artifact_path"
-} > "$result_tmp"; then
-  rm -f "$result_tmp"
-  printf 'Cannot write trace finalization result temporary file: %s\n' "$result_tmp" >&2
-  exit 70
-fi
-
-if ! python3 - "$result_tmp" "$result_file" <<'PY'
-import os
-import stat
-import sys
-
-source, destination = sys.argv[1:3]
-if os.path.lexists(destination) and not stat.S_ISREG(os.lstat(destination).st_mode):
-    raise SystemExit("destination is not a regular file")
-os.replace(source, destination)
-PY
-then
-  rm -f "$result_tmp"
-  printf 'Cannot write trace finalization result: %s\n' "$result_file" >&2
-  exit 70
-fi
-
-if [ ! -f "$result_file" ] || [ -L "$result_file" ] || [ ! -r "$result_file" ]; then
-  printf 'Trace finalization result is not a readable regular file: %s\n' "$result_file" >&2
-  exit 70
-fi
-if ! cat "$result_file"; then
-  printf 'Cannot read trace finalization result: %s\n' "$result_file" >&2
-  exit 70
-fi
+write_result_contract || exit $?
 exit "$exit_code"

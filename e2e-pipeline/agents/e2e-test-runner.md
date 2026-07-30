@@ -106,10 +106,10 @@ Ensure large binary artifacts are git-ignored before writing any files. Run once
 mkdir -p "{{report_dir}}"
 PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || dirname "$(dirname "{{report_dir}}")")
 if [ -f "$PROJ_ROOT/.gitignore" ]; then
-  grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.zip' "$PROJ_ROOT/.gitignore" 2>/dev/null || \
-    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/*.gif\n' >> "$PROJ_ROOT/.gitignore"
+  grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.json' "$PROJ_ROOT/.gitignore" 2>/dev/null || \
+    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n.claude/e2e/reports/**/*.gif\n' >> "$PROJ_ROOT/.gitignore"
 else
-  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/*.gif\n' > "$PROJ_ROOT/.gitignore"
+  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n.claude/e2e/reports/**/*.gif\n' > "$PROJ_ROOT/.gitignore"
 fi
 ```
 
@@ -188,7 +188,25 @@ If auth check FAILS:
 
 ### 1e. Start Tracing
 
+Detect the installed producer's trace capability before capture. Treat the output as data; never
+`source` or `eval` it:
+
 ```bash
+AGENT_BROWSER_EXECUTABLE=$(command -v "${AGENT_BROWSER_BIN:-agent-browser}")
+TRACE_CONTRACT_CLI="${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js"
+TRACE_CONTRACT_FILE="{{report_dir}}/trace-contract.env"
+node "$TRACE_CONTRACT_CLI" \
+  --agent-browser "$AGENT_BROWSER_EXECUTABLE" \
+  --output env > "$TRACE_CONTRACT_FILE"
+trace_producer=$(sed -n 's/^trace_producer=//p' "$TRACE_CONTRACT_FILE")
+trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "$TRACE_CONTRACT_FILE")
+trace_format=$(sed -n 's/^trace_format=//p' "$TRACE_CONTRACT_FILE")
+trace_extension=$(sed -n 's/^trace_extension=//p' "$TRACE_CONTRACT_FILE")
+case "$trace_format:$trace_extension" in
+  chrome-trace-json:.json|playwright-trace-zip:.zip) ;;
+  *) echo "Unsupported trace contract" >&2; exit 72 ;;
+esac
+TRACE_PATH="{{report_dir}}/trace${trace_extension}"
 {{browser_command}} trace start
 {{browser_command}} console --clear 2>&1 || true
 {{browser_command}} errors --clear 2>&1 || true
@@ -453,7 +471,10 @@ TRACE_FINALIZER_RC=0
   --browser-run-id "{{browser_run_id}}" \
   --app "{{app}}" \
   --browser-receipt "{{browser_receipt}}" \
-  --trace-path "{{report_dir}}/trace.zip" \
+  --trace-path "$TRACE_PATH" \
+  --trace-producer "$trace_producer" \
+  --trace-producer-version "$trace_producer_version" \
+  --trace-format "$trace_format" \
   --flow-verdict "$FLOW_VERDICT" \
   --result-file "{{report_dir}}/trace-finalization.env" ||
   TRACE_FINALIZER_RC=$?
@@ -465,10 +486,10 @@ report generation. Dispatch trace analysis only when `analysis_eligible=true`.
 If `trace-finalization.env` is missing or unreadable, synthesize a trace infrastructure failure
 with `trace_analysis_eligible: false`; never infer success from the finalizer exit code or path.
 
-The finalizer bounds `trace stop`, validates existence, non-empty size, ZIP integrity, and
-Playwright trace entries, and runs bounded close recovery through the owned browser runtime after a
-stop timeout or failure. On successful finalization, leave the browser open. Recovery may have
-closed it after an infrastructure failure.
+The finalizer bounds `trace stop`, detects the written format, rejects producer/format mismatch,
+and invokes only the declared format's validator. It runs bounded close recovery through the owned
+browser runtime after a stop timeout or failure. On successful finalization, leave the browser
+open. Recovery may have closed it after an infrastructure failure.
 
 ### 3b. Browser/Profile Completion
 
@@ -525,7 +546,7 @@ Write `{{report_dir}}/report.md` with the following structure:
 | Video | [test-run.mp4](./test-run.mp4) _(via media agent)_ |
 | Thumbnail | [thumbnail.png](./thumbnail.png) _(via media agent)_ |
 | Trace finalization | [trace-finalization.env](./trace-finalization.env) |
-| Trace (interactive) | [trace.zip](./trace.zip) _(only when `analysis_eligible=true`)_ |
+| Trace artifact | `<artifact_path>` _(only when `analysis_eligible=true`)_ |
 | Invalid trace artifact | `<artifact_path>` _(only when quarantined/retained invalid)_ |
 
 _(Media rows only if `video` was true)_
@@ -592,7 +613,7 @@ _(Include this section only when the flow contains `verify-external` steps)_
 |--------|---------|
 | Re-run this test | `/e2e-test {{flow_name}}` |
 | Re-run with video | `/e2e-test {{flow_name}} --video` |
-| View trace | `npx playwright show-trace {{report_dir}}/trace.zip` _(only when `analysis_eligible=true`)_ |
+| View trace | Playwright ZIP: `npx playwright show-trace <artifact_path>`; Chrome JSON: import `<artifact_path>` into Chrome DevTools Performance |
 
 > **Tip:** The `.claude/e2e/reports/` directory can be gitignored — only `.claude/e2e/flows/` and `.claude/e2e/mappings/` are needed to reproduce results.
 ```
@@ -612,11 +633,16 @@ You MUST end your response with this exact structured block (the orchestrator pa
 - api_failures: N
 - flow_verdict: PASS|FAIL
 - trace_infrastructure_result: PASS|FAIL
-- trace_finalization_status: valid|timeout|stop_failed|invalid_artifact|dependency_missing
-- trace_validation_status: valid|missing|not_regular|empty|timeout|invalid_zip|unsafe_archive|resource_limit_exceeded|missing_playwright_content|validator_unavailable
+- trace_finalization_status: valid|timeout|stop_failed|format_mismatch|invalid_artifact|dependency_missing
+- trace_validation_status: valid|missing|not_regular|empty|timeout|format_mismatch|invalid_json|invalid_zip|unsafe_archive|resource_limit_exceeded|missing_playwright_content|validator_unavailable
 - trace_recovery_status: not_needed|closed|timeout|failed
 - trace_artifact_disposition: accepted|quarantined|retained_invalid|missing
 - trace_path: <artifact_path from trace-finalization.env>
+- trace_producer: <producer from trace-finalization.env>
+- trace_producer_version: <producer_version from trace-finalization.env>
+- trace_declared_format: <declared_format from trace-finalization.env>
+- trace_detected_format: <detected_format from trace-finalization.env>
+- trace_validator: <validator from trace-finalization.env>
 - trace_finalization_result_path: {{report_dir}}/trace-finalization.env
 - trace_analysis_eligible: true|false
 - report_path: {{report_dir}}/report.md
@@ -688,8 +714,8 @@ eval_fallback_hits: <N>
 - eval_fallback_hits: N
 - flow_verdict: PASS|FAIL
 - trace_infrastructure_result: PASS|FAIL
-- trace_finalization_status: valid|timeout|stop_failed|invalid_artifact|dependency_missing
-- trace_validation_status: valid|missing|not_regular|empty|timeout|invalid_zip|unsafe_archive|resource_limit_exceeded|missing_playwright_content|validator_unavailable
+- trace_finalization_status: valid|timeout|stop_failed|format_mismatch|invalid_artifact|dependency_missing
+- trace_validation_status: valid|missing|not_regular|empty|timeout|format_mismatch|invalid_json|invalid_zip|unsafe_archive|resource_limit_exceeded|missing_playwright_content|validator_unavailable
 - trace_recovery_status: not_needed|closed|timeout|failed
 - trace_artifact_disposition: accepted|quarantined|retained_invalid|missing
 - trace_path: <artifact_path from trace-finalization.env>
@@ -906,18 +932,16 @@ canonical_auth_profile: <canonical path>
 ephemeral_auth_profile: <prepared fresh ephemeral path or omit>
 auth_profile: <canonical or prepared fresh ephemeral path>
 auth_profile_freshness: <persistent-existing|verified-absent>
-trace_path: {{report_dir}}/runs/<flow_run_id>/trace.zip
-trace_finalization_result_path: {{report_dir}}/runs/<flow_run_id>/trace-finalization.env
 ```
 
 First classify the `flow_run_id`. A duplicate matching the active or finalized ID must repeat the
-exact stored runtime, auth binding, and paths; replay its stored `FLOW READY` result without
+exact stored runtime and auth binding; replay its stored `FLOW READY` result without
 browser interaction or another profile adoption. Reject any drift.
 
-For a new ID, validate `session` against `{{app}}` and both supplied paths against the exact
-run-keyed paths. Require both ownership fields and require them to match the teammate's configured
-browser ownership. In flow-managed mode, adopt the inbound prepared profile only after prior
-cleanup:
+For a new ID, validate `session` against `{{app}}`. Require both ownership fields and require them
+to match the teammate's configured browser ownership. The lifecycle helper detects the installed
+trace capability before capture and derives the run-keyed artifact path; inbound messages never
+select an extension. In flow-managed mode, adopt the inbound prepared profile only after prior cleanup:
 
 1. Require `active_auth_profile` empty, require the inbound profile to be a new profile different
    from `last_auth_profile`, require `verified-absent`, and confirm the path is absent.
@@ -956,7 +980,7 @@ Parse its fixed `key=value` output without sourcing it. Send:
 ```
 SendMessage(
   to="lead",
-  message="FLOW READY\nflow_run_id: <id>\nbegin_status: started|replayed|already_finalized\ntrace_path: <path>\ntrace_finalization_result_path: <path>",
+  message="FLOW READY\nflow_run_id: <id>\nbegin_status: started|replayed|already_finalized\ntrace_path: <detected .json or .zip path>\ntrace_producer: <producer>\ntrace_producer_version: <version>\ntrace_format: <declared format>\ntrace_finalization_result_path: <path>",
   summary="<flow_run_id>: trace ready"
 )
 ```
@@ -982,13 +1006,12 @@ canonical_auth_profile: <canonical path>
 ephemeral_auth_profile: <active ephemeral path or omit>
 auth_profile: <canonical or active ephemeral path>
 auth_profile_freshness: <persistent-existing|verified-absent>
-trace_path: {{report_dir}}/runs/<flow_run_id>/trace.zip
-trace_finalization_result_path: {{report_dir}}/runs/<flow_run_id>/trace-finalization.env
 ```
 
 Validate that `flow_verdict` is `PASS` or `FAIL`, `session` exactly matches the configured
-`{{app}}`, and both paths exactly match the configured `{{report_dir}}` paths above. Reject a
-mismatch with `EXECUTION ERROR`; do not invoke the helper on untrusted paths.
+`{{app}}`, and the ownership fields match the active run. Reject a mismatch with
+`EXECUTION ERROR`; do not accept artifact paths from the message. Use the run-keyed paths and
+format contract persisted by the lifecycle helper at `BEGIN_FLOW`.
 Require both ownership fields and require them to match the ownership used by `BEGIN_FLOW`. Pass
 them as separate argv; never combine them into `AGENT_BROWSER_BIN` or another shell command string.
 Apply the complete Browser Command Contract: the auth mode/profile fields must match the active
@@ -1038,7 +1061,7 @@ Then send one combined finalization response:
 ```
 SendMessage(
   to="lead",
-  message="TRACE FINALIZED\nflow_run_id: <id>\nflow_verdict: PASS|FAIL\ntrace_path: <accepted path or N/A>\ntrace_finalization_result_path: <path>\ntrace_infrastructure_result: PASS|FAIL\ntrace_analysis_eligible: true|false\ntrace_finalization_status: <status>\ntrace_validation_status: <status>\ntrace_recovery_status: <status>\ntrace_artifact_disposition: <status>\ntrace_artifact_path: <path>\nprofile_infrastructure_result: PASS|FAIL|not-applicable\nauth_profile_binding: verified|not-applicable\nauth_profile_cleanup: removed|failed|not-applicable\ncanonical_profile: unchanged|changed|not-applicable\nprofile_retained: true|false|not-applicable\nprofile: <path or not-applicable>",
+  message="TRACE FINALIZED\nflow_run_id: <id>\nflow_verdict: PASS|FAIL\ntrace_path: <accepted path or N/A>\ntrace_producer: <producer>\ntrace_producer_version: <version>\ntrace_declared_format: <declared format>\ntrace_detected_format: <detected format>\ntrace_validator: <validator>\ntrace_finalization_result_path: <path>\ntrace_infrastructure_result: PASS|FAIL\ntrace_analysis_eligible: true|false\ntrace_finalization_status: <status>\ntrace_validation_status: <status>\ntrace_recovery_status: <status>\ntrace_artifact_disposition: <status>\ntrace_artifact_path: <path>\nprofile_infrastructure_result: PASS|FAIL|not-applicable\nauth_profile_binding: verified|not-applicable\nauth_profile_cleanup: removed|failed|not-applicable\ncanonical_profile: unchanged|changed|not-applicable\nprofile_retained: true|false|not-applicable\nprofile: <path or not-applicable>",
   summary="Flow/trace/profile finalization complete"
 )
 ```
@@ -1078,6 +1101,11 @@ Start one fresh trace only after the mode-appropriate browser/profile is ready:
 
 ```bash
 python3 --version
+# Repeat Phase 1e capability detection and refresh trace_producer,
+# trace_producer_version, trace_format, trace_extension, and TRACE_PATH.
+node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
+  --agent-browser "$(command -v "${AGENT_BROWSER_BIN:-agent-browser}")" \
+  --output env > "{{report_dir}}/trace-contract.env"
 {{browser_command}} trace start
 ```
 

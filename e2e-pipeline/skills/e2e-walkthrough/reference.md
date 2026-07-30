@@ -35,10 +35,10 @@ REPORT_DIR="$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)" && mkdir -p "$REP
 
 ```bash
 if [ -f .gitignore ]; then
-  grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.zip' .gitignore 2>/dev/null || \
-    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n' >> .gitignore
+  grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.json' .gitignore 2>/dev/null || \
+    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n' >> .gitignore
 else
-  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n' > .gitignore
+  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n' > .gitignore
 fi
 ```
 
@@ -70,6 +70,20 @@ Check URL against `auth.verification` condition. If verification fails (auth exp
 
 **Start trace** (after auth verified):
 ```bash
+AGENT_BROWSER_EXECUTABLE=$(command -v "${AGENT_BROWSER_BIN:-agent-browser}")
+TRACE_CONTRACT_FILE="$REPORT_DIR/trace-contract.env"
+node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
+  --agent-browser "$AGENT_BROWSER_EXECUTABLE" \
+  --output env > "$TRACE_CONTRACT_FILE"
+trace_producer=$(sed -n 's/^trace_producer=//p' "$TRACE_CONTRACT_FILE")
+trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "$TRACE_CONTRACT_FILE")
+trace_format=$(sed -n 's/^trace_format=//p' "$TRACE_CONTRACT_FILE")
+trace_extension=$(sed -n 's/^trace_extension=//p' "$TRACE_CONTRACT_FILE")
+case "$trace_format:$trace_extension" in
+  chrome-trace-json:.json|playwright-trace-zip:.zip) ;;
+  *) echo "Unsupported trace contract" >&2; exit 72 ;;
+esac
+TRACE_PATH="$REPORT_DIR/trace${trace_extension}"
 <browser_command> trace start
 ```
 
@@ -129,7 +143,9 @@ Human can request site switch anytime: "switch to admin", "go to portal", "check
 - Empty output (common case): no action, no output to human
 - Non-empty (≤5 errors): record each error as `{type: "js_error", detail: <message>, source: "errors --json"}` in the step's anomaly list. Notify human inline (don't stop).
 - Non-empty (>5 errors — bulk): aggregate instead of recording individually. Record up to 3 representative errors with distinct types, plus one summary: `{type: "js_error", detail: "N total errors (M unique) — top: TypeError (K), NetworkError (J)", source: "errors --json aggregated"}`. Save full raw output to `$REPORT_DIR/step-N-errors.json` for Phase 4 trace cross-reference.
-- Do NOT run `console --json` at any point during Phase 3 — not per-step, not "just once for debugging." Trace.zip captures complete console log with better coverage. This applies even when the user asks to "pay attention to console errors" — `errors --json` is the correct tool for that. Console data is fully available in Phase 4 via trace.zip cross-reference.
+- Do NOT run `console --json` during Phase 3. Use `errors --json` as the explicit browser-error
+  evidence. A Playwright trace may add console evidence during Phase 4; Chrome Trace Event JSON
+  does not, so never promise console cross-reference solely from artifact presence.
 
 **Step 6 — Anomaly observation:**
 
@@ -328,7 +344,10 @@ For a single-site walkthrough (no `--sites`), retain the root artifact paths:
 TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
 TRACE_FINALIZER_RC=0
 "$TRACE_FINALIZER" \
-  --trace-path "$REPORT_DIR/trace.zip" \
+  --trace-path "$TRACE_PATH" \
+  --trace-producer "$trace_producer" \
+  --trace-producer-version "$trace_producer_version" \
+  --trace-format "$trace_format" \
   --flow-verdict "$FLOW_VERDICT" \
   --result-file "$REPORT_DIR/trace-finalization.env" ||
   TRACE_FINALIZER_RC=$?
@@ -346,7 +365,10 @@ for APP in "${TRACE_STARTED_APPS[@]}"; do
   SITE_TRACE_FINALIZER_RC=0
   "$TRACE_FINALIZER" \
     --session "$APP" \
-    --trace-path "$REPORT_DIR/sites/$APP/trace.zip" \
+    --trace-path "$REPORT_DIR/sites/$APP/trace${trace_extension}" \
+    --trace-producer "$trace_producer" \
+    --trace-producer-version "$trace_producer_version" \
+    --trace-format "$trace_format" \
     --flow-verdict "$SITE_FLOW_VERDICT" \
     --result-file "$REPORT_DIR/sites/$APP/trace-finalization.env" ||
     SITE_TRACE_FINALIZER_RC=$?
@@ -362,6 +384,7 @@ The helper has four independent report surfaces:
 |---------|--------------|
 | Application result | `flow_verdict` |
 | Bounded stop | `stop_status`, `stop_exit_code` |
+| Artifact contract | `producer`, `producer_version`, `declared_format`, `detected_format`, `validator` |
 | Artifact gate | `validation_status`, `analysis_eligible` |
 | Recovery/disposition | `recovery_status`, `recovery_exit_code`, `artifact_disposition`, `artifact_path` |
 
@@ -371,27 +394,32 @@ bounded close recovery; report generation still proceeds even if recovery also t
 ### Trace Analysis (Subagent — Enhanced)
 
 Dispatch trace analysis to isolated context only when the applicable finalization result says
-`analysis_eligible=true`. For multi-site, evaluate and dispatch each
-`$REPORT_DIR/sites/$APP/trace.zip` independently; one ineligible site does not suppress analysis
+`analysis_eligible=true`. For multi-site, evaluate and dispatch each finalizer `artifact_path`
+independently; one ineligible site does not suppress analysis
 for another eligible site. When `step-log.json` is available, the analyzer performs
 step-correlated analysis and anomaly cross-reference.
 
 | Field | Source | Required |
 |-------|--------|----------|
-| `trace_path` | `$REPORT_DIR/trace.zip` | YES |
+| `trace_path` | Accepted `artifact_path` from `trace-finalization.env` | YES |
+| `trace_format` | `declared_format` from `trace-finalization.env` | YES |
 | `report_dir` | `$REPORT_DIR` | YES |
 | `step_log_path` | `$REPORT_DIR/step-log.json` | YES (walkthrough always writes this) |
 | `noise_patterns` | mapping's `health.known_noise` list (if present) | NO |
 
 ```
 Agent(subagent_type="e2e-trace-analyzer"):
-  trace_path: "$REPORT_DIR/trace.zip"
+  trace_path: "<accepted artifact_path>"
+  trace_format: "<declared_format>"
   report_dir: "$REPORT_DIR"
   step_log_path: "$REPORT_DIR/step-log.json"
   noise_patterns: <from mapping health.known_noise, or omit>
 ```
 
-**Standard returns:** `analysis_path`, `api_failures`, `console_errors`, `clean`.
+**Standard returns:** Playwright ZIP returns `analysis_path`, `api_failures`, `console_errors`,
+`clean`. Chrome JSON returns `analysis_path`, `analysis_scope: performance`,
+`performance_events`, `api_failures: unavailable`, `console_errors: unavailable`, and
+`clean: unknown`.
 
 **Enhanced returns (when step_log provided):** Additionally: `anomalies_observed`, `anomalies_correlated`, `anomalies_unmatched`, `silent_failures`.
 
@@ -444,7 +472,7 @@ Before proceeding to report generation, verify these prerequisites exist:
 1. `$REPORT_DIR` exists and contains step screenshots from Phase 3
 2. `trace-finalization.env` exists and has been read
 3. `step-log.json` exists in `$REPORT_DIR` (from Phase 3 step log output)
-4. If `analysis_eligible=true`, both `trace.zip` and `trace-analysis.md` exist. If false, the
+4. If `analysis_eligible=true`, both the accepted `artifact_path` and `trace-analysis.md` exist. If false, the
    invalid artifact disposition/path is recorded and `trace-analysis.md` is N/A.
 
 If any applicable prerequisite is missing, complete it before writing reports. An ineligible trace
@@ -523,7 +551,8 @@ flowchart TD
   counts and report finalization timeout/stop, validation, recovery, artifact disposition/path,
   and analysis eligibility from `trace-finalization.env`.
 - **Observations**: Key behavioral findings. Focus on: bug status (reproduced / not reproduced vs prior sessions), anomaly cross-reference insights (silent failures, cascading errors), UX quality (suggestion chips, confirmation flows), deviations from expected flow YAML. **Omit section entirely** if walkthrough was purely mechanical with no notable findings.
-- **Artifacts**: All files in `$REPORT_DIR/` — screenshots, trace.zip, trace-analysis.md, video files. One row per file.
+- **Artifacts**: All files in `$REPORT_DIR/` — screenshots, the accepted trace artifact,
+  trace-analysis.md, and video files. One row per file.
 - **Replay**: Always the last section. Shows commands to re-run and inspect. Template:
 
 ```markdown
@@ -533,7 +562,7 @@ flowchart TD
 |--------|---------|
 | Re-run as automated test | `/e2e-test <flow-yaml-name>` |
 | Re-walk interactively | `/e2e-walkthrough` |
-| View trace | `npx playwright show-trace $REPORT_DIR/trace.zip` |
+| View trace | Playwright ZIP: `npx playwright show-trace <artifact_path>`; Chrome JSON: import `<artifact_path>` into Chrome DevTools Performance |
 
 > **Tip:** The `.claude/e2e/reports/` directory can be gitignored — only `.claude/e2e/flows/` and `.claude/e2e/mappings/` are needed to reproduce results.
 ```

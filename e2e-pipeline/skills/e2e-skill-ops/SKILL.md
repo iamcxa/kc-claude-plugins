@@ -144,6 +144,6 @@ If verification fails, loop back to `--debug`. Write-back is not optional — at
 | List project flows | `ls .claude/e2e/flows/*.yaml` |
 | Verify a single flow | `/e2e-test <flow-name>` |
 | Verify full suite | `/e2e-test --suite smoke` |
-| View trace interactively | `npx playwright show-trace <trace.zip>` |
+| View trace interactively | Playwright ZIP: `npx playwright show-trace <artifact>`; Chrome JSON: import into Chrome DevTools Performance |
 
 <!-- Last updated: 2026-04-04 -->

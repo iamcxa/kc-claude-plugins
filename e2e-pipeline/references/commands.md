@@ -132,13 +132,28 @@ is missing, stop before tracing. If `trace-finalization.env` is missing or unrea
 finalizer attempt, record a trace infrastructure failure and never dispatch analysis.
 
 ```bash
+node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
+  --agent-browser "$(command -v "${AGENT_BROWSER_BIN:-agent-browser}")" \
+  --output env > "$REPORT_DIR/trace-contract.env" # REQUIRED before capture
+trace_producer=$(sed -n 's/^trace_producer=//p' "$REPORT_DIR/trace-contract.env")
+trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "$REPORT_DIR/trace-contract.env")
+trace_format=$(sed -n 's/^trace_format=//p' "$REPORT_DIR/trace-contract.env")
+trace_extension=$(sed -n 's/^trace_extension=//p' "$REPORT_DIR/trace-contract.env")
+case "$trace_format:$trace_extension" in
+  chrome-trace-json:.json|playwright-trace-zip:.zip) ;;
+  *) echo "Unsupported trace contract" >&2; exit 72 ;;
+esac
+TRACE_PATH="$REPORT_DIR/trace${trace_extension}"
 e2e_browser trace start                         # Start recording (AFTER open)
 "${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh" \
   --browser-runtime "$BROWSER_RUNTIME" \
   --browser-run-id "$BROWSER_RUN_ID" \
   --app "$APP" \
   --browser-receipt "$BROWSER_RECEIPT" \
-  --trace-path "<abs-path>/trace.zip" \
+  --trace-path "$TRACE_PATH" \
+  --trace-producer "$trace_producer" \
+  --trace-producer-version "$trace_producer_version" \
+  --trace-format "$trace_format" \
   --flow-verdict "<PASS|PARTIAL|FAIL>"             # Bounded stop + validity gate
 e2e_browser console --json                      # Console messages as JSON
 e2e_browser console --clear                     # Clear console buffer
@@ -217,9 +232,10 @@ e2e_browser find label "Email" fill "user@test.com"  # By label
 4. **fill > click+type**: `fill` is atomic (focus + clear + type). `click` then `type` is error-prone — @ref can change on focus.
 5. **is visible exit code**: Always 0. Check stdout text "true"/"false", NOT exit code. Don't chain with `&&`.
 6. **shared trace finalizer before close**: Never call raw `trace stop` in pipeline consumers.
-   Run `${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh`; it bounds stop, validates the ZIP and
-   Playwright entries under a separate bounded watchdog, rejects archive resource-limit violations
-   before a full read, attempts bounded close recovery after failure, and records artifact
-   disposition. Analyze only when `analysis_eligible=true`.
+   Probe `${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js` before capture, then run
+   `${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh` with that exact producer/format contract. It
+   bounds stop, detects actual output, rejects mismatches before selecting a validator, attempts
+   bounded close recovery after failure, and records artifact disposition. Analyze only when
+   `analysis_eligible=true`.
 7. **scroll direction only**: `scroll` accepts up/down only. To scroll TO an element, use `hover @ref`.
 8. **--headed for auth**: Browser must be visible when human needs to log in.

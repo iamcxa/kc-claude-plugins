@@ -43,7 +43,7 @@ terminate a PID absent from the ownership receipt.
 
 - **PATH**: `agent-browser` is installed globally via npm at `~/.npm-global/bin/`. After context reset or in subagent contexts, this path may not be in `$PATH`. Always verify availability before first use:
   ```bash
-  command -v agent-browser >/dev/null 2>&1 || export PATH="$HOME/.npm-global/bin:$PATH"
+  command -v "${AGENT_BROWSER_BIN:-agent-browser}" >/dev/null 2>&1 || export PATH="$HOME/.npm-global/bin:$PATH"
   ```
 - Run this check at the start of any agent or skill that calls `agent-browser` CLI commands.
 
@@ -143,9 +143,9 @@ terminate a PID absent from the ownership receipt.
 
 ## Gitignore Housekeeping
 
-E2E runs produce large binary artifacts (webm, mp4, trace.zip, quarantined
-trace.invalid-*.zip) that should NOT be committed. Before writing any of these files, ensure the
-project's `.gitignore` includes rules for them.
+E2E runs produce large artifacts (webm, mp4, Playwright `trace.zip`, Chrome `trace.json`, and
+quarantined `trace.invalid-*` variants) that should NOT be committed. Before writing any of these
+files, ensure the project's `.gitignore` includes rules for them.
 
 **Patterns to add** (if missing):
 
@@ -154,7 +154,9 @@ project's `.gitignore` includes rules for them.
 .claude/e2e/reports/**/*.webm
 .claude/e2e/reports/**/*.mp4
 .claude/e2e/reports/**/trace.zip
+.claude/e2e/reports/**/trace.json
 .claude/e2e/reports/**/trace.invalid-*.zip
+.claude/e2e/reports/**/trace.invalid-*.json
 ```
 
 **Check & append** (idempotent — safe to run multiple times):
@@ -162,11 +164,11 @@ project's `.gitignore` includes rules for them.
 ```bash
 PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 if [ -f "$PROJ_ROOT/.gitignore" ]; then
-  if ! grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.zip' "$PROJ_ROOT/.gitignore" 2>/dev/null; then
-    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n' >> "$PROJ_ROOT/.gitignore"
+  if ! grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.json' "$PROJ_ROOT/.gitignore" 2>/dev/null; then
+    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n' >> "$PROJ_ROOT/.gitignore"
   fi
 else
-  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n' > "$PROJ_ROOT/.gitignore"
+  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n' > "$PROJ_ROOT/.gitignore"
 fi
 ```
 
@@ -221,22 +223,43 @@ Add alongside existing browser artifact patterns:
 
 ## Trace Analysis
 
-- `trace.zip` contains: `trace.network` (JSONL HAR), `trace.trace` (JSONL events), `resources/` (response bodies)
-- View interactively: `npx playwright show-trace trace.zip`
-- Response bodies in `resources/` are SHA1-referenced files (`.dat` extension)
-- Screencast frames in `resources/` use full filename as SHA1 (e.g., `page@xxx-timestamp.jpeg`). Use `frameSwapWallTime` (wall clock ms) for duration, NOT `timestamp` (monotonic).
-- Filter trace.network for `status >= 400` to find API failures
-- Filter trace.trace for console errors (after noise removal)
+- `playwright-trace-zip`: `trace.network` (JSONL HAR), `trace.trace` (JSONL events), and
+  `resources/` (response bodies). View with `npx playwright show-trace <artifact_path>`.
+- `chrome-trace-json`: Chrome Trace Event JSON. Summarize bounded performance events with
+  `scripts/validate-chrome-trace.py summarize`; import into Chrome DevTools Performance for
+  interactive inspection.
+- Chrome Trace JSON does not provide the Playwright API/console evidence contract. Report those
+  fields as `unavailable` and `clean` as `unknown`, never zero/true.
+- For Playwright response bodies, resource files use SHA-1 identifiers. Filter
+  `trace.network` for status >= 400 and `trace.trace` for console errors after noise removal.
 
 ### Trace finalization failure/recovery contract
 
-All pipeline producers use one executable:
+All pipeline producers detect the installed capability before `trace start`, derive the extension,
+and use one finalizer:
 
 ```bash
+node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
+  --agent-browser "$(command -v "${AGENT_BROWSER_BIN:-agent-browser}")" \
+  --output env > "$REPORT_DIR/trace-contract.env"
+# Parse the fixed fields as data (never source/eval the file).
+trace_producer=$(sed -n 's/^trace_producer=//p' "$REPORT_DIR/trace-contract.env")
+trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "$REPORT_DIR/trace-contract.env")
+trace_format=$(sed -n 's/^trace_format=//p' "$REPORT_DIR/trace-contract.env")
+trace_extension=$(sed -n 's/^trace_extension=//p' "$REPORT_DIR/trace-contract.env")
+case "$trace_format:$trace_extension" in
+  chrome-trace-json:.json|playwright-trace-zip:.zip) ;;
+  *) echo "Unsupported trace contract" >&2; exit 72 ;;
+esac
+TRACE_PATH="$REPORT_DIR/trace${trace_extension}"
+
 TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
 TRACE_FINALIZER_RC=0
 "$TRACE_FINALIZER" \
-  --trace-path "$REPORT_DIR/trace.zip" \
+  --trace-path "$TRACE_PATH" \
+  --trace-producer "$trace_producer" \
+  --trace-producer-version "$trace_producer_version" \
+  --trace-format "$trace_format" \
   --flow-verdict "$FLOW_VERDICT" \
   --result-file "$REPORT_DIR/trace-finalization.env" ||
   TRACE_FINALIZER_RC=$?
@@ -267,7 +290,7 @@ fields and routes both `trace start` and finalization through that runtime.
 - Stop timeout/failure triggers one bounded `agent-browser close` recovery attempt (default 15
   seconds). Use `--session <name>` for named sessions.
 - Invalid/uncertain artifacts are quarantined under
-  `trace.invalid-<reason>-<timestamp>-<pid>.zip` when the destination is writable. Otherwise the
+  `trace.invalid-<reason>-<timestamp>-<pid>.<json|zip>` when the destination is writable. Otherwise the
   result contract reports `retained_invalid`; neither disposition is accepted for analysis.
 - Dispatch trace analysis only when `analysis_eligible=true`. All other outcomes continue to
   report generation.
@@ -282,9 +305,11 @@ CR/LF-bearing paths, sessions, and verdicts and accepts only `PASS`, `PARTIAL`, 
 |-------|---------|
 | `flow_verdict` | Already-known application flow result |
 | `infrastructure_result` | `PASS` only for completed + valid finalization |
-| `finalization_status` | `valid`, `timeout`, `stop_failed`, `invalid_artifact`, or pre-trace `dependency_missing` |
+| `producer`, `producer_version` | Capture producer identity and probed version |
+| `declared_format`, `detected_format`, `validator` | End-to-end artifact contract and actual validator used |
+| `finalization_status` | `valid`, `timeout`, `stop_failed`, `format_mismatch`, `invalid_artifact`, or pre-trace `dependency_missing` |
 | `stop_status`, `stop_exit_code` | `completed`, `timeout`, or `failed` |
-| `validation_status` | `valid`, `missing`, `not_regular`, `empty`, `timeout`, `invalid_zip`, `unsafe_archive`, `resource_limit_exceeded`, `missing_playwright_content`, `validator_unavailable` |
+| `validation_status` | `valid`, `missing`, `not_regular`, `empty`, `timeout`, `format_mismatch`, `invalid_json`, `invalid_zip`, `unsafe_archive`, `resource_limit_exceeded`, `missing_playwright_content`, `validator_unavailable` |
 | `recovery_status`, `recovery_exit_code` | `not_needed`, `closed`, `timeout`, or `failed` |
 | `artifact_disposition`, `artifact_path` | Accepted, quarantined, retained invalid, or missing |
 | `analysis_eligible` | The sole dispatch gate for trace analysis |

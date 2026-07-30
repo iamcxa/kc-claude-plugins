@@ -380,13 +380,18 @@ validation status is `valid`, and the trace infrastructure result is `PASS`. `tr
 presence alone never qualifies.
 
 Dispatch `e2e-pipeline:e2e-trace-analyzer` with:
-- `trace_path`: From verifier output
+- `trace_path`: Accepted artifact path from the parsed result file
+- `trace_format`: `declared_format` from the parsed result file
 - `report_dir`: Same as verifier
 - `step_log_path`: From verifier output (if present)
 
-For timeout, failed stop, missing/empty/corrupt/non-Playwright ZIP, or any other ineligible result,
+For timeout, failed stop, missing/empty/corrupt/format-mismatched output, or any other ineligible result,
 do not dispatch the analyzer. Preserve the verifier's application flow status, merge the separate
 trace infrastructure fields into the report, and continue Phase 2d.
+
+Playwright ZIP analysis returns API/console counts and a boolean `clean`. Chrome Trace JSON
+analysis is performance-scoped: preserve `api_failures: unavailable`,
+`console_errors: unavailable`, and `clean: unknown` instead of converting them to zero/true.
 
 ### 2d. Process results
 

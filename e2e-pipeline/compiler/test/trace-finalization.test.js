@@ -10,6 +10,12 @@ const { describe, test } = require('node:test');
 const pluginRoot = path.resolve(__dirname, '..', '..');
 const finalizer = path.join(pluginRoot, 'scripts', 'finalize-trace.sh');
 const archiveValidator = path.join(pluginRoot, 'scripts', 'validate-trace-archive.py');
+const chromeValidator = path.join(pluginRoot, 'scripts', 'validate-chrome-trace.py');
+const chromeTraceFixture = path.join(
+  __dirname,
+  'fixtures',
+  'chrome-trace-event.json'
+);
 const identifierValidator = path.join(
   pluginRoot,
   'scripts',
@@ -54,6 +60,21 @@ set -eu
 
 if [ -n "\${AGENT_BROWSER_LOG:-}" ]; then
   printf '%s\\n' "$*" >> "$AGENT_BROWSER_LOG"
+fi
+
+if [ "$#" -eq 1 ] && [ "$1" = "--version" ]; then
+  printf '%s\\n' 'agent-browser 0.32.0'
+  exit 0
+fi
+if [ "$#" -eq 2 ] && [ "$1" = "trace" ] && [ "$2" = "--help" ]; then
+  if [ "\${TRACE_CAPABILITY_MODE:-}" = unknown ]; then
+    printf '%s\\n' 'Record an implementation-defined trace.'
+    exit 0
+  fi
+  printf '%s\\n' \
+    'Record a Chrome DevTools trace for debugging.' \
+    'agent-browser trace stop ./debug-trace.json'
+  exit 0
 fi
 
 last_arg=
@@ -280,6 +301,21 @@ while True:
   return validator;
 }
 
+function writeMarkerArchiveValidator(dir, markerPath) {
+  const validator = path.join(dir, 'marker-archive-validator.py');
+  fs.writeFileSync(
+    validator,
+    [
+      '#!/usr/bin/env python3',
+      'from pathlib import Path',
+      `Path(${JSON.stringify(markerPath)}).write_text("called", encoding="utf-8")`,
+      'raise SystemExit(2)',
+      '',
+    ].join('\n')
+  );
+  return validator;
+}
+
 function parseResultFile(resultPath) {
   const result = {};
   const lines = fs.readFileSync(resultPath, 'utf8').trim().split('\n');
@@ -293,7 +329,13 @@ function parseResultFile(resultPath) {
 function runFinalizer(options) {
   const dir = options.dir;
   const resultPath = options.resultPath || path.join(dir, 'trace-finalization.env');
-  const tracePath = options.tracePath || path.join(dir, 'trace.zip');
+  const traceFormat = options.traceFormat || 'playwright-trace-zip';
+  const tracePath =
+    options.tracePath ||
+    path.join(
+      dir,
+      traceFormat === 'chrome-trace-json' ? 'trace.json' : 'trace.zip'
+    );
   const recoveryMarker = options.recoveryMarker || path.join(dir, 'recovery-reached');
   const descendantPidFile = options.descendantPidFile || path.join(dir, 'descendant.pid');
   const agentBrowserLog = options.agentBrowserLog || path.join(dir, 'agent-browser.log');
@@ -301,6 +343,9 @@ function runFinalizer(options) {
   const finalizerArgs = [
     '--trace-path', tracePath,
     '--flow-verdict', options.flowVerdict || 'PASS',
+    '--trace-producer', options.traceProducer || 'agent-browser',
+    '--trace-producer-version', options.traceProducerVersion || 'test',
+    '--trace-format', traceFormat,
     '--timeout', options.mode === 'hang' ? '1' : options.mode === 'fork-late-write' ? '2' : '10',
     // The owned runtime performs its own Node startup before forwarding close.
     // Leave one extra second under concurrent test load so this validates
@@ -335,6 +380,7 @@ function runFinalizer(options) {
         EXPECTED_BROWSER_APP: options.browserApp || '',
         EXPECTED_BROWSER_RUN_ID: options.browserRunId || '',
         E2E_TRACE_ARCHIVE_VALIDATOR: options.archiveValidator || '',
+        E2E_CHROME_TRACE_VALIDATOR: options.chromeValidator || chromeValidator,
         RECOVERY_MARKER: recoveryMarker,
         TRACE_FIXTURE: options.fixture || '',
         TRACE_STUB_MODE: options.mode,
@@ -431,6 +477,9 @@ describe('shared trace finalization contract', () => {
         [
           '--trace-path', tracePath,
           '--flow-verdict', 'PASS',
+          '--trace-producer', 'agent-browser',
+          '--trace-producer-version', 'test',
+          '--trace-format', 'playwright-trace-zip',
           '--timeout', '10',
           '--recovery-timeout', '1',
           '--result-file', path.join(dir, 'trace-finalization.env'),
@@ -538,6 +587,99 @@ describe('shared trace finalization contract', () => {
       assert.equal(result.artifact_disposition, 'accepted');
       assert.equal(result.analysis_eligible, 'true');
       assert.equal(result.artifact_path, run.tracePath);
+      assert.equal(result.producer, 'agent-browser');
+      assert.equal(result.producer_version, 'test');
+      assert.equal(result.declared_format, 'playwright-trace-zip');
+      assert.equal(result.detected_format, 'playwright-trace-zip');
+      assert.equal(result.validator, 'validate-trace-archive.py');
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test('real Chrome trace JSON is validated without entering the Playwright ZIP path', () => {
+    const dir = makeTempDir();
+    try {
+      const archiveMarker = path.join(dir, 'archive-validator-called');
+      const markerValidator = writeMarkerArchiveValidator(dir, archiveMarker);
+      const run = runFinalizer({
+        dir,
+        mode: 'valid',
+        fixture: chromeTraceFixture,
+        traceFormat: 'chrome-trace-json',
+        archiveValidator: markerValidator,
+      });
+
+      assert.equal(run.status, 0, run.stderr);
+      const result = parseResultFile(run.resultPath);
+      assert.equal(result.flow_verdict, 'PASS');
+      assert.equal(result.infrastructure_result, 'PASS');
+      assert.equal(result.finalization_status, 'valid');
+      assert.equal(result.validation_status, 'valid');
+      assert.equal(result.declared_format, 'chrome-trace-json');
+      assert.equal(result.detected_format, 'chrome-trace-json');
+      assert.equal(result.validator, 'validate-chrome-trace.py');
+      assert.equal(result.analysis_eligible, 'true');
+      assert.equal(path.extname(result.artifact_path), '.json');
+      assert.equal(fs.existsSync(archiveMarker), false);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test('Chrome JSON declared as Playwright is quarantined before ZIP validation', () => {
+    const dir = makeTempDir();
+    try {
+      const archiveMarker = path.join(dir, 'archive-validator-called');
+      const markerValidator = writeMarkerArchiveValidator(dir, archiveMarker);
+      const run = runFinalizer({
+        dir,
+        mode: 'valid',
+        fixture: chromeTraceFixture,
+        traceFormat: 'playwright-trace-zip',
+        archiveValidator: markerValidator,
+      });
+
+      assert.equal(run.status, 23, run.stderr);
+      const result = parseResultFile(run.resultPath);
+      assert.equal(result.flow_verdict, 'PASS');
+      assert.equal(result.infrastructure_result, 'FAIL');
+      assert.equal(result.finalization_status, 'format_mismatch');
+      assert.equal(result.validation_status, 'format_mismatch');
+      assert.equal(result.declared_format, 'playwright-trace-zip');
+      assert.equal(result.detected_format, 'chrome-trace-json');
+      assert.equal(result.validator, 'not_run');
+      assert.equal(result.analysis_eligible, 'false');
+      assert.equal(fs.existsSync(archiveMarker), false);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test('declared format and output extension mismatch fails before trace stop', () => {
+    const dir = makeTempDir();
+    try {
+      const run = runFinalizer({
+        dir,
+        mode: 'valid',
+        fixture: chromeTraceFixture,
+        traceFormat: 'chrome-trace-json',
+        tracePath: path.join(dir, 'trace.zip'),
+      });
+
+      assert.equal(run.status, 23, run.stderr);
+      const result = parseResultFile(run.resultPath);
+      assert.equal(result.flow_verdict, 'PASS');
+      assert.equal(result.finalization_status, 'format_mismatch');
+      assert.equal(result.stop_status, 'not_run');
+      assert.equal(result.validation_status, 'format_mismatch');
+      assert.equal(result.declared_format, 'chrome-trace-json');
+      assert.equal(result.detected_format, 'not_run');
+      assert.equal(result.analysis_eligible, 'false');
+      const browserCalls = fs.existsSync(run.agentBrowserLog)
+        ? fs.readFileSync(run.agentBrowserLog, 'utf8')
+        : '';
+      assert.doesNotMatch(browserCalls, /trace stop/);
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
@@ -854,6 +996,14 @@ describe('shared trace finalization contract', () => {
         tracePathSuffix: 'trace.zip\nanalysis_eligible=true',
       },
       {
+        name: 'trace producer newline',
+        traceProducer: 'agent-browser\nanalysis_eligible=true',
+      },
+      {
+        name: 'trace producer version newline',
+        traceProducerVersion: '0.32.0\nanalysis_eligible=true',
+      },
+      {
         name: 'unknown verdict',
         flowVerdict: 'UNKNOWN',
       },
@@ -869,6 +1019,8 @@ describe('shared trace finalization contract', () => {
           mode: 'valid',
           fixture,
           flowVerdict: testCase.flowVerdict,
+          traceProducer: testCase.traceProducer,
+          traceProducerVersion: testCase.traceProducerVersion,
           tracePath: testCase.tracePathSuffix
             ? path.join(dir, testCase.tracePathSuffix)
             : undefined,
@@ -935,6 +1087,9 @@ describe('shared trace finalization contract', () => {
         [
           '--trace-path', path.join(dir, 'trace.zip'),
           '--flow-verdict', 'PASS',
+          '--trace-producer', 'agent-browser',
+          '--trace-producer-version', 'test',
+          '--trace-format', 'playwright-trace-zip',
           '--result-file', resultPath,
         ],
         {
@@ -959,6 +1114,11 @@ describe('shared trace finalization contract', () => {
         'dependency failure must not leak a finalizer work directory'
       );
       const result = parseResultFile(resultPath);
+      assert.equal(result.producer, 'agent-browser');
+      assert.equal(result.producer_version, 'test');
+      assert.equal(result.declared_format, 'playwright-trace-zip');
+      assert.equal(result.detected_format, 'not_run');
+      assert.equal(result.validator, 'not_run');
       assert.equal(result.infrastructure_result, 'FAIL');
       assert.equal(result.finalization_status, 'dependency_missing');
       assert.equal(result.stop_status, 'not_run');
@@ -1086,7 +1246,7 @@ describe('shared trace finalization contract', () => {
     const dir = makeTempDir();
     try {
       const reportDir = path.join(dir, 'runner-admin');
-      const fixture = createValidTraceZip(dir);
+      const fixture = chromeTraceFixture;
       const stub = writeAgentBrowserStub(dir);
       const agentBrowserLog = path.join(dir, 'agent-browser.log');
       const env = {
@@ -1110,6 +1270,10 @@ describe('shared trace finalization contract', () => {
 
       const beginOne = invoke('begin', 'run-1');
       assert.equal(beginOne.status, 0, beginOne.stderr || beginOne.error?.message);
+      assert.match(beginOne.stdout, /trace_format=chrome-trace-json/);
+      assert.match(beginOne.stdout, /trace_producer=agent-browser/);
+      assert.match(beginOne.stdout, /trace_producer_version=0\.32\.0/);
+      assert.match(beginOne.stdout, /trace_path=.*\/trace\.json/);
       const duplicateBeginOne = invoke('begin', 'run-1');
       assert.equal(duplicateBeginOne.status, 0, duplicateBeginOne.stderr);
       const finalizeOne = invoke('finalize', 'run-1', 'PASS');
@@ -1124,13 +1288,31 @@ describe('shared trace finalization contract', () => {
       assert.equal(finalizeTwo.status, 0, finalizeTwo.stderr);
 
       const logLines = fs.readFileSync(agentBrowserLog, 'utf8').trim().split('\n');
+      assert.ok(
+        logLines.indexOf('trace --help') < logLines.findIndex((line) =>
+          line.includes(' trace start')
+        ),
+        'capability detection must finish before trace start'
+      );
       assert.equal(logLines.filter((line) => line.includes(' trace start')).length, 2);
       assert.equal(logLines.filter((line) => line.includes(' trace stop ')).length, 2);
       for (const runId of ['run-1', 'run-2']) {
+        const resultPath = path.join(
+          reportDir,
+          'runs',
+          runId,
+          'trace-finalization.env'
+        );
         assert.ok(
-          fs.existsSync(path.join(reportDir, 'runs', runId, 'trace-finalization.env')),
+          fs.existsSync(resultPath),
           `${runId} must have its own finalization result`
         );
+        const result = parseResultFile(resultPath);
+        assert.equal(result.producer, 'agent-browser');
+        assert.equal(result.producer_version, '0.32.0');
+        assert.equal(result.declared_format, 'chrome-trace-json');
+        assert.equal(result.detected_format, 'chrome-trace-json');
+        assert.equal(result.validator, 'validate-chrome-trace.py');
       }
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
@@ -1141,7 +1323,7 @@ describe('shared trace finalization contract', () => {
     const dir = makeTempDir();
     try {
       const reportDir = path.join(dir, 'runner-admin');
-      const fixture = createValidTraceZip(dir);
+      const fixture = chromeTraceFixture;
       const agentStub = writeAgentBrowserStub(dir);
       const runtime = writeBrowserRuntimeStub(dir);
       const runtimeLog = path.join(dir, 'browser-runtime.log');
@@ -1155,6 +1337,7 @@ describe('shared trace finalization contract', () => {
       ];
       const env = {
         ...process.env,
+        AGENT_BROWSER_BIN: agentStub,
         AGENT_BROWSER_UNDERLYING: agentStub,
         BROWSER_RUNTIME_LOG: runtimeLog,
         EXPECTED_BROWSER_APP: 'admin-panel',
@@ -1195,7 +1378,7 @@ describe('shared trace finalization contract', () => {
     const dir = makeTempDir();
     try {
       const reportDir = path.join(dir, 'runner-admin');
-      const fixture = createValidTraceZip(dir);
+      const fixture = chromeTraceFixture;
       const agentStub = writeAgentBrowserStub(dir);
       const runtime = writeBrowserRuntimeStub(dir);
       const runtimeLog = path.join(dir, 'browser-runtime.log');
@@ -1208,6 +1391,7 @@ describe('shared trace finalization contract', () => {
       ];
       const baseEnv = {
         ...process.env,
+        AGENT_BROWSER_BIN: agentStub,
         AGENT_BROWSER_UNDERLYING: agentStub,
         BROWSER_RUNTIME_LOG: runtimeLog,
         EXPECTED_BROWSER_APP: 'admin-panel',
@@ -1291,12 +1475,45 @@ describe('shared trace finalization contract', () => {
     }
   });
 
+  test('Teams begin fails closed on an unknown trace capability before capture', () => {
+    const dir = makeTempDir();
+    try {
+      const agentBrowserLog = path.join(dir, 'agent-browser.log');
+      const run = spawnSync(
+        teamTraceLifecycle,
+        [
+          'begin',
+          '--report-dir', path.join(dir, 'runner-admin'),
+          '--flow-run-id', 'run-1',
+          '--session', 'admin-panel',
+        ],
+        {
+          encoding: 'utf8',
+          env: {
+            ...process.env,
+            AGENT_BROWSER_BIN: writeAgentBrowserStub(dir),
+            AGENT_BROWSER_LOG: agentBrowserLog,
+            TRACE_CAPABILITY_MODE: 'unknown',
+            TRACE_STUB_MODE: 'valid',
+          },
+        }
+      );
+
+      assert.equal(run.status, 72, run.stderr);
+      const log = fs.readFileSync(agentBrowserLog, 'utf8');
+      assert.match(log, /trace --help/);
+      assert.doesNotMatch(log, / trace start/);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   test('Teams begin performs bounded trace cleanup when active-state persistence fails', () => {
     const dir = makeTempDir();
     try {
       const reportDir = path.join(dir, 'runner-admin');
       const statePath = path.join(reportDir, '.trace-lifecycle.env');
-      const fixture = createValidTraceZip(dir);
+      const fixture = chromeTraceFixture;
       const agentBrowserLog = path.join(dir, 'agent-browser.log');
       const run = spawnSync(
         teamTraceLifecycle,
@@ -1362,7 +1579,7 @@ describe('shared trace finalization contract', () => {
     );
     assert.match(
       scenarioC,
-      /runs\/<flow_run_id>\/trace-finalization\.env/,
+      /runs\/<flow_run_id>\/trace-finalization\.env|distinct `runs\/<flow_run_id>\/` trace and result path/,
       'Scenario C result paths must be keyed by run identity'
     );
     assert.match(
@@ -1436,7 +1653,7 @@ describe('shared trace finalization contract', () => {
       assert.match(finalizeSection, /--session "\$APP"/, `${relativePath}: named trace stop`);
       assert.match(
         finalizeSection,
-        /\$REPORT_DIR\/sites\/\$APP\/trace\.zip/,
+        /\$REPORT_DIR\/sites\/\$APP\/trace\$\{trace_extension\}/,
         `${relativePath}: per-site trace path`
       );
       assert.match(
@@ -1446,7 +1663,7 @@ describe('shared trace finalization contract', () => {
       );
       assert.match(
         finalizeSection,
-        /--trace-path "\$REPORT_DIR\/trace\.zip"/,
+        /--trace-path "\$TRACE_PATH"/,
         `${relativePath}: single-site trace path`
       );
     }
@@ -1524,13 +1741,18 @@ describe('shared trace finalization contract', () => {
     );
     assert.match(
       scenarioC,
-      /trace_path: <report_dir>\/<site\.alias>\/runs\/<flow_run_id>\/trace\.zip/,
-      'each named runner needs a distinct trace path'
+      /FLOW READY[\s\S]*detected trace_path/,
+      'each named runner must return its detected trace path'
     );
     assert.match(
       scenarioC,
-      /trace_finalization_result_path: <report_dir>\/<site\.alias>\/runs\/<flow_run_id>\/trace-finalization\.env/,
-      'each named runner needs a distinct result path'
+      /FLOW READY[\s\S]*trace_finalization_result_path/,
+      'each named runner must return its distinct result path'
+    );
+    assert.doesNotMatch(
+      scenarioC,
+      /message="(?:BEGIN_FLOW|FINALIZE_FLOW)[^"]*trace\.zip/,
+      'the lead must not guess a trace extension before capability detection'
     );
     assert.match(
       scenarioC,
@@ -1650,6 +1872,72 @@ describe('shared trace finalization contract', () => {
     );
     assert.match(testSkill, /analysis_eligible:\s*true/);
     assert.match(testSkill, /Do NOT dispatch.*trace-analyzer/i);
+  });
+
+  test('active trace producers detect the artifact contract before capture', () => {
+    const producers = [
+      'agents/e2e-test-runner.md',
+      'agents/e2e-flow-verifier.md',
+      'skills/e2e-walkthrough/reference.md',
+    ];
+
+    for (const relativePath of producers) {
+      const content = fs.readFileSync(path.join(pluginRoot, relativePath), 'utf8');
+      const detectorIndex = content.indexOf('e2e-trace-contract.js');
+      const startIndex = content.search(
+        /^\s*(?:\{\{browser_command\}\}|<browser_command[^>]*>) trace start\s*$/m
+      );
+      assert.ok(detectorIndex >= 0, `${relativePath}: missing capability detector`);
+      assert.ok(
+        detectorIndex < startIndex,
+        `${relativePath}: capability detection must precede trace start`
+      );
+      assert.match(
+        content,
+        /\$\{AGENT_BROWSER_BIN:-agent-browser\}/,
+        `${relativePath}: detector must probe the runtime-selected executable`
+      );
+      assert.match(content, /TRACE_PATH=.*trace_extension/);
+      assert.match(content, /--trace-producer "\$trace_producer"/);
+      assert.match(content, /--trace-producer-version "\$trace_producer_version"/);
+      assert.match(content, /--trace-format "\$trace_format"/);
+      assert.doesNotMatch(
+        content,
+        /--trace-path "[^"]*trace\.zip"/,
+        `${relativePath}: finalization must use the detected extension`
+      );
+    }
+  });
+
+  test('trace analyzer routes Playwright ZIP and Chrome JSON without false clean claims', () => {
+    const analyzer = fs.readFileSync(
+      path.join(pluginRoot, 'agents/e2e-trace-analyzer.md'),
+      'utf8'
+    );
+
+    assert.match(analyzer, /`trace_format` \| \*\*Required\*\*/);
+    assert.match(analyzer, /playwright-trace-zip/);
+    assert.match(analyzer, /chrome-trace-json/);
+    assert.match(analyzer, /validate-trace-archive\.py/);
+    assert.match(analyzer, /validate-chrome-trace\.py/);
+    assert.match(analyzer, /analysis_scope: performance/);
+    assert.match(analyzer, /api_failures: unavailable/);
+    assert.match(analyzer, /console_errors: unavailable/);
+    assert.match(analyzer, /clean: unknown/);
+  });
+
+  test('every active trace-analyzer dispatch carries an explicit format', () => {
+    for (const relativePath of [
+      'skills/e2e-dispatch/SKILL.md',
+      'skills/e2e-test/SKILL.md',
+      'skills/e2e-flow/SKILL.md',
+      'skills/e2e-flow/reference.md',
+      'skills/e2e-walkthrough/SKILL.md',
+      'skills/e2e-walkthrough/reference.md',
+    ]) {
+      const content = fs.readFileSync(path.join(pluginRoot, relativePath), 'utf8');
+      assert.match(content, /trace_format/, `${relativePath}: trace format input`);
+    }
   });
 
   test('persistent full-flow verification and re-runs start a fresh trace before executing steps', () => {
