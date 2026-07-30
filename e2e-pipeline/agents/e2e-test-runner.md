@@ -104,7 +104,7 @@ Ensure large binary artifacts are git-ignored before writing any files. Run once
 
 ```bash
 mkdir -p "{{report_dir}}"
-PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || dirname "$(dirname "{{report_dir}}")")
+PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || dirname "$(dirname "$(dirname "$(dirname "{{report_dir}}")")")")
 "${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --project-root "$PROJ_ROOT"
 ```
 

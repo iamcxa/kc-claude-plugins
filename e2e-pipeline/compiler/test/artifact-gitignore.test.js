@@ -61,6 +61,31 @@ test('adds every missing E2E artifact rule and remains idempotent', () => {
   }
 });
 
+test('preserves an existing unterminated rule before appending artifact rules', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-gitignore-'));
+  const gitignore = path.join(directory, '.gitignore');
+  try {
+    fs.writeFileSync(gitignore, 'node_modules/');
+
+    const first = run(directory);
+    assert.equal(first.status, 0, first.stderr);
+    const second = run(directory);
+    assert.equal(second.status, 0, second.stderr);
+
+    const lines = fs.readFileSync(gitignore, 'utf8').split('\n');
+    assert.equal(lines[0], 'node_modules/');
+    for (const pattern of requiredPatterns) {
+      assert.equal(
+        lines.filter((line) => line === pattern).length,
+        1,
+        `${pattern} must be present exactly once`
+      );
+    }
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
 test('creates the artifact ignore file but rejects a symlink destination', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-gitignore-'));
   const target = path.join(directory, 'foreign-ignore');
@@ -93,6 +118,22 @@ test('every browser artifact producer uses the shared gitignore helper', () => {
       content,
       /\$\{CLAUDE_PLUGIN_ROOT\}\/scripts\/ensure-e2e-gitignore\.sh/,
       `${relativePath} must invoke the shared gitignore helper`
+    );
+  }
+});
+
+test('report-based producers derive the non-Git fallback from the project root', () => {
+  const expectedFallback =
+    'dirname "$(dirname "$(dirname "$(dirname "{{report_dir}}")")")"';
+
+  for (const relativePath of [
+    'agents/e2e-test-runner.md',
+    'agents/e2e-flow-verifier.md',
+  ]) {
+    const content = fs.readFileSync(path.join(pluginRoot, relativePath), 'utf8');
+    assert.ok(
+      content.includes(expectedFallback),
+      `${relativePath} must walk from <project>/.claude/e2e/reports/<run> to <project>`
     );
   }
 });

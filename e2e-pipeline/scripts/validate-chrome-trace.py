@@ -212,7 +212,9 @@ class TraceSummary:
         self.processes: set[int] = set()
         self.threads: set[tuple[int, int]] = set()
         self.categories: collections.Counter[str] = collections.Counter()
-        self.longest: list[tuple[int | float, int, dict[str, Any]]] = []
+        self.longest: list[
+            tuple[int | float, int, int, int, dict[str, Any]]
+        ] = []
         self.retained_string_bytes = 0
 
     def string_size(self, value: str) -> int:
@@ -267,16 +269,21 @@ class TraceSummary:
             categories = []
         if not categories:
             categories = ["(uncategorized)"]
+        bounded_categories = []
+        has_category_overflow = False
         for category in categories:
             if (
                 category not in self.categories
                 and len(self.categories) >= self.limits.max_categories
             ):
                 self.categories["(other)"] += 1
+                bounded_categories.append("(other)")
+                has_category_overflow = True
             else:
                 if category not in self.categories:
                     self.reserve_strings(self.string_size(category))
                 self.categories[category] += 1
+                bounded_categories.append(category)
 
         duration = event.get("dur")
         if phase == "X":
@@ -290,29 +297,45 @@ class TraceSummary:
                     "complete trace events require a finite non-negative dur"
                 )
             self.duration_event_count += 1
+            if has_category_overflow:
+                event_category = "(other)"
+                event_category_size = 0
+            elif len(bounded_categories) == 1:
+                event_category = bounded_categories[0]
+                event_category_size = 0
+            else:
+                event_category = ",".join(bounded_categories)
+                event_category_size = self.string_size(event_category)
             item = {
                 "name": name,
-                "category": category,
+                "category": event_category,
                 "duration_us": duration,
                 "pid": pid,
                 "tid": tid,
             }
-            ranked = (duration, self.event_count, item)
+            ranked = (
+                duration,
+                self.event_count,
+                name_size,
+                event_category_size,
+                item,
+            )
             if len(self.longest) < 20:
-                self.reserve_strings(name_size)
+                self.reserve_strings(name_size + event_category_size)
                 heapq.heappush(self.longest, ranked)
             elif ranked[:2] > self.longest[0][:2]:
-                replaced_name = self.longest[0][2]["name"]
+                replaced_name_size = self.longest[0][2]
+                replaced_category_size = self.longest[0][3]
                 self.reserve_strings(
-                    name_size,
-                    removed_bytes=len(replaced_name.encode("utf-8")),
+                    name_size + event_category_size,
+                    removed_bytes=replaced_name_size + replaced_category_size,
                 )
                 heapq.heapreplace(self.longest, ranked)
 
     def result(self) -> dict[str, Any]:
         longest = [
             item
-            for _, _, item in sorted(
+            for _, _, _, _, item in sorted(
                 self.longest, key=lambda entry: (entry[0], entry[1]), reverse=True
             )
         ]

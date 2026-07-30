@@ -81,10 +81,41 @@ test('counts each comma-delimited Chrome trace category independently', () => {
 
     const result = run('summarize', artifact);
     assert.equal(result.status, 0, result.stderr);
-    assert.deepEqual(JSON.parse(result.stdout).categories, [
+    const summary = JSON.parse(result.stdout);
+    assert.deepEqual(summary.categories, [
       { name: 'gpu', count: 1 },
       { name: 'toplevel.flow', count: 1 },
     ]);
+    assert.equal(summary.longest_events[0].category, 'gpu,toplevel.flow');
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('maps overflow categories before retaining longest-event rows', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
+  try {
+    const artifact = path.join(directory, 'category-overflow.json');
+    fs.writeFileSync(
+      artifact,
+      JSON.stringify({
+        traceEvents: [
+          { name: 'A', cat: 'a', ph: 'I' },
+          { name: 'B', cat: '123456789', ph: 'X', dur: 1 },
+        ],
+      })
+    );
+
+    const result = run('summarize', artifact, {
+      E2E_CHROME_TRACE_MAX_CATEGORIES: '1',
+      E2E_CHROME_TRACE_MAX_STRING_BYTES: '8',
+      E2E_CHROME_TRACE_MAX_SUMMARY_STRING_BYTES: '8',
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(
+      JSON.parse(result.stdout).longest_events[0].category,
+      '(other)'
+    );
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }

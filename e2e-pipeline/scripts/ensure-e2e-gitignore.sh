@@ -38,6 +38,17 @@ if [ ! -e "$gitignore_path" ]; then
   : > "$gitignore_path" || exit 70
 fi
 
+if [ -s "$gitignore_path" ]; then
+  last_byte=$(
+    tail -c 1 "$gitignore_path" 2>/dev/null |
+      od -An -tu1 |
+      tr -d '[:space:]'
+  )
+  if [ "$last_byte" != "10" ]; then
+    printf '\n' >> "$gitignore_path" || exit 70
+  fi
+fi
+
 while IFS= read -r artifact_pattern; do
   if ! grep -Fqx -- "$artifact_pattern" "$gitignore_path" 2>/dev/null; then
     printf '%s\n' "$artifact_pattern" >> "$gitignore_path" || exit 70
