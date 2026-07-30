@@ -470,6 +470,11 @@ If zero anomalies and trace is clean:
 ```
 Skip the review menu entirely and proceed to reports.
 
+If Chrome performance-only analysis returns `clean: unknown`, use `step-log.json` as the
+application-health evidence. Present the review menu when the step log contains anomalies. When the
+step log contains zero anomalies, state that API/console cleanliness is unavailable from this trace
+format and proceed to report generation without claiming the trace is clean.
+
 ### Phase 4 Self-Check (before writing reports)
 
 Before proceeding to report generation, verify these prerequisites exist:

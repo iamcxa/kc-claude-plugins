@@ -2002,6 +2002,20 @@ describe('shared trace finalization contract', () => {
     assert.match(analyzer, /clean: unknown/);
   });
 
+  test('walkthrough advances performance-only Chrome analysis to report generation', () => {
+    const walkthroughReference = fs.readFileSync(
+      path.join(pluginRoot, 'skills/e2e-walkthrough/reference.md'),
+      'utf8'
+    );
+    const anomalyReview = walkthroughReference.match(
+      /### Anomaly Review[\s\S]*?(?=\n### Phase 4 Self-Check)/
+    )?.[0] || '';
+
+    assert.match(anomalyReview, /clean: unknown/);
+    assert.match(anomalyReview, /step-log/i);
+    assert.match(anomalyReview, /proceed to report generation/i);
+  });
+
   test('every active trace-analyzer dispatch carries an explicit format', () => {
     for (const relativePath of [
       'skills/e2e-dispatch/SKILL.md',

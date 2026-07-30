@@ -97,13 +97,22 @@ test('rejects malformed or non-Chrome JSON as an invalid artifact', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
   try {
     const malformed = path.join(directory, 'malformed.json');
+    const nonJsonWhitespace = path.join(directory, 'non-json-whitespace.json');
     const unrelated = path.join(directory, 'unrelated.json');
     fs.writeFileSync(malformed, '{"traceEvents": [');
+    fs.writeFileSync(
+      nonJsonWhitespace,
+      '{"traceEvents":\u00a0[{"name":"RunTask","ph":"X","dur":1}]}'
+    );
     fs.writeFileSync(unrelated, '{"events": []}\n');
 
     const malformedResult = run('validate', malformed);
     assert.equal(malformedResult.status, 2);
     assert.match(malformedResult.stderr, /invalid JSON/i);
+
+    const nonJsonWhitespaceResult = run('validate', nonJsonWhitespace);
+    assert.equal(nonJsonWhitespaceResult.status, 2);
+    assert.match(nonJsonWhitespaceResult.stderr, /invalid JSON/i);
 
     const unrelatedResult = run('validate', unrelated);
     assert.equal(unrelatedResult.status, 3);
@@ -148,6 +157,10 @@ test('rejects non-finite Chrome trace numbers', () => {
       [
         'overflow.json',
         '{"traceEvents":[{"name":"RunTask","ph":"X","dur":1e9999}]}',
+      ],
+      [
+        'pid-overflow.json',
+        '{"traceEvents":[{"name":"RunTask","ph":"X","pid":1e9999,"tid":2,"dur":1}]}',
       ],
     ];
 

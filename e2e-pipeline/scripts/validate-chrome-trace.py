@@ -35,6 +35,13 @@ def reject_non_finite_constant(value: str) -> None:
     raise InvalidJsonError(f"invalid JSON: non-finite constant {value}")
 
 
+def parse_finite_float(value: str) -> float:
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise InvalidJsonError(f"invalid JSON: numeric value must be finite: {value}")
+    return parsed
+
+
 def positive_limit(name: str, default: int) -> int:
     raw = os.environ.get(name, str(default))
     try:
@@ -83,7 +90,10 @@ class JsonStream:
 
     def __init__(self, file_path: str, max_value_bytes: int):
         self.handle = open(file_path, encoding="utf-8")
-        self.decoder = json.JSONDecoder(parse_constant=reject_non_finite_constant)
+        self.decoder = json.JSONDecoder(
+            parse_constant=reject_non_finite_constant,
+            parse_float=parse_finite_float,
+        )
         self.buffer = ""
         self.position = 0
         self.eof = False
@@ -108,9 +118,10 @@ class JsonStream:
 
     def skip_whitespace(self) -> None:
         while True:
-            while self.position < len(self.buffer) and self.buffer[
-                self.position
-            ].isspace():
+            while (
+                self.position < len(self.buffer)
+                and self.buffer[self.position] in " \t\r\n"
+            ):
                 self.position += 1
             if self.position < len(self.buffer) or self.eof:
                 return
@@ -156,7 +167,7 @@ class TraceSummary:
         self.processes: set[int] = set()
         self.threads: set[tuple[int, int]] = set()
         self.categories: collections.Counter[str] = collections.Counter()
-        self.longest: list[tuple[float, int, dict[str, Any]]] = []
+        self.longest: list[tuple[int | float, int, dict[str, Any]]] = []
 
     def add(self, event: Any) -> None:
         if not isinstance(event, dict):
@@ -195,8 +206,7 @@ class TraceSummary:
         duration = event.get("dur")
         if (
             phase == "X"
-            and isinstance(duration, (int, float))
-            and not isinstance(duration, bool)
+            and isinstance(duration, float)
             and not math.isfinite(duration)
         ):
             raise InvalidJsonError("invalid JSON: duration must be finite")
@@ -214,7 +224,7 @@ class TraceSummary:
                 "pid": pid,
                 "tid": tid,
             }
-            ranked = (float(duration), self.event_count, item)
+            ranked = (duration, self.event_count, item)
             if len(self.longest) < 20:
                 heapq.heappush(self.longest, ranked)
             elif ranked[:2] > self.longest[0][:2]:
@@ -388,7 +398,14 @@ def main(argv: list[str]) -> int:
         if command == "validate":
             print(FORMAT_CHROME)
         else:
-            print(json.dumps(summary.result(), separators=(",", ":"), sort_keys=True))
+            print(
+                json.dumps(
+                    summary.result(),
+                    allow_nan=False,
+                    separators=(",", ":"),
+                    sort_keys=True,
+                )
+            )
         return 0
     except InvalidJsonError as error:
         print(str(error), file=sys.stderr)
