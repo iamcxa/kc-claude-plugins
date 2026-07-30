@@ -593,3 +593,124 @@ The assigned branch now contains one validator-runnable, read-only exact-head la
 strict inputs become advisory `READY`, `NOT_READY`, or `UNKNOWN`; stale and malformed inputs fail
 closed; and review/post/merge authority remains outside the adapter. The branch and this split-root
 report are ready for an independent validation stage.
+
+## Stage Report: validation
+
+TL;DR — **REJECTED** at exact code head
+`56864d5461854509b2bbccec6fe82e58b2f5871a` against
+`origin/main@9cc0d1faa49e786837342b88062181460f037ac3`. The intended truth table,
+canonical hashing, local CLI wiring, regression suites, static gates, authority boundary, coverage,
+and adversarial mutations all reproduced. The closed-input claim did not: two inputs that cannot be
+valid outputs of the existing typed decision producer still emit `READY/HIGH`. One carries a
+`review_key` for a different repository identity; the other calls a required capability `clean`
+despite having no successful adapter attempt and an unavailable fallback.
+
+- DONE: Pin and preserve the exact product surface.
+  Product `HEAD`, upstream, and requested code head all equal `56864d5461854509b2bbccec6fe82e58b2f5871a`;
+  merge-base and `origin/main` equal `9cc0d1faa49e786837342b88062181460f037ac3`.
+  The worktree remained clean; validation changed no product file.
+- FAILED: AC-1 — one valid exact-head input yields the closed verdict table.
+  The expected positive, CI/test/review-negative, incomplete, sorted-reason, advisory-only, and
+  canonical-hash cases pass in focused **47/0**. A real regular-file positive CLI round trip also
+  passed with input hash `83ac397a81a1925c9c3f8dcadee307aa8b2e63b4e9eb1d41a51d71cf4d1e4530`
+  and output hash `a744474323c260558c67bef6244d85309651635db1084aedffe0f1f6aa2b8272`.
+  AC-1 still fails because the accepted `review_decision` need not be one the typed producer can
+  derive: a required `types` capability with zero attempts, `fallback.status=unavailable`, and
+  `terminal_state=clean` emitted `READY/HIGH`.
+- FAILED: AC-2 — identity and invalid-decision failures cannot emit `READY`.
+  The focused matrix catches one-sided head and nested-identity mutations, malformed/duplicate
+  JSON, unknown keys/status, bad hashes, and required/status contradictions. It misses coordinated
+  top-level+nested drift and producer-inconsistent capability terminals. Changing both repository
+  fields from `acme/widgets` to `other/repo` while retaining the original review key
+  `f7da797d...5cc61` emitted `READY/HIGH`; the runtime's own `review-key` command derives
+  `0fc1eb5c...3f09b` for `other/repo`, proving the supplied key is stale.
+- DONE: AC-3 — no post, network, or merge authority was added.
+  The focused empty-call-ledger assertion passed; added out-of-scope command vocabulary is confined
+  to the failing test stubs. `kc-pr-review/SKILL.md`, `review-post.sh`, and
+  `review-post.test.sh` have identical base/head blobs, and the fresh review-post suite returned
+  **156 passed, 0 failed**.
+- DONE: AC-4 — the diff remains the approved bounded adapter.
+  The exact five paths are the runtime, its test, and the three approved plugin docs: 581 insertions
+  and 5 deletions, with every path mapped to AC-1/2/3/4 and no agy routing, daemon, live-fetch,
+  repair, cross-repo, manifest, or merge implementation.
+- DONE: Independently verify the canonical-hash review-cycle proof.
+  Current tests against the untouched main runtime returned **2 passed, 45 failed** and exit 1.
+  The reordered/pretty arrangement precondition passed, while
+  `input binding normalizes key order and whitespace` failed with expected
+  `25e92b...022b`, actual empty. Exact head returned **47/0**.
+- DONE: Run the focused/full/static validation set.
+  Merge-readiness **47/0**; complete review-runtime **352/0** in 104.09s; review-post **156/0** in
+  376.78s; Bash syntax, pinned ShellCheck v0.9.0, `git diff --check`, and changed-path checks all
+  exited 0.
+- DONE: Measure executable diff coverage.
+  Full-suite Bash xtrace observed **54/63 changed shell command trace points = 85.71%**. The
+  denominator excludes comments, braces, continuation-only lines, and embedded jq program-body
+  lines, counting the shell command that executes each jq program once. The nine uncovered points
+  are dependency/canonicalization fallbacks and CLI argument-error branches.
+- DONE: Break two core claims in isolated scratch copies.
+  Removing observed-head equality returned **46/1** with the exact moved-head assertion failing.
+  Removing the CI-negative reason returned **44/3**, failing CI-negative, sorted multi-negative,
+  and negative-over-pending assertions. Both mutations exited 1.
+- DONE: Attempt the mandatory different-vendor review.
+  Codex invoked Antigravity `agy` 1.1.8 in read-only sandbox/plan mode. It returned
+  `NOT_READY/HIGH` with three findings, but all three cited
+  `docs/ship-flow/scripts/auto-merge-readiness*.mjs`, which do not exist and are outside the exact
+  five-path diff. With 3/3 citations invalid, the entire cross-model round is discarded under the
+  citation rule; no cross-model finding is accepted or used for this verdict.
+- SKIPPED: Browser/full-stack E2E.
+  This is an approved local CLI contract with no UI, service, or remote mutation. The direct
+  regular-file CLI round trip is the required E2E surface and passed.
+
+### Material findings
+
+1. **HIGH — a stale review key can still produce `READY/HIGH`.**
+   `review-runtime.sh:2432-2442` checks only identity field shapes. It never re-derives the documented
+   `sha256(repository|pr_number|base_sha|head_sha|config_hash)` binding before
+   `:2538-2547` accepts top-level/nested equality and `:2589-2603` emits `READY`. The test at
+   `review-runtime.test.sh:314-329` changes only the nested identity, so coordinated drift remains
+   untested. This contradicts the exact-identity guarantee in
+   `reference/review-runtime.md:23-27,129,140-149`.
+2. **HIGH — the nested decision validator accepts producer-impossible capability states.**
+   `review-runtime.sh:2443-2487` validates shapes but not the producer's satisfaction/terminal-state
+   relationships enforced at `:2174-2188,2248-2265`. A required capability with no attempt,
+   unavailable fallback, and `clean` terminal passes; empty gap/blocker arrays then make the
+   decision approval-eligible and `READY/HIGH`. The existing invalid-decision case at
+   `review-runtime.test.sh:331-344` tests only an unknown key, not semantic invalidity. This
+   contradicts the published claim that merge readiness consumes a validated derived
+   `InteractiveCollationDecision/v1`.
+
+Required repair: re-derive and compare `review_key`; reuse or extract one strict
+`InteractiveCollationDecision/v1` validator (including capability satisfaction and fallback
+relationships); add direct coordinated-identity and impossible-terminal mutations; and use at
+least one positive fixture produced by the real terminal rehydration path before claiming the
+input is a validated existing decision.
+
+### Evidence block
+
+- Lenses: Bash JSON decision adapter + shell tests + published contract docs. Correctness FAIL
+  (2 HIGH findings); silent-failure FAIL (2); type-design FAIL (1 shared closed-contract defect);
+  security FAIL (1 identity-integrity defect because caller evidence crosses into a merge
+  recommendation); resource-lifecycle PASS (0, private snapshot/trap cleanup inspected);
+  concurrency and manifest/back-compat did not fire because no shared/async state or installed
+  manifest/frontmatter contract changed.
+- Diff coverage: **85.71%** — 54/63 changed executable shell command trace points under the complete
+  352-case runtime suite.
+- Adversarial: PASS — observed-head guard removal returned 46/1; CI-negative removal returned 44/3.
+- Cross-model: `agy` 1.1.8 attempted from Codex; 3/3 citations invalid and the entire round was
+  discarded. No cross-model finding was relied on.
+- E2E: PASS — real regular-file CLI input emitted the closed `READY/HIGH` advisory decision and
+  matched its canonical input hash; browser/full-stack is N/A because there is no UI/service/remote
+  mutation.
+
+### Feedback Cycles
+
+- Cycle 1: RETURN to implementation — 2 HIGH manifestations of one under-validated input boundary;
+  validator fixed 0 and edited no product file. The ideation tolerance is 0, so a design-reset
+  decision is required before opening a correction round.
+
+### Summary
+
+The implementation is narrow, read-only, well exercised, and regression-clean, but it is not yet
+the promised exact-head landing contract. Its own CLI proves that stale identity binding and a
+semantically invalid typed decision can be labeled `READY/HIGH`. Validation therefore returns
+**REJECTED** with concrete file-anchored repairs and no waiver recommendation.
