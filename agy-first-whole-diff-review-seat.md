@@ -461,6 +461,10 @@ merge-readiness **47/0**, default runtime **352/0**, unchanged review-post **156
 ShellCheck v0.9.0, Bash syntax, `git diff --check`, and a real regular-file CLI round trip.
 `READY` remains advisory; protected §6c/post files are byte-identical to `origin/main`.
 
+- DONE: Closed advisory adapter — one exact-head CI/test/review input emits fail-closed `READY`, `NOT_READY`, or `UNKNOWN` without post or merge authority.
+- DONE: RED/GREEN plus verification — recorded untouched-main RED, focused and default GREEN, review-post regression, direct CLI E2E, pinned ShellCheck, syntax, and diff checks.
+- DONE: Bounded approved diff and handoff — only the five approved `kc-pr-flow` runtime/test/documentation paths changed, code commit `56864d5` is pushed, and validator commands are recorded below.
+
 - **DONE: AC-1 — one exact-head input emits one closed decision.**
   `kc-pr-flow/scripts/review-runtime.sh:2397` safe-snapshots one bounded input, applies the closed
   nested `InteractiveCollationDecision/v1` validator, hashes canonical JSON, and executes the
