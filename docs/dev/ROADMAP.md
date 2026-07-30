@@ -127,14 +127,27 @@ were resequenced when the captain named the four goals the kit is graded on.
 goals; `n9` breaks the shipped `gh` adapter on any ordinary busy PR, `11` needs a custom transport
 or a future adapter.
 
-### Sprint S6 — EM-owned PR closeout (unscheduled, dependency-gated)
+### Sprint S6 — EM merge-readiness (interrupt, bounded)
 
-This heading reserves `kc-pr-flow/S6` but does not sequence it. It remains
-unscheduled until the agent-native PR review runtime and the immediately
-preceding `n9 → 11` reliability closeout land. Its planned scope is
-`em-owned-pr-closeout-gate` plus a re-cut of `vf` / `x0f` around the resulting
-authority boundary: the daemon monitors and repairs, while EM owns title/body
-and merge-readiness judgment.
+End value: for one exact PR head, EM synthesizes existing CI, test, and review
+evidence into `READY`, `NOT_READY`, or `UNKNOWN` with explicit confidence. The
+existing human confirmation gate remains the sole merge authority.
+
+S6 recovers `kc-pr-review`'s exact-head evidence, confidence, and human-confirmation
+seams. It fills only the missing landing synthesis and daemon authority boundary.
+
+| # | id | scope |
+|---|----|-------|
+| 1 | `4a` | Re-cut at ideation as the core EM merge-readiness gate. |
+| 2 | `vf` | Reconcile daemon review-post authority with merge judgment; record no-change evidence if they are already disjoint. |
+| 3 | `x0f` | Feed existing head-freshness and coverage-refusal evidence into the decision; add no daemon or repair framework. |
+
+Exit: an exact green head can yield high-confidence `READY`; a moved head or
+incomplete or unknown required evidence cannot yield `READY`. The gate never
+auto-merges.
+
+Out of scope: auto-merge, title/body auto-authoring, daemon redesign, ACP, a
+general repair loop, mandatory agy routing, and cross-repo adoption.
 
 ## `e2e-pipeline`
 
