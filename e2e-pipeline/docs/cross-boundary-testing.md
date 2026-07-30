@@ -149,7 +149,7 @@ CLI-only flows skip the browser verifier entirely. Instead:
 ### What counts as a project-specific command
 
 - **Wrapper scripts**: `bash scripts/run-checks.sh`, `./bin/verify`, `make test-mcp`
-- **Installed CLI tools**: `recce run`, `dbt run`, `prisma migrate`
+- **Installed CLI tools**: `project-cli run`, `dbt run`, `prisma migrate`
 - **Local dev installs**: packages installed with `pip install -e .` or `npm link`
 - **Inline commands**: multi-line shell blocks with env vars, pipes, and conditionals
 
@@ -161,7 +161,7 @@ CLI-only flows skip the browser verifier entirely. Instead:
     cli:
       - run: |
           cd /path/to/project
-          python -m recce run --select tag:pr_check
+          python -m project_cli run --select tag:pr_check
         expect: "All checks passed"
   on_fail: fail
 ```
@@ -175,7 +175,7 @@ CLI-only flows skip the browser verifier entirely. Instead:
 - run: "/e2e-help --feedback 'test'"
 ```
 
-If a Claude Code skill wraps an underlying script, invoke the script directly instead. For example, if `/recce-mcp-e2e` ultimately calls `bash .claude/scripts/recce-mcp-e2e.sh`, use the script path in your `run:` block.
+If a Claude Code skill wraps an underlying script, invoke the script directly instead. For example, if `/project-mcp-e2e` ultimately calls `bash .claude/scripts/project-mcp-e2e.sh`, use the script path in your `run:` block.
 
 ### Pattern: wrap project commands in a shell script
 
@@ -206,9 +206,9 @@ python -m pytest tests/mcp/ -k "error_classification" -v
   on_fail: fail
 ```
 
-### Real-world example: recce MCP error classification
+### Example: MCP error classification
 
-The recce project uses a template script (`recce-mcp-e2e`) to verify that the MCP server correctly classifies SQL errors (Snowflake syntax errors, missing table errors, permission errors) and routes them to the appropriate Sentry channel.
+A sample project can use a template script (`project-mcp-e2e`) to verify that an MCP server correctly classifies SQL errors (syntax errors, missing table errors, permission errors) and routes them to the appropriate Sentry channel.
 
 The `Execute external` step calls the underlying Python test suite directly:
 
@@ -219,10 +219,10 @@ The `Execute external` step calls the underlying Python test suite directly:
   execute:
     cli:
       - run: |
-          cd /Users/kent/Project/recce/recce
+          cd /path/to/project
           source .venv/bin/activate
           python -m pytest tests/mcp/test_error_classification.py -v \
-            -k "snowflake or syntax_error or permission_denied"
+            -k "syntax_error or table_not_found or permission_denied"
         expect: "passed"
   on_fail: fail
 
@@ -232,9 +232,9 @@ The `Execute external` step calls the underlying Python test suite directly:
   wait: 15
   verify:
     sentry:
-      - check: "Issues tagged error_type=syntax_error exist for DRC-3053"
+      - check: "Issues tagged error_type=syntax_error exist for PROJ-101"
         expect: "At least 1 issue with correct tag"
-      - check: "Issues tagged error_type=permission_denied exist for DRC-3054"
+      - check: "Issues tagged error_type=permission_denied exist for PROJ-102"
         expect: "At least 1 issue with correct tag"
   on_fail: warn
 ```
@@ -249,30 +249,30 @@ The `Execute external` step calls the underlying Python test suite directly:
 | Env vars missing | Session env not inherited | Set vars explicitly in `run:` block |
 | Script not executable | Missing `chmod +x` | Add `chmod +x` or invoke with `bash script.sh` |
 
-## Real-World Example -- DRC-2880
+## Example -- PROJ-201
 
-**Feature:** When CI runners upload dbt artifacts 3 times (via `recce-cloud upload`), the system marks the project as having auto-uploaded artifacts and fires a PostHog funnel event.
+**Feature:** When CI runners upload build artifacts 3 times (via `sample-cli upload`), the system marks the project as having auto-uploaded artifacts and fires a PostHog funnel event.
 
 **What makes it cross-boundary:**
 - Browser: verify sessions appear in the project page table
-- CLI: run `recce-cloud upload` 3 times to trigger the threshold
+- CLI: run `sample-cli upload` 3 times to trigger the threshold
 - Analytics: verify PostHog receives `onboarding_artifacts_auto_uploaded` event
 
 ### Prerequisites
 
 ```bash
 # Install the CLI tool
-pip install recce-cloud
+pip install sample-cli
 
 # Login to local dev server (not production!)
-RECCE_CLOUD_API_HOST=http://localhost:9527 \
-RECCE_CLOUD_BASE_URL=http://localhost:3000 \
-recce-cloud login
+SAMPLE_API_HOST=http://localhost:9527 \
+SAMPLE_BASE_URL=http://localhost:3000 \
+sample-cli login
 
-# Bind a dbt project directory to a Recce Cloud project
-cd /path/to/your-dbt-project
-RECCE_CLOUD_API_HOST=http://localhost:9527 \
-recce-cloud init --org <org-slug> --project <project-slug>
+# Bind a build project directory to the sample application
+cd /path/to/your-project
+SAMPLE_API_HOST=http://localhost:9527 \
+sample-cli init --org <org-slug> --project <project-slug>
 ```
 
 ### The Flow
@@ -280,10 +280,10 @@ recce-cloud init --org <org-slug> --project <project-slug>
 ```yaml
 name: verify-artifacts-auto-uploaded
 description: |
-  DRC-2880: After 3 recce-cloud uploads, sessions appear in the
+  PROJ-201: After 3 sample-cli uploads, sessions appear in the
   project page and a PostHog event fires.
-tags: [drc-2880, cross-boundary]
-mapping: recce-cloud
+tags: [artifact-upload, cross-boundary]
+mapping: sample-app
 
 steps:
   # Phase 1: Browser -- confirm empty state
@@ -307,8 +307,8 @@ steps:
     execute:
       api:
         - run: |
-            RECCE_CLOUD_API_HOST=http://localhost:9527 \
-            recce-cloud upload --session-name "test-session-1" \
+            SAMPLE_API_HOST=http://localhost:9527 \
+            sample-cli upload --session-name "test-session-1" \
             --yes --target-path target
           expect: "Uploaded Successfully"
     wait_after: 2
@@ -320,8 +320,8 @@ steps:
     execute:
       api:
         - run: |
-            RECCE_CLOUD_API_HOST=http://localhost:9527 \
-            recce-cloud upload --session-name "test-session-2" \
+            SAMPLE_API_HOST=http://localhost:9527 \
+            sample-cli upload --session-name "test-session-2" \
             --yes --target-path target
           expect: "Uploaded Successfully"
     wait_after: 2
@@ -333,8 +333,8 @@ steps:
     execute:
       api:
         - run: |
-            RECCE_CLOUD_API_HOST=http://localhost:9527 \
-            recce-cloud upload --session-name "test-session-3" \
+            SAMPLE_API_HOST=http://localhost:9527 \
+            sample-cli upload --session-name "test-session-3" \
             --yes --target-path target
           expect: "Uploaded Successfully"
     wait_after: 3
@@ -386,8 +386,8 @@ Browser steps pass/fail independently. Checkpoint steps report `skip` when the r
 ```bash
 # Run the uploads
 cd /path/to/dbt-project
-RECCE_CLOUD_API_HOST=http://localhost:9527 \
-recce-cloud upload --session-name "test-1" --yes
+SAMPLE_API_HOST=http://localhost:9527 \
+sample-cli upload --session-name "test-1" --yes
 
 # Repeat 2 more times with different session names
 ```
@@ -401,12 +401,12 @@ recce-cloud upload --session-name "test-1" --yes
 
 1. **Flow-writer generates all step types** -- browser, `Execute external`, and `Verify external`. Don't hand-write flows to avoid the agent.
 2. **Browser and checkpoint steps are independent** -- browser verification works even when checkpoints are skipped.
-3. **`RECCE_CLOUD_API_HOST` env var** controls which server the CLI talks to. Always set it for local dev to avoid hitting production.
+3. **`SAMPLE_API_HOST` env var** controls which server the CLI talks to. Always set it for local dev to avoid hitting production.
 4. **`on_fail: warn` for analytics** -- PostHog verification is advisory. Don't block the test on analytics propagation delays.
 
 ## Real-World Example -- MCP Error Classification Verification (CLI-Only)
 
-**Feature:** The recce MCP server must correctly classify SQL errors from Snowflake (syntax errors, missing table, permission denied) and route them to the appropriate Sentry channel. Issues DRC-3051, DRC-3052, DRC-3053, DRC-3054.
+**Feature:** A sample MCP server must correctly classify SQL errors (syntax errors, missing table, permission denied) and route them to the appropriate Sentry channel. Issues PROJ-301, PROJ-302, and PROJ-303.
 
 **Why CLI-only:** There is no browser UI involved. The entire verification is: run pytest against the MCP server's error classification logic, confirm Sentry receives correctly-tagged events.
 
@@ -417,18 +417,18 @@ recce-cloud upload --session-name "test-1" --yes
 ```yaml
 name: verify-mcp-error-classification
 description: |
-  DRC-3051/3052/3053/3054: MCP server correctly classifies SQL errors
+  PROJ-301/302/303: MCP server correctly classifies SQL errors
   and routes them to Sentry with proper error_type tags.
-tags: [cli-only, mcp, drc-3051, drc-3052, drc-3053, drc-3054]
+tags: [cli-only, mcp, error-classification]
 
 steps:
   - id: run-none-relation-guard-tests
     action: "Execute external"
-    description: "DRC-3051: verify get_columns handles None relation without crashing"
+    description: "PROJ-301: verify get_columns handles None relation without crashing"
     execute:
       cli:
         - run: |
-            cd /Users/kent/Project/recce/recce
+            cd /path/to/project
             source .venv/bin/activate
             python -m pytest tests/mcp/test_get_columns.py \
               -k "none_relation" -v
@@ -437,24 +437,24 @@ steps:
 
   - id: run-syntax-error-classification-tests
     action: "Execute external"
-    description: "DRC-3053/3054: verify Snowflake SQL syntax and permission errors are classified correctly"
+    description: "PROJ-302: verify SQL syntax and permission errors are classified correctly"
     execute:
       cli:
         - run: |
-            cd /Users/kent/Project/recce/recce
+            cd /path/to/project
             source .venv/bin/activate
             python -m pytest tests/mcp/test_error_classification.py \
-              -k "snowflake" -v
+              -k "syntax_error or permission_denied" -v
           expect: "passed"
     on_fail: fail
 
   - id: run-integration-syntax-error-path
     action: "Execute external"
-    description: "DRC-3052: verify new syntax_error classification path via integration test"
+    description: "PROJ-303: verify new syntax_error classification path via integration test"
     execute:
       cli:
         - run: |
-            cd /Users/kent/Project/recce/recce
+            cd /path/to/project
             source .venv/bin/activate
             python -m pytest tests/mcp/test_integration.py \
               -k "syntax_error" -v
@@ -497,8 +497,8 @@ Because there are no browser steps, the PR comment omits the steps screenshot ta
 
 PASS -- 5 checkpoints, 3 executed, 2 advisory
 
-Verified MCP server error classification for DRC-3051/3052/3053/3054:
-get_columns None guard, Snowflake syntax error classification, and
+Verified MCP server error classification for PROJ-301/302/303:
+get_columns None guard, SQL syntax error classification, and
 permission_denied classification all pass. Sentry routing advisory checks
 deferred to post-deploy verification.
 
@@ -613,7 +613,7 @@ Checks state in external services. Use for analytics events, tracing spans, webh
 
 When a flow has **zero browser steps** (only `Execute external` + `Verify external`), the browser-based recording pipeline (screenshots + WebM) doesn't apply. Use terminal recording instead.
 
-**Demo** -- `recce summary` recorded via the CLI pipeline (asciinema -> agg -> GIF):
+**Demo** -- a sample command recorded via the CLI pipeline (asciinema -> agg -> GIF):
 
 ![CLI recording demo](assets/cli-recording-demo.gif)
 
