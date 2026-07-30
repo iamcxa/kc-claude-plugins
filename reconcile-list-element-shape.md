@@ -415,3 +415,39 @@ earned suites, product push, and PR work remain outside this correction dispatch
 Cycle 1 closes the sole returned proof gap without changing runtime behavior or branch scope.
 Validation recommends PASS to the Claude EM landing gate; six unchanged earned suites retain
 their prior-head receipts but are explicitly not claimed as updated-head executions.
+
+## Measurement
+
+Recovered at accepted validation from this live FO session because launch-boundary instrumentation
+was omitted. These ten lines are an evidenced floor over FO dispatches, not a claim that nested
+reviewer model calls were separately instrumented; no launch timestamps or token totals are
+reconstructed.
+
+- D1 recovered: Claude Opus independent shaping review | tokens: n/a (plain OAuth dispatch exposed no comparable per-dispatch total)
+- D2 recovered: Claude Opus ideation EM gate | tokens: n/a (plain OAuth dispatch exposed no comparable per-dispatch total)
+- D3 recovered: Codex implementation worker | tokens: n/a (Codex collaboration runtime exposed no per-worker usage)
+- D4 recovered: Codex implementation recovery worker | tokens: n/a (Codex collaboration runtime exposed no per-worker usage)
+- D5 recovered: Codex independent validation worker | tokens: n/a (Codex collaboration runtime exposed no per-worker usage)
+- D6 recovered: Claude Opus design-reconfirmation EM gate | tokens: n/a (plain OAuth dispatch exposed no comparable per-dispatch total)
+- D7 recovered: Codex cycle-1 implementation correction | tokens: n/a (Codex collaboration runtime exposed no per-worker usage)
+- D8 recovered: Codex cycle-1 independent validation | tokens: n/a (Codex collaboration runtime exposed no per-worker usage)
+- D9 recovered: Claude Opus landing EM gate | tokens: n/a (plain OAuth dispatch exposed no comparable per-dispatch total)
+- D10 recovered: Claude Opus ledger-envelope reconfirmation | tokens: n/a (plain OAuth dispatch exposed no comparable per-dispatch total)
+
+## Landing gate
+
+Fresh tool-free Claude Opus returned `proceed/high` for Draft PR preparation at corrected product
+head `2d3d07937d120d4f8d7647f305710c45cb61873b`. It judged the evidence asymmetry acceptable:
+all AC evidence and the returned m1 mutation are fresh at the corrected head, while the unchanged
+six earned suites and prior `95/96` trace remain explicitly prior-head receipts from `335722e`.
+The most important residual is aggregate coupling from one added test case; Draft CI is the
+cheapest sufficient detector before ready conversion.
+
+The canonical accepted-validation ledger clause then exposed an eighth-file conflict with the
+landing gate's scope stop. A second fresh tool-free Claude Opus reconfirmed `narrow/medium`:
+`docs/dev/ledger.csv` is the mandatory lifecycle exception, so the product diff may be exactly the
+seven authorized task files plus one ledger row, with no ninth file. The ledger delta needs only
+the premerge verifier, an exact eight-file scope check, and byte-level proof that
+`2d3d079..HEAD` changes the ledger alone; executable suites need not rerun until ready conversion.
+The PR body must disclose that agy/Gemini reviewed the seven-file diff before the ledger-only
+commit and that these Measurement lines were recovered with `n/a` token totals.
