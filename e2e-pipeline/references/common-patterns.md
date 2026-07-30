@@ -162,8 +162,7 @@ files, ensure the project's `.gitignore` includes rules for them.
 **Check & append** (idempotent — safe to run multiple times):
 
 ```bash
-PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --project-root "$PROJ_ROOT"
+"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --report-dir "$REPORT_DIR"
 ```
 
 Run this **once per session**, during the setup phase (after `mkdir -p` for `report_dir`). The

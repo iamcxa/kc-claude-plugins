@@ -132,16 +132,20 @@ test('creates the artifact ignore file but rejects a symlink destination', () =>
 });
 
 test('every browser artifact producer uses the shared gitignore helper', () => {
-  for (const relativePath of [
-    'agents/e2e-test-runner.md',
-    'agents/e2e-flow-verifier.md',
-    'skills/e2e-walkthrough/reference.md',
+  for (const [relativePath, reportDir] of [
+    ['agents/e2e-test-runner.md', '"{{report_dir}}"'],
+    ['agents/e2e-flow-verifier.md', '"{{report_dir}}"'],
+    ['skills/e2e-walkthrough/reference.md', '"$REPORT_DIR"'],
   ]) {
     const content = fs.readFileSync(path.join(pluginRoot, relativePath), 'utf8');
     assert.match(
       content,
       /\$\{CLAUDE_PLUGIN_ROOT\}\/scripts\/ensure-e2e-gitignore\.sh/,
       `${relativePath} must invoke the shared gitignore helper`
+    );
+    assert.ok(
+      content.includes(`--report-dir ${reportDir}`),
+      `${relativePath} must derive the app root from its report directory`
     );
   }
 });
@@ -168,7 +172,7 @@ test('derives project roots from nested report directories', () => {
   }
 });
 
-test('prefers the enclosing Git root for reports below a nested working directory', () => {
+test('writes app-local rules that Git honors below a nested monorepo package', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-gitignore-'));
   const nestedProject = path.join(directory, 'packages', 'app');
   const reportDir = path.join(
@@ -187,8 +191,23 @@ test('prefers the enclosing Git root for reports below a nested working director
 
     const result = runForReportDir(reportDir);
     assert.equal(result.status, 0, result.stderr);
-    assert.ok(fs.existsSync(path.join(directory, '.gitignore')));
-    assert.ok(!fs.existsSync(path.join(nestedProject, '.gitignore')));
+    assert.ok(!fs.existsSync(path.join(directory, '.gitignore')));
+    assert.ok(fs.existsSync(path.join(nestedProject, '.gitignore')));
+
+    const artifact = path.join(reportDir, 'video.mp4');
+    fs.writeFileSync(artifact, 'not-real-media');
+    const ignored = spawnSync(
+      'git',
+      [
+        '-C',
+        directory,
+        'check-ignore',
+        '-q',
+        path.relative(directory, artifact),
+      ],
+      { encoding: 'utf8' }
+    );
+    assert.equal(ignored.status, 0, ignored.stderr);
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }
@@ -206,4 +225,15 @@ test('report-based producers delegate project-root discovery to the helper', () 
       `${relativePath} must delegate report-root discovery to the helper`
     );
   }
+});
+
+test('common artifact guidance delegates app-root discovery to the helper', () => {
+  const content = fs.readFileSync(
+    path.join(pluginRoot, 'references/common-patterns.md'),
+    'utf8'
+  );
+  assert.ok(
+    content.includes('--report-dir "$REPORT_DIR"'),
+    'common artifact guidance must derive the app root from its report directory'
+  );
 });

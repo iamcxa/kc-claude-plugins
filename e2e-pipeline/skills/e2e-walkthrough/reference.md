@@ -34,8 +34,7 @@ REPORT_DIR="$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)" && mkdir -p "$REP
 **Gitignore housekeeping** (ensure large artifacts are not committed):
 
 ```bash
-PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --project-root "$PROJ_ROOT"
+"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --report-dir "$REPORT_DIR"
 ```
 
 **Browser open** (always use `--profile` — no recording needed):

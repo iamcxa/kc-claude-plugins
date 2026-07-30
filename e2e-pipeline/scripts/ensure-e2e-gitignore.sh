@@ -35,11 +35,7 @@ case "$1" in
       printf 'Cannot derive project root from report directory: %s\n' "$report_dir" >&2
       exit 64
     fi
-    if git_root=$(git -C "$candidate_root" rev-parse --show-toplevel 2>/dev/null); then
-      project_root=$git_root
-    else
-      project_root=$candidate_root
-    fi
+    project_root=$candidate_root
     ;;
   *)
     usage >&2
