@@ -830,6 +830,12 @@ else
   empty_reviews_usable=false
 fi
 assert_eq "an empty reviews array remains usable" "true" "$empty_reviews_usable"
+if review_post_reviews_usable '{"reviews":[42]}'; then
+  scalar_reviews_usable=true
+else
+  scalar_reviews_usable=false
+fi
+assert_eq "a scalar reviews element makes the list unusable" "false" "$scalar_reviews_usable"
 
 rfc_shell=''
 rfc_python=''
