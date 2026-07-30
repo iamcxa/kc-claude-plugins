@@ -10,6 +10,8 @@ issue:
 pr:
 design:
 id: x0fxzgrqcmtsbvp4c2cnp7z0
+product: kc-pr-flow
+sprint: S6
 ---
 
 **Unblocked 2026-07-26.** `attended-pr-review-wait` (4p) briefly threatened this slice's
