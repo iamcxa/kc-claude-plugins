@@ -21,6 +21,7 @@ TRACE_EVENT_PHASES = frozenset(
     {
         "(",
         ")",
+        "=",
         "B",
         "C",
         "D",

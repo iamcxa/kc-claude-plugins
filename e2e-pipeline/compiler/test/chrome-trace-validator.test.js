@@ -276,6 +276,27 @@ test('enforces max event bytes even when one buffer contains the complete event'
   }
 });
 
+test('accepts the standard Chrome link-ID event phase', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
+  try {
+    const artifact = path.join(directory, 'link-id.json');
+    fs.writeFileSync(
+      artifact,
+      JSON.stringify({
+        traceEvents: [
+          { name: 'LinkIds', ph: '=', ts: 1, pid: 1, tid: 1 },
+        ],
+      })
+    );
+
+    const result = run('validate', artifact);
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.stdout.trim(), 'chrome-trace-json');
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
 test('rejects unknown phase tokens and incomplete duration events', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
   try {
