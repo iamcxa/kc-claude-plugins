@@ -7,7 +7,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-gh-list-adapter-pagination
 issue:
-pr: pr-merge:pending:artifact-v1:674502ed8b79b4f7d0a80cf9acc5affba03d434491e32d769273791c2933414c
+pr: pr-merge:89:artifact-v1:674502ed8b79b4f7d0a80cf9acc5affba03d434491e32d769273791c2933414c
 design: trivial-pass
 id: n9xjhpeza7q0hk3sepc6rxhc
 lane: defect
