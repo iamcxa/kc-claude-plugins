@@ -1,6 +1,6 @@
 ---
 title: Synthesize exact-head EM merge readiness before human landing
-status: validation
+status: ideation
 source: captain direction 2026-07-30 after reconcile-list-element-shape closeout
 started: 2026-07-30T15:01:36Z
 completed:
@@ -953,8 +953,9 @@ binding should be checked by that shared validator as well.
 
 ### Feedback Cycles
 
-- Cycle 2: REJECTED — exact repaired-head re-review; both cycle-1 defects closed, broader
-  producer-compatibility gap remains; AC and design unchanged
+- Cycle 2: REJECTED / DESIGN RESET APPROVED — exact repaired-head re-review; surface 61m
+  implementation wall-clock vs estimate 90m (68%); AC narrowed: replace duplicated consumer
+  semantic validation with one canonical post-projection authority before further implementation.
 
 ### `--ac-scan`
 
