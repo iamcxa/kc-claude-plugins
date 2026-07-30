@@ -368,3 +368,50 @@ direct scalar-element usability assertion, then rerun the scoped suite and this 
 Cycle 1 closes the sole mutation-proof gap without altering behavior or scope. The product
 worktree is clean at the two-commit corrected head and is ready for fresh validation; agy,
 earned suites, product push, and PR work remain outside this correction dispatch.
+
+## Stage Report: validation (cycle 1)
+
+- DONE: Verify the correction is test-only after the returned head.
+  `2d3d07937d120d4f8d7647f305710c45cb61873b` adds only six assertion lines to
+  `review-post.test.sh`; parent is `335722e`, with no production or documentation change.
+- DONE: Confirm the branch diff remains exactly the authorized seven files.
+  Full diff from `f7c44efcd0f2587e004dcb3ff6f90896a385e1ab` names the same four docs,
+  runtime, test, and fixture files; the product worktree remained clean.
+- DONE: Freshly run the scoped review-post suite.
+  Exact-head `review-post.test.sh` returned 156 passed / 0 failed in 302.86s;
+  changing the scalar validator boundary is the edit that falsifies the new assertion.
+- DONE: Freshly kill the returned m1 mutation in a disposable copy.
+  Outer-array-only validation returned 155 passed / 1 failed in 406.24s; the only
+  failure was `a scalar reviews element makes the list unusable` (false vs true).
+- DONE: Freshly run the correction's static checks.
+  `bash -n`, pinned ShellCheck v0.9.0, and both full/correction `git diff --check`
+  invocations exited 0.
+- DONE: Request an updated whole-diff agy/Gemini review.
+  `agy` with `gemini-3.1-pro-high` reported prior P2 `FULLY CLOSED` and no new
+  P0-P3 correctness, edge-case, silent-failure, or falsifiability findings.
+- DONE: Verify the review against the exact updated head.
+  Its quoted six-line assertion and outer-only falsifier match lines 833-838 and the
+  observed 155/1 mutation; there were no new finding citations to adjudicate.
+- DONE: Record updated-head versus prior-head suite evidence without extrapolation.
+  Updated head reran review-post at 156/0; runtime 305/0, shadow 213/0, benchmark
+  135/0, cross-model 68/0, and diagram 43/0 plus 34/0 were not rerun in cycle 1.
+- DONE: Account for correction-only executable coverage.
+  Clean and mutated runs exercise opposite branches plus the assertion, covering all four
+  new command starts; the prior 95/96 trace was not rerun as one updated-head trace.
+- SKIPPED: Exercise a live GitHub PR E2E.
+  The approved proof remains the network-free injected transport CLI; no live PR mutation
+  was needed for the test-only correction.
+
+### Evidence block
+
+- Lenses: correctness PASS (0 findings); security and silent-failure behavior unchanged.
+- Diff coverage: correction 4/4 command starts; prior full trace not rerun at updated head.
+- Adversarial: PASS — returned m1 now fails exactly the direct scalar assertion.
+- Cross-model: Gemini 3.1 Pro High FULLY CLOSED; no new findings.
+- E2E: N/A — approved network-free transport seam; exact CLI suite ran 156/0.
+
+### Summary
+
+Cycle 1 closes the sole returned proof gap without changing runtime behavior or branch scope.
+Validation recommends PASS to the Claude EM landing gate; six unchanged earned suites retain
+their prior-head receipts but are explicitly not claimed as updated-head executions.
