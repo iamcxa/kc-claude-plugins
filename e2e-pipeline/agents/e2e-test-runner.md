@@ -198,7 +198,7 @@ Detect the installed producer's trace capability before capture. Treat the outpu
 `source` or `eval` it:
 
 ```bash
-AGENT_BROWSER_EXECUTABLE=$(command -v "${E2E_AGENT_BROWSER_BIN:-${AGENT_BROWSER_BIN:-agent-browser}}")
+AGENT_BROWSER_EXECUTABLE=$(command -v "${E2E_AGENT_BROWSER_BIN:-agent-browser}")
 TRACE_CONTRACT_CLI="${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js"
 TRACE_CONTRACT_FILE="{{report_dir}}/trace-contract.env"
 node "$TRACE_CONTRACT_CLI" \
@@ -1115,7 +1115,7 @@ python3 --version
 # Repeat Phase 1e capability detection and refresh trace_producer,
 # trace_producer_version, trace_format, trace_extension, and TRACE_PATH.
 node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
-  --agent-browser "$(command -v "${E2E_AGENT_BROWSER_BIN:-${AGENT_BROWSER_BIN:-agent-browser}}")" \
+  --agent-browser "$(command -v "${E2E_AGENT_BROWSER_BIN:-agent-browser}")" \
   --output env > "{{report_dir}}/trace-contract.env"
 trace_producer=$(sed -n 's/^trace_producer=//p' "{{report_dir}}/trace-contract.env")
 trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "{{report_dir}}/trace-contract.env")

@@ -89,7 +89,7 @@ Before starting, read these reference files for CLI command patterns:
 7. **Start trace**:
    ```bash
    python3 --version  # Required before tracing; stop before trace start if unavailable.
-   AGENT_BROWSER_EXECUTABLE=$(command -v "${E2E_AGENT_BROWSER_BIN:-${AGENT_BROWSER_BIN:-agent-browser}}")
+   AGENT_BROWSER_EXECUTABLE=$(command -v "${E2E_AGENT_BROWSER_BIN:-agent-browser}")
    TRACE_CONTRACT_FILE="$REPORT_DIR/trace-contract.env"
    node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
      --agent-browser "$AGENT_BROWSER_EXECUTABLE" \
@@ -573,7 +573,7 @@ trace, so persistent browser reuse does not imply trace reuse:
 python3 --version
 # Re-run the Phase 1 capability detector and refresh TRACE_PATH before this capture.
 node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
-  --agent-browser "$(command -v "${E2E_AGENT_BROWSER_BIN:-${AGENT_BROWSER_BIN:-agent-browser}}")" \
+  --agent-browser "$(command -v "${E2E_AGENT_BROWSER_BIN:-agent-browser}")" \
   --output env > "$REPORT_DIR/trace-contract.env"
 trace_producer=$(sed -n 's/^trace_producer=//p' "$REPORT_DIR/trace-contract.env")
 trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "$REPORT_DIR/trace-contract.env")

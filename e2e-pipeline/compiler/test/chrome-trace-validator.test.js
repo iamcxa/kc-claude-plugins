@@ -195,6 +195,25 @@ test('enforces the detection deadline before a late traceEvents field', () => {
   }
 });
 
+test('enforces one deadline through trailing top-level fields', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
+  try {
+    const artifact = path.join(directory, 'trailing-fields.json');
+    fs.writeFileSync(
+      artifact,
+      `{"traceEvents":[{"name":"RunTask","ph":"X","dur":1}],${'"padding":0,'.repeat(4_000_000)}"tail":0}`
+    );
+
+    const result = run('validate', artifact, {
+      E2E_CHROME_TRACE_TIMEOUT_SECONDS: '1',
+    });
+    assert.equal(result.status, 4, result.stderr);
+    assert.match(result.stderr, /timeout_seconds/i);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
 test('bounds individual and aggregate strings retained by summaries', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
   try {

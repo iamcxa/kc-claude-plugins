@@ -139,7 +139,7 @@ finalizer attempt, record a trace infrastructure failure and never dispatch anal
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
-  --agent-browser "$(command -v "${E2E_AGENT_BROWSER_BIN:-${AGENT_BROWSER_BIN:-agent-browser}}")" \
+  --agent-browser "$(command -v "${E2E_AGENT_BROWSER_BIN:-agent-browser}")" \
   --output env > "$REPORT_DIR/trace-contract.env" # REQUIRED before capture
 trace_producer=$(sed -n 's/^trace_producer=//p' "$REPORT_DIR/trace-contract.env")
 trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "$REPORT_DIR/trace-contract.env")

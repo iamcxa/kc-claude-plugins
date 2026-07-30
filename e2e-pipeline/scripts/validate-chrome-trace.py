@@ -336,27 +336,31 @@ def assert_chrome_file_limit(file_size: int, limits: Limits) -> None:
         raise ResourceLimitError("max_file_bytes exceeded")
 
 
+def assert_before_deadline(deadline: float) -> None:
+    if time.monotonic() > deadline:
+        raise ResourceLimitError("timeout_seconds exceeded")
+
+
 def has_top_level_trace_events(
-    file_path: str, max_value_bytes: int, timeout_seconds: int
+    file_path: str, max_value_bytes: int, deadline: float
 ) -> bool:
-    started = time.monotonic()
     stream = JsonStream(file_path, max_value_bytes)
     try:
+        assert_before_deadline(deadline)
         stream.expect("{")
         if stream.peek() == "}":
             return False
         while True:
-            if time.monotonic() - started > timeout_seconds:
-                raise ResourceLimitError("timeout_seconds exceeded")
+            assert_before_deadline(deadline)
             key = stream.value(64 * 1024)
+            assert_before_deadline(deadline)
             if not isinstance(key, str):
                 raise InvalidJsonError("invalid JSON: object key must be a string")
             stream.expect(":")
             if key == "traceEvents":
                 return True
             stream.value()
-            if time.monotonic() - started > timeout_seconds:
-                raise ResourceLimitError("timeout_seconds exceeded")
+            assert_before_deadline(deadline)
             separator = stream.peek()
             if separator == ",":
                 stream.position += 1
@@ -368,30 +372,33 @@ def has_top_level_trace_events(
         stream.close()
 
 
-def detect(file_path: str, max_value_bytes: int, timeout_seconds: int) -> str:
+def detect(file_path: str, max_value_bytes: int, deadline: float) -> str:
+    assert_before_deadline(deadline)
     with open(file_path, "rb") as artifact:
         prefix = artifact.read(4)
     if prefix.startswith(b"PK\x03\x04"):
         return FORMAT_PLAYWRIGHT
     try:
-        if has_top_level_trace_events(file_path, max_value_bytes, timeout_seconds):
+        if has_top_level_trace_events(file_path, max_value_bytes, deadline):
             return FORMAT_CHROME
     except (InvalidJsonError, UnicodeDecodeError):
         return FORMAT_UNKNOWN
     return FORMAT_UNKNOWN
 
 
-def parse_trace(file_path: str, limits: Limits) -> TraceSummary:
-    started = time.monotonic()
+def parse_trace(file_path: str, limits: Limits, deadline: float) -> TraceSummary:
     stream = JsonStream(file_path, limits.max_event_bytes)
     summary = TraceSummary(limits)
     found_trace_events = False
     try:
+        assert_before_deadline(deadline)
         stream.expect("{")
         if stream.peek() == "}":
             raise WrongFormatError("Chrome trace requires a traceEvents array")
         while True:
+            assert_before_deadline(deadline)
             key = stream.value(64 * 1024)
+            assert_before_deadline(deadline)
             if not isinstance(key, str):
                 raise InvalidJsonError("invalid JSON: object key must be a string")
             stream.expect(":")
@@ -402,9 +409,9 @@ def parse_trace(file_path: str, limits: Limits) -> TraceSummary:
                 stream.expect("[")
                 if stream.peek() != "]":
                     while True:
-                        if time.monotonic() - started > limits.timeout_seconds:
-                            raise ResourceLimitError("timeout_seconds exceeded")
+                        assert_before_deadline(deadline)
                         summary.add(stream.value())
+                        assert_before_deadline(deadline)
                         separator = stream.peek()
                         if separator == ",":
                             stream.position += 1
@@ -417,6 +424,7 @@ def parse_trace(file_path: str, limits: Limits) -> TraceSummary:
                 stream.expect("]")
             else:
                 stream.value()
+                assert_before_deadline(deadline)
             separator = stream.peek()
             if separator == ",":
                 stream.position += 1
@@ -425,8 +433,10 @@ def parse_trace(file_path: str, limits: Limits) -> TraceSummary:
                 stream.position += 1
                 break
             raise InvalidJsonError("invalid JSON: expected comma or object end")
+        assert_before_deadline(deadline)
         if stream.peek():
             raise InvalidJsonError("invalid JSON: trailing content")
+        assert_before_deadline(deadline)
     except UnicodeDecodeError as error:
         raise InvalidJsonError("invalid JSON: artifact is not UTF-8") from error
     finally:
@@ -460,10 +470,11 @@ def main(argv: list[str]) -> int:
 
         limits = Limits()
         assert_chrome_file_limit(file_size, limits)
+        deadline = time.monotonic() + limits.timeout_seconds
         detected = detect(
             file_path,
             limits.max_event_bytes,
-            limits.timeout_seconds,
+            deadline,
         )
         if command == "detect":
             print(detected)
@@ -472,7 +483,7 @@ def main(argv: list[str]) -> int:
             raise WrongFormatError(
                 f"expected Chrome trace JSON with traceEvents, detected {detected}"
             )
-        summary = parse_trace(file_path, limits)
+        summary = parse_trace(file_path, limits, deadline)
         if command == "validate":
             print(FORMAT_CHROME)
         else:

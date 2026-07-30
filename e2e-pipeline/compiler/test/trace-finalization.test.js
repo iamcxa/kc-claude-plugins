@@ -1486,6 +1486,51 @@ describe('shared trace finalization contract', () => {
     }
   });
 
+  test('Teams lifecycle uses the owned runtime PATH fallback instead of AGENT_BROWSER_BIN', () => {
+    const dir = makeTempDir();
+    try {
+      const reportDir = path.join(dir, 'runner-admin');
+      const chromeAgent = writeAgentBrowserStub(dir);
+      const wrongPathAgent = writePlaywrightCapabilityStub(dir);
+      const pathBin = path.join(dir, 'bin');
+      fs.mkdirSync(pathBin);
+      fs.symlinkSync(chromeAgent, path.join(pathBin, 'agent-browser'));
+      const runtime = writeBrowserRuntimeStub(dir);
+      const runtimeLog = path.join(dir, 'browser-runtime.log');
+      const env = {
+        ...process.env,
+        PATH: `${pathBin}:${process.env.PATH}`,
+        AGENT_BROWSER_BIN: wrongPathAgent,
+        AGENT_BROWSER_UNDERLYING: chromeAgent,
+        BROWSER_RUNTIME_LOG: runtimeLog,
+        EXPECTED_BROWSER_APP: 'admin-panel',
+        EXPECTED_BROWSER_RUN_ID: 'browser-run-123',
+        RECOVERY_MARKER: path.join(dir, 'recovery-reached'),
+        TRACE_FIXTURE: chromeTraceFixture,
+        TRACE_STUB_MODE: 'valid',
+      };
+
+      const begin = spawnSync(
+        teamTraceLifecycle,
+        [
+          'begin',
+          '--report-dir', reportDir,
+          '--flow-run-id', 'flow-run-1',
+          '--session', 'admin-panel',
+          '--browser-runtime', runtime,
+          '--browser-run-id', 'browser-run-123',
+          '--app', 'admin-panel',
+        ],
+        { encoding: 'utf8', env }
+      );
+      assert.equal(begin.status, 0, begin.stderr || begin.error?.message);
+      assert.match(begin.stdout, /trace_format=chrome-trace-json/);
+      assert.match(begin.stdout, /trace_path=.*\/trace\.json/);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   test('Teams lifecycle rejects browser ownership drift between begin and finalize', () => {
     const dir = makeTempDir();
     try {
@@ -2006,13 +2051,13 @@ describe('shared trace finalization contract', () => {
       );
       assert.match(
         content,
-        /\$\{AGENT_BROWSER_BIN:-agent-browser\}/,
+        /\$\{E2E_AGENT_BROWSER_BIN:-agent-browser\}/,
         `${relativePath}: detector must probe the runtime-selected executable`
       );
-      assert.match(
+      assert.doesNotMatch(
         content,
-        /E2E_AGENT_BROWSER_BIN/,
-        `${relativePath}: owned-runtime executable override must win capability detection`
+        /E2E_AGENT_BROWSER_BIN:-\$\{AGENT_BROWSER_BIN/,
+        `${relativePath}: AGENT_BROWSER_BIN must not replace the owned runtime PATH fallback`
       );
       assert.match(content, /TRACE_PATH=.*trace_extension/);
       assert.match(content, /--trace-producer "\$trace_producer"/);
