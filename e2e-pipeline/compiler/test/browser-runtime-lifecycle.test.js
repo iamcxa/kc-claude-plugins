@@ -25,6 +25,7 @@ function setup(t, options) {
   const settings = Object.assign(
     {
       copyLineage: true,
+      dropDiagnosticIndex: -1,
       profileMode: 'persistent',
       resetOnNavigation: '',
     },
@@ -96,11 +97,14 @@ function setup(t, options) {
         actualProfile: '',
         browserPid: 654,
         copyLineage: settings.copyLineage,
+        diagnosticGlobals: {},
+        dropDiagnosticIndex: settings.dropDiagnosticIndex,
         daemonPid: 321,
         events: [],
         executable,
         harActive: false,
         initRegistered: false,
+        initScripts: [],
         launchHash: 12345,
         profileMode: settings.profileMode,
         requests: [],
@@ -146,7 +150,12 @@ function setup(t, options) {
   };
 }
 
-function runOpen(fixture, url) {
+function runOpen(fixture, url, diagnosticInitScripts) {
+  const diagnosticArgs = (diagnosticInitScripts || []).flatMap(function(
+    scriptPath
+  ) {
+    return ['--diagnostic-init-script', scriptPath];
+  });
   return spawnSync(
     process.execPath,
     [
@@ -161,12 +170,441 @@ function runOpen(fixture, url) {
       fixture.profile,
       '--receipt',
       fixture.receipt,
+      ...diagnosticArgs,
       'open',
       url,
     ],
     { encoding: 'utf8', env: fixture.env }
   );
 }
+
+function runClose(fixture, diagnosticInitScripts) {
+  const diagnosticArgs = (diagnosticInitScripts || []).flatMap(function(
+    scriptPath
+  ) {
+    return ['--diagnostic-init-script', scriptPath];
+  });
+  return spawnSync(
+    process.execPath,
+    [
+      RUNTIME,
+      '--run-id',
+      fixture.runId,
+      '--app',
+      fixture.app,
+      '--profile',
+      fixture.profile,
+      '--receipt',
+      fixture.receipt,
+      ...diagnosticArgs,
+      'close',
+    ],
+    { encoding: 'utf8', env: fixture.env }
+  );
+}
+
+function runDiagnosticProjection(fixture, diagnosticInitScripts) {
+  const diagnosticArgs = (diagnosticInitScripts || []).flatMap(function(
+    scriptPath
+  ) {
+    return ['--diagnostic-init-script', scriptPath];
+  });
+  return spawnSync(
+    process.execPath,
+    [
+      RUNTIME,
+      '--run-id',
+      fixture.runId,
+      '--app',
+      fixture.app,
+      '--executable-path',
+      fixture.executable,
+      '--profile',
+      fixture.profile,
+      '--receipt',
+      fixture.receipt,
+      ...diagnosticArgs,
+      'diagnostic-projection',
+    ],
+    { encoding: 'utf8', env: fixture.env }
+  );
+}
+
+test('rejects invalid diagnostic init-script inputs before browser launch', function(t) {
+  const fixture = setup(t);
+  const directory = path.join(fixture.root, 'recorder-directory');
+  const missing = path.join(fixture.root, 'missing-recorder.js');
+  const target = path.join(fixture.root, 'recorder-target.js');
+  const symlink = path.join(fixture.root, 'recorder-symlink.js');
+  fs.mkdirSync(directory);
+  fs.writeFileSync(target, 'publishDiagnosticProjection({}, () => ({}));\n');
+  fs.symlinkSync(target, symlink);
+
+  for (const [label, scriptPath, errorPattern] of [
+    ['relative', 'recorder.js', /absolute/i],
+    ['missing', missing, /missing|regular file/i],
+    ['directory', directory, /regular file/i],
+    ['symlink', symlink, /symlink/i],
+  ]) {
+    const result = runOpen(
+      fixture,
+      'https://application.example.test/' + label,
+      [scriptPath]
+    );
+    assert.notEqual(result.status, 0, label);
+    assert.match(result.stderr, errorPattern, label);
+  }
+
+  const state = JSON.parse(fs.readFileSync(fixture.statePath, 'utf8'));
+  assert.equal(
+    state.events.some(function(event) {
+      return event.command === 'open';
+    }),
+    false
+  );
+});
+
+test('accepts repeated current-user-owned diagnostic init-script files', function(t) {
+  const fixture = setup(t);
+  const first = path.join(fixture.root, 'first-recorder.js');
+  const second = path.join(fixture.root, 'second-recorder.js');
+  fs.writeFileSync(first, 'publishDiagnosticProjection({}, () => ({}));\n');
+  fs.writeFileSync(second, 'publishDiagnosticProjection({}, () => ({}));\n');
+
+  const result = runOpen(fixture, 'about:blank', [first, second]);
+
+  assert.equal(result.status, 0, result.stderr);
+  const state = JSON.parse(fs.readFileSync(fixture.statePath, 'utf8'));
+  assert.equal(
+    state.events.some(function(event) {
+      return event.command === 'open';
+    }),
+    true
+  );
+});
+
+test('launches isolated diagnostic wrappers and records only safe provenance', function(t) {
+  const fixture = setup(t);
+  const first = path.join(fixture.root, 'first-recorder.js');
+  const second = path.join(fixture.root, 'second-recorder.js');
+  const firstSource =
+    "publishDiagnosticProjection({ready:{type:'boolean'}},()=>({ready:true}));\n";
+  const secondSource =
+    "publishDiagnosticProjection({phase:{type:'enum',values:['init']}},()=>({phase:'init'}));\n";
+  fs.writeFileSync(first, firstSource);
+  fs.writeFileSync(second, secondSource);
+
+  const result = runOpen(fixture, 'about:blank', [first, second]);
+
+  assert.equal(result.status, 0, result.stderr);
+  const state = JSON.parse(fs.readFileSync(fixture.statePath, 'utf8'));
+  const launch = state.events.find(function(event) {
+    return event.command === 'open';
+  });
+  const initScripts = launch.argv.flatMap(function(value, index, argv) {
+    return value === '--init-script' ? [argv[index + 1]] : [];
+  });
+  assert.equal(initScripts.length, 3);
+  assert.equal(initScripts.includes(first), false);
+  assert.equal(initScripts.includes(second), false);
+
+  const receiptText = fs.readFileSync(fixture.receipt, 'utf8');
+  const receipt = JSON.parse(receiptText);
+  assert.equal(receipt.diagnostic_init_scripts.length, 2);
+  assert.deepEqual(
+    receipt.diagnostic_init_scripts.map(function(script) {
+      return script.basename;
+    }),
+    ['first-recorder.js', 'second-recorder.js']
+  );
+  for (const script of receipt.diagnostic_init_scripts) {
+    assert.match(script.content_sha256, /^[a-f0-9]{64}$/);
+    assert.match(script.path_sha256, /^[a-f0-9]{64}$/);
+    assert.equal(script.status, 'registered');
+  }
+  assert.equal(receiptText.includes(first), false);
+  assert.equal(receiptText.includes(second), false);
+  assert.equal(receiptText.includes(firstSource.trim()), false);
+  assert.equal(receiptText.includes(secondSource.trim()), false);
+});
+
+test('fails before first application navigation when a diagnostic source changes', function(t) {
+  const fixture = setup(t);
+  const recorder = path.join(fixture.root, 'mutable-recorder.js');
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({ready:{type:'boolean'}},()=>({ready:true}));\n"
+  );
+  assert.equal(runOpen(fixture, 'about:blank', [recorder]).status, 0);
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({ready:{type:'boolean'}},()=>({ready:false}));\n"
+  );
+  const targetUrl = 'https://application.example.test/mutated';
+
+  const result = runOpen(fixture, targetUrl, [recorder]);
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /diagnostic init script 0.*content changed/i);
+  const state = JSON.parse(fs.readFileSync(fixture.statePath, 'utf8'));
+  const applicationOpen = state.events.find(function(event) {
+    return event.command === 'open' && event.args.includes(targetUrl);
+  });
+  assert.equal(applicationOpen, undefined);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.status, 'failed');
+  assert.match(receipt.error, /diagnostic init script 0.*content changed/i);
+});
+
+test('rejects substituted runtime-owned diagnostic files without touching caller source', function(t) {
+  const fixture = setup(t);
+  const recorder = path.join(fixture.root, 'caller-recorder.js');
+  const callerSource =
+    "publishDiagnosticProjection({ready:{type:'boolean'}},()=>({ready:true}));\n";
+  fs.writeFileSync(recorder, callerSource);
+  assert.equal(runOpen(fixture, 'about:blank', [recorder]).status, 0);
+  const manifestPath = fixture.receipt + '.diagnostic-manifest.json';
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const wrapperPath = manifest.scripts[0].wrapper_path;
+  fs.rmSync(wrapperPath);
+  fs.symlinkSync(recorder, wrapperPath);
+  const targetUrl = 'https://application.example.test/substituted';
+
+  const result = runOpen(fixture, targetUrl, [recorder]);
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /diagnostic wrapper.*regular|symlink/i);
+  assert.equal(fs.readFileSync(recorder, 'utf8'), callerSource);
+  const state = JSON.parse(fs.readFileSync(fixture.statePath, 'utf8'));
+  assert.equal(
+    state.events.some(function(event) {
+      return event.command === 'open' && event.args.includes(targetUrl);
+    }),
+    false
+  );
+});
+
+test('successful navigation removes only runtime-owned diagnostic files', function(t) {
+  const fixture = setup(t);
+  const recorder = path.join(fixture.root, 'success-recorder.js');
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({ready:{type:'boolean'}},()=>({ready:true}));\n"
+  );
+  const manifestPath = fixture.receipt + '.diagnostic-manifest.json';
+
+  const result = runOpen(
+    fixture,
+    'https://application.example.test/success',
+    [recorder]
+  );
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(fs.existsSync(manifestPath), false);
+  assert.equal(fs.existsSync(recorder), true);
+  const privateFiles = fs
+    .readdirSync(fixture.root)
+    .filter(function(fileName) {
+      return fileName.includes('.diagnostic-');
+    });
+  assert.deepEqual(privateFiles, []);
+});
+
+test('close removes pending runtime files but preserves caller scripts', function(t) {
+  const fixture = setup(t);
+  const recorder = path.join(fixture.root, 'pending-recorder.js');
+  const source =
+    "publishDiagnosticProjection({ready:{type:'boolean'}},()=>({ready:true}));\n";
+  fs.writeFileSync(recorder, source);
+  assert.equal(runOpen(fixture, 'about:blank', [recorder]).status, 0);
+
+  const pendingProjection = runDiagnosticProjection(fixture, [recorder]);
+  assert.notEqual(pendingProjection.status, 0);
+  assert.match(pendingProjection.stderr, /verified first-navigation/i);
+
+  const result = runClose(fixture, [recorder]);
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(fs.readFileSync(recorder, 'utf8'), source);
+  assert.equal(
+    fs
+      .readdirSync(fixture.root)
+      .some(function(fileName) {
+        return fileName.includes('.diagnostic-');
+      }),
+    false
+  );
+});
+
+test('close cleans pending runtime files after the caller script disappears', function(t) {
+  const fixture = setup(t);
+  const recorder = path.join(fixture.root, 'removed-recorder.js');
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({ready:{type:'boolean'}},()=>({ready:true}));\n"
+  );
+  assert.equal(runOpen(fixture, 'about:blank', [recorder]).status, 0);
+  fs.rmSync(recorder);
+
+  const result = runClose(fixture, [recorder]);
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(
+    fs
+      .readdirSync(fixture.root)
+      .some(function(fileName) {
+        return fileName.includes('.diagnostic-');
+      }),
+    false
+  );
+});
+
+test('observes every diagnostic recorder and returns only typed projections', function(t) {
+  const fixture = setup(t);
+  const recorder = path.join(fixture.root, 'typed-recorder.js');
+  fs.writeFileSync(
+    recorder,
+    [
+      'publishDiagnosticProjection(',
+      '  {',
+      "    ready: {type:'boolean'},",
+      "    phase: {type:'enum',values:['init','ready']},",
+      "    request_count: {type:'integer',min:0,max:10},",
+      "    fingerprint: {type:'sha256'}",
+      '  },',
+      '  () => ({',
+      '    ready: true,',
+      "    phase: 'ready',",
+      '    request_count: 2,',
+      "    fingerprint: '" + 'a'.repeat(64) + "'",
+      '  })',
+      ');',
+      '',
+    ].join('\n')
+  );
+
+  const open = runOpen(
+    fixture,
+    'https://application.example.test/typed',
+    [recorder]
+  );
+  assert.equal(open.status, 0, open.stderr);
+  const receiptText = fs.readFileSync(fixture.receipt, 'utf8');
+  const receipt = JSON.parse(receiptText);
+  assert.equal(receipt.diagnostic_init_scripts[0].status, 'observed');
+  assert.equal(
+    receipt.diagnostic_init_scripts[0].projection_status,
+    'validated'
+  );
+  assert.equal(receiptText.includes('"ready": true'), false);
+  assert.equal(receiptText.includes('"phase": "ready"'), false);
+  assert.equal(receiptText.includes('a'.repeat(64)), false);
+
+  const projection = runDiagnosticProjection(fixture, [recorder]);
+  assert.equal(projection.status, 0, projection.stderr);
+  assert.deepEqual(JSON.parse(projection.stdout), {
+    projections: [
+      {
+        index: 0,
+        basename: 'typed-recorder.js',
+        values: {
+          ready: true,
+          phase: 'ready',
+          request_count: 2,
+          fingerprint: 'a'.repeat(64),
+        },
+      },
+    ],
+  });
+});
+
+test('fails with the recorder index when a diagnostic script is unobserved', function(t) {
+  const fixture = setup(t, { dropDiagnosticIndex: 0 });
+  const recorder = path.join(fixture.root, 'unobserved-recorder.js');
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({ready:{type:'boolean'}},()=>({ready:true}));\n"
+  );
+
+  const result = runOpen(
+    fixture,
+    'https://application.example.test/unobserved',
+    [recorder]
+  );
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /diagnostic init script 0.*not observed/i);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.status, 'failed');
+  assert.match(receipt.error, /diagnostic init script 0.*not observed/i);
+});
+
+test('rejects a projection value outside its explicit schema', function(t) {
+  const fixture = setup(t);
+  const recorder = path.join(fixture.root, 'invalid-projection.js');
+  fs.writeFileSync(
+    recorder,
+    [
+      'publishDiagnosticProjection(',
+      "  {phase:{type:'enum',values:['init','ready']}},",
+      "  () => ({phase:'secret-value'})",
+      ');',
+      '',
+    ].join('\n')
+  );
+
+  const result = runOpen(
+    fixture,
+    'https://application.example.test/invalid-projection',
+    [recorder]
+  );
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /diagnostic projection 0.*phase.*enum/i);
+  const receiptText = fs.readFileSync(fixture.receipt, 'utf8');
+  assert.equal(receiptText.includes('secret-value'), false);
+});
+
+test('parallel recorders stay isolated and cleanup preserves both caller files', function(t) {
+  const first = setup(t);
+  const second = setup(t);
+  const firstRecorder = path.join(first.root, 'first.js');
+  const secondRecorder = path.join(second.root, 'second.js');
+  fs.writeFileSync(
+    firstRecorder,
+    "publishDiagnosticProjection({run:{type:'enum',values:['first']}},()=>({run:'first'}));\n"
+  );
+  fs.writeFileSync(
+    secondRecorder,
+    "publishDiagnosticProjection({run:{type:'enum',values:['second']}},()=>({run:'second'}));\n"
+  );
+  assert.equal(
+    runOpen(first, 'https://application.example.test/first', [firstRecorder])
+      .status,
+    0
+  );
+  assert.equal(
+    runOpen(second, 'https://application.example.test/second', [secondRecorder])
+      .status,
+    0
+  );
+
+  const firstProjection = JSON.parse(
+    runDiagnosticProjection(first, [firstRecorder]).stdout
+  );
+  const secondProjection = JSON.parse(
+    runDiagnosticProjection(second, [secondRecorder]).stdout
+  );
+  assert.equal(firstProjection.projections[0].values.run, 'first');
+  assert.equal(secondProjection.projections[0].values.run, 'second');
+  assert.equal(runClose(first, [firstRecorder]).status, 0);
+  assert.equal(
+    runDiagnosticProjection(second, [secondRecorder]).status,
+    0
+  );
+  assert.equal(fs.existsSync(firstRecorder), true);
+  assert.equal(fs.existsSync(secondRecorder), true);
+});
 
 test('unbound 0.32 snapshot fails before the application URL is requested', function(t) {
   const fixture = setup(t, {
@@ -334,4 +772,57 @@ test('subsequent actions do not replay browser launch flags', function(t) {
   assert.equal(event.argv.includes('--profile'), false);
   assert.equal(event.argv.includes('--executable-path'), false);
   assert.equal(event.argv.includes('--engine'), false);
+});
+
+test('subsequent actions reject diagnostic source drift before browser execution', function(t) {
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  const recorder = path.join(fixture.root, 'drifted-recorder.js');
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({ready:{type:'boolean'}},()=>({ready:true}));\n"
+  );
+  assert.equal(
+    runOpen(
+      fixture,
+      'https://application.example.test/diagnostic-binding',
+      [recorder]
+    ).status,
+    0
+  );
+  fs.writeFileSync(
+    recorder,
+    "publishDiagnosticProjection({ready:{type:'boolean'}},()=>({ready:false}));\n"
+  );
+
+  const result = spawnSync(
+    process.execPath,
+    [
+      RUNTIME,
+      '--run-id',
+      fixture.runId,
+      '--app',
+      fixture.app,
+      '--executable-path',
+      fixture.executable,
+      '--profile',
+      fixture.profile,
+      '--receipt',
+      fixture.receipt,
+      '--diagnostic-init-script',
+      recorder,
+      'snapshot',
+      '-i',
+    ],
+    { encoding: 'utf8', env: fixture.env }
+  );
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /diagnostic init script 0.*content changed/i);
+  const state = JSON.parse(fs.readFileSync(fixture.statePath, 'utf8'));
+  assert.equal(
+    state.events.some(function(event) {
+      return event.command === 'snapshot';
+    }),
+    false
+  );
 });

@@ -4,6 +4,10 @@ Detailed execution mechanics and output procedures. Loaded on demand from SKILL.
 It inherits the immutable `browser_runtime`, `browser_run_id`, and
 `browser_receipt` fields from the walkthrough. In every example below,
 `browser_command` means the exact owned runtime prefix declared by SKILL.md.
+It also inherits optional `diagnostic_init_scripts`, which defaults to an empty
+list. The prefix contains one
+`--diagnostic-init-script "<absolute recorder path>"` per entry; never pass
+these options to a bare browser CLI.
 
 ---
 

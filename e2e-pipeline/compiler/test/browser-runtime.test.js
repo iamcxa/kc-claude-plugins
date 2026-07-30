@@ -407,6 +407,7 @@ test('allows every command family referenced by e2e-test runtime surfaces', func
     'click',
     'close',
     'console',
+    'diagnostic-projection',
     'errors',
     'eval',
     'fill',
@@ -426,7 +427,9 @@ test('allows every command family referenced by e2e-test runtime surfaces', func
     'uncheck',
     'wait',
   ]);
-  for (const command of commands) {
+  for (const command of commands.filter(function(candidate) {
+    return candidate !== 'diagnostic-projection';
+  })) {
     const result = spawnSync(
       process.execPath,
       [

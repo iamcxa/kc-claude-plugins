@@ -234,6 +234,7 @@ Total: 4 runs, 31 steps. Proceed?
 | `browser_runtime` | Absolute path to `${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js` |
 | `browser_run_id` | One run identity generated before any browser runner dispatch |
 | `browser_receipt` | Absolute `<report_dir>/browser-ownership.json` for that app runner |
+| `diagnostic_init_scripts` | Optional ordered absolute recorder paths; defaults to an empty list |
 | `service_runtime` | Absolute local-service supervisor path when a manifest is active |
 | `service_run_id` | One owned service identity when a manifest is active |
 | `service_state_dir` | Absolute top-level `<report_dir>/local-services` when active |
@@ -277,6 +278,11 @@ Every browser dispatch and browser command also carries the same `browser_runtim
 Each app runner receives its own `browser_receipt` under that runner's report directory.
 A teammate `RE-RUN` requested inside this invocation keeps that identity. A fresh
 `/e2e-test` replay MUST generate a new `browser_run_id`.
+
+Pass `diagnostic_init_scripts` unchanged to every runner dispatch. Each runner
+adds one `--diagnostic-init-script "<absolute recorder path>"` to the owned
+runtime prefix per entry. Never convert this field into a bare browser CLI,
+CDP, storage, cookie, or raw-HAR operation.
 
 ### Flow-managed profile preparation
 

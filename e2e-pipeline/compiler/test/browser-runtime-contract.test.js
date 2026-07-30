@@ -167,6 +167,35 @@ test('every browser consumer requires the verified first-navigation lifecycle ve
   assert.match(runtime, /status:\s*'verified'/);
 });
 
+test('every browser consumer carries diagnostic scripts only through the owned runtime', function() {
+  const consumers = [
+    'skills/e2e-test/SKILL.md',
+    'agents/e2e-test-runner.md',
+    'skills/e2e-map/SKILL.md',
+    'agents/e2e-mapper.md',
+    'skills/e2e-walkthrough/SKILL.md',
+    'skills/e2e-walkthrough/reference.md',
+    'skills/e2e-flow/SKILL.md',
+    'agents/e2e-flow-verifier.md',
+    'skills/e2e-debug/SKILL.md',
+    'agents/e2e-debug-observe.md',
+    'references/commands.md',
+    'references/agent-teams.md',
+  ];
+
+  for (const consumer of consumers) {
+    const source = read(consumer);
+    assert.match(source, /diagnostic_init_scripts/, consumer);
+    assert.match(source, /--diagnostic-init-script/, consumer);
+    assert.match(source, /optional|Optional|defaults? to an empty list/, consumer);
+    assert.doesNotMatch(
+      source,
+      /agent-browser[^\n]*--(?:diagnostic-)?init-script/,
+      consumer + ' bypasses the owned runtime'
+    );
+  }
+});
+
 test('compiled flows wrap every browser call with the owned runtime', function() {
   const codegen = read('compiler/codegen.js');
   const compiler = read('compiler/compiler.js');
@@ -175,6 +204,8 @@ test('compiled flows wrap every browser call with the owned runtime', function()
   assert.match(codegen, /E2E_BROWSER_RUNTIME/);
   assert.match(codegen, /E2E_BROWSER_RUN_ID/);
   assert.match(codegen, /E2E_BROWSER_RECEIPT_DIR/);
+  assert.match(codegen, /E2E_DIAGNOSTIC_INIT_SCRIPTS/);
+  assert.match(codegen, /--diagnostic-init-script/);
   assert.match(codegen, /agent-browser\(\)/);
   assert.match(codegen, /node "\$E2E_BROWSER_RUNTIME"/);
   assert.match(compiler, /browserApps/);

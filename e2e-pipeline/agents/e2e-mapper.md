@@ -40,6 +40,7 @@ The orchestrator skill dispatches this agent with the following fields. Parse th
 | `browser_runtime` | Yes | Absolute path to `e2e-browser-runtime.js`. |
 | `browser_run_id` | Yes | Fresh run identity supplied by the orchestrator. |
 | `browser_receipt` | Yes | Absolute browser ownership receipt path. |
+| `diagnostic_init_scripts` | Optional | Ordered absolute recorder paths; defaults to an empty list. |
 | `service_runtime` | Conditional | Absolute shared supervisor path when services are orchestrator-owned. |
 | `service_run_id` | Conditional | Service ownership identity. |
 | `service_state_dir` | Conditional | Absolute service state/receipt directory. |
@@ -71,6 +72,10 @@ prohibited:
 ```text
 browser_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}" --receipt "{{browser_receipt}}"
 ```
+
+Append one `--diagnostic-init-script "{{absolute_recorder_path}}"` per optional
+`diagnostic_init_scripts` entry before the browser subcommand. These options
+belong only to the owned runtime and must never be passed to a bare browser CLI.
 
 ### 1a. Pre-flight Checks
 

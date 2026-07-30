@@ -155,6 +155,10 @@ For every browser flow, resolve
 `browser_runtime`, generate one fresh `browser_run_id`, create `report_dir`, and
 set `browser_receipt` to `<report_dir>/browser-ownership.json`. Pass all three
 fields unchanged to every verifier dispatch and `VERIFY_FLOW` message.
+`diagnostic_init_scripts` is optional and defaults to an empty list. Pass it
+unchanged to each verifier; the verifier appends one
+`--diagnostic-init-script "<absolute recorder path>"` per entry only to the
+owned runtime prefix, never to a bare browser CLI.
 The verifier may consume application evidence only after
 `browser_receipt.first_navigation.status: verified`. Any other first-navigation
 lifecycle result is infrastructure failure and cannot become a flow FAIL.

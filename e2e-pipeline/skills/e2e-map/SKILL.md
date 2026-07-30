@@ -54,6 +54,11 @@ unchanged for this invocation. Every browser command below uses:
 browser_command: node "<browser_runtime>" --run-id "<browser_run_id>" --app "<app>" --receipt "<browser_receipt>"
 ```
 
+`diagnostic_init_scripts` is optional and defaults to an empty list. When
+present, append repeated `--diagnostic-init-script "<absolute recorder path>"`
+arguments to this owned-runtime prefix before every browser subcommand; never
+pass them to a bare browser CLI.
+
 The first browser open must finish with
 `browser_receipt.first_navigation.status: verified`. Treat snapshot lineage,
 page/init-script, or first-document HAR failures as infrastructure failures and

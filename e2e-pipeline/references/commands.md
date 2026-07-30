@@ -19,12 +19,23 @@ BROWSER_RUNTIME="${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js"
 BROWSER_RUN_ID=$(node "$BROWSER_RUNTIME" new-run-id)
 APP="<mapping app>"
 BROWSER_RECEIPT="<absolute report dir>/browser-ownership-$APP.json"
+diagnostic_init_scripts=() # optional; defaults to an empty list
+diagnostic_runtime_args=()
+for recorder_path in "${diagnostic_init_scripts[@]}"; do
+  diagnostic_runtime_args+=(--diagnostic-init-script "$recorder_path")
+done
 
 e2e_browser() {
   node "$BROWSER_RUNTIME" --run-id "$BROWSER_RUN_ID" --app "$APP" \
-    --receipt "$BROWSER_RECEIPT" "$@"
+    --receipt "$BROWSER_RECEIPT" \
+    "${diagnostic_runtime_args[@]}" "$@"
 }
 ```
+
+Build `diagnostic_runtime_args` from `diagnostic_init_scripts` by appending one
+`--diagnostic-init-script "<absolute recorder path>"` pair per entry. The runtime
+validates and owns the wrapper lifecycle. Never pass these options to a bare
+browser CLI.
 
 The runtime creates an owned daemon namespace, selects the app session, discovers
 and pins the installed Chrome for Testing executable, and ignores inherited browser
@@ -36,6 +47,25 @@ run reuse the same ID and matching receipt.
 Do not use `--auto-connect`, `--cdp`, or `connect`. The runtime rejects those escape
 hatches and rejects executables that are not Chrome for Testing. Close with
 `e2e_browser close`, which targets only the owned namespace/session.
+
+### Optional diagnostic init scripts
+
+`diagnostic_init_scripts` contains local, current-user-owned JavaScript files
+that run before the first application navigation. Each file must call
+`publishDiagnosticProjection(schema, reader)` exactly once. The schema may
+allowlist only booleans, bounded integers, declared enums, and lowercase
+SHA-256 digests. After `first_navigation.status: verified`, retrieve the current
+sanitized values with:
+
+```bash
+e2e_browser diagnostic-projection
+```
+
+The receipt stores hashes, safe provenance, marker status, and allowlisted field
+names—not source paths, source text, or projection values. Diagnostic source
+and projection output are local evidence. Never upload or commit browser
+profiles, cookies, tokens, storage dumps, raw HAR, or screenshots containing
+credentials.
 
 ### Flow-managed authentication
 
