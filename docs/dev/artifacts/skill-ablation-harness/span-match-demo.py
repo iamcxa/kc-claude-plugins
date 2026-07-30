@@ -18,7 +18,7 @@ demonstrates that the replacement post-condition -- verbatim span match, table
 driven -- rejects the same arm. It is the regression test for the defect, run at
 ideation time so the design is not adopted on an argument.
 
-Proof Policy #7: a new check must be shown able to fail.
+Proof Policy #8: before trusting what a check found, confirm the check can fail.
 
 WHAT IT DOES
 ------------

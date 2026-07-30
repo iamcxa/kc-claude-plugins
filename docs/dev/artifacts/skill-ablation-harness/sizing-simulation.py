@@ -349,7 +349,7 @@ def worked_cases(split_cache):
 
 
 def joint_worked_cases(split_cache):
-    """Proof Policy #7 for the JOINT rule: one case it must flag, one it must not."""
+    """Proof Policy #8 for the JOINT rule: one case it must flag, one it must not."""
     print("\n== Worked verification, JOINT max-statistic (exact enumeration) ==")
     n, m = 3, 3
 
