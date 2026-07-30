@@ -70,19 +70,19 @@ test('e2e-test browser handoff closes through the owned runtime', function() {
   assert.doesNotMatch(skill, /agent-browser[^\n]*close/);
   assert.match(
     skill,
-    /Browser handoff:[\s\S]{0,400}node "<absolute browser_runtime>" --run-id "<browser_run_id>" --app "<app>" close/
+    /Browser handoff:[\s\S]{0,400}node "<absolute browser_runtime>" --run-id "<browser_run_id>" --app "<app>" --receipt "<browser_receipt>" close/
   );
 });
 
 test('shared Agent Teams guidance gives e2e-test runtime ownership precedence conditionally', function() {
   const teams = read('references/agent-teams.md');
 
-  assert.match(teams, /e2e-test runtime precedence/i);
+  assert.match(teams, /shared runtime precedence/i);
   assert.match(
     teams,
-    /When a dispatch includes both `browser_runtime` and `browser_run_id`[\s\S]{0,500}takes precedence/
+    /Every browser teammate dispatch includes `browser_runtime`, `browser_run_id`,[\s\S]{0,500}takes precedence/
   );
-  assert.match(teams, /Other consumers that do not provide both runtime fields[\s\S]{0,300}shared protocol/);
+  assert.match(teams, /Never fall back to a current\/default browser daemon/);
 });
 
 test('fresh e2e-test invocations recreate the team with full invocation state', function() {
@@ -114,4 +114,79 @@ test('e2e-test runner rejects a different browser run identity without partial s
   assert.match(runner, /recoverable: false/);
   assert.doesNotMatch(runner, /close the old browser[\s\S]{0,300}update both fields/i);
   assert.doesNotMatch(runner, /fresh-identity switch rule/i);
+});
+
+test('every browser consumer receives the shared runtime ownership fields', function() {
+  const consumers = [
+    'skills/e2e-map/SKILL.md',
+    'agents/e2e-mapper.md',
+    'skills/e2e-walkthrough/SKILL.md',
+    'skills/e2e-walkthrough/reference.md',
+    'skills/e2e-flow/SKILL.md',
+    'agents/e2e-flow-verifier.md',
+  ];
+
+  for (const consumer of consumers) {
+    const source = read(consumer);
+    assert.match(source, /browser_runtime/, consumer);
+    assert.match(source, /browser_run_id/, consumer);
+    assert.match(source, /browser_receipt/, consumer);
+    assert.match(source, /e2e-browser-runtime\.js|browser_command/, consumer);
+    assert.doesNotMatch(
+      source,
+      /^\s*agent-browser(?:\s|$)/m,
+      consumer + ' contains a raw browser command'
+    );
+  }
+});
+
+test('compiled flows wrap every browser call with the owned runtime', function() {
+  const codegen = read('compiler/codegen.js');
+  const compiler = read('compiler/compiler.js');
+
+  assert.match(codegen, /function generateBrowserRuntime/);
+  assert.match(codegen, /E2E_BROWSER_RUNTIME/);
+  assert.match(codegen, /E2E_BROWSER_RUN_ID/);
+  assert.match(codegen, /E2E_BROWSER_RECEIPT_DIR/);
+  assert.match(codegen, /agent-browser\(\)/);
+  assert.match(codegen, /node "\$E2E_BROWSER_RUNTIME"/);
+  assert.match(compiler, /browserApps/);
+});
+
+test('every orchestrator uses the shared local-service runtime without shell wait -n', function() {
+  const consumers = [
+    'skills/e2e-test/SKILL.md',
+    'skills/e2e-map/SKILL.md',
+    'skills/e2e-walkthrough/SKILL.md',
+    'skills/e2e-flow/SKILL.md',
+    'agents/e2e-test-runner.md',
+    'agents/e2e-mapper.md',
+    'agents/e2e-flow-verifier.md',
+    'references/common-patterns.md',
+  ];
+  for (const consumer of consumers) {
+    const source = read(consumer);
+    assert.match(source, /service_runtime/, consumer);
+    assert.match(source, /service_run_id/, consumer);
+    assert.match(source, /service_state_dir/, consumer);
+    assert.doesNotMatch(source, /\bwait\s+-n\b/, consumer);
+  }
+});
+
+test('compiled flows supervise optional local services before browser work', function() {
+  const codegen = read('compiler/codegen.js');
+
+  assert.match(codegen, /function generateLocalServiceRuntime/);
+  assert.match(codegen, /E2E_SERVICE_MANIFEST/);
+  assert.match(codegen, /E2E_SERVICE_RUNTIME/);
+  assert.match(codegen, /E2E_SERVICE_STATE_DIR/);
+  assert.match(codegen, /preflight/);
+  assert.match(codegen, /start/);
+  assert.match(codegen, /stop/);
+  assert.match(codegen, /local-service cleanup failed/);
+  assert.doesNotMatch(
+    codegen,
+    /E2E_SERVICE_RUNTIME" stop[^\n]*\|\| true/
+  );
+  assert.doesNotMatch(codegen, /\bwait\s+-n\b/);
 });

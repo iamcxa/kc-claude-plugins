@@ -33,6 +33,16 @@ Resolve browser E2E test flows and dispatch the `e2e-test-runner` agent for exec
 
 1. **agent-browser** installed globally  2. **Dev server running**  3. **Mapping file** in `.claude/e2e/mappings/`  4. **Flow files** in `.claude/e2e/flows/`
 
+### Optional owned local services
+
+If the user provides a manifest or `.claude/e2e/services.json` exists, resolve
+`service_runtime` to `${CLAUDE_PLUGIN_ROOT}/bin/e2e-local-service-runtime.js`,
+generate one `service_run_id`, and use `<top-level
+report_dir>/local-services` as the absolute `service_state_dir`. Run
+`preflight` then `start` before dispatching any browser attempt. The
+orchestrator alone runs `stop` after all browser/trace cleanup, including
+error paths.
+
 ## Knowledge Bootstrap (before Phase 0)
 
 Read accumulated patterns to inform test execution and result analysis:
@@ -218,6 +228,10 @@ Total: 4 runs, 31 steps. Proceed?
 | `suite_context` | Set to `true` for every multi-site browser runner (`--all-sites`, `--suite`, Scenario C, and Scenario D browser roles); the owned runtime isolates the app session |
 | `browser_runtime` | Absolute path to `${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js` |
 | `browser_run_id` | One run identity generated before any browser runner dispatch |
+| `browser_receipt` | Absolute `<report_dir>/browser-ownership.json` for that app runner |
+| `service_runtime` | Absolute local-service supervisor path when a manifest is active |
+| `service_run_id` | One owned service identity when a manifest is active |
+| `service_state_dir` | Absolute top-level `<report_dir>/local-services` when active |
 
 Before any multi-site path/session startup, collect aliases and mapping `app` values into separate
 Bash arrays and validate both namespaces:
@@ -230,6 +244,12 @@ TRACE_IDENTIFIER_VALIDATOR="${CLAUDE_PLUGIN_ROOT}/scripts/validate-trace-identif
 
 Do not interpolate or start a session after validation failure. Iterate only with
 `"${SITE_ALIASES[@]}"` / `"${SITE_APPS[@]}"`; never flatten identifiers into a scalar word list.
+
+When local-service supervision is active, append `service_runtime`,
+`service_run_id`, and `service_state_dir` unchanged to every browser runner
+`Agent` prompt, `EXECUTE_FLOW`, `EXECUTE_STEP`, `BEGIN_FLOW`, `FINALIZE_FLOW`,
+and `RE-RUN` message. Runners use them only for ownership `status`; the
+orchestrator remains the sole start/stop owner.
 
 ---
 
@@ -249,6 +269,7 @@ BROWSER_RUN_ID=$(node "$BROWSER_RUNTIME" new-run-id)
 
 All browser teammates spawned for this invocation receive the same `browser_run_id`.
 Every browser dispatch and browser command also carries the same `browser_runtime` path.
+Each app runner receives its own `browser_receipt` under that runner's report directory.
 A teammate `RE-RUN` requested inside this invocation keeps that identity. A fresh
 `/e2e-test` replay MUST generate a new `browser_run_id`.
 
@@ -355,6 +376,10 @@ Agent(
           auth_profile_freshness: <persistent-existing|verified-absent>
           base_url: <url>  app: <name>  report_dir: <path>
           browser_runtime: <absolute path>  browser_run_id: <run id>
+          browser_receipt: <report_dir>/browser-ownership.json
+          service_runtime: <absolute supervisor path, when active>
+          service_run_id: <owned service run id, when active>
+          service_state_dir: <top-level report_dir>/local-services, when active
           video: <bool>
           Open browser, execute all steps, send FLOW COMPLETE with results.
           Then go idle — browser stays open for potential re-run or debug."
@@ -405,6 +430,7 @@ for site in sites:
             base_url: <site.base_url>  app: <site.app>
             report_dir: <report_dir>/<site.alias>/
             browser_runtime: <absolute path>  browser_run_id: <same run id>
+            browser_receipt: <report_dir>/<site.alias>/browser-ownership.json
             video: <bool>
             Wait for EXECUTE_FLOW commands."
   )
@@ -617,6 +643,7 @@ Agent(subagent_type="e2e-test-runner", model="haiku"):  # override with --model 
    auth_profile_freshness: <persistent-existing|verified-absent>
    base_url: <url>  app: <name>  report_dir: <path>  headed: true
    browser_runtime: <absolute path>  browser_run_id: <run id>
+   browser_receipt: <report_dir>/browser-ownership.json
    video: true               # only when --video or --pr
    suite_context: true"      # only for --all-sites / --suite
 ```
@@ -876,7 +903,7 @@ Flow-managed output shows the `/e2e-test` command because no compiled run exists
 Then: `gh pr comment <PR> --body-file $REPORT_DIR/pr-summary.md`
 
 **Browser handoff:** In persistent mode, only close after human confirms. Multi-site: run
-`node "<absolute browser_runtime>" --run-id "<browser_run_id>" --app "<app>" close`
+`node "<absolute browser_runtime>" --run-id "<browser_run_id>" --app "<app>" --receipt "<browser_receipt>" close`
 for each app.
 
 Flow-managed mode has no browser handoff after final evidence capture: the runner

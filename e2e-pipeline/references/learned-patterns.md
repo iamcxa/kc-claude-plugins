@@ -75,3 +75,11 @@ Shell-quoting an input at argv boundaries is not sufficient when the same value 
 ## Validate generated-test identity before code generation (2026-07-12)
 
 Generated test steps need stable, unique, non-empty string IDs because the same identity drives logs, failure deduplication, metrics, JUnit records, screenshots, and continue-on-error state. Validate identity once at the parser boundary and reject missing, non-string, blank, or duplicate IDs before resolution and output generation. **Applies to**: compilers and workflow generators that reuse a user-defined ID across multiple evidence channels.
+
+## Browser session names are not daemon ownership (2026-07-30)
+
+An `agent-browser --session` value isolates a browser context, but it does not prove which daemon, browser executable, or profile accepted the first command. Every E2E run needs a short unique namespace, a controlled socket root, an explicit managed Chrome for Testing executable, and an ownership receipt backed by both `session info --json` and OS process evidence. The first launch must report `reused=false`; later reuse and every subsequent browser action are valid only after revalidating the matching active receipt. Persistent profiles must resolve to the canonical managed app profile and must not be symlinks. Scoped close should preserve peer sessions, wait for daemon shutdown to settle, remove only the owned session state, and mark the receipt closed. **Applies to**: any browser workflow that can overlap another run or coexist with a personal Chromium-based browser.
+
+## Local service readiness requires process and listener ownership (2026-07-30)
+
+Do not let workers invent foreground shell supervisors. Shell job-control features vary (`wait -n` is not supported by macOS zsh), and a reachable port alone can belong to a foreign process. Use one executable supervisor with argv arrays and `shell:false`, feature-test required process tools before consuming a replay attempt, place each service in an owned process group, and prove that the listener PID belongs to that group. Shutdown should signal only recorded process groups, use a bounded TERM-to-KILL escalation, and retain an atomic receipt plus logs. **Applies to**: mapper, runner, verifier, walkthrough, and generated scripts that launch local services before browser work.

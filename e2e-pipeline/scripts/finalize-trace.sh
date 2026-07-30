@@ -18,6 +18,7 @@ usage() {
     '  --browser-runtime <path>      Owned browser runtime executable' \
     '  --browser-run-id <id>         Owned browser run identity' \
     '  --app <id>                    Owned browser app/session identity' \
+    '  --browser-receipt <path>      Owned browser receipt path' \
     '  --help                        Show this help'
 }
 
@@ -31,6 +32,7 @@ session_name=
 browser_runtime=
 browser_run_id=
 browser_app=
+browser_receipt=
 agent_browser_bin=${AGENT_BROWSER_BIN:-agent-browser}
 active_pid=
 active_pgid=
@@ -94,6 +96,11 @@ while [ "$#" -gt 0 ]; do
       browser_app=$2
       shift 2
       ;;
+    --browser-receipt)
+      [ "$#" -ge 2 ] || { printf 'Missing value for --browser-receipt\n' >&2; exit 64; }
+      browser_receipt=$2
+      shift 2
+      ;;
     --help)
       usage
       exit 0
@@ -133,6 +140,7 @@ reject_line_break session "$session_name"
 reject_line_break browser_runtime "$browser_runtime"
 reject_line_break browser_run_id "$browser_run_id"
 reject_line_break app "$browser_app"
+reject_line_break browser_receipt "$browser_receipt"
 reject_line_break validation_timeout "$validation_timeout"
 
 case "$flow_verdict" in
@@ -152,7 +160,7 @@ if [ -n "$session_name" ]; then
 fi
 
 owned_runtime=false
-if [ -n "$browser_runtime" ] || [ -n "$browser_run_id" ] || [ -n "$browser_app" ]; then
+if [ -n "$browser_runtime" ] || [ -n "$browser_run_id" ] || [ -n "$browser_app" ] || [ -n "$browser_receipt" ]; then
   if [ -z "$browser_runtime" ] || [ -z "$browser_run_id" ] || [ -z "$browser_app" ]; then
     printf '%s\n' '--browser-runtime, --browser-run-id, and --app must be provided together' >&2
     exit 64
@@ -176,6 +184,16 @@ if [ -n "$browser_runtime" ] || [ -n "$browser_run_id" ] || [ -n "$browser_app" 
     exit 64
   fi
   "$identifier_validator" "$browser_app" || exit $?
+  if [ -n "$browser_receipt" ]; then
+    case "$browser_receipt" in
+      /*) ;;
+      *) printf 'Browser receipt path must be absolute: %s\n' "$browser_receipt" >&2; exit 64 ;;
+    esac
+    if [ -L "$browser_receipt" ] || [ ! -f "$browser_receipt" ]; then
+      printf 'Browser receipt must be an existing regular file: %s\n' "$browser_receipt" >&2
+      exit 64
+    fi
+  fi
   if [ -n "$session_name" ] && [ "$session_name" != "$browser_app" ]; then
     printf 'Legacy session and owned browser app must match: %s != %s\n' \
       "$session_name" "$browser_app" >&2
@@ -360,8 +378,14 @@ run_browser_bounded() {
   shift 2
 
   if [ "$owned_runtime" = true ]; then
-    run_bounded "$browser_timeout" "$browser_log" \
-      "$browser_runtime" --run-id "$browser_run_id" --app "$browser_app" "$@"
+    if [ -n "$browser_receipt" ]; then
+      run_bounded "$browser_timeout" "$browser_log" \
+        "$browser_runtime" --run-id "$browser_run_id" --app "$browser_app" \
+          --receipt "$browser_receipt" "$@"
+    else
+      run_bounded "$browser_timeout" "$browser_log" \
+        "$browser_runtime" --run-id "$browser_run_id" --app "$browser_app" "$@"
+    fi
   elif [ -n "$session_name" ]; then
     run_bounded "$browser_timeout" "$browser_log" \
       "$agent_browser_bin" --session "$session_name" "$@"

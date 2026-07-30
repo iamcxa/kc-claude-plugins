@@ -29,12 +29,30 @@ When `--page <name>` is specified:
 
 1. **agent-browser** installed globally
 
+If an explicit service manifest is provided or `.claude/e2e/services.json`
+exists, resolve `service_runtime` to
+`${CLAUDE_PLUGIN_ROOT}/bin/e2e-local-service-runtime.js`, generate one
+`service_run_id`, and use `<report_dir>/local-services` as the absolute
+`service_state_dir`. Run `preflight` and `start` before the first browser
+attempt; run `stop` only after browser handoff/cleanup. The mapper receives
+these fields as read-only evidence.
+
 **If no mapping exists yet** (first map for this app):
 - Ask user for `base_url` (e.g., "What URL is your dev server running at?")
 - Ask user for `app` name (e.g., "What should I call this app?")
 - Skip auth — it will be discovered by the mapper agent.
 
 **If mapping exists**, read `base_url` and `app` from it. **Capture the file content at this point** (store as `loaded_mapping_content`) — used in Phase 5 for concurrent modification detection.
+
+Resolve `${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js` to an absolute
+`browser_runtime`, generate one `browser_run_id` with `node
+"$browser_runtime" new-run-id`, create the absolute `report_dir`, and set
+`browser_receipt` to `<report_dir>/browser-ownership.json`. Keep these fields
+unchanged for this invocation. Every browser command below uses:
+
+```text
+browser_command: node "<browser_runtime>" --run-id "<browser_run_id>" --app "<app>" --receipt "<browser_receipt>"
+```
 
 ### Update Scope Decision (mapping exists + no `--page` flag)
 
@@ -52,7 +70,7 @@ If user chooses "Start fresh": rename the current mapping to `<app>.yaml.bak` (p
 If `--page` or `--scope full` was explicitly provided, skip this decision — the user already chose scope.
 
 ```bash
-agent-browser --version
+node "$browser_runtime" --run-id "$browser_run_id" --app "$app" --receipt "$browser_receipt" --version
 curl -s -o /dev/null -w "%{http_code}" <base_url>
 ls ~/.agent-browser/<app>/ 2>/dev/null && echo "OK" || echo "MISSING"
 ```
@@ -66,7 +84,7 @@ Any 2xx or 3xx HTTP response means the server is running.
 **First-Run Auth (if mapping exists but profile missing):**
 
 - If `auth.type: none` in mapping: skip auth entirely.
-- Otherwise: `agent-browser --profile ~/.agent-browser/<app> --headed open <base_url>`, read `auth.manual_prompt` from mapping and present to user. Verify using `auth.verification` condition. If verification fails, re-prompt user. Profile persists — login is one-time only.
+- Otherwise: `<browser_command> --profile ~/.agent-browser/<app> --headed open <base_url>`, read `auth.manual_prompt` from mapping and present to user. Verify using `auth.verification` condition. If verification fails, re-prompt user. Profile persists — login is one-time only.
 - **If no mapping yet**, skip auth here — the mapper agent handles discovery.
 
 ## Knowledge Bootstrap (before Phase 1)
@@ -136,6 +154,12 @@ After Phase 1, prepare the agent input and dispatch.
 | `target_page` | From `--page` flag | Optional |
 | `auth_config` | `{type, verification, manual_prompt}` from existing mapping | Optional |
 | `headed` | `true` (default; set `false` for headless) | Optional |
+| `browser_runtime` | Absolute shared runtime path | Required |
+| `browser_run_id` | Fresh ID for this invocation | Required |
+| `browser_receipt` | `<report_dir>/browser-ownership.json` | Required |
+| `service_runtime` | Absolute shared supervisor path | Conditional |
+| `service_run_id` | Owned service run identity | Conditional |
+| `service_state_dir` | `<report_dir>/local-services` | Conditional |
 
 ### Dispatch
 
@@ -150,6 +174,12 @@ Agent(subagent_type="e2e-mapper"):
   report_dir: $(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)-map
   auth_config: {type, verification, manual_prompt} from existing mapping
   headed: true
+  browser_runtime: <absolute path>/bin/e2e-browser-runtime.js
+  browser_run_id: <fresh invocation id>
+  browser_receipt: <report_dir>/browser-ownership.json
+  service_runtime: <absolute path>/bin/e2e-local-service-runtime.js  # when active
+  service_run_id: <owned service run id>                              # when active
+  service_state_dir: <report_dir>/local-services                      # when active
 ```
 
 Agent returns:
@@ -163,7 +193,7 @@ Agent returns:
 
 **If agent returns partial results** (pages_found < expected routes from Phase 1): Report what was mapped and what was missed. `"Mapped <N>/<M> pages. Missing: <list>. Possible causes: server became unreachable, page requires specific navigation state, or route is dynamic."` Ask user: (1) Accept partial mapping and explore missing pages via Phase 4, (2) Retry failed pages only, (3) Switch to `--interactive` for the missing pages.
 
-**If `--interactive` flag:** Skip agent dispatch. Run browser exploration in main context using `agent-browser` directly — navigate each route, snapshot, extract elements, build mapping inline. Use `Skill: "agent-browser"` patterns.
+**If `--interactive` flag:** Skip agent dispatch. Run browser exploration in main context through `<browser_command>` — navigate each route, snapshot, extract elements, build mapping inline. Use `Skill: "agent-browser"` interaction patterns, but never invoke its executable directly.
 
 After Phase 2 completes (agent returns summary or interactive exploration finishes), proceed to Phase 4.
 
@@ -204,7 +234,7 @@ steps:
 **Never generate v1 format** (`app:` instead of `mapping:`, step `name:` instead of `id:`, structured expect objects).
 
 5. Ask user if they want to commit
-6. Ask if ready to close browser: `agent-browser close`
+6. Ask if ready to close browser: `<browser_command> close`
 
 ### Multi-Site Hints
 

@@ -37,19 +37,25 @@ The orchestrator skill dispatches this agent with the following fields. Parse th
 | `report_dir` | Yes | Absolute path to the directory for report output (create with `mkdir -p` if missing) |
 | `browser_runtime` | Required | Absolute path to the plugin's `bin/e2e-browser-runtime.js` |
 | `browser_run_id` | Required | Run identity shared by every browser runner in this orchestrator invocation |
+| `browser_receipt` | Required | Absolute receipt path under this runner's `report_dir` |
+| `service_runtime` | Conditional | Absolute shared supervisor path when local services are orchestrator-owned |
+| `service_run_id` | Conditional | Service ownership identity |
+| `service_state_dir` | Conditional | Absolute service state/receipt directory |
 | `headed` | No | Run browser in headed mode (default: `true` — always headed in current workflow) |
 | `suite_context` | No | Marks a multi-site/suite run; the runtime always isolates the app session (default: `false`) |
 | `video` | No | When `true`, orchestrator will dispatch media-processor for screenshot-based MP4 after this agent completes (default: `false`). This agent always captures step screenshots regardless. |
 
 If any required field is missing, STOP with: "Missing required field: `<field>`. The orchestrator must provide all required fields."
+Service fields are read-only evidence. Validate `status` when supplied, but
+never start, adopt, or stop orchestrator-owned local services.
 
 ## Browser Command Contract
 
 Every browser operation uses this command prefix:
 
 ```text
-runtime_base_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}"
-browser_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}"
+runtime_base_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}" --receipt "{{browser_receipt}}"
+browser_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}" --receipt "{{browser_receipt}}"
 ```
 
 In flow-managed mode, append the lifecycle binding to that prefix:
@@ -127,8 +133,9 @@ curl -s -o /dev/null -w "%{http_code}" {{base_url}}                  # Server re
 
 ### 1b. Runtime Ownership Check
 
-Verify `{{browser_runtime}}` exists and `{{browser_run_id}}` matches
+Verify `{{browser_runtime}}` exists, `{{browser_run_id}}` matches
 `^[a-z0-9][a-z0-9-]{2,127}$`. Do not probe or close the default agent-browser daemon.
+Require `{{browser_receipt}}` to be an absolute path inside `{{report_dir}}`.
 The run identity owns a fresh namespace; reject a different identity as specified by
 the Browser Command Contract. In flow-managed mode, also require
 `{{ephemeral_auth_profile}}` to equal `{{auth_profile}}`; reject the dispatch before
@@ -445,6 +452,7 @@ TRACE_FINALIZER_RC=0
   --browser-runtime "{{browser_runtime}}" \
   --browser-run-id "{{browser_run_id}}" \
   --app "{{app}}" \
+  --browser-receipt "{{browser_receipt}}" \
   --trace-path "{{report_dir}}/trace.zip" \
   --flow-verdict "$FLOW_VERDICT" \
   --result-file "{{report_dir}}/trace-finalization.env" ||

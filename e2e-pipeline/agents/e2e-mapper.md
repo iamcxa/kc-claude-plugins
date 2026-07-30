@@ -37,8 +37,16 @@ The orchestrator skill dispatches this agent with the following fields. Parse th
 | `target_page` | No | When set, explore ONLY this page and merge into existing mapping. Requires `existing_mapping_path`. |
 | `auth_config` | No | Auth configuration from existing mapping: `{type, verification, manual_prompt}`. If absent, agent auto-detects auth state. |
 | `headed` | No | Run browser in headed mode (default: `true`). |
+| `browser_runtime` | Yes | Absolute path to `e2e-browser-runtime.js`. |
+| `browser_run_id` | Yes | Fresh run identity supplied by the orchestrator. |
+| `browser_receipt` | Yes | Absolute browser ownership receipt path. |
+| `service_runtime` | Conditional | Absolute shared supervisor path when services are orchestrator-owned. |
+| `service_run_id` | Conditional | Service ownership identity. |
+| `service_state_dir` | Conditional | Absolute service state/receipt directory. |
 
 If any required field is missing, STOP with: "Missing required field: `<field>`. The orchestrator must provide all required fields."
+Service fields are read-only evidence. If supplied, run `status` before browser
+work; never start, adopt, or stop those services.
 
 ## Startup
 
@@ -56,10 +64,18 @@ If any required field is missing, STOP with: "Missing required field: `<field>`.
 
 ## Phase 1: Setup
 
+Before any browser command, use the conceptual prefix below. The ownership
+fields are immutable for this dispatch, and bare `agent-browser` commands are
+prohibited:
+
+```text
+browser_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}" --receipt "{{browser_receipt}}"
+```
+
 ### 1a. Pre-flight Checks
 
 ```bash
-agent-browser --version                                              # CLI installed?
+{{browser_command}} --version                                        # CLI/runtime installed?
 curl -s -o /dev/null -w "%{http_code}" {{base_url}}                  # Server reachable? 2xx/3xx = OK
 ls {{auth_profile}} 2>/dev/null                                      # Auth profile exists?
 ```
@@ -71,21 +87,22 @@ ls {{auth_profile}} 2>/dev/null                                      # Auth prof
 ### 1b. Browser State Check
 
 ```bash
-agent-browser get url 2>/dev/null
+{{browser_command}} get url 2>/dev/null
 ```
 
-- **Active session, same profile** -> reuse with `agent-browser open {{base_url}}`
-- **Active session, different profile** -> `agent-browser close` first, then open fresh
+- **Active owned session** -> reuse with `{{browser_command}} open {{base_url}}`; the receipt must match
+- **Receipt/session drift** -> stop and return the ownership error; never adopt or close a foreign session
 - **No active session** -> proceed to open
 
 ### 1c. Open Browser
 
 ```bash
-agent-browser --profile {{auth_profile}} {{headed_flag}} open {{base_url}}
-agent-browser wait --load networkidle
+{{browser_command}} --profile {{auth_profile}} {{headed_flag}} open {{base_url}}
+{{browser_command}} wait --load networkidle
 ```
 
-Use `--headed` when `{{headed}}` is true (default). Use `--session {{app}}` if multi-site.
+Use `--headed` when `{{headed}}` is true (default). The immutable `app`
+binding provides session isolation, including multi-site runs.
 
 ### 1d. Auth Verification
 
@@ -94,7 +111,7 @@ Use `--headed` when `{{headed}}` is true (default). Use `--session {{app}}` if m
 **If `{{auth_config}}` provided with verification rules:**
 
 ```bash
-agent-browser get url
+{{browser_command}} get url
 ```
 
 Check against `auth_config.verification` (e.g., `url_not_contains: "/login"` -> verify URL does NOT contain "/login"). If auth check FAILS -> report "Auth expired. Please re-login in the headed browser." and **STOP**.
@@ -102,7 +119,7 @@ Check against `auth_config.verification` (e.g., `url_not_contains: "/login"` -> 
 **If no `{{auth_config}}` (first-time mapping):**
 
 ```bash
-agent-browser get url
+{{browser_command}} get url
 ```
 
 Compare current URL path against `{{base_url}}` path. If redirected to a different path (likely login) -> report "Login page detected at <url>. Please login in the headed browser, then re-run." and **STOP**. If NOT redirected -> tentatively set `auth.type: none` (orchestrator confirms).
@@ -125,18 +142,18 @@ For each route:
 
 1. **Navigate**:
    ```bash
-   agent-browser open "{{base_url}}{{route}}"
-   agent-browser wait --load networkidle
+   {{browser_command}} open "{{base_url}}{{route}}"
+   {{browser_command}} wait --load networkidle
    ```
 
 2. **Snapshot** (interactive elements only for less noise):
    ```bash
-   agent-browser snapshot -i
+   {{browser_command}} snapshot -i
    ```
 
 3. **Annotated screenshot**:
    ```bash
-   agent-browser screenshot --annotate "{{report_dir}}/record-{{page_name}}.png"
+   {{browser_command}} screenshot --annotate "{{report_dir}}/record-{{page_name}}.png"
    ```
    If `--annotate` fails, fall back to plain screenshot.
 

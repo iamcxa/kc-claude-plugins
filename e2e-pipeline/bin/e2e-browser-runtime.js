@@ -43,6 +43,7 @@ function parseArgs(argv) {
     canonicalProfile: '',
     executablePath: '',
     profile: '',
+    receipt: '',
     headed: false,
     command: [],
   };
@@ -61,6 +62,8 @@ function parseArgs(argv) {
       options.executablePath = argv[++index] || '';
     } else if (value === '--profile') {
       options.profile = argv[++index] || '';
+    } else if (value === '--receipt') {
+      options.receipt = argv[++index] || '';
     } else if (value === '--headed') {
       options.headed = true;
     } else {
@@ -70,6 +73,54 @@ function parseArgs(argv) {
   }
 
   return options;
+}
+
+function socketHomeForBrowserHome(browserHome) {
+  const temporaryRoot = process.platform === 'darwin' ? '/tmp' : os.tmpdir();
+  const identity = crypto
+    .createHash('sha256')
+    .update(path.resolve(browserHome))
+    .digest('hex')
+    .slice(0, 12);
+  const uid = typeof process.getuid === 'function' ? process.getuid() : 'user';
+  return path.join(temporaryRoot, 'e2e-agent-browser-' + uid + '-' + identity);
+}
+
+function namespaceForRun(runId, socketHome) {
+  const readable = 'e2e-' + runId;
+  if (
+    Buffer.byteLength(
+      path.join(
+        path.resolve(socketHome),
+        'namespaces',
+        readable,
+        'run',
+        'daemon.sock'
+      )
+    ) <= 103
+  ) {
+    return readable;
+  }
+
+  const digest = crypto.createHash('sha256').update(runId).digest('hex').slice(0, 12);
+  const oneCharacterPath = path.join(
+    path.resolve(socketHome),
+    'namespaces',
+    'X',
+    'run',
+    'daemon.sock'
+  );
+  const available = 103 - Buffer.byteLength(oneCharacterPath) + 1;
+  const fixedLength = Buffer.byteLength('e2e--' + digest);
+  if (available < Buffer.byteLength('e2e-a-' + digest)) {
+    throw new Error(
+      'agent-browser home is too long for a socket-safe e2e namespace: ' +
+        path.resolve(socketHome)
+    );
+  }
+  const prefixLength = available - fixedLength;
+  const prefix = runId.slice(0, prefixLength).replace(/-+$/, '') || 'run';
+  return 'e2e-' + prefix + '-' + digest;
 }
 
 function assertRunAndApp(runId, app) {
@@ -266,6 +317,341 @@ function writeJsonAtomic(filePath, value, exclusive) {
     mode: 0o600,
   });
   fs.renameSync(temporaryPath, filePath);
+}
+
+function readRegularJson(filePath, description) {
+  let stat;
+  try {
+    stat = fs.lstatSync(filePath);
+  } catch (error) {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  }
+  if (!stat.isFile() || stat.isSymbolicLink()) {
+    throw new Error(description + ' must be a regular file: ' + filePath);
+  }
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (_error) {
+    throw new Error(description + ' is not valid JSON: ' + filePath);
+  }
+}
+
+function parseSessionInfo(stdout) {
+  let payload;
+  try {
+    payload = JSON.parse(stdout);
+  } catch (_error) {
+    throw new Error('agent-browser session ownership evidence is not valid JSON');
+  }
+  const data = payload && payload.success === true && payload.data;
+  const runtime = data && data.runtime;
+  const lifecycle = runtime && runtime.lifecycle;
+  const effectiveLaunch = runtime && runtime.effectiveLaunch;
+  if (
+    !data ||
+    data.active !== true ||
+    !Number.isInteger(data.pid) ||
+    !runtime ||
+    !lifecycle ||
+    !effectiveLaunch
+  ) {
+    throw new Error('agent-browser session ownership evidence is incomplete');
+  }
+  return { data, effectiveLaunch, lifecycle, runtime };
+}
+
+function parseProcessTable(stdout) {
+  const processes = new Map();
+  for (const line of stdout.split('\n')) {
+    const match = line.match(/^\s*(\d+)\s+(\d+)\s+(.+)$/);
+    if (!match) continue;
+    processes.set(Number(match[1]), {
+      pid: Number(match[1]),
+      ppid: Number(match[2]),
+      command: match[3],
+    });
+  }
+  return processes;
+}
+
+function isDescendantOf(process, ancestorPid, processes) {
+  const visited = new Set();
+  let current = process;
+  while (current && !visited.has(current.pid)) {
+    if (current.ppid === ancestorPid) return true;
+    visited.add(current.pid);
+    current = processes.get(current.ppid);
+  }
+  return false;
+}
+
+function browserProcessEvidence(executablePath, profile, daemonPid, childEnvironment) {
+  const psBin =
+    process.env.E2E_RUNTIME_TEST_MODE === '1' && process.env.E2E_PS_BIN
+      ? process.env.E2E_PS_BIN
+      : fs.existsSync('/bin/ps')
+        ? '/bin/ps'
+        : fs.existsSync('/usr/bin/ps')
+          ? '/usr/bin/ps'
+          : 'ps';
+  const result = spawnSync(psBin, ['-axo', 'pid=,ppid=,command='], {
+    encoding: 'utf8',
+    env: childEnvironment,
+  });
+  if (result.error || result.status !== 0) {
+    throw new Error(
+      'could not inspect browser process evidence: ' +
+        (result.error ? result.error.message : String(result.stderr || '').trim())
+    );
+  }
+  const processes = parseProcessTable(result.stdout || '');
+  const profileFlag = '--user-data-dir=' + profile;
+  const matches = Array.from(processes.values()).filter(function(process) {
+    return (
+      (process.command === executablePath ||
+        process.command.startsWith(executablePath + ' ')) &&
+      process.command.split(' ').includes(profileFlag) &&
+      isDescendantOf(process, daemonPid, processes)
+    );
+  });
+  if (matches.length !== 1) {
+    throw new Error(
+      'browser process evidence must identify exactly one Chrome for Testing process ' +
+        'owned by the daemon and bound to profile ' +
+        profile
+    );
+  }
+  return matches[0];
+}
+
+function defaultReceiptPath(browserHome, runId, app) {
+  const receiptRoot = path.join(path.resolve(browserHome), 'ownership-receipts');
+  ensureOwnedDirectory(receiptRoot);
+  const runRoot = path.join(receiptRoot, runId);
+  ensureOwnedDirectory(runRoot);
+  return path.join(runRoot, app + '.json');
+}
+
+function defaultReceiptLocation(browserHome, runId, app) {
+  return path.join(
+    path.resolve(browserHome),
+    'ownership-receipts',
+    runId,
+    app + '.json'
+  );
+}
+
+function assertReceiptBinding(receipt, expected) {
+  const fields = [
+    ['run_id', expected.runId],
+    ['app', expected.app],
+    ['namespace', expected.namespace],
+    ['session', expected.app],
+    ['executable', expected.executablePath],
+    ['profile', expected.profile],
+    ['socket_dir', expected.socketDir],
+    ['daemon_pid', expected.daemonPid],
+    ['browser_pid', expected.browserPid],
+  ];
+  if (
+    receipt.version !== 1 ||
+    receipt.status !== 'active' ||
+    receipt.initial_reused !== false
+  ) {
+    throw new Error('browser ownership receipt is not active or has an unsupported version');
+  }
+  for (const [field, value] of fields) {
+    if (receipt[field] !== value) {
+      throw new Error('browser ownership receipt does not match ' + field);
+    }
+  }
+}
+
+function verifyBrowserOwnership(options) {
+  const infoResult = spawnSync(
+    options.agentBrowser,
+    [
+      '--namespace',
+      options.namespace,
+      '--session',
+      options.app,
+      '--config',
+      options.configPath,
+      'session',
+      'info',
+      '--json',
+    ],
+    {
+      encoding: 'utf8',
+      env: options.childEnvironment,
+    }
+  );
+  if (infoResult.error || infoResult.status !== 0) {
+    throw new Error(
+      'could not read agent-browser session ownership evidence: ' +
+        (infoResult.error
+          ? infoResult.error.message
+          : String(infoResult.stderr || '').trim())
+    );
+  }
+  const info = parseSessionInfo(infoResult.stdout || '');
+  if (
+    info.data.namespace !== options.namespace ||
+    info.runtime.namespace !== options.namespace
+  ) {
+    throw new Error('browser ownership namespace does not match requested namespace');
+  }
+  if (info.data.session !== options.app || info.runtime.session !== options.app) {
+    throw new Error('browser ownership session does not match requested app');
+  }
+  if (
+    info.runtime.socketDir !== info.data.socketDir ||
+    info.data.socketDir !== options.expectedSocketDir ||
+    info.effectiveLaunch.engine !== 'chrome' ||
+    info.effectiveLaunch.browserLaunched !== true
+  ) {
+    throw new Error('browser ownership runtime binding is incomplete or not Chrome');
+  }
+  const browserProcess = browserProcessEvidence(
+    options.executablePath,
+    options.profile,
+    info.data.pid,
+    options.childEnvironment
+  );
+  return {
+    browserPid: browserProcess.pid,
+    daemonPid: info.data.pid,
+    reused: info.lifecycle.reused,
+    socketDir: info.data.socketDir,
+  };
+}
+
+function writeBrowserOwnershipReceipt(options, evidence, existingReceipt) {
+  if (!existingReceipt && evidence.reused !== false) {
+    throw new Error(
+      'unexpected daemon reuse on first open; ownership requires reused=false'
+    );
+  }
+  const binding = {
+    runId: options.runId,
+    app: options.app,
+    namespace: options.namespace,
+    executablePath: options.executablePath,
+    profile: options.profile,
+    socketDir: evidence.socketDir,
+    daemonPid: evidence.daemonPid,
+    browserPid: evidence.browserPid,
+  };
+  if (existingReceipt) {
+    assertReceiptBinding(existingReceipt, binding);
+  }
+  const now = new Date().toISOString();
+  const receipt = Object.assign({}, existingReceipt || {}, {
+    version: 1,
+    status: 'active',
+    run_id: options.runId,
+    app: options.app,
+    namespace: options.namespace,
+    session: options.app,
+    executable: options.executablePath,
+    profile: options.profile,
+    socket_dir: evidence.socketDir,
+    daemon_pid: evidence.daemonPid,
+    browser_pid: evidence.browserPid,
+    initial_reused: existingReceipt ? existingReceipt.initial_reused : false,
+    last_reused: evidence.reused,
+    verified_at: now,
+  });
+  if (!existingReceipt) receipt.created_at = now;
+  writeJsonAtomic(options.receiptPath, receipt, false);
+  return receipt;
+}
+
+function closeReceiptBinding(receipt, options) {
+  assertReceiptBinding(receipt, {
+    runId: options.runId,
+    app: options.app,
+    namespace: options.namespace,
+    executablePath: receipt.executable,
+    profile: receipt.profile,
+    socketDir: receipt.socket_dir,
+    daemonPid: receipt.daemon_pid,
+    browserPid: receipt.browser_pid,
+  });
+  if (options.profile && path.resolve(options.profile) !== receipt.profile) {
+    throw new Error('browser ownership receipt does not match profile');
+  }
+}
+
+function sleepSync(milliseconds) {
+  const signal = new Int32Array(new SharedArrayBuffer(4));
+  Atomics.wait(signal, 0, 0, milliseconds);
+}
+
+function cleanupClosedNamespaceState(socketHome, namespace, app) {
+  const namespaceRoot = path.join(path.resolve(socketHome), 'namespaces', namespace);
+  const runRoot = path.join(namespaceRoot, 'run');
+  const configPath = path.join(runRoot, app + '.config');
+  const deadline = Date.now() + 2000;
+  while (Date.now() < deadline) {
+    if (fs.existsSync(configPath)) {
+      const stat = fs.lstatSync(configPath);
+      if (!stat.isFile() || stat.isSymbolicLink()) {
+        throw new Error('owned browser session config is not a regular file');
+      }
+      fs.unlinkSync(configPath);
+    }
+    let runRemoved = false;
+    try {
+      fs.rmdirSync(runRoot);
+      runRemoved = true;
+    } catch (error) {
+      if (error.code === 'ENOENT') return;
+      if (error.code !== 'ENOTEMPTY') throw error;
+    }
+    if (runRemoved) {
+      try {
+        fs.rmdirSync(namespaceRoot);
+      } catch (error) {
+        if (error.code !== 'ENOENT' && error.code !== 'ENOTEMPTY') throw error;
+      }
+      return;
+    }
+    const entries = fs.readdirSync(runRoot);
+    if (
+      entries.some(function(entry) {
+        return entry.endsWith('.config') && entry !== app + '.config';
+      })
+    ) {
+      return;
+    }
+    sleepSync(40);
+  }
+  throw new Error('owned browser namespace did not settle after close');
+}
+
+function markBrowserOwnershipClosed(receiptPath, receipt) {
+  if (!receipt) return;
+  const closed = Object.assign({}, receipt, {
+    status: 'closed',
+    cleanup: 'owned-session-closed',
+    closed_at: new Date().toISOString(),
+  });
+  writeJsonAtomic(receiptPath, closed, false);
+}
+
+function markBrowserOwnershipFailed(receiptPath, errorMessage, cleanup) {
+  if (!receiptPath) return;
+  const receipt = readRegularJson(receiptPath, 'browser ownership receipt');
+  if (!receipt) return;
+  const failed = Object.assign({}, receipt, {
+    status: 'failed',
+    cleanup,
+    error: errorMessage,
+    failed_at: new Date().toISOString(),
+  });
+  writeJsonAtomic(receiptPath, failed, false);
 }
 
 function readFlowManagedState(options) {
@@ -636,6 +1022,15 @@ function main(argv) {
   }
   const browserHome =
     process.env.E2E_AGENT_BROWSER_HOME || path.join(os.homedir(), '.agent-browser');
+  const socketHome = socketHomeForBrowserHome(browserHome);
+  let namespace;
+  try {
+    ensureOwnedDirectory(socketHome);
+    namespace = namespaceForRun(options.runId, socketHome);
+  } catch (error) {
+    process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+    return 2;
+  }
   if (!['persistent', 'flow-managed'].includes(options.authMode)) {
     process.stderr.write(
       'e2e-browser-runtime: auth mode must be persistent or flow-managed\n'
@@ -780,6 +1175,23 @@ function main(argv) {
     }
   }
   const isOwnedClose = options.command[0] === 'close' || isFlowManagedCleanup;
+  if (options.authMode === 'persistent') {
+    const canonicalProfile = expectedCanonicalProfile(browserHome, options.app);
+    if (options.profile && path.resolve(options.profile) !== canonicalProfile) {
+      process.stderr.write(
+        'e2e-browser-runtime: persistent profile must be the app profile at ' +
+          canonicalProfile +
+          '\n'
+      );
+      return 2;
+    }
+    try {
+      options.profile = assertCanonicalProfileRoot(canonicalProfile);
+    } catch (error) {
+      process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+      return 2;
+    }
+  }
   options.executablePath =
     options.executablePath ||
     process.env.E2E_CHROME_FOR_TESTING_EXECUTABLE ||
@@ -808,7 +1220,7 @@ function main(argv) {
   const configPath = path.join(__dirname, '..', 'references', 'agent-browser-runtime.json');
   const args = [
     '--namespace',
-    'e2e-' + options.runId,
+    namespace,
     '--session',
     options.app,
     '--config',
@@ -835,8 +1247,89 @@ function main(argv) {
   delete childEnvironment.AGENT_BROWSER_PROFILE;
   delete childEnvironment.AGENT_BROWSER_PROVIDER;
   delete childEnvironment.AGENT_BROWSER_SESSION;
+  childEnvironment.AGENT_BROWSER_SOCKET_DIR = socketHome;
   delete childEnvironment.CDP_PORT;
   delete childEnvironment.CDP_URL;
+  delete childEnvironment.E2E_COMPILED_BROWSER_ALIAS;
+  delete childEnvironment.E2E_PS_BIN;
+  delete childEnvironment.E2E_RUNTIME_TEST_MODE;
+  let receiptPath = '';
+  let existingReceipt = null;
+  if (options.command[0] === 'open') {
+    try {
+      receiptPath = options.receipt
+        ? path.resolve(options.receipt)
+        : defaultReceiptPath(browserHome, options.runId, options.app);
+      existingReceipt = readRegularJson(receiptPath, 'browser ownership receipt');
+    } catch (error) {
+      process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+      return 2;
+    }
+  } else if (isOwnedClose) {
+    try {
+      receiptPath = options.receipt
+        ? path.resolve(options.receipt)
+        : defaultReceiptLocation(browserHome, options.runId, options.app);
+      existingReceipt = readRegularJson(receiptPath, 'browser ownership receipt');
+      if (options.receipt && !existingReceipt) {
+        throw new Error('browser ownership receipt is unavailable: ' + receiptPath);
+      }
+      if (existingReceipt) {
+        closeReceiptBinding(existingReceipt, {
+          app: options.app,
+          namespace,
+          profile: options.profile,
+          runId: options.runId,
+        });
+      }
+    } catch (error) {
+      process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+      return 2;
+    }
+  } else if (options.receipt && options.command[0] !== '--version') {
+    try {
+      receiptPath = path.resolve(options.receipt);
+      existingReceipt = readRegularJson(receiptPath, 'browser ownership receipt');
+      if (!existingReceipt) {
+        throw new Error('browser ownership receipt is unavailable: ' + receiptPath);
+      }
+      assertReceiptBinding(existingReceipt, {
+        app: options.app,
+        browserPid: existingReceipt.browser_pid,
+        daemonPid: existingReceipt.daemon_pid,
+        executablePath: options.executablePath,
+        namespace,
+        profile: path.resolve(options.profile),
+        runId: options.runId,
+        socketDir: path.join(socketHome, 'namespaces', namespace, 'run'),
+      });
+      const liveEvidence = verifyBrowserOwnership({
+        agentBrowser,
+        app: options.app,
+        browserHome,
+        childEnvironment,
+        configPath,
+        executablePath: options.executablePath,
+        expectedSocketDir: path.join(socketHome, 'namespaces', namespace, 'run'),
+        namespace,
+        profile: path.resolve(options.profile),
+        runId: options.runId,
+      });
+      assertReceiptBinding(existingReceipt, {
+        app: options.app,
+        browserPid: liveEvidence.browserPid,
+        daemonPid: liveEvidence.daemonPid,
+        executablePath: options.executablePath,
+        namespace,
+        profile: path.resolve(options.profile),
+        runId: options.runId,
+        socketDir: liveEvidence.socketDir,
+      });
+    } catch (error) {
+      process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+      return 2;
+    }
+  }
   const result = spawnSync(agentBrowser, args, {
     env: childEnvironment,
     stdio: 'inherit',
@@ -847,21 +1340,47 @@ function main(argv) {
   }
   const childStatus = result.status === null ? 1 : result.status;
   if (childStatus !== 0) return childStatus;
-  if (options.authMode === 'flow-managed' && options.command[0] === 'open') {
+  if (options.command[0] === 'open') {
     try {
-      markFlowManagedProfileActive({
-        browserHome,
-        runId: options.runId,
+      const evidence = verifyBrowserOwnership({
+        agentBrowser,
         app: options.app,
-        canonicalProfile: options.canonicalProfile,
-        profile: options.profile,
+        browserHome,
+        childEnvironment,
+        configPath,
+        executablePath: options.executablePath,
+        expectedSocketDir: path.join(socketHome, 'namespaces', namespace, 'run'),
+        namespace,
+        profile: path.resolve(options.profile),
+        runId: options.runId,
       });
+      writeBrowserOwnershipReceipt(
+        {
+          app: options.app,
+          executablePath: options.executablePath,
+          namespace,
+          profile: path.resolve(options.profile),
+          receiptPath,
+          runId: options.runId,
+        },
+        evidence,
+        existingReceipt
+      );
+      if (options.authMode === 'flow-managed') {
+        markFlowManagedProfileActive({
+          browserHome,
+          runId: options.runId,
+          app: options.app,
+          canonicalProfile: options.canonicalProfile,
+          profile: options.profile,
+        });
+      }
     } catch (error) {
-      spawnSync(
+      const closeResult = spawnSync(
         agentBrowser,
         [
           '--namespace',
-          'e2e-' + options.runId,
+          namespace,
           '--session',
           options.app,
           '--config',
@@ -873,25 +1392,63 @@ function main(argv) {
           stdio: 'ignore',
         }
       );
+      let ownershipCleanup =
+        closeResult.error || closeResult.status !== 0
+          ? 'owned-session-close-failed-after-binding-failure'
+          : 'owned-session-closed-after-binding-failure';
       try {
-        discardFailedFlowManagedProfile(
-          {
-            browserHome,
-            runId: options.runId,
-            app: options.app,
-            canonicalProfile: options.canonicalProfile,
-            profile: options.profile,
-          },
-          error.message
-        );
-      } catch (cleanupError) {
+        cleanupClosedNamespaceState(socketHome, namespace, options.app);
+      } catch (namespaceCleanupError) {
+        ownershipCleanup = 'owned-session-state-cleanup-failed-after-binding-failure';
         process.stderr.write(
-          'e2e-browser-runtime: binding-failure cleanup failed: ' +
-            cleanupError.message +
+          'e2e-browser-runtime: binding-failure namespace cleanup failed: ' +
+            namespaceCleanupError.message +
             '\n'
         );
       }
+      try {
+        markBrowserOwnershipFailed(receiptPath, error.message, ownershipCleanup);
+      } catch (receiptError) {
+        process.stderr.write(
+          'e2e-browser-runtime: binding-failure receipt update failed: ' +
+            receiptError.message +
+            '\n'
+        );
+      }
+      if (options.authMode === 'flow-managed') {
+        try {
+          discardFailedFlowManagedProfile(
+            {
+              browserHome,
+              runId: options.runId,
+              app: options.app,
+              canonicalProfile: options.canonicalProfile,
+              profile: options.profile,
+            },
+            error.message
+          );
+        } catch (cleanupError) {
+          process.stderr.write(
+            'e2e-browser-runtime: binding-failure cleanup failed: ' +
+              cleanupError.message +
+              '\n'
+          );
+        }
+      }
       process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+      return 2;
+    }
+  }
+  if (isOwnedClose) {
+    try {
+      cleanupClosedNamespaceState(socketHome, namespace, options.app);
+      markBrowserOwnershipClosed(receiptPath, existingReceipt);
+    } catch (error) {
+      process.stderr.write(
+        'e2e-browser-runtime: owned browser cleanup evidence failed: ' +
+          error.message +
+          '\n'
+      );
       return 2;
     }
   }
@@ -930,8 +1487,10 @@ module.exports = {
   managedExecutableSuffixes,
   main,
   markFlowManagedProfileActive,
+  namespaceForRun,
   parseArgs,
   prepareFlowManagedProfile,
   protectedRuntimeArgument,
+  socketHomeForBrowserHome,
   verifyFlowManagedProfile,
 };

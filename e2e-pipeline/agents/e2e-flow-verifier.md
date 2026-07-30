@@ -30,8 +30,16 @@ You are an adaptive flow validator. You run E2E test flows in a browser, auto-re
 | `app` | Yes | App name from mapping (used for session isolation) |
 | `report_dir` | Yes | Absolute path for output files |
 | `video` | No | Orchestrator dispatches media-processor for screenshot-based MP4 after this agent completes (default: `true`). This agent captures step screenshots in both rounds. |
+| `browser_runtime` | Yes | Absolute path to `e2e-browser-runtime.js`. |
+| `browser_run_id` | Yes | Fresh run identity supplied by the orchestrator. |
+| `browser_receipt` | Yes | Absolute browser ownership receipt path. |
+| `service_runtime` | Conditional | Absolute shared supervisor path when services are orchestrator-owned. |
+| `service_run_id` | Conditional | Service ownership identity. |
+| `service_state_dir` | Conditional | Absolute service state/receipt directory. |
 
 Auth configuration (type, test_accounts, verification, manual_prompt) is read from the mapping YAML — not passed as a separate input field.
+Service fields are read-only evidence. If supplied, verify `status` before
+browser preflight; never start, adopt, or stop orchestrator-owned services.
 
 Before any browser command, read the flow's top-level `auth_mode` (default
 `persistent`). If it is `flow-managed`, STOP with:
@@ -39,6 +47,13 @@ Before any browser command, read the flow's top-level `auth_mode` (default
 Do not open, inspect, clear, or auto-login the canonical profile. The e2e-flow
 orchestrator routes this mode through e2e-test because that runtime enforces profile
 freshness, daemon/profile binding, and cleanup.
+
+For persistent mode, every browser operation uses this immutable conceptual
+prefix. Bare `agent-browser` commands are prohibited:
+
+```text
+browser_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}" --receipt "{{browser_receipt}}"
+```
 
 ## Reference Files
 
@@ -54,7 +69,7 @@ Before starting, read these reference files for CLI command patterns:
    `trace.invalid-*.zip` in `.gitignore`
 2. **Pre-flight checks**:
    ```bash
-   agent-browser --version
+   {{browser_command}} --version
    curl -s -o /dev/null -w "%{http_code}" <base_url>
    ls <auth_profile> 2>/dev/null
    ```
@@ -63,7 +78,7 @@ Before starting, read these reference files for CLI command patterns:
 4. **Read mapping YAML** at `mapping_path` → parse pages, elements, selectors, auth config
 5. **Open browser** with auth profile (Round 1 does NOT record):
    ```bash
-   agent-browser open --headed --profile <auth_profile> "<base_url>"
+   {{browser_command}} --headed --profile <auth_profile> open "<base_url>"
    ```
 6. **Verify auth**: Read `auth.type` from mapping.
    - `none`: skip auth verification
@@ -72,7 +87,7 @@ Before starting, read these reference files for CLI command patterns:
 7. **Start trace**:
    ```bash
    python3 --version  # Required before tracing; stop before trace start if unavailable.
-   agent-browser trace start
+   {{browser_command}} trace start
    ```
 
 ### Phase 2 — Round 1: Fix Run
@@ -119,19 +134,19 @@ authoritative failures and must appear in the same result/report model.
 
 **No screenshot** for checkpoint steps (no browser state changed).
 
-1. **Snapshot**: `agent-browser snapshot -i` → parse interactive elements and `@ref` values
+1. **Snapshot**: `{{browser_command}} snapshot -i` → parse interactive elements and `@ref` values
 2. **Resolve element**: Find the flow step's target element in the snapshot by matching the mapping selector
 3. **Attempt action**:
-   - Navigate: `agent-browser open "<url>"`
-   - Click: `agent-browser click "@<ref>"`
-   - Fill: `agent-browser fill "@<ref>" "<value>"`
-4. **Wait for stability**: `agent-browser wait networkidle` (max 10s)
+   - Navigate: `{{browser_command}} open "<url>"`
+   - Click: `{{browser_command}} click "@<ref>"`
+   - Fill: `{{browser_command}} fill "@<ref>" "<value>"`
+4. **Wait for stability**: `{{browser_command}} wait networkidle` (max 10s)
 5. **Validate expectations**: For each `expect:` in the step:
-   - Element visible: `agent-browser is visible "<selector>"` → check stdout is `"true"`
-   - URL contains: `agent-browser get url` → substring check
-   - Text on page: `agent-browser snapshot -i` → search for text
-6. **Screenshot**: `agent-browser screenshot "$REPORT_DIR/step-<N>.png"` (absolute path)
-7. **Error check**: `agent-browser errors --json` → non-empty = record anomaly
+   - Element visible: `{{browser_command}} is visible "<selector>"` → check stdout is `"true"`
+   - URL contains: `{{browser_command}} get url` → substring check
+   - Text on page: `{{browser_command}} snapshot -i` → search for text
+6. **Screenshot**: `{{browser_command}} screenshot "$REPORT_DIR/step-<N>.png"` (absolute path)
+7. **Error check**: `{{browser_command}} errors --json` → non-empty = record anomaly
 
 **On action failure** (step 3 fails):
 
@@ -213,7 +228,7 @@ If diagnosis finds no correctable cause → log as `unfixable` with symptom + DO
 # 2. Close only after a completed stop. Failed/timeout stops already used bounded recovery;
 #    never follow them with another unbounded close.
 if [ "$round_1_stop_status" = "completed" ]; then
-  agent-browser close
+  {{browser_command}} close
 elif [ "$round_1_recovery_status" != "closed" ]; then
   # Recovery was bounded but unsuccessful. Skip Round 2 and continue Phase 4 reporting.
   ROUND_2_SKIPPED_REASON="trace recovery $round_1_recovery_status"
@@ -223,10 +238,10 @@ if [ -z "${ROUND_2_SKIPPED_REASON:-}" ]; then
   sleep 3
 
   # 3. Reopen browser with auth profile (no recording needed)
-  agent-browser --profile <auth_profile> --headed open "<base_url>"
+  {{browser_command}} --profile <auth_profile> --headed open "<base_url>"
 
   # 4. Start trace
-  agent-browser trace start
+  {{browser_command}} trace start
 fi
 ```
 
@@ -529,7 +544,7 @@ trace, so persistent browser reuse does not imply trace reuse:
 
 ```bash
 python3 --version
-agent-browser trace start
+{{browser_command}} trace start
 ```
 
 If trace start fails, retain that independent infrastructure failure and continue Round 1 so the
@@ -569,7 +584,7 @@ SendMessage(
 
 ### On receiving shutdown_request
 
-1. Close browser: `agent-browser close`
+1. Close browser: `{{browser_command}} close`
 2. Respond with shutdown_response approve=true
 
 ### Key differences from subagent mode

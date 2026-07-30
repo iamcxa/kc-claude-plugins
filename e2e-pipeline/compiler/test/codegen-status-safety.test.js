@@ -10,6 +10,11 @@ const path = require('node:path');
 const { generate, generateRuntimeSupport, singleQuote } = require('../codegen.js');
 
 const RUNTIME_BASH = fs.existsSync('/bin/bash') ? '/bin/bash' : 'bash';
+const BROWSER_RUNTIME_SHIM = path.join(
+  __dirname,
+  'fixtures',
+  'browser-runtime-shim.js'
+);
 
 function resolveXmllint(env) {
   const commands = env.XMLLINT ? [env.XMLLINT] : ['xmllint'];
@@ -50,6 +55,7 @@ function runBash(script, binDir, extraEnv, scriptArgs) {
     encoding: 'utf8',
     env: Object.assign({}, process.env, extraEnv, {
       PATH: binDir + path.delimiter + process.env.PATH,
+      E2E_BROWSER_RUNTIME: BROWSER_RUNTIME_SHIM,
     }),
   });
 }
@@ -1498,5 +1504,51 @@ describe('snapshot matching is status-safe on large pages (pipefail false negati
     });
     assert.deepEqual(offenders, [],
       'emitted script must not pipe into grep:\n' + offenders.join('\n'));
+  });
+});
+
+test('generated flows fail when owned local-service cleanup fails', function() {
+  withFakeBrowser('#!/usr/bin/env bash\nexit 0\n', function(binDir) {
+    const serviceRuntime = path.join(binDir, 'service-runtime.js');
+    const manifest = path.join(binDir, 'services.json');
+    writeExecutable(
+      serviceRuntime,
+      [
+        '#!/usr/bin/env node',
+        "'use strict';",
+        'const command = process.argv[2];',
+        "if (command === 'new-run-id') process.stdout.write('service-run-123\\n');",
+        "else if (command === 'stop') {",
+        "  process.stderr.write('synthetic cleanup failure\\n');",
+        '  process.exitCode = 7;',
+        '}',
+        '',
+      ].join('\n')
+    );
+    fs.writeFileSync(manifest, '{"version":1,"services":[]}\\n');
+    const script = generate(
+      {
+        name: 'service-cleanup-failure',
+        description: 'Cleanup ownership must control the final verdict',
+        steps: [
+          {
+            id: 'wait',
+            action: 'Wait 0',
+            type: 'wait',
+            operands: { seconds: 0 },
+          },
+        ],
+      },
+      'service-cleanup-failure'
+    );
+
+    const result = runBash(script, binDir, {
+      E2E_SERVICE_MANIFEST: manifest,
+      E2E_SERVICE_RUNTIME: serviceRuntime,
+    });
+
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stderr, /synthetic cleanup failure/);
+    assert.match(result.stderr, /local-service cleanup failed/);
   });
 });

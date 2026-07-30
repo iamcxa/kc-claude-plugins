@@ -1,6 +1,9 @@
 # E2E Walkthrough — Reference
 
 Detailed execution mechanics and output procedures. Loaded on demand from SKILL.md.
+It inherits the immutable `browser_runtime`, `browser_run_id`, and
+`browser_receipt` fields from the walkthrough. In every example below,
+`browser_command` means the exact owned runtime prefix declared by SKILL.md.
 
 ---
 
@@ -14,11 +17,11 @@ authentication, write `auth_mode: flow-managed` into the generated flow and use
 the canonical profile here, and do not describe walkthrough evidence as a fresh
 flow-managed replay.
 
-Before opening a new browser session, check for stale sessions from previous skill invocations:
+Before opening a new browser session, consult the owned receipt:
 
-1. Check if agent-browser has an active session: `agent-browser get url 2>/dev/null`
-   - If active and same `app` profile: navigate to `base_url` to reset page state
-   - If active and different profile: close existing session first (`agent-browser close`)
+1. Check the owned session: `<browser_command> get url 2>/dev/null`
+   - If active and the receipt matches: navigate to `base_url` to reset page state
+   - If the runtime reports drift: stop; never adopt or close a foreign session
    - If no active session: proceed normally with `open`
 2. After opening/resetting, always verify auth before proceeding
 
@@ -42,32 +45,32 @@ fi
 **Browser open** (always use `--profile` — no recording needed):
 
 ```bash
-agent-browser --profile ~/.agent-browser/<app> --headed open <base_url>
-agent-browser wait --load networkidle
+<browser_command> --profile ~/.agent-browser/<app> --headed open <base_url>
+<browser_command> wait --load networkidle
 ```
 
 Video is generated post-hoc from step screenshots by the media-processor agent.
 
 **Verify auth** (skip if `auth.type: none`):
 ```bash
-agent-browser get url
+<browser_command> get url
 ```
 Check URL against `auth.verification` condition. If verification fails (auth expired or no profile):
 
 1. **Auto-login path** (preferred): If mapping has `auth.test_accounts` with email/password, use snapshot + fill to login automatically:
    ```bash
-   agent-browser snapshot -i          # Find email/password fields
-   agent-browser fill @<email> "<test_account_email>"
-   agent-browser fill @<password> "<test_account_password>"
-   agent-browser click @<submit>      # Login button
-   agent-browser wait --load networkidle
-   agent-browser get url              # Re-verify
+   <browser_command> snapshot -i          # Find email/password fields
+   <browser_command> fill @<email> "<test_account_email>"
+   <browser_command> fill @<password> "<test_account_password>"
+   <browser_command> click @<submit>      # Login button
+   <browser_command> wait --load networkidle
+   <browser_command> get url              # Re-verify
    ```
-2. **Manual path** (fallback): Read `auth.manual_prompt` from mapping and present to user. Browser is already `--headed` — user logs in directly. After user confirms → `agent-browser get url` and re-check. Repeat until verified or user aborts.
+2. **Manual path** (fallback): Read `auth.manual_prompt` from mapping and present to user. Browser is already `--headed` — user logs in directly. After user confirms → `<browser_command> get url` and re-check. Repeat until verified or user aborts.
 
 **Start trace** (after auth verified):
 ```bash
-agent-browser trace start
+<browser_command> trace start
 ```
 
 ### Multi-Site Startup (when `--sites` provided)
@@ -87,10 +90,10 @@ Open a session for each site and append its validated `app` value only after `tr
 succeeds:
 ```bash
 # For each mapping in --sites:
-agent-browser --session <app> --profile ~/.agent-browser/<app> --headed open <base_url>
-agent-browser --session <app> wait --load networkidle
+<browser_command-for-app> --profile ~/.agent-browser/<app> --headed open <base_url>
+<browser_command-for-app> wait --load networkidle
 # Verify auth per site (same flow as single-site)
-agent-browser --session <app> trace start
+<browser_command-for-app> trace start
 # On success:
 TRACE_STARTED_APPS[${#TRACE_STARTED_APPS[@]}]="$APP"
 ```
@@ -101,7 +104,7 @@ TRACE_STARTED_APPS[${#TRACE_STARTED_APPS[@]}]="$APP"
 
 When the plan transitions to a different site (or human requests it):
 1. Current session stays alive (do NOT close)
-2. Switch to target session: all subsequent `agent-browser` commands use `--session <target_app>`
+2. Switch to target app: all subsequent commands use that app's declared `<browser_command-for-app>`
 3. Mapping context switches to the target site's mapping
 4. Announce: "Switching to [portal] session..."
 
@@ -109,11 +112,11 @@ Human can request site switch anytime: "switch to admin", "go to portal", "check
 
 ### Per-Step Loop (Observe-and-Continue)
 
-1. `agent-browser snapshot -i` → find element `@ref` (interactive-only, reduces noise)
+1. `<browser_command> snapshot -i` → find element `@ref` (interactive-only, reduces noise)
 2. Execute action (click/fill via `@ref`)
-3. `agent-browser wait --load networkidle`
-4. `agent-browser screenshot "$REPORT_DIR/step-N.png"`
-5. Error check: `agent-browser errors --json` (lightweight — typically empty)
+3. `<browser_command> wait --load networkidle`
+4. `<browser_command> screenshot "$REPORT_DIR/step-N.png"`
+5. Error check: `<browser_command> errors --json` (lightweight — typically empty)
 6. Anomaly observation (agent examines post-action snapshot for visual issues)
 7. Record to step log + one-line report to human
 
@@ -121,7 +124,7 @@ Human can request site switch anytime: "switch to admin", "go to portal", "check
 
 **Step 5 — Error check (all modes except smoke):**
 ```bash
-agent-browser errors --json
+<browser_command> errors --json
 ```
 - Empty output (common case): no action, no output to human
 - Non-empty (≤5 errors): record each error as `{type: "js_error", detail: <message>, source: "errors --json"}` in the step's anomaly list. Notify human inline (don't stop).
@@ -150,11 +153,11 @@ Step N ✓  ⚠ 47 JS errors (see step-N-errors.json) | Visual: empty table
 ```
 Visual anomalies are always listed individually. JS error counts replace individual error summaries.
 
-**Smoke mode**: Skip steps 5-6 per step. Run `agent-browser errors --json` once at the end after all navigation steps. Smoke focus is selector verification, not runtime health. If the batch check returns errors, record them as anomalies on the **last step** in the step log with `source: "errors --json (batch)"`. These count toward the Phase 4 anomaly review threshold — batch errors mean non-zero anomalies, so the Phase 4 skip condition does NOT apply.
+**Smoke mode**: Skip steps 5-6 per step. Run `<browser_command> errors --json` once at the end after all navigation steps. Smoke focus is selector verification, not runtime health. If the batch check returns errors, record them as anomalies on the **last step** in the step log with `source: "errors --json (batch)"`. These count toward the Phase 4 anomaly review threshold — batch errors mean non-zero anomalies, so the Phase 4 skip condition does NOT apply.
 
 **Selector verification strategy:**
 - `find text "<v>"` subcommand selectors: verify by comparing snapshot a11y tree text content against mapping values. Snapshot is the source of truth. Bare `text=<v>` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
-- `data-testid` / `aria-label` / `[role="<r>"][aria-label="<v>"]` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `agent-browser is visible "<selector>"` for DOM-level verification. Bare `role=<r>[name="<v>"]` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh). DEPRECATED as `selector:` value: `find role <r> --name "<v>"` — subcommand chain, not selector grammar (PR #8 course correction).
+- `data-testid` / `aria-label` / `[role="<r>"][aria-label="<v>"]` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `<browser_command> is visible "<selector>"` for DOM-level verification. Bare `role=<r>[name="<v>"]` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh). DEPRECATED as `selector:` value: `find role <r> --name "<v>"` — subcommand chain, not selector grammar (PR #8 course correction).
 
 ### Anomaly Observation Rules
 
@@ -703,5 +706,5 @@ Browser still open at: <current URL>
 
 Only close after human confirms:
 ```bash
-agent-browser close
+<browser_command> close
 ```

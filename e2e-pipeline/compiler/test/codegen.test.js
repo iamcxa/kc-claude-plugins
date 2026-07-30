@@ -145,17 +145,20 @@ describe('generate() — shell header', function() {
 //      not_automated count, metrics summary includes not_automated, and JUnit
 //      emits not_automated steps as skipped testcases. Non-hatch flows preserve
 //      their existing pass/fail behavior and prose when the count is zero.
+//   3. Runtime ownership hardening — every compiled flow now emits an owned
+  //      browser wrapper plus optional local-service preflight/start/stop wiring;
+  //      cleanup failures remain visible and fail an otherwise successful run.
 describe('PR-38 legacy output parity', function() {
   test('non-SC-1032 flows stay byte-frozen except for declared drift', function() {
     const corpus = [
       {
         name: 'legacy-empty',
-        expected: '13d70bdd69b2963a214acc2b076063e8135b6dc6a0b5bb70e7b8d09aba1ec027',
+        expected: 'e3a60504c0cc273a805f5614879c757756f0f7515db94a13437a39f82f38cf8f',
         resolved: { name: 'legacy-empty', description: 'No steps', steps: [] },
       },
       {
         name: 'legacy-single-site',
-        expected: 'a1c38837a444295abf7cf4e3b2fc1b668d92e8b7f7334d5080328382a0287be2',
+        expected: 'ea7bb46aa383c15f78af0bcabdacadd97a7cc4e55ea1399e85e85e52a5291f08',
         resolved: {
           name: 'legacy-single-site',
           description: 'Representative legacy actions',
@@ -187,7 +190,7 @@ describe('PR-38 legacy output parity', function() {
       },
       {
         name: 'legacy-cross-site',
-        expected: 'f9d2c4921685784c744bc2356080a5885c132698d0039ff3f39d384b7959f83e',
+        expected: '475e064e97128db5fb7a61ab4a423b20ebd8f45fcb0dc4fadf1c2646a7337a60',
         resolved: {
           name: 'legacy-cross-site',
           description: 'Named browser sessions',
