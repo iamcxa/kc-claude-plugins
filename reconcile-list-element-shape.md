@@ -1,11 +1,11 @@
 ---
 title: A shape-valid but content-invalid reviews list reads as "marker absent"
-status: ideation
+status: implementation
 source: named residual from reconcile-degraded-mode-symmetry (sv) EM gate, 2026-07-26
 started: 2026-07-30T02:56:12Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-reconcile-list-element-shape
 issue:
 pr:
 design: trivial-pass
