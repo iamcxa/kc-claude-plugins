@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Unit tests for the append-only kc-pr-review shadow receipt runtime.
-# shellcheck disable=SC2002,SC2030,SC2031,SC2317,SC2329 # Intentional stdin probes, subshells, and dynamic function overrides across supported ShellCheck versions.
+# shellcheck disable=SC2002,SC2016,SC2030,SC2031,SC2317,SC2329 # Intentional literal stubs, stdin probes, subshells, and dynamic function overrides across supported ShellCheck versions.
 
 set -uo pipefail
 
@@ -25,7 +25,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision]\n' "$0" >&2
+    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -112,6 +112,276 @@ HEAD_SHA="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 CONFIG_HASH="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 OCCURRED_AT="2026-07-22T00:00:00Z"
 EXPECTED_REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
+
+run_merge_readiness_tests() {
+  local identity review_decision input input_file output stderr_file rc expected_hash
+  local stub_dir call_ledger stub_command status surface field mutated reason
+  local blocker_sha other_sha duplicate_input malformed_input noncanonical_input
+
+  identity="$(jq -S -c -n \
+    --arg repository "$REPOSITORY" --argjson pr_number "$PR_NUMBER" \
+    --arg base_sha "$BASE_SHA" --arg head_sha "$HEAD_SHA" \
+    --arg config_hash "$CONFIG_HASH" --arg review_key "$EXPECTED_REVIEW_KEY" \
+    '{repository:$repository,pr_number:$pr_number,base_sha:$base_sha,head_sha:$head_sha,
+      config_hash:$config_hash,review_key:$review_key,run_id:"run-merge-readiness"}')"
+  review_decision="$(jq -S -c -n --argjson identity "$identity" '
+    {
+      schema:"kc-pr-flow.interactive-collation-decision/v1",
+      review_identity:$identity,
+      mode:"typed",
+      coverage:"complete",
+      approve_eligible:true,
+      effective_event:"APPROVE",
+      capabilities:[],
+      confirmed_blocker_refs:[],
+      capability_gap_refs:[],
+      confirmation_input:{
+        identity_summary:"typed-derived",
+        coverage_summary:"typed-derived",
+        verdict_summary:"typed-derived",
+        blocker_refs:[],
+        gap_refs:[]
+      }
+    }')"
+  input="$(jq -S -c -n --argjson identity "$identity" --argjson decision "$review_decision" \
+    --arg head_sha "$HEAD_SHA" '
+    {
+      schema:"kc-pr-flow.merge-readiness-input/v1",
+      review_identity:$identity,
+      observed_head_sha:$head_sha,
+      ci:{
+        required:true,status:"PASS",head_sha:$head_sha,
+        evidence_sha256:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      tests:{
+        required:true,status:"PASS",head_sha:$head_sha,
+        evidence_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      review_decision:$decision
+    }')"
+
+  stub_dir="$TEST_INPUT_ROOT/merge-readiness-stubs"
+  call_ledger="$TEST_INPUT_ROOT/merge-readiness-call-ledger"
+  mkdir -p "$stub_dir"
+  : >"$call_ledger"
+  for stub_command in gh curl wget nc ssh git; do
+    printf '%s\n' \
+      '#!/bin/sh' \
+      'printf "%s\n" "$(basename "$0") $*" >>"$MERGE_READINESS_CALL_LEDGER"' \
+      'exit 97' >"$stub_dir/$stub_command"
+    chmod +x "$stub_dir/$stub_command"
+  done
+  export MERGE_READINESS_CALL_LEDGER="$call_ledger"
+
+  input_file="$TEST_INPUT_ROOT/merge-readiness-positive.json"
+  stderr_file="$TEST_INPUT_ROOT/merge-readiness-positive.stderr"
+  printf '%s\n' "$input" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --input-file "$input_file" 2>"$stderr_file")"
+  rc=$?
+  assert_eq "decide-merge-readiness command exists" "0" "$rc"
+  assert_eq "positive exact-head evidence is READY" "READY" \
+    "$(jq -r '.verdict // empty' <<<"$output" 2>/dev/null)"
+  assert_eq "positive exact-head confidence is HIGH" "HIGH" \
+    "$(jq -r '.confidence // empty' <<<"$output" 2>/dev/null)"
+  assert_eq "positive decision has one canonical reason" "all-required-evidence-positive" \
+    "$(jq -r '.reason_codes | join(",")' <<<"$output" 2>/dev/null)"
+  assert_eq "merge readiness has the closed output schema" \
+    "advisory_only,confidence,input_sha256,reason_codes,review_identity,schema,verdict" \
+    "$(jq -r 'keys | sort | join(",")' <<<"$output" 2>/dev/null)"
+  assert_eq "merge readiness decision is advisory only" "true" \
+    "$(jq -r '.advisory_only' <<<"$output" 2>/dev/null)"
+  assert_eq "merge readiness retains exact review identity" "$identity" \
+    "$(jq -S -c '.review_identity' <<<"$output" 2>/dev/null)"
+  expected_hash="$(sha256_text "$input")"
+  assert_eq "merge readiness binds canonical input bytes" "$expected_hash" \
+    "$(jq -r '.input_sha256' <<<"$output" 2>/dev/null)"
+
+  noncanonical_input="$(jq '
+    {
+      tests:.tests,
+      review_decision:.review_decision,
+      ci:.ci,
+      observed_head_sha:.observed_head_sha,
+      review_identity:.review_identity,
+      schema:.schema
+    }' <<<"$input")"
+  printf '%s\n' "$noncanonical_input" >"$input_file"
+  assert_eq "precondition: reordered pretty input has the same canonical value" \
+    "$input" "$(jq -S -c . "$input_file")"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "input binding normalizes key order and whitespace" "$expected_hash" \
+    "$(jq -r '.input_sha256' <<<"$output" 2>/dev/null)"
+
+  mutated="$(jq -S -c '.ci.required=false | .ci.status="NOT_REQUIRED" |
+    .tests.required=false | .tests.status="NOT_REQUIRED"' <<<"$input")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "non-required evidence is positive only when explicitly NOT_REQUIRED" \
+    "READY|HIGH|all-required-evidence-positive" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  for surface in ci tests; do
+    mutated="$(jq -S -c --arg surface "$surface" \
+      '.[$surface].status="FAIL"' <<<"$input")"
+    printf '%s\n' "$mutated" >"$input_file"
+    output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+    assert_eq "$surface failure is decisively NOT_READY" "NOT_READY|HIGH|$surface-failed" \
+      "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+  done
+
+  blocker_sha="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  mutated="$(jq -S -c --arg blocker "$blocker_sha" '
+    .review_decision.confirmed_blocker_refs=[$blocker] |
+    .review_decision.confirmation_input.blocker_refs=[$blocker] |
+    .review_decision.approve_eligible=false |
+    .review_decision.effective_event="REQUEST_CHANGES"' <<<"$input")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "confirmed review blocker is decisively NOT_READY" \
+    "NOT_READY|HIGH|review-blocked" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  mutated="$(jq -S -c --arg blocker "$blocker_sha" '
+    .ci.status="FAIL" | .tests.status="FAIL" |
+    .review_decision.confirmed_blocker_refs=[$blocker] |
+    .review_decision.confirmation_input.blocker_refs=[$blocker] |
+    .review_decision.approve_eligible=false |
+    .review_decision.effective_event="REQUEST_CHANGES"' <<<"$input")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "multiple decisive negatives emit sorted unique reasons" \
+    "ci-failed,review-blocked,tests-failed" \
+    "$(jq -r '.reason_codes | join(",")' <<<"$output")"
+
+  mutated="$(jq -S -c '.ci.status="FAIL" | .tests.status="PENDING"' <<<"$input")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "an exact-head negative outranks another pending signal" \
+    "NOT_READY|HIGH|ci-failed" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  for surface in ci tests; do
+    for status in PENDING UNKNOWN UNAVAILABLE; do
+      mutated="$(jq -S -c --arg surface "$surface" --arg status "$status" \
+        '.[$surface].status=$status' <<<"$input")"
+      printf '%s\n' "$mutated" >"$input_file"
+      output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+      assert_eq "$surface $status is incomplete rather than positive" \
+        "UNKNOWN|LOW|$surface-incomplete" \
+        "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+    done
+  done
+
+  mutated="$(jq -S -c --argjson identity "$identity" '
+    .review_decision.capabilities=[{
+      schema:"kc-pr-flow.capability-terminal/v1",
+      review_identity:$identity,
+      capability:"types",
+      required:true,
+      activation_condition:"configured",
+      owner:"core-collator",
+      adapter_attempts:[],
+      fallback:{status:"unavailable",result:null},
+      terminal_state:"incomplete_required",
+      finding_refs:[]
+    }] |
+    .review_decision.capability_gap_refs=["types"] |
+    .review_decision.confirmation_input.gap_refs=["types"] |
+    .review_decision.coverage="incomplete" |
+    .review_decision.approve_eligible=false |
+    .review_decision.effective_event="COMMENT"' <<<"$input")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "incomplete typed review is UNKNOWN" "UNKNOWN|LOW|review-incomplete" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  other_sha="1111111111111111111111111111111111111111"
+  for surface in observed_head_sha ci tests; do
+    if [ "$surface" = observed_head_sha ]; then
+      mutated="$(jq -S -c --arg sha "$other_sha" '.observed_head_sha=$sha' <<<"$input")"
+    else
+      mutated="$(jq -S -c --arg surface "$surface" --arg sha "$other_sha" \
+        '.[$surface].head_sha=$sha' <<<"$input")"
+    fi
+    printf '%s\n' "$mutated" >"$input_file"
+    output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+    assert_eq "$surface head mutation is UNKNOWN" \
+      "UNKNOWN|LOW|head-or-identity-mismatch" \
+      "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+  done
+
+  for field in repository pr_number base_sha head_sha config_hash review_key run_id; do
+    case "$field" in
+      repository) mutated="$(jq -S -c '.review_decision.review_identity.repository="other/repo"' <<<"$input")" ;;
+      pr_number) mutated="$(jq -S -c '.review_decision.review_identity.pr_number=43' <<<"$input")" ;;
+      base_sha) mutated="$(jq -S -c --arg sha "$other_sha" '.review_decision.review_identity.base_sha=$sha' <<<"$input")" ;;
+      head_sha) mutated="$(jq -S -c --arg sha "$other_sha" '.review_decision.review_identity.head_sha=$sha' <<<"$input")" ;;
+      config_hash) mutated="$(jq -S -c '.review_decision.review_identity.config_hash="1111111111111111111111111111111111111111111111111111111111111111"' <<<"$input")" ;;
+      review_key) mutated="$(jq -S -c '.review_decision.review_identity.review_key="2222222222222222222222222222222222222222222222222222222222222222"' <<<"$input")" ;;
+      run_id) mutated="$(jq -S -c '.review_decision.review_identity.run_id="run-other"' <<<"$input")" ;;
+    esac
+    printf '%s\n' "$mutated" >"$input_file"
+    output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+    assert_eq "nested review identity $field drift is UNKNOWN" \
+      "UNKNOWN|LOW|head-or-identity-mismatch" \
+      "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+  done
+
+  for reason in unknown-key malformed-hash invalid-required-status invalid-review-decision unknown-status; do
+    case "$reason" in
+      unknown-key) mutated="$(jq -S -c '.unexpected=true' <<<"$input")" ;;
+      malformed-hash) mutated="$(jq -S -c '.ci.evidence_sha256="bad"' <<<"$input")" ;;
+      invalid-required-status) mutated="$(jq -S -c '.ci.status="NOT_REQUIRED"' <<<"$input")" ;;
+      invalid-review-decision) mutated="$(jq -S -c '.review_decision.unexpected=true' <<<"$input")" ;;
+      unknown-status) mutated="$(jq -S -c '.tests.status="GREEN"' <<<"$input")" ;;
+    esac
+    printf '%s\n' "$mutated" >"$input_file"
+    output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+    assert_eq "$reason fails closed as invalid input" "UNKNOWN|LOW|invalid-input" \
+      "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+    assert_eq "$reason cannot retain an unvalidated identity" "null|null" \
+      "$(jq -r '[.review_identity,.input_sha256] | map(tostring) | join("|")' <<<"$output")"
+  done
+
+  duplicate_input="${input#\{}"
+  duplicate_input="{\"schema\":\"kc-pr-flow.merge-readiness-input/v1\",$duplicate_input"
+  printf '%s\n' "$duplicate_input" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "duplicate JSON member fails closed" "UNKNOWN|LOW|invalid-input" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  malformed_input='{'
+  printf '%s\n' "$malformed_input" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "malformed bounded JSON fails closed" "UNKNOWN|LOW|invalid-input" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  mutated="$(jq -S -c '.ci.required=false' <<<"$input")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "otherwise unreachable non-required PASS is inconsistent" \
+    "UNKNOWN|LOW|inconsistent-input" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  # Regression-only authority invariant, not RED evidence for command
+  # existence: untouched main has no adapter to make a call.
+  assert_eq "merge-readiness CLI performs no network, GitHub, git, post, or merge call" \
+    "" "$(cat "$call_ledger")"
+}
+
+if [ "$CASE_FILTER" = 'merge-readiness' ]; then
+  run_merge_readiness_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit
+fi
+
+# Keep the contract in the default CI run as well as the focused diagnostic
+# case above.
+if [ "$CASE_FILTER" = 'all' ]; then
+  run_merge_readiness_tests
+fi
 
 run_interactive_decision_tests() {
   local receipt policy repo output rc before_hash after_hash

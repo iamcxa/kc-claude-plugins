@@ -56,6 +56,14 @@ complete independently confirmed blocker-evidence receipt bound to the exact rev
 Missing, malformed, drifted, or decision-inconsistent evidence fails closed at COMMENT with no
 blockers and no in-run legacy fallback.
 
+EM landing synthesis is a read-only projection over that validated collation decision and
+caller-supplied exact-head CI/test observations. The
+`decide-merge-readiness --input-file FILE` command emits advisory `READY/HIGH`,
+`NOT_READY/HIGH`, or `UNKNOWN/LOW`; invalid, stale, or incomplete required evidence cannot yield
+`READY`. `READY` is not merge authority, and the adapter has no network, posting, authorization, or
+merge operation; `scripts/review-runtime.test.sh --case merge-readiness` enforces that boundary
+with a closed mutation matrix and failing command stubs.
+
 Terminal rehydration is local and read-only: no append, resume, recovery, retention, model, network,
 authorization, or remote mutation. Benchmark promotion is ordered G1-G5, requires zero lost
 expected must-fix findings before efficiency, and admits only the documented 20% reported-token or

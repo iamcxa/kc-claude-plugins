@@ -65,6 +65,13 @@ confirmed blockers still request changes, and both typed and legacy modes stop a
 human confirmation. Invalid typed state fails closed for that invocation instead of silently
 changing modes.
 
+For EM landing synthesis, `review-runtime.sh decide-merge-readiness --input-file FILE` validates
+one closed binding of that typed decision plus caller-supplied exact-head CI and test observations.
+Complete positive evidence emits advisory `READY/HIGH`, a current decisive failure emits
+`NOT_READY/HIGH`, and invalid, mismatched, or incomplete required evidence emits `UNKNOWN/LOW`.
+The command is local and read-only: it does not fetch evidence, authorize or post a review, or
+merge a PR. Humans remain the merge authority.
+
 The paired benchmark validates exact-head review keys, evidence-bound candidates and findings,
 canonical receipt identities, and any local rehydration measurement receipt. Promotion evaluates
 validity, coverage, behavior parity, and zero lost expected must-fix findings before either a median
