@@ -104,7 +104,7 @@ After browser work completes, each skill dispatches the `e2e-media-processor` ag
 **Illustrative browser media flow** -- replace these public placeholder URLs and assertions with pages from your application. No bundled recording is associated with this example.
 
 <details>
-<summary>Flow YAML used to generate this demo</summary>
+<summary>Illustrative flow YAML</summary>
 
 ```yaml
 name: demo-browser-recording

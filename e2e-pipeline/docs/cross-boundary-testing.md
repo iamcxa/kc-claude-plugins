@@ -404,7 +404,7 @@ sample-cli upload --session-name "test-1" --yes
 3. **`SAMPLE_API_HOST` env var** controls which server the CLI talks to. Always set it for local dev to avoid hitting production.
 4. **`on_fail: warn` for analytics** -- PostHog verification is advisory. Don't block the test on analytics propagation delays.
 
-## Real-World Example -- MCP Error Classification Verification (CLI-Only)
+## Example -- MCP Error Classification Verification (CLI-Only)
 
 **Feature:** A sample MCP server must correctly classify SQL errors (syntax errors, missing table, permission denied) and route them to the appropriate Sentry channel. Issues PROJ-301, PROJ-302, and PROJ-303.
 
