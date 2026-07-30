@@ -451,3 +451,141 @@ The prior agy-first proposal is no longer the task. Ideation now specifies the s
 one closed, deterministic EM adapter that binds existing CI, test, and typed review evidence to one
 exact head and emits an advisory landing verdict. Existing review decisions and human confirmation
 remain authoritative for their own surfaces; the new contract adds no posting or merge authority.
+
+## Stage Report: implementation
+
+TL;DR — Implemented and pushed one closed local
+`decide-merge-readiness --input-file FILE` adapter at code commit
+`56864d5461854509b2bbccec6fe82e58b2f5871a`. The exact current branch is green at focused
+merge-readiness **47/0**, default runtime **352/0**, unchanged review-post **156/0**, pinned
+ShellCheck v0.9.0, Bash syntax, `git diff --check`, and a real regular-file CLI round trip.
+`READY` remains advisory; protected §6c/post files are byte-identical to `origin/main`.
+
+- **DONE: AC-1 — one exact-head input emits one closed decision.**
+  `kc-pr-flow/scripts/review-runtime.sh:2397` safe-snapshots one bounded input, applies the closed
+  nested `InteractiveCollationDecision/v1` validator, hashes canonical JSON, and executes the
+  ordered negative/incomplete/positive table. The CLI entry is
+  `kc-pr-flow/scripts/review-runtime.sh:3061`. Positive required evidence emits
+  `READY/HIGH/all-required-evidence-positive`; same-head CI/test/review negatives emit
+  `NOT_READY/HIGH`; incomplete evidence emits `UNKNOWN/LOW`.
+- **DONE: AC-2 — invalid or stale evidence cannot emit `READY`.**
+  `kc-pr-flow/scripts/review-runtime.test.sh:116-370` covers recursive duplicate members,
+  malformed JSON/hash, unknown keys/status, contradictory `required/NOT_REQUIRED`, observed/CI/test
+  head mutations, all seven nested review-identity fields, invalid nested decisions, and the
+  otherwise-unreachable inconsistent fallback. Identity mismatch has priority over negative
+  evidence. Reason arrays are sorted/unique.
+- **DONE: AC-3 — no post or merge authority was added.**
+  The test runs the real CLI with failing `gh`, `curl`, `wget`, `nc`, `ssh`, and `git` stubs and
+  requires an empty call ledger (`review-runtime.test.sh:367`). The source contains no transport,
+  post, authorization, or merge operation. `kc-pr-flow/skills/kc-pr-review/SKILL.md`,
+  `scripts/review-post.sh`, and `scripts/review-post.test.sh` match `origin/main` byte-for-byte;
+  the unchanged post suite is **156 passed, 0 failed**.
+- **DONE: AC-4 — bounded adapter and approved docs only.**
+  Changed paths are exactly `kc-pr-flow/scripts/review-runtime.sh`,
+  `kc-pr-flow/scripts/review-runtime.test.sh`, `kc-pr-flow/reference/review-runtime.md`,
+  `kc-pr-flow/README.md`, and `kc-pr-flow/CLAUDE.md`. Documentation publishes the advisory
+  contract and human-only merge boundary at `reference/review-runtime.md:133-155,173`,
+  `README.md:68-74`, and `CLAUDE.md:59-66`.
+
+### TDD evidence
+
+- **Initial RED on untouched production:** after tests were written and before production edits,
+  `bash kc-pr-flow/scripts/review-runtime.test.sh --case merge-readiness` exited 1. First failure:
+  `decide-merge-readiness command exists (expected [0], got [2])`. Log SHA-256:
+  `a6a82fe898d3cea24881f24c697caf99758a6cdac9c9066ba18efcc9f5d1a7f0`.
+  Result: **1 passed, 44 failed**. All 44 behavior assertions were reachable because the shell
+  test continues after each assertion.
+- The sole initial RED pass was the empty side-effect ledger. It is explicitly labeled in the test
+  as a **regression-only authority invariant**, not evidence that the missing command existed:
+  untouched main had no adapter capable of calling a stub.
+- **Initial GREEN:** focused contract **45 passed, 0 failed**. A fixture-authoring warning in the
+  first attempt showed the duplicate-member case had accidentally become malformed JSON; that
+  attempt was not accepted. The fixture was corrected to contain a real duplicate member before
+  the recorded GREEN (log SHA-256
+  `32b94ba1a80e8c74adbfa5a6f689fad2691dd21c0bd67a5ff6a6f3f90834645a`).
+- **Review-cycle RED:** the read-only reviewer found that the first hash assertion began from
+  already-canonical JSON. The added reordered/pretty fixture has one labeled arrangement
+  precondition and one behavior assertion. Against untouched `origin/main`, that assertion failed:
+  `input binding normalizes key order and whitespace (expected [25e92b...], got [])`; exit 1,
+  **2 passed / 45 failed**, log SHA-256
+  `40e74693230d75dc18fd4188bc6540f226ab029123209bdd7dbb0be5f6b07414`.
+- **Review-cycle GREEN:** focused contract **47 passed, 0 failed**, log SHA-256
+  `5c9391d0fbdddfd23f96b539b60293a6a66df30129da690c76674da606b458df`.
+  No production change was needed because the adapter already hashes `jq -S -c` output.
+- **Old-behavior fixture audit:** no existing scenario was repurposed. The implementation adds one
+  new isolated test function and calls it from both `--case merge-readiness` and the default CI
+  path; all historical default assertions remain in place.
+
+### Verification and validator commands
+
+From the committed code worktree/repository root:
+
+```bash
+bash kc-pr-flow/scripts/review-runtime.test.sh --case merge-readiness
+bash kc-pr-flow/scripts/review-runtime.test.sh
+bash kc-pr-flow/scripts/review-post.test.sh
+bash -n kc-pr-flow/scripts/review-runtime.sh kc-pr-flow/scripts/review-runtime.test.sh
+docker run --rm --platform linux/amd64 -v "$PWD:/mnt" -w /mnt \
+  koalaman/shellcheck:v0.9.0 \
+  kc-pr-flow/scripts/review-runtime.sh kc-pr-flow/scripts/review-runtime.test.sh
+git diff --check origin/main...HEAD
+git diff --name-only origin/main...HEAD
+```
+
+- Final focused: **47 passed, 0 failed**.
+- Final default runtime: **352 passed, 0 failed**, log SHA-256
+  `d4a81c6bdff89c9272f5e45102f7abef9d0c5a8f38df09853be7a8fa9f2a3b8c`.
+- Review-post: **156 passed, 0 failed**, log SHA-256
+  `e7240ae969d70f9e851f7e89ac48b5d9d743175e34fb95c151f6ae580d609bfc`.
+- Direct E2E: a real regular input file passed through
+  `bash kc-pr-flow/scripts/review-runtime.sh decide-merge-readiness --input-file FILE`; `jq`
+  asserted schema, `READY`, `HIGH`, canonical reason, advisory flag, input hash, and exact head.
+  CLI output SHA-256:
+  `ad85fce8d4553bf6b02cd3040725145c56016d8b4ac1ccd90be9a5280e3864d2`.
+- Static/scope: Bash syntax 0, pinned ShellCheck v0.9.0 0, `git diff --check` 0. The only
+  out-of-scope vocabulary in added executable/test lines is the failing side-effect stub list.
+- CI timing disclosure: the required workflow has `timeout-minutes: 20`. Under the same local
+  machine conditions, the untouched 305-case default suite took **93.24s** and the branch's
+  350-case pre-review suite took **102.13s**, an **8.89s** increase. This is a suite delta, not a
+  reproduction of the full mutable `ubuntu-latest` job. The final two canonicalization assertions
+  add one local CLI invocation and do not change production complexity.
+
+### Review and appetite drift
+
+- A single read-only code-review child was spawned because root `AGENTS.md` prescribes one
+  `code-reviewer` subagent for a small single-seam change. FO correctly flagged that this still
+  violated the entity's declared **ONE worker** envelope: there were two agents, although only one
+  writer and one code worktree. No further workers were spawned.
+- Appetite effect: the review consumed one bounded concurrent read-only turn inside the same
+  implementation session and introduced no new production surface. It found no critical or
+  important issue and one in-scope minor proof gap, closed by the canonical-input test above. The
+  worker-count drift is real and not reclassified away; zero tolerance was honored after the FO
+  checkpoint by stopping further fan-out and accepting no scope expansion.
+
+### Scope and handoff
+
+- Commit `56864d5461854509b2bbccec6fe82e58b2f5871a` is pushed to
+  `origin/spacedock-ensign/agy-first-whole-diff-review-seat`; local HEAD and upstream matched after
+  `git pull --rebase origin main` and push.
+- No PR was created and no merge was performed, per dispatch.
+- SKIPPED: browser/full-stack E2E because the feature has no UI, service, or remote mutation. The
+  regular-file CLI round trip is the E2E surface.
+- SKIPPED by scope: `vf`, `x0f`, agy/model routing, daemon behavior, live GitHub fetching,
+  review-post authority changes, auto-merge, repair loops, and cross-repo adoption.
+
+### `--ac-scan`
+
+```text
+stage=implementation
+ac=AC-1 line=298 unevidenced=false citations=2
+ac=AC-2 line=307 unevidenced=false citations=2
+ac=AC-3 line=316 unevidenced=false citations=3
+ac=AC-4 line=324 unevidenced=false citations=3
+```
+
+### Summary
+
+The assigned branch now contains one validator-runnable, read-only exact-head landing projection:
+strict inputs become advisory `READY`, `NOT_READY`, or `UNKNOWN`; stale and malformed inputs fail
+closed; and review/post/merge authority remains outside the adapter. The branch and this split-root
+report are ready for an independent validation stage.
