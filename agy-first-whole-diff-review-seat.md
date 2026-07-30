@@ -1,8 +1,8 @@
 ---
 title: Make agy the whole-diff review seat before Claude EM landing
-status: backlog
+status: ideation
 source: captain direction 2026-07-30 after reconcile-list-element-shape closeout
-started:
+started: 2026-07-30T15:01:36Z
 completed:
 verdict:
 worktree:
