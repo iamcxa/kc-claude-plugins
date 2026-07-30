@@ -13,6 +13,12 @@ on:
       - "kc-pr-flow/scripts/review-shadow.test.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
+      - "kc-pr-flow/scripts/review-ablation.sh"
+      - "kc-pr-flow/scripts/review-ablation-core.py"
+      - "kc-pr-flow/scripts/review-ablation.test.sh"
+      - "kc-pr-flow/scripts/review-ablation-spans.tsv"
+      - "kc-pr-flow/scripts/review-ablation-corpus.tsv"
+      - "kc-pr-flow/scripts/review-ablation-driver-prompt.md"
       - "kc-pr-flow/scripts/review-post.sh"
       - "kc-pr-flow/scripts/review-post.test.sh"
       - "kc-pr-flow/scripts/cross-model.sh"
@@ -44,6 +50,12 @@ on:
       - "kc-pr-flow/scripts/review-shadow.test.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
       - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
+      - "kc-pr-flow/scripts/review-ablation.sh"
+      - "kc-pr-flow/scripts/review-ablation-core.py"
+      - "kc-pr-flow/scripts/review-ablation.test.sh"
+      - "kc-pr-flow/scripts/review-ablation-spans.tsv"
+      - "kc-pr-flow/scripts/review-ablation-corpus.tsv"
+      - "kc-pr-flow/scripts/review-ablation-driver-prompt.md"
       - "kc-pr-flow/scripts/review-post.sh"
       - "kc-pr-flow/scripts/review-post.test.sh"
       - "kc-pr-flow/scripts/cross-model.sh"
@@ -179,6 +191,9 @@ jobs:
           bash -n kc-pr-flow/scripts/review-post.sh
           bash -n kc-pr-flow/scripts/review-post.test.sh
           bash -n kc-pr-flow/test/fixtures/review-post/stub-transport.sh
+          python3 -m py_compile kc-pr-flow/scripts/review-ablation-core.py
+          bash -n kc-pr-flow/scripts/review-ablation.sh
+          bash -n kc-pr-flow/scripts/review-ablation.test.sh
 
       - name: ShellCheck
         run: |
@@ -190,6 +205,14 @@ jobs:
           shellcheck kc-pr-flow/scripts/review-post.sh
           shellcheck kc-pr-flow/scripts/review-post.test.sh
           shellcheck kc-pr-flow/test/fixtures/review-post/stub-transport.sh
+          shellcheck kc-pr-flow/scripts/review-ablation.sh
+          shellcheck kc-pr-flow/scripts/review-ablation.test.sh
+
+      # Test-plan items 1-4 only. The 27-run acceptance is operator-run and
+      # never in CI: it costs money and needs credentials. A slimming PR that
+      # relies on the harness carries the verdict JSON as its own evidence.
+      - name: Run ablation harness tests
+        run: bash kc-pr-flow/scripts/review-ablation.test.sh
 
       - name: Run runtime contract tests
         run: bash kc-pr-flow/scripts/review-runtime.test.sh

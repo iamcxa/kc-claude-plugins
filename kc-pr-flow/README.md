@@ -106,6 +106,7 @@ bash scripts/review-runtime.test.sh
 bash scripts/review-post.test.sh
 bash scripts/review-shadow.test.sh
 bash scripts/review-runtime-benchmark.test.sh
+bash scripts/review-ablation.test.sh
 ```
 
 ## Shared Config

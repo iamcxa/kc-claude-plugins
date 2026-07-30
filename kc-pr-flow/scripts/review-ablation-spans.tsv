@@ -1,0 +1,27 @@
+# review-ablation span table — the AC-2 ablation, enumerated by a tree-wide sweep
+# of kc-pr-flow/ at f4f4840, re-derived against ec9502c.
+# Columns: id\trelpath\tstart\tend\tkind\tremoval_text-or--\tsha256(text).
+# The sha column is GENERATED (review-ablation.sh arm --write-pins), never hand-typed.
+#
+# Re-derivation at ec9502c: every surviving span resolved to byte-identical text at
+# unchanged coordinates, verified by matching the f4f4840 span text against the
+# current file. The retired id is S8, `SKILL.md:1855` at f4f4840 — a tail
+# restatement of the pre-emit gate that merged PR #82 (85959dc) deleted as one of
+# its 31 clause-complete duplicates. Ids are not renumbered after a retirement, so
+# S8 stays absent rather than being reused for a different span. After the
+# retirement the ablation set still covers every statement of the gate in
+# kc-pr-flow/: SKILL.md:861 (S7), :975 (S1), :988 (S5) and the S2-S4/S6 operative
+# body, plus review-triage.md and learned-patterns.md.
+S1	skills/kc-pr-review/SKILL.md	975	975	cut	-	1d066b679f6f63b2e20ce7e2bee52bb83bdeee333adc81792fbea96e314bca3b
+S2	skills/kc-pr-review/SKILL.md	977	982	cut	-	1b77bba6ea281095c45e57b9ac355ac42c62f86eb1fd845184c2555dad4202ed
+S3	skills/kc-pr-review/SKILL.md	984	984	cut	-	346a287af920611c64022f4a99a2a4419b5cbdfa7be93556e8d37da942c5ca9b
+S4	skills/kc-pr-review/SKILL.md	986	986	cut	-	a5627033b436e60bd9ee116dc54cd90629f43f106796c8904600a49670212f0e
+S5	skills/kc-pr-review/SKILL.md	988	988	cut	-	a9022b0db237b4ed8d06119bcb0157aacd77076bdedb7a54b25464ab11799f6c
+S6	skills/kc-pr-review/SKILL.md	990	990	cut_sub	 after the verification gate	d790114083e922cba7b5d0410f115cd265beca8528148fa5d9271f62ef185694
+S7	skills/kc-pr-review/SKILL.md	861	862	cut	-	091e1d9ea9b32d4ad3762ecfde737b347b7e74b0d7a5dc3cd59e2655b3abe395
+S9	reference/review-triage.md	221	221	cut	-	ddb60957884e4ec6c85a19020b93e8918ed4bcba6af368afd7c336c151daeaba
+S10	reference/review-triage.md	223	227	cut	-	14b8e2944cc1233431d8b07979e7c6a0136c674a8d0ebdeaeaba180857a36a7d
+S11	reference/learned-patterns.md	13	15	cut	-	13b443b9f028d916ff8f206f83d0da5b2bcd652312a5b662d31bf8fbf5532002
+K1	skills/kc-pr-review/SKILL.md	143	143	keep	-	f9bf1be28d401f3a297fb0094c5938e88cf477c5edc201094cf9dc3beea877fe
+K2	reference/review-triage.md	229	236	keep	-	cc538eeb1618467694e9eecdc554d6ba22a759c96f874a8d9da19fdfa8ba5e6a
+K3	reference/learned-patterns.md	9	11	keep	-	e4273c7434d823642f09c29130f55e6bf18f6cedeed7265bf45fdb97b1c762b6

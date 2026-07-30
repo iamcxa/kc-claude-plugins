@@ -113,6 +113,7 @@ bash scripts/review-runtime.test.sh
 bash scripts/review-post.test.sh
 bash scripts/review-shadow.test.sh
 bash scripts/review-runtime-benchmark.test.sh
+bash scripts/review-ablation.test.sh
 ```
 
 **Lint with CI's ShellCheck, not yours.** `review-runtime-tests.yml` pins ShellCheck **v0.9.0**, and
@@ -134,6 +135,50 @@ curl -fsSL https://github.com/koalaman/shellcheck/releases/download/v0.9.0/shell
 ```
 
 Bump the pin in the workflow and both commands together.
+
+**Judging a cut to `SKILL.md`.** Prose has no test: deleting instruction text leaves the shell
+suites green. Before a cut to instruction text that could change what the review flags, run
+`scripts/review-ablation.sh` for an A/B verdict against the frozen corpus. The verdict compares
+candidate-fingerprint sets, so it is blind to a cut that changes a finding's wording without
+moving its anchor.
+
+**Price it before you launch it, from measured runs.** One verdict is the pre-registered three-arm
+experiment — A, A′, B over three PRs at three repetitions, 27 headless review runs, which cannot be
+compressed or reordered without breaking the pre-registration. Three valid pilots measured
+`$9.76/run` on average, so budget on the order of **$264** for one verdict. An earlier `$2.53/run`
+spike is what made this look like a `~$46` job; that spike loaded an already-installed skill instead
+of the experiment arm, so it is not a cost sample. This harness therefore has **no acceptance
+verdict yet** — the pilot corpus gate passed and the price gate did not. Do not read
+`scripts/review-ablation.sh` as a check that has already certified anything; treat a first run as
+paid work needing an explicit budget. The measured figures and the park decision are recorded on
+entity `5b` (`docs/dev/.spacedock-state/skill-ablation-harness.md`, `### Budget gate — acceptance
+not started`).
+
+Read the verdict for what it says, in both directions — the verdict's `certifies` object states
+each one. `material: false` certifies **no detected difference on the measured dimensions (anchor
+set, severity mix, tokens)** for the corpus, sizing, and model in the verdict — it is never a
+certificate of "no behavioral change". A wording-only cut is outside the instrument's range by
+construction, as is any effect below its power floor. And `material: true` on a large multi-file
+removal certifies only that a **large** removal is detected: the measured detection knee is
+between +1 and +2 findings per run, so **a passing verdict on someone else's bigger cut is not
+evidence your smaller cut would have been caught.** Each cut earns its own verdict or records its
+own accepted residual.
+
+The ablation the harness is certified against is enumerated in `scripts/review-ablation-spans.tsv`,
+one row per span with the sha256 of its exact text. That sidecar is generated
+(`scripts/review-ablation.sh arm --write-pins`), never hand-typed. A pin that stops matching means
+the tree moved under the table: re-derive the enumeration, do not adjust line numbers until the
+pins pass.
+
+The frozen corpus is `scripts/review-ablation-corpus.tsv`: PR #17 at
+`4489933ddf5237187c4866ab45bdecc5bdb2d0f0..f3aed43341d5fe4616d76ba02946bd4913ae260e`,
+PR #19 at
+`d62f2c6659d76799994482dd58be2dc2b05fb3ea..031b4908cf405724b2ed7d1b829f3c001eea7aa2`,
+and PR #50 at
+`536be3e7d7d8371a9e84b693804407ea1b54bc60..7c448243c0512d137a47cdf36a9b255658f096a3`.
+`run` accepts only an exact corpus tuple, creates a clean detached checkout at
+the pinned head from `--source-repo`, hashes the pinned base-to-head diff, and
+records that proof with the arm/prompt/model pins in its runner manifest.
 
 ## Internal Agents
 
