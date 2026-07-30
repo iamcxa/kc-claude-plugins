@@ -34,12 +34,8 @@ REPORT_DIR="$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)" && mkdir -p "$REP
 **Gitignore housekeeping** (ensure large artifacts are not committed):
 
 ```bash
-if [ -f .gitignore ]; then
-  grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.json' .gitignore 2>/dev/null || \
-    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n' >> .gitignore
-else
-  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n' > .gitignore
-fi
+PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --project-root "$PROJ_ROOT"
 ```
 
 **Browser open** (always use `--profile` — no recording needed):

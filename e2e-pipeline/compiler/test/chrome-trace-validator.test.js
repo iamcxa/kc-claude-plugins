@@ -61,6 +61,35 @@ test('summarizes Chrome events without materializing the full trace', () => {
   ]);
 });
 
+test('counts each comma-delimited Chrome trace category independently', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
+  try {
+    const artifact = path.join(directory, 'category-list.json');
+    fs.writeFileSync(
+      artifact,
+      JSON.stringify({
+        traceEvents: [
+          {
+            name: 'RunTask',
+            cat: 'gpu, toplevel.flow',
+            ph: 'X',
+            dur: 1,
+          },
+        ],
+      })
+    );
+
+    const result = run('summarize', artifact);
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(JSON.parse(result.stdout).categories, [
+      { name: 'gpu', count: 1 },
+      { name: 'toplevel.flow', count: 1 },
+    ]);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
 test('detects Playwright ZIP before attempting Chrome JSON validation', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
   const archive = path.join(directory, 'trace.zip');

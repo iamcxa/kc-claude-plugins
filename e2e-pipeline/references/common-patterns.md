@@ -163,16 +163,12 @@ files, ensure the project's `.gitignore` includes rules for them.
 
 ```bash
 PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-if [ -f "$PROJ_ROOT/.gitignore" ]; then
-  if ! grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.json' "$PROJ_ROOT/.gitignore" 2>/dev/null; then
-    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n' >> "$PROJ_ROOT/.gitignore"
-  fi
-else
-  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n' > "$PROJ_ROOT/.gitignore"
-fi
+"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --project-root "$PROJ_ROOT"
 ```
 
-Run this **once per session**, during the setup phase (after `mkdir -p` for `report_dir`). If `.gitignore` already has the patterns, the check is a no-op.
+Run this **once per session**, during the setup phase (after `mkdir -p` for `report_dir`). The
+helper checks every exact rule independently, adds only missing rules, and rejects a symlink or
+non-regular `.gitignore` destination.
 
 ## CLI Terminal Recording (for CLI-only flows)
 

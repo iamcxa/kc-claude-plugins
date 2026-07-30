@@ -256,16 +256,27 @@ class TraceSummary:
         ):
             raise ResourceLimitError("max_identities exceeded")
 
-        category = event.get("cat", "(uncategorized)")
-        if not isinstance(category, str):
-            category = "(uncategorized)"
-        if category not in self.categories and len(self.categories) >= self.limits.max_categories:
-            self.categories["(other)"] += 1
-            category = "(other)"
+        raw_category = event.get("cat", "(uncategorized)")
+        if isinstance(raw_category, str):
+            categories = [
+                category.strip()
+                for category in raw_category.split(",")
+                if category.strip()
+            ]
         else:
-            if category not in self.categories:
-                self.reserve_strings(self.string_size(category))
-            self.categories[category] += 1
+            categories = []
+        if not categories:
+            categories = ["(uncategorized)"]
+        for category in categories:
+            if (
+                category not in self.categories
+                and len(self.categories) >= self.limits.max_categories
+            ):
+                self.categories["(other)"] += 1
+            else:
+                if category not in self.categories:
+                    self.reserve_strings(self.string_size(category))
+                self.categories[category] += 1
 
         duration = event.get("dur")
         if phase == "X":

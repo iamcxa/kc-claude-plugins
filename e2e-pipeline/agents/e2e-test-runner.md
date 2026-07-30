@@ -105,12 +105,7 @@ Ensure large binary artifacts are git-ignored before writing any files. Run once
 ```bash
 mkdir -p "{{report_dir}}"
 PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || dirname "$(dirname "{{report_dir}}")")
-if [ -f "$PROJ_ROOT/.gitignore" ]; then
-  grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.json' "$PROJ_ROOT/.gitignore" 2>/dev/null || \
-    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n.claude/e2e/reports/**/*.gif\n' >> "$PROJ_ROOT/.gitignore"
-else
-  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.json\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/trace.invalid-*.json\n.claude/e2e/reports/**/*.gif\n' > "$PROJ_ROOT/.gitignore"
-fi
+"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --project-root "$PROJ_ROOT"
 ```
 
 ### 1a. Pre-flight Checks
