@@ -3,6 +3,13 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.0.1...e2e-pipeline-v3.1.0) (2026-07-30)
+
+
+### Features
+
+* **e2e-pipeline:** add runtime-owned diagnostic init hooks ([#115](https://github.com/iamcxa/kc-claude-plugins/issues/115)) ([58d6969](https://github.com/iamcxa/kc-claude-plugins/commit/58d69694f02078b9c9543920973e62b7d84e4a29))
+
 ## [3.0.1](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.0.0...e2e-pipeline-v3.0.1) (2026-07-30)
 
 
