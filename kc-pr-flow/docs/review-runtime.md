@@ -274,12 +274,13 @@ than the original POST. `post` applies the same rule to its own pre-POST read an
 
 | `reason` | Meaning | What to do |
 |----------|---------|-----------|
-| `reconcile_unavailable` | The `list` response was not a usable reviews array, so "marker absent" was never established. | Fix transport/API access, then resume again. Pending is kept. |
+| `reconcile_unavailable` | The `list` response was not a reviews array of objects, or its marker scan failed (including after partial id output), so neither "marker absent" nor "marker found" was established. | Fix transport/API access, then resume again. Pending is kept and no further POST or retry occurs. |
 | `reconcile_unconfirmed` | Marker absent, but less than `KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS` (default 60) has elapsed since `post.intent`. The reviews list is read-after-write eventually consistent, so an absent marker here may just be lag. | Resume again after the window; retrying now could duplicate a review that did land. |
 
 `post` performs the same marker reconcile *before* its own POST, so re-running `post` for a payload
-that already landed reports `posted_reconciled` instead of posting a second review. When that read is
-unusable, `post` refuses rather than proceeding — the local intent check it used to rely on goes
+that already landed reports `posted_reconciled` instead of posting a second review. When that read
+has unusable elements or a failed marker scan, `post` refuses rather than proceeding — the local
+intent check it used to rely on goes
 blind once the state directory is wiped or the caller moves machines. The refusal comes *after* that
 local check, so a prior run that definitively posted still reports `posted_reconciled` and an
 unsettled one still reports `prior_attempt_unsettled`. A pending payload

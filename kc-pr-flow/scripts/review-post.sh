@@ -431,10 +431,15 @@ review_post_next_sequence() {
 }
 
 # A reconcile read is only trusted when it positively confirms remote state: an
-# exit-0 body that is not a reviews array must never be read as "marker absent",
-# which would license a blind retry of a payload that may already be live.
+# exit-0 body that is not a reviews array of objects must never be read as
+# "marker absent", which would license a blind retry of a payload that may
+# already be live.
 review_post_reviews_usable() {
-  jq -e 'type == "object" and (.reviews | type == "array")' >/dev/null 2>&1 <<<"$1"
+  jq -e '
+    if type == "object" and (.reviews | type == "array")
+    then all(.reviews[]; type == "object")
+    else false
+    end' >/dev/null 2>&1 <<<"$1"
 }
 
 review_post_scan_marker() {
@@ -675,15 +680,19 @@ review_post_cmd_post() {
   reviews_json="$(review_post_transport list --repo "$repository" --pr "$pr_number" --self "$self_login")" || return 74
   if review_post_reviews_usable "$reviews_json"; then
     reviews_ok=1
-    existing_id="$(review_post_scan_marker "$reviews_json" "$marker")"
-    if [ -n "$existing_id" ]; then
-      review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
-        "$base_sha" "$head_sha" "$config_hash" 5 "$occurred_at" post.result \
-        "$(jq -cn --argjson remote_review_id "$existing_id" --arg idempotency_key "$idempotency_key" \
-          '{idempotency_key:$idempotency_key,outcome:"posted_reconciled",remote_review_id:$remote_review_id}')" || return 74
-      rm -f "$run_dir/pending-post.json"
-      review_post_emit posted_reconciled "$run_id" "$idempotency_key" '' "$existing_id"
-      return 0
+    if existing_id="$(review_post_scan_marker "$reviews_json" "$marker")"; then
+      if [ -n "$existing_id" ]; then
+        review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
+          "$base_sha" "$head_sha" "$config_hash" 5 "$occurred_at" post.result \
+          "$(jq -cn --argjson remote_review_id "$existing_id" --arg idempotency_key "$idempotency_key" \
+            '{idempotency_key:$idempotency_key,outcome:"posted_reconciled",remote_review_id:$remote_review_id}')" || return 74
+        rm -f "$run_dir/pending-post.json"
+        review_post_emit posted_reconciled "$run_id" "$idempotency_key" '' "$existing_id"
+        return 0
+      fi
+    else
+      existing_id=''
+      reviews_ok=0
     fi
   fi
   # No confirmed remote copy — but "not visible" is not "not posted". Consult
@@ -870,7 +879,14 @@ review_post_cmd_resume() {
     review_post_emit ambiguous "$run_id" "$idempotency_key" reconcile_unavailable ''
     return 0
   }
-  remote_id="$(review_post_scan_marker "$reviews_json" "$marker")"
+  if remote_id="$(review_post_scan_marker "$reviews_json" "$marker")"; then
+    :
+  else
+    remote_id=''
+    printf 'review-post: reconcile marker scan failed; keeping the pending payload\n' >&2
+    review_post_emit ambiguous "$run_id" "$idempotency_key" reconcile_unavailable ''
+    return 0
+  fi
   if [ -n "$remote_id" ]; then
     review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
       "$base_sha" "$head_sha" "$config_hash" "$next_seq" "$occurred_at" post.result \
@@ -919,8 +935,18 @@ review_post_cmd_resume() {
   if [ "$classification" = ambiguous ]; then
     reviews_json="$(review_post_transport list --repo "$repository" --pr "$pr_number" --self "$self_login")" || return 74
     remote_id=''
-    if review_post_reviews_usable "$reviews_json"; then
-      remote_id="$(review_post_scan_marker "$reviews_json" "$marker")"
+    review_post_reviews_usable "$reviews_json" || {
+      printf 'review-post: reconcile list was unusable; keeping the pending payload\n' >&2
+      review_post_emit ambiguous "$run_id" "$idempotency_key" reconcile_unavailable ''
+      return 0
+    }
+    if remote_id="$(review_post_scan_marker "$reviews_json" "$marker")"; then
+      :
+    else
+      remote_id=''
+      printf 'review-post: reconcile marker scan failed; keeping the pending payload\n' >&2
+      review_post_emit ambiguous "$run_id" "$idempotency_key" reconcile_unavailable ''
+      return 0
     fi
     if [ -n "$remote_id" ]; then
       review_post_append_event "$run_id" "$review_key" "$repository" "$pr_number" \
