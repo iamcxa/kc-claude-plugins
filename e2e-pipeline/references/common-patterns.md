@@ -103,7 +103,9 @@ Patterns and gotchas for E2E testing agents. For project-specific patterns, chec
 
 ## Gitignore Housekeeping
 
-E2E runs produce large binary artifacts (webm, mp4, trace.zip) that should NOT be committed. Before writing any of these files, ensure the project's `.gitignore` includes rules for them.
+E2E runs produce large binary artifacts (webm, mp4, trace.zip, quarantined
+trace.invalid-*.zip) that should NOT be committed. Before writing any of these files, ensure the
+project's `.gitignore` includes rules for them.
 
 **Patterns to add** (if missing):
 
@@ -112,6 +114,7 @@ E2E runs produce large binary artifacts (webm, mp4, trace.zip) that should NOT b
 .claude/e2e/reports/**/*.webm
 .claude/e2e/reports/**/*.mp4
 .claude/e2e/reports/**/trace.zip
+.claude/e2e/reports/**/trace.invalid-*.zip
 ```
 
 **Check & append** (idempotent — safe to run multiple times):
@@ -119,11 +122,11 @@ E2E runs produce large binary artifacts (webm, mp4, trace.zip) that should NOT b
 ```bash
 PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 if [ -f "$PROJ_ROOT/.gitignore" ]; then
-  if ! grep -q '.claude/e2e/reports/\*\*/\*.webm' "$PROJ_ROOT/.gitignore" 2>/dev/null; then
-    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' >> "$PROJ_ROOT/.gitignore"
+  if ! grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.zip' "$PROJ_ROOT/.gitignore" 2>/dev/null; then
+    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n' >> "$PROJ_ROOT/.gitignore"
   fi
 else
-  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' > "$PROJ_ROOT/.gitignore"
+  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n' > "$PROJ_ROOT/.gitignore"
 fi
 ```
 
@@ -184,6 +187,71 @@ Add alongside existing browser artifact patterns:
 - Screencast frames in `resources/` use full filename as SHA1 (e.g., `page@xxx-timestamp.jpeg`). Use `frameSwapWallTime` (wall clock ms) for duration, NOT `timestamp` (monotonic).
 - Filter trace.network for `status >= 400` to find API failures
 - Filter trace.trace for console errors (after noise removal)
+
+### Trace finalization failure/recovery contract
+
+All pipeline producers use one executable:
+
+```bash
+TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
+TRACE_FINALIZER_RC=0
+"$TRACE_FINALIZER" \
+  --trace-path "$REPORT_DIR/trace.zip" \
+  --flow-verdict "$FLOW_VERDICT" \
+  --result-file "$REPORT_DIR/trace-finalization.env" ||
+  TRACE_FINALIZER_RC=$?
+```
+
+For an orchestrator-owned browser runtime, append
+`--browser-runtime "$BROWSER_RUNTIME" --browser-run-id "$BROWSER_RUN_ID" --app "$APP"`.
+Provide all three fields together. The finalizer passes them as fixed argv to the executable; it
+does not accept a compound command string. `team-trace-lifecycle.sh` accepts the same ownership
+fields and routes both `trace start` and finalization through that runtime.
+
+- Set `FLOW_VERDICT` from completed application steps first. Never replace it with trace
+  infrastructure status.
+- The stop attempt is bounded (default 60 seconds; override with
+  `E2E_TRACE_STOP_TIMEOUT` or `--timeout`).
+- ZIP validation runs under the same process-group watchdog (default 30 seconds; override with
+  `E2E_TRACE_VALIDATION_TIMEOUT` or `--validation-timeout`). A timeout kills validator descendants,
+  quarantines the artifact, and still writes the result contract.
+- A usable artifact must exist, be non-empty, pass the shared Python validator's full ZIP
+  read/CRC check, and contain a root-level `trace.trace` or `trace.network` entry that the analyzer
+  can consume. Nested-only entries, presence, or exit code 0 alone do not qualify.
+- Before any full ZIP read or extraction, central-directory metadata must remain within these
+  defaults: 50,000 entries, 2 GiB total uncompressed bytes, 512 MiB per entry, and 1,000:1 maximum
+  per-entry compression ratio. Trusted projects may override them with
+  `E2E_TRACE_MAX_ENTRIES`, `E2E_TRACE_MAX_TOTAL_UNCOMPRESSED_BYTES`,
+  `E2E_TRACE_MAX_ENTRY_UNCOMPRESSED_BYTES`, and `E2E_TRACE_MAX_COMPRESSION_RATIO`; invalid or
+  exceeded limits fail closed as `resource_limit_exceeded`.
+- Stop timeout/failure triggers one bounded `agent-browser close` recovery attempt (default 15
+  seconds). Use `--session <name>` for named sessions.
+- Invalid/uncertain artifacts are quarantined under
+  `trace.invalid-<reason>-<timestamp>-<pid>.zip` when the destination is writable. Otherwise the
+  result contract reports `retained_invalid`; neither disposition is accepted for analysis.
+- Dispatch trace analysis only when `analysis_eligible=true`. All other outcomes continue to
+  report generation.
+
+`trace-finalization.env` is the report contract:
+
+Treat this as data, not shell code: parse the fixed keys by splitting each line at its first `=`.
+Never `source`, `.`, `eval`, or otherwise execute `trace-finalization.env`. The finalizer rejects
+CR/LF-bearing paths, sessions, and verdicts and accepts only `PASS`, `PARTIAL`, or `FAIL` verdicts.
+
+| Field | Meaning |
+|-------|---------|
+| `flow_verdict` | Already-known application flow result |
+| `infrastructure_result` | `PASS` only for completed + valid finalization |
+| `finalization_status` | `valid`, `timeout`, `stop_failed`, `invalid_artifact`, or pre-trace `dependency_missing` |
+| `stop_status`, `stop_exit_code` | `completed`, `timeout`, or `failed` |
+| `validation_status` | `valid`, `missing`, `not_regular`, `empty`, `timeout`, `invalid_zip`, `unsafe_archive`, `resource_limit_exceeded`, `missing_playwright_content`, `validator_unavailable` |
+| `recovery_status`, `recovery_exit_code` | `not_needed`, `closed`, `timeout`, or `failed` |
+| `artifact_disposition`, `artifact_path` | Accepted, quarantined, retained invalid, or missing |
+| `analysis_eligible` | The sole dispatch gate for trace analysis |
+| `dependency_status` | Present as `missing_python3` when Python preflight fails before tracing |
+
+In `report.md`, record all rows above under **Trace Finalization**. Trace failure is an explicit
+infrastructure failure, not evidence that an otherwise observed application flow failed.
 
 ## Preconditions (Data Readiness Checks)
 

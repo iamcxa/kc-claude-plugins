@@ -26,10 +26,10 @@ REPORT_DIR="$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)" && mkdir -p "$REP
 
 ```bash
 if [ -f .gitignore ]; then
-  grep -q '.claude/e2e/reports/\*\*/\*.webm' .gitignore 2>/dev/null || \
-    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' >> .gitignore
+  grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.zip' .gitignore 2>/dev/null || \
+    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n' >> .gitignore
 else
-  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n' > .gitignore
+  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.webm\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n' > .gitignore
 fi
 ```
 
@@ -66,13 +66,27 @@ agent-browser trace start
 
 ### Multi-Site Startup (when `--sites` provided)
 
-Open a session for each site:
+Before any path interpolation or session startup, collect site aliases and mapping `app` values in
+separate Bash arrays and validate each namespace with the central rule. It rejects traversal,
+whitespace, glob/newline characters, and case/separator normalization collisions:
+
+```bash
+TRACE_IDENTIFIER_VALIDATOR="${CLAUDE_PLUGIN_ROOT}/scripts/validate-trace-identifiers.sh"
+"$TRACE_IDENTIFIER_VALIDATOR" "${SITE_ALIASES[@]}"
+"$TRACE_IDENTIFIER_VALIDATOR" "${SITE_APPS[@]}"
+TRACE_STARTED_APPS=()
+```
+
+Open a session for each site and append its validated `app` value only after `trace start`
+succeeds:
 ```bash
 # For each mapping in --sites:
 agent-browser --session <app> --profile ~/.agent-browser/<app> --headed open <base_url>
 agent-browser --session <app> wait --load networkidle
 # Verify auth per site (same flow as single-site)
 agent-browser --session <app> trace start
+# On success:
+TRACE_STARTED_APPS[${#TRACE_STARTED_APPS[@]}]="$APP"
 ```
 
 **Auth failure handling:** If a site's auth fails after 2 retry attempts, mark it SKIP. Report skipped sites before proceeding. Walkthrough continues on remaining sites.
@@ -297,17 +311,61 @@ Or if no anomalies:
 
 ## Phase 4 — Output Details
 
-### Stop Trace
+### Finalize Trace
+
+For a single-site walkthrough (no `--sites`), retain the root artifact paths:
 
 ```bash
-agent-browser trace stop "$REPORT_DIR/trace.zip"
+TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
+TRACE_FINALIZER_RC=0
+"$TRACE_FINALIZER" \
+  --trace-path "$REPORT_DIR/trace.zip" \
+  --flow-verdict "$FLOW_VERDICT" \
+  --result-file "$REPORT_DIR/trace-finalization.env" ||
+  TRACE_FINALIZER_RC=$?
 ```
 
-**Do NOT close the browser** — human may want to inspect the final state or continue exploring.
+When `--sites` is provided, finalize each named session that reached `trace start`. The mapping's
+`app` alias must be path-safe and unique; use it as `APP` so trace and finalization results cannot
+overwrite another site. Continue the loop even when one finalizer reports infrastructure failure:
+
+```bash
+TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
+for APP in "${TRACE_STARTED_APPS[@]}"; do
+  mkdir -p "$REPORT_DIR/sites/$APP"
+  SITE_FLOW_VERDICT="<derive PASS|FAIL from completed steps for $APP>"
+  SITE_TRACE_FINALIZER_RC=0
+  "$TRACE_FINALIZER" \
+    --session "$APP" \
+    --trace-path "$REPORT_DIR/sites/$APP/trace.zip" \
+    --flow-verdict "$SITE_FLOW_VERDICT" \
+    --result-file "$REPORT_DIR/sites/$APP/trace-finalization.env" ||
+    SITE_TRACE_FINALIZER_RC=$?
+  # Read and record this result before continuing to the next APP.
+done
+```
+
+Set `FLOW_VERDICT` from completed walkthrough steps before invoking the helper. Read
+the single-site `trace-finalization.env`, or every per-site result file, after the helper returns.
+The helper has four independent report surfaces:
+
+| Surface | Result field |
+|---------|--------------|
+| Application result | `flow_verdict` |
+| Bounded stop | `stop_status`, `stop_exit_code` |
+| Artifact gate | `validation_status`, `analysis_eligible` |
+| Recovery/disposition | `recovery_status`, `recovery_exit_code`, `artifact_disposition`, `artifact_path` |
+
+Successful finalization leaves the browser open for inspection. A stop timeout/failure triggers
+bounded close recovery; report generation still proceeds even if recovery also times out.
 
 ### Trace Analysis (Subagent — Enhanced)
 
-Dispatch trace analysis to isolated context to keep verbose HAR data out of the walkthrough conversation. When `step-log.json` is available, the analyzer performs step-correlated analysis and anomaly cross-reference.
+Dispatch trace analysis to isolated context only when the applicable finalization result says
+`analysis_eligible=true`. For multi-site, evaluate and dispatch each
+`$REPORT_DIR/sites/$APP/trace.zip` independently; one ineligible site does not suppress analysis
+for another eligible site. When `step-log.json` is available, the analyzer performs
+step-correlated analysis and anomaly cross-reference.
 
 | Field | Source | Required |
 |-------|--------|----------|
@@ -327,6 +385,10 @@ Agent(subagent_type="e2e-trace-analyzer"):
 **Standard returns:** `analysis_path`, `api_failures`, `console_errors`, `clean`.
 
 **Enhanced returns (when step_log provided):** Additionally: `anomalies_observed`, `anomalies_correlated`, `anomalies_unmatched`, `silent_failures`.
+
+If analysis is ineligible, do not dispatch the analyzer. Record trace analysis as N/A with the
+finalizer's infrastructure/validation reason, then continue report generation. A missing analyzer
+result does not erase step-log anomalies or change the application flow verdict.
 
 ### Anomaly Review (after trace analysis returns)
 
@@ -371,11 +433,13 @@ Skip the review menu entirely and proceed to reports.
 Before proceeding to report generation, verify these prerequisites exist:
 
 1. `$REPORT_DIR` exists and contains step screenshots from Phase 3
-2. `trace.zip` exists in `$REPORT_DIR` (from `trace stop`)
+2. `trace-finalization.env` exists and has been read
 3. `step-log.json` exists in `$REPORT_DIR` (from Phase 3 step log output)
-4. `trace-analysis.md` exists in `$REPORT_DIR` (from trace-analyzer subagent)
+4. If `analysis_eligible=true`, both `trace.zip` and `trace-analysis.md` exist. If false, the
+   invalid artifact disposition/path is recorded and `trace-analysis.md` is N/A.
 
-If any is missing, **stop and complete the missing step** before writing reports. Reports without trace analysis are incomplete — the Health Log section requires trace-analysis.md data.
+If any applicable prerequisite is missing, complete it before writing reports. An ineligible trace
+is an infrastructure result to report, not a reason to block the report indefinitely.
 
 ### Report (Dual Output)
 
@@ -423,6 +487,7 @@ flowchart TD
 | API failures | <N> |
 | Console errors | <N> |
 | Trace status | Clean / <issue summary> |
+| Trace infrastructure | PASS / FAIL |
 
 <if non-noise failures exist, add detail paragraph distinguishing app issues from infra noise>
 
@@ -442,7 +507,12 @@ flowchart TD
 - **Summary**: 2-3 sentences. Template: "Starting from `{start page}`, {path summary}. {conclusion}." Conclusion auto-select: 0 anomalies → "All steps passed." / has anomalies → "Found N issues — see Observations." / has health issues → "Found N console errors / API failures — see Health Log."
 - **Flowchart**: Covers the complete walkthrough path. See [pr-report-template.md](../../references/pr-report-template.md) § Flowchart Rules.
 - **Step Results**: One row per walkthrough step. Action = concise verb phrase. Expected = shortened expectation from flow. Result = PASS, FAIL, SKIP, or CONDITIONAL (RBAC).
-- **Health Log**: Integrate trace-analysis.md content. Always show the base 3-row table (API failures / Console errors / Trace status). When step-log cross-reference data is available, add 2 additional rows (Anomalies observed / Silent failures). If all clean, values are `0 / 0 / Clean / 0 / 0`. If failures exist, add a paragraph after the table explaining each — distinguish app issues from infra noise (e.g., Sentry 429 rate limiting). Include step-correlated detail when available (e.g., "step-3: POST /api/items 500 → TypeError").
+- **Health Log**: Always preserve the application flow result separately from trace infrastructure.
+  For eligible traces, integrate `trace-analysis.md` content. Always show API failures / Console
+  errors / Trace status plus Trace infrastructure. When step-log cross-reference data is available,
+  add Anomalies observed / Silent failures. For ineligible traces, use `N/A` for trace-derived
+  counts and report finalization timeout/stop, validation, recovery, artifact disposition/path,
+  and analysis eligibility from `trace-finalization.env`.
 - **Observations**: Key behavioral findings. Focus on: bug status (reproduced / not reproduced vs prior sessions), anomaly cross-reference insights (silent failures, cascading errors), UX quality (suggestion chips, confirmation flows), deviations from expected flow YAML. **Omit section entirely** if walkthrough was purely mechanical with no notable findings.
 - **Artifacts**: All files in `$REPORT_DIR/` — screenshots, trace.zip, trace-analysis.md, video files. One row per file.
 - **Replay**: Always the last section. Shows commands to re-run and inspect. Template:

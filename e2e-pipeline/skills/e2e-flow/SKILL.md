@@ -229,12 +229,15 @@ If `--no-verify` → **delete flow-write sentinel** → if PR mode active, commi
 ### 2a. Pre-flight (browser flows only)
 
 ```bash
+python3 --version
 agent-browser --version
 curl -s -o /dev/null -w "%{http_code}" <base_url>
 ls ~/.agent-browser/<app>/ 2>/dev/null
 ```
 
 Dev server must be running. Auth profile should exist (run `/e2e-map` or `/e2e-walkthrough` first to create one).
+Python 3 must be present before tracing. If `trace-finalization.env` is missing or unreadable after
+verification, treat it as trace infrastructure failure, skip analysis, and preserve the flow verdict.
 
 **Teams mode**: pre-flight already passed during Phase 1 pre-warm. If verifier sent `BROWSER_READY`, skip pre-flight.
 
@@ -323,12 +326,19 @@ See [reference.md](./reference.md) § Agent Dispatch Patterns for exact format.
 
 ### 2c. Dispatch trace-analyzer
 
-After verifier returns, if `trace_path` is present:
+After verifier returns, read `trace_finalization_result_path`. Dispatch only when both the verifier
+summary and result file say `trace_analysis_eligible: true` / `analysis_eligible=true`, the
+validation status is `valid`, and the trace infrastructure result is `PASS`. `trace_path`
+presence alone never qualifies.
 
 Dispatch `e2e-pipeline:e2e-trace-analyzer` with:
 - `trace_path`: From verifier output
 - `report_dir`: Same as verifier
 - `step_log_path`: From verifier output (if present)
+
+For timeout, failed stop, missing/empty/corrupt/non-Playwright ZIP, or any other ineligible result,
+do not dispatch the analyzer. Preserve the verifier's application flow status, merge the separate
+trace infrastructure fields into the report, and continue Phase 2d.
 
 ### 2d. Process results
 
@@ -337,6 +347,10 @@ Merge verifier output + trace analysis:
 - Unfixable issues
 - Checkpoint results (external execution/verification pass/fail/skip)
 - API failures and console errors from trace
+- Trace finalization timeout/stop, validation, recovery, artifact disposition, and analysis
+  eligibility (without replacing the application flow verdict)
+- Round 1 trace finalization history from `round_1_trace_finalization_result_path` when Round 2 ran;
+  a valid final trace must not hide an earlier timeout/recovery event
 - Video path
 
 If verifier applied corrections (`flow_updated: true` or `mapping_updated: true`), present a correction diff summary before the full report:
@@ -537,7 +551,7 @@ finalizer outcomes are included in metrics/JUnit and can turn an otherwise passi
 | Running verify without dev server | Pre-flight checks catch this — but verify base_url is accessible |
 | Element names not matching mapping | Flow-writer validates against mapping. Manual edits can drift — re-run `/e2e-flow` |
 | Smoke test on app with dynamic URLs | Smoke auto-skips pages with `${id}` parameters. This is correct behavior, not a bug. |
-| Skipping trace analysis | Always dispatch trace-analyzer after verifier — even on PASS. Silent API failures are invisible otherwise. |
+| Dispatching analysis from path presence | Dispatch after PASS or FAIL only when the shared finalizer says `analysis_eligible=true`; otherwise report trace infrastructure failure |
 | Re-dispatching verifier for minor fixes | Verifier does its own repair loop (2 rounds max). If it returns PARTIAL, the remaining issues are genuinely unfixable by automation. |
 | Generating browser flow without mapping | Mapping must exist for browser steps. `/e2e-map` before `/e2e-flow`. CLI-only flows (all Execute/Verify external) do NOT need mapping. |
 | Sending CLI-only flow to browser verifier | CLI-only flows skip Phase 2a-2d entirely. Go directly to Phase 2.5 CLI recording. |

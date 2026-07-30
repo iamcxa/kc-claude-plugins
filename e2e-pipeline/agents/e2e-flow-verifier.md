@@ -42,7 +42,8 @@ Before starting, read these reference files for CLI command patterns:
 
 ### Phase 1 — Setup
 
-1. **Gitignore housekeeping**: Ensure `report_dir` parent has `*.webm`, `*.mp4`, `trace.zip` in `.gitignore`
+1. **Gitignore housekeeping**: Ensure `report_dir` parent has `*.webm`, `*.mp4`, `trace.zip`, and
+   `trace.invalid-*.zip` in `.gitignore`
 2. **Pre-flight checks**:
    ```bash
    agent-browser --version
@@ -62,6 +63,7 @@ Before starting, read these reference files for CLI command patterns:
    - Verify URL against `auth.verification.url_not_contains`
 7. **Start trace**:
    ```bash
+   python3 --version  # Required before tracing; stop before trace start if unavailable.
    agent-browser trace start
    ```
 
@@ -152,6 +154,37 @@ If diagnosis finds no correctable cause → log as `unfixable` with symptom + DO
 ```
 
 **After all steps:**
+- Compute `ROUND_1_FLOW_VERDICT` from the already-known step results (`PASS`, `PARTIAL`, or
+  `FAIL`). Preserve it independently from trace infrastructure.
+- Finalize Round 1 through the shared executable before branching:
+  - Corrections with no unfixable issues (Round 2 will run): save to
+    `$REPORT_DIR/round-1/trace.zip`, result
+    `$REPORT_DIR/round-1/trace-finalization.env`.
+  - All other outcomes (Round 1 is final): save to `$REPORT_DIR/trace.zip`, result
+    `$REPORT_DIR/trace-finalization.env`.
+
+  ```bash
+  if [ "$corrections" -gt 0 ] && [ "$unfixable" -eq 0 ]; then
+    ROUND_1_TRACE_PATH="$REPORT_DIR/round-1/trace.zip"
+    ROUND_1_FINALIZATION_RESULT="$REPORT_DIR/round-1/trace-finalization.env"
+  else
+    ROUND_1_TRACE_PATH="$REPORT_DIR/trace.zip"
+    ROUND_1_FINALIZATION_RESULT="$REPORT_DIR/trace-finalization.env"
+  fi
+
+  TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
+  TRACE_FINALIZER_RC=0
+  "$TRACE_FINALIZER" \
+    --trace-path "$ROUND_1_TRACE_PATH" \
+    --flow-verdict "$ROUND_1_FLOW_VERDICT" \
+    --result-file "$ROUND_1_FINALIZATION_RESULT" ||
+    TRACE_FINALIZER_RC=$?
+  ```
+
+  Read the result file. If `trace-finalization.env` is missing or unreadable, record an
+  infrastructure failure with analysis ineligible and preserve the application verdict. A non-zero finalizer result is an infrastructure failure; it does not
+  replace `ROUND_1_FLOW_VERDICT`, and it must not block report generation. The helper performs
+  bounded close recovery when trace stop times out or fails.
 - If `corrections > 0 && unfixable == 0`:
   1. Write corrected flow YAML to `flow_path` (overwrite)
   2. Write corrected mapping YAML to `mapping_path` (overwrite, safety rules apply)
@@ -168,19 +201,30 @@ If diagnosis finds no correctable cause → log as `unfixable` with symptom + DO
 
 **Browser lifecycle between rounds:**
 ```bash
-# 1. Stop trace from Round 1
-agent-browser trace stop
+# 1. Round 1 trace was already finalized through the shared finalizer above.
+# 2. Close only after a completed stop. Failed/timeout stops already used bounded recovery;
+#    never follow them with another unbounded close.
+if [ "$round_1_stop_status" = "completed" ]; then
+  agent-browser close
+elif [ "$round_1_recovery_status" != "closed" ]; then
+  # Recovery was bounded but unsuccessful. Skip Round 2 and continue Phase 4 reporting.
+  ROUND_2_SKIPPED_REASON="trace recovery $round_1_recovery_status"
+fi
 
-# 2. Close browser (wait for daemon shutdown)
-agent-browser close
-sleep 3
+if [ -z "${ROUND_2_SKIPPED_REASON:-}" ]; then
+  sleep 3
 
-# 3. Reopen browser with auth profile (no recording needed)
-agent-browser --profile <auth_profile> --headed open "<base_url>"
+  # 3. Reopen browser with auth profile (no recording needed)
+  agent-browser --profile <auth_profile> --headed open "<base_url>"
 
-# 4. Start trace
-agent-browser trace start
+  # 4. Start trace
+  agent-browser trace start
+fi
 ```
+
+If `ROUND_2_SKIPPED_REASON` is set, do not execute the sleep/reopen/start commands or Round 2
+steps. Proceed directly to Phase 4 with the preserved Round 1 flow verdict and trace infrastructure
+failure.
 
 **Execute corrected flow:**
 For each step: snapshot → action → `wait networkidle` → screenshot → `errors --json`
@@ -191,8 +235,20 @@ Record step timing and anomalies for step-log.json.
 
 **Finish:**
 ```bash
-agent-browser trace stop "$REPORT_DIR/trace.zip"
+ROUND_2_FLOW_VERDICT=PASS
+[ "$unfixable" -gt 0 ] && ROUND_2_FLOW_VERDICT=FAIL
+
+TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
+TRACE_FINALIZER_RC=0
+"$TRACE_FINALIZER" \
+  --trace-path "$REPORT_DIR/trace.zip" \
+  --flow-verdict "$ROUND_2_FLOW_VERDICT" \
+  --result-file "$REPORT_DIR/trace-finalization.env" ||
+  TRACE_FINALIZER_RC=$?
 ```
+
+Read `$REPORT_DIR/trace-finalization.env`. Continue to Phase 4 even when the finalizer returns
+non-zero. Trace analysis is eligible only when the file says `analysis_eligible=true`.
 
 **Write step-log.json:**
 ```json
@@ -213,7 +269,10 @@ agent-browser trace stop "$REPORT_DIR/trace.zip"
 
 ### Phase 4 — Output
 
-**Note:** Trace analysis is NOT your responsibility. The orchestrator skill dispatches the trace-analyzer agent separately. You save trace.zip + step-log.json, and the skill handles the rest.
+**Note:** Trace analysis is NOT your responsibility. The orchestrator skill dispatches the
+trace-analyzer separately only when `trace_analysis_eligible=true`. You save the finalization
+contract + step-log.json; valid traces remain `trace.zip`, while invalid artifacts may be
+quarantined.
 
 #### 4a. Report (report.md)
 
@@ -236,6 +295,26 @@ Write `$REPORT_DIR/report.md`:
 | Failed | N |
 | Corrections | N (R repair, A adapt, E enrich) |
 | Unfixable | N |
+
+## Trace Finalization
+
+| Field | Result |
+|-------|--------|
+| Flow verdict | `<flow_verdict>` |
+| Infrastructure result | `<infrastructure_result>` |
+| Trace stop | `<stop_status>` (exit `<stop_exit_code>`) |
+| Validation | `<validation_status>` |
+| Recovery | `<recovery_status>` (exit `<recovery_exit_code>`) |
+| Artifact disposition | `<artifact_disposition>` — `<artifact_path>` |
+| Trace analysis eligible | `<analysis_eligible>` |
+
+When Round 2 ran, also include the Round 1 contract so a later valid trace cannot erase an earlier
+timeout/failure:
+
+| Round | Flow verdict | Infrastructure | Stop | Validation | Recovery | Disposition | Analysis eligible |
+|-------|--------------|----------------|------|------------|----------|-------------|-------------------|
+| 1 | `<flow_verdict>` | `<infrastructure_result>` | `<stop_status>` | `<validation_status>` | `<recovery_status>` | `<artifact_disposition>` — `<artifact_path>` | `<analysis_eligible>` |
+| 2 (final) | `<flow_verdict>` | `<infrastructure_result>` | `<stop_status>` | `<validation_status>` | `<recovery_status>` | `<artifact_disposition>` — `<artifact_path>` | `<analysis_eligible>` |
 
 ## Corrections Applied
 
@@ -368,6 +447,14 @@ checkpoint_results:
     status: <pass|fail|skip>
     detail: <description>
 trace_path: <absolute path to trace.zip>
+trace_finalization_result_path: <absolute path to trace-finalization.env>
+round_1_trace_finalization_result_path: <absolute path when Round 2 ran, otherwise empty>
+trace_infrastructure_result: <PASS|FAIL>
+trace_finalization_status: <valid|timeout|stop_failed|invalid_artifact|dependency_missing>
+trace_validation_status: <valid|missing|not_regular|empty|timeout|invalid_zip|unsafe_archive|resource_limit_exceeded|missing_playwright_content|validator_unavailable>
+trace_recovery_status: <not_needed|closed|timeout|failed>
+trace_artifact_disposition: <accepted|quarantined|retained_invalid|missing>
+trace_analysis_eligible: <true|false>
 step_log_path: <absolute path to step-log.json>
 ```
 
@@ -383,8 +470,11 @@ step_log_path: <absolute path to step-log.json>
 16. **Do not accept eval-fallback as a passing assertion** — If a step's `expect:` clause was satisfied only because eval-fallback returned truthy (i.e., `agent-browser eval` was used as a workaround after a native selector returned not-found/false), the verifier MUST flag it as a **silent-pass**, not a real-pass. A silent-pass is treated as an `unfixable` issue: it means the selector is broken and must be repaired to a native form before the result is trustworthy. Record it as: `{ step_id, correction_type: "silent-pass", detail: "expect satisfied via eval-fallback, not native selector — repair required" }`.
 10. **Write-back always happens** — Even on partial/fail. Corrections that did work are still valuable.
 11. **Mapping safety** — Only update elements referenced by THIS flow. Preserve everything else.
-12. **Don't dispatch other agents** — You cannot dispatch subagents. Save trace.zip and step-log.json; the skill handles trace analysis.
-13. **Never close browser at end** — Leave it open. The skill or user may need to inspect final state.
+12. **Don't dispatch other agents** — You cannot dispatch subagents. Save the trace-finalization
+    result and step-log.json; the skill enforces analysis eligibility.
+13. **Never close browser after successful finalization** — Leave it open. On trace-stop timeout
+    or failure, the shared finalizer performs bounded close recovery so cleanup and reporting remain
+    reachable.
 14. **`_correction` metadata** — Add to every inserted/enriched step. Test-runner ignores it but reviewers use it.
 15. **Best-effort external checkpoints** — Steps with `action: "Verify external"` or `action: "Execute external"` skip browser interaction but attempt CLI/curl execution. Failures are always `warn` (never block Round 2). No snapshot, no element resolution. See § External Checkpoint Execution.
 
@@ -419,6 +509,18 @@ Parse `flow_path`, `mapping_path`, `base_url`, `auth_profile`, `record` from the
 
 **State isolation check** (see `references/agent-teams.md` § 5): if `base_url` or `auth_profile` differs from the current browser session → close and reopen browser with the new profile before starting verification.
 
+Start one fresh trace for this verification command. A previous `VERIFY_FLOW` finalized its own
+trace, so persistent browser reuse does not imply trace reuse:
+
+```bash
+python3 --version
+agent-browser trace start
+```
+
+If trace start fails, retain that independent infrastructure failure and continue Round 1 so the
+application verdict remains observable. The shared finalizer will fail closed and report the
+artifact as ineligible.
+
 Execute **Round 1 only** (Phase 2 — Fix Run). After Round 1 completes, send status to lead:
 
 ```
@@ -443,7 +545,7 @@ After Round 2 (or skip), write reports (Phase 4) and send final results:
 ```
 SendMessage(
   to="lead",
-  message="VERIFICATION COMPLETE\nstatus: PASS|PARTIAL|FAIL\ntotal_steps: N\ncorrections: N (R repair, A adapt, E enrich)\nunfixable: N\ncheckpoints: N pass, M fail, K skip\nflow_updated: true|false\nmapping_updated: true|false\nreport_path: <path>\ntrace_path: <path>\nrounds: <1|2>\n\nCorrections:\n- <step>: <type> (<details>)\n\nUnfixable:\n- <step>: <reason>",
+  message="VERIFICATION COMPLETE\nstatus: PASS|PARTIAL|FAIL\ntotal_steps: N\ncorrections: N (R repair, A adapt, E enrich)\nunfixable: N\ncheckpoints: N pass, M fail, K skip\nflow_updated: true|false\nmapping_updated: true|false\nreport_path: <path>\ntrace_path: <accepted path or N/A>\ntrace_finalization_result_path: <path>\ntrace_infrastructure_result: PASS|FAIL\ntrace_analysis_eligible: true|false\nrounds: <1|2>\n\nCorrections:\n- <step>: <type> (<details>)\n\nUnfixable:\n- <step>: <reason>",
   summary="Verify: <status>, N corrections"
 )
 ```

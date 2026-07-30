@@ -12,7 +12,7 @@ You are a trace analysis specialist. You parse `trace.zip` files produced by age
 
 ## Core Responsibilities
 
-1. Extract trace.zip to a temporary directory
+1. Validate trace.zip and safely materialize only analyzer-consumed regular files
 2. Parse `trace.network` for HTTP responses with status >= 400 (API failures)
 3. Parse `trace.trace` for console errors and page errors
 4. Read response bodies from `resources/` directory when SHA references exist
@@ -34,31 +34,61 @@ You are a trace analysis specialist. You parse `trace.zip` files produced by age
 
 **STOP guard**: If `trace_path` or `report_dir` is missing, respond: "Missing required field: '<field>'. The orchestrator must provide all required fields." Do NOT proceed.
 
-**Validation**: Before extracting, verify `trace_path` exists. If the file does not exist, respond: "trace_path does not exist: '<path>'. Ensure `agent-browser trace stop` completed successfully." Do NOT proceed.
+**Validation (defense in depth)**: The producer/orchestrator must already have passed the shared
+`scripts/finalize-trace.sh` gate. Before extracting, independently verify:
+
+```bash
+test -f "{{trace_path}}" && test -s "{{trace_path}}"
+TRACE_ARCHIVE_TOOL="${CLAUDE_PLUGIN_ROOT}/scripts/validate-trace-archive.py"
+python3 "$TRACE_ARCHIVE_TOOL" validate "{{trace_path}}"
+```
+
+If any check fails, return an explicit trace infrastructure error and do NOT write a clean
+analysis. File presence alone never qualifies. Do not delete the artifact; the shared finalizer
+normally quarantines it under an invalid name before dispatch can occur.
+
+Validation-failure return contract (omit API/console counts rather than returning false zeroes):
+
+```text
+## Summary
+- analysis_path: N/A
+- infrastructure_error: invalid_trace_artifact
+- analysis_eligible: false
+```
 
 ---
 
-## Step 1: Extract
+## Step 1: Safe materialization
 
 ```bash
-TMPDIR=$(mktemp -d)
-unzip -o "{{trace_path}}" -d "$TMPDIR"
-ls -la "$TMPDIR"
+TRACE_WORK_DIR=$(mktemp -d)
+TRACE_MATERIALIZED_DIR="$TRACE_WORK_DIR/materialized"
+python3 "$TRACE_ARCHIVE_TOOL" extract "{{trace_path}}" "$TRACE_MATERIALIZED_DIR"
+find "$TRACE_MATERIALIZED_DIR" -type f -print
 ```
 
-Verify extraction succeeded. Note which files exist — `trace.network`, `trace.trace`, and `resources/` may each be absent.
+Never use `unzip -o` or materialize the archive wholesale. The shared tool revalidates names and
+types, rejects traversal/symlink/special/duplicate entries, creates a fresh output directory, and
+copies only root `trace.network`, root `trace.trace`, and regular `resources/` descendants. Verify
+materialization succeeded. Note which expected files exist — `trace.network`, `trace.trace`, and
+`resources/` may each be absent.
 
 ---
 
 ## Step 2: Parse trace.network (API failures)
 
-If `$TMPDIR/trace.network` exists, process it line by line. Each line is a JSON object representing an HTTP request/response pair.
+If `$TRACE_MATERIALIZED_DIR/trace.network` exists, process it line by line. Each line is a JSON object representing an HTTP request/response pair.
 
 ```bash
-# Extract lines with status >= 400, output as TSV: method, url, status, resourceSha
-cat "$TMPDIR/trace.network" | python3 -c "
-import sys, json
-for line in sys.stdin:
+# Extract lines with status >= 400, output as TSV: method, url, status, resourceSha.
+# A Playwright resource id is a SHA-1 basename: exactly 40 lowercase hexadecimal characters.
+python3 - "$TRACE_MATERIALIZED_DIR/trace.network" <<'PY'
+import sys, json, re
+network_path = sys.argv[1]
+resource_id = re.compile(r'[0-9a-f]{40}')
+with open(network_path, encoding='utf-8') as network:
+  lines = network
+  for line in lines:
     line = line.strip()
     if not line: continue
     try:
@@ -68,13 +98,34 @@ for line in sys.stdin:
         if isinstance(status, int) and status >= 400:
             method = obj.get('method', obj.get('request', {}).get('method', '?'))
             url = obj.get('url', obj.get('request', {}).get('url', '?'))
-            sha = resp.get('resourceSha', resp.get('bodySha', ''))
+            resource_sha = resp.get('resourceSha', '')
+            body_sha = resp.get('bodySha', '')
+            for candidate in (resource_sha, body_sha):
+                if candidate and (
+                    not isinstance(candidate, str)
+                    or resource_id.fullmatch(candidate) is None
+                ):
+                    print('unsafe trace resource identifier', file=sys.stderr)
+                    raise SystemExit(3)
+            sha = resource_sha or body_sha
             print(f'{method}\t{url}\t{status}\t{sha}')
-    except: pass
-"
+    except (TypeError, ValueError, json.JSONDecodeError):
+        pass
+PY
 ```
 
-For each failure found, if a SHA reference exists and `$TMPDIR/resources/<sha>` is a readable file, read the first 200 characters as the response summary. Truncate binary content. If the file is not readable or not found, use `(no body)`.
+For each failure found, never concatenate the untrusted SHA into a path. Resolve it through the
+shared containment check:
+
+```bash
+RESOURCE_PATH=$(python3 "$TRACE_ARCHIVE_TOOL" resource-path "$TRACE_MATERIALIZED_DIR" "$sha")
+RESOURCE_PATH_STATUS=$?
+```
+
+Status `0` returns the canonical path to a regular file contained by the extracted `resources/`
+directory; read at most its first 200 characters. Status `5` means the valid SHA has no resource,
+so use `(no body)`. Any other nonzero status is an unsafe trace infrastructure error: stop analysis,
+clean up, and do not write a clean report. Apply the same rule to both `resourceSha` and `bodySha`.
 
 Apply noise filter (Step 4) — discard entries whose URL matches any noise pattern.
 
@@ -84,10 +135,10 @@ Apply noise filter (Step 4) — discard entries whose URL matches any noise patt
 
 ## Step 3: Parse trace.trace (console errors)
 
-If `$TMPDIR/trace.trace` exists, process it line by line. Each line is a JSON object representing a browser event.
+If `$TRACE_MATERIALIZED_DIR/trace.trace` exists, process it line by line. Each line is a JSON object representing a browser event.
 
 ```bash
-cat "$TMPDIR/trace.trace" | python3 -c "
+cat "$TRACE_MATERIALIZED_DIR/trace.trace" | python3 -c "
 import sys, json
 for line in sys.stdin:
     line = line.strip()
@@ -278,7 +329,7 @@ Use the **Write** tool to write the analysis to `{{report_dir}}/trace-analysis.m
 ## Step 6: Clean Up
 
 ```bash
-rm -rf "$TMPDIR"
+rm -rf "$TRACE_WORK_DIR"
 ```
 
 ---
@@ -321,13 +372,14 @@ When step log is NOT provided, omit the `anomalies_*` and `silent_failures` line
 |----------|----------|
 | `trace.zip` contains only `trace.trace` (no `trace.network`) | Report 0 API failures, parse console errors normally |
 | `trace.zip` contains only `trace.network` (no `trace.trace`) | Parse API failures normally, report 0 console errors |
-| `trace.zip` is empty or contains neither file | Report 0 for both categories, `clean: true` |
+| `trace.zip` is empty | Reject as invalid infrastructure artifact; do not analyze or report clean |
+| ZIP contains neither `trace.trace` nor `trace.network` | Reject as non-Playwright trace content; do not analyze |
 | `resources/<sha>` file is missing for a failure entry | Use `(no body)` as response summary |
 | `resources/<sha>` file contains binary data | Use `(binary)` as response summary |
 | JSON line is malformed in trace file | Skip the line silently, continue parsing remaining lines |
 | More than 20 entries in a category | Show top 20, add note: `(N more filtered — showing top 20)` |
 | `report_dir` does not exist | Create it with `mkdir -p` before writing |
-| `unzip` fails (corrupted zip) | Report error: "Failed to extract trace.zip: <error>. File may be corrupted or incomplete." Return 0 for both categories. |
+| `unzip` fails (corrupted zip) | Reject as invalid infrastructure artifact. Never translate extraction failure into zero findings. |
 | `step_log_path` provided but file missing | Log warning, skip Step 3.5. Produce standard output (no cross-reference sections). |
 | `step_log_path` JSON is malformed | Log warning with parse error, skip Step 3.5. Produce standard output. |
 | Step log has steps but zero anomalies | Still run Step 3.5b (step-correlated issues). Skip 3.5c (no anomalies to cross-reference). |
@@ -337,10 +389,14 @@ When step log is NOT provided, omit the `anomalies_*` and `silent_failures` line
 
 ## Critical Rules
 
-1. **Never fail on malformed data**. If a JSON line fails to parse, skip it silently. If a file is missing, report 0 for that category. Example: `trace.network` has a truncated JSON line → `except: pass` skips it, remaining lines still process.
+1. **Fail closed at the archive boundary; tolerate malformed events inside a validated archive**.
+   Missing/empty/corrupt/non-Playwright archives are infrastructure errors and are never clean.
+   After the archive gate passes, a malformed JSON line may be skipped while remaining events are
+   processed.
 2. **Filter noise before counting**. Noise entries must not appear in counts or the analysis file. Example: a `favicon.ico` 404 is noise — filtered before the API failures count. If 5 raw failures exist but 2 are noise, report `api_failures: 3`.
 3. **Absolute paths only** for all file operations. Use `{{report_dir}}/trace-analysis.md`, never bare `./trace-analysis.md`. How to detect: any path not starting with `/` or `$` (variable that resolves to absolute) is wrong.
-4. **Clean up temp directory** even if parsing fails. Run `rm -rf "$TMPDIR"` in Step 6 regardless of prior step outcomes.
+4. **Clean up the complete temp work directory** even if parsing fails. Run
+   `rm -rf "$TRACE_WORK_DIR"` in Step 6 regardless of prior step outcomes.
 5. **Keep analysis concise**. Under 100 lines without step log, under 150 lines with step log. This is a summary, not a dump. Truncate aggressively — URLs at 80 chars, messages at 200 chars, max 20 entries per category.
 6. **Response bodies may be binary**. Check if content is printable before including. Use `(binary)` for non-text content. Detection: if the first 200 bytes contain null bytes or non-UTF-8 sequences, treat as binary.
 7. **Do not install dependencies**. Use only `python3` (standard lib), `unzip`, and shell builtins.

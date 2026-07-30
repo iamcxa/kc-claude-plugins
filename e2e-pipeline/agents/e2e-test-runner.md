@@ -85,10 +85,10 @@ Ensure large binary artifacts are git-ignored before writing any files. Run once
 mkdir -p "{{report_dir}}"
 PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || dirname "$(dirname "{{report_dir}}")")
 if [ -f "$PROJ_ROOT/.gitignore" ]; then
-  grep -q '.claude/e2e/reports/\*\*/\*.mp4' "$PROJ_ROOT/.gitignore" 2>/dev/null || \
-    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/*.gif\n' >> "$PROJ_ROOT/.gitignore"
+  grep -q '.claude/e2e/reports/\*\*/trace.invalid-\*\.zip' "$PROJ_ROOT/.gitignore" 2>/dev/null || \
+    printf '\n# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/*.gif\n' >> "$PROJ_ROOT/.gitignore"
 else
-  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/*.gif\n' > "$PROJ_ROOT/.gitignore"
+  printf '# E2E pipeline artifacts (large binary files)\n.claude/e2e/reports/**/*.mp4\n.claude/e2e/reports/**/trace.zip\n.claude/e2e/reports/**/trace.invalid-*.zip\n.claude/e2e/reports/**/*.gif\n' > "$PROJ_ROOT/.gitignore"
 fi
 ```
 
@@ -97,12 +97,14 @@ fi
 Run these checks and STOP with a clear error if any critical check fails:
 
 ```bash
+python3 --version                                                   # Required before tracing
 {{browser_command}} --version                                              # CLI installed?
 curl -s -o /dev/null -w "%{http_code}" {{base_url}}                  # Server reachable? 2xx/3xx = OK
 ls {{auth_profile}} 2>/dev/null                                      # Auth profile exists?
 ```
 
-- If `agent-browser` is not installed, STOP: "agent-browser CLI not found."
+- If `python3` is not installed, STOP before `trace start`: "python3 is required for safe trace finalization."
+- If `{{browser_command}} --version` fails, STOP: "Owned browser runtime is unavailable."
 - If server returns 000/4xx/5xx, STOP: "Server not reachable at {{base_url}}."
 - If auth profile missing AND mapping `auth.type` is NOT "none", WARN but continue (auth verify will catch it).
 
@@ -390,17 +392,41 @@ When the step has `action: "Execute external"`, skip all browser interaction (no
 
 ## Phase 3: Report
 
-### 3a. Stop Trace
+### 3a. Finalize Trace (bounded, fail-closed)
+
+Compute and preserve the application result **before** trace finalization:
 
 ```bash
-{{browser_command}} trace stop "{{report_dir}}/trace.zip"
+FLOW_VERDICT=PASS
+[ "$failed" -gt 0 ] && FLOW_VERDICT=FAIL
+
+TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
+TRACE_FINALIZER_RC=0
+"$TRACE_FINALIZER" \
+  --browser-runtime "{{browser_runtime}}" \
+  --browser-run-id "{{browser_run_id}}" \
+  --app "{{app}}" \
+  --trace-path "{{report_dir}}/trace.zip" \
+  --flow-verdict "$FLOW_VERDICT" \
+  --result-file "{{report_dir}}/trace-finalization.env" ||
+  TRACE_FINALIZER_RC=$?
 ```
 
-Do NOT close browser after stopping trace.
+Read `trace-finalization.env` and carry every field into § 3c and § 3d. A non-zero
+`TRACE_FINALIZER_RC` is an infrastructure result, not an application-flow failure. Continue to
+report generation. Dispatch trace analysis only when `analysis_eligible=true`.
+If `trace-finalization.env` is missing or unreadable, synthesize a trace infrastructure failure
+with `trace_analysis_eligible: false`; never infer success from the finalizer exit code or path.
 
-### 3b. Do NOT Close Browser
+The finalizer bounds `trace stop`, validates existence, non-empty size, ZIP integrity, and
+Playwright trace entries, and runs bounded close recovery through the owned browser runtime after a
+stop timeout or failure. On successful finalization, leave the browser open. Recovery may have
+closed it after an infrastructure failure.
 
-The human may want to inspect the browser state after the test. Leave it open.
+### 3b. Browser State
+
+After successful finalization, leave the browser open for human inspection. If stop timed out or
+failed, report the finalizer's bounded recovery result; do not assume a session remains open.
 
 ### 3c. Write Report
 
@@ -425,6 +451,8 @@ Write `{{report_dir}}/report.md` with the following structure:
 | Not Automated | N |
 | Console Errors | N |
 | API Failures | N |
+| Flow Verdict | PASS / FAIL |
+| Trace Infrastructure | PASS / FAIL |
 
 ## Evidence
 
@@ -433,7 +461,9 @@ Write `{{report_dir}}/report.md` with the following structure:
 | Steps GIF | [steps.gif](./steps.gif) _(via media agent)_ |
 | Video | [test-run.mp4](./test-run.mp4) _(via media agent)_ |
 | Thumbnail | [thumbnail.png](./thumbnail.png) _(via media agent)_ |
-| Trace (interactive) | [trace.zip](./trace.zip) |
+| Trace finalization | [trace-finalization.env](./trace-finalization.env) |
+| Trace (interactive) | [trace.zip](./trace.zip) _(only when `analysis_eligible=true`)_ |
+| Invalid trace artifact | `<artifact_path>` _(only when quarantined/retained invalid)_ |
 
 _(Media rows only if `video` was true)_
 
@@ -468,13 +498,25 @@ _(Include this section only when the flow contains `verify-external` steps)_
 - N console errors (after noise filter)
 - N API failures (4xx/5xx)
 
+## Trace Finalization
+
+| Field | Result |
+|-------|--------|
+| Flow verdict | `<flow_verdict>` |
+| Infrastructure result | `<infrastructure_result>` |
+| Trace stop | `<stop_status>` (exit `<stop_exit_code>`) |
+| Validation | `<validation_status>` |
+| Recovery | `<recovery_status>` (exit `<recovery_exit_code>`) |
+| Artifact disposition | `<artifact_disposition>` — `<artifact_path>` |
+| Trace analysis eligible | `<analysis_eligible>` |
+
 ## Replay
 
 | Action | Command |
 |--------|---------|
 | Re-run this test | `/e2e-test {{flow_name}}` |
 | Re-run with video | `/e2e-test {{flow_name}} --video` |
-| View trace | `npx playwright show-trace {{report_dir}}/trace.zip` |
+| View trace | `npx playwright show-trace {{report_dir}}/trace.zip` _(only when `analysis_eligible=true`)_ |
 
 > **Tip:** The `.claude/e2e/reports/` directory can be gitignored — only `.claude/e2e/flows/` and `.claude/e2e/mappings/` are needed to reproduce results.
 ```
@@ -492,6 +534,15 @@ You MUST end your response with this exact structured block (the orchestrator pa
 - not_automated: N
 - console_errors: N
 - api_failures: N
+- flow_verdict: PASS|FAIL
+- trace_infrastructure_result: PASS|FAIL
+- trace_finalization_status: valid|timeout|stop_failed|invalid_artifact|dependency_missing
+- trace_validation_status: valid|missing|not_regular|empty|timeout|invalid_zip|unsafe_archive|resource_limit_exceeded|missing_playwright_content|validator_unavailable
+- trace_recovery_status: not_needed|closed|timeout|failed
+- trace_artifact_disposition: accepted|quarantined|retained_invalid|missing
+- trace_path: <artifact_path from trace-finalization.env>
+- trace_finalization_result_path: {{report_dir}}/trace-finalization.env
+- trace_analysis_eligible: true|false
 - report_path: {{report_dir}}/report.md
 - video: true|false    ← (echoes input, orchestrator uses this to decide media dispatch)
 - key_findings:
@@ -537,7 +588,7 @@ Where:
 
 At run end, `eval_fallback_hits` MUST appear in **both** of the following places:
 
-**1. Trace summary** — append to the trace stop output section:
+**1. Trace summary** — append to the trace finalization output section:
 
 ```
 eval_fallback_hits: <N>
@@ -554,6 +605,15 @@ eval_fallback_hits: <N>
 - console_errors: N
 - api_failures: N
 - eval_fallback_hits: N
+- flow_verdict: PASS|FAIL
+- trace_infrastructure_result: PASS|FAIL
+- trace_finalization_status: valid|timeout|stop_failed|invalid_artifact|dependency_missing
+- trace_validation_status: valid|missing|not_regular|empty|timeout|invalid_zip|unsafe_archive|resource_limit_exceeded|missing_playwright_content|validator_unavailable
+- trace_recovery_status: not_needed|closed|timeout|failed
+- trace_artifact_disposition: accepted|quarantined|retained_invalid|missing
+- trace_path: <artifact_path from trace-finalization.env>
+- trace_finalization_result_path: {{report_dir}}/trace-finalization.env
+- trace_analysis_eligible: true|false
 - report_path: {{report_dir}}/report.md
 - video: true|false
 - key_findings:
@@ -617,7 +677,9 @@ These rules are non-negotiable. Violating them causes flaky or broken tests.
 5. **`fill` over `click+type`** for form inputs. `fill` is atomic (focus + clear + type). `click` then `type` can break when @ref changes on focus.
 6. **`is visible` exit code is always 0**. Check stdout text "true"/"false", NOT the exit code. Do NOT use `&& echo pass || echo fail`.
 7. **`scroll` accepts direction only** (up/down). To scroll TO a specific element, use `hover @ref` which scrolls it into view.
-8. **Do NOT close browser** after test completes. Human may inspect.
+8. **Do NOT close browser after successful trace finalization**. Human may inspect. On trace-stop
+   timeout/failure, the shared finalizer performs bounded close recovery so report generation stays
+   reachable.
 9. **React Native Web**: Text elements render twice in DOM (nth=0 is hidden). Prefer `[role="<r>"][aria-label="<v>"]` CSS attribute selector for tab bars and interactive elements (directly targets the correct accessible element). For text-only elements use `find text "<v>"` or `:nth-of-type(2)` CSS pseudo. BANNED: `>> nth=N` chord and `role=X[name=...]` Playwright forms — see `e2e-pipeline/scripts/lint-mapping.sh`. DEPRECATED as selector value: `find role <r> --name "<v>"` strings — these are subcommand chains, not selector grammar (PR #8 course correction).
 10. **Ant Design**: CSS-hidden inputs (e.g., Segmented control radio buttons). `is visible` returns false even when the component is rendered. Verify via snapshot a11y tree instead.
 11. **Multi-site flows**: The shared runtime always supplies `--app {{app}}`, which maps to the isolated browser session. Do not add a second `--session` flag.
@@ -636,12 +698,15 @@ When your spawn prompt starts with **"TEAMS MODE"**, you operate as a persistent
 ### Startup
 
 Follow `references/agent-teams.md` § 3:
-1. Pre-flight checks (Phase 1: Setup) — same as subagent mode
-2. Open browser + auth + wait for load
-3. Set `active_browser_run_id` to the dispatched `browser_run_id`
-4. Send `BROWSER_READY` to lead (include `target_url`, `role`, `app`, `browser_run_id`)
-5. If `--headed` auth needed: send `WAITING_FOR_AUTH`, wait for `AUTH_COMPLETE`, then `BROWSER_READY`
-6. **Stop turn** — go idle
+1. Run pre-flight and runtime ownership checks (Phase 1 through § 1b).
+2. Open browser, wait for load, and verify auth (Phase 1 § 1c through § 1d).
+3. Set `active_browser_run_id` to the dispatched `browser_run_id`.
+4. **Do not run § 1e trace start during persistent startup.** `EXECUTE_FLOW` starts its own fresh
+   trace; step-routed work starts through `BEGIN_FLOW`.
+5. Send `BROWSER_READY` to lead (include `target_url`, `role`, `app`, `browser_run_id`).
+6. If `--headed` auth is needed, send `WAITING_FOR_AUTH`, wait for `AUTH_COMPLETE`, then
+   `BROWSER_READY`.
+7. **Stop turn** — go idle
 
 ### On receiving EXECUTE_FLOW message
 
@@ -656,12 +721,14 @@ browser_run_id: <same invocation id>
 
 Apply the Browser Command Contract before execution, rejecting an identity mismatch.
 
-Execute the full flow (Phase 2 + Phase 3 as normal). After completion, send results:
+Start one fresh trace for this command, then execute the full flow (Phase 2 + Phase 3 as normal).
+Phase 3 finalizes it exactly once. `EXECUTE_FLOW` never receives `BEGIN_FLOW` or `FINALIZE_FLOW`.
+After completion, send results:
 
 ```
 SendMessage(
   to="lead",
-  message="FLOW COMPLETE\ntotal_steps: N\npassed: N\nfailed: N\nskipped: N\nnot_automated: N\nconsole_errors: N\napi_failures: N\nreport_path: <path>\n\nStep Results:\n| Step | Result | Details |\n|------|--------|---------|\n| <id> | PASS | ... |\n| <id> | FAIL | <reason> |\n| <id> | NOT_AUTOMATED | <reason> |\n\nkey_findings:\n- <finding>",
+  message="FLOW COMPLETE\ntotal_steps: N\npassed: N\nfailed: N\nskipped: N\nnot_automated: N\nconsole_errors: N\napi_failures: N\nreport_path: <path>\ntrace_path: <accepted path or N/A>\ntrace_finalization_result_path: <path>\ntrace_infrastructure_result: PASS|FAIL\ntrace_analysis_eligible: true|false\n\nStep Results:\n| Step | Result | Details |\n|------|--------|---------|\n| <id> | PASS | ... |\n| <id> | FAIL | <reason> |\n| <id> | NOT_AUTOMATED | <reason> |\n\nkey_findings:\n- <finding>",
   summary="Flow: N/M PASS"
 )
 ```
@@ -672,11 +739,13 @@ SendMessage(
 
 Execute a SINGLE step from a cross-site flow (lead routes steps by `site:`):
 
-1. Require `browser_runtime` and `browser_run_id`, then apply the Browser Command Contract
-2. Parse step definition from message (`id`, `action`, `expect`, `context`)
-3. If `context:` present — inject variables into action/expect templates
-4. Execute the step (Phase 2 logic for one step: snapshot → interact → validate)
-5. Send result:
+1. Require `browser_runtime` and `browser_run_id`, then apply the Browser Command Contract.
+2. Parse `flow_run_id` plus step definition (`id`, `action`, `expect`, `context`).
+3. Require `flow_run_id` to match the active run established by `BEGIN_FLOW`; otherwise send
+   `EXECUTION ERROR` without browser interaction.
+4. If `context:` present — inject variables into action/expect templates.
+5. Execute the step (Phase 2 logic for one step: snapshot → interact → validate).
+6. Send result:
 
 ```
 SendMessage(
@@ -686,9 +755,107 @@ SendMessage(
 )
 ```
 
-6. **DO NOT close browser.** Go idle — wait for next step.
+7. **DO NOT close browser.** Go idle — wait for next step.
 
 The `data:` field captures values from the page that subsequent cross-site steps may need (e.g., order ID, URL, confirmation code). The lead passes these as `context:` to other runners.
+
+### On receiving BEGIN_FLOW message
+
+This command establishes a fresh named trace for one step-routed flow:
+
+```text
+BEGIN_FLOW
+flow_run_id: <validated id>
+browser_runtime: <absolute executable>
+browser_run_id: <owned run id>
+session: {{app}}
+trace_path: {{report_dir}}/runs/<flow_run_id>/trace.zip
+trace_finalization_result_path: {{report_dir}}/runs/<flow_run_id>/trace-finalization.env
+```
+
+Validate `session` against `{{app}}` and both supplied paths against the exact run-keyed paths.
+Require both ownership fields, require them to match the teammate's configured browser ownership,
+and append the following three argv fields to the lifecycle call:
+`--browser-runtime "<parsed browser_runtime>" --browser-run-id "<parsed browser_run_id>"
+--app "{{app}}"`.
+Then invoke the executable lifecycle contract:
+
+```bash
+TRACE_LIFECYCLE="${CLAUDE_PLUGIN_ROOT}/scripts/team-trace-lifecycle.sh"
+"$TRACE_LIFECYCLE" begin \
+  --report-dir "{{report_dir}}" \
+  --flow-run-id "<parsed flow_run_id>" \
+  --session "{{app}}" \
+  --browser-runtime "<parsed browser_runtime>" \
+  --browser-run-id "<parsed browser_run_id>" \
+  --app "{{app}}"
+```
+
+Parse its fixed `key=value` output without sourcing it. Send:
+
+```
+SendMessage(
+  to="lead",
+  message="FLOW READY\nflow_run_id: <id>\nbegin_status: started|replayed|already_finalized\ntrace_path: <path>\ntrace_finalization_result_path: <path>",
+  summary="<flow_run_id>: trace ready"
+)
+```
+
+Duplicate `BEGIN_FLOW` for an active ID replays `FLOW READY` without another start. A new ID is
+accepted only after the prior ID finalized, and starts a fresh trace.
+
+### On receiving FINALIZE_FLOW message
+
+This command ends a step-routed cross-site flow. It is separate from `EXECUTE_STEP`: never finalize
+after an individual step. Expected inbound fields:
+
+```text
+FINALIZE_FLOW
+flow_run_id: <validated id>
+flow_verdict: PASS|FAIL
+browser_runtime: <absolute executable>
+browser_run_id: <owned run id>
+session: {{app}}
+trace_path: {{report_dir}}/runs/<flow_run_id>/trace.zip
+trace_finalization_result_path: {{report_dir}}/runs/<flow_run_id>/trace-finalization.env
+```
+
+Validate that `flow_verdict` is `PASS` or `FAIL`, `session` exactly matches the configured
+`{{app}}`, and both paths exactly match the configured `{{report_dir}}` paths above. Reject a
+mismatch with `EXECUTION ERROR`; do not invoke the helper on untrusted paths.
+Require both ownership fields and require them to match the ownership used by `BEGIN_FLOW`. Pass
+them as separate argv; never combine them into `AGENT_BROWSER_BIN` or another shell command string.
+
+The lifecycle helper tracks active/completed run identity. A duplicate `FINALIZE_FLOW` for the same
+ID replays its existing result without another stop. A mismatched/new ID fails closed.
+
+Invoke the lifecycle contract, which calls the shared finalizer once for a first delivery:
+
+```bash
+TRACE_LIFECYCLE="${CLAUDE_PLUGIN_ROOT}/scripts/team-trace-lifecycle.sh"
+"$TRACE_LIFECYCLE" finalize \
+  --report-dir "{{report_dir}}" \
+  --flow-run-id "<parsed flow_run_id>" \
+  --session "{{app}}" \
+  --browser-runtime "<parsed browser_runtime>" \
+  --browser-run-id "<parsed browser_run_id>" \
+  --app "{{app}}" \
+  --flow-verdict "<parsed flow_verdict>"
+```
+
+Read the result file even when the helper returns non-zero. Preserve its `flow_verdict` separately
+from `infrastructure_result`, then send:
+
+```
+SendMessage(
+  to="lead",
+  message="TRACE FINALIZED\nflow_run_id: <id>\nflow_verdict: PASS|FAIL\ntrace_path: <accepted path or N/A>\ntrace_finalization_result_path: <path>\ntrace_infrastructure_result: PASS|FAIL\ntrace_analysis_eligible: true|false\ntrace_finalization_status: <status>\ntrace_validation_status: <status>\ntrace_recovery_status: <status>\ntrace_artifact_disposition: <status>\ntrace_artifact_path: <path>",
+  summary="Trace: PASS|FAIL infrastructure"
+)
+```
+
+Go idle. Successful finalization leaves the named browser session open; timeout/failure may have
+triggered bounded named-session recovery.
 
 ### On receiving RE-RUN message
 
@@ -705,7 +872,17 @@ variables:
 `flow_path`, `browser_runtime`, and `browser_run_id` are required. `flow_path` may
 differ from the original if the flow was updated. `variables` is optional.
 
-Re-execute the flow from the beginning. Browser is already open — navigate to `base_url` and restart flow execution. Send `FLOW COMPLETE` when done.
+Start one fresh trace for the re-run before executing steps:
+
+```bash
+python3 --version
+{{browser_command}} trace start
+```
+
+If trace start fails, retain that independent infrastructure failure and continue the application
+flow so its verdict remains observable. Re-execute the flow from the beginning. Browser is already
+open — navigate to `base_url` and restart flow execution. Phase 3 finalizes this re-run's trace
+exactly once. Send `FLOW COMPLETE` when done.
 
 ### On receiving shutdown_request
 
@@ -718,7 +895,7 @@ Re-execute the flow from the beginning. Browser is already open — navigate to 
 |--------|--------------|------------|
 | Results delivery | Return summary at end | SendMessage per flow/step |
 | Browser lifecycle | Open → execute → leave open | Open once → multiple flows/steps → close on shutdown |
-| Step execution | All steps in sequence | EXECUTE_FLOW (all) or EXECUTE_STEP (one at a time, lead-routed) |
+| Step execution | All steps in sequence | EXECUTE_FLOW (all), or EXECUTE_STEP then one FINALIZE_FLOW at end |
 | Multi-site | suite_context + --session | Separate teammates per site (no session juggling) |
 | Re-run | Full re-dispatch | SendMessage RE-RUN (same browser) |
 | Fail → debug | New browser session | Same browser, seamless transition |
