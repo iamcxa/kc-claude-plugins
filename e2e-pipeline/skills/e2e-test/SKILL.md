@@ -1076,6 +1076,49 @@ Apply severity gate + three-question test from `knowledge-capture.md`. Present c
 - Zero failures AND zero divergence AND no novel observations → skip Learning
 - All findings already in learned-patterns.md → skip (no duplicates)
 
+### Pipeline defect promotion (after Learning)
+
+Run this check after results and D1/D2 knowledge capture. It is separate from
+application findings and does not change the test verdict.
+
+Read → `${CLAUDE_PLUGIN_ROOT}/references/issue-promotion.md`
+
+Create a candidate only when the defect happened in this run, caused real
+rework, and points to the specific `e2e-pipeline/` file or contract that must
+change. Application bugs, ordinary test failures, model mistakes, project
+setup, and one-off environment failures are not candidates. Do not manufacture
+a candidate merely because the run failed.
+
+The executable, not the agent, decides recurrence. It requires observations
+from two distinct `browser_run_id` values by default and ignores same-run
+retries. Its default is proposal-only. `mode: auto` is accepted only as
+explicit repository-local authorization from
+`.claude/e2e/issue-promotion.json`.
+
+If one candidate qualifies, write the exact version 1 JSON contract to
+`$REPORT_DIR/issue-promotion-candidate.json`, then run:
+
+```bash
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+PROMOTION_STATE="$PROJECT_ROOT/.claude/e2e/reports/issue-promotion"
+PROMOTION_CONFIG="$PROJECT_ROOT/.claude/e2e/issue-promotion.json"
+
+PROMOTION_ARGS=(
+  --candidate "$REPORT_DIR/issue-promotion-candidate.json"
+  --run-id "$browser_run_id"
+  --state-dir "$PROMOTION_STATE"
+)
+if [ -f "$PROMOTION_CONFIG" ]; then
+  PROMOTION_ARGS+=(--config "$PROMOTION_CONFIG")
+fi
+
+node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-issue-promotion.js" "${PROMOTION_ARGS[@]}"
+```
+
+Report `proposal`, `filed`, `deduplicated`, `suppressed_closed`, or
+`filing_failed` to the user. `recorded` and `duplicate_run` need no extra
+message. A GitHub failure is advisory and must not replace the E2E verdict.
+
 ## Common Mistakes
 
 | Mistake | Fix |

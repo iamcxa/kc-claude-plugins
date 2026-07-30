@@ -72,6 +72,28 @@ LLM and compiled runs always diverge on modal steps.
 **Prevention**: Add `timeout: 5` to all modal interaction steps in audit flows
 ```
 
+### Recurring pipeline defects
+
+Pipeline defects are not a third knowledge dimension. They are concrete failures
+in the plugin's own code or instructions that need maintainer work rather than a
+new testing pattern.
+
+After normal D1/D2 capture, `e2e-test` may record a generic, structured candidate
+through `bin/e2e-issue-promotion.js`. The executable counts distinct run
+identities and promotes only after the same fingerprint appears in at least two
+runs. Same-run retries count once.
+
+The default mode writes a local proposal under
+`.claude/e2e/reports/issue-promotion/`. Automatic GitHub filing requires an
+explicit `.claude/e2e/issue-promotion.json` with `mode: "auto"` and the plugin
+origin repository, `iamcxa/kc-claude-plugins`; any other repository falls back
+to proposal mode. Before creating anything, the executable searches open and
+closed issues for its fingerprint marker. GitHub failures never change the E2E
+verdict.
+
+Application bugs, ordinary test failures, model mistakes, project-specific
+configuration, and raw execution logs are excluded from this path.
+
 ## How Patterns Are Captured
 
 After every skill execution, a Learning phase runs automatically:
@@ -80,6 +102,9 @@ After every skill execution, a Learning phase runs automatically:
 2. **Check for duplicates** -- search `learned-patterns.md` before appending
 3. **D1 candidates** -- auto-append with notification: "Appended pattern: [title]"
 4. **D2 candidates** (e2e-test and e2e-skill-ops only) -- pass through severity gate, then three-question test:
+5. **Pipeline defects** (e2e-test only) -- after Learning, record only concrete,
+   generic defects in the plugin itself; recurrence and issue filing are owned by
+   the executable.
 
 | # | Question | Filters out |
 |---|----------|-------------|
@@ -120,6 +145,7 @@ Test/Explore --> Findings --> D1: skill gets smarter     --> D2: project tests g
 - [Writing Tests](writing-tests.md) -- flow YAML format and preconditions
 - [Debugging](debugging.md) -- using `/e2e-skill-ops --evaluate` findings to improve
 - [PR Workflow](pr-workflow.md) -- posting E2E evidence to pull requests
+- [Issue Promotion](../references/issue-promotion.md) -- recurring pipeline-defect contract and authorization
 
 ---
 

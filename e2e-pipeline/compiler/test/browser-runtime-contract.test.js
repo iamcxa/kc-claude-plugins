@@ -190,3 +190,30 @@ test('compiled flows supervise optional local services before browser work', fun
   );
   assert.doesNotMatch(codegen, /\bwait\s+-n\b/);
 });
+
+test('e2e-test promotes only recurring pipeline defects through the executable contract', function() {
+  const skill = read('skills/e2e-test/SKILL.md');
+  const reference = read('references/issue-promotion.md');
+
+  assert.match(skill, /Read → `\$\{CLAUDE_PLUGIN_ROOT\}\/references\/issue-promotion\.md`/);
+  assert.match(skill, /after results and D1\/D2 knowledge capture/i);
+  assert.match(skill, /two distinct `browser_run_id` values/i);
+  assert.match(skill, /Application bugs, ordinary test failures, model mistakes/i);
+  assert.match(skill, /mode: auto[\s\S]{0,300}explicit repository-local authorization/i);
+  assert.match(skill, /--candidate "\$REPORT_DIR\/issue-promotion-candidate\.json"/);
+  assert.match(skill, /--run-id "\$browser_run_id"/);
+  assert.match(skill, /--state-dir "\$PROMOTION_STATE"/);
+  assert.match(
+    skill,
+    /node "\$\{CLAUDE_PLUGIN_ROOT\}\/bin\/e2e-issue-promotion\.js" "\$\{PROMOTION_ARGS\[@\]\}"/
+  );
+
+  assert.match(reference, /"kind": "pipeline-defect"/);
+  assert.match(reference, /specific `e2e-pipeline\/` target/);
+  assert.match(
+    reference,
+    /Do not include URLs,[\s\S]{0,80}credentials, selectors, test data/i
+  );
+  assert.match(reference, /default mode is `propose`/i);
+  assert.match(reference, /closed match is not reopened/i);
+});
