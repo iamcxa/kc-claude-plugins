@@ -101,6 +101,11 @@ ls {{auth_profile}} 2>/dev/null                                      # Auth prof
 {{browser_command}} wait --load networkidle
 ```
 
+Require `browser_receipt.first_navigation.status: verified` before discovery.
+A profile snapshot is valid only when the runtime receipt binds its actual path
+to the canonical source. Lifecycle failure is infrastructure failure; do not
+map an `about:blank` fallback.
+
 Use `--headed` when `{{headed}}` is true (default). The immutable `app`
 binding provides session isolation, including multi-site runs.
 

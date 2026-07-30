@@ -15,6 +15,7 @@ const ALLOWED_COMMANDS = new Set([
   'close',
   'cleanup-flow-managed-profile',
   'console',
+  'cookies',
   'errors',
   'eval',
   'fill',
@@ -22,6 +23,7 @@ const ALLOWED_COMMANDS = new Set([
   'get',
   'hover',
   'is',
+  'network',
   'open',
   'press',
   'reload',
@@ -29,6 +31,8 @@ const ALLOWED_COMMANDS = new Set([
   'scroll',
   'select',
   'snapshot',
+  'storage',
+  'tab',
   'trace',
   'type',
   'uncheck',
@@ -386,7 +390,251 @@ function isDescendantOf(process, ancestorPid, processes) {
   return false;
 }
 
-function browserProcessEvidence(executablePath, profile, daemonPid, childEnvironment) {
+function profileFlagFromCommand(command) {
+  const match = command.match(
+    /(?:^|\s)--user-data-dir=(?:"([^"]+)"|'([^']+)'|(\S+))/
+  );
+  return match ? match[1] || match[2] || match[3] || '' : '';
+}
+
+function structuralProfileManifest(profileRoot) {
+  const manifest = new Map();
+  const ignoredNames = new Set([
+    'DevToolsActivePort',
+    'LOCK',
+    'LOG',
+    'SingletonCookie',
+    'SingletonLock',
+    'SingletonSocket',
+  ]);
+  let visited = 0;
+
+  function visit(currentPath, relativePath) {
+    if (visited >= 10000) return;
+    const stat = fs.lstatSync(currentPath);
+    if (stat.isSymbolicLink()) return;
+    const name = path.basename(currentPath);
+    if (
+      ignoredNames.has(name) ||
+      name.endsWith('-journal') ||
+      name.endsWith('-shm') ||
+      name.endsWith('-wal')
+    ) {
+      return;
+    }
+    visited += 1;
+    if (stat.isFile()) {
+      manifest.set(relativePath, {
+        mode: stat.mode & 0o777,
+        size: stat.size,
+      });
+      return;
+    }
+    if (!stat.isDirectory()) return;
+    for (const entry of fs.readdirSync(currentPath).sort()) {
+      visit(path.join(currentPath, entry), path.join(relativePath, entry));
+    }
+  }
+
+  visit(profileRoot, '.');
+  return manifest;
+}
+
+function structuralProfileProof(sourceProfile, actualProfile) {
+  const sourceManifest = structuralProfileManifest(sourceProfile);
+  const actualManifest = structuralProfileManifest(actualProfile);
+  const matches = [];
+  let matchedBytes = 0;
+  for (const [relativePath, source] of sourceManifest) {
+    const actual = actualManifest.get(relativePath);
+    if (
+      !actual ||
+      actual.size !== source.size ||
+      actual.mode !== source.mode
+    ) {
+      continue;
+    }
+    matches.push(
+      relativePath + '\0' + source.size + '\0' + source.mode.toString(8)
+    );
+    matchedBytes += source.size;
+  }
+  matches.sort();
+  if (matches.length < 3 || matchedBytes < 1024) {
+    throw new Error(
+      'browser profile snapshot does not share enough structural evidence with its canonical source'
+    );
+  }
+  return {
+    digest: crypto
+      .createHash('sha256')
+      .update(matches.join('\n'))
+      .digest('hex'),
+    matchedBytes,
+    matchedEntries: matches.length,
+  };
+}
+
+function validateProfileLineage(actualProfile, requestedProfile, lineage) {
+  const resolvedActual = path.resolve(actualProfile);
+  const resolvedRequested = path.resolve(requestedProfile);
+  if (
+    resolvedActual === resolvedRequested &&
+    !fs.existsSync(resolvedActual) &&
+    process.env.E2E_RUNTIME_TEST_MODE === '1'
+  ) {
+    return {
+      actualProfile: resolvedActual,
+      actualProfileDevice: null,
+      actualProfileInode: null,
+      actualProfileMode: null,
+      actualProfileUid: null,
+      profileMode: 'persistent-path',
+      tempRootMode: null,
+      lineage: 'exact-path',
+    };
+  }
+  const actualStat = fs.lstatSync(resolvedActual);
+  if (!actualStat.isDirectory() || actualStat.isSymbolicLink()) {
+    throw new Error('actual browser profile must be a non-symlink directory');
+  }
+  const uid = typeof process.getuid === 'function' ? process.getuid() : actualStat.uid;
+  if (actualStat.uid !== uid) {
+    throw new Error('actual browser profile owner does not match the runtime user');
+  }
+  if (resolvedActual === resolvedRequested) {
+    return {
+      actualProfile: resolvedActual,
+      actualProfileDevice: String(actualStat.dev),
+      actualProfileInode: String(actualStat.ino),
+      actualProfileMode: actualStat.mode & 0o777,
+      actualProfileUid: actualStat.uid,
+      profileMode: 'persistent-path',
+      tempRootMode: null,
+      lineage: 'exact-path',
+    };
+  }
+  if (!lineage) {
+    throw new Error(
+      'browser process used a profile snapshot without runtime lineage evidence'
+    );
+  }
+  const temporaryRoot = fs.realpathSync(os.tmpdir());
+  const realActual = fs.realpathSync(resolvedActual);
+  const relative = path.relative(temporaryRoot, realActual);
+  if (
+    !relative ||
+    relative.startsWith('..' + path.sep) ||
+    path.isAbsolute(relative) ||
+    relative.includes(path.sep) ||
+    !/^agent-browser-chrome-[a-f0-9-]{16,}$/i.test(relative)
+  ) {
+    throw new Error(
+      'actual browser profile snapshot is outside the owned OS temp root'
+    );
+  }
+  const tempRootStat = fs.lstatSync(temporaryRoot);
+  const tempRootMode = tempRootStat.mode & 0o777;
+  if (tempRootStat.uid !== uid) {
+    throw new Error('OS temp root owner does not match the runtime user');
+  }
+  if ((tempRootMode & 0o077) !== 0 && (actualStat.mode & 0o077) !== 0) {
+    throw new Error(
+      'browser profile snapshot is readable outside the runtime user'
+    );
+  }
+  if (
+    lineage.actualProfile &&
+    path.resolve(lineage.actualProfile) === realActual
+  ) {
+    if (
+      String(actualStat.dev) !== String(lineage.actualProfileDevice) ||
+      String(actualStat.ino) !== String(lineage.actualProfileInode)
+    ) {
+      throw new Error('browser profile snapshot identity changed');
+    }
+    return {
+      actualProfile: realActual,
+      actualProfileDevice: String(actualStat.dev),
+      actualProfileInode: String(actualStat.ino),
+      actualProfileMode: actualStat.mode & 0o777,
+      actualProfileUid: actualStat.uid,
+      profileMode: 'verified-snapshot',
+      tempRootMode,
+      lineage: 'structural-metadata',
+      structuralDigest: lineage.structuralDigest,
+      structuralMatchedBytes: lineage.structuralMatchedBytes,
+      structuralMatchedEntries: lineage.structuralMatchedEntries,
+    };
+  }
+  if (
+    Number.isFinite(lineage.launchStartedAt) &&
+    actualStat.birthtimeMs + 2000 < lineage.launchStartedAt
+  ) {
+    throw new Error('browser profile snapshot predates this owned launch');
+  }
+  const structural = structuralProfileProof(resolvedRequested, realActual);
+  return {
+    actualProfile: realActual,
+    actualProfileDevice: String(actualStat.dev),
+    actualProfileInode: String(actualStat.ino),
+    actualProfileMode: actualStat.mode & 0o777,
+    actualProfileUid: actualStat.uid,
+    profileMode: 'verified-snapshot',
+    tempRootMode,
+    lineage: 'structural-metadata',
+    structuralDigest: structural.digest,
+    structuralMatchedBytes: structural.matchedBytes,
+    structuralMatchedEntries: structural.matchedEntries,
+  };
+}
+
+function prepareProfileLineage(profile, runId, app, receiptPath) {
+  const resolvedProfile = path.resolve(profile);
+  if (!fs.existsSync(resolvedProfile)) {
+    ensureOwnedDirectory(path.dirname(resolvedProfile));
+    fs.mkdirSync(resolvedProfile);
+  }
+  const profileStat = fs.lstatSync(resolvedProfile);
+  const uid = typeof process.getuid === 'function' ? process.getuid() : profileStat.uid;
+  if (
+    !profileStat.isDirectory() ||
+    profileStat.isSymbolicLink() ||
+    profileStat.uid !== uid
+  ) {
+    throw new Error('canonical profile is not an owned non-symlink directory');
+  }
+  return {
+    launchStartedAt: Date.now(),
+    sourceBinding: crypto
+      .createHash('sha256')
+      .update(
+        runId +
+          '\0' +
+          app +
+          '\0' +
+          path.resolve(receiptPath) +
+          '\0' +
+          resolvedProfile +
+          '\0' +
+          String(profileStat.dev) +
+          '\0' +
+          String(profileStat.ino)
+      )
+      .digest('hex'),
+    sourceDevice: String(profileStat.dev),
+    sourceInode: String(profileStat.ino),
+    sourceProfile: resolvedProfile,
+  };
+}
+
+function browserProcessEvidence(
+  executablePath,
+  profile,
+  daemonPid,
+  childEnvironment,
+  lineage
+) {
   const psBin =
     process.env.E2E_RUNTIME_TEST_MODE === '1' && process.env.E2E_PS_BIN
       ? process.env.E2E_PS_BIN
@@ -406,23 +654,26 @@ function browserProcessEvidence(executablePath, profile, daemonPid, childEnviron
     );
   }
   const processes = parseProcessTable(result.stdout || '');
-  const profileFlag = '--user-data-dir=' + profile;
   const matches = Array.from(processes.values()).filter(function(process) {
     return (
       (process.command === executablePath ||
         process.command.startsWith(executablePath + ' ')) &&
-      process.command.split(' ').includes(profileFlag) &&
+      Boolean(profileFlagFromCommand(process.command)) &&
       isDescendantOf(process, daemonPid, processes)
     );
   });
   if (matches.length !== 1) {
     throw new Error(
       'browser process evidence must identify exactly one Chrome for Testing process ' +
-        'owned by the daemon and bound to profile ' +
-        profile
+        'owned by the daemon'
     );
   }
-  return matches[0];
+  const profileEvidence = validateProfileLineage(
+    profileFlagFromCommand(matches[0].command),
+    profile,
+    lineage
+  );
+  return Object.assign({}, matches[0], profileEvidence);
 }
 
 function defaultReceiptPath(browserHome, runId, app) {
@@ -517,14 +768,491 @@ function verifyBrowserOwnership(options) {
     options.executablePath,
     options.profile,
     info.data.pid,
-    options.childEnvironment
+    options.childEnvironment,
+    options.lineage
   );
   return {
+    actualProfile: browserProcess.actualProfile,
+    actualProfileDevice: browserProcess.actualProfileDevice,
+    actualProfileInode: browserProcess.actualProfileInode,
+    actualProfileMode: browserProcess.actualProfileMode,
+    actualProfileUid: browserProcess.actualProfileUid,
     browserPid: browserProcess.pid,
     daemonPid: info.data.pid,
+    launchHash: info.effectiveLaunch.launchHash,
+    lineage: browserProcess.lineage,
+    pageCount: info.runtime.pageCount,
+    profileMode: browserProcess.profileMode,
     reused: info.lifecycle.reused,
     socketDir: info.data.socketDir,
+    structuralDigest: browserProcess.structuralDigest,
+    structuralMatchedBytes: browserProcess.structuralMatchedBytes,
+    structuralMatchedEntries: browserProcess.structuralMatchedEntries,
+    tempRootMode: browserProcess.tempRootMode,
   };
+}
+
+function runAgentBrowser(options, command) {
+  const result = spawnSync(
+    options.agentBrowser,
+    [
+      '--namespace',
+      options.namespace,
+      '--session',
+      options.app,
+      '--config',
+      options.configPath,
+      ...command,
+    ],
+    {
+      encoding: 'utf8',
+      env: options.childEnvironment,
+    }
+  );
+  if (result.error || result.status !== 0) {
+    throw new Error(
+      'agent-browser lifecycle command failed (' +
+        command.slice(0, 2).join(' ') +
+        '): ' +
+        (result.error
+          ? result.error.message
+          : String(result.stderr || result.stdout || '').trim())
+    );
+  }
+  return String(result.stdout || '');
+}
+
+function agentBrowserLifecycleVersion(agentBrowser, childEnvironment) {
+  const result = spawnSync(agentBrowser, ['--version'], {
+    encoding: 'utf8',
+    env: childEnvironment,
+  });
+  if (result.error || result.status !== 0) return '';
+  const match = String(result.stdout || '').match(
+    /agent-browser\s+(\d+(?:\.\d+){1,3})/
+  );
+  return match ? match[1] : '';
+}
+
+function parseAgentBrowserPayload(stdout, description) {
+  let payload;
+  try {
+    payload = JSON.parse(stdout);
+  } catch (_error) {
+    throw new Error(description + ' is not valid JSON');
+  }
+  if (!payload || payload.success !== true || !payload.data) {
+    throw new Error(description + ' is incomplete');
+  }
+  return payload.data;
+}
+
+function activePageIdentity(options) {
+  const data = parseAgentBrowserPayload(
+    runAgentBrowser(options, ['tab', 'list', '--json']),
+    'agent-browser active page evidence'
+  );
+  const activePages = (data.tabs || []).filter(function(tab) {
+    return tab && tab.active === true && tab.type === 'page';
+  });
+  if (
+    activePages.length !== 1 ||
+    typeof activePages[0].tabId !== 'string' ||
+    !activePages[0].tabId
+  ) {
+    throw new Error(
+      'agent-browser active page evidence must identify exactly one page'
+    );
+  }
+  return {
+    pageIdentity: activePages[0].tabId,
+    url: String(activePages[0].url || ''),
+  };
+}
+
+function captureNavigationEvidence(options) {
+  const ownership = verifyBrowserOwnership(options);
+  const page = activePageIdentity(options);
+  return {
+    namespace: options.namespace,
+    session: options.app,
+    daemon_pid: ownership.daemonPid,
+    browser_pid: ownership.browserPid,
+    page_identity: page.pageIdentity,
+    actual_profile: ownership.actualProfile,
+    actual_profile_device: ownership.actualProfileDevice,
+    actual_profile_inode: ownership.actualProfileInode,
+    actual_profile_mode: ownership.actualProfileMode,
+    actual_profile_uid: ownership.actualProfileUid,
+    profile_mode: ownership.profileMode,
+    profile_lineage: ownership.lineage,
+    structural_digest: ownership.structuralDigest || null,
+    structural_matched_bytes: ownership.structuralMatchedBytes || null,
+    structural_matched_entries: ownership.structuralMatchedEntries || null,
+    temp_root_mode: ownership.tempRootMode,
+    url: page.url,
+    page_count: ownership.pageCount,
+    launch_hash: ownership.launchHash,
+    reused: ownership.reused,
+    recorder: {
+      init_script: options.initStatus || 'not-checked',
+      har: options.harStatus || 'not-started',
+    },
+    captured_at: new Date().toISOString(),
+  };
+}
+
+function assertStableNavigationIdentity(pre, post) {
+  const identities = [
+    ['namespace', 'namespace'],
+    ['session', 'session'],
+    ['daemon_pid', 'daemon'],
+    ['browser_pid', 'browser'],
+    ['page_identity', 'page identity'],
+    ['actual_profile', 'actual profile'],
+  ];
+  for (const [field, label] of identities) {
+    if (pre[field] !== post[field]) {
+      throw new Error(
+        'browser lifecycle infrastructure failure: ' +
+          label +
+          ' changed across navigation'
+      );
+    }
+  }
+}
+
+function removePrivateLifecycleFile(filePath) {
+  if (!filePath || !fs.existsSync(filePath)) return;
+  const stat = fs.lstatSync(filePath);
+  if (!stat.isFile() || stat.isSymbolicLink()) {
+    throw new Error('refusing to remove non-regular lifecycle file: ' + filePath);
+  }
+  fs.unlinkSync(filePath);
+}
+
+function firstNavigationFiles(receiptPath) {
+  const digest = crypto
+    .createHash('sha256')
+    .update(path.resolve(receiptPath))
+    .digest('hex')
+    .slice(0, 16);
+  return {
+    harPath: receiptPath + '.first-navigation-' + digest + '.har',
+    initPath: receiptPath + '.first-navigation-' + digest + '.js',
+  };
+}
+
+function createInitProbe(receiptPath) {
+  const files = firstNavigationFiles(receiptPath);
+  ensureOwnedDirectory(path.dirname(files.initPath));
+  const key =
+    '__E2E_RUNTIME_INIT_' + crypto.randomBytes(8).toString('hex').toUpperCase();
+  const value = crypto.randomBytes(16).toString('hex');
+  fs.writeFileSync(
+    files.initPath,
+    'Object.defineProperty(globalThis, ' +
+      JSON.stringify(key) +
+      ', { configurable: false, value: ' +
+      JSON.stringify(value) +
+      ' });\n',
+    { flag: 'wx', mode: 0o600 }
+  );
+  return {
+    harPath: files.harPath,
+    initPath: files.initPath,
+    probeExpression:
+      'globalThis[' + JSON.stringify(key) + '] === ' + JSON.stringify(value),
+  };
+}
+
+function inspectFirstNavigationHar(harPath) {
+  const payload = readRegularJson(harPath, 'first-navigation HAR');
+  const entries =
+    Array.isArray(payload?.log?.entries)
+      ? payload.log.entries
+      : [];
+  const documentCount = entries.filter(function(entry) {
+    const resourceType = String(entry?._resourceType || '').toLowerCase();
+    const mimeType = String(
+      entry?.response?.content?.mimeType || ''
+    ).toLowerCase();
+    return resourceType === 'document' || mimeType.includes('text/html');
+  }).length;
+  if (documentCount < 1) {
+    throw new Error(
+      'browser lifecycle infrastructure failure: first-navigation HAR has no document request'
+    );
+  }
+  return {
+    document_count: documentCount,
+    entry_count: entries.length,
+    status: 'verified-and-discarded',
+  };
+}
+
+function assertInitProbeObserved(options, expression) {
+  const data = parseAgentBrowserPayload(
+    runAgentBrowser(options, ['eval', expression, '--json']),
+    'agent-browser init-script evidence'
+  );
+  if (data.result !== true) {
+    throw new Error(
+      'browser lifecycle infrastructure failure: init script was not observed after navigation'
+    );
+  }
+}
+
+function writeLifecycleReceipt(receiptPath, receipt) {
+  writeJsonAtomic(receiptPath, receipt, false);
+  return receipt;
+}
+
+function failLifecycleReceipt(receiptPath, receipt, error, postEvidence) {
+  if (!receipt) return;
+  const failed = Object.assign({}, receipt, {
+    status: 'failed',
+    failure_class: 'infrastructure',
+    error: error.message,
+    failed_at: new Date().toISOString(),
+  });
+  if (failed.first_navigation) {
+    failed.first_navigation = Object.assign({}, failed.first_navigation, {
+      status: 'failed',
+      post: postEvidence || failed.first_navigation.post || null,
+    });
+  }
+  writeLifecycleReceipt(receiptPath, failed);
+}
+
+function performOwnedOpen(options) {
+  const targetUrl = options.command[1] || '';
+  let receipt = options.existingReceipt;
+  let pre;
+  let probeExpression = '';
+  let initPath = '';
+  let lineage = receipt?.profile_lineage
+    ? {
+        actualProfile: receipt.actual_profile,
+        actualProfileDevice: receipt.profile_lineage.actual_device,
+        actualProfileInode: receipt.profile_lineage.actual_inode,
+        structuralDigest: receipt.profile_lineage.structural_digest,
+        structuralMatchedBytes:
+          receipt.profile_lineage.structural_matched_bytes,
+        structuralMatchedEntries:
+          receipt.profile_lineage.structural_matched_entries,
+      }
+    : null;
+  const files = firstNavigationFiles(options.receiptPath);
+
+  if (!receipt) {
+    lineage = prepareProfileLineage(
+      options.profile,
+      options.runId,
+      options.app,
+      options.receiptPath
+    );
+    const initProbe = createInitProbe(options.receiptPath);
+    initPath = initProbe.initPath;
+    probeExpression = initProbe.probeExpression;
+    const launch = [
+      '--engine',
+      'chrome',
+      '--executable-path',
+      options.executablePath,
+      '--profile',
+      options.profile,
+    ];
+    if (options.headed) launch.push('--headed');
+    launch.push('--init-script', initProbe.initPath, 'open');
+    try {
+      const stdout = runAgentBrowser(options, launch);
+      if (stdout) process.stdout.write(stdout);
+      pre = captureNavigationEvidence(
+        Object.assign({}, options, {
+          harStatus: 'not-started',
+          initStatus: 'registered',
+          lineage,
+        })
+      );
+    } finally {
+      removePrivateLifecycleFile(initProbe.initPath);
+      initPath = '';
+    }
+    receipt = writeBrowserOwnershipReceipt(
+      {
+        app: options.app,
+        executablePath: options.executablePath,
+        namespace: options.namespace,
+        profile: options.profile,
+        receiptPath: options.receiptPath,
+        runId: options.runId,
+      },
+      {
+        browserPid: pre.browser_pid,
+        daemonPid: pre.daemon_pid,
+        reused: pre.reused,
+        socketDir: options.expectedSocketDir,
+      },
+      null
+    );
+    receipt.actual_profile = pre.actual_profile;
+    receipt.profile_mode = pre.profile_mode;
+    receipt.profile_lineage = {
+      proof: pre.profile_lineage,
+      source_device: lineage.sourceDevice,
+      source_inode: lineage.sourceInode,
+      source_binding: lineage.sourceBinding,
+      actual_device: pre.actual_profile_device,
+      actual_inode: pre.actual_profile_inode,
+      actual_mode: pre.actual_profile_mode,
+      actual_uid: pre.actual_profile_uid,
+      structural_digest: pre.structural_digest,
+      structural_matched_bytes: pre.structural_matched_bytes,
+      structural_matched_entries: pre.structural_matched_entries,
+      temp_root_mode: pre.temp_root_mode,
+    };
+    lineage = {
+      actualProfile: receipt.actual_profile,
+      actualProfileDevice: receipt.profile_lineage.actual_device,
+      actualProfileInode: receipt.profile_lineage.actual_inode,
+      structuralDigest: receipt.profile_lineage.structural_digest,
+      structuralMatchedBytes:
+        receipt.profile_lineage.structural_matched_bytes,
+      structuralMatchedEntries:
+        receipt.profile_lineage.structural_matched_entries,
+    };
+    receipt.first_navigation = {
+      status: 'pending',
+      pre,
+      post: null,
+      init_script: 'registered',
+      har: { status: 'not-started', document_count: 0, entry_count: 0 },
+      probe_expression: probeExpression,
+    };
+    writeLifecycleReceipt(options.receiptPath, receipt);
+  } else {
+    if (!receipt.first_navigation) {
+      throw new Error(
+        'browser lifecycle receipt predates first-navigation evidence; close and reopen the owned session'
+      );
+    }
+    probeExpression = receipt.first_navigation.probe_expression || '';
+    pre = captureNavigationEvidence(
+      Object.assign({}, options, {
+        harStatus:
+          receipt.first_navigation.status === 'pending'
+            ? 'not-started'
+            : 'not-applicable',
+        initStatus:
+          receipt.first_navigation.status === 'pending'
+            ? 'registered'
+            : 'previously-observed',
+        lineage,
+      })
+    );
+    assertReceiptBinding(receipt, {
+      app: options.app,
+      browserPid: pre.browser_pid,
+      daemonPid: pre.daemon_pid,
+      executablePath: options.executablePath,
+      namespace: options.namespace,
+      profile: options.profile,
+      runId: options.runId,
+      socketDir: options.expectedSocketDir,
+    });
+    if (
+      receipt.actual_profile !== pre.actual_profile ||
+      receipt.profile_mode !== pre.profile_mode ||
+      String(receipt.profile_lineage.actual_device) !==
+        String(pre.actual_profile_device) ||
+      String(receipt.profile_lineage.actual_inode) !==
+        String(pre.actual_profile_inode)
+    ) {
+      throw new Error(
+        'browser lifecycle infrastructure failure: actual profile identity changed'
+      );
+    }
+  }
+
+  if (!targetUrl || targetUrl === 'about:blank') {
+    return receipt;
+  }
+
+  if (receipt.first_navigation.status !== 'pending') {
+    const stdout = runAgentBrowser(options, ['open', targetUrl]);
+    if (stdout) process.stdout.write(stdout);
+    const post = captureNavigationEvidence(
+      Object.assign({}, options, {
+        harStatus: 'not-applicable',
+        initStatus: 'previously-observed',
+        lineage,
+      })
+    );
+    assertStableNavigationIdentity(pre, post);
+    receipt.last_navigation = {
+      status: 'verified',
+      pre,
+      post,
+      verified_at: new Date().toISOString(),
+    };
+    writeLifecycleReceipt(options.receiptPath, receipt);
+    return receipt;
+  }
+
+  let harStarted = false;
+  let post = null;
+  try {
+    removePrivateLifecycleFile(files.harPath);
+    runAgentBrowser(options, ['network', 'har', 'start']);
+    harStarted = true;
+    receipt.first_navigation.pre.recorder.har = 'started';
+    writeLifecycleReceipt(options.receiptPath, receipt);
+    const stdout = runAgentBrowser(options, ['open', targetUrl]);
+    if (stdout) process.stdout.write(stdout);
+    post = captureNavigationEvidence(
+      Object.assign({}, options, {
+        harStatus: 'started',
+        initStatus: 'checking',
+        lineage,
+      })
+    );
+    assertStableNavigationIdentity(pre, post);
+    if (!post.url || post.url === 'about:blank') {
+      throw new Error(
+        'browser lifecycle infrastructure failure: application URL reset to about:blank'
+      );
+    }
+    assertInitProbeObserved(options, probeExpression);
+    post.recorder.init_script = 'observed';
+    runAgentBrowser(options, ['network', 'har', 'stop', files.harPath]);
+    harStarted = false;
+    const har = inspectFirstNavigationHar(files.harPath);
+    post.recorder.har = har.status;
+    receipt.first_navigation = {
+      status: 'verified',
+      pre: receipt.first_navigation.pre,
+      post,
+      init_script: 'observed',
+      har,
+      verified_at: new Date().toISOString(),
+    };
+    writeLifecycleReceipt(options.receiptPath, receipt);
+    return receipt;
+  } catch (error) {
+    if (harStarted) {
+      try {
+        runAgentBrowser(options, ['network', 'har', 'stop', files.harPath]);
+      } catch (_stopError) {
+        // Preserve the original lifecycle failure.
+      }
+    }
+    failLifecycleReceipt(options.receiptPath, receipt, error, post);
+    throw error;
+  } finally {
+    removePrivateLifecycleFile(initPath);
+    removePrivateLifecycleFile(files.harPath);
+  }
 }
 
 function writeBrowserOwnershipReceipt(options, evidence, existingReceipt) {
@@ -631,14 +1359,44 @@ function cleanupClosedNamespaceState(socketHome, namespace, app) {
   throw new Error('owned browser namespace did not settle after close');
 }
 
-function markBrowserOwnershipClosed(receiptPath, receipt) {
+function markBrowserOwnershipClosed(receiptPath, receipt, profileCleanup) {
   if (!receipt) return;
   const closed = Object.assign({}, receipt, {
     status: 'closed',
     cleanup: 'owned-session-closed',
+    profile_cleanup: profileCleanup || 'not-applicable',
     closed_at: new Date().toISOString(),
   });
   writeJsonAtomic(receiptPath, closed, false);
+}
+
+function cleanupOwnedProfileSnapshot(receipt) {
+  if (!receipt || receipt.profile_mode !== 'verified-snapshot') {
+    return 'not-applicable';
+  }
+  const actualProfile = receipt.actual_profile;
+  if (!fs.existsSync(actualProfile)) return 'already-removed';
+  const evidence = validateProfileLineage(actualProfile, receipt.profile, {
+    actualProfile: receipt.actual_profile,
+    actualProfileDevice: receipt.profile_lineage.actual_device,
+    actualProfileInode: receipt.profile_lineage.actual_inode,
+    structuralDigest: receipt.profile_lineage.structural_digest,
+    structuralMatchedBytes: receipt.profile_lineage.structural_matched_bytes,
+    structuralMatchedEntries:
+      receipt.profile_lineage.structural_matched_entries,
+  });
+  if (
+    evidence.profileMode !== 'verified-snapshot' ||
+    String(evidence.actualProfileDevice) !==
+      String(receipt.profile_lineage.actual_device) ||
+    String(evidence.actualProfileInode) !==
+      String(receipt.profile_lineage.actual_inode) ||
+    evidence.actualProfileUid !== receipt.profile_lineage.actual_uid
+  ) {
+    throw new Error('owned browser profile snapshot identity changed before cleanup');
+  }
+  fs.rmSync(actualProfile, { recursive: true, force: false });
+  return 'removed';
 }
 
 function markBrowserOwnershipFailed(receiptPath, errorMessage, cleanup) {
@@ -1122,16 +1880,31 @@ function main(argv) {
         profile: options.profile,
       });
       if (options.command[0] === 'open') {
-        if (record.state.status !== 'prepared' || fs.existsSync(record.binding.profile)) {
+        if (
+          record.state.status === 'prepared' &&
+          !fs.existsSync(record.binding.profile)
+        ) {
+          assertNoActiveFlowManagedBinding({
+            browserHome,
+            runId: options.runId,
+            app: options.app,
+          });
+        } else if (
+          record.state.status === 'active' &&
+          record.state.binding === 'verified'
+        ) {
+          verifyFlowManagedProfile({
+            browserHome,
+            runId: options.runId,
+            app: options.app,
+            canonicalProfile: options.canonicalProfile,
+            profile: options.profile,
+          });
+        } else {
           throw new Error(
-            'flow-managed open requires a prepared, previously absent profile'
+            'flow-managed open requires a prepared fresh profile or the active binding'
           );
         }
-        assertNoActiveFlowManagedBinding({
-          browserHome,
-          runId: options.runId,
-          app: options.app,
-        });
       } else if (isFlowManagedCleanup) {
         verifyFlowManagedProfile({
           browserHome,
@@ -1255,6 +2028,10 @@ function main(argv) {
   delete childEnvironment.E2E_RUNTIME_TEST_MODE;
   let receiptPath = '';
   let existingReceipt = null;
+  const lifecycleVersion =
+    options.command[0] === 'open'
+      ? agentBrowserLifecycleVersion(agentBrowser, childEnvironment)
+      : '';
   if (options.command[0] === 'open') {
     try {
       receiptPath = options.receipt
@@ -1313,6 +2090,21 @@ function main(argv) {
         expectedSocketDir: path.join(socketHome, 'namespaces', namespace, 'run'),
         namespace,
         profile: path.resolve(options.profile),
+        lineage: existingReceipt.profile_lineage
+          ? {
+              actualProfile: existingReceipt.actual_profile,
+              actualProfileDevice:
+                existingReceipt.profile_lineage.actual_device,
+              actualProfileInode:
+                existingReceipt.profile_lineage.actual_inode,
+              structuralDigest:
+                existingReceipt.profile_lineage.structural_digest,
+              structuralMatchedBytes:
+                existingReceipt.profile_lineage.structural_matched_bytes,
+              structuralMatchedEntries:
+                existingReceipt.profile_lineage.structural_matched_entries,
+            }
+          : null,
         runId: options.runId,
       });
       assertReceiptBinding(existingReceipt, {
@@ -1325,10 +2117,183 @@ function main(argv) {
         runId: options.runId,
         socketDir: liveEvidence.socketDir,
       });
+      if (
+        existingReceipt.actual_profile &&
+        (existingReceipt.actual_profile !== liveEvidence.actualProfile ||
+          String(existingReceipt.profile_lineage.actual_device) !==
+            String(liveEvidence.actualProfileDevice) ||
+          String(existingReceipt.profile_lineage.actual_inode) !==
+            String(liveEvidence.actualProfileInode))
+      ) {
+        throw new Error(
+          'browser ownership receipt does not match actual profile identity'
+        );
+      }
     } catch (error) {
       process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
       return 2;
     }
+  }
+  if (existingReceipt && !isOwnedClose) {
+    args.splice(
+      0,
+      args.length,
+      '--namespace',
+      namespace,
+      '--session',
+      options.app,
+      '--config',
+      configPath,
+      ...options.command
+    );
+  }
+  if (
+    options.command[0] === 'open' &&
+    lifecycleVersion &&
+    compareVersions(lifecycleVersion, '0.32.0') >= 0
+  ) {
+    try {
+      performOwnedOpen({
+        agentBrowser,
+        app: options.app,
+        childEnvironment,
+        command: options.command,
+        configPath,
+        executablePath: options.executablePath,
+        existingReceipt,
+        expectedSocketDir: path.join(
+          socketHome,
+          'namespaces',
+          namespace,
+          'run'
+        ),
+        headed: options.headed,
+        namespace,
+        profile: path.resolve(options.profile),
+        receiptPath,
+        runId: options.runId,
+      });
+      if (options.authMode === 'flow-managed') {
+        const record = readFlowManagedState({
+          browserHome,
+          runId: options.runId,
+          app: options.app,
+          canonicalProfile: options.canonicalProfile,
+          profile: options.profile,
+        });
+        if (record.state.status === 'prepared') {
+          markFlowManagedProfileActive({
+            browserHome,
+            runId: options.runId,
+            app: options.app,
+            canonicalProfile: options.canonicalProfile,
+            profile: options.profile,
+          });
+        }
+      }
+      return 0;
+    } catch (error) {
+      const closeResult = spawnSync(
+        agentBrowser,
+        [
+          '--namespace',
+          namespace,
+          '--session',
+          options.app,
+          '--config',
+          configPath,
+          'close',
+        ],
+        {
+          env: childEnvironment,
+          stdio: 'ignore',
+        }
+      );
+      let ownershipCleanup =
+        closeResult.error || closeResult.status !== 0
+          ? 'owned-session-close-failed-after-lifecycle-failure'
+          : 'owned-session-closed-after-lifecycle-failure';
+      try {
+        cleanupClosedNamespaceState(socketHome, namespace, options.app);
+      } catch (cleanupError) {
+        ownershipCleanup =
+          'owned-session-state-cleanup-failed-after-lifecycle-failure';
+        process.stderr.write(
+          'e2e-browser-runtime: lifecycle namespace cleanup failed: ' +
+            cleanupError.message +
+            '\n'
+        );
+      }
+      try {
+        const failedReceipt = readRegularJson(
+          receiptPath,
+          'browser ownership receipt'
+        );
+        if (failedReceipt) {
+          failedReceipt.cleanup = ownershipCleanup;
+          failedReceipt.profile_cleanup =
+            cleanupOwnedProfileSnapshot(failedReceipt);
+          writeLifecycleReceipt(receiptPath, failedReceipt);
+        }
+      } catch (receiptError) {
+        process.stderr.write(
+          'e2e-browser-runtime: lifecycle receipt update failed: ' +
+            receiptError.message +
+            '\n'
+        );
+      }
+      if (options.authMode === 'flow-managed') {
+        try {
+          const record = readFlowManagedState({
+            browserHome,
+            runId: options.runId,
+            app: options.app,
+            canonicalProfile: options.canonicalProfile,
+            profile: options.profile,
+          });
+          if (record.state.status === 'prepared') {
+            discardFailedFlowManagedProfile(
+              {
+                browserHome,
+                runId: options.runId,
+                app: options.app,
+                canonicalProfile: options.canonicalProfile,
+                profile: options.profile,
+              },
+              error.message
+            );
+          }
+        } catch (cleanupError) {
+          process.stderr.write(
+            'e2e-browser-runtime: lifecycle profile cleanup failed: ' +
+              cleanupError.message +
+              '\n'
+          );
+        }
+      }
+      process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+      return 2;
+    }
+  }
+  if (
+    options.command[0] === 'open' &&
+    !lifecycleVersion &&
+    process.env.E2E_RUNTIME_TEST_MODE !== '1'
+  ) {
+    process.stderr.write(
+      'e2e-browser-runtime: could not verify an agent-browser lifecycle contract version\n'
+    );
+    return 2;
+  }
+  if (
+    options.command[0] === 'open' &&
+    lifecycleVersion &&
+    compareVersions(lifecycleVersion, '0.32.0') < 0
+  ) {
+    process.stderr.write(
+      'e2e-browser-runtime: agent-browser 0.32.0 or newer is required for owned navigation lifecycle evidence\n'
+    );
+    return 2;
   }
   const result = spawnSync(agentBrowser, args, {
     env: childEnvironment,
@@ -1442,7 +2407,8 @@ function main(argv) {
   if (isOwnedClose) {
     try {
       cleanupClosedNamespaceState(socketHome, namespace, options.app);
-      markBrowserOwnershipClosed(receiptPath, existingReceipt);
+      const profileCleanup = cleanupOwnedProfileSnapshot(existingReceipt);
+      markBrowserOwnershipClosed(receiptPath, existingReceipt, profileCleanup);
     } catch (error) {
       process.stderr.write(
         'e2e-browser-runtime: owned browser cleanup evidence failed: ' +

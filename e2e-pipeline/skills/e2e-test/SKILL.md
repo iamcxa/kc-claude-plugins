@@ -33,6 +33,11 @@ Resolve browser E2E test flows and dispatch the `e2e-test-runner` agent for exec
 
 1. **agent-browser** installed globally  2. **Dev server running**  3. **Mapping file** in `.claude/e2e/mappings/`  4. **Flow files** in `.claude/e2e/flows/`
 
+The owned runtime treats the first `open` as an infrastructure transaction.
+Before any flow step, require the browser receipt to report
+`first_navigation.status: verified`. A non-zero open or any other lifecycle
+status is infrastructure failure, not an application verdict.
+
 ### Optional owned local services
 
 If the user provides a manifest or `.claude/e2e/services.json` exists, resolve

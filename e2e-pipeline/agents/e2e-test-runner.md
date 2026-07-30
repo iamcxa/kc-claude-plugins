@@ -157,6 +157,12 @@ Flow-managed mode:
 {{browser_command}} verify-flow-managed-profile
 ```
 
+The first `open` returns success only after the ownership receipt records
+`first_navigation.status: verified`, including stable daemon/browser/page
+identity, a bound actual profile, an observed init script, and a document HAR
+entry. Any other status is an `EXECUTION ERROR` (infrastructure); do not start
+auth checks, tracing, or flow steps.
+
 The runtime must return `binding: verified`; otherwise STOP before flow steps.
 
 ```bash
