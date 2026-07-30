@@ -83,6 +83,16 @@ class Limits:
             "E2E_CHROME_TRACE_MAX_CATEGORIES", 10_000
         )
     )
+    max_string_bytes: int = field(
+        default_factory=lambda: positive_limit(
+            "E2E_CHROME_TRACE_MAX_STRING_BYTES", 4 * 1024
+        )
+    )
+    max_summary_string_bytes: int = field(
+        default_factory=lambda: positive_limit(
+            "E2E_CHROME_TRACE_MAX_SUMMARY_STRING_BYTES", 1024 * 1024
+        )
+    )
 
 
 class JsonStream:
@@ -168,6 +178,19 @@ class TraceSummary:
         self.threads: set[tuple[int, int]] = set()
         self.categories: collections.Counter[str] = collections.Counter()
         self.longest: list[tuple[int | float, int, dict[str, Any]]] = []
+        self.retained_string_bytes = 0
+
+    def string_size(self, value: str) -> int:
+        size = len(value.encode("utf-8"))
+        if size > self.limits.max_string_bytes:
+            raise ResourceLimitError("max_string_bytes exceeded")
+        return size
+
+    def reserve_strings(self, added_bytes: int, removed_bytes: int = 0) -> None:
+        retained = self.retained_string_bytes - removed_bytes + added_bytes
+        if retained > self.limits.max_summary_string_bytes:
+            raise ResourceLimitError("max_summary_string_bytes exceeded")
+        self.retained_string_bytes = retained
 
     def add(self, event: Any) -> None:
         if not isinstance(event, dict):
@@ -176,6 +199,7 @@ class TraceSummary:
         phase = event.get("ph")
         if not isinstance(name, str) or not name or not isinstance(phase, str) or not phase:
             raise WrongFormatError("traceEvents entries require string name and ph")
+        name_size = self.string_size(name)
 
         self.event_count += 1
         if self.event_count > self.limits.max_events:
@@ -198,10 +222,13 @@ class TraceSummary:
         category = event.get("cat", "(uncategorized)")
         if not isinstance(category, str):
             category = "(uncategorized)"
-        if category in self.categories or len(self.categories) < self.limits.max_categories:
-            self.categories[category] += 1
-        else:
+        if category not in self.categories and len(self.categories) >= self.limits.max_categories:
             self.categories["(other)"] += 1
+            category = "(other)"
+        else:
+            if category not in self.categories:
+                self.reserve_strings(self.string_size(category))
+            self.categories[category] += 1
 
         duration = event.get("dur")
         if (
@@ -226,8 +253,14 @@ class TraceSummary:
             }
             ranked = (duration, self.event_count, item)
             if len(self.longest) < 20:
+                self.reserve_strings(name_size)
                 heapq.heappush(self.longest, ranked)
             elif ranked[:2] > self.longest[0][:2]:
+                replaced_name = self.longest[0][2]["name"]
+                self.reserve_strings(
+                    name_size,
+                    removed_bytes=len(replaced_name.encode("utf-8")),
+                )
                 heapq.heapreplace(self.longest, ranked)
 
     def result(self) -> dict[str, Any]:
@@ -269,13 +302,18 @@ def assert_chrome_file_limit(file_size: int, limits: Limits) -> None:
         raise ResourceLimitError("max_file_bytes exceeded")
 
 
-def has_top_level_trace_events(file_path: str, max_value_bytes: int) -> bool:
+def has_top_level_trace_events(
+    file_path: str, max_value_bytes: int, timeout_seconds: int
+) -> bool:
+    started = time.monotonic()
     stream = JsonStream(file_path, max_value_bytes)
     try:
         stream.expect("{")
         if stream.peek() == "}":
             return False
         while True:
+            if time.monotonic() - started > timeout_seconds:
+                raise ResourceLimitError("timeout_seconds exceeded")
             key = stream.value(64 * 1024)
             if not isinstance(key, str):
                 raise InvalidJsonError("invalid JSON: object key must be a string")
@@ -283,6 +321,8 @@ def has_top_level_trace_events(file_path: str, max_value_bytes: int) -> bool:
             if key == "traceEvents":
                 return True
             stream.value()
+            if time.monotonic() - started > timeout_seconds:
+                raise ResourceLimitError("timeout_seconds exceeded")
             separator = stream.peek()
             if separator == ",":
                 stream.position += 1
@@ -294,15 +334,15 @@ def has_top_level_trace_events(file_path: str, max_value_bytes: int) -> bool:
         stream.close()
 
 
-def detect(file_path: str, max_value_bytes: int) -> str:
+def detect(file_path: str, max_value_bytes: int, timeout_seconds: int) -> str:
     with open(file_path, "rb") as artifact:
         prefix = artifact.read(4)
     if prefix.startswith(b"PK\x03\x04"):
         return FORMAT_PLAYWRIGHT
     try:
-        if has_top_level_trace_events(file_path, max_value_bytes):
+        if has_top_level_trace_events(file_path, max_value_bytes, timeout_seconds):
             return FORMAT_CHROME
-    except (InvalidJsonError, ResourceLimitError, UnicodeDecodeError):
+    except (InvalidJsonError, UnicodeDecodeError):
         return FORMAT_UNKNOWN
     return FORMAT_UNKNOWN
 
@@ -386,7 +426,11 @@ def main(argv: list[str]) -> int:
 
         limits = Limits()
         assert_chrome_file_limit(file_size, limits)
-        detected = detect(file_path, limits.max_event_bytes)
+        detected = detect(
+            file_path,
+            limits.max_event_bytes,
+            limits.timeout_seconds,
+        )
         if command == "detect":
             print(detected)
             return 0

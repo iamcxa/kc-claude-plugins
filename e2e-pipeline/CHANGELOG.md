@@ -109,11 +109,6 @@ Copilot static-contract review of PR #8 caught that the Priority 2 canonical for
 
 ## [Unreleased]
 
-### Fixed
-
-- Detect agent-browser trace capability before capture, validate Chrome Trace Event JSON without
-  routing it through the Playwright ZIP validator, and preserve format-specific analysis semantics.
-
 ## [2.4.0] - 2026-03-20
 
 ### Added

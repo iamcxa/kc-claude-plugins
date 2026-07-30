@@ -73,7 +73,8 @@ Check URL against `auth.verification` condition. If verification fails (auth exp
    ```
 2. **Manual path** (fallback): Read `auth.manual_prompt` from mapping and present to user. Browser is already `--headed` — user logs in directly. After user confirms → `<browser_command> get url` and re-check. Repeat until verified or user aborts.
 
-**Start trace** (after auth verified):
+**Trace Capability Setup** (after auth verification, before choosing single-site or multi-site
+startup):
 ```bash
 AGENT_BROWSER_EXECUTABLE=$(command -v "${E2E_AGENT_BROWSER_BIN:-${AGENT_BROWSER_BIN:-agent-browser}}")
 TRACE_CONTRACT_FILE="$REPORT_DIR/trace-contract.env"
@@ -88,6 +89,14 @@ case "$trace_format:$trace_extension" in
   chrome-trace-json:.json|playwright-trace-zip:.zip) ;;
   *) echo "Unsupported trace contract" >&2; exit 72 ;;
 esac
+```
+
+This common setup applies to every named session in the walkthrough. All sites share the same
+owned runtime executable, so they reuse this exact detected capability contract.
+
+**Start trace (single-site only)**:
+
+```bash
 TRACE_PATH="$REPORT_DIR/trace${trace_extension}"
 <browser_command> trace start
 ```
@@ -106,7 +115,7 @@ TRACE_STARTED_APPS=()
 ```
 
 Open a session for each site and append its validated `app` value only after `trace start`
-succeeds:
+succeeds. Reuse the detected capability contract above for every named session:
 ```bash
 # For each mapping in --sites:
 <browser_command-for-app> --profile ~/.agent-browser/<app> --headed open <base_url>

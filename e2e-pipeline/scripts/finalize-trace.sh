@@ -639,6 +639,8 @@ else
   detection_timed_out=$bounded_timed_out
   if [ "$detection_timed_out" = true ]; then
     validation_status=timeout
+  elif [ "$detection_result" -eq 4 ]; then
+    validation_status=resource_limit_exceeded
   elif [ "$detection_result" -ne 0 ]; then
     validation_status=validator_unavailable
   else

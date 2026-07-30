@@ -176,6 +176,59 @@ test('rejects non-finite Chrome trace numbers', () => {
   }
 });
 
+test('enforces the detection deadline before a late traceEvents field', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
+  try {
+    const artifact = path.join(directory, 'late-trace-events.json');
+    fs.writeFileSync(
+      artifact,
+      `{${'"padding":0,'.repeat(4_000_000)}"traceEvents":[{"name":"RunTask","ph":"X","dur":1}]}`
+    );
+
+    const result = run('detect', artifact, {
+      E2E_CHROME_TRACE_TIMEOUT_SECONDS: '1',
+    });
+    assert.equal(result.status, 4, result.stderr);
+    assert.match(result.stderr, /timeout_seconds/i);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('bounds individual and aggregate strings retained by summaries', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
+  try {
+    const longName = path.join(directory, 'long-name.json');
+    const aggregate = path.join(directory, 'aggregate.json');
+    fs.writeFileSync(
+      longName,
+      JSON.stringify({
+        traceEvents: [{ name: '123456789', ph: 'X', dur: 1 }],
+      })
+    );
+    fs.writeFileSync(
+      aggregate,
+      JSON.stringify({
+        traceEvents: [{ name: '12345', cat: 'abcde', ph: 'X', dur: 1 }],
+      })
+    );
+
+    const longNameResult = run('summarize', longName, {
+      E2E_CHROME_TRACE_MAX_STRING_BYTES: '8',
+    });
+    assert.equal(longNameResult.status, 4, longNameResult.stderr);
+    assert.match(longNameResult.stderr, /max_string_bytes/i);
+
+    const aggregateResult = run('summarize', aggregate, {
+      E2E_CHROME_TRACE_MAX_SUMMARY_STRING_BYTES: '8',
+    });
+    assert.equal(aggregateResult.status, 4, aggregateResult.stderr);
+    assert.match(aggregateResult.stderr, /max_summary_string_bytes/i);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
 test('fails closed when file or event-count budgets are exceeded', () => {
   const fileLimit = run('validate', fixture, {
     E2E_CHROME_TRACE_MAX_FILE_BYTES: '32',

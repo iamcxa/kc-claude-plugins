@@ -306,9 +306,12 @@ Checklist items map to procedure steps below. Items 5-6 are both from procedure 
    verify the file exists. If write fails again, dispatch WITHOUT `step_log_path` — analyzer
    degrades gracefully to non-enhanced mode. See [reference.md](./reference.md) § Trace Analysis.
 4. **Anomaly review** (checklist item 4): If trace analysis was eligible, present review when
-   Phase 3 anomalies exist or trace returned `clean: false`; skip only when step-log has zero
-   anomalies and trace is clean. If trace analysis was ineligible, present the recorded step-log
-   anomalies plus the trace infrastructure failure, mark trace cross-reference N/A, and continue.
+   Phase 3 anomalies exist or trace returned `clean: false`. For Chrome `clean: unknown`, use the
+   step-log as application-health evidence: present review when it contains anomalies; otherwise
+   state that API/console cleanliness is unavailable and continue to report generation without
+   claiming the trace is clean. Skip the review menu only when a Playwright trace is clean or that
+   Chrome step-log path has zero anomalies. If trace analysis was ineligible, present the recorded
+   step-log anomalies plus the trace infrastructure failure, mark trace cross-reference N/A, and continue.
    An ineligible trace never turns the application flow verdict into FAIL. See
    [reference.md](./reference.md) § Anomaly Review.
 5. **Report (dual output, MANDATORY)** (checklist items 5+6): Write both `$REPORT_DIR/report.md` and `$REPORT_DIR/pr-summary.md`. Health Log now includes step-correlated data from trace analysis. See [reference.md](./reference.md) § Report for templates.

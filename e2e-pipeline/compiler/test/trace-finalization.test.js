@@ -648,6 +648,29 @@ describe('shared trace finalization contract', () => {
     }
   });
 
+  test('Chrome detection preserves resource-limit failures in the result contract', () => {
+    const dir = makeTempDir();
+    try {
+      const run = runFinalizer({
+        dir,
+        mode: 'valid',
+        fixture: chromeTraceFixture,
+        traceFormat: 'chrome-trace-json',
+        extraEnv: { E2E_CHROME_TRACE_MAX_FILE_BYTES: '1' },
+      });
+
+      assert.equal(run.status, 22, run.stderr);
+      const result = parseResultFile(run.resultPath);
+      assert.equal(result.infrastructure_result, 'FAIL');
+      assert.equal(result.finalization_status, 'invalid_artifact');
+      assert.equal(result.validation_status, 'resource_limit_exceeded');
+      assert.equal(result.artifact_disposition, 'quarantined');
+      assert.equal(result.analysis_eligible, 'false');
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   test('Chrome JSON declared as Playwright is quarantined before ZIP validation', () => {
     const dir = makeTempDir();
     try {
@@ -2014,6 +2037,39 @@ describe('shared trace finalization contract', () => {
     assert.match(anomalyReview, /clean: unknown/);
     assert.match(anomalyReview, /step-log/i);
     assert.match(anomalyReview, /proceed to report generation/i);
+
+    const walkthroughSkill = fs.readFileSync(
+      path.join(pluginRoot, 'skills/e2e-walkthrough/SKILL.md'),
+      'utf8'
+    );
+    const phaseFour = walkthroughSkill.match(
+      /3\. \*\*Trace analysis[\s\S]*?(?=\n5\. \*\*Report)/
+    )?.[0] || '';
+    assert.match(phaseFour, /clean: unknown/);
+    assert.match(phaseFour, /step-log/i);
+    assert.match(phaseFour, /report generation/i);
+  });
+
+  test('walkthrough capability setup is common to single-site and multi-site capture', () => {
+    const walkthroughReference = fs.readFileSync(
+      path.join(pluginRoot, 'skills/e2e-walkthrough/reference.md'),
+      'utf8'
+    );
+    const commonSetup = walkthroughReference.match(
+      /Trace Capability Setup[\s\S]*?(?=\n\*\*Start trace \(single-site only\))/i
+    )?.[0] || '';
+    const singleSite = walkthroughReference.match(
+      /\*\*Start trace \(single-site only\)[\s\S]*?(?=\n### Multi-Site Startup)/
+    )?.[0] || '';
+    const multiSite = walkthroughReference.match(
+      /### Multi-Site Startup[\s\S]*?(?=\n### Site Switching)/
+    )?.[0] || '';
+
+    assert.match(commonSetup, /e2e-trace-contract\.js/);
+    assert.doesNotMatch(commonSetup, /trace start/);
+    assert.match(singleSite, /trace start/);
+    assert.match(multiSite, /trace start/);
+    assert.match(multiSite, /detected capability contract/i);
   });
 
   test('every active trace-analyzer dispatch carries an explicit format', () => {
