@@ -68,8 +68,7 @@ Before starting, read these reference files for CLI command patterns:
 1. **Gitignore housekeeping**: Resolve the project root and run the shared helper before writing
    artifacts. Stop if it rejects the destination:
    ```bash
-   PROJ_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || dirname "$(dirname "$(dirname "$(dirname "{{report_dir}}")")")")
-   "${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --project-root "$PROJ_ROOT"
+   "${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --report-dir "{{report_dir}}"
    ```
 2. **Pre-flight checks**:
    ```bash

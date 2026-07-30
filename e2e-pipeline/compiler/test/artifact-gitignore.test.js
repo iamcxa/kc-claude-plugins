@@ -29,6 +29,12 @@ function run(projectRoot) {
   });
 }
 
+function runForReportDir(reportDir) {
+  return spawnSync('bash', [ensureGitignore, '--report-dir', reportDir], {
+    encoding: 'utf8',
+  });
+}
+
 test('adds every missing E2E artifact rule and remains idempotent', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-gitignore-'));
   const gitignore = path.join(directory, '.gitignore');
@@ -86,6 +92,24 @@ test('preserves an existing unterminated rule before appending artifact rules', 
   }
 });
 
+test('does not rewrite a complete read-only gitignore only to add a newline', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-gitignore-'));
+  const gitignore = path.join(directory, '.gitignore');
+  const contents = requiredPatterns.join('\n');
+  try {
+    fs.writeFileSync(gitignore, contents, { mode: 0o444 });
+
+    const result = run(directory);
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(fs.readFileSync(gitignore, 'utf8'), contents);
+  } finally {
+    if (fs.existsSync(gitignore)) {
+      fs.chmodSync(gitignore, 0o600);
+    }
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
 test('creates the artifact ignore file but rejects a symlink destination', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-gitignore-'));
   const target = path.join(directory, 'foreign-ignore');
@@ -122,18 +146,64 @@ test('every browser artifact producer uses the shared gitignore helper', () => {
   }
 });
 
-test('report-based producers derive the non-Git fallback from the project root', () => {
-  const expectedFallback =
-    'dirname "$(dirname "$(dirname "$(dirname "{{report_dir}}")")")"';
+test('derives project roots from nested report directories', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-gitignore-'));
+  const reportDir = path.join(
+    directory,
+    '.claude',
+    'e2e',
+    'reports',
+    'run-1',
+    'site-a'
+  );
+  try {
+    fs.mkdirSync(reportDir, { recursive: true });
 
+    const result = runForReportDir(reportDir);
+    assert.equal(result.status, 0, result.stderr);
+    assert.ok(fs.existsSync(path.join(directory, '.gitignore')));
+    assert.ok(!fs.existsSync(path.join(reportDir, '.gitignore')));
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('prefers the enclosing Git root for reports below a nested working directory', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-gitignore-'));
+  const nestedProject = path.join(directory, 'packages', 'app');
+  const reportDir = path.join(
+    nestedProject,
+    '.claude',
+    'e2e',
+    'reports',
+    'run-1'
+  );
+  try {
+    fs.mkdirSync(reportDir, { recursive: true });
+    const initialized = spawnSync('git', ['init', '-q', directory], {
+      encoding: 'utf8',
+    });
+    assert.equal(initialized.status, 0, initialized.stderr);
+
+    const result = runForReportDir(reportDir);
+    assert.equal(result.status, 0, result.stderr);
+    assert.ok(fs.existsSync(path.join(directory, '.gitignore')));
+    assert.ok(!fs.existsSync(path.join(nestedProject, '.gitignore')));
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('report-based producers delegate project-root discovery to the helper', () => {
   for (const relativePath of [
     'agents/e2e-test-runner.md',
     'agents/e2e-flow-verifier.md',
   ]) {
     const content = fs.readFileSync(path.join(pluginRoot, relativePath), 'utf8');
-    assert.ok(
-      content.includes(expectedFallback),
-      `${relativePath} must walk from <project>/.claude/e2e/reports/<run> to <project>`
+    assert.match(
+      content,
+      /ensure-e2e-gitignore\.sh" --report-dir "\{\{report_dir\}\}"/,
+      `${relativePath} must delegate report-root discovery to the helper`
     );
   }
 });
