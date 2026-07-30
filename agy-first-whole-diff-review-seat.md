@@ -1,6 +1,6 @@
 ---
 title: Synthesize exact-head EM merge readiness before human landing
-status: implementation
+status: validation
 source: captain direction 2026-07-30 after reconcile-list-element-shape closeout
 started: 2026-07-30T15:01:36Z
 completed:
