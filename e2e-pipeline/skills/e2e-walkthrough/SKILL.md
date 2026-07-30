@@ -88,6 +88,11 @@ the entire walkthrough:
 browser_command: node "<browser_runtime>" --run-id "<browser_run_id>" --app "<app>" --receipt "<browser_receipt>"
 ```
 
+Before auth or walkthrough steps, require
+`browser_receipt.first_navigation.status: verified`. A reset, unbound profile
+snapshot, missing init probe, or empty first-navigation HAR is infrastructure
+failure; never continue from `about:blank`.
+
 1. **agent-browser** installed globally
 2. **Python 3** installed; run `python3 --version` before tracing
 3. **Dev server running** (read `base_url` from mapping)
