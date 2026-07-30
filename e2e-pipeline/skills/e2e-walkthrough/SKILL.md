@@ -72,11 +72,13 @@ Which page to start? >
 **After Discover Mapping completes, proceed to Pre-Flight.** These checks use `base_url` and `app` from the **selected** mapping.
 
 1. **agent-browser** installed globally
-2. **Dev server running** (read `base_url` from mapping)
-3. **Auth profile** (derived from mapping `app`: `~/.agent-browser/<app>`)
-4. **`--headed` mode** — human must see the browser (NOT headless)
+2. **Python 3** installed; run `python3 --version` before tracing
+3. **Dev server running** (read `base_url` from mapping)
+4. **Auth profile** (derived from mapping `app`: `~/.agent-browser/<app>`)
+5. **`--headed` mode** — human must see the browser (NOT headless)
 
 ```bash
+python3 --version
 agent-browser --version
 curl -s -o /dev/null -w "%{http_code}" <base_url>
 ls ~/.agent-browser/<app>/ 2>/dev/null && echo "OK" || echo "MISSING"
@@ -188,7 +190,7 @@ For detailed execution mechanics (startup, multi-site, per-step loop, anomaly ob
 
 ```
 Phase 4 checklist:
-[ ] 1. trace stop → trace.zip saved
+[ ] 1. trace finalizer returned → validity/recovery/disposition recorded
 [ ] 2. (reserved)
 [ ] 3. trace-analyzer dispatched (with step-log.json)
 [ ] 4. anomaly review presented (or N/A if zero anomalies AND trace clean)
@@ -208,9 +210,61 @@ For detailed procedures (trace analysis, anomaly review, report templates, flow 
 
 Checklist items map to procedure steps below. Items 5-6 are both from procedure step 5 (dual output). Item 12 is D1 knowledge capture. Item 14 maps to Pipeline Next Steps section below.
 
-1. **Stop trace**: `agent-browser trace stop "$REPORT_DIR/trace.zip"`
-3. **Trace analysis (enhanced)**: Dispatch `e2e-trace-analyzer` subagent with `trace_path` + `report_dir` + `step_log_path`. Prerequisite: `step-log.json` must exist in `$REPORT_DIR` (written at end of Phase 3). If missing, write it now from in-memory step data and verify the file exists. If write fails again, dispatch WITHOUT `step_log_path` — analyzer degrades gracefully to non-enhanced mode (no cross-reference, but analysis still completes). See [reference.md](./reference.md) § Trace Analysis.
-4. **Anomaly review** (checklist item 4): If anomalies were observed during Phase 3 (check step-log.json `anomalies` arrays) OR trace found issues (`clean: false`), present the cross-reference summary and offer: review details / fix / re-walk / continue. Skip to step 5 ONLY when BOTH conditions are true: zero anomalies in step-log AND trace returns `clean: true`. Note: `clean: true` from trace-analyzer means zero API/console/silent-failure — it does NOT account for unmatched visual anomalies. See [reference.md](./reference.md) § Anomaly Review.
+1. **Finalize trace**: Preserve the already-known walkthrough `FLOW_VERDICT`, then run the shared
+   executable. Always continue to report generation after reading the result file.
+
+   For a single-site walkthrough (no `--sites`), keep the existing root artifact contract:
+   ```bash
+   TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
+   TRACE_FINALIZER_RC=0
+   "$TRACE_FINALIZER" \
+     --trace-path "$REPORT_DIR/trace.zip" \
+     --flow-verdict "$FLOW_VERDICT" \
+     --result-file "$REPORT_DIR/trace-finalization.env" ||
+     TRACE_FINALIZER_RC=$?
+   ```
+
+   When `--sites` is provided, finalize every site whose named session reached `trace start`.
+   Before session startup, validate the selected site aliases and mapping app values as separate
+   arrays with `${CLAUDE_PLUGIN_ROOT}/scripts/validate-trace-identifiers.sh`. Use the validated,
+   path-safe, unique mapping `app` value as `APP`; each session gets a distinct artifact directory
+   and result file. A failure for one session must not prevent later sessions from finalizing:
+   ```bash
+   TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
+   for APP in "${TRACE_STARTED_APPS[@]}"; do
+     mkdir -p "$REPORT_DIR/sites/$APP"
+     SITE_FLOW_VERDICT="<derive PASS|FAIL from completed steps for $APP>"
+     SITE_TRACE_FINALIZER_RC=0
+     "$TRACE_FINALIZER" \
+       --session "$APP" \
+       --trace-path "$REPORT_DIR/sites/$APP/trace.zip" \
+       --flow-verdict "$SITE_FLOW_VERDICT" \
+       --result-file "$REPORT_DIR/sites/$APP/trace-finalization.env" ||
+       SITE_TRACE_FINALIZER_RC=$?
+     # Read this site's result now, record it, and continue to the next APP.
+   done
+   ```
+   The finalizer bounds trace stop, validates the archive, performs bounded close recovery after a
+   stop timeout/failure, and quarantines invalid artifacts. Treat its non-zero result as
+   infrastructure failure, not proof that the walkthrough flow failed.
+   If `trace-finalization.env` is missing or unreadable, record trace infrastructure failure with
+   analysis ineligible, preserve the walkthrough verdict, and continue report generation.
+3. **Trace analysis (enhanced)**: For single-site, read `$REPORT_DIR/trace-finalization.env`. For
+   multi-site, read every `$REPORT_DIR/sites/$APP/trace-finalization.env` and dispatch analysis
+   independently for each eligible site trace. Dispatch `e2e-trace-analyzer` with `trace_path` +
+   `report_dir` + `step_log_path` only when that result says `analysis_eligible=true`. **Do not
+   dispatch trace analysis** for timeout, failed stop, missing, empty, corrupt, or non-Playwright
+   artifacts. Mark checklist item 3 N/A for each ineligible trace (with the infrastructure reason)
+   and continue reports. Prerequisite for eligible traces: `step-log.json` must exist in
+   `$REPORT_DIR` (written at end of Phase 3). If missing, write it now from in-memory step data and
+   verify the file exists. If write fails again, dispatch WITHOUT `step_log_path` — analyzer
+   degrades gracefully to non-enhanced mode. See [reference.md](./reference.md) § Trace Analysis.
+4. **Anomaly review** (checklist item 4): If trace analysis was eligible, present review when
+   Phase 3 anomalies exist or trace returned `clean: false`; skip only when step-log has zero
+   anomalies and trace is clean. If trace analysis was ineligible, present the recorded step-log
+   anomalies plus the trace infrastructure failure, mark trace cross-reference N/A, and continue.
+   An ineligible trace never turns the application flow verdict into FAIL. See
+   [reference.md](./reference.md) § Anomaly Review.
 5. **Report (dual output, MANDATORY)** (checklist items 5+6): Write both `$REPORT_DIR/report.md` and `$REPORT_DIR/pr-summary.md`. Health Log now includes step-correlated data from trace analysis. See [reference.md](./reference.md) § Report for templates.
 6. **Media post-processing** (checklist items 7+8): Dispatch media agent:
    ```
@@ -291,7 +345,7 @@ Next steps:
 | CSS selectors for clicks | Use `@ref` from snapshot. For visibility checks use `[role="<r>"][aria-label="<v>"]` CSS attribute selector (Cand 2) |
 | `has-text()` selectors | BROKEN in agent-browser — times out. Use `[role="button"][aria-label="..."]` CSS attribute selector or `find text "..."` subcommand |
 | Screenshot relative paths | agent-browser needs absolute paths (sandbox CWD differs) |
-| Forgetting `trace stop` | Trace data lost if browser closes without stopping |
+| Calling raw `trace stop` | Use `${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh`; it bounds stop, validates, recovers, and records disposition |
 | `scroll` to element | `scroll` only accepts direction (up/down). Use `hover "@ref"` to auto-scroll |
 | `is visible` exit code always 0 | Check stdout text "true"/"false", NOT exit code. Don't chain with `&&` |
 | Large table snapshots consume context | Use targeted `is visible` checks instead of full snapshot for 10+ row tables |

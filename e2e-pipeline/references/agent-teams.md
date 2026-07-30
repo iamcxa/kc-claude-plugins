@@ -130,6 +130,8 @@ Command types are skill-specific:
 - `e2e-debug`: `VERIFY` (steps + log_tags + filters)
 - `e2e-test`: `EXECUTE_STEP` (step definition + context)
 - `e2e-test`: `EXECUTE_FLOW` (full flow for parallel suite mode)
+- `e2e-test`: `BEGIN_FLOW` (start one identified trace before step routing)
+- `e2e-test`: `FINALIZE_FLOW` (once after all step-routed browser work; never per step)
 - `e2e-flow`: `VERIFY_FLOW` (flow path + mapping + auth + base_url)
 - `e2e-flow`: `PROCEED_ROUND_2` / `SKIP_ROUND_2` (guidance after Round 1)
 
@@ -147,8 +149,18 @@ Response types are skill-specific, but always start with a keyword line for easy
 - `OBSERVATION COMPLETE` (e2e-debug)
 - `STEP COMPLETE` (e2e-test, per-step)
 - `FLOW COMPLETE` (e2e-test, full flow)
+- `FLOW READY` (e2e-test, identified trace started/replayed)
+- `TRACE FINALIZED` (e2e-test, final contract for a step-routed browser runner)
 - `ROUND_1_STATUS` (e2e-flow verifier, after Round 1 — lead sends guidance before Round 2)
 - `VERIFICATION COMPLETE` (e2e-flow verifier, final results after Round 2 or skip)
+
+The canonical e2e-test finalization response token is `TRACE FINALIZED`; no alternate
+flow-finalization response token is valid.
+
+Every e2e-test teammate has owned browser runtime fields, and every `BEGIN_FLOW` and
+`FINALIZE_FLOW` repeats `browser_runtime` and `browser_run_id`. The lifecycle helper receives them
+as separate argv with `--app`; it persists that ownership with the flow run and rejects drift
+before browser interaction. Do not encode a runtime plus arguments into one shell command string.
 
 ### Error responses
 
@@ -163,7 +175,17 @@ On error, teammate goes idle. Lead decides: retry, skip, or teardown.
 
 ### Hard crash (teammate dies without sending a message)
 
-If the lead sends a command (or shutdown_request) and receives no response within **30 seconds**, assume hard crash. This also applies when a teammate is still executing its first turn (mid-startup) — the 30s timeout is the universal backstop regardless of teammate state:
+If the lead sends a command (or shutdown_request) and receives no response within **30 seconds**,
+assume hard crash. This also applies when a teammate is still executing its first turn
+(mid-startup).
+
+**Bounded-command exception:** `FINALIZE_FLOW` has a **120 seconds** response budget because its
+shared finalizer contains a 60-second trace-stop watchdog, a 15-second bounded recovery watchdog,
+and a 30-second validation watchdog. If that budget expires, do not resend `FINALIZE_FLOW` (a late
+first command could otherwise race a second stop); mark trace infrastructure failed and inspect
+member state.
+
+After the applicable response budget:
 1. Check if team member still exists in `~/.claude/teams/<team>/config.json`
 2. If member gone → teammate process died. Log warning.
 3. Fall back to subagent mode for the remaining work. Set any Teams-specific diagnosis mode (e.g., auto-loop) back to interactive.
@@ -238,6 +260,12 @@ for step in flow.steps:
     send(target, step)
     # Wait for response before next step to same site
     # Steps to different sites with no data dependency: can parallel
+
+# Before routing, send BEGIN_FLOW with one validated flow_run_id and wait for
+# FLOW READY from each participating browser runner.
+# After all routed steps settle, send FINALIZE_FLOW for that id exactly once to each
+# successfully started step-routed browser runner and wait for TRACE FINALIZED.
+# EXECUTE_FLOW runners already finalize; CLI runners have no browser trace.
 ```
 
 **Parallel eligibility**: consecutive steps to DIFFERENT sites where the later step does NOT reference variables from the earlier step's output → can be dispatched in parallel.

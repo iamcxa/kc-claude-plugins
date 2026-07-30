@@ -86,9 +86,18 @@ e2e_browser wait 2000                           # Wait fixed milliseconds
 
 ## Tracing & Health
 
+`python3` is a shared trace prerequisite. Run `python3 --version` before any `trace start`; if it
+is missing, stop before tracing. If `trace-finalization.env` is missing or unreadable after a
+finalizer attempt, record a trace infrastructure failure and never dispatch analysis.
+
 ```bash
 e2e_browser trace start                         # Start recording (AFTER open)
-e2e_browser trace stop "<abs-path>"             # Save trace.zip (BEFORE close!)
+"${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh" \
+  --browser-runtime "$BROWSER_RUNTIME" \
+  --browser-run-id "$BROWSER_RUN_ID" \
+  --app "$APP" \
+  --trace-path "<abs-path>/trace.zip" \
+  --flow-verdict "<PASS|PARTIAL|FAIL>"             # Bounded stop + validity gate
 e2e_browser console --json                      # Console messages as JSON
 e2e_browser console --clear                     # Clear console buffer
 e2e_browser errors --json                       # JS errors as JSON
@@ -96,6 +105,10 @@ e2e_browser errors --clear                      # Clear error buffer
 e2e_browser eval "<js>"                         # Execute JavaScript in page context
 e2e_browser eval -b "<base64>"                  # Execute base64-encoded JS (reliable escaping)
 ```
+
+Pass ownership as the three separate argv fields shown above. They are all-or-none. The finalizer invokes the executable directly with
+`--run-id`, `--app`, and the trace/close command; it never accepts or evaluates a shell command
+string. Browser-operating e2e-pipeline agents must not use the legacy direct/session mode.
 
 ## Recording (DEPRECATED)
 
@@ -160,6 +173,10 @@ e2e_browser find label "Email" fill "user@test.com"  # By label
 3. **Absolute paths**: agent-browser sandbox CWD differs from shell. ALWAYS use absolute screenshot/trace paths.
 4. **fill > click+type**: `fill` is atomic (focus + clear + type). `click` then `type` is error-prone — @ref can change on focus.
 5. **is visible exit code**: Always 0. Check stdout text "true"/"false", NOT exit code. Don't chain with `&&`.
-6. **trace before close**: Always `trace stop` before `close` or trace data is lost.
+6. **shared trace finalizer before close**: Never call raw `trace stop` in pipeline consumers.
+   Run `${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh`; it bounds stop, validates the ZIP and
+   Playwright entries under a separate bounded watchdog, rejects archive resource-limit violations
+   before a full read, attempts bounded close recovery after failure, and records artifact
+   disposition. Analyze only when `analysis_eligible=true`.
 7. **scroll direction only**: `scroll` accepts up/down only. To scroll TO an element, use `hover @ref`.
 8. **--headed for auth**: Browser must be visible when human needs to log in.

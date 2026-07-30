@@ -282,6 +282,10 @@ Agent tool (e2e-pipeline:e2e-flow-verifier):
 
 ### trace-analyzer dispatch
 
+Prerequisite: read the verifier's `trace_finalization_result_path`. Dispatch only when
+`trace_analysis_eligible: true`, `analysis_eligible=true`, `validation_status=valid`, and
+`infrastructure_result=PASS`. A present path without this shared gate is ineligible.
+
 ```
 Agent tool (e2e-pipeline:e2e-trace-analyzer):
   description: "Analyze trace from flow verification"
@@ -291,6 +295,13 @@ Agent tool (e2e-pipeline:e2e-trace-analyzer):
       report_dir: <same as verifier>
       step_log_path: <absolute path to step-log.json, if exists>
 ```
+
+If the prerequisite fails, do not dispatch. Preserve the application flow verdict and include
+stop/timeout, validation, bounded recovery, artifact disposition/path, and analysis eligibility in
+`report.md`.
+
+When `round_1_trace_finalization_result_path` is present, include that contract as a separate
+round-history row even if the final Round 2 trace is valid.
 
 ---
 

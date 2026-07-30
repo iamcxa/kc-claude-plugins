@@ -49,6 +49,12 @@ Use loaded patterns to:
 
 ## Phase 0 — Resolve Mapping & Flow
 
+Before dispatching any browser runner, require `python3 --version` to succeed. Python 3 is needed
+before tracing because the shared finalizer isolates and terminates the complete trace-stop process
+group and validates trace archives. If `trace-finalization.env` is missing or unreadable after a
+finalizer invocation, record trace infrastructure failure, skip analysis, and continue report
+generation with the application verdict unchanged.
+
 ### Mapping Resolution Reference
 
 **By filename** (flow `mapping:` field): `mapping: <name>` -> `.claude/e2e/mappings/<name>.yaml`.
@@ -191,9 +197,21 @@ Total: 4 runs, 31 steps. Proceed?
 | `report_dir` | `$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)` (create with `mkdir -p`) |
 | `headed` | Always `true` (agent opens browser in headed mode) |
 | `video` | `true` when `--video` or `--pr` is present, otherwise `false` |
-| `suite_context` | Set to `true` when dispatching via `--all-sites` or `--suite` |
+| `suite_context` | Set to `true` for every multi-site browser runner (`--all-sites`, `--suite`, Scenario C, and Scenario D browser roles); the owned runtime isolates the app session |
 | `browser_runtime` | Absolute path to `${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js` |
 | `browser_run_id` | One run identity generated before any browser runner dispatch |
+
+Before any multi-site path/session startup, collect aliases and mapping `app` values into separate
+Bash arrays and validate both namespaces:
+
+```bash
+TRACE_IDENTIFIER_VALIDATOR="${CLAUDE_PLUGIN_ROOT}/scripts/validate-trace-identifiers.sh"
+"$TRACE_IDENTIFIER_VALIDATOR" "${SITE_ALIASES[@]}"
+"$TRACE_IDENTIFIER_VALIDATOR" "${SITE_APPS[@]}"
+```
+
+Do not interpolate or start a session after validation failure. Iterate only with
+`"${SITE_ALIASES[@]}"` / `"${SITE_APPS[@]}"`; never flatten identifiers into a scalar word list.
 
 ---
 
@@ -328,15 +346,25 @@ Responses arrive asynchronously. Aggregate into combined results table.
 One teammate per site defined in flow `sites:`. Lead routes each step by `site:` field.
 
 ```
-# Same multi-runner spawn as Scenario B (one per sites: entry)
+# Same multi-runner spawn as Scenario B (one per sites: entry), with suite_context: true.
 ```
 
 After all runners ready, lead routes steps:
 
 ```
+FLOW_RUN_ID="<validated unique id for this flow execution>"
+
+# First, for every participating browser runner:
+SendMessage(
+  to="runner-<site.alias>",
+  message="BEGIN_FLOW\nflow_run_id: <flow_run_id>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <browser run id>\nsession: <site.app>\ntrace_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace.zip\ntrace_finalization_result_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace-finalization.env",
+  summary="<site.alias>: begin <flow_run_id>"
+)
+# Wait for FLOW READY from every runner before routing any steps.
+
 for step in flow.steps:
   target = f"runner-{step.site}"
-  SendMessage(to=target, message="EXECUTE_STEP\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>\n{step as YAML}", summary=f"{step.site}: {step.id}")
+  SendMessage(to=target, message="EXECUTE_STEP\nflow_run_id: <flow_run_id>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>\n{step as YAML}", summary=f"{step.site}: {step.id}")
   # Wait for STEP COMPLETE before next step to SAME site
   # Steps to DIFFERENT site with no data dependency → can dispatch in parallel
 ```
@@ -379,6 +407,41 @@ SendMessage(to="runner-customer",
   summary="customer: verify-order")
 ```
 
+**End-of-flow trace finalization (mandatory, exactly once per step-routed browser runner):**
+
+After all `STEP COMPLETE` responses have arrived (and dependency/crash skips are recorded),
+calculate the already-known overall application verdict: `PASS` only when no browser/CLI step
+failed, otherwise `FAIL`. Then send one finalization command to every successfully started browser
+runner participating in this step-routed flow, including a runner whose assigned steps were all
+skipped before dispatch:
+
+```
+SendMessage(
+  to="runner-<site.alias>",
+  message="FINALIZE_FLOW\nflow_run_id: <flow_run_id>\nflow_verdict: PASS|FAIL\nbrowser_runtime: <absolute path>\nbrowser_run_id: <browser run id>\nsession: <site.app>\ntrace_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace.zip\ntrace_finalization_result_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace-finalization.env",
+  summary="<site.alias>: finalize trace"
+)
+```
+
+The configured runner `report_dir` is `<report_dir>/<site.alias>/`, so each validated
+`flow_run_id` has a distinct `runs/<flow_run_id>/` trace and result path. `BEGIN_FLOW` starts a new
+named trace. Duplicate begin/finalize delivery for the same ID replays state/result; after one ID
+is finalized, a new ID starts a fresh trace. Track `finalization_sent` per runner and run ID. Do not
+send `BEGIN_FLOW` or `FINALIZE_FLOW` to runners that use `EXECUTE_FLOW`: that command owns one fresh
+start/finalize lifecycle internally. In particular, Scenario B remains `EXECUTE_FLOW`-only and
+must not receive either lifecycle command.
+
+Every browser teammate is spawned with `browser_runtime` and `browser_run_id`; repeat both fields
+in every `BEGIN_FLOW` and `FINALIZE_FLOW`. They are required ownership data, not a shell command
+string. The runner passes them to the lifecycle helper as separate argv together with
+`--app <site.app>`.
+
+Wait for `TRACE FINALIZED` from every commanded browser runner before Phase 1.75 trace analysis
+aggregation. Use a 120-second response budget for `FINALIZE_FLOW`, covering the finalizer's default
+60-second stop timeout, 15-second recovery timeout, 30-second validation timeout, and handoff
+overhead. If no response arrives, do not blindly resend the command; mark trace infrastructure
+failed for that runner and do not analyze by path presence. Preserve the application flow verdict.
+
 #### Scenario D: Mixed browser + CLI
 
 Spawn browser runners + a CLI runner (general-purpose agent, not test-runner):
@@ -408,6 +471,11 @@ Agent(
 
 Lead coordinates: "CLI runner executes `recce run ...`" → "browser runner verifies result appears in UI."
 
+When Scenario D uses step-level routing, apply Scenario C's end-of-flow `FINALIZE_FLOW` handoff
+exactly once to each step-routed **browser** runner after all mixed steps finish. Never send
+`FINALIZE_FLOW` to `runner-cli`, and never send it to a browser runner that already returned
+`FLOW COMPLETE`.
+
 **CLI result contract:**
 
 | Field | Meaning |
@@ -427,7 +495,10 @@ For single-flow: keep runners alive if user might re-run or debug. Teardown on e
 
 #### Teams mode: Result aggregation
 
-Collect `FLOW COMPLETE` or `STEP COMPLETE` messages from all runners. Build the same result structure as subagent mode (total_steps, passed, failed, etc.).
+Collect `FLOW COMPLETE` or `STEP COMPLETE` messages from all runners. For step-routed browser
+runners, also collect every `TRACE FINALIZED` response before proceeding. Build the same result
+structure as subagent mode (total_steps, passed, failed, etc.) plus one trace-finalization contract
+per browser runner.
 
 **Mixed flow handling**: CLI step results are aggregated alongside browser step results in the same report. CLI steps show `exit_code` and `stdout_path` instead of screenshots. The final results table includes a `Runner` column to distinguish browser vs CLI steps:
 
@@ -506,17 +577,37 @@ Agent returns: `gif_path`, `gif_frames`, `mp4_path`, `thumbnail_path`, `blank_fr
 
 ### Phase 1.75 — Trace Analysis
 
-After agent returns (regardless of `record`), dispatch trace analysis:
+After the runner returns, read `trace_finalization_result_path` and confirm its parsed result agrees
+with the runner summary. For Scenario C and step-routed Scenario D browser roles, do this
+independently for every `TRACE FINALIZED` response; CLI runners have no browser trace. Dispatch
+trace analysis only under this gate:
+
+```text
+trace_analysis_eligible: true
+analysis_eligible: true in trace-finalization.env
+trace_infrastructure_result: PASS
+```
+
+When all three conditions hold, dispatch trace analysis:
 
 ```
 Agent(subagent_type="e2e-trace-analyzer"):
-  trace_path: $REPORT_DIR/trace.zip
+  trace_path: <trace_path returned by runner>
   report_dir: $REPORT_DIR
 ```
 
 Agent returns: `api_failures`, `console_errors`, `clean`, `analysis_path`. Merge these counts into the results (they may differ from the test-runner's per-step health counts, as trace analysis covers the full session including background requests).
 
-If `trace.zip` doesn't exist (e.g., trace was never started), skip this phase.
+For multiple step-routed browser runners, dispatch the analyzer once per eligible trace using that
+runner's distinct `trace_path` and `report_dir`, then aggregate counts. One ineligible or missing
+runner finalization does not suppress analysis for another eligible runner. Never reuse a
+`STEP COMPLETE` message as trace eligibility.
+
+For every other result, **Do NOT dispatch the trace-analyzer**. Presence of `trace.zip` is not a
+validity signal. Keep the runner's application `flow_verdict` unchanged, surface the independent
+trace infrastructure result, and continue to compile/present results. The report must include stop
+status/timeout, validation status, recovery status, artifact disposition/path, and analysis
+eligibility from `trace-finalization.env`.
 
 ## Phase 1.8 -- Auto-Compile and Compiled Run
 
@@ -584,6 +675,12 @@ If 0 diverged: "LLM and compiled runs agree on all steps."
 ## Phase 2 — Present Results
 
 **Single:** `Test complete: N/M PASS, Z not automated (X console errors, Y API failures) Report: <path> Browser still open.`
+
+If trace finalization failed, append:
+`Application flow: <flow_verdict>. Trace infrastructure: FAIL (<finalization_status>;
+validation=<validation_status>; recovery=<recovery_status>; artifact=<artifact_disposition> at
+<artifact_path>).` Do not convert the application flow result to FAIL solely because trace
+infrastructure failed.
 
 If `--video` or `--pr` was used, append:
 - `Video: <path>/test-run.mp4` (step-paced, via media agent)
