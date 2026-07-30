@@ -240,3 +240,47 @@ The corrected ACs and ordering above incorporate every accepted material finding
 
 Corrected ideation is complete and ready for the EM ideation gate. Captain-approved scope has been
 preserved; no product worktree, code, test, documentation, PR, or release mutation has started.
+
+## Stage Report: implementation
+
+- DONE: RED before GREEN, with evidence.
+  Baseline was 142 passed / 0 failed in 331.48s. Test-and-stub-only RED was 148 passed /
+  7 failed in 341.29s; the seven claim failures covered scalar fresh/resume/post-retry,
+  numeric fresh, marker-first resume, error-first post-retry, and numeric unsettled placement.
+- DONE: Count new assertions against the RED output.
+  The behavior assertions above failed before production changed; arrangement probes for
+  scan rc 5 in both orders, empty-array usability, outer-unusable placement, and
+  numeric posted-prior placement intentionally stayed green.
+- DONE: When you change a behavior, audit the tests that arrange the old one.
+  Existing `posted_reconciled` and `prior_attempt_unsettled` placement cases were extended,
+  not narrowed; both retain their original local-positive ordering under scan failure.
+- DONE: Implement the minimum approved behavioral repair.
+  `review_post_reviews_usable` now requires object elements, and all three scan callers
+  consume nonzero status; fresh post clears partial ids but reaches the existing local check.
+- DONE: Apply the approved documentation diff.
+  `CLAUDE.md`, `README.md`, and both runtime summaries describe the same bounded
+  three-caller fail-closed rule, including partial output and local-state ordering.
+- DONE: Scoped tests in the loop, full suite plus ripple at the exit.
+  Fresh recovery GREEN: `bash kc-pr-flow/scripts/review-post.test.sh` returned
+  155 passed / 0 failed in 403.25s; removing any caller guard or the element predicate
+  makes the named RED behavior fail again.
+- DONE: Name what CI will do differently, before pushing.
+  The scoped suite grew 71.77s versus the 331.48s baseline. Applied to the workflow's
+  recorded 9m07s job, the 20-minute cap retains about 9m41s planning margin; exact-head
+  CI remains authoritative.
+- DONE: Run the diff-earned static gates.
+  `bash -n`, pinned ShellCheck v0.9.0, and `git diff --check` all exited 0 on the
+  changed shell surfaces.
+- DONE: Commit the self-contained product deliverable.
+  Commit `335722edf48018c16342216351c7229670b2e222` contains exactly the seven authorized
+  runtime, test, fixture, and documentation files; the product worktree is clean.
+- DONE: Preserve recovery and downstream-review boundaries.
+  Recovery found the seven-file residue uncommitted with no test process, retained it
+  byte-for-byte until fresh verification, and did not run agy, Claude, product push, or PR work.
+
+### Summary
+
+The two ACs now fail closed at the custom-transport boundary without changing the shipped
+adapter or `sv` ordering. A corrected fixture-syntax false start was excluded from RED evidence.
+Independent validation and agy code review remain next; Claude EM remains the landing gate and
+must not be inferred from this implementation receipt.
