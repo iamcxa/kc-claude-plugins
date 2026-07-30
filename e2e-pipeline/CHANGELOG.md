@@ -3,6 +3,14 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.0.1](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.0.0...e2e-pipeline-v3.0.1) (2026-07-30)
+
+
+### Bug Fixes
+
+* **e2e-pipeline:** align trace producer and artifact formats ([#106](https://github.com/iamcxa/kc-claude-plugins/issues/106)) ([90135a2](https://github.com/iamcxa/kc-claude-plugins/commit/90135a25669df8dd62bde07d6193c69f4fac3195))
+* **e2e-pipeline:** bind browser snapshots and first navigation ([#108](https://github.com/iamcxa/kc-claude-plugins/issues/108)) ([ec9502c](https://github.com/iamcxa/kc-claude-plugins/commit/ec9502cb60611a22fb65d4ba2b850dbc58fd33d3))
+
 ## [3.0.0](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v2.9.1...e2e-pipeline-v3.0.0) (2026-07-30)
 
 
