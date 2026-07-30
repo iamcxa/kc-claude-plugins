@@ -27,6 +27,41 @@ Do not use `--auto-connect`, `--cdp`, or `connect`. The runtime rejects those es
 hatches and rejects executables that are not Chrome for Testing. Close with
 `e2e_browser close`, which targets only the owned namespace/session.
 
+### Flow-managed authentication
+
+Flows that declare `auth_mode: flow-managed` do not use the canonical persistent
+profile. Prepare a replay-specific profile through the same runtime:
+
+```bash
+CANONICAL_PROFILE="$HOME/.agent-browser/$APP"
+PROFILE_STATE=$(node "$BROWSER_RUNTIME" \
+  --run-id "$BROWSER_RUN_ID" --app "$APP" \
+  --auth-mode flow-managed \
+  --canonical-profile "$CANONICAL_PROFILE" \
+  prepare-flow-managed-profile)
+EPHEMERAL_PROFILE=$(node -e \
+  'process.stdout.write(JSON.parse(process.argv[1]).profile)' \
+  "$PROFILE_STATE")
+
+e2e_flow_browser() {
+  node "$BROWSER_RUNTIME" \
+    --run-id "$BROWSER_RUN_ID" --app "$APP" \
+    --auth-mode flow-managed \
+    --canonical-profile "$CANONICAL_PROFILE" \
+    --profile "$EPHEMERAL_PROFILE" "$@"
+}
+
+e2e_flow_browser --headed open <url>
+e2e_flow_browser verify-flow-managed-profile
+# ...capture trace/screenshots...
+e2e_flow_browser cleanup-flow-managed-profile
+```
+
+Preparation fails if the requested profile already exists. Open fails unless Chrome
+materializes the reserved path. Cleanup closes the owned session, compares the
+canonical profile digest, and removes only the lifecycle-bound ephemeral profile.
+Every replay, including Teams `RE-RUN`, prepares a different ephemeral path.
+
 ## Session & Navigation
 
 ```bash

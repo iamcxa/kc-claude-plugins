@@ -28,6 +28,17 @@ Patterns and gotchas for E2E testing agents. For project-specific patterns, chec
 ## Authentication
 
 - Auth profiles persist in `~/.agent-browser/<app>/`
+- Persistent auth remains the default when a flow omits `auth_mode`.
+- `auth_mode: flow-managed` means flow steps own authentication. The e2e-test
+  runtime prepares a previously absent profile under its managed root for every
+  replay, verifies Chrome bound to it, skips setup auth/auto-login, and cleans it
+  after evidence capture.
+- The canonical `~/.agent-browser/<app>/` profile is not opened in flow-managed
+  mode, so it must remain unchanged. Runtime preparation records its recursive byte digest and cleanup compares
+  the digest; a change is reported as a fail-closed lifecycle error.
+- Never delete an arbitrary temporary-looking profile. Only
+  `cleanup-flow-managed-profile` may remove a profile with matching run/app/path
+  lifecycle state.
 - Profile MISSING on first run — open `--headed`, human logs in manually
 - Verify auth: `get url` + check against known signin path (substring check)
 - Auth expired: DON'T close browser — user re-logs in existing `--headed` window

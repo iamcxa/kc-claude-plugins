@@ -94,6 +94,15 @@ If agent-browser is not installed, stop and report: "agent-browser is required f
 - **Automated OTP path**: If mapping has `auth.test_accounts` with phone numbers AND the project has Supabase `config.toml` with `[auth.sms.test_otp]` entries, automate login: navigate to signin path → fill phone number (strip country code if UI has country selector) → submit → fill OTP from config → submit → verify URL. This avoids blocking on human input for local dev environments.
 - **Manual path**: If no test accounts or OTP config available, open browser `agent-browser --profile ~/.agent-browser/<app> --headed open <base_url>`, read `auth.manual_prompt` from mapping and relay it to the user (e.g., "Please complete login in the browser"). After user confirms → `agent-browser get url` and verify using `auth.verification.url_not_contains` from mapping (`url_not_contains` performs a **substring check** on the full URL). If verification fails, re-prompt user. Repeat until verified or user aborts. Profile persists — login is one-time only.
 
+Walkthrough uses the canonical persistent profile by default. When the user
+explicitly says authentication itself is under test, mark the generated flow with
+`auth_mode: flow-managed` and make its first browser step a non-mutating logged-out
+checkpoint. Do not infer the mode merely because a login step appears.
+
+The interactive walkthrough may help author that flow, but it is not fresh-profile
+replay evidence. Verify it with `/e2e-test <flow-name> --no-compile`, which owns the
+ephemeral profile lifecycle.
+
 ## Knowledge Bootstrap (before Phase 1)
 
 Read accumulated patterns to inform walkthrough execution:
@@ -164,7 +173,11 @@ Human adjusts the plan via natural conversation:
 
 For detailed execution mechanics (startup, multi-site, per-step loop, anomaly observation, step log), see [reference.md](./reference.md).
 
-**Summary**: Open browser with `--profile` → verify auth (auto-login if needed) → start trace → execute steps → observe anomalies → write step log. Video is generated post-hoc from step screenshots by the media-processor agent.
+**Summary**: Open the canonical persistent browser profile → verify auth (auto-login
+if needed) → start trace → execute steps → observe anomalies → write step log.
+For a generated `auth_mode: flow-managed` login journey, use `/e2e-test` for the
+fresh-profile verification run. Video is generated post-hoc from step screenshots
+by the media-processor agent.
 
 **Per-step loop (observe-and-continue)**:
 1. `snapshot -i` → find `@ref` (interactive-only, less noise)

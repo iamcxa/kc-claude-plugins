@@ -28,11 +28,11 @@ test('e2e-test propagates one browser run identity to every browser runner', fun
 
   assert.match(
     skill,
-    /name="runner"[\s\S]{0,500}browser_runtime:[^\n]+browser_run_id:/
+    /name="runner"[\s\S]{0,900}browser_runtime:[^\n]+browser_run_id:/
   );
   assert.match(
     skill,
-    /name="runner-<site\.alias>"[\s\S]{0,500}browser_runtime:[^\n]+browser_run_id:/
+    /name="runner-<site\.alias>"[\s\S]{0,900}browser_runtime:[^\n]+browser_run_id:/
   );
   assert.match(
     skill,

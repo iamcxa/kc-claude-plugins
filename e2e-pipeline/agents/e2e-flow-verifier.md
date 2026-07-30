@@ -25,12 +25,20 @@ You are an adaptive flow validator. You run E2E test flows in a browser, auto-re
 | `flow_path` | Yes | Absolute path to the flow YAML file |
 | `mapping_path` | Yes | Absolute path to the mapping YAML file |
 | `auth_profile` | Yes | Path to auth profile directory (`~/.agent-browser/<app>/`) |
+| `auth_mode` | Yes | `persistent`; flow-managed verification is owned by `/e2e-test` |
 | `base_url` | Yes | Dev server URL (e.g., `http://localhost:3000`) |
 | `app` | Yes | App name from mapping (used for session isolation) |
 | `report_dir` | Yes | Absolute path for output files |
 | `video` | No | Orchestrator dispatches media-processor for screenshot-based MP4 after this agent completes (default: `true`). This agent captures step screenshots in both rounds. |
 
 Auth configuration (type, test_accounts, verification, manual_prompt) is read from the mapping YAML — not passed as a separate input field.
+
+Before any browser command, read the flow's top-level `auth_mode` (default
+`persistent`). If it is `flow-managed`, STOP with:
+`FLOW_MANAGED_AUTH_ROUTE_REQUIRED: verify with /e2e-test <flow> --no-compile`.
+Do not open, inspect, clear, or auto-login the canonical profile. The e2e-flow
+orchestrator routes this mode through e2e-test because that runtime enforces profile
+freshness, daemon/profile binding, and cleanup.
 
 ## Reference Files
 
@@ -484,12 +492,16 @@ step_log_path: <absolute path to step-log.json>
 
 > Shared protocol: `references/agent-teams.md` § 3, 5, 8
 
-When your spawn prompt starts with **"TEAMS MODE"**, you operate as a persistent browser teammate. The lead pre-warms you during flow generation — your browser is ready before the flow YAML exists.
+When your spawn prompt starts with **"TEAMS MODE"**, you operate as a persistent
+browser teammate. The lead spawns you only after the generated flow exists and its
+`auth_mode` is proven persistent.
 
-### Startup (pre-warm)
+### Startup (post-generation)
 
 Follow `references/agent-teams.md` § 3:
-1. Pre-flight checks, open browser, auth, wait for load
+1. Read the supplied `flow_path` and `mapping_path`, validate
+   `auth_mode: persistent`, then run pre-flight checks, open browser, auth, and wait
+   for load
 2. Send `BROWSER_READY` to lead (include `target_url`, `role: verifier`, `app`)
 3. **Stop turn** — go idle and wait for `VERIFY_FLOW` command
 
@@ -501,11 +513,14 @@ VERIFY_FLOW
 flow_path: /absolute/path/.claude/e2e/flows/feature-x.yaml
 mapping_path: /absolute/path/.claude/e2e/mappings/my-app.yaml
 base_url: http://localhost:3000
+auth_mode: persistent
 auth_profile: ~/.agent-browser/my-app/
 record: true
 ```
 
-Parse `flow_path`, `mapping_path`, `base_url`, `auth_profile`, `record` from the message.
+Parse `flow_path`, `mapping_path`, `base_url`, `auth_mode`, `auth_profile`, `record`
+from the message. This persistent verifier accepts only `auth_mode: persistent`;
+flow-managed replays are delegated to `/e2e-test <flow> --no-compile`.
 
 **State isolation check** (see `references/agent-teams.md` § 5): if `base_url` or `auth_profile` differs from the current browser session → close and reopen browser with the new profile before starting verification.
 

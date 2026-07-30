@@ -96,6 +96,11 @@ Use loaded patterns to:
 - List existing flows in `.claude/e2e/flows/`
 - Ask user which to verify (or accept flow name as argument)
 - **Detect flow type**: Read the flow YAML. If ALL steps are `Execute external` or `Verify external` → set `flow_mode: cli-only` (skip browser verifier, go to Phase 2.5 CLI recording). Otherwise → `flow_mode: browser`.
+- **Detect auth lifecycle**: top-level `auth_mode` defaults to `persistent`.
+  If it is `flow-managed`, do not pre-warm or dispatch the persistent
+  `e2e-flow-verifier`. Delegate verification to
+  `/e2e-test <flow-name> --no-compile`; that path owns fresh-profile preparation,
+  binding verification, pre-auth skipping, reporting, and cleanup.
 - Skip to Phase 2
 
 ### Codebase Scan
@@ -145,11 +150,20 @@ The sentinel has a 10-minute staleness timeout as safety net — enforced by the
 - **Teams mode**: TeamCreate available AND `--no-teams` not set AND `flow_mode: browser` (CLI-only flows don't need Teams)
 - **Subagent mode**: TeamCreate unavailable OR `--no-teams` set OR `flow_mode: cli-only`
 
-### Teams mode: Pre-warm verifier browser (parallel with writer)
+### Teams mode: Defer verifier browser until auth mode is known
 
 > Shared protocol: `references/agent-teams.md` § 2-3
 
-When Teams mode is active AND `--no-verify` is NOT set, spawn the verifier teammate BEFORE dispatching the writer. This overlaps browser startup with flow generation.
+Do not create or pre-warm a verifier before the writer returns. A generated flow's
+top-level `auth_mode` is not known yet, and opening the canonical profile first
+would modify it before a possible flow-managed replay.
+
+After writer return and post-generation validation:
+
+- `auth_mode: flow-managed` → do not create a verifier team; delegate to
+  `/e2e-test <flow-name> --no-compile`.
+- Omitted/`auth_mode: persistent`, Teams mode, and verification enabled → create
+  the team and spawn the verifier with the proven persistent mode:
 
 ```
 TeamCreate(team_name="e2e-flow", description="Flow generation + verification")
@@ -158,26 +172,27 @@ Agent(
   team_name="e2e-flow",
   name="verifier",
   subagent_type="e2e-pipeline:e2e-flow-verifier",
-  prompt="TEAMS MODE. Pre-warm: open browser at <base_url> with auth profile <auth_profile>.
+  prompt="TEAMS MODE. Open the verified persistent flow.
+          flow_path: <absolute generated flow path>
+          mapping_path: <absolute mapping path>
+          auth_mode: persistent
+          base_url: <base_url>  auth_profile: <auth_profile>
           App: <app>. Report dir: <report_dir>.
           After browser is ready, send BROWSER_READY and wait for VERIFY_FLOW command."
 )
 ```
 
-Verifier opens browser in parallel while the writer generates the flow. By the time the writer returns, the verifier's browser is already warm.
-
 **If TeamCreate or Agent spawn fails**: see `references/agent-teams.md` § 4. Clean up partial state, fall back to subagent mode for Phase 2.
 
 If `--no-verify`: skip verifier spawn (no browser needed).
 
-### Verifier health check (after writer returns)
+### Verifier health check (persistent flows only)
 
-After the flow-writer subagent returns, verify the pre-warmed verifier is still alive before proceeding to Phase 2:
+After spawning the proven-persistent verifier, verify it is alive before Phase 2:
 
 1. Check `~/.claude/teams/e2e-flow/config.json` — verifier member still present?
-2. If verifier is gone (crashed during pre-warm): log warning, `TeamDelete()`, fall back to subagent mode for Phase 2
-3. If verifier sent `BROWSER_READY` during writer execution: proceed to Phase 2b directly
-4. If verifier hasn't sent `BROWSER_READY` yet: wait up to 30s. No response → treat as crash (step 2)
+2. If verifier is gone: log warning, `TeamDelete()`, fall back to subagent mode for Phase 2
+3. Wait up to 30s for `BROWSER_READY`. No response → treat as crash (step 2)
 
 ### Generate
 
@@ -200,6 +215,12 @@ See [reference.md](./reference.md) § Agent Dispatch Patterns for exact dispatch
 **Post-generation validation:**
 1. If `flow_mode: browser`: verify the flow's `mapping:` field matches the `app` value from the loaded mapping. If mismatch → treat as generation error (same cleanup path as invalid YAML below).
 2. If `flow_mode: cli-only`: verify ALL steps use `action: "Execute external"` or `action: "Verify external"` only. If any step has a browser action (Click, Navigate, Type, etc.) → treat as generation error. A CLI-only flow with browser steps is invalid — the writer was given `cli_only: true` but produced mixed output.
+3. Validate top-level `auth_mode`: omitted/`persistent` or `flow-managed` only.
+   If `flow-managed`, the first browser step must be non-mutating `Navigate` or
+   `Verify` with a logged-out expectation. No verifier has been opened before this
+   mode check; use
+   `/e2e-test <flow-name> --no-compile` for Phase 2 verification. Do not open the
+   canonical profile in the verifier as a fallback.
 
 Present summary to user:
 
@@ -256,7 +277,7 @@ verification, treat it as trace infrastructure failure, skip analysis, and prese
 ```
 SendMessage(
   to="verifier",
-  message="VERIFY_FLOW\nflow_path: <path>\nmapping_path: <path>\nbase_url: <url>\nauth_profile: <path>\nrecord: <bool>",
+  message="VERIFY_FLOW\nflow_path: <path>\nmapping_path: <path>\nbase_url: <url>\nauth_mode: persistent\nauth_profile: <path>\nrecord: <bool>",
   summary="Verify flow: <flow-name>"
 )
 ```
@@ -317,6 +338,8 @@ Dispatch `e2e-pipeline:e2e-flow-verifier` with:
 - `flow_path`: Path to generated (or existing) flow YAML
 - `mapping_path`: Path to mapping YAML
 - `auth_profile`: `~/.agent-browser/<app>/`
+- `auth_mode`: `persistent` only. Flow-managed verification is routed through
+  `/e2e-test` so its runtime can enforce a fresh profile lifecycle.
 - `base_url`: From mapping
 - `app`: From mapping
 - `report_dir`: `.claude/e2e/reports/<timestamp>/`

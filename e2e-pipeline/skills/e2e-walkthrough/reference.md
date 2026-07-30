@@ -8,6 +8,12 @@ Detailed execution mechanics and output procedures. Loaded on demand from SKILL.
 
 ### Browser State Check
 
+This walkthrough lifecycle is persistent. If the planned flow explicitly tests
+authentication, write `auth_mode: flow-managed` into the generated flow and use
+`/e2e-test <flow> --no-compile` for isolated replay evidence. Do not clear or replace
+the canonical profile here, and do not describe walkthrough evidence as a fresh
+flow-managed replay.
+
 Before opening a new browser session, check for stale sessions from previous skill invocations:
 
 1. Check if agent-browser has an active session: `agent-browser get url 2>/dev/null`
@@ -590,7 +596,7 @@ This is informational — always write the new flow regardless.
 **Serialization rules:**
 - Use structured action references (`"Click <element> on <page>"`) not natural-language descriptions
 - Set `mapping:` to the mapping filename without `.yaml` extension
-- Format must match `/e2e-test` flow spec — valid keys: `name`, `description`, `tags`, `mapping` (single-site) or `sites` (cross-site), `variables`, `steps` (each with `id`, `site` (cross-site only), `action`, `expect`, `screenshot`, `optional`, `timeout`, `note`)
+- Format must match `/e2e-test` flow spec — valid keys: `name`, `description`, `tags`, `auth_mode`, `mapping` (single-site) or `sites` (cross-site), `variables`, `steps` (each with `id`, `site` (cross-site only), `action`, `expect`, `screenshot`, `optional`, `timeout`, `note`)
 - **Checkpoint steps**: serialize with `action: "Verify external"`, `description`, `wait`, `verify:` block, and `on_fail`. Preserve the full `verify:` structure including service groups and natural language checks. For execution checkpoints, use `action: "Execute external"`, `description`, `execute:` block, `wait_after`, and `on_fail`.
 - Set `tags: [walkthrough, auto-generated]` plus any context-specific tags
 - For verification flows, use `/e2e-flow --verify-only` instead

@@ -27,7 +27,11 @@ The orchestrator skill dispatches this agent with the following fields. Parse th
 |-------|----------|-------------|
 | `flow_path` | Yes | Absolute path to the flow YAML file |
 | `mapping_path` | Yes | Absolute path to the mapping YAML file |
-| `auth_profile` | Yes | Path to the agent-browser auth profile directory (e.g., `~/.agent-browser/my-app/`) |
+| `auth_mode` | Required | `persistent` or `flow-managed`; reject any other value |
+| `canonical_auth_profile` | Required | Canonical app profile path (`~/.agent-browser/<app>/`) |
+| `ephemeral_auth_profile` | Flow-managed only | Must equal `auth_profile`; omitted in persistent mode |
+| `auth_profile` | Yes | Canonical profile in persistent mode; runtime-prepared ephemeral profile in flow-managed mode |
+| `auth_profile_freshness` | Required | `persistent-existing` or `verified-absent` |
 | `base_url` | Yes | Base URL of the app under test (e.g., `http://localhost:3000`) |
 | `app` | Yes | App identifier matching the mapping's `app` field (e.g., `my-app`) |
 | `report_dir` | Yes | Absolute path to the directory for report output (create with `mkdir -p` if missing) |
@@ -44,22 +48,33 @@ If any required field is missing, STOP with: "Missing required field: `<field>`.
 Every browser operation uses this command prefix:
 
 ```text
+runtime_base_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}"
 browser_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}"
 ```
 
-Replace `{{browser_command}}` in every command below with that exact prefix. Bare
+In flow-managed mode, append the lifecycle binding to that prefix:
+
+```text
+--auth-mode flow-managed --canonical-profile "{{canonical_auth_profile}}" --profile "{{auth_profile}}"
+```
+
+Replace `{{browser_command}}` in every command below with the applicable prefix. Bare
 `agent-browser` commands are prohibited: they can attach to the default daemon or a
 different Chrome-based browser. The runtime pins Chrome for Testing, an owned daemon
 namespace, and the app session; it rejects auto-connect and CDP attachment.
 
-In Teams mode, keep `active_browser_run_id`. Every `EXECUTE_FLOW`, `EXECUTE_STEP`, and
-`RE-RUN` command must repeat `browser_runtime` and `browser_run_id`:
+In Teams mode, keep `active_browser_run_id`, `active_auth_mode`, and
+`active_auth_profile`. Every `EXECUTE_FLOW`, `EXECUTE_STEP`, and `RE-RUN` command
+must repeat the runtime and auth fields:
 
 - Same identity: continue using the existing browser.
 - Different identity: reject the command without closing, switching, or reopening any
   browser. Send `EXECUTION ERROR` with `step: runtime-identity`,
   `error: browser_run_id does not match teammate invocation; recreate the e2e-test team`,
   and `recoverable: false`. The lead must teardown and recreate the `e2e-test` team.
+- Persistent mode may reuse the canonical profile.
+- Flow-managed `RE-RUN` must provide a different runtime-prepared profile with
+  `auth_profile_freshness: verified-absent`. Reject the prior path.
 
 ## Startup
 
@@ -98,28 +113,44 @@ Run these checks and STOP with a clear error if any critical check fails:
 
 ```bash
 python3 --version                                                   # Required before tracing
-{{browser_command}} --version                                              # CLI installed?
+{{runtime_base_command}} --version                                   # CLI installed?
 curl -s -o /dev/null -w "%{http_code}" {{base_url}}                  # Server reachable? 2xx/3xx = OK
-ls {{auth_profile}} 2>/dev/null                                      # Auth profile exists?
 ```
 
 - If `python3` is not installed, STOP before `trace start`: "python3 is required for safe trace finalization."
-- If `{{browser_command}} --version` fails, STOP: "Owned browser runtime is unavailable."
+- If `{{runtime_base_command}} --version` fails, STOP: "Owned browser runtime is unavailable."
 - If server returns 000/4xx/5xx, STOP: "Server not reachable at {{base_url}}."
-- If auth profile missing AND mapping `auth.type` is NOT "none", WARN but continue (auth verify will catch it).
+- Persistent mode: check `ls {{auth_profile}}`. If missing AND mapping `auth.type`
+  is not `none`, WARN but continue.
+- Flow-managed mode: require `auth_profile_freshness: verified-absent` and require
+  `{{auth_profile}}` does not exist. If it exists, STOP before browser launch.
 
 ### 1b. Runtime Ownership Check
 
 Verify `{{browser_runtime}}` exists and `{{browser_run_id}}` matches
 `^[a-z0-9][a-z0-9-]{2,127}$`. Do not probe or close the default agent-browser daemon.
 The run identity owns a fresh namespace; reject a different identity as specified by
-the Browser Command Contract.
+the Browser Command Contract. In flow-managed mode, also require
+`{{ephemeral_auth_profile}}` to equal `{{auth_profile}}`; reject the dispatch before
+opening a browser when they differ.
 
 ### 1c. Open Browser
+
+Persistent mode:
 
 ```bash
 {{browser_command}} --profile {{auth_profile}} --headed open {{base_url}}
 ```
+
+Flow-managed mode:
+
+```bash
+{{browser_command}} close 2>/dev/null || true
+{{browser_command}} --headed open {{base_url}}
+{{browser_command}} verify-flow-managed-profile
+```
+
+The runtime must return `binding: verified`; otherwise STOP before flow steps.
 
 ```bash
 {{browser_command}} wait --load networkidle
@@ -127,7 +158,15 @@ the Browser Command Contract.
 
 ### 1d. Auth Verification
 
-Skip if mapping `auth.type` is "none".
+If `auth_mode` is `flow-managed`, skip setup authentication verification,
+auto-login, manual login prompts, and `auth.test_accounts` use. Authentication is
+performed by flow steps. Before any auth-mutating step, the first browser step must
+be `Navigate` or `Verify` with at least one logged-out expectation (for example a
+login URL and login control). Validate it and emit `FLOW_MANAGED_AUTH_READY`; if it
+is missing or fails, stop before any login action.
+
+If `auth_mode` is `persistent`, keep the behavior below. Skip only if mapping
+`auth.type` is `none`.
 
 ```bash
 {{browser_command}} get url
@@ -423,10 +462,26 @@ Playwright trace entries, and runs bounded close recovery through the owned brow
 stop timeout or failure. On successful finalization, leave the browser open. Recovery may have
 closed it after an infrastructure failure.
 
-### 3b. Browser State
+### 3b. Browser/Profile Completion
 
-After successful finalization, leave the browser open for human inspection. If stop timed out or
-failed, report the finalizer's bounded recovery result; do not assume a session remains open.
+Persistent mode: after successful trace finalization, leave the owned browser open for human
+inspection. If trace stop timed out or failed, report the finalizer's bounded recovery result; do
+not assume a session remains open.
+
+Flow-managed mode: only after the shared finalizer has persisted or quarantined trace evidence,
+run the owned profile cleanup:
+
+```bash
+PROFILE_CLEANUP_RC=0
+PROFILE_CLEANUP_STATE=$({{browser_command}} cleanup-flow-managed-profile) ||
+  PROFILE_CLEANUP_RC=$?
+```
+
+Capture the JSON result separately from `trace-finalization.env`. The runtime closes the owned
+namespace/session, compares the canonical profile digest recorded at preparation, and removes only
+the lifecycle-bound ephemeral profile. A non-zero result, canonical result other than `unchanged`,
+or cleanup other than `removed` makes the profile infrastructure verdict fail closed without
+rewriting the already-preserved application `flow_verdict` or trace `infrastructure_result`.
 
 ### 3c. Write Report
 
@@ -510,6 +565,19 @@ _(Include this section only when the flow contains `verify-external` steps)_
 | Artifact disposition | `<artifact_disposition>` — `<artifact_path>` |
 | Trace analysis eligible | `<analysis_eligible>` |
 
+## Auth Profile Lifecycle
+
+| Field | Value |
+|-------|-------|
+| Mode | {{auth_mode}} |
+| Canonical Profile | {{canonical_auth_profile}} |
+| Ephemeral Profile | {{auth_profile_or_not_applicable}} |
+| Freshness | {{auth_profile_freshness}} |
+| Binding | {{binding_verified_or_not_applicable}} |
+| Canonical Digest (SHA-256) | {{canonical_digest_or_not_applicable}} |
+| Canonical Integrity | {{unchanged_changed_or_not_applicable}} |
+| Cleanup | {{removed_failed_or_not_applicable}} |
+
 ## Replay
 
 | Action | Command |
@@ -544,6 +612,11 @@ You MUST end your response with this exact structured block (the orchestrator pa
 - trace_finalization_result_path: {{report_dir}}/trace-finalization.env
 - trace_analysis_eligible: true|false
 - report_path: {{report_dir}}/report.md
+- auth_mode: persistent|flow-managed
+- auth_profile_freshness: persistent-existing|verified-absent
+- auth_profile_binding: not-applicable|verified
+- auth_profile_cleanup: not-applicable|removed|failed
+- canonical_profile: not-applicable|unchanged|changed
 - video: true|false    ← (echoes input, orchestrator uses this to decide media dispatch)
 - key_findings:
   - "finding 1"
@@ -615,6 +688,11 @@ eval_fallback_hits: <N>
 - trace_finalization_result_path: {{report_dir}}/trace-finalization.env
 - trace_analysis_eligible: true|false
 - report_path: {{report_dir}}/report.md
+- auth_mode: persistent|flow-managed
+- auth_profile_freshness: persistent-existing|verified-absent
+- auth_profile_binding: not-applicable|verified
+- auth_profile_cleanup: not-applicable|removed|failed
+- canonical_profile: not-applicable|unchanged|changed
 - video: true|false
 - key_findings:
   - "finding 1"
@@ -677,9 +755,11 @@ These rules are non-negotiable. Violating them causes flaky or broken tests.
 5. **`fill` over `click+type`** for form inputs. `fill` is atomic (focus + clear + type). `click` then `type` can break when @ref changes on focus.
 6. **`is visible` exit code is always 0**. Check stdout text "true"/"false", NOT the exit code. Do NOT use `&& echo pass || echo fail`.
 7. **`scroll` accepts direction only** (up/down). To scroll TO a specific element, use `hover @ref` which scrolls it into view.
-8. **Do NOT close browser after successful trace finalization**. Human may inspect. On trace-stop
-   timeout/failure, the shared finalizer performs bounded close recovery so report generation stays
-   reachable.
+8. **Browser completion follows auth mode**. Persistent mode stays open for
+   inspection after successful shared trace finalization. Flow-managed mode invokes the same
+   bounded finalizer first, then closes and cleans its owned ephemeral profile so evidence is
+   preserved and the profile cannot be reused. On trace timeout/failure, preserve the independent
+   trace infrastructure result and continue to owned profile cleanup/report generation.
 9. **React Native Web**: Text elements render twice in DOM (nth=0 is hidden). Prefer `[role="<r>"][aria-label="<v>"]` CSS attribute selector for tab bars and interactive elements (directly targets the correct accessible element). For text-only elements use `find text "<v>"` or `:nth-of-type(2)` CSS pseudo. BANNED: `>> nth=N` chord and `role=X[name=...]` Playwright forms — see `e2e-pipeline/scripts/lint-mapping.sh`. DEPRECATED as selector value: `find role <r> --name "<v>"` strings — these are subcommand chains, not selector grammar (PR #8 course correction).
 10. **Ant Design**: CSS-hidden inputs (e.g., Segmented control radio buttons). `is visible` returns false even when the component is rendered. Verify via snapshot a11y tree instead.
 11. **Multi-site flows**: The shared runtime always supplies `--app {{app}}`, which maps to the isolated browser session. Do not add a second `--session` flag.
@@ -699,49 +779,91 @@ When your spawn prompt starts with **"TEAMS MODE"**, you operate as a persistent
 
 Follow `references/agent-teams.md` § 3:
 1. Run pre-flight and runtime ownership checks (Phase 1 through § 1b).
-2. Open browser, wait for load, and verify auth (Phase 1 § 1c through § 1d).
-3. Set `active_browser_run_id` to the dispatched `browser_run_id`.
-4. **Do not run § 1e trace start during persistent startup.** `EXECUTE_FLOW` starts its own fresh
+2. Persistent mode opens the canonical profile, waits for load, and verifies auth
+   (Phase 1 § 1c through § 1d).
+3. A command-waiting flow-managed teammate (the prompt says to wait for `EXECUTE_FLOW`, or the
+   lead will route `BEGIN_FLOW`) does not open or adopt the prompt's prepared profile during
+   startup. Verify that it is still absent, set `active_auth_profile` empty and
+   `last_auth_profile` empty, and let the first flow command perform the binding transition.
+   A direct single-flow teammate may use Phase 1 § 1c once for its initial dispatch.
+4. Set `active_browser_run_id` and `active_auth_mode` from the dispatch. Set
+   `active_auth_profile` only after a browser binding has been verified.
+5. **Do not run § 1e trace start during persistent startup.** `EXECUTE_FLOW` starts its own fresh
    trace; step-routed work starts through `BEGIN_FLOW`.
-5. Send `BROWSER_READY` to lead (include `target_url`, `role`, `app`, `browser_run_id`).
-6. If `--headed` auth is needed, send `WAITING_FOR_AUTH`, wait for `AUTH_COMPLETE`, then
+6. Send `BROWSER_READY` to lead (include `target_url`, `role`, `app`, `browser_run_id`).
+   For a command-waiting flow-managed teammate this means the owned runtime is ready and no
+   profile is active yet.
+7. If `--headed` auth is needed, send `WAITING_FOR_AUTH`, wait for `AUTH_COMPLETE`, then
    `BROWSER_READY`.
-7. **Stop turn** — go idle
+8. **Stop turn** — go idle
 
 ### On receiving EXECUTE_FLOW message
 
-Require both runtime fields in the inbound message:
+Require the runtime and auth fields in the inbound message:
 
 ```text
 EXECUTE_FLOW
 flow_path: /absolute/path/.claude/e2e/flows/order-flow.yaml
 browser_runtime: /absolute/path/e2e-browser-runtime.js
 browser_run_id: <same invocation id>
+auth_mode: <persistent|flow-managed>
+canonical_auth_profile: <canonical path>
+ephemeral_auth_profile: <ephemeral path or omit>
+auth_profile: <canonical or ephemeral path>
+auth_profile_freshness: <persistent-existing|verified-absent>
 ```
 
 Apply the Browser Command Contract before execution, rejecting an identity mismatch.
 
+For flow-managed auth, adopt the inbound prepared profile before trace start. A command-waiting
+teammate does not treat the profile from an earlier suite entry as reusable:
+
+1. Require `active_auth_profile` to be empty. Reject a new `EXECUTE_FLOW` without closing
+   anything when another profile is active; the prior flow must finish cleanup first.
+2. After prior cleanup, require the inbound profile to be a new profile different from
+   `last_auth_profile`, require `verified-absent`, and confirm the path is absent.
+   A stale, reused, already-active, or existing path is an `EXECUTION ERROR`.
+3. Construct the candidate `{{browser_command}}` from the inbound binding, then adopt and verify it:
+
+   ```bash
+   {{browser_command}} close 2>/dev/null || true
+   {{browser_command}} --headed open {{base_url}}
+   {{browser_command}} verify-flow-managed-profile
+   ```
+
+4. Only after verification returns `binding: verified`, set `active_auth_profile` and
+   `last_auth_profile` to the inbound path. On any failure, fail closed: send `EXECUTION ERROR`,
+   do not start a trace, do not execute steps, and do not retain a partially switched active
+   binding. The owned runtime closes/discards a profile when browser adoption fails.
+
 Start one fresh trace for this command, then execute the full flow (Phase 2 + Phase 3 as normal).
 Phase 3 finalizes it exactly once. `EXECUTE_FLOW` never receives `BEGIN_FLOW` or `FINALIZE_FLOW`.
-After completion, send results:
+After completion, preserve `flow_verdict`, `trace_infrastructure_result`, and
+`profile_infrastructure_result` independently; a trace or cleanup failure never rewrites the
+application verdict. Send the exact outbound fields below, including binding, cleanup, canonical
+integrity, retained status, and retained path:
 
 ```
 SendMessage(
   to="lead",
-  message="FLOW COMPLETE\ntotal_steps: N\npassed: N\nfailed: N\nskipped: N\nnot_automated: N\nconsole_errors: N\napi_failures: N\nreport_path: <path>\ntrace_path: <accepted path or N/A>\ntrace_finalization_result_path: <path>\ntrace_infrastructure_result: PASS|FAIL\ntrace_analysis_eligible: true|false\n\nStep Results:\n| Step | Result | Details |\n|------|--------|---------|\n| <id> | PASS | ... |\n| <id> | FAIL | <reason> |\n| <id> | NOT_AUTOMATED | <reason> |\n\nkey_findings:\n- <finding>",
+  message="FLOW COMPLETE\nflow_verdict: PASS|FAIL\ntotal_steps: N\npassed: N\nfailed: N\nskipped: N\nnot_automated: N\nconsole_errors: N\napi_failures: N\nreport_path: <path>\ntrace_path: <accepted path or N/A>\ntrace_finalization_result_path: <path>\ntrace_infrastructure_result: PASS|FAIL\ntrace_analysis_eligible: true|false\nprofile_infrastructure_result: PASS|FAIL|not-applicable\nauth_profile_binding: verified|not-applicable\nauth_profile_cleanup: removed|failed|not-applicable\ncanonical_profile: unchanged|changed|not-applicable\nprofile_retained: true|false|not-applicable\nprofile: <path or not-applicable>\n\nStep Results:\n| Step | Result | Details |\n|------|--------|---------|\n| <id> | PASS | ... |\n| <id> | FAIL | <reason> |\n| <id> | NOT_AUTOMATED | <reason> |\n\nkey_findings:\n- <finding>",
   summary="Flow: N/M PASS"
 )
 ```
 
-**DO NOT close browser.** Go idle — lead may request re-run or debug.
+Persistent mode leaves the browser open and goes idle. Flow-managed mode completes
+the report and profile cleanup, then goes idle for a possible fresh-profile re-run.
 
 ### On receiving EXECUTE_STEP message
 
 Execute a SINGLE step from a cross-site flow (lead routes steps by `site:`):
 
-1. Require `browser_runtime` and `browser_run_id`, then apply the Browser Command Contract.
-2. Parse `flow_run_id` plus step definition (`id`, `action`, `expect`, `context`).
-3. Require `flow_run_id` to match the active run established by `BEGIN_FLOW`; otherwise send
+1. Require `browser_runtime`, `browser_run_id`, `auth_mode`,
+   `canonical_auth_profile`, `auth_profile`, and `auth_profile_freshness`;
+   additionally require `ephemeral_auth_profile` in flow-managed mode and require
+   it to be omitted in persistent mode. Then apply the Browser Command Contract.
+2. Parse `flow_run_id` plus the step definition (`id`, `action`, `expect`, `context`).
+3. Require `flow_run_id` to match the active trace run established by `BEGIN_FLOW`; otherwise send
    `EXECUTION ERROR` without browser interaction.
 4. If `context:` present — inject variables into action/expect templates.
 5. Execute the step (Phase 2 logic for one step: snapshot → interact → validate).
@@ -755,7 +877,9 @@ SendMessage(
 )
 ```
 
-7. **DO NOT close browser.** Go idle — wait for next step.
+7. Persistent mode leaves the browser open. Flow-managed mode stays open only until
+   the routed flow's final evidence is collected; the lead then requests lifecycle
+   finalization and cleanup. Go idle and wait for the next step or `FINALIZE_FLOW`.
 
 The `data:` field captures values from the page that subsequent cross-site steps may need (e.g., order ID, URL, confirmation code). The lead passes these as `context:` to other runners.
 
@@ -769,16 +893,44 @@ flow_run_id: <validated id>
 browser_runtime: <absolute executable>
 browser_run_id: <owned run id>
 session: {{app}}
+auth_mode: <persistent|flow-managed>
+canonical_auth_profile: <canonical path>
+ephemeral_auth_profile: <prepared fresh ephemeral path or omit>
+auth_profile: <canonical or prepared fresh ephemeral path>
+auth_profile_freshness: <persistent-existing|verified-absent>
 trace_path: {{report_dir}}/runs/<flow_run_id>/trace.zip
 trace_finalization_result_path: {{report_dir}}/runs/<flow_run_id>/trace-finalization.env
 ```
 
-Validate `session` against `{{app}}` and both supplied paths against the exact run-keyed paths.
-Require both ownership fields, require them to match the teammate's configured browser ownership,
-and append the following three argv fields to the lifecycle call:
+First classify the `flow_run_id`. A duplicate matching the active or finalized ID must repeat the
+exact stored runtime, auth binding, and paths; replay its stored `FLOW READY` result without
+browser interaction or another profile adoption. Reject any drift.
+
+For a new ID, validate `session` against `{{app}}` and both supplied paths against the exact
+run-keyed paths. Require both ownership fields and require them to match the teammate's configured
+browser ownership. In flow-managed mode, adopt the inbound prepared profile only after prior
+cleanup:
+
+1. Require `active_auth_profile` empty, require the inbound profile to be a new profile different
+   from `last_auth_profile`, require `verified-absent`, and confirm the path is absent.
+2. Construct the candidate `{{browser_command}}` from the inbound binding, then adopt and verify:
+
+   ```bash
+   {{browser_command}} close 2>/dev/null || true
+   {{browser_command}} --headed open {{base_url}}
+   {{browser_command}} verify-flow-managed-profile
+   ```
+
+3. Only after `binding: verified`, set `active_auth_profile` and `last_auth_profile`. On failure,
+   fail closed with `EXECUTION ERROR`: do not begin a trace or execute steps, and do not retain a
+   partially switched binding. The owned runtime closes/discards a profile when adoption fails.
+
+Persistent mode requires the canonical binding to match the active runner profile. Then append
+the following three argv fields to the lifecycle call:
 `--browser-runtime "<parsed browser_runtime>" --browser-run-id "<parsed browser_run_id>"
 --app "{{app}}"`.
-Then invoke the executable lifecycle contract:
+Only after the mode-appropriate browser binding is ready, invoke the executable lifecycle
+contract:
 
 ```bash
 TRACE_LIFECYCLE="${CLAUDE_PLUGIN_ROOT}/scripts/team-trace-lifecycle.sh"
@@ -801,8 +953,9 @@ SendMessage(
 )
 ```
 
-Duplicate `BEGIN_FLOW` for an active ID replays `FLOW READY` without another start. A new ID is
-accepted only after the prior ID finalized, and starts a fresh trace.
+Duplicate `BEGIN_FLOW` for an active or finalized ID replays `FLOW READY` without another start
+or profile adoption. A new ID is accepted only after the prior ID finalized and its flow-managed
+profile cleanup completed, and starts a fresh trace.
 
 ### On receiving FINALIZE_FLOW message
 
@@ -816,6 +969,11 @@ flow_verdict: PASS|FAIL
 browser_runtime: <absolute executable>
 browser_run_id: <owned run id>
 session: {{app}}
+auth_mode: <persistent|flow-managed>
+canonical_auth_profile: <canonical path>
+ephemeral_auth_profile: <active ephemeral path or omit>
+auth_profile: <canonical or active ephemeral path>
+auth_profile_freshness: <persistent-existing|verified-absent>
 trace_path: {{report_dir}}/runs/<flow_run_id>/trace.zip
 trace_finalization_result_path: {{report_dir}}/runs/<flow_run_id>/trace-finalization.env
 ```
@@ -825,11 +983,17 @@ Validate that `flow_verdict` is `PASS` or `FAIL`, `session` exactly matches the 
 mismatch with `EXECUTION ERROR`; do not invoke the helper on untrusted paths.
 Require both ownership fields and require them to match the ownership used by `BEGIN_FLOW`. Pass
 them as separate argv; never combine them into `AGENT_BROWSER_BIN` or another shell command string.
+Apply the complete Browser Command Contract: the auth mode/profile fields must match the active
+runner state, `ephemeral_auth_profile` is required only for flow-managed mode, and it must equal
+`auth_profile`.
 
 The lifecycle helper tracks active/completed run identity. A duplicate `FINALIZE_FLOW` for the same
-ID replays its existing result without another stop. A mismatched/new ID fails closed.
+ID replays its existing result without another stop. The runner also retains the combined
+trace/profile response for that ID so a duplicate never repeats profile cleanup. A mismatched/new
+ID fails closed.
 
-Invoke the lifecycle contract, which calls the shared finalizer once for a first delivery:
+Evidence is always finalized before profile cleanup. Invoke the lifecycle contract, which calls the
+shared bounded finalizer once for a first delivery:
 
 ```bash
 TRACE_LIFECYCLE="${CLAUDE_PLUGIN_ROOT}/scripts/team-trace-lifecycle.sh"
@@ -844,18 +1008,37 @@ TRACE_LIFECYCLE="${CLAUDE_PLUGIN_ROOT}/scripts/team-trace-lifecycle.sh"
 ```
 
 Read the result file even when the helper returns non-zero. Preserve its `flow_verdict` separately
-from `infrastructure_result`, then send:
+from trace `infrastructure_result`.
+
+For flow-managed mode, only after the lifecycle helper returns and the result file has been read,
+run the owned profile cleanup even when trace infrastructure failed:
+
+```bash
+PROFILE_CLEANUP_RC=0
+PROFILE_CLEANUP_STATE=$({{browser_command}} cleanup-flow-managed-profile) ||
+  PROFILE_CLEANUP_RC=$?
+```
+
+Parse cleanup JSON without sourcing it. Track a separate `profile_infrastructure_result`:
+`PASS` only when cleanup is `removed` and canonical profile is `unchanged`; otherwise `FAIL`.
+Whenever cleanup reports `removed`, clear `active_auth_profile` regardless of trace status and set
+`profile_retained: false`. If cleanup fails, retain the active profile/path for owned recovery and
+set `profile_retained: true`. Persistent mode reports all profile fields `not-applicable`.
+
+Then send one combined finalization response:
 
 ```
 SendMessage(
   to="lead",
-  message="TRACE FINALIZED\nflow_run_id: <id>\nflow_verdict: PASS|FAIL\ntrace_path: <accepted path or N/A>\ntrace_finalization_result_path: <path>\ntrace_infrastructure_result: PASS|FAIL\ntrace_analysis_eligible: true|false\ntrace_finalization_status: <status>\ntrace_validation_status: <status>\ntrace_recovery_status: <status>\ntrace_artifact_disposition: <status>\ntrace_artifact_path: <path>",
-  summary="Trace: PASS|FAIL infrastructure"
+  message="TRACE FINALIZED\nflow_run_id: <id>\nflow_verdict: PASS|FAIL\ntrace_path: <accepted path or N/A>\ntrace_finalization_result_path: <path>\ntrace_infrastructure_result: PASS|FAIL\ntrace_analysis_eligible: true|false\ntrace_finalization_status: <status>\ntrace_validation_status: <status>\ntrace_recovery_status: <status>\ntrace_artifact_disposition: <status>\ntrace_artifact_path: <path>\nprofile_infrastructure_result: PASS|FAIL|not-applicable\nauth_profile_binding: verified|not-applicable\nauth_profile_cleanup: removed|failed|not-applicable\ncanonical_profile: unchanged|changed|not-applicable\nprofile_retained: true|false|not-applicable\nprofile: <path or not-applicable>",
+  summary="Flow/trace/profile finalization complete"
 )
 ```
 
-Go idle. Successful finalization leaves the named browser session open; timeout/failure may have
-triggered bounded named-session recovery.
+This `TRACE FINALIZED` response is also the flow/profile finalization receipt. The lead preserves
+the application, trace infrastructure, and profile infrastructure verdicts independently. Go idle.
+Persistent success leaves the named browser session open; trace timeout/failure may have triggered
+bounded named-session recovery. Flow-managed completion closes/removes only its owned profile.
 
 ### On receiving RE-RUN message
 
@@ -865,14 +1048,25 @@ RE-RUN
 flow_path: /absolute/path/.claude/e2e/flows/order-flow.yaml
 browser_runtime: /absolute/path/e2e-browser-runtime.js
 browser_run_id: <same invocation id>
+auth_mode: <persistent|flow-managed>
+canonical_auth_profile: <canonical path>
+ephemeral_auth_profile: <new ephemeral path or omit>
+auth_profile: <same canonical or new ephemeral path>
+auth_profile_freshness: <persistent-existing|verified-absent>
 variables:
   customer_name: 王大明
 ```
 
-`flow_path`, `browser_runtime`, and `browser_run_id` are required. `flow_path` may
-differ from the original if the flow was updated. `variables` is optional.
+All runtime and auth fields above are required. `flow_path` may differ from the
+original if the flow was updated. `variables` is optional.
 
-Start one fresh trace for the re-run before executing steps:
+Persistent mode re-executes from the beginning in the existing canonical profile.
+
+Flow-managed mode rejects the old `active_auth_profile`. Require a different
+runtime-prepared absent profile, close the owned session if it remains active, open
+and binding-verify the new profile before tracing.
+
+Start one fresh trace only after the mode-appropriate browser/profile is ready:
 
 ```bash
 python3 --version
@@ -880,22 +1074,26 @@ python3 --version
 ```
 
 If trace start fails, retain that independent infrastructure failure and continue the application
-flow so its verdict remains observable. Re-execute the flow from the beginning. Browser is already
-open — navigate to `base_url` and restart flow execution. Phase 3 finalizes this re-run's trace
-exactly once. Send `FLOW COMPLETE` when done.
+flow so its verdict remains observable. Re-execute the flow from the beginning. Phase 3 invokes the shared
+trace finalizer exactly once and, for flow-managed mode, performs owned profile cleanup afterward.
+Send `FLOW COMPLETE` with separate flow, trace, and profile lifecycle results.
 
 ### On receiving shutdown_request
 
-1. Close browser: `{{browser_command}} close`
-2. Respond with shutdown_response approve=true
+1. Persistent mode: close browser with `{{browser_command}} close`.
+2. Flow-managed mode with an active profile: execute the same
+   `cleanup-flow-managed-profile` transition as `FINALIZE_FLOW`. Never downgrade it
+   to a plain close that leaves the profile behind.
+3. Respond with `shutdown_response approve=true` only after close/cleanup succeeds.
+   On failure, respond `approve=false` and include the retained profile path.
 
 ### Key differences from subagent mode
 
 | Aspect | Subagent mode | Teams mode |
 |--------|--------------|------------|
 | Results delivery | Return summary at end | SendMessage per flow/step |
-| Browser lifecycle | Open → execute → leave open | Open once → multiple flows/steps → close on shutdown |
-| Step execution | All steps in sequence | EXECUTE_FLOW (all), or EXECUTE_STEP then one FINALIZE_FLOW at end |
+| Browser lifecycle | Persistent: leave open; flow-managed: cleanup | Persistent: reuse; flow-managed: rotate profile per replay |
+| Step execution | All steps in sequence | EXECUTE_FLOW (all), or BEGIN_FLOW + EXECUTE_STEP + one FINALIZE_FLOW |
 | Multi-site | suite_context + --session | Separate teammates per site (no session juggling) |
 | Re-run | Full re-dispatch | SendMessage RE-RUN (same browser) |
 | Fail → debug | New browser session | Same browser, seamless transition |
