@@ -223,11 +223,15 @@ detect_trace_contract() {
     printf 'Trace capability detector is unavailable: %s\n' "$trace_contract_cli" >&2
     return 1
   }
-  resolved_agent_browser=$(command -v "$agent_browser_bin" 2>/dev/null || true)
+  trace_agent_browser_bin=$agent_browser_bin
+  if [ "$owned_runtime" = true ]; then
+    trace_agent_browser_bin=${E2E_AGENT_BROWSER_BIN:-$agent_browser_bin}
+  fi
+  resolved_agent_browser=$(command -v "$trace_agent_browser_bin" 2>/dev/null || true)
   case "$resolved_agent_browser" in
     /*) ;;
     *)
-      printf 'agent-browser executable could not be resolved: %s\n' "$agent_browser_bin" >&2
+      printf 'agent-browser executable could not be resolved: %s\n' "$trace_agent_browser_bin" >&2
       return 1
       ;;
   esac

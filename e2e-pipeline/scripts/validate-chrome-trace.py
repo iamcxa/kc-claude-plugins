@@ -6,8 +6,8 @@ from __future__ import annotations
 import collections
 import heapq
 import json
+import math
 import os
-import re
 import stat
 import sys
 import time
@@ -29,6 +29,10 @@ class WrongFormatError(Exception):
 
 class ResourceLimitError(Exception):
     """The artifact exceeds a configured validation budget."""
+
+
+def reject_non_finite_constant(value: str) -> None:
+    raise InvalidJsonError(f"invalid JSON: non-finite constant {value}")
 
 
 def positive_limit(name: str, default: int) -> int:
@@ -79,7 +83,7 @@ class JsonStream:
 
     def __init__(self, file_path: str, max_value_bytes: int):
         self.handle = open(file_path, encoding="utf-8")
-        self.decoder = json.JSONDecoder()
+        self.decoder = json.JSONDecoder(parse_constant=reject_non_finite_constant)
         self.buffer = ""
         self.position = 0
         self.eof = False
@@ -193,6 +197,13 @@ class TraceSummary:
             phase == "X"
             and isinstance(duration, (int, float))
             and not isinstance(duration, bool)
+            and not math.isfinite(duration)
+        ):
+            raise InvalidJsonError("invalid JSON: duration must be finite")
+        if (
+            phase == "X"
+            and isinstance(duration, (int, float))
+            and not isinstance(duration, bool)
             and duration >= 0
         ):
             self.duration_event_count += 1
@@ -234,27 +245,55 @@ class TraceSummary:
         }
 
 
-def assert_regular_file(file_path: str, limits: Limits) -> None:
+def assert_regular_file(file_path: str) -> int:
     file_stat = os.lstat(file_path)
     if not stat.S_ISREG(file_stat.st_mode):
         raise WrongFormatError("trace artifact must be a regular file")
     if file_stat.st_size <= 0:
         raise InvalidJsonError("invalid JSON: trace artifact is empty")
-    if file_stat.st_size > limits.max_file_bytes:
+    return file_stat.st_size
+
+
+def assert_chrome_file_limit(file_size: int, limits: Limits) -> None:
+    if file_size > limits.max_file_bytes:
         raise ResourceLimitError("max_file_bytes exceeded")
 
 
-def detect(file_path: str) -> str:
+def has_top_level_trace_events(file_path: str, max_value_bytes: int) -> bool:
+    stream = JsonStream(file_path, max_value_bytes)
+    try:
+        stream.expect("{")
+        if stream.peek() == "}":
+            return False
+        while True:
+            key = stream.value(64 * 1024)
+            if not isinstance(key, str):
+                raise InvalidJsonError("invalid JSON: object key must be a string")
+            stream.expect(":")
+            if key == "traceEvents":
+                return True
+            stream.value()
+            separator = stream.peek()
+            if separator == ",":
+                stream.position += 1
+                continue
+            if separator == "}":
+                return False
+            raise InvalidJsonError("invalid JSON: expected comma or object end")
+    finally:
+        stream.close()
+
+
+def detect(file_path: str, max_value_bytes: int) -> str:
     with open(file_path, "rb") as artifact:
-        prefix = artifact.read(64 * 1024)
+        prefix = artifact.read(4)
     if prefix.startswith(b"PK\x03\x04"):
         return FORMAT_PLAYWRIGHT
     try:
-        text = prefix.decode("utf-8")
-    except UnicodeDecodeError:
+        if has_top_level_trace_events(file_path, max_value_bytes):
+            return FORMAT_CHROME
+    except (InvalidJsonError, ResourceLimitError, UnicodeDecodeError):
         return FORMAT_UNKNOWN
-    if re.match(r'^\s*\{\s*"traceEvents"\s*:', text):
-        return FORMAT_CHROME
     return FORMAT_UNKNOWN
 
 
@@ -324,9 +363,20 @@ def main(argv: list[str]) -> int:
         return 64
     command, file_path = argv
     try:
+        file_size = assert_regular_file(file_path)
+        with open(file_path, "rb") as artifact:
+            is_playwright = artifact.read(4).startswith(b"PK\x03\x04")
+        if is_playwright:
+            if command == "detect":
+                print(FORMAT_PLAYWRIGHT)
+                return 0
+            raise WrongFormatError(
+                f"expected Chrome trace JSON with traceEvents, detected {FORMAT_PLAYWRIGHT}"
+            )
+
         limits = Limits()
-        assert_regular_file(file_path, limits)
-        detected = detect(file_path)
+        assert_chrome_file_limit(file_size, limits)
+        detected = detect(file_path, limits.max_event_bytes)
         if command == "detect":
             print(detected)
             return 0

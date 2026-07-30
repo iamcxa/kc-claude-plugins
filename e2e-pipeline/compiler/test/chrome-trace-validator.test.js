@@ -72,6 +72,19 @@ test('detects Playwright ZIP before attempting Chrome JSON validation', () => {
     assert.equal(detection.status, 0, detection.stderr);
     assert.equal(detection.stdout.trim(), 'playwright-trace-zip');
 
+    const detectionWithChromeLimit = run('detect', archive, {
+      E2E_CHROME_TRACE_MAX_FILE_BYTES: '32',
+    });
+    assert.equal(
+      detectionWithChromeLimit.status,
+      0,
+      detectionWithChromeLimit.stderr
+    );
+    assert.equal(
+      detectionWithChromeLimit.stdout.trim(),
+      'playwright-trace-zip'
+    );
+
     const validation = run('validate', archive);
     assert.equal(validation.status, 3);
     assert.match(validation.stderr, /expected Chrome trace JSON/i);
@@ -95,6 +108,56 @@ test('rejects malformed or non-Chrome JSON as an invalid artifact', () => {
     const unrelatedResult = run('validate', unrelated);
     assert.equal(unrelatedResult.status, 3);
     assert.match(unrelatedResult.stderr, /traceEvents/i);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('detects Chrome traceEvents regardless of top-level key order', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
+  try {
+    const reordered = path.join(directory, 'reordered.json');
+    fs.writeFileSync(
+      reordered,
+      JSON.stringify({
+        metadata: { source: 'agent-browser' },
+        traceEvents: [{ name: 'RunTask', ph: 'X', dur: 1 }],
+      })
+    );
+
+    const detection = run('detect', reordered);
+    assert.equal(detection.status, 0, detection.stderr);
+    assert.equal(detection.stdout.trim(), 'chrome-trace-json');
+
+    const validation = run('validate', reordered);
+    assert.equal(validation.status, 0, validation.stderr);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('rejects non-finite Chrome trace numbers', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
+  try {
+    const cases = [
+      ['nan.json', '{"traceEvents":[{"name":"RunTask","ph":"X","dur":NaN}]}'],
+      [
+        'infinity.json',
+        '{"traceEvents":[{"name":"RunTask","ph":"X","dur":Infinity}]}',
+      ],
+      [
+        'overflow.json',
+        '{"traceEvents":[{"name":"RunTask","ph":"X","dur":1e9999}]}',
+      ],
+    ];
+
+    for (const [name, contents] of cases) {
+      const artifact = path.join(directory, name);
+      fs.writeFileSync(artifact, contents);
+      const result = run('summarize', artifact);
+      assert.equal(result.status, 2, `${name}: ${result.stderr}`);
+      assert.match(result.stderr, /finite|invalid JSON/i);
+    }
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }

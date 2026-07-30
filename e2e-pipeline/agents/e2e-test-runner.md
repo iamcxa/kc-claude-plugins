@@ -198,7 +198,7 @@ Detect the installed producer's trace capability before capture. Treat the outpu
 `source` or `eval` it:
 
 ```bash
-AGENT_BROWSER_EXECUTABLE=$(command -v "${AGENT_BROWSER_BIN:-agent-browser}")
+AGENT_BROWSER_EXECUTABLE=$(command -v "${E2E_AGENT_BROWSER_BIN:-${AGENT_BROWSER_BIN:-agent-browser}}")
 TRACE_CONTRACT_CLI="${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js"
 TRACE_CONTRACT_FILE="{{report_dir}}/trace-contract.env"
 node "$TRACE_CONTRACT_CLI" \
@@ -725,6 +725,11 @@ eval_fallback_hits: <N>
 - trace_recovery_status: not_needed|closed|timeout|failed
 - trace_artifact_disposition: accepted|quarantined|retained_invalid|missing
 - trace_path: <artifact_path from trace-finalization.env>
+- trace_producer: <producer from trace-finalization.env>
+- trace_producer_version: <producer_version from trace-finalization.env>
+- trace_declared_format: <declared_format from trace-finalization.env>
+- trace_detected_format: <detected_format from trace-finalization.env>
+- trace_validator: <validator from trace-finalization.env>
 - trace_finalization_result_path: {{report_dir}}/trace-finalization.env
 - trace_analysis_eligible: true|false
 - report_path: {{report_dir}}/report.md
@@ -1110,8 +1115,17 @@ python3 --version
 # Repeat Phase 1e capability detection and refresh trace_producer,
 # trace_producer_version, trace_format, trace_extension, and TRACE_PATH.
 node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
-  --agent-browser "$(command -v "${AGENT_BROWSER_BIN:-agent-browser}")" \
+  --agent-browser "$(command -v "${E2E_AGENT_BROWSER_BIN:-${AGENT_BROWSER_BIN:-agent-browser}}")" \
   --output env > "{{report_dir}}/trace-contract.env"
+trace_producer=$(sed -n 's/^trace_producer=//p' "{{report_dir}}/trace-contract.env")
+trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "{{report_dir}}/trace-contract.env")
+trace_format=$(sed -n 's/^trace_format=//p' "{{report_dir}}/trace-contract.env")
+trace_extension=$(sed -n 's/^trace_extension=//p' "{{report_dir}}/trace-contract.env")
+case "$trace_format:$trace_extension" in
+  chrome-trace-json:.json|playwright-trace-zip:.zip) ;;
+  *) echo "Unsupported trace contract" >&2; exit 72 ;;
+esac
+TRACE_PATH="{{report_dir}}/trace${trace_extension}"
 {{browser_command}} trace start
 ```
 

@@ -134,6 +134,27 @@ exit 64
   return stub;
 }
 
+function writePlaywrightCapabilityStub(dir) {
+  const stub = path.join(dir, 'agent-browser-playwright-stub.sh');
+  fs.writeFileSync(stub, `#!/usr/bin/env bash
+set -eu
+
+if [ "$#" -eq 1 ] && [ "$1" = "--version" ]; then
+  printf '%s\\n' 'agent-browser 0.40.0'
+  exit 0
+fi
+if [ "$#" -eq 2 ] && [ "$1" = "trace" ] && [ "$2" = "--help" ]; then
+  printf '%s\\n' \
+    'Record a Playwright trace archive for debugging.' \
+    'agent-browser trace stop ./trace.zip'
+  exit 0
+fi
+exit 64
+`);
+  fs.chmodSync(stub, 0o755);
+  return stub;
+}
+
 function writeBrowserRuntimeStub(dir) {
   const stub = path.join(dir, 'browser-runtime-stub.sh');
   fs.writeFileSync(stub, `#!/usr/bin/env bash
@@ -1374,6 +1395,56 @@ describe('shared trace finalization contract', () => {
     }
   });
 
+  test('Teams lifecycle probes the agent-browser executable selected by the owned runtime', () => {
+    const dir = makeTempDir();
+    try {
+      const reportDir = path.join(dir, 'runner-admin');
+      const chromeAgent = writeAgentBrowserStub(dir);
+      const wrongPathAgent = writePlaywrightCapabilityStub(dir);
+      const runtime = writeBrowserRuntimeStub(dir);
+      const runtimeLog = path.join(dir, 'browser-runtime.log');
+      const commonArgs = [
+        '--report-dir', reportDir,
+        '--flow-run-id', 'flow-run-1',
+        '--session', 'admin-panel',
+        '--browser-runtime', runtime,
+        '--browser-run-id', 'browser-run-123',
+        '--app', 'admin-panel',
+      ];
+      const env = {
+        ...process.env,
+        AGENT_BROWSER_BIN: wrongPathAgent,
+        E2E_AGENT_BROWSER_BIN: chromeAgent,
+        AGENT_BROWSER_UNDERLYING: chromeAgent,
+        BROWSER_RUNTIME_LOG: runtimeLog,
+        EXPECTED_BROWSER_APP: 'admin-panel',
+        EXPECTED_BROWSER_RUN_ID: 'browser-run-123',
+        RECOVERY_MARKER: path.join(dir, 'recovery-reached'),
+        TRACE_FIXTURE: chromeTraceFixture,
+        TRACE_STUB_MODE: 'valid',
+      };
+
+      const begin = spawnSync(teamTraceLifecycle, ['begin', ...commonArgs], {
+        encoding: 'utf8',
+        env,
+      });
+      assert.equal(begin.status, 0, begin.stderr || begin.error?.message);
+      assert.match(begin.stdout, /trace_format=chrome-trace-json/);
+      assert.match(begin.stdout, /trace_path=.*\/trace\.json/);
+
+      const finalize = spawnSync(
+        teamTraceLifecycle,
+        ['finalize', ...commonArgs, '--flow-verdict', 'PASS'],
+        { encoding: 'utf8', env }
+      );
+      assert.equal(finalize.status, 0, finalize.stderr || finalize.error?.message);
+      assert.match(finalize.stdout, /declared_format=chrome-trace-json/);
+      assert.match(finalize.stdout, /detected_format=chrome-trace-json/);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   test('Teams lifecycle rejects browser ownership drift between begin and finalize', () => {
     const dir = makeTempDir();
     try {
@@ -1897,6 +1968,11 @@ describe('shared trace finalization contract', () => {
         /\$\{AGENT_BROWSER_BIN:-agent-browser\}/,
         `${relativePath}: detector must probe the runtime-selected executable`
       );
+      assert.match(
+        content,
+        /E2E_AGENT_BROWSER_BIN/,
+        `${relativePath}: owned-runtime executable override must win capability detection`
+      );
       assert.match(content, /TRACE_PATH=.*trace_extension/);
       assert.match(content, /--trace-producer "\$trace_producer"/);
       assert.match(content, /--trace-producer-version "\$trace_producer_version"/);
@@ -1961,11 +2037,61 @@ describe('shared trace finalization contract', () => {
       /python3[\s\S]*trace start[\s\S]*Execute \*\*Round 1 only\*\*/,
       'every VERIFY_FLOW command must start a fresh trace before Round 1'
     );
+    for (const field of [
+      'trace_producer',
+      'trace_producer_version',
+      'trace_format',
+      'trace_extension',
+    ]) {
+      assert.match(
+        verifyHandler,
+        new RegExp(`${field}=\\$\\(sed -n`),
+        `VERIFY_FLOW must parse and apply ${field} before capture`
+      );
+    }
+    assert.match(
+      verifyHandler,
+      /TRACE_PATH=.*trace\$\{trace_extension\}/,
+      'VERIFY_FLOW must apply trace_extension before capture'
+    );
     assert.match(
       rerunHandler,
       /python3[\s\S]*trace start[\s\S]*Re-execute the flow/,
       'every RE-RUN command must start a fresh trace before executing the flow'
     );
+    for (const field of [
+      'trace_producer',
+      'trace_producer_version',
+      'trace_format',
+      'trace_extension',
+    ]) {
+      assert.match(
+        rerunHandler,
+        new RegExp(`${field}=\\$\\(sed -n`),
+        `RE-RUN must parse and apply ${field} before capture`
+      );
+    }
+    assert.match(
+      rerunHandler,
+      /TRACE_PATH=.*trace\$\{trace_extension\}/,
+      'RE-RUN must apply trace_extension before capture'
+    );
+  });
+
+  test('the mandatory eval-fallback summary preserves the trace format contract', () => {
+    const runner = fs.readFileSync(
+      path.join(pluginRoot, 'agents/e2e-test-runner.md'),
+      'utf8'
+    );
+    const accountingStart = runner.indexOf('## Eval-Fallback Accounting');
+    const accountingEnd = runner.indexOf('### Removal Policy', accountingStart);
+    const accounting = runner.slice(accountingStart, accountingEnd);
+
+    assert.match(accounting, /trace_producer:/);
+    assert.match(accounting, /trace_producer_version:/);
+    assert.match(accounting, /trace_declared_format:/);
+    assert.match(accounting, /trace_detected_format:/);
+    assert.match(accounting, /trace_validator:/);
   });
 
   test('owned browser runtime receives trace stop and recovery as exact argv without raw session flags', () => {

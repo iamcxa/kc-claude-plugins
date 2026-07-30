@@ -75,7 +75,7 @@ Check URL against `auth.verification` condition. If verification fails (auth exp
 
 **Start trace** (after auth verified):
 ```bash
-AGENT_BROWSER_EXECUTABLE=$(command -v "${AGENT_BROWSER_BIN:-agent-browser}")
+AGENT_BROWSER_EXECUTABLE=$(command -v "${E2E_AGENT_BROWSER_BIN:-${AGENT_BROWSER_BIN:-agent-browser}}")
 TRACE_CONTRACT_FILE="$REPORT_DIR/trace-contract.env"
 node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
   --agent-browser "$AGENT_BROWSER_EXECUTABLE" \
