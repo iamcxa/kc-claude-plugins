@@ -284,3 +284,53 @@ The two ACs now fail closed at the custom-transport boundary without changing th
 adapter or `sv` ordering. A corrected fixture-syntax false start was excluded from RED evidence.
 Independent validation and agy code review remain next; Claude EM remains the landing gate and
 must not be inferred from this implementation receipt.
+
+## Stage Report: validation
+
+- DONE: Reproduce both approved ACs with fresh executable evidence.
+  Exact-head `review-post.test.sh` returned 155 passed / 0 failed in 290.83s; scalar and
+  numeric-body fresh, resume, post-retry, partial-output, and local-order assertions all ran.
+- DONE: Run all earned seven suites once at the end.
+  Runtime 305/0 (81.66s), shadow 213/0 (138.06s), benchmark 135/0 (19.60s),
+  post 155/0 (317.03s), cross-model 68/0 (0.34s), diagrams 43/0 and 34/0.
+- DONE: Run the diff-earned static gates.
+  `bash -n`, pinned ShellCheck v0.9.0, and `git diff --check` each exited 0.
+- DONE: Confirm the authorized scope and documentation guarantees.
+  Diff is exactly seven files; four docs match the three caller guards and local-state
+  ordering, with no `agy`-first policy, `vf`, `x0`, version, or broader review-kit work.
+- DONE: Compute executable diff coverage for changed shell command starts.
+  Bash xtrace covered 93/96; two locally stderr-suppressed scan calls were proven by their
+  `5|7` and `5|` assertions, for 95/96 = 98.96%; only test line 830 was unexecuted.
+- FAILED: Kill the element-validator boundary mutation.
+  Reverting to outer-array-only survived the full suite at 155/0 in 423.84s because scan
+  guards compensated; no direct assertion pins `{"reviews":[42]}` as unusable.
+- DONE: Kill the fresh, resume, and post-retry scan-status mutations.
+  They returned 154/1 in 427.45s, 154/1 in 458.90s, and 154/1 in 451.66s, with each
+  named caller assertion observing a POST/duplicate or untyped ambiguity.
+- DONE: Kill partial-output acceptance, early refusal, and empty-array rejection.
+  They returned 154/1 in 429.19s, 151/4 in 419.29s, and 96/59 in 352.36s; all failures
+  were task assertions rather than harness errors.
+- DONE: Run the mandatory whole-diff agy/Gemini review.
+  `gemini-3.1-pro-high` accepted the same P2 missing-boundary-test finding; its P3 missing
+  fixture-file concern was rejected because the only caller creates `reviews.jsonl`.
+- DONE: Preserve exact-head product state.
+  Product remained clean at `335722edf48018c16342216351c7229670b2e222`, parent/base
+  `f7c44efcd0f2587e004dcb3ff6f90896a385e1ab`; no product edit, push, PR, or version ran.
+- SKIPPED: Exercise a live GitHub PR E2E.
+  Ideation records the network-free custom-transport boundary; the supported injected CLI
+  runtime exercised real `post` and `resume` behavior without mutating a live PR.
+
+### Evidence block
+
+- Lenses: correctness FAIL (1 mutation-proof gap); security PASS (0);
+  silent-failure PASS (0); no type, concurrency, resource, or manifest lens fired.
+- Diff coverage: 98.96% (95/96 changed executable command starts).
+- Adversarial: FAIL — 6/7 required mutations killed; outer-only validation survived.
+- Cross-model: Gemini 3.1 Pro High REVISE; one P2 accepted, one P3 rejected.
+- E2E: N/A — approved network-free transport seam; exact CLI integration ran 155/0.
+
+### Summary
+
+AC-1 and AC-2 behavior pass and the seven-suite ripple is green, but the approved
+element-validator mechanism is not independently falsifiable. Return to implementation for one
+direct scalar-element usability assertion, then rerun the scoped suite and this mutation.
