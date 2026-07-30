@@ -2390,6 +2390,20 @@ review_runtime_merge_readiness_invalid() {
     'null' 'null' 'UNKNOWN' 'LOW' '["invalid-input"]'
 }
 
+review_runtime_review_identity_key_valid() {
+  local identity="$1"
+  local fields repository pr_number base_sha head_sha config_hash review_key expected
+
+  fields="$(jq -e -r '
+    [.repository,.pr_number,.base_sha,.head_sha,.config_hash,.review_key] |
+    @tsv
+  ' <<<"$identity" 2>/dev/null)" || return 1
+  IFS=$'\t' read -r repository pr_number base_sha head_sha config_hash review_key <<<"$fields"
+  expected="$(review_runtime_review_key \
+    "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash")" || return
+  [ "$review_key" = "$expected" ]
+}
+
 # Pure landing projection over caller-supplied, already-observed evidence.
 # Input ingestion uses the same bounded snapshot and duplicate-member checks as
 # the receipt runtime. The projection performs no live freshness lookup and
@@ -2447,12 +2461,30 @@ review_runtime_decide_merge_readiness() (
       (.ordinal | type == "number" and floor == . and . > 0 and . <= 2) and
       (.result == "succeeded" or .result == "transient_failure" or
        .result == "terminal_failure" or .result == "unavailable");
+    def manual_result:
+      type == "object" and
+      exact_keys(["candidate_ids","capability","evidence","recorded_at",
+                  "recorded_by","review_identity","schema",
+                  "terminal_assessment"]) and
+      .schema == "kc-pr-flow.manual-capability-result/v1" and
+      (.review_identity | identity) and
+      (.capability | token) and
+      (.terminal_assessment == "clean" or
+       .terminal_assessment == "findings" or
+       .terminal_assessment == "evidence_backed_na") and
+      (.candidate_ids | type == "array" and all(sha256) and
+        (unique | length) == length) and
+      (.evidence | type == "array" and length > 0 and
+        all(type == "object")) and
+      .recorded_by == "interactive-human" and
+      (.recorded_at | type == "string" and
+        test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"));
     def fallback:
       type == "object" and exact_keys(["result","status"]) and
       (.status == "not_needed" or .status == "provided" or
        .status == "declined" or .status == "failed" or
        .status == "unavailable") and
-      (if .status == "provided" then (.result | type == "object")
+      (if .status == "provided" then (.result | manual_result)
        else .result == null end);
     def interactive_decision:
       . as $decision |
@@ -2474,7 +2506,12 @@ review_runtime_decide_merge_readiness() (
           .activation_condition ==
             (if .required then "configured" else "observed_optional" end) and
           .owner == "core-collator" and
-          (.adapter_attempts | type == "array" and length <= 2 and all(attempt)) and
+          (.adapter_attempts | type == "array" and length <= 2 and all(attempt) and
+            (map(.ordinal) == [range(1; length + 1)]) and
+            (if length == 2 then
+               .[0].result == "transient_failure"
+             elif length == 1 then .[0].result != "transient_failure"
+             else true end)) and
           (.fallback | fallback) and
           (.finding_refs | type == "array" and all(sha256) and
             (unique | length) == length) and
@@ -2482,9 +2519,45 @@ review_runtime_decide_merge_readiness() (
            .terminal_state == "evidence_backed_na" or
            .terminal_state == "incomplete_required" or
            .terminal_state == "incomplete_optional") and
-          (if .terminal_state == "incomplete_required" then .required
-           elif .terminal_state == "incomplete_optional" then (.required | not)
-           else true end))) and
+          (if .fallback.status == "provided" then
+             ((.adapter_attempts | length) == 0 or
+              .adapter_attempts[-1].result != "succeeded") and
+             .fallback.result.capability == .capability and
+             .fallback.result.review_identity == $decision.review_identity
+           else true end) and
+          (
+            (((.adapter_attempts | length) > 0 and
+               .adapter_attempts[-1].result == "succeeded") or
+              .fallback.status == "provided") as $satisfied |
+            if $satisfied then
+              (.terminal_state == "clean" or
+               .terminal_state == "findings" or
+               .terminal_state == "evidence_backed_na") and
+              (if .fallback.status == "provided" then
+                 .terminal_state == .fallback.result.terminal_assessment and
+                 (if .terminal_state == "findings" then
+                    (.fallback.result.candidate_ids | length > 0) and
+                    (.finding_refs | length > 0)
+                  else
+                    (.fallback.result.candidate_ids | length == 0) and
+                    (.finding_refs | length == 0)
+                  end)
+               elif .terminal_state == "findings" then
+                 (.finding_refs | length > 0)
+               else
+                 (.finding_refs | length == 0)
+               end)
+            else
+              (if .required then
+                 .terminal_state == "incomplete_required"
+               else
+                 .terminal_state == "incomplete_optional"
+               end) and
+              (.fallback.status == "declined" or
+               .fallback.status == "failed" or
+               .fallback.status == "unavailable") and
+              (.finding_refs | length == 0)
+            end))) and
       (.confirmed_blocker_refs | type == "array" and all(sha256) and
         (unique | length) == length and . == sort) and
       (.capability_gap_refs | type == "array" and all(token) and
@@ -2534,6 +2607,10 @@ review_runtime_decide_merge_readiness() (
 
   input_sha256="$(printf '%s' "$canonical_input" | review_runtime_sha256)" || return
   review_identity="$(jq -S -c '.review_identity' <<<"$canonical_input")" || return
+  if ! review_runtime_review_identity_key_valid "$review_identity"; then
+    review_runtime_merge_readiness_invalid
+    return 0
+  fi
 
   if ! jq -e '
     .review_identity == .review_decision.review_identity and

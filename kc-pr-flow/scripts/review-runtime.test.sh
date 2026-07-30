@@ -328,6 +328,61 @@ run_merge_readiness_tests() {
       "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
   done
 
+  mutated="$(jq -S -c '
+    .review_identity.repository="other/repo" |
+    .review_decision.review_identity.repository="other/repo"
+  ' <<<"$input")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "coordinated identity drift cannot retain a stale review key" \
+    "UNKNOWN|LOW|invalid-input" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  mutated="$(jq -S -c --argjson identity "$identity" '
+    .review_decision.capabilities=[{
+      schema:"kc-pr-flow.capability-terminal/v1",
+      review_identity:$identity,
+      capability:"types",
+      required:true,
+      activation_condition:"configured",
+      owner:"core-collator",
+      adapter_attempts:[],
+      fallback:{status:"unavailable",result:null},
+      terminal_state:"clean",
+      finding_refs:[]
+    }]
+  ' <<<"$input")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "unsatisfied required capability cannot claim a clean terminal" \
+    "UNKNOWN|LOW|invalid-input" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  mutated="$(jq -S -c --argjson identity "$identity" '
+    .review_decision.capabilities=[{
+      schema:"kc-pr-flow.capability-terminal/v1",
+      review_identity:$identity,
+      capability:"types",
+      required:true,
+      activation_condition:"configured",
+      owner:"core-collator",
+      adapter_attempts:[{ordinal:1,result:"succeeded",lane_result_ref:"types-1"}],
+      fallback:{status:"not_needed",result:null},
+      terminal_state:"incomplete_required",
+      finding_refs:[]
+    }] |
+    .review_decision.capability_gap_refs=["types"] |
+    .review_decision.confirmation_input.gap_refs=["types"] |
+    .review_decision.coverage="incomplete" |
+    .review_decision.approve_eligible=false |
+    .review_decision.effective_event="COMMENT"
+  ' <<<"$input")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness --input-file "$input_file")"
+  assert_eq "satisfied required capability cannot claim an incomplete terminal" \
+    "UNKNOWN|LOW|invalid-input" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
   for reason in unknown-key malformed-hash invalid-required-status invalid-review-decision unknown-status; do
     case "$reason" in
       unknown-key) mutated="$(jq -S -c '.unexpected=true' <<<"$input")" ;;
@@ -370,19 +425,6 @@ run_merge_readiness_tests() {
     "" "$(cat "$call_ledger")"
 }
 
-if [ "$CASE_FILTER" = 'merge-readiness' ]; then
-  run_merge_readiness_tests
-  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
-  [ "$FAIL" -eq 0 ]
-  exit
-fi
-
-# Keep the contract in the default CI run as well as the focused diagnostic
-# case above.
-if [ "$CASE_FILTER" = 'all' ]; then
-  run_merge_readiness_tests
-fi
-
 run_interactive_decision_tests() {
   local receipt policy repo output rc before_hash after_hash
   local measurement_target measurement receipt_content receipt_id
@@ -394,6 +436,8 @@ run_interactive_decision_tests() {
   local interactive_head interactive_base interactive_key identity manual_clean manual_na review_config
   local CONFIG_HASH
   local bad_policy bad_receipt mutated identity_case bad_repo bad_pr bad_base bad_head bad_config bad_key bad_run
+  local mode merge_policy merge_manual merge_decision merge_input merge_input_file merge_output
+  mode="${1:-full}"
   receipt="$TEST_INPUT_ROOT/interactive-terminal.jsonl"
   policy="$TEST_INPUT_ROOT/interactive-policy.json"
   repo="$TEST_INPUT_ROOT/interactive-repo"
@@ -559,6 +603,49 @@ run_interactive_decision_tests() {
   after_hash="$(sha256_text "$(cat "$receipt")")"
   assert_eq "rehydration never appends or rewrites the receipt" "$before_hash" "$after_hash"
 
+  merge_policy="$TEST_INPUT_ROOT/interactive-merge-ready-policy.json"
+  merge_manual="$(jq -S -c '.capability="required-gap"' <<<"$manual_clean")"
+  jq -S -c --argjson manual "$merge_manual" '
+    .confirmed_blocker_refs=[] |
+    .obligations[] |= if .capability=="required-gap" then
+      .fallback={status:"provided",result:$manual} |
+      .terminal_state="clean"
+    else . end
+  ' "$policy" >"$merge_policy"
+  merge_decision="$(bash "$RUNTIME" rehydrate-interactive \
+    --event-file "$receipt" --policy-file "$merge_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" \
+    --base "$interactive_base" --head "$interactive_head" \
+    --config-hash "$CONFIG_HASH" --review-key "$interactive_key" \
+    --run-id "$run_id" 2>&1)"
+  rc=$?
+  assert_eq "merge-ready positive fixture is produced by terminal rehydration" "0" "$rc"
+  merge_input="$(jq -S -c -n --argjson identity "$identity" \
+    --argjson decision "$merge_decision" --arg head_sha "$interactive_head" '
+    {
+      schema:"kc-pr-flow.merge-readiness-input/v1",
+      review_identity:$identity,
+      observed_head_sha:$head_sha,
+      ci:{
+        required:true,status:"PASS",head_sha:$head_sha,
+        evidence_sha256:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      tests:{
+        required:true,status:"PASS",head_sha:$head_sha,
+        evidence_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      review_decision:$decision
+    }')"
+  merge_input_file="$TEST_INPUT_ROOT/interactive-merge-ready-input.json"
+  printf '%s\n' "$merge_input" >"$merge_input_file"
+  merge_output="$(bash "$RUNTIME" decide-merge-readiness --input-file "$merge_input_file")"
+  assert_eq "real terminal rehydration remains merge READY" \
+    "READY|HIGH|all-required-evidence-positive" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$merge_output")"
+  if [ "$mode" = 'merge-positive-only' ]; then
+    return
+  fi
+
   measurement_target="$TEST_INPUT_ROOT/interactive-measurement-target.json"
   control_file="$TEST_INPUT_ROOT/interactive-full-review-control.json"
   receipt_content="$(review_runtime_sha256 <"$receipt")"
@@ -721,6 +808,21 @@ run_interactive_decision_tests() {
     assert_eq "$forbidden_command remains outside runtime authority" "2" "$?"
   done
 }
+
+if [ "$CASE_FILTER" = 'merge-readiness' ]; then
+  run_merge_readiness_tests
+  run_interactive_decision_tests merge-positive-only
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit
+fi
+
+# Keep the contract, including a real rehydrated producer fixture, in the
+# default CI run as well as the focused diagnostic case above.
+if [ "$CASE_FILTER" = 'all' ]; then
+  run_merge_readiness_tests
+  run_interactive_decision_tests merge-positive-only
+fi
 
 if [ "$CASE_FILTER" = 'interactive-decision' ]; then
   run_interactive_decision_tests
