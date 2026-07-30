@@ -464,9 +464,12 @@ After it lands:
    session. For a parked or abandoned active entity, the original owner
    annotates before handoff or closeout; after that owner releases it, a
    captain-designated owner may take over and annotate at the next legal state
-   transition.
-3. Product backfill is complete when every non-archived backlog or active
-   entity has a non-empty scalar `product` recognized by the registry above.
+   transition. For a terminal `done` entity that still resides in the live
+   state path, its closeout or archive owner either annotates it before archive
+   or archives it first; the migration owner does not rewrite it or bypass its
+   holder.
+3. Product backfill is complete when every non-archived entity has a non-empty
+   scalar `product` recognized by the registry above.
    Only after that condition holds are product-filter results authoritative;
    before then they omit unannotated entities.
 4. Sprint-assignment migration is complete when every non-archived entity
@@ -474,8 +477,10 @@ After it lands:
    and `sprint` pair. Sprint-filter and combined product-plus-sprint query
    results become authoritative only after that condition holds. A genuinely
    unscheduled entity keeps `sprint` blank.
-5. Archived entities are a separate, optional historical migration. They do not
-   block current product-local scheduling.
+5. Archived entities are a separate, optional historical migration and need
+   not be backfilled. A terminal `done` entity still in the live path must be
+   annotated or archived by its closeout or archive owner before product-filter
+   authority can be declared.
 
 ## Proof Policy
 
