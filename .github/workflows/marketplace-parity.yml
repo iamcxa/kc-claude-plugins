@@ -43,3 +43,6 @@ jobs:
         run: |
           ./scripts/skill-frontmatter-lint.test.sh
           ./scripts/skill-frontmatter-lint.sh
+
+      - name: Validate dev-flow work-context adapter
+        run: ./scripts/dev-flow-work-context-check.test.sh
