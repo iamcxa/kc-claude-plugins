@@ -1,6 +1,6 @@
 ---
 title: Synthesize exact-head EM merge readiness before human landing
-status: validation
+status: implementation
 source: captain direction 2026-07-30 after reconcile-list-element-shape closeout
 started: 2026-07-30T15:01:36Z
 completed:
@@ -704,9 +704,8 @@ input is a validated existing decision.
 
 ### Feedback Cycles
 
-- Cycle 1: RETURN to implementation — 2 HIGH manifestations of one under-validated input boundary;
-  validator fixed 0 and edited no product file. The ideation tolerance is 0, so a design-reset
-  decision is required before opening a correction round.
+- Cycle 1: REJECTED — fresh validation; surface 42m implementation wall-clock vs estimate 90m
+  (47%); AC unchanged
 
 ### Summary
 
