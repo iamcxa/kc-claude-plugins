@@ -3,6 +3,32 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.0.0](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v2.9.1...e2e-pipeline-v3.0.0) (2026-07-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* **e2e-pipeline:** Unsupported expect forms now fail compilation; the deferred-success warning/count/runtime-TODO contract is removed. Rewrite them with supported grammar or mark genuinely manual coverage as {not_automated: <reason>}.
+
+### Features
+
+* **e2e-pipeline:** add --json structured diagnostics to e2e-compile ([4bf875e](https://github.com/iamcxa/kc-claude-plugins/commit/4bf875ef2d7984de4f5eb535e8bb79b327371aee))
+* **e2e-pipeline:** promote recurring pipeline defects ([2067bc9](https://github.com/iamcxa/kc-claude-plugins/commit/2067bc9524d6c0ffe0d9319cd0b2c5404a17c908))
+* **e2e-pipeline:** recognize text visibility predicate forms ([4bf875e](https://github.com/iamcxa/kc-claude-plugins/commit/4bf875ef2d7984de4f5eb535e8bb79b327371aee))
+* **e2e-pipeline:** require explicit handling for unsupported expects ([4bf875e](https://github.com/iamcxa/kc-claude-plugins/commit/4bf875ef2d7984de4f5eb535e8bb79b327371aee))
+
+
+### Bug Fixes
+
+* **e2e-pipeline:** bind page-qualified element assertions ([4bf875e](https://github.com/iamcxa/kc-claude-plugins/commit/4bf875ef2d7984de4f5eb535e8bb79b327371aee))
+* **e2e-pipeline:** bound trace finalization and reject invalid archives ([#95](https://github.com/iamcxa/kc-claude-plugins/issues/95)) ([c8d6d61](https://github.com/iamcxa/kc-claude-plugins/commit/c8d6d6192182e0a0d5b56c6e93b492bdbd02df43))
+* **e2e-pipeline:** clear release blockers ([4bf875e](https://github.com/iamcxa/kc-claude-plugins/commit/4bf875ef2d7984de4f5eb535e8bb79b327371aee))
+* **e2e-pipeline:** harden runtime ownership and local services ([#100](https://github.com/iamcxa/kc-claude-plugins/issues/100)) ([3922aa8](https://github.com/iamcxa/kc-claude-plugins/commit/3922aa89fa34958412b9e7e7d325cc74e8c38b4c))
+* **e2e-pipeline:** isolate browser runtime to Chrome for Testing ([#96](https://github.com/iamcxa/kc-claude-plugins/issues/96)) ([4f0fe13](https://github.com/iamcxa/kc-claude-plugins/commit/4f0fe13794efae9e341a931ea255e7df583bc7e8))
+* **e2e-pipeline:** report manual-only compiled steps separately ([4bf875e](https://github.com/iamcxa/kc-claude-plugins/commit/4bf875ef2d7984de4f5eb535e8bb79b327371aee))
+* **e2e-pipeline:** stop reporting a matched snapshot as a no-match under pipefail ([#68](https://github.com/iamcxa/kc-claude-plugins/issues/68)) ([d79f9ea](https://github.com/iamcxa/kc-claude-plugins/commit/d79f9ea200200b02e9f4819a95bab6c5a7f502f4))
+* **e2e-pipeline:** support isolated flow-managed auth ([#97](https://github.com/iamcxa/kc-claude-plugins/issues/97)) ([d5bc97a](https://github.com/iamcxa/kc-claude-plugins/commit/d5bc97ad73ca433e4cdde5c9571a827a19955c54))
+
 ## [2.9.1](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v2.9.0...e2e-pipeline-v2.9.1) (2026-07-14)
 
 
