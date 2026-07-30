@@ -155,6 +155,9 @@ For every browser flow, resolve
 `browser_runtime`, generate one fresh `browser_run_id`, create `report_dir`, and
 set `browser_receipt` to `<report_dir>/browser-ownership.json`. Pass all three
 fields unchanged to every verifier dispatch and `VERIFY_FLOW` message.
+The verifier may consume application evidence only after
+`browser_receipt.first_navigation.status: verified`. Any other first-navigation
+lifecycle result is infrastructure failure and cannot become a flow FAIL.
 When the owned local-service runtime is active, also pass `service_runtime`,
 `service_run_id`, and `service_state_dir` unchanged to every verifier dispatch
 and message; the verifier may run `status` but never owns start/stop.

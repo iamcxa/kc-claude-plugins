@@ -192,11 +192,23 @@ Build from manifest + Phase 0 outputs:
 | `target_url` | From `--url` or Phase 0 analysis |
 | `reproduction_steps` | From Phase 0 or `--steps` |
 | `report_dir` | `.claude/e2e/debug/` (absolute path) |
+| `browser_runtime` | `${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js` (absolute path) |
+| `browser_run_id` | Fresh runtime identity for a new observer; unchanged across same-observer rounds |
+| `browser_receipt` | `<report_dir>/browser-ownership.json` (absolute path) |
+| `app` | `e2e-debug`, or the basename of a validated managed `auth_profile` |
 | `auth_profile` | Detect from `.agent-browser/` profiles if auth is needed for the URL |
 | `headed` | Teams mode: `true` by default (user can see browser). Override with `--headless`. Subagent mode: `true` only if `--headed` flag provided. |
 | `model` | From `--model` flag. Default: `haiku`. Observer does browser interaction, not deep reasoning. Use `sonnet` for diagnostic-heavy sessions. |
 | `log_tags` | `["E2E-DBG"]` (always) |
 | `network_filters` | Extract from manifest `network_filters` if present |
+
+Generate `browser_run_id` with `node "$browser_runtime" new-run-id`. If an
+`auth_profile` is used, require it to be the managed
+`~/.agent-browser/<app>` path; never pass a personal Chrome profile. Every
+observer browser command uses the same `browser_runtime`, `browser_run_id`,
+`browser_receipt`, and `app`. The initial open is ready only when
+`browser_receipt.first_navigation.status: verified`; any other lifecycle result
+is infrastructure failure.
 
 ---
 
@@ -222,6 +234,10 @@ Agent(
   model=<model>,          # default: "haiku"
   prompt="TEAMS MODE. Open browser at <target_url> --headed [with --profile <auth_profile>].
           Report dir: <report_dir>.
+          browser_runtime: <absolute path>
+          browser_run_id: <run id>
+          browser_receipt: <absolute path>
+          app: <app>
           After browser is ready, send message to lead: 'BROWSER_READY'.
           Then STOP and wait for VERIFY commands."
 )
@@ -294,6 +310,10 @@ Agent(subagent_type="e2e-pipeline:e2e-debug-observe"):
       - <step 2>
       ...
     report_dir: <absolute_path>/.claude/e2e/debug
+    browser_runtime: <absolute path>/bin/e2e-browser-runtime.js
+    browser_run_id: <run id>
+    browser_receipt: <absolute path>/.claude/e2e/debug/browser-ownership.json
+    app: <app>
     auth_profile: <path if needed>
     headed: true              # only include if --headed flag provided
     log_tags:

@@ -4,6 +4,12 @@ Core commands for E2E testing agents. For full reference, see project-level `.cl
 
 ## E2E Browser Runtime (Required)
 
+The first `open <url>` is two-phase: launch and bind `about:blank`, then attach
+the init/HAR probes and navigate. Continue only when the receipt contains
+`first_navigation.status: verified`. The receipt records canonical and actual
+profile paths, structural snapshot lineage, pre/post daemon/browser/page
+identity, URL, init-script observation, and first-document HAR status.
+
 Browser-operating e2e-pipeline agents must route every command through the shared
 runtime. The orchestrator generates one ID per invocation and gives the same ID to
 all teammates in that run:

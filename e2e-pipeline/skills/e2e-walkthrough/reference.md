@@ -49,6 +49,11 @@ fi
 <browser_command> wait --load networkidle
 ```
 
+The open is usable only when
+`browser_receipt.first_navigation.status: verified`. Otherwise report the
+runtime lifecycle error as infrastructure failure and stop before walkthrough
+steps.
+
 Video is generated post-hoc from step screenshots by the media-processor agent.
 
 **Verify auth** (skip if `auth.type: none`):

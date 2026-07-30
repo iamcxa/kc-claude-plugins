@@ -124,6 +124,8 @@ test('every browser consumer receives the shared runtime ownership fields', func
     'skills/e2e-walkthrough/reference.md',
     'skills/e2e-flow/SKILL.md',
     'agents/e2e-flow-verifier.md',
+    'skills/e2e-debug/SKILL.md',
+    'agents/e2e-debug-observe.md',
   ];
 
   for (const consumer of consumers) {
@@ -138,6 +140,31 @@ test('every browser consumer receives the shared runtime ownership fields', func
       consumer + ' contains a raw browser command'
     );
   }
+});
+
+test('every browser consumer requires the verified first-navigation lifecycle verdict', function() {
+  const consumers = [
+    'skills/e2e-test/SKILL.md',
+    'agents/e2e-test-runner.md',
+    'skills/e2e-map/SKILL.md',
+    'agents/e2e-mapper.md',
+    'skills/e2e-walkthrough/SKILL.md',
+    'skills/e2e-walkthrough/reference.md',
+    'skills/e2e-flow/SKILL.md',
+    'agents/e2e-flow-verifier.md',
+    'skills/e2e-debug/SKILL.md',
+    'agents/e2e-debug-observe.md',
+    'references/commands.md',
+  ];
+
+  for (const consumer of consumers) {
+    const source = read(consumer);
+    assert.match(source, /first_navigation/, consumer);
+    assert.match(source, /verified/, consumer);
+  }
+  const runtime = read('bin/e2e-browser-runtime.js');
+  assert.match(runtime, /first_navigation/);
+  assert.match(runtime, /status:\s*'verified'/);
 });
 
 test('compiled flows wrap every browser call with the owned runtime', function() {

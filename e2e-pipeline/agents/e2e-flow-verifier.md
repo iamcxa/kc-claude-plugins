@@ -80,6 +80,8 @@ Before starting, read these reference files for CLI command patterns:
    ```bash
    {{browser_command}} --headed --profile <auth_profile> open "<base_url>"
    ```
+   Require `browser_receipt.first_navigation.status: verified`. Otherwise stop
+   with an infrastructure failure before auth, trace, repair, or flow verdict.
 6. **Verify auth**: Read `auth.type` from mapping.
    - `none`: skip auth verification
    - Check current URL: if redirected to signin → auto-login (use `auth.test_accounts` if available, else report auth failure and stop)

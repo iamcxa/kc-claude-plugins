@@ -54,6 +54,11 @@ unchanged for this invocation. Every browser command below uses:
 browser_command: node "<browser_runtime>" --run-id "<browser_run_id>" --app "<app>" --receipt "<browser_receipt>"
 ```
 
+The first browser open must finish with
+`browser_receipt.first_navigation.status: verified`. Treat snapshot lineage,
+page/init-script, or first-document HAR failures as infrastructure failures and
+stop before mapper dispatch.
+
 ### Update Scope Decision (mapping exists + no `--page` flag)
 
 When a mapping already exists and the user invoked bare `/e2e-map` (no `--page`):
