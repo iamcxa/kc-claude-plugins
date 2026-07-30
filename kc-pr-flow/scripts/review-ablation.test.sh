@@ -505,6 +505,20 @@ PY
   assert_eq 'C6 AA verdict echoes its arms' 'A A_prime' \
     "$(verdict_of "$dir" AA A,A_prime | jq -r '.arms | join(" ")')"
 
+  # C6b — a THREE-name --arms on a three-arm directory. The pre-registered
+  # experiment puts A, A' and B in one manifest directory, so `A,A_prime,B` is
+  # the shape an operator actually mistypes. Taking the first and last name
+  # would silently drop A_prime and hand back a real, plausible A-vs-B verdict
+  # for a comparison nobody asked for, so the arity is rejected before any
+  # statistic is taken. The A_prime files are still present from C6's rebuild,
+  # which is what makes the dropped middle arm resolvable rather than absent.
+  assert_rejects 'C6b --arms with three names is rejected' 'exactly two' \
+    verdict_of "$dir" AA A,A_prime,B
+  # ...and the degenerate one-name form, which would otherwise reach the
+  # equal-names guard by accident rather than be rejected on its own shape.
+  assert_rejects 'C6b --arms with one name is rejected' 'exactly two' \
+    verdict_of "$dir" AA A
+
   # C1 — mis-armed pair: both arms carry the SAME skill_sha256 though the
   # invocation says AB. Under AB the hashes are required to DIFFER.
   dir="$TEST_ROOT/g-misarmed"

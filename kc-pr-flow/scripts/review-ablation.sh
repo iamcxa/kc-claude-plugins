@@ -374,6 +374,17 @@ review_ablation_compare() {
   [ -d "$manifest_dir" ] ||
     { review_ablation_die "no manifest directory: $manifest_dir"; return 1; }
 
+  # A comparison is between exactly two arms, and the arity is checked before
+  # the names are read. One experiment directory holds A, A' and B, so taking
+  # the first and last name of `A,A_prime,B` would drop the middle arm and hand
+  # back a real, plausible A-vs-B verdict for a comparison nobody asked for.
+  local arm_count
+  arm_count="$(printf '%s' "$arms" | awk -F ',' '{print NF}')"
+  if [ "$arm_count" -ne 2 ]; then
+    review_ablation_die "--arms takes exactly two arm names separated by one comma (got $arm_count in '$arms'); a comparison is between two arms, and one experiment directory holds more than two"
+    return 1
+  fi
+
   local arm_x arm_y
   arm_x="${arms%%,*}"
   arm_y="${arms##*,}"
