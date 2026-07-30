@@ -79,12 +79,26 @@ generation with the application verdict unchanged.
 | Check | v2 (valid) | v1 (legacy) | Action |
 |-------|-----------|-------------|--------|
 | Top-level key | `mapping:`/`sites:` | `app:` | SKIP |
+| Auth lifecycle | omitted/`persistent` or `flow-managed` | any other `auth_mode` | ERROR |
 | Step identifier | `id:` | `name:` | SKIP |
 | Expect entries | strings or `{not_automated: "<reason>"}` objects | other objects | SKIP |
 
 The `not_automated` object is valid only when it has exactly one key, `not_automated`, and the value is a non-empty string. Objects carrying `not_automated` plus any other key are v1/legacy input.
 
 If ANY fail: warn with migration guidance (`app:`->`mapping:`, `name:`->`id:`, unsupported structured expects->grammar strings or `not_automated` only when genuinely human-only). All v1 -> stop execution of this flow. **In batch mode**: mark as ERROR in results table with "v1 format" reason, continue with remaining flows (per Multi-Flow Execution rule).
+
+**Auth mode validation (mandatory):** Resolve top-level `auth_mode` before dispatch:
+
+- Omitted or `persistent` → existing persistent-auth behavior.
+- `flow-managed` → authentication is executed by flow steps. Do not infer this
+  from action text or a login route.
+- Any other value → mark the flow ERROR before browser setup.
+
+For a cross-site flow, `auth_mode` applies to every browser site in that flow.
+For flow-managed auth, the first browser step must be a non-mutating `Navigate` or
+`Verify` step with at least one logged-out expectation (for example login URL plus
+login control). Otherwise mark the flow ERROR before dispatch. This creates the
+pre-auth checkpoint the runner must pass before any authentication action.
 
 **Flow/Mapping Mismatch Guard (mandatory):** If the flow has a `mapping:` field, compare it to the resolved mapping filename (without `.yaml`). If they differ, stop: `"Flow '<flow>' targets mapping '<flow.mapping>' but resolved mapping is '<resolved>'. Use '--mapping <flow.mapping>' or fix the flow's 'mapping:' field."` This catches app mismatches before dispatching the agent, avoiding wasted execution time.
 
@@ -191,7 +205,11 @@ Total: 4 runs, 31 steps. Proceed?
 |-------|--------|
 | `flow_path` | Absolute path to resolved flow YAML |
 | `mapping_path` | Absolute path to resolved mapping YAML |
-| `auth_profile` | `~/.agent-browser/<app>/` (from mapping `app` field) |
+| `auth_mode` | Flow `auth_mode`, default `persistent` |
+| `canonical_auth_profile` | `~/.agent-browser/<app>/` (from mapping `app` field) |
+| `ephemeral_auth_profile` | Runtime-prepared path in flow-managed mode; omitted in persistent mode |
+| `auth_profile` | Canonical profile in persistent mode; runtime-prepared ephemeral profile in flow-managed mode |
+| `auth_profile_freshness` | `persistent-existing` or `verified-absent` |
 | `base_url` | From mapping header |
 | `app` | From mapping `app` field |
 | `report_dir` | `$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)` (create with `mkdir -p`) |
@@ -234,10 +252,43 @@ Every browser dispatch and browser command also carries the same `browser_runtim
 A teammate `RE-RUN` requested inside this invocation keeps that identity. A fresh
 `/e2e-test` replay MUST generate a new `browser_run_id`.
 
+### Flow-managed profile preparation
+
+For every logical run whose flow has `auth_mode: flow-managed`, ask the owned runtime
+to reserve a profile immediately before dispatch. The runtime enforces that the
+canonical profile is `~/.agent-browser/<app>/`, the ephemeral path is below its
+managed profile root, and the requested path did not exist:
+
+```bash
+CANONICAL_AUTH_PROFILE="$HOME/.agent-browser/<app>"
+PROFILE_STATE=$(node "$BROWSER_RUNTIME" \
+  --run-id "$BROWSER_RUN_ID" \
+  --app "<app>" \
+  --auth-mode flow-managed \
+  --canonical-profile "$CANONICAL_AUTH_PROFILE" \
+  prepare-flow-managed-profile) || exit 1
+AUTH_PROFILE=$(node -e \
+  'process.stdout.write(JSON.parse(process.argv[1]).profile)' \
+  "$PROFILE_STATE") || exit 1
+```
+
+Pass `auth_mode: flow-managed`, `canonical_auth_profile`,
+`ephemeral_auth_profile: <AUTH_PROFILE>`, `auth_profile: <AUTH_PROFILE>`, and
+`auth_profile_freshness: verified-absent` to the runner. The two ephemeral-path
+fields must be identical. A profile preparation failure stops that run before
+agent dispatch.
+
+Prepare a separate profile for every replay. This includes batch entries, suite
+entries, a fresh `/e2e-test` invocation, and a same-invocation Teams `RE-RUN`.
+A same-invocation `RE-RUN` prepares a new fresh ephemeral profile.
+The browser runtime identity may stay the same for the Teams teammate, but the
+old ephemeral profile is closed and cleaned before a new profile is prepared.
+
 ### Fresh invocation team reset (mandatory)
 
 A fresh `/e2e-test` invocation MUST NOT reuse an existing `e2e-test` team. Even when
-`app`, `auth_profile`, `base_url`, or `report_dir` appear unchanged:
+`app`, `auth_profile`, `base_url`, or `report_dir` appear unchanged, including
+when `auth_mode` also appears unchanged:
 
 1. If `~/.claude/teams/e2e-test/config.json` exists, send `shutdown_request` to every
    member and wait for each `shutdown_response`.
@@ -259,6 +310,15 @@ Teams mode spawns persistent runner teammates. Benefits:
 - **Cross-role coordination** — lead orchestrates sequential dependencies between roles
 - **Mixed environments** — browser + CLI teammates in the same test session
 - **Fail-fast** — on failure, lead can immediately transition to `/e2e-debug` (same browser)
+
+For flow-managed Teams dispatch, profile ownership is command-scoped. Immediately before each new
+`EXECUTE_FLOW` or `BEGIN_FLOW`, run `prepare-flow-managed-profile` for that logical run and put the
+returned fresh absent path in every auth-profile field for that command. Keep only one active flow
+command per browser teammate. Do not send that teammate another flow until its `FLOW COMPLETE` or
+`TRACE FINALIZED` receipt reports cleanup `removed`; parallelism is across different teammates,
+not two profiles in one teammate. Sequential suite entries assigned to the same app therefore wait
+for the prior receipt and each receive a new different fresh profile. A duplicate delivery of the
+same active/finalized command replays its stored response and never prepares or adopts again.
 
 #### Scenario Routing (decision tree)
 
@@ -289,6 +349,10 @@ Agent(
   model="haiku",
   prompt="TEAMS MODE. Execute E2E flow.
           flow_path: <path>  mapping_path: <path>  auth_profile: <path>
+          auth_mode: <persistent|flow-managed>
+          canonical_auth_profile: <canonical path>
+          ephemeral_auth_profile: <ephemeral path or omit>
+          auth_profile_freshness: <persistent-existing|verified-absent>
           base_url: <url>  app: <name>  report_dir: <path>
           browser_runtime: <absolute path>  browser_run_id: <run id>
           video: <bool>
@@ -301,10 +365,21 @@ Wait for `BROWSER_READY` (30s timeout per `references/agent-teams.md` § 4 — a
 
 Runner executes flow → `FLOW COMPLETE` with results.
 
-On failure: offer `"Investigate with /e2e-debug? (browser is still open)"`
+On failure, persistent mode may offer
+`"Investigate with /e2e-debug? (browser is still open)"`. Flow-managed mode has
+already closed and cleaned the ephemeral profile; offer report/trace inspection.
 On re-run within this invocation:
-`SendMessage(to="runner", message="RE-RUN\nflow_path: <path>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>")`
-— no browser restart. A new `/e2e-test` invocation follows the mandatory team reset above.
+
+- Persistent mode:
+  `SendMessage(to="runner", message="RE-RUN\nflow_path: <path>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>\nauth_mode: persistent\ncanonical_auth_profile: <canonical path>\nauth_profile: <same canonical profile>\nauth_profile_freshness: persistent-existing")`
+  — navigation may reuse the browser.
+- Flow-managed mode: require the prior report to show cleanup `removed`, run
+  `prepare-flow-managed-profile` again, then send
+  `SendMessage(to="runner", message="RE-RUN\nflow_path: <path>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>\nauth_mode: flow-managed\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <new path>\nauth_profile: <same new different fresh ephemeral profile>\nauth_profile_freshness: verified-absent")`.
+  The runner closes/reopens the owned browser and rejects reuse of the previous
+  ephemeral path.
+
+A new `/e2e-test` invocation follows the mandatory team reset above.
 
 #### Scenario B: Multi-site suite / --all-sites (parallel flows)
 
@@ -321,7 +396,12 @@ for site in sites:
     subagent_type="e2e-pipeline:e2e-test-runner",
     model="haiku",
     prompt="TEAMS MODE. Role: <site.alias>.
-            auth_profile: <site.auth>  mapping_path: <site.mapping>
+            auth_profile: <canonical or prepared ephemeral path>
+            mapping_path: <site.mapping>
+            auth_mode: <persistent|flow-managed>
+            canonical_auth_profile: <site canonical auth>
+            ephemeral_auth_profile: <ephemeral path or omit>
+            auth_profile_freshness: <persistent-existing|verified-absent>
             base_url: <site.base_url>  app: <site.app>
             report_dir: <report_dir>/<site.alias>/
             browser_runtime: <absolute path>  browser_run_id: <same run id>
@@ -332,11 +412,12 @@ for site in sites:
 
 Wait for all `BROWSER_READY` messages (30s timeout per runner per `references/agent-teams.md` § 4 — applies to startup). Handle `WAITING_FOR_AUTH` per `references/agent-teams.md` § 3. If a runner fails to send `BROWSER_READY` within 30s → mark as crashed, skip flows assigned to it, continue with remaining runners. If ALL runners fail startup → fall back to subagent dispatch entirely.
 
-Then dispatch flows in parallel:
+Then dispatch flows in parallel across different runner teammates. If multiple suite entries map
+to the same runner, dispatch them sequentially under the command-scoped profile rule above:
 
 ```
-SendMessage(to="runner-admin", message="EXECUTE_FLOW\nflow_path: <admin-flow>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>", summary="admin: smoke-navigation")
-SendMessage(to="runner-customer", message="EXECUTE_FLOW\nflow_path: <customer-flow>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>", summary="customer: booking-flow")
+SendMessage(to="runner-admin", message="EXECUTE_FLOW\nflow_path: <admin-flow>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>\nauth_mode: <persistent|flow-managed>\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <ephemeral path or omit>\nauth_profile: <canonical or ephemeral path>\nauth_profile_freshness: <persistent-existing|verified-absent>", summary="admin: smoke-navigation")
+SendMessage(to="runner-customer", message="EXECUTE_FLOW\nflow_path: <customer-flow>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>\nauth_mode: <persistent|flow-managed>\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <ephemeral path or omit>\nauth_profile: <canonical or ephemeral path>\nauth_profile_freshness: <persistent-existing|verified-absent>", summary="customer: booking-flow")
 ```
 
 Responses arrive asynchronously. Aggregate into combined results table.
@@ -357,14 +438,14 @@ FLOW_RUN_ID="<validated unique id for this flow execution>"
 # First, for every participating browser runner:
 SendMessage(
   to="runner-<site.alias>",
-  message="BEGIN_FLOW\nflow_run_id: <flow_run_id>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <browser run id>\nsession: <site.app>\ntrace_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace.zip\ntrace_finalization_result_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace-finalization.env",
+  message="BEGIN_FLOW\nflow_run_id: <flow_run_id>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <browser run id>\nsession: <site.app>\nauth_mode: <persistent|flow-managed>\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <ephemeral path or omit>\nauth_profile: <canonical or ephemeral path>\nauth_profile_freshness: <persistent-existing|verified-absent>\ntrace_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace.zip\ntrace_finalization_result_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace-finalization.env",
   summary="<site.alias>: begin <flow_run_id>"
 )
 # Wait for FLOW READY from every runner before routing any steps.
 
 for step in flow.steps:
   target = f"runner-{step.site}"
-  SendMessage(to=target, message="EXECUTE_STEP\nflow_run_id: <flow_run_id>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>\n{step as YAML}", summary=f"{step.site}: {step.id}")
+  SendMessage(to=target, message="EXECUTE_STEP\nflow_run_id: <flow_run_id>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>\nauth_mode: <persistent|flow-managed>\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <ephemeral path or omit>\nauth_profile: <canonical or ephemeral path>\nauth_profile_freshness: <persistent-existing|verified-absent>\n{step as YAML}", summary=f"{step.site}: {step.id}")
   # Wait for STEP COMPLETE before next step to SAME site
   # Steps to DIFFERENT site with no data dependency → can dispatch in parallel
 ```
@@ -403,11 +484,11 @@ Lead extracts `data:` and includes as `context:` in the next step's command:
 
 ```
 SendMessage(to="runner-customer",
-  message="EXECUTE_STEP\nid: verify-order\ncontext:\n  order_id: 12345\naction: Navigate to /orders\nexpect:\n  - text '12345' on orders-list",
+  message="EXECUTE_STEP\nflow_run_id: <flow_run_id>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>\nauth_mode: <persistent|flow-managed>\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <ephemeral path or omit>\nauth_profile: <canonical or ephemeral path>\nauth_profile_freshness: <persistent-existing|verified-absent>\nid: verify-order\ncontext:\n  order_id: 12345\naction: Navigate to /orders\nexpect:\n  - text '12345' on orders-list",
   summary="customer: verify-order")
 ```
 
-**End-of-flow trace finalization (mandatory, exactly once per step-routed browser runner):**
+**End-of-flow trace/profile finalization (mandatory, exactly once per step-routed browser runner):**
 
 After all `STEP COMPLETE` responses have arrived (and dependency/crash skips are recorded),
 calculate the already-known overall application verdict: `PASS` only when no browser/CLI step
@@ -418,8 +499,8 @@ skipped before dispatch:
 ```
 SendMessage(
   to="runner-<site.alias>",
-  message="FINALIZE_FLOW\nflow_run_id: <flow_run_id>\nflow_verdict: PASS|FAIL\nbrowser_runtime: <absolute path>\nbrowser_run_id: <browser run id>\nsession: <site.app>\ntrace_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace.zip\ntrace_finalization_result_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace-finalization.env",
-  summary="<site.alias>: finalize trace"
+  message="FINALIZE_FLOW\nflow_run_id: <flow_run_id>\nflow_verdict: PASS|FAIL\nbrowser_runtime: <absolute path>\nbrowser_run_id: <browser run id>\nsession: <site.app>\nauth_mode: <persistent|flow-managed>\ncanonical_auth_profile: <canonical path>\nephemeral_auth_profile: <ephemeral path or omit>\nauth_profile: <canonical or ephemeral path>\nauth_profile_freshness: <persistent-existing|verified-absent>\ntrace_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace.zip\ntrace_finalization_result_path: <report_dir>/<site.alias>/runs/<flow_run_id>/trace-finalization.env",
+  summary="<site.alias>: finalize trace and profile"
 )
 ```
 
@@ -432,12 +513,17 @@ start/finalize lifecycle internally. In particular, Scenario B remains `EXECUTE_
 must not receive either lifecycle command.
 
 Every browser teammate is spawned with `browser_runtime` and `browser_run_id`; repeat both fields
-in every `BEGIN_FLOW` and `FINALIZE_FLOW`. They are required ownership data, not a shell command
-string. The runner passes them to the lifecycle helper as separate argv together with
-`--app <site.app>`.
+and the complete mode-appropriate auth binding in every `BEGIN_FLOW`, `EXECUTE_STEP`, and
+`FINALIZE_FLOW`. They are required ownership data, not a shell command string. The runner passes
+runtime identity to the lifecycle helper as separate argv together with `--app <site.app>`.
 
 Wait for `TRACE FINALIZED` from every commanded browser runner before Phase 1.75 trace analysis
-aggregation. Use a 120-second response budget for `FINALIZE_FLOW`, covering the finalizer's default
+aggregation or teardown. The response preserves application, trace infrastructure, and profile
+infrastructure verdicts independently. Flow-managed runners invoke owned profile cleanup only
+after the shared trace finalizer returns; record canonical integrity, cleanup, and
+`profile_retained`. Persistent runners report profile fields `not-applicable`.
+
+Use a 120-second response budget for `FINALIZE_FLOW`, covering the finalizer's default
 60-second stop timeout, 15-second recovery timeout, 30-second validation timeout, and handoff
 overhead. If no response arrives, do not blindly resend the command; mark trace infrastructure
 failed for that runner and do not analyze by path presence. Preserve the application flow verdict.
@@ -491,7 +577,10 @@ exactly once to each step-routed **browser** runner after all mixed steps finish
 > See `references/agent-teams.md` § 2 (Teardown)
 
 After all results collected and presented: shutdown all runners → `TeamDelete()`.
-For single-flow: keep runners alive if user might re-run or debug. Teardown on explicit close.
+For a persistent single-flow run, keep runners alive if the user might re-run or
+debug; teardown on explicit close. A flow-managed runner may stay idle only after
+cleanup and can accept a new prepared profile for re-run, but it has no browser to
+hand off for debugging.
 
 #### Teams mode: Result aggregation
 
@@ -522,6 +611,10 @@ Proceed to Phase 1.5 as normal.
 Agent(subagent_type="e2e-test-runner", model="haiku"):  # override with --model if provided
   "Execute E2E flow:
    flow_path: <path>  mapping_path: <path>  auth_profile: <path>
+   auth_mode: <persistent|flow-managed>
+   canonical_auth_profile: <canonical path>
+   ephemeral_auth_profile: <ephemeral path or omit>
+   auth_profile_freshness: <persistent-existing|verified-absent>
    base_url: <url>  app: <name>  report_dir: <path>  headed: true
    browser_runtime: <absolute path>  browser_run_id: <run id>
    video: true               # only when --video or --pr
@@ -611,7 +704,11 @@ eligibility from `trace-finalization.env`.
 
 ## Phase 1.8 -- Auto-Compile and Compiled Run
 
-> Default ON. Skip entirely when `--no-compile` was passed or flow is **CLI-only** (all steps are `Execute external` / `Verify external`). CLI-only flows have no browser actions for the compiler to translate — compilation would produce zero executable steps, making divergence analysis meaningless. Note: `"Phase 1.8 skipped — CLI-only flow (no compilable browser steps)."`
+> Default ON. Skip entirely when `--no-compile` was passed, flow is **CLI-only**
+> (all steps are `Execute external` / `Verify external`), or flow declares
+> `auth_mode: flow-managed`. The standalone compiler does not yet own the runtime
+> profile-freshness/binding/cleanup boundary. Note:
+> `"Phase 1.8 skipped — flow-managed auth is not supported by standalone compiled replay."`
 
 After trace analysis, auto-compile and run the same flow as a compiled script to detect divergence between LLM and deterministic execution.
 
@@ -674,7 +771,9 @@ If 0 diverged: "LLM and compiled runs agree on all steps."
 
 ## Phase 2 — Present Results
 
-**Single:** `Test complete: N/M PASS, Z not automated (X console errors, Y API failures) Report: <path> Browser still open.`
+**Single persistent mode:** `Test complete: N/M PASS, Z not automated (X console errors, Y API failures) Report: <path> Browser still open.`
+
+**Single flow-managed mode:** `Test complete: N/M PASS, Z not automated (X console errors, Y API failures) Report: <path> Ephemeral auth profile cleanup: <removed|failed>.`
 
 If trace finalization failed, append:
 `Application flow: <flow_verdict>. Trace infrastructure: FAIL (<finalization_status>;
@@ -697,7 +796,9 @@ If `--video` or `--pr` was used, append:
 
 When present, include `not_automated: N` in single, batch, and multi-site summaries without counting it as passed, failed, or skipped.
 
-**Quick Re-Run (always shown after single-flow results):**
+**Quick Re-Run:**
+
+Persistent mode, when Phase 1.8 produced a compiled script:
 
 ```
 ## Quick Re-Run
@@ -715,7 +816,19 @@ bash .claude/e2e/compiled/<flow-name>.sh --continue-on-error --junit /tmp/junit.
 > Compiled script regenerated automatically. To force recompile: `/e2e-compile <flow-name>`
 ```
 
-Include the Quick Re-Run section in both single-flow results and in the per-flow section of batch results.
+Flow-managed mode cannot use the standalone compiled script because it lacks the
+owned profile lifecycle. Show:
+
+```text
+## Quick Re-Run
+
+`/e2e-test <flow-name> --no-compile`
+
+Each invocation prepares a new absent profile and records binding/cleanup.
+```
+
+Include the mode-appropriate Quick Re-Run section in both single-flow results and
+the per-flow section of batch results.
 
 **Divergence Report (when Phase 1.8 ran):**
 
@@ -723,7 +836,9 @@ Present the divergence table from Step 4. If 0 diverged steps, show: "Compiled r
 
 If diverged steps exist, add recommendation: "Re-run `/e2e-compile --dry-run <flow>` to validate selectors, or update the mapping with a more stable selector."
 
-**On failures:** Offer "Investigate?", "Keep browser open", "Re-run failed?".
+**On failures:** Persistent mode may offer "Keep browser open". Flow-managed mode
+has already cleaned the profile after evidence capture; offer "Inspect report/trace"
+and "Re-run with a new fresh profile" instead.
 
 **Mapping staleness:** 0 stale -> nothing; 1-2 -> `/e2e-walkthrough --page`; 3+ -> `/e2e-map --page`.
 
@@ -740,21 +855,34 @@ If diverged steps exist, add recommendation: "Re-run `/e2e-compile --dry-run <fl
 
 > N diverged steps out of M total
 
-2. **Quick Re-Run** (always present):
+2. **Quick Re-Run**:
 
+Persistent mode with compiled output:
 ```bash
 bash .claude/e2e/compiled/<flow>.sh
 ```
 
 > Compiled script auto-regenerated. Force recompile: `/e2e-compile <flow>`
 
-**Footer override:** Line 1 shows compiled script path instead of `/e2e-test <flow>` (since Quick Re-Run provides the detailed replay).
+Flow-managed mode:
+
+```text
+/e2e-test <flow> --no-compile
+```
+
+**Footer override:** Persistent compiled output shows the compiled script path.
+Flow-managed output shows the `/e2e-test` command because no compiled run exists.
 
 Then: `gh pr comment <PR> --body-file $REPORT_DIR/pr-summary.md`
 
-**Browser handoff:** Only close after human confirms. Multi-site: run
+**Browser handoff:** In persistent mode, only close after human confirms. Multi-site: run
 `node "<absolute browser_runtime>" --run-id "<browser_run_id>" --app "<app>" close`
 for each app.
+
+Flow-managed mode has no browser handoff after final evidence capture: the runner
+closes the owned session and executes `cleanup-flow-managed-profile`. If cleanup
+fails, surface the profile path and failure in the result instead of deleting it
+with an unowned command.
 
 ## Flow File Format
 
@@ -763,6 +891,7 @@ name: <flow-name>
 description: "<what this tests>"
 tags: [smoke, feature-x]                     # optional
 mapping: <mapping-filename-no-ext>           # -> .claude/e2e/mappings/<name>.yaml
+auth_mode: persistent                        # optional: persistent (default) | flow-managed
 preconditions:                               # optional — data readiness checks
   runner: psql
   env: [DATABASE_URL]

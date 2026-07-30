@@ -43,11 +43,19 @@ function documentedRuntimeCommands() {
     ),
   ];
   const commands = new Set();
-  const pattern = /(?:\{\{browser_command\}\}|e2e_browser)\s+(--version|[a-z][a-z-]*)/g;
+  const pattern =
+    /(?:\{\{browser_command\}\}|\{\{runtime_base_command\}\}|e2e_browser)\s+(--version|[a-z][a-z-]*)/g;
   for (const source of sources) {
     for (const match of source.matchAll(pattern)) commands.add(match[1]);
   }
-  return Array.from(commands).sort();
+  return Array.from(commands)
+    .filter(function(command) {
+      return ![
+        'cleanup-flow-managed-profile',
+        'verify-flow-managed-profile',
+      ].includes(command);
+    })
+    .sort();
 }
 
 test('open pins Chrome for Testing inside a run-scoped daemon namespace', function(t) {

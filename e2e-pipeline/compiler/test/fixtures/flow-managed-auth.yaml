@@ -1,0 +1,15 @@
+version: 2
+name: explicit-login
+description: "Authentication is the behavior under test."
+mapping: example-app
+auth_mode: flow-managed
+steps:
+  - id: open-login
+    action: "Navigate to /auth/login"
+    expect:
+      - "url contains /auth/login"
+      - "email_input visible on login"
+  - id: login
+    action: "Click login_button on login"
+    expect:
+      - "url does not contain /auth/"

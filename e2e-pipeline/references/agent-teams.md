@@ -221,6 +221,25 @@ When reusing a teammate for a **different** flow/task (e.g., `--verify-only` aft
 - If same auth + same base_url → navigate is sufficient. Cookies/localStorage carry over (usually desired — avoids re-login).
 - When in doubt → clear console/errors baseline at minimum. For full isolation, close + reopen.
 
+**e2e-test flow-managed auth override:** The reuse rules above apply to persistent
+profiles. When an e2e-test flow declares `auth_mode: flow-managed`, cookies and
+localStorage must not cross a replay boundary. A same-invocation `RE-RUN` keeps the
+browser runtime identity but must:
+
+1. Finish trace/screenshot evidence for the current replay.
+2. Run the owned `cleanup-flow-managed-profile` lifecycle.
+3. Ask the runtime to prepare a new different fresh ephemeral profile.
+4. Send the new `auth_profile` and `auth_profile_freshness: verified-absent`.
+5. Reopen and require `verify-flow-managed-profile` before any flow step.
+
+For lead-routed cross-site execution, the lead sends `FINALIZE_FLOW` to every
+participating runner after the last routed step and waits for `TRACE FINALIZED`
+before aggregation or teardown. Shutdown is not a substitute: if a flow-managed
+profile is still active, shutdown must run the same owned cleanup transition.
+
+The runner rejects the previous ephemeral path. Persistent-mode consumers and other
+skills retain the existing reuse behavior.
+
 ## 6. Multi-Runner Coordination (Lead-side)
 
 When the lead manages multiple teammates:
