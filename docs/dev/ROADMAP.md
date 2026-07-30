@@ -152,8 +152,30 @@ general repair loop, mandatory agy routing, and cross-repo adoption.
 
 ## `e2e-pipeline`
 
-No sprint is scheduled in this roadmap yet. Its product-local sequence may start
-at `e2e-pipeline/S1` without waiting for the current `kc-pr-flow` sprint.
+### Sprint S1 — trustworthy browser diagnostics and selectors
+
+End value: application E2E diagnostics retain owned Chrome for Testing lifecycle
+proof from before the first navigation, while selector defects fail before an
+expensive browser run and visibility verdicts cannot silently use first-match
+semantics.
+
+This sprint is independent of `kc-pr-flow/S4`–`S6`. Issue #110 is first because
+it currently blocks a bounded CarLove diagnostic that cannot safely bypass the
+shared browser runtime.
+
+| # | issue | scope |
+|---|-------|-------|
+| 1 | `#110` | Add a fail-closed, runtime-owned pre-navigation recorder hook with hashed provenance, an allowlisted sanitized projection, first-navigation continuity proof, and scoped cleanup. |
+| 2 | `#88` | Make compiler/dry-run enforce the same strict selector grammar as mapping lint, including a scoped legacy migration path. |
+| 3 | `#91` | Define and enforce deterministic multi-match visibility semantics with evidence that distinguishes no match, all hidden, visible, and invalid selector states. |
+
+Exit: every recorder stays inside the owned runtime and survives the first
+application navigation; invalid selectors fail before browser startup; every
+browser consumer shares one explicit multi-match visibility contract.
+
+Out of scope: application-specific auth or tenant logic, raw browser-state/HAR
+upload, browser-runtime ownership redesign, and the broader generated-output
+hardening in #39.
 
 ## `repo-platform`
 
