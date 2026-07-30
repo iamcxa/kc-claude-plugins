@@ -1,5 +1,5 @@
 {
-  "e2e-pipeline": "3.0.1",
+  "e2e-pipeline": "3.1.0",
   "kc-plugin-forge": "1.9.0",
   "kc-nightwatch": "0.5.1",
   "kc-hyperfocus": "1.6.4",
