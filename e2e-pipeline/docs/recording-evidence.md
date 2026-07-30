@@ -79,7 +79,7 @@ The test summary (pass/fail, step count, health data) is posted directly to the 
 A PR implements a feature from a spec or flowchart. You need to verify the implementation matches the expected flow:
 
 ```
-/e2e-walkthrough --pr 940 --issue DRC-2779
+/e2e-walkthrough --pr 123 --issue PROJ-101
 ```
 
 The skill reads both the PR diff and the issue description (from Linear/GitHub), then proposes a walkthrough plan covering the feature's expected flow. Walk through it step by step:
@@ -92,7 +92,7 @@ The skill reads both the PR diff and the issue description (from Linear/GitHub),
 Post results:
 
 ```
-/e2e-test <generated-flow> --pr 940 --issue DRC-2779
+/e2e-test <generated-flow> --pr 123 --issue PROJ-101
 ```
 
 The PR comment includes the issue context, making the review self-documenting.
@@ -101,42 +101,40 @@ The PR comment includes the issue context, making the review self-documenting.
 
 After browser work completes, each skill dispatches the `e2e-media-processor` agent to transform raw artifacts into shareable assets.
 
-**Browser recording demo** -- 4-page walkthrough of docs.reccehq.com (screenshots -> GIF):
-
-![Browser recording demo](assets/browser-recording-demo.gif)
+**Illustrative browser media flow** -- replace these public placeholder URLs and assertions with pages from your application. No bundled recording is associated with this example.
 
 <details>
-<summary>Flow YAML used to generate this demo</summary>
+<summary>Illustrative flow YAML</summary>
 
 ```yaml
 name: demo-browser-recording
-description: Browse docs.reccehq.com to demonstrate the browser media pipeline
-mapping: recce-docs
+description: Browse public documentation to demonstrate the browser media pipeline
+mapping: example-docs
 tags: [demo, browser-recording]
 
 steps:
   - id: landing
-    action: "Navigate to https://docs.reccehq.com/"
+    action: "Navigate to https://example.com/"
     expect:
-      - "page loaded with title containing 'Recce'"
+      - "page loaded with the expected documentation title"
     screenshot: true
 
-  - id: summary-agent
-    action: "Navigate to https://docs.reccehq.com/recce-cloud/recce-summary-agent/"
+  - id: guides
+    action: "Navigate to https://example.com/guides/"
     expect:
-      - "page loaded with Summary Agent content"
+      - "page loaded with guide content"
     screenshot: true
 
-  - id: mcp-server
-    action: "Navigate to https://docs.reccehq.com/recce-cloud/mcp-server/"
+  - id: reference
+    action: "Navigate to https://example.com/reference/"
     expect:
-      - "page loaded with MCP Server content"
+      - "page loaded with reference content"
     screenshot: true
 
-  - id: lineage-diff
-    action: "Navigate to https://docs.reccehq.com/features/lineage/"
+  - id: changelog
+    action: "Navigate to https://example.com/changelog/"
     expect:
-      - "page loaded with Lineage Diff content"
+      - "page loaded with changelog content"
     screenshot: true
 ```
 
