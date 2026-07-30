@@ -339,3 +339,32 @@ direct scalar-element usability assertion, then rerun the scoped suite and this 
 
 - Cycle 1: RETURN — independent validation + agy/Gemini; surface 152 minutes vs estimate 90 minutes (169%); AC unchanged
 - Design reset after Cycle 1: RECONFIRM — Claude EM `proceed/high`; permit one test-only scalar-validator assertion, scoped suite, and m1 rerun; stop on any product, documentation, eighth-file, or mechanism change
+
+## Stage Report: implementation (cycle 1)
+
+- DONE: Re-anchor the correction on the approved acceptance criteria.
+  AC-1 and AC-2 are unchanged; the seven-file implementation still serves them, and
+  validation returned only the missing direct falsifiability proof for AC-1's validator.
+- DONE: Keep the correction to the reconfirmed one-file disposition.
+  Only `kc-pr-flow/scripts/review-post.test.sh` changed: one direct assertion now requires
+  `review_post_reviews_usable '{"reviews":[42]}'` to return unusable.
+- DONE: Prove the corrected exact-head scoped suite is green.
+  `bash kc-pr-flow/scripts/review-post.test.sh` returned 156 passed / 0 failed in
+  297.99s; changing the scalar predicate back to outer-array-only falsifies this claim.
+- DONE: Kill the returned m1 mutation in a disposable copy.
+  Reverting only the validator to outer-array-only returned 155 passed / 1 failed in
+  297.95s: `a scalar reviews element makes the list unusable` expected false, got true.
+- DONE: Run the correction's static gates.
+  `bash -n`, pinned ShellCheck v0.9.0, and `git diff --check` all exited 0.
+- DONE: Commit only the authorized test correction.
+  Commit `2d3d07937d120d4f8d7647f305710c45cb61873b` adds six test lines; no
+  production, documentation, fixture, eighth-file, mechanism, push, PR, or version changed.
+- DONE: Record the budget and design reconfirmation receipt.
+  Validation reported 152 minutes against the 90-minute estimate (169%); Claude EM
+  explicitly reconfirmed `proceed/high` for this bounded assertion, scoped suite, and m1 rerun.
+
+### Summary
+
+Cycle 1 closes the sole mutation-proof gap without altering behavior or scope. The product
+worktree is clean at the two-commit corrected head and is ready for fresh validation; agy,
+earned suites, product push, and PR work remain outside this correction dispatch.
