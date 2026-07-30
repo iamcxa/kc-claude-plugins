@@ -130,8 +130,9 @@ or a future adapter.
 ### Sprint S6 — EM merge-readiness (interrupt, bounded)
 
 End value: for one exact PR head, EM synthesizes existing CI, test, and review
-evidence into `READY`, `NOT_READY`, or `UNKNOWN` with explicit confidence. The
-existing human confirmation gate remains the sole merge authority.
+evidence into `READY`, `NOT_READY`, or `UNKNOWN` with explicit confidence.
+Humans remain sole merge authority; S6 adds no merge operation. The existing
+§6c confirmation gate remains the interactive review-post authority.
 
 S6 recovers `kc-pr-review`'s exact-head evidence, confidence, and human-confirmation
 seams. It fills only the missing landing synthesis and daemon authority boundary.
