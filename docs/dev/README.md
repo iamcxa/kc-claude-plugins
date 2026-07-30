@@ -465,11 +465,16 @@ After it lands:
    annotates before handoff or closeout; after that owner releases it, a
    captain-designated owner may take over and annotate at the next legal state
    transition.
-3. Product-filter results remain non-authoritative during migration because
-   they omit unannotated entities. Backfill is complete when every non-archived
-   backlog or active entity has a non-empty product recognized by the registry
-   above.
-4. Archived entities are a separate, optional historical migration. They do not
+3. Product backfill is complete when every non-archived backlog or active
+   entity has a non-empty scalar `product` recognized by the registry above.
+   Only after that condition holds are product-filter results authoritative;
+   before then they omit unannotated entities.
+4. Sprint-assignment migration is complete when every non-archived entity
+   scheduled under a ROADMAP product sprint has the matching scalar `product`
+   and `sprint` pair. Sprint-filter and combined product-plus-sprint query
+   results become authoritative only after that condition holds. A genuinely
+   unscheduled entity keeps `sprint` blank.
+5. Archived entities are a separate, optional historical migration. They do not
    block current product-local scheduling.
 
 ## Proof Policy
