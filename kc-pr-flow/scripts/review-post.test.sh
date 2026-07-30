@@ -95,6 +95,7 @@ write_auto_gate() {
      effective_event:"COMMENT",head_sha:$head,review_key:$key}' >"$AUTO_GATE"
 }
 store_count() { jq -s 'length' "$STUB_DIR/reviews.jsonl"; }
+post_count() { cat "$STUB_DIR/post-count" 2>/dev/null || printf '0'; }
 run_dir_for() { printf '%s/%s/pr-%s/%s' "$STATE" "$(printf '%s' "$REPO" | shasum -a 256 | awk '{print $1}')" "$PR" "$1"; }
 run_events() { cat "$(run_dir_for "$1")/events.jsonl"; }
 
@@ -367,6 +368,89 @@ assert_eq "a refused post settles on a later usable read" "posted" "$(jq -r '.st
 assert_eq "settling a refused post writes exactly one review" "1" "$(store_count)"
 teardown_env
 
+# --- A reviews array is usable only when every element is an object. Keep the
+# scalar cases separate from numeric-body scan failures so a green result cannot
+# hide one mechanism behind the other.
+#
+# Fresh post: malformed element means no POST, typed refusal, pending retained.
+new_env; write_request; write_gate
+printf 'posted\n' >"$STUB_DIR/post-plan"
+printf 'scalar\n' >"$STUB_DIR/list-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+assert_eq "a scalar review element makes fresh post fail closed with no POST and pending retained" \
+  "ambiguous|reconcile_unavailable|0|0|true" \
+  "$(jq -r '.status + "|" + (.reason // "")' <<<"$out")|$(post_count)|$(store_count)|$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
+teardown_env
+
+# Resume: the first faithful list allows one ambiguous POST to land. A later
+# scalar element must not be read as marker absence or license a retry.
+new_env; write_request; write_gate
+printf 'ambiguous\nposted\n' >"$STUB_DIR/post-plan"
+printf 'faithful\nscalar\n' >"$STUB_DIR/list-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
+assert_eq "a scalar review element makes resume fail closed without retrying its one landed review" \
+  "ambiguous|reconcile_unavailable|1|1|true" \
+  "$(jq -r '.status + "|" + (.reason // "")' <<<"$resume_out")|$(post_count)|$(store_count)|$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
+teardown_env
+
+# Post-retry: the first POST is lost, the first resume read confirms absence,
+# and the one bounded retry lands ambiguously. Its scalar reconcile response
+# must become a typed refusal without removing pending or attempting again.
+new_env; write_request; write_gate
+printf 'lost\nambiguous\nposted\n' >"$STUB_DIR/post-plan"
+printf 'faithful\nfaithful\nscalar\n' >"$STUB_DIR/list-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
+assert_eq "a scalar post-retry reconcile types the refusal and stops with pending retained" \
+  "ambiguous|reconcile_unavailable|2|1|true" \
+  "$(jq -r '.status + "|" + (.reason // "")' <<<"$resume_out")|$(post_count)|$(store_count)|$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
+teardown_env
+
+# Numeric body is an independent scan failure: every reviews[] element is an
+# object, so only checking review_post_scan_marker's pipefail-preserved status
+# can fail closed. Fresh post has no marker to distract from the guard.
+new_env; write_request; write_gate
+printf 'posted\n' >"$STUB_DIR/post-plan"
+printf 'numeric-body\n' >"$STUB_DIR/list-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+assert_eq "a numeric review body makes fresh post fail closed with no POST and pending retained" \
+  "ambiguous|reconcile_unavailable|0|0|true" \
+  "$(jq -r '.status + "|" + (.reason // "")' <<<"$out")|$(post_count)|$(store_count)|$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
+teardown_env
+
+# Marker-before-error: the ambiguous POST lands first, so the recorded marker
+# precedes the numeric-body object. Partial stdout must not be consumed as a
+# successful marker match when the scan itself exits nonzero.
+new_env; write_request; write_gate
+printf 'ambiguous\nposted\n' >"$STUB_DIR/post-plan"
+printf 'faithful\nnumeric-body\n' >"$STUB_DIR/list-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
+assert_eq "a failed marker-first scan ignores partial id output and fails closed without retry" \
+  "ambiguous|reconcile_unavailable|1|1|true" \
+  "$(jq -r '.status + "|" + (.reason // "")' <<<"$resume_out")|$(post_count)|$(store_count)|$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
+teardown_env
+
+# Error-before-marker at post-retry: after one bounded retry lands, the
+# malformed object precedes the recorded receipt. The caller must type the
+# refusal and stop with pending evidence intact.
+new_env; write_request; write_gate
+printf 'lost\nambiguous\nposted\n' >"$STUB_DIR/post-plan"
+printf 'faithful\nfaithful\nnumeric-body-first\n' >"$STUB_DIR/list-plan"
+out="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1000)"
+run_id="$(jq -r '.run_id' <<<"$out")"
+resume_out="$(bash "$POST" resume --repo "$REPO" --pr "$PR" --self "$SELF" --run-id "$run_id" --now-epoch 5000)"
+assert_eq "a failed error-first post-retry scan is typed and stops with pending retained" \
+  "ambiguous|reconcile_unavailable|2|1|true" \
+  "$(jq -r '.status + "|" + (.reason // "")' <<<"$resume_out")|$(post_count)|$(store_count)|$(path_exists "$(run_dir_for "$run_id")/pending-post.json")"
+teardown_env
+
 # --- Placement guard. The fail-closed check sits AFTER the local prior-attempt
 # consultation, so the two verdicts that local durable state can reach on its own
 # still win over the generic reconcile refusal. Moving the check earlier turns
@@ -379,6 +463,10 @@ assert_eq "the first post landed" "posted" "$(jq -r '.status' <<<"$first")"
 second="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1100)"
 assert_eq "a definitively posted prior run still reconciles under an unusable list" "posted_reconciled" "$(jq -r '.status' <<<"$second")"
 assert_eq "reconciling against local state posts nothing further" "1" "$(store_count)"
+printf 'numeric-body\n' >>"$STUB_DIR/list-plan"
+third="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1200)"
+assert_eq "a definitively posted prior run still reconciles after numeric-body scan failure" "posted_reconciled" "$(jq -r '.status' <<<"$third")"
+assert_eq "numeric-body reconciliation against posted local state adds no review" "1" "$(store_count)"
 teardown_env
 
 new_env; write_request; write_gate
@@ -389,6 +477,10 @@ assert_eq "the first post ended unsettled" "ambiguous" "$(jq -r '.status' <<<"$f
 second="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1100)"
 assert_eq "an unsettled prior attempt keeps its own reason under an unusable list" "prior_attempt_unsettled" "$(jq -r '.reason' <<<"$second")"
 assert_eq "the unsettled prior attempt is not re-posted" "1" "$(store_count)"
+printf 'numeric-body\n' >>"$STUB_DIR/list-plan"
+third="$(bash "$POST" post --request-file "$REQUEST" --gate-file "$GATE" --now-epoch 1200)"
+assert_eq "an unsettled prior attempt keeps its reason after numeric-body scan failure" "prior_attempt_unsettled" "$(jq -r '.reason // ""' <<<"$third")"
+assert_eq "numeric-body reconciliation against unsettled local state adds no review" "1" "$(store_count)"
 teardown_env
 
 # --- AC1 (author identity is not load-bearing): the idempotency marker alone
@@ -715,6 +807,35 @@ set -e
 assert_eq "the gh list adapter rejects partial output when gh fails without pipefail" \
   "rc:74|out:" "rc:$adapter_partial_rc|out:$adapter_partial_out"
 unset -f gh
+
+# Arrangement/preservation probes for the scan signal the three callers must
+# consume. They are expected to stay green during RED: the defect is that
+# callers ignore the already-nonzero status, not that jq fails to provide it.
+scan_marker='<!-- receipt -->'
+set +e
+scan_before_out="$(review_post_scan_marker \
+  '{"reviews":[{"id":7,"body":"<!-- receipt -->"},{"id":8,"body":42}]}' "$scan_marker" 2>/dev/null)"
+scan_before_rc=$?
+scan_after_out="$(review_post_scan_marker \
+  '{"reviews":[{"id":8,"body":42},{"id":7,"body":"<!-- receipt -->"}]}' "$scan_marker" 2>/dev/null)"
+scan_after_rc=$?
+set -e
+assert_eq "marker-before-error scan preserves nonzero status with partial stdout (arrangement)" \
+  "5|7" "$scan_before_rc|$scan_before_out"
+assert_eq "error-before-marker scan preserves nonzero status without a candidate (arrangement)" \
+  "5|" "$scan_after_rc|$scan_after_out"
+if review_post_reviews_usable '{"reviews":[]}'; then
+  empty_reviews_usable=true
+else
+  empty_reviews_usable=false
+fi
+assert_eq "an empty reviews array remains usable" "true" "$empty_reviews_usable"
+if review_post_reviews_usable '{"reviews":[42]}'; then
+  scalar_reviews_usable=true
+else
+  scalar_reviews_usable=false
+fi
+assert_eq "a scalar reviews element makes the list unusable" "false" "$scalar_reviews_usable"
 
 rfc_shell=''
 rfc_python=''

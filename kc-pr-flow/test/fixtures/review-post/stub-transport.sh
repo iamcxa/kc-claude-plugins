@@ -21,6 +21,12 @@
 #                                 non-empty (GitHub read-after-write lag: a just
 #                                 -created review is not visible yet)
 #                     unusable -> return {"reviews":null} (exit 0, unusable body)
+#                     scalar   -> append a scalar reviews[] element
+#                     numeric-body
+#                              -> append an object whose body is numeric
+#                     numeric-body-first
+#                              -> prepend that numeric-body object before the
+#                                 recorded store (including any receipt marker)
 #                   Missing/empty line defaults to `faithful`.
 #   head-plan       one behavior per `head` call, consumed top-down:
 #                     faithful  -> return {"head_sha": <head>} (default)
@@ -75,6 +81,17 @@ case "$op" in
         ;;
       unusable)
         printf '{"reviews":null}\n'
+        ;;
+      scalar)
+        jq -s '{reviews: (. + [42])}' "$stub_dir/reviews.jsonl"
+        ;;
+      numeric-body)
+        jq -s '{reviews: (. + [{id:9001,user:"malformed",body:42,commit_id:"0000000000000000000000000000000000000000"}])}' \
+          "$stub_dir/reviews.jsonl"
+        ;;
+      numeric-body-first)
+        jq -s '{reviews: ([{id:9001,user:"malformed",body:42,commit_id:"0000000000000000000000000000000000000000"}] + .)}' \
+          "$stub_dir/reviews.jsonl"
         ;;
       *)
         if [ -f "$stub_dir/reviews.jsonl" ]; then

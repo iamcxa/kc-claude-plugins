@@ -73,7 +73,8 @@ any network call, so a crash mid-POST is always recoverable. An ambiguous outcom
 response) never blind-retries: `resume` reconciles a landed post via the review body's embedded
 `idempotency_key` marker (`GET .../reviews`) before ever retrying, and a moved head or changed
 payload invalidates instead of posting the stale payload. A retry needs a reconcile read that
-*positively confirms* remote state: a list response that is not a reviews array fails closed
+*positively confirms* remote state: a list response that is not a reviews array of objects, or whose
+marker scan fails even after partial output, fails closed
 (`ambiguous{reconcile_unavailable}`), and because the reviews list is read-after-write eventually
 consistent, an absent marker only proves "never landed" once `KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS`
 (default 60) has elapsed since `post.intent` — inside that window resume reports

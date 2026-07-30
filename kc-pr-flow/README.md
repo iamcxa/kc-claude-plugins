@@ -84,8 +84,9 @@ call) means a crash mid-POST is always recoverable: `resume` reconciles a landed
 embedded idempotency marker in the review body before ever retrying, a moved head or changed
 payload invalidates instead of posting stale content, and `gc` expires unreconciled pending payloads
 after `KC_PR_FLOW_PENDING_RETENTION_SECONDS` (default 7 days) but never within their window. Only a
-reconcile read that positively confirms remote state licenses a retry: an unusable list response
-fails closed, and since the reviews list is read-after-write eventually consistent, an absent marker
+reconcile read that positively confirms remote state licenses a retry: a list that is not an array
+of review objects, or whose marker scan fails even after partial output, fails closed; since the
+reviews list is read-after-write eventually consistent, an absent marker
 is trusted as "never landed" only after `KC_PR_FLOW_RECONCILE_CONFIRM_SECONDS` (default 60) has
 elapsed since `post.intent` — otherwise a lagging list would duplicate a review that did land.
 `post` reconciles against the marker before its own POST too, so a repeat invocation of an
