@@ -32,6 +32,11 @@ cat ~/.claude/teams/e2e-<skill>/config.json 2>/dev/null
 
 If team exists and expected members are present → **reuse** (skip TeamCreate and browser open). The browser is already running.
 
+**e2e-test exception:** A fresh `/e2e-test` invocation never takes this reuse path.
+Its newly generated browser identity requires teardown of any existing `e2e-test`
+team before new members are created with the full invocation fields. Only a
+same-invocation `RE-RUN` may reuse those members.
+
 ### Spawn teammates
 
 ```
@@ -62,6 +67,19 @@ Teardown procedure:
 3. `TeamDelete()`
 
 ## 3. Browser Teammate Startup Protocol
+
+### e2e-test runtime precedence
+
+When a dispatch includes both `browser_runtime` and `browser_run_id`, the
+`e2e-test-runner` Browser Command Contract takes precedence over the bare
+`agent-browser` examples in this shared reference. Route startup, commands,
+reuse, and close through that runtime with the dispatched run identity and app.
+For a fresh `/e2e-test` invocation, teardown the prior team and recreate members
+with the full invocation fields; only a same-invocation `RE-RUN` may reuse them.
+
+Other consumers that do not provide both runtime fields continue to use the
+shared protocol below. This conditional does not imply that those consumers
+have migrated to the e2e-test runtime.
 
 All browser-operating teammates follow this sequence on first spawn:
 

@@ -2,74 +2,99 @@
 
 Core commands for E2E testing agents. For full reference, see project-level `.claude/skills/agent-browser/references/commands.md`.
 
+## E2E Browser Runtime (Required)
+
+Browser-operating e2e-pipeline agents must route every command through the shared
+runtime. The orchestrator generates one ID per invocation and gives the same ID to
+all teammates in that run:
+
+```bash
+BROWSER_RUNTIME="${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js"
+BROWSER_RUN_ID=$(node "$BROWSER_RUNTIME" new-run-id)
+APP="<mapping app>"
+
+e2e_browser() {
+  node "$BROWSER_RUNTIME" --run-id "$BROWSER_RUN_ID" --app "$APP" "$@"
+}
+```
+
+The runtime creates an owned daemon namespace, selects the app session, discovers
+and pins the installed Chrome for Testing executable, and ignores inherited browser
+provider/config attachment settings. A fresh replay gets a fresh `BROWSER_RUN_ID`;
+teammates within one run reuse the same ID.
+
+Do not use `--auto-connect`, `--cdp`, or `connect`. The runtime rejects those escape
+hatches and rejects executables that are not Chrome for Testing. Close with
+`e2e_browser close`, which targets only the owned namespace/session.
+
 ## Session & Navigation
 
 ```bash
-agent-browser open <url>                          # Navigate (auto-creates session)
-agent-browser --session <name> open <url>         # Named session (multi-site)
-agent-browser --profile <path> open <url>         # Persistent auth profile (NEW daemon only!)
-# NOTE: --profile is silently ignored if daemon already running. Fix: `agent-browser close` → wait → re-open.
-agent-browser --headed open <url>                 # Visible browser (required for auth)
-agent-browser close                               # Close current session
-agent-browser --session <name> close              # Close named session
-agent-browser back                                # Go back
-agent-browser reload                              # Reload page
+e2e_browser open <url>                          # Navigate (auto-creates session)
+e2e_browser --profile <path> open <url>         # Persistent auth profile
+e2e_browser --headed open <url>                 # Visible browser (required for auth)
+e2e_browser close                               # Close current session
+e2e_browser back                                # Go back
+e2e_browser reload                              # Reload page
 ```
+
+For multi-site work, set `APP` to the site mapping's `app` value before invoking
+`e2e_browser`; do not add `--session` manually.
 
 ## Observation
 
 ```bash
-agent-browser snapshot                            # Full accessibility tree with @ref tags
-agent-browser snapshot -i                         # Interactive elements only (recommended)
-agent-browser snapshot -s "#selector"             # Scope to CSS selector (reduces noise)
-agent-browser screenshot <abs-path>               # Save screenshot (MUST use absolute paths)
-agent-browser screenshot --annotate <abs-path>    # Labeled screenshot (fall back to plain if fails)
-agent-browser screenshot --full <abs-path>        # Full page screenshot
-agent-browser get url                             # Current page URL
-agent-browser get text @ref                       # Get element text
-agent-browser get count ".selector"               # Count matching elements
-agent-browser is visible "<selector>"             # Returns "true"/"false" TEXT (exit code always 0!)
-agent-browser is enabled @ref                     # Check if enabled
+e2e_browser snapshot                            # Full accessibility tree with @ref tags
+e2e_browser snapshot -i                         # Interactive elements only (recommended)
+e2e_browser snapshot -s "#selector"             # Scope to CSS selector (reduces noise)
+e2e_browser screenshot <abs-path>               # Save screenshot (MUST use absolute paths)
+e2e_browser screenshot --annotate <abs-path>    # Labeled screenshot (fall back to plain if fails)
+e2e_browser screenshot --full <abs-path>        # Full page screenshot
+e2e_browser get url                             # Current page URL
+e2e_browser get text @ref                       # Get element text
+e2e_browser get count ".selector"               # Count matching elements
+e2e_browser is visible "<selector>"             # Returns "true"/"false" TEXT (exit code always 0!)
+e2e_browser is enabled @ref                     # Check if enabled
 ```
 
 ## Interaction (ALWAYS use @ref from latest snapshot)
 
 ```bash
-agent-browser click @ref                          # Click element
-agent-browser fill @ref "<text>"                  # Focus + clear + type (PREFERRED over click+type)
-agent-browser type @ref "<text>"                  # Type without clearing
-agent-browser select @ref "<value>"               # Select dropdown option
-agent-browser hover @ref                          # Hover (also scrolls element into view)
-agent-browser press "<key>"                       # Keyboard (Enter, Tab, Escape, etc.)
-agent-browser press "Control+a"                   # Key combination
-agent-browser scroll down                         # Scroll page down (NOT to element — use hover)
-agent-browser scroll up                           # Scroll page up
-agent-browser check @ref                          # Check checkbox
-agent-browser uncheck @ref                        # Uncheck checkbox
+e2e_browser click @ref                          # Click element
+e2e_browser fill @ref "<text>"                  # Focus + clear + type (PREFERRED over click+type)
+e2e_browser type @ref "<text>"                  # Type without clearing
+e2e_browser select @ref "<value>"               # Select dropdown option
+e2e_browser hover @ref                          # Hover (also scrolls element into view)
+e2e_browser press "<key>"                       # Keyboard (Enter, Tab, Escape, etc.)
+e2e_browser press "Control+a"                   # Key combination
+e2e_browser scroll down                         # Scroll page down (NOT to element — use hover)
+e2e_browser scroll up                           # Scroll page up
+e2e_browser check @ref                          # Check checkbox
+e2e_browser uncheck @ref                        # Uncheck checkbox
 ```
 
 ## Waiting
 
 ```bash
-agent-browser wait --load networkidle             # Wait for network idle (after navigation)
-agent-browser wait "<selector>"                   # Wait for element to appear
-agent-browser wait "<selector>" --timeout <ms>    # With timeout in milliseconds
-agent-browser wait --text "Success"               # Wait for text on page
-agent-browser wait --url "**/dashboard"           # Wait for URL pattern
-agent-browser wait 2000                           # Wait fixed milliseconds
+e2e_browser wait --load networkidle             # Wait for network idle (after navigation)
+e2e_browser wait "<selector>"                   # Wait for element to appear
+e2e_browser wait "<selector>" --timeout <ms>    # With timeout in milliseconds
+e2e_browser wait --text "Success"               # Wait for text on page
+e2e_browser wait --url "**/dashboard"           # Wait for URL pattern
+e2e_browser wait 2000                           # Wait fixed milliseconds
 ```
 
 ## Tracing & Health
 
 ```bash
-agent-browser trace start                         # Start recording (AFTER open)
-agent-browser trace stop "<abs-path>"             # Save trace.zip (BEFORE close!)
-agent-browser console --json                      # Console messages as JSON
-agent-browser console --clear                     # Clear console buffer
-agent-browser errors --json                       # JS errors as JSON
-agent-browser errors --clear                      # Clear error buffer
-agent-browser eval "<js>"                         # Execute JavaScript in page context
-agent-browser eval -b "<base64>"                  # Execute base64-encoded JS (reliable escaping)
+e2e_browser trace start                         # Start recording (AFTER open)
+e2e_browser trace stop "<abs-path>"             # Save trace.zip (BEFORE close!)
+e2e_browser console --json                      # Console messages as JSON
+e2e_browser console --clear                     # Clear console buffer
+e2e_browser errors --json                       # JS errors as JSON
+e2e_browser errors --clear                      # Clear error buffer
+e2e_browser eval "<js>"                         # Execute JavaScript in page context
+e2e_browser eval -b "<base64>"                  # Execute base64-encoded JS (reliable escaping)
 ```
 
 ## Recording (DEPRECATED)
@@ -79,9 +104,9 @@ agent-browser eval -b "<base64>"                  # Execute base64-encoded JS (r
 
 **Recommended startup order:**
 ```bash
-agent-browser --profile <auth_profile> --headed open <url>   # 1. Open with auth profile
-agent-browser wait --load networkidle                         # 2. Wait for page load
-agent-browser trace start                                     # 3. Start tracing
+e2e_browser --profile <auth_profile> --headed open <url>   # 1. Open with auth profile
+e2e_browser wait --load networkidle                         # 2. Wait for page load
+e2e_browser trace start                                     # 3. Start tracing
 ```
 
 ## GIF Generation (from per-step screenshots)
@@ -122,10 +147,10 @@ ffmpeg -f concat -safe 0 -i "$REPORT_DIR/mp4-frames.txt" \
 ## Semantic Locators (alternative to @ref)
 
 ```bash
-agent-browser find role button click --name "Submit"   # By ARIA role
-agent-browser find text "Sign In" click                # By text content
-agent-browser find testid "submit-btn" click           # By data-testid
-agent-browser find label "Email" fill "user@test.com"  # By label
+e2e_browser find role button click --name "Submit"   # By ARIA role
+e2e_browser find text "Sign In" click                # By text content
+e2e_browser find testid "submit-btn" click           # By data-testid
+e2e_browser find label "Email" fill "user@test.com"  # By label
 ```
 
 ## Critical Rules
