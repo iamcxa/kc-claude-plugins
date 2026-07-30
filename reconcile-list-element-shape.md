@@ -1,6 +1,6 @@
 ---
 title: A shape-valid but content-invalid reviews list reads as "marker absent"
-status: validation
+status: implementation
 source: named residual from reconcile-degraded-mode-symmetry (sv) EM gate, 2026-07-26
 started: 2026-07-30T02:56:12Z
 completed:
@@ -338,3 +338,4 @@ direct scalar-element usability assertion, then rerun the scoped suite and this 
 ### Feedback Cycles
 
 - Cycle 1: RETURN — independent validation + agy/Gemini; surface 152 minutes vs estimate 90 minutes (169%); AC unchanged
+- Design reset after Cycle 1: RECONFIRM — Claude EM `proceed/high`; permit one test-only scalar-validator assertion, scoped suite, and m1 rerun; stop on any product, documentation, eighth-file, or mechanism change
