@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-pr-flow-v1.10.0...kc-pr-flow-v1.11.0) (2026-07-30)
+
+
+### Features
+
+* **kc-pr-flow:** give a prose cut a failure signal ([7bdb8c4](https://github.com/iamcxa/kc-claude-plugins/commit/7bdb8c4158dd83eac13f23f29a391b71be337d6e))
+
 ## [1.10.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-pr-flow-v1.9.1...kc-pr-flow-v1.10.0) (2026-07-30)
 
 
