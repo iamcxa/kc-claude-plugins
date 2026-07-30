@@ -57,6 +57,7 @@ defines sync levels, probe classification, and style defaults.
 | `references/commands.md` | `docs/commands.md` (agent-browser CLI reference) |
 | `references/common-patterns.md` | `docs/writing-tests.md` + `docs/cross-boundary-testing.md` |
 | `references/knowledge-capture.md` | `docs/self-improvement.md` |
+| `references/issue-promotion.md` | `docs/self-improvement.md` |
 | `references/learned-patterns.md` | `docs/debugging.md` (common issues) |
 | `references/pr-report-template.md` | `docs/pr-workflow.md` |
 
