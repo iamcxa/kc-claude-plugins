@@ -339,7 +339,7 @@ After a `--pr` run, the report directory (`.claude/e2e/reports/<timestamp>/`) co
 | `steps.gif` | Step overview animation or asciinema GIF (CLI flows) |
 | `test-run.mp4` | 2x speed video (trimmed) |
 | `thumbnail.png` | First non-blank screenshot or first GIF frame |
-| `trace.zip` | Network + console trace (browser flows; replay with `npx playwright show-trace`) |
+| `trace.json` / `trace.zip` | Capability-detected Chrome performance or Playwright network/console trace |
 | `compiled-junit.xml` | JUnit output from compiled script run (browser flows only) |
 | `recording.cast` | Raw asciinema terminal recording (CLI-only flows) |
 

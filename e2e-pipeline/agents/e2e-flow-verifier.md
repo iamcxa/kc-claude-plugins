@@ -65,8 +65,11 @@ Before starting, read these reference files for CLI command patterns:
 
 ### Phase 1 — Setup
 
-1. **Gitignore housekeeping**: Ensure `report_dir` parent has `*.webm`, `*.mp4`, `trace.zip`, and
-   `trace.invalid-*.zip` in `.gitignore`
+1. **Gitignore housekeeping**: Resolve the project root and run the shared helper before writing
+   artifacts. Stop if it rejects the destination:
+   ```bash
+   "${CLAUDE_PLUGIN_ROOT}/scripts/ensure-e2e-gitignore.sh" --report-dir "{{report_dir}}"
+   ```
 2. **Pre-flight checks**:
    ```bash
    {{browser_command}} --version
@@ -89,6 +92,20 @@ Before starting, read these reference files for CLI command patterns:
 7. **Start trace**:
    ```bash
    python3 --version  # Required before tracing; stop before trace start if unavailable.
+   AGENT_BROWSER_EXECUTABLE=$(command -v "${E2E_AGENT_BROWSER_BIN:-agent-browser}")
+   TRACE_CONTRACT_FILE="$REPORT_DIR/trace-contract.env"
+   node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
+     --agent-browser "$AGENT_BROWSER_EXECUTABLE" \
+     --output env > "$TRACE_CONTRACT_FILE"
+   trace_producer=$(sed -n 's/^trace_producer=//p' "$TRACE_CONTRACT_FILE")
+   trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "$TRACE_CONTRACT_FILE")
+   trace_format=$(sed -n 's/^trace_format=//p' "$TRACE_CONTRACT_FILE")
+   trace_extension=$(sed -n 's/^trace_extension=//p' "$TRACE_CONTRACT_FILE")
+   case "$trace_format:$trace_extension" in
+     chrome-trace-json:.json|playwright-trace-zip:.zip) ;;
+     *) echo "Unsupported trace contract" >&2; exit 72 ;;
+   esac
+   TRACE_PATH="$REPORT_DIR/trace${trace_extension}"
    {{browser_command}} trace start
    ```
 
@@ -183,17 +200,17 @@ If diagnosis finds no correctable cause → log as `unfixable` with symptom + DO
   `FAIL`). Preserve it independently from trace infrastructure.
 - Finalize Round 1 through the shared executable before branching:
   - Corrections with no unfixable issues (Round 2 will run): save to
-    `$REPORT_DIR/round-1/trace.zip`, result
+    `$REPORT_DIR/round-1/trace${trace_extension}`, result
     `$REPORT_DIR/round-1/trace-finalization.env`.
-  - All other outcomes (Round 1 is final): save to `$REPORT_DIR/trace.zip`, result
+  - All other outcomes (Round 1 is final): save to `$TRACE_PATH`, result
     `$REPORT_DIR/trace-finalization.env`.
 
   ```bash
   if [ "$corrections" -gt 0 ] && [ "$unfixable" -eq 0 ]; then
-    ROUND_1_TRACE_PATH="$REPORT_DIR/round-1/trace.zip"
+    ROUND_1_TRACE_PATH="$REPORT_DIR/round-1/trace${trace_extension}"
     ROUND_1_FINALIZATION_RESULT="$REPORT_DIR/round-1/trace-finalization.env"
   else
-    ROUND_1_TRACE_PATH="$REPORT_DIR/trace.zip"
+    ROUND_1_TRACE_PATH="$TRACE_PATH"
     ROUND_1_FINALIZATION_RESULT="$REPORT_DIR/trace-finalization.env"
   fi
 
@@ -201,6 +218,9 @@ If diagnosis finds no correctable cause → log as `unfixable` with symptom + DO
   TRACE_FINALIZER_RC=0
   "$TRACE_FINALIZER" \
     --trace-path "$ROUND_1_TRACE_PATH" \
+    --trace-producer "$trace_producer" \
+    --trace-producer-version "$trace_producer_version" \
+    --trace-format "$trace_format" \
     --flow-verdict "$ROUND_1_FLOW_VERDICT" \
     --result-file "$ROUND_1_FINALIZATION_RESULT" ||
     TRACE_FINALIZER_RC=$?
@@ -266,7 +286,10 @@ ROUND_2_FLOW_VERDICT=PASS
 TRACE_FINALIZER="${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh"
 TRACE_FINALIZER_RC=0
 "$TRACE_FINALIZER" \
-  --trace-path "$REPORT_DIR/trace.zip" \
+  --trace-path "$TRACE_PATH" \
+  --trace-producer "$trace_producer" \
+  --trace-producer-version "$trace_producer_version" \
+  --trace-format "$trace_format" \
   --flow-verdict "$ROUND_2_FLOW_VERDICT" \
   --result-file "$REPORT_DIR/trace-finalization.env" ||
   TRACE_FINALIZER_RC=$?
@@ -296,8 +319,8 @@ non-zero. Trace analysis is eligible only when the file says `analysis_eligible=
 
 **Note:** Trace analysis is NOT your responsibility. The orchestrator skill dispatches the
 trace-analyzer separately only when `trace_analysis_eligible=true`. You save the finalization
-contract + step-log.json; valid traces remain `trace.zip`, while invalid artifacts may be
-quarantined.
+contract + step-log.json; valid traces retain the detector-selected `.json` or `.zip` extension,
+while invalid artifacts may be quarantined.
 
 #### 4a. Report (report.md)
 
@@ -471,12 +494,17 @@ checkpoint_results:
     service: <service-name>
     status: <pass|fail|skip>
     detail: <description>
-trace_path: <absolute path to trace.zip>
+trace_path: <absolute accepted trace artifact path>
+trace_producer: <producer from trace-finalization.env>
+trace_producer_version: <producer_version from trace-finalization.env>
+trace_declared_format: <declared_format from trace-finalization.env>
+trace_detected_format: <detected_format from trace-finalization.env>
+trace_validator: <validator from trace-finalization.env>
 trace_finalization_result_path: <absolute path to trace-finalization.env>
 round_1_trace_finalization_result_path: <absolute path when Round 2 ran, otherwise empty>
 trace_infrastructure_result: <PASS|FAIL>
-trace_finalization_status: <valid|timeout|stop_failed|invalid_artifact|dependency_missing>
-trace_validation_status: <valid|missing|not_regular|empty|timeout|invalid_zip|unsafe_archive|resource_limit_exceeded|missing_playwright_content|validator_unavailable>
+trace_finalization_status: <valid|timeout|stop_failed|format_mismatch|invalid_artifact|dependency_missing>
+trace_validation_status: <valid|missing|not_regular|empty|timeout|format_mismatch|invalid_json|invalid_zip|unsafe_archive|resource_limit_exceeded|missing_playwright_content|validator_unavailable>
 trace_recovery_status: <not_needed|closed|timeout|failed>
 trace_artifact_disposition: <accepted|quarantined|retained_invalid|missing>
 trace_analysis_eligible: <true|false>
@@ -546,6 +574,19 @@ trace, so persistent browser reuse does not imply trace reuse:
 
 ```bash
 python3 --version
+# Re-run the Phase 1 capability detector and refresh TRACE_PATH before this capture.
+node "${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js" \
+  --agent-browser "$(command -v "${E2E_AGENT_BROWSER_BIN:-agent-browser}")" \
+  --output env > "$REPORT_DIR/trace-contract.env"
+trace_producer=$(sed -n 's/^trace_producer=//p' "$REPORT_DIR/trace-contract.env")
+trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "$REPORT_DIR/trace-contract.env")
+trace_format=$(sed -n 's/^trace_format=//p' "$REPORT_DIR/trace-contract.env")
+trace_extension=$(sed -n 's/^trace_extension=//p' "$REPORT_DIR/trace-contract.env")
+case "$trace_format:$trace_extension" in
+  chrome-trace-json:.json|playwright-trace-zip:.zip) ;;
+  *) echo "Unsupported trace contract" >&2; exit 72 ;;
+esac
+TRACE_PATH="$REPORT_DIR/trace${trace_extension}"
 {{browser_command}} trace start
 ```
 

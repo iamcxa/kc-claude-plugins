@@ -13,7 +13,8 @@
     "e2e-compile": "bin/e2e-compile.js",
     "e2e-browser-runtime": "bin/e2e-browser-runtime.js",
     "e2e-local-service-runtime": "bin/e2e-local-service-runtime.js",
-    "e2e-issue-promotion": "bin/e2e-issue-promotion.js"
+    "e2e-issue-promotion": "bin/e2e-issue-promotion.js",
+    "e2e-trace-contract": "bin/e2e-trace-contract.js"
   },
   "dependencies": {
     "commander": "^14.0.3",

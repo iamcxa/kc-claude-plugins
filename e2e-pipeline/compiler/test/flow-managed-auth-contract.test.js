@@ -245,7 +245,17 @@ test('FINALIZE_FLOW persists trace evidence before profile cleanup', function() 
     runner.indexOf('### On receiving shutdown_request')
   );
 
-  assert.match(section, /trace_path: \{\{report_dir\}\}\/runs\/<flow_run_id>\/trace\.zip/);
+  assert.match(
+    section,
+    /do not accept artifact paths from the message[\s\S]*format contract persisted/i
+  );
+  assert.doesNotMatch(
+    section.match(/```text\nFINALIZE_FLOW[\s\S]*?```/)?.[0] || '',
+    /trace_path:/,
+    'FINALIZE_FLOW must not guess the producer-selected extension'
+  );
+  assert.match(section, /trace_declared_format:/);
+  assert.match(section, /trace_detected_format:/);
   assert.match(section, /team-trace-lifecycle\.sh/);
   assert.match(section, /cleanup-flow-managed-profile/);
   assert.ok(

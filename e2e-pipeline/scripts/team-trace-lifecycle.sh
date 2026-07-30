@@ -94,6 +94,7 @@ esac
 script_dir=$(CDPATH='' cd -- "$(dirname "$0")" && pwd)
 identifier_validator="$script_dir/validate-trace-identifiers.sh"
 finalizer="$script_dir/finalize-trace.sh"
+trace_contract_cli="$script_dir/../bin/e2e-trace-contract.js"
 agent_browser_bin=${AGENT_BROWSER_BIN:-agent-browser}
 
 "$identifier_validator" "$flow_run_id" || exit $?
@@ -150,18 +151,28 @@ run_finalizer() {
       --app "$browser_app" \
       --trace-path "$trace_path" \
       --flow-verdict "$finalizer_verdict" \
+      --trace-producer "$trace_producer" \
+      --trace-producer-version "$trace_producer_version" \
+      --trace-format "$trace_format" \
       --result-file "$result_file"
   else
     "$finalizer" \
       --session "$session_name" \
       --trace-path "$trace_path" \
       --flow-verdict "$finalizer_verdict" \
+      --trace-producer "$trace_producer" \
+      --trace-producer-version "$trace_producer_version" \
+      --trace-format "$trace_format" \
       --result-file "$result_file"
   fi
 }
 
 run_dir="$report_dir/runs/$flow_run_id"
-trace_path="$run_dir/trace.zip"
+trace_path=
+trace_producer=
+trace_producer_version=
+trace_format=
+trace_extension=
 result_file="$run_dir/trace-finalization.env"
 state_file="$report_dir/.trace-lifecycle.env"
 
@@ -192,6 +203,68 @@ read_state_field() {
   sed -n "s/^${field_name}=//p" "$state_file" | head -n 1
 }
 
+load_trace_state() {
+  trace_producer=$(read_state_field trace_producer) || return 1
+  trace_producer_version=$(read_state_field trace_producer_version) || return 1
+  trace_format=$(read_state_field trace_format) || return 1
+  trace_path=$(read_state_field trace_path) || return 1
+  case "$trace_format" in
+    chrome-trace-json) trace_extension=.json ;;
+    playwright-trace-zip) trace_extension=.zip ;;
+    *) return 1 ;;
+  esac
+  [ "$trace_producer" = agent-browser ] &&
+    [ -n "$trace_producer_version" ] &&
+    [ "$trace_path" = "$run_dir/trace$trace_extension" ]
+}
+
+detect_trace_contract() {
+  [ -f "$trace_contract_cli" ] || {
+    printf 'Trace capability detector is unavailable: %s\n' "$trace_contract_cli" >&2
+    return 1
+  }
+  trace_agent_browser_bin=$agent_browser_bin
+  if [ "$owned_runtime" = true ]; then
+    trace_agent_browser_bin=${E2E_AGENT_BROWSER_BIN:-agent-browser}
+  fi
+  resolved_agent_browser=$(command -v "$trace_agent_browser_bin" 2>/dev/null || true)
+  case "$resolved_agent_browser" in
+    /*) ;;
+    *)
+      printf 'agent-browser executable could not be resolved: %s\n' "$trace_agent_browser_bin" >&2
+      return 1
+      ;;
+  esac
+  contract_file="$run_dir/trace-contract.env"
+  contract_tmp=$(mktemp "$run_dir/.trace-contract.tmp.XXXXXX") || return 1
+  if ! node "$trace_contract_cli" \
+      --agent-browser "$resolved_agent_browser" \
+      --output env > "$contract_tmp"; then
+    rm -f "$contract_tmp"
+    return 1
+  fi
+  if ! atomic_replace "$contract_tmp" "$contract_file"; then
+    rm -f "$contract_tmp"
+    return 1
+  fi
+  trace_producer=$(sed -n 's/^trace_producer=//p' "$contract_file")
+  trace_producer_version=$(sed -n 's/^trace_producer_version=//p' "$contract_file")
+  trace_format=$(sed -n 's/^trace_format=//p' "$contract_file")
+  trace_extension=$(sed -n 's/^trace_extension=//p' "$contract_file")
+  case "$trace_format:$trace_extension" in
+    chrome-trace-json:.json|playwright-trace-zip:.zip) ;;
+    *)
+      printf 'Trace capability detector returned an invalid format contract\n' >&2
+      return 1
+      ;;
+  esac
+  [ "$trace_producer" = agent-browser ] || return 1
+  case "$trace_producer_version" in
+    ''|*[!A-Za-z0-9._+-]*) return 1 ;;
+  esac
+  trace_path="$run_dir/trace$trace_extension"
+}
+
 write_state() {
   state_status=$1
   regular_destination_or_absent "$state_file" || return 1
@@ -202,6 +275,10 @@ write_state() {
     printf 'session=%s\n' "$session_name"
     printf 'browser_run_id=%s\n' "$browser_run_id"
     printf 'browser_app=%s\n' "$browser_app"
+    printf 'trace_producer=%s\n' "$trace_producer"
+    printf 'trace_producer_version=%s\n' "$trace_producer_version"
+    printf 'trace_format=%s\n' "$trace_format"
+    printf 'trace_path=%s\n' "$trace_path"
   } > "$state_tmp"; then
     rm -f "$state_tmp"
     return 1
@@ -214,13 +291,20 @@ write_state() {
     [ "$(read_state_field flow_run_id)" = "$flow_run_id" ] &&
     [ "$(read_state_field session)" = "$session_name" ] &&
     [ "$(read_state_field browser_run_id)" = "$browser_run_id" ] &&
-    [ "$(read_state_field browser_app)" = "$browser_app" ]
+    [ "$(read_state_field browser_app)" = "$browser_app" ] &&
+    [ "$(read_state_field trace_producer)" = "$trace_producer" ] &&
+    [ "$(read_state_field trace_producer_version)" = "$trace_producer_version" ] &&
+    [ "$(read_state_field trace_format)" = "$trace_format" ] &&
+    [ "$(read_state_field trace_path)" = "$trace_path" ]
 }
 
 print_begin_result() {
   begin_status=$1
   printf 'flow_run_id=%s\n' "$flow_run_id"
   printf 'begin_status=%s\n' "$begin_status"
+  printf 'trace_producer=%s\n' "$trace_producer"
+  printf 'trace_producer_version=%s\n' "$trace_producer_version"
+  printf 'trace_format=%s\n' "$trace_format"
   printf 'trace_path=%s\n' "$trace_path"
   printf 'trace_finalization_result_path=%s\n' "$result_file"
 }
@@ -253,6 +337,10 @@ if [ "$command_name" = begin ]; then
       printf 'Finalized trace ownership does not match flow run: %s\n' "$flow_run_id" >&2
       exit 66
     fi
+    if ! load_trace_state; then
+      printf 'Finalized trace format contract is invalid for flow run: %s\n' "$flow_run_id" >&2
+      exit 66
+    fi
     print_begin_result already_finalized
     exit 0
   fi
@@ -262,6 +350,10 @@ if [ "$command_name" = begin ]; then
        [ "$current_session" = "$session_name" ] &&
        [ "$current_browser_run_id" = "$browser_run_id" ] &&
        [ "$current_browser_app" = "$browser_app" ]; then
+      if ! load_trace_state; then
+        printf 'Active trace format contract is invalid for flow run: %s\n' "$flow_run_id" >&2
+        exit 66
+      fi
       print_begin_result replayed
       exit 0
     fi
@@ -270,6 +362,10 @@ if [ "$command_name" = begin ]; then
   fi
 
   mkdir -p "$run_dir" || exit 70
+  if ! detect_trace_contract; then
+    printf 'Trace capability detection failed before capture for flow run %s\n' "$flow_run_id" >&2
+    exit 72
+  fi
   run_browser trace start
   start_result=$?
   if [ "$start_result" -ne 0 ]; then
@@ -298,6 +394,10 @@ if [ -f "$result_file" ]; then
     printf 'Finalized trace ownership does not match flow run: %s\n' "$flow_run_id" >&2
     exit 66
   fi
+  if ! load_trace_state; then
+    printf 'Finalized trace format contract is invalid for flow run: %s\n' "$flow_run_id" >&2
+    exit 66
+  fi
   if ! cat "$result_file"; then
     printf 'Cannot read trace finalization result: %s\n' "$result_file" >&2
     exit 70
@@ -311,6 +411,10 @@ if [ "$current_status" != active ] ||
    [ "$current_browser_run_id" != "$browser_run_id" ] ||
    [ "$current_browser_app" != "$browser_app" ]; then
   printf 'Flow run is not the active trace: %s\n' "$flow_run_id" >&2
+  exit 66
+fi
+if ! load_trace_state; then
+  printf 'Active trace format contract is invalid for flow run: %s\n' "$flow_run_id" >&2
   exit 66
 fi
 

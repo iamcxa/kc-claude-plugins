@@ -25,7 +25,7 @@ Route E2E operations to the correct executor with auth pre-flight.
 | `--flow [--from source]` | `/e2e-dispatch --flow --from plan.md` |
 | `--flow --smoke` | `/e2e-dispatch --flow --smoke` |
 | `--flow --verify-only` | `/e2e-dispatch --flow --verify-only login-flow` |
-| `--analyze <path>` | `/e2e-dispatch --analyze .claude/e2e/reports/trace.zip` |
+| `--analyze <path>` | `/e2e-dispatch --analyze .claude/e2e/reports/trace.json` |
 | `--compile [flow]` | `/e2e-dispatch --compile login-flow` |
 | `--compile --all` | `/e2e-dispatch --compile --all` |
 | `--ops [mode]` | `/e2e-dispatch --ops --debug` |
@@ -37,7 +37,7 @@ No args or ambiguous request: present the routing menu and ask user to choose:
 > 2. `--map` — Create or update UI element mappings
 > 3. `--flow` — Generate & verify E2E flows from plans/specs/PRs, or smoke test
 > 4. `--walk` — Interactive walkthrough / explore UI
-> 5. `--analyze` — Analyze a Playwright trace file
+> 5. `--analyze` — Analyze a Playwright ZIP or Chrome Trace JSON artifact
 > 6. `--compile` — Compile flow YAML to standalone bash test scripts
 > 7. `--ops` — Debug, maintain, or evaluate E2E skills
 > 8. `--help` — Interactive help guide & topic deep-dive
@@ -120,10 +120,21 @@ Runs entirely in main context (interactive).
 Forward all additional flags to the target route (e.g., `--walk --smoke --site carlove` → `--flow --smoke --site carlove`). The mapping argument from `--walk` becomes the `--mapping` argument for `--flow`.
 
 ### --analyze
-Dispatch directly — no skill needed:
+Detect the artifact format with the bounded validator, fail closed on `unknown`, then dispatch
+directly — no skill needed:
+```bash
+TRACE_FORMAT=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/validate-chrome-trace.py" \
+  detect "<absolute trace path>")
+case "$TRACE_FORMAT" in
+  playwright-trace-zip|chrome-trace-json) ;;
+  *) echo "Unsupported trace artifact format" >&2; exit 3 ;;
+esac
+```
+
 ```
 Agent(subagent_type="e2e-trace-analyzer"):
-  trace_path: <absolute path to trace.zip>
+  trace_path: <absolute path to accepted trace artifact>
+  trace_format: <detected TRACE_FORMAT>
   report_dir: <dirname of trace_path>
 ```
 Present summary when agent returns.
@@ -177,7 +188,7 @@ Direct invocation of any target skill (`/e2e-test`, `/e2e-map`, `/e2e-flow`, `/e
 | Smoke test all pages | `/e2e-dispatch --flow --smoke` |
 | Verify existing flow | `/e2e-dispatch --flow --verify-only login-flow` |
 | Interactive explore | `/e2e-dispatch --walk admin-panel` |
-| Analyze trace | `/e2e-dispatch --analyze .claude/e2e/reports/20260306/trace.zip` |
+| Analyze trace | `/e2e-dispatch --analyze .claude/e2e/reports/20260306/trace.json` |
 | Compile one flow | `/e2e-dispatch --compile login-flow` |
 | Compile all flows | `/e2e-dispatch --compile --all` |
 | Debug skill issue | `/e2e-dispatch --ops --debug` |
