@@ -446,13 +446,51 @@ spacedock status --workflow-dir docs/dev --where 'product=repo-platform'
 ```
 
 Spacedock 0.26 stores and filters arbitrary frontmatter; it does not validate
-the product registry, scalar shape, or requiredness. This docs-only contract
-therefore has human enforcement at capture and every state-transition review.
-Until automated validation is implemented, a blank, unknown, or non-scalar
-`product` makes a seed invalid and the reviewer returns it for correction. The
-blank `product:` and `sprint:` values in the Task Template are authoring
-placeholders, not a valid captured seed; `sprint` may remain blank only after
-`product` is filled.
+the product registry, scalar shape, or requiredness. This repository therefore
+binds the optional
+[`work-control-profile`](./_mods/work-control-profile.md) capability
+`bound_field_validation` to
+`scripts/dev-flow-work-context-check.py`:
+
+```yaml
+work_controls:
+  bound_field_validation:
+    mode: required
+    adapter: scripts/dev-flow-work-context-check.py
+    authority: captain or designated state migration owner
+    enforcement:
+      - backlog capture before state commit
+      - every state-transition review
+      - before claiming a product or sprint filtered view is authoritative
+```
+
+No other profile capability is declared by this binding. Delivery
+reconciliation, landing metadata preview, resource envelopes, and review
+convergence remain separately adoptable follow-up controls, not implicit gates.
+
+After the lifecycle-hook state prerequisite has established the clean holder,
+validate the exact live task at capture and every transition review:
+
+```bash
+python3 "$REPO/scripts/dev-flow-work-context-check.py" validate \
+  --task "$TASK_FILE" \
+  --marketplace "$REPO/.claude-plugin/marketplace.json" \
+  --roadmap "$REPO/docs/dev/ROADMAP.md"
+```
+
+`TASK_FILE` is the exact flat task file or folder-form `index.md` selected for
+the operation. Exit 1 is a controlled-field `FAIL`; exit 2 is `UNKNOWN` because
+a provider input could not be established. Both block a required boundary. The
+JSON receipt hashes the exact task, marketplace registry, and roadmap bytes
+into `input_revision`, so an edit invalidates the old result.
+When a legal setter adds or changes `product` or `sprint`, run the validator on
+the resulting exact task before its companion state commit. A failure leaves
+the one attributable dirty entity for correction under the existing setter
+recovery rules; it never authorizes committing invalid fields.
+
+The blank `product:` and `sprint:` values in the Task Template are authoring
+placeholders, not a valid captured seed. `product` must be filled before
+capture completes; `sprint` may remain blank after validation.
 
 This contract change does not authorize a bulk rewrite of separated state.
 After it lands:
@@ -481,6 +519,32 @@ After it lands:
    not be backfilled. A terminal `done` entity still in the live path must be
    annotated or archived by its closeout or archive owner before product-filter
    authority can be declared.
+
+The complete-population audit makes those authority boundaries executable:
+
+```bash
+python3 "$REPO/scripts/dev-flow-work-context-check.py" audit \
+  --state-dir "$STATE" \
+  --marketplace "$REPO/.claude-plugin/marketplace.json" \
+  --roadmap "$REPO/docs/dev/ROADMAP.md"
+```
+
+The audit requires the exact clean Git worktree root on
+`spacedock-state/dev`, requires its Git common directory to equal the
+marketplace/roadmap code worktree's common directory, verifies its revision
+before and after the read, excludes `_archive/`, hashes the exact live
+population it read, reports deterministic JSON, and derives
+`product_filter_authoritative` from complete valid live coverage. A wrong
+directory or repository, branch, dirty holder, or changing revision is
+`UNKNOWN`. It does not
+infer that every blank sprint is intentionally unscheduled. Only the captain
+or designated migration owner may add `--iteration-migration-complete` after
+checking ROADMAP scheduling coverage; invalid live fields still keep
+`iteration_filter_authoritative` false. Until the relevant boolean is true, a
+product- or sprint-filtered result is advisory and must say that it can omit
+unmigrated entities. An empty state root is `UNKNOWN`, not a vacuous
+authoritative pass. The command is read-only and never authorizes a bulk
+rewrite.
 
 ## Proof Policy
 
