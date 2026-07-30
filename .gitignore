@@ -19,6 +19,9 @@ e2e-reports/**/trace.zip
 # Nightwatch runtime logs (may contain secrets)
 kc-nightwatch/runs/
 
+# Python bytecode left behind by running the committed helper scripts
+__pycache__/
+
 # Catch-all: trace.zip anywhere
 **/trace.zip
 docs/ship-flow/.spacedock-state/
