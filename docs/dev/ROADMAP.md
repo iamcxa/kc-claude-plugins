@@ -4,9 +4,25 @@ Sprint boundaries and sequencing only. This file never tracks task state; that i
 `spacedock status --workflow-dir docs/dev`. Owner: captain, or the sprint commander
 writing on the captain's direction.
 
-## Clear before either sprint starts
+Sprint numbers are product-local ordinals with no cross-product chronology or
+rank. Use the qualified identity `<product>/S<number>` outside a product section;
+for example, `kc-pr-flow/S5` and `e2e-pipeline/S1` may run concurrently without
+sharing a sprint boundary.
 
-Three items belong to neither track and should not wait for one.
+A number is allocated only by a product sprint heading in this file, written by
+the ROADMAP owner named above and accepted into `main`. Mentions and proposals
+elsewhere do not reserve it; the first accepted heading for a product/number pair
+wins. Bare `Sprint N` or `SN` references written before this contract's
+2026-07-30 adoption resolve to `kc-pr-flow/SN`, because `kc-pr-flow` was the only
+scheduled product. After adoption, a bare reference outside a product section is
+a defect.
+
+## `kc-pr-flow`
+
+### Unscheduled prerequisites
+
+Two work items belong to neither scheduled sprint and should not wait for one.
+The third entry records a prerequisite that has already landed.
 
 - **`zn` item 1** — `SKILL.md:405-413` prescribes a `codex exec` mode whose output file is 0 bytes
   for the whole run, so an in-flight dispatch reads as failed. One live occurrence bought a
@@ -16,9 +32,9 @@ Three items belong to neither track and should not wait for one.
   `knowledge-capture.md:7` says LOCAL only and not the public file. Decide this before `v5` is
   scheduled: if LOCAL-then-promote was the intent, the 1193-line corpus is an accident and `v5`
   and `3w` are treating a symptom.
-- **PR #75** — the tier estimate now says what it does not count. Already open.
+- **PR #75** — the tier estimate now says what it does not count. Merged.
 
-## Sprint 4 — slim the kit
+### Sprint S4 — slim the kit
 
 Opened 2026-07-27 on captain direction: **make the kit smaller before adding to it**, so that the
 strengthening work lands on a smaller surface rather than being layered onto a 1884-line skill.
@@ -33,7 +49,7 @@ tokens; removing a load-bearing one breaks the review, and prose has no test to 
 asymmetry sets the sequence below: the harness comes first, and the cuts are ordered by how loudly
 they would fail.
 
-### Sequence
+#### Sequence
 
 | # | id | slug | risk | why here |
 |---|----|------|------|----------|
@@ -43,7 +59,7 @@ they would fail.
 | 3 | `sk` | reference-progressive-load | medium | Three references load whole on an ordinary path (246 + 162 + 1193 lines). `gh-api-patterns.md` already demonstrates named-section reads inside this same skill. First cut whose failure mode is a *quieter* review rather than a broken one. |
 | 4 | — | overconstrained-rule audit | **high** | Not filed yet, on purpose. The guidance says replace rigid rules with judgment — but this kit's prose partly constrains five dispatched subagents that cannot recover an omitted constraint from the parent context. File it only if the harness proves able to measure this class. |
 
-### What is not cut, and why
+#### What is not cut, and why
 
 An earlier draft of this sprint proposed removing "544 lines of example output" from Step 6. **415
 of those lines are an executable Bash adapter** that `review-shadow.test.sh:56` extracts by
@@ -60,7 +76,7 @@ Also staying, all of them load-bearing rather than decorative:
   is ever rendered, the rendering becomes part of the contract and needs its own test
 - the typed/shadow schemas
 
-## Sprint 5 — strengthen, on the smaller surface
+### Sprint S5 — strengthen, on the smaller surface
 
 The entities that were Sprint 3's core, deferred deliberately so they land after the cuts rather
 than before them.
@@ -77,7 +93,7 @@ known defects). They are **not** dropped, and the deferral has a cost stated bel
 
 Following that: `x0r` as a bounded fixture spike, `dk` after `q0`, `3w` after `v5`.
 
-## The cost of this ordering, stated plainly
+### The cost of this ordering, stated plainly
 
 `5b` answers "did this change move anything". It does **not** answer "how good is the kit". Only
 `qe` + `62` answer that, and they now come after the cuts. So Sprint 4 can prove it broke nothing
@@ -88,7 +104,7 @@ That is an acceptable trade for a slimming pass, because the reference is the pr
 rather than an absolute standard. It would **not** be acceptable for the strengthening work, which
 is why `qe` and `62` sit before the point where anyone claims the kit improved.
 
-## Superseded: Sprint 3
+### Superseded: Sprint S3
 
 Sprint 3 (`zn item 1 → qe → 62 → 2t → 1c`) was committed 2026-07-27 and superseded the same day
 by captain direction. Its thesis was measure-then-mechanize; the captain's is slim-then-strengthen,
@@ -105,13 +121,33 @@ draft's analysis.
 `post` 65 → 9, CI job 488s at 139 assertions against main's 512–598s at 137. Its remaining items
 were resequenced when the captain named the four goals the kit is graded on.
 
-## Not in either sprint: once-only posting reliability
+### Runtime closeout before Sprint S6
 
 `n9` then `11`, in that order. Real posting-correctness repairs that serve none of the review-kit
 goals; `n9` breaks the shipped `gh` adapter on any ordinary busy PR, `11` needs a custom transport
 or a future adapter.
 
-## Hazard carried forward
+### Sprint S6 — EM-owned PR closeout (unscheduled, dependency-gated)
+
+This heading reserves `kc-pr-flow/S6` but does not sequence it. It remains
+unscheduled until the agent-native PR review runtime and the immediately
+preceding `n9 → 11` reliability closeout land. Its planned scope is
+`em-owned-pr-closeout-gate` plus a re-cut of `vf` / `x0f` around the resulting
+authority boundary: the daemon monitors and repairs, while EM owns title/body
+and merge-readiness judgment.
+
+## `e2e-pipeline`
+
+No sprint is scheduled in this roadmap yet. Its product-local sequence may start
+at `e2e-pipeline/S1` without waiting for the current `kc-pr-flow` sprint.
+
+## `repo-platform`
+
+No sprint is scheduled in this roadmap yet. Shared workflow, CI, marketplace,
+and root-configuration work uses this product's own sequence beginning at
+`repo-platform/S1`.
+
+### Hazard carried forward
 
 `spacedock status --ac-scan`'s citation counter is not trustworthy — an AC citing three paths
 scored `0` while one citing a single path scored `2`. The README makes that scan a hard

@@ -389,6 +389,8 @@ merge, or captain-approval invocations.
 | `title` | string | Human-readable task name |
 | `status` | enum | backlog, ideation, implementation, validation, done |
 | `source` | string | Where the task came from (captain note, defect, audit) |
+| `product` | string | Required primary product for entities created under this contract. Use one plugin slug registered in `.claude-plugin/marketplace.json`, or the reserved `repo-platform` value. |
+| `sprint` | string | Optional until scheduled. Once assigned, use `S<number>`; the number is local to `product`. |
 | `started` / `completed` | ISO 8601 | `started` at the first transition out of `backlog`; `completed` is the product-PR `mergedAt` timestamp, written explicitly when the ledger-finalization gate permits the `done` transition — `wallclock_hours` is their difference, so neither backlog wait nor post-merge bookkeeping delay is billed |
 | `verdict` | enum | PASSED or REJECTED — set at final stage |
 | `worktree` | string | Set on first worktree dispatch, cleared at terminal merge |
@@ -399,6 +401,76 @@ merge, or captain-approval invocations.
 | `mod-block` | string | Non-empty lifecycle guard. Product drafts use `pr-merge:product-draft:v1:{digest}`; explicit approval transitions the same artifact to `pr-merge:product-pr:v1:{digest}`. Either blocks terminalization until the verified ledger-finalization step clears it. |
 | `design` | enum | `required` or `trivial-pass` — set at ideation, or, for a `lane: defect` task that has no ideation stage, at the moment the FO classifies it into that lane. Empty during seed capture and through `backlog`; on the main line it is produced inside `ideation`, so the invariant starts at the ideation gate — never empty at that gate, and never empty in `implementation` or later |
 | `lane` | enum | `defect` or `main` — the FO's Defect-lane classification, written when the FO routes the task out of `backlog` (not at seed capture, which authors no classification), so it is queryable (`status --where lane=defect`) instead of re-derived by re-reading every body. `defect` asserts all four conditions in the Defect-lane section hold |
+
+### Product-local sprint identity
+
+The task frontmatter carries one scalar `product`, not a list. Plugin product
+values come from the `plugins[].name` slug registry in
+`.claude-plugin/marketplace.json`; `repo-platform` is the reserved non-plugin
+value. The current registry snapshot is:
+
+- `kc-pr-flow`
+- `e2e-pipeline`
+- `kc-nightwatch`
+- `kc-hyperfocus`
+- `kc-team-ops`
+- `kc-plugin-forge`
+- `repo-platform`
+
+Update this convenience snapshot in the same change that registers a plugin.
+Choose the plugin that owns the task's primary outcome. A single-plugin outcome
+stays with that plugin even when its implementation touches shared files. A
+multi-plugin primary outcome, or an outcome in shared CI, marketplace behavior,
+root configuration, or this workflow's schema, belongs to `repo-platform`. Do
+not split one outcome into artificial plugin tasks solely to avoid
+`repo-platform`.
+
+Sprint numbers are product-local ordinals. They carry no chronology or rank
+across products. The stable identity is the pair (`product`, `sprint`), so
+cross-product plans and reports use a qualified label such as `kc-pr-flow/S5`
+or `e2e-pipeline/S1`. A bare `S1` is meaningful only inside one product section.
+Backlog capture requires `product`, while `sprint` remains blank until the
+captain or sprint commander schedules the entity:
+
+```yaml
+product: kc-pr-flow
+sprint: S5
+```
+
+These fields are queryable through the normal status filter:
+
+```bash
+spacedock status --workflow-dir docs/dev --where 'product=kc-pr-flow'
+spacedock status --workflow-dir docs/dev --where 'product=e2e-pipeline'
+spacedock status --workflow-dir docs/dev --where 'product=repo-platform'
+```
+
+Spacedock 0.26 stores and filters arbitrary frontmatter; it does not validate
+the product registry, scalar shape, or requiredness. This docs-only contract
+therefore has human enforcement at capture and every state-transition review.
+Until automated validation is implemented, a blank, unknown, or non-scalar
+`product` makes a seed invalid and the reviewer returns it for correction. The
+blank `product:` and `sprint:` values in the Task Template are authoring
+placeholders, not a valid captured seed; `sprint` may remain blank only after
+`product` is filled.
+
+This contract change does not authorize a bulk rewrite of separated state.
+After it lands:
+
+1. One designated state migration owner may backfill inactive backlog entities,
+   adding `product` and adding `sprint` only where scheduling already exists.
+2. The owner of an active entity adds the fields at that entity's next legal
+   state transition; the migration owner does not rewrite it underneath that
+   session. For a parked or abandoned active entity, the original owner
+   annotates before handoff or closeout; after that owner releases it, a
+   captain-designated owner may take over and annotate at the next legal state
+   transition.
+3. Product-filter results remain non-authoritative during migration because
+   they omit unannotated entities. Backfill is complete when every non-archived
+   backlog or active entity has a non-empty product recognized by the registry
+   above.
+4. Archived entities are a separate, optional historical migration. They do not
+   block current product-local scheduling.
 
 ## Proof Policy
 
@@ -497,7 +569,8 @@ that reads like a session transcript costs reading budget nobody spends.
 ### `backlog` — capture (this is the todo queue)
 
 Any idea, rabbit hole, defect, or captain note enters as a seed task file:
-title, `source`, one-paragraph description. Target cost: under two minutes.
+title, `source`, `product`, and a one-paragraph description. Leave `sprint`
+blank unless the task is already scheduled. Target cost: under two minutes.
 Capturing a seed triggers NO design work — the gate is where the captain
 curates what advances. A seed too vague for the captain to triage is the only
 "bad" here.
@@ -1598,6 +1671,8 @@ id:
 title:
 status: backlog
 source:
+product:
+sprint:
 started:
 completed:
 verdict:
