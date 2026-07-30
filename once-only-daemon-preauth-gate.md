@@ -10,6 +10,8 @@ issue:
 pr:
 design:
 id: vf88cvthkhh9je2ng71xbbs9
+product: kc-pr-flow
+sprint: S6
 ---
 
 Slice 2 of 3 for daemon posting safety. Depends on `daemon-once-only-posting` (slice 1); `daemon-preauth-freshness-coverage` (slice 3) depends on this.
