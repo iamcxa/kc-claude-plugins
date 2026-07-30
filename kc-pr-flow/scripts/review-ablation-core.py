@@ -20,7 +20,7 @@ the table names — never the set of spans the builder happened to apply. Checki
 only what was applied asks the builder to grade its own homework: it agrees with
 itself by construction and cannot fail. That is the same defect shape as proving
 absence with the keywords you chose to grep for, and it is why the keyword grep
-below is a canary rather than the proof: of the 11 CUT spans, four (S2, S3, S4,
+below is a canary rather than the proof: of the 10 CUT spans, four (S2, S3, S4,
 S10) contain none of the four keyword patterns, so an arm that removed only the
 keyword-bearing spans would leave the gate's failure-class table, its demotion
 rule, its framework-meta sub-rule and the entire per-agent instruction blockquote

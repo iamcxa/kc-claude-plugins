@@ -330,7 +330,7 @@ run_arm_cases() {
   dir="$TEST_ROOT/arm-ok"
   out="$("$ABLATION" arm --tree "$BASELINE" --dest "$dir/B" --arm B 2>&1)"
   assert_eq 'B8 full ablation accepted' '0' "$?"
-  assert_eq 'B8 arm manifest records 11 CUT spans' '11' \
+  assert_eq 'B8 arm manifest records 10 CUT spans' '10' \
     "$(jq -r '[.spans[] | select(.kind != "keep")] | length' "$dir/B/arm-manifest.json" 2>/dev/null)"
   assert_eq 'B8 arm manifest records the post-condition result' 'pass' \
     "$(jq -r '.post_condition.span_match' "$dir/B/arm-manifest.json" 2>/dev/null)"
@@ -346,16 +346,16 @@ a=json.load(open(sys.argv[1]))["skill_sha256"]
 b=json.load(open(sys.argv[2]))["skill_sha256"]
 print("true" if a!=b else "false")' "$dir/A/arm-manifest.json" "$dir/B/arm-manifest.json" 2>/dev/null)"
 
-  # B4 — THE LOAD-BEARING CASE. An arm that removes only the 7 keyword-bearing
+  # B4 — THE LOAD-BEARING CASE. An arm that removes only the 6 keyword-bearing
   # spans leaves S2, S3, S4 and S10 on disk, still instructing the gate. The
   # round-2 keyword post-condition ACCEPTS it. Span match must REJECT it.
   assert_rejects 'B4 keyword-only arm is rejected by span match' 'CUT span still present' \
-    "$ABLATION" arm --tree "$BASELINE" --dest "$TEST_ROOT/arm-kw" --arm B --spans S1,S5,S6,S7,S8,S9,S11
+    "$ABLATION" arm --tree "$BASELINE" --dest "$TEST_ROOT/arm-kw" --arm B --spans S1,S5,S6,S7,S9,S11
 
   # ...and the rejection must name the four spans the keyword grep cannot see,
   # not merely fail. A rejection for the wrong reason is not this check passing.
   out="$("$ABLATION" arm --tree "$BASELINE" --dest "$TEST_ROOT/arm-kw2" --arm B \
-    --spans S1,S5,S6,S7,S8,S9,S11 2>&1)"
+    --spans S1,S5,S6,S7,S9,S11 2>&1)"
   for sid in S2 S3 S4 S10; do
     case "$out" in
       *"$sid"*) pass ;;
@@ -410,7 +410,7 @@ PY
   # and confound AC-2. Injected by asking the builder to also cut K2.
   assert_rejects 'B5 KEEP span K2 ablated is rejected' 'K2' \
     "$ABLATION" arm --tree "$BASELINE" --dest "$TEST_ROOT/arm-keep" --arm B \
-    --spans S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,K2
+    --spans S1,S2,S3,S4,S5,S6,S7,S9,S10,S11,K2
 
   # B6 — S6 is an EDIT, not a cut: only the substring ' after the verification
   # gate' goes, and '**Apply confidence gates**' must survive. Cutting the whole
