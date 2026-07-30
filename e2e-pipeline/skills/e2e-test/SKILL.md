@@ -191,9 +191,45 @@ Total: 4 runs, 31 steps. Proceed?
 | `report_dir` | `$(pwd)/.claude/e2e/reports/$(date +%Y%m%d-%H%M%S)` (create with `mkdir -p`) |
 | `headed` | Always `true` (agent opens browser in headed mode) |
 | `video` | `true` when `--video` or `--pr` is present, otherwise `false` |
-| `suite_context` | Set to `true` when dispatching via `--all-sites` or `--suite` (enables multi-session with `--session <app>`) |
+| `suite_context` | Set to `true` when dispatching via `--all-sites` or `--suite` |
+| `browser_runtime` | Absolute path to `${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js` |
+| `browser_run_id` | One run identity generated before any browser runner dispatch |
 
 ---
+
+### Browser runtime identity (mandatory)
+
+Resolve the shared runtime and generate the run identity exactly once per `/e2e-test`
+invocation:
+
+```bash
+BROWSER_RUNTIME="${CLAUDE_PLUGIN_ROOT}/bin/e2e-browser-runtime.js"
+test -f "$BROWSER_RUNTIME" || {
+  echo "Cannot find e2e-browser-runtime.js in the e2e-pipeline plugin." >&2
+  exit 1
+}
+BROWSER_RUN_ID=$(node "$BROWSER_RUNTIME" new-run-id)
+```
+
+All browser teammates spawned for this invocation receive the same `browser_run_id`.
+Every browser dispatch and browser command also carries the same `browser_runtime` path.
+A teammate `RE-RUN` requested inside this invocation keeps that identity. A fresh
+`/e2e-test` replay MUST generate a new `browser_run_id`.
+
+### Fresh invocation team reset (mandatory)
+
+A fresh `/e2e-test` invocation MUST NOT reuse an existing `e2e-test` team. Even when
+`app`, `auth_profile`, `base_url`, or `report_dir` appear unchanged:
+
+1. If `~/.claude/teams/e2e-test/config.json` exists, send `shutdown_request` to every
+   member and wait for each `shutdown_response`.
+2. Run `TeamDelete()`.
+3. Run `TeamCreate(...)` and spawn new members with the full invocation fields from
+   **Prepare Agent Input**, including the new `browser_run_id`.
+
+If shutdown or deletion fails, fall back to subagent mode; never dispatch the new
+invocation to stale teammates. Only a same-invocation `RE-RUN` may reuse the current teammates
+and browser identity.
 
 ### Teams mode — Multi-role parallel testing
 
@@ -236,6 +272,7 @@ Agent(
   prompt="TEAMS MODE. Execute E2E flow.
           flow_path: <path>  mapping_path: <path>  auth_profile: <path>
           base_url: <url>  app: <name>  report_dir: <path>
+          browser_runtime: <absolute path>  browser_run_id: <run id>
           video: <bool>
           Open browser, execute all steps, send FLOW COMPLETE with results.
           Then go idle — browser stays open for potential re-run or debug."
@@ -247,7 +284,9 @@ Wait for `BROWSER_READY` (30s timeout per `references/agent-teams.md` § 4 — a
 Runner executes flow → `FLOW COMPLETE` with results.
 
 On failure: offer `"Investigate with /e2e-debug? (browser is still open)"`
-On re-run: `SendMessage(to="runner", message="RE-RUN\nflow_path: <path>")` — no browser restart.
+On re-run within this invocation:
+`SendMessage(to="runner", message="RE-RUN\nflow_path: <path>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>")`
+— no browser restart. A new `/e2e-test` invocation follows the mandatory team reset above.
 
 #### Scenario B: Multi-site suite / --all-sites (parallel flows)
 
@@ -267,6 +306,7 @@ for site in sites:
             auth_profile: <site.auth>  mapping_path: <site.mapping>
             base_url: <site.base_url>  app: <site.app>
             report_dir: <report_dir>/<site.alias>/
+            browser_runtime: <absolute path>  browser_run_id: <same run id>
             video: <bool>
             Wait for EXECUTE_FLOW commands."
   )
@@ -277,8 +317,8 @@ Wait for all `BROWSER_READY` messages (30s timeout per runner per `references/ag
 Then dispatch flows in parallel:
 
 ```
-SendMessage(to="runner-admin", message="EXECUTE_FLOW\nflow_path: <admin-flow>", summary="admin: smoke-navigation")
-SendMessage(to="runner-customer", message="EXECUTE_FLOW\nflow_path: <customer-flow>", summary="customer: booking-flow")
+SendMessage(to="runner-admin", message="EXECUTE_FLOW\nflow_path: <admin-flow>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>", summary="admin: smoke-navigation")
+SendMessage(to="runner-customer", message="EXECUTE_FLOW\nflow_path: <customer-flow>\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>", summary="customer: booking-flow")
 ```
 
 Responses arrive asynchronously. Aggregate into combined results table.
@@ -296,7 +336,7 @@ After all runners ready, lead routes steps:
 ```
 for step in flow.steps:
   target = f"runner-{step.site}"
-  SendMessage(to=target, message="EXECUTE_STEP\n{step as YAML}", summary=f"{step.site}: {step.id}")
+  SendMessage(to=target, message="EXECUTE_STEP\nbrowser_runtime: <absolute path>\nbrowser_run_id: <same run id>\n{step as YAML}", summary=f"{step.site}: {step.id}")
   # Wait for STEP COMPLETE before next step to SAME site
   # Steps to DIFFERENT site with no data dependency → can dispatch in parallel
 ```
@@ -412,6 +452,7 @@ Agent(subagent_type="e2e-test-runner", model="haiku"):  # override with --model 
   "Execute E2E flow:
    flow_path: <path>  mapping_path: <path>  auth_profile: <path>
    base_url: <url>  app: <name>  report_dir: <path>  headed: true
+   browser_runtime: <absolute path>  browser_run_id: <run id>
    video: true               # only when --video or --pr
    suite_context: true"      # only for --all-sites / --suite
 ```
@@ -614,7 +655,9 @@ bash .claude/e2e/compiled/<flow>.sh
 
 Then: `gh pr comment <PR> --body-file $REPORT_DIR/pr-summary.md`
 
-**Browser handoff:** Only close after human confirms. Multi-site: `agent-browser --session <app> close` for each.
+**Browser handoff:** Only close after human confirms. Multi-site: run
+`node "<absolute browser_runtime>" --run-id "<browser_run_id>" --app "<app>" close`
+for each app.
 
 ## Flow File Format
 

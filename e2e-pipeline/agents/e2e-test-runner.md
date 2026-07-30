@@ -31,11 +31,35 @@ The orchestrator skill dispatches this agent with the following fields. Parse th
 | `base_url` | Yes | Base URL of the app under test (e.g., `http://localhost:3000`) |
 | `app` | Yes | App identifier matching the mapping's `app` field (e.g., `my-app`) |
 | `report_dir` | Yes | Absolute path to the directory for report output (create with `mkdir -p` if missing) |
+| `browser_runtime` | Required | Absolute path to the plugin's `bin/e2e-browser-runtime.js` |
+| `browser_run_id` | Required | Run identity shared by every browser runner in this orchestrator invocation |
 | `headed` | No | Run browser in headed mode (default: `true` — always headed in current workflow) |
-| `suite_context` | No | When `true`, use `--session {{app}}` on all `agent-browser` commands for multi-site session isolation (default: `false`) |
+| `suite_context` | No | Marks a multi-site/suite run; the runtime always isolates the app session (default: `false`) |
 | `video` | No | When `true`, orchestrator will dispatch media-processor for screenshot-based MP4 after this agent completes (default: `false`). This agent always captures step screenshots regardless. |
 
 If any required field is missing, STOP with: "Missing required field: `<field>`. The orchestrator must provide all required fields."
+
+## Browser Command Contract
+
+Every browser operation uses this command prefix:
+
+```text
+browser_command: node "{{browser_runtime}}" --run-id "{{browser_run_id}}" --app "{{app}}"
+```
+
+Replace `{{browser_command}}` in every command below with that exact prefix. Bare
+`agent-browser` commands are prohibited: they can attach to the default daemon or a
+different Chrome-based browser. The runtime pins Chrome for Testing, an owned daemon
+namespace, and the app session; it rejects auto-connect and CDP attachment.
+
+In Teams mode, keep `active_browser_run_id`. Every `EXECUTE_FLOW`, `EXECUTE_STEP`, and
+`RE-RUN` command must repeat `browser_runtime` and `browser_run_id`:
+
+- Same identity: continue using the existing browser.
+- Different identity: reject the command without closing, switching, or reopening any
+  browser. Send `EXECUTION ERROR` with `step: runtime-identity`,
+  `error: browser_run_id does not match teammate invocation; recreate the e2e-test team`,
+  and `recoverable: false`. The lead must teardown and recreate the `e2e-test` team.
 
 ## Startup
 
@@ -73,7 +97,7 @@ fi
 Run these checks and STOP with a clear error if any critical check fails:
 
 ```bash
-agent-browser --version                                              # CLI installed?
+{{browser_command}} --version                                              # CLI installed?
 curl -s -o /dev/null -w "%{http_code}" {{base_url}}                  # Server reachable? 2xx/3xx = OK
 ls {{auth_profile}} 2>/dev/null                                      # Auth profile exists?
 ```
@@ -82,25 +106,21 @@ ls {{auth_profile}} 2>/dev/null                                      # Auth prof
 - If server returns 000/4xx/5xx, STOP: "Server not reachable at {{base_url}}."
 - If auth profile missing AND mapping `auth.type` is NOT "none", WARN but continue (auth verify will catch it).
 
-### 1b. Browser State Check
+### 1b. Runtime Ownership Check
 
-```bash
-agent-browser get url 2>/dev/null
-```
-
-- **Active session** -> `agent-browser close` first, wait for full exit
-- **No active session** -> proceed
+Verify `{{browser_runtime}}` exists and `{{browser_run_id}}` matches
+`^[a-z0-9][a-z0-9-]{2,127}$`. Do not probe or close the default agent-browser daemon.
+The run identity owns a fresh namespace; reject a different identity as specified by
+the Browser Command Contract.
 
 ### 1c. Open Browser
 
 ```bash
-agent-browser --profile {{auth_profile}} --headed open {{base_url}}
+{{browser_command}} --profile {{auth_profile}} --headed open {{base_url}}
 ```
 
-Use `--session {{app}}` if `suite_context` is provided (multi-site flows).
-
 ```bash
-agent-browser wait --load networkidle
+{{browser_command}} wait --load networkidle
 ```
 
 ### 1d. Auth Verification
@@ -108,7 +128,7 @@ agent-browser wait --load networkidle
 Skip if mapping `auth.type` is "none".
 
 ```bash
-agent-browser get url
+{{browser_command}} get url
 ```
 
 Check against mapping's `auth.verification` condition:
@@ -121,9 +141,9 @@ If auth check FAILS:
 ### 1e. Start Tracing
 
 ```bash
-agent-browser trace start
-agent-browser console --clear 2>&1 || true
-agent-browser errors --clear 2>&1 || true
+{{browser_command}} trace start
+{{browser_command}} console --clear 2>&1 || true
+{{browser_command}} errors --clear 2>&1 || true
 ```
 
 ---
@@ -151,10 +171,10 @@ Action string formats and their handling:
 | `"Select '<val>' in <element> on <loc>"` | Look up element, snapshot, select value |
 | `"Hover <element> on <location>"` | Look up element, snapshot, hover @ref |
 | `"Wait for <element> on <location>"` | Use `wait "<selector>"` (NOT @ref -- element may not exist yet) |
-| `"Press <key>"` | `agent-browser press "<key>"` |
-| `"Scroll down"` / `"Scroll up"` | `agent-browser scroll down` / `scroll up` |
+| `"Press <key>"` | `{{browser_command}} press "<key>"` |
+| `"Scroll down"` / `"Scroll up"` | `{{browser_command}} scroll down` / `scroll up` |
 | `"Navigate to <url_or_page>"` | If starts with `/`, open as URL path. Otherwise look up page's url_pattern. |
-| `"Eval '<js>'"` | `agent-browser eval "<js>"`. If eval returns a non-zero exit code or stderr contains an error, mark step as FAIL with the error message. |
+| `"Eval '<js>'"` | `{{browser_command}} eval "<js>"`. If eval returns a non-zero exit code or stderr contains an error, mark step as FAIL with the error message. |
 | `"Verify <element> on <location>"` | Navigate if needed, snapshot, run expects only (no click) |
 | `"Verify <description>"` | Snapshot current page, run expects only (no navigation) |
 | `"Verify <el1>, <el2>, ... on <location>"` | Verify multiple elements -- just snapshot + run expects |
@@ -183,15 +203,15 @@ After finding the element definition, get its `selector` value and substitute an
 If the action specifies a page/location and the current URL does not match that page's `url_pattern`:
 
 ```bash
-agent-browser open "{{base_url}}{{page_url_pattern}}"
-agent-browser wait --load networkidle
+{{browser_command}} open "{{base_url}}{{page_url_pattern}}"
+{{browser_command}} wait --load networkidle
 ```
 
 For actions starting with "Navigate to /path", open the path directly:
 
 ```bash
-agent-browser open "{{base_url}}/path"
-agent-browser wait --load networkidle
+{{browser_command}} open "{{base_url}}/path"
+{{browser_command}} wait --load networkidle
 ```
 
 ### 2e. Pre-Action Snapshot
@@ -199,7 +219,7 @@ agent-browser wait --load networkidle
 Before ANY interactive command (click, fill, type, select, hover):
 
 ```bash
-agent-browser snapshot
+{{browser_command}} snapshot
 ```
 
 Find the element's @ref in the accessibility tree output. Match by the resolved selector. If the element is not found by selector pattern, try matching by the element's `description` field from the mapping.
@@ -209,11 +229,11 @@ Find the element's @ref in the accessibility tree output. Match by the resolved 
 Use the @ref obtained from the snapshot for ALL interactive commands:
 
 ```bash
-agent-browser click @ref              # Click
-agent-browser fill @ref "text"        # Fill (PREFERRED over click+type)
-agent-browser type @ref "text"        # Type without clearing
-agent-browser select @ref "value"     # Select dropdown option
-agent-browser hover @ref              # Hover / scroll into view
+{{browser_command}} click @ref              # Click
+{{browser_command}} fill @ref "text"        # Fill (PREFERRED over click+type)
+{{browser_command}} type @ref "text"        # Type without clearing
+{{browser_command}} select @ref "value"     # Select dropdown option
+{{browser_command}} hover @ref              # Hover / scroll into view
 ```
 
 **Critical**: NEVER click via CSS selectors. Always snapshot first, get @ref, then interact via @ref.
@@ -223,7 +243,7 @@ agent-browser hover @ref              # Hover / scroll into view
 After every action:
 
 ```bash
-agent-browser wait --load networkidle
+{{browser_command}} wait --load networkidle
 ```
 
 If the step has a `timeout:` field (in seconds), use `--timeout <timeout * 1000>` (milliseconds).
@@ -235,21 +255,21 @@ For each entry in the step's `expect:` array, resolve and verify independently:
 | Expect Pattern | How to Verify |
 |---|---|
 | `{not_automated: "<reason>"}` | Record expectation status `not_automated` with the reason. Do not run browser assertion commands, do not mark it PASS, and continue validating the step's other expectations. Any other object-shaped expect remains invalid legacy/v1 input and should have been stopped by the orchestrator. |
-| `"<element> visible on <location>"` | Look up element in location mapping, then shared pages (`shared: true`, plus `_global` unless disabled). `agent-browser is visible "<selector>"` -- check stdout is "true" |
+| `"<element> visible on <location>"` | Look up element in location mapping, then shared pages (`shared: true`, plus `_global` unless disabled). `{{browser_command}} is visible "<selector>"` -- check stdout is "true" |
 | `"<element> is visible"` | Resolve from action's page context, then shared pages (`shared: true`, plus `_global` unless disabled). `is visible "<selector>"` |
 | `"<element> not visible"` / `"<element> not visible on <loc>"` | Resolve with the same page/shared fallback, then `is visible "<selector>"` -- check stdout is "false" |
 | `"<element(param=val)> visible on <loc>"` | Substitute params into selector, `is visible` |
 | `"<element> enabled on <location>"` | `is visible` returns "true" + snapshot shows no `[disabled]` |
 | `"<element> disabled on <location>"` | `is visible` returns "true" + snapshot shows `[disabled]` or `aria-disabled=true` |
-| `"text '<text>' on page"` | `agent-browser snapshot` then search a11y tree for text |
+| `"text '<text>' on page"` | `{{browser_command}} snapshot` then search a11y tree for text |
 | `"text '<text>' on <location>"` | Navigate to location if needed, snapshot, search for text |
-| `"url contains <path>"` | `agent-browser get url` -- stdout contains path substring |
-| `"url does not contain <path>"` | `agent-browser get url` -- stdout does NOT contain path substring |
-| `"dialog visible"` | `agent-browser snapshot` -- check for `role=dialog` in tree |
-| `"dialog not visible"` | `agent-browser snapshot` -- verify NO `role=dialog` in tree |
+| `"url contains <path>"` | `{{browser_command}} get url` -- stdout contains path substring |
+| `"url does not contain <path>"` | `{{browser_command}} get url` -- stdout does NOT contain path substring |
+| `"dialog visible"` | `{{browser_command}} snapshot` -- check for `role=dialog` in tree |
+| `"dialog not visible"` | `{{browser_command}} snapshot` -- verify NO `role=dialog` in tree |
 | `"network <METHOD> <url> status <code>"` | Check console/errors data for matching request |
 | `"no network errors"` | No HTTP 4xx/5xx in errors (after filtering known noise) |
-| `"no console errors"` | `agent-browser errors --json` returns empty (after filtering noise) |
+| `"no console errors"` | `{{browser_command}} errors --json` returns empty (after filtering noise) |
 | `"A or B"` | Split on ` or `, pass if ANY segment passes |
 
 **Variable resolution in expects**: `${key}` tokens resolve from flow `variables:` first, then from the current action's parsed parameters. Do not substitute inside `not_automated` reason text.
@@ -263,13 +283,13 @@ For each entry in the step's `expect:` array, resolve and verify independently:
 Capture a screenshot for EVERY step (not just failures). This enables GIF generation downstream.
 
 ```bash
-agent-browser screenshot --annotate "{{report_dir}}/step-{{step_number}}-{{id}}.png"
+{{browser_command}} screenshot --annotate "{{report_dir}}/step-{{step_number}}-{{id}}.png"
 ```
 
 If `--annotate` fails, fall back to:
 
 ```bash
-agent-browser screenshot "{{report_dir}}/step-{{step_number}}-{{id}}.png"
+{{browser_command}} screenshot "{{report_dir}}/step-{{step_number}}-{{id}}.png"
 ```
 
 **Naming**: Use zero-padded step number prefix (e.g., `step-01-navigate.png`, `step-02-fill-email.png`) to ensure correct sort order for GIF generation.
@@ -277,7 +297,7 @@ agent-browser screenshot "{{report_dir}}/step-{{step_number}}-{{id}}.png"
 On failure, ALSO capture the failure-specific screenshot:
 
 ```bash
-agent-browser screenshot "{{report_dir}}/FAIL-{{id}}.png"
+{{browser_command}} screenshot "{{report_dir}}/FAIL-{{id}}.png"
 ```
 
 ### 2j. Collect Health Data
@@ -285,8 +305,8 @@ agent-browser screenshot "{{report_dir}}/FAIL-{{id}}.png"
 After each step:
 
 ```bash
-agent-browser console --json 2>&1 || echo '{"messages":[]}'
-agent-browser errors --json 2>&1 || echo '{"errors":[]}'
+{{browser_command}} console --json 2>&1 || echo '{"messages":[]}'
+{{browser_command}} errors --json 2>&1 || echo '{"errors":[]}'
 ```
 
 Filter known noise before recording: HMR websocket messages, favicon 404 errors, React DevTools warnings, browser extension requests. Also filter any patterns listed in the mapping's `health.known_noise` if present.
@@ -301,8 +321,8 @@ If a step has `optional: true`:
 
 On ANY failure during a step:
 
-1. Take failure screenshot: `agent-browser screenshot "{{report_dir}}/FAIL-{{id}}.png"`
-2. Capture debug snapshot: `agent-browser snapshot` -> save output to `{{report_dir}}/FAIL-{{id}}-snapshot.txt`
+1. Take failure screenshot: `{{browser_command}} screenshot "{{report_dir}}/FAIL-{{id}}.png"`
+2. Capture debug snapshot: `{{browser_command}} snapshot` -> save output to `{{report_dir}}/FAIL-{{id}}-snapshot.txt`
 3. Record the failure reason
 4. **Continue to next step** -- do NOT abort the flow. Collect maximum evidence.
 
@@ -373,7 +393,7 @@ When the step has `action: "Execute external"`, skip all browser interaction (no
 ### 3a. Stop Trace
 
 ```bash
-agent-browser trace stop "{{report_dir}}/trace.zip"
+{{browser_command}} trace stop "{{report_dir}}/trace.zip"
 ```
 
 Do NOT close browser after stopping trace.
@@ -483,7 +503,7 @@ You MUST end your response with this exact structured block (the orchestrator pa
 
 ## Eval-Fallback Accounting
 
-Every dispatch run MUST track how many times the runner fell back to `agent-browser eval` because a native selector command returned an unexpected result. This is the observability layer introduced in plan 001 (T2.1). Eval fallback REMOVED for native selectors (T2.2 landed). Banned Playwright forms also fail loud.
+Every dispatch run MUST track how many times the runner fell back to `{{browser_command}} eval` because a native selector command returned an unexpected result. This is the observability layer introduced in plan 001 (T2.1). Eval fallback REMOVED for native selectors (T2.2 landed). Banned Playwright forms also fail loud.
 
 ### Counter State
 
@@ -493,12 +513,12 @@ Initialize at the start of every run (before Phase 1):
 eval_fallback_hits = 0
 ```
 
-Increment `eval_fallback_hits` by 1 **each time** the runner falls back to `agent-browser eval` because any of the following native commands returned 0 / false / not-found on a selector that matches `role=` / `text=` / `>> nth=` / `has-text(` patterns:
+Increment `eval_fallback_hits` by 1 **each time** the runner falls back to `{{browser_command}} eval` because any of the following native commands returned 0 / false / not-found on a selector that matches `role=` / `text=` / `>> nth=` / `has-text(` patterns:
 
-- `agent-browser is visible "<selector>"` → returned `"false"` unexpectedly (element present in a11y tree but not detected)
-- `agent-browser wait "<selector>"` → returned 0 or timed out
-- `agent-browser click "<selector>"` → returned not-found / failed
-- `agent-browser get count "<selector>"` → returned 0
+- `{{browser_command}} is visible "<selector>"` → returned `"false"` unexpectedly (element present in a11y tree but not detected)
+- `{{browser_command}} wait "<selector>"` → returned 0 or timed out
+- `{{browser_command}} click "<selector>"` → returned not-found / failed
+- `{{browser_command}} get count "<selector>"` → returned 0
 
 ### Per-Hit Log Line
 
@@ -552,7 +572,7 @@ Also add the metric row to the `## Summary` table in `report.md` (§ 3c):
 
 **Rule 1 — Native form returns 0/false/not-found → fail loud, no eval bypass.**
 
-When a selector matches a NATIVE form — CSS attribute form (`[data-testid=...]`, `[aria-label="..."]`, `input[type="password"]`, etc.) OR canonical `find role|text|testid|label <r> [--name <v>]` subcommand — and `agent-browser is visible/wait/click` returns 0/false/not-found:
+When a selector matches a NATIVE form — CSS attribute form (`[data-testid=...]`, `[aria-label="..."]`, `input[type="password"]`, etc.) OR canonical `find role|text|testid|label <r> [--name <v>]` subcommand — and `{{browser_command}} is visible/wait/click` returns 0/false/not-found:
 - **DO NOT fall back to eval.**
 - Return the explicit failure to the flow runner immediately.
 - Increment `eval_fallback_hits` as the failure counter (still tracked for observability) but do NOT execute the eval bypass.
@@ -591,7 +611,7 @@ Without `--allow-eval-fallback`, any eval bypass attempt is a hard FAIL (banned-
 These rules are non-negotiable. Violating them causes flaky or broken tests.
 
 1. **Always snapshot before click**. @refs invalidate after ANY DOM change. A stale @ref clicks the wrong element or fails.
-2. **Click via @ref ONLY**. Use CSS selectors ONLY for `is visible` checks. Never `agent-browser click "role=button"`.
+2. **Click via @ref ONLY**. Use CSS selectors ONLY for `is visible` checks. Never `{{browser_command}} click "role=button"`.
 3. **Absolute paths** for all screenshots and traces. The agent-browser sandbox CWD differs from shell. Always use `{{report_dir}}/filename` (which is already absolute), never bare `./filename`.
 4. **Continue on failure**. Never abort after a step fails. Collect maximum evidence across all steps.
 5. **`fill` over `click+type`** for form inputs. `fill` is atomic (focus + clear + type). `click` then `type` can break when @ref changes on focus.
@@ -600,7 +620,7 @@ These rules are non-negotiable. Violating them causes flaky or broken tests.
 8. **Do NOT close browser** after test completes. Human may inspect.
 9. **React Native Web**: Text elements render twice in DOM (nth=0 is hidden). Prefer `[role="<r>"][aria-label="<v>"]` CSS attribute selector for tab bars and interactive elements (directly targets the correct accessible element). For text-only elements use `find text "<v>"` or `:nth-of-type(2)` CSS pseudo. BANNED: `>> nth=N` chord and `role=X[name=...]` Playwright forms — see `e2e-pipeline/scripts/lint-mapping.sh`. DEPRECATED as selector value: `find role <r> --name "<v>"` strings — these are subcommand chains, not selector grammar (PR #8 course correction).
 10. **Ant Design**: CSS-hidden inputs (e.g., Segmented control radio buttons). `is visible` returns false even when the component is rendered. Verify via snapshot a11y tree instead.
-11. **Multi-site flows**: When `suite_context` is provided, use `--session {{app}}` on all agent-browser commands to keep sessions separate.
+11. **Multi-site flows**: The shared runtime always supplies `--app {{app}}`, which maps to the isolated browser session. Do not add a second `--session` flag.
 12. **Timeout values** in flow YAML are in seconds. Convert to milliseconds (`* 1000`) for `--timeout` flags.
 13. **Checkpoint best-effort**. `verify-external` steps execute via Bash/curl only. Complex checks needing MCP (Slack, database) → mark SKIP. For full verification, use `/e2e-walkthrough --verify` (main context, full tool access).
 14. **Eval fallback REMOVED for native selectors (T2.2 landed). Banned Playwright forms also fail loud.** When a native selector returns 0/false/not-found, return the explicit failure — do NOT fall back to eval. Banned Playwright forms (`role=X[name=Y]`, `>> nth=N`, bare `text=`, `has-text(`) must also fail loud with a warning. Use `--allow-eval-fallback` only for explicit debug investigation (rare opt-in). Always increment `eval_fallback_hits` on any fallback attempt, even under `--allow-eval-fallback`.
@@ -618,11 +638,23 @@ When your spawn prompt starts with **"TEAMS MODE"**, you operate as a persistent
 Follow `references/agent-teams.md` § 3:
 1. Pre-flight checks (Phase 1: Setup) — same as subagent mode
 2. Open browser + auth + wait for load
-3. Send `BROWSER_READY` to lead (include `target_url`, `role`, `app`)
-4. If `--headed` auth needed: send `WAITING_FOR_AUTH`, wait for `AUTH_COMPLETE`, then `BROWSER_READY`
-5. **Stop turn** — go idle
+3. Set `active_browser_run_id` to the dispatched `browser_run_id`
+4. Send `BROWSER_READY` to lead (include `target_url`, `role`, `app`, `browser_run_id`)
+5. If `--headed` auth needed: send `WAITING_FOR_AUTH`, wait for `AUTH_COMPLETE`, then `BROWSER_READY`
+6. **Stop turn** — go idle
 
 ### On receiving EXECUTE_FLOW message
+
+Require both runtime fields in the inbound message:
+
+```text
+EXECUTE_FLOW
+flow_path: /absolute/path/.claude/e2e/flows/order-flow.yaml
+browser_runtime: /absolute/path/e2e-browser-runtime.js
+browser_run_id: <same invocation id>
+```
+
+Apply the Browser Command Contract before execution, rejecting an identity mismatch.
 
 Execute the full flow (Phase 2 + Phase 3 as normal). After completion, send results:
 
@@ -640,10 +672,11 @@ SendMessage(
 
 Execute a SINGLE step from a cross-site flow (lead routes steps by `site:`):
 
-1. Parse step definition from message (`id`, `action`, `expect`, `context`)
-2. If `context:` present — inject variables into action/expect templates
-3. Execute the step (Phase 2 logic for one step: snapshot → interact → validate)
-4. Send result:
+1. Require `browser_runtime` and `browser_run_id`, then apply the Browser Command Contract
+2. Parse step definition from message (`id`, `action`, `expect`, `context`)
+3. If `context:` present — inject variables into action/expect templates
+4. Execute the step (Phase 2 logic for one step: snapshot → interact → validate)
+5. Send result:
 
 ```
 SendMessage(
@@ -653,7 +686,7 @@ SendMessage(
 )
 ```
 
-5. **DO NOT close browser.** Go idle — wait for next step.
+6. **DO NOT close browser.** Go idle — wait for next step.
 
 The `data:` field captures values from the page that subsequent cross-site steps may need (e.g., order ID, URL, confirmation code). The lead passes these as `context:` to other runners.
 
@@ -663,17 +696,20 @@ Expected inbound format from lead:
 ```
 RE-RUN
 flow_path: /absolute/path/.claude/e2e/flows/order-flow.yaml
+browser_runtime: /absolute/path/e2e-browser-runtime.js
+browser_run_id: <same invocation id>
 variables:
   customer_name: 王大明
 ```
 
-`flow_path` is required (may differ from original if flow was updated). `variables` is optional (override flow-level variables for the re-run).
+`flow_path`, `browser_runtime`, and `browser_run_id` are required. `flow_path` may
+differ from the original if the flow was updated. `variables` is optional.
 
 Re-execute the flow from the beginning. Browser is already open — navigate to `base_url` and restart flow execution. Send `FLOW COMPLETE` when done.
 
 ### On receiving shutdown_request
 
-1. Close browser: `agent-browser close`
+1. Close browser: `{{browser_command}} close`
 2. Respond with shutdown_response approve=true
 
 ### Key differences from subagent mode
