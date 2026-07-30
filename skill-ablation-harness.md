@@ -1495,9 +1495,13 @@ The entity stays `backlog` and stays parked. What changed is where its code live
 commits that were only ever on `spacedock-ensign/skill-ablation-harness`, plus the AC-3 sizing and
 span-match artifacts that were only ever on `iamcxa/ac3-split-pr-review-agent-native`, were
 restacked onto `ec9502c` as one integration branch, `iamcxa/review-kit-ablation-integration`, and
-sent for review. Nothing about the acceptance changed: AC-1 has no A/A verdict and AC-2 has no
-ablation-detection verdict, so this harness still does not authorize `tm`, `fa`, or `sk`, and
-re-entry still requires an explicit new compute envelope.
+landed as PR #111, squash-merged by the captain at `7bdb8c4`. Nothing about the acceptance changed:
+AC-1 has no A/A verdict and AC-2 has no ablation-detection verdict, so this harness still does not
+authorize `tm`, `fa`, or `sk`, and re-entry still requires an explicit new compute envelope.
+
+Verified on the landed merge commit, not only on the branch: `review-ablation.test.sh` 82/82 and
+pinned ShellCheck v0.9.0 clean at `7bdb8c4`, and the merged tree is byte-identical to the reviewed
+head `e2ebda9` on every path the PR touched.
 
 Restacking surfaced one repair the park had hidden. The span table was enumerated at `f4f4840`;
 merged PR #82 (`85959dc`) then deleted `S8`, the `SKILL.md` tail restatement of the pre-emit gate,
@@ -1514,6 +1518,14 @@ pre-registered 27 runs at the measured `$9.76/run` mean, names the spike as not 
 says that this harness has no acceptance verdict yet. The `span-match-demo.py` artifact now records
 that its table is pinned to `f4f4840`, gives the `git archive` command to reproduce it there, and
 states that it is not re-pinned forward.
+
+Exact-head review found one further defect, fixed in `e2ebda9` before the merge. `--arms` was read
+as first-name-and-last-name, so on the pre-registered directory that holds `A`, `A'` and `B`
+together, `--arms A,A_prime,B` dropped the middle arm and returned a real, plausible A-vs-B verdict
+for a comparison nobody asked for — which would have been a wrong acceptance verdict, silently. The
+arity is now checked before the names are read; reverting the guard fails exactly the two new
+assertions and nothing else. This is the class of defect the park's delay made cheap to find: the
+harness had never been exercised through a merge gate before.
 
 The `product` and `sprint` frontmatter was added under the product-local sprint contract
 (`701c664`), as the captain-designated owner annotating a released parked entity.
