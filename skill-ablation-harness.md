@@ -1,6 +1,8 @@
 ---
 title: Cutting prose from a skill has no failure signal — build one before cutting
 status: backlog
+product: kc-pr-flow
+sprint: S4
 source: precondition for the Sprint 4 slimming track, filed 2026-07-27 on captain direction
 design: required
 id: 5b5gp68f2aq0bdrcf3q28jgg
@@ -1486,3 +1488,32 @@ the recorded cut-to-scope fallback; implementation does not silently extend the 
 AC-3's corrected false-null machinery and the frozen pilot precondition are implementation-proven.
 AC-1 and AC-2 remain acceptance-pending because their required 27-run verdicts were intentionally
 not purchased outside the approved budget.
+
+## Note: harness code integrated to main while parked — 2026-07-30
+
+The entity stays `backlog` and stays parked. What changed is where its code lives: the two product
+commits that were only ever on `spacedock-ensign/skill-ablation-harness`, plus the AC-3 sizing and
+span-match artifacts that were only ever on `iamcxa/ac3-split-pr-review-agent-native`, were
+restacked onto `ec9502c` as one integration branch, `iamcxa/review-kit-ablation-integration`, and
+sent for review. Nothing about the acceptance changed: AC-1 has no A/A verdict and AC-2 has no
+ablation-detection verdict, so this harness still does not authorize `tm`, `fa`, or `sk`, and
+re-entry still requires an explicit new compute envelope.
+
+Restacking surfaced one repair the park had hidden. The span table was enumerated at `f4f4840`;
+merged PR #82 (`85959dc`) then deleted `S8`, the `SKILL.md` tail restatement of the pre-emit gate,
+as one of its 31 clause-complete duplicates. Against the current tree the table failed closed on
+`S8` and 30 of the 80 harness assertions failed with it. The table was re-derived rather than
+hand-adjusted: every surviving span matched its `f4f4840` text byte-for-byte at unchanged
+coordinates, so every pin is unchanged; `S8` is retired and its id is not reused; the cut set is 10
+and still names every statement of the gate in `kc-pr-flow/`. Harness assertions are back to 80/80
+at the integration head.
+
+Two prose claims were corrected in the same pass. `kc-pr-flow/CLAUDE.md` priced one verdict at 18
+runs / ~$46, both figures derived from the discredited `$2.53` spike; it now states the
+pre-registered 27 runs at the measured `$9.76/run` mean, names the spike as not a cost sample, and
+says that this harness has no acceptance verdict yet. The `span-match-demo.py` artifact now records
+that its table is pinned to `f4f4840`, gives the `git archive` command to reproduce it there, and
+states that it is not re-pinned forward.
+
+The `product` and `sprint` frontmatter was added under the product-local sprint contract
+(`701c664`), as the captain-designated owner annotating a released parked entity.
