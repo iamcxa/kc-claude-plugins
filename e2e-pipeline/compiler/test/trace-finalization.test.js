@@ -424,6 +424,24 @@ function runFinalizer(options) {
 }
 
 describe('shared trace finalization contract', () => {
+  test('format detection and validation share one timeout budget', () => {
+    const source = fs.readFileSync(finalizer, 'utf8');
+    assert.match(source, /validation_started_at=/);
+    assert.match(source, /validation_remaining=/);
+    assert.match(
+      source,
+      /run_bounded "\$validation_remaining" "\$work_dir\/chrome-validation\.log"/
+    );
+    assert.match(
+      source,
+      /run_bounded "\$validation_remaining" "\$work_dir\/archive-validation\.log"/
+    );
+    assert.doesNotMatch(
+      source,
+      /run_bounded "\$validation_timeout" "\$work_dir\/(?:chrome|archive)-validation\.log"/
+    );
+  });
+
   test('never-exiting trace stop is bounded, recovers, and leaves report completion reachable', () => {
     const dir = makeTempDir();
     try {

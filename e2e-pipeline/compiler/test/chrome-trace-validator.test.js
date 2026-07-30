@@ -229,6 +229,64 @@ test('bounds individual and aggregate strings retained by summaries', () => {
   }
 });
 
+test('enforces max event bytes even when one buffer contains the complete event', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
+  try {
+    const artifact = path.join(directory, 'oversized-event.json');
+    fs.writeFileSync(
+      artifact,
+      JSON.stringify({
+        traceEvents: [
+          {
+            name: 'RunTask',
+            ph: 'X',
+            dur: 1,
+            args: { payload: 'x'.repeat(1024) },
+          },
+        ],
+      })
+    );
+
+    const result = run('validate', artifact, {
+      E2E_CHROME_TRACE_MAX_EVENT_BYTES: '100',
+    });
+    assert.equal(result.status, 4, result.stderr);
+    assert.match(result.stderr, /max_event_bytes/i);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('rejects unknown phase tokens and incomplete duration events', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-chrome-validator-'));
+  try {
+    const cases = [
+      [
+        'unknown-phase.json',
+        { traceEvents: [{ name: 'RunTask', ph: 'not-a-phase' }] },
+      ],
+      [
+        'missing-duration.json',
+        { traceEvents: [{ name: 'RunTask', ph: 'X' }] },
+      ],
+      [
+        'negative-duration.json',
+        { traceEvents: [{ name: 'RunTask', ph: 'X', dur: -1 }] },
+      ],
+    ];
+
+    for (const [name, contents] of cases) {
+      const artifact = path.join(directory, name);
+      fs.writeFileSync(artifact, JSON.stringify(contents));
+      const result = run('validate', artifact);
+      assert.equal(result.status, 3, `${name}: ${result.stderr}`);
+      assert.match(result.stderr, /phase|duration|dur/i);
+    }
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
 test('fails closed when file or event-count budgets are exceeded', () => {
   const fileLimit = run('validate', fixture, {
     E2E_CHROME_TRACE_MAX_FILE_BYTES: '32',

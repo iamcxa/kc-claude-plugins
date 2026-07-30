@@ -633,6 +633,7 @@ elif [ ! -s "$trace_path" ]; then
 elif [ ! -f "$chrome_validator" ]; then
   validation_status=validator_unavailable
 else
+  validation_started_at=$(date +%s)
   run_bounded "$validation_timeout" "$work_dir/format-detection.log" \
     python3 "$chrome_validator" detect "$trace_path"
   detection_result=$?
@@ -657,40 +658,52 @@ else
         validation_status=format_mismatch
       elif [ "$trace_format" = chrome-trace-json ]; then
         validator=$(basename "$chrome_validator")
-        run_bounded "$validation_timeout" "$work_dir/chrome-validation.log" \
-          python3 "$chrome_validator" validate "$trace_path"
-        chrome_validation_result=$?
-        chrome_validation_timed_out=$bounded_timed_out
-        if [ "$chrome_validation_timed_out" = true ]; then
+        validation_now=$(date +%s)
+        validation_remaining=$((validation_timeout - (validation_now - validation_started_at)))
+        if [ "$validation_remaining" -le 0 ]; then
           validation_status=timeout
         else
-          case "$chrome_validation_result" in
-            0) validation_status=valid ;;
-            2) validation_status=invalid_json ;;
-            3) validation_status=format_mismatch ;;
-            4) validation_status=resource_limit_exceeded ;;
-            *) validation_status=validator_unavailable ;;
-          esac
+          run_bounded "$validation_remaining" "$work_dir/chrome-validation.log" \
+            python3 "$chrome_validator" validate "$trace_path"
+          chrome_validation_result=$?
+          chrome_validation_timed_out=$bounded_timed_out
+          if [ "$chrome_validation_timed_out" = true ]; then
+            validation_status=timeout
+          else
+            case "$chrome_validation_result" in
+              0) validation_status=valid ;;
+              2) validation_status=invalid_json ;;
+              3) validation_status=format_mismatch ;;
+              4) validation_status=resource_limit_exceeded ;;
+              *) validation_status=validator_unavailable ;;
+            esac
+          fi
         fi
       elif [ ! -f "$archive_validator" ]; then
         validation_status=validator_unavailable
       else
         validator=$(basename "$archive_validator")
-        run_bounded "$validation_timeout" "$work_dir/archive-validation.log" \
-          python3 "$archive_validator" validate "$trace_path"
-        archive_validation_result=$?
-        archive_validation_timed_out=$bounded_timed_out
-        if [ "$archive_validation_timed_out" = true ]; then
+        validation_now=$(date +%s)
+        validation_remaining=$((validation_timeout - (validation_now - validation_started_at)))
+        if [ "$validation_remaining" -le 0 ]; then
           validation_status=timeout
         else
-          case "$archive_validation_result" in
-            0) validation_status=valid ;;
-            2) validation_status=invalid_zip ;;
-            3) validation_status=unsafe_archive ;;
-            4) validation_status=missing_playwright_content ;;
-            6) validation_status=resource_limit_exceeded ;;
-            *) validation_status=validator_unavailable ;;
-          esac
+          run_bounded "$validation_remaining" "$work_dir/archive-validation.log" \
+            python3 "$archive_validator" validate "$trace_path"
+          archive_validation_result=$?
+          archive_validation_timed_out=$bounded_timed_out
+          if [ "$archive_validation_timed_out" = true ]; then
+            validation_status=timeout
+          else
+            case "$archive_validation_result" in
+              0) validation_status=valid ;;
+              2) validation_status=invalid_zip ;;
+              3) validation_status=unsafe_archive ;;
+              4) validation_status=missing_playwright_content ;;
+              6) validation_status=resource_limit_exceeded ;;
+              *) validation_status=validator_unavailable ;;
+            esac
+          fi
         fi
       fi
     fi

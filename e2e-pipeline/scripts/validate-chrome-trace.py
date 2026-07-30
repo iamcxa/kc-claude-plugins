@@ -17,6 +17,37 @@ from typing import Any
 FORMAT_CHROME = "chrome-trace-json"
 FORMAT_PLAYWRIGHT = "playwright-trace-zip"
 FORMAT_UNKNOWN = "unknown"
+TRACE_EVENT_PHASES = frozenset(
+    {
+        "(",
+        ")",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "I",
+        "M",
+        "N",
+        "O",
+        "P",
+        "R",
+        "S",
+        "T",
+        "V",
+        "X",
+        "b",
+        "c",
+        "e",
+        "f",
+        "i",
+        "n",
+        "p",
+        "s",
+        "t",
+        "v",
+    }
+)
 
 
 class InvalidJsonError(Exception):
@@ -157,12 +188,15 @@ class JsonStream:
         self.skip_whitespace()
         while True:
             try:
-                value, end = self.decoder.raw_decode(self.buffer, self.position)
+                start = self.position
+                value, end = self.decoder.raw_decode(self.buffer, start)
+                if len(self.buffer[start:end].encode("utf-8")) > budget:
+                    raise ResourceLimitError("max_event_bytes exceeded")
                 self.position = end
                 return value
             except json.JSONDecodeError as error:
-                remaining = len(self.buffer) - self.position
-                if remaining > budget:
+                remaining = self.buffer[self.position :].encode("utf-8")
+                if len(remaining) > budget:
                     raise ResourceLimitError("max_event_bytes exceeded") from error
                 if self.eof or not self.fill():
                     raise InvalidJsonError(f"invalid JSON: {error.msg}") from error
@@ -197,8 +231,10 @@ class TraceSummary:
             raise WrongFormatError("traceEvents entries must be JSON objects")
         name = event.get("name")
         phase = event.get("ph")
-        if not isinstance(name, str) or not name or not isinstance(phase, str) or not phase:
+        if not isinstance(name, str) or not name or not isinstance(phase, str):
             raise WrongFormatError("traceEvents entries require string name and ph")
+        if phase not in TRACE_EVENT_PHASES:
+            raise WrongFormatError(f"unsupported trace event phase: {phase!r}")
         name_size = self.string_size(name)
 
         self.event_count += 1
@@ -231,18 +267,16 @@ class TraceSummary:
             self.categories[category] += 1
 
         duration = event.get("dur")
-        if (
-            phase == "X"
-            and isinstance(duration, float)
-            and not math.isfinite(duration)
-        ):
-            raise InvalidJsonError("invalid JSON: duration must be finite")
-        if (
-            phase == "X"
-            and isinstance(duration, (int, float))
-            and not isinstance(duration, bool)
-            and duration >= 0
-        ):
+        if phase == "X":
+            if (
+                not isinstance(duration, (int, float))
+                or isinstance(duration, bool)
+                or (isinstance(duration, float) and not math.isfinite(duration))
+                or duration < 0
+            ):
+                raise WrongFormatError(
+                    "complete trace events require a finite non-negative dur"
+                )
             self.duration_event_count += 1
             item = {
                 "name": name,
