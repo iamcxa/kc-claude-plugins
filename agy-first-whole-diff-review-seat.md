@@ -1539,3 +1539,181 @@ the existing terminal producer once, binds the successful producer decision into
 hash, rejects producer-impossible evidence as `UNKNOWN`, and cannot accept a caller-authored
 review decision. The bounded five-path implementation is pushed with fresh exact-head RED/GREEN,
 regression, purity, E2E, static, timing, and independent-review evidence.
+
+## Stage Report: validation
+
+TL;DR — **PASS / GATE READY for human landing.** Fresh validation found no material finding on
+exact product head `b2b71acb0583ab3573bc3d43229e8677f141b0e0` against current remote main
+`9eddf9928d6d7ae391d3b11adab2e920b5ec0b2c`. The producer-composed reset closes the two rejected
+caller-decision architectures: only observations and producer sources cross the CLI boundary,
+producer-inconsistent evidence fails closed, exact-head verdict ordering is preserved, and no
+posting or merge authority entered the five-path diff.
+
+### Exact head, scope, and fresh-review boundary
+
+- Product `HEAD`, its upstream, and the remote branch all equal
+  `b2b71acb0583ab3573bc3d43229e8677f141b0e0`; the product worktree is clean.
+- Remote and local `origin/main` both equal
+  `9eddf9928d6d7ae391d3b11adab2e920b5ec0b2c`, which is also the merge base.
+  The product branch is three commits ahead and zero behind.
+- `origin/main...HEAD` is exactly **5 files, 696 insertions, 5 deletions**:
+  `kc-pr-flow/scripts/review-runtime.sh`,
+  `kc-pr-flow/scripts/review-runtime.test.sh`,
+  `kc-pr-flow/reference/review-runtime.md`,
+  `kc-pr-flow/README.md`, and `kc-pr-flow/CLAUDE.md`.
+- `git diff --summary` is empty: no mode change or new executable entered the diff.
+- The validator read the complete five-file change, the active reset AC, and the unchanged producer
+  and post-authority context. It made no product edit, did not finish implementation, create a PR,
+  post, merge, amend, or widen scope.
+
+### Acceptance criteria
+
+- **PASS: AC-1 — only producer output drives readiness.**
+  `review_runtime_decide_merge_readiness` accepts a closed observations file plus the existing
+  producer's receipt, policy, repository, and exact-identity sources
+  (`review-runtime.sh:2402-2415`). A static reducer scan found exactly one
+  `review_runtime_rehydrate_interactive` call at `:2459-2461`. There is no caller decision option:
+  direct `--input-file` and `--decision-file` probes both exited 2 as unknown options. The focused
+  matrix returned **67/0**, including the nine coordinated stale-key, terminal-state, lane,
+  timestamp, obligation, pointer, and evidence-verification source mutations at
+  `review-runtime.test.sh:308-364`; every mutation reached
+  `UNKNOWN/LOW/invalid-review-evidence`. A caller `review_decision` member was closed-schema invalid.
+- **PASS: AC-2 — exact-head truth table and canonical internal binding.**
+  The real producer positive returned `READY/HIGH/all-required-evidence-positive`; CI, test, and
+  producer-derived review negatives returned `NOT_READY/HIGH`; pending, unknown, unavailable, or
+  incomplete review evidence returned `UNKNOWN/LOW`; and all three observed/CI/test head mutations
+  returned `UNKNOWN/LOW/head-or-identity-mismatch`
+  (`review-runtime.test.sh:163-305`). The reducer binds canonical observations and the exact
+  producer result in `kc-pr-flow.merge-readiness-binding/v1`
+  (`review-runtime.sh:2488-2496`). The independent regular-file E2E recomputed the same
+  `input_sha256`, `db4df89d887b4a783dd38650fde6697c7273c6d4ed5557201f584a962de64045`.
+- **PASS: AC-3 — advisory and side-effect free.**
+  The real CLI output kept `advisory_only:true`; failing `gh`, `curl`, `wget`, `nc`, and `ssh`
+  stubs recorded a zero-byte call ledger and the reducer contains zero prohibited command tokens.
+  Unsafe-directory observations exited 2 with zero stdout. Local `git` remained intentionally
+  available for producer evidence verification. Base/head blob IDs are identical for
+  `kc-pr-flow/skills/kc-pr-review/SKILL.md`, `scripts/review-post.sh`, and
+  `scripts/review-post.test.sh`; the fresh unchanged post suite returned **156/0**.
+- **PASS: AC-4 — one bounded runtime cut.**
+  The exact five paths are the existing runtime, its existing test, and three plugin docs. The
+  reducer contains one producer-call site and no second caller-decision grammar. No decision file,
+  new executable, receipt/signature/state authority, model route, network fetch, daemon, repair
+  loop, posting operation, merge operation, or cross-repo adoption entered the diff. Bash syntax,
+  pinned ShellCheck v0.9.0, `git diff --check`, exact changed-path review, and protected-path blob
+  checks all exited 0.
+
+### Published-guarantee falsifiers
+
+- **“Only producer output” / “no caller decision”:** closed-schema member mutation returned
+  `UNKNOWN/LOW/invalid-input`; legacy `--input-file` and `--decision-file` commands exited 2.
+- **“Exactly one producer call”:** the reducer slice contains one call site, and the direct E2E
+  used the producer-composed committed command.
+- **“Invalid, stale, or incomplete evidence cannot become READY”:** the source-mutation matrix,
+  three head mutations, all incomplete statuses, malformed/duplicate observation cases, and an
+  unsafe regular-file probe all failed closed.
+- **“Canonical binding”:** the focused pretty/reordered-input case and an independent E2E
+  rehydration both reconstructed the binding bytes and matched the emitted hash.
+- **“No live/network/post/auth/merge authority”:** the failing-command ledger stayed empty,
+  protected post/skill blobs matched the base, and the unchanged post suite passed.
+
+### Fresh executable verification
+
+- Focused merge-readiness: **67 passed, 0 failed**, 414.29s.
+- Focused interactive producer: **49 passed, 0 failed**, 174.37s.
+- Complete runtime under isolated Bash-5.3 runtime-only xtrace: **372 passed, 0 failed**, 760.99s.
+  A first inherited-xtrace attempt was discarded because Bash 3.2 routed trace text through
+  stderr and perturbed the suite; it supplied no verdict or coverage evidence.
+- Complete runtime without instrumentation: **372 passed, 0 failed**, 609.00s.
+- Untouched-base runtime, timed on the same host immediately afterward: **305 passed, 0 failed**,
+  202.12s.
+- Unchanged review-post ripple: **156 passed, 0 failed**, 482.06s.
+- Pinned `koalaman/shellcheck:v0.9.0` over the runtime and test exited 0 with empty output.
+- Bash syntax, `git diff --check origin/main...HEAD`, exact five-path, no-mode-change,
+  producer-call-count, legacy-option, prohibited-command, and protected-blob checks all passed.
+
+### Coverage, adversarial, and E2E details
+
+The runtime-only trace observed 82 of 93 changed executable shell command points, **88.17%**.
+The denominator excludes comments, declarations that only define functions, braces,
+continuation-only lines, and embedded jq program bodies while counting the shell command that
+executes each jq program once. The 11 unobserved fail-safe points are the unexpected
+duplicate-classifier return, canonical-observation fallback, producer-canonicalization/identity
+fallbacks, and missing-value/required-argument CLI diagnostics at
+`review-runtime.sh:2426,2429-2430,2466-2467,2484-2485,3028-3029,3056-3057`.
+
+In an isolated copied tree, replacing the observed-head equality with `true` turned the focused
+suite red at **66 passed, 1 failed**. The sole failure changed the observed-head mutation from
+`UNKNOWN/LOW/head-or-identity-mismatch` to
+`READY/HIGH/all-required-evidence-positive`, directly proving that the committed guard is
+behaviorally covered.
+
+The regular-file E2E used a real terminal receipt, merge-ready policy, evidence repository, and
+positive observations. The untouched committed CLI returned the closed
+`READY/HIGH/all-required-evidence-positive` advisory decision at exact fixture head
+`5aeb592e2550875f04ba112a17529eae333db476`, with zero stderr and zero transport-ledger bytes.
+Independent producer rehydration and binding reconstruction matched
+`db4df89d887b4a783dd38650fde6697c7273c6d4ed5557201f584a962de64045`; output SHA-256 was
+`cb3c1dad991fe74056be6117130d593a29ccb776cc9ec3bfb061b7bce0d8c3d9`.
+Browser/full-stack E2E is not the applicable surface because this change has no UI, service, or
+remote mutation.
+
+### Different-vendor review audit
+
+Codex used Google Antigravity `agy` 1.1.9 first, in read-only plan/sandbox mode. The initial
+workspace-backed round reported the wrong project head and was discarded. A clean-project retry
+timed out. The first embedded-patch response had more than one-third wrong citations and was
+discarded under the repo citation rule. A stricter embedded round cited the wrong test line for a
+claim that the default suite skipped full interactive coverage; independent base comparison proved
+that focused `interactive-decision` was already a separate case on `origin/main`, so the claimed
+regression was not change-induced and the citation-invalid round was discarded. The final
+citation-free, embedded exact-five-path review returned exactly `NO_MATERIAL_FINDINGS`. The CLI did
+not expose an exact model ID; no discarded round influenced this verdict.
+
+### CI-margin disclosure
+
+- `.github/workflows/review-runtime-tests.yml` retains `timeout-minutes: 20`.
+- There is no GitHub check run for exact head `b2b71acb`; this is explicitly not live exact-head CI
+  proof.
+- Fresh live-main run `30566386141`, job `90951846061`, at `6f51c55` completed successfully in
+  559 seconds. Its runtime-contract step used 75 seconds and review-post used 282 seconds.
+- Same-host exact-head runtime minus untouched-base runtime is 609.00 - 202.12 =
+  **406.88 seconds**. Conservatively adding that whole local delta to the live-main job projects
+  **965.88 of 1200 seconds**, leaving about **234 seconds**. This is a margin estimate across
+  different runners, not a claim that mutable `ubuntu-latest` was reproduced.
+
+### Material findings
+
+None.
+
+### Evidence block
+
+- Lenses: PASS — correctness 0 findings; silent-failure 0; type-design 0; security/trust-boundary 0; resource-lifecycle 0. Correctness always fired; input validation/fallbacks fired silent-failure; the new observations/binding/decision contracts fired type-design; caller-controlled evidence crossing into a merge advisory fired security; the private snapshot/trap fired resource-lifecycle. Concurrency did not fire because no locks, async ordering, or shared mutable state changed. Manifest/back-compat did not fire because no manifest, frontmatter, install-resolution, or existing command contract changed; the command is additive.
+- Diff coverage: PASS — 82/93 changed executable shell command points observed, **88.17%**, above the 85% ratchet.
+- Adversarial: PASS — isolated observed-head guard removal returned **66/1** and produced the exact forbidden `READY/HIGH` false positive.
+- Cross-model: PASS — Codex → Google Antigravity `agy` 1.1.9; final citation-free exact-patch round returned `NO_MATERIAL_FINDINGS`; stale, timed-out, or citation-invalid rounds were discarded and not relied on.
+- E2E: PASS — real regular-file producer-composed CLI returned `READY/HIGH`, exact identity and independently matched binding `db4df89d...64045`, with zero stderr and zero transport calls; browser/full-stack is not applicable because there is no UI, service, or remote mutation.
+
+### Feedback cycles
+
+- Fresh post-reset validation: **PASS**. No post-reset correction cycle was opened. The two
+  historical rejections remain attached to the superseded caller-decision architectures and are
+  not counted again against this reset.
+
+### `--ac-scan`
+
+```text
+stage=validation
+ac=AC-1 unevidenced=false citations=4
+ac=AC-2 unevidenced=false citations=4
+ac=AC-3 unevidenced=false citations=4
+ac=AC-4 unevidenced=false citations=3
+```
+
+### Summary
+
+Exact-head validation accepts the active producer-composed reset. The committed reducer has one
+producer authority, no caller-decision surface, closed exact-head observations, deterministic
+producer-bound hashing, ordered fail-closed verdicts, and advisory-only behavior. Focused,
+complete, ripple, static, coverage, adversarial, E2E, cross-vendor, scope, and timing checks are
+green with no material finding. Human landing remains the next authority; validation did not post,
+create a PR, or merge.
