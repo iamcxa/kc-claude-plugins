@@ -619,3 +619,50 @@ minimal final recut. It preserves AC-1 through AC-3, binds AC-4 to exact reviewe
 diff evidence, removes the misleading tracked measurement machinery, and clears
 the complete executable-surface 85% ratchet. The worker branch remains isolated
 for FO integration; no code-branch push, PR, merge, or worktree cleanup occurred.
+
+## Stage Report: validation (cycle 3 — captain-authorized final re-review)
+
+- FAILED: Independently revalidate exact clean head `57ddb26b32e03a3e5f4136f603d2319cad3881a5`
+  against the captain-reset ACs, reproducing AC-1 remote durability, AC-2 legacy/direct route, AC-3
+  derivation, and AC-4 exact-current-diff path plus every-added-hunk audit.
+  AC-1 through AC-4 pass, but a falsified validation guarantee blocks final PASS.
+- DONE: AC-1 — Product delivery terminalizes without ledger upkeep.
+  Bare-origin flat/folder routes passed; unauthenticated, dirty-live, and rejected-push cases stopped.
+- DONE: AC-2 — Legacy ledger and in-flight entities stay readable.
+  Six ledger phases passed; unreachable direct failed and the `origin/main`-reachable direct archived.
+- DONE: AC-3 — Archive-first observation remains useful and non-authoritative.
+  Exact derivation passed, state tree stayed unchanged, and missing evidence remained `unknown`.
+- DONE: AC-4 — This exact change stays inside the declared repo-platform boundary.
+  Independent audit covered all 61 added hunks at three paths and SHA-256 `a97f2ca6a69a7859d87a0ec3720364f0a2f4fd3e7d7a87aedeb57cf471779b40`;
+  no forbidden runtime creator, state mutation, daemon, scheduler, CI/runtime file, or metric gate exists.
+- DONE: Build and run an independent out-of-tree full-denominator coverage measurement that includes
+  every added executable Bash statement and Python heredoc body with no exclusions or waiver; verify
+  the reported >=85%, fixture shrink, focused all, and repository exits.
+  The 772-line fixture measured **370/430=86.05%**; `all`, 23/23, 22/22, 12/12, and static checks passed.
+- FAILED: Return final PASS or REJECT with exact-head evidence, required lenses/cross-model result,
+  and material residuals only; do not edit product, and if rejected record PARK with no cycle 4.
+  Final verdict is REJECT/PARK for one material falsified documented guarantee; product stayed clean.
+
+Lenses: workflow prose plus executable shell; correctness REJECT/1, security REJECT/1,
+silent-failure REJECT/1, type-design PASS/0, concurrency PASS/0,
+resource-lifecycle PASS/0, manifest/back-compat PASS/0.
+Diff coverage: **86.05%** (370/430 full-denominator Bash plus Python-heredoc statements); no exclusion
+or waiver. The implementation's exact 380 numerator was not reproduced, but the ratchet is green.
+Adversarial: removing either the host-state guard or product-ref guard left `terminal-without-ledger`
+green; ledger re-coupling reddened — the former two are a material suite hole.
+Cross-model: Gemini 3.6 Flash High timed out at 2m; Claude Haiku produced no result before termination.
+E2E: real Spacedock 0.26 bare-origin split-root terminal/archive and legacy direct routes passed,
+including rejected-push, dirty-root, and unreachable-commit negatives.
+
+### Material residual
+
+`docs/dev/_mods/pr-merge.md:392-396` says the focused fixture falsifies every guard consumed by
+`terminalize_authenticated_product`, but the recut fixture tests only `PRODUCT_AUTHENTICATED=no` at
+`docs/dev/artifacts/decoupled-ledger-contract-test.sh:469-475`. Removing the consumed host-state check
+at `pr-merge.md:405` or product-ref check at `:412` left the suite green, so auth can regress silently.
+
+### Summary
+
+Final validation REJECTS and PARKS exact head `57ddb26b32e03a3e5f4136f603d2319cad3881a5`.
+The captain-narrowed exact-diff AC-4 and the honest 85% coverage ratchet both pass, as do all final
+regressions; the sole residual is the falsified every-auth-guard claim. No cycle 4; product untouched.
