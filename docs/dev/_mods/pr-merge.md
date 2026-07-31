@@ -390,8 +390,10 @@ it does not select a phase and cannot veto the transaction.
 Run one self-contained holder durability transaction. Spacedock requires a
 separate setter to clear `mod-block`, so issue two setters back-to-back and
 then exactly one `state commit`. The function's authentication flag is local
-to the current hook invocation and may be set only by the exact product checks
-above:
+to the current hook invocation and consumes the result of the exact product
+checks above. The focused decoupling fixture falsifies every guard consumed by
+this function; the existing product-artifact/host reconciliation fixtures,
+not this flag alone, prove the upstream checks that are allowed to set it:
 
 ```bash
 # decoupled-terminal-transaction:start
@@ -631,6 +633,7 @@ print("archive-git-root:exact")
 PY
 }
 
+# decoupled-archive-comparator:start
 archive_verify() {
   python3 - "$1" "$2" <<'PY'
 import datetime
@@ -777,6 +780,7 @@ else:
 print("archive:exact")
 PY
 }
+# decoupled-archive-comparator:end
 ```
 
 The root-safety fixture runs both guards and the comparator against a normal
