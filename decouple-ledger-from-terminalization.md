@@ -401,6 +401,9 @@ completion PR.
   `scripts/release-metadata.test.sh` 22/22, and `scripts/skill-frontmatter-lint.test.sh` 12/12.
   The fixture remains manual and adds no CI job, so it changes no CI job runtime margin; no
   OS/libc/locale/clock-dependent behavior or CI-pinned governed file was introduced.
+  `spacedock status --read 7rgdvsjypgmzk8wh03h3vst9 --ac-scan` resolves AC-1 through AC-4 at
+  lines 196, 209, 222, and 236. It also emits `unevidenced=true citations=0` for each despite their
+  `Verified by:` commands, matching the known counter hazard recorded in `docs/dev/ROADMAP.md`.
 
 ### Summary
 
