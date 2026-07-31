@@ -570,3 +570,52 @@ green: focused `all`, 23/23 work-context, 22/22 release-metadata, 12/12 frontmat
 ShellCheck, Markdown fences, stage parser, and `git diff --check`. This is the second consecutive
 validation rejection, so Gate Authority ends the implementation loop and routes the decision to the
 captain rather than opening cycle 3.
+
+## Stage Report: implementation (captain-authorized final recut)
+
+- DONE: Reproduce both cycle-2 findings before changing the rejected head.
+  Injecting `measurement_batch(){ "$SPACEDOCK_BIN" new ...; }; measurement_batch`
+  bypassed the tracked syntax classifier. An independent counter also proved the
+  honest minimum was `330/406=81.28%`, not the self-reported `330/383=86.16%`:
+  the tracked harness excluded 23 executable Bash statements and all Python heredocs.
+- DONE: Aggressively simplify the focused fixture while preserving the accepted seams.
+  The fixture is 772 lines versus 1,042 at the rejected head: 270 fewer lines, or
+  25.9%. Removed the scope regex classifier, mutation mode, tracked coverage mode,
+  redundant authentication matrix, and duplicate remote-archive assertion.
+  No tracked self-measuring harness, coverage exclusion, or coverage waiver remains.
+- DONE: Replace AC-4's syntax claim with evidence for this exact reviewed diff.
+  `scope` requires exactly the three declared paths and reports the bound diff as
+  `paths=3:hunks=61:sha256=a97f2ca6a69a7859d87a0ec3720364f0a2f4fd3e7d7a87aedeb57cf471779b40`.
+  Human review of every added hunk found no product task creator, daemon, scheduler,
+  CI job, workflow/state mechanism, or measurement authority. The temporary fixture
+  state/remotes are test isolation, not a product process. No semantic denylist is
+  presented as AC-4 enforcement.
+- DONE: Measure all remaining added executable Bash and Python-heredoc statements
+  out of tree with no tracked exclusions. The independent script at
+  `/tmp/decoupled-ledger-coverage.23hKSF/measure.py` traced focused `all` and reported
+  Bash `297/338`, Python heredocs `83/92`, combined `380/430=88.37%`.
+- DONE: AC-1 — Product delivery terminalizes without ledger upkeep.
+  Fresh real-origin flat/folder runs observed durable terminal and archive commits;
+  unauthenticated, dirty-live, and rejected-push cases failed closed before archive.
+- DONE: AC-2 — Legacy ledger and in-flight entities stay readable.
+  Empty/draft/pending/numbered/merged/malformed phases remained compatible; the
+  unreachable direct route failed before mutation and the reachable route archived.
+- DONE: AC-3 — Archive-first observation remains useful and non-authoritative.
+  Exact derivation remained `14,2,18.81,n/a,88.17,pending:2026-08-07`; absent
+  optional evidence stayed `unknown`, and the archive state tree remained unchanged.
+- DONE: AC-4 — This exact change stays inside the declared repo-platform boundary.
+  The complete `origin/main...HEAD` diff is exactly `docs/dev/README.md`,
+  `docs/dev/_mods/pr-merge.md`, and the focused contract fixture; no fourth path exists.
+- DONE: Run fresh focused, static, and repository exits on the final code tree.
+  Focused `all`, Bash syntax, ShellCheck, `git diff --check`, Markdown fences,
+  stage-definition parsing, and the historical ledger verifier pass. Repository
+  exits pass work-context 23/23, release metadata 22/22, and frontmatter 12/12.
+  The fixture stays manual, so no CI runtime margin or governed CI file changed.
+
+### Summary
+
+Commit `57ddb26b32e03a3e5f4136f603d2319cad3881a5` implements the captain's
+minimal final recut. It preserves AC-1 through AC-3, binds AC-4 to exact reviewed
+diff evidence, removes the misleading tracked measurement machinery, and clears
+the complete executable-surface 85% ratchet. The worker branch remains isolated
+for FO integration; no code-branch push, PR, merge, or worktree cleanup occurred.
