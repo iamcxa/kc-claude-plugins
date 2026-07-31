@@ -110,8 +110,9 @@ must not restate this table — point back here instead. Enforcement lives in
 **`selector:` is a plugin-internal locator DSL, not a raw CLI argument you hand
 to `agent-browser`.** For `expect:`/visibility assertions, the compiler
 (`compiler/lib/selector-translate.js`) translates the value into an
-accessibility-tree grep pattern (`codegen.js:1572` -> `_poll_snapshot_contains`,
-a `grep -F` against the a11y snapshot) — it does not parse the value as literal
+accessibility-tree match pattern (emitted at `codegen.js:1766`, consumed by the
+generated `_poll_snapshot_contains` helper, whose body is a Bash substring test
+against the captured a11y snapshot — fixed-string, no regex) — it does not parse the value as literal
 CSS or Playwright syntax for that check, which is why the CSS-attribute form and
 the Playwright role-attr form below compile to byte-identical output. `click`/
 `fill` actions are a separate path: the raw `selector:` value **is** passed to
@@ -128,8 +129,18 @@ doesn't have. Full record: `docs/dev/.spacedock-state/e2e-selector-canon-review.
 2. `role=<r>[name="<v>"]` -- primary form for elements without a test ID. Matches
    the *computed* accessible name and *implicit* role exactly as the mapper
    observes them in the a11y snapshot (e.g., `role=button[name="Save"]`).
+   The regex variant `role=<r>[name=/<re>/]` is **accepted**: it translates to the
+   literal prefix of `<re>` before the first regex metacharacter. That prefix is a
+   substring match, so an over-short prefix can match a longer unintended string
+   (`/holder.*X/` -> `holder`, which matches inside `placeholder`) — hazard tracked
+   by the `e2e-regex-prefix-false-match` entity, not fixed here.
 3. `text=<v>` -- role-agnostic text match, for elements with no stable role.
-   Translates to the same a11y-grep shape as #2, just without the role prefix.
+   Translates to the same a11y pattern shape as #2, just without the role prefix.
+   A trailing ` >> nth=N` chord is stripped; at `nth=0` that is an equivalence for
+   an existence assertion, not a widening. The regex variant `text=/<re>/` is
+   **refused** (the translator returns null) because there is no fixed-string image
+   of a regex, so it takes the documented `_poll_visible` fallback instead of a
+   near-miss pattern that would silently never match.
 4. `[role="<r>"][aria-label="<v>"]` -- secondary form. Use ONLY when the
    component genuinely carries a literal `aria-label` attribute (rare — verify,
    don't assume). Not a default output.
