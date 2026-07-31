@@ -1,13 +1,13 @@
 ---
 title: Decouple the measurement ledger from delivery terminalization
-status: ideation
+status: implementation
 source: captain direction 2026-07-31 after EM merge-readiness closeout
 product: repo-platform
 sprint:
 started: 2026-07-31T10:22:20Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-decouple-ledger-from-terminalization
 issue:
 pr:
 ledger_pr:
