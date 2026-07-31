@@ -164,6 +164,47 @@ describe('selectorToA11yPattern: text= refuses what it cannot faithfully transla
     assert.equal(selectorToA11yPattern('text="foo"bar'), null);
   });
 
+  test('a value needing snapshot escaping is refused, not wrapped verbatim', function () {
+    // The quote detection only fires when the quote is character 0, so a mid-value
+    // quote used to fall through to the naive `'"' + value + '"'` wrap. agent-browser
+    // escapes an embedded quote as \" and a backslash as \\ in the snapshot (captured
+    // live below), and this branch does not reproduce that — so the wrap emitted a
+    // pattern the snapshot can never contain, which is the near-miss the branch's
+    // invariant forbids. Refuse and take the documented fallback instead.
+    assert.equal(selectorToA11yPattern('text=Save"Now'), null);
+    assert.equal(selectorToA11yPattern('text=Say "Hello"'), null);
+    assert.equal(selectorToA11yPattern('text=back\\slash'), null);
+    // A quote-delimited value is unaffected — there the quotes are delimiters, not payload.
+    assert.equal(selectorToA11yPattern('text="我的" >> nth=1'), '"我的"');
+    // An apostrophe needs no escaping inside a double-quoted snapshot name.
+    assert.equal(selectorToA11yPattern("text=It's Fine"), '"It\'s Fine"');
+  });
+
+  test('INVARIANT: an escaping-sensitive value returns null rather than a near-miss', function () {
+    // Byte-for-byte snapshot lines captured from a live agent-browser 0.32.0 +
+    // Chrome for Testing 151 run against a fixture whose buttons carried these exact
+    // accessible names. They are the evidence for the escaping convention asserted
+    // above; a future change that makes any of these non-null gets grepped against
+    // the real bytes here rather than passing on the author's say-so.
+    const SNAPSHOT_ESCAPING = [
+      ['text=Save"Now', '- button "Save\\"Now" [ref=e1]'],
+      ['text=back\\slash', '- button "back\\\\slash" [ref=e1]'],
+      ['text=both\\and"quote', '- button "both\\\\and\\"quote" [ref=e2]'],
+    ];
+
+    for (const [selector, snapshotLine] of SNAPSHOT_ESCAPING) {
+      const pattern = selectorToA11yPattern(selector);
+      if (pattern === null) continue;  // documented fallback — allowed
+      const hit = childProcess.spawnSync(
+        'bash', ['-c', 'grep -Fq "$1"', '--', pattern],
+        { input: snapshotLine, encoding: 'utf8' }
+      ).status === 0;
+      assert.ok(hit,
+        `non-null pattern ${JSON.stringify(pattern)} for ${selector} must match the ` +
+        `real snapshot line ${JSON.stringify(snapshotLine)}`);
+    }
+  });
+
   test('INVARIANT: every corpus text= shape either returns null or greps its own snapshot line', function () {
     // The falsifiable form of the invariant. Each entry pairs a real corpus selector
     // shape with the snapshot line agent-browser would emit for it. A non-null pattern

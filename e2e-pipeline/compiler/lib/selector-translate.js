@@ -135,6 +135,17 @@ function selectorToA11yPattern(selector) {
 
     if (textValue === '') return null;
 
+    // A value carrying a quote or a backslash → null, same reason as the regex case.
+    // agent-browser renders an accessible name into the snapshot with JSON-style
+    // escaping (`"` as \" and `\` as \\, verified live against 0.32.0 — the byte-exact
+    // lines are in selector-translate.test.js SNAPSHOT_ESCAPING). Wrapping the raw
+    // value would emit a pattern whose bytes differ from the snapshot's, so it would
+    // never hit. Reproducing that escaping here would bet the invariant on a
+    // third-party convention this module cannot pin, and the corpus has no instance
+    // of either character inside a text= value, so refusing costs nothing today and
+    // keeps "a non-null return can actually match" true by construction.
+    if (textValue.indexOf('"') !== -1 || textValue.indexOf('\\') !== -1) return null;
+
     return '"' + textValue + '"';
   }
 

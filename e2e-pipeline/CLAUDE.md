@@ -129,6 +129,17 @@ doesn't have. Full record: `docs/dev/.spacedock-state/e2e-selector-canon-review.
 2. `role=<r>[name="<v>"]` -- primary form for elements without a test ID. Matches
    the *computed* accessible name and *implicit* role exactly as the mapper
    observes them in the a11y snapshot (e.g., `role=button[name="Save"]`).
+   **Forms 2 and 3 resolve on the translated visibility path only.** Handed to
+   `agent-browser click|fill` literally they return `false`/not-found, because
+   agent-browser drives CDP and does not implement Playwright's selector engines.
+   Probed live against agent-browser 0.32.0 + Chrome for Testing on a fixture
+   whose snapshot showed the element: `is visible 'role=button[name="AlphaBtn"]'`
+   and `is visible 'text=AlphaBtn'` both returned `false`, while
+   `[role="button"][aria-label="通知"]` and `h1` returned `true`. So an element
+   these forms locate and a step also **clicks or fills** needs `css_selector:`
+   (below). Without it the step fails loud under `e2e-test-runner` Rule 1 — a
+   refusal, not a silent pass, which is why both forms belong in Rule 1's NATIVE
+   list rather than merely being dropped from its banned list.
    The regex variant `role=<r>[name=/<re>/]` is **accepted**: it translates to the
    literal prefix of `<re>` before the first regex metacharacter. That prefix is a
    substring match, so an over-short prefix can match a longer unintended string
