@@ -1,13 +1,15 @@
 ---
 title: Re-decide the canonical selector grammar — it has been declared for three months and adopted zero times
-status: implementation
+status: validation
 source: captain approval 2026-07-25, escalated out of e2e-selector-lint-gate when the codemod spike showed the canonical form is unsupported by the target apps
+product: e2e-pipeline
+sprint: S1
 started: 2026-07-25T13:47:31Z
 completed:
-verdict:
-worktree: .worktrees/spacedock-ensign-e2e-selector-canon-review
+verdict: PASSED
+worktree:
 issue:
-pr:
+pr: https://github.com/iamcxa/kc-claude-plugins/pull/123
 design: required
 id: rd55vfpddtyvsbfqxqecj6cx
 ---
@@ -424,3 +426,159 @@ a doc follow-up or land before merge at the captain's discretion.
 values (`/holder.*關閉/` → `holder`, which `grep -F` matches inside `placeholder`).
 Pre-existing, false-PASS direction, and therefore more serious than the nth widening.
 Not caused by this entity and not fixed by it.
+
+## Stage Report: implementation (cycle 3 — rebase and land)
+
+Cycle 2 was gate-accepted `proceed` on 2026-07-25 and then parked unmerged for three
+months. This cycle changed no ruling: it rebased the built work onto current `main`,
+closed the recorded doc residual, and fixed two defects the fresh validation found.
+Product PR: #123. Head `4fe0597`.
+
+- DONE: Rebase across 64 commits. Merge-base `7521546`; fresh branch
+  `fix/e2e-selector-canon-land` from `15ffa84`. Same 14 files, same +390/-136 as
+  before the rebase — the resolution preserved intent rather than re-deciding it.
+  7 files had changed on both sides; 2 conflicted. `main` had meanwhile templated
+  hardcoded `agent-browser` into `{{browser_command}}` / `<browser_command>`, so both
+  resolutions took the branch's **content** with `main`'s **templating**. In
+  `e2e-test-runner.md` Critical Rules, kept `main`'s item 8 (browser completion follows
+  auth mode — newer trace-finalization behavior) and took the branch's item 9.
+- DONE: Rebase-fidelity measurement, because an auto-merge can drop newer content
+  silently. Of **1,077 lines `main` added since merge-base** across the 7 overlapping
+  files, exactly **2 are absent** on the branch, and both are the two documented
+  intentional supersessions at the conflict sites. **0 accidental drops.**
+- DONE: Re-derive cycle 2's eval-fallback falsifier, which was anchored on line numbers
+  the rebase moved. Sentence granularity: **13 guarded sentences on `origin/main`, 13 on
+  HEAD, 0 removed / 0 added, byte-identical.** (Line-level grep gives a false positive
+  because one physical line packs the form-list sentence with three guarded sentences.)
+- DONE: Re-derive the branch-mapping check on the rebased tree. 310 unique corpus
+  selectors: **47 `text=` move to `_poll_snapshot_contains`, 0 non-text selectors change
+  branch.** Confirms the `role=` branches are behaviourally untouched rather than merely
+  absent from the diff — necessary because branch selection reads the translator's
+  return value, so `codegen.js` being unchanged proves nothing on its own.
+- DONE: Close the doc residual carried by the cycle-1 gate record (commit `03a8c6f`).
+  `CLAUDE.md` § Selector Priority now states that `role=<r>[name=/re/]` is accepted via
+  literal-prefix extraction (naming the substring false-match hazard and its owner
+  entity) and that `text=/re/` is refused and takes the `_poll_visible` fallback.
+  Also corrected two claims in the same section that had drifted: the a11y pattern is
+  emitted at `codegen.js:1766`, not 1572, and the generated `_poll_snapshot_contains`
+  helper is a Bash substring test, not a `grep -F`.
+- DONE: Fix a defect this diff introduced, found by the silent-failure lens and then
+  confirmed empirically (commit `4fe0597`). The `text=` branch's quote detection only
+  fired when the quote was character 0, so a mid-value quote fell through to the naive
+  wrap and emitted a pattern the snapshot can never contain — the near-miss the branch's
+  own invariant forbids. Probed live against agent-browser 0.32.0 + Chrome for Testing
+  151: an accessible name renders with JSON-style escaping (`- button "Save\"Now"`,
+  `- button "back\\slash"`), which the wrap reproduces for neither. **Refuses rather
+  than reproducing that escaping**, because mirroring a third-party rendering convention
+  would rest the invariant on something this module cannot pin, and no corpus `text=`
+  value carries either character (re-measured after the fix: still 47 change branch, 0
+  non-text, 0 of the 47 refused). RED first: 2 failing cases, `actual '"Save"Now"'` vs
+  `expected null`. Tests carry the byte-exact captured snapshot lines, so a future
+  change that makes any of these non-null is grepped against real bytes.
+- DONE: Record that the grammar authority's own primary form cannot be clicked.
+  Probed live rather than reasoned: `is visible 'role=button[name="AlphaBtn"]'` and
+  `is visible 'text=AlphaBtn'` both returned **false** against a fixture whose snapshot
+  showed the button, while `[role="button"][aria-label="通知"]` and `h1` returned
+  **true**. So forms 2 and 3 resolve on the translated visibility path only, and an
+  element they locate that a step also clicks or fills needs `css_selector:`. This was
+  **outside the approved scope** — the cycle-1 record deferred it as "worth a follow-up
+  spike". Closed here instead of deferred because the probe contradicted what a mapper
+  author would infer from the priority list, and leaving the single authority saying
+  something a live probe refutes is the exact defect class this entity exists to remove.
+  Flagged for the captain as a scope note, not presented as in-scope.
+- DONE: Full suite at the exit. **891/892 passing**, 161 suites, 1 skipped (opt-in
+  browser test). Scoped `selector-translate.test.js` 27/27.
+- NOTE: One full-suite run surfaced an unrelated failure in
+  `compiler/test/trace-finalization.test.js`. Not written off by impression: isolated to
+  load-flakiness (49/49 standalone on this branch twice, 49/49 standalone on clean
+  `main`, green on the full-suite re-run) and filed as **#122** rather than dismissed.
+
+## Stage Report: validation
+
+Fresh-context validator, two lenses, and a cross-vendor pass, all against exact head
+`4fe0597`. The implementer's self-report was not accepted for any AC.
+
+- **Lenses:** correctness (exercise-based, live browser) PASS · silent-failure — 1 MEDIUM
+  finding, **confirmed a real defect and fixed** (see cycle 3 above), 1 correctly
+  identified as pre-existing and out of scope · manifest/back-compat PASS. Not fired,
+  with the touched surfaces named instead: no new or changed type, no lock / async
+  ordering / shared mutable state, no process or handle lifecycle, no auth or trust
+  boundary, no workflow file.
+- **Diff coverage:** **100%** — 58/58 added executable lines instrumented and covered,
+  bar 85%. The only added executable logic is in `selector-translate.js`;
+  `lint-mapping.sh`'s additions are all `usage()` strings, the rest deletions and
+  comments.
+- **Adversarial:** 4 claim-breaking edits in scratch copies, all red as specified —
+  remove the regex refusal (7/25), revert the chord strip (7/25), remove the new
+  escaping refusal (2/27), restore lint CLASS 1 (corpus 2/5 → **5/5** failing, which is
+  AC-1's own stated falsifier).
+- **Cross-model:** codex (cross-vendor from a Claude session), run on exact head
+  `4fe0597` after the two new commits — the earlier run against a pre-commit diff was
+  discarded rather than recorded, so the gate reflects the bytes that merge.
+- **E2E:** AC-3 exercised against a **live** agent-browser 0.32.0 + Chrome for Testing
+  151 snapshot, driven through the plugin's own owned browser runtime (isolated
+  namespace, Chrome for Testing pinned, closed after). 9 cases including a negative
+  control (`text=NotPresent` must not hit) and the regex refusal, checked through both a
+  real `grep -F` subprocess and the exact Bash substring test codegen emits.
+
+### AC disposition
+
+- **AC-1 → PARTIAL**, exactly as the cycle-1 re-score corrected it. Corpus 5/5 → 2/5
+  failing; residue **exclusively** still-banned CLASS 2 (`>> nth=`, 39 occurrences).
+  Nothing un-banned still fails. The validator reproduced the falsifier independently.
+- **AC-2 → PASS.** Sweep for `silently mishandled` / `executed directly` clean outside
+  `CHANGELOG.md` (release-please-owned, not hand-edited).
+- **AC-3 → PASS**, exercised not read. The validator confirmed by reading the test
+  source that the AC-3 group genuinely shells out to `grep -Fq`, and found **no
+  decorative assertion** — no added behavior-claiming assertion that no RED run could
+  reach.
+
+### One reviewer claim rejected on evidence
+
+The silent-failure lens argued the un-ban creates no new click/fill risk partly because
+"agent-browser's Playwright-backed click/fill already parses these forms natively" and
+because 2,183 occurrences over three months with no attributed failures showed the path
+was exercised. **The live probe above refutes the premise** — agent-browser drives CDP,
+is not Playwright, and returns `false` for both forms on that path. Its *conclusion* still
+holds (the path is pre-existing, `codegen.js` is untouched), so the finding's disposition
+is unchanged, but the reasoning was not adopted and the doc now records what was measured.
+
+### Residuals, accepted rather than fixed
+
+1. The same byte-fidelity class in the **pre-existing** `role=` branch for a backslash
+   value. Outside approved scope; filed as **#121** together with the already-tracked
+   [[e2e-regex-prefix-false-match]] instance, because one convention should close both.
+2. The 39 `>> nth=` corpus occurrences stay grandfathered. Owner entity
+   [[e2e-nth-chord-widening]] is still `backlog` with no issue and no sprint, so this
+   deferral has **no landing date** — recorded plainly because "deferred to X" reads
+   stronger than it is.
+3. Wider-corpus magnitudes in this entity's earlier record (26/32, 19/32, the 295- and
+   81-selector counts) are **not reproducible from this machine**. The reachable corpus
+   is 5 mapping files / 310 unique selectors, so the falsifier direction is confirmed
+   locally but not those exact figures.
+
+## Measurement
+
+Cycles 1 and 2 (2026-07-25) were never instrumented and their sessions are gone, so
+their dispatch and token figures are **unrecoverable, not zero**. Cycle 3 is instrumented
+below. Per the `+` convention the roll-up is therefore a floor, excluded from baseline
+and bar comparisons.
+
+- dispatch 1 — EM sprint-entry gate (`ship-flow:science-officer-em`, opus): ~100K
+- dispatch 2 — cross-vendor design consult on the #91 contract (codex): ~158K
+- dispatch 3 — fresh-context AC validator (sonnet): ~111K
+- dispatch 4 — silent-failure lens (`pr-review-toolkit:silent-failure-hunter`, sonnet): ~82K
+- dispatch 5 — cross-model gate on exact head (codex): recorded at return
+- dispatch 6 — cross-model gate, first run, discarded as stale-diff: not counted toward
+  evidence, counted here because it consumed a dispatch
+- cycles 1-2 — unrecoverable
+
+`dispatches = 6+` (cycle 3 only; cycles 1-2 unknown), `rework_rounds = 2`,
+`diff_coverage = 100`, `tokens_if_known` is a floor.
+
+**No `ledger.csv` row is written from this workspace.** It is a state non-holder, and the
+`pr-merge` lifecycle hooks that replace the two pre-merge sentinels fail closed off the
+registered holder, which a concurrent `kc-pr-flow` session owns. Writing a row whose
+sentinels nothing here can finalize would leave an incomplete row that the terminal
+verifier rejects — worse than none. Same boundary as #104 / #107 / #110, which also
+carry no row. Bookkeeping is owed to the holder; the code is not blocked on it.
