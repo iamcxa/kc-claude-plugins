@@ -460,3 +460,51 @@ generic suite failure. Product files, branch, and worktree were preserved unchan
 
 - Cycle 1: REJECTED — fresh validation; surface 31m implementation wall-clock vs estimate 90m
   (34%); AC unchanged
+
+## Stage Report: implementation
+
+- DONE: Re-read the original requirement and current ACs, keep them unchanged, and replace the
+  no-origin handwritten archive proof with a real-origin remote-observed Spacedock split-root
+  terminal/archive transaction that fails closed on unauthenticated, dirty, or non-durable state.
+  AC-1 now creates a real bare `origin`, observes Spacedock's terminal commit at the exact state ref,
+  fetches and compares the durable parent, runs the documented archive comparator, creates the signed
+  two-root archive commit, pushes only that state ref, refetches it, and compares the observed remote
+  archive to the durable live root. Flat and folder roots pass. Five v1 guard failures, dirty bytes,
+  and a deliberately rejected pre-push terminal commit all stop before the archive move.
+- DONE: Close the exact validation holes: detect automatic task/process mutation anywhere in
+  authorized changed paths without proving policy by committed prose grep, and exercise the changed
+  legacy direct-commit route plus every supported authentication claim.
+  AC-4 now scans the complete added contract diff for automatic task/process mutation; an injected
+  `automatic_measurement_task(){ spacedock new ...; }` reds. AC-2 publishes both direct-route states
+  to the real origin: an unreachable commit reds before mutation, while a reachable `origin/main`
+  commit with lowercase `passed`, no v1 artifact, and preserved legacy ledger bytes archives and is
+  observed remotely. The terminal matrix falsifies flag, host state, mergedAt, ref, and artifact.
+- DONE: Raise executable diff coverage from 65.65% to at least the 85% ratchet, adversarially prove
+  each repaired guard goes red, rerun the focused and repository exits, and keep the product diff
+  within the original three paths.
+  RED: the repository-local changed-line/xtrace command
+  `bash docs/dev/artifacts/decoupled-ledger-contract-test.sh coverage` first measured
+  `174/241=72.20%`. GREEN at commit `7ad89b5d996d5e455475be648fbe4a0436f13640` is
+  `330/383=86.16%`. Mutations for automatic task creation, ledger re-coupling, authentication-guard
+  removal, the old ledger-gated baseline, and `unknown -> 0` all red; the unmutated combined suite
+  passes terminal-without-ledger, compatibility, archive-derive, scope, and mutation probes.
+  AC-3's `archive-derive` case still reproduces `14,2,18.81,n/a,88.17,pending:2026-08-07`, preserves
+  the archive tree, and rejects invented zero coverage when optional evidence is absent.
+- DONE: Run a fresh full-suite/ripple exit on the committed behavior.
+  `all`, Bash syntax, ShellCheck 0.11.0, `git diff --check`, Markdown fences, the Spacedock stage
+  parser, and the extracted historical ledger verifier pass. Repository exits pass
+  `dev-flow-work-context-check` 23/23, `release-metadata` 22/22, and `skill-frontmatter-lint` 12/12.
+  The fixture remains manual and adds no CI job, so no CI runtime margin changed. No OS/libc/locale/
+  clock-dependent behavior or CI-pinned governed file was introduced.
+- DONE: Preserve the original authority and scope boundaries.
+  The complete `origin/main...HEAD` diff remains exactly `docs/dev/README.md`,
+  `docs/dev/_mods/pr-merge.md`, and `docs/dev/artifacts/decoupled-ledger-contract-test.sh`; existing
+  CSV rows and archived evidence are read-only, with no daemon, scheduler, CI, ROADMAP, or task data.
+
+### Summary
+
+Cycle 2 closes validation's proof defects without changing an AC or authority edge. Commit
+`7ad89b5d996d5e455475be648fbe4a0436f13640` upgrades the focused contract from local simulation to
+remote-observed terminal/archive durability, adds direct-route and whole-diff mutation proof, and
+ratchets executable changed-line coverage above 85%. The isolated branch/worktree remains for FO
+integration; no worker PR, merge, push of the code branch, or cleanup was performed.
