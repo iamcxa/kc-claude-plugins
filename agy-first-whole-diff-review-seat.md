@@ -1566,41 +1566,65 @@ posting or merge authority entered the five-path diff.
   and post-authority context. It made no product edit, did not finish implementation, create a PR,
   post, merge, amend, or widen scope.
 
+### Completion checklist
+
+- DONE: Independently reproduced every active AC at exact product/base heads and attacked the
+  producer-only contract with all prior counterexamples plus fresh inconsistent inputs. Evidence:
+  `kc-pr-flow/scripts/review-runtime.test.sh:116-470` and
+  `kc-pr-flow/scripts/review-runtime.sh:2402-2568`.
+- DONE: Validated the five mapped paths with the required lenses, 88.17% executable diff coverage,
+  an isolated guard-breaking mutation, real regular-file CLI E2E, full/ripple/static checks, and
+  conservative CI-margin evidence. Scope anchors:
+  `kc-pr-flow/scripts/review-runtime.sh:2402-2568`,
+  `kc-pr-flow/scripts/review-runtime.test.sh:116-470`, and
+  `kc-pr-flow/reference/review-runtime.md:133-154`.
+- DONE: Ran the mandatory different-vendor `agy` review, discarded stale/timed-out/citation-invalid
+  rounds, verified the one cited regression claim against the base, and published the gate-ready
+  five-line evidence block with a PASS verdict. Citation-audit policy:
+  `docs/dev/README.md:984-990`.
+
 ### Acceptance criteria
 
-- **PASS: AC-1 — only producer output drives readiness.**
+- DONE: AC-1 — PASS — only producer output drives readiness.
   `review_runtime_decide_merge_readiness` accepts a closed observations file plus the existing
   producer's receipt, policy, repository, and exact-identity sources
-  (`review-runtime.sh:2402-2415`). A static reducer scan found exactly one
-  `review_runtime_rehydrate_interactive` call at `:2459-2461`. There is no caller decision option:
+  (`kc-pr-flow/scripts/review-runtime.sh:2402-2415`). A static reducer scan found exactly one
+  `review_runtime_rehydrate_interactive` call at
+  `kc-pr-flow/scripts/review-runtime.sh:2459-2461`. There is no caller decision option:
   direct `--input-file` and `--decision-file` probes both exited 2 as unknown options. The focused
   matrix returned **67/0**, including the nine coordinated stale-key, terminal-state, lane,
   timestamp, obligation, pointer, and evidence-verification source mutations at
-  `review-runtime.test.sh:308-364`; every mutation reached
+  `kc-pr-flow/scripts/review-runtime.test.sh:308-364`; every mutation reached
   `UNKNOWN/LOW/invalid-review-evidence`. A caller `review_decision` member was closed-schema invalid.
-- **PASS: AC-2 — exact-head truth table and canonical internal binding.**
+- DONE: AC-2 — PASS — exact-head truth table and canonical internal binding.
   The real producer positive returned `READY/HIGH/all-required-evidence-positive`; CI, test, and
   producer-derived review negatives returned `NOT_READY/HIGH`; pending, unknown, unavailable, or
   incomplete review evidence returned `UNKNOWN/LOW`; and all three observed/CI/test head mutations
   returned `UNKNOWN/LOW/head-or-identity-mismatch`
-  (`review-runtime.test.sh:163-305`). The reducer binds canonical observations and the exact
+  (`kc-pr-flow/scripts/review-runtime.test.sh:163-305`). The reducer binds canonical observations and the exact
   producer result in `kc-pr-flow.merge-readiness-binding/v1`
-  (`review-runtime.sh:2488-2496`). The independent regular-file E2E recomputed the same
+  (`kc-pr-flow/scripts/review-runtime.sh:2488-2496`). The independent regular-file E2E recomputed the same
   `input_sha256`, `db4df89d887b4a783dd38650fde6697c7273c6d4ed5557201f584a962de64045`.
-- **PASS: AC-3 — advisory and side-effect free.**
+- DONE: AC-3 — PASS — advisory and side-effect free.
   The real CLI output kept `advisory_only:true`; failing `gh`, `curl`, `wget`, `nc`, and `ssh`
   stubs recorded a zero-byte call ledger and the reducer contains zero prohibited command tokens.
   Unsafe-directory observations exited 2 with zero stdout. Local `git` remained intentionally
   available for producer evidence verification. Base/head blob IDs are identical for
   `kc-pr-flow/skills/kc-pr-review/SKILL.md`, `scripts/review-post.sh`, and
-  `scripts/review-post.test.sh`; the fresh unchanged post suite returned **156/0**.
-- **PASS: AC-4 — one bounded runtime cut.**
+  `scripts/review-post.test.sh`; the fresh unchanged post suite returned **156/0**. Authority and
+  ripple anchors: `kc-pr-flow/skills/kc-pr-review/SKILL.md:1723`,
+  `kc-pr-flow/scripts/review-post.test.sh:227`, and
+  `kc-pr-flow/scripts/review-runtime.sh:2402-2568`.
+- DONE: AC-4 — PASS — one bounded runtime cut.
   The exact five paths are the existing runtime, its existing test, and three plugin docs. The
   reducer contains one producer-call site and no second caller-decision grammar. No decision file,
   new executable, receipt/signature/state authority, model route, network fetch, daemon, repair
   loop, posting operation, merge operation, or cross-repo adoption entered the diff. Bash syntax,
   pinned ShellCheck v0.9.0, `git diff --check`, exact changed-path review, and protected-path blob
-  checks all exited 0.
+  checks all exited 0. Replacement and test anchors:
+  `kc-pr-flow/scripts/review-runtime.sh:2402-2568`,
+  `kc-pr-flow/scripts/review-runtime.test.sh:116-470`, and
+  `kc-pr-flow/reference/review-runtime.md:133-154`.
 
 ### Published-guarantee falsifiers
 
