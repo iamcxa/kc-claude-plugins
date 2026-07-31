@@ -1,13 +1,13 @@
 ---
 title: Decouple the measurement ledger from delivery terminalization
-status: validation
+status: backlog
 source: captain direction 2026-07-31 after EM merge-readiness closeout
 product: repo-platform
 sprint:
 started: 2026-07-31T10:22:20Z
 completed:
 verdict:
-worktree: .worktrees/spacedock-ensign-decouple-ledger-from-terminalization
+worktree:
 issue:
 pr:
 ledger_pr:
@@ -468,6 +468,8 @@ generic suite failure. Product files, branch, and worktree were preserved unchan
   (34%); AC unchanged
 - Cycle 2: REJECTED — validation re-review; surface 25m repair wall-clock vs estimate 90m
   (28%); AC unchanged
+- Cycle 3: PARKED — final validation; surface 14m final-recut wall-clock vs estimate 90m
+  (16%); AC unchanged; no cycle 4
 - Design reset: captain approved one final minimal re-cut on 2026-07-31 — retain AC-1 through AC-3,
   narrow AC-4 to an exact-current-diff property, remove the semantic denylist and self-excluding
   coverage machinery, and park without cycle 4 if the next validation rejects.
@@ -666,3 +668,22 @@ at `pr-merge.md:405` or product-ref check at `:412` left the suite green, so aut
 Final validation REJECTS and PARKS exact head `57ddb26b32e03a3e5f4136f603d2319cad3881a5`.
 The captain-narrowed exact-diff AC-4 and the honest 85% coverage ratchet both pass, as do all final
 regressions; the sole residual is the falsified every-auth-guard claim. No cycle 4; product untouched.
+
+## PARKED 2026-08-01 — the every-consumed-guard guarantee is false
+
+The captain's stop rule is applied without opening cycle 4 or a product PR. Preserve code commit
+`57ddb26b32e03a3e5f4136f603d2319cad3881a5`, validation state report
+`3291c8210c43374a2cce4d5695c2dc90932d11a6`, branch
+`spacedock-ensign/decouple-ledger-from-terminalization`, and physical worktree
+`.worktrees/spacedock-ensign-decouple-ledger-from-terminalization` as re-entry evidence. The active
+worktree binding is cleared when this entity returns to backlog; the physical worktree is retained.
+
+AC-1, AC-2, AC-3, the captain-narrowed exact-diff AC-4, and honest full-denominator coverage
+`370/430=86.05%` are independently proven. The one open material defect is
+`docs/dev/_mods/pr-merge.md:392-396`: it says the focused fixture falsifies every terminal guard the
+transaction consumes, but removing either the host-state guard or product-ref guard leaves the
+focused terminal test green. This exact head therefore does not authorize a PR.
+
+Re-entry requires a new captain decision and fresh validation from current `origin/main`. The new
+scope must either bound/delete the every-guard guarantee or restore behavioral proof for each named
+guard; it must not silently resume this correction loop or treat the parked head as accepted.
