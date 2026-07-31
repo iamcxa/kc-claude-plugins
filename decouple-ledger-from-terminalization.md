@@ -1,6 +1,6 @@
 ---
 title: Decouple the measurement ledger from delivery terminalization
-status: validation
+status: implementation
 source: captain direction 2026-07-31 after EM merge-readiness closeout
 product: repo-platform
 sprint:
@@ -455,3 +455,8 @@ Validation REJECTS exact product head `2d3985fc92523e49b6b513300811509043114406`
 implementation. The final regression exit still passed focused `all`, 23/23, 22/22, 12/12, ShellCheck,
 and `git diff --check`; the rejection is for falsified proof coverage and unsupported guarantees, not a
 generic suite failure. Product files, branch, and worktree were preserved unchanged.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — fresh validation; surface 31m implementation wall-clock vs estimate 90m
+  (34%); AC unchanged
