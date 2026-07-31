@@ -667,7 +667,7 @@ You MUST end your response with this exact structured block (the orchestrator pa
 
 ## Eval-Fallback Accounting
 
-Every dispatch run MUST track how many times the runner fell back to `{{browser_command}} eval` because a native selector command returned an unexpected result. This is the observability layer introduced in plan 001 (T2.1). Eval fallback REMOVED for native selectors (T2.2 landed). Banned Playwright forms also fail loud.
+Every dispatch run MUST track how many times the runner fell back to `{{browser_command}} eval` because a native selector command returned an unexpected result. This is the observability layer introduced in plan 001 (T2.1). Eval fallback REMOVED for native selectors (T2.2 landed). Banned forms also fail loud.
 
 ### Counter State
 
@@ -760,7 +760,7 @@ When a selector matches a NATIVE form — CSS attribute form (`[data-testid=...]
 - Return the explicit failure to the flow runner immediately.
 - Increment `eval_fallback_hits` as the failure counter (still tracked for observability) but do NOT execute the eval bypass.
 
-**Rule 2 — Banned Playwright forms → emit warning + fail loud.**
+**Rule 2 — Banned forms → emit warning + fail loud.**
 
 When a selector matches a BANNED form (`>> nth=N`, `has-text(`, or a `find role|text|testid|label ...` subcommand chain stored as a `selector:` value):
 - Emit a warning line: `⚠ banned-selector: <step-id> selector=<selector> form=<banned-pattern>`
@@ -810,7 +810,7 @@ These rules are non-negotiable. Violating them causes flaky or broken tests.
 11. **Multi-site flows**: The shared runtime always supplies `--app {{app}}`, which maps to the isolated browser session. Do not add a second `--session` flag.
 12. **Timeout values** in flow YAML are in seconds. Convert to milliseconds (`* 1000`) for `--timeout` flags.
 13. **Checkpoint best-effort**. `verify-external` steps execute via Bash/curl only. Complex checks needing MCP (Slack, database) → mark SKIP. For full verification, use `/e2e-walkthrough --verify` (main context, full tool access).
-14. **Eval fallback REMOVED for native selectors (T2.2 landed). Banned Playwright forms also fail loud.** When a native selector returns 0/false/not-found, return the explicit failure — do NOT fall back to eval. Banned forms (`>> nth=N`, `has-text(`, `find ...` as a selector value) must also fail loud with a warning. Use `--allow-eval-fallback` only for explicit debug investigation (rare opt-in). Always increment `eval_fallback_hits` on any fallback attempt, even under `--allow-eval-fallback`.
+14. **Eval fallback REMOVED for native selectors (T2.2 landed). Banned forms also fail loud.** When a native selector returns 0/false/not-found, return the explicit failure — do NOT fall back to eval. Banned forms (`>> nth=N`, `has-text(`, `find ...` as a selector value) must also fail loud with a warning. Use `--allow-eval-fallback` only for explicit debug investigation (rare opt-in). Always increment `eval_fallback_hits` on any fallback attempt, even under `--allow-eval-fallback`.
 
 ---
 

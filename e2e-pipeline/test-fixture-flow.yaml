@@ -5,12 +5,16 @@ description: |
   test-app mapping. Used by T3.1 integration smoke and as the in-tree example of
   post-001 selector grammar.
 
-  All selectors in the referenced mapping use the canonical native contract:
-  - [data-testid="<id>"]              (preferred — most stable)
-  - [role="<r>"][aria-label="<v>"]    (CSS attribute form for role-named elements)
-  - .Class:nth-of-type(N)             (replaces banned `>> nth=N`)
+  The forms below are a subset of the grammar, not the grammar. The authority for
+  what is permitted is CLAUDE.md § Selector Priority, not this description. This
+  flow exercises the CSS-attribute end of it:
+  - [data-testid="<id>"]              (priority 1 — most stable)
+  - [role="<r>"][aria-label="<v>"]    (priority 4 — only where a literal aria-label exists)
+  - .Class:nth-of-type(N)             (replaces the banned `>> nth=N` chord)
 
-  No banned Playwright forms (role=X[name=Y], >> nth=N, bare text=, has-text()).
+  It deliberately does not exercise `role=<r>[name="<v>"]` or `text=<v>`, which are
+  priorities 2 and 3 and are NOT banned. Carries none of the still-banned forms
+  (`>> nth=N`, `has-text(`, or a `find ...` subcommand stored as a selector value).
 
   Note: the runner resolves `mapping: test-app` to `.claude/e2e/mappings/test-app.yaml`
   per e2e-pipeline convention. This flow assumes captain has copied or symlinked
