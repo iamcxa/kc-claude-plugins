@@ -1,6 +1,6 @@
 ---
 title: Decouple the measurement ledger from delivery terminalization
-status: implementation
+status: validation
 source: captain direction 2026-07-31 after EM merge-readiness closeout
 product: repo-platform
 sprint:
