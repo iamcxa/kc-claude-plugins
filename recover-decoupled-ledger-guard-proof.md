@@ -1,6 +1,6 @@
 ---
 title: Recover the decoupled-ledger local guard proof
-status: implementation
+status: validation
 source: captain approval plus high-confidence Claude Science Officer EM narrow judgment on 2026-08-01; supersedes parked entity id 7rgdvsjypgmzk8wh03h3vst9 without altering it
 product: repo-platform
 sprint:
@@ -163,3 +163,70 @@ estimate plus 15-minute tolerance, with one dispatch. No implementation
 residual is known. Exactly one fresh independent whole-diff validation pass
 remains; no product/state push, PR, merge, parked-entity mutation, Carlove
 handoff, or worktree cleanup was performed.
+
+## Stage Report: validation
+
+- DONE: Re-anchored the clean product worktree at exact head
+  `2bd5a2386fa4c803e62d6adb32556c43c5bd93cd` against freshly fetched
+  `origin/main@1d6d0d02d4b0d6c84eac0813e6962c6774e652b7`; the base is a strict
+  ancestor.
+- DONE: Audited all 61 hunks across the three-path whole diff and reproduced
+  inherited AC-1 through AC-4 with real `spacedock 0.26.0 (contract 3)`.
+- DONE: Independently falsified each of the five local guards and the shared
+  refusal-path status-preservation assertion.
+- DONE: Re-measured every added executable Bash/Python statement with an
+  independent tracer and no executable exclusions or waivers.
+- DONE: Audited the absolute claims, state scope, exact changed paths, and
+  parked-entity byte identity.
+
+### Independent evidence
+
+- Product/base: clean exact head
+  `2bd5a2386fa4c803e62d6adb32556c43c5bd93cd`; fresh base
+  `1d6d0d02d4b0d6c84eac0813e6962c6774e652b7`; strict ancestry passed.
+- Whole diff: only `docs/dev/README.md`, `docs/dev/_mods/pr-merge.md`, and
+  `docs/dev/artifacts/decoupled-ledger-contract-test.sh`; 61 hunks; exact
+  scope hash
+  `23b51e52744cdc8fe5f1746838db0c42eaf62c72941dc6776791066ac1792f5c`.
+- Inherited behavior: `terminal-without-ledger`, `compatibility`,
+  `archive-derive`, and `scope` each exited 0 independently; a final fresh
+  `all` run also exited 0. The compatibility phase exercised all six ledger
+  forms plus reachable/unreachable direct-mode behavior.
+- Guard falsification: five scratch-only, syntax-checked marker mutations each
+  exited 1 at its named `guard accepted invalid local evidence` assertion for
+  `PRODUCT_AUTHENTICATED`, `PRODUCT_HOST_STATE`, `PRODUCT_MERGED_AT`,
+  `PRODUCT_REF`, and `PRODUCT_ARTIFACT_B64URL`.
+- State falsification: a separate direct refusal-path byte mutation exited 1
+  with `PRODUCT_AUTHENTICATED refusal changed task state`, proving the shared
+  status assertion detects drift.
+- Independent full-denominator coverage: Bash `388/433=89.61%`; all eight
+  Python heredocs `123/137=89.78%`; combined `511/570=89.65%`. The denominator
+  includes every added executable statement; no executable exclusion, waiver,
+  or implementation coverage helper was used.
+- Static checks: fixture, extracted terminal marker, and extracted archive
+  marker passed `bash -n`; fixture passed ShellCheck 0.11.0; `git diff --check`
+  and Markdown fence parity passed.
+- Absolute-claim audit: each new five-guard and status-preservation claim has
+  the red mutation above. Inherited non-authority, compatibility, byte-exact
+  archive, and exact-scope claims were exercised by the full fixture and whole
+  61-hunk audit. A fourth changed path or any task, daemon, CI, metric, or
+  product-authority hunk would falsify the scope claim; none exists.
+- Review lenses: correctness PASS/0 Material; security PASS/0 Material;
+  silent-failure PASS/0 Material; manifest/backward-compatibility PASS/0
+  Material. No type, concurrency, resource-lifecycle, CI, or runtime surface
+  changed in the bounded recovery commit.
+- E2E: the split-root, bare-origin fixture ran through real Spacedock 0.26.0
+  and all phases passed. Cross-model judgment remains pending for the separate
+  Claude Science Officer EM gate authorized after this evidence pass.
+- State isolation before this report: state head
+  `c9d3b732623ca6ed6ac5c171b260d1b8cecd3757`, remote state head
+  `e994be184b7f31ef9193959831112185b26f9f45`, and parked-entity blob
+  `0f88ef000d87862412232de3fedad18cbfca80c2`; only this new entity differed
+  from the remote/seed state.
+
+No Material finding was found in this bounded pass. The evidence is PASS-ready
+for the separate Claude Science Officer EM gate; this report does not set a
+verdict. Residual: the local matrix proves only the five enumerated local
+inputs. `authenticate_terminal_route` and `durable_archive` remain
+fixture-authored inherited routes, so this pass does not claim that the local
+matrix independently proves upstream authentication or durable archiving.
