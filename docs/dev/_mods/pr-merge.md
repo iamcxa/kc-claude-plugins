@@ -391,9 +391,13 @@ Run one self-contained holder durability transaction. Spacedock requires a
 separate setter to clear `mod-block`, so issue two setters back-to-back and
 then exactly one `state commit`. The function's authentication flag is local
 to the current hook invocation and consumes the result of the exact product
-checks above. The focused decoupling fixture falsifies every guard consumed by
-this function; the existing product-artifact/host reconciliation fixtures,
-not this flag alone, prove the upstream checks that are allowed to set it:
+checks above. The focused decoupling fixture independently exercises five
+local refusal conditions: `PRODUCT_AUTHENTICATED` other than `yes`,
+`PRODUCT_HOST_STATE` other than `MERGED`, empty `PRODUCT_MERGED_AT`,
+`PRODUCT_REF` unequal to the constructed product ref, and empty
+`PRODUCT_ARTIFACT_B64URL`. The existing product-artifact/host reconciliation
+fixtures, not these local checks, prove the upstream evidence allowed to set
+those values:
 
 ```bash
 # decoupled-terminal-transaction:start

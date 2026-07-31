@@ -461,18 +461,39 @@ terminal_without_ledger() {
   local contract_file="$TEST_ROOT/terminal-contract.sh"
   local digest
   local form
+  local guard
   local pre_push_hook
+  local valid_product_artifact
+  local valid_product_merged_at
+  local valid_product_ref
 
   extract_terminal_contract "$contract_file"
   extract_archive_contract "$archive_contract"
 
-  setup_fixture unauthenticated flat '' ''
-  PRODUCT_AUTHENTICATED=no
-  if run_terminal; then
-    fail 'terminalized without authenticated product evidence'
-  fi
-  grep -q '^status: validation$' "$STATE/$LIVE_INDEX" ||
-    fail 'unauthenticated product changed task state'
+  setup_fixture local-guard-matrix flat '' ''
+  valid_product_artifact=$PRODUCT_ARTIFACT_B64URL
+  valid_product_merged_at=$PRODUCT_MERGED_AT
+  valid_product_ref=$PRODUCT_REF
+  for guard in PRODUCT_AUTHENTICATED PRODUCT_HOST_STATE PRODUCT_MERGED_AT \
+    PRODUCT_REF PRODUCT_ARTIFACT_B64URL; do
+    PRODUCT_AUTHENTICATED=yes
+    PRODUCT_HOST_STATE=MERGED
+    PRODUCT_MERGED_AT=$valid_product_merged_at
+    PRODUCT_REF=$valid_product_ref
+    PRODUCT_ARTIFACT_B64URL=$valid_product_artifact
+    case "$guard" in
+      PRODUCT_AUTHENTICATED) PRODUCT_AUTHENTICATED=no ;;
+      PRODUCT_HOST_STATE) PRODUCT_HOST_STATE=CLOSED ;;
+      PRODUCT_MERGED_AT) PRODUCT_MERGED_AT= ;;
+      PRODUCT_REF) PRODUCT_REF=pr-merge:77:artifact-v1:mismatch ;;
+      PRODUCT_ARTIFACT_B64URL) PRODUCT_ARTIFACT_B64URL= ;;
+    esac
+    if run_terminal; then
+      fail "$guard guard accepted invalid local evidence"
+    fi
+    grep -q '^status: validation$' "$STATE/$LIVE_INDEX" ||
+      fail "$guard refusal changed task state"
+  done
 
   setup_fixture dirty-archive flat 'malformed ledger ref' 'opaque historical bytes'
   run_terminal
