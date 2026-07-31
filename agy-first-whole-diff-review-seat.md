@@ -1549,6 +1549,21 @@ caller-decision architectures: only observations and producer sources cross the 
 producer-inconsistent evidence fails closed, exact-head verdict ordering is preserved, and no
 posting or merge authority entered the five-path diff.
 
+- DONE: Independently reproduced every active criterion at exact product/base heads and attacked the
+  producer-only contract with all prior counterexamples plus fresh inconsistent inputs. AC-1 and
+  AC-2 evidence: `kc-pr-flow/scripts/review-runtime.test.sh:116-470` and
+  `kc-pr-flow/scripts/review-runtime.sh:2402-2568`.
+- DONE: Validated the five mapped paths with the required lenses, 88.17% executable diff coverage,
+  an isolated guard-breaking mutation, real regular-file CLI E2E, full/ripple/static checks, and
+  conservative CI-margin evidence. AC-3 and AC-4 scope anchors:
+  `kc-pr-flow/scripts/review-runtime.sh:2402-2568`,
+  `kc-pr-flow/scripts/review-runtime.test.sh:116-470`, and
+  `kc-pr-flow/reference/review-runtime.md:133-154`.
+- DONE: Ran the mandatory different-vendor `agy` review, discarded stale/timed-out/citation-invalid
+  rounds, verified the one cited regression claim against the base, and published the gate-ready
+  five-line evidence block with a PASS verdict. The review reconfirmed AC-1, AC-2, AC-3, and AC-4;
+  citation-audit policy: `docs/dev/README.md:984-990`.
+
 ### Exact head, scope, and fresh-review boundary
 
 - Product `HEAD`, its upstream, and the remote branch all equal
@@ -1565,23 +1580,6 @@ posting or merge authority entered the five-path diff.
 - The validator read the complete five-file change, the active reset AC, and the unchanged producer
   and post-authority context. It made no product edit, did not finish implementation, create a PR,
   post, merge, amend, or widen scope.
-
-### Completion checklist
-
-- DONE: Independently reproduced every active AC at exact product/base heads and attacked the
-  producer-only contract with all prior counterexamples plus fresh inconsistent inputs. Evidence:
-  `kc-pr-flow/scripts/review-runtime.test.sh:116-470` and
-  `kc-pr-flow/scripts/review-runtime.sh:2402-2568`.
-- DONE: Validated the five mapped paths with the required lenses, 88.17% executable diff coverage,
-  an isolated guard-breaking mutation, real regular-file CLI E2E, full/ripple/static checks, and
-  conservative CI-margin evidence. Scope anchors:
-  `kc-pr-flow/scripts/review-runtime.sh:2402-2568`,
-  `kc-pr-flow/scripts/review-runtime.test.sh:116-470`, and
-  `kc-pr-flow/reference/review-runtime.md:133-154`.
-- DONE: Ran the mandatory different-vendor `agy` review, discarded stale/timed-out/citation-invalid
-  rounds, verified the one cited regression claim against the base, and published the gate-ready
-  five-line evidence block with a PASS verdict. Citation-audit policy:
-  `docs/dev/README.md:984-990`.
 
 ### Acceptance criteria
 
