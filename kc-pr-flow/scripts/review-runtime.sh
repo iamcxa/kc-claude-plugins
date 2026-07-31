@@ -2,8 +2,8 @@
 # review-runtime.sh — append-only shadow receipt primitives for kc-pr-review.
 #
 # This file is both a source-safe function library and a small local CLI. It
-# deliberately owns no review verdict, confirmation, authorization, posting,
-# GitHub, resume, or garbage-collection behavior.
+# owns local evidence projections but no confirmation, authorization, posting,
+# GitHub, merge, resume, or garbage-collection behavior.
 
 review_runtime_sha256() {
   if command -v shasum >/dev/null 2>&1; then
@@ -2362,6 +2362,211 @@ review_runtime_rehydrate_interactive() (
     }'
 )
 
+review_runtime_merge_readiness_decision() {
+  local review_identity="$1"
+  local input_sha256="$2"
+  local verdict="$3"
+  local confidence="$4"
+  local reason_codes="$5"
+  jq -S -c -n \
+    --argjson review_identity "$review_identity" \
+    --argjson input_sha256 "$input_sha256" \
+    --arg verdict "$verdict" \
+    --arg confidence "$confidence" \
+    --argjson reason_codes "$reason_codes" '
+    {
+      schema:"kc-pr-flow.merge-readiness-decision/v1",
+      review_identity:$review_identity,
+      input_sha256:$input_sha256,
+      verdict:$verdict,
+      confidence:$confidence,
+      reason_codes:($reason_codes | unique | sort),
+      advisory_only:true
+    }'
+}
+
+review_runtime_merge_readiness_invalid() {
+  review_runtime_merge_readiness_decision \
+    'null' 'null' 'UNKNOWN' 'LOW' '["invalid-input"]'
+}
+
+review_runtime_merge_readiness_invalid_review() {
+  review_runtime_merge_readiness_decision \
+    'null' 'null' 'UNKNOWN' 'LOW' '["invalid-review-evidence"]'
+}
+
+# Pure landing projection over caller-supplied CI/test/head observations and
+# one successful in-process interactive producer result. The caller cannot
+# provide or select a review decision. This function performs no live freshness
+# lookup and grants no post or merge authority.
+review_runtime_decide_merge_readiness() (
+  local observations_file="$1" event_file="$2" policy_file="$3" repository_path="$4"
+  local repository="$5" pr_number="$6" base_sha="$7" head_sha="$8"
+  local config_hash="$9" review_key="${10}" run_id="${11}"
+  local snapshot_dir observations_snapshot observations duplicate_rc
+  local canonical_observations review_decision binding input_sha256
+  local review_identity reason_codes reason_count
+
+  review_runtime_require_jq || return
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  observations_snapshot="$snapshot_dir/merge-readiness-observations.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$observations_snapshot"' EXIT
+  review_runtime_snapshot_regular_file \
+    "$observations_file" "$observations_snapshot" 'merge readiness observations' 1048576 || return
+
+  observations="$(cat "$observations_snapshot")" || return 74
+  review_runtime_json_has_unique_members "$observations"
+  duplicate_rc=$?
+  case "$duplicate_rc" in
+    0) ;;
+    1 | 2)
+      review_runtime_merge_readiness_invalid
+      return 0
+      ;;
+    *) return "$duplicate_rc" ;;
+  esac
+  canonical_observations="$(jq -S -c . "$observations_snapshot" 2>/dev/null)" || {
+    review_runtime_merge_readiness_invalid
+    return 0
+  }
+
+  if ! jq -e '
+    def exact_keys($required):
+      ((keys - $required) | length) == 0 and
+      (($required - keys) | length) == 0;
+    def sha256: type == "string" and test("^[0-9a-f]{64}$");
+    def sha1: type == "string" and test("^[0-9a-f]{40}$");
+    def observation:
+      type == "object" and
+      exact_keys(["evidence_sha256","head_sha","required","status"]) and
+      (.required | type == "boolean") and
+      (.status == "PASS" or .status == "FAIL" or .status == "PENDING" or
+       .status == "UNKNOWN" or .status == "UNAVAILABLE" or
+       .status == "NOT_REQUIRED") and
+      (.head_sha | sha1) and (.evidence_sha256 | sha256) and
+      (if .status == "NOT_REQUIRED" then (.required | not) else true end);
+    type == "object" and
+    exact_keys(["ci","observed_head_sha","schema","tests"]) and
+    .schema == "kc-pr-flow.merge-readiness-observations/v1" and
+    (.observed_head_sha | sha1) and
+    (.ci | observation) and
+    (.tests | observation)
+  ' <<<"$canonical_observations" >/dev/null 2>&1; then
+    review_runtime_merge_readiness_invalid
+    return 0
+  fi
+
+  if ! review_decision="$(review_runtime_rehydrate_interactive \
+    "$event_file" "$repository" "$pr_number" "$base_sha" "$head_sha" \
+    "$config_hash" "$review_key" "$run_id" "$policy_file" "$repository_path")"; then
+    review_runtime_merge_readiness_invalid_review
+    return 0
+  fi
+  review_decision="$(jq -S -c . <<<"$review_decision" 2>/dev/null)" || {
+    review_runtime_merge_readiness_invalid_review
+    return 0
+  }
+  if ! jq -e \
+    --arg repository "$repository" --argjson pr_number "$pr_number" \
+    --arg base_sha "$base_sha" --arg head_sha "$head_sha" \
+    --arg config_hash "$config_hash" --arg review_key "$review_key" --arg run_id "$run_id" '
+      .schema == "kc-pr-flow.interactive-collation-decision/v1" and
+      .review_identity == {
+        repository:$repository,
+        pr_number:$pr_number,
+        base_sha:$base_sha,
+        head_sha:$head_sha,
+        config_hash:$config_hash,
+        review_key:$review_key,
+        run_id:$run_id
+      }
+    ' <<<"$review_decision" >/dev/null 2>&1; then
+    review_runtime_merge_readiness_invalid_review
+    return 0
+  fi
+
+  binding="$(jq -S -c -n --argjson observations "$canonical_observations" \
+    --argjson review_decision "$review_decision" '
+    {
+      schema:"kc-pr-flow.merge-readiness-binding/v1",
+      observations:$observations,
+      review_decision:$review_decision
+    }')" || return
+  input_sha256="$(printf '%s' "$binding" | review_runtime_sha256)" || return
+  review_identity="$(jq -S -c '.review_identity' <<<"$review_decision")" || return
+
+  if ! jq -e '
+    .observed_head_sha == $identity.head_sha and
+    .ci.head_sha == $identity.head_sha and
+    .tests.head_sha == $identity.head_sha
+  ' --argjson identity "$review_identity" <<<"$canonical_observations" >/dev/null 2>&1; then
+    review_runtime_merge_readiness_decision \
+      "$review_identity" "\"$input_sha256\"" 'UNKNOWN' 'LOW' \
+      '["head-or-identity-mismatch"]'
+    return 0
+  fi
+
+  reason_codes="$(jq -c '
+    [
+      if (.ci.required and .ci.status == "FAIL") then "ci-failed" else empty end,
+      if (.tests.required and .tests.status == "FAIL") then "tests-failed" else empty end,
+      if (($review_decision.confirmed_blocker_refs | length) > 0 or
+          $review_decision.effective_event == "REQUEST_CHANGES")
+        then "review-blocked" else empty end
+    ] | unique | sort
+  ' --argjson review_decision "$review_decision" <<<"$canonical_observations")" || return
+  reason_count="$(jq -r 'length' <<<"$reason_codes")" || return
+  if [ "$reason_count" -gt 0 ]; then
+    review_runtime_merge_readiness_decision \
+      "$review_identity" "\"$input_sha256\"" 'NOT_READY' 'HIGH' "$reason_codes"
+    return 0
+  fi
+
+  reason_codes="$(jq -c '
+    [
+      if (.ci.required and
+          (.ci.status == "PENDING" or .ci.status == "UNKNOWN" or
+           .ci.status == "UNAVAILABLE"))
+        then "ci-incomplete" else empty end,
+      if (.tests.required and
+          (.tests.status == "PENDING" or .tests.status == "UNKNOWN" or
+           .tests.status == "UNAVAILABLE"))
+        then "tests-incomplete" else empty end,
+      if ($review_decision.coverage != "complete" or
+          ($review_decision.approve_eligible | not) or
+          $review_decision.effective_event != "APPROVE")
+        then "review-incomplete" else empty end
+    ] | unique | sort
+  ' --argjson review_decision "$review_decision" <<<"$canonical_observations")" || return
+  reason_count="$(jq -r 'length' <<<"$reason_codes")" || return
+  if [ "$reason_count" -gt 0 ]; then
+    review_runtime_merge_readiness_decision \
+      "$review_identity" "\"$input_sha256\"" 'UNKNOWN' 'LOW' "$reason_codes"
+    return 0
+  fi
+
+  if jq -e '
+    ((.ci.required and .ci.status == "PASS") or
+     ((.ci.required | not) and .ci.status == "NOT_REQUIRED")) and
+    ((.tests.required and .tests.status == "PASS") or
+     ((.tests.required | not) and .tests.status == "NOT_REQUIRED")) and
+    $review_decision.coverage == "complete" and
+    $review_decision.approve_eligible and
+    $review_decision.effective_event == "APPROVE" and
+    ($review_decision.confirmed_blocker_refs | length) == 0 and
+    ($review_decision.capability_gap_refs | length) == 0
+  ' --argjson review_decision "$review_decision" <<<"$canonical_observations" >/dev/null 2>&1; then
+    review_runtime_merge_readiness_decision \
+      "$review_identity" "\"$input_sha256\"" 'READY' 'HIGH' \
+      '["all-required-evidence-positive"]'
+    return 0
+  fi
+
+  review_runtime_merge_readiness_decision \
+    "$review_identity" "\"$input_sha256\"" 'UNKNOWN' 'LOW' \
+    '["inconsistent-input"]'
+)
+
 review_runtime_shadow_status() {
   local status="$1"
   local reason="$2"
@@ -2812,6 +3017,50 @@ review_runtime_main_rehydrate_interactive() {
     "$base_sha" "$head_sha" "$config_hash" "$review_key" "$run_id" "$policy_file" "$repository_path"
 }
 
+review_runtime_main_decide_merge_readiness() {
+  local observations_file='' event_file='' policy_file='' repository_path=''
+  local repository='' pr_number='' base_sha='' head_sha=''
+  local config_hash='' review_key='' run_id=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --observations-file | --event-file | --policy-file | --repo-worktree | --repo | --pr | --base | --head | --config-hash | --review-key | --run-id)
+        [ "$#" -ge 2 ] || {
+          printf 'review-runtime: missing value for %s\n' "$1" >&2
+          return 2
+        }
+        case "$1" in
+          --observations-file) observations_file="$2" ;;
+          --event-file) event_file="$2" ;;
+          --policy-file) policy_file="$2" ;;
+          --repo-worktree) repository_path="$2" ;;
+          --repo) repository="$2" ;;
+          --pr) pr_number="$2" ;;
+          --base) base_sha="$2" ;;
+          --head) head_sha="$2" ;;
+          --config-hash) config_hash="$2" ;;
+          --review-key) review_key="$2" ;;
+          --run-id) run_id="$2" ;;
+        esac
+        shift 2
+        ;;
+      *)
+        printf 'review-runtime: unknown decide-merge-readiness option: %s\n' "$1" >&2
+        return 2
+        ;;
+    esac
+  done
+  if [ -z "$observations_file" ] || [ -z "$event_file" ] || [ -z "$policy_file" ] ||
+    [ -z "$repository_path" ] || [ -z "$repository" ] || [ -z "$pr_number" ] ||
+    [ -z "$base_sha" ] || [ -z "$head_sha" ] || [ -z "$config_hash" ] ||
+    [ -z "$review_key" ] || [ -z "$run_id" ]; then
+    printf 'review-runtime: decide-merge-readiness requires observations, producer sources, worktree, and exact identity\n' >&2
+    return 2
+  fi
+  review_runtime_decide_merge_readiness "$observations_file" "$event_file" "$policy_file" \
+    "$repository_path" "$repository" "$pr_number" "$base_sha" "$head_sha" \
+    "$config_hash" "$review_key" "$run_id"
+}
+
 review_runtime_main_shadow() {
   local enabled="${KC_PR_FLOW_REVIEW_SHADOW:-}"
   local head_check_status='' live_head='' observation_file=''
@@ -2993,7 +3242,7 @@ review_runtime_main_compare_usage() {
 }
 
 review_runtime_usage() {
-  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
+  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
 }
 
 review_runtime_main_start() {
@@ -3042,6 +3291,7 @@ review_runtime_main() {
     validate | append | replay | show) review_runtime_main_event_file "$command" "$@" ;;
     observe) review_runtime_main_observe "$@" ;;
     rehydrate-interactive) review_runtime_main_rehydrate_interactive "$@" ;;
+    decide-merge-readiness) review_runtime_main_decide_merge_readiness "$@" ;;
     shadow) review_runtime_main_shadow "$@" ;;
     verify-evidence) review_runtime_main_verify_evidence "$@" ;;
     compare-usage) review_runtime_main_compare_usage "$@" ;;

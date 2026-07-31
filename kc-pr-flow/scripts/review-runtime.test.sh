@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Unit tests for the append-only kc-pr-review shadow receipt runtime.
-# shellcheck disable=SC2002,SC2030,SC2031,SC2317,SC2329 # Intentional stdin probes, subshells, and dynamic function overrides across supported ShellCheck versions.
+# shellcheck disable=SC2002,SC2016,SC2030,SC2031,SC2317,SC2329 # Intentional literal stubs, stdin probes, subshells, and dynamic function overrides across supported ShellCheck versions.
 
 set -uo pipefail
 
@@ -25,7 +25,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision]\n' "$0" >&2
+    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -113,6 +113,363 @@ CONFIG_HASH="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 OCCURRED_AT="2026-07-22T00:00:00Z"
 EXPECTED_REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
 
+run_merge_readiness_tests() {
+  local receipt="$1" ready_policy="$2" blocked_policy="$3" repo="$4"
+  local base_sha="$5" head_sha="$6" config_hash="$7" review_key="$8" run_id="$9"
+  local identity="${10}" producer_decision="${11}"
+  local observations input_file output stderr_file rc expected_hash binding
+  local stub_dir call_ledger stub_command status surface mutated reason invalid_policy
+  local other_sha duplicate_input malformed_input noncanonical_input incomplete_policy
+  local legacy_input legacy_file legacy_mutated legacy_case
+
+  observations="$(jq -S -c -n --arg head_sha "$head_sha" '
+    {
+      schema:"kc-pr-flow.merge-readiness-observations/v1",
+      observed_head_sha:$head_sha,
+      ci:{
+        required:true,status:"PASS",head_sha:$head_sha,
+        evidence_sha256:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      tests:{
+        required:true,status:"PASS",head_sha:$head_sha,
+        evidence_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      }
+    }')"
+
+  stub_dir="$TEST_INPUT_ROOT/merge-readiness-stubs"
+  call_ledger="$TEST_INPUT_ROOT/merge-readiness-call-ledger"
+  mkdir -p "$stub_dir"
+  : >"$call_ledger"
+  for stub_command in gh curl wget nc ssh; do
+    printf '%s\n' \
+      '#!/bin/sh' \
+      'printf "%s\n" "$(basename "$0") $*" >>"$MERGE_READINESS_CALL_LEDGER"' \
+      'exit 97' >"$stub_dir/$stub_command"
+    chmod +x "$stub_dir/$stub_command"
+  done
+  export MERGE_READINESS_CALL_LEDGER="$call_ledger"
+
+  input_file="$TEST_INPUT_ROOT/merge-readiness-observations.json"
+  stderr_file="$TEST_INPUT_ROOT/merge-readiness-positive.stderr"
+  printf '%s\n' "$observations" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --observations-file "$input_file" --event-file "$receipt" \
+    --policy-file "$ready_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+    --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id" \
+    2>"$stderr_file")"
+  rc=$?
+  assert_eq "observation-only decide-merge-readiness command exists" "0" "$rc"
+  assert_eq "real producer positive exact-head evidence is READY" "READY" \
+    "$(jq -r '.verdict // empty' <<<"$output" 2>/dev/null)"
+  assert_eq "real producer positive exact-head confidence is HIGH" "HIGH" \
+    "$(jq -r '.confidence // empty' <<<"$output" 2>/dev/null)"
+  assert_eq "positive decision has one canonical reason" "all-required-evidence-positive" \
+    "$(jq -r '.reason_codes | join(",")' <<<"$output" 2>/dev/null)"
+  assert_eq "merge readiness has the closed output schema" \
+    "advisory_only,confidence,input_sha256,reason_codes,review_identity,schema,verdict" \
+    "$(jq -r 'keys | sort | join(",")' <<<"$output" 2>/dev/null)"
+  assert_eq "merge readiness decision is advisory only" "true" \
+    "$(jq -r '.advisory_only' <<<"$output" 2>/dev/null)"
+  assert_eq "merge readiness retains exact review identity" "$identity" \
+    "$(jq -S -c '.review_identity' <<<"$output" 2>/dev/null)"
+  binding="$(jq -S -c -n --argjson observations "$observations" \
+    --argjson review_decision "$producer_decision" '
+    {
+      schema:"kc-pr-flow.merge-readiness-binding/v1",
+      observations:$observations,
+      review_decision:$review_decision
+    }')"
+  expected_hash="$(sha256_text "$binding")"
+  assert_eq "merge readiness binds observations and exact producer decision" "$expected_hash" \
+    "$(jq -r '.input_sha256' <<<"$output" 2>/dev/null)"
+
+  noncanonical_input="$(jq '
+    {
+      tests:.tests,
+      ci:.ci,
+      observed_head_sha:.observed_head_sha,
+      schema:.schema
+    }' <<<"$observations")"
+  printf '%s\n' "$noncanonical_input" >"$input_file"
+  assert_eq "precondition: reordered pretty input has the same canonical value" \
+    "$observations" "$(jq -S -c . "$input_file")"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --observations-file "$input_file" --event-file "$receipt" \
+    --policy-file "$ready_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+    --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+  assert_eq "input binding normalizes key order and whitespace" "$expected_hash" \
+    "$(jq -r '.input_sha256' <<<"$output" 2>/dev/null)"
+
+  mutated="$(jq -S -c '.ci.required=false | .ci.status="NOT_REQUIRED" |
+    .tests.required=false | .tests.status="NOT_REQUIRED"' <<<"$observations")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --observations-file "$input_file" --event-file "$receipt" \
+    --policy-file "$ready_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+    --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+  assert_eq "non-required evidence is positive only when explicitly NOT_REQUIRED" \
+    "READY|HIGH|all-required-evidence-positive" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  for surface in ci tests; do
+    mutated="$(jq -S -c --arg surface "$surface" \
+      '.[$surface].status="FAIL"' <<<"$observations")"
+    printf '%s\n' "$mutated" >"$input_file"
+    output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+      --observations-file "$input_file" --event-file "$receipt" \
+      --policy-file "$ready_policy" --repo-worktree "$repo" \
+      --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+      --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+    assert_eq "$surface failure is decisively NOT_READY" "NOT_READY|HIGH|$surface-failed" \
+      "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+  done
+
+  printf '%s\n' "$observations" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --observations-file "$input_file" --event-file "$receipt" \
+    --policy-file "$blocked_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+    --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+  assert_eq "producer-derived confirmed review blocker is decisively NOT_READY" \
+    "NOT_READY|HIGH|review-blocked" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  mutated="$(jq -S -c '.ci.status="FAIL" | .tests.status="FAIL"' <<<"$observations")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --observations-file "$input_file" --event-file "$receipt" \
+    --policy-file "$blocked_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+    --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+  assert_eq "multiple decisive negatives emit sorted unique reasons" \
+    "ci-failed,review-blocked,tests-failed" \
+    "$(jq -r '.reason_codes | join(",")' <<<"$output")"
+
+  mutated="$(jq -S -c '.ci.status="FAIL" | .tests.status="PENDING"' <<<"$observations")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --observations-file "$input_file" --event-file "$receipt" \
+    --policy-file "$ready_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+    --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+  assert_eq "an exact-head negative outranks another pending signal" \
+    "NOT_READY|HIGH|ci-failed" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  for surface in ci tests; do
+    for status in PENDING UNKNOWN UNAVAILABLE; do
+      mutated="$(jq -S -c --arg surface "$surface" --arg status "$status" \
+        '.[$surface].status=$status' <<<"$observations")"
+      printf '%s\n' "$mutated" >"$input_file"
+      output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+        --observations-file "$input_file" --event-file "$receipt" \
+        --policy-file "$ready_policy" --repo-worktree "$repo" \
+        --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+        --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+      assert_eq "$surface $status is incomplete rather than positive" \
+        "UNKNOWN|LOW|$surface-incomplete" \
+        "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+    done
+  done
+
+  incomplete_policy="$TEST_INPUT_ROOT/merge-readiness-incomplete-policy.json"
+  jq -S -c '.confirmed_blocker_refs=[]' "$blocked_policy" >"$incomplete_policy"
+  printf '%s\n' "$observations" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --observations-file "$input_file" --event-file "$receipt" \
+    --policy-file "$incomplete_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+    --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+  assert_eq "producer-derived incomplete typed review is UNKNOWN" "UNKNOWN|LOW|review-incomplete" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  other_sha="1111111111111111111111111111111111111111"
+  for surface in observed_head_sha ci tests; do
+    if [ "$surface" = observed_head_sha ]; then
+      mutated="$(jq -S -c --arg sha "$other_sha" '.observed_head_sha=$sha' <<<"$observations")"
+    else
+      mutated="$(jq -S -c --arg surface "$surface" --arg sha "$other_sha" \
+        '.[$surface].head_sha=$sha' <<<"$observations")"
+    fi
+    printf '%s\n' "$mutated" >"$input_file"
+    output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+      --observations-file "$input_file" --event-file "$receipt" \
+      --policy-file "$ready_policy" --repo-worktree "$repo" \
+      --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+      --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+    assert_eq "$surface head mutation is UNKNOWN" \
+      "UNKNOWN|LOW|head-or-identity-mismatch" \
+      "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+  done
+
+  for reason in coordinated-stale-key unsatisfied-clean satisfied-incomplete duplicate-lane \
+    invalid-recorded-at empty-obligations malformed-pointer pointer-identity-drift \
+    evidence-verification-failure; do
+    invalid_policy="$TEST_INPUT_ROOT/merge-readiness-$reason-policy.json"
+    case "$reason" in
+      coordinated-stale-key)
+        jq -S -c '.review_identity.repository="other/repo"' "$ready_policy" >"$invalid_policy"
+        ;;
+      unsatisfied-clean)
+        jq -S -c '.obligations[] |= if .capability=="required-gap" then
+          .fallback={status:"unavailable",result:null} |
+          .terminal_state="clean"
+          else . end' "$ready_policy" >"$invalid_policy"
+        ;;
+      satisfied-incomplete)
+        jq -S -c '.obligations[] |= if .capability=="types" then
+          .terminal_state="incomplete_required"
+          else . end' "$ready_policy" >"$invalid_policy"
+        ;;
+      duplicate-lane)
+        jq -S -c '.obligations[] |= if .capability=="types" then
+          .adapter_attempts[1].lane_result_ref=.adapter_attempts[0].lane_result_ref
+          else . end' "$ready_policy" >"$invalid_policy"
+        ;;
+      invalid-recorded-at)
+        jq -S -c '.obligations[] |= if .capability=="manual-clean" then
+          .fallback.result.recorded_at="2026-99-99T99:99:99Z"
+          else . end' "$ready_policy" >"$invalid_policy"
+        ;;
+      empty-obligations)
+        jq -S -c '.obligations=[]' "$ready_policy" >"$invalid_policy"
+        ;;
+      malformed-pointer)
+        jq -S -c '.obligations[] |= if .capability=="manual-clean" then
+          .fallback.result.evidence[0].unexpected=true
+          else . end' "$ready_policy" >"$invalid_policy"
+        ;;
+      pointer-identity-drift)
+        jq -S -c --arg sha "$other_sha" '.obligations[] |= if .capability=="manual-clean" then
+          .fallback.result.evidence[0].head_sha=$sha
+          else . end' "$ready_policy" >"$invalid_policy"
+        ;;
+      evidence-verification-failure)
+        jq -S -c '.obligations[] |= if .capability=="manual-clean" then
+          .fallback.result.evidence[0].content_sha256=
+            "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          else . end' "$ready_policy" >"$invalid_policy"
+        ;;
+    esac
+    printf '%s\n' "$observations" >"$input_file"
+    output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+      --observations-file "$input_file" --event-file "$receipt" \
+      --policy-file "$invalid_policy" --repo-worktree "$repo" \
+      --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+      --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+    assert_eq "producer-inconsistent $reason source fails closed" \
+      "UNKNOWN|LOW|invalid-review-evidence" \
+      "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+  done
+
+  for reason in unknown-key malformed-hash invalid-required-status caller-decision-member unknown-status; do
+    case "$reason" in
+      unknown-key) mutated="$(jq -S -c '.unexpected=true' <<<"$observations")" ;;
+      malformed-hash) mutated="$(jq -S -c '.ci.evidence_sha256="bad"' <<<"$observations")" ;;
+      invalid-required-status) mutated="$(jq -S -c '.ci.status="NOT_REQUIRED"' <<<"$observations")" ;;
+      caller-decision-member) mutated="$(jq -S -c --argjson decision "$producer_decision" \
+        '.review_decision=$decision' <<<"$observations")" ;;
+      unknown-status) mutated="$(jq -S -c '.tests.status="GREEN"' <<<"$observations")" ;;
+    esac
+    printf '%s\n' "$mutated" >"$input_file"
+    output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+      --observations-file "$input_file" --event-file "$receipt" \
+      --policy-file "$ready_policy" --repo-worktree "$repo" \
+      --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+      --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+    assert_eq "$reason fails closed as invalid input" "UNKNOWN|LOW|invalid-input" \
+      "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+    assert_eq "$reason cannot retain an unvalidated identity" "null|null" \
+      "$(jq -r '[.review_identity,.input_sha256] | map(tostring) | join("|")' <<<"$output")"
+  done
+
+  duplicate_input="${observations#\{}"
+  duplicate_input="{\"schema\":\"kc-pr-flow.merge-readiness-observations/v1\",$duplicate_input"
+  printf '%s\n' "$duplicate_input" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --observations-file "$input_file" --event-file "$receipt" \
+    --policy-file "$ready_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+    --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+  assert_eq "duplicate JSON member fails closed" "UNKNOWN|LOW|invalid-input" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  malformed_input='{'
+  printf '%s\n' "$malformed_input" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --observations-file "$input_file" --event-file "$receipt" \
+    --policy-file "$ready_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+    --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+  assert_eq "malformed bounded JSON fails closed" "UNKNOWN|LOW|invalid-input" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  mutated="$(jq -S -c '.ci.required=false' <<<"$observations")"
+  printf '%s\n' "$mutated" >"$input_file"
+  output="$(PATH="$stub_dir:$PATH" bash "$RUNTIME" decide-merge-readiness \
+    --observations-file "$input_file" --event-file "$receipt" \
+    --policy-file "$ready_policy" --repo-worktree "$repo" \
+    --repo "$REPOSITORY" --pr "$PR_NUMBER" --base "$base_sha" --head "$head_sha" \
+    --config-hash "$config_hash" --review-key "$review_key" --run-id "$run_id")"
+  assert_eq "otherwise unreachable non-required PASS is inconsistent" \
+    "UNKNOWN|LOW|inconsistent-input" \
+    "$(jq -r '[.verdict,.confidence,(.reason_codes|join(","))] | join("|")' <<<"$output")"
+
+  legacy_input="$(jq -S -c -n --argjson identity "$identity" \
+    --argjson decision "$producer_decision" --arg head_sha "$head_sha" '
+    {
+      schema:"kc-pr-flow.merge-readiness-input/v1",
+      review_identity:$identity,
+      observed_head_sha:$head_sha,
+      ci:{
+        required:true,status:"PASS",head_sha:$head_sha,
+        evidence_sha256:"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      tests:{
+        required:true,status:"PASS",head_sha:$head_sha,
+        evidence_sha256:"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      review_decision:$decision
+    }')"
+  legacy_file="$TEST_INPUT_ROOT/merge-readiness-legacy-input.json"
+  for legacy_case in duplicate-lane invalid-recorded-at empty-capabilities; do
+    case "$legacy_case" in
+      duplicate-lane)
+        legacy_mutated="$(jq -S -c '
+          .review_decision.capabilities[] |= if .capability=="types" then
+            .adapter_attempts[1].lane_result_ref=.adapter_attempts[0].lane_result_ref
+            else . end' <<<"$legacy_input")"
+        ;;
+      invalid-recorded-at)
+        legacy_mutated="$(jq -S -c '
+          .review_decision.capabilities[] |= if .capability=="manual-clean" then
+            .fallback.result.recorded_at="2026-99-99T99:99:99Z"
+            else . end' <<<"$legacy_input")"
+        ;;
+      empty-capabilities)
+        legacy_mutated="$(jq -S -c '
+          .review_decision.capabilities=[] |
+          .review_decision.capability_gap_refs=[] |
+          .review_decision.confirmation_input.gap_refs=[]
+        ' <<<"$legacy_input")"
+        ;;
+    esac
+    printf '%s\n' "$legacy_mutated" >"$legacy_file"
+    output="$(bash "$RUNTIME" decide-merge-readiness --input-file "$legacy_file" 2>/dev/null)"
+    rc=$?
+    assert_eq "legacy caller decision $legacy_case is refused at the command boundary" "2" "$rc"
+  done
+
+  # Regression-only transport invariant, not behavior RED evidence: the old
+  # adapter also performed no transport calls. Local git is intentionally not
+  # stubbed because the reused producer verifies evidence in the supplied repo.
+  assert_eq "merge-readiness CLI performs no network, GitHub, post, or merge call" \
+    "" "$(cat "$call_ledger")"
+}
+
 run_interactive_decision_tests() {
   local receipt policy repo output rc before_hash after_hash
   local measurement_target measurement receipt_content receipt_id
@@ -124,6 +481,8 @@ run_interactive_decision_tests() {
   local interactive_head interactive_base interactive_key identity manual_clean manual_na review_config
   local CONFIG_HASH
   local bad_policy bad_receipt mutated identity_case bad_repo bad_pr bad_base bad_head bad_config bad_key bad_run
+  local mode merge_policy merge_manual merge_decision
+  mode="${1:-full}"
   receipt="$TEST_INPUT_ROOT/interactive-terminal.jsonl"
   policy="$TEST_INPUT_ROOT/interactive-policy.json"
   repo="$TEST_INPUT_ROOT/interactive-repo"
@@ -289,6 +648,32 @@ run_interactive_decision_tests() {
   after_hash="$(sha256_text "$(cat "$receipt")")"
   assert_eq "rehydration never appends or rewrites the receipt" "$before_hash" "$after_hash"
 
+  if [ "$mode" = 'merge-positive-only' ]; then
+    merge_policy="$TEST_INPUT_ROOT/interactive-merge-ready-policy.json"
+    merge_manual="$(jq -S -c '.capability="required-gap"' <<<"$manual_clean")"
+    jq -S -c --argjson manual "$merge_manual" '
+      .confirmed_blocker_refs=[] |
+      .obligations[] |= if .capability=="required-gap" then
+        .fallback={status:"provided",result:$manual} |
+        .terminal_state="clean"
+      else . end
+    ' "$policy" >"$merge_policy"
+    merge_decision="$(bash "$RUNTIME" rehydrate-interactive \
+      --event-file "$receipt" --policy-file "$merge_policy" --repo-worktree "$repo" \
+      --repo "$REPOSITORY" --pr "$PR_NUMBER" \
+      --base "$interactive_base" --head "$interactive_head" \
+      --config-hash "$CONFIG_HASH" --review-key "$interactive_key" \
+      --run-id "$run_id" 2>&1)"
+    rc=$?
+    # Arrangement-only precondition: it proves the readiness matrix begins with
+    # a successful real producer result and is not behavior RED evidence.
+    assert_eq "precondition: merge-ready fixture is produced by terminal rehydration" "0" "$rc"
+    run_merge_readiness_tests "$receipt" "$merge_policy" "$policy" "$repo" \
+      "$interactive_base" "$interactive_head" "$CONFIG_HASH" "$interactive_key" \
+      "$run_id" "$identity" "$merge_decision"
+    return
+  fi
+
   measurement_target="$TEST_INPUT_ROOT/interactive-measurement-target.json"
   control_file="$TEST_INPUT_ROOT/interactive-full-review-control.json"
   receipt_content="$(review_runtime_sha256 <"$receipt")"
@@ -451,6 +836,19 @@ run_interactive_decision_tests() {
     assert_eq "$forbidden_command remains outside runtime authority" "2" "$?"
   done
 }
+
+if [ "$CASE_FILTER" = 'merge-readiness' ]; then
+  run_interactive_decision_tests merge-positive-only
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit
+fi
+
+# Keep the contract, including a real rehydrated producer fixture, in the
+# default CI run as well as the focused diagnostic case above.
+if [ "$CASE_FILTER" = 'all' ]; then
+  run_interactive_decision_tests merge-positive-only
+fi
 
 if [ "$CASE_FILTER" = 'interactive-decision' ]; then
   run_interactive_decision_tests
