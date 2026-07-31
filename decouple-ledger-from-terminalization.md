@@ -1,6 +1,6 @@
 ---
 title: Decouple the measurement ledger from delivery terminalization
-status: validation
+status: implementation
 source: captain direction 2026-07-31 after EM merge-readiness closeout
 product: repo-platform
 sprint:
@@ -233,18 +233,21 @@ task state.
 Falsified by: measurement code calling a state setter/entity creator, inventing a metric, or treating
 an importer failure as non-terminal delivery.
 
-**AC-4 — The change stays inside the declared repo-platform boundary.**
+**AC-4 — This exact change stays inside the declared repo-platform boundary.**
 
 The landed diff changes only the dev-flow lifecycle docs and focused local fixture; it adds no daemon,
 CI/workflow trigger, generic analytics store, automatic task creation, or universal token/diff-coverage
-gate.
+gate. This is a property of the exact reviewed diff, not a promise that a regex can classify arbitrary
+future shell or prose; a later edit must establish the property again from its own diff.
 
 Verified by: `git diff --name-only origin/main...HEAD` plus
-`bash docs/dev/artifacts/decoupled-ledger-contract-test.sh scope` checks the allowed paths, scans for
-lifecycle mutation and workflow/daemon additions, and exercises no-network/no-task-creation stubs.
+`bash docs/dev/artifacts/decoupled-ledger-contract-test.sh scope` checks the exact allowed paths and
+absence of new runtime/workflow files; validation audits every added hunk in those paths for an actual
+task/entity creator, state mutation outside product terminalization, daemon, scheduler, CI trigger, or
+mandatory optional-metric gate. No semantic shell/prose denylist is acceptance evidence.
 
-Falsified by: any new runtime or automatic process mutation, or any wording that makes optional
-metrics a delivery gate.
+Falsified by: any changed path outside the three-file boundary, any reviewed added hunk that performs
+runtime or automatic process mutation, or any wording that makes optional metrics a delivery gate.
 
 ## Test plan
 
@@ -260,6 +263,9 @@ metrics a delivery gate.
    exact post-archive derivation, honest unknowns, and no archived-state mutation during upsert.
 5. Run `spacedock status --workflow-dir docs/dev --read 7rgdvsjypgmzk8wh03h3vst9 --ac-scan`,
    `git diff --check`, the focused fixture, and the existing ledger verifier fixture.
+6. Delete the tracked self-measuring coverage harness. Measure the complete added executable fixture,
+   including helper and heredoc bodies, with a reproducible out-of-tree command; meet the 85% ratchet
+   without exclusions, or simplify/delete uncovered machinery until it does.
 
 E2E-first is satisfied at the relevant surface by the real Spacedock CLI over a disposable split-root
 workflow. Browser/full-stack E2E is skipped because this is a docs/execution-contract change with no
@@ -460,6 +466,11 @@ generic suite failure. Product files, branch, and worktree were preserved unchan
 
 - Cycle 1: REJECTED — fresh validation; surface 31m implementation wall-clock vs estimate 90m
   (34%); AC unchanged
+- Cycle 2: REJECTED — validation re-review; surface 25m repair wall-clock vs estimate 90m
+  (28%); AC unchanged
+- Design reset: captain approved one final minimal re-cut on 2026-07-31 — retain AC-1 through AC-3,
+  narrow AC-4 to an exact-current-diff property, remove the semantic denylist and self-excluding
+  coverage machinery, and park without cycle 4 if the next validation rejects.
 
 ## Stage Report: implementation
 
@@ -559,8 +570,3 @@ green: focused `all`, 23/23 work-context, 22/22 release-metadata, 12/12 frontmat
 ShellCheck, Markdown fences, stage parser, and `git diff --check`. This is the second consecutive
 validation rejection, so Gate Authority ends the implementation loop and routes the decision to the
 captain rather than opening cycle 3.
-
-### Feedback Cycles
-
-- Cycle 2: REJECTED — remote durability/direct compatibility closed; automatic-mutation enforcement
-  and honest executable coverage remain open; captain escalation required by the consecutive-count rule.
