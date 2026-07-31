@@ -1343,6 +1343,23 @@ If this ships exactly per spec and still fails, the most likely cause is a **hid
 the reducer may accidentally hash only observations rather than the exact successful producer
 decision, allowing two distinct review results to share one advertised input binding.
 
+## Measurement
+
+D1 launched 2026-07-30T15:02:24Z | tokens: n/a
+D2 launched 2026-07-30T15:41:11Z | tokens: n/a
+D3 launched 2026-07-30T16:18:28Z | tokens: n/a
+D4 launched 2026-07-30T16:21:00Z | tokens: n/a
+D5 launched 2026-07-30T16:38:39Z | tokens: n/a
+D6 launched 2026-07-30T17:01:09Z | tokens: n/a
+D7 launched 2026-07-30T17:11:06Z | tokens: n/a
+D8 launched 2026-07-30T23:29:42Z | tokens: n/a
+D9 launched 2026-07-30T23:53:37Z | tokens: n/a
+D10 launched 2026-07-31T06:21:45Z | tokens: n/a
+D11 launched 2026-07-31T06:52:56Z | tokens: n/a
+D12 launched 2026-07-31T08:31:33Z | tokens: n/a
+D13 launched 2026-07-31T08:37:43Z | tokens: n/a
+D14 launched 2026-07-31T08:46:40Z | tokens: n/a
+
 ## Stage Report: ideation
 
 TL;DR — Cycle 2 is re-cut around one structural invariant: merge readiness no longer accepts or
