@@ -1,10 +1,10 @@
 ---
 title: Decouple the measurement ledger from delivery terminalization
-status: backlog
+status: ideation
 source: captain direction 2026-07-31 after EM merge-readiness closeout
 product: repo-platform
 sprint:
-started:
+started: 2026-07-31T10:22:20Z
 completed:
 verdict:
 worktree:
