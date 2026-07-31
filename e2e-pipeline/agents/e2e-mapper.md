@@ -200,6 +200,23 @@ When generating selectors for the mapping output, prefer in this order:
 4. **Role + literal `aria-label`** → `[role="<r>"][aria-label="<v>"]` — use ONLY when you have confirmed the component's DOM actually carries an `aria-label` attribute (most don't — verify in the snapshot/DOM, don't assume from #2's computed name).
 5. **Role only** → `[role="<r>"]` — aria-label absent/unstable and no test-id. Combine with `:nth-of-type(N)` if repeated on the page.
 
+**An element emitted as #2 or #3 that a step will click or fill also needs
+`css_selector:`.** Forms #2 and #3 resolve only on the translated visibility path.
+Handed to `agent-browser click|fill` literally they return false — probed live
+against 0.32.0: `is visible 'role=button[name="AlphaBtn"]'` and
+`is visible 'text=AlphaBtn'` both returned false against a fixture whose snapshot
+showed the button, while `[role="button"][aria-label="通知"]` and `h1` returned true.
+The step fails loud rather than silently passing, but it fails. So for any
+interactive element — button, tab, link, input — emit both:
+
+```yaml
+selector: 'role=button[name="Submit"]'
+css_selector: 'button[type="submit"]'
+```
+
+Forms #1, #4 and #5 are already literal CSS and need no companion. Nothing
+enforces this yet, so it is on you to emit it.
+
 **Repeated elements** (table rows, list items): Use `:nth-of-type(N)` CSS pseudo-class for positional targeting. Example: `[data-testid="row"]:nth-of-type(2)`. NEVER use `>> nth=N` — Playwright chord syntax, banned (linter-enforced).
 
 **React Native Web**: Text renders twice in DOM (hidden + visible). Prefer `role=<r>[name="<v>"]` (or `text=<v>` when there's no stable role) — both match the *computed* accessible name once, not the duplicated DOM node.
@@ -348,7 +365,7 @@ End your response with this exact structured block (the orchestrator parses it):
 5. **Prefer `role=<r>[name="<v>"]`** (see § Selector Priority above) over CSS attribute forms for elements without a `data-testid`. Example: `role=button[name="Submit"]`. NEVER emit `find role|text|testid|label <r> [--name "<v>"]` as a `selector:` value — it is a subcommand chain, not a selector string (linter-banned, CLASS 5).
 6. **Never use `has-text()`** selectors — broken in agent-browser, causes timeouts. Use `role=<r>[name="<v>"]` or `text=<v>` instead.
 7. **Repeated elements**: Use `:nth-of-type(N)` CSS pseudo-class in mapping (e.g., `[data-testid="row"]:nth-of-type(2)`). NEVER use `>> nth=N` — Playwright chord syntax, banned (linter-enforced).
-8. **React Native Web**: Text renders twice — use `role=<r>[name="<v>"]` (or `text=<v>`) for RNW tab bars and interactive elements; both match the computed accessible name once. If there's no stable role/text, add `data-testid` instead.
+8. **React Native Web**: Text renders twice — use `role=<r>[name="<v>"]` (or `text=<v>`) for RNW tab bars and interactive elements; both match the computed accessible name once. If there's no stable role/text, add `data-testid` instead. Because these are interactive, also emit `css_selector:` — see § Selector Priority; without it the click/fill step fails.
 9. **Do NOT close browser** after mapping. Human may want to explore further.
 10. **`is visible` exit code is always 0**. Check stdout text "true"/"false" when verifying selectors.
 11. **Snapshot before any interaction**. @refs invalidate after ANY DOM change.

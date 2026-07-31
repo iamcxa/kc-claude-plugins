@@ -253,12 +253,14 @@ echo "$lint_output"
 echo ""
 
 if [[ $LINTER_EXIT -eq 0 ]]; then
-  ok "Linter passed — no banned Playwright selector tokens found"
+  ok "Linter passed — no banned selector tokens found"
   append_note "lint=PASS"
 else
-  fail "Linter FAILED (exit $LINTER_EXIT) — banned Playwright selector tokens detected"
-  fail "This is a regression: the post-001 contract requires 0 banned tokens in fresh mappings."
-  fail "The e2e-mapper agent may still be emitting Playwright-style selectors."
+  fail "Linter FAILED (exit $LINTER_EXIT) — banned selector tokens detected"
+  fail "This is a regression: the contract requires 0 banned tokens in fresh mappings."
+  fail "Check which class below fired before blaming the mapper: role=<r>[name=...] and"
+  fail "bare text=<v> are NATIVE forms the mapper is supposed to emit, so a failure here"
+  fail "is a chord, a has-text(, or a find-subcommand stored as a selector value."
   fail ""
   fail "Banned token classes (from lint-mapping.sh):"
   fail "  CLASS 2: >> nth=<N>                        → replace with: :nth-of-type(N)"
