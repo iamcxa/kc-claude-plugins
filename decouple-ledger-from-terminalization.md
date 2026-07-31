@@ -371,7 +371,7 @@ completion PR.
 
 ## Stage Report: implementation
 
-- DONE: Prove RED then GREEN for product-merged terminalization while every ledger access fails,
+- DONE: AC-1 — Prove RED then GREEN for product-merged terminalization while every ledger access fails,
   keeping authenticated product evidence and durable archive fail-closed.
   RED `terminal-without-ledger` and `compatibility` on `origin/main@1d6d0d0` both exited 1 with
   `FAIL:RED: authenticated product MERGED still enters ledger finalization before terminal state`.
@@ -380,7 +380,7 @@ completion PR.
   GREEN: `bash docs/dev/artifacts/decoupled-ledger-contract-test.sh terminal-without-ledger` passes
   against the marked product-only transaction. It would fail for any ledger access, unauthenticated
   product acceptance, dirty-root archive mutation, or missing flat/folder archive result.
-- DONE: Preserve existing eight-column CSV rows and historical ledger refs, and prove archive-first
+- DONE: AC-2 / AC-3 — Preserve existing eight-column CSV rows and historical ledger refs, and prove archive-first
   derivation reports unknown instead of inventing optional metrics.
   GREEN: the `compatibility` case preserves the copied CSV hash, reads the historical
   `ledger-merge:` ref, and terminalizes empty, draft, pending, numbered, merged, and malformed ledger
@@ -388,7 +388,7 @@ completion PR.
   `14,2,18.81,n/a,88.17,pending:2026-08-07`, keeps the archive tree hash unchanged, and requires
   unavailable token/coverage evidence to remain unknown. Either case fails if a row/ref is rewritten,
   a ledger phase vetoes delivery, a metric is invented, or the exact tuple differs.
-- DONE: Keep the product diff to `docs/dev/README.md`, `docs/dev/_mods/pr-merge.md`, and
+- DONE: AC-4 — Keep the product diff to `docs/dev/README.md`, `docs/dev/_mods/pr-merge.md`, and
   `docs/dev/artifacts/decoupled-ledger-contract-test.sh` only; add no daemon, scheduler, CI trigger,
   automatic task creation, ROADMAP edit, or ledger data change.
   GREEN: `scope` permits exactly those three paths and rejects network, automatic process mutation,
