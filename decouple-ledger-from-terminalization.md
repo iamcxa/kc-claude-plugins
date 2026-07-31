@@ -368,3 +368,44 @@ evidence can later populate the unchanged CSV in a human-triggered batch; any pr
 task still requires captain approval. A read-only spike reproduced the newest committed row exactly
 from archived evidence, so the design preserves measurement value without a new service or second
 completion PR.
+
+## Stage Report: implementation
+
+- DONE: Prove RED then GREEN for product-merged terminalization while every ledger access fails,
+  keeping authenticated product evidence and durable archive fail-closed.
+  RED `terminal-without-ledger` and `compatibility` on `origin/main@1d6d0d0` both exited 1 with
+  `FAIL:RED: authenticated product MERGED still enters ledger finalization before terminal state`.
+  The archive-derivation arrangement was intentionally green in RED: it is a precondition proving
+  the historical archive contains the claimed observation, not a claim about terminalization.
+  GREEN: `bash docs/dev/artifacts/decoupled-ledger-contract-test.sh terminal-without-ledger` passes
+  against the marked product-only transaction. It would fail for any ledger access, unauthenticated
+  product acceptance, dirty-root archive mutation, or missing flat/folder archive result.
+- DONE: Preserve existing eight-column CSV rows and historical ledger refs, and prove archive-first
+  derivation reports unknown instead of inventing optional metrics.
+  GREEN: the `compatibility` case preserves the copied CSV hash, reads the historical
+  `ledger-merge:` ref, and terminalizes empty, draft, pending, numbered, merged, and malformed ledger
+  phases from authenticated product evidence. The `archive-derive` case reproduces
+  `14,2,18.81,n/a,88.17,pending:2026-08-07`, keeps the archive tree hash unchanged, and requires
+  unavailable token/coverage evidence to remain unknown. Either case fails if a row/ref is rewritten,
+  a ledger phase vetoes delivery, a metric is invented, or the exact tuple differs.
+- DONE: Keep the product diff to `docs/dev/README.md`, `docs/dev/_mods/pr-merge.md`, and
+  `docs/dev/artifacts/decoupled-ledger-contract-test.sh` only; add no daemon, scheduler, CI trigger,
+  automatic task creation, ROADMAP edit, or ledger data change.
+  GREEN: `scope` permits exactly those three paths and rejects network, automatic process mutation,
+  workflow/daemon additions, and mandatory optional-metric gates. `git diff --check`, `bash -n`,
+  ShellCheck 0.11.0, even Markdown-fence counts, the extracted historical ledger verifier, and the
+  Spacedock stage-definition parser all pass.
+- DONE: Run scoped tests in the loop and a fresh full-suite/ripple exit on the committed code.
+  `bash docs/dev/artifacts/decoupled-ledger-contract-test.sh all` passes all four cases.
+  Repository exits pass: `scripts/dev-flow-work-context-check.test.sh` 23/23,
+  `scripts/release-metadata.test.sh` 22/22, and `scripts/skill-frontmatter-lint.test.sh` 12/12.
+  The fixture remains manual and adds no CI job, so it changes no CI job runtime margin; no
+  OS/libc/locale/clock-dependent behavior or CI-pinned governed file was introduced.
+
+### Summary
+
+Commit `2d3985fc92523e49b6b513300811509043114406` removes ledger authority from product delivery while
+preserving exact product authentication and fail-closed terminal/archive durability. The unchanged
+eight-column ledger remains a backward-compatible, human-triggered observation surface whose
+unknown values and failures cannot alter task state. The isolated worker branch and worktree remain
+intact for First Officer integration; no worker-branch PR or cleanup was performed.
