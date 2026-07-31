@@ -412,3 +412,46 @@ preserving exact product authentication and fail-closed terminal/archive durabil
 eight-column ledger remains a backward-compatible, human-triggered observation surface whose
 unknown values and failures cannot alter task state. The isolated worker branch and worktree remain
 intact for First Officer integration; no worker-branch PR or cleanup was performed.
+
+## Stage Report: validation
+
+- FAILED: Independently reproduce every AC and the RED-to-GREEN contract at exact product head
+  `2d3985fc92523e49b6b513300811509043114406`; do not rely on the implementation report.
+  RED at `origin/main@1d6d0d0` failed both ledger-gated modes as expected; GREEN modes passed, but
+  AC-1, AC-2, and AC-4 lack the independent proof their end-state claims require.
+- DONE: Adversarially attack backward compatibility, empty/draft/pending/numbered/merged/malformed
+  ledger refs, flat and folder archives, ledger inaccessibility, authenticated product fail-closed
+  behavior, and honest unknown metrics.
+  Auth removal, ledger re-coupling, and `unknown -> 0` all reddened; an automatic-task mutation did not.
+- FAILED: Verify the exact three-path scope, diff/test evidence, required validation lenses,
+  cross-model review, and material findings; report only and do not edit product files.
+  Scope is exactly three paths and product stayed clean, but four material proof defects reject the gate.
+- FAILED: AC-1 — Product delivery terminalizes without ledger upkeep.
+  Real Spacedock 0.26 reached local `done` and flat/folder archive, but lines 77-124 and 222-243 use a
+  no-origin fixture and handwritten archive path, not the documented remote-observed transaction.
+- FAILED: AC-2 — Legacy ledger and in-flight entities stay readable.
+  Six ledger phases and the historical v1 ref passed, but the changed direct-commit route at
+  `docs/dev/_mods/pr-merge.md:1743` is never exercised by the v1-only fixture at lines 140-162.
+- DONE: AC-3 — Archive-first observation remains useful and non-authoritative.
+  `archive-derive` reproduced `14,2,18.81,n/a,88.17,pending:2026-08-07`, preserved the state tree,
+  and reddened when missing optional evidence was changed from `unknown` to invented `0`.
+- FAILED: AC-4 — The change stays inside the declared repo-platform boundary.
+  Adding `spacedock new` outside the marked snippet left both `scope` and `all` green; lines 449-470
+  only allowlist paths and grep prose, contrary to Proof Policy 1 at `docs/dev/README.md:552`.
+
+Lenses: workflow prose plus executable shell; correctness REJECT/3, security REJECT/1,
+silent-failure REJECT/1, type-design REJECT/1, concurrency REJECT/1,
+resource-lifecycle PASS/0, manifest/back-compat REJECT/1.
+Diff coverage: **65.65%** (172/262 traceable Bash logical statements), below the 85% ratchet; no waiver.
+Adversarial: three core mutations red; automatic task creation outside the marker stayed green — test hole.
+Cross-model: preferred `agy` failed wrong-scratch materialization/timeout; Claude Sonnet REJECTED with
+P1/P2/P3 findings, and its cited lines were checked against the exact files (two approximations corrected).
+E2E: real Spacedock 0.26 split-root flow passed locally, but its explicit no-origin output leaves remote
+terminal/archive durability unproved, so the end-to-end verdict is REJECT.
+
+### Summary
+
+Validation REJECTS exact product head `2d3985fc92523e49b6b513300811509043114406` and routes back to
+implementation. The final regression exit still passed focused `all`, 23/23, 22/22, 12/12, ShellCheck,
+and `git diff --check`; the rejection is for falsified proof coverage and unsupported guarantees, not a
+generic suite failure. Product files, branch, and worktree were preserved unchanged.
