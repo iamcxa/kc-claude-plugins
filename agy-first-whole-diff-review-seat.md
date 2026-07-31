@@ -1391,3 +1391,151 @@ readiness reducer receives observations and producer sources, obtains the decisi
 binds that exact result into its input hash, and never accepts a caller-authored decision. This is
 the smallest bounded reset that structurally prevents another producer/consumer validator drift
 while preserving advisory-only human merge authority.
+
+## Stage Report: implementation
+
+TL;DR — Replaced the rejected caller-decision consumer grammar with direct composition over the
+existing `rehydrate-interactive` producer. The exact rebased product head
+`b2b71acb0583ab3573bc3d43229e8677f141b0e0` is pushed and remote-equal. Fresh exact-head gates are
+green at merge-readiness **67/0**, interactive producer **49/0**, full runtime **372/0**,
+unchanged review-post **156/0**, pinned ShellCheck v0.9.0, Bash syntax, diff checks, and a real
+regular-file CLI round trip.
+
+- DONE: AC-1 — removed caller-supplied review decisions from the external contract. The reducer at
+  `kc-pr-flow/scripts/review-runtime.sh:2402-2571` validates only closed observations, calls
+  `review_runtime_rehydrate_interactive` once at `:2459`, maps producer rejection to
+  `UNKNOWN/LOW/invalid-review-evidence`, and uses only the successful returned decision.
+- DONE: AC-1 — deleted the readiness-side `InteractiveCollationDecision/v1` jq grammar. A static
+  review of the reducer found one producer-call site and zero copied `interactive_decision`,
+  `manual_result`, or `fallback` definitions.
+- DONE: AC-1 — focused source mutations cover coordinated stale key, unsatisfied clean,
+  satisfied incomplete, duplicate lane reference, impossible timestamp, empty obligations,
+  malformed pointer, pointer identity drift, and evidence verification failure at
+  `kc-pr-flow/scripts/review-runtime.test.sh:311-364`. Every case now emits
+  `UNKNOWN/LOW/invalid-review-evidence`.
+- DONE: AC-1 — a supplied `review_decision` member is closed-schema invalid, and the rejected
+  `--input-file` caller-decision surface is refused at the CLI boundary
+  (`review-runtime.test.sh:369-464`).
+- DONE: AC-2 — exact-head CI/test/review truth-table cases remain closed and ordered. Real
+  producer-positive evidence reaches `READY/HIGH`; current CI, test, and review negatives reach
+  `NOT_READY/HIGH`; incomplete required evidence reaches `UNKNOWN/LOW`; observed/CI/test head
+  drift reaches `UNKNOWN/LOW/head-or-identity-mismatch`.
+- DONE: AC-2 — `input_sha256` hashes the normalized
+  `kc-pr-flow.merge-readiness-binding/v1` containing both observations and the exact producer
+  output (`review-runtime.sh:2487-2496`). The focused test independently constructs those canonical
+  bytes at `review-runtime.test.sh:176-185`.
+- DONE: AC-3 — preserved advisory-only human merge authority. The real CLI ran with failing
+  `gh`, `curl`, `wget`, `nc`, and `ssh` stubs and an empty mutation/transport ledger; the reducer
+  block also contains no such command call. `kc-pr-flow/skills/kc-pr-review/SKILL.md`,
+  `scripts/review-post.sh`, and `scripts/review-post.test.sh` hash byte-for-byte to
+  `origin/main@9eddf99`.
+- DONE: AC-3 evidence wording correction — local `git` is deliberately not stubbed.
+  Direct composition reuses `rehydrate-interactive`, whose evidence verification makes read-only
+  `git -C <repo>` calls against the supplied worktree. The proved boundary is no model, network,
+  GitHub, posting, authorization, daemon, repair, or merge authority. This corrects the earlier
+  over-broad purity wording without expanding scope.
+- DONE: AC-4 — final `origin/main...HEAD` changed paths are exactly the approved runtime, focused
+  test, and three plugin documentation files:
+  `kc-pr-flow/scripts/review-runtime.sh`,
+  `kc-pr-flow/scripts/review-runtime.test.sh`,
+  `kc-pr-flow/reference/review-runtime.md`,
+  `kc-pr-flow/README.md`, and `kc-pr-flow/CLAUDE.md`.
+- DONE: AC-4 — docs now publish the producer-only observation/source contract, canonical internal
+  binding, producer-rejection behavior, advisory verdict vocabulary, and human-only merge
+  boundary at `reference/review-runtime.md:133-154,179`, `README.md:68-76`, and
+  `CLAUDE.md:59-67`.
+
+### Strict TDD evidence
+
+- **Rejected-head RED construction:** the disconnected worker left no durable active-reset RED
+  transcript. A detached scratch worktree used production from exact rejected head
+  `8224cd45d36a73c7a3bc4ff4063cc4ed17dcb6ff` plus the recovered final test file, without changing
+  the product WIP.
+- **RED result:** `bash kc-pr-flow/scripts/review-runtime.test.sh --case merge-readiness` exited 1
+  at **17 passed / 50 failed**. Transcript SHA-256:
+  `47e604dd25eda9458eae5a072a6bd6929ee62b59ab68e2f5ca3a425177450cab`.
+  The observation-only command failed first with
+  `expected [0], got [2]`; every one of the 50 new behavior assertions was subsequently reachable
+  and failed.
+- The 17 RED passes were not hidden behavior claims: 14 were pre-existing producer regression
+  assertions, two were explicitly labeled arrangement preconditions, and one was the explicitly
+  labeled regression-only empty transport-ledger invariant.
+- **Exact rejected false positives:** running the old caller-decision CLI against its three
+  producer-impossible decisions emitted
+  `READY|HIGH|all-required-evidence-positive` for duplicate retry lane identity, impossible manual
+  timestamp, and empty capabilities. The new command refuses that caller-decision boundary and the
+  source-mutation matrix routes the same producer inconsistencies through the canonical producer.
+- **Exact-head GREEN:** focused merge-readiness **67 passed / 0 failed**, transcript SHA-256
+  `bfe5ff854d2916f4821a6e783f472aa45a61b201be9a5685e4eca60652d206a6`.
+- **Old-fixture audit:** no unrelated historical scenario was repurposed. The obsolete
+  caller-decision fixture matrix was replaced because that external contract was removed; the
+  existing real terminal-rehydration setup remains the producer arrangement and its historical
+  producer assertions stay in the `interactive-decision` case.
+
+### Exact-head verification
+
+All final checks below ran after rebasing onto `origin/main@9eddf99`, on product head
+`b2b71acb0583ab3573bc3d43229e8677f141b0e0`:
+
+```bash
+bash kc-pr-flow/scripts/review-runtime.test.sh --case merge-readiness
+bash kc-pr-flow/scripts/review-runtime.test.sh --case interactive-decision
+bash kc-pr-flow/scripts/review-runtime.test.sh
+bash kc-pr-flow/scripts/review-post.test.sh
+bash -n kc-pr-flow/scripts/review-runtime.sh \
+  kc-pr-flow/scripts/review-runtime.test.sh
+docker run --rm --platform linux/amd64 -v "$PWD:/mnt" -w /mnt \
+  koalaman/shellcheck:v0.9.0 \
+  kc-pr-flow/scripts/review-runtime.sh \
+  kc-pr-flow/scripts/review-runtime.test.sh
+git diff --check origin/main...HEAD
+git diff --name-only origin/main...HEAD
+```
+
+- Merge-readiness: **67 passed, 0 failed**; SHA-256 `bfe5ff854d2916f4821a6e783f472aa45a61b201be9a5685e4eca60652d206a6`.
+- Interactive producer: **49 passed, 0 failed**; SHA-256 `62c340c29c2efdf1a7f899a3b3261cdfe46c27ba7bc0eac9daa9e7b1e9227fba`.
+- Default runtime: **372 passed, 0 failed**; SHA-256 `5db3881a318270326fc94f24cb5eb3e085606719b6ee4b43d203bf4f6b04be9a`.
+- Review-post ripple: **156 passed, 0 failed**; SHA-256 `e7240ae969d70f9e851f7e89ac48b5d9d743175e34fb95c151f6ae580d609bfc`.
+- Pinned ShellCheck v0.9.0 exited 0 with empty output; Bash syntax and
+  `git diff --check origin/main...HEAD` exited 0.
+- Direct E2E used regular observation, terminal receipt, policy, and repository files. It invoked
+  the full committed command, independently rehydrated the producer, recomputed the canonical
+  binding hash `b1aa8b7806bf15b2a06f3acd6cc030fe28b6071b8fd78537aa79958ee036eb3e`,
+  and asserted schema, `READY/HIGH`, canonical reason, `advisory_only:true`, exact head, matching
+  binding, and empty transport ledger. Decision-output SHA-256:
+  `07fd702af34dec333e27e666af6a19401140560533529d304678d46d3aa933d9`.
+- Browser/full-stack E2E is skipped because this is a local CLI with no UI, service, or remote
+  mutation. The regular-file producer-composed CLI invocation is the end-to-end surface.
+
+### CI timing disclosure
+
+- `.github/workflows/review-runtime-tests.yml` retains `timeout-minutes: 20`.
+- Latest successful live-main job before push, run `30566386141` / job `90951846061` at
+  `6f51c55`, used 559 of 1200 seconds; its runtime-contract step used 75 seconds.
+- The exact-head local default suite used 242 seconds. The same-machine untouched baseline
+  previously recorded in this entity was 93.24 seconds, a local delta of 148.76 seconds.
+  Conservatively adding that complete local delta to the live-main job projects about 708 seconds,
+  leaving about 492 seconds before the job cap. This is a margin disclosure, not a reproduction of
+  mutable `ubuntu-latest`.
+
+### Review, scope, and durability
+
+- This worker began with `git status`, `git diff --check`, and a semantic review of the recovered
+  five-path WIP. Because the implementation author had disconnected, the replacement worker's
+  read-only whole-diff review was independent of the author. It found no critical, important, or
+  in-scope minor defect; no extra reviewer/model worker was spawned.
+- The recovery preserved legitimate WIP and made no product edit beyond the recovered five paths.
+  No new runtime, receipt/signature/state authority, model route, daemon behavior, GitHub fetch,
+  posting behavior, repair loop, merge operation, or cross-repo adoption entered the diff.
+- Product commits were rebased onto live `origin/main` and pushed with an exact old-head
+  force-with-lease. Local and remote branch tips both equal
+  `b2b71acb0583ab3573bc3d43229e8677f141b0e0`; the product worktree is clean and upstream-equal.
+- No PR was created and no merge was performed, per dispatch.
+
+### Summary
+
+Merge readiness now receives only exact-head observations and canonical producer sources. It calls
+the existing terminal producer once, binds the successful producer decision into the decision
+hash, rejects producer-impossible evidence as `UNKNOWN`, and cannot accept a caller-authored
+review decision. The bounded five-path implementation is pushed with fresh exact-head RED/GREEN,
+regression, purity, E2E, static, timing, and independent-review evidence.
