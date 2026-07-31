@@ -11,7 +11,7 @@ pr:
 ledger_pr:
 pr_artifact_v1:
 ledger_artifact_v1:
-mod-block:
+mod-block: merge:pr-merge
 design: required
 lane:
 id: 4a255s3z87s7x09vn2fnscep
