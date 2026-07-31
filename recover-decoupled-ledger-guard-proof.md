@@ -97,3 +97,69 @@ edits only the extracted marker and must redden the targeted fixture.
 README changes beyond the inherited commits; ROADMAP, ledger, CI, daemon,
 persistence, task creation, analytics, archive/authentication routes, Carlove,
 push, PR creation, merge, and handoff.
+
+## Stage Report: implementation
+
+- DONE: AC-1 — The bounded local-guard claim and executable evidence agree.
+  Verified by: the five named mutation failures, the refusal-path status-drift
+  failure, focused `all`, and independent `392/447=87.70%` coverage below.
+  Falsified by: any named mutation staying green, refusal changing state, a
+  broader prose claim, a failing inherited phase, or coverage below 85%.
+
+### Summary
+
+On 2026-08-01, implemented the bounded proof recovery in code commit
+`2bd5a2386fa4c803e62d6adb32556c43c5bd93cd`. One fixture setup now drives
+five independent local refusal cases and preserves `status: validation`; the
+adjacent prose names exactly those five conditions and no archive or upstream
+authentication guarantee. The inherited whole-diff proof remains green with
+87.70% complete executable-surface coverage.
+
+### Identity and scope
+
+- Task id/path: `1a1c5f9k2m3cjmmhzf7162dv` at
+  `docs/dev/.spacedock-state/recover-decoupled-ledger-guard-proof.md`.
+- Branch: `spacedock-ensign/recover-decoupled-ledger-guard-proof`.
+- Worktree: `.worktrees/spacedock-ensign-recover-decoupled-ledger-guard-proof`.
+- Verified base: parked head `57ddb26b32e03a3e5f4136f603d2319cad3881a5`;
+  fresh `origin/main@1d6d0d02d4b0d6c84eac0813e6962c6774e652b7` is its ancestor,
+  so replay was a no-op. Final head: `2bd5a2386fa4c803e62d6adb32556c43c5bd93cd`.
+- This task changes only `docs/dev/_mods/pr-merge.md` and
+  `docs/dev/artifacts/decoupled-ledger-contract-test.sh`. The inherited full
+  diff still has exactly those paths plus unchanged `docs/dev/README.md`.
+
+### RED and adversarial evidence
+
+- Before the matrix, scratch deletions of `PRODUCT_HOST_STATE` and
+  `PRODUCT_REF` both left `terminal-without-ledger` green at exit 0, reproducing
+  the blind spot. The same copies red immediately after adding the matrix.
+- Five syntax-checked final marker mutations each exited 1 at its named case:
+  `PRODUCT_AUTHENTICATED`, `PRODUCT_HOST_STATE`, `PRODUCT_MERGED_AT`,
+  `PRODUCT_REF`, and `PRODUCT_ARTIFACT_B64URL` each reported
+  `guard accepted invalid local evidence`.
+- A separate refusal-path state-drift mutation exited 1 with
+  `PRODUCT_AUTHENTICATED refusal changed task state`, proving the shared status
+  assertion can fail rather than merely decorating the matrix.
+
+### GREEN and exit evidence
+
+- `bash docs/dev/artifacts/decoupled-ledger-contract-test.sh terminal-without-ledger`
+  exited 0 after emitting the five expected refusal diagnostics.
+- `bash docs/dev/artifacts/decoupled-ledger-contract-test.sh all` exited 0:
+  terminal-without-ledger, compatibility, archive-derive, and exact scope pass.
+- Independent out-of-tree coverage at
+  `/tmp/decoupled-ledger-coverage.23hKSF/measure.py` counted Bash `309/355`
+  plus Python heredocs `83/92`, total `392/447=87.70%`; no tracked exclusion or
+  waiver participates in the denominator.
+- `bash -n` on the fixture and extracted terminal marker, `shellcheck` on the
+  fixture, `git diff --check`, and Markdown fence parity all exited 0.
+- The focused fixture is manual and no CI file changed, so this recut adds no
+  CI-enlisted runtime or job-margin claim.
+
+### Effort and residual
+
+Elapsed implementation effort was about 7 minutes against the 30-minute
+estimate plus 15-minute tolerance, with one dispatch. No implementation
+residual is known. Exactly one fresh independent whole-diff validation pass
+remains; no product/state push, PR, merge, parked-entity mutation, Carlove
+handoff, or worktree cleanup was performed.
