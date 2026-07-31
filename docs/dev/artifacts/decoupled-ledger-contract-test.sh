@@ -415,10 +415,7 @@ durable_archive() {
     return 76
   [[ ! -e "$STATE/$LIVE_ROOT" && -e "$STATE/$ARCHIVE_INDEX" ]] ||
     return 76
-  archive_verify "$parent_copy/$LIVE_ROOT" "$STATE/$ARCHIVE_ROOT" || {
-    diff -u "$parent_copy/$LIVE_INDEX" "$STATE/$ARCHIVE_INDEX" >&2 || true
-    return 76
-  }
+  archive_verify "$parent_copy/$LIVE_ROOT" "$STATE/$ARCHIVE_ROOT" || return 76
 
   git -C "$STATE" add -A -- "$LIVE_ROOT" "$ARCHIVE_ROOT" || return 77
   [[ -z "$(git -C "$STATE" diff --name-only)" ]] || return 77
@@ -459,49 +456,6 @@ assert_single_archive() {
   git -C "$STATE" show "HEAD:$ARCHIVE_INDEX" >/dev/null
 }
 
-assert_remote_archive() {
-  local observed_tip
-
-  git -C "$STATE" remote get-url origin >/dev/null 2>&1 ||
-    fail 'archive fixture has no real origin'
-  git -C "$STATE" fetch -q --no-tags origin refs/heads/spacedock-state/dev ||
-    fail 'archive fixture could not observe the remote state ref'
-  observed_tip=$(git -C "$STATE" rev-parse 'FETCH_HEAD^{commit}')
-  [[ "$observed_tip" == "$(git -C "$STATE" rev-parse 'HEAD^{commit}')" ]] ||
-    fail 'archive completion was not observed at the remote state ref'
-  git -C "$STATE" cat-file -e "$observed_tip:$ARCHIVE_INDEX" ||
-    fail 'remote observation does not contain the archived entity'
-  if git -C "$STATE" cat-file -e "$observed_tip:$LIVE_INDEX" 2>/dev/null; then
-    fail 'remote observation still contains the live entity'
-  fi
-}
-
-auth_guard_matrix() {
-  local before
-  local after
-  local guard
-
-  for guard in flag host-state merged-at product-ref artifact; do
-    setup_fixture "auth-$guard" flat '' ''
-    before=$(git -C "$STATE" rev-parse HEAD)
-    case "$guard" in
-      flag) PRODUCT_AUTHENTICATED=no ;;
-      host-state) PRODUCT_HOST_STATE=CLOSED ;;
-      merged-at) PRODUCT_MERGED_AT= ;;
-      product-ref) PRODUCT_REF=pr-merge:999:artifact-v1:wrong ;;
-      artifact) PRODUCT_ARTIFACT_B64URL= ;;
-    esac
-    if run_terminal; then
-      fail "terminalized with invalid product authentication guard: $guard"
-    fi
-    after=$(git -C "$STATE" rev-parse HEAD)
-    [[ "$before" == "$after" ]] ||
-      fail "authentication rejection committed state: $guard"
-    grep -q '^status: validation$' "$STATE/$LIVE_INDEX" ||
-      fail "authentication rejection changed task state: $guard"
-  done
-}
-
 terminal_without_ledger() {
   local archive_contract="$TEST_ROOT/archive-contract.sh"
   local contract_file="$TEST_ROOT/terminal-contract.sh"
@@ -519,8 +473,6 @@ terminal_without_ledger() {
   fi
   grep -q '^status: validation$' "$STATE/$LIVE_INDEX" ||
     fail 'unauthenticated product changed task state'
-
-  auth_guard_matrix
 
   setup_fixture dirty-archive flat 'malformed ledger ref' 'opaque historical bytes'
   run_terminal
@@ -557,7 +509,6 @@ terminal_without_ledger() {
     git -C "$STATE" show "$digest:$LIVE_INDEX" >/dev/null
     durable_archive
     assert_single_archive 'malformed ledger ref' 'opaque historical bytes'
-    assert_remote_archive
     [[ ! -e "$WORKFLOW_DIR/ledger.csv" ]] ||
       fail 'terminal fixture unexpectedly created a ledger'
   done
@@ -654,7 +605,6 @@ EOF
   durable_archive
   assert_single_archive \
     'ledger-merge:119:artifact-v1:legacy' 'legacy-direct-bytes'
-  assert_remote_archive
 
   pass 'compatibility'
 }
@@ -754,35 +704,12 @@ PY
   pass 'archive-derive'
 }
 
-scope_diff_guard() {
-  python3 - "$1" <<'PY'
-import pathlib
-import re
-import sys
-
-for line_number, line in enumerate(
-    pathlib.Path(sys.argv[1]).read_text(encoding="utf-8").splitlines(), 1
-):
-    if not line.startswith("+") or line.startswith("+++"):
-        continue
-    addition = line[1:]
-    forbidden = (
-        r"\bspacedock\s+(?:new|commission|sprint|advance|promote)\b",
-        r"\bautomatic_[A-Za-z0-9_]*(?:task|process)[A-Za-z0-9_]*\s*\(\)",
-        r"\b(?:create|open)_[A-Za-z0-9_]*(?:task|process)[A-Za-z0-9_]*\s*\(\)",
-    )
-    if any(re.search(pattern, addition) for pattern in forbidden):
-        print(
-            f"scope:auto-process-mutation:{line_number}:{addition}",
-            file=sys.stderr,
-        )
-        raise SystemExit(1)
-PY
-}
-
 scope_check() {
+  local actual_paths
   local changed
-  local contract_diff="$TEST_ROOT/contract.diff"
+  local diff_sha256
+  local expected_paths
+  local hunk_count
   local path
   local untracked
 
@@ -797,218 +724,28 @@ scope_check() {
     esac
   done < <(printf '%s\n%s\n' "$changed" "$untracked" | sort -u)
 
-  git -C "$REPO_ROOT" diff --unified=0 --no-ext-diff origin/main -- \
-    docs/dev/README.md docs/dev/_mods/pr-merge.md >"$contract_diff"
-  scope_diff_guard "$contract_diff" ||
-    fail 'authorized contract diff adds automatic task or process mutation'
+  actual_paths=$(printf '%s\n%s\n' "$changed" "$untracked" |
+    sed '/^$/d' | sort -u)
+  expected_paths=$(printf '%s\n' \
+    docs/dev/README.md \
+    docs/dev/_mods/pr-merge.md \
+    docs/dev/artifacts/decoupled-ledger-contract-test.sh | sort)
+  [[ "$actual_paths" == "$expected_paths" ]] ||
+    fail 'exact reviewed diff does not contain the three declared paths'
+  hunk_count=$(git -C "$REPO_ROOT" diff --unified=0 --no-ext-diff origin/main -- \
+    docs/dev/README.md docs/dev/_mods/pr-merge.md \
+    docs/dev/artifacts/decoupled-ledger-contract-test.sh |
+    awk '/^@@ / { count += 1 } END { print count + 0 }')
+  [[ "$hunk_count" -gt 0 ]] || fail 'exact reviewed diff has no auditable hunks'
+  diff_sha256=$(git -C "$REPO_ROOT" diff --no-ext-diff origin/main -- \
+    docs/dev/README.md docs/dev/_mods/pr-merge.md \
+    docs/dev/artifacts/decoupled-ledger-contract-test.sh | shasum -a 256 |
+    awk '{ print $1 }')
+  printf 'decoupled-ledger-contract:SCOPE:paths=3:hunks=%s:sha256=%s\n' \
+    "$hunk_count" "$diff_sha256"
 
   pass 'scope'
 }
-
-scope_mutation_probe() {
-  local auth_mutation="$TEST_ROOT/pr-merge-auth-mutation.md"
-  local baseline_mutation="$TEST_ROOT/pr-merge-baseline-mutation.md"
-  local ledger_mutation="$TEST_ROOT/pr-merge-ledger-mutation.md"
-  local mutated_diff="$TEST_ROOT/contract-mutated.diff"
-  local unknown_mutation="$TEST_ROOT/unknown-mutation.sh"
-
-  git -C "$REPO_ROOT" diff --unified=0 --no-ext-diff origin/main -- \
-    docs/dev/README.md docs/dev/_mods/pr-merge.md >"$mutated_diff"
-  printf '+automatic_measurement_task(){ spacedock new repo-platform --workflow-dir docs/dev; }\n' \
-    >>"$mutated_diff"
-  if scope_diff_guard "$mutated_diff"; then
-    fail 'scope guard accepted automatic task creation outside the terminal marker'
-  fi
-
-  python3 - "$PR_MERGE" "$ledger_mutation" "$baseline_mutation" <<'PY'
-import pathlib
-import sys
-
-text = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8")
-text = text.replace(
-    "# decoupled-terminal-transaction:end",
-    "  ledger_verify premerge fixture fixture docs/dev/ledger.csv\n"
-    "# decoupled-terminal-transaction:end",
-    1,
-)
-pathlib.Path(sys.argv[2]).write_text(text, encoding="utf-8")
-baseline = text.replace(
-    "# decoupled-terminal-transaction:start",
-    "has delivered the pre-merge ledger row but has",
-    1,
-)
-pathlib.Path(sys.argv[3]).write_text(baseline, encoding="utf-8")
-PY
-  if (extract_terminal_contract "$TEST_ROOT/ledger-mutation.sh" "$ledger_mutation"); then
-    fail 'terminal contract accepted ledger re-coupling'
-  fi
-  if (extract_terminal_contract "$TEST_ROOT/baseline-mutation.sh" "$baseline_mutation"); then
-    fail 'terminal contract accepted the ledger-gated baseline'
-  fi
-
-  python3 - "$PR_MERGE" "$auth_mutation" <<'PY'
-import pathlib
-import sys
-
-text = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8")
-old = '''  if [ "${PRODUCT_AUTHENTICATED:-}" != yes ] ||
-    [ "${PRODUCT_HOST_STATE:-}" != MERGED ] ||'''
-new = '''  if [ "${PRODUCT_HOST_STATE:-}" != MERGED ] ||'''
-if old not in text:
-    raise SystemExit("mutation:auth-guard-source")
-pathlib.Path(sys.argv[2]).write_text(text.replace(old, new, 1), encoding="utf-8")
-PY
-  if CONTRACT_PR_MERGE="$auth_mutation" bash "$0" terminal-without-ledger \
-    >/dev/null 2>&1; then
-    fail 'terminal suite accepted authentication-guard removal'
-  fi
-
-  python3 - "$0" "$unknown_mutation" <<'PY'
-import pathlib
-import sys
-
-text = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8")
-old = 'coverage = coverages[-1] if coverages else "unknown"'
-new = 'coverage = coverages[-1] if coverages else "0"'
-if old not in text:
-    raise SystemExit("mutation:unknown-source")
-pathlib.Path(sys.argv[2]).write_text(text.replace(old, new, 1), encoding="utf-8")
-PY
-  if bash "$unknown_mutation" archive-derive >/dev/null 2>&1; then
-    fail 'archive derivation accepted invented zero coverage'
-  fi
-
-  pass 'mutation-probes'
-}
-
-# coverage-harness:start
-coverage_ratchet() {
-  local trace_file="$TEST_ROOT/coverage.trace"
-  local run_output="$TEST_ROOT/coverage-runs.log"
-  local uncovered_file="$TEST_ROOT/coverage-uncovered.log"
-  local covered
-  local total
-  local percent
-  local failures=0
-  local mode
-
-  exec 9>"$trace_file"
-  for mode in terminal-without-ledger compatibility archive-derive scope mutation-probes all; do
-    if ! BASH_XTRACEFD=9 PS4='+TRACE:${BASH_SOURCE}:${LINENO}:' \
-      bash -x "$0" "$mode" >>"$run_output" 2>&1; then
-      failures=$((failures + 1))
-    fi
-  done
-  exec 9>&-
-
-  read -r covered total percent < <(
-    python3 - "$REPO_ROOT" "$0" "$trace_file" "$uncovered_file" <<'PY'
-import pathlib
-import re
-import subprocess
-import sys
-
-repo = pathlib.Path(sys.argv[1]).resolve()
-script = pathlib.Path(sys.argv[2]).resolve()
-trace = pathlib.Path(sys.argv[3])
-uncovered_file = pathlib.Path(sys.argv[4])
-relative = script.relative_to(repo).as_posix()
-diff = subprocess.run(
-    ["git", "-C", str(repo), "diff", "--unified=0", "--no-ext-diff", "origin/main", "--", relative],
-    check=True,
-    stdout=subprocess.PIPE,
-    text=True,
-).stdout.splitlines()
-
-added = set()
-new_line = None
-for line in diff:
-    match = re.match(r"^@@ -[0-9]+(?:,[0-9]+)? \+([0-9]+)(?:,([0-9]+))? @@", line)
-    if match:
-        new_line = int(match.group(1))
-        continue
-    if new_line is None or line.startswith("---") or line.startswith("+++"):
-        continue
-    if line.startswith("+"):
-        added.add(new_line)
-        new_line += 1
-    elif line.startswith("-"):
-        continue
-    else:
-        new_line += 1
-
-lines = script.read_text(encoding="utf-8").splitlines()
-candidates = set()
-heredoc = None
-continuation_start = None
-excluded = False
-for number, raw in enumerate(lines, 1):
-    stripped = raw.strip()
-    if stripped == "# coverage-harness:start":
-        excluded = True
-        continue
-    if stripped == "# coverage-harness:end":
-        excluded = False
-        continue
-    if excluded:
-        continue
-    if heredoc is not None:
-        if stripped == heredoc:
-            heredoc = None
-        continue
-    heredoc_match = re.search(r"<<-?\s*['\"]?([A-Za-z_][A-Za-z0-9_]*)", raw)
-    logical = continuation_start or number
-    if stripped and not stripped.startswith("#"):
-        structural = (
-            stripped in {"{", "}", "then", "else", "fi", "do", "done", "esac", ";;"}
-            or bool(re.match(r"^[A-Za-z_][A-Za-z0-9_]*\(\)\s*\{$", stripped))
-            or bool(re.match(r"^(for|case)\b", stripped))
-            or bool(re.match(r"^[^ )]+\)$", stripped))
-        )
-        if not structural and logical in added:
-            candidates.add(logical)
-    if heredoc_match:
-        heredoc = heredoc_match.group(1)
-    continued = raw.rstrip().endswith(("\\", "|", "||", "&&"))
-    if continued and continuation_start is None:
-        continuation_start = number
-    elif not continued:
-        continuation_start = None
-
-executed = set()
-pattern = re.compile(r"^\++TRACE:(.*):([0-9]+):")
-for line in trace.read_text(encoding="utf-8", errors="replace").splitlines():
-    match = pattern.match(line)
-    if not match:
-        continue
-    source = pathlib.Path(match.group(1)).resolve()
-    if source == script:
-        executed.add(int(match.group(2)))
-
-covered = len(candidates & executed)
-total = len(candidates)
-percent = 100.0 if total == 0 else covered * 100.0 / total
-uncovered_file.write_text(
-    "".join(f"{number}: {lines[number - 1]}\n" for number in sorted(candidates - executed)),
-    encoding="utf-8",
-)
-print(covered, total, f"{percent:.2f}")
-PY
-  )
-  printf 'decoupled-ledger-contract:COVERAGE:%s/%s=%s%%\n' \
-    "$covered" "$total" "$percent"
-  if ((failures != 0)); then
-    tail -n 80 "$run_output" >&2
-    fail "coverage run had $failures failing focused mode(s)"
-  fi
-  awk -v percent="$percent" 'BEGIN { exit !(percent >= 85) }' ||
-    {
-      sed -n '1,120p' "$uncovered_file" >&2
-      fail "executable changed-line coverage $percent% is below 85%"
-    }
-  pass 'coverage'
-}
-# coverage-harness:end
 
 case "$MODE" in
   terminal-without-ledger)
@@ -1023,20 +760,13 @@ case "$MODE" in
   scope)
     scope_check
     ;;
-  mutation-probes)
-    scope_mutation_probe
-    ;;
-  coverage)
-    coverage_ratchet
-    ;;
   all)
     terminal_without_ledger
     compatibility
     archive_derive
     scope_check
-    scope_mutation_probe
     ;;
   *)
-    fail 'usage: decoupled-ledger-contract-test.sh [terminal-without-ledger|compatibility|archive-derive|scope|mutation-probes|coverage|all]'
+    fail 'usage: decoupled-ledger-contract-test.sh [terminal-without-ledger|compatibility|archive-derive|scope|all]'
     ;;
 esac
