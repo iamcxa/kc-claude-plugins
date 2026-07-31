@@ -2390,38 +2390,32 @@ review_runtime_merge_readiness_invalid() {
     'null' 'null' 'UNKNOWN' 'LOW' '["invalid-input"]'
 }
 
-review_runtime_review_identity_key_valid() {
-  local identity="$1"
-  local fields repository pr_number base_sha head_sha config_hash review_key expected
-
-  fields="$(jq -e -r '
-    [.repository,.pr_number,.base_sha,.head_sha,.config_hash,.review_key] |
-    @tsv
-  ' <<<"$identity" 2>/dev/null)" || return 1
-  IFS=$'\t' read -r repository pr_number base_sha head_sha config_hash review_key <<<"$fields"
-  expected="$(review_runtime_review_key \
-    "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash")" || return
-  [ "$review_key" = "$expected" ]
+review_runtime_merge_readiness_invalid_review() {
+  review_runtime_merge_readiness_decision \
+    'null' 'null' 'UNKNOWN' 'LOW' '["invalid-review-evidence"]'
 }
 
-# Pure landing projection over caller-supplied, already-observed evidence.
-# Input ingestion uses the same bounded snapshot and duplicate-member checks as
-# the receipt runtime. The projection performs no live freshness lookup and
-# grants no post or merge authority.
+# Pure landing projection over caller-supplied CI/test/head observations and
+# one successful in-process interactive producer result. The caller cannot
+# provide or select a review decision. This function performs no live freshness
+# lookup and grants no post or merge authority.
 review_runtime_decide_merge_readiness() (
-  local input_file="$1"
-  local snapshot_dir input_snapshot input duplicate_rc canonical_input
-  local input_sha256 review_identity reason_codes reason_count
+  local observations_file="$1" event_file="$2" policy_file="$3" repository_path="$4"
+  local repository="$5" pr_number="$6" base_sha="$7" head_sha="$8"
+  local config_hash="$9" review_key="${10}" run_id="${11}"
+  local snapshot_dir observations_snapshot observations duplicate_rc
+  local canonical_observations review_decision binding input_sha256
+  local review_identity reason_codes reason_count
 
   review_runtime_require_jq || return
   snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
-  input_snapshot="$snapshot_dir/merge-readiness-input.json"
-  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$input_snapshot"' EXIT
+  observations_snapshot="$snapshot_dir/merge-readiness-observations.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$observations_snapshot"' EXIT
   review_runtime_snapshot_regular_file \
-    "$input_file" "$input_snapshot" 'merge readiness input' 1048576 || return
+    "$observations_file" "$observations_snapshot" 'merge readiness observations' 1048576 || return
 
-  input="$(cat "$input_snapshot")" || return 74
-  review_runtime_json_has_unique_members "$input"
+  observations="$(cat "$observations_snapshot")" || return 74
+  review_runtime_json_has_unique_members "$observations"
   duplicate_rc=$?
   case "$duplicate_rc" in
     0) ;;
@@ -2431,7 +2425,7 @@ review_runtime_decide_merge_readiness() (
       ;;
     *) return "$duplicate_rc" ;;
   esac
-  canonical_input="$(jq -S -c . "$input_snapshot" 2>/dev/null)" || {
+  canonical_observations="$(jq -S -c . "$observations_snapshot" 2>/dev/null)" || {
     review_runtime_merge_readiness_invalid
     return 0
   }
@@ -2442,146 +2436,6 @@ review_runtime_decide_merge_readiness() (
       (($required - keys) | length) == 0;
     def sha256: type == "string" and test("^[0-9a-f]{64}$");
     def sha1: type == "string" and test("^[0-9a-f]{40}$");
-    def token: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
-    def identity:
-      type == "object" and
-      exact_keys(["base_sha","config_hash","head_sha","pr_number","repository",
-                  "review_key","run_id"]) and
-      (.repository | type == "string" and
-        test("^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$")) and
-      (.pr_number | type == "number" and floor == . and . > 0 and
-        . <= 9007199254740991) and
-      (.base_sha | sha1) and (.head_sha | sha1) and
-      (.config_hash | sha256) and (.review_key | sha256) and
-      (.run_id | type == "string" and test("^run-[A-Za-z0-9._-]+$"));
-    def attempt:
-      type == "object" and
-      exact_keys(["lane_result_ref","ordinal","result"]) and
-      (.lane_result_ref | token) and
-      (.ordinal | type == "number" and floor == . and . > 0 and . <= 2) and
-      (.result == "succeeded" or .result == "transient_failure" or
-       .result == "terminal_failure" or .result == "unavailable");
-    def manual_result:
-      type == "object" and
-      exact_keys(["candidate_ids","capability","evidence","recorded_at",
-                  "recorded_by","review_identity","schema",
-                  "terminal_assessment"]) and
-      .schema == "kc-pr-flow.manual-capability-result/v1" and
-      (.review_identity | identity) and
-      (.capability | token) and
-      (.terminal_assessment == "clean" or
-       .terminal_assessment == "findings" or
-       .terminal_assessment == "evidence_backed_na") and
-      (.candidate_ids | type == "array" and all(sha256) and
-        (unique | length) == length) and
-      (.evidence | type == "array" and length > 0 and
-        all(type == "object")) and
-      .recorded_by == "interactive-human" and
-      (.recorded_at | type == "string" and
-        test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"));
-    def fallback:
-      type == "object" and exact_keys(["result","status"]) and
-      (.status == "not_needed" or .status == "provided" or
-       .status == "declined" or .status == "failed" or
-       .status == "unavailable") and
-      (if .status == "provided" then (.result | manual_result)
-       else .result == null end);
-    def interactive_decision:
-      . as $decision |
-      type == "object" and
-      exact_keys(["approve_eligible","capabilities","capability_gap_refs",
-                  "confirmation_input","confirmed_blocker_refs","coverage",
-                  "effective_event","mode","review_identity","schema"]) and
-      .schema == "kc-pr-flow.interactive-collation-decision/v1" and
-      .mode == "typed" and (.review_identity | identity) and
-      (.capabilities | type == "array" and
-        (map(.capability) | unique | length) == length and
-        all(type == "object" and
-          exact_keys(["activation_condition","adapter_attempts","capability",
-                      "fallback","finding_refs","owner","required",
-                      "review_identity","schema","terminal_state"]) and
-          .schema == "kc-pr-flow.capability-terminal/v1" and
-          .review_identity == $decision.review_identity and
-          (.capability | token) and (.required | type == "boolean") and
-          .activation_condition ==
-            (if .required then "configured" else "observed_optional" end) and
-          .owner == "core-collator" and
-          (.adapter_attempts | type == "array" and length <= 2 and all(attempt) and
-            (map(.ordinal) == [range(1; length + 1)]) and
-            (if length == 2 then
-               .[0].result == "transient_failure"
-             elif length == 1 then .[0].result != "transient_failure"
-             else true end)) and
-          (.fallback | fallback) and
-          (.finding_refs | type == "array" and all(sha256) and
-            (unique | length) == length) and
-          (.terminal_state == "clean" or .terminal_state == "findings" or
-           .terminal_state == "evidence_backed_na" or
-           .terminal_state == "incomplete_required" or
-           .terminal_state == "incomplete_optional") and
-          (if .fallback.status == "provided" then
-             ((.adapter_attempts | length) == 0 or
-              .adapter_attempts[-1].result != "succeeded") and
-             .fallback.result.capability == .capability and
-             .fallback.result.review_identity == $decision.review_identity
-           else true end) and
-          (
-            (((.adapter_attempts | length) > 0 and
-               .adapter_attempts[-1].result == "succeeded") or
-              .fallback.status == "provided") as $satisfied |
-            if $satisfied then
-              (.terminal_state == "clean" or
-               .terminal_state == "findings" or
-               .terminal_state == "evidence_backed_na") and
-              (if .fallback.status == "provided" then
-                 .terminal_state == .fallback.result.terminal_assessment and
-                 (if .terminal_state == "findings" then
-                    (.fallback.result.candidate_ids | length > 0) and
-                    (.finding_refs | length > 0)
-                  else
-                    (.fallback.result.candidate_ids | length == 0) and
-                    (.finding_refs | length == 0)
-                  end)
-               elif .terminal_state == "findings" then
-                 (.finding_refs | length > 0)
-               else
-                 (.finding_refs | length == 0)
-               end)
-            else
-              (if .required then
-                 .terminal_state == "incomplete_required"
-               else
-                 .terminal_state == "incomplete_optional"
-               end) and
-              (.fallback.status == "declined" or
-               .fallback.status == "failed" or
-               .fallback.status == "unavailable") and
-              (.finding_refs | length == 0)
-            end))) and
-      (.confirmed_blocker_refs | type == "array" and all(sha256) and
-        (unique | length) == length and . == sort) and
-      (.capability_gap_refs | type == "array" and all(token) and
-        (unique | length) == length and
-        . == ([$decision.capabilities[] |
-          select(.terminal_state == "incomplete_required") |
-          .capability] | sort)) and
-      (.confirmation_input | type == "object" and
-        exact_keys(["blocker_refs","coverage_summary","gap_refs",
-                    "identity_summary","verdict_summary"]) and
-        .identity_summary == "typed-derived" and
-        .coverage_summary == "typed-derived" and
-        .verdict_summary == "typed-derived" and
-        .blocker_refs == $decision.confirmed_blocker_refs and
-        .gap_refs == $decision.capability_gap_refs) and
-      .coverage ==
-        (if (.capability_gap_refs | length) == 0 then "complete"
-         else "incomplete" end) and
-      .approve_eligible ==
-        ((.coverage == "complete") and
-         ((.confirmed_blocker_refs | length) == 0)) and
-      .effective_event ==
-        (if (.confirmed_blocker_refs | length) > 0 then "REQUEST_CHANGES"
-         elif .approve_eligible then "APPROVE" else "COMMENT" end);
     def observation:
       type == "object" and
       exact_keys(["evidence_sha256","head_sha","required","status"]) and
@@ -2592,32 +2446,60 @@ review_runtime_decide_merge_readiness() (
       (.head_sha | sha1) and (.evidence_sha256 | sha256) and
       (if .status == "NOT_REQUIRED" then (.required | not) else true end);
     type == "object" and
-    exact_keys(["ci","observed_head_sha","review_decision","review_identity",
-                "schema","tests"]) and
-    .schema == "kc-pr-flow.merge-readiness-input/v1" and
-    (.review_identity | identity) and
+    exact_keys(["ci","observed_head_sha","schema","tests"]) and
+    .schema == "kc-pr-flow.merge-readiness-observations/v1" and
     (.observed_head_sha | sha1) and
     (.ci | observation) and
-    (.tests | observation) and
-    (.review_decision | interactive_decision)
-  ' <<<"$canonical_input" >/dev/null 2>&1; then
+    (.tests | observation)
+  ' <<<"$canonical_observations" >/dev/null 2>&1; then
     review_runtime_merge_readiness_invalid
     return 0
   fi
 
-  input_sha256="$(printf '%s' "$canonical_input" | review_runtime_sha256)" || return
-  review_identity="$(jq -S -c '.review_identity' <<<"$canonical_input")" || return
-  if ! review_runtime_review_identity_key_valid "$review_identity"; then
-    review_runtime_merge_readiness_invalid
+  if ! review_decision="$(review_runtime_rehydrate_interactive \
+    "$event_file" "$repository" "$pr_number" "$base_sha" "$head_sha" \
+    "$config_hash" "$review_key" "$run_id" "$policy_file" "$repository_path")"; then
+    review_runtime_merge_readiness_invalid_review
     return 0
   fi
+  review_decision="$(jq -S -c . <<<"$review_decision" 2>/dev/null)" || {
+    review_runtime_merge_readiness_invalid_review
+    return 0
+  }
+  if ! jq -e \
+    --arg repository "$repository" --argjson pr_number "$pr_number" \
+    --arg base_sha "$base_sha" --arg head_sha "$head_sha" \
+    --arg config_hash "$config_hash" --arg review_key "$review_key" --arg run_id "$run_id" '
+      .schema == "kc-pr-flow.interactive-collation-decision/v1" and
+      .review_identity == {
+        repository:$repository,
+        pr_number:$pr_number,
+        base_sha:$base_sha,
+        head_sha:$head_sha,
+        config_hash:$config_hash,
+        review_key:$review_key,
+        run_id:$run_id
+      }
+    ' <<<"$review_decision" >/dev/null 2>&1; then
+    review_runtime_merge_readiness_invalid_review
+    return 0
+  fi
+
+  binding="$(jq -S -c -n --argjson observations "$canonical_observations" \
+    --argjson review_decision "$review_decision" '
+    {
+      schema:"kc-pr-flow.merge-readiness-binding/v1",
+      observations:$observations,
+      review_decision:$review_decision
+    }')" || return
+  input_sha256="$(printf '%s' "$binding" | review_runtime_sha256)" || return
+  review_identity="$(jq -S -c '.review_identity' <<<"$review_decision")" || return
 
   if ! jq -e '
-    .review_identity == .review_decision.review_identity and
-    .observed_head_sha == .review_identity.head_sha and
-    .ci.head_sha == .review_identity.head_sha and
-    .tests.head_sha == .review_identity.head_sha
-  ' <<<"$canonical_input" >/dev/null 2>&1; then
+    .observed_head_sha == $identity.head_sha and
+    .ci.head_sha == $identity.head_sha and
+    .tests.head_sha == $identity.head_sha
+  ' --argjson identity "$review_identity" <<<"$canonical_observations" >/dev/null 2>&1; then
     review_runtime_merge_readiness_decision \
       "$review_identity" "\"$input_sha256\"" 'UNKNOWN' 'LOW' \
       '["head-or-identity-mismatch"]'
@@ -2628,11 +2510,11 @@ review_runtime_decide_merge_readiness() (
     [
       if (.ci.required and .ci.status == "FAIL") then "ci-failed" else empty end,
       if (.tests.required and .tests.status == "FAIL") then "tests-failed" else empty end,
-      if ((.review_decision.confirmed_blocker_refs | length) > 0 or
-          .review_decision.effective_event == "REQUEST_CHANGES")
+      if (($review_decision.confirmed_blocker_refs | length) > 0 or
+          $review_decision.effective_event == "REQUEST_CHANGES")
         then "review-blocked" else empty end
     ] | unique | sort
-  ' <<<"$canonical_input")" || return
+  ' --argjson review_decision "$review_decision" <<<"$canonical_observations")" || return
   reason_count="$(jq -r 'length' <<<"$reason_codes")" || return
   if [ "$reason_count" -gt 0 ]; then
     review_runtime_merge_readiness_decision \
@@ -2650,12 +2532,12 @@ review_runtime_decide_merge_readiness() (
           (.tests.status == "PENDING" or .tests.status == "UNKNOWN" or
            .tests.status == "UNAVAILABLE"))
         then "tests-incomplete" else empty end,
-      if (.review_decision.coverage != "complete" or
-          (.review_decision.approve_eligible | not) or
-          .review_decision.effective_event != "APPROVE")
+      if ($review_decision.coverage != "complete" or
+          ($review_decision.approve_eligible | not) or
+          $review_decision.effective_event != "APPROVE")
         then "review-incomplete" else empty end
     ] | unique | sort
-  ' <<<"$canonical_input")" || return
+  ' --argjson review_decision "$review_decision" <<<"$canonical_observations")" || return
   reason_count="$(jq -r 'length' <<<"$reason_codes")" || return
   if [ "$reason_count" -gt 0 ]; then
     review_runtime_merge_readiness_decision \
@@ -2668,12 +2550,12 @@ review_runtime_decide_merge_readiness() (
      ((.ci.required | not) and .ci.status == "NOT_REQUIRED")) and
     ((.tests.required and .tests.status == "PASS") or
      ((.tests.required | not) and .tests.status == "NOT_REQUIRED")) and
-    .review_decision.coverage == "complete" and
-    .review_decision.approve_eligible and
-    .review_decision.effective_event == "APPROVE" and
-    (.review_decision.confirmed_blocker_refs | length) == 0 and
-    (.review_decision.capability_gap_refs | length) == 0
-  ' <<<"$canonical_input" >/dev/null 2>&1; then
+    $review_decision.coverage == "complete" and
+    $review_decision.approve_eligible and
+    $review_decision.effective_event == "APPROVE" and
+    ($review_decision.confirmed_blocker_refs | length) == 0 and
+    ($review_decision.capability_gap_refs | length) == 0
+  ' --argjson review_decision "$review_decision" <<<"$canonical_observations" >/dev/null 2>&1; then
     review_runtime_merge_readiness_decision \
       "$review_identity" "\"$input_sha256\"" 'READY' 'HIGH' \
       '["all-required-evidence-positive"]'
@@ -3136,15 +3018,29 @@ review_runtime_main_rehydrate_interactive() {
 }
 
 review_runtime_main_decide_merge_readiness() {
-  local input_file=''
+  local observations_file='' event_file='' policy_file='' repository_path=''
+  local repository='' pr_number='' base_sha='' head_sha=''
+  local config_hash='' review_key='' run_id=''
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --input-file)
+      --observations-file | --event-file | --policy-file | --repo-worktree | --repo | --pr | --base | --head | --config-hash | --review-key | --run-id)
         [ "$#" -ge 2 ] || {
           printf 'review-runtime: missing value for %s\n' "$1" >&2
           return 2
         }
-        input_file="$2"
+        case "$1" in
+          --observations-file) observations_file="$2" ;;
+          --event-file) event_file="$2" ;;
+          --policy-file) policy_file="$2" ;;
+          --repo-worktree) repository_path="$2" ;;
+          --repo) repository="$2" ;;
+          --pr) pr_number="$2" ;;
+          --base) base_sha="$2" ;;
+          --head) head_sha="$2" ;;
+          --config-hash) config_hash="$2" ;;
+          --review-key) review_key="$2" ;;
+          --run-id) run_id="$2" ;;
+        esac
         shift 2
         ;;
       *)
@@ -3153,11 +3049,16 @@ review_runtime_main_decide_merge_readiness() {
         ;;
     esac
   done
-  if [ -z "$input_file" ]; then
-    printf 'review-runtime: decide-merge-readiness requires --input-file\n' >&2
+  if [ -z "$observations_file" ] || [ -z "$event_file" ] || [ -z "$policy_file" ] ||
+    [ -z "$repository_path" ] || [ -z "$repository" ] || [ -z "$pr_number" ] ||
+    [ -z "$base_sha" ] || [ -z "$head_sha" ] || [ -z "$config_hash" ] ||
+    [ -z "$review_key" ] || [ -z "$run_id" ]; then
+    printf 'review-runtime: decide-merge-readiness requires observations, producer sources, worktree, and exact identity\n' >&2
     return 2
   fi
-  review_runtime_decide_merge_readiness "$input_file"
+  review_runtime_decide_merge_readiness "$observations_file" "$event_file" "$policy_file" \
+    "$repository_path" "$repository" "$pr_number" "$base_sha" "$head_sha" \
+    "$config_hash" "$review_key" "$run_id"
 }
 
 review_runtime_main_shadow() {
@@ -3341,7 +3242,7 @@ review_runtime_main_compare_usage() {
 }
 
 review_runtime_usage() {
-  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|decide-merge-readiness --input-file FILE|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
+  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
 }
 
 review_runtime_main_start() {

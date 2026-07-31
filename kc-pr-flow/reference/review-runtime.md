@@ -133,9 +133,12 @@ The capability policy is closed and provider-neutral. Each capability is require
 ## Advisory merge readiness
 
 `MergeReadinessDecision/v1` (`kc-pr-flow.merge-readiness-decision/v1`) is a closed advisory
-projection over one validated `InteractiveCollationDecision/v1`, one caller-supplied CI
-observation, one caller-supplied test observation, and one independently supplied observed PR
-head. Its canonical input binding is `kc-pr-flow.merge-readiness-input/v1`.
+projection over one in-process `rehydrate-interactive` result, one caller-supplied CI observation,
+one caller-supplied test observation, and one independently supplied observed PR head. Callers
+supply the terminal receipt, capability policy, repository worktree, exact review identity, and one
+closed `kc-pr-flow.merge-readiness-observations/v1` file; they cannot supply a review decision. The
+canonical input binding is `kc-pr-flow.merge-readiness-binding/v1`, combining the normalized
+observations with the exact successful producer result.
 
 All identities and observation heads must match the reviewed head. Complete positive evidence
 emits `READY/HIGH`; a same-head required CI/test failure or confirmed review blocker emits
@@ -143,10 +146,13 @@ emits `READY/HIGH`; a same-head required CI/test failure or confirmed review blo
 confidence describes whether the closed supplied evidence is structurally sufficient and
 decisive; it does not replace per-finding confidence calibration.
 
-The adapter consumes only the input file and writes one decision. It does not fetch live state,
-contact GitHub, dispatch a model, authorize or post a review, or merge a PR. `advisory_only` is
-`true`, and humans remain the merge authority. A caller that cannot obtain a decision because the
-input file is unsafe or unreadable must treat the result as `UNKNOWN`, never as `READY`.
+The adapter safe-snapshots the observation file, invokes the existing local producer exactly once,
+and writes one decision. Producer rejection maps to `UNKNOWN/LOW/invalid-review-evidence`. It does
+not fetch live state, contact GitHub, dispatch a model, authorize or post a review, or merge a PR.
+The producer still performs its documented read-only local Git evidence verification.
+`advisory_only` is `true`, and humans remain the merge authority. A caller that cannot obtain a
+decision because an input file is unsafe or unreadable must treat the result as `UNKNOWN`, never as
+`READY`.
 
 ## Evidence pointers
 
@@ -170,7 +176,7 @@ All commands print compact JSON except `config-hash`, which prints a hash, and C
 | `config-hash ...` | Normalize the effective v1 review configuration and return its canonical hash. Options are `--agent-tier`, `--pr-archetype`, `--full-pass`, `--probe-required`, `--cross-model`, `--noise-filter`, and comma-separated `--capabilities`; omitted options use the defaults above. |
 | `observe --event-file FILE --expected-head SHA --expected-review-key HASH` | Read-only replay plus exact-head/key check. Returns typed `observed` or `not_observed` status and never mutates the log. |
 | `rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID` | Replay one complete terminal receipt, verify exact identity and evidence, and emit one closed `InteractiveCollationDecision/v1`. It never appends or performs recovery or remote behavior. |
-| `decide-merge-readiness --input-file FILE` | Validate one closed exact-head CI/test/review input and emit one advisory `MergeReadinessDecision/v1`. It performs no network, post, authorization, or merge operation. |
+| `decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID` | Validate closed exact-head CI/test/head observations, invoke `rehydrate-interactive` once from the supplied producer sources and identity, and emit one advisory `MergeReadinessDecision/v1`. It accepts no caller decision and performs no network, post, authorization, or merge operation. |
 | `review-key ...` | Validate repository, PR, base, head, and config inputs and print their canonical review key. It uses the same construction as events, evidence, and the collector. |
 | `shadow --observation-file FILE ...` | Best-effort production seam. `--enabled` overrides `KC_PR_FLOW_REVIEW_SHADOW`; enabled collection also requires `--head-check-status` and, when successful, `--live-head`. It accepts exactly one closed `ShadowObservation/v1` (`kc-pr-flow.shadow-observation/v1`) file, persists a fresh `run.started`, builds and preflight-replays the remaining complete lifecycle before appending those events, then observes once. Every dependency, validation, head, append, or replay failure returns typed `not_observed` and fails open only to the unchanged legacy review. A post-start failure may leave an incomplete non-authoritative run for increment 2.3 recovery. |
 | `verify-evidence --pointer-json FILE --repo DIR` | Verify one pointer from a private snapshot against the local repository. |
