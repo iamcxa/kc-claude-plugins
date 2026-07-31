@@ -82,7 +82,7 @@ pages:
     url_pattern: "/path"
     elements:
       <snake_case_element>:
-        selector: 'data-testid="value"'
+        selector: '[data-testid="value"]'
         description: "..."
 ```
 
@@ -102,22 +102,80 @@ Using `app:` or `name:` in steps means v1 format -- rejected by the test runner.
 
 ## Selector Priority
 
-1. `[data-testid="value"]` -- best stability
-2. `[role="<r>"][aria-label="<v>"]` -- CSS attribute selector (Cand 2, canonical since PR #8) e.g., `[role="button"][aria-label="Submit"]`
-3. `[role="<r>"]` -- role only; combine with `:nth-of-type(N)` if repeated
-4. `[aria-label="<v>"]` -- when role isn't stable
-5. Never use `has-text()` -- broken in agent-browser, causes timeout
-6. BANNED: `role=<r>[name="<v>"]` Playwright attr syntax → use `[role="<r>"][aria-label="<v>"]` (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
-7. BANNED: ` >> nth=N` Playwright nth chord → use `:nth-of-type(N)` CSS pseudo
-8. BANNED: bare `text=<v>` at selector start → use `find text "<v>"` subcommand
-9. DEPRECATED as `selector:` value: `find role <r> --name "<v>"` -- subcommand chain, not selector grammar (PR #8 course correction; see design.md addendum)
+**This is the single authority for mapping `selector:` grammar.** Other files
+must not restate this table — point back here instead. Enforcement lives in
+`scripts/lint-mapping.sh` (what's banned) and `compiler/lib/selector-translate.js`
+(how each form is consumed).
+
+**`selector:` is a plugin-internal locator DSL, not a raw CLI argument you hand
+to `agent-browser`.** For `expect:`/visibility assertions, the compiler
+(`compiler/lib/selector-translate.js`) translates the value into an
+accessibility-tree match pattern (emitted at `codegen.js:1766`, consumed by the
+generated `_poll_snapshot_contains` helper, whose body is a Bash substring test
+against the captured a11y snapshot — fixed-string, no regex) — it does not parse the value as literal
+CSS or Playwright syntax for that check, which is why the CSS-attribute form and
+the Playwright role-attr form below compile to byte-identical output. `click`/
+`fill` actions are a separate path: the raw `selector:` value **is** passed to
+`agent-browser click|fill` as a literal argument there (unless the element also
+declares `css_selector:`, see below), so its syntax must actually resolve on
+that path. Measured three months post-launch: the CSS-attribute form
+(`[role="<r>"][aria-label="<v>"]`) was emitted 0 times across 32 real mapping
+files against a banned-but-actually-fine `role=<r>[name="<v>"]` emitted 2,183
+times, because `aria-label` is only present on ~2.8% of components in the
+primary target app — the CSS form requires literal attributes the DOM mostly
+doesn't have. Full record: `docs/dev/.spacedock-state/e2e-selector-canon-review.md`.
+
+1. `[data-testid="value"]` -- best stability, explicit test anchor
+2. `role=<r>[name="<v>"]` -- primary form for elements without a test ID. Matches
+   the *computed* accessible name and *implicit* role exactly as the mapper
+   observes them in the a11y snapshot (e.g., `role=button[name="Save"]`).
+   **Forms 2 and 3 resolve on the translated visibility path only.** Handed to
+   `agent-browser click|fill` literally they return `false`/not-found, because
+   agent-browser drives CDP and does not implement Playwright's selector engines.
+   Probed live against agent-browser 0.32.0 + Chrome for Testing on a fixture
+   whose snapshot showed the element: `is visible 'role=button[name="AlphaBtn"]'`
+   and `is visible 'text=AlphaBtn'` both returned `false`, while
+   `[role="button"][aria-label="通知"]` and `h1` returned `true`. So an element
+   these forms locate and a step also **clicks or fills** needs `css_selector:`
+   (below). Without it the step fails loud under `e2e-test-runner` Rule 1 — a
+   refusal, not a silent pass, which is why both forms belong in Rule 1's NATIVE
+   list rather than merely being dropped from its banned list.
+   The regex variant `role=<r>[name=/<re>/]` is **accepted**: it translates to the
+   literal prefix of `<re>` before the first regex metacharacter. That prefix is a
+   substring match, so an over-short prefix can match a longer unintended string
+   (`/holder.*X/` -> `holder`, which matches inside `placeholder`) — hazard tracked
+   by the `e2e-regex-prefix-false-match` entity, not fixed here.
+3. `text=<v>` -- role-agnostic text match, for elements with no stable role.
+   Translates to the same a11y pattern shape as #2, just without the role prefix.
+   A trailing ` >> nth=N` chord is stripped; at `nth=0` that is an equivalence for
+   an existence assertion, not a widening. The regex variant `text=/<re>/` is
+   **refused** (the translator returns null) because there is no fixed-string image
+   of a regex, so it takes the documented `_poll_visible` fallback instead of a
+   near-miss pattern that would silently never match.
+4. `[role="<r>"][aria-label="<v>"]` -- secondary form. Use ONLY when the
+   component genuinely carries a literal `aria-label` attribute (rare — verify,
+   don't assume). Not a default output.
+5. `[role="<r>"]` -- role only; combine with `:nth-of-type(N)` if repeated
+6. `[aria-label="<v>"]` -- when role isn't stable
+7. Never use `has-text()` -- broken in agent-browser, causes timeout (BANNED — see `scripts/lint-mapping.sh`)
+8. BANNED: ` >> nth=N` Playwright nth chord -> use `:nth-of-type(N)` CSS pseudo (BANNED — see `scripts/lint-mapping.sh`)
+9. DEPRECATED as a `selector:` value: `find role|text|testid|label <r> [--name "<v>"]` -- this is an
+   agent-browser CLI subcommand chain, not selector grammar (BANNED — see `scripts/lint-mapping.sh` CLASS 5).
+   Valid only as an interactive CLI command during exploration, never as a stored `selector:` value.
+
+**`css_selector:`** -- optional element field (read at `compiler/resolver.js:62`),
+a literal CSS selector distinct from `selector:`. Used for an eval-based
+`querySelector().click()` on `click` steps (more reliable than `agent-browser
+click` in headless CI) and **required** for `value: {runtime_ref: ...}`
+sensitive fills (SC-1032) — the secret is written via `querySelector`, never
+argv. Must be valid CSS (it is never translated).
 
 ## Key Gotchas
 
 - **`e2e-flow-writer` has no Bash tool**: intentional -- it does pure codebase analysis, never opens a browser. Adding Bash would break isolation.
 - **`@ref` is ephemeral**: snapshot `@ref` values change on every DOM mutation. Mappings store stable selectors, not `@ref`.
 - **`is visible` exit code is always 0**: check stdout text `"true"`/`"false"`, not exit code.
-- **React Native Web**: text elements render twice. Use `:nth-of-type(2)` CSS pseudo or `find text "<v>"` subcommand instead of bare `text=` with `>> nth=1` (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
+- **React Native Web**: text elements render twice. Use `:nth-of-type(2)` CSS pseudo, `role=<r>[name="<v>"]`, or `text=<v>` — all match the computed accessible name once. `>> nth=N` is BANNED regardless of prefix (see `e2e-pipeline/scripts/lint-mapping.sh`).
 - **Ant Design CSS-hidden inputs**: `is visible` returns false for functional elements. Verify via snapshot a11y tree presence instead.
 - **Snapshot doesn't expose `data-testid`/`aria-label`**: use `agent-browser is visible "<selector>"` for attribute-based verification.
 - **Don't pass-through what you can execute**: If an agent has the tools to attempt a step (e.g., verifier has Bash -> can run CLI commands), it should attempt it best-effort rather than blindly skipping. Silent skip = the user discovers broken commands only at execution time, not verification time. External checkpoint failures in the verifier use `on_fail: warn` override so they never block browser verification.

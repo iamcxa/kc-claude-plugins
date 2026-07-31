@@ -92,10 +92,10 @@ terminate a PID absent from the ownership receipt.
 
 ## React Native Web (Expo)
 
-- Text elements render TWICE in DOM (nth=0 hidden, nth=1 visible) — use `:nth-of-type(2)` CSS pseudo or `find text "<v>"` subcommand; `>> nth=1` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
-- `text=` does substring match — use `find text "<v>"` subcommand form for reliable matching
-- Tab bars get proper role attributes — use `[role="tab"][aria-label="..."]` CSS attribute selector (Cand 2, canonical since PR #8); do NOT emit `find role tab --name "..."` as a `selector:` value — that is a subcommand chain, not a selector string
-- Multi-row table elements need `:nth-of-type(1)` for "at least one exists" assertion; `>> nth=0` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
+- Text elements render TWICE in DOM (nth=0 hidden, nth=1 visible) — use `:nth-of-type(2)` CSS pseudo, `role=<r>[name="<v>"]`, or `text=<v>` (all match the computed accessible name once); `>> nth=1` is BANNED (see `e2e-pipeline/scripts/lint-mapping.sh`)
+- `text=` matches the computed accessible name (translated by the compiler — see `CLAUDE.md` § Selector Priority)
+- Tab bars get proper role attributes — use `role=<r>[name="<v>"]`; do NOT emit `find role tab --name "..."` as a `selector:` value — that is a subcommand chain, not a selector string
+- Multi-row table elements need `:nth-of-type(1)` for "at least one exists" assertion; `>> nth=0` is BANNED (see `e2e-pipeline/scripts/lint-mapping.sh`)
 
 ## Repeated Elements (Tables, Lists)
 
@@ -106,17 +106,7 @@ terminate a PID absent from the ownership receipt.
 
 ## Selector Priority (for mapping files)
 
-1. `[data-testid="value"]` — best stability, explicit test anchor
-2. `[role="<r>"][aria-label="<v>"]` — CSS attribute selector (Cand 2, canonical since PR #8); e.g., `[role="button"][aria-label="Submit"]`
-3. `[role="<r>"]` — role only; combine with `:nth-of-type(N)` if repeated
-4. `[aria-label="<v>"]` — when role isn't stable
-5. NEVER use `css=...has-text('...')` — broken in agent-browser, times out
-6. BANNED: `role=<r>[name="<v>"]` Playwright attr syntax → use `[role="<r>"][aria-label="<v>"]` (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
-7. BANNED: ` >> nth=N` Playwright nth chord → use `:nth-of-type(N)` CSS pseudo
-8. BANNED: bare `text=<v>` at selector start → use `find text "<v>"` subcommand
-9. DEPRECATED as `selector:` value: `find role <r> --name "<v>"` — subcommand chain, not selector grammar (PR #8 Copilot review; see design.md addendum)
-
-**Regex selector note**: Former form `find role <r> --name "/<pattern>/"` with regex partial match is also DEPRECATED as a `selector:` value (same reason — subcommand chain). For pattern-based matching, use `[aria-label*="prefix"]` (CSS substring attribute selector) or add `data-testid`. Former form `role=X[name=/pattern/]` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
+See `CLAUDE.md` § Selector Priority — the single authority for `selector:` grammar (what to emit, what's banned, and the `css_selector:` field). Enforcement: `e2e-pipeline/scripts/lint-mapping.sh`.
 
 ## Snapshot vs is visible
 

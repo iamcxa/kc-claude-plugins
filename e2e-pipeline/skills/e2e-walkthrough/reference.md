@@ -185,8 +185,8 @@ Visual anomalies are always listed individually. JS error counts replace individ
 **Smoke mode**: Skip steps 5-6 per step. Run `<browser_command> errors --json` once at the end after all navigation steps. Smoke focus is selector verification, not runtime health. If the batch check returns errors, record them as anomalies on the **last step** in the step log with `source: "errors --json (batch)"`. These count toward the Phase 4 anomaly review threshold — batch errors mean non-zero anomalies, so the Phase 4 skip condition does NOT apply.
 
 **Selector verification strategy:**
-- `find text "<v>"` subcommand selectors: verify by comparing snapshot a11y tree text content against mapping values. Snapshot is the source of truth. Bare `text=<v>` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
-- `data-testid` / `aria-label` / `[role="<r>"][aria-label="<v>"]` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `<browser_command> is visible "<selector>"` for DOM-level verification. Bare `role=<r>[name="<v>"]` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh). DEPRECATED as `selector:` value: `find role <r> --name "<v>"` — subcommand chain, not selector grammar (PR #8 course correction).
+- `role=<r>[name="<v>"]` / `text=<v>` selectors: verify by comparing snapshot a11y tree content against mapping values. Snapshot is the source of truth. (Neither is banned — see `CLAUDE.md` § Selector Priority.)
+- `data-testid` / `aria-label` / `[role="<r>"][aria-label="<v>"]` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `<browser_command> is visible "<selector>"` for DOM-level verification. DEPRECATED as `selector:` value: `find role|text|testid|label <r> [--name "<v>"]` — subcommand chain, not selector grammar; banned by the linter (CLASS 5).
 
 ### Anomaly Observation Rules
 
@@ -244,7 +244,7 @@ All anomalies are recorded to the step log and reported inline. The walkthrough 
 Maintain an in-memory list of mapping discrepancies throughout Phase 3. Each entry: `{type, page, element, details}`.
 
 **Detection mechanisms:**
-- **Stale selector**: `snapshot` a11y tree text differs from mapping's expected text for a `find text "<v>"` selector, OR `is visible` returns `false` for a `data-testid`/`aria-label` selector. Bare `text=<v>` form is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh).
+- **Stale selector**: `snapshot` a11y tree text differs from mapping's expected text for a `role=<r>[name="<v>"]` or `text=<v>` selector, OR `is visible` returns `false` for a `data-testid`/`aria-label` selector.
 - **Missing element**: element listed in mapping is absent from both snapshot and `is visible` check
 - **Trigger mismatch**: action on mapped element produces unexpected intermediate state (e.g., dropdown instead of direct dialog) — detected by post-action snapshot showing unexpected structure
 - **New element**: element found in snapshot that has no entry in the current mapping page
