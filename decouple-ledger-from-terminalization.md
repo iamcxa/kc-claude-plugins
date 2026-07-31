@@ -508,3 +508,59 @@ Cycle 2 closes validation's proof defects without changing an AC or authority ed
 remote-observed terminal/archive durability, adds direct-route and whole-diff mutation proof, and
 ratchets executable changed-line coverage above 85%. The isolated branch/worktree remains for FO
 integration; no worker PR, merge, push of the code branch, or cleanup was performed.
+
+## Stage Report: validation (cycle 2)
+
+- FAILED: Re-anchor on the unchanged source requirement and independently validate exact product
+  head `7ad89b5d996d5e455475be648fbe4a0436f13640` against `origin/main@1d6d0d0`.
+  The remote-durability, direct-route, absolute-claim, and exact cycle-1 mutation repairs were
+  reproduced, but adjacent AC-4 and coverage residuals still reject the gate.
+- DONE: AC-1 — Product delivery terminalizes without ledger upkeep.
+  Real bare-origin flat/folder fixtures reached remote-observed terminal commits and signed archive
+  commits. Dirty live bytes and a rejecting pre-push hook left the live entity unarchived.
+- DONE: AC-2 — Legacy ledger and in-flight entities stay readable.
+  Empty/draft/pending/numbered/merged/malformed ledger refs passed; an unreachable direct commit
+  failed before mutation, while an `origin/main`-reachable direct commit archived remotely with
+  legacy ledger bytes unchanged.
+- DONE: AC-3 — Archive-first observation remains useful and non-authoritative.
+  Derivation again produced `14,2,18.81,n/a,88.17,pending:2026-08-07`, preserved the state tree,
+  and the `unknown -> 0` mutation reddened.
+- FAILED: AC-4 — The change stays inside the declared repo-platform boundary.
+  The three-path allowlist is exact and the cycle-1 literal probe now reds, but the same automatic
+  task creation through `"$SPACEDOCK_BIN" new` plus an invocation is accepted by the regex guard at
+  `docs/dev/artifacts/decoupled-ledger-contract-test.sh:769-779`.
+
+Lenses: workflow prose plus executable shell; correctness REJECT/2, security PASS/0,
+silent-failure REJECT/2, type-design PASS/0, concurrency PASS/0,
+resource-lifecycle PASS/0, manifest/back-compat PASS/0.
+Diff coverage: **81.28%** (330/406 Bash logical statements), below the 85% ratchet; lines 884-1011
+explicitly exclude 23 executable coverage-harness candidates, all unexecuted, and executable Python
+heredocs are also outside the reported denominator. No waiver is recorded.
+Adversarial: auth removal, ledger re-coupling, old baseline, `unknown -> 0`, and the original
+automatic-task literal all red; `"$SPACEDOCK_BIN" new` plus invocation stayed green — test hole.
+Cross-model: preferred `agy` Gemini 3.1 Pro High timed out; fallback Claude Sonnet produced no result
+before termination. Both observed failures establish unavailability; no reviewer verdict is invented.
+E2E: real Spacedock 0.26 bare-origin split-root terminal/archive and direct-commit routes passed,
+including rejected-push and unreachable-commit negatives; product worktree remained clean.
+
+### Findings
+
+1. `scope_diff_guard` is a syntax denylist, not enforcement of the no-automatic-mutation boundary.
+   Lines 769-779 recognize literal `spacedock new` and selected function names but miss the already
+   supported binary indirection, so AC-4 remains behaviorally falsified.
+2. `coverage_ratchet` self-excludes its own added executable block at lines 947-954 and skips every
+   heredoc at lines 955-958. The printed 330/383 therefore is not diff coverage for the executable
+   surface required by the validation-stage ratchet; including only the omitted Bash block is red.
+
+### Summary
+
+Cycle 2 REJECTS exact head `7ad89b5d996d5e455475be648fbe4a0436f13640`. Final regressions remain
+green: focused `all`, 23/23 work-context, 22/22 release-metadata, 12/12 frontmatter, Bash syntax,
+ShellCheck, Markdown fences, stage parser, and `git diff --check`. This is the second consecutive
+validation rejection, so Gate Authority ends the implementation loop and routes the decision to the
+captain rather than opening cycle 3.
+
+### Feedback Cycles
+
+- Cycle 2: REJECTED — remote durability/direct compatibility closed; automatic-mutation enforcement
+  and honest executable coverage remain open; captain escalation required by the consecutive-count rule.
