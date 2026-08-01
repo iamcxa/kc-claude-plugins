@@ -1,13 +1,13 @@
 ---
 title: "Make the compiler refuse the selector grammar the linter bans — one policy, one gate"
-status: ideation
+status: implementation
 source: GitHub #88, sprint e2e-pipeline/S1 item 2; re-shaped after PR #123 retired two of the five ban classes
 product: e2e-pipeline
 sprint: S1
 started: 2026-08-01
 completed:
 verdict:
-worktree:
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/e2e-selector-compile-gate
 issue: "88"
 pr:
 design: required
@@ -67,8 +67,11 @@ reply was to proceed. Taken: **the baseline file lives in the consumer repo**
 plugin defines the format and ships **synthetic** fixtures only. No consumer app's
 violation inventory enters this public marketplace repo.
 
-**Gate granularity — captain decision, pending.** See the next section; the ACs are
-written against the recommended answer.
+**Gate granularity — captain ruled, 2026-08-01: option B, "two severities".** Blocking on
+the flow-resolved scope, non-blocking warnings on the whole mapping file. Asked because
+the EM routed it there and because it decides how obstructive the gate is on the captain's
+own repo; the ruling is recorded verbatim in the next section, which the ACs are written
+against.
 
 ## Gate granularity — measured, and the alternative named on record
 
@@ -78,34 +81,42 @@ gating **only the selectors a flow actually resolves**. It matters because whole
 granularity is what forces the baseline contract into existence at all.
 
 Measured against the real consumer corpus at `/Users/kent/Project/carlove/.claude/e2e`
-(45 flows, 5 mappings), by running this plugin's own `parser.js` + `resolver.js` over
+(47 flows, 5 mappings), by running this plugin's own `parser.js` + `resolver.js` over
 every flow and classifying every `selector` value in the resolved output
 (`/tmp/measure-resolved-scope.js`, reproducible):
 
 | scope | banned findings | unique records | blast radius on day one |
 |---|---|---|---|
 | mapping-file | **39** | 36 | 2 of 5 mappings — which reds *every* flow that loads them |
-| flow-resolved | **≥3** | 3 | 2 of 45 flows |
+| flow-resolved | **≥3** | 3 | 2 of 47 flows, and only 1 of those is differential-capable (AC-5) |
 
-The resolved number is a **floor, not an exact count**: 43 of 45 flows already carry
-pre-existing resolve errors (`vehicle-brand-select.yaml` alone has 32), so element
-references that never resolve were never classified. Those errors are corpus rot that
-predates this entity; the floor is still the right decision input, because it can only
-move up and the mapping-file number is fixed at 39.
+The resolved number is a **floor, not an exact count**: 43 of the corpus's 47 flows already
+carry pre-existing parse or resolve errors (`vehicle-brand-select.yaml` alone has 32), so
+element references that never resolve were never classified. Those errors are corpus rot
+that predates this entity; the floor is still the right decision input, because it can
+only move up and the mapping-file number is fixed at 39.
 
 Independently corroborating: the 4 compiled artifacts in that repo contain **zero**
 `>> nth=` tokens, because `compiler/lib/selector-translate.js:93-95` silently strips the
 chord on the visibility path. So the class survives by being invisible, and the flows it
 actually reaches are few.
 
-**Recommended: two severities, one policy table.**
+**Captain ruled 2026-08-01 — option B, two severities, one policy table.** The choice was
+put to the captain in consequence terms rather than mechanism terms: option A taxes every
+future edit to a mapping with an unrelated backlog of 39 findings; option B keeps the door
+narrow and lets rot sit longer, but visibly. The ruling was B, with the explicit condition
+that the other findings still print every run. What it selects:
+
 - **Blocking — flow-resolved scope.** A banned selector on an element the flow resolves
   fails compile and dry-run. This is the defect the issue reports.
 - **Warning — mapping-file scope.** Every other banned selector in a loaded mapping is
   printed with `path:line:class` on stderr, non-blocking. Latent rot stays visible
   instead of silently accumulating.
-- The baseline applies to the **blocking** set only, so the corpus adopts 3 records
-  rather than 36.
+- The baseline is **consulted** only for blocking findings, but it is **produced** by
+  walking the mapping file, so adopting one covers all 36 banned elements rather than
+  only the ~3 a flow reaches today. That asymmetry is deliberate and its cost is named in
+  the design section: a future flow that starts resolving a grandfathered element compiles
+  green, and prints a distinct resolved-grandfathered line every run.
 
 Refusal of the pure alternatives, on record: pure file-scope contradicts the issue's own
 acceptance idea ("without requiring an unrelated whole-file migration") and multiplies
@@ -114,13 +125,23 @@ the other 36 findings entirely, which is the only reason file-scope was attracti
 
 ## Appetite
 
-**Estimate: 4 hours** implementation (one dispatch), plus validation. Revised up from 3
-after the EM priced the unpriced part: threading `--selector-baseline` through
-`bin → compile() → parse()`, whose signature is `parse(flowPath, mappingDir)` and which
-has a separate cross-site multi-mapping branch.
-**Tolerance: +50% (6 hours).** Past that the work stops and gets re-cut rather than
-continuing — the re-cut is to land the blocking gate alone and defer the baseline to its
-own entity.
+**Estimate: 7 hours** implementation (one dispatch), plus validation. Revised twice: 3h at
+first draft, 4h after the EM priced the flag threading, and 7h after the EM walked the
+diff surface the option-B ruling actually implies — a five-export module, a bash→Node
+wrapper that must preserve three exit codes and the `path:line: class:` stderr shape,
+**resolution provenance threaded through `resolver.js` including the multi-site branch**,
+a post-resolve two-severity gate, a separate baseline producer, three test files plus a
+scratch-plugin drift harness, a cross-repo differential run, and four doc surfaces.
+
+**Tolerance: +40% (10 hours).**
+
+**The re-cut is pre-authorized at the seam, not at the clock.** If resolution provenance
+(the `resolver.js` change below) is not landing within the first third of the dispatch,
+the worker **drops the baseline and ships the blocking gate alone**, files the baseline as
+its own entity, and reports the cut — without a round trip. That seam is the load-bearing
+one: everything else is local, and a worker who discovers mid-dispatch that the identity
+it needs does not exist will otherwise either re-derive the design or quietly ship
+file-scope blocking, which is the thing the captain overruled.
 
 ## Fastest path / smallest cut, and which one is taken
 
@@ -144,47 +165,89 @@ own entity.
 This decides a contract, not just behavior: a new CLI flag, a new on-disk file format
 that consuming repos will commit, and a new module boundary two consumers read.
 
-**Module.** `compiler/lib/selector-policy.js`, **core-Node only, zero dependencies**
-(the linter must stay wireable into a consumer `.githooks` without `npm install`).
-Exports:
-- `BANNED_CLASSES` — **the single policy table**: `{id, label, pattern, guidance}` per class.
-- `classifySelector(value)` → class id or `null`. Every consumer's decision about whether
-  a string is banned goes through this one function.
-- `scanMappingText(text, filePath)` → findings with **line numbers**, for the linter and
-  the file-scope warning channel.
-- `scanResolvedElements(elements)` → findings with **element identity**, for the blocking
-  gate.
+**Module.** `compiler/lib/selector-policy.js`, **core-Node only** — the linter must stay
+wireable into a consumer `.githooks` without `npm install`, and that is a test line
+(AC-2), not a comment. Exports:
+- `BANNED_CLASSES` — the policy table: `{id, label, pattern, guidance}` per class.
+- `classifySelector(value)` → class id or `null`. The one function every traversal calls
+  to decide whether a string is banned.
+- `scanMappingText(text, filePath)` → findings with **line numbers**, no YAML structure
+  required. Consumed by `lint-mapping.sh` and by the file-scope warning channel.
+- `scanElements(elements)` → findings over `{mappingFile, page, element, selector}`
+  records. Consumed by the blocking gate and by the baseline producer.
 - `parseBaseline(text)` / `isGrandfathered(finding, baseline)`.
 
-**Two traversals, one policy — stated plainly rather than claimed away.** The text scan
-and the element scan are different code, because line numbers and element identity are
-different facts and neither traversal can produce the other's. What is single-sited is
-the *policy*: both call `classifySelector`, and `BANNED_CLASSES` appears once in the repo.
-The bounded claim is therefore "one banned-class table, two traversals", not "one
-implementation".
+**Two traversals, one policy.** The text scan and the element scan are different code,
+because line numbers and element identity are different facts and neither traversal
+produces the other's. What is shared is the *decision*: both call `classifySelector`. The
+claim this entity makes is the bounded one — "one banned-class table, two traversals" —
+and the enforcement point for it is AC-2's drift test, which proves the bash consumer's
+verdicts track the table. There is no mechanism that would stop someone adding a second
+table tomorrow, so this entity does not claim there is one.
+
+**Where the two severities are wired — this is what the captain's ruling changed.**
+Both live in `compiler/compiler.js`; `parser.js` is not touched, because parse time
+structurally cannot see the blocking set (`compiler.js:52-64` returns on parse errors
+*before* `resolve()` runs, and `validateMapping()` at `parser.js:388-400` sees only
+`version` and `pages`).
+
+| severity | scope | wiring point | effect |
+|---|---|---|---|
+| warning | every `selector:` in each loaded mapping file | after `parse()` succeeds, over the raw mapping bytes | `path:line:class` on stderr; never enters `errors` |
+| **blocking** | selectors the flow actually resolves | after `resolve()` succeeds, **before** `generate()` and before the output write | returns `{success:false, errors, errorDetails}`; no `.sh` written |
+
+**Resolution provenance — the load-bearing change, and it is not in the compiler.**
+`resolver.js` currently discards the identity the blocking gate and the baseline key both
+need: `resolveElement()` returns `{ selector: entry.selector }` and
+`elementResultFromEntry()` returns `{selector, cssSelector}` — element name, page, and
+mapping file all die there, even though `buildSymbolTable` already holds `page` on the
+entry (`resolver.js:61`). Threading `{page, element}` out of those two functions, and
+`mappingFile` in from `compiler.js` (which already computes `mappingPaths`), is the seam
+the appetite's pre-authorized re-cut is anchored on. The cross-site branch
+(`resolveMultiSite`) resolves against a different mapping per site; the baseline key uses
+the mapping file's **basename**, which is already unique per site, so no site field is
+added.
 
 **Baseline format.** One record per line, tab-separated:
 
 ```
-<mapping-file>\t<page>.<element>\t<class-id>\t<selector-value>
+<mapping-file-basename>\t<page>.<element>\t<class-id>\t<selector-value>
 ```
 
 `#` comments and blank lines allowed; matching is exact on all four fields. Keyed by
-**element identity**, not line number and not count — a line number churns the baseline on
-every unrelated edit above it, while an element name is stable across formatting. This
-closes the residual an earlier draft accepted: pasting the same banned selector onto a
-*different* element is a new record and still fails. Measured relevance: the corpus
-contains `role=switch >> nth=1` three times and one other banned string twice, so a
-format keyed only by `(file, class, selector)` would have granted those strings a
-permanent licence in files that `e2e-mapper` authors by pattern repetition.
+**element identity**, not line number and not count. A line number churns on every
+unrelated edit above it; a count passes the same-count swap (delete one occurrence, paste
+onto a different element). Element identity refuses both, and refuses a *changed selector*
+on a known element. It does not survive an element **rename** — a rename reads as a new
+element and blocks, which is the safe direction and is stated here so it is not discovered
+as a surprise. Measured relevance: the corpus contains `role=switch >> nth=1` three times
+and `.ant-modal role=button[name="holder"] >> nth=0` twice, so a `(file, class, selector)`
+key would have granted those two strings a permanent licence in files `e2e-mapper` authors
+by pattern repetition.
+
+**What the baseline grandfathers, stated precisely, because the two-severity split makes
+it ambiguous.** The producer walks the mapping file, so a baseline covers **every**
+banned element in it (36 records for the corpus), not just the ~3 currently reached by a
+flow. That is deliberate: a banned selector on an element that already exists is exactly
+the pre-existing debt the captain's ruling says must not tax unrelated work. What it costs
+is that a *future* flow which starts resolving one of those elements compiles green.
+Mitigation, and it is the reason this is acceptable rather than a hole: a grandfathered
+finding that is **actually resolved by the flow** prints its own distinct stderr line every
+run ("resolved a grandfathered banned selector"), separate from the file-scope warnings —
+so newly depending on known-broken debt is loud, even though it is not fatal. What still
+blocks: a new element, a changed selector on a known element, or a rename.
 
 **No regeneration by the gate.** The compile path contains **no write call** to the
-baseline path — that is the enforcement point, and AC-4 tests it by byte-comparison. The
-only producer is `scripts/lint-mapping.sh --format=baseline`, which prints records to
-**stdout** and accepts no output path. To be explicit about what that does and does not
-buy: an agent can redirect stdout in an inner loop exactly as easily as a person can, so
-stdout-only does not enforce human authorship. What it buys is that adopting or widening a
-baseline lands as a reviewable diff rather than as a side effect of a gate run.
+baseline path — that is the enforcement point, and AC-4 tests it by byte-comparison.
+The producer is a **separate binary that does no gating**, `bin/e2e-selector-baseline.js
+<mapping.yaml>`, which walks the YAML and prints records to **stdout** with no
+output-path argument. It is separate on purpose: an earlier draft put `--format=baseline`
+on `lint-mapping.sh`, which is line-oriented and YAML-structure-blind
+(`scripts/lint-mapping.sh:135-158` matches raw lines with no page/element context) and
+therefore cannot emit an element-keyed record at all. To be explicit about what stdout-only
+does and does not buy: an agent can redirect stdout in an inner loop exactly as easily as a
+person can, so it does not enforce human authorship. What it buys is that adopting or
+widening a baseline lands as a reviewable diff rather than as a side effect of a gate run.
 
 ## Reverse-recovery audit (against `origin/main` `1119387`, fetched 2026-08-01)
 
@@ -193,6 +256,7 @@ baseline lands as a reviewable diff rather than as a side effect of a gate run.
 | Policy definition | **WORKING** | `scripts/lint-mapping.sh:135-158` — three surviving classes, post-#123 |
 | Policy as a reusable unit | **EXISTS_BROKEN** | it exists only as inline bash regexes inside the CLI script; no module, no export. Re-run over the corpus: 2 files exit 2, 39 findings, all `>>nth` — the regexes run, they are just not reusable |
 | Compiler invocation of policy | **MISSING** | two-strategy grep above; `compiler/parser.js:388-401 validateMapping()` validates `version` and `pages` only |
+| Resolution provenance | **EXISTS_BROKEN** | `resolver.js:61` builds symbol-table entries carrying `page`, then `resolveElement()` (`:213`) returns `{selector}` and `elementResultFromEntry()` (`:226`) returns `{selector, cssSelector}` — element name, page, and mapping file are all discarded before the resolved output. The blocking gate and the baseline key both need them. This is the seam the pre-authorized re-cut is anchored on |
 | Chord handling in the compiler | **EXISTS_BROKEN** | `compiler/lib/selector-translate.js:93-95` silently strips `>> nth=N` on the visibility path, which is why CLASS 2 has been survivable and invisible — and why the compiled artifacts show zero chords. Narrowing that behavior is #124, not this entity |
 | Diagnostics channel | **WORKING** | `compiler/compiler.js:54-64` already surfaces parse errors as `errorDetails` for `--json` |
 | Delta / baseline mode | **MISSING** | `git grep -e selector-baseline -e selector-policy` — zero hits |
@@ -207,13 +271,27 @@ No job is renamed by this task.
 
 ## Spike
 
-**No spike needed.** The three mechanisms relied on are all already proven in this repo:
-`parser.js` accumulates and returns blocking errors before `resolve()` and `generate()`
-run (`compiler.js:53-64`); `compiler/lib/` already hosts a shared module two call sites
-read (`selector-translate.js`); and the banned-class regexes are the exact ones running in
-`lint-mapping.sh` today with fixtures that pin both directions. The one previously
-unpriced mechanism — resolved-scope classification — was not spiked but **measured**, by
-running the real parser and resolver over the whole corpus (table above).
+**No spike needed, restated against the post-resolve mechanism** — the first draft's
+waiver cited `parser.js` returning blocking errors before `resolve()`, which proves the
+wrong thing now that blocking happens *after* `resolve()`. The mechanisms this design
+actually relies on:
+
+- **Blocking between resolve and codegen.** `compiler.js:114-156` already returns
+  `{success:false, errors, errorDetails}` from the post-resolve branch on
+  `resolveResult.errors`, and `generate()` plus the output write are strictly downstream
+  (`:195-208`). Adding one more source of blocking errors at that point uses an existing
+  return path, not a new one.
+- **A shared `compiler/lib/` module with two consumers** — `selector-translate.js` is
+  exactly that shape today.
+- **The banned-class regexes** are the ones running in `lint-mapping.sh` now, with
+  fixtures pinning both directions.
+- **Resolved-scope classification** was not spiked but **measured** end to end, by running
+  the real `parser.js` + `resolver.js` over all 47 corpus flows (table above).
+
+The one mechanism that is neither proven nor measured is **threading provenance through
+`resolver.js`**. It is not spiked because it is not risky-unknown, it is
+tedious-and-wide — and that is precisely why the appetite's re-cut is anchored on it
+rather than on the clock.
 
 ## Pre-mortem
 
@@ -236,15 +314,20 @@ sprint exit condition**, and saying so here is the point.
 
 ## Acceptance criteria
 
-**AC-1 — A mapping carrying a surviving banned class fails compile and dry-run**
+**AC-1 — A banned class on an element the flow resolves fails compile and dry-run**
 
-The compiled artifact is not written, and the failure names mapping path, line, selector
-key, banned class, and replacement guidance.
-Verified by: `node bin/e2e-compile.js <flow> --mappings-dir <fixture-dir>` exits 1 with
-those five fields on stderr and no `.sh` in the output dir; same for `--dry-run`; and the
-`--json` document carries the class id in `errors[]`. RED evidence recorded first.
-Falsifier: delete the policy call from `parser.js` `validateMapping()` and the case goes
-green.
+The compiled artifact is not written, and the failure names mapping path, line, page and
+element, banned class, and replacement guidance. The same banned class on an element the
+flow does **not** resolve does not block.
+Verified by, against one fixture mapping carrying a banned selector on two elements where
+the flow references only the first: `node bin/e2e-compile.js <flow> --mappings-dir
+<fixture-dir>` exits 1 naming the referenced element, with no `.sh` in the output dir;
+`--dry-run` behaves the same; the `--json` document carries the class id in `errors[]`;
+and the unreferenced element appears on stderr as a `path:line:class` warning in that
+same run — one command proving both severities. RED evidence recorded first.
+Falsifier: delete the blocking call from `compiler.js` between `resolve()` and
+`generate()` and the exit-1 case goes green while the warning line survives, which
+distinguishes this from a total wiring failure.
 
 **AC-2 — The bash linter's verdicts are produced by the shared table, not its own copy**
 
@@ -265,47 +348,76 @@ An otherwise-blocking mapping compiles when every blocking finding is listed in 
 baseline; a newly introduced violation still fails, and the failure names only the new
 finding.
 Verified by: fixture with 2 blocking findings + a baseline listing both → exit 0 with both
-reported as grandfathered warnings on stderr; add a third violating selector → exit 1
-naming only the third; and re-point an existing baselined selector string onto a second
-element → exit 1, proving the record is keyed by element identity.
-Falsifier: make `isGrandfathered` return true unconditionally and both negative cases go
-green.
+reported on stderr as *resolved* grandfathered findings, distinct from the file-scope
+warning line; then, each as its own case → (a) add a third violating selector on a new
+element → exit 1 naming only the third; (b) re-point an existing baselined selector string
+onto a second element → exit 1, proving the record is keyed by element identity, not by
+`(file, class, selector)`; (c) change the selector on a baselined element to a different
+banned form → exit 1, proving the record pins the value too.
+Falsifier: make `isGrandfathered` return true unconditionally and all three negative cases
+go green.
 
 **AC-4 — The gate cannot regenerate its own baseline**
 
 No compile-path invocation writes the baseline file, and the CLI exposes no flag that does.
 Verified by: byte-compare the baseline file before and after a compile run over a
 violating mapping; `e2e-compile --help` output contains no baseline-writing option; the
-only producer is `lint-mapping.sh --format=baseline` writing to stdout with no output-path
-argument.
+only producer is `bin/e2e-selector-baseline.js`, a separate binary that gates nothing,
+writes to stdout, and takes no output-path argument.
 Falsifier: add an `--update-baseline` flag that writes the file and the byte-compare test
 goes red.
+Also verified here, since it is the other property with no home: `selector-policy.js`
+loads with no `node_modules` resolvable — the test asserts the module's own `require`
+calls resolve only to Node builtins, so the `.githooks`-without-`npm install` claim in the
+docs has an enforcement point rather than a promise.
 
 **AC-5 — A flow that compiles green today is refused, and the artifact a browser would have run is never produced**
 
-Baseline that can move the wrong way: today `gate-smoke-all-pages.yaml` and
-`vehicle-brand-select.yaml` resolve banned selectors (`role=combobox >> nth=0`,
-`role=row >> nth=1 >> …`) and `bin/e2e-compile.js` writes their scripts with exit 0 —
-0 of ≥3 resolved findings refused. End state: both are refused with exit 1 and no `.sh`
-written; with the baseline adopted both compile again, and a hand-added violation on a
+Baseline that can move the wrong way, **re-measured live rather than assumed** — the first
+draft named two flows and one of them was already failing:
+
+| corpus flow | today, real CLI | differential-capable? |
+|---|---|---|
+| `gate-smoke-all-pages.yaml` | **exit 0**, `gate-smoke-all-pages.sh` written, resolving `role=combobox >> nth=0` | **yes** — the whole AC rests on this one |
+| `vehicle-brand-select.yaml` | **exit 1**, no `.sh`, 6 pre-existing `unsupported expect string` errors | no — identical before and after, so it can never show the gate |
+
+So the honest delta this entity can demonstrate on the real corpus is **1 of 1
+differential-capable flow**, not "≥3 of ≥3". Stated that way because the larger number
+would read as more evidence while being less.
+
+End state: `gate-smoke-all-pages.yaml` is refused with exit 1, naming
+`role=combobox >> nth=0` and its class, and writes no `.sh`; with a baseline adopted it
+compiles again with the resolved-grandfathered stderr line; a hand-added violation on a
 new element is refused.
-Verified by (E2E, real runtime, not a unit test): a **differential** run of the real CLI —
-the same flow and mapping bytes compiled at `origin/main` (exit 0, `.sh` written,
-resolved element present in it) and at the branch head (exit 1, no `.sh`). Both runs'
-exit codes and directory listings recorded as command output. The differential is what
-makes this able to fail: an implementation that does not actually block produces two
-identical runs.
+Verified by (E2E, real runtime, not a unit test): a **differential** run of the real CLI
+over the same flow and mapping bytes — at `origin/main` (exit 0, `.sh` present) and at the
+branch head (exit 1, `.sh` absent, class id on stderr). Both exit codes and both output-dir
+listings recorded as command output.
+Note on the observable, and why it is the exit code and the artifact rather than the
+artifact's contents: the written script contains **zero** `nth=` tokens — verified,
+`grep -c 'nth=' gate-smoke-all-pages.sh` → `0`, `grep -c combobox` → `1` — because
+`selector-translate.js:93-95` strips the chord during translation. The banned form reaches
+the artifact only as the widened pattern it degrades into, which is #124's defect, not an
+observable for this one.
+The differential is what makes this able to fail: an implementation that does not actually
+block produces two identical runs.
 
 ## Test plan
 
 1. `compiler/test/selector-policy.test.js` — per class: one violating and one clean
    selector; comment/description lines carrying a banned token are ignored (the PR #8 C2
    narrowing); quoted and unquoted YAML scalars; baseline parse/match; `#` comments;
-   duplicate-string-on-a-different-element must not match a baseline record.
+   duplicate-string-on-a-different-element must not match a baseline record; changed
+   selector on a baselined element must not match; builtins-only `require` assertion.
 2. `compiler/test/selector-gate.test.js` — compile and dry-run against fixture mappings;
-   asserts exit status, the five diagnostic fields, no output file, `--json` `errors[]`
-   carrying the class id, and that a file-scope-only finding warns without blocking.
+   asserts exit status, the diagnostic fields, no output file, `--json` `errors[]`
+   carrying the class id, that a file-scope-only finding warns without blocking, and that
+   a resolved grandfathered finding prints its own distinct line.
 3. Drift test (AC-2) — bash consumer against a perturbed copy of the policy module.
+4. `bin/e2e-selector-baseline.js` — output over a fixture mapping is exactly the records
+   the gate would match, round-tripped through `parseBaseline`; and the fixture's
+   grandfathered set makes the AC-3 fixture compile clean, so producer and consumer are
+   proven to agree rather than asserted to.
 4. `test/integration-smoke.sh` — unchanged expectations must still hold (it calls the
    linter directly; the wrapper preserves exit codes 0/1/2 and the `path:line: class:`
    stderr shape).
@@ -316,9 +428,13 @@ identical runs.
 
 ## Measurement
 
-- Resolved-scope refusal rate on the real corpus: 0 of ≥3 today → ≥3 of ≥3 with no
-  baseline; 0 of ≥3 with the baseline adopted, all reported as warnings.
-- File-scope findings surfaced: 0 of 39 today → 39 of 39 as warnings.
+The two channels are **disjoint** — a finding is blocking or it is a warning, never
+counted in both. On the corpus that is 3 blocking and 36 warnings, not 3 and 39.
+
+- Blocking refusals on the real corpus: 0 of 3 today → 3 of 3 with no baseline; 0 of 3
+  with the baseline adopted, each printing the resolved-grandfathered line.
+- File-scope findings surfaced: 0 of 36 today → 36 of 36 as warnings.
+- Differential-capable corpus flows refused: 0 of 1 → 1 of 1 (AC-5's table).
 - Policy definition sites: 2 (bash regexes + prose) → 1 table + prose that points at it.
 - Diff coverage on the executable surface: bar 85%, measured on added/changed executable
   lines only. Prior gates in this repo have twice mis-derived this number by counting
@@ -334,8 +450,9 @@ identical runs.
   "BANNED — see `scripts/lint-mapping.sh`" pointers retarget to the module; the bounded
   claim "one banned-class table, two traversals" is stated where the absolute would be.
 - `e2e-pipeline/docs/ci-integration.md` § Mapping Linter — compile and dry-run now enforce
-  the same table; `--selector-baseline` and the baseline record format; the baseline is
-  produced by `lint-mapping.sh --format=baseline` on stdout; and the linter's new
+  the same table, blocking on what a flow resolves and warning on the rest;
+  `--selector-baseline` and the baseline record format; the baseline is produced by
+  `bin/e2e-selector-baseline.js <mapping.yaml>` on stdout; and the linter's new
   prerequisite — it now requires `node` on PATH, where it was previously pure bash with
   zero dependencies and wireable into a `.githooks` without `npm install`.
 - `e2e-pipeline/skills/e2e-compile/SKILL.md` — the new failure mode and its remedy.
@@ -350,8 +467,12 @@ baseline/delta mode) but they are sequentially dependent, not independent — 2 
 consume 1 — so splitting buys no parallel wall-clock and pays three cold starts.
 
 **Implementation re-verifies before building** (README ideation clause): re-fetch
-`origin/main`, re-run the corpus measurement, and report if 39 / ≥3 have moved. A premise
-that has collapsed is escalated, not built around.
+`origin/main`, re-run `/tmp/measure-resolved-scope.js`, **and re-run the two live compiles
+in AC-5's table** — the finding counts are not enough, because AC-5 rests on
+`gate-smoke-all-pages.yaml` still exiting 0 today and `vehicle-brand-select.yaml` still
+exiting 1 for unrelated reasons. An earlier draft of this entity named both flows as
+differential subjects and was wrong about one of them. Report any movement; a premise that
+has collapsed is escalated, not built around.
 
 ## Out of scope, with owners
 
@@ -406,10 +527,44 @@ invalidates the prior receipt.
 | 1 | AC-2's parity test is tautological — both sides are one code path, so no edit can redden it | **Fixed.** AC-2 is now a *drift* test against a perturbed copy of the module; the "no second table exists" absolute is replaced by the bounded "one table, two traversals" |
 | 2 | AC-5 measures refusal rate but is titled as value; the "no browser spawned" probe cannot fail because `e2e-compile` never spawns one | **Fixed.** AC-5 is now a differential against `origin/main` on two named real flows, with the written artifact as the observable |
 | 3 | The baseline's no-count residual is ~13% of the real corpus (`role=switch >> nth=1` ×3) | **Fixed, and stronger than the proposed count-pinning.** Records are keyed by element identity, which is stable across formatting *and* refuses a re-paste onto a different element |
-| 4 | The resolved-scope alternative was never named; it is what forces the baseline into existence | **Named, measured, partially adopted** — and the granularity change is escalated to the captain, per the EM's own routing |
+| 4 | The resolved-scope alternative was never named; it is what forces the baseline into existence | **Named, measured, escalated, ruled.** Captain ruled option B (two severities) on 2026-08-01; the ACs are written against that answer |
 | 5 (cond.) | Module must stay dependency-free; the linter's new Node prerequisite is undocumented | Adopted into the design and into the `ci-integration.md` doc diff |
 | 6 (cond.) | AC-4's "human redirect" wording overclaims | Rewritten: the enforcement point is the absent write call; stdout-only buys a reviewable diff, not human authorship |
 | 7 (cond.) | Implementation re-verifies corpus numbers against fresh `origin/main` | Written into the dispatch sizing section |
 | NM | The translator's silent chord strip is missing from the audit | Added as a fifth audit row |
 | NM | `css_selector:`-mitigated elements are still refused | Recorded in Out of scope with its reason |
 | NM | Sprint exit is not met by #88 alone; the runner path has no owner | Recorded in the pre-mortem and Out of scope; a backlog entity is filed by this stage |
+
+### Gate cycle 2 — EM verdict `narrow`, six findings, all addressed
+
+The cycle-2 verdict named the real defect of cycle 1's revision: adopting the captain's
+option-B ruling moved the blocking decision from parse time to resolve time, and the
+document was updated in its prose without being updated in its mechanism.
+
+| # | EM finding | disposition |
+|---|---|---|
+| 1 | The blocking gate was wired to `parser.js validateMapping()`, which structurally cannot see the resolved set | **Fixed.** A wiring table now names both severities' points: warnings after `parse()`, blocking after `resolve()` and before `generate()`. AC-1's falsifier retargeted. `parser.js` is no longer touched at all |
+| 2 | `resolver.js` discards element identity (`resolveElement` → `{selector}`), so the baseline key is not computable; it had no audit row, no price, no cross-site answer | **Fixed.** New `EXISTS_BROKEN` audit row with the three line numbers; the threading is named; the cross-site key resolves to the mapping file's basename, already unique per site; and the appetite's re-cut is anchored on this seam |
+| 3 | The only baseline producer (`lint-mapping.sh --format=baseline`) is line-oriented and YAML-blind, so it cannot emit an element-keyed record | **Fixed.** Producer moved to a separate binary, `bin/e2e-selector-baseline.js`, which walks the YAML and gates nothing — which also removes the "the gate produces its own baseline" smell entirely |
+| 4 | The producer emits the file-scope set while the baseline gates the blocking set, so the natural adoption pre-disarms 12× the ruled surface | **Answered, not machinery.** The asymmetry is kept and made explicit: an already-existing banned element *is* the pre-existing debt the ruling protects. What it costs — a future flow resolving one compiles green — is stated, and mitigated by a distinct resolved-grandfathered stderr line every run. A new element, a changed selector, and a rename all still block |
+| 5 | AC-5's differential was degenerate on one of its two named flows, and its observable was one the EM measured as always-zero | **Fixed, and re-measured live rather than taken.** `vehicle-brand-select.yaml` exits 1 today for six unrelated `unsupported expect string` errors — dropped. AC-5 now rests on `gate-smoke-all-pages.yaml` alone and says so: 1 of 1 differential-capable flow. Observable is exit code + artifact presence + class id; the artifact's *contents* are explicitly not the observable, because `grep -c 'nth=' gate-smoke-all-pages.sh` → 0 (the translator strips the chord) |
+| 6 | AC-1 was still titled and verified as file-scope blocking, re-installing option A | **Fixed.** Retitled to the resolved element; the fixture now carries the banned class on two elements where the flow references only one, so a single command proves both severities |
+
+**Corrected in the other direction — one EM number was wrong and is not adopted.** The
+cycle-2 report gives 23 flows with pre-existing parse/resolve errors and calls the
+entity's figure wrong by ~2×. Re-ran `/tmp/measure-resolved-scope.js` and counted its
+error block directly: **43**, against 47 total flow files (the entity's earlier "45" was
+also wrong, and is corrected to 47). The floor argument holds at either number; the number
+recorded is the one that reproduces.
+
+**Non-material items adopted:** the two rule-6 absolutes at the module design
+("`BANNED_CLASSES` appears once in the repo", "every consumer's decision goes through this
+one function") are deleted in favour of the bounded claim plus its enforcement point;
+element-name stability is bounded to reformatting, with rename called out as blocking;
+condition 5 (dependency-free module) became a test line inside AC-4 instead of prose; the
+Measurement channels are stated disjoint (3 blocking + 36 warnings, never 39).
+
+**Appetite:** raised 4h → 7h, tolerance +40% (10h), on the EM's walk of the implied diff
+surface. Per the EM's own guidance the estimate is not being raised further to chase the
+diff — the re-cut is pre-authorized at the `resolver.js` seam instead, so the worker takes
+it without a round trip.
