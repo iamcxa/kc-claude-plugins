@@ -221,7 +221,12 @@ enforces this yet, so it is on you to emit it.
 
 **React Native Web**: Text renders twice in DOM (hidden + visible). Prefer `role=<r>[name="<v>"]` (or `text=<v>` when there's no stable role) — both match the *computed* accessible name once, not the duplicated DOM node.
 
-**Banned forms (linter-enforced via `scripts/lint-mapping.sh`)**: `>> nth=N` (Playwright nth chord), `has-text(` (broken in agent-browser, no equivalent), and `find role|text|testid|label ...` as a stored `selector:` value (that's a CLI subcommand chain — valid only when run interactively during exploration, never written into mapping YAML).
+**Banned forms — now enforced at COMPILE time, not just by the linter.** The table lives
+in `compiler/lib/selector-policy.js`; `scripts/lint-mapping.sh` and `e2e-compile` both read
+it. Emitting one of these no longer merely fails a lint the consumer may not run: if any
+flow resolves that element, `e2e-compile` exits non-zero and writes no test script. A
+pre-existing violation can be grandfathered in the consumer's selector baseline, but
+anything newly emitted here blocks. The banned forms: `>> nth=N` (Playwright nth chord), `has-text(` (broken in agent-browser, no equivalent), and `find role|text|testid|label ...` as a stored `selector:` value (that's a CLI subcommand chain — valid only when run interactively during exploration, never written into mapping YAML).
 
 ### Discovery Mode Details
 

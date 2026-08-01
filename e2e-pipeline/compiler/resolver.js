@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('node:path');
+
 const { isValidSiteName, validateSiteNames } = require('./site-name');
 
 const ACTION_PARSERS = {
@@ -73,8 +75,12 @@ function buildSymbolTable(mapping) {
     }
   }
 
-  // Return collisions map so resolve() can check only referenced elements
-  return { table: table, collisions: collisions, byPage: byPage, sharedPages: sharedPages };
+  // Return collisions map so resolve() can check only referenced elements.
+  // `referenced` accumulates every element a step actually resolves, with the page
+  // and element name the symbol table knows. Without it the resolved output carries
+  // only bare selectors, and the compile gate cannot say WHICH element is banned nor
+  // key a baseline record by anything stable (#88).
+  return { table: table, collisions: collisions, byPage: byPage, sharedPages: sharedPages, referenced: [] };
 }
 
 function isSharedPage(pageName, pageData) {
@@ -200,7 +206,25 @@ var EXPECT_PATTERNS = [
  * Resolve a single element name using the symbol table, with built-in keyword fallback.
  * Returns { selector } on success, or pushes an error and returns null.
  */
-function resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, errorDetails) {
+function recordReference(symbolResult, elemName, page, selector) {
+  // Throw rather than no-op. This is the ONLY channel by which a resolved element reaches
+  // the compile-time selector gate, so a symbol-table-shaped object without `.referenced`
+  // — plausible from a future refactor that hand-builds one — would silently make the gate
+  // blind to that element: banned selector, clean compile, no signal anywhere. Every
+  // current caller goes through buildSymbolTable(), which always sets it, so this is a
+  // wiring assertion and not a runtime branch anyone should hit.
+  if (!symbolResult || !symbolResult.referenced) {
+    throw new Error(
+      'recordReference: symbolResult has no `referenced` accumulator, so the selector ' +
+      'gate cannot see element ' + elemName + ' — build symbol tables via buildSymbolTable()'
+    );
+  }
+  symbolResult.referenced.push({ page: page, element: elemName, selector: selector });
+}
+
+function resolveElement(elemName, symbolResult, stepId, errors, errorDetails) {
+  var symbolTable = symbolResult.table;
+  var collisionsTable = symbolResult.collisions;
   if (collisionsTable.has(elemName)) {
     var colPages = collisionsTable.get(elemName);
     var ambigMsg = "Step '" + stepId + "': expect element '" + elemName + "' is ambiguous -- found on: " + colPages.join(', ');
@@ -210,9 +234,13 @@ function resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, 
   }
   var entry = symbolTable.get(elemName);
   if (entry) {
+    recordReference(symbolResult, elemName, entry.page, entry.selector);
     return { selector: entry.selector };
   }
-  // Check built-in keywords (e.g., dialog -> role=dialog)
+  // Check built-in keywords (e.g., dialog -> role=dialog). These are compiler-owned
+  // constants, not mapping content, so they are deliberately NOT recorded as referenced
+  // elements: no mapping author can introduce a banned form through them, and a baseline
+  // record naming one would point at a file that does not contain it.
   if (BUILT_IN_KEYWORDS[elemName]) {
     return { selector: BUILT_IN_KEYWORDS[elemName] };
   }
@@ -222,7 +250,8 @@ function resolveElement(elemName, symbolTable, collisionsTable, stepId, errors, 
   return null;
 }
 
-function elementResultFromEntry(entry) {
+function elementResultFromEntry(entry, elemName, symbolResult, page) {
+  recordReference(symbolResult, elemName, page !== undefined ? page : entry.page, entry.selector);
   var merged = { selector: entry.selector };
   if (entry.cssSelector) merged.cssSelector = entry.cssSelector;
   return merged;
@@ -245,7 +274,7 @@ function allElementPages(elemName, symbolResult) {
 
 function resolveElementOnPage(elemName, pageName, symbolResult, stepId, mapping, errors, errorDetails, label) {
   if (!pageName) {
-    return resolveElement(elemName, symbolResult.table, symbolResult.collisions, stepId, errors, errorDetails);
+    return resolveElement(elemName, symbolResult, stepId, errors, errorDetails);
   }
 
   var pages = mapping.pages || {};
@@ -258,13 +287,13 @@ function resolveElementOnPage(elemName, pageName, symbolResult, stepId, mapping,
 
   var ownPage = symbolResult.byPage.get(pageName);
   var ownEntry = ownPage && ownPage.get(elemName);
-  if (ownEntry) return elementResultFromEntry(ownEntry);
+  if (ownEntry) return elementResultFromEntry(ownEntry, elemName, symbolResult, pageName);
 
   for (var i = 0; i < symbolResult.sharedPages.length; i++) {
     var sharedPageName = symbolResult.sharedPages[i];
     var sharedPage = symbolResult.byPage.get(sharedPageName);
     var sharedEntry = sharedPage && sharedPage.get(elemName);
-    if (sharedEntry) return elementResultFromEntry(sharedEntry);
+    if (sharedEntry) return elementResultFromEntry(sharedEntry, elemName, symbolResult, sharedPageName);
   }
 
   if (BUILT_IN_KEYWORDS[elemName]) {
@@ -338,7 +367,7 @@ function resolveExpects(expects, symbolResult, stepId, mapping) {
       if (type === 'active') {
         // Phase 1 pattern: "element is visible"
         var elemName = match[1];
-        var resolved = resolveElement(elemName, symbolResult.table, symbolResult.collisions, stepId, errors, errorDetails);
+        var resolved = resolveElement(elemName, symbolResult, stepId, errors, errorDetails);
         if (resolved) {
           resolvedExpects.push({
             type: 'active',
@@ -391,8 +420,8 @@ function resolveExpects(expects, symbolResult, stepId, mapping) {
       } else if (type === 'or-visible') {
         var elemA = match[1];
         var elemB = match[2];
-        var resolvedA = resolveElement(elemA, symbolResult.table, symbolResult.collisions, stepId, errors, errorDetails);
-        var resolvedB = resolveElement(elemB, symbolResult.table, symbolResult.collisions, stepId, errors, errorDetails);
+        var resolvedA = resolveElement(elemA, symbolResult, stepId, errors, errorDetails);
+        var resolvedB = resolveElement(elemB, symbolResult, stepId, errors, errorDetails);
         if (resolvedA && resolvedB) {
           resolvedExpects.push({
             type: 'or-visible',
@@ -620,7 +649,15 @@ function resolve(flow, mapping, options) {
     finally: resolvedFinally,
   };
 
-  return { resolved: resolved, stats: stats, errors: errors, errorDetails: errorDetails };
+  // `referencedElements` sits beside `resolved`, not inside it, so codegen's input shape
+  // is untouched. The compile gate (#88) reads it; nothing else does.
+  return {
+    resolved: resolved,
+    stats: stats,
+    errors: errors,
+    errorDetails: errorDetails,
+    referencedElements: symbolResult.referenced,
+  };
 }
 
 /**
@@ -779,7 +816,35 @@ function resolveMultiSite(flow, siteMappings) {
     steps: resolvedSteps,
   };
 
-  return { resolved: resolved, stats: stats, errors: errors, errorDetails: errorDetails };
+  // Cross-site: each site resolves against its own mapping, so the mapping file is
+  // stamped per site here rather than by the caller. The basename is already unique per
+  // site, which is why a baseline record needs no site column.
+  var referencedElements = [];
+  siteTables.forEach(function(siteResult, siteName) {
+    var siteData = siteMappings[siteName];
+    // basename: a site's `mapping:` may carry a directory (the parser resolves it against
+    // mappingDir), and the baseline key plus the compiler's warning channel both use the
+    // file's basename. Stamping the raw name would make `mappings/office` and
+    // `office.yaml` disagree with every other consumer of the same file.
+    var rawName = siteData && siteData.mappingName ? String(siteData.mappingName) : null;
+    var mappingFile = rawName ? path.basename(rawName) + '.yaml' : null;
+    siteResult.referenced.forEach(function(rec) {
+      referencedElements.push({
+        mappingFile: mappingFile,
+        page: rec.page,
+        element: rec.element,
+        selector: rec.selector,
+      });
+    });
+  });
+
+  return {
+    resolved: resolved,
+    stats: stats,
+    errors: errors,
+    errorDetails: errorDetails,
+    referencedElements: referencedElements,
+  };
 }
 
 module.exports = { resolve: resolve, resolveMultiSite: resolveMultiSite, buildSymbolTable: buildSymbolTable };

@@ -24,7 +24,7 @@ digraph debug {
 
 | Symptom | Category | Likely root cause | First check |
 |---------|----------|-------------------|-------------|
-| `strict mode violation` | MAPPING | Selector matches N>1 elements | Add `:nth-of-type(1)` CSS pseudo or row context (`>> nth=0` is BANNED — see e2e-pipeline/scripts/lint-mapping.sh) |
+| `strict mode violation` | MAPPING | Selector matches N>1 elements | Add `:nth-of-type(1)` CSS pseudo or row context (`>> nth=0` is BANNED — see e2e-pipeline/compiler/lib/selector-policy.js) |
 | `element not found` | MAPPING or FLOW | Selector stale or element renamed | Snapshot current page, compare a11y tree vs mapping |
 | `auth expired / redirect to login` | ENVIRONMENT | Profile cookie expired | Delete `~/.agent-browser/<app>/`, re-auth |
 | `@ref click wrong element` | SKILL | @ref reused across snapshots | Ensure snapshot immediately before every click |

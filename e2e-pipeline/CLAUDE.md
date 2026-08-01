@@ -104,8 +104,16 @@ Using `app:` or `name:` in steps means v1 format -- rejected by the test runner.
 
 **This is the single authority for mapping `selector:` grammar.** Other files
 must not restate this table — point back here instead. Enforcement lives in
-`scripts/lint-mapping.sh` (what's banned) and `compiler/lib/selector-translate.js`
-(how each form is consumed).
+`compiler/lib/selector-policy.js` (the banned-class table), which both
+`scripts/lint-mapping.sh` and the compiler read, and `compiler/lib/selector-translate.js`
+(how each form is consumed). The compiler **blocks** at compile and dry-run time on a
+banned selector the flow resolves, and warns on the rest of the mapping file; pre-existing
+violations go in a baseline the compile path only ever opens for reading — the
+enforcement point for that being true is the byte-compare in
+`compiler/test/selector-gate.test.js` (AC-4), not the wording here
+(`docs/ci-integration.md`).
+One banned-class table, two traversals — the enforcement point for that being true of the
+linter is `compiler/test/selector-lint-drift.test.js`, not a convention.
 
 **`selector:` is a plugin-internal locator DSL, not a raw CLI argument you hand
 to `agent-browser`.** For `expect:`/visibility assertions, the compiler
@@ -157,13 +165,13 @@ doesn't have. Full record: `docs/dev/.spacedock-state/e2e-selector-canon-review.
    don't assume). Not a default output.
 5. `[role="<r>"]` -- role only; combine with `:nth-of-type(N)` if repeated
 6. `[aria-label="<v>"]` -- when role isn't stable
-7. Never use `has-text()` -- broken in agent-browser, causes timeout (BANNED — see `scripts/lint-mapping.sh`)
-8. BANNED: ` >> nth=N` Playwright nth chord -> use `:nth-of-type(N)` CSS pseudo (BANNED — see `scripts/lint-mapping.sh`)
+7. Never use `has-text()` -- broken in agent-browser, causes timeout (BANNED — see `compiler/lib/selector-policy.js`)
+8. BANNED: ` >> nth=N` Playwright nth chord -> use `:nth-of-type(N)` CSS pseudo (BANNED — see `compiler/lib/selector-policy.js`)
 9. DEPRECATED as a `selector:` value: `find role|text|testid|label <r> [--name "<v>"]` -- this is an
-   agent-browser CLI subcommand chain, not selector grammar (BANNED — see `scripts/lint-mapping.sh` CLASS 5).
+   agent-browser CLI subcommand chain, not selector grammar (BANNED — see `compiler/lib/selector-policy.js` CLASS 5).
    Valid only as an interactive CLI command during exploration, never as a stored `selector:` value.
 
-**`css_selector:`** -- optional element field (read at `compiler/resolver.js:62`),
+**`css_selector:`** -- optional element field (read at `compiler/resolver.js:64`),
 a literal CSS selector distinct from `selector:`. Used for an eval-based
 `querySelector().click()` on `click` steps (more reliable than `agent-browser
 click` in headless CI) and **required** for `value: {runtime_ref: ...}`
@@ -175,7 +183,7 @@ argv. Must be valid CSS (it is never translated).
 - **`e2e-flow-writer` has no Bash tool**: intentional -- it does pure codebase analysis, never opens a browser. Adding Bash would break isolation.
 - **`@ref` is ephemeral**: snapshot `@ref` values change on every DOM mutation. Mappings store stable selectors, not `@ref`.
 - **`is visible` exit code is always 0**: check stdout text `"true"`/`"false"`, not exit code.
-- **React Native Web**: text elements render twice. Use `:nth-of-type(2)` CSS pseudo, `role=<r>[name="<v>"]`, or `text=<v>` — all match the computed accessible name once. `>> nth=N` is BANNED regardless of prefix (see `e2e-pipeline/scripts/lint-mapping.sh`).
+- **React Native Web**: text elements render twice. Use `:nth-of-type(2)` CSS pseudo, `role=<r>[name="<v>"]`, or `text=<v>` — all match the computed accessible name once. `>> nth=N` is BANNED regardless of prefix (see `e2e-pipeline/compiler/lib/selector-policy.js`).
 - **Ant Design CSS-hidden inputs**: `is visible` returns false for functional elements. Verify via snapshot a11y tree presence instead.
 - **Snapshot doesn't expose `data-testid`/`aria-label`**: use `agent-browser is visible "<selector>"` for attribute-based verification.
 - **Don't pass-through what you can execute**: If an agent has the tools to attempt a step (e.g., verifier has Bash -> can run CLI commands), it should attempt it best-effort rather than blindly skipping. Silent skip = the user discovers broken commands only at execution time, not verification time. External checkpoint failures in the verifier use `on_fail: warn` override so they never block browser verification.

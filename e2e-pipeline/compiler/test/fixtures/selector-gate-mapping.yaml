@@ -1,0 +1,30 @@
+# selector-gate-mapping.yaml — TEST FIXTURE, synthetic (#88)
+#
+# Deliberately SYNTHETIC. The real corpus that motivated this gate lives in a private
+# consumer repo, and a public marketplace repo is the wrong place for another app's
+# violation inventory. The shapes below are the ones that matter, not the values.
+#
+# Two elements carry the SAME banned selector, one of which the flow references and one
+# of which it does not — that pair is what proves the two severities in a single run.
+version: 2
+app: gate-app
+base_url: "http://localhost:3000"
+pages:
+  login:
+    url_pattern: "/login"
+    elements:
+      email_input:
+        selector: '[data-testid="email"]'
+        description: "Clean — must never be flagged"
+      submit_button:
+        selector: 'role=switch >> nth=1'
+        description: "BANNED (>>nth), and the flow resolves it — blocking"
+      unused_toggle:
+        selector: 'role=switch >> nth=1'
+        description: "BANNED (>>nth), same string, but no step resolves it — warning only"
+  dashboard:
+    url_pattern: "/dashboard"
+    elements:
+      heading:
+        selector: '[role="heading"][aria-label="Dashboard"]'
+        description: "Clean"

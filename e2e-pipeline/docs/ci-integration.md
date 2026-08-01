@@ -204,12 +204,21 @@ Quarantine thresholds are stored in `quarantine.json`:
 
 ---
 
-## Mapping Linter (`scripts/lint-mapping.sh`)
+## Selector Policy (`compiler/lib/selector-policy.js`)
 
-`scripts/lint-mapping.sh` rejects the selector forms below from mapping YAML
-files. Grammar and rationale (what's banned and why `role=X[name="Y"]` and bare
-`text=` are native, not banned): `CLAUDE.md` § Selector Priority — the single
-authority.
+The banned-selector table lives in `compiler/lib/selector-policy.js`. Two consumers read
+it: `scripts/lint-mapping.sh`, which execs it and carries no patterns of its own, and the
+**compiler**, which calls it at compile and dry-run time. Before that, the linter was the
+only enforcement and nothing on the compiled path invoked it — a mapping carrying a banned
+form compiled green and failed only once a browser was already running (#88).
+
+The claim is the bounded one: *one banned-class table, two traversals*. Its enforcement
+point is `compiler/test/selector-lint-drift.test.js`, which perturbs the table in a scratch
+copy and asserts the linter's output changes to match. Nothing prevents someone adding a
+second table tomorrow.
+
+Grammar and rationale (what's banned and why `role=X[name="Y"]` and bare `text=` are
+native, not banned): `CLAUDE.md` § Selector Priority — the single authority.
 
 | Banned token | Why | Use instead |
 |---|---|---|
@@ -228,9 +237,67 @@ find .claude/e2e/mappings -name '*.yaml' -print0 \
   | xargs -0 -n1 bash scripts/lint-mapping.sh
 ```
 
-Exit codes: `0` clean · `1` usage error / file not found · `2` one or more banned tokens detected (path + line printed to stderr).
+Exit codes: `0` clean (and for an explicit `--help`, which is not an error) · `1` missing argument / file not found / `node` not on PATH · `2` one or more banned tokens detected (path + line printed to stderr).
 
 Wire into CI as a fast pre-flight gate before the browser job spins up.
+
+**Dependency note.** The linter used to be pure bash. It now requires `node` on PATH,
+because the policy it enforces lives in a Node module. The module imports Node builtins
+only — asserted by `compiler/test/selector-policy.test.js` — so wiring the script into a
+`.githooks` without running `npm install` still works; a machine with no Node at all now
+fails closed here instead of linting.
+
+### The compile-time gate, and its two severities
+
+`e2e-compile` (and `--dry-run`) enforce the same table. Severity is a function of scope:
+
+| severity | scope | effect |
+|---|---|---|
+| **blocking** | a banned selector on an element **this flow resolves** | exit 1, no `.sh` written, diagnostic names mapping file, page.element, class, selector, and the replacement |
+| warning | every other banned selector in the loaded mapping file | `path:lines:class` on stderr, compile proceeds |
+
+Blocking is scoped to what the flow resolves so that legacy debt elsewhere in a mapping
+does not red an unrelated flow. Latent debt is not hidden — it is printed every run.
+
+### Delta mode: the selector baseline
+
+Pre-existing violations are recorded in a baseline file the compile path only ever opens
+for reading — enforced by a byte-compare across a blocked compile in
+`compiler/test/selector-gate.test.js`, not by this sentence (`--selector-baseline`, default `.claude/e2e/selector-baseline.tsv`). One
+tab-separated record per line:
+
+```
+<mapping-file>\t<page>.<element>\t<class>\t<selector>
+```
+
+`#` comments and blank lines are allowed; a malformed record is a hard error rather than a
+silently skipped line. Records are keyed by **element identity**, so:
+
+- reformatting the mapping does not churn the baseline (no line numbers);
+- pasting a baselined selector onto a **different** element still blocks;
+- **changing** the selector on a baselined element still blocks;
+- renaming an element reads as a new element and blocks — the safe direction.
+
+A baselined element that the flow actually resolves prints a distinct
+`this flow RESOLVES a grandfathered banned selector` warning, so newly depending on known
+debt is loud even though it does not block.
+
+Adopt or widen a baseline with the separate producer, which gates nothing and writes
+nothing:
+
+```bash
+node bin/e2e-selector-baseline.js .claude/e2e/mappings/*.yaml \
+  > .claude/e2e/selector-baseline.tsv
+```
+
+It is a separate binary on purpose: `e2e-compile` has no code path that produces a
+baseline, so there is no flag a build loop can use to make the gate stop complaining.
+Stdout-only does not enforce *human* authorship — an agent can redirect a stream as easily
+as a person can — it makes widening a baseline land in a reviewable diff.
+
+The producer emits records for every banned element in the file, not only the ones a flow
+currently reaches, because an element that already exists is the pre-existing debt the
+baseline is for.
 
 ## Fallback Counter Baseline (`scripts/measure-fallback-baseline.sh`)
 
@@ -441,7 +508,7 @@ FLOWS=$(ls .claude/e2e/compiled/gate-*.sh | xargs -I{} basename {} .sh \
 | `role=heading[name=/每日看板/]` | Playwright regex name (native) | `每日看板` (literal prefix) |
 | `role=combobox >> nth=0` | Role + nth chord — nth chord is BANNED (CLASS 2) regardless of what precedes it | `combobox` (role only) |
 
-> The mapping linter (`scripts/lint-mapping.sh`) rejects three token classes: ` >> nth=N`, `has-text(`, and `find role|text|label|testid ...` stored as a `selector:` value. `role=X[name=Y]` and bare `text=` are native forms, not banned — see `CLAUDE.md` § Selector Priority and `docs/dev/.spacedock-state/e2e-selector-canon-review.md`.
+> The selector policy (`compiler/lib/selector-policy.js`, enforced by `scripts/lint-mapping.sh` and by the compiler) rejects three token classes: ` >> nth=N`, `has-text(`, and `find role|text|label|testid ...` stored as a `selector:` value. `role=X[name=Y]` and bare `text=` are native forms, not banned — see `CLAUDE.md` § Selector Priority and `docs/dev/.spacedock-state/e2e-selector-canon-review.md`.
 
 **Fill and click** (login flows only): Replace `agent-browser fill`/`click` with `agent-browser eval` using JavaScript:
 

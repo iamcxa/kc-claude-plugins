@@ -1,0 +1,15 @@
+# selector-gate-flow.yaml — TEST FIXTURE (#88). Resolves submit_button, never unused_toggle.
+name: selector-gate-flow
+description: "Resolves one banned element and leaves another untouched"
+mapping: selector-gate-mapping
+variables:
+  base_url: "http://localhost:3000"
+steps:
+  - id: navigate-to-login
+    type: navigate
+    action: "Navigate to /login"
+  - id: click-submit
+    type: click
+    action: "Click submit_button on login"
+    expect:
+      - "email_input is visible"

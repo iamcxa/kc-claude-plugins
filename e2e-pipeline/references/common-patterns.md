@@ -92,21 +92,21 @@ terminate a PID absent from the ownership receipt.
 
 ## React Native Web (Expo)
 
-- Text elements render TWICE in DOM (nth=0 hidden, nth=1 visible) — use `:nth-of-type(2)` CSS pseudo, `role=<r>[name="<v>"]`, or `text=<v>` (all match the computed accessible name once); `>> nth=1` is BANNED (see `e2e-pipeline/scripts/lint-mapping.sh`)
+- Text elements render TWICE in DOM (nth=0 hidden, nth=1 visible) — use `:nth-of-type(2)` CSS pseudo, `role=<r>[name="<v>"]`, or `text=<v>` (all match the computed accessible name once); `>> nth=1` is BANNED (see `e2e-pipeline/compiler/lib/selector-policy.js`)
 - `text=` matches the computed accessible name (translated by the compiler — see `CLAUDE.md` § Selector Priority)
 - Tab bars get proper role attributes — use `role=<r>[name="<v>"]`; do NOT emit `find role tab --name "..."` as a `selector:` value — that is a subcommand chain, not a selector string
-- Multi-row table elements need `:nth-of-type(1)` for "at least one exists" assertion; `>> nth=0` is BANNED (see `e2e-pipeline/scripts/lint-mapping.sh`)
+- Multi-row table elements need `:nth-of-type(1)` for "at least one exists" assertion; `>> nth=0` is BANNED (see `e2e-pipeline/compiler/lib/selector-policy.js`)
 
 ## Repeated Elements (Tables, Lists)
 
 - Multiple matches -> strict mode violation
-- Use `:nth-of-type(1)` CSS pseudo for "at least one exists" check; `>> nth=0` is BANNED (BANNED — see e2e-pipeline/scripts/lint-mapping.sh)
+- Use `:nth-of-type(1)` CSS pseudo for "at least one exists" check; `>> nth=0` is BANNED (BANNED — see e2e-pipeline/compiler/lib/selector-policy.js)
 - Use `:nth-of-type(N)` for specific row/item; `>> nth=N` is BANNED
 - Per-row buttons (edit, delete) all share same selector — must use `:nth-of-type(N)` or @ref
 
 ## Selector Priority (for mapping files)
 
-See `CLAUDE.md` § Selector Priority — the single authority for `selector:` grammar (what to emit, what's banned, and the `css_selector:` field). Enforcement: `e2e-pipeline/scripts/lint-mapping.sh`.
+See `CLAUDE.md` § Selector Priority — the single authority for `selector:` grammar (what to emit, what's banned, and the `css_selector:` field). Enforcement: `e2e-pipeline/compiler/lib/selector-policy.js`.
 
 ## Snapshot vs is visible
 
