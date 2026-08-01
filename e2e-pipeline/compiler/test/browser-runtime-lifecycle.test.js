@@ -68,7 +68,8 @@ function setup(t, options) {
   const receipt = path.join(root, 'browser-ownership.json');
   const namespace = runtimeModule.namespaceForRun(
     runId,
-    runtimeModule.socketHomeForBrowserHome(browserHome)
+    runtimeModule.socketHomeForBrowserHome(browserHome),
+    app
   );
   const socketDir = path.join(
     runtimeModule.socketHomeForBrowserHome(browserHome),

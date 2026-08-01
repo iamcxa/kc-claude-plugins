@@ -399,29 +399,58 @@ test('ownership validation rejects session and process binding drift', function(
   assert.equal(fs.existsSync(wrongProfile.receipt), false);
 });
 
+// agent-browser names the socket after the session, not a fixed "daemon.sock":
+// <socketHome>/namespaces/<namespace>/run/<session>.sock. Confirmed on disk against
+// agent-browser 0.32.0. Budgeting against a fixed filename under-counts by
+// (len(session) + 5) - len('daemon.sock') bytes, which agent-browser then refuses.
+function socketPathFor(socketHome, namespace, session) {
+  return path.join(socketHome, 'namespaces', namespace, 'run', session + '.sock');
+}
+
 test('long run identities normalize to distinct socket-safe namespaces', function() {
   const browserHome = '/tmp/agent-browser-home';
+  const session = 'secha-office';
   const firstRun = 'task23-' + 'a'.repeat(100);
   const secondRun = 'task23-' + 'b'.repeat(100);
 
   assert.equal(typeof runtimeModule.namespaceForRun, 'function');
-  const first = runtimeModule.namespaceForRun(firstRun, browserHome);
-  const second = runtimeModule.namespaceForRun(secondRun, browserHome);
+  const first = runtimeModule.namespaceForRun(firstRun, browserHome, session);
+  const second = runtimeModule.namespaceForRun(secondRun, browserHome, session);
 
   assert.match(first, /^e2e-[a-z0-9-]+-[a-f0-9]{12}$/);
   assert.match(second, /^e2e-[a-z0-9-]+-[a-f0-9]{12}$/);
   assert.notEqual(first, second);
   for (const namespace of [first, second]) {
-    const finalSocketPath = path.join(
-      browserHome,
-      'namespaces',
-      namespace,
-      'run',
-      'daemon.sock'
-    );
+    const finalSocketPath = socketPathFor(browserHome, namespace, session);
     assert.ok(
       Buffer.byteLength(finalSocketPath) <= 103,
       crypto.createHash('sha256').update(finalSocketPath).digest('hex')
     );
   }
+});
+
+test('a generated run identity stays socket-safe for a realistic session name', function() {
+  // Shape produced by `new-run-id`: base36 timestamp + '-' + 20 hex characters.
+  const runId = 'msahjbw3-c5db2df771f976678836';
+  // Shape produced by socketHomeForBrowserHome for a real home directory.
+  const socketHome = '/tmp/e2e-agent-browser-502-5943dac8f232';
+
+  for (const session of ['secha-app', 'secha-office', 'a'.repeat(24)]) {
+    const namespace = runtimeModule.namespaceForRun(runId, socketHome, session);
+    const socketPath = socketPathFor(socketHome, namespace, session);
+    assert.ok(
+      Buffer.byteLength(socketPath) <= 103,
+      session + ' -> ' + Buffer.byteLength(socketPath) + ' bytes: ' + socketPath
+    );
+  }
+});
+
+test('an unusable session name fails in the runtime, not inside agent-browser', function() {
+  const socketHome = '/tmp/e2e-agent-browser-502-5943dac8f232';
+  assert.throws(
+    function() {
+      runtimeModule.namespaceForRun('abc123', socketHome, 'x'.repeat(80));
+    },
+    /socket-safe/
+  );
 });
