@@ -800,3 +800,45 @@ against a 7h estimate is under it. So the verdict stayed with EM and no Gate Aut
 bullet routed this to the captain.
 
 **Final head `64c7278`** — 947 tests, 946 pass, 0 fail, 1 skipped; biome clean.
+
+## Delivered — awaiting terminalization by the state holder
+
+PR [#128](https://github.com/iamcxa/kc-claude-plugins/pull/128) squash-merged on captain
+approval, `2026-08-01T13:57:23Z`, merge commit `8634d89`. Exact-head CI re-confirmed green
+on `64c7278` immediately before the merge, and `version parity` — the sole required
+context — is green on the merge commit itself. `release-please` is running on `main` and
+will open its own Release PR; no version was hand-bumped anywhere in this branch.
+
+**Not done here, and why.** This workspace is a **non-holder** of `spacedock-state/dev`
+(the holder is the `antananarivo` workspace). The `pr-merge` lifecycle hook refuses to run
+its terminal transaction — clear the `mod-block`, set `completed` to the authenticated
+`mergedAt`, set the passed verdict and `done`, then the fail-closed archive move — from a
+non-holder or from a detached substitute, and that refusal is the point. So the frontmatter
+here still reads `status: validation` with an empty `verdict`, deliberately: writing those
+cells by hand from a workspace the hook will not run in would produce an entity that *looks*
+terminal without the transaction that makes it so.
+
+**What the holder needs, all of it authenticated and already recorded above:** product PR
+`#128`, merge commit `8634d89`, `mergedAt 2026-08-01T13:57:23Z`, verdict PASSED on the EM
+validation gate (`narrow` + merge authorisation, both conditions landed in `64c7278`).
+
+**Measurement, for the human-triggered ledger pass.** The ledger's source is the *archived*
+entity, so the row is not written here either — but the observations it will need are:
+
+| cell | value | derivation |
+|---|---|---|
+| `task_id` | `pjjs91zrbrcm2we467a3vvp4` | frontmatter |
+| `slug` | `e2e-selector-compile-gate` | |
+| `dispatches` | `8` | 3 EM (2 ideation cycles + 1 validation gate), 2 fresh-context validators, 3 lens reviewers. Implementation was **not** dispatched — it ran in the FO session, which is the ideation-declared sizing (one worker session) collapsing into the orchestrator, and worth reading as such rather than as a dispatch count of 9 |
+| `rework_rounds` | `2` | two validation feedback cycles, both budget-recorded above |
+| `wallclock_hours` | `7.3` | entity opened `2026-08-01T06:39:59Z` → `mergedAt 13:57:23Z`. Against the ideation-declared 7h estimate with a +40% tolerance — inside it, and the pre-authorised re-cut was not taken |
+| `tokens_if_known` | `n/a` | no dispatch reported an observable figure; not inferred |
+| `diff_coverage` | `91.7` | 320/349 executable added/changed `.js` lines, measured by the cycle-2 validator with the comment-line filter applied. Folding in the 7 added `.sh` lines gives 89.3%; the `.js`-only figure is recorded because that is what the bar is scoped to |
+| `escaped_defects_7d` | `pending:2026-08-08` | seven days from `completed` |
+
+Cross-model gate for the record: `agy` 1.1.9, two rounds, cross-vendor to the Claude
+session that ran the gate. `codex` was not attempted — the same gate one session earlier
+ran 40 minutes without finishing while `agy` completed, so `agy` was taken first rather
+than after an observed `codex` failure. Stated plainly because the workflow asks that a
+skipped preferred reviewer carry its observed failure, and this one carries a prior
+session's rather than this session's.
