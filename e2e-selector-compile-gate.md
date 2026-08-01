@@ -678,3 +678,103 @@ It caught this itself, re-ran everything in an isolated detached checkout, and s
 SHA its verdict applied to. Its AC-1 FAIL was correct for that commit. Cycle 2 grades a
 frozen `bb7fc94` in the validator's own isolated worktree, which is what should have
 happened the first time.
+
+## Stage Report: validation
+
+**TL;DR** — Two fresh-context validation cycles, two cross-model rounds, three lens
+reviewers. Cycle 1 rejected on AC-1 and on my own process error (it graded a commit while
+I edited the worktree under it). Cycle 2, against a frozen `bb7fc94` in the validator's own
+isolated checkout, returned **5 of 5 ACs PASS**, diff coverage **91.7%** against an 85%
+bar, and suite green in isolation — with two Material findings, both of which were already
+closed by commits that landed after the SHA it graded, and both re-verified closed at head.
+Final head `0a8b8a7`: **946 tests, 945 pass, 0 fail, 1 skipped**; CI green on that exact
+commit.
+
+### Evidence block
+
+- **Lenses:** diff classified as executable + prose + a shell-script contract change.
+  Fired — **correctness** (exercise-based, per the prose clause: the reviewer ran the
+  documented commands rather than reading them) `1 Material`; **silent-failure**
+  `1 Material, 1 non-material`; **security** (a shell script and a new CLI reading
+  untrusted YAML) `0 findings`; **manifest/back-compat** (`lint-mapping.sh` gained a
+  `node` prerequisite, and an installed copy reads it) `0 Material`. Not fired:
+  **type-design** — no new or changed type, the findings are plain records;
+  **concurrency** — no locks, async ordering or shared mutable state; **resource-lifecycle**
+  — no processes, handles or unbounded growth beyond a synchronous file read.
+- **Diff coverage:** **320/349 = 91.7%** on executable added/changed `.js` lines
+  (bar 85%). Method: `git diff --unified=0` added lines ∩ lcov `DA` records, then a
+  second filter dropping blank, comment and bare-brace lines — the filter two prior gates
+  in this repo skipped, which is why one reported 58/58 where the truth was 17/17. Numerator
+  and denominator reported separately. Most misses are subprocess-only paths node's coverage
+  does not instrument; each was exercised by hand. The 7 added executable lines in
+  `scripts/lint-mapping.sh` were all exercised, including the no-`node` and missing-module
+  branches under `env -i`.
+- **Adversarial:** 3 edits by me, 3 more by the cycle-2 validator, none reused. Mine:
+  neutralising the blocking return (7 red), grandfathering everything (7 red), dropping
+  resolver provenance (8 red), plus re-adding a private regex to the linter (drift test
+  red). The validator's third edit reddened 9. **Its first two did not** — that is the
+  finding, not a pass: the `nth=-1` widening and the quoted-`#` fix had no falsifier.
+  Both now have one, each probed by reverting the fix and watching exactly one test redden.
+  One of my own probes also silently failed to run at first — a line placed after an
+  `exec` under `set -e` — and was re-run only after proving it fired.
+- **Cross-model:** `agy` 1.1.9 (Google Antigravity), cross-vendor to the Claude session
+  running the gate, **two rounds** — one on the build, one on the fixes. Round 1: 3 P1,
+  3 P2, 1 P3. Round 2: 1 P1, 3 P2, 3 P3, and 2 categories explicitly clean. `codex` not
+  attempted this time: the same gate last session ran 40 minutes without finishing and
+  `agy` completed, so `agy` was taken first rather than after an observed failure. Every P1
+  from both rounds is fixed; two P2s are declined with reproduced evidence (both inputs are
+  invalid YAML — `js-yaml` rejects them, so no consumer reaches the scan).
+- **E2E:** the AC-5 differential on the real consumer corpus, through the real CLI, all
+  three legs reproduced independently by the validator: `main` exit 0 with the `.sh`
+  written; branch exit 1 with the output directory empty and the class named; branch with
+  an adopted baseline exit 0, `.sh` written, and the distinct resolved-grandfathered line.
+
+### Scope checkpoint
+
+Every changed file maps to an AC or to the ideation-approved doc diff; **zero unmapped**.
+Confirmed independently by the cycle-2 validator. No version, marketplace, or SKILL.md
+frontmatter surface is touched, so `version-parity-check.sh` and `marketplace-verify.sh`
+are not earned by the diff — both were run anyway and pass, as does
+`skill-frontmatter-lint.sh` (35/35).
+
+### Feedback Cycle 2 — budget record
+
+| | |
+|---|---|
+| Round effort | ~1h against the ideation-declared 7h estimate (cumulative ~2.5h) |
+| Deviation | within the declared +40% tolerance; the pre-authorised re-cut was **not** taken — resolver provenance landed inside the first third, as its trigger required |
+| Findings | 12 raised · **7 fixed** · 3 declined with reasons · 2 already closed at head |
+
+**Fixed (7):** cross-site basename collisions now refused rather than silently merging two
+mappings into one key namespace; `locateSelectorLine` rewritten to attribute each
+`selector:` line to its nearest preceding key and to return a line only when exactly one
+candidate matches (it previously inherited a sibling's line, and picked the first page's
+line for a duplicated element name — a confident wrong answer, which its own docstring
+forbade); the double-quote unescape bounded to the two escapes the docstring names;
+falsifiable tests for the `nth=-1` and quoted-`#` fixes; `--help` exits 0 rather than
+being reported as a usage error; a `docs/debugging.md` anchor this branch's own heading
+rename had broken.
+
+**Declined (3):** the double-printed `ERROR:` lines (reproduced on `origin/main` with an
+unrelated resolve error — pre-existing and general, and fixing it is unrelated churn);
+`--json` losing structured fields for a thrown baseline error (identical to how every
+other thrown error is already wrapped); a quoted scalar with trailing content and an
+unterminated quote (both rejected by `js-yaml` with a parse error, so the mapping never
+loads — handling them would mean the linter disagreeing with the YAML spec).
+
+### Residuals accepted, named rather than left implicit
+
+1. **`scanMappingText` cannot read block or folded scalars.** The linter misses
+   `selector: >` values; the compiler blocks them. Reproduced by the validator in the
+   claimed direction — a lint that passes where a compile blocks, never the reverse.
+   Closing it means a YAML parser in a module that must stay dependency-free.
+2. **A baseline grandfathers a whole file's banned elements, not just the ones a flow
+   reaches.** A future flow that starts resolving one compiles green. Mitigated by the
+   distinct resolved-grandfathered line, and deliberate: an element that already exists is
+   the pre-existing debt the captain's ruling protects.
+3. **`test/integration-smoke.sh`'s 10 added lines are unexercised** — the script cannot
+   reach its lint phase headlessly, since phase 1 requires a reachable target URL. Its
+   actual contract (exit codes and stderr shape) was verified directly against the wrapper
+   instead.
+4. **`#88` does not close the sprint exit condition.** The LLM-driven browser paths are
+   unreached; filed as **#126** with a backlog entity.
