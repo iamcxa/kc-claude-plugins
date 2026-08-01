@@ -1,6 +1,6 @@
 ---
 title: "Make the compiler refuse the selector grammar the linter bans — one policy, one gate"
-status: implementation
+status: validation
 source: GitHub #88, sprint e2e-pipeline/S1 item 2; re-shaped after PR #123 retired two of the five ban classes
 product: e2e-pipeline
 sprint: S1
@@ -9,7 +9,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/e2e-selector-compile-gate
 issue: "88"
-pr:
+pr: "128"
 design: required
 lane: main
 id: pjjs91zrbrcm2we467a3vvp4
