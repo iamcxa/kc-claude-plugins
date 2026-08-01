@@ -170,17 +170,19 @@ function socketHomeForBrowserHome(browserHome) {
   return path.join(temporaryRoot, 'e2e-agent-browser-' + uid + '-' + identity);
 }
 
-function namespaceForRun(runId, socketHome) {
+// agent-browser names the daemon socket after the session, not a fixed filename:
+// <socketHome>/namespaces/<namespace>/run/<session>.sock. Sizing the namespace against
+// a fixed name under-counts by len(session) + 5 - len('daemon.sock'), and agent-browser
+// then refuses a bind the runtime has already declared socket-safe.
+function namespaceForRun(runId, socketHome, sessionName) {
+  if (!sessionName) {
+    throw new Error('a session name is required to size a socket-safe e2e namespace');
+  }
+  const socketFile = sessionName + '.sock';
   const readable = 'e2e-' + runId;
   if (
     Buffer.byteLength(
-      path.join(
-        path.resolve(socketHome),
-        'namespaces',
-        readable,
-        'run',
-        'daemon.sock'
-      )
+      path.join(path.resolve(socketHome), 'namespaces', readable, 'run', socketFile)
     ) <= 103
   ) {
     return readable;
@@ -192,14 +194,16 @@ function namespaceForRun(runId, socketHome) {
     'namespaces',
     'X',
     'run',
-    'daemon.sock'
+    socketFile
   );
   const available = 103 - Buffer.byteLength(oneCharacterPath) + 1;
   const fixedLength = Buffer.byteLength('e2e--' + digest);
   if (available < Buffer.byteLength('e2e-a-' + digest)) {
     throw new Error(
-      'agent-browser home is too long for a socket-safe e2e namespace: ' +
-        path.resolve(socketHome)
+      'agent-browser home and session name leave no socket-safe e2e namespace: ' +
+        path.resolve(socketHome) +
+        ' with session ' +
+        sessionName
     );
   }
   const prefixLength = available - fixedLength;
@@ -2384,7 +2388,7 @@ function main(argv) {
   let namespace;
   try {
     ensureOwnedDirectory(socketHome);
-    namespace = namespaceForRun(options.runId, socketHome);
+    namespace = namespaceForRun(options.runId, socketHome, options.app);
   } catch (error) {
     process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
     return 2;
