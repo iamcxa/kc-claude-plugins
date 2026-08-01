@@ -51,11 +51,11 @@ addition is not a normal set; route it to archive recovery.
    artifact suffix;
 3. terminal live entities in the working state checkout or last confirmed
    durable state ref, including a durable live root whose working copy
-   disappeared during a partial archive; these are either a v1 product plus
-   ledger pair, or `pr=direct-commit:{sha}`;
+   disappeared during a partial archive; these have an authenticated v1 product
+   ref or `pr=direct-commit:{sha}`. Optional ledger fields are unconsumed bytes;
 4. terminal roots found under `_archive/`, solely to distinguish a durable
    completed archive from a partial move that must be restored live. Include
-   both the v1 pair and `direct-commit:{sha}` legacy form.
+   both the v1 product and `direct-commit:{sha}` legacy forms.
 
 The marker is deliberately compact and has one grammar: the fixed prefix plus
 64 lowercase hexadecimal SHA-256 characters. It binds the entity frontmatter
@@ -83,8 +83,9 @@ or JSON `null` when exhaustive reconciliation found zero PRs. Its `head` is
 The artifact field is mod-owned frontmatter metadata and is excluded from
 motivation, change, and evidence extraction if drift forces a renewed draft.
 
-Use this codec for both product and ledger artifacts. `encode` accepts only an
-already-canonical file and emits its field value. `decode` writes the exact
+Use this codec for product artifacts. Historical ledger artifacts retain this
+encoding for read-only audit, but lifecycle decisions do not decode them.
+`encode` accepts only an already-canonical file and emits its field value. `decode` writes the exact
 decoded bytes to a private destination and emits their SHA-256:
 
 ```bash
@@ -140,18 +141,13 @@ PY
 }
 ```
 
-Artifact marker classification is field-specific in startup, dirty replay, and
-outgoing-commit recovery:
+Artifact marker classification in startup, dirty replay, and outgoing-commit
+recovery is product-only:
 
-- authenticate `pr_artifact_v1` only against its product draft/approved
-  `mod-block` and pending/numbered `pr` forms;
-- authenticate `ledger_artifact_v1` only against the draft, pending, numbered,
-  or merged `ledger_pr` forms listed below.
-
-Never compare a ledger artifact digest with `mod-block`: throughout ledger
-draft/finalization that block still carries the independent product artifact
-digest. When both artifacts exist, decode and authenticate both independently
-and require their `live_path` values to agree.
+- authenticate `pr_artifact_v1` against its product draft/approved `mod-block`
+  and pending/numbered `pr` forms;
+- preserve `ledger_artifact_v1` and `ledger_pr` exactly when present, but never
+  decode or require them for product terminalization or archive recovery.
 
 The lifecycle fixture for this contract uses the installed Spacedock 0.26
 binary and a temporary split-root repository. It must set an encoded artifact
@@ -164,10 +160,6 @@ encode a `live_path` for another root; each must stop before a host query or
 push. A crash fixture stops after the set, verifies the one anchored
 frontmatter-only diff through exact replay, reruns the assignments, and
 observes the companion state commit remotely.
-A ledger-draft crash fixture keeps a different valid product digest in
-`mod-block`, sets `ledger_artifact_v1` with its digest-bearing draft
-`ledger_pr`, and proves replay and commit use the ledger ref rather than
-rejecting it against the product block.
 The dirty-local-behind fixture first authenticates a terminalization
 clear-block prefix against local `HEAD` and writes the private recovery record.
 One case advances the remote with an unrelated entity append, restores only
@@ -189,13 +181,13 @@ extract the complete committed entity root as its comparison target, and
 require exact root-byte equality. This is the only normalization allowance; do
 not hand-author an accepted parent-to-commit diff. An explicit
 `direct-commit:{sha}` legacy entity uses its authenticated commit/task/path and
-unique legacy ledger row instead and must not acquire a v1 field. The body,
+must not acquire a v1 field. The body,
 unrelated fields, and all other paths must be unchanged. Only then retry:
 
 If the outgoing child is terminal and its parent is the authenticated
-blocked/non-terminal state with numbered product and ledger refs, validate it
-only as the compound terminalization transaction. Authenticate both artifacts,
-both merged PRs, and the landed ledger from the parent; seed the disposable
+blocked/non-terminal state with a numbered product ref, validate it only as the
+compound terminalization transaction. Authenticate the product artifact and
+merged product PR from the parent; seed the disposable
 workflow from that parent; replay the clear-block setter and then the complete
 terminal fields/refs setter; and require the final complete root to equal the
 committed root byte-for-byte. Never replay the terminal setter alone.
@@ -317,9 +309,9 @@ or archives.
 
 ### Immutable supersession
 
-A `CLOSED` retry, corrective PR, or drifted pushed-pending attempt with an
-exhaustive zero-candidate result is reachable only after the captain explicitly
-approves superseding the authenticated prior attempt. For the pushed-pending
+A `CLOSED` retry or drifted pushed-pending attempt with an exhaustive
+zero-candidate result is reachable only after the captain explicitly approves
+superseding the authenticated prior product attempt. For the pushed-pending
 case, first require the old remote branch still equals the old artifact's exact
 `head_oid`; an externally changed old ref blocks as an identity violation
 rather than becoming a supersession source. Base advancement or another
@@ -328,10 +320,8 @@ The old remote branch remains immutable audit residue.
 
 Mint a fresh attempt identity with
 `python3 -c 'import secrets; print(secrets.token_hex(8))'`, require exactly 16
-lowercase hexadecimal characters, and derive a branch that has never been used:
-
-- product: `docs/pr-{short-id}-attempt-{attempt_id}`;
-- ledger: `docs/dev-ledger-{short-id}-attempt-{attempt_id}`.
+lowercase hexadecimal characters, and derive a product branch that has never
+been used: `docs/pr-{short-id}-attempt-{attempt_id}`.
 
 Before approval, require the proposed branch absent from both local refs and an
 exhaustive `git ls-remote --heads origin
@@ -341,13 +331,11 @@ for that tuple. The new canonical artifact includes `attempt_id` and a
 `supersedes` array with the old artifact digest and head branch plus its exact
 numbered PR ref, or JSON `null` when exhaustive reconciliation found no PR.
 Retain every prior supersession entry as an append-only audit chain. Encode it
-with `artifact_codec`, then persist either
+with `artifact_codec`, then persist
 `pr_artifact_v1={new-product-base64url}` together with
 `pr=pr-merge:pending:artifact-v1:{new-product-digest}` and
-`mod-block=pr-merge:product-pr:v1:{new-product-digest}`, or
-`ledger_artifact_v1={new-ledger-base64url}` together with
-`ledger_pr=ledger-pr:pending:artifact-v1:{new-ledger-digest}`. The artifact
-field and every digest marker are assignments in one `status --set`, followed
+`mod-block=pr-merge:product-pr:v1:{new-product-digest}`. The artifact field and
+every digest marker are assignments in one `status --set`, followed
 immediately by `spacedock state commit`, before any push.
 
 Reconciliation then runs the executable all-state query only for the new
@@ -355,25 +343,25 @@ artifact's owner, branch, and base. `CLOSED` or `MERGED` PRs on superseded
 branches remain audit history and are not candidates for the new attempt; any
 returned PR on the new branch that fails authentication, or more than one
 candidate there, still blocks. Push only the new artifact's exact head OID to
-the absent new ref. For product and ledger zero-candidate drift alike, exact
-reconciliation and any eventual create run only on this new branch. Never
+the absent new ref. Exact reconciliation and any eventual create run only on
+this new branch. Never
 force-push, overwrite, delete, or reuse an old attempt branch. An unexpected
 candidate on the new branch blocks; an uncertain create outcome resumes
 reconciliation for the same durable new attempt and does not mint another.
 
-The zero-candidate supersession fixture runs both branch families against a
+The zero-candidate supersession fixture runs the product branch family against a
 temporary remote: push the old approved branch, return an exhaustive empty PR
 result, advance the base, mint and approve a new attempt artifact with
-`pr: null`, and push only the new branch. It requires both old refs to retain
-their original OIDs, both new refs to be distinct and present exactly once, and
-reconciliation to remain scoped to the corresponding new branch.
+`pr: null`, and push only the new branch. It requires the old ref to retain its
+original OID, the new ref to be distinct and present exactly once, and
+reconciliation to remain scoped to that new branch.
 
 The second set is fail-closed pre-v0.13 legacy adoption. Parse the plain hosted PR
 reference, quote its number in every `gh` call, and show the captain the exact
 live identity: repository, base, head branch, full head OID, merge-base OID,
 binary-diff SHA-256, exact title, full body plus body digest, audit link, and
-live entity path. Even if the PR is already merged, do not terminalize or
-start ledger finalization. Require one explicit captain approval to adopt that
+live entity path. Even if the PR is already merged, do not terminalize before
+adopting its authenticated identity. Require one explicit captain approval to adopt that
 identity, then serialize and durably persist the v1 product artifact and
 replace the plain ref with
 `pr_artifact_v1={product-base64url}` and
@@ -390,258 +378,92 @@ gh pr view "$PRODUCT_PR_NUMBER" \
   --json state,mergedAt,headRefName,baseRefName,headRefOid,isCrossRepository,url,title,body
 ```
 
-If the product PR is `MERGED`, it has delivered the pre-merge ledger row but has
-not yet earned terminal state. Keep the original product PR in `pr`, retain the
-existing `mod-block`, and run this ledger-finalization state machine:
+If the product PR is `MERGED`, product delivery has earned terminal state.
+Authenticate the product artifact and exact numbered PR again: same repository,
+base, quoted head, full stored head OID, approved binary diff, title/body, and a
+non-empty `mergedAt`. Only after every check succeeds set
+`PRODUCT_AUTHENTICATED=yes`, retain the exact numbered product ref, and run the
+product-only terminal transaction below. An empty, draft, pending, numbered,
+merged, malformed, or absent ledger ref is unconsumed compatibility evidence;
+it does not select a phase and cannot veto the transaction.
 
-The follow-up uses `ledger_artifact_v1`, the unpadded base64url of its complete
-canonical JSON bytes. It carries the same fields and byte rules as the product
-artifact
-(`repo`, `base`, `head`, `head_oid`, `base_oid`, `diff_sha256`, exact `title`,
-exact full `body`, `body_sha256`, `audit_link`, and `live_path`) plus the
-authenticated `product_pr`, `product_artifact_sha256`, and
-`product_merged_at`. Its SHA-256 binds these lifecycle forms:
-For a superseding ledger attempt, the decoded artifact also requires the immutable
-supersession contract's `attempt_id` and `supersedes` fields, and its `head`
-must be `docs/dev-ledger-{short-id}-attempt-{attempt_id}`.
+Run one self-contained holder durability transaction. Spacedock requires a
+separate setter to clear `mod-block`, so issue two setters back-to-back and
+then exactly one `state commit`. The function's authentication flag is local
+to the current hook invocation and consumes the result of the exact product
+checks above. The focused decoupling fixture independently exercises five
+local refusal conditions: `PRODUCT_AUTHENTICATED` other than `yes`,
+`PRODUCT_HOST_STATE` other than `MERGED`, empty `PRODUCT_MERGED_AT`,
+`PRODUCT_REF` unequal to the constructed product ref, and empty
+`PRODUCT_ARTIFACT_B64URL`. The existing product-artifact/host reconciliation
+fixtures, not these local checks, prove the upstream evidence allowed to set
+those values:
 
-- before a PR number is known:
-  `ledger_pr=ledger-pr:draft:artifact-v1:{ledger-artifact-sha256}` while
-  awaiting captain approval, then
-  `ledger_pr=ledger-pr:pending:artifact-v1:{ledger-artifact-sha256}`;
-- after exact reconciliation:
-  `ledger_pr=ledger-pr:{ledger-N}:artifact-v1:{ledger-artifact-sha256}`;
-- after terminal verification:
-  `ledger_pr=ledger-merge:{ledger-N}:artifact-v1:{ledger-artifact-sha256}`.
+```bash
+# decoupled-terminal-transaction:start
+terminalize_authenticated_product() {
+  local expected_product_ref
+  local spacedock_cmd
 
-The field is bookkeeping metadata for the existing product entity. It is
-excluded from PR-body extraction and never creates a task, dispatch, or ledger
-row of its own.
+  if [ "${PRODUCT_AUTHENTICATED:-}" != yes ] ||
+    [ "${PRODUCT_HOST_STATE:-}" != MERGED ] ||
+    [ -z "${PRODUCT_MERGED_AT:-}" ]; then
+    printf 'product:authentication-required\n' >&2
+    return 70
+  fi
 
-1. Resolve `BASE=$(spacedock dispatch trunk --workflow-dir {dir})`, fetch
-   `origin "$BASE"`, and select the phase **before** choosing a verifier:
+  expected_product_ref="pr-merge:${PRODUCT_PR_NUMBER}:artifact-v1:${PRODUCT_ARTIFACT_SHA256}"
+  if [ "${PRODUCT_REF:-}" != "$expected_product_ref" ] ||
+    [ -z "${PRODUCT_ARTIFACT_B64URL:-}" ]; then
+    printf 'product:identity-mismatch\n' >&2
+    return 71
+  fi
 
-   ```bash
-   ledger_phase() {
-     python3 - "$1" "${2-}" <<'PY'
-import re
-import sys
+  spacedock_cmd=${SPACEDOCK_BIN:-spacedock}
+  "$spacedock_cmd" status --workflow-dir "$WORKFLOW_DIR" \
+    --set "$SLUG" mod-block= &&
+  "$spacedock_cmd" status --workflow-dir "$WORKFLOW_DIR" --set "$SLUG" \
+    status="$TERMINAL" completed="$PRODUCT_MERGED_AT" verdict=PASSED worktree= \
+    pr_artifact_v1="$PRODUCT_ARTIFACT_B64URL" pr="$expected_product_ref" &&
+  "$spacedock_cmd" state commit "$SLUG" --workflow-dir "$WORKFLOW_DIR"
+}
+# decoupled-terminal-transaction:end
+```
 
-ledger_ref, host_state = sys.argv[1:]
-digest = r"[0-9a-f]{64}"
+Never run the holder prerequisite or commit between the two setters. A commit
+after only `mod-block=` would create a clean, non-terminal, unblocked entity
+and is forbidden. The assignment list deliberately omits `ledger_pr` and
+`ledger_artifact_v1`; Spacedock preserves either field exactly without
+allowing empty, historical, or malformed observation metadata to change the
+verdict.
 
+A dirty crash after the first or second setter is a two-prefix compound action:
+seed the disposable Spacedock 0.26 replay from the freshly fetched
+terminal-ready parent, authenticate its numbered product ref, product artifact,
+and merged host state, then produce an exact replay root after setter one and
+another after setter two. The dirty holder must match one of those roots
+byte-for-byte and no other path may differ. A match reruns both setters
+idempotently and executes one `state commit`; a mismatch blocks.
 
-def invalid():
-    print("invalid")
-    raise SystemExit(44)
+As a compatibility defense, startup may encounter a clean durable non-terminal
+entity with empty `mod-block`, an authenticated numbered product ref, and
+otherwise terminal-ready evidence from the superseded two-commit flow.
+Authenticate that exact product state and run the complete two-set/one-commit
+transaction. Any ledger phase is preserved and ignored.
 
-
-if ledger_ref == "":
-    if host_state != "":
-        invalid()
-    print("premerge")
-elif re.fullmatch(rf"ledger-pr:draft:artifact-v1:{digest}", ledger_ref):
-    if host_state != "":
-        invalid()
-    print("draft")
-elif re.fullmatch(rf"ledger-pr:pending:artifact-v1:{digest}", ledger_ref):
-    if host_state != "":
-        invalid()
-    print("reconcile")
-elif re.fullmatch(
-    rf"(?:ledger-pr|ledger-merge):[1-9][0-9]*:artifact-v1:{digest}",
-    ledger_ref,
-):
-    if host_state not in {"OPEN", "CLOSED", "MERGED"}:
-        invalid()
-    print("terminal" if host_state == "MERGED" else "wait")
-else:
-    invalid()
-PY
-   }
-   ```
-
-   With empty `ledger_pr`, set `PHASE=premerge`. A valid `draft` ref reloads
-   its digest-matched `ledger_artifact_v1` tuple and resumes presentation or
-   approval instead of rebuilding it from process state. With another non-empty
-   `ledger_pr`, authenticate its ledger artifact first. A pending marker enters exact
-   reconciliation without inventing a number. A numbered ref queries only its
-   authenticated PR; `MERGED` sets `PHASE=terminal`, while `OPEN` or `CLOSED`
-   does not run either row verifier. Every accepted digest is exactly 64
-   lowercase hexadecimal characters, and every numbered form uses a positive
-   decimal PR number with no empty or extra tokens. Any other grammar prints
-   `invalid`, returns `44`, and blocks before a verifier or host mutation.
-2. In `premerge`, extract the landed ledger without trusting the current
-   checkout (`git show "origin/$BASE:docs/dev/ledger.csv" > {private-temp}`)
-   and run the README's `ledger_verify premerge {task-id} {slug}
-   {private-temp}`. Missing (41), duplicate (42), or incomplete (43) is a
-   lifecycle defect: do not invent a value, do not clear `mod-block`, and do
-   not terminalize or archive. Report the exact state to the captain. Repair
-   is a bounded ledger-finalization PR built from the entity's persisted
-   `## Measurement`; if those lines are themselves incomplete, the entity
-   stays blocked because the live-only evidence is gone.
-3. When the pre-merge row is exact, compute
-   `wallclock_hours` from the entity's `started` timestamp to the product PR's
-   `mergedAt`, rounded to two decimal hours with trailing zeroes removed.
-   Compute `escaped_defects_7d` as `pending:<YYYY-MM-DD>`, seven UTC calendar
-   days after the UTC date of `mergedAt`; if that date has already arrived,
-   perform the overdue sweep and use the observed integer Severity-1/2 count
-   instead. Replace only this task's `pending:done` and `pending:merge` cells
-   with those values, using the README's line-preserving `ledger_upsert`.
-4. Prepare that replacement on deterministic branch
-   `docs/dev-ledger-{short-id}`, cut from fresh `origin/$BASE` in a private
-   temporary worktree. Run `ledger_verify terminal {task-id} {slug}
-   {ledger-path} {started} {mergedAt}` there and inspect the ledger diff before
-   presenting a follow-up PR draft. The captain approval guardrail below
-   applies independently to this outward-facing push and PR.
-   If this row completes the ten-row baseline cohort, compute after the row
-   update and include the frozen README medians in this same commit; otherwise
-   the commit contains only `ledger.csv`.
-   Before presenting the draft, commit `docs/dev/ledger.csv` locally with
-   `docs(dev): finalize ledger for {slug}`, serialize its exact tuple as the
-   canonical ledger artifact, encode it, and persist only
-   `ledger_artifact_v1={ledger-base64url}` together with
-   `ledger_pr=ledger-pr:draft:artifact-v1:{ledger-artifact-sha256}` in one
-   `status --set` plus `spacedock state commit`. Present the decoded artifact
-   digest; the inert field authorizes no outward action until approved.
-
-   On approval, reload that exact durable artifact. Re-fetch `origin "$BASE"`
-   and require its full OID to remain the approved `base_oid`; require the
-   private branch HEAD and binary diff to remain the approved OID/digest. Drift
-   persists the replacement `ledger_artifact_v1` and its new digest-bearing
-   draft ref in one set-plus-commit and requires renewed approval.
-   Otherwise set both
-   `ledger_artifact_v1={approved-ledger-base64url}` and
-   `ledger_pr=ledger-pr:pending:artifact-v1:{ledger-artifact-sha256}` through
-   one self-contained holder mutation followed immediately by
-   `spacedock state commit`. Re-read the durable entity and verify both
-   the decoded artifact/body digests and every field. If this fails, perform no outward
-   action.
-
-   Run the executable `gh api --method GET --paginate` query above with the
-   ledger artifact's repo, owner, head branch, head OID, base, title, and exact
-   body file. Re-read each candidate
-   and require same-repository head, exact base/head names, exact full head
-   OID, merge-base of the stored base/head OIDs equal to `base_oid`,
-   recomputed binary-diff digest for those OIDs, exact artifact title, exact
-   body digest, and the audit link exactly once. More than one result or any
-   ineligible result blocks. Exactly one eligible result is reused. Only a
-   completed zero-result query may continue: fetch
-   `origin "$BASE"` and require `"origin/$BASE"` to equal the artifact's
-   `base_oid`, recompute its exact binary-diff digest, then require an absent
-   remote head or one already equal to `head_oid`. Push only the stored object
-   with the quoted explicit refspec
-   `git push origin
-   "${LEDGER_HEAD_OID}:refs/heads/${LEDGER_HEAD}"`, fetch it back, and repeat
-   the exhaustive query immediately before
-   `gh pr create --base "$BASE" --head "$LEDGER_HEAD"
-   --title "$LEDGER_TITLE" --body-file "$LEDGER_BODY_FILE"`. Title and body
-   come only from the authenticated artifact. An uncertain create outcome
-   always returns to reconciliation before retry.
-
-   If exhaustive reconciliation is still zero but the exact ledger branch was
-   already pushed and the base/head/diff tuple no longer matches, do not update
-   that branch. Run immutable supersession after renewed captain approval:
-   mint a new ledger attempt branch and artifact whose `supersedes` entry
-   records the old digest/branch and `pr: null`, leave the old remote ref
-   untouched, and reconcile only the new branch.
-
-   Once exactly one eligible PR exists, atomically replace the pending value
-   by setting the unchanged
-   `ledger_artifact_v1={ledger-base64url}` together with
-   `ledger_pr=ledger-pr:{ledger-N}:artifact-v1:{ledger-artifact-sha256}` and
-   immediately run `spacedock state commit`. A crash before this number write
-   therefore finds the pending artifact and exact hosted candidate instead of
-   creating a duplicate. Never force-push or overwrite a different remote
-   head. This follow-up is bookkeeping for the existing entity and creates no
-   recursive dev-flow task or ledger row.
-5. On every scan with non-empty `ledger_pr`, recompute and authenticate its
-   artifact before using a number or state. Pending form runs the zero/one
-   reconciliation above. Numbered form requires its exact PR to be the sole
-   eligible candidate; zero matches is an identity failure, not permission to
-   create. Query the quoted number with
-   `gh pr view "$LEDGER_PR_NUMBER"
-   --json state,mergedAt,headRefName,baseRefName,headRefOid,isCrossRepository,url,title,body`.
-   `OPEN` means wait. `CLOSED` without merge is reported to the captain with
-   reopen, captain-approved immutable supersession, or abandon options. A new
-   PR must use the supersession contract above; clearing the ref or reusing the
-   old branch is not a retry route. On `MERGED`, authenticate the artifact and
-   hosted PR again, fetch `origin "$BASE"`, extract its ledger, and run
-   `ledger_verify terminal {task-id} {slug} {private-temp} {started}
-   {mergedAt}` against the landed file. The verifier must return
-   `ledger:exact`. If the only defect is that its dated pending cell became
-   overdue while the follow-up waited, perform the escaped-defect sweep and
-   use the immutable supersession contract to prepare a corrective finalization
-   PR from fresh `origin/$BASE`. Its new artifact records the prior ledger PR,
-   digest, and branch in `supersedes`; after independent captain approval,
-   persist its pending ref and run exact reconciliation only on its new branch.
-   Any other missing, duplicate, incomplete, or still-sentinel result uses the
-   same corrective supersession route from persisted Measurement evidence and
-   never manual state surgery.
-6. Only after that landed terminal verification succeeds, run one
-   self-contained holder durability transaction. Spacedock requires a separate
-   setter to clear `mod-block`, so issue two setters back-to-back and then
-   exactly one `state commit`:
-
-   ```bash
-   spacedock status --workflow-dir "$WORKFLOW_DIR" \
-     --set "$SLUG" mod-block= &&
-   spacedock status --workflow-dir "$WORKFLOW_DIR" --set "$SLUG" \
-     status="$TERMINAL" completed="$MERGED_AT" verdict=PASSED worktree= \
-     pr_artifact_v1="$PRODUCT_ARTIFACT_B64URL" \
-     ledger_artifact_v1="$LEDGER_ARTIFACT_B64URL" \
-     pr="pr-merge:$PR_NUMBER:artifact-v1:$PRODUCT_ARTIFACT_SHA256" \
-     ledger_pr="ledger-merge:$LEDGER_PR_NUMBER:artifact-v1:$LEDGER_ARTIFACT_SHA256" &&
-     spacedock state commit "$SLUG" || exit 1
-   ```
-
-   Never run the holder prerequisite or commit between the two setters. A
-   commit after only `mod-block=` would create a clean, non-terminal,
-   unblocked entity and is forbidden.
-   Re-authenticate both artifacts and both exact hosted PRs immediately before
-   this transaction. The product digest is copied from the verified product ref and
-   the ledger digest from the verified numbered ledger ref, so
-   terminal/archive recovery can authenticate `live_path`, both branch heads,
-   and both approved bodies. If this command fails, both artifact-backed PR
-   references and canonical artifact fields remain available for recovery.
-   A dirty crash after the first or second setter is a two-prefix compound
-   action: seed the disposable Spacedock 0.26 replay from the freshly fetched
-   terminal-ready parent, authenticate its numbered product and ledger refs,
-   artifacts, merged host state, and exact landed ledger, then produce an exact
-   replay root after setter one and another after setter two. The dirty holder
-   must match one of those two roots byte-for-byte and no other path may differ.
-   A match reruns both setters idempotently and executes one `state commit`; a
-   mismatch blocks. This is the only recovery route for either crash point.
-
-   As a compatibility defense, startup may encounter a clean durable
-   non-terminal entity with empty `mod-block`, authenticated numbered product
-   and ledger refs, and otherwise terminal-ready evidence from the superseded
-   two-commit flow. Classify and authenticate that exact state, then run the
-   complete two-set/one-commit transaction. New flow never creates that
-   intermediate durable state.
-
-   The terminalization fixture stops once after setter one and once after
-   setter two, requires each dirty root to match only its corresponding replay
-   prefix, then recovers. In both cases the resulting commit's parent is
-   blocked/non-terminal and its child is unblocked/terminal; no intermediate
-   state commit exists.
-   Use only the configured holder `STATE` after rerunning the README
-   prerequisite. Retain the
-   authenticated entity index as `LIVE_INDEX`, require it outside `_archive/`,
-   and derive the flat file or complete folder `LIVE_ROOT`. Commit only that
-   root with normal `spacedock state commit` while it is still live. Record the
-   confirmed commit as `TERM_COMMIT` and prove
-   every descendant path/byte at `TERM_COMMIT:$LIVE_ROOT` matches the terminal
-   root on disk. If any write, commit, push, or round-trip check fails, do not
-   clean up or archive.
-   Feed that durably committed live terminal file through the recovery path
-   below, even in the same hook invocation, so a crash between terminalization,
-   cleanup, archive move, and archive commit has a known recovery source.
+Use only the configured holder `STATE` after rerunning the README prerequisite.
+Retain the authenticated entity index as `LIVE_INDEX`, require it outside
+`_archive/`, and derive the flat file or complete folder `LIVE_ROOT`. Record
+the confirmed commit as `TERM_COMMIT` and prove every descendant path/byte at
+`TERM_COMMIT:$LIVE_ROOT` matches the terminal root on disk. If any write,
+commit, push, or round-trip check fails, do not clean up or archive. Feed that
+durably committed live terminal file through the existing archive recovery
+transaction below, so archive validation and durability remain fail-closed.
 
 Before processing the third set, repair the fourth set — or a durable-live
 third-set member whose working copy is missing — back to a live retry state.
-For a v1 entity, load both digest-bound artifacts and take `LIVE_INDEX` only
-from their identical validated `live_path`; for a direct-commit legacy entity,
+For a v1 entity, load the digest-bound product artifact and take `LIVE_INDEX`
+from its validated `live_path`; for a direct-commit legacy entity,
 take it from the unique exact task-id/ref scan result. Derive `LIVE_ROOT` by
 the flat/folder rule above. When an archived working copy exists, take
 `ARCHIVE_INDEX` and `ARCHIVE_ROOT` only from the unique exact `_archive/`
@@ -669,9 +491,9 @@ special root and rejects every symlink or special folder descendant without
 dereferencing it. The independent Git-tree guard requires the flat root, or
 every tracked file below the folder root, to be mode `100644` or `100755`;
 mode `120000`, gitlinks, and other non-blob modes fail. The comparator reverses
-only the valid UTC-seconds stamp and therefore preserves the product and ledger
-refs, both canonical approval artifacts, the entity body, and every per-stage
-artifact byte:
+only the valid UTC-seconds stamp and therefore preserves the product ref and
+artifact, optional ledger fields, the entity body, and every per-stage artifact
+byte:
 
 ```bash
 archive_root_guard() {
@@ -815,6 +637,7 @@ print("archive-git-root:exact")
 PY
 }
 
+# decoupled-archive-comparator:start
 archive_verify() {
   python3 - "$1" "$2" <<'PY'
 import datetime
@@ -961,6 +784,7 @@ else:
 print("archive:exact")
 PY
 }
+# decoupled-archive-comparator:end
 ```
 
 The root-safety fixture runs both guards and the comparator against a normal
@@ -1917,39 +1741,29 @@ and archive transaction:
 1. Choose exactly one authenticated terminal route:
 
    - **v1 hosted route:** require parseable
-     `pr=pr-merge:{number}:artifact-v1:{product-artifact-sha256}` and
-     `ledger_pr=ledger-merge:{ledger-N}:artifact-v1:{ledger-artifact-sha256}`.
-     Recompute both canonical artifact digests, require the two `live_path`
-     values to agree, and authenticate both exact numbered PRs through the
-     exhaustive reconciliation rules above. Resolve `BASE`, fetch
-     `origin "$BASE"`, and require both PRs to remain `MERGED`,
-     same-repository, based on `"$BASE"`, and at their stored head OIDs/diffs.
-     Retain their exact quoted `headRefName` values for cleanup. The product PR
-     must still return the stored non-empty `mergedAt`.
-   - **legacy direct-commit route:** require exactly
-     `pr=direct-commit:{sha}` with no `ledger_pr`. Resolve `{sha}` unambiguously
-     to a commit, fetch `origin "$BASE"`, and require
-     `git merge-base --is-ancestor "$DIRECT_COMMIT" "origin/$BASE"`. Extract
-     `origin/$BASE:docs/dev/ledger.csv` and run
-     `ledger_verify legacy {task-id} {slug} {private-temp}`. That mode accepts
-     historical blank/`n/a` metrics but still requires the canonical header,
-     exactly one row keyed by task id, eight cells, and the exact slug. It
-     never rewrites the row. Any failure blocks and reports the commit/row
-     evidence; v0.13 sentinels and artifacts are never minted retroactively.
+     `pr=pr-merge:{number}:artifact-v1:{product-artifact-sha256}`. Recompute the
+     canonical product artifact digest and authenticate the exact numbered PR
+     through the exhaustive reconciliation rules above. Resolve `BASE`, fetch
+     `origin "$BASE"`, and require the product PR to remain `MERGED`,
+     same-repository, based on `"$BASE"`, and at its stored head OID/diff.
+     Retain its exact quoted `headRefName` for cleanup and its non-empty stored
+     `mergedAt`. Preserve any ledger fields without inspecting them.
+   - **legacy direct-commit route:** require `pr=direct-commit:{sha}`. Resolve
+     `{sha}` unambiguously to a commit, fetch `origin "$BASE"`, and require
+     `git merge-base --is-ancestor "$DIRECT_COMMIT" "origin/$BASE"`. Optional
+     historical ledger fields and rows are not prerequisites and are not
+     rewritten or minted retroactively.
 
 2. Require the live entity to hold `status={terminal}`, a non-empty
    `completed`, a passed verdict (case-insensitive for the direct-commit legacy
    route), and no non-empty `worktree`. Resolve `DURABLE_STATE` and prove it
    contains this complete terminal root. On the v1 route, require
-   `completed="{mergedAt}"`, extract `origin/$BASE:docs/dev/ledger.csv`, and run
-   `ledger_verify terminal {task-id} {slug} {private-temp} {started}
-   {mergedAt}`. Only `ledger:exact` re-establishes the evidence that authorized
-   v1 terminalization. The direct route uses only its reachability plus
-   `ledger_verify legacy` evidence from step 1. A missing reference, changed
-   timestamp, absent durable live root, or non-zero verifier leaves the entity
-   live and reported.
-3. On the v1 route, find local worktrees by the two authenticated, quoted PR
-   `headRefName` values from `git worktree list --porcelain`. Absence is
+   `completed="{mergedAt}"` and re-authenticate the exact product evidence that
+   authorized terminalization. The direct route uses its reachable commit.
+   A missing reference, changed timestamp, or absent durable live root leaves
+   the entity live and reported.
+3. On the v1 route, find the local worktree by the authenticated, quoted product
+   `headRefName` from `git worktree list --porcelain`. Absence is
    already-clean. Remove only clean worktrees whose recorded branch equals an
    exact authenticated head. A dirty worktree, mismatched branch, or worktree
    removal failure blocks archive. After successful worktree removal, attempt
@@ -1961,7 +1775,7 @@ and archive transaction:
 4. Run
    `spacedock status --workflow-dir "$WORKFLOW_DIR" --archive "$SLUG"`, then
    locate exactly one new `ARCHIVE_ROOT` under `_archive/` whose index carries
-   the same task id and authenticated refs. Require `LIVE_ROOT` absent. Extract
+   the same task id and authenticated product ref. Require `LIVE_ROOT` absent. Extract
    the full durable `LIVE_ROOT` and working `ARCHIVE_ROOT` to private temporary
    locations, then require `archive_verify` to print `archive:exact`; this
    accepts only Spacedock's valid index stamp and rejects a descendant
@@ -1978,10 +1792,9 @@ and archive transaction:
    the same move, stage, commit, push, or observation restart point. The hook
    may report archived only after step 4's remote observation checks pass.
 
-This recovery path never calls `ledger_upsert`, prepares a finalization branch,
-pushes a product or ledger branch, opens a PR, or terminalizes again. Its only
-possible push is the archive transaction's exact state-ref push, so it cannot
-rerun finalization or create a recursive ledger task. All non-archive writes
+This recovery path never reads or writes the measurement ledger, prepares a
+measurement branch, pushes a product branch, opens a PR, or terminalizes again.
+Its only possible push is the archive transaction's exact state-ref push. All non-archive writes
 continue to use their self-contained `status --set` plus `state commit`.
 Report each auto-advanced or recovered entity to the captain.
 
@@ -2021,19 +1834,11 @@ that state commit before any branch push, host query, or PR create.
 Resolve the PR base once: `BASE=$(spacedock dispatch trunk --workflow-dir {dir})` — the workflow's configured integration trunk (default `main` when no `trunk:` key is set). `dispatch trunk` emits exactly a **bare branch name** (e.g. `main`), so `$( )` yields `$BASE` clean (command substitution strips the single trailing newline). Always quote `"$BASE"` at use sites — the push, the rebase, the draft, and the `gh pr create --base` below.
 
 Before constructing the draft, enforce the accepted-validation boundary from
-the README:
-
-1. Read `task_id` and `slug` from the live entity and run
-   `ledger_verify premerge {task-id} {slug}
-   {worktree}/docs/dev/ledger.csv`.
-2. Require `ledger:exact` (exit 0). Missing (41), duplicate (42), or
-   incomplete (43) returns the merge hook without pushing, creating a PR,
-   clearing `mod-block`, or cleaning the worktree. Repair the live
-   Measurement record and rerun the line-preserving upsert; never substitute
-   `0` or `n/a` for missing evidence.
-3. Confirm the product-branch diff changes at most this task's row plus
-   unrelated rows already brought in as a union. A rework round updates the
-   same `task_id`; it never appends a second row.
+the README: require the passed validation stage report and its exact product
+head evidence, then confirm every changed path maps to an acceptance criterion.
+Preserve `## Measurement` evidence in the entity for later archive-first
+observation, but do not read, verify, or update `ledger.csv` and do not require
+either ledger field before pushing or creating the product PR.
 
 **PR APPROVAL GUARDRAIL — Do NOT push or create a PR without explicit captain approval.** Before presenting the draft, construct the full PR body so the captain reviews the actual prose that will land on GitHub.
 
@@ -2174,12 +1979,9 @@ Wait for the captain's explicit approval before pushing. Do NOT infer approval f
 
 **On approval:** Treat the presented draft as approval of a specific
 head/diff/body tuple, not of a branch name. Before any outward push, fetch
-`origin "$BASE"` and rebase the worktree branch onto it. If
-`docs/dev/ledger.csv` conflicts, resolve it as the README's
-`task_id`-keyed union: retain every unrelated row from both sides, replay this
-task's latest upsert from the live Measurement section, and never take the
-whole file from `--ours` or `--theirs`. Re-run `ledger_verify premerge` and the
-scope/diff checks after the rebase.
+`origin "$BASE"` and rebase the worktree branch onto it. Re-run the product
+scope/diff checks after the rebase; measurement evidence remains archived input
+and is not a product-branch gate.
 
 Compare the full HEAD OID, `origin/$BASE` OID, SHA-256 of
 `git diff --binary "origin/$BASE"...HEAD`, and audit-link SHA to the tuple the
@@ -2216,7 +2018,7 @@ explicit refspec
 No commit, rebase, body rebuild, or other head-changing action is permitted
 after the artifact is durable. If the head push fails, report to the captain
 and leave the marker and branch unmerged; a local merge has no host `mergedAt`
-or protected-main-safe finalization path and is not a valid fallback.
+and cannot satisfy the authenticated product terminalization path.
 
 After the push, fetch the quoted `"$STORED_HEAD"` and require
 `"origin/$STORED_HEAD"` to equal `STORED_HEAD_OID`, then run exact
@@ -2284,14 +2086,13 @@ artifact-backed `pr` field, report the reused or created PR to the captain.
 **On decline:** Leave the branch unmerged and ask the captain whether to keep
 it or abandon the branch while the entity remains non-terminal pending a
 separate abandonment procedure. Local merge is not offered: it cannot supply
-the product-PR `mergedAt` or the protected-main-safe ledger-finalization PR
-this lifecycle requires.
+the authenticated product-PR `mergedAt` this lifecycle requires.
 
 Do NOT archive yet. The entity stays at its current stage with `pr` set until
-the product PR and its protected-main-safe ledger-finalization PR have both
-merged. The FO handles final verification, terminal advancement, and archival
-through the startup/idle state machine above. After terminal advancement, the
-live file remains restart-visible until the terminal recovery path re-verifies
-the landed row, removes any authenticated clean worktree, attempts safe branch
-deletion without gating on squash-merge refusal, and archives last. A product
-`MERGED` state alone never clears the block.
+the product PR merges. The startup/idle state machine then re-authenticates that
+exact product PR, clears the product block, commits terminal state, and archives
+through the existing fail-closed transaction. The live terminal file remains
+restart-visible until recovery re-verifies the product evidence, removes any
+authenticated clean worktree, attempts safe branch deletion without gating on
+squash-merge refusal, and archives last. Ledger availability or phase does not
+delay any of those steps.
