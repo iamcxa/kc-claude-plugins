@@ -88,6 +88,15 @@ describe('classifySelector: one decision function, three classes', function () {
     assert.deepEqual(classifySelector('find testid "x"'), ['find-subcommand']);
   });
 
+  test('a NEGATIVE nth index is banned too', function () {
+    // Playwright accepts `nth=-1` (last match). The pure-bash predecessor matched
+    // `nth=[0-9]+` only, so this linted clean on main — harmless while the linter was
+    // advisory, a hole once its verdict became a refusal. Without this case the fix has
+    // no evidence that can fail: reverting `-?` leaves the whole suite green.
+    assert.deepEqual(classifySelector('role=button >> nth=-1'), ['>>nth']);
+    assert.deepEqual(classifySelector('.row >> nth=-2'), ['>>nth']);
+  });
+
   test('a value tripping two classes yields two ids, in table order', function () {
     assert.deepEqual(
       classifySelector('.MuiDialog >> nth=1 >> :has-text("Confirm")'),
@@ -152,6 +161,17 @@ describe('scanMappingText: line-numbered traversal (the linter s view)', functio
     const lines = findings.map(function (f) { return f.line; });
     assert.ok(!lines.includes(10), 'flagged a comment line');
     assert.ok(!lines.includes(11), 'flagged a description: value');
+  });
+
+  test('a quoted value containing # is read whole, not truncated at the hash', function () {
+    // `#` inside a quoted scalar is part of the value. Stripping the comment before
+    // handling quotes collapsed this to `"div` and the chord went unreported — the linter
+    // then passed what the compiler blocks, which is the two consumers disagreeing on the
+    // same bytes. Reverting the quote-first ordering must redden this.
+    const findings = scanMappingText('  selector: "div #main >> nth=1"\n', 'm.yaml');
+    assert.equal(findings.length, 1);
+    assert.equal(findings[0].selector, 'div #main >> nth=1');
+    assert.equal(findings[0].class, '>>nth');
   });
 
   test('strips surrounding quotes and a trailing inline comment before classifying', function () {
