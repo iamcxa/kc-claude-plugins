@@ -1,0 +1,8 @@
+{
+  "name": "kc-release-bootstrap-contract",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "release-please": "17.3.0"
+  }
+}

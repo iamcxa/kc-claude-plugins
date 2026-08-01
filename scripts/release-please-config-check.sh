@@ -29,13 +29,62 @@ if not isinstance(packages, dict) or not packages:
     print("release-please config check failed: packages must be a non-empty object", file=sys.stderr)
     raise SystemExit(1)
 
+# release-please 17.3.0's BaseStrategy returns initial-version directly when
+# no latest release exists; without it, the simple strategy defaults to 1.0.0.
+# Keep one shared policy so newly registered components cannot silently diverge.
+expected_initial_version = "0.1.0"
+initial_version = config.get("initial-version")
+include_component = config.get("include-component-in-tag")
+include_v = config.get("include-v-in-tag")
+tag_separator = config.get("tag-separator")
+
 marketplace_selector = re.compile(
     r'^\$\.plugins\[\?\(@\.name=="([^"]+)"\)\]\.version$'
 )
 failures = []
 rows = []
+first_release_tags = []
+
+if initial_version != expected_initial_version:
+    failures.append(
+        f"top-level initial-version must be {expected_initial_version!r}; "
+        f"got {initial_version!r}"
+    )
+if include_component is not True:
+    failures.append("include-component-in-tag must be true for first-release tags")
+if include_v is not True:
+    failures.append("include-v-in-tag must be true for first-release tags")
+if tag_separator != "-":
+    failures.append("tag-separator must be '-' for first-release tags")
 
 for package, package_config in packages.items():
+    if "initial-version" in package_config:
+        failures.append(
+            f"{package}: must inherit top-level initial-version "
+            f"{expected_initial_version!r}; package overrides are not allowed"
+        )
+
+    tag_policy_overrides = sorted(
+        key
+        for key in ("include-component-in-tag", "include-v-in-tag", "tag-separator")
+        if key in package_config
+    )
+    if tag_policy_overrides:
+        failures.append(
+            f"{package}: must inherit top-level tag policy; remove package "
+            f"override(s): {', '.join(tag_policy_overrides)}"
+        )
+
+    component = package_config.get("component", package)
+    if not isinstance(component, str) or not component:
+        failures.append(f"{package}: component must be a non-empty string")
+    elif initial_version == expected_initial_version:
+        first_release_tags.append(
+            f"{component}{tag_separator or ''}{'v' if include_v is True else ''}{initial_version}"
+            if include_component is True
+            else f"{'v' if include_v is True else ''}{initial_version}"
+        )
+
     extra_files = package_config.get("extra-files", [])
     if not isinstance(extra_files, list) or not extra_files:
         failures.append(f"{package}: extra-files must be a non-empty array")
@@ -199,4 +248,5 @@ if failures:
     raise SystemExit(1)
 
 print("\nRelease-please config: all extra-file paths and JSONPath selectors are valid")
+print(f"First-release contract: {', '.join(first_release_tags)}")
 PY

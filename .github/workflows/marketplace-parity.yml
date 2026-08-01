@@ -9,12 +9,13 @@ name: marketplace version parity
 #
 # Catches invalid extra-file paths before release and half-published bumps where
 # the release manifest changes but a plugin / marketplace / Codex manifest is
-# left stale. Cheap by design: Bash + Python only, no `claude` CLI.
+# left stale. The only fetched test dependency is the exact release-please
+# version paired with the pinned release action; no `claude` CLI is required.
 #
 # Runs on EVERY pull request — intentionally no `paths:` filter. This is the
 # required status check on `main`: a required check that a path filter skips
 # stays "pending / expected" forever and blocks unrelated PRs from merging.
-# Always running it (≈7s) is the correct pattern for a required gate.
+# Always running it is the correct pattern for a required gate.
 
 on:
   pull_request:
@@ -34,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate release config and version parity
+      - name: Validate release config, first-release contract, and version parity
         run: |
           ./scripts/release-metadata.test.sh
           ./scripts/version-parity-check.sh
