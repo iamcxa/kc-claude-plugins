@@ -772,9 +772,31 @@ loads — handling them would mean the linter disagreeing with the YAML spec).
    reaches.** A future flow that starts resolving one compiles green. Mitigated by the
    distinct resolved-grandfathered line, and deliberate: an element that already exists is
    the pre-existing debt the captain's ruling protects.
-3. **`test/integration-smoke.sh`'s 10 added lines are unexercised** — the script cannot
-   reach its lint phase headlessly, since phase 1 requires a reachable target URL. Its
-   actual contract (exit codes and stderr shape) was verified directly against the wrapper
-   instead.
+3. ~~`test/integration-smoke.sh`'s 10 added lines are unexercised.~~ **Withdrawn — the
+   claim was false.** `git diff --stat origin/main...HEAD -- '*integration-smoke*'` is
+   empty: this branch adds zero lines to that file, exactly as the entity's own test plan
+   (item 4) says. The residual was carried over from a validator's coverage note without
+   being checked against the diff, which is the inherited-claim case Proof Policy 6 names.
+   The file's real contract — the linter's exit codes and `path:line: class:` stderr shape,
+   which it consumes — was verified directly against the wrapper and is byte-identical to
+   the predecessor on both shipped fixtures.
 4. **`#88` does not close the sprint exit condition.** The LLM-driven browser paths are
    unreached; filed as **#126** with a backlog entity.
+
+### Validation gate — EM verdict `narrow`, merge authorised on two conditions
+
+| # | EM finding | disposition |
+|---|---|---|
+| 1 (Material) | AC-4's byte-compare runs only on a *blocked* compile, while two docs cite it as the enforcement point for "the compile path only ever opens the baseline for reading". A regenerate-on-green write would be added on the success path, which that assertion cannot see | **Fixed** in `64c7278`. The grandfathered success case byte-compares too, and the assertion was probed: appending to the baseline after a green compile reddens it |
+| 2 (Material) | Accepted residual 3 claimed `test/integration-smoke.sh` had 10 unexercised added lines; the branch adds **zero** lines to that file | **Withdrawn above.** A validator's coverage note adopted without checking it against the diff — the inherited-claim case Proof Policy 6 names |
+| NM | The cross-site resolved-provenance channel has no test, and stamps the mapping file by a different expression than the single-site path — a mismatch fails **open** | **Fixed** in `64c7278`, and the first version of that test did not discriminate (one site made the fallback right by accident and it stayed green when the stamp was deleted). Two sites now, banned element in the second, probed red |
+| NM | The documented exit codes still called `1` the usage-error code after `--help` moved to `0` | Fixed |
+| NM | `dc1d6a6`'s commit body carries "a baseline the compiler reads and **never** writes" with no enforcement point named. The doc was fixed later; a commit message is immutable | Recorded, not actionable. Proof Policy 6 puts commit messages in scope precisely because nothing downstream checks them, and this is that case landing on me |
+
+**Circuit breakers — EM ruled neither fires.** One rejected cycle, not two: cycle 1 was
+rejected on AC-1, cycle 2 passed all five ACs, and a passed gate that surfaces Material
+findings is not a rejected cycle. The budget brake fires on *exceeding* tolerance; ~2.5h
+against a 7h estimate is under it. So the verdict stayed with EM and no Gate Authority
+bullet routed this to the captain.
+
+**Final head `64c7278`** — 947 tests, 946 pass, 0 fail, 1 skipped; biome clean.
