@@ -1,0 +1,4 @@
+interface:
+  display_name: "Adopt Dev Flow"
+  short_description: "Adopt or audit a portable repository workflow"
+  default_prompt: "Use $adopt-dev-flow to audit this repository and propose the smallest safe dev-flow adoption."

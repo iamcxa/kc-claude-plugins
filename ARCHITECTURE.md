@@ -4,11 +4,11 @@ This document records durable architecture decisions for repository capabilities
 
 ## Repository layout
 
-The repo is a monorepo of six independent Claude Code plugins at top level
+The repo is a monorepo of seven independent Claude Code plugins at top level
 (`e2e-pipeline/`, `kc-plugin-forge/`, `kc-nightwatch/`, `kc-hyperfocus/`,
-`kc-team-ops/`, `kc-pr-flow/`), each with its own `skills/` directory; five
-of the six also ship `agents/` (all but `kc-plugin-forge`), and (where
-applicable) `hooks/` directories, plus a repo-level `scripts/` directory and
+`kc-team-ops/`, `kc-pr-flow/`, `kc-dev-flow/`), each with its own `skills/`
+directory. Some also ship `agents/` or `hooks/` directories. The repository
+also has a shared `scripts/` directory and
 `.claude-plugin/marketplace.json` manifest. `docs/dev/` holds the lean
 ship-flow-style task workflow (split-root state under
 `docs/dev/.spacedock-state`) that governs how repo changes are proposed,
@@ -36,7 +36,7 @@ lint + tests only when `e2e-pipeline/` files are staged. Repo-level
 `scripts/` holds cross-plugin checks run in CI: `marketplace-verify.sh`,
 `post-install-smoke.sh`, `release-metadata.test.sh`,
 `release-please-config-check.sh`, `skill-frontmatter-lint.sh` (+ its
-test), `version-parity-check.sh`.
+test), `version-parity-check.sh`, and `kc-dev-flow-contract-test.py`.
 
 ## Versioning scheme
 
@@ -46,8 +46,9 @@ Each plugin is an independent release-please component
 `.release-please-manifest.json`. On push to `main`,
 `.github/workflows/release-please.yml` maintains a Release PR that bumps
 the changed plugin(s) across `<plugin>/.claude-plugin/plugin.json`,
-`<plugin>/.codex-plugin/plugin.json` (only `e2e-pipeline`, `kc-plugin-forge`,
-`kc-pr-flow` ship a Codex manifest), and the matching `marketplace.json`
+`<plugin>/.codex-plugin/plugin.json` (currently `e2e-pipeline`,
+`kc-plugin-forge`, `kc-pr-flow`, and `kc-dev-flow` ship a Codex manifest), and
+the matching `marketplace.json`
 array entry; merge cuts a `<plugin>-vX.Y.Z` tag, GitHub Release, and
 per-plugin `CHANGELOG.md`. `scripts/version-parity-check.sh` is the
 machine-enforced backstop asserting all tracked version sources agree.

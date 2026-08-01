@@ -4,7 +4,7 @@ This document records durable product outcomes for repository capabilities. It i
 
 ## Repository plugin catalog
 
-This monorepo publishes six plugins through the `kc-claude-plugins`
+This monorepo publishes seven plugins through the `kc-claude-plugins`
 marketplace (`.claude-plugin/marketplace.json`). Each entry states the
 outcome the plugin exists to deliver and who it serves; full skill lists
 live in each plugin's own `README.md`. `kc-pr-flow`'s agent-native review
@@ -37,6 +37,11 @@ runtime has its own deep-dive entry below this catalog.
   one-command PR workflow with consistent review quality across model
   providers. Its agent-native review runtime is detailed in the dedicated
   entry below.
+- **`kc-dev-flow`** — Portable authority and evidence kernel that adopts an
+  existing repository's tracker, sprint model, workflow runtime, and delivery
+  provider, then continues approved sprint work without unnecessary captain
+  pauses. Serves teams that need one lean workflow across Claude Code and Codex
+  without duplicating repository truth.
 
 ## kc-pr-flow: Agent-native PR review
 

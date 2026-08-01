@@ -1,0 +1,4 @@
+interface:
+  display_name: "Continue Dev Flow"
+  short_description: "Continue the approved sprint without ceremony"
+  default_prompt: "Use $continue-dev-flow to continue the current approved sprint from live repository state."

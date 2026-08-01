@@ -410,6 +410,7 @@ value. The current registry snapshot is:
 - `kc-hyperfocus`
 - `kc-team-ops`
 - `kc-plugin-forge`
+- `kc-dev-flow`
 - `repo-platform`
 
 Update this convenience snapshot in the same change that registers a plugin.
