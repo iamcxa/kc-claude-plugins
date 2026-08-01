@@ -347,10 +347,13 @@ point.
 An otherwise-blocking mapping compiles when every blocking finding is listed in the
 baseline; a newly introduced violation still fails, and the failure names only the new
 finding.
-Verified by: fixture with 2 blocking findings + a baseline listing both → exit 0 with both
-reported on stderr as *resolved* grandfathered findings, distinct from the file-scope
-warning line; then, each as its own case → (a) add a third violating selector on a new
-element → exit 1 naming only the third; (b) re-point an existing baselined selector string
+Verified by: the fixture carries the same banned selector on two elements, one the flow
+resolves and one it does not — so under the ruled resolved-scope granularity there is
+**1 blocking finding and 1 warning**, not 2 blocking (corrected here after validation
+caught this text still describing the pre-ruling file-scope shape). With the blocking one
+listed in the baseline → exit 0, and its *resolved* grandfathered line printed distinctly
+from the file-scope warning; then, each as its own case → (a) a violating selector on a
+new element → exit 1 naming only it; (b) re-point an existing baselined selector string
 onto a second element → exit 1, proving the record is keyed by element identity, not by
 `(file, class, selector)`; (c) change the selector on a baselined element to a different
 banned form → exit 1, proving the record pins the value too.
@@ -568,3 +571,110 @@ Measurement channels are stated disjoint (3 blocking + 36 warnings, never 39).
 surface. Per the EM's own guidance the estimate is not being raised further to chase the
 diff — the re-cut is pre-authorized at the `resolver.js` seam instead, so the worker takes
 it without a round trip.
+
+## Stage Report: implementation
+
+**TL;DR** — The policy is now one table in `compiler/lib/selector-policy.js` with two
+traversals over it. `scripts/lint-mapping.sh` execs the module and carries no patterns of
+its own (exit codes and stderr byte-identical to the predecessor on both shipped
+fixtures). `compiler.js` blocks between `resolve()` and `generate()` on banned selectors
+the flow resolves, and warns on the rest of the mapping file. `resolver.js` gained the
+element provenance the blocking scope and the baseline key both need. A baseline the
+compile path only reads grandfathers pre-existing debt, keyed by element identity, and its
+producer is a separate binary that gates nothing. Two commits: `dc1d6a6` (build) and
+`bb7fc94` (the validation round's fixes).
+
+### RED before GREEN
+
+- `selector-policy.test.js` written first: `Cannot find module '../lib/selector-policy.js'`,
+  0 pass / 1 fail. GREEN after the module: 26/26, now 28/28.
+- `selector-lint-drift.test.js` written first and run against the **pre-change** bash
+  linter: `AssertionError: expected NOT to match /has-text/` — the linter kept reporting a
+  class the module no longer carried, which is the drift the AC exists to catch. GREEN
+  after the wrapper: 2/2.
+- `selector-gate.test.js` surfaced a real defect at first run rather than confirming the
+  code: the fixture's two elements share one banned selector string, and the channel split
+  swallowed the sibling's warning. That is why the fixture is shaped that way.
+
+### Two defects found by writing the tests, not by reading the code
+
+1. **The gate fixture's identical-selector siblings.** The first channel split subtracted
+   by `(class, selector)` string, so an element sharing a banned string with a blocking
+   one lost its warning entirely. Rebuilt on element identity after validation showed the
+   same bug had a second face (see cycle 1, finding 4).
+2. **`runCompile` in the gate test used `execFileSync`,** which returns only stdout — so
+   every "it warned about X" assertion on a *passing* compile was matching against `''`.
+   A check that cannot fail. Switched to `spawnSync`.
+
+### Named what CI would do differently
+
+Tests added, so the job's margin was the relevant check; no OS/libc/locale/clock-dependent
+behaviour and no CI-pinned tool in the diff. Required contexts read live from
+`gh api …/branches/main/protection`: one required check, `version parity (plugin.json /
+marketplace.json / codex / README)`. No job renamed. It passed on `dc1d6a6`.
+
+### Checks the diff earned, and the ones it did not
+
+No version value, `marketplace.json` structure, plugin directory, or SKILL.md frontmatter
+block is touched, so `version-parity-check.sh` and `marketplace-verify.sh` are not earned —
+though the validator ran parity anyway and it passes. `skill-frontmatter-lint.sh` run
+regardless (35/35) because a SKILL.md body changed. No `.github/workflows/` file touched.
+
+### Full suite at stage exit
+
+`node --test compiler/test/*.test.js` → **936 tests, 935 pass, 0 fail, 1 skipped**
+(the opt-in browser test), run with nothing else competing for the machine.
+
+Two earlier runs each reported one failure in `trace-finalization.test.js`. Both were
+written off per the per-failing-line rule, not per impression: the file alone is 49/49
+twice on this branch and 49/49 on clean `main`; the diff touches neither that test nor
+`scripts/finalize-trace.sh`; and both failures occurred in runs where a second full suite
+was executing concurrently — a condition I was perturbing myself, which Proof Policy 7
+says makes the number evidence about the perturbation. It is issue #122's known
+load-flaky file.
+
+### Feedback Cycle 1 — budget record
+
+| | |
+|---|---|
+| Round effort | ~1.5h against the ideation-declared 7h estimate |
+| Deviation | within the declared +40% tolerance; no design reset |
+| Reviewers | cross-model (`agy`), silent-failure, correctness/back-compat, security, fresh-context validator |
+| Findings | 17 raised · **10 fixed** · 4 declined with reasons · 3 confirmed clean |
+
+**Fixed (10).** `>> nth=-1` invisible to the pattern; `selector: "div #main >> nth=1"`
+collapsing to `"div` in the text traversal; the channel split rebuilt on element identity;
+AC-1's missing path and line in the blocking diagnostic; `recordReference` silently
+no-oping; CRLF and embedded tabs in baseline records; the cross-site mapping key not
+using a basename; `--help` on the linter; the `>>` append-redirect in `SKILL.md`; five
+stale `scripts/lint-mapping.sh` authority pointers plus the unenforced "never writes"
+absolute and a `resolver.js:62` reference this diff shifted to `:64`.
+
+**Declined (4), each named rather than dropped:**
+- *Every blocking error prints twice.* Reproduced on `origin/main` for parse errors
+  (`054-service-category-foundation`: each `ERROR:` line appears 2×). Pre-existing and
+  general; fixing it is unrelated churn in a PR that already carries a gate.
+- *`--json` loses structured fields for a thrown baseline error.* Real, and identical to
+  how every other thrown error in `bin/e2e-compile.js` is already wrapped. Not introduced
+  here.
+- *No regression test for `EACCES`/`EISDIR` on the baseline read.* The rethrow is a
+  one-line `if (e.code === 'ENOENT')`; a test would pin the shape but the reviewer's own
+  verdict was "correctly coded, untested". Accepted as residual.
+- *`scanMappingText` cannot read block/folded scalars.* Not fixed — fixing it means a
+  YAML parser in a module that must stay dependency-free. Instead the predecessor's
+  caveat, dropped in the port, is restored to the docstring and pinned by a test, together
+  with proof that the element traversal does see those values. The bound is one-directional:
+  a lint that passes where a compile blocks, never the reverse.
+
+**Confirmed clean (3):** the security lens found no findings (argv passthrough is an
+array not a shell string; `js-yaml` 4's `load` is the safe loader; the read-only claim
+holds structurally); `loadSelectorBaseline` swallows only `ENOENT`; the linter fails
+closed when `node` is missing.
+
+### One process error of mine, recorded because it invalidated a result
+
+Cycle 1's validator graded `dc1d6a6` **while I was editing the worktree it was reading**.
+It caught this itself, re-ran everything in an isolated detached checkout, and said which
+SHA its verdict applied to. Its AC-1 FAIL was correct for that commit. Cycle 2 grades a
+frozen `bb7fc94` in the validator's own isolated worktree, which is what should have
+happened the first time.
