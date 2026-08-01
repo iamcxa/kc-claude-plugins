@@ -237,7 +237,7 @@ find .claude/e2e/mappings -name '*.yaml' -print0 \
   | xargs -0 -n1 bash scripts/lint-mapping.sh
 ```
 
-Exit codes: `0` clean · `1` usage error / file not found / `node` not on PATH · `2` one or more banned tokens detected (path + line printed to stderr).
+Exit codes: `0` clean (and for an explicit `--help`, which is not an error) · `1` missing argument / file not found / `node` not on PATH · `2` one or more banned tokens detected (path + line printed to stderr).
 
 Wire into CI as a fast pre-flight gate before the browser job spins up.
 

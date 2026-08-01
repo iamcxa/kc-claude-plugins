@@ -152,12 +152,19 @@ describe('AC-3 — a baseline grandfathers existing findings without hiding new 
     const out = tmpdir('out');
     const res = runCompile([path.join(dir, 'flow.yaml'), '--mappings-dir', dir, '--output-dir', out, '--selector-baseline', baselinePath]);
     res.out = out;
+    res.baselinePath = baselinePath;
     return res;
   };
 
   test('a listed element compiles, and says out loud that the flow resolves it', function () {
-    const res = compileWith(CLEAN_ELEMENTS, baselineFor('submit_button', 'role=switch >> nth=1'));
+    const baselineText = baselineFor('submit_button', 'role=switch >> nth=1');
+    const res = compileWith(CLEAN_ELEMENTS, baselineText);
     assert.equal(res.status, 0, res.stderr);
+    // AC-4 again, on the SUCCESS path. The byte-compare below it runs only on a blocked
+    // compile, and a "regenerate the baseline when the compile goes green" write would be
+    // added here, not there — leaving the documented "only ever opens for reading"
+    // absolute with an enforcement point that cannot see the case it most needs to.
+    assert.equal(fs.readFileSync(res.baselinePath, 'utf8'), baselineText);
     assert.deepEqual(fs.readdirSync(res.out), ['selector-gate-flow.sh']);
     // Not silence: depending on grandfathered debt is louder than dormant debt.
     assert.match(res.stderr, /RESOLVES a grandfathered banned selector/);
@@ -187,6 +194,42 @@ describe('AC-3 — a baseline grandfathers existing findings without hiding new 
 });
 
 describe('Cross-site: two mappings sharing a basename are refused, not silently merged', function () {
+  test('a cross-site flow blocks, and names the SITE\'s own mapping file', function () {
+    // `referencedElements` is stamped with the mapping file by a different expression on
+    // the cross-site path than on the single-site one, and a mismatch fails OPEN — banned
+    // selector, clean compile — with the rest of the suite green.
+    //
+    // TWO sites, and the banned element lives in the SECOND. A single-site flow would not
+    // discriminate: when the cross-site stamp is absent the compiler falls back to the
+    // first mapping path, which in a one-mapping flow is the right answer by accident. An
+    // earlier version of this test did exactly that and stayed green when the stamp was
+    // deleted — it proved nothing.
+    const dir = tmpdir('xsite-block');
+    const mapping = function (selector) {
+      return ['version: 2', 'app: x', 'base_url: "http://localhost:3000"', 'pages:', '  login:',
+              '    elements:', '      btn:', "        selector: '" + selector + "'", ''].join('\n');
+    };
+    fs.writeFileSync(path.join(dir, 'site-a.yaml'), mapping('[data-testid="clean"]'), 'utf8');
+    fs.writeFileSync(path.join(dir, 'site-b.yaml'), mapping('role=switch >> nth=1'), 'utf8');
+    fs.writeFileSync(path.join(dir, 'flow.yaml'), [
+      'name: xsite-block', 'sites:', '  one:', '    mapping: site-a', '  two:', '    mapping: site-b',
+      'steps:', '  - id: click-two', '    type: click', '    site: two',
+      '    action: "Click btn on login"', '',
+    ].join('\n'), 'utf8');
+
+    const out = tmpdir('out');
+    const res = runCompile([path.join(dir, 'flow.yaml'), '--mappings-dir', dir, '--output-dir', out, '--selector-baseline', NO_BASELINE]);
+    assert.equal(res.status, 1, res.stderr);
+    const errors = res.stderr.split('\n').filter(function (l) { return l.startsWith('ERROR:'); });
+    assert.ok(errors.length > 0, 'expected a blocking error');
+    // The site's OWN mapping, not the first one loaded — this is the assertion the stamp
+    // has to earn.
+    assert.ok(errors.every(function (l) { return l.includes('site-b.yaml'); }), errors.join('\n'));
+    assert.ok(errors.every(function (l) { return !l.includes('site-a.yaml'); }), errors.join('\n'));
+    assert.match(res.stderr, /login\.btn/);
+    assert.deepEqual(fs.readdirSync(out), []);
+  });
+
   test('a basename collision blocks with a message naming it', function () {
     // The finding identity, the baseline record and the diagnostic all key on the
     // basename. Two sites loading `a/m.yaml` and `b/m.yaml` would make one site's blocking
