@@ -54,6 +54,15 @@
         { "type": "json", "path": ".codex-plugin/plugin.json", "jsonpath": "$.version" },
         { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-pr-flow\")].version" }
       ]
+    },
+    "kc-dev-flow": {
+      "release-type": "simple",
+      "component": "kc-dev-flow",
+      "extra-files": [
+        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": ".codex-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "/.claude-plugin/marketplace.json", "jsonpath": "$.plugins[?(@.name==\"kc-dev-flow\")].version" }
+      ]
     }
   }
 }

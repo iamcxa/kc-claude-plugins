@@ -1,0 +1,35 @@
+{
+  "name": "kc-dev-flow",
+  "version": "0.0.0",
+  "description": "Portable, evidence-bound development flow for adopting and continuously advancing repository sprints without duplicating local authority.",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": [
+    "development-workflow",
+    "sprint",
+    "delivery",
+    "evidence",
+    "claude-code",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "KC Dev Flow",
+    "shortDescription": "Portable sprint flow with explicit authority and evidence",
+    "longDescription": "Adopt, audit, upgrade, and continue a repository-owned development flow while preserving the repository's tracker, stage runtime, delivery provider, and decision authority.",
+    "developerName": "Kent Chen",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Audit this repository with adopt-dev-flow",
+      "Continue the approved sprint with continue-dev-flow"
+    ],
+    "brandColor": "#2563EB"
+  }
+}

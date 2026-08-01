@@ -46,3 +46,6 @@ jobs:
 
       - name: Validate dev-flow work-context adapter
         run: ./scripts/dev-flow-work-context-check.test.sh
+
+      - name: Validate portable dev-flow product contract
+        run: ./scripts/kc-dev-flow-contract-test.py

@@ -89,6 +89,21 @@ Repository-level [product](./PRODUCT.md) and [architecture](./ARCHITECTURE.md) c
 /plugin install kc-pr-flow@kc-claude-plugins
 ```
 
+### [kc-dev-flow](./kc-dev-flow/)
+
+Portable development-flow kernel for Claude Code and Codex. It binds existing
+project context, work-item, sprint, execution, delivery, and observation
+authorities instead of replacing them. `adopt-dev-flow` audits or upgrades the
+binding; `continue-dev-flow` keeps an approved sprint moving through fresh
+validation and delivery without unnecessary captain pauses.
+
+**Use when:** You want multiple repositories or agent harnesses to share a lean,
+evidence-bound workflow while retaining their local tracker and runtime.
+
+```bash
+/plugin install kc-dev-flow@kc-claude-plugins
+```
+
 ## Adding to Your Project
 
 Add to `.claude/settings.json`:
@@ -109,7 +124,8 @@ Add to `.claude/settings.json`:
     "kc-nightwatch@kc-claude-plugins": true,
     "kc-hyperfocus@kc-claude-plugins": true,
     "kc-team-ops@kc-claude-plugins": true,
-    "kc-pr-flow@kc-claude-plugins": true
+    "kc-pr-flow@kc-claude-plugins": true,
+    "kc-dev-flow@kc-claude-plugins": true
   }
 }
 ```
