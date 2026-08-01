@@ -230,3 +230,72 @@ verdict. Residual: the local matrix proves only the five enumerated local
 inputs. `authenticate_terminal_route` and `durable_archive` remain
 fixture-authored inherited routes, so this pass does not claim that the local
 matrix independently proves upstream authentication or durable archiving.
+
+## Stage Report: validation (replacement validation after base refresh)
+
+- DONE: Re-establish the exact product/base identity after the authorized base refresh.
+  Fresh fetches retained `origin/main@71084954a55e2b57371486367ff51d00508b1973`,
+  strict ancestor of clean local head `74c66b0204c14ce3a5adc0ec19d39287c5245a3a`.
+- DONE: Prove the rebased four-commit series is patch-equivalent and audit the whole diff.
+  Four `git range-diff` entries were `=`, all stable patch IDs matched, and old/new binary
+  diffs were byte-identical at SHA-256 `23b51e52744cdc8fe5f1746838db0c42eaf62c72941dc6776791066ac1792f5c`.
+- DONE: Re-run inherited AC-1 through AC-4 plus the final `all` fixture on the refreshed base.
+  Every phase exited 0 with real `spacedock 0.26.0 (contract 3)` from the exact product worktree.
+- DONE: Re-run all five guard deletions and the refusal-state-drift mutation out of tree.
+  Every scratch mutation exited 1 at its intended named assertion; product HEAD stayed clean.
+- DONE: Re-measure the complete added executable surface without exclusions or waivers.
+  Independent Bash plus Python statement/branch tracing measured `525/598=87.79%`.
+
+### Replacement evidence
+
+- Captain authorization (2026-08-01): local rebase, later force-with-lease, and exactly one
+  replacement validation because `origin/main` advanced after the prior EM gate. This pass made
+  no product edit, rebase, push, force-push, PR mutation, cleanup, or parked-entity mutation.
+- Old series: base `1d6d0d02d4b0d6c84eac0813e6962c6774e652b7`, head
+  `2bd5a2386fa4c803e62d6adb32556c43c5bd93cd`. New series: base
+  `71084954a55e2b57371486367ff51d00508b1973`, head
+  `74c66b0204c14ce3a5adc0ec19d39287c5245a3a`. Patch IDs matched for all four commits.
+- Whole diff: only `docs/dev/README.md`, `docs/dev/_mods/pr-merge.md`, and
+  `docs/dev/artifacts/decoupled-ledger-contract-test.sh`; 61 hunks (`26/34/1`),
+  1,068 insertions and 592 deletions. Every added hunk was audited; no task/entity creator,
+  daemon, scheduler, CI trigger, runtime file, automatic process mutation, or metric gate entered.
+- Base advance `7108495` added ledger row `rd55vfpddtyvsbfqxqecj6cx`; `archive-derive` passed
+  against that refreshed file while still reproducing the exemplar row byte-for-byte.
+- Fresh commands `terminal-without-ledger`, `compatibility`, `archive-derive`, `scope`, and
+  `all` each exited 0. Compatibility exercised empty/draft/pending/numbered/merged/malformed
+  ledger refs, rejected unreachable direct commit, and archived the reachable direct route.
+- Five syntax-checked guard deletions each exited 1 with its named `guard accepted invalid local
+  evidence` assertion. The separate drift mutation exited 1 at
+  `PRODUCT_AUTHENTICATED refusal changed task state`.
+- Coverage: Bash physical/logical execution `390/433=90.07%`; all eight Python heredocs under
+  statement-and-branch tracing `135/165=81.82%`; combined `525/598=87.79%`. This is a fresh,
+  more conservative denominator, not the inherited `511/570`; no tracked helper, exclusion,
+  pragma, or waiver changed the denominator.
+- Static exits: fixture plus both extracted markers passed `bash -n` and ShellCheck 0.11.0;
+  `git diff --check` passed; README fences stayed `30/30`, pr-merge fences `24/26`, and both
+  marker pairs were exactly `1/1`.
+- Absolute-claim scan reviewed all 93 added hit lines. Local-guard/state claims have the six red
+  mutations; path/hunk/hash and historical-byte claims have scope/compatibility/derivation proof;
+  the remaining lifecycle absolutes are bounded to the reviewed product-only transaction.
+
+### Findings and residuals
+
+No Material finding was found. Correctness, security/trust-boundary, silent-failure,
+manifest/back-compatibility, state isolation, and exact-scope lenses pass; no type, concurrency,
+resource-lifecycle, CI, or product-runtime surface changed in this replacement diff.
+
+Two bounded residuals remain explicit: `authenticate_terminal_route` and `durable_archive` are
+fixture-authored routes, not independent upstream authentication/archive proof; and the five-case
+matrix pins refusal plus unchanged `status: validation`, but not the exact refusal return class or
+diagnostic strings. Neither residual broadens the five local-guard claim.
+
+The remote product branch was still deliberately old at
+`2bd5a2386fa4c803e62d6adb32556c43c5bd93cd` during this gate. This evidence is PASS-ready for a
+separate fresh Claude Science Officer EM gate; this report leaves `status: validation`,
+`completed:`, and `verdict:` unchanged.
+
+### Summary
+
+The captain-authorized base refresh preserved the exact four-patch product change, and fresh
+behavioral, mutation, static, scope, coverage, and absolute-claim evidence found no Material drift.
+Only this replacement validation report was added to state; product content stayed unchanged.
