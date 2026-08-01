@@ -5,6 +5,10 @@ set -u
 HERE="$(cd "$(dirname "$0")" && pwd)"
 PARITY="$HERE/version-parity-check.sh"
 CONFIG_CHECK="$HERE/release-please-config-check.sh"
+REPO_ROOT="$(cd "$HERE/.." && pwd)"
+RELEASE_ACTION_SHA="5c625bfb5d1ff62eadeeb3772007f7f66fdcf071"
+RELEASE_PLEASE_VERSION="17.3.0"
+RELEASE_RUNTIME_FIXTURE="$HERE/fixtures/release-please-runtime"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
@@ -40,6 +44,19 @@ expect_failure_contains() {
   fi
 }
 
+expect_success_contains() {
+  local label="$1" needle="$2" output rc
+  shift 2
+  output="$("$@" 2>&1)"
+  rc=$?
+  if [[ "$rc" -eq 0 ]] && grep -qF -- "$needle" <<<"$output"; then
+    pass "$label"
+  else
+    printf '  expected zero output containing: %s\n' "$needle"
+    fail "$label"
+  fi
+}
+
 write_valid_fixture() {
   local root="$1"
   mkdir -p "$root/alpha/.claude-plugin" "$root/.claude-plugin"
@@ -54,6 +71,10 @@ EOF
 EOF
   cat > "$root/release-please-config.json" <<'EOF'
 {
+  "initial-version": "0.1.0",
+  "include-component-in-tag": true,
+  "include-v-in-tag": true,
+  "tag-separator": "-",
   "packages": {
     "alpha": {
       "release-type": "simple",
@@ -70,8 +91,93 @@ EOF
     .claude-plugin/marketplace.json alpha/.claude-plugin/plugin.json
 }
 
+probe_release_please_first_tag() {
+  local fixture_root="$1" probe_dir="$TMP_DIR/release-please-probe"
+  mkdir -p "$probe_dir"
+  cp "$RELEASE_RUNTIME_FIXTURE/package.json" \
+    "$RELEASE_RUNTIME_FIXTURE/package-lock.json" "$probe_dir/"
+  (
+    cd "$probe_dir" || exit 1
+    npm ci --silent --ignore-scripts --no-audit --no-fund >/dev/null 2>&1
+  ) || return 1
+
+  (
+    cd "$probe_dir" || exit 1
+    node - "$fixture_root/release-please-config.json" \
+      "$fixture_root/.release-please-manifest.json" <<'NODE'
+const fs = require('fs');
+
+// Load the public entrypoint first; release-please 17.3.0's CommonJS strategy
+// modules otherwise form a circular load under newer Node runtimes.
+const releasePlease = require('release-please');
+const {Simple} = require('release-please/build/src/strategies/simple.js');
+const {TagName} = require('release-please/build/src/util/tag-name.js');
+
+const config = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+const manifest = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
+const [path, packageConfig] = Object.entries(config.packages)[0];
+if (manifest[path] !== '0.0.0') {
+  console.error(`bootstrap fixture must seed ${path} at 0.0.0; got ${manifest[path]}`);
+  process.exit(1);
+}
+const component = packageConfig.component || path;
+const includeComponent = packageConfig['include-component-in-tag']
+  ?? config['include-component-in-tag'];
+const tagSeparator = packageConfig['tag-separator'] ?? config['tag-separator'];
+const includeV = packageConfig['include-v-in-tag'] ?? config['include-v-in-tag'];
+const initialVersion = packageConfig['initial-version'] ?? config['initial-version'];
+
+const strategy = new Simple({
+  github: {repository: {}},
+  targetBranch: 'main',
+  path,
+  component,
+  initialVersion,
+  includeComponentInTag: includeComponent,
+  tagSeparator,
+});
+const featureCommit = {type: 'feat', notes: [], breaking: false};
+
+strategy.buildNewVersion([featureCommit], undefined).then(version => {
+  const tag = new TagName(
+    version,
+    includeComponent ? component : undefined,
+    tagSeparator,
+    includeV,
+  ).toString();
+  console.log(`release-please ${releasePlease.VERSION}: ${tag}`);
+  if (tag !== 'alpha-v0.1.0') process.exit(1);
+}).catch(error => {
+  console.error(error);
+  process.exit(1);
+});
+NODE
+  )
+}
+
 VALID="$TMP_DIR/valid"
 write_valid_fixture "$VALID"
+
+BOOTSTRAP="$TMP_DIR/bootstrap"
+cp -R "$VALID" "$BOOTSTRAP"
+python3 - "$BOOTSTRAP/.release-please-manifest.json" \
+  "$BOOTSTRAP/alpha/.claude-plugin/plugin.json" \
+  "$BOOTSTRAP/.claude-plugin/marketplace.json" <<'PY'
+import json, sys
+manifest_path, plugin_path, marketplace_path = sys.argv[1:]
+
+json.dump({"alpha": "0.0.0"}, open(manifest_path, "w"))
+
+plugin = json.load(open(plugin_path))
+plugin["version"] = "0.0.0"
+json.dump(plugin, open(plugin_path, "w"))
+
+marketplace = json.load(open(marketplace_path))
+marketplace["plugins"][0]["version"] = "0.0.0"
+json.dump(marketplace, open(marketplace_path, "w"))
+PY
+git -C "$BOOTSTRAP" add .release-please-manifest.json \
+  alpha/.claude-plugin/plugin.json .claude-plugin/marketplace.json
 
 if [[ -x "$CONFIG_CHECK" ]]; then
   pass "release-please config checker exists"
@@ -83,7 +189,90 @@ expect_success "accepts package-relative and repo-root extra-file paths" \
   env REPO_DIR_OVERRIDE="$VALID" bash "$CONFIG_CHECK"
 
 expect_success "repository release-please config resolves every extra file" \
-  env REPO_DIR_OVERRIDE="$(cd "$HERE/.." && pwd)" bash "$CONFIG_CHECK"
+  env REPO_DIR_OVERRIDE="$REPO_ROOT" bash "$CONFIG_CHECK"
+
+expect_success_contains "new-component fixture resolves the declared first tag" \
+  "First-release contract: alpha-v0.1.0" \
+  env REPO_DIR_OVERRIDE="$BOOTSTRAP" bash "$CONFIG_CHECK"
+
+expect_success "release-please probe has a committed dependency lock" \
+  test -f "$RELEASE_RUNTIME_FIXTURE/package-lock.json"
+
+expect_success_contains "release-please agrees on the first tag after a feature commit" \
+  "release-please $RELEASE_PLEASE_VERSION: alpha-v0.1.0" \
+  probe_release_please_first_tag "$BOOTSTRAP"
+
+MISSING_INITIAL_VERSION="$TMP_DIR/missing-initial-version"
+cp -R "$VALID" "$MISSING_INITIAL_VERSION"
+python3 - "$MISSING_INITIAL_VERSION/release-please-config.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+data = json.load(open(path))
+data.pop("initial-version")
+json.dump(data, open(path, "w"))
+PY
+expect_failure_contains "rejects an implicit first-release version" \
+  "top-level initial-version must be '0.1.0'" \
+  env REPO_DIR_OVERRIDE="$MISSING_INITIAL_VERSION" bash "$CONFIG_CHECK"
+
+CHANGED_INITIAL_VERSION="$TMP_DIR/changed-initial-version"
+cp -R "$VALID" "$CHANGED_INITIAL_VERSION"
+python3 - "$CHANGED_INITIAL_VERSION/release-please-config.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+data = json.load(open(path))
+data["initial-version"] = "1.0.0"
+json.dump(data, open(path, "w"))
+PY
+expect_failure_contains "rejects drift from the declared first-release version" \
+  "top-level initial-version must be '0.1.0'" \
+  env REPO_DIR_OVERRIDE="$CHANGED_INITIAL_VERSION" bash "$CONFIG_CHECK"
+
+PACKAGE_OVERRIDE="$TMP_DIR/package-initial-version-override"
+cp -R "$VALID" "$PACKAGE_OVERRIDE"
+python3 - "$PACKAGE_OVERRIDE/release-please-config.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+data = json.load(open(path))
+data["packages"]["alpha"]["initial-version"] = "1.0.0"
+json.dump(data, open(path, "w"))
+PY
+expect_failure_contains "rejects a package override of the shared first-release policy" \
+  "must inherit top-level initial-version '0.1.0'" \
+  env REPO_DIR_OVERRIDE="$PACKAGE_OVERRIDE" bash "$CONFIG_CHECK"
+
+MISSING_INCLUDE_V="$TMP_DIR/missing-include-v"
+cp -R "$VALID" "$MISSING_INCLUDE_V"
+python3 - "$MISSING_INCLUDE_V/release-please-config.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+data = json.load(open(path))
+data.pop("include-v-in-tag")
+json.dump(data, open(path, "w"))
+PY
+expect_failure_contains "rejects an implicit v-prefix policy" \
+  "include-v-in-tag must be true for first-release tags" \
+  env REPO_DIR_OVERRIDE="$MISSING_INCLUDE_V" bash "$CONFIG_CHECK"
+
+PACKAGE_TAG_OVERRIDE="$TMP_DIR/package-tag-override"
+cp -R "$VALID" "$PACKAGE_TAG_OVERRIDE"
+python3 - "$PACKAGE_TAG_OVERRIDE/release-please-config.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+data = json.load(open(path))
+data["packages"]["alpha"]["include-v-in-tag"] = False
+json.dump(data, open(path, "w"))
+PY
+expect_failure_contains "rejects a package override of the shared tag policy" \
+  "must inherit top-level tag policy" \
+  env REPO_DIR_OVERRIDE="$PACKAGE_TAG_OVERRIDE" bash "$CONFIG_CHECK"
+
+expect_success "release workflow pins the tested release-please action" \
+  grep -qF "googleapis/release-please-action@$RELEASE_ACTION_SHA" \
+    "$REPO_ROOT/.github/workflows/release-please.yml"
+
+expect_success "adopter guidance requires an actually published tag" \
+  grep -qF "pin only an actually published tag" "$REPO_ROOT/CLAUDE.md"
 
 DOUBLED="$TMP_DIR/doubled"
 cp -R "$VALID" "$DOUBLED"

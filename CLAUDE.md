@@ -12,6 +12,11 @@ Versioning, tagging, and changelogs are owned by **release-please** (monorepo ma
 2. **Release PR (automatic)** — on push to `main`, `.github/workflows/release-please.yml` opens/updates a Release PR that, per changed plugin, bumps the version across `<plugin>/.claude-plugin/plugin.json`, `<plugin>/.codex-plugin/plugin.json`, and that plugin's `.claude-plugin/marketplace.json` entry (**version string only** — the bespoke marketplace `description`/`keywords` are never touched), and writes `<plugin>/CHANGELOG.md`.
 3. **Merge the Release PR** — release-please cuts the `<plugin>-vX.Y.Z` tag + GitHub Release. A `RELEASE_PLEASE_TOKEN` PAT is required so the bot-opened Release PR fires the required status checks — see the comment in `release-please.yml`.
 
+New components inherit the repository's explicit `initial-version: 0.1.0`
+policy. Cross-repository adopters must pin only an actually published tag after
+the Release PR merges; never prepare a final dependency pin from a predicted
+release version.
+
 Version lives in release-please's component manifest and is propagated to `<plugin>/.claude-plugin/plugin.json`, the Codex manifest, and the marketplace entry. In `extra-files`, plugin files are package-relative (for example `.claude-plugin/plugin.json`), while repo-root files require a leading `/` (for example `/.claude-plugin/marketplace.json`). The README no longer carries per-plugin version badges (marketplace.json / tags / Releases are the source).
 
 ### Pre-merge gates (apply to feature PRs and the Release PR)
@@ -20,7 +25,7 @@ Version lives in release-please's component manifest and is propagated to `<plug
 |------|---------------|-----|
 | Sanitize-check | `Skill: kc-plugin-forge:kc-plugin-forge-sanitize-check <plugin>` | Public plugins must not leak internal org markers / secrets / paths. BLOCK class halts publish; REJECT class triggers incident response (rotate credential + scrub history). |
 | Marketplace schema + installability | `scripts/marketplace-verify.sh` (L1 + L2) | Schema validates `marketplace.json`; install test confirms each plugin is resolvable from a clean `HOME`. Catches `source` typos and orphaned entries before publish. |
-| Release config + version parity guard | `scripts/version-parity-check.sh` (CI: `marketplace-parity.yml`, required check) | Validates every resolved `extra-files` path and JSONPath target, then compares the release manifest / `plugin.json` / `.codex-plugin/plugin.json` / marketplace entry — including that every on-disk plugin directory (`*/.claude-plugin/plugin.json`) has a matching `marketplace.json` entry and vice versa (fail-closed on an unlisted directory). As a required check it **blocks merge on invalid propagation config, real version drift, or an unregistered plugin directory** (including the Release PR). |
+| Release config + version parity guard | `scripts/version-parity-check.sh` (CI: `marketplace-parity.yml`, required check) | Runs a pinned release-please fixture for the first version/tag after a feature commit, validates every resolved `extra-files` path and JSONPath target, then compares the release manifest / `plugin.json` / `.codex-plugin/plugin.json` / marketplace entry — including that every on-disk plugin directory (`*/.claude-plugin/plugin.json`) has a matching `marketplace.json` entry and vice versa (fail-closed on an unlisted directory). As a required check it **blocks merge on bootstrap-policy drift, invalid propagation config, real version drift, or an unregistered plugin directory** (including the Release PR). |
 | Skill frontmatter lint | `scripts/skill-frontmatter-lint.sh` (CI: `marketplace-parity.yml`, required check) | Validates every `*/skills/*/SKILL.md` has parseable YAML frontmatter with a non-empty `name` and `description`. **Blocks merge on a malformed or incomplete skill manifest.** |
 
 ### Post-merge — LOCAL install sync (run from the **main workspace**, NOT a Conductor / feature-branch worktree)

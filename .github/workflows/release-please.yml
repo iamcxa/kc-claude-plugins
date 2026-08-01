@@ -24,7 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: googleapis/release-please-action@v4
+      # Pin the action implementation covered by release-metadata.test.sh.
+      # This revision bundles release-please 17.3.0, whose BaseStrategy honors
+      # the explicit initial-version when no latest component release exists.
+      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4
         with:
           # IMPORTANT: use a PAT so the bot-opened Release PR fires the required
           # status checks (marketplace version parity). With the default

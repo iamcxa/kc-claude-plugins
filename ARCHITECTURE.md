@@ -42,7 +42,7 @@ test), `version-parity-check.sh`, and `kc-dev-flow-contract-test.py`.
 
 Each plugin is an independent release-please component
 (`release-please-config.json`, manifest mode, `tag-separator: "-"`,
-`include-component-in-tag: true`) tracked in
+`include-component-in-tag: true`, `include-v-in-tag: true`) tracked in
 `.release-please-manifest.json`. On push to `main`,
 `.github/workflows/release-please.yml` maintains a Release PR that bumps
 the changed plugin(s) across `<plugin>/.claude-plugin/plugin.json`,
@@ -52,6 +52,11 @@ the matching `marketplace.json`
 array entry; merge cuts a `<plugin>-vX.Y.Z` tag, GitHub Release, and
 per-plugin `CHANGELOG.md`. `scripts/version-parity-check.sh` is the
 machine-enforced backstop asserting all tracked version sources agree.
+New components inherit the top-level `initial-version: 0.1.0` contract, and
+`scripts/release-please-config-check.sh` rejects a missing, changed, or
+package-overridden bootstrap policy before release. Downstream repositories
+pin the published `<plugin>-vX.Y.Z` tag, not a version predicted before the
+Release PR is merged.
 
 ## kc-pr-flow: Agent-native review runtime
 
