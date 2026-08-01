@@ -43,6 +43,9 @@ or is considering an optional control.
    documentation grep.
 7. Record the kernel source/version and every adopted optional control. An
    omitted control remains off.
+8. If portable improvements may return to the kernel source, record
+   `upstream_contribution.repository`, its package path, and either
+   `propose_only` or `pull_request`. Omission defaults to `propose_only`.
 
 ## Authority boundary
 

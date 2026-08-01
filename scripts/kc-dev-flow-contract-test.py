@@ -87,6 +87,10 @@ for phrase in [
     "Do not invent or schedule work",
     "fresh validation",
     "Claude Code and Codex",
+    "repository-local",
+    "reusable kernel",
+    "upstream_contribution",
+    "Do not merge the upstream pull request",
 ]:
     require(phrase in continue_skill, f"continue skill is missing boundary: {phrase}")
 
@@ -99,6 +103,11 @@ for phrase in [
     "Observation is not authority",
     "backlog → ideation → implementation → validation → done",
     "smallest sufficient route",
+    "At each sprint boundary",
+    "repository-local",
+    "reusable kernel",
+    "`propose_only`",
+    "`pull_request`",
 ]:
     require(phrase in kernel, f"kernel is missing invariant: {phrase}")
 
@@ -112,6 +121,7 @@ for field in [
     "execution_state:",
     "delivery:",
     "observation:",
+    "upstream_contribution:",
     "adopted_controls:",
 ]:
     require(field in binding, f"local binding is missing {field}")

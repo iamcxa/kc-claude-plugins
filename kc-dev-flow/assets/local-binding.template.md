@@ -14,6 +14,11 @@ authority:
   gate_verdicts: <fresh reviewer or EM>
   scope_and_irreversibility: <captain or named authority>
 
+upstream_contribution:
+  repository: <kernel source repository>
+  path: <kernel package path>
+  mode: propose_only # propose_only | pull_request
+
 adopted_controls: []
 
 local_routes:

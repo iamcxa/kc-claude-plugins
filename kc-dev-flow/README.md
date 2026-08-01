@@ -17,5 +17,10 @@ The plugin is not a tracker, scheduler, daemon, or merge bot. The kernel defines
 portable semantics; each repository owns a short local binding and any provider
 adapters. Optional controls are off until individually declared.
 
+At a sprint boundary, repeated friction is classified as repository-local or a
+reusable kernel improvement. The default is proposal-only; an adopter may
+explicitly allow a sanitized, duplicate-checked upstream pull request. That
+permission never includes scheduling or merging the improvement.
+
 Install the plugin through the `kc-claude-plugins` marketplace in Claude Code.
 Codex uses the co-shipped `.codex-plugin` manifest and the same skill files.

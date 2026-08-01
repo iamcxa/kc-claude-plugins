@@ -39,7 +39,20 @@ reviewer silence, and missing evidence are not passes.
 
 ## Improve the flow without hijacking the sprint
 
-Capture repeated process friction as evidence. At a sprint boundary, present at
-most one narrow improvement proposal. Do not create or schedule it; keep the
-current product sprint moving unless the existing flow makes safe delivery
-impossible.
+Capture repeated process friction as evidence. At each sprint boundary, if the
+evidence repeats, remind the captain once and classify at most one proposal:
+
+- Route a **repository-local** defect to the repository's existing work-item
+  authority. Creating a proposal does not schedule it into the sprint.
+- Route a **reusable kernel** defect to the source declared by
+  `upstream_contribution`. Remove adopter-specific details and search for an
+  existing issue or change first.
+
+When the mode is absent or `propose_only`, produce a reviewable proposal or
+patch handoff. When it is `pull_request`, use an isolated branch, add a failing
+contract or behavior test first, implement the smallest portable repair, run
+the upstream gates, and open a pull request.
+
+Do not merge the upstream pull request. Do not add it to the adopter's sprint
+or pause product work unless the existing flow makes safe delivery impossible.
+With no repeated friction, add no reminder ceremony.

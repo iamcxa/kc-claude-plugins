@@ -70,10 +70,26 @@ needs a scheduling decision; it is not permission to invent work.
 
 ## Self-improvement
 
-Repeated friction may yield at most one narrow improvement proposal at a sprint
-boundary. The proposal cites observations, expected value, cost, and a disproof
-hook. It does not create, schedule, advance, or merge its own task. Improvement
-work competes for iteration authority like any other work.
+At each sprint boundary, if repeated friction was observed, remind the captain
+once and classify at most one narrow proposal:
+
+- **repository-local** — the defect depends on the adopter's product,
+  architecture, provider, or policy. Route it to the adopter's work-item
+  authority.
+- **reusable kernel** — the defect is portable across adopters. Route it to the
+  kernel source named by the local binding after removing adopter-specific
+  details and checking for an existing issue or change.
+
+The proposal cites observations, expected value, cost, and a disproof hook. No
+observed repeated friction means no reminder ritual. Detection never schedules
+or advances improvement work.
+
+For a reusable kernel proposal, read `upstream_contribution.mode` from the local
+binding. Missing or `propose_only` produces a reviewable proposal or patch
+handoff. `pull_request` permits an isolated, test-first patch and pull request
+to the declared upstream repository after the ownership and duplicate checks.
+It does not grant merge authority, local sprint membership, or permission to
+pause product work unless the defect makes safe delivery impossible.
 
 Optional controls are independently declared through the Work Control Profile.
 Undeclared capabilities remain off; adopters add only the control whose risk
