@@ -44,6 +44,11 @@ jobs:
           ./scripts/skill-frontmatter-lint.test.sh
           ./scripts/skill-frontmatter-lint.sh
 
+      - name: Validate packaged release helpers
+        run: |
+          ./kc-plugin-forge/scripts/plugin-release-contract.test.sh
+          ./kc-plugin-forge/scripts/plugin-release-contract-check.sh --repo .
+
       - name: Validate dev-flow work-context adapter
         run: ./scripts/dev-flow-work-context-check.test.sh
 

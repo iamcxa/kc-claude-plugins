@@ -237,13 +237,14 @@ HTTP cancellation/readback before metrics and JUnit emission. Finalizer failure 
 
 `/e2e-doc-sync` is the unified doc sync skill combining diff-aware scanning, history enrichment, doc writing, and live probe verification. The `doc-probe` agent handles behavioral verification.
 
-### Pre-Publish Gate (read by `/kc-marketplace-sync`)
+### Pre-Publish Gate (before the feature PR is ready)
 
 **Before syncing this plugin to the marketplace, the following gate MUST pass:**
 
 1. Run `/e2e-doc-sync --check` -- reports gaps between skills/agents and docs
 2. If gaps found -> run `/e2e-doc-sync --fix` to resolve, or acknowledge as intentional
-3. Only proceed with `/kc-marketplace-sync` after docs are in sync
+3. Only mark the feature PR ready after docs are in sync; release-please owns
+   the later version and marketplace propagation
 
 This gate exists because SKILL.md definitions are authoritative but not user-facing. Publishing a version where docs lag behind skills means users can't discover features.
 
@@ -376,4 +377,8 @@ The `/e2e-compile` skill uses a Node.js CLI (`bin/e2e-compile.js`) that requires
 
 ## Git Conventions
 
-Semantic commit prefixes: `feat`, `fix`, `docs`, `chore`. Version follows semver in `.claude-plugin/plugin.json`. After bumping, sync marketplace via `/kc-marketplace-sync`.
+Semantic commit prefixes: `feat`, `fix`, `docs`, `chore`. Do not bump plugin or
+marketplace versions in a feature PR; root release-please configuration owns
+version propagation and publishing. After its Release PR merges, use
+`kc-plugin-forge:kc-plugin-release` for local Claude Code and Codex install
+synchronization.
