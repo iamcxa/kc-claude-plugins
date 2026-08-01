@@ -74,6 +74,9 @@ Required marketplace plugins (runtime dependencies):
 
 # Get help
 /kc-plugin-forge-help
+
+# Watch exact-head CI or sync a released plugin into local Claude/Codex installs
+/kc-plugin-release
 ```
 
 ## How It Works
@@ -201,6 +204,7 @@ Each skill runs in `claude --bare --effort low` (~$0.025/test). API key is confi
 | `kc-plugin-forge` | Main orchestrator — full pipeline or single-phase routes |
 | `kc-plugin-forge-help` | Interactive guide, topic deep-dive, feedback → GitHub issue |
 | `kc-plugin-forge-doc-sync` | Documentation gap scanner & writer (Light — static scan + history) |
+| `kc-plugin-release` | Exact-head GitHub check watcher and post-release local Claude/Codex install sync; release-please retains publishing authority |
 
 ## Documentation
 

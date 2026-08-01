@@ -201,6 +201,20 @@ Documentation gap scanner and writer for this plugin (Light variant — no live 
 | 5. Self-Update | Sync `doc-sync-context.md` Source Map with current skill/hook inventory. New files → auto-added. Removed files → marked deprecated. |
 | 6. Report | Summary table + D1 learning check + offer to create GitHub issue for remaining gaps |
 
+## `/kc-plugin-release`
+
+Maintainer-only release handoff for this marketplace repository. It does not
+change versions, tags, changelogs, or marketplace metadata; release-please owns
+those operations.
+
+| Route | Effect |
+|-------|--------|
+| Feature or release PR | Run the packaged `watch-pr-checks.sh` helper and reject failed checks or a moved PR head |
+| After a release exists | From a clean, current `main`, run `post-release-sync.sh` to copy one plugin to both local Claude Code and Codex install roots |
+
+Both helpers resolve from the installed `kc-plugin-forge` root. They do not
+depend on user-global skill directories or repository-name conventions.
+
 ## SessionStart Hook
 
 The plugin includes a SessionStart hook (`hooks/hooks.json`) that fires at the start of every session where the forge plugin is loaded. It detects uncommitted plugin changes and suggests running `validate-only`.

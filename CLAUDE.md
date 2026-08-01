@@ -31,9 +31,13 @@ release-please owns versioning + tagging in the cloud, but it **cannot touch you
 |--------|-----|
 | Local install rsync (`~/.claude/plugins/local/<plugin>`) | Subagents read references from local install; stale local = agents see old state. |
 | Codex local install (`~/.codex/local-plugins/<plugin>`) | Codex CLI parallel of the above. See **Codex install conventions** below. |
-| Clear stale cache (`~/.claude/plugins/cache/local/<plugin>`) | Forces cache rebuild on next plugin load. |
 
-Run the local-sync subset via `Skill: kc-marketplace-sync <plugin>` from the main workspace (`$KC_WORKSPACE` on this machine; wherever you cloned `kc-claude-plugins` elsewhere). The skill's tagging / marketplace / README steps are **superseded by release-please** — only its local-install steps remain relevant.
+Run `Skill: kc-plugin-forge:kc-plugin-release` from the main workspace
+(`$KC_WORKSPACE` on this machine; wherever you cloned `kc-claude-plugins`
+elsewhere), then use its packaged post-release sync helper. The helper only
+copies local installs; it has no version, tag, changelog, or marketplace
+authority. Its boundary is enforced by
+`kc-plugin-forge/scripts/plugin-release-contract-check.sh`.
 
 **Codex install conventions** — two layouts coexist on a typical machine and both are valid:
 
@@ -42,9 +46,14 @@ Run the local-sync subset via `Skill: kc-marketplace-sync <plugin>` from the mai
 | Rsync copy (recommended for new plugins) | `~/.codex/local-plugins/<plugin>/` | Snapshots `main` post-merge. Defeats the "subagent sees uncommitted state" failure mode by definition. |
 | Symlink to source | `~/plugins/<plugin>` (with `~/.agents/plugins/marketplace.json` entry; documented in `kc-plugin-forge/README.md`) | Live-edit during plugin development. Skips the rsync but loses the "main only" guarantee. |
 
-Codex resolves both via `~/.agents/plugins/marketplace.json` `source.path` (relative to `$HOME`). The `kc-marketplace-sync` skill writes to the rsync layout; older plugins (e.g. `kc-plugin-forge`) still ship the symlink convention. Migration is optional; do not break working symlinks.
+Codex resolves both via `~/.agents/plugins/marketplace.json` `source.path`
+(relative to `$HOME`). The packaged helper writes to the rsync layout; older
+plugins (e.g. `kc-plugin-forge`) may still use the symlink convention. Migration
+is optional; the helper refuses to replace a working symlink.
 
-If you skip the post-merge local sync, the author's machine serves stale subagent references — symptoms include "the new skill change isn't taking effect" until the next `/kc-marketplace-sync` run.
+If you skip the post-merge local sync, the author's machine serves stale
+subagent references. A common symptom is that a newly released skill change
+does not take effect locally.
 
 ## Commit / PR Conventions (per user-preferences)
 

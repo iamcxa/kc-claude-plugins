@@ -13,8 +13,14 @@ kc-plugin-forge/
 │   │   └── SKILL.md
 │   ├── kc-plugin-forge-help/      # interactive help guide
 │   │   └── SKILL.md
-│   └── kc-plugin-forge-doc-sync/  # documentation sync (Light — no live probes)
+│   ├── kc-plugin-forge-doc-sync/  # documentation sync (Light — no live probes)
+│   │   └── SKILL.md
+│   └── kc-plugin-release/         # exact-head checks + local release sync
 │       └── SKILL.md
+├── scripts/
+│   ├── watch-pr-checks.sh         # gh-based exact-head CI watcher
+│   ├── post-release-sync.sh       # Claude/Codex local install copy
+│   └── plugin-release-contract.*  # packaged-resource and authority tests
 ├── hooks/
 │   └── hooks.json                 # SessionStart reminder
 ├── reference/

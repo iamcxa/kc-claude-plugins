@@ -8,14 +8,20 @@ A Claude Code plugin (`kc-plugin-forge`) that provides a one-command quality pip
 
 ## Architecture
 
-**Skills** (4) run in main conversation context:
+**Skills** (5) run in main conversation context:
 
 ```
 skills/kc-plugin-forge/                -> main orchestrator (7-phase pipeline + routes: 1→1.5→2→2.7→2.5→3→4 + dreaming)
 skills/kc-plugin-forge-help/           -> interactive help guide, topic deep-dive, feedback collection
 skills/kc-plugin-forge-doc-sync/       -> documentation gap scanner & writer (Light — static scan + history)
 skills/kc-plugin-forge-sanitize-check/ -> prepublish safety-net grep (REJECT/BLOCK/WARN classes) — backstop to Early-stage Dreaming
+skills/kc-plugin-release/              -> exact-head PR checks + post-release local Claude/Codex install sync
 ```
+
+**Release helper scripts** are packaged under `scripts/` and guarded by
+`plugin-release-contract.test.sh`. `watch-pr-checks.sh` uses the GitHub CLI
+without a host-global monitor dependency; `post-release-sync.sh` can only copy
+an already-released plugin into local Claude Code and Codex install roots.
 
 **Hooks** (1):
 
@@ -81,4 +87,8 @@ Adjacent skill: `kc-plugin-forge-sanitize-check` is a prepublish safety net — 
 
 ## Git Conventions
 
-Semantic commit prefixes: `feat`, `fix`, `docs`, `chore`. Version follows semver in `.claude-plugin/plugin.json`. After bumping, sync marketplace via `/kc-marketplace-sync`.
+Semantic commit prefixes: `feat`, `fix`, `docs`, `chore`. Do not bump plugin or
+marketplace versions in a feature PR. Root release-please configuration owns
+version propagation, changelogs, tags, and GitHub Releases. After its Release
+PR merges, use `kc-plugin-release` only for local Claude Code and Codex install
+synchronization.

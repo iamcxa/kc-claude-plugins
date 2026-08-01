@@ -1,6 +1,6 @@
 ---
 name: kc-plugin-forge-sanitize-check
-description: Use before publishing a public plugin (especially before /kc-marketplace-sync) to grep for known leak patterns in the plugin's public reference files. Triggered by "/kc-plugin-forge sanitize-check <plugin>", "sanitize-check", "check leaks before publish", "prepublish scan". Read-only safety net — NOT a replacement for Early-stage Dreaming (which is the real privacy gate at capture time).
+description: Use before making a public plugin feature PR ready or before a release-please publication to grep for known leak patterns in the plugin's public reference files. Triggered by "/kc-plugin-forge sanitize-check <plugin>", "sanitize-check", "check leaks before publish", "prepublish scan". Read-only safety net — NOT a replacement for Early-stage Dreaming (which is the real privacy gate at capture time).
 ---
 
 # Plugin Sanitize-Check
@@ -13,7 +13,7 @@ Prepublish backstop. Greps a plugin's public files (`reference/*.md`, `skills/**
 
 | Trigger | Action |
 |---------|--------|
-| Before `/kc-marketplace-sync` for a public plugin | Run sanitize-check first; abort sync if findings exist and user does not override |
+| Before making a public plugin feature PR ready | Run sanitize-check first; do not proceed if findings exist and the user does not override |
 | Before opening a PR to a public plugin repo | Run sanitize-check on the changed files |
 | After bulk Dreaming session | Sanity check that distilled rules don't still contain identifiers |
 | Periodically (nightwatch) | Audit accumulated drift |
@@ -120,9 +120,11 @@ If REJECT fires, **also** flag for journal entry — production secret in plugin
    - WARN > 0 → exit 0 with verdict CONDITIONAL PASS (no block unless `--strict`)
    - Clean → exit 0 with verdict PASS
 
-## Output for `kc-marketplace-sync` integration
+## Output for release-gate integration
 
-When invoked with `--ci` or `--exit-code-only`, suppress human-readable output and exit with class-based code. `kc-marketplace-sync` should run this skill with `--ci` and refuse to sync if exit code ≠ 0.
+When invoked with `--ci` or `--exit-code-only`, suppress human-readable output
+and exit with class-based code. A feature-PR or release gate should refuse to
+proceed when the exit code is non-zero.
 
 ## Allowlist
 
