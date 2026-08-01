@@ -14,6 +14,22 @@ External runtime dependencies — marketplace plugins whose agents/skills are di
 
 If unavailable, the skill warns the user and continues without agent dispatch (manual review fallback).
 
+### Canonical GitHub Write Safety
+
+Every top-level skill routes branch pushes through `scripts/github-repo-write.sh push`, which
+validates the effective push URL (including `pushurl`) before it owns the write. PR mutations
+separately canonicalize the repository extracted from the explicit/detected PR URL; a fork's push
+remote is never reused as its PR target. The helper refuses stale transferred-repo destinations and
+proposes rather than performs remote repairs. Mutating `gh` calls pin the canonical PR repository.
+Authorized merges use the helper's `merge` command, which requires that repository plus the
+reviewed full head SHA and intentionally has no branch-deletion or local-checkout behavior.
+
+Maintainer check:
+
+```bash
+bash scripts/github-repo-write.test.sh
+```
+
 ### Optional Cross-Model Review (Codex + Gemini)
 
 `kc-pr-review` may dispatch Codex as a cross-model second opinion and, on conflict, Gemini as an

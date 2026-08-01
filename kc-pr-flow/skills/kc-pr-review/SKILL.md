@@ -1772,6 +1772,17 @@ match the request — an interactive gate has a human to notice it being used on
 replayed autonomous one has nobody. Autonomous posting is only reachable through the once-only path
 below; with the rollback flag off, an autonomous gate authorizes nothing at all.
 
+**Canonical repository preflight (both posting paths).** `REPO` comes from the detected or explicit
+PR URL in Step 1, never from the push remote. Immediately before review-key construction or either
+posting path, refresh that explicit target and abort on failure:
+
+```bash
+REPO=$("$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" preflight --repo "$REPO") || exit $?
+```
+
+Bind the once-only request's `repo` field and every legacy `gh pr` mutation to this exact `$REPO`.
+If the head moves or the review returns to an earlier stage, rerun this check before the next write.
+
 **Once-only posting path — `KC_PR_FLOW_ONCE_ONLY_POST=on` only.** Unset or any other value skips
 straight to "Legacy posting path" below, byte-identical to today. When `on`, `scripts/review-post.sh`
 is the only component with posting/reconcile/network authority and guarantees at most one GitHub

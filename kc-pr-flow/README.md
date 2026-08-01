@@ -44,6 +44,19 @@ Use natural-language triggers rather than slash commands in Codex, for example:
 | [Typed review runtime](docs/review-runtime.md) | Mode selection, terminal rehydration, receipt inspection, promotion measurement, rollback, and troubleshooting |
 | [Review triage](reference/review-triage.md) | Agent tiering, 8-pass activation, security dispatch, and pre-scan rules |
 | [Review architecture diagrams](docs/review-architecture-diagrams.md) | Optional sequence and architecture/status diagrams, fail-closed generated-output validation, confirmation flow, evidence colors, and freshness rules |
+| [GitHub API patterns](reference/gh-api-patterns.md) | Canonical repository preflight, explicit-repository mutations, and reviewed-head-bound merge safety |
+
+### GitHub Write Safety
+
+Branch pushes and PR mutations use distinct identities. The push adapter validates the effective
+push URL, including `pushurl`, and owns `git push` so a failed transfer check cannot fall through to
+the write. First push sets the explicit new branch; later pushes preserve Git's configured
+upstream and bind one exact `HEAD:<upstream-ref>` refspec rather than assuming same-name local and
+remote branches or honoring broad `push.default` modes. PR operations
+independently canonicalize the repository from the detected/explicit PR URL, preserving
+fork-to-upstream workflows. A stale destination fails with an explicit repair command and the plugin
+never edits the remote. The optional merge adapter additionally pins the PR repository and reviewed
+head without checking out or deleting any branch.
 
 ### Typed Review Runtime
 
@@ -116,6 +129,7 @@ bash scripts/review-post.test.sh
 bash scripts/review-shadow.test.sh
 bash scripts/review-runtime-benchmark.test.sh
 bash scripts/review-ablation.test.sh
+bash scripts/github-repo-write.test.sh
 ```
 
 ## Shared Config
@@ -176,7 +190,7 @@ flowchart TD
 
     subgraph STEP4_5["Step 4-5: Confirm & Create"]
         C1["Present draft title + body"] --> C2{User approves?}
-        C2 -->|yes| C3["Read identity config<br>git push -u origin branch<br>gh pr create --assignee @me"]
+        C2 -->|yes| C3["Read identity config<br>verify canonical repository<br>push + create with explicit repo"]
         C2 -->|edit| C1
         C3 --> SIZE
     end
@@ -225,7 +239,7 @@ flowchart TD
 | 1.5 | E2E suggestion | 2+ layers touched + mappings exist | Optional E2E run |
 | 2 | Draft title | — | — |
 | 3 | Draft body | Template exists? → use it | — |
-| 4-5 | Confirm & create | User approval | `git push`, `gh pr create --assignee @me` |
+| 4-5 | Confirm & create | User approval | Canonical-repository preflight, then `git push` and explicit-repo `gh pr create --assignee @me` |
 | 6-8 | Self-review annotations | <100 lines → skip | `gh api` review with inline comments |
 | 9 | Linear comment | — | Comment on Linear issue |
 | 10 | Announce | Demo artifacts exist? → ask | Optional Slack announcement |

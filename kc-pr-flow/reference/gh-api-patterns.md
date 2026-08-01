@@ -5,22 +5,82 @@ Skills load specific sections at runtime via `Read → ${CLAUDE_PLUGIN_ROOT}/ref
 
 ---
 
+## Canonical Repository Preflight
+
+Keep the branch-push destination and the PR target repository as separate identities. A fork may
+push through `origin` while its PR belongs to `upstream`; neither identity can safely stand in for
+the other.
+
+Route branch pushes through the helper. It validates every effective push URL (including an
+explicit `remote.<name>.pushurl`) before it invokes `git push`, so a failed preflight cannot fall
+through to the write:
+
+```bash
+WORKTREE=$(git rev-parse --show-toplevel) || exit $?
+BRANCH=$(git branch --show-current) || exit $?
+"$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" push \
+  --worktree "$WORKTREE" --remote origin --branch "$BRANCH" --set-upstream || exit $?
+```
+
+That explicit branch form is for the first push of a new branch. For later fix/review/reorg pushes,
+use `push --worktree "$WORKTREE" --remote origin --tracked` (plus `--force-with-lease` only for an
+approved reorganization). Tracked mode resolves the checked-out branch's configured upstream,
+verifies it belongs to the validated remote, and pushes exactly `HEAD:<upstream-ref>`. It therefore
+ignores broad `push.default=current|matching` behavior without assuming the local branch name is the
+PR's remote head name.
+
+Resolve the PR target independently from the detected PR URL, explicit PR URL, or GitHub CLI's
+selected default repository, then canonicalize that explicit identity:
+
+```bash
+REPO=$("$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" preflight --repo "$PR_REPO") || exit $?
+```
+
+A stale push destination stops before `git push`, reports both identities, and prints an exact
+`git remote set-url` or `git remote set-url --push` repair command. The helper never rewrites the
+user's remote. Use the independently canonicalized `$REPO` for REST paths and pass
+`--repo "$REPO"` to every mutating `gh pr` command. Re-run the appropriate check immediately before
+each separated write batch.
+
+For an explicitly authorized merge, use the adapter so the server-side mutation is repository
+scoped and bound to the reviewed head:
+
+```bash
+"$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" merge --repo "$REPO" \
+  --pr "$PR_NUMBER" --head "$REVIEWED_HEAD_SHA" --method squash
+```
+
+The adapter does not grant merge authority. It deliberately rejects `--delete-branch` and performs
+no checkout, local branch deletion, or remote branch deletion. Verify the server-side result first;
+perform any separately authorized remote deletion and local/worktree cleanup as later operations.
+
+---
+
 ## PR Detection
 
 Detect the current PR from a number, URL, or current branch. Never hardcode owner/repo.
 
 ```bash
-# Get PR number from current branch
-gh pr view --json number,url,headRefName --jq '{number, url, headRefName}'
-
-# Minimal — number only
-gh pr view --json number,url --jq '.number'
+# Resolve an explicit number/URL, or omit the argument to detect from the current branch
+if [ -n "${PR_INPUT:-}" ]; then
+  PR_JSON=$(gh pr view "$PR_INPUT" --json number,url,headRefName) || exit $?
+else
+  PR_JSON=$(gh pr view --json number,url,headRefName) || exit $?
+fi
+PR_NUMBER=$(printf '%s' "$PR_JSON" | jq -r '.number')
+PR_URL=$(printf '%s' "$PR_JSON" | jq -r '.url')
+case "$PR_URL" in
+  https://github.com/*/*/pull/*) PR_REPO=${PR_URL#https://github.com/}; PR_REPO=${PR_REPO%%/pull/*} ;;
+  *) printf 'Unsupported GitHub PR URL: %s\n' "$PR_URL" >&2; exit 65 ;;
+esac
+REPO=$("$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" preflight --repo "$PR_REPO") || exit $?
 
 # Check whether a PR already exists for the current branch
 gh pr list --head $(git branch --show-current) --json number --jq '.[0].number'
 
-# Extract owner/repo dynamically
-gh repo view --json owner,name --jq '"\(.owner.login)/\(.name)"'
+# For PR creation only, preserve GitHub CLI's selected default target before canonicalizing it
+PR_REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner') || exit $?
+REPO=$("$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" preflight --repo "$PR_REPO") || exit $?
 ```
 
 If a PR number or URL is provided by the user, use it directly and skip branch detection.
@@ -89,13 +149,13 @@ fi
 
 ```bash
 # Approve
-gh pr review NUMBER --approve --body "LGTM"
+gh pr review NUMBER --repo "$REPO" --approve --body "LGTM"
 
 # Request changes
-gh pr review NUMBER --request-changes --body "See inline comments."
+gh pr review NUMBER --repo "$REPO" --request-changes --body "See inline comments."
 
 # Comment only
-gh pr review NUMBER --comment --body "Some observations."
+gh pr review NUMBER --repo "$REPO" --comment --body "Some observations."
 ```
 
 **Self-review restriction:** `gh pr review --approve` fails with "Can not approve your own pull request". When the PR author matches the current user (`PR_AUTHOR == MY_USERNAME`), auto-downgrade to `--comment` event. Detect with: `PR_AUTHOR=$(gh pr view NUMBER --json author --jq '.author.login')` vs `MY_USERNAME=$(gh api user --jq '.login')`.
@@ -122,7 +182,7 @@ cat > /tmp/pr-review.json << 'EOF'
 }
 EOF
 
-gh api repos/OWNER/REPO/pulls/NUMBER/reviews \
+gh api "repos/$REPO/pulls/NUMBER/reviews" \
   --method POST --input /tmp/pr-review.json
 ```
 
@@ -203,7 +263,7 @@ gh api graphql -f query="mutation { resolveReviewThread(input: {
 ### Reply to a PR-level comment
 
 ```bash
-gh pr comment PR_NUM --body "> Original comment text here
+gh pr comment PR_NUM --repo "$REPO" --body "> Original comment text here
 
 Response explaining how it was addressed."
 ```
@@ -255,15 +315,15 @@ gh api users/USERNAME --jq '.type'
 
 ```bash
 # ✅ CORRECT for collaborator bots (Claude, Coderabbit paid, etc.)
-gh pr edit PR_NUM --add-reviewer <bot-username>
+gh pr edit PR_NUM --repo "$REPO" --add-reviewer <bot-username>
 
 # ✅ CORRECT for GitHub Copilot — requires direct API with [bot] suffix
 # (gh pr edit --add-reviewer copilot silently no-ops; do NOT use it for Copilot)
-gh api -X POST repos/OWNER/REPO/pulls/PR_NUM/requested_reviewers \
+gh api -X POST "repos/$REPO/pulls/PR_NUM/requested_reviewers" \
   -f 'reviewers[]=copilot-pull-request-reviewer[bot]'
 
 # ❌ WRONG — @mentioning bot in comment body triggers unwanted actions
-gh pr comment PR_NUM --body "Addressed feedback. @copilot-pull-request-reviewer"
+gh pr comment PR_NUM --repo "$REPO" --body "Addressed feedback. @copilot-pull-request-reviewer"
 ```
 
 See `reference/learned-patterns.md` "Requesting Copilot review needs the `[bot]` suffix via direct API" for why `gh pr edit --add-reviewer copilot` fails silently and verification details from PR #17.
@@ -278,11 +338,11 @@ If the timeline event's `actor` is a bot or GitHub Action (no clear human), fall
 
 ```bash
 # List all inline comments on a PR
-gh api repos/OWNER/REPO/pulls/NUMBER/comments \
+gh api "repos/$REPO/pulls/NUMBER/comments" \
   --jq '.[] | {id, path, line, body: (.body | split("\n")[0])}'
 
 # Delete a specific inline comment
-gh api repos/OWNER/REPO/pulls/comments/COMMENT_ID --method DELETE
+gh api "repos/$REPO/pulls/comments/COMMENT_ID" --method DELETE
 ```
 
 ---
