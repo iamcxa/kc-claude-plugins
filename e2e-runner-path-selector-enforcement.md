@@ -123,3 +123,111 @@ line would sail past this gate exactly as it sails past the prose today. **The f
 implementation task is therefore to verify the routing empirically** — drive one real run
 per consumer and confirm every browser invocation carries the runtime prefix — not to
 write the classifier.
+
+## Spike result — the pre-mortem fired, on a different hidden assumption
+
+The pre-mortem above named the category correctly and the assumption wrongly. It worried
+that an agent would emit a bare `agent-browser` line and sail past the gate. Measured, that
+does not happen. What does happen is that the selector never arrives at the gate at all.
+
+### What was measured
+
+A shim was shadow-installed at the resolved `agent-browser` binary path
+(`~/.npm-global/bin/agent-browser`) so it records invocations reaching *that* path and the
+command line of the spawning process without depending on `PATH`, then execs the real
+binary. A caller that resolved a different install would sit outside it; none was observed,
+and no second strategy was run to look for one. A call counts as routed only when its
+immediate parent process **is**
+`node <path>/e2e-browser-runtime.js`, anchored on `node <path>` — matching the runtime path
+anywhere in the ancestor chain false-passed a bare control call twice, because a shell whose
+command line merely quotes that path matches. Both directions were exercised before the
+probe was trusted: a bare call must read BYPASS, a runtime-mediated call must read routed.
+
+One real `e2e-test-runner` run, carlove `gate-smoke-all-pages`, 10 steps, 19 expectations,
+all passing:
+
+- 147 `agent-browser` invocations, 145 routed, 2 bypasses.
+- Both bypasses are `bin/e2e-trace-contract.js` running `--version` and `trace --help`.
+  Capability probes, no selector argument.
+- In this run, the LLM runner improvised no bare call. One run is a sample; the claim is
+  about these 147 invocations, not about the agent in general.
+
+### The disproof
+
+Routing is not the invariant this entity needs. Of the four calls in that run that consumed
+an element:
+
+```
+fill e12 admin@bw.tw
+fill e14 pwd123
+click e9
+is visible 'role=heading[name=/每日看板/]'
+```
+
+`e9`/`e12`/`e14` are snapshot-assigned refs. `secha-office.yaml` carries 244 `selector:`
+entries and none has the form `e<digits>` — they are `role=textbox[name="電子郵件"]` and
+similar. Three of the four resolved through a snapshot first; exactly one selector reached
+argv, and it matches mapping entry 6 verbatim.
+
+**A runtime argv classifier would have inspected one selector in a ten-step flow and seen
+none of the click/fill operations.** This is not an accident of this flow. What makes it
+hold is agent-browser's behavior, live-probed against 0.32.0 in PR #123: `role=…` and
+`text=…` handed literally to `click|fill` return false, so the agents go through
+snapshot→ref to get a working locator. `CLAUDE.md` § Selector Priority records that probe
+result; the probe, not the record, is what makes it true. The Proposed approach assumed the
+selector rides on the argv of the operation that uses it, and on the action path it does
+not.
+
+### Corrections to what is recorded above
+
+- **Reverse-recovery audit, row 2.** "Owned runtime as a chokepoint — WORKING" is accurate
+  about *transport* and wrong as a premise for *selector* enforcement. Superseded by this
+  section; the allowlist it cites is a command allowlist, not a command grammar, so there is
+  no per-command schema saying which argument is a selector. Scanning every argv element
+  false-positives on fill values, wait text, URLs and JavaScript (`fill e12 admin@bw.tw` —
+  the value is an argument); scanning a fixed position misses `is visible` and `get count`.
+- **The consumer inventory is short by one.** `skills/ui-verify/bin/run.js:94` reads a
+  mapping, spawns `agent-browser` directly, passes selectors to click/fill, and embeds check
+  selectors inside `eval`. It is a second mapping-selector consumer this gate cannot see.
+- **`eval` and `@ref` are larger than "a named residual".** The claim this shape can support
+  is narrow: known-broken strings are not forwarded to native selector-taking CLI
+  operations. It cannot support "these consumers cannot silently use banned selector
+  semantics."
+- **Open question 1 (`e2e-mapper`) is unchanged by this spike and remains open.** The
+  measurement exercised `e2e-test-runner`; `e2e-mapper` was not run, so nothing here bears
+  on it. Note for whoever re-cuts: a `--consumer`-style exemption is caller-supplied, and
+  the runtime is not given anything that would let it authenticate the caller independently.
+  Gating a consumer also says nothing about mapper *output* — a banned selector written into
+  a mapping and never exercised is not reached by any runtime check.
+
+### Provenance
+
+The disproof came from an independent cross-model read of this repository (Codex,
+read-only), which rejected the approach on the snapshot→ref ground before the argv data was
+re-examined. The measurement above is this session's; the reading of it is not.
+
+The negative result reported earlier in this session — "147 invocations, 0 bypasses" — was
+a Proof Policy 7 miss on my part: it was an absence claim whose searched population
+(invocations that route) was never the population the gate cares about (selectors that
+arrive). One search strategy was a sample, not a census.
+
+### Effort against the appetite
+
+Approximately 1.5h of the declared 3h estimate went to this spike — building the probe,
+validating it in both directions, one measured consumer run, the cross-model read, and the
+argv re-analysis. A further ~1h went to an unplanned blocker outside this entity's scope:
+the owned runtime could not open a browser at all for any app name of ten characters or
+more, fixed and merged as PR #135, which is why the first measurement attempt produced only
+runtime preflight calls.
+
+So roughly 1.5h of the 3h remains, and the tolerance (+50%, 4.5h) is untouched. The
+remaining budget was sized for building a classifier that this spike has now shown will not
+see what it was meant to gate, so the number is reported for the re-cut rather than
+proposed as a plan.
+
+### What this does not decide
+
+Replacing the point-of-use classifier with a different mechanism is a scope re-cut, and
+Gate Authority puts scope on the captain alone. This section records the disproof and stops
+there. The approach on record is now known-insufficient rather than superseded, and the
+entity stays in `ideation` pending that ruling.
