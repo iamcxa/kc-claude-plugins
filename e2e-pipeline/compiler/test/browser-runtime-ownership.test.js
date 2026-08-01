@@ -454,3 +454,30 @@ test('an unusable session name fails in the runtime, not inside agent-browser', 
     /socket-safe/
   );
 });
+
+// Without the guard none of these throw: socketFile becomes the string
+// "undefined.sock" (or ".sock"), the budget is computed against the wrong filename, and
+// the run gets a namespace that under-counts exactly as it did before the session-named
+// socket was accounted for. The refusal is the only thing between a caller that omitted
+// the session and a silently wrong budget.
+//
+// One case per input rather than a loop: a case stops at its first failing assertion, so
+// a looped version would leave the second and third inputs unexecuted in the RED run and
+// unproven as falsifiers.
+for (const missing of [undefined, '', null]) {
+  test(
+    'a missing session name (' + JSON.stringify(missing) + ') is refused, not sized ' +
+      'against "undefined"',
+    function() {
+      const socketHome = '/tmp/e2e-agent-browser-502-5943dac8f232';
+      const runId = 'msahjbw3-c5db2df771f976678836';
+      assert.throws(
+        function() {
+          runtimeModule.namespaceForRun(runId, socketHome, missing);
+        },
+        /session name is required/,
+        'session name ' + JSON.stringify(missing) + ' was accepted'
+      );
+    }
+  );
+}
