@@ -186,6 +186,32 @@ describe('AC-3 — a baseline grandfathers existing findings without hiding new 
   });
 });
 
+describe('Cross-site: two mappings sharing a basename are refused, not silently merged', function () {
+  test('a basename collision blocks with a message naming it', function () {
+    // The finding identity, the baseline record and the diagnostic all key on the
+    // basename. Two sites loading `a/m.yaml` and `b/m.yaml` would make one site's blocking
+    // finding suppress the other's warning, and one baseline record grandfather both.
+    // Refusing is the enforcement point for the docs' claim that a basename suffices.
+    const dir = tmpdir('xsite');
+    fs.mkdirSync(path.join(dir, 'a'));
+    fs.mkdirSync(path.join(dir, 'b'));
+    const mapping = ['version: 2', 'app: x', 'base_url: "http://localhost:3000"', 'pages:', '  login:', '    elements:', '      btn:', "        selector: '[data-testid=\"b\"]'", ''].join('\n');
+    fs.writeFileSync(path.join(dir, 'a', 'm.yaml'), mapping, 'utf8');
+    fs.writeFileSync(path.join(dir, 'b', 'm.yaml'), mapping, 'utf8');
+    fs.writeFileSync(path.join(dir, 'flow.yaml'), [
+      'name: xsite-flow', 'sites:', '  one:', '    mapping: a/m', '  two:', '    mapping: b/m',
+      'steps:', '  - id: click-one', '    type: click', '    site: one',
+      '    action: "Click btn on login"', '',
+    ].join('\n'), 'utf8');
+
+    const out = tmpdir('out');
+    const res = runCompile([path.join(dir, 'flow.yaml'), '--mappings-dir', dir, '--output-dir', out, '--selector-baseline', NO_BASELINE]);
+    assert.equal(res.status, 1, res.stderr);
+    assert.match(res.stderr, /share the basename/);
+    assert.deepEqual(fs.readdirSync(out), []);
+  });
+});
+
 describe('AC-4 — the gate cannot regenerate its own baseline', function () {
   test('a blocked compile leaves the baseline file byte-identical', function () {
     const dir = mappingDirWith(CLEAN_ELEMENTS);

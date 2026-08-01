@@ -26,6 +26,7 @@ const policy = require('../lib/selector-policy.js');
 const {
   BANNED_CLASSES,
   classifySelector,
+  locateSelectorLine,
   scanMappingText,
   scanElements,
   parseBaseline,
@@ -175,6 +176,13 @@ describe('scanMappingText: line-numbered traversal (the linter s view)', functio
     assert.equal(f.selector, "a[title='x'] >> nth=0");
   });
 
+  test('only \\" and \\\\ are unescaped — any other escape is left verbatim', function () {
+    // Turning `\\n` into `n` would be this traversal inventing a value YAML never
+    // produced, and would put it out of step with the element traversal for no reason.
+    const f = scanMappingText('  selector: "a\\\\nb >> nth=1"\n', 'm.yaml')[0];
+    assert.equal(f.selector, 'a\\nb >> nth=1');
+  });
+
   test('an empty selector value (block scalar follows) is skipped, not classified', function () {
     assert.equal(scanMappingText('selector:\n', 'm.yaml').length, 0);
   });
@@ -198,6 +206,36 @@ describe('scanMappingText: line-numbered traversal (the linter s view)', functio
     const f = scanMappingText("  selector: '.a >> nth=1'\n", 'mappings/app.yaml')[0];
     assert.equal(f.file, 'mappings/app.yaml');
     assert.ok(f.guidance.includes('nth-of-type'));
+  });
+});
+
+describe('locateSelectorLine: attaches a line, or refuses to invent one', function () {
+  test('finds the line of the element that owns the selector', function () {
+    const text = 'elements:\n  submit_button:\n    description: "x"\n  cancel_button:\n    selector: "role=switch >> nth=1"\n';
+    assert.equal(locateSelectorLine(text, 'cancel_button', 'role=switch >> nth=1'), 5);
+  });
+
+  test('does not steal a sibling element line when the element has no selector', function () {
+    // A forward-window search attributed `cancel_button`'s line to `submit_button`, which
+    // sends a reader to the wrong element with a confident-looking line number.
+    const text = 'elements:\n  submit_button:\n    description: "x"\n  cancel_button:\n    selector: "role=switch >> nth=1"\n';
+    assert.equal(locateSelectorLine(text, 'submit_button', 'role=switch >> nth=1'), null);
+  });
+
+  test('returns null when two pages define the same element with the same selector', function () {
+    // Genuinely ambiguous without parsing the document. Null degrades the message; a guess
+    // misdirects the fix.
+    const text = [
+      'pages:', '  login:', '    elements:', '      submit_button:',
+      '        selector: "role=switch >> nth=1"',
+      '  checkout:', '    elements:', '      submit_button:',
+      '        selector: "role=switch >> nth=1"', '',
+    ].join('\n');
+    assert.equal(locateSelectorLine(text, 'submit_button', 'role=switch >> nth=1'), null);
+  });
+
+  test('a key line with a trailing comment still owns its selector', function () {
+    assert.equal(locateSelectorLine('  a: # note\n    selector: ".x >> nth=1"\n', 'a', '.x >> nth=1'), 2);
   });
 });
 

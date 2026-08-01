@@ -101,7 +101,10 @@ function normalizeScalar(raw) {
     let out = '';
     while (i < v.length) {
       const ch = v[i];
-      if (quote === '"' && ch === '\\' && i + 1 < v.length) { out += v[i + 1]; i += 2; continue; }
+      // Only `\"` and `\\` are unescaped — the two that occur in selectors. Any other
+      // escape is left verbatim rather than silently turned into its letter (`\\n` -> `n`),
+      // which would be this traversal inventing a value YAML never produced.
+      if (quote === '"' && ch === '\\' && (v[i + 1] === '"' || v[i + 1] === '\\')) { out += v[i + 1]; i += 2; continue; }
       if (ch === quote) {
         if (quote === "'" && v[i + 1] === "'") { out += "'"; i += 2; continue; }
         return out;                       // closing quote — the rest of the line is comment
@@ -226,15 +229,24 @@ function mappingElementRecords(mappingObject, mappingFile) {
  */
 function locateSelectorLine(text, element, selector) {
   const lines = String(text).split('\n');
-  const keyPattern = new RegExp('^[ \\t]*' + element.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ':[ \\t]*$');
+  // A key line is `name:` with nothing but an optional comment after it. Every
+  // `selector:` line is attributed to the NEAREST PRECEDING key line — not to a key
+  // scanned forwards within a window, which attributed a sibling element's line to an
+  // element that had no `selector:` of its own.
+  const KEY_LINE = /^[ \t]*([A-Za-z_][A-Za-z0-9_-]*):[ \t]*(#.*)?$/;
+  const candidates = [];
+  let owner = null;
   for (let i = 0; i < lines.length; i++) {
-    if (!keyPattern.test(lines[i])) continue;
-    for (let j = i + 1; j < lines.length && j < i + 40; j++) {
-      const m = SELECTOR_LINE.exec(lines[j]);
-      if (m && normalizeScalar(m[1]) === selector) return j + 1;
-    }
+    const key = KEY_LINE.exec(lines[i]);
+    if (key) { owner = key[1]; continue; }
+    const sel = SELECTOR_LINE.exec(lines[i]);
+    if (sel && owner === element && normalizeScalar(sel[1]) === selector) candidates.push(i + 1);
   }
-  return null;
+  // Exactly one match, or nothing. Two pages may define the same element name with the
+  // same selector, and there is no way to tell them apart without parsing the document —
+  // so this returns null and the caller prints the element without a line. A missing line
+  // number degrades a message; a wrong one sends the reader to the wrong element.
+  return candidates.length === 1 ? candidates[0] : null;
 }
 
 function findingKey(finding) {

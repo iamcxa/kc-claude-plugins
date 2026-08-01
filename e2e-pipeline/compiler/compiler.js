@@ -65,6 +65,33 @@ function checkSelectorPolicy(mappingSources, referencedElements, baseline) {
   // Line numbers are recovered per finding by `locateSelectorLine`, which returns null
   // rather than guessing. `scripts/lint-mapping.sh` keeps the text traversal, where a line
   // number is the natural unit.
+  // Everything downstream — the finding identity, the baseline record, the diagnostic —
+  // keys on the mapping file's BASENAME. A cross-site flow can legitimately load two
+  // mappings from different directories that share one, and then a blocking finding in
+  // one site suppresses the warning for the same element name in the other, and a single
+  // baseline record grandfathers both. Rather than widen the key (which would make a
+  // committed baseline depend on directory layout), refuse the ambiguity outright and say
+  // so. This is the enforcement point for the docs' claim that a basename is a sufficient
+  // key.
+  var byBase = new Map();
+  var collisions = [];
+  mappingSources.forEach(function(src) {
+    var base = path.basename(src.path);
+    if (byBase.has(base) && byBase.get(base) !== src.path) collisions.push(base);
+    byBase.set(base, src.path);
+  });
+  if (collisions.length > 0) {
+    var collisionMessage =
+      'two mapping files loaded by this flow share the basename ' +
+      JSON.stringify(collisions[0]) +
+      ', which the selector policy uses as a finding and baseline key. Rename one so the' +
+      ' two are distinguishable.';
+    return {
+      errors: [collisionMessage],
+      errorDetails: [{ message: collisionMessage, selector_class: null }],
+    };
+  }
+
   var allRecords = [];
   var textByFile = new Map();
   mappingSources.forEach(function(src) {
