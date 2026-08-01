@@ -179,6 +179,21 @@ describe('scanMappingText: line-numbered traversal (the linter s view)', functio
     assert.equal(scanMappingText('selector:\n', 'm.yaml').length, 0);
   });
 
+  test('a block/folded scalar is NOT read — bounded, and the bound is the point', function () {
+    // The dependency-free text traversal cannot follow `selector: >` onto its value line.
+    // Asserted rather than assumed so the docstring's caveat has a check behind it, and so
+    // this reads as a stated limit rather than an undiscovered hole. The compiler's
+    // blocking gate is unaffected: it traverses parsed YAML.
+    const folded = 'elements:\n  foo:\n    selector: >\n      role=switch >> nth=1\n';
+    assert.equal(scanMappingText(folded, 'm.yaml').length, 0);
+    // ...and the element traversal, which is what blocks, does see it:
+    assert.deepEqual(
+      scanElements([{ mappingFile: 'm.yaml', page: 'p', element: 'foo', selector: 'role=switch >> nth=1\n' }])
+        .map(function (f) { return f.class; }),
+      ['>>nth']
+    );
+  });
+
   test('carries the file path and the guidance into every finding', function () {
     const f = scanMappingText("  selector: '.a >> nth=1'\n", 'mappings/app.yaml')[0];
     assert.equal(f.file, 'mappings/app.yaml');

@@ -108,7 +108,10 @@ must not restate this table — point back here instead. Enforcement lives in
 `scripts/lint-mapping.sh` and the compiler read, and `compiler/lib/selector-translate.js`
 (how each form is consumed). The compiler **blocks** at compile and dry-run time on a
 banned selector the flow resolves, and warns on the rest of the mapping file; pre-existing
-violations go in a baseline it reads and never writes (`docs/ci-integration.md`).
+violations go in a baseline the compile path only ever opens for reading — the
+enforcement point for that being true is the byte-compare in
+`compiler/test/selector-gate.test.js` (AC-4), not the wording here
+(`docs/ci-integration.md`).
 One banned-class table, two traversals — the enforcement point for that being true of the
 linter is `compiler/test/selector-lint-drift.test.js`, not a convention.
 
@@ -168,7 +171,7 @@ doesn't have. Full record: `docs/dev/.spacedock-state/e2e-selector-canon-review.
    agent-browser CLI subcommand chain, not selector grammar (BANNED — see `compiler/lib/selector-policy.js` CLASS 5).
    Valid only as an interactive CLI command during exploration, never as a stored `selector:` value.
 
-**`css_selector:`** -- optional element field (read at `compiler/resolver.js:62`),
+**`css_selector:`** -- optional element field (read at `compiler/resolver.js:64`),
 a literal CSS selector distinct from `selector:`. Used for an eval-based
 `querySelector().click()` on `click` steps (more reliable than `agent-browser
 click` in headless CI) and **required** for `value: {runtime_ref: ...}`
@@ -180,7 +183,7 @@ argv. Must be valid CSS (it is never translated).
 - **`e2e-flow-writer` has no Bash tool**: intentional -- it does pure codebase analysis, never opens a browser. Adding Bash would break isolation.
 - **`@ref` is ephemeral**: snapshot `@ref` values change on every DOM mutation. Mappings store stable selectors, not `@ref`.
 - **`is visible` exit code is always 0**: check stdout text `"true"`/`"false"`, not exit code.
-- **React Native Web**: text elements render twice. Use `:nth-of-type(2)` CSS pseudo, `role=<r>[name="<v>"]`, or `text=<v>` — all match the computed accessible name once. `>> nth=N` is BANNED regardless of prefix (see `e2e-pipeline/scripts/lint-mapping.sh`).
+- **React Native Web**: text elements render twice. Use `:nth-of-type(2)` CSS pseudo, `role=<r>[name="<v>"]`, or `text=<v>` — all match the computed accessible name once. `>> nth=N` is BANNED regardless of prefix (see `e2e-pipeline/compiler/lib/selector-policy.js`).
 - **Ant Design CSS-hidden inputs**: `is visible` returns false for functional elements. Verify via snapshot a11y tree presence instead.
 - **Snapshot doesn't expose `data-testid`/`aria-label`**: use `agent-browser is visible "<selector>"` for attribute-based verification.
 - **Don't pass-through what you can execute**: If an agent has the tools to attempt a step (e.g., verifier has Bash -> can run CLI commands), it should attempt it best-effort rather than blindly skipping. Silent skip = the user discovers broken commands only at execution time, not verification time. External checkpoint failures in the verifier use `on_fail: warn` override so they never block browser verification.

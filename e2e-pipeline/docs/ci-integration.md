@@ -261,8 +261,9 @@ does not red an unrelated flow. Latent debt is not hidden — it is printed ever
 
 ### Delta mode: the selector baseline
 
-Pre-existing violations are recorded in a baseline file the compiler **reads and never
-writes** (`--selector-baseline`, default `.claude/e2e/selector-baseline.tsv`). One
+Pre-existing violations are recorded in a baseline file the compile path only ever opens
+for reading — enforced by a byte-compare across a blocked compile in
+`compiler/test/selector-gate.test.js`, not by this sentence (`--selector-baseline`, default `.claude/e2e/selector-baseline.tsv`). One
 tab-separated record per line:
 
 ```

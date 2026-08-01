@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('node:path');
+
 const { isValidSiteName, validateSiteNames } = require('./site-name');
 
 const ACTION_PARSERS = {
@@ -205,7 +207,18 @@ var EXPECT_PATTERNS = [
  * Returns { selector } on success, or pushes an error and returns null.
  */
 function recordReference(symbolResult, elemName, page, selector) {
-  if (!symbolResult || !symbolResult.referenced) return;
+  // Throw rather than no-op. This is the ONLY channel by which a resolved element reaches
+  // the compile-time selector gate, so a symbol-table-shaped object without `.referenced`
+  // — plausible from a future refactor that hand-builds one — would silently make the gate
+  // blind to that element: banned selector, clean compile, no signal anywhere. Every
+  // current caller goes through buildSymbolTable(), which always sets it, so this is a
+  // wiring assertion and not a runtime branch anyone should hit.
+  if (!symbolResult || !symbolResult.referenced) {
+    throw new Error(
+      'recordReference: symbolResult has no `referenced` accumulator, so the selector ' +
+      'gate cannot see element ' + elemName + ' — build symbol tables via buildSymbolTable()'
+    );
+  }
   symbolResult.referenced.push({ page: page, element: elemName, selector: selector });
 }
 
@@ -809,7 +822,12 @@ function resolveMultiSite(flow, siteMappings) {
   var referencedElements = [];
   siteTables.forEach(function(siteResult, siteName) {
     var siteData = siteMappings[siteName];
-    var mappingFile = siteData && siteData.mappingName ? siteData.mappingName + '.yaml' : null;
+    // basename: a site's `mapping:` may carry a directory (the parser resolves it against
+    // mappingDir), and the baseline key plus the compiler's warning channel both use the
+    // file's basename. Stamping the raw name would make `mappings/office` and
+    // `office.yaml` disagree with every other consumer of the same file.
+    var rawName = siteData && siteData.mappingName ? String(siteData.mappingName) : null;
+    var mappingFile = rawName ? path.basename(rawName) + '.yaml' : null;
     siteResult.referenced.forEach(function(rec) {
       referencedElements.push({
         mappingFile: mappingFile,

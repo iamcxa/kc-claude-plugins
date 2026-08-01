@@ -82,13 +82,29 @@ describe('AC-1 — a banned class on a RESOLVED element blocks; on an unresolved
   });
 
   test('the unresolved sibling is reported in the SAME run, as a non-blocking warning', function () {
-    // One command proving both severities. The sibling carries the identical selector
-    // string, which is the case a string-membership channel split silently swallows.
+    // One command proving both severities. The sibling carries the IDENTICAL selector
+    // string to the blocking element — the case a (class, selector) channel split
+    // swallows, and the reason the split is exact subtraction on element identity.
     const out = tmpdir('out');
     const res = runCompile([GATE_FLOW, '--mappings-dir', FIXTURES, '--output-dir', out, '--selector-baseline', NO_BASELINE]);
     const warnings = res.stderr.split('\n').filter(function (l) { return l.startsWith('WARNING:'); });
     assert.equal(warnings.length, 1);
-    assert.match(warnings[0], /1 of 2 occurrence\(s\) in this file are not resolved by this flow/);
+    assert.match(warnings[0], /login\.unused_toggle/);
+    assert.match(warnings[0], /no step in this flow resolves it/);
+    // The two channels name different elements — neither is double-counted, neither lost.
+    assert.doesNotMatch(warnings[0], /submit_button/);
+    const errors = res.stderr.split('\n').filter(function (l) { return l.startsWith('ERROR:'); });
+    assert.ok(errors.every(function (l) { return !l.includes('unused_toggle'); }));
+  });
+
+  test('the diagnostic carries a real line number, resolved from the element', function () {
+    // The element traversal has no line numbers of its own; they are recovered per finding
+    // and are null-rather-than-guessed when they cannot be. Pin the actual lines so a
+    // lookup that silently drifted to the wrong element would show up here.
+    const out = tmpdir('out');
+    const res = runCompile([GATE_FLOW, '--mappings-dir', FIXTURES, '--output-dir', out, '--selector-baseline', NO_BASELINE]);
+    assert.match(res.stderr, /selector-gate-mapping\.yaml:20: login\.submit_button/);
+    assert.match(res.stderr, /selector-gate-mapping\.yaml:23: login\.unused_toggle/);
   });
 
   test('--dry-run blocks identically — validation is not a write-time-only check', function () {

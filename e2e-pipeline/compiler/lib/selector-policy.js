@@ -36,7 +36,10 @@
 const BANNED_CLASSES = [
   {
     id: '>>nth',
-    pattern: />>[ \t]*nth=[0-9]+/,
+    // `-?` because Playwright accepts negative indices (`nth=-1` is the last match).
+    // The pure-bash predecessor matched `[0-9]+` only, so `>> nth=-1` linted clean on
+    // main — harmless while the linter was advisory, a hole once it became a gate.
+    pattern: />>[ \t]*nth=-?[0-9]+/,
     description: 'Playwright nth chord',
     guidance: 'use the :nth-of-type(N) CSS pseudo-class',
   },
@@ -84,7 +87,32 @@ function guidanceFor(classId) {
  * form is documentation, not a contract violation.
  */
 function normalizeScalar(raw) {
-  let v = raw.replace(/[ \t]+#.*$/, '').replace(/[ \t]+$/, '');
+  let v = raw.replace(/^[ \t]+/, '');
+
+  // Quoted scalars are read to their closing quote FIRST, because a `#` inside a quoted
+  // value is part of the value, not a comment. The predecessor stripped ` #...` before
+  // looking for quotes, so `selector: "div #main >> nth=1"` collapsed to `"div` and the
+  // banned chord went unreported — verified against main, which exits 0 on that input.
+  // A CSS id selector after a descendant combinator is ordinary, so this was a live hole,
+  // not a theoretical one.
+  const quote = v[0];
+  if (quote === '"' || quote === "'") {
+    let i = 1;
+    let out = '';
+    while (i < v.length) {
+      const ch = v[i];
+      if (quote === '"' && ch === '\\' && i + 1 < v.length) { out += v[i + 1]; i += 2; continue; }
+      if (ch === quote) {
+        if (quote === "'" && v[i + 1] === "'") { out += "'"; i += 2; continue; }
+        return out;                       // closing quote — the rest of the line is comment
+      }
+      out += ch;
+      i += 1;
+    }
+    return out;                           // unterminated quote: take what there is
+  }
+
+  v = v.replace(/[ \t]+#.*$/, '').replace(/[ \t]+$/, '');
   const single = /^'(.*)'$/.exec(v);
   if (single) return single[1].replace(/''/g, "'");
   const double = /^"(.*)"$/.exec(v);
@@ -107,6 +135,14 @@ const SELECTOR_LINE = /^[ \t]*selector:[ \t]*(.*)$/;
  * Line-oriented on purpose: it must run without a YAML parser so the linter stays
  * dependency-free, and a line number is the diagnostic #88 asks for. Only `selector:`
  * field values are scanned.
+ *
+ * **Block and folded scalars are not read** — `selector: >` or `selector: |` followed by
+ * an indented value yields no finding, because the value never appears on a `selector:`
+ * line. The pure-bash predecessor carried the same limitation and said so; the caveat is
+ * restated here because the port initially dropped it. This bounds the LINTER only: the
+ * compiler's blocking gate and `bin/e2e-selector-baseline.js` both traverse parsed YAML
+ * via `scanElements`, which sees those values correctly. So the failure mode is a lint
+ * that passes where a compile blocks, never the reverse.
  */
 function scanMappingText(text, filePath) {
   const findings = [];
@@ -156,6 +192,51 @@ function scanElements(records) {
   return findings;
 }
 
+/**
+ * mappingElementRecords(mappingObject, mappingFile) -> the {mappingFile, page, element,
+ * selector} records `scanElements` consumes, for EVERY element in a parsed v2 mapping.
+ *
+ * Shared by the compiler's warning channel and by `bin/e2e-selector-baseline.js`, so the
+ * set a baseline can grandfather and the set the compiler warns about are the same set by
+ * construction rather than by two similar loops agreeing.
+ */
+function mappingElementRecords(mappingObject, mappingFile) {
+  const records = [];
+  const pages = (mappingObject && mappingObject.pages) || {};
+  for (const page of Object.keys(pages)) {
+    const elements = (pages[page] && pages[page].elements) || {};
+    for (const element of Object.keys(elements)) {
+      const el = elements[element];
+      if (!el || typeof el.selector !== 'string') continue;
+      records.push({ mappingFile: mappingFile, page: page, element: element, selector: el.selector });
+    }
+  }
+  return records;
+}
+
+/**
+ * locateSelectorLine(text, element, selector) -> 1-based line, or null.
+ *
+ * The element traversal reads parsed YAML and has no line numbers; #88 asks diagnostics to
+ * carry one. Rather than write a second partial YAML parser to get it, this searches
+ * forward from the element's own key line for the first `selector:` line whose normalized
+ * value matches. It returns null rather than guessing when it cannot find one, and a null
+ * line is rendered as the element name alone — a missing line number degrades the message,
+ * a wrong one misdirects the fix.
+ */
+function locateSelectorLine(text, element, selector) {
+  const lines = String(text).split('\n');
+  const keyPattern = new RegExp('^[ \\t]*' + element.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ':[ \\t]*$');
+  for (let i = 0; i < lines.length; i++) {
+    if (!keyPattern.test(lines[i])) continue;
+    for (let j = i + 1; j < lines.length && j < i + 40; j++) {
+      const m = SELECTOR_LINE.exec(lines[j]);
+      if (m && normalizeScalar(m[1]) === selector) return j + 1;
+    }
+  }
+  return null;
+}
+
 function findingKey(finding) {
   return [
     finding.mappingFile,
@@ -184,15 +265,22 @@ function parseBaseline(text) {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     if (line.trim().length === 0 || line.trimStart().startsWith('#')) continue;
-    const fields = line.split('\t');
-    if (fields.length !== 4 || fields.some(function (f) { return f.length === 0; })) {
+    // `\r` is stripped so a baseline checked out with CRLF endings still matches. Without
+    // it every record's selector field carries a trailing `\r`, nothing matches, and the
+    // compile reds on findings the author believes are listed — a failure that reads like
+    // a regression in the mapping rather than a line-ending problem.
+    const fields = line.replace(/\r$/, '').split('\t');
+    // The first three fields cannot contain a tab (a filename could in principle; none
+    // does here, and one would be a worse problem than this). A selector value can, so
+    // everything past the third field is rejoined rather than counted as a malformation.
+    if (fields.length < 4 || fields.slice(0, 4).some(function (f) { return f.length === 0; })) {
       throw new Error(
         'malformed selector baseline record at line ' + (i + 1) +
         ': expected 4 tab-separated non-empty fields ' +
         '(mapping-file, page.element, class, selector), got ' + fields.length
       );
     }
-    keys.add(fields.join('\t'));
+    keys.add(fields.slice(0, 3).concat(fields.slice(3).join('\t')).join('\t'));
   }
   return keys;
 }
@@ -214,7 +302,7 @@ function isGrandfathered(finding, baseline) {
 
 function lintCli(argv) {
   const mappingFile = argv[0];
-  if (!mappingFile) {
+  if (!mappingFile || mappingFile === '--help' || mappingFile === '-h') {
     // Same shape the pure-bash `usage()` printed, generated from the table so it cannot
     // drift from what is actually enforced — the previous version restated the classes
     // by hand in three places.
@@ -256,6 +344,8 @@ if (require.main === module) {
 
 module.exports = {
   BANNED_CLASSES: BANNED_CLASSES,
+  mappingElementRecords: mappingElementRecords,
+  locateSelectorLine: locateSelectorLine,
   classifySelector: classifySelector,
   guidanceFor: guidanceFor,
   scanMappingText: scanMappingText,

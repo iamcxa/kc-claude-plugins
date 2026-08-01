@@ -45,26 +45,6 @@ function usage(stream) {
   stream.write('  Redirect it yourself; this command never writes a file.\n');
 }
 
-/** Flatten a v2 mapping into the {mappingFile, page, element, selector} records the policy scans. */
-function elementRecords(mappingObject, mappingFile) {
-  const records = [];
-  const pages = (mappingObject && mappingObject.pages) || {};
-  for (const pageName of Object.keys(pages)) {
-    const elements = (pages[pageName] && pages[pageName].elements) || {};
-    for (const elementName of Object.keys(elements)) {
-      const el = elements[elementName];
-      if (!el || typeof el.selector !== 'string') continue;
-      records.push({
-        mappingFile: mappingFile,
-        page: pageName,
-        element: elementName,
-        selector: el.selector,
-      });
-    }
-  }
-  return records;
-}
-
 function main(argv) {
   if (argv.length === 0 || argv.indexOf('--help') !== -1 || argv.indexOf('-h') !== -1) {
     usage(argv.length === 0 ? process.stderr : process.stdout);
@@ -80,7 +60,7 @@ function main(argv) {
       process.stderr.write('Error: cannot read mapping ' + mappingPath + ': ' + e.message + '\n');
       return 1;
     }
-    const records = elementRecords(doc, path.basename(mappingPath));
+    const records = policy.mappingElementRecords(doc, path.basename(mappingPath));
     for (const finding of policy.scanElements(records)) {
       out.push(policy.baselineRecord(finding));
     }
@@ -100,4 +80,3 @@ if (require.main === module) {
   process.exitCode = main(process.argv.slice(2));
 }
 
-module.exports = { elementRecords: elementRecords };
