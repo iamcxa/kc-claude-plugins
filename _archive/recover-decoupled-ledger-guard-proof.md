@@ -17,6 +17,7 @@ mod-block:
 design: trivial-pass
 lane: defect
 id: 1a1c5f9k2m3cjmmhzf7162dv
+archived: 2026-08-01T03:36:54Z
 ---
 
 The parked decoupled-ledger change makes a broader local-authentication claim than its focused fixture proves. Recover only the five local guards of terminalize_authenticated_product with mechanical mutation evidence, while preserving the inherited whole-diff behavior and leaving the parked entity untouched.
