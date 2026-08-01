@@ -314,7 +314,8 @@ function isGrandfathered(finding, baseline) {
 
 function lintCli(argv) {
   const mappingFile = argv[0];
-  if (!mappingFile || mappingFile === '--help' || mappingFile === '-h') {
+  const askedForHelp = mappingFile === '--help' || mappingFile === '-h';
+  if (!mappingFile || askedForHelp) {
     // Same shape the pure-bash `usage()` printed, generated from the table so it cannot
     // drift from what is actually enforced — the previous version restated the classes
     // by hand in three places.
@@ -326,8 +327,10 @@ function lintCli(argv) {
     lines.push('  role=<r>[name=...] and bare text= are NATIVE forms (translated by');
     lines.push('  compiler/lib/selector-translate.js) and are not banned.');
     lines.push('');
-    process.stderr.write(lines.join('\n') + '\n');
-    return 1;
+    // An explicit `--help` is not a usage error: a `.githooks` wrapper that checks `$?`
+    // would read exit 1 as a failure. Missing arguments still exit 1.
+    (askedForHelp ? process.stdout : process.stderr).write(lines.join('\n') + '\n');
+    return askedForHelp ? 0 : 1;
   }
   let text;
   try {

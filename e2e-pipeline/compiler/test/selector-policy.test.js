@@ -66,6 +66,27 @@ describe('BANNED_CLASSES: the table itself', function () {
   });
 });
 
+describe('the linter CLI contract two consumers read', function () {
+  const { execFileSync, spawnSync } = require('node:child_process');
+  const LINTER = path.join(__dirname, '..', '..', 'scripts', 'lint-mapping.sh');
+
+  test('--help exits 0; missing arguments exit 1', function () {
+    // A `.githooks` wrapper checking `$?` reads a non-zero `--help` as a failure, so the
+    // two cases must not share an exit code even though they print the same text.
+    const help = spawnSync('bash', [LINTER, '--help'], { encoding: 'utf8' });
+    assert.equal(help.status, 0);
+    assert.match(help.stdout, />>nth/);
+    assert.equal(spawnSync('bash', [LINTER], { encoding: 'utf8' }).status, 1);
+  });
+
+  test('the usage text is generated from the table, so it cannot drift from it', function () {
+    const help = spawnSync('bash', [LINTER, '--help'], { encoding: 'utf8' }).stdout;
+    BANNED_CLASSES.forEach(function (c) {
+      assert.ok(help.includes(c.id), 'usage text omits class ' + c.id);
+    });
+  });
+});
+
 describe('classifySelector: one decision function, three classes', function () {
   // Returns an ARRAY, not a single id: today's bash linter counts one error per class
   // per selector, so a value that trips two classes must stay two findings. Collapsing
