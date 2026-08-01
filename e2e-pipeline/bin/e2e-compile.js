@@ -39,12 +39,14 @@ program
   .option('--flows-dir <dir>', 'flows directory', '.claude/e2e/flows')
   .option('--mappings-dir <dir>', 'mappings directory', '.claude/e2e/mappings')
   .option('--output-dir <dir>', 'output directory', '.claude/e2e/compiled')
+  .option('--selector-baseline <path>', 'grandfathered banned-selector records; produced by e2e-selector-baseline, never written here', '.claude/e2e/selector-baseline.tsv')
   .action(async function(flowName, options) {
     var compileOptions = {
       dryRun: options.dryRun || false,
       verbose: options.verbose || false,
       coverage: options.coverage || false,
       json: options.json || false,
+      selectorBaseline: options.selectorBaseline,
     };
 
     // Default stats shape for a JSON document whose compile() result has no

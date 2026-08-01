@@ -8,8 +8,141 @@ const { parse } = require('./parser');
 const { resolve, resolveMultiSite } = require('./resolver');
 const { generate } = require('./codegen');
 const { siteBaseUrlVariable } = require('./site-name');
+const selectorPolicy = require('./lib/selector-policy.js');
 
 var COMPILER_VERSION = require('../package.json').version;
+
+var DEFAULT_SELECTOR_BASELINE = path.join('.claude', 'e2e', 'selector-baseline.tsv');
+
+/**
+ * loadSelectorBaseline(baselinePath) — read the grandfathered-findings baseline.
+ *
+ * An absent file is the normal case and yields an empty baseline. A present-but-malformed
+ * file throws, because a baseline that silently fails to parse silently stops
+ * grandfathering, and the compile then reds on something the author believes is listed.
+ *
+ * Read-only by construction: this is the only place the compile path touches the baseline
+ * path, and it opens for reading. That absent write call is what makes "the gate cannot
+ * regenerate its own baseline" true — the producer is a separate binary,
+ * `bin/e2e-selector-baseline.js`, which prints to stdout.
+ */
+function loadSelectorBaseline(baselinePath) {
+  var text;
+  try {
+    text = fs.readFileSync(baselinePath, 'utf8');
+  } catch (e) {
+    if (e && e.code === 'ENOENT') return selectorPolicy.parseBaseline('');
+    throw e;
+  }
+  return selectorPolicy.parseBaseline(text);
+}
+
+/**
+ * checkSelectorPolicy(...) — the two-severity selector gate (#88).
+ *
+ * Severity is a function of scope, per the captain's 2026-08-01 ruling:
+ *
+ *   warning   every `selector:` in each loaded mapping file — path:line:class on stderr
+ *   blocking  the selectors this flow actually resolves
+ *
+ * Whole-file blocking was the alternative and was ruled out: it reds every flow that
+ * loads a mapping carrying unrelated legacy debt, which the issue's own acceptance ideas
+ * ask not to require.
+ *
+ * Returns { errors, errorDetails } — both empty when nothing blocks.
+ */
+function checkSelectorPolicy(mappingSources, referencedElements, baseline) {
+  var fileFindings = [];
+  mappingSources.forEach(function(src) {
+    fileFindings = fileFindings.concat(selectorPolicy.scanMappingText(src.text, src.path));
+  });
+
+  var resolvedFindings = selectorPolicy.scanElements(referencedElements || []);
+
+  // One element can be referenced by many steps; report it once.
+  var seen = new Set();
+  var unique = [];
+  resolvedFindings.forEach(function(f) {
+    var key = [f.mappingFile, f.page, f.element, f.class].join(' ');
+    if (seen.has(key)) return;
+    seen.add(key);
+    unique.push(f);
+  });
+
+  var blocking = [];
+  var grandfathered = [];
+  unique.forEach(function(f) {
+    if (selectorPolicy.isGrandfathered(f, baseline)) grandfathered.push(f);
+    else blocking.push(f);
+  });
+
+  // Warnings report what the blocking channel does not, so a finding is counted once —
+  // "1 blocking and 14 warnings", never "1 and 15".
+  //
+  // The subtraction is by COUNT within a (file, class, selector) group, not by string
+  // membership. Two different elements can carry the identical banned selector — the
+  // corpus has one string on three elements — and a string-membership test silently
+  // swallows the warnings for every sibling of a blocking element. The text traversal has
+  // line numbers and the element traversal has element names; neither can produce the
+  // other's, so the group is the finest granularity both can agree on, and the warning
+  // says how many of the group's occurrences it speaks for.
+  var accountedFor = new Map();
+  unique.forEach(function(f) {
+    var akey = f.mappingFile + ' ' + f.class + ' ' + f.selector;
+    accountedFor.set(akey, (accountedFor.get(akey) || 0) + 1);
+  });
+
+  var groups = new Map();
+  fileFindings.forEach(function(f) {
+    var gkey = path.basename(f.file) + ' ' + f.class + ' ' + f.selector;
+    if (!groups.has(gkey)) groups.set(gkey, { finding: f, lines: [] });
+    groups.get(gkey).lines.push(f.line);
+  });
+
+  groups.forEach(function(group, gkey) {
+    var remaining = group.lines.length - (accountedFor.get(gkey) || 0);
+    if (remaining <= 0) return;
+    var gf = group.finding;
+    console.error(
+      'WARNING: ' + gf.file + ':' + group.lines.join(',') + ': ' + gf.class +
+      ': banned selector ' + JSON.stringify(gf.selector) + ' — ' + gf.guidance +
+      ' (' + remaining + ' of ' + group.lines.length +
+      ' occurrence(s) in this file are not resolved by this flow, so they do not block)'
+    );
+  });
+
+  grandfathered.forEach(function(f) {
+    // Louder than a file-scope warning on purpose: this flow actively depends on a
+    // selector the baseline only tolerates. It does not block, but it must not read like
+    // dormant debt either.
+    console.error(
+      'WARNING: ' + f.mappingFile + ': ' + f.page + '.' + f.element + ': ' + f.class +
+      ': this flow RESOLVES a grandfathered banned selector ' + JSON.stringify(f.selector) +
+      ' — ' + f.guidance
+    );
+  });
+
+  var errors = [];
+  var errorDetails = [];
+  blocking.forEach(function(f) {
+    var message =
+      f.mappingFile + ': ' + f.page + '.' + f.element + ": banned selector class '" +
+      f.class + "' in selector " + JSON.stringify(f.selector) + ' — ' + f.guidance +
+      '. Fix the mapping, or record it in the selector baseline if it is pre-existing' +
+      ' debt (see docs/ci-integration.md).';
+    errors.push(message);
+    errorDetails.push({
+      message: message,
+      selector_class: f.class,
+      mapping_file: f.mappingFile,
+      page: f.page,
+      element: f.element,
+      selector: f.selector,
+    });
+  });
+
+  return { errors: errors, errorDetails: errorDetails };
+}
 
 /**
  * hashSources(flowPath, mappingPaths) — compute SHA-256 of source files.
@@ -153,6 +286,43 @@ async function compile(flowPath, mappingDir, outputDir, options) {
       var analyzeCoverage = require('./coverage').analyzeCoverage;
       coverageData = analyzeCoverage(parseResult.mapping, resolveResult.resolved.steps);
     }
+  }
+
+  // --- Selector policy gate (#88) -----------------------------------------
+  //
+  // Sits here, after resolve() and before generate()/write, because the blocking scope
+  // is "what this flow resolves" and nothing earlier knows that: parse() returns before
+  // resolve() runs, and validateMapping() sees only version/pages. A banned selector on
+  // a resolved element therefore fails with no `.sh` produced — nothing a browser could
+  // later run.
+  var mappingSources = mappingPaths.map(function(p) {
+    return { path: p, text: fs.readFileSync(p, 'utf8') };
+  });
+  var referencedElements = (resolveResult.referencedElements || []).map(function(rec) {
+    // Single-site resolution has one mapping and does not stamp the file; cross-site
+    // stamps it per site because each site resolves against a different mapping.
+    if (rec.mappingFile) return rec;
+    return {
+      mappingFile: path.basename(mappingPaths[0]),
+      page: rec.page,
+      element: rec.element,
+      selector: rec.selector,
+    };
+  });
+  var baselinePath = (options && options.selectorBaseline) || DEFAULT_SELECTOR_BASELINE;
+  var selectorResult = checkSelectorPolicy(
+    mappingSources,
+    referencedElements,
+    loadSelectorBaseline(baselinePath)
+  );
+  if (selectorResult.errors.length > 0) {
+    selectorResult.errors.forEach(function(e) { console.error('ERROR: ' + e); });
+    return {
+      success: false,
+      errors: selectorResult.errors,
+      errorDetails: selectorResult.errorDetails,
+      stats: resolveResult.stats,
+    };
   }
 
   // Compute SHA-256 hash from source files (not generated output — deterministic)

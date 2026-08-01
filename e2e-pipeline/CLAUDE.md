@@ -104,8 +104,13 @@ Using `app:` or `name:` in steps means v1 format -- rejected by the test runner.
 
 **This is the single authority for mapping `selector:` grammar.** Other files
 must not restate this table — point back here instead. Enforcement lives in
-`scripts/lint-mapping.sh` (what's banned) and `compiler/lib/selector-translate.js`
-(how each form is consumed).
+`compiler/lib/selector-policy.js` (the banned-class table), which both
+`scripts/lint-mapping.sh` and the compiler read, and `compiler/lib/selector-translate.js`
+(how each form is consumed). The compiler **blocks** at compile and dry-run time on a
+banned selector the flow resolves, and warns on the rest of the mapping file; pre-existing
+violations go in a baseline it reads and never writes (`docs/ci-integration.md`).
+One banned-class table, two traversals — the enforcement point for that being true of the
+linter is `compiler/test/selector-lint-drift.test.js`, not a convention.
 
 **`selector:` is a plugin-internal locator DSL, not a raw CLI argument you hand
 to `agent-browser`.** For `expect:`/visibility assertions, the compiler
@@ -157,10 +162,10 @@ doesn't have. Full record: `docs/dev/.spacedock-state/e2e-selector-canon-review.
    don't assume). Not a default output.
 5. `[role="<r>"]` -- role only; combine with `:nth-of-type(N)` if repeated
 6. `[aria-label="<v>"]` -- when role isn't stable
-7. Never use `has-text()` -- broken in agent-browser, causes timeout (BANNED — see `scripts/lint-mapping.sh`)
-8. BANNED: ` >> nth=N` Playwright nth chord -> use `:nth-of-type(N)` CSS pseudo (BANNED — see `scripts/lint-mapping.sh`)
+7. Never use `has-text()` -- broken in agent-browser, causes timeout (BANNED — see `compiler/lib/selector-policy.js`)
+8. BANNED: ` >> nth=N` Playwright nth chord -> use `:nth-of-type(N)` CSS pseudo (BANNED — see `compiler/lib/selector-policy.js`)
 9. DEPRECATED as a `selector:` value: `find role|text|testid|label <r> [--name "<v>"]` -- this is an
-   agent-browser CLI subcommand chain, not selector grammar (BANNED — see `scripts/lint-mapping.sh` CLASS 5).
+   agent-browser CLI subcommand chain, not selector grammar (BANNED — see `compiler/lib/selector-policy.js` CLASS 5).
    Valid only as an interactive CLI command during exploration, never as a stored `selector:` value.
 
 **`css_selector:`** -- optional element field (read at `compiler/resolver.js:62`),
