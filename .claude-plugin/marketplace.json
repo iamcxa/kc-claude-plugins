@@ -13,7 +13,7 @@
       "name": "e2e-pipeline",
       "source": "./e2e-pipeline",
       "description": "Browser & CLI E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video, terminal recording for CLI-only flows, static UI computed-style verification",
-      "version": "3.1.0",
+      "version": "3.1.1",
       "keywords": [
         "e2e",
         "browser-testing",
@@ -129,7 +129,7 @@
       "name": "kc-dev-flow",
       "source": "./kc-dev-flow",
       "description": "Portable, evidence-bound development flow — adopt or upgrade a repository-owned authority binding, then keep approved sprints moving with fresh validation and minimal ceremony in Claude Code or Codex",
-      "version": "0.0.0",
+      "version": "1.0.0",
       "keywords": [
         "development-workflow",
         "sprint",
