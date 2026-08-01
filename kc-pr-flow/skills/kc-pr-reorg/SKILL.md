@@ -74,8 +74,17 @@ git diff backup/<branch>-pre-reorg
 ### 6. Force Push
 
 ```bash
-git push --force-with-lease
+WORKTREE=$(git rev-parse --show-toplevel) || exit $?
+"$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" push \
+  --worktree "$WORKTREE" --remote origin --tracked --force-with-lease || exit $?
 ```
+
+The adapter validates the effective push destination immediately before it owns the force push and
+resolves exactly one configured upstream ref instead of synthesizing a same-name remote branch or
+honoring broad `push.default=matching` behavior. It
+refuses a stale transferred-repository remote (including `pushurl`) and prints, but never executes,
+the explicit repair command. Resolve any later PR mutation from that PR's target repository
+separately; a fork's push destination is not its PR target.
 
 ## Common Mistakes
 

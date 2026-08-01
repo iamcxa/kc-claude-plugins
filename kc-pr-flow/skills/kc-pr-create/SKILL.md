@@ -139,8 +139,13 @@ Read → ~/.claude/kc-plugins-config/identity.yaml
 
 **Ship mode (default)** — always create as draft:
 ```bash
-git push -u origin $(git branch --show-current)
-gh pr create --draft --title "TITLE" --body "$(cat <<'EOF'
+PR_REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner') || exit $?
+REPO=$("$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" preflight --repo "$PR_REPO") || exit $?
+WORKTREE=$(git rev-parse --show-toplevel) || exit $?
+BRANCH=$(git branch --show-current) || exit $?
+"$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" push \
+  --worktree "$WORKTREE" --remote origin --branch "$BRANCH" --set-upstream || exit $?
+gh pr create --repo "$REPO" --draft --title "TITLE" --body "$(cat <<'EOF'
 BODY
 EOF
 )" --assignee @me
@@ -148,12 +153,22 @@ EOF
 
 **`--draft-only` mode** — create normally (no `--draft`):
 ```bash
-git push -u origin $(git branch --show-current)
-gh pr create --title "TITLE" --body "$(cat <<'EOF'
+PR_REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner') || exit $?
+REPO=$("$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" preflight --repo "$PR_REPO") || exit $?
+WORKTREE=$(git rev-parse --show-toplevel) || exit $?
+BRANCH=$(git branch --show-current) || exit $?
+"$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" push \
+  --worktree "$WORKTREE" --remote origin --branch "$BRANCH" --set-upstream || exit $?
+gh pr create --repo "$REPO" --title "TITLE" --body "$(cat <<'EOF'
 BODY
 EOF
 )" --assignee @me
 ```
+
+The PR target and push destination are intentionally separate: `REPO` follows GitHub CLI's selected
+target (including an upstream repository), while `push` validates the effective `origin` push URL.
+The helper owns the push so failure cannot fall through to `git push`. It prints any required remote
+repair without executing it. Re-run the relevant command before a later write batch.
 
 Capture `PR_NUMBER` and `PR_URL` from output for subsequent steps.
 
@@ -240,7 +255,13 @@ Ship review round 1/3:
 ```
 
 Commit: `fix: address self-review findings`
-Push immediately after commit.
+Push immediately after commit through the same validated adapter:
+
+```bash
+WORKTREE=$(git rev-parse --show-toplevel) || exit $?
+"$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" push \
+  --worktree "$WORKTREE" --remote origin --tracked || exit $?
+```
 
 ### 10d. Re-review or Exit
 
@@ -255,7 +276,8 @@ Ship review: APPROVE after 2 rounds (5 items fixed, 1 advisory noted)
 ## Step 11: Mark Ready
 
 ```bash
-gh pr ready <PR_NUMBER>
+REPO=$("$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" preflight --repo "$REPO") || exit $?
+gh pr ready <PR_NUMBER> --repo "$REPO"
 ```
 
 ```
@@ -266,13 +288,25 @@ If `--ci` NOT set → skip to Step 13 (Announce).
 
 ## Step 12: CI + AI Reviewer Gate (--ci only)
 
+Any fix produced by either the CI gate or AI reviewer gate starts a new push batch. After committing
+the fix, use this exact recipe before re-polling; a prose instruction to "re-push" never authorizes
+a raw `git push`:
+
+```bash
+# github-repo-create-ai-fix-push:start
+WORKTREE=$(git rev-parse --show-toplevel) || exit $?
+"$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" push \
+  --worktree "$WORKTREE" --remote origin --tracked || exit $?
+# github-repo-create-ai-fix-push:end
+```
+
 ### 12a. CI Gate
 
 Poll CI checks until all pass or timeout (5 min):
 
 ```bash
 for i in $(seq 1 20); do  # 20 × 15s = 5 min
-  STATUS=$(gh pr checks <PR_NUMBER> --json name,state \
+  STATUS=$(gh pr checks <PR_NUMBER> --repo "$REPO" --json name,state \
     --jq 'if all(.state == "SUCCESS") then "pass"
           elif any(.state == "FAILURE") then "fail"
           else "pending" end')
@@ -297,7 +331,7 @@ CI checks:
 **On CI failure**: report which check failed + log summary. Ask:
 ```
 CI check 'test' failed.
-  1. View logs and fix → re-push → re-poll
+  1. View logs and fix → run the validated Step 12 push recipe → re-poll
   2. Skip CI gate, proceed to announce
 ```
 
@@ -315,13 +349,13 @@ If user selects 1 — poll for new reviews:
 BASELINE_TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 for i in $(seq 1 6); do  # 6 × 10s = ~1 min
   sleep 10
-  NEW_REVIEWS=$(gh api repos/OWNER/REPO/pulls/PR_NUM/reviews \
+  NEW_REVIEWS=$(gh api "repos/$REPO/pulls/PR_NUM/reviews" \
     --jq "[.[] | select(.submitted_at > \"$BASELINE_TS\")] | length")
   [ "$NEW_REVIEWS" -gt 0 ] && break
 done
 ```
 
-**AI reviewer has findings** → fix → push → re-poll CI (back to 12a). Max 2 AI-fix rounds.
+**AI reviewer has findings** → fix → run the validated Step 12 push recipe → re-poll CI (back to 12a). Max 2 AI-fix rounds.
 
 ```
 AI reviewer: Copilot — 2 suggestions
@@ -352,7 +386,7 @@ find .claude/e2e/reports -name "pr-summary.md" -newer .git/HEAD 2>/dev/null | he
 find .claude/e2e/reports -path "*walkthrough*" \( -name "*.png" -o -name "*.webm" -o -name "*.mp4" \) 2>/dev/null | head -5
 
 # Tier 4: Loom URL in PR body
-gh pr view --json body --jq '.body' | grep -i "loom.com"
+gh pr view --repo "$REPO" --json body --jq '.body' | grep -i "loom.com"
 ```
 
 **Auto-upload** (Tier 1-3 only, runs after detection):
@@ -362,16 +396,17 @@ When local demo artifacts are found, auto-upload to GitHub for shareable URLs:
 ```bash
 BRANCH=$(git branch --show-current)
 TAG="e2e-assets-${BRANCH}"
+REPO=$("$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" preflight --repo "$REPO") || exit $?
 
 # Create draft release if not exists
-gh release view "$TAG" &>/dev/null || \
-  gh release create "$TAG" --draft --title "E2E Assets for ${BRANCH}" --notes "Auto-uploaded demo artifacts"
+gh release view "$TAG" --repo "$REPO" &>/dev/null || \
+  gh release create "$TAG" --repo "$REPO" --draft --title "E2E Assets for ${BRANCH}" --notes "Auto-uploaded demo artifacts"
 
 # Upload artifacts (--clobber replaces existing)
-gh release upload "$TAG" <detected_artifact_paths...> --clobber
+gh release upload "$TAG" --repo "$REPO" <detected_artifact_paths...> --clobber
 
 # Get download URLs
-gh release view "$TAG" --json assets --jq '.assets[].url'
+gh release view "$TAG" --repo "$REPO" --json assets --jq '.assets[].url'
 ```
 
 | Upload result | Action |

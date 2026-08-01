@@ -349,6 +349,26 @@ Dispatch or sequence fixes by surface group so code changes, verification change
 
 Push all commits, then reply to each item in-place — never batch replies into a single comment. The completion order is fixed:
 
+Before the push or any GitHub mutation, run the canonical repository preflight. It fails before the
+write when a transferred repository leaves a stale remote, reports the configured and canonical
+identities, and never edits the remote:
+
+```bash
+REPO=$("$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" preflight --repo "$REPO") || exit $?
+# github-repo-review-resolve-push:start
+WORKTREE=$(git rev-parse --show-toplevel) || exit $?
+"$CLAUDE_PLUGIN_ROOT/scripts/github-repo-write.sh" push \
+  --worktree "$WORKTREE" --remote origin --tracked || exit $?
+# github-repo-review-resolve-push:end
+```
+
+`REPO` comes from the detected or explicit PR URL in Step 1, not from the branch's push remote. Use
+this exact `$REPO` in REST endpoints and pass `--repo "$REPO"` to every mutating `gh pr` command.
+The tracked push resolves the checked-out branch's configured upstream, verifies it belongs to
+`origin`, and writes exactly `HEAD:<upstream-ref>`. Local aliases therefore update the PR head while
+`push.default=current|matching` cannot broaden the write. Re-run the preflight before later write
+batches rather than carrying it across a new review cycle.
+
 1. Validate feedback (Steps 2–4)
 2. Fix confirmed/preapproved issues (Step 5)
 3. Run targeted verification for each changed surface
@@ -406,14 +426,14 @@ Tag only **humans** in the comment body. Use `gh pr edit` to re-request AI revie
 
 ```bash
 # ✅ CORRECT — humans in comment, API for AI re-request
-gh pr comment PR_NUM --body "All review feedback addressed — please see individual thread replies for details.
+gh pr comment PR_NUM --repo "$REPO" --body "All review feedback addressed — please see individual thread replies for details.
 
 @kentwelcome @senior-dev @claude"
 
 # If user chose to re-trigger AI review:
-# - Collaborator bots (Claude, Coderabbit paid): gh pr edit --add-reviewer <bot>
+# - Collaborator bots (Claude, Coderabbit paid): gh pr edit PR_NUM --repo "$REPO" --add-reviewer <bot>
 # - Copilot: requires direct API with [bot] suffix (gh CLI silently no-ops)
-gh api -X POST repos/OWNER/REPO/pulls/PR_NUM/requested_reviewers \
+gh api -X POST "repos/$REPO/pulls/PR_NUM/requested_reviewers" \
   -f 'reviewers[]=copilot-pull-request-reviewer[bot]'
 ```
 
@@ -425,14 +445,14 @@ Some AI bots (notably Copilot) interpret @mentions in PR comments as new action 
 
 ```bash
 # ❌ WRONG — @mentioning bot triggers unwanted bot actions
-gh pr comment PR_NUM --body "All feedback addressed.
+gh pr comment PR_NUM --repo "$REPO" --body "All feedback addressed.
 @copilot-pull-request-reviewer @claude"
 
 # ✅ CORRECT — comment tags humans only, API re-requests bot separately
-gh pr comment PR_NUM --body "All feedback addressed.
+gh pr comment PR_NUM --repo "$REPO" --body "All feedback addressed.
 @kentwelcome @claude"
 # For Copilot specifically: gh pr edit --add-reviewer silently no-ops; use direct API
-gh api -X POST repos/OWNER/REPO/pulls/PR_NUM/requested_reviewers \
+gh api -X POST "repos/$REPO/pulls/PR_NUM/requested_reviewers" \
   -f 'reviewers[]=copilot-pull-request-reviewer[bot]'
 ```
 
@@ -442,7 +462,7 @@ Keep the summary **brief** — do NOT repeat per-thread details (those are alrea
 
 ```bash
 # ❌ Wrong — re-lists what's already in thread replies
-gh pr comment PR_NUM --body "Addressed all feedback:
+gh pr comment PR_NUM --repo "$REPO" --body "Addressed all feedback:
 - Threads 1, 2: Fixed in abc1234
 - Thread 3: Explained design choice
 Ready for re-review."
@@ -482,7 +502,7 @@ If user accepts:
 for i in $(seq 1 6); do
   sleep 30
   # Check new PR-level reviews
-  NEW_REVIEWS=$(gh api repos/OWNER/REPO/pulls/PR_NUM/reviews \
+  NEW_REVIEWS=$(gh api "repos/$REPO/pulls/PR_NUM/reviews" \
     --jq "[.[] | select(.user.login == \"AI_BOT_LOGIN\" and .submitted_at > \"BASELINE_TS\")] | length")
   # Check new unresolved thread comments
   NEW_THREADS=$(gh api graphql -f query='...' \
