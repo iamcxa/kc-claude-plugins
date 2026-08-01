@@ -3,6 +3,13 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.1.1](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.1.0...e2e-pipeline-v3.1.1) (2026-08-01)
+
+
+### Bug Fixes
+
+* **e2e-pipeline:** land the selector-grammar canon correction ([#123](https://github.com/iamcxa/kc-claude-plugins/issues/123)) ([7108495](https://github.com/iamcxa/kc-claude-plugins/commit/71084954a55e2b57371486367ff51d00508b1973))
+
 ## [3.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.0.1...e2e-pipeline-v3.1.0) (2026-07-30)
 
 
