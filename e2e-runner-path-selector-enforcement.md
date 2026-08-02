@@ -106,7 +106,7 @@ this entity exists to prevent.
 One missing seam, and the repair is wiring an existing module into an existing chokepoint.
 No greenfield.
 
-## Appetite
+## Appetite (superseded — see the re-shape section)
 
 **Estimate: 3 hours.** Smaller than #88 by construction: the table, its tests and its
 diagnostics already exist; this adds a call site and its refusal path.
@@ -239,84 +239,135 @@ selector is **written**. Reason given: it is cheap, reversible, and the only thi
 catches a banned selector written into a mapping and never exercised. Accepted cost: it does
 not stop a banned selector already sitting in a mapping from being used.
 
-This section re-shapes against that ruling and **stops at the options**. The captain
-reserved the choice of enforcement point (2026-08-02) and this does not make it.
+The captain also reserved the choice of enforcement point. **This section lays out the field
+and does not pick from it.** It is a scope escalation, not an ideation gate: every remaining
+mandatory ideation output — appetite, ACs, the `design: required` decision, the E2E
+determination, dispatch sizing, the doc diff — is a function of the reserved choice. The
+`## Appetite` section above (3h / +50%) was sized for the disproved argv classifier and is
+superseded; the correction-round brake should not read those numbers as current.
+
+### 換句話說
+
+**What breaks if this is wrong.** A test author writes a page-locator string that cannot
+work. Nothing refuses it. Later a test reports "element not found" and someone debugs the
+application for an afternoon before discovering the locator was never valid. The worse
+version is a locator that silently satisfies an assertion through a fallback, and a green
+test that proves nothing.
+
+**How expensive to reverse.** Options A, D and E are one PR each and nothing installed reads
+them differently afterwards. Options B and C change how two agents write files, which is the
+surface this entity has already been wrong about once; reversing those means another agent
+change plus whatever consumer repos have adapted to.
+
+**What is actually being chosen.** Not "should bad selectors be refused" — that is settled.
+It is **where the refusal lives**, and each place sees a different population: the agent's
+write path, the git commit, or CI. No single one of them sees all three of agent output,
+human hand-edits, and repairs written back by the verifier.
 
 ### Reverse-recovery audit (against `origin/main` `0a1079c`)
 
 | layer | verdict | evidence |
 |---|---|---|
-| Policy table | **WORKING** | `compiler/lib/selector-policy.js` — one table, dependency-free, read by two consumers |
-| Per-file linter | **WORKING** | `scripts/lint-mapping.sh` (54 lines) execs the policy module; documented exit codes |
-| Compile-path enforcement | **WORKING** | #88: blocks on flow-resolved selectors, warns on the rest of the file |
-| Hook infrastructure on `Write` | **WORKING** | `hooks/hooks.json` registers a `PreToolUse` `Write` matcher; ships and installs with the plugin, so it reaches consumer repos |
-| A fail-closed point on any write path | **MISSING** | every shipped hook `exit 0`s — see below |
-| Mapping files covered by any write hook | **MISSING** | `pre-write-flow-guard.sh` matches `*/.claude/e2e/flows/*.yaml` only; mappings are not matched |
+| Policy table | **WORKING** | `compiler/lib/selector-policy.js` — one table, dependency-free, read by three consumers: `compiler/compiler.js:11`, `bin/e2e-selector-baseline.js:37`, and `scripts/lint-mapping.sh` via `exec` |
+| Per-file linter | **WORKING** | `scripts/lint-mapping.sh`, 54 lines, execs the policy module; exit codes documented at lines 6-9 |
+| Compile-path enforcement | **WORKING** | #88 `checkSelectorPolicy`: blocks on elements the flow resolves, warns on the remainder **of the mappings a compiled flow loads** |
+| Hook infrastructure on `Write` | **WORKING** | `hooks/hooks.json` registers a `PreToolUse` `Write` matcher. Scope nuance the options turn on: a plugin hook is per-user and per-agent-session, so it reaches any repo this user's Claude touches — and reaches neither a human editor nor CI |
+| Agent-side prose on the write path | **EXISTS_BROKEN** | `agents/e2e-mapper.md:224-229` states the ban explicitly and nothing can refuse it. This row was in the pre-disproof audit and the first re-shape dropped it |
+| Commit / CI wiring for the linter | **built, unwired** | `docs/ci-integration.md:242` recommends wiring `lint-mapping.sh` as a CI pre-flight; `git grep lint-mapping` over `origin/main` finds zero workflow and zero `.githooks` references |
+| A fail-closed point on any write path | **MISSING** | the four scripts under `hooks/scripts/` all end `exit 0` — `pre-write-flow-guard.sh`, `pre-commit-e2e-check.sh:45`, `pre-commit-stale-check.sh:105`, `post-write-plan-e2e-check.sh:68`. Nothing enforces that a fifth would |
+| Mapping files covered by any write hook | **MISSING** | `pre-write-flow-guard.sh:17-20` matches `*/.claude/e2e/flows/*.yaml`; `post-write-plan-e2e-check.sh:22-31` matches plan files. No hook matches `.claude/e2e/mappings/` |
 
-Nothing here is greenfield. The linter exists, the hook channel exists and is already
-delivered to consumer repos. What is missing is a call site that refuses.
+Nothing here is greenfield. The linter exists, the hook channel exists and already ships to
+consumer repos, and the CI recommendation is already written down. What is missing is a call
+site that acts on the linter's verdict.
 
-### The constraint that decides this, and it is already on record here
+### One constraint already on record in this repo
 
-`hooks/scripts/pre-write-flow-guard.sh` is a `PreToolUse` hook on `Write` that **deliberately
-warns instead of blocking**, and its header says why:
+`hooks/scripts/pre-write-flow-guard.sh` is a `PreToolUse` hook on `Write` that deliberately
+warns instead of blocking, and its header says why:
 
 > block is trivially bypassed via Bash, creating an adversarial dynamic where agents find
 > workarounds instead of understanding why the /e2e-flow path is better.
 
-`pre-commit-e2e-check.sh` likewise ends `exit 0`. **Every hook this plugin ships is
-advisory.** So the repo has already made this exact call once, in the same problem shape,
-and chose cooperative warning.
+That reasoning is sound **for a `Write`-only matcher** — a `cat > file` in Bash does not fire
+a `Write` hook. It is not a general argument against blocking: `hooks.json` already registers
+`Bash` matchers for the two pre-commit scripts, so a matcher covering both is existing
+infrastructure, at the cost of inspecting arbitrary shell.
 
-That prior reasoning is sound *for a Write-only matcher* — a `cat > file` in Bash does not
-fire a `Write` hook. It is not a general argument against blocking: a matcher covering both
-`Write` and `Bash` closes that route, at the cost of inspecting arbitrary shell.
+### What write-time enforcement buys, bounded
 
-### What write-time enforcement actually buys, stated honestly
+A banned selector on an element no step resolves, **in a mapping that some compiled flow
+loads**, is already warned about by #88. For that population the delta is turning a warning
+into a refusal, not making an invisible thing visible — and the warning is ephemeral stderr
+on a manual compile that no CI runs, so "visible" means visible to whoever happens to compile.
 
-A banned selector written into a mapping and never exercised by any flow is **already
-warned about** at compile time — #88 warns on the whole-file scope. It is visible today and
-unenforced, not invisible. The delta this work buys is turning that warning into a refusal,
-and reaching selectors on paths that never compile at all.
+Outside that population the delta is larger: a mapping **no flow loads at all** is never
+scanned by the compiler and gets no warning today. That population demonstrably exists —
+`pre-commit-e2e-check.sh:31` exists specifically to warn that mappings are present with no
+flows.
 
-### The options, with what each can and cannot catch
+### The options
 
-**A — pre-commit hook, consumer-repo installed.** Banned selectors cannot enter a commit.
-Catches hand edits, mapper output and verifier repairs alike, because all three end in git.
-Cannot catch anything before commit, so an agent runs a whole browser session against a bad
-mapping first. Bypassable with `--no-verify`, which is a human choice rather than an agent
-improvisation. Cheapest of the three; nothing about the agents changes.
+**A — pre-commit hook, consumer-repo installed.** Catches agent output, hand edits and
+verifier repairs alike, because all three end in git. Cannot refuse anything before commit,
+so a whole browser session can run against a bad mapping first. Bounded claim: a banned
+selector cannot enter a commit **from a clone that has installed the hook** (`git config
+core.hooksPath`, which this repo's own `.githooks/pre-commit:3` documents as per-clone
+opt-in) **and does not pass `--no-verify`**. Never runs in CI.
 
-**B — the two agents write mappings through an owned CLI that validates first.** A real
-chokepoint at the moment of writing, and it is the only option that refuses before a browser
-ever runs. Requires changing `agents/e2e-mapper.md` and `agents/e2e-flow-verifier.md` — both
-currently hold the raw `Write` tool and write the file directly. Its weakness is exactly the
-one this entity exists to attack: telling an agent in markdown to use the CLI is prose
-enforcement, and an agent that writes with `Write` anyway sails past. Pairing it with a
-`Write`-matcher hook that refuses mapping paths converts that into a mechanism, and then the
-`Bash` route is the residual.
+**B — the two agents write mappings through an owned CLI that validates first.** The cheapest
+option that refuses before a browser ever runs. Requires changing `agents/e2e-mapper.md` and
+`agents/e2e-flow-verifier.md`, both of which hold the raw `Write` tool and write the file
+directly (`e2e-flow-verifier.md:240,464` writes mappings back). Its weakness is measured, not
+hypothetical: the EXISTS_BROKEN row above is the same instruction-only mechanism failing
+today. Pairing it with a `Write`-matcher hook that refuses mapping paths converts it into a
+mechanism; the `Bash` route is then the residual.
 
-**C — both.** The CLI refuses at the moment of use, the hook catches what routes around it,
-and pre-commit catches hand edits. Highest coverage, three surfaces to build and maintain,
-and it contradicts the shipped precedent above in one place: the `Write` hook would have to
-block where the existing one warns.
+**C — B plus A.** Refusal at the moment of writing, git as the net for what routes around it.
+Two surfaces to build and maintain. Contradicts the shipped precedent in one place: the
+`Write` hook would block where the existing one warns.
 
-**D — extend the existing warn-only guard to mapping paths.** Smallest possible change: add
-a mapping glob to `pre-write-flow-guard.sh`. Consistent with the shipped precedent, one file
-touched. But it is a warning, and a warning is what #88 replaced. It would make the class
-visible at write time without making it refusable — worth stating because it is the honest
-floor, not because it satisfies the original problem.
+**D — extend the shipped warn-only guard to mapping paths.** As stated in the first
+re-shape this was mis-specified, and the correction cuts against it: `pre-write-flow-guard.sh`
+**never inspects file content**. It checks for a `.flow-write-authorized` sentinel and, absent
+one, prints a flow-specific message pointing at `/e2e-flow`. Adding a mapping glob would warn
+on every mapping write regardless of selector content, with the wrong message, and would need
+a sentinel producer on the `/e2e-map` side. Making it a *selector* warning means calling the
+policy module — a different and larger change than "add a glob".
+
+**E — a mapping-lint CI job, shipped through the existing template mechanism.** The plugin
+already ships `templates/browser-e2e.yml` as its CI delivery mechanism and
+`docs/ci-integration.md:242` already recommends wiring `lint-mapping.sh` as a pre-flight
+gate. This is the only enforcement point an agent cannot route around at all — not by `Bash`,
+not by `--no-verify` — and the only one that sees a human's hand edit. It is also the latest:
+it refuses after the commit, in the pull request, so a bad selector can be written, exercised
+and pushed before anything says no. Consumer repos must adopt the template, which is the same
+adoption cost as A.
 
 ### What is NOT decided here
 
-Which option. The captain reserved it. Each has a different appetite, and B and C both
-change agent definitions, which is the surface this entity has already been wrong about
-once.
+Which option, and therefore every ideation output that depends on it. The captain reserved
+this on 2026-08-02.
+
+### Owed back-port
+
+`docs/ci-integration.md:209` says the policy table has two consumers; it has three. Recorded
+here rather than shipped, because a code-branch edit needs its own entity.
 
 ### Pre-mortem
 
 If this ships exactly per spec and still fails, the most likely cause is a **hidden
 assumption** again: that the agents' writes are the population. Mappings are also hand-edited
-by humans and written by whatever future skill needs one, and only the git-level point sees
-all of those. An option chosen for the agent path alone will be measured against a population
-it does not cover.
+by humans and written by whatever future skill needs one, and only the git-level points — A
+and E — see those. An option chosen for the agent path alone will be measured against a
+population it does not cover.
+
+### Provenance of this re-shape
+
+The first version of this section omitted option E and dropped two audit rows. An EM review
+returned it, and every `file:line` that review cited was checked against `origin/main`
+`0a1079c` before being adopted here rather than taken on the reviewer's word: the CI template
+exists, `.githooks/pre-commit:3` documents the per-clone opt-in, `ci-integration.md:209` does
+undercount the policy consumers, `lint-mapping.sh` appears in zero workflows and zero
+`.githooks`, and both verifier write-back sites are real. The policy module's three consumers
+were counted directly.
