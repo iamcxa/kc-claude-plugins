@@ -295,7 +295,7 @@ function runGenerated(expects, env, session) {
         PATH: dir + path.delimiter + process.env.PATH,
         E2E_BROWSER_RUNTIME: BROWSER_RUNTIME_SHIM,
         VISIBILITY_BROWSER_LOG: log,
-        WAIT_TIMEOUT: (env && env.WAIT_TIMEOUT) || '1',
+        WAIT_TIMEOUT: env?.WAIT_TIMEOUT || '1',
       }),
     });
     result.browserLog = fs.existsSync(log) ? fs.readFileSync(log, 'utf8') : '';
