@@ -9,7 +9,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-e2e-runner-path-selector-enforcement
 issue: "126"
-pr: pr-merge:pending:artifact-v1:06201bc5b4963ed0e0b21aee18bc04634cd5bcb3d6c8918cf77c9f7977223504
+pr: pr-merge:139:artifact-v1:06201bc5b4963ed0e0b21aee18bc04634cd5bcb3d6c8918cf77c9f7977223504
 design: required
 lane: main
 id: nabz0jraexvynv5bnzkms2kj
