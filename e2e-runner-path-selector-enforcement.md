@@ -745,3 +745,29 @@ No prior test arranged a multi-path invocation or diff-scoped annotation behavio
 must follow `ci-integration-consumer-count-backport`, which is still backlog; that later edit
 must document exit 2 (and xargs exit 123), per-file invocation, diff scoping, annotations,
 and the required-check/advisory boundary.
+
+## Stage Report: validation
+
+- FAILED: Attack diff scoping and failure behavior: additions, modifications, renames/deletions, malformed or empty lint output, invalid base/head, and clean-first multi-file ordering; record exact commands and falsifiers.
+  `rtk node /tmp/validate-diff-scoped-mapping-lint.js` passed add/modify/delete/clean-first/invalid-revision cases but falsified pure-renames and empty/malformed rc=2 handling.
+- DONE: Verify the GitHub Actions template structurally and semantically: full history, event SHA selection, path/script availability, job ordering/dependency, annotations, exit propagation, and timeout; distinguish local proof from live adoption proof.
+  `js-yaml`, `actionlint -shellcheck=`, and scratch runs proved fetch-depth 0, PR/push SHAs, annotations/exit 2, `auth-setup` dependency, and 5-minute cap; the declared plugin path is absent after a plain template copy, so adoption customization remains unproved here.
+- DONE: Re-run focused and earned suites from exact commit 62cb72e474ef53c7900d44d505d24d1134eac440; confirm only the three approved files changed and that docs/ci-integration.md, selector-policy, lint-mapping.sh, carlove, and branch protection remain untouched.
+  Focused 5/5 passed; full suite was 955 pass, 1 unrelated fail, 1 skip of 957, and the unchanged failing trace test passed 1/1 alone; `git diff --name-only` listed only the three approved files.
+
+### Evidence block
+
+Lenses: executable script + workflow; correctness FAIL (1), silent-failure FAIL (1), security PASS (0), resource-lifecycle PASS (0); type-design, concurrency, and manifest/back-compat did not fire.
+Diff coverage: 86.76% line coverage on the all-new production script via `node --test --experimental-test-coverage`; PASS over the 85% executable-line ratchet.
+Adversarial: flipping the blocking guard and deleting `auth-setup`'s dependency each made the focused suite red (4 pass, 1 fail); the external fixture exposed two suite holes.
+Cross-model: Gemini 3.6 Flash High independently found the same two Material defects; citations were verified, its insufficient `-M`-only rename correction was replaced, and its main-only zero-before edge was declined as out of adoption scope. A prior Gemini round was discarded for false repository context.
+E2E: NOT RUN — ideation says the carlove probe is owed, but this dispatch explicitly excludes adoption, required-check configuration, and the probe PR; all live AC-1/2/3 evidence remains outstanding.
+
+### Material findings
+
+1. `e2e-pipeline/scripts/diff-scoped-mapping-lint.js:28-31,95-97` loses the rename source by enumerating only the new path and then path-scoping the hunk diff. A pure R100 rename of legacy debt emitted `::error` and rc=2 instead of warning/rc=0; `-M` with only the new path reproduces the full-add diff. Carry old+new names from rename-aware name-status output into hunk parsing and add pure-rename plus rename-and-edit tests.
+2. `e2e-pipeline/scripts/diff-scoped-mapping-lint.js:109-125,133` accepts linter rc=2 even when stderr yields zero parseable findings, leaving `violations=false` and returning 0. Empty and malformed fake linters both reproduced the green gate; validate the linter summary/count against parsed findings and return infrastructure rc=1 on any mismatch, with focused tests.
+
+### Summary
+
+Validation rejects commit `62cb72e`: normal additions/modifications and workflow wiring work locally, but the gate violates AC-2 on pure renames and fails open when its linter protocol cannot be parsed. The focused suite and coverage ratchet pass, while the full-suite failure is pre-range/flaky evidence rather than part of this diff; live carlove adoption remains deliberately unverified.
