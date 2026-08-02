@@ -443,10 +443,16 @@ With the enforcement point fixed, the outputs deferred to this choice are now wr
 ### The design decision inside E, and the precedent that settles it
 
 **Whole-file linting would turn an adopting repo red on day one.** Measured against carlove
-on 2026-08-02 with the shipped `scripts/lint-mapping.sh`: `secha-office.yaml` reports 16
-findings and `secha-app.yaml` 25, both exit 2; the other three mappings are clean. So a
-naive job fails immediately on 41 pre-existing findings in 2 of 5 files, none of which the
-adopting PR touched.
+on 2026-08-02 with the shipped `scripts/lint-mapping.sh`, per file, reading the tool's own
+`path:line:` findings: `secha-office.yaml` **15**, `secha-app.yaml` **24**, both exit 2; the
+other three mappings clean, exit 0. So a naive job fails immediately on **39** pre-existing
+findings in 2 of 5 files, none of which the adopting PR touched.
+
+An earlier version of this section said 16 / 25 / 41 and attributed those to the linter. It
+had not run the linter — the numbers were a raw grep. `secha-office.yaml:706` carries
+`>> nth=1` inside a `note:` string, which the linter deliberately excludes because it
+classifies selector *values*, not any occurrence of the token. The correction is worth
+keeping on record as evidence that narrowing works, not just as a retraction.
 
 That is the exact failure the captain ruled against on 2026-08-01 when #88 was cut to
 flow-resolved blocking: an unrelated whole-file migration must not be the price of touching
@@ -458,6 +464,21 @@ Rejected alternative: a baseline file like #88's. `lint-mapping.sh` has no basel
 today, so this would add one plus its producer and its staleness story, to solve a problem
 diff-scoping solves with information the PR already carries. Recorded because it is the
 option a later reader will ask about.
+
+### Plan constraint — the linter is fail-open on multiple arguments
+
+`scripts/lint-mapping.sh` processes **only `argv[1]`**. Verified 2026-08-02 against carlove:
+invoked as `lint-mapping.sh *.yaml` with the clean file sorting first, it prints one `— OK`
+line and returns **rc=0**, leaving both failing files unscanned.
+
+So the "fastest path" rejected above is worse than day-one red — written the obvious way it
+is **day-one green and proves nothing**. The job must loop per file and check each exit code
+individually, and the implementation owes a test for the clean-first-file case specifically,
+because that is the arrangement under which the naive form passes.
+
+`docs/ci-integration.md` also mislabels the contract: it says "CI-friendly: exit 1 on any
+violation" where the script documents and returns **2** (and 123 under the `xargs -0 -n1`
+form the same page suggests). That correction rides with the doc diff below.
 
 ### Design determination
 
@@ -476,15 +497,18 @@ the single per-file authority it already is.
 ## Acceptance criteria
 
 **AC-1 — A banned selector added by a pull request fails the job.**
-Verified by: a probe PR that adds one `>> nth=` selector line to a mapping in an adopting
-repo; the job is observed red on live CI and its log names the file, line and class.
+Verified by: a probe PR that adds one `>> nth=` selector line to a mapping in the adopting
+repo (**carlove**, which the captain owns and which holds the mappings this entity measured);
+the job is observed red on live CI and its log names the file, line and class.
 Falsified by: an implementation that passes on that PR, or that reports a line the PR did
 not touch.
 
 **AC-2 — Pre-existing findings on untouched lines do not fail the job.**
-Verified by: the same probe PR against `secha-office.yaml`, which carries 16 pre-existing
-findings measured 2026-08-02; the job fails on the added line only, and those 16 appear as
-annotations rather than failures. Falsified by: a red attributable to any untouched finding,
+Verified by: the same probe PR against a mapping that already carries banned selectors on
+lines the PR does not touch — `secha-office.yaml` is such a file, whose pre-existing finding
+count is read from the linter at verification time rather than pinned here, because it is a
+mutable file in another repository. The job fails on the added line only; the untouched
+findings appear as annotations. Falsified by: a red attributable to any untouched finding,
 which is the day-one-red shape this AC exists to prevent.
 
 **AC-3 — A red job actually blocks the merge in an adopting repo.**
@@ -505,11 +529,24 @@ probe PR without merging, delete its branch, and record the run URLs.
 
 ### Appetite
 
-**Estimate: 2 hours.** A job in `templates/browser-e2e.yml`, the diff-scoping around an
-existing linter, and the docs. No new policy logic — `lint-mapping.sh` and
-`selector-policy.js` are untouched.
-**Tolerance: +50% (3 hours).** Past that the diff-scoping is fighting something, and the
-re-cut is to fail on any mapping file the PR touches rather than per line.
+Two budgets, separated because the ACs span two repositories and one number would hide that.
+
+**Deliverable (this repo): 2 hours.** A job in `templates/browser-e2e.yml`, the diff-scoping
+logic, and the docs. `lint-mapping.sh` and `selector-policy.js` are untouched — but the
+diff-scoping is real logic (parse `git diff --unified=0` hunk headers, intersect with the
+linter's `path:line:` output, split error from warning annotations), so it is extracted into
+a tested script rather than inlined in a YAML `run:` block, and it owes RED-before-GREEN like
+any other behavior. "No new policy logic" is true of those two files and is not a claim that
+there is no new logic.
+**Tolerance: +50% (3 hours).** Past that the diff-scoping is fighting something; the re-cut
+is to fail on any mapping *file* the PR touches rather than per line, which keeps AC-1 and
+AC-2 satisfiable.
+
+**Adoption and verification (carlove): separate, not inside the 2 hours.** Adopting the
+template, configuring branch protection, and running the probe PR are a distinct act in a
+different repository. **Probe commits: N=1.** All three ACs read the same run — AC-1 the log,
+AC-2 the absence of untouched-line failures in that same log, AC-3 the merge state while it
+is red — so the live-CI clause's per-step sequencing does not multiply here.
 
 ### Implementation dispatch sizing
 
@@ -518,18 +555,49 @@ threshold. Adoption in a consumer repo is a separate act and not part of this di
 
 ### Doc diff
 
-`docs/ci-integration.md` gains the adoption steps for the new job, and states in its own text
-that the job is advisory until it is marked a required check — the same bounded claim option E
-carries here. The existing "Wire into CI as a fast pre-flight gate" line at `:242` stops being
-a recommendation with nothing behind it and points at the shipped job.
+`docs/ci-integration.md`, concrete before/after. Sequence **after**
+[[ci-integration-consumer-count-backport]], which edits the same file at `:209`.
+
+**Before** (`:242`):
+
+> Wire into CI as a fast pre-flight gate before the browser job spins up.
+
+**After:**
+
+> `templates/browser-e2e.yml` ships a `mapping-lint` job that does this. It fails only on
+> mapping lines the pull request adds or modifies; findings on untouched lines are posted as
+> annotations, so adopting it does not require migrating pre-existing debt.
+>
+> The job loops per file and checks each exit code. Do not pass several paths in one
+> invocation: `lint-mapping.sh` reads only its first argument, so a glob whose first match is
+> clean returns 0 with the rest unscanned.
+>
+> **The job is advisory until it is marked a required status check.** Adopting the template
+> makes it run; branch protection is what makes it block.
+
+**Before** (exit-code line at `:240`):
+
+> Exit codes: `0` clean (and for an explicit `--help`, which is not an error) · `1` missing
+> argument / file not found / `node` not on PATH · `2` one or more banned tokens detected
+> (path + line printed to stderr).
+
+**After:** unchanged text, plus one sentence — a page elsewhere describes this as "exit 1 on
+any violation", which is wrong; it is 2, and 123 when wrapped in `xargs -0 -n1`. Correct that
+occurrence in the same edit.
 
 ### Pre-mortem for the chosen shape
 
 If this ships exactly per spec and still fails, the most likely cause is **criteria that pass
 without delivering value**: the job goes green in the plugin's own repo, which has no
-`.claude/e2e/mappings/` at all, and nobody notices that no consumer adopted it. AC-3 is
-written specifically against that — it is the only AC that cannot be satisfied inside this
-repository.
+`.claude/e2e/mappings/` at all, and nobody notices that no consumer adopted it. AC-3 is written
+specifically against that.
+
+**Neither AC-1 nor AC-3 can be satisfied inside this repository** — it has no
+`.claude/e2e/mappings/` directory at all, so there is nothing here for the job to lint. Both
+need carlove. **Captain authorization is owed for one thing this entity cannot grant itself:**
+AC-3 requires changing carlove's branch protection to mark the job a required check. Adopting
+the template is a normal PR; editing branch protection is a change to that repo's merge
+rules, which Judgment Escalation puts on the captain.
 
 ## Stage Report: ideation
 
@@ -561,3 +629,17 @@ and were corrected to `:1924` / `:2880` / `:3028` / `:3075` rather than carried.
 
 **Not done here.** The entity stays in `ideation`: this session is a state non-holder, so the
 stage transition is binary-owned and cannot be run from here.
+
+### Gate disposition
+
+EM held the ideation gate 2026-08-02 and returned `narrow` with six bounded fixes, all
+applied above: the measurement corrected to 15/24/39 with the mis-attribution recorded, the
+linter's multi-argument fail-open added as a plan constraint, the doc diff put in before/after
+form, the verification vehicle named with the branch-protection authorization the captain
+still owes, appetite split into two budgets with N=1 probe commits, and the grandfathered debt
+filed as [[carlove-legacy-selector-debt]]. EM stated no further EM round and no captain round
+are needed before the stage moves.
+
+**The stage does not move from here.** This session is a state non-holder, so the
+`ideation → implementation` transition is binary-owned and cannot be run. The next session
+holding state advances it and starts implementation from the ACs above.
