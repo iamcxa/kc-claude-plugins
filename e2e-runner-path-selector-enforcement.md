@@ -643,3 +643,105 @@ are needed before the stage moves.
 **The stage does not move from here.** This session is a state non-holder, so the
 `ideation → implementation` transition is binary-owned and cannot be run. The next session
 holding state advances it and starts implementation from the ACs above.
+
+## Stage Report: implementation
+
+### Summary
+
+Implemented option E on code commit `62cb72e474ef53c7900d44d505d24d1134eac440`
+(`feat(e2e-pipeline): add diff-scoped mapping lint CI gate`). The reusable
+`e2e-pipeline/scripts/diff-scoped-mapping-lint.js` enumerates changed mapping files with
+NUL-delimited git output, runs the existing `scripts/lint-mapping.sh` once per file, parses
+zero-context diff hunks, emits blocking GitHub `error` annotations only for findings whose
+new-file line is added or modified, and emits `warning` annotations for legacy findings on
+untouched lines. The existing selector policy module and per-file linter were not changed.
+
+`e2e-pipeline/templates/browser-e2e.yml` now contains a thin `mapping-lint` job with a
+full-history checkout and delegates all diff parsing and annotation behavior to that tested
+script. `auth-setup` depends on the job, so browser setup does not start after a mapping-lint
+failure. The job's check name is `Mapping Selector Lint`.
+
+### Produced
+
+- `e2e-pipeline/scripts/diff-scoped-mapping-lint.js`
+- `e2e-pipeline/compiler/test/diff-scoped-mapping-lint.test.js`
+- `e2e-pipeline/templates/browser-e2e.yml`
+
+No changes were made to `scripts/lint-mapping.sh`,
+`compiler/lib/selector-policy.js`, `docs/ci-integration.md`, carlove, branch protection, or
+required-check configuration.
+
+### RED evidence
+
+Scoped command for every loop:
+
+```text
+rtk node --test compiler/test/diff-scoped-mapping-lint.test.js
+```
+
+1. `blocks when a clean changed mapping sorts before a violating changed mapping` — 1 run,
+   1 failed. After correcting an arrangement error so both fixture changes were committed,
+   the clean-first precondition passed and the behavior assertion failed: expected exit 2,
+   got exit 1 with `MODULE_NOT_FOUND` for the not-yet-created
+   `scripts/diff-scoped-mapping-lint.js`.
+2. `annotates a violation on an added mapping line as a blocking error` — 2 run, 1 failed.
+   The wrapper exited nonzero, but stdout contained only the clean file's `— OK` line; the
+   expected `::error` carrying `z-violating.yaml`, line 8, and class `>>nth` was absent.
+3. `annotates a finding on an untouched legacy line as a non-blocking warning` — 3 run,
+   1 failed. Stdout contained the new-line `::error` but no `::warning` for the untouched
+   line 6 `has-text` finding.
+4. `the CI template runs the reusable gate before browser setup` — 4 run, 1 failed. The
+   template had no `mapping-lint` job, full-history checkout, reusable-script invocation,
+   base/head arguments, or `auth-setup` dependency, so the single workflow-contract regex
+   did not match.
+
+The modified-line case exercises the same zero-context hunk parser established in loops 2
+and 3: a second commit changes the selector at line 8 from `>>nth` to `has-text`, and the
+final suite requires the annotation to remain an error at the new-file line. Arrangement
+assertions are labelled in the test; the clean-first ordering assertion is a precondition,
+not a claim about the gate behavior.
+
+### GREEN and exit evidence
+
+- Scoped suite: 5 tests, 5 passed, 0 failed. It covers clean-first/multiple-file scanning,
+  added and modified line errors, untouched-line warning plus exit 0, and workflow wiring.
+- Full earned suite: `npm test` exit 0; 957 tests, 956 passed, 0 failed, 1 skipped;
+  `duration_ms 122762.535`.
+- Targeted pinned linter:
+  `npx biome lint scripts/diff-scoped-mapping-lint.js compiler/test/diff-scoped-mapping-lint.test.js`
+  checked both files with no diagnostics.
+- `node --check scripts/diff-scoped-mapping-lint.js`, a `js-yaml` parse of
+  `templates/browser-e2e.yml`, and `git diff --check` all exited 0.
+- `actionlint -shellcheck= e2e-pipeline/templates/browser-e2e.yml` exited 0. Normal
+  `actionlint` reports two SC2086 notices in the pre-existing mapping-staleness shell block;
+  the same two notices reproduce against `origin/main`, so this diff adds no actionlint
+  finding.
+
+Tests were added, so the implementation-stage timeout audit searched `.github` for a job
+that runs `npm test`, `node --test`, or the compiler test directory. There is no such job;
+there is therefore no existing CI test-job timeout margin for these five tests to consume.
+The local full-suite duration above is recorded rather than pretending it measures a CI
+job. The new template job has `timeout-minutes: 5`; its actual live-run margin remains part
+of adoption evidence.
+
+The old-behavior test audit found one prior linter arrangement,
+`selector-lint-drift.test.js`: it intentionally invokes the per-file linter with one mapping
+path to prove policy-table drift. Its intent is unchanged and the full suite keeps it green.
+No prior test arranged a multi-path invocation or diff-scoped annotation behavior.
+
+### Acceptance-criterion status and remaining proof
+
+- AC-1 implementation evidence is local and green: a violating added or modified line
+  produces a file/line/class `::error` and exit 2, including when a clean changed file sorts
+  first. The adopting-repo probe PR and live job URL are still required.
+- AC-2 implementation evidence is local and green: an untouched legacy finding in a changed
+  mapping produces a `::warning` and, when it is the only finding, exit 0. The same carlove
+  probe must show this on GitHub Actions against its live legacy population.
+- AC-3 is not attempted. carlove adoption, marking `Mapping Selector Lint` as a required
+  context, the probe PR, blocked merge-state observation, branch deletion, and run URL are
+  separately authorized cross-repository work.
+
+`docs/ci-integration.md` remains a dependency rather than absorbed scope. Its approved diff
+must follow `ci-integration-consumer-count-backport`, which is still backlog; that later edit
+must document exit 2 (and xargs exit 123), per-file invocation, diff scoping, annotations,
+and the required-check/advisory boundary.
