@@ -265,7 +265,8 @@ It is **where the refusal lives**, and the places trade coverage against timing.
 git-level points (A, E) see all three populations — agent output, human hand-edits, and
 verifier repairs — but only after the file is already written. The write-path points (B, C)
 refuse before a browser ever runs, but see only what the agents write. The compile-path
-point (F) sees every mapping on disk but only when someone compiles.
+point (F) sees every mapping on disk, but only when someone compiles and only as a warning
+unless the #88 severity ruling is reopened.
 
 ### Reverse-recovery audit (against `origin/main` `0a1079c`)
 
@@ -366,14 +367,27 @@ passed in. It answers the captain's stated reason for the cut directly: a select
 and never exercised is exactly what a directory-wide scan catches. Its limit is timing —
 it fires when someone compiles, and nothing in CI compiles today, which is the same
 adoption gap E closes.
-**Cost:** smallest in the field — one argument-construction change plus its tests; adoption
-surface none.
+**As specified this widens the WARNING channel only.** Blocking severity keys on the
+elements a flow resolves — `compiler.js:113-130` builds `blocking` from
+`scanElements(referencedElements)` and the warning stream from `scanElements(allRecords)`
+minus that set — so an unexercised banned selector would get stderr, not a refusal. Making F
+refuse means revisiting the two-severity split the captain ruled on at #88, whose reasoning
+is in `compiler.js:41-52`: whole-file blocking reds every flow that loads a mapping carrying
+unrelated legacy debt. That is plausibly the largest cost in the field, and it is a decision
+already made the other way.
+**Cost:** as a warning, smallest in the field — a read-and-parse loop over the mappings
+directory plus a failure policy for an unrelated malformed mapping; adoption surface none.
+As a refusal, it reopens the #88 severity ruling.
 
 **Null — accept the status quo.** Listed so the field is not five build options and no
 alternative. Today a banned selector written and never exercised produces no refusal and, in
 an unreferenced mapping, no warning either. The stated harm is an afternoon of debugging the
 application instead of the locator. Whether that clears any of the costs above is the
 captain's to weigh, not the shaper's to presume.
+
+**The options combine.** C is already A+B. F+E is the other natural pair — F sees every
+mapping, E supplies a run that is not "whoever happens to compile" — and each closes the
+other's stated limit. Named for completeness; which pairing, if any, is the captain's.
 
 ### What is NOT decided here
 
@@ -403,3 +417,13 @@ exists, `.githooks/pre-commit:3` documents the per-clone opt-in, `ci-integration
 undercount the policy consumers, `lint-mapping.sh` appears in zero workflows and zero
 `.githooks`, and both verifier write-back sites are real. The policy module's three consumers
 were counted directly.
+
+### Residual class, recorded so the field can close
+
+Two things no option in this field reaches, recorded rather than iterated on:
+
+- A human hand-edit that skips both the git hooks and CI is outside A, B, C, D, E and F.
+- `eval` and `@ref` remain outside every option, for the reason recorded in the spike above:
+  the selector is not a selector by the time it reaches the browser.
+
+These are properties of the chosen frame, not defects in it. The field is presentable.
