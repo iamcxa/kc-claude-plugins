@@ -25,12 +25,13 @@ function run(command, args, cwd) {
   return spawnSync(command, args, { cwd: cwd, encoding: 'utf8' });
 }
 
-function changedLines(base, head, mapping, cwd) {
+function changedLines(base, head, oldPath, newPath, cwd) {
+  const paths = oldPath === newPath ? [newPath] : [oldPath, newPath];
   const diff = run('git', [
-    'diff', '--unified=0', '--no-color', base, head, '--', mapping,
+    'diff', '--unified=0', '--no-color', '-M', base, head, '--', ...paths,
   ], cwd);
   if (diff.status !== 0) {
-    throw new Error(diff.stderr || 'git diff failed for ' + mapping);
+    throw new Error(diff.stderr || 'git diff failed for ' + newPath);
   }
 
   const lines = new Set();
@@ -44,17 +45,65 @@ function changedLines(base, head, mapping, cwd) {
   return lines;
 }
 
-function parseFindings(stderr) {
+function changedMappings(base, head, cwd) {
+  const diff = run('git', [
+    'diff', '--name-status', '-z', '-M', '--diff-filter=ACMR', base, head,
+    '--', '.claude/e2e/mappings/*.yaml',
+  ], cwd);
+  if (diff.status !== 0) {
+    throw new Error(diff.stderr || 'git diff failed\n');
+  }
+
+  const fields = diff.stdout.split('\0');
+  if (fields[fields.length - 1] === '') fields.pop();
+  const mappings = [];
+  for (let i = 0; i < fields.length;) {
+    const status = fields[i++];
+    if (/^[RC]\d+$/.test(status)) {
+      const oldPath = fields[i++];
+      const newPath = fields[i++];
+      mappings.push({ oldPath: oldPath, newPath: newPath });
+    } else {
+      const mapping = fields[i++];
+      mappings.push({ oldPath: mapping, newPath: mapping });
+    }
+  }
+  return mappings;
+}
+
+function parseLintFailure(stderr, mapping) {
   const findings = [];
-  for (const line of String(stderr || '').split('\n')) {
+  let summary = null;
+  for (const line of String(stderr || '').split('\n').filter(Boolean)) {
     const finding = /^(.*):(\d+): ([^:]+): (.*)$/.exec(line);
-    if (!finding) continue;
-    findings.push({
-      file: finding[1],
-      line: Number(finding[2]),
-      classId: finding[3],
-      source: finding[4],
-    });
+    if (finding) {
+      if (finding[1] !== mapping) {
+        throw new Error('finding names ' + finding[1] + ' instead of ' + mapping);
+      }
+      findings.push({
+        file: finding[1],
+        line: Number(finding[2]),
+        classId: finding[3],
+        source: finding[4],
+      });
+      continue;
+    }
+
+    const parsedSummary = /^lint-mapping: (.*) — FAIL \((\d+) banned token\(s\) found\)$/.exec(line);
+    if (!parsedSummary || summary) {
+      throw new Error('unrecognized or duplicate stderr line: ' + line);
+    }
+    summary = { mapping: parsedSummary[1], count: Number(parsedSummary[2]) };
+  }
+
+  if (!summary) throw new Error('missing FAIL summary');
+  if (summary.mapping !== mapping) {
+    throw new Error('FAIL summary names ' + summary.mapping + ' instead of ' + mapping);
+  }
+  if (summary.count !== findings.length || summary.count === 0) {
+    throw new Error(
+      'FAIL summary count ' + summary.count + ' does not match ' + findings.length + ' finding(s)'
+    );
   }
   return findings;
 }
@@ -92,29 +141,41 @@ function main() {
     return 1;
   }
 
-  const diff = run('git', [
-    'diff', '--name-only', '-z', '--diff-filter=ACMR', options.base, options.head,
-    '--', '.claude/e2e/mappings/*.yaml',
-  ], process.cwd());
-  if (diff.status !== 0) {
-    process.stderr.write(diff.stderr || 'git diff failed\n');
+  let mappings;
+  try {
+    mappings = changedMappings(options.base, options.head, process.cwd());
+  } catch (error) {
+    process.stderr.write(error.message + '\n');
     return 1;
   }
 
-  const mappings = diff.stdout.split('\0').filter(Boolean);
   let violations = false;
-  for (const mapping of mappings) {
+  for (const changed of mappings) {
+    const mapping = changed.newPath;
     const lint = run('bash', [options.linter, mapping], process.cwd());
     process.stdout.write(lint.stdout || '');
     if (lint.status === 2) {
+      let findings;
+      try {
+        findings = parseLintFailure(lint.stderr, mapping);
+      } catch (error) {
+        process.stderr.write('invalid lint-mapping protocol for ' + mapping + ': ' + error.message + '\n');
+        return 1;
+      }
       let touched;
       try {
-        touched = changedLines(options.base, options.head, mapping, process.cwd());
+        touched = changedLines(
+          options.base,
+          options.head,
+          changed.oldPath,
+          changed.newPath,
+          process.cwd()
+        );
       } catch (error) {
         process.stderr.write(error.message + '\n');
         return 1;
       }
-      for (const finding of parseFindings(lint.stderr)) {
+      for (const finding of findings) {
         if (touched.has(finding.line)) {
           process.stdout.write(annotation('error', finding));
           violations = true;
