@@ -17,6 +17,7 @@ ledger_artifact_v1:
 mod-block:
 design: trivial-pass
 lane: defect
+archived: 2026-08-02T09:08:52Z
 ---
 
 ## Problem
