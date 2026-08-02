@@ -231,3 +231,92 @@ Replacing the point-of-use classifier with a different mechanism is a scope re-c
 Gate Authority puts scope on the captain alone. This section records the disproof and stops
 there. The approach on record is now known-insufficient rather than superseded, and the
 entity stays in `ideation` pending that ruling.
+
+## Re-shape — the captain cut this to write-time enforcement
+
+Captain ruling, 2026-08-02: stop defending the moment of use and defend the moment the
+selector is **written**. Reason given: it is cheap, reversible, and the only thing that
+catches a banned selector written into a mapping and never exercised. Accepted cost: it does
+not stop a banned selector already sitting in a mapping from being used.
+
+This section re-shapes against that ruling and **stops at the options**. The captain
+reserved the choice of enforcement point (2026-08-02) and this does not make it.
+
+### Reverse-recovery audit (against `origin/main` `0a1079c`)
+
+| layer | verdict | evidence |
+|---|---|---|
+| Policy table | **WORKING** | `compiler/lib/selector-policy.js` — one table, dependency-free, read by two consumers |
+| Per-file linter | **WORKING** | `scripts/lint-mapping.sh` (54 lines) execs the policy module; documented exit codes |
+| Compile-path enforcement | **WORKING** | #88: blocks on flow-resolved selectors, warns on the rest of the file |
+| Hook infrastructure on `Write` | **WORKING** | `hooks/hooks.json` registers a `PreToolUse` `Write` matcher; ships and installs with the plugin, so it reaches consumer repos |
+| A fail-closed point on any write path | **MISSING** | every shipped hook `exit 0`s — see below |
+| Mapping files covered by any write hook | **MISSING** | `pre-write-flow-guard.sh` matches `*/.claude/e2e/flows/*.yaml` only; mappings are not matched |
+
+Nothing here is greenfield. The linter exists, the hook channel exists and is already
+delivered to consumer repos. What is missing is a call site that refuses.
+
+### The constraint that decides this, and it is already on record here
+
+`hooks/scripts/pre-write-flow-guard.sh` is a `PreToolUse` hook on `Write` that **deliberately
+warns instead of blocking**, and its header says why:
+
+> block is trivially bypassed via Bash, creating an adversarial dynamic where agents find
+> workarounds instead of understanding why the /e2e-flow path is better.
+
+`pre-commit-e2e-check.sh` likewise ends `exit 0`. **Every hook this plugin ships is
+advisory.** So the repo has already made this exact call once, in the same problem shape,
+and chose cooperative warning.
+
+That prior reasoning is sound *for a Write-only matcher* — a `cat > file` in Bash does not
+fire a `Write` hook. It is not a general argument against blocking: a matcher covering both
+`Write` and `Bash` closes that route, at the cost of inspecting arbitrary shell.
+
+### What write-time enforcement actually buys, stated honestly
+
+A banned selector written into a mapping and never exercised by any flow is **already
+warned about** at compile time — #88 warns on the whole-file scope. It is visible today and
+unenforced, not invisible. The delta this work buys is turning that warning into a refusal,
+and reaching selectors on paths that never compile at all.
+
+### The options, with what each can and cannot catch
+
+**A — pre-commit hook, consumer-repo installed.** Banned selectors cannot enter a commit.
+Catches hand edits, mapper output and verifier repairs alike, because all three end in git.
+Cannot catch anything before commit, so an agent runs a whole browser session against a bad
+mapping first. Bypassable with `--no-verify`, which is a human choice rather than an agent
+improvisation. Cheapest of the three; nothing about the agents changes.
+
+**B — the two agents write mappings through an owned CLI that validates first.** A real
+chokepoint at the moment of writing, and it is the only option that refuses before a browser
+ever runs. Requires changing `agents/e2e-mapper.md` and `agents/e2e-flow-verifier.md` — both
+currently hold the raw `Write` tool and write the file directly. Its weakness is exactly the
+one this entity exists to attack: telling an agent in markdown to use the CLI is prose
+enforcement, and an agent that writes with `Write` anyway sails past. Pairing it with a
+`Write`-matcher hook that refuses mapping paths converts that into a mechanism, and then the
+`Bash` route is the residual.
+
+**C — both.** The CLI refuses at the moment of use, the hook catches what routes around it,
+and pre-commit catches hand edits. Highest coverage, three surfaces to build and maintain,
+and it contradicts the shipped precedent above in one place: the `Write` hook would have to
+block where the existing one warns.
+
+**D — extend the existing warn-only guard to mapping paths.** Smallest possible change: add
+a mapping glob to `pre-write-flow-guard.sh`. Consistent with the shipped precedent, one file
+touched. But it is a warning, and a warning is what #88 replaced. It would make the class
+visible at write time without making it refusable — worth stating because it is the honest
+floor, not because it satisfies the original problem.
+
+### What is NOT decided here
+
+Which option. The captain reserved it. Each has a different appetite, and B and C both
+change agent definitions, which is the surface this entity has already been wrong about
+once.
+
+### Pre-mortem
+
+If this ships exactly per spec and still fails, the most likely cause is a **hidden
+assumption** again: that the agents' writes are the population. Mappings are also hand-edited
+by humans and written by whatever future skill needs one, and only the git-level point sees
+all of those. An option chosen for the agent path alone will be measured against a population
+it does not cover.
