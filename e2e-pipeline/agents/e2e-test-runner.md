@@ -324,29 +324,66 @@ If the step has a `timeout:` field (in seconds), use `--timeout <timeout * 1000>
 
 For each entry in the step's `expect:` array, resolve and verify independently:
 
+Mapped element visibility uses its effective DOM selector: substituted
+`css_selector` when present, otherwise substituted `selector` only when it is
+literal CSS. A non-CSS mapping locator without `css_selector` is a terminal
+mapping error. Use the shared seam, never raw scalar visibility or an a11y
+snapshot fallback:
+
+```bash
+VISIBILITY_PROBE="${CLAUDE_PLUGIN_ROOT}/bin/e2e-visibility-probe.js"
+expression=$(node "$VISIBILITY_PROBE" expression --selector "$effective_selector")
+started=$SECONDS
+attempts=0
+# Repeat the next three lines only for retryable results.
+attempts=$((attempts + 1)); transport_exit=0
+envelope=$({{browser_command}} eval "$expression" --json) || transport_exit=$?
+if judged=$(printf '%s' "$envelope" | node "$VISIBILITY_PROBE" judge --policy "$visibility_policy" --assert "$assertion" --transport-exit "$transport_exit"); then
+  judge_exit=0
+else
+  judge_exit=$?
+fi
+elapsed_seconds=$((SECONDS - started))
+```
+
+Positive assertions retry only `no_match` and `all_non_rendered`. Negative
+assertions immediately pass `no_match` and `all_non_rendered`, and retry `unique_rendered` or
+`unique_rendered_with_retained_zero_rect`. `invalid_selector`, `probe_error`,
+`raw_multi_match`, and `multiple_rendered` are terminal for positive and
+negative assertions. For OR, probe both operands on every attempt; a terminal
+result in either operand cannot mask behind a satisfied peer. Enabled and
+disabled checks must first satisfy this mapped positive visibility probe, then
+check the control state.
+
 | Expect Pattern | How to Verify |
 |---|---|
 | `{not_automated: "<reason>"}` | Record expectation status `not_automated` with the reason. Do not run browser assertion commands, do not mark it PASS, and continue validating the step's other expectations. Any other object-shaped expect remains invalid legacy/v1 input and should have been stopped by the orchestrator. |
-| `"<element> visible on <location>"` | Look up element in location mapping, then shared pages (`shared: true`, plus `_global` unless disabled). `{{browser_command}} is visible "<selector>"` -- check stdout is "true" |
-| `"<element> is visible"` | Resolve from action's page context, then shared pages (`shared: true`, plus `_global` unless disabled). `is visible "<selector>"` |
-| `"<element> not visible"` / `"<element> not visible on <loc>"` | Resolve with the same page/shared fallback, then `is visible "<selector>"` -- check stdout is "false" |
-| `"<element(param=val)> visible on <loc>"` | Substitute params into selector, `is visible` |
-| `"<element> enabled on <location>"` | `is visible` returns "true" + snapshot shows no `[disabled]` |
-| `"<element> disabled on <location>"` | `is visible` returns "true" + snapshot shows `[disabled]` or `aria-disabled=true` |
+| `"<element> visible on <location>"` | Resolve mapping/page/shared fallback and judge the effective DOM selector with assertion `visible`. |
+| `"<element> is visible"` | Resolve from action page context/shared fallback and use the same shared probe. |
+| `"<element> not visible"` / `"<element> not visible on <loc>"` | Resolve identically and judge with assertion `not-visible`; errors and cardinality failures stay terminal. |
+| `"<element(param=val)> visible on <loc>"` | Substitute parameters into both locator fields, then probe the substituted `css_selector`. |
+| `"<element> enabled on <location>"` | Shared positive visibility probe, then check enabled state. |
+| `"<element> disabled on <location>"` | Shared positive visibility probe, then check disabled state. |
 | `"text '<text>' on page"` | `{{browser_command}} snapshot` then search a11y tree for text |
 | `"text '<text>' on <location>"` | Navigate to location if needed, snapshot, search for text |
 | `"url contains <path>"` | `{{browser_command}} get url` -- stdout contains path substring |
 | `"url does not contain <path>"` | `{{browser_command}} get url` -- stdout does NOT contain path substring |
-| `"dialog visible"` | `{{browser_command}} snapshot` -- check for `role=dialog` in tree |
-| `"dialog not visible"` | `{{browser_command}} snapshot` -- verify NO `role=dialog` in tree |
+| `"dialog visible"` | Probe compiler-owned CSS `dialog,[role="dialog"]` under strict policy. |
+| `"dialog not visible"` | Probe the same compiler-owned CSS with assertion `not-visible`. |
 | `"network <METHOD> <url> status <code>"` | Check console/errors data for matching request |
 | `"no network errors"` | No HTTP 4xx/5xx in errors (after filtering known noise) |
 | `"no console errors"` | `{{browser_command}} errors --json` returns empty (after filtering noise) |
-| `"A or B"` | Split on ` or `, pass if ANY segment passes |
+| `"A or B"` | Probe both mapped operands per attempt; pass when either is satisfied only if neither is terminal. |
 
 **Variable resolution in expects**: `${key}` tokens resolve from flow `variables:` first, then from the current action's parsed parameters. Do not substitute inside `not_automated` reason text.
 
-**Important**: `is visible` always returns exit code 0. Check the stdout text "true" or "false". Do NOT chain with `&&`.
+Record every mapped result with `result_class`, `effective_selector`,
+`visibility_policy`, assertion/judgment, `match_count`,
+`nonzero_layout_visible_count`, `style_visible_zero_rect_count`,
+`non_style_visible_count`, `attempts`, `elapsed_seconds`,
+`candidate_evidence_limit`, truncation, and bounded
+`candidate_evidence`. Literal text expectations remain snapshot assertions and
+must not be entered in the mapped visibility result list.
 
 **Step status with non-automated expectations**: action failure or active expectation failure yields `FAIL`; at least one passing active expectation with no failures may yield `PASS` while still listing non-automated expectations separately; a step with only `not_automated` expectations and no action failure yields `NOT_AUTOMATED`, not `PASS`.
 
@@ -559,6 +596,11 @@ _(Media rows only if `video` was true)_
 
 ## Step Results
 
+For every mapped visibility expectation add its structured visibility result:
+`result_class`, `effective_selector`, `visibility_policy`, `match_count`,
+aggregate counts, `attempts`, `elapsed_seconds`, and bounded
+`candidate_evidence` (plus sanitized error evidence when present).
+
 ### [PASS] step-id: action description
 - Expectations: 3/3 passed
 - Screenshot: [step-01-step-id.png](./step-01-step-id.png)
@@ -677,9 +719,9 @@ Initialize at the start of every run (before Phase 1):
 eval_fallback_hits = 0
 ```
 
-Increment `eval_fallback_hits` by 1 **each time** the runner falls back to `{{browser_command}} eval` because any of the following native commands returned 0 / false / not-found on a selector that matches `role=` / `text=` / `>> nth=` / `has-text(` patterns:
+Increment `eval_fallback_hits` by 1 **each time** the runner uses an optional debug eval fallback because one of the following native commands returned 0 / false / not-found on a selector that matches `role=` / `text=` / `>> nth=` / `has-text(` patterns. The declared `e2e-visibility-probe` eval path is not a fallback and is never counted here:
 
-- `{{browser_command}} is visible "<selector>"` → returned `"false"` unexpectedly (element present in a11y tree but not detected)
+- raw diagnostic `{{browser_command}} is visible "<selector>"` → returned `"false"` unexpectedly
 - `{{browser_command}} wait "<selector>"` → returned 0 or timed out
 - `{{browser_command}} click "<selector>"` → returned not-found / failed
 - `{{browser_command}} get count "<selector>"` → returned 0
@@ -794,11 +836,11 @@ Without `--allow-eval-fallback`, any eval bypass attempt is a hard FAIL (banned-
 These rules are non-negotiable. Violating them causes flaky or broken tests.
 
 1. **Always snapshot before click**. @refs invalidate after ANY DOM change. A stale @ref clicks the wrong element or fails.
-2. **Click via @ref ONLY**. Use CSS selectors ONLY for `is visible` checks. Never `{{browser_command}} click "role=button"`.
+2. **Click via @ref ONLY**. Use CSS selectors as mapped DOM identity for the shared visibility probe. Never `{{browser_command}} click "role=button"`.
 3. **Absolute paths** for all screenshots and traces. The agent-browser sandbox CWD differs from shell. Always use `{{report_dir}}/filename` (which is already absolute), never bare `./filename`.
 4. **Continue on failure**. Never abort after a step fails. Collect maximum evidence across all steps.
 5. **`fill` over `click+type`** for form inputs. `fill` is atomic (focus + clear + type). `click` then `type` can break when @ref changes on focus.
-6. **`is visible` exit code is always 0**. Check stdout text "true"/"false", NOT the exit code. Do NOT use `&& echo pass || echo fail`.
+6. **Raw `is visible` is diagnostic only.** Product assertions use `e2e-visibility-probe` and its satisfied/retryable/terminal exit protocol.
 7. **`scroll` accepts direction only** (up/down). To scroll TO a specific element, use `hover @ref` which scrolls it into view.
 8. **Browser completion follows auth mode**. Persistent mode stays open for
    inspection after successful shared trace finalization. Flow-managed mode invokes the same
@@ -806,11 +848,11 @@ These rules are non-negotiable. Violating them causes flaky or broken tests.
    preserved and the profile cannot be reused. On trace timeout/failure, preserve the independent
    trace infrastructure result and continue to owned profile cleanup/report generation.
 9. **React Native Web**: Text elements render twice in DOM (nth=0 is hidden). Prefer `role=<r>[name="<v>"]` for tab bars and interactive elements, and `text=<v>` for text-only elements — both match the computed accessible name once. `:nth-of-type(2)` CSS pseudo also works. BANNED: `>> nth=N` chord and `has-text(` — see `e2e-pipeline/compiler/lib/selector-policy.js`. BANNED as a selector value: `find role|text|testid|label <r> [--name "<v>"]` strings — these are subcommand chains, not selector grammar (lint CLASS 5). Full grammar: `CLAUDE.md` § Selector Priority.
-10. **Ant Design**: CSS-hidden inputs (e.g., Segmented control radio buttons). `is visible` returns false even when the component is rendered. Verify via snapshot a11y tree instead.
+10. **Ant Design**: A CSS-hidden input is `all_non_rendered`; map/probe the rendered control identity instead of replacing mapped visibility with snapshot text.
 11. **Multi-site flows**: The shared runtime always supplies `--app {{app}}`, which maps to the isolated browser session. Do not add a second `--session` flag.
 12. **Timeout values** in flow YAML are in seconds. Convert to milliseconds (`* 1000`) for `--timeout` flags.
 13. **Checkpoint best-effort**. `verify-external` steps execute via Bash/curl only. Complex checks needing MCP (Slack, database) → mark SKIP. For full verification, use `/e2e-walkthrough --verify` (main context, full tool access).
-14. **Eval fallback REMOVED for native selectors (T2.2 landed). Banned Playwright forms also fail loud.** When a native selector returns 0/false/not-found, return the explicit failure — do NOT fall back to eval. Banned forms (`>> nth=N`, `has-text(`, `find ...` as a selector value) must also fail loud with a warning. Use `--allow-eval-fallback` only for explicit debug investigation (rare opt-in). Always increment `eval_fallback_hits` on any fallback attempt, even under `--allow-eval-fallback`.
+14. **Optional eval fallback remains removed.** The shared visibility eval is the declared assertion mechanism, not a fallback. Banned selector forms still fail loud; `--allow-eval-fallback` applies only to explicit debug investigation and every such fallback attempt increments `eval_fallback_hits`.
 
 ---
 

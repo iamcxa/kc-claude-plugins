@@ -366,6 +366,26 @@ function generateVisibilitySupport() {
     '  const judged = api.judgeVisibility(classified, process.argv[3]);',
     '  process.stdout.write(JSON.stringify(judged) + "\\n");',
     '  process.exitCode = judged.exit_code;',
+    "} else if (mode === 'report') {",
+    '  const judged = JSON.parse(fs.readFileSync(0, "utf8"));',
+    '  const report = {',
+    '    result_class: judged.result,',
+    '    effective_selector: process.argv[2],',
+    '    visibility_policy: judged.policy,',
+    '    assertion: judged.assertion,',
+    '    judgment: judged.judgment,',
+    '    match_count: judged.match_count,',
+    '    nonzero_layout_visible_count: judged.nonzero_layout_visible_count,',
+    '    style_visible_zero_rect_count: judged.style_visible_zero_rect_count,',
+    '    non_style_visible_count: judged.non_style_visible_count,',
+    '    attempts: Number(process.argv[3]),',
+    '    elapsed_seconds: Number(process.argv[4]),',
+    '    candidate_evidence_limit: judged.candidate_evidence_limit,',
+    '    candidate_evidence_truncated: judged.candidate_evidence_truncated,',
+    '    candidate_evidence: judged.candidates,',
+    '  };',
+    '  if (judged.error) report.error = judged.error;',
+    '  process.stdout.write(JSON.stringify(report) + "\\n");',
     '} else {',
     '  process.stderr.write("unknown visibility support mode\\n");',
     '  process.exitCode = 2;',
@@ -375,6 +395,7 @@ function generateVisibilitySupport() {
   return [
     '# Shared deterministic DOM visibility support (generated from compiler/lib/visibility-probe.js).',
     '_VISIBILITY_LAST_RESULT=""',
+    '_VISIBILITY_RESULTS=()',
     '_visibility_node() {',
     '  node -e ' + singleQuote(nodeProgram) + ' "$@"',
     '}',
@@ -412,6 +433,22 @@ function generateVisibilitySupport() {
     '  return "$_judge_status"',
     '}',
     '',
+    '_record_visibility_json() {',
+    '  local _judged="$1"',
+    '  local _selector="$2"',
+    '  local _attempts="$3"',
+    '  local _elapsed="$4"',
+    '  local _report',
+    '  if ! _report=$(printf \'%s\' "$_judged" | _visibility_node report "$_selector" "$_attempts" "$_elapsed"); then',
+    '    return 2',
+    '  fi',
+    '  _VISIBILITY_RESULTS+=("$_report")',
+    '}',
+    '',
+    '_record_visibility_result() {',
+    '  _record_visibility_json "$_VISIBILITY_LAST_RESULT" "$1" "$2" "$3"',
+    '}',
+    '',
     '_poll_visibility() {',
     '  local _selector="$1"',
     '  local _policy="$2"',
@@ -420,17 +457,28 @@ function generateVisibilitySupport() {
     '  local _timeout="${5:-10}"',
     '  local _session="${6:-}"',
     '  local _count=0',
+    '  local _attempts=0',
+    '  local _started=$SECONDS',
     '  local _status',
     '  while [ "$_count" -lt "$_timeout" ]; do',
+    '    _attempts=$((_attempts + 1))',
     '    if _probe_visibility_once "$_selector" "$_policy" "$_assertion" "$_session"; then',
-    '      return 0',
+    '      _status=0',
     '    else',
     '      _status=$?',
     '    fi',
-    '    if [ "$_status" -eq 2 ]; then return 2; fi',
+    '    if [ "$_status" -eq 0 ]; then',
+    '      _record_visibility_result "$_selector" "$_attempts" "$(( SECONDS - _started ))" || return 2',
+    '      return 0',
+    '    fi',
+    '    if [ "$_status" -eq 2 ]; then',
+    '      _record_visibility_result "$_selector" "$_attempts" "$(( SECONDS - _started ))" || return 2',
+    '      return 2',
+    '    fi',
     '    sleep 1',
     '    _count=$((_count + 1))',
     '  done',
+    '  _record_visibility_result "$_selector" "$_attempts" "$(( SECONDS - _started ))" || return 2',
     '  return 1',
     '}',
     '',
@@ -443,16 +491,33 @@ function generateVisibilitySupport() {
     '  local _selector_b="$6"',
     '  local _policy_b="$7"',
     '  local _count=0',
+    '  local _attempts=0',
+    '  local _started=$SECONDS',
     '  local _status_a',
     '  local _status_b',
+    '  local _result_a',
+    '  local _result_b',
     '  while [ "$_count" -lt "$_timeout" ]; do',
+    '    _attempts=$((_attempts + 1))',
     '    if _probe_visibility_once "$_selector_a" "$_policy_a" visible "$_session"; then _status_a=0; else _status_a=$?; fi',
+    '    _result_a="$_VISIBILITY_LAST_RESULT"',
     '    if _probe_visibility_once "$_selector_b" "$_policy_b" visible "$_session"; then _status_b=0; else _status_b=$?; fi',
-    '    if [ "$_status_a" -eq 2 ] || [ "$_status_b" -eq 2 ]; then return 2; fi',
-    '    if [ "$_status_a" -eq 0 ] || [ "$_status_b" -eq 0 ]; then return 0; fi',
+    '    _result_b="$_VISIBILITY_LAST_RESULT"',
+    '    if [ "$_status_a" -eq 2 ] || [ "$_status_b" -eq 2 ]; then',
+    '      _record_visibility_json "$_result_a" "$_selector_a" "$_attempts" "$(( SECONDS - _started ))" || return 2',
+    '      _record_visibility_json "$_result_b" "$_selector_b" "$_attempts" "$(( SECONDS - _started ))" || return 2',
+    '      return 2',
+    '    fi',
+    '    if [ "$_status_a" -eq 0 ] || [ "$_status_b" -eq 0 ]; then',
+    '      _record_visibility_json "$_result_a" "$_selector_a" "$_attempts" "$(( SECONDS - _started ))" || return 2',
+    '      _record_visibility_json "$_result_b" "$_selector_b" "$_attempts" "$(( SECONDS - _started ))" || return 2',
+    '      return 0',
+    '    fi',
     '    sleep 1',
     '    _count=$((_count + 1))',
     '  done',
+    '  _record_visibility_json "$_result_a" "$_selector_a" "$_attempts" "$(( SECONDS - _started ))" || return 2',
+    '  _record_visibility_json "$_result_b" "$_selector_b" "$_attempts" "$(( SECONDS - _started ))" || return 2',
     '  return 1',
     '}',
     '',
@@ -1426,7 +1491,7 @@ function generateJUnitEmitter(flowName) {
  *
  * Returns: string (multi-line bash block)
  */
-function generateMetricsEmitter(flowName) {
+function generateMetricsEmitter(flowName, includeVisibilityResults) {
   var escapedFlow = doubleQuote(jsonStringContent(flowName));
   var lines = [
     '_emit_metrics() {',
@@ -1475,13 +1540,30 @@ function generateMetricsEmitter(flowName) {
     '      printf \'{"id":"%s","result":"%s","time_s":%s,"failure_msg":"%s"}\' \\',
     '        "$_sname" "$_sresult" "$_stime" "$_sfail_esc"',
     '    done',
-    '    printf \'],"summary":{"total":%s,"passed":%s,"failed":%s,"skipped":%s,"not_automated":%s,"flaky_pass":%s}}\' \\',
-    '      "$_total" "$_passed" "$_failed" "$_skipped" "$_not_automated" "$_flaky_pass"',
+  ];
+  if (includeVisibilityResults) {
+    lines.push(
+      '    printf \'],"visibility_results":[\'',
+      '    local _visibility_first=true',
+      '    for _i in "${!_VISIBILITY_RESULTS[@]}"; do',
+      '      if [ "$_visibility_first" = "true" ]; then _visibility_first=false; else printf \',\'; fi',
+      '      printf \'%s\' "${_VISIBILITY_RESULTS[$_i]}"',
+      '    done',
+      '    printf \'],"summary":{"total":%s,"passed":%s,"failed":%s,"skipped":%s,"not_automated":%s,"flaky_pass":%s}}\' \\',
+      '      "$_total" "$_passed" "$_failed" "$_skipped" "$_not_automated" "$_flaky_pass"'
+    );
+  } else {
+    lines.push(
+      '    printf \'],"summary":{"total":%s,"passed":%s,"failed":%s,"skipped":%s,"not_automated":%s,"flaky_pass":%s}}\' \\',
+      '      "$_total" "$_passed" "$_failed" "$_skipped" "$_not_automated" "$_flaky_pass"'
+    );
+  }
+  lines.push(
     '    printf \'\\n\'',
     '  } > "$_out"',
     '}',
-    '',
-  ];
+    ''
+  );
   return lines.join('\n');
 }
 
@@ -2145,7 +2227,7 @@ function generate(resolved, flowName, meta) {
   parts.push(generateJUnitEmitter(flowName));
 
   // 5d. Metrics emitter function (FLAKY-02) — defined here, called in footer
-  parts.push(generateMetricsEmitter(flowName));
+  parts.push(generateMetricsEmitter(flowName, hasMappedVisibility));
 
   // 6. Cleanup trap — registers agent-browser close on EXIT (CI-06)
   // SC-1032: pass finallySteps so cleanup() runs HTTP finalizers before browser close

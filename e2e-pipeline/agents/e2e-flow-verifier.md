@@ -166,11 +166,45 @@ authoritative failures and must appear in the same result/report model.
    - Fill: `{{browser_command}} fill "@<ref>" "<value>"`
 4. **Wait for stability**: `{{browser_command}} wait networkidle` (max 10s)
 5. **Validate expectations**: For each `expect:` in the step:
-   - Element visible: `{{browser_command}} is visible "<selector>"` → check stdout is `"true"`
+   - Mapped element visibility: use the shared deterministic protocol below
    - URL contains: `{{browser_command}} get url` → substring check
-   - Text on page: `{{browser_command}} snapshot -i` → search for text
+   - Literal text on page: `{{browser_command}} snapshot -i` → search for text; Literal text snapshot evidence remains separate from mapped selector visibility
 6. **Screenshot**: `{{browser_command}} screenshot "$REPORT_DIR/step-<N>.png"` (absolute path)
 7. **Error check**: `{{browser_command}} errors --json` → non-empty = record anomaly
+
+For mapped visibility, resolve the effective DOM selector (`css_selector`, or
+`selector` only when literal CSS). Non-CSS locator DSL without `css_selector`
+is a terminal mapping defect. Run:
+
+```bash
+VISIBILITY_PROBE="${CLAUDE_PLUGIN_ROOT}/bin/e2e-visibility-probe.js"
+expression=$(node "$VISIBILITY_PROBE" expression --selector "$effective_selector")
+started=$SECONDS; attempts=0
+attempts=$((attempts + 1)); transport_exit=0
+envelope=$({{browser_command}} eval "$expression" --json) || transport_exit=$?
+if judged=$(printf '%s' "$envelope" | node "$VISIBILITY_PROBE" judge --policy "$visibility_policy" --assert "$assertion" --transport-exit "$transport_exit"); then
+  judge_exit=0
+else
+  judge_exit=$?
+fi
+elapsed_seconds=$((SECONDS - started))
+```
+
+Positive assertions retry only `no_match` and `all_non_rendered`. Negative
+assertions pass `no_match` and `all_non_rendered`, and retry a valid visible singleton or eligible
+exception. `invalid_selector`, `probe_error`, `raw_multi_match`, and
+`multiple_rendered` are terminal under positive and negative assertions. OR
+probes both operands per attempt; a terminal result in either cannot mask
+behind the other passing. Prefer repairing a multi-match selector to a unique
+stable identity. The verifier may propose `retained-zero-rect` only for the
+exact `unique_rendered_with_retained_zero_rect` signature and must never
+auto-apply the policy.
+
+Retain each final result with `result_class`, `effective_selector`,
+`visibility_policy`, assertion/judgment, `match_count`,
+`nonzero_layout_visible_count`, `style_visible_zero_rect_count`,
+`non_style_visible_count`, `attempts`, `elapsed_seconds`, and the bounded `candidate_evidence` plus its
+limit/truncation fields.
 
 **On action failure** (step 3 fails):
 
@@ -385,6 +419,10 @@ timeout/failure:
 
 ## Step Results
 
+Each mapped visibility result lists `result_class`, `effective_selector`,
+`visibility_policy`, `match_count`, aggregates, `attempts`, `elapsed_seconds`,
+and bounded `candidate_evidence` (or sanitized terminal error evidence).
+
 | Step | Action | Result | Screenshot |
 |------|--------|--------|------------|
 | 1 | Navigate to /projects | PASS | step-1.png |
@@ -523,9 +561,9 @@ step_log_path: <absolute path to step-log.json>
 3. **Absolute paths always** — agent-browser requires absolute paths for screenshots, recordings, traces.
 4. **Max 2 rounds** — Round 1 = fix. Round 2 = evidence. Never attempt Round 3.
 5. **Continue on failure** — Never stop at the first failed step. Execute ALL steps to collect maximum evidence.
-8. **`is visible` exit code is always 0** — Check stdout text `"true"` / `"false"`, not exit code.
+8. **Raw `is visible` is diagnostic only** — mapped assertions use the shared judge's 0 satisfied / 1 retryable / 2 terminal protocol.
 9. **Never use `has-text()`** — Broken in agent-browser, causes timeout. Use `role=button[name="<label>"]` instead (see `CLAUDE.md` § Selector Priority — the single authority for selector grammar). Do NOT emit `find role button --name "<label>"` as a `selector:` value — it is a subcommand chain, not a selector string.
-16. **Do not accept eval-fallback as a passing assertion** — If a step's `expect:` clause was satisfied only because eval-fallback returned truthy (i.e., `agent-browser eval` was used as a workaround after a native selector returned not-found/false), the verifier MUST flag it as a **silent-pass**, not a real-pass. A silent-pass is treated as an `unfixable` issue: it means the selector is broken and must be repaired to a native form before the result is trustworthy. Record it as: `{ step_id, correction_type: "silent-pass", detail: "expect satisfied via eval-fallback, not native selector — repair required" }`.
+16. **Do not accept optional eval fallback as a passing assertion** — The shared visibility eval is the declared assertion mechanism. A different eval used only after a native action/diagnostic fails remains a silent-pass and an `unfixable` mapping issue.
 10. **Write-back always happens** — Even on partial/fail. Corrections that did work are still valuable.
 11. **Mapping safety** — Only update elements referenced by THIS flow. Preserve everything else.
 12. **Don't dispatch other agents** — You cannot dispatch subagents. Save the trace-finalization

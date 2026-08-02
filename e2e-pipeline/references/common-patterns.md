@@ -81,7 +81,7 @@ terminate a PID absent from the ownership receipt.
 - **Select**: click `.ant-select` -> wait `.ant-select-dropdown` -> snapshot scoped to dropdown -> click option @ref
 - **Modal**: wait `.ant-modal` -> snapshot scoped to `.ant-modal` -> interact within modal
 - **Table**: snapshot scoped to `.ant-table` to reduce noise (10+ rows = 100+ @refs)
-- **Segmented control**: CSS-hidden radio inputs. `is visible` returns false. Verify via snapshot a11y tree instead
+- **Segmented control**: CSS-hidden radio inputs classify non-rendered. Map and probe the rendered control identity; do not replace mapped visibility with snapshot text
 - **Popover/Tooltip**: wait for `.ant-popover` after hover trigger
 - **`Input.Password` drops `name` attribute**: `Input.Password` doesn't pass `name` to inner `<input>`. Use `input[type="password"]` instead of `input[name="password"]`
 
@@ -108,12 +108,26 @@ terminate a PID absent from the ownership receipt.
 
 See `CLAUDE.md` § Selector Priority — the single authority for `selector:` grammar (what to emit, what's banned, and the `css_selector:` field). Enforcement: `e2e-pipeline/compiler/lib/selector-policy.js`.
 
-## Snapshot vs is visible
+## Deterministic mapped visibility vs literal text
 
-- Snapshot a11y tree does NOT expose `data-testid` or `aria-label` attributes
-- Use `is visible "<selector>"` for DOM-level verification of attribute-based selectors
-- Use snapshot for @ref extraction and text/role verification
-- `is visible` returns text "true"/"false" but exit code is always 0
+- Mapped element visibility uses `bin/e2e-visibility-probe.js` around the owned
+  browser runtime's `eval --json`; never use raw scalar `is visible` or snapshot
+  substring matching as a mapped visibility fallback.
+- Use `css_selector` as the effective DOM identity for non-CSS `role=`, `text=`,
+  or other locator DSL. Literal CSS `selector` may act as its own DOM identity.
+- Strict raw cardinality is the default. Prefer a unique mapping when evidence
+  reports `raw_multi_match` or `multiple_rendered`.
+- `retained-zero-rect` is an explicit exception only when exactly one candidate
+  is nonzero-layout-visible and every extra is style-visible with zero-area
+  client rects. Mapper/verifier may propose it but never auto-apply it.
+- Positive retries only `no_match`/`all_non_rendered`; negative passes those and
+  retries valid visible states. Errors and cardinality failures are terminal.
+  OR cannot mask a terminal operand.
+- Reports retain result class, effective selector/policy, match/aggregate
+  counts, attempts/elapsed, and bounded candidate evidence.
+- Snapshot remains the source for `@ref` extraction and literal text
+  assertions. Raw `is visible` is diagnostic only and can collapse invalid CSS
+  into `false`.
 
 ## Known Noise (filter before reporting)
 

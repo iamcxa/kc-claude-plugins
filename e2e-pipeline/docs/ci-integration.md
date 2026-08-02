@@ -152,6 +152,20 @@ Each compiled flow run with `--metrics-output` produces a JSON file like:
     { "id": "submit-form", "result": "pass", "duration_ms": 2100 },
     { "id": "verify-dashboard", "result": "pass", "duration_ms": 1500 }
   ],
+  "visibility_results": [
+    {
+      "result_class": "unique_rendered",
+      "effective_selector": "[data-testid=dashboard]",
+      "visibility_policy": "strict",
+      "match_count": 1,
+      "nonzero_layout_visible_count": 1,
+      "style_visible_zero_rect_count": 0,
+      "non_style_visible_count": 0,
+      "attempts": 1,
+      "elapsed_seconds": 0,
+      "candidate_evidence": []
+    }
+  ],
   "retries": 0
 }
 ```
@@ -496,19 +510,24 @@ FLOWS=$(ls .claude/e2e/compiled/gate-*.sh | xargs -I{} basename {} .sh \
 
 ### Workarounds (applied by the compiler)
 
-**Visibility checks**: The compiler generates `_poll_snapshot_contains` (grepping the a11y tree) instead of `_poll_visible` (Playwright's `isVisible()`). The `selectorToA11yPattern()` function (`compiler/lib/selector-translate.js`) translates every supported selector form to the identical a11y-grep-pattern shape — this is why the role-attribute form and the CSS-attribute form below compile to the same output:
+**Mapped visibility checks**: compiled scripts embed the shared DOM classifier
+from `compiler/lib/visibility-probe.js`. They evaluate the mapping's effective
+CSS selector through the owned runtime, classify all raw matches, and retain
+bounded evidence. A non-CSS `selector` (`role=`, `text=`, and other locator DSL)
+must have `css_selector`; compilation fails before browser startup when it is
+missing. Literal text expectations continue to use accessibility snapshots and
+are not mapped visibility.
 
-| Input selector | Form | Grep pattern |
-|---|---|---|
-| `role=textbox[name="電子郵件"]` | Role + name (primary native form) | `textbox "電子郵件"` |
-| `text=電子郵件` | Text only (native form) | `"電子郵件"` |
-| `[role="textbox"][aria-label="電子郵件"]` | Role + literal aria-label (secondary form) | `textbox "電子郵件"` |
-| `[role="combobox"]` | role-only | `combobox` (broad) |
-| `[data-testid="…"]` | data-testid | `null` (runner uses CSS attr selector directly) |
-| `role=heading[name=/每日看板/]` | Playwright regex name (native) | `每日看板` (literal prefix) |
-| `role=combobox >> nth=0` | Role + nth chord — nth chord is BANNED (CLASS 2) regardless of what precedes it | `combobox` (role only) |
+Strict policy is the default. `retained-zero-rect` passes only with one
+nonzero-layout-visible candidate and extras that are all style-visible with no
+positive-area rect. `invalid_selector`, `probe_error`, `raw_multi_match`, and
+`multiple_rendered` are terminal for positive and negative assertions. OR
+probes both operands per attempt so one terminal result cannot be masked.
 
-> The selector policy (`compiler/lib/selector-policy.js`, enforced by `scripts/lint-mapping.sh` and by the compiler) rejects three token classes: ` >> nth=N`, `has-text(`, and `find role|text|label|testid ...` stored as a `selector:` value. `role=X[name=Y]` and bare `text=` are native forms, not banned — see `CLAUDE.md` § Selector Priority and `docs/dev/.spacedock-state/e2e-selector-canon-review.md`.
+The metrics `visibility_results` array records result class, effective selector
+and policy, assertion/judgment, match/aggregate counts, attempts/elapsed, and
+bounded candidate evidence. This preserves invalid CSS as
+`invalid_selector` rather than downgrading it to absence.
 
 **Fill and click** (login flows only): Replace `agent-browser fill`/`click` with `agent-browser eval` using JavaScript:
 
@@ -532,7 +551,7 @@ agent-browser eval "(()=>{document.querySelector('button[type=\"submit\"]').clic
 
 | Aspect | Compiler handles | Manual patch needed |
 |--------|-----------------|-------------------|
-| Visibility checks (`_poll_snapshot_contains`) | All flows | -- |
+| Mapped visibility checks (shared DOM classifier) | All mapped visibility expects | Mapping must supply `css_selector` for non-CSS locator DSL |
 | Failure diagnostics (`_handle_failure`) | All flows | -- |
 | `WAIT_TIMEOUT`, `E2E_SCREENSHOT_DIR` | All flows | -- |
 | Fill via eval (login) | No | gate-login-flow.sh |

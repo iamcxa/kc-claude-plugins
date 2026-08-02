@@ -337,6 +337,55 @@ The user journey itself changed -- new pages, different steps, removed features.
    /e2e-test login-flow
    ```
 
+## Deterministic mapped visibility
+
+Mapped element visibility is strict by default: the effective DOM selector must
+match exactly one raw DOM candidate and that candidate must be
+nonzero-layout-visible. A non-CSS `selector` such as `role=` or `text=` needs a
+literal `css_selector` so the DOM identity is explicit. When the exact retained
+ghost signature is a real application invariant—one rendered candidate plus
+only style-visible zero-area extras—an author may opt in to
+`retained-zero-rect` after reviewing probe evidence:
+
+```yaml
+# file: mappings/visibility-example.yaml
+version: 2
+app: visibility-example
+base_url: https://example.test
+pages:
+  home:
+    url_pattern: /
+    elements:
+      page_heading:
+        selector: 'role=heading[name="Heading"]'
+        css_selector: '[data-testid="page-heading"]'
+        visibility_policy: retained-zero-rect
+```
+
+```yaml
+# file: flows/visibility-example.yaml
+name: visibility-example
+mapping: visibility-example
+steps:
+  - id: verify-heading
+    type: snapshot
+    action: Take snapshot
+    expect:
+      - page_heading visible on home
+```
+
+The mapper and verifier may propose that policy but never auto-apply it.
+Prefer a unique stable selector when there are hidden-style extras, two
+rendered candidates, or distinct responsive/application states.
+
+Reports include the result class, effective selector and policy, match count
+and aggregates, attempts/elapsed, and bounded candidate evidence. Positive
+assertions retry only `no_match` and `all_non_rendered`. Negative assertions
+pass those two states and retry valid visible states. Invalid CSS, browser/probe
+errors, and cardinality failures are terminal even for negative assertions; OR
+cannot mask a terminal operand. Literal `text '...'` expectations remain
+snapshot assertions and are intentionally separate.
+
 ## Expect Grammar Reference
 
 Every `expect:` string is matched against an ordered list of regex patterns in
