@@ -1,17 +1,17 @@
 ---
 title: Define deterministic visibility semantics for hidden-first multi-match selectors
-status: backlog
+status: ideation
 source: GitHub issue #91; committed e2e-pipeline/S1 work item
 product: e2e-pipeline
 sprint: S1
-started:
+started: 2026-08-02T14:13:18Z
 completed:
 verdict:
 worktree:
 issue: "91"
 pr:
 design:
-lane:
+lane: main
 id: d3mmhwzpdye4mtg6yc0jvmdz
 ---
 
