@@ -427,3 +427,137 @@ Two things no option in this field reaches, recorded rather than iterated on:
   the selector is not a selector by the time it reaches the browser.
 
 These are properties of the chosen frame, not defects in it. The field is presentable.
+
+## Captain ruling — option E, 2026-08-02
+
+**A mapping-lint CI job, shipped through the existing template mechanism.** Reasoning given
+at the decision: the population write-time enforcement uniquely catches is latent — a banned
+selector no flow exercises is not hurting anyone yet — so E's lateness costs almost nothing,
+while E is the only option configured once per repo rather than per clone, the only one an
+agent cannot route around, and the only one that needs no change to an agent definition on an
+entity that has already been wrong twice about agent behavior. A, B, C, D, F and null are not
+taken.
+
+With the enforcement point fixed, the outputs deferred to this choice are now written.
+
+### The design decision inside E, and the precedent that settles it
+
+**Whole-file linting would turn an adopting repo red on day one.** Measured against carlove
+on 2026-08-02 with the shipped `scripts/lint-mapping.sh`: `secha-office.yaml` reports 16
+findings and `secha-app.yaml` 25, both exit 2; the other three mappings are clean. So a
+naive job fails immediately on 41 pre-existing findings in 2 of 5 files, none of which the
+adopting PR touched.
+
+That is the exact failure the captain ruled against on 2026-08-01 when #88 was cut to
+flow-resolved blocking: an unrelated whole-file migration must not be the price of touching
+one flow. The same reasoning binds here, so **the job is diff-scoped**: it fails only on
+mapping lines the pull request **adds or modifies**. Untouched pre-existing findings are
+reported as annotations and do not fail the job.
+
+Rejected alternative: a baseline file like #88's. `lint-mapping.sh` has no baseline concept
+today, so this would add one plus its producer and its staleness story, to solve a problem
+diff-scoping solves with information the PR already carries. Recorded because it is the
+option a later reader will ask about.
+
+### Design determination
+
+`design: required`. The decision attached: the job's blocking scope is the PR's added and
+modified mapping lines, not the whole file and not a baseline — grounded in the #88 ruling
+above rather than in preference.
+
+### Fastest path and smallest cut
+
+**Fastest:** a job that runs `lint-mapping.sh` over every mapping and fails on exit 2. Two
+lines of YAML. Rejected: it is the day-one-red shape measured above.
+**Smallest cut that satisfies the AC:** diff-scoped linting, no baseline, no changes to
+`lint-mapping.sh`'s own contract — the diff scoping lives in the job, and the linter stays
+the single per-file authority it already is.
+
+## Acceptance criteria
+
+**AC-1 — A banned selector added by a pull request fails the job.**
+Verified by: a probe PR that adds one `>> nth=` selector line to a mapping in an adopting
+repo; the job is observed red on live CI and its log names the file, line and class.
+Falsified by: an implementation that passes on that PR, or that reports a line the PR did
+not touch.
+
+**AC-2 — Pre-existing findings on untouched lines do not fail the job.**
+Verified by: the same probe PR against `secha-office.yaml`, which carries 16 pre-existing
+findings measured 2026-08-02; the job fails on the added line only, and those 16 appear as
+annotations rather than failures. Falsified by: a red attributable to any untouched finding,
+which is the day-one-red shape this AC exists to prevent.
+
+**AC-3 — A red job actually blocks the merge in an adopting repo.**
+This is the value criterion: the bounded claim recorded for option E is that a banned
+selector cannot *merge* into a repo that has adopted the template **and** marked the job a
+required check, and an unrequired job is advisory.
+Verified by: after adoption, `gh api repos/<owner>/<repo>/branches/main/protection` lists the
+job's context name, and the AC-1 probe PR reports a blocked merge state while the job is red.
+Falsified by: the probe PR remaining mergeable with the job red, which would show the
+adoption instructions produced an advisory job.
+
+### E2E determination
+
+Owed, and satisfied by the probe PR: AC-1 and AC-3 are both live-CI observations, not local
+runs. Per the validation stage's live-CI clause, plan **one probe commit per step** — steps
+within a job short-circuit, so a single red run proves only the first failing step. Close the
+probe PR without merging, delete its branch, and record the run URLs.
+
+### Appetite
+
+**Estimate: 2 hours.** A job in `templates/browser-e2e.yml`, the diff-scoping around an
+existing linter, and the docs. No new policy logic — `lint-mapping.sh` and
+`selector-policy.js` are untouched.
+**Tolerance: +50% (3 hours).** Past that the diff-scoping is fighting something, and the
+re-cut is to fail on any mapping file the PR touches rather than per line.
+
+### Implementation dispatch sizing
+
+One dispatch. One behavior, one complete RED→GREEN loop, well under the ~90 minute split
+threshold. Adoption in a consumer repo is a separate act and not part of this dispatch.
+
+### Doc diff
+
+`docs/ci-integration.md` gains the adoption steps for the new job, and states in its own text
+that the job is advisory until it is marked a required check — the same bounded claim option E
+carries here. The existing "Wire into CI as a fast pre-flight gate" line at `:242` stops being
+a recommendation with nothing behind it and points at the shipped job.
+
+### Pre-mortem for the chosen shape
+
+If this ships exactly per spec and still fails, the most likely cause is **criteria that pass
+without delivering value**: the job goes green in the plugin's own repo, which has no
+`.claude/e2e/mappings/` at all, and nobody notices that no consumer adopted it. AC-3 is
+written specifically against that — it is the only AC that cannot be satisfied inside this
+repository.
+
+## Stage Report: ideation
+
+**TL;DR.** The original approach was disproved by measurement, the captain re-cut the entity
+to write-time enforcement, the option field was built over three EM rounds, and the captain
+ruled option E. AC-1, AC-2 and AC-3 are written against that shape; AC-3 is the value
+criterion and is deliberately unsatisfiable inside this repository. Appetite 2h / +50%, one
+dispatch, `design: required` with the blocking scope attached.
+
+**How the shape got here.** Three artifacts were wrong before this one was right, and each
+was caught by a different mechanism rather than by re-reading:
+
+1. The argv classifier was disproved by a measured run — 145 of 147 invocations routed, and
+   the selectors still did not arrive, because the consumers resolve to a snapshot ref first.
+2. The first re-shape omitted CI entirely. An EM return restored it; it is now the ruled
+   option, so the omission would have decided this entity by silence.
+3. A spike reported "zero drift orphans" and drew a conclusion from it. The check could not
+   have failed — both local installs are pre-#135 — and the conclusion was withdrawn.
+
+**Evidence produced at this stage, not asserted.** The 41 pre-existing findings that make
+whole-file linting a day-one red were measured against carlove with the shipped linter, not
+estimated: 16 in `secha-office.yaml`, 25 in `secha-app.yaml`, both exit 2, three other
+mappings clean. That measurement is what turns the diff-scoping decision from a preference
+into an application of the #88 ruling.
+
+**Reviewer citations.** Every `file:line` adopted from an EM round was checked against
+`origin/main` before use. One round's citations for `cleanupClosedNamespaceState` were wrong
+and were corrected to `:1924` / `:2880` / `:3028` / `:3075` rather than carried.
+
+**Not done here.** The entity stays in `ideation`: this session is a state non-holder, so the
+stage transition is binary-owned and cannot be run from here.
