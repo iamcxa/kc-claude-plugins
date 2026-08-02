@@ -3,7 +3,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
-const childProcess = require('node:child_process');
+const { spawn } = require('node:child_process');
 const fs = require('node:fs');
 const http = require('node:http');
 const os = require('node:os');
@@ -17,18 +17,42 @@ const CLI = path.join(PIPELINE, 'bin', 'e2e-visibility-probe.js');
 const RUN_REAL = process.env.E2E_REAL_VISIBILITY === '1';
 
 function run(command, args, options) {
-  return childProcess.spawnSync(command, args, Object.assign({ encoding: 'utf8' }, options));
+  return new Promise(function(resolve, reject) {
+    const spawnOptions = Object.assign({}, options);
+    const input = spawnOptions.input;
+    delete spawnOptions.input;
+    const child = spawn(command, args, Object.assign({}, spawnOptions, {
+      stdio: ['pipe', 'pipe', 'pipe'],
+    }));
+    let stdout = '';
+    let stderr = '';
+    const timer = setTimeout(function() {
+      child.kill('SIGTERM');
+      reject(new Error('real visibility runtime probe timed out'));
+    }, 60000);
+    child.stdout.on('data', function(chunk) { stdout += chunk; });
+    child.stderr.on('data', function(chunk) { stderr += chunk; });
+    child.on('error', function(error) {
+      clearTimeout(timer);
+      reject(error);
+    });
+    child.on('close', function(status) {
+      clearTimeout(timer);
+      resolve({ status: status, stderr: stderr, stdout: stdout });
+    });
+    child.stdin.end(input);
+  });
 }
 
 function runRuntime(baseArgs, command, environment) {
   return run(process.execPath, [RUNTIME, ...baseArgs, ...command], { env: environment });
 }
 
-function judgeOwnedSelector(baseArgs, selector, policy, assertion, environment) {
-  const expression = run(process.execPath, [CLI, 'expression', '--selector', selector]);
+async function judgeOwnedSelector(baseArgs, selector, policy, assertion, environment) {
+  const expression = await run(process.execPath, [CLI, 'expression', '--selector', selector]);
   assert.equal(expression.status, 0, expression.stderr);
-  const evaluated = runRuntime(baseArgs, ['eval', expression.stdout.trim(), '--json'], environment);
-  const judged = run(process.execPath, [
+  const evaluated = await runRuntime(baseArgs, ['eval', expression.stdout.trim(), '--json'], environment);
+  const judged = await run(process.execPath, [
     CLI,
     'judge',
     '--policy',
@@ -41,37 +65,110 @@ function judgeOwnedSelector(baseArgs, selector, policy, assertion, environment) 
   return { evaluated: evaluated, judged: judged, value: JSON.parse(judged.stdout) };
 }
 
-function generatedScript(selector, policy) {
+function generatedScript(options) {
+  const assertion = options.assertion;
   return generate({
     name: 'real-visibility',
-    steps: [{
-      id: 'real-visibility',
-      action: 'Wait 0',
-      type: 'wait',
-      operands: { seconds: 0 },
-      expects: [{
-        type: 'element-visible',
-        raw: 'target visible',
-        elementName: 'target',
-        selector: selector,
-        cssSelector: selector,
-        visibilityPolicy: policy,
-      }],
-    }],
+    variables: { base_url: options.baseUrl },
+    browserApps: { default: options.app },
+    steps: [
+      {
+        id: 'navigate-visibility',
+        action: 'Navigate to /visibility',
+        type: 'navigate',
+        operands: { target: '/visibility', urlPath: '/visibility' },
+        expects: [],
+      },
+      {
+        id: 'real-visibility',
+        action: 'Wait 0',
+        type: 'wait',
+        operands: { seconds: 0 },
+        expects: [{
+          type: assertion === 'not-visible' ? 'element-not-visible' : 'element-visible',
+          raw: 'target ' + assertion,
+          elementName: 'target',
+          selector: options.selector,
+          cssSelector: options.selector,
+          visibilityPolicy: options.policy,
+        }],
+      },
+    ],
   }, 'real-visibility');
 }
 
+test('generated real-browser fixture binds its app and navigates before visibility', function() {
+  const script = generatedScript({
+    app: 'vis-contract',
+    assertion: 'visible',
+    baseUrl: 'http://127.0.0.1:3000',
+    policy: 'retained-zero-rect',
+    selector: '.ghost',
+  });
+  const navigation = 'agent-browser open "${BASE_URL}"\'/visibility\'';
+  const visibility = "_poll_visibility '.ghost' 'retained-zero-rect' visible";
+
+  assert.match(script, /local _browser_app='vis-contract'/);
+  assert.match(script, /BASE_URL="\$\{1:-\$\{E2E_BASE_URL:-http:\/\/127\.0\.0\.1:3000\}\}"/);
+  assert.ok(script.indexOf(navigation) !== -1, script);
+  assert.ok(script.indexOf(visibility) !== -1, script);
+  assert.ok(script.indexOf(navigation) < script.indexOf(visibility), script);
+});
+
 test('owned real browser proves the visibility matrix for CLI and generated scripts', { skip: !RUN_REAL }, async function(t) {
-  const suffix = crypto.randomBytes(5).toString('hex');
-  const app = 'vis-' + suffix.slice(0, 6);
-  const runId = 'visibility-' + suffix;
   const browserHome = process.env.E2E_AGENT_BROWSER_HOME || path.join(os.homedir(), '.agent-browser');
-  const profile = path.join(browserHome, app);
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'visibility-real-'));
-  const receiptDir = path.join(root, 'receipts');
-  const receipt = path.join(receiptDir, app + '.json');
-  fs.mkdirSync(profile, { recursive: true, mode: 0o700 });
-  fs.mkdirSync(receiptDir, { recursive: true });
+  const bindings = [];
+
+  function createBinding(label, appLabel) {
+    const identity = crypto.randomBytes(5).toString('hex');
+    const app = (appLabel || ('vis-' + label)) + '-' + identity.slice(0, 6);
+    const runId = 'visibility-' + label + '-' + identity;
+    const profile = path.join(browserHome, app);
+    const caseRoot = path.join(root, label + '-' + identity);
+    const receiptDir = path.join(caseRoot, 'receipts');
+    const binding = {
+      app: app,
+      artifactRoot: path.join(caseRoot, 'artifacts'),
+      baseArgs: [
+        '--run-id', runId,
+        '--app', app,
+        '--profile', profile,
+        '--receipt', path.join(receiptDir, app + '.json'),
+      ],
+      metrics: path.join(caseRoot, 'metrics.json'),
+      profile: profile,
+      receipt: path.join(receiptDir, app + '.json'),
+      receiptDir: receiptDir,
+      runId: runId,
+    };
+    fs.mkdirSync(profile, { recursive: true, mode: 0o700 });
+    fs.mkdirSync(caseRoot, { recursive: true, mode: 0o700 });
+    bindings.push(binding);
+    return binding;
+  }
+
+  async function closeIfActive(binding, environment) {
+    if (!fs.existsSync(binding.receipt)) return;
+    const ownership = JSON.parse(fs.readFileSync(binding.receipt, 'utf8'));
+    if (ownership.status !== 'active') return;
+    const closed = await runRuntime(binding.baseArgs, ['close'], environment);
+    assert.equal(closed.status, 0, closed.stderr);
+  }
+
+  function assertClosedOwnership(binding) {
+    const ownership = JSON.parse(fs.readFileSync(binding.receipt, 'utf8'));
+    assert.equal(ownership.run_id, binding.runId);
+    assert.equal(ownership.app, binding.app);
+    assert.equal(ownership.session, binding.app);
+    assert.equal(ownership.profile, path.resolve(binding.profile));
+    assert.equal(ownership.initial_reused, false);
+    assert.equal(ownership.first_navigation.status, 'verified');
+    assert.equal(ownership.status, 'closed');
+    assert.equal(ownership.cleanup, 'owned-session-closed');
+  }
+
+  const directBinding = createBinding('cli');
 
   const server = http.createServer(function(_request, response) {
     response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
@@ -89,32 +186,31 @@ test('owned real browser proves the visibility matrix for CLI and generated scri
     ].join(''));
   });
   await new Promise(function(resolve) { server.listen(0, '127.0.0.1', resolve); });
-  const url = 'http://127.0.0.1:' + server.address().port + '/visibility';
+  const baseUrl = 'http://127.0.0.1:' + server.address().port;
+  const url = baseUrl + '/visibility';
   const environment = Object.assign({}, process.env, {
     E2E_AGENT_BROWSER_BIN: process.env.E2E_AGENT_BROWSER_BIN || 'agent-browser',
     E2E_AGENT_BROWSER_HOME: browserHome,
   });
-  const baseArgs = [
-    '--run-id', runId,
-    '--app', app,
-    '--profile', profile,
-    '--receipt', receipt,
-  ];
 
   t.after(async function() {
-    runRuntime(baseArgs, ['close'], environment);
+    for (const binding of bindings) {
+      await closeIfActive(binding, environment);
+    }
     await new Promise(function(resolve) { server.close(resolve); });
-    fs.rmSync(profile, { recursive: true, force: true });
+    for (const binding of bindings) {
+      fs.rmSync(binding.profile, { recursive: true, force: true });
+    }
     fs.rmSync(root, { recursive: true, force: true });
   });
 
-  const opened = runRuntime(baseArgs, ['open', url], environment);
+  const opened = await runRuntime(directBinding.baseArgs, ['open', url], environment);
   assert.equal(opened.status, 0, opened.stderr);
-  const ownership = JSON.parse(fs.readFileSync(receipt, 'utf8'));
+  const ownership = JSON.parse(fs.readFileSync(directBinding.receipt, 'utf8'));
   assert.equal(ownership.status, 'active');
-  assert.equal(ownership.run_id, runId);
-  assert.equal(ownership.session, app);
-  assert.equal(ownership.profile, path.resolve(profile));
+  assert.equal(ownership.run_id, directBinding.runId);
+  assert.equal(ownership.session, directBinding.app);
+  assert.equal(ownership.profile, path.resolve(directBinding.profile));
   assert.equal(ownership.first_navigation.status, 'verified');
   assert.match(ownership.executable, /chrome/i);
   assert.ok(ownership.daemon_pid > 0);
@@ -132,27 +228,52 @@ test('owned real browser proves the visibility matrix for CLI and generated scri
     ['[', 'strict', 'not-visible', 'invalid_selector', 2],
   ];
   for (const [selector, policy, assertion, expectedResult, expectedExit] of cases) {
-    const actual = judgeOwnedSelector(baseArgs, selector, policy, assertion, environment);
+    const actual = await judgeOwnedSelector(directBinding.baseArgs, selector, policy, assertion, environment);
     assert.equal(actual.judged.status, expectedExit, selector + ': ' + actual.judged.stderr);
     assert.equal(actual.value.result, expectedResult, selector);
   }
 
-  for (const [selector, policy, expectedStatus] of [
-    ['.ghost', 'retained-zero-rect', 0],
-    ['[', 'strict', 1],
+  const directClosed = await runRuntime(directBinding.baseArgs, ['close'], environment);
+  assert.equal(directClosed.status, 0, directClosed.stderr);
+  assertClosedOwnership(directBinding);
+
+  for (const [label, appLabel, selector, policy, assertion, expectedStatus, expectedResult, expectedCount, expectedJudgment] of [
+    ['generated-ghost', 'vg', '.ghost', 'retained-zero-rect', 'visible', 0, 'unique_rendered_with_retained_zero_rect', 2, 'satisfied'],
+    ['generated-invalid', 'vi', '[', 'strict', 'not-visible', 1, 'invalid_selector', null, 'terminal'],
   ]) {
-    const generated = run('/bin/bash', ['-c', generatedScript(selector, policy)], {
+    const binding = createBinding(label, appLabel);
+    assert.equal(fs.existsSync(binding.receipt), false);
+    const generated = await run('/bin/bash', [
+      '-c',
+      generatedScript({
+        app: binding.app,
+        assertion: assertion,
+        baseUrl: baseUrl,
+        policy: policy,
+        selector: selector,
+      }),
+      '--',
+      '--continue-on-error',
+      '--metrics-output',
+      binding.metrics,
+    ], {
       env: Object.assign({}, environment, {
+        E2E_BROWSER_RECEIPT_DIR: binding.receiptDir,
         E2E_BROWSER_RUNTIME: RUNTIME,
-        E2E_BROWSER_RUN_ID: runId,
-        E2E_BROWSER_RECEIPT_DIR: receiptDir,
+        E2E_BROWSER_RUN_ID: binding.runId,
+        E2E_SCREENSHOT_DIR: binding.artifactRoot,
         WAIT_TIMEOUT: '1',
       }),
     });
     assert.equal(generated.status, expectedStatus, selector + ': ' + generated.stdout + generated.stderr);
-    if (selector === '.ghost') {
-      const reopened = runRuntime(baseArgs, ['open', url], environment);
-      assert.equal(reopened.status, 0, reopened.stderr);
-    }
+    assertClosedOwnership(binding);
+    const report = JSON.parse(fs.readFileSync(binding.metrics, 'utf8'));
+    assert.equal(report.visibility_results.length, 1);
+    assert.equal(report.visibility_results[0].result_class, expectedResult);
+    assert.equal(report.visibility_results[0].effective_selector, selector);
+    assert.equal(report.visibility_results[0].visibility_policy, policy);
+    assert.equal(report.visibility_results[0].assertion, assertion);
+    assert.equal(report.visibility_results[0].judgment, expectedJudgment);
+    assert.equal(report.visibility_results[0].match_count, expectedCount);
   }
 });
