@@ -894,3 +894,77 @@ E2E: N/A — this dispatch explicitly excludes live carlove adoption, required-c
 ### Summary
 
 Validation rejects `8a86e86`: the prior pure-rename and empty/malformed rc=2 defects are closed, adjacent copy/delete/ordinary odd-name cases behave correctly, and all repository checks are green. A semantically inconsistent but parseable rc=2 record still fails open, so this second consecutive validation rejection must stop the feedback loop and return to the captain per gate authority; live consumer proof remains separately unclaimed.
+
+## Stage Report: implementation — feedback cycle 2
+
+### Summary
+
+The final captain-authorized feedback fix is additive code commit
+`33ffbbea9be930af2ed12c361b447d12a7d1754a`
+(`fix(e2e-pipeline): validate mapping lint finding identity`). It closes the
+remaining fail-open without changing selector policy or duplicating the
+per-file linter.
+
+After rc=2 output passes the existing grammar, mapping, summary, and count
+checks, the gate now reads the destination bytes and validates every parsed
+finding before touched-line classification. Each line number must be a safe
+positive integer within the destination line range, and each finding source
+must exactly equal the raw destination line at that one-based position.
+Invalid identities return infrastructure rc=1 with the existing
+`invalid lint-mapping protocol` diagnostic.
+
+The feedback commit changes exactly the two authorized product paths:
+
+- `e2e-pipeline/scripts/diff-scoped-mapping-lint.js`
+- `e2e-pipeline/compiler/test/diff-scoped-mapping-lint.test.js`
+
+Selector policy, `lint-mapping.sh`, the workflow template and topology,
+docs, carlove, branch protection, probe PRs, and required checks remain
+unchanged.
+
+### TDD and verification evidence
+
+RED command:
+
+```text
+rtk node --test --test-name-pattern='line zero|out-of-range|fabricated source' compiler/test/diff-scoped-mapping-lint.test.js
+```
+
+Before the production edit, all three new tests failed: 0 passed, 3 failed,
+`duration_ms 2626`. Line 0, line 999, and a valid line paired with fabricated
+source each actually returned `{status:0, diagnostic:false}` instead of the
+required `{status:1, diagnostic:true}`.
+
+The same targeted command passed 3/3 after the identity check. The full
+focused file then passed 14/14 with 0 failures in
+`duration_ms 11156.666`. All 11 pre-existing cases remained green, preserving
+clean-first scanning, added/modified-line errors, untouched-line warnings,
+workflow wiring, pure-rename handling, rename-plus-edit classification, and
+the earlier rc=2 protocol failures.
+
+The single earned full suite passed: 966 tests, 965 passed, 0 failed, 1
+skipped, `duration_ms 152958.862459`. This is the expected three-test
+population increase from the prior 963-test run. `node --check`, pinned
+Biome over the two edited files, `js-yaml` parsing of the unchanged template,
+`actionlint -shellcheck=`, and `git diff --check` all exited 0.
+
+### Effort, runtime margin, and disposition
+
+Commit timestamps conservatively bound this final feedback interval at
+36 minutes 52 seconds (`18:04:57` to `18:41:49` Asia/Taipei). That is about
+31% of the 2h deliverable appetite and about 20% of its +50% tolerance ceiling
+of 3h.
+
+Focused runtime increased from the prior 11-test `7596.755875` ms to the
+14-test `11156.666` ms: +3.560s, or about 46.9%. The full local suite measured
+152.959s versus the prior 123.031s (+29.928s, about 24.3%); this whole-suite
+delta is recorded as observed runtime, not attributed solely to three focused
+tests. No repository workflow runs this Node suite, so there is no existing CI
+test-job timeout margin to consume or claim.
+
+Implementation is complete for the final bounded correction. Per captain
+direction, this is the last implementation feedback cycle: FO should dispatch
+one fresh validation and must not automatically reopen another feedback loop.
+Live carlove adoption, required-context configuration, blocked merge-state
+observation, probe PRs, and sequenced documentation remain outside this
+dispatch and unclaimed.
