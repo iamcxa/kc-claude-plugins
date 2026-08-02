@@ -12,12 +12,13 @@ const CLI_PATH = path.join(__dirname, '..', '..', 'bin', 'e2e-visibility-probe.j
 const {
   buildProbeExpression,
   classifyVisibility,
+  inspectCandidate,
   judgeVisibility,
   renderStandaloneSupport,
   unwrapEvalEnvelope,
 } = require(MODULE_PATH);
 
-function evidence(matchCount, rendered, zeroRect, nonStyle) {
+function evidence(matchCount, rendered, zeroRect, nonStyle, renderedCandidate) {
   return {
     probe_version: 1,
     probe_scope: 'current-document',
@@ -28,6 +29,7 @@ function evidence(matchCount, rendered, zeroRect, nonStyle) {
     candidate_evidence_limit: 10,
     candidate_evidence_truncated: matchCount > 10,
     candidates: [],
+    rendered_candidate: renderedCandidate === undefined ? null : renderedCandidate,
   };
 }
 
@@ -37,11 +39,24 @@ test('visibility probe exposes the shared compiler and CLI seam', function () {
   assert.deepEqual(Object.keys(probe).sort(), [
     'buildProbeExpression',
     'classifyVisibility',
+    'inspectCandidate',
     'judgeVisibility',
     'renderStandaloneSupport',
     'unwrapEvalEnvelope',
   ]);
   assert.equal(fs.existsSync(CLI_PATH), true);
+});
+
+test('buildProbeExpression rejects invalid selectors and evidence limits', function () {
+  assert.throws(function () { buildProbeExpression(null); }, /cssSelector must be a string/);
+  for (const [limits, field] of [
+    [{ candidateEvidenceLimit: 0 }, 'candidateEvidenceLimit'],
+    [{ candidateEvidenceLimit: 101 }, 'candidateEvidenceLimit'],
+    [{ clientRectEvidenceLimit: 1.5 }, 'clientRectEvidenceLimit'],
+    [{ labelLengthLimit: 1001 }, 'labelLengthLimit'],
+  ]) {
+    assert.throws(function () { buildProbeExpression('button', limits); }, new RegExp(field));
+  }
 });
 
 const ALGEBRA_CASES = [
@@ -77,6 +92,11 @@ for (const [name, probeEvidence, policy, expected] of ALGEBRA_CASES) {
 test('classifyVisibility: invalid policy and inconsistent aggregates fail as probe_error', function () {
   assert.equal(classifyVisibility(evidence(1, 1, 0, 0), 'any-visible').result, 'probe_error');
   assert.equal(classifyVisibility(evidence(2, 1, 0, 0), 'strict').result, 'probe_error');
+  assert.equal(classifyVisibility(null, 'strict').result, 'probe_error');
+  assert.equal(classifyVisibility([], 'strict').result, 'probe_error');
+  const invalidCount = evidence(1, 1, 0, 0);
+  invalidCount.match_count = -1;
+  assert.equal(classifyVisibility(invalidCount, 'strict').result, 'probe_error');
 });
 
 test('classifyVisibility: missing protocol fields fail as probe_error, never absence', function () {
@@ -120,11 +140,42 @@ for (const [result, assertion, expectedJudgment, expectedExit] of JUDGMENT_CASES
   });
 }
 
+test('judgeVisibility couples enabled and disabled to the selected rendered candidate', function () {
+  const enabled = {
+    result: 'unique_rendered_with_retained_zero_rect',
+    rendered_candidate: { index: 1, enabled: true },
+  };
+  const disabled = {
+    result: 'unique_rendered_with_retained_zero_rect',
+    rendered_candidate: { index: 1, enabled: false },
+  };
+
+  assert.equal(judgeVisibility(enabled, 'enabled').judgment, 'satisfied');
+  assert.equal(judgeVisibility(enabled, 'disabled').judgment, 'retryable');
+  assert.equal(judgeVisibility(disabled, 'disabled').judgment, 'satisfied');
+  assert.equal(judgeVisibility(disabled, 'enabled').judgment, 'retryable');
+  assert.equal(judgeVisibility({ result: 'no_match', rendered_candidate: null }, 'enabled').judgment,
+    'retryable');
+});
+
+test('judgeVisibility fails closed when a rendered result has no selected candidate state', function () {
+  const judged = judgeVisibility({ result: 'unique_rendered' }, 'enabled');
+  assert.equal(judged.result, 'probe_error');
+  assert.equal(judged.judgment, 'terminal');
+  assert.equal(judged.exit_code, 2);
+});
+
+test('judgeVisibility rejects unsupported assertions and unknown result classes', function () {
+  assert.equal(judgeVisibility({ result: 'unique_rendered' }, 'clickable').exit_code, 2);
+  assert.equal(judgeVisibility({ result: 'future_result' }, 'visible').exit_code, 2);
+});
+
 function fakeElement(options) {
   const values = Object.assign({
     tag: 'DIV', role: null, testId: null, label: 'candidate', ariaHidden: null,
     inert: false, checkVisible: true, rects: [], display: 'block', visibility: 'visible',
-    opacity: '1', boundingRect: { x: 0, y: 0, width: 0, height: 0 },
+    opacity: '1', disabled: false, ariaDisabled: null,
+    boundingRect: { x: 0, y: 0, width: 0, height: 0 },
   }, options || {});
   return {
     tagName: values.tag,
@@ -137,8 +188,14 @@ function fakeElement(options) {
       if (name === 'data-testid') return values.testId;
       if (name === 'aria-label') return values.label;
       if (name === 'aria-hidden') return values.ariaHidden;
+      if (name === 'aria-disabled') return values.ariaDisabled;
       return null;
     },
+    matches: function (selector) {
+      if (selector !== ':disabled') throw new Error('unexpected selector: ' + selector);
+      return values.disabled;
+    },
+    parentElement: null,
     checkVisibility: values.checkVisibilityMissing ? undefined : function () {
       if (values.checkVisibilityError) throw new Error('predicate\u0000 exploded');
       return values.checkVisible;
@@ -152,6 +209,42 @@ function fakeElement(options) {
     },
   };
 }
+
+test('inspectCandidate executes the same render, state, and bounded-rect logic embedded in browser probes', function () {
+  const enabled = fakeElement({
+    rects: [
+      { x: 1, y: 2, width: 30, height: 20 },
+      { x: Infinity, y: NaN, width: 0, height: 0 },
+    ],
+    boundingRect: { x: 1, y: 2, width: 30, height: 20 },
+  });
+  const inspected = inspectCandidate(enabled, true, 1);
+  assert.equal(inspected.check_visibility, true);
+  assert.equal(inspected.nonzero_layout_visible, true);
+  assert.equal(inspected.enabled, true);
+  assert.equal(inspected.client_rect_count, 2);
+  assert.equal(inspected.client_rects_truncated, true);
+  assert.equal(inspected.client_rects.length, 1);
+  assert.equal(inspected.bounding_rect.width, 30);
+
+  const ariaParent = { getAttribute: function () { return 'true'; }, parentElement: null };
+  const ariaDisabled = fakeElement({ rects: [] });
+  ariaDisabled.parentElement = ariaParent;
+  assert.equal(inspectCandidate(ariaDisabled, false, 5).enabled, false);
+  assert.equal(inspectCandidate(fakeElement({ disabled: true }), true, 5).enabled, false);
+
+  assert.throws(function () { inspectCandidate(null, true, 5); }, /checkVisibility/);
+  assert.throws(function () {
+    const element = fakeElement();
+    element.matches = undefined;
+    inspectCandidate(element, true, 5);
+  }, /Element.matches/);
+  assert.throws(function () {
+    const element = fakeElement();
+    element.checkVisibility = function () { return 'yes'; };
+    inspectCandidate(element, true, 5);
+  }, /non-boolean/);
+});
 
 function runExpression(expression, candidates, queryError, selectorSink) {
   return vm.runInNewContext(expression, {
@@ -215,6 +308,29 @@ test('buildProbeExpression computes uncapped aggregates before truncating candid
   assert.equal(result.candidates[0].client_rect_count, 7);
   assert.equal(result.candidates[0].client_rects.length, 5);
   assert.equal(result.candidates[0].client_rects_truncated, true);
+  assert.equal(result.rendered_candidate.index, 11);
+  assert.equal(result.rendered_candidate.enabled, true);
+});
+
+test('buildProbeExpression selects state from the rendered candidate after a disabled zero-rect match', function () {
+  const candidates = [
+    fakeElement({ tag: 'BUTTON', disabled: true, rects: [] }),
+    fakeElement({
+      tag: 'BUTTON',
+      disabled: false,
+      rects: [{ x: 1, y: 2, width: 30, height: 20 }],
+      boundingRect: { x: 1, y: 2, width: 30, height: 20 },
+    }),
+  ];
+
+  const result = runExpression(buildProbeExpression('button'), candidates);
+  const classified = classifyVisibility(result, 'retained-zero-rect');
+  assert.equal(result.rendered_candidate.index, 1);
+  assert.equal(result.rendered_candidate.enabled, true);
+  assert.equal(result.candidates[0].enabled, false);
+  assert.equal(result.candidates[1].enabled, true);
+  assert.equal(judgeVisibility(classified, 'enabled').exit_code, 0);
+  assert.equal(judgeVisibility(classified, 'disabled').exit_code, 1);
 });
 
 test('buildProbeExpression retains invalid CSS as invalid_selector with null count', function () {
@@ -242,11 +358,19 @@ test('unwrapEvalEnvelope accepts one complete successful agent-browser envelope'
   const expected = evidence(0, 0, 0, 0);
   const raw = JSON.stringify({ success: true, data: { result: expected } });
   assert.deepEqual(unwrapEvalEnvelope(raw, 0), expected);
+  assert.deepEqual(unwrapEvalEnvelope(Buffer.from(raw), 0), expected);
+  assert.deepEqual(unwrapEvalEnvelope({ success: true, data: { result: expected } }, 0), expected);
+  const nested = JSON.stringify({
+    success: true,
+    data: { result: { note: ['escaped \\" quote', { nested: true }] } },
+  });
+  assert.deepEqual(unwrapEvalEnvelope(nested, 0), { note: ['escaped \\" quote', { nested: true }] });
 });
 
 test('unwrapEvalEnvelope makes nonzero transport and malformed envelopes probe_error, never no_match', function () {
   const cases = [
     [JSON.stringify({ success: true, data: { result: evidence(0, 0, 0, 0) } }), 17, 'transport'],
+    [JSON.stringify({ success: true, data: { result: evidence(0, 0, 0, 0) } }), 1.5, 'integer'],
     ['', 0, 'empty'],
     ['{broken', 0, 'valid JSON'],
     ['{"success":true,"success":true,"data":{"result":{}}}', 0, 'duplicate JSON field'],
@@ -284,6 +408,10 @@ const CLI_JUDGMENTS = [
   ['no-match positive retryable', evidence(0, 0, 0, 0), 'strict', 'visible', 1, 'retryable'],
   ['singleton positive satisfied', evidence(1, 1, 0, 0), 'strict', 'visible', 0, 'satisfied'],
   ['strict duplicate terminal', evidence(2, 1, 1, 0), 'strict', 'visible', 2, 'terminal'],
+  ['selected rendered candidate enabled', evidence(2, 1, 1, 0, { index: 1, enabled: true }),
+    'retained-zero-rect', 'enabled', 0, 'satisfied'],
+  ['selected rendered candidate not yet disabled', evidence(2, 1, 1, 0, { index: 1, enabled: true }),
+    'retained-zero-rect', 'disabled', 1, 'retryable'],
 ];
 
 for (const [name, probeEvidence, policy, assertion, expectedExit, expectedJudgment] of CLI_JUDGMENTS) {
@@ -313,6 +441,22 @@ test('visibility CLI judge returns terminal JSON for invalid policy, transport, 
     assert.equal(output.result, 'probe_error');
     assert.equal(output.match_count, null);
     assert.equal(output.judgment, 'terminal');
+  }
+});
+
+test('visibility CLI rejects malformed command lines through its executable usage path', function () {
+  for (const args of [
+    [],
+    ['unknown'],
+    ['expression'],
+    ['expression', '--selector', 'button', '--extra', 'value'],
+    ['judge', '--policy', 'strict'],
+    ['judge', '--policy', 'strict', '--assert', 'visible', '--transport-exit', '-1'],
+    ['judge', '--policy', 'strict', '--policy', 'strict', '--assert', 'visible', '--transport-exit', '0'],
+  ]) {
+    const result = runCli(args);
+    assert.equal(result.status, 64, args.join(' '));
+    assert.match(result.stderr, /usage: e2e-visibility-probe/);
   }
 });
 

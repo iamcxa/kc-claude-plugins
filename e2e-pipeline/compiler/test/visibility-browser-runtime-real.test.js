@@ -67,6 +67,13 @@ async function judgeOwnedSelector(baseArgs, selector, policy, assertion, environ
 
 function generatedScript(options) {
   const assertion = options.assertion;
+  const expectationType = assertion === 'not-visible'
+    ? 'element-not-visible'
+    : assertion === 'enabled'
+      ? 'element-enabled'
+      : assertion === 'disabled'
+        ? 'element-disabled'
+        : 'element-visible';
   return generate({
     name: 'real-visibility',
     variables: { base_url: options.baseUrl },
@@ -85,7 +92,7 @@ function generatedScript(options) {
         type: 'wait',
         operands: { seconds: 0 },
         expects: [{
-          type: assertion === 'not-visible' ? 'element-not-visible' : 'element-visible',
+          type: expectationType,
           raw: 'target ' + assertion,
           elementName: 'target',
           selector: options.selector,
@@ -182,6 +189,16 @@ test('owned real browser proves the visibility matrix for CLI and generated scri
       '<div class="hidden-extra" style="visibility:hidden">hidden style</div>',
       '<div class="hidden-extra">rendered after hidden</div>',
       '<div class="multi">rendered one</div><div class="multi">rendered two</div>',
+      '<button class="enabled-candidate" disabled style="position:absolute;width:0;height:0;padding:0;border:0;overflow:hidden">disabled ghost</button>',
+      '<button class="enabled-candidate">enabled rendered candidate</button>',
+      '<button class="delayed-enabled" disabled style="position:absolute;width:0;height:0;padding:0;border:0;overflow:hidden">disabled ghost</button>',
+      '<button id="delayed-enabled-target" class="delayed-enabled" disabled>enables later</button>',
+      '<button class="delayed-disabled" disabled style="position:absolute;width:0;height:0;padding:0;border:0;overflow:hidden">disabled ghost</button>',
+      '<button id="delayed-disabled-target" class="delayed-disabled">disables later</button>',
+      '<script>',
+      'setTimeout(function () { document.querySelector("#delayed-enabled-target").disabled = false; }, 1500);',
+      'setTimeout(function () { document.querySelector("#delayed-disabled-target").disabled = true; }, 1500);',
+      '</script>',
       '</body></html>',
     ].join(''));
   });
@@ -240,6 +257,9 @@ test('owned real browser proves the visibility matrix for CLI and generated scri
   for (const [label, appLabel, selector, policy, assertion, expectedStatus, expectedResult, expectedCount, expectedJudgment] of [
     ['generated-ghost', 'vg', '.ghost', 'retained-zero-rect', 'visible', 0, 'unique_rendered_with_retained_zero_rect', 2, 'satisfied'],
     ['generated-invalid', 'vi', '[', 'strict', 'not-visible', 1, 'invalid_selector', null, 'terminal'],
+    ['generated-enabled-candidate', 'vec', '.enabled-candidate', 'retained-zero-rect', 'enabled', 0, 'unique_rendered_with_retained_zero_rect', 2, 'satisfied'],
+    ['generated-delayed-enabled', 'vde', '.delayed-enabled', 'retained-zero-rect', 'enabled', 0, 'unique_rendered_with_retained_zero_rect', 2, 'satisfied'],
+    ['generated-delayed-disabled', 'vdd', '.delayed-disabled', 'retained-zero-rect', 'disabled', 0, 'unique_rendered_with_retained_zero_rect', 2, 'satisfied'],
   ]) {
     const binding = createBinding(label, appLabel);
     assert.equal(fs.existsSync(binding.receipt), false);
@@ -262,7 +282,7 @@ test('owned real browser proves the visibility matrix for CLI and generated scri
         E2E_BROWSER_RUNTIME: RUNTIME,
         E2E_BROWSER_RUN_ID: binding.runId,
         E2E_SCREENSHOT_DIR: binding.artifactRoot,
-        WAIT_TIMEOUT: '1',
+        WAIT_TIMEOUT: '4',
       }),
     });
     assert.equal(generated.status, expectedStatus, selector + ': ' + generated.stdout + generated.stderr);
@@ -275,5 +295,12 @@ test('owned real browser proves the visibility matrix for CLI and generated scri
     assert.equal(report.visibility_results[0].assertion, assertion);
     assert.equal(report.visibility_results[0].judgment, expectedJudgment);
     assert.equal(report.visibility_results[0].match_count, expectedCount);
+    if (assertion === 'enabled' || assertion === 'disabled') {
+      assert.equal(report.visibility_results[0].rendered_candidate.index, 1);
+      assert.equal(report.visibility_results[0].rendered_candidate.enabled, assertion === 'enabled');
+      if (label.startsWith('generated-delayed-')) {
+        assert.ok(report.visibility_results[0].attempts >= 2, label);
+      }
+    }
   }
 });

@@ -13,7 +13,7 @@ function usage(message) {
   if (message) process.stderr.write('e2e-visibility-probe: ' + message + '\n');
   process.stderr.write(
     'usage: e2e-visibility-probe expression --selector <css>\n' +
-    '       e2e-visibility-probe judge --policy <policy> --assert <visible|not-visible> ' +
+    '       e2e-visibility-probe judge --policy <policy> --assert <visible|not-visible|enabled|disabled> ' +
     '--transport-exit <n>\n'
   );
   return 64;

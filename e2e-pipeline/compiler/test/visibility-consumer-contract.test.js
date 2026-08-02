@@ -6,15 +6,12 @@ const childProcess = require('node:child_process');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const vm = require('node:vm');
 const yaml = require('js-yaml');
 
 const { compile } = require('../compiler.js');
 const { generate } = require('../codegen.js');
-const { renderStandaloneSupport } = require('../lib/visibility-probe.js');
 
 const PIPELINE = path.join(__dirname, '..', '..');
-const CLI = path.join(PIPELINE, 'bin', 'e2e-visibility-probe.js');
 const RUNTIME_SHIM = path.join(__dirname, 'fixtures', 'browser-runtime-shim.js');
 const CONSUMERS = [
   ['mapper', 'agents/e2e-mapper.md'],
@@ -85,81 +82,61 @@ const MATRIX = [
   ],
 ];
 
-function runCli(raw, policy, assertion) {
-  const result = childProcess.spawnSync(process.execPath, [
-    CLI,
-    'judge',
-    '--policy',
-    policy,
-    '--assert',
-    assertion,
-    '--transport-exit',
-    '0',
-  ], { encoding: 'utf8', input: raw });
-  return { status: result.status, value: JSON.parse(result.stdout) };
+function consumerRecipe(relativePath) {
+  const blocks = Array.from(read(relativePath).matchAll(/```bash\n([\s\S]*?)```/g), function (match) {
+    return match[1];
+  });
+  const recipe = blocks.find(function (block) {
+    return block.includes('e2e-visibility-probe.js') && block.includes('judge --policy');
+  });
+  assert.ok(recipe, relativePath + ': executable visibility recipe is missing');
+  return recipe.replaceAll('{{browser_command}}', 'browser_command')
+    .replaceAll('<browser_command>', 'browser_command');
 }
 
-test('four instruction consumers route mapped visibility through the shared CLI and retain reports', function () {
+function exerciseConsumer(relativePath, raw, policy, assertion) {
+  const recipe = consumerRecipe(relativePath);
+  const script = [
+    'set -u',
+    'browser_command() {',
+    '  if [ "$1" != "eval" ]; then return 71; fi',
+    '  printf \'%s\\n\' "$VISIBILITY_ENVELOPE"',
+    '}',
+    'effective_selector="#fixture"',
+    'visibility_policy="' + policy + '"',
+    'assertion="' + assertion + '"',
+    recipe,
+    'printf \'%s\\n\' "$judged"',
+    'printf \'selector=%s\\npolicy=%s\\nattempts=%s\\nelapsed=%s\\n\' "$effective_selector" "$visibility_policy" "$attempts" "$elapsed_seconds"',
+    'exit "$judge_exit"',
+  ].join('\n');
+  const result = childProcess.spawnSync('/bin/bash', ['-c', script], {
+    encoding: 'utf8',
+    env: Object.assign({}, process.env, {
+      CLAUDE_PLUGIN_ROOT: PIPELINE,
+      VISIBILITY_ENVELOPE: raw,
+    }),
+  });
+  const lines = result.stdout.trim().split('\n');
+  return { result: result, judged: lines[0] ? JSON.parse(lines[0]) : null, output: lines.slice(1) };
+}
+
+test('mapper, runner, verifier, and walkthrough execute their own shared-protocol recipes', function () {
   for (const [name, relativePath] of CONSUMERS) {
-    const source = read(relativePath);
-    assert.match(source, /bin\/e2e-visibility-probe\.js/, name);
-    assert.match(source, /expression --selector/, name);
-    assert.match(source, /judge --policy[\s\S]{0,200}--assert[\s\S]{0,200}--transport-exit/, name);
-    assert.match(source, /effective_selector/, name);
-    assert.match(source, /visibility_policy/, name);
-    assert.match(source, /result_class/, name);
-    assert.match(source, /match_count/, name);
-    assert.match(source, /nonzero_layout_visible_count/, name);
-    assert.match(source, /attempts/, name);
-    assert.match(source, /elapsed/, name);
-    assert.match(source, /candidate_evidence/, name);
-    assert.match(source, /Literal text[\s\S]{0,240}snapshot/i, name);
-    assert.match(source, /if judged=\$\(/, name + ': judge exit capture must be set -e safe');
-    assert.match(source, /else[\s\S]{0,80}judge_exit=\$\?/, name + ': retain nonzero judge exit');
-  }
-});
-
-test('mapper probes every concrete DOM selector and only proposes the exact exception', function () {
-  const mapper = read('agents/e2e-mapper.md');
-  assert.match(mapper, /probe every emitted concrete DOM selector/i);
-  assert.match(mapper, /non-CSS[\s\S]{0,240}`css_selector:`/i);
-  assert.match(mapper, /strict[\s\S]{0,240}default/i);
-  assert.match(mapper, /unique_rendered_with_retained_zero_rect/);
-  assert.match(mapper, /propos(?:e|al)[\s\S]{0,320}never auto-(?:apply|write|opt)/i);
-  assert.match(mapper, /must not claim[\s\S]{0,160}computed accessible-name equivalence/i);
-});
-
-test('runner, verifier, and walkthrough preserve terminal positive, negative, and OR behavior', function () {
-  for (const relativePath of [
-    'agents/e2e-test-runner.md',
-    'agents/e2e-flow-verifier.md',
-    'skills/e2e-walkthrough/reference.md',
-  ]) {
-    const source = read(relativePath);
-    assert.match(source, /positive[\s\S]{0,600}no_match[\s\S]{0,240}all_non_rendered/i, relativePath);
-    assert.match(source, /negative[\s\S]{0,600}no_match[\s\S]{0,240}all_non_rendered/i, relativePath);
-    assert.match(source, /OR[\s\S]{0,600}(?:cannot|must not|never) mask/i, relativePath);
-    assert.match(source, /invalid_selector[\s\S]{0,300}terminal/i, relativePath);
-    assert.match(source, /raw_multi_match[\s\S]{0,300}terminal/i, relativePath);
-  }
-});
-
-test('five-consumer executable matrix has one result algebra and exit protocol', function () {
-  const standalone = vm.runInNewContext(renderStandaloneSupport(), { Buffer: Buffer });
-  for (const [expectedResult, raw, policy, assertion, expectedExit] of MATRIX) {
-    for (const [consumer] of CONSUMERS) {
-      const actual = runCli(raw, policy, assertion);
-      assert.equal(actual.status, expectedExit, consumer + ': ' + expectedResult);
-      assert.equal(actual.value.result, expectedResult, consumer + ': ' + expectedResult);
-      assert.equal(actual.value.match_count, expectedResult === 'invalid_selector' ? null : JSON.parse(raw).data.result.match_count);
+    const vectors = name === 'mapper'
+      ? MATRIX.filter(function (entry) { return entry[2] === 'strict' && entry[3] === 'visible'; })
+      : MATRIX;
+    for (const [expectedResult, raw, policy, assertion, expectedExit] of vectors) {
+      const actual = exerciseConsumer(relativePath, raw, policy, assertion);
+      assert.equal(actual.result.status, expectedExit,
+        name + ': ' + expectedResult + ': ' + actual.result.stdout + actual.result.stderr);
+      assert.equal(actual.judged.result, expectedResult, name + ': ' + expectedResult);
+      assert.equal(actual.judged.match_count,
+        expectedResult === 'invalid_selector' ? null : JSON.parse(raw).data.result.match_count);
+      assert.ok(actual.output.includes('selector=#fixture'), name);
+      assert.ok(actual.output.some(function (line) { return line.startsWith('attempts='); }), name);
+      assert.ok(actual.output.some(function (line) { return line.startsWith('elapsed='); }), name);
     }
-    const evidence = JSON.parse(raw).data.result;
-    const compiled = standalone.judgeVisibility(
-      standalone.classifyVisibility(evidence, policy),
-      assertion
-    );
-    assert.equal(compiled.exit_code, expectedExit, 'compiled scripts: ' + expectedResult);
-    assert.equal(compiled.result, expectedResult, 'compiled scripts: ' + expectedResult);
   }
 });
 

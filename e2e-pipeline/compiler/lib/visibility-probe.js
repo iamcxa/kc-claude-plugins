@@ -1,7 +1,7 @@
 'use strict';
 
 const POLICIES = new Set(['strict', 'retained-zero-rect']);
-const ASSERTIONS = new Set(['visible', 'not-visible']);
+const ASSERTIONS = new Set(['visible', 'not-visible', 'enabled', 'disabled']);
 const TERMINAL_RESULTS = new Set([
   'probe_error',
   'invalid_selector',
@@ -15,6 +15,66 @@ function normalizePositiveInteger(value, fallback, maximum, name) {
     throw new TypeError(name + ' must be an integer from 1 through ' + maximum);
   }
   return value;
+}
+
+function inspectCandidate(element, captureEvidence, rectLimit) {
+  function numberOrNull(value) {
+    return typeof value === 'number' && Number.isFinite(value) ? value : null;
+  }
+
+  function rectEvidence(rect) {
+    return {
+      x: numberOrNull(rect?.x),
+      y: numberOrNull(rect?.y),
+      width: numberOrNull(rect?.width),
+      height: numberOrNull(rect?.height),
+    };
+  }
+
+  if (!element || typeof element.checkVisibility !== 'function') {
+    throw new Error('Element.checkVisibility is unavailable');
+  }
+  if (typeof element.matches !== 'function') {
+    throw new Error('Element.matches is unavailable');
+  }
+  const checkVisibility = element.checkVisibility({
+    opacityProperty: true,
+    visibilityProperty: true,
+  });
+  if (checkVisibility !== true && checkVisibility !== false) {
+    throw new Error('Element.checkVisibility returned a non-boolean value');
+  }
+
+  const rectList = element.getClientRects();
+  let hasPositiveAreaRect = false;
+  const clientRects = [];
+  for (let index = 0; index < rectList.length; index++) {
+    const rect = rectList[index];
+    if (rect && rect.width > 0 && rect.height > 0) hasPositiveAreaRect = true;
+    if (captureEvidence && index < rectLimit) clientRects.push(rectEvidence(rect));
+  }
+
+  let enabled = !element.matches(':disabled');
+  let current = element;
+  while (enabled && current) {
+    if (
+      typeof current.getAttribute === 'function' &&
+      current.getAttribute('aria-disabled') === 'true'
+    ) {
+      enabled = false;
+    }
+    current = current.parentElement;
+  }
+
+  return {
+    check_visibility: checkVisibility,
+    nonzero_layout_visible: checkVisibility && hasPositiveAreaRect,
+    enabled: enabled,
+    client_rect_count: rectList.length,
+    client_rects_truncated: rectList.length > rectLimit,
+    client_rects: clientRects,
+    bounding_rect: rectEvidence(element.getBoundingClientRect()),
+  };
 }
 
 function buildProbeExpression(cssSelector, evidenceLimits) {
@@ -48,7 +108,7 @@ function buildProbeExpression(cssSelector, evidenceLimits) {
     labelLimit: labelLimit,
   });
 
-  return '(' + function probeVisibility(config) {
+  return '(function (inspectCandidate) { return (' + function probeVisibility(config) {
     function cleanText(value, limit) {
       const input = String(value == null ? '' : value);
       let output = '';
@@ -59,22 +119,9 @@ function buildProbeExpression(cssSelector, evidenceLimits) {
       return output;
     }
 
-    function numberOrNull(value) {
-      return typeof value === 'number' && Number.isFinite(value) ? value : null;
-    }
-
     function attributeEvidence(element, name) {
       const value = element.getAttribute(name);
       return value == null ? null : cleanText(value, 120);
-    }
-
-    function rectEvidence(rect) {
-      return {
-        x: numberOrNull(rect?.x),
-        y: numberOrNull(rect?.y),
-        width: numberOrNull(rect?.width),
-        height: numberOrNull(rect?.height),
-      };
     }
 
     function errorEvidence(kind, error) {
@@ -88,6 +135,7 @@ function buildProbeExpression(cssSelector, evidenceLimits) {
         candidate_evidence_limit: config.candidateLimit,
         candidate_evidence_truncated: false,
         candidates: [],
+        rendered_candidate: null,
         error: {
           kind: kind,
           name: cleanText(error?.name ? error.name : 'Error', 80),
@@ -116,36 +164,21 @@ function buildProbeExpression(cssSelector, evidenceLimits) {
       candidate_evidence_limit: config.candidateLimit,
       candidate_evidence_truncated: matches.length > config.candidateLimit,
       candidates: [],
+      rendered_candidate: null,
     };
 
     try {
       for (let index = 0; index < matches.length; index++) {
         const element = matches[index];
-        if (!element || typeof element.checkVisibility !== 'function') {
-          throw new Error('Element.checkVisibility is unavailable');
-        }
-        const checkVisibility = element.checkVisibility({
-          opacityProperty: true,
-          visibilityProperty: true,
-        });
-        if (checkVisibility !== true && checkVisibility !== false) {
-          throw new Error('Element.checkVisibility returned a non-boolean value');
-        }
-
-        const rectList = element.getClientRects();
-        let hasPositiveAreaRect = false;
-        const clientRects = [];
-        for (let rectIndex = 0; rectIndex < rectList.length; rectIndex++) {
-          const rect = rectList[rectIndex];
-          if (rect && rect.width > 0 && rect.height > 0) hasPositiveAreaRect = true;
-          if (index < config.candidateLimit && rectIndex < config.rectLimit) {
-            clientRects.push(rectEvidence(rect));
-          }
-        }
-
-        const nonzeroLayoutVisible = checkVisibility && hasPositiveAreaRect;
+        const inspected = inspectCandidate(element, index < config.candidateLimit, config.rectLimit);
+        const checkVisibility = inspected.check_visibility;
+        const nonzeroLayoutVisible = inspected.nonzero_layout_visible;
+        const enabled = inspected.enabled;
         if (nonzeroLayoutVisible) {
           evidence.nonzero_layout_visible_count++;
+          evidence.rendered_candidate = evidence.nonzero_layout_visible_count === 1
+            ? { index: index, enabled: enabled }
+            : null;
         } else if (checkVisibility) {
           evidence.style_visible_zero_rect_count++;
         } else {
@@ -165,15 +198,16 @@ function buildProbeExpression(cssSelector, evidenceLimits) {
             inert: element.inert === true,
             check_visibility: checkVisibility,
             nonzero_layout_visible: nonzeroLayoutVisible,
+            enabled: enabled,
             computed_style: {
               display: cleanText(style?.display, 80),
               visibility: cleanText(style?.visibility, 80),
               opacity: cleanText(style?.opacity, 80),
             },
-            client_rect_count: rectList.length,
-            client_rects_truncated: rectList.length > config.rectLimit,
-            client_rects: clientRects,
-            bounding_rect: rectEvidence(element.getBoundingClientRect()),
+            client_rect_count: inspected.client_rect_count,
+            client_rects_truncated: inspected.client_rects_truncated,
+            client_rects: inspected.client_rects,
+            bounding_rect: inspected.bounding_rect,
           });
         }
       }
@@ -182,7 +216,7 @@ function buildProbeExpression(cssSelector, evidenceLimits) {
     }
 
     return evidence;
-  } + ')(' + configuration + ')';
+  } + ')(' + configuration + '); })(' + inspectCandidate.toString() + ')';
 }
 
 function sanitizeErrorText(value) {
@@ -207,6 +241,7 @@ function probeError(message, details) {
     candidate_evidence_limit: 0,
     candidate_evidence_truncated: false,
     candidates: [],
+    rendered_candidate: null,
     error: {
       kind: 'probe_error',
       message: sanitizeErrorText(message),
@@ -426,8 +461,32 @@ function judgeVisibility(result, assertion) {
       judgment = 'terminal';
     } else if (assertion === 'visible') {
       judgment = rendered ? 'satisfied' : 'retryable';
-    } else {
+    } else if (assertion === 'not-visible') {
       judgment = nonRendered ? 'satisfied' : 'retryable';
+    } else if (nonRendered) {
+      judgment = 'retryable';
+    } else {
+      const candidate = classified.rendered_candidate;
+      if (
+        !candidate ||
+        !Number.isInteger(candidate.index) ||
+        candidate.index < 0 ||
+        typeof candidate.enabled !== 'boolean'
+      ) {
+        return Object.assign(classified, {
+          result: 'probe_error',
+          match_count: null,
+          assertion: assertion,
+          judgment: 'terminal',
+          exit_code: 2,
+          error: {
+            kind: 'probe_error',
+            message: 'rendered candidate state is missing or invalid',
+          },
+        });
+      }
+      const expectedEnabled = assertion === 'enabled';
+      judgment = candidate.enabled === expectedEnabled ? 'satisfied' : 'retryable';
     }
   }
 
@@ -443,9 +502,10 @@ function renderStandaloneSupport() {
     '(function () {',
     "'use strict';",
     "const POLICIES = new Set(['strict', 'retained-zero-rect']);",
-    "const ASSERTIONS = new Set(['visible', 'not-visible']);",
+    "const ASSERTIONS = new Set(['visible', 'not-visible', 'enabled', 'disabled']);",
     "const TERMINAL_RESULTS = new Set(['probe_error', 'invalid_selector', 'raw_multi_match', 'multiple_rendered']);",
     normalizePositiveInteger.toString(),
+    inspectCandidate.toString(),
     buildProbeExpression.toString(),
     sanitizeErrorText.toString(),
     probeError.toString(),
@@ -465,6 +525,7 @@ function renderStandaloneSupport() {
 
 module.exports = {
   buildProbeExpression: buildProbeExpression,
+  inspectCandidate: inspectCandidate,
   unwrapEvalEnvelope: unwrapEvalEnvelope,
   classifyVisibility: classifyVisibility,
   judgeVisibility: judgeVisibility,

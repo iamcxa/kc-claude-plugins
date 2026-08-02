@@ -248,7 +248,7 @@ test('codegen OR probes both operands per attempt and passes both selectors and 
   assert.doesNotMatch(step, /_poll_or_visible /);
 });
 
-function evidence(matchCount, rendered, zeroRect, nonStyle) {
+function evidence(matchCount, rendered, zeroRect, nonStyle, renderedCandidate) {
   return JSON.stringify({
     success: true,
     data: {
@@ -262,6 +262,7 @@ function evidence(matchCount, rendered, zeroRect, nonStyle) {
         candidate_evidence_limit: 10,
         candidate_evidence_truncated: false,
         candidates: [],
+        rendered_candidate: renderedCandidate === undefined ? null : renderedCandidate,
       },
     },
   });
@@ -277,6 +278,8 @@ function runGenerated(expects, env, session) {
     'printf \'%s\\n\' "$*" >> "${VISIBILITY_BROWSER_LOG:?}"',
     'case " $* " in *" close "*|" close ") exit 0 ;; esac',
     'case " $* " in *" is enabled "*) printf \'%s\\n\' "${ENABLED_OUTPUT:-true}"; exit "${ENABLED_STATUS:-0}" ;; esac',
+    '_eval_count=$(grep -Ec "(^| )eval " "${VISIBILITY_BROWSER_LOG:?}" 2>/dev/null || true)',
+    'if [ "$_eval_count" -eq 1 ] && [ -n "${FIRST_ATTEMPT_ENVELOPE:-}" ]; then printf \'%s\\n\' "$FIRST_ATTEMPT_ENVELOPE"; exit 0; fi',
     'case "$*" in',
     '  *"#first"*) printf \'%s\\n\' "${FIRST_ENVELOPE:-${VISIBILITY_ENVELOPE:-}}"; exit "${FIRST_STATUS:-${VISIBILITY_STATUS:-0}}" ;;',
     '  *"#second"*) printf \'%s\\n\' "${SECOND_ENVELOPE:-${VISIBILITY_ENVELOPE:-}}"; exit "${SECOND_STATUS:-${VISIBILITY_STATUS:-0}}" ;;',
@@ -292,7 +295,7 @@ function runGenerated(expects, env, session) {
         PATH: dir + path.delimiter + process.env.PATH,
         E2E_BROWSER_RUNTIME: BROWSER_RUNTIME_SHIM,
         VISIBILITY_BROWSER_LOG: log,
-        WAIT_TIMEOUT: '1',
+        WAIT_TIMEOUT: (env && env.WAIT_TIMEOUT) || '1',
       }),
     });
     result.browserLog = fs.existsSync(log) ? fs.readFileSync(log, 'utf8') : '';
@@ -374,6 +377,51 @@ test('enabled previsibility preserves terminal cardinality and never reaches the
   assert.equal(result.browserLog.split('\n').filter(function (line) { return line.includes('eval '); }).length, 1);
   assert.doesNotMatch(result.browserLog, /is enabled/);
   assert.match(result.stdout, /visibility\/state probe failed/);
+});
+
+test('generated enabled and disabled use the rendered retained candidate without raw first-match state', function () {
+  const enabled = runGenerated([{
+    type: 'element-enabled', raw: 'control enabled on home', elementName: 'control',
+    selector: 'role=button[name="Control"]', cssSelector: '#control',
+    visibilityPolicy: 'retained-zero-rect',
+  }], {
+    VISIBILITY_ENVELOPE: evidence(2, 1, 1, 0, { index: 1, enabled: true }),
+    ENABLED_OUTPUT: 'false',
+  });
+  assert.equal(enabled.status, 0, enabled.stdout + enabled.stderr);
+  assert.doesNotMatch(enabled.browserLog, /is enabled/);
+
+  const disabled = runGenerated([{
+    type: 'element-disabled', raw: 'control disabled on home', elementName: 'control',
+    selector: 'role=button[name="Control"]', cssSelector: '#control',
+    visibilityPolicy: 'retained-zero-rect',
+  }], {
+    VISIBILITY_ENVELOPE: evidence(2, 1, 1, 0, { index: 1, enabled: false }),
+    ENABLED_OUTPUT: 'true',
+  });
+  assert.equal(disabled.status, 0, disabled.stdout + disabled.stderr);
+  assert.doesNotMatch(disabled.browserLog, /is enabled/);
+});
+
+test('generated enabled and disabled poll valid candidate-state mismatches within timeout', function () {
+  for (const [type, firstEnabled, finalEnabled] of [
+    ['element-enabled', false, true],
+    ['element-disabled', true, false],
+  ]) {
+    const result = runGenerated([{
+      type: type, raw: 'control state on home', elementName: 'control',
+      selector: 'role=button[name="Control"]', cssSelector: '#control',
+      visibilityPolicy: 'retained-zero-rect',
+    }], {
+      FIRST_ATTEMPT_ENVELOPE: evidence(2, 1, 1, 0, { index: 1, enabled: firstEnabled }),
+      VISIBILITY_ENVELOPE: evidence(2, 1, 1, 0, { index: 1, enabled: finalEnabled }),
+      WAIT_TIMEOUT: '2',
+    });
+    assert.equal(result.status, 0, type + ': ' + result.stdout + result.stderr);
+    assert.equal(result.browserLog.split('\n').filter(function (line) { return line.includes('eval '); }).length,
+      2, type + ': ' + result.browserLog);
+    assert.doesNotMatch(result.browserLog, /is enabled/);
+  }
 });
 
 test('compiler dry-run refuses non-CSS mapped visibility before producing a browser script', async function (t) {
