@@ -968,3 +968,32 @@ one fresh validation and must not automatically reopen another feedback loop.
 Live carlove adoption, required-context configuration, blocked merge-state
 observation, probe PRs, and sequenced documentation remain outside this
 dispatch and unclaimed.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Independently reproduce all three validation defect classes against exact head 33ffbbea9be930af2ed12c361b447d12a7d1754a: rename provenance, malformed/mismatched rc=2 protocol, and impossible line/source identity; attack adjacent boundaries without editing product files.
+  `/tmp/validate-diff-scoped-mapping-lint-r3.js` passed 19/19 independent fixtures: pure rename, rename+edit, empty/malformed/count/path rc=2, line 0/range/source identity, add/modify/legacy-warning/clean-first/delete/copy/linter-rc1, and invalid revisions.
+- DONE: Run focused tests, executable diff coverage, adversarial mutations, static workflow/script checks, one final earned full suite, and a fresh exact-head cross-model review; verify every citation and distinguish live adoption evidence still owed.
+  Focused 14/14 and 90.57% script line coverage passed; three scratch mutations red; static checks passed; Gemini 3.6 Flash found no Material defect; the final full suite was 963 pass/2 range-external fail/1 skip of 966.
+- DONE: Audit final scope and claims: origin/main..HEAD changes only the original three approved files, the final feedback commit changes only script/tests, all AC-local claims have independent evidence, and no workflow/docs/carlove/branch-protection scope was added.
+  `0a1079c..33ffbbe` lists only gate script/test/template; `33ffbbe^..33ffbbe` lists only script/test; the code worktree is clean and excluded live-adoption surfaces remain untouched.
+
+### Evidence block
+
+Lenses: executable script + workflow; correctness PASS (0), silent-failure PASS (0), security PASS (0), resource-lifecycle PASS (0); type-design, concurrency, and manifest/back-compat did not fire.
+Diff coverage: `node --test --experimental-test-coverage compiler/test/diff-scoped-mapping-lint.test.js` reports 90.57% line coverage on the all-new gate script; PASS over the 85% executable-line ratchet.
+Adversarial: destination-only provenance made both rename tests fail (0/2), removing identity validation made line0/range/source fail (0/3), and removing `auth-setup`'s dependency made workflow wiring fail (0/1).
+Cross-model: Gemini 3.6 Flash reviewed exact cwd/base `0a1079c`/head `33ffbbe` and found no Material defect; its function/workflow references were verified at script lines 25-209 and template lines 37-59.
+E2E: N/A — this dispatch explicitly excludes carlove adoption, required-check configuration, and the probe PR that ideation says owe live AC-1/2/3 proof.
+
+### Full-suite context
+
+The one final `npm test` run exited 1 with 963 passed, 2 failed, and 1 skipped of 966 in 197.882s. Both failures are in unchanged `compiler/test/trace-finalization.test.js:457,484`; blame attributes each line to pre-base commit `c8d6d619`, and the exact range contains no commit for that file, so they are reported rather than debugged or rerun.
+
+### Material findings
+
+None in the dispatched local deliverable at exact head `33ffbbea9be930af2ed12c361b447d12a7d1754a`.
+
+### Summary
+
+Cycle 3 closes all three prior defect classes and finds no adjacent fail-open or false-blocking regression in the bounded plugin deliverable. AC-1/AC-2 have independent local add/modify/legacy-warning proof, while carlove live annotations, required-context configuration, blocked merge state, probe cleanup, and the sequenced `docs/ci-integration.md` edit remain explicitly owed outside this dispatch; AC-3 is not claimed locally.
