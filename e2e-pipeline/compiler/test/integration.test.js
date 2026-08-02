@@ -16,6 +16,7 @@ const fs     = require('node:fs');
 const os     = require('node:os');
 const path   = require('node:path');
 const childProcess = require('node:child_process');
+const yaml = require('js-yaml');
 
 const { migrate }  = require('../migrate');
 const { compile }  = require('../compiler');
@@ -37,6 +38,39 @@ function mktemp() {
 
 function cleanup(dir) {
   fs.rmSync(dir, { recursive: true, force: true });
+}
+
+function copyCorpusMappingWithSyntheticVisibilityDomIdentity(tmpDir) {
+  var mappingDir = path.join(tmpDir, 'mappings');
+  fs.mkdirSync(mappingDir);
+  var mappingPath = path.join(CORPUS_MAPPING, 'secha-office.yaml');
+  var mapping = yaml.load(fs.readFileSync(mappingPath, 'utf8'));
+
+  // This integration test keeps the external CarLove corpus read-only. These temporary,
+  // synthetic CSS identities exercise compiler migration and do not claim equivalence
+  // with the external application's computed accessible names; real-browser proof is
+  // owned by the visibility runtime matrix.
+  mapping.pages.dashboard.elements.daily_board_heading.css_selector =
+    '[data-testid="dashboard-page"] h2';
+  mapping.pages._global.elements.sidebar_dashboard.css_selector =
+    '[role="menuitem"][aria-label="營運概況"]';
+  mapping.pages._global.elements.sidebar_branches.css_selector =
+    '[role="menuitem"][aria-label="門市管理"]';
+  mapping.pages._global.elements.sidebar_catalog.css_selector =
+    '[role="menuitem"][aria-label="服務目錄"]';
+  mapping.pages._global.elements.sidebar_operations.css_selector =
+    '[role="menuitem"][aria-label="營運管理"]';
+  mapping.pages._global.elements.search_button.css_selector =
+    'button[aria-label="開啟搜尋"]';
+  mapping.pages._global.elements.dark_mode_toggle.css_selector =
+    'button[aria-label^="切換為"][aria-label$="模式"]';
+
+  fs.writeFileSync(
+    path.join(mappingDir, 'secha-office.yaml'),
+    yaml.dump(mapping, { lineWidth: -1 }),
+    'utf8'
+  );
+  return mappingDir;
 }
 
 // ---------------------------------------------------------------------------
@@ -95,7 +129,8 @@ describe('Integration: migrate + compile real carlove flow', function() {
       migrate(tmpFlow, { useClaude: false });
 
       // Step 3: Compile
-      var compileResult = await compile(tmpFlow, CORPUS_MAPPING, outDir);
+      var mappingDir = copyCorpusMappingWithSyntheticVisibilityDomIdentity(tmpDir);
+      var compileResult = await compile(tmpFlow, mappingDir, outDir);
 
       assert.ok(compileResult.success, 'compile() must succeed. errors: ' + JSON.stringify(compileResult.errors));
       assert.ok(compileResult.outputPath, 'compile() must return outputPath');
@@ -141,7 +176,8 @@ describe('Integration: migrate + compile real carlove flow', function() {
       fs.copyFileSync(CORPUS_FLOW, tmpFlow);
       migrate(tmpFlow, { useClaude: false });
 
-      var compileResult = await compile(tmpFlow, CORPUS_MAPPING, outDir);
+      var mappingDir = copyCorpusMappingWithSyntheticVisibilityDomIdentity(tmpDir);
+      var compileResult = await compile(tmpFlow, mappingDir, outDir);
       assert.ok(compileResult.success);
 
       var script = fs.readFileSync(compileResult.outputPath, 'utf8');
@@ -160,7 +196,6 @@ describe('Integration: migrate + compile real carlove flow', function() {
     // Final guard — re-read corpus file and confirm content hasn't changed
     // (the copy-then-migrate pattern must never touch the original)
     var original = fs.readFileSync(CORPUS_FLOW, 'utf8');
-    var yaml = require('js-yaml');
     var flow = yaml.load(original);
     // gate-login-flow.yaml is already v2 (has type: fields) — just verify it parses and has steps
     assert.ok(flow.steps && flow.steps.length > 0, 'corpus flow must have steps');

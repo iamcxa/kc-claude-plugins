@@ -93,6 +93,7 @@ function artifactFileComponent(str) {
 // ---------------------------------------------------------------------------
 
 const { selectorToA11yPattern } = require('./lib/selector-translate.js');
+const { renderStandaloneSupport } = require('./lib/visibility-probe.js');
 const { siteBaseUrlVariable } = require('./site-name');
 
 // ---------------------------------------------------------------------------
@@ -350,7 +351,141 @@ function generateRuntimeFlagBlock() {
  *
  * Returns: string (multi-line bash block)
  */
-function generateRuntimeSupport(includeRuntimeStateSupport) {
+function generateVisibilitySupport() {
+  var nodeProgram = [
+    "'use strict';",
+    "const fs = require('node:fs');",
+    'const api = ' + renderStandaloneSupport() + ';',
+    'const mode = process.argv[1];',
+    "if (mode === 'expression') {",
+    '  process.stdout.write(api.buildProbeExpression(process.argv[2]) + "\\n");',
+    "} else if (mode === 'judge') {",
+    '  const raw = fs.readFileSync(0, "utf8");',
+    '  const evidence = api.unwrapEvalEnvelope(raw, Number(process.argv[4]));',
+    '  const classified = api.classifyVisibility(evidence, process.argv[2]);',
+    '  const judged = api.judgeVisibility(classified, process.argv[3]);',
+    '  process.stdout.write(JSON.stringify(judged) + "\\n");',
+    '  process.exitCode = judged.exit_code;',
+    '} else {',
+    '  process.stderr.write("unknown visibility support mode\\n");',
+    '  process.exitCode = 2;',
+    '}',
+  ].join('\n');
+
+  return [
+    '# Shared deterministic DOM visibility support (generated from compiler/lib/visibility-probe.js).',
+    '_VISIBILITY_LAST_RESULT=""',
+    '_visibility_node() {',
+    '  node -e ' + singleQuote(nodeProgram) + ' "$@"',
+    '}',
+    '',
+    '_probe_visibility_once() {',
+    '  local _selector="$1"',
+    '  local _policy="$2"',
+    '  local _assertion="$3"',
+    '  local _session="${4:-}"',
+    '  local _expression',
+    '  local _envelope',
+    '  local _transport',
+    '  local _judged',
+    '  local _judge_status',
+    '  if ! _expression=$(_visibility_node expression "$_selector"); then return 2; fi',
+    '  if [ -n "$_session" ]; then',
+    '    if _envelope=$(agent-browser --session "$_session" eval "$_expression" --json 2>&1); then',
+    '      _transport=0',
+    '    else',
+    '      _transport=$?',
+    '    fi',
+    '  else',
+    '    if _envelope=$(agent-browser eval "$_expression" --json 2>&1); then',
+    '      _transport=0',
+    '    else',
+    '      _transport=$?',
+    '    fi',
+    '  fi',
+    '  if _judged=$(printf \'%s\' "$_envelope" | _visibility_node judge "$_policy" "$_assertion" "$_transport"); then',
+    '    _judge_status=0',
+    '  else',
+    '    _judge_status=$?',
+    '  fi',
+    '  _VISIBILITY_LAST_RESULT="$_judged"',
+    '  return "$_judge_status"',
+    '}',
+    '',
+    '_poll_visibility() {',
+    '  local _selector="$1"',
+    '  local _policy="$2"',
+    '  local _assertion="$3"',
+    '  local _step_id="$4"',
+    '  local _timeout="${5:-10}"',
+    '  local _session="${6:-}"',
+    '  local _count=0',
+    '  local _status',
+    '  while [ "$_count" -lt "$_timeout" ]; do',
+    '    if _probe_visibility_once "$_selector" "$_policy" "$_assertion" "$_session"; then',
+    '      return 0',
+    '    else',
+    '      _status=$?',
+    '    fi',
+    '    if [ "$_status" -eq 2 ]; then return 2; fi',
+    '    sleep 1',
+    '    _count=$((_count + 1))',
+    '  done',
+    '  return 1',
+    '}',
+    '',
+    '_poll_or_visibility() {',
+    '  local _step_id="$1"',
+    '  local _timeout="$2"',
+    '  local _session="$3"',
+    '  local _selector_a="$4"',
+    '  local _policy_a="$5"',
+    '  local _selector_b="$6"',
+    '  local _policy_b="$7"',
+    '  local _count=0',
+    '  local _status_a',
+    '  local _status_b',
+    '  while [ "$_count" -lt "$_timeout" ]; do',
+    '    if _probe_visibility_once "$_selector_a" "$_policy_a" visible "$_session"; then _status_a=0; else _status_a=$?; fi',
+    '    if _probe_visibility_once "$_selector_b" "$_policy_b" visible "$_session"; then _status_b=0; else _status_b=$?; fi',
+    '    if [ "$_status_a" -eq 2 ] || [ "$_status_b" -eq 2 ]; then return 2; fi',
+    '    if [ "$_status_a" -eq 0 ] || [ "$_status_b" -eq 0 ]; then return 0; fi',
+    '    sleep 1',
+    '    _count=$((_count + 1))',
+    '  done',
+    '  return 1',
+    '}',
+    '',
+    '_poll_enabled_state() {',
+    '  local _selector="$1"',
+    '  local _policy="$2"',
+    '  local _expected="$3"',
+    '  local _step_id="$4"',
+    '  local _timeout="${5:-10}"',
+    '  local _session="${6:-}"',
+    '  local _result',
+    '  local _status',
+    '  if _poll_visibility "$_selector" "$_policy" visible "$_step_id" "$_timeout" "$_session"; then',
+    '    :',
+    '  else',
+    '    _status=$?',
+    '    return "$_status"',
+    '  fi',
+    '  if [ -n "$_session" ]; then',
+    '    if ! _result=$(agent-browser --session "$_session" is enabled "$_selector" 2>/dev/null); then return 2; fi',
+    '  else',
+    '    if ! _result=$(agent-browser is enabled "$_selector" 2>/dev/null); then return 2; fi',
+    '  fi',
+    '  case "$_expected:$_result" in',
+    '    enabled:true|disabled:false) return 0 ;;',
+    '    enabled:false|disabled:true) return 1 ;;',
+    '    *) return 2 ;;',
+    '  esac',
+    '}',
+  ].join('\n');
+}
+
+function generateRuntimeSupport(includeRuntimeStateSupport, includeVisibilitySupport) {
   var lines = [
     '# Failure accumulator',
     '_FAILED_STEPS=()',
@@ -792,7 +927,9 @@ function generateRuntimeSupport(includeRuntimeStateSupport) {
     var runtimeSupportEnd = lines.indexOf('_xml_attr_escape() {');
     lines.splice(runtimeSupportStart, runtimeSupportEnd - runtimeSupportStart);
   }
-  return lines.join('\n');
+  var output = lines.join('\n');
+  if (includeVisibilitySupport) output += '\n\n' + generateVisibilitySupport();
+  return output;
 }
 
 // ---------------------------------------------------------------------------
@@ -1760,9 +1897,26 @@ function generateExpects(step) {
     var expect = step.expects[i];
 
     if (expect.type === 'active' || expect.type === 'element-visible') {
-      // Prefer snapshot-based check (agent-browser "is visible" fails in headless CI on Linux)
-      var a11yPattern = selectorToA11yPattern(expect.selector);
-      if (a11yPattern) {
+      if (expect.cssSelector) {
+        lines.push(
+          'if _poll_visibility ' + singleQuote(expect.cssSelector) + ' ' +
+          singleQuote(expect.visibilityPolicy || 'strict') + ' visible ' + quotedId + ' ' +
+          timeoutArg + sessionArg + '; then'
+        );
+        lines.push('  :');
+        lines.push('else');
+        lines.push('  _probe_status=$?');
+        lines.push('  if [ "$_probe_status" -eq 2 ]; then');
+        lines.push('    ' + failureCall('deterministic visibility probe failed for ' + expect.elementName));
+        lines.push('  else');
+        lines.push('    ' + timedFailureCall(expect.elementName + ' not visible'));
+        lines.push('  fi');
+        lines.push('fi');
+      } else {
+        // Backward-compatible direct-codegen input. Resolver-produced mapped visibility
+        // always carries cssSelector and therefore cannot reach this legacy branch.
+        var a11yPattern = selectorToA11yPattern(expect.selector);
+        if (a11yPattern) {
         lines.push('if _poll_snapshot_contains ' + singleQuote(a11yPattern) + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
         lines.push('  :');
         lines.push('else');
@@ -1773,7 +1927,7 @@ function generateExpects(step) {
         lines.push('    ' + timedFailureCall(expect.elementName + ' not in a11y tree'));
         lines.push('  fi');
         lines.push('fi');
-      } else {
+        } else {
         // Fallback to _poll_visible for non-convertible selectors (e.g., css=)
         var sel = singleQuote(expect.selector);
         lines.push('if _poll_visible ' + sel + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
@@ -1786,20 +1940,43 @@ function generateExpects(step) {
         lines.push('    ' + timedFailureCall(expect.elementName + ' not visible'));
         lines.push('  fi');
         lines.push('fi');
+        }
       }
 
     } else if (expect.type === 'element-not-visible') {
-      // Poll until element is not visible (inverted logic — CODEGEN-01 Pitfall 4)
-      // Keep _poll_not_visible — headless CI issue is less critical for "not visible" checks
-      var sel = singleQuote(expect.selector);
-      lines.push('if _poll_not_visible ' + sel + ' ' + quotedId + ' ' + timeoutArg + sessionArg + '; then');
+      var negativeHelper = expect.cssSelector ? '_poll_visibility' : '_poll_not_visible';
+      var negativeArgs = expect.cssSelector
+        ? singleQuote(expect.cssSelector) + ' ' + singleQuote(expect.visibilityPolicy || 'strict') +
+          ' not-visible ' + quotedId + ' ' + timeoutArg + sessionArg
+        : singleQuote(expect.selector) + ' ' + quotedId + ' ' + timeoutArg + sessionArg;
+      lines.push('if ' + negativeHelper + ' ' + negativeArgs + '; then');
       lines.push('  :');
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    ' + failureCall('agent-browser visibility probe failed for ' + expect.elementName));
+      lines.push('    ' + failureCall(
+        (expect.cssSelector ? 'deterministic visibility probe failed for ' : 'agent-browser visibility probe failed for ') +
+        expect.elementName
+      ));
       lines.push('  else');
       lines.push('    ' + timedFailureCall(expect.elementName + ' still visible', ' (expected not visible)'));
+      lines.push('  fi');
+      lines.push('fi');
+
+    } else if (expect.type === 'element-enabled' || expect.type === 'element-disabled') {
+      var expectedState = expect.type === 'element-enabled' ? 'enabled' : 'disabled';
+      lines.push(
+        'if _poll_enabled_state ' + singleQuote(expect.cssSelector) + ' ' +
+        singleQuote(expect.visibilityPolicy || 'strict') + ' ' + expectedState + ' ' + quotedId +
+        ' ' + timeoutArg + sessionArg + '; then'
+      );
+      lines.push('  :');
+      lines.push('else');
+      lines.push('  _probe_status=$?');
+      lines.push('  if [ "$_probe_status" -eq 2 ]; then');
+      lines.push('    ' + failureCall('deterministic visibility/state probe failed for ' + expect.elementName));
+      lines.push('  else');
+      lines.push('    ' + timedFailureCall(expect.elementName + ' not ' + expectedState));
       lines.push('  fi');
       lines.push('fi');
 
@@ -1848,16 +2025,24 @@ function generateExpects(step) {
       lines.push('fi');
 
     } else if (expect.type === 'or-visible') {
-      // Poll until either element is visible (CODEGEN-01)
       var elements = expect.elements;
       var elemNames = elements.map(function(e) { return e.elementName; });
-      var selectorArgs = elements.map(function(e) { return singleQuote(e.selector); }).join(' ');
-      lines.push('if _poll_or_visible ' + quotedId + ' ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + '; then');
+      var mappedOr = elements.every(function(element) { return Boolean(element.cssSelector); });
+      var selectorArgs = mappedOr
+        ? elements.map(function(element) {
+          return singleQuote(element.cssSelector) + ' ' + singleQuote(element.visibilityPolicy || 'strict');
+        }).join(' ')
+        : elements.map(function(element) { return singleQuote(element.selector); }).join(' ');
+      var orHelper = mappedOr ? '_poll_or_visibility' : '_poll_or_visible';
+      lines.push('if ' + orHelper + ' ' + quotedId + ' ' + timeoutArg + ' ' + quotedSession + ' ' + selectorArgs + '; then');
       lines.push('  :');
       lines.push('else');
       lines.push('  _probe_status=$?');
       lines.push('  if [ "$_probe_status" -eq 2 ]; then');
-      lines.push('    ' + failureCall('agent-browser visibility probe failed for ' + elemNames.join(' or ')));
+      lines.push('    ' + failureCall(
+        (mappedOr ? 'deterministic visibility probe failed for ' : 'agent-browser visibility probe failed for ') +
+        elemNames.join(' or ')
+      ));
       lines.push('  else');
       lines.push('    ' + timedFailureCall('neither ' + elemNames.join(' nor ') + ' visible'));
       lines.push('  fi');
@@ -1894,6 +2079,22 @@ function generate(resolved, flowName, meta) {
   var hasRuntimeState = hasFinalizers ||
     Boolean(resolved.runtimeValues && Object.keys(resolved.runtimeValues).length > 0) ||
     steps.some(function(step) { return step.type === 'capture-url-query'; });
+  var hasMappedVisibility = steps.some(function(step) {
+    return (step.expects || []).some(function(expect) {
+      if (expect.type === 'or-visible') {
+        return Array.isArray(expect.elements) && expect.elements.every(function(element) {
+          return Boolean(element.cssSelector);
+        });
+      }
+      return Boolean(expect.cssSelector) && [
+        'active',
+        'element-visible',
+        'element-not-visible',
+        'element-enabled',
+        'element-disabled',
+      ].includes(expect.type);
+    });
+  });
 
   // Count verify-external and execute-external steps for PASS summary
   for (var i = 0; i < steps.length; i++) {
@@ -1932,7 +2133,7 @@ function generate(resolved, flowName, meta) {
   }
 
   // 5. Runtime support functions (_handle_failure, _FAILED_STEPS, poll helpers)
-  parts.push(generateRuntimeSupport(hasRuntimeState));
+  parts.push(generateRuntimeSupport(hasRuntimeState, hasMappedVisibility));
 
   // 5a. Route generated browser calls through the shared owned runtime.
   parts.push(generateBrowserRuntime(resolved.browserApps));
