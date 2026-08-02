@@ -780,3 +780,68 @@ that enabled/disabled assertions leave the deterministic candidate seam and regr
 state inspection, while their timeout does not poll state. The consumer proof is prose grading, and
 raw changed-line coverage is 81.01%. The validation gate is therefore REJECTED and returns to
 implementation with no residual waived.
+
+## Stage Report: implementation — correction round 1
+
+TL;DR: **IMPLEMENTATION CORRECTION COMPLETE.** Exact product head
+`1d5e6c90ce44e1ba3d07302b1da59240445846aa` closes all four validation-return items without
+changing issue, version, PR, ruleset, or stage authority. Enabled/disabled are now first-class
+shared judgments over the same rendered candidate selected by the atomic probe, valid state
+mismatches retry inside the declared timeout, the four instruction consumers execute their own
+committed Bash recipes in tests, and honest exact-head executable diff coverage is 88.06%. The
+branch is normally pushed; status remains `implementation` pending fresh validation.
+
+### Authority, scope, and effort
+
+- Re-entered the existing isolated product worktree at dispatched head `4d636750` and the durable
+  state checkout at `837d361`; re-read issue #91 plus the full entity/AC/report before editing.
+- Audited both directions across all 25 pre-existing changed files: every issue/AC clause has an
+  implementation, test, consumer, or documentation owner, and every changed file maps back to
+  AC-1 through AC-8. No unrelated file or second feature lane was admitted.
+- Correction round started `2026-08-02T18:29:47Z` and finished product push verification at
+  `2026-08-02T18:57:55Z`: **28m08s (0.47 working hours)**. This is 2.9% of the 16h estimate and
+  2.1% of the 22h tolerance; neither the 5h seam stop condition nor the 22h park condition fired.
+
+### RED to GREEN correction evidence
+
+- RED: the focused 60-test boundary initially finished 53 passed / 7 failed. Failures reproduced
+  unsupported shared enabled/disabled assertions, missing selected-candidate state, raw first-match
+  `is enabled`, and one-shot state sampling instead of delayed-transition polling.
+- GREEN: `compiler/lib/visibility-probe.js` now emits bounded `rendered_candidate` state from the
+  uniquely nonzero-layout-visible candidate. Native `:disabled` and ancestor `aria-disabled=true`
+  are inspected by one shared `inspectCandidate` implementation that is both directly executable
+  under Node coverage and embedded verbatim into browser expressions.
+- GREEN: generated `_poll_enabled_state` delegates every attempt to the same atomic visibility/state
+  judgment. `no_match`, `all_non_rendered`, and valid state mismatch remain retryable; invalid CSS,
+  transport/envelope/probe failure, and cardinality failure remain terminal without sleeping.
+- GREEN: the final focused boundary finished 64 passed / 0 failed. Strict singleton, retained
+  duplicate, terminal cardinality, invalid CSS, positive, negative, OR, session, quoting, report,
+  and generated-support parity regressions remain green.
+- GREEN: `visibility-consumer-contract.test.js` no longer grades prose regexes or relabels repeated
+  CLI calls. It extracts and executes the actual mapper, runner, verifier, and walkthrough Bash
+  recipes with real exit/result/report assertions; compiled generated scripts are exercised
+  separately through their generated support.
+
+### Exact-head gates and disposition
+
+- Commits: `fb2144e` (`fix(e2e-pipeline): couple control state to rendered candidate`) and
+  `1d5e6c9` (`test(e2e-pipeline): keep visibility harness lint-clean`). Remote branch head was
+  read back as exact `1d5e6c90ce44e1ba3d07302b1da59240445846aa` after a normal, non-force push.
+- Required owned real browser: **2 passed / 0 failed** in 40.56s on exact final head. The matrix
+  retains no-match, all-non-rendered, singleton, strict/retained ghost, hidden-style extra,
+  two-rendered, invalid CSS, disabled-first/enabled-second retained state, and delayed enabled and
+  disabled transitions. Delayed cases require at least two atomic attempts and report candidate
+  index 1 with the final expected state; all test-owned sessions/profiles/artifacts are cleaned.
+- Exact-head full `npm test`: **1,033 passed / 0 failed / 2 intentional real-browser skips** in
+  126.59s.
+- Honest exact-head executable diff coverage from full-suite `NODE_V8_COVERAGE` through c8/LCOV,
+  intersected with exact committed changed lines: CLI 70/73; codegen 289/289; compiler 4/4;
+  shared probe 424/533; parser 20/22; resolver 174/193; **total 981/1,114 = 88.06% PASS**.
+  No files, branches, or browser source were excluded, relabelled, or waived.
+- `npm run lint`: exit 0 with the pre-existing 215 warnings and 2 infos; no fixes applied.
+  `git diff --check origin/main...HEAD`, version parity, release-path/JSONPath checks, plugin
+  directory enumeration, skill frontmatter lint, marketplace schema, and isolated installation of
+  all seven plugins passed.
+- AC-5 implementation evidence is now green and the prior correction findings have no known red
+  residual. Fresh validation remains a separate gate; this report does not advance the entity,
+  create a PR, mutate version/release metadata, or change issue/ruleset state.
