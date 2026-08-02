@@ -1054,3 +1054,82 @@ Carlove adoption is now owned by the separately scheduled
 `mapping-selector-lint-ci-adoption` entity. This entity remains in validation until the
 plugin revision is remotely consumable and the adopting-repo probe supplies AC-1 through
 AC-3 evidence.
+
+## Stage Report: validation — Carlove pre-release live proof (#126)
+
+- DONE: Exercise the immutable plugin gate on a non-draft Carlove PR with exactly one
+  PR-added banned selector, and preserve the red-head evidence before correction.
+  PR [#1007](https://github.com/iamcxa/qnow/pull/1007) at exact head
+  `a904a6b7a67191167e6df215b2cf53b8aff09d80` ran
+  [PR Checking 30756368225](https://github.com/iamcxa/qnow/actions/runs/30756368225).
+  Its [test-summary job](https://github.com/iamcxa/qnow/actions/runs/30756368225/job/91519513662)
+  emitted a failure annotation at
+  `.claude/e2e/mappings/secha-office.yaml:33`, class `>>nth`, for the single seeded
+  ` >> nth=1`; untouched legacy selectors in the same mapping remained warning
+  annotations. The job's fail-closed output then made the existing
+  [ci-gate fail](https://github.com/iamcxa/qnow/actions/runs/30756368225/job/91519738806).
+- DONE: Read the live authority surface after the red run and prove that the failure
+  blocks the adopter's actual merge contract rather than a parallel advisory status.
+  Active ruleset `8510740` (`main blocker`) still required exactly `["ci-gate"]`.
+  The initial in-progress readback was `UNSTABLE`; after the run completed, a retry at
+  `2026-08-02T16:27:38Z` returned `mergeStateStatus=BLOCKED` for the same red head.
+  No ruleset mutation or second required context was used.
+- DONE: Remove only the intentional seed and re-run the same live path to green without
+  altering adoption wiring or legacy selector debt.
+  Exact green head `66b2ed91f4c4d26b770ddcc9cbf38064ec10787b` ran
+  [PR Checking 30756918638](https://github.com/iamcxa/qnow/actions/runs/30756918638).
+  The [green test-summary](https://github.com/iamcxa/qnow/actions/runs/30756918638/job/91520936614)
+  completed successfully with zero mapping annotations, the sole required
+  [ci-gate succeeded](https://github.com/iamcxa/qnow/actions/runs/30756918638/job/91521171032),
+  and the post-completion PR readback at `2026-08-02T16:40:41Z` was
+  `mergeStateStatus=CLEAN`.
+- DONE: Preserve both heads outside local shell state and clean up the disposable probe.
+  The durable [red packet](https://github.com/iamcxa/qnow/pull/1007#issuecomment-5159225973)
+  and [green packet](https://github.com/iamcxa/qnow/pull/1007#issuecomment-5159305112)
+  contain the exact SHAs, run/job links, annotation record, gate results, ruleset readback,
+  and merge-state timing. PR #1007 closed at `2026-08-02T16:41:08Z` with
+  `mergedAt=null`; the remote probe ref was deleted and its GitHub ref lookup returned 404.
+
+### Evidence block
+
+Lenses: CI wiring and live merge authority; correctness PASS (0), silent-failure PASS (0),
+security PASS (0), scope/back-compat PASS (0). The independent read-only review found no
+actionable finding, and the guarded cross-model implementation/docs passes ended
+`MODEL_GATE=PASS`. One valid review suggestion added an assertion that the immutable-source
+checkout itself remains `continue-on-error` so its outcome can be folded by `test-summary`;
+two other suggestions were disproved against the live `actions/checkout@v7` tag and the
+merge-tree checkout semantics.
+
+Static/local verification: classifier and workflow-policy tests passed 78/78; agent-doc
+tests passed 54/54; agent-doc lint reported zero findings; `actionlint -shellcheck=` and
+`git diff --check` passed. An isolated fixture against immutable plugin commit
+`33ffbbea9be930af2ed12c361b447d12a7d1754a` produced red rc=2 with 40 legacy warnings and
+one added-line error, then green rc=0 with the same 40 legacy findings after only the seed
+was restored.
+
+Adversarial: the red and green heads differ by one selector token only. Red produced the
+exact line-33 failure and failed the sole required gate; green removed that token, produced
+no mapping annotation for the net PR diff, passed the same gate, and recovered the merge
+state. This directly disproves both a fail-open aggregate and false blocking by untouched
+legacy debt.
+
+E2E: live GitHub PR #1007 on `iamcxa/qnow`; non-draft red-to-green run with remote cleanup.
+No local replay is substituted for the live annotation, required-context, or merge-state
+evidence.
+
+### Material findings
+
+None in this separately owned pre-release Carlove proof.
+
+### Summary
+
+The live consumer proof closes AC-1 through AC-3 for the bounded pre-release integration:
+one newly introduced banned selector was annotated and blocked by Carlove's actual sole
+required `ci-gate`; untouched legacy debt remained non-blocking; removing only the probe
+violation restored the same gate and merge state to green. The explicitly approved
+disposable no-SC exception was used only for this probe. Existing SC-1032 compiler/corpus
+pins, branch rules, and selector policy were unchanged.
+
+This report does not claim merge, published-plugin adoption, final Carlove adoption, or
+release equivalence. The probe PR was intentionally closed unmerged and its branch deleted;
+the blocked final-adoption entity remains untouched.
