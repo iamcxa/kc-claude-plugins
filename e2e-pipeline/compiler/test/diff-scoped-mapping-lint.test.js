@@ -309,3 +309,39 @@ test('rc=2 with a mismatched mapping identity is an infrastructure failure', fun
     { status: 1, diagnostic: true }
   );
 });
+
+test('rc=2 with line zero is an infrastructure failure', function () {
+  const repo = singleChangedLegacyRepo();
+  const result = runGate(repo, fakeLinter(repo, [
+    "printf '%s:0: has-text: selector: button:has-text(Legacy)\\n' \"$1\" >&2",
+    "printf 'lint-mapping: %s — FAIL (1 banned token(s) found)\\n' \"$1\" >&2",
+  ]));
+  assert.deepEqual(
+    { status: result.status, diagnostic: /invalid lint-mapping protocol/.test(result.stderr) },
+    { status: 1, diagnostic: true }
+  );
+});
+
+test('rc=2 with an out-of-range line is an infrastructure failure', function () {
+  const repo = singleChangedLegacyRepo();
+  const result = runGate(repo, fakeLinter(repo, [
+    "printf '%s:999: has-text: selector: button:has-text(Legacy)\\n' \"$1\" >&2",
+    "printf 'lint-mapping: %s — FAIL (1 banned token(s) found)\\n' \"$1\" >&2",
+  ]));
+  assert.deepEqual(
+    { status: result.status, diagnostic: /invalid lint-mapping protocol/.test(result.stderr) },
+    { status: 1, diagnostic: true }
+  );
+});
+
+test('rc=2 with fabricated source text is an infrastructure failure', function () {
+  const repo = singleChangedLegacyRepo();
+  const result = runGate(repo, fakeLinter(repo, [
+    "printf '%s:6: has-text: fabricated selector source\\n' \"$1\" >&2",
+    "printf 'lint-mapping: %s — FAIL (1 banned token(s) found)\\n' \"$1\" >&2",
+  ]));
+  assert.deepEqual(
+    { status: result.status, diagnostic: /invalid lint-mapping protocol/.test(result.stderr) },
+    { status: 1, diagnostic: true }
+  );
+});

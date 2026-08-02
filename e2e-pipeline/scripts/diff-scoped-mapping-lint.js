@@ -2,6 +2,7 @@
 'use strict';
 
 const { spawnSync } = require('node:child_process');
+const fs = require('node:fs');
 
 function parseArgs(argv) {
   const options = {};
@@ -108,6 +109,19 @@ function parseLintFailure(stderr, mapping) {
   return findings;
 }
 
+function validateFindingIdentity(findings, mapping) {
+  const lines = fs.readFileSync(mapping, 'utf8').split('\n');
+  if (lines[lines.length - 1] === '') lines.pop();
+  for (const finding of findings) {
+    if (!Number.isSafeInteger(finding.line) || finding.line <= 0 || finding.line > lines.length) {
+      throw new Error('finding line ' + finding.line + ' is outside ' + mapping);
+    }
+    if (finding.source !== lines[finding.line - 1]) {
+      throw new Error('finding source does not match ' + mapping + ':' + finding.line);
+    }
+  }
+}
+
 function escapeCommandValue(value) {
   return String(value)
     .replaceAll('%', '%25')
@@ -158,6 +172,7 @@ function main() {
       let findings;
       try {
         findings = parseLintFailure(lint.stderr, mapping);
+        validateFindingIdentity(findings, mapping);
       } catch (error) {
         process.stderr.write('invalid lint-mapping protocol for ' + mapping + ': ' + error.message + '\n');
         return 1;
