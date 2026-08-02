@@ -1,13 +1,13 @@
 ---
 title: Define deterministic visibility semantics for hidden-first multi-match selectors
-status: ideation
+status: implementation
 source: GitHub issue #91; committed e2e-pipeline/S1 work item
 product: e2e-pipeline
 sprint: S1
 started: 2026-08-02T14:13:18Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-deterministic-multi-match-visibility-semantics
 issue: "91"
 pr:
 design: required
