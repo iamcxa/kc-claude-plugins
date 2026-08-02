@@ -771,3 +771,101 @@ E2E: NOT RUN — ideation says the carlove probe is owed, but this dispatch expl
 ### Summary
 
 Validation rejects commit `62cb72e`: normal additions/modifications and workflow wiring work locally, but the gate violates AC-2 on pure renames and fails open when its linter protocol cannot be parsed. The focused suite and coverage ratchet pass, while the full-suite failure is pre-range/flaky evidence rather than part of this diff; live carlove adoption remains deliberately unverified.
+
+## Stage Report: implementation — feedback cycle 1
+
+### Summary
+
+Validation's two Material findings are repaired by additive code commit
+`8a86e866af252ea79e7d69f5277ef318c194a72e`
+(`fix(e2e-pipeline): harden diff-scoped mapping lint`). The rejected commit remains in
+history; it was not amended.
+
+The rename defect was provenance loss: destination-only `--name-only` enumeration followed
+by `git diff -- new-path` presents a pure rename as a full addition. The gate now enumerates
+`--name-status -z -M`, retains old and new paths for rename/copy records, lints the
+destination, and gives both paths to the zero-context hunk diff. A pure R100 rename therefore
+has no touched lines, while a rename with an edited selector carries only the actual
+new-file hunk lines.
+
+The protocol defect was an unchecked inference: rc=2 entered the violation branch, but zero
+parsed findings left `violations=false` and returned 0. The gate now accepts rc=2 only when
+stderr is entirely parseable as findings plus exactly one FAIL summary, every finding and
+the summary name the destination mapping, and the positive summary count equals the parsed
+finding count. Empty, malformed, duplicate, count-mismatched, or identity-mismatched output
+returns infrastructure rc=1 with an `invalid lint-mapping protocol` diagnostic.
+
+Authorized follow-up edits were limited to:
+
+- `e2e-pipeline/scripts/diff-scoped-mapping-lint.js`
+- `e2e-pipeline/compiler/test/diff-scoped-mapping-lint.test.js`
+
+The workflow template, workflow topology, selector policy, per-file linter, docs, carlove,
+and branch protection were unchanged in this feedback commit.
+
+### Feedback RED evidence
+
+Command:
+
+```text
+rtk node --test compiler/test/diff-scoped-mapping-lint.test.js
+```
+
+Result before production edits: 11 tests, 5 passed, 6 failed.
+
+1. `a pure R100 rename keeps untouched legacy debt non-blocking` — the Git R100 arrangement
+   precondition passed; actual was `{status:2, warning:false, error:true}` instead of
+   `{status:0, warning:true, error:false}`.
+2. `a rename plus selector edit warns on untouched debt and blocks the edited line` — the
+   rename arrangement precondition passed; the edited line was an error, but the untouched
+   legacy line was also an error instead of a warning.
+3. `rc=2 with empty stderr is an infrastructure failure` — actual was
+   `{status:0, diagnostic:false}` instead of `{status:1, diagnostic:true}`.
+4. `rc=2 with malformed stderr is an infrastructure failure` — same false-green result.
+5. `rc=2 with a mismatched FAIL count is an infrastructure failure` — same false-green
+   result despite one finding and a declared count of two.
+6. `rc=2 with a mismatched mapping identity is an infrastructure failure` — same
+   false-green result when the finding named the requested mapping and the summary named a
+   different one.
+
+Each behavior is one deep equality assertion, so the RED run reached and falsified every
+added behavior claim. The Git name-status checks in the two rename cases are explicitly
+labelled arrangement preconditions.
+
+### Feedback GREEN and exit evidence
+
+- Rename subset: 2 tests, 2 passed, 0 failed.
+- rc=2 protocol subset: 4 tests, 4 passed, 0 failed.
+- Full focused file: 11 tests, 11 passed, 0 failed; `duration_ms 7596.755875`.
+- Full earned suite: `npm test` exit 0; 963 tests, 962 passed, 0 failed, 1 skipped;
+  `duration_ms 123030.84925`. This closes the unrelated one-off validation failure with a
+  fresh full-population run rather than a focused retry.
+- `node --check scripts/diff-scoped-mapping-lint.js`, targeted pinned Biome over both edited
+  files, the `js-yaml` template parse, `actionlint -shellcheck=` on the unchanged template,
+  and `git diff --check` all exited 0.
+- Final code worktree status after the additive commit was clean and ahead of `origin/main`
+  by exactly the original feature commit plus the feedback fix.
+
+The old-behavior audit found that the original five focused cases still use their original
+fixtures and assertions: clean-first scanning, added-line error, modified-line error,
+untouched-line warning/exit 0, and workflow wiring all remained green. `runGate` gained only
+an optional fake-linter path for protocol tests; its default remains the real per-file
+linter. `selector-lint-drift.test.js` still arranges one real mapping per linter invocation
+and remained green in the full suite, so the feedback did not narrow its policy-drift intent.
+
+### Effort and remaining proof
+
+The commit timestamps conservatively bound the entire interval from the rejected feature
+commit to the feedback fix at 36 minutes (`17:28:55` to `18:04:57` Asia/Taipei). That upper
+bound includes validation and re-dispatch time, so feedback implementation consumed no more
+than 0.6h: 30% of the 2h deliverable appetite and below the 3h tolerance.
+
+Six tests were added. Focused runtime increased from the prior recorded 3.454s to 7.597s
+(+4.143s), while the full suite measured 123.031s versus the prior 122.763s (+0.268s in this
+local run). As recorded in the first implementation report, no repository workflow runs
+this Node suite, so there is no existing CI test-job timeout margin to consume or claim.
+
+Live carlove adoption remains outside this dispatch. AC-1/AC-2 still need the adopting-repo
+probe run, and AC-3 still needs captain-authorized required-context configuration plus a
+blocked merge-state observation. `docs/ci-integration.md` remains sequenced after
+`ci-integration-consumer-count-backport`; no part of that dependency was absorbed here.
