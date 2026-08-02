@@ -869,3 +869,28 @@ Live carlove adoption remains outside this dispatch. AC-1/AC-2 still need the ad
 probe run, and AC-3 still needs captain-authorized required-context configuration plus a
 blocked merge-state observation. `docs/ci-integration.md` remains sequenced after
 `ci-integration-consumer-count-backport`; no part of that dependency was absorbed here.
+
+## Stage Report: validation (cycle 2)
+
+- FAILED: Independently reproduce both prior Material findings against exact head 8a86e866af252ea79e7d69f5277ef318c194a72e, then attack adjacent rename/copy/delete and rc=2 protocol boundaries; verify no fail-open or false-blocking regression remains.
+  `node /tmp/validate-diff-scoped-mapping-lint-r2.js` independently closed the prior rename and empty/malformed/count/path cases but exited 1 because three parseable, semantically impossible rc=2 records still returned green.
+- DONE: Re-run mechanical lenses, focused tests, executable diff coverage, adversarial mutations, workflow static checks, and one earned full suite; obtain a fresh cross-model review with exact cwd/base/head and validate every citation.
+  Focused 11/11, line coverage 89.85%, two claim-breaking scratch mutations red, static checks clean, and full suite 962 pass / 0 fail / 1 skip of 963; Gemini 3.1 Pro High's sole citation was checked and its copy claim disproved by execution.
+- DONE: Audit scope and acceptance evidence: only the three original approved files differ from origin/main, feedback commit changes only script/tests, and live carlove adoption, required-check configuration, probe PR, and docs/ci-integration.md remain explicitly unclaimed.
+  `git diff --name-status 0a1079c..8a86e86` lists only the script, its test, and the template; `8a86e86^..8a86e86` lists only script/test, with all excluded cross-repo and doc surfaces untouched.
+
+### Evidence block
+
+Lenses: executable script + workflow; correctness FAIL (1), silent-failure FAIL (1), security PASS (0), resource-lifecycle PASS (0); type-design, concurrency, and manifest/back-compat did not fire.
+Diff coverage: `node --test --experimental-test-coverage compiler/test/diff-scoped-mapping-lint.test.js` reports 89.85% line coverage on the all-new production script; PASS over the 85% executable-line ratchet.
+Adversarial: destination-only rename provenance made both rename tests red (0/2), and accepting a missing rc=2 summary made the empty-protocol test red; the external boundary harness then exposed one uncovered mismatch class.
+Cross-model: Gemini 3.1 Pro High reviewed exact cwd/base `0a1079c`/head `8a86e86`; its only citation, script line 62, exists but the finding is false because `-M` reports a copy as `A`, and the independent C100 control blocked the copy at rc=2.
+E2E: N/A — this dispatch explicitly excludes live carlove adoption, required-check configuration, and the probe PR that ideation says owe AC-1/2/3 runtime proof.
+
+### Material findings
+
+1. `e2e-pipeline/scripts/diff-scoped-mapping-lint.js:78-108,178-184` validates rc=2 record grammar, path, summary and count but never verifies that a finding's line is a positive in-range destination line or that its source equals that on-disk line. In the fresh harness, otherwise-valid records for line 0, line 999, and line 6 with fabricated source each emitted only `::warning` and returned rc=0. Validate every parsed record against the destination bytes before touched-line classification (safe positive integer, in range, exact raw-line match), and add those three regressions; this is the smallest correction that closes the demonstrated mismatch class without duplicating selector policy.
+
+### Summary
+
+Validation rejects `8a86e86`: the prior pure-rename and empty/malformed rc=2 defects are closed, adjacent copy/delete/ordinary odd-name cases behave correctly, and all repository checks are green. A semantically inconsistent but parseable rc=2 record still fails open, so this second consecutive validation rejection must stop the feedback loop and return to the captain per gate authority; live consumer proof remains separately unclaimed.
