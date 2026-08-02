@@ -997,3 +997,21 @@ None in the dispatched local deliverable at exact head `33ffbbea9be930af2ed12c36
 ### Summary
 
 Cycle 3 closes all three prior defect classes and finds no adjacent fail-open or false-blocking regression in the bounded plugin deliverable. AC-1/AC-2 have independent local add/modify/legacy-warning proof, while carlove live annotations, required-context configuration, blocked merge state, probe cleanup, and the sequenced `docs/ci-integration.md` edit remain explicitly owed outside this dispatch; AC-3 is not claimed locally.
+
+### Validation gate — EM verdict `proceed`
+
+Fresh EM independently rechecked exact head
+`33ffbbea9be930af2ed12c361b447d12a7d1754a` over base
+`0a1079c4904bdd5c8cee6f5e3d01b997faf8f1f4`, reran the 19-fixture harness,
+focused 14-test suite, and executable coverage, and found zero Material defects in the
+bounded plugin-local deliverable. The two failures in the validator's final full-suite run
+remain explicit context: both are timeout-sensitive assertions at unchanged pre-base lines
+in `trace-finalization.test.js`; an earlier exact-head full run was 965 pass / 0 fail / 1
+skip, and EM's focused rerun of those two names passed 2/2.
+
+Verdict scope is validation only. It does not claim merged, shipped, adopted, AC-3 complete,
+or live AC-1/AC-2 proof. The next delivery boundary is carlove adoption: customize the
+template, obtain captain authorization before requiring `Mapping Selector Lint` on `main`,
+run the one-commit red probe, capture annotations, blocked merge state, and the run URL, then
+close the probe and delete its branch. The `docs/ci-integration.md` edit remains sequenced
+after `ci-integration-consumer-count-backport`.
