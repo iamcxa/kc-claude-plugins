@@ -511,14 +511,16 @@ mutable file in another repository. The job fails on the added line only; the un
 findings appear as annotations. Falsified by: a red attributable to any untouched finding,
 which is the day-one-red shape this AC exists to prevent.
 
-**AC-3 — A red job actually blocks the merge in an adopting repo.**
+**AC-3 — A red mapping-lint result fails the adopting repo's authoritative merge gate.**
 This is the value criterion: the bounded claim recorded for option E is that a banned
-selector cannot *merge* into a repo that has adopted the template **and** marked the job a
-required check, and an unrequired job is advisory.
-Verified by: after adoption, `gh api repos/<owner>/<repo>/branches/main/protection` lists the
-job's context name, and the AC-1 probe PR reports a blocked merge state while the job is red.
-Falsified by: the probe PR remaining mergeable with the job red, which would show the
-adoption instructions produced an advisory job.
+selector cannot *merge* into a repo whose sole required context is an aggregate gate when
+mapping lint is a fail-closed upstream of that gate. The mapping job does not need to become
+a second required context.
+Verified by: after adoption, the live ruleset still lists only `ci-gate`; the AC-1 probe PR
+shows `Mapping Selector Lint` red, `ci-gate` red because of that result, and a blocked merge
+state.
+Falsified by: mapping lint being red while `ci-gate` succeeds or skips it, or by the probe PR
+remaining mergeable. Either result would show that the adoption produced an advisory job.
 
 ### E2E determination
 
@@ -542,11 +544,12 @@ there is no new logic.
 is to fail on any mapping *file* the PR touches rather than per line, which keeps AC-1 and
 AC-2 satisfiable.
 
-**Adoption and verification (carlove): separate, not inside the 2 hours.** Adopting the
-template, configuring branch protection, and running the probe PR are a distinct act in a
+**Adoption and verification (carlove): separate, not inside the 2 hours.** Integrating the
+job into carlove's existing sole `ci-gate` and running the probe PR are a distinct act in a
 different repository. **Probe commits: N=1.** All three ACs read the same run — AC-1 the log,
-AC-2 the absence of untouched-line failures in that same log, AC-3 the merge state while it
-is red — so the live-CI clause's per-step sequencing does not multiply here.
+AC-2 the absence of untouched-line failures in that same log, AC-3 the aggregate-gate and
+merge state while it is red — so the live-CI clause's per-step sequencing does not multiply
+here.
 
 ### Implementation dispatch sizing
 
@@ -572,8 +575,10 @@ threshold. Adoption in a consumer repo is a separate act and not part of this di
 > invocation: `lint-mapping.sh` reads only its first argument, so a glob whose first match is
 > clean returns 0 with the rest unscanned.
 >
-> **The job is advisory until it is marked a required status check.** Adopting the template
-> makes it run; branch protection is what makes it block.
+> **The job is advisory until it feeds a required merge gate fail-closed.** In a repository
+> whose ruleset requires a single aggregate such as `ci-gate`, keep that aggregate as the
+> sole required context and make it consume the mapping-lint result. A separate directly
+> required mapping-lint context is neither necessary nor desirable there.
 
 **Before** (exit-code line at `:240`):
 
@@ -594,10 +599,10 @@ specifically against that.
 
 **Neither AC-1 nor AC-3 can be satisfied inside this repository** — it has no
 `.claude/e2e/mappings/` directory at all, so there is nothing here for the job to lint. Both
-need carlove. **Captain authorization is owed for one thing this entity cannot grant itself:**
-AC-3 requires changing carlove's branch protection to mark the job a required check. Adopting
-the template is a normal PR; editing branch protection is a change to that repo's merge
-rules, which Judgment Escalation puts on the captain.
+need carlove. Carlove's live ruleset already requires the correct authority surface — the
+single `ci-gate` context — so adoption changes the workflow DAG and aggregate verdict, not
+branch protection. Any later proposal to add a second required context remains a separate
+merge-rule change and is explicitly outside this entity.
 
 ## Stage Report: ideation
 
@@ -1010,8 +1015,40 @@ in `trace-finalization.test.js`; an earlier exact-head full run was 965 pass / 0
 skip, and EM's focused rerun of those two names passed 2/2.
 
 Verdict scope is validation only. It does not claim merged, shipped, adopted, AC-3 complete,
-or live AC-1/AC-2 proof. The next delivery boundary is carlove adoption: customize the
-template, obtain captain authorization before requiring `Mapping Selector Lint` on `main`,
-run the one-commit red probe, capture annotations, blocked merge state, and the run URL, then
-close the probe and delete its branch. The `docs/ci-integration.md` edit remains sequenced
-after `ci-integration-consumer-count-backport`.
+or live AC-1/AC-2 proof. The next delivery boundary is carlove adoption: integrate the
+mapping-lint result into the existing sole required `ci-gate`, run the one-commit red probe,
+capture annotations, both red gate results, blocked merge state, and the run URL, then close
+the probe and delete its branch. The `docs/ci-integration.md` edit remains sequenced after
+`ci-integration-consumer-count-backport`.
+
+## Captain re-cut — Carlove's sole `ci-gate` contract, 2026-08-02
+
+The captain approved the live-consumer correction after the Carlove adoption survey. The
+survey found that Carlove does not use classic branch protection for this decision: its
+active ruleset requires exactly one strict context, `ci-gate`, and the repository's CI docs
+name that aggregate as the only required status. Adding `Mapping Selector Lint` directly to
+the ruleset would create two authorities and contradict the adopter's established contract.
+
+The delivery shape is therefore narrower than the prior wording:
+
+- keep `ci-gate` as the sole required context;
+- add mapping lint as a read-only PR job and a fail-closed input to `ci-gate`;
+- consume the plugin implementation from an immutable remote SHA rather than copying its
+  policy, linter, and diff-scoping logic into Carlove;
+- prefer Carlove's existing `e2e_compiler` change classification first. It may schedule a
+  harmless no-op mapping-lint run for some compiler-only changes, but avoids a new filter and
+  its own fail-open surface. A dedicated mapping-only classifier is justified only if live
+  timing evidence shows that those no-op runs have material cost;
+- keep Carlove's existing compiler/corpus pin separate. Repointing it merely to acquire this
+  lint script would couple two independently versioned contracts.
+
+**換句話說.** If this re-cut is wrong, a PR can show a red mapping job while the only status
+that controls merge still goes green, so the gate looks installed and protects nothing.
+Reversal is one consumer workflow PR because the ruleset remains untouched. What is being
+chosen is not whether Carlove gets another required check; it is whether the existing single
+gate is made truthful about one more upstream invariant.
+
+Carlove adoption is now owned by the separately scheduled
+`mapping-selector-lint-ci-adoption` entity. This entity remains in validation until the
+plugin revision is remotely consumable and the adopting-repo probe supplies AC-1 through
+AC-3 evidence.
