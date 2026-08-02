@@ -1,13 +1,13 @@
 ---
 id: t5sa4zqw245w6ny0eyjmc9ez
 title: "The missing-session guard in namespaceForRun has no test that can fail"
-status: validation
+status: done
 source: "adversarial spot-check of PR #135, 2026-08-02 — captain-ordered evidence backfill"
 product: e2e-pipeline
 sprint: S1
 started: 2026-08-02
-completed:
-verdict:
+completed: 2026-08-02T00:26:50Z
+verdict: PASSED
 worktree:
 issue:
 pr: pr-merge:137:artifact-v1:beec1231fd94b9df552a884c11ca94ff5ee53362e84ad7c60eacc05a67274e40
