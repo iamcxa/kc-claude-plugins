@@ -845,3 +845,145 @@ branch is normally pushed; status remains `implementation` pending fresh validat
 - AC-5 implementation evidence is now green and the prior correction findings have no known red
   residual. Fresh validation remains a separate gate; this report does not advance the entity,
   create a PR, mutate version/release metadata, or change issue/ruleset state.
+
+## Stage Report: validation — cycle 2
+
+TL;DR: **REJECTED.** Fresh validation on exact clean product head
+`1d5e6c90ce44e1ba3d07302b1da59240445846aa` against exact base
+`844f36a53bc7094b74476b3e57cb47c70d69d5dd` closed all four findings returned by validation
+cycle 1, passed the owned runtime matrix, passed the full suite, and measured honest executable
+diff coverage at 88.06%. It also reproduced one new boundary failure: accepted `wait: 0` mapped
+visibility assertions execute zero probe attempts, emit no final visibility evidence, throw a JSON
+parse error, and are reported as probe infrastructure failure. This falsifies AC-6's final-evidence
+and terminal-distinction contract. Because this is validation cycle 2, the rejection requires
+captain escalation; validation has no authority to waive, correct, advance, or start another round.
+
+### Exact authority and scope
+
+- Re-read the full current `docs/dev/README.md`, root and plugin instructions, issue #91 including
+  the captain-approved contract, the validation stage definition, the complete entity through
+  state head `4308ed474580b8b670e20287b8640c3f79447e99`, and the exact product diff. The product worktree
+  began and ended clean on the dispatched head. No product, issue, PR, version, marketplace,
+  ruleset, or stage-status surface was edited.
+- Audited all 25 changed files in both directions; none is unrelated and none is missing an AC
+  owner. Runtime/classifier/compiler files (`bin/e2e-visibility-probe.js`, `compiler/codegen.js`,
+  `compiler/compiler.js`, `compiler/lib/visibility-probe.js`, `compiler/parser.js`, and
+  `compiler/resolver.js`) map to AC-1 through AC-7. The eight compiler test files map to AC-1
+  through AC-7 and the correction falsifiers. `CLAUDE.md`, the three agents, two walkthrough
+  files, compile skill, four docs/references, and the consumer-contract test map to AC-5 and AC-8.
+  The writing example also maps to the compiled AC-8 exercise. **25/25 mapped; zero scope drift.**
+
+### Cycle-1 blocker re-falsification
+
+1. **Rendered-candidate identity is closed.** Focused and owned-runtime cases select the enabled
+   or disabled state from the same uniquely rendered candidate. The disabled first zero-rect node
+   cannot override the enabled second rendered candidate, and delayed enabled/disabled transitions
+   require at least two atomic attempts while retaining candidate index 1.
+2. **Enabled/disabled polling is closed for positive timeout budgets.** The owned real delayed
+   transition cases poll state instead of sampling once, finish with the expected final state, and
+   retain attempts and elapsed time.
+3. **Consumer proof is closed.** Mapper, runner, verifier, and walkthrough tests extract and
+   execute each consumer's committed shared-protocol recipe; generated support is exercised
+   separately. The proof is behavioral and can fail when a consumer recipe drifts.
+4. **Coverage is closed.** Fresh full-suite V8 coverage converted to c8 LCOV and intersected with
+   exact added executable lines measured 981/1,114 = **88.06%**, with no browser-source waiver,
+   excluded file, or relabelled denominator.
+
+### Material finding: accepted zero-timeout input loses AC-6 evidence
+
+**P3 generally; Material for this task because AC-6 is false.** `compiler/resolver.js:715-718`
+admits `wait: 0` and threads it as numeric `step.timeout`; blame shows that admission is
+pre-existing at `^8267dda`. New mapped-visibility support in `compiler/codegen.js:453-483` uses
+`while [ "$_count" -lt "$_timeout" ]`, so timeout zero skips `_probe_visibility_once` entirely,
+then asks `_record_visibility_result` to parse empty `_VISIBILITY_LAST_RESULT`. The polling path
+was introduced by feature commits `13b9a8c` and `050da815`, so the accepted input is old but the
+empty-evidence mapped-visibility regression is introduced by this product diff. The equivalent OR
+path at `compiler/codegen.js:486-522` has the same zero-iteration shape.
+
+Fresh generated-script reproduction used a valid strict singleton envelope and exact
+`step.timeout: 0`. It exited 1 with:
+
+- stderr: `SyntaxError: Unexpected end of JSON input` while recording the result;
+- stdout: `deterministic visibility probe failed for heading`, which selects the terminal
+  infrastructure branch at `compiler/codegen.js:1973-1979` instead of a normal assertion timeout;
+- metrics: the step failed but `visibility_results` was `[]`, so there was no result class,
+  selector, policy, match count, attempts, elapsed time, or candidate evidence;
+- probe count: zero, despite the supplied envelope classifying as `unique_rendered` if invoked.
+
+This contradicts AC-6's requirement that generated polling/reporting retain final evidence,
+attempt count, elapsed time, and the retryable-versus-terminal distinction. A sufficient falsifier
+for a correction is a generated mapped visibility fixture with the public `wait: 0` boundary that
+either (a) is rejected before code generation with an explicit timeout-domain error, or (b) makes
+one defined probe attempt and records its final evidence, while never emitting JSON parse failure
+or misclassifying a normal assertion boundary as probe infrastructure failure. Single and OR
+mapped paths both need the same defined contract. Validation does not choose between those designs.
+
+### Per-AC verdict
+
+- **AC-1 PASS:** owned real strict and retained multi-match cases preserve raw cardinality and do
+  not collapse hidden-first duplicates into absence.
+- **AC-2 PASS:** focused classifier, CLI, policy, resolver, and codegen tests cover all result
+  classes, hidden-style disqualification, second rendered candidate identity, inconsistent
+  aggregates, enabled/disabled state, and capped evidence.
+- **AC-3 PASS:** invalid CSS remains terminal `invalid_selector` with `match_count: null` in direct
+  and generated owned-runtime paths; the invalid-CSS scratch mutation is caught.
+- **AC-4 PASS:** CSS identity and explicit policy survive single-site, multi-site, legacy,
+  parameterized, positive, negative, enabled/disabled, and OR forms; unresolved non-CSS mappings
+  fail before output/browser startup.
+- **AC-5 PASS:** mapper, runner, verifier, walkthrough, and generated support now have independent
+  exercise-based shared-protocol proof. Enabled/disabled judgment uses the selected rendered
+  candidate and polls delayed state for positive timeout budgets.
+- **AC-6 FAIL:** accepted timeout zero executes no mapped visibility judgment, records no final
+  visibility evidence, raises a JSON parse error, and reports an assertion boundary as terminal
+  probe failure.
+- **AC-7 PASS:** direct CLI and generated owned-runtime results agree for strict/retained ghost,
+  invalid selector, rendered-candidate state, and delayed transitions covered by the real matrix.
+- **AC-8 PASS:** published examples parse, compile, and execute; docs consistently state the
+  strict default, explicit exception, CSS identity migration, diagnostics, negative behavior, and
+  uniqueness guidance.
+
+### Required evidence block
+
+Lenses: correctness **FAIL, 1 finding**; silent-failure **FAIL, same finding**; type-design **PASS,
+0 findings**; concurrency **PASS, 0 findings**; resource-lifecycle **PASS, 0 findings**;
+manifest/back-compat **PASS, 0 findings**. Security did not fire: no auth, permission,
+trust-boundary, secret-bearing workflow, or shell hook changed.
+Diff coverage: **PASS — 981/1,114 exact added executable lines = 88.06%** from the final full-suite
+NODE_V8_COVERAGE to c8 LCOV intersection. Per file: CLI 70/73; codegen 289/289; compiler 4/4;
+shared probe 424/533; parser 20/22; resolver 174/193.
+Adversarial: strict-cardinality scratch mutation (`match_count === 1` to `>= 1`) made 7 tests red;
+invalid-CSS-to-`no_match` scratch mutation made 1 test red; generated `wait: 0` reproduction made
+the unmutated product emit zero attempts, empty `visibility_results`, JSON parse failure, and the
+wrong terminal diagnostic.
+Cross-model: exactly one read-only Claude Opus 5 / high call completed in 159.373s API time
+(181.491s wall), session `e17ea11e-c6e7-42af-9224-8bc55c017cb0`; no duplicate or fallback call was
+made. It confirmed all four returned blockers closed and identified the zero-timeout polling/report
+boundary, which local parser, blame, code-path, and generated-runtime reproduction accepted.
+E2E: exact owned real browser test **PASS 1/1 in 47.582s** with direct and generated no-match,
+all-non-rendered, singleton, strict/retained ghost, hidden-style extra, two-rendered, invalid CSS,
+rendered-candidate enabled state, and delayed enabled/disabled matrices; test-owned app, run,
+session, profile, and receipt state closed without touching unrelated browser state.
+
+### Other exit evidence
+
+- Focused protocol suites: **67 passed / 0 failed**.
+- Fresh final full `npm test`: **1,033 passed / 0 failed / 2 intentional real-browser skips** out
+  of 1,035 tests in 173 suites, duration 125.255s.
+- `npm run lint`: exit 0 with 215 warnings and 2 infos; no fixes or product mutation.
+- `git diff --check origin/main...HEAD`: exit 0.
+- `scripts/version-parity-check.sh`: all seven plugin manifests and marketplace entries consistent;
+  e2e-pipeline remains 3.2.0 across plugin, release, marketplace, and Codex surfaces.
+- `scripts/marketplace-verify.sh`: L0 parity, L1 schema, and isolated L2 installation passed for all
+  seven plugins.
+- `scripts/skill-frontmatter-lint.sh`: all 38 skill directories passed.
+- Product branch and remote remained exact `1d5e6c90ce44e1ba3d07302b1da59240445846aa` and the
+  product worktree remained clean after validation.
+
+### Cycle-2 escalation and disposition
+
+Correction round 1 used 0.47 working hours against the 16h estimate and 22h tolerance, so the
+effort budget itself remains healthy. That does not override the independent validation-cycle
+circuit breaker. This is the **second validation rejection**: do not automatically dispatch a
+third implementation/validation round, do not waive AC-6, and do not advance the entity. Captain
+must adjudicate whether the public timeout domain should reject zero or define one immediate probe,
+then explicitly authorize any correction path. The validator made no product or status mutation.
