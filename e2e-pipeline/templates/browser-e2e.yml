@@ -6,6 +6,8 @@
 # PREREQUISITES:
 #   - Compiled E2E scripts in .claude/e2e/compiled/*.sh
 #     (run /e2e-compile inside Claude Code to generate them)
+#   - e2e-pipeline available at kc-claude-plugins/e2e-pipeline/
+#     (or customize the mapping-lint script paths below)
 #   - agent-browser CLI (installed automatically by this workflow)
 #
 # CUSTOMIZATION:
@@ -15,7 +17,7 @@
 #   - timeout-minutes: Adjust based on your longest flow (default: 20)
 #
 # WORKFLOW STRUCTURE:
-#   auth-setup  →  browser-e2e (matrix)  →  report
+#   mapping-lint  →  auth-setup  →  browser-e2e (matrix)  →  report
 #   AUTH-01: Login once, reuse session across all parallel flows
 
 name: Browser E2E
@@ -32,11 +34,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  mapping-lint:
+    name: Mapping Selector Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Lint changed mapping lines
+        run: |
+          node kc-claude-plugins/e2e-pipeline/scripts/diff-scoped-mapping-lint.js \
+            --base "${{ github.event.pull_request.base.sha || github.event.before }}" \
+            --head "${{ github.sha }}" \
+            --linter kc-claude-plugins/e2e-pipeline/scripts/lint-mapping.sh
+
   # CI-04: Auth setup runs before matrix, uploads session directory
   # AUTH-01: Login once, reuse session across all parallel flows
   # If your app doesn't require authentication, remove auth-setup job and needs: [auth-setup]
   auth-setup:
     name: Auth Setup
+    needs: [mapping-lint]
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
