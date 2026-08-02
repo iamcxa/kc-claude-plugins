@@ -594,3 +594,46 @@ Three sequential RED-to-GREEN slices produced a clean, re-enterable implementati
 consumers, reports, docs, focused tests, full tests, lint, parity, installability, and diff checks
 are green. Implementation remains parked because two isolated owned-runtime attempts failed before
 navigation/classification with OS error 35, leaving AC-1 and AC-7 FAILED/UNPROVEN.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Diagnosed the prior `Resource temporarily unavailable (os error 35)` boundary as
+  `spawnSync` starving the test-owned HTTP server's Node event loop while runtime navigation waited.
+- DONE: Replaced the real harness's synchronous child execution with bounded async `spawn` while
+  preserving piped stdin/stdout/stderr and explicit runtime timeout behavior.
+- DONE: Closed each successive harness boundary without weakening ownership: injected the mapping
+  app, stopped reusing the generated script's closed receipt, added generated navigation, isolated
+  app/run/profile/receipt/artifact roots per invocation, and shortened only socket-budget app IDs.
+- DONE: The final real CLI matrix exercised no-match, all-non-rendered, singleton, strict ghost,
+  retained ghost, hidden-style duplicate, two-rendered, and invalid CSS on one verified owned binding.
+- DONE: The final generated ghost flow navigated on its own fresh binding and reported
+  `unique_rendered_with_retained_zero_rect`, `match_count: 2`, satisfied judgment, and exit 0.
+- DONE: The final generated negative invalid-CSS flow navigated on a second fresh binding and
+  reported `invalid_selector`, `match_count: null`, terminal judgment, and overall script exit 1.
+- DONE: Every generated case asserted `initial_reused: false`, verified first navigation, exact
+  app/run/session/profile identity, and a closed receipt with `owned-session-closed` cleanup.
+- DONE: Rebased cleanly onto `origin/main` `844f36a`; the exact implementation commits are
+  `d5b9946`, `13b9a8c`, `050da81`, and harness correction `4d63675` across the reviewed 25-file scope.
+- DONE: Fresh post-rebase owned real-browser proof finished 2 passed, 0 failed; changing ghost
+  cardinality, collapsing invalid CSS, reusing a receipt, or losing navigation ownership makes it red.
+- DONE: Fresh focused visibility proof finished 60 passed, 0 failed, 1 gated real-browser skip;
+  resolver, classifier, generated support, consumer contracts, metrics, and published examples are covered.
+- DONE: Fresh full `npm test` finished 1,025 passed, 0 failed, 2 intentional real-browser skips;
+  `npm run lint` exited 0 with 215 warnings and 2 infos and applied no fixes.
+- DONE: `git diff --check origin/main...HEAD`, version parity, marketplace schema, and isolated
+  installability for all seven plugins passed on the rebased head.
+- DONE: Pushed the feature branch normally without force; no PR, version mutation, or validation
+  stage advancement was performed.
+- DONE: AC-1 is PASS: strict hidden-first returns `raw_multi_match`, explicit retained policy
+  returns `unique_rendered_with_retained_zero_rect`, and neither path reports absence in the real runtime.
+- DONE: AC-7 is PASS: agent-facing CLI and independently owned generated Bash agree on retained
+  ghost success and invalid-CSS terminal failure against the supported real browser/runtime pair.
+- DONE: The prior implementation report's failed real-runtime evidence is superseded by this fresh
+  post-rebase proof; all ACs now have implementation evidence and implementation is complete.
+
+### Summary
+
+The earlier failures were harness lifecycle defects, not a product-classifier failure: synchronous
+children starved the local server, then shared app/receipt assumptions violated normal generated-flow
+ownership. Fresh isolated CLI and generated browser runs now prove AC-1 and AC-7 on the rebased four-
+commit head, all required gates are green, and implementation is complete pending separate validation.
