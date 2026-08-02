@@ -1,6 +1,6 @@
 ---
 title: "The LLM-driven browser paths read mappings the compiler never gates"
-status: validation
+status: implementation
 source: found at the e2e-selector-compile-gate ideation gate, 2026-08-01 — EM check 7 against the S1 exit condition
 product: e2e-pipeline
 sprint: S1
