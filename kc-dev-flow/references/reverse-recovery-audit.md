@@ -59,6 +59,23 @@ evidence, and only greenfield what is confirmed MISSING.**
    cheapest-literal recovery is a scope tool, not an architecture tool: when
    a recovered abstraction fights the domain model, escalate to a redesign
    decision instead of contorting the old shape.
+6. **Audit the tree the work actually merges into, and do not assume that is
+   the trunk.** Fetch first, then name the branch and commit you audited in
+   the artifact. A verdict read off the wrong tree is confidently wrong in
+   both directions: a stale branch shows stale infrastructure, while a trunk
+   that a policy holds work off of shows nothing at all — every layer reports
+   `MISSING` and the whole table is worthless. Any policy that defers merging
+   (a sprint that lands as one PR, a stacked-branch train, a release freeze)
+   produces exactly that trunk, so the effective merge target is a branch and
+   the audit has to say which one. Re-verify load-bearing `MISSING` claims
+   against a freshly fetched target before building.
+   **The same trap reaches documents, and it is quieter.** An agent running
+   at the repository root reads the trunk's copy of a spec, contract, or
+   schema, which can be behind the branch's — the audit is correct about the
+   code and wrong about what the code is supposed to do. Read those documents
+   from the branch, and cite anything a diff will edit by heading and quoted
+   text rather than by line number alone, so drift between copies shows up as
+   a failed match instead of an edit landing in the wrong place.
 
 ### Where it binds
 
