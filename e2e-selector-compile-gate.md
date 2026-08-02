@@ -9,7 +9,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/e2e-selector-compile-gate
 issue: "88"
-pr: pr-merge:/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/128rtifact-v1:69eb970a5b58f3579e5f5b1767ec9ab1d717af9dd6cd9d418de889ddc03a5fe7
+pr: pr-merge:128:artifact-v1:69eb970a5b58f3579e5f5b1767ec9ab1d717af9dd6cd9d418de889ddc03a5fe7
 design: required
 lane: main
 id: pjjs91zrbrcm2we467a3vvp4
