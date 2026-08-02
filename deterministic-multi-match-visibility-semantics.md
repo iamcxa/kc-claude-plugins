@@ -543,3 +543,54 @@ ACs and doc changes, and includes a fresh Gemini cross-vendor challenge with adj
   `151.0.7922.47`;
 - primary residual risk: accessible locator and DOM selector identity can diverge;
 - implementation dispatch: three sequential behavior-complete RED-to-GREEN sessions.
+
+## Stage Report: implementation
+
+- DONE: Added the dependency-free shared visibility probe/CLI, parser policy validation, exact
+  eight-result algebra, bounded evidence, sanitized errors, and fail-loud protocol handling in
+  commit `68491ba` (`feat(e2e-pipeline): add deterministic visibility probe`).
+- DONE: Slice 1 closed RED to GREEN, including a missing-protocol-field falsifier that initially
+  misclassified malformed evidence as `no_match`; the focused suite finished 52/52 green.
+- DONE: Threaded effective DOM identity and policy through resolver, compiler, single/multi-site,
+  legacy, parameterized, enabled/disabled, positive/negative, and OR forms in commit `9e2d18e`
+  (`feat(e2e-pipeline): compile deterministic visibility semantics`).
+- DONE: Generated scripts embed the shared standalone support, preserve named sessions and hostile
+  selector quoting, record both OR operands, stop terminal failures without sleeping, and add
+  `visibility_results` only when mapped visibility is present.
+- DONE: Slice 2 closed RED to GREEN, including a built-in dialog CSS falsifier; its full suite was
+  1,004 passed, 0 failed, 1 skipped.
+- DONE: Routed mapper, runner, verifier, walkthrough, and compiled scripts through the shared seam;
+  updated reports, selector authority, commands, patterns, testing, CI, and compile guidance in
+  checkpoint commit `0b8ff269565178162bf094256c89a4718b0bc681`.
+- DONE: Mapper guidance probes every concrete DOM selector, keeps strict as default, proposes but
+  never auto-applies the exact exception, reports both locator forms, and does not claim computed
+  accessible-name equivalence from DOM evidence.
+- DONE: Consumer shell recipes preserve judge exit 0/1/2 under `set -e`; a new contract test was
+  observed RED for unsafe capture/equivalence wording and GREEN after the correction.
+- DONE: Slice 3 focused result was 6 passed, 0 failed, 1 real-browser skip; the executable
+  five-consumer matrix, generated metrics, and published YAML compile/run example all passed.
+- DONE: Fresh full `npm test` finished 1,010 passed, 0 failed, 2 real-browser skips in 117.3s.
+- DONE: `npm run lint` exited 0 with the existing 214 warnings and 2 infos; `git diff --check`,
+  `scripts/version-parity-check.sh`, and `scripts/marketplace-verify.sh` all passed.
+- FAILED: Owned real-browser attempt 1 used a fresh test-owned app/run/profile but failed on its
+  first `open` after 158.0s: `Resource temporarily unavailable (os error 35)` after five retries.
+- FAILED: One bounded retry with a second fresh app/run/profile failed at the same first-open
+  boundary after 157.3s; neither attempt reached receipt assertions or selector classification.
+- DONE: Both failed attempts cleaned their unique test-owned state; unrelated agent-browser
+  namespaces/processes/profiles were identified and left untouched.
+- FAILED: AC-1 is FAILED/UNPROVEN because hidden-first strict/exception behavior did not execute
+  through the supported owned real-browser/runtime pair in this stage.
+- DONE: AC-2, AC-3, AC-4, AC-5, AC-6, and AC-8 have focused executable, compiler, consumer,
+  reporting, documentation, and full-suite evidence on the committed head.
+- FAILED: AC-7 is FAILED/UNPROVEN because CLI/generated parity passed fake-envelope fixtures but
+  the required owned real-browser hidden-first and invalid-CSS cases never ran past startup.
+- FAILED: The third completion-checklist item is incomplete at its real-browser boundary; no
+  runtime residual is waived or accepted, and implementation is not marked complete.
+
+### Summary
+
+Three sequential RED-to-GREEN slices produced a clean, re-enterable implementation checkpoint at
+`0b8ff269565178162bf094256c89a4718b0bc681`. Shared algebra, resolver/codegen parity, all five
+consumers, reports, docs, focused tests, full tests, lint, parity, installability, and diff checks
+are green. Implementation remains parked because two isolated owned-runtime attempts failed before
+navigation/classification with OS error 35, leaving AC-1 and AC-7 FAILED/UNPROVEN.
