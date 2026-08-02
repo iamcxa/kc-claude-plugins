@@ -3,6 +3,20 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.1.1...e2e-pipeline-v3.2.0) (2026-08-02)
+
+
+### Features
+
+* **e2e-pipeline:** add diff-scoped mapping lint gate ([d3a8046](https://github.com/iamcxa/kc-claude-plugins/commit/d3a804650ab626b6ff8cb48f3bf419fb52ff1f5c)), closes [#126](https://github.com/iamcxa/kc-claude-plugins/issues/126)
+* **e2e-pipeline:** enforce the selector grammar at compile time ([#88](https://github.com/iamcxa/kc-claude-plugins/issues/88)) ([#128](https://github.com/iamcxa/kc-claude-plugins/issues/128)) ([8634d89](https://github.com/iamcxa/kc-claude-plugins/commit/8634d8933056da5a13ca7914a336cde93fc6bc78))
+
+
+### Bug Fixes
+
+* **e2e-pipeline:** size the socket namespace against the session-named socket ([#135](https://github.com/iamcxa/kc-claude-plugins/issues/135)) ([27bff48](https://github.com/iamcxa/kc-claude-plugins/commit/27bff48004e7d046959fd6a5614668770fa00118))
+* **kc-plugin-forge:** package release helper contracts ([#133](https://github.com/iamcxa/kc-claude-plugins/issues/133)) ([0af7a71](https://github.com/iamcxa/kc-claude-plugins/commit/0af7a7124d98bd08a0ba93e43fb1bb23da3fe174))
+
 ## [3.1.1](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.1.0...e2e-pipeline-v3.1.1) (2026-08-01)
 
 

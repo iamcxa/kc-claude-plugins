@@ -1,7 +1,7 @@
 {
   "name": "kc-plugin-forge",
   "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, doc self-iteration",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "author": {
     "name": "Kent Chen",
     "url": "https://github.com/iamcxa"
@@ -9,5 +9,13 @@
   "homepage": "https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-plugin-forge",
   "repository": "https://github.com/iamcxa/kc-claude-plugins",
   "license": "MIT",
-  "keywords": ["plugin", "quality", "tdd", "validation", "forge", "lifecycle", "audit"]
+  "keywords": [
+    "plugin",
+    "quality",
+    "tdd",
+    "validation",
+    "forge",
+    "lifecycle",
+    "audit"
+  ]
 }

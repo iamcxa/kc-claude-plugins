@@ -13,7 +13,7 @@
       "name": "e2e-pipeline",
       "source": "./e2e-pipeline",
       "description": "Browser & CLI E2E testing pipeline with context-isolating subagents — map UI, generate flows, verify & test, walk through apps, record video, terminal recording for CLI-only flows, static UI computed-style verification",
-      "version": "3.1.1",
+      "version": "3.2.0",
       "keywords": [
         "e2e",
         "browser-testing",
@@ -31,7 +31,7 @@
       "name": "kc-plugin-forge",
       "source": "./kc-plugin-forge",
       "description": "One-command plugin development and quality pipeline — scaffold, TDD skills, verify agents, validate structure, audit frontmatter, optimize descriptions, doc self-iteration, two-stage Dreaming (LOCAL→public sanitize gate + public→structured taxonomy gate), prepublish sanitize-check",
-      "version": "1.9.0",
+      "version": "1.9.1",
       "keywords": [
         "plugin",
         "quality",
@@ -106,7 +106,7 @@
       "name": "kc-pr-flow",
       "source": "./kc-pr-flow",
       "description": "PR lifecycle workflow — create (ship chain), review (incl. Trail of Bits security subagents + 5 pr-review-toolkit agents covering correctness/comments/silent-failure/type-design/test-coverage, optional Codex cross-model second opinion, cross-file doc-claim verification, per-agent 1-10 confidence calibration), resolve review threads with cross-review verdict persistence (suppress prior-dismissed findings across review cycles), commit reorg, announce, and automated daemon",
-      "version": "1.11.0",
+      "version": "1.11.1",
       "keywords": [
         "pr",
         "review",

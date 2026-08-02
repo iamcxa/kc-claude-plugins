@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-pr-flow-v1.11.0...kc-pr-flow-v1.11.1) (2026-08-02)
+
+
+### Bug Fixes
+
+* **kc-pr-flow:** preflight canonical repository writes ([#136](https://github.com/iamcxa/kc-claude-plugins/issues/136)) ([25cb258](https://github.com/iamcxa/kc-claude-plugins/commit/25cb258e05a239f35d99443545df3ebc371443ae))
+
 ## [1.11.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-pr-flow-v1.10.0...kc-pr-flow-v1.11.0) (2026-07-30)
 
 
