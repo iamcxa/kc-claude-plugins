@@ -254,15 +254,18 @@ application for an afternoon before discovering the locator was never valid. The
 version is a locator that silently satisfies an assertion through a fallback, and a green
 test that proves nothing.
 
-**How expensive to reverse.** Options A, D and E are one PR each and nothing installed reads
-them differently afterwards. Options B and C change how two agents write files, which is the
-surface this entity has already been wrong about once; reversing those means another agent
-change plus whatever consumer repos have adapted to.
+**How expensive to reverse.** D and F are one PR each and install nowhere, so reversing them
+is one more PR. A and E each need an install in every consumer repo (A per clone, E per
+repo), so reversing them means un-installing wherever they were adopted. B and C change how
+two agents write files — the surface this entity has already been wrong about once — so
+reversing those is an agent change plus whatever consumer repos adapted to it.
 
 **What is actually being chosen.** Not "should bad selectors be refused" — that is settled.
-It is **where the refusal lives**, and each place sees a different population: the agent's
-write path, the git commit, or CI. No single one of them sees all three of agent output,
-human hand-edits, and repairs written back by the verifier.
+It is **where the refusal lives**, and the places trade coverage against timing. The
+git-level points (A, E) see all three populations — agent output, human hand-edits, and
+verifier repairs — but only after the file is already written. The write-path points (B, C)
+refuse before a browser ever runs, but see only what the agents write. The compile-path
+point (F) sees every mapping on disk but only when someone compiles.
 
 ### Reverse-recovery audit (against `origin/main` `0a1079c`)
 
@@ -314,6 +317,7 @@ so a whole browser session can run against a bad mapping first. Bounded claim: a
 selector cannot enter a commit **from a clone that has installed the hook** (`git config
 core.hooksPath`, which this repo's own `.githooks/pre-commit:3` documents as per-clone
 opt-in) **and does not pass `--no-verify`**. Never runs in CI.
+**Cost:** one hook script plus install docs; adoption surface per-clone.
 
 **B — the two agents write mappings through an owned CLI that validates first.** The cheapest
 option that refuses before a browser ever runs. Requires changing `agents/e2e-mapper.md` and
@@ -322,10 +326,13 @@ directly (`e2e-flow-verifier.md:240,464` writes mappings back). Its weakness is 
 hypothetical: the EXISTS_BROKEN row above is the same instruction-only mechanism failing
 today. Pairing it with a `Write`-matcher hook that refuses mapping paths converts it into a
 mechanism; the `Bash` route is then the residual.
+**Cost:** a new CLI plus edits to two agent definitions, and a hook if it is to be a
+mechanism rather than an instruction; adoption surface none (ships with the plugin).
 
 **C — B plus A.** Refusal at the moment of writing, git as the net for what routes around it.
 Two surfaces to build and maintain. Contradicts the shipped precedent in one place: the
 `Write` hook would block where the existing one warns.
+**Cost:** B plus A; adoption surface per-clone for the A half.
 
 **D — extend the shipped warn-only guard to mapping paths.** As stated in the first
 re-shape this was mis-specified, and the correction cuts against it: `pre-write-flow-guard.sh`
@@ -334,15 +341,39 @@ one, prints a flow-specific message pointing at `/e2e-flow`. Adding a mapping gl
 on every mapping write regardless of selector content, with the wrong message, and would need
 a sentinel producer on the `/e2e-map` side. Making it a *selector* warning means calling the
 policy module — a different and larger change than "add a glob".
+**Cost:** as described it is one glob and produces the wrong warning; as a selector warning
+it is a rewrite of the guard; adoption surface none. It warns, it does not refuse.
 
 **E — a mapping-lint CI job, shipped through the existing template mechanism.** The plugin
 already ships `templates/browser-e2e.yml` as its CI delivery mechanism and
 `docs/ci-integration.md:242` already recommends wiring `lint-mapping.sh` as a pre-flight
-gate. This is the only enforcement point an agent cannot route around at all — not by `Bash`,
-not by `--no-verify` — and the only one that sees a human's hand edit. It is also the latest:
-it refuses after the commit, in the pull request, so a bad selector can be written, exercised
-and pushed before anything says no. Consumer repos must adopt the template, which is the same
-adoption cost as A.
+gate. Bounded claim: a banned selector cannot **merge** into a repo that has adopted the
+template **and marked the job a required check** — `templates/browser-e2e.yml:3` is
+`# USAGE: Copy this file to .github/workflows/browser-e2e.yml`, and nothing in it establishes
+branch protection, so an unadopted or unrequired job is advisory in the same way #88's
+ephemeral stderr is. Residual: the workflow file is repo-writable by the same agent it gates.
+It is also the latest point in the field — it refuses after the commit, in the pull request,
+so a bad selector can be written, exercised and pushed before anything says no.
+**Cost:** one template edit plus a docs change; adoption surface per-repo.
+
+**F — widen the existing compile-time gate to every mapping on disk.** The traversal already
+exists and is already wired: `selector-policy.js` exports the file-scope `scanMappingText`,
+and `compiler/compiler.js:54` `checkSelectorPolicy(mappingSources, referencedElements,
+baseline)` already consumes a source list. Today that list is the mappings a compiled flow
+loads, so a mapping no flow references is never scanned. Widening the list to the mappings
+directory needs no consumer install, no hook, and no new call site — it changes what is
+passed in. It answers the captain's stated reason for the cut directly: a selector written
+and never exercised is exactly what a directory-wide scan catches. Its limit is timing —
+it fires when someone compiles, and nothing in CI compiles today, which is the same
+adoption gap E closes.
+**Cost:** smallest in the field — one argument-construction change plus its tests; adoption
+surface none.
+
+**Null — accept the status quo.** Listed so the field is not five build options and no
+alternative. Today a banned selector written and never exercised produces no refusal and, in
+an unreferenced mapping, no warning either. The stated harm is an afternoon of debugging the
+application instead of the locator. Whether that clears any of the costs above is the
+captain's to weigh, not the shaper's to presume.
 
 ### What is NOT decided here
 
@@ -351,8 +382,9 @@ this on 2026-08-02.
 
 ### Owed back-port
 
-`docs/ci-integration.md:209` says the policy table has two consumers; it has three. Recorded
-here rather than shipped, because a code-branch edit needs its own entity.
+`docs/ci-integration.md:209` says the policy table has two consumers; it has three. Filed as
+its own seed, [[ci-integration-consumer-count-backport]], rather than recorded here — a debt
+line inside an entity that will eventually be archived has no owner and no due date.
 
 ### Pre-mortem
 
