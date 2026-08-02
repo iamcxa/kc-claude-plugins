@@ -637,3 +637,146 @@ The earlier failures were harness lifecycle defects, not a product-classifier fa
 children starved the local server, then shared app/receipt assumptions violated normal generated-flow
 ownership. Fresh isolated CLI and generated browser runs now prove AC-1 and AC-7 on the rebased four-
 commit head, all required gates are green, and implementation is complete pending separate validation.
+
+## Stage Report: validation
+
+TL;DR: **REJECTED.** Exact-head focused, full-suite, lint, marketplace, and the filed
+visible/not-visible real-browser matrix are green, but fresh validation found two material AC-5
+defects and a red 81.01% executable diff-coverage result. In particular, generated enabled/disabled
+assertions leave the shared classifier after it selects the one rendered retained-zero-rect
+candidate and then ask raw `agent-browser is enabled` about the first DOM match. An owned browser
+falsifier with a disabled zero-rect first button and enabled rendered second button therefore
+classified visibility as satisfied but exited 1 as “not enabled.” The claimed five-consumer test
+also grades instruction wording rather than exercising those consumers, contrary to this
+workflow's proof policy. No red residual is waived.
+
+### Exact surface and scope
+
+- Validated only worktree
+  `.worktrees/spacedock-ensign-deterministic-multi-match-visibility-semantics`, branch
+  `spacedock-ensign/deterministic-multi-match-visibility-semantics`, exact clean head
+  `4d6367500212011dcda51e75d11246fa3e3a92ba`.
+- `origin/main`, the dispatched base, and merge-base all resolved to
+  `844f36a53bc7094b74476b3e57cb47c70d69d5dd`.
+- Diff measurement: 25 files, 2,885 insertions, 178 deletions; all 25 map to an AC:
+  - AC-1/2/3/6/7 probe and protocol: `bin/e2e-visibility-probe.js`,
+    `compiler/lib/visibility-probe.js`, `compiler/test/visibility-probe.test.js`.
+  - AC-3/4 metadata and fail-before-browser resolution: `compiler/parser.js`,
+    `compiler/compiler.js`, `compiler/resolver.js`, `compiler/test/cli.test.js`,
+    `compiler/test/integration.test.js`, `compiler/test/resolver.test.js`,
+    `compiler/test/visibility-policy-metadata.test.js`.
+  - AC-1/3/4/5/6/7 generated behavior and runtime proof: `compiler/codegen.js`,
+    `compiler/test/visibility-browser-runtime-real.test.js`,
+    `compiler/test/visibility-consumer-contract.test.js`,
+    `compiler/test/visibility-resolver-codegen.test.js`.
+  - AC-5 consumer contracts: `agents/e2e-test-runner.md`, `agents/e2e-mapper.md`,
+    `agents/e2e-flow-verifier.md`, `skills/e2e-walkthrough/SKILL.md`,
+    `skills/e2e-walkthrough/reference.md`.
+  - AC-5/8 published contracts and examples: `CLAUDE.md`, `docs/ci-integration.md`,
+    `docs/writing-tests.md`, `references/commands.md`, `references/common-patterns.md`,
+    `skills/e2e-compile/SKILL.md`.
+- Unmapped files: zero.
+
+### Findings
+
+1. **P1 — retained-zero-rect enabled/disabled checks inspect the wrong candidate.**
+   `e2e-pipeline/compiler/codegen.js:524-549` first accepts deterministic positive visibility,
+   then lines 540-543 run raw `agent-browser is enabled "$selector"`. For a selector whose first
+   match is a retained zero-rect disabled button and whose second match is the one rendered enabled
+   button, the classifier correctly returns
+   `unique_rendered_with_retained_zero_rect`, but the state command reads the first match. A fresh
+   owned-runtime scratch fixture reproduced generated-script exit 1 and `target not enabled after
+   1s`; the a11y diagnostic showed disabled ref `e1` followed by enabled ref `e2`. Cleanup closed
+   and removed only the randomized test-owned app/run/profile/receipt roots.
+2. **P1 — enabled/disabled state is sampled once instead of polled for the declared timeout.**
+   The same `codegen.js:524-549` path spends the timeout only in `_poll_visibility`, then makes one
+   `is enabled` call. A control that is already visible but changes disabled/enabled state during
+   the remaining wait budget returns 1 immediately. The independent reviewer found the same call
+   path; citation and control flow are correct.
+3. **P2 — AC-5's five-consumer proof is not exercise-based.**
+   `compiler/test/visibility-consumer-contract.test.js:102-145` asserts regexes over the four
+   instruction files. That is the committed prose-grep shape Proof Policy rule 1 bans as behavioral
+   evidence. Lines 147-163 then loop over consumer labels but execute the same CLI each time without
+   reading or invoking mapper, runner, verifier, or walkthrough behavior. The test can remain green
+   while a consumer ignores the documented recipe, so it cannot close AC-5 or the correctness lens.
+4. **Coverage gate is red.** Full-suite V8 output converted through c8/LCOV and intersected with
+   exact added/changed lines measured 866/1,069 = **81.01%**, below the required 85% bar. Per-file
+   results were CLI 54/73, codegen 305/305, compiler 4/4, shared probe 309/472, parser 20/22, and
+   resolver 174/193. The browser IIFE is exercised by the real E2E after stringification in Chrome,
+   but Node V8 cannot attribute that execution back to its source lines; the workflow provides no
+   waiver for that instrumentation boundary, so the raw measured result remains red.
+
+### Per-AC verdict
+
+- **AC-1 PASS:** `E2E_REAL_VISIBILITY=1 node --test
+  compiler/test/visibility-browser-runtime-real.test.js` finished 2 passed, 0 failed. Strict
+  hidden-first returned `raw_multi_match`; explicit retained policy returned
+  `unique_rendered_with_retained_zero_rect`; neither returned absence.
+- **AC-2 PASS:** focused classifier/CLI/resolver/consumer suites finished 59 passed, 0 failed and
+  covered the eight result classes, hidden-style disqualification, second rendered candidate,
+  inconsistent aggregates, and capped evidence.
+- **AC-3 PASS:** focused fake-envelope and real invalid-CSS cases retained
+  `invalid_selector`, `match_count: null`, terminal negative judgment, and nonzero exit.
+- **AC-4 PASS:** resolver/compiler fixtures carried CSS identity and policy through single-site,
+  multi-site, legacy, parameterized, positive, negative, enabled/disabled, and OR forms; missing
+  non-CSS `css_selector` failed before output/browser startup.
+- **AC-5 FAIL:** findings 1-3. The generated enabled/disabled seam is not deterministic for the
+  approved multi-match exception, and four prose consumers lack independent exercise-based proof.
+- **AC-6 PASS:** focused generated positive, negative, and OR matrices preserved retryable versus
+  terminal exit meanings; terminal OR operand stopped after one attempt and was not masked.
+- **AC-7 PASS for the criterion's visible/not-visible fixtures:** the owned real CLI/generated
+  retained-ghost and invalid-CSS cases agreed. This does not cure AC-5's enabled/disabled defect.
+- **AC-8 PASS:** the published YAML example parsed, compiled, and executed through generated
+  support; the reviewed docs state strict default, exact exception, CSS identity migration,
+  diagnostics, negative behavior, and uniqueness guidance.
+
+### Required evidence block
+
+Lenses: correctness **FAIL, 3 findings**; silent-failure **PASS, 0 findings**; type-design **PASS,
+0 findings**; concurrency **PASS, 0 findings**; resource-lifecycle **PASS, 0 findings**;
+manifest/back-compat **PASS, 0 findings**. Security did not fire: no auth, permission, trust-boundary,
+secret-bearing workflow, or shell hook changed.
+Diff coverage: **FAIL — 866/1,069 changed executable lines = 81.01%** from full-suite
+NODE_V8_COVERAGE → c8 LCOV intersection; required bar is 85%.
+Adversarial: strict-cardinality mutation (`match_count === 1` → `>= 1`) made 5 probe tests red;
+invalid-CSS-to-`no_match` mutation made 1 probe test red; disabled-first/enabled-second retained
+candidate fixture made the owned generated E2E red with exit 1.
+Cross-model: preferred Claude Opus/high tool-less diff attempts timed out sleeping at 6m30s and
+5m22s after an `AUTH_MISSING` preflight; only owned PIDs were terminated. One bounded fallback
+requested `gemini-3.1-pro-high`/high and succeeded in 168.998s, conversation
+`27a21e80-1fb2-4163-ab97-a2ec85120f0c`; agy reported **Gemini 3.6 Flash (High)** / High. One
+accepted finding (enabled state is not polled); three findings declined after citation checks as
+unreachable infrastructure-only stale reporting, outside the specified CLI contract, and an
+intentional prose placeholder.
+E2E: expected real matrix **PASS 2/2** in 21.35s with fresh owned namespaces; claim-breaking
+disabled-first/enabled-second retained fixture **FAIL as falsifier**, generated exit 1 after
+classifier success; all owned state cleaned, unrelated browser/profile/session state preserved.
+
+### Other exit evidence
+
+- Fresh full `npm test`: 1,025 passed, 0 failed, 2 intentional real-browser skips in 126.04s.
+- `npm run lint`: exit 0, 215 warnings and 2 infos, no fixes applied.
+- `git diff --check`: exit 0.
+- `scripts/version-parity-check.sh`: all seven plugins consistent.
+- `scripts/marketplace-verify.sh`: L0 parity, L1 schema, and isolated L2 installability for all
+  seven plugins passed.
+- `scripts/skill-frontmatter-lint.sh`: 38 skill directories passed.
+
+### Return to implementation
+
+- Make enabled/disabled state judgment operate on the same uniquely rendered candidate selected
+  by the shared probe, and poll the state transition within the declared timeout without reverting
+  to first-match scalar semantics.
+- Replace prose-regex grading with an exercise that can fail when mapper, runner, verifier, or
+  walkthrough behavior ignores the protocol; do not relabel repeated CLI calls as four consumer
+  executions.
+- Raise measured executable diff coverage to at least 85% with a tool/reporting shape that honestly
+  accounts for browser-executed source, then rerun the exact owned real matrix and falsifiers.
+
+### Summary
+
+Fresh validation reproduced the filed visibility fix and its invalid-selector behavior, but found
+that enabled/disabled assertions leave the deterministic candidate seam and regress to first-match
+state inspection, while their timeout does not poll state. The consumer proof is prose grading, and
+raw changed-line coverage is 81.01%. The validation gate is therefore REJECTED and returns to
+implementation with no residual waived.
