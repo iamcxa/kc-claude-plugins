@@ -1158,3 +1158,56 @@ Fresh cycle-3 validation closes the authorized zero-timeout correction and re-co
 boundary on the exact product head. All ACs, the complete evidence block, real-runtime proof,
 changed-line coverage, full suite, and compatibility gates pass with zero Material residuals, so
 the validation verdict is **PASSED**.
+
+## Stage Report: implementation — correction round 3
+
+### Completion checklist
+
+- **DONE — Runner enabled/disabled instructions invoke the shared visibility judge directly with assertion enabled or disabled so state is taken from the selected rendered_candidate; they explicitly forbid a separate raw selector state check.** Evidence: the runner table now prescribes `--assert enabled` / `--assert disabled`, names `rendered_candidate` as the state authority, and contains the explicit prohibition.
+- **DONE — The actual runner consumer exercise includes enabled/disabled rendered-candidate vectors, including disabled zero-rect first plus enabled rendered second, and a raw-first-match or state-decoupling mutation makes that runner exercise red.** Evidence: the aggregate test executes the runner's extracted recipe against candidate 0 disabled/zero-rect plus candidate 1 enabled/rendered and rejects both in-memory mutations.
+- **DONE — The correction remains confined to AC-5 runner guidance and its executable consumer contract, preserves the already-passed compiled wait: 0 path, and exits with focused/full/real-runtime/coverage/lint/parity/install evidence plus correction-round effort.** Evidence: exact commit `f0d8b5cede15b7e93ac922c32229c8c9396df40b` changes only the two authorized files; all required gates below passed.
+
+### Summary
+
+The runner's public enabled/disabled contract now uses the shared visibility judge directly, so the
+state decision is coupled to the uniquely selected rendered candidate rather than a raw first DOM
+match. One executable consumer test covers both state assertions and proves that raw-first-match or
+state-decoupled guidance cannot remain green. No production classifier, resolver, codegen, wait,
+release, or workflow-state semantics changed.
+
+### RED to GREEN and falsifiability
+
+- False-green reproduction: changing only the prior runner state table to prescribe a raw first-match
+  check left the extracted Bash recipe byte-identical, and the existing three consumer tests passed.
+- RED: the new aggregate runner exercise failed 1/4 before guidance correction. Both state cases used
+  assertion `visible`; the enabled case passed accidentally, the disabled case incorrectly returned
+  satisfied/status 0, and the explicit raw-check prohibition was absent.
+- GREEN: after the smallest runner guidance correction, the consumer contract passed 4/4. Enabled
+  resolves satisfied/status 0 while disabled resolves retryable/status 1 from rendered candidate
+  index 1, whose enabled state is true.
+- Adversarial evidence is executable in that test: mutating the runner row to raw first-match state or
+  replacing the recipe's assertion with `visible` changes the state summaries and is detected.
+- Old-fixture audit: the runner contains no competing enabled/disabled raw-state instruction, and the
+  focused suite re-ran all six previously added generated `wait: 0` cases without regression.
+
+### Exact-head verification
+
+- Focused visibility/protocol boundary: **75 passed / 0 failed / 1 intentional real-browser skip**.
+- Owned real browser: **2 passed / 0 failed** in 42.00s.
+- Fresh instrumented full suite: **1,040 passed / 0 failed / 2 intentional real-browser skips** out
+  of 1,042 tests across 173 suites in 131.00s.
+- Honest executable diff coverage against base `844f36a5`: **991/1,124 = 88.17%**. Per file:
+  CLI 70/73; codegen 299/299; compiler 4/4; parser 20/22; resolver 174/193; probe 424/533.
+- `npm run lint`: exit 0 with the pre-existing 215 warnings and 2 infos; no fixes applied.
+- `git diff --check`, version parity/release paths/JSONPath/plugin enumeration, 38-skill
+  frontmatter lint, marketplace schema, and isolated clean-HOME install of all seven plugins passed.
+- No current workflow invokes the full `e2e-pipeline npm test`, so no existing CI timeout is
+  consumed. The fresh 131.00s run is 0.73s slower than cycle 3's 130.27s reference (0.6%).
+- Product branch local and remote both read back exact clean head
+  `f0d8b5cede15b7e93ac922c32229c8c9396df40b`.
+
+### Effort
+
+Dispatch-to-exact-product-readback took **13m00s (0.22 working hours)**. Corrections now total
+**1.00h**, 6.3% of the 16h estimate and 4.5% of the 22h tolerance. Entity status remains
+`implementation` for the captain-authorized fourth validation cycle.
