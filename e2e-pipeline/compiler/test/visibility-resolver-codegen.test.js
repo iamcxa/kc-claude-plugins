@@ -194,18 +194,20 @@ function mappedExpect(type, name, cssSelector, policy) {
   };
 }
 
-function generatedVisibilityFlow(expects, session) {
+function generatedVisibilityFlow(expects, session, timeout) {
+  const step = {
+    id: 'visibility-step',
+    action: 'Wait 0',
+    type: 'wait',
+    operands: { seconds: 0 },
+    session: session || undefined,
+    expects: expects,
+  };
+  if (timeout !== undefined) step.timeout = timeout;
   return generate({
     name: 'generated-visibility',
     description: 'Generated visibility probe fixture',
-    steps: [{
-      id: 'visibility-step',
-      action: 'Wait 0',
-      type: 'wait',
-      operands: { seconds: 0 },
-      session: session || undefined,
-      expects: expects,
-    }],
+    steps: [step],
   }, 'generated-visibility');
 }
 
@@ -268,11 +270,13 @@ function evidence(matchCount, rendered, zeroRect, nonStyle, renderedCandidate) {
   });
 }
 
-function runGenerated(expects, env, session) {
+function runGenerated(expects, env, session, timeout) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'visibility-codegen-'));
   const browser = path.join(dir, 'agent-browser');
   const log = path.join(dir, 'browser.log');
   const sleep = path.join(dir, 'sleep');
+  const sleepLog = path.join(dir, 'sleep.log');
+  const metrics = path.join(dir, 'metrics.json');
   const browserSource = [
     '#!/usr/bin/env bash',
     'printf \'%s\\n\' "$*" >> "${VISIBILITY_BROWSER_LOG:?}"',
@@ -287,22 +291,193 @@ function runGenerated(expects, env, session) {
     'esac',
   ].join('\n');
   fs.writeFileSync(browser, browserSource, { mode: 0o755 });
-  fs.writeFileSync(sleep, '#!/usr/bin/env bash\nexit 0\n', { mode: 0o755 });
+  fs.writeFileSync(sleep, [
+    '#!/usr/bin/env bash',
+    'printf \'%s\\n\' "$*" >> "${VISIBILITY_SLEEP_LOG:?}"',
+    'exit 0',
+  ].join('\n'), { mode: 0o755 });
   try {
-    const result = childProcess.spawnSync('/bin/bash', ['-c', generatedVisibilityFlow(expects, session)], {
+    const result = childProcess.spawnSync('/bin/bash', [
+      '-c',
+      generatedVisibilityFlow(expects, session, timeout),
+      '--',
+      '--continue-on-error',
+      '--metrics-output',
+      metrics,
+    ], {
       encoding: 'utf8',
       env: Object.assign({}, process.env, env || {}, {
         PATH: dir + path.delimiter + process.env.PATH,
         E2E_BROWSER_RUNTIME: BROWSER_RUNTIME_SHIM,
         VISIBILITY_BROWSER_LOG: log,
+        VISIBILITY_SLEEP_LOG: sleepLog,
         WAIT_TIMEOUT: env?.WAIT_TIMEOUT || '1',
       }),
     });
     result.browserLog = fs.existsSync(log) ? fs.readFileSync(log, 'utf8') : '';
+    result.sleepLog = fs.existsSync(sleepLog) ? fs.readFileSync(sleepLog, 'utf8') : '';
+    result.metrics = fs.existsSync(metrics) ? JSON.parse(fs.readFileSync(metrics, 'utf8')) : null;
     return result;
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
+}
+
+function zeroTimeoutSummary(result) {
+  const visibilityResults = result.metrics?.visibility_results || [];
+  return {
+    status: result.status,
+    eval_count: result.browserLog.split('\n').filter(function (line) { return line.includes('eval '); }).length,
+    retry_sleep_count: result.sleepLog.split('\n').filter(function (line) { return line === '1'; }).length,
+    json_syntax_error: /SyntaxError: Unexpected end of JSON input/.test(result.stderr),
+    failure: result.metrics?.steps[0]?.failure_msg || '',
+    visibility_results: visibilityResults.map(function (item) {
+      return {
+        selector: item.effective_selector,
+        result: item.result_class,
+        judgment: item.judgment,
+        match_count: item.match_count,
+        attempts: item.attempts,
+        elapsed: item.elapsed_seconds,
+      };
+    }),
+  };
+}
+
+function expectedVisibility(selector, result, judgment, matchCount) {
+  return {
+    selector: selector,
+    result: result,
+    judgment: judgment,
+    match_count: matchCount,
+    attempts: 1,
+    elapsed: 0,
+  };
+}
+
+for (const fixture of [
+  {
+    name: 'single satisfied',
+    expects: [mappedExpect('element-visible', 'positive', '#positive', 'strict')],
+    env: { VISIBILITY_ENVELOPE: evidence(1, 1, 0, 0) },
+    expected: {
+      status: 0,
+      eval_count: 1,
+      retry_sleep_count: 0,
+      json_syntax_error: false,
+      failure: '',
+      visibility_results: [expectedVisibility('#positive', 'unique_rendered', 'satisfied', 1)],
+    },
+  },
+  {
+    name: 'single retryable',
+    expects: [mappedExpect('element-visible', 'positive', '#positive', 'strict')],
+    env: { VISIBILITY_ENVELOPE: evidence(0, 0, 0, 0) },
+    expected: {
+      status: 1,
+      eval_count: 1,
+      retry_sleep_count: 0,
+      json_syntax_error: false,
+      failure: 'positive not visible after 0s',
+      visibility_results: [expectedVisibility('#positive', 'no_match', 'retryable', 0)],
+    },
+  },
+  {
+    name: 'single terminal',
+    expects: [mappedExpect('element-visible', 'positive', '#positive', 'strict')],
+    env: { VISIBILITY_ENVELOPE: evidence(2, 1, 1, 0) },
+    expected: {
+      status: 1,
+      eval_count: 1,
+      retry_sleep_count: 0,
+      json_syntax_error: false,
+      failure: 'deterministic visibility probe failed for positive',
+      visibility_results: [expectedVisibility('#positive', 'raw_multi_match', 'terminal', 2)],
+    },
+  },
+  {
+    name: 'OR satisfied',
+    expects: [{
+      type: 'or-visible',
+      raw: 'first visible or second visible',
+      elements: [
+        mappedExpect(undefined, 'first', '#first', 'strict'),
+        mappedExpect(undefined, 'second', '#second', 'strict'),
+      ],
+    }],
+    env: {
+      FIRST_ENVELOPE: evidence(1, 1, 0, 0),
+      SECOND_ENVELOPE: evidence(0, 0, 0, 0),
+    },
+    expected: {
+      status: 0,
+      eval_count: 2,
+      retry_sleep_count: 0,
+      json_syntax_error: false,
+      failure: '',
+      visibility_results: [
+        expectedVisibility('#first', 'unique_rendered', 'satisfied', 1),
+        expectedVisibility('#second', 'no_match', 'retryable', 0),
+      ],
+    },
+  },
+  {
+    name: 'OR retryable',
+    expects: [{
+      type: 'or-visible',
+      raw: 'first visible or second visible',
+      elements: [
+        mappedExpect(undefined, 'first', '#first', 'strict'),
+        mappedExpect(undefined, 'second', '#second', 'strict'),
+      ],
+    }],
+    env: {
+      FIRST_ENVELOPE: evidence(0, 0, 0, 0),
+      SECOND_ENVELOPE: evidence(0, 0, 0, 0),
+    },
+    expected: {
+      status: 1,
+      eval_count: 2,
+      retry_sleep_count: 0,
+      json_syntax_error: false,
+      failure: 'neither first nor second visible after 0s',
+      visibility_results: [
+        expectedVisibility('#first', 'no_match', 'retryable', 0),
+        expectedVisibility('#second', 'no_match', 'retryable', 0),
+      ],
+    },
+  },
+  {
+    name: 'OR terminal',
+    expects: [{
+      type: 'or-visible',
+      raw: 'first visible or second visible',
+      elements: [
+        mappedExpect(undefined, 'first', '#first', 'strict'),
+        mappedExpect(undefined, 'second', '#second', 'strict'),
+      ],
+    }],
+    env: {
+      FIRST_ENVELOPE: evidence(1, 1, 0, 0),
+      SECOND_ENVELOPE: evidence(2, 2, 0, 0),
+    },
+    expected: {
+      status: 1,
+      eval_count: 2,
+      retry_sleep_count: 0,
+      json_syntax_error: false,
+      failure: 'deterministic visibility probe failed for first or second',
+      visibility_results: [
+        expectedVisibility('#first', 'unique_rendered', 'satisfied', 1),
+        expectedVisibility('#second', 'multiple_rendered', 'terminal', 2),
+      ],
+    },
+  },
+]) {
+  test('generated ' + fixture.name + ' wait: 0 probes immediately without retry sleep', function () {
+    const result = runGenerated(fixture.expects, fixture.env, undefined, 0);
+    assert.deepEqual(zeroTimeoutSummary(result), fixture.expected, result.stdout + result.stderr);
+  });
 }
 
 test('generated positive and negative polling execute the shared judgment protocol', function () {
