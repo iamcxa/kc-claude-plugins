@@ -9,7 +9,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-deterministic-multi-match-visibility-semantics
 issue: "91"
-pr: pr-merge:pending:artifact-v1:8965c2c319d9a4f6722de169a7b202bdc28a9d46e3e489ca6e7d4533b59553c6
+pr: pr-merge:140:artifact-v1:8965c2c319d9a4f6722de169a7b202bdc28a9d46e3e489ca6e7d4533b59553c6
 design: required
 lane: main
 id: d3mmhwzpdye4mtg6yc0jvmdz
