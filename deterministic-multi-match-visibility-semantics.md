@@ -987,3 +987,45 @@ circuit breaker. This is the **second validation rejection**: do not automatical
 third implementation/validation round, do not waive AC-6, and do not advance the entity. Captain
 must adjudicate whether the public timeout domain should reject zero or define one immediate probe,
 then explicitly authorize any correction path. The validator made no product or status mutation.
+
+## Stage Report: implementation — correction round 2
+
+- DONE: For single and OR mapped visibility, wait: 0 performs the defined immediate probe set without sleeping, records attempts=1 and populated final evidence, and preserves normal 0/1/2 result semantics.
+  Product commit `9e788e8` makes both generated mapped pollers probe before checking retry budget; reverting either poller to the old `< timeout` guard makes its zero-timeout aggregate test fail on probe count, result evidence, and verdict.
+- DONE: Generated single and OR fixtures cover satisfied, retryable, and terminal wait: 0 outcomes with RED-before-GREEN evidence, exact probe counts, and non-empty visibility_results.
+  Six generated-runtime tests in `visibility-resolver-codegen.test.js` require 1 single eval or 2 OR evals, zero `sleep 1`, elapsed 0, exact judgments, and 1 or 2 final reports; deleting either operand probe or report makes the corresponding aggregate assertion fail.
+- DONE: The correction remains limited to the captain-approved polling boundary and exits with focused, full-suite, real-runtime, coverage, lint, parity, and install evidence plus an honest correction-round budget record.
+  Only `compiler/codegen.js` and its generated-runtime test changed; exact remote head `9e788e8b09904073d8a66e782d472258a8b91cab` passed every named exit gate below without parser/resolver, unrelated helper, release, PR, issue, or status mutation.
+
+### Summary
+
+The accepted timeout domain is preserved: zero now means one immediate single probe or both OR
+operand probes, with no retry sleep. The ordinary satisfied, retryable, and terminal judgments
+are recorded with `attempts: 1`, `elapsed_seconds: 0`, and bounded final evidence before returning.
+
+### RED before GREEN and old-fixture audit
+
+- RED on exact pre-correction head: focused suite finished **16 passed / 6 failed**. Every new case
+  observed zero evals, `visibility_results: []`, `SyntaxError: Unexpected end of JSON input`, and
+  infrastructure-failure routing instead of the fixture's satisfied/retryable/terminal outcome.
+- GREEN after the two-poller correction: the same focused file finished **22 passed / 0 failed**;
+  the full visibility boundary finished **74 passed / 0 failed / 1 intentional real-browser skip**.
+- Existing mapped timeout fixtures retain their original intent: first-try positive cases still
+  terminate immediately, delayed enabled/disabled cases still require a second atomic probe, and
+  terminal-first single/OR cases still perform exactly one immediate attempt set with no sleep.
+
+### Exact-head gates, CI difference, and effort
+
+- Owned real browser: **2 passed / 0 failed** in 52.07s. Fresh full suite: **1,039 passed / 0 failed /
+  2 intentional real-browser skips** across 173 suites in 135.61s; instrumented coverage run matched.
+- Honest executable diff coverage against base `844f36a5`: **991/1,124 = 88.17%**. The correction
+  added ten covered `codegen.js` lines; no browser source, file, or denominator was waived.
+- Lint exited 0 with the pre-existing 215 warnings and 2 infos. `git diff --check`, version parity,
+  release-path/JSONPath validation, plugin enumeration, 38-skill frontmatter lint, marketplace
+  schema, and isolated clean-HOME installation of all seven plugins passed.
+- Six tests were added. No current GitHub workflow invokes `e2e-pipeline`'s `npm test`, so no existing
+  CI job timeout margin is consumed; the local full-suite measurement increased from the cycle-2
+  125.26s reference to 135.61s (+10.35s, 8.3%).
+- Dispatch-to-exact-product-readback was **18m49s (0.31 working hours)**. Together with correction
+  round 1, corrections total **0.78h**, 4.9% of the 16h estimate and 3.5% of the 22h tolerance.
+  The branch is pushed normally; entity status remains `implementation` for authorized validation cycle 3.
