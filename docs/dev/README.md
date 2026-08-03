@@ -1279,6 +1279,20 @@ Per-dispatch observations stay where they are already written: the entity's
 `## Measurement` block and its stage reports. Those are the task's own evidence,
 not a second task universe.
 
+- 2026-08-03 · `## Gate Authority` (this file, 1166-1249) — the 84 lines an agent must
+  know *before* acting sit inside a 1300-plus-line document whose remainder is looked
+  up by keyword, so the two are reached by opposite means and only one of them works
+  when you do not know you need it. A session that deleted 443 lines from this file
+  and rewrote its Canonical Docs Ownership row never read its Gate Authority section:
+  the heading was printed by that session's own `grep -n '^## '` and skipped for not
+  matching the task term.
+  Cost: the captain was asked to rule twice on decisions auto-advance already
+  delegated, one turn went to re-deriving that rule from scratch, and the turn ended
+  by proposing a clause the contract already contained. Open — ruled that the fix
+  belongs to this flow rather than to a pointer in a file loaded earlier, since a
+  pointer leaves the mixing in place and adds a second thing to keep true.
+  Self-reported by the session that paid it; amend or strike as you see it.
+
 ## Task Template
 
 ```yaml
