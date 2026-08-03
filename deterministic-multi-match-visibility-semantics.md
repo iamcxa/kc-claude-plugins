@@ -1029,3 +1029,127 @@ are recorded with `attempts: 1`, `elapsed_seconds: 0`, and bounded final evidenc
 - Dispatch-to-exact-product-readback was **18m49s (0.31 working hours)**. Together with correction
   round 1, corrections total **0.78h**, 4.9% of the 16h estimate and 3.5% of the 22h tolerance.
   The branch is pushed normally; entity status remains `implementation` for authorized validation cycle 3.
+
+## Stage Report: validation — cycle 3
+
+TL;DR: **PASSED.** Fresh validation on exact clean product head
+`9e788e8b09904073d8a66e782d472258a8b91cab` against freshly fetched
+`origin/main` `844f36a53bc7094b74476b3e57cb47c70d69d5dd` reproduced AC-1 through AC-8
+with zero Material residuals. The captain-approved `wait: 0` contract now performs one immediate
+single probe or both OR operand probes, performs no sleep, records attempts 1 / elapsed 0 and
+populated bounded final evidence, and preserves satisfied, retryable, and terminal routing. Both
+loop guards were broken in a detached scratch worktree and all six zero-timeout cases went red.
+
+### Exact authority and scope
+
+- Fetched `origin/main` immediately before review; merge-base and base both resolved to
+  `844f36a53bc7094b74476b3e57cb47c70d69d5dd`. The assigned branch, local HEAD, and remote feature
+  branch all resolved to exact `9e788e8b09904073d8a66e782d472258a8b91cab`.
+- The product worktree was clean before validation and remained clean after every focused,
+  adversarial, real-browser, full-suite, coverage, lint, and compatibility check.
+- Exact diff: 25 files, 3,311 insertions, 178 deletions, all under `e2e-pipeline/`. Shared
+  probe/CLI/codegen/parser/resolver/compiler files map to AC-1 through AC-7; the eight changed test
+  files map to the same behavior and falsifiers; the three agents, walkthrough skill/reference,
+  compile skill, selector authority, and four published docs/references map to AC-5 and AC-8.
+  **25/25 changed files mapped; zero unrelated files and zero missing AC owners.**
+- No product, issue, PR, version, release, marketplace, ruleset, or stage-status surface was edited.
+  The only durable validation write is this entity report.
+
+### Cycle-2 correction falsification and prior-finding closure
+
+1. The six generated `wait: 0` cases independently returned the required single/OR probe counts
+   (1/2), zero retry sleeps, attempts 1, elapsed 0, non-empty `visibility_results`, and distinct
+   satisfied/retryable/terminal result classes and failure messages.
+2. A separate generated snapshot-action fixture eliminated the test step's own `sleep 0` and
+   observed **zero sleep invocations of any kind**. Its single satisfied path retained one bounded
+   candidate; its OR satisfied-plus-terminal path retained one and two candidates respectively,
+   both with evidence limit 10 and `candidate_evidence_truncated: false`.
+3. Replacing both immediate `while :` guards with the pre-correction `< timeout` form in a detached
+   scratch worktree made all six zero-timeout cases red. Each reported zero evals and empty final
+   results; retryable and terminal cases also falsely exited success. The scratch worktree was
+   removed after the falsifier and the product tree was never edited.
+4. All cycle-1 findings remain closed: enabled/disabled state comes from the selected rendered
+   candidate; delayed state changes poll; mapper, runner, verifier, and walkthrough execute their
+   committed recipes; exact executable diff coverage remains above 85%.
+
+### Per-AC verdict
+
+- **AC-1 PASS:** owned Chrome/runtime proof finished 2 passed / 0 failed. Strict hidden-first
+  classified `raw_multi_match`; explicit retained policy classified
+  `unique_rendered_with_retained_zero_rect`; neither path reported absence.
+- **AC-2 PASS:** the focused 192-test boundary exercised all eight result classes, exact exception
+  eligibility, hidden-style and second-rendered disqualification, uncapped aggregates, capped
+  candidate evidence, and CLI/generated classifier parity.
+- **AC-3 PASS:** malformed policy/envelope/transport/predicate inputs remained terminal
+  `probe_error`; invalid CSS remained terminal `invalid_selector` with `match_count: null` in direct
+  and generated real-runtime paths and could not satisfy a negative assertion.
+- **AC-4 PASS:** resolver/compiler fixtures carried effective CSS identity and policy through
+  single-site, multi-site, legacy, parameterized, positive, negative, enabled/disabled, and OR
+  forms; non-CSS mapped visibility without `css_selector` failed before generated output/browser.
+- **AC-5 PASS:** mapper, runner, verifier, and walkthrough tests extracted and executed each
+  committed shared-protocol recipe; generated support was exercised separately. Selected-candidate
+  enabled/disabled and report fields remained coupled to the same shared seam.
+- **AC-6 PASS:** single and OR `wait: 0` satisfied, retryable, and terminal paths executed the
+  immediate probe set, never slept, retained attempts/elapsed/final evidence, and preserved 0/1/2
+  judge semantics. A terminal OR operand was not masked by its satisfied peer.
+- **AC-7 PASS:** direct CLI and generated Bash agreed in the owned browser for strict/retained
+  hidden-first, invalid-CSS, selected-candidate state, and delayed transitions; a scratch source
+  perturbation test retained CLI/generated drift coupling.
+- **AC-8 PASS:** published YAML examples parsed, compiled, and executed through generated support;
+  reviewed guidance consistently states the strict default, exact exception, CSS identity
+  requirement, negative/error behavior, diagnostics, and uniqueness guidance.
+
+### Required evidence block
+
+Lenses: executable JS/CLI/codegen/protocol plus agent/skill/docs contract diff; correctness **PASS,
+0 findings**; security **PASS, 0 findings**; silent-failure **PASS, 0 findings**; type-design **PASS,
+0 findings**; concurrency **PASS, 0 findings**; resource-lifecycle **PASS, 0 findings**;
+manifest/back-compat **PASS, 0 findings**. Security fired because mapping selector input crosses
+YAML, shell argv, and browser eval/report boundaries; hostile quoting, sanitized/bounded evidence,
+and forbidden secret fields were exercised.
+Diff coverage: **PASS — 991/1,124 exact added executable lines = 88.17%** from the final full-suite
+`NODE_V8_COVERAGE` converted to c8 LCOV and intersected with exact added lines. Per file: CLI
+70/73; codegen 299/299; compiler 4/4; shared probe 424/533; parser 20/22; resolver 174/193.
+Adversarial: mutating both mapped pollers back to the pre-correction `< timeout` loop guard made
+**6/6 zero-timeout tests red** across single/OR satisfied, retryable, and terminal outcomes; the
+failures showed zero evals, empty reports, and false-success routing. A separate unmutated
+snapshot-action control proved 1/2 evals, zero sleeps, and populated bounded candidate evidence.
+Cross-model: exactly one actual read-only whole-diff review was requested from `agy` with
+`gemini-3.1-pro-high` / high; it inspected all 25 files, returned **0 actionable findings**, and
+named only the accepted selector-identity and current-document scope residuals. Its cited
+probe/state, poller/order, and consumer-exercise lines were verified locally. One earlier malformed
+argument-order preflight returned usage guidance and reviewed no diff; it was not a review call.
+E2E: exact owned real-browser/runtime test **PASS 2/2 in 43.89s** with direct and generated
+no-match, all-non-rendered, singleton, strict/retained ghost, hidden-style extra, two-rendered,
+invalid CSS, rendered-candidate enabled state, and delayed enabled/disabled cases; owned test state
+closed without touching unrelated browser/profile/session state.
+
+### Other exit evidence
+
+- Focused AC/protocol boundary: **192 passed / 0 failed** in 13 suites.
+- Fresh final instrumented `npm test`: **1,039 passed / 0 failed / 2 intentional real-browser
+  skips** out of 1,041 tests in 173 suites, duration 130.27s.
+- `npm run lint`: exit 0 with 215 existing warnings and 2 infos; no fixes applied.
+- `git diff --check origin/main...HEAD`: exit 0.
+- `scripts/version-parity-check.sh`: release paths, JSONPath targets, plugin enumeration, and all
+  plugin/marketplace/Codex versions passed.
+- `scripts/marketplace-verify.sh`: L0 parity, L1 schema, and isolated clean-HOME L2 installation
+  passed for all seven plugins.
+- `scripts/skill-frontmatter-lint.sh`: all 38 skill directories passed.
+
+### Reviewer adjudication and residuals
+
+The cross-vendor reviewer supplied no finding to accept or decline. Its cited lines were accurate;
+the phrase “non-empty bounded evidence” was independently sharpened with an executable fixture
+because the committed zero-timeout vectors use empty candidate arrays. Final result records are
+always populated; candidate evidence is populated when matches exist and is legitimately empty for
+`no_match`. The two named residuals remain the already accepted design bounds: accessible locator
+and `css_selector` identity can diverge, and current-document probing does not cross shadow/frame
+boundaries.
+
+### Summary
+
+Fresh cycle-3 validation closes the authorized zero-timeout correction and re-confirms every prior
+boundary on the exact product head. All ACs, the complete evidence block, real-runtime proof,
+changed-line coverage, full suite, and compatibility gates pass with zero Material residuals, so
+the validation verdict is **PASSED**.
