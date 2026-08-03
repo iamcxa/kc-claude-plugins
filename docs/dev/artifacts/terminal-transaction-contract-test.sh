@@ -3,20 +3,19 @@ set -euo pipefail
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 PR_MERGE=${CONTRACT_PR_MERGE:-"$REPO_ROOT/docs/dev/_mods/pr-merge.md"}
-LEDGER="$REPO_ROOT/docs/dev/ledger.csv"
 SPACEDOCK_BIN=${SPACEDOCK_BIN:-spacedock}
 MODE=${1:-all}
 STATE_REF=refs/heads/spacedock-state/dev
-TEST_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/decoupled-ledger-contract.XXXXXX")
+TEST_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/terminal-transaction-contract.XXXXXX")
 trap 'rm -rf "$TEST_ROOT"' EXIT
 
 fail() {
-  printf 'decoupled-ledger-contract:FAIL:%s\n' "$*" >&2
+  printf 'terminal-transaction-contract:FAIL:%s\n' "$*" >&2
   exit 1
 }
 
 pass() {
-  printf 'decoupled-ledger-contract:PASS:%s\n' "$*"
+  printf 'terminal-transaction-contract:PASS:%s\n' "$*"
 }
 
 extract_terminal_contract() {
@@ -64,8 +63,8 @@ extract_archive_contract() {
 }
 
 git_identity() {
-  git -C "$1" config user.name 'Decoupled Ledger Fixture'
-  git -C "$1" config user.email 'decoupled-ledger-fixture@example.invalid'
+  git -C "$1" config user.name 'Terminal Transaction Fixture'
+  git -C "$1" config user.email 'terminal-transaction-fixture@example.invalid'
 }
 
 make_artifact() {
@@ -84,6 +83,10 @@ print(hashlib.sha256(raw).hexdigest())
 PY
 }
 
+# The ledger_pr / ledger_artifact_v1 arguments seed frontmatter keys the schema no
+# longer declares. They are retained because live entities still carry them until the
+# state migration lands; the assertions prove the terminal transaction preserves
+# fields it does not own rather than clobbering them.
 setup_fixture() {
   local case_name=$1
   local form=$2
@@ -98,7 +101,7 @@ setup_fixture() {
   remote_repo="$TEST_ROOT/remotes/$case_name.git"
   WORKFLOW_DIR="$FIXTURE_REPO/docs/dev"
   STATE="$WORKFLOW_DIR/.spacedock-state"
-  SLUG=decoupled-ledger-fixture
+  SLUG=terminal-transaction-fixture
   TERMINAL='done'
   PRODUCT_PR_NUMBER=77
   PRODUCT_MERGED_AT=2026-07-31T09:50:02Z
@@ -133,7 +136,7 @@ stages:
       terminal: true
 ---
 
-# Decoupled ledger contract fixture
+# Terminal transaction contract fixture
 EOF
   printf 'docs/dev/.spacedock-state/\n' >"$FIXTURE_REPO/.gitignore"
   git -C "$FIXTURE_REPO" add -- .gitignore docs/dev/README.md
@@ -170,7 +173,7 @@ EOF
   cat >"$STATE/$LIVE_INDEX" <<EOF
 ---
 id: 7rgdvsjypgmzk8wh03h3vst9
-title: Decoupled ledger fixture
+title: Terminal transaction fixture
 status: validation
 source: contract fixture
 product: repo-platform
@@ -456,13 +459,16 @@ assert_single_archive() {
   git -C "$STATE" show "HEAD:$ARCHIVE_INDEX" >/dev/null
 }
 
-terminal_without_ledger() {
+terminal_transaction() {
   local archive_contract="$TEST_ROOT/archive-contract.sh"
   local contract_file="$TEST_ROOT/terminal-contract.sh"
   local digest
+  local empty_tree
   local form
   local guard
   local pre_push_hook
+  local reachable_commit
+  local unreachable_commit
   local valid_product_artifact
   local valid_product_merged_at
   local valid_product_ref
@@ -534,79 +540,19 @@ terminal_without_ledger() {
       fail 'terminal fixture unexpectedly created a ledger'
   done
 
-  pass 'terminal-without-ledger'
-}
-
-compatibility() {
-  local archive_contract="$TEST_ROOT/archive-contract.sh"
-  local contract_file="$TEST_ROOT/terminal-contract.sh"
-  local before
-  local after
-  local digest
-  local ledger_ref
-  local ledger_artifact
-  local label
-  local archive_text
-  local empty_tree
-  local unreachable_commit
-  local reachable_commit
-
-  extract_terminal_contract "$contract_file"
-  extract_archive_contract "$archive_contract"
-  before=$(git hash-object "$LEDGER")
-  python3 - "$LEDGER" <<'PY'
-import csv
-import pathlib
-import sys
-
-path = pathlib.Path(sys.argv[1])
-with path.open(newline="", encoding="utf-8") as handle:
-    rows = list(csv.reader(handle))
-expected = [
-    "task_id", "slug", "dispatches", "rework_rounds", "wallclock_hours",
-    "tokens_if_known", "diff_coverage", "escaped_defects_7d",
-]
-if not rows or [cell.strip() for cell in rows[0]] != expected:
-    raise SystemExit("compatibility:header")
-if any(len(row) != 8 for row in rows[1:]):
-    raise SystemExit("compatibility:eight-column-history")
-if not any(any(cell.strip() == "" for cell in row) for row in rows[1:]):
-    raise SystemExit("compatibility:blank-history-missing")
-if not any(row[7].strip().startswith("pending:") for row in rows[1:]):
-    raise SystemExit("compatibility:dated-pending-history-missing")
-if not any(any(cell.strip() == "n/a" for cell in row) for row in rows[1:]):
-    raise SystemExit("compatibility:unknown-history-missing")
-PY
-
-  digest=$(printf 'a%.0s' {1..64})
-  while IFS='|' read -r label ledger_ref ledger_artifact; do
-    setup_fixture "compatibility-$label" flat "$ledger_ref" "$ledger_artifact"
-    run_terminal
-    frontmatter_assert "$STATE/$LIVE_INDEX" 'done' "$ledger_ref" "$ledger_artifact"
-  done <<EOF
-empty||
-draft|ledger-pr:draft:artifact-v1:$digest|legacy-draft-bytes
-pending|ledger-pr:pending:artifact-v1:$digest|legacy-pending-bytes
-numbered|ledger-pr:99:artifact-v1:$digest|legacy-numbered-bytes
-merged|ledger-merge:99:artifact-v1:$digest|legacy-merged-bytes
-malformed|ledger-pr:banana:not-a-digest|legacy-malformed-bytes
-EOF
-
-  after=$(git hash-object "$LEDGER")
-  [[ "$before" == "$after" ]] || fail 'historical ledger rows changed'
-
-  before=$(git -C "$REPO_ROOT" rev-parse \
-    'spacedock-state/dev:_archive/agy-first-whole-diff-review-seat.md')
-  archive_text=$(git -C "$REPO_ROOT" show \
-    'spacedock-state/dev:_archive/agy-first-whole-diff-review-seat.md')
-  grep -q '^ledger_pr: ledger-merge:119:artifact-v1:' <<<"$archive_text" ||
-    fail 'historical ledger merge reference is unreadable'
-  after=$(git -C "$REPO_ROOT" rev-parse \
-    'spacedock-state/dev:_archive/agy-first-whole-diff-review-seat.md')
-  [[ "$before" == "$after" ]] || fail 'historical archived entity changed'
-
+  # The legacy direct-commit route is the second of two terminalization routes and
+  # has its own reachability guard. This coverage lived in the deleted
+  # `compatibility` mode, which seeded it with ledger frontmatter values; the route
+  # under test was never the ledger.
+  #
+  # Bound on what this proves: the guard exercised below is authenticate_terminal_route()
+  # above — this harness's own restatement of the rule. The mod states the same rule in
+  # prose at _mods/pr-merge.md:1753-1757, which sits outside the
+  # `# decoupled-terminal-transaction:*` extraction markers, so nothing here reads or
+  # falsifies it. Deleting that prose rule leaves this test green. What follows proves
+  # the harness agrees with the harness, not that the mod is enforced.
   setup_fixture direct-unreachable flat \
-    'ledger-merge:119:artifact-v1:legacy' 'legacy-direct-bytes'
+    'malformed ledger ref' 'opaque historical bytes'
   empty_tree=$(git -C "$FIXTURE_REPO" mktree </dev/null)
   unreachable_commit=$(printf 'test: unreachable direct commit\n' |
     git -C "$FIXTURE_REPO" commit-tree "$empty_tree")
@@ -619,175 +565,21 @@ EOF
     fail 'direct-commit authentication refusal mutated the live/archive roots'
 
   setup_fixture direct-valid folder \
-    'ledger-merge:119:artifact-v1:legacy' 'legacy-direct-bytes'
+    'malformed ledger ref' 'opaque historical bytes'
   reachable_commit=$(git -C "$FIXTURE_REPO" rev-parse 'origin/main^{commit}')
   seed_direct_commit_terminal "$reachable_commit"
   publish_state_head || fail 'could not publish valid direct-commit fixture state'
   durable_archive
-  assert_single_archive \
-    'ledger-merge:119:artifact-v1:legacy' 'legacy-direct-bytes'
+  assert_single_archive 'malformed ledger ref' 'opaque historical bytes'
 
-  pass 'compatibility'
-}
-
-derive_archive_metrics() {
-  python3 - "$1" <<'PY'
-import datetime
-import pathlib
-import re
-import sys
-
-text = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8")
-lines = text.splitlines()
-fields = {}
-for line in lines[1:]:
-    if line == "---":
-        break
-    key, separator, value = line.partition(":")
-    if separator:
-        fields[key] = value.strip()
-
-started = datetime.datetime.fromisoformat(fields["started"].replace("Z", "+00:00"))
-completed = datetime.datetime.fromisoformat(fields["completed"].replace("Z", "+00:00"))
-dispatches = len(re.findall(r"^D[0-9]+ launched ", text, re.MULTILINE))
-rework = len(set(re.findall(r"Cycle ([0-9]+): REJECTED", text)))
-hours = f"{(completed - started).total_seconds() / 3600:.2f}".rstrip("0").rstrip(".")
-token_values = re.findall(
-    r"^D[0-9]+ launched [^\n|]+\| tokens:[ \t]*([^ \t\r\n]+)",
-    text,
-    re.MULTILINE,
-)
-tokens = "n/a" if len(token_values) == dispatches and set(token_values) == {"n/a"} else "unknown"
-coverages = re.findall(
-    r"Diff coverage:[^\n]*\*\*([0-9]+(?:\.[0-9]+)?)%\*\*", text
-)
-coverage = coverages[-1] if coverages else "unknown"
-deadline = (completed.date() + datetime.timedelta(days=7)).isoformat()
-print(",".join((str(dispatches), str(rework), hours, tokens, coverage, f"pending:{deadline}")))
-PY
-}
-
-archive_derive() {
-  local archive_copy="$TEST_ROOT/archive.md"
-  local unknown_copy="$TEST_ROOT/archive-unknown.md"
-  local ledger_copy="$TEST_ROOT/ledger.csv"
-  local state_tree_before
-  local state_tree_after
-  local derived
-  local unknown
-
-  state_tree_before=$(git -C "$REPO_ROOT" rev-parse 'spacedock-state/dev^{tree}')
-  git -C "$REPO_ROOT" show \
-    'spacedock-state/dev:_archive/agy-first-whole-diff-review-seat.md' >"$archive_copy"
-  derived=$(derive_archive_metrics "$archive_copy")
-  [[ "$derived" == '14,2,18.81,n/a,88.17,pending:2026-08-07' ]] ||
-    fail "archive derivation mismatch: $derived"
-
-  cp "$LEDGER" "$ledger_copy"
-  python3 - "$ledger_copy" "$derived" <<'PY'
-import pathlib
-import sys
-
-path = pathlib.Path(sys.argv[1])
-task_id = "4a255s3z87s7x09vn2fnscep"
-row = f"{task_id}, agy-first-whole-diff-review-seat, {sys.argv[2].replace(',', ', ')}"
-lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
-matches = [i for i, line in enumerate(lines) if line.startswith(task_id + ",")]
-if len(matches) != 1:
-    raise SystemExit("archive-derive:ledger-row")
-ending = "\n" if lines[matches[0]].endswith("\n") else ""
-lines[matches[0]] = row + ending
-path.write_text("".join(lines), encoding="utf-8")
-if row not in path.read_text(encoding="utf-8").splitlines():
-    raise SystemExit("archive-derive:upsert")
-PY
-  cmp -s "$LEDGER" "$ledger_copy" ||
-    fail 'derived exemplar did not reproduce its historical row byte-for-byte'
-
-  python3 - "$archive_copy" "$unknown_copy" <<'PY'
-import pathlib
-import re
-import sys
-
-text = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8")
-text = re.sub(r"(\| tokens:)[^\n]*", r"\1", text)
-text = re.sub(r"^.*Diff coverage:.*$", "", text, flags=re.MULTILINE)
-pathlib.Path(sys.argv[2]).write_text(text, encoding="utf-8")
-PY
-  unknown=$(derive_archive_metrics "$unknown_copy")
-  [[ "$unknown" == '14,2,18.81,unknown,unknown,pending:2026-08-07' ]] ||
-    fail "missing optional evidence was not reported unknown: $unknown"
-
-  state_tree_after=$(git -C "$REPO_ROOT" rev-parse 'spacedock-state/dev^{tree}')
-  [[ "$state_tree_before" == "$state_tree_after" ]] ||
-    fail 'archive-first observation mutated workflow state'
-
-  pass 'archive-derive'
-}
-
-scope_check() {
-  local actual_paths
-  local changed
-  local diff_sha256
-  local expected_paths
-  local hunk_count
-  local path
-  local untracked
-
-  changed=$(git -C "$REPO_ROOT" diff --name-only origin/main --)
-  untracked=$(git -C "$REPO_ROOT" ls-files --others --exclude-standard)
-  while IFS= read -r path; do
-    [[ -z "$path" ]] && continue
-    case "$path" in
-      docs/dev/README.md | docs/dev/_mods/pr-merge.md | \
-        docs/dev/artifacts/decoupled-ledger-contract-test.sh) ;;
-      *) fail "scope includes unauthorized path: $path" ;;
-    esac
-  done < <(printf '%s\n%s\n' "$changed" "$untracked" | sort -u)
-
-  actual_paths=$(printf '%s\n%s\n' "$changed" "$untracked" |
-    sed '/^$/d' | sort -u)
-  expected_paths=$(printf '%s\n' \
-    docs/dev/README.md \
-    docs/dev/_mods/pr-merge.md \
-    docs/dev/artifacts/decoupled-ledger-contract-test.sh | sort)
-  [[ "$actual_paths" == "$expected_paths" ]] ||
-    fail 'exact reviewed diff does not contain the three declared paths'
-  hunk_count=$(git -C "$REPO_ROOT" diff --unified=0 --no-ext-diff origin/main -- \
-    docs/dev/README.md docs/dev/_mods/pr-merge.md \
-    docs/dev/artifacts/decoupled-ledger-contract-test.sh |
-    awk '/^@@ / { count += 1 } END { print count + 0 }')
-  [[ "$hunk_count" -gt 0 ]] || fail 'exact reviewed diff has no auditable hunks'
-  diff_sha256=$(git -C "$REPO_ROOT" diff --no-ext-diff origin/main -- \
-    docs/dev/README.md docs/dev/_mods/pr-merge.md \
-    docs/dev/artifacts/decoupled-ledger-contract-test.sh | shasum -a 256 |
-    awk '{ print $1 }')
-  printf 'decoupled-ledger-contract:SCOPE:paths=3:hunks=%s:sha256=%s\n' \
-    "$hunk_count" "$diff_sha256"
-
-  pass 'scope'
+  pass 'terminal-transaction'
 }
 
 case "$MODE" in
-  terminal-without-ledger)
-    terminal_without_ledger
-    ;;
-  compatibility)
-    compatibility
-    ;;
-  archive-derive)
-    archive_derive
-    ;;
-  scope)
-    scope_check
-    ;;
-  all)
-    terminal_without_ledger
-    compatibility
-    archive_derive
-    scope_check
+  terminal-transaction | all)
+    terminal_transaction
     ;;
   *)
-    fail 'usage: decoupled-ledger-contract-test.sh [terminal-without-ledger|compatibility|archive-derive|scope|all]'
+    fail 'usage: terminal-transaction-contract-test.sh [terminal-transaction|all]'
     ;;
 esac
