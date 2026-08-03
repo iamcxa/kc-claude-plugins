@@ -541,9 +541,16 @@ terminal_transaction() {
   done
 
   # The legacy direct-commit route is the second of two terminalization routes and
-  # has its own authentication guard: the commit must be reachable from origin/main.
-  # This coverage lived in the deleted `compatibility` mode, which seeded it with
-  # ledger frontmatter values; the route under test was never the ledger.
+  # has its own reachability guard. This coverage lived in the deleted
+  # `compatibility` mode, which seeded it with ledger frontmatter values; the route
+  # under test was never the ledger.
+  #
+  # Bound on what this proves: the guard exercised below is authenticate_terminal_route()
+  # above — this harness's own restatement of the rule. The mod states the same rule in
+  # prose at _mods/pr-merge.md:1753-1757, which sits outside the
+  # `# decoupled-terminal-transaction:*` extraction markers, so nothing here reads or
+  # falsifies it. Deleting that prose rule leaves this test green. What follows proves
+  # the harness agrees with the harness, not that the mod is enforced.
   setup_fixture direct-unreachable flat \
     'malformed ledger ref' 'opaque historical bytes'
   empty_tree=$(git -C "$FIXTURE_REPO" mktree </dev/null)
