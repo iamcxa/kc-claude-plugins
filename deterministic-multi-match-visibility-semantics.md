@@ -1211,3 +1211,49 @@ release, or workflow-state semantics changed.
 Dispatch-to-exact-product-readback took **13m00s (0.22 working hours)**. Corrections now total
 **1.00h**, 6.3% of the 16h estimate and 4.5% of the 22h tolerance. Entity status remains
 `implementation` for the captain-authorized fourth validation cycle.
+
+## Stage Report: validation (cycle 4)
+
+TL;DR: **PASSED.** Fresh validation bound local and remote product head to
+`f0d8b5cede15b7e93ac922c32229c8c9396df40b` over freshly fetched base `844f36a5`, reproduced
+AC-1 through AC-8, and found zero Material residuals. The AC-5 runner correction now exercises
+enabled/disabled state from `rendered_candidate`; two independent scratch mutations made it red.
+
+- DONE: Independently falsify AC-5 on exact head f0d8b5c: exercise the actual runner enabled and disabled guidance against disabled zero-rect candidate 0 plus enabled rendered candidate 1, prove state comes from rendered_candidate, and prove raw-first-match or assertion-decoupling mutations make the exercise red.
+  Clean consumer exercise passed 4/4; raw-first-match guidance and `--assert visible` scratch mutations each failed 1/4 with disabled falsely satisfied/status 0.
+- DONE: Reproduce AC-1 through AC-8, including all prior cycle-1 findings and captain-approved AC-6 single/OR wait: 0 satisfied, retryable, and terminal behavior, with the complete five-line evidence block, exactly one actual cross-vendor review, adversarial mutations, honest executable diff coverage, and owned real-browser/runtime evidence.
+  Focused visibility boundary passed 75/75 plus one intentional browser skip; all six zero-timeout cases and selected-candidate/delayed state cases were green.
+- DONE: Audit every changed file to an AC, run focused checks then one final full suite plus earned lint/parity/frontmatter/marketplace/install gates, and return PASSED only with zero Material residuals; never edit product or mutate PR, issue, version, release, ruleset, or status state.
+  All 25 files map to AC-1 through AC-8; product stayed clean and no hosted/status surface changed.
+
+### Per-AC verdict
+
+- AC-1 PASS: owned runtime classified strict hidden-first as `raw_multi_match` and retained policy as `unique_rendered_with_retained_zero_rect`, never absence.
+- AC-2 PASS: focused tables exercised all eight classes, exact exception eligibility, hidden-style/two-rendered disqualification, and bounded evidence.
+- AC-3 PASS: invalid CSS, policy, transport, envelope, and predicate failures stayed terminal; invalid selector retained `match_count: null`.
+- AC-4 PASS: resolver/compiler fixtures carried CSS identity and policy through every mapped form and failed non-CSS-without-`css_selector` before browser output.
+- AC-5 PASS: four consumer recipes executed; runner enabled/disabled used assertions `enabled`/`disabled`, candidate index 1 state, and no raw state check.
+- AC-6 PASS: six single/OR `wait: 0` cases made 1/2 probes, zero retry sleeps, populated final evidence, and distinct satisfied/retryable/terminal routing.
+- AC-7 PASS: CLI and generated Bash agreed in the owned browser for retained ghost, invalid CSS, selected-candidate state, and delayed transitions.
+- AC-8 PASS: the published YAML parsed, compiled, and executed; reviewed guidance retains strict default, exact exception, CSS identity, diagnostics, and uniqueness.
+
+### Required evidence block
+
+Lenses: executable JS/CLI/codegen/protocol plus agent/skill/docs contract diff; correctness **PASS, 0 findings**; security **PASS, 0 findings**; silent-failure **PASS, 0 findings**; type-design **PASS, 0 findings**; concurrency **PASS, 0 findings**; resource-lifecycle **PASS, 0 findings**; manifest/back-compat **PASS, 0 findings**.
+Diff coverage: **PASS — 991/1,124 exact added executable lines = 88.17%** from the final full-suite `NODE_V8_COVERAGE` converted to c8 LCOV and intersected with committed added lines.
+Adversarial: raw-first-match guidance and assertion-to-visible scratch mutations each made the AC-5 consumer exercise red; clean product stayed 4/4 and the scratch tree was removed after both checks.
+Cross-model: exactly one actual read-only whole-diff review completed through `agy` requested as `gemini-3.1-pro-high` / high on exact head and all 25 files; **0 actionable findings**. A cached wrong-project attempt was terminated before verdict and did not count as a review.
+E2E: exact owned browser/runtime test **PASS 2/2 in 49.72s** across direct/generated hidden-first, invalid CSS, rendered-candidate enabled, and delayed enabled/disabled cases; owned cleanup completed.
+
+### Other exit evidence
+
+- Final instrumented `npm test`: **1,040 passed / 0 failed / 2 intentional skips** out of 1,042 tests in 173 suites, 137.43s.
+- `npm run lint` exited 0 with 215 pre-existing warnings and 2 infos; `git diff --check`, version/release parity, plugin enumeration, 38-skill frontmatter lint, marketplace schema, and clean-HOME install of all seven plugins passed.
+- Cross-vendor citations for runner, consumer mutation harness, wait-zero codegen/tests, and delayed selected-candidate polling were checked against the exact files and were accurate.
+
+### Summary
+
+Fresh cycle-4 validation independently closes the runner guidance false-green that invalidated
+cycle 3 while retaining every earlier correction and proof boundary. All ACs, required evidence,
+real runtime, coverage, full suite, and compatibility gates pass with zero Material residuals, so
+the validation verdict is **PASSED**.
