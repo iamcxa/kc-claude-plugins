@@ -1257,10 +1257,12 @@ noted the runtime does not expose per-worker usage — and no `escaped_defects_7
 window was ever swept. A comparison that cannot be computed does not referee
 anything.
 
-What the ledger clause actually asked for survives, on the axis that has
-evidence: **complexity does not earn its way back through argument.** The
-question that enforces it is not how fast a task ran, it is **which clause of
-this contract turned out to be expensive.**
+The ledger clause wanted complexity to cost something before it was accepted.
+Nothing here enforces that mechanically — the ledger did not either, since its
+bar was never computed. What this record supplies instead is the evidence such a
+judgment needs, on the axis that has any: not how fast a task ran, but **which
+clause of this contract turned out to be expensive.** The enforcement point is
+the captain's reading of it, named here so no one mistakes it for a gate.
 
 When a rule in this contract demonstrably delayed or blocked a task, the FO of
 that task appends one line below, after the EM accepts validation and before the

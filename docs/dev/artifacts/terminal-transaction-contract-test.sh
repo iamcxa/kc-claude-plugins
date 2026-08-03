@@ -463,9 +463,12 @@ terminal_transaction() {
   local archive_contract="$TEST_ROOT/archive-contract.sh"
   local contract_file="$TEST_ROOT/terminal-contract.sh"
   local digest
+  local empty_tree
   local form
   local guard
   local pre_push_hook
+  local reachable_commit
+  local unreachable_commit
   local valid_product_artifact
   local valid_product_merged_at
   local valid_product_ref
@@ -536,6 +539,31 @@ terminal_transaction() {
     [[ ! -e "$WORKFLOW_DIR/ledger.csv" ]] ||
       fail 'terminal fixture unexpectedly created a ledger'
   done
+
+  # The legacy direct-commit route is the second of two terminalization routes and
+  # has its own authentication guard: the commit must be reachable from origin/main.
+  # This coverage lived in the deleted `compatibility` mode, which seeded it with
+  # ledger frontmatter values; the route under test was never the ledger.
+  setup_fixture direct-unreachable flat \
+    'malformed ledger ref' 'opaque historical bytes'
+  empty_tree=$(git -C "$FIXTURE_REPO" mktree </dev/null)
+  unreachable_commit=$(printf 'test: unreachable direct commit\n' |
+    git -C "$FIXTURE_REPO" commit-tree "$empty_tree")
+  seed_direct_commit_terminal "$unreachable_commit"
+  publish_state_head || fail 'could not publish unreachable direct-commit fixture state'
+  if durable_archive; then
+    fail 'legacy direct-commit route accepted a commit not reachable from origin/main'
+  fi
+  [[ -e "$STATE/$LIVE_INDEX" && ! -e "$STATE/$ARCHIVE_INDEX" ]] ||
+    fail 'direct-commit authentication refusal mutated the live/archive roots'
+
+  setup_fixture direct-valid folder \
+    'malformed ledger ref' 'opaque historical bytes'
+  reachable_commit=$(git -C "$FIXTURE_REPO" rev-parse 'origin/main^{commit}')
+  seed_direct_commit_terminal "$reachable_commit"
+  publish_state_head || fail 'could not publish valid direct-commit fixture state'
+  durable_archive
+  assert_single_archive 'malformed ledger ref' 'opaque historical bytes'
 
   pass 'terminal-transaction'
 }
