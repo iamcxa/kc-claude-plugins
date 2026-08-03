@@ -24,7 +24,7 @@ function read(relativePath) {
   return fs.readFileSync(path.join(PIPELINE, relativePath), 'utf8');
 }
 
-function envelope(matchCount, rendered, zeroRect, nonStyle) {
+function envelope(matchCount, rendered, zeroRect, nonStyle, renderedCandidate, candidates) {
   return JSON.stringify({
     success: true,
     data: {
@@ -37,7 +37,8 @@ function envelope(matchCount, rendered, zeroRect, nonStyle) {
         non_style_visible_count: nonStyle,
         candidate_evidence_limit: 10,
         candidate_evidence_truncated: false,
-        candidates: [],
+        candidates: candidates || [],
+        rendered_candidate: renderedCandidate === undefined ? null : renderedCandidate,
       },
     },
   });
@@ -82,20 +83,23 @@ const MATRIX = [
   ],
 ];
 
-function consumerRecipe(relativePath) {
-  const blocks = Array.from(read(relativePath).matchAll(/```bash\n([\s\S]*?)```/g), function (match) {
+function consumerRecipeFromSource(source, label) {
+  const blocks = Array.from(source.matchAll(/```bash\n([\s\S]*?)```/g), function (match) {
     return match[1];
   });
   const recipe = blocks.find(function (block) {
     return block.includes('e2e-visibility-probe.js') && block.includes('judge --policy');
   });
-  assert.ok(recipe, relativePath + ': executable visibility recipe is missing');
+  assert.ok(recipe, label + ': executable visibility recipe is missing');
   return recipe.replaceAll('{{browser_command}}', 'browser_command')
     .replaceAll('<browser_command>', 'browser_command');
 }
 
-function exerciseConsumer(relativePath, raw, policy, assertion) {
-  const recipe = consumerRecipe(relativePath);
+function consumerRecipe(relativePath) {
+  return consumerRecipeFromSource(read(relativePath), relativePath);
+}
+
+function exerciseRecipe(recipe, raw, policy, assertion) {
   const script = [
     'set -u',
     'browser_command() {',
@@ -121,6 +125,10 @@ function exerciseConsumer(relativePath, raw, policy, assertion) {
   return { result: result, judged: lines[0] ? JSON.parse(lines[0]) : null, output: lines.slice(1) };
 }
 
+function exerciseConsumer(relativePath, raw, policy, assertion) {
+  return exerciseRecipe(consumerRecipe(relativePath), raw, policy, assertion);
+}
+
 test('mapper, runner, verifier, and walkthrough execute their own shared-protocol recipes', function () {
   for (const [name, relativePath] of CONSUMERS) {
     const vectors = name === 'mapper'
@@ -138,6 +146,90 @@ test('mapper, runner, verifier, and walkthrough execute their own shared-protoco
       assert.ok(actual.output.some(function (line) { return line.startsWith('elapsed='); }), name);
     }
   }
+});
+
+function runnerStateAssertion(source, state) {
+  const marker = '| `"<element> ' + state + ' on <location>"` |';
+  const row = source.split('\n').find(function (line) { return line.startsWith(marker); }) || '';
+  const direct = row.match(/shared visibility judge directly with assertion `([^`]+)`/i);
+  return direct ? direct[1] : 'visible';
+}
+
+function runnerStateSummary(source, raw, state) {
+  const actual = exerciseRecipe(
+    consumerRecipeFromSource(source, 'runner'),
+    raw,
+    'retained-zero-rect',
+    runnerStateAssertion(source, state)
+  );
+  return {
+    status: actual.result.status,
+    result: actual.judged.result,
+    assertion: actual.judged.assertion,
+    judgment: actual.judged.judgment,
+    rendered_candidate: actual.judged.rendered_candidate,
+  };
+}
+
+test('runner enabled and disabled judge the selected rendered candidate without a raw state check', function () {
+  const source = read('agents/e2e-test-runner.md');
+  const raw = envelope(
+    2,
+    1,
+    1,
+    0,
+    { index: 1, enabled: true },
+    [
+      { index: 0, enabled: false, check_visibility: true, client_rects: [] },
+      { index: 1, enabled: true, check_visibility: true, client_rects: [{ width: 120, height: 24 }] },
+    ]
+  );
+  const expectedStates = [
+    {
+      status: 0,
+      result: 'unique_rendered_with_retained_zero_rect',
+      assertion: 'enabled',
+      judgment: 'satisfied',
+      rendered_candidate: { index: 1, enabled: true },
+    },
+    {
+      status: 1,
+      result: 'unique_rendered_with_retained_zero_rect',
+      assertion: 'disabled',
+      judgment: 'retryable',
+      rendered_candidate: { index: 1, enabled: true },
+    },
+  ];
+  const rawFirstMatch = source
+    .replace(/^\| `"<element> enabled on <location>"` \|.*$/m,
+      '| `"<element> enabled on <location>"` | Probe visible, then run a raw first-match enabled check. |')
+    .replace(/^\| `"<element> disabled on <location>"` \|.*$/m,
+      '| `"<element> disabled on <location>"` | Probe visible, then run a raw first-match disabled check. |');
+  const stateDecoupled = source.replace('--assert "$assertion"', '--assert visible');
+  const normalStates = [
+    runnerStateSummary(source, raw, 'enabled'),
+    runnerStateSummary(source, raw, 'disabled'),
+  ];
+  const actual = {
+    normal_states: normalStates,
+    forbids_separate_raw_state_check: source.includes(
+      'Do not run a separate raw selector state check for enabled or disabled expectations.'
+    ),
+    raw_first_match_mutation_detected: JSON.stringify([
+      runnerStateSummary(rawFirstMatch, raw, 'enabled'),
+      runnerStateSummary(rawFirstMatch, raw, 'disabled'),
+    ]) !== JSON.stringify(expectedStates),
+    state_decoupling_mutation_detected: JSON.stringify([
+      runnerStateSummary(stateDecoupled, raw, 'enabled'),
+      runnerStateSummary(stateDecoupled, raw, 'disabled'),
+    ]) !== JSON.stringify(expectedStates),
+  };
+  assert.deepEqual(actual, {
+    normal_states: expectedStates,
+    forbids_separate_raw_state_check: true,
+    raw_first_match_mutation_detected: true,
+    state_decoupling_mutation_detected: true,
+  });
 });
 
 function generatedVisibilityScript(cssSelector, policy) {

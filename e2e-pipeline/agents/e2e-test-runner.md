@@ -352,8 +352,9 @@ assertions immediately pass `no_match` and `all_non_rendered`, and retry `unique
 `raw_multi_match`, and `multiple_rendered` are terminal for positive and
 negative assertions. For OR, probe both operands on every attempt; a terminal
 result in either operand cannot mask behind a satisfied peer. Enabled and
-disabled checks must first satisfy this mapped positive visibility probe, then
-check the control state.
+disabled expectations invoke this shared judge directly with assertion
+`enabled` or `disabled`, so control state comes from the selected
+`rendered_candidate`. Do not run a separate raw selector state check for enabled or disabled expectations.
 
 | Expect Pattern | How to Verify |
 |---|---|
@@ -362,8 +363,8 @@ check the control state.
 | `"<element> is visible"` | Resolve from action page context/shared fallback and use the same shared probe. |
 | `"<element> not visible"` / `"<element> not visible on <loc>"` | Resolve identically and judge with assertion `not-visible`; errors and cardinality failures stay terminal. |
 | `"<element(param=val)> visible on <loc>"` | Substitute parameters into both locator fields, then probe the substituted `css_selector`. |
-| `"<element> enabled on <location>"` | Shared positive visibility probe, then check enabled state. |
-| `"<element> disabled on <location>"` | Shared positive visibility probe, then check disabled state. |
+| `"<element> enabled on <location>"` | Invoke the shared visibility judge directly with assertion `enabled` (`--assert enabled`); use the selected `rendered_candidate` state. |
+| `"<element> disabled on <location>"` | Invoke the shared visibility judge directly with assertion `disabled` (`--assert disabled`); use the selected `rendered_candidate` state. |
 | `"text '<text>' on page"` | `{{browser_command}} snapshot` then search a11y tree for text |
 | `"text '<text>' on <location>"` | Navigate to location if needed, snapshot, search for text |
 | `"url contains <path>"` | `{{browser_command}} get url` -- stdout contains path substring |
