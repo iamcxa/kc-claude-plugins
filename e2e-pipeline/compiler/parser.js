@@ -9,6 +9,7 @@ const VARIABLE_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const VARIABLE_NAME_FORMAT = '^[A-Za-z_][A-Za-z0-9_]*$';
 const RESERVED_VARIABLE_NAMES = new Set(['__proto__', 'prototype', 'constructor']);
 const HTTP_AUTH_SCHEME_PATTERN = /^[A-Za-z][A-Za-z0-9._~+-]*$/;
+const VISIBILITY_POLICIES = new Set(['strict', 'retained-zero-rect']);
 
 // Allowed validate types for capture-url-query steps (SC-1032)
 const CAPTURE_VALIDATE_TYPES = new Set(['uuid']);
@@ -395,6 +396,27 @@ function validateMapping(mapping, filePath, errors) {
   }
   if (!mapping.pages || typeof mapping.pages !== 'object') {
     errors.push('Mapping missing required field "pages" (must be object) in ' + filePath);
+    return;
+  }
+
+  for (const pageName of Object.keys(mapping.pages)) {
+    const page = mapping.pages[pageName];
+    if (!page || typeof page !== 'object' || Array.isArray(page)) continue;
+    const elements = page.elements;
+    if (!elements || typeof elements !== 'object' || Array.isArray(elements)) continue;
+    for (const elementName of Object.keys(elements)) {
+      const element = elements[elementName];
+      if (!element || typeof element !== 'object' || Array.isArray(element)) continue;
+      if (
+        Object.hasOwn(element, 'visibility_policy') &&
+        !VISIBILITY_POLICIES.has(element.visibility_policy)
+      ) {
+        errors.push(
+          'Mapping visibility_policy for ' + pageName + '.' + elementName + ' in ' + filePath +
+          ' must be "strict" or "retained-zero-rect"'
+        );
+      }
+    }
   }
 }
 

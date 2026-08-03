@@ -26,21 +26,21 @@ const SIMPLE_MAPPING = {
     login: {
       url_pattern: '/login',
       elements: {
-        email_input: { selector: 'role=textbox[name="Email"]', description: 'Email input' },
+        email_input: { selector: 'role=textbox[name="Email"]', css_selector: 'input[aria-label="Email"]', description: 'Email input' },
         password_input: { selector: "input[type='password']", description: 'Password input' },
-        login_button: { selector: 'role=button[name="Sign In"]', description: 'Login button' },
+        login_button: { selector: 'role=button[name="Sign In"]', css_selector: 'button[aria-label="Sign In"]', description: 'Login button' },
       },
     },
     dashboard: {
       url_pattern: '/dashboard',
       elements: {
-        heading: { selector: 'role=heading[name="Dashboard"]', description: 'Dashboard heading' },
+        heading: { selector: 'role=heading[name="Dashboard"]', css_selector: 'h1', description: 'Dashboard heading' },
       },
     },
     _global: {
       description: 'Global elements',
       elements: {
-        sidebar_home: { selector: 'role=menuitem[name="Home"]', description: 'Sidebar home link' },
+        sidebar_home: { selector: 'role=menuitem[name="Home"]', css_selector: '[role="menuitem"][aria-label="Home"]', description: 'Sidebar home link' },
       },
     },
   },
@@ -176,8 +176,11 @@ test('resolve: css_selector in mapping passes through as cssSelector in operands
 });
 
 test('resolve: element without css_selector has no cssSelector in operands', () => {
-  const result = resolve(SIMPLE_FLOW, SIMPLE_MAPPING);
-  const fillStep = result.resolved.steps.find(s => s.id === 'fill-email');
+  const result = resolve({
+    name: 'test-no-css-selector',
+    steps: [{ id: 'fill-password', type: 'fill', action: "Fill password_input with 'secret' on login" }],
+  }, SIMPLE_MAPPING);
+  const fillStep = result.resolved.steps.find(s => s.id === 'fill-password');
   assert.equal(fillStep.operands.cssSelector, undefined, 'cssSelector should be undefined when not in mapping');
 });
 
@@ -514,22 +517,22 @@ const EXTENDED_MAPPING = {
     login: {
       url_pattern: '/login',
       elements: {
-        email_input: { selector: 'role=textbox[name="Email"]', description: 'Email input' },
+        email_input: { selector: 'role=textbox[name="Email"]', css_selector: 'input[aria-label="Email"]', description: 'Email input' },
         password_input: { selector: "input[type='password']", description: 'Password input' },
-        login_button: { selector: 'role=button[name="Sign In"]', description: 'Login button' },
+        login_button: { selector: 'role=button[name="Sign In"]', css_selector: 'button[aria-label="Sign In"]', description: 'Login button' },
       },
     },
     dashboard: {
       url_pattern: '/dashboard',
       elements: {
-        heading: { selector: 'role=heading[name="Dashboard"]', description: 'Dashboard heading' },
-        sidebar_dashboard: { selector: 'role=menuitem[name="Dashboard"]', description: 'Sidebar dashboard link' },
+        heading: { selector: 'role=heading[name="Dashboard"]', css_selector: 'h1', description: 'Dashboard heading' },
+        sidebar_dashboard: { selector: 'role=menuitem[name="Dashboard"]', css_selector: '[role="menuitem"][aria-label="Dashboard"]', description: 'Sidebar dashboard link' },
       },
     },
     _global: {
       description: 'Global elements',
       elements: {
-        sidebar_home: { selector: 'role=menuitem[name="Home"]', description: 'Sidebar home link' },
+        sidebar_home: { selector: 'role=menuitem[name="Home"]', css_selector: '[role="menuitem"][aria-label="Home"]', description: 'Sidebar home link' },
       },
     },
   },
@@ -893,7 +896,7 @@ const SITE_A_MAPPING = {
     dashboard: {
       url_pattern: '/dashboard',
       elements: {
-        heading_a: { selector: 'role=heading[name="Office Dashboard"]', description: 'Office dashboard heading' },
+        heading_a: { selector: 'role=heading[name="Office Dashboard"]', css_selector: 'h1', description: 'Office dashboard heading' },
       },
     },
   },
@@ -907,7 +910,7 @@ const SITE_B_MAPPING = {
     home: {
       url_pattern: '/home',
       elements: {
-        button_b: { selector: 'role=button[name="App Button"]', description: 'App button' },
+        button_b: { selector: 'role=button[name="App Button"]', css_selector: 'button[aria-label="App Button"]', description: 'App button' },
       },
     },
   },
@@ -972,7 +975,7 @@ describe('cross-site sites: block — resolver', function() {
             dashboard: {
               url_pattern: '/dashboard',
               elements: {
-                heading_a: { selector: 'role=heading[name="Office Dashboard"]' },
+                heading_a: { selector: 'role=heading[name="Office Dashboard"]', css_selector: 'h1' },
               },
             },
             reports: {

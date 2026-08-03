@@ -43,7 +43,7 @@ const ACTION_PARSERS = {
   },
 };
 
-function buildSymbolTable(mapping) {
+function buildSymbolTable(mapping, mappingPath) {
   var table = new Map();
   var collisions = new Map();
   var byPage = new Map();
@@ -60,7 +60,12 @@ function buildSymbolTable(mapping) {
     var elements = pageData.elements || {};
     for (var elemName in elements) {
       var elemData = elements[elemName];
-      var entry = { selector: elemData.selector, page: pageName };
+      var entry = {
+        selector: elemData.selector,
+        page: pageName,
+        mappingPath: mappingPath || null,
+        visibilityPolicy: elemData.visibility_policy || 'strict',
+      };
       if (elemData.css_selector) entry.cssSelector = elemData.css_selector;
       pageTable.set(elemName, entry);
       if (table.has(elemName)) {
@@ -158,31 +163,37 @@ function resolveNavigate(operands, stepId, mapping) {
 
 // Built-in keywords that resolve to ARIA selectors without requiring a mapping entry
 var BUILT_IN_KEYWORDS = {
-  dialog: 'role=dialog',
+  dialog: { selector: 'role=dialog', cssSelector: 'dialog,[role="dialog"]' },
 };
+
+var ELEMENT_REFERENCE = '([A-Za-z_][A-Za-z0-9_]*(?:\\([^)]*\\))?)';
 
 // Ordered dispatch table for expect pattern matching.
 // Priority matters: more specific patterns must come before general ones.
 var EXPECT_PATTERNS = [
   // Phase 1 — kept as 'active' type for full backwards compatibility
-  { re: /^(\w+) is visible$/, type: 'active' },
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' is visible$'), type: 'active' },
 
   // Phase 2 — element visibility with "is" and page qualifier
-  { re: /^(\w+) is visible on ([\w-]+)$/, type: 'element-visible' },
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' is visible on ([\\w-]+)$'), type: 'element-visible' },
 
   // Phase 2 — element visibility with page qualifier (more specific, before plain visible)
-  { re: /^(\w+) visible on ([\w-]+)$/, type: 'element-visible' },
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' visible on ([\\w-]+)$'), type: 'element-visible' },
 
   // Phase 2 — element visibility without page qualifier
-  { re: /^(\w+) visible$/, type: 'element-visible' },
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' visible$'), type: 'element-visible' },
 
   // Phase 2 — element not visible WITH page qualifier (more specific, before bare form)
-  { re: /^(\w+) is not visible on ([\w-]+)$/, type: 'element-not-visible' },
-  { re: /^(\w+) not visible on ([\w-]+)$/, type: 'element-not-visible' },
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' is not visible on ([\\w-]+)$'), type: 'element-not-visible' },
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' not visible on ([\\w-]+)$'), type: 'element-not-visible' },
 
   // Phase 2 — element not visible (bare form)
-  { re: /^(\w+) is not visible$/, type: 'element-not-visible' },
-  { re: /^(\w+) not visible$/, type: 'element-not-visible' },
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' is not visible$'), type: 'element-not-visible' },
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' not visible$'), type: 'element-not-visible' },
+
+  // Enabled/disabled assertions first establish visibility with the shared DOM probe.
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' (?:is )?enabled(?: on ([\\w-]+))?$'), type: 'element-enabled' },
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' (?:is )?disabled(?: on ([\\w-]+))?$'), type: 'element-disabled' },
 
   // Phase 2 — URL checks (url-does-not-contain must come before url-contains)
   { re: /^url does not contain (.+)$/, type: 'url-not-contains' },
@@ -199,7 +210,7 @@ var EXPECT_PATTERNS = [
   { re: /^text "(.+)" visible$/, type: 'text-visible' },
 
   // Phase 2 — or-syntax (two elements, any-true logic)
-  { re: /^(\w+) visible or (\w+) visible$/, type: 'or-visible' },
+  { re: new RegExp('^' + ELEMENT_REFERENCE + ' visible or ' + ELEMENT_REFERENCE + ' visible$'), type: 'or-visible' },
 ];
 
 /**
@@ -234,15 +245,20 @@ function resolveElement(elemName, symbolResult, stepId, errors, errorDetails) {
   }
   var entry = symbolTable.get(elemName);
   if (entry) {
-    recordReference(symbolResult, elemName, entry.page, entry.selector);
-    return { selector: entry.selector };
+    return elementResultFromEntry(entry, elemName, symbolResult);
   }
   // Check built-in keywords (e.g., dialog -> role=dialog). These are compiler-owned
   // constants, not mapping content, so they are deliberately NOT recorded as referenced
   // elements: no mapping author can introduce a banned form through them, and a baseline
   // record naming one would point at a file that does not contain it.
   if (BUILT_IN_KEYWORDS[elemName]) {
-    return { selector: BUILT_IN_KEYWORDS[elemName] };
+    return {
+      selector: BUILT_IN_KEYWORDS[elemName].selector,
+      cssSelector: BUILT_IN_KEYWORDS[elemName].cssSelector,
+      visibilityPolicy: 'strict',
+      mappingPage: null,
+      mappingPath: '<compiler built-in>',
+    };
   }
   var notFoundMsg = "Step '" + stepId + "': expect element '" + elemName + "' not found in mapping";
   errors.push(notFoundMsg);
@@ -252,9 +268,134 @@ function resolveElement(elemName, symbolResult, stepId, errors, errorDetails) {
 
 function elementResultFromEntry(entry, elemName, symbolResult, page) {
   recordReference(symbolResult, elemName, page !== undefined ? page : entry.page, entry.selector);
-  var merged = { selector: entry.selector };
+  var merged = {
+    selector: entry.selector,
+    visibilityPolicy: entry.visibilityPolicy || 'strict',
+    mappingPage: page !== undefined ? page : entry.page,
+    mappingPath: entry.mappingPath,
+  };
   if (entry.cssSelector) merged.cssSelector = entry.cssSelector;
   return merged;
+}
+
+function parseElementReference(reference, stepId, errors, errorDetails) {
+  var match = /^([A-Za-z_][A-Za-z0-9_]*)(?:\((.*)\))?$/.exec(reference);
+  if (!match) return null;
+  var parameters = null;
+  if (match[2] !== undefined) {
+    parameters = Object.create(null);
+    var assignments = match[2] === '' ? [] : match[2].split(',');
+    for (var i = 0; i < assignments.length; i++) {
+      var assignment = assignments[i];
+      var equals = assignment.indexOf('=');
+      var key = equals === -1 ? '' : assignment.slice(0, equals).trim();
+      var value = equals === -1 ? '' : assignment.slice(equals + 1).trim();
+      if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key) || value === '') {
+        var parameterMsg = "Step '" + stepId + "': invalid element parameter '" + assignment + "' in " + reference;
+        errors.push(parameterMsg);
+        errorDetails.push(tier2Detail(parameterMsg));
+        return null;
+      }
+      if ((value[0] === '"' && value[value.length - 1] === '"') ||
+          (value[0] === "'" && value[value.length - 1] === "'")) {
+        value = value.slice(1, -1);
+      }
+      parameters[key] = value;
+    }
+  }
+  return { elementName: match[1], parameters: parameters };
+}
+
+function substituteSelectorTemplate(template, parameters) {
+  if (!parameters) return template;
+  return template.replace(/\$\{([A-Za-z_][A-Za-z0-9_]*)\}/g, function(token, name) {
+    return Object.hasOwn(parameters, name) ? parameters[name] : token;
+  });
+}
+
+function isLiteralCssSelector(selector) {
+  if (typeof selector !== 'string' || selector.trim() === '') return false;
+  var trimmed = selector.trim();
+  if (/^(?:role|text|xpath|css|id|testid|label)=/i.test(trimmed)) return false;
+  if (/^find\s+(?:role|text|testid|label)\b/i.test(trimmed)) return false;
+  if (/^(?:\/\/|\.\/\/)/.test(trimmed)) return false;
+  return true;
+}
+
+function resolveVisibilityElement(reference, pageName, symbolResult, stepId, mapping, errors, errorDetails) {
+  var parsed = parseElementReference(reference, stepId, errors, errorDetails);
+  if (!parsed) return null;
+  var resolved = resolveElementOnPage(
+    parsed.elementName,
+    pageName,
+    symbolResult,
+    stepId,
+    mapping,
+    errors,
+    errorDetails,
+    'element'
+  );
+  if (!resolved) return null;
+
+  var effectiveSelector = substituteSelectorTemplate(resolved.selector, parsed.parameters);
+  var cssSelectorTemplate = resolved.cssSelector || null;
+  var cssSelector = cssSelectorTemplate
+    ? substituteSelectorTemplate(cssSelectorTemplate, parsed.parameters)
+    : isLiteralCssSelector(effectiveSelector) ? effectiveSelector : null;
+  var unresolved = /\$\{[A-Za-z_][A-Za-z0-9_]*\}/.test(effectiveSelector) ||
+    (cssSelector && /\$\{[A-Za-z_][A-Za-z0-9_]*\}/.test(cssSelector));
+  if (unresolved) {
+    var unresolvedMsg = "Step '" + stepId + "': unresolved selector parameter for " + reference;
+    errors.push(unresolvedMsg);
+    errorDetails.push(tier2Detail(unresolvedMsg));
+    return null;
+  }
+  if (!cssSelector) {
+    var mappingIdentity = resolved.mappingPath || '<mapping>';
+    var pageIdentity = resolved.mappingPage || pageName || '<unknown-page>';
+    var cssMsg =
+      "Step '" + stepId + "': mapped visibility in " + mappingIdentity + ' at ' +
+      pageIdentity + '.' + parsed.elementName + ' uses non-CSS selector ' +
+      JSON.stringify(resolved.selector) +
+      '; add css_selector with a literal CSS selector for deterministic DOM visibility';
+    errors.push(cssMsg);
+    errorDetails.push(tier2Detail(cssMsg));
+    return null;
+  }
+
+  var result = {
+    elementName: parsed.elementName,
+    selector: resolved.selector,
+    cssSelector: cssSelector,
+    visibilityPolicy: resolved.visibilityPolicy || 'strict',
+  };
+  if (parsed.parameters) {
+    result.selectorTemplate = resolved.selector;
+    if (cssSelectorTemplate) result.cssSelectorTemplate = cssSelectorTemplate;
+    result.effectiveSelector = effectiveSelector;
+  }
+  return result;
+}
+
+function resolvedVisibilityExpect(type, raw, resolved) {
+  var result = {
+    elementName: resolved.elementName,
+    selector: resolved.selector,
+    cssSelector: resolved.cssSelector,
+    visibilityPolicy: resolved.visibilityPolicy,
+  };
+  if (type !== undefined) result.type = type;
+  if (raw !== undefined) result.raw = raw;
+  if (resolved.selectorTemplate) result.selectorTemplate = resolved.selectorTemplate;
+  if (resolved.cssSelectorTemplate) result.cssSelectorTemplate = resolved.cssSelectorTemplate;
+  if (resolved.effectiveSelector) result.effectiveSelector = resolved.effectiveSelector;
+  return result;
+}
+
+function resolvedActionElement(resolved) {
+  var result = { selector: resolved.selector };
+  if (resolved.cssSelector) result.cssSelector = resolved.cssSelector;
+  return result;
 }
 
 function pageNames(mapping) {
@@ -297,7 +438,13 @@ function resolveElementOnPage(elemName, pageName, symbolResult, stepId, mapping,
   }
 
   if (BUILT_IN_KEYWORDS[elemName]) {
-    return { selector: BUILT_IN_KEYWORDS[elemName] };
+    return {
+      selector: BUILT_IN_KEYWORDS[elemName].selector,
+      cssSelector: BUILT_IN_KEYWORDS[elemName].cssSelector,
+      visibilityPolicy: 'strict',
+      mappingPage: null,
+      mappingPath: '<compiler built-in>',
+    };
   }
 
   var foundPages = allElementPages(elemName, symbolResult);
@@ -366,43 +513,36 @@ function resolveExpects(expects, symbolResult, stepId, mapping) {
 
       if (type === 'active') {
         // Phase 1 pattern: "element is visible"
-        var elemName = match[1];
-        var resolved = resolveElement(elemName, symbolResult, stepId, errors, errorDetails);
+        var elemRef = match[1];
+        var resolved = resolveVisibilityElement(elemRef, null, symbolResult, stepId, mapping, errors, errorDetails);
         if (resolved) {
-          resolvedExpects.push({
-            type: 'active',
-            raw: expectStr,
-            elementName: elemName,
-            selector: resolved.selector,
-          });
+          resolvedExpects.push(resolvedVisibilityExpect('active', expectStr, resolved));
           activeCount++;
         }
       } else if (type === 'element-visible') {
         // "element visible" or "element visible on page"
-        var elemName = match[1];
+        var elemRef = match[1];
         var pageName = match[2] || null;
-        var resolved = resolveElementOnPage(elemName, pageName, symbolResult, stepId, mapping, errors, errorDetails, 'element');
+        var resolved = resolveVisibilityElement(elemRef, pageName, symbolResult, stepId, mapping, errors, errorDetails);
         if (resolved) {
-          resolvedExpects.push({
-            type: 'element-visible',
-            raw: expectStr,
-            elementName: elemName,
-            selector: resolved.selector,
-          });
+          resolvedExpects.push(resolvedVisibilityExpect('element-visible', expectStr, resolved));
           activeCount++;
         }
       } else if (type === 'element-not-visible') {
         // "element not visible" or "element is not visible"
-        var elemName = match[1];
+        var elemRef = match[1];
         var pageName = match[2] || null;
-        var resolved = resolveElementOnPage(elemName, pageName, symbolResult, stepId, mapping, errors, errorDetails, 'element');
+        var resolved = resolveVisibilityElement(elemRef, pageName, symbolResult, stepId, mapping, errors, errorDetails);
         if (resolved) {
-          resolvedExpects.push({
-            type: 'element-not-visible',
-            raw: expectStr,
-            elementName: elemName,
-            selector: resolved.selector,
-          });
+          resolvedExpects.push(resolvedVisibilityExpect('element-not-visible', expectStr, resolved));
+          activeCount++;
+        }
+      } else if (type === 'element-enabled' || type === 'element-disabled') {
+        var elemRef = match[1];
+        var pageName = match[2] || null;
+        var resolved = resolveVisibilityElement(elemRef, pageName, symbolResult, stepId, mapping, errors, errorDetails);
+        if (resolved) {
+          resolvedExpects.push(resolvedVisibilityExpect(type, expectStr, resolved));
           activeCount++;
         }
       } else if (type === 'url-contains') {
@@ -420,15 +560,15 @@ function resolveExpects(expects, symbolResult, stepId, mapping) {
       } else if (type === 'or-visible') {
         var elemA = match[1];
         var elemB = match[2];
-        var resolvedA = resolveElement(elemA, symbolResult, stepId, errors, errorDetails);
-        var resolvedB = resolveElement(elemB, symbolResult, stepId, errors, errorDetails);
+        var resolvedA = resolveVisibilityElement(elemA, null, symbolResult, stepId, mapping, errors, errorDetails);
+        var resolvedB = resolveVisibilityElement(elemB, null, symbolResult, stepId, mapping, errors, errorDetails);
         if (resolvedA && resolvedB) {
           resolvedExpects.push({
             type: 'or-visible',
             raw: expectStr,
             elements: [
-              { elementName: elemA, selector: resolvedA.selector },
-              { elementName: elemB, selector: resolvedB.selector },
+              resolvedVisibilityExpect(undefined, undefined, resolvedA),
+              resolvedVisibilityExpect(undefined, undefined, resolvedB),
             ],
           });
           activeCount++;
@@ -454,7 +594,7 @@ function resolve(flow, mapping, options) {
   var errorDetails = [];
   var runtimeValues = (options && options.runtimeValues) || null;
 
-  var symbolResult = buildSymbolTable(mapping);
+  var symbolResult = buildSymbolTable(mapping, options && options.mappingPath);
 
   var resolvedSteps = [];
   var activeExpects = 0;
@@ -521,7 +661,7 @@ function resolve(flow, mapping, options) {
         if (!resolvedElement) {
           skipStep = true;
         } else {
-          resolvedOperands = Object.assign({}, rawOperands, resolvedElement);
+          resolvedOperands = Object.assign({}, rawOperands, resolvedActionElement(resolvedElement));
         }
       }
       // SC-1032: thread runtime_ref from step YAML into operands for sensitive fill
@@ -670,7 +810,7 @@ function resolve(flow, mapping, options) {
  *   - resolved.steps each have a session field from step.site qualifier
  *   - Element lookups use the per-site symbol table
  */
-function resolveMultiSite(flow, siteMappings) {
+function resolveMultiSite(flow, siteMappings, options) {
   var errors = [];
   var errorDetails = [];
 
@@ -687,7 +827,10 @@ function resolveMultiSite(flow, siteMappings) {
     }
     var siteData = siteMappings[siteName];
     if (siteData && siteData.mapping) {
-      siteTables.set(siteName, buildSymbolTable(siteData.mapping));
+      var mappingPath = siteData.mappingPath || (options && options.mappingDir
+        ? path.join(options.mappingDir, siteData.mappingName + '.yaml')
+        : siteData.mappingName ? siteData.mappingName + '.yaml' : null);
+      siteTables.set(siteName, buildSymbolTable(siteData.mapping, mappingPath));
     }
   }
 
@@ -757,7 +900,7 @@ function resolveMultiSite(flow, siteMappings) {
         if (!resolvedElement) {
           skipStep = true;
         } else {
-          resolvedOperands = Object.assign({}, rawOperands, resolvedElement);
+          resolvedOperands = Object.assign({}, rawOperands, resolvedActionElement(resolvedElement));
         }
       }
 

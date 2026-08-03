@@ -227,7 +227,9 @@ async function compile(flowPath, mappingDir, outputDir, options) {
 
   if (parseResult.sites) {
     // --- Cross-site flow path ---
-    resolveResult = resolveMultiSite(parseResult.flow, parseResult.sites);
+    resolveResult = resolveMultiSite(parseResult.flow, parseResult.sites, {
+      mappingDir: mappingDir,
+    });
     if (resolveResult.errors.length > 0) {
       resolveResult.errors.forEach(function(e) { console.error('ERROR: ' + e); });
       return {
@@ -272,6 +274,7 @@ async function compile(flowPath, mappingDir, outputDir, options) {
     // --- Single-site flow path ---
     resolveResult = resolve(parseResult.flow, parseResult.mapping, {
       runtimeValues: parseResult.flow.runtime_values || null,
+      mappingPath: path.join(mappingDir, parseResult.flow.mapping + '.yaml'),
     });
     if (resolveResult.errors.length > 0) {
       resolveResult.errors.forEach(function(e) { console.error('ERROR: ' + e); });

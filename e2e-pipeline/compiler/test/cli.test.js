@@ -49,6 +49,7 @@ pages:
     elements:
       email_input:
         selector: role=textbox[name="Email"]
+        css_selector: input[aria-label="Email"]
         description: Email input
 `);
 }

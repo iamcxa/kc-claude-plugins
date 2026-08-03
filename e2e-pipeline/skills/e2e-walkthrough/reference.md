@@ -185,8 +185,43 @@ Visual anomalies are always listed individually. JS error counts replace individ
 **Smoke mode**: Skip steps 5-6 per step. Run `<browser_command> errors --json` once at the end after all navigation steps. Smoke focus is selector verification, not runtime health. If the batch check returns errors, record them as anomalies on the **last step** in the step log with `source: "errors --json (batch)"`. These count toward the Phase 4 anomaly review threshold — batch errors mean non-zero anomalies, so the Phase 4 skip condition does NOT apply.
 
 **Selector verification strategy:**
-- `role=<r>[name="<v>"]` / `text=<v>` selectors: verify by comparing snapshot a11y tree content against mapping values. Snapshot is the source of truth. (Neither is banned — see `CLAUDE.md` § Selector Priority.)
-- `data-testid` / `aria-label` / `[role="<r>"][aria-label="<v>"]` selectors: **cannot** be verified via snapshot (a11y tree doesn't expose these attributes). Must use `<browser_command> is visible "<selector>"` for DOM-level verification. DEPRECATED as `selector:` value: `find role|text|testid|label <r> [--name "<v>"]` — subcommand chain, not selector grammar; banned by the linter (CLASS 5).
+- Mapped visibility always uses a concrete DOM selector: substituted
+  `css_selector`, or substituted `selector` only when it is literal CSS.
+  `role=`, `text=`, and other non-CSS mapping DSL require `css_selector`;
+  missing DOM identity is terminal rather than a snapshot fallback.
+- Literal text observation remains separate and may use the accessibility
+  snapshot. It never proves mapped selector visibility.
+
+Run the shared protocol with the owned browser command:
+
+```bash
+VISIBILITY_PROBE="${CLAUDE_PLUGIN_ROOT}/bin/e2e-visibility-probe.js"
+expression=$(node "$VISIBILITY_PROBE" expression --selector "$effective_selector")
+started=$SECONDS; attempts=0
+attempts=$((attempts + 1)); transport_exit=0
+envelope=$(<browser_command> eval "$expression" --json) || transport_exit=$?
+if judged=$(printf '%s' "$envelope" | node "$VISIBILITY_PROBE" judge --policy "$visibility_policy" --assert "$assertion" --transport-exit "$transport_exit"); then
+  judge_exit=0
+else
+  judge_exit=$?
+fi
+elapsed_seconds=$((SECONDS - started))
+```
+
+Positive assertions retry only `no_match` and `all_non_rendered`. Negative
+assertions pass `no_match` and `all_non_rendered`, and retry valid visible states.
+`invalid_selector`, `probe_error`, `raw_multi_match`, and `multiple_rendered`
+are terminal for positive and negative assertions. OR probes both operands per
+attempt and cannot mask a terminal operand behind a satisfied peer. A
+`retained-zero-rect` proposal is eligible only for the exact
+`unique_rendered_with_retained_zero_rect` signature; walkthrough may show the
+proposed mapping diff but never auto-apply it.
+
+Record `result_class`, `effective_selector`, `visibility_policy`,
+assertion/judgment, `match_count`, `nonzero_layout_visible_count`,
+`style_visible_zero_rect_count`, `non_style_visible_count`, `attempts`,
+`elapsed_seconds`, `candidate_evidence_limit`, truncation, and bounded
+`candidate_evidence` in the step log and report.
 
 ### Anomaly Observation Rules
 
@@ -244,8 +279,8 @@ All anomalies are recorded to the step log and reported inline. The walkthrough 
 Maintain an in-memory list of mapping discrepancies throughout Phase 3. Each entry: `{type, page, element, details}`.
 
 **Detection mechanisms:**
-- **Stale selector**: `snapshot` a11y tree text differs from mapping's expected text for a `role=<r>[name="<v>"]` or `text=<v>` selector, OR `is visible` returns `false` for a `data-testid`/`aria-label` selector.
-- **Missing element**: element listed in mapping is absent from both snapshot and `is visible` check
+- **Stale selector**: the deterministic mapped visibility result is `no_match`, `raw_multi_match`, or `multiple_rendered`, or candidate identity evidence contradicts the mapping description.
+- **Missing element**: a mapped element finishes as `no_match`; literal text absence is recorded separately from the snapshot
 - **Trigger mismatch**: action on mapped element produces unexpected intermediate state (e.g., dropdown instead of direct dialog) — detected by post-action snapshot showing unexpected structure
 - **New element**: element found in snapshot that has no entry in the current mapping page
 
@@ -324,6 +359,7 @@ After all steps complete (or human says "stop"), write the accumulated step log 
 | `steps[].ts` | Step execution time as `HH:MM:SS` (for trace timestamp correlation) |
 | `steps[].result` | `pass` / `fail` / `skip` — whether the step itself succeeded |
 | `steps[].anomalies` | Array of observed anomalies (may be empty) |
+| `steps[].visibility_results` | Final structured mapped visibility results; omitted when the step has none |
 | `steps[].superseded_by` | ID of retry entry that replaces this one (only present on re-run originals) |
 | `anomaly.type` | `js_error` (from errors --json), `visual` (agent observation), `network_hint` (a11y tree fetch error) |
 | `anomaly.detail` | Concise description, ≤ 100 chars |
@@ -534,6 +570,11 @@ flowchart TD
 | Step | Action | Expected | Result |
 |------|--------|----------|--------|
 | <step-id> | <action summary> | <expectation summary> | PASS/FAIL |
+
+For each mapped visibility assertion include `result_class`,
+`effective_selector`, `visibility_policy`, `match_count`, aggregate counts,
+`attempts`, `elapsed_seconds`, and bounded `candidate_evidence`. Literal text
+snapshot assertions stay in their own expectation rows.
 
 ## Health Log
 

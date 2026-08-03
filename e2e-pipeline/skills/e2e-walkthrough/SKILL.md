@@ -396,14 +396,14 @@ Next steps:
 | Mistake | Fix |
 |---------|-----|
 | Acting without snapshot | `snapshot -i` before every action — a11y tree is source of truth |
-| CSS selectors for clicks | Use `@ref` from snapshot. For visibility checks use `[role="<r>"][aria-label="<v>"]` CSS attribute selector (Cand 2) |
+| CSS selectors for clicks | Use `@ref` from snapshot. Mapped visibility uses the mapping's effective DOM selector through `bin/e2e-visibility-probe.js`. |
 | `has-text()` selectors | BROKEN in agent-browser — times out. Use `[role="button"][aria-label="..."]` CSS attribute selector or `find text "..."` subcommand |
 | Screenshot relative paths | agent-browser needs absolute paths (sandbox CWD differs) |
 | Calling raw `trace stop` | Use `${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh`; it bounds stop, validates, recovers, and records disposition |
 | `scroll` to element | `scroll` only accepts direction (up/down). Use `hover "@ref"` to auto-scroll |
-| `is visible` exit code always 0 | Check stdout text "true"/"false", NOT exit code. Don't chain with `&&` |
-| Large table snapshots consume context | Use targeted `is visible` checks instead of full snapshot for 10+ row tables |
-| Assuming snapshot shows `data-testid` | a11y snapshot does NOT expose `data-testid`/`aria-label`. Use `is visible` |
+| Raw `is visible` collapses invalid CSS into `false` | Treat it as diagnostic only. Product assertions use the shared satisfied/retryable/terminal judge protocol. |
+| Large table snapshots consume context | Use the targeted deterministic visibility probe for mapped elements instead of a full snapshot. |
+| Assuming snapshot shows `data-testid` | a11y snapshot does not expose DOM identity. Use the mapped `css_selector` with the shared probe. |
 | `--profile` silently ignored | Wrong daemon ownership. Stop and let `<browser_command>` reject or close only the matching receipt; never repair through a bare default daemon. |
 | Checkpoint steps interact with browser | `verify-external` steps do NOT touch browser — skip snapshot, skip element resolution |
 | Browser crash mid-walkthrough | Write step-log.json with steps completed so far → proceed to Phase 4 with partial data. Do NOT restart from step 1 — offer user: "Browser lost at step N. Resume from step N, or proceed to Phase 4 with partial results?" |

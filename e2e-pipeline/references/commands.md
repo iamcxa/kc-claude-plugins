@@ -130,9 +130,29 @@ e2e_browser screenshot --full <abs-path>        # Full page screenshot
 e2e_browser get url                             # Current page URL
 e2e_browser get text @ref                       # Get element text
 e2e_browser get count ".selector"               # Count matching elements
-e2e_browser is visible "<selector>"             # Returns "true"/"false" TEXT (exit code always 0!)
+e2e_browser is visible "<selector>"             # Diagnostic only: first match; invalid CSS also prints false
 e2e_browser is enabled @ref                     # Check if enabled
 ```
+
+### Deterministic mapped visibility
+
+Product assertions use the shared probe, not raw `is visible`:
+
+```bash
+VISIBILITY_PROBE="${CLAUDE_PLUGIN_ROOT}/bin/e2e-visibility-probe.js"
+expression=$(node "$VISIBILITY_PROBE" expression --selector "$effective_selector")
+transport_exit=0
+envelope=$(e2e_browser eval "$expression" --json) || transport_exit=$?
+printf '%s' "$envelope" | node "$VISIBILITY_PROBE" judge \
+  --policy "$visibility_policy" --assert visible --transport-exit "$transport_exit"
+```
+
+Judge exit `0` is satisfied, `1` retryable, and `2` terminal. The JSON retains
+`result`, policy, assertion/judgment, match/aggregate counts, bounded candidate
+evidence, and sanitized error evidence. Callers add effective selector,
+attempts, and elapsed time to reports. Use `not-visible` for negative
+assertions. Both operands of OR are judged per attempt; a terminal result is
+never masked.
 
 ## Interaction (ALWAYS use @ref from latest snapshot)
 
@@ -263,10 +283,10 @@ e2e_browser find label "Email" fill "user@test.com"  # By label
 ## Critical Rules
 
 1. **@ref scope**: Refs invalidate after ANY DOM change (click, fill, navigate, even snapshot on dynamic pages). ALWAYS re-snapshot before using @ref.
-2. **Click via @ref only**: Never click via CSS selectors. Use selectors only for `is visible` checks.
+2. **Click via @ref only**: Never click via CSS selectors. Use mapped CSS identity with the shared visibility probe; raw `is visible` is diagnostic only.
 3. **Absolute paths**: agent-browser sandbox CWD differs from shell. ALWAYS use absolute screenshot/trace paths.
 4. **fill > click+type**: `fill` is atomic (focus + clear + type). `click` then `type` is error-prone — @ref can change on focus.
-5. **is visible exit code**: Always 0. Check stdout text "true"/"false", NOT exit code. Don't chain with `&&`.
+5. **Raw is-visible semantics**: diagnostic only; it checks the first match and prints `false` for invalid CSS. Product assertions use the deterministic judge protocol above.
 6. **shared trace finalizer before close**: Never call raw `trace stop` in pipeline consumers.
    Probe `${CLAUDE_PLUGIN_ROOT}/bin/e2e-trace-contract.js` before capture, then run
    `${CLAUDE_PLUGIN_ROOT}/scripts/finalize-trace.sh` with that exact producer/format contract. It
