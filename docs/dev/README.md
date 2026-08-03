@@ -965,6 +965,40 @@ skip condition for any of the five. A gate presented without the block is
 returned unread — the same bar the ideation stage's design determination is held
 to.
 
+**A round counts only when it names what it read and what would have failed it.**
+Two facts, appended to whichever of the five the round belongs to:
+
+- **What it read** — the exact ref or revision and the path. `origin/main`, a
+  stale buffer, a base commit, and this worktree are four different artifacts,
+  and a round that read the wrong one produced a verdict about something other
+  than the change under review.
+- **What would have failed it** — the concrete result that would have flipped
+  the round to a finding. This is the same bar the Proof Policy already sets for
+  AC evidence, applied to the verifying round itself.
+
+A round missing either fact is recorded as run and **not counted as evidence**.
+This adds no permission: nothing here lets a required round be skipped, and the
+cross-model gate's own clause still governs when it is owed. It changes only
+whether a round that already happened may be offered as proof.
+
+The first fact is the one this fleet keeps paying for, and it is cheap to state
+because the verifier already knows it. Observed across sibling repositories: a
+reviewer reading a tree 85 commits behind, a re-review that checked out the base
+commit instead of the PR head, a required CI job that resolved to `main` rather
+than the branch under test on two separate runs, a relative test path that ran a
+same-named file in a different worktree and reported green, and editor
+diagnostics that were false three times out of three because the buffer resolved
+worktree files against `main`. None of these is a reviewer being insufficiently
+rigorous. Each is a rigorous verdict about the wrong bytes, and each was caught
+by a side channel rather than by the round itself.
+
+The second fact is what separates a gate that aims from one that only passes. A
+verifier that cannot fail returns output at a rate set by its prompt rather than
+by the artifact, so its silence is not evidence of correctness — and neither is
+its confidence. Where a round cannot name its falsifying result, prefer a check
+that can: a mutation that reddens a suite is a stronger claim about a guard than
+any reading of it, and it is usually the cheaper one to run.
+
 - Reproduce each AC's `Verified by:` clause; report PASS/FAIL per criterion
   with actual evidence (command output, screenshots, on-disk state) — never
   the implementer's self-report. Same execution order as implementation:
