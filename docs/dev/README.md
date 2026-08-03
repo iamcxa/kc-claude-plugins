@@ -228,9 +228,10 @@ so classification consumes only the product lifecycle markers:
   `pr-merge:product-draft:v1:{digest}` or
   `pr-merge:product-pr:v1:{digest}` `mod-block`, or in its pending/numbered
   `pr` ref as applicable.
-- `ledger_pr` and `ledger_artifact_v1` are optional legacy/observation bytes.
-  Preserve them exactly, including empty or malformed historical values, but
-  do not decode, classify, or consume them to authorize product terminalization.
+- `ledger_pr` and `ledger_artifact_v1` are legacy keys awaiting removal by the
+  state migration. Preserve them exactly, including empty or malformed historical
+  values, but do not decode, classify, or consume them for any decision. New
+  entities do not carry them.
 
 Require the selected decoded artifact's `live_path` to equal this anchored
 index path outside `_archive/`.
@@ -390,9 +391,9 @@ merge, or captain-approval invocations.
 | `verdict` | enum | PASSED or REJECTED — set at final stage |
 | `worktree` | string | Set on first worktree dispatch, cleared at terminal merge |
 | `issue` / `pr` | string | External references; `pr` remains empty while a product draft awaits approval, then uses digest-bound pending and numbered artifact forms during hosted delivery, and historically `direct-commit:{sha}` |
-| `ledger_pr` | string | Optional legacy/observation audit reference. Historical draft, pending, numbered, merged, malformed, and empty values remain readable and are preserved, but this field never authorizes or blocks product delivery, terminal state, cleanup, or archive. |
+| `ledger_pr` | string | Legacy key, removed from new entities and awaiting removal from the live population by the state migration. Historical values of every shape remain readable and preserved; the field authorizes and blocks nothing. |
 | `pr_artifact_v1` | base64url string | Unpadded base64url of the exact canonical product approval JSON. Its decoded bytes must hash to the digest in `pr` or the product `mod-block`; blank before a product candidate exists. |
-| `ledger_artifact_v1` | base64url string | Optional legacy/observation artifact paired with historical `ledger_pr` refs. Preserve it for audit; product terminalization does not decode or require it. |
+| `ledger_artifact_v1` | base64url string | Legacy key paired with historical `ledger_pr` refs, on the same removal path. Preserved verbatim; never decoded or required. |
 | `mod-block` | string | Non-empty lifecycle guard. Product drafts use `pr-merge:product-draft:v1:{digest}`; explicit approval transitions the same artifact to `pr-merge:product-pr:v1:{digest}`. Only authenticated product delivery clears this guard for terminalization. |
 | `design` | enum | `required` or `trivial-pass` — set at ideation, or, for a `lane: defect` task that has no ideation stage, at the moment the FO classifies it into that lane. Empty during seed capture and through `backlog`; on the main line it is produced inside `ideation`, so the invariant starts at the ideation gate — never empty at that gate, and never empty in `implementation` or later |
 | `lane` | enum | `defect` or `main` — the FO's Defect-lane classification, written when the FO routes the task out of `backlog` (not at seed capture, which authors no classification), so it is queryable (`status --where lane=defect`) instead of re-derived by re-reading every body. `defect` asserts all four conditions in the Defect-lane section hold |
@@ -1088,11 +1089,10 @@ to.
   is real but before review rounds have compounded on it. A round spent
   reviewing machinery nobody wants is paid twice: once to find its defects, once
   to fix them.
-- **Accepted validation preserves measurement evidence; it does not maintain
-  the ledger.** Keep the live `## Measurement` lines and accepted validation
-  coverage in the entity so archive retains them. Product PR creation and
-  delivery do not read, verify, or update `ledger.csv`; missing optional token
-  or coverage evidence is observation debt, not a delivery defect.
+- **Accepted validation preserves measurement evidence in the entity.** Keep the
+  live `## Measurement` lines and accepted validation coverage so archive retains
+  them. Product PR creation and delivery read no measurement of any kind; missing
+  token or coverage evidence is not a delivery defect.
 
 ### `done` — terminal
 
@@ -1100,15 +1100,15 @@ Merge after a passed validation gate (merge policy: PR to `main`). An
 authenticated product PR observed `MERGED` authorizes the terminal transaction:
 clear the product `mod-block`, set `completed` to that product PR's exact
 `mergedAt`, set the passed verdict and `done`, commit the live terminal entity
-durably, then run the existing fail-closed archive transaction. `ledger.csv`,
-`ledger_pr`, and `ledger_artifact_v1` are not read by that decision. Missing,
-stale, incomplete, pending, or malformed measurement cannot block terminal
-state or archive.
+durably, then run the existing fail-closed archive transaction. No measurement
+artifact and neither legacy `ledger_*` key is read by that decision. Missing,
+stale, incomplete, pending, or malformed measurement cannot block terminal state
+or archive.
 
 - **Terminal state is not archival proof.** The `pr-merge` mod retains the
   authenticated product merge reference in the live terminal entity and
-  re-verifies that exact merged product PR before cleanup and archive. Optional
-  legacy ledger refs remain unconsumed audit bytes. The mod first commits the
+  re-verifies that exact merged product PR before cleanup and archive. Legacy
+  `ledger_*` keys remain unconsumed bytes. The mod first commits the
   terminal file durably at its live path; the
   archive move is a second root-scoped state transaction and counts only after
   that commit is durable. Flat tasks move one file; folder tasks move the full
@@ -1129,7 +1129,7 @@ state or archive.
   runs measurement import or PR creation.
   Historical terminal `direct-commit:` tasks take a separate read-only route:
   the commit must be reachable from current `origin/main`; that route archives
-  without requiring or rewriting a historical ledger row.
+  without requiring or rewriting any historical measurement.
 - **Merge only on observed green CI for the exact HEAD.** A passing local
   suite, a static PR approval, or "CI was green earlier" never substitutes
   for a live CI run observed green on the commit being merged. A red or
@@ -1244,393 +1244,38 @@ rules; disagreement between seats goes to the captain, not to a vote.
 | File | Owner | Updated |
 |------|-------|---------|
 | PRODUCT.md / ARCHITECTURE.md | Task lifecycle (ideation proposes, implementation applies, validation verifies) | In the PR that changes the behavior |
-| ROADMAP.md / roadmap indexes | Captain (or sprint Commander) | Sprint boundaries, strategy shifts — never tracks task state (that's a `status --where` query). The same pass sweeps overdue `pending:` cells in the ledger, per Measurement Ledger |
-| This README | Captain-approved revision | When ledger data says a clause needs tuning |
+| ROADMAP.md / roadmap indexes | Captain (or sprint Commander) | Sprint boundaries, strategy shifts — never tracks task state (that's a `status --where` query) |
+| This README | Captain-approved revision | When the workflow cost record says a clause needs tuning |
 
-## Measurement Ledger
+## Workflow cost record
 
-`docs/dev/ledger.csv` is an observational feedback instrument for completed
-work. It is not workflow state, merge authority, a required delivery artifact,
-or an archive prerequisite. The eight-column schema remains:
+No ledger. The eight-column `docs/dev/ledger.csv` and its row/verifier machinery
+are removed: two of the three terms of the bar it existed to adjudicate are not
+observable from this runtime. Across every archived entity, `tokens_if_known`
+read `n/a` in all 17 recorded dispatches — three sessions on two runtimes each
+noted the runtime does not expose per-worker usage — and no `escaped_defects_7d`
+window was ever swept. A comparison that cannot be computed does not referee
+anything.
 
-```
-task_id, slug, dispatches, rework_rounds, wallclock_hours, tokens_if_known, diff_coverage, escaped_defects_7d
-```
+What the ledger clause actually asked for survives, on the axis that has
+evidence: **complexity does not earn its way back through argument.** The
+question that enforces it is not how fast a task ran, it is **which clause of
+this contract turned out to be expensive.**
 
-Keep every committed row and its eight cells byte-for-byte unless a later
-observation supplies evidence for that exact `task_id`. Historical blanks,
-bare `pending`, dated pending values, `n/a`, floors, and complete rows retain
-their current meanings. `ledger_pr` and `ledger_artifact_v1` remain optional
-legacy audit fields; an empty, draft, pending, numbered, merged, or malformed
-value cannot block product terminalization, cleanup, or archive.
+When a rule in this contract demonstrably delayed or blocked a task, the FO of
+that task appends one line below, after the EM accepts validation and before the
+PR boundary:
 
-The source is the archived entity plus authenticated product metadata already
-copied into it. The archive retains `started`, `completed`, task identity,
-dispatch lines, rework reports, and final validation evidence when those were
-recorded. Derive `wallclock_hours` from `started` to `completed` and the
-seven-day date from `completed`. Record token or diff-coverage evidence only
-when the archive supplies it. Missing optional evidence is `unknown` (or the
-existing `n/a` form where every dispatch is explicitly unknown), never an
-invented `0`, total, coverage value, or clean escaped-defect count.
+`- <date> · <clause or file> — <what happened>. Cost: <unit>. <resolution, or open>`
 
-Best-effort capture still belongs to the FO: append one
-`D{n} launched ... | tokens: ...` line at dispatch, fill the observable token figure on return, and
-preserve rework/coverage evidence in stage reports. A worker does not infer its
-own usage. Missing capture reduces later measurement completeness; it never
-changes validation, merge, terminalization, or archive authority.
+The captain reads this section at the sprint boundary, and reads it again before
+approving any addition to this contract. Nothing gates on it, no CI job reads it,
+and an empty section is not a defect — an empty section means no clause has cost
+anything yet, which is the outcome this record is hoping for.
 
-The human-triggered measurement pass may preview or batch several archived
-tasks into one protected-main documentation PR. It may fail, conflict, or be
-deferred without touching archived state; measurement debt cannot block
-terminal state or reopen a delivered entity. It is not a daemon, scheduler,
-CI requirement, completion PR, per-task deadline, or automatic task creator.
-
-A later human review may turn the ledger into at most one narrow repo-platform
-improvement proposal. It does not create or advance an entity. Scheduling that
-proposal requires new explicit captain approval under Gate Authority.
-
-Token notation retains its historical meanings: leading `~` is rounded
-measurement, trailing `+` is a known floor, and `n/a` means every dispatch is
-explicitly unknown. `escaped_defects_7d` uses `pending:<YYYY-MM-DD>` until the
-window closes; existing bare `pending` and blank cells remain unknown legacy
-forms and are never normalized without evidence.
-
-### Ledger row command and observation checks
-
-Use the same line-preserving upsert only in a human-triggered import/batch. It
-aborts on a duplicate instead of choosing one copy, and it changes no unrelated
-byte or row:
-
-```bash
-ledger_upsert() {
-  ledger=$1 task_id=$2 row=$3
-  python3 - "$ledger" "$task_id" "$row" <<'PY'
-import os
-import pathlib
-import sys
-
-path = pathlib.Path(sys.argv[1])
-task_id = sys.argv[2]
-row = sys.argv[3]
-if "\n" in row or "\r" in row or len(row.split(",")) != 8:
-    raise SystemExit("ledger:invalid-row")
-
-lines = path.read_bytes().splitlines(keepends=True)
-matches = [
-    i for i, line in enumerate(lines[1:], 1)
-    if line.decode("utf-8").split(",", 1)[0].strip() == task_id
-]
-if len(matches) > 1:
-    raise SystemExit("ledger:duplicate")
-
-encoded = row.encode("utf-8")
-if matches:
-    old = lines[matches[0]]
-    ending = b"\r\n" if old.endswith(b"\r\n") else b"\n"
-    lines[matches[0]] = encoded + ending
-else:
-    if lines and not lines[-1].endswith((b"\n", b"\r")):
-        raise SystemExit("ledger:invalid-final-newline")
-    lines.append(encoded + b"\n")
-
-tmp = path.with_name(path.name + ".tmp")
-tmp.write_bytes(b"".join(lines))
-os.replace(tmp, path)
-PY
-}
-```
-
-The compatibility checker retains three historical modes so existing rows and
-imports keep their meanings. `premerge` recognizes the two old sentinels;
-`terminal` rejects them and recomputes wall-clock and the dated observation
-window from archived `started`/`completed` evidence; `legacy` permits historical
-blank metrics while still requiring the canonical header, one eight-cell row,
-and the exact slug. These names no longer describe task lifecycle gates. Any
-failure rejects only the measurement batch and leaves the archived entity
-untouched. Exit status `41`, `42`, and `43` mean missing, duplicate, and
-incomplete:
-
-```bash
-ledger_verify() {
-  mode=$1 task_id=$2 slug=$3 ledger=$4
-  started=${5-} ended=${6-}
-  python3 - "$mode" "$task_id" "$slug" "$ledger" "$started" "$ended" <<'PY'
-import csv
-import datetime
-import re
-import sys
-
-mode, task_id, slug, path, started, ended = sys.argv[1:]
-with open(path, newline="", encoding="utf-8") as handle:
-    rows = [[cell.strip() for cell in row] for row in csv.reader(handle)]
-
-header = [
-    "task_id", "slug", "dispatches", "rework_rounds", "wallclock_hours",
-    "tokens_if_known", "diff_coverage", "escaped_defects_7d",
-]
-if not rows or rows[0] != header:
-    print("ledger:incomplete:header")
-    raise SystemExit(43)
-matches = [row for row in rows[1:] if row and row[0] == task_id]
-if not matches:
-    print("ledger:missing")
-    raise SystemExit(41)
-if len(matches) != 1:
-    print("ledger:duplicate")
-    raise SystemExit(42)
-
-row = matches[0]
-if len(row) != 8:
-    print("ledger:incomplete")
-    raise SystemExit(43)
-if mode == "legacy":
-    if row[1] != slug:
-        print("ledger:incomplete")
-        raise SystemExit(43)
-    print("ledger:exact")
-    raise SystemExit(0)
-tokens_complete = (
-    row[5] == "n/a"
-    or (
-        re.fullmatch(
-            r"(?:[0-9]+(?:\.[0-9]+)?|~[0-9]+(?:\.[0-9]+)?[KMG]?)\+?",
-            row[5],
-        )
-        is not None
-    )
-)
-valid_common = (
-    row[1] == slug
-    and re.fullmatch(r"[1-9][0-9]*", row[2]) is not None
-    and re.fullmatch(r"[0-9]+", row[3]) is not None
-    and (
-        re.fullmatch(r"(?:100(?:\.0+)?|[0-9]{1,2}(?:\.[0-9]+)?)", row[6])
-        is not None
-        or row[6] in {"n/a", "waived"}
-    )
-)
-if mode == "premerge":
-    valid_phase = (
-        tokens_complete
-        and row[4] == "pending:done"
-        and row[7] == "pending:merge"
-    )
-elif mode == "terminal":
-    try:
-        start = datetime.datetime.fromisoformat(started.replace("Z", "+00:00"))
-        end = datetime.datetime.fromisoformat(ended.replace("Z", "+00:00"))
-        if end < start:
-            raise ValueError("end precedes start")
-        hours = f"{(end - start).total_seconds() / 3600:.2f}".rstrip("0").rstrip(".")
-        deadline = (end.astimezone(datetime.timezone.utc).date()
-                    + datetime.timedelta(days=7)).isoformat()
-        window_closed = (
-            datetime.datetime.now(datetime.timezone.utc).date()
-            >= datetime.date.fromisoformat(deadline)
-        )
-    except (TypeError, ValueError, OverflowError):
-        print("ledger:incomplete:timestamp")
-        raise SystemExit(43)
-    escaped = (
-        re.fullmatch(r"[0-9]+", row[7]) is not None
-        if window_closed
-        else row[7] == f"pending:{deadline}"
-    )
-    valid_phase = tokens_complete and row[4] == hours and escaped
-else:
-    print("ledger:invalid-mode")
-    raise SystemExit(43)
-if not valid_common or not valid_phase:
-    print("ledger:incomplete")
-    raise SystemExit(43)
-print("ledger:exact")
-PY
-}
-```
-
-Exercise the historical row shapes before trusting an import. This disposable
-fixture covers exact, missing, duplicate, incomplete, coverage bounds and
-waivers, KC token notation, all-unknown and blank token evidence, old sentinel
-and finalized forms, reversed timestamps, and a unique historical blank/`n/a`
-row accepted only in `legacy`. It never touches the real ledger or task state:
-
-```bash
-expect_rc() {
-  want=$1
-  shift
-  set +e
-  "$@"
-  got=$?
-  set -e
-  test "$got" -eq "$want"
-}
-
-LEDGER_TEST=$(mktemp -d /tmp/dev-ledger-XXXXXX)
-TEST_ID=zzzzzzzzzzzzzzzzzzzzzzzz
-TEST_SLUG=ledger-lifecycle-fixture
-cp docs/dev/ledger.csv "$LEDGER_TEST/exact.csv"
-ledger_upsert "$LEDGER_TEST/exact.csv" "$TEST_ID" \
-  "$TEST_ID, $TEST_SLUG, 2, 1, pending:done, 12345+, 87.5, pending:merge"
-expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/exact.csv"
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/missing.csv"
-TEST_ID="$TEST_ID" perl -0pi -e \
-  's/^\Q$ENV{TEST_ID}\E[^\n]*\n//m' "$LEDGER_TEST/missing.csv"
-expect_rc 41 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/missing.csv"
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/duplicate.csv"
-TEST_ID="$TEST_ID" perl -0pi -e \
-  's/^(\Q$ENV{TEST_ID}\E[^\n]*\n)/$1$1/m' "$LEDGER_TEST/duplicate.csv"
-expect_rc 42 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/duplicate.csv"
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/all-unknown-premerge.csv"
-perl -0pi -e 's/12345\+/n\/a/' "$LEDGER_TEST/all-unknown-premerge.csv"
-expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/all-unknown-premerge.csv"
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/blank-tokens.csv"
-perl -0pi -e 's/12345\+//' "$LEDGER_TEST/blank-tokens.csv"
-expect_rc 43 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/blank-tokens.csv"
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/coverage-100.csv"
-perl -0pi -e 's/87\.5/100/' "$LEDGER_TEST/coverage-100.csv"
-expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/coverage-100.csv"
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/coverage-100.1.csv"
-perl -0pi -e 's/87\.5/100.1/' "$LEDGER_TEST/coverage-100.1.csv"
-expect_rc 43 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/coverage-100.1.csv"
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/terminal.csv"
-ledger_upsert "$LEDGER_TEST/terminal.csv" "$TEST_ID" \
-  "$TEST_ID, $TEST_SLUG, 2, 1, 36, 12345+, 100, pending:2099-01-09"
-PHASE=terminal
-expect_rc 0 ledger_verify "$PHASE" "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/terminal.csv" 2099-01-01T00:00:00Z 2099-01-02T12:00:00Z
-
-cp "$LEDGER_TEST/terminal.csv" "$LEDGER_TEST/all-unknown-terminal.csv"
-perl -0pi -e 's/12345\+/n\/a/' "$LEDGER_TEST/all-unknown-terminal.csv"
-expect_rc 0 ledger_verify "$PHASE" "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/all-unknown-terminal.csv" \
-  2099-01-01T00:00:00Z 2099-01-02T12:00:00Z
-
-PREMERGE_PHASE=premerge
-expect_rc 43 ledger_verify "$PREMERGE_PHASE" "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/terminal.csv"
-
-expect_rc 43 ledger_verify "$PHASE" "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/terminal.csv" 2099-01-03T00:00:00Z 2099-01-02T12:00:00Z
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/legacy.csv"
-ledger_upsert "$LEDGER_TEST/legacy.csv" "$TEST_ID" \
-  "$TEST_ID, $TEST_SLUG, 0, 0, 0.3, n/a, n/a, "
-expect_rc 0 ledger_verify legacy "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/legacy.csv"
-expect_rc 43 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/legacy.csv"
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/coverage-na.csv"
-perl -0pi -e 's/87\.5/n\/a/' "$LEDGER_TEST/coverage-na.csv"
-expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/coverage-na.csv"
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/coverage-waived.csv"
-perl -0pi -e 's/87\.5/waived/' "$LEDGER_TEST/coverage-waived.csv"
-expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/coverage-waived.csv"
-
-cp "$LEDGER_TEST/exact.csv" "$LEDGER_TEST/rounded-tokens.csv"
-perl -0pi -e 's/12345\+/~2.9M/' "$LEDGER_TEST/rounded-tokens.csv"
-expect_rc 0 ledger_verify premerge "$TEST_ID" "$TEST_SLUG" \
-  "$LEDGER_TEST/rounded-tokens.csv"
-rm -R "$LEDGER_TEST"
-```
-
-The file is append-only as a **set keyed by `task_id`**, not as a sequence that
-forbids correcting its own pending row. A human-triggered import replaces that
-task's one row in place; unrelated rows are immutable. Before every batch push,
-fetch and rebase on the configured trunk. If `ledger.csv` conflicts, resolve it
-as a union: retain every unrelated row from both sides, then replay this task's
-latest upsert from archived evidence. Never resolve with whole-file `--ours` or
-`--theirs`; either one can erase a sibling task. Run
-`ledger_verify` after the union and inspect `git diff --word-diff=porcelain --
-docs/dev/ledger.csv` to prove only the target row changed and new unrelated
-rows were retained.
-
-**Two pieces of ledger upkeep remain observational and human-triggered.**
-
-**Closing a `pending:` cell needs a trigger independent of task completion.**
-The batch owner sweeps overdue cells before any ledger write, but a ledger
-write cannot be the *only* trigger: a
-queue that goes quiet, a sprint that ships nothing, or the last task of a cycle
-leaves `pending:` cells whose windows shut with nobody scheduled to look. So
-the sweep also belongs to the captain's sprint-boundary pass over `ROADMAP.md`,
-which the Canonical Docs Ownership table already schedules and which happens
-whether or not any task reached `done`. Either party sweeping is enough; the
-point is that the obligation does not depend on work arriving. This is why the
-cell carries its own due date — a sweeper needs to recognise an overdue cell
-from the file alone, not reconstruct merge dates.
-
-**Freezing the baseline medians needs no delivery trigger.** An observation
-batch updates its row first and counts after: if that row is the tenth
-qualifying one, the same documentation PR computes the two medians *from the
-ten rows now present* and edits them into this section with the task ids and the
-date. Counting before the replacement reads nine rows and freezes the wrong
-number. If no further row ever qualifies, the cohort stays incomplete, which
-is the correct measurement state and not a delivery failure.
-
-Neither is a gate; both are bookkeeping.
-
-This ledger is the experiment. **Its baseline is a prospective control cohort
-recorded here, not a historical record someone has to go find**: the first ten
-rows carrying a complete `wallclock_hours` and a `tokens_if_known` that is
-neither `n/a` nor `+`-suffixed. Their medians become `baseline_tokens_per_task`
-and `baseline_wallclock_hours`, written into this section with the task ids and
-the date computed, and **frozen** — a moving baseline measures nothing. As of
-2026-07-28 the cohort stands at 8 of 10 qualifying rows, so no baseline is
-computed yet. Those are the only two baselines because they are the only two
-terms of the bar expressed as a ratio to one; its third term,
-`escaped_defects_7d`, is an absolute threshold and needs no baseline.
-`rework_rounds` stays a recorded column with no baseline, and any later use of it
-computes its own from the rows then present.
-
-**Say plainly what that can and cannot answer.** It measures whether this flow is
-getting cheaper over time. It cannot answer whether it beats what it replaced.
-The original comparison cited "the ship-flow historical baseline (006-line
-dispatch/veto records)", and three searches on 2026-07-28 — a
-`git log --diff-filter=A` over any `*006*` path across all refs, a
-commit-message sweep for `006`, and a grep over `docs/dev/` — found that no
-`006-*` entity is present in this repo's history and no dispatch/veto record set
-appears to have been committed. **That is a bounded claim, and Proof Policy 7
-says so out loud** — `--diff-filter=A` misses a record that arrived by rename,
-and a grep over the current `docs/dev/` misses one that was later deleted or
-lived elsewhere, so even inside the repo this is a strong sample rather than a
-census. Outside it, agent session transcripts, harness telemetry, and the
-`context-lake` journal were not searched at all, and a durable per-dispatch token
-record, if one survives, is most likely in one of those. So the honest state is
-**unavailable, not proven absent**: the bar that rested on that denominator does
-not stand today and is retired, and reinstating it needs a located record rather
-than an assumption that one is out there.
-
-Until the cohort is complete and its medians are written above, a clause added on
-this bar's strength must say in its own text that it rests on argument rather
-than data — the ledger held to the Proof Policy 2 it enforces on every AC.
-Pre-registered bar — this flow is improving if a row holds ≤60% of baseline
-tokens and ≤70% of baseline wall-clock with no added Severity-1/2 escaped
-defects; complexity (extra stages, skills, mechanisms) earns its way back only
-through this ledger, never through argument. **That bar reads three columns —
-`tokens_if_known`, `wallclock_hours`, and `escaped_defects_7d`.** At observation
-time, derive `wallclock_hours` from durable timestamps or omit the import; never
-invent it. `tokens_if_known` carries a recorded measurement, a marked floor, or
-`n/a` only when every dispatch is explicitly unknown. The all-unknown form is
-excluded from the bar and baseline; `escaped_defects_7d` starts at
-`pending:<date>` and is back-filled when that date passes. Any incomplete
-observation affects the ledger only, never the archived delivery verdict.
+Per-dispatch observations stay where they are already written: the entity's
+`## Measurement` block and its stage reports. Those are the task's own evidence,
+not a second task universe.
 
 ## Task Template
 
@@ -1648,9 +1293,7 @@ verdict:
 worktree:
 issue:
 pr:
-ledger_pr:
 pr_artifact_v1:
-ledger_artifact_v1:
 mod-block:
 design:
 lane:

@@ -83,8 +83,9 @@ or JSON `null` when exhaustive reconciliation found zero PRs. Its `head` is
 The artifact field is mod-owned frontmatter metadata and is excluded from
 motivation, change, and evidence extraction if drift forces a renewed draft.
 
-Use this codec for product artifacts. Historical ledger artifacts retain this
-encoding for read-only audit, but lifecycle decisions do not decode them.
+Use this codec for product artifacts. Historical `ledger_artifact_v1` values
+retain this encoding for read-only audit, but lifecycle decisions do not decode
+them.
 `encode` accepts only an already-canonical file and emits its field value. `decode` writes the exact
 decoded bytes to a private destination and emits their SHA-256:
 
@@ -384,8 +385,9 @@ base, quoted head, full stored head OID, approved binary diff, title/body, and a
 non-empty `mergedAt`. Only after every check succeeds set
 `PRODUCT_AUTHENTICATED=yes`, retain the exact numbered product ref, and run the
 product-only terminal transaction below. An empty, draft, pending, numbered,
-merged, malformed, or absent ledger ref is unconsumed compatibility evidence;
-it does not select a phase and cannot veto the transaction.
+merged, malformed, or absent legacy `ledger_pr` value is unconsumed
+compatibility evidence; it does not select a phase and cannot veto the
+transaction.
 
 Run one self-contained holder durability transaction. Spacedock requires a
 separate setter to clear `mod-block`, so issue two setters back-to-back and
@@ -449,7 +451,7 @@ As a compatibility defense, startup may encounter a clean durable non-terminal
 entity with empty `mod-block`, an authenticated numbered product ref, and
 otherwise terminal-ready evidence from the superseded two-commit flow.
 Authenticate that exact product state and run the complete two-set/one-commit
-transaction. Any ledger phase is preserved and ignored.
+transaction. Any legacy `ledger_*` value is preserved and ignored.
 
 Use only the configured holder `STATE` after rerunning the README prerequisite.
 Retain the authenticated entity index as `LIVE_INDEX`, require it outside
@@ -1751,7 +1753,7 @@ and archive transaction:
    - **legacy direct-commit route:** require `pr=direct-commit:{sha}`. Resolve
      `{sha}` unambiguously to a commit, fetch `origin "$BASE"`, and require
      `git merge-base --is-ancestor "$DIRECT_COMMIT" "origin/$BASE"`. Optional
-     historical ledger fields and rows are not prerequisites and are not
+     historical `ledger_*` fields are not prerequisites and are not
      rewritten or minted retroactively.
 
 2. Require the live entity to hold `status={terminal}`, a non-empty
@@ -1792,7 +1794,7 @@ and archive transaction:
    the same move, stage, commit, push, or observation restart point. The hook
    may report archived only after step 4's remote observation checks pass.
 
-This recovery path never reads or writes the measurement ledger, prepares a
+This recovery path never reads or writes any measurement artifact, prepares a
 measurement branch, pushes a product branch, opens a PR, or terminalizes again.
 Its only possible push is the archive transaction's exact state-ref push. All non-archive writes
 continue to use their self-contained `status --set` plus `state commit`.
@@ -1836,9 +1838,9 @@ Resolve the PR base once: `BASE=$(spacedock dispatch trunk --workflow-dir {dir})
 Before constructing the draft, enforce the accepted-validation boundary from
 the README: require the passed validation stage report and its exact product
 head evidence, then confirm every changed path maps to an acceptance criterion.
-Preserve `## Measurement` evidence in the entity for later archive-first
-observation, but do not read, verify, or update `ledger.csv` and do not require
-either ledger field before pushing or creating the product PR.
+Preserve `## Measurement` evidence in the entity so archive retains it, but do
+not require any measurement artifact, and do not require either legacy
+`ledger_*` field, before pushing or creating the product PR.
 
 **PR APPROVAL GUARDRAIL — Do NOT push or create a PR without explicit captain approval.** Before presenting the draft, construct the full PR body so the captain reviews the actual prose that will land on GitHub.
 
@@ -2094,5 +2096,5 @@ exact product PR, clears the product block, commits terminal state, and archives
 through the existing fail-closed transaction. The live terminal file remains
 restart-visible until recovery re-verifies the product evidence, removes any
 authenticated clean worktree, attempts safe branch deletion without gating on
-squash-merge refusal, and archives last. Ledger availability or phase does not
-delay any of those steps.
+squash-merge refusal, and archives last. No measurement artifact delays any of
+those steps.
