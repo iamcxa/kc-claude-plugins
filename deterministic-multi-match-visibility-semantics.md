@@ -1,6 +1,6 @@
 ---
 title: Define deterministic visibility semantics for hidden-first multi-match selectors
-status: validation
+status: implementation
 source: GitHub issue #91; committed e2e-pipeline/S1 work item
 product: e2e-pipeline
 sprint: S1
@@ -500,6 +500,11 @@ can prove computed-accessible-name equivalence from DOM CSS alone.
 - automatic application of `retained-zero-rect` by mapper or verifier;
 - rewriting historical plans, issue mutation, release/version work, or sprint membership changes;
 - generated-output hardening tracked separately by #39.
+
+### Feedback Cycles
+
+- Cycle 3: REJECTED — cycle-3 Science Officer/EM gate; surface 0.78h corrections vs
+  16h estimate (4.9%); AC unchanged
 
 ## Stage Report: ideation
 
