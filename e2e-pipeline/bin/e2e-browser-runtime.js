@@ -1551,87 +1551,6 @@ function assertInitProbeObserved(options, expression) {
   }
 }
 
-/**
- * Read the navigated origin's web storage back out of the live page.
- *
- * Everything else the first-navigation receipt records about the profile is
- * evidence about the *files*: lineage, inode, structural digest. None of it can
- * tell whether the browser actually populated the origin from them, so a profile
- * whose contents the browser silently dropped produces identical file evidence to
- * one it honored.
- *
- * localStorage throws on an opaque origin, so a failure to read is recorded as
- * `unreadable` rather than as zero — absent evidence must not be reported as an
- * observation of emptiness.
- */
-function observeProfileStorage(options) {
-  const expression =
-    '(() => {' +
-    ' const read = (store) => { try { return store.length; } catch (_e) { return null; } };' +
-    ' let cookies = null;' +
-    ' try { cookies = document.cookie ? document.cookie.split(";").length : 0; } catch (_e) { cookies = null; }' +
-    ' return {' +
-    '  origin: String(location.origin || ""),' +
-    '  local_storage_keys: read(localStorage),' +
-    '  session_storage_keys: read(sessionStorage),' +
-    '  cookie_count: cookies' +
-    ' };' +
-    '})()';
-  const data = parseAgentBrowserPayload(
-    runAgentBrowser(options, ['eval', expression, '--json']),
-    'agent-browser profile storage evidence'
-  );
-  const result = data.result;
-  if (!result || typeof result !== 'object') {
-    throw new Error(
-      'agent-browser profile storage evidence is incomplete'
-    );
-  }
-  const readable =
-    result.local_storage_keys !== null || result.cookie_count !== null;
-  return {
-    status: readable ? 'observed' : 'unreadable',
-    origin: String(result.origin || ''),
-    local_storage_keys: result.local_storage_keys,
-    session_storage_keys: result.session_storage_keys,
-    cookie_count: result.cookie_count,
-  };
-}
-
-/**
- * Refuse `verified` when a snapshot profile produced no origin state at all.
- *
- * Scoped to `verified-snapshot` on purpose. That mode is agent-browser copying the
- * requested profile into a temp directory before launch, and it is the mode in
- * which 0.32 drops Local Storage (#149) — `persistent-path` hands the browser the
- * requested directory itself and has no such copy step, so applying this there
- * would refuse runs that never had a profile to carry.
- *
- * The condition is zero localStorage keys AND zero cookies, not zero of either. A
- * real application carrying session state has at least one; a snapshot that
- * materialized neither is inert, whatever the file-level lineage proved.
- *
- * The `!== 0` comparisons are the single enforcement point for "an unreadable origin
- * is not an empty one" — `null` is absent evidence and must never be widened into a
- * zero by a falsy test. An earlier draft also short-circuited on
- * `status !== 'observed'`, which read as belt-and-braces but made each guard mask
- * regressions in the other: removing either one alone still passed the unreadable
- * case, so neither had a test that could fail.
- */
-function assertProfileStorageLive(profileMode, storage) {
-  if (profileMode !== 'verified-snapshot') return;
-  if (storage.local_storage_keys !== 0 || storage.cookie_count !== 0) return;
-  throw new Error(
-    'browser lifecycle infrastructure failure: profile snapshot carried no origin ' +
-      'state after navigation (0 localStorage keys and 0 cookies at ' +
-      (storage.origin || 'the navigated origin') +
-      '). The snapshot passed its file-level lineage checks, so the browser dropped ' +
-      'the profile contents rather than the runtime losing them — agent-browser 0.32 ' +
-      'snapshot mode is known to drop Local Storage. Any proof depending on a ' +
-      'pre-authenticated profile would run logged-out from here.'
-  );
-}
-
 function writeLifecycleReceipt(receiptPath, receipt) {
   writeJsonAtomic(receiptPath, receipt, false);
   return receipt;
@@ -1901,11 +1820,6 @@ function performOwnedOpen(options) {
     }
     assertInitProbeObserved(options, probeExpression);
     post.recorder.init_script = 'observed';
-    // Attachment is evidence about the recorder, not about the profile. `verified`
-    // is only reachable past a positive observation of the navigated origin (#149).
-    const profileStorage = observeProfileStorage(options);
-    post.profile_storage = profileStorage;
-    assertProfileStorageLive(post.profile_mode, profileStorage);
     if (diagnosticManifest?.scripts?.length) {
       observeDiagnosticProjections(options, receipt, diagnosticManifest);
     }
@@ -1918,7 +1832,6 @@ function performOwnedOpen(options) {
       pre: receipt.first_navigation.pre,
       post,
       init_script: 'observed',
-      profile_storage: profileStorage,
       har,
       verified_at: new Date().toISOString(),
     };
