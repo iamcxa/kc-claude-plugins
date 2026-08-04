@@ -295,6 +295,30 @@ if (command === 'open') {
 if (command === 'eval') {
   writeState(state);
   const expression = commandArgs[0] || '';
+  // The runtime's post-navigation profile-storage probe (#149). Its shape is an
+  // object, not the boolean every other eval in this fixture returns, so it needs
+  // its own branch. E2E_FIXTURE_PROFILE_STORAGE lets a case simulate an inert
+  // snapshot; the default is a profile that carried state, which is what the
+  // pre-existing cases assume.
+  if (expression.includes('local_storage_keys')) {
+    const configured = process.env.E2E_FIXTURE_PROFILE_STORAGE;
+    process.stdout.write(
+      JSON.stringify({
+        success: true,
+        data: {
+          result: configured
+            ? JSON.parse(configured)
+            : {
+                origin: 'https://app.test',
+                local_storage_keys: 3,
+                session_storage_keys: 0,
+                cookie_count: 2,
+              },
+        },
+      }) + '\n'
+    );
+    process.exit(0);
+  }
   const globalMatch = expression.match(
     /globalThis\[("(?:[^"\\]|\\.)*")\]/
   );
