@@ -47,6 +47,30 @@ implementation, and a terminal merge. The spacedock binary owns all runtime
 semantics: stage transitions, gate records, worktree lifecycle, state
 durability, exactly-once approval. This README owns judgment discipline only.
 
+## Kernel binding
+
+The portable authority and evidence contract is
+[`_mods/kernel.md`](./_mods/kernel.md), vendored byte-identically from
+`kc-dev-flow/references/kernel.md` and held there by
+`scripts/kc-dev-flow-contract-test.py`. Read it as the authority; this README
+adds the local mechanism the kernel deliberately does not prescribe.
+
+The binding itself is [`kernel-binding.yaml`](./kernel-binding.yaml) — authority
+map, adopted controls, local routes and exceptions. It is not restated here, so
+there is one place to read and one place to change. Verify it rather than read
+it:
+
+```
+python3 <installed kc-dev-flow>/scripts/verify-binding.py docs/dev/kernel-binding.yaml
+```
+
+This repository authors the kernel, so the version pinned in that file is
+**observational**: it names the newest published release and exists so this
+repository receives the same drift signal an adopter receives, from the same
+checker. Authority is the in-tree copy above. Between a kernel edit and the next
+release, `REBIND_REQUIRED` against our own published package is the expected
+reading — the repair is a release, not a text change.
+
 ## File Naming
 
 Each task is `{slug}.md` (default) or a folder `{slug}/index.md` when

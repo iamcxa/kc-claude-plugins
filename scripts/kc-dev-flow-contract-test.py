@@ -154,7 +154,7 @@ for field in [
 ]:
     require(field in binding, f"local binding is missing {field}")
 
-for reference_name in ["reverse-recovery-audit.md", "work-control-profile.md"]:
+for reference_name in ["kernel.md", "reverse-recovery-audit.md", "work-control-profile.md"]:
     canonical = (PLUGIN / "references" / reference_name).read_bytes()
     self_adoption = (ROOT / "docs/dev/_mods" / reference_name).read_bytes()
     require(canonical == self_adoption, f"self-adoption drifted: {reference_name}")

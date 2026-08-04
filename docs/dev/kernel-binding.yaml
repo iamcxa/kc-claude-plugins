@@ -1,0 +1,54 @@
+# kc-claude-plugins — kernel binding
+#
+# This repository AUTHORS kc-dev-flow, so its relationship to the kernel differs
+# from an adopter's in one way worth stating rather than leaving to inference:
+#
+#   * Authority is the in-tree kernel, vendored byte-identically at
+#     `_mods/kernel.md` and held there by `scripts/kc-dev-flow-contract-test.py`.
+#     Binding to a published release instead would bind this repository to text
+#     older than the text it ships, every time the kernel is edited.
+#   * The pin below is OBSERVATIONAL. It names the newest published release and
+#     exists so this repository receives the same drift signal every adopter
+#     receives, from the same checker. It grants no authority and gates nothing.
+#
+# A non-PASS here is therefore information. Between a kernel edit and the next
+# release this repository is expected to read REBIND_REQUIRED against its own
+# published package — that is the signal working, not a defect, and the repair
+# is a release rather than a text change.
+#
+# Verify:
+#     python3 <installed kc-dev-flow>/scripts/verify-binding.py docs/dev/kernel-binding.yaml
+#
+# Do not compute kernel_digest by hand: remove the field, run the checker, and
+# copy the verify-binding:expected-digest value it prints for the named version.
+#
+# `upstream_contribution` is deliberately absent. It routes a portable
+# improvement to the kernel source, and this repository is that source.
+
+kernel_source: iamcxa/kc-claude-plugins/kc-dev-flow
+kernel_version: 1.0.0
+kernel_entrypoint: references/kernel.md
+kernel_digest: f1a5907e36b1f5145ea28e67422b2db5254561c092bc23f7858836038e17df1e
+
+authority:
+  project_context: PRODUCT.md and ARCHITECTURE.md at the repository root; CLAUDE.md for repo-wide conventions
+  work_items: spacedock entities under docs/dev/, queried with `spacedock status --workflow-dir docs/dev`
+  iteration: docs/dev/ROADMAP.md — sprint headings written by the captain; never a task-state mirror
+  execution_state: docs/dev/.spacedock-state, owned by the spacedock binary
+  delivery: squash-merge to main through a GitHub pull request with its required checks; release-please owns versions and tags
+  gate_verdicts: fresh EM or reviewer, per docs/dev/README.md "Gate Authority"
+  scope_and_irreversibility: captain
+  observation: docs/dev/README.md "Workflow cost record" — a note to the captain, never a gate, and an empty one is not a defect
+
+# How each control is bound locally — adapter, authority, enforcement points —
+# stays in docs/dev/README.md, which is where local mechanism belongs. This
+# records only which controls are on.
+adopted_controls:
+  - bound_field_validation
+
+local_routes:
+  normal: backlog → ideation → implementation → validation → done
+  bounded_defect: a known-cause defect with a mechanical acceptance test may skip ideation, keeping every other bar
+
+local_exceptions:
+  - no ledger; the workflow cost record replaced it, and two of the three terms of the bar it adjudicated are not observable from this runtime
