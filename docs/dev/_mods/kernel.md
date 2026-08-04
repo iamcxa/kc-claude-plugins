@@ -24,6 +24,13 @@ runtime. Adopters bind those locally.
 - **Observation is not authority.** Ledgers and metrics may explain and improve
   the flow, but missing observation cannot block delivery, reopen completed
   work, or authorize another action.
+- **An instruction that contradicts the governing contract loses, and should not
+  have been an instruction.** An actor told not to do what its stage or contract
+  mandates resolves that conflict in favour of the contract, correctly. Where
+  the instructing party has already discharged the obligation, it says so —
+  naming the result, its author, and that the obligation is **met rather than
+  skipped**. Check for this contradiction before concluding that an actor
+  ignored an instruction.
 
 ## Lifecycle
 
@@ -125,22 +132,11 @@ reports the same way whether or not the thing it watches is broken.
   while the deliverable's shape is unchanged, the deliverable is reshaped before
   another verification round. Listing that option and then choosing a cheaper
   one is the original escape hatch with a ceremony added.
-- **A hazard that has defeated an instruction is removed from the path, not
-  described more carefully.** Where a worker can reach an operation that has
-  repeatedly gone wrong — a command slow enough to invite deferring it, a
-  destructive step, a credential — the repair is inspectable in the dispatch:
-  **the worker is neither assigned nor permitted to execute the operation, and a
-  separately named owner is assigned to execute it and supply its result.** Not
-  that the brief warns about it more firmly, and not that it is called optional
-  or a fallback while remaining reachable. A brief is not a control: it is read
-  by the party the control exists to bound. "The worker still needs to do the
-  slow thing" is the signal to split the work, not to rewrite the warning.
-- **An instruction that contradicts the governing contract loses, and should not
-  have been an instruction.** A worker told not to do what its stage mandates
-  resolves that conflict in favour of the stage, correctly. Where the dispatcher
-  has already discharged the obligation, it says so — naming the result, its
-  author, and that the obligation is **met rather than skipped**. Check for this
-  contradiction before concluding that a worker ignored an instruction.
+  Where the repeated failure is an instruction a worker keeps not following, the
+  restructuring that has evidence behind it is removing the operation from what
+  the worker may execute — declared through the Work Control Profile's
+  `dispatch_hazard_assignment`, because a brief is not a control: it is read by
+  the party the control exists to bound.
 
 ## Self-improvement
 

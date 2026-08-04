@@ -98,6 +98,34 @@ sets that view's authority flag to true. Invalid data is `FAIL`; missing or
 unreadable registry/state input, an unauthenticated population root, or a
 population that cannot be bound to one revision is `UNKNOWN`.
 
+### `dispatch_hazard_assignment`
+
+Use when a worker's path can reach an operation that has already defeated an
+instruction — a command slow enough to invite deferring it, a destructive step,
+a credential, an irreversible publish.
+
+The adapter must:
+
+1. read the dispatch record and enumerate every operation the worker is assigned
+   or permitted to execute;
+2. for each operation on the repository's declared hazard list, assert that the
+   worker is neither assigned nor permitted to execute it;
+3. assert that a separately named owner is assigned to execute it and to supply
+   its result to the worker;
+4. report the hazard list's provenance and exact revision, so a dispatch cannot
+   pass by being checked against an empty or stale list.
+
+An operation described as optional, a fallback, or "only if needed" is still
+reachable, and a warning about it is not an assignment. Mechanical coverage can
+prove a named operation is absent from a dispatch. It cannot prove the hazard
+list is complete; that stays with whoever declares it, and an incomplete list
+still defeats the declaration.
+
+Acceptance is a `PASS` receipt for the exact dispatch. A hazardous operation the
+worker may execute, or one reassigned to no named owner, is `FAIL`. A dispatch
+record that cannot be read, or a hazard list that cannot be bound to a revision,
+is `UNKNOWN`.
+
 ### `delivery_reconciliation`
 
 Use when a hosted delivery artifact can complete one or more work items.
@@ -146,6 +174,7 @@ fallback. Reviewer silence, timeout, or setup failure is never a clean verdict.
    enforcement point fails on `FAIL`, `UNKNOWN`, and `UNAVAILABLE`.
 6. Add another capability only when its own risk justifies the adoption cost.
 
-Combining all five capabilities into one verdict or rollout is not conformant:
-each capability must remain independently adoptable, observable, and
-enforceable.
+Combining capabilities into one verdict or rollout is not conformant: each must
+remain independently adoptable, observable, and enforceable. The count is
+deliberately not stated here — a number in prose goes stale the first time one
+is added, and this document has now had one added.
