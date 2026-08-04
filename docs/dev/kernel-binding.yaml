@@ -1,20 +1,33 @@
 # kc-claude-plugins — kernel binding
 #
-# This repository AUTHORS kc-dev-flow, so its relationship to the kernel differs
-# from an adopter's in one way worth stating rather than leaving to inference:
+# This repository AUTHORS kc-dev-flow, so its relationship to the kernel is not
+# an adopter's. Two separate things hold, and conflating them reads the checker
+# wrongly:
 #
-#   * Authority is the in-tree kernel, vendored byte-identically at
-#     `_mods/kernel.md` and held there by `scripts/kc-dev-flow-contract-test.py`.
-#     Binding to a published release instead would bind this repository to text
-#     older than the text it ships, every time the kernel is edited.
-#   * The pin below is OBSERVATIONAL. It names the newest published release and
-#     exists so this repository receives the same drift signal every adopter
-#     receives, from the same checker. It grants no authority and gates nothing.
+#   * AUTHORITY is the in-tree kernel, vendored byte-identically at
+#     `_mods/kernel.md`. Its enforcement point is
+#     `scripts/kc-dev-flow-contract-test.py`, which runs on every pull request as
+#     a required check — a stricter hold than an adopter's, which is a checker
+#     someone remembers to run. Binding a published release as authority instead
+#     would bind this repository to text older than the text it ships.
+#   * The pin below TRACKS RELEASES. It records which published release this
+#     repository was last compared against. It grants no authority and gates
+#     nothing, and the enforcement point for that is absence: no workflow under
+#     `.github/` names this file, so nothing can block on it.
 #
-# A non-PASS here is therefore information. Between a kernel edit and the next
-# release this repository is expected to read REBIND_REQUIRED against its own
-# published package — that is the signal working, not a defect, and the repair
-# is a release rather than a text change.
+# Read the checker's answer precisely. Its only inputs are this file and the
+# installed-plugin cache — `verify-binding.py` takes a binding path and an
+# optional cache root, and no repository path reaches it — so the working tree
+# is not something it can observe:
+#
+#   * PASS means the pin agrees with the INSTALLED package. It says nothing
+#     about the in-tree kernel, which is normally ahead of the newest release
+#     and is ahead of 1.0.0 as this is written.
+#   * A non-PASS means a newer release is installed, or the pin disagrees with
+#     the release it names. Either way the repair is an edit to this file.
+#
+# So editing the in-tree kernel does not move this reading at all. What catches
+# that is the contract test above, not the checker.
 #
 # Verify:
 #     python3 <installed kc-dev-flow>/scripts/verify-binding.py docs/dev/kernel-binding.yaml

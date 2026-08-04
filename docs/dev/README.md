@@ -57,19 +57,26 @@ adds the local mechanism the kernel deliberately does not prescribe.
 
 The binding itself is [`kernel-binding.yaml`](./kernel-binding.yaml) — authority
 map, adopted controls, local routes and exceptions. It is not restated here, so
-there is one place to read and one place to change. Verify it rather than read
-it:
+there is one place to read and one place to change.
+
+This repository authors the kernel, so two things hold separately and reading
+them as one misreads the checker:
+
+- **Authority is the in-tree copy above**, and its enforcement point is
+  `scripts/kc-dev-flow-contract-test.py` running on every PR as a required
+  check. That is a stricter hold than an adopter's, which is a checker someone
+  remembers to run.
+- **The pin tracks releases.** `verify-binding.py` never reads the working tree,
+  so a `PASS` means the pin agrees with the *installed package* and says nothing
+  about the in-tree kernel — which is normally ahead of the newest release.
+  Editing the kernel does not move that reading; the contract test catches it.
+
+Verify the pin rather than read it — from a release that ships the checker;
+`kc-dev-flow` 1.0.0 does not:
 
 ```
 python3 <installed kc-dev-flow>/scripts/verify-binding.py docs/dev/kernel-binding.yaml
 ```
-
-This repository authors the kernel, so the version pinned in that file is
-**observational**: it names the newest published release and exists so this
-repository receives the same drift signal an adopter receives, from the same
-checker. Authority is the in-tree copy above. Between a kernel edit and the next
-release, `REBIND_REQUIRED` against our own published package is the expected
-reading — the repair is a release, not a text change.
 
 ## File Naming
 
