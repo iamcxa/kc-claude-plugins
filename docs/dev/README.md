@@ -47,6 +47,37 @@ implementation, and a terminal merge. The spacedock binary owns all runtime
 semantics: stage transitions, gate records, worktree lifecycle, state
 durability, exactly-once approval. This README owns judgment discipline only.
 
+## Kernel binding
+
+The portable authority and evidence contract is
+[`_mods/kernel.md`](./_mods/kernel.md), vendored byte-identically from
+`kc-dev-flow/references/kernel.md` and held there by
+`scripts/kc-dev-flow-contract-test.py`. Read it as the authority; this README
+adds the local mechanism the kernel deliberately does not prescribe.
+
+The binding itself is [`kernel-binding.yaml`](./kernel-binding.yaml) — authority
+map, adopted controls, local routes and exceptions. It is not restated here, so
+there is one place to read and one place to change.
+
+This repository authors the kernel, so two things hold separately and reading
+them as one misreads the checker:
+
+- **Authority is the in-tree copy above**, and its enforcement point is
+  `scripts/kc-dev-flow-contract-test.py` running on every PR as a required
+  check. That is a stricter hold than an adopter's, which is a checker someone
+  remembers to run.
+- **The pin tracks releases.** `verify-binding.py` never reads the working tree,
+  so a `PASS` means the pin agrees with the *installed package* and says nothing
+  about the in-tree kernel — which is normally ahead of the newest release.
+  Editing the kernel does not move that reading; the contract test catches it.
+
+Verify the pin rather than read it — from a release that ships the checker;
+`kc-dev-flow` 1.0.0 does not:
+
+```
+python3 <installed kc-dev-flow>/scripts/verify-binding.py docs/dev/kernel-binding.yaml
+```
+
 ## File Naming
 
 Each task is `{slug}.md` (default) or a folder `{slug}/index.md` when
