@@ -295,6 +295,55 @@ if (command === 'open') {
 if (command === 'eval') {
   writeState(state);
   const expression = commandArgs[0] || '';
+  // Profile-liveness probe (#149). This branch EVALUATES the runtime's real expression
+  // against a synthetic global rather than returning a canned object, because the thing
+  // most worth testing is where the guards sit: `localStorage` is reachable only through
+  // a getter that can throw, and an expression that touches it outside a `try` lets the
+  // exception escape. A fixture that answered with pre-baked JSON would pass either way,
+  // which is exactly how the reverted first attempt shipped an unreachable code path.
+  if (expression.includes('readSelector')) {
+    const liveness = state.profileLiveness || {};
+    const presentKeys = liveness.keys || [];
+    const presentSelectors = liveness.selectors || [];
+    const context = {
+      location: { origin: liveness.origin || 'https://application.example.test' },
+      document: {
+        querySelector: function(selector) {
+          if (liveness.mode === 'document-throws') throw new Error('SecurityError');
+          return presentSelectors.includes(selector) ? {} : null;
+        },
+      },
+    };
+    context.globalThis = context;
+    // `storage-throws` models a store that exists but refuses the read. It does NOT
+    // model an opaque origin, where the property ACCESS itself throws: `vm` does not
+    // forward a throwing getter from a sandbox object — it yields `undefined` — so that
+    // case is untestable here by construction and is covered by the direct unit test on
+    // `profileLivenessExpression` instead. Saying so because a fixture that silently
+    // fails to model what its mode is named after is how the reverted attempt shipped
+    // an unreachable code path with a green test over it.
+    context.localStorage = {
+      getItem: function(key) {
+        if (liveness.mode === 'storage-throws') {
+          throw new Error('SecurityError: storage is not available');
+        }
+        return presentKeys.includes(key) ? 'value' : null;
+      },
+    };
+    let result;
+    try {
+      result = vm.runInNewContext(expression, context);
+    } catch (error) {
+      process.stdout.write(
+        JSON.stringify({ success: false, error: String(error && error.message) }) + '\n'
+      );
+      process.exit(0);
+    }
+    process.stdout.write(
+      JSON.stringify({ success: true, data: { result } }) + '\n'
+    );
+    process.exit(0);
+  }
   const globalMatch = expression.match(
     /globalThis\[("(?:[^"\\]|\\.)*")\]/
   );

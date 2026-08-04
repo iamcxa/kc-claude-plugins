@@ -151,7 +151,7 @@ function setup(t, options) {
   };
 }
 
-function runOpen(fixture, url, diagnosticInitScripts) {
+function runOpen(fixture, url, diagnosticInitScripts, livenessArgs) {
   const diagnosticArgs = (diagnosticInitScripts || []).flatMap(function(
     scriptPath
   ) {
@@ -172,11 +172,19 @@ function runOpen(fixture, url, diagnosticInitScripts) {
       '--receipt',
       fixture.receipt,
       ...diagnosticArgs,
+      ...(livenessArgs || []),
       'open',
       url,
     ],
     { encoding: 'utf8', env: fixture.env }
   );
+}
+
+/** Configure what the fixture's synthetic page will report for the liveness probe. */
+function setFixtureLiveness(fixture, liveness) {
+  const state = JSON.parse(fs.readFileSync(fixture.statePath, 'utf8'));
+  state.profileLiveness = liveness;
+  fs.writeFileSync(fixture.statePath, JSON.stringify(state, null, 2) + '\n');
 }
 
 function runClose(fixture, diagnosticInitScripts) {
@@ -647,6 +655,176 @@ test('0.32 snapshot is bound to its canonical source without reading profile sec
   assert.match(receipt.profile_lineage.structural_digest, /^[a-f0-9]{64}$/);
   assert.ok(receipt.profile_lineage.structural_matched_entries >= 3);
   assert.equal(receipt.first_navigation.status, 'verified');
+});
+
+// #149. The receipt used to reach `verified` on the strength of the init script having
+// attached, which is evidence about the recorder and says nothing about whether the
+// browser populated the origin from the profile. agent-browser 0.32 snapshot mode drops
+// Local Storage, so a run against a pre-authenticated profile behaved as a logged-out
+// visitor start to finish while the artifact stayed green.
+//
+// The first attempt at this counted origin state and refused when it found none. It was
+// reverted: counting cannot separate state the profile carried from state the page minted
+// on load, so a dropped profile passed whenever the app set any cookie of its own. These
+// cases pin the replacement — a caller-declared observation — and the boundary that the
+// runtime never invents a claim the caller did not make.
+
+test('a declared localStorage key that survived is recorded and verifies', function(t) {
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  setFixtureLiveness(fixture, {
+    origin: 'https://application.example.test',
+    keys: ['auth_token'],
+    selectors: [],
+  });
+
+  const result = runOpen(fixture, 'https://application.example.test/live', [], [
+    '--profile-liveness-key', 'auth_token',
+  ]);
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.status, 'verified');
+  assert.equal(receipt.first_navigation.profile_liveness.status, 'observed');
+  assert.deepEqual(receipt.first_navigation.profile_liveness.keys, [
+    { name: 'auth_token', result: 'present' },
+  ]);
+});
+
+test('a declared key the dropped snapshot did not carry fails closed', function(t) {
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  // The reverted design's blind spot, made explicit: the page HAS state — an anonymous
+  // session key it minted itself — and the profile's key is still gone. Counting saw
+  // "1 key, nonzero, fine". A declared observation sees the one that matters.
+  setFixtureLiveness(fixture, {
+    origin: 'https://application.example.test',
+    keys: ['anon_session_id'],
+    selectors: [],
+  });
+
+  const result = runOpen(fixture, 'https://application.example.test/inert', [], [
+    '--profile-liveness-key', 'auth_token',
+  ]);
+
+  assert.notEqual(result.status, 0);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.status, 'failed');
+  assert.equal(receipt.failure_class, 'infrastructure');
+  assert.match(receipt.error, /declared profile liveness was not observed/);
+  assert.match(receipt.error, /auth_token=absent/);
+  assert.notEqual(receipt.first_navigation.status, 'verified');
+});
+
+test('a declared authenticated-only affordance covers HttpOnly-cookie sessions', function(t) {
+  // The other half of why counting failed: `document.cookie` cannot see HttpOnly
+  // cookies, so a session carried entirely by one read as empty storage and a WORKING
+  // run would have been refused. A DOM affordance is observable regardless of where the
+  // session actually lives.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  setFixtureLiveness(fixture, {
+    origin: 'https://application.example.test',
+    keys: [],
+    selectors: ['[data-testid="sign-out"]'],
+  });
+
+  const result = runOpen(fixture, 'https://application.example.test/httponly', [], [
+    '--profile-liveness-selector', '[data-testid="sign-out"]',
+  ]);
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.profile_liveness.status, 'observed');
+  assert.deepEqual(receipt.first_navigation.profile_liveness.selectors, [
+    { name: '[data-testid="sign-out"]', result: 'present' },
+  ]);
+});
+
+test('a storage read that refuses does not satisfy a declared key', function(t) {
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  setFixtureLiveness(fixture, { mode: 'storage-throws', keys: [], selectors: [] });
+
+  const result = runOpen(fixture, 'https://application.example.test/refused', [], [
+    '--profile-liveness-key', 'auth_token',
+  ]);
+
+  assert.notEqual(result.status, 0);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.failure_class, 'infrastructure');
+  // `unreadable`, not `absent` — the probe distinguishes them — but a declared assertion
+  // is unsatisfied either way, because neither is the positive observation `verified`
+  // was made contingent on.
+  assert.match(receipt.error, /auth_token=unreadable/);
+});
+
+test('OPAQUE ORIGIN: the storage lookup stays inside the guard', function(t) {
+  // codex found that the predecessor read `localStorage` at a call site OUTSIDE the
+  // guard, so on an opaque origin the getter threw before `try` was entered and the
+  // documented `unreadable` path was unreachable in a real browser.
+  //
+  // This cannot be tested through the integration fixture: it evaluates the expression
+  // with `vm`, and `vm` does not forward a throwing getter from a sandbox object — it
+  // yields `undefined`, so the access never throws and BOTH guard placements produce
+  // `unreadable` for the wrong reason. Measured, not assumed; a fixture-based version of
+  // this test passed against the very regression it was written to catch.
+  //
+  // So the expression is evaluated in-process against a real throwing getter instead.
+  const throwingGlobal = { location: { origin: 'https://opaque.test' }, document: { querySelector: () => null } };
+  Object.defineProperty(throwingGlobal, 'localStorage', {
+    get() { throw new Error('SecurityError: localStorage is not available'); },
+  });
+
+  // Harness self-check first. If this stops throwing, the test below proves nothing —
+  // which is exactly the failure mode being guarded against.
+  assert.throws(() => throwingGlobal.localStorage, /SecurityError/,
+    'harness must model an origin where property ACCESS throws');
+
+  const expression = runtimeModule.profileLivenessExpression(['auth_token'], []);
+  // `new Function` on a built string is the injection shape, and here the string is the
+  // module's own output from JSON-encoded literals, in a test, with no external input.
+  // Evaluating the real emitted expression is the whole point: a hand-copied equivalent
+  // would pass while the shipped one regressed. `globalThis` is a parameter so the stub
+  // shadows the real global.
+  // eslint-disable-next-line no-new-func
+  const evaluate = new Function('globalThis', 'return ' + expression);
+
+  const observed = evaluate(throwingGlobal);
+  assert.deepEqual(observed.keys, [{ name: 'auth_token', result: 'unreadable' }]);
+});
+
+test('with nothing declared the receipt says so instead of implying a profile proof', function(t) {
+  const fixture = setup(t, { profileMode: 'snapshot' });
+
+  const result = runOpen(fixture, 'https://application.example.test/undeclared');
+
+  // The run is not refused: a caller that never named what the profile should carry has
+  // made no claim the runtime can check, and inventing one is what the reverted attempt
+  // got wrong. What changes is that the artifact stops being silent — this issue's
+  // complaint was that a reviewer could not tell "profile restored" from "profile
+  // silently absent", and `not-asserted` tells them which one they are looking at.
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.status, 'verified');
+  assert.equal(receipt.first_navigation.profile_liveness.status, 'not-asserted');
+  assert.match(receipt.first_navigation.profile_liveness.note, /no evidence|carries no evidence/);
+});
+
+test('a liveness value cannot break out of the expression it is embedded in', function(t) {
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  setFixtureLiveness(fixture, {
+    origin: 'https://application.example.test',
+    keys: ['"] ); globalThis.pwned = 1; //'],
+    selectors: [],
+  });
+
+  const result = runOpen(fixture, 'https://application.example.test/injection', [], [
+    '--profile-liveness-key', '"] ); globalThis.pwned = 1; //',
+  ]);
+
+  // The value is JSON-encoded into the expression, so it stays a string operand. It
+  // matches the fixture's present key, so the run verifies — the point is that it was
+  // compared as data rather than executed as code.
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.profile_liveness.status, 'observed');
 });
 
 test('first navigation records stable identity, init probe, and document HAR', function(t) {
