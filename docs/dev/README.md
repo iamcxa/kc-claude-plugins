@@ -576,103 +576,43 @@ rewrite.
 
 ## Proof Policy
 
-Inherited from the spacedock proof discipline; the rules below are binding
-in every stage report and every gate review. Numbered, not counted in the
-lead-in — a count in prose goes stale the first time one is added, and this
-one has already been wrong twice: it said "four" while five existed, then
-"seven" until this rule was added.
+The rules are the kernel's: `_mods/kernel.md` § Outcome discipline and
+§ Verification discipline. They are not restated here — one place to read, one
+place to change, and the byte-identity check in
+`scripts/kc-dev-flow-contract-test.py` keeps that copy current.
 
-1. **No prose-grep, and provenance decides independence.** A string match
-   over an instruction file the model reads never proves a behavioral claim.
-   A grep may serve as one-off evidence for an existence fact in a validation
-   report; the same grep committed as a test is banned. Not because it can
-   never go red — rewording the matched line, moving the file, or changing the
-   pattern all do that — but because **nothing about the behavior can**. It
-   reads text. A regression that leaves the wording intact passes straight
-   through it, and a rephrasing that broke nothing turns it red: it is
-   uncorrelated with the thing it was committed to catch, in both directions.
-   The falsifier is an edit to behavior alone that reddens it, and there is
-   none. And
-   a check the author wrote to grade the author's own artifact is a self-issued
-   stamp, not a gate. This is about what closes a gate, not about who may write
-   a test: the worker's own RED-before-GREEN tests are exactly the evidence
-   this workflow asks for, and they become insufficient only when they are also
-   offered as the independent verdict on themselves. Independence at a gate
-   comes from the fresh-context validator and the cross-model pass, never from
-   the artifact grading itself.
-2. **Evidence must be able to fail.** Each AC's cited evidence names the
-   concrete change that would flip it. If the author cannot name the
-   falsifying edit, the criterion does not count.
-3. **Prove behavior by exercising it.** Output bytes, exit codes, resulting
-   on-disk state, a browser actually driving the flow. Unit tests prove logic;
-   they do not prove wiring. Seam-level claims need runtime or E2E evidence.
-4. **Trace every mechanism to value.** Any new mechanism names the value AC it
-   serves, the simplest alternative considered, and why that alternative is
-   insufficient. A test harness orchestrates and observes the supported
-   runtime; it never becomes a second implementation of the system under test.
-5. **Automatic must-pass behavior checks live at stage boundaries, never in
-   the worker's inner loop.** Hooks that fire on every commit/edit inside a
-   work session are limited to fast mechanical checks (format, lint,
-   typecheck). Behavioral or corpus/consistency checks, *as must-pass gates*,
-   belong to the validation gate and CI: a must-pass check inside the inner
-   loop turns "implement the behavior" into "make the check shut up", and the
-   worker will drift the implementation — or the check's inputs — to satisfy
-   it. This governs checks the tooling forces, never tests the worker chooses
-   to run: RED-before-GREEN requires running the behavior's own tests inside
-   that loop, and that is the mechanism working, not an exception to it.
-6. **A claim must be able to fail, and it is checked when written.** An
-   absolute — "exactly", "only", "always", "never", "cannot", "byte-for-byte"
-   — written into a reference, a code comment, or a commit message either
-   names the enforcement point that makes it true, or is rewritten as the
-   bounded claim the code actually supports. This is rule 2 applied to prose:
-   the same discipline an AC's evidence gets, because a documented guarantee
-   *is* a claim and the next reader builds on it.
-   **An enforcement point is what makes the absolute true, not who believes
-   it.** The permission check, the schema constraint, the branch that cannot
-   be reached, the script that fails closed — those are enforcement points.
-   "I checked" is not one, and neither is the author. Where no such mechanism
-   exists the absolute is not defensible, and gets rewritten as the bounded
-   claim that is. Two consequences worth stating outright.
-   **This rule is itself a discipline, not a mechanism, and it does not claim
-   otherwise** — nothing checks it automatically, which is why it binds at
-   authoring time as something the writer applies rather than a gate someone
-   else runs. The validation-stage clause is the backstop for what slips
-   through, and a backstop that fires every time is a cost, not a control.
-   **Coverage past the author is uneven — and the distinction is read, versus
-   checked.** A reference or doc diff reaches validation, which has a clause
-   aimed squarely at its guarantees. A code comment reaches validation only
-   incidentally, inside a diff a reviewer happens to read closely. A commit
-   message is *read* by tooling here — `kc-pr-review` parses issue IDs out of
-   it — but by nothing that evaluates a claim in it. So all three get read at
-   some rate, and only the first has anything downstream that would test an
-   absolute. The thinner that coverage, the more the authoring moment is the
-   only moment — four of these shipped in two days, and the two nobody caught
-   until later were a commit message and a comment, which are exactly the two
-   thin cases. A claim inherited from a report, a reviewer, or an external
-   contributor is not exempt — adopt it only after checking it, and say which.
-7. **A negative result is a claim, and carries the same bar as a positive
-   one.** "The search found nothing" is evidence about the search. "The file is
-   unchanged" is evidence about the file, not about the failure. A number
-   measured while you were perturbing the system is evidence about the
-   perturbation. Before reporting an absence — no such skill, no such caller,
-   nothing tracked, not a regression — name the scope actually searched and why
-   that scope is the population, or run a second strategy that would have found
-   the thing if it existed: one tool, one pattern, one filter is a sample, not a
-   census. In this repo the sampling trap is concrete — a plugin's behavior can
-   live in `skills/*/SKILL.md`, an `agents/*.md`, a hook script, or the local
-   install under `~/.claude/plugins/`, so a single `grep` over one plugin
-   directory is never the population. And an unexplained signal is traced, never
-   assigned an invented origin — "probably another session" is a story, not a
-   cause.
-8. **Before trusting what a check found, confirm the check can fail.** A probe
-   that silently returns a plausible result where it should have errored is
-   worse than no probe, because its output reads as a conclusion. Two shapes
-   seen here: a spot-check edit whose target string did not exist, so "the
-   suite stayed green" meant the edit never happened rather than that the guard
-   was missing; and a section counter that read headings inside fenced code,
-   inventing a 742-line region that was not there. Run the check against a case
-   it must flag before running it against the case you care about — its silence
-   carries information only after you have seen it speak.
+What stays here is what the kernel deliberately does not carry: this
+repository's own instances, its local topology, and the field history that
+produced a rule. An adopter with a different tracker, runtime, or review fleet
+inherits the rules and writes its own instances.
+
+**Independence, locally.** Independence at a gate comes from the fresh-context
+validator *and the cross-model pass*. The kernel requires fresh context not
+involved in producing the artifact; requiring a second vendor is this
+repository's choice, taken because two of this year's most expensive misses were
+agreed on by two rounds of the same model. A text or existence contract test may
+be committed here; what it may not do is close a behavioral gate.
+
+**Where forced checks live, locally.** The kernel puts forced behavioral and
+corpus gates at the validation boundary. Here that means the validation stage
+and CI — `marketplace-parity.yml` and the contract tests. Inner-loop hooks stay
+at format, lint, and typecheck.
+
+**The absolutes rule, and why its coverage here is thin.** A reference or doc
+diff reaches validation, which has a clause aimed at its guarantees. A code
+comment reaches validation only incidentally, inside a diff a reviewer happens
+to read closely. A commit message is *read* by tooling here — `kc-pr-review`
+parses issue IDs out of it — but by nothing that evaluates a claim in it. So all
+three get read at some rate and only the first has anything downstream that
+would test an absolute. Four of these shipped in two days, and the two nobody
+caught until later were a commit message and a comment, which are exactly the
+two thin cases. That thinness is why the authoring moment is effectively the
+only moment here.
+
+**The sampling trap, concretely.** A plugin's behavior can live in
+`skills/*/SKILL.md`, an `agents/*.md`, a hook script, or the local install under
+`~/.claude/plugins/`, so a single `grep` over one plugin directory is never the
+population. And "probably another session" is a story, not a cause.
 
 ## Stages
 
@@ -808,7 +748,8 @@ once. Discipline clauses:
   contract → handler → domain → persistence → readback) and classify each
   layer WORKING / EXISTS_BROKEN / STUB / MISSING with file:line. Greenfield
   is allowed only after proof of absence (multi-strategy, multi-language
-  search) — the general bar for any absence claim is Proof Policy rule 7.
+  search) — the general bar for any absence claim is the kernel's
+  "a negative result carries the same bar as a positive claim".
   A single broken seam means repair scoped to that seam, not a
   rebuild. Full procedure: `_mods/reverse-recovery-audit.md`.
   **Audit against the merge target** (fetch `origin/<trunk>` first), never
@@ -958,7 +899,8 @@ once. Discipline clauses:
     touched and whether it is a required context (read it live, per the
     ideation clause).
   **The exit condition is never "the reported error is gone."** That is a
-  not-a-regression claim and Proof Policy 7 governs it: the one spec that named
+  not-a-regression claim, and the kernel's negative-result rule governs it: the
+  one spec that named
   the bug was never the population. A failure surviving the exit run is written
   off as pre-existing only by the per-failing-line rule the validation stage
   states — never per file, never per impression.
@@ -1005,8 +947,9 @@ failed it.** Two facts, appended to whichever of the five the round belongs to:
   than the change under review.
 - **What would have failed it** — the named claim, AC, or lens the round was
   checking, and the concrete change to *that* which would have flipped the round
-  to a finding. This is Proof Policy #2 — "if the author cannot name the
-  falsifying edit, the criterion does not count" — applied to the verifying round
+  to a finding. This is the kernel's acceptance-criterion
+  falsifier requirement — "if its author cannot name the falsifier, the criterion
+  does not count" — applied to the verifying round
   rather than to the criterion. A falsifier that bears on nothing the round was
   checking satisfies the letter and reports nothing: naming a token whose
   presence would have failed the round says only that the round could read.
