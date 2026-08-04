@@ -81,12 +81,13 @@ needs a scheduling decision; it is not permission to invent work.
   branch, or a fail-closed check — not "I checked", and not its author. This is
   an authoring discipline, not an assertion that an automatic gate exists. Apply
   it to claims adopted from reports, reviewers, or contributors too, and record
-  what was checked. **It governs claims of fact, not prohibitions.** "This
-  branch cannot be reached" asserts something about the artifact and needs the
-  mechanism that makes it true; "never create a second task universe" forbids an
-  action, and its enforcement point is whoever holds the authority the contract
-  names. Reading a normative absolute as a factual one turns every rule in a
-  contract into a violation of this one.
+  what was checked. **It governs factual claims regardless of grammatical form;
+  classify by falsifier, not by wording.** If contrary execution would make the
+  sentence false, it is factual and needs an enforcement point or bounded
+  wording. If contrary execution instead violates a duty assigned to a named
+  authority, it is a prohibition. "This branch cannot be reached" is factual;
+  "never create a second task universe" assigns a duty to work-item authority.
+  Rephrasing factual behavior as a command does not change its class.
 - Before planning new capability, apply the reverse-recovery audit and repair
   the cheapest compatible seam. Only confirmed `MISSING` work is greenfield.
 - Fresh validation is bound to the exact revision. A changed head invalidates
@@ -134,8 +135,8 @@ reports the same way whether or not the thing it watches is broken.
   rejection. `mutation` — change the producer and observe what breaks; this is
   the kind that reaches a consumer silently duplicating a producer's
   derivation instead of consuming its output. `existence-disproof` — show that
-  no value satisfies both requirements, which cannot be written as an assertion
-  at all. Treating all three as "write an assertion" lets two appear covered
+  no value satisfies both requirements, which no assertion over sampled inputs
+  establishes. Treating all three as "write an assertion" lets two appear covered
   when they are not.
 - **A negative result carries the same bar as a positive claim.** Evidence of
   absence is bounded by what was observed and under what system state; it
@@ -168,9 +169,9 @@ reports the same way whether or not the thing it watches is broken.
 - **When one failure shape repeats, change the work, not the wording.** At the
   second occurrence, restructure so the reproducer is eliminated; a stronger
   instruction, another case against the same reproducer, or an unchanged
-  deliverable shape do not count. Cheapness hides this: rounds that are
-  individually fast never breach a cost tolerance, so the trigger is repetition
-  of shape, not spend. If the repeated failure is an operation a worker should
+  deliverable shape do not count. Cheapness hides this: a tolerance sized for
+  expensive rounds does not fire on cheap ones, so the trigger is repetition of
+  shape, not spend. If the repeated failure is an operation a worker should
   not execute, remove it from that worker's executable authority through
   `dispatch_hazard_assignment`; a brief is not a control.
 
