@@ -3,6 +3,13 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.2.0...e2e-pipeline-v3.3.0) (2026-08-04)
+
+
+### Features
+
+* **e2e-pipeline:** define deterministic visibility semantics ([#91](https://github.com/iamcxa/kc-claude-plugins/issues/91)) ([#140](https://github.com/iamcxa/kc-claude-plugins/issues/140)) ([3cbdb48](https://github.com/iamcxa/kc-claude-plugins/commit/3cbdb481f09aca051c7725ca618793beea448946))
+
 ## [3.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.1.1...e2e-pipeline-v3.2.0) (2026-08-02)
 
 
