@@ -31,9 +31,23 @@ required_files = [
     PLUGIN / "references/reverse-recovery-audit.md",
     PLUGIN / "references/work-control-profile.md",
     PLUGIN / "assets/local-binding.template.md",
+    PLUGIN / "scripts/verify-binding.py",
 ]
 for required_file in required_files:
     require(required_file.is_file(), f"missing {required_file.relative_to(ROOT)}")
+
+# The binding checker is the package's only executable part, and the binding
+# template plus the adopt skill both instruct adopters to run it from the
+# installed package. Packaging is whole-directory, so it ships by default —
+# which means nothing would notice if it stopped. Require both that it is
+# present and that it is runnable.
+verifier = PLUGIN / "scripts/verify-binding.py"
+require(verifier.stat().st_mode & 0o111, "scripts/verify-binding.py is not executable")
+for caller in (PLUGIN / "assets/local-binding.template.md", PLUGIN / "skills/adopt-dev-flow/SKILL.md"):
+    require(
+        "scripts/verify-binding.py" in caller.read_text(encoding="utf-8"),
+        f"{caller.relative_to(ROOT)} no longer names the checker adopters are told to run",
+    )
 
 claude_manifest = load_json(required_files[0])
 codex_manifest = load_json(required_files[1])
