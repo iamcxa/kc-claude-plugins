@@ -105,12 +105,30 @@ reports the same way whether or not the thing it watches is broken.
   an adversarial reviewer, a fresh-context panel — for claims no cheap check can
   settle. An expensive instrument whose output is a work order for a cheap one
   was misapplied, and that cost is paid every round it repeats.
+- **A round names what it expects to learn that the last one did not.** A round
+  that cannot is a repeat. This is where verification stops: not when every
+  defensible check has been run, but when no round can state new information it
+  would produce. The clauses above bound the *quality* of an instrument and
+  none of them bounds the *number* — cheap, falsifiable, correctly bound checks
+  can be produced without limit, and an agent that satisfies every other clause
+  while never converging has complied locally and failed globally. This clause
+  is the one that ends it.
 - **When one failure shape repeats, change the work, not the wording.** A second
-  occurrence of a single failure class is the signal to restructure — take the
-  hazard off the path, split the stage, reshape the deliverable — never to
-  restate the instruction more firmly or add another case against the same
-  reproducer. Cheapness hides this: rounds that are individually fast never
+  occurrence of a single failure class is the signal to restructure — never to
+  restate the instruction more firmly, and never to add another case against the
+  same reproducer. Cheapness hides this: rounds that are individually fast never
   breach a cost tolerance, so the trigger is repetition of shape, not spend.
+  **The options always include reshaping the deliverable**, and a round that
+  leaves that off the list has narrowed the decision rather than taken it —
+  a wrong shape is exactly the case the other options cannot repair.
+- **A hazard that has defeated an instruction is removed from the path, not
+  described more carefully.** Where a worker can reach an operation that has
+  repeatedly gone wrong — a command slow enough to invite deferring it, a
+  destructive step, a credential — the repair is that the operation is *absent
+  from the worker's path and carries another named owner*, not that the brief
+  warns about it more firmly. A brief is not a control: it is read by the party
+  the control exists to bound. "The worker still needs to do the slow thing" is
+  the signal to split the work, not to rewrite the warning.
 - **An instruction that contradicts the governing contract loses, and should not
   have been an instruction.** A worker told not to do what its stage mandates
   resolves that conflict in favour of the stage, correctly. Where the dispatcher
