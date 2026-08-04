@@ -92,9 +92,9 @@ needs a scheduling decision; it is not permission to invent work.
   the cheapest compatible seam. Only confirmed `MISSING` work is greenfield.
 - Fresh validation is bound to the exact revision. A changed head invalidates
   prior evidence. **The binding is a recorded fact, not an assumption**: a round
-  that does not state the revision and artifact it read cannot be shown to have
-  read the one under review, and an unstated binding is indistinguishable from a
-  wrong one. A verifying round also names the result that would have made it
+  that does not state the revision and artifact it read cannot be shown, from its
+  own report, to have read the one under review, and an unstated binding is
+  indistinguishable in that report from a wrong one. A verifying round also names the result that would have made it
   fail; where it cannot, it reports at a rate set by its prompt rather than by
   the artifact, and neither its silence nor its confidence is evidence.
 - Judgment belongs to a fresh EM/reviewer; scope and irreversible decisions

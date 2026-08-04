@@ -1,0 +1,53 @@
+# Every block of a shipped reference that carries an absolute, judged once.
+# hash<TAB>prohibition|enforced|bounded<TAB>why
+#
+# prohibition  assigns a duty to a named authority; contrary execution breaks
+#              the duty rather than falsifying the sentence
+# enforced     a factual claim whose mechanism is named
+# bounded      rewritten to what the artifact supports, so not absolute in force
+#
+# Editing a block changes its hash and requires a fresh judgement. That is the
+# point: the rule this enforces had four hand-audits and each found a different
+# subset, because absolutes enter faster than anyone re-reads.
+
+4b1dc0ae8eee9b6c	prohibition	kernel.md:15 — duty on work-item authority; a second universe is forbidden, not impossible
+3422927e8f023d47	prohibition	kernel.md:24 — forbids gating on missing observation; duty on whoever holds the gate
+6a3ca4783fe561b3	prohibition	kernel.md:60 — grant of authority — states what the agent is not permitted to do
+9183ea992c7b9093	prohibition	kernel.md:67 — duty on the item author; the not-counting is definitional, not empirical
+0a6d021aa0dd2366	prohibition	kernel.md:71 — duty on whoever adds the mechanism
+98b59da531a4cdf4	prohibition	kernel.md:76 — the absolute words appear as quoted examples of what this rule governs
+bc010526d4527864	prohibition	kernel.md:91 — duty on the planner; greenfield without proof is forbidden
+c87b4ccb4ca6d930	bounded	kernel.md:93 — bounded to the round's own report, which is what a reader has
+75590538f542aa33	prohibition	kernel.md:110 — definition of completion; forbids treating artifact count as completion
+04fb3da3cdcda942	bounded	kernel.md:115 — bounded by the definition of an instrument that cannot fail
+1c1dd8b51eae4c88	bounded	kernel.md:119 — bounded to what a text match observes; the non-correlation is stated in situ
+e64c1752d3250f60	prohibition	kernel.md:127 — duty on whoever offers the check as evidence
+2048f4524bd474b8	bounded	kernel.md:134 — bounded to assertions over sampled inputs
+98f57a3339f2d139	prohibition	kernel.md:155 — duty to prefer; 'no cheap check can settle' is the condition, not a claim
+1a4f588dd1f3fb24	prohibition	kernel.md:159 — duty on the fresh reviewer, who is the named owner of the decision
+1c0edea006fd053e	prohibition	kernel.md:191 — forbids detection from scheduling; duty on the detecting agent
+942f14f946ed8d80	prohibition	kernel.md:195 — condition on a permission, not a claim about what is possible
+f8817bbe79459c71	prohibition	kernel.md:202 — duty on the adopter; undeclared-off is the declared default
+a90075d05a4dea6e	prohibition	reverse-recovery-audit.md:1 — frontmatter restating the document's own duty
+50bb04ee893f51db	bounded	reverse-recovery-audit.md:15 — bounded to brownfield codebases, stated in the first clause
+9955b6cc487b1203	prohibition	reverse-recovery-audit.md:26 — the document's central duty
+e50259fd45f82490	prohibition	reverse-recovery-audit.md:32 — evidence bar per tier; 'never qualify' sets a minimum, not a fact
+9c4426cc37f96de6	prohibition	reverse-recovery-audit.md:46 — duty on the searcher before writing MISSING
+a30f64a3dccc9d1a	prohibition	reverse-recovery-audit.md:50 — duty on the classifier
+329f8dd3e6e80056	bounded	reverse-recovery-audit.md:53 — bounded by what a unit exercises; the failure mode is named in situ
+a003871c9f96f54f	prohibition	reverse-recovery-audit.md:57 — quotes the rule to contrast it with one it is not
+2cdfa8e883270b88	prohibition	reverse-recovery-audit.md:67 — duty on the plan stage, enforced by plan reviewers named in the same block
+06e57612c440f70e	prohibition	work-control-profile.md:14 — duty on the adopting repository
+1b40b78f430d73f4	prohibition	work-control-profile.md:33 — defines what declaring `required` obliges
+b8b1ed8314c6687f	prohibition	work-control-profile.md:40 — duty on every attempt
+d134071fc5cbddcc	prohibition	work-control-profile.md:79 — duty on the adapter
+30c7378a777d521b	bounded	work-control-profile.md:89 — states what mechanical coverage cannot reach and who owns the remainder
+f31b2af3f01d0b5a	enforced	work-control-profile.md:95 — the population audit's authority flag is the named mechanism
+20f096c4df353145	prohibition	work-control-profile.md:109 — duty on the adapter
+f7620c459767d8d9	enforced	work-control-profile.md:115 — the provenance-and-revision report required in the same clause
+36e4ba539377ed15	bounded	work-control-profile.md:118 — states the limit of mechanical coverage and who owns the rest
+fa8685a0a8eade5a	prohibition	work-control-profile.md:124 — acceptance mapping; assigns an outcome to a condition
+1f5b888a6c8fab4e	prohibition	work-control-profile.md:151 — duty on the adapter at each round boundary
+97a8919023106e56	prohibition	work-control-profile.md:160 — forbids reading silence as a pass; duty on the adapter
+a1f4970b1aa0aade	prohibition	work-control-profile.md:173 — condition on promotion, owned by the adopting repository
+0abd4aa4fbe34b66	prohibition	work-control-profile.md:175 — condition on adoption, owned by the adopting repository
