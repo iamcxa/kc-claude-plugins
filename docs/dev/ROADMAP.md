@@ -198,9 +198,27 @@ Two of these are captain rulings taken as assumptions rather than open
 questions; both are recorded here so they can be bounced rather than discovered
 in a diff. **(1)** `--no-compile` forfeits the right to any fidelity claim — the
 compiled script is the fidelity authority, and a run that disables it reports
-`unverified`, not `EXACTLY`. **(2)** the `>> nth=N` ban narrows to the
-interaction path, because after #91 the visibility path requires `css_selector:`
-anyway and the single rule currently cannot state that distinction.
+`unverified`, not `EXACTLY`. **(2)** the `>> nth=N` ban **stays whole**, and the
+migration for the 39 corpus occurrences is `css_selector:` rather than a
+`:nth-of-type(N)` rewrite.
+
+Ruling (2) reverses the direction this sprint was first drafted with. The draft
+said narrow the ban to the interaction path, on #124's reasoning that the
+visibility path already translated the chord correctly so banning it there was
+over-broad. That reasoning was true of the pre-#91 tree and is not true of this
+one: after #91 mapped visibility does not translate selectors at all — it
+requires `css_selector:` and fails at resolve without one. So no path handles the
+chord correctly anymore, the asymmetry that made a single rule unable to speak is
+gone, and there is nothing left to narrow toward.
+
+The same change makes #124's hard question moot. It worried that
+`:nth-of-type(N)` is not semantically equivalent — different index base, siblings
+under a parent versus the matched set — and that a codemod getting it wrong
+silently retargets elements. None of that has to be decided: 37 of the 39
+occurrences carry no `css_selector:` today, so any of them used for mapped
+visibility already fails to compile under #91 independently of the chord. Adding
+`css_selector:` discharges both requirements at once, after which deleting the
+chord is a text edit with no semantic content.
 
 | # | issue | scope |
 |---|-------|-------|

@@ -41,7 +41,22 @@ const BANNED_CLASSES = [
     // main — harmless while the linter was advisory, a hole once it became a gate.
     pattern: />>[ \t]*nth=-?[0-9]+/,
     description: 'Playwright nth chord',
-    guidance: 'use the :nth-of-type(N) CSS pseudo-class',
+    // #124 asked whether this ban should narrow to the interaction path, on the
+    // reasoning that visibility already translated the chord correctly so banning it
+    // there was over-broad. That was true before #91 and is not true now: mapped
+    // visibility no longer translates selectors at all — it requires `css_selector:`
+    // and fails at resolve without one. So no path handles the chord correctly, and
+    // there is nothing to narrow toward. The ban stays whole.
+    //
+    // The guidance is `css_selector:`, not `:nth-of-type(N)`. #124 was right that the
+    // rewrite is not an equivalence — `nth=N` indexes the matched set, `:nth-of-type(N)`
+    // counts same-tag siblings under a parent, and the index bases differ, so a codemod
+    // that gets it wrong silently retargets elements. None of that has to be decided:
+    // measured over the corpus, 37 of the 39 occurrences carry no `css_selector:`, so
+    // any of them used for mapped visibility already fails to compile under #91
+    // independently of the chord. Adding `css_selector:` discharges both requirements,
+    // after which deleting the chord is a text edit with no semantic content.
+    guidance: 'add css_selector: with a literal CSS selector (this is also what mapped visibility requires); the chord then carries no meaning and can be deleted',
   },
   {
     id: 'has-text',

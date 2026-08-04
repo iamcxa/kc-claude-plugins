@@ -78,7 +78,9 @@ describe('AC-1 — a banned class on a RESOLVED element blocks; on an unresolved
     assert.match(res.stderr, /login\.submit_button/);
     assert.match(res.stderr, />>nth/);
     assert.match(res.stderr, /role=switch >> nth=1/);
-    assert.match(res.stderr, /nth-of-type/);
+    // Guidance is `css_selector:` since #124 ruled the ban stays whole and the
+    // migration is the field mapped visibility already requires.
+    assert.match(res.stderr, /css_selector/);
   });
 
   test('the unresolved sibling is reported in the SAME run, as a non-blocking warning', function () {

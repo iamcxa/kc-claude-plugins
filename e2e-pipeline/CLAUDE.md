@@ -160,7 +160,14 @@ doesn't have. Full record: `docs/dev/.spacedock-state/e2e-selector-canon-review.
 5. `[role="<r>"]` -- role only; combine with `:nth-of-type(N)` if repeated
 6. `[aria-label="<v>"]` -- when role isn't stable
 7. Never use `has-text()` -- broken in agent-browser, causes timeout (BANNED — see `compiler/lib/selector-policy.js`)
-8. BANNED: ` >> nth=N` Playwright nth chord -> use `:nth-of-type(N)` CSS pseudo (BANNED — see `compiler/lib/selector-policy.js`)
+8. BANNED: ` >> nth=N` Playwright nth chord (see `compiler/lib/selector-policy.js`).
+   The ban is whole, not path-scoped: since #91 mapped visibility does not translate
+   selectors at all — it requires `css_selector:` — so no path handles the chord
+   correctly. Migrate by adding `css_selector:`, **not** by rewriting to
+   `:nth-of-type(N)`: that is not an equivalence (`nth=N` indexes the matched set,
+   `:nth-of-type(N)` counts same-tag siblings under a parent, and the index bases
+   differ), so a mechanical rewrite silently retargets elements. Full migration note:
+   `docs/ci-integration.md` § Migrating off ` >> nth=N`.
 9. DEPRECATED as a `selector:` value: `find role|text|testid|label <r> [--name "<v>"]` -- this is an
    agent-browser CLI subcommand chain, not selector grammar (BANNED — see `compiler/lib/selector-policy.js` CLASS 5).
    Valid only as an interactive CLI command during exploration, never as a stored `selector:` value.
