@@ -96,7 +96,7 @@ reports the same way whether or not the thing it watches is broken.
   instrument has measured nothing.
 - **Name the falsifier's kind.** `refusal` — drive the system and read its
   rejection. `mutation` — change the producer and observe what breaks; this is
-  the only kind that finds a consumer silently duplicating a producer's
+  the kind that reaches a consumer silently duplicating a producer's
   derivation instead of consuming its output. `existence-disproof` — show that
   no value satisfies both requirements, which cannot be written as an assertion
   at all. Treating all three as "write an assertion" lets two appear covered
@@ -105,12 +105,36 @@ reports the same way whether or not the thing it watches is broken.
   an adversarial reviewer, a fresh-context panel — for claims no cheap check can
   settle. An expensive instrument whose output is a work order for a cheap one
   was misapplied, and that cost is paid every round it repeats.
+- **Validation ends by predicate, and a fresh reviewer owns the decision.** It
+  ends when the item's declared disproof evidence passes at the exact revision
+  and no recorded failure, contradiction, or unmet lifecycle obligation remains.
+  Another round requires the fresh reviewer to record three things: the
+  unresolved in-scope claim, the observation that raised it, and the result that
+  would change the verdict. **Possibility alone does not continue validation** —
+  an unbounded supply of properties nobody has checked yet is not a finding, and
+  a round justified only by the agent's own expectation of learning something is
+  self-attested and stops nothing. The clauses above bound an instrument's
+  quality and none bounds their number; this one does, and it is checkable by
+  someone other than the party that wants another round.
 - **When one failure shape repeats, change the work, not the wording.** A second
-  occurrence of a single failure class is the signal to restructure — take the
-  hazard off the path, split the stage, reshape the deliverable — never to
-  restate the instruction more firmly or add another case against the same
-  reproducer. Cheapness hides this: rounds that are individually fast never
+  occurrence of a single failure class is the signal to restructure — never to
+  restate the instruction more firmly, and never to add another case against the
+  same reproducer. Cheapness hides this: rounds that are individually fast never
   breach a cost tolerance, so the trigger is repetition of shape, not spend.
+  **A restructure must eliminate the reproducer.** If the failure class survives
+  while the deliverable's shape is unchanged, the deliverable is reshaped before
+  another verification round. Listing that option and then choosing a cheaper
+  one is the original escape hatch with a ceremony added.
+- **A hazard that has defeated an instruction is removed from the path, not
+  described more carefully.** Where a worker can reach an operation that has
+  repeatedly gone wrong — a command slow enough to invite deferring it, a
+  destructive step, a credential — the repair is inspectable in the dispatch:
+  **the worker is neither assigned nor permitted to execute the operation, and a
+  separately named owner is assigned to execute it and supply its result.** Not
+  that the brief warns about it more firmly, and not that it is called optional
+  or a fallback while remaining reachable. A brief is not a control: it is read
+  by the party the control exists to bound. "The worker still needs to do the
+  slow thing" is the signal to split the work, not to rewrite the warning.
 - **An instruction that contradicts the governing contract loses, and should not
   have been an instruction.** A worker told not to do what its stage mandates
   resolves that conflict in favour of the stage, correctly. Where the dispatcher
