@@ -64,8 +64,30 @@ needs a scheduling decision; it is not permission to invent work.
 
 ## Outcome discipline
 
-- Every item names the end value it exists to produce and evidence that would
-  disprove completion.
+- Every item names the end value it exists to produce. Each acceptance criterion
+  names evidence able to disprove completion, including the concrete artifact or
+  behavior change that would flip that evidence; if its author cannot name the
+  falsifier, the criterion does not count.
+- **Every new mechanism justifies its value and necessity.** It names the
+  value-level acceptance criterion it serves, the simplest alternative
+  considered, and why that alternative is insufficient. A harness orchestrates
+  and observes the supported runtime; it does not reimplement the system under
+  test.
+- **An absolute names its enforcement point or becomes a bounded claim.**
+  "Exactly", "only", "always", "never", "cannot", or "byte-for-byte", written
+  into a reference, a code comment, or a commit message, names the mechanism
+  that makes it true or is rewritten to what the artifact supports. An
+  enforcement point is a permission check, a schema constraint, an unreachable
+  branch, or a fail-closed check — not "I checked", and not its author. This is
+  an authoring discipline, not an assertion that an automatic gate exists. Apply
+  it to claims adopted from reports, reviewers, or contributors too, and record
+  what was checked. **It governs factual claims regardless of grammatical form;
+  classify by falsifier, not by wording.** If contrary execution would make the
+  sentence false, it is factual and needs an enforcement point or bounded
+  wording. If contrary execution instead violates a duty assigned to a named
+  authority, it is a prohibition. "This branch cannot be reached" is factual;
+  "never create a second task universe" assigns a duty to work-item authority.
+  Rephrasing factual behavior as a command does not change its class.
 - Before planning new capability, apply the reverse-recovery audit and repair
   the cheapest compatible seam. Only confirmed `MISSING` work is greenfield.
 - Fresh validation is bound to the exact revision. A changed head invalidates
@@ -94,6 +116,14 @@ Outcome discipline governs the claim. These govern the **instrument** — the
 check, the reviewer, the instruction — because an instrument that cannot fail
 reports the same way whether or not the thing it watches is broken.
 
+- **Behavioral validity follows observation; gate independence follows
+  provenance.** A text match over an instruction the actor reads may establish
+  that the text exists, but it cannot prove behavior or close a behavioral gate:
+  behavior can regress with the wording intact, while harmless rewording can fail
+  the match. Tests produced with the artifact may supply RED-before-GREEN
+  implementation evidence, but cannot by themselves provide the independent
+  verdict on that artifact; that verdict comes from fresh context not involved in
+  producing it.
 - **A check is evidence only once it has been seen to fail.** A probe that
   returns a plausible result where it should have errored is worse than none,
   because its output reads as a conclusion. Run it against a case it must flag
@@ -105,9 +135,23 @@ reports the same way whether or not the thing it watches is broken.
   rejection. `mutation` — change the producer and observe what breaks; this is
   the kind that reaches a consumer silently duplicating a producer's
   derivation instead of consuming its output. `existence-disproof` — show that
-  no value satisfies both requirements, which cannot be written as an assertion
-  at all. Treating all three as "write an assertion" lets two appear covered
+  no value satisfies both requirements, which no assertion over sampled inputs
+  establishes. Treating all three as "write an assertion" lets two appear covered
   when they are not.
+- **A negative result carries the same bar as a positive claim.** Evidence of
+  absence is bounded by what was observed and under what system state; it
+  establishes neither a wider population nor an unobserved cause. Before
+  reporting an empirical absence, name the searched scope and why it is the
+  population, or use a different strategy that would have found the thing. One
+  tool, pattern, or filter is a sample unless its coverage of the population can
+  be shown. Trace unexplained signals;
+  do not assign them an unobserved origin.
+- **Forced behavioral and corpus checks run at stage boundaries, not in the
+  worker's inner loop.** Per-edit or per-commit must-pass checks are limited to
+  fast mechanical checks such as format, lint, and typecheck. Behavioral and
+  corpus/consistency gates run at the validation boundary. This does not restrict
+  tests the worker chooses to run: RED-before-GREEN belongs inside
+  implementation.
 - **Prefer the cheapest instrument that can fail.** Reserve an expensive one —
   an adversarial reviewer, a fresh-context panel — for claims no cheap check can
   settle. An expensive instrument whose output is a work order for a cheap one
@@ -123,20 +167,14 @@ reports the same way whether or not the thing it watches is broken.
   self-attested and stops nothing. The clauses above bound an instrument's
   quality and none bounds their number; this one does, and it is checkable by
   someone other than the party that wants another round.
-- **When one failure shape repeats, change the work, not the wording.** A second
-  occurrence of a single failure class is the signal to restructure — never to
-  restate the instruction more firmly, and never to add another case against the
-  same reproducer. Cheapness hides this: rounds that are individually fast never
-  breach a cost tolerance, so the trigger is repetition of shape, not spend.
-  **A restructure must eliminate the reproducer.** If the failure class survives
-  while the deliverable's shape is unchanged, the deliverable is reshaped before
-  another verification round. Listing that option and then choosing a cheaper
-  one is the original escape hatch with a ceremony added.
-  Where the repeated failure is an instruction a worker keeps not following, the
-  restructuring that has evidence behind it is removing the operation from what
-  the worker may execute — declared through the Work Control Profile's
-  `dispatch_hazard_assignment`, because a brief is not a control: it is read by
-  the party the control exists to bound.
+- **When one failure shape repeats, change the work, not the wording.** At the
+  second occurrence, restructure so the reproducer is eliminated; a stronger
+  instruction, another case against the same reproducer, or an unchanged
+  deliverable shape do not count. Cheapness hides this: a tolerance sized for
+  expensive rounds does not fire on cheap ones, so the trigger is repetition of
+  shape, not spend. If the repeated failure is an operation a worker should
+  not execute, remove it from that worker's executable authority through
+  `dispatch_hazard_assignment`; a brief is not a control.
 
 ## Self-improvement
 
