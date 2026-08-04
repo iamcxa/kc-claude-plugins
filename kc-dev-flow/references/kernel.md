@@ -81,6 +81,43 @@ needs a scheduling decision; it is not permission to invent work.
 - Completion means the goal is achieved and durably delivered, not that the
   agent produced every possible ceremony artifact.
 
+## Verification discipline
+
+Outcome discipline governs the claim. These govern the **instrument** — the
+check, the reviewer, the instruction — because an instrument that cannot fail
+reports the same way whether or not the thing it watches is broken.
+
+- **A check is evidence only once it has been seen to fail.** A probe that
+  returns a plausible result where it should have errored is worse than none,
+  because its output reads as a conclusion. Run it against a case it must flag
+  before running it against the case in question; its silence carries
+  information only after you have heard it speak. This binds the check, not only
+  the artifact: a round that cannot say what would have reddened its own
+  instrument has measured nothing.
+- **Name the falsifier's kind.** `refusal` — drive the system and read its
+  rejection. `mutation` — change the producer and observe what breaks; this is
+  the only kind that finds a consumer silently duplicating a producer's
+  derivation instead of consuming its output. `existence-disproof` — show that
+  no value satisfies both requirements, which cannot be written as an assertion
+  at all. Treating all three as "write an assertion" lets two appear covered
+  when they are not.
+- **Prefer the cheapest instrument that can fail.** Reserve an expensive one —
+  an adversarial reviewer, a fresh-context panel — for claims no cheap check can
+  settle. An expensive instrument whose output is a work order for a cheap one
+  was misapplied, and that cost is paid every round it repeats.
+- **When one failure shape repeats, change the work, not the wording.** A second
+  occurrence of a single failure class is the signal to restructure — take the
+  hazard off the path, split the stage, reshape the deliverable — never to
+  restate the instruction more firmly or add another case against the same
+  reproducer. Cheapness hides this: rounds that are individually fast never
+  breach a cost tolerance, so the trigger is repetition of shape, not spend.
+- **An instruction that contradicts the governing contract loses, and should not
+  have been an instruction.** A worker told not to do what its stage mandates
+  resolves that conflict in favour of the stage, correctly. Where the dispatcher
+  has already discharged the obligation, it says so — naming the result, its
+  author, and that the obligation is **met rather than skipped**. Check for this
+  contradiction before concluding that a worker ignored an instruction.
+
 ## Self-improvement
 
 At each sprint boundary, if repeated friction was observed, remind the captain
