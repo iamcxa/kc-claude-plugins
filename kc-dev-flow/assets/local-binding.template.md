@@ -3,6 +3,8 @@
 ```yaml
 kernel_source: iamcxa/kc-claude-plugins/kc-dev-flow
 kernel_version: <installed kc-dev-flow package version>
+kernel_entrypoint: references/kernel.md
+kernel_digest: <sha256 of that file, at the version above>
 
 authority:
   project_context: <existing product and architecture sources>
@@ -30,3 +32,19 @@ local_exceptions: []
 
 Keep this binding in the repository's existing workflow entrypoint or local mod.
 Do not create another top-level document solely to hold the same truth.
+
+`kernel_version` states compatibility intent; `kernel_digest` identifies the
+exact bytes agreed to. Only the digest separates a current pin from a stale one,
+because an adopter holding a copy of kernel text stays internally consistent
+while the upstream text moves underneath it. Verify with the kernel-owned
+checker rather than by reading:
+
+```
+python3 <package>/scripts/verify-binding.py <this README> --package <package>
+```
+
+It reports one of `PASS`, `STALE_COMPATIBLE`, `REBIND_REQUIRED`, or
+`UNRESOLVABLE`, exits non-zero on every outcome except `PASS`, and prints the
+entrypoint path the agent is expected to read. A binding that omits the digest
+or entrypoint is `UNRESOLVABLE` — declared but unverifiable, which is a
+different state from undeclared and must not read the same.
