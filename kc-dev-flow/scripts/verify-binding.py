@@ -15,13 +15,28 @@ shape it exists to detect. The binding file remains caller-supplied, so a caller
 naming the wrong file is a misconfiguration this cannot detect; what it does
 close is the file being read as a binding when it is not one.
 
-The binding is read from a file whose top level carries only binding keys.
-Earlier revisions tried to locate it inside a Markdown document and returned
-PASS for repositories that had none -- by collecting fields across blocks, by an
-unclosed fence, by an indented example, and then by a shape filter that admitted
-any prose line of the form `Word: sentence`. Each of those closed a shape. This
-closes the decision instead: an unrecognised top-level key is refused, so a file
-holding anything besides a binding is not read as one.
+Five revisions of this checker returned PASS for repositories that had no
+binding: fields collected across Markdown blocks, an unclosed fence, an indented
+example, a shape filter admitting any `Word: sentence` line, and prose carried
+where the scan does not look. Three mechanisms now refuse a document, and it is
+worth being exact about which one carries the weight, because a maintainer who
+believes the wrong one will delete the load-bearing check:
+
+  * `PROSE_SUFFIXES` refuses a prose *filename*, resolved through symlinks. It
+    is a shape filter -- the mechanism the fourth variant discredited -- and it
+    is nonetheless the primary defense against the historical failure, because
+    every one of those variants arrived as a Markdown file. It is load-bearing,
+    not belt-and-braces. Do not remove it on the belief that the allowlist
+    subsumes it.
+  * `BINDING_KEYS` refuses an unrecognised key, but only an *unindented,
+    uncommented* one. Markdown headings are YAML comments and are skipped.
+  * An indented line must have a block-opening key above it, so prose indented
+    under a heading is refused as having no parent.
+
+What none of them can refuse is a document that is a well-formed binding record
+carrying odd values -- prose parked under `authority:`, for instance. That file
+is semantically a binding, and no parser distinguishes it from one. Naming the
+right file remains the caller's responsibility.
 
 The digest covers the release's whole `references/` set, and the entrypoint must
 resolve to a regular file inside that same set. The kernel names the Work
@@ -52,9 +67,9 @@ from pathlib import Path
 REQUIRED = ("kernel_source", "kernel_version", "kernel_entrypoint")
 DEFAULT_CACHE = Path.home() / ".claude" / "plugins" / "cache"
 PROSE_SUFFIXES = {".md", ".markdown", ".mdx", ".rst", ".txt"}
-# The binding file's top level carries these and nothing else. An allowlist, not
-# a shape filter: prose is refused because `Status:` is not a binding key, which
-# does not depend on guessing every shape prose can take.
+# The unindented, uncommented top level carries these and nothing else. Widening
+# this set widens what counts as a binding, so `kc-dev-flow-contract-test.py`
+# requires it to equal the shipped template's top-level keys exactly.
 BINDING_KEYS = frozenset(
     (
         "kernel_source",
@@ -71,7 +86,7 @@ BINDING_KEYS = frozenset(
 # release-please cuts semver directories; anything else in the cache root is an
 # installer artifact rather than a release, and ranking it would invent a newest.
 VERSION_DIR = re.compile(r"^\d+(?:\.\d+)*(?:-[0-9A-Za-z.\-]+)?(?:\+[0-9A-Za-z.\-]+)?$")
-TOP_LEVEL = re.compile(r"^([A-Za-z_][A-Za-z0-9_.\-]*):(?:[ \t].*)?$")
+TOP_LEVEL = re.compile(r"^([A-Za-z_][A-Za-z0-9_.\-]*):(?:[ \t]+(.*?))?[ \t]*$")
 IGNORABLE = re.compile(r"^(?:#.*|---|\.\.\.)?[ \t]*$")
 # Column zero only: a nested or indented key belongs to some other mapping.
 FIELD = r"^{name}:[ \t]*(?P<value>[^\s#]+)[ \t]*(?:#.*)?$"
@@ -103,14 +118,23 @@ def read_binding(path: Path) -> tuple[dict[str, str] | None, str | None]:
         return None, f"{path} is not a readable file"
 
     text = path.read_text(encoding="utf-8", errors="replace")
+    open_block = False
     for number, line in enumerate(text.splitlines(), start=1):
-        if line[:1] in (" ", "\t") or IGNORABLE.match(line):
+        if IGNORABLE.match(line):
+            continue
+        if line[:1] in (" ", "\t"):
+            # Indentation nests under the key above it. Prose indented beneath a
+            # heading has no such key, and is not a value of anything.
+            if not open_block:
+                return None, f"{path.name}:{number} is indented under no binding key: {line.strip()[:48]!r}"
             continue
         match = TOP_LEVEL.match(line)
         if match is None:
             return None, f"{path.name}:{number} is not a binding line: {line.strip()[:48]!r}"
         if match.group(1) not in BINDING_KEYS:
             return None, f"{path.name}:{number} declares {match.group(1)!r}, which is not a binding key"
+        inline = match.group(2)
+        open_block = inline is None or inline.startswith("#")
 
     binding: dict[str, str] = {}
     for name in (*REQUIRED, "kernel_digest"):
@@ -136,11 +160,16 @@ def version_key(name: str) -> tuple:
 def reference_digest(release: Path) -> tuple[str | None, str | None]:
     """Digest every regular file under the release's `references/`, path-ordered.
 
-    A symlink anywhere in the set is refused rather than skipped: its bytes
-    cannot be attributed to the release, and skipping it would let a release
-    change what an adopter reads while this reported the set unchanged.
+    A symlink is refused rather than followed -- the release directory, the
+    `references/` root, and every entry beneath it. Bytes reached through a link
+    are not the release's bytes, and the link's target can be replaced without
+    the release changing at all.
     """
+    if release.is_symlink():
+        return None, f"release {release.name} is a symlink, not an installed release"
     root = release / "references"
+    if root.is_symlink():
+        return None, f"release {release.name} reaches references/ through a symlink"
     if not root.is_dir():
         return None, f"release {release.name} ships no references/ to digest"
     entries = []

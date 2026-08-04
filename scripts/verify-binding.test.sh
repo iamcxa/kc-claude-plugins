@@ -31,11 +31,11 @@ release() { # 1=version 2=kernel-text [3=profile-text] [4=cache]
   printf '{"version":"%s"}\n' "$1" >"$dir/.claude-plugin/plugin.json"
 }
 
-digest_of() { # 1=version -- the checker's own answer, read back from a probe run
+digest_of() { # 1=version [2=cache] -- the checker's own answer, from a probe run
   local probe="$TEST_ROOT/probe.yaml" out
   printf 'kernel_source: %s\nkernel_version: %s\nkernel_entrypoint: %s\n' "$SOURCE" "$1" "$ENTRY" >"$probe"
   # A digest-less binding is UNRESOLVABLE by design, so the probe exits non-zero.
-  set +e; out=$(python3 "$VERIFY" "$probe" --cache-root "$CACHE" 2>&1); set -e
+  set +e; out=$(python3 "$VERIFY" "$probe" --cache-root "${2:-$CACHE}" 2>&1); set -e
   sed -n 's/^verify-binding:expected-digest://p' <<<"$out"
 }
 
@@ -80,6 +80,12 @@ expect fence_line UNRESOLVABLE 1 "is not a binding line" "$(printf '```yaml\n%s`
 # A column-zero list item makes the document root a sequence, which cannot also
 # carry the mapping keys a binding needs.
 expect list_item UNRESOLVABLE 1 "is not a binding line" "$(printf -- '- copy this to your own file\n%s' "$(binding 1.0.0 "$V100")")"
+
+# Prose indented beneath a Markdown heading. The headings are YAML comments and
+# the prose is indented, so neither the key allowlist nor the binding-line check
+# sees it; what refuses it is that indentation must nest under a key.
+expect orphan_indent UNRESOLVABLE 1 "is indented under no binding key" \
+  "$(printf '# Dev flow\n## Kernel binding\n  NOT ADOPTED. The block below is an EXAMPLE ONLY.\n%s' "$(binding 1.0.0 "$V100")")"
 
 # The suffix gate gets a body only it can refuse: a valid record in a .md file.
 expect prose_suffix UNRESOLVABLE 1 "is a prose document" "$(binding 1.0.0 "$V100")" md
@@ -162,6 +168,33 @@ SYM="$TEST_ROOT/cache-symlink"; release 1.0.0 "kernel" "profile" "$SYM"
 printf 'content outside the set\n' >"$TEST_ROOT/outside-target.md"
 ln -s "$TEST_ROOT/outside-target.md" "$SYM/kc-claude-plugins/kc-dev-flow/1.0.0/references/linked.md"
 expect symlink_in_references UNRESOLVABLE 1 "carries a symlink under references/" "$(binding 1.0.0 "$V100")" yaml "$SYM"
+
+# ...and the root itself. Refusing entries but following the root would digest a
+# directory outside the release while reporting the release's own set.
+ROOTSYM="$TEST_ROOT/cache-rootsym"
+mkdir -p "$ROOTSYM/kc-claude-plugins/kc-dev-flow/1.0.0" "$TEST_ROOT/elsewhere"
+printf 'kernel\n' >"$TEST_ROOT/elsewhere/kernel.md"
+ln -s "$TEST_ROOT/elsewhere" "$ROOTSYM/kc-claude-plugins/kc-dev-flow/1.0.0/references"
+expect symlinked_references_root UNRESOLVABLE 1 "reaches references/ through a symlink" "$(binding 1.0.0 "$V100")" yaml "$ROOTSYM"
+
+# A version directory that is a symlink is not an installed release: its target
+# can be replaced without anything about the release changing.
+RELSYM="$TEST_ROOT/cache-relsym"; release 1.0.0 "kernel" "profile" "$TEST_ROOT/staging"
+mkdir -p "$RELSYM/kc-claude-plugins/kc-dev-flow"
+ln -s "$TEST_ROOT/staging/kc-claude-plugins/kc-dev-flow/1.0.0" "$RELSYM/kc-claude-plugins/kc-dev-flow/1.0.0"
+expect symlinked_release UNRESOLVABLE 1 "is a symlink, not an installed release" "$(binding 1.0.0 "$V100")" yaml "$RELSYM"
+
+# The digest must recurse, and must bind each path to its own bytes. Neither was
+# pinned: a file in a subdirectory could vanish from the set, and a pure rename
+# could leave the digest unchanged.
+NEST="$TEST_ROOT/cache-nested"; release 1.0.0 "kernel" "profile" "$NEST"
+NESTREL="$NEST/kc-claude-plugins/kc-dev-flow/1.0.0/references"
+mkdir -p "$NESTREL/appendix"; printf 'nested normative text\n' >"$NESTREL/appendix/extra.md"
+NESTED_DIGEST=$(digest_of 1.0.0 "$NEST")
+[[ -n "$NESTED_DIGEST" ]] || fail "no expected-digest for the nested-reference release"
+expect nested_reference_counted PASS 0 "is the newest installed" "$(binding 1.0.0 "$NESTED_DIGEST")" yaml "$NEST"
+mv "$NESTREL/appendix/extra.md" "$NESTREL/appendix/renamed.md"
+expect rename_changes_digest REBIND_REQUIRED 1 "but that release is" "$(binding 1.0.0 "$NESTED_DIGEST")" yaml "$NEST"
 
 EMPTY="$TEST_ROOT/cache-empty"
 mkdir -p "$EMPTY/kc-claude-plugins/kc-dev-flow/1.0.0/references"

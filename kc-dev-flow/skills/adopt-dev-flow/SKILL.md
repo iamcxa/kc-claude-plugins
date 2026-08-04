@@ -46,9 +46,11 @@ or is considering an optional control.
 7. Write the binding to one machine-readable file the repository owns, carrying
    `kernel_source`, `kernel_version`, `kernel_entrypoint`, `kernel_digest`, and
    every adopted optional control. The workflow entrypoint links to that file
-   rather than restating it. The checker accepts only binding keys at the file's
-   top level, so a prose document is refused by the first line that is not one;
-   it cannot tell you that you named the wrong file. `kernel_entrypoint` must
+   rather than restating it. The checker refuses a prose filename, an unindented
+   line declaring a key that is not a binding key, and an indented line with no
+   key above it — but a file that is a well-formed binding record reads as one
+   whatever its prose claims, so put the binding where nothing else lives.
+   `kernel_entrypoint` must
    name a file inside the release's `references/`, which is the set the digest
    covers. An omitted control remains off. A binding missing the digest or
    entrypoint is declared but unverifiable, which the checker reports as

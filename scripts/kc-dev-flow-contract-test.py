@@ -59,8 +59,9 @@ template_keys = set(
     re.findall(r"^([A-Za-z_][A-Za-z0-9_.\-]*):", (PLUGIN / "assets/kernel-binding.template.yaml").read_text(encoding="utf-8"), re.M)
 )
 require(
-    template_keys <= allowed_keys,
-    f"kernel-binding.template.yaml declares {sorted(template_keys - allowed_keys)}, which the checker refuses",
+    template_keys == allowed_keys,
+    "kernel-binding.template.yaml and verify-binding.py disagree on the binding keys: "
+    f"template-only {sorted(template_keys - allowed_keys)}, checker-only {sorted(allowed_keys - template_keys)}",
 )
 
 claude_manifest = load_json(required_files[0])
