@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v1.1.0...kc-dev-flow-v1.2.0) (2026-08-04)
+
+
+### Features
+
+* **kc-dev-flow:** bind the instrument, not only the claim ([#156](https://github.com/iamcxa/kc-claude-plugins/issues/156)) ([f228f76](https://github.com/iamcxa/kc-claude-plugins/commit/f228f76f67a3f9705047246c8a4dfb2c8644ddd8))
+
 ## [1.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v1.0.0...kc-dev-flow-v1.1.0) (2026-08-04)
 
 
