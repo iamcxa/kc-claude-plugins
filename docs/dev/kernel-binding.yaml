@@ -22,7 +22,7 @@
 #
 #   * PASS means the pin agrees with the INSTALLED package. It says nothing
 #     about the in-tree kernel, which is normally ahead of the newest release
-#     and is ahead of 1.0.0 as this is written.
+#     and was ahead of 1.0.0 before this pin moved to 1.1.0.
 #   * A non-PASS means a newer release is installed, or the pin disagrees with
 #     the release it names. Either way the repair is an edit to this file.
 #
@@ -39,9 +39,9 @@
 # improvement to the kernel source, and this repository is that source.
 
 kernel_source: iamcxa/kc-claude-plugins/kc-dev-flow
-kernel_version: 1.0.0
+kernel_version: 1.1.0
 kernel_entrypoint: references/kernel.md
-kernel_digest: f1a5907e36b1f5145ea28e67422b2db5254561c092bc23f7858836038e17df1e
+kernel_digest: 6f1b348a6aea8cf9897070013241605fcfb4290cb7a718d85483de7feaf13a2a
 
 authority:
   project_context: PRODUCT.md and ARCHITECTURE.md at the repository root; CLAUDE.md for repo-wide conventions
