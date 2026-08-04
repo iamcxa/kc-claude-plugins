@@ -34,17 +34,26 @@ Keep this binding in the repository's existing workflow entrypoint or local mod.
 Do not create another top-level document solely to hold the same truth.
 
 `kernel_version` states compatibility intent; `kernel_digest` identifies the
-exact bytes agreed to. Only the digest separates a current pin from a stale one,
-because an adopter holding a copy of kernel text stays internally consistent
-while the upstream text moves underneath it. Verify with the kernel-owned
-checker rather than by reading:
+exact bytes agreed to. Neither alone suffices: a version cannot see that the text
+moved under a reused number, and a digest cannot see that a newer release exists.
+
+Keep all four fields in **one** fenced block. A binding assembled from fields
+scattered across a document is not a binding, and a checker that assembles one
+will report success for a repository that has none.
+
+Verify with the kernel-owned checker rather than by reading:
 
 ```
-python3 <package>/scripts/verify-binding.py <this README> --package <package>
+python3 <installed kc-dev-flow>/scripts/verify-binding.py <this README>
 ```
+
+It takes no package path. It resolves `kernel_source` against the installed
+releases itself, because a checker told where to look confirms only that the
+binding agrees with whatever it was handed — the same internally-consistent
+staleness it exists to detect.
 
 It reports one of `PASS`, `STALE_COMPATIBLE`, `REBIND_REQUIRED`, or
 `UNRESOLVABLE`, exits non-zero on every outcome except `PASS`, and prints the
-entrypoint path the agent is expected to read. A binding that omits the digest
-or entrypoint is `UNRESOLVABLE` — declared but unverifiable, which is a
-different state from undeclared and must not read the same.
+entrypoint path the agent is expected to read. Declared-but-unverifiable is
+`UNRESOLVABLE`, a different state from undeclared, and the two must not read the
+same.
