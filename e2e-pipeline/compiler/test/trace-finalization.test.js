@@ -383,10 +383,14 @@ function runFinalizer(options) {
     '--trace-producer-version', options.traceProducerVersion || 'test',
     '--trace-format', traceFormat,
     '--timeout', stopTimeoutSeconds,
-    // The owned runtime performs its own Node startup before forwarding close.
-    // Leave one extra second under concurrent test load so this validates
-    // recovery behavior rather than scheduler latency.
-    '--recovery-timeout', options.browserRuntime ? '2' : '1',
+    // Recovery has to spawn a shell and touch a marker file; the owned runtime also
+    // performs its own Node startup before forwarding close. One second for that was
+    // a deadline racing an arrangement — under full-suite load the close lost, the
+    // marker never appeared, and the case failed at `bounded recovery must run after
+    // timeout` while saying nothing about whether recovery works. Same class as #122,
+    // one test over. No case in this file asserts recovery *timing out*, so the
+    // generous budget removes a false-failure mode without weakening a contract.
+    '--recovery-timeout', options.recoveryTimeout || (options.browserRuntime ? '10' : '8'),
     '--validation-timeout', options.validationTimeout || '10',
     '--result-file', resultPath,
   ];
@@ -426,8 +430,11 @@ function runFinalizer(options) {
       },
       // Hard cap on the whole finalizer run. It must stay clear of the stop deadline
       // plus recovery, or spawnSync kills the finalizer mid-recovery and the failure
-      // is attributed to whatever assertion runs next.
-      timeout: Number(stopTimeoutSeconds) * 1000 + 12000,
+      // is attributed to whatever assertion runs next. Never below the 15s this was
+      // before the deadline became mode-derived — a shorter cap for a shorter stop
+      // deadline is exactly backwards, because recovery still has to run afterward
+      // and it is recovery, not the stop, that stretches under load.
+      timeout: Math.max(15000, Number(stopTimeoutSeconds) * 1000 + 12000),
     }
   );
 
@@ -496,13 +503,13 @@ describe('shared trace finalization contract', () => {
     try {
       const run = runFinalizer({ dir, mode: 'hang', flowVerdict: 'PASS' });
 
+      // "Bounded" means it terminated on its own rather than being killed at the
+      // spawnSync cap. `signal === null` plus the finalizer's own exit code is that
+      // proof; a wall-clock budget is not, because on a loaded host it measures the
+      // scheduler. The predecessor asserted `elapsedMs < 12000` and failed there under
+      // full-suite load while the bound it cared about — did this hang forever — held.
       assert.equal(run.signal, null, run.error?.message);
       assert.equal(run.status, 20, run.stderr);
-      // The finalizer itself normally completes in ~3s, but this file runs
-      // concurrently with CPU-heavy compiler tests in the full suite. Keep
-      // the assertion below spawnSync's 15s hard timeout without making it
-      // sensitive to host scheduling pressure.
-      assert.ok(run.elapsedMs < 12000, `finalizer took ${run.elapsedMs}ms`);
       assert.ok(fs.existsSync(run.recoveryMarker), 'bounded recovery must run after timeout');
 
       const result = parseResultFile(run.resultPath);
@@ -827,8 +834,10 @@ describe('shared trace finalization contract', () => {
         validatorLateMarker: lateMarker,
       });
 
+      // Same reasoning as the never-exiting-stop case above: boundedness is proven by
+      // exiting under its own power, not by a wall-clock budget the scheduler owns.
+      assert.equal(run.signal, null, run.error?.message);
       assert.equal(run.status, 22, run.stderr);
-      assert.ok(run.elapsedMs < 12000, `finalizer took ${run.elapsedMs}ms`);
       const result = parseResultFile(run.resultPath);
       assert.equal(result.flow_verdict, 'PASS');
       assert.equal(result.infrastructure_result, 'FAIL');
