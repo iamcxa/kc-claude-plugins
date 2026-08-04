@@ -30,10 +30,39 @@ required_files = [
     PLUGIN / "references/kernel.md",
     PLUGIN / "references/reverse-recovery-audit.md",
     PLUGIN / "references/work-control-profile.md",
-    PLUGIN / "assets/local-binding.template.md",
+    PLUGIN / "assets/kernel-binding.template.yaml",
+    PLUGIN / "scripts/verify-binding.py",
 ]
 for required_file in required_files:
     require(required_file.is_file(), f"missing {required_file.relative_to(ROOT)}")
+
+# The binding checker is the package's only executable part, and the binding
+# template plus the adopt skill both instruct adopters to run it from the
+# installed package. Packaging is whole-directory, so it ships by default —
+# which means nothing would notice if it stopped. Require both that it is
+# present and that it is runnable.
+verifier = PLUGIN / "scripts/verify-binding.py"
+require(verifier.stat().st_mode & 0o111, "scripts/verify-binding.py is not executable")
+for caller in (PLUGIN / "assets/kernel-binding.template.yaml", PLUGIN / "skills/adopt-dev-flow/SKILL.md"):
+    require(
+        "scripts/verify-binding.py" in caller.read_text(encoding="utf-8"),
+        f"{caller.relative_to(ROOT)} no longer names the checker adopters are told to run",
+    )
+
+# The checker accepts only a fixed set of top-level keys, and the template is
+# what adopters copy. A key added to one and not the other makes the shipped
+# template unreadable by the shipped checker, which nothing else would notice.
+allowed = re.search(r"BINDING_KEYS = frozenset\(\s*\((.*?)\)\s*\)", verifier.read_text(encoding="utf-8"), re.S)
+require(allowed is not None, "scripts/verify-binding.py no longer declares BINDING_KEYS")
+allowed_keys = set(re.findall(r'"([a-z_]+)"', allowed.group(1)))
+template_keys = set(
+    re.findall(r"^([A-Za-z_][A-Za-z0-9_.\-]*):", (PLUGIN / "assets/kernel-binding.template.yaml").read_text(encoding="utf-8"), re.M)
+)
+require(
+    template_keys == allowed_keys,
+    "kernel-binding.template.yaml and verify-binding.py disagree on the binding keys: "
+    f"template-only {sorted(template_keys - allowed_keys)}, checker-only {sorted(allowed_keys - template_keys)}",
+)
 
 claude_manifest = load_json(required_files[0])
 codex_manifest = load_json(required_files[1])
