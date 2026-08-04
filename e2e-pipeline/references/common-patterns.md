@@ -129,6 +129,22 @@ See `CLAUDE.md` § Selector Priority — the single authority for `selector:` gr
   assertions. Raw `is visible` is diagnostic only and can collapse invalid CSS
   into `false`.
 
+## Per-Step HTTP Evidence
+
+When a step's verdict rests on what the app sent or received, capture the exchange
+rather than describing it. `network requests --clear` before the step,
+`network request <id>` after — the detail carries `postData` and `responseBody`
+verbatim, so no reconstruction from a HAR is needed. Full command shape and the
+`--type xhr,fetch` narrowing: `references/commands.md` § Network evidence.
+
+Two boundaries to state in the report rather than work around: **SQL output and
+server stderr are not obtainable per browser step.** They are outside the
+instrument's boundary, so a step that needs them is really two steps — the browser
+step, plus an `Execute external` / `Verify external` checkpoint carrying its own
+evidence. `docs/recording-evidence.md` § What a step can be evidenced with is the
+table to cite when a downstream evidence contract asks for all five artifacts on
+one browser step.
+
 ## Known Noise (filter before reporting)
 
 - HMR websocket messages (hot module replacement)

@@ -415,6 +415,11 @@ test('allows every command family referenced by e2e-test runtime surfaces', func
     'get',
     'hover',
     'is',
+    // Documented for per-step HTTP evidence (#150). It was already in the runtime's
+    // allowlist because the first-navigation HAR uses it; what changed is that
+    // `references/commands.md` now tells a caller it exists, and this list is what
+    // makes "documented" and "forwarded by the runtime" the same set.
+    'network',
     'open',
     'press',
     'reload',

@@ -1,5 +1,36 @@
 # Recording & Evidence
 
+## What a step can be evidenced with
+
+Read this before writing a per-step evidence contract. Every row was probed
+against agent-browser 0.32.0 + Chrome for Testing 151 rather than inferred from
+the CLI's help text.
+
+| Evidence | Available per step | How |
+|----------|-------------------|-----|
+| HTTP request line, headers, and **full request body** | Yes | `network request <id>` -> `method`, `url`, `headers`, `postData` |
+| HTTP response status, headers, and **full response body** | Yes | `network request <id>` -> `status`, `responseHeaders`, `responseBody` |
+| The set of requests a step caused | Yes | `network requests --clear` before the step, `network requests` after |
+| Screenshot | Yes | `screenshot <abs-path>`, one per step by default in recording modes |
+| Accessibility snapshot | Yes | `snapshot`, one per step |
+| Console output and JS errors | Yes | `console` / the Playwright archive when the producer advertises it |
+| Raw SQL output for a step that reads state | **No** | Outside the browser boundary. Use an `Execute external` / `Verify external` checkpoint, which is a *separate* step with its own evidence, not an attribute of the browser step. |
+| Server-side stderr excerpt | **No** | Same boundary. The pipeline drives a browser; it does not supervise the application server, so it cannot attribute a server log range to a step. |
+
+The two `No` rows are boundary facts, not backlog items — a browser-driving
+instrument has no privileged view of your database or your server process. A
+contract that requires them per browser step is unmeetable by construction, and
+the honest decomposition is to make them their own external-checkpoint steps.
+
+The request log is **retained across navigation**: entries captured before a
+navigation are still listed after it, so a multi-page step sequence does not lose
+earlier evidence. Verified by navigating twice and re-listing.
+
+Capturing bodies is opt-in per step rather than automatic, because
+`responseBody` on a document request is the entire page source and would dominate
+a report. Clear the log before the step and fetch details only for the requests
+the assertion is about.
+
 ## Artifacts per run
 
 | Artifact | Format | When |
