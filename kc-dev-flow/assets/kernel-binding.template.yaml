@@ -8,12 +8,14 @@
 # because a checker that has to find it inside prose reports success for a
 # repository that has none. Four revisions of the checker did exactly that.
 #
-# What the checker enforces: the file's top level carries only the keys below,
-# so a line such as `Status: not adopted yet` is refused by name, and a file
-# holding anything besides a binding is not read as one. What it cannot
-# enforce: which file you name. Pointing it at a document that happens to be a
-# valid binding record is a misconfiguration no parser can distinguish from a
-# binding.
+# What the checker enforces: a prose *filename* is refused; an unindented,
+# uncommented line declaring anything but the keys below is refused by name; and
+# an indented line with no key above it is refused as a value of nothing.
+#
+# What it cannot enforce: which file you name, and what you put in the values. A
+# file that is a well-formed binding record IS a binding as far as any parser can
+# tell, whatever its prose says about itself. Keep the binding in a file that
+# holds only the binding, and the question does not arise.
 #
 # Verify with the kernel-owned checker rather than by reading:
 #
