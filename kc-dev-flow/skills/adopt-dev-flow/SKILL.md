@@ -38,23 +38,31 @@ or is considering an optional control.
 4. Identify contradictions and classify each surface as `WORKING`,
    `WORKING_UNIT_UNPROVEN`, `EXISTS_BROKEN`, `STUB`, or `MISSING`.
 5. Propose the smallest binding using
-   `../../assets/local-binding.template.md`. Keep repository-specific adapters
+   `../../assets/kernel-binding.template.yaml`. Keep repository-specific adapters
    local. Copy a portable reference only when the repository needs it.
 6. If implementation is authorized, repair one seam at a time and validate the
    repository's real enforcement point. Do not claim runtime behavior from a
    documentation grep.
-7. Record `kernel_source`, `kernel_version`, `kernel_entrypoint`,
-   `kernel_digest`, and every adopted optional control, all four kernel fields
-   in one fenced block. An omitted control remains off. A binding missing the
-   digest or entrypoint is declared but unverifiable, which the checker reports
-   as `UNRESOLVABLE` — a different state from undeclared, and not a lesser one.
+7. Write the binding to one machine-readable file the repository owns, carrying
+   `kernel_source`, `kernel_version`, `kernel_entrypoint`, `kernel_digest`, and
+   every adopted optional control. The workflow entrypoint links to that file
+   rather than restating it, and the checker refuses a prose document. An omitted
+   control remains off. A binding missing the digest or entrypoint is declared
+   but unverifiable, which the checker reports as `UNRESOLVABLE` — a different
+   state from undeclared, and not a lesser one.
+8. If portable improvements may return to the kernel source, record
+   `upstream_contribution.repository`, its package path, and either
+   `propose_only` or `pull_request`. Omission defaults to `propose_only`.
+9. Run the checker and record its outcome. Do not compute `kernel_digest` by
+   hand: leave the field out, run the checker, and copy the
+   `verify-binding:expected-digest:` value it prints for the named release.
 
 ## Upgrade procedure
 
 Run the checker before reading anything, and let its outcome pick the path:
 
 ```
-python3 <installed kc-dev-flow>/scripts/verify-binding.py <workflow README>
+python3 <installed kc-dev-flow>/scripts/verify-binding.py <binding file>
 ```
 
 It takes no package path; it resolves `kernel_source` against the installed
@@ -62,25 +70,22 @@ releases itself. Exit is non-zero on every outcome except `PASS`.
 
 - `PASS` — the pinned release is the newest installed and its bytes match.
   Nothing to upgrade. Report and stop.
-- `STALE_COMPATIBLE` — a newer release exists and the entrypoint is unchanged.
-  Update `kernel_version` alone. No invariant moved, so no local text changes.
+- `STALE_COMPATIBLE` — a newer release exists and no file in its reference set
+  changed. Update `kernel_version` alone; the digest already matches. Nothing
+  normative moved, so no local text changes.
 - `REBIND_REQUIRED` — either the binding disagrees with the release it names, or
-  a newer release changed the entrypoint. Read the entrypoint the checker
-  printed, diff it against the pinned release's copy, and bring the repository
-  the changed invariants **one at a time**, each as a change the captain can
-  accept or refuse. Update `kernel_version` and `kernel_digest` only after the
-  accepted invariants have landed.
+  a newer release changed the reference set. Read the entrypoint the checker
+  printed, diff the whole `references/` directory against the pinned release's
+  copy, and bring the repository the changed invariants **one at a time**, each
+  as a change the captain can accept or refuse. Update `kernel_version` and
+  `kernel_digest` only after the accepted invariants have landed.
 - `UNRESOLVABLE` — stop. Do not guess a binding, do not synthesise one from
-  fields found elsewhere in the document, and do not treat a missing release as
-  an up-to-date one. Report the reason the checker gave and leave state
-  unchanged.
+  fields found elsewhere, and do not treat a missing release as an up-to-date
+  one. Report the reason the checker gave and leave state unchanged.
 
 Never rewrite a local contract to match the kernel wholesale. The upgrade is the
 set of invariants the repository accepts, and a rejected invariant is recorded as
 a local exception rather than silently dropped.
-8. If portable improvements may return to the kernel source, record
-   `upstream_contribution.repository`, its package path, and either
-   `propose_only` or `pull_request`. Omission defaults to `propose_only`.
 
 ## Authority boundary
 

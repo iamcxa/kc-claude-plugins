@@ -13,10 +13,23 @@ the caller. A checker told where to look verifies only that the binding agrees
 with whatever it was handed, which is the same internally-consistent-but-stale
 shape it exists to detect.
 
+The binding is read from a machine-readable file that holds nothing else. Two
+earlier revisions tried to locate it inside a Markdown document instead, and both
+returned PASS for repositories that had no binding at all -- once by collecting
+fields from unrelated blocks, once because an unclosed fence and an indented
+example both read as real blocks. Prose documents are refused here rather than
+parsed, so that failure class has nowhere left to live.
+
+The digest covers the release's whole `references/` set, not the entrypoint
+alone. The kernel names the Work Control Profile as an independent declaration
+and the reverse-recovery audit as a normative procedure, so a release that moved
+either of those moved an invariant an adopter is bound to -- and an
+entrypoint-only digest would have called that release unchanged.
+
 Outcomes are closed:
 
   PASS              pinned version is the newest installed, and its bytes match
-  STALE_COMPATIBLE  a newer release is installed, but the entrypoint is unchanged
+  STALE_COMPATIBLE  a newer release is installed, but no reference text changed
   REBIND_REQUIRED   the pinned bytes are wrong, or a newer release changed them
   UNRESOLVABLE      binding, release, or entrypoint could not be established
 
@@ -31,67 +44,85 @@ import re
 import sys
 from pathlib import Path
 
-FIELDS = ("kernel_source", "kernel_version", "kernel_digest", "kernel_entrypoint")
-IDENTIFYING = ("kernel_source", "kernel_version")
+REQUIRED = ("kernel_source", "kernel_version", "kernel_entrypoint")
 DEFAULT_CACHE = Path.home() / ".claude" / "plugins" / "cache"
-FENCE = re.compile(r"^[ \t]*(?:```+|~~~+)", re.MULTILINE)
+PROSE_SUFFIXES = {".md", ".markdown", ".mdx", ".rst", ".txt"}
+# release-please cuts semver directories; anything else in the cache root is an
+# installer artifact rather than a release, and ranking it would invent a newest.
+VERSION_DIR = re.compile(r"^\d+(?:\.\d+)*(?:-[0-9A-Za-z.\-]+)?(?:\+[0-9A-Za-z.\-]+)?$")
+# Column zero only: a nested or indented key belongs to some other mapping.
+FIELD = r"^{name}:[ \t]*(?P<value>[^\s#]+)[ \t]*(?:#.*)?$"
+# Every unindented line of a binding file is a key, a list item, a comment, or
+# blank. A Markdown fence, heading underline, or sentence is none of those, so a
+# prose document renamed to a data suffix is refused structurally rather than by
+# its name.
+RECORD_LINE = re.compile(r"^(?:[A-Za-z_][A-Za-z0-9_.\-]*:(?:[ \t].*)?|-[ \t].*|#.*|---|\.\.\.)?[ \t]*$")
 
 
-def emit(outcome: str, detail: str, entrypoint: Path | None = None) -> int:
+def emit(outcome: str, detail: str, *lines: str) -> int:
     print(f"verify-binding:{outcome}:{detail}")
-    if entrypoint is not None:
-        # The agent's read path. A stale pin answers "which file do I read"
-        # wrongly and silently, so it is answered out loud on every resolution.
-        print(f"verify-binding:entrypoint:{entrypoint}")
+    for line in lines:
+        print(line)
     return 0 if outcome == "PASS" else 1
 
 
-def fenced_blocks(text: str) -> list[str]:
-    """Split on fence lines and keep the odd segments, which are block bodies."""
-    parts = FENCE.split(text)
-    return parts[1::2]
+def read_binding(path: Path) -> tuple[dict[str, str] | None, str | None]:
+    """Return (binding, error) from a file whose whole content is the binding.
 
-
-def read_binding(readme: Path) -> tuple[dict[str, str] | None, str | None]:
-    """Return (binding, error). A binding is read from ONE block, never assembled.
-
-    Fields scattered across a document — a quoted example, an appendix, a
-    changelog line — are not a binding, and treating them as one lets a
-    repository with no binding at all report success.
+    Each field must appear exactly once at column zero. A repeated field is
+    refused rather than resolved: choosing between two values would verify a
+    binding the repository does not operate under.
     """
-    if not readme.is_file():
-        return None, f"{readme} is not a readable file"
+    if path.suffix.lower() in PROSE_SUFFIXES:
+        return None, (
+            f"{path.name} is a prose document; the binding is read from a "
+            "machine-readable file that holds nothing else"
+        )
+    if not path.is_file():
+        return None, f"{path} is not a readable file"
 
-    candidates: list[dict[str, str]] = []
-    for block in fenced_blocks(readme.read_text(encoding="utf-8", errors="replace")):
-        found = {}
-        for field in FIELDS:
-            match = re.search(rf"^[ \t]*{field}:[ \t]*(\S+)[ \t]*$", block, re.MULTILINE)
-            if match:
-                found[field] = match.group(1).strip().strip("\"'")
-        if all(key in found for key in IDENTIFYING):
-            candidates.append(found)
+    text = path.read_text(encoding="utf-8", errors="replace")
+    for number, line in enumerate(text.splitlines(), start=1):
+        if line[:1] not in (" ", "\t") and not RECORD_LINE.match(line):
+            return None, f"{path.name}:{number} is not a record line: {line.strip()[:48]!r}"
 
-    if not candidates:
-        return None, "no fenced block declares both kernel_source and kernel_version"
-    if len(candidates) > 1:
-        # Choosing between them would be a guess, and a wrong guess verifies a
-        # binding the repository does not operate under.
-        return None, f"{len(candidates)} blocks declare a binding; exactly one must"
+    binding: dict[str, str] = {}
+    for name in (*REQUIRED, "kernel_digest"):
+        matches = re.findall(FIELD.format(name=name), text, re.MULTILINE)
+        if len(matches) > 1:
+            return None, f"{name} is declared {len(matches)} times; exactly one must"
+        if matches:
+            binding[name] = matches[0].strip("\"'")
 
-    binding = candidates[0]
-    missing = [f for f in FIELDS if f not in binding]
+    missing = [name for name in REQUIRED if name not in binding]
     if missing:
         return None, f"binding omits {','.join(missing)}"
     return binding, None
 
 
 def version_key(name: str) -> tuple:
-    return tuple(int(p) if p.isdigit() else -1 for p in re.split(r"[.\-+]", name))
+    """Order releases so a pre-release ranks below the version it precedes."""
+    core, _, pre = name.partition("+")[0].partition("-")
+    parts = tuple(int(p) if p.isdigit() else -1 for p in core.split("."))
+    return (parts, 0 if pre else 1, pre)
 
 
-def digest_of(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def reference_digest(release: Path) -> str | None:
+    """Digest every regular file under the release's `references/`, path-ordered."""
+    root = release / "references"
+    if not root.is_dir():
+        return None
+    entries = []
+    for path in root.rglob("*"):
+        if path.is_symlink() or not path.is_file():
+            continue
+        entries.append(
+            (path.relative_to(release).as_posix(), hashlib.sha256(path.read_bytes()).hexdigest())
+        )
+    if not entries:
+        return None
+    manifest = "".join(f"{name}\n{digest}\n" for name, digest in sorted(entries))
+    return hashlib.sha256(manifest.encode("utf-8")).hexdigest()
 
 
 def entrypoint_in(release: Path, relative: str) -> Path | None:
@@ -106,7 +137,7 @@ def entrypoint_in(release: Path, relative: str) -> Path | None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("readme", type=Path, help="adopter workflow README carrying the binding")
+    parser.add_argument("binding", type=Path, help="the adopter's kernel binding file")
     parser.add_argument(
         "--cache-root",
         type=Path,
@@ -115,7 +146,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    binding, error = read_binding(args.readme)
+    binding, error = read_binding(args.binding)
     if binding is None:
         return emit("UNRESOLVABLE", error or "unreadable binding")
 
@@ -128,13 +159,16 @@ def main() -> int:
     if not plugin_root.is_dir():
         return emit("UNRESOLVABLE", f"no installed releases for {binding['kernel_source']} under {args.cache_root}")
 
-    installed = sorted((d for d in plugin_root.iterdir() if d.is_dir()), key=lambda d: version_key(d.name))
+    installed = sorted(
+        (d for d in plugin_root.iterdir() if d.is_dir() and VERSION_DIR.match(d.name)),
+        key=lambda d: version_key(d.name),
+    )
     if not installed:
         return emit("UNRESOLVABLE", f"{plugin_root} holds no versioned release")
 
     pinned_version = binding["kernel_version"]
     pinned = plugin_root / pinned_version
-    if not pinned.is_dir():
+    if not pinned.is_dir() or not VERSION_DIR.match(pinned_version):
         # The pinned release is not on this machine, so the pin cannot be checked
         # at all — which is different from being out of date and must not read
         # the same.
@@ -144,28 +178,65 @@ def main() -> int:
     if pinned_entry is None:
         return emit("UNRESOLVABLE", f"entrypoint {binding['kernel_entrypoint']} does not resolve inside {pinned_version}")
 
-    pinned_digest = digest_of(pinned_entry)
-    if pinned_digest != binding["kernel_digest"]:
+    pinned_digest = reference_digest(pinned)
+    if pinned_digest is None:
+        return emit("UNRESOLVABLE", f"release {pinned_version} ships no references/ to digest")
+
+    # Printed whenever a release resolves, so a rebind — and a first adoption,
+    # which starts with no digest to state — is mechanical rather than computed
+    # by hand over a set of files.
+    expected = f"verify-binding:expected-digest:{pinned_digest}"
+
+    declared = binding.get("kernel_digest")
+    if declared is None:
+        return emit("UNRESOLVABLE", f"binding omits kernel_digest for {pinned_version}", expected)
+    if declared.lower() != pinned_digest:
         # The binding disagrees with the very release it names. Nothing about a
         # newer version matters until this is repaired.
         return emit(
             "REBIND_REQUIRED",
-            f"binding claims {binding['kernel_digest'][:12]} for {pinned_version}, but that release is {pinned_digest[:12]}",
-            pinned_entry,
+            f"binding claims {declared[:12].lower()} for {pinned_version}, but that release is {pinned_digest[:12]}",
+            f"verify-binding:entrypoint:{pinned_entry}",
+            expected,
         )
 
     newest = installed[-1]
     if newest.name == pinned_version:
-        return emit("PASS", f"{binding['kernel_source']}@{pinned_version} is the newest installed", pinned_entry)
+        return emit(
+            "PASS",
+            f"{binding['kernel_source']}@{pinned_version} is the newest installed",
+            # The agent's read path. A stale pin answers "which file do I read"
+            # wrongly and silently, so it is answered out loud on every pass.
+            f"verify-binding:entrypoint:{pinned_entry}",
+        )
 
     newest_entry = entrypoint_in(newest, binding["kernel_entrypoint"])
     if newest_entry is None:
-        return emit("REBIND_REQUIRED", f"{newest.name} is installed and no longer carries {binding['kernel_entrypoint']}", pinned_entry)
+        return emit(
+            "REBIND_REQUIRED",
+            f"{newest.name} is installed and no longer carries {binding['kernel_entrypoint']}",
+            f"verify-binding:entrypoint:{pinned_entry}",
+        )
 
-    if digest_of(newest_entry) == pinned_digest:
-        return emit("STALE_COMPATIBLE", f"pinned {pinned_version}, {newest.name} installed; entrypoint unchanged", newest_entry)
+    newest_digest = reference_digest(newest)
+    if newest_digest is None:
+        return emit("UNRESOLVABLE", f"release {newest.name} ships no references/ to digest")
 
-    return emit("REBIND_REQUIRED", f"pinned {pinned_version}, {newest.name} installed and the entrypoint differs", newest_entry)
+    newer = f"verify-binding:expected-digest:{newest_digest}"
+    if newest_digest == pinned_digest:
+        return emit(
+            "STALE_COMPATIBLE",
+            f"pinned {pinned_version}, {newest.name} installed; no reference text changed",
+            f"verify-binding:entrypoint:{newest_entry}",
+            newer,
+        )
+
+    return emit(
+        "REBIND_REQUIRED",
+        f"pinned {pinned_version}, {newest.name} installed and its references differ",
+        f"verify-binding:entrypoint:{newest_entry}",
+        newer,
+    )
 
 
 if __name__ == "__main__":
