@@ -303,6 +303,14 @@ if (command === 'eval') {
   // which is exactly how the reverted first attempt shipped an unreachable code path.
   if (expression.includes('readSelector')) {
     const liveness = state.profileLiveness || {};
+    if (liveness.mode === 'probe-broken') {
+      // Transport failure, not absence: the probe itself could not produce evidence.
+      writeState(state);
+      process.stdout.write(
+        JSON.stringify({ success: false, error: 'eval transport failure' }) + '\n'
+      );
+      process.exit(0);
+    }
     // `appearAfter` models the SPA that has not rendered its authenticated affordance
     // yet: the first N samples see nothing, later ones see it. A one-shot probe fails
     // this; a polling one does not.

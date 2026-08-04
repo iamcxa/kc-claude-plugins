@@ -1741,6 +1741,36 @@ function failLifecycleReceipt(receiptPath, receipt, error, postEvidence) {
   writeLifecycleReceipt(receiptPath, failed);
 }
 
+/**
+ * Record a failure that happened on a navigation AFTER the first one.
+ *
+ * `failLifecycleReceipt` is first-navigation-shaped: it rewrites `first_navigation` to
+ * `failed` and replaces its `post` with whatever evidence it is handed. Calling it for a
+ * later navigation therefore backdates the failure onto a navigation that genuinely
+ * verified, overwrites that navigation's evidence with a different page's, and leaves no
+ * record of the navigation that actually failed. The history would then say the run
+ * failed somewhere it did not.
+ *
+ * So a later failure marks the run failed, leaves `first_navigation` exactly as it was
+ * earned, and records itself under `last_navigation`.
+ */
+function failLaterNavigationReceipt(receiptPath, receipt, error, pre, post) {
+  if (!receipt) return;
+  const failed = Object.assign({}, receipt, {
+    status: 'failed',
+    failure_class: 'infrastructure',
+    error: error.message,
+    failed_at: new Date().toISOString(),
+    last_navigation: {
+      status: 'failed',
+      pre: pre || null,
+      post: post || null,
+      failed_at: new Date().toISOString(),
+    },
+  });
+  writeLifecycleReceipt(receiptPath, failed);
+}
+
 function performOwnedOpen(options) {
   const targetUrl = options.command[1] || '';
   let receipt = options.existingReceipt;
@@ -1958,15 +1988,18 @@ function performOwnedOpen(options) {
     // `open --profile-liveness-key ...` silently succeeded without checking or recording
     // anything — a declared claim quietly going unverified, which is the same defect
     // class this issue is about, one navigation over.
-    const lastLiveness = observeProfileLiveness(options);
-    post.profile_liveness = lastLiveness;
+    // Observation AND assertion both sit inside the recording path. An `eval` transport
+    // failure or an incomplete payload throws out of `observeProfileLiveness`, and
+    // leaving that outside the catch would exit unsuccessfully while the receipt still
+    // read as verified from the previous navigation — a green artifact for a run that
+    // failed, which is the defect class this whole issue is about.
+    let lastLiveness;
     try {
+      lastLiveness = observeProfileLiveness(options);
+      post.profile_liveness = lastLiveness;
       assertProfileLiveness(lastLiveness);
     } catch (error) {
-      // Record it the same way a first-navigation failure is recorded. Throwing straight
-      // out of here would leave the receipt saying nothing about why the run stopped,
-      // which is the shape of defect this whole issue is about.
-      failLifecycleReceipt(options.receiptPath, receipt, error, post);
+      failLaterNavigationReceipt(options.receiptPath, receipt, error, pre, post);
       throw error;
     }
     receipt.last_navigation = {

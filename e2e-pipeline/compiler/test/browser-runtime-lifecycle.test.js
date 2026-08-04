@@ -813,6 +813,55 @@ test('a declared assertion is checked on a later open, not only the first', func
   assert.notEqual(second.status, 0, 'a later navigation must still check what it declares');
   const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
   assert.match(receipt.error, /auth_token=absent/);
+
+  // The failure is recorded where it happened. `failLifecycleReceipt` is
+  // first-navigation-shaped — it rewrites `first_navigation` to failed and replaces its
+  // `post` — so using it here would backdate the failure onto a navigation that genuinely
+  // verified, overwrite that navigation's evidence with a different page's, and leave no
+  // record of the navigation that actually failed.
+  assert.equal(receipt.status, 'failed');
+  assert.equal(receipt.last_navigation.status, 'failed');
+  assert.equal(
+    receipt.first_navigation.status,
+    'verified',
+    'a later failure must not rewrite a first navigation that was earned'
+  );
+  assert.equal(
+    receipt.first_navigation.post.url,
+    'https://application.example.test/one',
+    "first_navigation's evidence must still be its own page"
+  );
+});
+
+test('a liveness probe transport failure on a later navigation is recorded, not silent', function(t) {
+  // codex: only the assertion was inside the recording path, so an `eval` transport
+  // failure or an incomplete payload threw straight out — the command exited
+  // unsuccessfully while the receipt still read as verified from the previous
+  // navigation. A green artifact for a failed run is the exact shape this issue is about.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  setFixtureLiveness(fixture, {
+    origin: 'https://application.example.test',
+    keys: ['auth_token'],
+    selectors: [],
+  });
+
+  const first = runOpen(fixture, 'https://application.example.test/one', [], [
+    '--profile-liveness-key', 'auth_token',
+  ]);
+  assert.equal(first.status, 0, first.stderr);
+
+  // Make the probe itself fail rather than merely report absence.
+  setFixtureLiveness(fixture, { mode: 'probe-broken', keys: [], selectors: [] });
+
+  const second = runOpen(fixture, 'https://application.example.test/two', [], [
+    '--profile-liveness-key', 'auth_token',
+  ]);
+
+  assert.notEqual(second.status, 0);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.status, 'failed', 'the receipt must not still read as verified');
+  assert.equal(receipt.last_navigation.status, 'failed');
+  assert.equal(receipt.first_navigation.status, 'verified');
 });
 
 test('OPAQUE ORIGIN: the storage lookup stays inside the guard', function(t) {
