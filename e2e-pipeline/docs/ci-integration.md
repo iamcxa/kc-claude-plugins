@@ -236,9 +236,27 @@ native, not banned): `CLAUDE.md` § Selector Priority — the single authority.
 
 | Banned token | Why | Use instead |
 |---|---|---|
-| ` >> nth=N` | Playwright chord nth selector | `:nth-of-type(N)` (CSS) |
+| ` >> nth=N` | Playwright chord nth selector | `css_selector:` — see below |
 | `has-text(...)` | Playwright pseudo (broken in agent-browser) | `role=<r>[name="<v>"]` or `text=<v>` |
 | `find role\|text\|label\|testid ...` as a `selector:` value | agent-browser CLI subcommand chain, not selector grammar | `role=<r>[name="<v>"]` |
+
+#### Migrating off ` >> nth=N` (#124)
+
+**Do not rewrite the chord to `:nth-of-type(N)`.** It is not an equivalence:
+Playwright's `nth=N` indexes the *matched set* while `:nth-of-type(N)` counts same-tag
+*siblings under a parent*, and the index bases differ (`nth=0` is zero-based,
+`:nth-of-type(1)` is one-based). A migration that gets this wrong silently retargets
+elements, which is worse than the violation.
+
+Add `css_selector:` to the element instead. Since #91 that field is what mapped
+visibility requires anyway — an element whose `selector:` is non-CSS locator DSL fails
+at resolve without it — so one edit discharges both requirements, and the chord then
+carries no meaning and can be deleted. Measured over the reference corpus, 37 of 39
+occurrences carry no `css_selector:` today, so they were already blocked by #91
+independently of the chord.
+
+Use the baseline (below) to grandfather what you have not migrated yet; the compile
+path only ever reads it.
 
 Usage:
 
@@ -254,6 +272,30 @@ find .claude/e2e/mappings -name '*.yaml' -print0 \
 Exit codes: `0` clean (and for an explicit `--help`, which is not an error) · `1` missing argument / file not found / `node` not on PATH · `2` one or more banned tokens detected (path + line printed to stderr).
 
 Wire into CI as a fast pre-flight gate before the browser job spins up.
+
+**Wire it, or do not cite it.** #124 recorded that this linter had no reference in the
+consuming repo's `.github` or `.githooks`, and that citing an unenforced lint as a
+mitigation is the exact defect class the selector work was chartered to name. Two things
+have changed since, and only one of them removes the need to wire anything:
+
+- The **compile-time gate below is enforcement that runs**, because it is on the path
+  every compiled flow already takes. If you compile in CI, the table is enforced whether
+  or not you wire the linter.
+- The linter and `scripts/diff-scoped-mapping-lint.js` are *pre-browser conveniences*.
+  They are enforcement only where a consumer repo actually invokes them. Nothing in this
+  plugin can make that true for you.
+
+For a repo carrying legacy debt, the diff-scoped form is the one worth wiring — it lints
+only the mapping lines a change touched, so existing violations do not red every PR:
+
+```bash
+node scripts/diff-scoped-mapping-lint.js \
+  --base "$GITHUB_BASE_SHA" \
+  --head "$GITHUB_SHA" \
+  --linter scripts/lint-mapping.sh
+```
+
+If you wire neither, say so plainly rather than listing the linter as a control.
 
 **Dependency note.** The linter used to be pure bash. It now requires `node` on PATH,
 because the policy it enforces lives in a Node module. The module imports Node builtins

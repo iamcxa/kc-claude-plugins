@@ -758,6 +758,15 @@ eligibility from `trace-finalization.env`.
 
 After trace analysis, auto-compile and run the same flow as a compiled script to detect divergence between LLM and deterministic execution.
 
+**Whenever this phase is skipped for any reason, the report's `Step Fidelity` row is
+`unverified`** (#148). The compiled script is the only witness to fidelity that is not
+the same agent that executed the run: it cannot improvise, so agreement between it and
+the LLM run is what earns an `as-written` claim. Without it the deviation ledger is
+self-reported, and a step improvised without the runner noticing is exactly the case
+the ledger cannot contain. `unverified` does not change the Flow Verdict — a
+`--no-compile` run can still PASS. It only stops the run from claiming a fidelity it
+has no independent evidence for.
+
 ### Step 1: Locate compiler
 
 ```bash

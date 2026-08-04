@@ -246,7 +246,11 @@ describe('scanMappingText: line-numbered traversal (the linter s view)', functio
   test('carries the file path and the guidance into every finding', function () {
     const f = scanMappingText("  selector: '.a >> nth=1'\n", 'mappings/app.yaml')[0];
     assert.equal(f.file, 'mappings/app.yaml');
-    assert.ok(f.guidance.includes('nth-of-type'));
+    // The chord's guidance is `css_selector:`, not a `:nth-of-type(N)` rewrite (#124).
+    // The rewrite is not an equivalence and a codemod getting it wrong silently
+    // retargets elements; `css_selector:` is what mapped visibility requires anyway.
+    assert.ok(f.guidance.includes('css_selector'));
+    assert.equal(f.guidance.includes('nth-of-type'), false);
   });
 });
 

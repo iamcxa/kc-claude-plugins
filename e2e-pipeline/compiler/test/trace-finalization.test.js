@@ -95,13 +95,20 @@ case " $* " in
         while :; do sleep 1; done
         ;;
       fork-late-write)
+        # The descendant's late write is gated on a file the test creates, not on a
+        # sleep. A sleep would make both directions timing-dependent: too short and
+        # the write races the finalizer's deadline, too long and "no trace.zip after
+        # 5s" stops proving the write was prevented rather than merely not yet due.
+        # With the gate, the test can open the window itself and a surviving
+        # descendant would write immediately — so an empty trace path is evidence of
+        # termination rather than of the observation window being short.
         sh -c '
           trap "" TERM
           printf "%s\n" "$$" > "$1"
-          sleep 4
+          while [ ! -f "$4" ]; do sleep 0.1; done
           cp "$2" "$3"
           while :; do sleep 1; done
-        ' sh "$DESCENDANT_PID_FILE" "$TRACE_FIXTURE" "$last_arg" &
+        ' sh "$DESCENDANT_PID_FILE" "$TRACE_FIXTURE" "$last_arg" "$LATE_WRITE_GATE" &
         while :; do sleep 1; done
         ;;
       truncated)
@@ -359,19 +366,31 @@ function runFinalizer(options) {
     );
   const recoveryMarker = options.recoveryMarker || path.join(dir, 'recovery-reached');
   const descendantPidFile = options.descendantPidFile || path.join(dir, 'descendant.pid');
+  const lateWriteGate = options.lateWriteGate || path.join(dir, 'late-write-gate');
   const agentBrowserLog = options.agentBrowserLog || path.join(dir, 'agent-browser.log');
   const stub = options.stub || writeAgentBrowserStub(dir);
+  // fork-late-write gets a generous stop deadline. The behavior under test is that the
+  // deadline terminates a TERM-ignoring descendant, and the descendant's write is gated
+  // rather than timed, so nothing here is made less strict by the extra seconds. The
+  // predecessor used 2s, which the forked child had to beat to record its own pid — a
+  // loaded machine lost that race and failed the arrangement, not the behavior (#122).
+  const stopTimeoutSeconds =
+    options.mode === 'hang' ? '1' : options.mode === 'fork-late-write' ? '8' : '10';
   const finalizerArgs = [
     '--trace-path', tracePath,
     '--flow-verdict', options.flowVerdict || 'PASS',
     '--trace-producer', options.traceProducer || 'agent-browser',
     '--trace-producer-version', options.traceProducerVersion || 'test',
     '--trace-format', traceFormat,
-    '--timeout', options.mode === 'hang' ? '1' : options.mode === 'fork-late-write' ? '2' : '10',
-    // The owned runtime performs its own Node startup before forwarding close.
-    // Leave one extra second under concurrent test load so this validates
-    // recovery behavior rather than scheduler latency.
-    '--recovery-timeout', options.browserRuntime ? '2' : '1',
+    '--timeout', stopTimeoutSeconds,
+    // Recovery has to spawn a shell and touch a marker file; the owned runtime also
+    // performs its own Node startup before forwarding close. One second for that was
+    // a deadline racing an arrangement — under full-suite load the close lost, the
+    // marker never appeared, and the case failed at `bounded recovery must run after
+    // timeout` while saying nothing about whether recovery works. Same class as #122,
+    // one test over. No case in this file asserts recovery *timing out*, so the
+    // generous budget removes a false-failure mode without weakening a contract.
+    '--recovery-timeout', options.recoveryTimeout || (options.browserRuntime ? '10' : '8'),
     '--validation-timeout', options.validationTimeout || '10',
     '--result-file', resultPath,
   ];
@@ -398,6 +417,7 @@ function runFinalizer(options) {
         AGENT_BROWSER_UNDERLYING: stub,
         BROWSER_RUNTIME_LOG: options.browserRuntimeLog || path.join(dir, 'browser-runtime.log'),
         DESCENDANT_PID_FILE: descendantPidFile,
+        LATE_WRITE_GATE: lateWriteGate,
         EXPECTED_BROWSER_APP: options.browserApp || '',
         EXPECTED_BROWSER_RUN_ID: options.browserRunId || '',
         E2E_TRACE_ARCHIVE_VALIDATOR: options.archiveValidator || '',
@@ -408,7 +428,13 @@ function runFinalizer(options) {
         VALIDATOR_LATE_MARKER: options.validatorLateMarker || '',
         ...(options.extraEnv || {}),
       },
-      timeout: 15000,
+      // Hard cap on the whole finalizer run. It must stay clear of the stop deadline
+      // plus recovery, or spawnSync kills the finalizer mid-recovery and the failure
+      // is attributed to whatever assertion runs next. Never below the 15s this was
+      // before the deadline became mode-derived — a shorter cap for a shorter stop
+      // deadline is exactly backwards, because recovery still has to run afterward
+      // and it is recovery, not the stop, that stretches under load.
+      timeout: Math.max(15000, Number(stopTimeoutSeconds) * 1000 + 12000),
     }
   );
 
@@ -419,8 +445,38 @@ function runFinalizer(options) {
     tracePath,
     recoveryMarker,
     descendantPidFile,
+    lateWriteGate,
     agentBrowserLog,
   };
+}
+
+/**
+ * Poll until `predicate()` is true, or fail with `message` after `boundMs`.
+ *
+ * The bound is deliberately generous: it exists so a hung expectation reports
+ * something rather than hanging the suite, not to time the behavior. Anything that
+ * needs to assert a deadline asserts it against the finalizer's own recorded
+ * elapsed time, never against how long this helper waited.
+ */
+function waitFor(predicate, message, boundMs) {
+  const deadline = Date.now() + (boundMs || 30000);
+  for (;;) {
+    if (predicate()) return;
+    if (Date.now() >= deadline) {
+      assert.fail(message + ` (still false after ${boundMs || 30000}ms)`);
+    }
+    spawnSync('sleep', ['0.1']);
+  }
+}
+
+/** True once `pid` is gone. A live-but-unreapable pid keeps returning false. */
+function processIsGone(pid) {
+  try {
+    process.kill(pid, 0);
+    return false;
+  } catch (error) {
+    return error.code === 'ESRCH';
+  }
 }
 
 describe('shared trace finalization contract', () => {
@@ -447,13 +503,13 @@ describe('shared trace finalization contract', () => {
     try {
       const run = runFinalizer({ dir, mode: 'hang', flowVerdict: 'PASS' });
 
+      // "Bounded" means it terminated on its own rather than being killed at the
+      // spawnSync cap. `signal === null` plus the finalizer's own exit code is that
+      // proof; a wall-clock budget is not, because on a loaded host it measures the
+      // scheduler. The predecessor asserted `elapsedMs < 12000` and failed there under
+      // full-suite load while the bound it cared about — did this hang forever — held.
       assert.equal(run.signal, null, run.error?.message);
       assert.equal(run.status, 20, run.stderr);
-      // The finalizer itself normally completes in ~3s, but this file runs
-      // concurrently with CPU-heavy compiler tests in the full suite. Keep
-      // the assertion below spawnSync's 15s hard timeout without making it
-      // sensitive to host scheduling pressure.
-      assert.ok(run.elapsedMs < 12000, `finalizer took ${run.elapsedMs}ms`);
       assert.ok(fs.existsSync(run.recoveryMarker), 'bounded recovery must run after timeout');
 
       const result = parseResultFile(run.resultPath);
@@ -480,24 +536,34 @@ describe('shared trace finalization contract', () => {
       const fixture = createValidTraceZip(dir);
       const run = runFinalizer({ dir, mode: 'fork-late-write', fixture });
 
-      assert.equal(run.status, 20, run.stderr);
-      assert.ok(fs.existsSync(run.descendantPidFile), 'stub must record its forked child');
+      // Arrangement, asserted separately from the contract below. If this fails the
+      // stub never forked a child, so the run says nothing either way about whether
+      // the timeout kills descendants — which is exactly the ambiguity #122 filed.
+      assert.ok(
+        fs.existsSync(run.descendantPidFile),
+        'arrangement: stub must record its forked child before the stop deadline'
+      );
       const descendantPid = Number.parseInt(
         fs.readFileSync(run.descendantPidFile, 'utf8').trim(),
         10
       );
 
-      spawnSync('sleep', ['5']);
+      // Contract.
+      assert.equal(run.status, 20, run.stderr);
+      waitFor(
+        () => processIsGone(descendantPid),
+        'forked descendant must be terminated and reaped'
+      );
 
+      // Open the late-write window. A surviving descendant would copy the fixture the
+      // moment this appears, so the absence below is evidence of termination rather
+      // than of having looked too early.
+      fs.writeFileSync(run.lateWriteGate, 'open');
+      spawnSync('sleep', ['1']);
       assert.equal(
         fs.existsSync(run.tracePath),
         false,
         'no descendant may recreate the valid trace path after finalization'
-      );
-      assert.throws(
-        () => process.kill(descendantPid, 0),
-        /ESRCH/,
-        'forked descendant must be terminated and reaped'
       );
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
@@ -510,6 +576,7 @@ describe('shared trace finalization contract', () => {
       const fixture = createValidTraceZip(dir);
       const tracePath = path.join(dir, 'trace.zip');
       const descendantPidFile = path.join(dir, 'descendant.pid');
+      const lateWriteGate = path.join(dir, 'late-write-gate');
       const stub = writeAgentBrowserStub(dir);
       const child = spawn(
         finalizer,
@@ -528,6 +595,7 @@ describe('shared trace finalization contract', () => {
             ...process.env,
             AGENT_BROWSER_BIN: stub,
             DESCENDANT_PID_FILE: descendantPidFile,
+            LATE_WRITE_GATE: lateWriteGate,
             RECOVERY_MARKER: path.join(dir, 'recovery-reached'),
             TRACE_FIXTURE: fixture,
             TRACE_STUB_MODE: 'fork-late-write',
@@ -536,10 +604,10 @@ describe('shared trace finalization contract', () => {
         }
       );
 
-      for (let attempt = 0; attempt < 50 && !fs.existsSync(descendantPidFile); attempt++) {
-        spawnSync('sleep', ['0.1']);
-      }
-      assert.ok(fs.existsSync(descendantPidFile), 'stub must record its forked child');
+      waitFor(
+        () => fs.existsSync(descendantPidFile),
+        'arrangement: stub must record its forked child'
+      );
 
       child.kill('SIGTERM');
       const close = await new Promise((resolve) => {
@@ -551,13 +619,17 @@ describe('shared trace finalization contract', () => {
         fs.readFileSync(descendantPidFile, 'utf8').trim(),
         10
       );
-      spawnSync('sleep', ['5']);
+      waitFor(
+        () => processIsGone(descendantPid),
+        'signal cleanup must terminate and reap the forked descendant'
+      );
+      fs.writeFileSync(lateWriteGate, 'open');
+      spawnSync('sleep', ['1']);
       assert.equal(
         fs.existsSync(tracePath),
         false,
         'signal cleanup must prevent a descendant from recreating trace.zip'
       );
-      assert.throws(() => process.kill(descendantPid, 0), /ESRCH/);
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
@@ -762,8 +834,10 @@ describe('shared trace finalization contract', () => {
         validatorLateMarker: lateMarker,
       });
 
+      // Same reasoning as the never-exiting-stop case above: boundedness is proven by
+      // exiting under its own power, not by a wall-clock budget the scheduler owns.
+      assert.equal(run.signal, null, run.error?.message);
       assert.equal(run.status, 22, run.stderr);
-      assert.ok(run.elapsedMs < 12000, `finalizer took ${run.elapsedMs}ms`);
       const result = parseResultFile(run.resultPath);
       assert.equal(result.flow_verdict, 'PASS');
       assert.equal(result.infrastructure_result, 'FAIL');

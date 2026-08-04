@@ -177,6 +177,77 @@ Out of scope: application-specific auth or tenant logic, raw browser-state/HAR
 upload, browser-runtime ownership redesign, and the broader generated-output
 hardening in #39.
 
+S1 shipped all three: #110 (`58d6969`), #88 (`8634d89`), #91 (`3cbdb48`).
+
+### Sprint S2 — a green artifact means what it says
+
+End value: no artifact this pipeline emits asserts something the pipeline did
+not observe. Today three separate outputs do — a recorder reports
+`first_navigation.status=verified` about a profile it never read back, a run
+reports `Executed flow EXACTLY as written` after improvising past a step, and an
+issue records a capability ceiling the instrument does not actually have.
+
+The sprint is ordered by **the direction of the lie**, weighted by cost. An
+output that claims more than it observed is worse than one that fails, because a
+reviewer citing it cannot tell it apart from an output that was earned. That
+ordering puts the two false-`verified` defects ahead of the false-negative one,
+and puts the flaky test first only because it is the cheapest item and every
+later item's green depends on it.
+
+Two of these are captain rulings taken as assumptions rather than open
+questions; both are recorded here so they can be bounced rather than discovered
+in a diff. **(1)** `--no-compile` forfeits the right to any fidelity claim — the
+compiled script is the fidelity authority, and a run that disables it reports
+`unverified`, not `EXACTLY`. **(2)** the `>> nth=N` ban **stays whole**, and the
+migration for the 39 corpus occurrences is `css_selector:` rather than a
+`:nth-of-type(N)` rewrite.
+
+Ruling (2) reverses the direction this sprint was first drafted with. The draft
+said narrow the ban to the interaction path, on #124's reasoning that the
+visibility path already translated the chord correctly so banning it there was
+over-broad. That reasoning was true of the pre-#91 tree and is not true of this
+one: after #91 mapped visibility does not translate selectors at all — it
+requires `css_selector:` and fails at resolve without one. So no path handles the
+chord correctly anymore, the asymmetry that made a single rule unable to speak is
+gone, and there is nothing left to narrow toward.
+
+The same change makes #124's hard question moot. It worried that
+`:nth-of-type(N)` is not semantically equivalent — different index base, siblings
+under a parent versus the matched set — and that a codemod getting it wrong
+silently retargets elements. None of that has to be decided: 37 of the 39
+occurrences carry no `css_selector:` today, so any of them used for mapped
+visibility already fails to compile under #91 independently of the chord. Adding
+`css_selector:` discharges both requirements at once, after which deleting the
+chord is a text edit with no semantic content.
+
+| # | issue | scope |
+|---|-------|-------|
+| 1 | `#122` | Make the TERM-ignoring-descendant case wait on an observable condition, and assert the timeout contract separately from its arrangement, so a loaded machine cannot fail the precondition and read as a regression. |
+| 2 | `#150` | Retract the capability-limitation framing against a live probe, document the `network` subcommands the instrument already has, and state per-step what it can and cannot evidence. |
+| 3 | `#149` | Make `first_navigation.status=verified` contingent on a positive observation taken after navigation, not on the init script having attached. Attachment is evidence about the recorder, not about the profile. |
+| 4 | `#148` | Give a run a step-level deviation ledger, make the closing assertion conditional on it, and retire the `EXACTLY` vocabulary from the path that cannot check it. |
+| 5 | `#121` | Prove or disprove that the sole `selectorToA11yPattern` emission site is unreachable post-#91; delete the branch if so, otherwise land one snapshot-pattern authority both branches call. |
+| 6 | `#124` | Rule on the ban's scope now that #88 supplies the migration path, and give the surviving rule an enforcement point that a consumer repo actually runs. |
+
+Sequencing notes. #150 is second rather than fifth because the live probe already
+refuted its premise, so most of it is a retraction and a reference page — it does
+not compete with #149 for the same files. #149 precedes #148 because it
+establishes the pattern #148 reuses: a status word is earned by a post-hoc
+positive observation, never by a precondition having been arranged. #121 dropped
+in severity when #91 landed — its defect now sits behind a branch comment
+claiming unreachability, so the first deliverable is the proof, not the fix.
+
+Exit: every `verified`/`EXACTLY`-class assertion in a shipped artifact names the
+observation that earned it; the suite's verdict is attributable to behavior under
+load; and the per-step evidence the instrument can guarantee is written down
+where a downstream contract author will read it before writing the contract.
+
+Out of scope: SQL and server-stderr evidence (outside the browser boundary by
+construction — S2 documents the boundary rather than crossing it), an
+`agent-browser` version bump, the multi-match visibility contract itself (shipped
+in #91), and consumer-repo mapping migrations beyond what the #124 ruling
+requires.
+
 ## `repo-platform`
 
 No sprint is scheduled in this roadmap yet. Shared workflow, CI, marketplace,

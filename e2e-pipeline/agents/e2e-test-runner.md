@@ -222,7 +222,39 @@ TRACE_PATH="{{report_dir}}/trace${trace_extension}"
 
 ## Phase 2: Execute Steps
 
-For each step in the flow's `steps:` array, execute the following sub-phases. Track results per step: `{id, status: pass|fail|skip, expectations: [], error?: string}`.
+For each step in the flow's `steps:` array, execute the following sub-phases. Track results per step: `{id, status: pass|fail|skip, deviation: null|{did, instead_of}, expectations: [], error?: string}`.
+
+### 2.0 Deviation ledger (fill this as you go, not at the end)
+
+A **deviation** is executing anything other than what the step authored. Record one on
+the step whenever you:
+
+- reach the step's target by a route the step did not specify (navigating to a URL
+  instead of operating the control the step names is the canonical case)
+- substitute a different element, selector, or action verb for the authored one
+- skip a step and continue
+- reorder steps
+- inject a step the flow does not contain
+
+`deviation` carries `did` (what you actually executed) and `instead_of` (the authored
+step text). A step with no deviation carries `null`. **A deviation does not by itself
+change the step's pass/fail status** — it is a separate axis, and the report shows both.
+
+Two rules make the ledger load-bearing rather than decorative:
+
+- **A blocked control is a finding, not an obstacle to route around.** If the step
+  says to operate a control and the control is disabled, absent, or refuses the
+  interaction, that is the result: mark the step FAIL with what you observed
+  (`send-otp button disabled`). Do **not** navigate past it to reach the next state.
+  Improvising past a block converts "the application stopped us here" into some
+  unrelated downstream failure, and destroys the one observation the run existed to
+  make. The product defect the block represents is more valuable than a completed run.
+- **Never assert exactness you did not track.** Do not write `EXACTLY`, `exactly as
+  written`, `faithfully replayed`, or any equivalent in the report. Those phrases are
+  what downstream reviewers cite as proof a flow was replayed verbatim, so emitting one
+  on a run that improvised makes every honest PASS unverifiable too — nothing
+  distinguishes them. State the counts instead, which is strictly more informative:
+  `Executed 32/34 steps; 1 step improvised (request-customer-otp -> direct navigation)`.
 
 ### 2a. Variable Substitution
 
@@ -577,10 +609,26 @@ Write `{{report_dir}}/report.md` with the following structure:
 | Failed | N |
 | Skipped | N |
 | Not Automated | N |
+| Deviations | N |
 | Console Errors | N |
 | API Failures | N |
 | Flow Verdict | PASS / FAIL |
+| Step Fidelity | as-written / N deviation(s) / unverified |
 | Trace Infrastructure | PASS / FAIL |
+
+**Step Fidelity** reports what was tracked, never a claim beyond it:
+
+| Value | Emit when |
+|-------|-----------|
+| `as-written` | `Deviations` is 0 **and** the compiled cross-check ran and agreed |
+| `N deviation(s)` | the ledger recorded any deviation — list each one below the table as `<step-id>: <did> instead of <instead_of>` |
+| `unverified` | the compiled cross-check did not run (`--no-compile`, CLI-only flow, or a compile failure), regardless of the deviation count |
+
+`unverified` is not a failure and does not change the Flow Verdict. It says the run has
+no independent witness to its own fidelity, which is the honest state of a
+`--no-compile` run: the deviation ledger is self-reported, and a step that was
+improvised without the runner noticing would be absent from it. Do not upgrade
+`unverified` to `as-written` on the strength of an empty ledger.
 
 ## Evidence
 

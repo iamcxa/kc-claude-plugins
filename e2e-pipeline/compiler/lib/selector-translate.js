@@ -6,6 +6,25 @@
  * This module is the single definition site for selectorToA11yPattern().
  * codegen.js and any future consumer must import from here.
  *
+ * REACHABILITY, as of #91. This function has exactly one emission site,
+ * `codegen.js:1994`, and it sits in the `else` of `if (expect.cssSelector)`. Nothing
+ * the compiler produces can land there:
+ *
+ *   1. `compiler.js:9` is the only non-test `require` of codegen.
+ *   2. `compiler.js:395` calls `generate(resolveResult.resolved, …)`, and returns early
+ *      at :233/:279 whenever resolve reported errors.
+ *   3. `resolver.js:353` makes `resolveVisibilityElement` push an error and return null
+ *      when the element has no `cssSelector`.
+ *   4. Every producer of an `active` / `element-visible` / `element-not-visible` /
+ *      `or-visible` expect goes through that one function (`resolver.js:514-571`).
+ *
+ * So the branch is live only for callers that hand-build resolved input, which today
+ * means tests. That makes deleting it — and this module with it — available as a
+ * follow-up; it is deliberately NOT done here, because #121 asked for the defect to be
+ * closed and a deletion touching four test files is a separate change with its own
+ * blast radius. What is done here is making the defect impossible to reintroduce, so
+ * the deletion can happen later without racing a correctness fix.
+ *
  * Output format note: agent-browser's snapshot output formats role+name
  * elements as literal lines like `textbox "Email" [ref=e7]`. The a11y-grep
  * pattern returned by this function is consumed by `_poll_snapshot_contains`
@@ -45,6 +64,41 @@
  * docs/ship-flow/001-selector-grammar-alignment/design.md (Cand 1 → Cand 2
  * course correction triggered by Copilot pre-merge review on PR #8).
  */
+/**
+ * The single authority for turning an accessible-name value into a snapshot pattern.
+ *
+ * Every branch below that emits a name calls this, so "how a value becomes a pattern"
+ * is decided in one place (#121). The rule it enforces is one-directional: a non-null
+ * return is a pattern that can actually match, and anything that cannot be given a
+ * faithful fixed-string image returns null and takes the documented `_poll_visible`
+ * fallback instead of a near-miss that would silently never hit — or, worse, hit
+ * something else.
+ *
+ * Refused, both for the same reason:
+ *
+ *   `"` and `\`  agent-browser renders an accessible name into the snapshot with
+ *                JSON-style escaping (`"` as \" and `\` as \\, verified live against
+ *                0.32.0 — the byte-exact lines are in selector-translate.test.js
+ *                SNAPSHOT_ESCAPING). Wrapping the raw value emits bytes the snapshot
+ *                does not contain. Reproducing the escaping here would instead rest
+ *                the invariant on a third-party rendering convention this module
+ *                cannot pin, so it refuses. The corpus has no instance of either
+ *                character, so refusing costs nothing today.
+ *
+ *   empty        nothing to match on.
+ *
+ * The returned pattern quotes the value, which anchors it to a name boundary in the
+ * snapshot line. That anchoring is load-bearing: the predecessor's regex branch
+ * returned a bare unquoted prefix, so `/holder.*X/` emitted `holder` and matched
+ * inside `placeholder` — a false PASS on an element the author never named.
+ */
+function snapshotNamePattern(value) {
+  if (typeof value !== 'string') return null;
+  if (value === '') return null;
+  if (value.indexOf('"') !== -1 || value.indexOf('\\') !== -1) return null;
+  return '"' + value + '"';
+}
+
 function selectorToA11yPattern(selector) {
   if (typeof selector !== 'string') return null;
 
@@ -55,13 +109,15 @@ function selectorToA11yPattern(selector) {
   // [role="X"][aria-label="Y"]  →  X "Y"  (snapshot-literal format)
   var roleAriaLabel = selector.match(/^\[role="([^"]+)"\]\[aria-label="([^"]+)"\]$/);
   if (roleAriaLabel) {
-    return roleAriaLabel[1] + ' "' + roleAriaLabel[2] + '"';
+    var roleAriaPattern = snapshotNamePattern(roleAriaLabel[2]);
+    return roleAriaPattern && roleAriaLabel[1] + ' ' + roleAriaPattern;
   }
 
   // Permit reversed attribute order: [aria-label="Y"][role="X"]
   var ariaLabelRole = selector.match(/^\[aria-label="([^"]+)"\]\[role="([^"]+)"\]$/);
   if (ariaLabelRole) {
-    return ariaLabelRole[2] + ' "' + ariaLabelRole[1] + '"';
+    var ariaRolePattern = snapshotNamePattern(ariaLabelRole[1]);
+    return ariaRolePattern && ariaLabelRole[2] + ' ' + ariaRolePattern;
   }
 
   // [role="X"]  →  X  (role-only; falls back to count-by-role)
@@ -82,14 +138,30 @@ function selectorToA11yPattern(selector) {
 
   // role=X[name="Y"] → X "Y"
   var exactMatch = selector.match(/^role=(\w+)\[name="([^"]+)"\]/);
-  if (exactMatch) return exactMatch[1] + ' "' + exactMatch[2] + '"';
+  if (exactMatch) {
+    var exactPattern = snapshotNamePattern(exactMatch[2]);
+    return exactPattern && exactMatch[1] + ' ' + exactPattern;
+  }
 
-  // role=X[name=/Y/] → extract longest literal prefix before first regex metachar
-  var regexMatch = selector.match(/^role=\w+\[name=\/([^/]+)\/\]/);
+  // role=X[name=/Y/]
+  //
+  // A regex value with any metacharacter has no fixed-string image, so it is refused —
+  // the same ruling `text=/Y/` below already carries. The predecessor emitted the
+  // literal prefix before the first metacharacter, unquoted, which is the
+  // `e2e-regex-prefix-false-match` defect: `/holder.*X/` became the bare pattern
+  // `holder`, and `grep -F holder` matches `- button "placeholder text" [ref=e1]`. That
+  // is the false-PASS direction — an assertion succeeding quietly on an element the
+  // author never named — so it is worse than losing the check.
+  //
+  // A regex carrying no metacharacter at all is a literal, and translates to the same
+  // anchored pattern the exact form above produces. Measured over the corpus that is 44
+  // of 49 values, which keep working; the 5 with metacharacters take the _poll_visible
+  // fallback instead of matching the wrong thing.
+  var regexMatch = selector.match(/^role=(\w+)\[name=\/([^/]+)\/\]/);
   if (regexMatch) {
-    // Strip regex metacharacters — take literal prefix up to first . * + ? [ ( { |
-    var literal = regexMatch[1].replace(/[.*+?[\](){}|\\].*$/, '');
-    return literal || regexMatch[1].replace(/[.*+?[\](){}|\\]/g, '');
+    if (/[.*+?[\](){}|\\^$]/.test(regexMatch[2])) return null;
+    var regexPattern = snapshotNamePattern(regexMatch[2]);
+    return regexPattern && regexMatch[1] + ' ' + regexPattern;
   }
 
   // role=X >> nth=N → X (role name only)
@@ -133,20 +205,9 @@ function selectorToA11yPattern(selector) {
     // grep -F can never match. There is no fixed-string image of a regex.
     if (/^\/.*\/$/.test(textValue)) return null;
 
-    if (textValue === '') return null;
-
-    // A value carrying a quote or a backslash → null, same reason as the regex case.
-    // agent-browser renders an accessible name into the snapshot with JSON-style
-    // escaping (`"` as \" and `\` as \\, verified live against 0.32.0 — the byte-exact
-    // lines are in selector-translate.test.js SNAPSHOT_ESCAPING). Wrapping the raw
-    // value would emit a pattern whose bytes differ from the snapshot's, so it would
-    // never hit. Reproducing that escaping here would bet the invariant on a
-    // third-party convention this module cannot pin, and the corpus has no instance
-    // of either character inside a text= value, so refusing costs nothing today and
-    // keeps "a non-null return can actually match" true by construction.
-    if (textValue.indexOf('"') !== -1 || textValue.indexOf('\\') !== -1) return null;
-
-    return '"' + textValue + '"';
+    // Empty values and values carrying a quote or a backslash are refused by the shared
+    // authority, which is also what the role= branches above call.
+    return snapshotNamePattern(textValue);
   }
 
   // css= or other formats → can't convert

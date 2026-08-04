@@ -154,6 +154,49 @@ attempts, and elapsed time to reports. Use `not-visible` for negative
 assertions. Both operands of OR are judged per attempt; a terminal result is
 never masked.
 
+## Network evidence
+
+The request log is per-session and **survives navigation**, so a step that spans
+pages does not lose the requests its earlier pages made.
+
+```bash
+e2e_browser network requests                    # List captured requests
+e2e_browser network requests --clear            # Clear the log (do this BEFORE the step)
+e2e_browser network requests --filter "api"     # Filter by URL pattern
+e2e_browser network requests --type xhr,fetch   # Filter by resource type
+e2e_browser network requests --method POST      # Filter by method
+e2e_browser network requests --status 2xx       # Filter by status (200, 2xx, 400-499)
+e2e_browser network request <requestId>         # Full detail INCLUDING request and response body
+e2e_browser network har start                   # Begin HAR capture
+e2e_browser network har stop <abs-path>         # Write the HAR
+```
+
+`network request <id> --json` returns `method`, `url`, `headers`, `postData`
+(the verbatim request body), `status`, `responseHeaders`, and `responseBody`
+(the verbatim response body). That is the whole HTTP artifact for one exchange —
+nothing else needs to be reconstructed from a HAR to evidence a step.
+
+Bodies are fetched per request rather than dumped wholesale on purpose: on a
+document request `responseBody` is the entire page source. The per-step shape is
+
+```bash
+e2e_browser network requests --clear                                   # 1. before the step
+# ...perform the step...
+ids=$(e2e_browser network requests --type xhr,fetch --json | \
+        node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+          for (const r of JSON.parse(s).data.requests) console.log(r.requestId)})')
+for id in $ids; do                                                     # 2. after the step
+  e2e_browser network request "$id" --json                             #    full bodies
+done
+```
+
+`--type xhr,fetch` keeps the document response out of the report; drop it when
+the document body itself is the evidence.
+
+What this **cannot** evidence: raw SQL output and server-side stderr. Both are
+outside the browser boundary — see `docs/recording-evidence.md` § What a step can
+be evidenced with before writing a per-step evidence contract against them.
+
 ## Interaction (ALWAYS use @ref from latest snapshot)
 
 ```bash

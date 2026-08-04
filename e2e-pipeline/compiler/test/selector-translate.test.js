@@ -232,3 +232,76 @@ describe('selectorToA11yPattern: text= refuses what it cannot faithfully transla
     }
   });
 });
+
+describe('selectorToA11yPattern: role= obeys the same authority as text= (#121)', function () {
+  test('a role= name needing snapshot escaping is refused, not wrapped verbatim', function () {
+    // The sibling of the text= defect, in the branch that entity deliberately left
+    // alone. Same byte-exact captures, same ruling: refuse rather than mirror a
+    // third-party escaping convention this module cannot pin.
+    const SNAPSHOT_ESCAPING = [
+      ['role=button[name="Save\\"Now"]', '- button "Save\\"Now" [ref=e1]'],
+      ['role=button[name="back\\slash"]', '- button "back\\\\slash" [ref=e1]'],
+      ['[role="button"][aria-label="back\\slash"]', '- button "back\\\\slash" [ref=e1]'],
+    ];
+
+    for (const [selector, snapshotLine] of SNAPSHOT_ESCAPING) {
+      const pattern = selectorToA11yPattern(selector);
+      if (pattern === null) continue;  // documented fallback — allowed
+      const hit = childProcess.spawnSync(
+        'bash', ['-c', 'grep -Fq "$1"', '--', pattern],
+        { input: snapshotLine, encoding: 'utf8' }
+      ).status === 0;
+      assert.ok(hit,
+        `non-null pattern ${JSON.stringify(pattern)} for ${selector} must match the ` +
+        `real snapshot line ${JSON.stringify(snapshotLine)}`);
+    }
+  });
+
+  test('FALSIFIER: a regex prefix may never match an element the author did not name', function () {
+    // `e2e-regex-prefix-false-match`'s stated falsification. The predecessor returned
+    // the bare prefix `holder`, and `grep -F holder` hits `placeholder text` — the
+    // assertion passes on the wrong element, which is the false-PASS direction.
+    const line = '- button "placeholder text" [ref=e1]';
+    const pattern = selectorToA11yPattern('role=button[name=/holder.*關閉/]');
+
+    if (pattern !== null) {
+      const hit = childProcess.spawnSync(
+        'bash', ['-c', 'grep -Fq "$1"', '--', pattern],
+        { input: line, encoding: 'utf8' }
+      ).status === 0;
+      assert.equal(hit, false,
+        `pattern ${JSON.stringify(pattern)} must not match ${JSON.stringify(line)}`);
+    }
+  });
+
+  test('metacharacter regexes are refused; metacharacter-free ones translate anchored', function () {
+    // The 5-of-49 corpus values that carry a metacharacter.
+    for (const selector of [
+      'role=button[name=/holder.*關閉/]',
+      'role=button[name=/Toggle (Dark|Light) Mode/]',
+      'role=button[name=/calendar.*\\d{4}/]',
+      'role=button[name=/切換為.*模式/]',
+      'role=button[name=/登\\s*入/]',
+    ]) {
+      assert.equal(selectorToA11yPattern(selector), null, selector + ' must be refused');
+    }
+
+    // The 44 that carry none keep working, now anchored to a name boundary instead of
+    // emitted as a bare substring.
+    assert.equal(selectorToA11yPattern('role=button[name=/新增項目/]'), 'button "新增項目"');
+    assert.equal(selectorToA11yPattern('role=link[name=/門市管理/]'), 'link "門市管理"');
+  });
+
+  test('every emitting branch routes through the one authority', function () {
+    // If a branch stopped calling it, that branch would wrap a quote-carrying value
+    // verbatim and emit bytes the snapshot never contains.
+    for (const selector of [
+      'role=button[name="a\\"b"]',
+      '[role="button"][aria-label="a\\"b"]',
+      '[aria-label="a\\"b"][role="button"]',
+      'text=a"b',
+    ]) {
+      assert.equal(selectorToA11yPattern(selector), null, selector + ' must be refused');
+    }
+  });
+});
