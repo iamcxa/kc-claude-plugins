@@ -1613,19 +1613,10 @@ function profileLivenessExpression(keys, selectors) {
  * receipt that stays silent about the profile reproduces exactly that. `not-asserted`
  * says the run has no profile proof, which is a different claim from having one.
  */
-function observeProfileLiveness(options) {
-  const keys = options.profileLivenessKeys || [];
-  const selectors = options.profileLivenessSelectors || [];
-  if (keys.length === 0 && selectors.length === 0) {
-    return {
-      status: 'not-asserted',
-      note:
-        'no --profile-liveness-key or --profile-liveness-selector was declared, so this ' +
-        'run carries no evidence that profile state reached the page',
-      keys: [],
-      selectors: [],
-    };
-  }
+const PROFILE_LIVENESS_TIMEOUT_MS = 10000;
+const PROFILE_LIVENESS_INTERVAL_MS = 250;
+
+function readProfileLiveness(options, keys, selectors) {
   const data = parseAgentBrowserPayload(
     runAgentBrowser(options, [
       'eval',
@@ -1645,8 +1636,7 @@ function observeProfileLiveness(options) {
   ) {
     throw new Error('agent-browser profile liveness evidence is incomplete');
   }
-  const observations = result.keys.concat(result.selectors);
-  const unsatisfied = observations.filter(function(observation) {
+  const unsatisfied = result.keys.concat(result.selectors).filter(function(observation) {
     return observation.result !== 'present';
   });
   return {
@@ -1656,6 +1646,46 @@ function observeProfileLiveness(options) {
     selectors: result.selectors,
     unsatisfied: unsatisfied,
   };
+}
+
+function observeProfileLiveness(options) {
+  const keys = options.profileLivenessKeys || [];
+  const selectors = options.profileLivenessSelectors || [];
+  if (keys.length === 0 && selectors.length === 0) {
+    return {
+      status: 'not-asserted',
+      note:
+        'no --profile-liveness-key or --profile-liveness-selector was declared, so this ' +
+        'run carries no evidence that profile state reached the page',
+      keys: [],
+      selectors: [],
+    };
+  }
+  // Polled, not one-shot. A restored session is not necessarily observable the instant
+  // navigation returns: an SPA rehydrating from an HttpOnly cookie has to complete a
+  // round trip before it renders anything authenticated-only, and a storage write can
+  // trail the load event. Sampling once would fail those runs nondeterministically —
+  // turning this guard into the flake class the rest of this work removed.
+  //
+  // Only the satisfied case can exit early; an unsatisfied one is retried until the
+  // deadline, so the reported failure is "still absent after the full budget" rather
+  // than "absent at one arbitrary instant".
+  const timeoutMs =
+    options.profileLivenessTimeoutMs === undefined
+      ? PROFILE_LIVENESS_TIMEOUT_MS
+      : options.profileLivenessTimeoutMs;
+  const deadline = Date.now() + timeoutMs;
+  let attempts = 0;
+  let liveness;
+  for (;;) {
+    attempts += 1;
+    liveness = readProfileLiveness(options, keys, selectors);
+    if (liveness.status === 'observed' || Date.now() >= deadline) break;
+    sleepSync(PROFILE_LIVENESS_INTERVAL_MS);
+  }
+  liveness.attempts = attempts;
+  liveness.waited_ms_budget = timeoutMs;
+  return liveness;
 }
 
 /**
@@ -1923,10 +1953,27 @@ function performOwnedOpen(options) {
       })
     );
     assertStableNavigationIdentity(pre, post);
+    // A declared assertion is checked on EVERY navigation that declares it, not only on
+    // the first. Evaluating it solely while `first_navigation` was pending meant a later
+    // `open --profile-liveness-key ...` silently succeeded without checking or recording
+    // anything — a declared claim quietly going unverified, which is the same defect
+    // class this issue is about, one navigation over.
+    const lastLiveness = observeProfileLiveness(options);
+    post.profile_liveness = lastLiveness;
+    try {
+      assertProfileLiveness(lastLiveness);
+    } catch (error) {
+      // Record it the same way a first-navigation failure is recorded. Throwing straight
+      // out of here would leave the receipt saying nothing about why the run stopped,
+      // which is the shape of defect this whole issue is about.
+      failLifecycleReceipt(options.receiptPath, receipt, error, post);
+      throw error;
+    }
     receipt.last_navigation = {
       status: 'verified',
       pre,
       post,
+      profile_liveness: lastLiveness,
       verified_at: new Date().toISOString(),
     };
     writeLifecycleReceipt(options.receiptPath, receipt);

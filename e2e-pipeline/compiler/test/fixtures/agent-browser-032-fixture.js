@@ -303,8 +303,15 @@ if (command === 'eval') {
   // which is exactly how the reverted first attempt shipped an unreachable code path.
   if (expression.includes('readSelector')) {
     const liveness = state.profileLiveness || {};
-    const presentKeys = liveness.keys || [];
-    const presentSelectors = liveness.selectors || [];
+    // `appearAfter` models the SPA that has not rendered its authenticated affordance
+    // yet: the first N samples see nothing, later ones see it. A one-shot probe fails
+    // this; a polling one does not.
+    state.livenessSamples = (state.livenessSamples || 0) + 1;
+    const appearAfter = liveness.appearAfter || 0;
+    const visible = state.livenessSamples > appearAfter;
+    const presentKeys = visible ? liveness.keys || [] : [];
+    const presentSelectors = visible ? liveness.selectors || [] : [];
+    writeState(state);
     const context = {
       location: { origin: liveness.origin || 'https://application.example.test' },
       document: {

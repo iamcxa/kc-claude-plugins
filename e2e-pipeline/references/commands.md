@@ -91,6 +91,15 @@ e2e_browser_runtime_args+=(--profile-liveness-selector '[data-testid="sign-out"]
 Repeat either flag; every declared assertion must hold. Values are JSON-encoded
 into the probe, so they are compared as data and cannot extend it.
 
+The probe **polls** for up to 10s rather than sampling once, because a restored
+session is not necessarily observable the instant navigation returns — an SPA
+rehydrating from an HttpOnly cookie has a round trip to finish before it renders
+anything authenticated-only. Only the satisfied case exits early, so a reported
+failure means "still absent after the full budget", not "absent at one instant".
+
+Assertions are checked on **every** navigation that declares them, not only the
+first, and each result is recorded on that navigation's receipt entry.
+
 **Pick the one your app can actually show.** A session carried entirely by an
 HttpOnly cookie leaves nothing in `localStorage` and is invisible to any storage
 check — use an authenticated-only affordance for those.

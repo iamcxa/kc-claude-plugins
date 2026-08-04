@@ -755,6 +755,66 @@ test('a storage read that refuses does not satisfy a declared key', function(t) 
   assert.match(receipt.error, /auth_token=unreadable/);
 });
 
+test('a late-rendering affordance is polled for, not sampled once', function(t) {
+  // codex: an SPA rehydrating from an HttpOnly cookie has to finish a round trip before
+  // it renders anything authenticated-only, so a one-shot probe fails valid profiles
+  // nondeterministically — which would have made this guard the very flake class the
+  // rest of this sprint removed. The fixture withholds the affordance for the first
+  // three samples; only a polling probe gets past it.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  setFixtureLiveness(fixture, {
+    origin: 'https://application.example.test',
+    keys: [],
+    selectors: ['[data-testid="sign-out"]'],
+    appearAfter: 3,
+  });
+
+  const result = runOpen(fixture, 'https://application.example.test/spa', [], [
+    '--profile-liveness-selector', '[data-testid="sign-out"]',
+  ]);
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.profile_liveness.status, 'observed');
+  assert.ok(
+    receipt.first_navigation.profile_liveness.attempts > 1,
+    'the probe must have sampled more than once'
+  );
+});
+
+test('a declared assertion is checked on a later open, not only the first', function(t) {
+  // codex: liveness was evaluated only while `first_navigation` was pending, so a
+  // declared flag on any subsequent `open` silently succeeded without checking or
+  // recording anything. A declared claim going quietly unverified is this issue's own
+  // defect class, one navigation over.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  setFixtureLiveness(fixture, {
+    origin: 'https://application.example.test',
+    keys: ['auth_token'],
+    selectors: [],
+  });
+
+  const first = runOpen(fixture, 'https://application.example.test/one', [], [
+    '--profile-liveness-key', 'auth_token',
+  ]);
+  assert.equal(first.status, 0, first.stderr);
+
+  // The session drops between navigations.
+  setFixtureLiveness(fixture, {
+    origin: 'https://application.example.test',
+    keys: [],
+    selectors: [],
+  });
+
+  const second = runOpen(fixture, 'https://application.example.test/two', [], [
+    '--profile-liveness-key', 'auth_token',
+  ]);
+
+  assert.notEqual(second.status, 0, 'a later navigation must still check what it declares');
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.match(receipt.error, /auth_token=absent/);
+});
+
 test('OPAQUE ORIGIN: the storage lookup stays inside the guard', function(t) {
   // codex found that the predecessor read `localStorage` at a call site OUTSIDE the
   // guard, so on an opaque origin the getter threw before `try` was entered and the
