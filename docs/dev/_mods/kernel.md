@@ -143,7 +143,8 @@ reports the same way whether or not the thing it watches is broken.
   establishes neither a wider population nor an unobserved cause. Before
   reporting an empirical absence, name the searched scope and why it is the
   population, or use a different strategy that would have found the thing. One
-  tool, pattern, or filter is a sample, not a census. Trace unexplained signals;
+  tool, pattern, or filter is a sample unless its coverage of the population can
+  be shown. Trace unexplained signals;
   do not assign them an unobserved origin.
 - **Forced behavioral and corpus checks run at stage boundaries, not in the
   worker's inner loop.** Per-edit or per-commit must-pass checks are limited to
