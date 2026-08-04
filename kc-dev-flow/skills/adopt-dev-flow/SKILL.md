@@ -46,10 +46,13 @@ or is considering an optional control.
 7. Write the binding to one machine-readable file the repository owns, carrying
    `kernel_source`, `kernel_version`, `kernel_entrypoint`, `kernel_digest`, and
    every adopted optional control. The workflow entrypoint links to that file
-   rather than restating it, and the checker refuses a prose document. An omitted
-   control remains off. A binding missing the digest or entrypoint is declared
-   but unverifiable, which the checker reports as `UNRESOLVABLE` — a different
-   state from undeclared, and not a lesser one.
+   rather than restating it. The checker accepts only binding keys at the file's
+   top level, so a prose document is refused by the first line that is not one;
+   it cannot tell you that you named the wrong file. `kernel_entrypoint` must
+   name a file inside the release's `references/`, which is the set the digest
+   covers. An omitted control remains off. A binding missing the digest or
+   entrypoint is declared but unverifiable, which the checker reports as
+   `UNRESOLVABLE` — a different state from undeclared, and not a lesser one.
 8. If portable improvements may return to the kernel source, record
    `upstream_contribution.repository`, its package path, and either
    `propose_only` or `pull_request`. Omission defaults to `propose_only`.

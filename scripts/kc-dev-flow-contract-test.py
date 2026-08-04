@@ -49,6 +49,20 @@ for caller in (PLUGIN / "assets/kernel-binding.template.yaml", PLUGIN / "skills/
         f"{caller.relative_to(ROOT)} no longer names the checker adopters are told to run",
     )
 
+# The checker accepts only a fixed set of top-level keys, and the template is
+# what adopters copy. A key added to one and not the other makes the shipped
+# template unreadable by the shipped checker, which nothing else would notice.
+allowed = re.search(r"BINDING_KEYS = frozenset\(\s*\((.*?)\)\s*\)", verifier.read_text(encoding="utf-8"), re.S)
+require(allowed is not None, "scripts/verify-binding.py no longer declares BINDING_KEYS")
+allowed_keys = set(re.findall(r'"([a-z_]+)"', allowed.group(1)))
+template_keys = set(
+    re.findall(r"^([A-Za-z_][A-Za-z0-9_.\-]*):", (PLUGIN / "assets/kernel-binding.template.yaml").read_text(encoding="utf-8"), re.M)
+)
+require(
+    template_keys <= allowed_keys,
+    f"kernel-binding.template.yaml declares {sorted(template_keys - allowed_keys)}, which the checker refuses",
+)
+
 claude_manifest = load_json(required_files[0])
 codex_manifest = load_json(required_files[1])
 marketplace = load_json(ROOT / ".claude-plugin/marketplace.json")

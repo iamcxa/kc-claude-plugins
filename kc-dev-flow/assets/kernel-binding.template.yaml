@@ -6,8 +6,14 @@
 #
 # The binding lives in its own file rather than inside the workflow document
 # because a checker that has to find it inside prose reports success for a
-# repository that has none. Two revisions of the checker did exactly that. It
-# now refuses prose outright, so a binding embedded in Markdown is UNRESOLVABLE.
+# repository that has none. Four revisions of the checker did exactly that.
+#
+# What the checker enforces: the file's top level carries only the keys below,
+# so a line such as `Status: not adopted yet` is refused by name, and a file
+# holding anything besides a binding is not read as one. What it cannot
+# enforce: which file you name. Pointing it at a document that happens to be a
+# valid binding record is a misconfiguration no parser can distinguish from a
+# binding.
 #
 # Verify with the kernel-owned checker rather than by reading:
 #
@@ -30,9 +36,11 @@
 #
 # `kernel_digest` covers the release's whole `references/` set, not the
 # entrypoint alone, because the Work Control Profile and the reverse-recovery
-# audit are normative too. Do not compute it by hand: run the checker with the
-# field absent and it prints `verify-binding:expected-digest:<value>` for the
-# release you named.
+# audit are normative too. `kernel_entrypoint` must therefore name a file inside
+# that same set: an entrypoint outside it could be rewritten while the checker
+# reported that nothing changed. Do not compute the digest by hand: run the
+# checker with the field absent and it prints
+# `verify-binding:expected-digest:<value>` for the release you named.
 
 kernel_source: iamcxa/kc-claude-plugins/kc-dev-flow
 kernel_version: <installed kc-dev-flow package version>
