@@ -62,7 +62,12 @@ needs a scheduling decision; it is not permission to invent work.
 - Before planning new capability, apply the reverse-recovery audit and repair
   the cheapest compatible seam. Only confirmed `MISSING` work is greenfield.
 - Fresh validation is bound to the exact revision. A changed head invalidates
-  prior evidence.
+  prior evidence. **The binding is a recorded fact, not an assumption**: a round
+  that does not state the revision and artifact it read cannot be shown to have
+  read the one under review, and an unstated binding is indistinguishable from a
+  wrong one. A verifying round also names the result that would have made it
+  fail; where it cannot, it reports at a rate set by its prompt rather than by
+  the artifact, and neither its silence nor its confidence is evidence.
 - Judgment belongs to a fresh EM/reviewer; scope and irreversible decisions
   belong to the captain. Orchestration itself carries no verdict authority.
 - Completion means the goal is achieved and durably delivered, not that the
