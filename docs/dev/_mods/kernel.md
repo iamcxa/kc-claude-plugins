@@ -81,7 +81,12 @@ needs a scheduling decision; it is not permission to invent work.
   branch, or a fail-closed check — not "I checked", and not its author. This is
   an authoring discipline, not an assertion that an automatic gate exists. Apply
   it to claims adopted from reports, reviewers, or contributors too, and record
-  what was checked.
+  what was checked. **It governs claims of fact, not prohibitions.** "This
+  branch cannot be reached" asserts something about the artifact and needs the
+  mechanism that makes it true; "never create a second task universe" forbids an
+  action, and its enforcement point is whoever holds the authority the contract
+  names. Reading a normative absolute as a factual one turns every rule in a
+  contract into a violation of this one.
 - Before planning new capability, apply the reverse-recovery audit and repair
   the cheapest compatible seam. Only confirmed `MISSING` work is greenfield.
 - Fresh validation is bound to the exact revision. A changed head invalidates
