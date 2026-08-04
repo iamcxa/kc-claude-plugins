@@ -70,6 +70,14 @@ needs a scheduling decision; it is not permission to invent work.
   the artifact, and neither its silence nor its confidence is evidence.
 - Judgment belongs to a fresh EM/reviewer; scope and irreversible decisions
   belong to the captain. Orchestration itself carries no verdict authority.
+- **Test depth is the adopter's call; integrating early is not.** Prefer
+  integrating the smallest working increment wherever the adopter's declared
+  route makes it run, over further rounds aiming evidence at an increment that
+  has not run anywhere. Automated tests and verification then grow against
+  observed behavior rather than against a model of it. This bounds
+  pre-integration evidence effort; it moves nothing past delivery, because
+  `validation` still precedes `done`, and the evidence named as able to fail
+  still has to exist and still has to pass.
 - Completion means the goal is achieved and durably delivered, not that the
   agent produced every possible ceremony artifact.
 
