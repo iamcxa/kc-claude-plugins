@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 
@@ -32,6 +34,8 @@ required_files = [
     PLUGIN / "references/work-control-profile.md",
     PLUGIN / "assets/kernel-binding.template.yaml",
     PLUGIN / "scripts/verify-binding.py",
+    PLUGIN / "scripts/absolutes-check.py",
+    PLUGIN / "references/absolutes.registry",
 ]
 for required_file in required_files:
     require(required_file.is_file(), f"missing {required_file.relative_to(ROOT)}")
@@ -42,7 +46,8 @@ for required_file in required_files:
 # which means nothing would notice if it stopped. Require both that it is
 # present and that it is runnable.
 verifier = PLUGIN / "scripts/verify-binding.py"
-require(verifier.stat().st_mode & 0o111, "scripts/verify-binding.py is not executable")
+for script in ("scripts/verify-binding.py", "scripts/absolutes-check.py"):
+    require((PLUGIN / script).stat().st_mode & 0o111, f"{script} is not executable")
 for caller in (PLUGIN / "assets/kernel-binding.template.yaml", PLUGIN / "skills/adopt-dev-flow/SKILL.md"):
     require(
         "scripts/verify-binding.py" in caller.read_text(encoding="utf-8"),
@@ -154,6 +159,19 @@ for field in [
     "adopted_controls:",
 ]:
     require(field in binding, f"local binding is missing {field}")
+
+# The kernel requires an absolute to name its enforcement point or be rewritten
+# as a bounded claim, and that rule had none of its own. Four hand-audits of one
+# file each found a different subset, so the registry replaces re-reading: every
+# block carrying an absolute is judged once, and an unjudged or edited one fails
+# here rather than in a fifth read-through.
+absolutes = subprocess.run(
+    [sys.executable, str(PLUGIN / "scripts/absolutes-check.py"), str(PLUGIN / "references/absolutes.registry")]
+    + [str(p) for p in sorted((PLUGIN / "references").glob("*.md"))],
+    capture_output=True,
+    text=True,
+)
+require(absolutes.returncode == 0, absolutes.stdout.strip() or "absolutes-check failed")
 
 for reference_name in ["kernel.md", "reverse-recovery-audit.md", "work-control-profile.md"]:
     canonical = (PLUGIN / "references" / reference_name).read_bytes()
