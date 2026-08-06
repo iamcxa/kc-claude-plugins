@@ -1,8 +1,10 @@
 # KC Dev Flow
 
-A small, versioned development-flow kernel for Claude Code and Codex. It lets a
-repository keep its own tracker, sprint model, workflow runtime, and delivery
-provider while sharing the same authority and evidence discipline.
+A small, versioned development-flow kernel for repositories running Spacedock,
+under Claude Code or Codex. It exists to carry a lesson one repository paid for
+into the others before they pay for it again: repositories keep their own
+tracker, sprint model, and delivery provider, and share the authority and
+evidence discipline that cost someone a cycle to learn.
 
 ## Skills
 

@@ -1,6 +1,6 @@
 ---
 name: adopt-dev-flow
-description: Use when a brownfield repository needs to adopt, audit, or upgrade a portable development workflow without replacing its existing tracker, sprint authority, stage runtime, or delivery provider.
+description: Use when a brownfield repository running Spacedock needs to adopt, audit, or upgrade the shared dev-flow kernel without replacing its existing tracker, sprint authority, or delivery provider.
 ---
 
 # Adopt Dev Flow

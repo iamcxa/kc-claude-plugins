@@ -4,9 +4,16 @@ name: kc-dev-flow-kernel
 
 # KC Dev Flow Kernel
 
-The kernel is a portable authority and evidence contract. It does not prescribe
-a tracker, Markdown filename, agent harness, CI vendor, PR host, or workflow
-runtime. Adopters bind those locally.
+The kernel is an authority and evidence contract for repositories running
+Spacedock. It exists to carry a lesson one repository paid for into the others
+before they pay for it again, so its scope is the reusable half of that lesson:
+what counts as evidence, who decides, and when a thing is done.
+
+It is portable **across those repositories**, not across workflow runtimes. It
+assumes Spacedock's entity and stage model and may name its surfaces. It still
+prescribes no tracker, Markdown filename, agent harness, CI vendor, or PR host;
+adopters bind those locally, and a rule that depends on one of them is the
+adopter's, not the kernel's.
 
 ## Authority model
 
