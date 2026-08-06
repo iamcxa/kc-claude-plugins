@@ -58,3 +58,6 @@ jobs:
 
       - name: Validate kernel binding verifier
         run: ./scripts/verify-binding.test.sh
+
+      - name: Validate split-root state prerequisite
+        run: ./scripts/dev-flow-state-prereq.test.sh

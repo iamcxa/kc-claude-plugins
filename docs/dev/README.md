@@ -144,83 +144,14 @@ non-holder or from a detached substitute. Before each lifecycle action — and
 again after an approval pause — run this complete check as a new command:
 
 ```bash
-REPO_DISCOVERED=$(git rev-parse --show-toplevel) || exit 1
-REPO=$(cd "$REPO_DISCOVERED" && pwd -P) || exit 1
-WORKFLOW_LITERAL="$REPO/docs/dev"
-WORKFLOW_DIR=$(cd "$WORKFLOW_LITERAL" && pwd -P) || exit 1
-test "$WORKFLOW_DIR" = "$WORKFLOW_LITERAL" || exit 1
-STATE="$WORKFLOW_DIR/.spacedock-state"
-
-WORKTREES=$(git -C "$REPO" worktree list --porcelain) || exit 1
-HOLDERS=$(printf '%s\n' "$WORKTREES" | awk '
-  BEGIN { RS=""; FS="\n" }
-  {
-    path=""; branch=""
-    for (i = 1; i <= NF; i++) {
-      if ($i ~ /^worktree /) path=substr($i, 10)
-      if ($i ~ /^branch /) branch=substr($i, 8)
-    }
-    if (branch == "refs/heads/spacedock-state/dev") print path
-  }
-')
-HOLDER_COUNT=$(printf '%s\n' "$HOLDERS" |
-  awk 'NF { count++ } END { print count + 0 }') || exit 1
-if test "$HOLDER_COUNT" -ne 1 || test "$HOLDERS" != "$STATE"; then
-  echo "lifecycle requires the registered state holder: ${HOLDERS:-<none>}" >&2
-  exit 1
-fi
-if test -L "$STATE"; then
-  echo "lifecycle state path must not be a symlink: $STATE" >&2
-  exit 1
-fi
-
-STATE_TOP_DISCOVERED=$(git -C "$STATE" rev-parse --show-toplevel) || exit 1
-STATE_TOP=$(cd "$STATE_TOP_DISCOVERED" && pwd -P) || exit 1
-REPO_COMMON_DISCOVERED=$(git -C "$REPO" rev-parse \
-  --path-format=absolute --git-common-dir) || exit 1
-REPO_COMMON=$(cd "$REPO_COMMON_DISCOVERED" && pwd -P) || exit 1
-STATE_COMMON_DISCOVERED=$(git -C "$STATE" rev-parse \
-  --path-format=absolute --git-common-dir) || exit 1
-STATE_COMMON=$(cd "$STATE_COMMON_DISCOVERED" && pwd -P) || exit 1
-test "$STATE_TOP" = "$STATE" || exit 1
-test "$STATE_COMMON" = "$REPO_COMMON" || exit 1
-STATE_BRANCH=$(git -C "$STATE" symbolic-ref --quiet --short HEAD) || exit 1
-test "$STATE_BRANCH" = spacedock-state/dev || exit 1
-STATE_REF=refs/heads/spacedock-state/dev
-git -C "$STATE" fetch --no-tags origin "$STATE_REF" || exit 1
-REMOTE_TIP=$(git -C "$STATE" rev-parse 'FETCH_HEAD^{commit}') || exit 1
-LOCAL_HEAD=$(git -C "$STATE" rev-parse 'HEAD^{commit}') || exit 1
-if test "$LOCAL_HEAD" = "$REMOTE_TIP"; then
-  STATE_RELATION=equal
-elif git -C "$STATE" merge-base --is-ancestor "$REMOTE_TIP" "$LOCAL_HEAD"; then
-  STATE_RELATION=ahead
-elif git -C "$STATE" merge-base --is-ancestor "$LOCAL_HEAD" "$REMOTE_TIP"; then
-  STATE_RELATION=behind
-else
-  STATE_RELATION=diverged
-fi
-STATE_DIRTY=$(git -C "$STATE" status --porcelain) || exit 1
-if test -n "$STATE_DIRTY"; then
-  echo "dirty holder ($STATE_RELATION); run attributable recovery" >&2
-  exit 75
-fi
-case "$STATE_RELATION" in
-  equal) ;;
-  behind)
-    git -C "$STATE" merge --ff-only "$REMOTE_TIP" || exit 1
-    test "$(git -C "$STATE" rev-parse 'HEAD^{commit}')" = "$REMOTE_TIP" ||
-      exit 1
-    ;;
-  ahead)
-    echo "holder has unpushed commits; run outgoing recovery" >&2
-    exit 76
-    ;;
-  diverged)
-    echo "holder and remote state diverged; run outgoing recovery" >&2
-    exit 77
-    ;;
-esac
+scripts/dev-flow-state-prereq.sh          # or: … <workflow-dir>
 ```
+
+This was 76 lines of shell in this document until it was saved as a program it
+already was — it had exit codes, stderr, and named failure modes, and none of
+them could run or be tested from here. `scripts/dev-flow-state-prereq.test.sh`
+covers the refusal path; the holder-side recovery codes are exercised in use,
+not in that suite.
 
 The exact `worktree`/subsequent `branch` record pairing in the exhaustive
 porcelain read identifies the holder. Any zero/multiple result, different
