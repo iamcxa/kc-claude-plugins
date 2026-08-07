@@ -47,7 +47,7 @@ implementation, and a terminal merge. The spacedock binary owns all runtime
 semantics: stage transitions, gate records, worktree lifecycle, state
 durability, exactly-once approval. This README owns judgment discipline only.
 
-## Kernel binding
+## Local Profile
 
 The portable authority and evidence contract is
 [`_mods/kernel.md`](./_mods/kernel.md), vendored byte-identically from
@@ -55,28 +55,31 @@ The portable authority and evidence contract is
 `scripts/kc-dev-flow-contract-test.py`. Read it as the authority; this README
 adds the local mechanism the kernel deliberately does not prescribe.
 
-The binding itself is [`kernel-binding.yaml`](./kernel-binding.yaml) — authority
-map, adopted controls, local routes and exceptions. It is not restated here, so
-there is one place to read and one place to change.
+| Role | Bound local authority |
+|---|---|
+| Project context | `PRODUCT.md` and `ARCHITECTURE.md` at the repository root; `CLAUDE.md` for repository-wide conventions |
+| Work items | Spacedock entities under `docs/dev/`, queried with `spacedock status --workflow-dir docs/dev` |
+| Iteration | `docs/dev/ROADMAP.md` sprint headings written by the captain; never a task-state mirror |
+| Execution state | `docs/dev/.spacedock-state`, owned by the Spacedock binary |
+| Delivery | Squash merge to `main` through a GitHub pull request with required checks; release-please owns versions and tags |
+| Gate verdicts | Fresh EM or reviewer under this README's `Gate Authority` section |
+| Scope and irreversibility | Captain |
+| Observation | This README's `Workflow cost record`; it is a note to the captain, never a gate, and an empty record is not a defect |
 
-This repository authors the kernel, so two things hold separately and reading
-them as one misreads the checker:
+The normal route is `backlog → ideation → implementation → validation → done`.
+A known-cause defect with a mechanical acceptance test may skip ideation while
+keeping every other bar. The adopted optional control is
+`bound_field_validation`; its local mechanism remains in this README and
+`scripts/dev-flow-work-context-check.py`.
 
-- **Authority is the in-tree copy above**, and its enforcement point is
-  `scripts/kc-dev-flow-contract-test.py` running on every PR as a required
-  check. That is a stricter hold than an adopter's, which is a checker someone
-  remembers to run.
-- **The pin tracks releases.** `verify-binding.py` never reads the working tree,
-  so a `PASS` means the pin agrees with the *installed package* and says nothing
-  about the in-tree kernel — which is normally ahead of the newest release.
-  Editing the kernel does not move that reading; the contract test catches it.
+This repository authors `kc-dev-flow`, so the canonical package references and
+the locally adopted copies are intentionally separate. The contract test checks
+the adopted kernel, reverse-recovery audit, and Work Control Profile
+byte-for-byte. Local policy stays here, not inside those files. No binding YAML,
+digest pin, status registry, or package fallback participates in continuation.
 
-Verify the pin rather than read it — from a release that ships the checker;
-`kc-dev-flow` 1.0.0 does not:
-
-```
-python3 <installed kc-dev-flow>/scripts/verify-binding.py docs/dev/kernel-binding.yaml
-```
+Local exception: there is no ledger. The workflow cost record replaced it, and
+two of the three terms of the former bar are not observable from this runtime.
 
 ## File Naming
 
@@ -553,6 +556,8 @@ that reads like a session transcript costs reading budget nobody spends.
 
 ### `backlog` — capture (this is the todo queue)
 
+Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
+
 Any idea, rabbit hole, defect, or captain note enters as a seed task file:
 title, `source`, `product`, and a one-paragraph description. Leave `sprint`
 blank unless the task is already scheduled. Target cost: under two minutes.
@@ -618,6 +623,9 @@ the cost of over-shaping one fix is smaller than the cost of designing inside
 an implementation stage nobody is reviewing for design.
 
 ### `ideation` — one gate for design, plan, and acceptance
+
+Policy mods: [`_mods/reverse-recovery-audit.md`](./_mods/reverse-recovery-audit.md)
+and [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 The single judgment-heavy stage. Flesh out the problem, decide the approach,
 define acceptance criteria and the test plan. The gate reviews all of it at
@@ -746,6 +754,8 @@ once. Discipline clauses:
 
 ### `implementation` — build in a worktree, test-first
 
+Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
+
 - **RED before GREEN, with evidence.** For each behavior: write the failing
   test, run it, record the RED evidence in the stage report (test name +
   failure output digest), then write the minimum code to pass. GREEN without
@@ -841,6 +851,8 @@ once. Discipline clauses:
   says what was produced, where, and how to run it.
 
 ### `validation` — fresh eyes, adversarial by default
+
+Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 A fresh-context agent verifies the deliverable against the ideation AC. The
 validator checks what was produced; it never finishes the work.
@@ -1044,6 +1056,8 @@ any reading of it, and it is usually the cheaper one to run.
   token or coverage evidence is not a delivery defect.
 
 ### `done` — terminal
+
+Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 Merge after a passed validation gate (merge policy: PR to `main`). An
 authenticated product PR observed `MERGED` authorizes the terminal transaction:

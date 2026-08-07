@@ -11,16 +11,24 @@ provider while sharing the same authority and evidence discipline.
 - `continue-dev-flow` — resume an approved sprint and keep advancing committed
   work without unnecessary captain pauses.
 
-## Design boundary
+## Distribution
 
 The plugin is not a tracker, scheduler, daemon, or merge bot. The kernel defines
-portable semantics; each repository owns a short local binding and any provider
-adapters. Optional controls are off until individually declared.
+portable semantics; each repository binds its existing authorities in a README
+`Local Profile` and vendors the accepted kernel plus selected policy mods under
+its workflow `_mods/` directory. Stage `Policy mods` lists decide which local
+policies apply. There is no binding YAML, digest registry, or runtime package
+fallback.
 
-At a sprint boundary, repeated friction is classified as repository-local or a
-reusable kernel improvement. The default is proposal-only; an adopter may
-explicitly allow a sanitized, duplicate-checked upstream pull request. That
-permission never includes scheduling or merging the improvement.
+`adopt-dev-flow` owns initial vendoring and explicit upgrades. It replaces an
+accepted canonical file byte-for-byte while local mechanisms and exceptions stay
+in the workflow README. `continue-dev-flow` reads the vendored policy and never
+installs or rewrites it. Optional controls remain off until individually declared.
+
+At launch, unseen immutable debriefs may yield at most one repository-local or
+reusable kernel improvement candidate. A derived `_improvements/state.yaml`
+cursor prevents repeat analysis. Detection never includes task creation, sprint
+admission, scheduling, merging, or permission to pause product work.
 
 Install the plugin through the `kc-claude-plugins` marketplace in Claude Code.
 Codex uses the co-shipped `.codex-plugin` manifest and the same skill files.

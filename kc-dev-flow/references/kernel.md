@@ -5,8 +5,10 @@ name: kc-dev-flow-kernel
 # KC Dev Flow Kernel
 
 The kernel is a portable authority and evidence contract. It does not prescribe
-a tracker, Markdown filename, agent harness, CI vendor, PR host, or workflow
-runtime. Adopters bind those locally.
+a tracker, workflow entrypoint path, agent harness, CI vendor, PR host, or workflow
+runtime. An adopter's chosen workflow README binds those roles in its Local Profile,
+and the adopter vendors the kernel plus selected policy mods under that workflow's
+`_mods/` directory.
 
 ## Authority model
 
@@ -61,6 +63,49 @@ The agent cannot author new scope, schedule an unscheduled item, accept a red
 residual, make an irreversible decision, spend beyond its envelope, or merge
 without the declared delivery authority. Empty committed work means the sprint
 needs a scheduling decision; it is not permission to invent work.
+
+## Route discipline
+
+Once a route is accepted, the approved outcome contract is its destination. It
+consists of the recorded end value together with each explicit non-goal,
+value-level acceptance criterion, and falsifier recorded by work-item authority.
+The agent cannot reinterpret it; only the captain may approve its exact revision.
+
+The accepted route remains the default. Its identity is the plan's named
+sufficient seam, counted surface set, and allocation of lifecycle obligations.
+
+A surface is counted plan-locally by an observable lifecycle invariant and its
+scope. It remains independent when its scoped lifecycle state can be violated,
+reconciled, or rolled back independently, or can require a distinct decision or
+action.
+Host and owner are attributes, not identity keys; changes to bound authority stay
+under the Authority model. Packaging, renaming, or relocation alone does not
+establish elimination.
+A claim of fewer surfaces supplies a plan-local pre/post mapping; a fresh reviewer
+under Verification discipline challenges each independence condition above
+against that mapping. Unresolved separability preserves the surface.
+
+The agent must not change the route except to a compatible, sufficient replacement
+when evidence satisfying Verification discipline shows either that the accepted
+route cannot satisfy the approved outcome contract within its constraints, or
+that the replacement has a strictly smaller surface set under that mapping.
+Before execution, a fail-closed mechanical control already declared through the
+Work Control Profile or a fresh reviewer evaluates cumulative change against the
+last accepted route, not only against the immediately preceding edit. Each
+route-change predicate must be enforced by that control or receive the fresh
+reviewer's recorded `PASS` under Verification discipline. Neither form of route
+proof authorizes a captain-owned delta; unproven reversibility remains
+captain-owned under Sprint continuity. Captain acceptance does not substitute for
+route proof.
+
+A question, Ask UI answer, conversational agreement, reviewer suggestion, or
+agent-authored option resolves only the ambiguity it names. It carries captain
+acceptance only when the exact outcome, surface, scope, spend, authority, or
+irreversibility delta is shown and explicitly accepted by the captain. The agent
+must not act on that acceptance until the accepted change is recorded in and
+re-read from the authority that owns the changed field or decision. A response
+that lacks the exact delta has no route-change effect and must not be recorded as
+accepted.
 
 ## Outcome discipline
 
@@ -176,28 +221,44 @@ reports the same way whether or not the thing it watches is broken.
   not execute, remove it from that worker's executable authority through
   `dispatch_hazard_assignment`; a brief is not a control.
 
+## Continuation
+
+At every handoff, record the authoritative work item, current stage, exact source
+revision, accepted evidence, next action, and any unresolved captain-owned
+decision. Re-read the Local Profile and live work-item authority before mutating
+shared state. Implementation completion and fresh validation remain separate claims.
+
 ## Self-improvement
 
-At each sprint boundary, if repeated friction was observed, remind the captain
-once and classify at most one narrow proposal:
+`continue-dev-flow` coordinates bounded self-improvement before routing product work:
 
-- **repository-local** — the defect depends on the adopter's product,
-  architecture, provider, or policy. Route it to the adopter's work-item
-  authority.
-- **reusable kernel** — the defect is portable across adopters. Route it to the
-  kernel source named by the local binding after removing adopter-specific
-  details and checking for an existing issue or change.
+1. Resolve the authoritative debrief home through the repository's execution-state
+   authority and read `_improvements/state.yaml` when present.
+2. Consider only immutable `_debriefs/` records newer than the recorded cursor, up
+   to the most recent three in one run. When more than three are unseen, the older
+   records outside that window are deliberately treated as superseded rather than
+   queued for a later run; record them as skipped before advancing the cursor.
+3. Classify at most one narrow candidate as **repository-local** or **reusable kernel**.
+   Record its observations, expected value, cost, disproof hook,
+   disposition, and the newest debrief consumed; then advance the cursor even when
+   no candidate is proposed.
+4. If no unseen debrief exists, do not rediscover or re-propose an older issue.
+5. Inside the execution-state authority's same single-writer transaction or
+   compare-and-swap that records the result, resolve the debrief home again and
+   verify its locator is unchanged, then re-read and compare the live cursor. A
+   home or cursor mismatch aborts the write and recomputes from live authority.
+   Without atomic comparison or exclusive ownership, report `UNKNOWN` instead of
+   writing.
 
-The proposal cites observations, expected value, cost, and a disproof hook. No
-observed repeated friction means no reminder ritual. Detection never schedules
-or advances improvement work.
+Repository-local candidates route to the adopter's work-item authority. Reusable
+kernel candidates become a reviewable handoff to the installed dev-flow source
+after adopter-specific details and duplicate proposals are removed.
 
-For a reusable kernel proposal, read `upstream_contribution.mode` from the local
-binding. Missing or `propose_only` produces a reviewable proposal or patch
-handoff. `pull_request` permits an isolated, test-first patch and pull request
-to the declared upstream repository after the ownership and duplicate checks.
-It does not grant merge authority, local sprint membership, or permission to
-pause product work unless the defect makes safe delivery impossible.
+The coordination record is derived state, not work-item authority. Detection never
+creates a task, grants sprint membership, merges a change, or pauses product work.
+Only the captain may admit a candidate to work-item or iteration authority. Adopt or
+refit owns installation and updates; `continue-dev-flow` reads the vendored policy
+and never silently rewrites it.
 
 Optional controls are independently declared through the Work Control Profile.
 Undeclared capabilities remain off; adopters add only the control whose risk
