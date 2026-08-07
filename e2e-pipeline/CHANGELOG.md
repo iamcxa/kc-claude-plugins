@@ -3,6 +3,13 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.3.1](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.3.0...e2e-pipeline-v3.3.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* **e2e-pipeline:** sprint S2 — make every green artifact mean what it says ([#122](https://github.com/iamcxa/kc-claude-plugins/issues/122) [#150](https://github.com/iamcxa/kc-claude-plugins/issues/150) [#148](https://github.com/iamcxa/kc-claude-plugins/issues/148) [#121](https://github.com/iamcxa/kc-claude-plugins/issues/121) [#124](https://github.com/iamcxa/kc-claude-plugins/issues/124)) ([#157](https://github.com/iamcxa/kc-claude-plugins/issues/157)) ([fe3c9f4](https://github.com/iamcxa/kc-claude-plugins/commit/fe3c9f4466c2fd8e7688680688b93613b9117b39))
+
 ## [3.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.2.0...e2e-pipeline-v3.3.0) (2026-08-04)
 
 
