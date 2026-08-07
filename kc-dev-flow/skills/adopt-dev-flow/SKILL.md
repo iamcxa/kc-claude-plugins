@@ -5,29 +5,29 @@ description: Use when a brownfield repository needs to adopt, audit, or upgrade 
 
 # Adopt Dev Flow
 
-Establish the smallest local binding to the versioned dev-flow kernel. The
-same procedure applies in Claude Code and Codex; use host-native read, edit,
-test, and review tools without changing the authority model.
+Establish the smallest repository-local adoption of the dev-flow kernel and any
+independently selected policy mods. The same procedure applies in Claude Code and Codex;
+use host-native read, edit, test, and review tools without changing the authority
+model.
 
 ## Required references
 
-Read `../../references/kernel.md` completely. For brownfield adoption, also
-read `../../references/reverse-recovery-audit.md`. Read
-`../../references/work-control-profile.md` only when the repository declares
-or is considering an optional control.
+Read `../../references/kernel.md` completely. For brownfield adoption, also read
+`../../references/reverse-recovery-audit.md`. Read
+`../../references/work-control-profile.md` only when the repository declares or
+is considering an optional control. Read another reference only when the adopter
+is considering that policy mod.
 
 ## Select a mode
 
-- **audit** — default read-only mode; report recovered surfaces, contradictions,
-  and the smallest repair.
-- **adopt** — after the user asks for implementation, add the binding and repair
-  only the confirmed seams.
-- **upgrade** — run the binding checker, then apply only the changed invariants
-  the repository accepts, preserving local bindings. The comparison is the
-  checker's, not yours: reading two documents and judging them the same is the
-  failure this mode exists to prevent.
+- **audit** — default read-only mode; report recovered surfaces,
+  contradictions, and the smallest repair.
+- **adopt** — after the user asks for implementation, bind existing authority in
+  the workflow README and vendor only the selected policy.
+- **upgrade** — compare adopted files with this installed source, present the
+  changed policy for acceptance, and replace accepted files byte-for-byte.
 
-## Procedure
+## Audit before changing anything
 
 1. Read the nearest repository instructions and check live branch, worktree,
    dirty state, shared-state ownership, and current tracker/runtime contracts.
@@ -35,69 +35,66 @@ or is considering an optional control.
    workflow runtime, PR flow, or document merely because its name differs.
 3. Map these authorities with evidence: project context, work items, iteration,
    execution state, delivery, observation, gate verdicts, and scope changes.
-4. Identify contradictions and classify each surface as `WORKING`,
-   `WORKING_UNIT_UNPROVEN`, `EXISTS_BROKEN`, `STUB`, or `MISSING`.
-5. Propose the smallest binding using
-   `../../assets/kernel-binding.template.yaml`. Keep repository-specific adapters
-   local. Copy a portable reference only when the repository needs it.
-6. If implementation is authorized, repair one seam at a time and validate the
-   repository's real enforcement point. Do not claim runtime behavior from a
-   documentation grep.
-7. Write the binding to one machine-readable file the repository owns, carrying
-   `kernel_source`, `kernel_version`, `kernel_entrypoint`, `kernel_digest`, and
-   every adopted optional control. The workflow entrypoint links to that file
-   rather than restating it. The checker refuses a prose filename, an unindented
-   line declaring a key that is not a binding key, and an indented line with no
-   key above it — but a file that is a well-formed binding record reads as one
-   whatever its prose claims, so put the binding where nothing else lives.
-   `kernel_entrypoint` must
-   name a file inside the release's `references/`, which is the set the digest
-   covers. An omitted control remains off. A binding missing the digest or
-   entrypoint is declared but unverifiable, which the checker reports as
-   `UNRESOLVABLE` — a different state from undeclared, and not a lesser one.
-8. If portable improvements may return to the kernel source, record
-   `upstream_contribution.repository`, its package path, and either
-   `propose_only` or `pull_request`. Omission defaults to `propose_only`.
-9. Run the checker and record its outcome. Do not compute `kernel_digest` by
-   hand: leave the field out, run the checker, and copy the
-   `verify-binding:expected-digest:` value it prints for the named release.
+4. Classify each relevant surface as `WORKING`, `WORKING_UNIT_UNPROVEN`,
+   `EXISTS_BROKEN`, `STUB`, or `MISSING`. Repair the cheapest compatible seam;
+   only confirmed `MISSING` capability is greenfield.
 
-## Upgrade procedure
+## Adopt
 
-Run the checker before reading anything, and let its outcome pick the path:
+1. Add a concise `## Local Profile` to the repository's existing workflow
+   README. It binds the local locators for project context, work items,
+   iteration, execution state, delivery, gate verdicts, scope changes, and any
+   observation source. A missing optional observation source is written as
+   `none`; it is never allowed to become delivery authority.
+2. In each lifecycle stage section, add `Policy mods:` followed by the selected
+   local `_mods/` paths, or `Policy mods: none`. The list is the stage's policy
+   selection; merely finding a file in `_mods/` does not activate it.
+3. Create the workflow's `_mods/` directory if needed and vendor
+   `../../references/kernel.md` as `_mods/kernel.md` byte-for-byte. Vendor each
+   explicitly selected policy mod under `_mods/` with the same basename.
+4. Keep repository-specific mechanisms and exceptions in the workflow README.
+   Never edit a vendored file to encode local policy. File presence records
+   adoption; do not add a second status registry.
+5. Validate the real local enforcement point and the repository's normal gates.
+   A documentation grep does not prove runtime behavior.
 
-```
-python3 <installed kc-dev-flow>/scripts/verify-binding.py <binding file>
-```
+The Local Profile is the binding. No binding YAML, digest, package fallback, or
+ambient runtime hook is part of this design.
 
-It takes no package path; it resolves `kernel_source` against the installed
-releases itself. Exit is non-zero on every outcome except `PASS`.
+## Upgrade
 
-- `PASS` — the pinned release is the newest installed and its bytes match.
-  Nothing to upgrade. Report and stop.
-- `STALE_COMPATIBLE` — a newer release exists and no file in its reference set
-  changed. Update `kernel_version` alone; the digest already matches. Nothing
-  normative moved, so no local text changes.
-- `REBIND_REQUIRED` — either the binding disagrees with the release it names, or
-  a newer release changed the reference set. Read the entrypoint the checker
-  printed, diff the whole `references/` directory against the pinned release's
-  copy, and bring the repository the changed invariants **one at a time**, each
-  as a change the captain can accept or refuse. Update `kernel_version` and
-  `kernel_digest` only after the accepted invariants have landed.
-- `UNRESOLVABLE` — stop. Do not guess a binding, do not synthesise one from
-  fields found elsewhere, and do not treat a missing release as an up-to-date
-  one. Report the reason the checker gave and leave state unchanged.
+1. Re-run the audit and recover the Local Profile before comparing files.
+2. Compare local `_mods/kernel.md` with `../../references/kernel.md`, then compare
+   each adopted policy mod with the installed reference of the same basename.
+   A missing local kernel or a missing stage-selected mod is a refit requirement,
+   not permission to read the installed file at runtime.
+3. For every changed file, explain the changed invariants one at a time. The
+   repository's captain may accept the complete canonical file or retain the old
+   local version and record a local exception in the Local Profile. Do not create
+   a locally edited hybrid.
+4. Replace each accepted file byte-for-byte and rerun local gates. Do not delete
+   an unselected or retired mod, and do not change any stage's `Policy mods`
+   declaration, unless that change is explicitly part of the approved upgrade.
 
-Never rewrite a local contract to match the kernel wholesale. The upgrade is the
-set of invariants the repository accepts, and a rejected invariant is recorded as
-a local exception rather than silently dropped.
+## Legacy migration
+
+A legacy kernel-binding file is migration evidence, not live authority. Recover
+its locators and selected controls. Before removal, record an itemized migration
+receipt: every legacy authority or control, whether it remains in force, and its
+exact Local Profile row, stage `Policy mods` declaration, or local enforcement
+point. Any in-force entry without a unique destination stops the migration.
+Immediately before removal, re-read the legacy source and every mapped destination;
+if any bytes or in-force entries changed, rebuild and revalidate the receipt.
+Remove the binding plus verifier references only after that final comparison and
+in the same approved migration slice. Do not keep both mechanisms active.
 
 ## Authority boundary
 
-The audit may produce one narrow improvement proposal with evidence and a
-disproof hook. Do not create, schedule, advance, or merge a process-improvement
-task merely because the audit found a problem. The repository's captain or
-named scheduling authority decides whether it enters a sprint.
+The audit may produce one narrow improvement proposal with observations,
+expected value, cost, and a disproof hook. Do not create, schedule, advance, or merge
+a process-improvement task merely because the audit found a problem. The
+repository's captain or named scheduling authority decides whether it enters a
+sprint.
 
 Never add a parallel status mirror. If authority cannot be established, stop
 with `UNKNOWN`, name the missing evidence, and leave existing state unchanged.

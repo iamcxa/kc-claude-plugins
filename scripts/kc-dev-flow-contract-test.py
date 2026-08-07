@@ -30,44 +30,28 @@ required_files = [
     PLUGIN / "skills/adopt-dev-flow/SKILL.md",
     PLUGIN / "skills/continue-dev-flow/SKILL.md",
     PLUGIN / "references/kernel.md",
+    PLUGIN / "references/project-context-maintenance.md",
     PLUGIN / "references/reverse-recovery-audit.md",
     PLUGIN / "references/work-control-profile.md",
-    PLUGIN / "assets/kernel-binding.template.yaml",
-    PLUGIN / "scripts/verify-binding.py",
     PLUGIN / "scripts/absolutes-check.py",
     PLUGIN / "references/absolutes.registry",
 ]
 for required_file in required_files:
     require(required_file.is_file(), f"missing {required_file.relative_to(ROOT)}")
 
-# The binding checker is the package's only executable part, and the binding
-# template plus the adopt skill both instruct adopters to run it from the
-# installed package. Packaging is whole-directory, so it ships by default —
-# which means nothing would notice if it stopped. Require both that it is
-# present and that it is runnable.
-verifier = PLUGIN / "scripts/verify-binding.py"
-for script in ("scripts/verify-binding.py", "scripts/absolutes-check.py"):
-    require((PLUGIN / script).stat().st_mode & 0o111, f"{script} is not executable")
-for caller in (PLUGIN / "assets/kernel-binding.template.yaml", PLUGIN / "skills/adopt-dev-flow/SKILL.md"):
-    require(
-        "scripts/verify-binding.py" in caller.read_text(encoding="utf-8"),
-        f"{caller.relative_to(ROOT)} no longer names the checker adopters are told to run",
-    )
-
-# The checker accepts only a fixed set of top-level keys, and the template is
-# what adopters copy. A key added to one and not the other makes the shipped
-# template unreadable by the shipped checker, which nothing else would notice.
-allowed = re.search(r"BINDING_KEYS = frozenset\(\s*\((.*?)\)\s*\)", verifier.read_text(encoding="utf-8"), re.S)
-require(allowed is not None, "scripts/verify-binding.py no longer declares BINDING_KEYS")
-allowed_keys = set(re.findall(r'"([a-z_]+)"', allowed.group(1)))
-template_keys = set(
-    re.findall(r"^([A-Za-z_][A-Za-z0-9_.\-]*):", (PLUGIN / "assets/kernel-binding.template.yaml").read_text(encoding="utf-8"), re.M)
-)
 require(
-    template_keys == allowed_keys,
-    "kernel-binding.template.yaml and verify-binding.py disagree on the binding keys: "
-    f"template-only {sorted(template_keys - allowed_keys)}, checker-only {sorted(allowed_keys - template_keys)}",
+    (PLUGIN / "scripts/absolutes-check.py").stat().st_mode & 0o111,
+    "scripts/absolutes-check.py is not executable",
 )
+
+for legacy in [
+    PLUGIN / "assets/kernel-binding.template.yaml",
+    PLUGIN / "scripts/verify-binding.py",
+    ROOT / "scripts/verify-binding.test.sh",
+    ROOT / "docs/dev/kernel-binding.yaml",
+    ROOT / "docs/dev/_mods/STATUS.md",
+]:
+    require(not legacy.exists(), f"legacy distribution artifact remains: {legacy.relative_to(ROOT)}")
 
 claude_manifest = load_json(required_files[0])
 codex_manifest = load_json(required_files[1])
@@ -111,6 +95,9 @@ for phrase in [
     "Do not create, schedule, advance, or merge",
     "one narrow improvement proposal",
     "Claude Code and Codex",
+    "Local Profile",
+    "byte-for-byte",
+    "_mods/",
 ]:
     require(phrase in adopt_skill, f"adopt skill is missing boundary: {phrase}")
 
@@ -123,10 +110,63 @@ for phrase in [
     "Claude Code and Codex",
     "repository-local",
     "reusable kernel",
-    "upstream_contribution",
-    "Do not merge the upstream pull request",
+    "_mods/kernel.md",
+    "Policy mods",
+    "_improvements/state.yaml",
+    "no unseen debrief",
+    "Inside the same transaction",
 ]:
     require(phrase in continue_skill, f"continue skill is missing boundary: {phrase}")
+
+runtime_docs = {
+    "adopt skill": adopt_skill,
+    "continue skill": continue_skill,
+    "package README": (PLUGIN / "README.md").read_text(encoding="utf-8"),
+    "workflow README": (ROOT / "docs/dev/README.md").read_text(encoding="utf-8"),
+}
+for label, content in runtime_docs.items():
+    for legacy_reference in [
+        "verify-binding.py",
+        "kernel-binding.yaml",
+        "kernel-binding.template.yaml",
+    ]:
+        require(
+            legacy_reference not in content,
+            f"{label} still instructs the legacy distribution path: {legacy_reference}",
+        )
+
+workflow = (ROOT / "docs/dev/README.md").read_text(encoding="utf-8")
+for phrase in [
+    "## Local Profile",
+    "| Project context |",
+    "| Work items |",
+    "| Iteration |",
+    "| Execution state |",
+    "| Delivery |",
+    "| Gate verdicts |",
+    "| Scope and irreversibility |",
+    "| Observation |",
+    "No binding YAML",
+]:
+    require(phrase in workflow, f"self-adoption is missing Local Profile boundary: {phrase}")
+
+stage_headings = [
+    "### `backlog`",
+    "### `ideation`",
+    "### `implementation`",
+    "### `validation`",
+    "### `done`",
+]
+for heading in stage_headings:
+    start = workflow.find(heading)
+    require(start >= 0, f"self-adoption is missing stage: {heading}")
+    end = workflow.find("### `", start + len(heading))
+    if end < 0:
+        end = len(workflow)
+    require(
+        "Policy mods:" in workflow[start:end],
+        f"self-adoption stage is missing Policy mods: {heading}",
+    )
 
 kernel = required_files[4].read_text(encoding="utf-8")
 for phrase in [
@@ -137,28 +177,14 @@ for phrase in [
     "Observation is not authority",
     "backlog → ideation → implementation → validation → done",
     "smallest sufficient route",
-    "At each sprint boundary",
+    "before routing product work",
     "repository-local",
     "reusable kernel",
-    "`propose_only`",
-    "`pull_request`",
+    "_improvements/state.yaml",
+    "newer than the recorded cursor",
+    "compare-and-swap",
 ]:
     require(phrase in kernel, f"kernel is missing invariant: {phrase}")
-
-binding = required_files[7].read_text(encoding="utf-8")
-for field in [
-    "kernel_source:",
-    "kernel_version:",
-    "project_context:",
-    "work_items:",
-    "iteration:",
-    "execution_state:",
-    "delivery:",
-    "observation:",
-    "upstream_contribution:",
-    "adopted_controls:",
-]:
-    require(field in binding, f"local binding is missing {field}")
 
 # The kernel requires an absolute to name its enforcement point or be rewritten
 # as a bounded claim, and that rule had none of its own. Four hand-audits of one

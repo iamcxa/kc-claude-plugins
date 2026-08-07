@@ -25,9 +25,20 @@ e64c1752d3250f60	prohibition	kernel.md:127 — duty on whoever offers the check 
 2048f4524bd474b8	bounded	kernel.md:134 — bounded to assertions over sampled inputs
 98f57a3339f2d139	prohibition	kernel.md:155 — duty to prefer; 'no cheap check can settle' is the condition, not a claim
 1a4f588dd1f3fb24	prohibition	kernel.md:159 — duty on the fresh reviewer, who is the named owner of the decision
-1c0edea006fd053e	prohibition	kernel.md:191 — forbids detection from scheduling; duty on the detecting agent
-942f14f946ed8d80	prohibition	kernel.md:195 — condition on a permission, not a claim about what is possible
-f8817bbe79459c71	prohibition	kernel.md:202 — duty on the adopter; undeclared-off is the declared default
+99628c13b2858948	prohibition	kernel.md:182 — handoff duty on the actor transferring or resuming execution state
+05f1724a9f48029d	prohibition	kernel.md:194 — bounds the continuing actor to a transparent three-record window and records superseded inputs
+c57b0f71c51a17b2	prohibition	kernel.md:212 — forbids self-improvement detection from exercising work, sprint, merge, or pause authority
+f8817bbe79459c71	prohibition	kernel.md:219 — duty on the adopter; undeclared-off is the declared default
+3b748d1b548c1708	prohibition	project-context-maintenance.md:24 — classification and same-slice maintenance duty on every approved task
+5e773bf2210743fc	bounded	project-context-maintenance.md:32 — none is explicitly scoped to claims in the single bound project context
+6f375c5a881a2867	prohibition	project-context-maintenance.md:54 — stage table assigns each lifecycle obligation to its stage actor
+5f333ed4e28f1051	bounded	project-context-maintenance.md:67 — example schema enumerates receipt values rather than asserting repository state
+4ccd856a00aef4f5	bounded	project-context-maintenance.md:80 — field rules are bounded to a receipt classified as none or update
+3b85f1fa325e9c9e	prohibition	project-context-maintenance.md:90 — limits implementation workers to claims already authorized by approved scope
+7b449737f470fa34	prohibition	project-context-maintenance.md:93 — forbids the receipt from competing with bound project-context authority
+cbe9e342041f0453	prohibition	project-context-maintenance.md:107 — automation proposal and authorization limits assigned to adopters
+364ad5b78bfdd122	prohibition	project-context-maintenance.md:115 — adoption duty to declare the mod on each applicable stage
+bedb861fa58bc6a7	prohibition	project-context-maintenance.md:116 — adoption duty to exercise both classifications before automation is proposed
 a90075d05a4dea6e	prohibition	reverse-recovery-audit.md:1 — frontmatter restating the document's own duty
 50bb04ee893f51db	bounded	reverse-recovery-audit.md:15 — bounded to brownfield codebases, stated in the first clause
 9955b6cc487b1203	prohibition	reverse-recovery-audit.md:26 — the document's central duty

@@ -5,8 +5,10 @@ name: kc-dev-flow-kernel
 # KC Dev Flow Kernel
 
 The kernel is a portable authority and evidence contract. It does not prescribe
-a tracker, Markdown filename, agent harness, CI vendor, PR host, or workflow
-runtime. Adopters bind those locally.
+a tracker, workflow entrypoint path, agent harness, CI vendor, PR host, or workflow
+runtime. An adopter's chosen workflow README binds those roles in its Local Profile,
+and the adopter vendors the kernel plus selected policy mods under that workflow's
+`_mods/` directory.
 
 ## Authority model
 
@@ -176,28 +178,44 @@ reports the same way whether or not the thing it watches is broken.
   not execute, remove it from that worker's executable authority through
   `dispatch_hazard_assignment`; a brief is not a control.
 
+## Continuation
+
+At every handoff, record the authoritative work item, current stage, exact source
+revision, accepted evidence, next action, and any unresolved captain-owned
+decision. Re-read the Local Profile and live work-item authority before mutating
+shared state. Implementation completion and fresh validation remain separate claims.
+
 ## Self-improvement
 
-At each sprint boundary, if repeated friction was observed, remind the captain
-once and classify at most one narrow proposal:
+`continue-dev-flow` coordinates bounded self-improvement before routing product work:
 
-- **repository-local** — the defect depends on the adopter's product,
-  architecture, provider, or policy. Route it to the adopter's work-item
-  authority.
-- **reusable kernel** — the defect is portable across adopters. Route it to the
-  kernel source named by the local binding after removing adopter-specific
-  details and checking for an existing issue or change.
+1. Resolve the authoritative debrief home through the repository's execution-state
+   authority and read `_improvements/state.yaml` when present.
+2. Consider only immutable `_debriefs/` records newer than the recorded cursor, up
+   to the most recent three in one run. When more than three are unseen, the older
+   records outside that window are deliberately treated as superseded rather than
+   queued for a later run; record them as skipped before advancing the cursor.
+3. Classify at most one narrow candidate as **repository-local** or **reusable kernel**.
+   Record its observations, expected value, cost, disproof hook,
+   disposition, and the newest debrief consumed; then advance the cursor even when
+   no candidate is proposed.
+4. If no unseen debrief exists, do not rediscover or re-propose an older issue.
+5. Inside the execution-state authority's same single-writer transaction or
+   compare-and-swap that records the result, resolve the debrief home again and
+   verify its locator is unchanged, then re-read and compare the live cursor. A
+   home or cursor mismatch aborts the write and recomputes from live authority.
+   Without atomic comparison or exclusive ownership, report `UNKNOWN` instead of
+   writing.
 
-The proposal cites observations, expected value, cost, and a disproof hook. No
-observed repeated friction means no reminder ritual. Detection never schedules
-or advances improvement work.
+Repository-local candidates route to the adopter's work-item authority. Reusable
+kernel candidates become a reviewable handoff to the installed dev-flow source
+after adopter-specific details and duplicate proposals are removed.
 
-For a reusable kernel proposal, read `upstream_contribution.mode` from the local
-binding. Missing or `propose_only` produces a reviewable proposal or patch
-handoff. `pull_request` permits an isolated, test-first patch and pull request
-to the declared upstream repository after the ownership and duplicate checks.
-It does not grant merge authority, local sprint membership, or permission to
-pause product work unless the defect makes safe delivery impossible.
+The coordination record is derived state, not work-item authority. Detection never
+creates a task, grants sprint membership, merges a change, or pauses product work.
+Only the captain may admit a candidate to work-item or iteration authority. Adopt or
+refit owns installation and updates; `continue-dev-flow` reads the vendored policy
+and never silently rewrites it.
 
 Optional controls are independently declared through the Work Control Profile.
 Undeclared capabilities remain off; adopters add only the control whose risk
