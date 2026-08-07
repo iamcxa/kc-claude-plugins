@@ -113,10 +113,25 @@ for phrase in [
     "_mods/kernel.md",
     "Policy mods",
     "_improvements/state.yaml",
+    "If no debrief home is bound",
     "no unseen debrief",
     "Inside the same transaction",
 ]:
     require(phrase in continue_skill, f"continue skill is missing boundary: {phrase}")
+require(
+    "If none or multiple candidates remain" not in continue_skill,
+    "continue skill still blocks product work when no debrief home exists",
+)
+
+project_context_mod = required_files[5].read_text(encoding="utf-8")
+require(
+    "`work-context-protocol`" not in project_context_mod,
+    "project-context-maintenance references an unshipped work-context-protocol",
+)
+require(
+    "`kernel.md` Authority model" in project_context_mod,
+    "project-context-maintenance does not name the shipped project-context binding policy",
+)
 
 runtime_docs = {
     "adopt skill": adopt_skill,

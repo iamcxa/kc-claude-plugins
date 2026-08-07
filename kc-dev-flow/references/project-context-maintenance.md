@@ -96,8 +96,7 @@ classifications, validation executes `planned_check` and replaces pending
 ## Non-goals
 
 - No automatic rewriting, generated prose, watcher, lifecycle hook, or background
-  job. The lifecycle-automation allowance in `work-context-protocol` does not extend
-  to this receipt; the responsible stage worker or validator writes each field.
+  job. The responsible stage worker or validator writes each field.
 - No mandatory filename, document format, tracker, or documentation site.
 - No second product-context document, decision ledger, or mirrored task state.
 - No general documentation refresh unrelated to the approved behavior change.
@@ -109,8 +108,8 @@ stage obligation is insufficient. Adoption of this v1 mod does not authorize it.
 
 ## Adoption
 
-1. Confirm the repository has bound `project_context` per
-   `work-context-protocol`.
+1. Confirm the repository has bound `project_context` under the
+   `kernel.md` Authority model.
 2. Vendor this file under the workflow's `_mods/` directory.
 3. List the mod on every stage with a non-`None` obligation in the stage table.
 4. Exercise one `none` task and one `update` task before proposing automation.

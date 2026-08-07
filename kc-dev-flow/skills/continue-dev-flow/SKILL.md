@@ -32,10 +32,12 @@ instructions decide the concrete tracker, runtime, and evidence tools.
 ## Consume debrief evidence once
 
 Before routing product work, resolve one authoritative `_debriefs/` home through
-execution-state authority. If none or multiple candidates remain, stop with
-`UNKNOWN`, name the ambiguity, and require adoption/refit before continuing.
-Read its sibling `_improvements/state.yaml` when present; absence means there is
-no cursor yet. This is derived coordination state with the following minimum shape:
+execution-state authority. If no debrief home is bound, treat that as no unseen
+debrief: perform no analysis, write no improvement state, and continue to product
+routing. If multiple candidates remain, stop with `UNKNOWN`, name the ambiguity,
+and require adoption/refit before continuing. When one home resolves, read its
+sibling `_improvements/state.yaml` when present; absence means there is no cursor
+yet. This is derived coordination state with the following minimum shape:
 
 ```yaml
 schema: kc-dev-flow-improvements/v1
