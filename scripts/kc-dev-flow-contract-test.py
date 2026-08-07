@@ -186,6 +186,26 @@ for phrase in [
 ]:
     require(phrase in kernel, f"kernel is missing invariant: {phrase}")
 
+route_discipline = kernel.find("## Route discipline")
+require(route_discipline >= 0, "kernel is missing Route discipline")
+require(
+    kernel.find("## Sprint continuity and autonomy")
+    < route_discipline
+    < kernel.find("## Outcome discipline"),
+    "Route discipline is not between Sprint continuity and Outcome discipline",
+)
+for phrase in [
+    "approved outcome contract is its destination",
+    "last accepted route",
+    "observable lifecycle invariant",
+    "plan-local pre/post mapping",
+    "Work Control Profile",
+    "reviewer's recorded `PASS`",
+    "resolves only the ambiguity it names",
+    "authority that owns the changed field or decision",
+]:
+    require(phrase in kernel, f"Route discipline is missing invariant: {phrase}")
+
 # The kernel requires an absolute to name its enforcement point or be rewritten
 # as a bounded claim, and that rule had none of its own. Four hand-audits of one
 # file each found a different subset, so the registry replaces re-reading: every

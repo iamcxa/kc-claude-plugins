@@ -64,6 +64,49 @@ residual, make an irreversible decision, spend beyond its envelope, or merge
 without the declared delivery authority. Empty committed work means the sprint
 needs a scheduling decision; it is not permission to invent work.
 
+## Route discipline
+
+Once a route is accepted, the approved outcome contract is its destination. It
+consists of the recorded end value together with each explicit non-goal,
+value-level acceptance criterion, and falsifier recorded by work-item authority.
+The agent cannot reinterpret it; only the captain may approve its exact revision.
+
+The accepted route remains the default. Its identity is the plan's named
+sufficient seam, counted surface set, and allocation of lifecycle obligations.
+
+A surface is counted plan-locally by an observable lifecycle invariant and its
+scope. It remains independent when its scoped lifecycle state can be violated,
+reconciled, or rolled back independently, or can require a distinct decision or
+action.
+Host and owner are attributes, not identity keys; changes to bound authority stay
+under the Authority model. Packaging, renaming, or relocation alone does not
+establish elimination.
+A claim of fewer surfaces supplies a plan-local pre/post mapping; a fresh reviewer
+under Verification discipline challenges each independence condition above
+against that mapping. Unresolved separability preserves the surface.
+
+The agent must not change the route except to a compatible, sufficient replacement
+when evidence satisfying Verification discipline shows either that the accepted
+route cannot satisfy the approved outcome contract within its constraints, or
+that the replacement has a strictly smaller surface set under that mapping.
+Before execution, a fail-closed mechanical control already declared through the
+Work Control Profile or a fresh reviewer evaluates cumulative change against the
+last accepted route, not only against the immediately preceding edit. Each
+route-change predicate must be enforced by that control or receive the fresh
+reviewer's recorded `PASS` under Verification discipline. Neither form of route
+proof authorizes a captain-owned delta; unproven reversibility remains
+captain-owned under Sprint continuity. Captain acceptance does not substitute for
+route proof.
+
+A question, Ask UI answer, conversational agreement, reviewer suggestion, or
+agent-authored option resolves only the ambiguity it names. It carries captain
+acceptance only when the exact outcome, surface, scope, spend, authority, or
+irreversibility delta is shown and explicitly accepted by the captain. The agent
+must not act on that acceptance until the accepted change is recorded in and
+re-read from the authority that owns the changed field or decision. A response
+that lacks the exact delta has no route-change effect and must not be recorded as
+accepted.
+
 ## Outcome discipline
 
 - Every item names the end value it exists to produce. Each acceptance criterion
