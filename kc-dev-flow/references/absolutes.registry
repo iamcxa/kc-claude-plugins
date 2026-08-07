@@ -39,9 +39,9 @@ e7ad37f84d560a85	prohibition	kernel.md:88 — pre-execution route-change duties 
 4ccd856a00aef4f5	bounded	project-context-maintenance.md:80 — field rules are bounded to a receipt classified as none or update
 3b85f1fa325e9c9e	prohibition	project-context-maintenance.md:90 — limits implementation workers to claims already authorized by approved scope
 7b449737f470fa34	prohibition	project-context-maintenance.md:93 — forbids the receipt from competing with bound project-context authority
-cbe9e342041f0453	prohibition	project-context-maintenance.md:107 — automation proposal and authorization limits assigned to adopters
-364ad5b78bfdd122	prohibition	project-context-maintenance.md:115 — adoption duty to declare the mod on each applicable stage
-bedb861fa58bc6a7	prohibition	project-context-maintenance.md:116 — adoption duty to exercise both classifications before automation is proposed
+cbe9e342041f0453	prohibition	project-context-maintenance.md:106 — automation proposal and authorization limits assigned to adopters
+364ad5b78bfdd122	prohibition	project-context-maintenance.md:114 — adoption duty to declare the mod on each applicable stage
+bedb861fa58bc6a7	prohibition	project-context-maintenance.md:115 — adoption duty to exercise both classifications before automation is proposed
 a90075d05a4dea6e	prohibition	reverse-recovery-audit.md:1 — frontmatter restating the document's own duty
 50bb04ee893f51db	bounded	reverse-recovery-audit.md:15 — bounded to brownfield codebases, stated in the first clause
 9955b6cc487b1203	prohibition	reverse-recovery-audit.md:26 — the document's central duty

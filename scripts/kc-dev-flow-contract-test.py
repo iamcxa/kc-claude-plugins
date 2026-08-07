@@ -116,11 +116,16 @@ for phrase in [
     "If no debrief home is bound",
     "no unseen debrief",
     "Inside the same transaction",
+    "report `UNKNOWN`, skip the improvement write, and continue to product routing",
 ]:
     require(phrase in continue_skill, f"continue skill is missing boundary: {phrase}")
 require(
     "If none or multiple candidates remain" not in continue_skill,
     "continue skill still blocks product work when no debrief home exists",
+)
+require(
+    "stop with `UNKNOWN` instead of risking an overwrite" not in continue_skill,
+    "continue skill still lets self-improvement storage block product routing",
 )
 
 project_context_mod = required_files[5].read_text(encoding="utf-8")

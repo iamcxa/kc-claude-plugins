@@ -67,8 +67,7 @@ last_run:
    writes the new state, resolve the debrief home again and verify the locator is
    unchanged, then re-read and compare the live cursor. A home or cursor mismatch
    aborts the write and recomputes from live authority; if the authority provides
-   neither atomic comparison nor exclusive ownership, stop with `UNKNOWN`
-   instead of risking an overwrite.
+   neither atomic comparison nor exclusive ownership, report `UNKNOWN`, skip the improvement write, and continue to product routing.
 5. Route a repository-local candidate to the existing work-item authority. A
    reusable kernel candidate becomes a sanitized handoff to the installed
    dev-flow source. Detection does not create or schedule a task, grant sprint
