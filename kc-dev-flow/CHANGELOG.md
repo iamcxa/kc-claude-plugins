@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v1.2.0...kc-dev-flow-v1.3.0) (2026-08-07)
+
+
+### Features
+
+* **kc-dev-flow:** distribute policy through vendored mods ([#167](https://github.com/iamcxa/kc-claude-plugins/issues/167)) ([2e086b3](https://github.com/iamcxa/kc-claude-plugins/commit/2e086b387713dbfd12db38285fc452953f7dadd5))
+* **kc-dev-flow:** give the absolutes rule an enforcement point of its own ([#164](https://github.com/iamcxa/kc-claude-plugins/issues/164)) ([f633bb9](https://github.com/iamcxa/kc-claude-plugins/commit/f633bb9ce889f25203f87230a8cc0275512941d3))
+* **kc-dev-flow:** give the stopping decision an owner, and take the hazard off the path ([#159](https://github.com/iamcxa/kc-claude-plugins/issues/159)) ([04ffece](https://github.com/iamcxa/kc-claude-plugins/commit/04ffece5133286b9f1e601452647bd4a0e89ac4e))
+
 ## [1.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v1.1.0...kc-dev-flow-v1.2.0) (2026-08-04)
 
 

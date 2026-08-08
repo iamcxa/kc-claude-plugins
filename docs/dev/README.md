@@ -47,7 +47,7 @@ implementation, and a terminal merge. The spacedock binary owns all runtime
 semantics: stage transitions, gate records, worktree lifecycle, state
 durability, exactly-once approval. This README owns judgment discipline only.
 
-## Kernel binding
+## Local Profile
 
 The portable authority and evidence contract is
 [`_mods/kernel.md`](./_mods/kernel.md), vendored byte-identically from
@@ -55,28 +55,31 @@ The portable authority and evidence contract is
 `scripts/kc-dev-flow-contract-test.py`. Read it as the authority; this README
 adds the local mechanism the kernel deliberately does not prescribe.
 
-The binding itself is [`kernel-binding.yaml`](./kernel-binding.yaml) — authority
-map, adopted controls, local routes and exceptions. It is not restated here, so
-there is one place to read and one place to change.
+| Role | Bound local authority |
+|---|---|
+| Project context | `PRODUCT.md` and `ARCHITECTURE.md` at the repository root; `CLAUDE.md` for repository-wide conventions |
+| Work items | Spacedock entities under `docs/dev/`, queried with `spacedock status --workflow-dir docs/dev` |
+| Iteration | `docs/dev/ROADMAP.md` sprint headings written by the captain; never a task-state mirror |
+| Execution state | `docs/dev/.spacedock-state`, owned by the Spacedock binary |
+| Delivery | Squash merge to `main` through a GitHub pull request with required checks; release-please owns versions and tags |
+| Gate verdicts | Fresh EM or reviewer under this README's `Gate Authority` section |
+| Scope and irreversibility | Captain |
+| Observation | This README's `Workflow cost record`; it is a note to the captain, never a gate, and an empty record is not a defect |
 
-This repository authors the kernel, so two things hold separately and reading
-them as one misreads the checker:
+The normal route is `backlog → ideation → implementation → validation → done`.
+A known-cause defect with a mechanical acceptance test may skip ideation while
+keeping every other bar. The adopted optional control is
+`bound_field_validation`; its local mechanism remains in this README and
+`scripts/dev-flow-work-context-check.py`.
 
-- **Authority is the in-tree copy above**, and its enforcement point is
-  `scripts/kc-dev-flow-contract-test.py` running on every PR as a required
-  check. That is a stricter hold than an adopter's, which is a checker someone
-  remembers to run.
-- **The pin tracks releases.** `verify-binding.py` never reads the working tree,
-  so a `PASS` means the pin agrees with the *installed package* and says nothing
-  about the in-tree kernel — which is normally ahead of the newest release.
-  Editing the kernel does not move that reading; the contract test catches it.
+This repository authors `kc-dev-flow`, so the canonical package references and
+the locally adopted copies are intentionally separate. The contract test checks
+the adopted kernel, reverse-recovery audit, and Work Control Profile
+byte-for-byte. Local policy stays here, not inside those files. No binding YAML,
+digest pin, status registry, or package fallback participates in continuation.
 
-Verify the pin rather than read it — from a release that ships the checker;
-`kc-dev-flow` 1.0.0 does not:
-
-```
-python3 <installed kc-dev-flow>/scripts/verify-binding.py docs/dev/kernel-binding.yaml
-```
+Local exception: there is no ledger. The workflow cost record replaced it, and
+two of the three terms of the former bar are not observable from this runtime.
 
 ## File Naming
 
@@ -144,83 +147,14 @@ non-holder or from a detached substitute. Before each lifecycle action — and
 again after an approval pause — run this complete check as a new command:
 
 ```bash
-REPO_DISCOVERED=$(git rev-parse --show-toplevel) || exit 1
-REPO=$(cd "$REPO_DISCOVERED" && pwd -P) || exit 1
-WORKFLOW_LITERAL="$REPO/docs/dev"
-WORKFLOW_DIR=$(cd "$WORKFLOW_LITERAL" && pwd -P) || exit 1
-test "$WORKFLOW_DIR" = "$WORKFLOW_LITERAL" || exit 1
-STATE="$WORKFLOW_DIR/.spacedock-state"
-
-WORKTREES=$(git -C "$REPO" worktree list --porcelain) || exit 1
-HOLDERS=$(printf '%s\n' "$WORKTREES" | awk '
-  BEGIN { RS=""; FS="\n" }
-  {
-    path=""; branch=""
-    for (i = 1; i <= NF; i++) {
-      if ($i ~ /^worktree /) path=substr($i, 10)
-      if ($i ~ /^branch /) branch=substr($i, 8)
-    }
-    if (branch == "refs/heads/spacedock-state/dev") print path
-  }
-')
-HOLDER_COUNT=$(printf '%s\n' "$HOLDERS" |
-  awk 'NF { count++ } END { print count + 0 }') || exit 1
-if test "$HOLDER_COUNT" -ne 1 || test "$HOLDERS" != "$STATE"; then
-  echo "lifecycle requires the registered state holder: ${HOLDERS:-<none>}" >&2
-  exit 1
-fi
-if test -L "$STATE"; then
-  echo "lifecycle state path must not be a symlink: $STATE" >&2
-  exit 1
-fi
-
-STATE_TOP_DISCOVERED=$(git -C "$STATE" rev-parse --show-toplevel) || exit 1
-STATE_TOP=$(cd "$STATE_TOP_DISCOVERED" && pwd -P) || exit 1
-REPO_COMMON_DISCOVERED=$(git -C "$REPO" rev-parse \
-  --path-format=absolute --git-common-dir) || exit 1
-REPO_COMMON=$(cd "$REPO_COMMON_DISCOVERED" && pwd -P) || exit 1
-STATE_COMMON_DISCOVERED=$(git -C "$STATE" rev-parse \
-  --path-format=absolute --git-common-dir) || exit 1
-STATE_COMMON=$(cd "$STATE_COMMON_DISCOVERED" && pwd -P) || exit 1
-test "$STATE_TOP" = "$STATE" || exit 1
-test "$STATE_COMMON" = "$REPO_COMMON" || exit 1
-STATE_BRANCH=$(git -C "$STATE" symbolic-ref --quiet --short HEAD) || exit 1
-test "$STATE_BRANCH" = spacedock-state/dev || exit 1
-STATE_REF=refs/heads/spacedock-state/dev
-git -C "$STATE" fetch --no-tags origin "$STATE_REF" || exit 1
-REMOTE_TIP=$(git -C "$STATE" rev-parse 'FETCH_HEAD^{commit}') || exit 1
-LOCAL_HEAD=$(git -C "$STATE" rev-parse 'HEAD^{commit}') || exit 1
-if test "$LOCAL_HEAD" = "$REMOTE_TIP"; then
-  STATE_RELATION=equal
-elif git -C "$STATE" merge-base --is-ancestor "$REMOTE_TIP" "$LOCAL_HEAD"; then
-  STATE_RELATION=ahead
-elif git -C "$STATE" merge-base --is-ancestor "$LOCAL_HEAD" "$REMOTE_TIP"; then
-  STATE_RELATION=behind
-else
-  STATE_RELATION=diverged
-fi
-STATE_DIRTY=$(git -C "$STATE" status --porcelain) || exit 1
-if test -n "$STATE_DIRTY"; then
-  echo "dirty holder ($STATE_RELATION); run attributable recovery" >&2
-  exit 75
-fi
-case "$STATE_RELATION" in
-  equal) ;;
-  behind)
-    git -C "$STATE" merge --ff-only "$REMOTE_TIP" || exit 1
-    test "$(git -C "$STATE" rev-parse 'HEAD^{commit}')" = "$REMOTE_TIP" ||
-      exit 1
-    ;;
-  ahead)
-    echo "holder has unpushed commits; run outgoing recovery" >&2
-    exit 76
-    ;;
-  diverged)
-    echo "holder and remote state diverged; run outgoing recovery" >&2
-    exit 77
-    ;;
-esac
+scripts/dev-flow-state-prereq.sh          # or: … <workflow-dir>
 ```
+
+This was 76 lines of shell in this document until it was saved as a program it
+already was — it had exit codes, stderr, and named failure modes, and none of
+them could run or be tested from here. `scripts/dev-flow-state-prereq.test.sh`
+covers the refusal path; the holder-side recovery codes are exercised in use,
+not in that suite.
 
 The exact `worktree`/subsequent `branch` record pairing in the exhaustive
 porcelain read identifies the holder. Any zero/multiple result, different
@@ -576,103 +510,43 @@ rewrite.
 
 ## Proof Policy
 
-Inherited from the spacedock proof discipline; the rules below are binding
-in every stage report and every gate review. Numbered, not counted in the
-lead-in — a count in prose goes stale the first time one is added, and this
-one has already been wrong twice: it said "four" while five existed, then
-"seven" until this rule was added.
+The rules are the kernel's: `_mods/kernel.md` § Outcome discipline and
+§ Verification discipline. They are not restated here — one place to read, one
+place to change, and the byte-identity check in
+`scripts/kc-dev-flow-contract-test.py` keeps that copy current.
 
-1. **No prose-grep, and provenance decides independence.** A string match
-   over an instruction file the model reads never proves a behavioral claim.
-   A grep may serve as one-off evidence for an existence fact in a validation
-   report; the same grep committed as a test is banned. Not because it can
-   never go red — rewording the matched line, moving the file, or changing the
-   pattern all do that — but because **nothing about the behavior can**. It
-   reads text. A regression that leaves the wording intact passes straight
-   through it, and a rephrasing that broke nothing turns it red: it is
-   uncorrelated with the thing it was committed to catch, in both directions.
-   The falsifier is an edit to behavior alone that reddens it, and there is
-   none. And
-   a check the author wrote to grade the author's own artifact is a self-issued
-   stamp, not a gate. This is about what closes a gate, not about who may write
-   a test: the worker's own RED-before-GREEN tests are exactly the evidence
-   this workflow asks for, and they become insufficient only when they are also
-   offered as the independent verdict on themselves. Independence at a gate
-   comes from the fresh-context validator and the cross-model pass, never from
-   the artifact grading itself.
-2. **Evidence must be able to fail.** Each AC's cited evidence names the
-   concrete change that would flip it. If the author cannot name the
-   falsifying edit, the criterion does not count.
-3. **Prove behavior by exercising it.** Output bytes, exit codes, resulting
-   on-disk state, a browser actually driving the flow. Unit tests prove logic;
-   they do not prove wiring. Seam-level claims need runtime or E2E evidence.
-4. **Trace every mechanism to value.** Any new mechanism names the value AC it
-   serves, the simplest alternative considered, and why that alternative is
-   insufficient. A test harness orchestrates and observes the supported
-   runtime; it never becomes a second implementation of the system under test.
-5. **Automatic must-pass behavior checks live at stage boundaries, never in
-   the worker's inner loop.** Hooks that fire on every commit/edit inside a
-   work session are limited to fast mechanical checks (format, lint,
-   typecheck). Behavioral or corpus/consistency checks, *as must-pass gates*,
-   belong to the validation gate and CI: a must-pass check inside the inner
-   loop turns "implement the behavior" into "make the check shut up", and the
-   worker will drift the implementation — or the check's inputs — to satisfy
-   it. This governs checks the tooling forces, never tests the worker chooses
-   to run: RED-before-GREEN requires running the behavior's own tests inside
-   that loop, and that is the mechanism working, not an exception to it.
-6. **A claim must be able to fail, and it is checked when written.** An
-   absolute — "exactly", "only", "always", "never", "cannot", "byte-for-byte"
-   — written into a reference, a code comment, or a commit message either
-   names the enforcement point that makes it true, or is rewritten as the
-   bounded claim the code actually supports. This is rule 2 applied to prose:
-   the same discipline an AC's evidence gets, because a documented guarantee
-   *is* a claim and the next reader builds on it.
-   **An enforcement point is what makes the absolute true, not who believes
-   it.** The permission check, the schema constraint, the branch that cannot
-   be reached, the script that fails closed — those are enforcement points.
-   "I checked" is not one, and neither is the author. Where no such mechanism
-   exists the absolute is not defensible, and gets rewritten as the bounded
-   claim that is. Two consequences worth stating outright.
-   **This rule is itself a discipline, not a mechanism, and it does not claim
-   otherwise** — nothing checks it automatically, which is why it binds at
-   authoring time as something the writer applies rather than a gate someone
-   else runs. The validation-stage clause is the backstop for what slips
-   through, and a backstop that fires every time is a cost, not a control.
-   **Coverage past the author is uneven — and the distinction is read, versus
-   checked.** A reference or doc diff reaches validation, which has a clause
-   aimed squarely at its guarantees. A code comment reaches validation only
-   incidentally, inside a diff a reviewer happens to read closely. A commit
-   message is *read* by tooling here — `kc-pr-review` parses issue IDs out of
-   it — but by nothing that evaluates a claim in it. So all three get read at
-   some rate, and only the first has anything downstream that would test an
-   absolute. The thinner that coverage, the more the authoring moment is the
-   only moment — four of these shipped in two days, and the two nobody caught
-   until later were a commit message and a comment, which are exactly the two
-   thin cases. A claim inherited from a report, a reviewer, or an external
-   contributor is not exempt — adopt it only after checking it, and say which.
-7. **A negative result is a claim, and carries the same bar as a positive
-   one.** "The search found nothing" is evidence about the search. "The file is
-   unchanged" is evidence about the file, not about the failure. A number
-   measured while you were perturbing the system is evidence about the
-   perturbation. Before reporting an absence — no such skill, no such caller,
-   nothing tracked, not a regression — name the scope actually searched and why
-   that scope is the population, or run a second strategy that would have found
-   the thing if it existed: one tool, one pattern, one filter is a sample, not a
-   census. In this repo the sampling trap is concrete — a plugin's behavior can
-   live in `skills/*/SKILL.md`, an `agents/*.md`, a hook script, or the local
-   install under `~/.claude/plugins/`, so a single `grep` over one plugin
-   directory is never the population. And an unexplained signal is traced, never
-   assigned an invented origin — "probably another session" is a story, not a
-   cause.
-8. **Before trusting what a check found, confirm the check can fail.** A probe
-   that silently returns a plausible result where it should have errored is
-   worse than no probe, because its output reads as a conclusion. Two shapes
-   seen here: a spot-check edit whose target string did not exist, so "the
-   suite stayed green" meant the edit never happened rather than that the guard
-   was missing; and a section counter that read headings inside fenced code,
-   inventing a 742-line region that was not there. Run the check against a case
-   it must flag before running it against the case you care about — its silence
-   carries information only after you have seen it speak.
+What stays here is what the kernel deliberately does not carry: this
+repository's own instances, its local topology, and the field history that
+produced a rule. An adopter with a different tracker, runtime, or review fleet
+inherits the rules and writes its own instances.
+
+**Independence, locally.** Independence at a gate comes from the fresh-context
+validator *and the cross-model pass*. The kernel requires fresh context not
+involved in producing the artifact; requiring a second vendor is this
+repository's choice, taken because two of this year's most expensive misses were
+agreed on by two rounds of the same model. A text or existence contract test may
+be committed here; what it may not do is close a behavioral gate.
+
+**Where forced checks live, locally.** The kernel puts forced behavioral and
+corpus gates at the validation boundary. Here that means the validation stage
+and CI — `marketplace-parity.yml` and the contract tests. Inner-loop hooks stay
+at format, lint, and typecheck.
+
+**The absolutes rule, and why its coverage here is thin.** A reference or doc
+diff reaches validation, which has a clause aimed at its guarantees. A code
+comment reaches validation only incidentally, inside a diff a reviewer happens
+to read closely. A commit message is *read* by tooling here — `kc-pr-review`
+parses issue IDs out of it — but by nothing that evaluates a claim in it. So all
+three get read at some rate and only the first has anything downstream that
+would test an absolute. Four of these shipped in two days, and the two nobody
+caught until later were a commit message and a comment, which are exactly the
+two thin cases. That thinness is why the authoring moment is effectively the
+only moment here.
+
+**The sampling trap, concretely.** A plugin's behavior can live in
+`skills/*/SKILL.md`, an `agents/*.md`, a hook script, or the local install under
+`~/.claude/plugins/`, so a single `grep` over one plugin directory is never the
+population. And "probably another session" is a story, not a cause.
 
 ## Stages
 
@@ -681,6 +555,8 @@ full diffs, and re-derivations go in collapsed or linked sections. A report
 that reads like a session transcript costs reading budget nobody spends.
 
 ### `backlog` — capture (this is the todo queue)
+
+Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 Any idea, rabbit hole, defect, or captain note enters as a seed task file:
 title, `source`, `product`, and a one-paragraph description. Leave `sprint`
@@ -748,6 +624,9 @@ an implementation stage nobody is reviewing for design.
 
 ### `ideation` — one gate for design, plan, and acceptance
 
+Policy mods: [`_mods/reverse-recovery-audit.md`](./_mods/reverse-recovery-audit.md)
+and [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
+
 The single judgment-heavy stage. Flesh out the problem, decide the approach,
 define acceptance criteria and the test plan. The gate reviews all of it at
 once. Discipline clauses:
@@ -808,7 +687,8 @@ once. Discipline clauses:
   contract → handler → domain → persistence → readback) and classify each
   layer WORKING / EXISTS_BROKEN / STUB / MISSING with file:line. Greenfield
   is allowed only after proof of absence (multi-strategy, multi-language
-  search) — the general bar for any absence claim is Proof Policy rule 7.
+  search) — the general bar for any absence claim is the kernel's
+  "a negative result carries the same bar as a positive claim".
   A single broken seam means repair scoped to that seam, not a
   rebuild. Full procedure: `_mods/reverse-recovery-audit.md`.
   **Audit against the merge target** (fetch `origin/<trunk>` first), never
@@ -873,6 +753,8 @@ once. Discipline clauses:
   Record the sizing decision in the task body so implementation inherits it.
 
 ### `implementation` — build in a worktree, test-first
+
+Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 - **RED before GREEN, with evidence.** For each behavior: write the failing
   test, run it, record the RED evidence in the stage report (test name +
@@ -958,7 +840,8 @@ once. Discipline clauses:
     touched and whether it is a required context (read it live, per the
     ideation clause).
   **The exit condition is never "the reported error is gone."** That is a
-  not-a-regression claim and Proof Policy 7 governs it: the one spec that named
+  not-a-regression claim, and the kernel's negative-result rule governs it: the
+  one spec that named
   the bug was never the population. A failure surviving the exit run is written
   off as pre-existing only by the per-failing-line rule the validation stage
   states — never per file, never per impression.
@@ -968,6 +851,8 @@ once. Discipline clauses:
   says what was produced, where, and how to run it.
 
 ### `validation` — fresh eyes, adversarial by default
+
+Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 A fresh-context agent verifies the deliverable against the ideation AC. The
 validator checks what was produced; it never finishes the work.
@@ -1005,8 +890,9 @@ failed it.** Two facts, appended to whichever of the five the round belongs to:
   than the change under review.
 - **What would have failed it** — the named claim, AC, or lens the round was
   checking, and the concrete change to *that* which would have flipped the round
-  to a finding. This is Proof Policy #2 — "if the author cannot name the
-  falsifying edit, the criterion does not count" — applied to the verifying round
+  to a finding. This is the kernel's acceptance-criterion
+  falsifier requirement — "if its author cannot name the falsifier, the criterion
+  does not count" — applied to the verifying round
   rather than to the criterion. A falsifier that bears on nothing the round was
   checking satisfies the letter and reports nothing: naming a token whose
   presence would have failed the round says only that the round could read.
@@ -1170,6 +1056,8 @@ any reading of it, and it is usually the cheaper one to run.
   token or coverage evidence is not a delivery defect.
 
 ### `done` — terminal
+
+Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 Merge after a passed validation gate (merge policy: PR to `main`). An
 authenticated product PR observed `MERGED` authorizes the terminal transaction:
