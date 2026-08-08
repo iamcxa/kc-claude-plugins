@@ -169,17 +169,36 @@ describe('e2e-test run fidelity contract', function() {
       /unverified; N deviation\(s\) recorded/,
       'the both-apply case must have an explicit rendering rather than being left to the reader'
     );
+    // `as-written` needs all three conditions, not the absence of one. The first ordered
+    // version still let a compiled cross-check that ran and DISAGREED fall through to
+    // `as-written` whenever the ledger happened to be empty — which is exactly the case
+    // where the ledger is least trustworthy, since the script cannot improvise and the
+    // runner can.
+    assert.match(
+      runner,
+      /The cross-check ran and disagreed with the run\*\* → `divergent`/,
+      'a disagreeing cross-check must have its own state, not fall through'
+    );
+    assert.match(
+      runner,
+      /the ledger is empty \*\*and\*\* the\s+compiled cross-check ran \*\*and\*\* agreed\. All three, not any of them\./,
+      'as-written must require all three conditions explicitly'
+    );
+
     // The fix is positional, so its enforcement has to be positional too.
     const unverifiedRule = runner.indexOf('The compiled cross-check did not run');
     const deviationRule = runner.indexOf('The ledger recorded a deviation');
+    const divergentRule = runner.indexOf('The cross-check ran and disagreed');
     const asWrittenRule = runner.indexOf('Otherwise** → `as-written`');
     assert.ok(
-      unverifiedRule > 0 && deviationRule > 0 && asWrittenRule > 0,
-      'all three rules must be present'
+      [unverifiedRule, deviationRule, divergentRule, asWrittenRule].every((i) => i > 0),
+      'all four rules must be present'
     );
     assert.ok(
-      unverifiedRule < deviationRule && deviationRule < asWrittenRule,
-      'unverified must be decided before the deviation count, which must precede as-written'
+      unverifiedRule < deviationRule &&
+        deviationRule < divergentRule &&
+        divergentRule < asWrittenRule,
+      'as-written must be the last rule, reachable only after every way of not earning it'
     );
   });
 });

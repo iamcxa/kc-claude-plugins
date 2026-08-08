@@ -628,8 +628,14 @@ match, and taking a later one understates what you do not know:
    it is exactly what a self-reported ledger cannot contain, which is why this rule wins
    over rule 2 rather than losing to it.
 2. **The ledger recorded a deviation** and the cross-check did run → `N deviation(s)`.
-3. **Otherwise** → `as-written`. Reachable only with zero deviations and a compiled
-   cross-check that ran and agreed.
+3. **The cross-check ran and disagreed with the run** → `divergent`, with the divergence
+   named. An empty ledger does not make this `as-written`: the ledger says what *you*
+   noticed, the cross-check says what a script that cannot improvise did, and a
+   disagreement between them is the case where your ledger is most likely to be the
+   incomplete one. This rule exists because without it the fallback below swallowed a
+   disagreement whenever nothing had been self-reported.
+4. **Otherwise** → `as-written`. Reachable only when the ledger is empty **and** the
+   compiled cross-check ran **and** agreed. All three, not any of them.
 
 List every deviation below the table as `<step-id>: <did> instead of <instead_of>`,
 whichever rule fired.
