@@ -1561,6 +1561,17 @@ function inspectFirstNavigationHar(harPath) {
  * the source and the page. `persistent-path` hands the browser the requested directory
  * itself. That is a statement about which modes have a copy step, not a prediction
  * about any agent-browser version.
+ *
+ * BOUNDED: this is written at the pending-to-verified transition, so it is carried by
+ * receipts this runtime verified — not by one an earlier runtime left at `verified`,
+ * which never passes through here again. Retrofitting those was implemented and removed:
+ * it meant writing the receipt from `snapshot`, `click` and `eval`, which until then only
+ * read it, and those writes replaced the whole object read before live ownership
+ * verification. Teammates within one run share a receipt, so a `snapshot` could have
+ * erased a `last_navigation` a concurrent `open` had just written — destroying evidence
+ * to add a derived field. The residual is bounded and stated in
+ * `references/commands.md`: a receipt without `profile_state` was verified by an older
+ * runtime, and `profile_mode` on it still says whether a copy step existed.
  */
 function profileStateDisclosure(profileMode) {
   const copiedBeforeLaunch = profileMode === 'verified-snapshot';
@@ -1577,32 +1588,6 @@ function profileStateDisclosure(profileMode) {
       : 'the browser was given the requested profile directory itself, so there is no ' +
         'copy step to lose contents in; nothing here observed the page either way',
   };
-}
-
-/**
- * Add the disclosure to a receipt that predates it.
- *
- * `profile_state` is written during the pending-to-verified transition, so a receipt
- * left behind by an earlier runtime already sits at `verified` and never passes through
- * that code again. Without this it would stay silent for the rest of its life — the
- * exact ambiguity the field exists to remove, preserved in the receipts most likely to
- * be read, because they belong to sessions already in flight.
- *
- * Backfilling is sound because the disclosure is derived, not measured: it is a function
- * of `profile_mode`, which is on the receipt and is re-checked against the live browser
- * on every open. Nothing here observes the page, so there is no observation whose timing
- * could make the derivation stale. `backfilled` records that it was written after the
- * fact anyway, because when a field was written is the kind of provenance this receipt
- * exists to keep.
- */
-function backfillProfileStateDisclosure(receipt) {
-  if (!receipt.first_navigation) return false;
-  if (receipt.first_navigation.profile_state) return false;
-  receipt.first_navigation.profile_state = Object.assign(
-    profileStateDisclosure(receipt.profile_mode),
-    { backfilled: true }
-  );
-  return true;
 }
 
 function assertInitProbeObserved(options, expression) {
@@ -1851,7 +1836,6 @@ function performOwnedOpen(options) {
       })
     );
     assertStableNavigationIdentity(pre, post);
-    backfillProfileStateDisclosure(receipt);
     receipt.last_navigation = {
       status: 'verified',
       pre,
@@ -2847,14 +2831,6 @@ function main(argv) {
         throw new Error(
           'browser ownership receipt does not match actual profile identity'
         );
-      }
-      // Backfill here rather than on the navigation path: every command that accepts an
-      // existing receipt reaches this point, and most of them (`snapshot`, `click`,
-      // `eval`, `open about:blank`) never reach a navigation. Placing it downstream left
-      // a legacy receipt permanently silent for any session that continued without
-      // another non-blank `open`.
-      if (backfillProfileStateDisclosure(existingReceipt)) {
-        writeLifecycleReceipt(receiptPath, existingReceipt);
       }
     } catch (error) {
       process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');

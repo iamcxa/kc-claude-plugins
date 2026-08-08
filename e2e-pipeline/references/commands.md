@@ -102,6 +102,16 @@ in the runtime measures the page's profile state. Reading a green `verified` as
 evidence that a pre-authenticated profile is live is the mistake this field exists
 to stop; it tells you the answer is unknown instead of letting you assume it.
 
+**A receipt with no `profile_state` at all was verified by an older runtime.** The
+field is written at the pending-to-verified transition, so a session already in
+flight when this landed keeps a receipt without it. Those are not retrofitted on
+purpose: backfilling meant writing the receipt from `snapshot`, `click` and `eval`,
+which until then only read it, and teammates within one run share a receipt — a
+`snapshot` could have erased a `last_navigation` a concurrent `open` had just
+written. Destroying evidence to add a derived field is the wrong trade. Read
+`profile_mode` on such a receipt instead: `verified-snapshot` means a copy step
+existed, and the same caution applies.
+
 If your run depends on a pre-authenticated profile, assert it yourself in the flow
 — an authenticated-only element, or a request that only succeeds when
 authenticated. A runtime-level detector is **not** available: one was built and

@@ -690,47 +690,25 @@ test('the disclosure never claims an observation the runtime did not take', func
   assert.deepEqual(observed, ['not-observed', 'not-observed']);
 });
 
-test('a receipt written before the disclosure existed is backfilled, not left silent', function(t) {
-  // The disclosure is written during the pending-to-verified transition, so a receipt an
-  // earlier runtime left at `verified` never passes through that code again. Without a
-  // backfill it stays ambiguous for the rest of its life — in the receipts most likely to
-  // be read, because they belong to sessions already in flight.
+test('BOUNDED: a legacy receipt is left alone rather than retrofitted by a read-only command', function(t) {
+  // The disclosure is written at the pending-to-verified transition, so a receipt an
+  // older runtime left at `verified` does not carry it. Retrofitting was implemented and
+  // removed, and this pins the removal rather than the gap: backfilling meant writing the
+  // receipt from `snapshot`, `click` and `eval`, which until then only read it, and the
+  // write replaced the whole object read before live ownership verification. Teammates
+  // within one run share a receipt, so a `snapshot` could erase a `last_navigation` a
+  // concurrent `open` had just written — destroying evidence to add a derived field.
+  //
+  // If a future change reintroduces the backfill, this test is where it has to argue with
+  // the concurrency hazard first.
   const fixture = setup(t, { profileMode: 'snapshot' });
 
-  const first = runOpen(fixture, 'https://application.example.test/legacy-one');
-  assert.equal(first.status, 0, first.stderr);
-
-  // Strip the field to reproduce a receipt from the previous runtime exactly.
-  const legacy = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
-  delete legacy.first_navigation.profile_state;
-  assert.equal(legacy.first_navigation.status, 'verified');
-  fs.writeFileSync(fixture.receipt, JSON.stringify(legacy, null, 2) + '\n');
-
-  const second = runOpen(fixture, 'https://application.example.test/legacy-two');
-  assert.equal(second.status, 0, second.stderr);
-
-  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
-  const disclosure = receipt.first_navigation.profile_state;
-  assert.equal(disclosure.status, 'not-observed');
-  assert.equal(disclosure.profile_copied_before_launch, true);
-  // Derived, not measured — but the receipt still records that it was written after the
-  // fact, because when a field was written is provenance this receipt exists to keep.
-  assert.equal(disclosure.backfilled, true);
-});
-
-test('a legacy receipt is backfilled by a command that never navigates', function(t) {
-  // The backfill first landed on the navigation path only, so a session that continued
-  // with `snapshot`, `click`, `eval`, or `open about:blank` kept its legacy receipt
-  // silent indefinitely. Those are the ordinary mid-session commands, so "another
-  // non-blank open eventually happens" is not a safe assumption. `snapshot` stands for
-  // the class: it accepts the existing receipt and never reaches a navigation.
-  const fixture = setup(t, { profileMode: 'snapshot' });
-
-  const first = runOpen(fixture, 'https://application.example.test/pre-legacy');
+  const first = runOpen(fixture, 'https://application.example.test/legacy');
   assert.equal(first.status, 0, first.stderr);
 
   const legacy = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
   delete legacy.first_navigation.profile_state;
+  legacy.last_navigation = { status: 'verified', sentinel: 'written-by-a-peer' };
   fs.writeFileSync(fixture.receipt, JSON.stringify(legacy, null, 2) + '\n');
 
   const snapshot = spawnSync(
@@ -748,25 +726,20 @@ test('a legacy receipt is backfilled by a command that never navigates', functio
   );
   assert.equal(snapshot.status, 0, snapshot.stderr);
 
-  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
-  assert.equal(receipt.first_navigation.profile_state.status, 'not-observed');
-  assert.equal(receipt.first_navigation.profile_state.backfilled, true);
-});
-
-test('a backfill never overwrites a disclosure the verification path already wrote', function(t) {
-  const fixture = setup(t, { profileMode: 'snapshot' });
-
-  const first = runOpen(fixture, 'https://application.example.test/keep-one');
-  assert.equal(first.status, 0, first.stderr);
-  const second = runOpen(fixture, 'https://application.example.test/keep-two');
-  assert.equal(second.status, 0, second.stderr);
-
-  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  const after = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
   assert.equal(
-    receipt.first_navigation.profile_state.backfilled,
+    after.first_navigation.profile_state,
     undefined,
-    'a disclosure written at verification time must not be relabelled as backfilled'
+    'a read-only command must not retrofit the disclosure'
   );
+  assert.equal(
+    after.last_navigation.sentinel,
+    'written-by-a-peer',
+    'and must not have rewritten the receipt at all — this is the evidence-loss hazard'
+  );
+  // The reader is not left without the fact: `profile_mode` still says whether a copy
+  // step existed, and references/commands.md states what a missing field means.
+  assert.equal(after.profile_mode, 'verified-snapshot');
 });
 
 test('no profile-liveness flag is silently accepted and ignored, in either position', function(t) {
