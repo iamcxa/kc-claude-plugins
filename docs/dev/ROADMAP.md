@@ -248,6 +248,43 @@ construction — S2 documents the boundary rather than crossing it), an
 in #91), and consumer-repo mapping migrations beyond what the #124 ruling
 requires.
 
+#### Outcome — five shipped, one part-shipped and still open
+
+S2 shipped #122, #150, #148, #121 and #124 in `fe3c9f4`. Two of those turned out
+not to be the issue as filed: #150's premise was refuted by a live probe (the
+instrument does capture full HTTP bodies and retains them across navigation, it
+was simply undocumented), and #122 carried an unnamed sibling in the same file
+that fails the same way under load.
+
+**#149 is the exception and stays open.** It asked for `verified` to become
+contingent on a positive post-navigation observation. What shipped instead is the
+receipt saying, in `first_navigation.profile_state`, that `verified` covers
+navigation continuity and not the profile's contents — the false claim is gone,
+the measurement was not built.
+
+A caller-declared detector was built and reverted. Seven cross-model gate rounds
+returned findings against it in every round that contained it — the predicate, the
+polling, the page binding, the failure recording, the wiring — and none against
+the disclosure. Round three found the documentation's own example appending to a
+variable that existed nowhere but that document, so a caller following it would
+have installed nothing while believing otherwise: the sprint's own defect class,
+inside the fix for it. A later attempt to retrofit the disclosure onto legacy
+receipts turned read-only command paths into writing ones and made a `snapshot`
+able to erase a peer's `last_navigation`, so that was withdrawn too and the claim
+bounded instead.
+
+The rule that kept applying is the kernel's: an absolute either names its
+enforcement point or becomes the bounded claim the artifact supports. Three times
+in one issue the correct move was to shrink the claim rather than grow the
+mechanism.
+
+**What the exit criterion did and did not get.** "Every `verified`/`EXACTLY`-class
+assertion names the observation that earned it" is met for `EXACTLY` (#148) and
+for the trace suite's verdict under load (#122). For `verified` it is met only in
+the weaker sense that the assertion now names what it does *not* cover. Anyone
+reading this sprint as having closed the false-`verified` class should read #149
+first.
+
 ## `repo-platform`
 
 No sprint is scheduled in this roadmap yet. Shared workflow, CI, marketplace,
