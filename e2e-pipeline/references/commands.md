@@ -67,6 +67,48 @@ and projection output are local evidence. Never upload or commit browser
 profiles, cookies, tokens, storage dumps, raw HAR, or screenshots containing
 credentials.
 
+### What `first_navigation.status: verified` does and does not cover
+
+It covers navigation continuity — daemon, browser, page and profile identity held
+across the first application navigation — and the recorder having attached. **It
+does not cover whether the profile's contents reached the page** (#149).
+
+The two are easy to conflate, because every other profile field on the receipt
+(lineage, device, inode, structural digest) is about the files — and the files
+are fine in exactly the case that matters. agent-browser 0.32 snapshot mode drops
+Local Storage, so a pre-authenticated profile can be completely inert while every
+one of those checks passes.
+
+So the receipt states the gap rather than leaving it to inference:
+
+```json
+"profile_state": {
+  "status": "not-observed",
+  "verified_covers": "navigation continuity and recorder attachment",
+  "verified_excludes": "whether profile contents reached the page",
+  "profile_copied_before_launch": true,
+  "note": "..."
+}
+```
+
+`profile_copied_before_launch` is `true` only for `verified-snapshot`, the mode
+that copies the profile before launch and therefore the only one whose contents
+can be lost on the way to the page. `persistent-path` hands the browser the
+requested directory itself. That is a fact about which modes have a copy step,
+not a prediction about any agent-browser version.
+
+**`status` is `not-observed` on every run today, and that is the point.** Nothing
+in the runtime measures the page's profile state. Reading a green `verified` as
+evidence that a pre-authenticated profile is live is the mistake this field exists
+to stop; it tells you the answer is unknown instead of letting you assume it.
+
+If your run depends on a pre-authenticated profile, assert it yourself in the flow
+— an authenticated-only element, or a request that only succeeds when
+authenticated. A runtime-level detector is **not** available: one was built and
+reverted, because distinguishing state the profile carried from state the page
+minted on load needs the observation bound to the captured page, a predicate
+stronger than non-null, and a bounded poll. Tracked in #149.
+
 ### Flow-managed authentication
 
 Flows that declare `auth_mode: flow-managed` do not use the canonical persistent

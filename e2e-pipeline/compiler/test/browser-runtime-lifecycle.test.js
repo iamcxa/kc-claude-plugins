@@ -629,6 +629,96 @@ test('unbound 0.32 snapshot fails before the application URL is requested', func
   assert.equal(openedUrls.includes(targetUrl), false);
 });
 
+// #149. `verified` was being read as though it covered the profile, because the receipt
+// said nothing about the profile's contents either way. These pin the disclosure that
+// replaces that silence, and the boundary it must not quietly cross: it is a statement
+// about what was NOT observed, so any future edit that lets it read like a positive
+// observation has to fail here first.
+
+test('a snapshot run discloses that verified did not cover the profile contents', function(t) {
+  const fixture = setup(t, { profileMode: 'snapshot' });
+
+  const result = runOpen(fixture, 'https://application.example.test/disclosure');
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  const disclosure = receipt.first_navigation.profile_state;
+
+  assert.equal(receipt.first_navigation.status, 'verified');
+  assert.equal(disclosure.status, 'not-observed');
+  assert.equal(disclosure.verified_excludes, 'whether profile contents reached the page');
+  // The mode that copies before launch is the only one whose contents can be lost on the
+  // way to the page, so the disclosure has to say which mode this run was.
+  assert.equal(disclosure.profile_copied_before_launch, true);
+  assert.match(disclosure.note, /do not read `verified` as evidence/);
+});
+
+test('a persistent-path run discloses the absence of a copy step, still without observing', function(t) {
+  const fixture = setup(t);
+
+  const result = runOpen(fixture, 'https://application.example.test/persistent');
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  const disclosure = receipt.first_navigation.profile_state;
+
+  assert.equal(receipt.profile_mode, 'persistent-path');
+  assert.equal(disclosure.profile_copied_before_launch, false);
+  // Still `not-observed`: no copy step is a reason the contents are unlikely to be lost,
+  // not an observation that they arrived. Downgrading the risk is not the same as
+  // taking a measurement, and the receipt must not blur the two.
+  assert.equal(disclosure.status, 'not-observed');
+  assert.match(disclosure.note, /nothing here observed the page/);
+});
+
+test('the disclosure never claims an observation the runtime did not take', function(t) {
+  // The boundary. Every status this field can carry today says the same thing, because
+  // nothing in this runtime observes the page's profile state. A future detector may add
+  // a positive status — but it has to add the observation in the same change, and this
+  // assertion is what makes shipping the word without the measurement fail.
+  const observed = [];
+  for (const profileMode of ['snapshot', 'persistent']) {
+    const fixture = setup(t, { profileMode });
+    const result = runOpen(
+      fixture,
+      'https://application.example.test/boundary-' + profileMode
+    );
+    assert.equal(result.status, 0, result.stderr);
+    const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+    observed.push(receipt.first_navigation.profile_state.status);
+  }
+  assert.deepEqual(observed, ['not-observed', 'not-observed']);
+});
+
+test('no profile-liveness flag is silently accepted and ignored', function(t) {
+  // The reverted attempt's worst failure was a documented flag that nothing forwarded, so
+  // a caller got a silent no-op while believing a guard was installed. Now that the flags
+  // are gone, passing one must fail loudly rather than being swallowed as a no-op.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+
+  const result = spawnSync(
+    process.execPath,
+    [
+      RUNTIME,
+      '--run-id', fixture.runId,
+      '--app', fixture.app,
+      '--executable-path', fixture.executable,
+      '--profile', fixture.profile,
+      '--receipt', fixture.receipt,
+      '--profile-liveness-key', 'auth_token',
+      'open', 'https://application.example.test/ghost-flag',
+    ],
+    { encoding: 'utf8', env: fixture.env }
+  );
+
+  assert.notEqual(result.status, 0, 'an unknown liveness flag must not be ignored');
+  assert.equal(
+    fs.existsSync(fixture.receipt),
+    false,
+    'it must fail before writing a receipt that would read as a verified run'
+  );
+});
+
 test('0.32 snapshot is bound to its canonical source without reading profile secrets', function(t) {
   const fixture = setup(t, { profileMode: 'snapshot' });
   const targetUrl = 'https://application.example.test/snapshot';
