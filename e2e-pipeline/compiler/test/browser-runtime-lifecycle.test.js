@@ -718,6 +718,41 @@ test('a receipt written before the disclosure existed is backfilled, not left si
   assert.equal(disclosure.backfilled, true);
 });
 
+test('a legacy receipt is backfilled by a command that never navigates', function(t) {
+  // The backfill first landed on the navigation path only, so a session that continued
+  // with `snapshot`, `click`, `eval`, or `open about:blank` kept its legacy receipt
+  // silent indefinitely. Those are the ordinary mid-session commands, so "another
+  // non-blank open eventually happens" is not a safe assumption. `snapshot` stands for
+  // the class: it accepts the existing receipt and never reaches a navigation.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+
+  const first = runOpen(fixture, 'https://application.example.test/pre-legacy');
+  assert.equal(first.status, 0, first.stderr);
+
+  const legacy = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  delete legacy.first_navigation.profile_state;
+  fs.writeFileSync(fixture.receipt, JSON.stringify(legacy, null, 2) + '\n');
+
+  const snapshot = spawnSync(
+    process.execPath,
+    [
+      RUNTIME,
+      '--run-id', fixture.runId,
+      '--app', fixture.app,
+      '--executable-path', fixture.executable,
+      '--profile', fixture.profile,
+      '--receipt', fixture.receipt,
+      'snapshot',
+    ],
+    { encoding: 'utf8', env: fixture.env }
+  );
+  assert.equal(snapshot.status, 0, snapshot.stderr);
+
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.profile_state.status, 'not-observed');
+  assert.equal(receipt.first_navigation.profile_state.backfilled, true);
+});
+
 test('a backfill never overwrites a disclosure the verification path already wrote', function(t) {
   const fixture = setup(t, { profileMode: 'snapshot' });
 
@@ -734,33 +769,51 @@ test('a backfill never overwrites a disclosure the verification path already wro
   );
 });
 
-test('no profile-liveness flag is silently accepted and ignored', function(t) {
+test('no profile-liveness flag is silently accepted and ignored, in either position', function(t) {
   // The reverted attempt's worst failure was a documented flag that nothing forwarded, so
-  // a caller got a silent no-op while believing a guard was installed. Now that the flags
-  // are gone, passing one must fail loudly rather than being swallowed as a no-op.
-  const fixture = setup(t, { profileMode: 'snapshot' });
-
-  const result = spawnSync(
-    process.execPath,
-    [
-      RUNTIME,
-      '--run-id', fixture.runId,
-      '--app', fixture.app,
-      '--executable-path', fixture.executable,
-      '--profile', fixture.profile,
-      '--receipt', fixture.receipt,
+  // a caller got a silent no-op while believing a guard was installed. Both argument
+  // positions are covered because they took different routes: before the command the flag
+  // became `command[0]` and was rejected as an unknown command, but AFTER it the flag sat
+  // in the command tail, which `isAllowedCommand` never inspects — so it was discarded
+  // and the run produced a verified receipt. An earlier version of this test only
+  // exercised the position that already failed.
+  for (const [label, argv] of [
+    ['before the command', [
       '--profile-liveness-key', 'auth_token',
-      'open', 'https://application.example.test/ghost-flag',
-    ],
-    { encoding: 'utf8', env: fixture.env }
-  );
+      'open', 'https://application.example.test/ghost-before',
+    ]],
+    ['in the command tail', [
+      'open', 'https://application.example.test/ghost-after',
+      '--profile-liveness-key', 'auth_token',
+    ]],
+    ['selector form in the tail', [
+      'open', 'https://application.example.test/ghost-selector',
+      '--profile-liveness-selector', '[data-testid="sign-out"]',
+    ]],
+  ]) {
+    const fixture = setup(t, { profileMode: 'snapshot' });
+    const result = spawnSync(
+      process.execPath,
+      [
+        RUNTIME,
+        '--run-id', fixture.runId,
+        '--app', fixture.app,
+        '--executable-path', fixture.executable,
+        '--profile', fixture.profile,
+        '--receipt', fixture.receipt,
+        ...argv,
+      ],
+      { encoding: 'utf8', env: fixture.env }
+    );
 
-  assert.notEqual(result.status, 0, 'an unknown liveness flag must not be ignored');
-  assert.equal(
-    fs.existsSync(fixture.receipt),
-    false,
-    'it must fail before writing a receipt that would read as a verified run'
-  );
+    assert.notEqual(result.status, 0, label + ': a retired liveness flag must not be ignored');
+    assert.match(result.stderr, /retired flag --profile-liveness/, label + ': refused by name');
+    assert.equal(
+      fs.existsSync(fixture.receipt),
+      false,
+      label + ': it must fail before writing a receipt that would read as a verified run'
+    );
+  }
 });
 
 test('0.32 snapshot is bound to its canonical source without reading profile secrets', function(t) {

@@ -2436,8 +2436,38 @@ function isAllowedCommand(command) {
   return ALLOWED_COMMANDS.has(command[0]);
 }
 
+/**
+ * Refuse a retired profile-liveness flag, wherever it appears in argv.
+ *
+ * These flags existed on an unmerged branch and in its documentation before the detector
+ * was reverted, so a copied invocation can still carry one. `isAllowedCommand` inspects
+ * only `command[0]`, so a flag in the command tail — `open <url> --profile-liveness-key
+ * x` — was accepted and discarded, and the run produced a verified receipt as though a
+ * guard had been applied. A flag that looks accepted and does nothing is the failure this
+ * whole issue is about, so it is refused by name rather than left to be ignored.
+ */
+function assertNoRetiredLivenessFlag(argv) {
+  const retired = argv.filter(function(value) {
+    return typeof value === 'string' && value.startsWith('--profile-liveness');
+  });
+  if (retired.length === 0) return;
+  throw new Error(
+    'retired flag ' + retired[0] + ': runtime-level profile-liveness detection was ' +
+      'removed, and accepting this silently would report a guard that is not running. ' +
+      'The receipt states what `verified` does not cover in ' +
+      '`first_navigation.profile_state`; assert authentication in the flow itself. ' +
+      'Tracked in issue #149.'
+  );
+}
+
 function main(argv) {
   const options = parseArgs(argv);
+  try {
+    assertNoRetiredLivenessFlag(argv);
+  } catch (error) {
+    process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+    return 2;
+  }
   if (options.command[0] === 'new-run-id') {
     process.stdout.write(
       Date.now().toString(36) + '-' + crypto.randomBytes(10).toString('hex') + '\n'
@@ -2817,6 +2847,14 @@ function main(argv) {
         throw new Error(
           'browser ownership receipt does not match actual profile identity'
         );
+      }
+      // Backfill here rather than on the navigation path: every command that accepts an
+      // existing receipt reaches this point, and most of them (`snapshot`, `click`,
+      // `eval`, `open about:blank`) never reach a navigation. Placing it downstream left
+      // a legacy receipt permanently silent for any session that continued without
+      // another non-blank `open`.
+      if (backfillProfileStateDisclosure(existingReceipt)) {
+        writeLifecycleReceipt(receiptPath, existingReceipt);
       }
     } catch (error) {
       process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
