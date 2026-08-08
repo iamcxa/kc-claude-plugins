@@ -139,4 +139,47 @@ describe('e2e-test run fidelity contract', function() {
       'skipping the compiled cross-check must force the unverified fidelity state'
     );
   });
+
+  test('the fidelity states are an ordered decision, not an unordered table', function() {
+    // Behaviourally observed, not theorised. The first shipped version listed the three
+    // states as a match table with no precedence. Run against a `--no-compile` scenario
+    // that also had a deviation, two rows matched and the actor picked the earlier one —
+    // reporting `1 deviation(s)`, which reads as a complete count, where the contract
+    // wanted `unverified`, whose entire point is that a self-reported count may not be
+    // complete.
+    //
+    // No text assertion found that, and none could have: all three state strings were in
+    // the file, so every check in this describe block was green. It took running the
+    // instruction against a scenario where the rows overlap. That is why the fix is an
+    // explicit order, and why this pins the order rather than the vocabulary.
+    const runner = fs.readFileSync(testRunnerAgent, 'utf8');
+
+    assert.match(
+      runner,
+      /Decide it in this order and stop at the first rule that applies/,
+      'the states must be an ordered decision'
+    );
+    assert.match(
+      runner,
+      /more than one can\s+match, and taking a later one understates what you do not know/,
+      'the order must say why it exists, since an unexplained order invites reordering'
+    );
+    assert.match(
+      runner,
+      /unverified; N deviation\(s\) recorded/,
+      'the both-apply case must have an explicit rendering rather than being left to the reader'
+    );
+    // The fix is positional, so its enforcement has to be positional too.
+    const unverifiedRule = runner.indexOf('The compiled cross-check did not run');
+    const deviationRule = runner.indexOf('The ledger recorded a deviation');
+    const asWrittenRule = runner.indexOf('Otherwise** → `as-written`');
+    assert.ok(
+      unverifiedRule > 0 && deviationRule > 0 && asWrittenRule > 0,
+      'all three rules must be present'
+    );
+    assert.ok(
+      unverifiedRule < deviationRule && deviationRule < asWrittenRule,
+      'unverified must be decided before the deviation count, which must precede as-written'
+    );
+  });
 });

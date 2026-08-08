@@ -618,11 +618,21 @@ Write `{{report_dir}}/report.md` with the following structure:
 
 **Step Fidelity** reports what was tracked, never a claim beyond it:
 
-| Value | Emit when |
-|-------|-----------|
-| `as-written` | `Deviations` is 0 **and** the compiled cross-check ran and agreed |
-| `N deviation(s)` | the ledger recorded any deviation — list each one below the table as `<step-id>: <did> instead of <instead_of>` |
-| `unverified` | the compiled cross-check did not run (`--no-compile`, CLI-only flow, or a compile failure), regardless of the deviation count |
+**Decide it in this order and stop at the first rule that applies** — more than one can
+match, and taking a later one understates what you do not know:
+
+1. **The compiled cross-check did not run** (`--no-compile`, CLI-only flow, or a compile
+   failure) → `unverified`. If the ledger also recorded deviations, write
+   `unverified; N deviation(s) recorded` and still list them. The count is what you
+   happened to notice, not a complete count — a step improvised without you registering
+   it is exactly what a self-reported ledger cannot contain, which is why this rule wins
+   over rule 2 rather than losing to it.
+2. **The ledger recorded a deviation** and the cross-check did run → `N deviation(s)`.
+3. **Otherwise** → `as-written`. Reachable only with zero deviations and a compiled
+   cross-check that ran and agreed.
+
+List every deviation below the table as `<step-id>: <did> instead of <instead_of>`,
+whichever rule fired.
 
 `unverified` is not a failure and does not change the Flow Verdict. It says the run has
 no independent witness to its own fidelity, which is the honest state of a
