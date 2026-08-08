@@ -67,54 +67,6 @@ and projection output are local evidence. Never upload or commit browser
 profiles, cookies, tokens, storage dumps, raw HAR, or screenshots containing
 credentials.
 
-### Profile liveness — proving a pre-authenticated profile actually arrived
-
-`first_navigation.status: verified` means the navigation and the recorder kept
-continuity. **It has never meant the profile was live**, and the receipt used to
-say nothing either way — so a run whose pre-authenticated profile the browser
-silently dropped produced an artifact indistinguishable from one that worked
-(#149; agent-browser 0.32 snapshot mode drops Local Storage).
-
-Declare what must be observable after navigation, and the runtime fails closed
-when it is not:
-
-```bash
-e2e_browser_runtime_args+=(--profile-liveness-key auth_token)
-e2e_browser_runtime_args+=(--profile-liveness-selector '[data-testid="sign-out"]')
-```
-
-| Flag | Satisfied when |
-|------|----------------|
-| `--profile-liveness-key <key>` | `localStorage.getItem(<key>)` is non-null after the first navigation |
-| `--profile-liveness-selector <css>` | `document.querySelector(<css>)` matches after the first navigation |
-
-Repeat either flag; every declared assertion must hold. Values are JSON-encoded
-into the probe, so they are compared as data and cannot extend it.
-
-The probe **polls** for up to 10s rather than sampling once, because a restored
-session is not necessarily observable the instant navigation returns — an SPA
-rehydrating from an HttpOnly cookie has a round trip to finish before it renders
-anything authenticated-only. Only the satisfied case exits early, so a reported
-failure means "still absent after the full budget", not "absent at one instant".
-
-Assertions are checked on **every** navigation that declares them, not only the
-first, and each result is recorded on that navigation's receipt entry.
-
-**Pick the one your app can actually show.** A session carried entirely by an
-HttpOnly cookie leaves nothing in `localStorage` and is invisible to any storage
-check — use an authenticated-only affordance for those.
-
-With neither flag the run is **not** refused, and the receipt records
-`first_navigation.profile_liveness.status: not-asserted`. That is the honest
-state: nothing was declared, so nothing was proven, and the artifact says which
-one it is instead of leaving a reader to assume. Do not cite a `not-asserted`
-receipt as evidence that a profile was restored.
-
-> Counting origin state does not work as a substitute, and was tried and
-> reverted. A dropped profile still loads the app as a logged-out visitor, and
-> that load sets its own cookies and keys — so "the origin has some state" is
-> true either way.
-
 ### Flow-managed authentication
 
 Flows that declare `auth_mode: flow-managed` do not use the canonical persistent

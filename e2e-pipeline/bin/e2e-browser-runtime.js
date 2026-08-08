@@ -50,8 +50,6 @@ function parseArgs(argv) {
     profile: '',
     receipt: '',
     diagnosticInitScripts: [],
-    profileLivenessKeys: [],
-    profileLivenessSelectors: [],
     headed: false,
     command: [],
   };
@@ -74,10 +72,6 @@ function parseArgs(argv) {
       options.receipt = argv[++index] || '';
     } else if (value === '--diagnostic-init-script') {
       options.diagnosticInitScripts.push(argv[++index] || '');
-    } else if (value === '--profile-liveness-key') {
-      options.profileLivenessKeys.push(argv[++index] || '');
-    } else if (value === '--profile-liveness-selector') {
-      options.profileLivenessSelectors.push(argv[++index] || '');
     } else if (value === '--headed') {
       options.headed = true;
     } else {
@@ -1557,168 +1551,6 @@ function assertInitProbeObserved(options, expression) {
   }
 }
 
-/**
- * Post-navigation proof that the profile's state reached the live page (#149).
- *
- * agent-browser 0.32 snapshot mode drops Local Storage, so a pre-authenticated profile
- * can be silently inert while every file-level check — lineage, device, inode,
- * structural digest — still passes, because the files were fine. Nothing the runtime
- * already records can see that, and the recorder's own init-script probe is evidence
- * about the recorder rather than about the profile.
- *
- * The observation is DECLARED BY THE CALLER, not inferred. An earlier attempt counted
- * origin state and refused when it found none; it was reverted because counting cannot
- * distinguish state the profile carried from state the page minted on load. A logged-out
- * load still sets an anonymous session cookie, a CSRF token, a locale — so the count is
- * nonzero and a dropped profile passes. The same counter was simultaneously too strict:
- * `document.cookie` cannot see HttpOnly cookies, so a profile authenticated purely by an
- * HttpOnly session cookie read as empty and a working run would have been refused. The
- * runtime does not know what a given application should be carrying. The caller does.
- *
- * Both forms are DATA, never code: the key and the selector are JSON-encoded into the
- * expression, so a value cannot extend the expression it appears in.
- */
-function profileLivenessExpression(keys, selectors) {
-  return (
-    '(() => {' +
-    ' const keys = ' + JSON.stringify(keys) + ';' +
-    ' const selectors = ' + JSON.stringify(selectors) + ';' +
-    // The store lookup itself is inside the try. `globalThis.localStorage` throws on an
-    // opaque origin, and reading it at a call site outside the guard — as an earlier
-    // draft did by passing `localStorage` as an argument — lets the exception escape
-    // and makes the unreadable path unreachable in a real browser.
-    ' const readKey = (k) => {' +
-    '  try { return globalThis.localStorage.getItem(k) !== null ? "present" : "absent"; }' +
-    '  catch (_e) { return "unreadable"; }' +
-    ' };' +
-    ' const readSelector = (s) => {' +
-    '  try { return globalThis.document.querySelector(s) !== null ? "present" : "absent"; }' +
-    '  catch (_e) { return "unreadable"; }' +
-    ' };' +
-    ' return {' +
-    '  origin: String(globalThis.location ? globalThis.location.origin || "" : ""),' +
-    '  keys: keys.map((k) => ({ name: k, result: readKey(k) })),' +
-    '  selectors: selectors.map((s) => ({ name: s, result: readSelector(s) }))' +
-    ' };' +
-    '})()'
-  );
-}
-
-/**
- * Observe every declared liveness assertion and return the receipt fragment.
- *
- * Returns `not-asserted` when the caller declared nothing. That is the honest state and
- * it is recorded rather than omitted: this issue's complaint was that a reviewer reading
- * the artifact could not tell "profile restored" from "profile silently absent", and a
- * receipt that stays silent about the profile reproduces exactly that. `not-asserted`
- * says the run has no profile proof, which is a different claim from having one.
- */
-const PROFILE_LIVENESS_TIMEOUT_MS = 10000;
-const PROFILE_LIVENESS_INTERVAL_MS = 250;
-
-function readProfileLiveness(options, keys, selectors) {
-  const data = parseAgentBrowserPayload(
-    runAgentBrowser(options, [
-      'eval',
-      profileLivenessExpression(keys, selectors),
-      '--json',
-    ]),
-    'agent-browser profile liveness evidence'
-  );
-  const result = data.result;
-  if (
-    !result ||
-    typeof result !== 'object' ||
-    !Array.isArray(result.keys) ||
-    !Array.isArray(result.selectors) ||
-    result.keys.length !== keys.length ||
-    result.selectors.length !== selectors.length
-  ) {
-    throw new Error('agent-browser profile liveness evidence is incomplete');
-  }
-  const unsatisfied = result.keys.concat(result.selectors).filter(function(observation) {
-    return observation.result !== 'present';
-  });
-  return {
-    status: unsatisfied.length === 0 ? 'observed' : 'unsatisfied',
-    origin: String(result.origin || ''),
-    keys: result.keys,
-    selectors: result.selectors,
-    unsatisfied: unsatisfied,
-  };
-}
-
-function observeProfileLiveness(options) {
-  const keys = options.profileLivenessKeys || [];
-  const selectors = options.profileLivenessSelectors || [];
-  if (keys.length === 0 && selectors.length === 0) {
-    return {
-      status: 'not-asserted',
-      note:
-        'no --profile-liveness-key or --profile-liveness-selector was declared, so this ' +
-        'run carries no evidence that profile state reached the page',
-      keys: [],
-      selectors: [],
-    };
-  }
-  // Polled, not one-shot. A restored session is not necessarily observable the instant
-  // navigation returns: an SPA rehydrating from an HttpOnly cookie has to complete a
-  // round trip before it renders anything authenticated-only, and a storage write can
-  // trail the load event. Sampling once would fail those runs nondeterministically —
-  // turning this guard into the flake class the rest of this work removed.
-  //
-  // Only the satisfied case can exit early; an unsatisfied one is retried until the
-  // deadline, so the reported failure is "still absent after the full budget" rather
-  // than "absent at one arbitrary instant".
-  const timeoutMs =
-    options.profileLivenessTimeoutMs === undefined
-      ? PROFILE_LIVENESS_TIMEOUT_MS
-      : options.profileLivenessTimeoutMs;
-  const deadline = Date.now() + timeoutMs;
-  let attempts = 0;
-  let liveness;
-  for (;;) {
-    attempts += 1;
-    liveness = readProfileLiveness(options, keys, selectors);
-    if (liveness.status === 'observed' || Date.now() >= deadline) break;
-    sleepSync(PROFILE_LIVENESS_INTERVAL_MS);
-  }
-  liveness.attempts = attempts;
-  liveness.waited_ms_budget = timeoutMs;
-  return liveness;
-}
-
-/**
- * Fail closed on a declared assertion that did not hold.
- *
- * Only a DECLARED assertion can fail here. `not-asserted` never fails — a caller that
- * did not name what the profile should carry has not made a claim the runtime can
- * refuse, and inventing one is what the reverted attempt got wrong.
- *
- * `unreadable` is grouped with `absent` on purpose, and this is the one place the two
- * differ from the earlier design: when the caller HAS declared that a key must be
- * readable, an origin where it cannot be read has not satisfied the assertion. Absent
- * evidence still is not evidence of absence — it is simply not the positive observation
- * that `verified` was made contingent on.
- */
-function assertProfileLiveness(liveness) {
-  if (liveness.status !== 'unsatisfied') return;
-  const detail = liveness.unsatisfied
-    .map(function(observation) {
-      return observation.name + '=' + observation.result;
-    })
-    .join(', ');
-  throw new Error(
-    'browser lifecycle infrastructure failure: declared profile liveness was not ' +
-      'observed after navigation (' + detail + ' at ' +
-      (liveness.origin || 'the navigated origin') +
-      '). The profile passed its file-level lineage checks, so its contents were ' +
-      'dropped between the snapshot and the page rather than lost by the runtime — ' +
-      'agent-browser 0.32 snapshot mode is known to drop Local Storage. Any proof ' +
-      'depending on a pre-authenticated profile would run logged-out from here.'
-  );
-}
-
 function writeLifecycleReceipt(receiptPath, receipt) {
   writeJsonAtomic(receiptPath, receipt, false);
   return receipt;
@@ -1738,36 +1570,6 @@ function failLifecycleReceipt(receiptPath, receipt, error, postEvidence) {
       post: postEvidence || failed.first_navigation.post || null,
     });
   }
-  writeLifecycleReceipt(receiptPath, failed);
-}
-
-/**
- * Record a failure that happened on a navigation AFTER the first one.
- *
- * `failLifecycleReceipt` is first-navigation-shaped: it rewrites `first_navigation` to
- * `failed` and replaces its `post` with whatever evidence it is handed. Calling it for a
- * later navigation therefore backdates the failure onto a navigation that genuinely
- * verified, overwrites that navigation's evidence with a different page's, and leaves no
- * record of the navigation that actually failed. The history would then say the run
- * failed somewhere it did not.
- *
- * So a later failure marks the run failed, leaves `first_navigation` exactly as it was
- * earned, and records itself under `last_navigation`.
- */
-function failLaterNavigationReceipt(receiptPath, receipt, error, pre, post) {
-  if (!receipt) return;
-  const failed = Object.assign({}, receipt, {
-    status: 'failed',
-    failure_class: 'infrastructure',
-    error: error.message,
-    failed_at: new Date().toISOString(),
-    last_navigation: {
-      status: 'failed',
-      pre: pre || null,
-      post: post || null,
-      failed_at: new Date().toISOString(),
-    },
-  });
   writeLifecycleReceipt(receiptPath, failed);
 }
 
@@ -1983,30 +1785,10 @@ function performOwnedOpen(options) {
       })
     );
     assertStableNavigationIdentity(pre, post);
-    // A declared assertion is checked on EVERY navigation that declares it, not only on
-    // the first. Evaluating it solely while `first_navigation` was pending meant a later
-    // `open --profile-liveness-key ...` silently succeeded without checking or recording
-    // anything — a declared claim quietly going unverified, which is the same defect
-    // class this issue is about, one navigation over.
-    // Observation AND assertion both sit inside the recording path. An `eval` transport
-    // failure or an incomplete payload throws out of `observeProfileLiveness`, and
-    // leaving that outside the catch would exit unsuccessfully while the receipt still
-    // read as verified from the previous navigation — a green artifact for a run that
-    // failed, which is the defect class this whole issue is about.
-    let lastLiveness;
-    try {
-      lastLiveness = observeProfileLiveness(options);
-      post.profile_liveness = lastLiveness;
-      assertProfileLiveness(lastLiveness);
-    } catch (error) {
-      failLaterNavigationReceipt(options.receiptPath, receipt, error, pre, post);
-      throw error;
-    }
     receipt.last_navigation = {
       status: 'verified',
       pre,
       post,
-      profile_liveness: lastLiveness,
       verified_at: new Date().toISOString(),
     };
     writeLifecycleReceipt(options.receiptPath, receipt);
@@ -2038,12 +1820,6 @@ function performOwnedOpen(options) {
     }
     assertInitProbeObserved(options, probeExpression);
     post.recorder.init_script = 'observed';
-    // Attachment is evidence about the recorder, not about the profile. A declared
-    // liveness assertion is the only thing here that can speak to the profile, and it
-    // fails the run when it does not hold (#149).
-    const profileLiveness = observeProfileLiveness(options);
-    post.profile_liveness = profileLiveness;
-    assertProfileLiveness(profileLiveness);
     if (diagnosticManifest?.scripts?.length) {
       observeDiagnosticProjections(options, receipt, diagnosticManifest);
     }
@@ -2056,11 +1832,6 @@ function performOwnedOpen(options) {
       pre: receipt.first_navigation.pre,
       post,
       init_script: 'observed',
-      // Always present, including as `not-asserted`. `status: verified` has always meant
-      // navigation and recorder continuity and still does; it never meant the profile
-      // was live, and a receipt that stayed silent on the profile is what let a reviewer
-      // read it as though it did.
-      profile_liveness: profileLiveness,
       har,
       verified_at: new Date().toISOString(),
     };
@@ -3064,8 +2835,6 @@ function main(argv) {
         receiptPath,
         runId: options.runId,
         diagnosticScripts: options.diagnosticScripts,
-        profileLivenessKeys: options.profileLivenessKeys,
-        profileLivenessSelectors: options.profileLivenessSelectors,
       });
       if (options.authMode === 'flow-managed') {
         const record = readFlowManagedState({
@@ -3352,12 +3121,6 @@ module.exports = {
   markFlowManagedProfileActive,
   namespaceForRun,
   parseArgs,
-  // Exported for a direct unit test. The integration fixture runs the expression through
-  // `vm`, and `vm` does NOT forward a throwing getter from the sandbox — it yields
-  // `undefined` instead — so an opaque origin cannot be modelled there at all. Guard
-  // placement is only falsifiable against a real throwing getter, which needs
-  // in-process evaluation.
-  profileLivenessExpression,
   validateDiagnosticInitScript,
   prepareFlowManagedProfile,
   protectedRuntimeArgument,
