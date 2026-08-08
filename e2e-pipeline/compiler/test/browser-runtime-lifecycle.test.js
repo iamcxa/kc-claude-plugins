@@ -789,6 +789,33 @@ test('no profile-liveness flag is silently accepted and ignored, in either posit
   }
 });
 
+test('the refusal matches the retired option names, not anything starting with them', function(t) {
+  // A prefix match would also reject a legitimate payload whose value merely begins with
+  // the string. Refusing real work to catch a retired option is a worse trade than the
+  // option being retired at all, so the refusal is by exact name.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+
+  const result = spawnSync(
+    process.execPath,
+    [
+      RUNTIME,
+      '--run-id', fixture.runId,
+      '--app', fixture.app,
+      '--executable-path', fixture.executable,
+      '--profile', fixture.profile,
+      '--receipt', fixture.receipt,
+      'eval', '--profile-liveness-key-is-retired-see-issue-149',
+    ],
+    { encoding: 'utf8', env: fixture.env }
+  );
+
+  assert.doesNotMatch(
+    result.stderr,
+    /retired flag/,
+    'a data argument that merely starts with the retired name must not be refused'
+  );
+});
+
 test('0.32 snapshot is bound to its canonical source without reading profile secrets', function(t) {
   const fixture = setup(t, { profileMode: 'snapshot' });
   const targetUrl = 'https://application.example.test/snapshot';

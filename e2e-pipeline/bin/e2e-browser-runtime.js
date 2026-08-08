@@ -2431,8 +2431,13 @@ function isAllowedCommand(command) {
  * whole issue is about, so it is refused by name rather than left to be ignored.
  */
 function assertNoRetiredLivenessFlag(argv) {
+  // Exact names, not a prefix. A prefix match also rejects a legitimate payload whose
+  // value merely begins with the string — `eval "--profile-liveness-key is retired"` is
+  // data, not a flag — and refusing real work to catch a retired option is a worse trade
+  // than the option being retired at all.
+  const RETIRED = new Set(['--profile-liveness-key', '--profile-liveness-selector']);
   const retired = argv.filter(function(value) {
-    return typeof value === 'string' && value.startsWith('--profile-liveness');
+    return typeof value === 'string' && RETIRED.has(value);
   });
   if (retired.length === 0) return;
   throw new Error(
