@@ -690,6 +690,50 @@ test('the disclosure never claims an observation the runtime did not take', func
   assert.deepEqual(observed, ['not-observed', 'not-observed']);
 });
 
+test('a receipt written before the disclosure existed is backfilled, not left silent', function(t) {
+  // The disclosure is written during the pending-to-verified transition, so a receipt an
+  // earlier runtime left at `verified` never passes through that code again. Without a
+  // backfill it stays ambiguous for the rest of its life — in the receipts most likely to
+  // be read, because they belong to sessions already in flight.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+
+  const first = runOpen(fixture, 'https://application.example.test/legacy-one');
+  assert.equal(first.status, 0, first.stderr);
+
+  // Strip the field to reproduce a receipt from the previous runtime exactly.
+  const legacy = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  delete legacy.first_navigation.profile_state;
+  assert.equal(legacy.first_navigation.status, 'verified');
+  fs.writeFileSync(fixture.receipt, JSON.stringify(legacy, null, 2) + '\n');
+
+  const second = runOpen(fixture, 'https://application.example.test/legacy-two');
+  assert.equal(second.status, 0, second.stderr);
+
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  const disclosure = receipt.first_navigation.profile_state;
+  assert.equal(disclosure.status, 'not-observed');
+  assert.equal(disclosure.profile_copied_before_launch, true);
+  // Derived, not measured — but the receipt still records that it was written after the
+  // fact, because when a field was written is provenance this receipt exists to keep.
+  assert.equal(disclosure.backfilled, true);
+});
+
+test('a backfill never overwrites a disclosure the verification path already wrote', function(t) {
+  const fixture = setup(t, { profileMode: 'snapshot' });
+
+  const first = runOpen(fixture, 'https://application.example.test/keep-one');
+  assert.equal(first.status, 0, first.stderr);
+  const second = runOpen(fixture, 'https://application.example.test/keep-two');
+  assert.equal(second.status, 0, second.stderr);
+
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(
+    receipt.first_navigation.profile_state.backfilled,
+    undefined,
+    'a disclosure written at verification time must not be relabelled as backfilled'
+  );
+});
+
 test('no profile-liveness flag is silently accepted and ignored', function(t) {
   // The reverted attempt's worst failure was a documented flag that nothing forwarded, so
   // a caller got a silent no-op while believing a guard was installed. Now that the flags

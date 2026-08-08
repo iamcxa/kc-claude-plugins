@@ -1579,6 +1579,32 @@ function profileStateDisclosure(profileMode) {
   };
 }
 
+/**
+ * Add the disclosure to a receipt that predates it.
+ *
+ * `profile_state` is written during the pending-to-verified transition, so a receipt
+ * left behind by an earlier runtime already sits at `verified` and never passes through
+ * that code again. Without this it would stay silent for the rest of its life — the
+ * exact ambiguity the field exists to remove, preserved in the receipts most likely to
+ * be read, because they belong to sessions already in flight.
+ *
+ * Backfilling is sound because the disclosure is derived, not measured: it is a function
+ * of `profile_mode`, which is on the receipt and is re-checked against the live browser
+ * on every open. Nothing here observes the page, so there is no observation whose timing
+ * could make the derivation stale. `backfilled` records that it was written after the
+ * fact anyway, because when a field was written is the kind of provenance this receipt
+ * exists to keep.
+ */
+function backfillProfileStateDisclosure(receipt) {
+  if (!receipt.first_navigation) return false;
+  if (receipt.first_navigation.profile_state) return false;
+  receipt.first_navigation.profile_state = Object.assign(
+    profileStateDisclosure(receipt.profile_mode),
+    { backfilled: true }
+  );
+  return true;
+}
+
 function assertInitProbeObserved(options, expression) {
   const data = parseAgentBrowserPayload(
     runAgentBrowser(options, ['eval', expression, '--json']),
@@ -1825,6 +1851,7 @@ function performOwnedOpen(options) {
       })
     );
     assertStableNavigationIdentity(pre, post);
+    backfillProfileStateDisclosure(receipt);
     receipt.last_navigation = {
       status: 'verified',
       pre,
