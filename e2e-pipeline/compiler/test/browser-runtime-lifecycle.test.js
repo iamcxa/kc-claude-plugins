@@ -629,6 +629,193 @@ test('unbound 0.32 snapshot fails before the application URL is requested', func
   assert.equal(openedUrls.includes(targetUrl), false);
 });
 
+// #149. `verified` was being read as though it covered the profile, because the receipt
+// said nothing about the profile's contents either way. These pin the disclosure that
+// replaces that silence, and the boundary it must not quietly cross: it is a statement
+// about what was NOT observed, so any future edit that lets it read like a positive
+// observation has to fail here first.
+
+test('a snapshot run discloses that verified did not cover the profile contents', function(t) {
+  const fixture = setup(t, { profileMode: 'snapshot' });
+
+  const result = runOpen(fixture, 'https://application.example.test/disclosure');
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  const disclosure = receipt.first_navigation.profile_state;
+
+  assert.equal(receipt.first_navigation.status, 'verified');
+  assert.equal(disclosure.status, 'not-observed');
+  assert.equal(disclosure.verified_excludes, 'whether profile contents reached the page');
+  // The mode that copies before launch is the only one whose contents can be lost on the
+  // way to the page, so the disclosure has to say which mode this run was.
+  assert.equal(disclosure.profile_copied_before_launch, true);
+  assert.match(disclosure.note, /do not read `verified` as evidence/);
+});
+
+test('a persistent-path run discloses the absence of a copy step, still without observing', function(t) {
+  const fixture = setup(t);
+
+  const result = runOpen(fixture, 'https://application.example.test/persistent');
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  const disclosure = receipt.first_navigation.profile_state;
+
+  assert.equal(receipt.profile_mode, 'persistent-path');
+  assert.equal(disclosure.profile_copied_before_launch, false);
+  // Still `not-observed`: no copy step is a reason the contents are unlikely to be lost,
+  // not an observation that they arrived. Downgrading the risk is not the same as
+  // taking a measurement, and the receipt must not blur the two.
+  assert.equal(disclosure.status, 'not-observed');
+  assert.match(disclosure.note, /nothing here observed the page/);
+});
+
+test('the disclosure never claims an observation the runtime did not take', function(t) {
+  // The boundary. Every status this field can carry today says the same thing, because
+  // nothing in this runtime observes the page's profile state. A future detector may add
+  // a positive status — but it has to add the observation in the same change, and this
+  // assertion is what makes shipping the word without the measurement fail.
+  const observed = [];
+  for (const profileMode of ['snapshot', 'persistent']) {
+    const fixture = setup(t, { profileMode });
+    const result = runOpen(
+      fixture,
+      'https://application.example.test/boundary-' + profileMode
+    );
+    assert.equal(result.status, 0, result.stderr);
+    const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+    observed.push(receipt.first_navigation.profile_state.status);
+  }
+  assert.deepEqual(observed, ['not-observed', 'not-observed']);
+});
+
+test('BOUNDED: a legacy receipt is left alone rather than retrofitted by a read-only command', function(t) {
+  // The disclosure is written at the pending-to-verified transition, so a receipt an
+  // older runtime left at `verified` does not carry it. Retrofitting was implemented and
+  // removed, and this pins the removal rather than the gap: backfilling meant writing the
+  // receipt from `snapshot`, `click` and `eval`, which until then only read it, and the
+  // write replaced the whole object read before live ownership verification. Teammates
+  // within one run share a receipt, so a `snapshot` could erase a `last_navigation` a
+  // concurrent `open` had just written — destroying evidence to add a derived field.
+  //
+  // If a future change reintroduces the backfill, this test is where it has to argue with
+  // the concurrency hazard first.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+
+  const first = runOpen(fixture, 'https://application.example.test/legacy');
+  assert.equal(first.status, 0, first.stderr);
+
+  const legacy = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  delete legacy.first_navigation.profile_state;
+  legacy.last_navigation = { status: 'verified', sentinel: 'written-by-a-peer' };
+  fs.writeFileSync(fixture.receipt, JSON.stringify(legacy, null, 2) + '\n');
+
+  const snapshot = spawnSync(
+    process.execPath,
+    [
+      RUNTIME,
+      '--run-id', fixture.runId,
+      '--app', fixture.app,
+      '--executable-path', fixture.executable,
+      '--profile', fixture.profile,
+      '--receipt', fixture.receipt,
+      'snapshot',
+    ],
+    { encoding: 'utf8', env: fixture.env }
+  );
+  assert.equal(snapshot.status, 0, snapshot.stderr);
+
+  const after = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(
+    after.first_navigation.profile_state,
+    undefined,
+    'a read-only command must not retrofit the disclosure'
+  );
+  assert.equal(
+    after.last_navigation.sentinel,
+    'written-by-a-peer',
+    'and must not have rewritten the receipt at all — this is the evidence-loss hazard'
+  );
+  // The reader is not left without the fact: `profile_mode` still says whether a copy
+  // step existed, and references/commands.md states what a missing field means.
+  assert.equal(after.profile_mode, 'verified-snapshot');
+});
+
+test('no profile-liveness flag is silently accepted and ignored, in either position', function(t) {
+  // The reverted attempt's worst failure was a documented flag that nothing forwarded, so
+  // a caller got a silent no-op while believing a guard was installed. Both argument
+  // positions are covered because they took different routes: before the command the flag
+  // became `command[0]` and was rejected as an unknown command, but AFTER it the flag sat
+  // in the command tail, which `isAllowedCommand` never inspects — so it was discarded
+  // and the run produced a verified receipt. An earlier version of this test only
+  // exercised the position that already failed.
+  for (const [label, argv] of [
+    ['before the command', [
+      '--profile-liveness-key', 'auth_token',
+      'open', 'https://application.example.test/ghost-before',
+    ]],
+    ['in the command tail', [
+      'open', 'https://application.example.test/ghost-after',
+      '--profile-liveness-key', 'auth_token',
+    ]],
+    ['selector form in the tail', [
+      'open', 'https://application.example.test/ghost-selector',
+      '--profile-liveness-selector', '[data-testid="sign-out"]',
+    ]],
+  ]) {
+    const fixture = setup(t, { profileMode: 'snapshot' });
+    const result = spawnSync(
+      process.execPath,
+      [
+        RUNTIME,
+        '--run-id', fixture.runId,
+        '--app', fixture.app,
+        '--executable-path', fixture.executable,
+        '--profile', fixture.profile,
+        '--receipt', fixture.receipt,
+        ...argv,
+      ],
+      { encoding: 'utf8', env: fixture.env }
+    );
+
+    assert.notEqual(result.status, 0, label + ': a retired liveness flag must not be ignored');
+    assert.match(result.stderr, /retired flag --profile-liveness/, label + ': refused by name');
+    assert.equal(
+      fs.existsSync(fixture.receipt),
+      false,
+      label + ': it must fail before writing a receipt that would read as a verified run'
+    );
+  }
+});
+
+test('the refusal matches the retired option names, not anything starting with them', function(t) {
+  // A prefix match would also reject a legitimate payload whose value merely begins with
+  // the string. Refusing real work to catch a retired option is a worse trade than the
+  // option being retired at all, so the refusal is by exact name.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+
+  const result = spawnSync(
+    process.execPath,
+    [
+      RUNTIME,
+      '--run-id', fixture.runId,
+      '--app', fixture.app,
+      '--executable-path', fixture.executable,
+      '--profile', fixture.profile,
+      '--receipt', fixture.receipt,
+      'eval', '--profile-liveness-key-is-retired-see-issue-149',
+    ],
+    { encoding: 'utf8', env: fixture.env }
+  );
+
+  assert.doesNotMatch(
+    result.stderr,
+    /retired flag/,
+    'a data argument that merely starts with the retired name must not be refused'
+  );
+});
+
 test('0.32 snapshot is bound to its canonical source without reading profile secrets', function(t) {
   const fixture = setup(t, { profileMode: 'snapshot' });
   const targetUrl = 'https://application.example.test/snapshot';

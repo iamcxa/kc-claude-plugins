@@ -1539,6 +1539,57 @@ function inspectFirstNavigationHar(harPath) {
   };
 }
 
+/**
+ * State, on the receipt, that `verified` covers navigation and not the profile (#149).
+ *
+ * `first_navigation.status: verified` means the daemon, browser, page and profile
+ * identity held across the first application navigation and the recorder attached.
+ * It has never meant the profile's *contents* reached the page. The two are easy to
+ * conflate because every other profile field on the receipt — lineage, device, inode,
+ * structural digest — is about the files, and the files are fine in exactly the case
+ * that matters: agent-browser 0.32 snapshot mode drops Local Storage, so a
+ * pre-authenticated profile can be inert while every check above still passes.
+ *
+ * The issue's complaint was that a reader could not tell "profile restored" from
+ * "profile silently absent". This does not add that distinction — no observation is
+ * taken here, and an earlier attempt to take one was reverted after three gate rounds.
+ * What it removes is the *silence*: the receipt now says which of the two it is unable
+ * to tell you, so a reviewer stops inferring the answer from a green `verified`.
+ *
+ * `verified-snapshot` is called out because it is the mode that copies a profile
+ * before launch, and therefore the only mode in which contents can be dropped between
+ * the source and the page. `persistent-path` hands the browser the requested directory
+ * itself. That is a statement about which modes have a copy step, not a prediction
+ * about any agent-browser version.
+ *
+ * BOUNDED: this is written at the pending-to-verified transition, so it is carried by
+ * receipts this runtime verified — not by one an earlier runtime left at `verified`,
+ * which never passes through here again. Retrofitting those was implemented and removed:
+ * it meant writing the receipt from `snapshot`, `click` and `eval`, which until then only
+ * read it, and those writes replaced the whole object read before live ownership
+ * verification. Teammates within one run share a receipt, so a `snapshot` could have
+ * erased a `last_navigation` a concurrent `open` had just written — destroying evidence
+ * to add a derived field. The residual is bounded and stated in
+ * `references/commands.md`: a receipt without `profile_state` was verified by an older
+ * runtime, and `profile_mode` on it still says whether a copy step existed.
+ */
+function profileStateDisclosure(profileMode) {
+  const copiedBeforeLaunch = profileMode === 'verified-snapshot';
+  return {
+    status: 'not-observed',
+    verified_covers: 'navigation continuity and recorder attachment',
+    verified_excludes: 'whether profile contents reached the page',
+    profile_copied_before_launch: copiedBeforeLaunch,
+    note: copiedBeforeLaunch
+      ? 'this run used a profile copied into a snapshot before launch, which is the ' +
+        'only mode whose contents can be lost between the source profile and the ' +
+        'page; nothing here observed whether they were, so do not read `verified` as ' +
+        'evidence that a pre-authenticated profile is live'
+      : 'the browser was given the requested profile directory itself, so there is no ' +
+        'copy step to lose contents in; nothing here observed the page either way',
+  };
+}
+
 function assertInitProbeObserved(options, expression) {
   const data = parseAgentBrowserPayload(
     runAgentBrowser(options, ['eval', expression, '--json']),
@@ -1833,6 +1884,7 @@ function performOwnedOpen(options) {
       post,
       init_script: 'observed',
       har,
+      profile_state: profileStateDisclosure(receipt.profile_mode),
       verified_at: new Date().toISOString(),
     };
     receipt.diagnostic_cleanup = cleanupDiagnosticLifecycle(options.receiptPath);
@@ -2368,8 +2420,43 @@ function isAllowedCommand(command) {
   return ALLOWED_COMMANDS.has(command[0]);
 }
 
+/**
+ * Refuse a retired profile-liveness flag, wherever it appears in argv.
+ *
+ * These flags existed on an unmerged branch and in its documentation before the detector
+ * was reverted, so a copied invocation can still carry one. `isAllowedCommand` inspects
+ * only `command[0]`, so a flag in the command tail — `open <url> --profile-liveness-key
+ * x` — was accepted and discarded, and the run produced a verified receipt as though a
+ * guard had been applied. A flag that looks accepted and does nothing is the failure this
+ * whole issue is about, so it is refused by name rather than left to be ignored.
+ */
+function assertNoRetiredLivenessFlag(argv) {
+  // Exact names, not a prefix. A prefix match also rejects a legitimate payload whose
+  // value merely begins with the string — `eval "--profile-liveness-key is retired"` is
+  // data, not a flag — and refusing real work to catch a retired option is a worse trade
+  // than the option being retired at all.
+  const RETIRED = new Set(['--profile-liveness-key', '--profile-liveness-selector']);
+  const retired = argv.filter(function(value) {
+    return typeof value === 'string' && RETIRED.has(value);
+  });
+  if (retired.length === 0) return;
+  throw new Error(
+    'retired flag ' + retired[0] + ': runtime-level profile-liveness detection was ' +
+      'removed, and accepting this silently would report a guard that is not running. ' +
+      'The receipt states what `verified` does not cover in ' +
+      '`first_navigation.profile_state`; assert authentication in the flow itself. ' +
+      'Tracked in issue #149.'
+  );
+}
+
 function main(argv) {
   const options = parseArgs(argv);
+  try {
+    assertNoRetiredLivenessFlag(argv);
+  } catch (error) {
+    process.stderr.write('e2e-browser-runtime: ' + error.message + '\n');
+    return 2;
+  }
   if (options.command[0] === 'new-run-id') {
     process.stdout.write(
       Date.now().toString(36) + '-' + crypto.randomBytes(10).toString('hex') + '\n'
