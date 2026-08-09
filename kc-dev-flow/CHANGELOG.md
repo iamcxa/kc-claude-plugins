@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v1.3.0...kc-dev-flow-v1.4.0) (2026-08-09)
+
+
+### Features
+
+* **kc-dev-flow:** strengthen evidence intake and judgment ([97e3d25](https://github.com/iamcxa/kc-claude-plugins/commit/97e3d2597999c104821958494141fe14f5445abf)), closes [#170](https://github.com/iamcxa/kc-claude-plugins/issues/170) [#171](https://github.com/iamcxa/kc-claude-plugins/issues/171)
+
 ## [1.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v1.2.0...kc-dev-flow-v1.3.0) (2026-08-07)
 
 

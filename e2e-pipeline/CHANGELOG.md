@@ -3,6 +3,15 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.3.2](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.3.1...e2e-pipeline-v3.3.2) (2026-08-09)
+
+
+### Bug Fixes
+
+* **e2e-pipeline:** give the fidelity states an order, found by running them ([#148](https://github.com/iamcxa/kc-claude-plugins/issues/148)) ([#169](https://github.com/iamcxa/kc-claude-plugins/issues/169)) ([952371f](https://github.com/iamcxa/kc-claude-plugins/commit/952371f6e41e267e7d56b72918a1703c81ec7ff5))
+* **e2e-pipeline:** say on the receipt what verified did not cover ([#149](https://github.com/iamcxa/kc-claude-plugins/issues/149)) ([#163](https://github.com/iamcxa/kc-claude-plugins/issues/163)) ([5018dea](https://github.com/iamcxa/kc-claude-plugins/commit/5018deae9b614ae1b2a23e08580cd8b7a8f308dd))
+* **e2e-pipeline:** test the temp-root property, not a proxy for it ([#174](https://github.com/iamcxa/kc-claude-plugins/issues/174)) ([#175](https://github.com/iamcxa/kc-claude-plugins/issues/175)) ([0f6af32](https://github.com/iamcxa/kc-claude-plugins/commit/0f6af32ae7fdca42075519320343f040d3eeea39))
+
 ## [3.3.1](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.3.0...e2e-pipeline-v3.3.1) (2026-08-07)
 
 
