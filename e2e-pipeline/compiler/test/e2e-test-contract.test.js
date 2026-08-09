@@ -139,4 +139,66 @@ describe('e2e-test run fidelity contract', function() {
       'skipping the compiled cross-check must force the unverified fidelity state'
     );
   });
+
+  test('the fidelity states are an ordered decision, not an unordered table', function() {
+    // Behaviourally observed, not theorised. The first shipped version listed the three
+    // states as a match table with no precedence. Run against a `--no-compile` scenario
+    // that also had a deviation, two rows matched and the actor picked the earlier one —
+    // reporting `1 deviation(s)`, which reads as a complete count, where the contract
+    // wanted `unverified`, whose entire point is that a self-reported count may not be
+    // complete.
+    //
+    // No text assertion found that, and none could have: all three state strings were in
+    // the file, so every check in this describe block was green. It took running the
+    // instruction against a scenario where the rows overlap. That is why the fix is an
+    // explicit order, and why this pins the order rather than the vocabulary.
+    const runner = fs.readFileSync(testRunnerAgent, 'utf8');
+
+    assert.match(
+      runner,
+      /Decide it in this order and stop at the first rule that applies/,
+      'the states must be an ordered decision'
+    );
+    assert.match(
+      runner,
+      /more than one can\s+match, and taking a later one understates what you do not know/,
+      'the order must say why it exists, since an unexplained order invites reordering'
+    );
+    assert.match(
+      runner,
+      /unverified; N deviation\(s\) recorded/,
+      'the both-apply case must have an explicit rendering rather than being left to the reader'
+    );
+    // `as-written` needs all three conditions, not the absence of one. The first ordered
+    // version still let a compiled cross-check that ran and DISAGREED fall through to
+    // `as-written` whenever the ledger happened to be empty — which is exactly the case
+    // where the ledger is least trustworthy, since the script cannot improvise and the
+    // runner can.
+    assert.match(
+      runner,
+      /The cross-check ran and disagreed with the run\*\* → `divergent`/,
+      'a disagreeing cross-check must have its own state, not fall through'
+    );
+    assert.match(
+      runner,
+      /the ledger is empty \*\*and\*\* the\s+compiled cross-check ran \*\*and\*\* agreed\. All three, not any of them\./,
+      'as-written must require all three conditions explicitly'
+    );
+
+    // The fix is positional, so its enforcement has to be positional too.
+    const unverifiedRule = runner.indexOf('The compiled cross-check did not run');
+    const deviationRule = runner.indexOf('The ledger recorded a deviation');
+    const divergentRule = runner.indexOf('The cross-check ran and disagreed');
+    const asWrittenRule = runner.indexOf('Otherwise** → `as-written`');
+    assert.ok(
+      [unverifiedRule, deviationRule, divergentRule, asWrittenRule].every((i) => i > 0),
+      'all four rules must be present'
+    );
+    assert.ok(
+      unverifiedRule < deviationRule &&
+        deviationRule < divergentRule &&
+        divergentRule < asWrittenRule,
+      'as-written must be the last rule, reachable only after every way of not earning it'
+    );
+  });
 });
