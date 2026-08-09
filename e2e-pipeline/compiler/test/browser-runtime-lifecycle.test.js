@@ -825,7 +825,15 @@ test('the refusal matches the retired option names, not anything starting with t
 // snapshot. These pin all three ways that holds and the one way it does not, so a future
 // tightening back to a uid test fails here first.
 
-test('a temp root that is root-owned and sticky is accepted, as on Linux', function(t) {
+// Skipped when the process is root: `/tmp` is then owned by us, so the case this test
+// exists for — a root-owned root that is NOT ours — cannot be built from the host
+// filesystem. Root-running containers are common enough that leaving it to fail there
+// would be a red that says nothing about the guard.
+const RUNNING_AS_ROOT = process.getuid() === 0;
+
+test('a temp root that is root-owned and sticky is accepted, as on Linux', {
+  skip: RUNNING_AS_ROOT ? 'process is root, so /tmp is not a foreign-owned root' : false,
+}, function(t) {
   // `/tmp` on macOS is root-owned mode 1777 — byte-for-byte the Linux shape, so this runs
   // the real condition rather than a model of it.
   const stickyRoot = fs.realpathSync('/tmp');

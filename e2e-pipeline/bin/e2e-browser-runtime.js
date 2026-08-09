@@ -595,6 +595,14 @@ function structuralProfileProof(sourceProfile, actualProfile) {
  * runtime user (rejected above as "actual browser profile owner does not match"), and its
  * name carries agent-browser's ≥16-hex run id, so an attacker cannot pre-create the path
  * we will use and cannot keep it if they guess.
+ *
+ * KNOWN GAP, pre-existing and unchanged here: only the temp root itself is examined, not
+ * its ancestors. `TMPDIR=/attacker-owned/tmp` passes if the leaf looks right, while the
+ * ancestor's owner can rename the whole root and substitute the path underneath us.
+ * Closing it needs every ancestor validated to a trusted filesystem boundary, or the
+ * directory pinned through a handle rather than re-resolved by path. The predecessor had
+ * the same gap — it also stat'd only the leaf — so this is a hardening item rather than a
+ * regression, and it is tracked on #174 instead of being widened into this change.
  */
 function assertTempRootCannotBeHijacked(temporaryRoot, tempRootStat) {
   const runtimeUid =
