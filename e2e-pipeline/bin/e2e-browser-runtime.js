@@ -575,16 +575,20 @@ function structuralProfileProof(sourceProfile, actualProfile) {
  * while accepting a user-owned root with no sticky bit, which is equally safe for a
  * different reason. It was testing a proxy for the property instead of the property.
  *
- * The property is: nobody else can remove or rename our entry. Two ways that holds —
+ * The property is: nobody else can remove or rename our entry. That needs BOTH halves —
  *
- *   not group/world-writable  nobody else can write in the directory at all
- *   sticky                    others may create their own entries but not touch ours
+ *   a trusted owner    us, or root. A directory's owner may unlink any child it holds,
+ *                      whatever the mode says, so an untrusted owner defeats everything
+ *                      below.
+ *   safe permissions   not group/world-writable, or sticky. Sticky stops non-owners
+ *                      removing entries they did not create.
  *
- * Ownership deliberately does not appear. A directory we own at mode `0777` with no
- * sticky bit is exactly as hijackable as a root-owned one: the permission bits decide who
- * may unlink, not the owner field. A first draft of this fix kept `owned by us` as a
- * third sufficient condition and the refusal test caught it immediately — which is the
- * same mistake the predecessor made, one level in.
+ * Both, because each alone has a hole, and this function has now had each hole in turn:
+ *
+ *   ownership alone — the original. Rejected Linux `/tmp` (root-owned `1777`), which is
+ *     the standard secure arrangement, so the runtime could not launch on the platform.
+ *   permissions alone — my first fix. Accepted an attacker-owned `1777` `TMPDIR`, because
+ *     the sticky bit does not restrain the owner. Caught by the cross-model gate.
  *
  * Two guards elsewhere close the rest of the substitution path and are why this one only
  * has to cover removal and rename: the snapshot directory must itself be owned by the
@@ -593,9 +597,22 @@ function structuralProfileProof(sourceProfile, actualProfile) {
  * we will use and cannot keep it if they guess.
  */
 function assertTempRootCannotBeHijacked(temporaryRoot, tempRootStat) {
+  const runtimeUid =
+    typeof process.getuid === 'function' ? process.getuid() : tempRootStat.uid;
+  // root is trusted here in the same sense the OS already trusts it: a root that wanted
+  // this profile does not need to race us for a directory entry.
+  const trustedOwner = tempRootStat.uid === runtimeUid || tempRootStat.uid === 0;
   const writableByOthers = (tempRootStat.mode & 0o022) !== 0;
   // Sticky lives above the 0o777 permission bits, so it survives only on the raw mode.
   const sticky = (tempRootStat.mode & 0o1000) !== 0;
+  if (!trustedOwner) {
+    throw new Error(
+      'OS temp root is owned by another user, who may remove or rename entries in it ' +
+        'regardless of permissions, so a profile snapshot placed there could be replaced ' +
+        'before launch: ' + temporaryRoot + ' (uid ' + tempRootStat.uid + '). ' +
+        'Point TMPDIR at a directory you own.'
+    );
+  }
   if (!writableByOthers || sticky) return;
   throw new Error(
     'OS temp root is writable by other users without the sticky bit, so a profile ' +

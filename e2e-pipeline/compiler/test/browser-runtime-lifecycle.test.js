@@ -851,36 +851,51 @@ test('the guard refuses exactly the roots another user could swap, and no others
   // had nothing to do with what it claimed to prove. Driving the system to reach a pure
   // predicate buys nothing and couples the result to path length.
   const guard = runtimeModule.assertTempRootCannotBeHijacked;
-  const stat = (mode) => ({ mode: mode, uid: 0 });
+  const me = process.getuid();
+  const root = { uid: 0 };
+  const stranger = { uid: me + 4242 };
 
-  // Safe: nobody else may write in the directory at all.
-  guard('/safe/private', stat(0o40700));
-  guard('/safe/readable', stat(0o40755));
-  // Safe: others may create their own entries but not remove ours. Linux /tmp.
-  guard('/tmp', stat(0o41777));
+  // Safe: trusted owner, and nobody else may write in the directory at all.
+  guard('/safe/private', { mode: 0o40700, uid: me });
+  guard('/safe/readable', { mode: 0o40755, uid: me });
+  guard('/safe/root-private', { mode: 0o40755, uid: root.uid });
+  // Safe: trusted owner, and sticky stops non-owners removing our entry. Linux /tmp.
+  guard('/tmp', { mode: 0o41777, uid: root.uid });
 
-  // Unsafe: group- or world-writable with no sticky bit, so our entry can be unlinked.
+  // Unsafe: group- or world-writable with no sticky bit, so our entry can be unlinked
+  // by anyone who can write there.
   for (const mode of [0o40777, 0o40707, 0o40770]) {
     assert.throws(
-      () => guard('/unsafe', stat(mode)),
+      () => guard('/unsafe', { mode: mode, uid: me }),
       /writable by other users without the sticky bit/,
       'mode ' + mode.toString(8) + ' must be refused'
     );
   }
 
-  // Ownership must not rescue a swappable root: the permission bits decide who may
-  // unlink, not the owner field. This is the condition a first draft of the fix wrongly
-  // accepted, and the reason it is asserted rather than assumed.
+  // Unsafe: sticky does NOT restrain the directory's own owner, so an attacker-owned
+  // 1777 root permits substitution even though it looks exactly like /tmp. This is the
+  // hole the cross-model gate found in the first version of this fix, which tested
+  // permissions alone.
   assert.throws(
-    () => guard('/unsafe-but-mine', { mode: 0o40777, uid: process.getuid() }),
-    /writable by other users without the sticky bit/,
-    'a directory we own at 0777 is still swappable'
+    () => guard('/stranger-tmp', { mode: 0o41777, uid: stranger.uid }),
+    /owned by another user, who may remove or rename entries in it/,
+    'a sticky root owned by someone else is still swappable by its owner'
+  );
+  // Same for a locked-down root owned by someone else: the owner can unlink regardless.
+  assert.throws(
+    () => guard('/stranger-private', { mode: 0o40700, uid: stranger.uid }),
+    /owned by another user/,
+    'permissions do not restrain the owner'
   );
 
-  // The message has to be actionable: a user hitting this needs to know what to change.
+  // Both messages have to be actionable: a user hitting either needs to know what to fix.
   assert.throws(
-    () => guard('/unsafe', stat(0o40777)),
+    () => guard('/unsafe', { mode: 0o40777, uid: me }),
     /Point TMPDIR at a directory you own, or restore the sticky bit/
+  );
+  assert.throws(
+    () => guard('/stranger-tmp', { mode: 0o41777, uid: stranger.uid }),
+    /Point TMPDIR at a directory you own\./
   );
 });
 
