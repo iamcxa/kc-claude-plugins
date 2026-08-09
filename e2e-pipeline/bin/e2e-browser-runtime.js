@@ -3250,6 +3250,11 @@ module.exports = {
   managedExecutableSuffixes,
   main,
   markFlowManagedProfileActive,
+  // Exported for a direct unit test. Driving the whole runtime to reach this guard
+  // couples the assertion to the temp path's length, because the socket-namespace check
+  // runs first and rejects a long root before this one is reached — which is how the
+  // refusal case passed locally and failed on a runner.
+  assertTempRootCannotBeHijacked,
   namespaceForRun,
   parseArgs,
   validateDiagnosticInitScript,

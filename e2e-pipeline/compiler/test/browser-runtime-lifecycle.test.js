@@ -843,24 +843,45 @@ test('a temp root that is root-owned and sticky is accepted, as on Linux', funct
   assert.equal(receipt.first_navigation.status, 'verified');
 });
 
-test('a temp root writable by others without the sticky bit is refused', function(t) {
-  // The case the guard exists for: others may create AND remove entries, so the snapshot
-  // can be swapped between creation and launch.
-  const fixture = setup(t, { profileMode: 'snapshot' });
-  const unsafeRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-unsafe-root-'));
-  t.after(function() {
-    fs.rmSync(unsafeRoot, { recursive: true, force: true });
-  });
-  fs.chmodSync(unsafeRoot, 0o777); // world-writable, no sticky
-  fixture.env.TMPDIR = unsafeRoot;
+test('the guard refuses exactly the roots another user could swap, and no others', function() {
+  // Unit-level on purpose. An earlier version drove the whole runtime with TMPDIR set to a
+  // scratch directory, and on a Linux runner the socket-namespace check rejected that
+  // longer path *before* this guard was reached: the run failed, the assertion on the
+  // message did not, and the test was passing on the author's machine for a reason that
+  // had nothing to do with what it claimed to prove. Driving the system to reach a pure
+  // predicate buys nothing and couples the result to path length.
+  const guard = runtimeModule.assertTempRootCannotBeHijacked;
+  const stat = (mode) => ({ mode: mode, uid: 0 });
 
-  const result = runOpen(fixture, 'https://application.example.test/unsafe');
+  // Safe: nobody else may write in the directory at all.
+  guard('/safe/private', stat(0o40700));
+  guard('/safe/readable', stat(0o40755));
+  // Safe: others may create their own entries but not remove ours. Linux /tmp.
+  guard('/tmp', stat(0o41777));
 
-  assert.notEqual(result.status, 0, 'a swappable temp root must not be launched from');
-  assert.match(result.stderr, /writable by other users without the sticky bit/);
-  // The message has to be actionable: a user hitting this needs to know what to change,
-  // not just that a security condition failed.
-  assert.match(result.stderr, /Point TMPDIR at a directory you own, or restore the sticky bit/);
+  // Unsafe: group- or world-writable with no sticky bit, so our entry can be unlinked.
+  for (const mode of [0o40777, 0o40707, 0o40770]) {
+    assert.throws(
+      () => guard('/unsafe', stat(mode)),
+      /writable by other users without the sticky bit/,
+      'mode ' + mode.toString(8) + ' must be refused'
+    );
+  }
+
+  // Ownership must not rescue a swappable root: the permission bits decide who may
+  // unlink, not the owner field. This is the condition a first draft of the fix wrongly
+  // accepted, and the reason it is asserted rather than assumed.
+  assert.throws(
+    () => guard('/unsafe-but-mine', { mode: 0o40777, uid: process.getuid() }),
+    /writable by other users without the sticky bit/,
+    'a directory we own at 0777 is still swappable'
+  );
+
+  // The message has to be actionable: a user hitting this needs to know what to change.
+  assert.throws(
+    () => guard('/unsafe', stat(0o40777)),
+    /Point TMPDIR at a directory you own, or restore the sticky bit/
+  );
 });
 
 test('0.32 snapshot is bound to its canonical source without reading profile secrets', function(t) {
