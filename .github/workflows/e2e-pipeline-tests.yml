@@ -58,7 +58,21 @@ jobs:
       - name: Install
         run: npm ci
 
+      # The browser runtime refuses to launch when the OS temp root is not owned by the
+      # runtime user, because a snapshot profile is written there and a temp root someone
+      # else owns is a tampering surface. On macOS `$TMPDIR` is per-user and that holds by
+      # default; on Linux `/tmp` is root-owned, so it does not, and six lifecycle tests
+      # failed here on the first CI run with "OS temp root owner does not match the
+      # runtime user".
+      #
+      # Pointing TMPDIR at the runner-owned scratch directory satisfies the requirement
+      # rather than relaxing the check — a security check should not be loosened because
+      # a runner is shaped differently. The requirement itself is undocumented and would
+      # bite any Linux user the same way; that is filed separately.
+
       - name: Run suite
+        env:
+          TMPDIR: ${{ runner.temp }}
         # The file list is built here rather than with a shell glob exclusion so the
         # exclusion is visible in the log: a reader can see which file was skipped and
         # why the count differs from `npm test`.
@@ -86,5 +100,19 @@ jobs:
       - name: Install
         run: npm ci
 
+      # The browser runtime refuses to launch when the OS temp root is not owned by the
+      # runtime user, because a snapshot profile is written there and a temp root someone
+      # else owns is a tampering surface. On macOS `$TMPDIR` is per-user and that holds by
+      # default; on Linux `/tmp` is root-owned, so it does not, and six lifecycle tests
+      # failed here on the first CI run with "OS temp root owner does not match the
+      # runtime user".
+      #
+      # Pointing TMPDIR at the runner-owned scratch directory satisfies the requirement
+      # rather than relaxing the check — a security check should not be loosened because
+      # a runner is shaped differently. The requirement itself is undocumented and would
+      # bite any Linux user the same way; that is filed separately.
+
       - name: Run trace finalization
+        env:
+          TMPDIR: ${{ runner.temp }}
         run: node --test compiler/test/trace-finalization.test.js
