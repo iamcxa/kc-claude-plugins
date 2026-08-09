@@ -47,11 +47,27 @@ const childProcess = require('node:child_process');
 const { compile } = require('../compiler');
 
 const FIXTURES = path.join(__dirname, 'fixtures');
-const MAPPING_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-happy-map-'));
-fs.copyFileSync(
-  path.join(FIXTURES, 'happy-path-mapping.yaml'),
-  path.join(MAPPING_DIR, 'happy-path-app.yaml')
-);
+
+/**
+ * A mapping directory named for the app, torn down with the test that made it.
+ *
+ * `compile` resolves a mapping by filename, so the fixture has to be copied to
+ * `<app>.yaml` somewhere. Doing that once at module load leaked an `e2e-happy-map-*`
+ * directory into the OS temp root on every invocation — a test that litters the machine
+ * it runs on, which over a CI lifetime is exactly the kind of debris that later makes a
+ * temp-root guard look flaky.
+ */
+function mappingDir(t) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-happy-map-'));
+  t.after(function() {
+    fs.rmSync(dir, { recursive: true, force: true });
+  });
+  fs.copyFileSync(
+    path.join(FIXTURES, 'happy-path-mapping.yaml'),
+    path.join(dir, 'happy-path-app.yaml')
+  );
+  return dir;
+}
 
 const SCENARIOS = [
   {
@@ -92,7 +108,7 @@ function compileScenario(t, slug) {
   t.after(function() {
     fs.rmSync(outDir, { recursive: true, force: true });
   });
-  return compile(path.join(FIXTURES, slug), MAPPING_DIR, outDir);
+  return compile(path.join(FIXTURES, slug), mappingDir(t), outDir);
 }
 
 describe('happy path: the combinations real flows use', function() {

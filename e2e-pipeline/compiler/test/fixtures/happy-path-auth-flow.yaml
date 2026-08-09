@@ -10,9 +10,11 @@ name: happy-path-auth
 description: "Sign in and reach the dashboard"
 tags: [happy-path]
 mapping: happy-path-app
-variables:
-  email: "user@example.com"
-  password: "correct horse"
+# No `variables:` block. Zero flows in the corpus interpolate a variable into a Fill
+# value, and a first draft of this fixture did — inventing a shape nobody writes, which
+# is what this gate's header says not to do. It also silently did the wrong thing:
+# `${email}` is emitted inside single quotes and never bound, so the literal characters
+# would be typed into the field. Tracked separately; this fixture stays literal.
 steps:
   - id: open-login
     type: navigate
@@ -23,11 +25,11 @@ steps:
 
   - id: fill-email
     type: fill
-    action: "Fill email_input with '${email}' on login"
+    action: "Fill email_input with 'user@example.com' on login"
 
   - id: fill-password
     type: fill
-    action: "Fill password_input with '${password}' on login"
+    action: "Fill password_input with 'correct horse' on login"
 
   - id: submit
     type: click
