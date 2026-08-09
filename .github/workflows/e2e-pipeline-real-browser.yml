@@ -1,0 +1,83 @@
+name: e2e-pipeline real browser
+
+# The two behavioural proofs for #91 and #110, on a schedule.
+#
+# WHY THEY ARE NOT IN THE PR GATE
+#
+# They need a real agent-browser and a real Chrome for Testing, which the PR gate's Linux
+# runner has neither of (#174: the runtime does not run there yet). Installing a browser
+# on every pull request would also add minutes and an install-flake surface to a gate
+# whose value depends on being believed.
+#
+# WHY THEY NEED TO RUN AT ALL
+#
+# Both existed and neither had ever executed. `E2E_REAL_VISIBILITY` and
+# `E2E_REAL_AGENT_BROWSER_032` appeared nowhere in the repository — not in CI, not in a
+# script, not in package.json — so the behavioural half of two shipped issues was inert
+# and showed only as two `# SKIP` lines at the bottom of a 1055-line run. What actually
+# closed #91 and #110 was a stub. Both pass now (#176), which means the closures were
+# not wrong; the defect was that nobody could have known.
+#
+# Weekly rather than nightly: these guard a third-party integration that changes on
+# agent-browser's release cadence, not on ours, and a schedule nobody reads is worse than
+# one that fires rarely enough to be read. `workflow_dispatch` covers the case where
+# someone is deliberately changing the runtime.
+#
+# agent-browser is PINNED. #149 was a behaviour change between agent-browser versions
+# that nothing detected; a floating install here would make this job's verdict depend on
+# an upstream release, so a break would read as our regression.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: e2e-pipeline
+
+jobs:
+  real-browser:
+    # macOS because that is where the runtime currently works. When #174 closes, this
+    # should move to (or add) Linux — the point of the job is to catch what a stub cannot,
+    # and a single platform is how #110 came to be closed on one machine's evidence.
+    name: e2e-pipeline real-browser proofs (#91, #110)
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: e2e-pipeline/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Install agent-browser (pinned)
+        run: npm install -g agent-browser@0.32.0
+
+      - name: Install browser binaries
+        run: agent-browser install
+
+      - name: Record the versions this verdict is about
+        # A pass means "these two versions behave as the stub models". Without the
+        # versions in the log, a future reader cannot tell which upstream the evidence
+        # covers — which is the same gap that made #149 invisible.
+        run: |
+          set -euo pipefail
+          agent-browser --version
+          ls ~/.agent-browser/browsers 2>/dev/null || echo "no browsers directory"
+
+      - name: Run the real-browser proofs
+        # Serialised. Run in parallel these two intermittently fail: they each drive a
+        # real browser and contend for it. Measured — one of three parallel runs failed,
+        # three of three serial runs passed.
+        run: npm run test:real
