@@ -169,6 +169,16 @@ reports the same way whether or not the thing it watches is broken.
   implementation evidence, but cannot by themselves provide the independent
   verdict on that artifact; that verdict comes from fresh context not involved in
   producing it.
+- **Preserve the observation boundary at closure.** When an accepted problem or
+  criterion is grounded in behavior observed through a consumer or external
+  runtime boundary, validation re-runs the reported scenario through a runtime
+  of the same behavior-producing kind. Lower-level diagnosis and guards do not
+  replace re-observation through that boundary; they may localize the cause or
+  prevent a known input without showing what the consumer now experiences. The
+  original instance is not mandatory, but an alternative names why its actor,
+  instrument, delivery path, configuration, and claim-relevant conditions are
+  equivalent, together with the exact revision and artifact it exercised.
+  Unavailable re-observation is missing evidence, not completion evidence.
 - **A check is evidence only once it has been seen to fail.** A probe that
   returns a plausible result where it should have errored is worse than none,
   because its output reads as a conclusion. Run it against a case it must flag

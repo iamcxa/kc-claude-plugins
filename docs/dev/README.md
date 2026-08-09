@@ -624,8 +624,9 @@ an implementation stage nobody is reviewing for design.
 
 ### `ideation` — one gate for design, plan, and acceptance
 
-Policy mods: [`_mods/reverse-recovery-audit.md`](./_mods/reverse-recovery-audit.md)
-and [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
+Policy mods: [`_mods/engineering-judgment.md`](./_mods/engineering-judgment.md),
+[`_mods/reverse-recovery-audit.md`](./_mods/reverse-recovery-audit.md), and
+[`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 The single judgment-heavy stage. Flesh out the problem, decide the approach,
 define acceptance criteria and the test plan. The gate reviews all of it at
@@ -852,37 +853,50 @@ Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 ### `validation` — fresh eyes, adversarial by default
 
-Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
+Policy mods: [`_mods/engineering-judgment.md`](./_mods/engineering-judgment.md)
+and [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 A fresh-context agent verifies the deliverable against the ideation AC. The
 validator checks what was produced; it never finishes the work.
 
 The gate is presented with a filled **evidence block** — one line of *specific,
 falsifiable* evidence per item (presence of text is not the bar), and anything
-left blank counts as not-done, never a silent pass. It records five lines —
+left blank counts as not-done, never a silent pass. It records six lines —
 `Lenses:` (the diff classification, and per fired lens its verdict and finding
 count), `Diff coverage:` (the measured %), `Adversarial:`, `Cross-model:`,
-`E2E:` — each naming what was actually run and what it returned.
+`E2E:`, `Origin re-observation:` — each naming what was actually run and what it
+returned.
+
+When an accepted problem or AC came from behavior observed through a consumer or
+external runtime, the sixth line is:
+
+`Origin re-observation: PASS|FAIL — Reported scenario: <scenario> | Originating runtime kind: <kind> | Re-observation artifact/revision: <artifact and exact revision> | Equivalent-runtime rationale: <why its actor, instrument, delivery path, configuration, and claim-relevant conditions match the originating boundary> | Falsifier kind: refusal|mutation|existence-disproof | Result: <what happened>`
+
+Otherwise write `Origin re-observation: N/A — no accepted claim originated in
+consumer or external runtime behavior`. A missing runtime, inaccessible consumer,
+or unconfigured instrument is not an `N/A` condition; it leaves the field not-done.
 
 **A field whose own clause permits a skip is written `N/A — <why>`, never a bare
-`N/A`.** A skip without its reason and a skip with one do not read alike. Three
-fields have such a clause — `Adversarial:`, `Diff coverage:`, `E2E:`; `Lenses:`
-and `Cross-model:` have none and are therefore never `N/A`. **The condition that
+`N/A`.** A skip without its reason and a skip with one do not read alike. Four
+fields have such a clause — `Adversarial:`, `Diff coverage:`, `E2E:`, and
+`Origin re-observation:`; `Lenses:` and `Cross-model:` have none and are therefore
+never `N/A`. **The condition that
 permits the skip lives in that field's own clause, and is not restated here** — for
 `E2E:` that is the E2E-first acceptance clause at ideation; for the rest, the
-validation clauses in this section. Only two are set here, because nowhere else
+validation clauses in this section. Only three are set here, because nowhere else
 states them: `Adversarial: N/A — <why>` for a diff with no behavioral guard to
 break, and `Diff coverage: N/A — prose-only diff, no executable surface` for the
 markdown-only diffs that are this repo's common case (the coverage clause below
-scopes what counts as coverable). `Lenses:` and `Cross-model:` are never `N/A`.
+scopes what counts as coverable), plus the exact Origin condition above. `Lenses:`
+and `Cross-model:` are never `N/A`.
 Scale changes how deep each item goes, never whether it runs — this block is
 where an agent is tempted to convert "small" into "skipped", and small is not a
-skip condition for any of the five. A gate presented without the block is
+skip condition for any of the six. A gate presented without the block is
 returned unread — the same bar the ideation stage's design determination is held
 to.
 
 **A round fills its field only when it names what it read and what would have
-failed it.** Two facts, appended to whichever of the five the round belongs to:
+failed it.** Two facts, appended to whichever of the six the round belongs to:
 
 - **What it read** — the exact ref or revision and the path. `origin/main`, a
   stale buffer, a base commit, and this worktree are four different artifacts,
@@ -986,6 +1000,9 @@ any reading of it, and it is usually the cheaper one to run.
   explicitly waived with a recorded reason at the gate — never silently dropped.
 - Exercise the E2E AC in the real runtime. Whether the task owes one at all is
   decided by the E2E-first clause at ideation, not here.
+- Re-observe every accepted consumer or external-runtime report through the
+  `Origin re-observation:` clause. Producer-side diagnosis and guards do not fill
+  that field without the required originating-boundary or equivalence evidence.
 - **Coverage is a ratchet, not a target — scoped to executable code only.**
   This repo is prose-heavy: coverage applies ONLY to executable surfaces
   (scripts/, hooks, MCP/server code), where lines added or changed by a task
@@ -1144,8 +1161,8 @@ kind of decision, not on which stage it sits at.
 
 | Seat | Holds | Examples |
 |------|-------|----------|
-| **Captain** | Direction and irreversibility | Scope authorship; what to work on next; schema / architecture / scope-cut / costly_no; accepting a documented residual against a red gate; any seat disagreement |
-| **EM** (`ship-flow:science-officer-em`) | Bounded judgment on completed work | The ideation and validation verdicts — proceed / narrow / return / block |
+| **Captain** | Direction and irreversibility | Scope authorship; what to work on next; schema / architecture / scope-cut; accepting or rejecting costly_no recommendations; accepting a documented residual against a red gate; any seat disagreement |
+| **EM** (`kc-dev-flow:science-officer-em`) | Bounded judgment on completed work | The ideation and validation recommendations — proceed / narrow / return / block / costly_no |
 | **FO** | Nothing adjudicative | Checklist accounting, AC-evidence presence, dispatch, merge mechanics, cleanup |
 
 **Default: EM holds the gate.** The FO assembles the review — checklist
@@ -1208,10 +1225,15 @@ propagates versions — **not a gate verdict that lets this one merge proceed.**
 passed validation gate is the second kind, so it stays inside the auto-advance
 rule above; reading it as the first kind would make auto-advance dead for the
 only stage it matters at. Route to a
-fresh-context engineering-judgment agent (`ship-flow:science-officer-em`) for
+fresh-context engineering-judgment agent (`kc-dev-flow:science-officer-em`) for
 independent synthesis, add one cross-vendor pass (codex/gemini) when the call
 is contested, and bring the captain a CONVERGED recommendation. The captain
 rules; disagreement between seats goes to the captain, not to a vote.
+
+The engineering_judgment advisory record defined by
+`_mods/engineering-judgment.md` is the required payload whichever agent renders
+it. A provider-specific upward report may wrap that record, but it does not omit
+adjudications, dissent, disproof condition, or the authority boundary.
 
 ## Canonical Docs Ownership
 

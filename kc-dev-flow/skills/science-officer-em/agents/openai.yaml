@@ -1,0 +1,4 @@
+interface:
+  display_name: "Science Officer (EM)"
+  short_description: "Independent engineering judgment and costly-no"
+  default_prompt: "Use $science-officer-em to adjudicate this engineering decision and return a primary-source-grounded recommendation."

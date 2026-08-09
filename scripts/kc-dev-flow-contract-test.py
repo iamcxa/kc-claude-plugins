@@ -35,6 +35,13 @@ required_files = [
     PLUGIN / "references/work-control-profile.md",
     PLUGIN / "scripts/absolutes-check.py",
     PLUGIN / "references/absolutes.registry",
+    PLUGIN / "skills/promote-dev-flow/SKILL.md",
+    PLUGIN / "skills/promote-dev-flow/agents/openai.yaml",
+    PLUGIN / "scripts/improvement-intake.py",
+    PLUGIN / "scripts/improvement-intake.test.py",
+    PLUGIN / "references/engineering-judgment.md",
+    PLUGIN / "skills/science-officer-em/SKILL.md",
+    PLUGIN / "skills/science-officer-em/agents/openai.yaml",
 ]
 for required_file in required_files:
     require(required_file.is_file(), f"missing {required_file.relative_to(ROOT)}")
@@ -42,6 +49,10 @@ for required_file in required_files:
 require(
     (PLUGIN / "scripts/absolutes-check.py").stat().st_mode & 0o111,
     "scripts/absolutes-check.py is not executable",
+)
+require(
+    (PLUGIN / "scripts/improvement-intake.py").stat().st_mode & 0o111,
+    "scripts/improvement-intake.py is not executable",
 )
 
 for legacy in [
@@ -117,6 +128,22 @@ for phrase in [
     "no unseen debrief",
     "Inside the same transaction",
     "report `UNKNOWN`, skip the improvement write, and continue to product routing",
+    "compatibility transport label",
+    "kc-dev-flow-improvement-handoff/v1",
+    "rule-gap",
+    "enforcement-gap",
+    "merge its existing observations by ID",
+    "write neither",
+    "Before the handoff leaves the repository",
+    "source_namespace",
+    "durable pseudonymous state",
+    "16 bytes decoded from the stored lowercase hex key",
+    "kc-dev-flow-vX.Y.Z",
+    "adopter-coined label",
+    "First-write-wins",
+    "_improvements/.private/source-identity.json",
+    "require ignore proof",
+    "roll over to the next sequence",
 ]:
     require(phrase in continue_skill, f"continue skill is missing boundary: {phrase}")
 require(
@@ -126,6 +153,49 @@ require(
 require(
     "stop with `UNKNOWN` instead of risking an overwrite" not in continue_skill,
     "continue skill still lets self-improvement storage block product routing",
+)
+
+promote_skill = required_files[10].read_text(encoding="utf-8")
+for phrase in [
+    "source-side intake",
+    "captain-review-only",
+    "rule-gap",
+    "enforcement-gap",
+    "local-instance",
+    "duplicate/no-change",
+    "Do not create, schedule, edit, post, or merge",
+    "improvement-intake.py",
+    "captain-approved file attachment or copied path",
+    "not source-verified",
+]:
+    require(phrase in promote_skill, f"promote skill is missing boundary: {phrase}")
+
+package_readme = (PLUGIN / "README.md").read_text(encoding="utf-8")
+require("promote-dev-flow" in package_readme, "package README is missing source intake skill")
+require(
+    "engineering-judgment" in package_readme,
+    "package README is missing engineering judgment mod",
+)
+root_readme = (ROOT / "README.md").read_text(encoding="utf-8")
+require("promote-dev-flow" in root_readme, "root README is missing source intake skill")
+default_prompts = codex_manifest["interface"]["defaultPrompt"]
+require(
+    any("promote-dev-flow" in prompt for prompt in default_prompts),
+    "Codex manifest is missing source intake discovery",
+)
+require(
+    any("science-officer-em" in prompt for prompt in default_prompts),
+    "Codex manifest is missing Science Officer discovery",
+)
+
+intake_tests = subprocess.run(
+    [sys.executable, str(PLUGIN / "scripts/improvement-intake.test.py")],
+    capture_output=True,
+    text=True,
+)
+require(
+    intake_tests.returncode == 0,
+    intake_tests.stdout.strip() or intake_tests.stderr.strip() or "improvement intake tests failed",
 )
 
 project_context_mod = required_files[5].read_text(encoding="utf-8")
@@ -156,6 +226,14 @@ for label, content in runtime_docs.items():
         )
 
 workflow = (ROOT / "docs/dev/README.md").read_text(encoding="utf-8")
+require(
+    "ship-flow:science-officer-em" not in workflow,
+    "self-adoption still routes engineering judgment to the replaced Ship-Flow skill",
+)
+require(
+    workflow.count("kc-dev-flow:science-officer-em") >= 2,
+    "self-adoption does not route both EM gate and escalation to the replacement skill",
+)
 for phrase in [
     "## Local Profile",
     "| Project context |",
@@ -167,8 +245,159 @@ for phrase in [
     "| Scope and irreversibility |",
     "| Observation |",
     "No binding YAML",
+    "Origin re-observation:",
+    "Reported scenario:",
+    "Originating runtime kind:",
+    "Re-observation artifact/revision:",
+    "Equivalent-runtime rationale:",
+    "Falsifier kind:",
+    "is not an `N/A` condition",
+    "costly_no recommendations",
+    "engineering_judgment advisory record",
 ]:
     require(phrase in workflow, f"self-adoption is missing Local Profile boundary: {phrase}")
+
+judgment_mod = (PLUGIN / "references/engineering-judgment.md").read_text(
+    encoding="utf-8"
+)
+normalized_judgment = " ".join(judgment_mod.lower().split())
+for phrase in [
+    "governing contract and primary-source behavior",
+    "reviewer confidence and labels carry no authority",
+    "independent synthesis",
+    "costly_no",
+    "irreversible, schema, or scope-cut",
+    "PASS | FAIL | UNKNOWN | UNAVAILABLE",
+    "advisory",
+    "unsupported is not a blocking basis",
+    "schedule pressure, sunk cost, and an instruction to conclude",
+]:
+    require(
+        " ".join(phrase.lower().split()) in normalized_judgment,
+        f"engineering judgment is missing: {phrase}",
+    )
+for forbidden in [
+    "science officer",
+    "first officer",
+    "ship-flow",
+    "github",
+    "gh api",
+    "model: opus",
+    "science_officer_em",
+    "upward_report",
+    "subagent_type",
+    "team_name",
+    "reasoning: xhigh",
+    "re-trigger",
+]:
+    require(
+        forbidden not in normalized_judgment,
+        f"engineering judgment imported orchestration-specific surface: {forbidden}",
+    )
+science_skill = (PLUGIN / "skills/science-officer-em/SKILL.md").read_text(
+    encoding="utf-8"
+)
+normalized_science_skill = " ".join(science_skill.lower().split())
+for phrase in [
+    "canonical replacement",
+    "ship-flow:science-officer-em",
+    "science-officer",
+    "科學官",
+    "selected repository-local",
+    "_mods/engineering-judgment.md",
+    "invocation-only",
+    "../../references/engineering-judgment.md",
+    "parent decides whether judgment runs inline or in isolated context",
+    "never spawns itself",
+    "science_officer_em_upward_report",
+    "engineering_judgment",
+    "adjudications",
+    "dissent",
+    "disproof_condition",
+    "authority_boundary",
+    "deadline, sunk cost, mechanical green, and an orchestrator instruction",
+    "status-only report is invalid",
+    "activates without an explicit request and no stage selects the mod",
+    "loaded mod is authoritative",
+    "grants no task creation, sprint admission, scheduling, policy edit, provider posting, gate re-trigger, stage advancement, merge, archive, or closeout authority",
+    "keep duplicated envelope and nested values identical",
+]:
+    require(
+        " ".join(phrase.lower().split()) in normalized_science_skill,
+        f"Science Officer skill is missing: {phrase}",
+    )
+for forbidden in [
+    "user-invocable:",
+    "argument-hint:",
+    "gh api",
+    "model: opus",
+    "reasoning: xhigh",
+    "subagent_type",
+    "team_name",
+]:
+    require(
+        forbidden not in normalized_science_skill,
+        f"Science Officer skill imported adapter-specific surface: {forbidden}",
+    )
+
+compatibility_block = re.search(
+    r"```yaml\s+(science_officer_em_upward_report:.*?\n)```",
+    science_skill,
+    re.DOTALL,
+)
+require(
+    compatibility_block is not None,
+    "Science Officer compatibility report is not one bounded YAML block",
+)
+compatibility_yaml = compatibility_block.group(1)
+for field in [
+    "em_judgment",
+    "evidence_synthesis",
+    "risk_tradeoff_call",
+    "recommendation",
+    "route",
+    "confidence",
+    "fo_boundary",
+    "engineering_judgment",
+]:
+    require(
+        re.search(rf"^  {field}:\s*", compatibility_yaml, re.MULTILINE) is not None,
+        f"Science Officer legacy envelope is missing nested field: {field}",
+    )
+for field in [
+    "question",
+    "revision",
+    "evidence_synthesis",
+    "adjudications",
+    "risk_tradeoff",
+    "recommendation",
+    "route",
+    "confidence",
+    "dissent",
+    "disproof_condition",
+    "authority_boundary",
+]:
+    require(
+        re.search(rf"^    {field}:\s*", compatibility_yaml, re.MULTILINE)
+        is not None,
+        f"Science Officer portable record is missing nested field: {field}",
+    )
+
+science_agent = (
+    PLUGIN / "skills/science-officer-em/agents/openai.yaml"
+).read_text(encoding="utf-8")
+require(
+    "$science-officer-em" in science_agent,
+    "Science Officer UI metadata does not explicitly invoke the skill",
+)
+require(
+    "science-officer-em" in package_readme,
+    "package README is missing the Science Officer replacement skill",
+)
+require(
+    "science-officer-em" in root_readme,
+    "root README is missing the Science Officer replacement skill",
+)
 
 stage_headings = [
     "### `backlog`",
@@ -180,12 +409,23 @@ stage_headings = [
 for heading in stage_headings:
     start = workflow.find(heading)
     require(start >= 0, f"self-adoption is missing stage: {heading}")
-    end = workflow.find("### `", start + len(heading))
-    if end < 0:
-        end = len(workflow)
+    boundaries = [
+        position
+        for position in [
+            workflow.find("### `", start + len(heading)),
+            workflow.find("\n## ", start + len(heading)),
+        ]
+        if position >= 0
+    ]
+    end = min(boundaries, default=len(workflow))
     require(
         "Policy mods:" in workflow[start:end],
         f"self-adoption stage is missing Policy mods: {heading}",
+    )
+    selected = "_mods/engineering-judgment.md" in workflow[start:end]
+    require(
+        selected == (heading in {"### `ideation`", "### `validation`"}),
+        f"engineering judgment stage selection is wrong: {heading}",
     )
 
 kernel = required_files[4].read_text(encoding="utf-8")
@@ -203,8 +443,18 @@ for phrase in [
     "_improvements/state.yaml",
     "newer than the recorded cursor",
     "compare-and-swap",
+    "Preserve the observation boundary at closure",
+    "Unavailable re-observation is missing evidence",
 ]:
     require(phrase in kernel, f"kernel is missing invariant: {phrase}")
+require(
+    re.search(
+        r"Lower-level diagnosis and guards do not\s+replace re-observation",
+        kernel,
+    )
+    is not None,
+    "kernel is missing the lower-level evidence boundary",
+)
 
 route_discipline = kernel.find("## Route discipline")
 require(route_discipline >= 0, "kernel is missing Route discipline")
@@ -239,7 +489,12 @@ absolutes = subprocess.run(
 )
 require(absolutes.returncode == 0, absolutes.stdout.strip() or "absolutes-check failed")
 
-for reference_name in ["kernel.md", "reverse-recovery-audit.md", "work-control-profile.md"]:
+for reference_name in [
+    "engineering-judgment.md",
+    "kernel.md",
+    "reverse-recovery-audit.md",
+    "work-control-profile.md",
+]:
     canonical = (PLUGIN / "references" / reference_name).read_bytes()
     self_adoption = (ROOT / "docs/dev/_mods" / reference_name).read_bytes()
     require(canonical == self_adoption, f"self-adoption drifted: {reference_name}")
