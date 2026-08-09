@@ -7,7 +7,8 @@
     "test": "node --test compiler/test/*.test.js",
     "lint": "biome lint compiler/ bin/",
     "lint:fix": "biome lint --write compiler/ bin/",
-    "check": "npm run lint && npm test"
+    "check": "npm run lint && npm test",
+    "test:real": "E2E_REAL_AGENT_BROWSER_032=1 E2E_REAL_VISIBILITY=1 node --test --test-concurrency=1 compiler/test/browser-runtime-diagnostic-real.test.js compiler/test/visibility-browser-runtime-real.test.js"
   },
   "bin": {
     "e2e-compile": "bin/e2e-compile.js",
