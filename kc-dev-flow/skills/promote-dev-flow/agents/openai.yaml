@@ -1,0 +1,4 @@
+interface:
+  display_name: "Promote Dev Flow Evidence"
+  short_description: "Review adopter evidence at the dev-flow source"
+  default_prompt: "Use $promote-dev-flow to classify this sanitized adopter evidence without creating or scheduling work."

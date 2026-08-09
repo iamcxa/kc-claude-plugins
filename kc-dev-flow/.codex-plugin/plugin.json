@@ -19,7 +19,7 @@
   "interface": {
     "displayName": "KC Dev Flow",
     "shortDescription": "Portable sprint flow with explicit authority and evidence",
-    "longDescription": "Adopt, audit, upgrade, and continue a repository-owned development flow while preserving the repository's tracker, stage runtime, delivery provider, and decision authority.",
+    "longDescription": "Adopt, audit, upgrade, and continue a repository-owned development flow, review sanitized adopter evidence at the canonical source, and request independent engineering judgment while preserving local and source decision authority.",
     "developerName": "Kent Chen",
     "category": "Productivity",
     "capabilities": [
@@ -28,7 +28,9 @@
     ],
     "defaultPrompt": [
       "Audit this repository with adopt-dev-flow",
-      "Continue the approved sprint with continue-dev-flow"
+      "Continue the approved sprint with continue-dev-flow",
+      "Review sanitized adopter evidence with promote-dev-flow",
+      "Ask $science-officer-em to adjudicate this engineering decision"
     ],
     "brandColor": "#2563EB"
   }

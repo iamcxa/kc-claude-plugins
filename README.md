@@ -95,7 +95,11 @@ Portable development-flow kernel for Claude Code and Codex. It binds existing
 project context, work-item, sprint, execution, delivery, and observation
 authorities instead of replacing them. `adopt-dev-flow` audits or upgrades the
 binding; `continue-dev-flow` keeps an approved sprint moving through fresh
-validation and delivery without unnecessary captain pauses.
+validation and delivery without unnecessary captain pauses; `promote-dev-flow`
+reviews sanitized adopter evidence at the canonical source without granting it
+task or policy authority; `science-officer-em` provides independent engineering
+judgment through the canonical replacement skill while preserving the legacy
+report envelope and existing captain, gate, and delivery authority.
 
 **Use when:** You want multiple repositories or agent harnesses to share a lean,
 evidence-bound workflow while retaining their local tracker and runtime.
