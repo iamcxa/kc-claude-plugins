@@ -1013,6 +1013,17 @@ any reading of it, and it is usually the cheaper one to run.
   fresh start: the approach cannot hold the boundary, and the next cycle finds
   the next surface. Counting only repeated findings never fires on that case,
   and it is the common one.
+  **That escalation carries its option set, and re-cutting the deliverable is on
+  it.** The FO presents named choices rather than an open question — at minimum:
+  re-cut at ideation because the deliverable is the wrong shape; one further
+  correction round, justified by a named change to the *approach* and not merely
+  to the findings; accept the surviving findings as a recorded residual against
+  the red gate; or park with re-enterable state, cutting the remainder to
+  backlog. Re-cut is the option most easily dropped, because the clause that
+  spells it out on this path is the budget brake below, and this counter fires
+  on rounds that brake does not reach. An option the presenting agent has to
+  think of is an option that depends on the presenting agent. Naming it does not
+  choose it — the captain holds the call, per Gate Authority.
 - **Every correction round carries a budget record.** Each rework round
   appends one entry: the round's actual effort against the ideation-declared
   estimate, the deviation, and the findings disposition. Past the declared
@@ -1255,6 +1266,22 @@ not a second task universe.
   belongs to this flow rather than to a pointer in a file loaded earlier, since a
   pointer leaves the mixing in place and adds a second thing to keep true.
   Self-reported by the session that paid it; amend or strike as you see it.
+- 2026-08-09 · the validation stage's rejection clause — the counter-based
+  escalation ended the loop and sent the call to the captain without naming what
+  the captain was choosing between, so whether "the deliverable is the wrong
+  shape" reached the gate depended on the presenting agent thinking of it. The
+  design-reset option was written down, on this path, only in the adjacent
+  budget brake, and the budget brake was never approached: three consecutive
+  rejections of the same defect class ran at 30%, 47% and 60% of the approved
+  budget with ACs unchanged. Cost: two correction rounds spent fixing instances
+  of a class that needed deleting, plus a human ruling to stop them. Resolved —
+  the rejection clause now carries its option set. Provenance: measured in a
+  **sibling** instance of the same canonical template, not in this repository
+  and not downstream of this file (this README is itself instantiated from
+  `spacedock-workflows muscat/docs/lean-sd-workflow/README-template.md`, see the
+  comment at the top). The counter it measured is the template's same-finding
+  wording, which this file had already replaced with a count-based trigger, so
+  the numbers attach to that clause and not to the one above (issue #143).
 
 ## Task Template
 
