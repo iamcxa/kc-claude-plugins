@@ -75,12 +75,32 @@ const SCENARIOS = [
     label: 'sign in and reach the dashboard',
     // Selector forms this scenario must actually drive into the generated script.
     mustResolve: ["input[type='email']", '[data-testid="login-submit"]'],
+    // …and the assertions those elements are subject to. A selector reaching the script
+    // says the element resolved; it does not say the flow still asserts what it wrote.
+    // Without these, codegen could drop or invert every expect and this stays green.
+    mustAssert: [
+      // `url contains` — 34% of corpus expects, on both the start and the landing page.
+      /_poll_url_contains '\/login'/,
+      /_poll_url_contains '\/dashboard'/,
+      // `not visible` — the polarity is the point. An inverted assertion is the failure
+      // mode a presence check cannot see.
+      /_poll_visibility '\[data-testid="login-error"\]' 'strict' not-visible/,
+      // …and its positive counterpart, so a global polarity flip cannot pass either.
+      /_poll_visibility '\[data-testid="welcome"\]' 'strict' visible/,
+    ],
   },
   {
     slug: 'happy-path-locators-flow.yaml',
     label: 'assert elements located by text=, role regex, and bare role',
     // The css_selector companions, which are what mapped visibility resolves post-#91.
     mustResolve: ['[data-testid="welcome"]', 'button[aria-label="重新整理"]', 'table.results'],
+    mustAssert: [
+      /_poll_url_contains '\/dashboard'/,
+      // The non-CSS-located elements must be asserted through their DOM identity, which
+      // is the whole point of the css_selector companion.
+      /_poll_visibility 'table\.results' 'strict' visible/,
+      /_poll_visibility '\[data-testid="nav-dashboard"\]' 'strict' visible/,
+    ],
   },
 ];
 
@@ -139,6 +159,17 @@ describe('happy path: the combinations real flows use', function() {
         assert.ok(
           readable.includes(selector),
           'generated script must carry the resolved identity ' + JSON.stringify(selector)
+        );
+      }
+
+      // …and the assertion each element is subject to, with its polarity. A resolved
+      // selector proves the element survived compilation; it says nothing about whether
+      // the flow still checks what it asked for.
+      for (const operation of scenario.mustAssert) {
+        assert.match(
+          readable,
+          operation,
+          'generated script must emit the assertion ' + operation
         );
       }
     });
