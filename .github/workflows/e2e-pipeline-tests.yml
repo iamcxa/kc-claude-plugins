@@ -66,12 +66,14 @@ jobs:
         run: npm ci
 
       - name: Run suite
-        env:
-          # Satisfies the runtime's user-owned-temp-root requirement rather than relaxing
-          # the check. Only some of the excluded files need it, but the rest of the suite
-          # writes scratch directories too and a runner-owned root is correct for all of
-          # them.
-          TMPDIR: ${{ runner.temp }}
+        # TMPDIR is deliberately NOT overridden. An earlier revision pointed it at
+        # `runner.temp` to satisfy the old user-owned-temp-root guard; #174 fixed that
+        # guard to test the actual property, so `/tmp` is accepted on its own merits and
+        # the override became not just unnecessary but harmful — `/home/runner/work/_temp`
+        # is long enough that the derived agent-browser socket path exceeds the ~104-byte
+        # Unix domain socket limit, which failed 30 tests with "leave no socket-safe e2e
+        # namespace". A workaround that outlived its cause, costing more than it saved.
+        #
         # The exclusion list is spelled out in the command rather than hidden in a glob so
         # the log shows which files were skipped and why the count differs from `npm test`.
         run: |
