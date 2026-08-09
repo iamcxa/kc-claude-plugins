@@ -1,6 +1,6 @@
 {
   "name": "kc-dev-flow",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Portable, evidence-bound development flow for adopting and continuously advancing repository sprints without duplicating local authority.",
   "author": {
     "name": "Kent Chen",
