@@ -1,0 +1,90 @@
+name: e2e-pipeline tests
+
+# Runs the `e2e-pipeline` compiler/runtime suite, which until now ran nowhere in CI.
+#
+# That gap mattered more than it looks. `docs/dev/README.md` § `done` requires "observed
+# green CI for the exact HEAD" before a merge, and every e2e-pipeline PR satisfied it
+# against a pipeline that checked version parity, skill frontmatter, and dev-flow
+# contracts — but never executed a single one of the suite's ~1050 assertions. The suite
+# was only ever run on an author's machine, which is precisely the evidence the `done`
+# clause says never substitutes.
+#
+# Split into two jobs that run in parallel rather than one serial run:
+#
+#   suite              36 files, ~90s local
+#   trace-finalization  1 file,  ~75s local
+#
+# `trace-finalization.test.js` is separated because of what it does, not because it is
+# slow. It forks children that ignore SIGTERM, kills process groups, and asserts against
+# recovery deadlines, so it is the file most sensitive to a loaded host — and a shared
+# runner is a loaded host. Issue #122 was exactly that class failing under load and being
+# read as a regression. Keeping it in its own job means a stall there is attributable on
+# sight instead of hiding inside a 160-second run.
+#
+# NEITHER JOB IS A REQUIRED CHECK YET. Wiring a never-before-run suite straight to
+# required is how a green `main` turns red on its first busy afternoon for reasons that
+# have nothing to do with the change under review. Let both accumulate runs on this
+# runner first; promote them in branch protection once the trace job has shown it is
+# stable here, and record that promotion rather than leaving it to memory.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: e2e-pipeline
+
+jobs:
+  suite:
+    name: e2e-pipeline suite (excl. trace finalization)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: e2e-pipeline/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Run suite
+        # The file list is built here rather than with a shell glob exclusion so the
+        # exclusion is visible in the log: a reader can see which file was skipped and
+        # why the count differs from `npm test`.
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(ls compiler/test/*.test.js | grep -v 'trace-finalization')
+          echo "running ${#files[@]} test files (trace-finalization runs in its own job)"
+          node --test "${files[@]}"
+
+  trace-finalization:
+    name: e2e-pipeline trace finalization
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: e2e-pipeline/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Run trace finalization
+        run: node --test compiler/test/trace-finalization.test.js
