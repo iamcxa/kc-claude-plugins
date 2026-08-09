@@ -816,6 +816,53 @@ test('the refusal matches the retired option names, not anything starting with t
   );
 });
 
+// #174. The temp-root guard tested `uid === me` and nothing else, which holds on macOS
+// (per-user $TMPDIR) and fails on Linux (`/tmp` is root-owned `1777`). That rejected the
+// standard configuration of an entire platform: the browser runtime could not launch on
+// an ordinary Linux box, in CI or anywhere else, and nothing said so.
+//
+// The property the guard is actually for is that nobody else can remove or rename our
+// snapshot. These pin all three ways that holds and the one way it does not, so a future
+// tightening back to a uid test fails here first.
+
+test('a temp root that is root-owned and sticky is accepted, as on Linux', function(t) {
+  // `/tmp` on macOS is root-owned mode 1777 — byte-for-byte the Linux shape, so this runs
+  // the real condition rather than a model of it.
+  const stickyRoot = fs.realpathSync('/tmp');
+  const stat = fs.lstatSync(stickyRoot);
+  assert.notEqual(stat.uid, process.getuid(), 'precondition: /tmp is not owned by us');
+  assert.notEqual(stat.mode & 0o1000, 0, 'precondition: /tmp carries the sticky bit');
+
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  fixture.env.TMPDIR = stickyRoot;
+
+  const result = runOpen(fixture, 'https://application.example.test/sticky');
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.status, 'verified');
+});
+
+test('a temp root writable by others without the sticky bit is refused', function(t) {
+  // The case the guard exists for: others may create AND remove entries, so the snapshot
+  // can be swapped between creation and launch.
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  const unsafeRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-unsafe-root-'));
+  t.after(function() {
+    fs.rmSync(unsafeRoot, { recursive: true, force: true });
+  });
+  fs.chmodSync(unsafeRoot, 0o777); // world-writable, no sticky
+  fixture.env.TMPDIR = unsafeRoot;
+
+  const result = runOpen(fixture, 'https://application.example.test/unsafe');
+
+  assert.notEqual(result.status, 0, 'a swappable temp root must not be launched from');
+  assert.match(result.stderr, /writable by other users without the sticky bit/);
+  // The message has to be actionable: a user hitting this needs to know what to change,
+  // not just that a security condition failed.
+  assert.match(result.stderr, /Point TMPDIR at a directory you own, or restore the sticky bit/);
+});
+
 test('0.32 snapshot is bound to its canonical source without reading profile secrets', function(t) {
   const fixture = setup(t, { profileMode: 'snapshot' });
   const targetUrl = 'https://application.example.test/snapshot';

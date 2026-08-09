@@ -559,6 +559,52 @@ function structuralProfileProof(sourceProfile, actualProfile) {
   };
 }
 
+/**
+ * Refuse a temp root in which another user could swap our profile snapshot.
+ *
+ * The hazard is substitution, not disclosure: the snapshot holds authenticated browser
+ * state, so a directory another user can rename or delete out from under us lets them put
+ * their own profile at the path we are about to launch against. Disclosure is covered
+ * separately, by the mode check on the snapshot itself below.
+ *
+ * The predecessor tested `tempRootStat.uid === uid` and nothing else, which happens to
+ * hold on macOS — `$TMPDIR` there is a per-user directory — and does not hold on Linux,
+ * where `/tmp` is root-owned `1777`. That is not an insecure Linux; `1777` is the standard
+ * arrangement, and the sticky bit is precisely the mechanism that stops one user removing
+ * another's entries. So the check rejected the normal configuration of an entire platform
+ * while accepting a user-owned root with no sticky bit, which is equally safe for a
+ * different reason. It was testing a proxy for the property instead of the property.
+ *
+ * The property is: nobody else can remove or rename our entry. Two ways that holds —
+ *
+ *   not group/world-writable  nobody else can write in the directory at all
+ *   sticky                    others may create their own entries but not touch ours
+ *
+ * Ownership deliberately does not appear. A directory we own at mode `0777` with no
+ * sticky bit is exactly as hijackable as a root-owned one: the permission bits decide who
+ * may unlink, not the owner field. A first draft of this fix kept `owned by us` as a
+ * third sufficient condition and the refusal test caught it immediately — which is the
+ * same mistake the predecessor made, one level in.
+ *
+ * Two guards elsewhere close the rest of the substitution path and are why this one only
+ * has to cover removal and rename: the snapshot directory must itself be owned by the
+ * runtime user (rejected above as "actual browser profile owner does not match"), and its
+ * name carries agent-browser's ≥16-hex run id, so an attacker cannot pre-create the path
+ * we will use and cannot keep it if they guess.
+ */
+function assertTempRootCannotBeHijacked(temporaryRoot, tempRootStat) {
+  const writableByOthers = (tempRootStat.mode & 0o022) !== 0;
+  // Sticky lives above the 0o777 permission bits, so it survives only on the raw mode.
+  const sticky = (tempRootStat.mode & 0o1000) !== 0;
+  if (!writableByOthers || sticky) return;
+  throw new Error(
+    'OS temp root is writable by other users without the sticky bit, so a profile ' +
+      'snapshot placed there could be replaced before launch: ' + temporaryRoot +
+      ' (mode ' + (tempRootStat.mode & 0o7777).toString(8) + ', uid ' + tempRootStat.uid +
+      '). Point TMPDIR at a directory you own, or restore the sticky bit.'
+  );
+}
+
 function validateProfileLineage(actualProfile, requestedProfile, lineage) {
   const resolvedActual = path.resolve(actualProfile);
   const resolvedRequested = path.resolve(requestedProfile);
@@ -619,9 +665,7 @@ function validateProfileLineage(actualProfile, requestedProfile, lineage) {
   }
   const tempRootStat = fs.lstatSync(temporaryRoot);
   const tempRootMode = tempRootStat.mode & 0o777;
-  if (tempRootStat.uid !== uid) {
-    throw new Error('OS temp root owner does not match the runtime user');
-  }
+  assertTempRootCannotBeHijacked(temporaryRoot, tempRootStat);
   if ((tempRootMode & 0o077) !== 0 && (actualStat.mode & 0o077) !== 0) {
     throw new Error(
       'browser profile snapshot is readable outside the runtime user'
