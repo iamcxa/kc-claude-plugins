@@ -30,6 +30,27 @@
  * occurrences), or-expects (0), and `Execute external` (11, ~4%). Adding fixtures for
  * shapes nobody writes would grow the gate without covering anything.
  *
+ * WHAT THIS CANNOT CATCH
+ *
+ * It reads the generated source. It does not run it, so two classes stay open and should
+ * not be assumed covered by a green result here:
+ *
+ *   Escaping that is wrong but well-formed. `recoverSelectorText` below normalises bash
+ *   quoting so an assertion can name the selector as written — which also means a broken
+ *   emission that bash would accept while passing the wrong argument reads the same as a
+ *   correct one. `bash -n` does not help: it validates shell syntax, not the JavaScript
+ *   embedded in an `eval`.
+ *
+ *   Missing actions. The scenarios pin the selectors that must resolve and the assertions
+ *   that must be emitted; they do not pin every `open`, `fill`, `click` and `wait`. A
+ *   dropped navigation or fill can still leave this green.
+ *
+ * Both need the same instrument — run the compiled script against a stubbed
+ * `agent-browser` on PATH and assert the argv it actually receives. That is a real
+ * fixture rather than an assertion tweak, because the stub has to answer `eval` with
+ * visibility JSON, `get url`, and the rest, so it is tracked separately rather than
+ * half-done here.
+ *
  * WHEN A BUG IS FIXED
  *
  * Add the combination that produced it here. That is the cheap half of #170's rule — an
