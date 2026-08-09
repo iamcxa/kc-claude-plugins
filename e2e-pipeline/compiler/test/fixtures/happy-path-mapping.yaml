@@ -1,0 +1,59 @@
+# Mapping for the happy-path compile gate.
+#
+# The element shapes are chosen by measured frequency in a real consumer corpus
+# (355 selectors across 5 mapping files), not by what is convenient to write:
+#
+#   plain CSS            40%
+#   [data-testid=]       28%
+#   text=                14%
+#   role=X[name=/re/]    11%
+#   ------------------------- 93% cumulative
+#   bare role=X           4%
+#   >> nth  (banned)      3%
+#   [aria-label=]         1%
+#
+# Every non-CSS locator that a flow asserts visible carries `css_selector`, because
+# since #91 mapped visibility resolves a DOM identity and fails at resolve without one.
+# That is not decoration: 92 `css_selector` entries exist in the real corpus and 37 of
+# the 39 elements still carrying a banned `>> nth` chord lack one, which is why they
+# cannot compile.
+version: 2
+app: happy-path-app
+base_url: "http://localhost:3000"
+pages:
+  login:
+    url_pattern: "/login"
+    elements:
+      email_input:
+        selector: "input[type='email']"          # plain CSS — the 40% case
+        description: "Email input"
+      password_input:
+        selector: "input[type='password']"
+        description: "Password input"
+      submit_button:
+        selector: '[data-testid="login-submit"]' # data-testid — the 28% case
+        description: "Submit button"
+      error_banner:
+        selector: '[data-testid="login-error"]'
+        description: "Login error banner"
+  dashboard:
+    url_pattern: "/dashboard"
+    elements:
+      welcome_heading:
+        selector: "text=Welcome back"            # text= — the 14% case
+        css_selector: '[data-testid="welcome"]'  # required for mapped visibility (#91)
+        description: "Welcome heading"
+      refresh_button:
+        selector: 'role=button[name=/重新整理/]'  # role regex — the 11% case, CJK as in corpus
+        css_selector: 'button[aria-label="重新整理"]'
+        description: "Refresh button"
+      results_table:
+        selector: "role=table"                   # bare role — the 4% case
+        css_selector: "table.results"
+        description: "Results table"
+  _global:
+    description: "Global elements"
+    elements:
+      sidebar_dashboard:
+        selector: '[data-testid="nav-dashboard"]'
+        description: "Sidebar dashboard link"

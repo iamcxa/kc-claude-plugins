@@ -1,0 +1,41 @@
+# Scenario 2 — the non-CSS locator shape.
+#
+# `text=`, `role=X[name=/re/]` and bare `role=X` are 29% of corpus selectors between them,
+# and they are the forms that changed meaning in #91: they no longer resolve mapped
+# visibility on their own, so every element asserted here carries a `css_selector`.
+#
+# This is the combination that broke in the field. 37 of the 39 elements still carrying a
+# banned `>> nth` chord have no `css_selector`, so they compile only until something
+# asserts their visibility. A flow that exercises the shape end to end is what would have
+# caught that before a browser was started.
+name: happy-path-locators
+description: "Reach the dashboard and assert non-CSS-located elements"
+tags: [happy-path]
+mapping: happy-path-app
+steps:
+  - id: open-dashboard
+    type: navigate
+    action: "Navigate to /dashboard"
+    expect:
+      - "url contains /dashboard"
+
+  - id: sidebar-present
+    type: snapshot
+    action: "Verify sidebar_dashboard on dashboard"
+    expect:
+      - "sidebar_dashboard is visible"
+
+  - id: refresh
+    type: click
+    action: "Click refresh_button on dashboard"
+
+  - id: settle
+    type: wait
+    action: "Wait 1"
+
+  - id: results-rendered
+    type: snapshot
+    action: "Verify results_table on dashboard"
+    expect:
+      - "results_table visible on dashboard"
+      - "welcome_heading visible on dashboard"
