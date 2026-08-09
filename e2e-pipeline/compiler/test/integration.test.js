@@ -23,10 +23,24 @@ const { compile }  = require('../compiler');
 
 // ---------------------------------------------------------------------------
 // Corpus paths (read-only — never modified)
+//
+// This is a real consumer's mapping/flow corpus, which lives outside this repository
+// and is not published with it. These tests were written against an absolute path on
+// one machine, so they passed there and could not pass anywhere else — including CI,
+// where they surfaced as four ENOENT failures the first time the suite ran on a runner.
+//
+// Absent corpus is now a skip, not a failure. A test that cannot run in an environment
+// should say so; failing there teaches everyone to ignore the red, which costs more than
+// the coverage is worth. Point E2E_CORPUS_ROOT at a checkout to run them elsewhere.
 // ---------------------------------------------------------------------------
 
-var CORPUS_FLOW     = '/Users/kent/Project/carlove/.claude/e2e/flows/gate-login-flow.yaml';
-var CORPUS_MAPPING  = '/Users/kent/Project/carlove/.claude/e2e/mappings';  // directory
+var CORPUS_ROOT = process.env.E2E_CORPUS_ROOT || '/Users/kent/Project/carlove';
+var CORPUS_FLOW     = path.join(CORPUS_ROOT, '.claude/e2e/flows/gate-login-flow.yaml');
+var CORPUS_MAPPING  = path.join(CORPUS_ROOT, '.claude/e2e/mappings');  // directory
+var CORPUS_PRESENT  = fs.existsSync(CORPUS_FLOW) && fs.existsSync(CORPUS_MAPPING);
+var CORPUS_SKIP     = CORPUS_PRESENT
+  ? false
+  : 'corpus not present at ' + CORPUS_ROOT + ' (set E2E_CORPUS_ROOT to run)';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -77,7 +91,7 @@ function copyCorpusMappingWithSyntheticVisibilityDomIdentity(tmpDir) {
 // Integration tests
 // ---------------------------------------------------------------------------
 
-describe('Integration: migrate + compile real carlove flow', function() {
+describe('Integration: migrate + compile real carlove flow', { skip: CORPUS_SKIP }, function() {
 
   test('corpus files exist and are readable', function() {
     assert.ok(fs.existsSync(CORPUS_FLOW),    'gate-login-flow.yaml must exist: ' + CORPUS_FLOW);
