@@ -816,6 +816,97 @@ test('the refusal matches the retired option names, not anything starting with t
   );
 });
 
+// #174. The temp-root guard tested `uid === me` and nothing else, which holds on macOS
+// (per-user $TMPDIR) and fails on Linux (`/tmp` is root-owned `1777`). That rejected the
+// standard configuration of an entire platform: the browser runtime could not launch on
+// an ordinary Linux box, in CI or anywhere else, and nothing said so.
+//
+// The property the guard is actually for is that nobody else can remove or rename our
+// snapshot. These pin all three ways that holds and the one way it does not, so a future
+// tightening back to a uid test fails here first.
+
+// Skipped when the process is root: `/tmp` is then owned by us, so the case this test
+// exists for — a root-owned root that is NOT ours — cannot be built from the host
+// filesystem. Root-running containers are common enough that leaving it to fail there
+// would be a red that says nothing about the guard.
+const RUNNING_AS_ROOT = process.getuid() === 0;
+
+test('a temp root that is root-owned and sticky is accepted, as on Linux', {
+  skip: RUNNING_AS_ROOT ? 'process is root, so /tmp is not a foreign-owned root' : false,
+}, function(t) {
+  // `/tmp` on macOS is root-owned mode 1777 — byte-for-byte the Linux shape, so this runs
+  // the real condition rather than a model of it.
+  const stickyRoot = fs.realpathSync('/tmp');
+  const stat = fs.lstatSync(stickyRoot);
+  assert.notEqual(stat.uid, process.getuid(), 'precondition: /tmp is not owned by us');
+  assert.notEqual(stat.mode & 0o1000, 0, 'precondition: /tmp carries the sticky bit');
+
+  const fixture = setup(t, { profileMode: 'snapshot' });
+  fixture.env.TMPDIR = stickyRoot;
+
+  const result = runOpen(fixture, 'https://application.example.test/sticky');
+
+  assert.equal(result.status, 0, result.stderr);
+  const receipt = JSON.parse(fs.readFileSync(fixture.receipt, 'utf8'));
+  assert.equal(receipt.first_navigation.status, 'verified');
+});
+
+test('the guard refuses exactly the roots another user could swap, and no others', function() {
+  // Unit-level on purpose. An earlier version drove the whole runtime with TMPDIR set to a
+  // scratch directory, and on a Linux runner the socket-namespace check rejected that
+  // longer path *before* this guard was reached: the run failed, the assertion on the
+  // message did not, and the test was passing on the author's machine for a reason that
+  // had nothing to do with what it claimed to prove. Driving the system to reach a pure
+  // predicate buys nothing and couples the result to path length.
+  const guard = runtimeModule.assertTempRootCannotBeHijacked;
+  const me = process.getuid();
+  const root = { uid: 0 };
+  const stranger = { uid: me + 4242 };
+
+  // Safe: trusted owner, and nobody else may write in the directory at all.
+  guard('/safe/private', { mode: 0o40700, uid: me });
+  guard('/safe/readable', { mode: 0o40755, uid: me });
+  guard('/safe/root-private', { mode: 0o40755, uid: root.uid });
+  // Safe: trusted owner, and sticky stops non-owners removing our entry. Linux /tmp.
+  guard('/tmp', { mode: 0o41777, uid: root.uid });
+
+  // Unsafe: group- or world-writable with no sticky bit, so our entry can be unlinked
+  // by anyone who can write there.
+  for (const mode of [0o40777, 0o40707, 0o40770]) {
+    assert.throws(
+      () => guard('/unsafe', { mode: mode, uid: me }),
+      /writable by other users without the sticky bit/,
+      'mode ' + mode.toString(8) + ' must be refused'
+    );
+  }
+
+  // Unsafe: sticky does NOT restrain the directory's own owner, so an attacker-owned
+  // 1777 root permits substitution even though it looks exactly like /tmp. This is the
+  // hole the cross-model gate found in the first version of this fix, which tested
+  // permissions alone.
+  assert.throws(
+    () => guard('/stranger-tmp', { mode: 0o41777, uid: stranger.uid }),
+    /owned by another user, who may remove or rename entries in it/,
+    'a sticky root owned by someone else is still swappable by its owner'
+  );
+  // Same for a locked-down root owned by someone else: the owner can unlink regardless.
+  assert.throws(
+    () => guard('/stranger-private', { mode: 0o40700, uid: stranger.uid }),
+    /owned by another user/,
+    'permissions do not restrain the owner'
+  );
+
+  // Both messages have to be actionable: a user hitting either needs to know what to fix.
+  assert.throws(
+    () => guard('/unsafe', { mode: 0o40777, uid: me }),
+    /Point TMPDIR at a directory you own, or restore the sticky bit/
+  );
+  assert.throws(
+    () => guard('/stranger-tmp', { mode: 0o41777, uid: stranger.uid }),
+    /Point TMPDIR at a directory you own\./
+  );
+});
+
 test('0.32 snapshot is bound to its canonical source without reading profile secrets', function(t) {
   const fixture = setup(t, { profileMode: 'snapshot' });
   const targetUrl = 'https://application.example.test/snapshot';

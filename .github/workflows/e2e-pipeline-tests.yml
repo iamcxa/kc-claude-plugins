@@ -10,31 +10,29 @@ name: e2e-pipeline tests
 #
 # WHAT THIS COVERS, AND WHAT IT DOES NOT
 #
-# 925 of 1055 assertions: parser, resolver, compiler, codegen, selector policy and grammar
-# gate, visibility probe and contract, quarantine, metrics, migrate, CLI, issue promotion.
-# That is the regression surface for five of the six issues in sprint S2.
+# Everything except `trace-finalization.test.js`, which needs the `agent-browser` binary
+# on PATH — a dependency package.json never declares (#174). That one file is the whole
+# remaining exclusion.
 #
-# Three files are excluded because they do not run on a clean Linux host at all:
+# Wiring CI is what found the Linux gap in the first place. All 1055 assertions passed on
+# macOS while 15 failed on the first runner execution, and each fix revealed the next
+# assumption underneath:
 #
-#   browser-runtime-lifecycle.test.js   27 failures
-#   trace-finalization.test.js           3
-#   runtime-state-finalizer.test.js      3
+#   1. the runtime refused any temp root it did not own. True of macOS per-user $TMPDIR,
+#      false of Linux /tmp, which is root-owned 1777 — the standard secure arrangement.
+#      Fixed in #174: the guard now tests the property it was approximating (nobody else
+#      can remove or rename our entry: not group/world-writable, or sticky).
+#   2. `integration.test.js` read a private corpus from an absolute path on one laptop.
+#      Fixed: absent corpus skips with a reason, `E2E_CORPUS_ROOT` overrides.
+#   3. `trace-finalization.test.js` resolves `agent-browser` from PATH. Still open.
+#   4. `runtime-state-finalizer.test.js` still fails on a runner for a cause not yet
+#      identified — it passes locally even under a Linux-shaped temp root, so whatever
+#      differs is a fourth environment assumption. Excluded rather than guessed at.
 #
-# Wiring CI is what found that. All 1055 pass on macOS; on the first runner execution 15
-# failed, and each fix revealed the next assumption underneath:
-#
-#   1. the runtime refuses a temp root it does not own — true of macOS per-user $TMPDIR,
-#      false of Linux /tmp, which is root-owned
-#   2. `integration.test.js` read a private corpus from an absolute path on one laptop
-#      (fixed here: absent corpus now skips with a reason, `E2E_CORPUS_ROOT` overrides)
-#   3. the suite needs the `agent-browser` binary on PATH, which package.json never
-#      declares
-#
-# (1) and (3) are product facts, not test bugs: the browser runtime as shipped cannot run
-# on an ordinary Linux box. Porting it is its own work and is filed separately. Excluding
-# those three files here is deliberate — a permanently red check trains everyone to ignore
-# CI, which costs more than the coverage it pretends to give. A smaller gate that is
-# actually trustworthy beats a larger one nobody believes.
+# Excluding that last file is deliberate rather than papered over with an install step: a
+# permanently red check trains everyone to ignore CI, and installing a browser driver to
+# satisfy a test that should be stubbing it would hide the undeclared dependency instead
+# of fixing it.
 #
 # NOT A REQUIRED CHECK YET. Let it accumulate runs on this runner before promotion in
 # branch protection, and record that promotion rather than leaving it to memory.
@@ -71,18 +69,20 @@ jobs:
         run: npm ci
 
       - name: Run suite
-        env:
-          # Satisfies the runtime's user-owned-temp-root requirement rather than relaxing
-          # the check. Only some of the excluded files need it, but the rest of the suite
-          # writes scratch directories too and a runner-owned root is correct for all of
-          # them.
-          TMPDIR: ${{ runner.temp }}
+        # TMPDIR is deliberately NOT overridden. An earlier revision pointed it at
+        # `runner.temp` to satisfy the old user-owned-temp-root guard; #174 fixed that
+        # guard to test the actual property, so `/tmp` is accepted on its own merits and
+        # the override became not just unnecessary but harmful — `/home/runner/work/_temp`
+        # is long enough that the derived agent-browser socket path exceeds the ~104-byte
+        # Unix domain socket limit, which failed 30 tests with "leave no socket-safe e2e
+        # namespace". A workaround that outlived its cause, costing more than it saved.
+        #
         # The exclusion list is spelled out in the command rather than hidden in a glob so
         # the log shows which files were skipped and why the count differs from `npm test`.
         run: |
           set -euo pipefail
-          excluded='trace-finalization|browser-runtime-lifecycle|runtime-state-finalizer'
+          excluded='trace-finalization|runtime-state-finalizer'
           mapfile -t files < <(ls compiler/test/*.test.js | grep -vE "$excluded")
           echo "running ${#files[@]} of $(ls compiler/test/*.test.js | wc -l) test files"
-          echo "excluded (do not run on a clean Linux host — see workflow header): $excluded"
+          echo "excluded (see #174): $excluded"
           node --test "${files[@]}"
