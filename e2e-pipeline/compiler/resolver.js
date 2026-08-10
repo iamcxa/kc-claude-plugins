@@ -137,6 +137,37 @@ function parseActionString(type, action, stepId) {
   return { operands: parser.extract(match) };
 }
 
+/**
+ * fillValueInterpolationError(value, stepId) — reject `${...}` in a fill value.
+ *
+ * The two executors disagree, and that is the whole defect. The `/e2e-test` agent
+ * runner substitutes `${key}` from `variables:` (`agents/e2e-test-runner.md`), and
+ * `docs/multi-site-testing.md` shows a flow that relies on it. Compilation never
+ * substituted: `variables:` become the script's own parameters (`email:` becomes
+ * `EMAIL="${2:-…}"`), a different name in a different scope, and the written token
+ * reached the input field as eight literal characters with nothing reporting it.
+ *
+ * Refusing is what the compile path can honestly do today. Implementing the
+ * substitution means emitting the value double-quoted — a `$(...)` execution
+ * surface — and, on the `css_selector` path, crossing bash-then-JS escaping. Those
+ * are exactly the two emission sites #180 records as invisible to the current gate,
+ * so that work is sequenced after the instrument exists, not before.
+ *
+ * Returns a message, or null when the value is fine. A bare `$` is fine; only the
+ * `${…}` form is refused, because that is the one that looks like it should work.
+ */
+function fillValueInterpolationError(value, stepId) {
+  if (typeof value !== 'string') return null;
+  var found = /\$\{[^}]*\}/.exec(value);
+  if (!found) return null;
+  return "Step '" + stepId + "': fill value contains " + found[0] +
+    ', which compiled scripts never interpolate — the field would receive those' +
+    ' characters literally. Flow `variables:` bind as script parameters, not into' +
+    ' step values. (The /e2e-test agent runner does substitute them, so a flow that' +
+    ' works there can still fail to compile.) Use a literal value, or' +
+    ' `value: {runtime_ref: ...}` for one that must come from the environment.';
+}
+
 function resolveNavigate(operands, stepId, mapping) {
   var target = operands.target;
 
@@ -664,6 +695,12 @@ function resolve(flow, mapping, options) {
           resolvedOperands = Object.assign({}, rawOperands, resolvedActionElement(resolvedElement));
         }
       }
+      var interpMsg = fillValueInterpolationError(rawOperands.value, stepId);
+      if (interpMsg) {
+        errors.push(interpMsg);
+        errorDetails.push(tier2Detail(interpMsg));
+        skipStep = true;
+      }
       // SC-1032: thread runtime_ref from step YAML into operands for sensitive fill
       if (step.type === 'fill' && step.value && step.value.runtime_ref) {
         var runtimeKey = step.value.runtime_ref;
@@ -902,6 +939,12 @@ function resolveMultiSite(flow, siteMappings, options) {
         } else {
           resolvedOperands = Object.assign({}, rawOperands, resolvedActionElement(resolvedElement));
         }
+      }
+      var siteInterpMsg = fillValueInterpolationError(rawOperands.value, stepId);
+      if (siteInterpMsg) {
+        errors.push(siteInterpMsg);
+        errorDetails.push(tier2Detail(siteInterpMsg));
+        skipStep = true;
       }
 
     } else if (step.type === 'verify-external' || step.type === 'execute-external') {

@@ -195,12 +195,6 @@ function generateRuntimeValuesBlock(runtimeValues, _flowName) {
   return lines.join('\n');
 }
 
-function runtimeTemplateDoubleQuote(value) {
-  return '"' + escapeDoubleQuoted(String(value)).replace(
-    /\\\$\{([A-Za-z_][A-Za-z0-9_]*)\}/g,
-    '${$1}'
-  ) + '"';
-}
 
 // ---------------------------------------------------------------------------
 // Header generation

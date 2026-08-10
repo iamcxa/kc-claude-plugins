@@ -35,6 +35,11 @@ Session isolation is **automatic** when using `--all-sites` or `--suite`.
 
 Use `sites:` instead of `mapping:` (mutually exclusive). Every step requires `site:`:
 
+> `${test_email}` inside a Fill value is substituted by the `/e2e-test` agent
+> runner only. `/e2e-compile` refuses it — compiled scripts never interpolate
+> flow variables into step values, so this flow runs under `/e2e-test` and does
+> not compile.
+
 ```yaml
 name: admin-creates-customer-verifies
 description: "Admin creates a user, customer portal verifies login works"

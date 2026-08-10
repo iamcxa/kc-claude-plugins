@@ -1286,6 +1286,44 @@ describe('errorDetails — additive structured channel', () => {
     assert.deepEqual(result.errorDetails[0], { message: result.errors[0] });
   });
 
+  test('a fill value carrying ${...} is refused, naming what variables actually bind', () => {
+    const flow = {
+      name: 'test-fill-interpolation',
+      variables: { email: 'user@example.com' },
+      steps: [
+        {
+          id: 'fill-email',
+          type: 'fill',
+          action: "Fill email_input with '${email}' on login",
+        },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /fill-email/);
+    assert.match(result.errors[0], /\$\{email\}/);
+    // The remediation has to name the two real mechanisms, or the author is told
+    // "no" without being told what to do instead.
+    assert.match(result.errors[0], /variables:/);
+    assert.match(result.errors[0], /runtime_ref/);
+    assert.deepEqual(result.errorDetails[0], { message: result.errors[0] });
+  });
+
+  test('a literal fill value that merely contains a dollar sign still compiles', () => {
+    const flow = {
+      name: 'test-fill-literal-dollar',
+      steps: [
+        {
+          id: 'fill-amount',
+          type: 'fill',
+          action: "Fill email_input with '$100 and change' on login",
+        },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.deepEqual(result.errors, []);
+  });
+
   test('multiple errors keep errors and errorDetails the same length and order', () => {
     const flow = {
       name: 'test-multi-error',
