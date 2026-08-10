@@ -4,7 +4,7 @@ source: Captain 2x development-speed target, 2026-08-10
 product: kc-dev-flow
 sprint: S1
 id: f32cg5cbw6b633s09e2zxbr5
-status: implementation
+status: validation
 lane: main
 started: 2026-08-10T22:03:08Z
 design: required
@@ -52,21 +52,25 @@ offered an additional model pass.
 ## Acceptance criteria
 
 **AC-1 — Judgment is required only at ideation and validation.**
+
 Verified by: `kc-dev-flow/skills/continue-dev-flow/SKILL.md:193-197` and
 `scripts/kc-dev-flow-contract-test.py:251-259`. Falsified by: adding a mandatory
 implementation reviewer or removing either gate's fresh EM verdict.
 
 **AC-2 — Reviewer capability has a bounded fallback.**
+
 Verified by: `kc-dev-flow/skills/science-officer-em/SKILL.md:46-49` and
 `scripts/kc-dev-flow-contract-test.py:527-529`. Falsified by: hard-coding a
 provider/model or leaving a top-tier worker with no fresh-context route.
 
 **AC-3 — Multi-model review is optional and decision-triggered.**
+
 Verified by: `kc-dev-flow/skills/science-officer-em/SKILL.md:93-97` and
 `docs/dev/README.md:244-255`. Falsified by: launching it without captain approval,
 treating silence as approval, or skipping the one EM verdict.
 
 **AC-4 — Pre-integration reviewer waits fall by at least half.**
+
 Verified by: the task's fixed before/after route count, recorded in
 `docs/dev/history/workflow-cost-record.md:14-17`. Falsified by: any ordinary
 implementation path still requiring one of the two baseline review waits.
@@ -95,8 +99,14 @@ provider-specific model policy, and creating or merging a PR.
   preference with top-tier fallback, and optional multi-model review.
 - DONE: Reverse recovery kept the lifecycle, EM skill, and contract suite; only
   their review-stage binding changes.
-- DONE: The fixed route removes 2/2 blocking implementation review waits while
-  retaining both judgment gates and every delivery predicate.
+- DONE: AC-1 keeps exactly one fresh EM verdict at ideation and validation and
+  opens no implementation reviewer loop.
+- DONE: AC-2 prefers the next capability tier and gives a top-tier worker a
+  fresh high-reasoning fallback.
+- DONE: AC-3 offers an additional model only for a contested, irreversible,
+  low-confidence, or unresolved call and requires captain approval.
+- DONE: AC-4 removes 2/2 blocking implementation review waits while retaining
+  both judgment gates and every delivery predicate.
 - DONE: Fresh high-reasoning EM returned `narrow / high`: remove repeated
   implementation review, keep one EM at each judgment stage, and do not make
   multi-model review universal.
@@ -105,3 +115,26 @@ provider-specific model policy, and creating or merging a PR.
 
 Proceed with the existing two judgment gates and zero implementation review
 loops unless a premise changes and returns to its owning stage.
+
+## Stage Report: implementation
+
+- DONE: Commit `c48a9e97f1614d80d8220ac4c80b4df993db09fb` updates the
+  continuation skill, EM compatibility skill, local workflow binding, and their
+  existing contract test; it adds no stage, queue, provider registry, or model
+  identifier.
+- DONE: Contract fixtures first failed on the prior judgment-heavy and universal
+  cross-model wording, then pass on one EM at ideation/validation, no
+  implementation review loop, the top-tier fallback, and optional multi-model
+  semantics.
+- DONE: The before/after route removes both implementation-time waits before the
+  first integrated slice; validation still requires fresh exact-revision EM and
+  delivery evidence.
+- DONE: Fresh stage-exit checks pass: kc-dev-flow contract, 40 skill
+  frontmatters, version parity at 2.1.0, marketplace L0/L1/L2,
+  state-prerequisite contract, Python compilation, and `git diff --check`.
+
+### Summary
+
+Implementation changes one scheduling seam: deep judgment stays at ideation and
+validation; implementation proceeds without a reviewer loop unless a premise
+returns to its owning stage.
