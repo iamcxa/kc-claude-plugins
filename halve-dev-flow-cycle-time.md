@@ -9,6 +9,7 @@ lane: main
 started: 2026-08-10T22:03:08Z
 design: required
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-release-batch
+pr: "#199"
 ---
 
 ## Problem
