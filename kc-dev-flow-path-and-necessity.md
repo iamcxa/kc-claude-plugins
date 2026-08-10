@@ -261,11 +261,18 @@ new revision and require re-binding before PR approval.
   version `0.2.1`; contract RED caught the old path, the stale-registry
   intermediate RED proved absolutes wiring, final contract GREEN and `cmp`
   proved the accepted bytes.
+  Verified by: `scripts/kc-dev-flow-contract-test.py:516-544`,
+  `kc-dev-flow/references/reverse-recovery-audit.md:1-10`, and the two recorded
+  RED exits plus final PASS.
 - **AC-2 PASS** — fresh Opus dispositions: `P1 RETURN UNREAD` missing all three
   labeled lines; `P2 PASS accounting`; `P3 PASS accounting`; `P3-no-ref RETURN
   UNREAD` for the missing resolvable review reference.
+  Verified by: fresh Opus session `e30e64f7-448f-4253-a4b2-53e0914c3f5e`
+  against diff hash `5adcec6c` and `docs/dev/README.md:671-682`.
 - **AC-3 PASS** — exact five-file +26/-7 diff adds no new file, executable,
   registry, workflow step, required context, manifest, or kernel edit.
+  Verified by: `git diff --name-only origin/main`, live branch-protection
+  receipt, `scripts/version-parity-check.sh`, and the exact diff hash above.
 
 ### Evidence block
 
