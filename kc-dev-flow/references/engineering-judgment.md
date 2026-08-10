@@ -1,7 +1,7 @@
 ---
 name: engineering-judgment
 description: "Optional portable policy for independent engineering synthesis, reviewer adjudication, risk trade-offs, and advisory recommendations"
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Engineering Judgment
@@ -32,6 +32,17 @@ Use the smallest evidence packet that can settle the question:
 
 Missing evidence stays missing. Green mechanical status may support a
 recommendation, but it does not substitute for engineering judgment.
+
+## Iteration-size precheck
+
+Before acceptance criteria expand, compare the proposed exit criterion against
+the declared appetite. Derive independently releasable value surfaces through the
+surface-independence conditions in the governing contract's Route discipline.
+Technical seams spanning one primary journey do not multiply that count; actor
+count is evidence of possible independent obligations, not a split rule. More than
+one value surface defaults to `narrow` unless the exact scope exception is
+captain-approved and recorded by work-item authority. Re-estimating the same scope
+does not resolve an appetite mismatch.
 
 ## Procedure
 
