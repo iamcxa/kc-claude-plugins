@@ -8,7 +8,7 @@ completed:
 verdict:
 worktree: /Users/kent/mini-legs/rx-0bdfaef9-64c7-4b5a-992b-b813c61ddbe8/worktree
 issue: "190"
-pr:
+pr: "#194"
 design: trivial-pass
 ---
 
@@ -696,3 +696,24 @@ Not writable off as pre-existing under this stage's per-line rule: `git blame` p
 ### Summary
 
 Re-verified all eight routed findings closed at `6c5a0ad` by executing emitted bash on bash 3.2.57 and 5.3.9 rather than reading it — F6 really did execute commands on origin/main (canary in 100/200 runs) and really is inert now, and F7's apostrophe no longer makes the script unparseable. The re-pinned golden hashes, this round's biggest hiding place, are clean: the retired pins reproduce origin/main's output exactly and the drift is precisely the claimed 0/1/2 `*_BASE_URL=` lines. Of the two escalations, the process-substitution correction to the FO is right and the `variables:`-key finding is wrong — `parser.js:48` already validates those keys, so no entity should be opened for them. One confirmed defect survives: the printf-FORMAT class was closed for `%` but not `\`, letting an unvalidated `flow.name` inject fabricated `<testcase>` elements into the JUnit report with exit 0, on lines this change authored. That is a one-line fix I verified, so the recommendation is REJECTED on V1 alone, with flow-`name` charset validation recorded as the residual for a follow-up entity.
+
+- Cycle 2: REJECTED — fresh validation (round 2); surface 64m cumulative implementation
+  wall-clock vs estimate 90m (71%); AC unchanged. All eight round-1 findings (F1–F8b) verified
+  genuinely closed by execution on bash 3.2.57 and 5.3.9; the golden-hash re-pin was audited
+  and hides nothing; diff coverage 100% (22/22 of the validator's own mutations reddened).
+  One new defect survives — **V1**, `compiler/codegen.js:1457`: the printf-FORMAT class was
+  closed for `%` but not `\`, so an unvalidated `flow.name` can inject a fabricated
+  `<testcase>` into the CI-consumed JUnit report at exit 0 (CI-signal forgery, not RCE).
+  `git blame` puts `:1457` on 6c5a0ad and `:1477` on 63b9362 — both inside this change's
+  range, so the per-line pre-existing write-off is unavailable. Validator-verified one-line
+  fix on hand. Residual recorded, not routed: `flow.name` has no charset validation
+  (`parser.js:128`) and also reaches `compiler.js:398` `path.join`, where `name:
+  "../../TRAVERSED"` writes outside `--output-dir` — needs its own entity.
+
+**ESCALATION — second consecutive rejection at this gate. Loop stopped; routed to the captain.**
+Per the workflow README ("two consecutive rejections → escalate to the captain instead of a
+third round") and the feedback-rejection contract ("on cycle 3, escalate to the human"), the FO
+did NOT open a third round. Budget was not the brake — 71% of appetite, inside the 2× tolerance;
+the round counter was. The FO holds the conn for gate approval, which does not extend to a
+circuit breaker the contract routes to a human. No verdict set, status left at `validation`.
+Briefing written to `docs/dev/issue190.gate.json`; draft PR opened carrying `DECISION NEEDED`.
