@@ -3,7 +3,7 @@ title: Review the published-tag Science Officer runtime smoke
 status: backlog
 source: Captain-approved issue #183 follow-up, 2026-08-10
 product: kc-dev-flow
-sprint:
+sprint: S1
 design:
 id: jj5jbzp2tpyc7a6x78wnfqky
 ---
