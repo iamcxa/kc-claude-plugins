@@ -938,6 +938,11 @@ describe('SC-1032 vertical seam', function () {
         assert.equal(result.status, 124, result.stdout + '\n' + result.stderr);
         assert.ok(Date.now() - startedAt < 3000, 'runner timeout must be bounded');
         const childPid = Number(fs.readFileSync(childPidPath, 'utf8').trim());
+        // This needs a PID 1 that reaps. `kill(pid, 0)` succeeds on a zombie, so
+        // under an init that never waits on adopted children — `docker run` without
+        // `--init` is the common case — the descendant reads as alive forever and
+        // this fails intermittently. Real hosts and GitHub runners reap; a bare
+        // container may not. Diagnose that before treating a failure here as a leak.
         assert.throws(function () { process.kill(childPid, 0); }, /ESRCH/,
           'runner descendants must be gone after timeout');
       } finally {
@@ -1279,7 +1284,13 @@ describe('SC-1032 vertical seam', function () {
           '  esac',
           'done',
           '_dir=${_config%/*}',
-          '_mode() { stat -f \'%Lp\' "$1" 2>/dev/null || stat -c \'%a\' "$1"; }',
+          // GNU first, BSD second. Reversing these looks equivalent and is not:
+          // on GNU coreutils `-f` means --file-system and takes no argument, so
+          // `stat -f '%Lp' "$1"` reads '%Lp' and "$1" as two operands. It errors on
+          // the first, prints a filesystem report for the second, and exits 1 — the
+          // `||` fallback fires, but its output is already prefixed by that report,
+          // so `dir_mode=` captures the report instead of 700.
+          '_mode() { stat -c \'%a\' "$1" 2>/dev/null || stat -f \'%Lp\' "$1" 2>/dev/null; }',
           '{',
           '  printf \'config=%s\\nresponse=%s\\ndir=%s\\n\' "$_config" "$_out" "$_dir"',
           '  printf \'dir_mode=%s\\nconfig_mode=%s\\nresponse_mode=%s\\n\' "$(_mode "$_dir")" "$(_mode "$_config")" "$(_mode "$_out")"',

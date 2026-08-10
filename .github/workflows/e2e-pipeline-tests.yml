@@ -12,7 +12,8 @@ name: e2e-pipeline tests
 #
 # Everything except `trace-finalization.test.js`, which needs the `agent-browser` binary
 # on PATH — a dependency package.json never declares (#174). That one file is the whole
-# remaining exclusion.
+# remaining exclusion. `runtime-state-finalizer.test.js` was excluded too until its cause
+# was identified; see item 4 below.
 #
 # Wiring CI is what found the Linux gap in the first place. All 1055 assertions passed on
 # macOS while 15 failed on the first runner execution, and each fix revealed the next
@@ -25,14 +26,17 @@ name: e2e-pipeline tests
 #   2. `integration.test.js` read a private corpus from an absolute path on one laptop.
 #      Fixed: absent corpus skips with a reason, `E2E_CORPUS_ROOT` overrides.
 #   3. `trace-finalization.test.js` resolves `agent-browser` from PATH. Still open.
-#   4. `runtime-state-finalizer.test.js` still fails on a runner for a cause not yet
-#      identified — it passes locally even under a Linux-shaped temp root, so whatever
-#      differs is a fourth environment assumption. Excluded rather than guessed at.
+#   4. `runtime-state-finalizer.test.js` used `stat -f '%Lp' || stat -c '%a'` to read a
+#      mode. On GNU coreutils `-f` means --file-system and takes no argument, so the
+#      format string is read as a second operand: stat errors on it, prints a filesystem
+#      report for the real path, and exits 1. The `||` fallback runs, but its output is
+#      already prefixed by that report, so the captured value never equalled `700`.
+#      Fixed by trying GNU first; the file is back in this run.
 #
-# Excluding that last file is deliberate rather than papered over with an install step: a
-# permanently red check trains everyone to ignore CI, and installing a browser driver to
-# satisfy a test that should be stubbing it would hide the undeclared dependency instead
-# of fixing it.
+# Excluding `trace-finalization.test.js` is deliberate rather than papered over with an
+# install step: a permanently red check trains everyone to ignore CI, and installing a
+# browser driver to satisfy a test that should be stubbing it would hide the undeclared
+# dependency instead of fixing it.
 #
 # NOT A REQUIRED CHECK YET. Let it accumulate runs on this runner before promotion in
 # branch protection, and record that promotion rather than leaving it to memory.
