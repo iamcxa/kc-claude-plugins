@@ -1,9 +1,9 @@
 ---
 id: srqy4f40m20yf5fp392vtcn0
 title: "e2e-pipeline: escape flow/mapping-sourced strings in every expansion-active codegen emission context"
-status: backlog
+status: ideation
 source: GitHub issue #190 (https://github.com/iamcxa/kc-claude-plugins/issues/190) — found by cross-model EM review of PR #184, repro re-run independently before filing
-started:
+started: 2026-08-10T09:19:35Z
 completed:
 verdict:
 worktree:
