@@ -164,7 +164,7 @@ adversarial packets. Add no enforcement mechanism.
 
 ## Stage Report: implementation
 
-- DONE: Commit `636e6b903e877456c3725243055feafebfa915f5` adds one
+- DONE: Commit `636e6b9b100753e1fa2d566783b3de5451549f94` adds one
   portable subtractive predicate to the byte-identical canonical/vendored
   kernel pair.
 - DONE: Existing surfaces now preserve `UNKNOWN` without claiming necessity;
@@ -192,4 +192,14 @@ adversarial packets. Add no enforcement mechanism.
 ### Summary
 
 The implementation changes existing policy and authority surfaces only. Enter
-fresh validation at exact revision `636e6b903e877456c3725243055feafebfa915f5`.
+fresh validation at exact revision `636e6b9b100753e1fa2d566783b3de5451549f94`.
+
+## Validation cycle 0 — returned before product review
+
+Fresh Claude Opus high session `a3982792-e77f-432d-875d-7edf50d5f7f5`
+returned the packet because its exact revision expanded short SHA `636e6b9` to
+the nonexistent `636e6b903e877456c3725243055feafebfa915f5`. It adjudicated the
+seven packet routes on their premises but admitted no product evidence and made
+no product finding. The actual commit is
+`636e6b9b100753e1fa2d566783b3de5451549f94`. Reissue the complete artifact to a
+fresh session; do not carry a verdict or product correction from cycle 0.
