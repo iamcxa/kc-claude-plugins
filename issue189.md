@@ -1,7 +1,7 @@
 ---
 id: n6hhdhm5tyggcs6408ztm45e
 title: "e2e-pipeline: anchor the click action grammar so no click action is accepted on a prefix"
-status: validation
+status: implementation
 source: "GitHub issue #189 (iamcxa/kc-claude-plugins) — trusted own-lane intake, dispatched by the captain"
 started: 2026-08-10T09:00:16Z
 completed:
@@ -322,3 +322,42 @@ Repo-rule gates: commit is `fix(e2e-pipeline): …` (conventional, correctly sco
 ### Summary
 
 Validated PR #191 at `c7f9c3b` from a fresh context, reproducing every AC from the tree rather than the self-report: CLI end-to-end both ways, the pre-fix defect re-observed on `origin/main`, a five-case mutation matrix that reproduced the implementer's counts exactly, a repo-wide sweep of all 51 click action strings, real diff-coverage measurement, and two independent review rounds (cross-model codex plus a silent-failure lens) whose citations I checked one by one. All five ACs PASS; both mid-stage re-baselines adjudicate correctly, and the stale-premise claim underpinning the gate question is TRUE by execution, not by reading. One P2 survives — the anchored grammar has no `resolveMultiSite` test, on a branch the coverage instrument shows is uncovered suite-wide, against a convention this repo states verbatim three lines from the code the diff edits. Seven P3s are recorded as converged residuals.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED (captain ruling on `briefing:issue189-validation-c2` —
+  decision `revise`, `route:approve-route-a-after-cross-site-test`, `to:
+  stage:implementation`; the leg's own recommendation) — fresh validation;
+  surface implementation wall-clock NOT INSTRUMENTED for either round, so the
+  measurable surface is dispatch count: 2 implementation dispatches vs the
+  entity's declared estimate of 1 (`## Sizing`, "ONE implementation dispatch";
+  200%, exactly AT the default 2× tolerance and not past it, so no design-reset
+  decision is owed — a Cycle 2 would be past it). Appetite `~90 minutes of
+  worker time` is the entity's other declared number and no round recorded
+  minutes against it; that is a gap in the reports, not a zero. AC unchanged —
+  the captain kept Route A, so the `## Design determination` recorded at
+  ideation stands and no criterion was narrowed or dropped.
+  Findings routed: **1 fixed** — the P2, `resolver.js:1044-1047` (the cross-site
+  parse-refusal branch) has no `resolveMultiSite` test and is uncovered across
+  the whole 1068-test suite, against the convention `resolver.test.js:1543-1545`
+  states verbatim three lines from the code the diff edits; the diff removed the
+  only cross-site input carrying the parameterized form
+  (`resolver.test.js:1571-1574`). **7 declined, each named, none unexamined** —
+  the P3 residual class "an anchored single-line grammar over a `\s`-separated
+  regex, with a diagnostic narrower than the mistake it describes": (1) multiline
+  `Click row\non list` accepted, (2) `\w+` grammar vs
+  `[A-Za-z_][A-Za-z0-9_]*` diagnostic disagree, (3) `Fill row(id=7) …` gets no
+  named diagnostic (branch gated on `type === 'click'`), (4) trailing whitespace
+  fails with an invisible cause, (5) the parse gate `continue`s so a refused
+  step never resolves its `expect:`, (6) `SKILL.md:148` keys its row on the
+  grammar form not the emitted sentence, (7) `migrate.js:21-32` carries a third
+  drifted grammar (pre-existing). Accepted under the validation stage's
+  converge-by-naming-residuals clause: Route A cannot dissolve the class without
+  widening into `fill`/`navigate`/`wait`, which `## Out of scope` defers to a
+  backlog seed. **2 recorded as cantTell, not passed** — AC-5's "opened through
+  the REST endpoint" clause leaves no observable artifact, and the `/e2e-test`
+  parameterized-support claim is doc-derived from
+  `agents/e2e-test-runner.md:261,272,303` and was never re-observed live
+  (`route:hold-for-live-e2e-test-runner-probe`, the route the captain did not
+  take). **1 CONTEXT** — `/e2e-compile` double-prints errors, reproduced
+  identically on `origin/main`; not this diff.
