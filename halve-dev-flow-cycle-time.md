@@ -138,3 +138,76 @@ loops unless a premise changes and returns to its owning stage.
 Implementation changes one scheduling seam: deep judgment stays at ideation and
 validation; implementation proceeds without a reviewer loop unless a premise
 returns to its owning stage.
+
+## Stage Report: validation
+
+### TL;DR
+
+Fresh Claude Opus high session `d4daa8b0-ea12-4c8f-9ccc-a086ae9a8edd`
+reviewed exact head `c48a9e97f1614d80d8220ac4c80b4df993db09fb` over
+`a024b254e236f521d8438d567ade36d779a52d11` and returned
+`proceed / high / multi_model:not_needed`, with AC-1..AC-4 PASS and zero
+Material findings. This validates the accepted fixed-route wait reduction; it
+does not claim a post-release median that has not yet been observed.
+
+### Per-AC verdicts
+
+- **AC-1 PASS** — every ideation and validation gate gets one fresh EM verdict,
+  the defect lane retains validation EM, and implementation opens no review loop.
+- **AC-2 PASS** — reviewer choice prefers the next capability tier and gives a
+  top-tier worker a fresh highest-tier/high-reasoning fallback without provider
+  or model identifiers.
+- **AC-3 PASS** — the EM recommends an optional model only for the four named
+  decision conditions; the captain must approve it and silence is not approval.
+- **AC-4 PASS** — the approved comparison falls from two mandatory
+  implementation-time waits to zero, a 100% reduction, while both judgment gates
+  and delivery predicates remain.
+
+### Evidence block
+
+`Lenses:` Docs/policy, authority, back-compat, and workflow correctness fired;
+all PASS with zero Material findings. Security, concurrency, and resource
+lifecycle did not fire because the change adds no executable provider, state,
+auth, process, or handle surface. Would fail on a third mandatory review point,
+a removed gate verdict, or a provider-specific fallback.
+
+`Diff coverage:` N/A — the task's production surface is Markdown workflow/skill
+policy. Its executable contract assertions ran in the full kc-dev-flow suite and
+are validation instruments, not shipped runtime behavior.
+
+`Adversarial:` PASS — pre-change contract assertions reddened on the old
+judgment-heavy/universal-cross-model wording; the exact-head suite rejects a
+missing stage verdict, implementation review loop, absent top-tier fallback, or
+universal multi-model requirement. Would fail if any mutation passed.
+
+`Cross-model:` not_needed — the exact-head EM found no contested, irreversible,
+low-confidence, or unresolved call. No optional second model was requested.
+
+`E2E:` N/A — ideation approved a workflow-policy scheduling change, not a
+user-visible or full-stack product behavior. Exact-head contract and fresh EM
+are its declared validation instruments.
+
+`Origin re-observation:` N/A — the accepted ACs concern repository stage policy
+and a captain-approved fixed route; no AC claims a consumer or external runtime
+median. Historical waits remain observation evidence, not the pass predicate.
+
+### Engineering judgment
+
+- `question:` Does exact head satisfy the two-stage EM route, bounded fallback,
+  optional multi-model rule, and at-least-half fixed-route wait reduction?
+- `revision:` `c48a9e97f1614d80d8220ac4c80b4df993db09fb` over
+  `a024b254e236f521d8438d567ade36d779a52d11`.
+- `adjudications:` AC-1..AC-4 supported; no task-level non-pass, Material
+  finding, removable complete file, or removable review mechanism.
+- `risk_tradeoff:` retain independent judgment where route and acceptance are
+  decided while removing all ordinary implementation waits; keep an extra model
+  available only for the four decision-risk conditions.
+- `recommendation/route/confidence:` proceed / proceed / high.
+- `dissent:` bounded future performance remains an operational measurement;
+  this verdict proves the accepted route-count reduction, not an unobserved median.
+- `multi_model:` not_needed.
+- `disproof_condition:` change route if implementation regains a mandatory wait,
+  either EM gate disappears, the fallback becomes provider-specific, or optional
+  multi-model work runs without its condition and captain approval.
+- `authority_boundary:` advisory only; Captain retains scope/irreversibility,
+  Spacedock retains state, and GitHub/release-please retain delivery and release.
