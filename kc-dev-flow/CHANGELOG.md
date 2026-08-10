@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.0.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v1.4.0...kc-dev-flow-v2.0.0) (2026-08-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **kc-dev-flow:** adopters re-vendor. A repository using only the five-tier ladder keeps working, but plan review gains a rejection it did not have.
+* **kc-dev-flow:** adopters who vendored this file re-vendor and re-declare. The stage list is unchanged for anyone using Part 2 only; the adoption section now asks them to record that Part 1 is not adopted, so the omission reads as a choice.
+
+### Features
+
+* **kc-dev-flow:** add what a retained document may contain, as an adoptable half ([#185](https://github.com/iamcxa/kc-claude-plugins/issues/185)) ([4963a5b](https://github.com/iamcxa/kc-claude-plugins/commit/4963a5b1cab1dbc8093628a9be6795e7ec9851ce))
+* **kc-dev-flow:** classify a layer's need separately from its completeness ([#193](https://github.com/iamcxa/kc-claude-plugins/issues/193)) ([e871313](https://github.com/iamcxa/kc-claude-plugins/commit/e871313418e35f01240aea5d1d1c4f349e80b4b8))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** make document policies independently selectable ([#192](https://github.com/iamcxa/kc-claude-plugins/issues/192)) ([cc8139e](https://github.com/iamcxa/kc-claude-plugins/commit/cc8139e3b1065fceb842da41d10a7b21112fd4c2))
+
 ## [1.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v1.3.0...kc-dev-flow-v1.4.0) (2026-08-09)
 
 

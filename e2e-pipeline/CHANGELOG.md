@@ -3,6 +3,14 @@
 All notable changes to the e2e-pipeline plugin are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.3.3](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.3.2...e2e-pipeline-v3.3.3) (2026-08-10)
+
+
+### Bug Fixes
+
+* **e2e-pipeline:** empty the CI exclusion list — all three [#174](https://github.com/iamcxa/kc-claude-plugins/issues/174) residuals ([#186](https://github.com/iamcxa/kc-claude-plugins/issues/186)) ([e6069c2](https://github.com/iamcxa/kc-claude-plugins/commit/e6069c23fe6091629b36d1a0ce12a074fec41803))
+* **e2e-pipeline:** refuse ${...} in a fill value, which two executors read differently ([#179](https://github.com/iamcxa/kc-claude-plugins/issues/179)) ([#184](https://github.com/iamcxa/kc-claude-plugins/issues/184)) ([bd2b142](https://github.com/iamcxa/kc-claude-plugins/commit/bd2b1421ddb0d3fff6053ddc044f9575f08c2df4))
+
 ## [3.3.2](https://github.com/iamcxa/kc-claude-plugins/compare/e2e-pipeline-v3.3.1...e2e-pipeline-v3.3.2) (2026-08-09)
 
 
