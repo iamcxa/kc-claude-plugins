@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.0.0...kc-dev-flow-v2.1.0) (2026-08-10)
+
+
+### Features
+
+* **kc-dev-flow:** size outcomes before acceptance expands ([#197](https://github.com/iamcxa/kc-claude-plugins/issues/197)) ([2bb412e](https://github.com/iamcxa/kc-claude-plugins/commit/2bb412ea48e36a6be272ba36fc521ea3a0a7b0d0))
+
 ## [2.0.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v1.4.0...kc-dev-flow-v2.0.0) (2026-08-10)
 
 
