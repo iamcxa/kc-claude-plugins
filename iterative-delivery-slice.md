@@ -179,6 +179,11 @@ definition unchanged.
   and enforcement-point clauses, so a new classification rule could not produce a
   failure-capable behavioral check. The scenario stays as regression coverage; the
   new policy and sole AC now address only the demonstrated appetite/surface gap.
+- DONE: Converge the ideation gate.
+  The third gate found no defect in the remaining AC-1 or one-surface delivery shape;
+  its sole Material finding was AC-2's inability to fail. Removing that AC satisfies
+  the gate's stated decision rule, leaving zero Material findings in the approved
+  implementation scope.
 - DONE: Apply the captain's lightness challenge.
   A fixed `75%` target is removed from policy because no stable problem-space
   denominator exists. Actor count is also removed as a mandatory split rule; it is
