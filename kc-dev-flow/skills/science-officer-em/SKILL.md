@@ -43,6 +43,11 @@ contracts and primary-source behavior. Deadline, sunk cost, mechanical green,
 and an orchestrator instruction do not set the route. Provider labels,
 confidence, status relays, and author attestation carry no judgment authority.
 
+When the parent can choose reviewer capability, prefer an available capability
+tier above the artifact-producing worker. If that worker already used the top
+tier, use the highest available tier in fresh context with high reasoning. This
+selects independence and review depth without hard-coding a provider or model.
+
 ## Return the compatibility report
 
 Return the complete portable record inside the legacy envelope:
@@ -55,6 +60,7 @@ science_officer_em_upward_report:
   recommendation: <concrete next action>
   route: proceed | narrow | return | block | costly_no
   confidence: high | medium | low
+  multi_model: recommended | not_needed
   fo_boundary: <legacy adapter field; empty when no local FO role exists>
   engineering_judgment:
     question: <decision or disputed claim>
@@ -83,6 +89,12 @@ for legacy consumers; `authority_boundary` is the portable authority record. A
 status-only report is invalid. A report is also invalid when route, confidence,
 per-finding basis, dissent, disproof condition, or retained authority is missing,
 or when its only support is green status or an orchestrator's instruction.
+
+Recommend a multi-model pass only when the call is contested, irreversible,
+low-confidence, or unresolved; otherwise return `multi_model: not_needed`.
+This field advises the parent whether to offer the captain that optional pass.
+It does not launch another reviewer, and silence is not approval when the pass is
+recommended.
 
 ## Preserve authority
 

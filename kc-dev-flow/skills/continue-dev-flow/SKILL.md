@@ -190,8 +190,15 @@ to post, upload, or create source work.
    abstractions before greenfield planning.
 4. Within approved scope, implement, test, repair rejected evidence, and advance
    reversible green gates without asking the captain to repeat approval.
-5. Require a fresh-context EM/reviewer for judgment-heavy ideation and validation
-   verdicts. Exact-head CI/runtime evidence remains delivery evidence.
+5. Require exactly one fresh-context EM verdict for every ideation and validation gate.
+   A defect route that skips ideation still receives the validation verdict.
+   Implementation opens no reviewer loop: when an approved premise changes, return
+   it to its owning stage instead of adjudicating it inside implementation.
+   Multi-model review is optional. Ask the captain only when that EM records it as
+   `recommended` for a contested, irreversible, low-confidence, or unresolved
+   call; otherwise record `not_needed` and proceed. Reviewer delay or captain
+   silence is not approval. Exact-head CI/runtime evidence remains delivery
+   evidence.
 6. When every acceptance criterion has fresh validation and the repository's
    delivery authority is satisfied, durably terminalize/archive the work item,
    then continue without a captain pause to the next committed item.
