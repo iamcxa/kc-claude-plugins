@@ -393,3 +393,30 @@ authority omitted from its embedded packet:
 The exact-head validation result therefore remains `proceed` with no product
 correction round. Delivery, PR creation, CI, merge, and terminal state remain
 outside this receipt.
+
+### PR-ready revalidation on current main
+
+The branch rebased without conflict onto current `origin/main`
+`a024b254e236f521d8438d567ade36d779a52d11`. The two logical commits are now
+`d937ae9a1c86b12043f4d22a13508f34fffbaa96` and
+`fc7e5abdbd1ef658940750e46832c4f2788627e2`; the exact five-file `+26/-7` diff
+has SHA-256
+`8c5f89386742bcdb6c0eeeebbce19ad57f4ea799589c5b559e63558a2dda78e4`.
+
+Fresh exact-head mechanical receipts pass: the kc-dev-flow contract suite,
+version parity, skill frontmatter lint, marketplace schema and clean-HOME
+installation of all seven plugins, diff/check and five-path scope assertions,
+canonical/self-adopted byte identity, stale-path absence, and the changed-file
+sanitize scan with zero REJECT, BLOCK, or WARN matches.
+
+Fresh Claude Opus 5 high session `821be97e-5137-4500-8d44-dcc329a83433`
+returned `proceed`: AC-1 through AC-3 PASS, all four adversarial packet
+dispositions match, and there are zero Material findings. It recorded two
+non-blocking dissents — the path assertion remains a bounded prose substring
+guard, and the mechanism's necessity record lives in this authoritative item
+rather than the five-file product diff — but found neither changes an AC,
+minimality, or route verdict.
+
+The candidate is ready for the delivery boundary. Per captain instruction, no
+PR was created. The item remains in `validation`; `done` still requires a Draft
+PR, exact-head hosted CI, authorized merge to `main`, and durable archive state.
