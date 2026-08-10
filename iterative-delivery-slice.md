@@ -4,7 +4,7 @@ source: Captain ruling on iterative delivery, 2026-08-10; Relay remote-review do
 product: kc-dev-flow
 sprint:
 id: nzae8nwgvrg9dhwc6kz0kfsy
-status: implementation
+status: validation
 lane: main
 started: 2026-08-10T14:35:14Z
 design: required
