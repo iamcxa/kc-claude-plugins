@@ -4,7 +4,9 @@ source: Captain runtime-reading budget, 2026-08-10
 product: repo-platform
 sprint: S1
 id: hp4y9nwh8e75vk75j9ncwmb7
-status: backlog
+status: ideation
+lane: main
+started: 2026-08-10T22:03:08Z
 ---
 
 ## Problem
