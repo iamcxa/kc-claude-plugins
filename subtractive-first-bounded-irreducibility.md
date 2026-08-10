@@ -3,7 +3,7 @@ title: "kc-dev-flow: prove bounded surface necessity before adding layers"
 source: "Captain-approved subtractive-first pilot for PR #199, 2026-08-11"
 product: kc-dev-flow
 sprint: S1
-status: implementation
+status: validation
 lane: main
 design: required
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-release-batch
@@ -97,10 +97,11 @@ After captain-approved removals, implementation sizes against the remaining
 tree and adds only the smallest seam that turns the first relevant red AC green.
 Each retained addition records the surface, served AC, without-it mutation or
 bypass, observed failure, cheaper alternative, and insufficiency. Known-cause
-single-seam defects add no new ceremony. Verified by: the local ideation and
-validation predicates plus a fresh exact-revision EM exercise. Falsified by: an
-addition surviving with no necessity witness or by forcing the pilot onto the
-defect route.
+single-seam defects add no new ceremony. Verified by: the kernel predicate at
+kc-dev-flow/references/kernel.md:138, the local gates at docs/dev/README.md:189
+and docs/dev/README.md:254, and a fresh exact-revision EM exercise. Falsified by:
+an addition surviving with no necessity witness or by forcing the pilot onto
+the defect route.
 
 **AC-3 — Validation rejects reducible additions without over-deleting.**
 
@@ -160,3 +161,35 @@ route in this task's source conversation.
 
 Proceed with one kernel predicate, local gate/delivery wording, and three
 adversarial packets. Add no enforcement mechanism.
+
+## Stage Report: implementation
+
+- DONE: Commit `636e6b903e877456c3725243055feafebfa915f5` adds one
+  portable subtractive predicate to the byte-identical canonical/vendored
+  kernel pair.
+- DONE: Existing surfaces now preserve `UNKNOWN` without claiming necessity;
+  proposed new surfaces return on green or `UNKNOWN` and advance only on a
+  named without-it AC failure plus an insufficient simpler alternative.
+- DONE: The local ideation and validation stages carry explicit rejection
+  predicates; known-cause single-seam defects stay exempt unless they propose a
+  new surface.
+- DONE: Delivery defaults to one independently deliverable smallest PR to
+  `main`; a stack requires dependent, independently reviewable and verifiable
+  working slices plus real wait-blocked work.
+- DONE: No new file, script, policy mod, Work Control capability, reviewer loop,
+  or per-edit gate was added. The existing absolutes registry received the one
+  disposition required by its standing contract.
+- DONE: Every changed file maps to an AC: the kernel pair and registry to AC-1,
+  AC-2, and AC-3; local README to AC-1, AC-2, AC-3, and AC-4; ROADMAP and the
+  existing release plan to the accepted iteration/delivery scope. No changed
+  file is unmapped.
+- DONE: Fresh checks pass at the committed revision: kc-dev-flow contract,
+  state-prerequisite contract, 23 work-context cases, 40 skill frontmatters and
+  12 lint cases, version parity, 32 release-metadata cases, release-please
+  configuration, marketplace L0/L1/L2 clean-HOME installation, canonical/vendor
+  byte identity, `git diff --check`, and the 389-line README budget.
+
+### Summary
+
+The implementation changes existing policy and authority surfaces only. Enter
+fresh validation at exact revision `636e6b903e877456c3725243055feafebfa915f5`.
