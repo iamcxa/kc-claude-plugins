@@ -18,18 +18,18 @@
 98b59da531a4cdf4	prohibition	kernel.md:121 — the absolute words appear as quoted examples of what this rule governs
 bc010526d4527864	prohibition	kernel.md:136 — duty on the planner; greenfield without proof is forbidden
 31dfba02c6bb5e8e	prohibition	kernel.md:138 — duties on planners and validators; new surfaces need a bounded without-it failure, while existing UNKNOWN surfaces are preserved
-c87b4ccb4ca6d930	bounded	kernel.md:138 — bounded to the round's own report, which is what a reader has
-75590538f542aa33	prohibition	kernel.md:155 — definition of completion; forbids treating artifact count as completion
-04fb3da3cdcda942	bounded	kernel.md:160 — bounded by the definition of an instrument that cannot fail
-1c1dd8b51eae4c88	bounded	kernel.md:164 — bounded to what a text match observes; the non-correlation is stated in situ
-e64c1752d3250f60	prohibition	kernel.md:182 — duty on whoever offers the check as evidence
-2048f4524bd474b8	bounded	kernel.md:189 — bounded to assertions over sampled inputs
-98f57a3339f2d139	prohibition	kernel.md:210 — duty to prefer; 'no cheap check can settle' is the condition, not a claim
-1a4f588dd1f3fb24	prohibition	kernel.md:214 — duty on the fresh reviewer, who is the named owner of the decision
-99628c13b2858948	prohibition	kernel.md:236 — handoff duty on the actor transferring or resuming execution state
-05f1724a9f48029d	prohibition	kernel.md:247 — bounds the continuing actor to a transparent three-record window and records superseded inputs
-c57b0f71c51a17b2	prohibition	kernel.md:267 — forbids self-improvement detection from exercising work, sprint, merge, or pause authority
-f8817bbe79459c71	prohibition	kernel.md:273 — duty on the adopter; undeclared-off is the declared default
+c87b4ccb4ca6d930	bounded	kernel.md:153 — bounded to the round's own report, which is what a reader has
+75590538f542aa33	prohibition	kernel.md:170 — definition of completion; forbids treating artifact count as completion
+04fb3da3cdcda942	bounded	kernel.md:175 — bounded by the definition of an instrument that cannot fail
+1c1dd8b51eae4c88	bounded	kernel.md:179 — bounded to what a text match observes; the non-correlation is stated in situ
+e64c1752d3250f60	prohibition	kernel.md:197 — duty on whoever offers the check as evidence
+2048f4524bd474b8	bounded	kernel.md:204 — bounded to assertions over sampled inputs
+98f57a3339f2d139	prohibition	kernel.md:225 — duty to prefer; 'no cheap check can settle' is the condition, not a claim
+1a4f588dd1f3fb24	prohibition	kernel.md:229 — duty on the fresh reviewer, who is the named owner of the decision
+99628c13b2858948	prohibition	kernel.md:251 — handoff duty on the actor transferring or resuming execution state
+05f1724a9f48029d	prohibition	kernel.md:262 — bounds the continuing actor to a transparent three-record window and records superseded inputs
+c57b0f71c51a17b2	prohibition	kernel.md:282 — forbids self-improvement detection from exercising work, sprint, merge, or pause authority
+f8817bbe79459c71	prohibition	kernel.md:288 — duty on the adopter; undeclared-off is the declared default
 c00b34c04fb0129b	prohibition	kernel.md:69 — destination and revision duties assigned to the agent, captain, and work-item authority
 e7ad37f84d560a85	prohibition	kernel.md:88 — pre-execution route-change duties assigned to the agent, declared control, fresh reviewer, and captain
 043249fb5aad8bab	prohibition	kernel.md:101 — consent and authoritative-record duties assigned to the agent and captain
