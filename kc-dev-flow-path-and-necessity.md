@@ -3,8 +3,9 @@ title: "kc-dev-flow: correct mod adoption path and enforce mechanism necessity"
 source: "Captain directive `修 bug + 183`, GitHub issue #183, 2026-08-10"
 product: kc-dev-flow
 sprint: captain-directed
-design:
+design: required
 id: 9f63nm17bntn0ts7k9b1nm9c
+status: ideation
 ---
 
 ## Problem
@@ -17,3 +18,146 @@ naming the AC it serves, the simpler alternative, or an escaped defect.
 
 The captain authorized this bounded repair together with issue #183. The
 published-tag smoke review remains a separate unscheduled follow-up.
+
+## End value
+
+An adopter is directed to the selected workflow's local `_mods/` directory,
+and this repository's ideation gate refuses a proposed control mechanism until
+its necessity is reviewable. Speculative controls also leave a dated removal
+review in the existing work-item authority.
+
+## Scope
+
+Two policy surfaces:
+
+1. Correct the reverse-recovery mod's portable adoption instruction in the
+   canonical and self-adopted copies, with one semantic regression assertion.
+2. Add one local ideation rejection predicate for gates, checks, harnesses,
+   automations, and registries. Reuse backlog seeds for speculative review.
+
+No new registry, script, CI job, required context, kernel clause, or change to
+the separate published-tag smoke review is in scope.
+
+## Reverse-recovery audit
+
+Against `origin/main` at `bd81be0081911639e5930be896eea5bb3ba23bb5`:
+
+| Layer | Classification | Need | Evidence |
+|---|---|---|---|
+| Portable mechanism-necessity rule | WORKING_UNIT_UNPROVEN | REQUIRED | `kc-dev-flow/references/kernel.md` requires criterion, alternative, and insufficiency, but local ideation has no refusal predicate. |
+| Local ideation gate | EXISTS_BROKEN | REQUIRED | `docs/dev/README.md` already owns local judgment; issue #183 records #178 passing without a necessity record. |
+| Existing absolutes registry/check | WORKING_UNIT_UNPROVEN | REQUIRED | `scripts/kc-dev-flow-contract-test.py` invokes `absolutes-check.py`; required CI invokes the contract test. Issue #183's unwired premise is stale. |
+| Work-item authority | WORKING | REQUIRED | Spacedock backlog already holds `kc-dev-flow-published-tag-smoke-review.md` as a dated review seed pattern. |
+| Mod distribution path | EXISTS_BROKEN | REQUIRED | `reverse-recovery-audit.md` hard-codes `docs/ship-flow/_mods/`; `continue-dev-flow` reads only the adopted workflow's named local `_mods/`. |
+
+No greenfield layer is required. The cheapest compatible seam is the existing
+ideation gate plus the existing work-item authority.
+
+## Options and decision
+
+- **Take:** add one ideation rejection predicate and require a referenced
+  backlog review seed only for speculative controls.
+- **Do not take:** issue #183's proposed second content-hash registry and CI
+  wiring. The cited wiring gap has already been closed, and another registry
+  would duplicate the gate and work-item authorities.
+- **Do not take:** a text-presence assertion for the ideation wording. Kernel
+  says a text match cannot close a behavioral gate; validation will exercise a
+  missing and a complete necessity record through a fresh reviewer instead.
+
+Fastest path and smallest cut are the same: one local gate clause, one portable
+path correction, and one semantic regression assertion in the existing suite.
+
+## Necessity records
+
+**Ideation refusal predicate**
+
+- `Criterion:` AC-2.
+- `Alternative:` leave the kernel rule as guidance; insufficient because #178
+  passed the workflow without any of its three required facts.
+- `Escape:` #178 would have been returned unread because it named no criterion,
+  simpler alternative, or past escape/speculative review.
+
+**Adoption-path regression assertion**
+
+- `Criterion:` AC-1.
+- `Alternative:` change only the prose; insufficient because byte parity can
+  keep two copies identically wrong, as the current defect demonstrates.
+- `Escape:` mutate the corrected header back to `docs/ship-flow/_mods/`; the
+  existing contract suite must fail before distribution.
+
+## Design determination
+
+`required` — this changes the local ideation gate contract. The accepted shape
+is a necessity record with `Criterion`, `Alternative`, and `Escape`. `Escape`
+names a past defect proved by mutation; when none exists it instead records
+`speculative until YYYY-MM-DD; review <work-item ref>`, and removal is the
+default at that review.
+
+## Acceptance criteria
+
+**AC-1 — Adoption path is workflow-local.**
+
+The canonical and self-adopted reverse-recovery mods direct adopters to the
+adopted workflow's `_mods/reverse-recovery-audit.md`, carry version `0.2.1`, and
+remain byte-identical. Verified by: a RED-before-GREEN assertion in
+`scripts/kc-dev-flow-contract-test.py`, the full contract test, and the
+absolutes registry check it invokes.
+
+**AC-2 — Necessity can stop ideation.**
+
+A proposed control mechanism missing any required necessity fact is returned
+unread; a complete past-escape record passes accounting; a speculative record
+also requires a date and work-item reference. Verified by: a fresh-context
+Claude Opus high exercise over three adversarial ideation packets, naming the
+exact changed revision and the result that would fail the exercise.
+
+**AC-3 — No parallel enforcement system is added.**
+
+The diff adds no mechanism registry, new executable, workflow step, or required
+context. Verified by: exact diff classification against `origin/main`, live
+branch-protection read, and the existing version-parity/contract suites.
+
+## Test plan
+
+1. Add the adoption-path assertion and run the scoped contract test: expected
+   RED on the current hard-coded ship-flow path.
+2. Correct and version both copies, update the existing absolutes registry, and
+   rerun the contract test: expected GREEN.
+3. Exercise the ideation clause with missing, past-escape, and speculative
+   packets through fresh Claude Opus high.
+4. Run the full contract and version-parity suites once at stage exit.
+
+E2E skip: this is a docs/policy-only task. Its behavioral proof is the
+fresh-reviewer gate exercise; no product runtime or external consumer report
+originated the accepted problem.
+
+## Appetite and dispatch
+
+One worker session, 45 minutes; stop and re-cut beyond 70 minutes or if the
+change needs a new script, registry, CI step, or kernel edit. No spike needed:
+the existing ideation gate, work-item authority, contract test, and required CI
+path are live and were read directly.
+
+## Pre-mortem
+
+If this ships exactly per spec and still fails, the likely cause is criteria
+that pass without delivering value: a reviewer may echo the required fields
+without actually refusing an incomplete packet.
+
+## Measurement
+
+- Baseline: issue #183 records one control (#178) that passed without a
+  necessity record.
+- Target: 3/3 adversarial packets receive their specified disposition.
+
+## Doc diff
+
+- Reverse-recovery header: replace the ship-flow-specific destination with the
+  adopted workflow's local `_mods/` destination.
+- Ideation stage: add the necessity-record refusal predicate and speculative
+  review-seed requirement.
+
+## Out of scope
+
+Changing kernel policy, adding a registry or CI step, reopening issue #178,
+executing the published-tag smoke review, release version edits, and merge.
