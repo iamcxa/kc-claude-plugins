@@ -361,3 +361,42 @@ Validated PR #191 at `c7f9c3b` from a fresh context, reproducing every AC from t
   (`route:hold-for-live-e2e-test-runner-probe`, the route the captain did not
   take). **1 CONTEXT** — `/e2e-compile` double-prints errors, reproduced
   identically on `origin/main`; not this diff.
+
+## Stage Report: implementation (cycle 2)
+
+Wall-clock this round: **14 minutes** (06:55–07:10 CST, 2026-08-11), against the
+entity's `~90 minutes of worker time` appetite for the whole task.
+
+- DONE: Add the missing `resolveMultiSite` regression test to `e2e-pipeline/compiler/test/resolver.test.js` — mirror `resolver.test.js:311` through `resolveMultiSite` — so `resolver.js:1044-1047` is exercised
+  `resolver.test.js:1589`, `the parameterized element form is refused by name on the cross-site walk`, commit `6d9663b` (+28 lines, no other file). Drives `Click row(id=7) on list` through `resolveMultiSite` and asserts exactly one error, named (`element(param=value)` + `/e2e-test`), not the generic mismatch text, with the tier-2 detail forwarded and no step resolved. `resolver.js` unchanged: `git show --stat 6d9663b` lists only the test file.
+- DONE: In a THROWAWAY scratch worktree, neuter the cross-site parse gate, prove the edit applied with `git diff`, run the new test, and record the RED digest — then discard the scratch and record the GREEN
+  Scratch `git worktree add --detach /tmp/issue189-red-scratch`; unneutered baseline 87/87 green. **Six** one-line neuters of `resolver.js:1043-1047`, each shown by `git diff` before the run, each turning **exactly this one test red (86 pass / 1 fail of 87)**: N1 drop both pushes → `0 !== 1`; N2 hand-roll a generic message → `must name the form the author actually wrote`; N3 strip the step-id prefix → `must name the step the author has to go edit`; N4 hand-roll the tier-2 detail → `deepEqual` fail; N5 drop `/e2e-test` → `must name the executor that does support the form`; N6 append the generic text → `the generic mismatch text leaves the author guessing…`. Scratch discarded (`git worktree remove --force` + `rm -rf`; absent from `git worktree list`). GREEN after: `node --test test/resolver.test.js` 87/87.
+  *Assertion honesty (stage-def "count new assertions against the RED output"):* all six behaviour-claiming assertions are individually falsifiable by the neuters above. The seventh, `assert.equal(result.resolved.steps.length, 0)`, is green under every neuter tried — each still `continue`s the step — so it is an arrangement check, not a behaviour claim, and is labelled as such in the test comment.
+- DONE: Finish by re-instrumenting `node --test --experimental-test-coverage` and showing `1044-1047` is no longer in the uncovered set
+  Two full-suite coverage runs. Before (new test reverted, 1068 tests): `resolver.js | 97.02 | 87.59 | 95.12 | 337-341 457-461 560 593-600 652-656 1036-1040 1044-1047 1123-1124`. After (1069 tests): `97.36 | 87.97 | 95.12 | 337-341 457-461 560 593-600 652-656 1036-1040 1123-1124`. `1044-1047` is gone. `1036-1040` (the cross-site `!step.type` branch) is still uncovered and was not in scope this round.
+- DONE: Nothing else moves … Re-anchor on the source requirement before touching code … Full suite ONCE at stage exit with the pass/fail/skip counts recorded
+  *Re-anchor against #189:* its asks map — "an action string the parser cannot fully consume should be an error" → AC-1; "the page qualifier vanishes and nothing refuses that" → AC-2; "accept `element(param=value)` … or reject it explicitly" → AC-3 (reject; captain-settled Route A); its conditional fourth ask (substitution must precede the unresolved-`${...}` guard *if* the form becomes supported) is untriggered because the form is rejected. One #189 observation is served by no AC — the element still resolves globally rather than page-scoped — and `## Out of scope` defers it by name as a separate behaviour change. *Diff the other way:* `git diff --stat origin/main...HEAD` = `compiler/resolver.js` (AC-1/2/3), `compiler/test/resolver.test.js` (AC-2/3/4 + this round's guard), `skills/e2e-compile/SKILL.md` +1 (the ideation-approved Doc diff). No changed file lacks an AC. `git diff --name-only origin/main...HEAD | grep -E 'plugin\.json|marketplace\.json|release-please|\.github/workflows'` → empty.
+  *Full suite at stage exit:* `npm run test:ci` → **tests 1069, pass 1067, fail 0, skipped 2, todo 0**, 108s wall. The 2 skips are pre-existing (the reverted-test baseline run was 1068/1066/0/2).
+- DONE: PR #191 is updated and its CI is re-observed green AT THE NEW HEAD … Report the mergeable state and every required check at the exact new head … say explicitly whether the incoming `happy-path.test.js` change interacts with this diff
+  New head **`6d9663b`**, pushed fast-forward (`c7f9c3b..6d9663b`); no force-push, no history rewrite. The branch first merged `origin/main` **a024b25** as `b7144f7` (no conflicts, no file in this diff touched by main), so it is no longer 6 behind. `gh pr view 191` → `mergeable: MERGEABLE`, `mergeStateStatus: CLEAN`, `isDraft: true`. `gh pr checks 191` at `6d9663b`, all seven entries, none failing: **e2e-pipeline suite (portable) pass** 1m57s; **version parity (plugin.json / marketplace.json / codex / README) pass** 24s; **decide whether the real browser is needed pass** 7s; **real-browser proofs pass** 3s; **GitGuardian Security Checks pass** 4s; `e2e-pipeline real-browser proofs (#91,…)` skipping; `report-failure` skipping. Bounded claim on "required": branch protection is not readable with this token (`/branches/main/protection` → 404, `rulesets` → empty), so this is the set GitHub attached to the PR, not a read of the protection rule.
+  *Interaction with the incoming `happy-path.test.js`: yes, and it exercises this diff rather than merely coexisting with it.* That test compiles `compiler/test/fixtures/happy-path-flow.yaml`, which carries two click steps — `Click submit_button on login` and `Click refresh_button on dashboard` — both canonical `Click <element> on <page>` forms the anchored pattern must still fully consume. Main's rework changed its assertions from "the emitted script contains X" to "the run issues call X" (new `test/fixtures/agent-browser-argv-stub.js`); it did **not** change the flow fixture, so the action strings reaching the resolver are unchanged. Scoped run at the merged head: `node --test compiler/test/happy-path.test.js` → 1/1 pass; green again in the full suite and on CI.
+  *CI margin (stage-def "tests added" clause):* portable job 1m57s against `timeout-minutes: 10` — roughly 80% of the cap unused; one test added to 1069. No margin disclosure owed.
+- SKIPPED: the RED-before-GREEN loop in its ordinary form
+  The round brief and the validator both establish the branch already refuses correctly, so no failing-first run exists to record. Substituted by the six-neuter falsifiability record above, per the checklist's instruction.
+
+### Summary
+
+One test added (`resolver.test.js:1589`); no product code changed. The round's real
+work was making a green-on-arrival guard falsifiable — six single-line neuters of
+`resolver.js:1043-1047`, each turning only this test red out of 87 — plus a
+before/after full-suite coverage measurement showing `1044-1047` leave the
+uncovered set. **Two deviations to surface.** (1) The branch was merged with
+`origin/main` a024b25 (`b7144f7`, clean) so the exit suite and CI would exercise
+this diff against current main instead of a 6-commit-stale base; that is a second
+commit beyond the "~8-line correction", taken because the checklist asks for CI at
+the exact new head and for a statement about the incoming `happy-path.test.js`,
+neither of which is answerable from a stale base. (2) The correction commit is
+typed `test(e2e-pipeline)` rather than the `fix(e2e-pipeline)` shown in the round
+brief: it adds no behaviour, `CLAUDE.md` lists `test` as a valid type, and the PR
+title — the squash message release-please actually reads — is still
+`fix(e2e-pipeline): …`. None of the seven accepted P3 residuals were touched.
