@@ -193,3 +193,19 @@ locally bound workflow authority.
   is lost, or the installed Spacedock version differs from the named contract.
 - `authority_boundary:` advisory only; Captain retains workflow scope, Spacedock
   retains state, and GitHub/release-please retain delivery and release.
+
+### Exact-head PR rebind
+
+Fresh PR-level Claude Opus high session
+`53ca4a4a-e114-4a4b-9412-ae0fbb0c0e0a` rebound AC-1, AC-2, AC-3, and AC-4 to
+`454507f7ba56ce79ca0414f1964af4e59126eea5`. The always-loaded README is now
+389 lines and the four-file surface is 620, still below both the 700-line ceiling
+and 1,362-line baseline. Recovery remains failure-triggered at README line 94,
+validation procedure stage-triggered at line 240, and history non-authoritative
+at line 54. No moved file changed or became universally required; the 15 added
+README lines allocate the new pilot to existing stages. Hosted CI is green at
+the exact head. Verdict remains `proceed / high`, with zero Material findings.
+
+The prior 374/605 values remain the measurement at `c48a9e9`; 389/620 is the
+current delivery snapshot. The growth direction is a pilot observation, not an
+AC failure: the README retains 311 lines of ceiling headroom.
