@@ -200,3 +200,26 @@ definition unchanged.
 
 Add one explicit pre-AC appetite and surface test to Engineering Judgment without
 changing the kernel or adding an executable classifier.
+
+## Stage Report: implementation
+
+TL;DR: Implemented the approved one-surface change at
+`e6930fe74df014370e52c8cc2d13dbd63461f270`; the canonical policy, vendored copy,
+and existing contract test are the only changed files.
+
+- DONE: Observed RED before the policy edit. The package contract failed with
+  `engineering judgment is missing: before acceptance criteria expand`.
+- DONE: Added the named `Iteration-size precheck`, bound surface counting to the
+  kernel's `Route discipline`, and made multiple surfaces default to `narrow`
+  unless an exact captain-approved exception is recorded by work-item authority.
+- DONE: Kept the canonical and vendored policy copies byte-identical and bumped
+  only the policy-local version from `0.1.0` to `0.2.0`; release-please retains
+  ownership of plugin versions.
+- DONE: Strengthened the existing contract test to pin the operative route,
+  exception authority, technical-seam guard, and top-level heading structure.
+- DONE: Ran the complete repository gate set. Release metadata, version parity,
+  skill frontmatter, plugin release contract, work-context contract,
+  kc-dev-flow contract, state prerequisite contract, mirror comparison, and
+  `git diff --check` all passed.
+- DONE: Stayed inside the stop condition. No kernel, skill, new mod, runtime
+  classifier, schema field, or second canonical policy surface was added.
