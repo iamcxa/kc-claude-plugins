@@ -464,3 +464,161 @@ Reproduced all six ACs from a clean `npm ci` without relying on the implementati
   double-quote shape already routed for F1 closes F1, F6 and F7 together on both bash
   3.2.57 and 5.3.9 — so the escalation adds evidence and one test axis, not a new mechanism.
   Round budget after escalation: still inside the 2× tolerance of the 90m appetite.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Re-derive from the code (not from the entity's lead table) a complete file:line audit of EVERY expansion-active emission context in e2e-pipeline/compiler/ where a flow- or mapping-sourced string lands in shell text — inside "...", inside a ${VAR:-default} word, inside a ${VAR:?word} word, and any # comment line an embedded newline could terminate — classifying each ESCAPED (name the helper) / SINGLE-QUOTED / MISSING-ESCAPE, and put that table in the stage report.
+  Re-derived mechanically at commit 6c5a0ad; table below. `codegen.js` is still the only bash emitter (the other two `lines.push` modules build a markdown table and a help string).
+- DONE: Close every MISSING-ESCAPE context by reusing the existing escapeDoubleQuoted / singleQuote helpers, proving each with a test that RUNS the emitted bash under a real shell (canary file must stay absent, variable value must equal the literal YAML text) — record the RED failure digest before the fix, and cover step ids reaching echo and _record_step_name per issue #190's explicit ask.
+  8 contexts closed this cycle in 6c5a0ad; 29 executing tests in `compiler/test/codegen-shell-escaping.test.js`, all green on bash 3.2.57 AND 5.3.9. **Deviation stated, not buried:** `escapeDoubleQuoted` was the WRONG TOOL for a `${...}` word, so two sites use nested double quotes rather than a helper call — see F1/F6/F7 below.
+- DONE: Leave runtime_values ${NAME} template expansion (runtimeTemplateDoubleQuote) behaving exactly as before with no edits to pre-existing tests, and exit with `npm test` and `npm run lint` green in e2e-pipeline/.
+  `runtimeTemplateDoubleQuote` no longer exists (deleted by #184); `runtime_values` codegen is untouched. Suite 1091 / 0 fail / 2 skipped; `npm run lint` exit 0. **Correction to the checklist's second half:** five pre-existing tests DID need editing this cycle — see "Pre-existing tests that arranged the old shape".
+
+### Premise re-verification (done first, at HEAD 63b9362)
+
+All three escalation premises reproduced before any code was written, by executing the emitted bash — not by reading it:
+
+| Finding | Repro at 63b9362 | bash 3.2.57 | bash 5.3.9 |
+|---|---|---|---|
+| F1 `}` | `base_url: "http://h/}; touch C; #"` | `BASE_URL` = `http://h/; touch C; #}` — wrong value, exit 0, no diagnostic | identical |
+| F6 `<(...)` | `flow.name` = `demo<(touch C)flow`, required var, no args | msg shows `/dev/fd/63` (substitution performed; canary lost to exit race) | **canary CREATED** |
+| F7 `'` | `base_url: "http://x/it's"` | `bash -n`: unexpected EOF — whole script unparseable | identical |
+
+Premise intact: #184/#179 did not close any of it.
+
+### AC-4 audit table — re-derived from the code at 6c5a0ad
+
+Method: a script flagged every line in `codegen.js` concatenating a dynamic fragment into emitted script text (196 candidates), then each was traced to its data provenance. `compiler/*.js`, `compiler/lib/*.js`, `bin/*.js` were swept for other bash emitters — `codegen.js` is the only one.
+
+**Expansion-active `${...}` words** (the class the escalation reopened):
+
+| file:line | context | before | now |
+|---|---|---|---|
+| codegen.js:171 | `${N:?Usage: …}` word ← `flowName` + variable names | MISSING-ESCAPE (`}`, `<(`, `>(`, `'`) | **NESTED-QUOTED** + `escapeDoubleQuoted` |
+| codegen.js:186 | `${N:-…}` word ← variable default / mapping `base_url` | MISSING-ESCAPE (`}`, `'`, `${}`) | **NESTED-QUOTED** + `escapeDoubleQuoted` |
+| codegen.js:179 | `${N:-${E2E_X:-}}` empty default | INERT (no flow content) | unchanged |
+| codegen.js:223, 1246, 1261, 1293, 1804 | `"${ENV…}"` ← env identifiers | INERT — parser.js:218/329/376 pin `^[A-Z_][A-Z0-9_]*$` | unchanged |
+| codegen.js:1041, 1894–1902 | bash var names ← site name / `save_as` | INERT — `isValidSiteName`, parser.js:283 `VARIABLE_NAME_PATTERN` | unchanged |
+
+**`#` comment lines** (an embedded newline ends a comment; neither quoting helper touches line terminators):
+
+| file:line | source | before | now |
+|---|---|---|---|
+| codegen.js:147 | `# Usage:` ← flowName **+ variable KEYS** | MISSING-ESCAPE (keys unvalidated — new find) | `commentSafe` (whole line) |
+| codegen.js:173, 178, 181 | `# $N NAME --` ← variable KEYS | MISSING-ESCAPE (new find) | `commentSafe` (whole line) |
+| codegen.js:259 | `# DO NOT EDIT` ← `meta.flowName` | ESCAPED | `commentSafe` |
+| codegen.js:260 | `# Source:` ← `meta.flowPath` | **MISSING-ESCAPE (F4)** | `commentSafe` |
+| codegen.js:262 | `# Mapping:` ← `mappingPaths[]` (cross-site) | ESCAPED but UNTESTED (F2) | `commentSafe` + test |
+| codegen.js:264 | `# Mapping:` ← `mappingPath` (single) | ESCAPED | `commentSafe` |
+| codegen.js:266, 267, 269 | timestamp / hash / compilerVersion | INERT — machine-generated (compiler.js:363-369) | unchanged |
+| codegen.js:1802 | `# … runtime key <ref>` | INERT — parser.js:206 `VARIABLE_NAME_PATTERN` | unchanged, stated not silent |
+| codegen.js:1971 | `# Unknown action type:` ← `step.type` | MISSING-ESCAPE via exported `generate()` | `commentSafe` |
+
+**`printf` FORMAT operands** (`%` is neutralized by NO helper — F8):
+
+| file:line | source | before | now |
+|---|---|---|---|
+| codegen.js:1474, 1484, 1487, 1490, 1493 | `flowName` in JUnit formats | `singleQuote` closed `'`, but `%` open (F8a) | `xmlAttrEscape(...).replace(/%/g,'%%')` |
+| codegen.js:1297 | HTTP header NAME (parser.js:339 permits `%`) | MISSING-ESCAPE (F8b) | `hKey.replace(/%/g,'%%')`; `header.scheme` needs none — `HTTP_AUTH_SCHEME_PATTERN` excludes `%` |
+| codegen.js:1555 | `flowName` in metrics | INERT — name is in an ARGUMENT slot, not the format | unchanged |
+
+**Ordinary `"…"` / `'…'` contexts** — all already correct, re-confirmed: `doubleQuote`/`escapeDoubleQuoted` at :1239, :1687, :1719, :1768, :1853, :1950, :1959, :2301 (step id / action / flow name); `singleQuote` at :1257, :1265, :1358, :1738, :1789, :1846, :2024, :2055, :2073, :2107, :2120, :2133, :2142, :2155 (selectors, text, session, failure messages). `seconds` is `parseInt`, `timeout` is `Number` — numeric by construction.
+
+### RED evidence (recorded before each fix, same session, committed together)
+
+`node --test compiler/test/codegen-shell-escaping.test.js` — 12 of 27 failing before any codegen edit:
+
+| RED case | what the failure proved | falsified by |
+|---|---|---|
+| `${N:-default} word survives expansion-closing brace }` | value was `http://…/a; touch C; #b}`, not the seed — wrong value, exit 0 | M1 |
+| `${N:-default} word survives apostrophe` | script unparseable, exit non-zero | M1 |
+| `${N:-default} word survives parameter expansion ${...}` | value was `a${HOMEb}`, not `a${HOME}b` | M1 |
+| `mapping base_url … nested-quoted` | byte shape lacked the nesting | M1 |
+| `${N:?usage} word survives <(...)` / `>(...)` | usage message carried `/dev/fd/63`, not the literal name | M2 |
+| `${N:?usage} word survives }` / `'` / `${...}` | message truncated at `}` / script unparseable | M2 |
+| `a newline in provenance metadata …` (extended with `flowPath`) | `flowPath` payload escaped the comment | M4 |
+| `a % in the flow name cannot shift the JUnit printf argument list` | counts landed in `name=`, `timestamp` starved | M6 |
+| `a % in a finalizer HTTP header name …` | got `header = "X-tok3n: Bearer "` vs `header = "X-%s: Bearer tok3n"` | M7 |
+| `a newline in a variable name cannot terminate the # Usage comment` | canary created from the `# Usage:` line | usage-line mutation |
+| `a newline in an unknown step type …` | canary created from the comment | commentSafe removal |
+
+Two cases in the axis matrix are **regression pins, not behavior claims** — green in both worlds and labelled as such: `${N:-default}` vs `<(...)`/`>(...)` (bash does not perform process substitution in a `:-` word; it does in a `:?` word — measured, not assumed), and the `" \` axis in both words (already covered by `escapeDoubleQuoted`). The two `assert.ok(...)` arrangement checks in the finalizer and unknown-type cases are likewise preconditions, kept so a later green is trustworthy.
+
+### Adversarial falsification (scratch mutation, restored byte-identically)
+
+Each mutation was applied to `compiler/codegen.js`, the scoped suite run, then the file restored from a pre-mutation copy and the restore confirmed by sha256 compare (`restore-identical: YES` printed for every batch).
+
+| # | mutation | result |
+|---|---|---|
+| M1 | drop nested quotes in the `:-` word | 4 fail |
+| M2 | drop nested quotes in the `:?` word | 5 fail |
+| M3 | drop `commentSafe(p)` in the cross-site `mappingPaths` branch | 1 fail — **the F2 hole, previously silent** |
+| M4 | drop `commentSafe(meta.flowPath)` | 1 fail |
+| M5 | replace `singleQuote` with naive `"'" + … + "'"` on the PASSING-step `<testcase/>` format (:1493) | 1 fail — **the F3 hole, previously silent** |
+| M6 | drop `%`-doubling on the JUnit flow name | 1 fail |
+| M7 | drop `%`-doubling on the finalizer header name | 1 fail |
+| M8 | narrow the `# Usage:` `commentSafe` back to `flowName` only | 1 fail |
+
+### Pre-existing tests that arranged the old shape — per-scenario accounting
+
+The nested-quote change alters emitted bytes, so five pre-existing cases failed. Each was checked for whether the edit **restored its original intent** or quietly narrowed it:
+
+| test | intent | verdict |
+|---|---|---|
+| `codegen.test.js` "assignment uses `:-` pattern with env fallback and default value" | the `$1 → $E2E_X → default` chain exists | intent preserved; only the literal updated |
+| `codegen.test.js` "assignment uses `:?` pattern with usage message" | required var uses `:?` and carries the usage text | intent preserved |
+| `compiler.test.js` "accepts explicit uppercase BASE_URL without injecting a duplicate assignment" | the load-bearing assertion is `match(/^BASE_URL="\$\{1:/gm).length === 1` — untouched | intent preserved; only the value regex updated |
+| `visibility-browser-runtime-real.test.js` "generated real-browser fixture binds its app…" | fixture emits a BASE_URL prologue | intent preserved |
+| `codegen.test.js` "non-SC-1032 flows stay byte-frozen except for declared drift" | frozen-output receipt; re-pinning demands a declared line-level accounting | **accounting done before re-pinning** (below) |
+
+Byte-freeze drift, measured by diffing old vs new `generate()` output per corpus entry: `legacy-empty` **byte-identical** (no variables); `legacy-single-site` **exactly 1 changed line** (`BASE_URL=`); `legacy-cross-site` **exactly 2** (`OFFICE_BASE_URL=`, `APP_BASE_URL=`). One line per optional variable, nothing else. Ledger entry 5 added to the comment block above the corpus, then the two hashes re-pinned.
+
+### Disposition of every routed finding
+
+| ID | disposition |
+|---|---|
+| F1 `}` | FIXED — nested quotes at codegen.js:186 |
+| F2 cross-site `mappingPaths` test hole | FIXED — new test; M3 proves it now reddens |
+| F3 JUnit `_STEP_NAMES=()` empty stub | FIXED — arrays populated one per result class (`pass`/`skip`/`not_automated`/`fail`), all four formats execute; M5 proves the passing-step format now reddens |
+| F4 `# Source:` | **FIXED**, not waived — one `commentSafe` call |
+| F5 redundant `assert.ok` at old test:80 | REMOVED — the strict-equal above it subsumed it |
+| F6 process substitution (RCE) | FIXED — same nested-quote shape at codegen.js:171 |
+| F7 apostrophe | FIXED — same shape, both sites |
+| F8(a) `%` in JUnit formats | FIXED — folded into F3's now-executing test |
+| F8(b) `%` in HTTP header name | **FIXED**, not waived — `hKey.replace(/%/g,'%%')` + executing test |
+| codegen.js:1971 unknown action type | FIXED — reachable via the exported `generate()`, so not waived on reachability |
+| codegen.js:1802 runtime key comment | NO ACTION, stated — parser.js:206 pins `^[A-Za-z_][A-Za-z0-9_]*$` |
+| cleanup-trap over-escape (cycle-1 follow-up 1) | still out of scope, unchanged |
+
+### Scope: one thing found beyond the routed list — declared, not silently absorbed
+
+While re-deriving the table I found that parser.js does **not** charset-validate flow `variables:` KEYS. Two consequences:
+
+1. **Comment class — FIXED here.** The key reaches `# Usage:` and `# $N …` verbatim; a newline in a key ended those comments and executed the remainder. In-class per this stage's own checklist, same one-call shape as F4.
+2. **Identifier class — NOT fixed, reported.** The same key is uppercased into a bash identifier: `variables: {"a\ntouch X\n#b": "v"}` emits a bare `TOUCH X` command line. No escaper can fix this — it needs parser-side name validation, which is a behavior change for existing flows. That is precisely what the escalation ruled out for `flow.name` this round, so the same ruling is applied here. **Recommend a follow-up entity covering flow `name`, `variables` keys, and any other identifier-position field together.** The new test is explicitly narrowed to the comment window, with the narrowing and its reason written into the test.
+
+Nothing else was expanded. No new lint, CI lane, or standing enforcement was added.
+
+### CI delta, named before the handoff
+
+Tests added (+20 cases in this file), each spawning one `bash`. Scoped file runs in ~190 ms; full suite ~106 s against `e2e-pipeline-tests.yml`'s `timeout-minutes: 10` (600 s) — ~82 % margin, not thin. CI is `ubuntu-latest` → bash 5.x, and the behavior here is shell-version-dependent, so the whole escaping suite was run under **bash 5.3.9 as well as 3.2.57** (29/29 both). Lint warning classes vs `main`: only `noTemplateCurlyInString` +2, the unavoidable consequence of new `${…}` string literals; the 2 `noUselessEscapeInString` I first introduced were removed. No `.github/workflows/**`, version, manifest, or marketplace file touched.
+
+### Reproduce (fresh validator, no session access)
+
+    cd e2e-pipeline
+    node --test compiler/test/codegen-shell-escaping.test.js     # 29/29, AC-1/2/3
+    npm test                                                     # 1091, 0 fail — AC-6
+    npm run lint                                                 # exit 0 — AC-6
+    # AC-2 on the CI shell family, not just the local 3.2:
+    sed "s|'/bin/bash'|'/opt/homebrew/bin/bash'|" compiler/test/codegen-shell-escaping.test.js > /tmp/b53.test.js
+    node --test /tmp/b53.test.js
+    # AC-4: re-derive independently, then diff against the table above
+    grep -n "lines.push\|assignments.push" compiler/codegen.js
+    # AC-5: runtime_values path is untouched by this diff
+    git show --stat 6c5a0ad
+
+Falsifiers for every fix are the M1-M8 mutations above; each is a single-token edit to `compiler/codegen.js`.
+
+### Summary
+
+The escalation's diagnosis was right and is now written into the code: `escapeDoubleQuoted` is the wrong tool for a `${…}` word, because that word re-enables quote processing and process substitution rather than behaving as double-quoted text. Nesting the payload in its own double quotes fixes the grammar instead of enumerating characters, and one shape closed F1, F6 (live command execution) and F7 at both sites, portably across bash 3.2.57 and 5.3.9. F2 and F3 were test holes rather than code holes — both branches now actually execute, and both redden when their escaper is removed, which is what the previous round could not show. F4 and F8(b) were fixed rather than waived, and `%`-in-`printf`-format was closed at both emitters. One finding beyond the routed list is declared above: flow `variables:` keys are unvalidated, whose comment half is fixed here and whose identifier half is deliberately left to a follow-up decision rather than silently widening this round's appetite.
