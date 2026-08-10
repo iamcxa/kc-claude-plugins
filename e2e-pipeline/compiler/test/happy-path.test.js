@@ -16,10 +16,17 @@
  *     `click` and `wait` between them were not. Dropping the navigation, either
  *     wait, or the password fill left every scenario green.
  *
- * It now executes the script against a stubbed agent-browser and asserts the argv
- * it receives. "This text appears in the source" becomes "the program passed this
- * argument", which closes both classes at once and makes the selector assertions
- * exact rather than normalised.
+ * It now also executes the script against a stubbed agent-browser and asserts the
+ * argv it receives. "This text appears in the source" becomes "the program passed
+ * this argument", which closes both classes and makes the selector assertions exact
+ * rather than normalised.
+ *
+ * ALSO, not INSTEAD. A first revision deleted the source assertions, and that was a
+ * net loss on two shapes: the flow's two `url contains` expectations emit an
+ * identical `get url`, so argv cannot tell them apart or tell one from two; and
+ * assertion polarity lives in the inline judge call, not in what agent-browser
+ * receives. Both are pinned in source and unreachable from argv. The two layers see
+ * different things and both run.
  *
  * HOW THE STUB IS REACHED
  *
@@ -120,7 +127,7 @@ const MUST_INVOKE_IN_ORDER = [
   // carries a `css_selector`, so codegen emits it as an eval-based
   // `querySelector().click()` with `agent-browser click` only as a fallback. Pinned
   // as the eval, because the fallback does not run when the eval succeeds.
-  ['eval', /querySelector\(.*aria-label.*\)[\s\S]*\.click\(\)/],
+  ['eval', /querySelector\("button\[aria-label=\\"重新整理\\"\]"\)[\s\S]*\.click\(\)/],
 ];
 
 /** Assertions the script must actually perform, identified by the argv they carry. */
@@ -148,6 +155,41 @@ const MUST_ASSERT = [
     match: function(c) { return c[0] === 'eval' && /nav-dashboard/.test(c[1] || ''); },
   },
 ];
+
+/**
+ * The source-level assertions, kept rather than replaced.
+ *
+ * Argv is strictly better for identity and for "did this call happen at all", and
+ * strictly worse for two things, because argv erases distinctions the source keeps:
+ *
+ *   - the flow's two `url contains` expectations emit the *identical* `get url`
+ *     call, so no argv assertion can tell one from the other, or one from two.
+ *   - assertion polarity lives in the inline judge invocation, not in what
+ *     agent-browser receives, so `visible` and `not-visible` are indistinguishable
+ *     in argv.
+ *
+ * A first revision deleted these and disclosed neither loss. The two instruments
+ * catch disjoint classes; running both is the honest arrangement.
+ */
+const MUST_EMIT = [
+  /_poll_url_contains '\/login'/,
+  /_poll_url_contains '\/dashboard'/,
+  /_poll_visibility '\[data-testid="login-error"\]' 'strict' not-visible/,
+  /_poll_visibility '\[data-testid="welcome"\]' 'strict' visible/,
+  /_poll_visibility 'table\.results' 'strict' visible/,
+];
+
+/**
+ * Recover a selector's written form from the generated script.
+ *
+ * Undoes bash single-quoting and the JS string inside it, so `MUST_EMIT` pins the
+ * identity rather than codegen's quoting style. That normalisation is exactly why
+ * source assertions cannot see a wrong-but-well-formed emission — which is what the
+ * argv assertions below are for.
+ */
+function recoverSelectorText(script) {
+  return script.split("'\\''").join("'").split('\\"').join('"');
+}
 
 function readInvocations(logPath) {
   if (!fs.existsSync(logPath)) return [];
@@ -188,6 +230,12 @@ describe('happy path: the commands real flows issue', function() {
     // quoting defects codegen can emit, and it fails before the script is run.
     const syntax = childProcess.spawnSync('bash', ['-n', result.outputPath], { stdio: 'pipe' });
     assert.equal(syntax.status, 0, 'bash -n must accept the script: ' + syntax.stderr);
+
+    // Source-level, for the two things argv erases: which url assertion, and polarity.
+    const readable = recoverSelectorText(fs.readFileSync(result.outputPath, 'utf8'));
+    for (const emission of MUST_EMIT) {
+      assert.match(readable, emission, 'generated script must emit ' + emission);
+    }
 
     // A directory on PATH holding only the stub, named as the binary the shim spawns.
     const binDir = path.join(runDir, 'bin');
