@@ -42,6 +42,7 @@ required_files = [
     PLUGIN / "references/engineering-judgment.md",
     PLUGIN / "skills/science-officer-em/SKILL.md",
     PLUGIN / "skills/science-officer-em/agents/openai.yaml",
+    PLUGIN / "references/retained-document-policy.md",
 ]
 for required_file in required_files:
     require(required_file.is_file(), f"missing {required_file.relative_to(ROOT)}")
@@ -176,6 +177,18 @@ require(
     "engineering-judgment" in package_readme,
     "package README is missing engineering judgment mod",
 )
+require(
+    "- `retained-document-policy` —" in package_readme,
+    "package README is missing the independently selectable retained-document policy mod",
+)
+require(
+    "- `project-context-maintenance` —" in package_readme,
+    "package README is missing the independently selectable project-context mod",
+)
+require(
+    "independently adoptable parts" not in package_readme,
+    "package README still claims path-internal policy selection",
+)
 root_readme = (ROOT / "README.md").read_text(encoding="utf-8")
 require("promote-dev-flow" in root_readme, "root README is missing source intake skill")
 default_prompts = codex_manifest["interface"]["defaultPrompt"]
@@ -199,6 +212,30 @@ require(
 )
 
 project_context_mod = required_files[5].read_text(encoding="utf-8")
+retained_document_mod = required_files[-1].read_text(encoding="utf-8")
+require(
+    "# Part 1" not in project_context_mod,
+    "project-context-maintenance still embeds the separately selectable retained-document policy",
+)
+require(
+    "name: retained-document-policy" in retained_document_mod,
+    "retained-document policy has the wrong mod identity",
+)
+retained_stage_rows = {
+    line.split("|", 2)[1].strip(" `"): line
+    for line in retained_document_mod.splitlines()
+    if line.startswith("| `")
+}
+require(
+    "For an addition or deletion, execute Rule 4."
+    in retained_stage_rows.get("implementation", ""),
+    "retained-document policy does not assign Rule 4 to implementation",
+)
+require(
+    "For an addition or deletion, repeat Rule 4 independently"
+    in retained_stage_rows.get("validation", ""),
+    "retained-document policy does not assign independent Rule 4 verification",
+)
 require(
     "`work-context-protocol`" not in project_context_mod,
     "project-context-maintenance references an unshipped work-context-protocol",
