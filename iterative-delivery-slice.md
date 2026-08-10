@@ -4,9 +4,11 @@ source: Captain ruling on iterative delivery, 2026-08-10; Relay remote-review do
 product: kc-dev-flow
 sprint:
 id: nzae8nwgvrg9dhwc6kz0kfsy
-status: ideation
+status: implementation
 lane: main
 started: 2026-08-10T14:35:14Z
+design: required
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-iterative-outcomes
 ---
 
 ## Problem
