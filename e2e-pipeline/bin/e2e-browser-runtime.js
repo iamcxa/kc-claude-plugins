@@ -975,16 +975,37 @@ function runAgentBrowser(options, command) {
   return String(result.stdout || '');
 }
 
+/**
+ * Read agent-browser's lifecycle contract version.
+ *
+ * Returns the version string, `''` when the binary is present but its version is
+ * unreadable, and `null` when the binary is not there at all. Callers need the
+ * distinction: collapsing both into `''` reports "could not verify an
+ * agent-browser lifecycle contract version" to someone whose actual problem is
+ * that agent-browser is not installed, which is the first thing this runtime says
+ * on a fresh host.
+ */
 function agentBrowserLifecycleVersion(agentBrowser, childEnvironment) {
   const result = spawnSync(agentBrowser, ['--version'], {
     encoding: 'utf8',
     env: childEnvironment,
   });
+  if (result.error && result.error.code === 'ENOENT') return null;
   if (result.error || result.status !== 0) return '';
   const match = String(result.stdout || '').match(
     /agent-browser\s+(\d+(?:\.\d+){1,3})/
   );
   return match ? match[1] : '';
+}
+
+/** The one place that says how to obtain the prerequisite. */
+function agentBrowserMissingMessage(agentBrowser) {
+  return (
+    'e2e-browser-runtime: agent-browser is required and was not found: ' +
+    agentBrowser +
+    '\n  install it with: npm install -g agent-browser' +
+    '\n  or point E2E_AGENT_BROWSER_BIN at an existing executable\n'
+  );
 }
 
 function parseAgentBrowserPayload(stdout, description) {
@@ -3094,6 +3115,13 @@ function main(argv) {
       return 2;
     }
   }
+  // Absent binary before unreadable version: the two produce the same falsy
+  // `lifecycleVersion`, and reporting the version problem for a missing install
+  // sends the reader looking for a contract mismatch that does not exist.
+  if (options.command[0] === 'open' && lifecycleVersion === null) {
+    process.stderr.write(agentBrowserMissingMessage(agentBrowser));
+    return 2;
+  }
   if (
     options.command[0] === 'open' &&
     !lifecycleVersion &&
@@ -3119,6 +3147,13 @@ function main(argv) {
     stdio: 'inherit',
   });
   if (result.error) {
+    // Reached by the commands that skip the `open` version probe above.
+    // `spawnSync agent-browser ENOENT` names a Node API and a binary and leaves
+    // the reader to infer the rest.
+    if (result.error.code === 'ENOENT') {
+      process.stderr.write(agentBrowserMissingMessage(agentBrowser));
+      return 1;
+    }
     process.stderr.write('e2e-browser-runtime: ' + result.error.message + '\n');
     return 1;
   }
