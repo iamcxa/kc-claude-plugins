@@ -2,9 +2,9 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Validate the published Science Officer runtime, halve the accepted-work-to-first-integrated-slice delay, and reduce the local workflow README to 700 lines before one kc-dev-flow release.
+**Goal:** Validate the published Science Officer runtime, halve the accepted-work-to-first-integrated-slice delay, reduce the local workflow README to 700 lines, and pilot bounded subtraction before one kc-dev-flow release.
 
-**Architecture:** Preserve the existing Spacedock work-item, iteration, and delivery authorities. Run the v2.1.0 smoke as a one-off exact-tag experiment before adding any persistent harness; make one fresh EM the only required judgment seat at ideation and validation; then split always-loaded authority from trigger-loaded recovery and validation detail. Keep each work item and logical change independently reviewable even when they share the release batch.
+**Architecture:** Preserve the existing Spacedock work-item, iteration, and delivery authorities. Run the v2.1.0 smoke as a one-off exact-tag experiment before adding any persistent harness; make one fresh EM the only required judgment seat at ideation and validation; split always-loaded authority from trigger-loaded recovery and validation detail; then require non-trivial brownfield additions to survive a bounded without-it challenge. Keep each work item and logical change independently reviewable even when they share the release batch.
 
 **Ideation EM ruling:** `narrow / high`. Treat the completed v2.1.0 experiment as the decision receipt, retain one release-closeout dual-host smoke rather than a per-PR matrix, make multi-model review optional, and delete repeated README prose instead of relocating it. The captain's earlier instruction still controls delivery: finish the batch before opening a PR.
 
@@ -70,12 +70,37 @@
 7. Delete superseded examples and repeated rationale instead of relocating them. Verify the total mandatory reading path is smaller for backlog, ideation, implementation, and validation separately.
 8. Run contract, frontmatter, parity, marketplace installability, link/path checks, and a fresh high-reasoning EM validation against the exact diff.
 
-### Task 5: Deliver one release after all work items validate
+### Task 5: Pilot bounded subtraction before adding brownfield surfaces
+
+**Files:**
+- Modify: `kc-dev-flow/references/kernel.md`
+- Modify byte-identically: `docs/dev/_mods/kernel.md`
+- Modify: `kc-dev-flow/references/absolutes.registry`
+- Modify: `docs/dev/README.md`
+- Modify: `docs/dev/ROADMAP.md`
+
+1. Trace candidate surfaces backward from the accepted outcome and record a
+   without-it instrument against the exact revision and observed runtime.
+2. For existing surfaces, distinguish bounded retention, captain-owned removal
+   candidate, and `UNKNOWN`; preserve `UNKNOWN` without claiming irreducibility.
+3. Return a proposed new surface on green or `UNKNOWN`; retain it only when the
+   without-it result names a failed AC and the simpler alternative is
+   insufficient.
+4. Keep known-cause single-seam defects lean. Add no script, registry mechanism,
+   Work Control capability, reviewer loop, or per-edit behavioral gate.
+5. Default to one independently deliverable minimal PR to `main`; use a stack
+   only for dependent, independently reviewable and verifiable working slices
+   when waiting for the lower merge blocks useful work.
+6. Exercise bounded-retention, removal-candidate, `UNKNOWN`, and stack/no-stack
+   packets; run contract, frontmatter, parity, marketplace, line-budget, link,
+   and exact-diff checks; obtain one fresh high-reasoning EM validation.
+
+### Task 6: Deliver one release after all work items validate
 
 **Files:**
 - No manual version edits; release-please owns manifests, tags, and changelog.
 
 1. Present each logical commit set for captain confirmation; stage only named files.
-2. Create Draft feature PRs only after all three tasks are locally validated, or one bounded batch PR if exact delivery-to-work-item coverage remains unambiguous.
+2. Create Draft feature PRs only after all four tasks are locally validated, or one bounded batch PR if exact delivery-to-work-item coverage remains unambiguous.
 3. Wait for required checks and merge authorized feature PRs; do not merge the generated kc-dev-flow Release PR early.
 4. Merge the single updated Release PR after `kc-dev-flow/S1` and `repo-platform/S1` are terminal, then verify the published tag and local Claude/Codex sync.

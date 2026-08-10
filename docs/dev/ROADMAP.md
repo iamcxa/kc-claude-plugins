@@ -302,11 +302,16 @@ Captain-approved order for the next single-release batch:
    context with high reasoning. Multi-model review is optional and presented to
    the captain only when the EM recommends it for a contested, irreversible,
    low-confidence, or unresolved call.
+3. `subtractive-first-bounded-irreducibility` — pilot a subtractive-first rule
+   for non-trivial brownfield work. Retain proposed new surfaces only after a
+   without-it failure names the AC they serve; keep existing `UNKNOWN` surfaces
+   without treating uncertainty as either deletion authority or minimality.
 
-Exit: both items have exact-revision validation, implementation opens no EM
-review loop, and the published-tag smoke has a keep-or-remove disposition backed
-by installed-runtime evidence. Hold the kc-dev-flow Release PR until the
-dependent `repo-platform/S1` item below also exits.
+Exit: all three items have exact-revision validation, implementation opens no
+EM review loop, the published-tag smoke has a keep-or-remove disposition backed
+by installed-runtime evidence, and the subtractive pilot rejects green or
+`UNKNOWN` proposed additions. Hold the kc-dev-flow Release PR until the dependent
+`repo-platform/S1` item below also exits.
 
 ## `repo-platform`
 

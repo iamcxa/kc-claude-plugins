@@ -135,6 +135,21 @@ accepted.
   Rephrasing factual behavior as a command does not change its class.
 - Before planning new capability, apply the reverse-recovery audit and repair
   the cheapest compatible seam. Only confirmed `MISSING` work is greenfield.
+- **Use bounded subtraction for non-trivial brownfield work.** Trace the
+  candidate surfaces backward from the accepted outcome and try the cheapest
+  reversible removal or bypass before introducing another surface. Bind the
+  result to the exact revision, declared candidate set, and observed runtime.
+  For an existing surface, a named acceptance-criterion failure supports
+  bounded retention; green governing evidence with closed need and observation
+  boundaries produces a captain-owned removal candidate; an unclosed boundary
+  is `UNKNOWN`, preserves the surface, and proves no irreducibility. A proposed
+  new surface advances only when its absence produces a named criterion failure
+  and the recorded simpler alternative is insufficient; green or `UNKNOWN`
+  returns the addition. Record the surface, served criterion, without-it
+  instrument and result, simpler alternative, and insufficiency. Group
+  components only when Route discipline cannot separate their lifecycle state.
+  The bounded known-defect route adds this work only when it proposes a new
+  surface.
 - Fresh validation is bound to the exact revision. A changed head invalidates
   prior evidence. **The binding is a recorded fact, not an assumption**: a round
   that does not state the revision and artifact it read cannot be shown, from its

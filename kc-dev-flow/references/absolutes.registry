@@ -17,6 +17,7 @@
 0a6d021aa0dd2366	prohibition	kernel.md:116 — duty on whoever adds the mechanism
 98b59da531a4cdf4	prohibition	kernel.md:121 — the absolute words appear as quoted examples of what this rule governs
 bc010526d4527864	prohibition	kernel.md:136 — duty on the planner; greenfield without proof is forbidden
+31dfba02c6bb5e8e	prohibition	kernel.md:138 — duties on planners and validators; new surfaces need a bounded without-it failure, while existing UNKNOWN surfaces are preserved
 c87b4ccb4ca6d930	bounded	kernel.md:138 — bounded to the round's own report, which is what a reader has
 75590538f542aa33	prohibition	kernel.md:155 — definition of completion; forbids treating artifact count as completion
 04fb3da3cdcda942	bounded	kernel.md:160 — bounded by the definition of an instrument that cannot fail

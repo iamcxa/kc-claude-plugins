@@ -48,7 +48,7 @@ package fallback participates in continuation.
 | Work items | Spacedock entities under `docs/dev/` |
 | Iteration | Captain-owned product sprint headings in `docs/dev/ROADMAP.md` |
 | Execution state | Split-root `docs/dev/.spacedock-state` on `spacedock-state/dev`, owned by Spacedock |
-| Delivery | Squash-merge PR to `main`; GitHub required checks; release-please owns versions and tags |
+| Delivery | One independently deliverable squash-merge PR to `main` by default; conditional stacks follow the implementation rule below; GitHub required checks; release-please owns versions and tags |
 | Gate verdicts | Exactly one fresh EM under `Gate Authority` at ideation and validation |
 | Scope and irreversibility | Captain |
 | Observation | [`history/workflow-cost-record.md`](./history/workflow-cost-record.md), non-authoritative and not read during ordinary continuation |
@@ -186,6 +186,10 @@ Policy mods: [`_mods/engineering-judgment.md`](./_mods/engineering-judgment.md),
   the reason. A missing determination returns the gate unread.
 - Before `build/add`, run the reverse-recovery audit against fresh `origin/main`.
   Classify existing layers and repair one broken seam instead of rebuilding.
+- For non-trivial brownfield work, trace candidate surfaces backward from the
+  accepted outcome and record the kernel's subtractive result. Return a proposed
+  new surface unless its without-it instrument produces a named AC failure;
+  preserve an existing `UNKNOWN` surface without claiming it is irreducible.
 - Write end-state ACs with `Verified by:` and a concrete falsifier. At least one
   AC measures the accepted value. Run `status --read <ref> --ac-scan` before the
   gate and keep each bold AC heading on one line.
@@ -223,6 +227,10 @@ the decision to its owning stage; do not adjudicate it while coding.
   mechanism belongs in the deliverable.
 - Before validation, map every changed file to an AC. Delete an unmapped file or
   ask the captain to authorize its scope.
+- Default to one independently deliverable smallest PR targeting `main`. Use a
+  stack only for at least two dependent working slices that are each reviewable
+  and verifiable on their own, when waiting for the lower PR to merge blocks
+  useful work. Stack shape is delivery topology, not minimality evidence.
 
 ### `validation` — fresh, adversarial evidence
 
@@ -245,6 +253,13 @@ Every validation gate receives exactly one fresh-context EM verdict through
 `kc-dev-flow:science-officer-em` against the exact revision and governing ACs.
 The engineering_judgment advisory record includes adjudications, dissent, a
 disproof condition, and the authority boundary.
+
+The validator challenges every retained new surface, or inseparable surface
+group, with its recorded without-it instrument. A named AC failure may support
+bounded irreducibility. Green or `UNKNOWN` evidence returns a proposed addition;
+for an existing surface, green produces only a captain-owned removal candidate
+and `UNKNOWN` preserves it outside the irreducibility claim. Wiring claims keep
+the kernel's same-kind runtime observation boundary.
 
 Multi-model review is optional. The EM records `recommended` only for a
 contested, irreversible, low-confidence, or unresolved call; otherwise it
