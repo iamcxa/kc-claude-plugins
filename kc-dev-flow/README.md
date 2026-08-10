@@ -22,8 +22,9 @@ provider while sharing the same authority and evidence discipline.
   contracts and primary behavior, synthesize risk and durable cost, and return
   an advisory `proceed | narrow | return | block | costly_no` recommendation
   without replacing gate or captain authority.
-- `project-context-maintenance` — keep approved product and architecture context
-  aligned with delivered behavior.
+- `project-context-maintenance` — what a retained document may contain, and
+  keeping approved product and architecture context aligned with delivered
+  behavior. Two independently adoptable parts.
 - `reverse-recovery-audit` — recover existing brownfield seams before proposing
   greenfield work.
 - `work-control-profile` — bind optional mechanical controls to local adapters
