@@ -1474,6 +1474,12 @@ describe('shared trace finalization contract', () => {
       const env = {
         ...process.env,
         AGENT_BROWSER_BIN: agentStub,
+        // Owned runtime deliberately ignores AGENT_BROWSER_BIN and reads only
+        // E2E_AGENT_BROWSER_BIN (team-trace-lifecycle.sh:228) — the behaviour the
+        // sibling "probes the executable selected by the owned runtime" test pins.
+        // Without it this reaches a real `agent-browser` on PATH, so the test
+        // passed on a machine with one installed and nowhere else.
+        E2E_AGENT_BROWSER_BIN: agentStub,
         AGENT_BROWSER_UNDERLYING: agentStub,
         BROWSER_RUNTIME_LOG: runtimeLog,
         EXPECTED_BROWSER_APP: 'admin-panel',
@@ -1623,6 +1629,8 @@ describe('shared trace finalization contract', () => {
       const baseEnv = {
         ...process.env,
         AGENT_BROWSER_BIN: agentStub,
+        // See the sibling Teams test: owned runtime reads only this variable.
+        E2E_AGENT_BROWSER_BIN: agentStub,
         AGENT_BROWSER_UNDERLYING: agentStub,
         BROWSER_RUNTIME_LOG: runtimeLog,
         EXPECTED_BROWSER_APP: 'admin-panel',

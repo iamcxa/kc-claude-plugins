@@ -11,7 +11,10 @@ Browser E2E testing pipeline for Claude Code and Codex. Maps UI elements, genera
 
 Codex users can install the same plugin via `.codex-plugin/plugin.json` -- skills auto-discover under `./skills/`.
 
-**Prerequisite:** [agent-browser](https://github.com/nicobrinkkemper/agent-browser) CLI installed globally.
+**Prerequisite:** [agent-browser](https://github.com/nicobrinkkemper/agent-browser) CLI
+installed globally (`npm install -g agent-browser`). It is a peer CLI, not an npm
+dependency of this plugin, so `npm install` here does not provide it. Set
+`E2E_AGENT_BROWSER_BIN` to use an executable that is not on `PATH`.
 
 ## Quick Start
 

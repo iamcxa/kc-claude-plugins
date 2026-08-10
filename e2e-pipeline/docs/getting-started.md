@@ -12,8 +12,13 @@ Via the [kc-claude-plugins](https://github.com/iamcxa/kc-claude-plugins) marketp
 ## Prerequisites
 
 - [agent-browser](https://github.com/nicobrinkkemper/agent-browser) CLI installed globally
+  (`npm install -g agent-browser`). A peer CLI, not an npm dependency of this plugin —
+  `npm install` below does not provide it. `E2E_AGENT_BROWSER_BIN` overrides the lookup
+  when the executable is not on `PATH`.
 - Node.js 20+ (required for the compiler and quarantine CLI)
 - Run `npm install` in the plugin directory (for `/e2e-compile` dependencies)
+- `zip` on `PATH` to run the test suite (trace archive validation shells out to it;
+  present on macOS and on GitHub's `ubuntu-latest`, absent from a bare `node` container)
 - For CLI-only flow recording: `brew install asciinema agg` (optional)
 
 ## Quick Start

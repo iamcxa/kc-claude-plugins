@@ -1105,3 +1105,37 @@ test('subsequent actions reject diagnostic source drift before browser execution
     false
   );
 });
+
+test('a missing agent-browser names the prerequisite instead of a version problem', function(t) {
+  const fixture = setup(t);
+  // Point at a path that does not exist. The `open` path probes `--version`
+  // first, and until this test both "absent" and "unreadable version" produced
+  // the same falsy result — so the reader was told the contract version could
+  // not be verified when nothing was installed at all.
+  const env = Object.assign({}, fixture.env, {
+    E2E_AGENT_BROWSER_BIN: path.join(fixture.root, 'no-such-agent-browser'),
+  });
+  delete env.E2E_RUNTIME_TEST_MODE;
+
+  const result = spawnSync(
+    process.execPath,
+    [
+      RUNTIME,
+      '--run-id', fixture.runId,
+      '--app', fixture.app,
+      '--executable-path', fixture.executable,
+      '--profile', fixture.profile,
+      '--receipt', fixture.receipt,
+      'open',
+      'about:blank',
+    ],
+    { encoding: 'utf8', env: env }
+  );
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /agent-browser is required and was not found/);
+  assert.match(result.stderr, /npm install -g agent-browser/);
+  assert.match(result.stderr, /E2E_AGENT_BROWSER_BIN/);
+  // The wrong message must not be what the reader sees.
+  assert.doesNotMatch(result.stderr, /lifecycle contract version/);
+});

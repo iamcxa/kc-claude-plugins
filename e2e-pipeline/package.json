@@ -5,7 +5,7 @@
   "description": "Browser E2E testing plugin compiler",
   "scripts": {
     "test": "node --test compiler/test/*.test.js",
-    "test:ci": "node --test $(ls compiler/test/*.test.js | grep -vE 'trace-finalization')",
+    "test:ci": "node --test compiler/test/*.test.js",
     "lint": "biome lint compiler/ bin/",
     "lint:fix": "biome lint --write compiler/ bin/",
     "check": "npm run lint && npm test",

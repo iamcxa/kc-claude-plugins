@@ -8,12 +8,9 @@ name: e2e-pipeline tests
 # version parity, skill frontmatter, and dev-flow contracts and executed none of the
 # suite's ~1050 assertions. The suite had only ever run on an author's machine.
 #
-# WHAT THIS COVERS, AND WHAT IT DOES NOT
+# WHAT THIS COVERS
 #
-# Everything except `trace-finalization.test.js`, which needs the `agent-browser` binary
-# on PATH — a dependency package.json never declares (#174). That one file is the whole
-# remaining exclusion. `runtime-state-finalizer.test.js` was excluded too until its cause
-# was identified; see item 4 below.
+# The whole suite. There is no exclusion list any more (#174).
 #
 # Wiring CI is what found the Linux gap in the first place. All 1055 assertions passed on
 # macOS while 15 failed on the first runner execution, and each fix revealed the next
@@ -25,18 +22,21 @@ name: e2e-pipeline tests
 #      can remove or rename our entry: not group/world-writable, or sticky).
 #   2. `integration.test.js` read a private corpus from an absolute path on one laptop.
 #      Fixed: absent corpus skips with a reason, `E2E_CORPUS_ROOT` overrides.
-#   3. `trace-finalization.test.js` resolves `agent-browser` from PATH. Still open.
+#   3. `trace-finalization.test.js` was recorded as needing `agent-browser` on PATH. It
+#      does not. Two of its Teams tests set only `AGENT_BROWSER_BIN`, and the owned-runtime
+#      path deliberately reads `E2E_AGENT_BROWSER_BIN` instead, so they reached whatever
+#      real binary the author had installed. Fixed by giving those two the stub the rest
+#      of the file already uses. The suite does shell out to `zip`, which macOS and
+#      `ubuntu-latest` both provide.
 #   4. `runtime-state-finalizer.test.js` used `stat -f '%Lp' || stat -c '%a'` to read a
 #      mode. On GNU coreutils `-f` means --file-system and takes no argument, so the
 #      format string is read as a second operand: stat errors on it, prints a filesystem
 #      report for the real path, and exits 1. The `||` fallback runs, but its output is
 #      already prefixed by that report, so the captured value never equalled `700`.
-#      Fixed by trying GNU first; the file is back in this run.
+#      Fixed by trying GNU first.
 #
-# Excluding `trace-finalization.test.js` is deliberate rather than papered over with an
-# install step: a permanently red check trains everyone to ignore CI, and installing a
-# browser driver to satisfy a test that should be stubbing it would hide the undeclared
-# dependency instead of fixing it.
+# None of the four was a defect in the shipped runtime except (1). Three were assumptions
+# the author's machine happened to satisfy.
 #
 # NOT A REQUIRED CHECK YET. Let it accumulate runs on this runner before promotion in
 # branch protection, and record that promotion rather than leaving it to memory.
