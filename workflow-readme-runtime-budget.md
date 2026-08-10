@@ -122,3 +122,73 @@ add no loading framework or parallel policy source.
 
 The implementation keeps one bounded authority entrypoint and three documents
 that load only for recovery, validation, or historical observation.
+
+## Stage Report: validation
+
+### TL;DR
+
+Fresh Claude Opus high session `d4daa8b0-ea12-4c8f-9ccc-a086ae9a8edd`
+reviewed exact head `c48a9e97f1614d80d8220ac4c80b4df993db09fb` over
+`a024b254e236f521d8438d567ade36d779a52d11` and returned
+`proceed / high / multi_model:not_needed`, with AC-1..AC-4 PASS and zero
+Material findings. The README is 374 lines and all four documents total 605.
+
+### Per-AC verdicts
+
+- **AC-1 PASS** — exact-head count is 374 lines; the contract ceiling leaves a
+  326-line margin.
+- **AC-2 PASS** — Local Profile, lifecycle, every stage's `Policy mods`, the
+  validation predicate, and Captain/EM/FO authority remain always loaded and
+  contract-enforced.
+- **AC-3 PASS** — recovery is 116 lines and failure-triggered; validation is 93
+  lines and stage-triggered; 22 lines of history are non-authoritative and absent
+  from ordinary continuation.
+- **AC-4 PASS** — 605 total lines remain below the 1,362-line baseline, and no
+  moved file is universally required; repeated rationale/examples were deleted.
+
+### Evidence block
+
+`Lenses:` Docs/policy, authority, state recovery, validation procedure,
+back-compat, and delivery fired; all PASS with zero Material findings. The
+script change is comment-only. Would fail on a missing authority binding, stage
+mod, trigger link, recovery runtime, or universally loaded moved file.
+
+`Diff coverage:` N/A — the task's production change is Markdown plus a comment
+path update; there is no changed executable behavior line. The contract suite
+and state-prerequisite test both ran and passed as validation instruments.
+
+`Adversarial:` PASS — the old 1,362-line README reddened the new ceiling, and
+the contract rejects missing Local Profile/Gate Authority clauses, stage policy
+selections, EM fallback, and trigger paths. Thirteen changed-document local links
+resolve; would fail if one target were removed or a required clause disappeared.
+
+`Cross-model:` not_needed — the exact-head EM found no contested, irreversible,
+low-confidence, or unresolved call. No optional second model was requested.
+
+`E2E:` N/A — ideation declared a local docs/workflow-loading change; it has no
+user-visible or full-stack product runtime. Contract, path, and recovery
+prerequisite exercises are the applicable evidence.
+
+`Origin re-observation:` N/A — no accepted claim originated in a consumer or
+external runtime; the baseline and result are repository document counts and
+locally bound workflow authority.
+
+### Engineering judgment
+
+- `question:` Does the 374-line README preserve all always-loaded authority and
+  reduce every mandatory reading path without relocating universal cost?
+- `revision:` `c48a9e97f1614d80d8220ac4c80b4df993db09fb` over
+  `a024b254e236f521d8438d567ade36d779a52d11`.
+- `adjudications:` AC-1..AC-4 supported; the prior ambiguous recovery-version
+  finding is closed by explicit `spacedock 0.26.0 (contract 3)` wording. No
+  task-level non-pass, Material finding, or removable complete document remains.
+- `risk_tradeoff:` pay three small trigger-owned files to cut ordinary reading by
+  988 lines while preserving authority; avoid a loader, index, or duplicate
+  policy source.
+- `recommendation/route/confidence:` proceed / proceed / high.
+- `dissent:` empty. `multi_model:` not_needed.
+- `disproof_condition:` change route if README exceeds 700, any moved file becomes
+  universal, a stage path reaches the old 1,362-line baseline, a trigger/authority
+  is lost, or the installed Spacedock version differs from the named contract.
+- `authority_boundary:` advisory only; Captain retains workflow scope, Spacedock
+  retains state, and GitHub/release-please retain delivery and release.
