@@ -39,15 +39,12 @@ e7ad37f84d560a85	prohibition	kernel.md:88 — pre-execution route-change duties 
 4ccd856a00aef4f5	bounded	project-context-maintenance.md:80 — field rules are bounded to a receipt classified as none or update
 3b85f1fa325e9c9e	prohibition	project-context-maintenance.md:90 — limits implementation workers to claims already authorized by approved scope
 7b449737f470fa34	prohibition	project-context-maintenance.md:93 — forbids the receipt from competing with bound project-context authority
-a90075d05a4dea6e	prohibition	reverse-recovery-audit.md:1 — frontmatter restating the document's own duty
+cbe9e342041f0453	prohibition	project-context-maintenance.md:106 — automation proposal and authorization limits assigned to adopters
+364ad5b78bfdd122	prohibition	project-context-maintenance.md:114 — adoption duty to declare the mod on each applicable stage
+bedb861fa58bc6a7	prohibition	project-context-maintenance.md:115 — adoption duty to exercise both classifications before automation is proposed
 50bb04ee893f51db	bounded	reverse-recovery-audit.md:15 — bounded to brownfield codebases, stated in the first clause
-9955b6cc487b1203	prohibition	reverse-recovery-audit.md:26 — the document's central duty
-e50259fd45f82490	prohibition	reverse-recovery-audit.md:32 — evidence bar per tier; 'never qualify' sets a minimum, not a fact
-9c4426cc37f96de6	prohibition	reverse-recovery-audit.md:46 — duty on the searcher before writing MISSING
-a30f64a3dccc9d1a	prohibition	reverse-recovery-audit.md:50 — duty on the classifier
-329f8dd3e6e80056	bounded	reverse-recovery-audit.md:53 — bounded by what a unit exercises; the failure mode is named in situ
-a003871c9f96f54f	prohibition	reverse-recovery-audit.md:57 — quotes the rule to contrast it with one it is not
-2cdfa8e883270b88	prohibition	reverse-recovery-audit.md:67 — duty on the plan stage, enforced by plan reviewers named in the same block
+9c4426cc37f96de6	prohibition	reverse-recovery-audit.md:65 — duty on the searcher before writing MISSING
+2cdfa8e883270b88	prohibition	reverse-recovery-audit.md:104 — duty on the plan stage, enforced by plan reviewers named in the same block
 06e57612c440f70e	prohibition	work-control-profile.md:14 — duty on the adopting repository
 1b40b78f430d73f4	prohibition	work-control-profile.md:33 — defines what declaring `required` obliges
 b8b1ed8314c6687f	prohibition	work-control-profile.md:40 — duty on every attempt
@@ -62,14 +59,21 @@ fa8685a0a8eade5a	prohibition	work-control-profile.md:124 — acceptance mapping;
 97a8919023106e56	prohibition	work-control-profile.md:160 — forbids reading silence as a pass; duty on the adapter
 a1f4970b1aa0aade	prohibition	work-control-profile.md:173 — condition on promotion, owned by the adopting repository
 0abd4aa4fbe34b66	prohibition	work-control-profile.md:175 — condition on adoption, owned by the adopting repository
-045d809fff68d3a1	bounded	project-context-maintenance.md:27 — "the expensive failures are not missed updates" scopes Part 1 against Part 2 and is narrowed in the same block to the case a maintenance obligation cannot reach
-a29d4061863e3258	bounded	project-context-maintenance.md:41 — "every rule reduces to one move" describes the eight that follow and is checkable against them; it claims nothing about documents in general
-16d2b17171d37ebc	prohibition	project-context-maintenance.md:53 — duty on the author: a changing fact goes to the work-item store. Contrary execution breaks the duty rather than falsifying the sentence
-220c2b57907da2e6	prohibition	project-context-maintenance.md:74 — duty on the author to name a falsifier; "not a check" forbids the substitute rather than asserting it never happens
-73c12466af5e4cf4	prohibition	project-context-maintenance.md:102 — duty to leave frozen records unedited; the correction goes in a new entry
-00902ce0a6b89009	bounded	project-context-maintenance.md:139 — "a rewrite discards the parts that were right" states the cost of a choice, and the same block names when the choice is still correct
-94a86be1a8b3f93f	prohibition	project-context-maintenance.md:148 — the Part 1 stage table assigns duties per stage; "None" at backlog and done assigns no duty rather than claiming universality
-7b3e2a35626ff8a2	prohibition	project-context-maintenance.md:252 — automation proposal and authorization limits assigned to adopters; re-judged at this hash after the non-goals absorbed Part 1's, duty unchanged
-b0a776b417c34069	prohibition	project-context-maintenance.md:272 — adoption duty to declare the mod on each applicable stage; re-judged at this hash after Part 2's steps were renumbered, duty unchanged
-4a8de0ad6eb0cb02	prohibition	project-context-maintenance.md:273 — adoption duty to exercise both classifications before automation is proposed; re-judged at this hash after renumbering, duty unchanged
-b88c2f566ca79b93	prohibition	project-context-maintenance.md:275 — duty on an adopter of Part 1 alone to record the Part 2 omission, so a reader sees a choice rather than an oversight
+a29d4061863e3258	bounded	retained-document-policy.md:17 — "every rule reduces to one move" describes the eight that follow and is checkable against them; it claims nothing about documents in general
+16d2b17171d37ebc	prohibition	retained-document-policy.md:29 — duty on the author: a changing fact goes to the work-item store. Contrary execution breaks the duty rather than falsifying the sentence
+220c2b57907da2e6	prohibition	retained-document-policy.md:50 — duty on the author to name a falsifier; "not a check" forbids the substitute rather than asserting it never happens
+73c12466af5e4cf4	prohibition	retained-document-policy.md:78 — duty to leave frozen records unedited; the correction goes in a new entry
+00902ce0a6b89009	bounded	retained-document-policy.md:115 — "a rewrite discards the parts that were right" states the cost of a choice, and the same block names when the choice is still correct
+2a1ab68c86b66dbe	prohibition	retained-document-policy.md:123 — the stage table assigns Rules 4 and 5 to implementation and independent validation; "None" at backlog and done assigns no duty rather than claiming universality
+7b3e2a35626ff8a2	prohibition	retained-document-policy.md:147 — automation proposal and authorization limits assigned to adopters
+969c6d525879f6a9	prohibition	reverse-recovery-audit.md:1 — frontmatter restating the document's own duty; re-judged at this hash after the description gained the two-axis clause, duty unchanged
+60e8b0b6e2b27fb1	prohibition	reverse-recovery-audit.md:26 — the document's central duty; re-judged at this hash after "surface removal candidates for the scope owner" joined it, duty unchanged in kind
+eacf05812b14cf0e	prohibition	reverse-recovery-audit.md:31 — duty to record both axes; "cannot say" is a statement about what the ladder expresses, checkable against the table below it
+9b67e9327f40a8fe	prohibition	reverse-recovery-audit.md:47 — heading assigning the duty that the need field is recorded beside the tier and never replaces it
+2d90168fa899df5e	prohibition	reverse-recovery-audit.md:49 — evidence bar per need value; the bar is a minimum assigned to the classifier, not a factual claim
+860fd19aa8ef35b4	bounded	reverse-recovery-audit.md:55 — "never that nothing requires a thing" states the limit of what a search can establish, and the same block narrows the claim the field is allowed to make
+6f83d3e26f6bcef8	prohibition	reverse-recovery-audit.md:84 — duty on the classifier; re-judged at this hash after renumbering, duty unchanged
+4e094c79a73a901f	bounded	reverse-recovery-audit.md:87 — bounded by what a unit exercises; the failure mode is named in situ. Re-judged at this hash after renumbering
+9eb3e0bb32918783	prohibition	reverse-recovery-audit.md:91 — quotes the rule to contrast it with one it is not; re-judged at this hash after the need-field boundary was expanded to every created, changed, or removed surface
+b57433e1c41b0162	bounded	reverse-recovery-audit.md:124 — a claim about the six changes named in the paragraph above, and the block's whole purpose is to bound what that evidence supports
+e50259fd45f82490	prohibition	reverse-recovery-audit.md:39 — evidence bar per tier; "never qualify" sets a minimum, not a fact. Unchanged text; only the line moved
