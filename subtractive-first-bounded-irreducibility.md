@@ -3,7 +3,7 @@ title: "kc-dev-flow: prove bounded surface necessity before adding layers"
 source: "Captain-approved subtractive-first pilot for PR #199, 2026-08-11"
 product: kc-dev-flow
 sprint: S1
-status: ideation
+status: implementation
 lane: main
 design: required
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-release-batch
@@ -29,8 +29,9 @@ deletion. Known-cause single-seam defects keep the lean route.
 
 ## Scope
 
-- Add a tri-state subtractive-first rule to the existing reverse-recovery and
-  local stage gates: bounded retention, removal candidate, or `UNKNOWN`.
+- Add a tri-state subtractive-first rule to the portable kernel and existing
+  local stage gates, reusing reverse-recovery's classifications unchanged:
+  bounded retention, removal candidate, or `UNKNOWN`.
 - Require a compact necessity witness for each retained new surface or genuinely
   inseparable surface group.
 - Default delivery to one independently deliverable minimal PR targeting trunk;
@@ -42,6 +43,34 @@ No new registry, script, workflow capability, dependency engine, reviewer loop,
 or per-edit behavioral gate is in scope. Stacked PR shape is not minimality
 evidence. Physical removal and accepted scope changes remain captain-owned.
 
+## Smallest route and reverse-recovery audit
+
+| Surface | Completeness | Need | Decision |
+|---|---|---|---|
+| Kernel route/outcome discipline | `WORKING_UNIT_UNPROVEN` | `REQUIRED` | Extend its existing sufficient-seam rule with one subtractive predicate; do not add a second policy file. |
+| Reverse-recovery audit | `WORKING` | `REQUIRED` | Reuse its completeness/need classification, bounded absence, and captain-owned removal rules unchanged. |
+| Local ideation/validation gates | `EXISTS_BROKEN` | `REQUIRED` | They ask for the smallest cut but do not reject a retained addition lacking a without-it failure. |
+| Work Control Profile | `WORKING` | `NO_OBSERVED_CONSUMER` for this pilot | Do not add a capability or adapter; the accepted pilot requires judgment packets, not a new executable surface. |
+| PR delivery binding | `WORKING` | `REQUIRED` | Keep direct-to-trunk as default and add one conditional stack exception locally. |
+
+The smallest route changes the canonical/vendored kernel pair, the already
+mandatory local README, and the existing sprint order. It does not change the
+reverse-recovery mod because that file already owns the three need outcomes and
+the removal authority boundary. The disproof hook is an ideation packet whose
+new surface has no named without-it failure: it must not advance.
+
+## Mechanism necessity
+
+- `Criterion:` AC-1 through AC-4.
+- `Alternative:` add only local README wording; insufficient because the
+  subtractive rule is portable outcome discipline and adopters must receive it.
+- `Alternative:` add a Work Control Profile capability and adapter;
+  insufficient because the pilot has no stable provider baseline and would add
+  the enforcement surface it is trying to avoid.
+- `Escape:` without the predicate, an agent can retain a new layer by reporting
+  green tests or an unclosed search instead of demonstrating the named failure
+  that makes the layer necessary.
+
 ## Design determination
 
 `required` — this changes the ideation and validation rejection predicates and
@@ -52,13 +81,15 @@ the local delivery route.
 **AC-1 — Non-trivial brownfield plans start from subtraction.**
 
 The plan traces candidate surfaces backward from the accepted outcome and
-records one of three results per surface: a named AC failure after removal or
-bypass makes it eligible for bounded retention; green governing evidence with
+records one of three results per existing surface: a named AC failure after
+removal or bypass supports bounded retention; green governing evidence with
 closed need and observation boundaries makes it a removal candidate; an
-unclosed obligation or inadequate instrument records `UNKNOWN` and cannot
-support deletion or an irreducibility claim. Verified by: three adversarial
-ideation packets covering all outcomes. Falsified by: a plan retaining a new
-surface without a without-it result, or treating `UNKNOWN` as deletion evidence.
+unclosed obligation or inadequate instrument records `UNKNOWN`, preserves the
+existing surface, and cannot support deletion or an irreducibility claim. A
+proposed new surface advances only on the first outcome; green or `UNKNOWN`
+returns the addition. Verified by: three adversarial ideation packets covering
+all outcomes. Falsified by: a plan retaining a new surface without a named
+without-it failure, or treating `UNKNOWN` as deletion evidence.
 
 **AC-2 — Addition grows only from the residual tree.**
 
@@ -75,11 +106,13 @@ defect route.
 
 Validation challenges every retained new surface or genuinely inseparable group
 with the cheapest instrument able to fail and preserves same-kind runtime
-observation for wiring claims. Green evidence creates only a captain-disposed
-removal candidate; `UNKNOWN` remains conservatively retained and outside the
-bounded claim. Verified by: adversarial validation packets and exact-head EM
-review. Falsified by: self-attested irreducibility, unit-only wiring proof, or
-physical deletion without captain authority.
+observation for wiring claims. A new surface with green or `UNKNOWN` evidence
+returns to implementation or ideation instead of shipping. For an existing
+surface, green evidence creates only a captain-disposed removal candidate and
+`UNKNOWN` preserves it outside the bounded claim. Verified by: adversarial
+validation packets and exact-head EM review. Falsified by: self-attested
+irreducibility, unit-only wiring proof, or physical deletion without captain
+authority.
 
 **AC-4 — PR topology remains lean and conditional.**
 
@@ -107,3 +140,23 @@ burden of proof and bounded ablation, rejected green evidence as deletion
 authority, kept stacked PR conditional, and required the tri-state rule plus a
 reversible non-trivial brownfield pilot. The captain accepted that narrowed
 route in this task's source conversation.
+
+## Stage Report: ideation
+
+- DONE: The captain accepted a reversible, non-trivial brownfield pilot and kept
+  known-cause single-seam defects on the lean route.
+- DONE: Reverse recovery found no missing policy layer: extend the existing
+  kernel and local stage gates; do not change the working audit mod or add an
+  executable control.
+- DONE: The three outcomes distinguish existing surfaces from proposed new
+  surfaces so `UNKNOWN` cannot become either deletion authority or an additive
+  escape hatch.
+- DONE: One direct-to-trunk minimal PR remains the default; a stack is a
+  conditional throughput route and never minimality evidence.
+- DONE: Fresh high-reasoning EM returned `narrow / high`; multi-model review was
+  not recommended because the unresolved cost claim needs pilot observation.
+
+### Summary
+
+Proceed with one kernel predicate, local gate/delivery wording, and three
+adversarial packets. Add no enforcement mechanism.
