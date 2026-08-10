@@ -212,3 +212,14 @@ median. Historical waits remain observation evidence, not the pass predicate.
   multi-model work runs without its condition and captain approval.
 - `authority_boundary:` advisory only; Captain retains scope/irreversibility,
   Spacedock retains state, and GitHub/release-please retain delivery and release.
+
+### Exact-head PR rebind
+
+Fresh PR-level Claude Opus high session
+`53ca4a4a-e114-4a4b-9412-ae0fbb0c0e0a` rebound AC-1, AC-2, AC-3, and AC-4 to
+`454507f7ba56ce79ca0414f1964af4e59126eea5`. The delta changes neither skill,
+contract-test, nor workflow-cost-record instruments. Its ideation and validation
+surface challenges execute inside the two existing EM seats: no implementation
+reviewer, third seat, route, or blocking wait was added. Multi-model remains
+optional at current README line 264. Hosted CI is green at the exact head.
+Verdict remains `proceed / high`, with zero Material findings.
