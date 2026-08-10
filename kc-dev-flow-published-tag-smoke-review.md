@@ -1,6 +1,6 @@
 ---
 title: Review the published-tag Science Officer runtime smoke
-status: implementation
+status: validation
 source: Captain-approved issue #183 follow-up, 2026-08-10
 product: kc-dev-flow
 sprint: S1
@@ -53,24 +53,32 @@ contract. It runs only after a tag exists and before local install sync.
 ## Acceptance criteria
 
 **AC-1 — The smoke is bound to one published artifact.**
+
 Verified by: an exact-tag clone, exact revision lookup, and digest equality for
-both installed plugin trees. Falsified by: a wrong revision or changed installed
-tree makes the command fail.
+both installed plugin trees in
+`scripts/kc-dev-flow-published-tag-smoke.py:305-451`. Falsified by: a wrong
+revision or changed installed tree makes the command fail.
 
 **AC-2 — Both supported hosts exercise the installed skill.**
+
 Verified by: isolated Claude and Codex plugin homes, operator authentication, and
-one accepted EM report from each host. Falsified by: a missing, duplicate, or
-implicit plugin load, or either host failing to return one report.
+one accepted EM report from each host at
+`scripts/kc-dev-flow-published-tag-smoke.py:234-451`. Falsified by: a missing,
+duplicate, or implicit plugin load, or either host failing to return one report.
 
 **AC-3 — The compatibility record is structural and exact.**
+
 Verified by: direct negative fixtures for missing, extra, duplicated, misplaced,
-invalid-enum, mismatched-wrapper, and wrong-revision data. Falsified by: any such
-fixture being accepted.
+invalid-enum, mismatched-wrapper, and wrong-revision data at
+`scripts/kc-dev-flow-contract-test.py:64-159`. Falsified by: any such fixture
+being accepted.
 
 **AC-4 — The check stays release-only and earns its maintenance cost.**
+
 Verified by: the root release instructions place it after tag creation and before
-local sync, with no per-PR workflow entry. Falsified by: wiring it into ordinary
-PR CI, or the first released run producing no evidence beyond existing helpers.
+local sync at `CLAUDE.md:47-54`, with no per-PR workflow entry. Falsified by:
+wiring it into ordinary PR CI, or the first released run producing no evidence
+beyond existing helpers.
 
 ## Test plan
 
@@ -96,8 +104,10 @@ post-release sync, and creating or merging a PR.
 - DONE: Reverse recovery found two working but narrower helpers and one successful
   v2.1.0 experiment; one release-only dual-host wrapper is the smallest missing
   seam.
-- DONE: AC-1..AC-4 name end value and concrete falsifiers; the route adds no CI,
-  auth, registry, or installation authority.
+- DONE: AC-1 binds the requested tag, resolved revision, and both installed trees.
+- DONE: AC-2 requires one isolated installed-skill invocation from each host.
+- DONE: AC-3 rejects every malformed or wrong-revision report class directly.
+- DONE: AC-4 keeps the command after release and outside ordinary PR CI.
 - DONE: Fresh high-reasoning EM returned `narrow / high`: retain one
   release-closeout smoke, not a per-PR matrix. Multi-model review was not
   recommended.
@@ -107,3 +117,26 @@ post-release sync, and creating or merging a PR.
 Proceed with one exact-tag, dual-host release-closeout smoke. Its first run from
 a tag containing the command remains release evidence, not something local
 validation can claim in advance.
+
+## Stage Report: implementation
+
+- DONE: Commit `c48a9e97f1614d80d8220ac4c80b4df993db09fb` adds the one
+  release-closeout script, its direct report-contract fixtures, and the bounded
+  root release instruction.
+- DONE: Claude runs with plugin autoload disabled and must report exactly one
+  explicit kc-dev-flow plugin at the expected path/version; Codex uses a clean
+  temporary home that reuses only operator authentication.
+- DONE: Both installed plugin trees digest-match the canonical exact-tag clone;
+  the nested EM revision must equal the tag commit and every duplicated wrapper
+  value must match.
+- DONE: Direct fixtures reject malformed, incomplete, misplaced, duplicate,
+  invalid-enum, wrapper-mismatch, and wrong-revision records before provider
+  execution.
+- DONE: Fresh stage-exit checks pass: kc-dev-flow contract, 40 skill
+  frontmatters, version parity at 2.1.0, marketplace L0/L1/L2, state-prerequisite
+  contract, Python compilation, and `git diff --check`.
+
+### Summary
+
+The implementation is the accepted release-only shape and is self-contained for
+fresh validation. The next exact tag invocation remains a release-closeout step.
