@@ -1,7 +1,7 @@
 ---
 id: srqy4f40m20yf5fp392vtcn0
 title: "e2e-pipeline: escape flow/mapping-sourced strings in every expansion-active codegen emission context"
-status: validation
+status: implementation
 source: GitHub issue #190 (https://github.com/iamcxa/kc-claude-plugins/issues/190) — found by cross-model EM review of PR #184, repro re-run independently before filing
 started: 2026-08-10T09:19:35Z
 completed:
@@ -441,3 +441,26 @@ because neither existing escaper touches line terminators.
 ### Summary
 
 Reproduced all six ACs from a clean `npm ci` without relying on the implementation report, re-derived the AC-4 emission audit from the code and found its 49 citations all accurate, and confirmed AC-5's expiry independently against `bd2b142`. Three defects survive: `}` still escapes the `${N:-word}` grammar and silently corrupts a `base_url` on both bash 3.2 and 5.3 (found here and by the cross-model reviewer), and two changed lines — the cross-site `# Mapping:` branch and the passing-step JUnit `<testcase>` format — stay green under a claim-breaking edit, so the suite does not actually hold them. Recommending REJECTED with the three fixes anchored to file and line; `commentSafe`, the three scoped-out follow-ups, and the AC-5 expiry are all upheld as argued.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — fresh validation; surface 29m implementation wall-clock vs estimate 90m
+  (33%); AC unchanged (AC-5 recorded N/A: its subject `runtimeTemplateDoubleQuote` was deleted
+  upstream by #184 before this task began; expiry independently verified at the gate, so this is
+  an expired premise, not a narrowed criterion). Findings routed: F1 (`codegen.js:175`/`:163` —
+  `}` closes the `${N:-word}` grammar, silent wrong value on bash 3.2 and 5.3), F2
+  (`codegen.js:251` stays green under a claim-breaking edit), F3 (`codegen.js:1473` — JUnit
+  `<testcase>` formats never execute in the test). F4 fix-or-waive, F5 optional.
+  ESCALATED before re-dispatch, same round: the exhaustive emission audit the validator
+  delegated returned after its report and carried three findings the reject did not. The FO
+  re-verified the two severe ones first-hand rather than routing them on report alone —
+  **F6 (P1, live command execution)**: bash performs process substitution `<(…)` inside a
+  `${N:?word}` word even within double quotes, and `escapeDoubleQuoted` neutralizes none of
+  `< > ( )`; a `flow.name` of `demo<(touch …)flow` created the canary on bash 5.3.9 at the
+  *fixed* HEAD — i.e. the filed execution class is still open, not closed. **F7 (P2)**: `'`
+  is likewise unescaped, so an apostrophe in `flow.name` or `base_url` makes the whole
+  compiled script unparseable (`unexpected EOF`). **F8 (P2)**: `%` reaches `printf` FORMAT
+  operands that no helper neutralizes. The FO also verified that the single nested
+  double-quote shape already routed for F1 closes F1, F6 and F7 together on both bash
+  3.2.57 and 5.3.9 — so the escalation adds evidence and one test axis, not a new mechanism.
+  Round budget after escalation: still inside the 2× tolerance of the 90m appetite.
