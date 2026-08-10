@@ -83,16 +83,31 @@ jobs:
           EVENT: ${{ github.event_name }}
           HEAD_REF: ${{ github.head_ref }}
           BASE_REF: ${{ github.base_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          THIS_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
           if [ "$EVENT" != 'pull_request' ]; then
             printf 'run=true\nreason=%s trigger\n' "$EVENT" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          # A fork's branch can be named anything, including the release branch's name.
+          # Without this, any returning contributor can light up a 20-minute macos-latest
+          # job — 10x minutes — by naming a branch and touching e2e-pipeline/. This is
+          # `pull_request`, so the token is read-only and no secret is exposed; the cost
+          # is compute, and one condition removes it.
+          if [ "$HEAD_REPO" != "$THIS_REPO" ]; then
+            printf 'run=false\nreason=fork pull request\n' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           if [ "$HEAD_REF" != 'release-please--branches--main' ]; then
             printf 'run=false\nreason=not the release pull request\n' >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          # `|| true` swallows a git failure into changed=0, which reads as "release does
+          # not touch e2e-pipeline" and skips the gate. Left as is: checkout fetches
+          # +refs/heads/*:refs/remotes/origin/*, so origin/$BASE_REF is reliably present,
+          # and `grep -c` legitimately exits 1 on zero matches. Recorded, not defended.
           changed=$(git diff --name-only "origin/$BASE_REF...HEAD" -- e2e-pipeline | grep -c . || true)
           if [ "$changed" -eq 0 ]; then
             printf 'run=false\nreason=release does not touch e2e-pipeline\n' >> "$GITHUB_OUTPUT"
@@ -166,11 +181,21 @@ jobs:
       - name: Verdict
         working-directory: .
         env:
+          SCOPE_RESULT: ${{ needs.scope.result }}
           SCOPE_RUN: ${{ needs.scope.outputs.run }}
           SCOPE_REASON: ${{ needs.scope.outputs.reason }}
           BROWSER_RESULT: ${{ needs.real-browser.result }}
         run: |
           set -euo pipefail
+          # Fail closed. A failed or cancelled `scope` job produces empty outputs, and
+          # `always()` still runs this one — so without this the check reads "" != "true",
+          # prints "not required", and goes green precisely when its own gate is broken.
+          # That is the state in which a release would ship with no browser having run.
+          if [ "$SCOPE_RESULT" != 'success' ]; then
+            printf 'scope job did not succeed (%s) — cannot tell whether the proofs were needed\n' \
+              "$SCOPE_RESULT" >&2
+            exit 1
+          fi
           if [ "$SCOPE_RUN" != 'true' ]; then
             printf 'not required for this pull request: %s\n' "$SCOPE_REASON"
             exit 0
