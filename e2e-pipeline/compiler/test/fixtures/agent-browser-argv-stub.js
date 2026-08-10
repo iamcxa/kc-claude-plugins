@@ -22,10 +22,13 @@
  *
  * WHAT IT ANSWERS
  *
- * Only what the happy-path flow issues: open, fill, click, snapshot, get url,
- * is visible, eval, close. It is not a model of agent-browser and must not grow
- * into one — a stub that answers commands no test exercises is untested code that
- * looks like coverage.
+ * Only what the happy-path flow issues, measured from the argv log rather than
+ * counted from the generated source: open, eval, get, fill, click, snapshot, close.
+ * Seven. An earlier version said eight and answered `is visible` too — those
+ * occurrences in the script are helper *definitions*, not calls this flow makes, and
+ * the branch was dead. It is not a model of agent-browser and must not grow into
+ * one: a stub that answers commands no test exercises is untested code that looks
+ * like coverage, which that branch was.
  *
  * The `eval` envelope shape is not guessed. It was derived by feeding candidates to
  * the real judge (`compiler/lib/visibility-probe.js`) until all four
@@ -146,10 +149,6 @@ switch (command) {
     process.stdout.write(
       JSON.stringify({ success: true, data: { result: probeEvidence(present) } }) + '\n'
     );
-    break;
-  }
-  case 'is': {
-    process.stdout.write(expressionTargetsAbsent(args[2] || '') ? 'false\n' : 'true\n');
     break;
   }
   case 'snapshot': {
