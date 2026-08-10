@@ -4,6 +4,7 @@ source: Captain 2x development-speed target, 2026-08-10
 product: kc-dev-flow
 sprint:
 id: f32cg5cbw6b633s09e2zxbr5
+status: backlog
 ---
 
 ## Problem
