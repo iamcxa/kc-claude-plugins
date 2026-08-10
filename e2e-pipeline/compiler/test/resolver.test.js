@@ -1309,6 +1309,36 @@ describe('errorDetails — additive structured channel', () => {
     assert.deepEqual(result.errorDetails[0], { message: result.errors[0] });
   });
 
+  test('an expect string carrying ${...} is refused', () => {
+    // `text '(.+)' on page` matches `${x}` happily. An earlier probe of this path used
+    // `on login`, which fails because the pattern wants the literal word `page` — the
+    // refusal was for the wrong reason and the interpolation was never tested.
+    const flow = {
+      name: 'test-expect-interpolation',
+      variables: { x: 'a' },
+      steps: [
+        { id: 'check', type: 'snapshot', action: 'Take snapshot', expect: ["text '${x}' on page"] },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /check/);
+    assert.match(result.errors[0], /\$\{x\}/);
+  });
+
+  test('a navigate target carrying ${...} is refused', () => {
+    const flow = {
+      name: 'test-navigate-interpolation',
+      variables: { email: 'a@b.c' },
+      steps: [
+        { id: 'go', type: 'navigate', action: 'Navigate to /login?e=${email}' },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /\$\{email\}/);
+  });
+
   test('a literal fill value that merely contains a dollar sign still compiles', () => {
     const flow = {
       name: 'test-fill-literal-dollar',

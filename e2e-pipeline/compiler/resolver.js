@@ -138,14 +138,21 @@ function parseActionString(type, action, stepId) {
 }
 
 /**
- * fillValueInterpolationError(value, stepId) — reject `${...}` in a fill value.
+ * interpolationError(value, stepId, where) — reject `${...}` anywhere it is not
+ * substituted.
  *
  * The two executors disagree, and that is the whole defect. The `/e2e-test` agent
- * runner substitutes `${key}` from `variables:` (`agents/e2e-test-runner.md`), and
- * `docs/multi-site-testing.md` shows a flow that relies on it. Compilation never
- * substituted: `variables:` become the script's own parameters (`email:` becomes
- * `EMAIL="${2:-…}"`), a different name in a different scope, and the written token
- * reached the input field as eight literal characters with nothing reporting it.
+ * runner substitutes `${key}` from `variables:` into action strings, expect entries
+ * and selector templates (`agents/e2e-test-runner.md` §2a), and
+ * `docs/multi-site-testing.md` shows a flow that relies on it. Compilation
+ * substitutes only selector templates: `variables:` otherwise become the script's
+ * own parameters (`email:` becomes `EMAIL="${2:-…}"`), a different name in a
+ * different scope, and the written token survives into the artifact verbatim — a
+ * fill value typed literally into an input, an assertion comparing against the
+ * eight characters `${x}`, a URL fetched with them still in the query string.
+ *
+ * Three paths, one class. Covering only the one that was reported is how the
+ * expect path came to be asserted closed while still open.
  *
  * Refusing is what the compile path can honestly do today. Implementing the
  * substitution means emitting the value double-quoted — a `$(...)` execution
@@ -156,16 +163,38 @@ function parseActionString(type, action, stepId) {
  * Returns a message, or null when the value is fine. A bare `$` is fine; only the
  * `${…}` form is refused, because that is the one that looks like it should work.
  */
-function fillValueInterpolationError(value, stepId) {
+function interpolationError(value, stepId, where) {
   if (typeof value !== 'string') return null;
   var found = /\$\{[^}]*\}/.exec(value);
   if (!found) return null;
-  return "Step '" + stepId + "': fill value contains " + found[0] +
-    ', which compiled scripts never interpolate — the field would receive those' +
+  return "Step '" + stepId + "': " + where + ' contains ' + found[0] +
+    ', which compiled scripts never interpolate — the artifact would carry those' +
     ' characters literally. Flow `variables:` bind as script parameters, not into' +
-    ' step values. (The /e2e-test agent runner does substitute them, so a flow that' +
-    ' works there can still fail to compile.) Use a literal value, or' +
-    ' `value: {runtime_ref: ...}` for one that must come from the environment.';
+    ' step values, expects, or navigation targets. (The /e2e-test agent runner does' +
+    ' substitute them, so a flow that works there can still fail to compile.) Use a' +
+    ' literal, or `value: {runtime_ref: ...}` for a fill that must come from the' +
+    ' environment.';
+}
+
+/**
+ * Collect every interpolation refusal a step earns, across all three paths.
+ *
+ * One helper called from both traversals, so single-site and cross-site cannot
+ * drift — the same reason the fill check is not inlined at its two call sites.
+ */
+function stepInterpolationErrors(step, rawOperands, stepId) {
+  var messages = [];
+  var fill = interpolationError(rawOperands.value, stepId, 'fill value');
+  if (fill) messages.push(fill);
+  var target = interpolationError(rawOperands.target, stepId, 'navigation target');
+  if (target) messages.push(target);
+  if (Array.isArray(step.expect)) {
+    for (var i = 0; i < step.expect.length; i++) {
+      var expectMsg = interpolationError(step.expect[i], stepId, 'expect entry');
+      if (expectMsg) messages.push(expectMsg);
+    }
+  }
+  return messages;
 }
 
 function resolveNavigate(operands, stepId, mapping) {
@@ -675,6 +704,15 @@ function resolve(flow, mapping, options) {
     var resolvedOperands = Object.assign({}, rawOperands);
     var skipStep = false;
 
+    // Before the type dispatch, so every step type is covered rather than the one
+    // that happened to be reported.
+    var interpolationMessages = stepInterpolationErrors(step, rawOperands, stepId);
+    for (var im = 0; im < interpolationMessages.length; im++) {
+      errors.push(interpolationMessages[im]);
+      errorDetails.push(tier2Detail(interpolationMessages[im]));
+      skipStep = true;
+    }
+
     if (step.type === 'navigate') {
       var navResult = resolveNavigate(rawOperands, stepId, mapping);
       if (navResult.error) {
@@ -694,12 +732,6 @@ function resolve(flow, mapping, options) {
         } else {
           resolvedOperands = Object.assign({}, rawOperands, resolvedActionElement(resolvedElement));
         }
-      }
-      var interpMsg = fillValueInterpolationError(rawOperands.value, stepId);
-      if (interpMsg) {
-        errors.push(interpMsg);
-        errorDetails.push(tier2Detail(interpMsg));
-        skipStep = true;
       }
       // SC-1032: thread runtime_ref from step YAML into operands for sensitive fill
       if (step.type === 'fill' && step.value && step.value.runtime_ref) {
@@ -920,6 +952,15 @@ function resolveMultiSite(flow, siteMappings, options) {
     var resolvedOperands = Object.assign({}, rawOperands);
     var skipStep = false;
 
+    // Before the type dispatch, so every step type is covered rather than the one
+    // that happened to be reported.
+    var interpolationMessages = stepInterpolationErrors(step, rawOperands, stepId);
+    for (var im = 0; im < interpolationMessages.length; im++) {
+      errors.push(interpolationMessages[im]);
+      errorDetails.push(tier2Detail(interpolationMessages[im]));
+      skipStep = true;
+    }
+
     if (step.type === 'navigate') {
       var navResult = resolveNavigate(rawOperands, stepId, siteMapping);
       if (navResult.error) {
@@ -940,13 +981,6 @@ function resolveMultiSite(flow, siteMappings, options) {
           resolvedOperands = Object.assign({}, rawOperands, resolvedActionElement(resolvedElement));
         }
       }
-      var siteInterpMsg = fillValueInterpolationError(rawOperands.value, stepId);
-      if (siteInterpMsg) {
-        errors.push(siteInterpMsg);
-        errorDetails.push(tier2Detail(siteInterpMsg));
-        skipStep = true;
-      }
-
     } else if (step.type === 'verify-external' || step.type === 'execute-external') {
       skipped++;
     }
