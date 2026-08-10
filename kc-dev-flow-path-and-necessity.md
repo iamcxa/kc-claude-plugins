@@ -243,3 +243,114 @@ existing suite.
 Two REDs proved the semantic path defect and the existing registry wiring;
 GREEN restored both. The product diff remains the five-file shape accepted by
 the ideation EM and is self-contained for fresh validation.
+
+## Stage Report: validation
+
+### TL;DR
+
+Fresh Claude Opus high read diff artifact
+`5adcec6cbb0eb3ee965b7627fec90550d7a45606acd44995324fc70010bd4b1f`
+against `bd81be0` and returned `proceed`: AC-1..AC-3 PASS, all four adversarial
+packet dispositions match, and there are zero Material findings. This is a
+passed candidate-bytes review, not a delivery verdict; committing will create a
+new revision and require re-binding before PR approval.
+
+### Per-AC verdicts
+
+- **AC-1 PASS** — both copies contain the workflow-relative destination and
+  version `0.2.1`; contract RED caught the old path, the stale-registry
+  intermediate RED proved absolutes wiring, final contract GREEN and `cmp`
+  proved the accepted bytes.
+- **AC-2 PASS** — fresh Opus dispositions: `P1 RETURN UNREAD` missing all three
+  labeled lines; `P2 PASS accounting`; `P3 PASS accounting`; `P3-no-ref RETURN
+  UNREAD` for the missing resolvable review reference.
+- **AC-3 PASS** — exact five-file +26/-7 diff adds no new file, executable,
+  registry, workflow step, required context, manifest, or kernel edit.
+
+### Evidence block
+
+`Lenses:` Exact diff hash above. Correctness PASS, 0 findings: Opus exercised
+all necessity packet branches and adjudicated the path assertion against both
+REDs. Manifest/back-compat PASS, 0 findings: policy version is `0.2.1`, existing
+absolutes disposition is refreshed, and the standing contract at
+`scripts/kc-dev-flow-contract-test.py:536-544` byte-compares canonical and
+self-adopted references. Security, silent-failure, type-design, concurrency,
+and resource-lifecycle did not fire: the diff touches one local policy clause,
+one reference header in two distribution positions, one registry disposition,
+and one synchronous assertion; no auth, error fallback, type, async/shared
+state, process, handle, or growth surface. Would have failed on a wrong packet
+disposition, a sixth path, or non-identical reference bytes.
+
+`Diff coverage:` PASS — Python `trace` on the GREEN suite reported 267
+executable lines, 99.6% file coverage, and positive counts for every added line
+at `scripts/kc-dev-flow-contract-test.py:516-521`; changed executable-line
+coverage is 100%. Would have failed on any added executable line with count 0.
+
+`Adversarial:` PASS — the pre-fix path assertion RED and stale-registry RED
+both spoke before GREEN. Fresh Opus then refused #178's actual unlabeled
+proposal and the speculative packet without a review ref while accepting the
+two complete records. Would have failed if either incomplete packet passed or
+either complete packet was refused.
+
+`Cross-model:` PASS — Claude Opus 5, high effort, safe/tool-less fresh session
+`e30e64f7-448f-4253-a4b2-53e0914c3f5e` reviewed artifact hash above from the
+Codex implementation lane and returned `proceed`, high confidence, zero
+Material findings. Would have failed on any P1 or AC non-pass.
+
+`E2E:` N/A — ideation declared a docs/policy-only task; no user-visible product
+runtime changed. The applicable exercise is the fresh ideation-gate packet
+drive recorded under Adversarial.
+
+`Origin re-observation:` N/A — no accepted claim originated in a consumer or
+external runtime; both accepted defects were reproduced from repository policy
+and its contract suite.
+
+### Reviewer adjudication
+
+Opus recorded one non-Material dissent: it thought byte parity relied only on
+the stage-exit `cmp`. Unsupported by primary source:
+`scripts/kc-dev-flow-contract-test.py:536-544` reads both canonical and
+self-adopted bytes for every named reference and fails on inequality. The
+external `cmp` reproduced that standing gate; it is not the sole enforcement.
+No citation error remains and no product edit follows from this adjudication.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "AC-1 through AC-3 pass on diff 5adcec6c; zero Material findings."
+  evidence_synthesis: "Two observed REDs, contract/parity GREEN, 100% changed-line execution, and four correct adversarial packet dispositions."
+  risk_tradeoff_call: "Reuse the existing ideation and contract gates; avoid a second registry or CI surface."
+  recommendation: "Keep the five-file candidate unchanged and re-bind validation after commit."
+  route: proceed
+  confidence: high
+  fo_boundary: "No commit, merge, stage-terminalization, or delivery authority."
+  engineering_judgment:
+    question: "Does the exact candidate satisfy AC-1..AC-3 with the smallest sufficient shape?"
+    revision: "base bd81be0081911639e5930be896eea5bb3ba23bb5; diff sha256 5adcec6cbb0eb3ee965b7627fec90550d7a45606acd44995324fc70010bd4b1f"
+    evidence_synthesis: "Path and wiring REDs preceded GREEN; packet P1/P3-no-ref refused and P2/P3 accepted; five declared files only."
+    adjudications:
+      - finding: "AC-1 adoption path"
+        disposition: supported
+        basis: "workflow-relative header, version 0.2.1, RED/GREEN, and standing byte-parity contract"
+      - finding: "AC-2 necessity refusal"
+        disposition: supported
+        basis: "fresh four-variant packet exercise"
+      - finding: "AC-3 no parallel system"
+        disposition: supported
+        basis: "exact five-path diff and live required-context evidence"
+      - finding: "byte parity depends only on external cmp"
+        disposition: unsupported
+        basis: "contract test lines 536-544 fail on canonical/self-adoption byte drift"
+    risk_tradeoff: "One existing-suite assertion buys deterministic path protection; behavioral necessity stays at the judgment gate where a text check cannot substitute."
+    recommendation: "Keep candidate unchanged; after captain-approved commit, re-bind exact-head evidence."
+    route: proceed
+    confidence: high
+    dissent: "AC-2 remains judgment-enforced; a text check is intentionally not credited as behavioral proof."
+    disproof_condition: "Any incomplete packet passes, a complete packet is refused, the path mutation stays green, or the five-file diff grows a parallel enforcement surface."
+    authority_boundary: "Captain retains scope and commit choice; delivery owns PR/CI/merge; EM record is advisory."
+```
+
+### Summary
+
+Candidate validation passed without product edits. The task remains in
+`validation` because the captain's commit confirmation and an exact committed
+revision do not yet exist.
