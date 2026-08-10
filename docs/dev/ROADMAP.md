@@ -285,11 +285,42 @@ the weaker sense that the assertion now names what it does *not* cover. Anyone
 reading this sprint as having closed the false-`verified` class should read #149
 first.
 
+## `kc-dev-flow`
+
+### Sprint S1 — prove the runtime, then shorten the route
+
+Captain-approved order for the next single-release batch:
+
+1. `kc-dev-flow-published-tag-smoke-review` — the released `v2.1.0` Science
+   Officer passed clean-installed Claude and Codex invocation and exposed
+   coverage absent from local-source checks. Retain one authenticated
+   release-closeout exact-tag smoke, not a per-PR matrix.
+2. `halve-dev-flow-cycle-time` — measure accepted-work to first-integrated-slice
+   latency and remove implementation-time review waits. Ideation and validation
+   each receive one fresh EM verdict; the EM prefers the next higher available
+   model capability tier, falling back to the highest available tier in fresh
+   context with high reasoning. Multi-model review is optional and presented to
+   the captain only when the EM recommends it for a contested, irreversible,
+   low-confidence, or unresolved call.
+
+Exit: both items have exact-revision validation, implementation opens no EM
+review loop, and the published-tag smoke has a keep-or-remove disposition backed
+by installed-runtime evidence. Hold the kc-dev-flow Release PR until the
+dependent `repo-platform/S1` item below also exits.
+
 ## `repo-platform`
 
-No sprint is scheduled in this roadmap yet. Shared workflow, CI, marketplace,
-and root-configuration work uses this product's own sequence beginning at
-`repo-platform/S1`.
+### Sprint S1 — reduce the runtime reading surface
+
+1. `workflow-readme-runtime-budget` — after `kc-dev-flow/S1` settles the review
+   contract, reduce `docs/dev/README.md` from 1,362 lines to at most 700 without
+   deleting an authority boundary or moving the same always-loaded cost to a
+   second file.
+
+Exit: the runtime README is at most 700 lines, every retained mandatory clause
+has an enforcement/owner mapping, recovery and stage-specific details are loaded
+only when their trigger fires, and the contract suite plus fresh EM validation
+pass. Only then may the pending kc-dev-flow Release PR be merged.
 
 ### Hazard carried forward
 
