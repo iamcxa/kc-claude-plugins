@@ -72,17 +72,11 @@ jobs:
         # TMPDIR is deliberately NOT overridden. An earlier revision pointed it at
         # `runner.temp` to satisfy the old user-owned-temp-root guard; #174 fixed that
         # guard to test the actual property, so `/tmp` is accepted on its own merits and
-        # the override became not just unnecessary but harmful — `/home/runner/work/_temp`
-        # is long enough that the derived agent-browser socket path exceeds the ~104-byte
-        # Unix domain socket limit, which failed 30 tests with "leave no socket-safe e2e
-        # namespace". A workaround that outlived its cause, costing more than it saved.
+        # the override became harmful — `/home/runner/work/_temp` is long enough that the
+        # derived agent-browser socket path exceeds the ~104-byte Unix domain socket
+        # limit, which failed 30 tests. A workaround that outlived its cause.
         #
-        # The exclusion list is spelled out in the command rather than hidden in a glob so
-        # the log shows which files were skipped and why the count differs from `npm test`.
-        run: |
-          set -euo pipefail
-          excluded='trace-finalization|runtime-state-finalizer'
-          mapfile -t files < <(ls compiler/test/*.test.js | grep -vE "$excluded")
-          echo "running ${#files[@]} of $(ls compiler/test/*.test.js | wc -l) test files"
-          echo "excluded (see #174): $excluded"
-          node --test "${files[@]}"
+        # The exclusion list lives in `package.json` rather than here, so the tier a PR is
+        # judged by is the same command an author can run locally. It was bash in this
+        # file first, which meant the gate's definition existed only in CI.
+        run: npm run test:ci

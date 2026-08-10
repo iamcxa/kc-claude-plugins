@@ -1,0 +1,69 @@
+# One flow covering the measured top of every axis.
+#
+# It was two — one for the CSS/testid shapes, one for the non-CSS locators. They exercise
+# disjoint elements of the same mapping, so a single flow covers both axes and the split
+# bought only readability.
+#
+#   Click 39% · Navigate 18% · Wait 14% · Fill 11% · Verify 10%    91% of 271 actions
+#   "visible on" 53% · "url contains" 34% · "is visible" 7%
+#     · "not visible" 2%                                           96% of 317 expects
+#
+# The second half is the shape that broke in the field: `text=`, `role=X[name=/re/]` and
+# bare `role=X` no longer resolve mapped visibility on their own since #91, so each needs
+# a `css_selector`. 37 of the 39 corpus elements still carrying a banned chord lack one.
+#
+# No `variables:` block. Zero corpus flows interpolate a variable into a Fill value, and a
+# first draft did — inventing a shape nobody writes. It also silently did the wrong thing:
+# `${email}` is emitted inside single quotes and never bound, so the literal characters
+# reach the field. Tracked in #179.
+name: happy-path
+description: "Sign in, land, and assert elements located every way the corpus locates them"
+tags: [happy-path]
+mapping: happy-path-app
+steps:
+  - id: open-login
+    type: navigate
+    action: "Navigate to /login"
+    expect:
+      - "email_input visible on login"
+      - "url contains /login"
+
+  - id: fill-email
+    type: fill
+    action: "Fill email_input with 'user@example.com' on login"
+
+  - id: fill-password
+    type: fill
+    action: "Fill password_input with 'correct horse' on login"
+
+  - id: submit
+    type: click
+    action: "Click submit_button on login"
+
+  - id: settle
+    type: wait
+    action: "Wait 2"
+
+  - id: reached-dashboard
+    type: snapshot
+    action: "Verify welcome_heading on dashboard"
+    expect:
+      - "url contains /dashboard"
+      - "welcome_heading visible on dashboard"
+      - "error_banner not visible on login"
+
+  - id: sidebar-present
+    type: snapshot
+    action: "Verify sidebar_dashboard on dashboard"
+    expect:
+      - "sidebar_dashboard is visible"
+
+  - id: refresh
+    type: click
+    action: "Click refresh_button on dashboard"
+
+  - id: results-rendered
+    type: snapshot
+    action: "Verify results_table on dashboard"
+    expect:
+      - "results_table visible on dashboard"
