@@ -2,7 +2,7 @@
 title: Cut the local workflow README to 700 lines without losing authority
 source: Captain runtime-reading budget, 2026-08-10
 product: repo-platform
-sprint:
+sprint: S1
 id: hp4y9nwh8e75vk75j9ncwmb7
 status: backlog
 ---
