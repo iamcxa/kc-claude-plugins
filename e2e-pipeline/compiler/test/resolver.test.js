@@ -1286,6 +1286,102 @@ describe('errorDetails — additive structured channel', () => {
     assert.deepEqual(result.errorDetails[0], { message: result.errors[0] });
   });
 
+  test('a fill value carrying ${...} is refused, naming what variables actually bind', () => {
+    const flow = {
+      name: 'test-fill-interpolation',
+      variables: { email: 'user@example.com' },
+      steps: [
+        {
+          id: 'fill-email',
+          type: 'fill',
+          action: "Fill email_input with '${email}' on login",
+        },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /fill-email/);
+    assert.match(result.errors[0], /\$\{email\}/);
+    // The remediation has to name the two real mechanisms, or the author is told
+    // "no" without being told what to do instead.
+    assert.match(result.errors[0], /variables:/);
+    assert.match(result.errors[0], /runtime_ref/);
+    assert.deepEqual(result.errorDetails[0], { message: result.errors[0] });
+  });
+
+  test('an expect string carrying ${...} is refused', () => {
+    // `text '(.+)' on page` matches `${x}` happily. An earlier probe of this path used
+    // `on login`, which fails because the pattern wants the literal word `page` — the
+    // refusal was for the wrong reason and the interpolation was never tested.
+    const flow = {
+      name: 'test-expect-interpolation',
+      variables: { x: 'a' },
+      steps: [
+        { id: 'check', type: 'snapshot', action: 'Take snapshot', expect: ["text '${x}' on page"] },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /check/);
+    assert.match(result.errors[0], /\$\{x\}/);
+  });
+
+  test('a navigate target carrying ${...} is refused', () => {
+    const flow = {
+      name: 'test-navigate-interpolation',
+      variables: { email: 'a@b.c' },
+      steps: [
+        { id: 'go', type: 'navigate', action: 'Navigate to /login?e=${email}' },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /\$\{email\}/);
+  });
+
+  test('an unresolved ${...} surviving into a click selector is refused', () => {
+    // The expect path has guarded this since #91 (resolver.js, resolveVisibilityElement).
+    // The action path did not, and `Click row(id=7)` does not even reach substitution:
+    // the click pattern's `\w+` cannot match `row(id=7)` and is unanchored, so it binds
+    // `row`, drops the parameters, and emits `[data-testid="row-${id}"]` to the DOM.
+    // Compiling it produced zero errors, which is how it was mistaken for safe.
+    const TEMPLATE_MAPPING = {
+      version: 2,
+      app: 'tpl',
+      base_url: 'http://localhost:3000',
+      pages: {
+        list: {
+          url_pattern: '/list',
+          elements: {
+            row: { selector: '[data-testid="row-${id}"]', css_selector: '[data-testid="row-${id}"]' },
+          },
+        },
+      },
+    };
+    const result = resolve({
+      name: 'test-click-template',
+      steps: [{ id: 'hit', type: 'click', action: 'Click row(id=7) on list' }],
+    }, TEMPLATE_MAPPING);
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /unresolved selector parameter/);
+    assert.match(result.errors[0], /hit/);
+  });
+
+  test('a literal fill value that merely contains a dollar sign still compiles', () => {
+    const flow = {
+      name: 'test-fill-literal-dollar',
+      steps: [
+        {
+          id: 'fill-amount',
+          type: 'fill',
+          action: "Fill email_input with '$100 and change' on login",
+        },
+      ],
+    };
+    const result = resolve(flow, SIMPLE_MAPPING);
+    assert.deepEqual(result.errors, []);
+  });
+
   test('multiple errors keep errors and errorDetails the same length and order', () => {
     const flow = {
       name: 'test-multi-error',
@@ -1354,5 +1450,59 @@ describe('errorDetails — additive structured channel', () => {
       candidates: ['page-a', 'page-b'],
       message: result.errors[0],
     });
+  });
+});
+
+describe('cross-site traversal carries the same refusals', function() {
+  // resolveMultiSite is a second, parallel walk over steps. Every guard added to the
+  // single-site walk has to be added there too, and nothing enforces that but a test —
+  // "I patched both call sites" is not evidence anyone can re-check.
+  const TEMPLATE_SITE_MAPPINGS = {
+    office: {
+      mappingName: 'tpl-a',
+      mapping: {
+        version: 2,
+        app: 'tpl-a',
+        base_url: 'http://a.local',
+        pages: {
+          list: {
+            url_pattern: '/list',
+            elements: {
+              row: { selector: '[data-testid="row-${id}"]', css_selector: '[data-testid="row-${id}"]' },
+              plain: { selector: '#plain', css_selector: '#plain' },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  test('an unresolved ${...} in a click selector is refused on the cross-site walk', function() {
+    const result = resolveMultiSite({
+      name: 'cross-site-template',
+      sites: { office: { mapping: 'tpl-a' } },
+      steps: [{ id: 'hit', site: 'office', type: 'click', action: 'Click row(id=7) on list' }],
+    }, TEMPLATE_SITE_MAPPINGS);
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /unresolved selector parameter/);
+  });
+
+  test('an interpolated fill value is refused on the cross-site walk', function() {
+    const result = resolveMultiSite({
+      name: 'cross-site-interp',
+      sites: { office: { mapping: 'tpl-a' } },
+      steps: [{ id: 'f', site: 'office', type: 'fill', action: "Fill plain with '${email}' on list" }],
+    }, TEMPLATE_SITE_MAPPINGS);
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /never interpolate/);
+  });
+
+  test('the same cross-site flow without templates still resolves clean', function() {
+    const result = resolveMultiSite({
+      name: 'cross-site-control',
+      sites: { office: { mapping: 'tpl-a' } },
+      steps: [{ id: 'ok', site: 'office', type: 'click', action: 'Click plain on list' }],
+    }, TEMPLATE_SITE_MAPPINGS);
+    assert.deepEqual(result.errors, []);
   });
 });

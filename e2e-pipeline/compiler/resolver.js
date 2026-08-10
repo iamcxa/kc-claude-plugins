@@ -137,6 +137,66 @@ function parseActionString(type, action, stepId) {
   return { operands: parser.extract(match) };
 }
 
+/**
+ * interpolationError(value, stepId, where) — reject `${...}` anywhere it is not
+ * substituted.
+ *
+ * The two executors disagree, and that is the whole defect. The `/e2e-test` agent
+ * runner substitutes `${key}` from `variables:` into action strings, expect entries
+ * and selector templates (`agents/e2e-test-runner.md` §2a), and
+ * `docs/multi-site-testing.md` shows a flow that relies on it. Compilation
+ * substitutes only selector templates: `variables:` otherwise become the script's
+ * own parameters (`email:` becomes `EMAIL="${2:-…}"`), a different name in a
+ * different scope, and the written token survives into the artifact verbatim — a
+ * fill value typed literally into an input, an assertion comparing against the
+ * eight characters `${x}`, a URL fetched with them still in the query string.
+ *
+ * Three paths, one class. Covering only the one that was reported is how the
+ * expect path came to be asserted closed while still open.
+ *
+ * Refusing is what the compile path can honestly do today. Implementing the
+ * substitution means emitting the value double-quoted — a `$(...)` execution
+ * surface — and, on the `css_selector` path, crossing bash-then-JS escaping. Those
+ * are exactly the two emission sites #180 records as invisible to the current gate,
+ * so that work is sequenced after the instrument exists, not before.
+ *
+ * Returns a message, or null when the value is fine. A bare `$` is fine; only the
+ * `${…}` form is refused, because that is the one that looks like it should work.
+ */
+function interpolationError(value, stepId, where) {
+  if (typeof value !== 'string') return null;
+  var found = /\$\{[^}]*\}/.exec(value);
+  if (!found) return null;
+  return "Step '" + stepId + "': " + where + ' contains ' + found[0] +
+    ', which compiled scripts never interpolate — the artifact would carry those' +
+    ' characters literally. Flow `variables:` bind as script parameters, not into' +
+    ' step values, expects, or navigation targets. (The /e2e-test agent runner does' +
+    ' substitute them, so a flow that works there can still fail to compile.) Use a' +
+    ' literal, or `value: {runtime_ref: ...}` for a fill that must come from the' +
+    ' environment.';
+}
+
+/**
+ * Collect every interpolation refusal a step earns, across all three paths.
+ *
+ * One helper called from both traversals, so single-site and cross-site cannot
+ * drift — the same reason the fill check is not inlined at its two call sites.
+ */
+function stepInterpolationErrors(step, rawOperands, stepId) {
+  var messages = [];
+  var fill = interpolationError(rawOperands.value, stepId, 'fill value');
+  if (fill) messages.push(fill);
+  var target = interpolationError(rawOperands.target, stepId, 'navigation target');
+  if (target) messages.push(target);
+  if (Array.isArray(step.expect)) {
+    for (var i = 0; i < step.expect.length; i++) {
+      var expectMsg = interpolationError(step.expect[i], stepId, 'expect entry');
+      if (expectMsg) messages.push(expectMsg);
+    }
+  }
+  return messages;
+}
+
 function resolveNavigate(operands, stepId, mapping) {
   var target = operands.target;
 
@@ -398,6 +458,42 @@ function resolvedActionElement(resolved) {
   return result;
 }
 
+/**
+ * Refuse an unresolved `${...}` that survived into a click or fill selector.
+ *
+ * The expect path has refused this since #91 (`resolveVisibilityElement`); the action
+ * path did not, so the same mapping was safe to assert against and unsafe to click.
+ *
+ * Nothing supplies the parameter on this path at all: the click pattern's `\w+` cannot
+ * match `row(id=7)` and is unanchored, so it binds `row`, silently discards both the
+ * parameters and the ` on <page>` qualifier, and `substituteSelectorTemplate` never
+ * runs. `agents/e2e-test-runner.md:272` documents that form as substituted, so the
+ * artifact carried a literal `${id}` while the agent runner resolved it — the same
+ * divergence as an uninterpolated fill value, one layer down.
+ *
+ * Measured against the reference corpus before changing behaviour: 355 mapping
+ * elements, 4 carrying `${...}`, 45 flows, and **0** click or fill actions targeting
+ * any of them. Nothing that works today starts failing; what starts failing is a
+ * selector that was already reaching the DOM with the braces still in it.
+ */
+function unresolvedActionSelectorError(operands, stepId) {
+  var pattern = /\$\{[A-Za-z_][A-Za-z0-9_]*\}/;
+  if (!pattern.test(operands.selector || '') && !pattern.test(operands.cssSelector || '')) {
+    return null;
+  }
+  // State the condition, not the cause. Only one of the three ways to reach this
+  // message involves discarded parameters (a click written as `row(id=7)`, #189);
+  // for a bare `Click row` — or any `Fill`, whose pattern is anchored and rejects
+  // the parameterized form outright — nothing was discarded and the author would be
+  // sent looking for a parser bug they did not hit.
+  return "Step '" + stepId + "': unresolved selector parameter for " +
+    JSON.stringify(operands.cssSelector || operands.selector) +
+    '. Nothing supplies a selector parameter on a click or fill action — only an' +
+    ' `expect:` entry accepts a parameterized reference — so the template would' +
+    ' reach the DOM call with the braces intact. Use an element whose selector is' +
+    ' literal, or assert it through an expect.';
+}
+
 function pageNames(mapping) {
   return Object.keys(mapping.pages || {});
 }
@@ -644,6 +740,15 @@ function resolve(flow, mapping, options) {
     var resolvedOperands = Object.assign({}, rawOperands);
     var skipStep = false;
 
+    // Before the type dispatch, so every step type is covered rather than the one
+    // that happened to be reported.
+    var interpolationMessages = stepInterpolationErrors(step, rawOperands, stepId);
+    for (var im = 0; im < interpolationMessages.length; im++) {
+      errors.push(interpolationMessages[im]);
+      errorDetails.push(tier2Detail(interpolationMessages[im]));
+      skipStep = true;
+    }
+
     if (step.type === 'navigate') {
       var navResult = resolveNavigate(rawOperands, stepId, mapping);
       if (navResult.error) {
@@ -662,6 +767,12 @@ function resolve(flow, mapping, options) {
           skipStep = true;
         } else {
           resolvedOperands = Object.assign({}, rawOperands, resolvedActionElement(resolvedElement));
+          var unresolvedMsg = unresolvedActionSelectorError(resolvedOperands, stepId);
+          if (unresolvedMsg) {
+            errors.push(unresolvedMsg);
+            errorDetails.push(tier2Detail(unresolvedMsg));
+            skipStep = true;
+          }
         }
       }
       // SC-1032: thread runtime_ref from step YAML into operands for sensitive fill
@@ -883,6 +994,15 @@ function resolveMultiSite(flow, siteMappings, options) {
     var resolvedOperands = Object.assign({}, rawOperands);
     var skipStep = false;
 
+    // Before the type dispatch, so every step type is covered rather than the one
+    // that happened to be reported.
+    var interpolationMessages = stepInterpolationErrors(step, rawOperands, stepId);
+    for (var im = 0; im < interpolationMessages.length; im++) {
+      errors.push(interpolationMessages[im]);
+      errorDetails.push(tier2Detail(interpolationMessages[im]));
+      skipStep = true;
+    }
+
     if (step.type === 'navigate') {
       var navResult = resolveNavigate(rawOperands, stepId, siteMapping);
       if (navResult.error) {
@@ -901,9 +1021,14 @@ function resolveMultiSite(flow, siteMappings, options) {
           skipStep = true;
         } else {
           resolvedOperands = Object.assign({}, rawOperands, resolvedActionElement(resolvedElement));
+          var unresolvedMsg = unresolvedActionSelectorError(resolvedOperands, stepId);
+          if (unresolvedMsg) {
+            errors.push(unresolvedMsg);
+            errorDetails.push(tier2Detail(unresolvedMsg));
+            skipStep = true;
+          }
         }
       }
-
     } else if (step.type === 'verify-external' || step.type === 'execute-external') {
       skipped++;
     }
