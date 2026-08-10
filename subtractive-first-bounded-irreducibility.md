@@ -289,3 +289,12 @@ changed it.
 `proceed / high` at `454507f7ba56ce79ca0414f1964af4e59126eea5`.
 The task remains in `validation` until PR #199 merges with exact-head checks;
 delivery, terminal verdict, and archive state are not claimed here.
+
+### Exact-head PR receipt
+
+PR #199 now points to `454507f7ba56ce79ca0414f1964af4e59126eea5`.
+Portable suite, real-browser decision/proofs, version parity, and GitGuardian are
+green; two conditional jobs are skipped. Fresh PR-level Claude Opus high session
+`53ca4a4a-e114-4a4b-9412-ae0fbb0c0e0a` rebound all sixteen batch ACs and
+returned `proceed / high`, zero Material findings, `multi_model: not_needed`.
+The task is ready for review but remains non-terminal until authorized merge.
