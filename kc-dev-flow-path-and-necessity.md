@@ -161,3 +161,35 @@ without actually refusing an incomplete packet.
 
 Changing kernel policy, adding a registry or CI step, reopening issue #178,
 executing the published-tag smoke review, release version edits, and merge.
+
+## Stage Report: ideation
+
+- DONE: Reproduce both defects and bind their causes to `origin/main`
+  `bd81be0081911639e5930be896eea5bb3ba23bb5`.
+  The path came from the original ship-flow-specific copy; byte parity preserves
+  the error. The mechanism rule exists in kernel, but local ideation has no
+  refusal predicate.
+- DONE: Recheck issue #183's enforcement premise.
+  `scripts/kc-dev-flow-contract-test.py` invokes `absolutes-check.py`, required
+  CI invokes that contract test, and live branch protection requires the job
+  context. A second registry or CI step is therefore rejected.
+- DONE: Select the smallest sufficient route.
+  Reuse the ideation gate and work-item authority, correct the portable path,
+  and add one assertion to the existing contract suite. No new authority or
+  executable surface is introduced.
+- DONE: Define falsifiable ACs and the control mechanisms' own necessity
+  records.
+  AC-1 has a mutation RED/GREEN; AC-2 has three fresh-reviewer packets; AC-3 has
+  an exact diff and live required-context read.
+- DONE: Complete ideation discipline.
+  Captain-authored scope, design decision, reverse-recovery audit, appetite and
+  tolerance, cheap path, rejected alternatives, doc diff, one-worker sizing,
+  E2E skip reason, and pre-mortem are recorded.
+
+### Summary
+
+Proceed with the existing ideation gate as the enforcement point. A control
+mechanism must name `Criterion`, `Alternative`, and `Escape`; speculative
+controls also name a date and backlog review reference. Correct the mod's
+workflow-local adoption path and protect that distribution contract in the
+existing suite.
