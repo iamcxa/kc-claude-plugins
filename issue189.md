@@ -268,3 +268,5 @@ Two material re-baselines happened mid-stage and both are in the PR body. First,
 The support-vs-reject choice was NOT made here. It is in the PR body under the literal heading `DECISION NEEDED`, with both routes and one correction the captain needs: the recorded reason to reject — "supporting it means building a new escaping surface" — is now stale, because the substitution machinery already exists and runs on the `expect:` path. Route B's remaining risk is emission/escaping in codegen, not parsing. Anchoring is required under either route, so none of this diff is wasted work whichever way the captain rules.
 
 Verification: full suite ONCE at stage exit — 1068 tests, 1066 pass, 0 fail, 2 skipped (both pre-existing, env-gated). Lint parity per touched file measured in place against `origin/main`: `resolver.js` 14 vs 14, `resolver.test.js` 13 vs 13. Draft PR **#191** — https://github.com/iamcxa/kc-claude-plugins/pull/191 — `isDraft: true`, base `main`, links #189.
+
+CI on #191 (post-report): all required checks green — `e2e-pipeline suite (portable)` pass, `version parity` pass, `real-browser proofs` pass, GitGuardian pass. `mergeable: MERGEABLE`.
