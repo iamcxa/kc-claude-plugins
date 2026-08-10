@@ -234,3 +234,58 @@ The correction changes exact HEAD, so cycle 1 does not close validation. Re-run
 one fresh EM at `454507f7ba56ce79ca0414f1964af4e59126eea5`; add nothing and
 reopen no already-settled packet or minimum-shape question unless the correction
 changed it.
+
+## Stage Report: validation
+
+- DONE: AC-1 passes at exact head
+  `454507f7ba56ce79ca0414f1964af4e59126eea5`: kernel line 138 carries the
+  existing/proposed tri-state and README line 189 returns a new surface without
+  a named without-it AC failure.
+- DONE: AC-2 passes: the kernel records surface, served criterion, without-it
+  instrument/result, simpler alternative/insufficiency, and the task's anchors
+  at kernel 138 and README 189/257 all resolve.
+- DONE: AC-3 passes: README line 257 re-challenges the retained addition,
+  returns green or `UNKNOWN`, preserves existing `UNKNOWN` surfaces outside the
+  claim, and keeps same-kind runtime evidence for wiring.
+- DONE: AC-4 passes: README line 230 defaults to one smallest PR targeting
+  `main`, requires all three stack conditions, and denies topology as minimality
+  evidence; the Local Profile delivery row names the conditional route.
+- DONE: `Lenses:` outcome necessity, authority, minimum shape, instrument
+  validity, lifecycle independence, and delivery topology.
+- DONE: `Diff coverage:` all six changed files and five logical surfaces mapped;
+  removing any one loses a named consumer, gate, disposition, or batch-exit
+  predicate. No new file or executable surface exists.
+- DONE: `Adversarial:` cycle 1 exercised P1 through P7 from the exact shipped
+  wording. Cycle 2 independently re-derived the correction and confirmed it did
+  not change the settled packet routes.
+- DONE: `Cross-model:` `not_needed`; both fresh EM rounds were high-confidence,
+  the only Material finding was mechanical, and no contested call remains.
+- DONE: `E2E:` not applicable to this policy/docs-only pilot. It makes no
+  user-visible or full-stack behavior claim; real adopter behavior is the
+  post-delivery pilot observation, not completion evidence for this change.
+- DONE: `Origin re-observation:` not applicable. The accepted outcome is a
+  bounded policy rejection predicate, not a defect observed through an external
+  runtime; the seven adversarial packets exercise the claimed decision boundary.
+- DONE: Fresh Claude Opus high session
+  `58adac34-b674-457c-9bad-ffe8baa64ca9` returned `proceed / high`, AC 4/4,
+  zero unresolved Material findings, and `multi_model: not_needed` at the exact
+  corrected head.
+- DONE: Fresh exact-head mechanical receipts pass: contract, canonical/vendor
+  byte identity, diff check, 40 frontmatters, version parity, 389-line README,
+  and task work-context. A full-file inspection accounts for all 23 kernel
+  registry rows; the new row uniquely names line 138 and all twelve displaced
+  rows name their current lines.
+
+### Residual pilot observations
+
+- The captain-approved `non-trivial` boundary may permit self-classification;
+  watch that escape before deciding on universal adoption.
+- The existing absolutes contract validates content hashes but not descriptive
+  line locators. This correction needed manual arithmetic; that gap does not
+  authorize a new checker in this task.
+
+### Summary
+
+`proceed / high` at `454507f7ba56ce79ca0414f1964af4e59126eea5`.
+The task remains in `validation` until PR #199 merges with exact-head checks;
+delivery, terminal verdict, and archive state are not claimed here.
