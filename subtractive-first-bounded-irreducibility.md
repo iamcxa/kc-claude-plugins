@@ -99,7 +99,7 @@ Each retained addition records the surface, served AC, without-it mutation or
 bypass, observed failure, cheaper alternative, and insufficiency. Known-cause
 single-seam defects add no new ceremony. Verified by: the kernel predicate at
 kc-dev-flow/references/kernel.md:138, the local gates at docs/dev/README.md:189
-and docs/dev/README.md:254, and a fresh exact-revision EM exercise. Falsified by:
+and docs/dev/README.md:257, and a fresh exact-revision EM exercise. Falsified by:
 an addition surviving with no necessity witness or by forcing the pilot onto
 the defect route.
 
@@ -203,3 +203,34 @@ seven packet routes on their premises but admitted no product evidence and made
 no product finding. The actual commit is
 `636e6b9b100753e1fa2d566783b3de5451549f94`. Reissue the complete artifact to a
 fresh session; do not carry a verdict or product correction from cycle 0.
+
+## Validation cycle 1 — narrow correction
+
+Fresh Claude Opus high session `6c7bce28-08c5-4694-8ed9-902ffdfb8cf8`
+reviewed the complete artifact at
+`636e6b9b100753e1fa2d566783b3de5451549f94` and returned `narrow / high`,
+`multi_model: not_needed`.
+
+- AC-1 through AC-4 were met from the artifact, not the implementation report.
+- P1 through P7 all routed to their expected outcomes; green and `UNKNOWN`
+  cannot retain proposed additions, weak instruments return them, independently
+  violable components cannot hide in one group, and stack topology remains
+  conditional rather than minimality evidence.
+- The six-file shape was retained: the kernel pair serves two consumers; local
+  ideation and validation own independently decidable gates; the delivery row
+  binds the conditional route; ROADMAP and the active plan prevent premature
+  batch exit; the standing absolute registry requires one new disposition.
+- One Material correction remained: inserting 15 kernel lines left twelve
+  existing registry descriptions pointing at their old line numbers, including
+  two entries claiming `kernel.md:138`. Commit
+  `454507f7ba56ce79ca0414f1964af4e59126eea5` realigns those descriptions.
+- The task's AC-2 validation anchor was corrected from README line 254 to 257.
+  This is state evidence, not a product change.
+- The undefined `non-trivial` qualifier remains a captain-accepted pilot scope
+  and an observation target, not an implementation defect. Self-classified
+  trivial work is the named escape to watch before universal adoption.
+
+The correction changes exact HEAD, so cycle 1 does not close validation. Re-run
+one fresh EM at `454507f7ba56ce79ca0414f1964af4e59126eea5`; add nothing and
+reopen no already-settled packet or minimum-shape question unless the correction
+changed it.
