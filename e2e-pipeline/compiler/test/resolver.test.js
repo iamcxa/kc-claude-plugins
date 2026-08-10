@@ -1586,6 +1586,34 @@ describe('cross-site traversal carries the same refusals', function() {
     assert.match(result.errors[0], /never interpolate/);
   });
 
+  test('the parameterized element form is refused by name on the cross-site walk', function() {
+    // The cross-site twin of "the parameterized element form is refused by name, not
+    // generically" (#189 anchored click grammar, above). Without this test nothing in the
+    // suite reaches resolveMultiSite's parse-refusal branch: it was uncovered before #189
+    // and after it, and the diff moved the last cross-site input carrying the
+    // parameterized form onto the plain `Click row on list` reference two tests up.
+    const result = resolveMultiSite({
+      name: 'cross-site-parameterized',
+      sites: { office: { mapping: 'tpl-a' } },
+      steps: [{ id: 'hit', site: 'office', type: 'click', action: 'Click row(id=7) on list' }],
+    }, TEMPLATE_SITE_MAPPINGS);
+    assert.equal(result.errors.length, 1);
+    const message = result.errors[0];
+    assert.match(message, /^Step 'hit':/, 'must name the step the author has to go edit');
+    assert.match(message, /element\(param=value\)/, 'must name the form the author actually wrote');
+    assert.match(message, /\/e2e-test/, 'must name the executor that does support the form');
+    assert.doesNotMatch(
+      message,
+      /does not match expected format/,
+      'the generic mismatch text leaves the author guessing which token was wrong'
+    );
+    assert.deepEqual(result.errorDetails[0], { message: message });
+    // Arrangement check, not a behaviour claim: green under every neuter of the branch
+    // tried in the RED record, because each one still skips the step. It is here so a
+    // later green cannot be read as "refused AND emitted anyway".
+    assert.equal(result.resolved.steps.length, 0);
+  });
+
   test('the same cross-site flow without templates still resolves clean', function() {
     const result = resolveMultiSite({
       name: 'cross-site-control',
