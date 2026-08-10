@@ -5,7 +5,7 @@ product: kc-dev-flow
 sprint: captain-directed
 design: required
 id: 9f63nm17bntn0ts7k9b1nm9c
-status: implementation
+status: validation
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/fix-kc-dev-flow-path-necessity
 ---
 
@@ -203,3 +203,43 @@ mechanism must name `Criterion`, `Alternative`, and `Escape`; speculative
 controls also name a date and backlog review reference. Correct the mod's
 workflow-local adoption path and protect that distribution contract in the
 existing suite.
+
+## Stage Report: implementation
+
+- DONE: AC-1 RED — add the workflow-relative destination assertion before
+  changing production policy.
+  `scripts/kc-dev-flow-contract-test.py` exited 1 on `bd81be0` with
+  `reverse-recovery adoption path is not workflow-relative`. The one new
+  assertion is the behavior claim and appeared as the failure.
+- DONE: AC-1 wiring RED — correct both mod copies and bump policy version while
+  deliberately leaving the existing registry stale.
+  The same suite exited 1 at `absolutes-check`: the new `d004c8dad2f2ac69`
+  block was undispositioned and old `969c6d525879f6a9` matched no block. This
+  proves the checker is executed through the contract suite rather than merely
+  present in source.
+- DONE: AC-1 GREEN — replace the one existing registry disposition and rerun.
+  `scripts/kc-dev-flow-contract-test.py` exited 0 with
+  `kc-dev-flow contract: PASS`; `cmp` confirms the canonical and self-adopted
+  copies are byte-identical, both at policy version `0.2.1`.
+- DONE: AC-2 implementation — add one rejection predicate to the existing
+  ideation stage.
+  It requires `Criterion`, `Alternative`, and mutation-proved `Escape`; a
+  speculative escape additionally requires a date and resolvable backlog seed.
+  No text-presence assertion was added for this behavioral gate.
+- DONE: AC-3 scope and stage-exit checks.
+  `git diff --check`, the full kc-dev-flow contract suite, and
+  `scripts/version-parity-check.sh` pass. Exact diff: five declared files,
+  +26/-7, all mapped to AC-1/2/3; zero manifest, marketplace, workflow, kernel,
+  new executable, or new registry files. Plugin manifests remain 2.0.0 in
+  parity; release-please owns the next package release.
+- DONE: CI delta and old-arrangement audit.
+  Required CI already runs the edited contract suite; the new assertion adds no
+  subprocess and no material runtime. Before the fix, the stale path appeared
+  only in the canonical and self-adopted copies; both now use the same
+  workflow-relative destination.
+
+### Summary
+
+Two REDs proved the semantic path defect and the existing registry wiring;
+GREEN restored both. The product diff remains the five-file shape accepted by
+the ideation EM and is self-contained for fresh validation.
