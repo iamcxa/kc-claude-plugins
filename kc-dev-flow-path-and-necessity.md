@@ -5,7 +5,8 @@ product: kc-dev-flow
 sprint: captain-directed
 design: required
 id: 9f63nm17bntn0ts7k9b1nm9c
-status: ideation
+status: implementation
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/fix-kc-dev-flow-path-necessity
 ---
 
 ## Problem
@@ -119,13 +120,16 @@ branch-protection read, and the existing version-parity/contract suites.
 
 ## Test plan
 
-1. Add the adoption-path assertion and run the scoped contract test: expected
-   RED on the current hard-coded ship-flow path.
-2. Correct and version both copies, update the existing absolutes registry, and
-   rerun the contract test: expected GREEN.
-3. Exercise the ideation clause with missing, past-escape, and speculative
-   packets through fresh Claude Opus high.
-4. Run the full contract and version-parity suites once at stage exit.
+1. Add an assertion that the header contains the exact workflow-relative
+   backticked destination `_mods/reverse-recovery-audit.md`; run the scoped
+   contract test and expect RED on the current ship-flow-prefixed path.
+2. Correct and version both copies without updating the absolutes registry;
+   rerun and expect the existing registry check to RED on the changed block.
+3. Update the existing absolutes registry and rerun the contract test: expected
+   GREEN.
+4. Exercise the ideation clause with #178's actual incomplete proposal, a
+   past-escape record, and a speculative record through fresh Claude Opus high.
+5. Run the full contract and version-parity suites once at stage exit.
 
 E2E skip: this is a docs/policy-only task. Its behavioral proof is the
 fresh-reviewer gate exercise; no product runtime or external consumer report
@@ -185,6 +189,12 @@ executing the published-tag smoke review, release version edits, and merge.
   Captain-authored scope, design decision, reverse-recovery audit, appetite and
   tolerance, cheap path, rejected alternatives, doc diff, one-worker sizing,
   E2E skip reason, and pre-mortem are recorded.
+- DONE: Obtain fresh-context EM judgment.
+  Claude Opus high reviewed the exact `bd81be0` plan and returned `proceed`
+  with confidence 0.82. It found the five-file diff minimal and required three
+  zero-surface refinements: assert presence of the correct relative path,
+  preserve the stale-registry intermediate RED, and use #178's actual proposal
+  as the incomplete packet. All three are incorporated above.
 
 ### Summary
 
