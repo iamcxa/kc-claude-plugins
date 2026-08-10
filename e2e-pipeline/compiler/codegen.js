@@ -81,6 +81,22 @@ function doubleQuote(str) {
   return '"' + escapeDoubleQuoted(str) + '"';
 }
 
+/**
+ * Render str safe for embedding in a `#` comment line.
+ *
+ * A `#` comment ends at the first newline, so an embedded CR/LF in a flow- or
+ * mapping-sourced string turns the remainder into executable script text.
+ * Neither singleQuote() nor escapeDoubleQuoted() closes that: comments are not
+ * quoted, and neither helper touches line terminators. Collapsing the
+ * terminators to their two-character escape keeps the comment readable and on
+ * one line.
+ */
+function commentSafe(str) {
+  return String(str)
+    .replace(/\r/g, '\\r')
+    .replace(/\n/g, '\\n');
+}
+
 /** Produce a path component that cannot traverse outside an artifact directory. */
 function artifactFileComponent(str) {
   if (/^[A-Za-z0-9._-]*$/.test(str)) return str;
@@ -125,7 +141,7 @@ function generateVariables(variables, flowName) {
     usageParts.push(isRequired ? '<' + name + '>' : '[' + name + ']');
   }
 
-  var usageLine = '# Usage: ' + flowName + '.sh ' + usageParts.join(' ');
+  var usageLine = '# Usage: ' + commentSafe(flowName) + '.sh ' + usageParts.join(' ');
   var lines = [usageLine, '# Parameters:'];
 
   // Build assignment lines in same pass
@@ -142,7 +158,9 @@ function generateVariables(variables, flowName) {
 
     if (isReq) {
       // Required: collect all usage params for the :? message
-      var reqUsage = flowName + '.sh ' + usageParts.join(' ');
+      // The ${N:?word} word is expanded when the parameter is unset, so the
+      // flow-sourced name must be inert data here, not shell text.
+      var reqUsage = escapeDoubleQuoted(flowName) + '.sh ' + usageParts.join(' ');
       lines.push('# $' + pos + ' ' + bashName + ' -- required (or set ' + envName + ')');
       assignments.push(bashName + '="${' + pos + ':?Usage: ' + reqUsage + '}"');
     } else {
@@ -151,8 +169,10 @@ function generateVariables(variables, flowName) {
         lines.push('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ')');
         assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-}}"');
       } else {
-        lines.push('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ', default: ' + defaultStr + ')');
-        assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-' + defaultStr + '}}"');
+        lines.push('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ', default: ' + commentSafe(defaultStr) + ')');
+        // The ${N:-default} word is expanded when the parameter is unset, so a
+        // mapping base_url (or any flow variable default) must be inert data.
+        assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-' + escapeDoubleQuoted(defaultStr) + '}}"');
       }
     }
   }
@@ -225,12 +245,12 @@ function generateHeader(meta) {
   ];
 
   if (meta) {
-    lines.push('# DO NOT EDIT -- regenerate with: e2e-compile ' + meta.flowName);
+    lines.push('# DO NOT EDIT -- regenerate with: e2e-compile ' + commentSafe(meta.flowName));
     lines.push('# Source: ' + meta.flowPath);
     if (Array.isArray(meta.mappingPaths)) {
-      meta.mappingPaths.forEach(function(p) { lines.push('# Mapping: ' + p); });
+      meta.mappingPaths.forEach(function(p) { lines.push('# Mapping: ' + commentSafe(p)); });
     } else if (meta.mappingPath) {
-      lines.push('# Mapping: ' + meta.mappingPath);
+      lines.push('# Mapping: ' + commentSafe(meta.mappingPath));
     }
     lines.push('# Generated: ' + meta.timestamp);
     lines.push('# SHA-256: ' + meta.hash);
@@ -1408,6 +1428,9 @@ function generateCleanupTrap(steps, finallySteps, summary) {
  * Returns: string (multi-line bash block)
  */
 function generateJUnitEmitter(flowName) {
+  // xmlAttrEscape() makes the name safe for XML, not for bash: it leaves an
+  // apostrophe intact, which closes the printf format's single-quoted literal.
+  // Every format string carrying it is wrapped with singleQuote() below.
   var escapedFlow = xmlAttrEscape(flowName);
   var lines = [
     '_emit_junit() {',
@@ -1428,7 +1451,7 @@ function generateJUnitEmitter(flowName) {
     '  {',
     '    printf \'<?xml version="1.0" encoding="UTF-8"?>\\n\'',
     '    printf \'<testsuites>\\n\'',
-    '    printf \'  <testsuite name="' + escapedFlow + '" tests="%s" failures="%s" skipped="%s" time="%s" timestamp="%s">\\n\' \\',
+    '    printf ' + singleQuote('  <testsuite name="' + escapedFlow + '" tests="%s" failures="%s" skipped="%s" time="%s" timestamp="%s">\\n') + ' \\',
     '      "$_total" "$_failures" "$_skipped" "$_duration" "$(date -u +%Y-%m-%dT%H:%M:%SZ)"',
     '    for _i in "${!_STEP_NAMES[@]}"; do',
     '      local _sname="${_STEP_XML_NAMES[$_i]}"',
@@ -1438,16 +1461,16 @@ function generateJUnitEmitter(flowName) {
     '      local _sfail_xml',
     '      _sfail_xml=$(_xml_attr_escape "$_sfail")',
     '      if [ "$_sresult" = "not_automated" ]; then',
-    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped message="not automated"/></testcase>\\n\' \\',
+    '        printf ' + singleQuote('    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped message="not automated"/></testcase>\\n') + ' \\',
     '          "$_sname" "$_stime"',
     '      elif [ "$_sresult" = "skip" ]; then',
-    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped/></testcase>\\n\' \\',
+    '        printf ' + singleQuote('    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><skipped/></testcase>\\n') + ' \\',
     '          "$_sname" "$_stime"',
     '      elif [ "$_sresult" = "fail" ]; then',
-    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><failure message="%s"/></testcase>\\n\' \\',
+    '        printf ' + singleQuote('    <testcase classname="' + escapedFlow + '" name="%s" time="%s"><failure message="%s"/></testcase>\\n') + ' \\',
     '          "$_sname" "$_stime" "$_sfail_xml"',
     '      else',
-    '        printf \'    <testcase classname="' + escapedFlow + '" name="%s" time="%s"/>\\n\' \\',
+    '        printf ' + singleQuote('    <testcase classname="' + escapedFlow + '" name="%s" time="%s"/>\\n') + ' \\',
     '          "$_sname" "$_stime"',
     '      fi',
     '    done',
@@ -1578,6 +1601,9 @@ function generateFooter(flowName, totalSteps, skipped, deferReportsToCleanup) {
     ].join('\n');
   }
 
+  // The summary echoes are double-quoted and must keep expanding the runtime
+  // counters, so only the flow-sourced name is escaped — not the whole line.
+  var safeFlowName = escapeDoubleQuoted(flowName);
   var lines = [];
   lines.push('# Emit metrics JSON if --metrics-output path was provided (FLAKY-02)');
   lines.push('if [ -n "$METRICS_OUTPUT" ]; then _emit_metrics "$METRICS_OUTPUT"; fi');
@@ -1593,15 +1619,15 @@ function generateFooter(flowName, totalSteps, skipped, deferReportsToCleanup) {
     '_automated_total=$(( ' + totalSteps + ' - ' + skipped + ' - _not_automated ))',
     'if [ "$_HAD_RETRIES" = "true" ]; then',
     '  if [ "$_not_automated" -gt 0 ]; then',
-    '    echo "PASS (FLAKY): ' + flowName + ' ($_automated_total/' + totalSteps + ' automated steps passed, ' + skipped + ' skipped, $_not_automated not automated)"',
+    '    echo "PASS (FLAKY): ' + safeFlowName + ' ($_automated_total/' + totalSteps + ' automated steps passed, ' + skipped + ' skipped, $_not_automated not automated)"',
     '  else',
-    '    echo "PASS (FLAKY): ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    '    echo "PASS (FLAKY): ' + safeFlowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
     '  fi',
     'else',
     '  if [ "$_not_automated" -gt 0 ]; then',
-    '    echo "PASS: ' + flowName + ' ($_automated_total/' + totalSteps + ' automated steps passed, ' + skipped + ' skipped, $_not_automated not automated)"',
+    '    echo "PASS: ' + safeFlowName + ' ($_automated_total/' + totalSteps + ' automated steps passed, ' + skipped + ' skipped, $_not_automated not automated)"',
     '  else',
-    '    echo "PASS: ' + flowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
+    '    echo "PASS: ' + safeFlowName + ' (' + totalSteps + '/' + totalSteps + ' steps, ' + skipped + ' skipped)"',
     '  fi',
     'fi',
     'exit 0'
