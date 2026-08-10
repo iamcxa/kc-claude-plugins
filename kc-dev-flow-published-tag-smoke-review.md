@@ -140,3 +140,82 @@ validation can claim in advance.
 
 The implementation is the accepted release-only shape and is self-contained for
 fresh validation. The next exact tag invocation remains a release-closeout step.
+
+## Stage Report: validation
+
+### TL;DR
+
+Fresh Claude Opus high session `d4daa8b0-ea12-4c8f-9ccc-a086ae9a8edd`
+reviewed exact head `c48a9e97f1614d80d8220ac4c80b4df993db09fb` over
+`a024b254e236f521d8438d567ade36d779a52d11` and returned
+`proceed / high / multi_model:not_needed`, with zero Material findings. This is
+candidate-code validation; the first tag containing the command and its local
+sync are still release-closeout evidence, so the task stays in `validation`.
+
+### Per-AC verdicts
+
+- **AC-1 PASS** — the requested canonical tag resolves to one commit and both
+  installed trees must digest-match that checkout; a wrong revision/tree is
+  fail-closed.
+- **AC-2 PASS** — post-correction Claude isolation reported one explicit
+  kc-dev-flow plugin at the expected path/version; Codex reuses only operator
+  auth in a temporary home.
+- **AC-3 PASS** — direct fixtures reject missing, extra, duplicate, misplaced,
+  invalid-enum, mismatched-wrapper, and wrong-revision reports.
+- **AC-4 PASS** — `CLAUDE.md` places the command after tag publication and
+  before local sync and explicitly excludes per-PR gating.
+
+### Evidence block
+
+`Lenses:` Runtime/platform, contract/schema, correctness, auth isolation, and
+delivery fired; all PASS with zero Material findings against exact head above.
+No concurrency or persistent-resource surface exists: temporary directories and
+subprocess failures are bounded and fail-closed. Would fail on an extra Claude
+plugin, unequal installed tree, malformed record, or revision mismatch.
+
+`Diff coverage:` coverage.py reports 39% aggregate for the full new script under
+the repeatable local contract suite (99/239 statements; 100 branches, 10 partial).
+The uncounted authenticated orchestration is covered by the prior dual-host
+v2.1.0 invocation plus post-correction isolation/install probes and remains a
+release-only exact-tag check, not a unit-test substitute.
+
+`Adversarial:` PASS — malformed/incomplete/misplaced/duplicate/invalid-enum/
+wrapper-mismatch/wrong-revision fixtures all fail; plugin-count and tree-digest
+mismatches are explicit refusal paths. Would fail if any bad fixture exited 0.
+
+`Cross-model:` not_needed — the exact-head EM found no contested, irreversible,
+low-confidence, or unresolved call. No optional second model was requested.
+
+`E2E:` PASS, bounded — the v2.1.0 exact-tag one-off invoked both clean-installed
+hosts; post-correction probes on this commit observed `plugins_count=1` for
+Claude and equal Claude/Codex installed trees. The first execution from a tag
+that contains this command is intentionally deferred to release closeout.
+
+`Origin re-observation:` PASS — Reported scenario: an exact published kc-dev-flow
+tag installs and invokes through Claude and Codex | Originating runtime kind:
+authenticated installed host CLIs | Re-observation artifact/revision: v2.1.0 tag
+`a024b254e236f521d8438d567ade36d779a52d11` plus corrected wrapper commit
+`c48a9e97f1614d80d8220ac4c80b4df993db09fb` | Equivalent-runtime rationale:
+same host CLIs, canonical repository, tag resolver, plugin layouts, and operator
+authentication; the correction probes isolate plugin state and bind tree bytes |
+Falsifier kind: mutation | Result: both host invocations passed, one Claude plugin
+was observed, and both installed trees matched the tag checkout.
+
+### Engineering judgment
+
+- `question:` Does the retained release-closeout smoke prove the accepted exact
+  tag, dual-host, isolation, and report boundaries without excess mechanism?
+- `revision:` `c48a9e97f1614d80d8220ac4c80b4df993db09fb` over
+  `a024b254e236f521d8438d567ade36d779a52d11`.
+- `adjudications:` the prior isolation, structural-parser, revision/tree-binding,
+  and recovery-version findings are closed; no whole changed file or smoke
+  mechanism is removable without losing an AC or falsifier.
+- `risk_tradeoff:` retain one substantial authenticated release-only check to
+  cover boundaries the cheaper marketplace and sync helpers do not observe;
+  avoid the higher recurring cost of a per-PR model matrix.
+- `recommendation/route/confidence:` proceed / proceed / high.
+- `dissent:` empty. `multi_model:` not_needed.
+- `disproof_condition:` change route on an extra Claude plugin, unequal installed
+  tree, accepted malformed/wrong-revision report, or unmapped changed file.
+- `authority_boundary:` advisory only; Captain, Spacedock, GitHub checks, and
+  release-please retain scope, state, PR, merge, tag, release, and sync authority.
