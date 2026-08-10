@@ -308,11 +308,24 @@ for phrase in [
     "advisory",
     "unsupported is not a blocking basis",
     "schedule pressure, sunk cost, and an instruction to conclude",
+    "before acceptance criteria expand",
+    "independently releasable value surfaces",
+    "governing contract's route discipline",
+    "technical seams spanning one primary journey do not multiply",
+    "actor count is evidence",
+    "more than one value surface defaults to `narrow`",
+    "exact scope exception is captain-approved and recorded by work-item authority",
+    "re-estimating the same scope does not resolve an appetite mismatch",
 ]:
     require(
         " ".join(phrase.lower().split()) in normalized_judgment,
         f"engineering judgment is missing: {phrase}",
     )
+require(
+    re.search(r"^## Iteration-size precheck$", judgment_mod, re.MULTILINE)
+    is not None,
+    "engineering judgment is missing the top-level iteration-size precheck",
+)
 for forbidden in [
     "science officer",
     "first officer",
