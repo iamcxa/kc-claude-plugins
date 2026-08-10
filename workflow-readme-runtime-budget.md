@@ -4,7 +4,7 @@ source: Captain runtime-reading budget, 2026-08-10
 product: repo-platform
 sprint: S1
 id: hp4y9nwh8e75vk75j9ncwmb7
-status: implementation
+status: validation
 lane: main
 started: 2026-08-10T22:03:08Z
 design: required
@@ -85,8 +85,14 @@ system, product code, and creating or merging a PR.
 - DONE: Reverse recovery retained the existing README authority and identified
   exactly three trigger-owned categories; repeated examples/rationale are
   deletion candidates, not relocation candidates.
-- DONE: The accepted split has four files but keeps the always-loaded surface
-  single and bounds the combined surface below the old README.
+- DONE: AC-1 caps the always-loaded README at 700 lines with a fail-closed
+  contract assertion.
+- DONE: AC-2 keeps Local Profile, lifecycle, stage policy selection, and seat
+  authority in the always-loaded README.
+- DONE: AC-3 binds recovery, validation recipes, and observation history to
+  explicit triggers instead of ordinary continuation.
+- DONE: AC-4 requires every stage path and the combined four-file surface to
+  remain smaller than the old 1,362-line README.
 - DONE: Fresh high-reasoning EM returned `narrow / high`: delete repetition,
   retain authority in the README, and load recovery/validation/history only on
   their triggers. Multi-model review was not recommended.
@@ -95,3 +101,24 @@ system, product code, and creating or merging a PR.
 
 Proceed with one 700-line authority file plus three trigger-loaded documents;
 add no loading framework or parallel policy source.
+
+## Stage Report: implementation
+
+- DONE: Commit `c48a9e97f1614d80d8220ac4c80b4df993db09fb` reduces
+  `docs/dev/README.md` from 1,362 to 374 lines.
+- DONE: Recovery procedure is 116 lines, validation procedure is 93, and
+  observation history is 22; the four-file surface totals 605 lines and none of
+  the moved files is universally loaded.
+- DONE: Local Profile, state ownership, lifecycle entry/exit, every stage's
+  `Policy mods`, validation predicate, and Captain/EM/FO boundaries remain in
+  the README. Repeated rationale and examples were deleted, not relocated.
+- DONE: Contract tests enforce the ceiling, required authority sections,
+  trigger links, EM selection/fallback, and every stage's policy declaration.
+- DONE: Fresh stage-exit checks pass: kc-dev-flow contract, 40 skill
+  frontmatters, version parity at 2.1.0, marketplace L0/L1/L2,
+  state-prerequisite contract, Python compilation, and `git diff --check`.
+
+### Summary
+
+The implementation keeps one bounded authority entrypoint and three documents
+that load only for recovery, validation, or historical observation.
