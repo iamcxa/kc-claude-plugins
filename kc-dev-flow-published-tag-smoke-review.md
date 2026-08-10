@@ -220,3 +220,14 @@ was observed, and both installed trees matched the tag checkout.
   tree, accepted malformed/wrong-revision report, or unmapped changed file.
 - `authority_boundary:` advisory only; Captain, Spacedock, GitHub checks, and
   release-please retain scope, state, PR, merge, tag, release, and sync authority.
+
+### Exact-head PR rebind
+
+Fresh PR-level Claude Opus high session
+`53ca4a4a-e114-4a4b-9412-ae0fbb0c0e0a` rebound AC-1, AC-2, AC-3, and AC-4 to
+`454507f7ba56ce79ca0414f1964af4e59126eea5`. The intervening delta changes no
+smoke script, parser fixture, `CLAUDE.md` release placement, workflow file, or
+host invocation surface; the new kernel rule preserves the pending smoke and
+leaves its keep-or-remove decision captain-owned. Hosted CI is green at that
+exact head. Verdict remains `proceed / high`, with zero Material findings; the
+first containing-tag invocation remains release-closeout evidence.
