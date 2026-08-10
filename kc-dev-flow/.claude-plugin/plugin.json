@@ -1,7 +1,7 @@
 {
   "name": "kc-dev-flow",
   "description": "Portable, evidence-bound development flow for adopting and continuously advancing repository sprints without duplicating local authority.",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": {
     "name": "Kent Chen",
     "url": "https://github.com/iamcxa"
