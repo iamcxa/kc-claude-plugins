@@ -27,10 +27,30 @@ name: e2e-pipeline real browser
 # that nothing detected; a floating install here would make this job's verdict depend on
 # an upstream release, so a break would read as our regression.
 
+# WHEN IT RUNS, AND WHY THOSE THREE
+#
+#   schedule          — upstream drift. agent-browser is pinned, so what actually moves
+#                       week to week is Chrome for Testing (`agent-browser install` takes
+#                       the current one) and the macOS runner image. Neither is triggered
+#                       by anything we commit, so only a clock finds it.
+#   release-please PR — the proof that matters at ship time. Everything else in this repo
+#                       is graded on "observed green CI for the exact HEAD"; without this,
+#                       a release went out having never run a real browser at that SHA.
+#   workflow_dispatch — deliberate runs while changing the runtime.
+#
+# It does NOT run on ordinary pull requests. Installing a browser on every PR adds minutes
+# and an install-flake surface to a gate whose value depends on being believed, and the
+# argv-level question a PR needs answered is #180's, not this one's.
+#
+# The scope decision is a separate cheap job so the reported check exists on every pull
+# request. A path-filtered required check never reports on a PR it does not match, which
+# leaves that PR pending forever — the failure mode this shape avoids.
+
 on:
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
+  pull_request:
 
 permissions:
   contents: read
@@ -40,13 +60,58 @@ defaults:
     working-directory: e2e-pipeline
 
 jobs:
+  scope:
+    name: decide whether the real browser is needed
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+      reason: ${{ steps.decide.outputs.reason }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decide
+        id: decide
+        working-directory: .
+        # head_ref and base_ref go through env rather than into the script text:
+        # a branch name is attacker-controllable on a fork PR, and `${{ }}` inside
+        # `run:` is textual substitution.
+        env:
+          EVENT: ${{ github.event_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" != 'pull_request' ]; then
+            printf 'run=true\nreason=%s trigger\n' "$EVENT" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$HEAD_REF" != 'release-please--branches--main' ]; then
+            printf 'run=false\nreason=not the release pull request\n' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          changed=$(git diff --name-only "origin/$BASE_REF...HEAD" -- e2e-pipeline | grep -c . || true)
+          if [ "$changed" -eq 0 ]; then
+            printf 'run=false\nreason=release does not touch e2e-pipeline\n' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          printf 'run=true\nreason=release pull request touching e2e-pipeline (%s files)\n' "$changed" >> "$GITHUB_OUTPUT"
+
   real-browser:
+    needs: scope
+    if: needs.scope.outputs.run == 'true'
     # macOS because that is where the runtime currently works. When #174 closes, this
     # should move to (or add) Linux — the point of the job is to catch what a stub cannot,
     # and a single platform is how #110 came to be closed on one machine's evidence.
     name: e2e-pipeline real-browser proofs (#91, #110)
     runs-on: macos-latest
     timeout-minutes: 20
+    outputs:
+      agent_browser: ${{ steps.versions.outputs.agent_browser }}
+      browsers: ${{ steps.versions.outputs.browsers }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -68,16 +133,101 @@ jobs:
         run: agent-browser install
 
       - name: Record the versions this verdict is about
+        id: versions
         # A pass means "these two versions behave as the stub models". Without the
         # versions in the log, a future reader cannot tell which upstream the evidence
-        # covers — which is the same gap that made #149 invisible.
+        # covers — which is the same gap that made #149 invisible. They are also an
+        # output, because a failure report that omits them cannot distinguish upstream
+        # drift from our own regression, which is the first question to answer.
         run: |
           set -euo pipefail
-          agent-browser --version
-          ls ~/.agent-browser/browsers 2>/dev/null || echo "no browsers directory"
+          agent_browser=$(agent-browser --version 2>&1 | head -1)
+          browsers=$(ls ~/.agent-browser/browsers 2>/dev/null | tr '\n' ' ')
+          printf 'agent_browser=%s\n' "$agent_browser" >> "$GITHUB_OUTPUT"
+          printf 'browsers=%s\n' "${browsers:-none}" >> "$GITHUB_OUTPUT"
+          printf '%s\nbrowsers: %s\n' "$agent_browser" "${browsers:-none}"
 
       - name: Run the real-browser proofs
         # Serialised. Run in parallel these two intermittently fail: they each drive a
         # real browser and contend for it. Measured — one of three parallel runs failed,
         # three of three serial runs passed.
         run: npm run test:real
+
+  proofs:
+    # The reported check. It exists on every pull request, including those where the
+    # browser job never ran, so it can be made a required check without leaving
+    # non-release pull requests pending forever.
+    name: real-browser proofs
+    needs: [scope, real-browser]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verdict
+        working-directory: .
+        env:
+          SCOPE_RUN: ${{ needs.scope.outputs.run }}
+          SCOPE_REASON: ${{ needs.scope.outputs.reason }}
+          BROWSER_RESULT: ${{ needs.real-browser.result }}
+        run: |
+          set -euo pipefail
+          if [ "$SCOPE_RUN" != 'true' ]; then
+            printf 'not required for this pull request: %s\n' "$SCOPE_REASON"
+            exit 0
+          fi
+          if [ "$BROWSER_RESULT" != 'success' ]; then
+            printf 'real-browser proofs did not pass (%s): %s\n' "$BROWSER_RESULT" "$SCOPE_REASON" >&2
+            exit 1
+          fi
+          printf 'real-browser proofs passed: %s\n' "$SCOPE_REASON"
+
+  report-failure:
+    # Only for runs nobody is looking at. A failure on the release pull request is
+    # already in front of a reader; filing an issue for it would be noise.
+    needs: [scope, real-browser]
+    if: always() && needs.real-browser.result == 'failure' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: File or update the failure issue
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          AGENT_BROWSER: ${{ needs.real-browser.outputs.agent_browser }}
+          BROWSERS: ${{ needs.real-browser.outputs.browsers }}
+          TRIGGER: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          body=$(printf '%s\n' \
+            "The scheduled real-browser proofs failed." \
+            "" \
+            "- run: $RUN_URL" \
+            "- trigger: $TRIGGER" \
+            "- agent-browser: ${AGENT_BROWSER:-not reached}" \
+            "- browsers present: ${BROWSERS:-not reached}" \
+            "" \
+            "**Answer this first: upstream drift, or our regression?** agent-browser is" \
+            "pinned in the workflow, so it is not the variable. Chrome for Testing is" \
+            "whatever \`agent-browser install\` fetched on this run, and the macOS runner" \
+            "image also moves. Compare the versions above against the previous green run" \
+            "before changing any code — #149 was an upstream behaviour change that read as" \
+            "our regression and cost three review rounds and a full revert." \
+            "" \
+            "Reopened weekly until fixed; this issue is updated rather than duplicated.")
+          existing=$(gh issue list --repo "$REPO" --state open --label e2e-real-browser \
+            --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --repo "$REPO" --body "$body"
+            printf 'commented on existing #%s\n' "$existing"
+          else
+            gh issue create --repo "$REPO" \
+              --title 'e2e-pipeline: the scheduled real-browser proofs are failing' \
+              --label e2e-real-browser \
+              --assignee quinn-code-agent \
+              --body "$body"
+          fi
