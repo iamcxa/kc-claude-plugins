@@ -223,3 +223,32 @@ and existing contract test are the only changed files.
   `git diff --check` all passed.
 - DONE: Stayed inside the stop condition. No kernel, skill, new mod, runtime
   classifier, schema field, or second canonical policy surface was added.
+
+## Stage Report: validation
+
+TL;DR: PASS at exact revision
+`e6930fe74df014370e52c8cc2d13dbd63461f270`; all mechanical gates and the one
+validation-stage Claude Opus high cross-model review passed with no Material
+finding.
+
+- Lenses: PASS — correctness and manifest/back-compat read exact revision
+  `e6930fe74df014370e52c8cc2d13dbd63461f270` against `origin/main`; an inverted
+  `narrow` default, an unrecorded exception, or canonical/vendor drift would have
+  failed the contract or mirror checks. No other lens fired for this policy and
+  contract-test-only diff.
+- Diff coverage: PASS — 13/13 added executable Python lines are module-scope
+  assertions executed by `./scripts/kc-dev-flow-contract-test.py`; the command
+  passed at the exact revision.
+- Adversarial: PASS — the contract was observed RED before the policy edit and
+  GREEN after it; removing the precheck, flipping the pinned route, or changing
+  its exception authority is the falsifier.
+- Cross-model: PASS — Claude Opus high read the exact three-file diff at
+  `e6930fe74df014370e52c8cc2d13dbd63461f270`. It returned `narrow` for the
+  oversized Relay plan, retained the single owner-reviewer-owner journey across
+  its technical seams, verified canonical/vendor parity and authority consistency,
+  and reported zero Material findings.
+- E2E: N/A — policy prose and its package contract have no user runtime surface;
+  exercise-based pressure plans and the installed-package contract are the
+  applicable proof.
+- Origin re-observation: N/A — no accepted claim originated in consumer or
+  external runtime behavior.
