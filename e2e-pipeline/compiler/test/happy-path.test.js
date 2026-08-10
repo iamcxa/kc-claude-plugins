@@ -49,6 +49,13 @@
  *   actions    Click 39% · Navigate 18% · Wait 14% · Fill 11% · Verify 10%           91%
  *   expects    "visible on" 53% · "url contains" 34% · "is visible" 7% · "not" 2%    96%
  *
+ * IT ASSERTS THE SCRIPT'S OWN VERDICT FIRST
+ *
+ * `run.status` before any argv. A first version omitted it, and the gate went green
+ * on a run that exited 1 — every required call had been made, and nothing checked
+ * whether the flow passed. A gate built to stop proxies standing in for outcomes had
+ * made itself one.
+ *
  * BOTH CLASSES ARE PROVEN CAUGHT, NOT ASSERTED
  *
  *   missing action — delete the password fill step from the flow fixture: red, on
@@ -109,6 +116,11 @@ const MUST_INVOKE_IN_ORDER = [
   ['fill', /^input\[type='email'\]$/, /^user@example\.com$/],
   ['fill', /^input\[type='password'\]$/, /^correct horse$/],
   ['click', /login-submit/],
+  // The refresh click is the 11% regex-role shape and the only action whose element
+  // carries a `css_selector`, so codegen emits it as an eval-based
+  // `querySelector().click()` with `agent-browser click` only as a fallback. Pinned
+  // as the eval, because the fallback does not run when the eval succeeds.
+  ['eval', /querySelector\(.*aria-label.*\)[\s\S]*\.click\(\)/],
 ];
 
 /** Assertions the script must actually perform, identified by the argv they carry. */
@@ -125,6 +137,15 @@ const MUST_ASSERT = [
   {
     what: 'results table probe',
     match: function(c) { return c[0] === 'eval' && /table\\?\.results|table\.results/.test(c[1] || ''); },
+  },
+  // The bare `<element> is visible` form — 7% of corpus expects, and a shared
+  // `_global` element rather than a page-scoped one. It resolves through the same
+  // eval probe as the others; the `agent-browser is visible` calls in the generated
+  // script are helper *definitions*, not calls this flow makes, which is what a
+  // first version of this entry asserted before the baseline refused it.
+  {
+    what: 'shared-element visibility probe',
+    match: function(c) { return c[0] === 'eval' && /nav-dashboard/.test(c[1] || ''); },
   },
 ];
 
@@ -200,6 +221,13 @@ describe('happy path: the commands real flows issue', function() {
     const diagnostic = '\n--- stdout ---\n' + (run.stdout || '') +
       '\n--- stderr ---\n' + (run.stderr || '') +
       '\n--- argv ---\n' + transcript;
+
+    // The script's own verdict, before any argv is inspected. Without this the gate
+    // asserts that calls were *made* and never that the flow *passed*: reporting the
+    // results table absent makes the script exit 1, and every assertion below still
+    // holds, so the gate went green on a failing run. That is the same shape as the
+    // classes this file exists to close — a proxy standing in for the outcome.
+    assert.equal(run.status, 0, 'the compiled script must exit 0' + diagnostic);
 
     assert.ok(calls.length > 0, 'the script must invoke agent-browser at all' + diagnostic);
 

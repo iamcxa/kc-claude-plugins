@@ -165,8 +165,12 @@ switch (command) {
     break;
   }
   default: {
-    // Loud, not silent. An unanswered command previously showed up as a poll loop
-    // burning its timeout, which reads as a slow test rather than a gap in the stub.
+    // Exits 3 rather than answering. That is only *loud* where the script propagates
+    // it: the cleanup `close` is emitted as `... 2>/dev/null || true`, so an unhandled
+    // command there is swallowed and the run still exits 0. What actually catches it
+    // is the `run.status` assertion in happy-path.test.js — at every position the
+    // script does not deliberately ignore. Naming that rather than claiming the exit
+    // code is self-enforcing.
     process.stderr.write('agent-browser-argv-stub: unhandled command ' + String(command) + '\n');
     process.exit(3);
   }
