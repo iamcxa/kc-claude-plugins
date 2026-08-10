@@ -361,3 +361,35 @@ science_officer_em_upward_report:
 Candidate validation passed without product edits. The task remains in
 `validation` because the captain's commit confirmation and an exact committed
 revision do not yet exist.
+
+### Exact-head rebind after captain-confirmed commits
+
+The captain confirmed the two logical commits. While they were being created,
+`origin/main` advanced from `bd81be0` to `334764d` in two non-overlapping
+`e2e-pipeline/compiler/test` paths. The branch rebased cleanly and retained the
+same product diff hash.
+
+- Base: `334764d6779aaafcb2621e63036fadc56f3146c2`
+- Path fix: `cd2aa442e8897816dfc5f8538b17801b93d66c4a`
+- Necessity gate: `fd45025f1ea9878f1eb6f10f4edad35007b021ce`
+- Final diff SHA-256:
+  `5adcec6cbb0eb3ee965b7627fec90550d7a45606acd44995324fc70010bd4b1f`
+
+Fresh Claude Opus high session `68c7cabe-cb58-4dfd-b62c-6a805513e913`
+re-bound the complete diff and receipts to that exact commit chain: AC-1..AC-3
+PASS, route `proceed`, zero Material findings. Fresh contract, version-parity,
+byte-identity, no-stale-path, diff-check, commit-boundary, and clean-worktree
+checks all passed after rebase.
+
+The rebind recorded two non-Material dissents, both unsupported by primary
+authority omitted from its embedded packet:
+
+1. A one-sided path mutation is caught by the standing byte-parity loop at
+   `scripts/kc-dev-flow-contract-test.py:536-544`.
+2. The ideation refusal predicate's own necessity record is present in this
+   authoritative item at lines 71-79: `Criterion: AC-2`, the kernel-only
+   alternative and its insufficiency, and #178 as the escaped defect.
+
+The exact-head validation result therefore remains `proceed` with no product
+correction round. Delivery, PR creation, CI, merge, and terminal state remain
+outside this receipt.
