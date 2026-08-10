@@ -458,6 +458,37 @@ function resolvedActionElement(resolved) {
   return result;
 }
 
+/**
+ * Refuse an unresolved `${...}` that survived into a click or fill selector.
+ *
+ * The expect path has refused this since #91 (`resolveVisibilityElement`); the action
+ * path did not, so the same mapping was safe to assert against and unsafe to click.
+ *
+ * Nothing supplies the parameter on this path at all: the click pattern's `\w+` cannot
+ * match `row(id=7)` and is unanchored, so it binds `row`, silently discards both the
+ * parameters and the ` on <page>` qualifier, and `substituteSelectorTemplate` never
+ * runs. `agents/e2e-test-runner.md:272` documents that form as substituted, so the
+ * artifact carried a literal `${id}` while the agent runner resolved it — the same
+ * divergence as an uninterpolated fill value, one layer down.
+ *
+ * Measured against the reference corpus before changing behaviour: 355 mapping
+ * elements, 4 carrying `${...}`, 45 flows, and **0** click or fill actions targeting
+ * any of them. Nothing that works today starts failing; what starts failing is a
+ * selector that was already reaching the DOM with the braces still in it.
+ */
+function unresolvedActionSelectorError(operands, stepId) {
+  var pattern = /\$\{[A-Za-z_][A-Za-z0-9_]*\}/;
+  if (!pattern.test(operands.selector || '') && !pattern.test(operands.cssSelector || '')) {
+    return null;
+  }
+  return "Step '" + stepId + "': unresolved selector parameter for " +
+    JSON.stringify(operands.cssSelector || operands.selector) +
+    '. A parameterized reference works in an `expect:` entry but not on a click or' +
+    ' fill action — the action parser discards the parameters (#189) — so the' +
+    ' template would reach the DOM call with the braces intact. Use an element whose' +
+    ' selector is literal, or assert it through an expect.';
+}
+
 function pageNames(mapping) {
   return Object.keys(mapping.pages || {});
 }
@@ -731,6 +762,12 @@ function resolve(flow, mapping, options) {
           skipStep = true;
         } else {
           resolvedOperands = Object.assign({}, rawOperands, resolvedActionElement(resolvedElement));
+          var unresolvedMsg = unresolvedActionSelectorError(resolvedOperands, stepId);
+          if (unresolvedMsg) {
+            errors.push(unresolvedMsg);
+            errorDetails.push(tier2Detail(unresolvedMsg));
+            skipStep = true;
+          }
         }
       }
       // SC-1032: thread runtime_ref from step YAML into operands for sensitive fill
@@ -979,6 +1016,12 @@ function resolveMultiSite(flow, siteMappings, options) {
           skipStep = true;
         } else {
           resolvedOperands = Object.assign({}, rawOperands, resolvedActionElement(resolvedElement));
+          var unresolvedMsg = unresolvedActionSelectorError(resolvedOperands, stepId);
+          if (unresolvedMsg) {
+            errors.push(unresolvedMsg);
+            errorDetails.push(tier2Detail(unresolvedMsg));
+            skipStep = true;
+          }
         }
       }
     } else if (step.type === 'verify-external' || step.type === 'execute-external') {
