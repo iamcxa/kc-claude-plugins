@@ -481,12 +481,17 @@ function unresolvedActionSelectorError(operands, stepId) {
   if (!pattern.test(operands.selector || '') && !pattern.test(operands.cssSelector || '')) {
     return null;
   }
+  // State the condition, not the cause. Only one of the three ways to reach this
+  // message involves discarded parameters (a click written as `row(id=7)`, #189);
+  // for a bare `Click row` — or any `Fill`, whose pattern is anchored and rejects
+  // the parameterized form outright — nothing was discarded and the author would be
+  // sent looking for a parser bug they did not hit.
   return "Step '" + stepId + "': unresolved selector parameter for " +
     JSON.stringify(operands.cssSelector || operands.selector) +
-    '. A parameterized reference works in an `expect:` entry but not on a click or' +
-    ' fill action — the action parser discards the parameters (#189) — so the' +
-    ' template would reach the DOM call with the braces intact. Use an element whose' +
-    ' selector is literal, or assert it through an expect.';
+    '. Nothing supplies a selector parameter on a click or fill action — only an' +
+    ' `expect:` entry accepts a parameterized reference — so the template would' +
+    ' reach the DOM call with the braces intact. Use an element whose selector is' +
+    ' literal, or assert it through an expect.';
 }
 
 function pageNames(mapping) {
