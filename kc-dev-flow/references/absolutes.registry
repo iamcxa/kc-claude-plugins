@@ -43,8 +43,8 @@ cbe9e342041f0453	prohibition	project-context-maintenance.md:106 — automation p
 364ad5b78bfdd122	prohibition	project-context-maintenance.md:114 — adoption duty to declare the mod on each applicable stage
 bedb861fa58bc6a7	prohibition	project-context-maintenance.md:115 — adoption duty to exercise both classifications before automation is proposed
 50bb04ee893f51db	bounded	reverse-recovery-audit.md:15 — bounded to brownfield codebases, stated in the first clause
-9c4426cc37f96de6	prohibition	reverse-recovery-audit.md:46 — duty on the searcher before writing MISSING
-2cdfa8e883270b88	prohibition	reverse-recovery-audit.md:67 — duty on the plan stage, enforced by plan reviewers named in the same block
+9c4426cc37f96de6	prohibition	reverse-recovery-audit.md:65 — duty on the searcher before writing MISSING
+2cdfa8e883270b88	prohibition	reverse-recovery-audit.md:104 — duty on the plan stage, enforced by plan reviewers named in the same block
 06e57612c440f70e	prohibition	work-control-profile.md:14 — duty on the adopting repository
 1b40b78f430d73f4	prohibition	work-control-profile.md:33 — defines what declaring `required` obliges
 b8b1ed8314c6687f	prohibition	work-control-profile.md:40 — duty on every attempt
@@ -74,6 +74,6 @@ eacf05812b14cf0e	prohibition	reverse-recovery-audit.md:31 — duty to record bot
 860fd19aa8ef35b4	bounded	reverse-recovery-audit.md:55 — "never that nothing requires a thing" states the limit of what a search can establish, and the same block narrows the claim the field is allowed to make
 6f83d3e26f6bcef8	prohibition	reverse-recovery-audit.md:84 — duty on the classifier; re-judged at this hash after renumbering, duty unchanged
 4e094c79a73a901f	bounded	reverse-recovery-audit.md:87 — bounded by what a unit exercises; the failure mode is named in situ. Re-judged at this hash after renumbering
-2d606bcce07dd9a3	prohibition	reverse-recovery-audit.md:91 — quotes the rule to contrast it with one it is not; re-judged at this hash after the need-field boundary joined it
+9eb3e0bb32918783	prohibition	reverse-recovery-audit.md:91 — quotes the rule to contrast it with one it is not; re-judged at this hash after the need-field boundary was expanded to every created, changed, or removed surface
 b57433e1c41b0162	bounded	reverse-recovery-audit.md:124 — a claim about the six changes named in the paragraph above, and the block's whole purpose is to bound what that evidence supports
 e50259fd45f82490	prohibition	reverse-recovery-audit.md:39 — evidence bar per tier; "never qualify" sets a minimum, not a fact. Unchanged text; only the line moved

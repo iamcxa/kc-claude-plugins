@@ -66,12 +66,12 @@ inside a boundary, never that nothing requires a thing.
    nouns in every language the codebase uses, across contracts, routes,
    domain types, and UI surfaces, with at least two search strategies before
    writing MISSING. "Not found after one grep" is the easiest false claim.
-3. **A need claim names its boundaries and the consumer kinds it considered.**
+3. **A `NO_OBSERVED_CONSUMER` claim names its search boundaries.**
    In-repo callers are the easy half. Also state what was done about external
    repositories, dynamic or reflective references, manual and operational use,
    contractual or compatibility obligations, and dormant paths — searched, out
-   of scope, or unknown. A need claim that does not say where it stopped
-   looking is `UNKNOWN`, not `NO_OBSERVED_CONSUMER`.
+   of scope, or unknown. A `NO_OBSERVED_CONSUMER` claim that does not say where
+   it stopped looking is `UNKNOWN`.
 4. **The audit proposes; the scope owner disposes.** Removal is a scope
    decision. The audit records the candidate with its evidence and stops. An
    agent that likes deleting is as dangerous as one that likes adding, and the
@@ -90,9 +90,9 @@ inside a boundary, never that nothing requires a thing.
    E2E evidence.
 8. **Boundary conditions.** Greenfield domains take no search tax — the rule
    is "prove MISSING before building", not "never build". The need field is
-   asked of the layers the increment will sit on and of any authority surface
-   it adds — not of the whole tree, and not of shared foundations the increment
-   merely passes through. And
+   asked of every surface the increment proposes to create, change, or remove,
+   and of existing layers the increment will sit on — not of the whole tree or
+   of shared foundations the increment merely passes through. And
    cheapest-literal recovery is a scope tool, not an architecture tool: when
    a recovered abstraction fights the domain model, escalate to a redesign
    decision instead of contorting the old shape.
@@ -104,11 +104,11 @@ inside a boundary, never that nothing requires a thing.
 - **plan stage**: every task that creates a new file/domain/route MUST carry
   a classification line justifying why recovery was impossible (MISSING with
   search evidence). Plan reviewers reject greenfield tasks without it.
-- **plan stage, need**: a task that builds on an existing foundation, or that
-  adds an authority surface of its own, MUST carry the need field for those
-  layers. Plan reviewers reject it without one, on the same footing as a
-  missing MISSING claim. Without a rejection predicate the field is prose an
-  author can decline to write and still pass.
+- **plan stage, need**: a task that creates, changes, or removes a surface, or
+  builds on an existing foundation, MUST carry the need field for those
+  surfaces and layers. Plan reviewers reject it without one, on the same
+  footing as a missing MISSING claim. Without a rejection predicate the field
+  is prose an author can decline to write and still pass.
 - **any "build/add/implement X" request**: run the audit for the touched
   capability before writing the plan.
 
