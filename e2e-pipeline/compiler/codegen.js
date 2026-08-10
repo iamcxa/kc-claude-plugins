@@ -141,7 +141,10 @@ function generateVariables(variables, flowName) {
     usageParts.push(isRequired ? '<' + name + '>' : '[' + name + ']');
   }
 
-  var usageLine = '# Usage: ' + commentSafe(flowName) + '.sh ' + usageParts.join(' ');
+  // commentSafe() wraps the WHOLE comment, not just flowName: parser.js does not
+  // charset-validate flow `variables:` keys, and usageParts carries each key
+  // verbatim, so a newline in a key would end the comment here too.
+  var usageLine = commentSafe('# Usage: ' + flowName + '.sh ' + usageParts.join(' '));
   var lines = [usageLine, '# Parameters:'];
 
   // Build assignment lines in same pass
@@ -157,22 +160,30 @@ function generateVariables(variables, flowName) {
     var pos = j + 1;
 
     if (isReq) {
-      // Required: collect all usage params for the :? message
-      // The ${N:?word} word is expanded when the parameter is unset, so the
-      // flow-sourced name must be inert data here, not shell text.
-      var reqUsage = escapeDoubleQuoted(flowName) + '.sh ' + usageParts.join(' ');
-      lines.push('# $' + pos + ' ' + bashName + ' -- required (or set ' + envName + ')');
-      assignments.push(bashName + '="${' + pos + ':?Usage: ' + reqUsage + '}"');
+      // Required: collect all usage params for the :? message.
+      // The ${N:?word} word is expanded when the parameter is unset, and it is
+      // NOT an ordinary double-quoted string even inside "...": it ends at the
+      // first unquoted `}`, it re-enables quote processing (a lone `'` opens a
+      // literal), and it still performs process substitution (`<(cmd)` RUNS cmd).
+      // Escaping metacharacter-by-metacharacter therefore cannot close it — the
+      // word is nested in its own double quotes so bash parses it as a quoted
+      // string instead of as expansion grammar. Portable on bash 3.2 and 5.x;
+      // backslash-escaping `}` is NOT (3.2 keeps the backslash, 5.x drops it).
+      var reqUsage = escapeDoubleQuoted(flowName + '.sh ' + usageParts.join(' '));
+      lines.push(commentSafe('# $' + pos + ' ' + bashName + ' -- required (or set ' + envName + ')'));
+      assignments.push(bashName + '="${' + pos + ':?Usage: "' + reqUsage + '"}"');
     } else {
       var defaultStr = String(varValue);
       if (defaultStr === '') {
-        lines.push('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ')');
+        lines.push(commentSafe('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ')'));
         assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-}}"');
       } else {
-        lines.push('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ', default: ' + commentSafe(defaultStr) + ')');
+        lines.push(commentSafe('# $' + pos + ' ' + bashName + ' -- optional (or set ' + envName + ', default: ' + defaultStr + ')'));
         // The ${N:-default} word is expanded when the parameter is unset, so a
         // mapping base_url (or any flow variable default) must be inert data.
-        assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-' + escapeDoubleQuoted(defaultStr) + '}}"');
+        // Same grammar problem as the :? word above — nest it in its own double
+        // quotes rather than enumerating metacharacters.
+        assignments.push(bashName + '="${' + pos + ':-${' + envName + ':-"' + escapeDoubleQuoted(defaultStr) + '"}}"');
       }
     }
   }
@@ -246,7 +257,7 @@ function generateHeader(meta) {
 
   if (meta) {
     lines.push('# DO NOT EDIT -- regenerate with: e2e-compile ' + commentSafe(meta.flowName));
-    lines.push('# Source: ' + meta.flowPath);
+    lines.push('# Source: ' + commentSafe(meta.flowPath));
     if (Array.isArray(meta.mappingPaths)) {
       meta.mappingPaths.forEach(function(p) { lines.push('# Mapping: ' + commentSafe(p)); });
     } else if (meta.mappingPath) {
@@ -1280,7 +1291,13 @@ function generateCleanupTrap(steps, finallySteps, summary) {
         var header = op.headers[hKey];
         lines.push('  if [ "$_FINALIZER_OK" = true ]; then');
         lines.push('    if _FINALIZER_HEADER=$(_curl_config_escape "${' + header.runtime_ref.env + '-}"); then');
-        lines.push('      if ! printf ' + singleQuote('header = "' + hKey + ': ' + header.scheme + ' %s"\n') +
+        // The header NAME is spliced into a printf FORMAT operand, and
+        // parser.js validates it against a pattern that explicitly permits `%`
+        // — `X-%s` would relocate the token argument into the name position and
+        // leave the value empty. Doubling `%` makes it a literal percent.
+        // header.scheme needs no such treatment: HTTP_AUTH_SCHEME_PATTERN
+        // (parser.js) excludes `%`.
+        lines.push('      if ! printf ' + singleQuote('header = "' + hKey.replace(/%/g, '%%') + ': ' + header.scheme + ' %s"\n') +
           ' "$_FINALIZER_HEADER" >> "$_FINALIZER_CONFIG"; then');
         lines.push('        _FINALIZER_OK=false');
         lines.push('        _FINALIZER_FAILURE=' + singleQuote('finalizer credential artifact write failed'));
@@ -1431,7 +1448,13 @@ function generateJUnitEmitter(flowName) {
   // xmlAttrEscape() makes the name safe for XML, not for bash: it leaves an
   // apostrophe intact, which closes the printf format's single-quoted literal.
   // Every format string carrying it is wrapped with singleQuote() below.
-  var escapedFlow = xmlAttrEscape(flowName);
+  //
+  // The name also lands inside a printf FORMAT operand, where a `%` is a
+  // conversion specifier: `flow%s%s-X` would consume two of the value arguments
+  // and shift every later one, corrupting the JUnit attributes. Doubling `%`
+  // makes it a literal percent. (The metrics emitter avoids this by putting the
+  // name in an argument slot instead; this emitter cannot, the name is inlined.)
+  var escapedFlow = xmlAttrEscape(flowName).replace(/%/g, '%%');
   var lines = [
     '_emit_junit() {',
     '  local _out="$1"',
@@ -1942,7 +1965,10 @@ function generateAction(step, stepIndex, totalSteps) {
     }
 
     default: {
-      lines.push('# Unknown action type: ' + step.type);
+      // Unreachable through compiler.js (resolver.js hands over a closed type
+      // set), but generate() is exported, so a caller-supplied type reaches this
+      // comment — where an embedded newline terminates it.
+      lines.push('# Unknown action type: ' + commentSafe(step.type));
       break;
     }
   }

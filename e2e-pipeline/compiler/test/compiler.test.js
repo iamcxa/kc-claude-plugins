@@ -579,7 +579,8 @@ describe('compile() — normalized flow variable validation', function() {
       assert.equal(result.success, true, JSON.stringify(result.errors));
       const output = fs.readFileSync(result.outputPath, 'utf8');
       assert.equal(output.match(/^BASE_URL="\$\{1:/gm).length, 1, output);
-      assert.match(output, /E2E_BASE_URL:-https:\/\/override\.test/);
+      // #190: the ${N:-...} word nests its payload in its own double quotes.
+      assert.match(output, /E2E_BASE_URL:-"https:\/\/override\.test"/);
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
