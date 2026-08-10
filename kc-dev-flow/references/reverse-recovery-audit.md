@@ -1,13 +1,13 @@
 ---
 name: reverse-recovery-audit
 description: "Brownfield shape/plan mindset: assume the abstraction already exists, classify its completeness and its observed need as separate axes, and only greenfield what is confirmed MISSING"
-version: 0.2.0
+version: 0.2.1
 ---
 
 # Reverse-Recovery Audit — Assume It Exists, Prove What's Missing
 
-> Plugin-canonical copy. Adopting repos copy this to
-> `docs/ship-flow/_mods/reverse-recovery-audit.md` and MAY append a
+> Plugin-canonical copy. Adopting repositories vendor this file at the adopted
+> workflow's `_mods/reverse-recovery-audit.md` and MAY append a
 > repo-specific worked example and their own known seam-defect classes.
 
 ## Why This Exists
