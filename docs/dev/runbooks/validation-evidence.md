@@ -59,23 +59,6 @@ Diff coverage counts coverable changed behavior lines exercised by a failing
 test, runtime scenario, or direct falsifier. Prose-only diffs may be `N/A` but
 still require adversarial document review.
 
-## EM verdict and optional multi-model pass
-
-Exactly one fresh-context EM reviews the exact revision, AC evidence, and
-findings. Prefer a capability tier above the producing worker; at the highest
-available tier, use a fresh context with high reasoning.
-
-The EM returns the complete `engineering_judgment` record and sets the wrapper's
-`multi_model` field:
-
-- `recommended` only for a contested, irreversible, low-confidence, or
-  unresolved call;
-- `not_needed` otherwise.
-
-On `recommended`, the FO asks the captain whether to buy one additional model
-pass. Silence is not approval. The optional pass supplies evidence to the same
-EM/gate; it is not a second mandatory verdict and does not create a vote.
-
 ## Correction rounds
 
 Reject with evidence tied to an AC or fired lens, route to implementation, and

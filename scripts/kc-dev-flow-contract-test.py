@@ -372,11 +372,9 @@ for label, content in runtime_docs.items():
 workflow = (ROOT / "docs/dev/README.md").read_text(encoding="utf-8")
 state_recovery_runbook = ROOT / "docs/dev/runbooks/state-recovery.md"
 validation_evidence_runbook = ROOT / "docs/dev/runbooks/validation-evidence.md"
-workflow_cost_history = ROOT / "docs/dev/history/workflow-cost-record.md"
 for runtime_reference in [
     state_recovery_runbook,
     validation_evidence_runbook,
-    workflow_cost_history,
 ]:
     require(
         runtime_reference.is_file(),
@@ -405,7 +403,6 @@ require(
 for phrase in [
     "Read [`runbooks/state-recovery.md`](./runbooks/state-recovery.md) only after",
     "Read [`runbooks/validation-evidence.md`](./runbooks/validation-evidence.md) when entering validation",
-    "not read during ordinary continuation",
     "exactly one fresh-context EM verdict",
     "Implementation opens no reviewer loop",
     "Multi-model review is optional",
@@ -433,7 +430,7 @@ for phrase in [
     "| Delivery |",
     "| Gate verdicts |",
     "| Scope and irreversibility |",
-    "| Observation |",
+    "| Observation | none |",
     "No binding YAML",
     "Origin re-observation:",
     "Reported scenario:",

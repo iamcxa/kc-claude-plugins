@@ -51,7 +51,7 @@ package fallback participates in continuation.
 | Delivery | One independently deliverable squash-merge PR to `main` by default; conditional stacks follow the implementation rule below; GitHub required checks; release-please owns versions and tags |
 | Gate verdicts | Exactly one fresh EM under `Gate Authority` at ideation and validation |
 | Scope and irreversibility | Captain |
-| Observation | [`history/workflow-cost-record.md`](./history/workflow-cost-record.md), non-authoritative and not read during ordinary continuation |
+| Observation | none |
 
 The normal route uses all five stages. A known-cause, single-seam defect with a
 mechanical acceptance test may skip ideation, but it keeps implementation,
@@ -333,10 +333,6 @@ merge-rule change. Provider labels and mechanical green carry no authority.
 | ROADMAP.md | Captain or sprint commander at scheduling/strategy changes |
 | This README | Captain-approved workflow revision only |
 | Trigger-loaded runbooks | Same change that alters their referenced mechanism |
-
-Historical cost observations live in
-[`history/workflow-cost-record.md`](./history/workflow-cost-record.md). They are
-non-authoritative evidence for future pruning, not a stage input or gate.
 
 ## Task Template
 
