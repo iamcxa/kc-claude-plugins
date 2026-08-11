@@ -151,7 +151,9 @@ For non-trivial brownfield work, apply this outcome-first route in order:
 
 1. **Accepted outcome.** Name the end value, value-level acceptance criteria,
    constraints, and non-goals. Decompose from this contract without assuming
-   the implementation is absent or that the task is a greenfield rebuild.
+   the implementation is absent or that the task is a greenfield rebuild. Carve
+   along the journey; apply journey slicing, whose first slice is demoable and
+   whose layered alternative passes review while delivering nothing.
 2. **Recover the existing seam.** Against fresh `origin/main`, apply the
    reverse-recovery audit and repair the cheapest compatible `EXISTS_BROKEN` or
    `STUB` seam. Only evidence-backed absence supports `MISSING`.

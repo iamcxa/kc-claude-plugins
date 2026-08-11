@@ -28,6 +28,8 @@ provider while sharing the same authority and evidence discipline.
   aligned with delivered behavior.
 - `reverse-recovery-audit` — recover existing brownfield seams before proposing
   greenfield work.
+- `journey-slicing` — carve an accepted outcome along the journey rather than by
+  layer, and keep the first slice demoable.
 - `work-control-profile` — bind optional mechanical controls to local adapters
   and four-state receipts.
 
