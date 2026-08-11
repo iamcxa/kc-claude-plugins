@@ -433,3 +433,206 @@ to any resulting subtraction, and let no number own a delivery decision.
 Implemented and mechanically falsified the outcome-first change-shape contract
 at `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b`. The exact five-file revision is
 ready for fresh validation; change-shape numbers remain observation only.
+
+## Stage Report: validation
+
+**DECISION: AC-1 THROUGH AC-4 PASS; HOLD THE STAGE TRANSITION.** Fresh
+exact-revision EM validation supports the product change at
+`fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b` with no code/product findings. The
+required state-context control is independently red for the pre-existing
+`kc-dev-flow/S1` roadmap registration, so this advisory does not recommend
+advancing the workflow boundary yet.
+
+### Exact-revision AC verdicts
+
+**AC-1 — PASS.** The canonical and adopted kernels state the seven decisions in
+one order, and the local implementation stage places observation after RED/GREEN
+and changed-file-to-AC mapping.
+
+- Recovered-seam walk: (1) the accepted value is a brownfield path that protects
+  the named outcome and constraints; (2) the pre-change local stage contract in
+  `docs/dev/README.md` was `EXISTS_BROKEN`, because it already owned RED/GREEN and
+  AC mapping but lacked post-diff observation; (3) bypassing that existing stage
+  loses the local packet and cohort authority, failing AC-2 and AC-3; (4) the
+  compatible repair therefore extends that seam rather than adding a new mod,
+  store, job, or schema; (5) the exact-head contract is GREEN and order mutations
+  are RED; (6) the post-diff question identifies the assertion block as the
+  largest added responsibility and its without-it evidence supports retention;
+  (7) every final check below is bound to the exact head.
+- Proposed-responsibility walk: the assertion block inside the existing contract
+  test is proposed only after the existing checker is recovered. At base
+  `54913dda3e5e66841e043025bf646e0ad2493bc9`, the contract returned PASS while the
+  seven-step route was absent, so the simpler pre-change checker was insufficient
+  and AC-1/AC-4's mechanical falsifier failed without the responsibility. At the
+  implemented head, reversing RED/GREEN with observation exits `1` for
+  `ordered route is out of sequence`; removing required route, question,
+  boundary, outcome, precedence, and delivery-authority clauses also exits `1`.
+  A separate collector/store responsibility still returns at step 4 because all
+  ACs have a sufficient existing-file route without it.
+- Falsifier: a route or stage-order mutation stays green; an existing `UNKNOWN`
+  is removed as irreducible; or green/`UNKNOWN` absence retains a proposed
+  responsibility.
+
+**AC-2 — PASS.** The exact-head packet keeps mechanically sourced additions and
+deletions separate, asks the unconditional question, and assigns numbers no
+delivery authority. Fresh synthetic packets exercised the adversarial edges:
+
+| Packet | Exercise | Result |
+|---|---|---|
+| Necessary large addition | `180/4`; the independently maintained compatibility responsibility fails a named AC under its without-it instrument | Retain on AC evidence; the count supplies no verdict |
+| Deletion-heavy | `6/190`; inspect the six added lines independently and do not offset them with deletions | Ask the question; no net score and no delivery change |
+| Test-heavy | `140/3`; the largest added responsibility is a regression-test block | Keep when removal loses the named AC falsifier; count cannot authorize test deletion |
+
+The composite contract mutation removed the question and an observe-only
+prohibition and exited `1` with both named failures. Falsifier: a count passes or
+fails a change, chooses a responsibility, offsets additions and deletions, or
+authorizes deletion without normal without-it evidence.
+
+**AC-3 — PASS.** The local stage contract resolves every required synthetic
+cohort without making an outcome a per-change delivery gate:
+
+| Cohort | Rows / condition | Applied disposition |
+|---|---|---|
+| Success | one newly attributable subtraction, one defense, one `UNKNOWN`; no incident | Success |
+| Defense-only | three defenses already required by AC mapping; no subtraction or incident | No incremental value |
+| Incident | one attributable subtraction, one defense, one confirmed count-caused unsafe deletion | Immediate stop/removal wins before Success |
+| Retirement | five comparable defense-only changes with no new question | Redundancy retirement at policy review; fifth delivery result is unchanged |
+| Mixed precedence | one attributable subtraction plus two defenses; no incident | Success, not No incremental value |
+
+Removing a cohort outcome or precedence statement in the scratch artifact exits
+`1`. Falsifier: any row maps to competing dispositions, attribution to the
+post-diff question is not distinguishable from prior AC mapping, or a cohort
+outcome blocks an otherwise accepted change.
+
+**AC-4 — PASS.** Fresh checks at the exact head returned:
+
+- `python3 scripts/kc-dev-flow-contract-test.py` -> `kc-dev-flow contract: PASS`;
+- `absolutes-check.py` -> `PASS:70 dispositioned`;
+- independent registry locator audit -> `PASS:25` kernel locators;
+- canonical/adopted `cmp` -> exit `0`;
+- exact-scope audit -> the five authorized files and no sixth file;
+- `git diff --check <base>...<head>` -> exit `0`;
+- raw `git diff --numstat` -> `46/0`, `51/24`, `16/14`, `51/24`, and
+  `81/0` for the five mapped files; and
+- code worktree -> clean on `spacedock-ensign/change-shape-awareness` at the
+  named head.
+
+The changed-file responsibilities remain mapped exactly as implementation
+reported: portable contract (AC-1/2), adopted mirror (AC-1/4), local packet and
+cohorts (AC-2/3), mechanical falsifier (AC-1 through AC-4), and absolute
+dispositions/locators (AC-4). Falsifier: a sixth file, runtime/store/schema/job,
+mirror drift, stale locator, whitespace error, or count-motivated removal of a
+necessary test or clarity surface.
+
+### Mutation and coverage evidence
+
+- Exact head GREEN: contract exit `0`.
+- Base without the new assertion responsibility: contract exit `0` while the
+  seven-step route was absent, demonstrating the pre-change enforcement hole.
+- Scratch mutation A, extracted from the exact head: removed a route obligation,
+  the question, an observe-only boundary, stage placement, retirement outcome,
+  incident precedence, and delivery boundary; exit `1` with all seven named
+  contract failures.
+- Scratch mutation B, extracted from the exact head: reversed route and local
+  stage placement; exit `1` with `ordered route is out of sequence` and
+  `implementation stage does not place change-shape observation after RED/GREEN
+  and AC mapping`.
+- Combined exact-head GREEN plus mutation coverage: `33/33` changed executable
+  lines, `100%` diff coverage.
+
+### Workflow evidence block
+
+- `Lenses: PASS —` Diff classification is prose plus one executable contract
+  assertion block. Correctness fired (`0` findings) and manifest/back-compat
+  fired (`0` findings) because installed `continue-dev-flow` consumers read the
+  adopted kernel. Read exact revision `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b`
+  at the five changed paths plus `kc-dev-flow/skills/continue-dev-flow/SKILL.md`;
+  this line would fail on a qualifying regression, an unresolved consumer path,
+  or an existing install no longer resolving the adopted contract. Security,
+  silent-failure, type-design, concurrency, and resource-lifecycle did not fire:
+  the diff touches no auth/trust/shell workflow, error/fallback contract, type,
+  shared state, or owned resource surface.
+- `Diff coverage: PASS —` `diff-cover` measured `33/33` changed executable lines
+  (`100%`) across the exact-head GREEN and two exact-head-derived scratch
+  mutations of `scripts/kc-dev-flow-contract-test.py`; this line would fail below
+  `85%` or if a named mutation branch did not execute.
+- `Adversarial: PASS —` The recovered seam, proposed responsibility, three
+  change-shape edge packets, and five cohort tables were exercised against the
+  exact revision; two scratch mutation artifacts exited `1` with the expected
+  order, boundary, outcome, and precedence failures. This line would fail if an
+  addition advanced before without-it evidence, a number supplied a verdict, or
+  a cohort had ambiguous precedence.
+- `Cross-model: not_needed —` The exact-head EM found no contested,
+  irreversible, low-confidence, or unresolved call, so the local validation
+  policy did not trigger the optional pass. Read the exact revision, ACs, primary
+  diff, mutation outputs, and named checks; this line would change to
+  `recommended` if any such risk trigger or unresolved P1 appeared.
+- `E2E: N/A —` Ideation scoped the change to documentation and its mechanical
+  contract, with no user-visible or full-stack runtime claim. Read the exact
+  five-file diff; this line would fail if a changed path introduced runtime
+  behavior or an AC required a real-runtime observation.
+- `Origin re-observation: N/A — no accepted claim originated in consumer or
+  external runtime behavior.` Read the accepted problem, ACs, and exact diff;
+  this line would fail if the accepted claim were grounded in a consumer/runtime
+  report without same-kind re-observation.
+
+### Required state-control blocker
+
+`dev-flow-work-context-check.py validate` returned `FAIL` with
+`sprint_unregistered`: `kc-dev-flow/S1` is absent from `docs/dev/ROADMAP.md`.
+Running the same check against the entity at the pre-report state commit produced
+the same failure; `git blame` binds `product: kc-dev-flow` and `sprint: S1` to
+state commit `b068debb`, so this report did not introduce the mismatch. Under the
+required `bound_field_validation` control, the captain or designated state
+migration owner must register the pair or correct the authoritative entity and
+obtain a PASS receipt before the stage transition. This is outside the product
+diff's blast radius and is not routed to implementation.
+
+### Fresh EM advisory record
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: AC-1 through AC-4 are supported at the exact revision with no code or product finding, but the required state-context control keeps the workflow boundary closed.
+  evidence_synthesis: Exact-head primary diff review, ordered-route and cohort exercises, two red scratch mutations, 100 percent executable diff coverage, and green contract, absolute, locator, mirror, scope, and diff checks support the product change; the live and pre-report entity both fail required bound-field validation because kc-dev-flow/S1 is absent from the roadmap.
+  risk_tradeoff_call: The benefit is one coherent brownfield subtraction route and a falsifiable observe-only trial; the product cost is limited to existing documentation and one assertion block, while bypassing the red state control would make sprint authority untruthful; the alternative is to preserve the validated change and repair only the authoritative roadmap or entity before transition.
+  recommendation: Keep the stage transition closed until the captain or designated state migration owner resolves kc-dev-flow/S1 and a fresh bound-field validation returns PASS; then proceed without adding another product mechanism or model pass.
+  route: block
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: The First Officer retains orchestration and gate-transition authority; this advisory does not advance state or deliver the change.
+  engineering_judgment:
+    question: Whether the exact five-file outcome-first change-shape contract satisfies AC-1 through AC-4 and should proceed.
+    revision: fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b
+    evidence_synthesis: Exact-head primary diff review, ordered-route and cohort exercises, two red scratch mutations, 100 percent executable diff coverage, and green contract, absolute, locator, mirror, scope, and diff checks support the product change; the live and pre-report entity both fail required bound-field validation because kc-dev-flow/S1 is absent from the roadmap.
+    adjudications:
+      - finding: AC-1 ordered brownfield route
+        disposition: supported
+        basis: Exact kernel order, recovered-seam/proposed-responsibility walks, base false-green evidence, exact-head GREEN, and order-mutation RED.
+      - finding: AC-2 observation without numeric verdict authority
+        disposition: supported
+        basis: Necessary-addition, deletion-heavy, and test-heavy packets plus question/prohibition mutation RED.
+      - finding: AC-3 bounded cohort outcomes and precedence
+        disposition: supported
+        basis: Success, defense-only, incident, retirement, and mixed-cohort exercises plus outcome/precedence mutation RED.
+      - finding: AC-4 existing five-file contract surface
+        disposition: supported
+        basis: Exact-five-file, contract, absolute, 25-locator, byte-identity, diff-check, and clean-head evidence.
+      - finding: Required bound-field validation for the live work item
+        disposition: supported
+        basis: Live and pre-report checks both return sprint_unregistered for kc-dev-flow/S1; blame binds the fields to pre-existing state commit b068debb.
+    risk_tradeoff: The benefit is one coherent brownfield subtraction route and a falsifiable observe-only trial; the product cost is limited to existing documentation and one assertion block, while bypassing the red state control would make sprint authority untruthful; the alternative is to preserve the validated change and repair only the authoritative roadmap or entity before transition.
+    recommendation: Keep the stage transition closed until the captain or designated state migration owner resolves kc-dev-flow/S1 and a fresh bound-field validation returns PASS; then proceed without adding another product mechanism or model pass.
+    route: block
+    confidence: high
+    dissent: ""
+    disproof_condition: A PASS receipt for the live entity and roadmap pair removes the lifecycle block; a route, cohort, numeric-authority, scope, mirror, locator, absolute, or diff failure would instead change the product recommendation to return.
+    authority_boundary: Captain retains scope and irreversibility; First Officer and Spacedock retain gate and stage transitions; work-item and delivery authorities retain status, merge, and terminalization.
+```
+
+### Summary
+
+Fresh exact-head validation found no product defect: the five-file change
+satisfies AC-1 through AC-4 and its instrument reddens under claim-breaking
+mutations. The EM recommends `block` only at the workflow boundary until the
+pre-existing `kc-dev-flow/S1` state-control failure is resolved; no concrete
+trigger remains for optional multi-model review.
