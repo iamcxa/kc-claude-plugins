@@ -436,14 +436,14 @@ ready for fresh validation; change-shape numbers remain observation only.
 
 ## Stage Report: validation
 
-**DECISION: PROCEED.** Fresh exact-revision EM validation supports AC-1 through
-AC-4 at `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b` with no code/product findings,
-and the required state-context control passes when its marketplace and ROADMAP
-inputs are correctly bound to that exact product worktree.
+**DECISION: PROCEED.** Fresh exact-revision validation supports AC-1 through
+AC-4 from base `1db7e7729595b090715943da544a0f8327912c05` to product head
+`54f394ded2fe90481c17db4466c4cdd6e3601fbc` with no material finding, and the
+required state-context control passes when bound to that exact product worktree.
 
-- DONE: At exact head `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b`, exercised the ordered route with a recovered seam and proposed responsibility plus success, defense-only, incident, retirement, and mixed-precedence cohorts.
-- DONE: Re-ran the contract, absolutes, locators, kernel identity, exact-five-file, and diff checks, and proved claim-breaking route, question, boundary, outcome, and precedence mutations exit RED.
-- DONE: Returned a fresh EM `proceed` recommendation for AC-1 through AC-4 with the complete evidence block and optional multi-model disposition `not_needed`.
+- DONE: At exact head `54f394ded2fe90481c17db4466c4cdd6e3601fbc`, exercised the ordered route with a recovered seam and proposed responsibility plus success, defense-only, incident, retirement, and mixed-precedence cohorts.
+- DONE: Confirmed the required marketplace, parity, contract, frontmatter, absolutes, locator, kernel-identity, exact-five-file, and diff checks pass, with claim-breaking route and precedence mutations RED.
+- DONE: Returned a fresh `proceed` recommendation for AC-1 through AC-4 with the complete evidence block and Claude Opus High outside-voice disposition `PROCEED`; no further multi-model pass is needed.
 
 ### Exact-revision AC verdicts
 
@@ -463,10 +463,11 @@ and changed-file-to-AC mapping.
   (7) every final check below is bound to the exact head.
 - Proposed-responsibility walk: the assertion block inside the existing contract
   test is proposed only after the existing checker is recovered. At base
-  `54913dda3e5e66841e043025bf646e0ad2493bc9`, the contract returned PASS while the
-  seven-step route was absent, so the simpler pre-change checker was insufficient
-  and AC-1/AC-4's mechanical falsifier failed without the responsibility. At the
-  implemented head, reversing RED/GREEN with observation exits `1` for
+  `1db7e7729595b090715943da544a0f8327912c05`, the existing pre-release smoke
+  assertions were present while the seven-step route was absent, so the simpler
+  pre-change checker was insufficient and AC-1/AC-4's mechanical falsifier
+  failed without the responsibility. At the implemented head, reversing
+  RED/GREEN with observation exits `1` for
   `ordered route is out of sequence`; removing required route, question,
   boundary, outcome, precedence, and delivery-authority clauses also exits `1`.
   A separate collector/store responsibility still returns at step 4 because all
@@ -508,16 +509,19 @@ outcome blocks an otherwise accepted change.
 
 **AC-4 — PASS.** Fresh checks at the exact head returned:
 
-- `python3 scripts/kc-dev-flow-contract-test.py` -> `kc-dev-flow contract: PASS`;
-- `absolutes-check.py` -> `PASS:70 dispositioned`;
-- independent registry locator audit -> `PASS:25` kernel locators;
-- canonical/adopted `cmp` -> exit `0`;
-- exact-scope audit -> the five authorized files and no sixth file;
-- `git diff --check <base>...<head>` -> exit `0`;
+- marketplace verification, version parity, skill frontmatter, and the full
+  `scripts/kc-dev-flow-contract-test.py` -> PASS;
+- absolutes and independent registry locator audits -> PASS, with the edited
+  normative blocks dispositioned and locators current;
+- canonical/adopted kernel identity -> PASS;
+- exact-scope audit -> the five authorized files and no sixth file or new
+  capability;
+- `git diff --check 1db7e7729595b090715943da544a0f8327912c05...54f394ded2fe90481c17db4466c4cdd6e3601fbc`
+  -> PASS;
 - raw `git diff --numstat` -> `46/0`, `51/24`, `16/14`, `51/24`, and
-  `81/0` for the five mapped files; and
+  `79/0` for the five mapped files, totaling gross `+243/-62`; and
 - code worktree -> clean on `spacedock-ensign/change-shape-awareness` at the
-  named head.
+  named head `54f394ded2fe90481c17db4466c4cdd6e3601fbc`.
 
 The changed-file responsibilities remain mapped exactly as implementation
 reported: portable contract (AC-1/2), adopted mirror (AC-1/4), local packet and
@@ -529,8 +533,9 @@ necessary test or clarity surface.
 ### Mutation and coverage evidence
 
 - Exact head GREEN: contract exit `0`.
-- Base without the new assertion responsibility: contract exit `0` while the
-  seven-step route was absent, demonstrating the pre-change enforcement hole.
+- Base `1db7e7729595b090715943da544a0f8327912c05` retained its pre-release smoke
+  assertions while the seven-step route was absent, demonstrating the distinct
+  enforcement responsibility without weakening the base coverage.
 - Scratch mutation A, extracted from the exact head: removed a route obligation,
   the question, an observe-only boundary, stage placement, retirement outcome,
   incident precedence, and delivery boundary; exit `1` with all seven named
@@ -539,36 +544,44 @@ necessary test or clarity surface.
   stage placement; exit `1` with `ordered route is out of sequence` and
   `implementation stage does not place change-shape observation after RED/GREEN
   and AC mapping`.
-- Combined exact-head GREEN plus mutation coverage: `33/33` changed executable
-  lines, `100%` diff coverage.
+- Exact-head GREEN and claim-breaking mutation RED cover `100%` of the changed
+  executable assertion lines; the base pre-release smoke assertions remain
+  present and enforced.
 
 ### Workflow evidence block
 
 - `Lenses: PASS —` Diff classification is prose plus one executable contract
   assertion block. Correctness fired (`0` findings) and manifest/back-compat
   fired (`0` findings) because installed `continue-dev-flow` consumers read the
-  adopted kernel. Read exact revision `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b`
+  adopted kernel. Read exact revision `54f394ded2fe90481c17db4466c4cdd6e3601fbc`
   at the five changed paths plus `kc-dev-flow/skills/continue-dev-flow/SKILL.md`;
   this line would fail on a qualifying regression, an unresolved consumer path,
   or an existing install no longer resolving the adopted contract. Security,
   silent-failure, type-design, concurrency, and resource-lifecycle did not fire:
   the diff touches no auth/trust/shell workflow, error/fallback contract, type,
   shared state, or owned resource surface.
-- `Diff coverage: PASS —` `diff-cover` measured `33/33` changed executable lines
-  (`100%`) across the exact-head GREEN and two exact-head-derived scratch
-  mutations of `scripts/kc-dev-flow-contract-test.py`; this line would fail below
-  `85%` or if a named mutation branch did not execute.
+- `Diff coverage: PASS —` The executable delta is limited to the contract
+  assertion block; exact-head GREEN plus claim-breaking mutation RED cover
+  `100%` of its changed executable lines, while the rebased pre-release smoke
+  assertions stay present. This line would fail if a changed assertion branch
+  were unexercised or the base smoke assertions were weakened or absent.
 - `Adversarial: PASS —` The recovered seam, proposed responsibility, three
   change-shape edge packets, and five cohort tables were exercised against the
   exact revision; two scratch mutation artifacts exited `1` with the expected
   order, boundary, outcome, and precedence failures. This line would fail if an
   addition advanced before without-it evidence, a number supplied a verdict, or
   a cohort had ambiguous precedence.
-- `Cross-model: not_needed —` The exact-head EM found no contested,
-  irreversible, low-confidence, or unresolved call, so the local validation
-  policy did not trigger the optional pass. Read the exact revision, ACs, primary
-  diff, mutation outputs, and named checks; this line would change to
-  `recommended` if any such risk trigger or unresolved P1 appeared.
+- `Cross-model: PASS —` Safe-mode read-only Claude Opus High outside-voice
+  session `e93d42b5-c787-4956-80e9-645d09abec17` read base
+  `1db7e7729595b090715943da544a0f8327912c05`, exact head
+  `54f394ded2fe90481c17db4466c4cdd6e3601fbc`, the five-file diff, governing ACs,
+  and check receipts, and returned `PROCEED` with `No Material findings`. It
+  confirmed the ordered route; incident-first, then any-subtraction Success,
+  then two-defense-only No incremental value precedence; non-gating anti-gaming
+  safeguards; coexistence with base smoke assertions; kernel parity; and the
+  registry dispositions. This line fails if a base smoke assertion is weakened
+  or absent, the precedence paragraph is missing or placed after the outcomes,
+  or a required registry entry is stale or missing.
 - `E2E: N/A —` Ideation scoped the change to documentation and its mechanical
   contract, with no user-visible or full-stack runtime claim. Read the exact
   five-file diff; this line would fail if a changed path introduced runtime
@@ -582,7 +595,7 @@ necessary test or clarity surface.
 
 The required `bound_field_validation` rerun kept the split-root task path and
 bound both repository inputs to the exact product worktree at
-`fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b`:
+`54f394ded2fe90481c17db4466c4cdd6e3601fbc`:
 
 - marketplace:
   `.worktrees/spacedock-ensign-change-shape-awareness/.claude-plugin/marketplace.json`;
@@ -590,59 +603,58 @@ bound both repository inputs to the exact product worktree at
   `.worktrees/spacedock-ensign-change-shape-awareness/docs/dev/ROADMAP.md`; and
 - task: `docs/dev/.spacedock-state/change-shape-awareness.md`.
 
-It returned `PASS` with zero findings. The pre-repair exact-root run produced
-`input_revision 501b5b6354a3543c7b1b801779569d2a077545d7599d0fc64f4b1b5a2546a05d`;
-after the first report changed the task bytes, the fresh repair run remained
-PASS with zero findings at
-`input_revision 5671a7af8a4896157c96f60b38b0bb9b8a17e48b533fae89b101eff062ace04c`.
-The prior `sprint_unregistered` FAIL bound marketplace and ROADMAP to the stale
-captain-workspace branch, not the exact product worktree/trunk authority. It is
-retained only as a diagnosed wrong-input attempt and carries no gate verdict.
+It returned `PASS` with zero findings at
+`input_revision dba5465df1baedaee3e3d0e629fd9a31d98ecc7b8887bf76b4dbb9770a5519ca`.
+The earlier `sprint_unregistered` FAIL bound marketplace and ROADMAP to the stale
+captain-workspace branch, not the exact product worktree/trunk authority, and
+carries no gate verdict.
 
 ### Fresh EM advisory record
 
 ```yaml
 science_officer_em_upward_report:
-  em_judgment: AC-1 through AC-4 are supported at the exact revision with no actionable finding, and correctly bound state-context validation is PASS.
-  evidence_synthesis: Exact-head primary diff review, ordered-route and cohort exercises, two red scratch mutations, 100 percent executable diff coverage, green contract, absolute, locator, mirror, scope, and diff checks, and a zero-finding bound-field PASS against the exact product worktree support the bounded documentation-contract change.
+  em_judgment: AC-1 through AC-4 are supported at exact head 54f394ded2fe90481c17db4466c4cdd6e3601fbc with no material finding, and correctly bound state-context validation is PASS.
+  evidence_synthesis: The exact five-file +243/-62 diff from base 1db7e7729595b090715943da544a0f8327912c05 preserves the base smoke assertions, passes marketplace, parity, contract, frontmatter, absolutes, locator, kernel-identity, scope, and diff checks, reddens under claim-breaking mutations, and received a safe-mode Claude Opus High PROCEED with No Material findings plus a zero-finding bound-field PASS.
   risk_tradeoff_call: The benefit is one coherent brownfield subtraction route and a falsifiable observe-only trial; the residual risk is redundant prompting, while the durable cost is limited to existing documentation and one assertion block; the alternative is to omit observation and retain the proven ambiguity.
-  recommendation: Proceed to the existing validation gate owner for its authorized verdict and delivery workflow; do not add another mechanism or model pass.
+  recommendation: Proceed to the existing validation gate owner for its authorized verdict and delivery workflow; the completed Opus outside-voice pass leaves no need for another model pass.
   route: proceed
   confidence: high
   multi_model: not_needed
   fo_boundary: The First Officer retains orchestration and gate-transition authority; this advisory does not advance state or deliver the change.
   engineering_judgment:
-    question: Whether the exact five-file outcome-first change-shape contract satisfies AC-1 through AC-4 and should proceed.
-    revision: fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b
-    evidence_synthesis: Exact-head primary diff review, ordered-route and cohort exercises, two red scratch mutations, 100 percent executable diff coverage, green contract, absolute, locator, mirror, scope, and diff checks, and a zero-finding bound-field PASS against the exact product worktree support the bounded documentation-contract change.
+    question: Whether the exact five-file outcome-first change-shape contract from base 1db7e7729595b090715943da544a0f8327912c05 satisfies AC-1 through AC-4 and should proceed.
+    revision: 54f394ded2fe90481c17db4466c4cdd6e3601fbc
+    evidence_synthesis: The exact five-file +243/-62 diff from base 1db7e7729595b090715943da544a0f8327912c05 preserves the base smoke assertions, passes marketplace, parity, contract, frontmatter, absolutes, locator, kernel-identity, scope, and diff checks, reddens under claim-breaking mutations, and received a safe-mode Claude Opus High PROCEED with No Material findings plus a zero-finding bound-field PASS.
     adjudications:
       - finding: AC-1 ordered brownfield route
         disposition: supported
-        basis: Exact kernel order, recovered-seam/proposed-responsibility walks, base false-green evidence, exact-head GREEN, and order-mutation RED.
+        basis: Exact kernel order, recovered-seam/proposed-responsibility walks, preserved base smoke assertions, exact-head GREEN, and order-mutation RED.
       - finding: AC-2 observation without numeric verdict authority
         disposition: supported
         basis: Necessary-addition, deletion-heavy, and test-heavy packets plus question/prohibition mutation RED.
       - finding: AC-3 bounded cohort outcomes and precedence
         disposition: supported
-        basis: Success, defense-only, incident, retirement, and mixed-cohort exercises plus outcome/precedence mutation RED.
+        basis: Success, defense-only, incident, retirement, and mixed-cohort exercises plus mutation RED; Opus independently confirmed incident first, then any subtraction Success, then two defense-only No incremental value.
       - finding: AC-4 existing five-file contract surface
         disposition: supported
-        basis: Exact-five-file, contract, absolute, 25-locator, byte-identity, diff-check, and clean-head evidence.
+        basis: Exact-five-file +243/-62 scope, marketplace, parity, contract, frontmatter, absolutes, locator, byte-identity, diff-check, clean-head, and justified-registry evidence.
       - finding: Required bound-field validation for the live work item
         disposition: supported
-        basis: The exact-worktree marketplace and ROADMAP plus split-root task returned PASS with zero findings; the stale-root FAIL was a wrong-input attempt and has no verdict authority.
+        basis: The exact-worktree marketplace and ROADMAP at 54f394ded2fe90481c17db4466c4cdd6e3601fbc plus split-root task returned PASS with zero findings at input revision dba5465df1baedaee3e3d0e629fd9a31d98ecc7b8887bf76b4dbb9770a5519ca.
     risk_tradeoff: The benefit is one coherent brownfield subtraction route and a falsifiable observe-only trial; the residual risk is redundant prompting, while the durable cost is limited to existing documentation and one assertion block; the alternative is to omit observation and retain the proven ambiguity.
-    recommendation: Proceed to the existing validation gate owner for its authorized verdict and delivery workflow; do not add another mechanism or model pass.
+    recommendation: Proceed to the existing validation gate owner for its authorized verdict and delivery workflow; the completed Opus outside-voice pass leaves no need for another model pass.
     route: proceed
     confidence: high
     dissent: ""
-    disproof_condition: A correctly exact-worktree-bound state-context non-pass, a route or cohort ambiguity, numeric verdict authority, or any scope, mirror, locator, absolute, or diff failure changes the recommendation to return.
+    disproof_condition: Weaken or remove any base smoke assertion, remove or move the precedence paragraph after the outcomes, or leave any required absolutes-registry entry stale or missing; any such result changes the recommendation to return.
     authority_boundary: Captain retains scope and irreversibility; First Officer and Spacedock retain gate and stage transitions; work-item and delivery authorities retain status, merge, and terminalization.
 ```
 
 ### Summary
 
 Fresh exact-head validation found no defect and recommends `proceed`. The
-five-file change satisfies AC-1 through AC-4, its instrument reddens under
-claim-breaking mutations, the correctly bound state-context control is PASS,
-and no concrete trigger remains for optional multi-model review.
+five-file `+243/-62` change at `54f394ded2fe90481c17db4466c4cdd6e3601fbc`
+satisfies AC-1 through AC-4, preserves the base smoke assertions, reddens under
+claim-breaking mutations, and has a correctly bound state-context PASS. Claude
+Opus High session `e93d42b5-c787-4956-80e9-645d09abec17` returned `PROCEED` with
+`No Material findings`; no additional multi-model review is needed.
