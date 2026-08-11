@@ -4,7 +4,7 @@ source: Captain runtime-reading budget, 2026-08-10
 product: repo-platform
 sprint: S1
 id: hp4y9nwh8e75vk75j9ncwmb7
-status: validation
+status: implementation
 lane: main
 started: 2026-08-10T22:03:08Z
 design: required
@@ -19,15 +19,16 @@ pr: "#199"
 ## End value
 
 Ordinary continuation reads a bounded authority map and current-stage policy;
-recovery, validation recipes, and history load only when their trigger fires.
+recovery and validation recipes load only when their trigger fires. Cost
+observations remain in the task records that produced them.
 
 ## Smallest route and reverse-recovery audit
 
 The README already owns every local authority, stage boundary, and gate seat, so
 it is `WORKING` but overgrown. Recovery procedure, validation recipes, and cost
-history are independently triggered content. Split only those three categories,
-delete repeated rationale/examples, and add no index, loader, registry, or new
-policy layer.
+history are separable content. Split only the two operational procedures, delete
+the duplicated history and repeated rationale/examples, and add no index, loader,
+registry, or new policy layer.
 
 ## Design determination
 
@@ -50,16 +51,15 @@ Authority boundary without a replacement in the always-loaded file.
 
 **AC-3 — Detail loads only at its real trigger.**
 
-Verified by: `docs/dev/README.md:105-108,229-231,325-329` and the three bounded
-files under `docs/dev/runbooks/` and `docs/dev/history/`. Falsified by: ordinary
-backlog/implementation continuation requiring recovery, validation recipes, or
-history.
+Verified by: the README's two trigger links and the bounded files under
+`docs/dev/runbooks/`. Falsified by: ordinary backlog/implementation continuation
+requiring recovery or validation procedure, or a separate observation log.
 
 **AC-4 — The split reduces total mandatory reading rather than relocating it.**
 
-Verified by: 374 README lines and a 605-line four-file total, compared with the
-1,362-line baseline. Falsified by: any stage's required path exceeding its old
-1,362-line path or a moved file becoming universally required.
+Verified by: the README plus its two runbooks remaining below the 1,362-line
+baseline. Falsified by: any stage's required path reaching that baseline or a
+moved file becoming universally required.
 
 ## Test plan
 
@@ -69,7 +69,7 @@ link, and exact-diff checks and one fresh EM review.
 
 ## Appetite and pre-mortem
 
-One worker; keep the README below 700 and the full four-file surface below the
+One worker; keep the README below 700 and the full three-file surface below the
 old README. Stop if the split needs a loader or duplicates an authority. If this
 ships and continuation is still slow, the remaining cost is the kernel or the
 current stage mod, not hidden moved prose.
@@ -78,6 +78,15 @@ current stage mod, not hidden moved prose.
 
 Changing lifecycle authority, deleting safety predicates, a generated docs
 system, product code, and creating or merging a PR.
+
+## Captain scope revision — 2026-08-11
+
+The captain approved deleting `docs/dev/history/workflow-cost-record.md` after
+the exact-head audit found no runtime, gate, delivery, or self-improvement
+consumer. `Observation` becomes `none`; task records remain the durable home for
+their own measurements. This narrows AC-3 and AC-4 from three extracted detail
+files to the two operational runbooks and supersedes only the history-retention
+parts of the earlier stage reports.
 
 ## Stage Report: ideation
 
