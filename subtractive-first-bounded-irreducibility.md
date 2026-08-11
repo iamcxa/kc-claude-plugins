@@ -3,7 +3,7 @@ title: "kc-dev-flow: prove bounded surface necessity before adding layers"
 source: "Captain-approved subtractive-first pilot for PR #199, 2026-08-11"
 product: kc-dev-flow
 sprint: S1
-status: implementation
+status: validation
 lane: main
 design: required
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-release-batch
@@ -309,3 +309,25 @@ green; two conditional jobs are skipped. Fresh PR-level Claude Opus high session
 `53ca4a4a-e114-4a4b-9412-ae0fbb0c0e0a` rebound all sixteen batch ACs and
 returned `proceed / high`, zero Material findings, `multi_model: not_needed`.
 The task is ready for review but remains non-terminal until authorized merge.
+
+## Implementation correction — apply the pilot to its own delivery
+
+Commit `76614da671eaf29e9bed2147aae4e4f9f390af84` demonstrates the
+accepted subtractive predicate against PR #199 itself. Closed need and
+observation boundaries made the zero-consumer plan and history removal
+candidates; existing ROADMAP and task authority retain membership, order, ACs,
+and exit. Duplicate validation procedure and task-description prose were
+removed from secondary surfaces. A proposed file-specific tombstone returned
+because its absence produced no named AC failure.
+
+The correction adds 8 lines and deletes 173 across six paths, a net reduction
+of 165 lines. It adds no file, registry, scanner, workflow capability, reviewer
+loop, or delivery topology. The surviving semantic contract is path-independent:
+a new surface advances only after its absence causes a named AC failure and the
+simpler alternative is insufficient.
+
+Fresh implementation checks pass at that commit: kc-dev-flow contract, 40 skill
+frontmatters, version parity, marketplace L0/L1/L2 installation, state
+prerequisite contract, Python compilation, diff check, and local Markdown links.
+Re-enter validation because the exact head changed; the fresh EM must challenge
+the new residual surface map.
