@@ -84,6 +84,10 @@ vendored mod defines the record differently, the loaded mod is authoritative;
 preserve its full record without dropping fields and map the legacy fields
 without rewriting the mod's semantics.
 
+The root object, `science_officer_em_upward_report`, `engineering_judgment`, and
+every adjudication item are closed objects: emit exactly the documented keys and
+no additional keys, including `verdict_note`.
+
 Keep duplicated envelope and nested values identical. `fo_boundary` exists only
 for legacy consumers; `authority_boundary` is the portable authority record. A
 status-only report is invalid. A report is also invalid when route, confidence,

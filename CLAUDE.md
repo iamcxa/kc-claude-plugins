@@ -28,6 +28,27 @@ Version lives in release-please's component manifest and is propagated to `<plug
 | Release config + version parity guard | `scripts/version-parity-check.sh` (CI: `marketplace-parity.yml`, required check) | Runs a pinned release-please fixture for the first version/tag after a feature commit, validates every resolved `extra-files` path and JSONPath target, then compares the release manifest / `plugin.json` / `.codex-plugin/plugin.json` / marketplace entry — including that every on-disk plugin directory (`*/.claude-plugin/plugin.json`) has a matching `marketplace.json` entry and vice versa (fail-closed on an unlisted directory). As a required check it **blocks merge on bootstrap-policy drift, invalid propagation config, real version drift, or an unregistered plugin directory** (including the Release PR). |
 | Skill frontmatter lint | `scripts/skill-frontmatter-lint.sh` (CI: `marketplace-parity.yml`, required check) | Validates every `*/skills/*/SKILL.md` has parseable YAML frontmatter with a non-empty `name` and `description`. **Blocks merge on a malformed or incomplete skill manifest.** |
 
+### Release-boundary kc-dev-flow runtime smoke
+
+On the clean `kc-dev-flow` Release PR head, before merge or publication, set
+`RECEIPT` to an operator-owned path outside the checkout and run:
+
+```bash
+python3 scripts/kc-dev-flow-published-tag-smoke.py candidate --receipt "$RECEIPT"
+```
+
+Preserve that receipt through publication. After release-please creates the exact
+tag, and before local sync, run:
+
+```bash
+python3 scripts/kc-dev-flow-published-tag-smoke.py published kc-dev-flow-vX.Y.Z --candidate-receipt "$RECEIPT"
+```
+
+Candidate mode installs the clean checkout into isolated Claude and Codex state,
+invokes both hosts, and writes the receipt only after both closed reports pass.
+Published mode installs the exact tag into new isolated state and binds its
+version and plugin-tree bytes to that receipt; it invokes neither model.
+
 ### Post-merge — LOCAL install sync (run from the **main workspace**, NOT a Conductor / feature-branch worktree)
 
 release-please owns versioning + tagging in the cloud, but it **cannot touch your machine's local install**. After the Release PR merges, mirror `main` into the author's local plugin installs so dispatched subagents read current references:
@@ -43,17 +64,6 @@ elsewhere), then use its packaged post-release sync helper. The helper only
 copies local installs; it has no version, tag, changelog, or marketplace
 authority. Its boundary is enforced by
 `kc-plugin-forge/scripts/plugin-release-contract-check.sh`.
-
-For a published `kc-dev-flow` tag, run the authenticated release-closeout smoke
-before local sync:
-
-```bash
-python3 scripts/kc-dev-flow-published-tag-smoke.py kc-dev-flow-vX.Y.Z
-```
-
-It installs the exact tag into temporary Claude and Codex homes, invokes the
-packaged Science Officer, and validates the complete compatibility record. It is
-not a per-PR gate and does not reuse either host's installed plugin state.
 
 **Codex install conventions** — two layouts coexist on a typical machine and both are valid:
 
