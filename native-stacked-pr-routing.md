@@ -57,7 +57,9 @@ entity worktree or qualified PR reference, and terminal discovery enters the
 0.26 merge-guard sentinel path. Falsified by: an unreleased `spacedock gate` or
 `merge guard --rework` command, shell-interpolated PR body, post-approval rebase,
 ambient-repository lookup, branch-name push, direct terminalization, or unrelated
-local artifact protocol remains.
+local artifact protocol remains. Because kc-dev-flow requires an authenticated
+merged product PR for terminalization, an automatic local-merge fallback also
+falsifies this criterion; delivery failures stop with pending authority intact.
 
 **AC-2 — Native stacks have one unambiguous topology and command surface.**
 Verified by: adversarial examples distinguish a native dependent stack, parallel
