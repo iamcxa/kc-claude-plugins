@@ -106,6 +106,7 @@ smoke_spec = importlib.util.spec_from_file_location(
 require(smoke_spec is not None and smoke_spec.loader is not None, "cannot load published-tag smoke")
 smoke = importlib.util.module_from_spec(smoke_spec)
 smoke_spec.loader.exec_module(smoke)
+smoke_tag = f"kc-dev-flow-v{smoke.installed_version(ROOT / 'kc-dev-flow')}"
 
 with mock.patch.object(
     sys, "argv", ["smoke", "candidate", "--receipt", "/tmp/candidate.json"]
@@ -115,7 +116,7 @@ with mock.patch.object(
     sys,
     "argv",
     [
-        "smoke", "published", "kc-dev-flow-v2.2.0",
+        "smoke", "published", smoke_tag,
         "--candidate-receipt", "/tmp/candidate.json",
     ],
 ):
@@ -219,7 +220,7 @@ class FakeSmokeRuntime:
     def __init__(
         self,
         *,
-        observed_tag: str = "kc-dev-flow-v2.2.0",
+        observed_tag: str = smoke_tag,
         mutate_host: str = "",
         invalid_codex_report: bool = False,
     ) -> None:
@@ -431,40 +432,40 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-contract-") as contract_tmp
     published_runtime = FakeSmokeRuntime()
     published_result, published_error = run_fake(
         published_runtime,
-        lambda: smoke.run_published_smoke("kc-dev-flow-v2.2.0", receipt_path, 30),
+        lambda: smoke.run_published_smoke(smoke_tag, receipt_path, 30),
     )
     published_cases = [
         (
             "tag",
-            "kc-dev-flow-v2.2.0",
+            smoke_tag,
             candidate_receipt,
-            FakeSmokeRuntime(observed_tag="kc-dev-flow-v2.1.0"),
+            FakeSmokeRuntime(observed_tag=f"{smoke_tag}-other"),
             "resolved",
         ),
         (
             "version",
-            "kc-dev-flow-v2.2.0",
+            smoke_tag,
             candidate_receipt | {"version": "9.9.9"},
             FakeSmokeRuntime(),
             "version",
         ),
         (
             "source",
-            "kc-dev-flow-v2.2.0",
+            smoke_tag,
             candidate_receipt | {"tree_sha256": "e" * 64},
             FakeSmokeRuntime(),
             "source tree",
         ),
         (
             "Claude tree",
-            "kc-dev-flow-v2.2.0",
+            smoke_tag,
             candidate_receipt,
             FakeSmokeRuntime(mutate_host="claude"),
             "Claude installed tree",
         ),
         (
             "Codex tree",
-            "kc-dev-flow-v2.2.0",
+            smoke_tag,
             candidate_receipt,
             FakeSmokeRuntime(mutate_host="codex"),
             "Codex installed tree",
