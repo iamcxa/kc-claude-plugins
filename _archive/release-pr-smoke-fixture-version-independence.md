@@ -14,6 +14,7 @@ pr_artifact_v1: eyJhdWRpdF9saW5rIjoiWzBiXSgvaWFtY3hhL2tjLWNsYXVkZS1wbHVnaW5zL2Js
 mod-block:
 completed: 2026-08-11T07:56:30Z
 verdict: PASSED
+archived: 2026-08-11T09:17:41Z
 ---
 
 The published-mode contract fixture hard-codes `kc-dev-flow-v2.2.0`, so a correctly version-bumped Release PR fails before exercising its identity falsifiers. Derive fixture identity from the manifests under test while leaving the production smoke and its strict published-tag checks unchanged.
