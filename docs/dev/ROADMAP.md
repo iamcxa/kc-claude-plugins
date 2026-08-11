@@ -285,11 +285,34 @@ the weaker sense that the assertion now names what it does *not* cover. Anyone
 reading this sprint as having closed the false-`verified` class should read #149
 first.
 
+## `kc-dev-flow`
+
+### Sprint S1 — prove the runtime, then shorten the route
+
+Captain-approved order for the next single-release batch:
+
+1. `kc-dev-flow-published-tag-smoke-review`
+2. `halve-dev-flow-cycle-time`
+3. `subtractive-first-bounded-irreducibility`
+
+Exit: all three items have exact-revision validation, implementation opens no
+EM review loop, the published-tag smoke has a keep-or-remove disposition backed
+by installed-runtime evidence, and the subtractive pilot rejects green or
+`UNKNOWN` proposed additions. Hold the kc-dev-flow Release PR until the dependent
+`repo-platform/S1` item below also exits.
+
 ## `repo-platform`
 
-No sprint is scheduled in this roadmap yet. Shared workflow, CI, marketplace,
-and root-configuration work uses this product's own sequence beginning at
-`repo-platform/S1`.
+### Sprint S1 — reduce the runtime reading surface
+
+Dependency: run after `kc-dev-flow/S1` settles the review contract.
+
+1. `workflow-readme-runtime-budget`
+
+Exit: the runtime README is at most 700 lines, every retained mandatory clause
+has an enforcement/owner mapping, recovery and stage-specific details are loaded
+only when their trigger fires, and the contract suite plus fresh EM validation
+pass. Only then may the pending kc-dev-flow Release PR be merged.
 
 ### Hazard carried forward
 

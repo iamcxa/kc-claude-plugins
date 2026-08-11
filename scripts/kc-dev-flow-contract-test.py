@@ -42,6 +42,7 @@ required_files = [
     PLUGIN / "references/engineering-judgment.md",
     PLUGIN / "skills/science-officer-em/SKILL.md",
     PLUGIN / "skills/science-officer-em/agents/openai.yaml",
+    ROOT / "scripts/kc-dev-flow-published-tag-smoke.py",
     PLUGIN / "references/retained-document-policy.md",
 ]
 for required_file in required_files:
@@ -55,6 +56,108 @@ require(
     (PLUGIN / "scripts/improvement-intake.py").stat().st_mode & 0o111,
     "scripts/improvement-intake.py is not executable",
 )
+require(
+    (ROOT / "scripts/kc-dev-flow-published-tag-smoke.py").stat().st_mode & 0o111,
+    "scripts/kc-dev-flow-published-tag-smoke.py is not executable",
+)
+
+expected_smoke_revision = "a" * 40
+valid_em_report_data = {
+    "science_officer_em_upward_report": {
+        "em_judgment": "proceed on the bounded documentation change",
+        "evidence_synthesis": "exact-tag installed-runtime evidence",
+        "risk_tradeoff_call": "low-cost reversible change versus stale guidance",
+        "recommendation": "proceed through normal delivery",
+        "route": "proceed",
+        "confidence": "high",
+        "multi_model": "not_needed",
+        "fo_boundary": "",
+        "engineering_judgment": {
+            "question": "should the bounded change proceed",
+            "revision": expected_smoke_revision,
+            "evidence_synthesis": "exact-tag installed-runtime evidence",
+            "adjudications": [
+                {
+                    "finding": "runtime contract is present",
+                    "disposition": "supported",
+                    "basis": "installed host output",
+                }
+            ],
+            "risk_tradeoff": "low-cost reversible change versus stale guidance",
+            "recommendation": "proceed through normal delivery",
+            "route": "proceed",
+            "confidence": "high",
+            "dissent": "",
+            "disproof_condition": "a required field or installed host is missing",
+            "authority_boundary": "captain and delivery owners retain authority",
+        },
+    }
+}
+valid_em_report = json.dumps(valid_em_report_data)
+
+
+def run_report_check(report: str, revision: str = expected_smoke_revision) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/kc-dev-flow-published-tag-smoke.py"),
+            "--validate-report",
+            "-",
+            "--expected-revision",
+            revision,
+        ],
+        input=report,
+        capture_output=True,
+        text=True,
+    )
+
+
+report_check = run_report_check(valid_em_report)
+require(
+    report_check.returncode == 0,
+    report_check.stdout.strip() or report_check.stderr.strip() or "valid EM report was rejected",
+)
+
+invalid_reports: dict[str, tuple[str, str]] = {
+    "malformed structure": ("not a JSON/YAML document", "structural"),
+}
+incomplete = json.loads(valid_em_report)
+del incomplete["science_officer_em_upward_report"]["engineering_judgment"]["disproof_condition"]
+invalid_reports["incomplete"] = (json.dumps(incomplete), "disproof_condition")
+
+misplaced = json.loads(valid_em_report)
+misplaced_value = misplaced["science_officer_em_upward_report"]["engineering_judgment"].pop(
+    "disproof_condition"
+)
+misplaced["science_officer_em_upward_report"]["disproof_condition"] = misplaced_value
+invalid_reports["misplaced"] = (json.dumps(misplaced), "disproof_condition")
+
+duplicate = valid_em_report.replace(
+    '"route": "proceed",', '"route": "proceed", "route": "return",', 1
+)
+invalid_reports["duplicate"] = (duplicate, "duplicate")
+
+invalid_enum = json.loads(valid_em_report)
+invalid_enum["science_officer_em_upward_report"]["route"] = "maybe"
+invalid_enum["science_officer_em_upward_report"]["engineering_judgment"]["route"] = "maybe"
+invalid_reports["invalid enum"] = (json.dumps(invalid_enum), "route")
+
+mismatched = json.loads(valid_em_report)
+mismatched["science_officer_em_upward_report"]["engineering_judgment"][
+    "recommendation"
+] = "return for more work"
+invalid_reports["mismatched duplicates"] = (json.dumps(mismatched), "recommendation")
+
+invalid_reports["wrong revision"] = (valid_em_report, "revision")
+
+for label, (report, expected_error) in invalid_reports.items():
+    expected_revision = "b" * 40 if label == "wrong revision" else expected_smoke_revision
+    invalid_report_check = run_report_check(report, expected_revision)
+    require(
+        invalid_report_check.returncode != 0
+        and expected_error in (invalid_report_check.stdout + invalid_report_check.stderr),
+        f"published-tag smoke accepts an invalid EM report: {label}",
+    )
 
 for legacy in [
     PLUGIN / "assets/kernel-binding.template.yaml",
@@ -145,6 +248,10 @@ for phrase in [
     "_improvements/.private/source-identity.json",
     "require ignore proof",
     "roll over to the next sequence",
+    "exactly one fresh-context EM verdict for every ideation and validation gate",
+    "Implementation opens no reviewer loop",
+    "Multi-model review is optional",
+    "silence is not approval",
 ]:
     require(phrase in continue_skill, f"continue skill is missing boundary: {phrase}")
 require(
@@ -263,6 +370,49 @@ for label, content in runtime_docs.items():
         )
 
 workflow = (ROOT / "docs/dev/README.md").read_text(encoding="utf-8")
+state_recovery_runbook = ROOT / "docs/dev/runbooks/state-recovery.md"
+validation_evidence_runbook = ROOT / "docs/dev/runbooks/validation-evidence.md"
+for runtime_reference in [
+    state_recovery_runbook,
+    validation_evidence_runbook,
+]:
+    require(
+        runtime_reference.is_file(),
+        f"self-adoption is missing trigger-loaded reference: {runtime_reference.relative_to(ROOT)}",
+    )
+state_recovery = state_recovery_runbook.read_text(encoding="utf-8")
+require(
+    "spacedock 0.26.0 (contract 3)" in state_recovery,
+    "state recovery does not name the supported Spacedock runtime contract",
+)
+published_smoke = (ROOT / "scripts/kc-dev-flow-published-tag-smoke.py").read_text(
+    encoding="utf-8"
+)
+for phrase in [
+    "DISABLE_PLUGIN_AUTOLOAD",
+    "stream-json",
+    "Claude did not isolate runtime plugin state to one explicit plugin",
+    "tree_digest",
+    "report revision differs from exact tag commit",
+]:
+    require(phrase in published_smoke, f"published-tag smoke is missing boundary: {phrase}")
+require(
+    len(workflow.splitlines()) <= 700,
+    f"workflow README exceeds its 700-line runtime budget: {len(workflow.splitlines())}",
+)
+for phrase in [
+    "Read [`runbooks/state-recovery.md`](./runbooks/state-recovery.md) only after",
+    "Read [`runbooks/validation-evidence.md`](./runbooks/validation-evidence.md) when entering validation",
+    "exactly one fresh-context EM verdict",
+    "Implementation opens no reviewer loop",
+    "Multi-model review is optional",
+]:
+    require(phrase in workflow, f"self-adoption is missing runtime-budget contract: {phrase}")
+for forbidden in [
+    "Cross-model gate before merge approval",
+    "The independent cross-model gate",
+]:
+    require(forbidden not in workflow, f"self-adoption still requires universal multi-model review: {forbidden}")
 require(
     "ship-flow:science-officer-em" not in workflow,
     "self-adoption still routes engineering judgment to the replaced Ship-Flow skill",
@@ -280,7 +430,7 @@ for phrase in [
     "| Delivery |",
     "| Gate verdicts |",
     "| Scope and irreversibility |",
-    "| Observation |",
+    "| Observation | none |",
     "No binding YAML",
     "Origin re-observation:",
     "Reported scenario:",
@@ -371,6 +521,10 @@ for phrase in [
     "loaded mod is authoritative",
     "grants no task creation, sprint admission, scheduling, policy edit, provider posting, gate re-trigger, stage advancement, merge, archive, or closeout authority",
     "keep duplicated envelope and nested values identical",
+    "capability tier above the artifact-producing worker",
+    "highest available tier in fresh context with high reasoning",
+    "contested, irreversible, low-confidence, or unresolved",
+    "multi_model: recommended | not_needed",
 ]:
     require(
         " ".join(phrase.lower().split()) in normalized_science_skill,

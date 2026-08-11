@@ -44,6 +44,17 @@ copies local installs; it has no version, tag, changelog, or marketplace
 authority. Its boundary is enforced by
 `kc-plugin-forge/scripts/plugin-release-contract-check.sh`.
 
+For a published `kc-dev-flow` tag, run the authenticated release-closeout smoke
+before local sync:
+
+```bash
+python3 scripts/kc-dev-flow-published-tag-smoke.py kc-dev-flow-vX.Y.Z
+```
+
+It installs the exact tag into temporary Claude and Codex homes, invokes the
+packaged Science Officer, and validates the complete compatibility record. It is
+not a per-PR gate and does not reuse either host's installed plugin state.
+
 **Codex install conventions** — two layouts coexist on a typical machine and both are valid:
 
 | Layout | Path | Use case |
