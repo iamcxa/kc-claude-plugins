@@ -1,6 +1,6 @@
 ---
 title: Keep the release smoke fixture version-independent
-status: implementation
+status: validation
 source: Release PR #202 required-check failure after #203 merged; captain authorized continuing through release
 product: kc-dev-flow
 sprint: S1
@@ -21,3 +21,16 @@ The published-mode contract fixture hard-codes `kc-dev-flow-v2.2.0`, so a correc
 - Seam: one deterministic fake-runtime fixture in one existing file; no production, schema, host, or release configuration change.
 - Design: no choice remains after the failure is reproduced; the tested manifests are the single compatible source of fixture version identity.
 - Appetite: one dispatch, 20 minutes with 10 minutes tolerance; stop on a second file or any production-smoke change.
+
+## Stage Report: implementation
+
+- DONE: Reproduce the release-version mismatch before changing the fixture
+  RED: a parity-clean simulated `2.3.0` tree exited 1 with `published tag version differs from manifests: 2.2.0 != 2.3.0` before source and installed-tree falsifiers could run.
+- DONE: Make the fixture version-independent at the bounded seam
+  `scripts/kc-dev-flow-contract-test.py` maps to the Mechanical AC and one-file seam: commit `5e5c5f646a2ca401121b39eeac2628de685eb51f`, `+10/-9`, derives the tag from tested manifests, and preserves tag, version, source, Claude-tree, and Codex-tree falsifiers; production smoke is unchanged.
+- DONE: Verify the exact implementation head and prepare fresh validation
+  Current-tree and simulated-`2.3.0` contracts, marketplace L0/L1/L2, version parity, 40-file frontmatter lint, and diff check passed; the product worktree was clean at the exact head.
+
+### Summary
+
+The smallest sufficient change touched one existing fixture file and left production release identity enforcement intact. Without it, every future version-bumped Release PR would fail on the stale fixture tag before exercising the five intended falsifiers.
