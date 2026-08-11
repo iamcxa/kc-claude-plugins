@@ -331,6 +331,15 @@ cycle-1 evidence. They do not satisfy the revised ACs.
 
 ## Stage Report: validation
 
+- DONE: Exact clean head `24d91bb0...` ran real isolated authenticated Claude
+  and Codex candidate mode; both strict reports passed and the closed receipt was
+  written only afterward.
+- FAILED: AC-3's first-containing-tag published proof is unavailable because no
+  tag contains exact head; deterministic published mode rejects all named
+  identity mutations and records zero model invocations.
+- DONE: Fresh exact-head EM and evidence block maps all four changed files to
+  ACs with zero unmapped files and made no deliverable edits.
+
 ### TL;DR
 
 Exact-head candidate validation passes at
