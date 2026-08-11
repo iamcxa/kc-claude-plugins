@@ -27,11 +27,13 @@ Read staged, unstaged, and untracked paths from the exact holder. A recoverable
 non-archive mutation changes one flat entity file or one complete folder entity
 root. Identity comes from that path, never from searching body text.
 
-For a delivery mutation, decode the entity's canonical `pr_artifact_v1` and
-require its digest and `live_path` to match the product `mod-block` or `pr` ref.
-Legacy `ledger_pr` and `ledger_artifact_v1` bytes are preserved but authorize
-nothing. A direct-commit historical route authenticates its commit, task ID, and
-anchored path without inventing an artifact.
+Artifact-backed delivery recovery is no longer part of this workflow. A dirty
+or interrupted delivery mutation cannot be authenticated; preserve the evidence
+and stop. Do not infer a replacement credential from a PR number, branch, body,
+review, or remote state. Legacy `ledger_pr` and `ledger_artifact_v1` bytes are
+preserved but authorize nothing. The replay and archive procedures below apply
+only when the recovery identity and exact setter assignments do not depend on
+delivery authentication.
 
 Reproduce the intended setter in a private disposable workflow seeded from the
 dirty parent:
@@ -50,7 +52,7 @@ git diff --no-index --quiet -- \
   "$REPLAY_STATE/$LIVE_ROOT" "$STATE/$LIVE_ROOT" || exit 1
 ```
 
-Require every dirty path inside the authenticated entity root and byte-for-byte
+Require every dirty path inside the validated entity root and byte-for-byte
 equality with the replay. Corrupt encoding, a wrong digest/path, multiple roots,
 or any replay mismatch blocks and preserves evidence.
 
@@ -61,18 +63,18 @@ alone.
 
 ## Dirty holder behind remote
 
-Only a dirty root already authenticated and replay-matched against its local
-parent may be carried forward.
+Only a non-delivery dirty root already validated and replay-matched against its
+local parent may be carried forward.
 
 1. Create a mode-0700 recovery directory outside the repository.
 2. Record the local parent, slug, ID, live root, action class, ordered assignment
-   arrays as data, authenticated artifact/ref, complete root bytes, and a
+   arrays as data, validated entity identity, complete root bytes, and a
    path/digest manifest.
 3. Restore only the enumerated entity paths from the local parent. Remove only
-   authenticated untracked paths already copied to the recovery record.
+   validated untracked paths already copied to the recovery record.
 4. Require a clean holder, fetch the state ref, prove local HEAD is still its
    ancestor, and fast-forward.
-5. Re-resolve the same task and re-authenticate every field the action reads or
+5. Re-resolve the same task and revalidate every field the action reads or
    writes. An unrelated append is compatible; deletion, move, identity change,
    or a changed consumed field blocks on the remote tip.
 6. Replay the full action from the new tip in a disposable workflow, execute it
@@ -80,7 +82,7 @@ parent may be carried forward.
    require remote equality.
 7. Remove the recovery directory only after equality is observed.
 
-Unauthenticated dirt, dirty divergence, and unknown extra paths have no restore
+Unvalidated dirt, dirty divergence, and unknown extra paths have no restore
 route. Leave them untouched.
 
 ## Clean local-ahead holder
@@ -100,7 +102,7 @@ push. Unknown, multiple, or unrelated commits remain blocked.
 Archive is a path-scoped Git transaction because the supported Spacedock cannot
 commit an already archived slug. Before restoring or removing anything, require:
 
-- all dirty paths lie within the authenticated live and archive roots;
+- all dirty paths lie within the validated live and archive roots;
 - filesystem and Git entries are regular files with permitted modes;
 - the remote live root is exact;
 - the archive comparator passes, allowing only the deterministic archive stamp;
@@ -108,8 +110,8 @@ commit an already archived slug. Before restoring or removing anything, require:
 
 A byte, mode, symlink, gitlink, special-file, extra-index, or scope mismatch
 leaves all evidence untouched. Normal archive push is one signed commit. The
-only two-commit recovery gate is an authenticated archive commit followed by its
-exact signed inverse, rooted at the freshly fetched live tip.
+only two-commit recovery gate is an exactly validated archive commit followed by
+its exact signed inverse, rooted at the freshly fetched live tip.
 
 After recovery, rerun `scripts/dev-flow-state-prereq.sh`. Resume ordinary
 lifecycle work only when it returns 0 and the observed holder equals the remote
