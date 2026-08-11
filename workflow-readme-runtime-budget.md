@@ -245,3 +245,27 @@ Fresh implementation checks pass at that commit: kc-dev-flow contract, 40 skill
 frontmatters, version parity, marketplace L0/L1/L2 installation, state
 prerequisite contract, Python compilation, diff check, and 11 local Markdown
 links. Re-enter validation because the exact head changed.
+
+## Exact-head validation — `76614da671eaf29e9bed2147aae4e4f9f390af84`
+
+Fresh Claude Opus high session `317c8a98-df85-4baa-8a48-c780d51e55b9`
+returned `proceed / high`, AC 4/4, zero Material findings, and
+`multi_model: not_needed`. The same session corrected its output envelope
+without changing evidence or verdict.
+
+- `Lenses:` runtime reading, authority, trigger ownership, and delivery pass.
+- `Diff coverage:` all 13 PR paths map to an AC or release obligation; no
+  history or product-plan path survives.
+- `Adversarial:` contract mutations reject a README above 700, missing authority
+  or stage policy, broken trigger links, and canonical/vendor drift.
+- `Cross-model:` not_needed — no contested, irreversible, low-confidence, or
+  unresolved call remains.
+- `E2E:` N/A — this is a repository docs/policy loading change; hosted exact-head
+  CI and all local contract/install/link checks are green.
+- `Origin re-observation:` N/A — the accepted measurements are repository line
+  counts and authority paths, not external consumer-runtime behavior.
+
+The README is 385 lines and the complete retained README/runbook surface is 577
+lines. No moved file is universally loaded, and no surviving whole file or
+separable paragraph was found reducible from the exact packet. Delivery state
+remains open until PR #199 merges.
