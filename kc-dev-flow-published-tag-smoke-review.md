@@ -1,6 +1,6 @@
 ---
 title: Review the published-tag Science Officer runtime smoke
-status: implementation
+status: ideation
 source: Captain-approved issue #183 follow-up, 2026-08-10
 product: kc-dev-flow
 sprint: S1
@@ -264,4 +264,4 @@ this task until that tag records a keep-or-remove disposition.
 
 ### Feedback Cycles
 
-- Cycle 1: REJECTED — `kc-dev-flow-v2.2.0` release-closeout smoke; keep the harness because it caught a producer/consumer closed-schema mismatch absent from pre-release checks; surface 1 correction seam vs estimate 1 seam (0%); AC unchanged
+- Cycle 1: REJECTED — `kc-dev-flow-v2.2.0` release-closeout smoke; keep one smoke mechanism across two triggers because it caught a producer/consumer closed-schema mismatch absent from pre-release checks; surface 1 mechanism vs estimate 1 mechanism (0%); AC narrowed: pre-release owns host/report validation, while post-release owns tag/version/tree identity
