@@ -827,6 +827,187 @@ require(
     == "a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64",
     "pr-merge released 0.12.2 body drifted outside the Draft adjustment",
 )
+decision_heading = "### Delivery topology decision\n"
+require(
+    local_extension.count(decision_heading) == 1,
+    "pr-merge must contain one authoritative delivery-topology decision table",
+)
+decision_section = local_extension.split(decision_heading, 1)[1].split("\n### ", 1)[0]
+require(
+    "Numeric trigger: `gross additions + deletions > 1,500 OR changed files > 20`."
+    in decision_section,
+    "delivery-topology numeric trigger is not the strict >1,500 OR >20 predicate",
+)
+topology_table_section = decision_section.split("\n#### ", 1)[0]
+decision_table_lines = [
+    line for line in topology_table_section.splitlines() if line.startswith("|")
+]
+require(
+    len(decision_table_lines) == 6,
+    "delivery-topology decision table must contain one header and exactly four rows",
+)
+
+
+def markdown_row(line: str) -> tuple[str, ...]:
+    return tuple(cell.strip() for cell in line.strip().strip("|").split("|"))
+
+
+require(
+    markdown_row(decision_table_lines[0])
+    == (
+        "Dependent green layers?",
+        "Independent green slices?",
+        "Numeric trigger?",
+        "Required topology",
+    ),
+    "delivery-topology decision table header drifted",
+)
+require(
+    markdown_row(decision_table_lines[1]) == ("---", "---", "---", "---"),
+    "delivery-topology decision table separator drifted",
+)
+expected_topology_rows = [
+    ("yes", "any", "any", "Native stack at any size"),
+    ("no", "yes", "any", "Parallel Draft PRs from trunk"),
+    (
+        "no",
+        "no",
+        "yes",
+        "One Draft PR with `## Native stack exception`",
+    ),
+    ("no", "no", "no", "One Draft PR"),
+]
+require(
+    [markdown_row(line) for line in decision_table_lines[2:]]
+    == expected_topology_rows,
+    "delivery-topology row polarity or required outcome drifted",
+)
+
+
+def policy_table(section: str, heading: str) -> list[tuple[str, ...]]:
+    marker = f"#### {heading}\n"
+    if section.count(marker) != 1:
+        return []
+    body = section.split(marker, 1)[1]
+    body = re.split(r"\n#### ", body, maxsplit=1)[0]
+    return [markdown_row(line) for line in body.splitlines() if line.startswith("|")]
+
+
+expected_layer_rows = [
+    ("Layer", "`UNIT_BASE_BRANCH`", "`UNIT_BASE_SHA`"),
+    ("---", "---", "---"),
+    ("bottom", "trunk `$BASE`", "approved trunk `$BASE_SHA`"),
+    (
+        "each higher",
+        "branch immediately below",
+        "approved `UNIT_CANDIDATE_SHA` immediately below",
+    ),
+]
+expected_stack_completion_rows = [
+    ("Evidence", "Required result", "Otherwise"),
+    ("---", "---", "---"),
+    ("Stack lookup", "exactly one stack for stored top PR", "stop"),
+    ("Base", "`base.ref` equals trunk", "stop"),
+    ("Top position", "stored top PR is final ordered entry", "stop"),
+    (
+        "Atomic landing",
+        "every ordered `pull_requests[].merged_at` is non-empty",
+        "stop",
+    ),
+    (
+        "Candidate",
+        "each `head.sha` and explicit PR `headRefOid` equal body Candidate",
+        "stop",
+    ),
+    (
+        "Required checks",
+        "each explicit-repository required check succeeds",
+        "stop",
+    ),
+    (
+        "Completion time",
+        "stored top PR `mergedAt` is non-empty",
+        "only then sentinel and guard",
+    ),
+]
+stack_link = 'gh stack link --base "$BASE" "$BOTTOM_PR_URL" "$NEXT_PR_URL" ... "$TOP_PR_URL"'
+stack_api = 'gh api --method GET "repos/$STACK_REPO/stacks?pull_request=$TOP_PR_NUMBER"'
+layer_view = 'gh pr view "$LAYER_PR_NUMBER" --repo "$STACK_REPO" --json body,headRefOid,mergedAt'
+layer_checks = 'gh pr checks "$LAYER_PR_NUMBER" --repo "$STACK_REPO" --required'
+
+
+def stack_contract_errors(section: str) -> list[str]:
+    errors: list[str] = []
+    if policy_table(section, "Native stack delivery-unit composition") != expected_layer_rows:
+        errors.append("stack layer/base binding drifted")
+    if policy_table(section, "Native stack completion decision") != expected_stack_completion_rows:
+        errors.append("native-stack completion decision drifted")
+    for label, phrase in {
+        "one unit per layer": "Bind one approved canonical Draft delivery unit per layer in bottom-to-top order",
+        "canonical invocation": "Invoke the canonical bottom delivery unit unchanged for every layer",
+        "URL-only link": stack_link,
+        "explicit stack lookup": stack_api,
+        "explicit layer view": layer_view,
+        "explicit layer checks": layer_checks,
+        "public-preview fields": "`number`, `base.ref`, and ordered `pull_requests[]` entries containing `number`, `merged_at`, `head.ref`, and `head.sha`",
+        "atomic merge": "Use GitHub native atomic stack merge through `gh stack merge` or the native UI; never merge an individual PR.",
+        "captain-authorized ready gate": "Only after each layer's required checks and review are green and the captain explicitly authorizes readiness, run `gh pr ready \"$LAYER_PR_URL\"` for every layer in bottom-to-top order.",
+        "Draft merge refusal": "Do not call `gh stack merge` while any layer remains Draft.",
+        "non-stack refusal": "A top PR merged outside exactly one matching native stack stops without sentinel or guard",
+    }.items():
+        if phrase not in section:
+            errors.append(f"missing {label}")
+    if "gh pr create" in section:
+        errors.append("policy duplicates the canonical create recipe")
+    if "gh pr merge" in section:
+        errors.append("policy permits individual PR merge")
+    return errors
+
+
+require(
+    not stack_contract_errors(decision_section),
+    "native-stack contract failed: " + "; ".join(stack_contract_errors(decision_section)),
+)
+stack_mutants = {
+    "trunk-sha-for-higher-layer": decision_section.replace(
+        "approved `UNIT_CANDIDATE_SHA` immediately below",
+        "approved trunk `$BASE_SHA`",
+        1,
+    ),
+    "branch-link": decision_section.replace(
+        stack_link,
+        'gh stack link --base "$BASE" {bottom-branch} {top-branch}',
+        1,
+    ),
+    "individual-merge": decision_section.replace("gh stack merge", "gh pr merge", 1),
+}
+for mutant_name, mutant in stack_mutants.items():
+    require(
+        stack_contract_errors(mutant),
+        f"native-stack mutant survived: {mutant_name}",
+    )
+
+for phrase in [
+    "merge-base diff at review request",
+    "Mechanical, generated, vendor, and lock-file changes stay in both counts",
+    "Counts choose topology only; they do not relax quality boundaries",
+    "approve every title, full body, and bottom-to-top branch order",
+    "Do not pass `--open`",
+    "track the top PR",
+    "pull_request CI for every layer",
+]:
+    require(phrase in local_extension, f"pr-merge native-stack mechanics are missing: {phrase}")
+require(
+    "waiting for the lower PR to merge blocks useful work" not in workflow,
+    "workflow README adds a second stack-readiness condition",
+)
+require(
+    "[`_mods/pr-merge.md`](./_mods/pr-merge.md#delivery-topology-decision)"
+    in workflow
+    and "dependent green layers, independent green slices, and numeric trigger"
+    in workflow,
+    "workflow README does not point to the authoritative topology predicates",
+)
 for phrase in [
     "overrides the released audit-link inputs",
     "spacedock status --workflow-dir {dir} --resolve {entity ref} --json",
@@ -840,12 +1021,7 @@ for phrase in [
     "Do not fall back to the code-worktree SHA, code-relative path, or `main`",
 ]:
     require(phrase in local_extension, f"pr-merge split-root audit link is missing: {phrase}")
-for forbidden in [
-    "gh " + "pr link",
-    "gh " + "stack link",
-    "Native " + "stack",
-    "1,500 gross lines",
-]:
+for forbidden in ["gh " + "pr link"]:
     require(forbidden not in pr_merge_mod, f"runtime-only pr-merge contains policy: {forbidden}")
 portable_delivery = subprocess.run(
     [sys.executable, "scripts/pr-merge-portable-delivery.test.py"],
