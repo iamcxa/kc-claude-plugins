@@ -816,3 +816,166 @@ Track the top-v2 worktree and exact head above. There are no implementation
 blockers. Any product push, Draft PR creation, native-stack link, readiness
 change, merge, or terminalization remains captain/FO delivery work and was not
 performed in this cycle.
+
+## Stage Report: validation (cycle 3)
+
+### Verdict
+
+REJECTED at the exact stack bottom
+`264aabb017a36dcda0a740f28896086eab96bcc6` and direct-child top
+`e5b2e07fe45da7fe6104b15573f7a199ecf4da8f` against freshly fetched
+`origin/main` `1745b13563dd60ee41f51066ef15d0bff4929cb0`.
+
+Both exact heads are mechanically green and clean; released v0.12.2 identity,
+formal pre3 provenance, removed-consumer cleanup, and 0.26 command availability
+pass. Three Material contradictions plus one directly proven proof defect remain,
+so no product
+push, PR/link mutation, merge, terminalization, or stage advancement is allowed.
+
+### Findings
+
+- **[P1] Preserve Draft in the command that replaces PR creation —
+  `docs/dev/_mods/pr-merge.md:188`.** The body-file replacement omits
+  `--draft`; its test requires the same non-Draft argv. The earlier released
+  command has `--draft` but is explicitly superseded, so bottom fails
+  independently and combined single/exception routes can open ready PRs.
+- **[P1] Bind hardening to each approved layer base —
+  `docs/dev/_mods/pr-merge.md:188`.** Hardening resolves `$BASE` once from
+  trunk and uses it for merge-tree and create, while the top policy requires
+  each higher PR to target `{branch-below}`. No per-layer base reconciles the
+  two recipes, so top can be preflighted and created against trunk.
+- **[P1] Prove the whole stack landed before terminalizing from the tracked PR —
+  `docs/dev/_mods/pr-merge.md:246`.** The mod stores only the top PR, queries
+  only `state`, then writes a sentinel and runs guard. `gh stack link` is not the
+  separate atomic `gh stack merge` operation; top can merge into the branch
+  below before bottom lands on trunk. The query also omits approved head SHAs,
+  required checks, and `mergedAt`, while installed guard writes its own current
+  completion time. This conflicts with `docs/dev/README.md:327-329`.
+- **[P2] Replace phrase-only safety cases with executable transcripts —
+  `scripts/pr-merge-portable-delivery.test.py:159`.** A disposable exact-top
+  mutant added ambient qualified lookup, continued after sentinel-commit
+  failure, and automatic local-merge terminal success after failures. The three
+  focused cases and integrated contract still passed. Body/candidate primitives
+  and topology polarity are mutation-sensitive; repository, sentinel, and
+  failure-policy cases are not.
+
+### AC, path, diff, and deletion coverage
+
+| AC | Verdict | Evidence |
+| --- | --- | --- |
+| AC-1 | FAIL | v0.12.2 equality, literal body bytes, immutable candidate/exact refspec, installed 0.26 verbs, and current fail-stop prose pass. Active create is non-Draft, terminal discovery misses authenticated head/check/mergedAt proof, and three safety cases accept contradictions. |
+| AC-2 | FAIL | Decision rows, exact local graph, and `gh stack link` bottom-to-top help pass. Hardening still uses trunk for top, and top-only MERGED state is not atomic lower-layer proof. |
+| AC-3 | PASS | Strict `>1,500 OR >20` semantics pass: 1,500/20 false; 1,501/20 and 1,500/21 true. Dependent green layers win at any size; all volume remains counted; polarity inversion fails. |
+| AC-4 | FAIL | Exception heading/share/acknowledgment text passes, but its active replacement command can create the PR non-Draft. |
+| AC-5 | PASS | No tracked live consumer remains for the artifact field, deleted transaction/audit functions or markers, or obsolete test names. Recovery stops without inventing authentication. |
+
+Bottom `1745b135...264aabb` is 515 additions and 2,913 deletions over seven
+paths. Top `264aabb...e5b2e07` is 130 additions and 10 deletions over exactly
+three policy paths. Top remains policy-only.
+
+| Path-layer | AC | Coverage |
+| --- | --- | --- |
+| bottom `docs/dev/README.md` | AC-1, AC-5 | Artifact deletion passes; terminal mergedAt/check rule exposes P1. |
+| bottom `docs/dev/_mods/pr-merge.md` | AC-1, AC-5 | Full replacement/extension, pre3 delta, five hardening classes, failures, and split-root tuple reviewed. |
+| deleted terminal transaction test | AC-5 | Its custom-artifact subject and all consumers are gone. |
+| bottom recovery runbook | AC-5 | Refusal contract passes and preserves evidence. |
+| deleted audit-link test | AC-5 | Its marked function is gone; tuple proof remains in contract/live state checks. |
+| bottom integrated contract | AC-1, AC-5 | Hash/recovery/consumer checks pass; adversarial semantic blind spot reproduced. |
+| bottom portable harness | AC-1, AC-5 | All 247 lines reviewed; two behavioral cases pass, three phrase-only cases fail validation. |
+| top README/mod/contract | AC-2, AC-3, AC-4 | One table authority and polarity guard pass; Draft/base/terminal composition findings remain. |
+
+Diff coverage: 100% path-layer coverage (10/10); all 645 sequential additions
+classified or exercised; all 2,923 deletions covered by exact upstream-body
+comparison and deleted-subject/consumer sweeps. The 99-line hardening plus
+harness is not minimum: collapse the competing generic and stack-specific create
+recipes into one Draft, body-file, exact-SHA, per-layer-base responsibility.
+
+### Provenance, exact commands, and results
+
+- Fresh `git fetch origin main --prune` left `origin/main` at the expected SHA.
+  Bottom is two commits above it; top has bottom as its sole parent; both
+  worktrees remained clean and range `git diff --check` passed.
+- Fresh `git ls-remote` and GitHub API inventory resolved pre3 annotated tag
+  object `5a0b9a13282bd0abd6d1e3479475acd809b73b12`, peeled commit
+  `ffaeaef696cad492c8d40ab84939178e242aff2e`, prerelease publication
+  `2026-08-09T17:05:53Z`, and no final `v0.27.0` tag/release.
+- Shipped pre3 `mods/pr-merge.md` hashes to
+  `0f2a4628a008e044b9d0faa67282597dfaa2ee56b6954f10028ca7d921b6e031`.
+  The separate adopted pre3 `docs/dev/_mods/pr-merge.md` hashes to
+  `44e7b345eee634b35780efe3106ad827b424661b45dd75aaeaec9fd90f38c4f2`;
+  it was not used as the shipped comparison seam.
+- Shipped v0.26.0 `mods/pr-merge.md` at peeled commit
+  `ca136f83a579fd44c223321ae7f8fe7785c685f7` and normalized local baseline
+  both hash to `a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64`.
+- At each exact product head: Python compile, portable delivery 5/5, integrated
+  contract, state-prereq refusal, version parity, frontmatter 12/12 and 40/40,
+  marketplace L0/L1/all seven L2 installs, and diff checks exited 0.
+- Clean v0.26 source: `go test -count=1 -v ./internal/status -run Merge` and
+  `go test -count=1 -v ./internal/cli -run 'Merge|StateCommit'` exited 0.
+- Installed 0.26: status/state commit/dispatch trunk/ordinary guard work;
+  `spacedock gate consume` exits 2 `unknown command: gate`; guard `--rework`
+  exits 1 `unknown argument: --rework`.
+- Installed `gh 2.92.0`: link help confirms bottom-to-top, bottom `--base`, and
+  `--open`; merge help identifies `gh stack merge` as the separate atomic
+  all-or-nothing operation. The adopted mod never requires it.
+- Installed guard fixture ran sentinel set -> state commit -> ordinary guard and
+  archived with `completed: 2026-08-11T14:45:04Z`, proving guard does not source
+  GitHub `mergedAt`.
+- Mutant repository/sentinel/failure focused cases and integrated contract
+  exited 0. Changing the dependent row to `One Draft PR` then exited 1 with
+  `delivery-topology row polarity or required outcome drifted`.
+- Immediately before this write,
+  `scripts/dev-flow-state-prereq.sh /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/docs/dev`
+  exited 0 at holder/remote `2fa66d0ae2c2c7a4ddbe81ad67f865a683c060bf`;
+  bound-field validation returned PASS.
+
+Lenses: behavior FAIL; contract/schema PASS for baseline and removals; state/concurrency FAIL for top-only sentinel; security/privacy PASS for body bytes/explicit repo with proof residual; runtime/platform PASS for 0.26 commands; docs/policy FAIL for terminal rule and competing bases; delivery FAIL; test-quality FAIL (4 findings: 3 P1, 1 P2; falsifiers: Draft replacement argv, one per-layer base, full-stack exact-head/check/mergedAt proof, and contradictory mutants fail).
+Adversarial: FAIL — body bytes, moved HEAD, exact refspec, strict thresholds, and polarity pass; Draft argv, per-layer base, top-only tracking, and three semantic mutants fail.
+Cross-model: not_needed — exact text, tagged primary source, installed CLI behavior, graph evidence, and deterministic mutants settle the findings at high confidence; no optional pass launched.
+E2E: N/A — workflow policy/CLI orchestration has no app/browser journey; exact source/installed CLI fixtures, Git/state worktrees, help surfaces, and mutations cover the runtime boundary. Real PR creation/linking is withheld delivery authority.
+Origin re-observation: FAIL — Reported scenario: 0.26 executes the adopted merge ceremony, pre3 safety remains portable/fail-closed, and native Draft layers land bottom-to-top before terminalization | Originating runtime kind: installed Spacedock/GitHub CLIs plus Git/state worktrees | Re-observation artifact/revision: origin/main `1745b13563dd60ee41f51066ef15d0bff4929cb0`, bottom `264aabb017a36dcda0a740f28896086eab96bcc6`, top `e5b2e07fe45da7fe6104b15573f7a199ecf4da8f`, pre3 `ffaeaef696cad492c8d40ab84939178e242aff2e`, v0.26.0 `ca136f83a579fd44c223321ae7f8fe7785c685f7`, installed spacedock 0.26.0, gh 2.92.0, state `2fa66d0ae2c2c7a4ddbe81ad67f865a683c060bf` blob `67858078652a000d1c4bfa500533e784b7677d6f` | Equivalent-runtime rationale: exact tags, actual layer graph, installed commands, real Git primitives, installed guard mutation, and live split-root state; outward PR mutation stayed with delivery owner | Falsifier kind: refusal and mutation | Result: baseline/runtime checks pass, but active create is non-Draft/trunk-based, top-only state is insufficient terminal proof, and contradictory safety mutants remain green.
+
+### Engineering-manager judgment
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Reject the exact stack: baseline and runtime compatibility pass, but Draft, per-layer base, authenticated stack terminalization, and behavioral proof remain unsatisfied."
+  evidence_synthesis: "Fresh origin/main and the requested bottom/direct-child-top graph are exact and clean; primary tags and hashes prove shipped pre3 versus adopted-copy provenance and exact v0.12.2 normalization. Active argv/data flow, installed CLI behavior, and deterministic mutants establish three Material contradictions and one proof defect despite green mechanical suites."
+  risk_tradeoff_call: "Returning costs one bounded recipe consolidation, terminal-evidence correction, and executable safety matrix, but avoids ready PRs, trunk-based top PRs, premature terminalization, and phrase-only false confidence; accepting wording leaves those observable failures intact."
+  recommendation: "Return: use one Draft body-file exact-SHA recipe parameterized by layer base; require full-stack exact-head, checks, and mergedAt evidence; make repository, sentinel, and failure mutants fail."
+  route: return
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "FO may route this rejection to implementation, but may not waive findings, push, create/link/merge PRs, or terminalize."
+  engineering_judgment:
+    question: "Do bottom 264aabb017a36dcda0a740f28896086eab96bcc6 and top e5b2e07fe45da7fe6104b15573f7a199ecf4da8f satisfy all ACs after pre3 hardening?"
+    revision: "1745b13563dd60ee41f51066ef15d0bff4929cb0 -> 264aabb017a36dcda0a740f28896086eab96bcc6 -> e5b2e07fe45da7fe6104b15573f7a199ecf4da8f"
+    evidence_synthesis: "Fresh origin/main and the requested bottom/direct-child-top graph are exact and clean; primary tags and hashes prove shipped pre3 versus adopted-copy provenance and exact v0.12.2 normalization. Active argv/data flow, installed CLI behavior, and deterministic mutants establish three Material contradictions and one proof defect despite green mechanical suites."
+    adjudications:
+      - finding: "Replacement body-file command preserves Draft."
+        disposition: unsupported
+        basis: "The active argv omits --draft and the harness requires that argv."
+      - finding: "Hardening composes with each native-stack base."
+        disposition: unsupported
+        basis: "Hardening uses trunk BASE while top policy requires branch-below; no per-layer seam exists."
+      - finding: "Tracked top MERGED proves authenticated whole-stack delivery."
+        disposition: unsupported
+        basis: "Link is not atomic merge; state-only lookup omits all heads, checks, and mergedAt, and guard supplies current completion time."
+      - finding: "Every hardening class has behaviorally falsifiable proof."
+        disposition: unsupported
+        basis: "Ambient lookup, skipped sentinel commit, and local-terminal-success contradictions pass focused and integrated contracts."
+    risk_tradeoff: "Returning costs one bounded recipe consolidation, terminal-evidence correction, and executable safety matrix, but avoids ready PRs, trunk-based top PRs, premature terminalization, and phrase-only false confidence; accepting wording leaves those observable failures intact."
+    recommendation: "Return: use one Draft body-file exact-SHA recipe parameterized by layer base; require full-stack exact-head, checks, and mergedAt evidence; make repository, sentinel, and failure mutants fail."
+    route: return
+    confidence: high
+    dissent: "Implementation reports independent green and Draft-safe behavior; mechanical suites are green, but active argv/base flow, installed terminal behavior, and passing contradictory mutants disprove those outcome claims."
+    disproof_condition: "Change route only when replacement argv is Draft/per-layer-base-bound, terminalization proves all approved layer heads/checks and product mergedAt, and all named safety mutants fail."
+    authority_boundary: "Captain retains scope/topology/Draft-body/irreversible delivery; validation owns this rejection; work-item/FO may route back; delivery owner alone may push, create, link, merge, ready, or close."
+```
+
+### Summary
+
+Return to implementation without terminalizing. Preserve the exact baseline,
+provenance, consumer removal, literal body transport, candidate-SHA protection,
+strict topology table, and fail-closed recovery; repair the four findings and
+re-enter validation fresh. This cycle changed only this authorized state report.
