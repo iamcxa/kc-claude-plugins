@@ -1,6 +1,6 @@
 ---
 title: Review the published-tag Science Officer runtime smoke
-status: validation
+status: done
 source: Captain-approved issue #183 follow-up and v2.2.0 cycle-1 reset, 2026-08-11
 product: kc-dev-flow
 sprint: S1
@@ -8,10 +8,12 @@ design: required
 id: jj5jbzp2tpyc7a6x78wnfqky
 lane: main
 started: 2026-08-10T22:03:08Z
-worktree: .worktrees/spacedock-ensign-kc-dev-flow-published-tag-smoke-review
+worktree:
 pr: pr-merge:201:artifact-v1:22c1c9cb96015736fdefd536f408afb368f0aca9a590411b026417942a79c06c
-mod-block: pr-merge:product-pr:v1:22c1c9cb96015736fdefd536f408afb368f0aca9a590411b026417942a79c06c
+mod-block:
 pr_artifact_v1: eyJhdWRpdF9saW5rIjoiW2pqXSgvaWFtY3hhL2tjLWNsYXVkZS1wbHVnaW5zL2Jsb2IvYzVjMGIyZmU5M2VhMDA5NWM1YWQyNmU3ZGZkYTZlNmFjMGM4YWMwYi9rYy1kZXYtZmxvdy1wdWJsaXNoZWQtdGFnLXNtb2tlLXJldmlldy5tZCkiLCJiYXNlIjoibWFpbiIsImJhc2Vfb2lkIjoiNTQ5MTNkZGEzZTVlNjY4NDFlMDQzMDI1YmY2NDZlMGFkMjQ5M2JjOSIsImJvZHkiOiJNb3ZlIGR1YWwtaG9zdCBjb21wYXRpYmlsaXR5IHByb29mIGJlZm9yZSBwdWJsaWNhdGlvbiBzbyByZXBvcnQtY29udHJhY3QgZGVmZWN0cyBjYW5ub3QgZmlyc3Qgc3VyZmFjZSBhZnRlciByZWxlYXNlLlxuXG4jIyBXaGF0IGNoYW5nZWRcblxuLSBTcGxpdCB0aGUgc21va2UgaW50byBjYW5kaWRhdGUgYW5kIHB1Ymxpc2hlZCBtb2Rlcy5cbi0gQ2xvc2UgU2NpZW5jZSBPZmZpY2VyIHJlcG9ydCBvYmplY3RzIGFnYWluc3QgZXh0cmEgZmllbGRzLlxuLSBCaW5kIHJlbGVhc2UgaWRlbnRpdHkgdGhyb3VnaCBvbmUgc3RyaWN0IGNhbmRpZGF0ZSByZWNlaXB0LlxuLSBSZW9yZGVyIHJlbGVhc2UgaW5zdHJ1Y3Rpb25zIGFyb3VuZCBib3RoIHByb29mIHBoYXNlcy5cblxuIyMgRXZpZGVuY2VcblxuLSBSZWFsIGNhbmRpZGF0ZSBzbW9rZSBwYXNzZWQgaXNvbGF0ZWQgQ2xhdWRlIGFuZCBDb2RleCBhdCBgMjRkOTFiYjBgLlxuLSBDb250cmFjdCwgbWFya2V0cGxhY2UsIHBhcml0eSwgYW5kIDkzJSBleGVjdXRhYmxlIGRpZmYgY292ZXJhZ2UgcGFzc2VkLlxuXG4tLS1cbltqal0oL2lhbWN4YS9rYy1jbGF1ZGUtcGx1Z2lucy9ibG9iL2M1YzBiMmZlOTNlYTAwOTVjNWFkMjZlN2RmZGE2ZTZhYzBjOGFjMGIva2MtZGV2LWZsb3ctcHVibGlzaGVkLXRhZy1zbW9rZS1yZXZpZXcubWQpXG4iLCJib2R5X3NoYTI1NiI6IjZiODM5YTBlMDUzMTJhNzFkYmQ0M2MyOGUyYzFkOWY3MjFiNzU1MmIwNGEyYjhhYzkxZDdmODk4YWI5MjdhYTgiLCJkaWZmX3NoYTI1NiI6ImYxZmFjYWRmOGI0NmUwNWVkNWNkMTIyODBjYjRhYmFmZWZjMjJiOWZkODlkMGZmNTUzZWJhZjM1YzAyMDZiZmYiLCJoZWFkIjoic3BhY2Vkb2NrLWVuc2lnbi9rYy1kZXYtZmxvdy1wdWJsaXNoZWQtdGFnLXNtb2tlLXJldmlldyIsImhlYWRfb2lkIjoiMjRkOTFiYjBhZjBiNTNmZDBiMThiODgyZTc5YzUzODQxOTExNWNiMiIsImxpdmVfcGF0aCI6ImtjLWRldi1mbG93LXB1Ymxpc2hlZC10YWctc21va2UtcmV2aWV3Lm1kIiwicmVwbyI6ImlhbWN4YS9rYy1jbGF1ZGUtcGx1Z2lucyIsInRpdGxlIjoiZml4KGtjLWRldi1mbG93KTogdmFsaWRhdGUgcnVudGltZSBjb21wYXRpYmlsaXR5IGJlZm9yZSByZWxlYXNlIn0
+completed: 2026-08-11T06:37:42Z
+verdict: PASSED
 ---
 
 ## Problem
@@ -649,3 +651,13 @@ this task until that tag records a keep-or-remove disposition.
 ### Feedback Cycles
 
 - Cycle 1: REJECTED — `kc-dev-flow-v2.2.0` release-closeout smoke; keep one smoke mechanism across two triggers because it caught a producer/consumer closed-schema mismatch absent from pre-release checks; surface 1 mechanism vs estimate 1 mechanism (0%); AC narrowed: pre-release owns host/report validation, while post-release owns tag/version/tree identity
+
+## Release closeout — kc-dev-flow-v2.3.0
+
+**DECISION: PASSED.** The first published tag containing this command completed both proof phases and local installation sync.
+
+- Candidate receipt `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/kc-dev-flow-2.3.0-candidate-receipt-v3.json` binds Release PR #202 head `543425a2b7ca1d38eac5d3cc9175004da99aaf1c`, version `2.3.0`, tree `dc01f5656e4859923dd343e080994f69d9a5e6bb2de01abdfbaad105680b62b0`, and `Claude=PASS`, `Codex=PASS`.
+- Published smoke resolved `kc-dev-flow-v2.3.0` to release merge `1745b13563dd60ee41f51066ef15d0bff4929cb0`; tag, version, source tree, Claude install, and Codex install all passed against the candidate receipt, with no model invocation in published mode.
+- The GitHub Release is published and non-prerelease. Canonical clean `main` equals the release merge; post-release sync copied kc-dev-flow 2.3.0 to both local hosts. Source, Claude-local, and Codex-local kernel SHA are all `e05a9107cb40dabbcb9a210be9de3ce9c3097e7748ffa7f19292bfbbc057deb7`; Science Officer skill SHA is `8a4b6ff0b932d18be918990669dcdeff211d38530c7e3747346a30cccc9f5ec5`.
+
+All accepted release-closeout falsifiers are now closed. PR #201 remains the authenticated product delivery for this task; Release PR #202 and tag `kc-dev-flow-v2.3.0` supply the deferred runtime evidence without changing that product identity.
