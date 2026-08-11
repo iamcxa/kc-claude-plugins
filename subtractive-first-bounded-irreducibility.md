@@ -3,7 +3,7 @@ title: "kc-dev-flow: prove bounded surface necessity before adding layers"
 source: "Captain-approved subtractive-first pilot for PR #199, 2026-08-11"
 product: kc-dev-flow
 sprint: S1
-status: validation
+status: implementation
 lane: main
 design: required
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-release-batch
@@ -141,6 +141,17 @@ burden of proof and bounded ablation, rejected green evidence as deletion
 authority, kept stacked PR conditional, and required the tri-state rule plus a
 reversible non-trivial brownfield pilot. The captain accepted that narrowed
 route in this task's source conversation.
+
+## Captain scope revision — 2026-08-11
+
+The captain accepted a second without-it pass over PR #199. The zero-consumer
+product plan is a removal candidate because ROADMAP plus work-item authority
+retain membership, order, ACs, and exit. The validation runbook's EM/multi-model
+section is duplicate procedure already owned by the README and shipped skills.
+ROADMAP keeps only iteration membership, order, dependency, and exit; task prose
+stays in work-item authority. A file-specific history tombstone has no named
+runtime failure and is returned. This supersedes the earlier validation cycle's
+plan-retention mapping without changing AC-1 through AC-4.
 
 ## Stage Report: ideation
 
