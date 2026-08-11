@@ -1,7 +1,7 @@
 ---
 id: c6wj65396r1s42330e19dweg
 title: Align PR merge policy and route oversized changes to native stacks
-status: validation
+status: implementation
 source: captain directive 2026-08-11
 product: kc-dev-flow
 sprint:
@@ -435,6 +435,10 @@ green migration layer before the corrected native-stack policy layer.
   exact-push, and sentinel hardening absent from the accepted bottom layer;
   sequential surface 9 layer-paths vs estimate 9 (0%); AC-1 widened by captain
   directive, AC-2 through AC-5 unchanged
+- Cycle 3: REJECTED — fresh validation found non-Draft replacement argv,
+  trunk-only hardening, insufficient whole-stack terminal proof, and three
+  phrase-only safety cases; surface 10 layer-paths vs estimate 9 (11%); AC
+  unchanged
 
 ## Stage Report: implementation (cycle 3)
 
