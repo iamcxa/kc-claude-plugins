@@ -231,3 +231,33 @@ host invocation surface; the new kernel rule preserves the pending smoke and
 leaves its keep-or-remove decision captain-owned. Hosted CI is green at that
 exact head. Verdict remains `proceed / high`, with zero Material findings; the
 first containing-tag invocation remains release-closeout evidence.
+
+## Exact-head candidate validation — `76614da671eaf29e9bed2147aae4e4f9f390af84`
+
+Fresh Claude Opus high session `317c8a98-df85-4baa-8a48-c780d51e55b9`
+returned `proceed / high`, AC 4/4 at candidate scope, zero Material findings,
+and `multi_model: not_needed`. The same session corrected its output envelope
+without changing evidence or verdict.
+
+- `Lenses:` release placement, installed-tree binding, host isolation, report
+  schema, and delivery sequencing pass.
+- `Diff coverage:` all smoke paths map to AC-1 through AC-4; the subtractive
+  correction changes no host invocation or release placement.
+- `Adversarial:` malformed, duplicate, mismatched, and wrong-revision records
+  fail; installed-tree and plugin-count mismatches remain refusal paths.
+- `Cross-model:` not_needed — no contested, irreversible, low-confidence, or
+  unresolved call remains.
+- `E2E:` bounded PASS — prior v2.1.0 same-kind Claude/Codex host probes plus
+  current exact-head contract, tree-digest, and isolation instruments.
+- `Origin re-observation:` bounded PASS — Reported scenario: exact published
+  kc-dev-flow tag installs and invokes through Claude and Codex | Originating
+  runtime kind: authenticated installed host CLIs | Re-observation
+  artifact/revision: v2.1.0 host probes plus candidate
+  `76614da671eaf29e9bed2147aae4e4f9f390af84` | Equivalent-runtime rationale:
+  same host CLIs, tag resolver, plugin layouts, operator authentication, and
+  report contract | Falsifier kind: mutation | Result: prior host probes and
+  current refusal instruments pass; the first containing-tag run remains open.
+
+The sequencing boundary is intentional: release-please must create the first tag
+that contains this command before its closeout smoke can run. Do not terminalize
+this task until that tag records a keep-or-remove disposition.
