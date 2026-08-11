@@ -8,7 +8,7 @@ sprint:
 started: 2026-08-11T12:40:19Z
 completed:
 verdict:
-worktree: .worktrees/spacedock-ensign-native-stacked-pr-policy
+worktree: .worktrees/spacedock-ensign-native-stacked-pr-policy-v2
 issue:
 pr:
 mod-block:
@@ -666,3 +666,153 @@ native-stack policy, the top is a policy-only direct child, one authoritative
 predicate now governs routing, and semantic outcome inversion is caught. The
 next authorized action is captain review of both exact Draft PR bodies and the
 bottom-to-top branch/base bundle.
+
+## Stage Report: implementation (cycle 4)
+
+### Outcome
+
+Hardened the accepted bottom layer against the portable delivery seams present
+in the formal Spacedock `v0.27.0-pre3` shipped template, then rebuilt the
+accepted native-stack policy as one direct-child top commit. Both new layers
+are committed, clean, independently green at their exact heads, and remain
+local. No product branch was pushed, no PR was created, and no stack was linked.
+
+The task `worktree` now points to
+`.worktrees/spacedock-ensign-native-stacked-pr-policy-v2`.
+
+### Source provenance
+
+- No final Spacedock `v0.27.0` tag or GitHub release exists at this comparison
+  date.
+- The authoritative comparison seam is shipped `mods/pr-merge.md` from formal
+  prerelease `v0.27.0-pre3`, annotated tag object
+  `5a0b9a13282bd0abd6d1e3479475acd809b73b12`, peeled commit
+  `ffaeaef696cad492c8d40ab84939178e242aff2e`, and full template SHA-256
+  `0f2a4628a008e044b9d0faa67282597dfaa2ee56b6954f10028ca7d921b6e031`.
+- Upstream commit `07ce3ddd30e644b289deda98d3a589ec18e57e41` is 102 commits
+  after pre3, not a release. Its shipped template is byte-identical to pre3.
+- Upstream `docs/dev/_mods/pr-merge.md` is a separate adopted workflow copy at
+  v0.12.5. It retains branch-name push and inline `--body`, so it was not used
+  as the comparison seam.
+- The normalized released 0.26 v0.12.2 body remains byte-identical at SHA-256
+  `a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64`.
+
+### Bottom v2: portable runtime hardening
+
+- Branch: `spacedock-ensign/pr-merge-runtime-alignment-v2`
+- Worktree: `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-pr-merge-runtime-alignment-v2`
+- Head: `264aabb017a36dcda0a740f28896086eab96bcc6`
+- Parent and merge base:
+  `0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae`
+- Commit: `fix(kc-dev-flow): harden portable PR delivery`
+
+Raw `git diff --numstat 0980e992...264aabb`:
+
+```text
+98	1	docs/dev/_mods/pr-merge.md
+12	1	scripts/kc-dev-flow-contract-test.py
+247	0	scripts/pr-merge-portable-delivery.test.py
+```
+
+The focused commit changes only the trailing local runtime extension and its
+tests. It adds mode-0600 body-file transport, immutable approved-candidate
+identity, merge-tree preflight without rebase, exact-SHA refspec push, explicit
+entity-worktree branch/repository resolution, qualified PR lookup with explicit
+`--repo`, and restart-safe merged-sentinel commit followed by the ordinary
+installed 0.26 merge guard.
+
+### Top v2: policy-only direct child
+
+- Branch: `spacedock-ensign/native-stacked-pr-policy-v2`
+- Worktree: `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-native-stacked-pr-policy-v2`
+- Head: `e5b2e07fe45da7fe6104b15573f7a199ecf4da8f`
+- Parent and merge base:
+  `264aabb017a36dcda0a740f28896086eab96bcc6`
+- Commit: `docs(kc-dev-flow): route dependent changes through native stacks`
+
+Raw `git diff --numstat 264aabb...e5b2e07`:
+
+```text
+5	4	docs/dev/README.md
+46	0	docs/dev/_mods/pr-merge.md
+79	6	scripts/kc-dev-flow-contract-test.py
+```
+
+The top diff contains exactly the three accepted policy paths above. It does
+not change `scripts/pr-merge-portable-delivery.test.py`; the authoritative
+four-row topology table, README delegation, strict numeric trigger, exception,
+approval, Draft/linking, CI, and top-PR tracking semantics remain the sole top
+layer.
+
+### TDD evidence
+
+All five cases were added before changing the runtime extension and each failed
+for its intended missing behavior:
+
+| Safety class | RED evidence | GREEN behavior |
+| --- | --- | --- |
+| Body file | `body-file contract missing: replaces the released shell-interpolated --body command` | A real mode-0600 file transported adversarial backticks, `$()`, `$HOME`, and embedded newlines byte-for-byte through a fake `gh --body-file`; no body content executed. |
+| Candidate SHA | `candidate-SHA contract missing: CANDIDATE_SHA=...` | A real Git fixture recorded the candidate, moved `HEAD` after approval, preflighted the recorded SHA, pushed the exact refspec, and observed the remote branch at the approved candidate rather than moved `HEAD`. |
+| Repository reference | `PR reference resolution table is not unique` | The test parses exact outcomes for `owner/repo#N`, `#N`, and `N`, and requires entity-worktree `CODE_REPO`, `BRANCH`, and explicit `--repo`. |
+| Sentinel compatibility | `sentinel/guard sequence is incomplete` | The test requires ordered `pr=pr-merge:{N}` set, `spacedock state commit`, then ordinary 0.26 `merge guard`, and rejects direct terminal/archive writes. |
+| Failure policy | `failure-policy contract missing: local kc-dev-flow compatibility override, not shipped pre3 parity` | The mod now preserves pending authority and state on push, mergeability, repository, or `gh` failure; it never treats local merge as authenticated terminal success. |
+
+The integrated `kc-dev-flow` contract initially failed with all five RED rows,
+then passed after only the local extension changed.
+
+### Pre3 delta disposition
+
+| Shipped pre3 behavior | Local disposition | Compatibility reason |
+| --- | --- | --- |
+| Mode-0600 temporary body plus `gh pr create --body-file` | Backported | Pure file/argv behavior; executable on 0.26 and protects Markdown bytes from shell interpolation. |
+| Immutable `CANDIDATE_SHA`, merge-tree preflight, no post-approval rebase, exact-SHA refspec | Backported | Uses Git primitives available locally and preserves the exact approved commit. |
+| Branch and code repository from entity worktree; qualified PR plus explicit `--repo` | Backported | Removes launch-directory ambiguity without requiring a newer Spacedock verb. |
+| Durable `pr-merge:{N}` sentinel, state commit, then ordinary merge guard | Backported | Installed 0.26 provides both `state commit` and `merge guard`; this replaces unsafe direct terminalization. |
+| Split-root immutable state audit tuple | Retained from accepted bottom | Already locally corrected and independently verified. |
+| `spacedock gate consume` | Rejected | 0.27-only runtime surface; installed 0.26 does not provide it. |
+| `merge guard --rework` | Rejected | 0.27-only flag; ordinary 0.26 guard remains the sole merge entry. |
+| Push/mergeability/`gh` failure fallback to local merge | Rejected and locally overridden | kc-dev-flow `done` requires an authenticated merged product PR; failure must preserve authority/state and stop. |
+| Role-generic PR-body extraction wording | Not backported | Outside the requested portable-delivery safety seam. |
+
+### Acceptance and changed-path mapping
+
+| Path/layer | Acceptance mapping | Exact evidence |
+| --- | --- | --- |
+| Bottom `docs/dev/_mods/pr-merge.md` | AC-1, AC-5 | Preserves released-body hash and installed-0.26 runtime while adding only portable safety overrides and fail-closed delivery. |
+| Bottom `scripts/kc-dev-flow-contract-test.py` | AC-1, AC-5 | Runs the bounded portable behavior suite and keeps structural upstream/recovery/consumer guards. |
+| Bottom `scripts/pr-merge-portable-delivery.test.py` | AC-1, AC-5 | Executes body-byte and candidate-SHA falsifiers; parses repository and sentinel semantics; enforces 0.26 exclusions and local failure policy. |
+| Top `docs/dev/README.md` | AC-2, AC-3 | Delegates to the same authoritative topology predicates without a second readiness rule. |
+| Top `docs/dev/_mods/pr-merge.md` | AC-2, AC-3, AC-4 | Adds only native-stack/parallel/single topology, strict trigger, exception, and approved Draft/link mechanics. |
+| Top `scripts/kc-dev-flow-contract-test.py` | AC-2, AC-3, AC-4 | Parses the exact decision table and fails polarity/outcome drift while retaining all bottom checks. |
+
+### Exact-head verification
+
+At both exact heads, all of these exited zero:
+
+- `python3 -m py_compile` for both Python contracts;
+- `python3 scripts/pr-merge-portable-delivery.test.py` (5/5);
+- `python3 scripts/kc-dev-flow-contract-test.py`;
+- `bash scripts/dev-flow-state-prereq.test.sh`;
+- `bash scripts/marketplace-verify.sh` (L0/L1 and all seven L2 installs);
+- `bash scripts/version-parity-check.sh`;
+- `bash scripts/skill-frontmatter-lint.test.sh` (12/12);
+- `bash scripts/skill-frontmatter-lint.sh` (40/40); and
+- `git diff --check`.
+
+Spacedock 0.26.0 `internal/status` and `internal/cli` merge-guard fixtures passed.
+The installed `spacedock 0.26.0 (contract 3)` exposes ordinary `state commit`
+and `merge guard`; installed `gh stack link` still exposes the approved
+bottom-to-top stack surface. The live holder prerequisite ran successfully
+before this shared-state mutation.
+
+The prior bottom, top, and combined evidence worktrees remain clean at
+`0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae`,
+`3ad8a4f8d35ac2efe1e839aa77291eb4521d9543`, and
+`7b315696705840b0db4941d8205e53247ccafdd8`, respectively.
+
+### Handoff and blockers
+
+Track the top-v2 worktree and exact head above. There are no implementation
+blockers. Any product push, Draft PR creation, native-stack link, readiness
+change, merge, or terminalization remains captain/FO delivery work and was not
+performed in this cycle.
