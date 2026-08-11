@@ -244,3 +244,174 @@ Cycle 2 corrects the one split-root regression without widening runtime or
 delivery scope: PR bodies now use immutable task-state audit links and stop when
 state cannot be proven, while released 0.12.2 behavior, Draft/native-stack
 routing, artifact removal, and the two test deletions remain intact.
+
+## Stage Report: validation
+
+### Verdict
+
+REJECTED at exact product head
+`7b315696705840b0db4941d8205e53247ccafdd8` against merge base
+`1745b13563dd60ee41f51066ef15d0bff4929cb0`. Released-runtime preservation,
+split-root link construction, and removal of the unconsumed artifact protocol
+pass. The delivery cannot advance because the governing stack predicates
+conflict, this oversized change has a demonstrated independently green lower
+layer, and the new routing contract accepts semantically inverted policy.
+
+### Findings
+
+- **[P1] Align the governing stack predicate with the new mandatory route —
+  `docs/dev/_mods/pr-merge.md:157`.** The extension requires a native stack
+  whenever two dependent, independently reviewable and verifiable green layers
+  exist. The unchanged governing implementation rule in `docs/dev/README.md:276`
+  allows a stack only when waiting for the lower PR to merge blocks useful work.
+  The same change can therefore receive opposite topology decisions. Make the
+  README rule and the extension express one predicate before this can govern
+  delivery.
+- **[P1] Route this oversized migration through the demonstrated green
+  two-layer stack — `docs/dev/_mods/pr-merge.md:161`.** The exact diff is 3,119
+  gross lines. In a disposable checkout, removing only the new native-routing
+  policy paragraphs and their phrase assertions left a lower layer containing
+  the released-runtime/artifact migration and split-root correction; both
+  `python3 scripts/kc-dev-flow-contract-test.py` and
+  `bash scripts/dev-flow-state-prereq.test.sh` passed. That falsifies the entity's
+  claim that no ordering yields two independently reviewable and verifiable
+  green layers. Deliver that lower layer first and the corrected routing policy
+  above it, or identify a named independent acceptance check that the lower
+  layer actually fails.
+- **[P2] Make the routing guard fail on semantic inversion —
+  `scripts/kc-dev-flow-contract-test.py:830`.** A disposable mutant changed the
+  normative rule to say that two green dependent layers "never requires a
+  native stack at any size." The current phrase loop still passed because it
+  checks vocabulary, not polarity or classification. Replace the loose phrase
+  assertions with exact normative assertions and data-driven adversarial cases
+  that fail when stack, parallel, atomic, and exception outcomes are inverted.
+
+### Acceptance-criteria coverage
+
+| Criterion | Verdict | Evidence |
+| --- | --- | --- |
+| AC1 | PASS | Removing the trailing extension and the one `--draft` token reproduces released `pr-merge` v0.12.2 SHA-256 `a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64`. Spacedock v0.26.0 merge tests passed 49/49, and the installed 0.26.0 binary armed then refused terminal advancement until its merge hook ran. No v0.27 gate/rework/candidate behavior or unrelated artifact protocol remains. |
+| AC2 | FAIL | The extension states the required bottom-to-trunk and higher-to-branch-below topology and uses `gh stack link`, but its mandatory stack predicate conflicts with the governing README predicate. |
+| AC3 | FAIL | Gross lines and file count are measured from the merge base, all volume stays in the totals, and semantic examples classify correctly in isolation. The current one-PR topology nevertheless ignores a demonstrated green seam, while the README conflict makes the semantic override ambiguous. |
+| AC4 | FAIL | The fixed `## Native stack exception`, non-subtracted mechanical share, and reviewer acknowledgment are specified. This change's exception is not justified because a lower green layer passes independently. |
+| AC5 | PASS | `pr_artifact_v1`, the two recipe marker pairs, obsolete executable subjects, and obsolete tests have no tracked consumer at HEAD. Recovery now preserves evidence and stops instead of inventing a replacement credential. |
+
+### Changed-path and diff coverage
+
+| Changed path | AC mapping | Validation |
+| --- | --- | --- |
+| `docs/dev/README.md` | AC2-AC3 | Compared its implementation-stage predicate with the extension and found the blocking contradiction. |
+| `docs/dev/_mods/pr-merge.md` | AC1-AC4 | Proved exact released-body equality, exercised released merge behavior, inspected all extension rules, ran topology attacks, and demonstrated the lower green layer. |
+| `docs/dev/artifacts/terminal-transaction-contract-test.sh` | AC5 | Inspected the deleted test and swept HEAD for its extracted function, recipe markers, and remaining consumers; none exists. |
+| `docs/dev/runbooks/state-recovery.md` | AC5 | Ran the refusal contract and inspected the new fail-closed recovery language for invented credentials or unsafe fallback. |
+| `kc-pr-flow/scripts/pr-merge-audit-link.test.sh` | AC5 | Inspected the deleted executable subject and swept HEAD for its function and markers; none exists. The live state tuple replaces its surviving boundary claim. |
+| `scripts/kc-dev-flow-contract-test.py` | AC1-AC5 | Ran at exact head, inspected every addition, exercised a split-root tuple, and used a polarity mutant to expose the inadequate routing assertions. |
+
+`git diff --numstat` reports 209 additions and 2,910 deletions across six paths.
+All 209 additions were classified: the 191 mod/contract lines were exercised by
+structural comparison, exact-head suites, live CLI/state checks, and direct
+mutants; the 18 README/recovery lines were exercised by policy comparison and
+the refusal path. Deletions were covered by exact released-body comparison plus
+deleted-subject and consumer sweeps.
+
+Diff coverage: 100% path coverage (6/6); 209/209 additions classified and exercised by a suite, live boundary check, structural equality check, or direct falsifier; 2,910 deletions covered by exact upstream comparison and deleted-subject/consumer sweeps.
+
+### Adversarial classification and falsifiers
+
+- 200 gross lines with two dependent, independently green layers: native stack.
+- 2,000 atomic lines: the numeric decision fires; if no green seam exists, one
+  Draft PR needs the fixed exception, the separately named zero/nonzero
+  mechanical share, and explicit reviewer acknowledgment.
+- 2,000 generated lines: all 2,000 count; generated share is named but never
+  subtracted or auto-exempted.
+- 25 independent files: the file trigger fires; independent slices become
+  parallel Draft PRs from trunk, not a stack.
+- Two independent parallel slices: parallel Draft PRs from trunk.
+- A proposed layer that cannot verify alone: not a green seam; reject the fake
+  layer, then use atomic or exception routing according to the full diff.
+
+Concrete falsifier: a mutant that preserves the current keywords while changing
+"requires a native stack" to "never requires a native stack" must fail the
+contract. Separately, the one-PR exception remains disproved unless the
+runtime/artifact lower-layer carveout fails a named independent acceptance
+check.
+
+### Exact evidence
+
+- Product worktree was clean and exact HEAD remained
+  `7b315696705840b0db4941d8205e53247ccafdd8`; `git diff --check` passed.
+- `python3 scripts/kc-dev-flow-contract-test.py`,
+  `bash scripts/dev-flow-state-prereq.test.sh`,
+  `bash scripts/version-parity-check.sh`,
+  `bash scripts/skill-frontmatter-lint.sh`, and
+  `bash scripts/marketplace-verify.sh` all passed at exact HEAD.
+- Extracted tag `spacedock/v0.26.0` at
+  `3819610affd5bfc01f9a9a31893462c02b578589`: 42 `internal/status` merge tests
+  and 7 `internal/cli` merge tests passed. The installed `spacedock 0.26.0`
+  fixture armed `merge:local-merge` and then refused terminal advancement before
+  the hook ran.
+- The released section contains one Draft adjustment; after removing it, its
+  bytes equal the tagged v0.12.2 mod and hash to
+  `a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64`.
+- Installed `gh 2.92.0` reports that `gh stack link` arguments are bottom to top,
+  `--base` selects the bottom base, and `--open` opts out of Draft creation.
+  Official source confirms the default Draft flag and official documentation
+  confirms bottom-to-trunk/higher-to-branch-below topology and stack-base CI:
+  `https://github.com/github/gh-stack/blob/main/cmd/link.go`,
+  `https://github.github.com/gh-stack/introduction/overview/`, and
+  `https://github.github.com/gh-stack/faq/`.
+- Live split-root resolution produced state HEAD
+  `e355fb298762eceec5c769f30177159bcab77032`, relative path
+  `native-stacked-pr-routing.md`, and blob
+  `0459a92843ce6f6401ccc5aea77c3d379a4f91d1`. Both plausible product/code-tree
+  tuples failed blob existence as required.
+- HEAD contains no tracked `pr_artifact_v1`, deleted recipe marker, deleted test
+  name, or deleted executable subject.
+
+Lenses: behavior PASS; contract/schema FAIL; state/recovery PASS; runtime/platform PASS; docs/policy FAIL; delivery/topology FAIL; security/privacy PASS; concurrency/split-root PASS (3 findings: 2 P1, 1 P2).
+Adversarial: six topology cases classified; live arm/block and split-root fail paths passed; disposable lower-layer carveout and polarity mutant both falsified acceptance.
+Cross-model: not_needed — direct source, exact-runtime, live-state, and mutant evidence is high confidence; no optional pass was launched under the no-agent contract.
+E2E: N/A — this ideation-approved change is workflow policy and CLI orchestration with no app/browser journey; exact installed CLI, released-source fixtures, and the live split-root tuple exercised the equivalent boundaries.
+Origin re-observation: PASS — Reported scenario: released Spacedock 0.26 must arm/block the merge guard, the custom artifact protocol must have no consumer, and split-root audit links must name committed task state | Originating runtime kind: installed native CLI plus GitHub-hosted stack/gh CLI | Re-observation artifact/revision: product `7b315696705840b0db4941d8205e53247ccafdd8`, Spacedock v0.26.0 tag `3819610affd5bfc01f9a9a31893462c02b578589`, installed spacedock 0.26.0, gh 2.92.0, state `e355fb298762eceec5c769f30177159bcab77032` blob `0459a92843ce6f6401ccc5aea77c3d379a4f91d1` | Equivalent-runtime rationale: exact released tag/installed binary, actual task-state checkout, installed gh help, and official GitHub stack source/docs | Falsifier kind: refusal plus existence disproof | Result: installed fixture armed then refused without its hook; the state tuple blob exists; both product/code-tree tuples fail.
+
+### Engineering-manager judgment
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Exact head preserves released runtime behavior and artifact removal, but cannot pass validation because its routing policy is internally contradictory, its own oversized diff has a demonstrable green stack seam, and its phrase guard accepts inverted semantics."
+  evidence_synthesis: "At 7b315696705840b0db4941d8205e53247ccafdd8 the v0.12.2 normalized body matches SHA-256 a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64, Spacedock v0.26.0 merge suites pass 49/49 and the installed arm/block fixture reproduces, while disposable bottom-layer and semantic-mutant experiments respectively pass the affected contracts and expose the invalid one-PR exception and tautological routing assertion."
+  risk_tradeoff_call: "Returning costs one bounded policy/test correction and stacked delivery, but avoids shipping contradictory routing and a reviewer exception already disproved by an independently green layer; the alternative is to retain a one-PR exception that violates the change's own rule."
+  recommendation: "Return to implementation: align the README and mod predicates, replace loose phrase checks with semantic adversarial fixtures, and deliver the runtime/artifact migration below the native-stack policy layer."
+  route: return
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "The First Officer may route the rejected gate but has no authority to waive findings, approve the exception, or mutate PR delivery."
+  engineering_judgment:
+    question: "Does exact head 7b315696705840b0db4941d8205e53247ccafdd8 satisfy native-stacked-pr-routing acceptance and justify one oversized Draft PR?"
+    revision: "7b315696705840b0db4941d8205e53247ccafdd8"
+    evidence_synthesis: "At 7b315696705840b0db4941d8205e53247ccafdd8 the v0.12.2 normalized body matches SHA-256 a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64, Spacedock v0.26.0 merge suites pass 49/49 and the installed arm/block fixture reproduces, while disposable bottom-layer and semantic-mutant experiments respectively pass the affected contracts and expose the invalid one-PR exception and tautological routing assertion."
+    adjudications:
+      - finding: "The governing README and extension give different stack predicates."
+        disposition: supported
+        basis: "README line 276 conditions stacking on blocked useful work; mod line 157 makes every dependent green seam mandatory at any size."
+      - finding: "The current oversized diff has no independently green stack seam."
+        disposition: unsupported
+        basis: "A disposable lower layer retaining released runtime, artifact removal, recovery, and split-root correction passed both affected contracts."
+      - finding: "The phrase loop protects native-routing semantics."
+        disposition: unsupported
+        basis: "A polarity-inverted rule retained every searched phrase and the contract still passed."
+    risk_tradeoff: "Returning costs one bounded policy/test correction and stacked delivery, but avoids shipping contradictory routing and a reviewer exception already disproved by an independently green layer; the alternative is to retain a one-PR exception that violates the change's own rule."
+    recommendation: "Return to implementation: align the README and mod predicates, replace loose phrase checks with semantic adversarial fixtures, and deliver the runtime/artifact migration below the native-stack policy layer."
+    route: return
+    confidence: high
+    dissent: "The implementation report asserts no green split exists; the disposable bottom-layer PASS directly contradicts that assertion."
+    disproof_condition: "A corrected exact head would change this route if the bottom carveout fails a named independent acceptance check, the two governing predicates are identical, and a polarity inversion makes the routing contract fail."
+    authority_boundary: "The captain owns scope, exception, and stack-body approval; the validation gate owns this verdict; work-item and First Officer owners may transition or route the entity; this judgment grants no merge or delivery-mutation authority."
+```
+
+### Summary
+
+Return to implementation. Preserve the confirmed released-runtime, split-root,
+and fail-closed artifact-removal work; align the governing topology predicate,
+make semantic inversion fail the contract, and deliver the demonstrated lower
+green migration layer before the corrected native-stack policy layer.
