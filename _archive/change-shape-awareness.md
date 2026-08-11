@@ -14,6 +14,7 @@ pr_artifact_v1: eyJhdWRpdF9saW5rIjoiWzVlXSgvaWFtY3hhL2tjLWNsYXVkZS1wbHVnaW5zL2Js
 mod-block:
 completed: 2026-08-11T07:24:14Z
 verdict: PASSED
+archived: 2026-08-11T09:17:28Z
 ---
 
 kc-dev-flow already governs accepted outcomes, reverse recovery, bounded subtraction, and without-it validation, but it does not expose removable mass inside AC-mapped files after implementation. Integrate these principles in one unambiguous order and trial categorized gross change shape as observation only, so agents ask what can still be removed without optimizing LOC at the expense of correctness, tests, clarity, or accepted value.
