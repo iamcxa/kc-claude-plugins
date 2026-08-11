@@ -220,6 +220,105 @@ Captain decline remains an explicit choice prompt: ask whether to keep the
 branch pending, revise the proposed delivery, or cancel it. If the captain asks
 about local delivery, explain that local merge cannot authenticate the product PR required for terminalization and do not claim or write terminal success.
 
+### Delivery topology decision
+
+Classify the reviewed change before constructing titles or bodies. A green layer
+is independently reviewable and independently verifiable. Mark dependent green
+layers `yes` only when at least two green layers must land bottom to top. Mark
+independent green slices `yes` only when multiple green slices can land from
+trunk in any order.
+
+Measure the merge-base diff at review request. Numeric trigger: `gross additions + deletions > 1,500 OR changed files > 20`. Mechanical, generated, vendor, and lock-file changes stay in both counts and are named separately. Counts choose topology only; they do not relax quality boundaries or justify padding, compression, unsafe deletion, or responsibility splitting.
+
+| Dependent green layers? | Independent green slices? | Numeric trigger? | Required topology |
+| --- | --- | --- | --- |
+| yes | any | any | Native stack at any size |
+| no | yes | any | Parallel Draft PRs from trunk |
+| no | no | yes | One Draft PR with `## Native stack exception` |
+| no | no | no | One Draft PR |
+
+For an exception row, include the exact heading `## Native stack exception` in
+the PR body. Explain why no layer can be independently reviewed and verified,
+and name the mechanical, generated, vendor, and lock-file share without
+subtracting it. A reviewer must explicitly acknowledge the exception before
+the PR becomes ready or merges; author approval is insufficient.
+
+#### Native stack delivery-unit composition
+
+Bind one approved canonical Draft delivery unit per layer in bottom-to-top order.
+Use the unit defined above without changing its Draft, explicit repository,
+body-file, exact-base preflight, or exact-candidate refspec contract:
+
+| Layer | `UNIT_BASE_BRANCH` | `UNIT_BASE_SHA` |
+| --- | --- | --- |
+| bottom | trunk `$BASE` | approved trunk `$BASE_SHA` |
+| each higher | branch immediately below | approved `UNIT_CANDIDATE_SHA` immediately below |
+
+Invoke the canonical bottom delivery unit unchanged for every layer. The
+bottom unit's full approved candidate therefore becomes the exact preflight
+base SHA for the next unit. For parallel delivery, invoke independent units
+whose base branch and approved base SHA both resolve to trunk; none targets a
+sibling branch.
+
+Each unit gets its own reviewed title, mode-0600 body file containing its full
+`Candidate:` SHA, code repository, branch, base branch, base SHA, candidate SHA,
+and worktree. Each layer remains independently green, with pull_request CI for every layer against its declared base.
+
+Before any unit push, creation, or link mutation, present one stack draft and
+get explicit captain approval. The captain must approve every title, full body, and bottom-to-top branch order, including every unit's Candidate and base SHA.
+Do not reuse single-PR approval for a stack or infer approval from silence.
+
+After all canonical units have created Draft PRs, retain their full GitHub PR
+URLs. Link only those already-created URLs in bottom-to-top order:
+
+`gh stack link --base "$BASE" "$BOTTOM_PR_URL" "$NEXT_PR_URL" ... "$TOP_PR_URL"`
+
+Full URLs prevent branch pushing and ambient-repository selection by the link
+step. Do not pass `--open`. Stop and preserve authority on any unit or link
+failure. After linking succeeds, track the top PR as a qualified repository and
+number in the entity `pr` field.
+
+Only after each layer's required checks and review are green and the captain explicitly authorizes readiness, run `gh pr ready "$LAYER_PR_URL"` for every layer in bottom-to-top order. Preserve Draft state on any missing evidence, refusal, or failure. Do not call `gh stack merge` while any layer remains Draft.
+
+Use GitHub native atomic stack merge through `gh stack merge` or the native UI; never merge an individual PR.
+
+#### Native stack completion decision
+
+The stored top PR is completion evidence only after this public-preview stack
+proof passes:
+
+| Evidence | Required result | Otherwise |
+| --- | --- | --- |
+| Stack lookup | exactly one stack for stored top PR | stop |
+| Base | `base.ref` equals trunk | stop |
+| Top position | stored top PR is final ordered entry | stop |
+| Atomic landing | every ordered `pull_requests[].merged_at` is non-empty | stop |
+| Candidate | each `head.sha` and explicit PR `headRefOid` equal body Candidate | stop |
+| Required checks | each explicit-repository required check succeeds | stop |
+| Completion time | stored top PR `mergedAt` is non-empty | only then sentinel and guard |
+
+Resolve the stored qualified top reference into `STACK_REPO` and
+`TOP_PR_NUMBER`, then query the repository-explicit endpoint:
+
+`gh api --method GET "repos/$STACK_REPO/stacks?pull_request=$TOP_PR_NUMBER"`
+
+The public-preview response contract uses `number`, `base.ref`, and ordered `pull_requests[]` entries containing `number`, `merged_at`, `head.ref`, and `head.sha`. Require exactly one returned stack, its trunk base, and the stored top PR as the final ordered entry.
+
+For every ordered entry, query the same explicit repository:
+
+`gh pr view "$LAYER_PR_NUMBER" --repo "$STACK_REPO" --json body,headRefOid,mergedAt`
+
+Require exactly one full `Candidate:` SHA in the approved body and require both
+the entry's `head.sha` and the PR's `headRefOid` to equal it. Then run:
+
+`gh pr checks "$LAYER_PR_NUMBER" --repo "$STACK_REPO" --required`
+
+Every entry must have non-empty `merged_at`; the stored top PR's non-empty
+`mergedAt` is the completion timestamp. Then and only then invoke the canonical
+sentinel, state-commit, and ordinary 0.26 guard transcript once for the stored
+top PR. A top PR merged outside exactly one matching native stack stops without sentinel or guard. Missing, multiple, reordered, mismatched, unchecked, or
+partially merged evidence also stops without state mutation.
+
 ### Split-root audit-link correction
 
 This subsection overrides the released audit-link inputs for this split-root

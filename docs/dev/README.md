@@ -273,10 +273,11 @@ the decision to its owning stage; do not adjudicate it while coding.
   fail a change, rank an agent or PR, offset additions with deletions, forecast
   a budget, redefine accepted value, or override tests, safety, clarity, and
   maintenance obligations.
-- Default to one independently deliverable smallest PR targeting `main`. Use a
-  stack only for at least two dependent working slices that are each reviewable
-  and verifiable on their own, when waiting for the lower PR to merge blocks
-  useful work. Stack shape is delivery topology, not minimality evidence.
+- Select PR topology from the authoritative Delivery topology decision table in
+  [`_mods/pr-merge.md`](./_mods/pr-merge.md#delivery-topology-decision). Use its
+  dependent green layers, independent green slices, and numeric trigger
+  predicates without adding another readiness condition here. Stack shape is
+  delivery topology, not minimality evidence.
 
 ### `validation` — fresh, adversarial evidence
 
