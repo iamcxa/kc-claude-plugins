@@ -1,7 +1,7 @@
 ---
 id: c6wj65396r1s42330e19dweg
 title: Align PR merge policy and route oversized changes to native stacks
-status: implementation
+status: validation
 source: captain directive 2026-08-11
 product: kc-dev-flow
 sprint:
