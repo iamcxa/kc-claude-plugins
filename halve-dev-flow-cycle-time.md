@@ -4,7 +4,7 @@ source: Captain 2x development-speed target, 2026-08-10
 product: kc-dev-flow
 sprint: S1
 id: f32cg5cbw6b633s09e2zxbr5
-status: implementation
+status: validation
 lane: main
 started: 2026-08-10T22:03:08Z
 design: required
@@ -230,3 +230,17 @@ surface challenges execute inside the two existing EM seats: no implementation
 reviewer, third seat, route, or blocking wait was added. Multi-model remains
 optional at current README line 264. Hosted CI is green at the exact head.
 Verdict remains `proceed / high`, with zero Material findings.
+
+## Implementation correction — remove duplicate observation surface
+
+Commit `76614da671eaf29e9bed2147aae4e4f9f390af84` deletes the
+non-authoritative workflow cost history and its file-specific contract wording.
+The accepted two-to-zero fixed-route comparison remains in this work item and
+the semantic contract still rejects an implementation reviewer loop. No skill,
+stage binding, EM seat, multi-model condition, or delivery predicate changed.
+
+Fresh implementation checks pass at that commit: kc-dev-flow contract, 40 skill
+frontmatters, version parity, marketplace L0/L1/L2 installation, state
+prerequisite contract, Python compilation, diff check, and local Markdown links.
+Re-enter validation because the exact head changed; prior verdicts are evidence,
+not authority for the new revision.
