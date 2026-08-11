@@ -1,7 +1,7 @@
 ---
 title: Review the published-tag Science Officer runtime smoke
 status: ideation
-source: Captain-approved issue #183 follow-up, 2026-08-10
+source: Captain-approved issue #183 follow-up and v2.2.0 cycle-1 reset, 2026-08-11
 product: kc-dev-flow
 sprint: S1
 design: required
@@ -9,115 +9,266 @@ id: jj5jbzp2tpyc7a6x78wnfqky
 lane: main
 started: 2026-08-10T22:03:08Z
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-release-batch
-pr: "#199"
+pr: ""
 ---
 
 ## Problem
 
-The published-tag cross-harness smoke is intentionally speculative until the first kc-dev-flow release containing its packaged schema and prompt can exercise the clean-installed Claude and Codex surfaces. Without a durable review point, the harness could remain permanently after its claimed value fails to materialize.
+The first containing-tag run at `kc-dev-flow-v2.2.0` earned retention by finding
+installed-runtime evidence that no pre-release check had observed: Claude added
+`verdict_note` to an adjudication object, and the intentionally strict consumer
+rejected the extra field. The defect is a producer/consumer specification gap.
+The packaged skill and smoke prompt enumerate fields but never say their objects
+are closed.
+
+The release-only placement is now wrong. Publication became the first full
+observation of the host/report contract, so a preventable producer mismatch was
+found only after the artifact was public. Without correction, later releases can
+repeat that sequencing failure even though the smoke itself is valuable.
+
+No new scope interview is needed for this reset: the captain's rejection and
+decision answer the ideation questions directly. The cost of doing nothing is a
+post-publication contract surprise; the protected core is pre-release dual-host
+report proof plus post-release artifact identity; retries, schema relaxation,
+provider matrices, and a second framework are happily excluded; and the
+load-bearing assumption is that both existing marketplace installers can consume
+a local candidate checkout.
 
 ## Review contract
 
-After the first GitHub Release containing the smoke assets, run the authenticated exact-tag release smoke and preserve its receipt. Keep the harness only if it produces installed-runtime evidence unavailable from the existing post-install and marketplace helpers; otherwise remove it.
-
-The captain scheduled this review in `kc-dev-flow/S1` as the first item in the
-single-release batch.
+Keep one smoke mechanism across two release triggers. Before a Release PR is
+merged, the clean candidate must install and invoke through isolated Claude and
+Codex state, and both reports must satisfy the exact closed schema. Preserve that
+candidate receipt. After publication, rebind the exact tag, declared version, and
+both installed plugin trees to the receipt without invoking either model, then
+continue to local sync.
 
 ## End value
 
-Release closeout can prove that the exact published kc-dev-flow tag installs and
-invokes through clean Claude and Codex plugin state, and that both hosts return
-the complete EM compatibility record for that tag's commit.
+Publication is never the first observation of a host/report incompatibility. A
+pre-release receipt proves both isolated installed hosts accepted the candidate's
+closed compatibility record. A post-release receipt then proves that the exact
+published tag's version and plugin bytes are the already-validated candidate,
+while recording both candidate and published revisions.
+
+## Fastest path, smallest cut, and rejected alternative
+
+- **Fastest path:** teach the existing producer surfaces that the report objects
+  are closed, then run the existing smoke before and after publication.
+- **Smallest cut:** keep `scripts/kc-dev-flow-published-tag-smoke.py` as the only
+  mechanism, split it into `candidate` and `published` modes, and pass one
+  closed-schema JSON receipt between them. Extend only the existing contract test,
+  packaged Science Officer skill, and root release instructions.
+- **Taking the cheap path:** the one-script/four-existing-file repair satisfies
+  the same ACs with no scope cut. The more thorough alternative is an authenticated
+  Release-PR CI matrix plus hosted or signed receipt storage. It adds secrets,
+  provider spend, workflow authority, and a second persistence concern without
+  improving the accepted manual release-boundary proof.
 
 ## Smallest route and reverse-recovery audit
 
-- `scripts/marketplace-verify.sh` is `WORKING` for current-checkout Claude
-  marketplace resolution, but it does not bind an exact tag, invoke Codex, or
-  validate the EM report.
-- `kc-plugin-forge/scripts/post-release-sync.sh:38-68` is `WORKING` for copying a
-  clean `main` checkout after release, but it neither checks a tag nor invokes a
-  host.
-- The v2.1.0 one-off exact-tag probe is `WORKING` evidence that clean-installed
-  Claude and Codex can both invoke the skill, but it is not a reusable release
-  check.
+Audit target: fresh `origin/main` at published tag `kc-dev-flow-v2.2.0`, revision
+`54913dda3e5e66841e043025bf646e0ad2493bc9`.
 
-Keep one release-only wrapper around those real host CLIs. A per-PR matrix, new
-CI job, new auth store, or reimplementation of plugin installation is outside
-the route. The mechanism is required by AC-1; the cheaper existing helpers are
-insufficient because none observes all four missing boundaries together.
+- **Release entry — `EXISTS_BROKEN`:** `CLAUDE.md:47-56` runs the only authenticated
+  smoke after publication, so it cannot prevent publication from being the first
+  report-contract observation. Falsifier: a containing-tag provider mismatch is
+  seen only after the tag exists; v2.2.0 supplied that observation.
+- **Producer contract — `EXISTS_BROKEN`:**
+  `kc-dev-flow/skills/science-officer-em/SKILL.md:51-91` enumerates the report but
+  does not say root, envelope, judgment, and adjudication objects reject extra
+  keys. Falsifier: the v2.2.0 producer emitted `verdict_note`.
+- **Smoke prompt — `EXISTS_BROKEN`:**
+  `scripts/kc-dev-flow-published-tag-smoke.py:296-302` asks for every field but
+  does not say "exactly these keys and no extras." Falsifier: the same released
+  host output.
+- **Strict consumer — `WORKING`:**
+  `scripts/kc-dev-flow-published-tag-smoke.py:53-188` rejects duplicate, missing,
+  extra, invalid-enum, wrong-revision, and wrapper-mismatch data. The v2.2.0
+  failure is its runtime proof. Relaxing it would delete the evidence that earned
+  retention.
+- **Host install/invocation — `WORKING`:** the script already isolates and
+  installs both hosts at lines 305-442; prior v2.1.0 probes exercised both host
+  kinds, and v2.2.0 reached the real Claude producer. Current `claude` and `codex`
+  CLI help both explicitly accept a local path for `plugin marketplace add`, so
+  the candidate mode needs no new installer. Disproof hook: the first RED/GREEN
+  rehearsal fails to install the exact local candidate.
+- **Candidate receipt handoff — `MISSING` within the existing mechanism:** two
+  searches of `origin/main` found no candidate-receipt vocabulary, and argparse
+  at script lines 454-488 exposes only a published tag or standalone report
+  validation. Add the seam inside the existing script; do not add a new script.
+- **Published identity proof — `WORKING_UNIT_UNPROVEN` against a candidate:** exact
+  tag resolution, version comparison, and source/installed tree digests already
+  exist at script lines 323-364 and 407-421. They are not yet compared to a
+  pre-release receipt. Disproof hook: mutate receipt version or digest and observe
+  published mode refuse it without a provider call.
+
+Live branch protection requires only the existing `version parity
+(plugin.json / marketplace.json / codex / README)` context. The existing parity
+job already runs `scripts/kc-dev-flow-contract-test.py`; no provider workflow or
+required-check identity change is justified.
 
 ## Design determination
 
-`required` — this introduces a release-closeout command and a fail-closed report
-contract. It runs only after a tag exists and before local install sync.
+`required` — this changes a release CLI and two closed data contracts.
+
+```text
+# On the clean Release PR head, before merge/publication
+python3 scripts/kc-dev-flow-published-tag-smoke.py candidate --receipt "$RECEIPT"
+
+# After the exact tag exists, before local sync
+python3 scripts/kc-dev-flow-published-tag-smoke.py published \
+  kc-dev-flow-vX.Y.Z --candidate-receipt "$RECEIPT"
+```
+
+`candidate` installs the current clean checkout into temporary Claude and Codex
+homes, checks each installed version/tree against source, invokes both hosts with
+the current auth path, applies the unchanged strict report validator, and writes
+the receipt only after both pass. The closed receipt contains its schema,
+candidate revision, declared version, tree SHA-256, and Claude/Codex
+version/tree/report results.
+
+`published` validates that receipt strictly, exact-clones the tag, records the tag
+revision, installs the tag checkout into both isolated homes, and requires tag
+version plus source and installed-tree digests to equal the candidate receipt. It
+does not copy operator auth or invoke a model. Candidate and tag revisions are
+recorded but need not be equal because merge mechanics can change commit identity
+without changing plugin bytes.
+
+The packaged skill and smoke prompt will state that root, envelope,
+`engineering_judgment`, and every adjudication item are closed objects: emit
+exactly the documented keys and no additional keys, including `verdict_note`.
+`exact_object` remains strict.
 
 ## Acceptance criteria
 
-**AC-1 — The smoke is bound to one published artifact.**
+**AC-1 — Host and report compatibility is proven before publication.**
 
-Verified by: an exact-tag clone, exact revision lookup, and digest equality for
-both installed plugin trees in
-`scripts/kc-dev-flow-published-tag-smoke.py:305-451`. Falsified by: a wrong
-revision or changed installed tree makes the command fail.
+Verified by: `scripts/kc-dev-flow-contract-test.py:64-159` failure-path tests and
+one real pre-release candidate receipt proving the isolated host path at
+`scripts/kc-dev-flow-published-tag-smoke.py:305-442` writes no passing receipt
+until both installed hosts return one strictly accepted report.
 
-**AC-2 — Both supported hosts exercise the installed skill.**
+Falsified by: either host is skipped, uses implicit plugin state, returns an
+invalid record, or publication is the first dual-host result.
 
-Verified by: isolated Claude and Codex plugin homes, operator authentication, and
-one accepted EM report from each host at
-`scripts/kc-dev-flow-published-tag-smoke.py:234-451`. Falsified by: a missing,
-duplicate, or implicit plugin load, or either host failing to return one report.
+Baseline: v2.2.0 was published before the first complete host/report observation.
 
-**AC-3 — The compatibility record is structural and exact.**
+**AC-2 — Producer and consumer share one closed report schema.**
 
-Verified by: direct negative fixtures for missing, extra, duplicated, misplaced,
-invalid-enum, mismatched-wrapper, and wrong-revision data at
-`scripts/kc-dev-flow-contract-test.py:64-159`. Falsified by: any such fixture
-being accepted.
+Verified by: `scripts/kc-dev-flow-contract-test.py:64-159` producer-guidance
+assertions and a direct `verdict_note` negative fixture, the unchanged strict
+consumer at `scripts/kc-dev-flow-published-tag-smoke.py:53-188`, and closed
+producer guidance at `kc-dev-flow/skills/science-officer-em/SKILL.md:51-91`.
 
-**AC-4 — The check stays release-only and earns its maintenance cost.**
+Falsified by: an extra field is accepted, stripped, retried, or left permitted by
+producer guidance.
 
-Verified by: the root release instructions place it after tag creation and before
-local sync at `CLAUDE.md:47-54`, with no per-PR workflow entry. Falsified by:
-wiring it into ordinary PR CI, or the first released run producing no evidence
-beyond existing helpers.
+**AC-3 — Publication only rebinds the validated artifact identity.**
+
+Verified by: `scripts/kc-dev-flow-contract-test.py:64-159` receipt/tag/version/tree
+mutation tests, the identity seams at
+`scripts/kc-dev-flow-published-tag-smoke.py:323-451`, and the first containing-tag
+receipt proving published mode exact-resolves the tag and matches its version,
+source digest, and both installed trees without invoking either model.
+
+Falsified by: a missing/non-exact tag, mismatched version or digest, unequal
+installed tree, accepted extra receipt field, or any post-release host invocation.
+
+**AC-4 — One mechanism spans exactly two release triggers.**
+
+Verified by: the two ordered release commands in `CLAUDE.md:40-56`, both modes in
+`scripts/kc-dev-flow-published-tag-smoke.py:454-488`, no new workflow or smoke
+file in `git diff --name-only origin/main...HEAD`, and contract coverage remaining
+in `.github/workflows/marketplace-parity.yml:28-57`.
+
+Falsified by: a second smoke framework, per-PR model matrix, new
+credential/persistence system, post-release report validation, or a relaxed
+parser.
 
 ## Test plan
 
-Run the report fixtures without provider calls; run Claude plugin-isolation and
-exact-tag install probes; run both hosts against one released tag; then run the
-full kc-dev-flow contract, frontmatter, parity, marketplace, and link checks.
+Use RED before GREEN inside the existing contract suite:
+
+1. Add failing CLI/receipt tests for `candidate` and `published`, exact receipt
+   fields, no receipt before both hosts pass, and candidate revision/version/tree
+   capture.
+2. Add failing orchestration tests proving candidate mode invokes both installed
+   hosts and published mode invokes neither. Use faked command results; do not make
+   provider calls in the deterministic suite.
+3. Add failing mismatch fixtures for tag, version, source digest, either installed
+   digest, extra receipt fields, and the observed report `verdict_note`.
+4. Add failing text-contract assertions for closed-object guidance in the
+   packaged skill and smoke prompt.
+5. Implement the two modes and guidance, then run the contract suite, Python
+   compilation, frontmatter, version parity, marketplace, state-prerequisite, link,
+   and `git diff --check` gates.
+6. In validation, run candidate mode once through real authenticated Claude and
+   Codex before publication. After the next containing tag, run published mode
+   with that receipt; do not terminalize on candidate evidence alone.
+
+No new test framework is justified. A fifth implementation surface is allowed
+only if a RED result proves that the installed CLI cannot consume the exact local
+candidate, the receipt cannot bind version plus tree bytes across publication, or
+the existing release instructions cannot carry the receipt. A preference for
+automation, provider variation, or extra telemetry is not such evidence.
 
 ## Appetite and pre-mortem
 
-One worker and one release-closeout command. Stop and re-cut if it needs a new
-credential store, CI matrix, or provider abstraction. If this still fails after
-release, the likely cause is that the wrapper validates its own files while one
-host resolves a different installed plugin tree.
+Estimate one implementation worker and 60 minutes, with a declared tolerance of
+30 minutes. Stop and re-cut at 90 minutes, on a fifth implementation surface, or
+if the local installer/receipt premise fails; never compress validation to fit the
+budget. The first implementation action re-fetches `origin/main` and starts from a
+fresh isolated worktree rather than the stale release-batch branch.
+
+No further spike is needed for ideation: current Claude and Codex help both state
+that marketplace add accepts a local path, while the released script already
+proves the other install, isolation, auth, tag, digest, and strict-consumer seams.
+The first local-candidate RED/GREEN rehearsal remains the disproof hook.
+
+If this ships exactly per spec and still fails, the most likely cause is the hidden
+assumption that a Release PR candidate's version plus plugin-tree digest survives
+publication unchanged even when its commit SHA does not.
 
 ## Out of scope
 
-Per-PR model calls, manual version edits, replacing marketplace verification or
-post-release sync, and creating or merging a PR.
+Retries, field stripping, schema relaxation, per-PR model calls, a model matrix,
+new CI jobs or required contexts, signed/hosted receipt storage, a second smoke or
+test framework, a new credential or installer abstraction, replacing marketplace
+verification or post-release sync, manual version edits, general release-please
+changes, post-release model invocation, and creating or merging a PR.
 
 ## Stage Report: ideation
 
-- DONE: The captain scheduled the exact review obligation in `kc-dev-flow/S1`.
-- DONE: Reverse recovery found two working but narrower helpers and one successful
-  v2.1.0 experiment; one release-only dual-host wrapper is the smallest missing
-  seam.
-- DONE: AC-1 binds the requested tag, resolved revision, and both installed trees.
-- DONE: AC-2 requires one isolated installed-skill invocation from each host.
-- DONE: AC-3 rejects every malformed or wrong-revision report class directly.
-- DONE: AC-4 keeps the command after release and outside ordinary PR CI.
-- DONE: Fresh high-reasoning EM returned `narrow / high`: retain one
-  release-closeout smoke, not a per-PR matrix. Multi-model review was not
-  recommended.
+- DONE: AC-1 reframes the accepted outcome so dual-host invocation and exact
+  report validation are proven on the Release PR candidate before publication,
+  reversing the v2.2.0 baseline.
+- DONE: AC-2 preserves the strict consumer and closes the packaged skill and
+  smoke-prompt producer contract, with the observed `verdict_note` as a direct
+  negative fixture.
+- DONE: AC-3 limits post-release work to exact tag/version/source/installed-tree
+  identity against the candidate receipt and forbids model invocation there.
+- DONE: AC-4 keeps one existing smoke script across `candidate` and `published`
+  triggers and names the RED evidence required before adding any fifth surface.
+- DONE: Recorded exclusions, the RED-first route, and a 60-minute estimate plus
+  30-minute declared tolerance.
+- DONE: Reverse recovery against `origin/main` at
+  `54913dda3e5e66841e043025bf646e0ad2493bc9` found a sequencing/guidance seam,
+  not a missing smoke abstraction; the strict parser remains `WORKING`.
+- DONE: Exactly one fresh high-reasoning EM returned
+  `proceed / high / multi_model:not_needed`. It supports a durable receipt as the
+  evidence bridge, rejects commit-SHA equality as a merge-strategy assumption,
+  and found no fifth implementation surface justified.
 
 ### Summary
 
-Proceed with one exact-tag, dual-host release-closeout smoke. Its first run from
-a tag containing the command remains release evidence, not something local
-validation can claim in advance.
+Proceed with the one-mechanism/two-trigger reset. The candidate phase owns real
+Claude/Codex report compatibility; the published phase owns artifact identity
+only. Keep strict parsing, close the producer contract explicitly, and require a
+RED falsifier before widening beyond the four existing files.
+
+The prior implementation and validation reports below are retained as historical
+cycle-1 evidence. They do not satisfy the revised ACs.
 
 ## Stage Report: implementation
 
