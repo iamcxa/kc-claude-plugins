@@ -1107,3 +1107,98 @@ time; a non-stack top merge stops without sentinel or guard.
 
 There are no implementation blockers. Delivery authority remains with the
 captain/FO; this cycle performed no outward product mutation.
+
+## Stage Report: validation (cycle 4)
+
+### Verdict
+
+REJECTED; route `return` for exact bottom
+`647d4c87805f0dde8b71d1153d2c226edb129d87` and direct-child top
+`a87326b901bebd88858beea85a463b1fbd1a26cf`. Draft creation, per-layer base
+SHA, full-URL linking, captain-authorized readiness, exact per-layer heads and
+checks, and fail-closed local terminal behavior are mechanically protected. One
+Material completion-proof contradiction remains, so no push, PR/link/ready,
+merge, terminalization, or stage transition is authorized.
+
+### Finding
+
+- **[P1] Prove the atomic operation, not only the final merged snapshot —
+  `docs/dev/_mods/pr-merge.md:295`.** The completion table treats non-empty
+  `pull_requests[].merged_at` for every member as proof of "Atomic landing".
+  Those fields prove that every PR merged, but the declared response has no
+  atomic-operation identity or provenance and therefore cannot distinguish one
+  native atomic stack merge from individually merged members. The prose and
+  mutant guard forbid `gh pr merge`, but startup/idle can still accept the same
+  final snapshot and invoke sentinel/guard. Bind completion to provider-native
+  evidence of the one whole-stack atomic operation, or enforce and prove that
+  individual member merges cannot produce an acceptable snapshot.
+
+### Focused exact-head evidence
+
+- Graph and worktrees: `origin/main` is
+  `1745b13563dd60ee41f51066ef15d0bff4929cb0`; bottom is its three-commit
+  descendant and top's sole parent is the exact bottom; both worktrees were
+  clean.
+- At both exact heads, `python3 scripts/pr-merge-portable-delivery.test.py`,
+  `python3 scripts/kc-dev-flow-contract-test.py`, and the applicable
+  `git diff --check` exited zero. Existing implementation receipts cover the
+  unchanged marketplace/version/frontmatter suites and were not duplicated.
+- Direct disposable mutants were rejected for missing Draft create, trunk SHA
+  on a higher layer, branch-name rather than full-URL link, ready before green
+  or without captain authorization, individual PR merge, omitted per-layer
+  required checks, and automatic local terminal success.
+- Installed `spacedock 0.26.0 (contract 3)` exposes the retained runtime;
+  installed `gh 2.92.0` documents bottom-to-top linking and describes stack
+  merge as atomic/all-or-nothing. The local completion receipt nevertheless
+  observes only per-member merged/head/check fields.
+- Provenance: shipped Spacedock `v0.27.0-pre3` `mods/pr-merge.md` at peeled
+  `ffaeaef696cad492c8d40ab84939178e242aff2e` hashes to
+  `0f2a4628a008e044b9d0faa67282597dfaa2ee56b6954f10028ca7d921b6e031`.
+  Local extensions retain its portable body-file/candidate/repository/sentinel
+  seams while excluding the installed-0.26-incompatible `gate consume` and
+  `merge guard --rework` commands.
+
+Lenses: behavior FAIL; contract/schema FAIL for atomic provenance; state/concurrency FAIL at terminal acceptance; security/privacy PASS; runtime/platform PASS; docs/policy FAIL; delivery FAIL (1 P1; exact inputs above; falsifier is provider-native proof that the same completion snapshot can only follow one whole-stack atomic operation).
+Diff coverage: 100% changed layer-path coverage (5/5 for the cycle-5 bottom repair and rebuilt top); focused final checks covered every prior failure class, while unchanged broad-suite receipts were reused.
+Adversarial: FAIL — seven named contradiction mutants were rejected, but existence-disproof shows the accepted completion fields do not encode whether merges were atomic or individual.
+Cross-model: not_needed — optional multi-model review was not authorized for this round; the single fresh GPT-5.6 High EM used exact text, installed CLI help, and deterministic mutants.
+E2E: N/A — ideation-approved workflow policy and CLI orchestration has no app/browser journey; outward GitHub mutations remain delivery-owner authority.
+Origin re-observation: FAIL — Reported scenario: Draft native-stack layers land as one atomic whole-stack operation before terminalization | Originating runtime kind: installed GitHub and Spacedock CLIs plus repository policy | Re-observation artifact/revision: bottom `647d4c87805f0dde8b71d1153d2c226edb129d87`, top `a87326b901bebd88858beea85a463b1fbd1a26cf`, pre3 `ffaeaef696cad492c8d40ab84939178e242aff2e`, installed gh 2.92.0 and spacedock 0.26.0 | Equivalent-runtime rationale: exact local policy heads and installed command surfaces; no outward merge was authorized | Falsifier kind: existence-disproof | Result: the completion schema proves all members merged with exact heads/checks but contains no field proving the merges occurred in one atomic operation.
+
+### Engineering-manager judgment
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Return the exact stack: all named cycle-3 contradictions are mechanically closed, but terminal completion still cannot prove that all members landed through one atomic stack operation rather than individual merges."
+  evidence_synthesis: "Exact clean heads 647d4c87805f0dde8b71d1153d2c226edb129d87 and a87326b901bebd88858beea85a463b1fbd1a26cf pass both focused contracts and diff checks; seven direct mutants are rejected. The completion decision observes merged_at, Candidate/head identity, and required checks for every member, but its declared provider response contains no atomic-operation provenance, so the same accepted snapshot does not establish the required whole-stack ceremony."
+  risk_tradeoff_call: "Returning costs one bounded completion-evidence correction, but avoids terminalizing an individually landed stack under an atomic-delivery claim; accepting now buys no compensating value because Draft, base, URL, readiness, head, check, and local-fallback protections can all be preserved."
+  recommendation: "Return to implementation and bind terminal acceptance to provider-native whole-stack atomic-operation evidence, or to an enforced provider rule plus proof that individual member merges cannot satisfy completion."
+  route: return
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "FO may route this rejection but may not waive it or push, create, link, ready, merge, terminalize, or transition the task."
+  engineering_judgment:
+    question: "Do exact heads 647d4c87805f0dde8b71d1153d2c226edb129d87 and a87326b901bebd88858beea85a463b1fbd1a26cf close the four cycle-3 findings and prove atomic whole-stack completion?"
+    revision: "1745b13563dd60ee41f51066ef15d0bff4929cb0 -> 647d4c87805f0dde8b71d1153d2c226edb129d87 -> a87326b901bebd88858beea85a463b1fbd1a26cf"
+    evidence_synthesis: "Exact clean heads 647d4c87805f0dde8b71d1153d2c226edb129d87 and a87326b901bebd88858beea85a463b1fbd1a26cf pass both focused contracts and diff checks; seven direct mutants are rejected. The completion decision observes merged_at, Candidate/head identity, and required checks for every member, but its declared provider response contains no atomic-operation provenance, so the same accepted snapshot does not establish the required whole-stack ceremony."
+    adjudications:
+      - finding: "The cycle-3 Draft, per-layer base, full-URL link, readiness, exact head/check, individual-merge prose, and local-terminal contradictions persist."
+        disposition: unsupported
+        basis: "Focused exact-head contracts pass and all seven corresponding disposable mutants exit nonzero."
+      - finding: "Every merged member with matching heads and green checks proves one atomic whole-stack operation."
+        disposition: unsupported
+        basis: "The declared completion response contains only per-member final state and no atomic-operation identity or provenance."
+    risk_tradeoff: "Returning costs one bounded completion-evidence correction, but avoids terminalizing an individually landed stack under an atomic-delivery claim; accepting now buys no compensating value because Draft, base, URL, readiness, head, check, and local-fallback protections can all be preserved."
+    recommendation: "Return to implementation and bind terminal acceptance to provider-native whole-stack atomic-operation evidence, or to an enforced provider rule plus proof that individual member merges cannot satisfy completion."
+    route: return
+    confidence: high
+    dissent: "Implementation claims native atomic landing evidence; the completion schema proves the final merged snapshot but not the operation that produced it."
+    disproof_condition: "Change route when exact-head completion evidence uniquely identifies one whole-stack atomic merge, or when provider enforcement plus a failing individual-merge exercise proves that an individually landed stack cannot reach the accepted snapshot."
+    authority_boundary: "Captain retains scope, topology, and irreversible delivery; validation owns this rejection; FO/work-item owners may route it; delivery owners alone may mutate GitHub or terminal state."
+```
+
+### Summary
+
+Return for one bounded atomic-provenance correction. Preserve all seven repaired
+failure guards and the exact two-layer graph; this validation changed only the
+authorized task-state report.
