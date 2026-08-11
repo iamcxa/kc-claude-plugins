@@ -22,10 +22,95 @@ TAG_PATTERN = re.compile(r"kc-dev-flow-v\d+\.\d+\.\d+")
 ROUTES = {"proceed", "narrow", "return", "block", "costly_no"}
 CONFIDENCES = {"high", "medium", "low"}
 MULTI_MODEL = {"recommended", "not_needed"}
+DISPOSITIONS = {"supported", "unsupported", "unresolved"}
+ROOT_FIELDS = ("science_officer_em_upward_report",)
+ENVELOPE_FIELDS = (
+    "em_judgment",
+    "evidence_synthesis",
+    "risk_tradeoff_call",
+    "recommendation",
+    "route",
+    "confidence",
+    "multi_model",
+    "fo_boundary",
+    "engineering_judgment",
+)
+JUDGMENT_FIELDS = (
+    "question",
+    "revision",
+    "evidence_synthesis",
+    "adjudications",
+    "risk_tradeoff",
+    "recommendation",
+    "route",
+    "confidence",
+    "dissent",
+    "disproof_condition",
+    "authority_boundary",
+)
+ADJUDICATION_FIELDS = ("finding", "disposition", "basis")
 
 
 class SmokeError(RuntimeError):
     """A bounded setup, invocation, or report-contract failure."""
+
+
+def closed_schema(properties: dict[str, object]) -> dict[str, object]:
+    return {
+        "type": "object",
+        "properties": properties,
+        "required": list(properties),
+        "additionalProperties": False,
+    }
+
+
+def text_properties(
+    fields: tuple[str, ...], *, allow_empty: set[str] | None = None
+) -> dict[str, object]:
+    empty = allow_empty or set()
+    return {
+        name: {"type": "string"} | ({} if name in empty else {"minLength": 1})
+        for name in fields
+    }
+
+
+ADJUDICATION_SCHEMA = closed_schema(
+    text_properties(ADJUDICATION_FIELDS)
+    | {
+        "disposition": {
+            "type": "string",
+            "enum": sorted(DISPOSITIONS),
+        }
+    }
+)
+JUDGMENT_SCHEMA = closed_schema(
+    text_properties(JUDGMENT_FIELDS, allow_empty={"dissent"})
+    | {
+        "revision": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40,64}$",
+        },
+        "adjudications": {
+            "type": "array",
+            "minItems": 1,
+            "items": ADJUDICATION_SCHEMA,
+        },
+        "route": {"type": "string", "enum": sorted(ROUTES)},
+        "confidence": {"type": "string", "enum": sorted(CONFIDENCES)},
+    }
+)
+ENVELOPE_SCHEMA = closed_schema(
+    text_properties(ENVELOPE_FIELDS, allow_empty={"fo_boundary"})
+    | {
+        "route": {"type": "string", "enum": sorted(ROUTES)},
+        "confidence": {"type": "string", "enum": sorted(CONFIDENCES)},
+        "multi_model": {"type": "string", "enum": sorted(MULTI_MODEL)},
+        "engineering_judgment": JUDGMENT_SCHEMA,
+    }
+)
+REPORT_SCHEMA = closed_schema(
+    {ROOT_FIELDS[0]: ENVELOPE_SCHEMA}
+)
 
 
 def run(
@@ -92,22 +177,12 @@ def validate_report(report: str, expected_revision: str) -> None:
     root = exact_object(
         document,
         "root",
-        {"science_officer_em_upward_report"},
+        set(ROOT_FIELDS),
     )
     envelope = exact_object(
         root["science_officer_em_upward_report"],
         "science_officer_em_upward_report",
-        {
-            "em_judgment",
-            "evidence_synthesis",
-            "risk_tradeoff_call",
-            "recommendation",
-            "route",
-            "confidence",
-            "multi_model",
-            "fo_boundary",
-            "engineering_judgment",
-        },
+        set(ENVELOPE_FIELDS),
     )
     for name in [
         "em_judgment",
@@ -124,19 +199,7 @@ def validate_report(report: str, expected_revision: str) -> None:
     judgment = exact_object(
         envelope["engineering_judgment"],
         "engineering_judgment",
-        {
-            "question",
-            "revision",
-            "evidence_synthesis",
-            "adjudications",
-            "risk_tradeoff",
-            "recommendation",
-            "route",
-            "confidence",
-            "dissent",
-            "disproof_condition",
-            "authority_boundary",
-        },
+        set(JUDGMENT_FIELDS),
     )
     for name in [
         "question",
@@ -159,11 +222,11 @@ def validate_report(report: str, expected_revision: str) -> None:
         adjudication = exact_object(
             item,
             f"adjudications[{index}]",
-            {"finding", "disposition", "basis"},
+            set(ADJUDICATION_FIELDS),
         )
         for name in ["finding", "disposition", "basis"]:
             text_field(adjudication, name)
-        if adjudication["disposition"] not in {"supported", "unsupported", "unresolved"}:
+        if adjudication["disposition"] not in DISPOSITIONS:
             raise SmokeError(f"report adjudication disposition is invalid at index {index}")
 
     if envelope["route"] not in ROUTES or judgment["route"] not in ROUTES:
@@ -337,14 +400,13 @@ def claude_stream_result(
     ):
         raise SmokeError(f"Claude loaded an unexpected plugin: {observed}")
 
-    results = [
-        event.get("result")
-        for event in events
-        if event.get("type") == "result" and isinstance(event.get("result"), str)
-    ]
-    if len(results) != 1 or not results[0].strip():
+    results = [event for event in events if event.get("type") == "result"]
+    if len(results) != 1:
         raise SmokeError(f"Claude final report count is {len(results)}, expected 1")
-    return results[0]
+    structured_output = results[0].get("structured_output")
+    if not isinstance(structured_output, dict):
+        raise SmokeError("Claude final report has no structured_output object")
+    return json.dumps(structured_output, separators=(",", ":"), sort_keys=True)
 
 
 def codex_result(output: str) -> str:
@@ -462,6 +524,9 @@ def run_candidate_smoke(receipt_path: Path, timeout: int) -> dict[str, object]:
             timeout=timeout,
         )
         prompt = smoke_prompt(f"candidate@{revision}", revision)
+        report_schema = json.dumps(REPORT_SCHEMA, separators=(",", ":"), sort_keys=True)
+        report_schema_path = candidate_root / "science-officer-em-report.schema.json"
+        report_schema_path.write_text(report_schema + "\n", encoding="utf-8")
         claude_output = run(
             [
                 "claude",
@@ -481,6 +546,8 @@ def run_candidate_smoke(receipt_path: Path, timeout: int) -> dict[str, object]:
                 "--output-format",
                 "stream-json",
                 "--verbose",
+                "--json-schema",
+                report_schema,
                 "-p",
                 prompt,
             ],
@@ -519,6 +586,8 @@ def run_candidate_smoke(receipt_path: Path, timeout: int) -> dict[str, object]:
                 "--skip-git-repo-check",
                 "--ephemeral",
                 "--json",
+                "--output-schema",
+                str(report_schema_path),
                 "-C",
                 str(runtime_root),
                 "-s",
