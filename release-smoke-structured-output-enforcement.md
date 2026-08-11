@@ -1,6 +1,6 @@
 ---
 title: Enforce structured reviewer reports in the release smoke
-status: implementation
+status: validation
 source: Release PR #202 candidate smoke at ddcd98c884b67513cefe78c704d031fea6472297; captain approved durable schema enforcement
 product: kc-dev-flow
 sprint: S1
@@ -21,3 +21,17 @@ The candidate smoke asks both reviewer hosts for a closed report object but reli
 - Seam: the existing candidate-smoke producer boundary and its existing contract test; no report fields, validator acceptance, retry policy, release manifest, or published-mode behavior changes.
 - Design: `trivial-pass` because the captain selected CLI schema enforcement after the free-form producer failed; stripping fields, retrying, or weakening validation remain explicit non-goals.
 - Appetite: one dispatch, 75 minutes with 15 minutes tolerance; stop if the fix requires a third tracked file, a new persisted schema artifact, or any parser relaxation.
+
+## Stage Report: implementation
+
+**READY FOR VALIDATION** at exact product revision
+`4c8893ba76c06d09f644c9d9b2140f21e0c33d7d`.
+
+- DONE: Reproduce the ungoverned producer boundary before changing it
+  RED: the contract failed when neither host received a schema and when Claude extraction selected the free-form `result` carrying forbidden `adjudications[0].verdict_note` instead of a schema-validated object.
+- DONE: Enforce one existing report shape at both host boundaries
+  `scripts/kc-dev-flow-published-tag-smoke.py` defines one closed in-code schema, passes it through Claude `--json-schema` and Codex `--output-schema`, consumes Claude `structured_output`, and leaves `validate_report` as the final strict authority. There is no retry, field stripping, validator relaxation, persisted schema file, or skill change.
+- DONE: Prove the exact implementation head through the real boundary
+  Contract, Python compile, marketplace L0-L2, version parity, 40-file frontmatter lint, and `git diff --check` passed on the clean exact head. A real candidate smoke invoked isolated Claude 2.1.226 and Codex 0.145.0 and wrote `/tmp/kc-dev-flow-candidate-4c8893b.json`; both reports passed. The receipt binds revision `4c8893ba76c06d09f644c9d9b2140f21e0c33d7d`, version `2.2.0`, and independently recomputed tree `d2d103cdcf62b514e35883fea9db51b823ca809e8a363d849c2470acf7f32323`.
+
+Changed-file-to-AC mapping: `scripts/kc-dev-flow-published-tag-smoke.py` is the host enforcement and envelope-consumption seam; `scripts/kc-dev-flow-contract-test.py` supplies the RED/GREEN refusal and shared-schema checks. Raw shape against `215c5d48b1103bbc9e09fc7fb6ceec408028e765` is `+72/-0` and `+103/-34` respectively. The largest added responsibility is the shared closed schema; removing it makes the contract observe missing host schemas and restores nondeterministic free-form production, so the mechanical AC fails. Counts informed the subtraction pass but did not set scope or acceptance; no number-management incident occurred.
