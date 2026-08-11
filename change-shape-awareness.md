@@ -1,13 +1,13 @@
 ---
 title: Integrate outcome-first subtraction with change-shape awareness
-status: ideation
+status: implementation
 source: Captain-approved kc-dev-flow/S1 extension after Fable 5 challenge, 2026-08-11
 product: kc-dev-flow
 sprint: S1
 design: required
 lane: main
 started: 2026-08-11T03:53:06Z
-worktree: ""
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-change-shape-awareness
 pr: ""
 id: 5ecpkp81k2p7gh0sss3w9qxn
 ---
