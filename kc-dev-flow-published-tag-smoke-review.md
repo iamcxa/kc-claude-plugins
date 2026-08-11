@@ -10,6 +10,7 @@ lane: main
 started: 2026-08-10T22:03:08Z
 worktree: .worktrees/spacedock-ensign-kc-dev-flow-published-tag-smoke-review
 pr: ""
+mod-block: merge:pr-merge
 ---
 
 ## Problem
