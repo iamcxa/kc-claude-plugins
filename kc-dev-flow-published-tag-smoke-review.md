@@ -1,6 +1,6 @@
 ---
 title: Review the published-tag Science Officer runtime smoke
-status: validation
+status: implementation
 source: Captain-approved issue #183 follow-up, 2026-08-10
 product: kc-dev-flow
 sprint: S1
@@ -261,3 +261,7 @@ without changing evidence or verdict.
 The sequencing boundary is intentional: release-please must create the first tag
 that contains this command before its closeout smoke can run. Do not terminalize
 this task until that tag records a keep-or-remove disposition.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — `kc-dev-flow-v2.2.0` release-closeout smoke; surface 1 closed-schema correction seam vs estimate 1 seam (0%); AC unchanged
