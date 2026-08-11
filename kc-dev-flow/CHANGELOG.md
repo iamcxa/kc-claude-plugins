@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.1.0...kc-dev-flow-v2.2.0) (2026-08-11)
+
+
+### Features
+
+* **kc-dev-flow:** streamline reviews and prove minimal surfaces ([7e8fa5e](https://github.com/iamcxa/kc-claude-plugins/commit/7e8fa5e89e94c951c4d4f0c90a5476bdbd324175))
+
 ## [2.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.0.0...kc-dev-flow-v2.1.0) (2026-08-10)
 
 
