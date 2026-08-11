@@ -1,7 +1,7 @@
 ---
 id: c6wj65396r1s42330e19dweg
 title: Align PR merge policy and route oversized changes to native stacks
-status: validation
+status: implementation
 source: captain directive 2026-08-11
 product: kc-dev-flow
 sprint:
@@ -25,9 +25,11 @@ qualitatively and does not identify GitHub's native stack topology or CLI.
 ## Proposed approach
 
 Replace the custom mod with the released Spacedock 0.26.0 `pr-merge` v0.12.2
-contract plus one bounded local routing section. Preserve Draft PR delivery,
-remove only artifact machinery with no released consumer, and use numeric change
-shape only to require a topology decision.
+contract plus bounded local routing and runtime-hardening sections. Preserve
+Draft PR delivery, remove only artifact machinery with no released consumer,
+and use numeric change shape only to require a topology decision. Compare
+Spacedock 0.27.0 at its exact source revision: backport safety behavior that the
+installed 0.26.x runtime can execute, and reject commands owned by 0.27.x.
 
 ## Design determination
 
@@ -42,13 +44,18 @@ the captain approves all Draft PR bodies.
 
 ## Acceptance criteria
 
-**AC-1 — The adopted merge hook executes against Spacedock 0.26.x and contains
-only a bounded local Draft/native-stack extension to released `pr-merge`
-v0.12.2.**
+**AC-1 — The adopted merge hook executes against Spacedock 0.26.x while
+backporting only runtime-compatible Spacedock 0.27.0 safety behavior around the
+released `pr-merge` v0.12.2 body.**
 Verified by: compare the retained upstream body byte-for-byte after removing the
-marked local extension, then exercise `spacedock merge guard` over its released
-fixtures. Falsified by: an unreleased `spacedock gate` command or unrelated local
-artifact protocol remains.
+marked local extension; exercise `spacedock merge guard` over its released
+fixtures; and prove PR bodies use a mode-0600 file, the approved candidate SHA
+does not change, pushes name that exact SHA, repository selection comes from the
+entity worktree or qualified PR reference, and terminal discovery enters the
+0.26 merge-guard sentinel path. Falsified by: an unreleased `spacedock gate` or
+`merge guard --rework` command, shell-interpolated PR body, post-approval rebase,
+ambient-repository lookup, branch-name push, direct terminalization, or unrelated
+local artifact protocol remains.
 
 **AC-2 — Native stacks have one unambiguous topology and command surface.**
 Verified by: adversarial examples distinguish a native dependent stack, parallel
@@ -419,6 +426,11 @@ green migration layer before the corrected native-stack policy layer.
 ### Feedback Cycles
 
 - Cycle 1: REJECTED — fresh validation; surface 6 files vs estimate 6 (0%); AC unchanged
+- Cycle 2: RETURN — exact Spacedock 0.27.0 comparison found runtime-compatible
+  body-file, candidate-SHA, repository-selection, exact-push, and sentinel
+  hardening absent from the accepted bottom layer; sequential surface 9
+  layer-paths vs estimate 9 (0%); AC-1 widened by captain directive, AC-2 through
+  AC-5 unchanged
 
 ## Stage Report: implementation (cycle 3)
 
