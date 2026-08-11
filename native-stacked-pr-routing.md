@@ -505,3 +505,148 @@ Track the top worktree listed above. When captain approval authorizes delivery,
 push and open the bottom Draft PR first, then the top Draft PR based on the
 bottom branch, and link them bottom to top. This implementation cycle performed
 none of those outward mutations.
+
+## Stage Report: validation (cycle 2)
+
+### Verdict
+
+ACCEPTED for the exact two-layer revision:
+
+- bottom `0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae` against remote and local
+  `origin/main` `1745b13563dd60ee41f51066ef15d0bff4929cb0`;
+- top `3ad8a4f8d35ac2efe1e839aa77291eb4521d9543` against that exact bottom head.
+
+No blocking findings remain. Product worktrees were read-only and clean; no
+branch push, PR creation, stack link, merge, or product edit was performed.
+
+### Cycle-1 finding disposition
+
+- **Resolved — governing predicate alignment.** The README now delegates to the
+  one authoritative Delivery topology decision table and expressly adds no
+  second readiness condition. The old lower-merge waiting predicate is absent.
+  The exact-head contract enforces both facts.
+- **Resolved — actual stacked delivery shape.** Remote `main` and local
+  `origin/main` both equal `1745b13563dd60ee41f51066ef15d0bff4929cb0`.
+  The bottom commit's sole parent is that revision, and the top commit's sole
+  parent is the exact bottom head. The bottom passes independently without any
+  native-stack policy; the top is one policy-only commit above it.
+- **Resolved — outcome/polarity mutation failure.** In a disposable archive of
+  the top head, changing the dependent-green row's required topology from
+  `Native stack at any size` to `One Draft PR` made
+  `python3 scripts/kc-dev-flow-contract-test.py` exit 1 with
+  `delivery-topology row polarity or required outcome drifted`. The unmodified
+  top head passes.
+
+### Acceptance-criteria coverage
+
+| Criterion | Verdict | Exact evidence |
+| --- | --- | --- |
+| AC-1 | PASS | At both layer heads, removing the one Draft token from the released section reproduces tagged `pr-merge` v0.12.2 byte-for-byte at SHA-256 `a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64`. Spacedock v0.26.0 merge tests passed 42 status plus 7 CLI cases, and the installed 0.26.0 binary reproduced arm then refusal. No unreleased gate/rework/candidate surface exists. |
+| AC-2 | PASS | The exact decision table separates dependent stack, parallel slices, and atomic single-PR outcomes. The local commit graph is bottom-to-trunk and top-to-bottom. Installed `gh 2.92.0` documents bottom-to-top `gh stack link`, correct base chaining, bottom `--base`, and the `--open` opt-out. |
+| AC-3 | PASS | The authoritative table uses the strict `gross additions + deletions > 1,500 OR changed files > 20` trigger, keeps all mechanical/generated/vendor/lock volume in the totals, and makes dependent green layers win at any size. Exact row equality and the polarity mutant protect the outcomes. |
+| AC-4 | PASS | The atomic-trigger row requires one Draft PR with the fixed `## Native stack exception`; policy requires why no green layer exists, separately names non-subtracted mechanical/generated/vendor/lock share, and requires explicit reviewer acknowledgment. |
+| AC-5 | PASS | Both exact heads have zero tracked removed artifact fields, recipe markers, obsolete test names, or deleted executable subjects. Bottom recovery fails closed, and top changes no recovery or artifact-removal file. |
+
+### Layer and changed-file coverage
+
+Bottom `origin/main...0980e992` is 157 additions and 2,910 deletions across six
+paths (3,067 gross lines):
+
+| Bottom changed path | AC mapping | Validation |
+| --- | --- | --- |
+| `docs/dev/README.md` | AC-5 | Removed the artifact field; tracked consumer sweep passed. |
+| `docs/dev/_mods/pr-merge.md` | AC-1, AC-5 | Released-body equality, Draft adjustment, split-root extension, released merge suites, and installed arm/refusal passed; native-stack policy is absent. |
+| `docs/dev/artifacts/terminal-transaction-contract-test.sh` | AC-5 | Deleted subject and all marker/name consumers are absent. |
+| `docs/dev/runbooks/state-recovery.md` | AC-5 | Refusal contract passes and recovery stops without an invented credential. |
+| `kc-pr-flow/scripts/pr-merge-audit-link.test.sh` | AC-5 | Deleted extraction subject and all marker/name consumers are absent. |
+| `scripts/kc-dev-flow-contract-test.py` | AC-1, AC-5 | Exact released hash, split-root tuple, policy absence, recovery refusal, and consumer removal pass independently. |
+
+Top `0980e992...3ad8a4f8` is 130 additions and 11 deletions across exactly three
+paths (141 gross lines):
+
+| Top changed path | AC mapping | Validation |
+| --- | --- | --- |
+| `docs/dev/README.md` | AC-2, AC-3 | Points to the table's exact predicates; old conflicting waiting predicate is absent and contract-guarded. |
+| `docs/dev/_mods/pr-merge.md` | AC-2, AC-3, AC-4 | Adds only the decision table, exception, Draft stack mechanics, approval, linking, CI, and top-PR tracking policy. |
+| `scripts/kc-dev-flow-contract-test.py` | AC-2, AC-3, AC-4 | Parses one table, requires its exact header/four rows and strict threshold, guards README authority, and fails on outcome inversion. |
+
+Diff coverage: 100% path-layer coverage (9/9: six bottom plus three top); 287/287 sequential additions classified and exercised by an exact-head suite, structural comparison, live boundary, adversarial document case, or direct mutant; 2,921 sequential deletions covered by released-body equality, top-only scope inspection, and deleted-subject/consumer sweeps.
+
+### Exact-head evidence
+
+- Both product worktrees matched their declared heads and were clean before and
+  after the checks; `git diff --check` passed for each declared layer range.
+- At **each** exact head, these exited zero:
+  `python3 scripts/kc-dev-flow-contract-test.py`,
+  `bash scripts/dev-flow-state-prereq.test.sh`,
+  `bash scripts/version-parity-check.sh`,
+  `bash scripts/skill-frontmatter-lint.test.sh` (12/12),
+  `bash scripts/skill-frontmatter-lint.sh` (40/40), and
+  `bash scripts/marketplace-verify.sh` (L0, L1, and all seven L2 installs).
+- A clean extraction of Spacedock tag `v0.26.0` at
+  `3819610affd5bfc01f9a9a31893462c02b578589` passed 42
+  `internal/status` and 7 `internal/cli` merge tests with zero failures.
+- Installed `spacedock 0.26.0 (contract 3)` armed
+  `merge:local-merge`, then a second guard call exited 1 because the hook had not
+  run. The guard neither inferred success nor advanced terminal state.
+- Structural comparison at each layer produced the same released-body SHA-256
+  `a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64`.
+  The bottom extension reports `policy=false`; the top reports `policy=true`.
+- The top diff contains only `docs/dev/README.md`,
+  `docs/dev/_mods/pr-merge.md`, and
+  `scripts/kc-dev-flow-contract-test.py`; its parent is the bottom head. The
+  bottom contract's explicit policy-absence guard passes before the top lands.
+- Live state resolution found state head
+  `e1ab5e82cf2e689bfd9f814e80a2f262812d9c67`, task path
+  `native-stacked-pr-routing.md`, blob
+  `d24dc94af802b0b61965702dd9801c72d36f2e31`, repository
+  `iamcxa/kc-claude-plugins`, and short ID `c6`.
+
+Lenses: behavior PASS; contract/schema PASS; state/recovery PASS; runtime/platform PASS; docs/policy PASS; delivery/topology PASS; security/privacy PASS; concurrency/split-root PASS (0 findings; inputs: exact bottom/top commits, task ACs, selected mods, installed CLIs, released tag; falsifiers: parent mismatch, policy leak into bottom, predicate conflict, semantic outcome inversion, missing consumer, or unsafe recovery).
+Adversarial: PASS — classified dependent, parallel, triggered atomic, and smaller atomic rows; proved bottom green with policy absent; an inverted dependent-row outcome failed with the exact polarity error; released guard and split-root refusal/existence paths remained fail closed.
+Cross-model: not_needed — all three disputed findings have direct exact-graph, exact-text, exact-suite, live-runtime, and mutation evidence at high confidence; the no-agent validation contract was preserved.
+E2E: N/A — the accepted change is workflow policy and CLI orchestration with no app/browser user journey; exact local stack graph, installed CLI, released-source fixtures, marketplace installs, and live split-root resolution exercise the relevant boundaries. External PR creation/linking remains captain-gated delivery, not validation-owned E2E.
+Origin re-observation: PASS — Reported scenario: released Spacedock 0.26 must arm/block its merge ceremony, removed artifact machinery must have no consumer, split-root audit links must name committed task state, and native GitHub stacks must use bottom-to-top/base chaining | Originating runtime kind: released and installed native CLIs plus repository task state | Re-observation artifact/revision: bottom `0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae`, top `3ad8a4f8d35ac2efe1e839aa77291eb4521d9543`, Spacedock tag `3819610affd5bfc01f9a9a31893462c02b578589`, installed spacedock 0.26.0, gh 2.92.0, state `e1ab5e82cf2e689bfd9f814e80a2f262812d9c67` blob `d24dc94af802b0b61965702dd9801c72d36f2e31` | Equivalent-runtime rationale: exact released source and installed binary, actual parent-linked layer revisions, actual split-root state checkout, and installed gh command surface | Falsifier kind: refusal, mutation, and existence-disproof | Result: 49 released merge tests passed, installed guard armed then refused without its hook, both tracked-consumer sweeps were empty, the committed state tuple exists, the local stack parent chain is exact, and the polarity mutant failed.
+
+### Engineering-manager judgment
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "The corrected two-layer exact revision satisfies all five acceptance criteria and resolves every cycle-1 finding: authoritative predicate alignment, real parent-linked stack shape, and mutation-sensitive semantic enforcement."
+  evidence_synthesis: "Bottom 0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae is the sole child of current origin/main and passes independently with native-stack policy forbidden; top 3ad8a4f8d35ac2efe1e839aa77291eb4521d9543 is its sole-child policy commit across only three mapped paths. Both exact heads pass the full repository gates, the released body matches SHA-256 a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64, released merge tests pass 49/49, and an inverted topology outcome fails the semantic contract."
+  risk_tradeoff_call: "Proceeding retains two-PR review and landing overhead and still requires captain-approved Draft bodies and linking, but buys truthful independent review boundaries and one authoritative routing rule; returning to the combined branch would reintroduce the already proven topology violation."
+  recommendation: "Proceed from validation with 0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae as the bottom Draft targeting main and 3ad8a4f8d35ac2efe1e839aa77291eb4521d9543 as the top Draft targeting the bottom branch; preserve the approval, link, and no-open guards."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "The First Officer may route the accepted gate and seek captain approval, but may not push, create, link, ready, or merge either PR without the declared authority."
+  engineering_judgment:
+    question: "Do exact heads 0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae and 3ad8a4f8d35ac2efe1e839aa77291eb4521d9543 resolve the three cycle-1 findings and satisfy native-stacked-pr-routing acceptance?"
+    revision: "0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae -> 3ad8a4f8d35ac2efe1e839aa77291eb4521d9543"
+    evidence_synthesis: "Bottom 0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae is the sole child of current origin/main and passes independently with native-stack policy forbidden; top 3ad8a4f8d35ac2efe1e839aa77291eb4521d9543 is its sole-child policy commit across only three mapped paths. Both exact heads pass the full repository gates, the released body matches SHA-256 a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64, released merge tests pass 49/49, and an inverted topology outcome fails the semantic contract."
+    adjudications:
+      - finding: "Cycle-1 governing predicate conflict persists."
+        disposition: unsupported
+        basis: "The top README delegates to one decision table, removes the lower-merge waiting predicate, and the exact-head contract guards both properties."
+      - finding: "Cycle-1 independently green seam remains delivered as one combined revision."
+        disposition: unsupported
+        basis: "The bottom commit is a clean, independently green child of origin/main and the top policy commit is its direct child; their declared diffs are separately bounded and mapped."
+      - finding: "Cycle-1 phrase guard still accepts a polarity inversion."
+        disposition: unsupported
+        basis: "The contract parses and compares all four exact rows; replacing the dependent outcome with One Draft PR exits 1 with the polarity-drift error."
+    risk_tradeoff: "Proceeding retains two-PR review and landing overhead and still requires captain-approved Draft bodies and linking, but buys truthful independent review boundaries and one authoritative routing rule; returning to the combined branch would reintroduce the already proven topology violation."
+    recommendation: "Proceed from validation with 0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae as the bottom Draft targeting main and 3ad8a4f8d35ac2efe1e839aa77291eb4521d9543 as the top Draft targeting the bottom branch; preserve the approval, link, and no-open guards."
+    route: proceed
+    confidence: high
+    dissent: ""
+    disproof_condition: "Change this route if remote main no longer equals the bottom parent, the bottom fails independently with stack policy absent, the top gains an unmapped non-policy path, a topology outcome inversion passes, the released hash drifts, or a removed artifact consumer reappears."
+    authority_boundary: "The captain retains Draft-body, topology, scope, and irreversible delivery approval; the validation gate owns this verdict; work-item and First Officer owners may route the entity; delivery owners alone may push, create, link, ready, merge, or close."
+```
+
+### Summary
+
+Proceed. The bottom runtime/artifact migration is independently green without
+native-stack policy, the top is a policy-only direct child, one authoritative
+predicate now governs routing, and semantic outcome inversion is caught. The
+next authorized action is captain review of both exact Draft PR bodies and the
+bottom-to-top branch/base bundle.
