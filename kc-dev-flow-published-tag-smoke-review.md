@@ -1,6 +1,6 @@
 ---
 title: Review the published-tag Science Officer runtime smoke
-status: implementation
+status: validation
 source: Captain-approved issue #183 follow-up and v2.2.0 cycle-1 reset, 2026-08-11
 product: kc-dev-flow
 sprint: S1
