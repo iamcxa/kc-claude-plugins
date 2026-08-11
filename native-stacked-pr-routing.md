@@ -1,7 +1,7 @@
 ---
 id: c6wj65396r1s42330e19dweg
 title: Align PR merge policy and route oversized changes to native stacks
-status: validation
+status: implementation
 source: captain directive 2026-08-11
 product: kc-dev-flow
 sprint:
@@ -415,3 +415,7 @@ Return to implementation. Preserve the confirmed released-runtime, split-root,
 and fail-closed artifact-removal work; align the governing topology predicate,
 make semantic inversion fail the contract, and deliver the demonstrated lower
 green migration layer before the corrected native-stack policy layer.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — fresh validation; surface 6 files vs estimate 6 (0%); AC unchanged
