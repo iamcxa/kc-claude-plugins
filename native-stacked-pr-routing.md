@@ -1,14 +1,14 @@
 ---
 id: c6wj65396r1s42330e19dweg
 title: Align PR merge policy and route oversized changes to native stacks
-status: ideation
+status: implementation
 source: captain directive 2026-08-11
 product: kc-dev-flow
 sprint:
-started:
+started: 2026-08-11T12:40:19Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-native-stacked-pr-routing
 issue:
 pr:
 mod-block:
