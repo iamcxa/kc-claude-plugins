@@ -436,12 +436,10 @@ ready for fresh validation; change-shape numbers remain observation only.
 
 ## Stage Report: validation
 
-**DECISION: AC-1 THROUGH AC-4 PASS; HOLD THE STAGE TRANSITION.** Fresh
-exact-revision EM validation supports the product change at
-`fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b` with no code/product findings. The
-required state-context control is independently red for the pre-existing
-`kc-dev-flow/S1` roadmap registration, so this advisory does not recommend
-advancing the workflow boundary yet.
+**DECISION: PROCEED.** Fresh exact-revision EM validation supports AC-1 through
+AC-4 at `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b` with no code/product findings,
+and the required state-context control passes when its marketplace and ROADMAP
+inputs are correctly bound to that exact product worktree.
 
 ### Exact-revision AC verdicts
 
@@ -576,34 +574,43 @@ necessary test or clarity surface.
   this line would fail if the accepted claim were grounded in a consumer/runtime
   report without same-kind re-observation.
 
-### Required state-control blocker
+### Corrected state-control evidence
 
-`dev-flow-work-context-check.py validate` returned `FAIL` with
-`sprint_unregistered`: `kc-dev-flow/S1` is absent from `docs/dev/ROADMAP.md`.
-Running the same check against the entity at the pre-report state commit produced
-the same failure; `git blame` binds `product: kc-dev-flow` and `sprint: S1` to
-state commit `b068debb`, so this report did not introduce the mismatch. Under the
-required `bound_field_validation` control, the captain or designated state
-migration owner must register the pair or correct the authoritative entity and
-obtain a PASS receipt before the stage transition. This is outside the product
-diff's blast radius and is not routed to implementation.
+The required `bound_field_validation` rerun kept the split-root task path and
+bound both repository inputs to the exact product worktree at
+`fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b`:
+
+- marketplace:
+  `.worktrees/spacedock-ensign-change-shape-awareness/.claude-plugin/marketplace.json`;
+- ROADMAP:
+  `.worktrees/spacedock-ensign-change-shape-awareness/docs/dev/ROADMAP.md`; and
+- task: `docs/dev/.spacedock-state/change-shape-awareness.md`.
+
+It returned `PASS` with zero findings. The pre-repair exact-root run produced
+`input_revision 501b5b6354a3543c7b1b801779569d2a077545d7599d0fc64f4b1b5a2546a05d`;
+after the first report changed the task bytes, the fresh repair run remained
+PASS with zero findings at
+`input_revision 5671a7af8a4896157c96f60b38b0bb9b8a17e48b533fae89b101eff062ace04c`.
+The prior `sprint_unregistered` FAIL bound marketplace and ROADMAP to the stale
+captain-workspace branch, not the exact product worktree/trunk authority. It is
+retained only as a diagnosed wrong-input attempt and carries no gate verdict.
 
 ### Fresh EM advisory record
 
 ```yaml
 science_officer_em_upward_report:
-  em_judgment: AC-1 through AC-4 are supported at the exact revision with no code or product finding, but the required state-context control keeps the workflow boundary closed.
-  evidence_synthesis: Exact-head primary diff review, ordered-route and cohort exercises, two red scratch mutations, 100 percent executable diff coverage, and green contract, absolute, locator, mirror, scope, and diff checks support the product change; the live and pre-report entity both fail required bound-field validation because kc-dev-flow/S1 is absent from the roadmap.
-  risk_tradeoff_call: The benefit is one coherent brownfield subtraction route and a falsifiable observe-only trial; the product cost is limited to existing documentation and one assertion block, while bypassing the red state control would make sprint authority untruthful; the alternative is to preserve the validated change and repair only the authoritative roadmap or entity before transition.
-  recommendation: Keep the stage transition closed until the captain or designated state migration owner resolves kc-dev-flow/S1 and a fresh bound-field validation returns PASS; then proceed without adding another product mechanism or model pass.
-  route: block
+  em_judgment: AC-1 through AC-4 are supported at the exact revision with no actionable finding, and correctly bound state-context validation is PASS.
+  evidence_synthesis: Exact-head primary diff review, ordered-route and cohort exercises, two red scratch mutations, 100 percent executable diff coverage, green contract, absolute, locator, mirror, scope, and diff checks, and a zero-finding bound-field PASS against the exact product worktree support the bounded documentation-contract change.
+  risk_tradeoff_call: The benefit is one coherent brownfield subtraction route and a falsifiable observe-only trial; the residual risk is redundant prompting, while the durable cost is limited to existing documentation and one assertion block; the alternative is to omit observation and retain the proven ambiguity.
+  recommendation: Proceed to the existing validation gate owner for its authorized verdict and delivery workflow; do not add another mechanism or model pass.
+  route: proceed
   confidence: high
   multi_model: not_needed
   fo_boundary: The First Officer retains orchestration and gate-transition authority; this advisory does not advance state or deliver the change.
   engineering_judgment:
     question: Whether the exact five-file outcome-first change-shape contract satisfies AC-1 through AC-4 and should proceed.
     revision: fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b
-    evidence_synthesis: Exact-head primary diff review, ordered-route and cohort exercises, two red scratch mutations, 100 percent executable diff coverage, and green contract, absolute, locator, mirror, scope, and diff checks support the product change; the live and pre-report entity both fail required bound-field validation because kc-dev-flow/S1 is absent from the roadmap.
+    evidence_synthesis: Exact-head primary diff review, ordered-route and cohort exercises, two red scratch mutations, 100 percent executable diff coverage, green contract, absolute, locator, mirror, scope, and diff checks, and a zero-finding bound-field PASS against the exact product worktree support the bounded documentation-contract change.
     adjudications:
       - finding: AC-1 ordered brownfield route
         disposition: supported
@@ -619,20 +626,19 @@ science_officer_em_upward_report:
         basis: Exact-five-file, contract, absolute, 25-locator, byte-identity, diff-check, and clean-head evidence.
       - finding: Required bound-field validation for the live work item
         disposition: supported
-        basis: Live and pre-report checks both return sprint_unregistered for kc-dev-flow/S1; blame binds the fields to pre-existing state commit b068debb.
-    risk_tradeoff: The benefit is one coherent brownfield subtraction route and a falsifiable observe-only trial; the product cost is limited to existing documentation and one assertion block, while bypassing the red state control would make sprint authority untruthful; the alternative is to preserve the validated change and repair only the authoritative roadmap or entity before transition.
-    recommendation: Keep the stage transition closed until the captain or designated state migration owner resolves kc-dev-flow/S1 and a fresh bound-field validation returns PASS; then proceed without adding another product mechanism or model pass.
-    route: block
+        basis: The exact-worktree marketplace and ROADMAP plus split-root task returned PASS with zero findings; the stale-root FAIL was a wrong-input attempt and has no verdict authority.
+    risk_tradeoff: The benefit is one coherent brownfield subtraction route and a falsifiable observe-only trial; the residual risk is redundant prompting, while the durable cost is limited to existing documentation and one assertion block; the alternative is to omit observation and retain the proven ambiguity.
+    recommendation: Proceed to the existing validation gate owner for its authorized verdict and delivery workflow; do not add another mechanism or model pass.
+    route: proceed
     confidence: high
     dissent: ""
-    disproof_condition: A PASS receipt for the live entity and roadmap pair removes the lifecycle block; a route, cohort, numeric-authority, scope, mirror, locator, absolute, or diff failure would instead change the product recommendation to return.
+    disproof_condition: A correctly exact-worktree-bound state-context non-pass, a route or cohort ambiguity, numeric verdict authority, or any scope, mirror, locator, absolute, or diff failure changes the recommendation to return.
     authority_boundary: Captain retains scope and irreversibility; First Officer and Spacedock retain gate and stage transitions; work-item and delivery authorities retain status, merge, and terminalization.
 ```
 
 ### Summary
 
-Fresh exact-head validation found no product defect: the five-file change
-satisfies AC-1 through AC-4 and its instrument reddens under claim-breaking
-mutations. The EM recommends `block` only at the workflow boundary until the
-pre-existing `kc-dev-flow/S1` state-control failure is resolved; no concrete
-trigger remains for optional multi-model review.
+Fresh exact-head validation found no defect and recommends `proceed`. The
+five-file change satisfies AC-1 through AC-4, its instrument reddens under
+claim-breaking mutations, the correctly bound state-context control is PASS,
+and no concrete trigger remains for optional multi-model review.
