@@ -331,3 +331,29 @@ frontmatters, version parity, marketplace L0/L1/L2 installation, state
 prerequisite contract, Python compilation, diff check, and local Markdown links.
 Re-enter validation because the exact head changed; the fresh EM must challenge
 the new residual surface map.
+
+## Exact-head validation — `76614da671eaf29e9bed2147aae4e4f9f390af84`
+
+Fresh Claude Opus high session `317c8a98-df85-4baa-8a48-c780d51e55b9`
+returned `proceed / high`, AC 4/4, zero Material findings, and
+`multi_model: not_needed`. The same session corrected its output envelope
+without changing evidence or verdict.
+
+- `Lenses:` subtraction, authority, lifecycle independence, instrument quality,
+  and delivery topology all pass.
+- `Diff coverage:` 13/13 PR paths map to a task AC or release obligation; the
+  newest correction is net -165 lines and adds no surface.
+- `Adversarial:` green and `UNKNOWN` cannot retain proposed additions; weak
+  without-it evidence returns them; independently violable components cannot be
+  hidden in one group.
+- `Cross-model:` not_needed — no contested, irreversible, low-confidence, or
+  unresolved call remains.
+- `E2E:` N/A — the pilot ships a policy rejection predicate, not product runtime
+  behavior; hosted exact-head CI and local checks are green.
+- `Origin re-observation:` N/A — the accepted outcome is repository policy and
+  adversarial decision packets, not an external consumer-runtime claim.
+
+The EM found no surviving whole file or separable paragraph reducible from the
+supplied exact packet. Further removal of an existing green surface remains a
+captain-owned decision under the shipped rule. Delivery state remains open until
+PR #199 merges.
