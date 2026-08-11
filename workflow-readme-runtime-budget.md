@@ -4,7 +4,7 @@ source: Captain runtime-reading budget, 2026-08-10
 product: repo-platform
 sprint: S1
 id: hp4y9nwh8e75vk75j9ncwmb7
-status: implementation
+status: validation
 lane: main
 started: 2026-08-10T22:03:08Z
 design: required
@@ -225,3 +225,23 @@ the exact head. Verdict remains `proceed / high`, with zero Material findings.
 The prior 374/605 values remain the measurement at `c48a9e9`; 389/620 is the
 current delivery snapshot. The growth direction is a pilot observation, not an
 AC failure: the README retains 311 lines of ceiling headroom.
+
+## Implementation correction — residual surface subtraction
+
+Commit `76614da671eaf29e9bed2147aae4e4f9f390af84` applies the
+captain-approved second without-it pass. It deletes the 22-line zero-consumer
+history and 106-line duplicate product plan, removes 17 lines of repeated EM
+procedure from the validation runbook, reduces ROADMAP task prose to sprint
+membership/order/dependency/exit, and removes the file-specific history
+tombstone from the contract test.
+
+The always-loaded README is now 385 lines. The two retained trigger-loaded
+runbooks are 116 and 76 lines, so the complete authority-plus-procedure surface
+is 577 lines: 123 below the README ceiling and 785 below the original 1,362-line
+README. Recovery and validation retain distinct triggers; observation is bound
+to `none`. Local search finds no surviving reference to either deleted file.
+
+Fresh implementation checks pass at that commit: kc-dev-flow contract, 40 skill
+frontmatters, version parity, marketplace L0/L1/L2 installation, state
+prerequisite contract, Python compilation, diff check, and 11 local Markdown
+links. Re-enter validation because the exact head changed.
