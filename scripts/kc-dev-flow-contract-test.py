@@ -213,6 +213,50 @@ def capture(action):
         return None, str(exc)
 
 
+claude_plugin = ROOT / "kc-dev-flow"
+claude_version = smoke.installed_version(claude_plugin)
+claude_probe_events = [
+    {
+        "type": "system",
+        "subtype": "init",
+        "plugins": [
+            {
+                "name": "kc-dev-flow",
+                "version": claude_version,
+                "path": str(claude_plugin),
+            }
+        ],
+    },
+    {
+        "type": "result",
+        "result": json.dumps(extra_adjudication),
+        "structured_output": valid_em_report_data,
+    },
+]
+claude_probe_output = "\n".join(json.dumps(event) for event in claude_probe_events)
+claude_structured_report = smoke.claude_stream_result(
+    claude_probe_output,
+    claude_plugin,
+    claude_version,
+)
+require(
+    json.loads(claude_structured_report) == valid_em_report_data,
+    "Claude extraction ignored the schema-validated structured_output envelope",
+)
+del claude_probe_events[-1]["structured_output"]
+_, missing_structured_error = capture(
+    lambda: smoke.claude_stream_result(
+        "\n".join(json.dumps(event) for event in claude_probe_events),
+        claude_plugin,
+        claude_version,
+    )
+)
+require(
+    "structured_output" in missing_structured_error,
+    "Claude extraction fell back to unvalidated result text",
+)
+
+
 class FakeSmokeRuntime:
     candidate_revision = "c" * 40
     published_revision = "d" * 40
@@ -230,6 +274,7 @@ class FakeSmokeRuntime:
         self.sources: dict[str, Path] = {}
         self.plugins: dict[str, Path] = {}
         self.host_invocations: list[str] = []
+        self.host_schemas: dict[str, object] = {}
 
     def _install(self, host: str, env: dict[str, str]) -> None:
         source = self.sources[host] / "kc-dev-flow"
@@ -278,6 +323,8 @@ class FakeSmokeRuntime:
             stdout = '{"loggedIn":true}\n'
         elif command[0] == "claude" and "-p" in command:
             self.host_invocations.append("claude")
+            schema_index = command.index("--json-schema") + 1
+            self.host_schemas["claude"] = json.loads(command[schema_index])
             plugin = self.plugins["claude"]
             init = {
                 "type": "system",
@@ -291,6 +338,7 @@ class FakeSmokeRuntime:
             result = {
                 "type": "result",
                 "result": report_for_revision(self.candidate_revision),
+                "structured_output": json.loads(report_for_revision(self.candidate_revision)),
             }
             stdout = json.dumps(init) + "\n" + json.dumps(result)
         elif command[:4] == ["codex", "plugin", "marketplace", "add"]:
@@ -299,6 +347,10 @@ class FakeSmokeRuntime:
             self._install("codex", env or {})
         elif command[:2] == ["codex", "exec"]:
             self.host_invocations.append("codex")
+            schema_index = command.index("--output-schema") + 1
+            self.host_schemas["codex"] = json.loads(
+                Path(command[schema_index]).read_text(encoding="utf-8")
+            )
             stdout = json.dumps({
                 "type": "item.completed",
                 "item": {
@@ -356,6 +408,26 @@ with tempfile.TemporaryDirectory(prefix="kc-dev-flow-contract-") as contract_tmp
         and candidate_receipt["reports"] == {"claude": "PASS", "codex": "PASS"},
         "candidate mode did not invoke both hosts and write the minimum receipt: "
         f"{candidate_error!r}; {candidate_runtime.host_invocations}; {candidate_receipt!r}",
+    )
+    schema = candidate_runtime.host_schemas.get("claude")
+    require(
+        isinstance(schema, dict),
+        f"Claude candidate command omitted the report schema: {candidate_runtime.host_schemas!r}",
+    )
+    envelope_schema = schema["properties"]["science_officer_em_upward_report"]
+    judgment_schema = envelope_schema["properties"]["engineering_judgment"]
+    adjudication_schema = judgment_schema["properties"]["adjudications"]["items"]
+    schema_objects = [schema, envelope_schema, judgment_schema, adjudication_schema]
+    require(
+        candidate_runtime.host_schemas.get("codex") == schema
+        and all(
+            isinstance(node, dict)
+            and node.get("additionalProperties") is False
+            for node in schema_objects
+        )
+        and "verdict_note" not in adjudication_schema["properties"],
+        "candidate hosts did not receive one closed report schema: "
+        f"{candidate_runtime.host_schemas!r}",
     )
 
     failed_receipt = contract_root / "failed.json"
