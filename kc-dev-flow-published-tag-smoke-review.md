@@ -329,6 +329,169 @@ shared installation logic, and preserves every named AC and falsifier.
 The prior implementation and validation reports below are retained as historical
 cycle-1 evidence. They do not satisfy the revised ACs.
 
+## Stage Report: validation
+
+### TL;DR
+
+Exact-head candidate validation passes at
+`24d91bb0af0b53fd0b18b882e79c538419115cb2`: real authenticated isolated
+Claude and Codex installs both returned strictly accepted reports, and the
+closed receipt records version `2.2.0` plus tree
+`be81769f994b031e92d543fdad46c2b02af33688c1a24eda32cbd6bd19461e37`.
+The four-file implementation has no supported Material finding. Do not
+terminalize or make a release-complete claim: no tag contains this commit, and
+the future version-bumped Release PR head needs its own fresh candidate receipt
+before the resulting tag can run real `published` identity closeout.
+
+### Per-AC verdicts
+
+- **AC-1 PASS at exact implementation head** — a clean real invocation of
+  `scripts/kc-dev-flow-published-tag-smoke.py candidate` installed the current
+  tree through isolated Claude and Codex state, invoked both authenticated
+  hosts, strictly accepted both reports, and wrote the five-key receipt only
+  afterward. A direct invalid-Codex case invoked both hosts and left no receipt;
+  dirty-checkout and pre-existing-receipt probes both refused before model work.
+  This verdict would flip if either host could be skipped, an invalid report
+  left a receipt, or the eventual Release PR candidate did not repeat the proof.
+- **AC-2 PASS** — the exact packaged skill and smoke prompt close the root,
+  envelope, `engineering_judgment`, and adjudication objects; the unchanged
+  `exact_object` consumer rejected `verdict_note`. Weakening that guard in a
+  disposable detached copy made the contract suite fail on the same extra
+  field. This verdict would flip if an extra field exited zero or the producer
+  guidance again permitted it.
+- **AC-3 NOT DONE at the release boundary** — deterministic published-mode
+  checks reject extra/duplicate receipt fields and mutations to schema,
+  revision, version, digest, tag, source tree, Claude tree, and Codex tree; the
+  valid simulation records `host_invocations=[]`. A real auth-free Codex local
+  install also resolved version `2.2.0` and the exact candidate digest, closing
+  the independent reviewer's only plausible Material liveness concern. The
+  required first-containing-tag execution is impossible today because refreshed
+  tags contain no `24d91bb0...`; this verdict becomes PASS only when a fresh
+  Release PR candidate receipt and its exact resulting tag complete the real
+  `published` command without model invocation.
+- **AC-4 PASS** — `git diff-tree` reports exactly four modified existing files,
+  `664` insertions and `90` deletions: `CLAUDE.md` maps to AC-4, the packaged
+  Science Officer skill maps to AC-2, and the existing contract test and
+  existing smoke script map to AC-1 through AC-4. There are zero unmapped files,
+  no workflow/version/publication/local-sync/PR/fifth surface, and the release
+  instructions order candidate before published before local sync. This verdict
+  would flip on a fifth file, second smoke mechanism, parser relaxation, or
+  reordered trigger.
+
+### Evidence block
+
+`Lenses:` PASS at candidate scope — Read exact
+`24d91bb0af0b53fd0b18b882e79c538419115cb2` over
+`54913dda3e5e66841e043025bf646e0ad2493bc9` in `CLAUDE.md`,
+`kc-dev-flow/skills/science-officer-em/SKILL.md`,
+`scripts/kc-dev-flow-contract-test.py`, and
+`scripts/kc-dev-flow-published-tag-smoke.py`. Correctness fired (0 supported
+Material, 3 Advisory residuals), silent-failure fired (0 Material; all named
+invalid inputs refused), type-design fired (0 findings; receipt/report objects
+are closed), security fired (0 findings after the auth-free Codex install
+falsified the only plausible concern), resource-lifecycle fired (0 findings;
+temporary homes/checkouts are bounded), and manifest/back-compat fired (0
+Material; both installed candidate hosts resolved the packaged skill). Security,
+type, lifecycle, and manifest verdicts would fail on auth leakage, an accepted
+identity extension, leaked persistent state, or an installed-host mismatch;
+correctness/silent-failure would fail on any named mutation exiting zero.
+
+`Diff coverage:` PASS — Coverage.py plus diff-cover read the executable delta
+from `54913dda3...` to exact head `24d91bb0...` in the two changed Python files:
+the contract test is `100%`, the smoke is `86.2%`, and total changed-line
+coverage is `93%` (`243` lines, `16` missing). This field would fail below the
+`85%` executable ratchet; Markdown behavior is covered by the real installed
+invoke rather than line coverage.
+
+`Adversarial:` PASS — The focused exact-head harness rejected
+`verdict_note`; receipt root/report extras, duplicate key, wrong schema,
+revision, version, digest, and report state; and published tag/version/source/
+Claude-tree/Codex-tree mutations while keeping published host invocations empty.
+A disposable `24d91bb0...` copy with `exact_object` weakened went RED on
+`extra verdict_note`. This field would fail if that claim-breaking edit stayed
+green or any identity mutation invoked a model or exited zero.
+
+`Cross-model:` PASS — After `agy` Opus, Gemini Pro, and Sonnet attempts each
+returned an observed timeout, fresh safe-mode Claude Opus 5 session
+`c73ae360-547d-4170-8080-1a2247933ed3` read the exact current/base copies of all
+four paths with only Read/Grep/Glob and no hooks, plugins, MCP, Bash, or writes.
+It returned `proceed / medium-high`, one plausible Material and six Advisories;
+the Material Codex-auth concern was then falsified through the exact auth-free
+install helper (`PASS`, no `auth.json`, matching version and digest). This field
+would fail on a supported file-cited Material defect or a reviewer bound to the
+wrong revision.
+
+`E2E:` FAIL — Read and ran exact-head
+`scripts/kc-dev-flow-published-tag-smoke.py`: the real candidate half passed
+both authenticated installed hosts and emitted the closed receipt, but refreshed
+Git tags contain no `24d91bb0...`, so the real published half cannot run. This
+field would pass only after a clean version-bumped Release PR head repeats
+candidate and its resulting exact tag passes published identity binding with no
+model invocation; either host/report failure, identity mismatch, or post-release
+model call would fail it.
+
+`Origin re-observation:` FAIL — Reported scenario: a published kc-dev-flow tag
+is the already-validated Release PR candidate and published mode invokes no
+model | Originating runtime kind: authenticated installed Claude/Codex CLIs plus
+published-tag installers | Re-observation artifact/revision: candidate-only
+receipt for `24d91bb0af0b53fd0b18b882e79c538419115cb2`; no containing tag exists |
+Equivalent-runtime rationale: the candidate run matches the actor, instrument,
+local install, auth, prompt, and strict report path, but cannot match the future
+Release PR version/tree or exact tag delivery path | Falsifier kind:
+existence-disproof | Result: no containing tag exists, so publication identity
+remains unobserved and this field stays not-done.
+
+### Engineering judgment
+
+- `question:` Does exact commit `24d91bb0...` provide the smallest valid
+  pre-release dual-host proof and post-release identity-only mechanism without
+  claiming the not-yet-existent release artifact?
+- `revision:` `24d91bb0af0b53fd0b18b882e79c538419115cb2` over
+  `54913dda3e5e66841e043025bf646e0ad2493bc9`.
+- `evidence_synthesis:` Real candidate receipt, focused closed-schema and
+  identity refusals, one RED guard mutation, auth-free Codex installation, 93%
+  executable diff coverage, full repository gates, refreshed tags, and fresh
+  cross-vendor exact-head review all agree on the implementation-head result.
+- `adjudications:` AC-1, AC-2, and AC-4 pass. AC-3's deterministic boundary
+  passes but its accepted real published-tag observation remains open. The
+  Opus Material hypothesis is unsupported after the exact auth-free install
+  passed; its remaining advisories do not justify a fifth implementation
+  surface before the real tag falsifier.
+- `risk_tradeoff:` proceed with the four-file mechanism rather than adding CI,
+  credentials, or persistence. Preserve the release boundary: rerun candidate
+  on the actual Release PR head because its version/tree will differ from this
+  feature head, then use only that receipt for published closeout.
+- `recommendation/route/confidence:` proceed to the release boundary while
+  keeping this entity in validation / `proceed` / high on the implementation,
+  low until published-runtime liveness is observed.
+- `dissent:` The independent reviewer notes that the prompt itself can elicit
+  the closed shape even if packaged-skill guidance were absent, and that two
+  receipt-extra assertions can reject for a broad `extra=` reason. Static skill
+  guidance checks plus the direct report mutation preserve the accepted
+  boundary; retain these as Advisory residuals rather than expanding scope.
+- `disproof_condition:` return to implementation if the actual Release PR
+  candidate cannot produce both strict reports and a closed receipt, or if the
+  resulting published tag fails version/source/installed-tree binding, accepts
+  a receipt mutation, or invokes a model.
+- `authority_boundary:` advisory only. Captain and release workflow retain PR,
+  merge, version, tag, publication, local-sync, scope, and terminal state
+  authority.
+
+## Measurement
+
+- Exact implementation scope: 4 existing files, `+664/-90`, 0 unmapped.
+- Executable diff coverage: `93%` across 243 changed lines; smoke `86.2%`,
+  contract `100%`.
+- Real candidate artifact: schema `kc-dev-flow-candidate-smoke/v1`, revision
+  `24d91bb0af0b53fd0b18b882e79c538419115cb2`, version `2.2.0`, tree
+  `be81769f994b031e92d543fdad46c2b02af33688c1a24eda32cbd6bd19461e37`,
+  reports `Claude=PASS`, `Codex=PASS`.
+- Full-suite evidence: release metadata `32/32`, skill-frontmatter fixture
+  `12/12`, live frontmatter `40/40`, plugin-release contract `11/11`, work
+  context `23/23`, state prerequisite PASS, marketplace L0/L1/L2 PASS for all
+  seven plugins, audit-link `35/35`, Python compile PASS, contract PASS, and
+  `git diff --check` PASS.
+
 ## Historical Stage Report: implementation (cycle 1)
 
 - DONE: Commit `c48a9e97f1614d80d8220ac4c80b4df993db09fb` adds the one
