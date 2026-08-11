@@ -249,7 +249,13 @@ the decision to its owning stage; do not adjudicate it while coding.
   Necessary tests, assertions, safety checks, and clarifying code keep the same
   protection as every other responsibility.
 
-  Evaluate the cohort without comparing changes competitively:
+  Evaluate the cohort without comparing changes competitively. If a
+  number-management incident is confirmed, classify the cohort Immediate
+  stop/removal before considering other outcomes. Otherwise, any newly
+  attributable subtraction is Success, including a one-subtraction/two-defense
+  cohort. When neither is present, two defense-only rows are No incremental
+  value.
+
   - **Success:** at least one concrete subtraction is attributable to this
     question rather than prior reverse recovery or AC mapping, with no
     number-management incident.

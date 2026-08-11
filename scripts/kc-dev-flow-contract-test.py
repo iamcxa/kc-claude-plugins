@@ -1111,6 +1111,13 @@ for outcome in [
 ]:
     if outcome not in normalized_implementation_stage:
         change_shape_failures.append(f"observe-only cohort outcome is missing: {outcome}")
+for phrase in [
+    "classify the cohort Immediate stop/removal before considering other outcomes",
+    "any newly attributable subtraction is Success, including a one-subtraction/two-defense cohort",
+    "When neither is present, two defense-only rows are No incremental value.",
+]:
+    if phrase not in normalized_implementation_stage:
+        change_shape_failures.append(f"cohort precedence is missing: {phrase}")
 if "None of these outcomes is a per-change delivery gate." not in normalized_implementation_stage:
     change_shape_failures.append("cohort outcomes are not bounded away from delivery authority")
 
