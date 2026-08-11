@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-native-stacked-pr-policy-v4
 issue:
-pr:
+pr: iamcxa/kc-claude-plugins#210
 mod-block:
 design: required
 lane: main
@@ -1234,3 +1234,16 @@ old and new top patch IDs both equal
 contracts, named safety mutants, clean-worktree checks, and diff checks pass at
 both exact heads. Multi-model review is `not_needed`. Delivery remains pending
 captain approval of the rebound Candidate and base SHAs.
+
+## Draft native stack created
+
+Captain-approved exact heads were pushed without rebasing and created as Drafts:
+bottom [#209](https://github.com/iamcxa/kc-claude-plugins/pull/209) targets
+`main` at Candidate `937f5266f5da6f53a196c5c88c6d51ca42ecccdd`; top
+[#210](https://github.com/iamcxa/kc-claude-plugins/pull/210) targets the bottom
+branch at Candidate `b6a120539cbf8b160536775ece4268a66907ebd1`.
+`gh stack link --base main` linked those full URLs bottom-to-top as native stack
+`#211`. Provider re-observation shows one stack, the approved order and base,
+both exact heads, and both PRs still Draft. The entity tracks qualified top PR
+`iamcxa/kc-claude-plugins#210`; readiness, merge, release, and terminalization
+remain pending their later gates.
