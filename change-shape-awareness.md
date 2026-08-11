@@ -1,6 +1,6 @@
 ---
 title: Integrate outcome-first subtraction with change-shape awareness
-status: implementation
+status: validation
 source: Captain-approved kc-dev-flow/S1 extension after Fable 5 challenge, 2026-08-11
 product: kc-dev-flow
 sprint: S1
