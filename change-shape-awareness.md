@@ -327,3 +327,109 @@ deletion. The observe trial and immediate incident stop are the disproof path.
 Proceed with a five-existing-file documentation/contract observe trial. Ask the
 largest-responsibility question after RED/GREEN, apply normal without-it proof
 to any resulting subtraction, and let no number own a delivery decision.
+
+## Stage Report: implementation
+
+- DONE: Implemented the accepted five-file contract slice on
+  `spacedock-ensign/change-shape-awareness` at exact head
+  `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b` from merge base
+  `54913dda3e5e66841e043025bf646e0ad2493bc9`.
+- DONE: The portable kernel now orders accepted outcome, reverse recovery,
+  reversible subtraction or bypass, necessary addition, RED/GREEN, post-diff
+  observation, and fresh validation. Existing `UNKNOWN` preserves a surface;
+  green or `UNKNOWN` returns a proposed addition.
+- DONE: The local implementation stage records separate gross additions and
+  deletions, the unconditional largest-responsibility question, observe-only
+  boundaries, the three-change cohort, and unambiguous outcome precedence.
+- DONE: A fresh review of the first head found overlapping Success and
+  No-incremental-value predicates. The corrected exact head makes a confirmed
+  incident win first, then an attributable subtraction win Success, then two
+  defense-only rows yield No incremental value. Fresh re-review returned no
+  findings and AC-3 `PASS`.
+
+### RED and GREEN
+
+- Pre-contract RED: the new fail-collecting contract case exited `1` and
+  reported the missing seven-step order, unconditional question, observe-only
+  boundaries, implementation placement, and four cohort outcomes in one run.
+  Its behavior assertions were all reached; no later assertion was hidden by
+  the first failure.
+- Mutation RED at the corrected contract: reordering RED/GREEN and observation,
+  removing the question, weakening the numeric-authority prohibition, removing
+  the Success outcome, and removing mixed-cohort precedence each exited `1`
+  with the corresponding contract failure.
+- Review-fix RED: before the README precedence edit, the contract exited `1`
+  for all three missing precedence statements. After the edit it returned
+  `kc-dev-flow contract: PASS`.
+- Final GREEN at exact head:
+  `python3 scripts/kc-dev-flow-contract-test.py` returned
+  `kc-dev-flow contract: PASS`.
+- Old-behavior arrangement audit: the existing contract had no fixture that
+  arranged post-diff change-shape behavior. The new assertions add a new
+  contract case and do not repurpose or narrow an existing scenario.
+
+### Changed file to AC mapping
+
+| Changed file | Accepted responsibility | AC |
+|---|---|---|
+| `kc-dev-flow/references/kernel.md` | Portable ordered route, operational definitions, question, and observe-only boundary | AC-1, AC-2 |
+| `docs/dev/_mods/kernel.md` | Adopt the same portable contract; byte identity is checked by the contract test and `cmp` | AC-1, AC-4 |
+| `docs/dev/README.md` | Local packet, stage placement, cohort results, and outcome precedence | AC-2, AC-3 |
+| `scripts/kc-dev-flow-contract-test.py` | Position-sensitive and mutation-capable falsifiers for the route, question, boundaries, stage placement, outcomes, and precedence | AC-1, AC-2, AC-3, AC-4 |
+| `kc-dev-flow/references/absolutes.registry` | Fresh disposition hashes and corrected `kernel.md` locators for the edited normative blocks | AC-4 |
+
+### Post-diff change-shape packet
+
+- Merge base: `54913dda3e5e66841e043025bf646e0ad2493bc9`
+- Implemented head: `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b`
+- Mechanically sourced raw `git diff --numstat <base>...<head>`:
+
+  ```text
+  46  0   docs/dev/README.md
+  51  24  docs/dev/_mods/kernel.md
+  16  14  kc-dev-flow/references/absolutes.registry
+  51  24  kc-dev-flow/references/kernel.md
+  81  0   scripts/kc-dev-flow-contract-test.py
+  ```
+
+- Gross additions: `245`.
+- Gross deletions: `62`.
+- Question: **If the largest added responsibility is removed, which named AC
+  fails?**
+- Answer: the largest independently maintained added responsibility is the
+  contract-test enforcement block. Removing it makes the ordered-route,
+  question, observe-boundary, cohort, and precedence mutations lose their
+  mechanical falsifier, failing AC-1, AC-2, AC-3, and AC-4. The mutation runs
+  are the without-it failure instrument, so the responsibility remains.
+- Disposition: defense established by the AC mapping; no subtraction was
+  authorized. Counts focused inspection but neither chose the responsibility
+  nor supplied the answer.
+- Number-management incidents: none observed. No test, assertion, clarity, or
+  necessary contract wording was deleted or compressed because of a count.
+
+### Validation-ready evidence
+
+- Exact five-file scope: `git diff --name-only <base>...<head>` matched the
+  authorized set; no sixth file or new capability is present.
+- `python3 kc-dev-flow/scripts/absolutes-check.py ...` returned
+  `absolutes-check:PASS:70 dispositioned`.
+- A locator audit recomputed the kernel block hashes and returned
+  `kernel registry locators: PASS:25`.
+- `cmp kc-dev-flow/references/kernel.md docs/dev/_mods/kernel.md` returned `0`.
+- `git diff --check <base>...<head>` returned `0`.
+- The code worktree was clean on the named branch and exact head after the final
+  checks.
+- Fresh exact-head reviewer verdict: no findings; AC-1 through AC-4 pass, and
+  the existing-seam, proposed-addition, and four synthetic cohort exercises are
+  coherent at the corrected revision.
+- E2E: not applicable because the diff changes documentation and its mechanical
+  contract only; it adds no user-visible or full-stack runtime behavior.
+- CI delta: the diff adds text-contract assertions without an OS, libc, locale,
+  clock, CI-pinned-tool, or material timeout dependency. Exact-head required CI
+  remains delivery authority.
+
+### Summary
+
+Implemented and mechanically falsified the outcome-first change-shape contract
+at `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b`. The exact five-file revision is
+ready for fresh validation; change-shape numbers remain observation only.
