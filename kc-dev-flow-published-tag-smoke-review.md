@@ -264,4 +264,4 @@ this task until that tag records a keep-or-remove disposition.
 
 ### Feedback Cycles
 
-- Cycle 1: REJECTED — `kc-dev-flow-v2.2.0` release-closeout smoke; surface 1 closed-schema correction seam vs estimate 1 seam (0%); AC unchanged
+- Cycle 1: REJECTED — `kc-dev-flow-v2.2.0` release-closeout smoke; keep the harness because it caught a producer/consumer closed-schema mismatch absent from pre-release checks; surface 1 correction seam vs estimate 1 seam (0%); AC unchanged
