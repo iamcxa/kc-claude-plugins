@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.2.0...kc-dev-flow-v2.3.0) (2026-08-11)
+
+
+### Features
+
+* **kc-dev-flow:** add change-shape observation ([53e3232](https://github.com/iamcxa/kc-claude-plugins/commit/53e3232d61d689d34a6c493495c791fe0d0f85b4))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** validate runtime compatibility before release ([1db7e77](https://github.com/iamcxa/kc-claude-plugins/commit/1db7e7729595b090715943da544a0f8327912c05))
+
 ## [2.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.1.0...kc-dev-flow-v2.2.0) (2026-08-11)
 
 
