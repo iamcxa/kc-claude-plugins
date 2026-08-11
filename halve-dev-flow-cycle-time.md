@@ -244,3 +244,26 @@ frontmatters, version parity, marketplace L0/L1/L2 installation, state
 prerequisite contract, Python compilation, diff check, and local Markdown links.
 Re-enter validation because the exact head changed; prior verdicts are evidence,
 not authority for the new revision.
+
+## Exact-head validation — `76614da671eaf29e9bed2147aae4e4f9f390af84`
+
+Fresh Claude Opus high session `317c8a98-df85-4baa-8a48-c780d51e55b9`
+returned `proceed / high`, AC 4/4, zero Material findings, and
+`multi_model: not_needed`. The same session corrected its output envelope
+without changing evidence or verdict.
+
+- `Lenses:` review scheduling, authority, fallback, and delivery all pass.
+- `Diff coverage:` the 13-path PR map binds every changed path; the deletion of
+  history changes no skill, stage seat, fallback, or delivery predicate.
+- `Adversarial:` the contract rejects an implementation review loop, a missing
+  ideation/validation EM, absent top-tier fallback, and universal multi-model.
+- `Cross-model:` not_needed — no contested, irreversible, low-confidence, or
+  unresolved call remains.
+- `E2E:` N/A — this accepted value is repository stage policy; hosted exact-head
+  CI and all local contract/install checks are green.
+- `Origin re-observation:` N/A — the accepted comparison is the recorded fixed
+  route, not an external consumer-runtime claim.
+
+The two mandatory pre-integration waits remain zero; both judgment gates and
+all delivery predicates remain present. Delivery state remains open until PR
+#199 merges.
