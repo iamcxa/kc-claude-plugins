@@ -14,6 +14,7 @@ pr_artifact_v1: eyJhdWRpdF9saW5rIjoiW2F6XSgvaWFtY3hhL2tjLWNsYXVkZS1wbHVnaW5zL2Js
 mod-block:
 completed: 2026-08-11T08:49:40Z
 verdict: PASSED
+archived: 2026-08-11T09:17:53Z
 ---
 
 The candidate smoke asks both reviewer hosts for a closed report object but relies on prose alone. Claude returned a report with the forbidden `verdict_note` field, so the strict parser correctly rejected an otherwise usable run. Enforce the already-declared report schema at each host CLI boundary while keeping the strict parser and report shape unchanged.
