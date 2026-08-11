@@ -4,7 +4,7 @@ source: Captain 2x development-speed target, 2026-08-10
 product: kc-dev-flow
 sprint: S1
 id: f32cg5cbw6b633s09e2zxbr5
-status: validation
+status: implementation
 lane: main
 started: 2026-08-10T22:03:08Z
 design: required
@@ -72,8 +72,8 @@ treating silence as approval, or skipping the one EM verdict.
 
 **AC-4 — Pre-integration reviewer waits fall by at least half.**
 
-Verified by: the task's fixed before/after route count, recorded in
-`docs/dev/history/workflow-cost-record.md:14-17`. Falsified by: any ordinary
+Verified by: the fixed before/after route above and the contract mutation that
+rejects an implementation reviewer loop. Falsified by: any ordinary
 implementation path still requiring one of the two baseline review waits.
 
 ## Test plan
@@ -93,6 +93,13 @@ separately and does not hide by weakening validation.
 
 Reducing test depth, changing merge authority, optimizing release PR #198's CI,
 provider-specific model policy, and creating or merging a PR.
+
+## Captain scope revision — 2026-08-11
+
+The captain approved removing the non-authoritative workflow cost history. AC-4
+keeps the same accepted two-to-zero fixed-route comparison; its durable evidence
+is this task plus the executable contract, so deleting the duplicate observation
+file changes no review schedule or acceptance threshold.
 
 ## Stage Report: ideation
 
