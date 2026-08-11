@@ -419,3 +419,89 @@ green migration layer before the corrected native-stack policy layer.
 ### Feedback Cycles
 
 - Cycle 1: REJECTED — fresh validation; surface 6 files vs estimate 6 (0%); AC unchanged
+
+## Stage Report: implementation (cycle 3)
+
+### Outcome
+
+Split the rejected combined delivery into the demonstrated two-layer native
+stack. Both layers are committed, clean, independently green at their exact
+heads, and remain local: no code branch was pushed and no PR was opened.
+
+### Bottom layer: released-runtime alignment
+
+- Branch: `spacedock-ensign/pr-merge-runtime-alignment`
+- Worktree: `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-pr-merge-runtime-alignment`
+- Head: `0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae`
+- Merge base against `origin/main`:
+  `1745b13563dd60ee41f51066ef15d0bff4929cb0`
+- Commit: `refactor(kc-dev-flow): align PR merge with released runtime`
+
+This layer restores the released Spacedock 0.26.0 `pr-merge` v0.12.2 body,
+changes only its one create command to Draft, retains the bounded split-root
+immutable audit-link correction, removes the unconsumed `pr_artifact_v1`
+protocol and obsolete extraction/terminal tests, and makes unsupported delivery
+recovery fail closed. It introduces no native-stack routing policy.
+
+Raw `git diff --numstat origin/main...HEAD`:
+
+```text
+1	2	docs/dev/README.md
+58	2017	docs/dev/_mods/pr-merge.md
+0	585	docs/dev/artifacts/terminal-transaction-contract-test.sh
+17	15	docs/dev/runbooks/state-recovery.md
+0	291	kc-pr-flow/scripts/pr-merge-audit-link.test.sh
+81	0	scripts/kc-dev-flow-contract-test.py
+```
+
+### Top layer: native-stack policy
+
+- Branch: `spacedock-ensign/native-stacked-pr-policy`
+- Worktree: `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-native-stacked-pr-policy`
+- Head: `3ad8a4f8d35ac2efe1e839aa77291eb4521d9543`
+- Merge base against the bottom head:
+  `0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae`
+- Commit: `docs(kc-dev-flow): route dependent changes through native stacks`
+
+The top diff contains only `docs/dev/README.md`,
+`docs/dev/_mods/pr-merge.md`, and
+`scripts/kc-dev-flow-contract-test.py`. One authoritative parsed decision table
+now maps the four exact cases: dependent green layers to a native stack at any
+size; independent green slices to parallel Draft PRs; an atomic change above
+the strict `> 1,500` gross-lines or `> 20` files trigger to one Draft with
+`## Native stack exception`; and a smaller atomic change to one Draft. README
+points to those same predicates and no longer adds the lower-merge waiting
+condition.
+
+Raw `git diff --numstat 0980e992c0f5f31a0e9c6d816d48f7bee3a8a5ae...HEAD`:
+
+```text
+5	4	docs/dev/README.md
+46	0	docs/dev/_mods/pr-merge.md
+79	7	scripts/kc-dev-flow-contract-test.py
+```
+
+### Exact-head evidence
+
+- At each exact head, `python3 scripts/kc-dev-flow-contract-test.py`,
+  `bash scripts/dev-flow-state-prereq.test.sh`,
+  `bash scripts/marketplace-verify.sh`,
+  `bash scripts/skill-frontmatter-lint.test.sh`,
+  `bash scripts/skill-frontmatter-lint.sh`, and `git diff --check` passed.
+- Spacedock 0.26.0 `internal/status` and `internal/cli` merge-guard fixtures
+  passed against the retained runtime contract.
+- A temporary outcome inversion in the first table row failed with
+  `delivery-topology row polarity or required outcome drifted`; restoring the
+  exact row returned the contract to green.
+- Installed `gh stack link --help` passed and documents bottom-to-top arguments,
+  `--base`, and the `--open` opt-out that the policy forbids.
+- The preserved combined-evidence worktree remains clean at
+  `7b315696705840b0db4941d8205e53247ccafdd8` on
+  `spacedock-ensign/native-stacked-pr-routing`.
+
+### Handoff
+
+Track the top worktree listed above. When captain approval authorizes delivery,
+push and open the bottom Draft PR first, then the top Draft PR based on the
+bottom branch, and link them bottom to top. This implementation cycle performed
+none of those outward mutations.
