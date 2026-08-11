@@ -106,7 +106,7 @@ archive move is partial. Ordinary continuation does not load that runbook.
 | `started`, `completed` | First departure from backlog; authenticated product PR `mergedAt` |
 | `verdict` | `PASSED` or `REJECTED` at final validation |
 | `worktree` | Set on worktree dispatch; cleared after terminal merge |
-| `issue`, `pr`, `pr_artifact_v1`, `mod-block` | Delivery references and digest-bound lifecycle guard |
+| `issue`, `pr`, `mod-block` | Delivery references and merge lifecycle guard |
 | `design` | `required` or `trivial-pass`; set at ideation or defect classification |
 | `lane` | `main` or `defect`; set when routing out of backlog |
 | `ledger_pr`, `ledger_artifact_v1` | Legacy bytes only; preserve but never consume for authority |
@@ -396,7 +396,6 @@ verdict:
 worktree:
 issue:
 pr:
-pr_artifact_v1:
 mod-block:
 design:
 lane:

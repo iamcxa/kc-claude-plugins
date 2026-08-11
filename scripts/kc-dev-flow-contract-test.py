@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import re
@@ -800,6 +801,97 @@ require(
     "spacedock 0.26.0 (contract 3)" in state_recovery,
     "state recovery does not name the supported Spacedock runtime contract",
 )
+
+pr_merge_mod_path = ROOT / "docs/dev/_mods/pr-merge.md"
+require(pr_merge_mod_path.is_file(), "self-adoption is missing the pr-merge mod")
+pr_merge_mod = pr_merge_mod_path.read_text(encoding="utf-8")
+extension_start = "<!-- kc-dev-flow runtime extension:start -->\n"
+extension_end = "<!-- kc-dev-flow runtime extension:end -->\n"
+require(
+    pr_merge_mod.count(extension_start) == 1
+    and pr_merge_mod.count(extension_end) == 1
+    and pr_merge_mod.endswith(extension_end),
+    "pr-merge does not contain one trailing runtime extension",
+)
+released_body, local_extension = pr_merge_mod.split(extension_start, 1)
+local_extension = extension_start + local_extension
+released_body_without_draft = released_body.replace(
+    "gh pr create --draft --base", "gh pr create --base", 1
+)
+require(
+    released_body.count("gh pr create --draft --base") == 1,
+    "pr-merge does not make the released single-PR command Draft by default",
+)
+require(
+    hashlib.sha256(released_body_without_draft.encode("utf-8")).hexdigest()
+    == "a70a0ba4f9fb48a1c33e9f9e2c4ff3cb76b0a816d050a42bdbd6eced9fd15f64",
+    "pr-merge released 0.12.2 body drifted outside the Draft adjustment",
+)
+for phrase in [
+    "overrides the released audit-link inputs",
+    "spacedock status --workflow-dir {dir} --resolve {entity ref} --json",
+    'git -C "$STATE_ROOT" rev-parse HEAD',
+    'git -C "$STATE_ROOT" ls-files --full-name -- "$ENTITY_PATH"',
+    'git -C "$STATE_ROOT" cat-file -e "$STATE_SHA:$STATE_RELATIVE_PATH"',
+    'git -C "$STATE_ROOT" remote get-url origin',
+    'gh repo view "$STATE_ORIGIN"',
+    "/{state-owner}/{state-repo}/blob/{state-sha}/{state-relative-path}",
+    "Stop if entity state is unresolved, untracked, or absent from the state commit",
+    "Do not fall back to the code-worktree SHA, code-relative path, or `main`",
+]:
+    require(phrase in local_extension, f"pr-merge split-root audit link is missing: {phrase}")
+for forbidden in [
+    "gh " + "pr link",
+    "gh " + "stack link",
+    "Native " + "stack",
+    "1,500 gross lines",
+]:
+    require(forbidden not in pr_merge_mod, f"runtime-only pr-merge contains policy: {forbidden}")
+portable_delivery = subprocess.run(
+    [sys.executable, "scripts/pr-merge-portable-delivery.test.py"],
+    cwd=ROOT,
+    text=True,
+    capture_output=True,
+)
+require(
+    portable_delivery.returncode == 0,
+    "portable pr-merge delivery contract failed:\n"
+    + portable_delivery.stdout
+    + portable_delivery.stderr,
+)
+require(
+    "cannot be authenticated; preserve the evidence and stop"
+    in " ".join(state_recovery.split()),
+    "state recovery does not fail closed after delivery artifact removal",
+)
+
+forbidden_tracked_references = {
+    "removed delivery artifact field": "pr_" + "artifact_v1",
+    "removed extraction marker": "pr-merge-audit-link-recipe:" + "start",
+    "removed extraction marker end": "pr-merge-audit-link-recipe:" + "end",
+    "obsolete contract test": "terminal-" + "transaction-contract-test.sh",
+}
+tracked_files = subprocess.run(
+    ["git", "ls-files", "-z"],
+    cwd=ROOT,
+    check=True,
+    capture_output=True,
+).stdout.split(b"\0")
+for raw_path in tracked_files:
+    if not raw_path:
+        continue
+    tracked_path = ROOT / raw_path.decode("utf-8")
+    if not tracked_path.is_file():
+        continue
+    try:
+        tracked_text = tracked_path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        continue
+    for label, reference in forbidden_tracked_references.items():
+        require(
+            reference not in tracked_text,
+            f"{label} remains in {tracked_path.relative_to(ROOT)}",
+        )
 published_smoke = (ROOT / "scripts/kc-dev-flow-published-tag-smoke.py").read_text(
     encoding="utf-8"
 )
