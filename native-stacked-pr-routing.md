@@ -8,7 +8,7 @@ sprint:
 started: 2026-08-11T12:40:19Z
 completed:
 verdict:
-worktree: .worktrees/spacedock-ensign-native-stacked-pr-policy-v3
+worktree: .worktrees/spacedock-ensign-native-stacked-pr-policy-v4
 issue:
 pr:
 mod-block:
@@ -1217,3 +1217,20 @@ accepted; no product correction or additional model review is required.
 
 Delivery remains pending. Create the approved bottom-to-top Draft stack from the
 two exact heads; do not ready, merge, or terminalize without the later gates.
+
+## Validation rebind — current main accepted
+
+`origin/main` advanced through #206 and #207 before delivery. The approved stack
+was recut without scope change as
+`f572b013ceb994596a29b348a1afa74b530e461f` →
+`937f5266f5da6f53a196c5c88c6d51ca42ecccdd` →
+`b6a120539cbf8b160536775ece4268a66907ebd1`.
+
+The fresh GPT-5.6 High EM returns `proceed` with high confidence: old and new
+bottom patch IDs both equal `4498b07e861f4fc3a270efb7295035143d86f568`;
+old and new top patch IDs both equal
+`7f97a95f6ec68750ce6050aec93467a1b65d4920`; the retained #206/#207 delta equals
+`d63d99123ae8c82dd4ce4b16d0e833deab0fe845`. Focused portable and integrated
+contracts, named safety mutants, clean-worktree checks, and diff checks pass at
+both exact heads. Multi-model review is `not_needed`. Delivery remains pending
+captain approval of the rebound Candidate and base SHAs.
