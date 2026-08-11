@@ -441,6 +441,10 @@ AC-4 at `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b` with no code/product findings
 and the required state-context control passes when its marketplace and ROADMAP
 inputs are correctly bound to that exact product worktree.
 
+- DONE: At exact head `fb0ae44e7f06bc6ea3e0e9f52c268a25c5dfad2b`, exercised the ordered route with a recovered seam and proposed responsibility plus success, defense-only, incident, retirement, and mixed-precedence cohorts.
+- DONE: Re-ran the contract, absolutes, locators, kernel identity, exact-five-file, and diff checks, and proved claim-breaking route, question, boundary, outcome, and precedence mutations exit RED.
+- DONE: Returned a fresh EM `proceed` recommendation for AC-1 through AC-4 with the complete evidence block and optional multi-model disposition `not_needed`.
+
 ### Exact-revision AC verdicts
 
 **AC-1 — PASS.** The canonical and adopted kernels state the seven decisions in
