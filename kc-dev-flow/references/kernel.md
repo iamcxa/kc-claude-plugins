@@ -48,6 +48,19 @@ The default lifecycle is
    claim. Unit tests alone do not prove wiring.
 5. `done` follows exact-revision delivery plus durable terminal/archive state.
 
+At ideation entry, inherited backlog criteria are hypotheses, not accepted
+outcome constraints. The ideation actor classifies each as value, governing
+constraint, or mechanism and preserves constraints explicitly imposed by the
+captain or governing authority. It rewrites a mechanism-shaped criterion to the
+value or failure it serves, or removes it. A mechanism may remain only when its
+absence fails a named value-level criterion, the simpler route has proved
+insufficient, and the selected route still exposes the hazard. When the selected
+route structurally eliminates or bypasses the failure mode, its defense criterion
+is superseded. Before the accepted outcome is recorded, work-item authority
+records each inherited criterion's class and retain, rewrite, remove, or
+supersede disposition; a governing constraint names its imposing authority, so
+a later reviewer can read the normalization.
+
 Use the smallest sufficient route. A bounded defect with a known cause and a
 mechanical acceptance test may skip ideation, but it keeps the same acceptance,
 validation, delivery, and terminal-state bars.

@@ -1098,6 +1098,35 @@ require(
     "kernel is missing the lower-level evidence boundary",
 )
 
+lifecycle_start = kernel.find("## Lifecycle")
+sprint_continuity_start = kernel.find("## Sprint continuity and autonomy")
+require(
+    0 <= lifecycle_start < sprint_continuity_start,
+    "kernel lifecycle boundaries are missing or out of order",
+)
+lifecycle_contract = " ".join(
+    kernel[lifecycle_start:sprint_continuity_start].split()
+)
+for phrase in [
+    "inherited backlog criteria are hypotheses, not accepted outcome constraints",
+    "value, governing constraint, or mechanism",
+    "constraints explicitly imposed by the captain or governing authority",
+    "rewrites a mechanism-shaped criterion to the value or failure it serves, or removes it",
+    "may remain only when its absence fails a named value-level criterion",
+    "the simpler route has proved insufficient",
+    "the selected route still exposes the hazard",
+    "structurally eliminates or bypasses the failure mode",
+    "defense criterion is superseded",
+    "Before the accepted outcome is recorded",
+    "work-item authority records each inherited criterion's class and retain, rewrite, remove, or supersede disposition",
+    "a governing constraint names its imposing authority",
+    "a later reviewer can read the normalization",
+]:
+    require(
+        phrase in lifecycle_contract,
+        f"kernel ideation entry is missing seed normalization: {phrase}",
+    )
+
 route_discipline = kernel.find("## Route discipline")
 require(route_discipline >= 0, "kernel is missing Route discipline")
 require(
