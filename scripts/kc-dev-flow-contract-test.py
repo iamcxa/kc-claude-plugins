@@ -1316,7 +1316,9 @@ stage_headings = [
     "### `validation`",
     "### `done`",
 ]
-for heading in stage_headings:
+
+
+def stage_body(heading: str) -> str:
     start = workflow.find(heading)
     require(start >= 0, f"self-adoption is missing stage: {heading}")
     boundaries = [
@@ -1327,18 +1329,122 @@ for heading in stage_headings:
         ]
         if position >= 0
     ]
-    end = min(boundaries, default=len(workflow))
+    return workflow[start : min(boundaries, default=len(workflow))]
+
+
+def selected_policy_mods(heading: str) -> set[str]:
+    lines = stage_body(heading).splitlines()
+    declarations = [
+        (index, match.group(1))
+        for index, line in enumerate(lines)
+        if (match := re.fullmatch(r"Policy mods:[ \t]*(.*)", line)) is not None
+    ]
     require(
-        "Policy mods:" in workflow[start:end],
-        f"self-adoption stage is missing Policy mods: {heading}",
+        len(declarations) == 1,
+        f"self-adoption stage must have one Policy mods declaration: {heading}",
     )
-    selected = "_mods/engineering-judgment.md" in workflow[start:end]
+    index, first_line = declarations[0]
+    declaration_lines = [first_line.strip()]
+    for line in lines[index + 1 :]:
+        if not line.strip():
+            break
+        declaration_lines.append(line.strip())
+    text = " ".join(filter(None, declaration_lines))
+    if text.rstrip(".") == "none":
+        return set()
+    selected = set(
+        re.findall(r"\]\((?:\./)?(_mods/[^)#]+\.md)(?:#[^)]+)?\)", text)
+    )
+    require(selected, f"self-adoption stage has unreadable Policy mods: {heading}")
+    return selected
+
+
+real_workflow = workflow
+workflow = """### `ideation`
+
+Policy mods:
+
+The stage body mentions [`_mods/journey-slicing.md`](./_mods/journey-slicing.md)
+without selecting it.
+"""
+try:
+    try:
+        selected_policy_mods("### `ideation`")
+        rejects_body_only_policy_link = False
+    except SystemExit:
+        rejects_body_only_policy_link = True
+finally:
+    workflow = real_workflow
+require(
+    rejects_body_only_policy_link,
+    "Policy mods parser crossed a blank line into the stage body",
+)
+
+
+for heading in stage_headings:
+    selected = "_mods/engineering-judgment.md" in selected_policy_mods(heading)
     require(
         selected == (heading in {"### `ideation`", "### `validation`"}),
         f"engineering judgment stage selection is wrong: {heading}",
     )
 
+journey_activation_failures: list[str] = []
+normalized_adopt_skill = " ".join(adopt_skill.split())
+for phrase in [
+    "newly available optional policy mod",
+    "separate adopt or decline decision",
+    "A prior blanket instruction may supply the decision",
+    "upgrade record still names each mod and its disposition",
+    "Never vendor or select a newly available policy mod silently",
+]:
+    if phrase not in normalized_adopt_skill:
+        journey_activation_failures.append(
+            f"upgrade does not require explicit optional-mod choice: {phrase}"
+        )
+
+journey_reference = PLUGIN / "references/journey-slicing.md"
+if not journey_reference.is_file():
+    journey_activation_failures.append("package has no journey-slicing reference")
+journey_vendored = ROOT / "docs/dev/_mods/journey-slicing.md"
+if not journey_vendored.is_file():
+    journey_activation_failures.append("self-adoption has no vendored journey-slicing mod")
+elif (
+    journey_reference.is_file()
+    and journey_vendored.read_bytes() != journey_reference.read_bytes()
+):
+    journey_activation_failures.append("self-adoption journey-slicing mod is not canonical")
+
+for heading in stage_headings:
+    selected = "_mods/journey-slicing.md" in selected_policy_mods(heading)
+    if selected != (heading == "### `ideation`"):
+        journey_activation_failures.append(
+            f"journey-slicing stage selection is wrong: {heading}"
+        )
+
+if "read only the named local `_mods/` files" not in continue_skill:
+    journey_activation_failures.append(
+        "continuation does not load policy from the active stage selection"
+    )
+
 kernel = required_files[4].read_text(encoding="utf-8")
+normalized_kernel = " ".join(kernel.split())
+if (
+    "When the current stage selects `_mods/journey-slicing.md`, carve along "
+    "the journey" not in normalized_kernel
+):
+    journey_activation_failures.append(
+        "kernel applies journey slicing without the stage selection condition"
+    )
+if "Carve along the journey; apply journey slicing" in normalized_kernel:
+    journey_activation_failures.append(
+        "kernel still carries the unconditional journey-slicing command"
+    )
+
+require(
+    not journey_activation_failures,
+    "journey-slicing activation gaps: " + "; ".join(journey_activation_failures),
+)
+
 for phrase in [
     "Project context authority",
     "Work-item authority",
@@ -1415,27 +1521,27 @@ for phrase in [
 ]:
     require(phrase in kernel, f"Route discipline is missing invariant: {phrase}")
 
-# Collect independent gaps in one RED run.
-change_shape_failures: list[str] = []
+# The three recorded pilot packets reported no uniquely attributable
+# subtraction. Preserve the already-required decision checks and prevent the
+# observe-only packet from returning to the normal implementation path.
+change_shape_retirement_failures: list[str] = []
 
 
 def check_order(text: str, label: str, markers: list[str]) -> None:
     positions = [text.find(marker) for marker in markers]
     missing = [marker for marker, position in zip(markers, positions) if position < 0]
     if missing:
-        change_shape_failures.append(f"{label} is missing: {', '.join(missing)}")
+        change_shape_retirement_failures.append(
+            f"{label} is missing: {', '.join(missing)}"
+        )
     elif positions != sorted(positions):
-        change_shape_failures.append(f"{label} is out of sequence")
+        change_shape_retirement_failures.append(f"{label} is out of sequence")
 
 
-normalized_kernel = " ".join(kernel.split())
 implementation_start = workflow.find("### `implementation`")
 validation_start = workflow.find("### `validation`")
 implementation_stage = workflow[implementation_start:validation_start]
 normalized_implementation_stage = " ".join(implementation_stage.split())
-largest_responsibility_question = (
-    "If the largest added responsibility is removed, which named AC fails?"
-)
 check_order(
     kernel,
     "ordered route",
@@ -1445,8 +1551,7 @@ check_order(
         "3. **Prove subtraction or bypass.**",
         "4. **Authorize only necessary addition.**",
         "5. **Run RED/GREEN.**",
-        "6. **Observe post-diff change shape.**",
-        "7. **Validate fresh.**",
+        "6. **Validate fresh.**",
     ],
 )
 check_order(
@@ -1455,43 +1560,42 @@ check_order(
     [
         "record a failing RED test",
         "map every changed file to an AC",
-        largest_responsibility_question,
     ],
 )
-for text, label, phrases in [
-    (
-        normalized_kernel,
-        "kernel",
-        [
-            largest_responsibility_question,
-            "gross additions and gross deletions as separate facts",
-            "Counts may focus inspection; they do not choose the responsibility or supply the answer.",
-            "not a forecast, budget, score, or gate",
-            "Numbers cannot gate or rank a change, offset additions with deletions",
-        ],
-    ),
-    (
-        normalized_implementation_stage,
-        "implementation stage",
-        [
-            "**Success:**",
-            "**No incremental value:**",
-            "**Immediate stop/removal:**",
-            "**Redundancy retirement:**",
-            "classify the cohort Immediate stop/removal before considering other outcomes",
-            "any newly attributable subtraction is Success, including a one-subtraction/two-defense cohort",
-            "When neither is present, two defense-only rows are No incremental value.",
-            "None of these outcomes is a per-change delivery gate.",
-        ],
-    ),
+for phrase in [
+    "Trace candidate surfaces backward from the accepted outcome",
+    "try the cheapest reversible without-it instrument",
+    "numbers do not authorize it",
+    "Bind fresh validation to the final exact revision",
+    "a changed head invalidates prior evidence",
 ]:
-    change_shape_failures.extend(
-        f"{label} is missing: {phrase}" for phrase in phrases if phrase not in text
-    )
+    if phrase not in normalized_kernel:
+        change_shape_retirement_failures.append(
+            f"kernel lost retained subtraction guard: {phrase}"
+        )
+
+for text, label in [
+    (kernel, "kernel"),
+    (workflow, "self-adoption workflow"),
+]:
+    for forbidden in [
+        "Observe post-diff change shape",
+        "If the largest added responsibility is removed",
+        "git diff --numstat",
+        "gross additions and gross deletions",
+        "number-management incident",
+        "defense-only rows",
+        "Redundancy retirement",
+    ]:
+        if forbidden in text:
+            change_shape_retirement_failures.append(
+                f"{label} still requires retired bookkeeping: {forbidden}"
+            )
 
 require(
-    not change_shape_failures,
-    "change-shape contract failures:\n- " + "\n- ".join(change_shape_failures),
+    not change_shape_retirement_failures,
+    "change-shape retirement failures:\n- "
+    + "\n- ".join(change_shape_retirement_failures),
 )
 
 # The kernel requires an absolute to name its enforcement point or be rewritten
