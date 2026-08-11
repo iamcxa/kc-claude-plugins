@@ -8,7 +8,7 @@ sprint:
 started: 2026-08-11T12:40:19Z
 completed:
 verdict:
-worktree: .worktrees/spacedock-ensign-native-stacked-pr-policy-v2
+worktree: .worktrees/spacedock-ensign-native-stacked-pr-policy-v3
 issue:
 pr:
 mod-block:
@@ -983,3 +983,127 @@ Return to implementation without terminalizing. Preserve the exact baseline,
 provenance, consumer removal, literal body transport, candidate-SHA protection,
 strict topology table, and fail-closed recovery; repair the four findings and
 re-enter validation fresh. This cycle changed only this authorized state report.
+
+## Stage Report: implementation (cycle 5)
+
+### Outcome
+
+Repaired the four cycle-3 findings as a fresh two-layer local stack. The bottom
+now defines one canonical Draft delivery unit and an authenticated single-PR
+completion decision. The top composes that exact unit per layer and requires
+native atomic-stack landing evidence before the stored top PR can drive the
+ordinary 0.26 sentinel/guard transcript. No product branch was pushed and no
+PR, ready transition, stack link, merge, or terminalization was performed.
+
+The tracked worktree is now
+`.worktrees/spacedock-ensign-native-stacked-pr-policy-v3`.
+
+### Exact layers
+
+Bottom:
+
+- Branch: `spacedock-ensign/pr-merge-runtime-alignment-v3`
+- Worktree: `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-pr-merge-runtime-alignment-v3`
+- Head: `647d4c87805f0dde8b71d1153d2c226edb129d87`
+- Parent/merge base: `264aabb017a36dcda0a740f28896086eab96bcc6`
+- Commit: `fix(kc-dev-flow): bind portable PR delivery evidence`
+
+```text
+75	55	docs/dev/_mods/pr-merge.md
+111	223	scripts/pr-merge-portable-delivery.test.py
+```
+
+Top:
+
+- Branch: `spacedock-ensign/native-stacked-pr-policy-v3`
+- Worktree: `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-native-stacked-pr-policy-v3`
+- Head: `a87326b901bebd88858beea85a463b1fbd1a26cf`
+- Parent/merge base: `647d4c87805f0dde8b71d1153d2c226edb129d87`
+- Commit: `docs(kc-dev-flow): route dependent changes through native stacks`
+
+```text
+5	4	docs/dev/README.md
+99	0	docs/dev/_mods/pr-merge.md
+182	6	scripts/kc-dev-flow-contract-test.py
+```
+
+The top remains one direct-child policy commit across exactly the prior three
+policy paths. The strict four-row topology table and its thresholds/polarity are
+unchanged.
+
+### RED/GREEN and mutants
+
+Bottom RED reported missing canonical delivery/completion tables, Draft create,
+per-unit base/candidate preflight, exact refspec, Candidate metadata, explicit
+repository proof/checks, and failed-state-commit stop. GREEN now parses the
+exact tables and rejects all three proven mutants:
+
+- ambient `gh pr view` without `--repo` — REJECTED;
+- continuing to guard after failed `spacedock state commit` — REJECTED;
+- automatic local-merge terminal success — REJECTED.
+
+The reduced 135-line portable contract removes the fake-gh and scratch-Git
+halves. It checks the mod's active argv/data contract directly: one canonical
+`gh pr create` contains `--draft`, explicit repo, unit base/head/title, and
+mode-0600 body file; the reviewed body contains exactly one full
+`Candidate: {full approved SHA}` audit line.
+
+Top RED reported missing per-layer unit/base binding, URL-only link, atomic
+stack completion table, explicit API/PR/check queries, atomic merge, non-stack
+refusal, and captain-authorized ready gate. GREEN parses both exact tables and
+rejects these scoped mutants:
+
+- binding a higher layer to trunk SHA instead of the approved candidate below;
+- linking branch names instead of already-created full PR URLs;
+- replacing native atomic `gh stack merge` with individual `gh pr merge`.
+
+Draft remains the creation default. Each layer may run
+`gh pr ready "$LAYER_PR_URL"` only after its required checks and review are green
+and the captain explicitly authorizes readiness; atomic stack merge is forbidden
+while any layer remains Draft.
+
+### Completion and source contract
+
+For a single PR, startup/idle now requires an explicit repository, exactly one
+full Candidate SHA from the approved body, matching GitHub `headRefOid`,
+non-empty `mergedAt`, and successful explicit-repository required checks. Only
+then may it set `pr-merge:{N}`, commit state, and invoke ordinary 0.26 guard;
+every missing, ambiguous, or failed proof stops.
+
+For a native stack, already-created full PR URLs are linked bottom-to-top. The
+bottom unit targets trunk; every higher unit targets the branch below and uses
+the approved candidate SHA below as its exact preflight base SHA. Landing uses
+GitHub native atomic stack merge, never an individual PR merge.
+
+The public-preview source contract is queried explicitly as
+`GET repos/{repo}/stacks?pull_request={top}`. The response contract used here is
+one stack `number`, `base.ref`, and ordered `pull_requests[]` entries containing
+`number`, `merged_at`, `head.ref`, and `head.sha`. Completion requires exactly
+one matching stack, correct trunk base, stored top in final position, every
+ordered entry merged, each entry/PR head equal to its approved body Candidate,
+and required checks green. The stored top PR's `mergedAt` supplies completion
+time; a non-stack top merge stops without sentinel or guard.
+
+### AC and path mapping
+
+| Layer/path | AC mapping | Evidence |
+| --- | --- | --- |
+| Bottom `docs/dev/_mods/pr-merge.md` | AC-1, AC-5 | One parameterized Draft unit plus fail-closed authenticated single-PR completion; normalized released v0.12.2 body remains invariant. |
+| Bottom `scripts/pr-merge-portable-delivery.test.py` | AC-1, AC-5 | Exact unit/completion parsers and three named contradiction mutants. |
+| Top `docs/dev/README.md` | AC-2, AC-3 | Still delegates to unchanged authoritative topology predicates. |
+| Top `docs/dev/_mods/pr-merge.md` | AC-2, AC-3, AC-4, AC-5 | Per-layer canonical units, URL linking, captain-authorized ready gate, atomic merge, full-stack completion proof, unchanged threshold/exception policy. |
+| Top `scripts/kc-dev-flow-contract-test.py` | AC-2, AC-3, AC-4, AC-5 | Exact topology/composition/completion tables and three scoped stack mutants. |
+
+### Verification and handoff
+
+- Exact bottom passed the focused portable mutant suite, independent integrated
+  contract, and diff check.
+- Exact top passed the portable/integrated contracts, marketplace L0/L1 plus
+  all seven L2 installs, version parity, frontmatter tests 12/12, frontmatter
+  lint 40/40, and diff check.
+- Installed `gh stack link` and `gh stack merge` command surfaces are present.
+- The live state prerequisite passed before this shared-state update.
+- v2 and all older evidence branches/worktrees remain untouched.
+
+There are no implementation blockers. Delivery authority remains with the
+captain/FO; this cycle performed no outward product mutation.
