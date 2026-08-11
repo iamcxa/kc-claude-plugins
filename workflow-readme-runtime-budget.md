@@ -88,6 +88,13 @@ their own measurements. This narrows AC-3 and AC-4 from three extracted detail
 files to the two operational runbooks and supersedes only the history-retention
 parts of the earlier stage reports.
 
+The captain then approved the same without-it audit for the remaining delivery:
+delete the zero-consumer product plan, remove the validation runbook's duplicate
+EM/multi-model explanation, reduce ROADMAP task prose to membership/order/exit,
+and keep no file-specific tombstone for the deleted history. The README's
+`Observation: none` binding and absence of a runtime link remain the semantic
+contract. Both runbooks keep their unique operational procedures.
+
 ## Stage Report: ideation
 
 - DONE: The captain set a hard 700-line README ceiling and required every live
