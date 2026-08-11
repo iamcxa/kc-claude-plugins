@@ -267,10 +267,69 @@ Claude/Codex report compatibility; the published phase owns artifact identity
 only. Keep strict parsing, close the producer contract explicitly, and require a
 RED falsifier before widening beyond the four existing files.
 
+## Stage Report: implementation
+
+- DONE: Captain-approved commit
+  `24d91bb0af0b53fd0b18b882e79c538419115cb2` changes exactly four existing
+  files: `CLAUDE.md`, the packaged Science Officer skill, the existing
+  kc-dev-flow contract test, and the existing published-tag smoke script. Its
+  diff is 664 insertions and 90 deletions; no fifth surface, workflow, version
+  bump, publication, local sync, PR, or provider matrix was added.
+- DONE: `candidate --receipt PATH` requires a clean checkout, installs that
+  checkout through isolated Claude and Codex homes, invokes both hosts, applies
+  the unchanged strict report consumer, and writes no receipt until both reports
+  pass. `published TAG --candidate-receipt PATH` invokes neither model and
+  rebinds the exact tag, declared version, source tree, and both fresh installed
+  trees to the candidate identity.
+- DONE: The durable receipt is the minimum closed bridge: `schema`,
+  `candidate_revision`, `version`, one `tree_sha256`, and one closed `reports`
+  object containing Claude/Codex `PASS`. Per-host version/digest copies were
+  removed. One `package_identity` seam and one `install_verified_plugin` seam
+  now own the shared source and installation checks without hiding the explicit
+  candidate-only model invocations.
+- DONE: The packaged skill and smoke prompt state that the root, envelope,
+  `engineering_judgment`, and every adjudication item are closed objects with
+  exactly the documented keys and no extras, including `verdict_note`.
+  `exact_object` remains strict and unchanged.
+- DONE: RED evidence was observed before each behavior was implemented:
+  producer guidance failed on `missing boundary: closed objects`; the mode seam
+  reported missing candidate/published/receipt callables; candidate orchestration
+  reported `invocations=[]; receipt=None`; strict receipt loading rejected the
+  valid fixture as `not implemented`; published identity cases all reported
+  `published mode is not implemented`; both CLI modes exited argparse 2; and the
+  release-order assertion reported missing candidate-before-published commands.
+  The subtractive reset then failed against the superseded receipt while both
+  fake hosts had completed, printing its duplicated root/Claude/Codex identity.
+- DONE: GREEN contract coverage uses fake command results and makes no provider
+  call. It proves both candidate hosts run, an invalid Codex report leaves no
+  receipt, root and `reports` receipt objects are closed, and published mode has
+  no model invocation across the named tag, version, source-tree, Claude-tree,
+  and Codex-tree falsifiers. The observed adjudication `verdict_note` regression
+  remains direct; redundant root/envelope/judgment copies were removed because
+  the existing `exact_object` paths already enforce them.
+- DONE: Old-behavior fixture audit found no quiet narrowing: malformed,
+  incomplete, misplaced, duplicate, invalid-enum, wrapper-mismatch, and
+  wrong-revision scenarios retain their prior intent. The new adjudication extra
+  fixture extends that population; no existing setup was repurposed.
+- DONE: Fresh stage-exit evidence passes: kc-dev-flow contract; Python compile;
+  40/40 skill frontmatters; version parity at 2.2.0; marketplace L0/L1/L2 for all
+  seven plugins; state-prerequisite; 35/35 audit-link cases; and
+  `git diff --check`. The exact marketplace-parity CI command body completed in
+  25.96 seconds against its 300-second timeout, and a fresh isolated Codex
+  local-path install resolved kc-dev-flow 2.2.0. The real authenticated candidate
+  run remains clean committed-head validation evidence, not a deterministic test.
+
+### Summary
+
+Runtime compatibility now moves before publication while post-publication work
+is identity-only. The final subtractive shape is 139 insertions smaller than the
+rejected first packet (803 to 664), removes duplicated receipt identity and
+shared installation logic, and preserves every named AC and falsifier.
+
 The prior implementation and validation reports below are retained as historical
 cycle-1 evidence. They do not satisfy the revised ACs.
 
-## Stage Report: implementation
+## Historical Stage Report: implementation (cycle 1)
 
 - DONE: Commit `c48a9e97f1614d80d8220ac4c80b4df993db09fb` adds the one
   release-closeout script, its direct report-contract fixtures, and the bounded
@@ -293,7 +352,7 @@ cycle-1 evidence. They do not satisfy the revised ACs.
 The implementation is the accepted release-only shape and is self-contained for
 fresh validation. The next exact tag invocation remains a release-closeout step.
 
-## Stage Report: validation
+## Historical Stage Report: validation (cycle 1)
 
 ### TL;DR
 
