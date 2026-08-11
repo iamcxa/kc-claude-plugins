@@ -231,6 +231,79 @@ def tree_digest(root: Path) -> str:
     ).hexdigest()
 
 
+def package_identity(checkout: Path) -> tuple[str, str, str]:
+    marketplace_data = json.loads(
+        (checkout / ".claude-plugin/marketplace.json").read_text(encoding="utf-8")
+    )
+    marketplace = marketplace_data["name"]
+    version = installed_version(checkout / "kc-dev-flow")
+    marketplace_versions = {
+        entry["version"]
+        for entry in marketplace_data["plugins"]
+        if entry["name"] == "kc-dev-flow"
+    }
+    if marketplace_versions != {version}:
+        raise SmokeError(
+            f"marketplace version differs from manifests: {sorted(marketplace_versions)} != {version}"
+        )
+    return marketplace, version, tree_digest(checkout / "kc-dev-flow")
+
+
+def install_verified_plugin(
+    checkout: Path,
+    host: str,
+    state_root: Path,
+    marketplace: str,
+    expected_version: str,
+    expected_digest: str,
+    operator_env: dict[str, str],
+    timeout: int,
+    *,
+    codex_auth: Path | None = None,
+) -> Path:
+    home = state_root / f"{host}-home"
+    home.mkdir()
+    if host == "claude":
+        install_env = operator_env | {"HOME": str(home)}
+        run(
+            ["claude", "plugin", "marketplace", "add", str(checkout)],
+            env=install_env,
+            timeout=timeout,
+        )
+        run(
+            ["claude", "plugin", "install", f"kc-dev-flow@{marketplace}"],
+            env=install_env,
+            timeout=timeout,
+        )
+    elif host == "codex":
+        if codex_auth is not None:
+            (home / "auth.json").symlink_to(codex_auth)
+        install_env = operator_env | {"CODEX_HOME": str(home)}
+        run(
+            ["codex", "plugin", "marketplace", "add", str(checkout), "--json"],
+            env=install_env,
+            timeout=timeout,
+        )
+        run(
+            ["codex", "plugin", "add", f"kc-dev-flow@{marketplace}", "--json"],
+            env=install_env,
+            timeout=timeout,
+        )
+    else:
+        raise SmokeError(f"unsupported host: {host}")
+
+    plugin = installed_plugin(home, host)
+    observed_version = installed_version(plugin)
+    if observed_version != expected_version:
+        raise SmokeError(
+            f"{host.title()} installed version differs from expected identity: "
+            f"{observed_version} != {expected_version}"
+        )
+    if tree_digest(plugin) != expected_digest:
+        raise SmokeError(f"{host.title()} installed tree differs from expected identity")
+    return plugin
+
+
 def claude_stream_result(
     output: str, expected_plugin: Path, expected_version: str
 ) -> str:
@@ -293,78 +366,102 @@ def codex_result(output: str) -> str:
     return messages[-1]
 
 
-def smoke_prompt(tag: str, revision: str) -> str:
+def smoke_prompt(artifact: str, revision: str) -> str:
     return f"""Use $science-officer-em in explicit invocation-only mode.
 Evaluate this bounded hypothetical: a reversible documentation-only rename has passing checks.
-Return only one JSON object, which is valid YAML 1.2, containing the complete science_officer_em_upward_report for tag {tag}.
+Return only one JSON object, which is valid YAML 1.2, containing the complete science_officer_em_upward_report for artifact {artifact}.
 Include every compatibility and nested field, including multi_model.
+Treat the root object, science_officer_em_upward_report, engineering_judgment, and every adjudication item as closed objects: emit exactly the documented keys and no additional keys, including verdict_note.
 Set engineering_judgment.revision to exactly {revision}.
 Do not claim a stage verdict or mutate files."""
 
 
-def run_release_smoke(tag: str, timeout: int) -> dict[str, object]:
-    if TAG_PATTERN.fullmatch(tag) is None:
-        raise SmokeError("tag must match kc-dev-flow-vX.Y.Z")
+def load_candidate_receipt(path: Path) -> dict[str, object]:
+    try:
+        document = json.loads(
+            path.read_text(encoding="utf-8"),
+            object_pairs_hook=without_duplicate_keys,
+        )
+    except json.JSONDecodeError as exc:
+        raise SmokeError(f"candidate receipt is not structural JSON: {exc}") from exc
+    receipt = exact_object(
+        document,
+        "candidate receipt",
+        {
+            "schema",
+            "candidate_revision",
+            "version",
+            "tree_sha256",
+            "reports",
+        },
+    )
+    if receipt["schema"] != "kc-dev-flow-candidate-smoke/v1":
+        raise SmokeError(f"candidate receipt schema is invalid: {receipt['schema']!r}")
+    revision = receipt["candidate_revision"]
+    if not isinstance(revision, str) or re.fullmatch(r"[0-9a-f]{40,64}", revision) is None:
+        raise SmokeError(f"candidate receipt candidate_revision is invalid: {revision!r}")
+    version = receipt["version"]
+    if not isinstance(version, str) or re.fullmatch(r"\d+\.\d+\.\d+", version) is None:
+        raise SmokeError(f"candidate receipt version is invalid: {version!r}")
+    digest = receipt["tree_sha256"]
+    if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+        raise SmokeError(f"candidate receipt tree_sha256 is invalid: {digest!r}")
+    reports = exact_object(
+        receipt["reports"], "candidate receipt reports", {"claude", "codex"}
+    )
+    if reports != {"claude": "PASS", "codex": "PASS"}:
+        raise SmokeError(f"candidate receipt reports are invalid: {reports!r}")
+    return receipt
+
+
+def run_candidate_smoke(receipt_path: Path, timeout: int) -> dict[str, object]:
     for command in ["git", "claude", "codex"]:
         if shutil.which(command) is None:
             raise SmokeError(f"required command is unavailable: {command}")
+    if receipt_path.exists():
+        raise SmokeError(f"candidate receipt already exists: {receipt_path}")
+
+    checkout = ROOT
+    revision = run(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()
+    if re.fullmatch(r"[0-9a-f]{40,64}", revision) is None:
+        raise SmokeError(f"candidate revision is invalid: {revision!r}")
+    if run(["git", "status", "--porcelain"], cwd=checkout).stdout.strip():
+        raise SmokeError("candidate checkout must be clean")
+
+    marketplace, version, source_digest = package_identity(checkout)
 
     operator_env = os.environ.copy()
     operator_home = Path(operator_env.get("HOME", ""))
     if not operator_home.is_dir():
         raise SmokeError("operator HOME is unavailable")
 
-    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-tag-") as clone_tmp, tempfile.TemporaryDirectory(
-        prefix="kc-dev-flow-runtime-"
-    ) as runtime_tmp:
-        clone_root = Path(clone_tmp)
-        runtime_root = Path(runtime_tmp)
-        checkout = clone_root / "repo"
-        run(
-            [
-                "git",
-                "clone",
-                "--depth",
-                "1",
-                "--branch",
-                tag,
-                "--single-branch",
-                REPOSITORY_URL,
-                str(checkout),
-            ],
-            timeout=timeout,
-        )
-        revision = run(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()
-        observed_tag = run(["git", "describe", "--tags", "--exact-match", "HEAD"], cwd=checkout).stdout.strip()
-        if observed_tag != tag:
-            raise SmokeError(f"checkout resolved {observed_tag!r}, expected {tag!r}")
-
-        marketplace = json.loads((checkout / ".claude-plugin/marketplace.json").read_text(encoding="utf-8"))["name"]
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-candidate-") as candidate_tmp:
+        candidate_root = Path(candidate_tmp)
+        runtime_root = candidate_root / "runtime"
+        runtime_root.mkdir()
         runtime_note = "There is no repository workflow context. Invoke installed skills directly and do not search outside this directory.\n"
         (runtime_root / "CLAUDE.md").write_text(runtime_note, encoding="utf-8")
         (runtime_root / "AGENTS.md").write_text(runtime_note, encoding="utf-8")
         mcp_config = runtime_root / "empty-mcp.json"
         mcp_config.write_text('{"mcpServers": {}}\n', encoding="utf-8")
 
-        claude_home = clone_root / "claude-home"
-        claude_home.mkdir()
-        claude_install_env = operator_env | {"HOME": str(claude_home)}
-        run(["claude", "plugin", "marketplace", "add", str(checkout)], env=claude_install_env, timeout=timeout)
-        run(["claude", "plugin", "install", f"kc-dev-flow@{marketplace}"], env=claude_install_env, timeout=timeout)
-        claude_plugin = installed_plugin(claude_home, "claude")
-        expected_version = tag.removeprefix("kc-dev-flow-v")
-        claude_version = installed_version(claude_plugin)
-        if claude_version != expected_version:
-            raise SmokeError(
-                f"Claude installed kc-dev-flow {claude_version}, expected {expected_version}"
-            )
-        source_digest = tree_digest(checkout / "kc-dev-flow")
-        claude_digest = tree_digest(claude_plugin)
-        if claude_digest != source_digest:
-            raise SmokeError("Claude installed tree differs from the exact tag checkout")
+        claude_plugin = install_verified_plugin(
+            checkout,
+            "claude",
+            candidate_root,
+            marketplace,
+            version,
+            source_digest,
+            operator_env,
+            timeout,
+        )
         claude_runtime_env = operator_env | {"DISABLE_PLUGIN_AUTOLOAD": "1"}
-        run(["claude", "auth", "status", "--json"], env=claude_runtime_env, timeout=timeout)
-        prompt = smoke_prompt(tag, revision)
+        run(
+            ["claude", "auth", "status", "--json"],
+            env=claude_runtime_env,
+            timeout=timeout,
+        )
+        prompt = smoke_prompt(f"candidate@{revision}", revision)
         claude_output = run(
             [
                 "claude",
@@ -392,33 +489,29 @@ def run_release_smoke(tag: str, timeout: int) -> dict[str, object]:
             timeout=timeout,
         )
         validate_report(
-            claude_stream_result(claude_output.stdout, claude_plugin, claude_version),
+            claude_stream_result(claude_output.stdout, claude_plugin, version),
             revision,
         )
 
-        source_codex_home = Path(operator_env.get("CODEX_HOME", operator_home / ".codex"))
+        source_codex_home = Path(
+            operator_env.get("CODEX_HOME", operator_home / ".codex")
+        )
         auth_file = source_codex_home / "auth.json"
         if not auth_file.is_file():
             raise SmokeError("Codex auth.json is unavailable; run codex login first")
-        codex_home = clone_root / "codex-home"
-        codex_home.mkdir()
-        (codex_home / "auth.json").symlink_to(auth_file)
-        codex_env = operator_env | {"CODEX_HOME": str(codex_home)}
-        run(
-            ["codex", "plugin", "marketplace", "add", MARKETPLACE_SOURCE, "--ref", tag, "--json"],
-            env=codex_env,
-            timeout=timeout,
+        codex_plugin = install_verified_plugin(
+            checkout,
+            "codex",
+            candidate_root,
+            marketplace,
+            version,
+            source_digest,
+            operator_env,
+            timeout,
+            codex_auth=auth_file,
         )
-        run(["codex", "plugin", "add", f"kc-dev-flow@{marketplace}", "--json"], env=codex_env, timeout=timeout)
-        codex_plugin = installed_plugin(codex_home, "codex")
-        codex_version = installed_version(codex_plugin)
-        if codex_version != expected_version:
-            raise SmokeError(
-                f"Codex installed kc-dev-flow {codex_version}, expected {expected_version}"
-            )
-        codex_digest = tree_digest(codex_plugin)
-        if codex_digest != source_digest:
-            raise SmokeError("Codex installed tree differs from the exact tag checkout")
+        codex_home = candidate_root / "codex-home"
+        codex_env = operator_env | {"CODEX_HOME": str(codex_home)}
         codex_output = run(
             [
                 "codex",
@@ -441,22 +534,95 @@ def run_release_smoke(tag: str, timeout: int) -> dict[str, object]:
         )
         validate_report(codex_result(codex_output.stdout), revision)
 
+    receipt: dict[str, object] = {
+        "schema": "kc-dev-flow-candidate-smoke/v1",
+        "candidate_revision": revision,
+        "version": version,
+        "tree_sha256": source_digest,
+        "reports": {"claude": "PASS", "codex": "PASS"},
+    }
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    receipt_path.write_text(
+        json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return receipt
+
+
+def run_published_smoke(
+    tag: str, candidate_receipt_path: Path, timeout: int
+) -> dict[str, object]:
+    if TAG_PATTERN.fullmatch(tag) is None:
+        raise SmokeError("tag must match kc-dev-flow-vX.Y.Z")
+    receipt = load_candidate_receipt(candidate_receipt_path)
+    for command in ["git", "claude", "codex"]:
+        if shutil.which(command) is None:
+            raise SmokeError(f"required command is unavailable: {command}")
+
+    operator_env = os.environ.copy()
+    with tempfile.TemporaryDirectory(prefix="kc-dev-flow-published-") as published_tmp:
+        published_root = Path(published_tmp)
+        checkout = published_root / "repo"
+        run(
+            [
+                "git",
+                "clone",
+                "--depth",
+                "1",
+                "--branch",
+                tag,
+                "--single-branch",
+                REPOSITORY_URL,
+                str(checkout),
+            ],
+            timeout=timeout,
+        )
+        revision = run(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()
+        observed_tag = run(
+            ["git", "describe", "--tags", "--exact-match", "HEAD"], cwd=checkout
+        ).stdout.strip()
+        if observed_tag != tag:
+            raise SmokeError(f"checkout resolved {observed_tag!r}, expected {tag!r}")
+
+        marketplace, version, source_digest = package_identity(checkout)
+        expected_version = tag.removeprefix("kc-dev-flow-v")
+        if version != expected_version:
+            raise SmokeError(
+                f"published tag version differs from manifests: {expected_version} != {version}"
+            )
+        if version != receipt["version"]:
+            raise SmokeError(
+                f"published version differs from candidate receipt: {version} != {receipt['version']}"
+            )
+        if source_digest != receipt["tree_sha256"]:
+            raise SmokeError("published source tree differs from candidate receipt")
+
+        for host in ["claude", "codex"]:
+            install_verified_plugin(
+                checkout,
+                host,
+                published_root,
+                marketplace,
+                receipt["version"],
+                receipt["tree_sha256"],
+                operator_env,
+                timeout,
+            )
+
         return {
-            "schema": "kc-dev-flow-published-tag-smoke/v1",
+            "schema": "kc-dev-flow-published-tag-smoke/v2",
             "tag": tag,
-            "revision": revision,
+            "candidate_revision": receipt["candidate_revision"],
+            "published_revision": revision,
+            "version": version,
             "tree_sha256": source_digest,
-            "claude": {"version": claude_version, "tree": "PASS", "report": "PASS"},
-            "codex": {"version": codex_version, "tree": "PASS", "report": "PASS"},
+            "installed": {"claude": "PASS", "codex": "PASS"},
         }
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run an authenticated Claude+Codex EM smoke after a kc-dev-flow release."
+        description="Validate a kc-dev-flow candidate with both hosts, then bind its exact published tag."
     )
-    parser.add_argument("tag", nargs="?", help="published tag, for example kc-dev-flow-v2.2.0")
-    parser.add_argument("--timeout", type=int, default=240, help="seconds per external command")
     parser.add_argument(
         "--validate-report",
         metavar="PATH",
@@ -465,6 +631,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--expected-revision",
         help="exact 40-64 character Git revision required by --validate-report",
+    )
+    modes = parser.add_subparsers(dest="mode")
+    candidate = modes.add_parser(
+        "candidate", help="invoke both isolated hosts against the clean checkout"
+    )
+    candidate.add_argument(
+        "--receipt", required=True, type=Path, help="new candidate receipt path"
+    )
+    candidate.add_argument(
+        "--timeout", type=int, default=240, help="seconds per external command"
+    )
+    published = modes.add_parser(
+        "published", help="bind a published tag to a validated candidate receipt"
+    )
+    published.add_argument("tag", help="published tag, for example kc-dev-flow-v2.2.0")
+    published.add_argument(
+        "--candidate-receipt",
+        required=True,
+        type=Path,
+        help="candidate receipt written before publication",
+    )
+    published.add_argument(
+        "--timeout", type=int, default=240, help="seconds per external command"
     )
     return parser.parse_args()
 
@@ -483,9 +672,15 @@ def main() -> int:
             validate_report(report, args.expected_revision)
             print("report: PASS")
             return 0
-        if not args.tag:
-            raise SmokeError("a published tag is required")
-        print(json.dumps(run_release_smoke(args.tag, args.timeout), indent=2, sort_keys=True))
+        if args.mode == "candidate":
+            result = run_candidate_smoke(args.receipt, args.timeout)
+        elif args.mode == "published":
+            result = run_published_smoke(
+                args.tag, args.candidate_receipt, args.timeout
+            )
+        else:
+            raise SmokeError("candidate or published mode is required")
+        print(json.dumps(result, indent=2, sort_keys=True))
         return 0
     except (OSError, ValueError, subprocess.TimeoutExpired, SmokeError) as exc:
         print(f"published-tag smoke: FAIL — {exc}", file=sys.stderr)

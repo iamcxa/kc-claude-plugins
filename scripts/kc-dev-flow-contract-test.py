@@ -3,10 +3,14 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
+from unittest import mock
 from pathlib import Path
 
 
@@ -95,6 +99,35 @@ valid_em_report_data = {
 }
 valid_em_report = json.dumps(valid_em_report_data)
 
+smoke_spec = importlib.util.spec_from_file_location(
+    "kc_dev_flow_published_tag_smoke",
+    ROOT / "scripts/kc-dev-flow-published-tag-smoke.py",
+)
+require(smoke_spec is not None and smoke_spec.loader is not None, "cannot load published-tag smoke")
+smoke = importlib.util.module_from_spec(smoke_spec)
+smoke_spec.loader.exec_module(smoke)
+
+with mock.patch.object(
+    sys, "argv", ["smoke", "candidate", "--receipt", "/tmp/candidate.json"]
+):
+    candidate_args = smoke.parse_args()
+with mock.patch.object(
+    sys,
+    "argv",
+    [
+        "smoke", "published", "kc-dev-flow-v2.2.0",
+        "--candidate-receipt", "/tmp/candidate.json",
+    ],
+):
+    published_args = smoke.parse_args()
+require(
+    candidate_args.mode == "candidate"
+    and candidate_args.receipt == Path("/tmp/candidate.json")
+    and published_args.mode == "published"
+    and published_args.candidate_receipt == Path("/tmp/candidate.json"),
+    "published-tag smoke CLI modes are incomplete",
+)
+
 
 def run_report_check(report: str, revision: str = expected_smoke_revision) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
@@ -148,6 +181,12 @@ mismatched["science_officer_em_upward_report"]["engineering_judgment"][
 ] = "return for more work"
 invalid_reports["mismatched duplicates"] = (json.dumps(mismatched), "recommendation")
 
+extra_adjudication = json.loads(valid_em_report)
+extra_adjudication["science_officer_em_upward_report"]["engineering_judgment"][
+    "adjudications"
+][0]["verdict_note"] = "not part of the closed compatibility record"
+invalid_reports["extra verdict_note"] = (json.dumps(extra_adjudication), "verdict_note")
+
 invalid_reports["wrong revision"] = (valid_em_report, "revision")
 
 for label, (report, expected_error) in invalid_reports.items():
@@ -158,6 +197,309 @@ for label, (report, expected_error) in invalid_reports.items():
         and expected_error in (invalid_report_check.stdout + invalid_report_check.stderr),
         f"published-tag smoke accepts an invalid EM report: {label}",
     )
+
+
+def report_for_revision(revision: str) -> str:
+    report = json.loads(valid_em_report)
+    report["science_officer_em_upward_report"]["engineering_judgment"]["revision"] = revision
+    return json.dumps(report)
+
+
+def capture(action):
+    try:
+        return action(), ""
+    except Exception as exc:
+        return None, str(exc)
+
+
+class FakeSmokeRuntime:
+    candidate_revision = "c" * 40
+    published_revision = "d" * 40
+
+    def __init__(
+        self,
+        *,
+        observed_tag: str = "kc-dev-flow-v2.2.0",
+        mutate_host: str = "",
+        invalid_codex_report: bool = False,
+    ) -> None:
+        self.observed_tag = observed_tag
+        self.mutate_host = mutate_host
+        self.invalid_codex_report = invalid_codex_report
+        self.sources: dict[str, Path] = {}
+        self.plugins: dict[str, Path] = {}
+        self.host_invocations: list[str] = []
+
+    def _install(self, host: str, env: dict[str, str]) -> None:
+        source = self.sources[host] / "kc-dev-flow"
+        version = smoke.installed_version(source)
+        cache = (
+            Path(env["HOME"]) / ".claude/plugins/cache"
+            if host == "claude"
+            else Path(env["CODEX_HOME"]) / "plugins/cache"
+        )
+        plugin = cache / "test/kc-dev-flow" / version
+        plugin.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(source, plugin)
+        if self.mutate_host == host:
+            (plugin / "unexpected-runtime-file.txt").write_text(
+                "mutated\n", encoding="utf-8"
+            )
+        self.plugins[host] = plugin
+
+    def __call__(
+        self,
+        command: list[str],
+        *,
+        cwd: Path | None = None,
+        env: dict[str, str] | None = None,
+        timeout: int = 240,
+    ) -> subprocess.CompletedProcess[str]:
+        del timeout
+        stdout = ""
+        if command[:3] == ["git", "rev-parse", "HEAD"]:
+            stdout = (
+                self.candidate_revision if cwd == ROOT else self.published_revision
+            ) + "\n"
+        elif command[:3] == ["git", "status", "--porcelain"]:
+            pass
+        elif command[:2] == ["git", "clone"]:
+            checkout = Path(command[-1])
+            shutil.copytree(ROOT / ".claude-plugin", checkout / ".claude-plugin")
+            shutil.copytree(ROOT / "kc-dev-flow", checkout / "kc-dev-flow")
+        elif command[:3] == ["git", "describe", "--tags"]:
+            stdout = self.observed_tag + "\n"
+        elif command[:4] == ["claude", "plugin", "marketplace", "add"]:
+            self.sources["claude"] = Path(command[4])
+        elif command[:3] == ["claude", "plugin", "install"]:
+            self._install("claude", env or {})
+        elif command[:3] == ["claude", "auth", "status"]:
+            stdout = '{"loggedIn":true}\n'
+        elif command[0] == "claude" and "-p" in command:
+            self.host_invocations.append("claude")
+            plugin = self.plugins["claude"]
+            init = {
+                "type": "system",
+                "subtype": "init",
+                "plugins": [{
+                    "name": "kc-dev-flow",
+                    "version": smoke.installed_version(plugin),
+                    "path": str(plugin),
+                }],
+            }
+            result = {
+                "type": "result",
+                "result": report_for_revision(self.candidate_revision),
+            }
+            stdout = json.dumps(init) + "\n" + json.dumps(result)
+        elif command[:4] == ["codex", "plugin", "marketplace", "add"]:
+            self.sources["codex"] = Path(command[4])
+        elif command[:3] == ["codex", "plugin", "add"]:
+            self._install("codex", env or {})
+        elif command[:2] == ["codex", "exec"]:
+            self.host_invocations.append("codex")
+            stdout = json.dumps({
+                "type": "item.completed",
+                "item": {
+                    "type": "agent_message",
+                    "text": (
+                        "{}"
+                        if self.invalid_codex_report
+                        else report_for_revision(self.candidate_revision)
+                    ),
+                },
+            })
+        return subprocess.CompletedProcess(command, 0, stdout=stdout, stderr="")
+
+
+def run_fake(runtime: FakeSmokeRuntime, action, codex_home: Path | None = None):
+    with mock.patch.object(smoke, "run", runtime), mock.patch.object(
+        smoke.shutil, "which", return_value="/fake/bin"
+    ):
+        if codex_home is None:
+            return capture(action)
+        with mock.patch.dict(
+            smoke.os.environ, {"CODEX_HOME": str(codex_home)}, clear=False
+        ):
+            return capture(action)
+
+
+def write_receipt(path: Path, receipt: dict[str, object]) -> None:
+    path.write_text(json.dumps(receipt, sort_keys=True) + "\n", encoding="utf-8")
+
+
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-contract-") as contract_tmp:
+    contract_root = Path(contract_tmp)
+    receipt_path = contract_root / "candidate.json"
+    operator_codex_home = contract_root / "operator-codex"
+    operator_codex_home.mkdir()
+    (operator_codex_home / "auth.json").write_text("{}\n", encoding="utf-8")
+
+    candidate_runtime = FakeSmokeRuntime()
+    candidate_result, candidate_error = run_fake(
+        candidate_runtime,
+        lambda: smoke.run_candidate_smoke(receipt_path, 30),
+        operator_codex_home,
+    )
+    candidate_receipt = (
+        json.loads(receipt_path.read_text(encoding="utf-8"))
+        if receipt_path.is_file()
+        else {}
+    )
+    require(
+        not candidate_error
+        and candidate_runtime.host_invocations == ["claude", "codex"]
+        and candidate_result == candidate_receipt
+        and set(candidate_receipt)
+        == {"schema", "candidate_revision", "version", "tree_sha256", "reports"}
+        and candidate_receipt["reports"] == {"claude": "PASS", "codex": "PASS"},
+        "candidate mode did not invoke both hosts and write the minimum receipt: "
+        f"{candidate_error!r}; {candidate_runtime.host_invocations}; {candidate_receipt!r}",
+    )
+
+    failed_receipt = contract_root / "failed.json"
+    failed_runtime = FakeSmokeRuntime(invalid_codex_report=True)
+    _, failed_error = run_fake(
+        failed_runtime,
+        lambda: smoke.run_candidate_smoke(failed_receipt, 30),
+        operator_codex_home,
+    )
+    require(
+        bool(failed_error)
+        and failed_runtime.host_invocations == ["claude", "codex"]
+        and not failed_receipt.exists(),
+        "candidate mode wrote a receipt before both reports passed",
+    )
+
+    receipt_variants = [
+        ("extra root", candidate_receipt | {"extra": True}, "extra"),
+        (
+            "extra reports",
+            candidate_receipt
+            | {"reports": candidate_receipt["reports"] | {"extra": True}},
+            "extra",
+        ),
+        (
+            "wrong schema",
+            candidate_receipt | {"schema": "kc-dev-flow-candidate-smoke/v2"},
+            "schema",
+        ),
+        (
+            "wrong revision",
+            candidate_receipt | {"candidate_revision": "bad"},
+            "candidate_revision",
+        ),
+        ("wrong version", candidate_receipt | {"version": "next"}, "version"),
+        ("wrong digest", candidate_receipt | {"tree_sha256": "short"}, "tree_sha256"),
+        (
+            "wrong report",
+            candidate_receipt | {"reports": {"claude": "PASS", "codex": "UNKNOWN"}},
+            "reports",
+        ),
+    ]
+    receipt_results: dict[str, str] = {}
+    loaded_receipt, valid_receipt_error = capture(
+        lambda: smoke.load_candidate_receipt(receipt_path)
+    )
+    for index, (label, receipt, expected_error) in enumerate(receipt_variants):
+        path = contract_root / f"receipt-{index}.json"
+        write_receipt(path, receipt)
+        _, error = capture(lambda path=path: smoke.load_candidate_receipt(path))
+        receipt_results[label] = (
+            "rejected" if expected_error in error else error or "accepted"
+        )
+    duplicate_path = contract_root / "duplicate.json"
+    duplicate_path.write_text(
+        json.dumps(candidate_receipt).replace(
+            '"schema": "kc-dev-flow-candidate-smoke/v1",',
+            '"schema": "kc-dev-flow-candidate-smoke/v1", "schema": "duplicate",',
+            1,
+        ),
+        encoding="utf-8",
+    )
+    _, duplicate_error = capture(
+        lambda: smoke.load_candidate_receipt(duplicate_path)
+    )
+    require(
+        not valid_receipt_error
+        and loaded_receipt == candidate_receipt
+        and set(receipt_results.values()) == {"rejected"}
+        and "duplicate" in duplicate_error,
+        f"candidate receipt contract is not closed: {receipt_results}; {duplicate_error!r}",
+    )
+
+    published_runtime = FakeSmokeRuntime()
+    published_result, published_error = run_fake(
+        published_runtime,
+        lambda: smoke.run_published_smoke("kc-dev-flow-v2.2.0", receipt_path, 30),
+    )
+    published_cases = [
+        (
+            "tag",
+            "kc-dev-flow-v2.2.0",
+            candidate_receipt,
+            FakeSmokeRuntime(observed_tag="kc-dev-flow-v2.1.0"),
+            "resolved",
+        ),
+        (
+            "version",
+            "kc-dev-flow-v2.2.0",
+            candidate_receipt | {"version": "9.9.9"},
+            FakeSmokeRuntime(),
+            "version",
+        ),
+        (
+            "source",
+            "kc-dev-flow-v2.2.0",
+            candidate_receipt | {"tree_sha256": "e" * 64},
+            FakeSmokeRuntime(),
+            "source tree",
+        ),
+        (
+            "Claude tree",
+            "kc-dev-flow-v2.2.0",
+            candidate_receipt,
+            FakeSmokeRuntime(mutate_host="claude"),
+            "Claude installed tree",
+        ),
+        (
+            "Codex tree",
+            "kc-dev-flow-v2.2.0",
+            candidate_receipt,
+            FakeSmokeRuntime(mutate_host="codex"),
+            "Codex installed tree",
+        ),
+    ]
+    published_results: dict[str, str] = {}
+    for index, (label, tag, receipt, runtime, expected_error) in enumerate(
+        published_cases
+    ):
+        path = contract_root / f"published-{index}.json"
+        write_receipt(path, receipt)
+        _, error = run_fake(
+            runtime, lambda tag=tag, path=path: smoke.run_published_smoke(tag, path, 30)
+        )
+        published_results[label] = (
+            "rejected" if expected_error in error and not runtime.host_invocations else error or "accepted"
+        )
+    require(
+        not published_error
+        and not published_runtime.host_invocations
+        and set(published_result)
+        == {
+            "schema",
+            "tag",
+            "candidate_revision",
+            "published_revision",
+            "version",
+            "tree_sha256",
+            "installed",
+        }
+        and published_result["installed"] == {"claude": "PASS", "codex": "PASS"}
+        and set(published_results.values()) == {"rejected"},
+        f"published mode invoked a model or missed an identity falsifier: {published_error!r}; {published_results}",
+    )
+
 
 for legacy in [
     PLUGIN / "assets/kernel-binding.template.yaml",
@@ -394,8 +736,28 @@ for phrase in [
     "Claude did not isolate runtime plugin state to one explicit plugin",
     "tree_digest",
     "report revision differs from exact tag commit",
+    "closed objects",
+    "exactly the documented keys and no additional keys",
+    "verdict_note",
 ]:
     require(phrase in published_smoke, f"published-tag smoke is missing boundary: {phrase}")
+release_instructions = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+normalized_release_instructions = " ".join(release_instructions.split())
+candidate_command = (
+    'python3 scripts/kc-dev-flow-published-tag-smoke.py candidate --receipt "$RECEIPT"'
+)
+published_command = (
+    "python3 scripts/kc-dev-flow-published-tag-smoke.py published "
+    'kc-dev-flow-vX.Y.Z --candidate-receipt "$RECEIPT"'
+)
+require(
+    candidate_command in normalized_release_instructions
+    and published_command in normalized_release_instructions
+    and normalized_release_instructions.index(candidate_command)
+    < normalized_release_instructions.index(published_command)
+    < normalized_release_instructions.index("Post-merge — LOCAL install sync"),
+    "root release instructions do not order candidate proof before published identity and local sync",
+)
 require(
     len(workflow.splitlines()) <= 700,
     f"workflow README exceeds its 700-line runtime budget: {len(workflow.splitlines())}",
@@ -525,6 +887,9 @@ for phrase in [
     "highest available tier in fresh context with high reasoning",
     "contested, irreversible, low-confidence, or unresolved",
     "multi_model: recommended | not_needed",
+    "closed objects",
+    "exactly the documented keys and no additional keys",
+    "verdict_note",
 ]:
     require(
         " ".join(phrase.lower().split()) in normalized_science_skill,
