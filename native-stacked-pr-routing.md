@@ -27,9 +27,11 @@ qualitatively and does not identify GitHub's native stack topology or CLI.
 Replace the custom mod with the released Spacedock 0.26.0 `pr-merge` v0.12.2
 contract plus bounded local routing and runtime-hardening sections. Preserve
 Draft PR delivery, remove only artifact machinery with no released consumer,
-and use numeric change shape only to require a topology decision. Compare
-Spacedock 0.27.0 at its exact source revision: backport safety behavior that the
-installed 0.26.x runtime can execute, and reject commands owned by 0.27.x.
+and use numeric change shape only to require a topology decision. Compare the
+shipped `mods/pr-merge.md` from Spacedock `v0.27.0-pre3` at peeled commit
+`ffaeaef696cad492c8d40ab84939178e242aff2e`: backport safety behavior that the
+installed 0.26.x runtime can execute, and reject commands owned by 0.27.x. No
+final `v0.27.0` tag or release exists at the comparison date.
 
 ## Design determination
 
@@ -45,8 +47,8 @@ the captain approves all Draft PR bodies.
 ## Acceptance criteria
 
 **AC-1 — The adopted merge hook executes against Spacedock 0.26.x while
-backporting only runtime-compatible Spacedock 0.27.0 safety behavior around the
-released `pr-merge` v0.12.2 body.**
+backporting only runtime-compatible behavior from the Spacedock
+`v0.27.0-pre3` shipped `pr-merge` template around the released v0.12.2 body.**
 Verified by: compare the retained upstream body byte-for-byte after removing the
 marked local extension; exercise `spacedock merge guard` over its released
 fixtures; and prove PR bodies use a mode-0600 file, the approved candidate SHA
@@ -426,11 +428,11 @@ green migration layer before the corrected native-stack policy layer.
 ### Feedback Cycles
 
 - Cycle 1: REJECTED — fresh validation; surface 6 files vs estimate 6 (0%); AC unchanged
-- Cycle 2: RETURN — exact Spacedock 0.27.0 comparison found runtime-compatible
-  body-file, candidate-SHA, repository-selection, exact-push, and sentinel
-  hardening absent from the accepted bottom layer; sequential surface 9
-  layer-paths vs estimate 9 (0%); AC-1 widened by captain directive, AC-2 through
-  AC-5 unchanged
+- Cycle 2: RETURN — exact Spacedock `v0.27.0-pre3` shipped-template comparison
+  found runtime-compatible body-file, candidate-SHA, repository-selection,
+  exact-push, and sentinel hardening absent from the accepted bottom layer;
+  sequential surface 9 layer-paths vs estimate 9 (0%); AC-1 widened by captain
+  directive, AC-2 through AC-5 unchanged
 
 ## Stage Report: implementation (cycle 3)
 
