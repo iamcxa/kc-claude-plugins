@@ -1202,3 +1202,18 @@ science_officer_em_upward_report:
 Return for one bounded atomic-provenance correction. Preserve all seven repaired
 failure guards and the exact two-layer graph; this validation changed only the
 authorized task-state report.
+
+## Captain adjudication — validation accepted
+
+The captain rejects cycle 4's sole return ground and accepts validation at
+bottom `647d4c87805f0dde8b71d1153d2c226edb129d87` and top
+`a87326b901bebd88858beea85a463b1fbd1a26cf`. GitHub's native stack merge is the
+required operation and individual PR merge remains forbidden, but terminal
+evidence need not prove one forensic landing event: a merge queue may accept the
+stack together and land members in separate groups. Completion therefore binds
+the native stack, exact per-layer Candidate/head identity, required checks, and
+merged state. The seven repaired contradictions and focused green evidence are
+accepted; no product correction or additional model review is required.
+
+Delivery remains pending. Create the approved bottom-to-top Draft stack from the
+two exact heads; do not ready, merge, or terminalize without the later gates.
