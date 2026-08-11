@@ -133,30 +133,57 @@ accepted.
   authority, it is a prohibition. "This branch cannot be reached" is factual;
   "never create a second task universe" assigns a duty to work-item authority.
   Rephrasing factual behavior as a command does not change its class.
-- Before planning new capability, apply the reverse-recovery audit and repair
-  the cheapest compatible seam. Only confirmed `MISSING` work is greenfield.
-- **Use bounded subtraction for non-trivial brownfield work.** Trace the
-  candidate surfaces backward from the accepted outcome and try the cheapest
-  reversible removal or bypass before introducing another surface. Bind the
-  result to the exact revision, declared candidate set, and observed runtime.
-  For an existing surface, a named acceptance-criterion failure supports
-  bounded retention; green governing evidence with closed need and observation
-  boundaries produces a captain-owned removal candidate; an unclosed boundary
-  is `UNKNOWN`, preserves the surface, and proves no irreducibility. A proposed
-  new surface advances only when its absence produces a named criterion failure
-  and the recorded simpler alternative is insufficient; green or `UNKNOWN`
-  returns the addition. Record the surface, served criterion, without-it
-  instrument and result, simpler alternative, and insufficiency. Group
-  components only when Route discipline cannot separate their lifecycle state.
-  The bounded known-defect route adds this work only when it proposes a new
-  surface.
-- Fresh validation is bound to the exact revision. A changed head invalidates
-  prior evidence. **The binding is a recorded fact, not an assumption**: a round
-  that does not state the revision and artifact it read cannot be shown, from its
-  own report, to have read the one under review, and an unstated binding is
-  indistinguishable in that report from a wrong one. A verifying round also names the result that would have made it
-  fail; where it cannot, it reports at a rate set by its prompt rather than by
-  the artifact, and neither its silence nor its confidence is evidence.
+
+For non-trivial brownfield work, apply this outcome-first route in order:
+
+1. **Accepted outcome.** Name the end value, value-level acceptance criteria,
+   constraints, and non-goals. Decompose from this contract without assuming
+   the implementation is absent or that the task is a greenfield rebuild.
+2. **Recover the existing seam.** Against fresh `origin/main`, apply the
+   reverse-recovery audit and repair the cheapest compatible `EXISTS_BROKEN` or
+   `STUB` seam. Only evidence-backed absence supports `MISSING`.
+3. **Prove subtraction or bypass.** Trace candidate surfaces backward from the
+   accepted outcome and try the cheapest reversible without-it instrument. Bind
+   the result to the exact revision, declared candidate set, and observed
+   runtime. For an existing surface, a named criterion failure supports bounded
+   retention; green governing evidence with closed need and observation
+   boundaries produces a captain-owned removal candidate; `UNKNOWN` preserves
+   the surface and proves neither necessity nor removability.
+4. **Authorize only necessary addition.** A proposed new responsibility can
+   advance when its absence fails a named criterion and the recorded simpler
+   route is insufficient. Green or `UNKNOWN` returns the proposal.
+5. **Run RED/GREEN.** Demonstrate the accepted behavior failing before the
+   minimum implementation and passing after it. A subtraction prompted later
+   returns through the same without-it and GREEN evidence; numbers do not
+   authorize it.
+6. **Observe post-diff change shape.** At the implemented revision, retain
+   mechanically sourced gross additions and gross deletions as separate facts,
+   then ask unconditionally: **“If the largest added responsibility is removed,
+   which named AC fails?”** Counts may focus inspection; they do not choose the
+   responsibility or supply the answer. The worker or reviewer identifies an
+   independently maintained responsibility from the diff and Route discipline.
+   Change shape is post-diff evidence, not a forecast, budget, score, or gate.
+   Numbers cannot gate or rank a change, offset additions with deletions,
+   redefine accepted value, or override necessary tests, safety, clarity, and
+   maintenance obligations.
+7. **Validate fresh.** Bind fresh validation to the final exact revision after
+   any resulting subtraction; a changed head invalidates prior evidence. **The
+   binding is a recorded fact, not an assumption**: a round that does not state
+   the revision and artifact it read cannot be shown, from its own report, to
+   have read the one under review, and an unstated binding is indistinguishable
+   in that report from a wrong one. A verifying round also names the result that
+   would have made it fail; where it cannot, it reports at a rate set by its
+   prompt rather than by the artifact, and neither its silence nor its confidence
+   is evidence.
+
+Here, **minimum** means the fewest independently maintained lifecycle
+responsibilities sufficient for the accepted outcome, not the fewest files or
+lines. **Simple** means the direct sufficient route with the least lifecycle and
+maintenance obligation, not dense code. Record each candidate surface, served
+criterion, without-it instrument and result, simpler route, and insufficiency.
+Group components only when Route discipline cannot separate their lifecycle
+state. The bounded known-defect route adds this work only when it proposes a new
+surface.
 - Judgment belongs to a fresh EM/reviewer; scope and irreversible decisions
   belong to the captain. Orchestration itself carries no verdict authority.
 - **Test depth is the adopter's call; integrating early is not.** Prefer

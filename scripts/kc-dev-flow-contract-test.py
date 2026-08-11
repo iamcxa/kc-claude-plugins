@@ -1045,6 +1045,85 @@ for phrase in [
 ]:
     require(phrase in kernel, f"Route discipline is missing invariant: {phrase}")
 
+# Collect independent gaps in one RED run.
+change_shape_failures: list[str] = []
+
+
+def check_order(text: str, label: str, markers: list[str]) -> None:
+    positions = [text.find(marker) for marker in markers]
+    missing = [marker for marker, position in zip(markers, positions) if position < 0]
+    if missing:
+        change_shape_failures.append(f"{label} is missing: {', '.join(missing)}")
+    elif positions != sorted(positions):
+        change_shape_failures.append(f"{label} is out of sequence")
+
+
+normalized_kernel = " ".join(kernel.split())
+implementation_start = workflow.find("### `implementation`")
+validation_start = workflow.find("### `validation`")
+implementation_stage = workflow[implementation_start:validation_start]
+normalized_implementation_stage = " ".join(implementation_stage.split())
+largest_responsibility_question = (
+    "If the largest added responsibility is removed, which named AC fails?"
+)
+check_order(
+    kernel,
+    "ordered route",
+    [
+        "1. **Accepted outcome.**",
+        "2. **Recover the existing seam.**",
+        "3. **Prove subtraction or bypass.**",
+        "4. **Authorize only necessary addition.**",
+        "5. **Run RED/GREEN.**",
+        "6. **Observe post-diff change shape.**",
+        "7. **Validate fresh.**",
+    ],
+)
+check_order(
+    normalized_implementation_stage,
+    "implementation stage",
+    [
+        "record a failing RED test",
+        "map every changed file to an AC",
+        largest_responsibility_question,
+    ],
+)
+for text, label, phrases in [
+    (
+        normalized_kernel,
+        "kernel",
+        [
+            largest_responsibility_question,
+            "gross additions and gross deletions as separate facts",
+            "Counts may focus inspection; they do not choose the responsibility or supply the answer.",
+            "not a forecast, budget, score, or gate",
+            "Numbers cannot gate or rank a change, offset additions with deletions",
+        ],
+    ),
+    (
+        normalized_implementation_stage,
+        "implementation stage",
+        [
+            "**Success:**",
+            "**No incremental value:**",
+            "**Immediate stop/removal:**",
+            "**Redundancy retirement:**",
+            "classify the cohort Immediate stop/removal before considering other outcomes",
+            "any newly attributable subtraction is Success, including a one-subtraction/two-defense cohort",
+            "When neither is present, two defense-only rows are No incremental value.",
+            "None of these outcomes is a per-change delivery gate.",
+        ],
+    ),
+]:
+    change_shape_failures.extend(
+        f"{label} is missing: {phrase}" for phrase in phrases if phrase not in text
+    )
+
+require(
+    not change_shape_failures,
+    "change-shape contract failures:\n- " + "\n- ".join(change_shape_failures),
+)
+
 # The kernel requires an absolute to name its enforcement point or be rewritten
 # as a bounded claim, and that rule had none of its own. Four hand-audits of one
 # file each found a different subset, so the registry replaces re-reading: every
