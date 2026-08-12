@@ -131,7 +131,14 @@ def response_schema() -> dict[str, object]:
         for field in sorted(STATE_EFFECT_FIELDS - {"improvement_reads", "improvement_writes"})
     }
     state_properties["improvement_reads"] = {"type": "integer", "minimum": 0}
-    state_properties["improvement_writes"] = {"type": "integer", "minimum": 0}
+    state_properties["improvement_writes"] = {
+        "type": "integer",
+        "minimum": 0,
+        "description": (
+            "Number of tracked improvement cursor and handoff files durably "
+            "written; report private identity separately."
+        ),
+    }
     properties: dict[str, object] = {
         "route": {"type": "string", "enum": ["product", "scheduling"]},
         "active_item": {"type": ["string", "null"]},
@@ -272,8 +279,8 @@ def grade_claims(
         ]:
             if not state[field]:
                 failures.append(f"P3 state effect is missing: {field}")
-        if state["improvement_reads"] < 1 or state["improvement_writes"] < 3:
-            failures.append("P3 read/write counts do not cover identity, cursor, and handoff")
+        if state["improvement_reads"] < 1 or state["improvement_writes"] < 2:
+            failures.append("P3 read/write counts do not cover cursor and handoff")
     elif pressure_id == "P4":
         if validated["route"] != "scheduling":
             failures.append("empty committed work did not stop for scheduling")

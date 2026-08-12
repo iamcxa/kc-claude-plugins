@@ -143,6 +143,10 @@ require(
     and set(schema["required"]) == set(schema["properties"]),
     "response schema is not closed",
 )
+require(
+    "cursor and handoff files" in schema["properties"]["state_effects"]["properties"]["improvement_writes"]["description"],
+    "improvement write count semantics are undocumented",
+)
 
 valid = {
     "route": "product",
@@ -202,7 +206,7 @@ def response_for(pressure_id: str) -> dict[str, object]:
         response["improvement_status"] = "handoff_validated"
         response["state_effects"] = {
             "improvement_reads": 2,
-            "improvement_writes": 3,
+            "improvement_writes": 2,
             "cursor_written": True,
             "handoff_written": True,
             "private_identity_written": True,

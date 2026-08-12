@@ -709,6 +709,11 @@ require(
     "ordinary routing does not guard broad execution-state enumeration",
 )
 require(
+    "Before opening the harvest reference or enumerating improvement evidence"
+    in continue_skill,
+    "explicit harvesting does not require concrete product-route resolution first",
+)
+require(
     "../../references/improvement-harvesting.md" in continue_skill,
     "explicit harvesting does not load the packaged reference",
 )

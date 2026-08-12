@@ -64,7 +64,8 @@ reviewer silence, and missing evidence are not passes.
 The resolved product route comes first. Only when the current invocation
 explicitly asks to harvest unseen debrief evidence or prepare a dev-flow
 improvement, read `../../references/improvement-harvesting.md` completely and
-follow it before resuming the already-resolved product route. A debrief directory,
+follow it before resuming the already-resolved product route. Before opening the harvest reference or enumerating improvement evidence, read the selected work-item
+record and name its item, stage, and first product action. A debrief directory,
 cursor, or old candidate is not a trigger.
 
 Do not inspect `_debriefs/` or `_improvements/` on an ordinary continuation, and
