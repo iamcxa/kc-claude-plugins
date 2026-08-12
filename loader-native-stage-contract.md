@@ -263,3 +263,137 @@ stage transition.
 Proceed with one stage-native deferred-activation sentence, one sharpened
 topology trigger, and existing-test coverage. Keep `pr-merge` inactive until
 candidate facts exist; add no loader, policy surface, or ceremony.
+
+## Stage Report: implementation
+
+Verdict: **IMPLEMENTATION EVIDENCE COMPLETE** for candidate
+`47a7dac7a2417aedb1a326b6dcc6fcf4d3a3206e`; Gate Authority retains the
+transition to validation.
+
+- DONE: Started from `origin/main`
+  `a18ba78f72c03036d8463629bd19977aa684e159`. The executable test-only RED
+  failed with `missing inactive locator rule`, all four missing candidate-fact
+  triggers, and `missing pre-trigger unread boundary` before README changes.
+- DONE: Implemented only `docs/dev/README.md` and
+  `scripts/kc-dev-flow-contract-test.py`. The implementation `Policy mods`
+  declaration remains exactly `_mods/work-control-profile.md`; unlisted links
+  are inactive locators, and the PR locator stays unread until candidate
+  revision, changed-file map, merge-base diff size, and independent/dependent
+  slice assessment all exist.
+- DONE: Proved the three executable mutations fail after first confirming each
+  mutation changed its input: `premature-load` -> `implementation entry policy
+  mods drifted`; `trigger-loss` -> `missing pre-trigger unread boundary`;
+  `locator-loss` -> `missing topology locator`.
+- DONE: Mapped the exact two-file diff to ACs.
+  `docs/dev/README.md` serves AC-1, AC-2, and AC-3; the contract test serves
+  AC-2 and AC-3. No changed file is unmapped.
+- DONE: Re-ran the real installed loader on the exact candidate with Spacedock
+  `0.26.0 (contract 3)`. Output SHA-256 is
+  `4f10401f127e77cf12bf23d7fcf70b626e082eca2f4579d3a76468dc1bf7a965`;
+  size is 33 lines / 269 words / 1934 bytes. The bytes embedded in every Q08
+  input equal that extraction exactly.
+- DONE: Reused Q08 from `.context/experiments/dev-flow-full-pressure/ablation/prompts.md:79-88`
+  and its discriminator from `RUBRIC.md:47-56`; the historical no-policy RED
+  answer was not supplied to the runners. Claude Code 2.1.227 was unavailable
+  because its session limit was reached, so three fresh Codex CLI sessions ran
+  honestly instead of fabricating Claude receipts.
+- DONE: The frozen Q08 input SHA-256 is
+  `13333b94d374cea9cb2abc857cca54a5c24d11bb7f2b4fb6baa94c1b7e84b283`.
+  Runner was Codex CLI 0.145.0 using native binary SHA-256
+  `1da3f4e0e96028b8a771814293c3033dafd1971f943f6c7e79b0897fe705f590`;
+  model was `gpt-5.6-sol` (string SHA-256
+  `419255f2bb4c6801939e868fe2cdbbdc34d51742400939d1842d262a1fec749c`),
+  reasoning `high`, read-only sandbox, `--ephemeral`, ignored user config and
+  repo rules, and no tool use. All three satisfied Q08's required behavior:
+  read the stage plus declared implementation mod only, leave trigger
+  procedures unloaded, then continue RED/GREEN.
+
+### Fresh Q08 receipts
+
+Trial 1 session `019ff453-c064-7262-8d29-68a745d1c816`; exact output SHA-256
+`040ec192c8544223428d260347c1402526831f6a9d54108d94189585d3abf83c`:
+
+```text
+## READ NOW
+
+- `implementation` stage instructions
+- Declared active policy mod: `_mods/work-control-profile.md`
+- Q-08 scenario facts, including the recorded failing RED behavior check
+
+## UNREAD NOW
+
+- `_mods/pr-merge.md`, including `#delivery-topology-decision`; its four prerequisites do not yet exist
+- Adjacent validation and recovery procedures
+- Any other linked but undeclared policy material
+
+## NEXT WORK STEP
+
+Write the minimum implementation change for the failing behavior check, then run it to record GREEN in the same session.
+```
+
+Trial 2 session `019ff454-6c87-7322-8041-cbb0187d8df7`; exact output SHA-256
+`2ccaa19924ac1faf930a7a8ca605e44ae71864ad360a029842b3fdfe737dfb12`:
+
+```text
+## READ NOW
+
+- The `implementation` stage instructions.
+- The active policy mod: `_mods/work-control-profile.md`.
+- Q-08 scenario facts, including the recorded failing RED check.
+
+## UNREAD NOW
+
+- `_mods/pr-merge.md`, including `#delivery-topology-decision`; its trigger facts do not yet exist.
+- Adjacent validation and recovery procedures.
+- Any unlisted linked policy.
+
+## NEXT WORK STEP
+
+Write the minimum change for the failing behavior, then run the scoped check to record GREEN in the same session.
+```
+
+Trial 3 session `019ff454-6c86-7a32-973c-ca7c736c94ab`; exact output SHA-256
+`ddce7c3fe655b50dc057072aa276cf790a2aedacbc54f96fda751740f48c504e`:
+
+```text
+## READ NOW
+
+- `implementation` stage instructions
+- Active policy mod: `_mods/work-control-profile.md`
+- Q-08 facts, including the recorded failing RED behavior check
+
+## UNREAD NOW
+
+- `_mods/pr-merge.md`, including `#delivery-topology-decision`; its four prerequisites do not yet exist
+- Adjacent validation and recovery procedures
+- Any inactive, undeclared policy locators
+
+## NEXT WORK STEP
+
+Write the minimum implementation change needed to make the recorded RED behavior check pass, then record GREEN in the same session.
+```
+
+### Exit gates and topology
+
+- `python3 scripts/kc-dev-flow-contract-test.py` -> `kc-dev-flow contract: PASS`.
+- `./scripts/skill-frontmatter-lint.sh` -> 40/40 skill directories valid.
+- `git diff --check origin/main...HEAD` -> exit 0, no output.
+- Worktree is clean at the candidate commit.
+- Merge-base diff is 82 additions + 2 deletions across 2 files. The README
+  contract and its regression test form one inseparable behavior; dependent
+  green layers = no, independent green slices = no, numeric trigger = no.
+  After the four exit facts existed, the deferred locator selected the
+  `One Draft PR` row. This is an implementation recommendation only; no PR was
+  created and no delivery authority was exercised.
+- Dispatch metadata drift: the supplied state checkout path under the code
+  worktree did not exist, and its claim that the actual state checkout had no
+  `origin` was stale. The captain confirmed the actual split-root entity path
+  and directed the shipped `spacedock state commit` transaction; this is not a
+  product-scope change.
+
+### Summary
+
+Made implementation activation loader-native with a deferred PR topology
+locator, protected entry/trigger/locator behavior with executable mutations,
+and obtained 3/3 fresh exact-loader Q08 receipts without adding workflow
+ceremony or another policy surface.
