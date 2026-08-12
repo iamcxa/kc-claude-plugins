@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: make workflow changes measurable through the real loader"
-status: implementation
+status: validation
 source: "captain:conversation-2026-08-12-second-slice"
 product: kc-dev-flow
 sprint:
