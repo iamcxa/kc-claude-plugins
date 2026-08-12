@@ -973,3 +973,24 @@ Decision: PROCEED — accept the captain-approved AC-1 comparability reset; Gate
 ### Summary
 
 The ideation reset replaces single-sample cost dominance with safety-first comparability while retaining every hard product, safety, policy, trace, exact-revision, and delivery constraint. The sole fresh EM recommends proceeding through the deterministic contract correction to one bounded Sol-high P1; efficiency remains observation-only and the hard stop preserves `UNKNOWN` rather than authorizing more spend.
+
+## Stage Report: implementation correction (cycle 4)
+
+Outcome: DETERMINISTIC CONTRACT GREEN; FINAL P1 `UNKNOWN`
+
+- DONE: Implement the captain-approved safety-first comparability rule with deterministic RED then GREEN.
+  The RED test proved the old evaluator still failed a hard verdict solely because the candidate used 8 calls versus 7. The minimum GREEN removes the obsolete single-sample tool-call and relative-word dominance gates, retains the hard 650-word candidate ceiling and every existing claim/trace/artifact gate, and adds explicit efficiency comparability: any failed prerequisite produces `NOT_COMPARABLE`, uncertainty stays `UNKNOWN`, and only two passing arms are `COMPARABLE`. The manifest now records this status with `gating: false`; per-run tool calls, elapsed time, and provider usage remain preserved in each arm.
+- DONE: Run only the focused deterministic checks authorized for this reset.
+  PASS: `python3 scripts/kc-dev-flow-continuation-eval.test.py`; PASS: `python3 scripts/kc-dev-flow-contract-test.py`; PASS: `git diff --check`. No broad suite or model matrix was run.
+- UNKNOWN: Run the one allowed exact-head Sol-high paired P1.
+  The implementation dispatch was received at `2026-08-12T16:12:29Z`, leaving 268 seconds before the hard stop at `2026-08-12T16:16:57Z`. The prior paired runs exceeded that remaining window, so the run could not be bounded to finish by the deadline and was not started. No Sol-high output directory or new model receipt was created; P2-P4, Terra, repeats, and the full matrix were not run. This is `UNKNOWN`, not a relabeling of the preserved Terra `FAIL` receipt.
+- DONE: Commit and push the exact bounded evaluator/test correction while preserving product scope and topology.
+  Local and remote branch `spacedock-ensign/product-first-continuation` are `2fff0f5ff2712e7c8ac2a8b6aee36ce50151b9db` (`fix(kc-dev-flow): make efficiency non-gating`). Only `scripts/kc-dev-flow-continuation-eval.py` and `scripts/kc-dev-flow-continuation-eval.test.py` changed in cycle 4. Installed skill, product docs, harvest contract, AC-2 through AC-5, prior receipts, candidate product bytes at `452dabd1eb7fcf1519b5c1e72917331ca06e3d88`, and the one-Draft-PR Native stack exception topology are unchanged. No PR, readiness, merge, release, task, sprint-admission, provider-post, or stage-transition authority was exercised.
+
+### Summary
+
+Cycle 4 replaces the unsound single-sample cost gate with a deterministic safety-first comparability record while preserving all hard product and safety failures. Focused contracts are green and the exact correction is pushed. The sole authorized Sol-high P1 was not started because it could not be bounded to finish inside the remaining hard-deadline window, so final P1 evidence is `UNKNOWN` and no further pressure is authorized.
+
+### Feedback Cycles
+
+- Cycle 4: CONTRACT GREEN / MODEL UNKNOWN — safety/product prerequisites now govern comparability; efficiency is recorded and non-gating; final P1 not started because the deadline-bounded window was insufficient
