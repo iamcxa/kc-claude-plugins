@@ -93,6 +93,9 @@ reusable-source handoff, and continue product routing. Never regenerate, rotate,
 publish, or commit this identity file. If it is lost, report that recurrence
 restarts under a new namespace instead of claiming continuity.
 This private identity is durable pseudonymous state, not derived coordination state.
+Generate and consume it inside file-processing code that does not echo it or embed
+it in command text. Never print or interpolate the private key into a command,
+message, log, or tool output.
 
 Compute `source_namespace` as the first 12 lowercase hex characters of SHA-256
 over the key bytes. Never derive either value from repository identity and never

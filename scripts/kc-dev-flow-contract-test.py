@@ -705,8 +705,16 @@ require(
     "ordinary continuation does not prohibit improvement-state I/O",
 )
 require(
+    "Do not enumerate the execution-state tree" in continue_skill,
+    "ordinary routing does not guard broad execution-state enumeration",
+)
+require(
     "../../references/improvement-harvesting.md" in continue_skill,
     "explicit harvesting does not load the packaged reference",
+)
+require(
+    "Never print or interpolate the private key" in harvest_reference,
+    "explicit harvesting does not protect private identity from host traces",
 )
 for phrase in [
     "next committed work item",

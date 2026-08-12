@@ -33,7 +33,9 @@ instructions decide the concrete tracker, runtime, and evidence tools.
 
 1. Ask the work-item and iteration authorities for the active item. If none is
    active, select the next committed work item by the repository's declared
-   sprint order and dependency rules.
+   sprint order and dependency rules. Do not enumerate the execution-state tree
+   on an ordinary continuation; read only the product-authority paths needed to
+   resolve that route.
 2. If no committed item exists, report that the sprint needs scheduling. Do not invent or schedule work to keep the agent busy.
 3. Use the defect route only for a bounded known defect with a mechanical
    acceptance test; otherwise use the normal lifecycle. Recover existing

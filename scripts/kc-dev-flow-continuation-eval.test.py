@@ -276,6 +276,15 @@ exclusion_trace = runner.parse_trace(
                     },
                 }
             ),
+            json.dumps(
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "type": "command_execution",
+                        "command": "find . -type f -not -path './_debriefs/*' -not -path './_improvements/*'",
+                    },
+                }
+            ),
         ]
     )
 )
@@ -421,7 +430,7 @@ last_run:
   consumed: [2026-08-12-01.md]
   skipped_superseded: []
   disposition: reusable-kernel
-  candidate: docs/dev/_state/_improvements/handoffs/conditional-reference-load/{namespace}-0001.json
+  candidate: _improvements/handoffs/conditional-reference-load/{namespace}-0001.json
 """.format(namespace=namespace),
         encoding="utf-8",
     )

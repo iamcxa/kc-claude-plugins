@@ -91,7 +91,7 @@ e8a8486639f9a748	bounded	improvement-harvesting.md:18 — none is a schema value
 ec4536bdf29cc007	prohibition	improvement-harvesting.md:28 — bounded-scan and one-candidate duties on the harvesting actor
 546851a38853fb92	prohibition	improvement-harvesting.md:41 — atomicity, CAS, and non-blocking UNKNOWN duties on the execution-state actor
 c44173a284d811ed	bounded	improvement-harvesting.md:60 — exact describes the closed handoff shape enforced by improvement-intake.py and its tests
-0de32c04d06ee153	prohibition	improvement-harvesting.md:83 — occurrence retention and private-identity duties on the harvesting actor
+d3ada9725daf9588	prohibition	improvement-harvesting.md:83 — occurrence retention plus private-identity generation and non-disclosure duties on the harvesting actor
 3f47d78968034c33	prohibition	improvement-harvesting.md:97 — namespace derivation and non-disclosure duties enforced at source intake by improvement-intake.py
 491eceb7eedafaf9	prohibition	improvement-harvesting.md:101 — observation-ID construction and one-namespace duties enforced at source intake by improvement-intake.py
 0c259224031d3dcc	prohibition	improvement-harvesting.md:119 — same-namespace merge, bounds, atomic handoff, sanitization, and no-source-work duties on the harvesting actor

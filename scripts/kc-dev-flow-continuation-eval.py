@@ -339,6 +339,11 @@ def grade_trace(
             "",
             guarded,
         )
+        guarded = re.sub(
+            r"-not\s+-path\s+\S*_(?:debriefs|improvements)\S*",
+            "",
+            guarded,
+        )
         return "_debriefs" in guarded or "_improvements" in guarded
 
     improvement_indexes = [
@@ -992,7 +997,8 @@ def grade_artifacts(
     state_text = state_path.read_text(encoding="utf-8") if state_path.is_file() else ""
     if "newest_processed_debrief: 2026-08-12-01.md" not in state_text:
         failures.append("P3 cursor did not advance to the consumed debrief")
-    if str(handoff.relative_to(scenario)) not in state_text:
+    handoff_from_state = str(handoff.relative_to(scenario / "docs/dev/_state"))
+    if handoff_from_state not in state_text:
         failures.append("P3 cursor does not reference the handoff batch")
 
     changed = set(
