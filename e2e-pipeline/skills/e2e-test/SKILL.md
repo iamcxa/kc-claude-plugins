@@ -958,21 +958,70 @@ preconditions:                               # optional — data readiness check
 steps:
   - id: <unique-step-id>
     action: "<action string>"                # see syntax table below
+    type: <step-type>                        # REQUIRED — compile fails without it
     expect:                                  # optional assertions
       - "<element> visible on <page>"
       - "url contains <path>"
-      - "text '<text>' on <page>"
-      - "network POST /api/items status 201"
-      - "no network errors"
-      - "no console errors since <step-id>"
+      - "text '<text>' on page"
     screenshot: true                         # optional (always on failure)
     optional: true                           # skip if element missing
     timeout: 30                              # seconds
     note: "..."                              # context for agent
 ```
 
-**Action syntax:**
-`Click <el> on <page>` | `Click <el>(<p>=<v>) on <page>` | `Fill <el> with '<text>' on <page>` | `Wait for <el> on <page>` | `Navigate to <path>` | `Press <key>` | `Scroll <dir>` | `Verify <el> on <page>` | `Eval '<js>'` | `Verify external` (verify checkpoint) | `Execute external` (execute checkpoint)
+**`type:` is required.** Omitting it fails the compile with
+`Step '<id>' has no type field — run migration tool first`. The complete set of
+valid types is the `ACTION_PARSERS` keys in `compiler/resolver.js`:
+
+| `type` | Action string it expects |
+|---|---|
+| `navigate` | `Navigate to <path>` |
+| `click` | `Click <el>` or `Click <el> on <page>` |
+| `fill` | `Fill <el> with '<text>'` or `… on <page>` |
+| `snapshot` | `Take snapshot`, `snapshot`, or `Verify <anything>` — this is the type assertion-only steps use |
+| `wait` | `Wait <n>` (a **number**, e.g. `Wait 1`) |
+| `verify-external` | `Verify external` |
+| `execute-external` | `Execute external` |
+| `capture-url-query` | `Capture <name> from url query` |
+
+There is no `assert`, `eval`, `press`, `scroll`, or `interact` type. Assertions
+belong on a `snapshot` step: its pattern is
+`/snapshot|^Verify\s+(?!external)\w+/i`, so any `Verify …` action reaches it
+**except** `Verify external`, which is its own type.
+
+### Expect grammar reference
+
+This is the **complete** list the compiler resolves (`compiler/resolver.js`,
+`EXPECT_PATTERNS`). Anything else is a compile error:
+`unsupported expect string '<s>' -- rewrite it … or declare {not_automated: <reason>}`.
+
+| Form | Notes |
+|---|---|
+| `<el> visible` / `<el> visible on <page>` | `is visible` also accepted |
+| `<el> not visible` / `<el> not visible on <page>` | `is not visible` also accepted |
+| `<el> enabled` / `<el> disabled` | optional `on <page>` |
+| `url contains <s>` / `url does not contain <s>` | substring |
+| `text '<s>' on page` | **`page` is a literal word, not a page name.** `text 'x' on dashboard` does not parse |
+| `text '<s>' is visible` / `text "<s>" visible` | equivalent positive forms |
+| `text '<s>' not on page` / `text '<s>' is not visible` / `text "<s>" not visible` | negations |
+| `<a> visible or <b> visible` | passes if either matches |
+| `{not_automated: "<reason>"}` | the only permitted **object** form; records a human-only or inexpressible check without faking it |
+
+**There is no network or console assertion.** `network <METHOD> <path> status
+<code>`, `no network errors`, and `no console errors since <step-id>` were
+previously documented here and are **not implemented** — `resolver.js` contains
+zero occurrences of either word. Using them is a compile error, and the locked
+wrapper converts any deferred expect into an `exit 1` guard, so they cannot
+silently pass either.
+
+Consequence worth knowing before designing a flow: **request-level facts —
+query parameters, status codes, request counts — are not assertable.** A flow
+whose real claim is "the list requests `limit=20`, not `limit=500`" cannot state
+it. Declare it `{not_automated: …}` rather than substituting a rendered-page
+proxy, which can pass while the server still returns the wrong payload.
+
+**Action syntax:** see the `type:` table above — the action string must match the
+pattern for its declared type.
 
 ### External Checkpoint Steps
 
