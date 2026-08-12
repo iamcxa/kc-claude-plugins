@@ -1089,6 +1089,7 @@ def grade_artifacts(
     if "newest_processed_debrief: 2026-08-12-01.md" not in state_text:
         failures.append("P3 cursor did not advance to the consumed debrief")
     handoff_references = {
+        str(handoff.relative_to(state_path.parent)),
         str(handoff.relative_to(scenario / "docs/dev/_state")),
         str(handoff.relative_to(scenario)),
     }

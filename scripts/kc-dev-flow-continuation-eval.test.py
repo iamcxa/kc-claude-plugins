@@ -585,6 +585,22 @@ last_run:
     state_path.write_text(
         state_path.read_text(encoding="utf-8").replace(
             f"candidate: _improvements/handoffs/conditional-reference-load/{namespace}-0001.json",
+            f"candidate: handoffs/conditional-reference-load/{namespace}-0001.json",
+        ),
+        encoding="utf-8",
+    )
+    runner.run_command(["git", "add", str(state_path.relative_to(p3_scenario))], cwd=p3_scenario)
+    runner.run_command(["git", "commit", "-q", "--amend", "--no-edit"], cwd=p3_scenario)
+    state_relative_failures, _ = runner.grade_artifacts(
+        p3, p3_scenario, initial_head, ROOT / "kc-dev-flow", "trace"
+    )
+    require(
+        not state_relative_failures,
+        f"state-relative cursor handoff reference failed: {state_relative_failures}",
+    )
+    state_path.write_text(
+        state_path.read_text(encoding="utf-8").replace(
+            f"candidate: handoffs/conditional-reference-load/{namespace}-0001.json",
             f"candidate: docs/dev/_state/_improvements/handoffs/conditional-reference-load/{namespace}-0001.json",
         ),
         encoding="utf-8",
