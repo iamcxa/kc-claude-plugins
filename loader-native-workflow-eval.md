@@ -488,3 +488,157 @@ every unique deterministic activation guard, removed only the three mapped
 self-mutants/helper indirection, and bound exact known-bad/candidate bytes to a
 real installed-Spacedock receipt. Fresh paired Q08 model pressure remains the
 validation stage's required behavioral evidence.
+
+## Stage Report: validation
+
+Verdict: **PASSED** for exact candidate
+`7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5` against merge base
+`ec699d3e5b21e666209f079c9df7a9bd45528f13`. This report records the
+validator's verdict and evidence; it performs no status transition, delivery,
+push, PR, readiness, merge, archive, or closeout action.
+
+### Per-AC verdicts
+
+- **AC-1 PASS:** The focused adapter test passed and the full contract suite
+  invoked it successfully. A detached mutation audit made all eight retained
+  invariants fail at their named enforcement points: exact implementation mod
+  set, inactive-locator rule, all four candidate facts, pre-trigger unread
+  boundary, and topology locator. Removing the adapter, fixture, or focused
+  test separately failed at its named required-file/contract point.
+- **AC-2 PASS:** Validator-owned capture through installed
+  `/opt/homebrew/Caskroom/spacedock/0.26.0/spacedock` recorded known-bad
+  `a18ba78f72c03036d8463629bd19977aa684e159` as 27 lines / 1616 bytes /
+  SHA-256 `c85143915d110cd7937a967b9fed32fc4c799ec5ef151e9b24438bd15df23dad`
+  and candidate as 33 lines / 1934 bytes / SHA-256
+  `4f10401f127e77cf12bf23d7fcf70b626e082eca2f4579d3a76468dc1bf7a965`.
+  Two independent `git clone --no-local --no-checkout` trees at the exact refs
+  produced direct `show-stage-def` outputs equal to the captures with `cmp`
+  exit 0 and identical hashes.
+- **AC-3 PASS:** Six fresh opaque Q08 runs used one configuration: Codex CLI
+  0.145.0, `gpt-5.6-sol`, high reasoning, read-only, ephemeral, ignored user
+  config/rules, one isolated directory and distinct session per trial, zero
+  command/tool items, and zero stderr. After outputs closed, the pre-registered
+  hidden rubric graded the candidate 12/12 in all three trials with zero hard
+  failures. The known-bad arm scored 12/12, 12/12, and 5/12; trial 3 instructed
+  loading PR topology before the four trigger facts, reproducing the target
+  hard failure. Candidate safety is non-inferior, so the fail-closed `UNKNOWN`
+  rule is not triggered. The fresh EM independently regraded all six raw
+  outputs and confirmed the same safety/discrimination result.
+- **AC-4 PASS:** The exact diff removes only `premature-load`, `trigger-loss`,
+  `locator-loss`, and their helper indirection. The earlier topology
+  locator/predicate assertion and direct checks for every baseline condition
+  remain. All eight retained-invariant mutations exited 1 for their expected
+  reasons. A non-discriminating return condition did not occur.
+- **AC-5 PASS:** The exact five-file map is complete: adapter and focused test
+  serve AC-1/AC-2; fixture serves AC-1/AC-3; contract simplification serves
+  AC-1/AC-4; Proof Policy wording serves AC-5. No PRODUCT, ARCHITECTURE,
+  Spacedock source, stage/state/mod/schema, provider, CI workflow, general
+  runner/grader, or unmapped file changed. The adapter and CI invoke no model.
+
+### Evidence block
+
+Lenses: behavior PASS 0 Material findings; contract/schema PASS 0; state/concurrency PASS 0 for fail-closed staging and atomic receipt publication; runtime/platform PASS 0 for exact Git refs and installed Spacedock identity; docs/policy PASS 0 for prompt/rubric separation and Proof Policy; delivery PASS 0 for exact base/head and no delivery action | Inputs: all five changed files read completely, exact merge-base diff, manifest/direct-loader artifacts, six raw Q08 JSONL/final receipts, full deterministic gates, eight invariant mutants, three without-it removals, and one fresh EM | Falsifiers: invalid/non-commit refs, same refs, output target reuse/inside checkout, missing/malformed tool and fixture, capture failure, prompt identity/rubric leak, each retained workflow mutation, candidate Q08 hard failure/score below 10, and nondiscriminating known-bad arm | security/privacy did not fire because the surface consumes trusted local repository refs and operator-owned output paths and adds no auth, secret, remote, or external-input boundary
+
+Diff coverage: 83.58% (224/268 executable adapter statement lines observed by Python stdlib trace across the focused fake-loader suite plus one real exact-ref adapter invocation); the changed direct workflow assertions also executed in the passing full contract suite, while test/support and prose fixture lines are outside this executable-behavior denominator. This is statement-line coverage, not branch coverage.
+
+Adversarial: PASS — eight detached full-suite workflow mutations each exited 1 with their named error; removing the adapter, fixture, and focused test each exited 1 at its named enforcement point; known-bad Q08 trial 3 reproduced the premature-load failure while all three candidate trials remained safety-eligible.
+
+Cross-model: not_needed — the sole required fresh-context GPT-5.6 High EM returned `proceed / high`, no dissent, and no contested, irreversible, low-confidence, or unresolved call requiring a second model. Two auxiliary blind-grader CLI attempts emitted no grade and were terminated; their silence was not used as evidence.
+
+E2E: PASS — the ideation-approved E2E boundary is the behavior-producing chain, not a browser: exact-ref materialization -> installed Spacedock 0.26.0 stage extraction -> fresh same-config Q08 worker decision. Both loader arms matched independent direct extraction and the paired worker sample discriminated the target behavior.
+
+Origin re-observation: PASS — Reported scenario: a stage-loader revision should change whether a fresh implementation worker treats a readable PR locator as active before its four trigger facts | Originating runtime kind: installed Spacedock 0.26.0 stage extractor followed by fresh Codex implementation-worker decisions | Re-observation artifact/revision: manifest SHA-256 `9c0db52673de191c353aaeef0995495bf5239a0196db05424a6a87a3ffe1313b`, known-bad `a18ba78f72c03036d8463629bd19977aa684e159`, candidate `7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5`, and six sessions under `/tmp/kc-dev-flow-loader-eval-validation-cycle2.oWCsWW` | Equivalent-runtime rationale: same installed extractor and contract, exact ref bytes, frozen Q08 facts/response contract, one runner/model/reasoning/sandbox configuration, opaque runner prompts, fresh isolated sessions, and no tool calls reproduce the claim-producing chain | Falsifier kind: mutation | Result: the candidate left PR, validation, and recovery unread in 3/3 trials, while known-bad trial 3 loaded PR topology before its trigger
+
+### Validator-owned receipts
+
+Receipt root:
+`/tmp/kc-dev-flow-loader-eval-validation-cycle2.oWCsWW`.
+
+- Capture manifest SHA-256:
+  `9c0db52673de191c353aaeef0995495bf5239a0196db05424a6a87a3ffe1313b`.
+- Fixture SHA-256:
+  `58a4553447e84fe6d8cc5ea1ba13e73ecb7f446aa66e751323ce9dc9a28f6550`.
+- Paired grade receipt SHA-256:
+  `d07dd767b4522a3bcb57575e37bb459d9ec8d41af925a3d4818b5a97a34ae452`.
+- Mutation/without-it receipt SHA-256:
+  `6ced1f3abdfca2a1768d63ad659fb2f5cac2cb39cad0b6f88a4881886f813f4f`.
+- Runner: `/Users/kent/.npm-global/bin/codex`, `codex-cli 0.145.0`,
+  SHA-256 `134063e133f0b4244fa3b251acf973d4fe4b4aeeacbdc135211bf480f59f1477`.
+- Provider cost was unavailable in the JSONL receipts; exact session IDs,
+  input/cached/output/reasoning tokens, wall times, event hashes, output hashes,
+  and the shared non-fatal skills-context-budget warning are retained.
+
+### Exact-head deterministic gates
+
+- `python3 scripts/kc-dev-flow-loader-eval.test.py` ->
+  `kc-dev-flow loader eval test: PASS`.
+- `python3 scripts/kc-dev-flow-contract-test.py` ->
+  `kc-dev-flow contract: PASS`.
+- `./scripts/skill-frontmatter-lint.sh` -> 40/40 valid.
+- `python3 -m py_compile` for adapter, focused test, and contract test -> exit 0.
+- `git diff --check ec699d3..7ff2092` -> exit 0.
+- Search for the retired helper/mutant identifiers -> no match.
+- Exact candidate worktree -> clean, one commit ahead of `origin/main`.
+
+### Fresh Science Officer EM judgment
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "The exact candidate satisfies the accepted validation criteria against the stated merge base. The evidence supports proceeding through the repository's existing gate and authorized Draft-PR delivery route."
+  evidence_synthesis: "Fresh inspection bound the clean worktree to candidate 7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5 and merge base ec699d3e5b21e666209f079c9df7a9bd45528f13. The five-file diff maps completely to AC-1 through AC-5. Fresh deterministic runs passed the focused loader-evaluation test, full kc-dev-flow contract test, 40-file frontmatter lint, and diff check. Installed Spacedock 0.26.0 contract 3 freshly reproduced both captured stage hashes; independent exact-ref trees matched the captured bytes. Six frozen Q08 outputs have distinct sessions, matching output hashes, zero stderr, and no command/tool items. Independent regrading against the hash-matched pre-registered rubric leaves every candidate trial at least 10/12 with zero hard failures; known-bad trial 3 explicitly loads the PR topology procedure before its four trigger facts and therefore reproduces the target hard failure. Eight invariant mutants and three without-it removals fail at their named enforcement points. Material limits are that the 83.58% figure is statement-line rather than branch coverage, provider cost is unavailable, and the auxiliary blind-grader attempts produced no grade record; the last limitation is contained by direct fresh EM regrading of all frozen outputs and is not an acceptance criterion."
+  risk_tradeoff_call: "The benefit is repeatable evidence through the real installed loader plus behavioral discrimination that phrase checks alone cannot provide. The remaining risk is model variability and ongoing maintenance of one adapter, fixture, and validation-only trial procedure; exact revision/tool/rubric binding, fail-closed publication, retained deterministic invariants, and the known-bad discrimination rule bound that risk. The durable cost is proportionate to the single measurement surface. The cheaper alternative of retaining only text checks does not observe loader-produced behavior; if future paired trials stop discriminating, the concrete alternative is to return the candidate and restore the retired self-mutants rather than weaken the rubric."
+  recommendation: "Gate Authority should accept validation only for exact candidate 7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5 against ec699d3e5b21e666209f079c9df7a9bd45528f13, then hand the authorized delivery owner the declared one-Draft-PR route. Any candidate, merge-base, loader, fixture, rubric, or evidence drift requires fresh validation before delivery."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "FO may account for evidence and perform state or delivery mechanics only when authorized by Gate and Delivery Authority; FO does not adjudicate, change scope, or derive posting or merge authority from this advisory record."
+  engineering_judgment:
+    question: "Should exact candidate 7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5 pass validation against merge base ec699d3e5b21e666209f079c9df7a9bd45528f13 for the accepted loader-native workflow evaluation?"
+    revision: "7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5 against ec699d3e5b21e666209f079c9df7a9bd45528f13"
+    evidence_synthesis: "Fresh inspection bound the clean worktree to candidate 7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5 and merge base ec699d3e5b21e666209f079c9df7a9bd45528f13. The five-file diff maps completely to AC-1 through AC-5. Fresh deterministic runs passed the focused loader-evaluation test, full kc-dev-flow contract test, 40-file frontmatter lint, and diff check. Installed Spacedock 0.26.0 contract 3 freshly reproduced both captured stage hashes; independent exact-ref trees matched the captured bytes. Six frozen Q08 outputs have distinct sessions, matching output hashes, zero stderr, and no command/tool items. Independent regrading against the hash-matched pre-registered rubric leaves every candidate trial at least 10/12 with zero hard failures; known-bad trial 3 explicitly loads the PR topology procedure before its four trigger facts and therefore reproduces the target hard failure. Eight invariant mutants and three without-it removals fail at their named enforcement points. Material limits are that the 83.58% figure is statement-line rather than branch coverage, provider cost is unavailable, and the auxiliary blind-grader attempts produced no grade record; the last limitation is contained by direct fresh EM regrading of all frozen outputs and is not an acceptance criterion."
+    adjudications:
+      - finding: "AC-1 deterministic invariants and focused adapter contract"
+        disposition: supported
+        basis: "Kernel Verification discipline requires a check seen to fail and AC-1 names exact manifest and activation invariants. Complete-file inspection, fresh focused/full-suite passes, and eight named mutation failures establish exact policy-mod selection, the inactive-locator rule, all four trigger facts, the pre-trigger unread boundary, exact bytes and hashes, closed provenance, prompt separation, rejection paths, and fail-closed publication."
+      - finding: "AC-2 installed-loader stage-boundary equivalence"
+        disposition: supported
+        basis: "Kernel observation-boundary discipline requires same-kind runtime re-observation. The manifest binds Spacedock 0.26.0 contract 3, exact known-bad and candidate SHAs, fixture hash, byte counts, and stage hashes; fresh direct show-stage-def invocations over independent exact-ref trees reproduced c85143915d110cd7937a967b9fed32fc4c799ec5ef151e9b24438bd15df23dad and 4f10401f127e77cf12bf23d7fcf70b626e082eca2f4579d3a76468dc1bf7a965 byte-for-byte."
+      - finding: "AC-3 paired Q08 behavioral discrimination"
+        disposition: supported
+        basis: "AC-3 and the pre-registered rubric require every candidate score to be at least 10/12, zero candidate hard failures, safety non-inferiority, and at least one target known-bad hard failure. Direct review of all six hash-bound raw outputs confirms three safety-eligible candidate responses and the known-bad trial-3 instruction to load delivery topology before its trigger; candidate safety is 0 versus 1 hard failures, so UNKNOWN is not triggered."
+      - finding: "AC-4 bounded retirement with surviving enforcement"
+        disposition: supported
+        basis: "Outcome discipline permits subtraction only with surviving evidence. The exact diff removes only the three declared self-mutants and helper indirection, preserves the earlier topology-locator predicate check and direct activation assertions, and the detached mutation receipt demonstrates all eight retained invariants fail at their named enforcement points."
+      - finding: "AC-5 scope and authority boundary"
+        disposition: supported
+        basis: "Route discipline and AC-5 prohibit added loader ownership, workflow authority, provider CI, general runner or grader, product architecture changes, and unmapped files. The exact five-file diff contains only the mapped README, fixture, contract simplification, adapter, and focused test; complete-file inspection found no provider/model execution in adapter or CI and no Spacedock source, workflow state/schema, PRODUCT, ARCHITECTURE, runner, grader, or CI-workflow change."
+      - finding: "auxiliary blind-grader produced no grade record"
+        disposition: supported
+        basis: "The auxiliary blind-grader event streams contain only the shared context-budget warning. This is an evidence limitation, not a governing AC failure: responder prompts exclude the hash-matched hidden rubric and arm identity, frozen raw outputs predate grading, and this fresh EM independently applied the pre-registered rubric to every output."
+    risk_tradeoff: "The benefit is repeatable evidence through the real installed loader plus behavioral discrimination that phrase checks alone cannot provide. The remaining risk is model variability and ongoing maintenance of one adapter, fixture, and validation-only trial procedure; exact revision/tool/rubric binding, fail-closed publication, retained deterministic invariants, and the known-bad discrimination rule bound that risk. The durable cost is proportionate to the single measurement surface. The cheaper alternative of retaining only text checks does not observe loader-produced behavior; if future paired trials stop discriminating, the concrete alternative is to return the candidate and restore the retired self-mutants rather than weaken the rubric."
+    recommendation: "Gate Authority should accept validation only for exact candidate 7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5 against ec699d3e5b21e666209f079c9df7a9bd45528f13, then hand the authorized delivery owner the declared one-Draft-PR route. Any candidate, merge-base, loader, fixture, rubric, or evidence drift requires fresh validation before delivery."
+    route: proceed
+    confidence: high
+    dissent: ""
+    disproof_condition: "Change the route to return if either exact revision drifts, direct installed-loader output no longer matches the captured bytes, a retained invariant mutation survives, a candidate Q08 trial scores below 10/12 or incurs a hard failure, the known-bad arm produces no target hard failure, paired configuration or hidden-rubric provenance cannot be bound, or prohibited or unmapped scope appears."
+    authority_boundary: "This advisory record grants no task creation, sprint admission, scope change, policy edit, provider posting, gate mutation, stage advancement, PR creation, merge, archive, or closeout authority. The captain retains scope and irreversible decisions; Gate Authority retains the validation verdict and transition; work-item authority retains entity state; FO retains only authorized mechanics; Delivery Authority retains PR, readiness, merge, and release actions; provider owners retain any optional model invocation."
+```
+
+### Findings and residuals
+
+No Material code-review finding survives. The paired sample remains
+nondeterministic by design; exact identities and fail-closed discrimination
+contain that risk without turning model pressure into per-commit CI. Provider
+cost was unavailable, and two auxiliary blind-grader invocations returned no
+grade; neither absence was treated as zero or PASS. One validator-owned mutation
+harness initially stopped before execution because an exact README target
+crossed a Markdown line break; correcting that temporary harness outside the
+candidate led all eleven adversarial cases to run and pass.
+
+### Summary
+
+Passed the exact five-file candidate with validator-owned installed-loader
+equality, a discriminating six-run Q08 pair, fresh deterministic and mutation
+evidence, complete changed-file mapping, and one high-confidence EM
+recommendation. The candidate remains unchanged and clean. Gate transition and
+one-Draft-PR delivery remain separately authorized actions.
