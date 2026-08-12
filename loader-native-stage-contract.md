@@ -400,6 +400,10 @@ ceremony or another policy surface.
 
 ## Stage Report: validation
 
+- DONE: Adversarially verify all four ACs on exact candidate 47a7dac7a2417aedb1a326b6dcc6fcf4d3a3206e, including the actual Spacedock loader and Q08 receipts.
+- DONE: Challenge both added surfaces with without-it evidence and verify no authority, ceremony, stage, loader, mod, or unrelated-policy expansion.
+- DONE: Run the full relevant gates, obtain one fresh-context EM verdict, and return PASSED or concrete findings without modifying candidate files.
+
 Verdict: **PASSED** for exact candidate
 `47a7dac7a2417aedb1a326b6dcc6fcf4d3a3206e` against exact base
 `a18ba78f72c03036d8463629bd19977aa684e159`; Gate Authority retains the
@@ -510,6 +514,16 @@ science_officer_em_upward_report:
     disproof_condition: "Return to design if exact loader output causes a fresh worker to preload PR, validation, or recovery policy, cannot identify the sole entry mod, cannot reach topology after all four facts, or if candidate/base drift invalidates the approved delivery packet."
     authority_boundary: "Gate Authority retains validation advancement; the Captain retains workflow-policy approval, scope, Draft readiness, and merge; delivery and provider owners retain push, PR, CI, GitHub, posting, and release actions."
 ```
+
+### Validation checklist and AC citations
+
+Evidence for AC-1: loader-native validation receipt at `loader-native-stage-contract.md:412-418`; installed-runtime origin re-observation at `loader-native-stage-contract.md:446`; independently hashed Q08 receipts at `loader-native-stage-contract.md:450-457`.
+
+Evidence for AC-2: activation and locator verdict at `loader-native-stage-contract.md:419-424`; focused adversarial result at `loader-native-stage-contract.md:443`; without-it RED at `loader-native-stage-contract.md:458-461`.
+
+Evidence for AC-3: exact two-file and no-ceremony verdict at `loader-native-stage-contract.md:425-429`; fired-lens and adversarial receipts at `loader-native-stage-contract.md:441-444`; changed-file mapping at `loader-native-stage-contract.md:468-470`.
+
+Evidence for AC-4: exact-head/topology and delivery-boundary verdict at `loader-native-stage-contract.md:430-437`; EM adjudication of the hosted delivery-time receipt at `loader-native-stage-contract.md:503-505`.
 
 ### Summary
 
