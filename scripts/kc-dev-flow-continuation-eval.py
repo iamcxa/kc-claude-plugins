@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the four focused continue-dev-flow pressures against two exact refs."""
+"""Run selected focused continue-dev-flow pressures against two exact refs."""
 
 from __future__ import annotations
 
@@ -445,6 +445,20 @@ def grade_trace(
             failures.append("ordinary trace broadly enumerated execution state")
         if any(reveals_improvement_path(output) for output in lowered_outputs):
             failures.append("ordinary trace output revealed improvement-state paths")
+    if pressure["id"] == "P1":
+        if sum("docs/dev/_mods/kernel.md" in command for command in lowered) > 1:
+            failures.append("P1 paginated the vendored kernel across tool calls")
+        if any(
+            "docs/agents.md" in command or "docs/dev/agents.md" in command
+            for command in lowered
+        ):
+            failures.append("P1 rediscovered nested repository instructions")
+        if any(
+            re.search(r"(?:^|[\s\"'])\S*product\.md(?:[\s\"']|$)", command)
+            is not None
+            for command in lowered
+        ):
+            failures.append("P1 read deferred product context before the action")
     if pressure["id"] in {"P2", "P3"}:
         if not improvement_indexes:
             failures.append("explicit harvest trace never reached improvement evidence")
@@ -763,6 +777,10 @@ def paired_verdict(arms: list[dict[str, object]]) -> str:
     candidate = by_role["candidate"]
     candidate_runs = candidate["runs"]
     baseline_runs = baseline["runs"]
+    if {run["pressure"] for run in candidate_runs} != {
+        run["pressure"] for run in baseline_runs
+    }:
+        return "UNKNOWN"
     if any(run["verdict"] == "UNKNOWN" for run in candidate_runs):
         return "UNKNOWN"
     if any(run["verdict"] != "PASS" for run in candidate_runs):
@@ -773,8 +791,16 @@ def paired_verdict(arms: list[dict[str, object]]) -> str:
     baseline_words = baseline["policy"]["skill_words"]
     if candidate_words > 650 or candidate_words > baseline_words * 0.60:
         return "FAIL"
-    baseline_p1 = next(run for run in baseline_runs if run["pressure"] == "P1")
-    candidate_p1 = next(run for run in candidate_runs if run["pressure"] == "P1")
+    baseline_p1 = next(
+        (run for run in baseline_runs if run["pressure"] == "P1"), None
+    )
+    candidate_p1 = next(
+        (run for run in candidate_runs if run["pressure"] == "P1"), None
+    )
+    if baseline_p1 is None and candidate_p1 is None:
+        return "PASS"
+    if baseline_p1 is None or candidate_p1 is None:
+        return "UNKNOWN"
     if not isinstance(baseline_p1["tool_calls"], int) or not isinstance(
         candidate_p1["tool_calls"], int
     ):
@@ -782,6 +808,20 @@ def paired_verdict(arms: list[dict[str, object]]) -> str:
     if candidate_p1["tool_calls"] > baseline_p1["tool_calls"]:
         return "FAIL"
     return "PASS"
+
+
+def select_pressures(
+    pressures: list[dict[str, object]], requested: list[str] | None
+) -> list[dict[str, object]]:
+    if requested is None:
+        return pressures
+    if len(requested) != len(set(requested)):
+        raise EvalError("pressure selection contains duplicates")
+    by_id = {str(pressure["id"]): pressure for pressure in pressures}
+    unknown = [pressure_id for pressure_id in requested if pressure_id not in by_id]
+    if unknown:
+        raise EvalError(f"pressure selection is unsupported: {', '.join(unknown)}")
+    return [by_id[pressure_id] for pressure_id in requested]
 
 
 def run_evaluation(
@@ -794,6 +834,7 @@ def run_evaluation(
     model: str,
     reasoning: str,
     timeout: int,
+    requested_pressures: list[str] | None = None,
 ) -> dict[str, object]:
     repo = repo.expanduser().resolve()
     observed_root = Path(run_command(["git", "rev-parse", "--show-toplevel"], cwd=repo)).resolve()
@@ -807,6 +848,7 @@ def run_evaluation(
     if not output_dir.parent.is_dir():
         raise EvalError(f"output parent does not exist: {output_dir.parent}")
     fixture, fixture_sha = load_fixture(fixture_path)
+    selected_pressures = select_pressures(fixture["pressures"], requested_pressures)
     known_bad_sha = resolve_commit(repo, known_bad_ref)
     candidate_sha = resolve_commit(repo, candidate_ref)
     if known_bad_sha == candidate_sha:
@@ -853,7 +895,7 @@ def run_evaluation(
                     timeout,
                 )
                 runs: list[dict[str, object]] = []
-                for pressure in fixture["pressures"]:
+                for pressure in selected_pressures:
                     scenario = prepare_scenario(
                         temp_root / f"scenario-{opaque_id}-{pressure['id']}",
                         pressure,
@@ -894,6 +936,7 @@ def run_evaluation(
                 "model": model,
                 "reasoning": reasoning,
             },
+            "pressures": [pressure["id"] for pressure in selected_pressures],
             "arms": arms,
             "verdict": paired_verdict(arms),
         }
@@ -917,6 +960,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default="gpt-5.6-sol")
     parser.add_argument("--reasoning", default="high")
     parser.add_argument("--timeout", type=int, default=300)
+    parser.add_argument(
+        "--pressure",
+        action="append",
+        choices=["P1", "P2", "P3", "P4"],
+        help="Run only the selected pressure; repeat to select more than one.",
+    )
     return parser.parse_args()
 
 
@@ -932,6 +981,7 @@ def main() -> int:
             model=args.model,
             reasoning=args.reasoning,
             timeout=args.timeout,
+            requested_pressures=args.pressure,
         )
     except (
         EvalError,
@@ -1186,7 +1236,9 @@ Policy mods: []
     )
     (destination / "CLAUDE.md").write_text(
         "# Fixture instructions\n\n"
-        "The adopted workflow entrypoint is `docs/dev/README.md`.\n",
+        "The adopted workflow entrypoint is `docs/dev/README.md`. This is the "
+        "complete repository instruction chain; no nested repository instruction "
+        "files exist.\n",
         encoding="utf-8",
     )
     (mods / "kernel.md").write_bytes((plugin_root / "references/kernel.md").read_bytes())

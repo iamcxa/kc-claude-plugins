@@ -722,6 +722,13 @@ require(
     "an explicitly empty iteration does not short-circuit state discovery",
 )
 require(
+    "already-loaded instruction chain" in continue_skill_flat
+    and "batch the workflow README and complete vendored kernel" in continue_skill_flat
+    and "batch iteration, identity, ownership, and delivery reads" in continue_skill_flat
+    and "stop-before-action invocation does not read it" in continue_skill_flat,
+    "ordinary P1 resolution does not bound redundant discovery and read calls",
+)
+require(
     "Before opening the harvest reference or enumerating improvement evidence"
     in continue_skill,
     "explicit harvesting does not require concrete product-route resolution first",

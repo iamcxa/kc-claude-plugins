@@ -1,32 +1,37 @@
 ---
 name: continue-dev-flow
-description: Use when an adopted repository has an approved sprint or active work item and should autonomously resume or select the next committed item while preserving its local gates and authority boundaries.
+description: Resume an adopted repository's approved sprint or active item while preserving local gates and authority.
 ---
 
 # Continue Dev Flow
 
-Move a sprint toward outcomes by the smallest sufficient route.
-Claude Code and Codex use repository-bound authorities and tools.
+Claude Code and Codex continue by the smallest sufficient route using repository-bound authority.
 
 ## Load only adopted policy
 
-1. Read the workflow README path named by the nearest repository instructions;
+1. Read the workflow README named by nearest repository instructions;
    never enumerate a workflow parent to discover it. Read its `## Local Profile`.
-   If multiple candidates remain, stop and name the ambiguity. This profile must bind project
+   Name any ambiguity. This profile must bind project
    context, work items, iteration, execution state, delivery, gate verdicts, and
    scope changes; observation may be `none`. If a required role is absent, use
    `adopt-dev-flow` before proceeding.
-2. Read the repository's vendored `_mods/kernel.md` completely. Do not fall back
-   to the installed package reference: that would silently apply policy the
-   repository has not adopted.
-3. Recheck branch/worktree identity, shared-state ownership, remote delivery
-   state, and instructions. Never inherit another session's validation.
+2. Read the vendored `_mods/kernel.md` completely; installed policy never
+   substitutes at runtime.
+3. Recheck branch/worktree, shared-state ownership, and remote delivery state.
+   Never inherit another session's validation.
 4. Resolve the active work item and current stage from live work-item,
    iteration, and execution-state authority. Read that stage's `Policy mods`
    declaration and then read only the named local `_mods/` files.
-5. If the local kernel, a named policy mod, required authority, or shared-state
-   owner is missing or ambiguous, stop with a named adoption/refit requirement.
+5. If local kernel, a named policy mod, required authority, or shared-state
+   owner is missing or ambiguous, require a named adoption/refit requirement.
    Installed source is never a runtime substitute.
+
+Minimize resolution calls without skipping authority: use the already-loaded
+instruction chain instead of probing for more instruction files; batch the
+workflow README and complete vendored kernel in one read-only call; batch
+iteration, identity, ownership, and delivery reads when independent. Defer
+project context until product execution; a stop-before-action invocation does
+not read it.
 
 ## Advance the work
 
@@ -39,12 +44,12 @@ Claude Code and Codex use repository-bound authorities and tools.
    If none is active, select the next committed work item by declared sprint
    order and dependencies.
    Do not enumerate the execution-state tree.
-2. If no committed item exists, report that the sprint needs scheduling. Do not invent or schedule work.
+2. With no committed item, report that the sprint needs scheduling. Do not invent or schedule work.
 3. Use the defect route only for a bounded known defect with a mechanical
    acceptance test; otherwise use the normal lifecycle. Recover existing
    abstractions before greenfield planning.
-4. Within approved scope, implement, test, repair rejected evidence, and advance
-   reversible green gates without asking the captain to repeat approval.
+4. Implement, test, repair rejected evidence, and advance reversible green gates
+   within approved scope without repeated captain approval.
 5. Require exactly one fresh-context EM verdict for every ideation and validation gate.
    A defect route that skips ideation still receives the validation verdict.
    Implementation opens no reviewer loop: when an approved premise changes, return

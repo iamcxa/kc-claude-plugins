@@ -55,6 +55,23 @@ require(
     default_args.model == "gpt-5.6-sol" and default_args.reasoning == "high",
     "installed-host default is not the supported GPT-5.6 High route",
 )
+require(default_args.pressure is None, "default pressure selection is not the full matrix")
+try:
+    sys.argv = [
+        str(RUNNER_PATH),
+        "--known-bad-ref",
+        "baseline",
+        "--candidate-ref",
+        "candidate",
+        "--output-dir",
+        "/tmp/continuation-eval-p1",
+        "--pressure",
+        "P1",
+    ]
+    p1_args = runner.parse_args()
+finally:
+    sys.argv = original_argv
+require(p1_args.pressure == ["P1"], "paired P1-only selector is unavailable")
 timed = runner.external_command(
     [
         sys.executable,
@@ -101,6 +118,25 @@ require(
     runner.paired_verdict([baseline_partial, candidate_unknown]) == "UNKNOWN",
     "candidate uncertainty was accepted",
 )
+p1_baseline = {
+    "role": "known_bad",
+    "policy": {"skill_words": 1000},
+    "runs": [{"pressure": "P1", "verdict": "FAIL", "tool_calls": 7}],
+}
+p1_candidate = {
+    "role": "candidate",
+    "policy": {"skill_words": 500},
+    "runs": [{"pressure": "P1", "verdict": "PASS", "tool_calls": 7}],
+}
+require(
+    runner.paired_verdict([p1_baseline, p1_candidate]) == "PASS",
+    "equal-call paired P1-only evidence did not pass",
+)
+p1_candidate["runs"][0]["tool_calls"] = 8
+require(
+    runner.paired_verdict([p1_baseline, p1_candidate]) == "FAIL",
+    "higher-call paired P1-only evidence did not fail",
+)
 
 fixture, fixture_sha = runner.load_fixture(FIXTURE_PATH)
 require(len(fixture_sha) == 64, "fixture digest is not SHA-256")
@@ -109,6 +145,11 @@ require(
     "fixture schema drifted",
 )
 pressures = fixture["pressures"]
+require(
+    [pressure["id"] for pressure in runner.select_pressures(pressures, ["P1"])]
+    == ["P1"],
+    "P1-only pressure selection did not stay bounded",
+)
 require([pressure["id"] for pressure in pressures] == ["P1", "P2", "P3", "P4"], "pressure order drifted")
 require(
     pressures[0]["harvest"] is False
@@ -319,6 +360,55 @@ live_broad_enumeration_trace = runner.parse_trace(
 require(
     runner.grade_trace(pressures[0], live_broad_enumeration_trace),
     "live-holder execution-state enumeration survived",
+)
+redundant_resolution_trace = runner.parse_trace(
+    "\n".join(
+        [
+            json.dumps(
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "type": "command_execution",
+                        "command": "sed -n '1,360p' docs/dev/_mods/kernel.md",
+                    },
+                }
+            ),
+            json.dumps(
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "type": "command_execution",
+                        "command": "sed -n '361,760p' docs/dev/_mods/kernel.md",
+                    },
+                }
+            ),
+            json.dumps(
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "type": "command_execution",
+                        "command": "cat docs/AGENTS.md docs/dev/AGENTS.md",
+                    },
+                }
+            ),
+            json.dumps(
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "type": "command_execution",
+                        "command": "cat PRODUCT.md",
+                    },
+                }
+            ),
+        ]
+    )
+)
+resolution_failures = runner.grade_trace(pressures[0], redundant_resolution_trace)
+require(
+    "P1 paginated the vendored kernel across tool calls" in resolution_failures
+    and "P1 rediscovered nested repository instructions" in resolution_failures
+    and "P1 read deferred product context before the action" in resolution_failures,
+    "redundant ordinary P1 resolution survived deterministic grading",
 )
 live_output_leaking_trace = runner.parse_trace(
     json.dumps(
