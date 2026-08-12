@@ -494,6 +494,13 @@ Implementation routes ordinary continuation to committed product work before opt
 
 Verdict: REJECTED
 
+- FAILED: Independently validate exact candidate e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47 against AC-1 through AC-5, including literal real-host P1 and paired-timeout plus same-ref supplemental P3 evidence.
+  AC-1, E2E, and Origin re-observation record the non-discriminating P1 result; AC-2 preserves the paired P3 timeout as UNKNOWN and the same-ref supplement as separate PASS evidence.
+- DONE: Adversarially challenge the retained reference and focused evaluator, inspect the full diff and authority boundaries, re-observe origin behavior, and run the exact-head suite.
+  Material findings, Adversarial, Diff coverage, Origin re-observation, and Full exact-head verification record the without-it, known-bad, direct-mutant, 12-file, origin, and suite evidence.
+- DONE: Produce the complete validation record and exactly one fresh-context Science Officer EM judgment.
+  Verdict, Lenses, Cross-model, the Validation Science Officer EM judgment, its disproof condition and authority boundary, and Delivery topology and Native stack exception contain the required record.
+
 ### Material findings
 
 - P1: The focused evaluator accepts ordinary execution-state enumeration that
