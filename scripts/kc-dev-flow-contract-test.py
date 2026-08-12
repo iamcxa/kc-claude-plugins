@@ -657,6 +657,33 @@ for phrase in [
     require(phrase in adopt_skill, f"adopt skill is missing boundary: {phrase}")
 
 continue_skill = required_files[3].read_text(encoding="utf-8")
+harvest_reference_path = PLUGIN / "references/improvement-harvesting.md"
+require(
+    harvest_reference_path.is_file(),
+    "missing kc-dev-flow/references/improvement-harvesting.md",
+)
+harvest_reference = harvest_reference_path.read_text(encoding="utf-8")
+continue_contract = continue_skill + "\n" + harvest_reference
+continue_skill_words = len(continue_skill.split())
+require(
+    continue_skill_words <= 650,
+    f"ordinary continuation policy exceeds 650 words: {continue_skill_words}",
+)
+require(
+    "## Advance the work" in continue_skill
+    and "## Harvest improvements only when explicitly requested" in continue_skill
+    and continue_skill.index("## Advance the work")
+    < continue_skill.index("## Harvest improvements only when explicitly requested"),
+    "continuation does not route product work before optional harvesting",
+)
+require(
+    "Do not inspect `_debriefs/` or `_improvements/`" in continue_skill,
+    "ordinary continuation does not prohibit improvement-state I/O",
+)
+require(
+    "../../references/improvement-harvesting.md" in continue_skill,
+    "explicit harvesting does not load the packaged reference",
+)
 for phrase in [
     "next committed work item",
     "continue without a captain pause",
@@ -693,14 +720,14 @@ for phrase in [
     "Multi-model review is optional",
     "silence is not approval",
 ]:
-    require(phrase in continue_skill, f"continue skill is missing boundary: {phrase}")
+    require(phrase in continue_contract, f"continue contract is missing boundary: {phrase}")
 require(
-    "If none or multiple candidates remain" not in continue_skill,
-    "continue skill still blocks product work when no debrief home exists",
+    "If none or multiple candidates remain" not in continue_contract,
+    "continue contract still blocks product work when no debrief home exists",
 )
 require(
-    "stop with `UNKNOWN` instead of risking an overwrite" not in continue_skill,
-    "continue skill still lets self-improvement storage block product routing",
+    "stop with `UNKNOWN` instead of risking an overwrite" not in continue_contract,
+    "continue contract still lets self-improvement storage block product routing",
 )
 
 promote_skill = required_files[10].read_text(encoding="utf-8")
