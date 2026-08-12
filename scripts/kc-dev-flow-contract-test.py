@@ -709,6 +709,11 @@ require(
     "ordinary routing does not guard broad execution-state enumeration",
 )
 require(
+    "read its exact bound entity path" in continue_skill
+    and "`rg --files`, `find`, `ls`" in continue_skill,
+    "ordinary routing does not operationalize direct active-entity resolution",
+)
+require(
     "Before opening the harvest reference or enumerating improvement evidence"
     in continue_skill,
     "explicit harvesting does not require concrete product-route resolution first",

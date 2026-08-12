@@ -298,6 +298,38 @@ require(
     runner.grade_trace(pressures[0], broad_enumeration_trace),
     "broad execution-state enumeration survived",
 )
+live_broad_enumeration_trace = runner.parse_trace(
+    json.dumps(
+        {
+            "type": "item.completed",
+            "item": {
+                "type": "command_execution",
+                "command": "rg --files docs/dev docs/dev/.spacedock-state | sort",
+                "aggregated_output": "docs/dev/.spacedock-state/product-first-continuation.md",
+            },
+        }
+    )
+)
+require(
+    runner.grade_trace(pressures[0], live_broad_enumeration_trace),
+    "live-holder execution-state enumeration survived",
+)
+live_output_leaking_trace = runner.parse_trace(
+    json.dumps(
+        {
+            "type": "item.completed",
+            "item": {
+                "type": "command_execution",
+                "command": "printf paths",
+                "aggregated_output": "docs/dev/.spacedock-state/_improvements/state.yaml",
+            },
+        }
+    )
+)
+require(
+    runner.grade_trace(pressures[0], live_output_leaking_trace),
+    "live-holder improvement output survived",
+)
 exclusion_trace = runner.parse_trace(
     "\n".join(
         [

@@ -378,7 +378,10 @@ def grade_trace(
         return "_debriefs" in guarded or "_improvements" in guarded
 
     def broadly_enumerates_execution_state(command: str) -> bool:
-        state_root = r"(?:^|[\s\"'])\.?/?docs/dev/_state(?:[\s\"']|$)"
+        state_root = (
+            r"(?:^|[\s\"'])\S*docs/dev/(?:_state|\.spacedock-state)"
+            r"(?:[\s\"']|$)"
+        )
         if re.search(state_root, command) is None:
             return False
         return any(
@@ -388,7 +391,8 @@ def grade_trace(
 
     def reveals_improvement_path(output: str) -> bool:
         return re.search(
-            r"(?:^|\s)\S*docs/dev/_state/_(?:debriefs|improvements)(?:[/\s]|$)",
+            r"(?:^|\s)\S*docs/dev/(?:_state|\.spacedock-state)/"
+            r"_(?:debriefs|improvements)(?:[/\s]|$)",
             output,
         ) is not None
 
