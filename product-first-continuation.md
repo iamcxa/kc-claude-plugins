@@ -849,3 +849,34 @@ belongs to the captain, with the EM recommendation another bounded correction.
 
 - Cycle 2: REJECTED — corrected prior findings and exact-final origin behavior, but preserved paired P1 tool-call non-inferiority remains red; AC unchanged
 - Cycle 3: CAPTAIN-APPROVED BOUNDED CORRECTION — two-cycle escalation resolved in favor of one ordinary-resolution correction; surface 1 bounded correction vs estimate 1 (100%); AC unchanged
+
+## Stage Report: implementation correction (cycle 3)
+
+Outcome: STOPPED AT PRE-REGISTERED CANARY RED
+
+- DONE: Reduce only the ordinary P1 resolution path at exact candidate `452dabd1eb7fcf1519b5c1e72917331ca06e3d88`.
+  The ordinary skill now uses the already-loaded instruction chain, batches the workflow README with the complete vendored kernel, batches independent iteration/identity/ownership/delivery reads, and defers project context until the product action will execute. The accepted route, exact work-item authority, explicit-harvest contract, P2-P4 policy, ACs, and 650-word ceiling remain unchanged.
+- DONE: Record deterministic RED before the smallest GREEN.
+  Before implementation, `scripts/kc-dev-flow-continuation-eval.test.py` failed because no P1-only selector existed. A replay of the preserved 10-call P1 trace then reddened all three targeted redundancies: paginated kernel reads, nested-instruction rediscovery, and product-context read before the stop-before-action boundary. The minimum GREEN adds bounded `--pressure P1` selection, fail-closed paired-P1 verdict coverage, those three trace falsifiers, and the small policy wording above.
+- DONE: Map every cycle-3 changed file to accepted scope.
+  `kc-dev-flow/skills/continue-dev-flow/SKILL.md` maps to AC-1 ordinary resolution cost while preserving AC-2 through AC-4 boundaries. `scripts/kc-dev-flow-continuation-eval.py`, `scripts/kc-dev-flow-continuation-eval.test.py`, and `scripts/kc-dev-flow-contract-test.py` map to AC-1 paired non-inferiority and AC-5 focused falsifiable evidence. No cycle-3 changed file is unmapped.
+- DONE: Run the complete diff-earned deterministic suite before model spend.
+  PASS: continuation evaluator tests; package contract; loader evaluator; improvement intake (9 tests); skill frontmatter test plus lint (40 skills); version parity; marketplace schema and every isolated plugin install; and `git diff --check`. The ordinary skill is exactly 650 words.
+- DONE: Pre-register the captain-bound spend ladder before execution.
+  `/tmp/kc-dev-flow-p1-spend-ladder-452dabd1-20260812.md`, SHA-256 `06f837a0e34c60c7136c3382f5683b93fb89a5dc25413ba6cb6bb1173d0500ba`, binds candidate `452dabd1eb7fcf1519b5c1e72917331ca06e3d88`, known-bad `64c496cdab7ccc59a15753e454f627a70383fb46`, P1 only, Terra medium before Sol high, exact output paths, paired action/state-I/O/tool-call pass conditions, and mandatory stop on the first non-PASS. Both output paths were absent before execution.
+- FAILED: Pass the Terra medium paired-P1 canary.
+  `/tmp/kc-dev-flow-continuation-p1-terra-medium-452dabd1-20260812/manifest.json`, SHA-256 `4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026`, uses GPT-5.6 Terra Medium, Codex CLI 0.145.0, fixture SHA-256 `b0db244da2db1d4ef82e8521c42b4a3e1278989c9cf9b0b03b5b8a4843d7bbca`, and only P1. The known-bad arm uses 4 calls and fails broad state enumeration, improvement-path output disclosure, and premature PRODUCT read. The candidate arm improves the prior candidate sample from 10 calls to 6, returns the exact item, implementation stage, and `Run the focused implementation contract.`, performs zero improvement-state I/O, and has no claim or artifact failures. It remains red because it paginates the vendored kernel across two calls and 6 candidate calls exceed the paired 4-call known-bad arm. Paired verdict: `FAIL`.
+- NOT RUN: Sol high final paired P1 and P2-P4.
+  The Terra canary activated the pre-registered stop condition. `/tmp/kc-dev-flow-continuation-p1-sol-high-452dabd1-20260812` does not exist. No sample was repeated, no receipt was relabeled, and no wider model matrix was run for ceremony.
+- DONE: Commit and push the exact bounded correction without exercising gate or delivery authority.
+  Local and remote branch `spacedock-ensign/product-first-continuation` are both `452dabd1eb7fcf1519b5c1e72917331ca06e3d88`; fresh `origin/main` remains `64c496cdab7ccc59a15753e454f627a70383fb46`. The merge-base diff is 12 files, 2,450 additions, 188 deletions, and remains one inseparable slice above the numeric trigger. The accepted one-Draft-PR `## Native stack exception` topology is unchanged. No PR, readiness action, merge, release, stage transition, task, sprint admission, provider post, or accepted red residual was created.
+- BLOCKED BY AUTHORITY: The accepted P1 non-inferiority condition remains red.
+  This implementation session has exhausted the captain-approved verification ladder at its first red. Another code correction or model sample requires a fresh captain/gate decision; the worker cannot waive 6-versus-4, rerun until favorable, or advance validation.
+
+### Summary
+
+Cycle 3 reduced the exact candidate's ordinary P1 sample from 10 calls to 6 while retaining exact action resolution, zero improvement-state I/O, and every safety boundary. The pre-registered Terra canary still fails paired non-inferiority against a 4-call known-bad arm because the candidate paginates the kernel. Per captain instruction, the ladder stopped and Sol high plus P2-P4 were not run. Exact code is committed and pushed; the item remains in implementation pending new authority.
+
+### Feedback Cycles
+
+- Cycle 3: CANARY FAIL — ordinary candidate calls reduced 10 to 6 but remain above paired baseline 4; mandatory spend stop honored; AC unchanged
