@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: route product work before improvement harvesting"
-status: ideation
+status: implementation
 source: "captain:conversation-2026-08-12-third-slice"
 product: kc-dev-flow
 sprint:
