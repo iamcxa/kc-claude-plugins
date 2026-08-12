@@ -9,7 +9,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-loader-native-workflow-eval
 issue:
-pr: iamcxa/kc-claude-plugins#216
+pr: pr-merge:216
 mod-block: merge:pr-merge
 design: required
 lane: main
