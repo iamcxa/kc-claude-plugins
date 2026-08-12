@@ -926,10 +926,14 @@ def grade_artifacts(
     except (OSError, UnicodeDecodeError, json.JSONDecodeError, EvalError) as exc:
         failures.append(f"P3 private identity is unreadable: {exc}")
         return failures, summary
-    if not isinstance(identity, dict) or set(identity) != {
-        "source_namespace_key",
-        "source_namespace",
-    }:
+    identity_fields = set(identity) if isinstance(identity, dict) else set()
+    if identity_fields not in [
+        {"source_namespace_key", "source_namespace"},
+        {"schema", "source_namespace_key", "source_namespace"},
+    ] or (
+        "schema" in identity_fields
+        and identity.get("schema") != "kc-dev-flow-source-identity/v1"
+    ):
         failures.append("P3 private identity fields are not closed")
         return failures, summary
     key = identity["source_namespace_key"]
@@ -1004,8 +1008,11 @@ def grade_artifacts(
     state_text = state_path.read_text(encoding="utf-8") if state_path.is_file() else ""
     if "newest_processed_debrief: 2026-08-12-01.md" not in state_text:
         failures.append("P3 cursor did not advance to the consumed debrief")
-    handoff_from_state = str(handoff.relative_to(scenario / "docs/dev/_state"))
-    if handoff_from_state not in state_text:
+    handoff_references = {
+        str(handoff.relative_to(scenario / "docs/dev/_state")),
+        str(handoff.relative_to(scenario)),
+    }
+    if not any(reference in state_text for reference in handoff_references):
         failures.append("P3 cursor does not reference the handoff batch")
 
     changed = set(

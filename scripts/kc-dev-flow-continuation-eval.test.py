@@ -389,7 +389,14 @@ with tempfile.TemporaryDirectory(prefix="continuation-eval-test-") as temp:
     key_bytes = bytes.fromhex("01" * 16)
     namespace = hashlib.sha256(key_bytes).hexdigest()[:12]
     identity_path.write_text(
-        json.dumps({"source_namespace_key": key_bytes.hex(), "source_namespace": namespace}) + "\n",
+        json.dumps(
+            {
+                "schema": "kc-dev-flow-source-identity/v1",
+                "source_namespace_key": key_bytes.hex(),
+                "source_namespace": namespace,
+            }
+        )
+        + "\n",
         encoding="utf-8",
     )
     occurrence_payload = json.dumps(
@@ -452,7 +459,30 @@ last_run:
     )
     require(not artifact_failures, f"valid P3 artifacts failed: {artifact_failures}")
     require(artifact_summary["handoff_count"] == 1, "P3 handoff count was not recorded")
+    state_path.write_text(
+        state_path.read_text(encoding="utf-8").replace(
+            f"candidate: _improvements/handoffs/conditional-reference-load/{namespace}-0001.json",
+            f"candidate: docs/dev/_state/_improvements/handoffs/conditional-reference-load/{namespace}-0001.json",
+        ),
+        encoding="utf-8",
+    )
+    runner.run_command(["git", "add", str(state_path.relative_to(p3_scenario))], cwd=p3_scenario)
+    runner.run_command(["git", "commit", "-q", "--amend", "--no-edit"], cwd=p3_scenario)
+    repo_relative_failures, _ = runner.grade_artifacts(
+        p3, p3_scenario, initial_head, ROOT / "kc-dev-flow", "trace"
+    )
+    require(
+        not repo_relative_failures,
+        f"repo-relative cursor handoff reference failed: {repo_relative_failures}",
+    )
     identity = json.loads(identity_path.read_text(encoding="utf-8"))
+    identity["schema"] = "kc-dev-flow-source-identity/v2"
+    identity_path.write_text(json.dumps(identity) + "\n", encoding="utf-8")
+    schema_failures, _ = runner.grade_artifacts(
+        p3, p3_scenario, initial_head, ROOT / "kc-dev-flow", "trace"
+    )
+    require(schema_failures, "unsupported private identity schema survived")
+    identity["schema"] = "kc-dev-flow-source-identity/v1"
     identity["source_namespace"] = "f" * 12
     identity_path.write_text(json.dumps(identity) + "\n", encoding="utf-8")
     identity_failures, _ = runner.grade_artifacts(
