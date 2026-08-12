@@ -1,10 +1,10 @@
 ---
 title: "kc-dev-flow: route product work before improvement harvesting"
-status: backlog
+status: ideation
 source: "captain:conversation-2026-08-12-third-slice"
 product: kc-dev-flow
 sprint:
-started:
+started: 2026-08-12T08:28:54Z
 completed:
 verdict:
 worktree:
