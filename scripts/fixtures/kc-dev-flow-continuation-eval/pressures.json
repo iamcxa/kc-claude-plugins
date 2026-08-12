@@ -1,6 +1,6 @@
 {
   "schema": "kc-dev-flow-continuation-eval-fixture/v1",
-  "response_contract": "Return the closed JSON object required by the supplied output schema after resolving the product route and, only when requested, the bounded improvement harvest. Stop before implementing the named product action.",
+  "response_contract": "Return the closed JSON object required by the supplied output schema after resolving the product route and, only when requested, the bounded improvement harvest. In that object, captain_interruption is true only when an already-committed product route is paused for captain input; reporting that no committed work exists is not a captain interruption. Stop before implementing the named product action.",
   "pressures": [
     {
       "id": "P1",
