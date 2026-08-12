@@ -1,11 +1,11 @@
 ---
 id: 64w8w7fpkt3ryg13h4ye7xnn
 title: "kc-dev-flow: make stage activation loader-native"
-status: backlog
+status: ideation
 source: "captain:conversation-2026-08-12"
 product: kc-dev-flow
 sprint:
-started:
+started: 2026-08-12T04:32:15Z
 completed:
 verdict:
 worktree:
@@ -13,7 +13,7 @@ issue:
 pr:
 mod-block:
 design:
-lane:
+lane: main
 ---
 
 ## Problem
