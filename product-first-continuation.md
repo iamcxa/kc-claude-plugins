@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: route product work before improvement harvesting"
-status: validation
+status: implementation
 source: "captain:conversation-2026-08-12-third-slice"
 product: kc-dev-flow
 sprint:
@@ -848,3 +848,4 @@ belongs to the captain, with the EM recommendation another bounded correction.
 ### Feedback Cycles
 
 - Cycle 2: REJECTED — corrected prior findings and exact-final origin behavior, but preserved paired P1 tool-call non-inferiority remains red; AC unchanged
+- Cycle 3: CAPTAIN-APPROVED BOUNDED CORRECTION — two-cycle escalation resolved in favor of one ordinary-resolution correction; surface 1 bounded correction vs estimate 1 (100%); AC unchanged
