@@ -55,6 +55,52 @@ require(
     default_args.model == "gpt-5.6-sol" and default_args.reasoning == "high",
     "installed-host default is not the supported GPT-5.6 High route",
 )
+timed = runner.external_command(
+    [
+        sys.executable,
+        "-c",
+        "import time; print('timeout-evidence', flush=True); time.sleep(2)",
+    ],
+    timeout=1,
+)
+require(timed.returncode == 124, "host timeout did not become a preserved result")
+require("timeout-evidence" in timed.stdout, "host timeout discarded partial stdout")
+require("timed out" in timed.stderr.lower(), "host timeout lacks a diagnostic")
+
+
+def verdict_arm(role: str, verdicts: list[str], words: int, p1_calls: int) -> dict[str, object]:
+    return {
+        "role": role,
+        "policy": {"skill_words": words},
+        "runs": [
+            {
+                "pressure": pressure_id,
+                "verdict": verdict,
+                "tool_calls": p1_calls if pressure_id == "P1" else 1,
+            }
+            for pressure_id, verdict in zip(["P1", "P2", "P3", "P4"], verdicts)
+        ],
+    }
+
+
+candidate_pass = verdict_arm("candidate", ["PASS"] * 4, 500, 2)
+baseline_partial = verdict_arm(
+    "known_bad", ["FAIL", "PASS", "UNKNOWN", "PASS"], 1000, 3
+)
+require(
+    runner.paired_verdict([baseline_partial, candidate_pass]) == "PASS",
+    "a discriminating baseline failure was erased by an unrelated baseline timeout",
+)
+baseline_unknown = verdict_arm("known_bad", ["UNKNOWN"] * 4, 1000, 3)
+require(
+    runner.paired_verdict([baseline_unknown, candidate_pass]) == "UNKNOWN",
+    "baseline without a discriminating failure was accepted",
+)
+candidate_unknown = verdict_arm("candidate", ["PASS", "PASS", "UNKNOWN", "PASS"], 500, 2)
+require(
+    runner.paired_verdict([baseline_partial, candidate_unknown]) == "UNKNOWN",
+    "candidate uncertainty was accepted",
+)
 
 fixture, fixture_sha = runner.load_fixture(FIXTURE_PATH)
 require(len(fixture_sha) == 64, "fixture digest is not SHA-256")

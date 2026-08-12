@@ -468,6 +468,16 @@ def external_command(
             text=True,
             timeout=timeout,
         )
+    except subprocess.TimeoutExpired as exc:
+        stdout = exc.stdout or ""
+        stderr = exc.stderr or ""
+        if isinstance(stdout, bytes):
+            stdout = stdout.decode("utf-8", errors="replace")
+        if isinstance(stderr, bytes):
+            stderr = stderr.decode("utf-8", errors="replace")
+        diagnostic = f"command timed out after {timeout} seconds"
+        stderr = f"{stderr.rstrip()}\n{diagnostic}\n" if stderr else f"{diagnostic}\n"
+        return subprocess.CompletedProcess(command, 124, stdout, stderr)
     except OSError as exc:
         raise EvalError(f"command could not start: {command[0]}: {exc}") from exc
 
@@ -644,18 +654,22 @@ def paired_verdict(arms: list[dict[str, object]]) -> str:
     candidate = by_role["candidate"]
     candidate_runs = candidate["runs"]
     baseline_runs = baseline["runs"]
-    if any(run["verdict"] == "UNKNOWN" for run in candidate_runs + baseline_runs):
-        return "UNKNOWN"
-    if not any(run["verdict"] == "FAIL" for run in baseline_runs):
+    if any(run["verdict"] == "UNKNOWN" for run in candidate_runs):
         return "UNKNOWN"
     if any(run["verdict"] != "PASS" for run in candidate_runs):
         return "FAIL"
+    if not any(run["verdict"] == "FAIL" for run in baseline_runs):
+        return "UNKNOWN"
     candidate_words = candidate["policy"]["skill_words"]
     baseline_words = baseline["policy"]["skill_words"]
     if candidate_words > 650 or candidate_words > baseline_words * 0.60:
         return "FAIL"
     baseline_p1 = next(run for run in baseline_runs if run["pressure"] == "P1")
     candidate_p1 = next(run for run in candidate_runs if run["pressure"] == "P1")
+    if not isinstance(baseline_p1["tool_calls"], int) or not isinstance(
+        candidate_p1["tool_calls"], int
+    ):
+        return "UNKNOWN"
     if candidate_p1["tool_calls"] > baseline_p1["tool_calls"]:
         return "FAIL"
     return "PASS"
