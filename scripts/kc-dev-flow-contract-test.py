@@ -681,6 +681,7 @@ for phrase in [
     require(phrase in adopt_skill, f"adopt skill is missing boundary: {phrase}")
 
 continue_skill = required_files[3].read_text(encoding="utf-8")
+continue_skill_flat = " ".join(continue_skill.split())
 harvest_reference_path = PLUGIN / "references/improvement-harvesting.md"
 require(
     harvest_reference_path.is_file(),
@@ -715,9 +716,9 @@ require(
     "ordinary routing does not operationalize direct active-entity resolution",
 )
 require(
-    "Read iteration authority first" in continue_skill
-    and "report scheduling immediately" in continue_skill
-    and "do not inspect work-item or execution state" in continue_skill,
+    "Read iteration authority first" in continue_skill_flat
+    and "report scheduling immediately" in continue_skill_flat
+    and "do not inspect work-item or execution state" in continue_skill_flat,
     "an explicitly empty iteration does not short-circuit state discovery",
 )
 require(

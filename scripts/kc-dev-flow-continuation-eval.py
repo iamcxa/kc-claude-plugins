@@ -1139,13 +1139,15 @@ def prepare_scenario(
     authority = pressure["state_authority"]
     if authority == "exclusive":
         state_binding = (
-            "exclusive single-writer authority for this invocation; commit the cursor "
+            "`docs/dev/_state` is the debrief home with exclusive single-writer "
+            "authority for this invocation; commit the cursor "
             "and handoff together in one local Git commit, do not push, and keep the "
             "ignored private identity outside that commit"
         )
     else:
         state_binding = (
-            "unavailable atomic comparison and unavailable exclusive ownership; "
+            "`docs/dev/_state` is the debrief home with unavailable atomic comparison "
+            "and unavailable exclusive ownership; "
             "improvement-state reads are allowed only on an explicit harvest and all "
             "improvement writes are forbidden"
         )

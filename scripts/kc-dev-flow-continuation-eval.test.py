@@ -464,6 +464,10 @@ with tempfile.TemporaryDirectory(prefix="continuation-eval-test-") as temp:
         require(work_item.exists() == pressure["committed_work"], f"{pressure['id']} work fixture drifted")
         profile = (scenario / "docs/dev/README.md").read_text(encoding="utf-8")
         require(pressure["state_authority"] in profile, f"{pressure['id']} authority not bound")
+        require(
+            "| Execution state | `docs/dev/_state`" in profile,
+            f"{pressure['id']} execution-state home is not explicitly bound",
+        )
         if pressure["id"] == "P4":
             require(
                 "No active stage is declared without a committed work item" in profile,
