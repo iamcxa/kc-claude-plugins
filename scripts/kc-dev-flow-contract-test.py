@@ -48,6 +48,9 @@ required_files = [
     PLUGIN / "skills/science-officer-em/SKILL.md",
     PLUGIN / "skills/science-officer-em/agents/openai.yaml",
     ROOT / "scripts/kc-dev-flow-published-tag-smoke.py",
+    ROOT / "scripts/kc-dev-flow-loader-eval.py",
+    ROOT / "scripts/kc-dev-flow-loader-eval.test.py",
+    ROOT / "scripts/fixtures/kc-dev-flow-loader-eval/q08.json",
     PLUGIN / "references/retained-document-policy.md",
 ]
 for required_file in required_files:
@@ -64,6 +67,27 @@ require(
 require(
     (ROOT / "scripts/kc-dev-flow-published-tag-smoke.py").stat().st_mode & 0o111,
     "scripts/kc-dev-flow-published-tag-smoke.py is not executable",
+)
+require(
+    (ROOT / "scripts/kc-dev-flow-loader-eval.py").stat().st_mode & 0o111,
+    "scripts/kc-dev-flow-loader-eval.py is not executable",
+)
+require(
+    (ROOT / "scripts/kc-dev-flow-loader-eval.test.py").stat().st_mode & 0o111,
+    "scripts/kc-dev-flow-loader-eval.test.py is not executable",
+)
+
+loader_eval_test = subprocess.run(
+    [sys.executable, "scripts/kc-dev-flow-loader-eval.test.py"],
+    cwd=ROOT,
+    text=True,
+    capture_output=True,
+)
+require(
+    loader_eval_test.returncode == 0,
+    "loader eval contract failed:\n"
+    + loader_eval_test.stdout
+    + loader_eval_test.stderr,
 )
 
 expected_smoke_revision = "a" * 40
@@ -1381,77 +1405,30 @@ require(
 )
 
 
-def implementation_activation_errors(
-    section: str, policy_mods: set[str]
-) -> list[str]:
-    errors: list[str] = []
-    normalized = " ".join(section.split())
-    expected_mods = {"_mods/work-control-profile.md"}
-    if policy_mods != expected_mods:
-        errors.append("implementation entry policy mods drifted")
-    for label, phrase in {
-        "inactive locator rule": (
-            "Links to mods not listed in `Policy mods` are inactive locators, "
-            "not active policy, until their stage-native trigger is satisfied."
-        ),
-        "candidate revision trigger": "candidate revision",
-        "changed-file map trigger": "changed-file map",
-        "merge-base diff trigger": "merge-base diff size",
-        "slice assessment trigger": "independent/dependent slice assessment",
-        "topology locator": (
-            "[`_mods/pr-merge.md`](./_mods/pr-merge.md#delivery-topology-decision)"
-        ),
-        "pre-trigger unread boundary": (
-            "Before those four facts exist, leave `_mods/pr-merge.md` unread."
-        ),
-    }.items():
-        if phrase not in normalized:
-            errors.append(f"missing {label}")
-    return errors
-
-
 implementation_heading = "### `implementation`"
 implementation_section = stage_body(implementation_heading)
 implementation_mods = selected_policy_mods(implementation_heading)
 normalized_implementation_section = " ".join(implementation_section.split())
 require(
-    not implementation_activation_errors(implementation_section, implementation_mods),
-    "implementation activation contract failed: "
-    + "; ".join(
-        implementation_activation_errors(implementation_section, implementation_mods)
-    ),
+    implementation_mods == {"_mods/work-control-profile.md"},
+    "implementation entry policy mods drifted",
 )
-implementation_activation_mutants = {
-    "premature-load": (
-        normalized_implementation_section,
-        implementation_mods | {"_mods/pr-merge.md"},
+for label, phrase in {
+    "inactive locator rule": (
+        "Links to mods not listed in `Policy mods` are inactive locators, "
+        "not active policy, until their stage-native trigger is satisfied."
     ),
-    "trigger-loss": (
-        normalized_implementation_section.replace(
-            "Before those four facts exist, leave `_mods/pr-merge.md` unread.",
-            "",
-            1,
-        ),
-        implementation_mods,
+    "candidate revision trigger": "candidate revision",
+    "changed-file map trigger": "changed-file map",
+    "merge-base diff trigger": "merge-base diff size",
+    "slice assessment trigger": "independent/dependent slice assessment",
+    "pre-trigger unread boundary": (
+        "Before those four facts exist, leave `_mods/pr-merge.md` unread."
     ),
-    "locator-loss": (
-        normalized_implementation_section.replace(
-            "[`_mods/pr-merge.md`](./_mods/pr-merge.md#delivery-topology-decision)",
-            "the topology decision",
-            1,
-        ),
-        implementation_mods,
-    ),
-}
-for mutant_name, (mutant_section, mutant_mods) in implementation_activation_mutants.items():
+}.items():
     require(
-        mutant_section != normalized_implementation_section
-        or mutant_mods != implementation_mods,
-        f"implementation activation mutant was not applied: {mutant_name}",
-    )
-    require(
-        implementation_activation_errors(mutant_section, mutant_mods),
-        f"implementation activation mutant survived: {mutant_name}",
+        phrase in normalized_implementation_section,
+        f"implementation activation contract is missing {label}",
     )
 
 

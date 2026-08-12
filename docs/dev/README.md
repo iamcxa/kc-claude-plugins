@@ -136,10 +136,29 @@ corresponding authority flag is true.
 `_mods/kernel.md` owns outcome and verification discipline. Local checks are:
 
 - `scripts/kc-dev-flow-contract-test.py` for the portable/adopted contract;
+- `scripts/kc-dev-flow-loader-eval.test.py` for the deterministic capture adapter
+  contract with a fake Spacedock executable;
 - `scripts/version-parity-check.sh` for release propagation and version parity;
 - `scripts/marketplace-verify.sh` for marketplace schema and local-source install;
 - `scripts/skill-frontmatter-lint.sh` for skill frontmatter;
 - exact-head GitHub checks for workflow and merge evidence.
+
+For workflow-behavior evidence, capture the installed loader boundary manually
+against two exact commit refs; keep the new receipt directory outside the
+checkout:
+
+```bash
+python3 scripts/kc-dev-flow-loader-eval.py \
+  --known-bad-ref <exact-commit> \
+  --candidate-ref <exact-commit> \
+  --output-dir "$RECEIPT"
+```
+
+The capture records exact implementation-stage bytes, tool/ref/fixture
+provenance, and opaque Q08 runner prompts. It does not run or grade a model.
+Fresh paired model pressure and hidden-rubric grading are validation-only
+evidence. A deterministic contract pass does not establish loader equality;
+loader equality does not establish worker behavior.
 
 A negative result carries the kernel's positive-claim bar. Sampled text matches
 do not prove a population; a check offered as evidence must name what change
