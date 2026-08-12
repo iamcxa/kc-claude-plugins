@@ -791,7 +791,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--fixture", type=Path, default=DEFAULT_FIXTURE)
     parser.add_argument("--repo", type=Path, default=ROOT)
-    parser.add_argument("--model", default="gpt-5.6")
+    parser.add_argument("--model", default="gpt-5.6-sol")
     parser.add_argument("--reasoning", default="high")
     parser.add_argument("--timeout", type=int, default=300)
     return parser.parse_args()

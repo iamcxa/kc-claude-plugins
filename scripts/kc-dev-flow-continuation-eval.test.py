@@ -8,6 +8,7 @@ import hashlib
 import hmac
 import json
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -35,6 +36,25 @@ spec = importlib.util.spec_from_file_location("kc_dev_flow_continuation_eval", R
 require(spec is not None and spec.loader is not None, "cannot load focused runner")
 runner = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
+
+original_argv = sys.argv
+try:
+    sys.argv = [
+        str(RUNNER_PATH),
+        "--known-bad-ref",
+        "baseline",
+        "--candidate-ref",
+        "candidate",
+        "--output-dir",
+        "/tmp/continuation-eval-defaults",
+    ]
+    default_args = runner.parse_args()
+finally:
+    sys.argv = original_argv
+require(
+    default_args.model == "gpt-5.6-sol" and default_args.reasoning == "high",
+    "installed-host default is not the supported GPT-5.6 High route",
+)
 
 fixture, fixture_sha = runner.load_fixture(FIXTURE_PATH)
 require(len(fixture_sha) == 64, "fixture digest is not SHA-256")
