@@ -11,7 +11,7 @@ verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-loader-native-stage-contract
 issue:
 pr:
-mod-block:
+mod-block: merge:pr-merge
 design: required
 lane: main
 ---
