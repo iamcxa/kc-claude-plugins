@@ -113,6 +113,17 @@ Filter criteria:
 
 If zero unresolved inline threads AND zero actionable PR-level reviews → report "no feedback to address" and stop. Do NOT stop on zero threads alone — PR-level reviews may contain actionable feedback.
 
+### Dev-flow reconciliation caller
+
+When `pr-merge` supplies an exact-head detector set for dev-flow reconciliation,
+use that set as the population instead of applying the normal interactive
+exclusions above. Return one technical disposition for every supplied review and
+thread ID. A pure approval or a PR-level review already covered by a resolved
+inline thread may be `rejected-with-reason` as non-actionable or already covered,
+but it must not disappear from the reconciliation result. This integration mode
+does not change the skill's confirmation, push, posting, readiness, merge, or
+closeout authority.
+
 ### Reviewer Metadata (parallel)
 
 In parallel with fetching threads and reviews, query the PR timeline to build a **reviewer map**:
