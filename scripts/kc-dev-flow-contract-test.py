@@ -1381,6 +1381,80 @@ require(
 )
 
 
+def implementation_activation_errors(
+    section: str, policy_mods: set[str]
+) -> list[str]:
+    errors: list[str] = []
+    normalized = " ".join(section.split())
+    expected_mods = {"_mods/work-control-profile.md"}
+    if policy_mods != expected_mods:
+        errors.append("implementation entry policy mods drifted")
+    for label, phrase in {
+        "inactive locator rule": (
+            "Links to mods not listed in `Policy mods` are inactive locators, "
+            "not active policy, until their stage-native trigger is satisfied."
+        ),
+        "candidate revision trigger": "candidate revision",
+        "changed-file map trigger": "changed-file map",
+        "merge-base diff trigger": "merge-base diff size",
+        "slice assessment trigger": "independent/dependent slice assessment",
+        "topology locator": (
+            "[`_mods/pr-merge.md`](./_mods/pr-merge.md#delivery-topology-decision)"
+        ),
+        "pre-trigger unread boundary": (
+            "Before those four facts exist, leave `_mods/pr-merge.md` unread."
+        ),
+    }.items():
+        if phrase not in normalized:
+            errors.append(f"missing {label}")
+    return errors
+
+
+implementation_heading = "### `implementation`"
+implementation_section = stage_body(implementation_heading)
+implementation_mods = selected_policy_mods(implementation_heading)
+normalized_implementation_section = " ".join(implementation_section.split())
+require(
+    not implementation_activation_errors(implementation_section, implementation_mods),
+    "implementation activation contract failed: "
+    + "; ".join(
+        implementation_activation_errors(implementation_section, implementation_mods)
+    ),
+)
+implementation_activation_mutants = {
+    "premature-load": (
+        normalized_implementation_section,
+        implementation_mods | {"_mods/pr-merge.md"},
+    ),
+    "trigger-loss": (
+        normalized_implementation_section.replace(
+            "Before those four facts exist, leave `_mods/pr-merge.md` unread.",
+            "",
+            1,
+        ),
+        implementation_mods,
+    ),
+    "locator-loss": (
+        normalized_implementation_section.replace(
+            "[`_mods/pr-merge.md`](./_mods/pr-merge.md#delivery-topology-decision)",
+            "the topology decision",
+            1,
+        ),
+        implementation_mods,
+    ),
+}
+for mutant_name, (mutant_section, mutant_mods) in implementation_activation_mutants.items():
+    require(
+        mutant_section != normalized_implementation_section
+        or mutant_mods != implementation_mods,
+        f"implementation activation mutant was not applied: {mutant_name}",
+    )
+    require(
+        implementation_activation_errors(mutant_section, mutant_mods),
+        f"implementation activation mutant survived: {mutant_name}",
+    )
+
+
 for heading in stage_headings:
     selected = "_mods/engineering-judgment.md" in selected_policy_mods(heading)
     require(
