@@ -14,6 +14,7 @@ pr: iamcxa/kc-claude-plugins#215
 mod-block:
 design: required
 lane: main
+archived: 2026-08-12T05:37:28Z
 ---
 
 ## Problem
