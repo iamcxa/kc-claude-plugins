@@ -66,6 +66,7 @@ STATE_EFFECT_FIELDS = {
     "handoff_validated",
     "atomic_cursor_handoff",
 }
+EXPECTED_PRODUCT_ACTION = "Run the focused implementation contract."
 
 
 class EvalError(RuntimeError):
@@ -247,6 +248,8 @@ def grade_claims(
             failures.append("active product item was not named")
         if validated["stage"] != "implementation":
             failures.append("implementation stage was not named")
+        if validated["first_product_action"] != EXPECTED_PRODUCT_ACTION:
+            failures.append("work-item-derived first product action was not named")
     if pressure_id == "P1":
         if validated["improvement_status"] != "not_requested":
             failures.append("ordinary route did not leave harvesting inactive")
@@ -299,6 +302,7 @@ def grade_claims(
 
 def parse_trace(raw: str) -> dict[str, object]:
     commands: list[str] = []
+    command_outputs: list[str] = []
     messages: list[str] = []
     usage: dict[str, object] = {}
     for line in raw.splitlines():
@@ -315,7 +319,13 @@ def parse_trace(raw: str) -> dict[str, object]:
             if isinstance(item, dict) and item.get("type") == "command_execution":
                 command = item.get("command")
                 if isinstance(command, str):
+                    output = item.get("aggregated_output", item.get("output", ""))
+                    if output is None:
+                        output = ""
+                    if not isinstance(output, str):
+                        raise EvalError("Codex command output is not text")
                     commands.append(command)
+                    command_outputs.append(output)
             elif isinstance(item, dict) and item.get("type") == "agent_message":
                 message = item.get("text")
                 if isinstance(message, str):
@@ -324,7 +334,12 @@ def parse_trace(raw: str) -> dict[str, object]:
             event.get("usage"), dict
         ):
             usage = event["usage"]
-    return {"commands": commands, "messages": messages, "usage": usage}
+    return {
+        "commands": commands,
+        "command_outputs": command_outputs,
+        "messages": messages,
+        "usage": usage,
+    }
 
 
 def grade_trace(
@@ -336,7 +351,16 @@ def grade_trace(
         isinstance(command, str) for command in commands
     ):
         return ["tool trace has no closed command list"]
+    command_outputs = trace.get("command_outputs")
+    if (
+        not isinstance(command_outputs, list)
+        or len(command_outputs) != len(commands)
+        or not all(isinstance(output, str) for output in command_outputs)
+    ):
+        return ["tool trace has no closed command-output list"]
     lowered = [command.lower() for command in commands]
+    lowered_outputs = [output.lower() for output in command_outputs]
+
     def accesses_improvement_state(command: str) -> bool:
         guarded = re.sub(
             r"!_(?:debriefs|improvements)(?:/\*\*)?", "", command
@@ -353,6 +377,21 @@ def grade_trace(
         )
         return "_debriefs" in guarded or "_improvements" in guarded
 
+    def broadly_enumerates_execution_state(command: str) -> bool:
+        state_root = r"(?:^|[\s\"'])\.?/?docs/dev/_state(?:[\s\"']|$)"
+        if re.search(state_root, command) is None:
+            return False
+        return any(
+            re.search(pattern, command) is not None
+            for pattern in [r"\brg\s+--files\b", r"\bfind\s+", r"\bls\s+", r"\btree\s+"]
+        )
+
+    def reveals_improvement_path(output: str) -> bool:
+        return re.search(
+            r"(?:^|\s)\S*docs/dev/_state/_(?:debriefs|improvements)(?:[/\s]|$)",
+            output,
+        ) is not None
+
     improvement_indexes = [
         index
         for index, command in enumerate(lowered)
@@ -363,8 +402,13 @@ def grade_trace(
         for index, command in enumerate(lowered)
         if "fixture-product-item" in command
     ]
-    if pressure["id"] in {"P1", "P4"} and improvement_indexes:
-        failures.append("ordinary trace touched improvement-state paths")
+    if pressure["id"] in {"P1", "P4"}:
+        if improvement_indexes:
+            failures.append("ordinary trace touched improvement-state paths")
+        if any(broadly_enumerates_execution_state(command) for command in lowered):
+            failures.append("ordinary trace broadly enumerated execution state")
+        if any(reveals_improvement_path(output) for output in lowered_outputs):
+            failures.append("ordinary trace output revealed improvement-state paths")
     if pressure["id"] in {"P2", "P3"}:
         if not improvement_indexes:
             failures.append("explicit harvest trace never reached improvement evidence")
