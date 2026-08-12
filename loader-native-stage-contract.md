@@ -1,17 +1,17 @@
 ---
 id: 64w8w7fpkt3ryg13h4ye7xnn
 title: "kc-dev-flow: make stage activation loader-native"
-status: validation
+status: done
 source: "captain:conversation-2026-08-12"
 product: kc-dev-flow
 sprint:
 started: 2026-08-12T04:32:15Z
-completed:
-verdict:
-worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-loader-native-stage-contract
+completed: 2026-08-12T05:28:06Z
+verdict: PASSED
+worktree:
 issue:
 pr: iamcxa/kc-claude-plugins#215
-mod-block: merge:pr-merge
+mod-block:
 design: required
 lane: main
 ---
