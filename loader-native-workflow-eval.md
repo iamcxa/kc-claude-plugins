@@ -497,6 +497,18 @@ Verdict: **PASSED** for exact candidate
 validator's verdict and evidence; it performs no status transition, delivery,
 push, PR, readiness, merge, archive, or closeout action.
 
+- DONE: Reviewed exact candidate `7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5`
+  over `ec699d3e5b21e666209f079c9df7a9bd45528f13` against all five accepted ACs;
+  all five changed files were read completely and the candidate remained clean
+  and unchanged.
+- DONE: Independently reproduced both exact installed-Spacedock stage captures
+  and ran the same-config six-trial opaque Q08 pair; candidate passed 3/3 at
+  12/12 with zero hard failures, known-bad reproduced one target hard failure,
+  and the fail-closed `UNKNOWN` condition was therefore not triggered.
+- DONE: Rechecked the deterministic suite and the bounded test-retirement map,
+  obtained exactly one fresh EM verdict (`proceed / high`,
+  `multi_model: not_needed`), and performed no product or delivery action.
+
 ### Per-AC verdicts
 
 - **AC-1 PASS:** The focused adapter test passed and the full contract suite
@@ -634,6 +646,18 @@ grade; neither absence was treated as zero or PASS. One validator-owned mutation
 harness initially stopped before execution because an exact README target
 crossed a Markdown line break; correcting that temporary harness outside the
 candidate led all eleven adversarial cases to run and pass.
+
+### AC citation index
+
+Evidence for AC-1: `../../../scripts/kc-dev-flow-loader-eval.test.py:127`, `../../../scripts/kc-dev-flow-contract-test.py:80`, and `loader-native-workflow-eval.md:514`.
+
+Evidence for AC-2: `../../../scripts/kc-dev-flow-loader-eval.py:195`, `../../../scripts/kc-dev-flow-loader-eval.py:217`, and `loader-native-workflow-eval.md:520`.
+
+Evidence for AC-3: `../../../scripts/fixtures/kc-dev-flow-loader-eval/q08.json:1` and `loader-native-workflow-eval.md:529`.
+
+Evidence for AC-4: `../../../scripts/kc-dev-flow-contract-test.py:1412` and `loader-native-workflow-eval.md:539`.
+
+Evidence for AC-5: `../README.md:136` and `loader-native-workflow-eval.md:544`.
 
 ### Summary
 
