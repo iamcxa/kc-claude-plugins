@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: route product work before improvement harvesting"
-status: implementation
+status: ideation
 source: "captain:conversation-2026-08-12-third-slice"
 product: kc-dev-flow
 sprint:
@@ -880,3 +880,4 @@ Cycle 3 reduced the exact candidate's ordinary P1 sample from 10 calls to 6 whil
 ### Feedback Cycles
 
 - Cycle 3: CANARY FAIL — ordinary candidate calls reduced 10 to 6 but remain above paired baseline 4; mandatory spend stop honored; AC unchanged
+- Cycle 4: CAPTAIN-APPROVED DESIGN RESET — replace unsafe single-sample tool-call dominance with safety-first comparability and non-gating efficiency observation; surface one AC clarification vs estimate one (100%); AC revised, product scope unchanged; 20-minute total cap
