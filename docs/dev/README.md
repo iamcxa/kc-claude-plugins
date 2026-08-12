@@ -210,6 +210,9 @@ Authority decides whether it advances or reaches the captain.
 
 Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
+Links to mods not listed in `Policy mods` are inactive locators, not active
+policy, until their stage-native trigger is satisfied.
+
 Implementation opens no reviewer loop. If an accepted premise changes, return
 the decision to its owning stage; do not adjudicate it while coding.
 
@@ -228,8 +231,11 @@ the decision to its owning stage; do not adjudicate it while coding.
   mechanism belongs in the deliverable.
 - Before validation, map every changed file to an AC. Delete an unmapped file or
   ask the captain to authorize its scope.
-- Select PR topology from the authoritative Delivery topology decision table in
-  [`_mods/pr-merge.md`](./_mods/pr-merge.md#delivery-topology-decision). Use its
+- After a candidate revision, changed-file map, merge-base diff size, and
+  independent/dependent slice assessment all exist, read only the authoritative
+  Delivery topology decision in
+  [`_mods/pr-merge.md`](./_mods/pr-merge.md#delivery-topology-decision). Before
+  those four facts exist, leave `_mods/pr-merge.md` unread. Once loaded, use its
   dependent green layers, independent green slices, and numeric trigger
   predicates without adding another readiness condition here. Stack shape is
   delivery topology, not minimality evidence.
