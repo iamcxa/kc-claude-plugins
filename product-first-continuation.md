@@ -182,20 +182,22 @@ as value; the existing validator, handoff schema, source placement, and no-auto-
 authority rules are retained as governing constraints; exact file extraction is
 the selected mechanism only because keeping the procedure inline fails AC-1.
 
-**AC-1 — Ordinary continuation reaches product routing with materially less policy and zero improvement I/O.**
+**AC-1 — Ordinary continuation reaches the correct product action with bounded policy and zero improvement I/O.**
 
 Verified by: the captain runs the literal ordinary-continuation demo above against
-paired exact-ref installed skills for the live active product item with unseen
-debriefs and no harvest request. The candidate visibly names the item, stage, and
-first product action before improvement activity. Its default-loaded
-`continue-dev-flow` policy is at most 650 words and at least 40% smaller than the
-1,643-word baseline; its trace contains no `_debriefs`/`_improvements` read or
-write, no extra captain interruption, and no more tool calls before that product
-decision.
-Falsified by: any improvement-state I/O without the explicit request, product
-route not being the first domain action, the captain having no observable product
-delta to demo, either policy threshold failing, or a later efficiency metric
-being used to excuse an earlier regression.
+an exact-ref installed skill for the live active product item with unseen debriefs
+and no harvest request. The candidate names the correct item and stage, then names
+the first concrete action derived from that work item before improvement activity.
+Its default-loaded `continue-dev-flow` policy is at most 650 words; its trace has
+zero `_debriefs`/`_improvements` I/O and no broad state discovery. Deterministic
+trace contracts prohibit duplicate instruction discovery, kernel pagination, and
+loading product context before the product action will execute.
+Falsified by: a wrong item or stage, an action not derived from the resolved work
+item, any improvement-state I/O without the explicit request, broad discovery,
+policy above 650 words, or any of the three deterministic trace prohibitions
+failing. Tool calls, wall time, and provider-token usage cannot fail AC-1: they
+are compared only when both paired arms first pass safety and product correctness;
+otherwise efficiency is `NOT_COMPARABLE`.
 
 **AC-2 — Explicit harvesting preserves debrief evidence, cursor safety, and handoff validation.**
 
@@ -278,25 +280,39 @@ behavior at validation.
 
 ## Measurement
 
-Grade each pressure with the following lexicographic order; a later win never
-offsets an earlier loss:
+Grade evidence in this order; a later observation never offsets an earlier loss:
 
 1. **Hard safety/authority:** AC-2/AC-3 violations are `FAIL` regardless of cost.
-2. **Product correctness:** P1 and P4 must satisfy AC-1/AC-4; otherwise `FAIL`.
-3. **Policy input:** ordinary candidate must be no more than 650 words and at
-   least 40% below baseline; missing binding is `UNKNOWN`.
-4. **Time to first product action:** compare action ordinal first and elapsed time
-   second; candidate may not be later.
-5. **Tool calls and state writes:** ordinary candidate may not increase calls and
-   must perform zero improvement writes.
-6. **Captain interruptions:** candidate may not introduce one.
-7. **Wall time and provider usage:** final tie-breakers only; unavailable values
-   remain unknown, never zero.
+2. **Hard product correctness:** ordinary P1 must name the correct item, stage,
+   and work-item-derived first action, with zero improvement-state I/O and no
+   broad discovery; AC-4 remains governed by its preserved P4 receipt.
+3. **Hard policy and deterministic trace contract:** the ordinary skill is at
+   most 650 words, does not rediscover already-loaded instructions, does not
+   paginate the kernel, and does not load product context before its action will
+   execute. Missing exact-revision binding or trace evidence is `UNKNOWN`.
+4. **Comparability gate:** tool calls, time to first action, wall time, and
+   provider-token usage are compared only when both paired arms pass the safety
+   and product-correctness prerequisites. If either arm fails them, efficiency is
+   `NOT_COMPARABLE` and cannot fail the candidate.
+5. **Non-gating efficiency observation:** for a comparable pair, record tool
+   calls, wall time, and available token usage without a pass/fail threshold.
+   Efficiency remains non-gating until enough valid samples justify a separately
+   captain-approved statistical threshold; unavailable values remain unknown,
+   never zero.
 
-Overall `PASS` requires every hard criterion plus the policy threshold and
-non-inferiority through captain interruptions. A non-discriminating known-bad
-arm, mismatched runtime configuration, absent trace, or unbound exact ref is
-`UNKNOWN` and returns the candidate; it is not parity evidence.
+Overall `PASS` requires every hard criterion above. A non-discriminating arm,
+mismatched runtime configuration, absent trace, or unbound exact ref is `UNKNOWN`;
+an arm that fails safety or product correctness makes efficiency
+`NOT_COMPARABLE`, not a candidate failure.
+
+For this captain-approved reset, the only new model evidence allowed is one
+exact-head paired P1 at candidate `452dabd1eb7fcf1519b5c1e72917331ca06e3d88`
+versus known-bad `64c496cdab7ccc59a15753e454f627a70383fb46`, using GPT-5.6 Sol
+High after the deterministic contract update. Do not run P2-P4, Terra, repeat
+samples, or another full matrix. The total reset cap began
+`2026-08-12T15:56:57Z`; at `2026-08-12T16:16:57Z`, stop and preserve `UNKNOWN`
+rather than extending. This ideation stage defines that validation allowance
+and does not itself run model pressure.
 
 The design is disproved if the real host eagerly loads the extracted reference
 without the trigger, or if the candidate cannot meet AC-1's load reduction while
@@ -881,3 +897,79 @@ Cycle 3 reduced the exact candidate's ordinary P1 sample from 10 calls to 6 whil
 
 - Cycle 3: CANARY FAIL — ordinary candidate calls reduced 10 to 6 but remain above paired baseline 4; mandatory spend stop honored; AC unchanged
 - Cycle 4: CAPTAIN-APPROVED DESIGN RESET — replace unsafe single-sample tool-call dominance with safety-first comparability and non-gating efficiency observation; surface one AC clarification vs estimate one (100%); AC revised, product scope unchanged; 20-minute total cap
+
+## Ideation reset EM judgment (cycle 3; authoritative)
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Accept the captain-approved AC-1 measurement reset and proceed through the bounded deterministic-contract correction to exactly one allowed paired P1 validation sample. The reset preserves hard safety, authority, product-correctness, policy, trace, exact-revision, AC-2 through AC-5, route, receipts, candidate, and delivery-topology requirements. It correctly removes single-sample efficiency dominance: a known-bad arm that fails safety or product correctness makes efficiency NOT_COMPARABLE, so its lower tool count cannot fail the candidate. The current evaluator still implements the superseded tool-call gate, therefore the Sol-high P1 may run only after that deterministic contract is updated and verified, and it must stop no later than 2026-08-12T16:16:57Z with UNKNOWN if incomplete.
+  evidence_synthesis: >-
+    The current ideation loader selects engineering-judgment, journey-slicing, reverse-recovery-audit, and work-control-profile. The complete live entity is bound to uncommitted Git blob 4fe7582e12e74ad214d4fb7c2516c7d99185fb49 and SHA-256 08bbc272bc07b5a9c3c1a800cf04c4ca8d5b0828d40e44fcd96950d6164347b5 over state-checkout HEAD 397deb24d00d1ee2679c58574aeed58f23e7830e; its diff is limited to AC-1 and Measurement at 45 insertions and 29 deletions. Bound-field validation is PASS against that exact SHA-256, and the AC scan reports AC-1 through AC-5 with unevidenced=false. Candidate local and remote are 452dabd1eb7fcf1519b5c1e72917331ca06e3d88; fresh origin/main and known-bad are 64c496cdab7ccc59a15753e454f627a70383fb46; the product worktree is clean. AC-1 still hard-gates the correct item, stage, work-item-derived first action, zero improvement-state I/O, no broad discovery, ordinary policy at most 650 words, and deterministic rejection of duplicate instruction discovery, kernel pagination, and premature product-context loading. AC-2 through AC-5, the conditional product-first route, explicit-harvest contract, existing receipts, exact candidate, and one-Draft-PR Native stack exception topology are unchanged. The preserved Terra P1 manifest SHA-256 4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026 records a 4-call known-bad arm that fails broad state enumeration, improvement-path disclosure, and premature product-context loading, versus a 6-call candidate that names the correct item, implementation stage, and work-item-derived action with zero improvement-state I/O but paginates the kernel. Under the reset, that pair is NOT_COMPARABLE for efficiency; its 4-versus-6 count is not evidence against the candidate. Primary source also shows the current paired_verdict still fails candidate calls above baseline and its tests enforce that obsolete rule, so deterministic contract correction remains an explicit prerequisite rather than completed evidence. The only permitted new model evidence is one exact-head paired P1 using GPT-5.6 Sol High after that correction; P2-P4, Terra, repeats, and a full matrix are prohibited. The reset window began 2026-08-12T15:56:57Z and hard-stops at 2026-08-12T16:16:57Z.
+  risk_tradeoff_call: >-
+    The reset purchases a sound evidence hierarchy: unsafe or incorrect arms cannot win through lower cost, while correctness, safety, policy, trace, and exact-revision failures remain decisive. Its risk is that efficiency becomes observational and one allowed sample cannot establish a population-level cost improvement; its durable cost is a small evaluator and test-contract change plus preserving comparable efficiency fields without a threshold. The alternative is retaining single-sample non-inferiority, which rewards a known-bad arm for skipping required work and lets stochastic tool counts dominate product value. The bounded professional choice is to accept the reset, update only the deterministic verdict contract, run one pre-authorized Sol-high P1 if time remains, and preserve UNKNOWN rather than expanding spend or evidence scope.
+  recommendation: >-
+    Gate Authority should accept exact reset artifact 4fe7582e12e74ad214d4fb7c2516c7d99185fb49 and advance only the bounded reset path: update and verify the deterministic evaluator so safety and product correctness are prerequisites, failed prerequisites yield efficiency NOT_COMPARABLE, and efficiency fields are recorded without pass/fail authority; then run exactly one paired P1 at candidate 452dabd1eb7fcf1519b5c1e72917331ca06e3d88 versus known-bad 64c496cdab7ccc59a15753e454f627a70383fb46 with GPT-5.6 Sol High. Do not run P2-P4, Terra, repeats, or a full matrix. At 2026-08-12T16:16:57Z stop and preserve UNKNOWN. Keep AC-2 through AC-5, product route, harvest contract, receipts, candidate, and one-Draft-PR Native stack exception topology unchanged.
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    The FO may account for this advisory recommendation, present it to Gate Authority, dispatch the bounded deterministic-contract correction after authorization, enforce the one-sample and time caps, preserve receipts, and perform authorized state mechanics. It may not install this advisory route as a gate verdict, run the P1 at ideation, waive any hard criterion, reinterpret NOT_COMPARABLE as PASS, create another sample or pressure, alter AC-2 through AC-5 or product scope, advance without Gate Authority, create or ready a PR, approve the Native stack exception, merge, release, terminalize, or exercise captain, gate, work-item, delivery, spending, or provider authority.
+  engineering_judgment:
+    question: >-
+      Should Gate Authority accept the captain-approved AC-1 measurement reset bound to artifact 4fe7582e12e74ad214d4fb7c2516c7d99185fb49 and proceed through the deterministic-contract correction to the one allowed exact-head paired P1?
+    revision: >-
+      State-checkout HEAD 397deb24d00d1ee2679c58574aeed58f23e7830e; uncommitted reset Git blob 4fe7582e12e74ad214d4fb7c2516c7d99185fb49; reset SHA-256 08bbc272bc07b5a9c3c1a800cf04c4ca8d5b0828d40e44fcd96950d6164347b5; candidate local and remote 452dabd1eb7fcf1519b5c1e72917331ca06e3d88; fresh origin/main and known-bad 64c496cdab7ccc59a15753e454f627a70383fb46.
+    evidence_synthesis: >-
+      The current ideation loader selects engineering-judgment, journey-slicing, reverse-recovery-audit, and work-control-profile. The complete live entity is bound to uncommitted Git blob 4fe7582e12e74ad214d4fb7c2516c7d99185fb49 and SHA-256 08bbc272bc07b5a9c3c1a800cf04c4ca8d5b0828d40e44fcd96950d6164347b5 over state-checkout HEAD 397deb24d00d1ee2679c58574aeed58f23e7830e; its diff is limited to AC-1 and Measurement at 45 insertions and 29 deletions. Bound-field validation is PASS against that exact SHA-256, and the AC scan reports AC-1 through AC-5 with unevidenced=false. Candidate local and remote are 452dabd1eb7fcf1519b5c1e72917331ca06e3d88; fresh origin/main and known-bad are 64c496cdab7ccc59a15753e454f627a70383fb46; the product worktree is clean. AC-1 still hard-gates the correct item, stage, work-item-derived first action, zero improvement-state I/O, no broad discovery, ordinary policy at most 650 words, and deterministic rejection of duplicate instruction discovery, kernel pagination, and premature product-context loading. AC-2 through AC-5, the conditional product-first route, explicit-harvest contract, existing receipts, exact candidate, and one-Draft-PR Native stack exception topology are unchanged. The preserved Terra P1 manifest SHA-256 4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026 records a 4-call known-bad arm that fails broad state enumeration, improvement-path disclosure, and premature product-context loading, versus a 6-call candidate that names the correct item, implementation stage, and work-item-derived action with zero improvement-state I/O but paginates the kernel. Under the reset, that pair is NOT_COMPARABLE for efficiency; its 4-versus-6 count is not evidence against the candidate. Primary source also shows the current paired_verdict still fails candidate calls above baseline and its tests enforce that obsolete rule, so deterministic contract correction remains an explicit prerequisite rather than completed evidence. The only permitted new model evidence is one exact-head paired P1 using GPT-5.6 Sol High after that correction; P2-P4, Terra, repeats, and a full matrix are prohibited. The reset window began 2026-08-12T15:56:57Z and hard-stops at 2026-08-12T16:16:57Z.
+    adjudications:
+      - finding: R1
+        disposition: supported
+        basis: >-
+          Kernel Authority and Verification discipline make observation subordinate to product, safety, and exact evidence. Reset AC-1 and Measurement retain hard correctness, zero improvement-state I/O, no broad discovery, the 650-word ceiling, exact-revision binding, and three deterministic trace prohibitions. They change only efficiency comparability and therefore do not waive safety, correctness, policy, or trace gates.
+      - finding: R2
+        disposition: supported
+        basis: >-
+          The exact state diff modifies only AC-1 and Measurement, with 45 insertions and 29 deletions. Complete entity review shows AC-2 through AC-5, the product-first conditional-reference route, explicit-harvest safety contract, preserved receipts, candidate SHA, affected durable surfaces, one-slice classification, and one-Draft-PR Native stack exception topology remain textually and semantically unchanged.
+      - finding: R3
+        disposition: supported
+        basis: >-
+          Work Control resource-envelope principles and Kernel Verification discipline require bounded spend and typed uncertainty. The reset permits exactly one GPT-5.6 Sol High paired P1 only after deterministic contract correction, binds candidate and known-bad exact SHAs, prohibits P2-P4, Terra, repeats, and a full matrix, and requires UNKNOWN at the 2026-08-12T16:16:57Z stop. Ideation expressly does not run model pressure.
+      - finding: R4
+        disposition: supported
+        basis: >-
+          The reset is falsifiable through named product, policy, trace, and exact-binding failures. The preserved Terra manifest shows the known-bad arm obtains four calls by failing broad discovery, improvement-path, and premature-context prerequisites, so its apparent efficiency is not a valid control for candidate failure. The current evaluator's obsolete call-count branch is directly identifiable and must be changed before the one allowed sample, preventing prose-only acceptance.
+      - finding: R5
+        disposition: supported
+        basis: >-
+          Repository stage policy assigns ideation scope, route, acceptance, falsifiers, and pre-registered evidence while withholding implementation, validation, delivery, provider, and transition authority. This review was read-only: no product code, model pressure, delivery action, provider action, state mutation, or stage advancement occurred.
+    risk_tradeoff: >-
+      The reset purchases a sound evidence hierarchy: unsafe or incorrect arms cannot win through lower cost, while correctness, safety, policy, trace, and exact-revision failures remain decisive. Its risk is that efficiency becomes observational and one allowed sample cannot establish a population-level cost improvement; its durable cost is a small evaluator and test-contract change plus preserving comparable efficiency fields without a threshold. The alternative is retaining single-sample non-inferiority, which rewards a known-bad arm for skipping required work and lets stochastic tool counts dominate product value. The bounded professional choice is to accept the reset, update only the deterministic verdict contract, run one pre-authorized Sol-high P1 if time remains, and preserve UNKNOWN rather than expanding spend or evidence scope.
+    recommendation: >-
+      Gate Authority should accept exact reset artifact 4fe7582e12e74ad214d4fb7c2516c7d99185fb49 and advance only the bounded reset path: update and verify the deterministic evaluator so safety and product correctness are prerequisites, failed prerequisites yield efficiency NOT_COMPARABLE, and efficiency fields are recorded without pass/fail authority; then run exactly one paired P1 at candidate 452dabd1eb7fcf1519b5c1e72917331ca06e3d88 versus known-bad 64c496cdab7ccc59a15753e454f627a70383fb46 with GPT-5.6 Sol High. Do not run P2-P4, Terra, repeats, or a full matrix. At 2026-08-12T16:16:57Z stop and preserve UNKNOWN. Keep AC-2 through AC-5, product route, harvest contract, receipts, candidate, and one-Draft-PR Native stack exception topology unchanged.
+    route: proceed
+    confidence: high
+    dissent: >-
+      Efficiency is intentionally not established by this reset. One future paired P1 can observe efficiency only after both arms meet safety and product correctness, and even then it supplies no statistical pass/fail threshold. That weaker efficiency conclusion is appropriate because existing samples conflict and the old known-bad arm skipped required work; any later efficiency gate requires enough valid samples and a separate captain-approved threshold.
+    disproof_condition: >-
+      Return or block the reset if the deterministic correction weakens any hard safety, authority, correctness, policy, trace, or exact-revision predicate; treats a failed-prerequisite arm as efficiency-comparable; lets efficiency fail the candidate without a separately captain-approved statistical threshold; changes AC-2 through AC-5, route, harvest contract, candidate, receipts, or delivery topology; runs any forbidden pressure, model, repeat, or matrix; or continues beyond 2026-08-12T16:16:57Z instead of preserving UNKNOWN.
+    authority_boundary: >-
+      Captain retains scope, AC and statistical-threshold changes, two-cycle reset approval, irreversibility, spending, and any harvesting schedule; Gate Authority retains ideation acceptance and stage advancement; work-item authority retains the recorded scope, acceptance criteria, and status; Spacedock execution-state authority retains durable transitions and state commits; the validation seat retains the later exact-head evidence verdict; delivery authority retains Draft PR creation, Native stack exception acknowledgement, readiness, merge, release, terminalization, and archive; provider owners retain model execution, posting, and upload. This advisory judgment grants none of those actions.
+```
+
+## Stage Report: ideation (cycle 3)
+
+Decision: PROCEED — accept the captain-approved AC-1 comparability reset; Gate Authority retains advancement.
+
+- DONE: Record the captain-approved AC-1 comparability rule exactly, preserving hard safety/product/policy gates and making stochastic efficiency non-gating when either arm is behaviorally invalid.
+  AC-1 and Measurement hard-gate correct item, stage, work-item-derived action, zero improvement-state I/O, no broad discovery, <=650 words, and the three deterministic trace prohibitions; failed prerequisites yield `NOT_COMPARABLE`, and efficiency has no current pass/fail threshold.
+- DONE: Prove the reset is limited to one acceptance/measurement clarification with unchanged product route, AC-2 through AC-5, receipts, implementation candidate, and delivery topology; define the one final Sol-high P1 and 20-minute stop rule.
+  Against state base `397deb24d00d1ee2679c58574aeed58f23e7830e`, every byte outside AC-1 and Measurement is identical and AC-2, AC-3, AC-4, and AC-5 retain SHA-256 `b6c7c679f110c6bd5762df8691ee087c14d195c4c045ddecb4d3649feac01f7e`; candidate/remote remain `452dabd1...`, Terra manifest remains `4c71adba...`, and only one Sol-high P1 is allowed before `2026-08-12T16:16:57Z`, otherwise `UNKNOWN`.
+- DONE: Obtain exactly one fresh-context EM judgment on this reset and produce a complete ideation-reset Stage Report with bound-field PASS and AC evidence, without editing product files or running model pressure.
+  One GPT-5.6 Sol High fresh-context EM reviewed reset blob `4fe7582e12e74ad214d4fb7c2516c7d99185fb49` / SHA-256 `08bbc272...`, returned `proceed/high/not_needed`, and supported R1-R5; bound-field validation passed and AC-1 through AC-5 each report `unevidenced=false`.
+- DONE: Preserve the EM prerequisite and all non-ideation authority boundaries.
+  The current evaluator still implements the superseded tool-call gate, so deterministic contract correction and verification must precede P1; this stage changed no product file, ran no model pressure, created no PR, and exercised no transition or delivery authority.
+
+### Summary
+
+The ideation reset replaces single-sample cost dominance with safety-first comparability while retaining every hard product, safety, policy, trace, exact-revision, and delivery constraint. The sole fresh EM recommends proceeding through the deterministic contract correction to one bounded Sol-high P1; efficiency remains observation-only and the hard stop preserves `UNKNOWN` rather than authorizing more spend.
