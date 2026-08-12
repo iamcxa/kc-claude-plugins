@@ -658,3 +658,30 @@ validation.
 ### Feedback Cycles
 
 - Cycle 1: REJECTED — fresh validation / EM loop; surface 153m implementation wall-clock vs estimate 90m (170%); AC unchanged
+
+## Stage Report: implementation correction
+
+- DONE: Repair both validation findings without changing the accepted product-first route.
+  `parse_trace` now retains command output; P1/P4 grading rejects command-level improvement access, broad execution-state enumeration, and output-level improvement-path disclosure. Claim grading now compares the work-item-derived first product action after only case and terminal-punctuation normalization, so a semantically wrong action still fails. The checked-in mutants redden the original broad-enumeration/output-leak and wrong-action defects before the corrected grader turns them green.
+- DONE: Remove the live continuation discovery paths exposed by exact runtime evidence.
+  The ordinary skill reads the workflow path named by nearest instructions, reads iteration authority first, short-circuits an explicitly empty iteration to scheduling, and reads an active item's exact bound entity rather than enumerating the workflow or execution-state parent. This closed the additional real P4 reproducer found after the two rejected evaluator findings. The ordinary skill is 650 words versus the 1,643-word baseline, a 60.4% reduction within the accepted 650-word ceiling.
+- DONE: Keep the focused fixture and artifact grader bound to real authority semantics.
+  The Local Profile now binds `docs/dev/_state` as the debrief home instead of asking the model to guess it. The artifact grader accepts a handoff reference relative to the repository, `_state`, or the sibling `_improvements/state.yaml`; a new RED test proves the previously rejected `handoffs/...` sibling reference. These are evaluator corrections, not new product policy.
+- DONE: Preserve exact model receipts without smoothing failures.
+  The latest complete paired receipt is `/tmp/kc-dev-flow-continuation-eval-4ebb960a-20260812/manifest.json`, SHA-256 `f579541db7c7c0b36468af3902f9534f0a988dd83195d201b201b172f3ef27a3`. It binds candidate `4ebb960a5c79337863607f0c8dd09ae426fa10c0`, fixture SHA-256 `b0db244da2db1d4ef82e8521c42b4a3e1278989c9cf9b0b03b5b8a4843d7bbca`, plugin tree SHA-256 `6e0c7b3a183e501eaee331afe11a1311c47e8c94713ce11b1672a3c2a1ea1f6a`, skill SHA-256 `6ad7dbc6b4e302c49e31850a7553040776acdf6bc78114403272bc4c18fe0f27`, GPT-5.6 Sol High, and Codex CLI 0.145.0. Candidate P1, P2, and P4 PASS with zero claim, trace, or artifact failures. Candidate P3 has zero claim and trace failures, validator PASS, one valid private identity, one handoff, and one atomic two-file commit, but the manifest remains FAIL because the then-current grader rejected its correct state-relative `handoffs/...` cursor reference.
+- DONE: Close the P3 grader false negative mechanically without manufacturing a model verdict.
+  The final correction at `bd2ba881ae9e68f97a203c0c49d90a18bc85983d` adds the state-parent-relative reference to the closed accepted set. Its RED test fails against the old grader with `P3 cursor does not reference the handoff batch` and passes after the one-line normalization. The final plugin tree and skill hashes are byte-identical to the `4ebb960a` receipt because this final change touches only the evaluator and its test. The earlier `/tmp/kc-dev-flow-continuation-eval-aefa64b8-20260812/manifest.json` independently records P3 PASS against the same plugin-tree and skill hashes; it remains separate evidence and does not rewrite either paired aggregate.
+- DONE: Run the complete relevant deterministic suite after the final correction.
+  PASS: `python3 scripts/kc-dev-flow-continuation-eval.test.py`; `python3 scripts/kc-dev-flow-contract-test.py`; `python3 scripts/kc-dev-flow-loader-eval.test.py`; `python3 kc-dev-flow/scripts/improvement-intake.test.py` (9 tests); `bash scripts/skill-frontmatter-lint.sh` (40 skills); `bash scripts/version-parity-check.sh`; `bash scripts/marketplace-verify.sh` (schema and all isolated installs); and `git diff --check`.
+- DONE: Commit and push the bounded correction while preserving delivery and gate authority.
+  Local and remote branch `spacedock-ensign/product-first-continuation` are both `bd2ba881ae9e68f97a203c0c49d90a18bc85983d`; fresh `origin/main` remains `64c496cdab7ccc59a15753e454f627a70383fb46`. The merge-base diff is 12 files, 2,288 additions, 180 deletions, and 14 commits. It remains one inseparable slice above the numeric trigger, so the previously recorded one-Draft-PR `## Native stack exception` topology is unchanged. No PR currently exists, and this worker created no PR, merge, release, stage transition, task, sprint admission, provider post, or accepted red residual.
+- OPEN EVIDENCE: Do not treat implementation completion as a validation verdict.
+  The final full model manifest remains transparently FAIL for the now-repaired P3 grader false negative, and no new model run was started merely to rewrite that receipt. The literal real-holder run was performed at earlier policy bytes and is not exact-final origin closure. Fresh validation still owns whether the corrected deterministic instrument, same-plugin-byte model receipts, and any exact-final origin re-observation satisfy the rejected gate's disproof condition.
+
+### Summary
+
+The bounded implementation correction is committed and remote-confirmed at `bd2ba881ae9e68f97a203c0c49d90a18bc85983d`. It closes the rejected output/broad-enumeration and wrong-first-action falsifiers, removes workflow and execution-state discovery scans, binds the pressure fixture to its real state home, and fixes the state-relative artifact grader. The complete deterministic suite is green. Model receipts are preserved exactly: the latest paired aggregate is not relabeled, and fresh validation—not this implementation report—retains the acceptance and stage-transition decision.
+
+### Feedback Cycles
+
+- Cycle 2: IMPLEMENTATION CORRECTION COMPLETE — repaired rejected AC-1 instrument and runtime findings; exact model aggregate preserved as FAIL pending fresh validation; AC unchanged
