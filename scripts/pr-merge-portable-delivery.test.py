@@ -48,6 +48,7 @@ COMPLETION_ROWS = [
     ("PR repository", "explicit `PR_REPO`", "stop"),
     ("Approved candidate", "exactly one full `Candidate:` SHA in approved body", "stop"),
     ("GitHub PR", "`headRefOid` equals Candidate and `mergedAt` is non-empty", "stop"),
+    ("PR feedback", "current exact-head digest and dispositions", "stop"),
     ("Required checks", "explicit-repository required checks succeed", "stop"),
     ("Sentinel commit", "set and state commit both succeed", "only then guard"),
 ]
@@ -86,7 +87,16 @@ def validate(text: str) -> list[str]:
             errors.append(f"missing {label}")
     if text.count("gh pr create") != 1:
         errors.append("local extension must contain exactly one canonical PR-create command")
-    positions = [text.find(item) for item in [VIEW, CHECKS, SET_SENTINEL, COMMIT_SENTINEL, GUARD]]
+    completion_marker = "#### Single-PR completion decision\n"
+    completion = (
+        text.split(completion_marker, 1)[1].split("\n#### ", 1)[0]
+        if text.count(completion_marker) == 1
+        else ""
+    )
+    positions = [
+        completion.find(item)
+        for item in [VIEW, CHECKS, SET_SENTINEL, COMMIT_SENTINEL, GUARD]
+    ]
     if any(position < 0 for position in positions) or positions != sorted(positions):
         errors.append("completion transcript is incomplete or out of order")
     for command in re.findall(r"`(gh pr view[^`\n]+)`", text):

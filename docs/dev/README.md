@@ -244,6 +244,18 @@ it is not part of backlog, ideation, or implementation reading. A fresh-context
 validator checks the exact deliverable against ideation ACs and never finishes
 the implementation.
 
+After a product PR exists, the `pr-merge` reconciliation hook supplies its
+declared external GitHub review surfaces as another validation input: unresolved
+inline review threads and submitted PR-level reviews. Conversation-tab comments
+are outside this first slice. Route the declared set through
+`kc-pr-flow:kc-pr-review-resolve` so claims are checked against the code rather
+than accepted by reviewer identity. The validation report records one
+`PR feedback snapshot:` line per delivered PR containing the same exact PR head,
+the feedback digest, review and thread IDs, and one `fixed`,
+`rejected-with-reason`, or `out-of-scope-and-filed` disposition per observed
+item. A code-changing fix returns to implementation and requires fresh
+validation at the new revision.
+
 The stage report records: `Lenses:`, `Diff coverage:`, `Adversarial:`,
 `Cross-model:`, `E2E:`, and `Origin re-observation:`. When origin evidence
 applies, its line includes `Reported scenario:`, `Originating runtime kind:`,
@@ -280,11 +292,14 @@ entity; delivery never depends on token accounting.
 Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
 Only an authenticated product PR observed merged with required checks green on
-its exact HEAD authorizes terminalization. Clear the product `mod-block`, set
-`completed` from the PR's `mergedAt`, set the passed verdict and `done`, commit
-the live entity, then run the path-scoped archive transaction. Terminal state is
-not archive proof; preserve the live entity when archive validation fails and
-load the recovery runbook.
+its exact HEAD authorizes terminalization. The current exact-head PR feedback
+snapshot must also match the complete provider read: no unresolved external
+review thread lacks a recorded disposition, and no substantive external
+PR-level review lacks a recorded disposition. Clear the product `mod-block`,
+set `completed` from the PR's `mergedAt`, set the passed verdict and `done`,
+commit the live entity, then run the path-scoped archive transaction. Terminal
+state is not archive proof; preserve the live entity when archive validation
+fails and load the recovery runbook.
 
 ## Continuation and handoff
 

@@ -920,6 +920,11 @@ expected_stack_completion_rows = [
         "stop",
     ),
     (
+        "PR feedback",
+        "each layer has a current exact-head digest and dispositions",
+        "stop",
+    ),
+    (
         "Required checks",
         "each explicit-repository required check succeeds",
         "stop",
@@ -997,6 +1002,105 @@ for phrase in [
     "pull_request CI for every layer",
 ]:
     require(phrase in local_extension, f"pr-merge native-stack mechanics are missing: {phrase}")
+
+feedback_heading = "### PR feedback reconciliation\n"
+require(
+    local_extension.count(feedback_heading) == 1,
+    "pr-merge must contain one PR feedback reconciliation contract",
+)
+feedback_section = re.split(
+    r"\n#{3,4} ", local_extension.split(feedback_heading, 1)[1], maxsplit=1
+)[0]
+feedback_view = 'gh pr view "$PR_NUMBER" --repo "$PR_REPO" --json author,headRefOid,isDraft,state'
+feedback_reviews = 'gh api --paginate --slurp "repos/$PR_REPO/pulls/$PR_NUMBER/reviews"'
+feedback_checks = 'gh pr checks "$PR_NUMBER" --repo "$PR_REPO" --required'
+
+
+def feedback_contract_errors(section: str) -> list[str]:
+    errors: list[str] = []
+    normalized = " ".join(section.split())
+    required = [
+        "overrides the released startup and idle treatment of an `OPEN` PR",
+        "startup, idle, before readiness, and before merge or terminalization",
+        feedback_view,
+        "gh api graphql",
+        "reviewThreads(first: 100)",
+        "pageInfo { hasNextPage endCursor }",
+        "Require `hasNextPage=false`",
+        feedback_reviews,
+        "author differs from the PR author",
+        "Bot feedback is external feedback",
+        "`CHANGES_REQUESTED`",
+        "body hash",
+        "feedback digest",
+        "PR feedback snapshot:",
+        "fixed",
+        "rejected-with-reason",
+        "out-of-scope-and-filed",
+        "Every detector-retained ID",
+        "kc-pr-flow:kc-pr-review-resolve",
+        feedback_checks,
+        "exit 8 is pending",
+        "return to implementation",
+        "invalidates the prior validation",
+        "one snapshot per layer",
+        "explicit captain authorization",
+        "preserve `mod-block`",
+        "report `UNKNOWN`",
+    ]
+    for phrase in required:
+        if phrase not in normalized:
+            errors.append(f"missing {phrase}")
+    order = [
+        feedback_view,
+        "gh api graphql",
+        feedback_reviews,
+        "Read the latest validation report's `PR feedback snapshot:`",
+        "kc-pr-flow:kc-pr-review-resolve",
+        feedback_checks,
+    ]
+    positions = [normalized.find(marker) for marker in order]
+    if any(position < 0 for position in positions) or positions != sorted(positions):
+        errors.append("feedback observation, disposition, and checks are out of order")
+    for forbidden in ["sleep ", "while true", "ci-" + "gate", "reviewDecision"]:
+        if forbidden in normalized:
+            errors.append(f"forbidden shortcut {forbidden}")
+    return errors
+
+
+require(
+    not feedback_contract_errors(feedback_section),
+    "pr-merge feedback reconciliation failed: "
+    + "; ".join(feedback_contract_errors(feedback_section)),
+)
+normalized_feedback_section = " ".join(feedback_section.split())
+feedback_mutants = {
+    "head-binding": normalized_feedback_section.replace("headRefOid", "headRefName"),
+    "pagination": normalized_feedback_section.replace(
+        "Require `hasNextPage=false`", "Ignore `hasNextPage`", 1
+    ),
+    "author-filter": normalized_feedback_section.replace(
+        "author differs from the PR author", "author is present"
+    ),
+    "bot-feedback": normalized_feedback_section.replace(
+        "Bot feedback is external feedback", "Bot feedback is ignored", 1
+    ),
+    "edited-body": normalized_feedback_section.replace("body hash", "body length"),
+    "disposition": normalized_feedback_section.replace(
+        "Every detector-retained ID", "Some retained IDs", 1
+    ),
+    "layer-coverage": normalized_feedback_section.replace(
+        "one snapshot per layer", "one snapshot for the top PR", 1
+    ),
+    "checks-before-disposition": feedback_checks + " " + normalized_feedback_section.replace(
+        feedback_checks, "", 1
+    ),
+}
+for mutant_name, mutant in feedback_mutants.items():
+    require(
+        feedback_contract_errors(mutant),
+        f"pr-merge feedback mutant survived: {mutant_name}",
+    )
 require(
     "waiting for the lower PR to merge blocks useful work" not in workflow,
     "workflow README adds a second stack-readiness condition",
@@ -1463,6 +1567,68 @@ for phrase in [
     "Unavailable re-observation is missing evidence",
 ]:
     require(phrase in kernel, f"kernel is missing invariant: {phrase}")
+normalized_feedback_kernel = " ".join(kernel.split())
+for phrase in [
+    "delivery provider exposes review feedback after initial validation",
+    "Feedback is evidence to verify, not authority to obey",
+    "`fixed`, `rejected-with-reason`, or `out-of-scope-and-filed`",
+    "exact delivery revision",
+    "invalidates the prior validation",
+]:
+    require(
+        phrase in normalized_feedback_kernel,
+        f"kernel is missing review-feedback invariant: {phrase}",
+    )
+require(
+    (ROOT / "docs/dev/_mods/kernel.md").read_bytes() == required_files[4].read_bytes(),
+    "self-adopted kernel is not byte-identical to the packaged kernel",
+)
+
+feedback_validation_start = workflow.find("### `validation`")
+feedback_validation_end = workflow.find("### `done`", feedback_validation_start)
+feedback_validation_stage = workflow[feedback_validation_start:feedback_validation_end]
+feedback_done_end = workflow.find("\n## ", feedback_validation_end)
+feedback_done_stage = workflow[
+    feedback_validation_end:feedback_done_end if feedback_done_end >= 0 else len(workflow)
+]
+normalized_feedback_validation_stage = " ".join(feedback_validation_stage.split())
+normalized_feedback_done_stage = " ".join(feedback_done_stage.split())
+for phrase in [
+    "PR feedback snapshot:",
+    "feedback digest",
+    "review and thread IDs",
+    "kc-pr-flow:kc-pr-review-resolve",
+    "fixed",
+    "rejected-with-reason",
+    "out-of-scope-and-filed",
+    "same exact PR head",
+]:
+    require(
+        phrase in normalized_feedback_validation_stage,
+        f"validation stage is missing PR feedback input: {phrase}",
+    )
+review_resolve_skill = (
+    ROOT / "kc-pr-flow/skills/kc-pr-review-resolve/SKILL.md"
+).read_text(encoding="utf-8")
+for phrase in [
+    "Dev-flow reconciliation caller",
+    "exact-head detector set",
+    "one technical disposition for every supplied review and thread ID",
+    "must not disappear from the reconciliation result",
+]:
+    require(
+        phrase in " ".join(review_resolve_skill.split()),
+        f"kc-pr-review-resolve is missing reconciliation integration: {phrase}",
+    )
+for phrase in [
+    "current exact-head PR feedback snapshot",
+    "no unresolved external review thread lacks a recorded disposition",
+    "no substantive external PR-level review lacks a recorded disposition",
+]:
+    require(
+        phrase in normalized_feedback_done_stage,
+        f"done stage is missing PR feedback gate: {phrase}",
+    )
 require(
     re.search(
         r"Lower-level diagnosis and guards do not\s+replace re-observation",

@@ -180,6 +180,106 @@ Resolve an unqualified reference's `CODE_REPO` from the entity worktree origin;
 never consult the launch directory. Bind the result as explicit `PR_REPO` and
 the number as `PR_NUMBER`.
 
+### PR feedback reconciliation
+
+For this repository, this section overrides the released startup and idle
+treatment of an `OPEN` PR. The check is restartable: run it at startup, idle,
+before readiness, and before merge or terminalization. Do not keep a shell
+process alive between checks.
+
+Resolve the PR reference as above, then bind one observation to its explicit
+repository and head:
+
+`gh pr view "$PR_NUMBER" --repo "$PR_REPO" --json author,headRefOid,isDraft,state`
+
+Require an `OPEN` or `MERGED` PR, a non-empty PR author login, and one full
+`headRefOid`. Split the already-canonical `PR_REPO` into owner and name without
+consulting ambient repository state. Run `gh api graphql` with typed owner,
+name, and integer PR-number variables to query unresolved inline feedback using
+this selection:
+
+```graphql
+pullRequest(number: $number) {
+  reviewThreads(first: 100) {
+    pageInfo { hasNextPage endCursor }
+    nodes {
+      id
+      isResolved
+      comments(first: 100) {
+        pageInfo { hasNextPage endCursor }
+        nodes { id author { login } body createdAt updatedAt }
+      }
+    }
+  }
+}
+```
+
+Require `hasNextPage=false` for both the thread collection and every comments
+collection; this bounded query is not complete evidence otherwise. Keep each
+unresolved thread containing at least one comment whose author differs from the
+PR author. Fetch all submitted PR-level reviews separately:
+
+`gh api --paginate --slurp "repos/$PR_REPO/pulls/$PR_NUMBER/reviews"`
+
+Flatten every returned page. Keep an external review when its author differs
+from the PR author and either its trimmed body is non-empty or its state is
+`CHANGES_REQUESTED`. Bot feedback is external feedback; identity affects
+notification routing, not whether the claim is read or verified. Pure
+Conversation-tab comments are outside this first slice.
+
+Canonicalize the retained set by sorting on object kind and GitHub ID. For each
+review retain its ID, state, commit ID, submitted time, and body hash; for each
+thread retain its ID plus every external comment ID, created/updated time, and
+body hash. Hash that canonical JSON as the feedback digest, so an edited review
+or a new reply in an existing thread is a new observation rather than a reused
+ID. Do not retain untrusted bodies in workflow state.
+
+Read the latest validation report's `PR feedback snapshot:`. It names the exact
+head, feedback digest, review and thread IDs, and one disposition for every
+observed item: `fixed`, `rejected-with-reason`, or
+`out-of-scope-and-filed`. A fixed thread must no longer be unresolved; either of
+the other dispositions is the explicit waiver permitted by the done gate.
+
+When the snapshot is absent, its head or digest differs, an item lacks a valid
+disposition, or a fixed thread is still unresolved, preserve `mod-block` and
+route the complete set through `kc-pr-flow:kc-pr-review-resolve`. That skill
+reads, verifies, deduplicates, and presents the feedback; it does not gain push,
+scope, posting, readiness, or merge authority from this hook. If accepted work
+changes code, return to implementation. The new head invalidates the prior
+validation and must complete fresh validation plus a new feedback snapshot
+before delivery is rebound or readiness is considered.
+
+Invoke the skill in reconciliation mode with the retained review and thread IDs
+plus their untrusted bodies as validation input. Every detector-retained ID must
+receive a disposition in the validation report. Normal interactive exclusions
+inside the skill, including a pure approval or a PR-level review whose points
+are already covered by resolved inline threads, become an explicit
+`rejected-with-reason` disposition here; they do not disappear from the
+snapshot. The validation gate, not the observer, judges whether a body is
+substantive.
+
+Only after the exact-head feedback snapshot is current may this hook query
+repository-defined CI:
+
+`gh pr checks "$PR_NUMBER" --repo "$PR_REPO" --required`
+
+For this command, exit 8 is pending, exit zero is green, and every other
+non-zero or malformed result stops. Never substitute a hard-coded workflow or
+job name. A Draft PR becomes eligible for `gh pr ready` only when this feedback
+decision and required checks are green at the same head and explicit captain
+authorization has been recorded. Repeat the complete observation immediately
+before an authorized merge or terminalization; a changed head or feedback
+digest invalidates the earlier result.
+
+Any missing tool, authorization failure, pagination overflow, parse failure,
+API failure, incomplete response, or identity ambiguity must preserve
+`mod-block`, report `UNKNOWN`, and leave delivery state unchanged. Startup and
+idle retry from live GitHub state; they never infer clean feedback from silence.
+
+For a single PR, run the observation against `PR_REPO` and `PR_NUMBER`. For a
+native stack, resolve the ordered stack first and run the same complete
+observation independently for every layer PR at its own `head.sha`, with one snapshot per layer. A top-PR snapshot cannot cover a lower layer. Any layer with an absent, stale, incomplete, or undispositioned snapshot blocks readiness for every layer and blocks stack completion before any sentinel or guard.
+
 #### Single-PR completion decision
 
 The startup and idle hooks use this exact fail-closed decision:
@@ -189,6 +289,7 @@ The startup and idle hooks use this exact fail-closed decision:
 | PR repository | explicit `PR_REPO` | stop |
 | Approved candidate | exactly one full `Candidate:` SHA in approved body | stop |
 | GitHub PR | `headRefOid` equals Candidate and `mergedAt` is non-empty | stop |
+| PR feedback | current exact-head digest and dispositions | stop |
 | Required checks | explicit-repository required checks succeed | stop |
 | Sentinel commit | set and state commit both succeed | only then guard |
 
@@ -198,7 +299,8 @@ Fetch the proof without ambient repository context:
 
 Parse exactly one `Candidate:` line containing a full approved SHA from the
 returned body. Require that SHA to equal `headRefOid`, require non-empty
-`mergedAt`, then require:
+`mergedAt`, then repeat the PR feedback reconciliation at that exact head and
+require its current digest plus complete dispositions before running:
 
 `gh pr checks "$PR_NUMBER" --repo "$PR_REPO" --required`
 
@@ -294,6 +396,7 @@ proof passes:
 | Top position | stored top PR is final ordered entry | stop |
 | Atomic landing | every ordered `pull_requests[].merged_at` is non-empty | stop |
 | Candidate | each `head.sha` and explicit PR `headRefOid` equal body Candidate | stop |
+| PR feedback | each layer has a current exact-head digest and dispositions | stop |
 | Required checks | each explicit-repository required check succeeds | stop |
 | Completion time | stored top PR `mergedAt` is non-empty | only then sentinel and guard |
 
@@ -309,7 +412,9 @@ For every ordered entry, query the same explicit repository:
 `gh pr view "$LAYER_PR_NUMBER" --repo "$STACK_REPO" --json body,headRefOid,mergedAt`
 
 Require exactly one full `Candidate:` SHA in the approved body and require both
-the entry's `head.sha` and the PR's `headRefOid` to equal it. Then run:
+the entry's `head.sha` and the PR's `headRefOid` to equal it. Repeat PR feedback
+reconciliation for that layer at the same head and require its current digest
+plus complete dispositions before running:
 
 `gh pr checks "$LAYER_PR_NUMBER" --repo "$STACK_REPO" --required`
 
