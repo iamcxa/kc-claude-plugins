@@ -1,10 +1,10 @@
 ---
 title: "kc-dev-flow: make workflow changes measurable through the real loader"
-status: backlog
+status: ideation
 source: "captain:conversation-2026-08-12-second-slice"
 product: kc-dev-flow
 sprint:
-started:
+started: 2026-08-12T05:46:00Z
 completed:
 verdict:
 worktree:
@@ -12,7 +12,7 @@ issue:
 pr:
 mod-block:
 design:
-lane:
+lane: main
 id: zzr91wq8wmc29ddfsyjyfyz5
 ---
 
