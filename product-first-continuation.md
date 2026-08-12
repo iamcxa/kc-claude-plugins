@@ -685,3 +685,166 @@ The bounded implementation correction is committed and remote-confirmed at `bd2b
 ### Feedback Cycles
 
 - Cycle 2: IMPLEMENTATION CORRECTION COMPLETE — repaired rejected AC-1 instrument and runtime findings; exact model aggregate preserved as FAIL pending fresh validation; AC unchanged
+
+## Stage Report: validation (cycle 2)
+
+Verdict: REJECTED
+
+- FAILED: Independently validate exact candidate bd2ba881ae9e68f97a203c0c49d90a18bc85983d against AC-1 through AC-5 without relabeling preserved model evidence.
+  The corrected P3 artifact rule replays GREEN, but the latest paired P1 still uses 10 candidate tool calls versus 7 for its paired known-bad arm. The checked-in `paired_verdict` therefore remains `FAIL` after the P3 false negative is mechanically cleared, which violates AC-1's pre-registered ordinary-call non-inferiority rule.
+- DONE: Re-test both rejected P1 falsifiers, the live broad-state discovery path, exact-final origin behavior, retained-surface necessity, and the full relevant suite.
+  The broad enumeration, output leak, and wrong-first-action mutants now fail; the exact installed live-holder run resolves the item, validation stage, and first action without a state-tree walk or improvement-state command; the missing-reference mutation fails; all deterministic gates pass.
+- DONE: Produce one authoritative fresh-context cycle-2 Science Officer EM judgment with AC, lens, origin, receipt, topology, and authority accounting.
+  The judgment recommends another bounded AC-1 correction, preserves the accepted scope and topology, and records the required captain escalation after two consecutive rejected validation cycles.
+
+### Material findings
+
+- P1: The latest complete paired receipt preserves an ordinary-path tool-call
+  regression. In `/tmp/kc-dev-flow-continuation-eval-4ebb960a-20260812/manifest.json`,
+  candidate `4ebb960a5c79337863607f0c8dd09ae426fa10c0` uses 10 P1 tool calls while
+  paired known-bad `64c496cdab7ccc59a15753e454f627a70383fb46` uses 7. Final candidate
+  `bd2ba881ae9e68f97a203c0c49d90a18bc85983d` has the same plugin-tree and skill
+  hashes as that candidate arm. Replaying the manifest through the final
+  `paired_verdict` with only the corrected P3 artifact failure cleared still
+  returns `FAIL`. AC-1 and the accepted lexicographic measurement prohibit an
+  ordinary candidate increase; the earlier same-byte `aefa64b8` sample at 7
+  candidate calls versus 8 baseline calls is conflicting supplemental evidence,
+  not authority to discard the newer paired regression.
+
+### Acceptance results
+
+- AC-1: FAIL. The final ordinary skill is 650 words versus 1,643, a 60.4%
+  reduction. Direct mutations now reject `rg --files docs/dev/_state`, the live
+  `docs/dev/.spacedock-state` enumeration form, output-level improvement-path
+  disclosure, and a wrong first action. The exact installed live-holder run names
+  `product-first-continuation`, `validation`, and the fresh validation action
+  without `rg --files`, `find`, `ls`, a tree walk, or an improvement-state
+  command. Those gains do not override the latest paired 10-versus-7 tool-call
+  regression. The live entity contains historical prose quoting the old debrief
+  path, so the conservative output matcher flags a replay of that prose even
+  though the commands read only the exact work-item record; this is an
+  instrumentation limit, not evidence of improvement-state I/O, and it does not
+  repair the independent tool-count failure.
+- AC-2: PASS as bounded evidence, without rewriting either manifest. The `4ebb960a`
+  candidate P2 has zero failures and preserves `UNKNOWN` with no write under
+  unavailable authority. Its P3 has zero claim/trace failures, validator `PASS`,
+  one durable private identity, one handoff, and one atomic commit; the final
+  deterministic RED/GREEN accepts its state-relative `handoffs/...` reference.
+  The separate `aefa64b8` P3 is `PASS` against the same plugin-tree and skill
+  hashes. The complete `4ebb960a` manifest remains `FAIL`.
+- AC-3: PASS. Closed authority mutants and preserved P2/P3 responses exercise no
+  task creation, sprint admission, scheduling, posting/upload, policy edit,
+  installation, merge, promotion, or product pause. Handoff validation stays
+  upstream of captain-approved delivery and source placement stays downstream.
+- AC-4: PASS. The `4ebb960a` candidate P4 has zero claim, trace, and artifact
+  failures. The corrected direct live-form mutant rejects broad state discovery,
+  and the skill now short-circuits an explicitly empty iteration before work-item
+  or execution-state inspection.
+- AC-5: PASS for focus and durable scope, but it cannot rescue AC-1. All 12
+  changed files map to AC-1 through AC-5, the change remains one inseparable
+  continuation slice, the retained reference fails its without-it mutation, and
+  no new skill, schema, scheduler, general runner, or Spacedock change appears.
+
+Lenses: behavior FAIL with one P1 non-inferiority finding; contract/schema PASS for the closed claims, trace, and final artifact normalization, with the quoted-path output-matcher limit recorded; state/concurrency PASS for P2/P3 ownership and atomicity; security/privacy PASS for private identity and sanitized handoff boundaries; runtime/platform FAIL because the latest paired P1 increases tool calls; docs/policy PASS across PRODUCT, ARCHITECTURE, README, canonical/vendored kernel, skill, reference, and absolutes registry; delivery PASS for exact-head, install, version, and topology facts. Inputs were merge base `64c496cdab7ccc59a15753e454f627a70383fb46`, candidate `bd2ba881ae9e68f97a203c0c49d90a18bc85983d`, all 12 changed files, both preserved manifests and raw traces, the exact-final live-holder receipt, selected validation policies, and fresh origin refs. Falsifiers were the rejected broad-enumeration/output and wrong-action mutants, final P3 RED/GREEN replay, missing-reference mutation, known-bad arm, and post-P3 paired-verdict replay.
+
+Diff coverage: 100% (5/5 coverable behavior contracts exercised: conditional-reference necessity and P1-P4; 12/12 changed files and every authority boundary inspected). The surviving finding is a pre-registered cross-arm measurement, not an untested possibility.
+
+Adversarial: The two rejected P1 falsifiers and the newly exposed live `.spacedock-state` enumeration form now redden. Removing `kc-dev-flow/references/improvement-harvesting.md` from an exact-head clone makes the package contract fail. Re-grading the preserved `4ebb960a` raw P1-P4 responses at final head yields zero claim and trace failures; deterministic RED/GREEN closes only the P3 state-relative artifact false negative. When that P3 run is changed to `PASS` for the purpose of exercising the final aggregate, `paired_verdict` still returns `FAIL` because candidate P1 has 10 calls versus 7. No model rerun was used to relabel the receipt.
+
+Cross-model: not_needed — the receipt fields and checked-in verdict function reproduce the finding deterministically with high confidence. The earlier same-byte favorable P1 sample is explicit dissent, but it does not make the newer paired regression ambiguous under the accepted all-criteria pass rule; another model would not adjudicate away a recorded non-pass.
+
+E2E: FAIL — the behavior-producing installed-skill boundary routes product work correctly, but the latest same-runtime paired P1 violates the accepted tool-call non-inferiority check at 10 versus 7. The exact-final live-holder observation is supporting origin evidence, not a paired cost control.
+
+Origin re-observation: PASS — Reported scenario: use the installed `continue-dev-flow` skill to continue the current approved sprint from live repository state and name `product-first-continuation`, validation, and its first concrete product action before improvement activity | Originating runtime kind: Codex installed-skill host against the live split-root Spacedock holder | Re-observation artifact/revision: `/tmp/kc-dev-flow-p1-bd2ba88.icWPvL` at `bd2ba881ae9e68f97a203c0c49d90a18bc85983d`, install receipt SHA-256 `e4596a353a24b356136d1ad4828610a3b6817216d58d693079da6f53a577faeb`, raw trace SHA-256 `bde9dc606e000d95f405810a796c600aff11d5d75ef40ae883648cae400fa894` | Equivalent-runtime rationale: exact Git-archive plugin installation, GPT-5.6 Sol High, real workflow README, iteration authority, Spacedock work-item authority, actual state holder, and the literal invocation prefix were preserved; the appended observation-only clause stopped before stage work and granted no mutation or harvest authority | Falsifier kind: mutation | Result: the run resolved `gp / product-first-continuation`, stage `validation`, and the exact-final validation action; its 25 shell commands contained no broad direct state enumerator or improvement-state path access, and the product and state worktrees remained clean.
+
+### Full exact-head verification
+
+- PASS: `python3 scripts/kc-dev-flow-continuation-eval.test.py`.
+- PASS: `python3 scripts/kc-dev-flow-contract-test.py`.
+- PASS: `python3 scripts/kc-dev-flow-loader-eval.test.py`.
+- PASS: `python3 kc-dev-flow/scripts/improvement-intake.test.py`, 9 tests.
+- PASS: `bash scripts/skill-frontmatter-lint.sh`, 40 skills.
+- PASS: `bash scripts/version-parity-check.sh`.
+- PASS: `bash scripts/marketplace-verify.sh`, schema and all isolated installs.
+- PASS: canonical and vendored kernel are byte-identical.
+- PASS: `git diff --check origin/main...HEAD`.
+- PASS: fresh fetch leaves origin/main at `64c496cdab7ccc59a15753e454f627a70383fb46` and local/remote candidate at `bd2ba881ae9e68f97a203c0c49d90a18bc85983d`; `gh pr list` returns no PR for the branch.
+
+### Delivery topology and Native stack exception
+
+The merge-base diff remains 12 files, 2,288 additions, 180 deletions, and 14
+commits. No dependent green layer or independent green slice exists, so the
+accepted topology remains one Draft PR with the exact `## Native stack exception`
+heading and explicit non-author reviewer acknowledgement before readiness. This
+validation grants no PR creation, readiness, merge, release, or terminalization
+authority.
+
+## Validation Science Officer EM judgment (cycle 2; authoritative)
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Return exact candidate bd2ba881ae9e68f97a203c0c49d90a18bc85983d for another bounded AC-1 correction. The rejected broad-enumeration and wrong-action falsifiers are closed, exact-final origin behavior now routes correctly, AC-2 through AC-5 remain supported, and P3's state-relative artifact failure is a proven grader false negative. However, the latest paired P1 uses 10 candidate tool calls versus 7 for its known-bad arm. Replaying the final aggregate after clearing only that P3 false negative still returns FAIL, so the accepted non-inferiority criterion is not met.
+  evidence_synthesis: >-
+    Fresh origin fetch binds origin/main to 64c496cdab7ccc59a15753e454f627a70383fb46 and local/remote candidate to bd2ba881ae9e68f97a203c0c49d90a18bc85983d. Final policy identity is plugin tree 6e0c7b3a183e501eaee331afe11a1311c47e8c94713ce11b1672a3c2a1ea1f6a and skill 6ad7dbc6b4e302c49e31850a7553040776acdf6bc78114403272bc4c18fe0f27, byte-identical to the 4ebb960a and aefa64b8 candidate receipts. The two rejected P1 mutants and the live broad-state form now fail; the complete deterministic suite, missing-reference mutation, and final P3 artifact RED/GREEN behave as required. The exact installed live-holder run names the item, validation stage, and next product action without improvement-state access. Preserved 4ebb960a candidate P1/P2/P4 and P3 claims/traces are clean, P3 artifacts are otherwise valid, and aefa64b8 independently supplies a same-byte P3 PASS. The complete 4ebb960a manifest remains FAIL. Its P1 candidate uses 10 calls versus 7 baseline; setting only its repaired P3 artifact result to PASS still makes checked-in paired_verdict return FAIL. The earlier aefa64b8 P1 sample is favorable at 7 versus 8 calls, but does not erase the later paired regression.
+  risk_tradeoff_call: >-
+    The candidate buys a 60.4% smaller ordinary skill, correct product-first routing, and preserved explicit-harvest safety. Accepting it would waive a captain-approved AC after a preserved runtime sample failed it; rerunning the same matrix until a favorable stochastic sample appears would weaken evidence rather than improve the product. The bounded alternative is to reduce ordinary resolution work while retaining direct-path and no-improvement-I/O guards, prove P1 first against a paired same-runtime control, and only then spend on any exact-policy evidence invalidated by that correction.
+  recommendation: >-
+    Gate Authority should record REJECTED and return only the ordinary P1 resolution path for bounded correction. Preserve the accepted product-first route, harvest contract, ACs, and one-PR topology. Do not relabel either existing manifest and do not start another full model matrix merely to obtain a different aggregate. Because this is the second consecutive rejection at validation, present the local Gate Authority escalation to the captain with the recommendation another bounded correction rather than an ideation reset, scope cut, or stop.
+  route: return
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    The FO may account for the rejected checklist, present the required two-cycle escalation, dispatch the bounded correction after authority resolves it, and perform authorized state mechanics. It may not waive the tool-call AC, choose a favorable sample, alter scope, advance the stage, create or ready a PR, approve the Native stack exception, merge, release, terminalize, or exercise captain, gate, work-item, delivery, or provider authority.
+  engineering_judgment:
+    question: >-
+      Should exact candidate bd2ba881ae9e68f97a203c0c49d90a18bc85983d pass validation when the corrected P1 falsifiers and origin behavior are green but the latest paired P1 increases tool calls from 7 to 10?
+    revision: >-
+      Merge base and fresh origin/main 64c496cdab7ccc59a15753e454f627a70383fb46; local and remote candidate bd2ba881ae9e68f97a203c0c49d90a18bc85983d; paired receipt /tmp/kc-dev-flow-continuation-eval-4ebb960a-20260812/manifest.json; supplemental receipt /tmp/kc-dev-flow-continuation-eval-aefa64b8-20260812/manifest.json; origin receipt /tmp/kc-dev-flow-p1-bd2ba88.icWPvL.
+    evidence_synthesis: >-
+      Exact-head source, preserved raw traces, manifests, deterministic tests, origin behavior, without-it mutation, and fresh remote refs support the synthesis above. The finding is reproduced by the repository's own paired_verdict after changing only the mechanically disproved P3 artifact failure; it does not depend on reviewer wording or a new model sample.
+    adjudications:
+      - finding: V2-1
+        disposition: supported
+        basis: >-
+          AC-1 and Measurement require ordinary candidate tool calls not to increase. The latest complete paired receipt records 10 candidate P1 calls and 7 known-bad calls. Final policy bytes match that candidate, and final paired_verdict remains FAIL after the P3 artifact false negative alone is cleared.
+      - finding: V2-2
+        disposition: supported
+        basis: >-
+          The prior correction genuinely closes its assigned defects. Direct broad-state, output-leak, live-path, and wrong-action mutants now fail, final raw P1-P4 claims/traces re-grade clean, and the exact installed live-holder run resolves product work without a state-tree walk or improvement-state command.
+      - finding: V2-3
+        disposition: supported
+        basis: >-
+          AC-2 through AC-4 retain valid evidence without laundering receipt status. P2 and P4 pass; 4ebb960a P3 has valid behavior and artifacts except for the mechanically disproved relative-reference grader error; aefa64b8 supplies a separate same-byte P3 PASS. Neither complete manifest is rewritten.
+      - finding: V2-4
+        disposition: supported
+        basis: >-
+          The missing-reference mutation fails, all 12 files map to accepted criteria, and the 2,468-line gross diff has no independently deliverable layer or slice. The existing one-Draft-PR Native stack exception topology remains accurate after rejection.
+    risk_tradeoff: >-
+      Correct product routing and smaller policy input are valuable, but they do not authorize waiving a separately accepted runtime-cost boundary. Another bounded resolution-path correction is cheaper and more reversible than an ideation reset, while a scope cut or stop is disproportionate because AC-2 through AC-5 and the route itself remain sound.
+    recommendation: >-
+      Return for one bounded AC-1 correction, then require a pre-registered paired P1 to satisfy action, state-I/O, and tool-call checks before any wider model spend. If policy bytes change, re-establish only the behavior evidence invalidated by that change after P1 clears. Escalate this two-cycle gate result to the captain as required by the local workflow.
+    route: return
+    confidence: high
+    dissent: >-
+      The earlier aefa64b8 paired P1 favors the same candidate policy bytes at 7 calls versus 8 baseline, showing model variance rather than a deterministic policy floor. That sample supports feasibility but cannot supersede the newer complete paired receipt or the accepted requirement that every hard criterion and non-inferiority check pass. The exact-final live observation also routes correctly but is not a paired cost control.
+    disproof_condition: >-
+      Change the route to proceed when a corrected exact head retains all direct P1/P4 falsifier failures and live-holder product-first behavior, and one pre-registered same-runtime paired P1 records the correct item, stage, and work-item-derived action with zero improvement-state I/O, no broad discovery, and candidate tool calls no greater than its paired known-bad arm. Do not run the remaining expensive pressures merely to relabel preserved receipts before this P1 condition clears.
+    authority_boundary: >-
+      Captain retains scope, AC revisions, two-cycle escalation resolution, irreversibility, spending, and any harvest schedule; Gate Authority retains validation verdict and transition; work-item authority retains scope and acceptance; Spacedock retains durable state; delivery authority retains Draft PR creation, exception acknowledgement, readiness, merge, release, terminalization, and archive; provider owners retain posting and upload. This advisory judgment grants none of those actions.
+```
+
+### Summary
+
+Validation cycle 2 rejects exact candidate
+`bd2ba881ae9e68f97a203c0c49d90a18bc85983d`. The bounded correction genuinely
+closed both prior P1 instrument defects, removed live broad-state discovery,
+fixed the P3 artifact grader, and preserved AC-2 through AC-5. The latest paired
+receipt nevertheless records 10 candidate P1 calls versus 7 baseline calls, and
+the final aggregate remains `FAIL` after the P3 false negative is cleared. Scope,
+ACs, and delivery topology remain unchanged; the local two-cycle escalation now
+belongs to the captain, with the EM recommendation another bounded correction.
+
+### Feedback Cycles
+
+- Cycle 2: REJECTED — corrected prior findings and exact-final origin behavior, but preserved paired P1 tool-call non-inferiority remains red; AC unchanged
