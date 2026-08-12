@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: route product work before improvement harvesting"
-status: validation
+status: implementation
 source: "captain:conversation-2026-08-12-third-slice"
 product: kc-dev-flow
 sprint:
@@ -654,3 +654,7 @@ ordinary broad state enumeration and a wrong first action must both redden, then
 the literal real-holder P1 must be rerun at the corrected exact head. No code,
 delivery, provider, stage-transition, or scope authority was exercised in
 validation.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — fresh validation / EM loop; surface 153m implementation wall-clock vs estimate 90m (170%); AC unchanged
