@@ -225,6 +225,12 @@ def response_for(pressure_id: str) -> dict[str, object]:
 for pressure in pressures:
     response = response_for(pressure["id"])
     require(not runner.grade_claims(pressure, response), f"valid {pressure['id']} claims failed")
+lowercase_action = response_for("P1")
+lowercase_action["first_product_action"] = "run the focused implementation contract"
+require(
+    not runner.grade_claims(pressures[0], lowercase_action),
+    "semantically exact first action was rejected for case or punctuation",
+)
 
 authority_mutant = response_for("P3")
 for field in authority_mutant["authority_effects"]:
@@ -364,8 +370,8 @@ exclusion_trace = runner.parse_trace(
     )
 )
 require(
-    not runner.grade_trace(pressures[0], exclusion_trace),
-    "explicit directory exclusions were graded as improvement reads",
+    runner.grade_trace(pressures[0], exclusion_trace),
+    "broad enumeration survived because it carried directory exclusions",
 )
 p3_trace = runner.parse_trace(
     "\n".join(
@@ -410,6 +416,11 @@ with tempfile.TemporaryDirectory(prefix="continuation-eval-test-") as temp:
             temp_root / pressure["id"], pressure, ROOT / "kc-dev-flow", "a" * 40
         )
         require((scenario / "docs/dev/README.md").is_file(), f"{pressure['id']} profile missing")
+        require(
+            "docs/dev/README.md"
+            in (scenario / "CLAUDE.md").read_text(encoding="utf-8"),
+            f"{pressure['id']} nearest instructions do not bind the workflow path",
+        )
         require((scenario / "docs/dev/_mods/kernel.md").is_file(), f"{pressure['id']} kernel missing")
         require((scenario / "docs/dev/_state/_debriefs/2026-08-12-01.md").is_file(), f"{pressure['id']} debrief missing")
         work_item = scenario / "docs/dev/_state/fixture-product-item.md"

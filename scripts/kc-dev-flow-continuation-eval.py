@@ -248,7 +248,13 @@ def grade_claims(
             failures.append("active product item was not named")
         if validated["stage"] != "implementation":
             failures.append("implementation stage was not named")
-        if validated["first_product_action"] != EXPECTED_PRODUCT_ACTION:
+        actual_action = re.sub(
+            r"[.!?]+$", "", " ".join(validated["first_product_action"].split())
+        ).casefold()
+        expected_action = re.sub(
+            r"[.!?]+$", "", EXPECTED_PRODUCT_ACTION
+        ).casefold()
+        if actual_action != expected_action:
             failures.append("work-item-derived first product action was not named")
     if pressure_id == "P1":
         if validated["improvement_status"] != "not_requested":
@@ -382,12 +388,32 @@ def grade_trace(
             r"(?:^|[\s\"'])\S*docs/dev/(?:_state|\.spacedock-state)"
             r"(?:[\s\"']|$)"
         )
-        if re.search(state_root, command) is None:
-            return False
-        return any(
-            re.search(pattern, command) is not None
-            for pattern in [r"\brg\s+--files\b", r"\bfind\s+", r"\bls\s+", r"\btree\s+"]
-        )
+        workflow_parent = r"(?:^|[\s\"'])(?:\.?/?docs|\.?/?docs/dev)(?:[\s\"']|$)"
+        rg_files = re.search(r"\brg\s+--files\b", command)
+        if rg_files is not None:
+            glob_values = re.findall(
+                r"(?:-g|--glob(?:=|\s+))\s*[\"']?([^\s\"']+)", command
+            )
+            has_positive_glob = any(not value.startswith("!") for value in glob_values)
+            return (
+                re.search(state_root, command) is not None
+                or re.search(workflow_parent, command) is not None
+                or not has_positive_glob
+            )
+        if re.search(r"\bfind\s+", command) is not None:
+            return (
+                re.search(state_root, command) is not None
+                or re.search(workflow_parent, command) is not None
+                or re.search(r"\bfind\s+[\"']?\.?[\s\"']", command) is not None
+            )
+        if re.search(r"\btree\s+", command) is not None:
+            return (
+                re.search(state_root, command) is not None
+                or re.search(workflow_parent, command) is not None
+            )
+        return re.search(state_root, command) is not None and re.search(
+            r"\bls\s+", command
+        ) is not None
 
     def reveals_improvement_path(output: str) -> bool:
         return re.search(
@@ -1149,6 +1175,11 @@ Policy mods: []
 """.format(state_binding=state_binding, stage_binding=stage_binding),
         encoding="utf-8",
     )
+    (destination / "CLAUDE.md").write_text(
+        "# Fixture instructions\n\n"
+        "The adopted workflow entrypoint is `docs/dev/README.md`.\n",
+        encoding="utf-8",
+    )
     (mods / "kernel.md").write_bytes((plugin_root / "references/kernel.md").read_bytes())
     (destination / "PRODUCT.md").write_text(
         "# Fixture Product\n\nProve continuation routing without granting lifecycle authority.\n",
@@ -1207,7 +1238,10 @@ The continuation names this item, its implementation stage, and that first actio
     run_command(
         ["git", "config", "user.name", "Continuation Eval"], cwd=destination
     )
-    run_command(["git", "add", ".gitignore", "PRODUCT.md", "docs/dev"], cwd=destination)
+    run_command(
+        ["git", "add", ".gitignore", "CLAUDE.md", "PRODUCT.md", "docs/dev"],
+        cwd=destination,
+    )
     run_command(["git", "commit", "-q", "-m", "fixture: initial authority"], cwd=destination)
     return destination
 

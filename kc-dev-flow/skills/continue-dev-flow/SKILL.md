@@ -11,9 +11,9 @@ instructions decide the concrete tracker, runtime, and evidence tools.
 
 ## Load only adopted policy
 
-1. Discover the workflow README named by the nearest repository instructions and
-   read its `## Local Profile`. If multiple candidates remain, stop and name the
-   ambiguity. This profile is the repository binding and must bind project
+1. Read the workflow README path named by the nearest repository instructions;
+   never enumerate a workflow parent to discover it. Read its `## Local Profile`.
+   If multiple candidates remain, stop and name the ambiguity. This profile must bind project
    context, work items, iteration, execution state, delivery, gate verdicts, and
    scope changes; observation may be `none`. If a required role is absent, use
    `adopt-dev-flow` before proceeding.
