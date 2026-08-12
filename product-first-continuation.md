@@ -1,13 +1,13 @@
 ---
 title: "kc-dev-flow: route product work before improvement harvesting"
-status: ideation
+status: implementation
 source: "captain:conversation-2026-08-12-third-slice"
 product: kc-dev-flow
 sprint:
 started: 2026-08-12T08:28:54Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-product-first-continuation
 issue:
 pr:
 mod-block:
