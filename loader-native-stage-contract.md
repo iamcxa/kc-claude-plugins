@@ -1,18 +1,18 @@
 ---
 id: 64w8w7fpkt3ryg13h4ye7xnn
 title: "kc-dev-flow: make stage activation loader-native"
-status: ideation
+status: implementation
 source: "captain:conversation-2026-08-12"
 product: kc-dev-flow
 sprint:
 started: 2026-08-12T04:32:15Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-loader-native-stage-contract
 issue:
 pr:
 mod-block:
-design:
+design: required
 lane: main
 ---
 
