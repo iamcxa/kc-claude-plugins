@@ -380,3 +380,111 @@ Proceed with one exact-ref real-loader capture adapter and one tracked Q08
 fixture. Keep CI deterministic and retain every unique mechanical invariant;
 run fresh paired agent pressure only at validation, and restore the retired
 self-mutants if the known-bad arm does not discriminate.
+
+## Stage Report: implementation
+
+Verdict: **EXACT CANDIDATE CAPTURED; VALIDATION REQUIRED** at
+`7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5` against merge base
+`ec699d3e5b21e666209f079c9df7a9bd45528f13`. Gate Authority retains the
+transition. AC-3 model pressure was not run in implementation, so this report
+does not claim behavioral PASS.
+
+- DONE: Added one repository-local exact-ref capture adapter that materializes
+  `docs/dev` with Git, calls one resolved installed Spacedock executable, and
+  publishes only after both implementation-stage captures and prompts close.
+- DONE: Added one focused deterministic test with a fake executable and wired
+  it into the existing model-free contract suite.
+- DONE: Promoted only Q08's response contract, scenario, hard-failure rule, and
+  required behavior into one closed tracked fixture. Runner prompts omit the
+  hidden grading fields and base/candidate identities.
+- DONE: Replaced `implementation_activation_errors` with direct checks for the
+  exact implementation mod set, inactive-locator rule, all four trigger facts,
+  and the pre-trigger unread boundary. Removed only `premature-load`,
+  `trigger-loss`, and `locator-loss`; the earlier topology locator/predicate
+  assertion remains.
+- DONE: Captured both exact refs through installed Spacedock and independently
+  reproduced both outputs from fresh local clones with byte-for-byte equality.
+- NOT RUN: Six validation-only Q08 model trials, hidden-rubric grading, EM
+  review, provider posting, push, PR creation, readiness, or merge.
+
+### RED/GREEN and mutation evidence
+
+- Initial adapter RED: `loader eval test: capture adapter is missing`.
+- Minimum adapter GREEN: `kc-dev-flow loader eval test: PASS`.
+- Installed-runtime RED: the first candidate rejected the real multiline
+  `spacedock --version` output. A focused multiline-version case reproduced the
+  failure; the adapter now validates and records only the canonical first-line
+  identity, while malformed first lines remain rejected.
+- Final GREEN: the focused test and its invocation from
+  `scripts/kc-dev-flow-contract-test.py` both pass at the exact candidate.
+- Must-fail mutation audit over the full contract suite:
+  - extra implementation policy mod -> `implementation entry policy mods drifted`;
+  - inactive-locator wording loss -> `missing inactive locator rule`;
+  - `candidate revision` loss -> `missing candidate revision trigger`;
+  - `changed-file map` loss -> `missing changed-file map trigger`;
+  - `merge-base diff size` loss -> `missing merge-base diff trigger`;
+  - `independent/dependent slice assessment` loss -> `missing slice assessment trigger`;
+  - pre-trigger unread sentence loss -> `missing pre-trigger unread boundary`;
+  - topology locator loss -> `workflow README does not point to the authoritative topology predicates`.
+
+### Changed-file to AC map
+
+| Changed file | AC | Responsibility |
+|---|---|---|
+| `scripts/kc-dev-flow-loader-eval.py` | AC-1, AC-2 | Exact-ref materialization, installed-loader invocation, exact bytes/hashes, provenance, opaque prompts, and fail-closed publication. |
+| `scripts/kc-dev-flow-loader-eval.test.py` | AC-1, AC-2 | Deterministic fake-loader coverage for exact refs, bytes, hashes, version/path provenance, prompt separation, closed fields, rejection paths, and failed publication. |
+| `scripts/fixtures/kc-dev-flow-loader-eval/q08.json` | AC-1, AC-3 | One durable Q08 response/scenario/grading contract; grading fields stay out of runner prompts. |
+| `scripts/kc-dev-flow-contract-test.py` | AC-1, AC-4 | CI entry for the focused test and direct enforcement of every unique activation invariant after the three mapped self-mutants are removed. |
+| `docs/dev/README.md` | AC-5 | Proof Policy separates deterministic checks, installed-loader capture, and validation-only pressure and names the operator command. |
+
+No PRODUCT, ARCHITECTURE, Spacedock source, workflow stage/state, mod, provider,
+generic runner/grader, or CI workflow file changed.
+
+### Installed-loader receipt
+
+Receipt root:
+`/tmp/kc-dev-flow-loader-eval-implementation.ucon7c/capture`.
+
+- Tool: `/opt/homebrew/Caskroom/spacedock/0.26.0/spacedock`,
+  `spacedock 0.26.0 (contract 3)`.
+- Fixture SHA-256:
+  `58a4553447e84fe6d8cc5ea1ba13e73ecb7f446aa66e751323ce9dc9a28f6550`.
+- Known-bad `a18ba78f72c03036d8463629bd19977aa684e159`: 27 lines,
+  1616 bytes, SHA-256
+  `c85143915d110cd7937a967b9fed32fc4c799ec5ef151e9b24438bd15df23dad`.
+- Candidate `7ff2092ec66b27f997b99cbcbdc9f6e33c2ce4a5`: 33 lines,
+  1934 bytes, SHA-256
+  `4f10401f127e77cf12bf23d7fcf70b626e082eca2f4579d3a76468dc1bf7a965`.
+- Independent-clone direct invocations matched each captured stage with
+  `cmp` exit 0. Manifest SHA-256:
+  `9c0db52673de191c353aaeef0995495bf5239a0196db05424a6a87a3ffe1313b`.
+
+### Exact-head deterministic gates
+
+- `python3 scripts/kc-dev-flow-loader-eval.test.py` -> PASS.
+- `python3 scripts/kc-dev-flow-contract-test.py` -> PASS.
+- `./scripts/skill-frontmatter-lint.sh` -> 40/40 valid.
+- `python3 -m py_compile` for the adapter, focused test, and contract test ->
+  exit 0.
+- `git diff --check origin/main...HEAD` -> exit 0.
+- Exact code worktree status -> clean, branch ahead of `origin/main` by the
+  single candidate commit.
+
+### Delivery topology
+
+The merge-base diff is 5 files, 753 additions, and 62 deletions: 815 gross
+changed lines. Mechanical/test/support lines remain included; generated,
+vendor, and lock-file changes are zero. The adapter, fixture, focused test,
+contract integration, and Proof Policy form one dependent verification surface,
+not two green layers that can land bottom-to-top and not multiple independent
+green slices. Therefore the authoritative predicates are `dependent=no`,
+`independent=no`, `numeric=no`, and the required topology is **One Draft PR**.
+Implementation performed no delivery action.
+
+### Summary
+
+Built and committed the bounded loader-native Q08 capture surface, retained
+every unique deterministic activation guard, removed only the three mapped
+self-mutants/helper indirection, and bound exact known-bad/candidate bytes to a
+real installed-Spacedock receipt. Fresh paired Q08 model pressure remains the
+validation stage's required behavioral evidence.
