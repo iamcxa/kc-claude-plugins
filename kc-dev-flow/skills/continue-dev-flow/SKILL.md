@@ -5,9 +5,8 @@ description: Use when an adopted repository has an approved sprint or active wor
 
 # Continue Dev Flow
 
-Move an approved sprint toward verified outcomes with the smallest sufficient
-route. The procedure is the same in Claude Code and Codex; local repository
-instructions decide the concrete tracker, runtime, and evidence tools.
+Move a sprint toward outcomes by the smallest sufficient route.
+Claude Code and Codex use repository-bound authorities and tools.
 
 ## Load only adopted policy
 
@@ -21,7 +20,7 @@ instructions decide the concrete tracker, runtime, and evidence tools.
    to the installed package reference: that would silently apply policy the
    repository has not adopted.
 3. Recheck branch/worktree identity, shared-state ownership, remote delivery
-   state, and fresh instructions. Never inherit another session's validation.
+   state, and instructions. Never inherit another session's validation.
 4. Resolve the active work item and current stage from live work-item,
    iteration, and execution-state authority. Read that stage's `Policy mods`
    declaration and then read only the named local `_mods/` files.
@@ -31,13 +30,16 @@ instructions decide the concrete tracker, runtime, and evidence tools.
 
 ## Advance the work
 
-1. Ask the work-item and iteration authorities for the active item. When one
-   returns a slug, read its exact bound entity path; never discover it with
+1. Read iteration authority first. If it explicitly declares no active or
+   committed item, report scheduling immediately; do not inspect work-item or
+   execution state.
+   Otherwise ask work-item authority for the active item. When it returns a
+   slug, read its exact bound entity path; never discover it with
    `rg --files`, `find`, `ls`, or a tree walk.
    If none is active, select the next committed work item by declared sprint
    order and dependencies.
    Do not enumerate the execution-state tree.
-2. If no committed item exists, report that the sprint needs scheduling. Do not invent or schedule work to keep the agent busy.
+2. If no committed item exists, report that the sprint needs scheduling. Do not invent or schedule work.
 3. Use the defect route only for a bounded known defect with a mechanical
    acceptance test; otherwise use the normal lifecycle. Recover existing
    abstractions before greenfield planning.
@@ -47,7 +49,7 @@ instructions decide the concrete tracker, runtime, and evidence tools.
    A defect route that skips ideation still receives the validation verdict.
    Implementation opens no reviewer loop: when an approved premise changes, return
    it to its owning stage instead of adjudicating it inside implementation.
-   Multi-model review is optional. Ask the captain only when that EM records it as
+   Multi-model review is optional. Ask the captain only when the EM records it as
    `recommended` for a contested, irreversible, low-confidence, or unresolved
    call; otherwise record `not_needed` and proceed. Reviewer delay or captain
    silence is not approval. Exact-head CI/runtime evidence remains delivery

@@ -369,7 +369,9 @@ def grade_trace(
 
     def accesses_improvement_state(command: str) -> bool:
         guarded = re.sub(
-            r"!_(?:debriefs|improvements)(?:/\*\*)?", "", command
+            r"![^\s\"']*_(?:debriefs|improvements)(?:/[^\s\"']*)?",
+            "",
+            command,
         )
         guarded = re.sub(
             r"-path\s+\S*_(?:debriefs|improvements)\S*\s+-prune",
@@ -389,15 +391,19 @@ def grade_trace(
             r"(?:[\s\"']|$)"
         )
         workflow_parent = r"(?:^|[\s\"'])(?:\.?/?docs|\.?/?docs/dev)(?:[\s\"']|$)"
-        rg_files = re.search(r"\brg\s+--files\b", command)
-        if rg_files is not None:
+        rg_command = re.search(r"\brg\s+", command)
+        if rg_command is not None:
+            if re.search(state_root, command) is not None:
+                return True
+            rg_files = re.search(r"\brg\s+--files\b", command)
+            if rg_files is None:
+                return False
             glob_values = re.findall(
                 r"(?:-g|--glob(?:=|\s+))\s*[\"']?([^\s\"']+)", command
             )
             has_positive_glob = any(not value.startswith("!") for value in glob_values)
             return (
-                re.search(state_root, command) is not None
-                or re.search(workflow_parent, command) is not None
+                re.search(workflow_parent, command) is not None
                 or not has_positive_glob
             )
         if re.search(r"\bfind\s+", command) is not None:

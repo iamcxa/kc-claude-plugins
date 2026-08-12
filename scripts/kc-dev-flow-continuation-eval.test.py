@@ -373,6 +373,43 @@ require(
     runner.grade_trace(pressures[0], exclusion_trace),
     "broad enumeration survived because it carried directory exclusions",
 )
+safe_negated_glob_trace = runner.parse_trace(
+    json.dumps(
+        {
+            "type": "item.completed",
+            "item": {
+                "type": "command_execution",
+                "command": (
+                    "rg -n slug docs/dev/_state/fixture-product-item.md "
+                    "-g '!**/_debriefs/**' -g '!**/_improvements/**'"
+                ),
+            },
+        }
+    )
+)
+require(
+    not runner.grade_trace(pressures[0], safe_negated_glob_trace),
+    "an exact entity read with negated improvement globs was treated as improvement access",
+)
+p4_recursive_state_scan = runner.parse_trace(
+    json.dumps(
+        {
+            "type": "item.completed",
+            "item": {
+                "type": "command_execution",
+                "command": (
+                    "rg -n --glob '*.md' --glob '!**/_debriefs/**' "
+                    "--glob '!**/_improvements/**' '^slug:' docs/dev/_state"
+                ),
+            },
+        }
+    )
+)
+require(
+    "ordinary trace broadly enumerated execution state"
+    in runner.grade_trace(pressures[3], p4_recursive_state_scan),
+    "recursive rg over the P4 execution-state root survived",
+)
 p3_trace = runner.parse_trace(
     "\n".join(
         [

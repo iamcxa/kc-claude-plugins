@@ -715,6 +715,12 @@ require(
     "ordinary routing does not operationalize direct active-entity resolution",
 )
 require(
+    "Read iteration authority first" in continue_skill
+    and "report scheduling immediately" in continue_skill
+    and "do not inspect work-item or execution state" in continue_skill,
+    "an explicitly empty iteration does not short-circuit state discovery",
+)
+require(
     "Before opening the harvest reference or enumerating improvement evidence"
     in continue_skill,
     "explicit harvesting does not require concrete product-route resolution first",
