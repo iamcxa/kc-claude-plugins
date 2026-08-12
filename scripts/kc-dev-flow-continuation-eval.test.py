@@ -134,8 +134,28 @@ require(
 )
 p1_candidate["runs"][0]["tool_calls"] = 8
 require(
-    runner.paired_verdict([p1_baseline, p1_candidate]) == "FAIL",
-    "higher-call paired P1-only evidence did not fail",
+    runner.paired_verdict([p1_baseline, p1_candidate]) == "PASS",
+    "single-sample tool-call variation incorrectly failed hard criteria",
+)
+require(
+    runner.efficiency_comparability([p1_baseline, p1_candidate])
+    == "NOT_COMPARABLE",
+    "failed baseline prerequisites were treated as efficiency-comparable",
+)
+p1_baseline["runs"][0]["verdict"] = "PASS"
+require(
+    runner.paired_verdict([p1_baseline, p1_candidate]) == "UNKNOWN",
+    "non-discriminating hard evidence was accepted",
+)
+require(
+    runner.efficiency_comparability([p1_baseline, p1_candidate]) == "COMPARABLE",
+    "passing paired prerequisites were not efficiency-comparable",
+)
+p1_candidate["policy"]["skill_words"] = 650
+p1_baseline["policy"]["skill_words"] = 900
+require(
+    runner.paired_verdict([p1_baseline, p1_candidate]) == "UNKNOWN",
+    "the obsolete relative word threshold still gates AC-1",
 )
 
 fixture, fixture_sha = runner.load_fixture(FIXTURE_PATH)

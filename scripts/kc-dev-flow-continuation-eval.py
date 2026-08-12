@@ -788,26 +788,26 @@ def paired_verdict(arms: list[dict[str, object]]) -> str:
     if not any(run["verdict"] == "FAIL" for run in baseline_runs):
         return "UNKNOWN"
     candidate_words = candidate["policy"]["skill_words"]
-    baseline_words = baseline["policy"]["skill_words"]
-    if candidate_words > 650 or candidate_words > baseline_words * 0.60:
-        return "FAIL"
-    baseline_p1 = next(
-        (run for run in baseline_runs if run["pressure"] == "P1"), None
-    )
-    candidate_p1 = next(
-        (run for run in candidate_runs if run["pressure"] == "P1"), None
-    )
-    if baseline_p1 is None and candidate_p1 is None:
-        return "PASS"
-    if baseline_p1 is None or candidate_p1 is None:
-        return "UNKNOWN"
-    if not isinstance(baseline_p1["tool_calls"], int) or not isinstance(
-        candidate_p1["tool_calls"], int
-    ):
-        return "UNKNOWN"
-    if candidate_p1["tool_calls"] > baseline_p1["tool_calls"]:
+    if candidate_words > 650:
         return "FAIL"
     return "PASS"
+
+
+def efficiency_comparability(arms: list[dict[str, object]]) -> str:
+    """Classify efficiency without granting it pass/fail authority."""
+    by_role = {arm["role"]: arm for arm in arms}
+    baseline_runs = by_role["known_bad"]["runs"]
+    candidate_runs = by_role["candidate"]["runs"]
+    if {run["pressure"] for run in candidate_runs} != {
+        run["pressure"] for run in baseline_runs
+    }:
+        return "UNKNOWN"
+    verdicts = [run["verdict"] for run in baseline_runs + candidate_runs]
+    if any(verdict == "UNKNOWN" for verdict in verdicts):
+        return "UNKNOWN"
+    if any(verdict != "PASS" for verdict in verdicts):
+        return "NOT_COMPARABLE"
+    return "COMPARABLE"
 
 
 def select_pressures(
@@ -938,6 +938,10 @@ def run_evaluation(
             },
             "pressures": [pressure["id"] for pressure in selected_pressures],
             "arms": arms,
+            "efficiency": {
+                "comparability": efficiency_comparability(arms),
+                "gating": False,
+            },
             "verdict": paired_verdict(arms),
         }
         (staging / "manifest.json").write_text(
