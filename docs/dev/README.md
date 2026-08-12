@@ -173,6 +173,7 @@ main route through ideation.
 ### `ideation` — decide scope, route, and acceptance
 
 Policy mods: [`_mods/engineering-judgment.md`](./_mods/engineering-judgment.md),
+[`_mods/journey-slicing.md`](./_mods/journey-slicing.md),
 [`_mods/reverse-recovery-audit.md`](./_mods/reverse-recovery-audit.md), and
 [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
@@ -227,52 +228,6 @@ the decision to its owning stage; do not adjudicate it while coding.
   mechanism belongs in the deliverable.
 - Before validation, map every changed file to an AC. Delete an unmapped file or
   ask the captain to authorize its scope.
-- For each of three comparable non-trivial brownfield changes, after RED/GREEN
-  and AC mapping but before fresh validation, retain this observe-only packet in
-  the existing work-item report:
-  - the exact merge base and implemented head;
-  - raw per-file `git diff --numstat <base>...<head>` output, or the provider's
-    equivalent mechanically sourced gross additions and gross deletions, kept
-    separate with no net score;
-  - the changed-file-to-AC mapping;
-  - the unconditional question **“If the largest added responsibility is
-    removed, which named AC fails?”**, answered with the named AC and failure
-    instrument;
-  - the disposition `new subtraction/question`, `defense already established by
-    AC mapping`, or `UNKNOWN`; and
-  - any number-management incident, its concrete diff evidence, and the stop
-    action.
-
-  Counts can focus the inspection but do not select the independently maintained
-  responsibility or supply its answer. A prompted subtraction returns through
-  the same without-it and GREEN evidence before exact-revision validation.
-  Necessary tests, assertions, safety checks, and clarifying code keep the same
-  protection as every other responsibility.
-
-  Evaluate the cohort without comparing changes competitively. If a
-  number-management incident is confirmed, classify the cohort Immediate
-  stop/removal before considering other outcomes. Otherwise, any newly
-  attributable subtraction is Success, including a one-subtraction/two-defense
-  cohort. When neither is present, two defense-only rows are No incremental
-  value.
-
-  - **Success:** at least one concrete subtraction is attributable to this
-    question rather than prior reverse recovery or AC mapping, with no
-    number-management incident.
-  - **No incremental value:** two of the three changes produce only defenses
-    already required by AC mapping.
-  - **Immediate stop/removal:** one confirmed incident where a count causes
-    padding, compression, responsibility splitting or relabeling, unsafe or
-    unproven deletion, addition/deletion offsetting, or avoidance of a necessary
-    addition stops and removes the observation mechanism.
-  - **Redundancy retirement:** if roughly five comparable changes yield no new
-    question beyond AC mapping, policy review retires the observation as
-    redundant rather than changing the fifth change's delivery result.
-
-  None of these outcomes is a per-change delivery gate. Numbers cannot pass or
-  fail a change, rank an agent or PR, offset additions with deletions, forecast
-  a budget, redefine accepted value, or override tests, safety, clarity, and
-  maintenance obligations.
 - Select PR topology from the authoritative Delivery topology decision table in
   [`_mods/pr-merge.md`](./_mods/pr-merge.md#delivery-topology-decision). Use its
   dependent green layers, independent green slices, and numeric trigger

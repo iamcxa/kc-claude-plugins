@@ -19,8 +19,7 @@
 98b59da531a4cdf4	prohibition	kernel.md:121 — the absolute words appear as quoted examples of what this rule governs
 4a7a1d85b5925d7b	prohibition	kernel.md:142 — recovery and MISSING classification duties on the brownfield worker
 8a4ef1dcf4e3b944	prohibition	kernel.md:152 — necessary-addition authorization duty on the worker
-20c8247753f57231	prohibition	kernel.md:159 — observe-only duties on the worker or reviewer; counts cannot own a verdict
-4b55c7d764368427	bounded	kernel.md:169 — binding claim is bounded to what the round's own report can show
+3df5fd675cbe02f3	bounded	kernel.md:175 — binding claim is bounded to what the round's own report can show
 1f4c6cc86ca152a6	prohibition	kernel.md:179 — lifecycle grouping and known-defect addition duties on the worker
 75590538f542aa33	prohibition	kernel.md:197 — definition of completion; forbids treating artifact count as completion
 04fb3da3cdcda942	bounded	kernel.md:202 — bounded by the definition of an instrument that cannot fail

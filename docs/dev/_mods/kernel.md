@@ -151,9 +151,10 @@ For non-trivial brownfield work, apply this outcome-first route in order:
 
 1. **Accepted outcome.** Name the end value, value-level acceptance criteria,
    constraints, and non-goals. Decompose from this contract without assuming
-   the implementation is absent or that the task is a greenfield rebuild. Carve
-   along the journey; apply journey slicing, whose first slice is demoable and
-   whose layered alternative passes review while delivering nothing.
+   the implementation is absent or that the task is a greenfield rebuild. When
+   the current stage selects `_mods/journey-slicing.md`, carve along the journey
+   using that local policy; its first slice is demoable and its layered
+   alternative passes review while delivering nothing.
 2. **Recover the existing seam.** Against fresh `origin/main`, apply the
    reverse-recovery audit and repair the cheapest compatible `EXISTS_BROKEN` or
    `STUB` seam. Only evidence-backed absence supports `MISSING`.
@@ -171,17 +172,7 @@ For non-trivial brownfield work, apply this outcome-first route in order:
    minimum implementation and passing after it. A subtraction prompted later
    returns through the same without-it and GREEN evidence; numbers do not
    authorize it.
-6. **Observe post-diff change shape.** At the implemented revision, retain
-   mechanically sourced gross additions and gross deletions as separate facts,
-   then ask unconditionally: **“If the largest added responsibility is removed,
-   which named AC fails?”** Counts may focus inspection; they do not choose the
-   responsibility or supply the answer. The worker or reviewer identifies an
-   independently maintained responsibility from the diff and Route discipline.
-   Change shape is post-diff evidence, not a forecast, budget, score, or gate.
-   Numbers cannot gate or rank a change, offset additions with deletions,
-   redefine accepted value, or override necessary tests, safety, clarity, and
-   maintenance obligations.
-7. **Validate fresh.** Bind fresh validation to the final exact revision after
+6. **Validate fresh.** Bind fresh validation to the final exact revision after
    any resulting subtraction; a changed head invalidates prior evidence. **The
    binding is a recorded fact, not an assumption**: a round that does not state
    the revision and artifact it read cannot be shown, from its own report, to

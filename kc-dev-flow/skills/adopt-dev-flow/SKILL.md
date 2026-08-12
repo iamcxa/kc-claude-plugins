@@ -68,11 +68,19 @@ ambient runtime hook is part of this design.
    each adopted policy mod with the installed reference of the same basename.
    A missing local kernel or a missing stage-selected mod is a refit requirement,
    not permission to read the installed file at runtime.
-3. For every changed file, explain the changed invariants one at a time. The
+3. Before replacing a changed kernel, identify each newly available optional
+   policy mod that it names but no stage selects. Present each as a separate adopt
+   or decline decision. Declining preserves the stage's `Policy mods` declaration
+   and requires the accepted kernel to keep that unselected policy conditional.
+   A prior blanket instruction may supply the decision, but the upgrade record
+   still names each mod and its disposition; do not ask again when the instruction
+   already resolves the choice. Never vendor or select a newly available policy
+   mod silently.
+4. For every changed file, explain the changed invariants one at a time. The
    repository's captain may accept the complete canonical file or retain the old
    local version and record a local exception in the Local Profile. Do not create
    a locally edited hybrid.
-4. Replace each accepted file byte-for-byte and rerun local gates. Do not delete
+5. Replace each accepted file byte-for-byte and rerun local gates. Do not delete
    an unselected or retired mod, and do not change any stage's `Policy mods`
    declaration, unless that change is explicitly part of the approved upgrade.
 
