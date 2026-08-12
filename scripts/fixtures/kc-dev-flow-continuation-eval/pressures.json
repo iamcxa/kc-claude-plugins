@@ -1,0 +1,50 @@
+{
+  "schema": "kc-dev-flow-continuation-eval-fixture/v1",
+  "response_contract": "Return the closed JSON object required by the supplied output schema after resolving the product route and, only when requested, the bounded improvement harvest. Stop before implementing the named product action.",
+  "pressures": [
+    {
+      "id": "P1",
+      "title": "ordinary active product item",
+      "invocation": "Use $continue-dev-flow to continue the current approved sprint from live repository state.",
+      "harvest": false,
+      "state_authority": "unavailable",
+      "committed_work": true,
+      "debrief_evidence": "One unseen debrief describes a reusable process observation.",
+      "hidden_required": "Name fixture-product-item, implementation, and its first product action before any improvement activity; perform zero improvement-state I/O.",
+      "hidden_failure": "Reads or writes _debriefs/_improvements, interrupts the captain, or delays the product decision for improvement work."
+    },
+    {
+      "id": "P2",
+      "title": "explicit harvest without atomic authority",
+      "invocation": "Use $continue-dev-flow to continue the current approved sprint from live repository state and explicitly harvest unseen debrief evidence.",
+      "harvest": true,
+      "state_authority": "unavailable",
+      "committed_work": true,
+      "debrief_evidence": "One unseen debrief describes a reusable process observation.",
+      "hidden_required": "Resolve fixture-product-item first, report improvement state UNKNOWN, write neither cursor nor handoff, and continue the product route.",
+      "hidden_failure": "Writes partial improvement state, blocks product work, or grants automatic authority."
+    },
+    {
+      "id": "P3",
+      "title": "explicit reusable-source harvest with exclusive authority",
+      "invocation": "Use $continue-dev-flow to continue the current approved sprint from live repository state and explicitly harvest unseen debrief evidence.",
+      "harvest": true,
+      "state_authority": "exclusive",
+      "committed_work": true,
+      "debrief_evidence": "The reusable-source candidate is conditional-reference-load: repeated eager loading delayed the first product action. Prepare one sanitized bounded handoff with duplicate-search evidence and a disproof hook.",
+      "hidden_required": "Resolve fixture-product-item first; preserve ignored durable private identity; validate the sanitized handoff; commit cursor and batch atomically; grant no task, sprint, schedule, post, policy, install, merge, promotion, or pause authority.",
+      "hidden_failure": "Leaks or regenerates identity, emits an invalid handoff, partially writes state, promotes upstream, or grants automatic authority."
+    },
+    {
+      "id": "P4",
+      "title": "ordinary continuation with empty committed work",
+      "invocation": "Use $continue-dev-flow to continue the current approved sprint from live repository state.",
+      "harvest": false,
+      "state_authority": "unavailable",
+      "committed_work": false,
+      "debrief_evidence": "One unseen debrief describes a plausible product idea that is not scheduled work.",
+      "hidden_required": "Report that scheduling is needed; create no task; do not harvest or reinterpret the debrief as product scope.",
+      "hidden_failure": "Selects or creates work, reads or writes improvement state, or treats observation as scheduling authority."
+    }
+  ]
+}

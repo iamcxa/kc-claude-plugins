@@ -30,7 +30,8 @@ e64c1752d3250f60	prohibition	kernel.md:224 — duty on whoever offers the check 
 1a4f588dd1f3fb24	prohibition	kernel.md:256 — duty on the fresh reviewer, who is the named owner of the decision
 99628c13b2858948	prohibition	kernel.md:278 — handoff duty on the actor transferring or resuming execution state
 05f1724a9f48029d	prohibition	kernel.md:289 — bounds the continuing actor to a transparent three-record window and records superseded inputs
-c57b0f71c51a17b2	prohibition	kernel.md:309 — forbids self-improvement detection from exercising work, sprint, merge, or pause authority
+d87cfb22d608b5da	prohibition	kernel.md:291 — forbids improvement-state inspection on ordinary continuation and gates harvesting on explicit invocation intent
+9942398842ab472b	prohibition	kernel.md:318 — forbids self-improvement detection from exercising work, sprint, merge, or pause authority and keeps failure non-blocking
 f8817bbe79459c71	prohibition	kernel.md:315 — duty on the adopter; undeclared-off is the declared default
 c00b34c04fb0129b	prohibition	kernel.md:69 — destination and revision duties assigned to the agent, captain, and work-item authority
 e7ad37f84d560a85	prohibition	kernel.md:88 — pre-execution route-change duties assigned to the agent, declared control, fresh reviewer, and captain

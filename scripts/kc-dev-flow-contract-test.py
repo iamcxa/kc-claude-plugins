@@ -51,6 +51,9 @@ required_files = [
     ROOT / "scripts/kc-dev-flow-loader-eval.py",
     ROOT / "scripts/kc-dev-flow-loader-eval.test.py",
     ROOT / "scripts/fixtures/kc-dev-flow-loader-eval/q08.json",
+    ROOT / "scripts/kc-dev-flow-continuation-eval.py",
+    ROOT / "scripts/kc-dev-flow-continuation-eval.test.py",
+    ROOT / "scripts/fixtures/kc-dev-flow-continuation-eval/pressures.json",
     PLUGIN / "references/retained-document-policy.md",
 ]
 for required_file in required_files:
@@ -76,6 +79,14 @@ require(
     (ROOT / "scripts/kc-dev-flow-loader-eval.test.py").stat().st_mode & 0o111,
     "scripts/kc-dev-flow-loader-eval.test.py is not executable",
 )
+require(
+    (ROOT / "scripts/kc-dev-flow-continuation-eval.py").stat().st_mode & 0o111,
+    "scripts/kc-dev-flow-continuation-eval.py is not executable",
+)
+require(
+    (ROOT / "scripts/kc-dev-flow-continuation-eval.test.py").stat().st_mode & 0o111,
+    "scripts/kc-dev-flow-continuation-eval.test.py is not executable",
+)
 
 loader_eval_test = subprocess.run(
     [sys.executable, "scripts/kc-dev-flow-loader-eval.test.py"],
@@ -88,6 +99,19 @@ require(
     "loader eval contract failed:\n"
     + loader_eval_test.stdout
     + loader_eval_test.stderr,
+)
+
+continuation_eval_test = subprocess.run(
+    [sys.executable, "scripts/kc-dev-flow-continuation-eval.test.py"],
+    cwd=ROOT,
+    text=True,
+    capture_output=True,
+)
+require(
+    continuation_eval_test.returncode == 0,
+    "continuation eval contract failed:\n"
+    + continuation_eval_test.stdout
+    + continuation_eval_test.stderr,
 )
 
 expected_smoke_revision = "a" * 40
@@ -747,6 +771,12 @@ for phrase in [
 
 package_readme = (PLUGIN / "README.md").read_text(encoding="utf-8")
 require("promote-dev-flow" in package_readme, "package README is missing source intake skill")
+require(
+    "Only an explicit request" in package_readme
+    and "improvement-harvesting.md" in package_readme
+    and "Ordinary continuation" in package_readme,
+    "package README does not document product-first explicit harvesting",
+)
 require(
     "engineering-judgment" in package_readme,
     "package README is missing engineering judgment mod",
@@ -1531,7 +1561,8 @@ for phrase in [
     "Observation is not authority",
     "backlog → ideation → implementation → validation → done",
     "smallest sufficient route",
-    "before routing product work",
+    "resolves the committed product route before optional self-improvement",
+    "Do not inspect `_debriefs/` or `_improvements/` on an ordinary continuation",
     "repository-local",
     "reusable kernel",
     "_improvements/state.yaml",
@@ -1541,6 +1572,24 @@ for phrase in [
     "Unavailable re-observation is missing evidence",
 ]:
     require(phrase in kernel, f"kernel is missing invariant: {phrase}")
+require(
+    "coordinates bounded self-improvement before routing product work" not in kernel,
+    "kernel still activates self-improvement before product routing",
+)
+
+product_doc = (ROOT / "PRODUCT.md").read_text(encoding="utf-8")
+require(
+    "routes committed product work before optional improvement harvesting" in product_doc
+    and "explicitly requested" in product_doc,
+    "PRODUCT.md does not state the product-first continuation value",
+)
+architecture_doc = (ROOT / "ARCHITECTURE.md").read_text(encoding="utf-8")
+for boundary in [
+    "default product router",
+    "conditional adopter-harvest reference",
+    "downstream source intake",
+]:
+    require(boundary in architecture_doc, f"ARCHITECTURE.md is missing boundary: {boundary}")
 require(
     re.search(
         r"Lower-level diagnosis and guards do not\s+replace re-observation",

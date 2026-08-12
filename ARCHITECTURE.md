@@ -14,6 +14,20 @@ ship-flow-style task workflow (split-root state under
 `docs/dev/.spacedock-state`) that governs how repo changes are proposed,
 built, and verified.
 
+## kc-dev-flow continuation ownership
+
+The continuation path keeps three ownership boundaries explicit:
+
+- The **default product router** resolves the live work item, current stage, and
+  next approved product action before any optional improvement work.
+- The **conditional adopter-harvest reference** is loaded only when the current
+  invocation explicitly requests improvement harvesting. It may derive a
+  candidate, but it does not create work, admit it to a sprint, or pause product
+  delivery.
+- **downstream source intake** independently rechecks reusable handoffs and
+  prepares captain-reviewable proposals; it does not inherit adopter authority
+  or make a placement decision.
+
 ## Marketplace publish flow
 
 `.claude-plugin/marketplace.json` is the published catalog; each plugin
