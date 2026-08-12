@@ -1,19 +1,20 @@
 ---
 title: "kc-dev-flow: make workflow changes measurable through the real loader"
-status: validation
+status: done
 source: "captain:conversation-2026-08-12-second-slice"
 product: kc-dev-flow
 sprint:
 started: 2026-08-12T05:46:00Z
-completed:
-verdict:
+completed: 2026-08-12T08:25:51Z
+verdict: passed
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-loader-native-workflow-eval
 issue:
 pr: pr-merge:216
-mod-block: merge:pr-merge
+mod-block:
 design: required
 lane: main
 id: zzr91wq8wmc29ddfsyjyfyz5
+archived: 2026-08-12T08:25:51Z
 ---
 
 ## Problem
