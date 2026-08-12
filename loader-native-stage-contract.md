@@ -397,3 +397,124 @@ Made implementation activation loader-native with a deferred PR topology
 locator, protected entry/trigger/locator behavior with executable mutations,
 and obtained 3/3 fresh exact-loader Q08 receipts without adding workflow
 ceremony or another policy surface.
+
+## Stage Report: validation
+
+Verdict: **PASSED** for exact candidate
+`47a7dac7a2417aedb1a326b6dcc6fcf4d3a3206e` against exact base
+`a18ba78f72c03036d8463629bd19977aa684e159`; Gate Authority retains the
+transition and delivery remains separately authorized.
+
+- **AC-1 PASS:** The installed `/opt/homebrew/bin/spacedock` 0.26.0
+  `(contract 3)` extracted the exact candidate's implementation subsection as
+  33 lines / 269 words / 1934 bytes with SHA-256
+  `4f10401f127e77cf12bf23d7fcf70b626e082eca2f4579d3a76468dc1bf7a965`.
+  A validator-owned fresh Q08 run read only the stage, the declared
+  `_mods/work-control-profile.md`, and the RED fact; it left PR, validation,
+  and recovery procedures unread and selected the minimum GREEN step next.
+- **AC-2 PASS:** The implementation declaration still selects only
+  `_mods/work-control-profile.md`. Direct execution rejected `premature-load`
+  with `implementation entry policy mods drifted`, `trigger-loss` with
+  `missing pre-trigger unread boundary`, and `locator-loss` with
+  `missing topology locator`. Once the four candidate facts existed, the
+  retained locator reached the unchanged Delivery topology decision.
+- **AC-3 PASS:** The merge-base diff is exactly 82 additions and 2 deletions
+  across `docs/dev/README.md` and
+  `scripts/kc-dev-flow-contract-test.py`. No file, stage, state field, loader,
+  mod, registry, CI lane, review loop, approval, Captain decision, or parallel
+  authority was added. Q08 adds zero pre-trigger ceremony events.
+- **AC-4 PASS at the validation boundary:** Fresh remote observation kept
+  `origin/main` at the approved base, HEAD and merge-base remained exact, and
+  the unchanged topology table selected `One Draft PR` from dependent layers
+  `no`, independent slices `no`, and numeric trigger `no` (84 gross changed
+  lines, 2 files). No remote branch or PR exists because validation had no
+  delivery authority. Hosted `headRefOid` and required checks are fail-closed
+  delivery-time receipts: any candidate/base drift requires a new cut,
+  validation, and approval.
+
+### Evidence block
+
+Lenses: behavior PASS 0 findings; contract/schema PASS 0; runtime/platform PASS 0; docs/policy PASS 0; delivery PASS 0 | Inputs: exact two-file merge-base diff, installed Spacedock extraction, Q08 source/rubric and four receipts, exact topology table, remote base/head/PR observations | Falsifiers exercised: premature activation, trigger loss, locator loss, undeclared reads, added ceremony, and candidate/base drift | state/concurrency and security/privacy did not fire on this activation-only diff
+Diff coverage: 100% (8/8 coverable added README behavior lines); the 74 added test-evidence lines are outside the product-behavior denominator and executed in the passing contract suite
+Adversarial: PASS — removing the README surface while retaining the guard returned exit 1 with all named activation gaps; removing the new guard let a trigger-loss prose mutant pass the prior suite; all three focused mutants failed for their intended reasons
+Cross-model: not_needed — the sole fresh-context GPT-5.6 High EM returned `proceed / high`, no blocking or unresolved finding, and no recommendation for another model
+E2E: N/A — the ideation-approved scope is a docs/config-only runtime-loading contract; the installed Spacedock extractor plus fresh Q08 pressure is the origin-runtime exercise
+Origin re-observation: PASS — Reported scenario: a readable unlisted PR locator was treated as active before its trigger | Originating runtime kind: installed Spacedock 0.26.0 stage extractor followed by a fresh worker activation decision | Re-observation artifact/revision: implementation output SHA-256 `4f10401f127e77cf12bf23d7fcf70b626e082eca2f4579d3a76468dc1bf7a965` at `47a7dac7a2417aedb1a326b6dcc6fcf4d3a3206e`, fresh Codex session `019ff45f-8563-7c90-8030-a90289c7c299` | Equivalent-runtime rationale: same installed extractor, exact stage bytes, original Q08 facts, GPT-5.6 High fresh read-only worker, ignored user config/rules, and no tool calls matched the claim-producing chain | Falsifier kind: mutation | Result: the worker kept PR, validation, and recovery unread and continued only RED/GREEN
+
+### Receipt and gate audit
+
+- Independently inspected all three implementation Q08 bodies and recomputed
+  their exact output hashes without trusting the summary: trial 1
+  `040ec192c8544223428d260347c1402526831f6a9d54108d94189585d3abf83c`,
+  trial 2
+  `2ccaa19924ac1faf930a7a8ca605e44ae71864ad360a029842b3fdfe737dfb12`,
+  and trial 3
+  `ddce7c3fe655b50dc057072aa276cf790a2aedacbc54f96fda751740f48c504e`.
+  Each independently retained the same safe read inventory and next step.
+- Reproduced the test-only RED by pairing the base README bytes with the
+  candidate test bytes. It failed on the inactive-locator rule, all four
+  candidate facts, and the pre-trigger unread boundary before any candidate
+  behavior prose was present.
+- `python3 scripts/kc-dev-flow-contract-test.py` ->
+  `kc-dev-flow contract: PASS`.
+- `./scripts/skill-frontmatter-lint.sh` -> 40/40 skill directories valid.
+- `git diff --check
+  a18ba78f72c03036d8463629bd19977aa684e159...47a7dac7a2417aedb1a326b6dcc6fcf4d3a3206e`
+  -> exit 0, no output.
+- Changed-file mapping is complete: `docs/dev/README.md` serves AC-1, AC-2,
+  and AC-3; `scripts/kc-dev-flow-contract-test.py` serves AC-2 and AC-3.
+  AC-4 is the exact-head delivery predicate over the same inseparable slice.
+
+### Science Officer EM judgment
+
+The single fresh EM returned a high-confidence pass with no blocking or
+unresolved finding. Its raw response used a non-canonical field layout despite
+the closed-schema instruction; the record below is a lossless normalization of
+that same judgment and adjudications, not a second review.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Candidate 47a7dac7a2417aedb1a326b6dcc6fcf4d3a3206e passes validation; AC-4 hosted evidence is a fail-closed delivery-time receipt, not a validation blocker."
+  evidence_synthesis: "Exact head/base, the two-file AC mapping, installed Spacedock extraction, four of four bounded Q08 passes, RED/GREEN and without-it evidence, three rejected mutants, fresh full gates, and the no-ceremony audit support the candidate with no Material residual finding."
+  risk_tradeoff_call: "The bounded prose plus regression guard buys safe stage-entry loading and later topology reachability at the cost of two local surfaces; future model misreading remains a monitored residual, and loader-enforced dependency representation is the concrete alternative only after fresh falsification."
+  recommendation: "Pass validation and proceed only to captain-owned exact-head Draft delivery; revalidate and obtain fresh approval on any candidate or base drift."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "FO may report evidence and perform authorized delivery mechanics only; Gate Authority owns the transition and the Captain owns scope, Draft readiness, and merge."
+  engineering_judgment:
+    question: "Should exact candidate 47a7dac7a2417aedb1a326b6dcc6fcf4d3a3206e pass validation and proceed to captain-owned Draft delivery against exact base a18ba78f72c03036d8463629bd19977aa684e159?"
+    revision: "47a7dac7a2417aedb1a326b6dcc6fcf4d3a3206e against a18ba78f72c03036d8463629bd19977aa684e159"
+    evidence_synthesis: "Exact head/base, the two-file AC mapping, installed Spacedock extraction, four of four bounded Q08 passes, RED/GREEN and without-it evidence, three rejected mutants, fresh full gates, and the no-ceremony audit support the candidate with no Material residual finding."
+    adjudications:
+      - finding: "Exact scope and AC mapping"
+        disposition: supported
+        basis: "The clean merge-base diff has only the two mapped files, unchanged stage inventory and implementation mod set, and no prohibited policy, authority, state, loader, registry, CI, or ceremony surface."
+      - finding: "Origin-runtime Q08 closure"
+        disposition: supported
+        basis: "The same installed Spacedock extractor and exact candidate stage bytes produced four of four fresh worker decisions that retained the declared-only read set and continued RED/GREEN."
+      - finding: "Without-it irreducibility"
+        disposition: supported
+        basis: "Removing the README caused named AC failures, while removing the new guard allowed trigger-loss to pass the prior suite; all three focused mutants were rejected."
+      - finding: "AC-4 hosted evidence is a validation blocker"
+        disposition: unsupported
+        basis: "The one-Draft topology and exact local/remote heads are proven now; hosted headRefOid and checks cannot exist before separately authorized delivery and must fail closed at that later boundary."
+      - finding: "Prose sufficiency remains a Material blocker"
+        disposition: unsupported
+        basis: "Four independent bounded runtime observations and executable assertions reduce future misreading to a monitored residual; a fresh contrary origin observation would return the design to a loader-enforced representation."
+    risk_tradeoff: "The bounded prose plus regression guard buys safe stage-entry loading and later topology reachability at the cost of two local surfaces; future model misreading remains a monitored residual, and loader-enforced dependency representation is the concrete alternative only after fresh falsification."
+    recommendation: "Pass validation and proceed only to captain-owned exact-head Draft delivery; revalidate and obtain fresh approval on any candidate or base drift."
+    route: proceed
+    confidence: high
+    dissent: "none"
+    disproof_condition: "Return to design if exact loader output causes a fresh worker to preload PR, validation, or recovery policy, cannot identify the sole entry mod, cannot reach topology after all four facts, or if candidate/base drift invalidates the approved delivery packet."
+    authority_boundary: "Gate Authority retains validation advancement; the Captain retains workflow-policy approval, scope, Draft readiness, and merge; delivery and provider owners retain push, PR, CI, GitHub, posting, and release actions."
+```
+
+### Summary
+
+Passed the exact two-file candidate with fresh loader-native Q08 evidence,
+independent receipt verification, executable RED/GREEN and without-it pressure,
+complete relevant gates, no added ceremony or authority, and one high-confidence
+EM recommendation. Delivery remains one separately authorized exact-head Draft
+PR and must fail closed on any candidate or base drift.
