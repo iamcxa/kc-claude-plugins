@@ -8,7 +8,7 @@ sprint:
 started: 2026-08-12T04:32:15Z
 completed:
 verdict:
-worktree: .worktrees/spacedock-ensign-loader-native-stage-contract
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/spacedock-ensign-loader-native-stage-contract
 issue:
 pr:
 mod-block:
