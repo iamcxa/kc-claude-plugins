@@ -6,7 +6,7 @@ product: kc-dev-flow
 sprint:
 started: 2026-08-12T08:28:54Z
 completed:
-verdict:
+verdict: REJECTED
 worktree: .worktrees/spacedock-ensign-product-first-continuation
 issue:
 pr:
@@ -489,3 +489,161 @@ The repaired ideation record now contains one authoritative fresh-context EM jud
 ### Summary
 
 Implementation routes ordinary continuation to committed product work before optional improvement harvesting, cuts default policy input by 61.0%, and preserves explicit harvesting, validator, private identity, atomic cursor/handoff, downstream placement, and captain authority. One focused slice is committed and pushed at exact head `e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47`. Mechanical gates are green; exact candidate P1/P2/P4 and supplemental P3 are green. The formal paired aggregate remains transparently `UNKNOWN` because one candidate P3 sample timed out, so fresh validation—not this report—owns the exact acceptance verdict and any stage advance.
+
+## Stage Report: validation
+
+Verdict: REJECTED
+
+### Material findings
+
+- P1: The focused evaluator accepts ordinary execution-state enumeration that
+  reveals improvement evidence. scripts/kc-dev-flow-continuation-eval.py:300-367
+  retains command text but discards command output, then recognizes improvement
+  access only when the command itself contains _debriefs or _improvements. The
+  preserved exact-candidate P1 command rg --files docs/dev/_state | sort emitted
+  docs/dev/_state/_debriefs/2026-08-12-01.md, while the manifest still recorded
+  zero trace failures and PASS. A direct mutant containing the same broad
+  enumeration returned no failure. This violates AC-1 and the candidate skill's
+  own prohibition on enumerating the execution-state tree on an ordinary
+  continuation.
+- P1: The focused evaluator never grades the required first product action.
+  scripts/kc-dev-flow-continuation-eval.py:243-250 checks route, active item, and
+  stage but does not compare first_product_action with the live work-item action.
+  A P1 response naming Harvest unseen debriefs before product work as its first
+  action returned no claim failure. The instrument can therefore pass a response
+  that fails AC-1's captain-visible product delta.
+
+### Acceptance results
+
+- AC-1: FAIL. Candidate policy size is 640 words versus 1,643, a 61.0% reduction;
+  the exact fixture P1 uses 6 tool calls versus baseline 7 and is faster in this
+  sample. Those later measurements cannot offset the earlier safety-order loss:
+  the candidate P1 trace enumerates the unseen debrief path and its grader misses
+  both that access and a wrong-first-action mutant. The literal live-holder run
+  was captured only at initial candidate 76fb9e97c712d8bdbdfa3ba03826494208754bd8,
+  not at the exact final head.
+- AC-2: PASS as supplemental behavior evidence, not as a rewrite of the paired
+  receipt. Exact-candidate P2 reports UNKNOWN under unavailable ownership and
+  writes nothing. The paired P3 remains UNKNOWN after exit 124 at 400.011
+  seconds. The separate P3 receipt passes at the same candidate SHA, fixture
+  SHA-256 b0db244da2db1d4ef82e8521c42b4a3e1278989c9cf9b0b03b5b8a4843d7bbca,
+  plugin-tree SHA-256 e0ccc82f5872ecc6c7f193fdfdf103704fe3fafcbff9240110078e10aa6b5ff5,
+  skill/reference hashes, model, reasoning, and prompt hash. It validates one
+  ignored durable identity, one valid handoff, and one cursor-plus-handoff commit.
+  The original timeout remains UNKNOWN and is not converted to PASS.
+- AC-3: PASS on the inspected response contract, authority mutants, artifacts,
+  and P2/P3 traces. No task creation, sprint admission, scheduling, posting,
+  policy edit, install, merge, promotion, or product pause is exercised; intake
+  remains captain-review-only and source placement remains downstream.
+- AC-4: PASS on the exact candidate P4 evidence. It returns scheduling with no
+  active item or stage, creates no work, performs no improvement-state I/O, and
+  does not treat the unseen debrief as scope.
+- AC-5: PASS for focus and durable scope, but it cannot rescue AC-1. All 12
+  changed files map to AC-1 through AC-5, the change remains one inseparable
+  continuation slice, no new skill/schema/scheduler/general runner or Spacedock
+  change appears, and the shortcut inventory remains none.
+
+Lenses: behavior FAIL with 2 P1 findings; contract/schema FAIL because the closed response grader omits the required first-action value; state/concurrency PASS for P2/P3 cursor, identity, and atomic-write evidence; security/privacy PASS for exact candidate P3 with the known-bad private-key leak detected; runtime/platform FAIL because the exact final live-holder P1 is absent and the substitute trace exposes debrief enumeration; docs/policy PASS across PRODUCT, ARCHITECTURE, README, canonical/vendored kernel, skill, reference, and absolute registry; delivery PASS for exact-head and topology classification. Inputs were merge base 64c496cdab7ccc59a15753e454f627a70383fb46, candidate e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47, all 12 changed files, both preserved manifests and raw traces, the real-holder initial-candidate trace, the selected validation policies, and fresh origin refs. Falsifiers were the known-bad P2/P3 arm, missing-reference mutation, broad-state-enumeration trace mutant, and wrong-first-action response mutant.
+
+Diff coverage: 100% (5/5 coverable behavior contracts exercised: conditional-reference presence and P1-P4; 12/12 changed files and all authority boundaries inspected). The direct P1 falsifiers reddened the acceptance claim even though the checked-in deterministic suites stayed green.
+
+Adversarial: Removing kc-dev-flow/references/improvement-harvesting.md from an exact-head Git clone makes the package contract fail with missing kc-dev-flow/references/improvement-harvesting.md, supporting bounded retention of the trigger-loaded safety contract. The exact-ref known-bad arm fails P2 product-first ordering and P3 private-key trace safety. Conversely, the evaluator incorrectly accepts rg --files docs/dev/_state and a wrong first_product_action, so the new evaluator is returned for bounded repair rather than accepted as a discriminating AC-1 instrument.
+
+Cross-model: not_needed — the fresh validation EM finds two reproducible, contract-bound P1 defects with high confidence; the recommendation is neither contested, irreversible, low-confidence, nor unresolved.
+
+E2E: FAIL — the behavior-producing installed-skill boundary at exact candidate e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47 was exercised, but its P1 trace enumerated docs/dev/_state and exposed the unseen _debriefs path. The only literal run against the real live split-root holder is bound to earlier candidate 76fb9e97c712d8bdbdfa3ba03826494208754bd8, so it cannot close final-head validation.
+
+Origin re-observation: FAIL — Reported scenario: Use the installed continue-dev-flow skill to continue the current approved sprint from live repository state, name product-first-continuation, validation stage, and the first concrete product action before any improvement activity | Originating runtime kind: Codex installed-skill host against the live split-root Spacedock holder | Re-observation artifact/revision: /tmp/kc-dev-flow-continuation-eval-e2740f53-20260812 at e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47 plus /private/tmp/kc-dev-flow-p1.kLLSrJ at 76fb9e97c712d8bdbdfa3ba03826494208754bd8 | Equivalent-runtime rationale: the exact-head fixture matches the host, installed exact plugin delivery path, model/reasoning configuration, invocation text, active-item shape, and unseen-debrief condition, but it does not match the live holder; the live-holder artifact matches authority but predates the final revision, so neither artifact alone or together is exact-head origin closure | Falsifier kind: mutation | Result: the exact-head P1 raw trace emits the unseen debrief path through broad state enumeration while the grader returns PASS, and no exact-final live-holder receipt exists.
+
+### Full exact-head verification
+
+- PASS: python3 scripts/kc-dev-flow-contract-test.py.
+- PASS: python3 scripts/kc-dev-flow-continuation-eval.test.py.
+- PASS: python3 scripts/kc-dev-flow-loader-eval.test.py.
+- PASS: python3 kc-dev-flow/scripts/improvement-intake.test.py, 9 tests.
+- PASS: ./scripts/skill-frontmatter-lint.sh, 40 skills.
+- PASS: ./scripts/version-parity-check.sh.
+- PASS: ./scripts/marketplace-verify.sh, schema and all isolated installs.
+- PASS: canonical/vendored kernel byte comparison.
+- PASS: git diff --check for 64c496cdab7ccc59a15753e454f627a70383fb46..e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47.
+- PASS: after fresh fetch, origin/main remains 64c496cdab7ccc59a15753e454f627a70383fb46 and the local and remote candidate remain e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47.
+
+### Delivery topology and Native stack exception
+
+The required Native stack exception is accurate. The merge-base diff has 12
+changed files, 2,031 additions, and 169 deletions, so 2,200 gross changed lines
+triggers the greater-than-1,500 rule. There are no independently reviewable and
+verifiable dependent layers and no independent green slices; splitting the
+production route, conditional contract, aligned docs, and its focused evidence
+would not produce separately releasable value. The delivery shape therefore
+remains one Draft PR with the exact heading ## Native stack exception and
+explicit non-author reviewer acknowledgement before readiness. Mechanical share
+is 14 gross registry lines, vendored-policy share is 10 gross lines, and
+generated plus lock-file share is zero; none is subtracted. This classification
+grants no push, PR, readiness, merge, or release authority.
+
+## Validation Science Officer EM judgment
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Return exact candidate e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47 to implementation. The product-first route and explicit-harvest safety behavior are promising, but AC-1 is not closed: the exact-head P1 trace enumerates the execution-state tree and emits an unseen debrief path while the focused evaluator reports PASS, and a separate mutant proves the evaluator also accepts the wrong first product action. Mechanical green and a same-ref P3 retry cannot override a non-discriminating P1 instrument or missing exact-final live-holder evidence.
+  evidence_synthesis: >-
+    Fresh origin fetch binds origin/main to 64c496cdab7ccc59a15753e454f627a70383fb46 and both local and remote candidate to e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47. All 12 changed files and the full diff were inspected. The ordinary skill is 640 words versus 1,643 and the candidate P1 sample uses 6 tool calls versus baseline 7, but its command rg --files docs/dev/_state emits docs/dev/_state/_debriefs/2026-08-12-01.md. parse_trace retains only command strings, and grade_trace searches those strings for literal improvement paths, so the manifest records no trace failures. Direct broad-enumeration and wrong-first-action mutants both survive. The checked-in full suite passes, the missing-reference mutation fails, and known-bad 64c496cdab7ccc59a15753e454f627a70383fb46 fails P2 ordering and P3 private-key safety. Candidate P2 and P4 pass. The paired candidate P3 stays UNKNOWN after exit 124 at 400.011 seconds; its raw and stderr hashes verify, and the timeout diagnostic is preserved. A separate P3 run is independently PASS with the same candidate, fixture, plugin tree, skill/reference hashes, model, reasoning, and prompt hash, valid intake, private identity, and atomic two-file commit, but it remains supplemental evidence rather than rewriting the original timeout. The only live-holder literal P1 is bound to earlier candidate 76fb9e97c712d8bdbdfa3ba03826494208754bd8, not the exact final head. The numeric delivery trigger is correctly classified as one Draft PR requiring the Native stack exception.
+  risk_tradeoff_call: >-
+    Product-first continuation buys a 61.0% smaller ordinary skill and removes default harvesting work, while the conditional reference preserves explicit-harvest safety. Accepting now risks shipping an AC-1 regression behind a grader that can certify both hidden debrief enumeration and a wrong first action; that is more damaging than the bounded delay of repairing two focused grading seams and rerunning final-head origin evidence. Removing the reference would lose AC-2 and AC-3 behavior, and deleting the evaluator would lose the required installed-runtime check, so the lower-cost alternative is to retain both, make P1 grading observe broad-enumeration outputs and the exact expected action, add mutants, and rerun the exact-final live-holder P1.
+  recommendation: >-
+    Gate Authority should record REJECTED and return the item to implementation for one bounded correction: make the evaluator fail broad execution-state enumeration or any output revealing _debriefs/_improvements on P1/P4, require the work-item-derived first product action, add both RED mutants, and rerun the literal live-holder P1 plus the focused paired evidence at the corrected exact head. Preserve the original P3 timeout as UNKNOWN and the matching supplemental run as a separate PASS receipt. Do not alter the accepted product-first route, harvest contract, scope, or delivery topology unless the correction exposes a new premise.
+  route: return
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    The FO may account for this rejected gate, dispatch the bounded implementation correction, verify evidence presence, and perform authorized state mechanics. It may not reinterpret the ACs, turn the supplemental P3 PASS into the original paired PASS, advance the stage, push or create a PR, approve the Native stack exception, ready or merge delivery, or exercise captain, gate, work-item, delivery, or provider authority.
+  engineering_judgment:
+    question: >-
+      Should exact candidate e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47 pass validation against AC-1 through AC-5, including literal P1 origin behavior and the paired-timeout plus same-ref supplemental P3 evidence?
+    revision: >-
+      Merge base and fresh origin/main 64c496cdab7ccc59a15753e454f627a70383fb46; local and remote candidate e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47; paired receipt /tmp/kc-dev-flow-continuation-eval-e2740f53-20260812; supplemental receipt /tmp/kc-dev-flow-continuation-eval-e2740f53-p3-20260812.
+    evidence_synthesis: >-
+      Fresh origin fetch binds origin/main to 64c496cdab7ccc59a15753e454f627a70383fb46 and both local and remote candidate to e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47. All 12 changed files and the full diff were inspected. The ordinary skill is 640 words versus 1,643 and the candidate P1 sample uses 6 tool calls versus baseline 7, but its command rg --files docs/dev/_state emits docs/dev/_state/_debriefs/2026-08-12-01.md. parse_trace retains only command strings, and grade_trace searches those strings for literal improvement paths, so the manifest records no trace failures. Direct broad-enumeration and wrong-first-action mutants both survive. The checked-in full suite passes, the missing-reference mutation fails, and known-bad 64c496cdab7ccc59a15753e454f627a70383fb46 fails P2 ordering and P3 private-key safety. Candidate P2 and P4 pass. The paired candidate P3 stays UNKNOWN after exit 124 at 400.011 seconds; its raw and stderr hashes verify, and the timeout diagnostic is preserved. A separate P3 run is independently PASS with the same candidate, fixture, plugin tree, skill/reference hashes, model, reasoning, and prompt hash, valid intake, private identity, and atomic two-file commit, but it remains supplemental evidence rather than rewriting the original timeout. The only live-holder literal P1 is bound to earlier candidate 76fb9e97c712d8bdbdfa3ba03826494208754bd8, not the exact final head. The numeric delivery trigger is correctly classified as one Draft PR requiring the Native stack exception.
+    adjudications:
+      - finding: V1
+        disposition: supported
+        basis: >-
+          AC-1 and the candidate skill prohibit ordinary improvement-state inspection and broad execution-state enumeration. The exact P1 trace emits the unseen debrief path through rg --files docs/dev/_state, while scripts/kc-dev-flow-continuation-eval.py:300-367 discards command output and returns no trace failure. The same command survives a direct validator mutant.
+      - finding: V2
+        disposition: supported
+        basis: >-
+          AC-1 requires the captain-visible first concrete product action. scripts/kc-dev-flow-continuation-eval.py:243-250 verifies only route, item, and stage; a structurally valid P1 response whose first action is Harvest unseen debriefs before product work receives no claim failure.
+      - finding: V3
+        disposition: supported
+        basis: >-
+          Work Control and Verification discipline keep unavailable evidence typed. The paired P3 exit 124, elapsed 400.011 seconds, empty usage, and UNKNOWN verdict remain intact. Hash checks establish that the separate P3 PASS uses the same exact candidate, fixture, installed tree, prompt, model, and reasoning, so it supports AC-2 and AC-3 independently without changing the paired timeout into PASS.
+      - finding: V4
+        disposition: supported
+        basis: >-
+          Outcome discipline requires retained surfaces to survive without-it challenge and delivery policy binds topology to exact counts and independence. Removing the harvest reference makes the package contract fail and removes the explicit-harvest safety path; the known-bad arm makes the focused runner speak. The 2,200-line, 12-file diff crosses the numeric trigger but has no independent green layer or slice, so one Draft PR with the exact Native stack exception heading is the accurate topology after validation is repaired.
+    risk_tradeoff: >-
+      Product-first continuation buys a 61.0% smaller ordinary skill and removes default harvesting work, while the conditional reference preserves explicit-harvest safety. Accepting now risks shipping an AC-1 regression behind a grader that can certify both hidden debrief enumeration and a wrong first action; that is more damaging than the bounded delay of repairing two focused grading seams and rerunning final-head origin evidence. Removing the reference would lose AC-2 and AC-3 behavior, and deleting the evaluator would lose the required installed-runtime check, so the lower-cost alternative is to retain both, make P1 grading observe broad-enumeration outputs and the exact expected action, add mutants, and rerun the exact-final live-holder P1.
+    recommendation: >-
+      Gate Authority should record REJECTED and return the item to implementation for one bounded correction: make the evaluator fail broad execution-state enumeration or any output revealing _debriefs/_improvements on P1/P4, require the work-item-derived first product action, add both RED mutants, and rerun the literal live-holder P1 plus the focused paired evidence at the corrected exact head. Preserve the original P3 timeout as UNKNOWN and the matching supplemental run as a separate PASS receipt. Do not alter the accepted product-first route, harvest contract, scope, or delivery topology unless the correction exposes a new premise.
+    route: return
+    confidence: high
+    dissent: >-
+      No material dissent remains on AC-2 through AC-5, the conditional-reference architecture, or the delivery topology. The rejected call differs only from the implementation report's provisional interpretation of P1 and from treating green deterministic suites as sufficient despite two surviving AC-1 mutants and missing exact-final live-holder closure.
+    disproof_condition: >-
+      Change the route to proceed when a corrected exact head makes both broad-enumeration and wrong-first-action mutants fail, its exact candidate P1 trace performs no command or output-level improvement-state enumeration, the literal installed-skill run against the live holder names the current item, validation stage, and first concrete product action before improvement activity, and the full suite plus P2/P3/P4 evidence remain green with the original P3 timeout still recorded separately as UNKNOWN.
+    authority_boundary: >-
+      Captain retains scope, accepted outcome changes, irreversibility, spending, and any harvesting schedule; Gate Authority retains the validation verdict and stage transition; work-item authority retains scope, status, and acceptance; Spacedock execution-state authority retains durable transitions and report commits; delivery authority retains Draft PR creation, Native stack exception acknowledgement, readiness, merge, release, terminalization, and archive; provider owners retain posting and upload. This EM is advisory and grants none of those actions.
+```
+
+### Summary
+
+Validation rejects exact candidate e2740f535334f1c12dfb9e2bc3e9f6bb4ecceb47.
+The product-first route, conditional harvest contract, P2/P3/P4 behavior, full
+mechanical suite, and Native stack exception classification are retained. The
+bounded correction is in the focused evaluator and final-head origin receipt:
+ordinary broad state enumeration and a wrong first action must both redden, then
+the literal real-holder P1 must be rerun at the corrected exact head. No code,
+delivery, provider, stage-transition, or scope authority was exercised in
+validation.
