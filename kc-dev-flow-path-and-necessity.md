@@ -5,7 +5,7 @@ product: kc-dev-flow
 sprint: S2
 design: required
 id: 9f63nm17bntn0ts7k9b1nm9c
-status: implementation
+status: validation
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/fix-kc-dev-flow-path-necessity
 ---
 
