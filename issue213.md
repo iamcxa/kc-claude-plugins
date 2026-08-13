@@ -1,7 +1,7 @@
 ---
 id: 92h25gk5mcagj6wtqrz24nsa
 title: "kc-dev-flow: no stage reads PR review feedback, so a PASSED verdict can ship unread reviewer findings"
-status: implementation
+status: validation
 source: https://github.com/iamcxa/kc-claude-plugins/issues/213
 product: kc-dev-flow
 sprint: S2
