@@ -1384,3 +1384,47 @@ Bound-field validation returned `PASS` for SHA-256 `3e09ad8814d3c4da90c045609a84
 ### Summary
 
 Cycle 7 removes the unintended actor-interpreter requirement and restores Option A's honest four-class evidence hierarchy. The fresh EM recommends `proceed`; Gate Authority retains the verdict and transition.
+
+## Stage Report: validation (post-ideation cycle 7)
+
+Verdict: UNKNOWN
+
+- DONE: Bind the review to exact base `64c496cdab7ccc59a15753e454f627a70383fb46`, candidate `c0b387b121f9919d5be3952d145187394bf9d59e`, clean branch `spacedock-ensign/product-first-continuation-product`, preserved P1 manifest SHA-256 `4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026`, preserved evaluator branch `2fff0f5ff2712e7c8ac2a8b6aee36ce50151b9db`, current AC-1 through AC-5, Measurement, validation runbook, engineering-judgment mod, and work-control-profile mod.
+- DONE: Preserve the P1 evidence within its exact class. The byte-bound receipt supports the correct item, stage, work-item-derived first action, 650-word ordinary policy, zero implicit improvement-state I/O, and zero authority effects. Kernel pagination and calls/time/tokens remain non-gating `FAIL` observations. P2 through P4 remain evaluator-only `UNKNOWN` observations.
+- DONE: Run the unmutated focused contract and executable downstream validator at the exact candidate. `python3 scripts/kc-dev-flow-contract-test.py` returned `PASS`; `python3 kc-dev-flow/scripts/improvement-intake.test.py` executed nine tests, including rejection and acceptance cases, and returned `OK`.
+- UNKNOWN: Complete valid temporary mutation coverage for every retained Measurement item 2 group. Twenty temporary Git-archive mutants were attempted under `/tmp/product-first-mutations.iDsRIy`; no product bytes were edited or committed. Routing, the 651-word bound, explicit trigger, zero implicit I/O, cursor-plus-batch atomicity, private-key non-disclosure, validator-before-delivery, the combined create/schedule/edit/post/merge prohibition, and no-invention produced an early non-zero contract result. However broad-discovery and iteration-first mutants failed first on the incidental 651/652-word bound, route-before-context did not apply, and the item/stage/action, bounded-scan, ownership/CAS, sanitization, install-authority, validated-handoff-before-promotion, product-nonblocking, and no-implicit-harvest attempts reached a later `git ls-files` failure because the temporary archive lacked Git metadata. Those results do not prove failure for the intended reason and cannot be relabeled as mutation-sensitive evidence.
+- DONE: Do not rerun owned exact-head green checks without drift. The current cycle-4 report already binds this exact base/candidate and records green canonical/vendored kernel parity, frontmatter lint, `git diff --check`, exact-head/clean-worktree, nine-file changed-file map, evaluator exclusion, and one ordinary Draft-PR topology. This fresh run found no candidate or worktree drift.
+- UNKNOWN: Obtain the required one fresh-context validation EM advisory. At the hard stop `2026-08-13T01:19:15Z`, the mutation packet was incomplete. The dispatch explicitly prohibited adding a model run after that condition, so no EM judgment was launched or fabricated. This is missing required evidence, not silence-as-approval.
+- DONE: Preserve scope and authority. No interpreter, actor, harness, test, installed-skill pressure, optional cross-model pass, product edit, frontmatter mutation, push, PR, readiness, merge, release, or stage transition occurred.
+
+Lenses: behavior `UNKNOWN` (intended-reason mutation closure incomplete); contract/schema `UNKNOWN` (bounded scan, sanitizer, validator/promotion boundary not validly closed); state/concurrency `UNKNOWN` (ownership/CAS and atomicity set incomplete); security/privacy `UNKNOWN` (private-key clause rejected, but sanitization and install/authority set incomplete); runtime/platform `PASS` only for the preserved exact-byte P1 hard observations and `FAIL`/`UNKNOWN` for the expressly non-gating evaluator observations; docs/policy `UNKNOWN` because the retained policy mutation matrix did not close; delivery `PASS` for exact head, clean tree, focused nine-file map, evaluator exclusion, and recorded one-Draft-PR topology, without granting readiness.
+
+Diff coverage: UNKNOWN — nine changed files remain mapped to AC-1 through AC-5, but the required retained-clause mutation denominator did not obtain valid intended-reason results for every group before the hard stop.
+
+Adversarial: UNKNOWN — twenty temporary mutants were attempted; nine produced an early intended contract rejection, while the remainder were invalidated by an incidental word-bound failure, a missing mutation target, or the Git-less temporary archive before intended-reason closure. No surviving mutation is accepted as green and no invalid non-zero exit is counted as a contract failure.
+
+Cross-model: not run — the required fresh-context EM record is missing because the hard stop prohibited a model run after incomplete mutation closure; no optional cross-model pass was authorized.
+
+E2E: PASS only for the preserved exact-byte P1 hard observations — manifest SHA-256 `4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026` binds the candidate skill/reference hashes and observes the correct product route with zero implicit improvement I/O and zero authority effects. Pagination/calls/time/tokens remain non-gating `FAIL`; P2-P4 remain evaluator-only `UNKNOWN`.
+
+Origin re-observation: PASS within the P1 hard-observation class — Reported scenario: ordinary continuation resolves the active product item before optional improvement work | Originating runtime kind: Codex installed-skill host | Re-observation artifact/revision: preserved manifest SHA-256 `4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026`, byte-bound to candidate policy at `c0b387b121f9919d5be3952d145187394bf9d59e` | Equivalent-runtime rationale: exact skill/reference hashes, invocation class, item/stage/action contract, zero-I/O result, and zero authority effects match the accepted class | Falsifier kind: mutation | Result: the P1 hard observations remain supported, but the required policy-artifact mutation class is `UNKNOWN` and cannot borrow P1 authority.
+
+### Acceptance results
+
+- AC-1: UNKNOWN. P1 hard runtime observations and the 650-word bound are supported; routing, bound, trigger, and zero-I/O mutants reddened, but item/stage/action, route-before-context, broad-discovery, and iteration-first intended-reason closure is incomplete.
+- AC-2: UNKNOWN. The downstream validator is green for nine executed rejection/acceptance tests; cursor-plus-batch atomicity and private-key non-disclosure mutants reddened, but bounded scan, ownership/CAS, sanitization, validated delivery, and product-nonblocking mutation closure is incomplete.
+- AC-3: UNKNOWN. The combined source-side create/schedule/edit/post/merge prohibition reddened, while installation ownership and validated-handoff-before-promotion did not obtain valid intended-reason results; every prohibition is therefore not closed.
+- AC-4: UNKNOWN. No-invention reddened, but iteration-first empty-work and no-implicit-harvest did not obtain valid intended-reason results.
+- AC-5: PASS for exact focus, one inseparable slice, durable file map, evaluator exclusion, and topology. It cannot upgrade AC-1 through AC-4 or make the candidate delivery-ready.
+
+### EM record, disproof, and delivery readiness
+
+Fresh validation EM: `UNAVAILABLE` as evidence, not as an advisory route. No `science_officer_em_upward_report` exists for this validation attempt because the hard stop prohibited starting the required model run after mutation incompleteness. Gate Authority must not infer a route from its absence.
+
+Disproof condition: this `UNKNOWN` changes only after a fresh validation packet runs every retained policy-artifact mutant in a Git-capable temporary copy, shows each existing contract fail for its intended named reason, preserves the unmutated contract and nine validator tests green, and obtains exactly one fresh-context EM advisory against those exact results. Any surviving retained-clause mutation rejects.
+
+Delivery readiness: NOT READY. Exact candidate and topology remain preserved, but AC-1 through AC-4 and the mandatory fresh EM are not closed. Captain, Gate Authority, work-item authority, Spacedock state authority, delivery authority, and provider owners retain all existing authority.
+
+### Summary
+
+Exact candidate `c0b387b121f9919d5be3952d145187394bf9d59e` remains clean and its preserved P1 hard observations plus executable intake validator are green within their own evidence classes. The temporary mutation attempt did not produce valid intended-reason closure for every retained clause before the hard stop, so validation is `UNKNOWN`, no EM or delivery action was performed, and the candidate is not delivery-ready.
