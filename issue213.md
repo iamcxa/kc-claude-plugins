@@ -51,6 +51,7 @@ fingerprint, and one disposition per normalized item ID. The canonical v1 input
 sorts by kind then stable GitHub ID and covers each item's author, review state
 or thread resolution state, commit ID when present, and a SHA-256 of every
 mutable body/comment. Each `rejected-with-reason` includes its reason; each
+`fixed` includes the fix revision and verification-evidence reference; each
 `out-of-scope-and-filed` includes the filed work-item reference. The fingerprint
 is necessary because GitHub review bodies and inline comments are mutable;
 ID-only reuse can silently accept changed feedback. This extends the existing
@@ -150,7 +151,8 @@ At validation entry, before Ready, immediately before merge, and before
 terminalization, repository, PR or layer identity, current head, fingerprint
 scheme, and feedback fingerprint must match a validation report with one
 evidence-bearing disposition for every normalized item. A rejected item requires
-its recorded reason; an out-of-scope item requires its filed work-item reference.
+its recorded reason; a fixed item requires its fix revision and verification
+evidence reference; an out-of-scope item requires its filed work-item reference.
 With
 `kc-pr-review-resolve` absent, the complete set routes to the ordinary
 implementation worker and remains blocked; a code change invalidates prior
@@ -394,3 +396,39 @@ authority_boundary: Captain retains the two-surface exception and merge policy; 
 ### Summary
 
 The smallest credible design keeps GitHub observation and fail-closed delivery in dev-flow, persists only a versioned compact fact in the existing validation report, and uses the ordinary worker when the optional resolver is absent. The initial proposal was corrected after independent EM review, but the recorded advisory route remains `return`; a new ideation cycle must evaluate the corrected artifact rather than treating the correction as self-approval.
+
+## Stage Report: ideation (cycle 2)
+
+Verdict: `proceed` with high confidence; multi-model review `not_needed`.
+
+- DONE: Re-read the corrected Design determination, Acceptance criteria, and Test plan without changing product files or broadening scope.
+  Review bound the proposal to fresh `origin/main` `281bd7f6` and corrected artifact blob `59269267f89a11d51875b0acb512c1e5c9348b29` (SHA-256 `591e1401d45c73c93c0f6376c747eec8cf931d45e7e9adfcd5706fac258c6ac6`).
+- DONE: Verify every prior EM return condition is now satisfied.
+  The artifact now binds versioned mutable content and full PR/layer identity, requires evidence for all dispositions, counts two captain-approved surfaces, names only four boundaries, bounds test claims, and preserves the six-file/no-ledger/no-resolver-integration cut.
+- DONE: Recheck the positive and resolved-thread provider evidence.
+  `qnow#1057@ca1d613c` remains two external non-empty reviews plus three raw/zero unresolved threads; `qnow#1124@ebddb0ab` remains one external non-empty review plus two unresolved threads, with empty `reviewDecision` and complete pages.
+- DONE: Commission exactly one new fresh-context Science Officer EM review.
+  The new reviewer independently returned `proceed/high`; all five adjudications were supported, dissent was empty, and no additional reviewer was commissioned.
+- DONE: Preserve the bounded correction-cycle scope.
+  Only this entity changed; implementation remains six existing files with no startup/idle polling, `kc-pr-flow` change, second ledger, standalone plan, or added delivery authority.
+- DONE: Re-run the ideation AC structure check.
+  `spacedock status --workflow-dir docs/dev --read .../issue213.md --ac-scan` exits 0; removing a bold single-line AC heading would fail this check.
+
+### Engineering judgment
+
+```yaml
+question: Whether corrected issue213 artifact 59269267 should advance under the captain-approved two-surface S2 exception.
+revision: origin/main 281bd7f6; artifact blob 59269267f89a11d51875b0acb512c1e5c9348b29
+adjudications: binding exactness, prior return conditions, iteration-size exception, live probes, and boundary/scope consistency are supported.
+risk_tradeoff: Maintain one versioned fingerprint and four boundary observations; implementation drift remains for fresh exact-head validation.
+recommendation: Proceed with the six-file slice exactly as written and re-pin origin plus the open probe at implementation entry.
+route: proceed
+confidence: high
+dissent: ""
+disproof_condition: Return or narrow if implementation needs a seventh file, resolver contract, second store, startup/idle polling, standalone plan, or lets a non-pass provider state cross a required boundary.
+authority_boundary: Captain retains scope and exception authority; Gate Authority retains advancement; delivery owners retain Ready, merge, and terminalization mutations.
+```
+
+### Summary
+
+The bounded correction resolves every prior return condition without expanding the design or file family. One new fresh-context EM recommends `proceed`; implementation should re-pin the moving provider evidence and build only the accepted six-file slice.
