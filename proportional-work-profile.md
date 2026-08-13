@@ -971,6 +971,20 @@ Verdict: **DONE**. Repaired all four cycle-1 findings on exact product head
 16-response model evaluation. The product branch remains unpushed and no PR was
 created.
 
+- DONE: Proved the packaging without-it pair first. The complete inline chooser
+  cannot keep itself absent from valid-receipt input while remaining available
+  for missing-receipt interaction; the conditional dedicated skill satisfies
+  both behaviors and remains the selected mechanism.
+- DONE: Implemented the fixed three-profile receipt and pre-AC activation with
+  recorded RED/GREEN behavioral evidence while preserving common safety,
+  authority, evidence, cleanup, promotion, canonical/adopted, and five-stage
+  invariants.
+- DONE: Delivered the smallest closed evaluation support for the frozen fixtures
+  and 16-provider-response/20-minute envelope, mapped every changed file to the
+  existing ACs, and ran the full relevant deterministic suite without adding a
+  runner service, provider abstraction, standing CI, release/version change, or
+  implementation-time model call.
+
 ### Repairs
 
 - AC-1 interaction and transaction evidence: the closed result now carries the
