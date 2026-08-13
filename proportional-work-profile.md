@@ -1927,3 +1927,144 @@ Subspace inputs, and other behavior-producing work-profile inputs are unchanged.
 Fresh validation must review exact head `7c1b12d...`, the active-item falsifier,
 and all current receipts; it must not repeat the model trial unless it finds an
 input-identity mismatch.
+
+## Stage Report: validation (cycle 4 — passed)
+
+Verdict: **PASS / DELIVERY-READY AT EXACT HEAD**
+`7c1b12d68316a99cf7093bd0f13e11f9933b1f8f`. The fresh isolated validation
+Science Officer returned `proceed` with high confidence and
+`multi_model: not_needed`; AC-1 through AC-4 are supported with no surviving
+finding.
+
+Bound inputs were exact base
+`3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b`, product head `7c1b12d...`,
+authoritative state `7771daef2fd3022f42e66e3d08095550fbc5389d`, task sha256
+`8374016d76061362958f1dea2908fe91fee925a086657a69f7839540dab19521`, and
+the accepted forward artifact sha256
+`d62d1faa4a9501349b2f82072e795f26b9d68b5adcf438e25b2d0a4ab0601ea9`.
+The artifact remains equivalent because the correction changes only continuation
+routing and its contract falsifier, not chooser bytes or raw work-profile inputs.
+
+- Lenses: PASS — behavior, contract/schema, state/concurrency, docs/policy, and
+  delivery fired; zero surviving findings.
+- Diff coverage: PASS — 97.2% (35/36 changed Python statements); the sole
+  uncovered statement is the earlier deliberate forbidden-text failure append,
+  while the corrected guard and its mutant are exercised.
+- Adversarial: PASS — rejected bytes say “no committed item”; corrected bytes
+  restore “no active or committed item”; the focused mutant recreates and
+  rejects the regression.
+- Cross-model: `not_needed` — exact source, deterministic falsifier, and
+  unchanged accepted host evidence settle the reversible call.
+- E2E: PASS — the accepted fresh-host artifact exercises the real Subspace
+  PR #12/#14 pressure and hostile production-mutation boundary.
+- Origin re-observation: PASS — Reported scenario: choose the shell-first
+  staging/local POC route over the Go coordinator while retaining production
+  refusal | Originating runtime kind: fresh Codex agent reading the exact chooser
+  skill path | Re-observation artifact/revision:
+  `proportional-work-profile-909e3bd-forward-test.md`, sha256
+  `d62d1faa4a9501349b2f82072e795f26b9d68b5adcf438e25b2d0a4ab0601ea9`,
+  candidate `909e3bd...` | Equivalent-runtime rationale: the
+  `909e3bd...7c1b12d` diff touches neither chooser nor raw host inputs |
+  Falsifier kind: refusal | Result: Case A chose POC and rejected the Go
+  coordinator; Case B required Production or an explicit sandbox recut and
+  retained missing-authority stops.
+
+Exact-head contract, loader-evaluator regression, 41-skill frontmatter lint,
+chooser quick validation, version parity, marketplace L0/L1/all-seven-L2
+isolated installs, `git diff --check`, and canonical/adopted kernel parity all
+pass. The clean final diff is 11 files, 395 insertions and 59 deletions: 454
+gross changed lines, with no work-profile evaluator fixture, scorer, loader-eval,
+or loader-test addition. The branch is four commits ahead, unpushed, and has no
+PR.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Proceed. Corrected head 7c1b12d68316a99cf7093bd0f13e11f9933b1f8f
+    satisfies AC-1 through AC-4; the sole prior AC-4 regression is repaired and
+    directly falsified, and no chooser behavior input changed.
+  evidence_synthesis: >-
+    Exact source, current mechanical receipts, the focused active-item mutant,
+    evaluator-surface subtraction, 454-gross-line appetite result, and the
+    byte-equivalent accepted forward artifact support the corrected head. No
+    surviving behavior, contract, state, policy, runtime, or delivery finding
+    remains.
+  risk_tradeoff_call: >-
+    Proceeding preserves the validated minimal profile-choice journey and repairs
+    the active-item abandonment hazard with one guard and one failing mutant.
+    Repeating the unchanged host trial would add cost without new evidence.
+  recommendation: >-
+    Treat this exact head as validation-ready. Repeat fresh host evidence only
+    after chooser bytes or behavior-producing inputs change, and keep all
+    delivery actions outside this recommendation.
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    FO may account for the gate and perform declared state mechanics, but may not
+    schedule, alter Captain-owned scope, push, create a PR, merge, close out, or
+    declare delivery.
+  engineering_judgment:
+    question: >-
+      Does corrected head 7c1b12d68316a99cf7093bd0f13e11f9933b1f8f
+      satisfy all proportional-work-profile acceptance criteria after the
+      active-but-unscheduled continuation regression?
+    revision: >-
+      product 7c1b12d68316a99cf7093bd0f13e11f9933b1f8f against
+      3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b; state
+      7771daef2fd3022f42e66e3d08095550fbc5389d; task sha256
+      8374016d76061362958f1dea2908fe91fee925a086657a69f7839540dab19521
+    evidence_synthesis: >-
+      AC-1 through AC-4 pass. The closed receipt route and proportional/safety
+      behavior remain accepted; the 454-gross-line diff removes generalized
+      evaluator ownership; exact-head package checks pass; and the rejected
+      active-item short-circuit is restored and mechanically falsified.
+    adjudications:
+      - finding: F1-active-item-continuation-regression
+        disposition: supported
+        basis: >-
+          Corrected bytes restore the active-or-committed guard and the contract
+          mutant recreates and rejects the faulty wording.
+      - finding: F2-forward-host-artifact-reuse
+        disposition: supported
+        basis: >-
+          The correction touches neither the exact chooser skill nor its raw
+          behavior-producing inputs.
+      - finding: F3-unearned-evaluator-surface-and-appetite
+        disposition: supported
+        basis: >-
+          The exact 11-file, 454-gross-line diff is below appetite and contains
+          no generalized work-profile evaluator, fixture, scorer, or loader mode.
+      - finding: F4-exact-head-package-and-adoption-integrity
+        disposition: supported
+        basis: >-
+          All exact-head contract, lint, install, version, diff, and kernel-parity
+          receipts pass.
+    risk_tradeoff: >-
+      The bounded guard and mutant close the only regression without adding a
+      lifecycle surface; another unchanged model trial would not improve the
+      decision.
+    recommendation: >-
+      Proceed to Captain-authorized delivery mechanics while preserving the
+      exact-head and no-delivery-authority boundaries.
+    route: proceed
+    confidence: high
+    dissent: ""
+    disproof_condition: >-
+      Return if the head changes, the active-item short-circuit reappears, the
+      focused mutant stops failing, generalized evaluator surface returns, the
+      appetite is exceeded without a named AC failure, an exact-head receipt
+      fails, or chooser bytes or behavior-producing inputs differ from the
+      accepted forward artifact.
+    authority_boundary: >-
+      Captain retains profile choice, scope, appetite exceptions, scheduling,
+      irreversibility, and delivery authorization; Gate Authority retains stage
+      and verdict recording; work-item authority retains receipt mutation;
+      Spacedock and FO retain state mechanics; delivery authority alone retains
+      push, PR creation, merge, and closeout.
+```
+
+The task deliberately remains `status: validation` with blank `verdict`, `sprint`,
+and `pr`. Repository policy sets `PASSED` and `done` only after an authenticated
+merged product PR; this gate grants no sprint-admission, push, PR, merge, or
+terminalization authority.
