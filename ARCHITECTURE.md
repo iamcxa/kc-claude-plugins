@@ -37,15 +37,24 @@ and AC expansion:
   returns a candidate receipt. It owns no task-body or transition mutation.
 - The Local Profile's authorized work-item actor compare-checks the exact entity,
   writes through the existing safe transaction, syncs, and re-reads the committed
-  receipt before ideation continues.
+  receipt before ideation continues. The actor's separate observation binds the
+  exact path, pre-write and committed revisions, path-scoped changed set, sync,
+  committed/re-read digests, receipt, and evidence reference; model self-report
+  cannot substitute for those facts.
 - A later trigger returns `PROFILE_PROMOTION_REQUIRED` to the existing
-  execution-state owner. Promotion re-enters ideation; it adds no lifecycle stage,
-  tracker, daemon, or parallel authority.
+  execution-state owner. Its observation names the detecting worker, owner,
+  mutation actor, stale and replacement revisions, and ordered re-entry before
+  replacement AC derivation. Promotion adds no lifecycle stage, tracker, daemon,
+  or parallel authority.
 
 The loader evaluator remains capture-only. Its `work-profile-v1` mode snapshots
 the ideation stage, conditional chooser, four frozen fixtures, closed local jq
-scorer, and sixteen no-retry call slots under one twenty-minute envelope. It does
-not call a model, select a provider implementation, or run a standing service.
+scorer, explicit installed-host/model invocation profiles, and sixteen no-retry
+call slots under one twenty-minute envelope. It does not call a model or run a
+standing service. Validation counts every provider-native sample response,
+including auxiliary work, inside the 16-response budget; missing usage is
+`UNKNOWN`. One mandatory fresh EM judgment follows the runner outside that
+budget and its comparative metrics and grants no optional cross-model authority.
 
 ## Marketplace publish flow
 

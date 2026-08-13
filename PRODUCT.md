@@ -45,6 +45,10 @@ runtime has its own deep-dive entry below this catalog.
   criteria, it records a Captain-selected `POC / Exploration`, `Pilot / Product
   slice`, or `Production` receipt so architecture, implementation, and testing
   proof stay proportional while safety and authority remain unchanged.
+  Its bounded evidence requires a positive paired benign-POC acceptance-criteria
+  burden reduction, receipt obligations linked to emitted obligation/test IDs,
+  and observable work-item/promotion transactions rather than model-attested
+  status fields.
   Ordinary continuation routes committed product work before optional improvement harvesting;
   harvesting runs only when explicitly requested and grants no product authority.
 

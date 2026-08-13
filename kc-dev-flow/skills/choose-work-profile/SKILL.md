@@ -59,6 +59,14 @@ non-production scope boundary removes the trigger.
 5. In a non-interactive worker, return the recommendation, exact delta, and
    `NEEDS_PROFILE_DECISION` to the user-facing parent. Do not auto-select.
 
+The question event carries the exact prompt plus these three ordered choices.
+Each choice includes its label, closed receipt value, and task-specific
+consequence: `POC / Exploration` / `poc-exploration`, `Pilot / Product slice` /
+`pilot-product-slice`, and `Production` / `production`. The host or user-facing
+parent records the actual structured surface or plain-chat payload and its
+evidence reference before forwarding the Captain's answer. A later summary that
+only says a question was asked is not interaction evidence.
+
 ## Return the candidate receipt
 
 Return this payload to the actor already authorized by the Local Profile and
@@ -91,6 +99,15 @@ path-scoped work-item transaction, sync it, and re-read the committed receipt.
 If work-item authority supplies no safe mutation path, return `UNKNOWN`.
 Do not write a sidecar.
 
+The actor returns authoritative transaction facts to the ideation caller: exact
+work-item identity and path, authority source, actor identity, pre-write
+revision, the path-scoped committed revision and changed-path set, sync result,
+committed and re-read work-item digests, the re-read receipt, and an evidence
+reference. The caller verifies that the committed and re-read revisions,
+digests, and receipt match before deriving. Model-authored fields that merely
+claim `recorded` or `re-read` are not evidence. If the runtime cannot expose any
+required fact, return `UNKNOWN` and do not derive acceptance criteria.
+
 Only after the committed receipt is re-read may inherited criteria be normalized
 or acceptance criteria be expanded.
 
@@ -116,7 +133,11 @@ Outside ideation, do not rewrite the receipt or stage. Return
 `PROFILE_PROMOTION_REQUIRED` with the stale basis and observed trigger to the
 bound execution-state owner. That owner performs the existing transition to
 ideation and dispatches the authorized mutation actor; this skill gains no stage
-transition authority.
+transition authority. The handoff evidence names the detecting worker,
+execution-state owner, authorized mutation actor, stale receipt revision,
+ideation transition, replacement committed receipt revision, and the ordering
+from detection through committed re-read. Replacement acceptance criteria are
+derived only after that sequence completes.
 
 ## Example
 

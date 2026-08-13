@@ -1472,11 +1472,15 @@ def work_profile_contract_failures(
         "best structured question capability",
         "Do not couple the contract to a tool name",
         "one concise plain-chat question",
+        "exact prompt plus these three ordered choices",
         "NEEDS_PROFILE_DECISION",
         "recommendation and question authority only",
         "cannot authorize secrets, permissions, spend, destructive actions, production data, external mutations, irreversibility, red residual acceptance, merge, or closeout",
         "UNKNOWN",
         "Do not write a sidecar",
+        "authoritative transaction facts",
+        "Model-authored fields that merely claim `recorded` or `re-read` are not evidence",
+        "detecting worker, execution-state owner, authorized mutation actor",
         "PROFILE_PROMOTION_REQUIRED",
     ]:
         if phrase not in " ".join(chooser.split()):

@@ -13,5 +13,17 @@
   "required_authority_stop_ids": [],
   "required_promotion_ids": [],
   "forbidden_selection": null,
-  "existing_surface_ids": ["import-command", "record-store"]
+  "existing_surface_ids": ["import-command", "record-store"],
+  "acceptance_criteria_limit": 6,
+  "receipt_obligations": {
+    "architecture": ["limited-user-seam", "data-safety"],
+    "implementation": ["diagnostics", "retry-recovery"],
+    "testing": ["owned-logic", "integration-seams", "retry-recovery", "data-safety", "real-e2e"]
+  },
+  "work_item_path": "docs/dev/.spacedock-state/eval-P1-limited-use.md",
+  "work_item_identity": "P1-limited-use",
+  "authorized_mutation_actor": "dispatched-ideation-worker",
+  "authority_source": "local-profile",
+  "detecting_worker": null,
+  "execution_state_owner": null
 }

@@ -13,5 +13,17 @@
   "required_authority_stop_ids": [],
   "required_promotion_ids": [],
   "forbidden_selection": null,
-  "existing_surface_ids": ["public-api", "customer-store", "release-workflow"]
+  "existing_surface_ids": ["public-api", "customer-store", "release-workflow"],
+  "acceptance_criteria_limit": 9,
+  "receipt_obligations": {
+    "architecture": ["lifecycle-owner", "compatibility", "migration-recovery"],
+    "implementation": ["observability", "integrity", "release-rollback"],
+    "testing": ["negative", "recovery", "compatibility-upgrade", "integrity", "observability", "rollback", "real-e2e"]
+  },
+  "work_item_path": "docs/dev/.spacedock-state/eval-P2-long-lived.md",
+  "work_item_identity": "P2-long-lived",
+  "authorized_mutation_actor": "dispatched-ideation-worker",
+  "authority_source": "local-profile",
+  "detecting_worker": null,
+  "execution_state_owner": null
 }

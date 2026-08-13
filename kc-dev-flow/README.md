@@ -64,6 +64,11 @@ load. A missing or stale receipt loads `choose-work-profile`, whose closed choic
 are `POC / Exploration`, `Pilot / Product slice`, and `Production`. The chooser
 returns a candidate receipt; it does not create workflow state or gain work-item,
 stage-transition, merge, or closeout authority.
+The host records the exact three-choice payload and surface. The authorized
+work-item actor separately returns path-scoped commit, sync, and committed
+re-read evidence; a model-authored status claim is not transaction evidence.
+Promotion evidence similarly names the detecting worker, execution-state owner,
+mutation actor, and replacement receipt revision before ACs are re-derived.
 
 `reusable-kernel` is the version-1 transport label for a sanitized source
 handoff, not a placement verdict. `promote-dev-flow` rechecks duplicates and
