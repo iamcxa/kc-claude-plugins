@@ -184,15 +184,11 @@ the selected mechanism only because keeping the procedure inline fails AC-1.
 
 **AC-1 — Ordinary continuation reaches the correct product action with bounded policy and zero improvement I/O.**
 
-Verified by: the continuation skill and harvest reference are policy artifacts;
-their shipped bytes are their implementation. The exact-byte preserved P1 receipt
-binds those candidate bytes and observes the correct item, stage, work-item-derived
-first action, 650 default words, zero implicit improvement I/O, and zero authority
-effects. Deterministic product contracts delete, mutate, or reorder the policy
-clauses that enforce item/stage/action routing, the word bound, no broad discovery,
-zero implicit improvement I/O, and no product-context load that changes or precedes
-route resolution, and must visibly fail on each artifact mutation. They do not
-emulate an LLM actor or claim model adherence.
+Verified by: the exact-byte preserved P1 receipt observes the correct item, stage,
+work-item-derived first action, 650 default words, zero implicit improvement I/O,
+and zero authority effects on candidate-identical policy bytes. The static product
+contract supports only policy order, shape, and the word bound; it does not prove
+model adherence. Pagination, calls, time, and tokens remain evaluator-only.
 Falsified by: a wrong item or stage, an action not derived from the resolved work
 item, any improvement-state I/O without the explicit request, broad discovery,
 policy above 650 words, or product-context loading that changes or precedes route
@@ -201,40 +197,35 @@ provider-token usage are non-gating evaluator observations.
 
 **AC-2 — Explicit harvesting preserves debrief evidence, cursor safety, and handoff validation.**
 
-Verified by: deterministic policy-artifact mutations delete or corrupt each
-explicit-trigger, bounded-scan, ownership/CAS, atomic cursor-plus-batch,
-retry-stable private-identity, sanitization, validator-before-delivery, and
-product-nonblocking clause, and the product contract visibly fails each mutation.
-Executable `improvement-intake.test.py` tests separately prove the downstream
-handoff validator rejects invalid payloads and accepts valid ones. These two
-evidence classes protect the shipped policy and executable validator; neither
-claims that a model will obey the policy. Preserved or later exact-byte P2/P3
-model-adherence receipts remain non-gating evaluator observations.
+Verified by: the static product contract supports the explicit-trigger and
+retained bounded-scan, ownership/CAS, atomic cursor-plus-batch, retry-stable
+private-identity, sanitization, validator-before-delivery, and product-nonblocking
+policy clauses. Executable `improvement-intake.test.py` supports only downstream
+handoff rejection and acceptance. Model transaction adherence is not proven and
+remains non-gating evaluator evidence; preserved P2/P3 remain `UNKNOWN`.
 Falsified by: lost/superseded evidence being silently reused, a partial write,
 identity publication/regeneration, invalid handoff delivery, or improvement
 failure blocking product work.
 
 **AC-3 — Every automatic-authority prohibition remains hard and source promotion stays downstream.**
 
-Verified by: deterministic policy-artifact mutations across the continuation,
-harvest, and promote boundaries delete or corrupt every prohibition on task
-creation, sprint admission, scheduling, posting/upload, policy edit, install,
-merge, and product pause, plus the validated-handoff-before-promotion clause; the
-contract visibly fails each mutation. Product tests do not execute forbidden
-external effects or emulate an actor. Preserved or later exact-byte P2/P3
-model-adherence receipts are non-gating evaluator observations.
-Falsified by: a required prohibition or validated-handoff boundary can be removed,
-reversed, or weakened without deterministic contract failure.
+Verified by: the static contract supports required continuation/harvest/promote
+clauses prohibiting task creation, sprint admission, scheduling, posting/upload,
+policy edit, install, merge, and product pause, plus validated handoff before
+promotion. It does not prove a model cannot violate them. Any observed unauthorized
+secret disclosure, authority grant, or external mutation is a critical incident
+and correction trigger; absent such a new observation, this Draft PR requires no
+additional model run. Preserved P2/P3 remain non-gating `UNKNOWN` observations.
+Falsified by: a required prohibition or downstream-promotion clause is absent, or
+an observed model run performs an unauthorized effect.
 
 **AC-4 — Empty committed work remains a scheduling stop, not a harvest or invention trigger.**
 
-Verified by: deterministic policy-artifact mutations delete, weaken, or reorder
-the iteration-first empty-work short-circuit, scheduling-stop, no-invention, and
-no-implicit-harvest clauses; the contract visibly fails each mutation. No model
-actor fixture is required or permitted. Preserved or later exact-byte P4
-model-adherence evidence remains a non-gating evaluator observation. Falsified
-by: one of those required clauses can be removed or reordered so debrief evidence
-precedes the empty-work stop without deterministic contract failure.
+Verified by: the static contract supports the iteration-first empty-work
+short-circuit, scheduling-stop, no-invention, and no-implicit-harvest policy.
+It does not prove model adherence. Preserved P4 remains `UNKNOWN` and non-gating.
+Falsified by: one of those policy clauses is absent, or a later observation shows
+empty work causing invention or implicit harvesting.
 
 **AC-5 — The change stays one focused continuation slice and updates its durable contracts.**
 
@@ -250,66 +241,42 @@ mandatory model CI, general runner/grader, automated schedule, or an unmapped fi
 
 ## Test plan
 
-1. Preserve the journey-first feasibility receipt already exercised: installed
-   skill hash equals exact `origin/main`, live Local Profile and work-item binding
-   resolve, and the baseline enters debrief work before the product route. Re-run
-   this no-edit baseline at implementation start if any identity has drifted.
-2. Write the smallest RED for the ordinary product-first behavior, implement only
-   the final explicit-trigger guard plus conditional reference extraction, install
-   that exact worktree snapshot, and immediately run the literal captain-visible
-   P1 journey against the real host and live authorities. If it is not demoable,
-   stop before broader mutants, harness work, or docs.
-3. Only after P1 is observable, harden the riskiest mechanism with deterministic
-   RED/GREEN mutations for conditional reference presence, CAS/write-unit,
-   handoff validation, private identity, and every no-auto-authority boundary.
-   Keep `improvement-intake.py` behavior unchanged.
-4. Reuse PR #216's exact-ref materialization, opaque-arm, hidden-rubric, and
-   provenance pattern for one focused `continue-dev-flow` fixture. Do not turn it
-   into a general model runner or all-skill harness. Install each exact plugin arm
-   in an isolated host profile and invoke the real skill entrypoint.
-5. Pre-register four pressures: P1 ordinary active item + unseen debriefs + no
-   trigger; P2 explicit harvest + unseen debriefs + unavailable CAS/ownership;
-   P3 explicit harvest + reusable-source candidate + CAS/private identity; P4 no
-   committed work + unseen debriefs + no trigger. Preserve raw responses, tool and
-   file traces, exact refs, skill/reference hashes, model/reasoning identity, and
-   available usage/wall-time receipts before revealing arm identity and rubric.
-6. Run the full `scripts/kc-dev-flow-contract-test.py`, focused loader/skill
-   evaluation tests, `improvement-intake.test.py`, skill frontmatter lint, and
-   `git diff --check` at the exact implementation head.
+1. Bind the preserved exact-byte P1 receipt to candidate-identical skill/reference
+   hashes and claim only its observed product outcomes.
+2. Require the existing static contract to keep policy order, shape, word bound,
+   explicit trigger, harvesting safeguards, authority boundaries, downstream
+   promotion order, and empty-work policy present. Do not add an actor interpreter,
+   exhaustive mutation matrix, or replacement evaluator to this product slice.
+3. Keep `improvement-intake.test.py` green for executable downstream validator
+   rejection/acceptance; do not expand its claim to model transaction adherence.
+4. Keep exact base/candidate, nine-file map, kernel parity, focused checks, and one
+   ordinary Draft PR. Later model-evaluator work is separate and optional; retain
+   all existing P1-P4 labels without requiring exact-byte P2-P4 closure here.
 
-E2E applies at the behavior-producing installed-skill boundary, not in a browser.
-The first journey uses the real host and live authorities before later mechanism
-hardening; fake fixtures prove deterministic contracts only and cannot replace
-the literal demo. The four exact-ref pressures close routing and conditional-load
-behavior at validation.
+E2E evidence is probabilistic at the installed-skill boundary. Preserved P1 is
+the bounded product observation for this slice. P2-P4 and any later evaluator run
+remain separate observations and do not close or automatically block delivery.
 
 ## Measurement
 
-Evidence is classified before judgment, and every claim is limited to its class:
+Evidence follows risk tiers, and every claim stays inside its tier:
 
-1. **Exact-byte runtime product observation:** the preserved P1 receipt supports
-   only what it observed on candidate-identical policy bytes: correct item, stage,
-   first action, 650 words, zero implicit improvement I/O, and zero authority
-   effects. Its pagination, calls, time, and tokens remain non-gating observations.
-2. **Policy-artifact mutation:** because the continuation and harvest policies are
-   implemented by their bytes, deterministic tests must delete, mutate, or reorder
-   each retained routing, trigger, bound, transaction, identity, validation,
-   authority, promotion, product-nonblocking, and empty-work clause and visibly
-   fail. This proves artifact integrity and ordering, not model adherence; it must
-   not create an LLM interpreter, actor emulator, or new harness.
-3. **Executable downstream validator:** `improvement-intake.test.py` proves only
-   executable handoff rejection/acceptance behavior. It does not prove that a
-   model follows the harvesting policy or performs the adopter transaction.
-4. **Evaluator-only model-adherence observation:** kernel single-call versus
-   pagination, calls/time/tokens, and exact-byte P2-P4 remain honestly labeled
-   `FAIL`, `UNKNOWN`, or unavailable observations and have no automatic delivery-
-   gate authority. A later observed hard product or safety failure may motivate a
-   separate correction proposal; it does not automatically block this PR.
+1. **Deterministic executable systems:** existing executable validators and
+   deterministic product checks must be green for the behavior they actually run.
+2. **Policy-shape integrity:** static checks support only required bytes, clauses,
+   order, shape, and word bound. They do not prove model behavior or transaction
+   adherence and require neither exhaustive mutation closure nor an interpreter.
+3. **Sampled LLM behavior:** exact-byte P1 supports only its observed product
+   results. P2-P4 remain honestly labeled `UNKNOWN`; pagination, calls, time,
+   tokens, read shape, and style are probabilistic non-gating observations.
+4. **Critical incidents:** an observed secret/private-identity disclosure,
+   unauthorized authority grant, or external mutation blocks and triggers a
+   correction. Other later hard product/safety observations may create a separate
+   correction proposal but do not automatically block this Draft PR.
 
-Overall `PASS` requires the bound P1 hard product observations, mutation-sensitive
-policy artifacts for every retained clause, and green executable downstream
-validator coverage. No class may be used to claim another class's result, and no
-new installed-skill pressure is authorized by this ideation correction.
+Overall `PASS` requires green executable systems, intact static policy shape, and
+no observed critical incident. No additional model run, exact-byte P2-P4 closure,
+actor interpreter, new harness, or exhaustive per-clause mutation is required.
 
 The design is disproved if the real host eagerly loads the extracted reference
 without the trigger, or if the candidate cannot meet AC-1's load reduction while
@@ -1429,3 +1396,24 @@ Delivery readiness: NOT READY. Exact candidate and topology remain preserved, bu
 ### Summary
 
 Exact candidate `c0b387b121f9919d5be3952d145187394bf9d59e` remains clean and its preserved P1 hard observations plus executable intake validator are green within their own evidence classes. The temporary mutation attempt did not produce valid intended-reason closure for every retained clause before the hard stop, so validation is `UNKNOWN`, no EM or delivery action was performed, and the candidate is not delivery-ready.
+
+## Stage Report: ideation risk closeout (cycle 8)
+
+- DONE: Replace exhaustive prose mutation and mandatory actor/EM closure with the Captain-approved risk-tiered evidence model without changing product bytes or weakening executable safety checks.
+  AC-1 limits P1 to its exact observations and static checks to policy shape. AC-2 limits static safety clauses and executable intake-validator evidence to their real surfaces. AC-3/AC-4 retain authority, promotion, empty-work, no-invention, and no-implicit-harvest policy without claiming deterministic model obedience.
+- DONE: Reconcile Measurement, Test plan, and E2E wording with the focused product slice.
+  Deterministic executable systems must be green; static checks prove artifact integrity only; sampled LLM behavior is probabilistic; observed secret, authority, or external-mutation incidents are critical. P1 pagination/cost retains its recorded non-gating `FAIL`, P2-P4 retain `UNKNOWN`, and later evaluator work is separate rather than mandatory closure for this PR.
+- SKIPPED: Run tests, pressure, EM, optional review, or delivery actions.
+  The Captain explicitly excepted this closeout from the ideation fresh-EM default and prohibited those actions. No test, model/provider call, product edit, push, PR, readiness, merge, release, or transition was performed.
+
+### Exact bindings
+
+State base is `f45c2a1ece716b336907260842c7346e402a9014`; reviewed closeout artifact before this report was Git blob `ecf41679dd0407e11fa556a4d8f12f8a260e4f4d` and SHA-256 `b722d10ad3b4c123f68e962b5c0f50a5a407f217a3716cca41eaee433637728e`. Product base remains `64c496cdab7ccc59a15753e454f627a70383fb46`; clean candidate remains `c0b387b121f9919d5be3952d145187394bf9d59e`; AC-5, the nine-file product scope, and one ordinary Draft PR remain unchanged.
+
+### Disproof and authority boundary
+
+This closeout is disproved if an executable validator regresses, a required policy clause/order/word bound is absent, exact-byte P1 is misquoted, any historical receipt is relabeled, or an observed critical secret/authority/external-mutation incident is ignored. Efficiency/read-shape/style observations remain non-gating. Captain retains risk acceptance and scope; Gate Authority retains verdict and advancement; work-item and Spacedock owners retain state; validation retains evidence judgment; delivery retains push, Draft PR, readiness, merge, release, and archive; provider owners retain model execution and posting.
+
+### Summary
+
+Cycle 8 closes ideation on a risk-tiered evidence model: deterministic executables stay hard, static policy claims stay bounded, sampled LLM behavior stays probabilistic, and observed critical incidents block. Candidate, AC-5, scope, topology, receipt labels, and all delivery authority are preserved.
