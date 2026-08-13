@@ -9,7 +9,7 @@ completed:
 verdict: REJECTED
 worktree: .worktrees/spacedock-ensign-product-first-continuation
 issue:
-pr:
+pr: "#218"
 mod-block: merge:pr-merge
 design: required
 lane: main
