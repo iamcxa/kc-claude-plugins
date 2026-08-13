@@ -160,43 +160,6 @@ Fresh paired model pressure and hidden-rubric grading are validation-only
 evidence. A deterministic contract pass does not establish loader equality;
 loader equality does not establish worker behavior.
 
-For proportional-work-profile validation, use the same capture adapter in its
-closed mode after both refs are committed:
-
-```bash
-python3 scripts/kc-dev-flow-loader-eval.py \
-  --mode work-profile-v1 \
-  --known-bad-ref <exact-commit> \
-  --candidate-ref <exact-commit> \
-  --output-dir "$RECEIPT"
-```
-
-That mode snapshots the ideation stage and conditional chooser, copies four
-frozen fixtures and `score.jq`, and writes a sixteen-slot manifest: no retry,
-four-way maximum concurrency, model stop at minute 15, and the same-clock
-20-minute ceiling. It performs no model call. The manifest binds each host to an
-explicit model and invocation profile that suppresses auxiliary work where the
-installed host supports it. Validation counts provider-native model responses,
-not CLI invocations: auxiliary, subagent, or router responses consume the same
-16-response budget, and missing provider-native usage is `UNKNOWN`.
-
-Candidate derived prompts are templates. Before a preselected or post-answer
-turn, the validation driver binds the frozen fixture to an exact existing
-work-item path and has the authorized actor compare, write, path-scope commit,
-sync, and re-read the receipt. It replaces the transaction marker with the
-authoritative actor's path/revision/digest/receipt evidence. Question turns
-record the exact three-choice payload and actual structured or plain-chat
-surface. A model's own mutation claim is non-evidence; an unavailable host or
-transaction fact stays `UNKNOWN`.
-
-Validation supplies each recorded result plus its separate observation and runs
-the copied expression as `jq -c -f score.jq <score-input.json>`. The same scorer
-checks closed sample results, positive paired benign-POC burden, and the complete
-provider-native response ledger. The mandatory fresh validation EM runs exactly
-once after the sample runner as a workflow-gate judgment. It is outside the 16
-sample responses and comparative metrics and does not authorize optional
-cross-model review.
-
 A negative result carries the kernel's positive-claim bar. Sampled text matches
 do not prove a population; a check offered as evidence must name what change
 would make it fail. An absolute claim in a reference, comment, or commit message
@@ -233,17 +196,12 @@ Policy mods: [`_mods/engineering-judgment.md`](./_mods/engineering-judgment.md),
 [`_mods/reverse-recovery-audit.md`](./_mods/reverse-recovery-audit.md), and
 [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
-- Re-read the exact work item and its `## Work profile receipt`. If it is valid
-  and its basis is unchanged, consume it without another question. If it is
-  missing, or the audience, lifespan, mutation boundary, authority need, or
-  operational commitment changed, invoke `kc-dev-flow:choose-work-profile`.
-  The chooser recommends and asks through the host's best structured question
-  capability or one concise plain-chat fallback; the dispatched ideation actor
-  compares the exact entity, commits only its state path, syncs it, and re-reads
-  the committed receipt.
+- Re-read the exact work item and its `## Work profile receipt`. Consume an
+  unchanged receipt; otherwise invoke `kc-dev-flow:choose-work-profile` and let
+  the authorized work-item actor record, sync, and re-read the Captain's choice.
   Only after the committed receipt is re-read may inherited criteria be normalized or acceptance criteria be expanded.
-  Tasks already beyond ideation are not reopened without an observed promotion
-  trigger, and the bounded mechanical-defect route keeps its valid ideation skip.
+  Tasks already beyond ideation are not reopened without a promotion trigger;
+  the bounded mechanical-defect route keeps its valid ideation skip.
 - Ask the captain what value is protected, the appetite and tolerance, what to
   keep if cut, explicit non-goals, and the assumption most likely to be wrong.
 - Record the fastest path and smallest cut. Take the cheaper route when it

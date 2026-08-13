@@ -86,6 +86,7 @@ aa2f7dbcf78c15d8	prohibition	journey-slicing.md:30 — "every part of the journe
 661b527bf32021c7	prohibition	journey-slicing.md:34 — "every fake, stub, hardcode" is an enumeration duty on the skeleton's author; an omitted entry is an unassigned scope, not a false sentence
 60a0cc22d9657eee	bounded	journey-slicing.md:43 — inherited verbatim except "will pass" → "can pass": no mechanism makes a layered carve certain to clear review, and the block's force is the duty to name the sibling
 1be490fae159cacf	enforced	journey-slicing.md:62 — the mechanism is the table directly below it; each check is a count or a textual match on an item body, with no model in the path
+8c76dc031441448e	prohibition	kernel.md:53 — receipt ordering, authorized mutation, non-retroactivity, and defect-route preservation are duties on ideation and execution-state actors
 9518d55676bc4b47	prohibition	improvement-harvesting.md:3 — trigger and ordering duties on continue-dev-flow; the ordinary-path contract test names the activation guard
 e8a8486639f9a748	bounded	improvement-harvesting.md:18 — none is a schema value for the cursor fields, not a claim about repository state
 ec4536bdf29cc007	prohibition	improvement-harvesting.md:28 — bounded-scan and one-candidate duties on the harvesting actor
@@ -97,4 +98,3 @@ d3ada9725daf9588	prohibition	improvement-harvesting.md:83 — occurrence retenti
 0c259224031d3dcc	prohibition	improvement-harvesting.md:119 — same-namespace merge, bounds, atomic handoff, sanitization, and no-source-work duties on the harvesting actor
 6ed5c3161d1374f6	prohibition	improvement-harvesting.md:135 — only limits batch merging to the named bounded same-namespace case
 07eede3b0ed79931	enforced	improvement-harvesting.md:139 — validator bounds are enforced by improvement-intake.py and improvement-intake.test.py
-69fe5e1f53985cd2	prohibition	kernel.md:53 — receipt ordering, authorized mutation, non-retroactivity, and defect-route preservation are duties on ideation and execution-state actors

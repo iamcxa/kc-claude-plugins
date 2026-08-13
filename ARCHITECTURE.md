@@ -28,33 +28,12 @@ The continuation path keeps three ownership boundaries explicit:
   prepares captain-reviewable proposals; it does not inherit adopter authority
   or make a placement decision.
 
-The normal ideation route adds one conditional boundary before seed normalization
-and AC expansion:
-
-- The stage actor reads `## Work profile receipt`; an unchanged valid receipt
-  keeps the full chooser unloaded.
-- `choose-work-profile` recommends and asks through a host capability, then
-  returns a candidate receipt. It owns no task-body or transition mutation.
-- The Local Profile's authorized work-item actor compare-checks the exact entity,
-  writes through the existing safe transaction, syncs, and re-reads the committed
-  receipt before ideation continues. The actor's separate observation binds the
-  exact path, pre-write and committed revisions, path-scoped changed set, sync,
-  committed/re-read digests, receipt, and evidence reference; model self-report
-  cannot substitute for those facts.
-- A later trigger returns `PROFILE_PROMOTION_REQUIRED` to the existing
-  execution-state owner. Its observation names the detecting worker, owner,
-  mutation actor, stale and replacement revisions, and ordered re-entry before
-  replacement AC derivation. Promotion adds no lifecycle stage, tracker, daemon,
-  or parallel authority.
-
-The loader evaluator remains capture-only. Its `work-profile-v1` mode snapshots
-the ideation stage, conditional chooser, four frozen fixtures, closed local jq
-scorer, explicit installed-host/model invocation profiles, and sixteen no-retry
-call slots under one twenty-minute envelope. It does not call a model or run a
-standing service. Validation counts every provider-native sample response,
-including auxiliary work, inside the 16-response budget; missing usage is
-`UNKNOWN`. One mandatory fresh EM judgment follows the runner outside that
-budget and its comparative metrics and grants no optional cross-model authority.
+Normal ideation first reads the existing task's work-profile receipt. An
+unchanged receipt keeps the full chooser unloaded; a missing or stale receipt
+loads `choose-work-profile`. The chooser recommends and asks, while the actor
+already authorized by the repository records, syncs, and re-reads the choice
+before AC expansion. This adds no tracker field, lifecycle stage, or mutation
+authority.
 
 ## Marketplace publish flow
 
