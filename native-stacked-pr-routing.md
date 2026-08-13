@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-native-stacked-pr-policy-v4
 issue:
-pr: iamcxa/kc-claude-plugins#210
+pr: pr-merge:210
 mod-block:
 design: required
 lane: main
