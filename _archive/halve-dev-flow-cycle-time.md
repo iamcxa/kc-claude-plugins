@@ -4,12 +4,15 @@ source: Captain 2x development-speed target, 2026-08-10
 product: kc-dev-flow
 sprint: S1
 id: f32cg5cbw6b633s09e2zxbr5
-status: validation
+status: done
 lane: main
 started: 2026-08-10T22:03:08Z
 design: required
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-release-batch
 pr: pr-merge:199
+verdict: passed
+completed: 2026-08-13T09:26:57Z
+archived: 2026-08-13T09:26:57Z
 ---
 
 ## Problem
