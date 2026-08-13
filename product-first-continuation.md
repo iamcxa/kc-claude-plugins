@@ -1489,3 +1489,51 @@ This closeout is disproved if an executable validator regresses, a required poli
 ### Summary
 
 Cycle 8 closes ideation on a risk-tiered evidence model: deterministic executables stay hard, static policy claims stay bounded, sampled LLM behavior stays probabilistic, and observed critical incidents block. Candidate, AC-5, scope, topology, receipt labels, and all delivery authority are preserved.
+
+## Stage Report: validation risk closeout (cycle 8; authoritative)
+
+Verdict: PASS
+
+This report applies the Captain-approved risk-tiered AC-1 through AC-5 and
+Measurement. It supersedes validation conclusions that required exhaustive
+mutation closure, an actor interpreter, exact-byte P2-P4 closure, or a fresh EM,
+while preserving those older reports as audit history.
+
+- DONE: Adjudicate exact candidate `c0b387b121f9919d5be3952d145187394bf9d59e` against current AC-1 through AC-5 using only recorded evidence.
+  Exact base remains `64c496cdab7ccc59a15753e454f627a70383fb46`; the candidate is the clean nine-file product-only branch. The preserved exact-byte P1 observation, static product contract, 9/9 executable intake validator, parity/lint/diff/exact-head/map/evaluator-exclusion receipts, and one ordinary Draft-PR topology meet the current risk-tiered gate.
+- DONE: Keep every claim inside its evidence tier and preserve all observation labels.
+  P1 supports only its observed correct item, stage, work-item-derived action, 650-word policy, zero implicit improvement I/O, and zero authority effects. Static checks support only policy bytes, clauses, order, shape, word bound, and retained safeguards. `improvement-intake.test.py` supports only downstream validator rejection and acceptance. Pagination/calls/time/tokens remain non-gating `FAIL`; P2-P4 remain `UNKNOWN`. No bound evidence records a critical secret/private-identity disclosure, unauthorized authority grant, or external mutation.
+- DONE: Return the final verdict, residual risk, and bounded delivery decision without generating evidence or exercising delivery authority.
+  Explicit-harvest and empty-work model adherence beyond P1 remain unmeasured and belong to separate optional evaluator work. The Captain explicitly excepted this closeout from fresh-EM and new-model-run requirements. The candidate is ready only for creation of one ordinary Draft PR; it is not ready to mark ready, merge, or release, and this report performs none of those actions.
+
+Lenses: behavior `PASS` for the preserved P1 sample only; contract/schema `PASS` for intact static harvesting/authority/promotion shape plus the 9/9 executable downstream validator; state/concurrency `PASS` for required policy-shape coverage, with model CAS/atomic transaction adherence unmeasured; security/privacy `PASS` for intact prohibitions and no observed critical incident, without claiming universal model obedience; runtime/platform `PASS` for current gate evidence, while pagination/calls/time/tokens retain non-gating `FAIL` and P2-P4 retain `UNKNOWN`; docs/policy `PASS` for aligned product, architecture, kernel, reference, skill, README, and contract surfaces; delivery `PASS` only for exact clean head, nine-file map, evaluator exclusion, and one ordinary Draft-PR topology.
+
+Diff coverage: 100% (9/9 changed files mapped to AC-1 through AC-5) using the already-recorded changed-file map; this measures scope coverage, not 100% LLM adherence.
+
+Adversarial: PASS under the current risk tiers using recorded evidence only — the static contract retains product-first order, the 650-word bound, explicit trigger, harvest safeguards, no-auto-authority clauses, downstream promotion order, and empty-work policy; the executable intake validator retains rejection/acceptance coverage; no observed critical secret, authority, or external-mutation incident exists. Exhaustive policy mutation is explicitly not a requirement of this closeout.
+
+Cross-model: not run — Captain-approved exception; no fresh EM, model run, or optional cross-model pass is required or authorized for this risk closeout.
+
+E2E: PASS within the sampled P1 tier — preserved manifest SHA-256 `4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026` binds candidate-identical policy bytes and observes the correct item/stage/action, 650 words, zero implicit improvement I/O, and zero authority effects. It does not establish explicit-harvest or empty-work adherence; pagination/cost remain non-gating `FAIL` and P2-P4 remain `UNKNOWN`.
+
+Origin re-observation: PASS within the sampled P1 tier — Reported scenario: ordinary continuation routes the active product item before optional improvement harvesting | Originating runtime kind: Codex installed-skill host | Re-observation artifact/revision: preserved P1 manifest SHA-256 `4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026`, bound to candidate-identical skill/reference bytes for `c0b387b121f9919d5be3952d145187394bf9d59e` | Equivalent-runtime rationale: exact policy bytes, invocation class, item/stage/action contract, word bound, zero-I/O result, and zero authority effects match the accepted P1 claim | Falsifier kind: existence-disproof | Result: no recorded P1 hard failure; pagination/calls/time/tokens remain non-gating observations and no claim extends to P2-P4.
+
+### Acceptance results
+
+- AC-1: PASS. Preserved exact-byte P1 records the correct item, stage, work-item-derived first action, exactly 650 words, zero implicit improvement I/O, and zero authority effects. The static contract supports product-first policy order/shape/bound only. No 100% model-adherence claim is made.
+- AC-2: PASS. The static contract retains the explicit trigger, bounded scan, ownership/CAS, atomic cursor-plus-batch, retry-stable private identity, sanitization, validator-before-delivery, and product-nonblocking clauses. The downstream intake validator is 9/9 green. Explicit-harvest model transaction adherence remains unmeasured; P2/P3 remain non-gating `UNKNOWN`.
+- AC-3: PASS. Required task/sprint/schedule/post/upload/policy-edit/install/merge/product-pause prohibitions and validated-handoff-before-promotion order remain present in the static contract. No observed unauthorized secret disclosure, authority grant, or external mutation exists in the bound evidence. This does not prove a model can never violate policy.
+- AC-4: PASS. The static contract retains iteration-first empty-work, scheduling-stop, no-invention, and no-implicit-harvest policy. Empty-work model adherence remains unmeasured and P4 remains non-gating `UNKNOWN`.
+- AC-5: PASS. All nine changed product files remain mapped to the five ACs, one focused inseparable continuation slice, no evaluator/actor/new-harness scope, and one ordinary Draft-PR topology.
+
+### Residual risk, exception, and authority boundary
+
+Residual risk: explicit-harvest transaction behavior and empty-work model adherence beyond the sampled P1 journey are unmeasured. They belong to separate evaluator work and are not represented as green behavior in this product closeout. A future observed secret/private-identity disclosure, unauthorized authority grant, or external mutation is a critical incident and correction trigger; other later hard observations may motivate a separate proposal under current Measurement.
+
+Captain exception: this risk-based closeout requires no fresh EM and no new model run. Historical missing-EM, exhaustive-mutation, actor-interpreter, and exact-byte P2-P4 conclusions are superseded as gate requirements and are not blockers here. Existing `FAIL` and `UNKNOWN` observation labels remain unchanged.
+
+Delivery readiness: READY FOR ONE ORDINARY DRAFT PR ONLY. Delivery authority may create the Draft PR through its normal workflow. The candidate is NOT READY to mark ready, merge, or release based on this report alone. Captain retains risk acceptance and scope; Gate Authority retains advancement; work-item and Spacedock owners retain state; delivery retains push, PR creation, readiness, merge, release, and archive; provider owners retain model execution and posting. This validation report grants or performs none of those actions.
+
+### Summary
+
+Exact candidate `c0b387b121f9919d5be3952d145187394bf9d59e` passes the Captain-approved cycle-8 risk-tiered gate using only recorded evidence. Claims remain bounded to executable checks, static policy shape, and sampled P1 behavior; P2-P4 and pagination/cost labels are preserved, explicit-harvest and empty-work adherence remain residual evaluator risk, and delivery is authorized only as one ordinary Draft PR—not readiness, merge, or release.
