@@ -1103,6 +1103,24 @@ promotion outcomes remain `UNKNOWN`. Separate direct falsifiers then showed
 that the corrected scorer can still certify invented work-item authority and a
 POC burden delta whose known-bad baseline is `UNKNOWN`.
 
+### Dispatched validation checklist
+
+- DONE: Adversarially validated correction-cycle exact product head
+  `9634a70960e2b26687545edc8c88c3604bb17ceb` against all five ACs, every
+  fired lens, all 18 changed files, and each retained surface group's without-it
+  instrument. The dispatch's older `01acac94...` checklist reference was
+  superseded by its explicit correction-cycle head binding, as recorded above.
+- FAILED: Started the frozen installed-host paired evaluation exactly once under
+  the 20-minute / 16-provider-response / no-retry / concurrency-four envelope,
+  but the validation-owned driver stopped after the first provider response.
+  No retry was run; 15 slots, every candidate pair, and aggregate accounting
+  remain fail-closed `UNKNOWN`. The mandatory fresh EM below is explicitly
+  outside the sample count and metrics.
+- DONE: Produced all six required evidence lines, exact changed-file-to-AC
+  coverage, the fresh science-officer EM judgment, explicit proportionality,
+  safety, and promotion results, and delivery-topology evidence without product
+  repair, product push, PR creation, or gate relaxation.
+
 ### Blocking findings
 
 `[P1] Bind mutation authority to the Local Profile instead of copying fixture literals — scripts/kc-dev-flow-loader-eval.py:673`
