@@ -1,19 +1,20 @@
 ---
 title: "kc-dev-flow: route product work before improvement harvesting"
-status: validation
+status: done
 source: "captain:conversation-2026-08-12-third-slice"
 product: kc-dev-flow
 sprint:
 started: 2026-08-12T08:28:54Z
-completed:
-verdict: REJECTED
+completed: 2026-08-13T02:31:37Z
+verdict: passed
 worktree: .worktrees/spacedock-ensign-product-first-continuation
 issue:
 pr: pr-merge:218
-mod-block: merge:pr-merge
+mod-block:
 design: required
 lane: main
 id: gpvz6779wyexg9k9xtn19zbb
+archived: 2026-08-13T02:31:37Z
 ---
 
 ## Problem
