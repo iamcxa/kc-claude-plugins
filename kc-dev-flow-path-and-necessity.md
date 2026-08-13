@@ -461,3 +461,142 @@ PR, exact-head hosted CI, authorized merge to `main`, and durable archive state.
 The latest-main conflicts are reconciled without weakening either accepted
 contract. The clean five-file candidate is ready for a fresh exact-head
 validation pass.
+
+## Stage Report: validation
+
+### TL;DR
+
+PASS on exact candidate `f20157bc64af5725122bdccf9d9e1de5671e856e`
+against current `origin/main`
+`951618fbc81f9dae46a22014d109904a54eda6b2`. Fresh Claude Opus 5 high
+session `0d5c97f9-b92f-4986-8634-0784e8d62e6b` returned `proceed`, high
+confidence, AC-1 through AC-3 PASS, and zero Material findings. The candidate
+remains a clean five-file `+24/-7` cut; no product correction or delivery
+action follows from validation.
+
+### Per-AC verdicts
+
+- **AC-1 PASS** — both reverse-recovery copies are byte-identical, carry
+  version `0.2.1`, and name the adopted workflow's
+  `_mods/reverse-recovery-audit.md`. The stale
+  `docs/ship-flow/_mods/reverse-recovery-audit.md` path is absent. A fresh
+  in-memory restoration of that stale path made the added assertion false, and
+  the standing parity loop closes one-sided mutations.
+- **AC-2 PASS** — the fresh EM applied the exact clause at
+  `docs/dev/README.md:213-222` to four adversarial packets: P1, the actual #178
+  proposal, `RETURN UNREAD`; P2, the complete past-escape record, `PASS`; P3,
+  the dated speculative record whose `benchmark-full-rerun-control` reference
+  resolves to active backlog, `PASS`; P3-no-ref, `RETURN UNREAD`.
+- **AC-3 PASS** — exact diff classification is five existing files and no new
+  registry, executable, workflow step, required context, manifest, or kernel
+  edit. Live branch protection still requires the existing version-parity
+  context. `git merge-tree --write-tree` produced candidate tree
+  `52ef48e236c4b4cab84a0da0db82cc8705c974bb`, exactly equal to `HEAD^{tree}`.
+
+### Evidence block
+
+`Lenses:` PASS — docs/policy, contract/schema, and delivery fired. The local
+ideation predicate is internally consistent with kernel authority, the
+workflow-local path is protected inside the existing contract suite, and the
+five-file cut introduces no async, auth, privacy, resource, platform, or new
+authority surface. The exact diff SHA-256 is
+`cb0ee8c376bdb5db9e5e7ee57985d53468c18d3b3fe0c718dac1fd0065fd1d9a`.
+Would have failed on a wrong packet disposition, surviving stale-path mutation,
+sixth path, new enforcement surface, or merge-tree mismatch.
+
+`Diff coverage:` PASS — Python `trace` reported 1,316 executable lines and
+97.6% file coverage for `scripts/kc-dev-flow-contract-test.py`; every added
+executable line at `2028-2032` ran, so changed executable-line coverage is
+100% (5/5). Would have failed on any added executable line with count zero.
+
+`Adversarial:` PASS — all 23 already-landed `github-pr-feedback/v1` mutants
+executed and were rejected; the fresh stale-path mutation turned the AC-1
+assertion red; and the fresh EM produced P1/P2/P3/P3-no-ref dispositions of
+return/pass/pass/return. Would have failed if any feedback mutant survived,
+the stale path stayed green, or any packet disposition differed.
+
+`Cross-model:` not_needed — fresh Claude Opus 5 high EM session
+`0d5c97f9-b92f-4986-8634-0784e8d62e6b` returned `proceed`, high confidence,
+with zero Material findings. The call is reversible, uncontested, and has no
+unresolved route-changing evidence.
+
+`E2E:` N/A — ideation approved a docs/policy-only change with no user-visible
+product runtime. The applicable behavioral proof is the fresh ideation packet
+exercise and contract mutation evidence above.
+
+`Origin re-observation:` N/A — no accepted claim originated in consumer or
+external runtime behavior; both defects were reproduced from repository policy
+and its contract suite.
+
+`PR feedback:` N/A — this is a brand-new delivery with no product PR before
+initial Draft creation. Per the validation contract, that absence is not
+`UNKNOWN`; a current `github-pr-feedback/v1` observation becomes mandatory
+after Draft creation and at each later declared boundary.
+
+### Conflict-sensitive contract preservation
+
+The full contract suite, version parity, frontmatter lint, marketplace schema
+and clean-HOME install, `git diff --check`, canonical/self-adopted `cmp`, stale
+path negative search, and exact-head merge preflight all pass. The
+`github-pr-feedback/v1` validation/done policy section is byte-identical between
+base and head (SHA-256 `83141bd5`), as are its positive and mutation contract
+ranges (SHA-256 `dafdce1b`). The fresh EM independently confirmed that the
+positive check, 23-mutant dictionary, and rejection loop are unconditional
+module-level code and execute before the new path assertion; the recut neither
+skips nor weakens the merged feedback contract.
+
+### Reviewer adjudication
+
+No Material finding survives. The EM retained three bounded, non-Material
+dissents: the path check is a backtick-anchored substring guard rather than a
+general parser; the judgment-enforced ideation clause intentionally has no text
+regression assertion; and `Criterion`/`Alternative` overlap portable kernel
+guidance while `Escape`, dated review, and the local refusal predicate supply
+the necessary repository-local delta. None changes an AC, the five-file
+minimality claim, or the route.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "AC-1 through AC-3 pass on exact candidate f20157bc against base 951618fb; zero Material findings, and the merged github-pr-feedback/v1 contract remains intact."
+  evidence_synthesis: "Primary-source review found the feedback positive check and all 23 mutant rejections unconditional and reachable; exact-head contract, parity, marketplace, trace, byte-parity, stale-path, scope, branch-protection, and merge-tree receipts pass; packet dispositions are P1 RETURN UNREAD, P2 PASS, P3 PASS, and P3-no-ref RETURN UNREAD."
+  risk_tradeoff_call: "The existing contract suite gains one deterministic path guard and the existing ideation gate gains one local refusal predicate; bounded risks are substring-level path checking and judgment-enforced policy drift, while a second registry or CI surface would duplicate authority and violate AC-3."
+  recommendation: "Advance validation on exact candidate f20157bc without a product edit; re-bind evidence if the head changes and use the ordinary Draft PR, exact-head CI, feedback-observation, and authorized delivery route."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "No commit, push, PR, merge, stage-transition, terminalization, archive, or delivery authority; this record is advisory input to the declared gate authority."
+  engineering_judgment:
+    question: "Does exact candidate f20157bc satisfy AC-1 through AC-3 with the smallest sufficient shape and preserve github-pr-feedback/v1 after the conflict-sensitive recut?"
+    revision: "base 951618fbc81f9dae46a22014d109904a54eda6b2; candidate f20157bc64af5725122bdccf9d9e1de5671e856e; tree 52ef48e236c4b4cab84a0da0db82cc8705c974bb"
+    evidence_synthesis: "Primary-source review found the feedback positive check and all 23 mutant rejections unconditional and reachable; exact-head contract, parity, marketplace, trace, byte-parity, stale-path, scope, branch-protection, and merge-tree receipts pass; packet dispositions are P1 RETURN UNREAD, P2 PASS, P3 PASS, and P3-no-ref RETURN UNREAD."
+    adjudications:
+      - finding: "AC-1 workflow-local adoption path and falsifying assertion"
+        disposition: supported
+        basis: "Both version-0.2.1 copies name the workflow-local destination; the stale-path mutation turns the added assertion red and the standing parity loop closes one-sided drift."
+      - finding: "AC-2 incomplete necessity records are returned unread"
+        disposition: supported
+        basis: "Fresh application of README lines 213-222 produced the required four packet dispositions, including active-backlog resolution for the speculative review seed."
+      - finding: "AC-3 five-file cut adds no parallel enforcement system"
+        disposition: supported
+        basis: "Exact diff and live required-context evidence show only existing policy, reference, registry, and contract-test surfaces; merge-tree equals the candidate tree."
+      - finding: "The recut skips or weakens github-pr-feedback/v1"
+        disposition: unsupported
+        basis: "The base/head policy and test ranges are byte-identical, and the positive check plus all 23 mutant rejections are unconditional and execute before final PASS."
+      - finding: "The path assertion and judgment-enforced clause have bounded future-drift limits"
+        disposition: supported
+        basis: "The assertion is a backtick-anchored substring check and no text assertion guards the ideation prose; both are non-Material because the named falsifiers and behavioral gate still satisfy the accepted ACs."
+    risk_tradeoff: "The existing contract suite gains one deterministic path guard and the existing ideation gate gains one local refusal predicate; bounded risks are substring-level path checking and judgment-enforced policy drift, while a second registry or CI surface would duplicate authority and violate AC-3."
+    recommendation: "Advance validation on exact candidate f20157bc without a product edit; re-bind evidence if the head changes and use the ordinary Draft PR, exact-head CI, feedback-observation, and authorized delivery route."
+    route: proceed
+    confidence: high
+    dissent: "The path assertion is bounded to the natural backticked destination form, the ideation clause is intentionally judgment-enforced without a text assertion, and Criterion/Alternative overlap kernel guidance; none changes an AC, minimality, or route."
+    disproof_condition: "Return if the exact-head contract fails, a feedback mutant survives or is skipped, the five-file diff grows a parallel enforcement surface, the copies drift, the stale-path mutation stays green, a packet disposition differs, the speculative seed no longer resolves to active backlog, or merge preflight changes the candidate tree."
+    authority_boundary: "Captain retains scope, irreversibility, workflow revision approval, and accepted red residuals; Gate Authority owns stage advancement; Spacedock owns entity and review-seed state; delivery owns PR, CI, feedback observation, merge, and terminalization; release-please owns versions and tags."
+```
+
+### Summary
+
+Fresh exact-head validation passes with zero Material findings. The corrected
+candidate preserves the already-landed GitHub feedback contract and is ready
+for the gate/delivery owner; no product files, PR, push, or merge were changed
+by validation.
