@@ -994,3 +994,25 @@ Cycle 4 replaces the unsound single-sample cost gate with a deterministic safety
 ### Feedback Cycles
 
 - Cycle 4: CONTRACT GREEN / MODEL UNKNOWN — safety/product prerequisites now govern comparability; efficiency is recorded and non-gating; final P1 not started because the deadline-bounded window was insufficient
+
+## Stage Report: implementation (cycle 5)
+
+- DONE: Produce one lean product-only candidate whose ordinary continuation route reaches the active product action before any improvement harvesting.
+  Candidate `c0b387b121f9919d5be3952d145187394bf9d59e` is one commit on exact base `64c496cdab7ccc59a15753e454f627a70383fb46`; RED failed on the missing conditional harvest reference and GREEN passed after the product-first route and guarded reference were restored.
+- DONE: Exclude the continuation evaluator, model-pressure fixtures, and evaluator tests while retaining only deterministic product-contract evidence that can fail on the shipped behavior.
+  The candidate has no `kc-dev-flow-continuation-eval.py`, evaluator test, pressure fixture, or shared-test binding to them; `scripts/kc-dev-flow-contract-test.py` fails if the <=650-word route, product-before-harvest ordering, ordinary-path I/O guard, explicit-harvest safety contract, docs, or kernel parity drift.
+- DONE: Preserve the full evaluator branch, run focused relevant checks without any model call, and report the exact candidate SHA, changed-file-to-AC map, and delivery topology.
+  Remote `spacedock-ensign/product-first-continuation` remains exactly `2fff0f5ff2712e7c8ac2a8b6aee36ce50151b9db`; focused GREEN was `python3 scripts/kc-dev-flow-contract-test.py` PASS, canonical/vendored kernels are byte-identical, and `git diff --check` passed without any installed-skill or provider/model call.
+- DONE: Map every remaining changed file to AC-1 through AC-5 and delete unmapped surface.
+  `kc-dev-flow/skills/continue-dev-flow/SKILL.md` maps to AC-1 through AC-4; `kc-dev-flow/references/improvement-harvesting.md` maps to AC-2/AC-3; canonical and vendored `kernel.md` map to AC-1 through AC-3.
+  `PRODUCT.md`, `ARCHITECTURE.md`, and `kc-dev-flow/README.md` map to AC-1/AC-3/AC-5; `kc-dev-flow/references/absolutes.registry` maps to AC-2/AC-3; `scripts/kc-dev-flow-contract-test.py` maps to AC-1 through AC-5. No changed file is unmapped.
+- DONE: Commit only the scoped candidate with the required message and preserve delivery authority.
+  Commit `c0b387b121f9919d5be3952d145187394bf9d59e` is `feat(kc-dev-flow): route product work before harvesting` on local branch `spacedock-ensign/product-first-continuation-product`; it was not pushed and no PR, readiness, merge, release, or state-frontmatter action was taken.
+- SKIPPED: Run installed-skill model pressure or make a provider/model call.
+  The captain-approved product split forbids new pressure in implementation; preserved evidence remains on the untouched evaluator branch for later validation.
+- DONE: Re-evaluate delivery topology after the final changed-file map and merge-base diff existed.
+  The candidate is one cohesive product/contract slice with no dependent green layers and no independent green slices; 9 files and 531 gross changed lines do not trigger the `>20` files or `>1,500` gross threshold, so delivery remains one ordinary Draft PR with no Native stack exception. Mechanical registry share is 14 gross lines, vendored-kernel share is 10, and generated/lock-file share is zero.
+
+### Summary
+
+The cycle-5 candidate cleanly separates the lean product-first continuation slice from the preserved evaluator framework. Its focused deterministic contract and diff checks are green at exact commit `c0b387b121f9919d5be3952d145187394bf9d59e`; validation still owns any later evidence verdict, and delivery authority remains untouched.
