@@ -1529,3 +1529,24 @@ harness had never been exercised through a merge gate before.
 
 The `product` and `sprint` frontmatter was added under the product-local sprint contract
 (`701c664`), as the captain-designated owner annotating a released parked entity.
+
+## Research input: proportional work-profile evaluator — 2026-08-13
+
+The rejected work-profile evaluator was preserved outside its product slice on
+remote branch `prototype/proportional-work-profile-evaluator-v1`, commit
+`762b6bfa1d5ea8975b69b69378b658498a754440`. This does not reactivate 5b,
+change its parked status, approve another model run, or alter its existing
+acceptance criteria.
+
+Potential harvest inputs are exact-ref materialization, digest-bound manifests,
+closed frozen fixtures, explicit no-retry/timebox metadata, and fail-closed
+`UNKNOWN` intent. They do not replace the landed 5b A/A-prime/B arm builder,
+stable finding projection, permutation comparator, false-null guards, or frozen
+PR corpus.
+
+The prototype's failed seams are negative cases for future re-entry: fixture
+labels cannot authenticate mutation authority; constructed promotion topology
+is not runtime observation; an `UNKNOWN` known-bad arm cannot support a positive
+pair result; and distinct provider model-usage keys cannot count repeated
+responses. Its correction-cycle run stopped after one of sixteen declared
+responses, so none of its model output is an acceptance verdict for this task.
