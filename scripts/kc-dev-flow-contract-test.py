@@ -699,6 +699,29 @@ require(
     and "do not inspect work-item or execution state" in continue_skill_flat,
     "an explicitly empty iteration does not short-circuit state discovery",
 )
+
+
+def continuation_route_failures(text: str) -> list[str]:
+    normalized = " ".join(text.split())
+    if "If it declares no active or committed item" not in normalized:
+        return ["continuation can abandon an active but unscheduled item"]
+    return []
+
+
+require(
+    not continuation_route_failures(continue_skill),
+    "continuation routing gaps:\n- "
+    + "\n- ".join(continuation_route_failures(continue_skill)),
+)
+active_item_mutant = continue_skill.replace(
+    "If it declares no active or committed item",
+    "If it declares no committed item",
+    1,
+)
+require(
+    continuation_route_failures(active_item_mutant),
+    "continuation contract accepted active-item short-circuit mutant",
+)
 require(
     "already-loaded instruction chain" in continue_skill_flat
     and "batch the workflow README and complete vendored kernel" in continue_skill_flat
