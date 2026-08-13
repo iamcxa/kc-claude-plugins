@@ -10,7 +10,7 @@ verdict: REJECTED
 worktree: .worktrees/spacedock-ensign-product-first-continuation
 issue:
 pr:
-mod-block:
+mod-block: merge:pr-merge
 design: required
 lane: main
 id: gpvz6779wyexg9k9xtn19zbb
