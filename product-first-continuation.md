@@ -184,17 +184,15 @@ the selected mechanism only because keeping the procedure inline fails AC-1.
 
 **AC-1 — Ordinary continuation reaches the correct product action with bounded policy and zero improvement I/O.**
 
-Verified by: the captain runs the literal ordinary-continuation demo above against
-an exact-ref installed skill for the live active product item with unseen debriefs
-and no harvest request. The candidate names the correct item and stage, then names
-the first concrete action derived from that work item before improvement activity.
-Its default-loaded `continue-dev-flow` policy is at most 650 words; its trace has
-zero `_debriefs`/`_improvements` I/O and no broad state discovery. Deterministic
-behavior contracts must fail when the route selects the wrong item, stage, or
-action; performs implicit improvement I/O; exceeds the policy bound; broadly
-discovers state; or loads product context in a way that changes or precedes route
-resolution. Whether the kernel is read once or paginated is recorded only by the
-separate evaluator and has no delivery-gate authority.
+Verified by: the continuation skill and harvest reference are policy artifacts;
+their shipped bytes are their implementation. The exact-byte preserved P1 receipt
+binds those candidate bytes and observes the correct item, stage, work-item-derived
+first action, 650 default words, zero implicit improvement I/O, and zero authority
+effects. Deterministic product contracts delete, mutate, or reorder the policy
+clauses that enforce item/stage/action routing, the word bound, no broad discovery,
+zero implicit improvement I/O, and no product-context load that changes or precedes
+route resolution, and must visibly fail on each artifact mutation. They do not
+emulate an LLM actor or claim model adherence.
 Falsified by: a wrong item or stage, an action not derived from the resolved work
 item, any improvement-state I/O without the explicit request, broad discovery,
 policy above 650 words, or product-context loading that changes or precedes route
@@ -203,43 +201,40 @@ provider-token usage are non-gating evaluator observations.
 
 **AC-2 — Explicit harvesting preserves debrief evidence, cursor safety, and handoff validation.**
 
-Verified by: deterministic RED/GREEN behavior and transaction mutations for (a)
-unseen debriefs with neither CAS nor exclusive ownership and (b) a reusable-source
-proposal with ignore proof, durable private identity, and CAS. The checks must
-observe and fail the actual trace/artifact contract rather than merely require
-policy wording. Case (a) reports `UNKNOWN`, writes neither cursor nor handoff, and
-continues the already-resolved product route. Case (b) bounds the scan, keeps
-retry-stable occurrence IDs, commits cursor and batch as one unit, sanitizes the
-payload, and requires `improvement-intake.py --handoff` success before it can leave
-the adopter. Preserved or later exact-byte P2/P3 model receipts are non-gating
-evaluator observations while these deterministic safety contracts are green.
+Verified by: deterministic policy-artifact mutations delete or corrupt each
+explicit-trigger, bounded-scan, ownership/CAS, atomic cursor-plus-batch,
+retry-stable private-identity, sanitization, validator-before-delivery, and
+product-nonblocking clause, and the product contract visibly fails each mutation.
+Executable `improvement-intake.test.py` tests separately prove the downstream
+handoff validator rejects invalid payloads and accepts valid ones. These two
+evidence classes protect the shipped policy and executable validator; neither
+claims that a model will obey the policy. Preserved or later exact-byte P2/P3
+model-adherence receipts remain non-gating evaluator observations.
 Falsified by: lost/superseded evidence being silently reused, a partial write,
 identity publication/regeneration, invalid handoff delivery, or improvement
 failure blocking product work.
 
 **AC-3 — Every automatic-authority prohibition remains hard and source promotion stays downstream.**
 
-Verified by: deterministic contract mutants must fail when detection, validation,
-recurrence, or source classification grants task creation, sprint admission,
-scheduling, posting/upload, policy edit, install, merge, or product-pause
-authority. They also exercise the real validated-handoff boundary: a reusable
-proposal stops at a captain-approved attachment/copied path, and
-`promote-dev-flow` may receive it only afterward while retaining canonical-source
-placement judgment. Preserved or later exact-byte P2/P3 model receipts are
-non-gating evaluator observations, not substitutes for these fail-able contracts.
-Falsified by: any exercised behavior performs or authorizes one of those actions,
-or invokes source promotion before a validated adopter handoff exists.
+Verified by: deterministic policy-artifact mutations across the continuation,
+harvest, and promote boundaries delete or corrupt every prohibition on task
+creation, sprint admission, scheduling, posting/upload, policy edit, install,
+merge, and product pause, plus the validated-handoff-before-promotion clause; the
+contract visibly fails each mutation. Product tests do not execute forbidden
+external effects or emulate an actor. Preserved or later exact-byte P2/P3
+model-adherence receipts are non-gating evaluator observations.
+Falsified by: a required prohibition or validated-handoff boundary can be removed,
+reversed, or weakened without deterministic contract failure.
 
 **AC-4 — Empty committed work remains a scheduling stop, not a harvest or invention trigger.**
 
-Verified by: a deterministic empty-work behavior fixture, including a mutation
-that attempts to reinterpret unseen debrief evidence as product scope. With no
-active or committed work and no harvest request, the candidate reports that
-scheduling is needed, creates no task, reads/writes no improvement state, and
-stops. The check must fail on the mutation and on any implicit improvement I/O.
-Preserved or later exact-byte P4 model evidence is a non-gating evaluator
-observation. Falsified by: selecting an unscheduled item, creating work,
-harvesting implicitly, or treating observation as authority.
+Verified by: deterministic policy-artifact mutations delete, weaken, or reorder
+the iteration-first empty-work short-circuit, scheduling-stop, no-invention, and
+no-implicit-harvest clauses; the contract visibly fails each mutation. No model
+actor fixture is required or permitted. Preserved or later exact-byte P4
+model-adherence evidence remains a non-gating evaluator observation. Falsified
+by: one of those required clauses can be removed or reordered so debrief evidence
+precedes the empty-work stop without deterministic contract failure.
 
 **AC-5 — The change stays one focused continuation slice and updates its durable contracts.**
 
@@ -290,34 +285,31 @@ behavior at validation.
 
 ## Measurement
 
-Grade hard evidence before evaluator observations; a later observation never
-offsets a retained product, safety, or authority failure:
+Evidence is classified before judgment, and every claim is limited to its class:
 
-1. **Hard product correctness:** AC-1 requires the correct item, stage, and
-   work-item-derived first action; at most 650 default policy words; zero implicit
-   improvement I/O; no broad state discovery; and no product-context load that
-   changes or precedes route resolution. AC-4 requires an empty-work scheduling
-   stop with no invented task or implicit harvest.
-2. **Hard safety/authority:** deterministic AC-2/AC-3 contracts must remain able
-   to fail every retained bound, ownership/CAS, atomic-write, retry-stable private
-   identity, validation, sanitized-handoff, downstream-promotion, no-auto-authority,
-   and product-nonblocking invariant. Wording presence is not behavior evidence.
-3. **Evidence honesty:** missing exact-revision binding or a deterministic check
-   that cannot be shown to fail is `UNKNOWN`; preserved live-model receipts retain
-   their recorded `FAIL` or `UNKNOWN` labels. They become delivery blockers only
-   when they demonstrate one of the hard product/safety failures above.
-4. **Evaluator-only observations:** record kernel single-call versus paginated
-   reads, tool calls, elapsed/wall time, available provider-token usage, and
-   exact-byte P2-P4 live-model pressure separately. These observations carry no
-   threshold and no delivery-gate authority while deterministic safety contracts
-   are green; unavailable values remain unknown, never zero.
+1. **Exact-byte runtime product observation:** the preserved P1 receipt supports
+   only what it observed on candidate-identical policy bytes: correct item, stage,
+   first action, 650 words, zero implicit improvement I/O, and zero authority
+   effects. Its pagination, calls, time, and tokens remain non-gating observations.
+2. **Policy-artifact mutation:** because the continuation and harvest policies are
+   implemented by their bytes, deterministic tests must delete, mutate, or reorder
+   each retained routing, trigger, bound, transaction, identity, validation,
+   authority, promotion, product-nonblocking, and empty-work clause and visibly
+   fail. This proves artifact integrity and ordering, not model adherence; it must
+   not create an LLM interpreter, actor emulator, or new harness.
+3. **Executable downstream validator:** `improvement-intake.test.py` proves only
+   executable handoff rejection/acceptance behavior. It does not prove that a
+   model follows the harvesting policy or performs the adopter transaction.
+4. **Evaluator-only model-adherence observation:** kernel single-call versus
+   pagination, calls/time/tokens, and exact-byte P2-P4 remain honestly labeled
+   `FAIL`, `UNKNOWN`, or unavailable observations and have no automatic delivery-
+   gate authority. A later observed hard product or safety failure may motivate a
+   separate correction proposal; it does not automatically block this PR.
 
-Overall `PASS` requires every hard criterion above. A preserved P1 pagination
-failure does not fail the candidate because pagination is evaluator-only; its
-correct route, first action, policy bound, zero implicit improvement I/O, and
-absence of broad discovery remain hard evidence. Preserved P2-P4 receipts may
-remain `FAIL` or `UNKNOWN` observations without relabeling, and no new installed-
-skill pressure is authorized by this ideation reset.
+Overall `PASS` requires the bound P1 hard product observations, mutation-sensitive
+policy artifacts for every retained clause, and green executable downstream
+validator coverage. No class may be used to claim another class's result, and no
+new installed-skill pressure is authorized by this ideation correction.
 
 The design is disproved if the real host eagerly loads the extracted reference
 without the trigger, or if the candidate cannot meet AC-1's load reduction while
@@ -1339,3 +1331,56 @@ This rejection is disproved by deterministic exact-candidate instruments that ex
 ### Summary
 
 The product-only candidate is exact, focused, clean, and its preserved P1 hard observations are green. Validation returns it because the revised ACs require behaviorally fail-able deterministic product/safety mutations, while the shipped contract test checks policy wording for AC-1 through AC-4. No evaluator-only observation caused this rejection.
+
+## Ideation evidence-hierarchy EM judgment (cycle 7; authoritative)
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "The corrected AC-1 through AC-4 and Measurement honestly and falsifiably implement Captain-approved Option A without an LLM actor interpreter or new harness."
+  evidence_synthesis: "Reviewed state 656fbcd3e67c0768edff8575e36f5f57e57dd15d, entity blob fd589321dcf5d4880f83dcc258344d3f5e96d363 / SHA-256 3e09ad8814d3c4da90c045609a84c87419709def9447f893312d22ab87f01d93, exact base 64c496cdab7ccc59a15753e454f627a70383fb46, and clean candidate c0b387b121f9919d5be3952d145187394bf9d59e. Bound fields PASS; AC-1 through AC-5 are complete; AC-5, nine files, and one ordinary Draft PR are unchanged."
+  risk_tradeoff_call: "This protects shipped policy bytes and executable validator behavior without false actor authority; model adherence remains an explicit evaluator-only risk."
+  recommendation: "Proceed with this correction and preserve exact bindings, safety clauses, scope, topology, receipt labels, and evaluator-only adherence."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "The FO may relay this advisory but has no captain, gate, transition, delivery, posting, readiness, or merge authority."
+  engineering_judgment:
+    question: "Does the corrected evidence hierarchy match Option A without an actor interpreter or new harness?"
+    revision: "State 656fbcd3e67c0768edff8575e36f5f57e57dd15d; blob fd589321dcf5d4880f83dcc258344d3f5e96d363; SHA-256 3e09ad8814d3c4da90c045609a84c87419709def9447f893312d22ab87f01d93; base 64c496cdab7ccc59a15753e454f627a70383fb46; candidate c0b387b121f9919d5be3952d145187394bf9d59e."
+    evidence_synthesis: "Exact-byte P1, policy-artifact mutation, downstream validator, and evaluator-only adherence are separate classes; retained safety clauses, scope, and topology are unchanged."
+    adjudications:
+      - finding: H1
+        disposition: supported
+        basis: "The four evidence classes are explicit and prohibit cross-class claims."
+      - finding: H2
+        disposition: supported
+        basis: "AC-1 through AC-4 require named delete, mutate, weaken, corrupt, or reorder operations to visibly fail without actor emulation."
+      - finding: H3
+        disposition: supported
+        basis: "Trigger, bounds, CAS, atomicity, private identity, validation, nonblocking, no-auto-authority, and promotion boundaries remain required."
+      - finding: H4
+        disposition: supported
+        basis: "AC-5, exact base/candidate, nine files, one slice, and one ordinary Draft PR remain unchanged."
+      - finding: H5
+        disposition: supported
+        basis: "P2-P4 and pagination/cost remain non-gating; later evaluator findings may support a proposal but have no automatic blocking authority."
+    risk_tradeoff: "Policy-byte protection stays deterministic; model adherence remains observable but non-gating."
+    recommendation: "Proceed with the exact correction."
+    route: proceed
+    confidence: high
+    dissent: ""
+    disproof_condition: "Return if a retained clause mutation survives, validator coverage is lost, evidence classes are conflated, or an actor, harness, scope, topology, or authority is added."
+    authority_boundary: "Captain retains scope; Gate Authority retains verdict/advance; work-item and Spacedock owners retain state; delivery retains PR/readiness/merge/release; provider owners retain model actions."
+```
+
+## Stage Report: ideation (cycle 7)
+
+- DONE: Correct AC-1 through AC-4 and Measurement without an actor interpreter or new harness. Policy bytes are implementation and named delete/mutate/reorder mutations must visibly fail; exact-byte P1 supports only its observed product outcomes.
+- DONE: Define four non-interchangeable evidence classes: exact-byte runtime product observation, policy-artifact mutation, executable downstream validator, and evaluator-only model adherence. P2-P4 and pagination/cost labels remain unchanged and non-gating.
+- DONE: Preserve exact base/candidate, AC-5, nine files, one ordinary Draft PR, historical labels, and all authority; obtain one fresh EM. The sole EM returned `proceed/high/not_needed`; no product edit, pressure, provider, or delivery action occurred.
+
+Bound-field validation returned `PASS` for SHA-256 `3e09ad8814d3c4da90c045609a84c87419709def9447f893312d22ab87f01d93`; AC-1 through AC-5 report `unevidenced=false`. The correction is disproved by a surviving named mutation, lost validator coverage, cross-class claim, or scope/topology/authority expansion. Captain, Gate Authority, work-item, Spacedock, validation, delivery, and provider owners retain their existing authority.
+
+### Summary
+
+Cycle 7 removes the unintended actor-interpreter requirement and restores Option A's honest four-class evidence hierarchy. The fresh EM recommends `proceed`; Gate Authority retains the verdict and transition.
