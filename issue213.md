@@ -638,3 +638,12 @@ mutable-content fingerprint contract, fail-closed outcomes, disposition
 evidence, ordinary-worker fallback, all four boundaries, and self-assignment
 survive adversarial validation; Draft PR #214 remains stale and must not be used
 as candidate delivery proof until it is updated and re-observed.
+
+### Post-delivery observation — PR #220
+
+Observation evidence: `PASS` — start/end state `OPEN`, Draft `true`, and head
+`107fb9546d560a421e187ae2f77e26cd056ee7a6`; GraphQL thread pages 1, raw
+threads 0, nested comment overflow false, normalized external unresolved
+threads 0; REST review pages 1, raw reviews 0, normalized external reviews 0.
+Canonical population input: `{"head":"107fb9546d560a421e187ae2f77e26cd056ee7a6","items":[],"layer":"single","pr":220,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}`.
+PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr":220,"layer":"single","head":"107fb9546d560a421e187ae2f77e26cd056ee7a6","fingerprint":"sha256:8a63c4e81ab1f67d6161a0c84bcc60619ebc36e7dfa09909354471654daf8757","dispositions":[]}
