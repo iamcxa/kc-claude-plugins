@@ -161,7 +161,7 @@ After clean preflight, push only the approved candidate:
 
 This is the only active PR-create command; do not execute the released inline-body command above.
 
-`gh pr create --draft --repo "$UNIT_CODE_REPO" --base "$UNIT_BASE_BRANCH" --head "$UNIT_BRANCH" --title "$UNIT_TITLE" --body-file "$UNIT_BODY_FILE"`
+`gh pr create --draft --repo "$UNIT_CODE_REPO" --base "$UNIT_BASE_BRANCH" --head "$UNIT_BRANCH" --title "$UNIT_TITLE" --body-file "$UNIT_BODY_FILE" --assignee "@me"`
 
 Do not rebase after approval. Any unresolved binding, byte mismatch, conflict,
 command failure, incomplete result, or ambiguous result stops the unit and
@@ -180,6 +180,129 @@ Resolve an unqualified reference's `CODE_REPO` from the entity worktree origin;
 never consult the launch directory. Bind the result as explicit `PR_REPO` and
 the number as `PR_NUMBER`.
 
+#### GitHub PR feedback observation
+
+Use one restartable GitHub-native observation, not a daemon or a second ledger.
+Run it at validation entry when a PR already exists, before Ready, immediately
+before merge, and before terminalization. A brand-new delivery completes local
+validation first, creates its Draft only after the captain-approved push, and
+takes its first mandatory observation before Ready. No PR before initial Draft
+creation is not `UNKNOWN` and does not block creation. A resumed delivery whose
+PR already exists observes at validation entry. No startup or idle observation
+is added because neither authorizes one of these boundaries.
+
+For a single PR, bind `FEEDBACK_REPO` and `FEEDBACK_PR_NUMBER` from the explicit
+`PR_REPO` and `PR_NUMBER` above, and bind `FEEDBACK_LAYER` as `single`. For a
+native stack, bind the same repository plus each layer's integer PR number and
+stable ordered layer identity. Require `FEEDBACK_REPO` to parse unambiguously as
+one owner/name pair and require a positive integer PR number. Start with:
+
+`gh pr view "$FEEDBACK_PR_NUMBER" --repo "$FEEDBACK_REPO" --json author,headRefOid,isDraft,number,state,url`
+
+Require the returned number and URL to identify that explicit repository and PR,
+a non-empty PR-author login, a full `headRefOid`, and the state required by the
+calling boundary. Split the already-validated repository into `owner` and
+`name`; do not consult ambient repository state. Query thread pages with typed
+GraphQL variables. Invoke `gh api graphql` with `-F owner="$FEEDBACK_OWNER"`,
+`-F name="$FEEDBACK_NAME"`, and `-F number="$FEEDBACK_PR_NUMBER"`; omit the
+optional cursor on the first page and pass `-f cursor="$FEEDBACK_CURSOR"` on
+later pages. Use this selection:
+
+```graphql
+query($owner: String!, $name: String!, $number: Int!, $cursor: String) {
+  repository(owner: $owner, name: $name) {
+    pullRequest(number: $number) {
+      number
+      headRefOid
+      author { login }
+      reviewThreads(first: 100, after: $cursor) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          isResolved
+          comments(first: 100) {
+            pageInfo { hasNextPage endCursor }
+            nodes {
+              id
+              author { login }
+              body
+              commit { oid }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Continue with `endCursor` until `hasNextPage` is false; a true flag requires a
+non-empty next cursor and another page. The bounded comment-page contract is
+deliberately fail closed: any nested comments page with `hasNextPage=true` is
+incomplete. Separately fetch every REST review page:
+
+`gh api --paginate --slurp "repos/$FEEDBACK_REPO/pulls/$FEEDBACK_PR_NUMBER/reviews?per_page=100"`
+
+Require every slurped page to be an array, flatten all pages, and reject missing,
+malformed, or duplicate IDs. Keep each unresolved thread with at least one
+external comment, where external means the comment author login differs from the
+PR author's login. Keep each external PR-level review when the review author
+login differs from the PR author's login and its trimmed body is non-empty or
+its state is `CHANGES_REQUESTED`. Bots remain external reviewers.
+Conversation-tab issue comments are outside this slice.
+
+Repeat the repository-explicit PR view after both paginated reads. The GraphQL
+identity and all observed `headRefOid` values must equal the starting head;
+otherwise the observation is not a snapshot. Observe and disposition every
+stack layer independently; a top-layer result never covers another layer.
+
+Canonicalize one UTF-8 JSON object with scheme `github-pr-feedback/v1`, the
+repository, PR number, stack-layer identity, and exact head. Normalize every ID
+to a string, sort retained items by kind and stable GitHub ID, and sort a
+thread's comments by stable ID. A review item includes its author, state, commit
+ID when present, and body hash. A thread item includes its resolution state and
+all comments, including each comment's author, commit ID when present, and body
+hash. In other words the input covers every item's kind and stable GitHub ID;
+author, review state or thread resolution state, and commit ID when present; and
+the SHA-256 of every mutable review body and thread comment body. Each body hash
+is lowercase hex over the exact UTF-8 body string; encode an absent body or
+commit ID as JSON null. Serialize with object keys sorted lexicographically, the
+defined array order, and no insignificant whitespace. Hash those canonical
+UTF-8 bytes with SHA-256. A resolved, edited, deleted, or newly added retained
+item therefore changes the fingerprint. Do not persist an untrusted review body
+in workflow state.
+
+The current validation report stores one compact single-line `PR feedback:` JSON
+record for each PR or layer. It carries the scheme, repository, PR number, layer,
+head, `sha256:<hex>` fingerprint, and exactly one evidence-bearing disposition
+for every normalized kind-and-ID pair, with no duplicate or extra disposition.
+`fixed` requires a fix revision and
+verification-evidence reference; `rejected-with-reason` requires a non-empty
+reason; `out-of-scope-and-filed` requires a filed work-item reference. A fixed
+revision must be a full revision contained by the exact observed head. An empty
+normalized population has an empty disposition list, but is clean only after
+the complete observation succeeds.
+
+Observation and repair are separate. `kc-pr-flow:kc-pr-review-resolve` is an
+optional repair accelerator and supplies neither observation nor gate authority.
+Do not install or simulate the optional skill. When it is unavailable and
+feedback needs action or a disposition is missing, route the complete set to the
+ordinary implementation worker, then return to fresh validation after any code
+change. Its absence is never clean-feedback evidence; only the complete native
+observation can establish an empty population. The observer may provide the
+same complete set to the optional skill when installed, but the validation
+report remains the restart fact consumed by this delivery gate.
+
+At each boundary, repeat the complete observation and require the report's
+scheme, identity, head, fingerprint, item population, and disposition evidence
+to match before any readiness, merge, or terminal state mutation. Incomplete
+pagination; ambiguous repository, PR, or layer identity; head drift; content or
+fingerprint drift; missing fix evidence, rejection reason, or filed reference;
+API failure; malformed data; or any parse or read uncertainty must record
+`UNKNOWN`, preserve pending state, and block the boundary. A code-changing
+disposition creates a new head, invalidates the prior report, and requires fresh
+validation. `UNKNOWN`, resolver absence, and silence never mean clean.
+
 #### Single-PR completion decision
 
 The startup and idle hooks use this exact fail-closed decision:
@@ -189,6 +312,7 @@ The startup and idle hooks use this exact fail-closed decision:
 | PR repository | explicit `PR_REPO` | stop |
 | Approved candidate | exactly one full `Candidate:` SHA in approved body | stop |
 | GitHub PR | `headRefOid` equals Candidate and `mergedAt` is non-empty | stop |
+| PR feedback | current exact-head fingerprint and evidenced dispositions | stop |
 | Required checks | explicit-repository required checks succeed | stop |
 | Sentinel commit | set and state commit both succeed | only then guard |
 
@@ -198,7 +322,8 @@ Fetch the proof without ambient repository context:
 
 Parse exactly one `Candidate:` line containing a full approved SHA from the
 returned body. Require that SHA to equal `headRefOid`, require non-empty
-`mergedAt`, then require:
+`mergedAt`, then repeat the complete GitHub PR feedback observation at that head
+and require its current fingerprint plus evidenced dispositions before running:
 
 `gh pr checks "$PR_NUMBER" --repo "$PR_REPO" --required`
 
@@ -278,7 +403,14 @@ step. Do not pass `--open`. Stop and preserve authority on any unit or link
 failure. After linking succeeds, track the top PR as a qualified repository and
 number in the entity `pr` field.
 
-Only after each layer's required checks and review are green and the captain explicitly authorizes readiness, run `gh pr ready "$LAYER_PR_URL"` for every layer in bottom-to-top order. Preserve Draft state on any missing evidence, refusal, or failure. Do not call `gh stack merge` while any layer remains Draft.
+Only after each layer's required checks and review are green, its complete PR
+feedback observation matches the validation report, and the captain explicitly
+authorizes readiness, repeat that observation and run `gh pr ready
+"$LAYER_PR_URL"` for every layer in bottom-to-top order. Preserve Draft state on
+any missing evidence, refusal, or failure. Do not call `gh stack merge` while any
+layer remains Draft. Immediately before an authorized atomic merge, repeat the
+complete observation for every layer and block the merge if any result no longer
+matches.
 
 Use GitHub native atomic stack merge through `gh stack merge` or the native UI; never merge an individual PR.
 
@@ -294,6 +426,7 @@ proof passes:
 | Top position | stored top PR is final ordered entry | stop |
 | Atomic landing | every ordered `pull_requests[].merged_at` is non-empty | stop |
 | Candidate | each `head.sha` and explicit PR `headRefOid` equal body Candidate | stop |
+| PR feedback | each layer has a current exact-head fingerprint and evidenced dispositions | stop |
 | Required checks | each explicit-repository required check succeeds | stop |
 | Completion time | stored top PR `mergedAt` is non-empty | only then sentinel and guard |
 
@@ -309,7 +442,9 @@ For every ordered entry, query the same explicit repository:
 `gh pr view "$LAYER_PR_NUMBER" --repo "$STACK_REPO" --json body,headRefOid,mergedAt`
 
 Require exactly one full `Candidate:` SHA in the approved body and require both
-the entry's `head.sha` and the PR's `headRefOid` to equal it. Then run:
+the entry's `head.sha` and the PR's `headRefOid` to equal it. Repeat the complete
+GitHub PR feedback observation for that layer, require its current fingerprint
+plus evidenced dispositions, and then run:
 
 `gh pr checks "$LAYER_PR_NUMBER" --repo "$STACK_REPO" --required`
 

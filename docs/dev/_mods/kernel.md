@@ -270,6 +270,13 @@ reports the same way whether or not the thing it watches is broken.
   self-attested and stops nothing. The clauses above bound an instrument's
   quality and none bounds their number; this one does, and it is checkable by
   someone other than the party that wants another round.
+- **Provider review feedback re-enters validation.** When a delivery provider
+  exposes review feedback after validation, the earlier verdict does not cover
+  that evidence. Feedback is evidence to verify, not authority to obey. Require
+  a complete provider observation at the exact delivery revision and one
+  evidence-bearing disposition per retained external item; an incomplete or
+  unavailable observation is missing evidence. A code-changing disposition
+  invalidates prior validation and requires a fresh exact-revision decision.
 - **When one failure shape repeats, change the work, not the wording.** At the
   second occurrence, restructure so the reproducer is eliminated; a stronger
   instruction, another case against the same reproducer, or an unchanged

@@ -1010,6 +1010,11 @@ expected_stack_completion_rows = [
         "stop",
     ),
     (
+        "PR feedback",
+        "each layer has a current exact-head fingerprint and evidenced dispositions",
+        "stop",
+    ),
+    (
         "Required checks",
         "each explicit-repository required check succeeds",
         "stop",
@@ -1028,6 +1033,7 @@ layer_checks = 'gh pr checks "$LAYER_PR_NUMBER" --repo "$STACK_REPO" --required'
 
 def stack_contract_errors(section: str) -> list[str]:
     errors: list[str] = []
+    normalized = " ".join(section.split())
     if policy_table(section, "Native stack delivery-unit composition") != expected_layer_rows:
         errors.append("stack layer/base binding drifted")
     if policy_table(section, "Native stack completion decision") != expected_stack_completion_rows:
@@ -1041,11 +1047,16 @@ def stack_contract_errors(section: str) -> list[str]:
         "explicit layer checks": layer_checks,
         "public-preview fields": "`number`, `base.ref`, and ordered `pull_requests[]` entries containing `number`, `merged_at`, `head.ref`, and `head.sha`",
         "atomic merge": "Use GitHub native atomic stack merge through `gh stack merge` or the native UI; never merge an individual PR.",
-        "captain-authorized ready gate": "Only after each layer's required checks and review are green and the captain explicitly authorizes readiness, run `gh pr ready \"$LAYER_PR_URL\"` for every layer in bottom-to-top order.",
+        "captain-authorized ready gate": (
+            "Only after each layer's required checks and review are green, its complete PR "
+            "feedback observation matches the validation report, and the captain explicitly "
+            "authorizes readiness, repeat that observation and run `gh pr ready "
+            "\"$LAYER_PR_URL\"` for every layer in bottom-to-top order."
+        ),
         "Draft merge refusal": "Do not call `gh stack merge` while any layer remains Draft.",
         "non-stack refusal": "A top PR merged outside exactly one matching native stack stops without sentinel or guard",
     }.items():
-        if phrase not in section:
+        if phrase not in normalized:
             errors.append(f"missing {label}")
     if "gh pr create" in section:
         errors.append("policy duplicates the canonical create recipe")
@@ -1087,6 +1098,229 @@ for phrase in [
     "pull_request CI for every layer",
 ]:
     require(phrase in local_extension, f"pr-merge native-stack mechanics are missing: {phrase}")
+
+feedback_heading = "#### GitHub PR feedback observation\n"
+require(
+    local_extension.count(feedback_heading) == 1,
+    "pr-merge must contain one GitHub PR feedback observation contract",
+)
+feedback_section = re.split(
+    r"\n#### ", local_extension.split(feedback_heading, 1)[1], maxsplit=1
+)[0]
+feedback_view = (
+    'gh pr view "$FEEDBACK_PR_NUMBER" --repo "$FEEDBACK_REPO" '
+    "--json author,headRefOid,isDraft,number,state,url"
+)
+feedback_reviews = (
+    'gh api --paginate --slurp '
+    '"repos/$FEEDBACK_REPO/pulls/$FEEDBACK_PR_NUMBER/reviews?per_page=100"'
+)
+
+
+def feedback_contract_errors(section: str) -> list[str]:
+    errors: list[str] = []
+    normalized = " ".join(section.split())
+    required = {
+        "four boundaries": (
+            "validation entry when a PR already exists, before Ready, "
+            "immediately before merge, and before terminalization"
+        ),
+        "new Draft exception": (
+            "No PR before initial Draft creation is not `UNKNOWN` and does not block creation"
+        ),
+        "explicit PR view": feedback_view,
+        "thread pagination": "reviewThreads(first: 100, after: $cursor)",
+        "GraphQL invocation": "Invoke `gh api graphql`",
+        "thread page loop": (
+            "Continue with `endCursor` until `hasNextPage` is false"
+        ),
+        "nested-page refusal": (
+            "any nested comments page with `hasNextPage=true` is incomplete"
+        ),
+        "REST review pagination": feedback_reviews,
+        "external thread author filter": (
+            "comment author login differs from the PR author's login"
+        ),
+        "external review author filter": (
+            "review author login differs from the PR author's login"
+        ),
+        "bot inclusion": "Bots remain external reviewers",
+        "review population": (
+            "trimmed body is non-empty or its state is `CHANGES_REQUESTED`"
+        ),
+        "thread population": "unresolved thread with at least one external comment",
+        "second head read": "Repeat the repository-explicit PR view after both paginated reads",
+        "head-drift refusal": "all observed `headRefOid` values must equal the starting head",
+        "fingerprint scheme": "`github-pr-feedback/v1`",
+        "canonical identity": (
+            "repository, PR number, stack-layer identity, and exact head"
+        ),
+        "stable item identity": "kind and stable GitHub ID",
+        "mutable body": "SHA-256 of every mutable review body and thread comment body",
+        "mutable state": (
+            "author, review state or thread resolution state, and commit ID when present"
+        ),
+        "canonical serialization": (
+            "object keys sorted lexicographically, the defined array order, and no insignificant whitespace"
+        ),
+        "compact report": "`PR feedback:`",
+        "fixed evidence": (
+            "`fixed` requires a fix revision and verification-evidence reference"
+        ),
+        "rejection evidence": "`rejected-with-reason` requires a non-empty reason",
+        "filed evidence": (
+            "`out-of-scope-and-filed` requires a filed work-item reference"
+        ),
+        "complete dispositions": (
+            "exactly one evidence-bearing disposition for every normalized kind-and-ID pair"
+        ),
+        "no extra dispositions": "no duplicate or extra disposition",
+        "optional accelerator": (
+            "`kc-pr-flow:kc-pr-review-resolve` is an optional repair accelerator"
+        ),
+        "no observer authority": "supplies neither observation nor gate authority",
+        "ordinary fallback": "route the complete set to the ordinary implementation worker",
+        "no install": "Do not install or simulate the optional skill",
+        "absence not clean": "Its absence is never clean-feedback evidence",
+        "unknown refusal": "record `UNKNOWN`, preserve pending state, and block the boundary",
+        "stack isolation": "Observe and disposition every stack layer independently",
+        "content drift": "content or fingerprint drift",
+        "identity uncertainty": "ambiguous repository, PR, or layer identity",
+        "parse uncertainty": "parse or read uncertainty",
+        "API uncertainty": "API failure",
+    }
+    for label, phrase in required.items():
+        if phrase not in normalized:
+            errors.append(f"missing {label}")
+    for forbidden in [
+        "run it at startup",
+        "run it at idle",
+        "while true",
+        "sleep ",
+        "reviewDecision",
+        "Conversation-tab comments are included",
+    ]:
+        if forbidden in normalized:
+            errors.append(f"forbidden feedback mechanism {forbidden}")
+    return errors
+
+
+require(
+    not feedback_contract_errors(feedback_section),
+    "GitHub PR feedback contract failed: "
+    + "; ".join(feedback_contract_errors(feedback_section)),
+)
+normalized_feedback_section = " ".join(feedback_section.split())
+feedback_mutants = {
+    "ambient-repository": normalized_feedback_section.replace(
+        ' --repo "$FEEDBACK_REPO"', "", 1
+    ),
+    "unread-thread-page": normalized_feedback_section.replace(
+        "Continue with `endCursor` until `hasNextPage` is false",
+        "Read only the first thread page",
+        1,
+    ),
+    "nested-comment-overflow": normalized_feedback_section.replace(
+        "any nested comments page with `hasNextPage=true` is incomplete",
+        "ignore nested comment overflow",
+        1,
+    ),
+    "unread-review-page": normalized_feedback_section.replace(
+        "gh api --paginate --slurp", "gh api", 1
+    ),
+    "thread-author-filter-inversion": normalized_feedback_section.replace(
+        "comment author login differs from the PR author's login",
+        "comment author login equals the PR author's login",
+        1,
+    ),
+    "review-author-filter-inversion": normalized_feedback_section.replace(
+        "review author login differs from the PR author's login",
+        "review author login equals the PR author's login",
+        1,
+    ),
+    "head-drift": normalized_feedback_section.replace(
+        "Repeat the repository-explicit PR view after both paginated reads",
+        "Reuse the starting PR view",
+        1,
+    ),
+    "mutable-content": normalized_feedback_section.replace(
+        "SHA-256 of every mutable review body and thread comment body",
+        "the length of each body",
+        1,
+    ),
+    "mutable-state": normalized_feedback_section.replace(
+        "author, review state or thread resolution state, and commit ID when present",
+        "author only",
+        1,
+    ),
+    "canonical-serialization": normalized_feedback_section.replace(
+        "object keys sorted lexicographically, the defined array order, and no insignificant whitespace",
+        "implementation-defined serialization",
+        1,
+    ),
+    "fingerprint-scheme": normalized_feedback_section.replace(
+        "`github-pr-feedback/v1`", "`github-pr-feedback`", 1
+    ),
+    "missing-fixed-evidence": normalized_feedback_section.replace(
+        "`fixed` requires a fix revision and verification-evidence reference",
+        "`fixed` needs no evidence",
+        1,
+    ),
+    "missing-rejection-reason": normalized_feedback_section.replace(
+        "`rejected-with-reason` requires a non-empty reason",
+        "`rejected-with-reason` needs no evidence",
+        1,
+    ),
+    "missing-filed-reference": normalized_feedback_section.replace(
+        "`out-of-scope-and-filed` requires a filed work-item reference",
+        "`out-of-scope-and-filed` needs no reference",
+        1,
+    ),
+    "resolver-as-observer": normalized_feedback_section.replace(
+        "supplies neither observation nor gate authority",
+        "supplies observation and gate authority",
+        1,
+    ),
+    "missing-ordinary-worker": normalized_feedback_section.replace(
+        "route the complete set to the ordinary implementation worker",
+        "treat the delivery as clean",
+        1,
+    ),
+    "unknown-as-clean": normalized_feedback_section.replace(
+        "record `UNKNOWN`, preserve pending state, and block the boundary",
+        "record clean and continue",
+        1,
+    ),
+    "top-layer-only": normalized_feedback_section.replace(
+        "Observe and disposition every stack layer independently",
+        "Observe only the top stack layer",
+        1,
+    ),
+    "skip-validation-entry": normalized_feedback_section.replace(
+        "validation entry when a PR already exists",
+        "validation exit",
+        1,
+    ),
+    "skip-before-ready": normalized_feedback_section.replace(
+        "before Ready", "after Ready", 1
+    ),
+    "skip-before-merge": normalized_feedback_section.replace(
+        "immediately before merge", "after merge", 1
+    ),
+    "skip-before-terminalization": normalized_feedback_section.replace(
+        "before terminalization", "after terminalization", 1
+    ),
+    "creation-loop": normalized_feedback_section.replace(
+        "No PR before initial Draft creation is not `UNKNOWN` and does not block creation",
+        "No PR before initial Draft creation is `UNKNOWN` and blocks creation",
+        1,
+    ),
+}
+for mutant_name, mutant in feedback_mutants.items():
+    require(
+        feedback_contract_errors(mutant),
+        f"GitHub PR feedback mutant survived: {mutant_name}",
+    )
 require(
     "waiting for the lower PR to merge blocks useful work" not in workflow,
     "workflow README adds a second stack-readiness condition",
@@ -1581,6 +1815,63 @@ for phrase in [
     "Unavailable re-observation is missing evidence",
 ]:
     require(phrase in kernel, f"kernel is missing invariant: {phrase}")
+normalized_feedback_kernel = " ".join(kernel.split())
+for phrase in [
+    "delivery provider exposes review feedback after validation",
+    "Feedback is evidence to verify, not authority to obey",
+    "complete provider observation at the exact delivery revision",
+    "evidence-bearing disposition",
+    "incomplete or unavailable observation is missing evidence",
+    "code-changing disposition invalidates prior validation",
+]:
+    require(
+        phrase in normalized_feedback_kernel,
+        f"kernel is missing review-feedback invariant: {phrase}",
+    )
+require(
+    (ROOT / "docs/dev/_mods/kernel.md").read_bytes() == required_files[4].read_bytes(),
+    "self-adopted kernel is not byte-identical to the packaged kernel",
+)
+
+feedback_validation_start = workflow.find("### `validation`")
+feedback_validation_end = workflow.find("### `done`", feedback_validation_start)
+feedback_done_end = workflow.find("\n## ", feedback_validation_end)
+require(
+    0 <= feedback_validation_start < feedback_validation_end,
+    "workflow feedback stages are missing or out of order",
+)
+feedback_validation_stage = " ".join(
+    workflow[feedback_validation_start:feedback_validation_end].split()
+)
+feedback_done_stage = " ".join(
+    workflow[
+        feedback_validation_end:
+        feedback_done_end if feedback_done_end >= 0 else len(workflow)
+    ].split()
+)
+for phrase in [
+    "At validation entry, when an existing product PR or stack layer exists",
+    "`PR feedback:`",
+    "`github-pr-feedback/v1`",
+    "repository, PR or layer, exact head, fingerprint",
+    "ordinary implementation worker",
+    "optional `kc-pr-flow:kc-pr-review-resolve` skill",
+    "does not supply observation or gate authority",
+]:
+    require(
+        phrase in feedback_validation_stage,
+        f"validation stage is missing PR feedback input: {phrase}",
+    )
+for phrase in [
+    "current `github-pr-feedback/v1` proof",
+    "before terminalization",
+    "UNKNOWN",
+    "blocks terminalization",
+]:
+    require(
+        phrase in feedback_done_stage,
+        f"done stage is missing PR feedback gate: {phrase}",
+    )
 require(
     "coordinates bounded self-improvement before routing product work" not in kernel,
     "kernel still activates self-improvement before product routing",
