@@ -1,7 +1,7 @@
 ---
 id: 4wkne0vvpgsy2japzr08xqtx
 title: "kc-dev-flow: choose a proportional work profile before AC expansion"
-status: implementation
+status: validation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint:
@@ -1739,3 +1739,83 @@ science_officer_em_upward_report:
       dispatch mechanics; delivery authority retains push, PR, merge, and
       closeout; installed hosts and this EM provide evidence and advice only.
 ```
+
+## Stage Report: implementation (cycle 3 — POC recut)
+
+Verdict: **DONE**. Exact product head
+`909e3bdecbf945eab052764442704795146abd7a` recuts the rejected candidate
+against exact merge base
+`3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b`. The branch is clean, three local
+commits ahead, unpushed, and has no PR.
+
+### Subtractive result
+
+- The recut commit is 16 files, 157 insertions, and 2,811 deletions.
+- The final merge-base diff is 11 files, 372 insertions, and 59 deletions: 431
+  gross changed lines, below the 1,000-line POC appetite.
+- Final diff contains no `work-profile-v1` fixture or scorer and no
+  work-profile change to `scripts/kc-dev-flow-loader-eval.py` or its test.
+- Retained product surface is one 151-line conditional chooser, Codex metadata,
+  the bounded continuation/kernel/adopter trigger, 105 lines of focused contract
+  coverage, and durable product/architecture/package wording.
+- The existing rejected commits preserve the removed evaluator machinery for
+  recovery; no external consumer exists because the branch remains unpushed and
+  has no PR.
+
+### RED/GREEN
+
+After restoring the evaluator, fixtures, scorer, and unrelated product changes
+to `origin/main`, the new focused contract first failed:
+
+```text
+kc-dev-flow contract: work-profile contract gaps:
+- continue-dev-flow does not gate AC expansion on the receipt
+- kernel does not gate AC expansion on the receipt
+- self-adoption does not gate AC expansion on the receipt
+```
+
+The minimum trigger, receipt contract, and absolutes disposition then made the
+same `python3 scripts/kc-dev-flow-contract-test.py` command print
+`kc-dev-flow contract: PASS`. Its three work-profile mutants reject a changed
+closed profile choice, unsafe POC downscoping, and AC-before-receipt order.
+
+### Changed-file to AC map
+
+- AC-1: canonical/adopted kernels, `continue-dev-flow`, `choose-work-profile`,
+  Codex metadata, self-adoption README, absolutes registry, and contract test
+  implement and fail-close `choose -> record -> re-read -> derive`.
+- AC-2: PRODUCT, ARCHITECTURE, package README, the chooser's POC proof floor,
+  and conditional activation define the simple-route product outcome; the fresh
+  Subspace host trial remains validation evidence.
+- AC-3: chooser production-boundary rules and the unsafe-downscoping contract
+  mutant preserve authority and safety across profiles; the adversarial host
+  case remains validation evidence.
+- AC-4: all 11 final files map above; the exact diff and deleted evaluator group
+  prove the unearned surface is absent and the appetite guard passes.
+
+### Exact-head checks
+
+- `python3 scripts/kc-dev-flow-contract-test.py` — PASS.
+- `python3 scripts/kc-dev-flow-loader-eval.test.py` — pre-existing loader
+  contract PASS with no work-profile mode.
+- `scripts/skill-frontmatter-lint.sh` — 41 skill directories, PASS.
+- skill-creator `quick_validate.py` under `uv run --with pyyaml` —
+  `Skill is valid!`.
+- `scripts/version-parity-check.sh` — all seven plugins consistent;
+  `kc-dev-flow` remains 2.3.0.
+- `scripts/marketplace-verify.sh` — L0 parity, L1 schema, and all seven L2
+  isolated installs PASS.
+- `git diff --check`, clean worktree, and canonical/adopted kernel byte parity —
+  PASS.
+
+### Delivery topology and remaining boundary
+
+There is one dependent product journey, no independently deliverable second
+slice, 11 changed files, and 431 gross lines. The selected topology is one Draft
+PR, but implementation has no push or PR authority and performed neither.
+
+Implementation ran no behavioral model trial. Fresh validation must bind one
+installed-host response to exact head `909e3bd...`, challenge PR #12 versus the
+open Draft PR #14, run the adversarial production-mutation case, and finish with
+exactly one fresh validation EM. No 16-response evaluator run or optional
+reviewer is authorized.
