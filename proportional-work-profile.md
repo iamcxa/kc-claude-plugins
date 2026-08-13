@@ -568,3 +568,126 @@ engineering_judgment:
     and FO retain state transitions/mechanics; delivery retains merge/closeout;
     installed models produce evidence only.
 ```
+
+## Stage Report: implementation (cycle 1)
+
+- DONE: Implemented the closed `POC / Exploration`, `Pilot / Product slice`, and
+  `Production` chooser on product commit
+  `01acac94e520171eb113d5a2c64c80beea3097b4` from
+  `origin/main@3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b`.
+- DONE: The normal ideation route re-reads `## Work profile receipt` before seed
+  normalization or AC expansion, skips a valid unchanged receipt, and loads
+  `kc-dev-flow:choose-work-profile` only for a missing or stale receipt.
+- DONE: The chooser uses host-capability-based structured questioning, one
+  concise plain-chat fallback, and `NEEDS_PROFILE_DECISION` for a
+  non-interactive worker. It returns a candidate receipt and gains no work-item,
+  state-transition, merge, or closeout authority.
+- DONE: Canonical and adopted kernels remain byte-identical and keep
+  `backlog → ideation → implementation → validation → done`; the bounded defect
+  route remains exempt and tasks already beyond ideation are not reopened
+  without a promotion trigger.
+- DONE: Added capture-only `work-profile-v1` support with four frozen fixtures,
+  exact ideation/chooser bytes, a closed `jq` scorer, packaging inputs, and the
+  fixed 16-slot/no-retry/4-concurrency/20-minute envelope.
+- UNKNOWN: Implementation ran zero model calls. Fresh installed Claude/Codex
+  outputs, paired scores, per-arm rates, elapsed time, and the complete 16-slot
+  receipt remain validation-owned evidence.
+- DONE: No plugin version, marketplace version, release metadata, new lifecycle
+  stage, tracker, daemon, provider abstraction, runner service, or standing CI
+  lane was added.
+
+### Packaging without-it result
+
+The direct packaging experiment materializes all four inputs and hashes their
+bytes:
+
+| Arm | Valid receipt: chooser loaded | Missing receipt: host interaction | Satisfies both |
+|---|---:|---:|---:|
+| Complete inline chooser | yes | yes | no |
+| Conditional skill | no | yes | yes |
+
+The inline arm fails lazy loading because the complete chooser remains in the
+valid-receipt input. The conditional arm keeps it absent there and includes all
+three interaction markers for the missing-receipt input. The fail-closed result
+is `dedicated-skill-required`; an incomplete chooser instead returns
+`chooser-contract-incomplete` rather than inferring interaction from presence.
+
+### RED/GREEN evidence
+
+All behavior changes began with a focused failing check and closed GREEN in the
+same implementation session:
+
+1. Packaging evaluator:
+   - RED: `python3 scripts/kc-dev-flow-loader-eval.test.py` exited 1 with
+     `AttributeError: ... has no attribute 'evaluate_work_profile_packaging'`.
+   - GREEN: the same command printed `kc-dev-flow loader eval test: PASS` after
+     the minimal inline/conditional materialization evaluator was added.
+2. Receipt/profile contract:
+   - RED: `python3 scripts/kc-dev-flow-contract-test.py` exited 1 with
+     `missing kc-dev-flow/skills/choose-work-profile/SKILL.md`.
+   - GREEN: the same command printed `kc-dev-flow contract: PASS` after the
+     chooser, activation order, closed enum, receipt, authority, lifecycle, and
+     no-sidecar mutants were enforced.
+3. Frozen capture mode:
+   - RED: the loader test first exited 1 with
+     `tracked work-profile fixture is missing: P0-benign`, then with
+     `AttributeError: ... has no attribute 'capture_work_profile_pair'` after the
+     four fixtures were supplied.
+   - GREEN: the loader test passed after exact ideation/chooser capture and the
+     fixed slot manifest were implemented.
+4. Closed scorer:
+   - RED: the loader test exited 1 with
+     `tracked work-profile scorer is missing`.
+   - GREEN: the loader test passed with the copied/hash-bound `score.jq`; its
+     closed passing POC sample passes and an extra-key result mutant fails.
+5. Direct packaging artifacts and interaction semantics:
+   - RED: the loader test rejected a manifest with no valid/missing packaging
+     input files, then rejected the evaluator for inferring host interaction from
+     arbitrary chooser presence.
+   - GREEN: the loader test passed with four hashed packaging inputs and required
+     structured/plain-chat/non-interactive markers.
+
+### Changed-file to AC map
+
+- AC-1: `kc-dev-flow/skills/choose-work-profile/**`,
+  `kc-dev-flow/skills/continue-dev-flow/SKILL.md`, canonical/adopted `kernel.md`,
+  `docs/dev/README.md`, and the work-profile contract mutants implement and prove
+  conditional choose → record → re-read → derive ordering.
+- AC-2: the chooser profile table, `PRODUCT.md`, `kc-dev-flow/README.md`, four
+  frozen fixtures, result contract, and `score.jq` bind proportional obligation,
+  test, and unnecessary-surface scoring.
+- AC-3: chooser invariants, authority/no-sidecar mutants, P3 adversarial fixture,
+  closed authority-stop IDs, and fail-closed scorer preserve common safety,
+  evidence, cleanup, and authority behavior.
+- AC-4: chooser promotion returns, continuation/kernel activation boundaries,
+  architecture ownership text, P3 stale-receipt fixture, and promotion IDs route
+  changed premises through the existing ideation owner without parallel state.
+- AC-5: `scripts/kc-dev-flow-loader-eval.py`, its behavioral test, the frozen
+  fixture/scorer directory, `docs/dev/README.md`, and `ARCHITECTURE.md` materialize
+  the complete 16-slot and same-clock envelope without running a model.
+- Shared enforcement: `scripts/kc-dev-flow-contract-test.py` and
+  `kc-dev-flow/references/absolutes.registry` keep the closed package/adopter
+  contract and canonical absolute disposition fail-closed.
+
+### Exit verification
+
+- `python3 scripts/kc-dev-flow-contract-test.py` → PASS.
+- `scripts/skill-frontmatter-lint.sh` → 41 skill directories checked, PASS.
+- skill-creator `quick_validate.py` under `uv run --with pyyaml` →
+  `Skill is valid!`.
+- `scripts/version-parity-check.sh` → all seven plugins consistent; kc-dev-flow
+  remains `2.3.0` in all tracked sources.
+- `scripts/marketplace-verify.sh` → L0 parity, L1 schema, and all seven L2 local
+  installs PASS.
+- `scripts/release-metadata.test.sh` → 32 passed, 0 failed.
+- `scripts/release-please-config-check.sh` → configured paths and first-release
+  contract PASS.
+- `git diff --check` and canonical/adopted kernel byte comparison → PASS.
+
+### Summary
+
+Implemented the proportional work-profile receipt and pre-AC activation while
+preserving the five-stage workflow and common authority/safety invariants. The
+without-it experiment falsified complete inline packaging, so the dedicated
+conditional chooser remains. Deterministic validation inputs are closed and
+ready; fresh model evidence is intentionally deferred to validation.
