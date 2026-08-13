@@ -602,3 +602,15 @@ Fresh exact-head validation passes with zero Material findings. The corrected
 candidate preserves the already-landed GitHub feedback contract and is ready
 for the gate/delivery owner; no product files, PR, push, or merge were changed
 by validation.
+
+### Pre-Ready PR feedback observation — PR #222
+
+Observation evidence: `PASS` — start/end state `OPEN`, Draft `true`, and head
+`f20157bc64af5725122bdccf9d9e1de5671e856e`; GraphQL thread pages 1, raw
+threads 0, nested comment overflow false, normalized external unresolved
+threads 0; REST review pages 1, raw reviews 0, duplicate IDs 0, normalized
+external reviews 0. The repository, PR, author, and head were stable across
+both paginated reads.
+
+Canonical population input: `{"head":"f20157bc64af5725122bdccf9d9e1de5671e856e","items":[],"layer":"single","pr":222,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}`.
+PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr":222,"layer":"single","head":"f20157bc64af5725122bdccf9d9e1de5671e856e","fingerprint":"sha256:b2e25f68c94af0e9385ecb289495cbef3ecca654c380b3e04f7c5d22a4a7371a","dispositions":[]}
