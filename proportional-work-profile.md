@@ -1,7 +1,7 @@
 ---
 id: 4wkne0vvpgsy2japzr08xqtx
 title: "kc-dev-flow: choose a proportional work profile before AC expansion"
-status: validation
+status: ideation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint:
@@ -1390,3 +1390,32 @@ evaluator expansion.
 - Cycle 2: REJECTED — correction re-validation; implementation grew to 3,111
   gross diff lines versus one-worker scope; ACs unchanged; recommend ideation
   reset after two consecutive validation rejections.
+
+## Captain ruling: ideation recut (2026-08-13)
+
+The Captain accepted the cycle-2 EM recommendation and returned this item to
+ideation. Do not run the second 16-response validation shape or create another
+task.
+
+Preserve the three profile choices, the in-task receipt, the common governing
+invariants, and the already-observed conditional-packaging benefit. Recut the
+deliverable around the smallest real pressure path:
+
+- reuse the existing `Criterion / Alternative / Escape` and bounded
+  without-it rules instead of adding another general enforcement universe;
+- use the Subspace remote-review POC as the primary behavior fixture: its
+  shell-first shipped slice is the sufficient POC route, while the earlier
+  Go-heavy candidate is the overbuilt route the profile decision must return;
+- retain only small contract mutants needed to fail a missing profile decision,
+  unsafe downscoping, or AC expansion before the receipt is re-read; and
+- keep a separate chooser only because the accepted packaging experiment shows
+  complete inline logic defeats valid-receipt lazy loading.
+
+The accepted trade-off is loss of the generalized paired evaluator and its
+automation in exchange for a smaller maintained product surface and direct
+originating-runtime evidence. The current product branch is unpushed and has no
+PR, so the removed machinery remains recoverable from its existing commits.
+
+Sprint membership remains blank. This ruling changes the route inside the
+existing task; it does not schedule the task or authorize push, PR, merge, or
+closeout.
