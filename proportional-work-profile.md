@@ -1,7 +1,7 @@
 ---
 id: 4wkne0vvpgsy2japzr08xqtx
 title: "kc-dev-flow: choose a proportional work profile before AC expansion"
-status: ideation
+status: implementation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint:
@@ -1564,3 +1564,178 @@ PR, so the removed machinery remains recoverable from its existing commits.
 Sprint membership remains blank. This ruling changes the route inside the
 existing task; it does not schedule the task or authorize push, PR, merge, or
 closeout.
+
+## Stage Report: ideation (cycle 3 — recut)
+
+Verdict: **PROCEED**. The current four-AC recut at state commit
+`5c665190c8359a0a9fa7789361c24579d7055425` and content
+`sha256:ddeb965c32cfb724dbc45898527efbbc5765caaa2154fdcaae2eda184aeaac29`
+may advance to implementation against
+`origin/main@3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b`.
+
+- Keep the earned conditional chooser and existing task-body receipt.
+- Delete every generalized evaluator, scorer, provider-accounting, transaction
+  harness, and frozen work-profile fixture extension.
+- Keep only the three named mechanical mutants; validate behavior through the
+  real Subspace PR #12/#14 pressure and production-mutation cases.
+- Treat PR #14 as an open Draft pressure artifact, not delivery evidence.
+- Multi-model review is not needed. Sprint admission, push, PR, merge, and
+  closeout remain unauthorized.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Cycle-3 ideation is sufficient to proceed to a fresh implementation recut;
+    it converts the twice-rejected evaluator-heavy candidate into one bounded
+    profile-choice journey with direct originating-runtime validation.
+  evidence_synthesis: >-
+    The authoritative task is state commit
+    5c665190c8359a0a9fa7789361c24579d7055425 with content sha256
+    ddeb965c32cfb724dbc45898527efbbc5765caaa2154fdcaae2eda184aeaac29,
+    against product base 3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b.
+    Rejected candidate 9634a70960e2b26687545edc8c88c3604bb17ceb is
+    clean, unpushed, and 3,111 gross lines; excluding its generalized fixtures,
+    scorer, and loader evaluator leaves an indicative 592-gross-line product
+    shape. The conditional package experiment removed 8,929 bytes from the
+    valid-receipt input while retaining missing-receipt interaction, so inline
+    logic is not an equivalent lazy-loaded alternative. The receipt remains in
+    existing work-item authority and uses its existing path-scoped transaction.
+    GitHub primary evidence shows PR #14 is an OPEN Draft at
+    62a0fda2534cc4a8668bfd9f418fbc0961bd1760 with 7 files and +424/-5,
+    while PR #12 is CLOSED with 12 files and +1810/-19 including the Go
+    coordinator. PR #14 is pressure evidence, not delivered-state evidence.
+  risk_tradeoff_call: >-
+    The recut buys a direct proof that POC classification changes a real planning
+    outcome and removes roughly 2,679 additions of durable evaluator ownership.
+    The remaining risks are a decorative receipt, text-only mutants that do not
+    predict host behavior, and an arbitrary line count being mistaken for
+    lifecycle minimality. The accepted controls are one real installed-host
+    Subspace pressure case, an adversarial production-mutation case, three
+    fail-closed contract mutants, and a less-than-1,000-line guard; the cheaper
+    alternative is inline chooser prose, but the measured lazy-load experiment
+    has already falsified it.
+  recommendation: >-
+    Proceed with one worker-sized recut from the declared base: retain the
+    conditional chooser and concise in-task receipt, delete every generalized
+    evaluator/scorer/fixture extension, keep only the three named contract
+    mutants, and bind fresh validation to the exact recut revision and the real
+    PR #12/#14 pressure plus production-mutation cases.
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    FO may account for this advisory gate and dispatch the accepted recut, but
+    may not reinterpret PR #14 as delivered, restore evaluator scope, accept an
+    appetite exception, mutate Captain-owned scope, push, create a PR, advance
+    the stage without Gate Authority, or perform delivery.
+  engineering_judgment:
+    question: >-
+      Is cycle-3 ideation for proportional work profiles sufficient to proceed
+      to implementation after two evaluator-heavy validation rejections?
+    revision: >-
+      task state 5c665190c8359a0a9fa7789361c24579d7055425, task sha256
+      ddeb965c32cfb724dbc45898527efbbc5765caaa2154fdcaae2eda184aeaac29,
+      product base 3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b, with rejected
+      candidate 9634a70960e2b26687545edc8c88c3604bb17ceb as historical
+      implementation evidence only
+    evidence_synthesis: >-
+      The authoritative task is state commit
+      5c665190c8359a0a9fa7789361c24579d7055425 with content sha256
+      ddeb965c32cfb724dbc45898527efbbc5765caaa2154fdcaae2eda184aeaac29,
+      against product base 3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b.
+      Rejected candidate 9634a70960e2b26687545edc8c88c3604bb17ceb is
+      clean, unpushed, and 3,111 gross lines; excluding its generalized fixtures,
+      scorer, and loader evaluator leaves an indicative 592-gross-line product
+      shape. The conditional package experiment removed 8,929 bytes from the
+      valid-receipt input while retaining missing-receipt interaction, so inline
+      logic is not an equivalent lazy-loaded alternative. The receipt remains in
+      existing work-item authority and uses its existing path-scoped transaction.
+      GitHub primary evidence shows PR #14 is an OPEN Draft at
+      62a0fda2534cc4a8668bfd9f418fbc0961bd1760 with 7 files and +424/-5,
+      while PR #12 is CLOSED with 12 files and +1810/-19 including the Go
+      coordinator. PR #14 is pressure evidence, not delivered-state evidence.
+    adjudications:
+      - finding: F1-conditional-chooser-retention
+        disposition: supported
+        basis: >-
+          Kernel Outcome discipline permits a new responsibility only after the
+          simpler route proves insufficient. The direct complete-inline arm kept
+          chooser bytes in valid-receipt input, while the conditional arm removed
+          8,929 bytes and preserved missing-receipt interaction; cycle 3 retains
+          only that earned package surface.
+      - finding: F2-receipt-mutation-burden
+        disposition: supported
+        basis: >-
+          Kernel Authority and Route discipline require an accepted delta to be
+          recorded and re-read from its owning authority. Cycle 3 uses the
+          existing task body, authorized actor, and path-scoped state transaction,
+          adds no tracker field or stage, and fails closed when no safe mutation
+          path exists; this is one obligation within the existing work-item
+          lifecycle, not a second authority surface.
+      - finding: F3-appetite-and-value-surface
+        disposition: supported
+        basis: >-
+          Engineering Judgment's iteration precheck counts independently
+          releasable value surfaces, not technical seams or lines. The route has
+          one demoable value journey, choose-record-re-read-derive, and no
+          independently blockable second value. The less-than-1,000 gross-line
+          rule is a fail-closed appetite guard rather than minimality proof; the
+          rejected diff indicates the evaluator-free shape can fit it.
+      - finding: F4-small-mutant-set
+        disposition: supported
+        basis: >-
+          Verification discipline prefers the cheapest instrument that can fail.
+          Missing choice, unsafe POC downscoping, and AC-before-re-read are the
+          three material mechanical regressions; profile-dependent planning
+          behavior is separately observed through the installed host rather than
+          expanded into another scorer or corpus platform.
+      - finding: F5-real-subspace-pressure
+        disposition: supported
+        basis: >-
+          Journey slicing requires a demoable real journey. PR #14 provides the
+          bounded shell-first POC at 7 files and +424/-5, while closed PR #12
+          supplies the 12-file, +1810/-19 Go-heavy alternative. AC-2 fails if the
+          fresh host retains the Go coordinator without a named journey failure,
+          and AC-3 separately fails unsafe production downscoping. The evidence
+          is correctly bounded to an OPEN Draft, not delivery.
+      - finding: F6-generalized-evaluator-deletion
+        disposition: supported
+        basis: >-
+          Kernel subtraction and Reverse-Recovery require an unearned proposed
+          surface to return. Two validation cycles showed the evaluator could not
+          authenticate authority, observe promotion, validate paired inputs, or
+          count its envelope, while the branch has no remote consumer. Cycle 3
+          deletes that machinery and uses raw exact-revision host evidence.
+    risk_tradeoff: >-
+      The recut buys a direct proof that POC classification changes a real planning
+      outcome and removes roughly 2,679 additions of durable evaluator ownership.
+      The remaining risks are a decorative receipt, text-only mutants that do not
+      predict host behavior, and an arbitrary line count being mistaken for
+      lifecycle minimality. The accepted controls are one real installed-host
+      Subspace pressure case, an adversarial production-mutation case, three
+      fail-closed contract mutants, and a less-than-1,000-line guard; the cheaper
+      alternative is inline chooser prose, but the measured lazy-load experiment
+      has already falsified it.
+    recommendation: >-
+      Proceed with one worker-sized recut from the declared base: retain the
+      conditional chooser and concise in-task receipt, delete every generalized
+      evaluator/scorer/fixture extension, keep only the three named contract
+      mutants, and bind fresh validation to the exact recut revision and the real
+      PR #12/#14 pressure plus production-mutation cases.
+    route: proceed
+    confidence: high
+    dissent: ""
+    disproof_condition: >-
+      Return the route if the recut retains generalized evaluator machinery,
+      crosses 1,000 gross lines without a named AC failure, requires new
+      work-item or execution-state authority, or if exact-revision installed-host
+      evidence retains the Go coordinator without a named POC journey failure,
+      permits production mutation under POC, or shows complete inline logic can
+      now satisfy both valid-receipt lazy loading and missing-receipt interaction.
+    authority_boundary: >-
+      The Captain retains scope, appetite exceptions, profile choice, cuts, and
+      irreversibility; Gate Authority retains stage advancement; the authorized
+      work-item actor retains receipt mutation; Spacedock and FO retain state and
+      dispatch mechanics; delivery authority retains push, PR, merge, and
+      closeout; installed hosts and this EM provide evidence and advice only.
+```
