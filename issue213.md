@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-pr-feedback-gate
 issue: "213"
-pr: "#220"
+pr: pr-merge:220
 mod-block:
 design: required
 lane: main
