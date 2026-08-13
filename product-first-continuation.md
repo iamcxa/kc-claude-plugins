@@ -1016,3 +1016,72 @@ Cycle 4 replaces the unsound single-sample cost gate with a deterministic safety
 ### Summary
 
 The cycle-5 candidate cleanly separates the lean product-first continuation slice from the preserved evaluator framework. Its focused deterministic contract and diff checks are green at exact commit `c0b387b121f9919d5be3952d145187394bf9d59e`; validation still owns any later evidence verdict, and delivery authority remains untouched.
+
+## Stage Report: validation (cycle 3)
+
+Verdict: REJECTED — delivery NOT READY.
+
+- FAILED: Independently verify exact candidate c0b387b121f9919d5be3952d145187394bf9d59e against AC-1 through AC-5, including correct product action, zero implicit improvement I/O, and explicit-harvest safety.
+  AC-1 is `FAIL`: byte-bound P1 routes the correct item/action with zero improvement I/O but paginates the vendored kernel; AC-2 through AC-4 are `UNKNOWN` because their preserved runtime receipts exercised non-identical skill bytes.
+- DONE: Prove the product-only reconstruction preserves the shipped product bytes and necessary deterministic safety evidence while excluding evaluator-framework scope.
+  All 9 product/contract paths are byte-identical to `452dabd1eb7fcf1519b5c1e72917331ca06e3d88`; the candidate diff excludes evaluator, evaluator test, and pressure fixture, and the shared contract test has no dangling reference to them.
+- DONE: Return a fresh validation verdict with required EM advice, exact evidence citations, and delivery readiness without running new installed-skill pressure or optional multi-model review.
+  The sole fresh-context EM below returns `return/high/not_needed`; no model/provider call, push, PR, readiness, merge, release, or frontmatter mutation occurred.
+
+Lenses: behavior FAIL (exact-byte P1 kernel pagination); contract/schema PASS for deterministic guards but runtime completeness UNKNOWN; state/concurrency UNKNOWN and security/privacy UNKNOWN because older P2/P3 receipts are not byte-bound; runtime/platform FAIL on P1; docs/policy PASS; delivery PASS for exact head and one-slice topology. Inputs: base `64c496cd...`, candidate `c0b387b...`, product revision `452dabd1...`, preserved full branch `2fff0f5f...`, 9-file diff, runbook, ACs, and selected mods. Falsifiers: missing-reference mutation and exact-byte P1 trace.
+Diff coverage: 100% (5/5 coverable contract groups exercised; 9/9 changed files mapped). Coverage does not upgrade missing exact-policy P2-P4 runtime evidence.
+Adversarial: deleting `kc-dev-flow/references/improvement-harvesting.md` from an exact-candidate archive makes `scripts/kc-dev-flow-contract-test.py` fail with the named missing-reference error; retained conditional policy is boundedly necessary.
+Cross-model: not_needed — one exact-byte hard P1 failure plus typed missing evidence is reproducible and neither contested, irreversible, low-confidence, nor unresolved by another model.
+E2E: FAIL — manifest `/tmp/kc-dev-flow-continuation-p1-terra-medium-452dabd1-20260812/manifest.json` (SHA-256 `4c71adba...`) exercises the installed-skill boundary at byte-identical product policy and records `P1 paginated the vendored kernel across tool calls`.
+Origin re-observation: UNKNOWN — Reported scenario: literal ordinary continuation against the live active item and split-root holder | Originating runtime kind: Codex installed-skill host with live Spacedock authority | Re-observation artifact/revision: Terra P1 manifest `4c71adba...` at product revision `452dabd1...`, byte-identical to candidate `c0b387b...` | Equivalent-runtime rationale: host, exact installed policy hashes, invocation class, item/action contract, and unseen-debrief condition match, but the fixture holder is not the live split-root holder and the older live-holder receipt uses non-identical skill bytes | Falsifier kind: mutation | Result: exact-policy P1 is FAIL and exact-candidate live-holder closure is missing.
+
+### Acceptance results
+
+- AC-1: FAIL — candidate policy is 650 words; skill SHA-256 `e0ac1776...` and harvest-reference SHA-256 `3c3db221...` match the preserved `452dabd1...` arm, whose P1 reports the correct item/action and zero improvement I/O but violates the no-kernel-pagination trace guard.
+- AC-2: UNKNOWN — focused contract and `improvement-intake` 9/9 are green, but preserved P2/P3 model receipts bind earlier, non-identical skill bytes.
+- AC-3: UNKNOWN — static authority prohibitions and intake boundaries are green; the required exact-policy explicit-harvest pressure evidence is absent.
+- AC-4: UNKNOWN — the empty-iteration short-circuit is deterministically guarded, but preserved P4 is not byte-bound to this skill.
+- AC-5: PASS — one commit on exact base changes 9 mapped files (343 additions, 188 deletions), creates no new skill/schema/scheduler/general runner, and excludes all evaluator-framework paths.
+
+Changed-file map: skill AC-1..4; harvest reference AC-2/3; canonical+vendored kernels AC-1..3; PRODUCT/ARCHITECTURE/README AC-1/3/5; absolutes registry AC-2/3; contract test AC-1..5.
+Focused verification: PASS `scripts/kc-dev-flow-contract-test.py`; PASS `improvement-intake.test.py` 9/9; PASS skill frontmatter lint 40/40; PASS kernel byte parity; PASS diff check; PASS clean exact-head worktree.
+Topology: candidate is one commit from exact base, unpushed with no PR; preserved full/evaluator remote remains exactly `2fff0f5f...`. The eligible shape remains one ordinary Draft PR, but validation prevents delivery readiness.
+
+### Fresh validation Science Officer EM advisory
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Return exact candidate c0b387b121f9919d5be3952d145187394bf9d59e: AC-1 has an exact-byte P1 trace failure, AC-2 through AC-4 lack byte-bound runtime closure, and AC-5 passes."
+  evidence_synthesis: "The 9 candidate paths are byte-identical to product revision 452dabd1; its preserved P1 manifest binds matching skill/reference hashes and records correct routing plus zero improvement I/O but kernel pagination. Deterministic guards pass. Older P2-P4 receipts bind non-identical skill bytes and remain UNKNOWN."
+  risk_tradeoff_call: "The lean split removes evaluator delivery cost, but accepting it would waive a hard trace guard and convert unbound runtime evidence into PASS. The bounded alternative is return for authority-owned exact-policy closure without restoring evaluator scope to the product PR."
+  recommendation: "Gate Authority should keep validation rejected and return the exact product policy for bounded evidence resolution; preserve the product-only diff and evaluator branch separately."
+  route: return
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "The FO may account for this advisory and route authorized correction/evidence work; it may not advance, push, create or ready a PR, merge, release, or waive FAIL/UNKNOWN."
+  engineering_judgment:
+    question: "Should exact product-only candidate c0b387b121f9919d5be3952d145187394bf9d59e pass AC-1 through AC-5 and become delivery-ready using preserved evidence?"
+    revision: "Base 64c496cdab7ccc59a15753e454f627a70383fb46; candidate c0b387b121f9919d5be3952d145187394bf9d59e; byte-identical product revision 452dabd1eb7fcf1519b5c1e72917331ca06e3d88; preserved full branch 2fff0f5ff2712e7c8ac2a8b6aee36ce50151b9db."
+    evidence_synthesis: "The 9 candidate paths are byte-identical to product revision 452dabd1; its preserved P1 manifest binds matching skill/reference hashes and records correct routing plus zero improvement I/O but kernel pagination. Deterministic guards pass. Older P2-P4 receipts bind non-identical skill bytes and remain UNKNOWN."
+    adjudications:
+      - finding: V3-1
+        disposition: supported
+        basis: "AC-1 makes kernel pagination a hard falsifier; exact-byte manifest 4c71adba records that failure."
+      - finding: V3-2
+        disposition: supported
+        basis: "The validation evidence envelope binds receipts to exact inputs; older P2-P4 skill bytes differ, so they cannot close AC-2 through AC-4."
+      - finding: V3-3
+        disposition: supported
+        basis: "Git identity, clean status, 9-file map, deterministic checks, and absent evaluator paths prove AC-5 and the product-only reconstruction."
+    risk_tradeoff: "The lean split removes evaluator delivery cost, but accepting it would waive a hard trace guard and convert unbound runtime evidence into PASS. The bounded alternative is return for authority-owned exact-policy closure without restoring evaluator scope to the product PR."
+    recommendation: "Gate Authority should keep validation rejected and return the exact product policy for bounded evidence resolution; preserve the product-only diff and evaluator branch separately."
+    route: return
+    confidence: high
+    dissent: "The exact-byte P1 does prove correct item/action, 650-word policy, and zero implicit improvement I/O; deterministic safety tests are green. Those gains do not erase kernel pagination or supply exact-policy P2-P4 runtime evidence."
+    disproof_condition: "Change the route only when authorized exact-policy evidence shows P1 without kernel pagination and closes P2-P4 safety/authority behavior, while the 9-file product-only diff and one-PR topology remain unchanged."
+    authority_boundary: "Captain retains scope, spending, and acceptance of residual risk; Gate Authority retains verdict and transition; work-item and Spacedock owners retain state; delivery authority retains push, PR, readiness, merge, release, and archive; provider owners retain model execution and posting."
+```
+
+### Summary
+
+The reconstruction is lean and mechanically faithful, but it is not validation-ready: exact-byte P1 evidence still violates a hard trace guard, while P2-P4 runtime receipts are not bound to the final skill bytes. The independent EM therefore recommends `return`, with no optional multi-model pass.
