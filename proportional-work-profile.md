@@ -1,7 +1,7 @@
 ---
 id: 4wkne0vvpgsy2japzr08xqtx
 title: "kc-dev-flow: choose a proportional work profile before AC expansion"
-status: validation
+status: implementation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint:
@@ -1819,3 +1819,77 @@ installed-host response to exact head `909e3bd...`, challenge PR #12 versus the
 open Draft PR #14, run the adversarial production-mutation case, and finish with
 exactly one fresh validation EM. No 16-response evaluator run or optional
 reviewer is authorized.
+
+## Stage Report: validation (cycle 3 — returned)
+
+Verdict: **RETURN**. Fresh forward evidence supports AC-1 through AC-3, but the
+fresh validation Science Officer found one unrelated continuation regression,
+so AC-4 is not satisfied at exact product head
+`909e3bdecbf945eab052764442704795146abd7a`.
+
+### Origin-runtime observation
+
+- Raw artifact: `.context/validation/proportional-work-profile-909e3bd-forward-test.md`
+  at sha256
+  `d62d1faa4a9501349b2f82072e795f26b9d68b5adcf438e25b2d0a4ab0601ea9`.
+- The exact candidate chooser handled two raw cases in one fresh request. For
+  Subspace PR #12 versus open Draft PR #14 it selected POC, preferred the
+  shell-first route, rejected the Go coordinator without a named POC journey
+  failure, and returned `NEEDS_PROFILE_DECISION` rather than claiming delivery.
+- For a production-credentials, real-data, destructive-mutation case it selected
+  Production or an explicit sandbox recut, preserved missing authority, and
+  returned `NEEDS_PROFILE_DECISION`.
+- Live GitHub evidence remained bounded: PR #14 was an OPEN Draft at
+  `62a0fda2534cc4a8668bfd9f418fbc0961bd1760` with 7 files and +424/-5;
+  PR #12 was CLOSED with 12 files and +1810/-19.
+
+### Fresh validation finding
+
+`kc-dev-flow/skills/continue-dev-flow/SKILL.md:33-34` changed the base guard
+from “no active or committed item” to “no committed item.” An active but
+unscheduled item could therefore be abandoned before work-item authority is
+consulted. This semantic change is outside the accepted work-profile scope and
+violates the implementation rule against unrelated refactors.
+
+### Validation accounting
+
+- Lenses: behavior PASS for AC-1 through AC-3; state/concurrency and docs/policy
+  FAIL for AC-4 because of the active-item routing regression.
+- Diff coverage: PASS, 100%, 30/30 coverable changed contract lines.
+- Adversarial: production-boundary case PASS; overall FAIL because an
+  active-but-unscheduled work item falsifies continuation routing.
+- Cross-model: `not_needed`; the fresh EM found a deterministic repository
+  regression and no material unresolved ambiguity.
+- E2E: PASS for the bounded work-profile journey; not sufficient to waive AC-4.
+- Origin-runtime re-observation: PASS with the exact raw artifact above. The
+  chooser bytes and behavior-producing inputs need not be repeated if the
+  correction touches only continuation routing and its focused falsifier.
+
+```yaml
+science_officer:
+  stage: validation
+  model: GPT-5.6
+  freshness: fresh
+  exact_product_head: 909e3bdecbf945eab052764442704795146abd7a
+  route: return
+  confidence: high
+  cross_model_review: not_needed
+  finding: >-
+    continue-dev-flow lines 33-34 stop when there is no committed item, while
+    origin/main stops only when there is no active or committed item. This can
+    abandon an active-but-unscheduled item and is unrelated to the accepted
+    work-profile change.
+  recommendation: >-
+    Return only continue-dev-flow to implementation, restore the active-or-
+    committed guard, add a focused falsifier, rerun exact-head mechanical
+    checks, and obtain one fresh validation EM. Reuse the accepted work-profile
+    host trial unless chooser bytes or behavior-producing inputs change.
+  disproof_condition: >-
+    Proceed only if the corrected exact head preserves active-item continuation,
+    the focused contract fails on the regressed wording and passes on the fix,
+    all exact-head checks remain green, and no unrelated surface is introduced.
+  authority_boundary: >-
+    Captain retains scope, scheduling, profile, delivery, and irreversibility;
+    Gate Authority retains stage advancement; the Science Officer provides
+    evidence and routing advice only.
+```
