@@ -4,7 +4,7 @@ title: "kc-dev-flow: choose a proportional work profile before AC expansion"
 status: validation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
-sprint:
+sprint: S2
 started: 2026-08-13T03:14:12Z
 completed:
 verdict:
