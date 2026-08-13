@@ -1,7 +1,7 @@
 ---
 id: 4wkne0vvpgsy2japzr08xqtx
 title: "kc-dev-flow: choose a proportional work profile before AC expansion"
-status: implementation
+status: validation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint:
@@ -1893,3 +1893,37 @@ science_officer:
     Gate Authority retains stage advancement; the Science Officer provides
     evidence and routing advice only.
 ```
+
+## Stage Report: implementation (cycle 4 — bounded correction)
+
+Verdict: **DONE**. Exact product head
+`7c1b12d68316a99cf7093bd0f13e11f9933b1f8f` changes only the rejected
+continuation guard and its focused contract falsifier relative to cycle 3.
+
+The contract first failed on the rejected bytes with:
+
+```text
+kc-dev-flow contract: continuation routing gaps:
+- continuation can abandon an active but unscheduled item
+```
+
+Restoring “no active or committed item” made the same contract pass; its mutant
+recreates “no committed item” and is rejected. The continuation skill is 644
+words against its 650-word limit. The final merge-base diff is 11 files, 395
+insertions and 59 deletions: 454 gross changed lines, still below the 1,000-line
+POC appetite. The branch is clean, four local commits ahead, unpushed, and has no
+PR.
+
+Exact-head contract, loader-evaluator regression, 41-skill frontmatter lint,
+skill-creator validation, version parity, marketplace L0/L1/all-L2 isolated
+installs, `git diff --check`, and canonical/adopted kernel parity all pass.
+Current branch-wide Python diff coverage is 97.2% (35/36 changed statements);
+the sole uncovered statement is the pre-existing deliberate forbidden-text
+failure append in the change-shape retirement check, not the new continuation
+guard or mutant.
+
+The accepted forward artifact remains applicable because chooser bytes,
+Subspace inputs, and other behavior-producing work-profile inputs are unchanged.
+Fresh validation must review exact head `7c1b12d...`, the active-item falsifier,
+and all current receipts; it must not repeat the model trial unless it finds an
+input-identity mismatch.
