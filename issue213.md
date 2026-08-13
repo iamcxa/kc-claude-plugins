@@ -35,17 +35,219 @@ surfaced because the branch data set was too small to reach page 2.
 
 ## Proposed approach
 
+Protect the captain-approved feedback-safety value with one GitHub-native
+observation at the existing PR lifecycle seam. At validation entry, before
+Ready, immediately before merge, and before terminalization, resolve the
+explicit repository and PR (or stack layer), pin `headRefOid`, paginate GraphQL
+`reviewThreads`, and separately paginate REST PR-level reviews. Normalize
+external reviewer items (bots included) into a sorted transient set.
+Conversation-tab comments remain outside this slice. Startup and idle polling
+are not required because they authorize no safety boundary.
+
+The observer records only one compact `PR feedback:` record in the existing
+validation report. It binds repository, PR number or stack-layer identity,
+exact head, fingerprint scheme `github-pr-feedback/v1`, the population
+fingerprint, and one disposition per normalized item ID. The canonical v1 input
+sorts by kind then stable GitHub ID and covers each item's author, review state
+or thread resolution state, commit ID when present, and a SHA-256 of every
+mutable body/comment. Each `rejected-with-reason` includes its reason; each
+`out-of-scope-and-filed` includes the filed work-item reference. The fingerprint
+is necessary because GitHub review bodies and inline comments are mutable;
+ID-only reuse can silently accept changed feedback. This extends the existing
+stage report rather than creating another ledger, resolver result schema, or
+provider framework.
+
+Observation and repair stay separate. If
+`kc-pr-flow:kc-pr-review-resolve` is installed, it may accelerate technical
+triage. If it is absent or unavailable, do not install or simulate it: route the
+complete normalized set to the ordinary implementation worker, return to fresh
+validation after any code change, and keep Ready/merge blocked until a new
+exact-head observation matches complete dispositions and their evidence. API,
+repository/PR identity, parsing, pagination, head, fingerprint, disposition
+reason, or filed-reference uncertainty is `UNKNOWN`, never clean.
+
+Add `--assignee "@me"` to the one active canonical Draft `gh pr create`
+command. The authenticated creator remains the author; the assignee becomes the
+default owner for follow-through.
+
+Fastest path: recut Draft PR #214 from fresh `origin/main` `281bd7f6` and repair
+the existing `docs/dev/_mods/pr-merge.md` lifecycle seam. Retain the generic
+provider-feedback invariant in the packaged kernel and its byte-identical
+vendored copy, and bind validation/done in `docs/dev/README.md`. Delete the
+special kc-pr-review-resolve integration change and the standalone plan; use the
+existing contract-test files for RED/GREEN and known-mutant coverage.
+
+Riskiest-assumption result: separation is viable, but a restartable gate cannot
+safely use only item IDs. A live read-only probe of merged
+`iamcxa/qnow#1057` at `ca1d613c` found two external non-empty PR-level reviews
+and three raw external threads, all three resolved at that final head, while
+`reviewDecision` remained empty. A positive live probe of open
+`iamcxa/qnow#1124` at `ebddb0ab` found two unresolved external threads and one
+external non-empty PR-level review, with complete first pages and
+`reviewDecision` still empty. GitHub also exposes review-body and review-comment
+update operations. Therefore one versioned observation fingerprint is the
+minimum restart fact, but another durable feedback ledger and a resolver-side
+integration mode are not necessary.
+
+Pre-mortem: the accepted design ships but an edit, deletion, resolution change,
+or new review lands after validation and before Ready. The failure would be
+stale disposition reuse; the pre-Ready, pre-merge, and pre-terminal
+identity/head/fingerprint re-observations must invalidate that report and
+preserve Draft or pending state.
+
 ## Design determination
+
+`design: required` — two independently violable value surfaces under the
+captain-approved one-small-S2 scope exception: (1) fail-closed GitHub feedback
+safety and (2) default creator ownership through self-assignment. The first
+repairs the existing GitHub delivery seam: the dev-flow observer owns complete
+GitHub reads, normalization, exact-head binding, and the delivery barrier; the
+selected repair worker owns technical disposition; `kc-pr-review-resolve` is an
+optional accelerator with no required integration contract. The second is one
+flag in the already-canonical Draft creation unit. One implementation worker is
+sufficient; these share the same delivery-policy files and together stay within
+the captain's explicit appetite.
+
+Reverse-recovery audit against `origin/main` `281bd7f6`:
+
+| Surface | Completeness / need | Subtractive result and disproof hook |
+|---|---|---|
+| `docs/dev/_mods/pr-merge.md` PR lifecycle | `EXISTS_BROKEN` / `REQUIRED` by the validation-entry, Ready, merge, and terminalization consumers | Retain and repair: without provider observation, the qnow probes are invisible and AC1 fails. Disproof: a fresh grep/API walk finds an existing complete review read before every delivery boundary. |
+| `docs/dev/README.md` validation and done stages | `EXISTS_BROKEN` / `REQUIRED` by stage actors | Retain and bind the observer result: without a declared input/disposition, AC2 fails. Disproof: current stage text already requires exact-head external feedback disposition. |
+| packaged kernel plus vendored copy | `EXISTS_BROKEN` / `REQUIRED` by adopters and the local workflow | Retain one generic feedback-reentry invariant; byte identity is already enforced. Disproof: current kernel already makes late provider feedback invalidate validation. |
+| `kc-pr-review-resolve` integration change from #214 | `WORKING_UNIT_UNPROVEN` / `NO_OBSERVED_CONSUMER` inside this slice; external consumers are out of scope | Remove from the recut: fallback route satisfies AC2 without changing the skill. Disproof: a fixture with the skill absent cannot reach the ordinary worker or cannot produce complete dispositions. |
+| standalone plan or new feedback ledger | `MISSING` / `NO_OBSERVED_CONSUMER` inside repo workflow and delivery boundaries | Do not add: the entity and existing validation report own the decision and restart fact. Disproof: a restart cannot distinguish edited/new feedback using the compact fingerprint. |
+| canonical Draft creation command | `EXISTS_BROKEN` / `REQUIRED` by PR creation | Repair in place with `--assignee "@me"`. Disproof: installed `gh pr create` lacks `--assignee` support or another active create path exists. |
+
+Kernel subtraction result: the independently maintained surfaces are the
+existing provider observer/barrier and the existing validation report. Removing
+either fails a named AC; the optional resolver change, new ledger, and plan do
+not. No new product runtime, service, schema file, or review framework advances.
 
 ## Acceptance criteria
 
+**AC1 — GitHub-native observation is complete, exact-head, and fail-closed**
+
+For every delivered PR or stack layer, dev-flow reads the explicit GitHub
+repository and current `headRefOid`, all GraphQL review-thread pages within the
+declared bounded comment-page contract, and all REST PR-review pages. It
+normalizes external unresolved threads plus external non-empty or
+`CHANGES_REQUESTED` PR-level reviews; any top-level or nested page reporting
+unread data, incomplete response, ambiguous identity, or head drift returns
+`UNKNOWN` and blocks the boundary. **Verified by:** contract and known-mutant
+checks establish that the declared provider data path rejects missing REST
+reviews, unread GraphQL pages, nested-comment overflow, author-filter inversion,
+API failure, and head drift. Read-only same-kind probes establish provider
+behavior: merged `qnow#1057@ca1d613c` yields two external non-empty reviews plus
+three raw but zero unresolved external threads; open
+`qnow#1124@ebddb0ab` yields one external non-empty review plus two unresolved
+external threads, with complete first pages. **Falsifier:** a contract mutant
+survives, or a live response contradicts the declared population rule.
+
+**AC2 — Unread or undispositioned feedback cannot cross Ready or merge**
+
+At validation entry, before Ready, immediately before merge, and before
+terminalization, repository, PR or layer identity, current head, fingerprint
+scheme, and feedback fingerprint must match a validation report with one
+evidence-bearing disposition for every normalized item. A rejected item requires
+its recorded reason; an out-of-scope item requires its filed work-item reference.
+With
+`kc-pr-review-resolve` absent, the complete set routes to the ordinary
+implementation worker and remains blocked; a code change invalidates prior
+validation. **Verified by:** contract decision-table and ordering mutants prove
+the policy represents blocking for actionable feedback, missing resolver,
+ambiguous identity, missing disposition evidence, changed head, changed
+fingerprint, and provider `UNKNOWN`; fresh exact-revision validation owns the
+behavioral judgment that the workflow follows those instructions. **Falsifier:**
+a mutant removes one refusal and still passes, or fresh validation observes a
+Ready/merge/terminal path that ignores a non-pass case.
+
+**AC3 — The authenticated Draft creator owns follow-through by default**
+
+The single active canonical Draft creation unit includes
+`--assignee "@me"`, while the released disabled command remains untouched.
+**Verified by:** the focused portable-delivery contract test plus a mutant that
+deletes only the assignee flag. **Falsifier:** the mutant still passes, or more
+than one active PR-create command exists.
+
+**AC4 — The recut adds no second review framework or durable feedback ledger**
+
+The #214 replacement changes no `kc-pr-flow/**` file, adds no feedback-state
+file, and uses the existing validation report for the compact restart fact.
+**Verified by:** the exact `origin/main...HEAD` file map plus contract and
+known-mutant checks that require the optional-skill-absent route to name the
+ordinary worker and remain fail closed; fresh validation verifies that no hidden
+resolver dependency exists. **Falsifier:** delivery correctness requires a
+resolver-side integration mode or a separate persistent store.
+
 ## Test plan
+
+1. RED on fresh `origin/main`: the focused contract test must reject both the
+   absent GitHub feedback barrier and the canonical create command without
+   `--assignee "@me"`.
+2. GREEN with contract and mutation coverage: check canonical v1 population
+   fields, pagination failure, identity/head/fingerprint invalidation, fallback
+   routing, gate ordering, stack per-layer coverage, disposition evidence, and
+   self-assignment. Each mutant must name the policy/data-path property it
+   removes; these checks do not claim agent behavioral compliance.
+3. Run `scripts/kc-dev-flow-contract-test.py` and
+   `scripts/pr-merge-portable-delivery.test.py`, then the existing version
+   parity, frontmatter, marketplace, and sanitize checks earned by the diff.
+4. Re-run live read-only GitHub probes against pinned merged
+   `qnow#1057@ca1d613c` (resolved-thread case) and open
+   `qnow#1124@ebddb0ab` (positive unresolved-thread case), recording raw and
+   normalized counts plus pagination completeness. If the open head drifts,
+   record the probe stale and choose a newly pinned equivalent; do not silently
+   reuse it. No product UI E2E applies because this is workflow-policy/config
+   behavior; the provider probes are the same-kind observation boundary and
+   perform no GitHub mutation.
+5. Fresh-context validation reviews the final recut against the exact new
+   `origin/main` base and confirms the old #214 resolver modification and plan
+   document are absent.
 
 ## Measurement
 
+- Primary feedback-safety measure: every declared non-pass case in the
+  feedback-blocking decision table is represented as refusing
+  Ready/merge/terminal mutation until the same-identity, same-head observation is
+  completely dispositioned; fresh validation reports zero observed unsafe
+  transitions.
+- Primary ownership measure: deleting only `--assignee "@me"` makes the focused
+  canonical-create contract test fail.
+- Scope measure: one implementation worker, two captain-approved value surfaces
+  in the same existing delivery-policy seam, no
+  `kc-pr-flow/**` diff, no new state file, and no product/architecture document
+  change. The workflow README, pr-merge mod, kernel copies, and two existing
+  tests are the six-file expected family.
+- Comparison baseline: current Draft #214 is 392 additions/deletions across
+  eight files and is based on `a18ba78f`; the recut must be based on fresh
+  `origin/main` and remove the resolver-side integration and standalone plan.
+
 ## Doc diff
 
+- `docs/dev/README.md`: declare GitHub feedback observation as validation input,
+  record the compact fingerprint/dispositions, document fallback routing, and
+  make current feedback proof a done prerequisite.
+- `kc-dev-flow/references/kernel.md` and byte-identical
+  `docs/dev/_mods/kernel.md`: add one provider-neutral late-feedback re-entry
+  invariant; keep GitHub commands and routing out of the kernel.
+- `docs/dev/_mods/pr-merge.md`: document the GitHub-native observation,
+  fail-closed boundaries, optional accelerator/fallback, and self-assigned
+  canonical Draft command.
+- No `PRODUCT.md` change: its kc-dev-flow outcome already promises adoption of
+  repository delivery authority without duplicating truth. No `ARCHITECTURE.md`
+  change: this slice repairs local workflow policy and deliberately adds no new
+  durable component or ownership boundary.
+
 ## Out of scope
+
+- Auto-merge, automatic Ready, or any new merge authority.
+- Auto-installing or requiring `kc-pr-flow` / `kc-pr-review-resolve`.
+- A second review framework, generalized provider adapter, database, state file,
+  or durable feedback ledger.
+- Conversation-tab issue comments, automatic replies, or automatic thread
+  resolution.
+- Retrofitting every adopter or changing GitHub repository protection rules.
 
 ## Stage Report: backlog
 
@@ -159,3 +361,36 @@ belongs to spacedock rather than kc-dev-flow. The capability the issue points at
 is real and already wired in a sibling workflow here, but the fix's placement
 (portable kernel vs local README vs another project's mod) is undecided and is
 itself the root-cause question, so this is not a defect-lane item.
+
+## Stage Report: ideation
+
+- DONE: Define a GitHub-native feedback observation and fail-closed repair fallback that works without kc-pr-review-resolve.
+  The accepted direction binds `github-pr-feedback/v1` to repo/PR-or-layer/head, a canonical mutable-content fingerprint, and evidence-bearing dispositions; absent resolver routes to the ordinary worker and every incomplete read stays `UNKNOWN`.
+- DONE: Add default self-assignment to the canonical Draft PR creation unit with a falsifiable contract test.
+  The design adds `--assignee "@me"` to the sole active command; deleting only that flag is the named contract-test mutant, and installed `gh` help confirms support.
+- DONE: Recut the existing #214 direction into the smallest S2 slice against fresh origin/main without adding a second review framework.
+  Against `origin/main` `281bd7f6`, the proposed recut is six existing files and removes the `kc-pr-flow` change plus standalone plan from stale-base PR #214 (`40fdf84`, 392 additions/deletions across eight files).
+- DONE: Run the reverse-recovery audit and kernel subtraction.
+  Existing PR lifecycle and validation-report seams are `EXISTS_BROKEN/REQUIRED`; removing either fails AC1/AC2, while a resolver integration, separate ledger, plan, startup polling, and idle polling fail no named AC and are cut.
+- DONE: Test the likely-wrong assumption with same-kind provider evidence.
+  `qnow#1057@ca1d613c` yields two external non-empty reviews and three raw but zero unresolved external threads; positive `qnow#1124@ebddb0ab` yields one such review and two unresolved threads, with complete first pages and empty `reviewDecision` in both.
+- DONE: Record `design: required`, end-state ACs with falsifiers, test scope, measurement, docs, and non-goals.
+  `spacedock status --read ... --ac-scan` exits 0 for four bold AC headings; UI E2E is inapplicable to this policy/config slice, so live read-only GitHub probes preserve the provider observation boundary.
+- FAILED: Advance the ideation gate.
+  The one fresh-context EM returned `return/high`: the first draft under-specified fingerprint identity/evidence, miscounted two value surfaces as one, over-retained startup/idle, and overstated what contract tests prove; the body now incorporates all corrections, but this report does not rewrite that verdict.
+
+### Engineering judgment
+
+```yaml
+route: return
+confidence: high
+multi_model: not_needed
+recommendation: Re-evaluate the corrected two-surface, six-file recut in the next ideation cycle; keep the versioned compact report fact and remove resolver integration, standalone plan, startup, and idle observation.
+dissent: The original proposal mislabeled assignee ownership as the same value surface and treated resolved qnow threads as normalized unresolved evidence.
+disproof_condition: Proceed only after the artifact unambiguously binds the fingerprint and disposition evidence, counts both captain-approved surfaces, bounds tests to policy/data-path proof, and supplies a positive unresolved-thread provider observation.
+authority_boundary: Captain retains the two-surface exception and merge policy; the gate retains advancement; FO retains mechanics; the optional resolver has no gate authority.
+```
+
+### Summary
+
+The smallest credible design keeps GitHub observation and fail-closed delivery in dev-flow, persists only a versioned compact fact in the existing validation report, and uses the ordinary worker when the optional resolver is absent. The initial proposal was corrected after independent EM review, but the recorded advisory route remains `return`; a new ideation cycle must evaluate the corrected artifact rather than treating the correction as self-approval.
