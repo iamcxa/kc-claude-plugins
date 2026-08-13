@@ -1403,6 +1403,7 @@ Exact candidate `c0b387b121f9919d5be3952d145187394bf9d59e` remains clean and its
   AC-1 limits P1 to its exact observations and static checks to policy shape. AC-2 limits static safety clauses and executable intake-validator evidence to their real surfaces. AC-3/AC-4 retain authority, promotion, empty-work, no-invention, and no-implicit-harvest policy without claiming deterministic model obedience.
 - DONE: Reconcile Measurement, Test plan, and E2E wording with the focused product slice.
   Deterministic executable systems must be green; static checks prove artifact integrity only; sampled LLM behavior is probabilistic; observed secret, authority, or external-mutation incidents are critical. P1 pagination/cost retains its recorded non-gating `FAIL`, P2-P4 retain `UNKNOWN`, and later evaluator work is separate rather than mandatory closure for this PR.
+  AC-5 evidence: the unchanged nine-file map remains one focused single slice, excludes evaluator, model-pressure, actor-interpreter, and new-harness paths, and retains the recorded one ordinary Draft PR topology.
 - SKIPPED: Run tests, pressure, EM, optional review, or delivery actions.
   The Captain explicitly excepted this closeout from the ideation fresh-EM default and prohibited those actions. No test, model/provider call, product edit, push, PR, readiness, merge, release, or transition was performed.
 
