@@ -942,3 +942,7 @@ adversarial safety sample, could not observe question/state-transition behavior,
 and exceeded the provider-response ceiling through auxiliary host calls. Return a
 bounded evidence-contract repair to implementation; do not promote or deliver this
 head.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — fresh validation; surface 1 worker vs estimate 1 (100%); AC unchanged
