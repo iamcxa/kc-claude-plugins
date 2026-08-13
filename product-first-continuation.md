@@ -190,46 +190,56 @@ and no harvest request. The candidate names the correct item and stage, then nam
 the first concrete action derived from that work item before improvement activity.
 Its default-loaded `continue-dev-flow` policy is at most 650 words; its trace has
 zero `_debriefs`/`_improvements` I/O and no broad state discovery. Deterministic
-trace contracts prohibit duplicate instruction discovery, kernel pagination, and
-loading product context before the product action will execute.
+behavior contracts must fail when the route selects the wrong item, stage, or
+action; performs implicit improvement I/O; exceeds the policy bound; broadly
+discovers state; or loads product context in a way that changes or precedes route
+resolution. Whether the kernel is read once or paginated is recorded only by the
+separate evaluator and has no delivery-gate authority.
 Falsified by: a wrong item or stage, an action not derived from the resolved work
 item, any improvement-state I/O without the explicit request, broad discovery,
-policy above 650 words, or any of the three deterministic trace prohibitions
-failing. Tool calls, wall time, and provider-token usage cannot fail AC-1: they
-are compared only when both paired arms first pass safety and product correctness;
-otherwise efficiency is `NOT_COMPARABLE`.
+policy above 650 words, or product-context loading that changes or precedes route
+resolution. Kernel single-call versus paginated reads, tool calls, wall time, and
+provider-token usage are non-gating evaluator observations.
 
 **AC-2 — Explicit harvesting preserves debrief evidence, cursor safety, and handoff validation.**
 
-Verified by: deterministic RED/GREEN contract mutations plus exact-ref pressure
-for (a) unseen debriefs with neither CAS nor exclusive ownership and (b) a
-reusable-source proposal with ignore proof, durable private identity, and CAS.
-Case (a) reports `UNKNOWN`, writes neither cursor nor handoff, and continues the
-resolved product route. Case (b) bounds the scan, keeps retry-stable occurrence
-IDs, commits cursor and batch as one unit, sanitizes the payload, and requires
-`improvement-intake.py --handoff` success before it can leave the adopter.
+Verified by: deterministic RED/GREEN behavior and transaction mutations for (a)
+unseen debriefs with neither CAS nor exclusive ownership and (b) a reusable-source
+proposal with ignore proof, durable private identity, and CAS. The checks must
+observe and fail the actual trace/artifact contract rather than merely require
+policy wording. Case (a) reports `UNKNOWN`, writes neither cursor nor handoff, and
+continues the already-resolved product route. Case (b) bounds the scan, keeps
+retry-stable occurrence IDs, commits cursor and batch as one unit, sanitizes the
+payload, and requires `improvement-intake.py --handoff` success before it can leave
+the adopter. Preserved or later exact-byte P2/P3 model receipts are non-gating
+evaluator observations while these deterministic safety contracts are green.
 Falsified by: lost/superseded evidence being silently reused, a partial write,
 identity publication/regeneration, invalid handoff delivery, or improvement
 failure blocking product work.
 
 **AC-3 — Every automatic-authority prohibition remains hard and source promotion stays downstream.**
 
-Verified by: contract mutants and both explicit-harvest pressures require that
-detection, validation, recurrence, and source classification grant no task
-creation, sprint admission, scheduling, posting/upload, policy edit, install,
-merge, or product-pause authority. A reusable proposal stops at a captain-
-approved attachment/copied path; `promote-dev-flow` receives a handoff and keeps
-canonical-source placement judgment.
-Falsified by: any pressure response performs or authorizes one of those actions,
+Verified by: deterministic contract mutants must fail when detection, validation,
+recurrence, or source classification grants task creation, sprint admission,
+scheduling, posting/upload, policy edit, install, merge, or product-pause
+authority. They also exercise the real validated-handoff boundary: a reusable
+proposal stops at a captain-approved attachment/copied path, and
+`promote-dev-flow` may receive it only afterward while retaining canonical-source
+placement judgment. Preserved or later exact-byte P2/P3 model receipts are
+non-gating evaluator observations, not substitutes for these fail-able contracts.
+Falsified by: any exercised behavior performs or authorizes one of those actions,
 or invokes source promotion before a validated adopter handoff exists.
 
 **AC-4 — Empty committed work remains a scheduling stop, not a harvest or invention trigger.**
 
-Verified by: exact-ref pressure with no active or committed work and unseen
-debriefs but no harvest request. The candidate reports that scheduling is needed,
-creates no task, reads/writes no improvement state, and does not reinterpret the
-debrief as product scope. Falsified by: selecting an unscheduled item, creating
-work, harvesting implicitly, or treating observation as authority.
+Verified by: a deterministic empty-work behavior fixture, including a mutation
+that attempts to reinterpret unseen debrief evidence as product scope. With no
+active or committed work and no harvest request, the candidate reports that
+scheduling is needed, creates no task, reads/writes no improvement state, and
+stops. The check must fail on the mutation and on any implicit improvement I/O.
+Preserved or later exact-byte P4 model evidence is a non-gating evaluator
+observation. Falsified by: selecting an unscheduled item, creating work,
+harvesting implicitly, or treating observation as authority.
 
 **AC-5 — The change stays one focused continuation slice and updates its durable contracts.**
 
@@ -280,39 +290,34 @@ behavior at validation.
 
 ## Measurement
 
-Grade evidence in this order; a later observation never offsets an earlier loss:
+Grade hard evidence before evaluator observations; a later observation never
+offsets a retained product, safety, or authority failure:
 
-1. **Hard safety/authority:** AC-2/AC-3 violations are `FAIL` regardless of cost.
-2. **Hard product correctness:** ordinary P1 must name the correct item, stage,
-   and work-item-derived first action, with zero improvement-state I/O and no
-   broad discovery; AC-4 remains governed by its preserved P4 receipt.
-3. **Hard policy and deterministic trace contract:** the ordinary skill is at
-   most 650 words, does not rediscover already-loaded instructions, does not
-   paginate the kernel, and does not load product context before its action will
-   execute. Missing exact-revision binding or trace evidence is `UNKNOWN`.
-4. **Comparability gate:** tool calls, time to first action, wall time, and
-   provider-token usage are compared only when both paired arms pass the safety
-   and product-correctness prerequisites. If either arm fails them, efficiency is
-   `NOT_COMPARABLE` and cannot fail the candidate.
-5. **Non-gating efficiency observation:** for a comparable pair, record tool
-   calls, wall time, and available token usage without a pass/fail threshold.
-   Efficiency remains non-gating until enough valid samples justify a separately
-   captain-approved statistical threshold; unavailable values remain unknown,
-   never zero.
+1. **Hard product correctness:** AC-1 requires the correct item, stage, and
+   work-item-derived first action; at most 650 default policy words; zero implicit
+   improvement I/O; no broad state discovery; and no product-context load that
+   changes or precedes route resolution. AC-4 requires an empty-work scheduling
+   stop with no invented task or implicit harvest.
+2. **Hard safety/authority:** deterministic AC-2/AC-3 contracts must remain able
+   to fail every retained bound, ownership/CAS, atomic-write, retry-stable private
+   identity, validation, sanitized-handoff, downstream-promotion, no-auto-authority,
+   and product-nonblocking invariant. Wording presence is not behavior evidence.
+3. **Evidence honesty:** missing exact-revision binding or a deterministic check
+   that cannot be shown to fail is `UNKNOWN`; preserved live-model receipts retain
+   their recorded `FAIL` or `UNKNOWN` labels. They become delivery blockers only
+   when they demonstrate one of the hard product/safety failures above.
+4. **Evaluator-only observations:** record kernel single-call versus paginated
+   reads, tool calls, elapsed/wall time, available provider-token usage, and
+   exact-byte P2-P4 live-model pressure separately. These observations carry no
+   threshold and no delivery-gate authority while deterministic safety contracts
+   are green; unavailable values remain unknown, never zero.
 
-Overall `PASS` requires every hard criterion above. A non-discriminating arm,
-mismatched runtime configuration, absent trace, or unbound exact ref is `UNKNOWN`;
-an arm that fails safety or product correctness makes efficiency
-`NOT_COMPARABLE`, not a candidate failure.
-
-For this captain-approved reset, the only new model evidence allowed is one
-exact-head paired P1 at candidate `452dabd1eb7fcf1519b5c1e72917331ca06e3d88`
-versus known-bad `64c496cdab7ccc59a15753e454f627a70383fb46`, using GPT-5.6 Sol
-High after the deterministic contract update. Do not run P2-P4, Terra, repeat
-samples, or another full matrix. The total reset cap began
-`2026-08-12T15:56:57Z`; at `2026-08-12T16:16:57Z`, stop and preserve `UNKNOWN`
-rather than extending. This ideation stage defines that validation allowance
-and does not itself run model pressure.
+Overall `PASS` requires every hard criterion above. A preserved P1 pagination
+failure does not fail the candidate because pagination is evaluator-only; its
+correct route, first action, policy bound, zero implicit improvement I/O, and
+absence of broad discovery remain hard evidence. Preserved P2-P4 receipts may
+remain `FAIL` or `UNKNOWN` observations without relabeling, and no new installed-
+skill pressure is authorized by this ideation reset.
 
 The design is disproved if the real host eagerly loads the extracted reference
 without the trigger, or if the candidate cannot meet AC-1's load reduction while
@@ -1087,3 +1092,146 @@ science_officer_em_upward_report:
 ### Summary
 
 The reconstruction is lean and mechanically faithful, but it is not validation-ready: exact-byte P1 evidence still violates a hard trace guard, while P2-P4 runtime receipts are not bound to the final skill bytes. The independent EM therefore recommends `return`, with no optional multi-model pass.
+
+## Ideation reset EM judgment (cycle 4; authoritative)
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Accept the Captain-approved Recommended acceptance reset. Exact entity artifact
+    43416c986880de150effb3ce988a09f9b06e2173 keeps correct product routing, the
+    650-word ceiling, zero implicit improvement I/O, route-resolution order,
+    explicit-harvest safety, no-auto-authority, product nonblocking behavior, and
+    the empty-work stop hard and falsifiable; kernel pagination, efficiency
+    measurements, and exact-byte P2-P4 live pressure are evaluator-only.
+  evidence_synthesis: >-
+    State HEAD is ec7f171a623239f41e47a11ea98f77a5145b321d; the reviewed entity is
+    Git blob 43416c986880de150effb3ce988a09f9b06e2173 and SHA-256
+    a4e81091401b88a828bf810c1562a7a0ccd7dc56dce03912c21e4d60fbad9f73.
+    Bound-field validation is PASS and AC-1 through AC-5 report unevidenced=false.
+    Base 64c496cdab7ccc59a15753e454f627a70383fb46 and clean candidate
+    c0b387b121f9919d5be3952d145187394bf9d59e remain exact. The diff changes only
+    AC-1 through AC-4 and Measurement; AC-5 and one ordinary Draft PR are unchanged.
+  risk_tradeoff_call: >-
+    The reset restores product and safety outcomes as decisive while host read
+    shape, stochastic cost, and optional live pressure cannot dominate a safe
+    candidate. Deterministic contracts carry more weight, so their continued
+    mutation sensitivity is the critical maintenance obligation; later evaluator
+    evidence may still return the product when it reveals a retained hard failure.
+  recommendation: >-
+    Gate Authority should accept this exact ideation reset and may advance the
+    unchanged product-only candidate for fresh validation under the revised ACs.
+    Preserve historical receipt labels, record evaluator observations separately,
+    and run no new model pressure merely to manufacture closure.
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    The FO may account for this advisory and perform authorized state mechanics,
+    but may not install the gate verdict, weaken invariants, relabel evidence, run
+    pressure, alter scope or topology, advance without Gate Authority, push, create
+    or ready a PR, merge, release, or exercise captain or provider authority.
+  engineering_judgment:
+    question: >-
+      Should Gate Authority accept entity reset
+      43416c986880de150effb3ce988a09f9b06e2173 for candidate
+      c0b387b121f9919d5be3952d145187394bf9d59e?
+    revision: >-
+      State HEAD ec7f171a623239f41e47a11ea98f77a5145b321d; entity Git blob
+      43416c986880de150effb3ce988a09f9b06e2173; entity SHA-256
+      a4e81091401b88a828bf810c1562a7a0ccd7dc56dce03912c21e4d60fbad9f73;
+      base 64c496cdab7ccc59a15753e454f627a70383fb46; candidate
+      c0b387b121f9919d5be3952d145187394bf9d59e.
+    evidence_synthesis: >-
+      The complete dispatch, entity, decision draft, repository instructions,
+      workflow binding, and selected ideation mods were reviewed. The diff removes
+      pagination and live-pressure delivery authority while retaining behavioral
+      falsifiers for route correctness, policy size, improvement I/O, discovery
+      order, transaction safety, private identity, validation, downstream
+      promotion, automatic authority, product nonblocking, and empty-work stopping.
+    adjudications:
+      - finding: R1
+        disposition: supported
+        basis: >-
+          AC-1 retains correct item, stage, work-item-derived action, <=650 words,
+          zero implicit improvement I/O, no broad discovery, and no product-context
+          load that changes or precedes route resolution; AC-4 retains empty-work
+          stopping. Only kernel read shape and efficiency leave the gate.
+      - finding: R2
+        disposition: supported
+        basis: >-
+          AC-2 and AC-3 require deterministic behavior and transaction mutations
+          against actual traces and artifacts for bounds, ownership/CAS, atomic
+          writes, retry-stable private identity, validation, downstream placement,
+          no-auto-authority, and product nonblocking. Wording presence is rejected.
+      - finding: R3
+        disposition: supported
+        basis: >-
+          Pagination, calls, time, tokens, and exact-byte P2-P4 pressure have no
+          delivery authority while hard contracts are green. Missing evidence stays
+          UNKNOWN, and preserved FAIL/UNKNOWN receipts keep their labels and block
+          only when they demonstrate a retained hard failure.
+      - finding: R4
+        disposition: supported
+        basis: >-
+          The state diff is confined to AC-1 through AC-4 and Measurement. AC-5,
+          exact base/candidate, the focused product-only slice, and one ordinary
+          Draft PR topology remain unchanged.
+      - finding: R5
+        disposition: supported
+        basis: >-
+          Ideation owns scope, route, acceptance, falsifiers, and advisory judgment;
+          Gate Authority owns acceptance and advancement. This review performed no
+          product edit, model pressure, provider action, delivery action, or transition.
+    risk_tradeoff: >-
+      The reset prevents unsafe behavior from winning through fewer calls and
+      prevents evaluator variance from overriding product value. Deterministic
+      checks require maintained mutation sensitivity; evaluator evidence remains a
+      useful falsifier without becoming an implicit second delivery gate.
+    recommendation: >-
+      Proceed with the exact reset, keep every retained invariant fail-able,
+      preserve historical receipt status, and let fresh validation decide the hard
+      product and safety result for the unchanged candidate.
+    route: proceed
+    confidence: high
+    dissent: >-
+      Exact-byte P1 retains a pagination failure and exact-byte P2-P4 pressure is
+      incomplete. Under the approved boundary these remain honest evaluator
+      observations unless their evidence demonstrates a retained hard failure.
+    disproof_condition: >-
+      Return if a retained deterministic check cannot fail its named mutation; if
+      ordinary behavior selects the wrong route/action, performs implicit
+      improvement I/O or broad discovery, exceeds 650 words, or lets product
+      context alter or precede resolution; if explicit harvest loses atomicity,
+      privacy, validation, authority, or product nonblocking; if evaluator
+      observations acquire gate authority; or if AC-5, candidate, scope, or one-PR
+      topology changes.
+    authority_boundary: >-
+      Captain retains scope, AC changes, residual risk, spending, architecture,
+      irreversibility, and harvest scheduling. Gate Authority retains acceptance
+      and advancement; work-item and Spacedock owners retain state; validation
+      retains the evidence verdict; delivery retains push, Draft PR, readiness,
+      merge, release, and archive; provider owners retain model execution and
+      posting. This advisory grants none of those actions.
+```
+
+## Stage Report: ideation (cycle 4)
+
+- DONE: Rewrite AC-1 through AC-4 so retained product and safety outcomes remain hard while pagination, efficiency, and exact-byte P2-P4 pressure are evaluator-only.
+  AC-1 keeps correct item/stage/action, the <=650-word bound, zero implicit improvement I/O, no broad discovery, and route-resolution ordering. AC-2/AC-3 keep fail-able transaction, identity, validation, authority, and product-nonblocking contracts. AC-4 keeps the empty-work scheduling stop.
+- DONE: Keep deterministic evidence behavioral and honest without changing product identity, AC-5, or delivery topology.
+  Checks must observe traces/artifacts and fail named mutations rather than match wording. Preserved model receipts keep their recorded FAIL/UNKNOWN labels and block only for retained hard failures. Base `64c496cdab7ccc59a15753e454f627a70383fb46`, candidate `c0b387b121f9919d5be3952d145187394bf9d59e`, AC-5, and one ordinary Draft PR remain unchanged.
+- DONE: Obtain exactly one fresh-context EM advisory and record the reset boundary without product edits or installed-skill pressure.
+  The sole GPT-5.6 Sol High EM reviewed blob `43416c986880de150effb3ce988a09f9b06e2173`, returned `proceed/high/not_needed`, and supported R1-R5. No optional reviewer, model pressure, product edit, provider post, delivery action, or transition occurred.
+
+### Bound-field and AC evidence
+
+`bound_field_validation` returned `PASS` for entity SHA-256 `a4e81091401b88a828bf810c1562a7a0ccd7dc56dce03912c21e4d60fbad9f73`; `spacedock status --read product-first-continuation --ac-scan` found AC-1 through AC-5 with `unevidenced=false`.
+
+### Disproof and authority boundary
+
+The reset is disproved by any retained deterministic contract that cannot fail its named behavior mutation, any retained hard product/safety breach, evaluator evidence acquiring independent delivery-gate authority, or drift in AC-5, exact base/candidate, scope, or one-PR topology. Captain, Gate Authority, work-item, Spacedock, validation, delivery, and provider owners retain their existing authorities; this ideation report grants no stage advance, model run, push, PR, readiness, merge, or release authority.
+
+### Summary
+
+Cycle 4 enacts the Captain-approved Recommended acceptance reset: product and safety outcomes remain hard and falsifiable, while pagination, efficiency, and exact-byte P2-P4 pressure are evaluator-only observations. The fresh EM recommends `proceed`; Gate Authority retains the verdict and transition.
