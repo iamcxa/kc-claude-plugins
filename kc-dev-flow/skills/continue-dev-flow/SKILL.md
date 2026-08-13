@@ -30,7 +30,7 @@ execution; a stop-before-action invocation does not read it.
 
 ## Advance the work
 
-1. Read iteration authority first. If it declares no committed item, report
+1. Read iteration authority first. If it declares no active or committed item, report
    scheduling immediately; do not inspect work-item or execution state.
    Otherwise request the active item and read its exact bound entity path; never
    discover it with `rg --files`, `find`, `ls`, or a tree walk. If none is active,
