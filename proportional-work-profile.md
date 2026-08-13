@@ -1,14 +1,14 @@
 ---
 id: 4wkne0vvpgsy2japzr08xqtx
 title: "kc-dev-flow: choose a proportional work profile before AC expansion"
-status: ideation
+status: implementation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint:
 started: 2026-08-13T03:14:12Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-proportional-work-profile
 issue:
 pr:
 mod-block:
