@@ -1,11 +1,11 @@
 ---
 id: 4wkne0vvpgsy2japzr08xqtx
 title: "kc-dev-flow: choose a proportional work profile before AC expansion"
-status: backlog
+status: ideation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint:
-started:
+started: 2026-08-13T03:14:12Z
 completed:
 verdict:
 worktree:
