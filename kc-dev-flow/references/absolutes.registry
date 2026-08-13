@@ -97,3 +97,4 @@ d3ada9725daf9588	prohibition	improvement-harvesting.md:83 — occurrence retenti
 0c259224031d3dcc	prohibition	improvement-harvesting.md:119 — same-namespace merge, bounds, atomic handoff, sanitization, and no-source-work duties on the harvesting actor
 6ed5c3161d1374f6	prohibition	improvement-harvesting.md:135 — only limits batch merging to the named bounded same-namespace case
 07eede3b0ed79931	enforced	improvement-harvesting.md:139 — validator bounds are enforced by improvement-intake.py and improvement-intake.test.py
+69fe5e1f53985cd2	prohibition	kernel.md:53 — receipt ordering, authorized mutation, non-retroactivity, and defect-route preservation are duties on ideation and execution-state actors
