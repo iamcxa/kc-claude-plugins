@@ -41,7 +41,8 @@ runtime has its own deep-dive entry below this catalog.
   existing repository's tracker, sprint model, workflow runtime, and delivery
   provider, then continues approved sprint work without unnecessary captain
   pauses. Serves teams that need one lean workflow across Claude Code and Codex
-  without duplicating repository truth.
+  without duplicating repository truth. Ordinary continuation routes committed product work before optional improvement harvesting;
+  harvesting runs only when explicitly requested and grants no product authority.
 
 ## kc-pr-flow: Agent-native PR review
 

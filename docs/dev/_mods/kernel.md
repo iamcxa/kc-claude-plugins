@@ -288,7 +288,10 @@ shared state. Implementation completion and fresh validation remain separate cla
 
 ## Self-improvement
 
-`continue-dev-flow` coordinates bounded self-improvement before routing product work:
+`continue-dev-flow` resolves the committed product route before optional self-improvement.
+Do not inspect `_debriefs/` or `_improvements/` on an ordinary continuation. Only
+when the current invocation explicitly requests improvement harvesting, apply this
+bounded procedure after resolving the product route:
 
 1. Resolve the authoritative debrief home through the repository's execution-state
    authority and read `_improvements/state.yaml` when present.
@@ -306,7 +309,7 @@ shared state. Implementation completion and fresh validation remain separate cla
    verify its locator is unchanged, then re-read and compare the live cursor. A
    home or cursor mismatch aborts the write and recomputes from live authority.
    Without atomic comparison or exclusive ownership, report `UNKNOWN` instead of
-   writing.
+   writing and continue the already-resolved product route.
 
 Repository-local candidates route to the adopter's work-item authority. Reusable
 kernel candidates become a reviewable handoff to the installed dev-flow source
@@ -316,7 +319,8 @@ The coordination record is derived state, not work-item authority. Detection nev
 creates a task, grants sprint membership, merges a change, or pauses product work.
 Only the captain may admit a candidate to work-item or iteration authority. Adopt or
 refit owns installation and updates; `continue-dev-flow` reads the vendored policy
-and never silently rewrites it.
+and never silently rewrites it. Improvement-state failure never blocks the
+already-resolved product route.
 
 Optional controls are independently declared through the Work Control Profile.
 Undeclared capabilities remain off; adopters add only the control whose risk

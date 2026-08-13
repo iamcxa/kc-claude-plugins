@@ -30,7 +30,8 @@ e64c1752d3250f60	prohibition	kernel.md:224 — duty on whoever offers the check 
 1a4f588dd1f3fb24	prohibition	kernel.md:256 — duty on the fresh reviewer, who is the named owner of the decision
 99628c13b2858948	prohibition	kernel.md:278 — handoff duty on the actor transferring or resuming execution state
 05f1724a9f48029d	prohibition	kernel.md:289 — bounds the continuing actor to a transparent three-record window and records superseded inputs
-c57b0f71c51a17b2	prohibition	kernel.md:309 — forbids self-improvement detection from exercising work, sprint, merge, or pause authority
+d87cfb22d608b5da	prohibition	kernel.md:291 — forbids improvement-state inspection on ordinary continuation and gates harvesting on explicit invocation intent
+9942398842ab472b	prohibition	kernel.md:318 — forbids self-improvement detection from exercising work, sprint, merge, or pause authority and keeps failure non-blocking
 f8817bbe79459c71	prohibition	kernel.md:315 — duty on the adopter; undeclared-off is the declared default
 c00b34c04fb0129b	prohibition	kernel.md:69 — destination and revision duties assigned to the agent, captain, and work-item authority
 e7ad37f84d560a85	prohibition	kernel.md:88 — pre-execution route-change duties assigned to the agent, declared control, fresh reviewer, and captain
@@ -85,3 +86,14 @@ aa2f7dbcf78c15d8	prohibition	journey-slicing.md:30 — "every part of the journe
 661b527bf32021c7	prohibition	journey-slicing.md:34 — "every fake, stub, hardcode" is an enumeration duty on the skeleton's author; an omitted entry is an unassigned scope, not a false sentence
 60a0cc22d9657eee	bounded	journey-slicing.md:43 — inherited verbatim except "will pass" → "can pass": no mechanism makes a layered carve certain to clear review, and the block's force is the duty to name the sibling
 1be490fae159cacf	enforced	journey-slicing.md:62 — the mechanism is the table directly below it; each check is a count or a textual match on an item body, with no model in the path
+9518d55676bc4b47	prohibition	improvement-harvesting.md:3 — trigger and ordering duties on continue-dev-flow; the ordinary-path contract test names the activation guard
+e8a8486639f9a748	bounded	improvement-harvesting.md:18 — none is a schema value for the cursor fields, not a claim about repository state
+ec4536bdf29cc007	prohibition	improvement-harvesting.md:28 — bounded-scan and one-candidate duties on the harvesting actor
+546851a38853fb92	prohibition	improvement-harvesting.md:41 — atomicity, CAS, and non-blocking UNKNOWN duties on the execution-state actor
+c44173a284d811ed	bounded	improvement-harvesting.md:60 — exact describes the closed handoff shape enforced by improvement-intake.py and its tests
+d3ada9725daf9588	prohibition	improvement-harvesting.md:83 — occurrence retention plus private-identity generation and non-disclosure duties on the harvesting actor
+3f47d78968034c33	prohibition	improvement-harvesting.md:97 — namespace derivation and non-disclosure duties enforced at source intake by improvement-intake.py
+491eceb7eedafaf9	prohibition	improvement-harvesting.md:101 — observation-ID construction and one-namespace duties enforced at source intake by improvement-intake.py
+0c259224031d3dcc	prohibition	improvement-harvesting.md:119 — same-namespace merge, bounds, atomic handoff, sanitization, and no-source-work duties on the harvesting actor
+6ed5c3161d1374f6	prohibition	improvement-harvesting.md:135 — only limits batch merging to the named bounded same-namespace case
+07eede3b0ed79931	enforced	improvement-harvesting.md:139 — validator bounds are enforced by improvement-intake.py and improvement-intake.test.py
