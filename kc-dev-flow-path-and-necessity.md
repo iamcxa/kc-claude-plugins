@@ -2,7 +2,7 @@
 title: "kc-dev-flow: correct mod adoption path and enforce mechanism necessity"
 source: "Captain directive `修 bug + 183`, GitHub issue #183, 2026-08-10"
 product: kc-dev-flow
-sprint: captain-directed
+sprint: S2
 design: required
 id: 9f63nm17bntn0ts7k9b1nm9c
 status: validation
