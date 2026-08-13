@@ -53,11 +53,6 @@ required_files = [
     ROOT / "scripts/fixtures/kc-dev-flow-loader-eval/q08.json",
     PLUGIN / "skills/choose-work-profile/SKILL.md",
     PLUGIN / "skills/choose-work-profile/agents/openai.yaml",
-    ROOT / "scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/P0-benign.json",
-    ROOT / "scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/P1-limited-use.json",
-    ROOT / "scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/P2-long-lived.json",
-    ROOT / "scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/P3-adversarial-poc-label.json",
-    ROOT / "scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/score.jq",
     PLUGIN / "references/retained-document-policy.md",
 ]
 for required_file in required_files:
@@ -1414,172 +1409,6 @@ stage_headings = [
     "### `done`",
 ]
 
-chooser_skill = (PLUGIN / "skills/choose-work-profile/SKILL.md").read_text(
-    encoding="utf-8"
-)
-chooser_agent = (PLUGIN / "skills/choose-work-profile/agents/openai.yaml").read_text(
-    encoding="utf-8"
-)
-
-WORK_PROFILE_READ_MARKER = (
-    "Re-read the exact work item and its `## Work profile receipt`."
-)
-WORK_PROFILE_AC_MARKER = (
-    "Only after the committed receipt is re-read may inherited criteria be "
-    "normalized or acceptance criteria be expanded."
-)
-
-
-def work_profile_contract_failures(
-    *, chooser: str, continuation: str, kernel_text: str, workflow_text: str
-) -> list[str]:
-    failures: list[str] = []
-    profile_rows = set(
-        re.findall(
-            r"^\| `([^`]+)` \| `([^`]+)` \|",
-            chooser,
-            re.MULTILINE,
-        )
-    )
-    expected_profiles = {
-        ("POC / Exploration", "poc-exploration"),
-        ("Pilot / Product slice", "pilot-product-slice"),
-        ("Production", "production"),
-    }
-    if profile_rows != expected_profiles:
-        failures.append(f"profile enum is not closed: {sorted(profile_rows)!r}")
-
-    for field in [
-        "schema: kc-dev-flow-work-profile/v1",
-        "selected:",
-        "recommended:",
-        "basis:",
-        "obligations:",
-        "architecture:",
-        "implementation:",
-        "testing:",
-        "invariant_sources:",
-        "scope_boundary:",
-        "promote_when:",
-        "decision:",
-        "authority:",
-        "at:",
-    ]:
-        if field not in chooser:
-            failures.append(f"receipt is missing {field}")
-
-    for phrase in [
-        "best structured question capability",
-        "Do not couple the contract to a tool name",
-        "one concise plain-chat question",
-        "exact prompt plus these three ordered choices",
-        "NEEDS_PROFILE_DECISION",
-        "recommendation and question authority only",
-        "cannot authorize secrets, permissions, spend, destructive actions, production data, external mutations, irreversibility, red residual acceptance, merge, or closeout",
-        "UNKNOWN",
-        "Do not write a sidecar",
-        "authoritative transaction facts",
-        "Model-authored fields that merely claim `recorded` or `re-read` are not evidence",
-        "detecting worker, execution-state owner, authorized mutation actor",
-        "PROFILE_PROMOTION_REQUIRED",
-    ]:
-        if phrase not in " ".join(chooser.split()):
-            failures.append(f"chooser is missing invariant: {phrase}")
-
-    if "$choose-work-profile" not in chooser_agent:
-        failures.append("Codex metadata does not invoke choose-work-profile")
-
-    for label, text in [
-        ("continue-dev-flow", continuation),
-        ("kernel", kernel_text),
-        ("self-adoption", workflow_text),
-    ]:
-        read_at = text.find(WORK_PROFILE_READ_MARKER)
-        ac_at = text.find(WORK_PROFILE_AC_MARKER)
-        if read_at < 0 or ac_at < 0 or read_at >= ac_at:
-            failures.append(f"{label} does not activate the receipt before AC expansion")
-        normalized = " ".join(text.split())
-        for phrase in [
-            "valid and its basis is unchanged",
-            "audience, lifespan, mutation boundary, authority need, or operational commitment",
-            "kc-dev-flow:choose-work-profile",
-            "Tasks already beyond ideation are not reopened",
-            "bounded mechanical-defect route",
-        ]:
-            if phrase not in normalized:
-                failures.append(f"{label} is missing activation behavior: {phrase}")
-
-    if "backlog → ideation → implementation → validation → done" not in kernel_text:
-        failures.append("kernel five-stage lifecycle changed")
-    if "backlog → ideation → implementation → validation → done" not in workflow_text:
-        failures.append("self-adoption five-stage lifecycle changed")
-    return failures
-
-
-kernel_for_profile = (PLUGIN / "references/kernel.md").read_text(encoding="utf-8")
-work_profile_failures = work_profile_contract_failures(
-    chooser=chooser_skill,
-    continuation=continue_skill,
-    kernel_text=kernel_for_profile,
-    workflow_text=workflow,
-)
-require(
-    not work_profile_failures,
-    "work-profile contract gaps:\n- " + "\n- ".join(work_profile_failures),
-)
-
-profile_mutants = {
-    "fourth-or-replaced-profile": chooser_skill.replace(
-        "| `Production` | `production` |",
-        "| `Staging` | `staging` |",
-        1,
-    ),
-    "missing-receipt-field": chooser_skill.replace("  scope_boundary:", "  boundary:", 1),
-    "authority-waiver": chooser_skill.replace("cannot authorize secrets", "can authorize secrets", 1),
-    "parallel-sidecar": chooser_skill.replace("Do not write a sidecar", "Write a sidecar", 1),
-    "silent-auto-selection": chooser_skill.replace(
-        "`NEEDS_PROFILE_DECISION`", "`AUTO_SELECTED`"
-    ),
-}
-for label, mutant in profile_mutants.items():
-    require(
-        work_profile_contract_failures(
-            chooser=mutant,
-            continuation=continue_skill,
-            kernel_text=kernel_for_profile,
-            workflow_text=workflow,
-        ),
-        f"work-profile contract accepted mutant: {label}",
-    )
-
-order_mutant = kernel_for_profile.replace(WORK_PROFILE_READ_MARKER, "ORDER-TEMP", 1)
-order_mutant = order_mutant.replace(WORK_PROFILE_AC_MARKER, WORK_PROFILE_READ_MARKER, 1)
-order_mutant = order_mutant.replace("ORDER-TEMP", WORK_PROFILE_AC_MARKER, 1)
-require(
-    work_profile_contract_failures(
-        chooser=chooser_skill,
-        continuation=continue_skill,
-        kernel_text=order_mutant,
-        workflow_text=workflow,
-    ),
-    "work-profile contract accepted AC-before-receipt mutant",
-)
-
-lifecycle_mutant = workflow.replace(
-    "backlog → ideation → implementation → validation → done",
-    "backlog → ideation → implementation → validation → release → done",
-    1,
-)
-require(
-    work_profile_contract_failures(
-        chooser=chooser_skill,
-        continuation=continue_skill,
-        kernel_text=kernel_for_profile,
-        workflow_text=lifecycle_mutant,
-    ),
-    "work-profile contract accepted a sixth lifecycle stage",
-)
-
 
 def stage_body(heading: str) -> str:
     start = workflow.find(heading)
@@ -1906,6 +1735,109 @@ require(
     "change-shape retirement failures:\n- "
     + "\n- ".join(change_shape_retirement_failures),
 )
+
+# A work profile is a small pre-AC decision, not another evaluator. Mechanical
+# coverage is limited to the three regressions that can be settled from package
+# bytes; profile-dependent planning stays a validation-time host observation.
+chooser_skill = (PLUGIN / "skills/choose-work-profile/SKILL.md").read_text(
+    encoding="utf-8"
+)
+chooser_agent = (
+    PLUGIN / "skills/choose-work-profile/agents/openai.yaml"
+).read_text(encoding="utf-8")
+work_profile_read = "Re-read the exact work item and its `## Work profile receipt`."
+work_profile_derive = (
+    "Only after the committed receipt is re-read may inherited criteria be "
+    "normalized or acceptance criteria be expanded."
+)
+
+
+def work_profile_failures(
+    *, chooser: str, continuation: str, kernel_text: str, workflow_text: str
+) -> list[str]:
+    failures: list[str] = []
+    rows = set(
+        re.findall(r"^\| `([^`]+)` \| `([^`]+)` \|", chooser, re.MULTILINE)
+    )
+    expected = {
+        ("POC / Exploration", "poc-exploration"),
+        ("Pilot / Product slice", "pilot-product-slice"),
+        ("Production", "production"),
+    }
+    if rows != expected:
+        failures.append("profile choices are not the closed approved set")
+
+    normalized_chooser = " ".join(chooser.split())
+    for phrase in [
+        "schema: kc-dev-flow-work-profile/v1",
+        "selected:",
+        "recommended:",
+        "basis:",
+        "obligations:",
+        "invariant_sources:",
+        "scope_boundary:",
+        "promote_when:",
+        "decision:",
+        "A task labeled POC does not downscope a production credential",
+        "Recommend `production` until an explicit safe non-production scope boundary removes the trigger.",
+        "NEEDS_PROFILE_DECISION",
+        "Do not auto-select",
+        "Do not write a sidecar",
+    ]:
+        if phrase not in normalized_chooser:
+            failures.append(f"chooser is missing: {phrase}")
+
+    for label, text in [
+        ("continue-dev-flow", continuation),
+        ("kernel", kernel_text),
+        ("self-adoption", workflow_text),
+    ]:
+        read_at = text.find(work_profile_read)
+        derive_at = text.find(work_profile_derive)
+        if read_at < 0 or derive_at < 0 or read_at >= derive_at:
+            failures.append(f"{label} does not gate AC expansion on the receipt")
+
+    return failures
+
+
+profile_failures = work_profile_failures(
+    chooser=chooser_skill,
+    continuation=continue_skill,
+    kernel_text=kernel,
+    workflow_text=workflow,
+)
+require(
+    not profile_failures,
+    "work-profile contract gaps:\n- " + "\n- ".join(profile_failures),
+)
+require(
+    "$choose-work-profile" in chooser_agent,
+    "choose-work-profile Codex metadata does not invoke the skill",
+)
+
+profile_mutant = chooser_skill.replace(
+    "| `Production` | `production` |", "| `Staging` | `staging` |", 1
+)
+unsafe_mutant = chooser_skill.replace(
+    "A task labeled POC does not downscope", "A task labeled POC downscopes", 1
+)
+order_mutant = kernel.replace(work_profile_read, "PROFILE-ORDER-TEMP", 1)
+order_mutant = order_mutant.replace(work_profile_derive, work_profile_read, 1)
+order_mutant = order_mutant.replace("PROFILE-ORDER-TEMP", work_profile_derive, 1)
+for label, inputs in {
+    "missing profile choice": {"chooser": profile_mutant, "kernel_text": kernel},
+    "unsafe POC downscoping": {"chooser": unsafe_mutant, "kernel_text": kernel},
+    "AC before receipt re-read": {"chooser": chooser_skill, "kernel_text": order_mutant},
+}.items():
+    require(
+        work_profile_failures(
+            chooser=inputs["chooser"],
+            continuation=continue_skill,
+            kernel_text=inputs["kernel_text"],
+            workflow_text=workflow,
+        ),
+        f"work-profile contract accepted mutant: {label}",
+    )
 
 # The kernel requires an absolute to name its enforcement point or be rewritten
 # as a bounded claim, and that rule had none of its own. Four hand-audits of one

@@ -56,12 +56,12 @@ its basis is unchanged, consume it without another question. If it is missing,
 or the audience, lifespan, mutation boundary, authority need, or operational
 commitment changed, invoke `kc-dev-flow:choose-work-profile`. The chooser has
 recommendation and question authority; the actor already authorized by the Local
-Profile and dispatch compares the exact entity, records the decision through the
-safe work-item mutation path, syncs it, and re-reads the committed receipt.
+Profile and dispatch records the decision through the existing safe work-item
+mutation path, syncs it, and re-reads the committed receipt.
 Only after the committed receipt is re-read may inherited criteria be normalized or acceptance criteria be expanded.
 Tasks already beyond ideation are not reopened without an observed promotion
-trigger. The bounded mechanical-defect route that
-validly skips ideation does not acquire this gate.
+trigger. The bounded mechanical-defect route that validly skips ideation does
+not acquire this gate.
 
 At ideation entry, inherited backlog criteria are hypotheses, not accepted
 outcome constraints. The ideation actor classifies each as value, governing
