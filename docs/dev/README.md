@@ -174,10 +174,28 @@ python3 scripts/kc-dev-flow-loader-eval.py \
 That mode snapshots the ideation stage and conditional chooser, copies four
 frozen fixtures and `score.jq`, and writes a sixteen-slot manifest: no retry,
 four-way maximum concurrency, model stop at minute 15, and the same-clock
-20-minute ceiling. It performs no model call. Validation supplies each recorded
-response and runs the copied expression as
-`jq -c -f score.jq <fixture-result-input.json>`; missing output remains
-`UNKNOWN`, never a clean or zero-cost sample.
+20-minute ceiling. It performs no model call. The manifest binds each host to an
+explicit model and invocation profile that suppresses auxiliary work where the
+installed host supports it. Validation counts provider-native model responses,
+not CLI invocations: auxiliary, subagent, or router responses consume the same
+16-response budget, and missing provider-native usage is `UNKNOWN`.
+
+Candidate derived prompts are templates. Before a preselected or post-answer
+turn, the validation driver binds the frozen fixture to an exact existing
+work-item path and has the authorized actor compare, write, path-scope commit,
+sync, and re-read the receipt. It replaces the transaction marker with the
+authoritative actor's path/revision/digest/receipt evidence. Question turns
+record the exact three-choice payload and actual structured or plain-chat
+surface. A model's own mutation claim is non-evidence; an unavailable host or
+transaction fact stays `UNKNOWN`.
+
+Validation supplies each recorded result plus its separate observation and runs
+the copied expression as `jq -c -f score.jq <score-input.json>`. The same scorer
+checks closed sample results, positive paired benign-POC burden, and the complete
+provider-native response ledger. The mandatory fresh validation EM runs exactly
+once after the sample runner as a workflow-gate judgment. It is outside the 16
+sample responses and comparative metrics and does not authorize optional
+cross-model review.
 
 A negative result carries the kernel's positive-claim bar. Sampled text matches
 do not prove a population; a check offered as evidence must name what change

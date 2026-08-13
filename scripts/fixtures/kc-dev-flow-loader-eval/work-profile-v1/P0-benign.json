@@ -13,5 +13,17 @@
   "required_authority_stop_ids": [],
   "required_promotion_ids": [],
   "forbidden_selection": null,
-  "existing_surface_ids": ["shell-script", "input-file"]
+  "existing_surface_ids": ["shell-script", "input-file"],
+  "acceptance_criteria_limit": 4,
+  "receipt_obligations": {
+    "architecture": ["thin-real-journey", "cleanup"],
+    "implementation": ["critical-risk"],
+    "testing": ["owned-logic", "critical-risk", "real-e2e"]
+  },
+  "work_item_path": "docs/dev/.spacedock-state/eval-P0-benign.md",
+  "work_item_identity": "P0-benign",
+  "authorized_mutation_actor": "dispatched-ideation-worker",
+  "authority_source": "local-profile",
+  "detecting_worker": null,
+  "execution_state_owner": null
 }

@@ -67,6 +67,14 @@ WORK_PROFILE_FIXTURE_FIELDS = {
     "required_promotion_ids",
     "forbidden_selection",
     "existing_surface_ids",
+    "acceptance_criteria_limit",
+    "receipt_obligations",
+    "work_item_path",
+    "work_item_identity",
+    "authorized_mutation_actor",
+    "authority_source",
+    "detecting_worker",
+    "execution_state_owner",
 }
 WORK_PROFILE_LIST_FIELDS = {
     "required_obligation_ids",
@@ -147,6 +155,64 @@ WORK_PROFILE_RESULT_IDS = {
     ),
     "promotion_ids": ["production-mutation"],
 }
+WORK_PROFILE_HOSTS = {
+    "claude": {
+        "provider": "anthropic",
+        "model": "claude-fable-5",
+        "command": [
+            "claude",
+            "--print",
+            "--model",
+            "claude-fable-5",
+            "--output-format",
+            "json",
+            "--no-session-persistence",
+            "--safe-mode",
+            "--disable-slash-commands",
+            "--prompt-suggestions",
+            "false",
+            "--tools",
+            "",
+            "--strict-mcp-config",
+            "--mcp-config",
+            '{"mcpServers":{}}',
+        ],
+        "environment": {"CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"},
+        "provider_usage_source": (
+            "json modelUsage keys; every reported model consumes at least one "
+            "provider response"
+        ),
+        "auxiliary_policy": "suppress-when-supported-otherwise-count",
+    },
+    "codex": {
+        "provider": "openai",
+        "model": "gpt-5.6-terra",
+        "command": [
+            "codex",
+            "exec",
+            "--model",
+            "gpt-5.6-terra",
+            "--sandbox",
+            "read-only",
+            "--ephemeral",
+            "--ignore-user-config",
+            "--disable",
+            "multi_agent",
+            "--disable",
+            "multi_agent_v2",
+            "--disable",
+            "apps",
+            "--json",
+            "-",
+        ],
+        "environment": {},
+        "provider_usage_source": (
+            "json thread.started plus turn.completed native usage; each completed "
+            "turn consumes one response from the explicitly requested model"
+        ),
+        "auxiliary_policy": "suppress-when-supported-otherwise-count",
+    },
+}
 
 
 class CaptureError(RuntimeError):
@@ -213,6 +279,19 @@ def load_work_profile_fixture(
         value = document[field]
         if not isinstance(value, str) or not value.strip():
             raise CaptureError(f"work-profile fixture field is empty: {field}")
+    for field in [
+        "work_item_path",
+        "work_item_identity",
+        "authorized_mutation_actor",
+        "authority_source",
+    ]:
+        value = document[field]
+        if not isinstance(value, str) or not value.strip():
+            raise CaptureError(f"work-profile fixture field is empty: {field}")
+    if not isinstance(document["acceptance_criteria_limit"], int) or not (
+        1 <= document["acceptance_criteria_limit"] <= 12
+    ):
+        raise CaptureError("work-profile fixture has invalid acceptance_criteria_limit")
     for field in ["expected_recommendation", "captain_selection"]:
         if document[field] not in WORK_PROFILE_VALUES:
             raise CaptureError(f"work-profile fixture has invalid {field}")
@@ -229,6 +308,38 @@ def load_work_profile_fixture(
             or len(values) != len(set(values))
         ):
             raise CaptureError(f"work-profile fixture has invalid {field}")
+    receipt_obligations = document["receipt_obligations"]
+    if not isinstance(receipt_obligations, dict) or set(receipt_obligations) != {
+        "architecture",
+        "implementation",
+        "testing",
+    }:
+        raise CaptureError("work-profile fixture has invalid receipt_obligations")
+    for field, values in receipt_obligations.items():
+        if (
+            not isinstance(values, list)
+            or not values
+            or any(not isinstance(value, str) or not value for value in values)
+            or len(values) != len(set(values))
+        ):
+            raise CaptureError(
+                f"work-profile fixture has invalid receipt_obligations.{field}"
+            )
+    receipt_obligation_ids = set(receipt_obligations["architecture"]) | set(
+        receipt_obligations["implementation"]
+    )
+    if receipt_obligation_ids != set(document["required_obligation_ids"]):
+        raise CaptureError("receipt obligation IDs differ from the required obligations")
+    if set(receipt_obligations["testing"]) != set(document["required_test_ids"]):
+        raise CaptureError("receipt testing IDs differ from the required tests")
+    promotion_identity_fields = ["detecting_worker", "execution_state_owner"]
+    if document["required_promotion_ids"]:
+        for field in promotion_identity_fields:
+            value = document[field]
+            if not isinstance(value, str) or not value.strip():
+                raise CaptureError(f"promotion fixture field is empty: {field}")
+    elif any(document[field] is not None for field in promotion_identity_fields):
+        raise CaptureError("non-promotion fixture declares promotion topology")
     if set(document["required_obligation_ids"]) & set(
         document["forbidden_obligation_ids"]
     ):
@@ -394,22 +505,192 @@ def work_profile_result_contract() -> str:
     identifier_contract = json.dumps(WORK_PROFILE_RESULT_IDS, sort_keys=True)
     return (
         "Return one JSON object and no prose. The object has exactly these keys: "
-        "recommendation, selection, question_surface, receipt, receipt_status, "
+        "recommendation, selection, question_surface, question, receipt, receipt_status, "
         "obligation_ids, surface_ids, test_ids, authority_stop_ids, promotion_ids, "
         "acceptance_criteria, final_status. recommendation is one of "
         "poc-exploration, pilot-product-slice, production. selection is one of "
         "those values or null while awaiting a Captain answer. question_surface is "
-        "structured, plain-chat, preselected, or none. receipt is null only while "
-        "final_status is NEEDS_PROFILE_DECISION; otherwise it has exactly schema, "
+        "structured, plain-chat, preselected, or none. question is null for a "
+        "preselected run; otherwise it is the actual question payload with exactly "
+        "prompt, options, and recommendation. options contains exactly the three "
+        "ordered label, value, consequence choices POC / Exploration, Pilot / Product "
+        "slice, and Production. receipt is null while final_status is "
+        "NEEDS_PROFILE_DECISION or UNKNOWN; otherwise it has exactly schema, "
         "selected, recommended, basis, obligations, invariant_sources, "
         "scope_boundary, promote_when, decision. obligations has exactly "
         "architecture, implementation, testing; decision has exactly authority and "
-        "at. receipt_status is missing, stale, recorded-re-read, or unavailable. "
+        "at. receipt_status is missing, stale, observed-committed-reread, or unavailable. "
         "final_status is NEEDS_PROFILE_DECISION, UNKNOWN, PROFILE_PROMOTION_REQUIRED, "
         "or derived. Each ID array may use only identifiers in this closed registry: "
         f"{identifier_contract}. acceptance_criteria is an array whose entries have "
-        "exactly id and obligation_ids. Do not mutate anything."
+        "exactly id, obligation_ids, and test_ids. A derived result is valid only from "
+        "the authoritative transaction observation supplied by the harness; never "
+        "self-attest a write or re-read. Carry the actual question payload exactly. "
+        "Do not mutate anything."
     )
+
+
+def work_profile_fixture_receipt(fixture: dict[str, object]) -> dict[str, object]:
+    """Build the frozen selected receipt that the authorized actor must commit."""
+    promotion_triggers = (
+        ["the stale production-mutation premise is accepted into ideation"]
+        if fixture["required_promotion_ids"]
+        else ["the frozen audience, lifespan, mutation, authority, or operation basis changes"]
+    )
+    return {
+        "schema": "kc-dev-flow-work-profile/v1",
+        "selected": fixture["captain_selection"],
+        "recommended": fixture["expected_recommendation"],
+        "basis": fixture["scenario"],
+        "obligations": fixture["receipt_obligations"],
+        "invariant_sources": [fixture["authority_source"], "kc-dev-flow:kernel"],
+        "scope_boundary": (
+            "Only the frozen declared obligations, tests, surfaces, and invariant "
+            "stops are accepted in this evaluation work item."
+        ),
+        "promote_when": promotion_triggers,
+        "decision": {
+            "authority": "frozen-captain-selection",
+            "at": "2026-08-13T00:00:00Z",
+        },
+    }
+
+
+def observe_work_profile_transaction(
+    *,
+    repo: Path,
+    fixture: dict[str, object],
+    receipt: dict[str, object],
+) -> dict[str, object]:
+    """Exercise one authorized path-scoped Git transaction and return observed facts."""
+    repo = repository_root(Path(repo))
+    relative_path = Path(str(fixture["work_item_path"]))
+    if relative_path.is_absolute() or ".." in relative_path.parts:
+        raise CaptureError("work-profile transaction path is not repository-relative")
+    work_item = (repo / relative_path).resolve()
+    if not work_item.is_relative_to(repo):
+        raise CaptureError("work-profile transaction path escapes the repository")
+    try:
+        original = work_item.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise CaptureError(f"cannot read bound work item: {exc}") from exc
+    identity = re.search(r'^id:\s*["\']?([^"\'\n]+)["\']?\s*$', original, re.MULTILINE)
+    if identity is None or identity.group(1) != fixture["work_item_identity"]:
+        raise CaptureError("bound work-item identity does not match the fixture")
+    target_status = command_output(
+        ["git", "status", "--porcelain=v1", "--", relative_path.as_posix()],
+        cwd=repo,
+        label="inspect bound work-item status",
+    )
+    if target_status.strip():
+        raise CaptureError("bound work item is not clean before transaction")
+    command_output(
+        ["git", "ls-files", "--error-unmatch", "--", relative_path.as_posix()],
+        cwd=repo,
+        label="bind tracked work-item path",
+    )
+    pre_write_revision = resolve_commit(repo, "HEAD")
+    receipt_block = (
+        "## Work profile receipt\n\n```json\n"
+        + json.dumps(receipt, indent=2, sort_keys=True)
+        + "\n```\n"
+    )
+    section = re.compile(r"(?ms)^## Work profile receipt\n.*?(?=^## |\Z)")
+    updated, replacement_count = section.subn(receipt_block, original, count=1)
+    if replacement_count != 1:
+        raise CaptureError("bound work item has no unique work-profile receipt section")
+    work_item.write_text(updated, encoding="utf-8")
+    command_output(
+        ["git", "add", "--", relative_path.as_posix()],
+        cwd=repo,
+        label="stage bound work-item receipt",
+    )
+    staged_paths = command_output(
+        ["git", "diff", "--cached", "--name-only"],
+        cwd=repo,
+        label="inspect staged transaction paths",
+    ).decode("utf-8").splitlines()
+    if staged_paths != [relative_path.as_posix()]:
+        raise CaptureError(
+            f"work-profile transaction staged paths are not closed: {staged_paths!r}"
+        )
+    command_output(
+        [
+            "git",
+            "commit",
+            "-m",
+            f"test(kc-dev-flow): record {fixture['id']} work profile",
+            "--",
+            relative_path.as_posix(),
+        ],
+        cwd=repo,
+        label="commit bound work-item receipt",
+    )
+    committed_revision = resolve_commit(repo, "HEAD")
+    changed_paths = command_output(
+        [
+            "git",
+            "diff-tree",
+            "--no-commit-id",
+            "--name-only",
+            "-r",
+            committed_revision,
+        ],
+        cwd=repo,
+        label="inspect committed transaction paths",
+    ).decode("utf-8").splitlines()
+    if changed_paths != [relative_path.as_posix()]:
+        raise CaptureError(
+            f"work-profile transaction committed paths are not closed: {changed_paths!r}"
+        )
+    branch = command_output(
+        ["git", "branch", "--show-current"], cwd=repo, label="resolve transaction branch"
+    ).decode("utf-8").strip()
+    if not branch:
+        raise CaptureError("work-profile transaction branch is detached")
+    command_output(
+        ["git", "push", "origin", f"HEAD:refs/heads/{branch}"],
+        cwd=repo,
+        label="sync bound work-item transaction",
+    )
+    remote_revision = command_output(
+        ["git", "ls-remote", "--heads", "origin", f"refs/heads/{branch}"],
+        cwd=repo,
+        label="re-read synced transaction revision",
+    ).decode("utf-8").split()
+    if not remote_revision or remote_revision[0] != committed_revision:
+        raise CaptureError("synced work-item revision does not match the commit")
+    reread = command_output(
+        ["git", "show", f"{committed_revision}:{relative_path.as_posix()}"],
+        cwd=repo,
+        label="re-read committed work item",
+    )
+    disk_bytes = work_item.read_bytes()
+    if reread != disk_bytes:
+        raise CaptureError("committed work-item re-read differs from the working file")
+    digest = sha256(reread)
+    return {
+        "work_item_path": relative_path.as_posix(),
+        "work_item_identity": fixture["work_item_identity"],
+        "authorized_mutation_actor": fixture["authorized_mutation_actor"],
+        "authority_source": fixture["authority_source"],
+        "pre_write_revision": pre_write_revision,
+        "committed_receipt_revision": committed_revision,
+        "reread_receipt_revision": committed_revision,
+        "committed_work_item_sha256": digest,
+        "reread_work_item_sha256": digest,
+        "committed_changed_paths": changed_paths,
+        "sync_status": "observed",
+        "receipt": receipt,
+        "evidence_ref": f"git:{committed_revision}:{relative_path.as_posix()}",
+        "sequence": [
+            "compare-bound-work-item",
+            "authorized-path-scoped-write",
+            "commit-and-sync",
+            "committed-reread",
+            "derive",
+        ],
+    }
 
 
 def work_profile_runner_prompt(
@@ -431,13 +712,40 @@ def work_profile_runner_prompt(
         captain_input = (
             "No Captain selection is supplied. Recommend one profile and ask the "
             "same three-choice decision through an available structured surface or "
-            "one concise plain-chat fallback. Return NEEDS_PROFILE_DECISION."
+            "one concise plain-chat fallback. Put the exact prompt and all three "
+            "label/value/consequence options in question. Return NEEDS_PROFILE_DECISION."
         )
+        transaction_block = ""
     else:
-        captain_input = (
-            f"The Captain selection is {decision}. Return the recorded-re-read "
-            "receipt and derived acceptance criteria."
-        )
+        if phase == "preselected":
+            captain_input = (
+                f"The Captain selection is preselected as {decision}. Return null "
+                "question and preselected question_surface."
+            )
+        else:
+            captain_input = (
+                f"The Captain answered {decision}. This is a post-answer turn; the "
+                "materialized observation must include the earlier exact question "
+                "payload and surface. Carry both into the result unchanged."
+            )
+        if chooser is None:
+            transaction_block = (
+                "\n<work-item-transaction-observation>\n"
+                "UNAVAILABLE: this arm has no work-profile transaction contract. "
+                "Return UNKNOWN rather than claiming a write or committed re-read.\n"
+                "</work-item-transaction-observation>\n"
+            )
+        else:
+            transaction_block = (
+                "\n<work-item-transaction-observation>\n"
+                "{{WORK_PROFILE_TRANSACTION_OBSERVATION_JSON}}\n"
+                "</work-item-transaction-observation>\n"
+                "The validation driver must replace the marker with evidence from the "
+                "bound authorized actor's compare, path-scoped commit, sync, and "
+                "committed re-read. If it remains a marker or any fact is unavailable, "
+                "return UNKNOWN. Derive acceptance criteria only from that committed "
+                "receipt and revision.\n"
+            )
     chooser_block = (
         f"\n<chooser-contract>\n{chooser_text}</chooser-contract>\n"
         if chooser is not None
@@ -451,9 +759,13 @@ def work_profile_runner_prompt(
         f"{stage_text}"
         "</workflow-stage>\n"
         f"{chooser_block}\n"
+        f"{transaction_block}\n"
         "<result-contract>\n"
         f"{work_profile_result_contract()}\n"
         "</result-contract>\n\n"
+        "<phase>\n"
+        f"{phase}\n"
+        "</phase>\n\n"
         "<scenario>\n"
         f"{fixture['scenario']}\n"
         "</scenario>\n\n"
@@ -808,8 +1120,10 @@ def capture_work_profile_pair(
                 {
                     "slot": slot_number,
                     "host": host,
-                    "provider": host,
-                    "model": None,
+                    "provider": WORK_PROFILE_HOSTS[host]["provider"],
+                    "model": WORK_PROFILE_HOSTS[host]["model"],
+                    "invocation_profile": host,
+                    "provider_response_budget": 1,
                     "role": role,
                     "opaque_id": opaque_id,
                     "fixture_id": fixture_id,
@@ -845,6 +1159,44 @@ def capture_work_profile_pair(
                 "max_provider_responses": 16,
                 "max_concurrency": 4,
                 "retry_limit": 0,
+            },
+            "hosts": WORK_PROFILE_HOSTS,
+            "response_accounting": {
+                "sample_provider_response_limit": 16,
+                "counting_unit": "provider-native-model-response",
+                "auxiliary_response_policy": "count-in-the-same-sample-budget",
+                "missing_provider_usage_result": "UNKNOWN",
+                "mandatory_validation_em": {
+                    "timing": "after-sample-runner",
+                    "provider_responses": 1,
+                    "included_in_sample_budget": False,
+                    "included_in_comparative_metrics": False,
+                    "authorizes_optional_cross_model": False,
+                },
+            },
+            "observation_contract": {
+                "schema": "kc-dev-flow-work-profile-observation/v1",
+                "question_evidence": (
+                    "copy the exact host-rendered or plain-chat question payload and "
+                    "raw-output evidence reference before applying the frozen answer"
+                ),
+                "transaction_evidence": (
+                    "bind the exact existing work-item path and record authoritative "
+                    "actor, pre-write revision, path-scoped committed revision, synced "
+                    "re-read revision, receipt payload, and evidence reference"
+                ),
+                "transaction_helper": "observe_work_profile_transaction",
+                "frozen_receipt_builder": "work_profile_fixture_receipt",
+                "promotion_evidence": (
+                    "record detecting worker, execution-state owner, authorized mutation "
+                    "actor, route to ideation, committed replacement receipt revision, "
+                    "and ordered evidence before AC derivation"
+                ),
+                "self_attestation": "non-evidence",
+                "unavailable_result": "UNKNOWN",
+                "transaction_prompt_marker": (
+                    "{{WORK_PROFILE_TRANSACTION_OBSERVATION_JSON}}"
+                ),
             },
             "fixtures": fixture_manifest,
             "scorer": {
