@@ -48,11 +48,12 @@ COMPLETION_ROWS = [
     ("PR repository", "explicit `PR_REPO`", "stop"),
     ("Approved candidate", "exactly one full `Candidate:` SHA in approved body", "stop"),
     ("GitHub PR", "`headRefOid` equals Candidate and `mergedAt` is non-empty", "stop"),
+    ("PR feedback", "current exact-head fingerprint and evidenced dispositions", "stop"),
     ("Required checks", "explicit-repository required checks succeed", "stop"),
     ("Sentinel commit", "set and state commit both succeed", "only then guard"),
 ]
 
-CREATE = 'gh pr create --draft --repo "$UNIT_CODE_REPO" --base "$UNIT_BASE_BRANCH" --head "$UNIT_BRANCH" --title "$UNIT_TITLE" --body-file "$UNIT_BODY_FILE"'
+CREATE = 'gh pr create --draft --repo "$UNIT_CODE_REPO" --base "$UNIT_BASE_BRANCH" --head "$UNIT_BRANCH" --title "$UNIT_TITLE" --body-file "$UNIT_BODY_FILE" --assignee "@me"'
 PREFLIGHT = 'git -C "$UNIT_WORKTREE" merge-tree --write-tree "$UNIT_BASE_SHA" "$UNIT_CANDIDATE_SHA"'
 PUSH = 'git -C "$UNIT_WORKTREE" push origin "${UNIT_CANDIDATE_SHA}:refs/heads/${UNIT_BRANCH}"'
 VIEW = 'gh pr view "$PR_NUMBER" --repo "$PR_REPO" --json body,headRefOid,mergedAt'
@@ -104,6 +105,10 @@ if baseline_errors:
     raise SystemExit("portable-delivery:FAIL\n" + "\n".join(baseline_errors))
 
 mutants = {
+    "missing-self-assignment": (
+        EXTENSION.replace(' --assignee "@me"', "", 1),
+        "missing canonical Draft create",
+    ),
     "ambient-view": (
         EXTENSION.replace(VIEW, VIEW.replace(' --repo "$PR_REPO"', ''), 1),
         "ambient gh pr view is forbidden",
