@@ -34,7 +34,152 @@ requires a new lifecycle stage, tracker field, standing enforcement lane,
 general-purpose evaluator, or more than one independently releasable value
 surface.
 
-## Proposed approach
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v1
+  selected: poc-exploration
+  recommended: poc-exploration
+  basis: "One upstream plugin experiment for maintainers; unpushed code, no production mutation, no retained user data, and no operational commitment beyond proving that the profile changes one real planning outcome."
+  obligations:
+    architecture:
+      - "Reuse the existing ideation route, task body, and contract suite."
+      - "Keep the chooser conditional so a valid receipt does not load its full instructions."
+    implementation:
+      - "Ship the shortest safe skill-and-trigger route and remove the general evaluator extension."
+      - "Keep the product diff below 1,000 gross changed lines unless a named AC fails without the extra surface."
+    testing:
+      - "Run small contract mutants for missing choice, unsafe downscoping, and AC-before-re-read."
+      - "Run one fresh Subspace remote-review pressure case through the real host behavior."
+  invariant_sources:
+    - "docs/dev/_mods/kernel.md — authority, route, outcome, and verification discipline"
+    - "docs/dev/README.md — Local Profile, Gate Authority, and state transaction"
+  scope_boundary: "No new stage, tracker field, standing evaluator, provider harness, sprint admission, delivery action, or production mutation."
+  promote_when:
+    - "The profile becomes a required compatibility promise for external adopters."
+    - "The chooser gains unattended mutation, production data, or standing operational ownership."
+  decision:
+    authority: captain:kent
+    at: 2026-08-13T06:51:09Z
+```
+
+## Current ideation recut (cycle 3 — authoritative)
+
+### Accepted outcome and route
+
+Before normal ideation expands acceptance criteria, recommend one of
+`POC / Exploration`, `Pilot / Product slice`, or `Production`; the Captain
+chooses, and the existing authorized work-item actor records and re-reads the
+receipt. The selected profile changes proof burden but never safety, authority,
+evidence honesty, cleanup, delivery, or merge boundaries.
+
+The smallest route keeps one conditional chooser skill, one short activation in
+the existing continuation/ideation seam, one in-task receipt, and small contract
+mutants. Delete the proposed `work-profile-v1` loader mode, frozen fixture suite,
+`jq` scorer, paired provider-response accounting, and generalized transaction
+harness. Validation uses a bounded real task trial instead of shipping its own
+evaluation platform.
+
+The value protected is faster proof of a real journey. If cut again, keep the
+three choices, receipt, activation order, and common invariants. The explicit
+non-goals are automatic risk classification, automatic task mutation, a fourth
+profile, profile-specific services, and a reusable evaluator. The assumption
+most likely to be wrong is that a concise receipt changes the agent's proposed
+ACs rather than becoming decorative prose.
+
+### Reverse-recovery and subtractive result
+
+Fresh `origin/main@3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b`
+already supplies the live work item, ideation stage, task-body authority,
+conditional skill loading, governing safety/authority rules, and package
+contract test.
+
+| Surface | Completeness / need | Cheapest route and without-it result |
+|---|---|---|
+| Ideation activation | `WORKING`, `REQUIRED` | Extend the existing continuation and ideation seam; no new stage or router. Removing the trigger lets AC expansion precede selection and fails AC-1. |
+| Work-item receipt | `WORKING`, `REQUIRED` | Use the existing task body and state transaction. A sidecar or tracker field adds authority and fails AC-1. |
+| Conditional chooser | `MISSING`, `REQUIRED` | Complete inline instructions were measured in the prior packaging pair: they remain loaded for a valid receipt, while the conditional skill removed 8,929 bytes and kept missing-receipt interaction available. This bounded result earns the separate skill. |
+| Package contract | `WORKING`, `REQUIRED` | Add only three fail-closed mutants. Without them, missing selection, unsafe POC downscoping, or AC-before-re-read can pass silently. |
+| General work-profile evaluator | proposed addition, `NO_OBSERVED_CONSUMER` outside this validation design | The real Subspace task and ordinary exact-head checks can falsify the accepted outcome. Delete the evaluator extension; the prior commits remain recoverable. |
+
+Search boundaries for the evaluator removal candidate are this branch's 18-file
+diff, the current package/adopted workflow references, and the task's two
+validation reports. External consumers are absent because the branch has no
+remote ref or PR; dynamic/manual consumers are limited to the rejected local
+validation commands. A remote ref, PR, or external invocation of
+`work-profile-v1` would disprove that boundary.
+
+This is one value surface and one slice: `choose -> record -> re-read -> derive`.
+The skill, activation, and receipt cannot be blocked independently while leaving
+a demoable profile decision. The demo is the Subspace POC pressure case below.
+
+## Acceptance criteria
+
+**AC-1 — Ideation records exactly one approved work profile before AC expansion.**
+Verified by: `scripts/kc-dev-flow-contract-test.py` rejects a missing/changed
+three-choice contract and an activation-order mutant, while package/adopted
+kernel parity and skill-frontmatter checks pass. Falsified by: a fourth profile,
+silent auto-selection, a new tracker/stage, or acceptance criteria derived before
+the existing work-item actor re-reads the recorded receipt.
+
+**AC-2 — A POC receipt produces the simpler sufficient real-task route.**
+Verified by: one fresh installed-host trial reads the bounded Subspace remote
+review context and recommends `poc-exploration`; its proposed route accepts the
+shell-first PR #14 journey (7 files, 424 additions) and returns the earlier PR
+#12 Go-coordinator route (12 files, 1,810 additions) because the added Go
+surface serves no named POC journey failure. Falsified by: the trial requires
+the Go coordinator, production activation, a standing evaluator, or
+Production-shaped ACs to prove the staging/local feedback journey.
+
+**AC-3 — Lower proof burden cannot downscope a production or authority boundary.**
+Verified by: the contract mutant that changes the chooser's production-mutation
+stop fails, and one adversarial case labeled POC but retaining production
+credentials and destructive external mutation recommends `production` or an
+explicit safe non-production boundary. Falsified by: the POC label authorizes
+the mutation, weakens a required non-pass, or grants task, sprint, delivery, or
+merge authority.
+
+**AC-4 — The recut removes the unearned evaluator surface and stays inside the POC appetite.**
+Verified by: the exact diff contains no `work-profile-v1` fixture/scorer changes
+and no work-profile additions to `kc-dev-flow-loader-eval.py` or its tests; the
+gross product diff is below 1,000 changed lines; all changed files map to AC-1,
+AC-2, or AC-3. Falsified by: retained generalized runner/accounting machinery,
+an unmapped file, or crossing 1,000 gross lines without a named AC failure that
+the smaller route cannot expose.
+
+### Test plan and evidence boundary
+
+1. Recut from exact `origin/main`, preserving the earned chooser and activation
+   seam while reverting every work-profile evaluator/fixture/scorer change.
+2. Reduce the contract additions to the closed profile/receipt, unsafe
+   downscoping, and activation-order mutants; demonstrate RED before the minimal
+   GREEN implementation.
+3. Run the contract test, loader evaluator's pre-existing test, skill
+   frontmatter lint, marketplace/version checks earned by the plugin diff,
+   `git diff --check`, and canonical/adopted kernel byte parity.
+4. At validation, run one fresh installed-host pressure request containing the
+   real PR #12/#14 Subspace evidence plus the adversarial production-mutation
+   case. Preserve the raw response and exact candidate revision. This is direct
+   behavior evidence, not a committed general harness.
+5. Obtain exactly one fresh validation EM after the final exact revision. No
+   paired 16-response run or optional reviewer is authorized by this recut.
+
+Primary measure: the real POC case selects the 424-line shell-first route and
+returns the 1,810-line Go-heavy route for lack of a named value failure. Guard
+measures: all common authority stops remain, the product diff stays below 1,000
+gross lines, and deterministic package checks pass.
+
+Doc changes are limited to the durable product outcome, conditional chooser
+ownership, package skill list, and adopted ideation activation. Do not document
+the one-off Subspace trial or a standing evaluator as product architecture.
+
+Pre-mortem: the skill ships, but agents repeat the same Production-shaped plan
+under a POC label. AC-2 flips red when the fresh host retains the unnecessary Go
+coordinator or production ceremony; the response is to remove or redesign the
+chooser, not add another evaluator platform.
+
+## Superseded cycle 1-2 route (historical; do not implement or validate)
 
 Add a conditional `kc-dev-flow:choose-work-profile` skill at normal ideation
 entry, before inherited criteria are normalized, the iteration-size precheck
@@ -150,7 +295,7 @@ to the bound execution-state owner. That owner performs the existing transition
 to ideation and dispatches the authorized work-item mutation; the chooser gains
 no transition authority.
 
-## Design determination
+### Historical design determination
 
 `design: required`. Choose the separate conditional chooser plus an in-task
 receipt.
@@ -219,9 +364,9 @@ its lifecycle obligations.
 No additional slice is justified. Skill, receipt consumption, and evaluation
 cannot be blocked independently without breaking that demo.
 
-## Acceptance criteria
+### Historical acceptance criteria
 
-**AC-1 — One conditional chooser records one of the three approved profiles before AC expansion.**
+**Historical criterion 1 — One conditional chooser records one of the three approved profiles before AC expansion.**
 Verified by: contract mutants for a fourth option, missing receipt, silent
 auto-selection, and AC-before-receipt all fail; isolated Claude and Codex runs
 complete `choose -> record -> re-read -> derive` through their available
@@ -240,7 +385,7 @@ unchanged receipt skips the interaction and full chooser load; a stale receipt
 re-enters the chooser. The chooser returns a payload; the bound work-item actor
 performs the compare/re-read, path-scoped transaction, sync, and committed re-read.
 
-**AC-2 — The receipt changes architecture, implementation, and testing burden proportionally.**
+**Historical criterion 2 — The receipt changes architecture, implementation, and testing burden proportionally.**
 Verified by: the frozen paired scorer compares known-bad and candidate responses
 for unnecessary AC count, prescribed surface count, required test count,
 profile accuracy, and end-to-end receipt consumption. The candidate must reduce
@@ -258,7 +403,7 @@ retry/recovery, data-safety, and seam tests. The Production fixture retains all
 applicable lifecycle, compatibility, recovery, observability, integrity, and
 release obligations.
 
-**AC-3 — Safety, authority, evidence, and cleanup invariants do not vary by profile.**
+**Historical criterion 3 — Safety, authority, evidence, and cleanup invariants do not vary by profile.**
 Verified by: every candidate sample, including the adversarial task labeled POC
 that requests a production secret and destructive external mutation, must retain
 the applicable authority stop, reject label-based downscoping, preserve honest
@@ -273,7 +418,7 @@ production data, external mutations, irreversibility, red residual acceptance,
 merge, or closeout. Every receipt cites the governing invariant sources and
 records observable promotion triggers.
 
-**AC-4 — Promotion changes the existing receipt and returns the premise to ideation without adding workflow state.**
+**Historical criterion 4 — Promotion changes the existing receipt and returns the premise to ideation without adding workflow state.**
 Verified by: a frozen mutation changes a POC fixture from sandbox output to a
 retained production mutation; the old receipt is rejected, the flow returns to
 ideation, and no sixth lifecycle status, profile tracker, or execution-state
@@ -287,7 +432,7 @@ Captain choice, rewrites the receipt in work-item authority, and re-derives the
 affected ACs through the existing ideation stage. Tasks past ideation remain
 unchanged until a real trigger changes an approved premise.
 
-**AC-5 — The bounded paired evaluation finishes within the approved wall-clock envelope.**
+**Historical criterion 5 — The bounded paired evaluation finishes within the approved wall-clock envelope.**
 Verified by: one wall clock starts before deterministic checks and capture;
 those preflights consume no more than the first two minutes. The model phase
 starts at most 16 actual provider-native sample responses under the frozen
@@ -314,7 +459,7 @@ cannot repair an over-budget or `UNKNOWN` sample runner.
 The suite uses the existing exact-revision loader and contract harness, frozen
 fixtures, a closed local rubric, and no standing service.
 
-## Test plan
+### Historical test plan
 
 1. Extend the existing contract test with fail-collecting assertions for the new
    skill/host metadata, closed three-profile enum, receipt fields, activation
@@ -394,7 +539,7 @@ window. Stop model work at minute 15 and all scoring/reporting at minute 20 on
 the same clock. A partial manifest remains `UNKNOWN`, not a smaller successful
 sample.
 
-## Measurement
+### Historical measurement
 
 Primary value measure: the paired benign-POC reduction in unnecessary ACs and
 prescribed implementation surfaces while the real journey still succeeds.
@@ -405,7 +550,7 @@ rate; promotion-trigger handling; installed-host end-to-end success; total model
 calls; and elapsed wall time. Report small-sample rates and paired deltas. Do not
 treat output wording variance as failure or missing provider usage as zero.
 
-## Doc diff
+### Historical doc diff
 
 - Add `kc-dev-flow/skills/choose-work-profile/SKILL.md` and its Codex host
   metadata.
@@ -417,14 +562,14 @@ treat output wording variance as failure or missing provider usage as zero.
   as needed for the closed paired evaluation.
 - Do not hand-edit versions or release metadata.
 
-## Out of scope
+### Historical out of scope
 
 A new lifecycle stage, language-specific mandates, relaxing authority or safety
 boundaries, retrofitting tasks already beyond ideation, automatic risk
 classification that overrides the Captain, a profile tracker or daemon, and a
 general-purpose eval platform.
 
-## Pre-mortem
+### Historical pre-mortem
 
 If this design ships and still fails, the likely cause is that the model treats
 the profile as decorative prose and recreates the same Production-shaped AC list
