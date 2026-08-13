@@ -301,6 +301,24 @@ by installed-runtime evidence, and the subtractive pilot rejects green or
 `UNKNOWN` proposed additions. Hold the kc-dev-flow Release PR until the dependent
 `repo-platform/S1` item below also exits.
 
+### Sprint S2 — make evidence proportional without weakening delivery
+
+Dependency: begin product delivery after the kc-dev-flow 2.4.0 Release PR and
+the S1 release closeout finish.
+
+Captain-approved order:
+
+1. `issue213`
+2. `kc-dev-flow-path-and-necessity`
+3. `proportional-work-profile`
+
+Exit: external PR feedback is reconciled before completion, each proposed
+control names the criterion and failed simpler route that earn it, and normal
+ideation records one Captain-selected POC, Pilot, or Production receipt before
+acceptance criteria expand. All three items have exact-revision validation and
+delivery evidence; the proportional-profile product diff retains no generalized
+evaluation platform. Hold the S2 Release PR until all three items exit.
+
 ## `repo-platform`
 
 ### Sprint S1 — reduce the runtime reading surface
