@@ -47,10 +47,12 @@ accepted canonical file byte-for-byte while local mechanisms and exceptions stay
 in the workflow README. `continue-dev-flow` reads the vendored policy and never
 installs or rewrites it. Optional controls remain off until individually declared.
 
-At launch, unseen immutable debriefs may yield at most one repository-local or
-reusable kernel improvement candidate. A derived `_improvements/state.yaml`
-cursor prevents repeat analysis. Detection never includes task creation, sprint
-admission, scheduling, merging, or permission to pause product work.
+Ordinary continuation resolves committed product work first and does not inspect
+`_debriefs/` or `_improvements/`. Only an explicit request to harvest improvements
+loads `references/improvement-harvesting.md`. That conditional path may derive at
+most one repository-local or reusable kernel candidate from unseen immutable
+debriefs, but it cannot create tasks, admit work to a sprint, schedule, merge, or
+pause product work.
 
 `reusable-kernel` is the version-1 transport label for a sanitized source
 handoff, not a placement verdict. `promote-dev-flow` rechecks duplicates and

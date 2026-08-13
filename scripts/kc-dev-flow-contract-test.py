@@ -657,6 +657,66 @@ for phrase in [
     require(phrase in adopt_skill, f"adopt skill is missing boundary: {phrase}")
 
 continue_skill = required_files[3].read_text(encoding="utf-8")
+continue_skill_flat = " ".join(continue_skill.split())
+harvest_reference_path = PLUGIN / "references/improvement-harvesting.md"
+require(
+    harvest_reference_path.is_file(),
+    "missing kc-dev-flow/references/improvement-harvesting.md",
+)
+harvest_reference = harvest_reference_path.read_text(encoding="utf-8")
+continue_contract = continue_skill + "\n" + harvest_reference
+continue_skill_words = len(continue_skill.split())
+require(
+    continue_skill_words <= 650,
+    f"ordinary continuation policy exceeds 650 words: {continue_skill_words}",
+)
+require(
+    "## Advance the work" in continue_skill
+    and "## Harvest improvements only when explicitly requested" in continue_skill
+    and continue_skill.index("## Advance the work")
+    < continue_skill.index("## Harvest improvements only when explicitly requested"),
+    "continuation does not route product work before optional harvesting",
+)
+require(
+    "Do not inspect `_debriefs/` or `_improvements/`" in continue_skill,
+    "ordinary continuation does not prohibit improvement-state I/O",
+)
+require(
+    "Do not enumerate the execution-state tree" in continue_skill,
+    "ordinary routing does not guard broad execution-state enumeration",
+)
+require(
+    "never enumerate a workflow parent" in continue_skill
+    and "read its exact bound entity path" in continue_skill
+    and "`rg --files`, `find`, `ls`" in continue_skill,
+    "ordinary routing does not operationalize direct active-entity resolution",
+)
+require(
+    "Read iteration authority first" in continue_skill_flat
+    and "report scheduling immediately" in continue_skill_flat
+    and "do not inspect work-item or execution state" in continue_skill_flat,
+    "an explicitly empty iteration does not short-circuit state discovery",
+)
+require(
+    "already-loaded instruction chain" in continue_skill_flat
+    and "batch the workflow README and complete vendored kernel" in continue_skill_flat
+    and "batch iteration, identity, ownership, and delivery reads" in continue_skill_flat
+    and "stop-before-action invocation does not read it" in continue_skill_flat,
+    "ordinary P1 resolution does not bound redundant discovery and read calls",
+)
+require(
+    "Before opening the harvest reference or enumerating improvement evidence"
+    in continue_skill,
+    "explicit harvesting does not require concrete product-route resolution first",
+)
+require(
+    "../../references/improvement-harvesting.md" in continue_skill,
+    "explicit harvesting does not load the packaged reference",
+)
+require(
+    "Never print or interpolate the private key" in harvest_reference,
+    "explicit harvesting does not protect private identity from host traces",
+)
 for phrase in [
     "next committed work item",
     "continue without a captain pause",
@@ -693,14 +753,14 @@ for phrase in [
     "Multi-model review is optional",
     "silence is not approval",
 ]:
-    require(phrase in continue_skill, f"continue skill is missing boundary: {phrase}")
+    require(phrase in continue_contract, f"continue contract is missing boundary: {phrase}")
 require(
-    "If none or multiple candidates remain" not in continue_skill,
-    "continue skill still blocks product work when no debrief home exists",
+    "If none or multiple candidates remain" not in continue_contract,
+    "continue contract still blocks product work when no debrief home exists",
 )
 require(
-    "stop with `UNKNOWN` instead of risking an overwrite" not in continue_skill,
-    "continue skill still lets self-improvement storage block product routing",
+    "stop with `UNKNOWN` instead of risking an overwrite" not in continue_contract,
+    "continue contract still lets self-improvement storage block product routing",
 )
 
 promote_skill = required_files[10].read_text(encoding="utf-8")
@@ -720,6 +780,12 @@ for phrase in [
 
 package_readme = (PLUGIN / "README.md").read_text(encoding="utf-8")
 require("promote-dev-flow" in package_readme, "package README is missing source intake skill")
+require(
+    "Only an explicit request" in package_readme
+    and "improvement-harvesting.md" in package_readme
+    and "Ordinary continuation" in package_readme,
+    "package README does not document product-first explicit harvesting",
+)
 require(
     "engineering-judgment" in package_readme,
     "package README is missing engineering judgment mod",
@@ -1504,7 +1570,8 @@ for phrase in [
     "Observation is not authority",
     "backlog → ideation → implementation → validation → done",
     "smallest sufficient route",
-    "before routing product work",
+    "resolves the committed product route before optional self-improvement",
+    "Do not inspect `_debriefs/` or `_improvements/` on an ordinary continuation",
     "repository-local",
     "reusable kernel",
     "_improvements/state.yaml",
@@ -1514,6 +1581,24 @@ for phrase in [
     "Unavailable re-observation is missing evidence",
 ]:
     require(phrase in kernel, f"kernel is missing invariant: {phrase}")
+require(
+    "coordinates bounded self-improvement before routing product work" not in kernel,
+    "kernel still activates self-improvement before product routing",
+)
+
+product_doc = (ROOT / "PRODUCT.md").read_text(encoding="utf-8")
+require(
+    "routes committed product work before optional improvement harvesting" in product_doc
+    and "explicitly requested" in product_doc,
+    "PRODUCT.md does not state the product-first continuation value",
+)
+architecture_doc = (ROOT / "ARCHITECTURE.md").read_text(encoding="utf-8")
+for boundary in [
+    "default product router",
+    "conditional adopter-harvest reference",
+    "downstream source intake",
+]:
+    require(boundary in architecture_doc, f"ARCHITECTURE.md is missing boundary: {boundary}")
 require(
     re.search(
         r"Lower-level diagnosis and guards do not\s+replace re-observation",
