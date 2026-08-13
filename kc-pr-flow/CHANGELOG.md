@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-pr-flow-v1.11.1...kc-pr-flow-v1.11.2) (2026-08-13)
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** bind portable PR delivery evidence ([#209](https://github.com/iamcxa/kc-claude-plugins/issues/209)) ([95b4295](https://github.com/iamcxa/kc-claude-plugins/commit/95b4295127d6733cd7d6a98cc98fa1b78a1bc179))
+
 ## [1.11.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-pr-flow-v1.11.0...kc-pr-flow-v1.11.1) (2026-08-02)
 
 

@@ -106,7 +106,7 @@
       "name": "kc-pr-flow",
       "source": "./kc-pr-flow",
       "description": "PR lifecycle workflow — create (ship chain), review (incl. Trail of Bits security subagents + 5 pr-review-toolkit agents covering correctness/comments/silent-failure/type-design/test-coverage, optional Codex cross-model second opinion, cross-file doc-claim verification, per-agent 1-10 confidence calibration), resolve review threads with cross-review verdict persistence (suppress prior-dismissed findings across review cycles), commit reorg, announce, and automated daemon",
-      "version": "1.11.1",
+      "version": "1.11.2",
       "keywords": [
         "pr",
         "review",
@@ -129,7 +129,7 @@
       "name": "kc-dev-flow",
       "source": "./kc-dev-flow",
       "description": "Portable, evidence-bound development flow — adopt or upgrade a repository-owned authority binding, then keep approved sprints moving with fresh validation and minimal ceremony in Claude Code or Codex",
-      "version": "2.3.0",
+      "version": "2.4.0",
       "keywords": [
         "development-workflow",
         "sprint",

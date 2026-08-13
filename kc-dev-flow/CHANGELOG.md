@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.3.0...kc-dev-flow-v2.4.0) (2026-08-13)
+
+
+### Features
+
+* **kc-dev-flow:** carve along the journey, not by layer ([#207](https://github.com/iamcxa/kc-claude-plugins/issues/207)) ([f572b01](https://github.com/iamcxa/kc-claude-plugins/commit/f572b013ceb994596a29b348a1afa74b530e461f))
+* **kc-dev-flow:** route product work before harvesting ([#218](https://github.com/iamcxa/kc-claude-plugins/issues/218)) ([3e28d4a](https://github.com/iamcxa/kc-claude-plugins/commit/3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** align policy activation and retire change-shape ([#212](https://github.com/iamcxa/kc-claude-plugins/issues/212)) ([a18ba78](https://github.com/iamcxa/kc-claude-plugins/commit/a18ba78f72c03036d8463629bd19977aa684e159))
+* **kc-dev-flow:** normalize inherited seed criteria ([#206](https://github.com/iamcxa/kc-claude-plugins/issues/206)) ([c41cbbb](https://github.com/iamcxa/kc-claude-plugins/commit/c41cbbbf60efa841379fc59216f3e75921174557))
+
 ## [2.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.2.0...kc-dev-flow-v2.3.0) (2026-08-11)
 
 
