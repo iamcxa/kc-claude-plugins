@@ -1,6 +1,6 @@
 ---
 title: "kc-dev-flow: route product work before improvement harvesting"
-status: validation
+status: ideation
 source: "captain:conversation-2026-08-12-third-slice"
 product: kc-dev-flow
 sprint:
@@ -994,6 +994,7 @@ Cycle 4 replaces the unsound single-sample cost gate with a deterministic safety
 - Cycle 5: REJECTED / DESIGN RESET REQUIRED — the product-only candidate is deterministic GREEN, but kernel-pagination and exact-byte P2-P4 pressure remain product delivery gates; surface 17m Goal work vs estimate 20m (85%); AC unchanged pending Captain re-scope, with no further model run authorized
 - Cycle 6: CAPTAIN-APPROVED RE-SCOPE — keep product and safety outcomes hard while moving kernel pagination, cost, and exact-byte P2-P4 pressure to the evaluator slice; surface one AC reset vs estimate one (100%); AC narrowed: evaluator observations no longer block product delivery
 - Cycle 7: REJECTED / IDEATION DRIFT — validation correctly found that cycle 6 required a deterministic actor interpreter not authorized by option A; surface one actor-harness demand vs estimate zero (new evaluator scope); AC correction required: policy-artifact mutants and executable downstream validators are product evidence, model adherence remains evaluator-only
+- Cycle 8: CAPTAIN-APPROVED RISK-BASED CLOSEOUT — stop exhaustive mutation and fresh-EM retries; deterministic code/validators must pass, policy checks prove only policy shape, exact-byte P1 proves only observed behavior, and LLM adherence remains probabilistic evaluator evidence; surface one closeout vs estimate one (100%); AC narrowed to evidence claims the current product can honestly support
 
 ## Stage Report: implementation (cycle 5)
 
