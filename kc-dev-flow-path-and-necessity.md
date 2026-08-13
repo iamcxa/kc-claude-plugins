@@ -7,6 +7,8 @@ design: required
 id: 9f63nm17bntn0ts7k9b1nm9c
 status: validation
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/fix-kc-dev-flow-path-necessity
+mod-block: merge:pr-merge
+pr: "#222"
 ---
 
 ## Problem
