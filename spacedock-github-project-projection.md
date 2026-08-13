@@ -2,7 +2,7 @@
 id: qahvaf44bx0y52cwvr8t1a13
 title: Project Spacedock state into GitHub Issues and Projects through a portable installer
 status: backlog
-source: Captain request on 2026-08-13 after live mapping against iamcxa Project #2
+source: Captain request on 2026-08-13, retargeted after live inspection from iamcxa Project #2 to Project #1
 product: kc-dev-flow
 sprint:
 started:
@@ -28,7 +28,7 @@ The desired operator surface is one setup skill plus one installed GitHub Action
 
 There is an unresolved trigger question for split-root state. GitHub resolves a `push` workflow from the event's associated commit/ref. If `.github/workflows/spacedock-project-sync.yml` exists only on the default branch and not on `spacedock-state/dev`, a push to the state branch may not find it. The current conservative design is a default-branch `schedule` plus `workflow_dispatch` reconcile, with event-driven alternatives — a state-branch trigger workflow or a `repository_dispatch` emitted after state push — requiring a measured spike before selection.
 
-Project #2 is user-owned. The installer must not assume the repository-scoped `GITHUB_TOKEN` can write it, and must verify the supported credential path without copying local credentials into repository secrets. The task must distinguish repository Issue writes from personal Project writes and document the minimum supported token and scopes.
+Project #1 is user-owned. Its current title is `kc-plugins`, but its five existing items are unmanaged QNow Issues. The installer must treat all pre-existing items without a matching projector receipt as foreign: report them, never delete or overwrite them, and project only into explicitly managed items. It must not assume the repository-scoped `GITHUB_TOKEN` can write the Project, and must verify the supported credential path without copying local credentials into repository secrets. The task must distinguish repository Issue writes from personal Project writes and document the minimum supported token and scopes.
 
 ## Proposed approach
 
@@ -48,7 +48,7 @@ Build a schema-driven projector with two layers:
    - It preserves the exact stage in `SD Stage` while deriving the existing five GitHub Status buckets: unscheduled backlog → Backlog, scheduled backlog → Ready, ideation/implementation → In progress, validation → In review, done → Done.
    - A missing optional field produces a partial projection, not a failed Issue projection. An invalid sprint pair blocks only the sprint/Milestone write. Identity collisions and lifecycle contradictions remain quarantined conflicts.
 
-For a single selected workflow, the minimum generic Project schema is `SD Stage` plus projector-owned `SD Projection` (`Current`, `Partial`, `Conflict`, `Stale`). If multiple SD workflows feed the same Project, add `SD Workflow` and qualify every receipt and lookup by workflow directory. Additional fields are admitted only when the selected profile gives them stable semantics and they answer a concrete view or metric question. For kc-dev-flow the candidate fields are `SD Product`, `SD Started`, and `SD Completed`; `SD Score`, `SD Lane`, `SD Design`, `SD Verdict`, `mod-block`, and derived `SD Cycle Days` remain optional follow-ups rather than installation defaults.
+For a single selected workflow, the minimum generic Project schema is `SD Stage` plus projector-owned `SD Projection` (`Current`, `Partial`, `Conflict`, `Stale`). V1 deliberately binds one installed configuration to one SD workflow and one GitHub Project, so it does not create an `SD Workflow` field or aggregate unrelated workflow semantics into one Project. Additional fields are admitted only when the selected profile gives them stable semantics and they answer a concrete view or metric question. For kc-dev-flow the candidate fields are `SD Product`, `SD Started`, and `SD Completed`; `SD Score`, `SD Lane`, `SD Design`, `SD Verdict`, `mod-block`, and derived `SD Cycle Days` remain optional follow-ups rather than installation defaults.
 
 Use repository Milestone as logical sprint membership. Do not create a duplicate `SD Sprint` single-select field, because it would duplicate authority, drift from the Milestone, and accumulate bounded select options. The captain constraint is that one SD sprint cannot span multiple repositories.
 
@@ -66,6 +66,20 @@ Expected installed files:
 
 The setup skill should be a small router with install, audit, and upgrade workflows, a shared mapping-contract reference, templates for the workflow/config, and the deterministic projector script. The target repository gets reviewable vendored bytes rather than mutable remote code.
 
+## Project boundary and dogfood sequence
+
+A GitHub Project represents one management system: one workflow vocabulary, planning cadence, metric interpretation, status-update audience, and ownership boundary. Repository or team identity alone is insufficient. Two repositories owned by the same team may still require separate Projects when their work-item semantics differ; conversely, unrelated teams and workflows must never be combined merely to form a portfolio.
+
+The rollout order is:
+
+1. `iamcxa/kc-claude-plugins`, workflow `docs/dev`, projects into user Project #1 (`kc-plugins`). This is the first real dogfood because it already uses kc-dev-flow and has enough tasks to exercise partial fields, sprint Milestones, grouping, and charts. The five current QNow items remain unmanaged until the captain separately decides whether to remove or migrate them.
+2. `spacedock-dev/subspace-relay`, workflow `docs/dev`, projects into a separate Relay Project whose number is not yet selected. Relay has its own Local Profile, sprint registry, and lifecycle policy; its adapter is validated independently rather than inheriting kc-claude-plugins field choices.
+3. CarLove projects into a separate CarLove Project after the first two mappings are stable. Its higher complexity is a later compatibility test, not a reason to broaden the first Project schema.
+
+A disposable repository and Project may still be used before dogfood to prove trigger and credential behavior. That proof environment is not counted as a dogfood target and cannot replace the kc-claude-plugins vertical slice.
+
+Project Status Updates follow the same boundary. V1 produces a deterministic run summary and the metrics needed for a human-authored update. Automated narrative updates are deferred until the first dogfood proves a low-noise transition rule such as sprint start, sprint close, or freshness failure; they must summarize the selected Project only and must not become another lifecycle authority.
+
 ## Acceptance criteria
 
 ### AC-1 — Generic capability discovery is schema-driven
@@ -82,7 +96,7 @@ Verified by: a fake GitHub adapter with operation receipts for a mixed ten-entit
 
 ### AC-3 — Project fields serve explicit views or metrics
 
-The generic default creates only `SD Stage` and `SD Projection`. The kc-dev-flow profile may add `SD Product`, `SD Started`, and `SD Completed`; qualified sprint uses Milestone; Priority, Size, Estimate, and Cycle are never inferred. Installation prints, for every created field, its source authority, blank behavior, and intended group/filter/chart use.
+The generic default creates only `SD Stage` and `SD Projection`. The kc-dev-flow profile may add `SD Product`, `SD Started`, and `SD Completed`; qualified sprint uses Milestone; Priority, Size, Estimate, and Cycle are never inferred. V1 never creates `SD Workflow`, because one configuration selects one workflow and one Project. Installation prints, for every created field, its source authority, blank behavior, and intended group/filter/chart use.
 
 Verified by: installer dry-run snapshot and Project schema fixture. Falsified by: an unknown custom field silently becomes a Project field, `sprint` writes Cycle, or the installer creates a duplicate `SD Sprint` field.
 
@@ -108,7 +122,7 @@ Verified by: install into a fixture repository, diff of exactly the expected wor
 
 ### AC-6 — GitHub authentication is explicitly supported
 
-The workflow separately proves same-repository Issue/Milestone access and user-owned Project #2 access. Current live evidence shows the 2026 REST endpoint `GET /users/iamcxa/projectsV2/2` exists and returns Project #2; do not inherit the older claim that Projects v2 is GraphQL-only. The spike must test the actual REST and/or GraphQL mutations chosen by the implementation and determine whether a fine-grained token with personal Projects permission works before falling back to a classic PAT. The setup report identifies the supported secret/token type and required permissions, rejects an unsupported token before partial mutation, documents expiry/rotation/revocation, and keeps `GITHUB_TOKEN` for repository-scoped writes rather than using one broad token for both authorities.
+The workflow separately proves same-repository Issue/Milestone access and user-owned Project #1 access. Current live evidence shows Project #1 is a private user-owned Project with Board, Roadmap, and Table views; current Projects v2 REST and GraphQL surfaces both require direct capability probing rather than inheriting an older GraphQL-only assumption. The spike must test the actual REST and/or GraphQL mutations chosen by the implementation and determine whether a fine-grained token with personal Projects permission works before falling back to a classic PAT. The setup report identifies the supported secret/token type and required permissions, rejects an unsupported token before partial mutation, documents expiry/rotation/revocation, and keeps `GITHUB_TOKEN` for repository-scoped writes rather than using one broad token for both authorities.
 
 Verified by: read-only Project probe followed by a reversible fixture-item mutation using the documented secret in a disposable target, with negative coverage for an insufficient token. Falsified by: the workflow creates an Issue and only then discovers it cannot add or update the Project item.
 
@@ -132,15 +146,15 @@ Verified by: disable the scheduled workflow and separately use an expired/invali
 
 ### AC-10 — Archive and removal semantics are explicit
 
-When an entity moves to `_archive/`, the projector retains qualified identity, marks the Project item archived or an equivalent explicit terminal projection, and closes only projector-owned Issues when policy permits. A pre-existing linked Issue is never closed merely because the SD entity was archived. Deletion without an archive tombstone is quarantined rather than silently removing history.
+When an entity moves to `_archive/`, the projector retains qualified identity, marks the Project item archived or an equivalent explicit terminal projection, and closes only projector-owned Issues when policy permits. A pre-existing linked Issue is never closed merely because the SD entity was archived. A foreign Project item without a projector receipt is never changed. Deletion without an archive tombstone is quarantined rather than silently removing history.
 
 Verified by: live create → archive → reconcile for both projector-owned and linked fixture Issues. Falsified by: charts retain an apparently active orphan or a linked human Issue is closed.
 
 ### AC-11 — The deployed slice proves value and bounded cost
 
-The first vertical slice uses a true split state branch with no `.github/`, checks out both refs, projects one entity into a disposable Project, re-runs to zero mutations, preserves freshness after an unrelated entity change, and creates a saved view grouped by `SD Stage` that answers which entities occupy a given workflow stage. It records a bounded API request count and fails resumably under a simulated rate limit.
+After disposable trigger/auth proof, the first dogfood vertical slice uses `iamcxa/kc-claude-plugins` `docs/dev` with its true split state branch, checks out both refs, dry-runs ten representative entities against Project #1, then projects an explicitly approved bounded subset. It re-runs to zero mutations, preserves freshness after an unrelated entity change, leaves all five foreign QNow items untouched, and creates a saved view grouped by `SD Stage` that answers which entities occupy a given workflow stage. It records a bounded API request count and fails resumably under a simulated rate limit.
 
-Verified by: disposable repository/Project URLs, run IDs, GraphQL or REST request log, no-op receipt, and saved-view evidence. Falsified by: only fake-adapter tests pass, or the Project UI cannot answer the stated question.
+Verified by: disposable proof URLs and run IDs, Project #1 dry-run/apply receipts, GraphQL or REST request log, no-op receipt, untouched foreign-item evidence, and saved-view evidence. Falsified by: only fake-adapter tests pass, a QNow item changes, or the Project UI cannot answer the stated question.
 
 ## Open questions for independent review
 
@@ -185,11 +199,13 @@ Use one disposable repository with default-branch workflow/config/projector, a t
 ## Out of scope
 
 - GitHub Project changes flowing back into SD state.
+- Combining kc-claude-plugins, Relay, or CarLove in one GitHub Project, or adding a cross-project portfolio layer.
 - Adding `product`, `sprint`, estimate, target dates, or projection receipt fields to the generic SD entity schema.
+- Automatically publishing narrative Project Status Updates before a dogfood transition rule is approved.
 - Inferring Priority, Size, Estimate, Cycle, dates, or sprint semantics from prose.
 - Replacing repository-local sprint Milestones with GHP Iteration.
 - Editing or committing workflow files during this backlog capture beyond the SD task itself.
 
 ## Sizing
 
-Design required. Ideation must split implementation if the trigger/authentication spike and the portable installer/projector cannot stay within one bounded dispatch. The first falsifiable slice is: install into one disposable non-kc workflow, project one entity, persist its receipt, rerun to `NO_CHANGE`, and reproduce the selected automatic trigger.
+Design required. Ideation must split implementation if the trigger/authentication spike and the portable installer/projector cannot stay within one bounded dispatch. The proof slice is: install into one disposable workflow, project one entity, persist its receipt, rerun to `NO_CHANGE`, and reproduce the selected automatic trigger. The first dogfood slice then dry-runs ten kc-dev-flow entities and applies an approved bounded subset to Project #1 without mutating its five foreign QNow items.
