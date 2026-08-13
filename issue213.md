@@ -1,16 +1,16 @@
 ---
 id: 92h25gk5mcagj6wtqrz24nsa
 title: "kc-dev-flow: no stage reads PR review feedback, so a PASSED verdict can ship unread reviewer findings"
-status: ideation
+status: implementation
 source: https://github.com/iamcxa/kc-claude-plugins/issues/213
 product: kc-dev-flow
 sprint: S2
 started: 2026-08-12T01:51:59Z
 completed:
 verdict:
-worktree:
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-pr-feedback-gate
 issue: "213"
-pr:
+pr: "#214"
 mod-block:
 design: required
 lane: main
