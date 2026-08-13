@@ -519,3 +519,122 @@ six-file PR-feedback gate and default self-assignment against exact
 `origin/main` `281bd7f6`. Focused mutants, repository gates, sanitize-check, and
 both live provider cases pass; the code worktree is clean and the candidate is
 committed but unpushed for fresh validation.
+
+## Stage Report: validation
+
+Verdict: `PASS` at exact candidate
+`107fb9546d560a421e187ae2f77e26cd056ee7a6`, based on
+`281bd7f69db38089ca5f487b9da0596fe11c6c64`. No product file or GitHub state
+was modified during validation.
+
+- DONE: Validate AC1 against the exact policy and provider data path.
+  The GitHub-native contract reads the explicit repository and PR/layer, binds
+  start and end `headRefOid`, paginates all GraphQL thread pages and all REST
+  review pages, fails closed on nested-comment overflow, and normalizes the
+  accepted external thread/review populations including bots. The canonical
+  `github-pr-feedback/v1` input includes stable kind/ID, authors, review or
+  resolution state, commit IDs, and SHA-256 hashes for every mutable body or
+  comment; malformed, incomplete, ambiguous, drifting, or failed reads become
+  `UNKNOWN`.
+- DONE: Validate AC2's dispositions, fallback, and all four delivery boundaries.
+  The validation report binds identity, head, fingerprint, population, and one
+  evidenced disposition per item. Missing fix evidence, rejection reason, filed
+  reference, resolver, parse result, or provider proof cannot pass. The ordinary
+  implementation worker remains the fallback, a code change invalidates the
+  prior verdict, and observations occur at validation entry for an existing PR,
+  before Ready, immediately before merge, and before terminalization. Existing
+  startup/idle scans gain no independent polling surface; they invoke the same
+  terminalization decision only when that boundary is reached.
+- DONE: Validate AC3 self-assignment at the active canonical command.
+  The enabled body-file command includes `--assignee "@me"`; installed `gh` help
+  confirms that value self-assigns. The released inline-body command remains
+  disabled and unchanged, and the focused flag-deletion mutant is rejected.
+- DONE: Validate AC4 and the approved subtraction.
+  The exact merge-base map is six modified existing files, +477/-12, with no
+  added/deleted file, `kc-pr-flow/**` diff, ledger, resolver mode, daemon,
+  standalone plan, PRODUCT/ARCHITECTURE change, or seventh product surface. The
+  packaged and vendored kernels are byte-identical.
+- DONE: Re-run adversarial and proportional exact-head exits.
+  `scripts/kc-dev-flow-contract-test.py` passes with all 23 feedback mutants
+  rejected; `scripts/pr-merge-portable-delivery.test.py` passes with all four
+  portable mutants rejected. `git diff --check`, version parity for seven
+  plugins, frontmatter lint for 40/40 skill directories, marketplace L0/L1 and
+  all seven L2 installs pass. The changed public kernel has zero sanitize
+  REJECT/BLOCK patterns.
+- DONE: Re-observe both same-kind GitHub cases at their pinned heads.
+  `qnow#1057@ca1d613c` stayed head-stable with one complete thread page, one REST
+  review page, no nested overflow, 3 raw/0 normalized unresolved external
+  threads, and 7 raw/2 normalized external reviews. `qnow#1124@ebddb0ab` stayed
+  head-stable with complete first pages, no nested overflow, 2/2 threads and 1/1
+  review. `reviewDecision` remained empty in both, confirming it is not a
+  substitute for the declared population.
+- DONE: Commission exactly one fresh validation Science Officer EM.
+  The independent EM returned `proceed/high`, `multi_model: not_needed`, with
+  all six adjudications supported and no dissent. No optional second model was
+  commissioned.
+- DONE: Separate local candidate validation from delivery proof.
+  Draft PR #214 remains at old head `40fdf8484202232c793ffbdd3e4241b3eaee8f6a`,
+  so it is not exact-candidate evidence. This PASS authorizes no push, Ready,
+  merge, or terminalization; after the candidate is delivered, its complete
+  feedback observation and exact-head CI must be recorded at the applicable
+  boundaries.
+
+Lenses: behavior PASS (0 findings); contract/schema PASS (0); state/concurrency PASS (0); security/privacy PASS (0); runtime/platform PASS (0); docs/policy PASS (0); delivery PASS (0) — inputs were the exact six-file diff, governing ACs, policy mods, focused mutants, repository exits, and pinned GitHub responses; falsifiers were a surviving refusal/mutation, incomplete provider population, stale head, unsafe boundary, extra authority surface, or unsupported active command.
+Diff coverage: N/A — docs/policy-only product surface; the executable changes are test oracles, while 23 feedback mutants and four portable mutants exercised every declared new refusal group.
+Adversarial: PASS — attacked pagination, nested overflow, author inversion, head drift, mutable content/state, canonical serialization, disposition evidence, resolver absence, `UNKNOWN`, stack isolation, all four timings, the creation exception, and self-assignment; no mutant survived.
+Cross-model: not_needed — the required fresh EM returned `proceed/high` with no contested, irreversible, low-confidence, or unresolved call.
+E2E: N/A — ideation-approved workflow-policy/config slice with no product UI or executable application path; live GitHub GraphQL/REST probes preserve the same-kind provider boundary.
+Origin re-observation: PASS — Reported scenario: review findings can exist while validation and `reviewDecision` do not expose them | Originating runtime kind: GitHub PR GraphQL review threads plus REST PR reviews | Re-observation artifact/revision: `iamcxa/qnow#1057@ca1d613c817a10d02235c7c2e137ec40722116a8` and `iamcxa/qnow#1124@ebddb0ab52f5661ddf5f4933036e089865b8a06e` on 2026-08-13 | Equivalent-runtime rationale: same provider, repository-explicit APIs, actors including bots, pagination, head binding, and accepted population rules used by the delivery policy | Falsifier kind: existence-disproof | Result: complete head-stable responses reproduced the resolved-thread and positive unresolved-thread populations while `reviewDecision` stayed empty.
+
+### Engineering judgment
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Exact candidate 107fb9546d560a421e187ae2f77e26cd056ee7a6 satisfies AC1-AC4 and the approved subtraction constraints; proceed to the next authorized Draft-delivery step, without treating validation as delivery."
+  evidence_synthesis: "The candidate is exactly one commit over base 281bd7f69db38089ca5f487b9da0596fe11c6c64 and changes the approved six existing files by +477/-12, with no kc-pr-flow file, new state file, ledger, resolver integration, startup/idle polling loop, product document, or architecture document. The contract and portable-delivery suites pass at the candidate, including mutants for provider pagination, population filters, mutable content/state, canonical serialization, head drift, UNKNOWN handling, all four boundaries, resolver fallback, stack isolation, and self-assignment; diff-check passes and the packaged/vendored kernels are byte-identical. Fresh read-only GitHub probes remained head-stable: qnow#1057 produced 3 raw/0 normalized unresolved external threads and 7 raw/2 normalized external reviews; qnow#1124 produced 2/2 threads and 1/1 reviews, with complete first pages and no nested overflow. Existing Draft PR #214 remains at old head 40fdf8484202232c793ffbdd3e4241b3eaee8f6a with an empty normalized population, so that observation is not candidate-head delivery proof and must be repeated after the candidate is pushed."
+  risk_tradeoff_call: "The change purchases fail-closed protection against unread or edited GitHub review feedback and default follow-through ownership. Its durable cost is maintaining a detailed GitHub GraphQL/REST observation and fingerprint contract at the existing delivery seam; the remaining operational risk is incorrect execution of that policy, bounded by fresh exact-head validation and repeated boundary observations. A resolver integration, daemon, startup/idle polling regime, or second durable ledger would add ownership and synchronization cost without serving an unmet accepted criterion."
+  recommendation: "Proceed through the existing Gate Authority to captain-approved delivery of exact candidate 107fb9546d560a421e187ae2f77e26cd056ee7a6; after its PR head is updated, perform and record the complete candidate-head observation before Ready, immediately before merge, and before terminalization. This recommendation grants no push, Ready, merge, state-transition, or archive authority."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "The FO may relay this judgment, account for evidence, and perform authorized state or delivery mechanics; it does not adjudicate findings or gain push, Ready, merge, terminalization, or archive authority."
+  engineering_judgment:
+    question: "Does exact candidate 107fb9546d560a421e187ae2f77e26cd056ee7a6 satisfy issue 213 AC1-AC4 and the approved scope/subtraction constraints sufficiently to proceed from validation?"
+    revision: "107fb9546d560a421e187ae2f77e26cd056ee7a6 against base 281bd7f69db38089ca5f487b9da0596fe11c6c64"
+    evidence_synthesis: "The candidate is exactly one commit over base 281bd7f69db38089ca5f487b9da0596fe11c6c64 and changes the approved six existing files by +477/-12, with no kc-pr-flow file, new state file, ledger, resolver integration, startup/idle polling loop, product document, or architecture document. The contract and portable-delivery suites pass at the candidate, including mutants for provider pagination, population filters, mutable content/state, canonical serialization, head drift, UNKNOWN handling, all four boundaries, resolver fallback, stack isolation, and self-assignment; diff-check passes and the packaged/vendored kernels are byte-identical. Fresh read-only GitHub probes remained head-stable: qnow#1057 produced 3 raw/0 normalized unresolved external threads and 7 raw/2 normalized external reviews; qnow#1124 produced 2/2 threads and 1/1 reviews, with complete first pages and no nested overflow. Existing Draft PR #214 remains at old head 40fdf8484202232c793ffbdd3e4241b3eaee8f6a with an empty normalized population, so that observation is not candidate-head delivery proof and must be repeated after the candidate is pushed."
+    adjudications:
+      - finding: "AC1-provider-population-and-fingerprint"
+        disposition: supported
+        basis: "AC1 and the pr-merge GitHub observation contract require explicit repository/PR identity, start and end head reads, complete GraphQL thread pagination, fail-closed nested-comment overflow, complete REST review pagination, external unresolved threads, external non-empty or CHANGES_REQUESTED reviews including bots, and canonical mutable body/state/commit coverage. Candidate tests reject the named population, pagination, head-drift, mutable-content, mutable-state, and serialization mutants; current qnow probes match the declared populations."
+      - finding: "AC2-four-boundaries-UNKNOWN-and-fallback"
+        disposition: supported
+        basis: "AC2, the validation/done stage bindings, and pr-merge require observation at validation entry for an existing PR, before Ready, immediately before merge, and before terminalization. Every boundary compares identity, head, population fingerprint, and evidenced dispositions; malformed, incomplete, drifting, failed, or ambiguous reads become UNKNOWN and block. Resolver absence routes the complete set to the ordinary implementation worker, and any code change requires fresh validation."
+      - finding: "AC3-self-assignment"
+        disposition: supported
+        basis: "The sole active canonical Draft command adds --assignee \"@me\" while the released inline-body command remains disabled and unchanged. The focused missing-self-assignment mutant removes only that flag and is rejected."
+      - finding: "AC4-six-file-and-no-parallel-framework"
+        disposition: supported
+        basis: "The exact merge-base map contains only docs/dev/README.md, docs/dev/_mods/kernel.md, docs/dev/_mods/pr-merge.md, kc-dev-flow/references/kernel.md, and the two existing contract tests. There is no kc-pr-flow diff, new state file, resolver mode, daemon, or feedback ledger. Startup and idle gain only the required terminalization decision when that boundary is reached; no independent startup/idle observation loop was added."
+      - finding: "iteration-size-and-subtraction"
+        disposition: supported
+        basis: "The work-item authority records the captain-approved one-small-S2 exception for two value surfaces sharing the existing delivery seam. The 489-line, six-file change stays below the topology trigger. Without-it mutants establish the retained observer/barrier, validation report binding, provider-neutral kernel invariant, and self-assignment need; the optional resolver change, standalone plan, new ledger, and extra polling surface remain subtracted."
+      - finding: "candidate-delivery-proof"
+        disposition: supported
+        basis: "Local validation is bound to candidate 107fb9546d560a421e187ae2f77e26cd056ee7a6, but current Draft PR #214 remains on 40fdf8484202232c793ffbdd3e4241b3eaee8f6a. The governing contract correctly treats the old-head observation as non-transferable and requires a new complete observation after candidate delivery and before each subsequent boundary."
+    risk_tradeoff: "The change purchases fail-closed protection against unread or edited GitHub review feedback and default follow-through ownership. Its durable cost is maintaining a detailed GitHub GraphQL/REST observation and fingerprint contract at the existing delivery seam; the remaining operational risk is incorrect execution of that policy, bounded by fresh exact-head validation and repeated boundary observations. A resolver integration, daemon, startup/idle polling regime, or second durable ledger would add ownership and synchronization cost without serving an unmet accepted criterion."
+    recommendation: "Proceed through the existing Gate Authority to captain-approved delivery of exact candidate 107fb9546d560a421e187ae2f77e26cd056ee7a6; after its PR head is updated, perform and record the complete candidate-head observation before Ready, immediately before merge, and before terminalization. This recommendation grants no push, Ready, merge, state-transition, or archive authority."
+    route: proceed
+    confidence: high
+    dissent: ""
+    disproof_condition: "Change the route to return if an exact-candidate contract test fails, a live same-kind probe contradicts the declared population or pagination behavior, a current candidate-head observation cannot produce a stable canonical fingerprint and complete dispositions, any delivery path crosses Ready/merge/terminalization on non-pass evidence, the assignee mutant survives, or the merge-base map gains a resolver, ledger, startup/idle polling, or seventh product surface."
+    authority_boundary: "The captain retains scope, exception, push, readiness, and merge authority; repository Gate Authority owns stage advancement; Spacedock work-item and execution-state authority owns durable status, terminalization, and archive transitions; the declared GitHub delivery owner owns provider observations and mutations. This EM record is advisory only."
+```
+
+### Summary
+
+Exact candidate `107fb9546d560a421e187ae2f77e26cd056ee7a6` passes AC1-AC4 at the
+approved six-file/no-ledger/no-resolver scope. The provider populations,
+mutable-content fingerprint contract, fail-closed outcomes, disposition
+evidence, ordinary-worker fallback, all four boundaries, and self-assignment
+survive adversarial validation; Draft PR #214 remains stale and must not be used
+as candidate delivery proof until it is updated and re-observed.
