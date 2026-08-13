@@ -5,7 +5,7 @@ product: kc-dev-flow
 sprint: S2
 design: required
 id: 9f63nm17bntn0ts7k9b1nm9c
-status: validation
+status: implementation
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/fix-kc-dev-flow-path-necessity
 ---
 
@@ -420,3 +420,7 @@ minimality, or route verdict.
 The candidate is ready for the delivery boundary. Per captain instruction, no
 PR was created. The item remains in `validation`; `done` still requires a Draft
 PR, exact-head hosted CI, authorized merge to `main`, and durable archive state.
+
+### Feedback Cycles
+
+- Cycle 1: REJECTED — delivery merge preflight; surface 5 files/33 LOC vs estimate 5 files (100% file count); AC unchanged
