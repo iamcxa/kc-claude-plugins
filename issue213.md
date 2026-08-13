@@ -432,3 +432,90 @@ authority_boundary: Captain retains scope and exception authority; Gate Authorit
 ### Summary
 
 The bounded correction resolves every prior return condition without expanding the design or file family. One new fresh-context EM recommends `proceed`; implementation should re-pin the moving provider evidence and build only the accepted six-file slice.
+
+## Stage Report: implementation
+
+Verdict: `DONE` at exact product commit
+`107fb9546d560a421e187ae2f77e26cd056ee7a6`, based on `origin/main`
+`281bd7f69db38089ca5f487b9da0596fe11c6c64`. The code branch was not pushed
+and no GitHub state changed.
+
+- DONE: Recut the existing #214 work without rewriting or moving its PR branch.
+  The assigned branch `spacedock-ensign/issue213` starts at exact fresh
+  `origin/main` `281bd7f6`; the existing local and remote
+  `fix/kc-dev-flow-pr-feedback-gate` branch remains at `40fdf84`. The final
+  merge-base diff contains exactly the approved six files, +477/-12: no
+  `kc-pr-flow/**` change, standalone plan, feedback state file, or seventh
+  product file.
+- DONE: Close AC1 with a complete GitHub-native, exact-head, fail-closed
+  observation contract.
+  `_mods/pr-merge.md` binds `github-pr-feedback/v1` to explicit repository,
+  PR/layer, head, stable normalized IDs, state, authors, commit IDs, exact body
+  hashes, and deterministic canonical JSON. It paginates GraphQL thread pages
+  and REST review pages, rejects nested-comment overflow, rereads the head, and
+  maps every ambiguous, incomplete, drifting, malformed, or unread result to
+  `UNKNOWN`. Focused mutants reject ambient repository reads, unread pages,
+  author-filter inversions, head drift, mutable-content/state loss,
+  non-canonical fingerprints, and top-layer-only coverage.
+- DONE: Close AC2 with the four approved boundaries and evidence-bearing
+  dispositions, without resolver coupling.
+  Existing PRs observe at validation entry; every delivery re-observes before
+  Ready, immediately before merge, and before terminalization. Initial Draft
+  creation remains outside the loop when no PR exists. The compact existing
+  validation-report record requires an exact fingerprint match and exactly one
+  `fixed`, `rejected-with-reason`, or `out-of-scope-and-filed` disposition per
+  item, including its required evidence. The optional resolver supplies no
+  observation or gate authority; absence routes actionable work to the ordinary
+  implementation worker and never means clean.
+- DONE: Close AC3 in the sole active canonical Draft creation unit.
+  Added only `--assignee "@me"` to the enabled body-file command. The released
+  disabled inline-body example is byte-protected and unchanged. The focused
+  `missing-self-assignment` mutant deletes only that flag and is rejected with
+  `missing canonical Draft create`.
+- DONE: Preserve AC4's existing authority surfaces and map every file to an AC.
+  `docs/dev/_mods/pr-merge.md` owns AC1/AC2/AC3; `docs/dev/README.md` binds
+  validation and done for AC2; the byte-identical packaged and vendored kernels
+  carry the provider-neutral AC2 invariant; the two existing test files prove
+  AC1/AC2/AC3 scope and fail-closed mutations. No second ledger, daemon,
+  startup/idle observation, automatic reply, resolver integration, or added
+  Ready/merge authority was introduced.
+- DONE: Record RED before production edits and GREEN on the exact candidate.
+  RED: `scripts/pr-merge-portable-delivery.test.py` exited 1 with
+  `single-PR completion table drifted` and `missing canonical Draft create`;
+  `scripts/kc-dev-flow-contract-test.py` exited 1 with
+  `native-stack completion decision drifted`. GREEN at `107fb954`: both focused
+  suites exit 0, the assignee and existing portable-delivery mutants report
+  `REJECTED`, `git diff --check` passes, and the two kernels compare
+  byte-identically.
+- DONE: Re-run same-kind provider probes at the pinned examples.
+  `iamcxa/qnow#1057@ca1d613c` remained head-stable with one complete thread page,
+  one REST-review page, no nested overflow, three raw threads, zero normalized
+  unresolved external threads, seven raw reviews, and two normalized external
+  reviews. `iamcxa/qnow#1124@ebddb0ab` remained head-stable with complete first
+  pages, no nested overflow, two raw/two normalized unresolved external threads,
+  and one raw/one normalized external review. The documented GraphQL selection,
+  including comment commit IDs, executed successfully.
+- DONE: Run the proportional repository exits at the committed candidate.
+  `scripts/version-parity-check.sh` passes all seven plugins;
+  `scripts/skill-frontmatter-lint.sh` passes 40/40 skill directories;
+  `scripts/marketplace-verify.sh` passes L0 parity, L1 schema, and all seven L2
+  installs. The repo sanitize-check skill scanned the changed public
+  `kc-dev-flow/references/kernel.md` and returned PASS with zero REJECT, BLOCK,
+  or WARN findings.
+- DONE: Apply the authoritative delivery-topology decision without changing
+  GitHub state.
+  Dependent green layers: no. Independent deliverable green slices at the
+  accepted unit: no — the two separately falsifiable values intentionally share
+  the same canonical Draft lifecycle command, completion table, and focused
+  delivery contract under the captain-approved six-file exception. Numeric
+  trigger: no (489 gross changed lines, six files). Required topology remains the
+  one preserved Draft PR #214 named by the dispatch; this worker performed no
+  push, Ready, merge, or PR edit.
+
+### Summary
+
+Exact commit `107fb9546d560a421e187ae2f77e26cd056ee7a6` implements the corrected
+six-file PR-feedback gate and default self-assignment against exact
+`origin/main` `281bd7f6`. Focused mutants, repository gates, sanitize-check, and
+both live provider cases pass; the code worktree is clean and the candidate is
+committed but unpushed for fresh validation.
