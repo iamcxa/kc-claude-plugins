@@ -424,3 +424,40 @@ PR, exact-head hosted CI, authorized merge to `main`, and durable archive state.
 ### Feedback Cycles
 
 - Cycle 1: REJECTED — delivery merge preflight; surface 5 files/33 LOC vs estimate 5 files (100% file count); AC unchanged
+
+## Stage Report: implementation
+
+- DONE: Reconcile the accepted two-commit change with current `origin/main`
+  `951618fbc81f9dae46a22014d109904a54eda6b2`.
+  The path assertion was placed after main's retained subtraction checks, and
+  the necessity predicate was recut into main's current concise ideation stage.
+  Main's `github-pr-feedback/v1` validation and done-stage contract, including
+  its contract-test mutation exercise, remains present and green.
+- DONE: Preserve the accepted five-file AC scope.
+  Both reverse-recovery copies still carry version `0.2.1`, direct adopters to
+  `_mods/reverse-recovery-audit.md`, and remain byte-identical. The existing
+  absolutes disposition and workflow-relative regression assertion remain in
+  place. Ideation still returns gates, checks, harnesses, automations, and
+  registries unread without `Criterion`, `Alternative`, and `Escape`; a
+  speculative escape still requires a dated, resolvable backlog review seed
+  with removal as the default recommendation.
+- DONE: Re-run proportionate implementation checks on the corrected head.
+  `scripts/kc-dev-flow-contract-test.py` passes, including the merged GitHub
+  feedback contract; `scripts/version-parity-check.sh` passes; `git diff
+  --check`, canonical/self-adopted `cmp`, and the stale ship-flow-path negative
+  search pass. The worktree is clean.
+- DONE: Bind the implementation handoff to the exact candidate.
+  Base is `951618fbc81f9dae46a22014d109904a54eda6b2`; path commit is
+  `d339e1e835ebcde03f2536b2044b4072a162c15f`; necessity commit is
+  `f20157bc64af5725122bdccf9d9e1de5671e856e`; final diff SHA-256 is
+  `39fef2aec22027a99e82d3539d252aa633c7c289467c37843789a8a52a132730`.
+  The diff remains exactly five declared files, `+24/-7`, with no new file,
+  executable, registry, workflow step, required context, manifest, or kernel
+  edit. Fresh validation remains required; no PR, product push, or delivery
+  action was taken.
+
+### Summary
+
+The latest-main conflicts are reconciled without weakening either accepted
+contract. The clean five-file candidate is ready for a fresh exact-head
+validation pass.
