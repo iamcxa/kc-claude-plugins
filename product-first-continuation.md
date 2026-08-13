@@ -1397,6 +1397,77 @@ Delivery readiness: NOT READY. Exact candidate and topology remain preserved, bu
 
 Exact candidate `c0b387b121f9919d5be3952d145187394bf9d59e` remains clean and its preserved P1 hard observations plus executable intake validator are green within their own evidence classes. The temporary mutation attempt did not produce valid intended-reason closure for every retained clause before the hard stop, so validation is `UNKNOWN`, no EM or delivery action was performed, and the candidate is not delivery-ready.
 
+## Stage Report: validation (final bounded mechanics retry)
+
+Verdict: UNKNOWN
+
+- DONE: Repair the temporary-validation topology. A disposable Git-capable detached worktree at exact candidate `c0b387b121f9919d5be3952d145187394bf9d59e` was created at `/tmp/product-first-git-mut.utOwzJ`. The real candidate worktree was never mutated. Each recorded retry required one exact target and restored exact candidate bytes before mutation; the disposable worktree was restored clean after the final executed retry. It remains at the reported path because the hard stop prohibited further actions.
+- DONE: Preserve all prior exact bindings and evidence classes. Base remains `64c496cdab7ccc59a15753e454f627a70383fb46`; candidate remains `c0b387b121f9919d5be3952d145187394bf9d59e`; P1 manifest SHA-256 remains `4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026`; evaluator branch remains `2fff0f5ff2712e7c8ac2a8b6aee36ce50151b9db`. P1 hard observations remain bounded to correct item, stage, first action, 650 words, zero implicit improvement I/O, and zero authority effects. Pagination/calls/time/tokens remain non-gating `FAIL`; P2-P4 remain evaluator-only `UNKNOWN`.
+- DONE: Obtain decisive mutation findings without an actor or harness. Four exact-candidate policy mutations survived the existing unmodified contract with exit zero: replace `name its item, stage, and first product action`; reverse `Defer project context until product execution`; weaken adopter detection's no task/schedule/sprint/merge/product-pause prohibition; and weaken delivery's no post/upload/create-source-work prohibition. Under Measurement item 2, each surviving retained-clause mutation rejects its affected contract and cannot be rescued by P1 or validator evidence.
+- DONE: Obtain intended non-zero artifact failures for routing/direct binding, the 651-word bound, explicit trigger, broad-discovery prohibition, zero implicit improvement I/O, cursor-plus-batch atomicity, private-key non-disclosure, validator-before-delivery, source-side create/schedule/edit/post/merge prohibition, install ownership, iteration-first empty-work, and no invention/scheduling. Bounded scan, ownership/CAS, sanitization, validated-handoff-before-promotion, and product-nonblocking mutations were rejected by the existing `absolutes.registry` block-hash contract; those are direct policy-artifact integrity failures bound to their unique mutated blocks.
+- UNKNOWN: Close the separate no-implicit-harvest clause mutation. Its multiline target did not match exactly once, so the dispatch classifies it as validation setup failure rather than a product result. The retry then crossed hard stop `2026-08-13T01:30:11Z`; no further target inspection, mutant, or cleanup was allowed.
+- UNKNOWN: Obtain the required fresh-context EM advisory. Mutation closure was incomplete at the hard stop, and the dispatch explicitly said not to start EM in that condition. No advisory was started or fabricated; its absence is missing evidence, not approval.
+- DONE: Preserve product and delivery authority. The already-green unmutated contract, nine-case downstream validator, parity, lint, diff, exact-head, changed-file map, evaluator-exclusion, and one-Draft-PR topology evidence remain unchanged. No installed-skill pressure, model matrix, actor interpreter, durable harness, product edit/commit/push, PR, readiness, merge, or release occurred.
+
+Lenses: behavior `FAIL` (item/stage/action and route-before-context mutations survive); contract/schema `UNKNOWN` (most retained artifacts reject, but no-implicit-harvest setup remains open); state/concurrency `PASS` within policy-artifact class (CAS and atomic write groups reject mutation); security/privacy `FAIL` (adopter no-authority and delivery no-post/upload/source-work groups survive, while identity/sanitization/install groups reject); runtime/platform `PASS` only for bound P1 hard observations with non-gating evaluator `FAIL`/`UNKNOWN` preserved; docs/policy `FAIL` for surviving retained clauses; delivery `PASS` for exact clean shape and topology only, with no readiness authority.
+
+Diff coverage: UNKNOWN — every retained group except the separately named no-implicit-harvest clause received a valid exact-candidate policy-artifact result. Four groups survived; one setup target remained unclosed at the hard stop.
+
+Adversarial: FAIL — exact-candidate mutations of item/stage/action, route-before-context, adopter no-auto-authority, and delivery no-post/upload/create-source-work all returned contract `PASS`. The existing contract therefore does not fail every retained clause mutation as required.
+
+Cross-model: not run — mandatory fresh-context EM was correctly withheld because mutation closure remained incomplete at the hard stop; no optional pass was authorized.
+
+E2E: PASS only for preserved P1 hard observations — manifest SHA-256 `4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026` remains byte-bound to candidate skill/reference policy. Pagination/calls/time/tokens remain non-gating `FAIL`, and P2-P4 remain evaluator-only `UNKNOWN`.
+
+Origin re-observation: PASS within the P1 hard-observation class — Reported scenario: ordinary continuation resolves the active product item before optional improvement work | Originating runtime kind: Codex installed-skill host | Re-observation artifact/revision: preserved manifest SHA-256 `4c71adba4a83cb1662fbf35af9036f898c41c7f7cb2ec987c2c5e575ec9d5026`, byte-bound to candidate `c0b387b121f9919d5be3952d145187394bf9d59e` | Equivalent-runtime rationale: exact policy hashes, invocation class, item/stage/action observation, zero-I/O result, and zero authority effects match | Falsifier kind: mutation | Result: P1 hard observations remain supported only in their class; four policy-artifact mutations independently survive and one required mutation is not closed.
+
+### Mutation evidence
+
+| Retained group | Exact-candidate result | Intended evidence |
+|---|---|---|
+| routing / direct item resolution | REJECTED | `ordinary routing does not operationalize direct active-entity resolution` |
+| item / stage / first action | SURVIVED | contract returned `PASS` |
+| 650-word bound | REJECTED | `ordinary continuation policy exceeds 650 words: 651` |
+| explicit trigger | REJECTED | `continuation does not route product work before optional harvesting` |
+| no broad discovery | REJECTED | `ordinary routing does not guard broad execution-state enumeration` |
+| zero implicit improvement I/O | REJECTED | `ordinary continuation does not prohibit improvement-state I/O` |
+| route before product context | SURVIVED | contract returned `PASS` |
+| bounded scan | REJECTED | exact unique policy block rejected by `absolutes.registry` hash |
+| ownership / CAS | REJECTED | exact unique policy block rejected by `absolutes.registry` hash |
+| cursor plus batch atomicity | REJECTED | `continue contract is missing boundary: write neither` |
+| private identity | REJECTED | `explicit harvesting does not protect private identity from host traces` |
+| sanitization | REJECTED | exact unique policy block rejected by `absolutes.registry` hash |
+| validator before delivery | REJECTED | `continue contract is missing boundary: Before the handoff leaves the repository` |
+| task/schedule/sprint/merge/product-pause prohibition | SURVIVED | contract returned `PASS` for the grouped harvest mutation |
+| post/upload/create-source-work prohibition | SURVIVED | contract returned `PASS` |
+| source create/schedule/edit/post/merge prohibition | REJECTED | `promote skill is missing boundary` |
+| install ownership | REJECTED | exact unique kernel block rejected by `absolutes.registry` hash |
+| validated handoff before promotion | REJECTED | exact unique policy block rejected by `absolutes.registry` hash |
+| product nonblocking | REJECTED | exact unique policy block rejected by `absolutes.registry` hash |
+| iteration-first empty-work | REJECTED | `an explicitly empty iteration does not short-circuit state discovery` |
+| no invention / scheduling | REJECTED | `continue contract is missing boundary: Do not invent or schedule work` |
+| no implicit harvest | UNKNOWN | exact multiline target count was zero; setup failure, not product evidence |
+
+### Acceptance results
+
+- AC-1: FAIL. Exact-byte P1 hard observations remain green, but item/stage/action and route-before-context retained-clause mutations survive the deterministic policy contract.
+- AC-2: PASS within the policy-artifact and downstream-validator classes for the completed groups. The bounded scan, ownership/CAS, atomicity, identity, sanitization, validation, and product-nonblocking groups reject mutation; the executable intake validator remains 9/9 green. This claims neither model adherence nor a P2/P3 runtime result.
+- AC-3: FAIL. The grouped adopter no-task/schedule/sprint/merge/pause mutation and delivery no-post/upload/create-source-work mutation survive. Source-side and install/promotion guards do not repair those missing deterministic sensitivities.
+- AC-4: UNKNOWN. Iteration-first empty-work and no-invention/scheduling reject mutation, but the separate no-implicit-harvest mutation was not validly established before hard stop.
+- AC-5: PASS for exact nine-file focus, one inseparable slice, durable mapping, evaluator exclusion, and one ordinary Draft-PR topology. It cannot rescue AC-1, AC-3, or the missing gate evidence.
+
+### EM record, disproof, and delivery readiness
+
+Fresh validation EM: `UNAVAILABLE` as required evidence, not an advisory route. The hard-stop rule prohibited starting it after incomplete mutation closure; no `science_officer_em_upward_report` exists for this retry.
+
+Disproof condition: the validation route can change only after an authorized new cycle makes the four surviving mutations fail for their intended named contracts, validly closes no-implicit-harvest, preserves every currently rejecting group and the unmutated contract/validator evidence, and obtains exactly one fresh-context EM against that exact packet. This dispatch authorizes no further retry.
+
+Delivery readiness: NOT READY. AC-1 and AC-3 have direct surviving-mutation failures; AC-4 and the mandatory fresh EM remain incomplete. Captain, Gate Authority, work-item authority, Spacedock state authority, delivery authority, and provider owners retain all authority.
+
+### Summary
+
+The Git-capable retry exposed four real surviving policy mutations at exact candidate `c0b387b121f9919d5be3952d145187394bf9d59e`, while most other retained groups failed for their intended contract or exact absolute-block integrity guard. One no-implicit-harvest setup target and the mandatory EM remained incomplete at hard stop, so the overall retry is honestly `UNKNOWN`; the candidate is independently not delivery-ready because AC-1 and AC-3 already contain direct deterministic failures.
+
 ## Stage Report: ideation risk closeout (cycle 8)
 
 - DONE: Replace exhaustive prose mutation and mandatory actor/EM closure with the Captain-approved risk-tiered evidence model without changing product bytes or weakening executable safety checks.
