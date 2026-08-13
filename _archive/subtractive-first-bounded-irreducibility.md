@@ -3,13 +3,16 @@ title: "kc-dev-flow: prove bounded surface necessity before adding layers"
 source: "Captain-approved subtractive-first pilot for PR #199, 2026-08-11"
 product: kc-dev-flow
 sprint: S1
-status: validation
+status: done
 lane: main
 design: required
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/kc-dev-flow-release-batch
 pr: pr-merge:199
 id: mwb53mqbayj4rrbx62zxsyer
 started: 2026-08-10T22:53:00Z
+verdict: passed
+completed: 2026-08-13T09:26:59Z
+archived: 2026-08-13T09:26:59Z
 ---
 
 ## Problem
