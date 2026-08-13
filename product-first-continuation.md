@@ -994,6 +994,7 @@ Cycle 4 replaces the unsound single-sample cost gate with a deterministic safety
 ### Feedback Cycles
 
 - Cycle 4: CONTRACT GREEN / MODEL UNKNOWN — safety/product prerequisites now govern comparability; efficiency is recorded and non-gating; final P1 not started because the deadline-bounded window was insufficient
+- Cycle 5: REJECTED / DESIGN RESET REQUIRED — the product-only candidate is deterministic GREEN, but kernel-pagination and exact-byte P2-P4 pressure remain product delivery gates; surface 17m Goal work vs estimate 20m (85%); AC unchanged pending Captain re-scope, with no further model run authorized
 
 ## Stage Report: implementation (cycle 5)
 
