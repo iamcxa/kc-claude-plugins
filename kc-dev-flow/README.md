@@ -10,6 +10,9 @@ provider while sharing the same authority and evidence discipline.
   existing workflow.
 - `continue-dev-flow` — resume an approved sprint and keep advancing committed
   work without unnecessary captain pauses.
+- `choose-work-profile` — at normal ideation entry, recommend one proportional
+  proof profile when the bound task receipt is missing or stale; the Captain
+  chooses and the authorized work-item actor records it before AC expansion.
 - `promote-dev-flow` — review sanitized adopter field evidence at the canonical
   source without granting it task or policy authority.
 - `science-officer-em` — provide independent engineering judgment through the
@@ -53,6 +56,14 @@ loads `references/improvement-harvesting.md`. That conditional path may derive a
 most one repository-local or reusable kernel candidate from unseen immutable
 debriefs, but it cannot create tasks, admit work to a sprint, schedule, merge, or
 pause product work.
+
+At normal ideation entry, continuation first reads the short work-profile receipt
+trigger. A valid receipt with an unchanged audience, lifespan, mutation boundary,
+authority need, and operational commitment skips the question and full chooser
+load. A missing or stale receipt loads `choose-work-profile`, whose closed choices
+are `POC / Exploration`, `Pilot / Product slice`, and `Production`. The chooser
+returns a candidate receipt; it does not create workflow state or gain work-item,
+stage-transition, merge, or closeout authority.
 
 `reusable-kernel` is the version-1 transport label for a sanitized source
 handoff, not a placement verdict. `promote-dev-flow` rechecks duplicates and

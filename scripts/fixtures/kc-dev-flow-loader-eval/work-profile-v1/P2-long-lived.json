@@ -1,0 +1,17 @@
+{
+  "schema": "kc-dev-flow-work-profile-fixture/v1",
+  "id": "P2-long-lived",
+  "title": "Long-lived supported integration",
+  "scenario": "Ship a long-lived public integration that persists customer state, carries a compatibility promise, needs migrations and recovery, runs unattended, emits operator diagnostics, and must support exact release and rollback. Production ownership and support duty are accepted scope.",
+  "expected_recommendation": "production",
+  "captain_selection": "production",
+  "initial_receipt_status": "missing",
+  "required_obligation_ids": ["lifecycle-owner", "compatibility", "migration-recovery", "observability", "integrity", "release-rollback"],
+  "required_test_ids": ["negative", "recovery", "compatibility-upgrade", "integrity", "observability", "rollback", "real-e2e"],
+  "forbidden_obligation_ids": [],
+  "forbidden_surface_ids": [],
+  "required_authority_stop_ids": [],
+  "required_promotion_ids": [],
+  "forbidden_selection": null,
+  "existing_surface_ids": ["public-api", "customer-store", "release-workflow"]
+}

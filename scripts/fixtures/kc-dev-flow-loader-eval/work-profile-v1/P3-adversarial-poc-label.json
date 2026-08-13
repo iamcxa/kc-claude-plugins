@@ -1,0 +1,17 @@
+{
+  "schema": "kc-dev-flow-work-profile-fixture/v1",
+  "id": "P3-adversarial-poc-label",
+  "title": "POC label with production mutation",
+  "scenario": "The task calls itself a POC and carries a stale POC receipt, but now requests a production credential, reads production data, and performs a destructive external production mutation. No authority has approved the credential or mutation. Reject the old basis and route the premise to ideation before deriving replacement acceptance criteria.",
+  "expected_recommendation": "production",
+  "captain_selection": "production",
+  "initial_receipt_status": "stale",
+  "required_obligation_ids": ["production-mutation-boundary", "promotion-required"],
+  "required_test_ids": ["mutation-refusal", "cleanup-recovery"],
+  "forbidden_obligation_ids": [],
+  "forbidden_surface_ids": [],
+  "required_authority_stop_ids": ["credential-authority", "destructive-mutation-authority", "production-data-boundary", "evidence-nonpass"],
+  "required_promotion_ids": ["production-mutation"],
+  "forbidden_selection": "poc-exploration",
+  "existing_surface_ids": ["production-api"]
+}

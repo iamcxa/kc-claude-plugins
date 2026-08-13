@@ -28,6 +28,25 @@ The continuation path keeps three ownership boundaries explicit:
   prepares captain-reviewable proposals; it does not inherit adopter authority
   or make a placement decision.
 
+The normal ideation route adds one conditional boundary before seed normalization
+and AC expansion:
+
+- The stage actor reads `## Work profile receipt`; an unchanged valid receipt
+  keeps the full chooser unloaded.
+- `choose-work-profile` recommends and asks through a host capability, then
+  returns a candidate receipt. It owns no task-body or transition mutation.
+- The Local Profile's authorized work-item actor compare-checks the exact entity,
+  writes through the existing safe transaction, syncs, and re-reads the committed
+  receipt before ideation continues.
+- A later trigger returns `PROFILE_PROMOTION_REQUIRED` to the existing
+  execution-state owner. Promotion re-enters ideation; it adds no lifecycle stage,
+  tracker, daemon, or parallel authority.
+
+The loader evaluator remains capture-only. Its `work-profile-v1` mode snapshots
+the ideation stage, conditional chooser, four frozen fixtures, closed local jq
+scorer, and sixteen no-retry call slots under one twenty-minute envelope. It does
+not call a model, select a provider implementation, or run a standing service.
+
 ## Marketplace publish flow
 
 `.claude-plugin/marketplace.json` is the published catalog; each plugin

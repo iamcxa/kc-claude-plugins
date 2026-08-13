@@ -160,6 +160,25 @@ Fresh paired model pressure and hidden-rubric grading are validation-only
 evidence. A deterministic contract pass does not establish loader equality;
 loader equality does not establish worker behavior.
 
+For proportional-work-profile validation, use the same capture adapter in its
+closed mode after both refs are committed:
+
+```bash
+python3 scripts/kc-dev-flow-loader-eval.py \
+  --mode work-profile-v1 \
+  --known-bad-ref <exact-commit> \
+  --candidate-ref <exact-commit> \
+  --output-dir "$RECEIPT"
+```
+
+That mode snapshots the ideation stage and conditional chooser, copies four
+frozen fixtures and `score.jq`, and writes a sixteen-slot manifest: no retry,
+four-way maximum concurrency, model stop at minute 15, and the same-clock
+20-minute ceiling. It performs no model call. Validation supplies each recorded
+response and runs the copied expression as
+`jq -c -f score.jq <fixture-result-input.json>`; missing output remains
+`UNKNOWN`, never a clean or zero-cost sample.
+
 A negative result carries the kernel's positive-claim bar. Sampled text matches
 do not prove a population; a check offered as evidence must name what change
 would make it fail. An absolute claim in a reference, comment, or commit message
@@ -196,6 +215,17 @@ Policy mods: [`_mods/engineering-judgment.md`](./_mods/engineering-judgment.md),
 [`_mods/reverse-recovery-audit.md`](./_mods/reverse-recovery-audit.md), and
 [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
+- Re-read the exact work item and its `## Work profile receipt`. If it is valid
+  and its basis is unchanged, consume it without another question. If it is
+  missing, or the audience, lifespan, mutation boundary, authority need, or
+  operational commitment changed, invoke `kc-dev-flow:choose-work-profile`.
+  The chooser recommends and asks through the host's best structured question
+  capability or one concise plain-chat fallback; the dispatched ideation actor
+  compares the exact entity, commits only its state path, syncs it, and re-reads
+  the committed receipt.
+  Only after the committed receipt is re-read may inherited criteria be normalized or acceptance criteria be expanded.
+  Tasks already beyond ideation are not reopened without an observed promotion
+  trigger, and the bounded mechanical-defect route keeps its valid ideation skip.
 - Ask the captain what value is protected, the appetite and tolerance, what to
   keep if cut, explicit non-goals, and the assumption most likely to be wrong.
 - Record the fastest path and smallest cut. Take the cheaper route when it
