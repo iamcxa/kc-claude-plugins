@@ -28,7 +28,7 @@ The desired operator surface is one setup skill plus one installed GitHub Action
 
 There is an unresolved trigger question for split-root state. GitHub resolves a `push` workflow from the event's associated commit/ref. If `.github/workflows/spacedock-project-sync.yml` exists only on the default branch and not on `spacedock-state/dev`, a push to the state branch may not find it. The current conservative design is a default-branch `schedule` plus `workflow_dispatch` reconcile, with event-driven alternatives — a state-branch trigger workflow or a `repository_dispatch` emitted after state push — requiring a measured spike before selection.
 
-Project #1 is user-owned. Its current title is `kc-plugins`, but its five existing items are unmanaged QNow Issues. The installer must treat all pre-existing items without a matching projector receipt as foreign: report them, never delete or overwrite them, and project only into explicitly managed items. It must not assume the repository-scoped `GITHUB_TOKEN` can write the Project, and must verify the supported credential path without copying local credentials into repository secrets. The task must distinguish repository Issue writes from personal Project writes and document the minimum supported token and scopes.
+Project #1 is user-owned. Its current title is `kc-plugins`; the captain removed its five obsolete QNow items on 2026-08-13 and a live readback showed zero items. The generic installer must still treat any pre-existing item without a matching projector receipt as foreign: report it, never delete or overwrite it, and project only into explicitly managed items. It must not assume the repository-scoped `GITHUB_TOKEN` can write the Project, and must verify the supported credential path without copying local credentials into repository secrets. The task must distinguish repository Issue writes from personal Project writes and document the minimum supported token and scopes.
 
 ## Proposed approach
 
@@ -72,13 +72,26 @@ A GitHub Project represents one management system: one workflow vocabulary, plan
 
 The rollout order is:
 
-1. `iamcxa/kc-claude-plugins`, workflow `docs/dev`, projects into user Project #1 (`kc-plugins`). This is the first real dogfood because it already uses kc-dev-flow and has enough tasks to exercise partial fields, sprint Milestones, grouping, and charts. The five current QNow items remain unmanaged until the captain separately decides whether to remove or migrate them.
+1. `iamcxa/kc-claude-plugins`, workflow `docs/dev`, projects into user Project #1 (`kc-plugins`). This is the first real dogfood because it already uses kc-dev-flow and has enough tasks to exercise partial fields, sprint Milestones, grouping, and charts. Project #1 begins dogfood empty after the captain removed its five obsolete QNow items.
 2. `spacedock-dev/subspace-relay`, workflow `docs/dev`, projects into a separate Relay Project whose number is not yet selected. Relay has its own Local Profile, sprint registry, and lifecycle policy; its adapter is validated independently rather than inheriting kc-claude-plugins field choices.
 3. CarLove projects into a separate CarLove Project after the first two mappings are stable. Its higher complexity is a later compatibility test, not a reason to broaden the first Project schema.
 
 A disposable repository and Project may still be used before dogfood to prove trigger and credential behavior. That proof environment is not counted as a dogfood target and cannot replace the kc-claude-plugins vertical slice.
 
-Project Status Updates follow the same boundary. V1 produces a deterministic run summary and the metrics needed for a human-authored update. Automated narrative updates are deferred until the first dogfood proves a low-noise transition rule such as sprint start, sprint close, or freshness failure; they must summarize the selected Project only and must not become another lifecycle authority.
+## Project Status Update flow
+
+Project Status Updates follow the same one-workflow/one-Project boundary and describe Project-level health, not item lifecycle. `COMPLETE` means the Project itself is complete, not that one sprint ended. Start and target dates remain Project-level inputs and are not inferred from an SD sprint.
+
+Separate evidence, drafting, language, and publication:
+
+1. Every successful reconcile emits a deterministic status snapshot containing the pinned trunk/state commits, selected workflow and Project, qualified sprint identities, member-set digest, stage counts, terminal count, projection conflicts/freshness, and any available goal/exit-criterion digest.
+2. Compare that snapshot with the last published update receipt, or the installation baseline before the first update. Classify changes as delivery delta (members changed stage or completed), scope delta (members entered, left, or moved sprint), and definition delta (goal, exit criterion, or sprint identity changed). A ratio change caused by a new denominator must be reported as scope change rather than work regression.
+3. A weekly schedule and high-signal reconcile events may generate a candidate draft. Initial event candidates are sprint start, sprint close, definition change, projection stale, and projection conflict. Cooldown and content digest suppress repeated drafts. A schedule delay changes draft latency, not source truth.
+4. GHA renders a baseline Markdown draft from deterministic facts and uploads the machine-readable manifest as a run artifact/job summary. It does not call an LLM. Missing dates, estimates, or exit criteria produce an explicit insufficient-evidence result rather than an invented health claim.
+5. The setup skill exposes `status draft`, `status preview`, `status publish`, and `status history`. `status draft` may optionally ask the host LLM to rewrite the baseline for clarity, but the model cannot calculate metrics, add unsupported claims, or publish. The rewrite remains bound to the manifest and evidence links.
+6. `status publish` re-reads the live SD and Project inputs, rejects a stale manifest, shows the exact GraphQL payload and diff from the latest update, and requires explicit user confirmation. The published Markdown carries a bounded machine receipt with snapshot digest, source commits, projector version, and ownership mode so the next delta has a durable baseline.
+
+GitHub has no native draft status-update object in the current API: create, update, and delete mutations operate on published updates. Therefore a generated draft is projector-owned derived evidence, not a hidden GitHub lifecycle state. V1 defaults to automated evidence and draft generation with manual publication. Opt-in automatic publication remains a later policy mode and must not make an LLM-authored body the unattended payload.
 
 ## Acceptance criteria
 
@@ -156,6 +169,12 @@ After disposable trigger/auth proof, the first dogfood vertical slice uses `iamc
 
 Verified by: disposable proof URLs and run IDs, Project #1 dry-run/apply receipts, GraphQL or REST request log, no-op receipt, untouched foreign-item evidence, and saved-view evidence. Falsified by: only fake-adapter tests pass, a QNow item changes, or the Project UI cannot answer the stated question.
 
+### AC-12 — Status drafting detects sprint deltas without surrendering publish authority
+
+Given a prior published snapshot, changing only task stage produces a delivery delta, adding four unchanged tasks produces a scope delta and explains the changed denominator, and changing the sprint exit criterion produces a definition delta. The same deterministic manifest renders the GHA baseline and constrains an optional skill-hosted LLM rewrite. An unchanged rerun produces no new candidate. Missing schedule evidence leaves proposed health unset or explicitly insufficient rather than inferring `ON_TRACK`. No Project Status Update is created until `status publish` revalidates the manifest and receives explicit user confirmation.
+
+Verified by: fixture sequence over baseline → delivery → scope → definition changes; golden JSON/Markdown drafts; stale-manifest refusal; fake GraphQL adapter proving zero create mutations before confirmation and one receipt-bearing mutation after it. Falsified by: scope expansion is described as work regression, an LLM changes a metric, `COMPLETE` is inferred from sprint closure, or GHA publishes an unconfirmed narrative.
+
 ## Open questions for independent review
 
 1. Is a default-branch workflow genuinely unable to receive a `push` event for a split state branch when the workflow file is absent from that state ref, and what is the smallest live experiment that settles it?
@@ -201,7 +220,7 @@ Use one disposable repository with default-branch workflow/config/projector, a t
 - GitHub Project changes flowing back into SD state.
 - Combining kc-claude-plugins, Relay, or CarLove in one GitHub Project, or adding a cross-project portfolio layer.
 - Adding `product`, `sprint`, estimate, target dates, or projection receipt fields to the generic SD entity schema.
-- Automatically publishing narrative Project Status Updates before a dogfood transition rule is approved.
+- Automatically publishing LLM-authored Project Status Updates or enabling any unattended publish policy before a dogfood transition rule is separately approved.
 - Inferring Priority, Size, Estimate, Cycle, dates, or sprint semantics from prose.
 - Replacing repository-local sprint Milestones with GHP Iteration.
 - Editing or committing workflow files during this backlog capture beyond the SD task itself.
