@@ -4,7 +4,7 @@ title: "kc-dev-flow: no stage reads PR review feedback, so a PASSED verdict can 
 status: backlog
 source: https://github.com/iamcxa/kc-claude-plugins/issues/213
 product: kc-dev-flow
-sprint:
+sprint: S2
 started: 2026-08-12T01:51:59Z
 completed:
 verdict:
