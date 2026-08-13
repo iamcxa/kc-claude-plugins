@@ -1082,3 +1082,293 @@ Fresh installed Claude/Codex outputs, all sample/pair/run scores, elapsed time,
 and the single fresh post-run validation EM remain `UNKNOWN` until the kept-alive
 validator runs the one no-retry 16-response evaluation at this exact head. No
 implementation-time model response or hidden grader call was made.
+
+## Stage Report: validation (cycle 2 — correction re-validation)
+
+Verdict: **REJECTED**. Exact correction head
+`9634a70960e2b26687545edc8c88c3604bb17ceb` was reviewed against
+`origin/main@3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b` and committed task body
+`8af0ca6712fb89207d8aa3d957a74912f7a3bd57` / task-content
+`sha256:62f1a9bab485f1b99f93276bfcb12d79197bfd0f3dff92aea25d66fb4aab6032`.
+The dispatch's correction-cycle paragraph names `9634a709...`; its completion
+checklist still names rejected head `01acac94...`. The newer, explicit
+correction-cycle binding controlled this run.
+
+The correction closes several cycle-1 schema gaps, but it still cannot prove
+the Captain's primary claim. The single frozen installed-host run was started
+once and stopped fail-closed after one provider response when the
+validation-owned driver raised an `UnboundLocalError`; no retry or second run
+was started. All unobserved slots, pairs, interactions, transactions, and
+promotion outcomes remain `UNKNOWN`. Separate direct falsifiers then showed
+that the corrected scorer can still certify invented work-item authority and a
+POC burden delta whose known-bad baseline is `UNKNOWN`.
+
+### Blocking findings
+
+`[P1] Bind mutation authority to the Local Profile instead of copying fixture literals — scripts/kc-dev-flow-loader-eval.py:673`
+
+`observe_work_profile_transaction` exercises a real path-scoped Git commit,
+push, and committed re-read, but its purported authorization facts are copied
+unchanged from the fixture at lines 675-676. Fixture loading checks only that
+`authorized_mutation_actor` and `authority_source` are non-empty. The scorer
+then compares those fields back to the same fixture at `score.jq:85-86`; it
+never authenticates the Local Profile, current dispatch, or actual state actor.
+A direct adversarial run replaced both fields with
+`invented-untrusted-actor` / `invented-untrusted-authority`, exercised the Git
+helper, and returned `transaction_observed:true`, `outcome:PASS`, `pass:true`.
+This does not satisfy AC-1's authoritative actor requirement or prove mutation
+of the real bound Spacedock entity.
+
+`[P1] Require a valid known-bad sample before accepting the POC burden delta — scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/score.jq:425`
+
+The ordered Test-plan gate starts with valid bound inputs, but `score_pair`
+never requires the known-bad sample to be valid or to have a closed outcome.
+Its final branch checks only the candidate and positive arithmetic delta. A
+direct falsifier supplied a candidate `PASS` and a known-bad observation with
+no transaction, which scored `UNKNOWN`; the pair still returned
+`poc_burden_delta_pass:true`, `outcome:PASS`, `pass:true`. AC-2 therefore can be
+certified from an unavailable baseline rather than an observed paired result.
+
+`[P1] Observe the promotion owner transition instead of validating a fabricated topology record — scripts/kc-dev-flow-loader-eval.test.py:788`
+
+The correction rejects a topology-free object, but it adds no runtime helper
+that observes the detecting-worker to execution-state-owner handoff, ideation
+re-entry, or dispatch of the authorized mutation actor. The only product-side
+capture code for promotion is descriptive manifest text at
+`scripts/kc-dev-flow-loader-eval.py:1190`. The GREEN test constructs all
+promotion fields and revision hashes as literals at lines 790-811, then proves
+only that the scorer accepts those literals. Matching frozen strings is not the
+AC-4 transcript or provider/runtime observation; the frozen P3 slots were never
+reached and remain `UNKNOWN`.
+
+`[P1] Count actual provider responses rather than distinct model-usage keys — scripts/kc-dev-flow-loader-eval.py:181`
+
+The manifest explicitly describes Claude accounting as `modelUsage` keys and
+admits that each key represents **at least** one response. `score_run` later
+sums the length of supplied `responses` arrays as an exact count at
+`score.jq:456-463`. Repeated responses from the same model can therefore
+collapse to one model key, so auxiliary/router calls using the requested model
+remain undercountable. The one observed raw result happened to contain one
+turn, one iteration, and only `claude-fable-5`, so its partial count is one;
+the incomplete run cannot establish AC-5 for all 16 slots.
+
+### Acceptance-criterion results
+
+| AC | Result | Decisive evidence |
+|---|---|---|
+| AC-1 | REJECTED | The closed question and transaction schemas are present, but no interactive candidate slot ran and the transaction helper accepted invented authority labels. Observable real-task `choose -> record -> committed re-read -> derive` remains unproved. |
+| AC-2 | REJECTED | Deterministic 100-AC/empty-obligation mutants now fail, but no installed-host pair completed and a direct mutant proved an `UNKNOWN` known-bad baseline can still yield pair `PASS`. |
+| AC-3 | REJECTED | Contract tests retain the four P3 stops, but no candidate P3 response ran. Safety and required-obligation/test recall are `UNKNOWN`, not an averageable pass. |
+| AC-4 | REJECTED | Topology-free input now fails, but the only passing topology is a test-authored record; no detecting-worker/owner/authorized-actor transition or real ideation re-entry was observed. |
+| AC-5 | REJECTED | Capture finished inside the two-minute preflight allowance and exactly one response was observed with no retry or auxiliary model, but the run aborted after slot 1. Fifteen slots and the aggregate remain `UNKNOWN`; the Claude source also cannot count repeated same-model responses. |
+
+### Frozen run receipt
+
+- One no-retry run started at `2026-08-13T06:35:39.505739Z` in
+  `/tmp/spacedock-work-profile-validation-20260813-cycle2`. Capture manifest:
+  `sha256:cfa446d04775c4ac52b693d857c74655ba6212050e9f3e44a728d02be09edc60`.
+- Installed loader: `/opt/homebrew/Caskroom/spacedock/0.26.0/spacedock`, version
+  `0.26.0 contract3`. It captured 16 declared slots, explicit Claude
+  `claude-fable-5` and Codex `gpt-5.6-terra`, concurrency 4, retry 0, model stop
+  at 900 seconds, and the mandatory post-run EM outside sample metrics/budget.
+- Slot 1 was the Claude known-bad P0 arm. Provider-native raw evidence
+  `sha256:f6a8dc416c3815b173e157c1c900d2db37b817fa83b53ec0836385c58e58e939`
+  records session `1661b77b-9fbc-4f76-afca-e189280941d3`, one turn, one
+  iteration, only `claude-fable-5`, no retry, and no tool/web use. Its model
+  returned `UNKNOWN` because no receipt transaction was available.
+- The validation-owned driver then failed at its first local score call because
+  a later local assignment shadowed its `run_score` function. That is a
+  validator-instrument failure, not a product finding. The frozen attempt was
+  not resumed: 1/16 provider responses observed, 15/16 slots `UNKNOWN`, 0/8
+  candidate samples observed, 0/4 pairs observed, and aggregate `UNKNOWN`.
+- Direct local falsifiers are recorded at
+  `/tmp/spacedock-work-profile-validation-20260813-cycle2/static-falsifiers.json`,
+  `sha256:0a3cb8a35e7a0ce3b84531cd0745f376d1efa8b07d79b71e66754608a0087c34`.
+  They consumed no model response.
+- The mandatory fresh validation EM below is one separate workflow-gate
+  judgment after the stopped runner. It is excluded from the 1/16 sample count
+  and comparative metrics and grants no optional cross-model authority.
+
+### Proportionality, safety, and promotion
+
+- **Proportionality:** `UNKNOWN/REJECTED`. Conditional packaging still removes
+  the 8,929-byte chooser from valid-receipt input (`12,080 -> 3,151` bytes), and
+  the 100-AC mutant is fixed. There is no completed model pair, and the pair
+  validity bypass makes a positive delta non-authoritative.
+- **Safety:** `UNKNOWN/REJECTED`. Static contracts retain the P3 stop IDs,
+  including `evidence-nonpass`, but no P3 sample ran in this attempt.
+- **Promotion:** `UNKNOWN/REJECTED`. The schema names the correct actors and
+  sequence, but candidate code only fabricates and validates the record; it
+  does not observe the owner transition at the originating runtime boundary.
+
+### Retained-surface challenge
+
+| Surface group | Without-it instrument | Result |
+|---|---|---|
+| Conditional chooser package and Codex metadata | Complete-inline versus conditional capture | Earned mechanically: the valid-receipt input is 8,929 bytes smaller while missing-receipt interaction markers remain. This does not establish behavioral acceptance. |
+| Ideation activation, receipt, and authority wording | Ordering/enum/authority mutants plus real transaction falsifier | Partly earned: ordering and closed enums pass; authority is not earned because invented actor/source labels pass. |
+| Frozen fixtures, scorer, loader adapter, loader test, and contract additions | Direct scorer/transaction mutants and single installed-host run | Not earned. This group contributes about 2,679 of 3,039 additions yet accepts an `UNKNOWN` baseline, self-certifies authority/promotion records, cannot count repeated same-model responses, and did not complete its validation-owned run. |
+| Product, architecture, adopter, kernel, and registry prose | Canonical/adopted parity, changed-file map, primary behavior comparison | Mapped but not independently accepting. The prose describes behavior that the originating runtime evidence does not yet prove. |
+
+### Exact changed-file-to-AC coverage
+
+- `ARCHITECTURE.md` — AC-1 transaction ownership; AC-4 promotion; AC-5 accounting.
+- `PRODUCT.md` — AC-2 proportional product outcome.
+- `docs/dev/README.md` — AC-1 adopted transaction path; AC-5 installed capture/EM boundary.
+- `docs/dev/_mods/kernel.md` — AC-1 ordering; AC-3 invariants; AC-4 promotion.
+- `kc-dev-flow/README.md` — AC-1 chooser route; AC-2 proportional proof; AC-4 ownership.
+- `kc-dev-flow/references/absolutes.registry` — AC-1/AC-3 receipt and authority discipline.
+- `kc-dev-flow/references/kernel.md` — AC-1 ordering; AC-3 invariants; AC-4 promotion.
+- `kc-dev-flow/skills/choose-work-profile/SKILL.md` — AC-1 through AC-4 runtime contract.
+- `kc-dev-flow/skills/choose-work-profile/agents/openai.yaml` — AC-1 Codex host entry.
+- `kc-dev-flow/skills/continue-dev-flow/SKILL.md` — AC-1 activation; AC-4 re-entry routing.
+- `scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/P0-benign.json` — AC-1 transaction fixture; AC-2 POC burden.
+- `scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/P1-limited-use.json` — AC-1 transaction fixture; AC-2 Pilot obligations.
+- `scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/P2-long-lived.json` — AC-1 transaction fixture; AC-2 Production obligations.
+- `scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/P3-adversarial-poc-label.json` — AC-1 transaction fixture; AC-3 safety; AC-4 promotion.
+- `scripts/fixtures/kc-dev-flow-loader-eval/work-profile-v1/score.jq` — AC-1 observation; AC-2 burden; AC-3 safety; AC-4 promotion; AC-5 accounting.
+- `scripts/kc-dev-flow-contract-test.py` — AC-1/AC-3/AC-4 contract mutants and shared enforcement.
+- `scripts/kc-dev-flow-loader-eval.py` — AC-1 packaging/transaction; AC-4 promotion manifest; AC-5 capture/accounting.
+- `scripts/kc-dev-flow-loader-eval.test.py` — AC-1 through AC-5 deterministic harness contract.
+
+### Validation evidence
+
+Lenses: behavior/contract-schema/state-concurrency/security-privacy/runtime-platform/docs-policy/delivery all fired; REJECTED with four P1 findings; inputs were exact candidate/base/task revisions, all 18 changed files, installed-host partial receipt, contract tests, source inspection, and direct falsifiers; falsifiers targeted invented mutation authority, UNKNOWN paired baseline, fabricated promotion topology, and provider-response reconciliation.
+Diff coverage: 81.6% (271/332 coverable changed Python statements; 61 violations) for the loader and contract adapters; the 509-line `score.jq` was outside Python coverage and was directly falsified; prose, fixtures, metadata, and all 18 changed paths received adversarial review.
+Adversarial: FAIL — invented actor/authority labels produced transaction and sample `PASS`; a pair with known-bad `UNKNOWN` produced pair `PASS`; promotion GREEN is a literal test-authored record; response accounting is a lower bound for repeated same-model calls.
+Cross-model: not_needed — the mandatory fresh high-confidence EM below resolves rejection from primary evidence; no optional cross-model review was Captain-approved, and the lone Claude sample is frozen-run evidence rather than optional review.
+E2E: FAIL — the single installed-host attempt observed only Claude known-bad P0 returning `UNKNOWN`; the validation driver then stopped, so no candidate `choose -> record -> committed re-read -> derive`, paired burden, P3 safety, or promotion journey completed.
+Origin re-observation: FAIL — Reported scenario: benign POC work should shed production ceremony while a production-mutation POC label retains every authority stop and returns to ideation | Originating runtime kind: installed Claude Code and Codex CLI over Spacedock-captured ideation inputs plus authorized Spacedock work-item mutation | Re-observation artifact/revision: `/tmp/spacedock-work-profile-validation-20260813-cycle2`, capture manifest `sha256:cfa446d04775c4ac52b693d857c74655ba6212050e9f3e44a728d02be09edc60`, candidate `9634a70960e2b26687545edc8c88c3604bb17ceb` | Equivalent-runtime rationale: exact installed Spacedock, frozen stage/chooser/fixtures/models/slots, provider-native raw output, and no simulated replacement for unavailable actor/runtime evidence | Falsifier kind: mutation and existence-disproof | Result: only one known-bad Claude response was observed, all candidate/Codex/interaction/P3 paths remain missing, and local falsifiers disproved authoritative transaction, paired-input, promotion-observation, and exact-accounting claims.
+
+### Delivery topology and deterministic verification
+
+- Product branch `spacedock-ensign/proportional-work-profile` remains clean at
+  exact head `9634a709...`, two commits above exact merge base/origin main
+  `3e28d4a7...`. There is no remote product branch, no product push, and no PR.
+- The exact diff contains 18 files, 3,039 additions, and 72 deletions (3,111
+  gross lines). The dispatch's 1,717-gross suspicion was the earlier candidate;
+  the correction is materially larger, not smaller.
+- Fresh exact-head checks passed: loader-eval test; contract test; 41-skill
+  frontmatter lint; version parity; marketplace schema and all seven local
+  installs; release metadata 32/32; release-please config; `git diff --check`;
+  canonical/adopted kernel byte parity. Mechanical green does not repair the
+  failed or missing behavioral evidence.
+- No implementation, product docs, version, release metadata, lifecycle state,
+  provider service, or standing CI was changed by validation. Only this state
+  report is committed and pushed.
+
+### Fresh science-officer EM judgment
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Reject correction head 9634a709 and return the evidence shape to ideation;
+    a third evaluator expansion is not justified after two rejected validation
+    cycles at the same gate.
+  evidence_synthesis: >-
+    Deterministic repository gates pass and conditional packaging saves 8,929
+    input bytes, but the only frozen provider result was one known-bad Claude
+    UNKNOWN before the validation-owned driver stopped. Direct falsifiers prove
+    the corrected evaluator accepts invented Local Profile authority and a POC
+    pair whose known-bad baseline is UNKNOWN. Promotion remains a test-authored
+    topology record, and Claude accounting counts model keys as a lower bound
+    rather than actual same-model responses. No candidate POC, P3, interaction,
+    transaction, Codex, or full-budget result is available.
+  risk_tradeoff_call: >-
+    Retaining the conditional chooser buys a measurable 8,929-byte lazy-load
+    saving, but the 3,111-gross-line change is dominated by an evaluator that
+    still cannot authenticate authority, observe promotion, validate both pair
+    inputs, or count its own envelope exactly. Another bounded implementation
+    repair would optimize an evidence abstraction that has already failed twice;
+    the lower-cost alternative is to reset ideation around the smallest real
+    originating-runtime vertical slice and decide which evidence machinery to
+    delete.
+  recommendation: >-
+    Return to ideation and narrow the shape before further implementation:
+    preserve the accepted conditional-packaging measurement, require one real
+    bound choose-record-reread-derive transaction and one real promotion handoff,
+    and remove synthetic evaluator surfaces that cannot observe those paths.
+  route: return
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    FO may present this second-gate rejection and ideation-reset recommendation;
+    it may not accept UNKNOWN gates, authorize another sample run, alter scope,
+    push product code, or advance the stage without Captain and Gate Authority.
+  engineering_judgment:
+    question: >-
+      Does exact candidate 9634a70960e2b26687545edc8c88c3604bb17ceb
+      materially lighten benign POC work without weakening invariant safety and
+      while satisfying the frozen validation envelope?
+    revision: >-
+      product 9634a70960e2b26687545edc8c88c3604bb17ceb against
+      3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b; task body
+      8af0ca6712fb89207d8aa3d957a74912f7a3bd57 / sha256
+      62f1a9bab485f1b99f93276bfcb12d79197bfd0f3dff92aea25d66fb4aab6032
+    evidence_synthesis: >-
+      Packaging and deterministic contracts pass, but installed-host candidate
+      behavior is missing and direct falsifiers defeat transaction authority,
+      paired validity, promotion observation, and exact provider accounting.
+      Fifteen frozen slots and every candidate/pair outcome are UNKNOWN.
+    adjudications:
+      - finding: F1-authoritative-transaction-observation
+        disposition: supported
+        basis: >-
+          Loader lines 673-676 copy fixture actor/authority literals; an invented
+          actor and authority completed the helper and scored PASS.
+      - finding: F2-valid-paired-proportionality
+        disposition: supported
+        basis: >-
+          score_pair lines 425-430 do not gate on known_bad.pass; a known-bad
+          UNKNOWN plus candidate PASS scored pair PASS.
+      - finding: F3-runtime-promotion-observation
+        disposition: supported
+        basis: >-
+          No promotion observation helper exists; the passing test constructs
+          actor, owner, revisions, evidence reference, and sequence as literals.
+      - finding: F4-provider-native-response-accounting
+        disposition: supported
+        basis: >-
+          Claude modelUsage keys establish at least one response per model while
+          score_run treats response-array length as the exact provider count;
+          the full run was also incomplete.
+    risk_tradeoff: >-
+      The lazy-loaded chooser has a bounded measured benefit, but retaining about
+      2,679 evaluator-related additions would create durable false assurance at
+      the authority and safety boundary. Resetting to direct runtime observation
+      costs another design round but is cheaper than a third synthetic repair.
+    recommendation: >-
+      Select ideation reset after this second consecutive validation rejection;
+      retain only accepted packaging evidence and reshape the proof around real
+      authorized state and promotion transactions before recutting implementation.
+    route: return
+    confidence: high
+    dissent: ""
+    disproof_condition: >-
+      Change this route only if a newly scoped exact head authenticates actor and
+      authority from the real Local Profile/dispatch, rejects UNKNOWN on either
+      side of a pair, observes rather than fabricates promotion ownership, counts
+      every provider response including repeated same-model calls, and completes
+      the single frozen candidate/P3/interaction run inside the ceiling.
+    authority_boundary: >-
+      The Captain retains scope, ideation reset, additional spend, and irreversible
+      decisions; Gate Authority retains validation verdict and stage advancement;
+      the bound work-item actor retains entity mutation; Spacedock/FO retains state
+      mechanics; delivery retains push, PR, merge, and closeout.
+```
+
+### Summary
+
+Correction-cycle validation rejected the exact candidate. It preserved and
+strengthened deterministic contracts, but the one-shot model run ended after
+one known-bad response and direct primary evidence still falsifies transaction
+authority, paired proportionality, promotion observation, and exact response
+accounting. After two consecutive rejects at this gate, the fresh EM recommends
+an ideation reset around a smaller real-runtime proof rather than another
+evaluator expansion.
+
+### Feedback Cycles
+
+- Cycle 2: REJECTED — correction re-validation; implementation grew to 3,111
+  gross diff lines versus one-worker scope; ACs unchanged; recommend ideation
+  reset after two consecutive validation rejections.
