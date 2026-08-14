@@ -5,10 +5,13 @@ product: kc-dev-flow
 sprint: S2
 design: required
 id: 9f63nm17bntn0ts7k9b1nm9c
-status: validation
+status: done
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/fix-kc-dev-flow-path-necessity
-mod-block: merge:pr-merge
+mod-block:
 pr: pr-merge:222
+verdict: passed
+completed: 2026-08-14T00:52:14Z
+archived: 2026-08-14T00:52:14Z
 ---
 
 ## Problem
