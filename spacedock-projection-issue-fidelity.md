@@ -41,10 +41,10 @@ Verified by: a fixture and Project #1 dry-run show `[{short-id}] {title}` where 
 Verified by: projector-owned Issues retain `Status`, `SD Stage`, and optional `SD Product`, gain text field `SD Identity` plus `spacedock:managed`, and preserve unrelated Project fields and repository labels. Falsified by: lifecycle metadata remains duplicated in visible body, a human field/label is replaced, or an absent optional SD field suppresses projection.
 
 **AC-3 — Mutable Issue content is not the sole mapping key.**
-Verified by: fixtures cover field-plus-receipt agreement, either anchor missing, disagreement, duplicate anchors, and a managed item with neither anchor; one valid anchor repairs the other while ambiguity produces `CONFLICT` and zero external writes. Falsified by: deleting the hidden receipt can plan a second Issue or editing `SD Identity` silently rebinds an Issue.
+Verified by: fixtures cover field-plus-receipt agreement, either anchor missing, disagreement, duplicate anchors, and a managed item with neither anchor; discovery uses the union of `spacedock:managed`, `SD Identity`, and hidden receipt, so one valid anchor repairs the other while label-only or ambiguous candidates produce `CONFLICT` and cannot plan `CREATE`. Falsified by: deleting any single signal can hide a managed candidate, deleting the hidden receipt can plan a second Issue, or editing `SD Identity` silently rebinds an Issue.
 
 **AC-4 — User body edits fail closed without becoming SD input.**
-Verified by: a post-projection body mutation produces typed `BODY_DRIFT`, preserves the GitHub body, emits no mutation or refreshed receipt, and leaves comments outside the managed comparison. Falsified by: a drifted body is silently overwritten, accepted as current, or written back to the state branch.
+Verified by: a post-projection body mutation produces per-item typed `BODY_DRIFT`, preserves the GitHub body, emits no mutation or refreshed receipt, and leaves comments outside the managed comparison without blocking unrelated safe entities. The digest covers body-minus-receipt after pinned CRLF/CR-to-LF normalization and one terminal newline; an unmodified normalized round-trip is `NO_CHANGE`. Falsified by: an unmodified body drifts, one drifted item blocks unrelated safe updates, or a drifted body is overwritten, accepted as current, or written back to the state branch.
 
 **AC-5 — The ten Project #1 dogfood Issues migrate in place and converge.**
 Verified by: an exact-state dry-run names only existing Issues #229-#238, stays below the approved mutation cap, and predicts no new Issue or Project item; after authorized apply, live readback preserves all ten numbers/URLs/comments and an identical rerun records zero operations. Falsified by: any duplicate, missing item, foreign-item mutation, or non-empty identical rerun.
@@ -82,5 +82,41 @@ Update the setup skill's mapping contract and runtime receipt/refusal guidance. 
 - `Journey/demo:` migrate one v1 fixture in place, then render the ten Project #1 changes as a no-write plan. The first visible demo is #232 with `[g5]` title, its full `## Problem` content, existing lifecycle fields, `SD Identity`, and the same Issue number.
 - `Pre-mortem:` a user removes both anchors or edits the body during migration and the projector guesses; managed-orphan and `BODY_DRIFT` classifications therefore stop the entire apply before its first write.
 - `Sizing:` one worker, one projector/test/doc seam, expected under 90 minutes; external apply is a later delivery procedure, not inner-loop implementation evidence.
-- `Cross-model:` pending the required fresh-context EM ideation verdict.
+- `Cross-model:` PASS — fresh Claude Opus 5 High, tool-less safe mode, returned `proceed / medium`; it required the discovery-union AC-3 row and normalized round-trip AC-4 row now recorded above, recommended no second model, and left schema/external apply with the captain.
 - `Disproof hooks:` a field/receipt disagreement that does not conflict, a removed receipt that plans CREATE, replacement of a foreign label/field, body drift that is overwritten, short IDs computed from only the selected subset, or a non-empty identical rerun rejects the route.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Proceed with the in-place repair. The existing field adapter, receipt parser, journal, approval digest, cap, no-op planner, and live ten-Issue installation make body construction and identity indexing localized repair seams rather than a replacement."
+  evidence_synthesis: "Live Issue #232 omits entity Markdown; the current summary producer emits metadata, receipt-only indexing loses identity when the comment is removed, and current equality ignores managed body bytes. Pre-apply evidence does not yet prove REST text-field normalization or live preservation."
+  risk_tradeoff_call: "The benefit is one readable and recognizable projected-task journey. Additive field and label risk is reversible and ambiguity remains fail-closed; the durable cost is the anchor matrix, v1 migration, and normalized body digest. A mapping ledger or state writeback costs more authority."
+  recommendation: "Proceed after extending AC-3 with union discovery and AC-4 with normalized unmodified round-trip proof. Keep BODY_DRIFT per-item and non-blocking; document manual body revert and add no repair command in this slice."
+  route: proceed
+  confidence: medium
+  multi_model: not_needed
+  fo_boundary: "FO may render, preview, and report typed outcomes; FO may not mutate schema, apply externally, write SD, or resolve drift/conflict by editing GitHub."
+  engineering_judgment:
+    question: "Should one S3 follow-up proceed as an in-place repair of the existing one-way Spacedock-to-GitHub projector?"
+    revision: "Product c00de6c2140db268eb1fe693abfa347b13a9e0b4; state 3dfa01064d514484c6f03f31729dbf2bed921854; task sha256 12f7bc5fe3d8e11a8490e50062fe1ca5dcd64fd1032ea4cfcece93552875caa9; roadmap sha256 755181bcdfc66b9aa62efe9dfa2dfda21531a3c8e122d62823ae96c3fd830029."
+    evidence_synthesis: "Live Issue #232 omits entity Markdown; the current summary producer emits metadata, receipt-only indexing loses identity when the comment is removed, and current equality ignores managed body bytes. Pre-apply evidence does not yet prove REST text-field normalization or live preservation."
+    adjudications:
+      - finding: "In-place repair is the smallest sufficient route and one value surface."
+        disposition: supported
+        basis: "The accepted journey extends existing projection lifecycle components and rejected alternatives add authority or leave the duplicate hole open."
+      - finding: "Project text identity plus receipt bounds mutable-body matching risk."
+        disposition: supported
+        basis: "Two additive anchors permit one missing signal to repair while disagreement stops before writes."
+      - finding: "Managed candidate discovery is underspecified unless label, field, and receipt form a union."
+        disposition: unresolved
+        basis: "Label-only discovery could hide an intact field/receipt after label deletion; AC-3 now requires the union fixture."
+      - finding: "Body digest normalization is underspecified until an unmodified GitHub-style round-trip is no-op."
+        disposition: unresolved
+        basis: "Line-ending normalization can otherwise produce fleet-wide false BODY_DRIFT; AC-4 now pins normalization and its RED/GREEN row."
+    risk_tradeoff: "The benefit is one readable and recognizable projected-task journey. Additive field and label risk is reversible and ambiguity remains fail-closed; the durable cost is the anchor matrix, v1 migration, and normalized body digest. A mapping ledger or state writeback costs more authority."
+    recommendation: "Proceed after extending AC-3 with union discovery and AC-4 with normalized unmodified round-trip proof. Keep BODY_DRIFT per-item and non-blocking; document manual body revert and add no repair command in this slice."
+    route: proceed
+    confidence: medium
+    dissent: "The under-90-minute appetite is optimistic; preserve conflict and migration fixtures before optional projection metadata if scope pressure appears."
+    disproof_condition: "Return if a single-signal deletion can reach CREATE, normalized unmodified body reports drift, exact preview names a new/out-of-scope Issue, or the captain declines either additive anchor."
+    authority_boundary: "Captain retains schema, scope, merge, and external apply; work-item authority retains task state; EM is advisory and FO owns mechanics only."
+```
