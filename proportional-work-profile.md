@@ -2607,3 +2607,45 @@ Fresh validation returns the exact documentation candidate for three bounded
 factual-parity corrections. Mechanical checks, clean mergeability, one-file
 scope, unchanged runtime inputs, and old-head PR feedback all pass; no product,
 GitHub, or workflow-state mutation was performed.
+
+## Stage Report: implementation (cycle 7 — source-parity repair)
+
+Verdict: **DONE**. Repaired all three documentation findings in one README-only
+commit, `2b9adb3e1028545ee08287ad6a8b905c5cfc92d2`, directly on rejected head
+`4c4ff052427ebea0c501461e5dc51eec1ac1022e`.
+
+- DONE: Scoped the chooser to normal ideation with a missing or stale receipt.
+  The prose and diagram now reuse a valid unchanged receipt without a Captain
+  pause, do not reopen work already beyond ideation without a promotion trigger,
+  and preserve the bounded mechanical-defect ideation skip.
+- DONE: Added direct POC-to-Production and Pilot-to-Production promotion paths
+  for a retained production boundary while keeping the bounded POC-to-Pilot
+  trigger for real users, persistent value, or reused shortcuts.
+- DONE: Production validation now proves every applicable lifecycle,
+  compatibility, migration/recovery, observability, integrity, rollback,
+  release, and ownership obligation in both the diagram and comparison.
+- DONE: Preserved the approved same-request import journey, one-workflow framing,
+  shared invariants, implementation-language neutrality, and all three existing
+  outcomes. No contract, schema, runtime, test, lifecycle, policy/check, version,
+  release metadata, or workflow state changed.
+
+### Exact-head checks
+
+- Fresh base: `origin/main@029047b0e7d510b71ac260f2643ec8aef52298a5`;
+  exact product head: `2b9adb3e1028545ee08287ad6a8b905c5cfc92d2`.
+- `python3 scripts/kc-dev-flow-contract-test.py` — PASS.
+- `git diff --check HEAD^ HEAD` and canonical/adopted kernel byte parity — PASS.
+- Exact correction commit: only `kc-dev-flow/README.md`, 20 insertions and 10
+  deletions. Cumulative merge-base surface: 11 files, 451 insertions and 59
+  deletions, 510 gross changed lines, below the 1,000-line appetite.
+- `git merge-tree --write-tree origin/main HEAD` — clean mergeability result,
+  tree `b02e1953b707373159b2c55a7b426571eebac1cd`.
+- The product worktree is clean and the branch is six commits ahead and one
+  behind current `origin/main`. Product code was not pushed, PR #226 was not
+  edited, and workflow status was not changed.
+
+### Summary
+
+Aligned the adopter journey with the shipped conditional activation, direct
+Production promotion boundary, and complete Production proof floor while
+keeping the correction documentation-only and inside the accepted appetite.
