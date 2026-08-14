@@ -48,7 +48,7 @@ Build a schema-driven projector with two layers:
    - It preserves the exact stage in `SD Stage` while deriving the existing five GitHub Status buckets: unscheduled backlog → Backlog, scheduled backlog → Ready, ideation/implementation → In progress, validation → In review, done → Done.
    - A missing optional field produces a partial projection, not a failed Issue projection. An invalid sprint pair blocks only the sprint/Milestone write. Identity collisions and lifecycle contradictions remain quarantined conflicts.
 
-For a single selected workflow, the minimum generic Project schema is `SD Stage` plus projector-owned `SD Projection` (`Current`, `Partial`, `Conflict`, `Stale`). V1 deliberately binds one installed configuration to one SD workflow and one GitHub Project, so it does not create an `SD Workflow` field or aggregate unrelated workflow semantics into one Project. Additional fields are admitted only when the selected profile gives them stable semantics and they answer a concrete view or metric question. For kc-dev-flow the candidate fields are `SD Product`, `SD Started`, and `SD Completed`; `SD Score`, `SD Lane`, `SD Design`, `SD Verdict`, `mod-block`, and derived `SD Cycle Days` remain optional follow-ups rather than installation defaults.
+For a single selected workflow, the minimum generic Project schema is only `SD Stage`. V1 deliberately binds one installed configuration to one SD workflow and one GitHub Project, so it does not create an `SD Workflow` field or aggregate unrelated workflow semantics into one Project. A stored `SD Projection = Current` value is not a liveness signal because it cannot decay when the workflow stops. Per-item projection state stays in the Issue receipt; installation liveness uses the timestamped last-successful reconcile receipt and a configured freshness window. Additional fields are admitted only when the selected profile gives them stable semantics and they answer a concrete view or metric question. For kc-dev-flow the candidate fields are `SD Product`, `SD Started`, and `SD Completed`; `SD Score`, `SD Lane`, `SD Design`, `SD Verdict`, `mod-block`, and derived `SD Cycle Days` remain optional follow-ups rather than installation defaults.
 
 Use repository Milestone as logical sprint membership. Do not create a duplicate `SD Sprint` single-select field, because it would duplicate authority, drift from the Milestone, and accumulate bounded select options. The captain constraint is that one SD sprint cannot span multiple repositories.
 
@@ -72,26 +72,28 @@ A GitHub Project represents one management system: one workflow vocabulary, plan
 
 The rollout order is:
 
-1. `iamcxa/kc-claude-plugins`, workflow `docs/dev`, projects into user Project #1 (`kc-plugins`). This is the first real dogfood because it already uses kc-dev-flow and has enough tasks to exercise partial fields, sprint Milestones, grouping, and charts. Project #1 begins dogfood empty after the captain removed its five obsolete QNow items.
+1. `iamcxa/kc-claude-plugins`, workflow `docs/dev`, projects into user Project #1 (`kc-plugins`). This is the first real dogfood because it already uses kc-dev-flow and has enough tasks to exercise partial fields, grouping, and charts. Project #1 begins dogfood empty after the captain removed its five obsolete QNow items. Before bounded apply, create two deliberate receipt-less fixtures so foreign-item preservation has a non-vacuous live test: one title collision and one item with a hand-set real `SD Stage` value.
 2. `spacedock-dev/subspace-relay`, workflow `docs/dev`, projects into a separate Relay Project whose number is not yet selected. Relay has its own Local Profile, sprint registry, and lifecycle policy; its adapter is validated independently rather than inheriting kc-claude-plugins field choices.
 3. CarLove projects into a separate CarLove Project after the first two mappings are stable. Its higher complexity is a later compatibility test, not a reason to broaden the first Project schema.
 
 A disposable repository and Project may still be used before dogfood to prove trigger and credential behavior. That proof environment is not counted as a dogfood target and cannot replace the kc-claude-plugins vertical slice.
 
-## Project Status Update flow
+## Project Status Update sibling boundary
 
 Project Status Updates follow the same one-workflow/one-Project boundary and describe Project-level health, not item lifecycle. `COMPLETE` means the Project itself is complete, not that one sprint ended. Start and target dates remain Project-level inputs and are not inferred from an SD sprint.
 
-Separate evidence, drafting, language, and publication:
+The captain approved splitting status drafting and publication into the separately scheduled `spacedock-project-status-updates` sibling. This task owns only the producer seam: every successful reconcile emits a versioned deterministic status snapshot. The sibling consumes that snapshot and owns delta classification, candidate suppression, optional LLM wording, stale-manifest refusal, and human-confirmed publication.
+
+The sibling design keeps these boundaries:
 
 1. Every successful reconcile emits a deterministic status snapshot containing the pinned trunk/state commits, selected workflow and Project, qualified sprint identities, member-set digest, stage counts, terminal count, projection conflicts/freshness, and any available goal/exit-criterion digest.
 2. Compare that snapshot with the last published update receipt, or the installation baseline before the first update. Classify changes as delivery delta (members changed stage or completed), scope delta (members entered, left, or moved sprint), and definition delta (goal, exit criterion, or sprint identity changed). A ratio change caused by a new denominator must be reported as scope change rather than work regression.
-3. A weekly schedule and high-signal reconcile events may generate a candidate draft. Initial event candidates are sprint start, sprint close, definition change, projection stale, and projection conflict. Cooldown and content digest suppress repeated drafts. A schedule delay changes draft latency, not source truth.
+3. A weekly schedule and high-signal reconcile events may generate a candidate draft. Initial event candidates are sprint start, sprint close, and definition change. Cooldown and content digest suppress repeated drafts. Projection liveness belongs to the reconcile health surface, not a management status narrative. A schedule delay changes draft latency, not source truth.
 4. GHA renders a baseline Markdown draft from deterministic facts and uploads the machine-readable manifest as a run artifact/job summary. It does not call an LLM. Missing dates, estimates, or exit criteria produce an explicit insufficient-evidence result rather than an invented health claim.
-5. The setup skill exposes `status draft`, `status preview`, `status publish`, and `status history`. `status draft` may optionally ask the host LLM to rewrite the baseline for clarity, but the model cannot calculate metrics, add unsupported claims, or publish. The rewrite remains bound to the manifest and evidence links.
-6. `status publish` re-reads the live SD and Project inputs, rejects a stale manifest, shows the exact GraphQL payload and diff from the latest update, and requires explicit user confirmation. The published Markdown carries a bounded machine receipt with snapshot digest, source commits, projector version, and ownership mode so the next delta has a durable baseline.
+5. The sibling skill exposes `status draft`, `status preview`, `status publish`, and `status history`. `status draft` may optionally ask the host LLM to rewrite the baseline for clarity, but the model cannot calculate metrics, add unsupported claims, or publish. At publish time, every number, date, identifier, and health claim in the rewrite must be an unchanged member of the deterministic manifest fact set; omission is allowed, invention or alteration is refused.
+6. `status publish` re-reads the live SD and Project inputs, rejects a stale manifest, shows the exact GraphQL payload and diff from the latest update, and requires explicit user confirmation. The published Markdown carries a bounded machine receipt with snapshot digest, source commits, projector version, and ownership mode so the next delta has a durable baseline. If the latest published update has no parsable receipt, the sibling reports `insufficient-evidence` and requires an explicit re-baseline; it never treats a foreign update as its baseline or overwrites one.
 
-GitHub has no native draft status-update object in the current API: create, update, and delete mutations operate on published updates. Therefore a generated draft is projector-owned derived evidence, not a hidden GitHub lifecycle state. V1 defaults to automated evidence and draft generation with manual publication. Opt-in automatic publication remains a later policy mode and must not make an LLM-authored body the unattended payload.
+GitHub has no native draft status-update object in the current API: create, update, and delete mutations operate on published updates. Therefore a generated draft is sibling-owned derived evidence, not a hidden GitHub lifecycle state. The projection v1 emits evidence only; the sibling may add automated draft generation with manual publication. Opt-in automatic publication remains a later policy mode and must not make an LLM-authored body the unattended payload.
 
 ## Ideation working record
 
@@ -103,18 +105,18 @@ The protected value is a low-maintenance external view of SD state that stays tr
 
 Non-goals remain GitHub-to-SD writeback, Relay or CarLove rollout, unattended Project Status Update publication, LLM-derived metrics, a hosted service, and a cross-Project portfolio. The riskiest assumption is that a default-branch Actions topology can obtain both split-state inputs and least-authority personal Project credentials with acceptable latency and upgrade cost.
 
-Appetite and deviation stop remain captain-owned and are not yet denominated in human-hours. The proposed first cut is a POC-shaped vertical slice; the ideation gate remains open until the captain records the appetite and the deviation that forces a re-cut.
+Captain-approved appetite is eight human-hours for the POC. Stop and re-cut if the disposable trigger/credential proof consumes two hours without a reproducible supported route, if implementation requires a hosted service or a Spacedock core change, or if the first observable round trip cannot stay within one setup skill plus one deterministic projector. Preserve projection and its snapshot producer; defer Milestone writes and every status draft/publish consumer before extending the appetite.
 
 ### Inherited acceptance normalization
 
 | Criteria | Class and disposition |
 |---|---|
 | AC-1, AC-2, AC-7, AC-9, AC-10 | Retain as value or authority constraints: generic portability, idempotency, traceable freshness, visible liveness failure, and safe archive semantics. |
-| AC-3 | Retain the value that every field serves a view/metric/audit; treat the exact initial field list as the current smallest hypothesis, not immutable schema. |
+| AC-3 | Retain the value that every field serves a view/metric/audit; the generic minimum is now only `SD Stage`, with time-bearing reconcile freshness outside stored Project enums. |
 | AC-4, AC-6 | Retain as falsifiable spikes earned by the automatic reconcile and user-owned Project values. The spike selects topology and credential type; it does not pre-authorize repository or secret mutation. |
 | AC-5, AC-8 | Retain the captain-selected installable skill plus GHA boundary. Exact installed filenames are mechanisms and may change if a smaller reviewed layout satisfies the same reviewability, upgrade, and single-reconcile values. |
 | AC-11 | Retain as the S3 observable dogfood value and bind apply to a separately approved bounded subset after dry-run. |
-| AC-12 | Retain deterministic delta classification and human publication authority. Treat optional LLM rewriting as deferrable presentation, not completion value. |
+| AC-12 | Narrow this task to the versioned deterministic snapshot producer. Move delta classification, drafting, optional LLM wording, and human-confirmed publication to the separately scheduled `spacedock-project-status-updates` sibling. |
 
 ### Reverse-recovery audit against `origin/main@b9821d50580f184fc81f2363ade820fd76a30af6`
 
@@ -127,13 +129,13 @@ Two search strategies were used over `kc-dev-flow`, repository `scripts`, and `.
 | Schedule plus manual-dispatch Actions shape | `WORKING_UNIT_UNPROVEN` | `REQUIRED` | `.github/workflows/e2e-pipeline-real-browser.yml:49-56` demonstrates schedule, `workflow_dispatch`, and narrow permissions in this repository. It does not prove split-state event delivery or personal Project write permissions, so AC-4/6 retain the live spike. | A disposable split-state run that cannot reconcile from both pinned refs flips the selected topology to `EXISTS_BROKEN`. |
 | GitHub Project/Issue projection adapter | `MISSING` | `REQUIRED` | Neither domain search nor the complete kc-dev-flow/scripts/workflow inventory found ProjectV2 item mutation, qualified identity lookup, or receipt reconciliation code. Add one deterministic projector only after its fake-adapter RED case fails. | Discovery of an importable existing adapter that passes the same fake/live contract changes the plan to recovery. |
 | Installable projection templates/config | `MISSING` | `REQUIRED` | Existing plugin bytes contain no projection workflow/config/projector templates. Add only the target-repository bytes required by the selected spike; do not add a daemon or hosted service. | A supported host-native installation surface that can produce an auditable target diff removes the vendored-template proposal. |
-| Status snapshot/delta renderer | `MISSING` | `REQUIRED` by S3 exit | No status-update manifest, delivery/scope/definition delta classifier, or ProjectV2 status-update adapter exists in the inventoried surfaces. Build the deterministic manifest/renderer on projector receipts; LLM rewriting remains skill-hosted and optional. | An existing renderer accepting the proposed manifest and passing delivery/scope/definition fixtures changes this to recovery. |
+| Status snapshot producer | `MISSING` | `REQUIRED` | No versioned reconcile snapshot exists. Add only the deterministic producer seam to this task; the status-update sibling owns delta rendering and publication. | An existing producer accepting projector receipts and passing stable-schema fixtures changes this to recovery. |
 
 ### Route, carve, and pre-mortem
 
 The smallest current route is one projection skill plus one deterministic projector whose install mode vendors the reviewed config/workflow/script bytes. No reusable workflow repository, Action package, daemon, database, webhook service, or LLM call belongs in the runtime path. The GHA file is an execution shell over the same projector used by local dry-run and manual dispatch.
 
-The provisional carve exposes two potentially independent value surfaces. Slice 1 is install → ten-entity dry-run → approved bounded apply → no-op rerun → `SD Stage` grouped view. Its literal operator demo is `gh workflow run spacedock-project-sync.yml -f dry_run=true`, followed by the Project #1 grouped view and a run summary showing the same pinned commits and zero second-run mutations. Slice 2 is reconcile snapshot → delivery/scope/definition delta → deterministic Markdown draft → stale-manifest publish refusal. Because status drafting can fail while projection remains useful, the ideation EM must decide whether AC-12 stays a second slice or requires a separately scheduled sibling task under the journey-slicing independent-blocker rule.
+The accepted carve has two slices in one projection journey. Slice 1 proves the split-state trigger and dedicated-credential topology in a disposable repository/Project, then performs a one-entity round trip and no-op rerun. Slice 2 installs into `kc-claude-plugins`, dry-runs ten entities, applies an approved bounded subset, proves foreign-fixture preservation and no-op convergence, emits the versioned status snapshot, and leaves the grouped view usable. Status draft/publish work is the named `spacedock-project-status-updates` sibling because its API, credential, baseline, and confirmation failures cannot block projection value.
 
 Pre-mortem: the design ships and still fails because installation appears portable while every adopter needs bespoke schema, token, and trigger repair; the disproof is a second-repository dry-run that requires code edits rather than config/profile selection.
 
@@ -153,13 +155,13 @@ Verified by: a fake GitHub adapter with operation receipts for a mixed ten-entit
 
 ### AC-3 — Project fields serve explicit views or metrics
 
-The generic default creates only `SD Stage` and `SD Projection`. The kc-dev-flow profile may add `SD Product`, `SD Started`, and `SD Completed`; qualified sprint uses Milestone; Priority, Size, Estimate, and Cycle are never inferred. V1 never creates `SD Workflow`, because one configuration selects one workflow and one Project. Installation prints, for every created field, its source authority, blank behavior, and intended group/filter/chart use.
+The generic default creates only `SD Stage`. The kc-dev-flow profile may add `SD Product`, `SD Started`, and `SD Completed`; qualified sprint may use Milestone in a later approved slice; Priority, Size, Estimate, and Cycle are never inferred. V1 never creates `SD Workflow`, because one configuration selects one workflow and one Project. Installation prints, for every created field, its source authority, blank behavior, and intended group/filter/chart use. Projection freshness is time-bearing reconcile evidence, never a frozen per-item `Current` enum.
 
 Verified by: installer dry-run snapshot and Project schema fixture. Falsified by: an unknown custom field silently becomes a Project field, `sprint` writes Cycle, or the installer creates a duplicate `SD Sprint` field.
 
 ### AC-4 — Trigger topology is proven, not assumed
 
-A live disposable-repository experiment determines whether a workflow present only on the default branch runs on a push that changes only a split state branch lacking that workflow. It records the exact refs and run IDs for both the control and experimental pushes. The chosen v1 topology must then prove automatic reconciliation without adding a hidden local hook.
+A live disposable-repository experiment determines whether a workflow present only on the default branch runs on a push that changes only a split state branch lacking that workflow. It records `git ls-tree <state-ref> -- .github`, the no-workflow experimental push and documented absence, a state-ref-with-workflow positive control, and a manual-dispatch positive control with exact refs and run IDs. The chosen v1 topology must then prove automatic reconciliation without adding a hidden local hook.
 
 The decision compares exactly three supported options:
 
@@ -167,25 +169,25 @@ The decision compares exactly three supported options:
 2. a minimal workflow present on the state branch and triggered by state push;
 3. default-branch `repository_dispatch` emitted by an authenticated state-push integration.
 
-Selection criteria are event latency, state-branch pollution, required credential surface, retry/reconcile behavior, workflow upgrade path, and ability to prove exactly-once effects through idempotency. If immediate event-driven behavior requires changing Spacedock or installing state-branch workflow bytes, state that explicitly rather than claiming a default-branch push listener can observe the split branch. The current v1 hypothesis is default-branch schedule as the liveness safety net plus `workflow_dispatch` as the fast path; an explicit setup/dev-flow operation may invoke `gh workflow run` after a successful state push without becoming a hidden git hook. The experiment, not this hypothesis, makes the final choice.
+Selection criteria are event latency, state-branch pollution, required credential surface, retry/reconcile behavior, workflow upgrade path, and convergence through idempotent apply. V1 pre-registers option 1: default-branch schedule as the liveness safety net plus `workflow_dispatch` as the fast path. Flip away from it only if the disposable proof shows it cannot meet the configured freshness window or fresh-install dispatch is unreliable. If immediate event-driven behavior requires changing Spacedock or installing state-branch workflow bytes, state that explicitly rather than claiming a default-branch push listener can observe the split branch. An explicit setup/dev-flow operation may invoke `gh workflow run` after a successful state push without becoming a hidden git hook.
 
 Verified by: links to the disposable repository workflow files, commits, Actions runs or documented absence, and a decision record naming the winning v1 topology. Falsified by: the selected trigger cannot reproduce after a fresh install, or relies only on documentation interpretation without a live branch experiment.
 
 ### AC-5 — Installer skill produces reviewable, least-authority output
 
-One setup skill supports `install`, `audit`, and `upgrade`. Install pins the target repository, trunk ref, state ref, workflow directory, Project owner/number/ID, mapping profile, generated field plan, and projector version. It defaults to dry-run and shows exact files and external Project mutations before applying them. At runtime the projector re-derives capabilities from both pinned inputs and refuses mutation if they disagree with the reviewed config. It never stores or prints credential values.
+One setup skill supports `install` and `audit`; v1 upgrade is an install re-run that prints a target diff. Install pins the target repository, trunk ref, state ref, workflow directory, Project owner/number/ID, mapping profile, generated field plan, projector version, and projector byte digest. It defaults to dry-run and shows exact files and external Project mutations before applying them. Local dry-run executes the vendored target bytes or refuses when their digest differs from the reviewed projector. At runtime the projector re-derives capabilities from both pinned inputs and refuses mutation if they disagree with the reviewed config. It never stores or prints credential values.
 
 Verified by: install into a fixture repository, diff of exactly the expected workflow/config/script files, and a no-secret output scan. Falsified by: installation mutates an unconfirmed Project, copies local `gh` credentials, or requires editing the installed YAML by hand to select a generic profile.
 
 ### AC-6 — GitHub authentication is explicitly supported
 
-The workflow separately proves same-repository Issue/Milestone access and user-owned Project #1 access. Current live evidence shows Project #1 is a private user-owned Project with Board, Roadmap, and Table views; current Projects v2 REST and GraphQL surfaces both require direct capability probing rather than inheriting an older GraphQL-only assumption. The spike must test the actual REST and/or GraphQL mutations chosen by the implementation and determine whether a fine-grained token with personal Projects permission works before falling back to a classic PAT. The setup report identifies the supported secret/token type and required permissions, rejects an unsupported token before partial mutation, documents expiry/rotation/revocation, and keeps `GITHUB_TOKEN` for repository-scoped writes rather than using one broad token for both authorities.
+The workflow separately proves same-repository Issue access and user-owned Project #1 access. Current live evidence shows Project #1 is a private user-owned Project with Board, Roadmap, and Table views; current Projects v2 REST and GraphQL surfaces both require direct capability probing rather than inheriting an older GraphQL-only assumption. The spike must test the actual REST and/or GraphQL mutations chosen by the implementation and record a fine-grained-token attempt before any classic-PAT fallback. The workflow uses a dedicated projector credential stored under a named repository secret, never the operator's ambient local `gh` credential. The setup receipt identifies token type, minimum permissions, secret name, expiry, rotation/revocation owner, and fallback blast radius; it rejects an unsupported token before partial mutation and keeps `GITHUB_TOKEN` for repository-scoped writes.
 
 Verified by: read-only Project probe followed by a reversible fixture-item mutation using the documented secret in a disposable target, with negative coverage for an insufficient token. Falsified by: the workflow creates an Issue and only then discovers it cannot add or update the Project item.
 
 ### AC-7 — Projection receipts prove identity and freshness without state feedback
 
-Every managed Issue records repository- and workflow-qualified identity, slug, optional non-empty SD entity ID, state ref, trunk audit commit, state audit commit, entity digest, projector version, and ownership mode in one bounded machine block. Lookup by existing `issue` reference or qualified identity cannot create duplicates. Freshness compares entity digest, not only branch head. No successful run writes to the SD state branch.
+Every managed Issue records repository- and workflow-qualified identity, slug, optional non-empty SD entity ID, state ref, trunk audit commit, state audit commit, entity digest, projector version, projector byte digest, and ownership mode in one bounded machine block. Lookup by existing `issue` reference or qualified identity cannot create duplicates. Freshness compares entity digest, not only branch head. No successful run writes to the SD state branch.
 
 Verified by: duplicate/search fixtures, an unrelated state commit that leaves an entity `Current`, and a changed entity that becomes `Stale` until projected. Falsified by: an unrelated entity change marks every receipt stale or creates another Issue.
 
@@ -197,7 +199,7 @@ Verified by: dry-run, first apply, repeated no-op apply, concurrent-run test, an
 
 ### AC-9 — Liveness failure is visible
 
-The installation exposes when reconciliation has not completed within its configured freshness window, including a disabled/delayed schedule or expired Project token. Silence cannot look like a quiet, current Project.
+The installation exposes when reconciliation has not completed within its configured freshness window, provisionally three times the selected schedule interval, including a disabled/delayed schedule or expired Project token. The signal compares the timestamped last-successful reconcile receipt against that window; silence cannot look like a quiet, current Project.
 
 Verified by: disable the scheduled workflow and separately use an expired/invalid fixture token; each produces an observable stale/failing signal without mutating Issue state. Falsified by: the last successful projection remains visually `Current` indefinitely.
 
@@ -209,15 +211,15 @@ Verified by: live create → archive → reconcile for both projector-owned and 
 
 ### AC-11 — The deployed slice proves value and bounded cost
 
-After disposable trigger/auth proof, the first dogfood vertical slice uses `iamcxa/kc-claude-plugins` `docs/dev` with its true split state branch, checks out both refs, dry-runs ten representative entities against Project #1, then projects an explicitly approved bounded subset. It re-runs to zero mutations, preserves freshness after an unrelated entity change, leaves all five foreign QNow items untouched, and creates a saved view grouped by `SD Stage` that answers which entities occupy a given workflow stage. It records a bounded API request count and fails resumably under a simulated rate limit.
+After disposable trigger/auth proof, the first dogfood vertical slice uses `iamcxa/kc-claude-plugins` `docs/dev` with its true split state branch, checks out both refs, dry-runs ten representative entities against Project #1, then projects an explicitly approved bounded subset. Before apply it creates two deliberate receipt-less Project fixtures: one title collision and one item with a hand-set real `SD Stage`. It re-runs to zero mutations, preserves freshness after an unrelated entity change, and proves both foreign fixtures unchanged by field-level before/after readback. It records a bounded API request count and fails resumably under a simulated rate limit. The credential spike also probes whether saved-view creation is API-reachable; otherwise grouping the existing Project view is a documented manual operator step and automated evidence ends at correct field values.
 
-Verified by: disposable proof URLs and run IDs, Project #1 dry-run/apply receipts, GraphQL or REST request log, no-op receipt, untouched foreign-item evidence, and saved-view evidence. Falsified by: only fake-adapter tests pass, a QNow item changes, or the Project UI cannot answer the stated question.
+Verified by: disposable proof URLs and run IDs, Project #1 dry-run/apply receipts, GraphQL or REST request log, no-op receipt, foreign-fixture before/after evidence, and either saved-view evidence or the documented manual grouping fallback. Falsified by: only fake-adapter tests pass, either receipt-less fixture changes, or the Project UI cannot answer the stated question after the supported grouping step.
 
-### AC-12 — Status drafting detects sprint deltas without surrendering publish authority
+### AC-12 — Reconcile emits the stable producer seam for the status sibling
 
-Given a prior published snapshot, changing only task stage produces a delivery delta, adding four unchanged tasks produces a scope delta and explains the changed denominator, and changing the sprint exit criterion produces a definition delta. The same deterministic manifest renders the GHA baseline and constrains an optional skill-hosted LLM rewrite. An unchanged rerun produces no new candidate. Missing schedule evidence leaves proposed health unset or explicitly insufficient rather than inferring `ON_TRACK`. No Project Status Update is created until `status publish` revalidates the manifest and receives explicit user confirmation.
+Every successful reconcile emits a versioned deterministic snapshot containing pinned trunk/state commits, workflow/Project identity, qualified sprint identities when present, member-set digest, stage counts, terminal count, projection conflicts/freshness, and available goal/exit-criterion digests. Identical inputs produce byte-identical facts apart from an explicitly excluded observation timestamp. This task performs no Project Status Update mutation and invokes no LLM.
 
-Verified by: fixture sequence over baseline → delivery → scope → definition changes; golden JSON/Markdown drafts; stale-manifest refusal; fake GraphQL adapter proving zero create mutations before confirmation and one receipt-bearing mutation after it. Falsified by: scope expansion is described as work regression, an LLM changes a metric, `COMPLETE` is inferred from sprint closure, or GHA publishes an unconfirmed narrative.
+Verified by: golden snapshot fixtures for generic and kc-dev-flow profiles plus a fake Project Status Update adapter proving zero mutations. Falsified by: the snapshot invents missing schedule/health evidence, changes metric values across identical inputs, or any runtime path drafts or publishes narrative text.
 
 ## Open questions for independent review
 
@@ -226,6 +228,22 @@ Verified by: fixture sequence over baseline → delivery → scope → definitio
 3. Can a user-owned GitHub Project be updated from Actions with a narrower credential than a classic user token today, or must v1 explicitly accept that limitation?
 4. Which generic SD fields are stable enough for automatic Project schema creation, and which must remain opt-in profile mappings?
 5. Does the proposed Issue ownership split preserve trustworthy historical charts without allowing the projector to close pre-existing human Issues?
+
+## Independent ideation challenge — Claude Opus 5, 2026-08-14
+
+Fresh read-only session `66e5b3f0-8f11-4d26-ba32-9d82da61b1c3` completed with reported model `claude-opus-5`, Read-only tooling, safe mode, no MCP, and no Bash/Edit/Write. The reviewer reported **narrow**, explicitly did not treat the prior review as approval, and did not run the required live GitHub experiments.
+
+The accepted material corrections are:
+
+- Remove the frozen `SD Projection = Current` field. Use receipt state plus a timestamped installation-level reconcile receipt and a numeric freshness window.
+- Create deliberate receipt-less fixtures before Project #1 apply; an empty Project cannot prove foreign-item safety.
+- Require a dedicated named projector secret with token type, least-permission attempt, expiry, rotation/revocation owner, and explicit fallback blast radius. Ambient local `gh` credentials are never installed.
+- Pre-register schedule + manual dispatch as v1 and record the exact branch controls that could falsify it. Idempotent reruns prove convergence, not exactly-once delivery.
+- Bind local dry-run to the installed projector byte digest, not a version label alone.
+- Probe saved-view API capability and retain a documented manual grouping fallback.
+- Split status draft/publish into `spacedock-project-status-updates`; this task ends at the versioned deterministic snapshot producer. The sibling must reject foreign baselines and mechanically refuse rewritten facts not present unchanged in the manifest.
+
+The review also recommends deferring Milestone writes from the first projection slice and collapsing a separate `upgrade` mode into `install --diff`. Both fit the captain-approved eight-hour appetite and keep the first round trip to Issue + Project item + receipt + no-op convergence.
 
 ## Independent architecture review — Claude Opus 5 High, 2026-08-13
 
@@ -271,4 +289,4 @@ Use one disposable repository with default-branch workflow/config/projector, a t
 
 ## Sizing
 
-Design required. Ideation must split implementation if the trigger/authentication spike and the portable installer/projector cannot stay within one bounded dispatch. The proof slice is: install into one disposable workflow, project one entity, persist its receipt, rerun to `NO_CHANGE`, and reproduce the selected automatic trigger. The first dogfood slice then dry-runs ten kc-dev-flow entities and applies an approved bounded subset to Project #1 without mutating its five foreign QNow items.
+Design required. Eight human-hours cover the disposable proof and the smallest dogfood round trip. Stop after two hours without a reproducible trigger/credential route and re-cut before adding authority or architecture. Slice 1 proves the selected trigger, dedicated credential, one entity, one receipt, and a `NO_CHANGE` rerun in disposable targets. Slice 2 dry-runs ten kc-dev-flow entities, applies an approved bounded subset to Project #1, preserves two deliberate foreign fixtures, emits the status snapshot, and leaves exact stage grouping usable. Milestone writes and all status draft/publish behavior are deferred.
