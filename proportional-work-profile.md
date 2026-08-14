@@ -2332,3 +2332,44 @@ paginated reads; required checks pass.
 
 Canonical population input: `{"head":"d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7","items":[],"layer":"single","pr":226,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}`.
 PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr":226,"layer":"single","head":"d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7","fingerprint":"sha256:afd2e7571d7d1f5da8bec1f05d666f9553905c1a779c0abe797cfa9ec6c606e2","dispositions":[]}
+
+## Stage Report: implementation (cycle 6 — adopter-facing profile journey)
+
+Verdict: **DONE**. Added one documentation-only commit,
+`4c4ff052427ebea0c501461e5dc51eec1ac1022e`, directly on accepted product head
+`d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7`.
+
+- DONE: Added one concise `kc-dev-flow/README.md` section that follows the same
+  request, “Build an import workflow.”, through POC, Pilot, and Production.
+- DONE: The journey begins with audience, lifespan, state, mutation boundary,
+  and authority analysis, then preserves one shared authority, safety, evidence
+  honesty, cleanup, and delivery-gate invariant node before the Captain chooses
+  the intended commitment.
+- DONE: The diagram shows each profile's ideation, implementation, validation,
+  and outcome obligations, plus POC-to-Pilot and Pilot-to-Production promotion.
+  The compact comparison applies those obligations to concrete import-workflow
+  choices without introducing another chooser contract.
+- DONE: Profiles are explicitly one workflow with different obligations, not
+  three workflows. No receipt schema, runtime behavior, lifecycle stage,
+  workflow state, policy/check, standing test, version, or release metadata
+  changed.
+
+### Exact-head checks
+
+- Fresh validation base: `origin/main@029047b0e7d510b71ac260f2643ec8aef52298a5`;
+  exact product head: `4c4ff052427ebea0c501461e5dc51eec1ac1022e`.
+- `python3 scripts/kc-dev-flow-contract-test.py` — PASS.
+- `git diff --check HEAD^ HEAD` — PASS; the commit changes only
+  `kc-dev-flow/README.md` with 46 additions.
+- `git merge-tree --write-tree origin/main HEAD` — clean mergeability result,
+  tree `b9e90caf435cd440f192191f7d8115e84a889c14`.
+- The product worktree is clean and the branch is five commits ahead and one
+  behind current `origin/main`. Product code was not pushed, PR #226 was not
+  edited, and workflow status was not changed.
+
+### Summary
+
+Documented how one import-workflow request scales from validated experiment to
+bounded real use to long-term operation while retaining shared invariants and
+explicit promotion triggers. The amendment remains a single adopter-doc surface
+on top of the accepted candidate.
