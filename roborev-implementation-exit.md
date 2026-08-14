@@ -87,8 +87,9 @@ authority.
   current and documented `review` command has no stable JSON launch receipt.
 - **Pre-mortem:** the workflow ships and says it reviewed the right code, but a
   concurrent job or ambient global configuration caused it to read a different
-  review. The prevention is exact repo/ref/config matching, before/after job-set
-  comparison, and `UNKNOWN` whenever identity is not unique.
+  review or spend twice. The prevention is an atomic claim in existing Spacedock
+  execution state, winner-only re-query/enqueue, exact repo/ref/config matching,
+  and `UNKNOWN` whenever claim or job identity is not unique.
 
 ### Fastest path and smallest cut
 
@@ -133,27 +134,38 @@ Draft, Ready, merge, and terminalization decisions.
    explicit local-command bridge is usable only when the binding authorizes it
    and the bridge proves the Mac checkout is the same exact tip; otherwise the
    result is non-green.
-3. **Reuse before enqueue.** Query queued, running, and completed provider jobs.
-   Reuse or wait for a provider-native job only when its repository, exact
-   range/tip, agent, model, reasoning, minimum severity, panel name and complete
-   membership, and configuration revision all match. Stale or ambiguous jobs do
-   not match.
-4. **One explicit request.** If no matching job exists, snapshot the job IDs,
-   enqueue exactly one explicit exact-ref review, then compare the provider job
-   set. Because `review` exposes no stable JSON launch receipt, accept a job only
-   when exactly one new parent job matches all bound inputs. Zero or multiple
-   candidates are `UNKNOWN`; do not enqueue again in the same attempt.
-5. **Terminal evidence.** Wait no longer than the repository's declared live
+3. **Reuse probe.** Query queued, running, and completed provider jobs. Reuse or
+   wait for a provider-native job only when its repository, exact range/tip,
+   agent, model, reasoning, minimum severity, panel name and complete membership,
+   and configuration revision all match. Stale or ambiguous jobs do not match.
+4. **Atomic single-flight claim.** If the first probe finds no match, claim the
+   identity `{repository, base, tip, configuration}` through the current work
+   item's existing Spacedock execution-state transaction. The mutation and
+   fast-forward state push are the compare-and-swap enforcement point; this is a
+   receipt in the authoritative work item, not a provider ledger or second
+   tracker. Exactly one winner may continue. Claim loss, a non-fast-forward race,
+   ambiguous ownership, or indeterminate state produces `UNKNOWN` without
+   enqueue, rebase-and-enqueue, or automatic retry.
+5. **Winner re-query and one explicit request.** Only the claim winner re-queries
+   provider jobs after claiming, closing the gap between the first probe and
+   enqueue. It reuses a newly matching job if present. Otherwise it snapshots the
+   job IDs and enqueues exactly one explicit exact-ref review. Because `review`
+   exposes no stable JSON launch receipt, accept a job only when exactly one new
+   parent job matches all bound inputs. Zero or multiple candidates are
+   `UNKNOWN`; do not enqueue again in the same attempt.
+6. **Terminal evidence.** Wait no longer than the repository's declared live
    batch limit, then re-read the selected job through `show --job <id> --json`.
    Record the job ID/UUID, exact range/tip, status, verdict, configuration, and
-   panel/member terminal states when applicable. Human-formatted CLI prose alone
-   cannot establish `PASS`.
-6. **Bounded repair.** A material finding returns to the ordinary implementation
+   panel/member terminal states when applicable. Every configured member must
+   complete without execution failure or skip before either `PASS` or a
+   review-findings `FAIL` is possible. Human-formatted CLI prose alone cannot
+   establish `PASS`.
+7. **Bounded repair.** A material finding returns to the ordinary implementation
    worker. If the resource envelope permits it, one changed exact tip may receive
    one confirmation using the same protocol. A second non-pass, timeout,
    ambiguity, or setup failure is carried into fresh validation. Never invoke
    `refine`, install a post-commit hook, or auto-review intermediate repairs.
-7. **Cost observation.** When supported, record `cost --json` totals together
+8. **Cost observation.** When supported, record `cost --json` totals together
    with `jobs_with_cost`, `jobs_total`, and `complete`. The numbers are
    approximate observation only. Invocation count, confirmation cap, panel
    membership, model, and reasoning are the enforceable spend controls.
@@ -162,14 +174,15 @@ Draft, Ready, merge, and terminalization decisions.
 
 | Provider observation | Work Control outcome | Required evidence and continuation |
 |---|---|---|
-| Terminal exact-input verdict passes | `PASS` | Matching `show --json` job and configuration; continue to fresh validation. |
-| Terminal exact-input verdict contains retained findings or fails | `FAIL` | Matching job, verdict, and finding identities; repair once if authorized or carry to fresh validation. |
+| Terminal exact-input review completes without parent/member execution failure or skip and its verdict passes | `PASS` | Matching `show --json` job, configuration, and complete member population; continue to fresh validation. |
+| Terminal exact-input review completes without parent/member execution failure or skip and reports retained review findings | `FAIL` | Matching job, findings verdict, stable finding identities, and complete member population; repair once if authorized or carry to fresh validation. |
 | Binary, daemon/state, configured agent/authentication, authorized bridge, or declared repository configuration is absent | `UNAVAILABLE` (`reason: unavailable`) | Probe/config evidence; run no review and continue to fresh validation. |
 | Installed version lacks the required command or JSON contract, or a named panel cannot run without the daemon | `UNAVAILABLE` (`reason: unsupported`) | Version/help evidence; never silently downgrade a named panel to local single-reviewer mode. |
 | Provider gives an explicit supported no-run/eligibility result before evaluating the input | `UNAVAILABLE` (`reason: skipped`) | Provider-native skip/no-run evidence; continue to fresh validation without retry. |
-| Invocation/job ends in an execution error or all panel members fail | `UNKNOWN` (`reason: failed`) | Matching failed job or command evidence; failure is never clean feedback. |
+| Invocation, parent, or any configured member has an execution failure; any member is skipped/incomplete; or a mixed panel contains an execution failure | `UNKNOWN` (`reason: failed`, `member_skipped`, or `member_incomplete`) | Matching job and complete observed member population. Execution failure is neither clean feedback nor review-findings `FAIL`; a completed reviewer findings verdict remains distinct. |
 | No terminal exact-input result exists at the live-batch deadline | `UNKNOWN` (`reason: timed_out`) | Job/timeout evidence; do not enqueue a duplicate. |
 | A result binds another tip, range, repository, configuration, or incomplete/ambiguous panel | `UNKNOWN` (`reason: stale`) | Mismatch evidence; never reuse it or relabel it `PASS`. |
+| The Spacedock single-flight claim is lost, ambiguous, or indeterminate | `UNKNOWN` (`reason: claim_lost` or `state_unknown`) | Authoritative execution-state evidence; the loser performs no provider re-query, enqueue, rebase-and-enqueue, or automatic retry. |
 
 `observe` means these non-passes do not themselves close the implementation
 boundary. They remain explicit validation input. A validator may decide the
@@ -195,9 +208,10 @@ product is otherwise acceptable, but it cannot rewrite the RoboRev receipt.
   accepts exact refs, agent/model/reasoning/minimum severity, `--panel none`,
   and local execution; `list` and `show` expose JSON, while `review` and `run`
   do not expose JSON launch receipts in this version.
-- Local provider-native evidence includes a failed two-member `branch_final`
-  synthesis at job `164` (Codex pass, Claude fail) and a passing two-member
-  synthesis at job `169`. Job `167` records the exact tip and repository-owned
+- Local provider-native evidence includes a completed two-member `branch_final`
+  findings verdict at job `164` (one reviewer pass and one reviewer findings
+  fail) and a passing two-member synthesis at job `169`. Job `167` records the
+  exact tip and repository-owned
   Codex model/reasoning/severity/member configuration. This proves the panel and
   member-failure distinctions; it does not prove a shipped Spacedock runtime
   integration.
@@ -232,7 +246,7 @@ tree.
 
 | Candidate surface | Result | Necessity or return instrument |
 |---|---|---|
-| Reuse `review_convergence` in `observe` | Keep | **Criterion:** AC1-AC4. **Alternative:** a new review capability duplicates the closed envelope and authority model. **Escape:** local job `164` proves a member failure can coexist with a passing member and must remain a typed non-pass. Mutation: collapse member failure to clean and AC2 fails. |
+| Reuse `review_convergence` in `observe` | Keep | **Criterion:** AC1-AC4. **Alternative:** a new review capability duplicates the closed envelope and authority model. **Escape:** local job `164` proves completed reviewer findings can coexist with a passing reviewer, while the required mixed execution-failure mutant must remain `UNKNOWN`, not clean or review-findings `FAIL`. Mutation: collapse those two classes and AC2 fails. |
 | One conditional RoboRev provider reference | Keep | **Criterion:** AC1-AC3. **Alternative:** inline provider mechanics in `continue-dev-flow` makes every adopter load RoboRev details and obscures the no-provider path. **Escape:** current `review` lacks JSON launch identity and local named-panel execution can silently become one reviewer. Mutation: accept prose or silent downgrade and AC2/AC3 fails. |
 | Repository-native `.roborev.toml` for this repository's dogfood selection | Keep | **Criterion:** AC3. **Alternative:** ambient global defaults are not repository-owned; duplicating provider settings in a second registry creates drift. **Escape:** origin-aware config mutation to global/default makes AC3 fail. |
 | New daemon, hook, generalized evaluator, receipt database, or cost ledger | Return | Remove each from the proposed tree. AC1-AC4 remain testable through explicit CLI observation, the existing stage report envelope, and provider JSON/cost coverage. Any future claim that one is necessary must provide its own failed without-it instrument and Captain scope decision. |
@@ -248,7 +262,8 @@ sibling. One worker owns the conditional loading rule, provider reference,
 repository dogfood config, parity docs, contract fixtures, and Roadmap wording.
 The first demo runs the same candidate tip once with the declared single reviewer
 and then reruns continuation against the matching completed job to show reuse
-with zero additional enqueue.
+with zero additional enqueue. A deterministic two-continuation demo proves one
+atomic Spacedock claim winner and zero loser enqueues for the same identity.
 
 ## Design determination
 
@@ -278,24 +293,36 @@ calls when omitted, and validation reachability for every no-run case.
 
 Only one terminal `show --json` result matching repository, exact range/tip,
 agent/model/reasoning/severity/panel configuration, and complete member state can
-produce `PASS`; findings map to `FAIL`, while failed, timed-out, ambiguous, or
-stale evidence maps to `UNKNOWN`. **Verified by:** fixture/mutation cases for all
-eight required classes plus live inspection of passing job `169` and mixed-member
-failed job `164`; mutate exact tip, config, member terminal state, job count, and
-deadline independently. **Falsifier:** any mutation still yields `PASS`, a
-member failure is synthesized clean, or human prose alone closes the receipt.
+produce `PASS`; only a completed review-findings verdict with no parent/member
+execution failure or skip maps to `FAIL`. Any parent/member execution failure,
+skipped or incomplete member, mixed panel containing an execution failure,
+timeout, ambiguity, or staleness maps to `UNKNOWN`. **Verified by:**
+fixture/mutation cases for all eight required classes plus member-failed,
+member-skipped, member-incomplete, and mixed-panel variants; live job `169` must
+map `PASS`, completed mixed-reviewer findings job `164` must map `FAIL`, and the
+mixed execution-failure fixture must map `UNKNOWN(reason: failed)`. Mutate exact
+tip, config, member terminal state, job count, and deadline independently.
+**Falsifier:** any mutation still yields `PASS`, an execution failure maps to
+review-findings `FAIL`, a member failure/skip/incompleteness is synthesized
+clean, or human prose alone closes the receipt.
 
 **AC3: Review spend is repository-owned and structurally bounded**
 
 The workflow reuses a matching queued/running/completed job before enqueue,
-enqueues at most once for one tip, permits at most one post-repair confirmation,
-defaults this repository to one declared reviewer with `panel: none`, and runs a
-named panel only when committed repository configuration opts in. It reports
-provider cost coverage as approximate and incomplete when so marked.
+then atomically claims `{repository, base, tip, configuration}` through existing
+Spacedock execution state. Only the claim winner may re-query and enqueue;
+claim loss or indeterminate state returns `UNKNOWN` with no enqueue/retry. The
+workflow enqueues at most once for one identity, permits at most one post-repair
+confirmation, defaults this repository to one declared reviewer with `panel:
+none`, and runs a named panel only when committed repository configuration opts
+in. It reports provider cost coverage as approximate and incomplete when so
+marked.
 **Verified by:** a fake provider call log and origin-aware config fixtures for
-single, named-panel, global-default, reuse, concurrent ambiguity, repair, and
-cost-coverage cases, plus the first demo's no-second-enqueue observation.
-**Falsifier:** duplicate enqueue for a matching tip, a third review round,
+single, named-panel, global-default, reuse, repair, and cost-coverage cases, plus
+a two-concurrent-continuation test in which both first probes miss, exactly one
+atomic claim wins, and the loser performs zero provider re-query/enqueue.
+**Falsifier:** two claim winners or any loser enqueue for the same identity,
+duplicate enqueue for a matching tip, a third review round,
 Production alone selects a panel, ambient global settings pass ownership, a
 named panel silently becomes local single review, or incomplete cost is reported
 as a precise ceiling.
@@ -332,7 +359,8 @@ minutes; a timeout records `UNKNOWN` and never triggers an automatic retry.
 | Batch | Maximum | Evidence |
 |---|---:|---|
 | Static contract and parity mutants | 10 min | Conditional locator, omitted declaration, package/adopted wording, four-state mapping, authority, no hook/refine/ledger, and Roadmap closeout. |
-| Fake-provider deterministic matrix | 15 min | PASS, findings, unavailable, unsupported, skipped, failed, timed out, stale, reuse, ambiguity, single/panel, repair cap, and incomplete cost coverage. |
+| Fake-provider deterministic matrix | 15 min | PASS, completed review findings, unavailable, unsupported, top-level skipped, parent/member failed, member skipped/incomplete, mixed-panel failure, timed out, stale, reuse, ambiguity, single/panel, repair cap, and incomplete cost coverage. |
+| Two-concurrent-continuation single-flight | 10 min | Both initial probes miss; the existing Spacedock execution-state transaction yields exactly one claim winner, while claim loss/indeterminate state yields `UNKNOWN` and zero loser re-query/enqueue/retry. |
 | Current local capability probe | 5 min | Version/help, daemon/state, configured agent/auth check, JSON command support, and config origin; no review enqueue. |
 | Exact-tip single-reviewer/reuse demo | 20 min | One explicit review at the candidate tip, provider-native terminal receipt, then a second continuation observation with zero new job IDs. |
 | Named-panel compatibility | 20 min | Run only when committed repository config opts in and the resource envelope permits; otherwise use the proven provider fixture plus `UNAVAILABLE`, never silent single-reviewer fallback. |
@@ -352,11 +380,13 @@ state.
   medium-or-higher defect (or truthfully passes the clean mutation) or one honest
   non-green no-run receipt, and fresh validation remains reachable in both cases.
 - **Correctness counters:** 8/8 required outcome classes classified; 0 stale,
-  ambiguous, failed-member, or prose-only cases accepted as `PASS`; 100% receipts
-  bind repository and exact tip.
+  ambiguous, failed/skipped/incomplete-member, mixed-execution-failure, or
+  prose-only cases accepted as `PASS`; 0 execution failures classified as
+  review-findings `FAIL`; 100% receipts bind repository and exact tip.
 - **Spend counters:** explicit enqueue count `<= 1` per tip, repair confirmation
-  `<= 1`, omitted-control calls `= 0`, undeclared panel members `= 0`, and reuse
-  demo additional enqueue `= 0`.
+  `<= 1`, atomic claim winners `<= 1` per repository/base/tip/config identity,
+  claim-loser re-query/enqueue/retry `= 0`, omitted-control calls `= 0`,
+  undeclared panel members `= 0`, and reuse demo additional enqueue `= 0`.
 - **Cost observation:** report the provider total and coverage fields together.
   `complete: false` or missing usage stays visible and makes no exact-dollar
   claim.
@@ -377,16 +407,18 @@ state.
   reviewer loop” wording with “no unbounded/adjudicating loop” and conditionally
   load the provider reference only when the Local Profile declares it.
 - `kc-dev-flow/references/roborev-implementation-exit.md`: add the narrow
-  provider protocol, capability matrix, exact-job correlation, outcome mapping,
-  bounded repair, approximate cost observation, and authority limits.
+  provider protocol, capability matrix, existing-state atomic single-flight
+  claim, exact-job correlation, outcome mapping, bounded repair, approximate
+  cost observation, and authority limits.
 - `docs/dev/README.md`: adopt the behavior locally, declare the
   `review_convergence` observation at implementation exit, and retain the
   existing validation/GitHub/Captain contract.
 - `.roborev.toml`: commit this repository's lowest-cost valid single-reviewer
   model/reasoning/severity choice with no automatic hook and no default panel.
 - `scripts/kc-dev-flow-contract-test.py` and focused fixtures: prove conditional
-  loading, exact mappings, configuration origin, structural caps, package/adopted
-  parity, and reject authority mutations without creating a generic evaluator.
+  loading, exact mappings, configuration origin, two-concurrent-continuation
+  single-flight, structural caps, package/adopted parity, and reject authority
+  mutations without creating a generic evaluator.
 - `docs/dev/ROADMAP.md`: add `roborev-implementation-exit` after
   `proportional-work-profile` and replace the S2 exit with:
 
@@ -410,7 +442,8 @@ state.
 - A default panel by work profile, automatic fallback between reviewers, or
   workflow-owned model/provider policy.
 - A new daemon, generalized evaluator, job mirror, finding tracker, receipt
-  store, cost ledger, exact-dollar budget, or cross-repository scheduler.
+  store, cost ledger, generalized lock service, exact-dollar budget, or
+  cross-repository scheduler.
 - Replacing fresh validation, the GitHub-native feedback contract, required
   checks, release evidence, or Captain delivery authority.
 - Posting review output or mutating a PR from this sensor.
@@ -487,3 +520,26 @@ science_officer_em_upward_report:
     disproof_condition: "Change to proceed if the revised proposal provides one unambiguous UNKNOWN rule for every incomplete or failed panel member and a tested atomic single-flight enforcement point that prevents two concurrent continuations from enqueueing the same repository/base/tip/config observation without adding a second ledger."
     authority_boundary: "Captain retains scope, Roadmap, irreversibility, red-residual, push, Draft, Ready, merge, and terminalization authority; Gate Authority owns advancement; Spacedock remains work-item and execution-state authority; fresh validation and GitHub observation retain their existing decisions; RoboRev remains a sensor with no posting or transition authority."
 ```
+
+### Ideation repair report: REPAIRED_FOR_CLAUDE_OPUS_EM
+
+- **Reviewed state revision:**
+  `8c2e2b193516f21358c3c7b2680f8a8d09c71dbf`, preserving its OpenAI
+  `gpt-5.6-sol` `route: return` report as historical evidence.
+- **Panel correction:** only completed review findings with no parent/member
+  execution failure, skip, or incompleteness can be `FAIL`; any such execution
+  defect, including a mixed execution-failure panel, is unambiguously `UNKNOWN`
+  with a typed reason. Completed mixed-reviewer findings job `164` remains the
+  distinct `FAIL` example. The mapping, AC2, tests, measurements, and examples
+  now agree.
+- **Single-flight correction:** the existing Spacedock execution-state
+  transaction atomically claims repository/base/tip/config before enqueue. Only
+  the winner may re-query/enqueue; claim loss, ambiguity, or indeterminate state
+  is `UNKNOWN` with no enqueue, rebase-and-enqueue, or automatic retry. AC3 now
+  includes a two-concurrent-continuation falsifier and matching counters.
+- **Unchanged boundaries:** Production profile, optional no-tool/Cloud path,
+  one-review-per-tip and one-confirmation caps, provider cost caveat, no new
+  daemon/ledger/lock service, and fresh validation/GitHub/Captain authority.
+- **Status:** `REPAIRED_FOR_CLAUDE_OPUS_EM`. This records a bounded correction,
+  not a gate pass; the First Officer owns the Captain-selected fresh Claude Opus
+  5 High review.
