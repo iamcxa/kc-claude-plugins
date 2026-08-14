@@ -74,3 +74,11 @@ The repository secret value is a separate host operation and never enters instal
 - `Schedule disposition:` merge only just after a 15-minute cron boundary, dispatch manually immediately, and require ten-item field readback plus an identical zero-operation rerun before schedule evidence is accepted. Any scheduled run that starts first becomes the first apply evidence and must satisfy the same readback/convergence bar; it is never hidden or relabeled manual.
 - `E2E:` local live read-only Project observation PASS; GitHub-hosted apply and no-op remain pending delivery.
 - `Origin re-observation:` pending the Project #1 manual run; Project #1 remains zero items at this checkpoint.
+
+### Draft delivery and Ready gate
+
+- Draft PR `#228` binds exact base `f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7`, exact candidate `cf61b4b5d631358d0f85f28a046c773737cf802f`, and exactly one matching `Candidate:` line.
+- GitHub CI PASS at that head: portable e2e suite, version parity, real-browser decision/proof, and GitGuardian all green; expected non-applicable jobs skipped.
+- GitHub PR feedback snapshot is complete at that head: zero reviews, zero issue comments, zero review threads, zero unresolved threads, and no pagination remainder.
+- Fresh Claude Opus 5 High Ready gate returned `ready_only / high`, acknowledged the native-stack exception, found zero blockers, and granted no merge, dispatch, or Project mutation authority.
+- Ready remains captain authority. Merge-time revalidation must confirm token/approval validity, recount the live plan, and re-observe the cron/manual race.
