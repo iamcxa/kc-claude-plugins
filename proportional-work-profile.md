@@ -2880,3 +2880,39 @@ Fresh exact-head validation passes the bounded README repair with all three
 prior Material findings closed. The candidate remains mechanically green,
 README-only, within appetite, cleanly mergeable, and unpushed; Draft PR #226
 remains unchanged at its older validated head.
+
+## Validation terminal observation — merged PR #226
+
+Terminalization evidence: **PASS** for explicit repository
+`iamcxa/kc-claude-plugins`, PR `226`, and approved candidate
+`2b9adb3e1028545ee08287ad6a8b905c5cfc92d2`.
+
+- The current PR body contains exactly one `Candidate:` line, and its full SHA
+  equals both the approved candidate and GitHub `headRefOid`
+  `2b9adb3e1028545ee08287ad6a8b905c5cfc92d2`.
+- GitHub reports state `MERGED`, `isDraft: false`, non-empty `mergedAt`
+  `2026-08-14T07:33:21Z`, and merge commit
+  `6f0e274e6e02ff7e0e5b158859783df037c45c4d`.
+- The complete feedback snapshot was identity-stable across the starting PR
+  view, one terminal GraphQL review-thread page, one REST review page, and the
+  repeated PR view. It contained zero threads, no nested comment overflow, zero
+  reviews, no duplicate IDs, and an empty retained external population.
+- `gh pr checks 226 --repo iamcxa/kc-claude-plugins --required` — PASS. The one
+  required check, `version parity (plugin.json / marketplace.json / codex /
+  README)`, completed `SUCCESS` in workflow `marketplace version parity`:
+  `https://github.com/iamcxa/kc-claude-plugins/actions/runs/31779419409/job/94701720958`.
+
+Canonical population input: `{"head":"2b9adb3e1028545ee08287ad6a8b905c5cfc92d2","items":[],"layer":"single","pr":226,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}`.
+PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr":226,"layer":"single","head":"2b9adb3e1028545ee08287ad6a8b905c5cfc92d2","fingerprint":"sha256:76da25239e659a9ad4727976f80db78fc0b1855d6b0c812dc88c665081dd673e","dispositions":[]}
+
+All fail-closed terminal evidence rows are satisfied at the merged exact head:
+explicit repository, one body Candidate, matching `headRefOid`, non-empty
+`mergedAt`, exact-head feedback fingerprint with complete dispositions, and
+explicit-repository required checks. This receipt is suitable for the separate
+authorized terminalization transaction. This observation did not mutate task
+frontmatter, archive state, product files, refs, worktrees, or GitHub.
+
+### Summary
+
+Refreshed terminal evidence at merged candidate `2b9adb3e...`; PR identity,
+merge metadata, complete feedback population, and required checks all pass.
