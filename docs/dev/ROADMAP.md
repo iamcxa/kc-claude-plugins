@@ -321,7 +321,8 @@ evaluation platform. Hold the S2 Release PR until all three items exit.
 
 ### Sprint S3 — GitHub projection dogfood
 
-Dependency: begin after `kc-dev-flow/S2` completes.
+Captain direction: begin immediately alongside the remaining `kc-dev-flow/S2`
+validation work. S3 does not change S2 scope, ordering, or release hold.
 
 Captain-approved sequence:
 
