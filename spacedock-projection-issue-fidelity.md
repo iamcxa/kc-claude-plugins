@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/spacedock-projection-issue-fidelity
 issue:
-pr:
+pr: "#240"
 mod-block:
 design: required
 lane: main
