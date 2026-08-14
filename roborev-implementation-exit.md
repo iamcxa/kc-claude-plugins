@@ -543,3 +543,37 @@ science_officer_em_upward_report:
 - **Status:** `REPAIRED_FOR_CLAUDE_OPUS_EM`. This records a bounded correction,
   not a gate pass; the First Officer owns the Captain-selected fresh Claude Opus
   5 High review.
+
+### Fresh Claude Opus 5 High EM gate: PROCEED
+
+- **Reviewed state revision:**
+  `826f3f64ce6ec18971c55bdb5836d4909b015ca1`.
+- **Reviewer:** canonical Claude Opus 5 (`claude-opus-5`), high effort, using
+  claude.ai OAuth with API-key/auth-token environment variables removed,
+  read-only Read/Grep/Glob tools, Bash/Edit/Write disabled, empty MCP, safe mode,
+  and no session persistence. Duration was approximately 203 seconds; the Claude
+  CLI reported approximate cost USD 1.4197335.
+- **Verdict:** `PROCEED`, confidence `high`. The repaired Production-profile
+  proposal is gate-ready; remaining risk belongs to normal implementation proof,
+  not another ideation repair loop.
+- **Implementation proof obligation 1:** the two-concurrent-continuation test
+  must exercise the real existing state transaction in both required topologies:
+  two independent state clones where non-fast-forward rejection can fire, and a
+  shared-parent variant that refuses a second claim when the parent already
+  records the same identity. Both variants must perform a post-push re-read. A
+  mocked lock is not sufficient.
+- **Implementation proof obligation 2:** define deterministic precedence for an
+  incomplete or ambiguous member state versus stale completed findings:
+  `member_incomplete` versus `stale`.
+- **Implementation proof obligation 3:** a claim loser conservatively returning
+  `UNKNOWN` with no provider re-query, no enqueue, and no retry is accepted
+  behavior.
+- **Disproof condition:** return the task from implementation if either
+  concurrency topology produces two winners, any loser re-queries or enqueues at
+  the provider, or the existing state transaction cannot express same-identity
+  refusal without adding a second ledger, tracker, daemon, or generalized lock
+  service.
+- **Authority boundary:** unchanged. This EM recommendation does not approve the
+  Captain gate, implementation dispatch, external spend, PR readiness, or merge;
+  existing Spacedock, validation, GitHub-observation, and Captain authorities
+  remain in force.
