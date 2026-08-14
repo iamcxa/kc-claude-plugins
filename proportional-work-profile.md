@@ -1,7 +1,7 @@
 ---
 id: 4wkne0vvpgsy2japzr08xqtx
 title: "kc-dev-flow: choose a proportional work profile before AC expansion"
-status: validation
+status: implementation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint: S2
@@ -11,7 +11,7 @@ verdict:
 worktree: .worktrees/spacedock-ensign-proportional-work-profile
 issue:
 pr: "#226"
-mod-block: merge:pr-merge
+mod-block:
 design: required
 lane: main
 ---
@@ -2073,6 +2073,8 @@ terminalization authority.
 
 - Cycle 5: REJECTED — delivery merge preflight after ordered S2 predecessor #222; surface 11 files/454 gross lines vs under-1,000-line appetite (45.4%); AC unchanged
 - Design-reset decision: RECONFIRM the existing four ACs and POC appetite. The Captain resumed S2 after #222 merged; recut only the conflict-sensitive contract-test integration against current `origin/main`, preserve the accepted chooser behavior and receipts, then obtain fresh exact-head validation.
+- Cycle 6: CAPTAIN-AMENDMENT — add the approved adopter-facing same-request/three-profile journey to `kc-dev-flow/README.md`; one product-document surface; AC unchanged
+- Design-reset decision: RECONFIRM the existing four ACs and POC appetite. The Captain authorized a bounded documentation-only addition to the existing #226 delivery unit: explain how one request changes across POC, Pilot, and Production inside the same workflow, preserve shared invariants and promotion triggers, and add no receipt schema, runtime behavior, lifecycle stage, or standing test.
 
 ## Stage Report: implementation (cycle 5 — current-base recut)
 
