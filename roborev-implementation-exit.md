@@ -970,3 +970,198 @@ science_officer_em_upward_report:
     authority_boundary: >-
       Captain retains scope, Roadmap, irreversibility, accepted-red, push, initial Draft, Ready, merge, and terminalization authority; Gate Authority owns stage advancement; the implementation owner performs any repair; Spacedock and its registered state holder retain work-item and execution-state mutation authority; fresh validation and later GitHub observation retain their existing roles; RoboRev remains an evidence-only sensor with no provider-posting or workflow authority.
 ```
+
+## Stage Report: validation cycle 2
+
+### Checklist
+
+- `DONE` — Bound the fresh cycle to merge target
+  `c00de6c2140db268eb1fe693abfa347b13a9e0b4`, candidate
+  `1e54cd4e25a3b9bd4c460d62b7a9d76ba1de9755`, validation-entry task revision
+  `ce9e7632`, all five acceptance criteria, and all 13 changed files. The
+  product worktree was clean, the declared base was the merge base and current
+  `origin/main`, both relevant suites passed, and `git diff --check` passed.
+- `DONE` — Revalidated F1 through installed Spacedock `0.26.0`, the registered
+  Local Profile holder shape, `scripts/dev-flow-state-prereq.sh`, and
+  `spacedock state commit` in both concurrency topologies. Adjudicated F2 with
+  direct wrong-value, missing-field, malformed-population, and precedence
+  falsifiers without editing product files or invoking RoboRev.
+- `DONE` — Obtained exactly one new fresh-context GPT-5.6 High engineering
+  judgment against this exact candidate. It returned `route: return`,
+  confidence `high`, and `multi_model: not_needed`.
+- `DONE` — Recorded all six validation-evidence lines, measured focused-test
+  execution, package/adopted parity, the initial-delivery no-PR condition,
+  one-PR topology, proof-surface judgment, and one structural bounded route for
+  the second rejected cycle without exercising implementation or delivery
+  authority.
+
+### Summary
+
+`REJECTED`. F1/AC3 is closed: the repaired fixture now exercises the actual
+registered-holder prerequisite and supported Spacedock durability transaction,
+and its large setup is not replaceable by the existing refusal-only test. AC1
+and AC2 remain open. Missing canonical identity evidence can still become
+`PASS`, malformed member evidence escapes the closed outcome mapping, terminal
+failure can be mislabeled as timeout, and historical job `170` is not an
+exact-current-tip receipt for the repaired candidate. Return once for a
+structural, bounded classifier/receipt correction; do not invoke RoboRev again.
+
+### Validation evidence
+
+- Exact inputs: base and merge base
+  `c00de6c2140db268eb1fe693abfa347b13a9e0b4`; candidate
+  `1e54cd4e25a3b9bd4c460d62b7a9d76ba1de9755`; task revision `ce9e7632`;
+  clean product worktree; 13 files, 1,265 additions, and 46 deletions.
+- Fresh suites: `python3 scripts/roborev-implementation-exit-contract.test.py`
+  passed in 8.57 seconds; `python3 scripts/kc-dev-flow-contract-test.py` passed
+  in 19.28 seconds; `git diff --check` passed. Python trace observed 441/441
+  executable statement lines in the focused test; this is statement execution,
+  not proof of unmodeled inputs or prose behavior.
+- Fresh origin observation at `2026-08-14T10:42:26Z` found `origin/main` still
+  at the declared base. Package and adopted provider contracts were byte
+  identical, the fixture parsed as JSON, and no product PR exists for branch
+  `iamcxa/roborev-implementation-exit-repair-recut`.
+
+```text
+Lenses: FAIL — behavior, contract/schema, state/concurrency, runtime/platform, docs/policy, and delivery fired against AC1-AC5, the Local Profile, kernel, Work Control Profile, provider runbook, exact 13-file diff, installed Spacedock transaction, fixture classifier, and historical job 170; F1 and present-but-wrong identity mutations passed, while 4 material AC1/AC2 gaps remained. Security/privacy found no new credential, disclosure, destructive, or GitHub-mutation path; authority remained intact.
+Diff coverage: focused executable statement execution was 100% (441/441 lines) and 13/13 changed files were mapped to AC1-AC5; prose-only surfaces were adversarially reviewed rather than assigned a numeric execution percentage. Full execution does not cover absent identity fields, malformed population shapes, failed-plus-deadline precedence, or a changed-tip receipt.
+Adversarial: FAIL — all 11 present-but-wrong scalar identity fields plus wrong/missing/extra stable members returned UNKNOWN(stale), but the canonical PASS fixture supplied none of those scalar fields and still passed; deleting each required scalar independently still passed, malformed member populations raised SystemExit or AttributeError instead of UNKNOWN, and terminal failed plus deadline_reached returned timed_out. F1's installed transaction produced one winner in both topologies, refused invalid holder states, and the suite failed when SPACEDOCK_BIN was replaced by /usr/bin/false.
+Cross-model: not_needed — the one fresh GPT-5.6 High EM adjudicated F1 closed, F2A/F2B/F2C and the current-tip receipt gap supported, returned route return with high confidence, and recommended one structural bounded correction for the second rejected cycle rather than a second model.
+E2E: FAIL — installed Spacedock 0.26.0 exercised registered holders, the clean-holder prerequisite, supported state commit, independent-clone race, shared-parent refusal, and post-push re-read at this exact candidate, but no exact-current-tip RoboRev observation or closed non-green fallback exists after the repair; historical job 170 was not queried, retried, or confirmed.
+Origin re-observation: FAIL — Reported scenario: one proportional implementation-exit observation must bind the full exact-input identity and the supported Spacedock transaction before fresh validation | Originating runtime kind: local RoboRev v0.62 historical job plus installed Spacedock 0.26.0 state transaction | Re-observation artifact/revision: job 170 retained as historical evidence; state fixture and classifier at candidate 1e54cd4e25a3b9bd4c460d62b7a9d76ba1de9755 | Equivalent-runtime rationale: the repaired concurrency path used the declared holder/prerequisite/durability commands and the classifier exercised the same canonical provider fields and member population named by the runbook | Falsifier kind: mutation and refusal | Result: F1 passed through the actual supported transaction, but missing identity and malformed/precedence mutations defeated AC2 and the changed candidate has no closed exact-tip receipt, so the origin claim remains non-green.
+```
+
+### Finding adjudications and bounded route
+
+1. **F1 — closed (`AC3`).** The focused test uses installed Spacedock `0.26.0`,
+   the real `scripts/dev-flow-state-prereq.sh`, registered
+   `spacedock-state/dev` holders, and `spacedock state commit`. Independent
+   clones produced one `pending` winner and one `claim_lost`; the shared parent
+   refused the second identity; post-push reads agreed. Missing tool,
+   non-holder, dirty, ahead, divergent, stale, and bypassed-preparation cases
+   earned no winner. Replacing `SPACEDOCK_BIN` with `/usr/bin/false` made the
+   suite fail. The existing 47-line prerequisite test covers only refusal and
+   cannot substitute for this concurrency/durability proof; the retained
+   installed-Spacedock fixture is bounded necessary evidence, not removable
+   ceremony in this slice.
+2. **F2A — supported (`AC2`).** `classify` at lines 45-59 uses
+   `case.get(field, identity[field])`. The PASS fixture contains none of the 11
+   scalar identity fields, and removal of any one field from an otherwise
+   explicit exact case still returned `PASS(passed)`. Missing provider evidence
+   therefore masquerades as an exact match. Require each canonical field to be
+   present and equal before lifecycle/verdict mapping; add sparse and
+   field-deletion falsifiers.
+3. **F2B — supported (`AC2`).** `members=None` or a mapping exits through
+   `SystemExit`, and a null member raises `AttributeError`. The closed contract
+   requires malformed, incomplete, or ambiguous population evidence to return
+   a typed non-pass. Add one fail-closed normalization boundary and make every
+   malformed shape return the declared `UNKNOWN` reason without exception.
+4. **F2C — supported (`AC2`).** A terminal parent `status: failed` combined
+   with `deadline_reached: true` returned `UNKNOWN(timed_out)` because deadline
+   interpretation precedes failure. Apply terminal parent/member execution
+   failure before deadline interpretation and add the overlap mutant.
+5. **Current-tip receipt — supported (`AC1`).** Job `170` belongs to the
+   superseded tip. The repair-cycle block preserves useful historical
+   provenance but carries `FAIL` with a reason outside the closed mapping. For
+   the repaired exact tip, record a closed honest non-pass such as
+   `UNKNOWN(reason: stale)` referencing job `170`; do not request confirmation
+   without separate authority.
+
+This is the second rejected validation cycle at the same gate. The fresh EM
+recommends one structural bounded correction because the architecture, real
+state transaction, proportional spend boundary, authority separation, package
+parity, and one-PR topology are otherwise valid. An ideation reset, scope cut,
+or stop would discard working proof without addressing the localized
+normalization/receipt defects.
+
+### Feedback and delivery topology
+
+- `PR feedback: N/A — initial delivery has no product PR or stack layer; the
+  exact branch query returned an empty population. The first Draft remains
+  Captain-push-authorized only after a passed local validation.`
+- Delivery remains one dependent slice and one future Draft PR. No stack
+  exception, provider posting, push, Draft creation, Ready, merge, release, or
+  terminalization was performed.
+- Changed-file coverage remains 13/13: configuration maps to AC3; product and
+  architecture docs to AC1/AC3/AC4; package/adopted loader and runbook surfaces
+  to AC1-AC5; Roadmap to AC1/AC3/AC4/AC5; and registry, fixture, focused test,
+  and aggregate test to AC1-AC5.
+
+### Engineering judgment
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    The exact candidate 1e54cd4e25a3b9bd4c460d62b7a9d76ba1de9755 should not proceed. F1 is credibly closed and the retained proof surface is justified, but AC1 and AC2 remain materially open: the current-tip Work Control record reuses a historical FAIL outside the closed mapping, missing identity evidence can still produce PASS, malformed member evidence aborts instead of returning UNKNOWN, and terminal failure can be mislabeled timed_out. Because this is the second rejected validation cycle, recommend one structural bounded correction rather than ideation reset, scope narrowing, or stop.
+  evidence_synthesis: >-
+    The clean worktree, HEAD, origin/main, and merge base bind the review to base c00de6c2140db268eb1fe693abfa347b13a9e0b4 and candidate 1e54cd4e25a3b9bd4c460d62b7a9d76ba1de9755. Fresh focused and aggregate contract reruns pass, git diff --check is clean, package and adopted runbooks are byte-identical, and the candidate changes 13 files with 1265 additions and 46 deletions. F1 is closed by actual Spacedock 0.26.0 execution through scripts/dev-flow-state-prereq.sh and spacedock state commit: independent clones produce one winner and one claim_lost, the shared parent refuses duplication, both paths re-read authoritative state, invalid holder states stay non-green, and substituting /usr/bin/false for SPACEDOCK_BIN makes the focused suite fail. The 710-line focused file is therefore substantial executable setup and proof for concurrency and state-boundary behavior that the existing 47-line refusal-only test cannot establish. However, classify at lines 45-59 compares each required scalar with case.get(field, identity[field]); the canonical PASS case contains none of those eleven fields, a sparse case returns PASS, and deleting any one field from an explicit exact case still returns PASS, contrary to AC2 and runbook lines 49-66 and 121-157. members=None or a mapping raises SystemExit and members=[None] raises AttributeError rather than producing a declared UNKNOWN. A failed terminal parent with deadline_reached=true returns UNKNOWN(timed_out) because the deadline branch precedes failure, although failed is terminal evidence and the runbook assigns execution failure UNKNOWN(failed). The repair-cycle Work Control block also carries historical job 170 as FAIL with a new non-canonical reason at the changed tip; the old job is useful provenance but cannot be the exact-current-tip receipt required by AC1. AC3's state and spend controls, AC4's authority boundary, and AC5's candidate-stage package parity are otherwise supported; published-tag and exact-head delivery evidence remain later delivery obligations.
+  risk_tradeoff_call: >-
+    The accepted sensor provides useful exact-tip defect evidence, and F1 now proves its most expensive concurrency boundary through the supported runtime. Proceeding would still permit absent provider identity evidence to be treated as an exact match, turn malformed provider data into an uncontrolled abort, misstate execution failure as timeout, and present a stale historical FAIL as the changed tip's receipt. The durable cost of correction is small and localized: replace permissive defaulting with one fail-closed normalization/schema boundary, define total member-shape handling and terminal precedence, and record a closed current-tip non-pass without another provider request. Reset, narrowing, or stopping would discard a valid architecture without reducing this localized risk.
+  recommendation: >-
+    Return for one Captain-approved bounded correction. Structurally eliminate the repeated identity-matching failure shape: require every canonical scalar field to be present and equal before PASS or FAIL, normalize and validate the complete member population without exceptions, and apply terminal parent/member execution failure before deadline interpretation. Add adversarial cases for sparse identity, deletion of every required field, malformed member shapes, and failed-plus-deadline precedence; do not merely add more permissive defaults. Replace the repair-cycle Work Control entry with a closed exact-current-tip non-pass such as UNKNOWN(stale) referencing historical job 170, unless separate authority later permits confirmation; do not invoke RoboRev for this correction. Retain the proven Spacedock harness, package/adopted parity, authority limits, and one-PR topology, then rerun the focused and aggregate suites and dispatch fresh validation at the new exact head.
+  route: return
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    FO may preserve evidence, present this second-cycle recommendation to the Captain, and route an authorized bounded correction; FO may not accept the residuals, invoke RoboRev, mutate implementation or state, create or push the Draft PR, or advance the validation gate.
+  engineering_judgment:
+    question: >-
+      After the prior validation rejection and bounded repair, do F1 closure and the green exact-candidate receipts justify proceeding, or do F2A, F2B, F2C and the current-tip receipt require another bounded correction at the second validation cycle?
+    revision: >-
+      base c00de6c2140db268eb1fe693abfa347b13a9e0b4; candidate 1e54cd4e25a3b9bd4c460d62b7a9d76ba1de9755; authoritative task roborev-implementation-exit at validation
+    evidence_synthesis: >-
+      The clean worktree, HEAD, origin/main, and merge base bind the review to base c00de6c2140db268eb1fe693abfa347b13a9e0b4 and candidate 1e54cd4e25a3b9bd4c460d62b7a9d76ba1de9755. Fresh focused and aggregate contract reruns pass, git diff --check is clean, package and adopted runbooks are byte-identical, and the candidate changes 13 files with 1265 additions and 46 deletions. F1 is closed by actual Spacedock 0.26.0 execution through scripts/dev-flow-state-prereq.sh and spacedock state commit: independent clones produce one winner and one claim_lost, the shared parent refuses duplication, both paths re-read authoritative state, invalid holder states stay non-green, and substituting /usr/bin/false for SPACEDOCK_BIN makes the focused suite fail. The 710-line focused file is therefore substantial executable setup and proof for concurrency and state-boundary behavior that the existing 47-line refusal-only test cannot establish. However, classify at lines 45-59 compares each required scalar with case.get(field, identity[field]); the canonical PASS case contains none of those eleven fields, a sparse case returns PASS, and deleting any one field from an explicit exact case still returns PASS, contrary to AC2 and runbook lines 49-66 and 121-157. members=None or a mapping raises SystemExit and members=[None] raises AttributeError rather than producing a declared UNKNOWN. A failed terminal parent with deadline_reached=true returns UNKNOWN(timed_out) because the deadline branch precedes failure, although failed is terminal evidence and the runbook assigns execution failure UNKNOWN(failed). The repair-cycle Work Control block also carries historical job 170 as FAIL with a new non-canonical reason at the changed tip; the old job is useful provenance but cannot be the exact-current-tip receipt required by AC1. AC3's state and spend controls, AC4's authority boundary, and AC5's candidate-stage package parity are otherwise supported; published-tag and exact-head delivery evidence remain later delivery obligations.
+    adjudications:
+      - finding: F1-registered-state-transaction-closure
+        disposition: supported
+        basis: >-
+          AC3, the Local Profile state boundary, and runbook lines 69-112 require the registered holder, clean-holder prerequisite, supported Spacedock durability command, one winner, loser refusal, and post-push re-read. The focused test exercises those paths with installed Spacedock 0.26.0, rejects missing, dirty, ahead, divergent, stale, non-holder, and bypassed states, and fails when SPACEDOCK_BIN is replaced with /usr/bin/false.
+      - finding: F2-explicit-mismatch-repair
+        disposition: supported
+        basis: >-
+          Independent present-but-wrong mutations of repository, base, tip, configuration, provider version, JSON contract, agent, model, reasoning, severity, panel, member identities, and member count all return UNKNOWN(stale). This closes the previously reported explicit-value mismatch cases, but not missing or malformed evidence.
+      - finding: F2A-missing-identity-evidence-can-pass
+        disposition: supported
+        basis: >-
+          AC2 and runbook lines 49-66 require provider evidence to match every canonical input. The classifier's case.get(field, identity[field]) substitutes the expected value when evidence omits a field. The canonical PASS fixture omits all eleven scalar fields, sparse PASS returns PASS, and deleting each field independently also returns PASS.
+      - finding: F2B-malformed-member-population-is-not-total
+        disposition: supported
+        basis: >-
+          AC2 and runbook lines 136-157 require incomplete or ambiguous member evidence to become a typed UNKNOWN. The executable classifier instead raises SystemExit for None or mapping populations and AttributeError for a null member, so it supplies neither the closed outcome nor a stable reason.
+      - finding: F2C-terminal-failure-precedence
+        disposition: supported
+        basis: >-
+          Runbook lines 140-154 assign terminal parent or member execution failure UNKNOWN(failed), while timed_out applies only when no terminal exact-input evidence exists. The classifier checks deadline_reached before status failed, causing a terminal failed parent at the deadline to return UNKNOWN(timed_out).
+      - finding: AC1-current-tip-observation-or-fallback
+        disposition: unsupported
+        basis: >-
+          Kernel exact-revision discipline and runbook lines 159-163 invalidate job 170 as a receipt for the changed candidate tip. The repair block preserves its historical FAIL under reason review_findings_repaired_pending_fresh_validation, which is outside the closed mapping. No further provider request is needed, but the current tip still needs an honest closed non-pass record.
+      - finding: AC2-closed-exact-input-classification
+        disposition: unsupported
+        basis: >-
+          F2A permits false PASS, F2B escapes the four-state mapping, and F2C violates declared reason precedence. Green modeled cases and full statement execution cannot close unmodeled required-field and malformed-shape behavior.
+      - finding: AC3-bounded-spend-and-single-flight
+        disposition: supported
+        basis: >-
+          The real supported state transaction produces at most one winner across both required topologies, claim losers do not reach provider re-query or enqueue, request and confirmation caps remain explicit, and no new ledger, daemon, tracker, or lock service was introduced.
+      - finding: AC4-evidence-only-authority
+        disposition: supported
+        basis: >-
+          The package, adopted runbook, Local Profile, architecture, and executable authority mutants retain fresh validation, GitHub observation, and Captain delivery authority and grant RoboRev no stage or delivery mutation.
+      - finding: AC5-candidate-parity-and-proof-surface
+        disposition: supported
+        basis: >-
+          Package and adopted runbooks are byte-identical, fixture JSON parses, the relevant aggregate contract passes, and every changed file remains mapped to AC1-AC5. The 710-line focused harness is one inseparable executable proof surface for real concurrency and refusal behavior; the shorter existing prerequisite test cannot replace it. Published-tag and exact-head delivery proof remain future release-boundary obligations.
+    risk_tradeoff: >-
+      The accepted sensor provides useful exact-tip defect evidence, and F1 now proves its most expensive concurrency boundary through the supported runtime. Proceeding would still permit absent provider identity evidence to be treated as an exact match, turn malformed provider data into an uncontrolled abort, misstate execution failure as timeout, and present a stale historical FAIL as the changed tip's receipt. The durable cost of correction is small and localized: replace permissive defaulting with one fail-closed normalization/schema boundary, define total member-shape handling and terminal precedence, and record a closed current-tip non-pass without another provider request. Reset, narrowing, or stopping would discard a valid architecture without reducing this localized risk.
+    recommendation: >-
+      Return for one Captain-approved bounded correction. Structurally eliminate the repeated identity-matching failure shape: require every canonical scalar field to be present and equal before PASS or FAIL, normalize and validate the complete member population without exceptions, and apply terminal parent/member execution failure before deadline interpretation. Add adversarial cases for sparse identity, deletion of every required field, malformed member shapes, and failed-plus-deadline precedence; do not merely add more permissive defaults. Replace the repair-cycle Work Control entry with a closed exact-current-tip non-pass such as UNKNOWN(stale) referencing historical job 170, unless separate authority later permits confirmation; do not invoke RoboRev for this correction. Retain the proven Spacedock harness, package/adopted parity, authority limits, and one-PR topology, then rerun the focused and aggregate suites and dispatch fresh validation at the new exact head.
+    route: return
+    confidence: high
+    dissent: >-
+      The implementation report and green suites claim F1 and F2 closure, with every modeled line executed. F1 and the explicit mismatch subset are accepted, but the broader proceed claim is rejected because direct adversarial inputs reproduce a false PASS, two uncontrolled abort classes, incorrect failure precedence, and a non-canonical current-tip receipt. No material disagreement remains unresolved.
+    disproof_condition: >-
+      Change to proceed on a new exact candidate when one fail-closed schema boundary requires every canonical identity field, malformed or ambiguous member populations always produce a declared UNKNOWN without exception, terminal execution failure wins over deadline interpretation, the current-tip Work Control entry uses the closed mapping without another unauthorized provider request, the retained Spacedock transaction tests still prove one winner and loser refusal, and all focused and aggregate checks pass at a clean head bound to the current merge target.
+    authority_boundary: >-
+      Because this is the second consecutive rejection at the same validation gate, the Captain retains the continuation choice among the recommended bounded correction, reset, narrowing, or stop. Gate Authority keeps validation closed; the implementation owner may correct only after that route is accepted. Spacedock and its registered holder retain task and execution-state mutation authority. RoboRev remains evidence-only, and no actor gains provider invocation, push, Draft creation, Ready, merge, accepted-red, stage advancement, or terminalization authority from this report.
+```
