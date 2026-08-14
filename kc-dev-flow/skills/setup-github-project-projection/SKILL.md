@@ -121,16 +121,32 @@ is appended to the run journal so a partial failure remains actionable.
 
 ## Receipts and refusal
 
-Manage projector-created Issue bytes only when a schema-valid qualified receipt
-is already in the selected Project, or a stranded receipt Issue was authored by
-the configured automation identity. A title match and a public receipt-shaped
-comment are not ownership. An explicitly linked human Issue must match its
-reviewed `owner/repo#number` binding; never PATCH its title, body, or state. Only
-add it to the Project when needed and manage projector-owned Project fields.
+Discover projector-created candidates from the union of the `SD Identity`
+Project text field, hidden receipt, and additive `spacedock:managed` repository
+label. Require the field and receipt to agree when both exist. A title match and
+a public receipt-shaped comment are not ownership. A stranded receipt Issue must
+still be authored by the configured automation identity. An explicitly linked
+human Issue must match its reviewed `owner/repo#number` binding; never PATCH its
+title, body, state, or labels. Only add it to the Project when needed and manage
+projector-owned Project fields.
+
+For projector-owned Issues, render `[{short-id}] {title}` and copy only the
+entity Markdown after frontmatter into the visible body. Keep lifecycle and
+identity metadata in Project fields and the managed label. Preserve any body
+whose normalized digest differs from the receipt as per-item `BODY_DRIFT`; do
+not block safe entities in the same plan. Repair one missing identity anchor,
+but fail closed when anchors disagree, duplicate, or only the managed label
+remains. Migrate the old visible summary only when it matches the recognized
+projector-summary shape.
+
+To clear `BODY_DRIFT`, the operator restores the visible Issue body to the
+current SD entity Markdown and reruns the dry-run. This slice has no force-repair
+command and never treats the edited GitHub body as SD input.
 
 Refuse or quarantine:
 
 - duplicate qualified identities or Issue references;
+- disagreeing identity anchors or label-only managed candidates;
 - unknown stages, malformed receipts, or pinned-input drift;
 - deletion without an `_archive/` tombstone;
 - unsupported Project fields or credentials;
