@@ -1,7 +1,7 @@
 ---
 id: qahvaf44bx0y52cwvr8t1a13
 title: Project Spacedock state into GitHub Issues and Projects through a portable installer
-status: ideation
+status: implementation
 source: Captain request on 2026-08-13, retargeted after live inspection from iamcxa Project #2 to Project #1
 product: kc-dev-flow
 sprint: S3
@@ -45,16 +45,16 @@ Build a schema-driven projector with two layers:
 
 2. **Optional mapping profiles**
    - The kc-dev-flow profile maps `product` to an `SD Product` single-select field and maps a valid (`product`, `sprint`) pair to a qualified repository Milestone such as `kc-pr-flow/S4 — slim the kit`.
-   - It preserves the exact stage in `SD Stage` while deriving the existing five GitHub Status buckets: unscheduled backlog → Backlog, scheduled backlog → Ready, ideation/implementation → In progress, validation → In review, done → Done.
+   - It preserves the exact stage in `SD Stage` while deriving only target-native Status semantics. For Project #1, backlog maps to `Todo`, every nonterminal active stage maps to `In Progress`, and terminal maps to `Done`; exact `SD Stage` and qualified sprint retain the finer distinction.
    - A missing optional field produces a partial projection, not a failed Issue projection. An invalid sprint pair blocks only the sprint/Milestone write. Identity collisions and lifecycle contradictions remain quarantined conflicts.
 
 For a single selected workflow, the minimum generic Project schema is only `SD Stage`. V1 deliberately binds one installed configuration to one SD workflow and one GitHub Project, so it does not create an `SD Workflow` field or aggregate unrelated workflow semantics into one Project. A stored `SD Projection = Current` value is not a liveness signal because it cannot decay when the workflow stops. Per-item projection state stays in the Issue receipt; installation liveness uses the timestamped last-successful reconcile receipt and a configured freshness window. Additional fields are admitted only when the selected profile gives them stable semantics and they answer a concrete view or metric question. For kc-dev-flow the candidate fields are `SD Product`, `SD Started`, and `SD Completed`; `SD Score`, `SD Lane`, `SD Design`, `SD Verdict`, `mod-block`, and derived `SD Cycle Days` remain optional follow-ups rather than installation defaults.
 
 Use repository Milestone as logical sprint membership. Do not create a duplicate `SD Sprint` single-select field, because it would duplicate authority, drift from the Milestone, and accumulate bounded select options. The captain constraint is that one SD sprint cannot span multiple repositories.
 
-Store projection identity and freshness in the GitHub Issue's machine-managed block. Record both the source branch commit for audit and a per-entity content digest for freshness; comparing every item only to the moving branch head would make unchanged entities falsely stale after unrelated state commits. Do not write projection receipts back into the state branch.
+Store projector-owned identity and freshness in the GitHub Issue's machine-managed block. Record both the source branch commit for audit and a per-entity content digest for freshness; comparing every item only to the moving branch head would make unchanged entities falsely stale after unrelated state commits. Explicitly linked human Issues remain byte-read-only and use the approved full Issue binding plus reconcile snapshot for identity/freshness. Do not write projection receipts back into the state branch.
 
-Distinguish projector-created Issues from pre-existing linked Issues. Only projector-owned Issues may eventually have open/closed state managed from SD terminal status; linked Issues default to metadata-only lifecycle management. Native historical burn-up/burndown claims must state which ownership class is included, because GitHub historical completion is based on Issue/PR state.
+Distinguish projector-created Issues from pre-existing linked Issues. Only projector-owned Issues may have title/body/open/closed state managed from SD. Linked Issues receive Project-field projection only and never an Issue PATCH. Native historical burn-up/burndown claims must state which ownership class is included, because GitHub historical completion is based on Issue/PR state.
 
 Expected installed files:
 
@@ -155,7 +155,7 @@ Verified by: fixture tests over commissioned workflow READMEs plus representativ
 
 **AC-2 — Mapping is field-local and idempotent**
 
-The projector classifies every entity as `CREATE`, `UPDATE`, `NO_CHANGE`, `PARTIAL`, or `CONFLICT`. Missing optional fields cannot suppress a valid Issue identity/title/status projection. Every target field declares all source dependencies: for example, kc-dev-flow's scheduled-backlog → Ready mapping depends on a valid sprint pair, so a malformed sprint suppresses both Milestone and that derived Status write rather than silently treating the item as unscheduled. A second run over identical entity bytes and GitHub state performs no mutation.
+The projector classifies every entity as `CREATE`, `UPDATE`, `NO_CHANGE`, `PARTIAL`, or `CONFLICT`. Missing optional fields cannot suppress a valid Issue identity/title/status projection. Every target field declares all source dependencies. Project #1 uses only `Todo`, `In Progress`, and `Done`; exact `SD Stage` and qualified sprint carry finer planning state, so a malformed sprint suppresses only Milestone rather than inventing another native Status option. A second run over identical entity bytes and GitHub state performs no mutation.
 
 Verified by: a fake GitHub adapter with operation receipts for a mixed ten-entity corpus, including missing product, blank sprint, existing linked Issue, terminal item, and conflicting lifecycle. Falsified by: rerunning the same input emits any create/update operation, or blank product prevents Issue creation.
 
@@ -181,13 +181,13 @@ Verified by: links to the disposable repository workflow files, commits, Actions
 
 **AC-5 — Installer skill produces reviewable, least-authority output**
 
-One setup skill supports `install` and `audit`; v1 upgrade is an install re-run that prints a target diff. Install pins the target repository, trunk ref, state ref, workflow directory, Project owner/number/ID, mapping profile, generated field plan, projector version, and projector byte digest. It defaults to dry-run and shows exact files and external Project mutations before applying them. Local dry-run executes the vendored target bytes or refuses when their digest differs from the reviewed projector. At runtime the projector re-derives capabilities from both pinned inputs and refuses mutation if they disagree with the reviewed config. It never stores or prints credential values.
+One setup skill supports `install` and `audit`; v1 upgrade is an install re-run that prints a target diff. Install pins the target repository, trunk ref, state ref, workflow directory, Project owner/number/ID, mapping profile, generated field plan, projector version/digest, automation scope, linked-Issue bindings, and an envelope expiry no later than credential expiry. Dogfood uses `selected` scope over an approved subset. Production may use `workflow` scope: every valid entity under the one commissioned workflow may create/update a projector-owned Issue, while every explicit link to an existing human Issue must match a default-branch approved full binding. Local dry-run executes vendored target bytes or refuses on digest drift. New linked bindings, target/config changes, projector drift, or expiry require a fresh reviewed install; ordinary entity lifecycle/content changes and new projector-owned entities inside workflow scope do not. It never stores or prints credential values.
 
 Verified by: install into a fixture repository, diff of exactly the expected workflow/config/script files, and a no-secret output scan. Falsified by: installation mutates an unconfirmed Project, copies local `gh` credentials, or requires editing the installed YAML by hand to select a generic profile.
 
 **AC-6 — GitHub authentication is explicitly supported**
 
-The workflow separately proves same-repository Issue access and user-owned Project #1 access. Current live evidence shows Project #1 is a private user-owned Project with Board, Roadmap, and Table views; current Projects v2 REST and GraphQL surfaces both require direct capability probing rather than inheriting an older GraphQL-only assumption. The spike must test the actual REST and/or GraphQL mutations chosen by the implementation and record a fine-grained-token attempt before any classic-PAT fallback. The workflow uses a dedicated projector credential stored under a named repository secret, never the operator's ambient local `gh` credential. The setup receipt identifies token type, minimum permissions, secret name, expiry, rotation/revocation owner, and fallback blast radius; it rejects an unsupported token before partial mutation and keeps `GITHUB_TOKEN` for repository-scoped writes.
+The workflow separately identifies same-repository Issue authority and user-owned Project #1 authority. Current live evidence shows Project #1 is a private user-owned Project with Board, Roadmap, and Table views; current Projects v2 REST and GraphQL surfaces both require direct capability probing rather than inheriting an older GraphQL-only assumption. The spike must test the actual REST and/or GraphQL mutations chosen by the implementation and record a fine-grained-token attempt before any classic-PAT fallback. The workflow uses a dedicated projector credential stored under a named repository secret, never the operator's ambient local `gh` credential. The setup receipt identifies token type, minimum permissions, secret name, expiry, rotation/revocation owner, and fallback blast radius. REST reads do not claim to prove write capability; all deterministic validation completes before writes, every successful response is journaled, and a first write may still fail safely and resumably. `GITHUB_TOKEN` remains repository-scoped.
 
 Fresh read-only evidence on 2026-08-14 confirms Project #1 ID `PVT_kwHOABc8eM4A-a-N`, zero items, and native Status options `Todo`, `In Progress`, and `Done`. Current official REST documentation for list/add/update items and add fields on a user-owned Project states that those endpoints do not support fine-grained PATs or GitHub App tokens. Therefore REST v1 must either use a dedicated classic PAT with explicit blast-radius acceptance or be displaced by a separately proven narrower GraphQL route; local ambient `gh` success does not decide the workflow credential.
 
@@ -195,13 +195,13 @@ Verified by: read-only Project probe followed by a reversible fixture-item mutat
 
 **AC-7 — Projection receipts prove identity and freshness without state feedback**
 
-Every managed Issue records repository- and workflow-qualified identity, slug, optional non-empty SD entity ID, state ref, trunk audit commit, state audit commit, entity digest, projector version, projector byte digest, and ownership mode in one bounded machine block. Lookup by existing `issue` reference or qualified identity cannot create duplicates. Freshness compares entity digest, not only branch head. No successful run writes to the SD state branch.
+Every projector-owned Issue records repository- and workflow-qualified identity, slug, optional non-empty SD entity ID, state ref, trunk audit commit, state audit commit, entity digest, projector version, projector byte digest, and ownership mode in one bounded machine block. Full Issue identity is `owner/repository#number`; bare numbers never match across repositories. A receipt is trusted only when its exact schema is valid and the configured Project already contains that same-repository item or a stranded projector-owned Issue has the configured automation author. Unrelated malformed public markers are ignored; malformed selected/managed records are quarantined. Linked human Issues carry no body receipt and are resolved only through approved full bindings. Freshness compares entity digest, not only branch head. No successful run writes to the SD state branch.
 
 Verified by: duplicate/search fixtures, an unrelated state commit that leaves an entity `Current`, and a changed entity that becomes `Stale` until projected. Falsified by: an unrelated entity change marks every receipt stale or creates another Issue.
 
 **AC-8 — One installed workflow reconciles safely**
 
-The installed workflow checks out exact trunk and state commits, serializes projector writes with `cancel-in-progress: false`, runs both credential preflights and all validation before mutation, emits a machine-readable summary, and leaves conflicts visible without overwriting human-owned Issue content. Manual dispatch and the selected automatic trigger converge through the same projector path. Human edits to `SD *` fields are explicitly non-authoritative and are restored on the next successful reconcile.
+The installed workflow checks out exact observed trunk and state commits, serializes projector writes with `cancel-in-progress: false`, validates envelope/config/project identity/schema/conflicts and the complete plan before mutation, emits a machine-readable summary, journals every successful external response, retries bounded `Retry-After`/transient failures, and leaves conflicts visible without overwriting human-owned Issue content. A configured per-run cap counts Issue creations and Project field/item mutations before apply, fails closed when exceeded, and records the refusal. Manual dispatch and schedule converge through the same projector path. Projector-owned `SD *` fields are derived and restored on the next successful reconcile; linked Issue bytes remain read-only. The workflow guard proves a default-branch branch ref rather than accepting a same-named tag, and third-party Actions are pinned to reviewed commit SHAs.
 
 Verified by: dry-run, first apply, repeated no-op apply, concurrent-run test, and one conflict fixture. Falsified by: two overlapping runs create duplicate Issues, or trigger-specific paths implement different mapping logic.
 
@@ -439,17 +439,17 @@ The implementation is now reviewable as Draft PR #227 at an exact product commit
 - SIZE BASELINE: the PR adds 2,299 gross lines across nine files. Runtime Python is 1,300 gross lines and 1,162 syntax-bearing lines; tests are 671 gross lines. The 1,124-line projector contains 40 functions and two classes; `plan_projection` is the maintenance hotspot at 198 lines, followed by `apply_github_plan` at 95 lines. The total is plausible for install, parse, plan, REST reconcile, receipt, and snapshot behavior, but the current responsibility density and missing production-path coverage prevent a simplicity claim.
 - PRESERVE: one setup skill, one installed GHA execution shell, one deterministic projector, no daemon/database/webhook/LLM runtime, one-way SD authority, generic capability discovery, and the separately owned Project Status Update sibling.
 
-### Proposed ideation correction — not yet accepted
+### Accepted ideation correction — captain decision 2026-08-14
 
-1. Replace static per-run plan approval with a default-branch **automation envelope**: pin repository/workflow/Project, installed projector digest, a non-empty allowed entity set, and each approved entity-to-Issue binding. Schedule may apply changed lifecycle bytes only inside that envelope. New entities, changed Issue bindings, installed-byte drift, or broader roots return to reviewed dry-run and explicit approval. The observed state commit remains receipt provenance rather than a value whose expected change disables automation.
+1. Replace static per-run plan approval with a default-branch **automation envelope**. Dogfood uses a non-empty selected subset and short expiry. Production retains a workflow-level boundary: pin repository/workflow/Project, installed projector digest, mapping policy, envelope expiry no later than credential expiry, and explicit full bindings for linked human Issues. Schedule may automatically project ordinary changes and new projector-owned entities inside that commissioned workflow. New/changed linked bindings, installed-byte drift, target/config change, or expiry return to reviewed dry-run and explicit approval. The observed state commit remains receipt provenance rather than a value whose expected change disables automation.
 2. Use full `owner/repository#number` identity everywhere. Trust a projector-owned receipt only when its exact schema is valid and either the configured Project already contains the item or a stranded Issue was authored by the configured automation identity. Ignore unrelated malformed public markers; quarantine malformed selected/managed records.
 3. Keep explicitly linked human Issues read-only: never patch their title, body, or open/closed state. Bind them through the approved state/config mapping and Project item identity; keep freshness in the reconcile snapshot rather than inserting a mutable body receipt. Projector-created Issues retain the machine receipt and lifecycle writes.
 4. Map Project #1 without inventing a fourth native status: backlog maps to `Todo`, active SD stages map to `In Progress`, and terminal maps to `Done`; exact `SD Stage` plus qualified sprint carries the finer distinction. Adding `Ready` remains a separately approved Project-schema choice.
 5. Bound the authentication claim to what the provider exposes: validate credential metadata, repository/Project identity, config, schema, conflicts, and the complete mutation plan before writes; order writes to minimize blast radius and persist an append-only operation journal after every response. Do not claim that REST proves both credentials can write without performing a mutation.
 
-The corrected route keeps the same lifecycle surface count. It changes authority semantics and linked-Issue ownership, so fresh ideation EM judgment and captain acceptance are required before implementation resumes.
+The corrected route keeps the same lifecycle surface count. The captain accepted the workflow-level boundary after the distinction from dogfood's per-entity subset was presented. Because this broadens the entity scope beyond the preceding EM artifact, that verdict is superseded and a fresh exact-route EM is required before implementation resumes.
 
-## Fresh ideation EM gate — Claude Opus 5 High, 2026-08-14
+## Superseded ideation EM gate — Claude Opus 5 High, 2026-08-14
 
 Fresh read-only session `609d2eb0-b646-4e5f-b60a-0f121a97d141` ran with reported model `claude-opus-5`, high effort, safe mode, no tools, no MCP, and no Bash/Edit/Write. An earlier fresh attempt returned provider `529 Overloaded` with no judgment and is not counted as a gate verdict. The successful EM returned `proceed / medium / multi_model:not_needed`; it independently supports F1-F5 and requires explicit envelope expiry plus forced re-attestation.
 
@@ -491,6 +491,50 @@ science_officer_em_upward_report:
     disproof_condition: "If apply becomes manual-only, static per-run approval is sufficient; demonstrated atomic Issue-body compare-and-swap would reopen linked receipt placement."
     authority_boundary: "Captain owns envelope authority and schema; gate/work-item authority owns ACs and stage; delivery owns Draft/merge; provider owners retain credentials and Project #1. No mutation or Ready authority is granted."
 ```
+
+## Final exact-route ideation EM gate — Claude Opus 5 High, 2026-08-14
+
+Fresh read-only session `31447303-c6cf-4478-9d59-bcf9c28db8d6` ran with reported model `claude-opus-5`, high effort, safe mode, no tools, no MCP, and no Bash/Edit/Write. It reviewed the captain-accepted workflow-level production envelope rather than the superseded per-entity proposal and returned `proceed / medium / multi_model:not_needed`.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "The final workflow-level route is safe and minimal enough to return to implementation. Dogfood keeps selected scope; production may automate new projector-owned entities inside one enforced commissioned workflow, while linked human Issues retain explicit default-branch bindings and byte-read-only Issue content."
+  evidence_synthesis: "F1-F3 are supported on the supplied exact artifact. The envelope bounds repository/workflow/state-ref/Project/policy/projector/expiry; full Issue identity and explicit linked bindings contain the higher-risk human surface; lifecycle topology remains workflow/config/stdlib projector. Enforcement and production reconcile coverage remain implementation evidence, not ideation assumptions."
+  risk_tradeoff_call: "Workflow scope buys automatic projection of new ordinary tasks without a per-task approval queue. State writers gain an external projector-owned GitHub effect, bounded to one repository/Project/workflow with expiry, drift refusal, read-only linked Issues, journal, retry, and a fail-closed per-run mutation cap. Per-entity production scope is safer per event but defeats the accepted automation value without reducing lifecycle surfaces."
+  recommendation: "Return to implementation. Before Ready, prove production reconcile including outside-workflow and expired-envelope refusal, decompose the 198-line planner into testable units, enforce every pin and linked-Issue no-PATCH boundary, and add the fail-closed per-run mutation cap."
+  route: proceed
+  confidence: medium
+  multi_model: not_needed
+  fo_boundary: ""
+  engineering_judgment:
+    question: "Is the captain-accepted workflow-level production envelope safe and minimal enough to leave ideation?"
+    revision: "PR head 96bb66ccec2a530256dd30ef4fd834d863535221; origin/main 029047b0e7d510b71ac260f2643ec8aef52298a5; Project #1 unmutated"
+    evidence_synthesis: "F1-F3 are supported on the supplied exact artifact. The envelope bounds repository/workflow/state-ref/Project/policy/projector/expiry; full Issue identity and explicit linked bindings contain the higher-risk human surface; lifecycle topology remains workflow/config/stdlib projector. Enforcement and production reconcile coverage remain implementation evidence, not ideation assumptions."
+    adjudications:
+      - finding: F1
+        disposition: supported
+        basis: "Workflow scope provides the accepted automation value and creates an external effect for authorized state writers; executed envelope checks and a per-run cap are its enforcement points."
+      - finding: F2
+        disposition: supported
+        basis: "Default-branch full linked bindings plus no linked-Issue PATCH remove state retargeting, cross-repository number collision, and concurrent-human overwrite while preserving Project visibility."
+      - finding: F3
+        disposition: supported
+        basis: "The lifecycle topology stays minimal, but the untested production reconcile and dense planner remain implementation sufficiency failures."
+    risk_tradeoff: "Workflow scope buys automatic projection of new ordinary tasks without a per-task approval queue. State writers gain an external projector-owned GitHub effect, bounded to one repository/Project/workflow with expiry, drift refusal, read-only linked Issues, journal, retry, and a fail-closed per-run mutation cap. Per-entity production scope is safer per event but defeats the accepted automation value without reducing lifecycle surfaces."
+    recommendation: "Return to implementation. Before Ready, prove production reconcile including outside-workflow and expired-envelope refusal, decompose the 198-line planner into testable units, enforce every pin and linked-Issue no-PATCH boundary, and add the fail-closed per-run mutation cap."
+    route: proceed
+    confidence: medium
+    dissent: "The workflow-level boundary remains incomplete until a fail-closed per-run cap limits Issue creation and Project mutations; journaling records but does not contain runaway volume."
+    disproof_condition: "Return if linked bindings can come from state, any linked Issue PATCH is reachable, workflow-root/digest/expiry pins are not executed, or production reconcile cannot test those refusals without changing authority."
+    authority_boundary: "Captain retains workflow-envelope/schema authority; work-item/gate authority owns ACs and stage; delivery owns Draft/push/Ready/merge; provider owners retain credentials and Project #1."
+```
+
+### Ideation exit decision
+
+- ACCEPTED: Captain approved dogfood `selected` scope and production `workflow` scope after their authority difference was presented.
+- ACCEPTED: Final EM recommends `proceed`; its per-run mutation cap is adopted as the minimum enforcement needed to contain workflow-wide external volume.
+- PRESERVED: one skill, one installed workflow/config/projector topology; no Project #1 mutation, product push, Ready transition, merge, new service, database, webhook, second sync engine, or LLM runtime is authorized.
+- NEXT: return to implementation and close the named safety/correctness findings with behavior-specific RED/GREEN evidence before rebuilding the delivery candidate.
 
 ## Out of scope
 
