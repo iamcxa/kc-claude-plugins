@@ -1,7 +1,7 @@
 ---
 id: e9nrdgxgnp1rqwwbcxfzb1nj
 title: "kc-dev-flow: adopt a proportional RoboRev implementation exit"
-status: validation
+status: implementation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint: S2
