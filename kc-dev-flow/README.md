@@ -17,6 +17,9 @@ provider while sharing the same authority and evidence discipline.
 - `science-officer-em` — provide independent engineering judgment through the
   canonical replacement for the former Ship-Flow skill, preserving its legacy
   report envelope while carrying the complete portable advisory record.
+- `setup-github-project-projection` — plan, install, and audit a deterministic
+  one-way projection from one Spacedock workflow into GitHub Issues and one
+  GitHub Project without making GitHub lifecycle authority.
 
 ## Work profiles
 

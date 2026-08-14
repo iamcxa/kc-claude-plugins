@@ -44,6 +44,13 @@ required_files = [
     PLUGIN / "skills/promote-dev-flow/agents/openai.yaml",
     PLUGIN / "scripts/improvement-intake.py",
     PLUGIN / "scripts/improvement-intake.test.py",
+    PLUGIN / "scripts/project-spacedock-state.test.py",
+    PLUGIN / "skills/setup-github-project-projection/SKILL.md",
+    PLUGIN / "skills/setup-github-project-projection/agents/openai.yaml",
+    PLUGIN / "skills/setup-github-project-projection/references/mapping-contract.md",
+    PLUGIN / "skills/setup-github-project-projection/assets/install-projection.py",
+    PLUGIN / "skills/setup-github-project-projection/assets/project-spacedock-state.py",
+    PLUGIN / "skills/setup-github-project-projection/assets/spacedock-project-sync.yml",
     PLUGIN / "references/engineering-judgment.md",
     PLUGIN / "skills/science-officer-em/SKILL.md",
     PLUGIN / "skills/science-officer-em/agents/openai.yaml",
@@ -847,6 +854,18 @@ intake_tests = subprocess.run(
 require(
     intake_tests.returncode == 0,
     intake_tests.stdout.strip() or intake_tests.stderr.strip() or "improvement intake tests failed",
+)
+
+projection_tests = subprocess.run(
+    [sys.executable, str(PLUGIN / "scripts/project-spacedock-state.test.py")],
+    capture_output=True,
+    text=True,
+)
+require(
+    projection_tests.returncode == 0,
+    projection_tests.stdout.strip()
+    or projection_tests.stderr.strip()
+    or "Spacedock projection tests failed",
 )
 
 project_context_mod = required_files[5].read_text(encoding="utf-8")
