@@ -245,6 +245,46 @@ The accepted material corrections are:
 
 The review also recommends deferring Milestone writes from the first projection slice and collapsing a separate `upgrade` mode into `install --diff`. Both fit the captain-approved eight-hour appetite and keep the first round trip to Issue + Project item + receipt + no-op convergence.
 
+## Fresh ideation EM gate — Claude Opus 5, 2026-08-14
+
+Read-only session `54df0ad0-656b-45a7-93c5-484ef67450cb` returned the following closed compatibility record. It ran with reported model `claude-opus-5`, Read-only tooling, safe mode, no MCP, and no Bash/Edit/Write. It did not run commands or verify the supplied digests independently.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Approve the ideation gate as an evidence-only judgment. The three artifacts are internally consistent and mutually traceable, all four findings hold on the text as read, and the first admissible action is fully local and reversible, so approval mints no external authority. One material limit is recorded rather than waived: AC-9 liveness and AC-10 archive carry live procedures named in neither the accepted carve nor the ROADMAP projection exit."
+  evidence_synthesis: "The projection task, status sibling, and proposed ROADMAP describe the same eight-hour two-slice projection journey, two-hour trigger and credential stop, stable snapshot dependency, and local-first fake-adapter route. Every accepted Claude correction lands in a numbered falsifiable criterion. Material limits: the reviewer did not recompute supplied hashes; reverse-recovery evidence predates origin/main@5f14040b22f0c7f019398d7209981226b9782ac2; AC-9 and AC-10 live procedures exceed the recorded carve; and trigger, credential, saved-view, and mutation-surface questions remain live-unproven by design."
+  risk_tradeoff_call: "Benefit: a bounded, traceable one-way SD view whose protected core is deterministic projection, receipts, ten-entity dry-run, and no-op convergence. Risk: silent appetite overrun through AC-9 and AC-10, plus an unfavorable trigger or personal-Project credential result; the two-hour stop contains the latter. Durable cost is only reviewable vendored bytes and fixtures. Returning solely to rewrite criteria would delay the empirical proof without improving the current stop rules."
+  recommendation: "Record ideation approval only. Mint no token, create no repository or Project, change no secret, write nothing to Project #1, and let the stage owner advance separately. Begin only with local deterministic fixtures, fake-adapter RED cases, and vendored installer/projector bytes. Before external proof, obtain bounded approval. At design entry, explicitly defer or include AC-9 and AC-10 live procedures, and refresh reverse recovery against origin/main@5f14040b22f0c7f019398d7209981226b9782ac2."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: ""
+  engineering_judgment:
+    question: "Does the captain-narrowed kc-dev-flow/S3 projection pass ideation, are F1-F4 supported, and may its first action remain fully local?"
+    revision: "projection 8b1de63d211bfc58cf5900b6c3bcae4012846df4 sha256 e0e6033ad05cd8af7ad1d088c394dda020c36aa821a11cb838298a8b55595c8b; status sibling 3b51fee85285047bd85227b71865047c1e1559e2 sha256 db62e7e0ede948ce9790131e0ba295339441f09aaadf81c98ee5a0ffaeb9a82b; proposed ROADMAP sha256 acdf9d4131880de29afcd594dc980962dacc9424a21313dcd408a31ca8c758cb; base origin/main@5f14040b22f0c7f019398d7209981226b9782ac2"
+    evidence_synthesis: "The projection task, status sibling, and proposed ROADMAP describe the same eight-hour two-slice projection journey, two-hour trigger and credential stop, stable snapshot dependency, and local-first fake-adapter route. Every accepted Claude correction lands in a numbered falsifiable criterion. Material limits: the reviewer did not recompute supplied hashes; reverse-recovery evidence predates origin/main@5f14040b22f0c7f019398d7209981226b9782ac2; AC-9 and AC-10 live procedures exceed the recorded carve; and trigger, credential, saved-view, and mutation-surface questions remain live-unproven by design."
+    adjudications:
+      - finding: F1
+        disposition: supported
+        basis: "The carve, sizing, and ROADMAP define one observable journey from disposable proof through Project #1 stage grouping and a stable snapshot; appetite fit is protected by the recorded stop and cut order."
+      - finding: F2
+        disposition: supported
+        basis: "The status work has its own task and acceptance criteria, depends explicitly on the snapshot, and cannot block projection because AC-12 verifies zero status-update mutations."
+      - finding: F3
+        disposition: supported
+        basis: "All seven corrections are testable numbered clauses; remaining trigger, credential, saved-view, and API questions are bounded empirical probes rather than missing design surfaces."
+      - finding: F4
+        disposition: supported
+        basis: "AC-1, AC-2, AC-3, AC-7, and AC-12 admit fixture and fake-adapter RED work before any external mutation; each live mutation remains separately gated."
+    risk_tradeoff: "Benefit: a bounded, traceable one-way SD view whose protected core is deterministic projection, receipts, ten-entity dry-run, and no-op convergence. Risk: silent appetite overrun through AC-9 and AC-10, plus an unfavorable trigger or personal-Project credential result; the two-hour stop contains the latter. Durable cost is only reviewable vendored bytes and fixtures. Returning solely to rewrite criteria would delay the empirical proof without improving the current stop rules."
+    recommendation: "Record ideation approval only. Mint no token, create no repository or Project, change no secret, write nothing to Project #1, and let the stage owner advance separately. Begin only with local deterministic fixtures, fake-adapter RED cases, and vendored installer/projector bytes. Before external proof, obtain bounded approval. At design entry, explicitly defer or include AC-9 and AC-10 live procedures, and refresh reverse recovery against origin/main@5f14040b22f0c7f019398d7209981226b9782ac2."
+    route: proceed
+    confidence: high
+    dissent: "The criteria are broader than the accepted two-slice carve: AC-9 and AC-10 require disabled-schedule, invalid-token, and create/archive/reconcile live procedures that appear in neither the carve nor the ROADMAP projection exit. State their disposition before implementation rather than discovering the mismatch at hour eight."
+    disproof_condition: "Narrow or return if fresh reverse recovery finds an importable adapter or snapshot producer, supplied digests do not match, AC-9 and AC-10 live procedures stay inside the same eight hours, the two-hour proof finds no supported trigger/credential route, the first RED case needs a live external write, or the sibling becomes a projection prerequisite."
+    authority_boundary: "The captain retains scope, appetite, sequencing, deferrals, re-cut, and all external provider authority. The gate advances no stage, commits no ROADMAP, starts no implementation, and grants no repository, Project, token, secret, merge, release, or S2-hold authority."
+```
+
 ## Independent architecture review — Claude Opus 5 High, 2026-08-13
 
 Fresh read-only review session `569fa7f4-7603-4e4b-a9f1-621d26403c91` returned **coherent with required corrections**. It had Read/Grep/Glob access only, safe mode, no MCP, no Bash/Edit/Write, and did not run the required live GitHub experiment.
