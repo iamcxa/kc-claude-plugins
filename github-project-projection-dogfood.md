@@ -49,3 +49,16 @@ The repository secret value is a separate host operation and never enters instal
 - `Credential boundary:` repository readback shows no `SPACEDOCK_PROJECT_TOKEN`; the existing `RELEASE_PLEASE_TOKEN` is not dedicated and may not be reused. Secret provisioning is a host operation and blocks only live apply.
 - `Cross-model:` PASS — fresh Claude Opus 5, high effort, safe mode, no tools or MCP, returned `proceed`; it found no file-implementation blocker and independently required the dedicated classic PAT, recorded permissions and expiries, rotation owner, fallback blast radius, exact selected scope, dry-run count, manual dispatch, and identical no-op rerun before live apply.
 - `Disproof hooks:` any fourth installed file, external mutation during install, plan count above 80, absent or over-broad envelope metadata, receipt-less foreign-item mutation, or a non-zero identical rerun rejects the slice.
+
+## Stage Report: implementation — cycle 1
+
+**Verdict: implementation complete at product commit `cf61b4b5d631358d0f85f28a046c773737cf802f`; Project #1 remains unmutated pending delivery.**
+
+- Installed exactly `.github/workflows/spacedock-project-sync.yml`, `.github/spacedock-project.json`, and `.github/scripts/project-spacedock-state.py`; 1,708 added lines, of which 1,572 are the byte-identical merged projector runtime.
+- Installer audit reports all three files `NO_CHANGE`; installed projector SHA-256 is `be538048ee802a8d9e80568c6dc5558eba50a420bb0ee252245cc674ddfc5c18`.
+- Live read-only dry-run against Project #1 and state commit `6c98fe0b5c37400366471da012c0c7984bb114e4` reports ten selected entities, zero conflicts, eight backlog and two implementation stages, and schema creation for `SD Stage` plus `SD Product`.
+- The first sample exposed two unapproved linked Issues (`issue189`, `issue190`) and correctly refused them. They were replaced with `github-project-projection-dogfood` and `e2e-typed-operands`; no source task or human Issue was changed.
+- Armed envelope records Project `PVT_kwHOABc8eM4A-a-N`, `classic-pat`, permission `project`, credential expiry `2026-08-21`, approval expiry `2026-08-20T23:59:59Z`, rotation owner `iamcxa`, explicit fallback blast radius, the exact ten slugs, no linked bindings, and cap 80. The deterministic first-run estimate is 32 writes.
+- Repository Actions secret readback confirms `SPACEDOCK_PROJECT_TOKEN`; its value was never read, copied, printed, or stored. `RELEASE_PLEASE_TOKEN` remains separate.
+- Focused projector suite PASS 34/34; kc-dev-flow contract PASS; installed config validation PASS; installer audit PASS; Ruff PASS; Python compilation PASS; actionlint PASS; token-pattern scan PASS; staged diff check PASS.
+- External authority remains unopened until the default-branch workflow is merged. The first manual dispatch and its identical no-op rerun are validation evidence, not implementation assumptions.
