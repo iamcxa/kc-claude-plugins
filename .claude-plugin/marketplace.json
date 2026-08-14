@@ -129,7 +129,7 @@
       "name": "kc-dev-flow",
       "source": "./kc-dev-flow",
       "description": "Portable, evidence-bound development flow — adopt or upgrade a repository-owned authority binding, then keep approved sprints moving with fresh validation and minimal ceremony in Claude Code or Codex",
-      "version": "2.4.0",
+      "version": "2.5.0",
       "keywords": [
         "development-workflow",
         "sprint",
