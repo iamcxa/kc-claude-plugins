@@ -375,6 +375,21 @@ The local deterministic seam is real and testable, but it is not yet an automati
 
 The installable local path and both live read-only projections are working. Automatic runner execution and any Project #1 mutation remain intentionally unclaimed until billing and credential authority are resolved.
 
+## Stage Report: implementation (cycle 3 — focused review correction)
+
+- DONE: Fresh read-only Claude Opus 5 High review session `9f800dfa-30c7-4272-b883-7621ca767b18` returned `narrow`. Its Critical finding was valid: comparing full receipts made unrelated trunk/state commits rewrite every entity because audit commits changed. Managed equality now compares entity-local identity/digest/ownership/archive plus projector identity while retaining trunk/state commits as non-equality audit provenance. A regression changes both commits and proves `NO_CHANGE`; a projector digest change still earns one migration update.
+- DONE: Removed automatic GraphQL replacement of existing single-select option sets. A missing option is reported as `UPDATE_FIELD_OPTIONS` and apply refuses before any write, avoiding unproven option-ID preservation. Missing fields may still be created after the conflict-free schema preflight.
+- DONE: Explicitly linked repository Issues are now observed even without a projection receipt. Linked title, body, and open/closed state are preserved; a missing linked Issue or duplicate Issue reference is a conflict. Projector-owned Issues receive a bounded human-readable Spacedock summary plus the machine receipt and never publish `worktree`.
+- DONE: Runtime entity discovery skips non-entity Markdown, excludes private underscore directories, recognizes `_archive` at nested depths, and still rejects a file that partially declares but fails the entity baseline. Unexpected runtime exceptions now emit a failure receipt instead of losing the artifact.
+- DONE: Removed the unused persisted freshness-window configuration and bounded the documentation: deterministic clock decisions exist, but a decaying last-successful liveness signal is deferred. The workflow now resolves the repository default branch through the authenticated repository API rather than assuming a schedule event payload shape.
+- DONE: Registered the focused suite in `scripts/kc-dev-flow-contract-test.py`. Final local results are 17/17 projection tests, kc-dev-flow contract PASS, generated-workflow `actionlint` PASS, 41/41 skill frontmatter PASS, version parity PASS, marketplace L0-L2 PASS, and `git diff --check` PASS.
+- DONE: Repeated the live Project #1 ten-entity dry-run at state `2534b88fdec5d7f02b500882268299e87f502755`. It still reports zero conflicts and ten planned entity mutations; Issues #90 and #189 are now explicitly `linked` updates while Project #1 remains at zero items.
+- LIVE-UNPROVEN: The REST create/add/field-write payloads, runner execution, schedule execution, and post-apply convergence have not executed against GitHub. Product documentation and delivery must preserve that boundary until billing is fixed and a dedicated Project credential is approved.
+
+### Summary
+
+The focused review found and closed the cross-run idempotency defect plus linked-Issue and option-identity hazards. The remaining blockers are live provider execution and credential authority, not a known local planner/installer failure.
+
 ## Out of scope
 
 - GitHub Project changes flowing back into SD state.
