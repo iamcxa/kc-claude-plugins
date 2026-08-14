@@ -82,3 +82,16 @@ The repository secret value is a separate host operation and never enters instal
 - GitHub PR feedback snapshot is complete at that head: zero reviews, zero issue comments, zero review threads, zero unresolved threads, and no pagination remainder.
 - Fresh Claude Opus 5 High Ready gate returned `ready_only / high`, acknowledged the native-stack exception, found zero blockers, and granted no merge, dispatch, or Project mutation authority.
 - Ready remains captain authority. Merge-time revalidation must confirm token/approval validity, recount the live plan, and re-observe the cron/manual race.
+
+### Live Project #1 validation
+
+**Verdict: PASS — Project #1 visibly contains all ten selected entities and the identical-input rerun produced zero operations.**
+
+- PR `#228` squash-merged at `2026-08-14T10:00:36Z` as `c00de6c2140db268eb1fe693abfa347b13a9e0b4`. Manual dispatch began two seconds later; no scheduled run existed before it.
+- First run `31790461828` completed all 32 planned writes: two fields, Issues `#229` through `#238`, ten Project items, and their managed fields. It then failed the immediate post-apply convergence assertion because GitHub's first re-observation was not yet consistent. The uploaded failure receipt journals every successful operation.
+- A later read-only observation against the identical trunk `c00de6c2140db268eb1fe693abfa347b13a9e0b4` and state `d1c9208e0737cdc42a9021e595e16bf875a14ba8` returned ten `NO_CHANGE`, zero mutations, zero orphans, and zero conflicts. The failure is bounded to immediate provider consistency; no lost or partial Project write remained.
+- Before the next run, selected entity `roborev-implementation-exit` legitimately advanced from implementation to validation on state `33bed021d985867d7652c034bb3642e6c2bfa2fa`. Run `31790671419` performed exactly two journaled operations for Issue `#235`, then re-observed zero mutations and succeeded.
+- Identical-input run `31790729428` used trunk `c00de6c2140db268eb1fe693abfa347b13a9e0b4` and state `33bed021d985867d7652c034bb3642e6c2bfa2fa`; its artifact reports `mode=apply`, zero operations, zero converged mutations, and zero conflicts.
+- Project readback reports exactly ten items: eight `Todo` with exact `SD Stage=backlog`, two `In Progress` with exact `SD Stage=validation`, and non-empty `SD Product` only where the source supplies it. Project fields expose options `e2e-pipeline`, `kc-dev-flow`, and `repo-platform` without inventing values for partial entities.
+- `E2E:` PASS — create, visible field readback, legitimate state update, provider-settled convergence, and identical no-op rerun all ran on GitHub-hosted Actions with the installed split-token path.
+- `Origin re-observation:` Reported scenario: SD tasks were invisible in GitHub | Runtime kind: production repository and private user Project #1 | Artifact/revision: merge `c00de6c2140db268eb1fe693abfa347b13a9e0b4`, state `33bed021d985867d7652c034bb3642e6c2bfa2fa`, runs `31790461828`, `31790671419`, and `31790729428` | Falsifier: fewer than ten qualified items, incorrect Status/SD fields, foreign mutation, unresolved conflict, or non-zero identical rerun | Result: PASS.
