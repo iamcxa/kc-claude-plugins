@@ -54,41 +54,62 @@ Canonicalize and hash these fields before the first provider query:
 repository identity
 base SHA
 tip SHA
-RoboRev version and JSON contract
+RoboRev version and required JSON command/response contract
 configuration object SHA
 agent, model, reasoning, minimum severity
-panel name and declared member population
+panel identity, sorted stable member identities, and complete member count
 ```
 
 The claim identity is the SHA-256 of that canonical record. Provider evidence
-matches when its repository, exact range or tip, configuration, and complete
-panel membership match the record. Human-formatted output is diagnostic; it
-cannot establish `PASS`.
+matches only when its repository, exact range or tip, configuration, RoboRev
+version/JSON contract, agent, model, reasoning, minimum severity, panel
+identity, stable member identities, and complete population match the record.
+Human-formatted output is diagnostic; it cannot establish `PASS`.
 
 ## Existing-state single-flight transaction
 
 First query queued, running, and completed jobs for reusable exact-input
 evidence. If none matches, claim the identity in the current work item's
-implementation evidence through the repository's existing Spacedock
-execution-state transaction:
+implementation evidence through the Local Profile's registered state holder,
+clean-holder prerequisite, and supported Spacedock state transaction. For this
+repository the prerequisite is `scripts/dev-flow-state-prereq.sh` and the
+durability command is `spacedock state commit`; adopters resolve their declared
+equivalents rather than copying those paths blindly.
 
-1. Re-read the authoritative remote state revision and the bound task. A
-   shared parent that already records the same identity refuses the new claim
-   and records `UNKNOWN(reason: claim_lost)`.
-2. If absent, append one claim containing identity, claimant, state revision,
-   and `state: claimed`; commit only the bound task path.
-3. Push the state branch as a fast-forward compare-and-swap. Do not pull,
-   rebase, or retry a rejected claim push. A non-fast-forward rejection is
-   `UNKNOWN(reason: claim_lost)`; an indeterminate write is
+1. Resolve the declared holder, prerequisite, and Spacedock executable before
+   mutating state. An absent executable is `UNAVAILABLE(reason: unavailable)`.
+   A missing or non-holder checkout, dirty holder, local-ahead holder, divergent
+   holder, or failed prerequisite is `UNKNOWN(reason: state_unknown)` and earns
+   no claim preparation.
+2. Run the clean-holder prerequisite. Exit zero establishes the registered
+   holder at the freshly observed remote state revision; a behind checkout may
+   proceed only after the prerequisite fast-forwards it and proves equality.
+   Record that exact revision and re-read the bound task. A shared parent that
+   already records the identity returns `UNKNOWN(reason: claim_lost)`.
+3. Append one claim containing identity, claimant, observed state revision, and
+   `state: claimed` to the bound task. Before durability, prove that the holder
+   HEAD is still the recorded revision and the bound task is the sole dirty
+   path. A missing, bypassed, or additionally dirty boundary is
    `UNKNOWN(reason: state_unknown)`.
-4. After success or rejection, fetch and perform a post-push re-read of the
-   authoritative task. The claimant proceeds only when the remote record names
-   its identity and claimant. Any other state is a loss or indeterminate state.
+4. Fetch the authoritative state ref once more. If it no longer equals the
+   recorded revision, return `UNKNOWN(reason: stale)` without committing,
+   rebasing, or retrying the claim.
+5. Invoke `spacedock state commit --workflow-dir "$WORKFLOW_DIR" "$SLUG"`.
+   This is the supported Spacedock state transaction: it commits the bound task,
+   integrates peer state only through Spacedock's durability rules, and pushes
+   the registered state branch. Do not substitute raw `git commit`/`git push`,
+   manually pull or rebase, or retry a rejected claim transaction. A
+   same-entity conflict or remote claimant is `UNKNOWN(reason: claim_lost)`; an
+   indeterminate write is `UNKNOWN(reason: state_unknown)`.
+6. After success or rejection, fetch and perform a post-push re-read of the
+   authoritative task. The claimant proceeds only when the supported command
+   succeeded and the remote record names exactly its identity and claimant. Any
+   other state is a loss or indeterminate state.
 
-The push rejection is the independent-clone enforcement point; the existing
-claim check is the shared-parent enforcement point. A claim loser performs no
-provider re-query, enqueue, or retry. Do not add another ledger, tracker,
-daemon, or generalized lock service.
+The supported transaction's same-entity conflict is the independent-clone
+enforcement point; the existing claim check is the shared-parent enforcement
+point. A claim loser performs no provider re-query, enqueue, or retry. Do not
+add another ledger, tracker, daemon, or generalized lock service.
 
 ## Winner observation protocol
 
@@ -100,7 +121,9 @@ agent/model/reasoning/severity/panel flags.
 The supported `review` command has no stable JSON launch receipt. Correlate the
 request by comparing the post-request `list --json` population with the
 snapshot. Accept the launch identity when one new parent job matches the full
-exact-input record. Zero, multiple, stale, or ambiguous candidates produce
+exact-input record, including provider version/JSON contract, reviewer
+configuration, panel identity, and the complete stable member population. Zero,
+multiple, stale, or ambiguous candidates produce
 `UNKNOWN(reason: state_unknown)` and do not earn another request.
 
 Wait within the declared live-batch timeout and re-read the selected job with
@@ -111,11 +134,12 @@ record `UNKNOWN(reason: timed_out)` without duplicate enqueue.
 ## Correlation precedence and closed mapping
 
 Apply correlation before lifecycle and verdict interpretation. A repository,
-range/tip, configuration, panel, or member-population mismatch is `stale`; when
-that same evidence also has an incomplete member, `stale` wins over
-`member_incomplete`. For an exact-input job, execution failure wins over skip or
-findings, then member skip wins over incomplete state, and an incomplete or
-ambiguous member wins over a completed parent verdict.
+range/tip, configuration, provider version/JSON contract, agent, model,
+reasoning, minimum severity, panel identity, stable member identity, or complete
+population mismatch is `stale`; when that same evidence also has an incomplete
+member, `stale` wins over `member_incomplete`. For an exact-input job, execution
+failure wins over skip or findings, then member skip wins over incomplete state,
+and an incomplete or ambiguous member wins over a completed parent verdict.
 
 | Observation | Work Control receipt |
 |---|---|
@@ -128,9 +152,9 @@ ambiguous member wins over a completed parent verdict.
 | Exact-input member skipped | `UNKNOWN(reason: member_skipped)` |
 | Exact-input member incomplete or ambiguous | `UNKNOWN(reason: member_incomplete)` |
 | No terminal exact-input evidence at deadline | `UNKNOWN(reason: timed_out)` |
-| Repository, range/tip, configuration, panel, or population mismatch | `UNKNOWN(reason: stale)` |
+| Any canonical provider/input/reviewer/panel/member identity mismatch, or a stale observed state revision | `UNKNOWN(reason: stale)` |
 | Claim lost | `UNKNOWN(reason: claim_lost)` |
-| Claim, launch identity, JSON evidence, or state is indeterminate | `UNKNOWN(reason: state_unknown)` |
+| Claim, launch identity, JSON evidence, registered state boundary, or state is indeterminate | `UNKNOWN(reason: state_unknown)` |
 
 Store the result in the ordinary implementation report's Work Control evidence
 envelope. Bind it to the candidate revision and include capability, mode,
