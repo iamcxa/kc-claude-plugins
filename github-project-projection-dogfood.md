@@ -1,14 +1,14 @@
 ---
 id: cx23zq6y1apw1j0kvdf3mns9
 title: Dogfood Spacedock projection in kc-claude-plugins Project #1
-status: ideation
+status: implementation
 source: Captain instruction on 2026-08-14 to continue until Project #1 shows the projection result
 product: repo-platform
 sprint:
-started:
+started: 2026-08-14
 completed:
 verdict:
-worktree:
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-project-install
 issue:
 pr:
 mod-block:
