@@ -1,0 +1,43 @@
+{
+  "approval": {
+    "expires_at": "2026-08-20T23:59:59Z",
+    "linked_issues": {},
+    "max_mutations_per_run": 80,
+    "projector_digest": "be538048ee802a8d9e80568c6dc5558eba50a420bb0ee252245cc674ddfc5c18",
+    "scope": "selected"
+  },
+  "credential": {
+    "expiry": "2026-08-21",
+    "fallback_blast_radius": "Can write user Projects accessible to iamcxa until token expiry; revoke the PAT and repository secret to stop.",
+    "permissions": "project",
+    "rotation_owner": "iamcxa",
+    "token_type": "classic-pat"
+  },
+  "entity_selection": [
+    "ci-integration-consumer-count-backport",
+    "e2e-prose-load",
+    "e2e-schema-contract",
+    "e2e-typed-operands",
+    "executable-diff-coverage-ratchet",
+    "github-project-projection-dogfood",
+    "roborev-implementation-exit",
+    "ship-flow-pr-merge-audit-link-parity",
+    "spacedock-project-status-updates",
+    "spacedock-projector-automation-sunset-review"
+  ],
+  "external_apply_enabled": true,
+  "profile": "kc-dev-flow",
+  "project": {
+    "node_id": "PVT_kwHOABc8eM4A-a-N",
+    "number": 1,
+    "owner": "iamcxa",
+    "owner_type": "user"
+  },
+  "project_secret_name": "SPACEDOCK_PROJECT_TOKEN",
+  "repository": "iamcxa/kc-claude-plugins",
+  "schedule_interval_minutes": 15,
+  "schema": "spacedock-project-config/v1",
+  "state_ref": "spacedock-state/dev",
+  "trunk_ref": "main",
+  "workflow_dir": "docs/dev"
+}
