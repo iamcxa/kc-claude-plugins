@@ -1,7 +1,7 @@
 ---
 id: 4wkne0vvpgsy2japzr08xqtx
 title: "kc-dev-flow: choose a proportional work profile before AC expansion"
-status: validation
+status: implementation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint: S2
@@ -2068,3 +2068,8 @@ The task deliberately remains `status: validation` with blank `verdict`, `sprint
 and `pr`. Repository policy sets `PASSED` and `done` only after an authenticated
 merged product PR; this gate grants no sprint-admission, push, PR, merge, or
 terminalization authority.
+
+### Feedback Cycles
+
+- Cycle 5: REJECTED — delivery merge preflight after ordered S2 predecessor #222; surface 11 files/454 gross lines vs under-1,000-line appetite (45.4%); AC unchanged
+- Design-reset decision: RECONFIRM the existing four ACs and POC appetite. The Captain resumed S2 after #222 merged; recut only the conflict-sensitive contract-test integration against current `origin/main`, preserve the accepted chooser behavior and receipts, then obtain fresh exact-head validation.
