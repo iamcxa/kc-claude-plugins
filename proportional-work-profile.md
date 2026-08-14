@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: .worktrees/spacedock-ensign-proportional-work-profile
 issue:
-pr:
+pr: "#226"
 mod-block: merge:pr-merge
 design: required
 lane: main
