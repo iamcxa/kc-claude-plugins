@@ -1,0 +1,4 @@
+interface:
+  display_name: "Choose Work Profile"
+  short_description: "Choose proportional proof before ideation"
+  default_prompt: "Use $choose-work-profile to recommend and record the proportional work profile before acceptance criteria expand."

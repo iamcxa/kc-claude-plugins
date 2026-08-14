@@ -28,6 +28,13 @@ The continuation path keeps three ownership boundaries explicit:
   prepares captain-reviewable proposals; it does not inherit adopter authority
   or make a placement decision.
 
+Normal ideation first reads the existing task's work-profile receipt. An
+unchanged receipt keeps the full chooser unloaded; a missing or stale receipt
+loads `choose-work-profile`. The chooser recommends and asks, while the actor
+already authorized by the repository records, syncs, and re-reads the choice
+before AC expansion. This adds no tracker field, lifecycle stage, or mutation
+authority.
+
 ## Marketplace publish flow
 
 `.claude-plugin/marketplace.json` is the published catalog; each plugin

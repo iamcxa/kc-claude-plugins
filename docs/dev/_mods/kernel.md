@@ -42,11 +42,26 @@ The default lifecycle is
 1. `backlog` captures a cheap seed. It performs no design and grants no sprint
    membership.
 2. `ideation` makes the necessary product/design decision, defines value-level
-   acceptance criteria, and names evidence able to fail.
+   acceptance criteria, and names evidence able to fail. At normal ideation
+   entry it activates `kc-dev-flow:choose-work-profile` when the bound receipt is
+   missing or stale.
 3. `implementation` works test-first inside approved scope.
 4. `validation` uses fresh context and seam/runtime evidence appropriate to the
    claim. Unit tests alone do not prove wiring.
 5. `done` follows exact-revision delivery plus durable terminal/archive state.
+
+At normal ideation entry, before inherited backlog criteria are classified:
+Re-read the exact work item and its `## Work profile receipt`. If it is valid and
+its basis is unchanged, consume it without another question. If it is missing,
+or the audience, lifespan, mutation boundary, authority need, or operational
+commitment changed, invoke `kc-dev-flow:choose-work-profile`. The chooser has
+recommendation and question authority; the actor already authorized by the Local
+Profile and dispatch records the decision through the existing safe work-item
+mutation path, syncs it, and re-reads the committed receipt.
+Only after the committed receipt is re-read may inherited criteria be normalized or acceptance criteria be expanded.
+Tasks already beyond ideation are not reopened without an observed promotion
+trigger. The bounded mechanical-defect route that validly skips ideation does
+not acquire this gate.
 
 At ideation entry, inherited backlog criteria are hypotheses, not accepted
 outcome constraints. The ideation actor classifies each as value, governing

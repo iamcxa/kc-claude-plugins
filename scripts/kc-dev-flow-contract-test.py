@@ -51,6 +51,8 @@ required_files = [
     ROOT / "scripts/kc-dev-flow-loader-eval.py",
     ROOT / "scripts/kc-dev-flow-loader-eval.test.py",
     ROOT / "scripts/fixtures/kc-dev-flow-loader-eval/q08.json",
+    PLUGIN / "skills/choose-work-profile/SKILL.md",
+    PLUGIN / "skills/choose-work-profile/agents/openai.yaml",
     PLUGIN / "references/retained-document-policy.md",
 ]
 for required_file in required_files:
@@ -696,6 +698,29 @@ require(
     and "report scheduling immediately" in continue_skill_flat
     and "do not inspect work-item or execution state" in continue_skill_flat,
     "an explicitly empty iteration does not short-circuit state discovery",
+)
+
+
+def continuation_route_failures(text: str) -> list[str]:
+    normalized = " ".join(text.split())
+    if "If it declares no active or committed item" not in normalized:
+        return ["continuation can abandon an active but unscheduled item"]
+    return []
+
+
+require(
+    not continuation_route_failures(continue_skill),
+    "continuation routing gaps:\n- "
+    + "\n- ".join(continuation_route_failures(continue_skill)),
+)
+active_item_mutant = continue_skill.replace(
+    "If it declares no active or committed item",
+    "If it declares no committed item",
+    1,
+)
+require(
+    continuation_route_failures(active_item_mutant),
+    "continuation contract accepted active-item short-circuit mutant",
 )
 require(
     "already-loaded instruction chain" in continue_skill_flat
@@ -2031,6 +2056,109 @@ require(
     "`_mods/reverse-recovery-audit.md`" in reverse_recovery_header,
     "reverse-recovery adoption path is not workflow-relative",
 )
+
+# A work profile is a small pre-AC decision, not another evaluator. Mechanical
+# coverage is limited to the three regressions that can be settled from package
+# bytes; profile-dependent planning stays a validation-time host observation.
+chooser_skill = (PLUGIN / "skills/choose-work-profile/SKILL.md").read_text(
+    encoding="utf-8"
+)
+chooser_agent = (
+    PLUGIN / "skills/choose-work-profile/agents/openai.yaml"
+).read_text(encoding="utf-8")
+work_profile_read = "Re-read the exact work item and its `## Work profile receipt`."
+work_profile_derive = (
+    "Only after the committed receipt is re-read may inherited criteria be "
+    "normalized or acceptance criteria be expanded."
+)
+
+
+def work_profile_failures(
+    *, chooser: str, continuation: str, kernel_text: str, workflow_text: str
+) -> list[str]:
+    failures: list[str] = []
+    rows = set(
+        re.findall(r"^\| `([^`]+)` \| `([^`]+)` \|", chooser, re.MULTILINE)
+    )
+    expected = {
+        ("POC / Exploration", "poc-exploration"),
+        ("Pilot / Product slice", "pilot-product-slice"),
+        ("Production", "production"),
+    }
+    if rows != expected:
+        failures.append("profile choices are not the closed approved set")
+
+    normalized_chooser = " ".join(chooser.split())
+    for phrase in [
+        "schema: kc-dev-flow-work-profile/v1",
+        "selected:",
+        "recommended:",
+        "basis:",
+        "obligations:",
+        "invariant_sources:",
+        "scope_boundary:",
+        "promote_when:",
+        "decision:",
+        "A task labeled POC does not downscope a production credential",
+        "Recommend `production` until an explicit safe non-production scope boundary removes the trigger.",
+        "NEEDS_PROFILE_DECISION",
+        "Do not auto-select",
+        "Do not write a sidecar",
+    ]:
+        if phrase not in normalized_chooser:
+            failures.append(f"chooser is missing: {phrase}")
+
+    for label, text in [
+        ("continue-dev-flow", continuation),
+        ("kernel", kernel_text),
+        ("self-adoption", workflow_text),
+    ]:
+        read_at = text.find(work_profile_read)
+        derive_at = text.find(work_profile_derive)
+        if read_at < 0 or derive_at < 0 or read_at >= derive_at:
+            failures.append(f"{label} does not gate AC expansion on the receipt")
+
+    return failures
+
+
+profile_failures = work_profile_failures(
+    chooser=chooser_skill,
+    continuation=continue_skill,
+    kernel_text=kernel,
+    workflow_text=workflow,
+)
+require(
+    not profile_failures,
+    "work-profile contract gaps:\n- " + "\n- ".join(profile_failures),
+)
+require(
+    "$choose-work-profile" in chooser_agent,
+    "choose-work-profile Codex metadata does not invoke the skill",
+)
+
+profile_mutant = chooser_skill.replace(
+    "| `Production` | `production` |", "| `Staging` | `staging` |", 1
+)
+unsafe_mutant = chooser_skill.replace(
+    "A task labeled POC does not downscope", "A task labeled POC downscopes", 1
+)
+order_mutant = kernel.replace(work_profile_read, "PROFILE-ORDER-TEMP", 1)
+order_mutant = order_mutant.replace(work_profile_derive, work_profile_read, 1)
+order_mutant = order_mutant.replace("PROFILE-ORDER-TEMP", work_profile_derive, 1)
+for label, inputs in {
+    "missing profile choice": {"chooser": profile_mutant, "kernel_text": kernel},
+    "unsafe POC downscoping": {"chooser": unsafe_mutant, "kernel_text": kernel},
+    "AC before receipt re-read": {"chooser": chooser_skill, "kernel_text": order_mutant},
+}.items():
+    require(
+        work_profile_failures(
+            chooser=inputs["chooser"],
+            continuation=continue_skill,
+            kernel_text=inputs["kernel_text"],
+            workflow_text=workflow,
+        ),
+        f"work-profile contract accepted mutant: {label}",
+    )
 
 # The kernel requires an absolute to name its enforcement point or be rewritten
 # as a bounded claim, and that rule had none of its own. Four hand-audits of one

@@ -196,6 +196,12 @@ Policy mods: [`_mods/engineering-judgment.md`](./_mods/engineering-judgment.md),
 [`_mods/reverse-recovery-audit.md`](./_mods/reverse-recovery-audit.md), and
 [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 
+- Re-read the exact work item and its `## Work profile receipt`. Consume an
+  unchanged receipt; otherwise invoke `kc-dev-flow:choose-work-profile` and let
+  the authorized work-item actor record, sync, and re-read the Captain's choice.
+  Only after the committed receipt is re-read may inherited criteria be normalized or acceptance criteria be expanded.
+  Tasks already beyond ideation are not reopened without a promotion trigger;
+  the bounded mechanical-defect route keeps its valid ideation skip.
 - Ask the captain what value is protected, the appetite and tolerance, what to
   keep if cut, explicit non-goals, and the assumption most likely to be wrong.
 - Record the fastest path and smallest cut. Take the cheaper route when it
