@@ -1,14 +1,14 @@
 ---
 id: e9nrdgxgnp1rqwwbcxfzb1nj
 title: "kc-dev-flow: adopt a proportional RoboRev implementation exit"
-status: implementation
+status: validation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint: S2
 started: 2026-08-14T07:45:49Z
 completed:
 verdict:
-worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/roborev-implementation-exit-recut
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/roborev-implementation-exit-repair-recut
 issue:
 pr:
 mod-block:
@@ -52,6 +52,96 @@ work_profile:
   decision:
     authority: captain:kent
     at: 2026-08-14T08:08:11Z
+```
+
+## Implementation repair cycle 1
+
+### Summary
+
+Repaired only the two validation-supported RoboRev findings. The recut
+candidate now requires the Local Profile's registered holder, clean-holder
+prerequisite, and `spacedock state commit` durability path before a claim can
+win, and exact-input classification binds every declared provider, reviewer,
+panel, and stable member-population field before lifecycle or verdict mapping.
+No provider query, enqueue, retry, confirmation, PR, push, or stage transition
+was performed.
+
+### Exact candidate and recut
+
+- Repaired source range:
+  `f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7..307f1b20647f88509ac69d31c092f81eae2d2fc9`.
+- Final base: `c00de6c2140db268eb1fe693abfa347b13a9e0b4`.
+- Final tip: `1e54cd4e25a3b9bd4c460d62b7a9d76ba1de9755` in
+  `/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/roborev-implementation-exit-repair-recut`.
+- `git range-diff` mapped both commits with `=`. The complete old and recut
+  ranges share stable patch ID
+  `53cc47a31daff0b02822072b14a7e2889cfc4b81`; there is no non-mechanical
+  recut difference.
+
+### RED and GREEN evidence
+
+- F1 RED: the focused contract failed with `provider reference is missing:
+  scripts/dev-flow-state-prereq.sh` before the runbook repair.
+- F2 RED: with the new identity mutation present and the old classifier intact,
+  `stale_provider_version` incorrectly mapped to `PASS(passed)` instead of
+  `UNKNOWN(stale)`.
+- Final focused suite:
+  `python3 scripts/roborev-implementation-exit-contract.test.py` — `PASS` in
+  8.13 seconds.
+- Final full relevant suite: `python3 scripts/kc-dev-flow-contract-test.py` —
+  `PASS` in 18.20 seconds.
+- `git diff --check origin/main...HEAD`, fixture JSON parsing, and packaged /
+  adopted runbook byte parity passed at the final tip. The final worktree is
+  clean.
+
+### Supported transaction and adversarial proof
+
+- Installed Spacedock `0.26.0` exercised two independent registered holders
+  concurrently through `scripts/dev-flow-state-prereq.sh` and
+  `spacedock state commit`: exactly one claim reached `pending`, the same-entity
+  loser returned `claim_lost`, and both clones' post-push re-read agreed on one
+  remote identity and claimant.
+- The shared-parent topology used the same supported path: the first claim was
+  durable and clean after post-push re-read; the second same-identity claimant
+  was refused before provider work.
+- Missing Spacedock, non-holder, dirty, local-ahead, divergent, stale observed
+  state, and bypassed-prerequisite cases all remained non-green and earned no
+  claim winner. No alternate ledger, tracker, daemon, lock service, or raw-Git
+  durability path was added.
+- Independent mutations for repository, base, tip, configuration hash,
+  RoboRev version, JSON contract, agent, model, reasoning, minimum severity,
+  panel, stable member identity, missing member, and extra member all mapped to
+  `UNKNOWN(reason: stale)` before lifecycle/verdict interpretation.
+
+### Change map and proof-surface assessment
+
+| Repair surface | Acceptance criteria |
+|---|---|
+| Packaged and adopted provider contract | AC2, AC3, AC4, AC5 |
+| Canonical outcome fixture and classifier | AC2 |
+| Registered-holder / supported-transaction topology and refusal fixtures | AC3, AC4 |
+| Absolute-claim registry dispositions | AC2, AC3, AC5 |
+
+The repair initially expanded the outcome fixture in generated-looking form;
+it was compacted to 45 lines before commit. The remaining repair is 594
+additions and 164 deletions across five existing files. Its largest surface is
+the executable installed-Spacedock fixture that creates real registered holders,
+races both required topologies, and falsifies each required invalid state; none
+of those cases can be removed while retaining the explicit F1/F2 disproof
+conditions. The complete candidate is one 13-file seam with 1,265 additions and
+46 deletions. Splitting the contract from its only executable proof would not
+create an independently acceptable slice.
+
+```yaml
+work_control_repair:
+  provider: roborev
+  prior_job: 170
+  request_count_this_cycle: 0
+  confirmation_count: 0
+  outcome: FAIL
+  reason: review_findings_repaired_pending_fresh_validation
+  authority: evidence-only
+  continuation: fresh-validation
 ```
 
 ## Proposed approach
