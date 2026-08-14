@@ -210,6 +210,16 @@ Policy mods: [`_mods/engineering-judgment.md`](./_mods/engineering-judgment.md),
   accepted outcome and record the kernel's subtractive result. Return a proposed
   new surface unless its without-it instrument produces a named AC failure;
   preserve an existing `UNKNOWN` surface without claiming it is irreducible.
+- Return a proposed gate, check, harness, automation, or registry unread unless
+  its necessity record names three labeled facts: `Criterion:` the value-level
+  AC it serves; `Alternative:` the simplest existing or lower-authority path and
+  why it is insufficient; and `Escape:` a specific past defect it would have
+  caught, proved by mutation. With no past escape, require
+  `Escape: speculative until YYYY-MM-DD; review <work-item ref>` and resolve the
+  reference to a backlog seed in this README's work-item authority before the
+  gate. At that review, removal is the default recommendation; the seed grants
+  neither deletion nor renewal authority. This ideation refusal is the
+  enforcement point; a text or existence check does not prove the behavior.
 - Write end-state ACs with `Verified by:` and a concrete falsifier. At least one
   AC measures the accepted value. Run `status --read <ref> --ac-scan` before the
   gate and keep each bold AC heading on one line.

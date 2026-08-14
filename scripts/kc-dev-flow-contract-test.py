@@ -2025,6 +2025,13 @@ require(
     + "\n- ".join(change_shape_retirement_failures),
 )
 
+reverse_recovery = required_files[6].read_text(encoding="utf-8")
+reverse_recovery_header = reverse_recovery.split("## Why This Exists", 1)[0]
+require(
+    "`_mods/reverse-recovery-audit.md`" in reverse_recovery_header,
+    "reverse-recovery adoption path is not workflow-relative",
+)
+
 # The kernel requires an absolute to name its enforcement point or be rewritten
 # as a bounded claim, and that rule had none of its own. Four hand-audits of one
 # file each found a different subset, so the registry replaces re-reading: every
