@@ -171,4 +171,8 @@ science_officer_em_upward_report:
 
 ## Delivery checkpoint
 
-Draft PR #240 and its remote branch still point to previously approved candidate `736ce6710533cc18d9c5bf37c3d1deb9bf00ac54`. Local recut candidate `8af38c437201abf2f47fbbc3966af028c80daa2e` contains the same stable logical patch on current `main@387be484ae353ebe4603720cc7cc3f8c633d25a1` and has fresh local validation. A new canonical delivery packet, exact-candidate push, candidate-bound CI/feedback, Ready, merge, Project #1 apply, and the post-apply zero-write rerun remain pending and captain-owned.
+Captain approved the canonical recut delivery packet binding `main@387be484ae353ebe4603720cc7cc3f8c633d25a1`, candidate `8af38c437201abf2f47fbbc3966af028c80daa2e`, branch `iamcxa/spacedock-projection-issue-fidelity`, and Draft PR #240. Exact `force-with-lease` replaced remote candidate `736ce6710533cc18d9c5bf37c3d1deb9bf00ac54`; remote branch and PR now read back at the approved candidate. The reviewed PR body is byte-identical to its mode-0600 body file, contains exactly one full-SHA `Candidate:` line, the split-root `q0n` audit link, and the required `## Native stack exception`. Candidate-bound GitHub checks pass; the PR remains Draft.
+
+`PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr_number":240,"layer":"single","head":"8af38c437201abf2f47fbbc3966af028c80daa2e","fingerprint":"sha256:6318c612cab0d6278740cf062d06f62c5d8718e0f7961db539b8873497efe831","items":[],"dispositions":[]}`
+
+Ready still requires a fresh matching feedback observation plus explicit non-author reviewer acknowledgement of the native-stack exception and captain authorization. Merge, Project #1 apply, and the post-apply zero-write rerun remain pending and captain-owned.
