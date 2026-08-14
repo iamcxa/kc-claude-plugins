@@ -1216,3 +1216,168 @@ work_control_correction:
 
 No RoboRev query, enqueue, retry, confirmation, state commit/push, product push,
 PR mutation, or stage transition was performed.
+
+## Stage Report: validation cycle 3
+
+### Checklist
+
+- DONE — Bound the final fresh cycle to merge target
+  c00de6c2140db268eb1fe693abfa347b13a9e0b4, clean candidate
+  830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23, validation-entry task revision
+  7176189e47118956ca19e624b2c9456180e54e1f, AC1-AC5, and all 13 changed
+  files. A fresh fetch left origin/main and the merge base at the declared
+  target.
+- DONE — Reran the focused and full relevant suites, diff check, fixture parse,
+  package/adopted byte parity, installed-Spacedock transaction proof, and the
+  transaction falsifier. Directly exercised 22 sparse, deleted-field,
+  malformed/duplicate/incomplete member, and failure-at-deadline mutations.
+- DONE — Obtained exactly one fresh-context GPT-5.6 High engineering judgment
+  against the exact candidate. It returned route proceed, confidence high, and
+  multi_model not_needed.
+- DONE — Recorded all six validation-evidence lines, current-tip
+  UNKNOWN(stale) receipt, initial-delivery no-PR condition, one-PR topology,
+  AC/file coverage, retained proof-surface judgment, and later release/delivery
+  obligations without invoking RoboRev or exercising delivery authority.
+
+### Summary
+
+PASSED. The final bounded correction closes AC1 and AC2: every canonical scalar
+must be present and equal before PASS or findings FAIL, malformed member
+populations return typed UNKNOWN without exception, and parent/member execution
+failure wins over deadline interpretation. Historical RoboRev job 170 remains
+provenance only; the corrected exact tip carries an honest
+UNKNOWN(reason: stale) receipt with zero requests and zero confirmations this
+cycle. Previously accepted AC3 transaction/spend control, AC4 authority
+separation, AC5 candidate parity, proof-surface necessity, and one-PR topology
+remain closed.
+
+### Validation evidence
+
+- Exact inputs: base, current origin/main, and merge base
+  c00de6c2140db268eb1fe693abfa347b13a9e0b4; candidate
+  830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23; task revision
+  7176189e47118956ca19e624b2c9456180e54e1f; clean product worktree; 13
+  changed files, 1,334 additions, and 46 deletions.
+- Fresh checks: scripts/roborev-implementation-exit-contract.test.py passed;
+  scripts/kc-dev-flow-contract-test.py passed; git diff --check passed;
+  package/adopted provider contracts were byte-identical; fixture JSON parsed.
+- Installed Spacedock 0.26.0 again exercised the registered holder,
+  scripts/dev-flow-state-prereq.sh, spacedock state commit, independent-clone
+  race, shared-parent refusal, invalid-holder paths, and post-push re-read.
+  Replacing Spacedock with /usr/bin/false made the focused proof fail with zero
+  winners, proving the harness does not silently substitute raw Git.
+- Fresh origin observation found no product PR for branch
+  iamcxa/roborev-implementation-exit-repair-recut. Initial local validation may
+  therefore pass before Captain-authorized push and Draft creation.
+
+Lenses: PASS — behavior, contract/schema, state/concurrency, runtime/platform, docs/policy, security/privacy, and delivery fired against AC1-AC5, the exact 13-file diff, Local Profile, kernel, Work Control Profile, provider runbook, current-tip receipt, and historical job 170; no material current-gate finding survived.
+Diff coverage: PASS — 482/482 executable statement lines in the focused harness were observed by Python trace, and 13/13 changed files map to AC1-AC5; prose-only surfaces were adversarially reviewed. The final correction changed four existing files by 111 additions and 42 deletions and introduced no independently maintained lifecycle surface.
+Adversarial: PASS — sparse evidence, deletion of each of 11 canonical scalar fields, null/mapping/non-object/missing-identity/duplicate/missing/extra member populations all returned UNKNOWN(stale); incomplete exact members returned UNKNOWN(member_incomplete); parent and member failure at deadline returned UNKNOWN(failed). The installed-Spacedock proof failed when its executable was replaced by /usr/bin/false.
+Cross-model: not_needed — exactly one fresh GPT-5.6 High EM independently adjudicated AC1-AC5 and the retained F1/F2/authority/parity/topology findings, returned route proceed with high confidence, and recommended no second model.
+E2E: PASS — installed Spacedock 0.26.0 produced one winner and one claim_lost across independent holders, refused a duplicate shared-parent identity before provider work, re-read authoritative remote state, and kept invalid holders non-green; the current corrected tip then reached fresh validation with a closed UNKNOWN(stale) provider receipt and zero new RoboRev requests or confirmations.
+Origin re-observation: PASS — Reported scenario: one proportional implementation-exit observation must fail closed on incomplete provider identity and use the supported Spacedock transaction before fresh validation | Originating runtime kind: historical local RoboRev v0.62 provider evidence plus installed Spacedock 0.26.0 state transaction | Re-observation artifact/revision: job 170 retained as superseded provenance, current-tip UNKNOWN(stale) receipt, classifier and state harness at 830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23 | Equivalent-runtime rationale: no confirmation was authorized, so the provider side was re-observed through its exact declared JSON shapes and current-tip invalidation while the concurrency side reran through the same installed Spacedock commands, holder, durability path, and configuration | Falsifier kind: mutation and refusal | Result: all sparse/malformed/precedence mutations failed closed, both supported concurrency topologies retained one winner, and the stale historical job could not become a current-tip PASS or FAIL.
+
+### Acceptance and delivery mapping
+
+1. AC1 supported: declaration/omission and no-run paths stay proportional; the
+   exact current tip has a closed UNKNOWN(stale) receipt and reaches validation.
+2. AC2 supported: one total correlation boundary covers every canonical scalar
+   and complete member population before lifecycle/verdict interpretation.
+3. AC3 supported: repository-owned reviewer configuration, one-request and
+   one-confirmation caps, reuse-before-enqueue, real single-flight transaction,
+   loser refusal, and incomplete cost coverage remain intact.
+4. AC4 supported: provider outcomes remain evidence for fresh validation and
+   retain no GitHub, stage, acceptance, or delivery authority.
+5. AC5 supported for this candidate gate: package/adopted parity, aggregate
+   contract, fixture, Roadmap wording, and 13/13 file mapping pass. Candidate
+   and published-tag smoke, exact-head CI, GitHub feedback, merge, and S2
+   closeout remain later obligations at their owning release/delivery
+   boundaries.
+
+PR feedback: N/A — initial delivery has no product PR or stack layer; the exact
+branch query returned an empty population. Delivery remains one dependent slice
+and one future Draft PR. No provider query/post, product push, Draft creation,
+Ready, merge, release, stage transition, or terminalization was performed.
+
+### Engineering judgment
+
+~~~yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    The final local validation gate may proceed at exact candidate 830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23. AC1-AC5 close for the current gate, all previously accepted state-transaction, authority, parity, proof-surface, and one-PR-topology findings remain closed, and the final bounded correction eliminates the sparse-evidence, malformed-population, failure-precedence, and current-tip receipt defects without another RoboRev invocation.
+  evidence_synthesis: >-
+    This judgment is bound to base and current origin/main c00de6c2140db268eb1fe693abfa347b13a9e0b4, clean candidate 830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23, merge base c00de6c2140db268eb1fe693abfa347b13a9e0b4, and validation-entry state revision 7176189e47118956ca19e624b2c9456180e54e1f. Independent reruns passed scripts/roborev-implementation-exit-contract.test.py and scripts/kc-dev-flow-contract-test.py; git diff --check passed, the package and adopted provider contracts are byte-identical, and the fixture parses as JSON. Direct source review confirms one fail-closed normalization boundary requires all eleven canonical scalar evidence fields, rejects malformed, duplicate, extra, or incomplete member populations without exception, correlates before lifecycle interpretation, and applies parent/member execution failure before deadline. Its adversarial block independently deletes every required scalar, supplies malformed member shapes, and overlaps failure with deadline. Installed Spacedock 0.26.0 exercised the registered holder, repository prerequisite, spacedock state commit, independent-clone race, shared-parent refusal, invalid-holder cases, and post-push re-read; replacing Spacedock with /usr/bin/false made the focused proof fail. The current-tip Work Control entry is UNKNOWN(reason: stale), binds the corrected base/tip, treats historical job 170 as provenance only, and records zero requests and confirmations in this cycle. The branch has no PR, which is valid for initial local validation under the Local Profile. No RoboRev query or invocation was performed during this judgment. Candidate-stage AC5 parity is closed; published-tag smoke, exact-head CI, GitHub feedback observation, and delivery evidence remain later release and delivery obligations under CLAUDE.md and the validation/done contracts.
+  risk_tradeoff_call: >-
+    The change buys early exact-tip defect evidence with bounded provider spend, honest no-tool and stale-evidence fallbacks, and preserved fresh-validation and delivery authority. Its main durable cost is the 771-line executable harness plus a byte-identical adopted runbook, but that surface exercises real Spacedock concurrency, invalid-holder refusal, correlation, and authority mutations that the existing small prerequisite test cannot establish. Returning again would repeat already-falsified concerns without an unresolved in-scope claim; removing the harness would lose the only real-runtime proof of AC2 and AC3. Later published-tag, CI, PR-feedback, and merge evidence should remain at their owning delivery boundaries rather than being pulled into this local gate.
+  recommendation: >-
+    Record the exact candidate as locally validation-passed and continue to the Captain-owned push and initial Draft decision without another RoboRev request or model pass. Preserve the single-PR topology, then require exact-head CI and complete GitHub-native feedback observation before Ready, and require the release-boundary candidate/published-tag smoke before release publication and final S2 closeout.
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    FO may record this exact-revision advisory, account for the completed validation evidence, and perform authorized reversible gate and state mechanics. FO may not invoke RoboRev, push, create or mutate the Draft, mark Ready, merge, accept a red residual, publish a release, or terminalize the task without the authority and evidence assigned to those boundaries.
+  engineering_judgment:
+    question: >-
+      At base c00de6c2140db268eb1fe693abfa347b13a9e0b4 and candidate 830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23, do the final bounded correction and retained primary evidence close AC1-AC5 and every previously accepted finding sufficiently to pass local validation?
+    revision: >-
+      base c00de6c2140db268eb1fe693abfa347b13a9e0b4; candidate 830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23; validation-entry state 7176189e47118956ca19e624b2c9456180e54e1f
+    evidence_synthesis: >-
+      This judgment is bound to base and current origin/main c00de6c2140db268eb1fe693abfa347b13a9e0b4, clean candidate 830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23, merge base c00de6c2140db268eb1fe693abfa347b13a9e0b4, and validation-entry state revision 7176189e47118956ca19e624b2c9456180e54e1f. Independent reruns passed scripts/roborev-implementation-exit-contract.test.py and scripts/kc-dev-flow-contract-test.py; git diff --check passed, the package and adopted provider contracts are byte-identical, and the fixture parses as JSON. Direct source review confirms one fail-closed normalization boundary requires all eleven canonical scalar evidence fields, rejects malformed, duplicate, extra, or incomplete member populations without exception, correlates before lifecycle interpretation, and applies parent/member execution failure before deadline. Its adversarial block independently deletes every required scalar, supplies malformed member shapes, and overlaps failure with deadline. Installed Spacedock 0.26.0 exercised the registered holder, repository prerequisite, spacedock state commit, independent-clone race, shared-parent refusal, invalid-holder cases, and post-push re-read; replacing Spacedock with /usr/bin/false made the focused proof fail. The current-tip Work Control entry is UNKNOWN(reason: stale), binds the corrected base/tip, treats historical job 170 as provenance only, and records zero requests and confirmations in this cycle. The branch has no PR, which is valid for initial local validation under the Local Profile. No RoboRev query or invocation was performed during this judgment. Candidate-stage AC5 parity is closed; published-tag smoke, exact-head CI, GitHub feedback observation, and delivery evidence remain later release and delivery obligations under CLAUDE.md and the validation/done contracts.
+    adjudications:
+      - finding: AC1-declared-exact-tip-observation-or-honest-fallback
+        disposition: supported
+        basis: >-
+          The Local Profile declares the observe-mode RoboRev boundary and repository-owned configuration, continue-dev-flow conditionally loads the local contract only after implementation evidence exists, and the corrected work-control entry binds the current base/tip as UNKNOWN(reason: stale) while retaining job 170 only as historical evidence. Request and confirmation counts are both zero, and the validation route remained reachable.
+      - finding: AC2-closed-exact-input-classification
+        disposition: supported
+        basis: >-
+          The runbook requires every canonical evidence field and a complete stable member population before PASS or FAIL. scripts/roborev-implementation-exit-contract.test.py:51-118 implements one correlation boundary before lifecycle interpretation; lines 607-647 exercise fixture outcomes, sparse identity, deletion of each canonical field, malformed populations, duplicate members, and failure-at-deadline. All now produce the declared non-pass or failure precedence, and the focused suite passes.
+      - finding: AC3-repository-owned-bounded-spend-and-single-flight
+        disposition: supported
+        basis: >-
+          The repository configuration fixes one Codex gpt-5.6-terra thorough reviewer at medium severity with panel none. The real Spacedock 0.26.0 tests at scripts/roborev-implementation-exit-contract.test.py:334-580 and 756-769 prove registered-holder preparation, one winner across independent clones, shared-parent duplicate refusal, post-push re-read, and non-green invalid-holder paths. The separate call-path assertions keep losers from re-query or enqueue, enforce one initial request and one confirmation cap, and preserve incomplete cost coverage.
+      - finding: AC4-roborev-remains-evidence-only
+        disposition: supported
+        basis: >-
+          The provider contract at lines 184-191 routes every outcome into fresh validation and denies push, Draft creation, GitHub posting, Ready, merge, accepted-red, stage-close, and terminalization authority. Authority mutants fail the focused contract, and no provider or GitHub mutation occurred in the correction or this review.
+      - finding: AC5-candidate-parity-and-delivery-boundary
+        disposition: supported
+        basis: >-
+          Package and adopted provider contracts are byte-identical, the aggregate contract and fixture parsing pass, all 13 changed files remain mapped to AC1-AC5, and Roadmap keeps exact-revision validation and delivery evidence as S2 exit conditions. CLAUDE.md assigns candidate and published-tag smoke to the later Release PR and publication boundary, while docs/dev/README.md permits initial local validation before the first Draft; those later obligations are retained rather than falsely claimed complete now.
+      - finding: F1-registered-state-transaction-remains-closed
+        disposition: supported
+        basis: >-
+          The final correction did not alter the accepted state harness. Fresh execution again used scripts/dev-flow-state-prereq.sh and spacedock state commit with installed Spacedock 0.26.0 in both required concurrency topologies, and substituting /usr/bin/false caused the proof to fail. One winner, claim_lost refusal, invalid-holder non-passes, and post-push authoritative re-read therefore remain observed.
+      - finding: F2A-sparse-evidence-fails-closed
+        disposition: supported
+        basis: >-
+          normalize_exact_input checks field presence, non-nullness, and equality for every canonical scalar before lifecycle handling. The adversarial block proves a sparse case and independent deletion of each of the eleven fields return UNKNOWN(stale).
+      - finding: F2B-malformed-member-population-is-total
+        disposition: supported
+        basis: >-
+          The normalizer validates expected and observed member collections, member object shape, non-empty stable identity, uniqueness, and complete sorted population. Null, mapping, non-object, missing-identity, and duplicate-member inputs return UNKNOWN(stale) without SystemExit, AttributeError, or TypeError.
+      - finding: F2C-terminal-failure-precedes-deadline
+        disposition: supported
+        basis: >-
+          classify evaluates parent or member execution failure before deadline interpretation, matching runbook lines 137-158. The failed-plus-deadline mutation now returns UNKNOWN(failed), while a nonterminal deadline remains UNKNOWN(timed_out).
+      - finding: F2D-current-tip-receipt-is-closed
+        disposition: supported
+        basis: >-
+          The authoritative correction record names base c00de6c2140db268eb1fe693abfa347b13a9e0b4 and tip 830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23, records UNKNOWN(reason: stale), and states that job 170 belongs to a superseded tip. It makes no non-canonical FAIL claim and records zero provider requests or confirmations.
+      - finding: F3-proof-surface-authority-parity-and-topology-remain-closed
+        disposition: supported
+        basis: >-
+          The retained harness is the only executable surface exercising supported Spacedock concurrency and refusal behavior, the shorter prerequisite test cannot replace it, package/adopted parity still passes, authority mutants remain red, and the 13-file change remains one dependent product slice with no PR or evidence of an independently deliverable sibling.
+    risk_tradeoff: >-
+      The change buys early exact-tip defect evidence with bounded provider spend, honest no-tool and stale-evidence fallbacks, and preserved fresh-validation and delivery authority. Its main durable cost is the 771-line executable harness plus a byte-identical adopted runbook, but that surface exercises real Spacedock concurrency, invalid-holder refusal, correlation, and authority mutations that the existing small prerequisite test cannot establish. Returning again would repeat already-falsified concerns without an unresolved in-scope claim; removing the harness would lose the only real-runtime proof of AC2 and AC3. Later published-tag, CI, PR-feedback, and merge evidence should remain at their owning delivery boundaries rather than being pulled into this local gate.
+    recommendation: >-
+      Record the exact candidate as locally validation-passed and continue to the Captain-owned push and initial Draft decision without another RoboRev request or model pass. Preserve the single-PR topology, then require exact-head CI and complete GitHub-native feedback observation before Ready, and require the release-boundary candidate/published-tag smoke before release publication and final S2 closeout.
+    route: proceed
+    confidence: high
+    dissent: >-
+      No material current-gate dissent remains. The harness is large and the provider procedure is agent-native rather than a standalone runtime adapter, but the accepted product is a workflow contract, the real state boundary and fail-closed classifier are executable, and removing either proof would reopen AC2 or AC3. Published-tag, CI, PR-feedback, and merge evidence are still outstanding by design and are not claimed as completed.
+    disproof_condition: >-
+      Change this route if the exact candidate or merge target changes before the next bound action; any missing or malformed canonical evidence can produce PASS or FAIL; execution failure can lose to deadline, skip, or findings; either supported concurrency topology yields two winners or permits a loser provider re-query, enqueue, or retry; the current-tip receipt ceases to use the closed mapping; package/adopted parity drifts; a provider verdict gains validation or delivery authority; or the later exact-head, GitHub-feedback, candidate-smoke, published-tag, or merge obligations fail at their owning boundaries.
+    authority_boundary: >-
+      Captain retains scope, Roadmap, irreversibility, accepted-red, push, initial Draft, Ready, merge, release, and terminalization authority. Gate Authority owns the validation verdict and stage mechanics; FO may record and route this advisory but cannot create authority. Spacedock and its registered holder retain work-item and execution-state mutation authority. The implementation owner cannot self-certify. GitHub-native observation and required checks retain delivery evidence authority, release-please and the published-tag smoke retain release identity authority, and RoboRev remains an evidence-only sensor with no provider-posting or workflow-transition authority.
+~~~
