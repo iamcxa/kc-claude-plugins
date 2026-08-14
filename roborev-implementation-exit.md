@@ -595,6 +595,10 @@ science_officer_em_upward_report:
   independent clones and one shared-parent checkout. Both topologies produced
   one winner, performed a post-push remote re-read, and kept the loser from
   provider re-query, enqueue, or retry.
+- `DONE` — Used the Captain-authorized single-flight claim and exactly one live
+  `gpt-5.6-terra` review request for the exact recut candidate. Provider-native
+  job `170` completed with a findings verdict; no retry, confirmation, repair,
+  or delivery mutation was performed.
 
 ### Summary
 
@@ -646,27 +650,56 @@ repository: kc-claude-plugins
 base: f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7
 tip: b2b2e229738cef5caec84b1a87e69f5f23a50717
 configuration_sha256: 63b6d59a39c07c8a28db161da4d79af412d4b01d46b5bdcf1c7cc4eec58e64dd
-outcome: UNAVAILABLE
-reason: unavailable
-detail: "The implementation dispatch did not authorize paid/live provider spend. Read-only capability and state probes ran; no review was enqueued."
-request_count: 0
+outcome: FAIL
+reason: review_findings
+detail: "Exact-input RoboRev job 170 completed normally with verdict F and two retained medium findings. No execution failure, skip, incomplete member, retry, confirmation, repair, or delivery mutation occurred."
+request_count: 1
 confirmation_count: 0
 cost:
-  approximate_total: null
-  jobs_with_cost: null
-  jobs_total: null
+  approximate_total_usd_before: 0
+  approximate_total_usd_after: 0
+  jobs_with_cost_before: 0
+  jobs_with_cost_after: 0
+  jobs_total_before: 0
+  jobs_total_after: 1
   complete: false
+  interpretation: "Provider cost coverage is incomplete, so the zero reported total is not a zero-cost claim."
 authority: evidence-only
 continuation: fresh-validation
 ```
 
-The smallest remaining live-provider proof request is authorization for at most
-one 20-minute exact-tip review at the candidate above, using agent `codex`, model
-`gpt-5.6-terra`, reasoning `thorough`, minimum severity `medium`, and
-`--panel none`. The observer must first use the documented state claim, then
-snapshot jobs and invoke the exact base/tip request once; approximate cost is
-unknown until provider evidence reports it. No repair confirmation is requested
-unless a material finding changes the tip.
+### Live observation evidence
+
+- Captain authorization bounded the run to one initial request, zero automatic
+  retry, zero confirmation, and at most 20 minutes from the first provider
+  query. The first provider query was `2026-08-14T09:55:25Z`; terminal evidence
+  was read at `2026-08-14T09:58:44Z`, for 199 seconds total.
+- The claim identity was
+  `338ce58947be74701d68f3ee6335ea924647cc874d3304e45285df3180ae5d1b`.
+  Claim commit `c1fb6adac1721a8fbb5b9f6f7a4769151c172b59` was pushed by
+  `codex-worker:/root/roborev_implementation` and verified by a post-push remote
+  re-read before enqueue.
+- The exact request bound repository `github.com/iamcxa/kc-claude-plugins`, base
+  `f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7`, tip
+  `b2b2e229738cef5caec84b1a87e69f5f23a50717`, agent `codex`, model
+  `gpt-5.6-terra`, reasoning `thorough`, minimum severity `medium`, and
+  `panel: none`. The provider represents that panel selection as
+  `panel_name: null`; the complete population was the single parent reviewer.
+- A post-claim winner re-query found no matching job. One request created the
+  sole new matching parent job: job ID `170`, job UUID
+  `cb3847db-560b-4053-9235-2e378d5b6f87`, review record ID `165`, review UUID
+  `440fd7e8-b097-4ec6-a72c-d758161035c1`, session
+  `019fffb3-6a27-77a2-b8f2-7258377ba3ed`. Its provider range, branch, agent,
+  model, reasoning, and severity all matched; retry count was zero.
+- Job `170` ran from `2026-08-14T09:56:14Z` to
+  `2026-08-14T09:58:30Z`, reached `status: done`, `verdict: F`, and had no
+  execution error. It reported two medium findings: the runbook claim path does
+  not require the registered state-holder/supported state transaction, and the
+  identity contract test omits reviewer-configuration and panel-population
+  mismatch cases. Under the closed mapping this is `FAIL`, not `UNKNOWN`.
+- `roborev cost --json` moved from zero observed jobs to one, but both snapshots
+  reported `jobs_with_cost: 0` and `complete: false`. No precise cost conclusion
+  is possible.
 
 ### Changed-file to acceptance-criteria map
 
