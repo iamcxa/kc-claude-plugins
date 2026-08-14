@@ -1,7 +1,7 @@
 ---
 id: e9nrdgxgnp1rqwwbcxfzb1nj
 title: "kc-dev-flow: adopt a proportional RoboRev implementation exit"
-status: implementation
+status: validation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint: S2
@@ -1165,3 +1165,54 @@ science_officer_em_upward_report:
     authority_boundary: >-
       Because this is the second consecutive rejection at the same validation gate, the Captain retains the continuation choice among the recommended bounded correction, reset, narrowing, or stop. Gate Authority keeps validation closed; the implementation owner may correct only after that route is accepted. Spacedock and its registered holder retain task and execution-state mutation authority. RoboRev remains evidence-only, and no actor gains provider invocation, push, Draft creation, Ready, merge, accepted-red, stage advancement, or terminalization authority from this report.
 ```
+
+## Implementation correction cycle 2
+
+### Summary
+
+Corrected only the final AC1/AC2 boundary at base
+`c00de6c2140db268eb1fe693abfa347b13a9e0b4`, tip
+`830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23`. One total fail-closed
+normalizer now requires every canonical evidence field and validates the stable
+member population before lifecycle interpretation; terminal parent/member
+failure precedes deadline handling. The validated F1 Spacedock harness and the
+45-line fixture were not expanded.
+
+### RED and GREEN evidence
+
+- RED collected in one adversarial run: sparse evidence and deletion of each of
+  the 11 canonical fields remained green; null/mapping/non-object populations
+  escaped through `SystemExit` or `AttributeError`; terminal failure at the
+  deadline mapped to `timed_out`.
+- GREEN: the same mutations now return `UNKNOWN(stale)` without exceptions, and
+  failed-plus-deadline returns `UNKNOWN(failed)`.
+- Final focused suite passed in 9.64 seconds; the full relevant contract suite
+  passed in 19.86 seconds. Package/adopted parity remains enforced.
+- The correction commit changes four existing files by 111 additions and 42
+  deletions (net +69). `scripts/roborev-implementation-exit-contract.test.py`
+  owns the normalization/mutations; packaged and adopted runbooks own the
+  presence/precedence contract; `absolutes.registry` records its bounded claim.
+  These surfaces map to AC1, AC2, AC4, and AC5; AC3's previously validated
+  transaction proof is unchanged.
+
+```yaml
+work_control_correction:
+  capability: review_convergence
+  mode: observe
+  provider: roborev
+  boundary: implementation-exit
+  repository: kc-claude-plugins
+  base: c00de6c2140db268eb1fe693abfa347b13a9e0b4
+  tip: 830a3bd51eee0faaaf3772f7bf4fcbcd92b79d23
+  outcome: UNKNOWN
+  reason: stale
+  detail: "Historical job 170 observed b2b2e229738cef5caec84b1a87e69f5f23a50717, not this corrected exact tip. It remains provenance only."
+  historical_job: 170
+  request_count_this_cycle: 0
+  confirmation_count: 0
+  authority: evidence-only
+  continuation: fresh-validation
+```
+
+No RoboRev query, enqueue, retry, confirmation, state commit/push, product push,
+PR mutation, or stage transition was performed.
