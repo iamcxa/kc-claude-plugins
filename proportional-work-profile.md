@@ -2373,3 +2373,235 @@ Documented how one import-workflow request scales from validated experiment to
 bounded real use to long-term operation while retaining shared invariants and
 explicit promotion triggers. The amendment remains a single adopter-doc surface
 on top of the accepted candidate.
+
+## Stage Report: validation (cycle 6 — adopter journey returned)
+
+Verdict: **REJECTED / RETURN**. Exact candidate
+`4c4ff052427ebea0c501461e5dc51eec1ac1022e` remains mechanically clean against
+fresh `origin/main@029047b0e7d510b71ac260f2643ec8aef52298a5`, but the new
+README journey is not factually equivalent to the shipped chooser and
+continuation contract. The fresh EM returns `return` with high confidence and
+`multi_model: not_needed`.
+
+- DONE: Compared the exact README amendment directly with the authoritative
+  chooser, kernel, continuation skill, current AC-1 through AC-4, and selected
+  validation policies.
+- DONE: Ran the existing kc-dev-flow contract test, one-commit and cumulative
+  diff checks, kernel parity, exact-surface accounting, and merge-tree preflight.
+- DONE: Observed Draft PR #226 through the complete GitHub-native feedback
+  population at its still-old remote head and kept it distinct from the unpushed
+  local candidate.
+- DONE: Returned one fresh-context EM verdict without editing product files,
+  rebasing, pushing, changing GitHub, rerunning the unchanged chooser model
+  trial, or changing workflow status.
+
+### Blocking findings
+
+1. **Material — the README turns a conditional ideation gate into an every-request
+   choice.** `kc-dev-flow/README.md:23-27` says every request first performs the
+   analysis and lets the Captain choose before AC expansion. The authoritative
+   chooser at `kc-dev-flow/skills/choose-work-profile/SKILL.md:19-26`, kernel at
+   `kc-dev-flow/references/kernel.md:53-64`, and continuation seam at
+   `kc-dev-flow/skills/continue-dev-flow/SKILL.md:40-49` instead reuse a valid
+   unchanged receipt without re-selection, do not retroactively reopen work
+   beyond ideation, and preserve the bounded defect skip. A valid-receipt resume
+   is the direct counterexample; the README would add a Captain pause that the
+   shipped route deliberately avoids. This rejects AC-1 documentation parity.
+2. **Material — a POC crossing a production boundary has no truthful promotion
+   path in the journey.** The only POC arrow and prose route to Pilot
+   (`kc-dev-flow/README.md:50-51,62-65`), while the chooser requires either lower
+   profile to move directly to Production when production credentials/data,
+   external production mutation, irreversibility, public compatibility,
+   unattended operation, broad exposure, SLO/support, or release/rollback
+   enters scope (`kc-dev-flow/skills/choose-work-profile/SKILL.md:40-44,108-116`).
+   A POC that acquires production credentials is the AC-3 adversarial
+   counterexample: it must recommend Production or an explicit safe
+   non-production boundary, not pass through Pilot.
+3. **Material — Production validation is narrower than the authoritative proof
+   floor.** The Production validation nodes list recovery, production
+   boundaries, ownership, and generic operational readiness
+   (`kc-dev-flow/README.md:47,60`), but the chooser requires applicable lifecycle,
+   compatibility, migration/recovery, observability, integrity, rollback,
+   release, and ownership proof
+   (`kc-dev-flow/skills/choose-work-profile/SKILL.md:38`). The README places most
+   of those only under implementation, which can misstate implementation work as
+   validation evidence. The adopter journey must preserve the profile-specific
+   proof delta across ideation, implementation, validation, and outcome.
+
+The bounded correction is prose-only: scope the chooser sentence to normal
+ideation with a missing or stale receipt, show that either lower profile crosses
+the Production boundary directly, and make the Production validation proof floor
+truthful. Preserve the current one-workflow statement, shared
+safety/authority/evidence/cleanup/delivery invariants, concrete POC/Pilot journey,
+and implementation-language neutrality.
+
+### Acceptance-criterion results
+
+| AC | Result | Basis |
+|---|---|---|
+| AC-1 | REJECTED | Runtime and contract mutants remain green, but the new user documentation contradicts the conditional `choose -> record -> re-read -> derive` activation and valid-receipt/defect exceptions. |
+| AC-2 | PASSED | The POC journey retains the shell/CLI/library/tool route, owned logic, critical risk, one real end-to-end import, cleanup, and explicit unproved limits without adding Production ceremony. |
+| AC-3 | REJECTED | Shared invariants are present, but the documented promotion topology omits the authoritative direct POC-to-Production response to a retained production boundary. |
+| AC-4 | PASSED | The amendment is one README-only commit with 46 additions; the cumulative candidate is 11 files and 500 gross lines, below appetite, with no fixture, scorer, loader-eval, standing test, schema, workflow-state, or behavior addition. |
+
+### Exact-head and proportional evidence
+
+- Fresh pair: base `029047b0e7d510b71ac260f2643ec8aef52298a5`,
+  candidate `4c4ff052427ebea0c501461e5dc51eec1ac1022e` on
+  `spacedock-ensign/proportional-work-profile`; the worktree is clean and the
+  branch is five commits ahead and one behind the bound base.
+- `python3 scripts/kc-dev-flow-contract-test.py` — PASS.
+- `git diff --check 4c4ff052^ 4c4ff052` and cumulative `git diff --check` —
+  PASS; `git diff-tree` proves the amendment changes only
+  `kc-dev-flow/README.md`, 46 additions and zero deletions.
+- Canonical/adopted kernel byte parity — PASS. Chooser and Codex metadata blobs
+  remain `8e8f5063f01ddbe3d05ab26048f789701ba0a463` and
+  `aa21cc4ba78aa2756c580baf52eaebae5610ca56`, identical to accepted parent
+  `d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7`; no behavior, schema, or test
+  surface changed.
+- `git merge-tree --write-tree 029047b0... 4c4ff052...` — clean, tree
+  `b9e90caf435cd440f192191f7d8115e84a889c14`.
+
+### Draft PR #226 observation
+
+Observation evidence: `PASS` — explicit repository
+`iamcxa/kc-claude-plugins`, PR 226, start/end state `OPEN`, Draft `true`, author
+`iamcxa`, and head `d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7`; one complete GraphQL page had
+zero threads and no nested overflow, one complete REST page had zero reviews and
+no duplicate IDs, and the repeated PR view was identity-stable.
+
+Canonical population input: `{"head":"d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7","items":[],"layer":"single","pr":226,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}`.
+PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr":226,"layer":"single","head":"d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7","fingerprint":"sha256:afd2e7571d7d1f5da8bec1f05d666f9553905c1a779c0abe797cfa9ec6c606e2","dispositions":[]}
+
+The remote PR is clean feedback input for its own prior head only. It is not the
+validation candidate, contains none of commit `4c4ff052...`, remains Draft, and
+was not edited or pushed during this validation.
+
+Lenses: FAIL — docs/policy and contract/schema fired with three Material factual-parity findings; behavior, state/concurrency, security/authority, runtime/platform, and delivery checks found no executable or exact-head regression. The falsifiers were a valid-receipt resume, a POC acquiring production credentials, and a Production proof plan lacking compatibility/rollback/release evidence.
+
+Diff coverage: N/A — prose-only amendment with no executable surface; direct comparison covered all 46 added lines against the chooser, kernel, continuation seam, and ACs.
+
+Adversarial: FAIL — the valid-receipt counterexample disproves the every-request wording, and the production-credential POC counterexample has no direct Production promotion in the diagram or prose.
+
+Cross-model: `not_needed` — the call is reversible and settled by exact primary-source contradictions; another model would not replace the bounded prose correction.
+
+E2E: N/A — this ideation-approved amendment changes only adopter documentation and the dispatch explicitly excludes rerunning the unchanged chooser model trial.
+
+Origin re-observation: PASS — Reported scenario: choose the shell-first staging/local POC route over the Go coordinator while preserving production refusal | Originating runtime kind: fresh Codex agent reading the exact chooser skill | Re-observation artifact/revision: accepted entity receipt for `proportional-work-profile-909e3bd-forward-test.md`, `sha256:d62d1faa4a9501349b2f82072e795f26b9d68b5adcf438e25b2d0a4ab0601ea9`, behavior parent `d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7`, docs-only candidate `4c4ff052427ebea0c501461e5dc51eec1ac1022e` | Equivalent-runtime rationale: chooser and Codex metadata blobs, actor kind, instrument, delivery path, configuration, and both claim-relevant cases are unchanged; the explicit dispatch therefore reuses the accepted receipt instead of rerunning the model | Falsifier kind: refusal | Result: the accepted runtime evidence still selects POC for the shell-first case and requires Production or a safe non-production recut for the adversarial case; the blocking regression is only the new explanation of that behavior.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Return. Exact candidate 4c4ff052427ebea0c501461e5dc51eec1ac1022e is
+    mechanically clean against base 029047b0e7d510b71ac260f2643ec8aef52298a5,
+    but its new README journey contradicts conditional activation, direct
+    lower-profile-to-Production promotion, and the Production proof floor.
+  evidence_synthesis: >-
+    Direct exact-line comparison against the chooser, kernel, continuation seam,
+    and ACs exposes three reproducible documentation counterexamples. The
+    existing contract test, diff checks, byte parity, one-file accounting,
+    clean merge-tree, unchanged behavior blobs, and complete old-head PR feedback
+    observation all pass; they do not make contradictory user guidance truthful.
+  risk_tradeoff_call: >-
+    The amendment buys a useful adopter journey at negligible code risk, but
+    shipping it would create durable guidance that can add an unnecessary Captain
+    gate, under-classify a POC production boundary, and understate Production
+    proof. A small prose-and-diagram correction preserves the value without a
+    second contract or new executable surface.
+  recommendation: >-
+    Return to implementation for the bounded README correction, then run fresh
+    direct-source validation and the existing cheap contract/diff checks at the
+    new exact head; keep PR #226 Draft and unmodified until Captain authorizes
+    delivery of a passing candidate.
+  route: return
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    FO may account for this rejected gate and dispatch the bounded correction,
+    but may not rewrite scope, change workflow state, push, edit or ready the PR,
+    merge, or close out from this advisory verdict.
+  engineering_judgment:
+    question: >-
+      Does documentation-only candidate 4c4ff052427ebea0c501461e5dc51eec1ac1022e
+      truthfully explain the shipped proportional-profile journey and promotion
+      rules against current base 029047b0e7d510b71ac260f2643ec8aef52298a5?
+    revision: >-
+      product 4c4ff052427ebea0c501461e5dc51eec1ac1022e against
+      029047b0e7d510b71ac260f2643ec8aef52298a5; pre-report state commit
+      6706abd402364af8aa0ef0f2d1fd6942f5a59b5e; pre-report entity
+      sha256:99dcfa1d8912af3e1a36281b4d25b666fc06b2309ed083ad2bf10bba7440e010
+    evidence_synthesis: >-
+      Direct exact-line comparison against the chooser, kernel, continuation seam,
+      and ACs exposes three reproducible documentation counterexamples. The
+      existing contract test, diff checks, byte parity, one-file accounting,
+      clean merge-tree, unchanged behavior blobs, and complete old-head PR feedback
+      observation all pass; they do not make contradictory user guidance truthful.
+    adjudications:
+      - finding: F1-conditional-activation-parity
+        disposition: supported
+        basis: >-
+          README lines 23-27 say every request reaches a Captain choice, while
+          chooser lines 19-26, kernel lines 53-64, and continuation lines 40-49
+          reuse valid receipts and exempt post-ideation and bounded defect paths.
+      - finding: F2-production-promotion-safety
+        disposition: supported
+        basis: >-
+          README lines 50-51 and 62-65 expose only POC-to-Pilot and
+          Pilot-to-Production, while chooser lines 40-44 and 108-116 require
+          either lower profile to go to Production on a retained production
+          boundary; the AC-3 production-credential POC is a direct falsifier.
+      - finding: F3-production-validation-proof
+        disposition: supported
+        basis: >-
+          README lines 47 and 60 omit compatibility, migration, observability,
+          integrity, rollback, and release from Validation even though chooser
+          line 38 retains their applicable proof, so the profile proof delta is
+          not accurately represented across lifecycle steps.
+      - finding: F4-proportional-mechanical-surface
+        disposition: supported
+        basis: >-
+          Exact diff-tree shows only kc-dev-flow/README.md with 46 additions;
+          the contract test, diff checks, byte parity, unchanged behavior blobs,
+          500-gross-line cumulative appetite, and merge-tree all pass with no
+          schema, runtime, state, test, evaluator, or language-prescription surface.
+      - finding: F5-old-pr-head-distinction
+        disposition: supported
+        basis: >-
+          Complete GitHub-native observation finds an empty normalized population
+          at Draft PR #226 head d96bc9ad..., while local candidate 4c4ff052... is
+          its unpushed descendant; old-head feedback cannot validate the candidate.
+    risk_tradeoff: >-
+      The amendment buys a useful adopter journey at negligible code risk, but
+      shipping it would create durable guidance that can add an unnecessary Captain
+      gate, under-classify a POC production boundary, and understate Production
+      proof. A small prose-and-diagram correction preserves the value without a
+      second contract or new executable surface.
+    recommendation: >-
+      Return to implementation for the bounded README correction, then run fresh
+      direct-source validation and the existing cheap contract/diff checks at the
+      new exact head; keep PR #226 Draft and unmodified until Captain authorizes
+      delivery of a passing candidate.
+    route: return
+    confidence: high
+    dissent: ""
+    disproof_condition: >-
+      Change the route to proceed only when a new exact README head scopes
+      activation to missing/stale receipts at normal ideation, preserves the
+      valid-receipt/post-ideation/defect exceptions, routes either lower profile
+      directly to Production on a production boundary, and states the applicable
+      Production validation proof without introducing another contract; all cheap
+      checks, exact mergeability, and provider observation must remain non-red.
+    authority_boundary: >-
+      Captain retains scope, profile, appetite exceptions, scheduling,
+      irreversibility, and delivery authorization; Gate Authority retains stage
+      and verdict recording; work-item authority retains receipt mutation;
+      Spacedock and FO retain state mechanics; delivery authority alone retains
+      push, PR creation/readiness, merge, and closeout; this EM supplies advice.
+```
+
+### Summary
+
+Fresh validation returns the exact documentation candidate for three bounded
+factual-parity corrections. Mechanical checks, clean mergeability, one-file
+scope, unchanged runtime inputs, and old-head PR feedback all pass; no product,
+GitHub, or workflow-state mutation was performed.
