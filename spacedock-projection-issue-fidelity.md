@@ -154,3 +154,7 @@ science_officer_em_upward_report:
 - `Adjudication:` the review's linked-Issue concern is unreachable because any valid quoted or unquoted `issue` parses to a positive integer, forces linked ownership, requires a reviewed binding, and conflicts before mutation when missing. Existing `issue=404` evidence proves zero mutations. Live Project item observation was separately inspected and contains the `labels` key.
 - `Focused re-review:` `VERDICT: PASS`; findings 1 and 3 closed. The only retained item is the already-declared post-apply dry-run: any replanned `ADD_LABEL` or other write reopens validation rather than permitting completion.
 - `Exact revision evidence:` canonical/vendored projector digest `sha256:b0327065f19c4c11808ab7403293954fbafa36360231d2c5e5037c79967ca33a`; canonical runtime 1,880 lines versus 1,572 at `origin/main`, net +308. Package contract PASS, projector 43/43 PASS, and `git diff --check` PASS.
+
+## Delivery checkpoint
+
+Captain-approved commit `736ce671` (`feat(kc-dev-flow): make projected issues readable and identity-safe`) contains exactly the seven reviewed files. Exact-head package contract PASS, projector tests 43/43 PASS, and `origin/main...736ce671` diff check PASS. Code-branch push, Draft PR creation, merge, Project #1 apply, and the post-apply zero-write rerun remain unperformed and captain-owned.
