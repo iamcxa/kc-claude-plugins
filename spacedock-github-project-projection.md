@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-projection
 issue:
-pr:
+pr: 227
 mod-block:
 design: required
 lane: main
@@ -419,6 +419,17 @@ The no-cost hosted-runner route works and exercises the real split-ref workflow 
 ### Summary
 
 The disposable vertical slice now passes create/apply, live field readback, post-apply convergence, and a zero-operation rerun. The live failure exposed and closed the terminal-Issue lifecycle defect; only schedule observation and separately authorized Project #1 dogfood remain outside this proof.
+
+## Stage Report: implementation (cycle 6 — product commit and Draft PR)
+
+- DONE: Committed the reviewed nine-file product set as `96bb66ccec2a530256dd30ef4fd834d863535221` (`feat(kc-dev-flow): add GitHub Project projection installer`) without a version bump; release-please retains version propagation authority.
+- DONE: Pushed `iamcxa/spacedock-github-project-projection` and opened Draft PR #227 against `main`: https://github.com/iamcxa/kc-claude-plugins/pull/227. The PR head exactly matches the committed product SHA and remains Draft while CI and review run.
+- DONE: Delivery text preserves the live-evidence boundary: manual hosted apply and identical no-op rerun are proven; automatic scheduled delivery remains unobserved; Project #1 remains untouched.
+- PENDING: CI completion, review, and explicit captain authorization before any Ready transition. Project #1 dogfood apply and production-readiness AC-9/AC-10 live procedures remain separately gated.
+
+### Summary
+
+The implementation is now reviewable as Draft PR #227 at an exact product commit. No merge, Ready transition, Project #1 mutation, or automatic-schedule claim was made.
 
 ## Out of scope
 
