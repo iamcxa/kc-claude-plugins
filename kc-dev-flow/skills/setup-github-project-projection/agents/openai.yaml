@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup GitHub Project Projection"
+  short_description: "Install and audit one-way SD projection"
+  default_prompt: "Use $setup-github-project-projection to dry-run and install a one-way Spacedock-to-GitHub Project projection."
