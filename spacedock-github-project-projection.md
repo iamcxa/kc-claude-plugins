@@ -1,11 +1,11 @@
 ---
 id: qahvaf44bx0y52cwvr8t1a13
 title: Project Spacedock state into GitHub Issues and Projects through a portable installer
-status: backlog
+status: ideation
 source: Captain request on 2026-08-13, retargeted after live inspection from iamcxa Project #2 to Project #1
 product: kc-dev-flow
 sprint: S3
-started:
+started: 2026-08-14
 completed:
 verdict:
 worktree:
@@ -13,7 +13,7 @@ issue:
 pr:
 mod-block:
 design: required
-lane:
+lane: main
 ---
 
 Spacedock state is authoritative but mostly invisible outside its state branch. Provide a portable, one-way projection that makes entities and their lifecycle visible as GitHub Issues and GitHub Project items without turning GitHub into a second workflow authority or assuming every Spacedock workflow uses kc-dev-flow fields.
