@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.5.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.4.0...kc-dev-flow-v2.5.0) (2026-08-14)
+
+
+### Features
+
+* **kc-dev-flow:** add GitHub Project projection installer ([#227](https://github.com/iamcxa/kc-claude-plugins/issues/227)) ([f9895e5](https://github.com/iamcxa/kc-claude-plugins/commit/f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7))
+* **kc-dev-flow:** add proportional RoboRev implementation exit ([#239](https://github.com/iamcxa/kc-claude-plugins/issues/239)) ([387be48](https://github.com/iamcxa/kc-claude-plugins/commit/387be484ae353ebe4603720cc7cc3f8c633d25a1))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** gate delivery on GitHub PR feedback ([#220](https://github.com/iamcxa/kc-claude-plugins/issues/220)) ([951618f](https://github.com/iamcxa/kc-claude-plugins/commit/951618fbc81f9dae46a22014d109904a54eda6b2))
+
 ## [2.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.3.0...kc-dev-flow-v2.4.0) (2026-08-13)
 
 
