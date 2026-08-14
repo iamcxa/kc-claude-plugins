@@ -1,11 +1,11 @@
 ---
 id: e9nrdgxgnp1rqwwbcxfzb1nj
 title: "kc-dev-flow: adopt a proportional RoboRev implementation exit"
-status: backlog
+status: ideation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint: S2
-started:
+started: 2026-08-14T07:45:49Z
 completed:
 verdict:
 worktree:
@@ -13,7 +13,7 @@ issue:
 pr:
 mod-block:
 design:
-lane:
+lane: main
 ---
 
 ## Problem
