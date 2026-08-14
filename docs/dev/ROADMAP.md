@@ -311,13 +311,16 @@ Captain-approved order:
 1. `issue213`
 2. `kc-dev-flow-path-and-necessity`
 3. `proportional-work-profile`
+4. `roborev-implementation-exit`
 
 Exit: external PR feedback is reconciled before completion, each proposed
 control names the criterion and failed simpler route that earn it, and normal
 ideation records one Captain-selected POC, Pilot, or Production receipt before
-acceptance criteria expand. All three items have exact-revision validation and
-delivery evidence; the proportional-profile product diff retains no generalized
-evaluation platform. Hold the S2 Release PR until all three items exit.
+acceptance criteria expand. A declared RoboRev implementation exit records one
+exact-revision observation or an honest non-green fallback without becoming
+validation or delivery authority. All four items have exact-revision validation
+and delivery evidence, and the product diff retains no generalized evaluation
+platform. Hold the S2 Release PR until all four items exit.
 
 ### Sprint S3 — GitHub projection dogfood
 

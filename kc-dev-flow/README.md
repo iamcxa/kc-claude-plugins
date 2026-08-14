@@ -135,5 +135,15 @@ activate stage policy, satisfy a gate, or gain provider and workflow authority.
 The skill returns `science_officer_em_upward_report` for compatibility and nests
 the complete `engineering_judgment` advisory record inside it.
 
+An adopter may separately declare `review_convergence` in `observe` mode at
+implementation exit with `provider: roborev`. It vendors
+`references/roborev-implementation-exit.md` to the repository-local path named
+by its Local Profile and commits the agent, model, reasoning, minimum severity,
+panel choice, timeout, and request/confirmation caps. `continue-dev-flow` loads
+that local provider contract only after the declaration is active. Omission
+keeps the reference unloaded and performs no RoboRev work; tool or host absence
+records a non-green fallback and does not block fresh validation. The provider
+receipt never gains validation, GitHub, or Captain delivery authority.
+
 Install the plugin through the `kc-claude-plugins` marketplace in Claude Code.
 Codex uses the co-shipped `.codex-plugin` manifest and the same skill files.

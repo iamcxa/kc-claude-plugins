@@ -46,6 +46,10 @@ runtime has its own deep-dive entry below this catalog.
   expanding acceptance criteria so proof burden matches the commitment while
   safety and authority remain unchanged. Ordinary continuation routes committed product work before optional improvement harvesting;
   harvesting runs only when explicitly requested and grants no product authority.
+  A repository may also declare one proportional RoboRev observation at
+  implementation exit: it records provider-native evidence for the candidate
+  revision or an honest non-green fallback, then leaves fresh validation,
+  GitHub feedback, and Captain delivery authority unchanged.
 
 ## kc-pr-flow: Agent-native PR review
 
