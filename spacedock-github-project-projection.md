@@ -1,14 +1,14 @@
 ---
 id: qahvaf44bx0y52cwvr8t1a13
 title: Project Spacedock state into GitHub Issues and Projects through a portable installer
-status: ideation
+status: implementation
 source: Captain request on 2026-08-13, retargeted after live inspection from iamcxa Project #2 to Project #1
 product: kc-dev-flow
 sprint: S3
 started: 2026-08-14
 completed:
 verdict:
-worktree:
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-projection
 issue:
 pr:
 mod-block:
