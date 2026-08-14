@@ -1,7 +1,7 @@
 ---
 id: cx23zq6y1apw1j0kvdf3mns9
 title: Dogfood Spacedock projection in kc-claude-plugins Project #1
-status: backlog
+status: ideation
 source: Captain instruction on 2026-08-14 to continue until Project #1 shows the projection result
 product: repo-platform
 sprint:
@@ -13,7 +13,7 @@ issue:
 pr:
 mod-block:
 design: required
-lane:
+lane: main
 ---
 
 Install the merged deterministic projector into `iamcxa/kc-claude-plugins`, project ten selected `docs/dev` entities into user Project #1, and prove visible field values plus a zero-mutation rerun without giving GitHub lifecycle authority.
