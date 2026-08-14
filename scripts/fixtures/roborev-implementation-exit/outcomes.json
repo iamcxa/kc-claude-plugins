@@ -1,0 +1,25 @@
+{
+  "identity": {
+    "repository": "github.com/kc/repo",
+    "base": "1111111111111111111111111111111111111111",
+    "tip": "2222222222222222222222222222222222222222",
+    "configuration": "cfg-v1"
+  },
+  "cases": [
+    {"name": "pass", "status": "done", "verdict": "pass", "members": [{"status": "done", "verdict": "pass"}], "expected": ["PASS", "passed"]},
+    {"name": "findings", "status": "done", "verdict": "findings", "members": [{"status": "done", "verdict": "pass"}, {"status": "done", "verdict": "findings"}], "expected": ["FAIL", "findings"]},
+    {"name": "unavailable", "capability": "unavailable", "expected": ["UNAVAILABLE", "unavailable"]},
+    {"name": "unsupported", "capability": "unsupported", "expected": ["UNAVAILABLE", "unsupported"]},
+    {"name": "skipped", "capability": "skipped", "expected": ["UNAVAILABLE", "skipped"]},
+    {"name": "parent_failed", "status": "failed", "verdict": "findings", "members": [], "expected": ["UNKNOWN", "failed"]},
+    {"name": "member_failed", "status": "done", "verdict": "findings", "members": [{"status": "done", "verdict": "pass"}, {"status": "failed", "verdict": "findings"}], "expected": ["UNKNOWN", "failed"]},
+    {"name": "member_skipped", "status": "done", "verdict": "pass", "members": [{"status": "done", "verdict": "pass"}, {"status": "skipped"}], "expected": ["UNKNOWN", "member_skipped"]},
+    {"name": "member_incomplete", "status": "done", "verdict": "pass", "members": [{"status": "done", "verdict": "pass"}, {"status": "running"}], "expected": ["UNKNOWN", "member_incomplete"]},
+    {"name": "mixed_execution_failure", "status": "done", "verdict": "findings", "members": [{"status": "done", "verdict": "pass"}, {"status": "failed", "verdict": "findings"}], "expected": ["UNKNOWN", "failed"]},
+    {"name": "timed_out", "status": "running", "verdict": null, "members": [], "deadline_reached": true, "expected": ["UNKNOWN", "timed_out"]},
+    {"name": "stale_tip", "tip": "3333333333333333333333333333333333333333", "status": "done", "verdict": "pass", "members": [], "expected": ["UNKNOWN", "stale"]},
+    {"name": "stale_configuration", "configuration": "cfg-old", "status": "done", "verdict": "pass", "members": [], "expected": ["UNKNOWN", "stale"]},
+    {"name": "stale_precedes_incomplete", "tip": "3333333333333333333333333333333333333333", "status": "done", "verdict": "findings", "members": [{"status": "running"}], "expected": ["UNKNOWN", "stale"]},
+    {"name": "prose_only", "status": "done", "verdict": "pass", "members": [], "json_evidence": false, "expected": ["UNKNOWN", "state_unknown"]}
+  ]
+}

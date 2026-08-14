@@ -35,6 +35,42 @@ already authorized by the repository records, syncs, and re-reads the choice
 before AC expansion. This adds no tracker field, lifecycle stage, or mutation
 authority.
 
+### Conditional implementation-exit observation
+
+A Local Profile may bind `review_convergence` in `observe` mode to RoboRev. The
+loader leaves the provider reference unread when the declaration is absent. At
+implementation exit, a declared adapter binds repository, base, tip, committed
+reviewer configuration, and panel membership; it reuses matching provider jobs
+or uses the existing Git-backed Spacedock state transaction to select one claim
+winner before a bounded explicit request. Independent clones are serialized by
+fast-forward push rejection, while a shared parent refuses an identity already
+present in the authoritative task. Both paths re-read the remote task after the
+claim attempt.
+
+The provider observation emits the existing Work Control `PASS | FAIL | UNKNOWN
+| UNAVAILABLE` envelope. Missing tools and unsupported hosts stay non-green but
+do not block the separate fresh-validation route. A claim loser does not
+re-query or enqueue. No daemon, second ledger, generalized evaluator, or lock
+service belongs to this seam.
+
+```mermaid
+flowchart LR
+    I[Implementation evidence and exact tip] --> D{Local Profile declares RoboRev?}
+    D -->|no| V[Fresh validation]
+    D -->|yes| R[Reuse matching job]
+    R -->|match| E[Four-state observation]
+    R -->|miss| C[Spacedock state claim]
+    C -->|winner| Q[One bounded provider request]
+    C -->|loss or unknown| E
+    Q --> E
+    E --> V
+    V --> G[GitHub feedback and Captain delivery gates]
+```
+
+RoboRev is evidence only. Its verdict does not advance or block a stage, mutate
+GitHub, replace required checks, accept a red residual, or gain push, Draft,
+Ready, merge, or terminalization authority.
+
 ## Marketplace publish flow
 
 `.claude-plugin/marketplace.json` is the published catalog; each plugin

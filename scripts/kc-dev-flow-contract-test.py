@@ -99,6 +99,19 @@ require(
     + loader_eval_test.stderr,
 )
 
+roborev_contract_test = subprocess.run(
+    [sys.executable, "scripts/roborev-implementation-exit-contract.test.py"],
+    cwd=ROOT,
+    text=True,
+    capture_output=True,
+)
+require(
+    roborev_contract_test.returncode == 0,
+    "RoboRev implementation-exit contract failed:\n"
+    + roborev_contract_test.stdout
+    + roborev_contract_test.stderr,
+)
+
 expected_smoke_revision = "a" * 40
 valid_em_report_data = {
     "science_officer_em_upward_report": {
@@ -781,7 +794,7 @@ for phrase in [
     "require ignore proof",
     "roll over to the next sequence",
     "exactly one fresh-context EM verdict for every ideation and validation gate",
-    "Implementation opens no reviewer loop",
+    "Implementation opens no unbounded or adjudicating reviewer loop",
     "Multi-model review is optional",
     "silence is not approval",
 ]:
@@ -1475,7 +1488,7 @@ for phrase in [
     "Read [`runbooks/state-recovery.md`](./runbooks/state-recovery.md) only after",
     "Read [`runbooks/validation-evidence.md`](./runbooks/validation-evidence.md) when entering validation",
     "exactly one fresh-context EM verdict",
-    "Implementation opens no reviewer loop",
+    "Implementation opens no unbounded or adjudicating reviewer loop",
     "Multi-model review is optional",
 ]:
     require(phrase in workflow, f"self-adoption is missing runtime-budget contract: {phrase}")
@@ -1501,7 +1514,7 @@ for phrase in [
     "| Delivery |",
     "| Gate verdicts |",
     "| Scope and irreversibility |",
-    "| Observation | none |",
+    "| Observation | `review_convergence` in `observe` mode at implementation exit",
     "No binding YAML",
     "Origin re-observation:",
     "Reported scenario:",

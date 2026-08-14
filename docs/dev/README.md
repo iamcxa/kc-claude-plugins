@@ -51,7 +51,14 @@ package fallback participates in continuation.
 | Delivery | One independently deliverable squash-merge PR to `main` by default; conditional stacks follow the implementation rule below; GitHub required checks; release-please owns versions and tags |
 | Gate verdicts | Exactly one fresh EM under `Gate Authority` at ideation and validation |
 | Scope and irreversibility | Captain |
-| Observation | none |
+| Observation | `review_convergence` in `observe` mode at implementation exit; provider RoboRev; contract `docs/dev/runbooks/roborev-implementation-exit.md` |
+
+The repository-owned observation configuration is `.roborev.toml`: agent
+`codex`, model `gpt-5.6-terra`, reasoning `thorough`, minimum severity `medium`,
+and `panel: none`. The live batch is at most 20 minutes; one exact-tip request
+and one changed-tip repair confirmation are the structural caps. No
+local-command bridge is authorized. Missing capability records a non-green
+receipt and leaves fresh validation reachable.
 
 The normal route uses all five stages. A known-cause, single-seam defect with a
 mechanical acceptance test may skip ideation, but it keeps implementation,
@@ -248,8 +255,9 @@ Policy mods: [`_mods/work-control-profile.md`](./_mods/work-control-profile.md).
 Links to mods not listed in `Policy mods` are inactive locators, not active
 policy, until their stage-native trigger is satisfied.
 
-Implementation opens no reviewer loop. If an accepted premise changes, return
-the decision to its owning stage; do not adjudicate it while coding.
+Implementation opens no unbounded or adjudicating reviewer loop. If an accepted
+premise changes, return the decision to its owning stage; do not adjudicate it
+while coding.
 
 - Use an isolated worktree. For each behavior, record a failing RED test, write
   the minimum change, then record GREEN. RED and GREEN close in one session and
@@ -264,6 +272,12 @@ the decision to its owning stage; do not adjudicate it while coding.
   depends on them. Exact-head CI remains merge authority.
 - Apply the ideation-approved doc diff. No unrelated refactor or speculative
   mechanism belongs in the deliverable.
+- After tests, the exact candidate revision, and changed-file map exist, this
+  Local Profile's declared RoboRev observation loads
+  [`runbooks/roborev-implementation-exit.md`](./runbooks/roborev-implementation-exit.md).
+  Record one exact-tip four-state receipt or honest non-green fallback, then
+  continue to fresh validation. A missing tool is not a stage failure, and a
+  provider verdict is not validation or delivery authority.
 - Before validation, map every changed file to an AC. Delete an unmapped file or
   ask the captain to authorize its scope.
 - After a candidate revision, changed-file map, merge-base diff size, and
