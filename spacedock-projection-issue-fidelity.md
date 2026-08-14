@@ -155,6 +155,20 @@ science_officer_em_upward_report:
 - `Focused re-review:` `VERDICT: PASS`; findings 1 and 3 closed. The only retained item is the already-declared post-apply dry-run: any replanned `ADD_LABEL` or other write reopens validation rather than permitting completion.
 - `Exact revision evidence:` canonical/vendored projector digest `sha256:b0327065f19c4c11808ab7403293954fbafa36360231d2c5e5037c79967ca33a`; canonical runtime 1,880 lines versus 1,572 at `origin/main`, net +308. Package contract PASS, projector 43/43 PASS, and `git diff --check` PASS.
 
+## Stage Report: validation — cycle 3
+
+**Decision: PROCEED to a fresh captain push-approval decision for recut candidate `8af38c437201abf2f47fbbc3966af028c80daa2e`; keep Draft readiness, merge, and Project apply closed.**
+
+- `Recut identity:` candidate parent is exact `origin/main@387be484ae353ebe4603720cc7cc3f8c633d25a1`; the stable patch ID remains `be9809758663aa415a179856241cf92a70c1e662`, matching approved candidate `736ce6710533cc18d9c5bf37c3d1deb9bf00ac54`. The only upstream path overlap was `docs/dev/ROADMAP.md`, and rebase completed without conflict.
+- `Exact evidence:` package contract PASS; projector 43/43 PASS; `git diff origin/main...HEAD --check` PASS; version parity, skill frontmatter, marketplace schema/install, and bound-field validation PASS. Canonical and vendored projector bytes remain identical at `sha256:b0327065f19c4c11808ab7403293954fbafa36360231d2c5e5037c79967ca33a`; the worktree is clean and exact-base merge-tree preflight succeeds.
+- `Lenses:` delivery/exact-head and docs-policy fired; no changed implementation behavior or route was introduced by the recut. The gross 1,628-line diff remains one projector lifecycle, including a 544-line vendored runtime copy and 453 test lines.
+- `Diff coverage:` unchanged from cycle 2 because the stable patch and projector bytes are identical; the exact candidate reruns every owned projector behavior row.
+- `Adversarial:` patch-ID comparison, canonical/vendored byte comparison, current-main parent proof, and explicit old-remote-head readback would fail on logical, packaging, base, or provider drift.
+- `Cross-model:` `not_needed` — fresh GPT-5.6 High EM returned `proceed / high`; the call is reversible and uncontested after exact evidence.
+- `E2E:` the prior exact live Project #1 dry-run remains behavior-continuity evidence for the unchanged projector bytes, but it does not authorize apply or close AC-5.
+- `Origin re-observation:` pending delivery — Issue #232 still shows the old projection because PR #240 and the default-branch workflow remain at old candidate `736ce671`; candidate-bound CI, complete `github-pr-feedback/v1`, authorized apply, and the post-apply zero-write rerun must follow their own gates.
+- `EM disproof condition:` return if the base/candidate/body cannot be bound exactly, remote head moves before push, candidate-bound CI or feedback is non-pass, a fresh dry-run plans create/conflict/body drift/orphan, or apply fails zero-write convergence.
+
 ## Delivery checkpoint
 
-Captain-approved commit `736ce671` (`feat(kc-dev-flow): make projected issues readable and identity-safe`) contains exactly the seven reviewed files. Exact-head package contract PASS, projector tests 43/43 PASS, and `origin/main...736ce671` diff check PASS. Code-branch push, Draft PR creation, merge, Project #1 apply, and the post-apply zero-write rerun remain unperformed and captain-owned.
+Draft PR #240 and its remote branch still point to previously approved candidate `736ce6710533cc18d9c5bf37c3d1deb9bf00ac54`. Local recut candidate `8af38c437201abf2f47fbbc3966af028c80daa2e` contains the same stable logical patch on current `main@387be484ae353ebe4603720cc7cc3f8c633d25a1` and has fresh local validation. A new canonical delivery packet, exact-candidate push, candidate-bound CI/feedback, Ready, merge, Project #1 apply, and the post-apply zero-write rerun remain pending and captain-owned.
