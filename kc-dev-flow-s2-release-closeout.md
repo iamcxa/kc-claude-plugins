@@ -8,7 +8,7 @@ sprint: S2
 started: 2026-08-14T14:59:28Z
 completed:
 verdict:
-worktree:
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-s2-release-221-aad7
 issue:
 pr: pr-merge:221
 mod-block:
