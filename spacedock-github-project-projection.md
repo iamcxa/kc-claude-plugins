@@ -404,6 +404,22 @@ The focused review found and closed the cross-run idempotency defect plus linked
 
 The no-cost hosted-runner route works and exercises the real split-ref workflow through its credential boundary. Remaining live proof is a dedicated user-Project credential plus bounded apply/no-op convergence; schedule delivery is still unobserved rather than failed.
 
+## Stage Report: implementation (cycle 5 — live apply and no-op convergence)
+
+- DONE: Captain supplied the named `SPACEDOCK_PROJECT_TOKEN` secret directly in the public proof repository. Its reviewed config records `classic-pat`, `project`, expiry `2026-08-21`, rotation owner `iamcxa`, and the user-Project blast radius; the secret value was never read, printed, copied, or stored locally.
+- OBSERVED DEFECT: First armed run `31767953290` successfully created three Issues, added three Project items, and wrote `Status` plus `SD Stage`, then failed its post-apply convergence check. Readback isolated one residual UPDATE: non-archived terminal entity `charlie` was closed after `Status=Done`, while the projector still expected every non-archived projector-owned Issue to remain open.
+- DONE: Added a RED contract proving an exact terminal stage closes a projector-owned Issue while a linked human Issue remains open. It failed `CLOSED != OPEN` before the correction. The projector now treats terminal stage or archive as closed only for projector ownership; the suite passes 18/18 after the one-rule correction.
+- DONE: Corrected live run `31768086308` updated all three receipts for the new projector digest and completed successfully. Its artifact records three UPDATE classifications, six Issue/field operations, then zero post-apply mutations and zero orphans.
+- DONE: Identical rerun `31768117401` completed successfully with `alpha`, `bravo`, and `charlie` all `NO_CHANGE`, zero planned mutations, zero operations, zero converged mutations, and zero orphans. Snapshot counts remain `inbox=1`, `building=1`, `released=1`, terminal `1` at state `03cdc090cc6eb6e8ccf4aebca18cf0f57df147ff`.
+- DONE: Field-level readback confirms managed Issues #1/#2 remain open with `Todo/inbox` and `In Progress/building`; managed Issue #3 is closed with `Done/released`. Pre-existing foreign item `228509911` remains the original `iamcxa/spacedock-projection-proof#1`, open with `Todo/inbox`.
+- DONE: Final local gates pass: 18/18 focused projection tests, registered kc-dev-flow contract, generated-workflow `actionlint`, 41-skill frontmatter lint, version parity, marketplace L0-L2, and `git diff --check`.
+- STILL UNOBSERVED: No automatic schedule event has appeared yet. Manual apply and no-op convergence are live-proven; scheduled delivery remains a separate latency observation rather than a claimed pass.
+- BOUNDARY: Project #1 remains untouched. This disposable proof establishes the public runner, dedicated user-Project credential, actual REST mutations, receipt migration, foreign preservation, and no-op rerun, but does not authorize kc-claude-plugins dogfood apply.
+
+### Summary
+
+The disposable vertical slice now passes create/apply, live field readback, post-apply convergence, and a zero-operation rerun. The live failure exposed and closed the terminal-Issue lifecycle defect; only schedule observation and separately authorized Project #1 dogfood remain outside this proof.
+
 ## Out of scope
 
 - GitHub Project changes flowing back into SD state.
