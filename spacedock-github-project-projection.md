@@ -93,6 +93,50 @@ Separate evidence, drafting, language, and publication:
 
 GitHub has no native draft status-update object in the current API: create, update, and delete mutations operate on published updates. Therefore a generated draft is projector-owned derived evidence, not a hidden GitHub lifecycle state. V1 defaults to automated evidence and draft generation with manual publication. Opt-in automatic publication remains a later policy mode and must not make an LLM-authored body the unattended payload.
 
+## Ideation working record
+
+### Accepted outcome and authority
+
+The accepted S3 outcome is the ROADMAP entry on `main@b9821d50580f184fc81f2363ade820fd76a30af6`: install one-way projection for one selected SD workflow and one selected GitHub Project, dogfood `kc-claude-plugins/docs/dev` against Project #1, prove idempotency and a usable stage-grouped view, and generate deterministic sprint-delta status drafts that remain human-published. Captain direction permits S3 to begin alongside remaining S2 validation and preserves S2 scope, ordering, and release hold.
+
+The protected value is a low-maintenance external view of SD state that stays traceable to exact source revisions without becoming workflow authority. If forced to cut, keep the deterministic one-way projector, identity/freshness receipts, ten-entity dry-run, and no-op rerun. Defer richer Project fields, narrative rewriting, automatic event latency, and status drafting before weakening projection correctness or authority separation.
+
+Non-goals remain GitHub-to-SD writeback, Relay or CarLove rollout, unattended Project Status Update publication, LLM-derived metrics, a hosted service, and a cross-Project portfolio. The riskiest assumption is that a default-branch Actions topology can obtain both split-state inputs and least-authority personal Project credentials with acceptable latency and upgrade cost.
+
+Appetite and deviation stop remain captain-owned and are not yet denominated in human-hours. The proposed first cut is a POC-shaped vertical slice; the ideation gate remains open until the captain records the appetite and the deviation that forces a re-cut.
+
+### Inherited acceptance normalization
+
+| Criteria | Class and disposition |
+|---|---|
+| AC-1, AC-2, AC-7, AC-9, AC-10 | Retain as value or authority constraints: generic portability, idempotency, traceable freshness, visible liveness failure, and safe archive semantics. |
+| AC-3 | Retain the value that every field serves a view/metric/audit; treat the exact initial field list as the current smallest hypothesis, not immutable schema. |
+| AC-4, AC-6 | Retain as falsifiable spikes earned by the automatic reconcile and user-owned Project values. The spike selects topology and credential type; it does not pre-authorize repository or secret mutation. |
+| AC-5, AC-8 | Retain the captain-selected installable skill plus GHA boundary. Exact installed filenames are mechanisms and may change if a smaller reviewed layout satisfies the same reviewability, upgrade, and single-reconcile values. |
+| AC-11 | Retain as the S3 observable dogfood value and bind apply to a separately approved bounded subset after dry-run. |
+| AC-12 | Retain deterministic delta classification and human publication authority. Treat optional LLM rewriting as deferrable presentation, not completion value. |
+
+### Reverse-recovery audit against `origin/main@b9821d50580f184fc81f2363ade820fd76a30af6`
+
+Two search strategies were used over `kc-dev-flow`, repository `scripts`, and `.github/workflows`: domain/API vocabulary search (`ProjectV2`, status update, state branch, workflow dispatch, install, template) and complete file inventory by surface. External repositories, dynamic references, and unpublished branches were outside this repository audit and remain unknown.
+
+| Surface | Completeness | Need | Evidence and recovery decision | Disproof hook |
+|---|---|---|---|---|
+| Skill mode router and upgrade discipline | `WORKING_UNIT_UNPROVEN` | `REQUIRED` | `kc-dev-flow/skills/adopt-dev-flow/SKILL.md:21-28` already supplies audit/adopt/upgrade routing and `:30-40` supplies reverse recovery. Reuse its interaction and authority pattern; keep projection in a distinct skill because kernel adoption and external projection have independently changeable credentials and installed bytes. | Invoke the installed skill in isolated Claude and Codex homes; inability to select and preview a mode flips it to `EXISTS_BROKEN`. |
+| Deterministic bounded frontmatter/input receipts | `WORKING_UNIT_UNPROVEN` | `REQUIRED` | `scripts/dev-flow-work-context-check.py:75-84` already binds input bytes to SHA-256 and `:138-179` parses selected frontmatter fail-closed without a YAML dependency. Recover these patterns but do not import the repository-only product/sprint validator into the portable projector. | A fixture with duplicate/malformed generic fields that passes parsing flips this to `EXISTS_BROKEN`. |
+| Schedule plus manual-dispatch Actions shape | `WORKING_UNIT_UNPROVEN` | `REQUIRED` | `.github/workflows/e2e-pipeline-real-browser.yml:49-56` demonstrates schedule, `workflow_dispatch`, and narrow permissions in this repository. It does not prove split-state event delivery or personal Project write permissions, so AC-4/6 retain the live spike. | A disposable split-state run that cannot reconcile from both pinned refs flips the selected topology to `EXISTS_BROKEN`. |
+| GitHub Project/Issue projection adapter | `MISSING` | `REQUIRED` | Neither domain search nor the complete kc-dev-flow/scripts/workflow inventory found ProjectV2 item mutation, qualified identity lookup, or receipt reconciliation code. Add one deterministic projector only after its fake-adapter RED case fails. | Discovery of an importable existing adapter that passes the same fake/live contract changes the plan to recovery. |
+| Installable projection templates/config | `MISSING` | `REQUIRED` | Existing plugin bytes contain no projection workflow/config/projector templates. Add only the target-repository bytes required by the selected spike; do not add a daemon or hosted service. | A supported host-native installation surface that can produce an auditable target diff removes the vendored-template proposal. |
+| Status snapshot/delta renderer | `MISSING` | `REQUIRED` by S3 exit | No status-update manifest, delivery/scope/definition delta classifier, or ProjectV2 status-update adapter exists in the inventoried surfaces. Build the deterministic manifest/renderer on projector receipts; LLM rewriting remains skill-hosted and optional. | An existing renderer accepting the proposed manifest and passing delivery/scope/definition fixtures changes this to recovery. |
+
+### Route, carve, and pre-mortem
+
+The smallest current route is one projection skill plus one deterministic projector whose install mode vendors the reviewed config/workflow/script bytes. No reusable workflow repository, Action package, daemon, database, webhook service, or LLM call belongs in the runtime path. The GHA file is an execution shell over the same projector used by local dry-run and manual dispatch.
+
+The provisional carve exposes two potentially independent value surfaces. Slice 1 is install → ten-entity dry-run → approved bounded apply → no-op rerun → `SD Stage` grouped view. Its literal operator demo is `gh workflow run spacedock-project-sync.yml -f dry_run=true`, followed by the Project #1 grouped view and a run summary showing the same pinned commits and zero second-run mutations. Slice 2 is reconcile snapshot → delivery/scope/definition delta → deterministic Markdown draft → stale-manifest publish refusal. Because status drafting can fail while projection remains useful, the ideation EM must decide whether AC-12 stays a second slice or requires a separately scheduled sibling task under the journey-slicing independent-blocker rule.
+
+Pre-mortem: the design ships and still fails because installation appears portable while every adopter needs bespoke schema, token, and trigger repair; the disproof is a second-repository dry-run that requires code edits rather than config/profile selection.
+
 ## Acceptance criteria
 
 ### AC-1 — Generic capability discovery is schema-driven
