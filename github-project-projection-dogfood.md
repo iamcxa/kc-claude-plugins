@@ -1,7 +1,7 @@
 ---
 id: cx23zq6y1apw1j0kvdf3mns9
 title: Dogfood Spacedock projection in kc-claude-plugins Project #1
-status: implementation
+status: validation
 source: Captain instruction on 2026-08-14 to continue until Project #1 shows the projection result
 product: repo-platform
 sprint:
