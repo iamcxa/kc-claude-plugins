@@ -1,7 +1,7 @@
 ---
 id: qahvaf44bx0y52cwvr8t1a13
 title: Project Spacedock state into GitHub Issues and Projects through a portable installer
-status: implementation
+status: ideation
 source: Captain request on 2026-08-13, retargeted after live inspection from iamcxa Project #2 to Project #1
 product: kc-dev-flow
 sprint: S3
@@ -430,6 +430,67 @@ The disposable vertical slice now passes create/apply, live field readback, post
 ### Summary
 
 The implementation is now reviewable as Draft PR #227 at an exact product commit. No merge, Ready transition, Project #1 mutation, or automatic-schedule claim was made.
+
+## Stage Report: implementation rejection (cycle 7 — strict contract audit)
+
+- REJECTED: Draft PR #227 at `96bb66ccec2a530256dd30ef4fd834d863535221` is not admissible for validation. Review reproduced a cross-repository same-number Issue collision, untrusted receipt adoption, explicit-Issue/receipt disagreement, selection-wide orphan false positives, mutable-ref dispatch exposure, lost partial-operation evidence, and absent production-`reconcile` test coverage.
+- REJECTED PROCESS: implementation opened reviewer loops, did not retain RED-before-GREEN evidence for every behavior, and opened the Draft without the repository delivery hook's exact candidate/base/body and native-stack-exception receipt. Green CI does not repair those missing implementation and delivery obligations.
+- RETURN TO IDEATION: AC-5/AC-8 currently require mutation to refuse when the reviewed state commit or plan digest changes, while AC-4/AC-11 require schedule-driven projection of later state-branch changes. A static approved state/plan and unattended projection of new state bytes cannot both be true. Linked-Issue body receipts also conflict with the promise never to overwrite concurrent human content, and Project #1 exposes only `Todo`, `In Progress`, and `Done` rather than the accepted AC-2 `Ready` state.
+- SIZE BASELINE: the PR adds 2,299 gross lines across nine files. Runtime Python is 1,300 gross lines and 1,162 syntax-bearing lines; tests are 671 gross lines. The 1,124-line projector contains 40 functions and two classes; `plan_projection` is the maintenance hotspot at 198 lines, followed by `apply_github_plan` at 95 lines. The total is plausible for install, parse, plan, REST reconcile, receipt, and snapshot behavior, but the current responsibility density and missing production-path coverage prevent a simplicity claim.
+- PRESERVE: one setup skill, one installed GHA execution shell, one deterministic projector, no daemon/database/webhook/LLM runtime, one-way SD authority, generic capability discovery, and the separately owned Project Status Update sibling.
+
+### Proposed ideation correction — not yet accepted
+
+1. Replace static per-run plan approval with a default-branch **automation envelope**: pin repository/workflow/Project, installed projector digest, a non-empty allowed entity set, and each approved entity-to-Issue binding. Schedule may apply changed lifecycle bytes only inside that envelope. New entities, changed Issue bindings, installed-byte drift, or broader roots return to reviewed dry-run and explicit approval. The observed state commit remains receipt provenance rather than a value whose expected change disables automation.
+2. Use full `owner/repository#number` identity everywhere. Trust a projector-owned receipt only when its exact schema is valid and either the configured Project already contains the item or a stranded Issue was authored by the configured automation identity. Ignore unrelated malformed public markers; quarantine malformed selected/managed records.
+3. Keep explicitly linked human Issues read-only: never patch their title, body, or open/closed state. Bind them through the approved state/config mapping and Project item identity; keep freshness in the reconcile snapshot rather than inserting a mutable body receipt. Projector-created Issues retain the machine receipt and lifecycle writes.
+4. Map Project #1 without inventing a fourth native status: backlog maps to `Todo`, active SD stages map to `In Progress`, and terminal maps to `Done`; exact `SD Stage` plus qualified sprint carries the finer distinction. Adding `Ready` remains a separately approved Project-schema choice.
+5. Bound the authentication claim to what the provider exposes: validate credential metadata, repository/Project identity, config, schema, conflicts, and the complete mutation plan before writes; order writes to minimize blast radius and persist an append-only operation journal after every response. Do not claim that REST proves both credentials can write without performing a mutation.
+
+The corrected route keeps the same lifecycle surface count. It changes authority semantics and linked-Issue ownership, so fresh ideation EM judgment and captain acceptance are required before implementation resumes.
+
+## Fresh ideation EM gate — Claude Opus 5 High, 2026-08-14
+
+Fresh read-only session `609d2eb0-b646-4e5f-b60a-0f121a97d141` ran with reported model `claude-opus-5`, high effort, safe mode, no tools, no MCP, and no Bash/Edit/Write. An earlier fresh attempt returned provider `529 Overloaded` with no judgment and is not counted as a gate verdict. The successful EM returned `proceed / medium / multi_model:not_needed`; it independently supports F1-F5 and requires explicit envelope expiry plus forced re-attestation.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Replace the jointly unsatisfiable static state/plan approval with the bounded automation envelope. Full repository-qualified identity, read-only linked Issues, existing three-option Status mapping, bounded credential claims, an operation journal, retry, and the unchanged runtime topology are professionally sound. Captain approval is still required for standing external authority."
+  evidence_synthesis: "F1-F5 are supported by the supplied exact artifact and contract. Static state/plan invariance cannot process the later state commits schedule exists to reconcile; bare Issue numbers cross repository boundaries; unconditional linked-Issue PATCH can overwrite humans; REST reads do not prove write capability; and the small topology is not yet sufficient because production reconcile is untested. The EM did not independently run tools, so counts and live bytes remain supplied evidence."
+  risk_tradeoff_call: "The envelope buys unattended convergence while limiting writes to pinned installed bytes, explicit entities, and fixed Issue bindings. Its standing authority is the material risk and durable maintenance cost. Require expiry, re-attestation on projector digest/entity/binding changes, blast-radius ordering, an append-only journal, and bounded retry. Manual-only per-run approval is safer but abandons the accepted schedule value."
+  recommendation: "Accept the six-point corrected route only with an explicit envelope expiry no later than credential expiry and forced re-attestation on projector digest, entity set, or Issue-binding change; then return to implementation and require a production-reconcile journey test before leaving Draft."
+  route: proceed
+  confidence: medium
+  multi_model: not_needed
+  fo_boundary: ""
+  engineering_judgment:
+    question: "Should static per-run approval become a bounded automation envelope, with the accompanying ownership, Status, credential, and minimal-stack corrections?"
+    revision: "PR head 96bb66ccec2a530256dd30ef4fd834d863535221; origin/main 029047b0e7d510b71ac260f2643ec8aef52298a5; Project #1 unmutated"
+    evidence_synthesis: "F1-F5 are supported by the supplied exact artifact and contract. Static state/plan invariance cannot process the later state commits schedule exists to reconcile; bare Issue numbers cross repository boundaries; unconditional linked-Issue PATCH can overwrite humans; REST reads do not prove write capability; and the small topology is not yet sufficient because production reconcile is untested. The EM did not independently run tools, so counts and live bytes remain supplied evidence."
+    adjudications:
+      - finding: F1
+        disposition: supported
+        basis: "The expected later state commit is both schedule input and the static gate's abort condition."
+      - finding: F2
+        disposition: supported
+        basis: "The accepted same-repository boundary requires content_type plus repository_url and Issue number, which live REST bytes expose."
+      - finding: F3
+        disposition: supported
+        basis: "Without a demonstrated atomic compare-and-swap, unconditional linked-Issue PATCH cannot preserve concurrent human content."
+      - finding: F4
+        disposition: supported
+        basis: "Reads prove identity, not write capability; journal and bounded retry are primary partial-write safety."
+      - finding: F5
+        disposition: supported
+        basis: "The lifecycle topology remains workflow, config, and standard-library projector; insufficient production-path coverage requires internal repair, not new infrastructure."
+    risk_tradeoff: "The envelope buys unattended convergence while limiting writes to pinned installed bytes, explicit entities, and fixed Issue bindings. Its standing authority is the material risk and durable maintenance cost. Require expiry, re-attestation on projector digest/entity/binding changes, blast-radius ordering, an append-only journal, and bounded retry. Manual-only per-run approval is safer but abandons the accepted schedule value."
+    recommendation: "Accept the six-point corrected route only with an explicit envelope expiry no later than credential expiry and forced re-attestation on projector digest, entity set, or Issue-binding change; then return to implementation and require a production-reconcile journey test before leaving Draft."
+    route: proceed
+    confidence: medium
+    dissent: "Do not permit approve-once permanence. The first apply after an envelope change remains a minimal-blast-radius probe because write capability cannot be proven before mutation."
+    disproof_condition: "If apply becomes manual-only, static per-run approval is sufficient; demonstrated atomic Issue-body compare-and-swap would reopen linked receipt placement."
+    authority_boundary: "Captain owns envelope authority and schema; gate/work-item authority owns ACs and stage; delivery owns Draft/merge; provider owners retain credentials and Project #1. No mutation or Ready authority is granted."
+```
 
 ## Out of scope
 
