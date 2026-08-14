@@ -17,9 +17,16 @@ jobs:
   reconcile:
     runs-on: ubuntu-latest
     steps:
+      - name: Initialize reconcile receipt
+        shell: bash
+        run: |
+          printf '%s\n' '{"schema":"spacedock-project-reconcile-result/v1","mode":"failed","error":"workflow stopped before projector result","operations":[]}' \
+            > "$RUNNER_TEMP/spacedock-project-result.json"
+
       - name: Check out projection controls
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.sha }}
           path: projection-trunk
 
       - name: Read pinned state ref
@@ -50,7 +57,9 @@ jobs:
               default_branch = json.load(response)["default_branch"]
           if config["trunk_ref"] != default_branch:
               raise SystemExit("configured trunk ref must be the repository default branch")
-          if os.environ["GITHUB_REF_NAME"] != default_branch:
+          if os.environ["GITHUB_REF_TYPE"] != "branch":
+              raise SystemExit("dispatch this workflow from a branch")
+          if os.environ["GITHUB_REF"] != f"refs/heads/{default_branch}":
               raise SystemExit("dispatch this workflow from the default branch")
           if not re.fullmatch(r"[A-Za-z0-9._/-]+", config["state_ref"]):
               raise SystemExit("configured state ref contains unsupported characters")
@@ -59,7 +68,7 @@ jobs:
           PY
 
       - name: Check out Spacedock state
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ steps.config.outputs.state_ref }}
           path: projection-state
@@ -77,7 +86,7 @@ jobs:
 
       - name: Publish reconcile receipt
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: spacedock-project-reconcile
           path: ${{ runner.temp }}/spacedock-project-result.json

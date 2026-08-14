@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic Spacedock projection planner.
-
-The POC deliberately owns no network client. It converts pinned workflow/entity
-bytes plus an observed target snapshot into a closed mutation plan. GitHub I/O is
-an adapter boundary layered on this planner after credential and trigger proof.
-"""
+"""Deterministic Spacedock projection planner and bounded GitHub REST adapter."""
 
 from __future__ import annotations
 
@@ -16,10 +11,13 @@ import os
 import pathlib
 import re
 import subprocess
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter
+from datetime import date, datetime, time as datetime_time, timezone
+from email.utils import parsedate_to_datetime
 from typing import Any
 
 
@@ -39,6 +37,27 @@ COMPARED_RECEIPT_KEYS = {
     "ownership",
     "archived",
 }
+RECEIPT_REQUIRED_TYPES = {
+    "schema": str,
+    "identity": str,
+    "slug": str,
+    "entity_digest": str,
+    "projector_version": str,
+    "projector_digest": str,
+    "ownership": str,
+    "archived": bool,
+}
+MANAGED_ENTITY_FIELDS = {
+    "id",
+    "title",
+    "status",
+    "score",
+    "source",
+    "worktree",
+    "issue",
+    "product",
+    "sprint",
+}
 
 
 class ProjectionError(ValueError):
@@ -48,10 +67,19 @@ class ProjectionError(ValueError):
 class GitHubRestClient:
     """Small REST 2026-03-10 transport with separate repository/project tokens."""
 
-    def __init__(self, repository_token: str, project_token: str) -> None:
+    def __init__(
+        self,
+        repository_token: str,
+        project_token: str,
+        *,
+        sleep: Any = time.sleep,
+        max_attempts: int = 3,
+    ) -> None:
         if not repository_token or not project_token:
             raise ProjectionError("both repository and Project credentials are required")
         self._tokens = {"repository": repository_token, "project": project_token}
+        self._sleep = sleep
+        self._max_attempts = max_attempts
 
     def request(
         self,
@@ -86,16 +114,25 @@ class GitHubRestClient:
                 "Content-Type": "application/json",
             },
         )
-        try:
-            with urllib.request.urlopen(request, timeout=30) as response:
-                payload = response.read()
-                headers = response.headers
-        except urllib.error.HTTPError as exc:
-            detail = exc.read().decode("utf-8", errors="replace")[:500]
-            raise ProjectionError(
-                f"GitHub {method} {path} failed with HTTP {exc.code}: {detail}"
-            ) from exc
-        return (json.loads(payload) if payload else None), headers
+        for attempt in range(1, self._max_attempts + 1):
+            try:
+                with urllib.request.urlopen(request, timeout=30) as response:
+                    payload = response.read()
+                    headers = response.headers
+                return (json.loads(payload) if payload else None), headers
+            except urllib.error.HTTPError as exc:
+                detail = exc.read().decode("utf-8", errors="replace")[:500]
+                retryable = exc.code in {429, 500, 502, 503, 504}
+                if not retryable or attempt == self._max_attempts:
+                    raise ProjectionError(
+                        f"GitHub {method} {path} failed with HTTP {exc.code}: {detail}"
+                    ) from exc
+                self._sleep(_retry_delay(exc.headers.get("Retry-After"), attempt))
+            except urllib.error.URLError as exc:
+                if attempt == self._max_attempts:
+                    raise ProjectionError(f"GitHub {method} {path} transport failed: {exc}") from exc
+                self._sleep(min(2 ** (attempt - 1), 10))
+        raise AssertionError("retry loop exhausted without returning or raising")
 
     def request_all(self, path: str, *, authority: str) -> list[dict[str, Any]]:
         result: list[dict[str, Any]] = []
@@ -120,6 +157,19 @@ def _digest(value: bytes | str) -> str:
     if isinstance(value, str):
         value = value.encode("utf-8")
     return hashlib.sha256(value).hexdigest()
+
+
+def _retry_delay(raw: str | None, attempt: int) -> float:
+    if raw:
+        try:
+            return min(max(float(raw), 0.0), 10.0)
+        except ValueError:
+            try:
+                parsed = parsedate_to_datetime(raw)
+                return min(max((parsed - datetime.now(timezone.utc)).total_seconds(), 0.0), 10.0)
+            except (TypeError, ValueError, OverflowError):
+                pass
+    return float(min(2 ** (attempt - 1), 10))
 
 
 def _frontmatter_lines(text: str) -> list[str]:
@@ -207,20 +257,35 @@ def parse_entity_text(text: str, *, slug: str, archived: bool = False) -> dict[s
     """Parse flat entity frontmatter while preserving unknown keys as data."""
 
     values: dict[str, Any] = {}
+    parent_key: str | None = None
     for line in _frontmatter_lines(text):
         if not line.strip() or line.lstrip().startswith("#"):
             continue
-        if line.startswith((" ", "\t")) or ":" not in line:
-            raise ProjectionError(f"entity {slug!r} has unsupported nested frontmatter")
+        if line.startswith((" ", "\t")):
+            if parent_key in MANAGED_ENTITY_FIELDS:
+                raise ProjectionError(
+                    f"entity {slug!r} has nested data under managed field {parent_key!r}"
+                )
+            continue
+        if ":" not in line:
+            raise ProjectionError(f"entity {slug!r} has malformed frontmatter")
         key, raw = line.split(":", 1)
         if key in values:
             raise ProjectionError(f"entity {slug!r} repeats field {key!r}")
         values[key] = _scalar(raw)
+        parent_key = key
     for required in ("title", "status", "source"):
-        if not values.get(required):
+        if not isinstance(values.get(required), str) or not values[required]:
             raise ProjectionError(f"entity {slug!r} is missing {required!r}")
     if isinstance(values.get("issue"), str) and values["issue"].isdigit():
         values["issue"] = int(values["issue"])
+    issue = values.get("issue")
+    if issue is not None and (isinstance(issue, bool) or not isinstance(issue, int) or issue <= 0):
+        raise ProjectionError(f"entity {slug!r} issue must be a positive integer")
+    for optional in ("id", "product", "sprint"):
+        value = values.get(optional)
+        if value is not None and (not isinstance(value, str) or not value):
+            raise ProjectionError(f"entity {slug!r} {optional} must be a non-empty string")
     values["_slug"] = slug
     values["_archived"] = archived
     values["_content_digest"] = _digest(text)
@@ -245,7 +310,23 @@ def parse_receipt(body: str | None) -> dict[str, Any] | None:
         value = json.loads(match.group("payload"))
     except json.JSONDecodeError as exc:
         raise ProjectionError("malformed projection receipt") from exc
-    return value if isinstance(value, dict) else None
+    if not isinstance(value, dict):
+        raise ProjectionError("projection receipt must be a JSON object")
+    for key, expected_type in RECEIPT_REQUIRED_TYPES.items():
+        if not isinstance(value.get(key), expected_type):
+            raise ProjectionError(f"projection receipt has invalid {key!r}")
+    if value["schema"] != "spacedock-projection-receipt/v1":
+        raise ProjectionError("unsupported projection receipt schema")
+    if value["ownership"] not in {"projector", "linked"}:
+        raise ProjectionError("projection receipt has invalid ownership")
+    if not re.fullmatch(r"[0-9a-f]{64}", value["entity_digest"]):
+        raise ProjectionError("projection receipt has invalid entity digest")
+    if not re.fullmatch(r"[0-9a-f]{64}", value["projector_digest"]):
+        raise ProjectionError("projection receipt has invalid projector digest")
+    entity_id = value.get("entity_id")
+    if entity_id is not None and not isinstance(entity_id, str):
+        raise ProjectionError("projection receipt has invalid entity ID")
+    return value
 
 
 def _body_with_receipt(body: str | None, receipt: dict[str, Any]) -> str:
@@ -294,7 +375,7 @@ def _generic_status(
     workflow: dict[str, Any], stage: str, status_options: list[str]
 ) -> str | None:
     if stage == workflow["initial_stage"]:
-        candidates = ("Backlog", "Todo")
+        candidates = ("Todo", "Backlog")
     elif stage == workflow["terminal_stage"]:
         candidates = ("Done",)
     else:
@@ -302,15 +383,36 @@ def _generic_status(
     return next((candidate for candidate in candidates if candidate in status_options), None)
 
 
-def _target_by_identity(target_items: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+def _target_by_identity(
+    target_items: list[dict[str, Any]],
+    *,
+    repository: str | None = None,
+    workflow_dir: str | None = None,
+) -> dict[str, dict[str, Any]]:
     result: dict[str, dict[str, Any]] = {}
+    prefix = f"{repository}:{workflow_dir}:" if repository and workflow_dir else None
     for item in target_items:
+        if repository and item.get("repository") not in {None, repository}:
+            continue
         receipt = parse_receipt(item.get("body"))
-        if receipt and isinstance(receipt.get("identity"), str):
+        if receipt:
+            if prefix and not receipt["identity"].startswith(prefix):
+                continue
             if receipt["identity"] in result:
                 raise ProjectionError(f"duplicate target identity {receipt['identity']!r}")
             result[receipt["identity"]] = item
     return result
+
+
+def _repository_from_url(value: Any) -> str | None:
+    if not isinstance(value, str):
+        return None
+    match = re.search(r"(?:api\.github\.com/repos/|github\.com/)([^/]+/[^/#]+)", value)
+    return match.group(1) if match else None
+
+
+def _issue_identity(repository: str, number: int) -> str:
+    return f"{repository}#{number}"
 
 
 def status_options_from_rest(fields: list[dict[str, Any]]) -> list[str]:
@@ -337,9 +439,18 @@ def target_items_from_rest(
     }
     result: list[dict[str, Any]] = []
     for item in items:
-        content = item.get("content") or {}
-        if content.get("number") is None:
+        if item.get("content_type") not in {None, "Issue"}:
             continue
+        content = item.get("content") or {}
+        if (
+            isinstance(content.get("number"), bool)
+            or not isinstance(content.get("number"), int)
+            or content["number"] <= 0
+        ):
+            continue
+        content_repository = _repository_from_url(content.get("repository_url"))
+        if content_repository is None:
+            raise ProjectionError("Project Issue observation lacks repository identity")
         values: dict[str, Any] = {}
         for value in item.get("fields", []):
             field_name = field_names.get(value.get("id"), value.get("name"))
@@ -355,7 +466,10 @@ def target_items_from_rest(
                 "item_id": item.get("id"),
                 "item_node_id": item.get("node_id"),
                 "issue_number": content.get("number"),
+                "repository": content_repository,
+                "issue_identity": _issue_identity(content_repository, content["number"]),
                 "issue_id": content.get("id"),
+                "author_login": (content.get("user") or {}).get("login"),
                 "title": content.get("title"),
                 "issue_state": str(content.get("state", "open")).upper(),
                 "body": content.get("body") or "",
@@ -369,25 +483,62 @@ def merge_repository_issues(
     target_items: list[dict[str, Any]],
     issues: list[dict[str, Any]],
     *,
+    repository: str | None = None,
     linked_issue_numbers: set[int] | None = None,
+    managed_identity_prefix: str | None = None,
+    trusted_automation_authors: set[str] | None = None,
 ) -> list[dict[str, Any]]:
     """Include stranded managed Issues and explicitly linked human Issues."""
 
     result = copy.deepcopy(target_items)
-    projected_numbers = {item.get("issue_number") for item in result}
+    projected_identities = {
+        item.get("issue_identity")
+        or (
+            _issue_identity(repository, item["issue_number"])
+            if repository and isinstance(item.get("issue_number"), int)
+            else None
+        )
+        for item in result
+    }
     linked_issue_numbers = linked_issue_numbers or set()
+    trusted_automation_authors = trusted_automation_authors or {"github-actions[bot]"}
     for issue in issues:
-        if issue.get("pull_request") or issue.get("number") in projected_numbers:
+        number = issue.get("number")
+        issue_identity = (
+            _issue_identity(repository, number)
+            if repository and isinstance(number, int)
+            else None
+        )
+        if issue.get("pull_request") or issue_identity in projected_identities:
             continue
         body = issue.get("body") or ""
-        if parse_receipt(body) is None and issue.get("number") not in linked_issue_numbers:
+        linked = number in linked_issue_numbers
+        try:
+            receipt = parse_receipt(body)
+        except ProjectionError:
+            if linked:
+                raise
+            continue
+        author_login = (issue.get("user") or {}).get("login")
+        trusted_receipt = bool(
+            receipt
+            and author_login in trusted_automation_authors
+            and (
+                managed_identity_prefix is None
+                or receipt["identity"].startswith(managed_identity_prefix)
+            )
+        )
+        if not linked and not trusted_receipt:
             continue
         result.append(
             {
                 "item_id": None,
                 "item_node_id": None,
-                "issue_number": issue.get("number"),
+                "issue_number": number,
+                "repository": repository,
+                "issue_identity": issue_identity,
                 "issue_id": issue.get("id"),
+                "author_login": author_login,
                 "title": issue.get("title"),
                 "issue_state": str(issue.get("state", "open")).upper(),
                 "body": body,
@@ -403,9 +554,67 @@ def _project_base(config: dict[str, Any]) -> str:
     return f"{prefix}/{project['owner']}/projectsV2/{project['number']}"
 
 
-def validate_config(config: dict[str, Any]) -> None:
+def _timestamp(value: Any, *, end_of_day: bool = False) -> datetime:
+    if not isinstance(value, str) or not value:
+        raise ProjectionError("approval and credential expiry must be ISO-8601 strings")
+    normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
+    try:
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", normalized):
+            parsed_date = date.fromisoformat(normalized)
+            parsed = datetime.combine(
+                parsed_date,
+                datetime_time.max if end_of_day else datetime_time.min,
+                tzinfo=timezone.utc,
+            )
+        else:
+            parsed = datetime.fromisoformat(normalized)
+    except ValueError as exc:
+        raise ProjectionError(f"invalid ISO-8601 expiry {value!r}") from exc
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def validate_approval_scope(approval: dict[str, Any], selection: list[Any]) -> None:
+    scope = approval.get("scope")
+    if scope not in {"selected", "workflow"}:
+        raise ProjectionError("approval scope must be 'selected' or 'workflow'")
+    if not isinstance(selection, list) or any(
+        not isinstance(slug, str) or not slug for slug in selection
+    ):
+        raise ProjectionError("entity selection must contain non-empty slugs")
+    if len(selection) != len(set(selection)):
+        raise ProjectionError("entity selection contains duplicate slugs")
+    if scope == "selected" and not selection:
+        raise ProjectionError("selected approval requires a non-empty entity selection")
+    if scope == "workflow" and selection:
+        raise ProjectionError("workflow approval cannot include an entity selection")
+
+
+def _validate_linked_bindings(bindings: Any, repository: str) -> None:
+    if not isinstance(bindings, dict):
+        raise ProjectionError("approval linked_issues must be an object")
+    pattern = re.compile(r"(?P<repository>[^\s/#]+/[^\s/#]+)#(?P<number>[1-9][0-9]*)")
+    for slug, identity in bindings.items():
+        if not isinstance(slug, str) or not slug or not isinstance(identity, str):
+            raise ProjectionError("linked Issue bindings require non-empty slug and identity")
+        match = pattern.fullmatch(identity)
+        if not match or match.group("repository") != repository:
+            raise ProjectionError(
+                f"linked Issue binding for {slug!r} must use {repository}#number"
+            )
+
+
+def validate_config(
+    config: dict[str, Any],
+    *,
+    installed_projector_digest: str | None = None,
+    now: datetime | None = None,
+) -> None:
     if config.get("schema") != "spacedock-project-config/v1":
         raise ProjectionError("unsupported projection config schema")
+    if not isinstance(config.get("external_apply_enabled"), bool):
+        raise ProjectionError("external_apply_enabled must be boolean")
     for name in ("repository", "trunk_ref", "state_ref", "workflow_dir", "profile"):
         if not isinstance(config.get(name), str) or not config[name]:
             raise ProjectionError(f"configuration requires non-empty {name!r}")
@@ -414,7 +623,13 @@ def validate_config(config: dict[str, Any]) -> None:
     project = config.get("project")
     if not isinstance(project, dict) or project.get("owner_type") not in {"user", "organization"}:
         raise ProjectionError("configuration requires a user or organization Project")
-    if not isinstance(project.get("owner"), str) or not isinstance(project.get("number"), int):
+    if (
+        not isinstance(project.get("owner"), str)
+        or not project["owner"]
+        or isinstance(project.get("number"), bool)
+        or not isinstance(project.get("number"), int)
+        or project["number"] <= 0
+    ):
         raise ProjectionError("configuration requires Project owner and number")
     if not isinstance(project.get("node_id"), str) or not project["node_id"]:
         raise ProjectionError("configuration requires the pinned Project node ID")
@@ -433,6 +648,26 @@ def validate_config(config: dict[str, Any]) -> None:
             raise ProjectionError("external apply requires a complete credential receipt")
         if project["owner_type"] == "user" and credential.get("token_type") != "classic-pat":
             raise ProjectionError("the REST adapter for a user-owned Project requires classic-pat")
+        approval = config.get("approval")
+        if not isinstance(approval, dict):
+            raise ProjectionError("external apply requires a reviewed approval envelope")
+        validate_approval_scope(approval, config.get("entity_selection") or [])
+        digest = approval.get("projector_digest")
+        if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise ProjectionError("approval requires a SHA-256 projector digest")
+        if installed_projector_digest is None or digest != installed_projector_digest:
+            raise ProjectionError("approval projector digest does not match installed projector digest")
+        cap = approval.get("max_mutations_per_run")
+        if isinstance(cap, bool) or not isinstance(cap, int) or cap <= 0:
+            raise ProjectionError("approval mutation cap must be a positive integer")
+        _validate_linked_bindings(approval.get("linked_issues"), config["repository"])
+        approval_expiry = _timestamp(approval.get("expires_at"))
+        credential_expiry = _timestamp(credential.get("expiry"), end_of_day=True)
+        if approval_expiry > credential_expiry:
+            raise ProjectionError("approval expiry cannot exceed credential expiry")
+        current = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+        if current >= approval_expiry:
+            raise ProjectionError("projection approval envelope has expired")
 
 
 def _unwrap(value: Any) -> Any:
@@ -475,7 +710,11 @@ def observe_github(
     )
     normalized = target_items_from_rest(fields, items)
     return fields, merge_repository_issues(
-        normalized, issues, linked_issue_numbers=linked_issue_numbers
+        normalized,
+        issues,
+        repository=repository,
+        linked_issue_numbers=linked_issue_numbers,
+        managed_identity_prefix=f"{repository}:{config['workflow_dir']}:",
     )
 
 
@@ -556,6 +795,8 @@ def apply_github_plan(
     config: dict[str, Any],
     plan: dict[str, Any],
     fields: list[dict[str, Any]],
+    *,
+    journal: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Apply a conflict-free plan through resumable Issue then Project writes."""
 
@@ -564,8 +805,22 @@ def apply_github_plan(
         raise ProjectionError("conflicts must be resolved before external apply")
     validate_project_schema(plan, fields, allow_missing=True)
     project_base = _project_base(config)
-    operations: list[dict[str, Any]] = []
+    operations = journal if journal is not None else []
     by_name = _field_by_name(fields)
+    planned_writes = sum(name not in by_name for name in required_project_schema(plan))
+    for mutation in plan["mutations"]:
+        if mutation.get("ownership") != "linked":
+            planned_writes += 1
+        if mutation.get("current_item_id") is None:
+            planned_writes += 1
+        planned_writes += 1
+    cap = (config.get("approval") or {}).get("max_mutations_per_run")
+    if isinstance(cap, bool) or not isinstance(cap, int) or cap <= 0:
+        raise ProjectionError("external apply requires a positive mutation cap")
+    if planned_writes > cap:
+        raise ProjectionError(
+            f"planned {planned_writes} writes exceed mutation cap {cap}"
+        )
     for name, options in required_project_schema(plan).items():
         if name in by_name:
             continue
@@ -592,13 +847,19 @@ def apply_github_plan(
     for mutation in plan["mutations"]:
         desired = mutation["desired"]
         issue_number = mutation.get("current_issue_number") or desired.get("issue_number")
-        issue_id: int | None = None
+        issue_id: int | None = mutation.get("current_issue_id")
+        current_repository = mutation.get("current_repository")
+        if mutation.get("current_issue_number") is not None and current_repository != repository:
+            raise ProjectionError("observed Issue repository does not match configured repository")
         issue_payload = {
             "title": desired["title"],
             "body": desired["body"],
             "state": desired["issue_state"].lower(),
         }
-        if issue_number is None:
+        if mutation.get("ownership") == "linked":
+            if not isinstance(issue_number, int) or not isinstance(issue_id, int):
+                raise ProjectionError("linked Issue observation lacks stable Issue identity")
+        elif issue_number is None:
             issue = client.request(
                 "POST",
                 f"repos/{repository}/issues",
@@ -649,6 +910,11 @@ def apply_github_plan(
 
 
 def _same_managed_state(current: dict[str, Any], desired: dict[str, Any]) -> bool:
+    if desired["receipt"]["ownership"] == "linked":
+        return current.get("item_id") is not None and all(
+            current.get("fields", {}).get(name) == value
+            for name, value in desired["fields"].items()
+        )
     return all(
         (
             current.get("title") == desired["title"],
@@ -661,6 +927,280 @@ def _same_managed_state(current: dict[str, Any], desired: dict[str, Any]) -> boo
             == _receipt_core(desired["receipt"]),
         )
     )
+
+
+def _conflict(slug: str, reason: str) -> dict[str, Any]:
+    return {
+        "slug": slug,
+        "classification": "CONFLICT",
+        "reason": reason,
+        "desired": None,
+        "missing_optional": [],
+    }
+
+
+def _validate_entity_population(entities: list[dict[str, Any]]) -> None:
+    for field, label in (("_slug", "slugs"), ("issue", "Issue references"), ("id", "IDs")):
+        values = [
+            entity.get(field)
+            for entity in entities
+            if entity.get(field) is not None and not isinstance(entity.get(field), bool)
+        ]
+        duplicates = sorted(value for value, count in Counter(values).items() if count > 1)
+        if duplicates:
+            raise ProjectionError(f"duplicate entity {label} {duplicates!r}")
+
+
+def _resolve_target(
+    entity: dict[str, Any],
+    *,
+    identity: str,
+    repository: str,
+    target_by_identity: dict[str, dict[str, Any]],
+    target_by_issue: dict[str, dict[str, Any]],
+    linked_issue_bindings: dict[str, str],
+) -> tuple[dict[str, Any] | None, str, str | None]:
+    slug = entity["_slug"]
+    explicit_issue = entity.get("issue")
+    ownership = "linked" if isinstance(explicit_issue, int) else "projector"
+    current = target_by_identity.get(identity)
+    if isinstance(explicit_issue, int):
+        explicit_identity = _issue_identity(repository, explicit_issue)
+        if linked_issue_bindings.get(slug) != explicit_identity:
+            return None, ownership, "unapproved_linked_issue"
+        if current is not None:
+            current_identity = current.get("issue_identity") or _issue_identity(
+                repository, current["issue_number"]
+            )
+            if current_identity != explicit_identity:
+                return None, ownership, "explicit_issue_identity_mismatch"
+        else:
+            current = target_by_issue.get(explicit_identity)
+        if current is None:
+            return None, ownership, "missing_linked_issue"
+    receipt = parse_receipt(current.get("body")) if current else None
+    if receipt and receipt["ownership"] != ownership:
+        return None, ownership, "ownership_mismatch"
+    return current, ownership, None
+
+
+def _desired_fields(
+    workflow: dict[str, Any],
+    entity: dict[str, Any],
+    *,
+    profile: str,
+    status_options: list[str],
+) -> tuple[dict[str, str], list[str]]:
+    fields = {"SD Stage": entity["status"]}
+    target_status = _generic_status(workflow, entity["status"], status_options)
+    if target_status is not None:
+        fields["Status"] = target_status
+    missing_optional: list[str] = []
+    if profile == "kc-dev-flow":
+        if entity.get("product"):
+            fields["SD Product"] = entity["product"]
+        else:
+            missing_optional.append("product")
+        if not entity.get("sprint"):
+            missing_optional.append("sprint")
+    return fields, missing_optional
+
+
+def _projection_receipt(
+    entity: dict[str, Any],
+    *,
+    identity: str,
+    ownership: str,
+    state_ref: str,
+    trunk_commit: str,
+    state_commit: str,
+    projector_version: str,
+    projector_digest: str,
+) -> dict[str, Any]:
+    return {
+        "schema": "spacedock-projection-receipt/v1",
+        "identity": identity,
+        "slug": entity["_slug"],
+        "entity_id": entity.get("id") or None,
+        "state_ref": state_ref,
+        "trunk_commit": trunk_commit,
+        "state_commit": state_commit,
+        "entity_digest": entity["_content_digest"],
+        "projector_version": projector_version,
+        "projector_digest": projector_digest,
+        "ownership": ownership,
+        "archived": bool(entity.get("_archived")),
+    }
+
+
+def _desired_issue(
+    workflow: dict[str, Any],
+    entity: dict[str, Any],
+    current: dict[str, Any] | None,
+    *,
+    identity: str,
+    ownership: str,
+    fields: dict[str, str],
+    receipt: dict[str, Any],
+    repository: str,
+    workflow_dir: str,
+    state_ref: str,
+) -> dict[str, Any]:
+    linked = ownership == "linked"
+    issue_state = (
+        current.get("issue_state", "OPEN")
+        if linked and current
+        else "CLOSED"
+        if entity.get("_archived") or entity["status"] == workflow["terminal_stage"]
+        else "OPEN"
+    )
+    body = (
+        current.get("body", "")
+        if linked and current
+        else _body_with_receipt(
+            _projector_summary(
+                entity,
+                repository=repository,
+                workflow_dir=workflow_dir,
+                state_ref=state_ref,
+            ),
+            receipt,
+        )
+    )
+    return {
+        "identity": identity,
+        "title": current.get("title", entity["title"]) if linked and current else entity["title"],
+        "issue_number": (
+            entity["issue"]
+            if isinstance(entity.get("issue"), int)
+            else current.get("issue_number") if current else None
+        ),
+        "issue_state": issue_state,
+        "body": body,
+        "fields": fields,
+        "receipt": receipt,
+    }
+
+
+def _orphan_conflicts(
+    target_by_identity: dict[str, dict[str, Any]],
+    current_identities: set[str],
+    *,
+    prefix: str,
+) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for identity, item in sorted(target_by_identity.items()):
+        if identity.startswith(prefix) and identity not in current_identities:
+            result.append(
+                {
+                    "identity": identity,
+                    "classification": "CONFLICT",
+                    "reason": "missing_archive_tombstone",
+                    "item_id": item.get("item_id"),
+                    "receipt": parse_receipt(item.get("body")),
+                }
+            )
+    return result
+
+
+def _plan_entity(
+    workflow: dict[str, Any],
+    entity: dict[str, Any],
+    *,
+    profile: str,
+    repository: str,
+    workflow_dir: str,
+    state_ref: str,
+    trunk_commit: str,
+    state_commit: str,
+    projector_version: str,
+    projector_digest: str,
+    status_options: list[str],
+    target_by_identity: dict[str, dict[str, Any]],
+    target_by_issue: dict[str, dict[str, Any]],
+    linked_issue_bindings: dict[str, str],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    slug = entity["_slug"]
+    identity = _identity(repository, workflow_dir, slug)
+    if entity["status"] not in workflow["stages"]:
+        return _conflict(slug, "unknown_stage"), None
+    current, ownership, conflict = _resolve_target(
+        entity,
+        identity=identity,
+        repository=repository,
+        target_by_identity=target_by_identity,
+        target_by_issue=target_by_issue,
+        linked_issue_bindings=linked_issue_bindings,
+    )
+    if conflict:
+        return _conflict(slug, conflict), None
+    fields, missing_optional = _desired_fields(
+        workflow, entity, profile=profile, status_options=status_options
+    )
+    receipt = _projection_receipt(
+        entity,
+        identity=identity,
+        ownership=ownership,
+        state_ref=state_ref,
+        trunk_commit=trunk_commit,
+        state_commit=state_commit,
+        projector_version=projector_version,
+        projector_digest=projector_digest,
+    )
+    desired = _desired_issue(
+        workflow,
+        entity,
+        current,
+        identity=identity,
+        ownership=ownership,
+        fields=fields,
+        receipt=receipt,
+        repository=repository,
+        workflow_dir=workflow_dir,
+        state_ref=state_ref,
+    )
+    action = (
+        "CREATE"
+        if current is None
+        else "NO_CHANGE" if _same_managed_state(current, desired) else "UPDATE"
+    )
+    result = {
+        "slug": slug,
+        "classification": "PARTIAL" if missing_optional else action,
+        "action": action,
+        "desired": desired,
+        "missing_optional": missing_optional,
+        "source_metadata": {
+            "product": entity.get("product"),
+            "sprint": entity.get("sprint"),
+            "sprint_identity": (
+                f"{repository}:{workflow_dir}:sprint:{entity['sprint']}"
+                if entity.get("sprint")
+                else None
+            ),
+            "goal_digest": (
+                _digest(_canonical(entity["goal"])) if entity.get("goal") else None
+            ),
+            "exit_digest": (
+                _digest(_canonical(entity.get("exit-criteria") or entity.get("exit_criteria")))
+                if entity.get("exit-criteria") or entity.get("exit_criteria")
+                else None
+            ),
+        },
+    }
+    if action == "NO_CHANGE":
+        return result, None
+    mutation = {
+        "action": action,
+        "identity": identity,
+        "current_item_id": current.get("item_id") if current else None,
+        "current_issue_number": current.get("issue_number") if current else None,
+        "current_issue_id": current.get("issue_id") if current else None,
+        "current_repository": current.get("repository") if current else None,
+        "ownership": ownership,
+        "desired": desired,
+    }
+    return result, mutation
 
 
 def plan_projection(
@@ -677,174 +1217,59 @@ def plan_projection(
     projector_version: str,
     projector_digest: str,
     status_options: list[str] | None = None,
+    linked_issue_bindings: dict[str, str] | None = None,
+    detect_orphans: bool = True,
 ) -> dict[str, Any]:
     """Create a deterministic plan without mutating source or target state."""
 
     if profile not in {"generic", "kc-dev-flow"}:
         raise ProjectionError(f"unsupported profile {profile!r}")
-    target_by_identity = _target_by_identity(target_items)
+    _validate_entity_population(entities)
+    target_by_identity = _target_by_identity(
+        target_items, repository=repository, workflow_dir=workflow_dir
+    )
     target_by_issue = {
-        item.get("issue_number"): item
+        item.get("issue_identity") or _issue_identity(repository, item["issue_number"]): item
         for item in target_items
         if isinstance(item.get("issue_number"), int)
     }
-    seen_slugs: set[str] = set()
-    issue_counts = Counter(
-        entity.get("issue") for entity in entities if isinstance(entity.get("issue"), int)
-    )
-    duplicate_issues = sorted(issue for issue, count in issue_counts.items() if count > 1)
-    if duplicate_issues:
-        raise ProjectionError(f"duplicate entity Issue references {duplicate_issues!r}")
-    entity_id_counts = Counter(
-        entity.get("id") for entity in entities if isinstance(entity.get("id"), str) and entity.get("id")
-    )
-    duplicate_entity_ids = sorted(
-        entity_id for entity_id, count in entity_id_counts.items() if count > 1
-    )
-    if duplicate_entity_ids:
-        raise ProjectionError(f"duplicate entity IDs {duplicate_entity_ids!r}")
+    bindings = linked_issue_bindings or {}
     entity_results: list[dict[str, Any]] = []
     mutations: list[dict[str, Any]] = []
 
     for entity in sorted(entities, key=lambda item: item["_slug"]):
-        slug = entity["_slug"]
-        if slug in seen_slugs:
-            raise ProjectionError(f"duplicate entity slug {slug!r}")
-        seen_slugs.add(slug)
-        stage = entity["status"]
-        identity = _identity(repository, workflow_dir, slug)
-        if stage not in workflow["stages"]:
-            entity_results.append(
-                {
-                    "slug": slug,
-                    "classification": "CONFLICT",
-                    "reason": "unknown_stage",
-                    "desired": None,
-                    "missing_optional": [],
-                }
-            )
-            continue
-
-        explicit_issue = entity.get("issue")
-        current = target_by_identity.get(identity)
-        if current is None and isinstance(explicit_issue, int):
-            current = target_by_issue.get(explicit_issue)
-        if isinstance(explicit_issue, int) and current is None:
-            entity_results.append(
-                {
-                    "slug": slug,
-                    "classification": "CONFLICT",
-                    "reason": "missing_linked_issue",
-                    "desired": None,
-                    "missing_optional": [],
-                }
-            )
-            continue
-        current_receipt = parse_receipt(current.get("body")) if current else None
-        ownership = (
-            current_receipt.get("ownership")
-            if current_receipt and current_receipt.get("ownership") in {"projector", "linked"}
-            else "linked" if isinstance(explicit_issue, int) else "projector"
+        result, mutation = _plan_entity(
+            workflow,
+            entity,
+            profile=profile,
+            repository=repository,
+            workflow_dir=workflow_dir,
+            state_ref=state_ref,
+            trunk_commit=trunk_commit,
+            state_commit=state_commit,
+            projector_version=projector_version,
+            projector_digest=projector_digest,
+            status_options=status_options or [],
+            target_by_identity=target_by_identity,
+            target_by_issue=target_by_issue,
+            linked_issue_bindings=bindings,
         )
-        fields = {"SD Stage": stage}
-        target_status = _generic_status(workflow, stage, status_options or [])
-        if target_status is not None:
-            fields["Status"] = target_status
-        missing_optional: list[str] = []
-        if profile == "kc-dev-flow":
-            product = entity.get("product")
-            sprint = entity.get("sprint")
-            if product:
-                fields["SD Product"] = product
-            else:
-                missing_optional.append("product")
-            if not sprint:
-                missing_optional.append("sprint")
-
-        receipt = {
-            "schema": "spacedock-projection-receipt/v1",
-            "identity": identity,
-            "slug": slug,
-            "entity_id": entity.get("id") or None,
-            "state_ref": state_ref,
-            "trunk_commit": trunk_commit,
-            "state_commit": state_commit,
-            "entity_digest": entity["_content_digest"],
-            "projector_version": projector_version,
-            "projector_digest": projector_digest,
-            "ownership": ownership,
-            "archived": bool(entity.get("_archived")),
-        }
-        base_body = (
-            current.get("body")
-            if ownership == "linked" and current
-            else _projector_summary(
-                entity,
-                repository=repository,
-                workflow_dir=workflow_dir,
-                state_ref=state_ref,
-            )
-        )
-        if ownership == "linked":
-            desired_issue_state = current.get("issue_state", "OPEN") if current else "OPEN"
-        else:
-            desired_issue_state = (
-                "CLOSED"
-                if entity.get("_archived") or stage == workflow["terminal_stage"]
-                else "OPEN"
-            )
-        desired = {
-            "identity": identity,
-            "title": current.get("title", entity["title"]) if ownership == "linked" and current else entity["title"],
-            "issue_number": explicit_issue if isinstance(explicit_issue, int) else current.get("issue_number") if current else None,
-            "issue_state": desired_issue_state,
-            "body": _body_with_receipt(base_body, receipt),
-            "fields": fields,
-            "receipt": receipt,
-        }
-        if current is None:
-            action = "CREATE"
-        elif _same_managed_state(current, desired):
-            action = "NO_CHANGE"
-        else:
-            action = "UPDATE"
-        classification = "PARTIAL" if missing_optional else action
-        entity_result = {
-            "slug": slug,
-            "classification": classification,
-            "action": action,
-            "desired": desired,
-            "missing_optional": missing_optional,
-        }
-        entity_results.append(entity_result)
-        if action in {"CREATE", "UPDATE"}:
-            mutations.append(
-                {
-                    "action": action,
-                    "identity": identity,
-                    "current_item_id": current.get("item_id") if current else None,
-                    "current_issue_number": current.get("issue_number") if current else None,
-                    "desired": desired,
-                }
-            )
+        entity_results.append(result)
+        if mutation:
+            mutations.append(mutation)
 
     current_identities = {
         _identity(repository, workflow_dir, entity["_slug"]) for entity in entities
     }
-    orphans: list[dict[str, Any]] = []
-    for identity, item in sorted(target_by_identity.items()):
-        receipt = parse_receipt(item.get("body"))
-        if identity.startswith(f"{repository}:{workflow_dir}:") and identity not in current_identities:
-            orphans.append(
-                {
-                    "identity": identity,
-                    "classification": "CONFLICT",
-                    "reason": "missing_archive_tombstone",
-                    "item_id": item.get("item_id"),
-                    "receipt": receipt,
-                }
-            )
-
+    orphans = (
+        _orphan_conflicts(
+            target_by_identity,
+            current_identities,
+            prefix=f"{repository}:{workflow_dir}:",
+        )
+        if detect_orphans
+        else []
+    )
     return {
         "schema": "spacedock-projection-plan/v1",
         "profile": profile,
@@ -863,53 +1288,6 @@ def plan_projection(
     }
 
 
-def apply_fake(plan: dict[str, Any], target_items: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Apply a plan to an in-memory target for contract tests only."""
-
-    result = copy.deepcopy(target_items)
-    next_issue = max((item.get("issue_number", 0) or 0 for item in result), default=0) + 1
-    for mutation in plan["mutations"]:
-        desired = mutation["desired"]
-        if mutation["action"] == "CREATE":
-            issue_number = desired.get("issue_number")
-            if not isinstance(issue_number, int):
-                issue_number = next_issue
-                next_issue += 1
-            result.append(
-                {
-                    "item_id": f"FAKE-{len(result) + 1}",
-                    "issue_number": issue_number,
-                    "title": desired["title"],
-                    "issue_state": desired["issue_state"],
-                    "body": desired["body"],
-                    "fields": copy.deepcopy(desired["fields"]),
-                }
-            )
-            continue
-        matched = False
-        for item in result:
-            if (
-                mutation.get("current_item_id") is not None
-                and item.get("item_id") == mutation["current_item_id"]
-            ) or (
-                mutation.get("current_issue_number") is not None
-                and item.get("issue_number") == mutation["current_issue_number"]
-            ):
-                item.update(
-                    {
-                        "title": desired["title"],
-                        "issue_state": desired["issue_state"],
-                        "body": desired["body"],
-                        "fields": copy.deepcopy(desired["fields"]),
-                    }
-                )
-                matched = True
-                break
-        if not matched:
-            raise ProjectionError(f"fake target lost update identity {mutation['identity']!r}")
-    return result
-
-
 def freshness_status(last_success: int | None, *, now: int, window: int) -> str:
     if window <= 0:
         raise ProjectionError("freshness window must be positive")
@@ -918,7 +1296,14 @@ def freshness_status(last_success: int | None, *, now: int, window: int) -> str:
     return "CURRENT" if now - last_success <= window else "STALE"
 
 
-def build_status_snapshot(plan: dict[str, Any]) -> dict[str, Any]:
+def build_status_snapshot(
+    plan: dict[str, Any],
+    *,
+    project: dict[str, Any] | None = None,
+    last_success: int | None = None,
+    observed_at: int | None = None,
+    freshness_window: int | None = None,
+) -> dict[str, Any]:
     stages = [item["desired"]["fields"]["SD Stage"] for item in plan["entities"] if item["desired"]]
     members = [
         {
@@ -928,6 +1313,23 @@ def build_status_snapshot(plan: dict[str, Any]) -> dict[str, Any]:
         for item in plan["entities"]
         if item["desired"]
     ]
+    sprint_members: dict[str, list[str]] = {}
+    goal_digests: set[str] = set()
+    exit_digests: set[str] = set()
+    for item in plan["entities"]:
+        metadata = item.get("source_metadata") or {}
+        sprint_identity = metadata.get("sprint_identity")
+        if isinstance(sprint_identity, str) and item.get("desired"):
+            sprint_members.setdefault(sprint_identity, []).append(item["desired"]["identity"])
+        if isinstance(metadata.get("goal_digest"), str):
+            goal_digests.add(metadata["goal_digest"])
+        if isinstance(metadata.get("exit_digest"), str):
+            exit_digests.add(metadata["exit_digest"])
+    projection_freshness = (
+        freshness_status(last_success, now=observed_at, window=freshness_window)
+        if observed_at is not None and freshness_window is not None
+        else "MISSING"
+    )
     return {
         "schema": "spacedock-status-snapshot/v1",
         "repository": plan["repository"],
@@ -937,7 +1339,28 @@ def build_status_snapshot(plan: dict[str, Any]) -> dict[str, Any]:
         "state_commit": plan["state_commit"],
         "projector_version": plan["projector_version"],
         "projector_digest": plan["projector_digest"],
+        "project": (
+            {
+                "owner_type": project.get("owner_type"),
+                "owner": project.get("owner"),
+                "number": project.get("number"),
+                "node_id": project.get("node_id"),
+            }
+            if project
+            else None
+        ),
+        "projection_freshness": projection_freshness,
         "member_set_digest": _digest(_canonical(sorted(members, key=lambda item: item["identity"]))),
+        "sprints": [
+            {
+                "identity": identity,
+                "member_count": len(identities),
+                "member_set_digest": _digest(_canonical(sorted(identities))),
+            }
+            for identity, identities in sorted(sprint_members.items())
+        ],
+        "available_goal_digests": sorted(goal_digests),
+        "available_exit_digests": sorted(exit_digests),
         "stage_counts": dict(sorted(Counter(stages).items())),
         "terminal_count": sum(stage == plan["workflow"]["terminal_stage"] for stage in stages),
         "conflict_count": sum(item["classification"] == "CONFLICT" for item in plan["entities"])
@@ -981,31 +1404,49 @@ def _git_commit(path: pathlib.Path) -> str:
     return result.stdout.strip()
 
 
+def _select_entities(
+    entities: list[dict[str, Any]], selection: list[str], *, scope: str
+) -> list[dict[str, Any]]:
+    slugs = [entity["_slug"] for entity in entities]
+    duplicates = sorted(slug for slug, count in Counter(slugs).items() if count > 1)
+    if duplicates:
+        raise ProjectionError(f"duplicate entity slugs {duplicates!r}")
+    validate_approval_scope({"scope": scope, "linked_issues": {}}, selection)
+    if scope == "workflow":
+        return entities
+    available = {entity["_slug"]: entity for entity in entities}
+    missing = sorted(set(selection) - set(available))
+    if missing:
+        raise ProjectionError(f"configured entity selection is missing {missing!r}")
+    return [available[slug] for slug in sorted(selection)]
+
+
 def reconcile(
     config: dict[str, Any],
     *,
     trunk_dir: pathlib.Path,
     state_dir: pathlib.Path,
     client: Any,
+    journal: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    validate_config(config)
+    projector_path = pathlib.Path(__file__)
+    projector_digest = _digest(projector_path.read_bytes())
+    validate_config(config, installed_projector_digest=projector_digest)
     workflow_path = trunk_dir / config["workflow_dir"] / "README.md"
     workflow = parse_workflow_text(workflow_path.read_text())
     entities = _load_entities(state_dir)
+    approval = config.get("approval") or {"scope": "workflow", "linked_issues": {}}
     selection = config.get("entity_selection") or []
-    if selection:
-        available = {entity["_slug"]: entity for entity in entities}
-        missing = sorted(set(selection) - set(available))
-        if missing:
-            raise ProjectionError(f"configured entity selection is missing {missing!r}")
-        entities = [available[slug] for slug in sorted(set(selection))]
+    if config.get("external_apply_enabled"):
+        entities = _select_entities(entities, selection, scope=approval["scope"])
+    elif selection:
+        entities = _select_entities(entities, selection, scope="selected")
     linked_issue_numbers = {
         entity["issue"] for entity in entities if isinstance(entity.get("issue"), int)
     }
     fields, target = observe_github(
         client, config, linked_issue_numbers=linked_issue_numbers
     )
-    projector_path = pathlib.Path(__file__)
     provenance = {
         "profile": config["profile"],
         "repository": config["repository"],
@@ -1014,11 +1455,13 @@ def reconcile(
         "trunk_commit": _git_commit(trunk_dir),
         "state_commit": _git_commit(state_dir),
         "projector_version": VERSION,
-        "projector_digest": _digest(projector_path.read_bytes()),
+        "projector_digest": projector_digest,
         "status_options": status_options_from_rest(fields),
+        "linked_issue_bindings": approval.get("linked_issues") or {},
+        "detect_orphans": approval.get("scope") != "selected",
     }
     plan = plan_projection(workflow, entities, target, **provenance)
-    snapshot = build_status_snapshot(plan)
+    snapshot = build_status_snapshot(plan, project=config["project"])
     result: dict[str, Any] = {
         "schema": "spacedock-project-reconcile-result/v1",
         "mode": "apply" if config.get("external_apply_enabled") else "dry-run",
@@ -1028,7 +1471,9 @@ def reconcile(
         "project_schema_plan": project_schema_plan(plan, fields),
     }
     if config.get("external_apply_enabled"):
-        result["operations"] = apply_github_plan(client, config, plan, fields)
+        result["operations"] = apply_github_plan(
+            client, config, plan, fields, journal=journal
+        )
         refreshed_fields, refreshed_target = observe_github(
             client, config, linked_issue_numbers=linked_issue_numbers
         )
@@ -1068,9 +1513,10 @@ def main() -> int:
 
     args = parser.parse_args()
     if args.command == "reconcile":
-        config = json.loads(args.config.read_text())
         args.output.parent.mkdir(parents=True, exist_ok=True)
+        journal: list[dict[str, Any]] = []
         try:
+            config = json.loads(args.config.read_text())
             client = GitHubRestClient(
                 os.environ.get("SPACEDOCK_REPOSITORY_TOKEN", ""),
                 os.environ.get("SPACEDOCK_PROJECT_TOKEN", ""),
@@ -1080,12 +1526,14 @@ def main() -> int:
                 trunk_dir=args.trunk_dir,
                 state_dir=args.state_dir,
                 client=client,
+                journal=journal,
             )
         except Exception as exc:
             failure = {
                 "schema": "spacedock-project-reconcile-result/v1",
                 "mode": "failed",
                 "error": f"{type(exc).__name__}: {exc}",
+                "operations": journal,
             }
             args.output.write_text(json.dumps(failure, indent=2, sort_keys=True) + "\n")
             print(json.dumps(failure, sort_keys=True))

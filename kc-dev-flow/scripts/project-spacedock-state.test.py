@@ -11,6 +11,9 @@ import pathlib
 import tempfile
 import types
 import unittest
+import urllib.error
+from datetime import datetime, timezone
+from unittest import mock
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -74,6 +77,60 @@ def entity(title: str, status: str, **fields: object) -> str:
     return "\n".join(frontmatter)
 
 
+def apply_fake(plan: dict[str, object], target_items: list[dict[str, object]]):
+    """Apply a plan to an in-memory target without shipping test code."""
+
+    result = copy.deepcopy(target_items)
+    next_issue = max((item.get("issue_number", 0) or 0 for item in result), default=0) + 1
+    for mutation in plan["mutations"]:
+        desired = mutation["desired"]
+        if mutation["action"] == "CREATE":
+            issue_number = desired.get("issue_number")
+            if not isinstance(issue_number, int):
+                issue_number = next_issue
+                next_issue += 1
+            result.append(
+                {
+                    "item_id": f"FAKE-{len(result) + 1}",
+                    "issue_number": issue_number,
+                    "title": desired["title"],
+                    "issue_state": desired["issue_state"],
+                    "body": desired["body"],
+                    "fields": copy.deepcopy(desired["fields"]),
+                }
+            )
+            continue
+        matched = False
+        for item in result:
+            if (
+                mutation.get("current_item_id") is not None
+                and item.get("item_id") == mutation["current_item_id"]
+            ) or (
+                mutation.get("current_issue_number") is not None
+                and item.get("issue_number") == mutation["current_issue_number"]
+            ):
+                if mutation.get("ownership") == "linked":
+                    item["fields"] = copy.deepcopy(desired["fields"])
+                    if item.get("item_id") is None:
+                        item["item_id"] = f"FAKE-LINKED-{item.get('issue_number')}"
+                else:
+                    item.update(
+                        {
+                            "title": desired["title"],
+                            "issue_state": desired["issue_state"],
+                            "body": desired["body"],
+                            "fields": copy.deepcopy(desired["fields"]),
+                        }
+                    )
+                matched = True
+                break
+        if not matched:
+            raise projector.ProjectionError(
+                f"fake target lost update identity {mutation['identity']!r}"
+            )
+    return result
+
+
 class ProjectorContractTest(unittest.TestCase):
     def setUp(self) -> None:
         self.workflow = projector.parse_workflow_text(WORKFLOW)
@@ -87,6 +144,9 @@ class ProjectorContractTest(unittest.TestCase):
             "projector_digest": hashlib.sha256(PROJECTOR.read_bytes()).hexdigest(),
             "status_options": ["Todo", "In Progress", "Done"],
         }
+
+    def binding(self, slug: str, number: int) -> dict[str, str]:
+        return {slug: f"example/repo#{number}"}
 
     def test_dynamic_stages_and_missing_kc_fields_remain_projectable(self) -> None:
         task = projector.parse_entity_text(
@@ -122,7 +182,7 @@ class ProjectorContractTest(unittest.TestCase):
         first = projector.plan_projection(
             self.workflow, [task], [], profile="generic", **self.provenance
         )
-        applied = projector.apply_fake(first, [])
+        applied = apply_fake(first, [])
         second = projector.plan_projection(
             self.workflow, [task], applied, profile="generic", **self.provenance
         )
@@ -168,7 +228,12 @@ class ProjectorContractTest(unittest.TestCase):
             linked_issue_numbers={22},
         )
         plan = projector.plan_projection(
-            self.workflow, [task], target, profile="generic", **self.provenance
+            self.workflow,
+            [task],
+            target,
+            profile="generic",
+            linked_issue_bindings=self.binding("linked", 22),
+            **self.provenance,
         )
 
         self.assertEqual(22, task["issue"])
@@ -187,7 +252,12 @@ class ProjectorContractTest(unittest.TestCase):
         )
 
         plan = projector.plan_projection(
-            self.workflow, [owned, linked], target, profile="generic", **self.provenance
+            self.workflow,
+            [owned, linked],
+            target,
+            profile="generic",
+            linked_issue_bindings=self.binding("linked", 22),
+            **self.provenance,
         )
         by_slug = {item["slug"]: item["desired"] for item in plan["entities"]}
 
@@ -199,7 +269,12 @@ class ProjectorContractTest(unittest.TestCase):
             entity("Missing", "building", issue=404), slug="missing"
         )
         plan = projector.plan_projection(
-            self.workflow, [task], [], profile="generic", **self.provenance
+            self.workflow,
+            [task],
+            [],
+            profile="generic",
+            linked_issue_bindings=self.binding("missing", 404),
+            **self.provenance,
         )
 
         self.assertEqual("CONFLICT", plan["entities"][0]["classification"])
@@ -224,13 +299,18 @@ class ProjectorContractTest(unittest.TestCase):
             linked_issue_numbers={22},
         )
         plan = projector.plan_projection(
-            self.workflow, [task], target, profile="generic", **self.provenance
+            self.workflow,
+            [task],
+            target,
+            profile="generic",
+            linked_issue_bindings=self.binding("linked", 22),
+            **self.provenance,
         )
         desired = plan["entities"][0]["desired"]
 
         self.assertEqual("Human title", desired["title"])
         self.assertEqual("CLOSED", desired["issue_state"])
-        self.assertTrue(desired["body"].startswith("Human body\n\n"))
+        self.assertEqual("Human body", desired["body"])
         self.assertEqual("linked", desired["receipt"]["ownership"])
 
     def test_duplicate_explicit_issue_references_fail_closed(self) -> None:
@@ -241,7 +321,15 @@ class ProjectorContractTest(unittest.TestCase):
 
         with self.assertRaisesRegex(projector.ProjectionError, "duplicate entity Issue"):
             projector.plan_projection(
-                self.workflow, tasks, [], profile="generic", **self.provenance
+                self.workflow,
+                tasks,
+                [],
+                profile="generic",
+                linked_issue_bindings={
+                    "one": "example/repo#22",
+                    "two": "example/repo#22",
+                },
+                **self.provenance,
             )
 
     def test_archive_closes_owned_preserves_linked_and_ignores_foreign(self) -> None:
@@ -265,9 +353,10 @@ class ProjectorContractTest(unittest.TestCase):
             baseline_entities,
             linked_target,
             profile="generic",
+            linked_issue_bindings=self.binding("linked", 22),
             **self.provenance,
         )
-        target = projector.apply_fake(baseline_plan, linked_target)
+        target = apply_fake(baseline_plan, linked_target)
         target.append(
             {
                 "item_id": "FOREIGN",
@@ -281,9 +370,14 @@ class ProjectorContractTest(unittest.TestCase):
         before_foreign = copy.deepcopy(target[-1])
 
         archive_plan = projector.plan_projection(
-            self.workflow, [owned, linked], target, profile="generic", **self.provenance
+            self.workflow,
+            [owned, linked],
+            target,
+            profile="generic",
+            linked_issue_bindings=self.binding("linked", 22),
+            **self.provenance,
         )
-        applied = projector.apply_fake(archive_plan, target)
+        applied = apply_fake(archive_plan, target)
         by_slug = {
             projector.parse_receipt(item["body"])["slug"]: item
             for item in applied
@@ -291,18 +385,26 @@ class ProjectorContractTest(unittest.TestCase):
         }
 
         self.assertEqual("CLOSED", by_slug["owned"]["issue_state"])
-        self.assertEqual("OPEN", by_slug["linked"]["issue_state"])
+        self.assertEqual(
+            "OPEN",
+            next(item for item in applied if item["issue_number"] == 22)["issue_state"],
+        )
         self.assertTrue(projector.parse_receipt(by_slug["owned"]["body"])["archived"])
         self.assertEqual(before_foreign, applied[-1])
 
         no_op = projector.plan_projection(
-            self.workflow, [owned, linked], applied, profile="generic", **self.provenance
+            self.workflow,
+            [owned, linked],
+            applied,
+            profile="generic",
+            linked_issue_bindings=self.binding("linked", 22),
+            **self.provenance,
         )
         self.assertEqual([], no_op["mutations"])
 
     def test_missing_tombstone_is_conflict_without_mutation(self) -> None:
         task = projector.parse_entity_text(entity("Gone", "building"), slug="gone")
-        baseline = projector.apply_fake(
+        baseline = apply_fake(
             projector.plan_projection(
                 self.workflow, [task], [], profile="generic", **self.provenance
             ),
@@ -317,11 +419,7 @@ class ProjectorContractTest(unittest.TestCase):
         self.assertEqual("missing_archive_tombstone", missing["orphans"][0]["reason"])
         self.assertEqual([], missing["mutations"])
 
-    def test_freshness_is_time_bearing_and_snapshot_is_deterministic(self) -> None:
-        self.assertEqual("MISSING", projector.freshness_status(None, now=1000, window=300))
-        self.assertEqual("CURRENT", projector.freshness_status(800, now=1000, window=300))
-        self.assertEqual("STALE", projector.freshness_status(699, now=1000, window=300))
-
+    def test_snapshot_is_deterministic_and_reports_missing_liveness(self) -> None:
         tasks = [
             projector.parse_entity_text(entity("A", "building"), slug="a"),
             projector.parse_entity_text(entity("B", "released"), slug="b"),
@@ -334,7 +432,46 @@ class ProjectorContractTest(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual({"building": 1, "released": 1}, first["stage_counts"])
         self.assertEqual(1, first["terminal_count"])
+        self.assertEqual("MISSING", first["projection_freshness"])
         self.assertNotIn("observed_at", first)
+        self.assertEqual(
+            "CURRENT",
+            projector.build_status_snapshot(
+                plan, last_success=800, observed_at=1000, freshness_window=300
+            )["projection_freshness"],
+        )
+        self.assertEqual(
+            "STALE",
+            projector.build_status_snapshot(
+                plan, last_success=699, observed_at=1000, freshness_window=300
+            )["projection_freshness"],
+        )
+
+    def test_status_snapshot_qualifies_project_and_sprint_metrics(self) -> None:
+        task = projector.parse_entity_text(
+            entity("Sprint task", "building", sprint="S3"), slug="sprint-task"
+        )
+        task["goal"] = "Prove projection"
+        task["exit-criteria"] = "Zero mutation rerun"
+        plan = projector.plan_projection(
+            self.workflow, [task], [], profile="generic", **self.provenance
+        )
+        snapshot = projector.build_status_snapshot(
+            plan,
+            project={
+                "owner_type": "user",
+                "owner": "example",
+                "number": 1,
+                "node_id": "PVT_example",
+            },
+        )
+
+        self.assertEqual("PVT_example", snapshot["project"]["node_id"])
+        self.assertEqual("MISSING", snapshot["projection_freshness"])
+        self.assertEqual("example/repo:docs/dev:sprint:S3", snapshot["sprints"][0]["identity"])
+        self.assertEqual(1, snapshot["sprints"][0]["member_count"])
+        self.assertEqual(1, len(snapshot["available_goal_digests"]))
+        self.assertEqual(1, len(snapshot["available_exit_digests"]))
 
     def test_rest_observation_uses_numeric_field_ids_not_cli_display_keys(self) -> None:
         fields = [
@@ -359,6 +496,7 @@ class ProjectorContractTest(unittest.TestCase):
                     "title": "Observed",
                     "state": "open",
                     "body": "human body",
+                    "repository_url": "https://api.github.com/repos/example/repo",
                 },
                 "fields": [
                     {"id": 10, "value": {"id": "todo", "name": {"raw": "Todo"}}},
@@ -414,6 +552,7 @@ class ProjectorContractTest(unittest.TestCase):
         client = FakeClient()
         config = {
             "repository": "example/repo",
+            "approval": {"max_mutations_per_run": 10},
             "project": {
                 "owner_type": "user",
                 "owner": "example",
@@ -440,7 +579,7 @@ class ProjectorContractTest(unittest.TestCase):
         first = projector.plan_projection(
             self.workflow, [task], [], profile="generic", **self.provenance
         )
-        target = projector.apply_fake(first, [])
+        target = apply_fake(first, [])
         target[0]["fields"]["Human field"] = "preserve me"
 
         second = projector.plan_projection(
@@ -490,6 +629,7 @@ class ProjectorContractTest(unittest.TestCase):
         client = FakeClient()
         config = {
             "repository": "example/repo",
+            "approval": {"max_mutations_per_run": 10},
             "project": {
                 "owner_type": "user",
                 "owner": "example",
@@ -506,7 +646,7 @@ class ProjectorContractTest(unittest.TestCase):
 
     def test_stranded_receipt_issue_resumes_without_duplicate_issue(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
-        created = projector.apply_fake(
+        created = apply_fake(
             projector.plan_projection(
                 self.workflow, [task], [], profile="generic", **self.provenance
             ),
@@ -519,9 +659,10 @@ class ProjectorContractTest(unittest.TestCase):
                 "title": created["title"],
                 "state": "open",
                 "body": created["body"],
+                "user": {"login": "github-actions[bot]"},
             }
         ]
-        target = projector.merge_repository_issues([], issues)
+        target = projector.merge_repository_issues([], issues, repository="example/repo")
         plan = projector.plan_projection(
             self.workflow, [task], target, profile="generic", **self.provenance
         )
@@ -561,6 +702,7 @@ class ProjectorContractTest(unittest.TestCase):
             client,
             {
                 "repository": "example/repo",
+                "approval": {"max_mutations_per_run": 10},
                 "project": {
                     "owner_type": "user",
                     "owner": "example",
@@ -654,8 +796,8 @@ class ProjectorContractTest(unittest.TestCase):
             self.assertIn("workflow_dispatch:", workflow)
             self.assertIn('cron: "*/15 * * * *"', workflow)
             self.assertIn("cancel-in-progress: false", workflow)
-            self.assertEqual(2, workflow.count("actions/checkout@v7"))
-            self.assertIn("actions/upload-artifact@v7", workflow)
+            self.assertEqual(2, workflow.count("actions/checkout@3d3c42e5"))
+            self.assertIn("actions/upload-artifact@043fb46d", workflow)
             self.assertNotIn("push:", workflow)
             self.assertNotIn("PVT_example", workflow)
 
@@ -665,6 +807,610 @@ class ProjectorContractTest(unittest.TestCase):
             by_path = {item["path"]: item for item in drifted["files"]}
             self.assertFalse(drifted["clean"])
             self.assertEqual("UPDATE", by_path[".github/scripts/project-spacedock-state.py"]["action"])
+
+    def test_full_repository_identity_prevents_cross_repo_issue_collision(self) -> None:
+        fields: list[dict[str, object]] = []
+        items = [
+            {
+                "id": 1,
+                "content": {
+                    "id": 101,
+                    "number": 22,
+                    "title": "Foreign",
+                    "state": "open",
+                    "body": "",
+                    "repository_url": "https://api.github.com/repos/other/repo",
+                },
+                "fields": [],
+            },
+            {
+                "id": 2,
+                "content": {
+                    "id": 102,
+                    "number": 22,
+                    "title": "Local",
+                    "state": "open",
+                    "body": "",
+                    "repository_url": "https://api.github.com/repos/example/repo",
+                },
+                "fields": [],
+            },
+        ]
+        target = projector.target_items_from_rest(fields, items)
+        task = projector.parse_entity_text(
+            entity("SD title", "building", issue=22), slug="linked"
+        )
+
+        plan = projector.plan_projection(
+            self.workflow,
+            [task],
+            target,
+            profile="generic",
+            linked_issue_bindings=self.binding("linked", 22),
+            **self.provenance,
+        )
+
+        self.assertEqual("example/repo#22", target[1]["issue_identity"])
+        self.assertEqual(2, plan["mutations"][0]["current_item_id"])
+        self.assertEqual("Local", plan["entities"][0]["desired"]["title"])
+
+    def test_foreign_repository_receipt_cannot_own_local_issue_number(self) -> None:
+        task = projector.parse_entity_text(entity("Owned", "building"), slug="owned")
+        foreign = apply_fake(
+            projector.plan_projection(
+                self.workflow, [task], [], profile="generic", **self.provenance
+            ),
+            [],
+        )[0]
+        foreign.update(
+            {
+                "repository": "other/repo",
+                "issue_identity": "other/repo#1",
+                "issue_number": 1,
+            }
+        )
+
+        plan = projector.plan_projection(
+            self.workflow, [task], [foreign], profile="generic", **self.provenance
+        )
+
+        self.assertEqual("CREATE", plan["entities"][0]["action"])
+        self.assertIsNone(plan["mutations"][0]["current_issue_number"])
+
+    def test_todo_wins_when_project_exposes_todo_and_backlog(self) -> None:
+        self.assertEqual(
+            "Todo",
+            projector._generic_status(
+                self.workflow,
+                self.workflow["initial_stage"],
+                ["Backlog", "Todo", "In Progress", "Done"],
+            ),
+        )
+
+    def test_linked_issue_apply_never_patches_issue_bytes(self) -> None:
+        task = projector.parse_entity_text(
+            entity("SD title", "building", issue=22), slug="linked"
+        )
+        target = projector.merge_repository_issues(
+            [],
+            [{"id": 31, "number": 22, "title": "Human", "state": "open", "body": "Body"}],
+            repository="example/repo",
+            linked_issue_numbers={22},
+        )
+        plan = projector.plan_projection(
+            self.workflow,
+            [task],
+            target,
+            profile="generic",
+            linked_issue_bindings=self.binding("linked", 22),
+            **self.provenance,
+        )
+        fields = [
+            {
+                "id": 10,
+                "name": "Status",
+                "data_type": "single_select",
+                "options": [{"id": "progress", "name": {"raw": "In Progress"}}],
+            },
+            {
+                "id": 11,
+                "name": "SD Stage",
+                "data_type": "single_select",
+                "options": [{"id": "building", "name": {"raw": "building"}}],
+            },
+        ]
+
+        class Client:
+            def __init__(self) -> None:
+                self.calls = []
+
+            def request(self, method, path, *, authority, body=None):
+                self.calls.append((method, path, authority, body))
+                if method == "POST" and path.endswith("/items"):
+                    return {"value": {"id": 21}}
+                return {}
+
+        client = Client()
+        operations = projector.apply_github_plan(
+            client,
+            {
+                "repository": "example/repo",
+                "project": {
+                    "owner_type": "user",
+                    "owner": "example",
+                    "number": 1,
+                    "node_id": "PVT_example",
+                },
+                "approval": {"max_mutations_per_run": 5},
+            },
+            plan,
+            fields,
+        )
+
+        self.assertFalse(any("/issues/22" in path for _, path, _, _ in client.calls))
+        self.assertEqual(
+            ["ADD_PROJECT_ITEM", "UPDATE_FIELDS"],
+            [operation["action"] for operation in operations],
+        )
+
+    def test_projection_envelope_expires_and_pins_installed_projector(self) -> None:
+        config = {
+            "schema": "spacedock-project-config/v1",
+            "repository": "example/repo",
+            "trunk_ref": "main",
+            "state_ref": "spacedock-state/dev",
+            "workflow_dir": "docs/dev",
+            "profile": "generic",
+            "entity_selection": ["one"],
+            "external_apply_enabled": True,
+            "credential": {
+                "token_type": "classic-pat",
+                "permissions": "project, repo",
+                "expiry": "2026-08-20T00:00:00Z",
+                "rotation_owner": "example",
+                "fallback_blast_radius": "repository secret",
+            },
+            "project": {
+                "owner_type": "user",
+                "owner": "example",
+                "number": 1,
+                "node_id": "PVT_example",
+            },
+            "approval": {
+                "scope": "selected",
+                "expires_at": "2026-08-15T00:00:00Z",
+                "projector_digest": self.provenance["projector_digest"],
+                "max_mutations_per_run": 5,
+                "linked_issues": {},
+            },
+        }
+
+        projector.validate_config(
+            config,
+            installed_projector_digest=self.provenance["projector_digest"],
+            now=datetime(2026, 8, 14, tzinfo=timezone.utc),
+        )
+        with self.assertRaisesRegex(projector.ProjectionError, "expired"):
+            projector.validate_config(
+                config,
+                installed_projector_digest=self.provenance["projector_digest"],
+                now=datetime(2026, 8, 16, tzinfo=timezone.utc),
+            )
+        with self.assertRaisesRegex(projector.ProjectionError, "projector digest"):
+            projector.validate_config(
+                config,
+                installed_projector_digest="f" * 64,
+                now=datetime(2026, 8, 14, tzinfo=timezone.utc),
+            )
+
+    def test_selected_scope_requires_nonempty_subset_and_suppresses_global_orphans(self) -> None:
+        with self.assertRaisesRegex(projector.ProjectionError, "non-empty entity selection"):
+            projector.validate_approval_scope(
+                {"scope": "selected", "linked_issues": {}}, []
+            )
+
+        task = projector.parse_entity_text(entity("Selected", "building"), slug="selected")
+        orphan = apply_fake(
+            projector.plan_projection(
+                self.workflow,
+                [projector.parse_entity_text(entity("Other", "building"), slug="other")],
+                [],
+                profile="generic",
+                **self.provenance,
+            ),
+            [],
+        )
+        plan = projector.plan_projection(
+            self.workflow,
+            [task],
+            orphan,
+            profile="generic",
+            detect_orphans=False,
+            **self.provenance,
+        )
+        self.assertEqual([], plan["orphans"])
+
+    def test_nested_unknown_fields_are_unmapped_but_optional_types_fail_closed(self) -> None:
+        nested = entity("Nested", "building") + "\n"
+        nested = nested.replace(
+            "source: fixture",
+            "source: fixture\ndepends-on:\n  - another-task",
+        )
+        parsed = projector.parse_entity_text(nested, slug="nested")
+        self.assertIsNone(parsed["depends-on"])
+
+        with self.assertRaisesRegex(projector.ProjectionError, "issue.*positive integer"):
+            projector.parse_entity_text(
+                entity("Bad issue", "building", issue="true"), slug="bad-issue"
+            )
+        with self.assertRaisesRegex(projector.ProjectionError, "product.*string"):
+            projector.parse_entity_text(
+                entity("Bad product", "building", product=7), slug="bad-product"
+            )
+
+    def test_mutation_cap_refuses_entire_plan_before_first_write(self) -> None:
+        task = projector.parse_entity_text(entity("One", "building"), slug="one")
+        plan = projector.plan_projection(
+            self.workflow, [task], [], profile="generic", **self.provenance
+        )
+
+        class Client:
+            def __init__(self) -> None:
+                self.calls = []
+
+            def request(self, method, path, *, authority, body=None):
+                self.calls.append((method, path))
+                raise AssertionError("cap must refuse before writes")
+
+        client = Client()
+        fields = [
+            {
+                "id": 10,
+                "name": "Status",
+                "data_type": "single_select",
+                "options": [{"id": "progress", "name": {"raw": "In Progress"}}],
+            },
+            {
+                "id": 11,
+                "name": "SD Stage",
+                "data_type": "single_select",
+                "options": [{"id": "building", "name": {"raw": "building"}}],
+            },
+        ]
+        config = {
+            "repository": "example/repo",
+            "project": {
+                "owner_type": "user",
+                "owner": "example",
+                "number": 1,
+                "node_id": "PVT_example",
+            },
+            "approval": {"max_mutations_per_run": 2},
+        }
+        with self.assertRaisesRegex(projector.ProjectionError, "mutation cap"):
+            projector.apply_github_plan(client, config, plan, fields)
+        self.assertEqual([], client.calls)
+
+    def test_installed_workflow_pins_actions_and_default_branch_identity(self) -> None:
+        workflow = (
+            ROOT
+            / "skills/setup-github-project-projection/assets/spacedock-project-sync.yml"
+        ).read_text()
+        self.assertIn(
+            "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1", workflow
+        )
+        self.assertIn(
+            "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a", workflow
+        )
+        self.assertIn('GITHUB_REF_TYPE', workflow)
+        self.assertIn('refs/heads/', workflow)
+        self.assertIn("ref: ${{ github.sha }}", workflow)
+
+    def test_forged_public_receipts_are_ignored_but_bot_receipts_can_resume(self) -> None:
+        task = projector.parse_entity_text(entity("One", "building"), slug="one")
+        created = apply_fake(
+            projector.plan_projection(
+                self.workflow, [task], [], profile="generic", **self.provenance
+            ),
+            [],
+        )[0]
+        forged = {
+            "id": 1,
+            "number": 1,
+            "title": "Forged",
+            "state": "open",
+            "body": created["body"],
+            "user": {"login": "attacker"},
+        }
+        trusted = {
+            **forged,
+            "id": 2,
+            "number": 2,
+            "title": "Trusted",
+            "user": {"login": "github-actions[bot]"},
+        }
+        malformed = {
+            **forged,
+            "id": 3,
+            "number": 3,
+            "body": "<!-- spacedock-projection:v1\nnot-json\n-->",
+        }
+
+        observed = projector.merge_repository_issues(
+            [],
+            [forged, trusted, malformed],
+            repository="example/repo",
+            managed_identity_prefix="example/repo:docs/dev:",
+        )
+
+        self.assertEqual([2], [item["issue_number"] for item in observed])
+
+    def test_explicit_issue_and_existing_receipt_identity_mismatch_conflict(self) -> None:
+        baseline = projector.parse_entity_text(entity("Linked", "building"), slug="linked")
+        current = apply_fake(
+            projector.plan_projection(
+                self.workflow, [baseline], [], profile="generic", **self.provenance
+            ),
+            [],
+        )[0]
+        current["issue_number"] = 33
+        current["issue_identity"] = "example/repo#33"
+        linked = projector.parse_entity_text(
+            entity("Linked", "building", issue=22), slug="linked"
+        )
+
+        plan = projector.plan_projection(
+            self.workflow,
+            [linked],
+            [current],
+            profile="generic",
+            linked_issue_bindings=self.binding("linked", 22),
+            **self.provenance,
+        )
+
+        self.assertEqual("CONFLICT", plan["entities"][0]["classification"])
+        self.assertEqual("explicit_issue_identity_mismatch", plan["entities"][0]["reason"])
+        self.assertEqual([], plan["mutations"])
+
+    def test_mixed_conflict_and_create_refuses_before_any_write(self) -> None:
+        tasks = [
+            projector.parse_entity_text(entity("Create", "building"), slug="create"),
+            projector.parse_entity_text(
+                entity("Missing", "building", issue=404), slug="missing"
+            ),
+        ]
+        plan = projector.plan_projection(
+            self.workflow,
+            tasks,
+            [],
+            profile="generic",
+            linked_issue_bindings=self.binding("missing", 404),
+            **self.provenance,
+        )
+        self.assertEqual(1, len(plan["mutations"]))
+
+        class Client:
+            calls: list[object] = []
+
+            def request(self, *args, **kwargs):
+                self.calls.append((args, kwargs))
+                raise AssertionError("conflict must refuse before writes")
+
+        client = Client()
+        with self.assertRaisesRegex(projector.ProjectionError, "conflicts"):
+            projector.apply_github_plan(
+                client,
+                {
+                    "repository": "example/repo",
+                    "project": {
+                        "owner_type": "user",
+                        "owner": "example",
+                        "number": 1,
+                        "node_id": "PVT_example",
+                    },
+                    "approval": {"max_mutations_per_run": 10},
+                },
+                plan,
+                [],
+            )
+        self.assertEqual([], client.calls)
+
+    def test_partial_apply_keeps_append_only_operation_journal(self) -> None:
+        task = projector.parse_entity_text(entity("One", "building"), slug="one")
+        plan = projector.plan_projection(
+            self.workflow, [task], [], profile="generic", **self.provenance
+        )
+        fields = [
+            {
+                "id": 10,
+                "name": "Status",
+                "data_type": "single_select",
+                "options": [{"id": "progress", "name": {"raw": "In Progress"}}],
+            },
+            {
+                "id": 11,
+                "name": "SD Stage",
+                "data_type": "single_select",
+                "options": [{"id": "building", "name": {"raw": "building"}}],
+            },
+        ]
+
+        class Client:
+            def request(self, method, path, *, authority, body=None):
+                if method == "POST" and path.endswith("/issues"):
+                    return {"id": 31, "number": 7}
+                raise projector.ProjectionError("injected Project failure")
+
+        journal: list[dict[str, object]] = []
+        with self.assertRaisesRegex(projector.ProjectionError, "injected"):
+            projector.apply_github_plan(
+                Client(),
+                {
+                    "repository": "example/repo",
+                    "project": {
+                        "owner_type": "user",
+                        "owner": "example",
+                        "number": 1,
+                        "node_id": "PVT_example",
+                    },
+                    "approval": {"max_mutations_per_run": 3},
+                },
+                plan,
+                fields,
+                journal=journal,
+            )
+        self.assertEqual([{"action": "CREATE_ISSUE", "issue_number": 7}], journal)
+
+    def test_rest_client_retries_transient_http_with_bounded_retry_after(self) -> None:
+        waits: list[float] = []
+
+        class Response:
+            headers: dict[str, str] = {}
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return None
+
+            def read(self):
+                return b'{"ok":true}'
+
+        error = urllib.error.HTTPError(
+            "https://api.github.com/test",
+            503,
+            "unavailable",
+            {"Retry-After": "60"},
+            None,
+        )
+        with mock.patch.object(
+            projector.urllib.request, "urlopen", side_effect=[error, Response()]
+        ):
+            client = projector.GitHubRestClient("repo", "project", sleep=waits.append)
+            self.assertEqual({"ok": True}, client.request("GET", "test", authority="repository"))
+
+        self.assertEqual([10.0], waits)
+
+    def test_production_reconcile_converges_end_to_end(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            trunk = root / "trunk"
+            state = root / "state"
+            (trunk / "docs/dev").mkdir(parents=True)
+            state.mkdir()
+            (trunk / "docs/dev/README.md").write_text(WORKFLOW)
+            (state / "one.md").write_text(entity("One", "building"))
+
+            digest = hashlib.sha256(PROJECTOR.read_bytes()).hexdigest()
+            config = {
+                "schema": "spacedock-project-config/v1",
+                "repository": "example/repo",
+                "trunk_ref": "main",
+                "state_ref": "spacedock-state/dev",
+                "workflow_dir": "docs/dev",
+                "profile": "generic",
+                "entity_selection": [],
+                "external_apply_enabled": True,
+                "credential": {
+                    "token_type": "classic-pat",
+                    "permissions": "project, repo",
+                    "expiry": "2099-01-02T00:00:00Z",
+                    "rotation_owner": "example",
+                    "fallback_blast_radius": "repository secret",
+                },
+                "project": {
+                    "owner_type": "user",
+                    "owner": "example",
+                    "number": 1,
+                    "node_id": "PVT_example",
+                },
+                "approval": {
+                    "scope": "workflow",
+                    "expires_at": "2099-01-01T00:00:00Z",
+                    "projector_digest": digest,
+                    "max_mutations_per_run": 5,
+                    "linked_issues": {},
+                },
+            }
+
+            class Client:
+                def __init__(self) -> None:
+                    self.issues: list[dict[str, object]] = []
+                    self.items: list[dict[str, object]] = []
+                    self.fields = [
+                        {
+                            "id": 10,
+                            "name": "Status",
+                            "data_type": "single_select",
+                            "options": [
+                                {"id": "progress", "name": {"raw": "In Progress"}}
+                            ],
+                        },
+                        {
+                            "id": 11,
+                            "name": "SD Stage",
+                            "data_type": "single_select",
+                            "options": [
+                                {"id": "building", "name": {"raw": "building"}}
+                            ],
+                        },
+                    ]
+
+                def request_all(self, path, *, authority):
+                    if path.endswith("/fields"):
+                        return self.fields
+                    if "/items" in path:
+                        return self.items
+                    return self.issues
+
+                def request(self, method, path, *, authority, body=None):
+                    if method == "GET" and path == "repos/example/repo":
+                        return {"default_branch": "main"}
+                    if method == "GET" and path.endswith("projectsV2/1"):
+                        return {"value": {"node_id": "PVT_example"}}
+                    if method == "POST" and path.endswith("/issues"):
+                        issue = {
+                            "id": 31,
+                            "number": 7,
+                            "title": body["title"],
+                            "state": body["state"],
+                            "body": body["body"],
+                            "user": {"login": "github-actions[bot]"},
+                        }
+                        self.issues.append(issue)
+                        return issue
+                    if method == "POST" and path.endswith("/items"):
+                        issue = next(item for item in self.issues if item["id"] == body["id"])
+                        project_item = {
+                            "id": 21,
+                            "node_id": "PVTI_fixture",
+                            "content": {
+                                **issue,
+                                "repository_url": "https://api.github.com/repos/example/repo",
+                            },
+                            "fields": [],
+                        }
+                        self.items.append(project_item)
+                        return {"value": {"id": 21}}
+                    if method == "PATCH" and "/items/" in path:
+                        self.items[0]["fields"] = [
+                            {"id": field["id"], "value": {"id": field["value"], "name": {"raw": "building" if field["id"] == 11 else "In Progress"}}}
+                            for field in body["fields"]
+                        ]
+                        return {}
+                    raise AssertionError((method, path, authority, body))
+
+            with mock.patch.object(projector, "_git_commit", side_effect=["a" * 40, "b" * 40]):
+                result = projector.reconcile(
+                    config, trunk_dir=trunk, state_dir=state, client=Client()
+                )
+
+        self.assertEqual("apply", result["mode"])
+        self.assertEqual(
+            ["CREATE_ISSUE", "ADD_PROJECT_ITEM", "UPDATE_FIELDS"],
+            [operation["action"] for operation in result["operations"]],
+        )
+        self.assertEqual([], result["converged_plan"]["mutations"])
 
 
 if __name__ == "__main__":

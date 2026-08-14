@@ -23,16 +23,19 @@ the selected workflow is generic.
   GitHub mutations.
 - **audit** — compare installed byte digests and configuration with the selected
   workflow and Project; report drift without repair.
-- **apply** — only after a reviewed dry-run and separate bounded approval for the
-  named repository, Project, entities, credential, and mutation subset.
+- **apply** — only through an installed, expiring approval envelope. Dogfood
+  approval names a non-empty entity subset; production approval covers the one
+  commissioned workflow.
 
 An update is `install` against an existing target: show the byte diff and replace
 only accepted files. Do not maintain a second upgrade mode.
 
 ## Plan and install
 
-1. Pin the repository, workflow directory, trunk commit, state ref and commit,
-   Project owner/number/ID, mapping profile, and freshness window.
+1. Pin the repository, workflow directory, state ref, Project owner/number/ID,
+   mapping profile, installed projector digest, approval expiry, credential
+   expiry, and per-run mutation cap. State commits are provenance, not a static
+   allowlist.
 2. Run local capability discovery against the pinned workflow README and entity
    bytes. Unknown fields remain unmapped; missing optional profile fields produce
    partial projection rather than suppressing Issue identity.
@@ -48,8 +51,9 @@ only accepted files. Do not maintain a second upgrade mode.
    .github/scripts/project-spacedock-state.py
    ```
 
-6. Re-run audit from the installed target. Refuse external apply when any pinned
-   input or installed byte digest differs from the reviewed plan.
+6. Re-run the local byte audit from the installed target. It proves only that
+   the installed files match the proposed package; runtime separately validates
+   the envelope, default-branch config, live Project identity, and observations.
 
 Use the packaged installer for the file transaction. Its default `plan` and
 `install` modes leave `external_apply_enabled` false and never mutate GitHub:
@@ -70,8 +74,12 @@ python3 assets/install-projection.py plan \
 After review, repeat with mode `install`, then repeat with mode `audit`. To arm
 external apply, the reviewed install must additionally name token type,
 credential expiry, rotation owner, fallback blast radius, and
-`--enable-external-apply`. Secret creation remains a separate host operation;
-the installer accepts no token value.
+`--approval-expiry`, `--approval-scope`, `--max-mutations-per-run`, and
+`--enable-external-apply`. Selected scope also requires at least one `--entity`.
+Workflow scope allows all valid entities under the commissioned workflow.
+Approve an explicit human Issue only with a reviewed full binding such as
+`--linked-issue task-slug=OWNER/REPO#123`. Secret creation remains a separate
+host operation; the installer accepts no token value.
 
 The deterministic projector lives at
 [`assets/project-spacedock-state.py`](assets/project-spacedock-state.py). Keep
@@ -84,8 +92,8 @@ The installed default-branch workflow uses one reconcile path:
 
 - `workflow_dispatch` is the explicit fast path after a successful state push;
 - `schedule` is the convergence and liveness safety net;
-- both check out exact trunk and state commits and invoke the same vendored
-  projector;
+- both check out the exact default-branch event SHA and the configured state ref,
+  then invoke the same vendored projector;
 - overlapping writes serialize with `cancel-in-progress: false`.
 
 The repository `GITHUB_TOKEN` owns same-repository Issue writes. A dedicated,
@@ -105,12 +113,20 @@ sets `external_apply_enabled` true. A successful partial sequence is resumable:
 receipt-bearing repository Issues are rediscovered even when Project item
 creation did not finish, and a rerun converges through the same plan.
 
+Before the first write, runtime validates the approval scope and expiry, requires
+expiry no later than the credential expiry, compares the installed projector
+SHA-256 with the reviewed digest, validates every full linked-Issue binding, and
+counts all planned writes against the fail-closed cap. Each completed response
+is appended to the run journal so a partial failure remains actionable.
+
 ## Receipts and refusal
 
-Manage only Issue blocks and Project fields carrying this projector's qualified
-identity receipt. A title match is not ownership. Never change a receipt-less
-Project item unless an entity explicitly links its Issue and the dry-run labels
-the resulting ownership `linked`.
+Manage projector-created Issue bytes only when a schema-valid qualified receipt
+is already in the selected Project, or a stranded receipt Issue was authored by
+the configured automation identity. A title match and a public receipt-shaped
+comment are not ownership. An explicitly linked human Issue must match its
+reviewed `owner/repo#number` binding; never PATCH its title, body, or state. Only
+add it to the Project when needed and manage projector-owned Project fields.
 
 Refuse or quarantine:
 
@@ -118,17 +134,20 @@ Refuse or quarantine:
 - unknown stages, malformed receipts, or pinned-input drift;
 - deletion without an `_archive/` tombstone;
 - unsupported Project fields or credentials;
-- apply when the reviewed plan digest is stale.
+- apply when the approval expired, its projector digest differs, or its mutation
+  cap would be exceeded.
 
 Do not write projection receipts back to the state branch. Do not infer Priority,
 Size, Estimate, Cycle, dates, product, or sprint semantics.
 
 ## POC boundary
 
-Local deterministic fixtures prove mapping, no-op convergence, freshness
-decisions, and archive ownership before any external write. Disabled-schedule,
-invalid-token, and live archive procedures remain production-readiness evidence,
-not prerequisites for the local POC. This boundary does not remove the installed
-schedule or archive contract. The POC does not yet persist the last-successful
-timestamp needed for a decaying liveness signal; do not present the configured
-schedule alone as liveness evidence.
+Local deterministic fixtures prove mapping, production reconcile convergence,
+scope and expiry refusal, no-op reruns, retry bounds, mutation-cap refusal,
+receipt trust, and archive ownership before any external write. Disabled-
+schedule, invalid-token, and live archive procedures remain production-readiness
+evidence, not prerequisites for the local POC. The result snapshot records
+qualified Project/sprint identities but reports freshness `MISSING` until a
+later owner persists the last successful timestamp needed for a decaying
+liveness signal. Do not present the configured schedule alone as liveness
+evidence.

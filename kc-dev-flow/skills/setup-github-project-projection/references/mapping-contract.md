@@ -15,9 +15,10 @@ and workflow-specific fields as optional. Never publish worktree paths.
 
 One installed configuration selects one workflow and one Project. Therefore the
 generic Project schema creates only `SD Stage`; it does not need `SD Workflow`.
-Map the initial stage to GitHub Status `Backlog`, the terminal stage to `Done`,
-and other stages to `In progress` only when those options exist. Exact `SD Stage`
-remains the lossless lifecycle view.
+Map the initial stage to GitHub Status `Todo` (fall back to `Backlog` only when
+that is the available option), the terminal stage to `Done`, and other stages to
+`In Progress` only when those options exist. Exact `SD Stage` remains the
+lossless lifecycle view.
 
 `SD Stage` and `SD Product` are single-select fields so Project views can group
 and chart them. Installation creates missing fields from observed source values.
@@ -42,8 +43,8 @@ ID only as a secondary key. Every receipt records pinned commits, entity digest,
 projector version and byte digest, ownership, and archive state.
 
 - `projector`: the projector may manage Issue open/closed state.
-- `linked`: preserve the human Issue title and open/closed state; manage only the
-  receipt block and projector-owned Project fields.
+- `linked`: require a reviewed full `owner/repo#number` binding; preserve every
+  human Issue byte and manage only projector-owned Project fields.
 - receipt-less: foreign; report and leave unchanged unless the SD entity carries
   the exact Issue reference selected in the reviewed plan.
 
@@ -55,7 +56,10 @@ projector version and byte digest, ownership, and archive state.
 - `PARTIAL`: identity remains projectable but optional profile inputs are absent.
 - `CONFLICT`: applying would require guessing identity, lifecycle, or authority.
 
-Identical inputs and observed target state must produce zero mutations.
+For projector-owned Issues, identical managed inputs and observed target state
+produce zero mutations. For linked Issues, equality covers Project membership
+and managed Project fields; human Issue title, body, and state are not desired
+values and are never PATCHed.
 Human-owned Project fields outside the desired `SD *` set do not participate in
 the equality check and remain untouched.
 
@@ -82,3 +86,19 @@ endpoints do not accept fine-grained PATs or GitHub App tokens; the user-owned
 adapter therefore remains unarmed until a classic PAT's expiry, rotation owner,
 and fallback blast radius are explicitly accepted.
 Never copy the operator's ambient `gh` authentication into a repository secret.
+
+## Approval envelope
+
+External apply requires one default-branch envelope. `selected` scope names a
+non-empty dogfood subset and suppresses workflow-global orphan conclusions.
+`workflow` scope covers every valid entity under the one commissioned workflow.
+Both pin repository, workflow, state ref, Project identity, mapping policy,
+installed projector digest, linked-Issue bindings, expiry, and a positive
+per-run mutation cap. The approval must expire no later than its credential.
+State commit and entity lifecycle changes remain projection provenance; they do
+not invalidate workflow-scope approval.
+
+All validation and write counting finish before the first mutation. Completed
+responses append to the run journal. Transient REST failures use bounded retry
+and bounded `Retry-After`; conflicts, stale approval, schema drift, or an
+exceeded mutation cap fail closed.

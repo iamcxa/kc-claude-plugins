@@ -26,6 +26,14 @@ def _canonical_json(value: Any) -> bytes:
 
 
 def build_config(args: argparse.Namespace) -> dict[str, Any]:
+    linked_issues: dict[str, str] = {}
+    for binding in getattr(args, "linked_issue", None) or []:
+        if "=" not in binding:
+            raise ValueError("linked Issue binding must be SLUG=owner/repo#number")
+        slug, identity = binding.split("=", 1)
+        if not slug or slug in linked_issues:
+            raise ValueError("linked Issue bindings require unique non-empty slugs")
+        linked_issues[slug] = identity
     return {
         "schema": "spacedock-project-config/v1",
         "repository": args.repository,
@@ -47,6 +55,13 @@ def build_config(args: argparse.Namespace) -> dict[str, Any]:
             "expiry": args.credential_expiry,
             "rotation_owner": args.rotation_owner,
             "fallback_blast_radius": args.fallback_blast_radius,
+        },
+        "approval": {
+            "scope": getattr(args, "approval_scope", "selected"),
+            "expires_at": getattr(args, "approval_expiry", None),
+            "projector_digest": _digest((ASSET_DIR / "project-spacedock-state.py").read_bytes()),
+            "max_mutations_per_run": getattr(args, "max_mutations_per_run", 25),
+            "linked_issues": dict(sorted(linked_issues.items())),
         },
         "schedule_interval_minutes": args.schedule_interval_minutes,
         "external_apply_enabled": bool(args.enable_external_apply),
@@ -135,6 +150,16 @@ def _parser() -> argparse.ArgumentParser:
         default="unresolved",
     )
     parser.add_argument("--credential-expiry")
+    parser.add_argument(
+        "--approval-scope", choices=("selected", "workflow"), default="selected"
+    )
+    parser.add_argument("--approval-expiry")
+    parser.add_argument("--max-mutations-per-run", type=int, default=25)
+    parser.add_argument(
+        "--linked-issue",
+        action="append",
+        help="reviewed same-repository binding in SLUG=owner/repo#number form",
+    )
     parser.add_argument("--project-token-permissions")
     parser.add_argument("--rotation-owner")
     parser.add_argument("--fallback-blast-radius")
@@ -154,13 +179,20 @@ def main() -> int:
             or not args.credential_expiry
             or not args.rotation_owner
             or not args.fallback_blast_radius
+            or not args.approval_expiry
         ):
             raise SystemExit(
                 "external apply requires token type, permissions, expiry, rotation owner, "
-                "and fallback blast radius"
+                "fallback blast radius, and approval expiry"
             )
         if args.project_owner_type == "user" and args.project_token_type != "classic-pat":
             raise SystemExit("the REST adapter for a user-owned Project requires classic-pat")
+        if args.approval_scope == "selected" and not args.entity:
+            raise SystemExit("selected approval requires at least one --entity")
+        if args.approval_scope == "workflow" and args.entity:
+            raise SystemExit("workflow approval cannot include --entity")
+        if args.max_mutations_per_run <= 0:
+            raise SystemExit("mutation cap must be positive")
     config = build_config(args)
     if args.mode == "install":
         result = write_installation(args.target, config)
