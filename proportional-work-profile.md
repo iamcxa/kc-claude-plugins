@@ -2073,3 +2073,68 @@ terminalization authority.
 
 - Cycle 5: REJECTED — delivery merge preflight after ordered S2 predecessor #222; surface 11 files/454 gross lines vs under-1,000-line appetite (45.4%); AC unchanged
 - Design-reset decision: RECONFIRM the existing four ACs and POC appetite. The Captain resumed S2 after #222 merged; recut only the conflict-sensitive contract-test integration against current `origin/main`, preserve the accepted chooser behavior and receipts, then obtain fresh exact-head validation.
+
+## Stage Report: implementation (cycle 5 — current-base recut)
+
+Verdict: **DONE**. The accepted four-commit candidate is rebased onto exact
+`origin/main@5f14040b22f0c7f019398d7209981226b9782ac2`; the new exact product head is
+`d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7`. The product branch is clean,
+four local commits ahead, unpushed, and has no PR.
+
+### Conflict reconciliation
+
+- Git reported one content conflict, in
+  `scripts/kc-dev-flow-contract-test.py`, where #222's new
+  reverse-recovery adoption-path assertion and the accepted work-profile block
+  were inserted at the same boundary. The resolution retains both adjacent
+  assertions.
+- The exact-head contract passes with #222's adoption-path assertion and the
+  landed `github-pr-feedback/v1` observation, mutation, and kernel checks still
+  active. No accepted work-profile AC or POC appetite wording changed.
+- `git range-diff` marks commits 1, 2, and 4 patch-equivalent. Commit 3 differs
+  at the conflict boundary by retaining #222's seven-line assertion before the
+  work-profile block. The chooser skill and its Codex metadata retain the same
+  Git blob IDs as accepted head `7c1b12d...`.
+
+### Changed-file to AC map and appetite
+
+- AC-1: canonical/adopted kernels, `continue-dev-flow`, the chooser and Codex
+  metadata, self-adoption README, absolutes registry, and contract test retain
+  `choose -> record -> re-read -> derive`.
+- AC-2: PRODUCT, ARCHITECTURE, package README, chooser proof floor, and the
+  existing activation seam retain the accepted POC route.
+- AC-3: chooser production-boundary wording and the unsafe-downscoping mutant
+  retain the common authority and safety stops.
+- AC-4: all 11 changed files map above; the merge-base diff has 395 insertions
+  and 59 deletions, 454 gross changed lines, with no work-profile evaluator
+  fixture, scorer, loader-eval, or loader-test addition.
+
+### Exact-head checks
+
+- `python3 scripts/kc-dev-flow-contract-test.py` — PASS, including the landed
+  path-and-necessity and `github-pr-feedback/v1` contracts.
+- `python3 scripts/kc-dev-flow-loader-eval.test.py` — PASS with no work-profile
+  evaluator mode.
+- `scripts/skill-frontmatter-lint.sh` — 41 skill directories, PASS; skill-creator
+  `quick_validate.py` — `Skill is valid!`.
+- `scripts/version-parity-check.sh` — all seven plugins consistent;
+  `kc-dev-flow` is 2.4.0 from the new base.
+- `scripts/marketplace-verify.sh` — L0 parity, L1 schema, and all seven L2
+  isolated installs PASS.
+- `git diff --check`, clean worktree, and canonical/adopted kernel byte parity —
+  PASS.
+
+### Delivery topology and remaining boundary
+
+This remains one dependent product journey with no independently releasable
+second slice. The 11-file, 454-gross-line diff does not fire the numeric
+topology trigger, so the authoritative table selects one Draft PR when delivery
+is authorized. Implementation performed no product push or PR action. Fresh
+exact-head validation and all delivery decisions remain with their owners.
+
+### Summary
+
+Rebased the accepted proportional-profile slice onto #222, preserved both
+landed contract families at the conflict boundary, and returned a clean,
+mechanically green exact head without changing AC-1 through AC-4 or expanding
+the POC surface.
