@@ -19,6 +19,19 @@ PLUGIN = ROOT / "kc-dev-flow"
 FIXTURE = ROOT / "scripts/fixtures/roborev-implementation-exit/outcomes.json"
 STATE_BRANCH = "spacedock-state/dev"
 STATE_PREREQ = ROOT / "scripts/dev-flow-state-prereq.sh"
+CANONICAL_FIELDS = (
+    "repository",
+    "base",
+    "tip",
+    "configuration",
+    "provider_version",
+    "json_contract",
+    "agent",
+    "model",
+    "reasoning",
+    "minimum_severity",
+    "panel",
+)
 
 
 def require(condition: bool, message: str) -> None:
@@ -35,6 +48,45 @@ def git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProces
     )
 
 
+def normalize_exact_input(
+    case: dict[str, object], identity: dict[str, object]
+) -> tuple[tuple[str, str] | None, list[dict[str, object]]]:
+    """Return one total, fail-closed correlation boundary before lifecycle."""
+    for field in CANONICAL_FIELDS:
+        if field not in case or field not in identity or case[field] is None:
+            return ("UNKNOWN", "stale"), []
+        if case[field] != identity[field]:
+            return ("UNKNOWN", "stale"), []
+
+    members = case.get("members", [])
+    expected_member_identities = identity.get("member_identities")
+    if not isinstance(expected_member_identities, list) or any(
+        not isinstance(member_identity, str) or not member_identity
+        for member_identity in expected_member_identities
+    ):
+        return ("UNKNOWN", "state_unknown"), []
+    if len(set(expected_member_identities)) != len(expected_member_identities):
+        return ("UNKNOWN", "state_unknown"), []
+    if not isinstance(members, list):
+        return ("UNKNOWN", "stale"), []
+    normalized_members: list[dict[str, object]] = []
+    member_identities: list[str] = []
+    for member in members:
+        if not isinstance(member, dict):
+            return ("UNKNOWN", "stale"), []
+        member_identity = member.get("identity")
+        if not isinstance(member_identity, str) or not member_identity:
+            return ("UNKNOWN", "stale"), []
+        member_identities.append(member_identity)
+        normalized_members.append(member)
+    if (
+        len(set(member_identities)) != len(member_identities)
+        or sorted(member_identities) != sorted(expected_member_identities)
+    ):
+        return ("UNKNOWN", "stale"), []
+    return None, normalized_members
+
+
 def classify(case: dict[str, object], identity: dict[str, object]) -> tuple[str, str]:
     capability = case.get("capability")
     if capability in {"unavailable", "unsupported", "skipped"}:
@@ -42,45 +94,17 @@ def classify(case: dict[str, object], identity: dict[str, object]) -> tuple[str,
 
     # Correlation precedes lifecycle interpretation. A stale exact-input binding
     # cannot be promoted to member_incomplete or to retained findings.
-    for field in (
-        "repository",
-        "base",
-        "tip",
-        "configuration",
-        "provider_version",
-        "json_contract",
-        "agent",
-        "model",
-        "reasoning",
-        "minimum_severity",
-        "panel",
-    ):
-        if case.get(field, identity[field]) != identity[field]:
-            return "UNKNOWN", "stale"
-
-    members = case.get("members", [])
-    require(isinstance(members, list), "fixture members must be a list")
-    member_identities = [member.get("identity") for member in members]
-    expected_member_identities = identity["member_identities"]
-    require(
-        isinstance(expected_member_identities, list),
-        "fixture member identities must be a list",
-    )
-    if (
-        any(not isinstance(member_identity, str) for member_identity in member_identities)
-        or sorted(member_identities) != sorted(expected_member_identities)
-    ):
-        return "UNKNOWN", "stale"
+    correlation_error, members = normalize_exact_input(case, identity)
+    if correlation_error is not None:
+        return correlation_error
     if case.get("json_evidence", True) is not True:
         return "UNKNOWN", "state_unknown"
-    if case.get("deadline_reached") and case.get("status") != "done":
-        return "UNKNOWN", "timed_out"
-    if case.get("status") == "failed":
-        return "UNKNOWN", "failed"
 
     member_statuses = [member.get("status") for member in members]
-    if "failed" in member_statuses:
+    if case.get("status") == "failed" or "failed" in member_statuses:
         return "UNKNOWN", "failed"
+    if case.get("deadline_reached") and case.get("status") != "done":
+        return "UNKNOWN", "timed_out"
     if "skipped" in member_statuses:
         return "UNKNOWN", "member_skipped"
     if any(status != "done" for status in member_statuses):
@@ -581,9 +605,46 @@ require(
     + ", ".join(sorted(required_stale_mutations - fixture_case_names)),
 )
 for case in fixture["cases"]:
-    actual = classify(case, identity)
+    provider_case = case if "capability" in case else {**identity, **case}
+    actual = classify(provider_case, identity)
     expected = tuple(case["expected"])
     require(actual == expected, f"{case['name']} mapped to {actual}, expected {expected}")
+
+exact_members = [
+    {"identity": "codex-primary", "status": "done", "verdict": "pass"},
+    {"identity": "claude-secondary", "status": "done", "verdict": "pass"},
+]
+exact_pass = {**identity, "status": "done", "verdict": "pass", "members": exact_members}
+adversarial_errors: list[str] = []
+if classify({"status": "done", "verdict": "pass", "members": exact_members}, identity) != (
+    "UNKNOWN",
+    "stale",
+):
+    adversarial_errors.append("sparse identity")
+for field in CANONICAL_FIELDS:
+    mutant = dict(exact_pass)
+    del mutant[field]
+    if classify(mutant, identity) != ("UNKNOWN", "stale"):
+        adversarial_errors.append(f"missing {field}")
+for label, members in [
+    ("null population", None),
+    ("mapping population", {"identity": "codex-primary"}),
+    ("non-object member", [None]),
+    ("missing member identity", [{"status": "done"}]),
+    ("duplicate member identity", [{"identity": "codex-primary"}, {"identity": "codex-primary"}]),
+]:
+    mutant = {**exact_pass, "members": members}
+    try:
+        malformed_result = classify(mutant, identity)
+    except (AttributeError, SystemExit, TypeError):
+        adversarial_errors.append(f"{label} escaped")
+    else:
+        if malformed_result != ("UNKNOWN", "stale"):
+            adversarial_errors.append(f"{label} mapped to {malformed_result}")
+failed_at_deadline = {**exact_pass, "status": "failed", "deadline_reached": True}
+if classify(failed_at_deadline, identity) != ("UNKNOWN", "failed"):
+    adversarial_errors.append("terminal failure lost to deadline")
+require(not adversarial_errors, "adversarial identity failures: " + ", ".join(adversarial_errors))
 
 omitted_result, omitted_calls = observation_calls(
     declared=False, reusable_jobs=0, claim="winner", jobs_after_claim=0

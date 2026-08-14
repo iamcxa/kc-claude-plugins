@@ -100,7 +100,7 @@ d3ada9725daf9588	prohibition	improvement-harvesting.md:83 — occurrence retenti
 07eede3b0ed79931	enforced	improvement-harvesting.md:139 — validator bounds are enforced by improvement-intake.py and improvement-intake.test.py
 5172b561abb06fd3	prohibition	roborev-implementation-exit.md:13 — declaration-field duty on the adopter; missing ownership maps to UNAVAILABLE
 247625896c34c173	prohibition	roborev-implementation-exit.md:24 — candidate-config and explicit-flag duties on the implementation-exit observer prevent ambient/default-branch drift
-eddb3e8ffc85dc9b	bounded	roborev-implementation-exit.md:63 — matching is bounded to the complete canonical identity fields and stable member population exercised by the outcome classifier
+0ec8c60da99388f1	bounded	roborev-implementation-exit.md:63 — matching is bounded to present canonical evidence fields and the total member-population normalizer exercised by mutation
 ddcfdd75c7294ce6	prohibition	roborev-implementation-exit.md:71 — the observer must use the Local Profile's registered state boundary before preparing a claim
 0593a89a2d6b414e	enforced	roborev-implementation-exit.md:84 — dev-flow-state-prereq.sh establishes the named clean, equal holder condition before mutation
 0d7c5a6a64717bba	prohibition	roborev-implementation-exit.md:97 — the claimant must use Spacedock's state commit transaction and may not substitute raw Git durability

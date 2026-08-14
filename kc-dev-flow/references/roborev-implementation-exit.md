@@ -64,7 +64,10 @@ The claim identity is the SHA-256 of that canonical record. Provider evidence
 matches only when its repository, exact range or tip, configuration, RoboRev
 version/JSON contract, agent, model, reasoning, minimum severity, panel
 identity, stable member identities, and complete population match the record.
-Human-formatted output is diagnostic; it cannot establish `PASS`.
+Every evidence field must be present; missing or null fields and malformed,
+duplicate, extra, or incomplete member populations are `UNKNOWN(reason:
+stale)`, never values copied from the expected record. Human-formatted output
+is diagnostic; it cannot establish `PASS`.
 
 ## Existing-state single-flight transaction
 
@@ -138,8 +141,9 @@ range/tip, configuration, provider version/JSON contract, agent, model,
 reasoning, minimum severity, panel identity, stable member identity, or complete
 population mismatch is `stale`; when that same evidence also has an incomplete
 member, `stale` wins over `member_incomplete`. For an exact-input job, execution
-failure wins over skip or findings, then member skip wins over incomplete state,
-and an incomplete or ambiguous member wins over a completed parent verdict.
+failure wins over deadline, skip, or findings, then member skip wins over
+incomplete state, and an incomplete or ambiguous member wins over a completed
+parent verdict.
 
 | Observation | Work Control receipt |
 |---|---|
