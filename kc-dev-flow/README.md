@@ -21,16 +21,24 @@ provider while sharing the same authority and evidence discipline.
 ## Work profiles
 
 Profiles use one workflow with different obligations, not three workflows. For
-every request, first analyze the audience, lifespan, state, mutation boundary,
-and authority. Preserve the same authority, safety, evidence honesty, cleanup,
-and delivery gates; then let the Captain choose the intended commitment before
-ideation expands acceptance criteria.
+normal ideation, first analyze the audience, lifespan, state, mutation boundary,
+and authority. Reuse a valid unchanged receipt. Only a missing or stale receipt
+asks the Captain to choose the intended commitment before ideation expands
+acceptance criteria. Every profile preserves the same authority, safety,
+evidence honesty, cleanup, and delivery gates. Work already beyond ideation is
+not reopened without a promotion trigger, and a bounded mechanical defect keeps
+its valid ideation skip.
 
 ```mermaid
 flowchart TD
     A["Request: Build an import workflow."] --> B["Project context<br/>Audience, lifespan, state,<br/>mutation boundary, authority"]
     B --> C["Shared invariants<br/>Authority, safety, evidence honesty,<br/>cleanup, delivery gates"]
-    C --> D{"Captain chooses<br/>intended commitment"}
+    C --> G{"Workflow route"}
+    G -->|Normal ideation| H{"Receipt valid<br/>and unchanged?"}
+    H -->|Yes| U["Reuse receipt<br/>No Captain pause"]
+    H -->|Missing or stale| D{"Captain chooses<br/>intended commitment"}
+    G -->|Already beyond ideation| X["Do not reopen<br/>without a promotion trigger"]
+    G -->|Bounded mechanical defect| Y["Keep the valid<br/>ideation skip"]
 
     D -->|POC / Exploration| P1["Ideation<br/>One demoable journey<br/>and riskiest assumption"]
     P1 --> P2["Implementation<br/>Simplest safe mechanism"]
@@ -44,11 +52,12 @@ flowchart TD
 
     D -->|Production| R1["Ideation<br/>Operational commitment, compatibility,<br/>ownership, and failure policy"]
     R1 --> R2["Implementation<br/>Lifecycle, migration, observability,<br/>integrity, rollback, release support"]
-    R2 --> R3["Validation<br/>Recovery, production boundaries,<br/>ownership, operational readiness"]
+    R2 --> R3["Validation<br/>Prove every applicable lifecycle, compatibility,<br/>migration/recovery, observability, integrity,<br/>rollback, release, and ownership obligation"]
     R3 --> R4["Outcome<br/>Operated capability ready<br/>for long-term support"]
 
     P4 -. "Real users, persistent value,<br/>or reused shortcuts" .-> L1
-    L4 -. "Production data, SLO,<br/>public compatibility, or unattended operation" .-> R1
+    P4 -. "Retained production boundary" .-> R1
+    L4 -. "Retained production boundary" .-> R1
 ```
 
 For the same import request, the practical difference is:
@@ -57,12 +66,13 @@ For the same import request, the practical difference is:
 |---|---|---|---|
 | POC / Exploration | One file-to-preview journey; a safe shell, CLI, library, or existing tool is enough. | Parser-owned logic, the riskiest input assumption, and one real import. | Experiment validated; cleanup and unproved limits recorded. |
 | Pilot / Product slice | Limited users and persistent import state in a maintainable repository-native slice with diagnostics and recovery. | Integration seams, retry and duplicate handling, data safety, and the accepted journey. | Limited usable slice for bounded real use. |
-| Production | Owned operation with compatibility, lifecycle, migration, observability, integrity, rollback, and release support. | Recovery and production boundaries, plus ownership and operational readiness. | Operated capability ready for long-term support. |
+| Production | Owned operation with compatibility, lifecycle, migration, observability, integrity, rollback, and release support. | Every applicable lifecycle, compatibility, migration/recovery, observability, integrity, rollback, release, and ownership obligation. | Operated capability ready for long-term support. |
 
 Promotion is a new Captain decision in the same ideation workflow. Move from POC
 to Pilot when real users, persistent value, or reused shortcuts enter scope;
-move from Pilot to Production for production data, an SLO, public compatibility,
-or unattended operation.
+move either lower profile directly to Production when a retained production
+boundary such as production data, an SLO, public compatibility, or unattended
+operation enters scope.
 
 ## Optional policy mods
 
