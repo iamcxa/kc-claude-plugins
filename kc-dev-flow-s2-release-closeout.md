@@ -69,9 +69,12 @@ No product doc edit is planned. The already-merged Roadmap declares the S2 relea
 
 ### Result
 
-- **DONE — bounded validation evidence consolidation.** Release PR #221 is bound to exact head `aad7f59f29267f7654383e8be377adf79617bf0b`, base `387be484ae353ebe4603720cc7cc3f8c633d25a1`, kc-dev-flow `2.5.0`, and the preserved candidate receipt. No candidate smoke or model was rerun.
-- **SKIPPED — authority and post-publication boundaries.** The PR-body edit, final pre-merge re-observation, merge, published smoke, local sync, terminalization, and Roadmap closeout remain Captain-owned or post-publication work.
-- **FAILED — none within this validation-report scope.** The next merge gate remains closed until the exact `Candidate:` metadata line is Captain-approved and applied, followed by a fresh exact-head observation and separate merge authorization.
+- **DONE — exact candidate binding.** Release PR #221 is bound to exact head `aad7f59f29267f7654383e8be377adf79617bf0b`, base `387be484ae353ebe4603720cc7cc3f8c633d25a1`, kc-dev-flow `2.5.0`, receipt SHA-256 `2723e4f60e7ade48c07c9b9d3a1c9f2e5d5aefdff47b1ea6919bbf10100f7513`, and package-tree SHA-256 `a4a270194800a263523aacdea18ce27ce79f1da090860d80bca80e71ffe45eaf`. No candidate smoke was rerun.
+- **DONE — feedback and Candidate-line disposition.** Complete exact-head GitHub feedback is clean at fingerprint `sha256:349b6dc8e16915980bc38b0a36ad74abb291ce66d7bdbf479a501d422592ecf4`; the missing Candidate line is a supported Captain-owned metadata seam with one exact append proposed. Pre-merge evidence, Captain authority, and post-publication work are separately bounded below.
+- **DONE — EM, AC, and route accounting.** The single Claude Opus 5 High EM record is preserved with AC-1/AC-2 supported, AC-3/AC-4/AC-5 unresolved only at their named authority or publication boundaries, and a gate-ready `narrow / medium / multi-model:not_needed` route. No model was rerun.
+- **SKIPPED — intentionally pending boundaries after the three checklist items.** The PR-body edit, final pre-merge re-observation, explicit merge authorization, merge, published smoke, local sync, terminalization, and Roadmap closeout remain Captain-owned or post-publication work. The next merge gate stays closed until the exact `Candidate:` line is approved and applied, then exact-head checks and feedback are re-observed for a separate Captain merge decision.
+
+Failure summary: none within this bounded validation-report scope.
 
 ### Summary
 
