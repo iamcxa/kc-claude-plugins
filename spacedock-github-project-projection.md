@@ -131,6 +131,12 @@ Two search strategies were used over `kc-dev-flow`, repository `scripts`, and `.
 | Installable projection templates/config | `MISSING` | `REQUIRED` | Existing plugin bytes contain no projection workflow/config/projector templates. Add only the target-repository bytes required by the selected spike; do not add a daemon or hosted service. | A supported host-native installation surface that can produce an auditable target diff removes the vendored-template proposal. |
 | Status snapshot producer | `MISSING` | `REQUIRED` | No versioned reconcile snapshot exists. Add only the deterministic producer seam to this task; the status-update sibling owns delta rendering and publication. | An existing producer accepting projector receipts and passing stable-schema fixtures changes this to recovery. |
 
+Audit refresh at `origin/main@5f14040b22f0c7f019398d7209981226b9782ac2`: the intervening product change only corrected adopted-mod routing and added the mechanism-necessity refusal. It introduced no ProjectV2 adapter, installable projection template, or status snapshot producer, so the table's completeness classifications remain unchanged. The new necessity rule applies to the proposed scheduled reconcile automation:
+
+- `Criterion:` AC-5, AC-8, AC-9, and AC-11 require an installable convergence path that recovers after a missed fast-path dispatch and makes delayed reconciliation visible.
+- `Alternative:` retain only explicit `workflow_dispatch` after state push. It is lower authority and remains the preferred removal target, but it is insufficient until dogfood proves missed dispatches and failed runs still meet the freshness window without schedule recovery.
+- `Escape:` speculative until 2026-09-14; review backlog seed `spacedock-projector-automation-sunset-review` (`pm`). Removal is the default unless receipt history plus a schedule-disabled mutant demonstrates a named liveness failure.
+
 ### Route, carve, and pre-mortem
 
 The smallest current route is one projection skill plus one deterministic projector whose install mode vendors the reviewed config/workflow/script bytes. No reusable workflow repository, Action package, daemon, database, webhook service, or LLM call belongs in the runtime path. The GHA file is an execution shell over the same projector used by local dry-run and manual dispatch.
@@ -141,25 +147,25 @@ Pre-mortem: the design ships and still fails because installation appears portab
 
 ## Acceptance criteria
 
-### AC-1 — Generic capability discovery is schema-driven
+**AC-1 — Generic capability discovery is schema-driven**
 
 Given the two real commissioned workflows in this repository plus a focused non-kc fixture with custom stages such as `inbox → building → checking → released` and no `product` or `sprint`, the installer emits a deterministic capability report from each workflow README and state ref. It accepts real extension keys, `id-style: slug`, an empty stored ID, absent `score`, and nullable or omitted optional structures without weakening the initial/terminal invariants. The non-kc fixture remains projectable, receives exact dynamic `SD Stage` values, and does not receive `SD Product` or Milestone writes.
 
 Verified by: fixture tests over commissioned workflow READMEs plus representative entity files, asserting the planned fields and mapping decisions. Falsified by: renaming the non-kc stages or removing its optional dates changes only the discovered profile, while any fixed kc stage list or required product causes the test to fail.
 
-### AC-2 — Mapping is field-local and idempotent
+**AC-2 — Mapping is field-local and idempotent**
 
 The projector classifies every entity as `CREATE`, `UPDATE`, `NO_CHANGE`, `PARTIAL`, or `CONFLICT`. Missing optional fields cannot suppress a valid Issue identity/title/status projection. Every target field declares all source dependencies: for example, kc-dev-flow's scheduled-backlog → Ready mapping depends on a valid sprint pair, so a malformed sprint suppresses both Milestone and that derived Status write rather than silently treating the item as unscheduled. A second run over identical entity bytes and GitHub state performs no mutation.
 
 Verified by: a fake GitHub adapter with operation receipts for a mixed ten-entity corpus, including missing product, blank sprint, existing linked Issue, terminal item, and conflicting lifecycle. Falsified by: rerunning the same input emits any create/update operation, or blank product prevents Issue creation.
 
-### AC-3 — Project fields serve explicit views or metrics
+**AC-3 — Project fields serve explicit views or metrics**
 
 The generic default creates only `SD Stage`. The kc-dev-flow profile may add `SD Product`, `SD Started`, and `SD Completed`; qualified sprint may use Milestone in a later approved slice; Priority, Size, Estimate, and Cycle are never inferred. V1 never creates `SD Workflow`, because one configuration selects one workflow and one Project. Installation prints, for every created field, its source authority, blank behavior, and intended group/filter/chart use. Projection freshness is time-bearing reconcile evidence, never a frozen per-item `Current` enum.
 
 Verified by: installer dry-run snapshot and Project schema fixture. Falsified by: an unknown custom field silently becomes a Project field, `sprint` writes Cycle, or the installer creates a duplicate `SD Sprint` field.
 
-### AC-4 — Trigger topology is proven, not assumed
+**AC-4 — Trigger topology is proven, not assumed**
 
 A live disposable-repository experiment determines whether a workflow present only on the default branch runs on a push that changes only a split state branch lacking that workflow. It records `git ls-tree <state-ref> -- .github`, the no-workflow experimental push and documented absence, a state-ref-with-workflow positive control, and a manual-dispatch positive control with exact refs and run IDs. The chosen v1 topology must then prove automatic reconciliation without adding a hidden local hook.
 
@@ -173,49 +179,49 @@ Selection criteria are event latency, state-branch pollution, required credentia
 
 Verified by: links to the disposable repository workflow files, commits, Actions runs or documented absence, and a decision record naming the winning v1 topology. Falsified by: the selected trigger cannot reproduce after a fresh install, or relies only on documentation interpretation without a live branch experiment.
 
-### AC-5 — Installer skill produces reviewable, least-authority output
+**AC-5 — Installer skill produces reviewable, least-authority output**
 
 One setup skill supports `install` and `audit`; v1 upgrade is an install re-run that prints a target diff. Install pins the target repository, trunk ref, state ref, workflow directory, Project owner/number/ID, mapping profile, generated field plan, projector version, and projector byte digest. It defaults to dry-run and shows exact files and external Project mutations before applying them. Local dry-run executes the vendored target bytes or refuses when their digest differs from the reviewed projector. At runtime the projector re-derives capabilities from both pinned inputs and refuses mutation if they disagree with the reviewed config. It never stores or prints credential values.
 
 Verified by: install into a fixture repository, diff of exactly the expected workflow/config/script files, and a no-secret output scan. Falsified by: installation mutates an unconfirmed Project, copies local `gh` credentials, or requires editing the installed YAML by hand to select a generic profile.
 
-### AC-6 — GitHub authentication is explicitly supported
+**AC-6 — GitHub authentication is explicitly supported**
 
 The workflow separately proves same-repository Issue access and user-owned Project #1 access. Current live evidence shows Project #1 is a private user-owned Project with Board, Roadmap, and Table views; current Projects v2 REST and GraphQL surfaces both require direct capability probing rather than inheriting an older GraphQL-only assumption. The spike must test the actual REST and/or GraphQL mutations chosen by the implementation and record a fine-grained-token attempt before any classic-PAT fallback. The workflow uses a dedicated projector credential stored under a named repository secret, never the operator's ambient local `gh` credential. The setup receipt identifies token type, minimum permissions, secret name, expiry, rotation/revocation owner, and fallback blast radius; it rejects an unsupported token before partial mutation and keeps `GITHUB_TOKEN` for repository-scoped writes.
 
 Verified by: read-only Project probe followed by a reversible fixture-item mutation using the documented secret in a disposable target, with negative coverage for an insufficient token. Falsified by: the workflow creates an Issue and only then discovers it cannot add or update the Project item.
 
-### AC-7 — Projection receipts prove identity and freshness without state feedback
+**AC-7 — Projection receipts prove identity and freshness without state feedback**
 
 Every managed Issue records repository- and workflow-qualified identity, slug, optional non-empty SD entity ID, state ref, trunk audit commit, state audit commit, entity digest, projector version, projector byte digest, and ownership mode in one bounded machine block. Lookup by existing `issue` reference or qualified identity cannot create duplicates. Freshness compares entity digest, not only branch head. No successful run writes to the SD state branch.
 
 Verified by: duplicate/search fixtures, an unrelated state commit that leaves an entity `Current`, and a changed entity that becomes `Stale` until projected. Falsified by: an unrelated entity change marks every receipt stale or creates another Issue.
 
-### AC-8 — One installed workflow reconciles safely
+**AC-8 — One installed workflow reconciles safely**
 
 The installed workflow checks out exact trunk and state commits, serializes projector writes with `cancel-in-progress: false`, runs both credential preflights and all validation before mutation, emits a machine-readable summary, and leaves conflicts visible without overwriting human-owned Issue content. Manual dispatch and the selected automatic trigger converge through the same projector path. Human edits to `SD *` fields are explicitly non-authoritative and are restored on the next successful reconcile.
 
 Verified by: dry-run, first apply, repeated no-op apply, concurrent-run test, and one conflict fixture. Falsified by: two overlapping runs create duplicate Issues, or trigger-specific paths implement different mapping logic.
 
-### AC-9 — Liveness failure is visible
+**AC-9 — Liveness failure is visible**
 
 The installation exposes when reconciliation has not completed within its configured freshness window, provisionally three times the selected schedule interval, including a disabled/delayed schedule or expired Project token. The signal compares the timestamped last-successful reconcile receipt against that window; silence cannot look like a quiet, current Project.
 
 Verified by: disable the scheduled workflow and separately use an expired/invalid fixture token; each produces an observable stale/failing signal without mutating Issue state. Falsified by: the last successful projection remains visually `Current` indefinitely.
 
-### AC-10 — Archive and removal semantics are explicit
+**AC-10 — Archive and removal semantics are explicit**
 
 When an entity moves to `_archive/`, the projector retains qualified identity, marks the Project item archived or an equivalent explicit terminal projection, and closes only projector-owned Issues when policy permits. A pre-existing linked Issue is never closed merely because the SD entity was archived. A foreign Project item without a projector receipt is never changed. Deletion without an archive tombstone is quarantined rather than silently removing history.
 
 Verified by: live create → archive → reconcile for both projector-owned and linked fixture Issues. Falsified by: charts retain an apparently active orphan or a linked human Issue is closed.
 
-### AC-11 — The deployed slice proves value and bounded cost
+**AC-11 — The deployed slice proves value and bounded cost**
 
 After disposable trigger/auth proof, the first dogfood vertical slice uses `iamcxa/kc-claude-plugins` `docs/dev` with its true split state branch, checks out both refs, dry-runs ten representative entities against Project #1, then projects an explicitly approved bounded subset. Before apply it creates two deliberate receipt-less Project fixtures: one title collision and one item with a hand-set real `SD Stage`. It re-runs to zero mutations, preserves freshness after an unrelated entity change, and proves both foreign fixtures unchanged by field-level before/after readback. It records a bounded API request count and fails resumably under a simulated rate limit. The credential spike also probes whether saved-view creation is API-reachable; otherwise grouping the existing Project view is a documented manual operator step and automated evidence ends at correct field values.
 
 Verified by: disposable proof URLs and run IDs, Project #1 dry-run/apply receipts, GraphQL or REST request log, no-op receipt, foreign-fixture before/after evidence, and either saved-view evidence or the documented manual grouping fallback. Falsified by: only fake-adapter tests pass, either receipt-less fixture changes, or the Project UI cannot answer the stated question after the supported grouping step.
 
-### AC-12 — Reconcile emits the stable producer seam for the status sibling
+**AC-12 — Reconcile emits the stable producer seam for the status sibling**
 
 Every successful reconcile emits a versioned deterministic snapshot containing pinned trunk/state commits, workflow/Project identity, qualified sprint identities when present, member-set digest, stage counts, terminal count, projection conflicts/freshness, and available goal/exit-criterion digests. Identical inputs produce byte-identical facts apart from an explicitly excluded observation timestamp. This task performs no Project Status Update mutation and invokes no LLM.
 
@@ -316,6 +322,21 @@ The reviewer claimed Projects v2 is GraphQL-only and treated the cited REST docu
 ### Smallest validated slice recommended by the review
 
 Use one disposable repository with default-branch workflow/config/projector, a true orphan state branch containing three representative entities and no `.github/`, and one disposable user-owned Project. Run trigger controls first, then credential probes, then manual dispatch to create one Issue/item/receipt, repeat to `NO_CHANGE`, change an unrelated entity to prove digest-local freshness, and finally demonstrate a non-empty saved view grouped by `SD Stage`.
+
+## Stage Report: ideation
+
+- DONE: Bound the POC to eight human-hours with a two-hour trigger/credential deviation stop, one setup skill, one deterministic projector, and no external mutation authority.
+- DONE: Recovered existing router, digest, frontmatter, and Actions seams; confirmed Project adapter, installable templates, and snapshot producer remain missing at fresh `origin/main@5f14040b22f0c7f019398d7209981226b9782ac2`.
+- DONE: Apply the new automation-necessity rule. The schedule serves AC-5/8/9/11, manual dispatch remains the lower-authority alternative, and backlog seed `pm` reviews removal on 2026-09-14.
+- DONE: AC-1 through AC-8, AC-11, and AC-12 define local-first or bounded-live falsifiers for portability, mapping, schema, topology, install, credentials, receipts, convergence, dogfood value, and the snapshot producer.
+- DONE: `spacedock status --read qa --ac-scan` resolves AC-1 through AC-12 at lines 150-224. It reports `unevidenced=true citations=0` for AC-2, AC-3, AC-4, AC-6, and AC-7 despite each containing a `Verified by:` paragraph, matching the ROADMAP's known citation-counter hazard rather than proving missing evidence.
+- DONE: Fresh Claude architecture challenge returned `narrow`; its material corrections are incorporated. Fresh ideation EM session `54df0ad0-656b-45a7-93c5-484ef67450cb` returned `proceed / high / multi_model:not_needed`, supporting F1-F4 and preserving every captain/external-provider boundary.
+- PENDING CAPTAIN: decide whether AC-9 liveness and AC-10 archive live procedures are inside this eight-hour POC or deferred. EM warns that keeping both inside falsifies the appetite; recommendation is to defer their live procedures while keeping local contract fixtures and the dated automation review.
+- PENDING DELIVERY: accept the proposed ROADMAP split that schedules `spacedock-project-status-updates` (`16`) after the projection snapshot contract. No repository commit or PR exists yet.
+
+### Summary
+
+Proceed once the captain resolves the AC-9/AC-10 appetite mismatch and confirms the single ROADMAP commit. The first implementation action remains local fake-adapter RED tests and vendored bytes; disposable repositories, Projects, credentials, secrets, and Project #1 apply retain separate approval gates.
 
 ## Out of scope
 
