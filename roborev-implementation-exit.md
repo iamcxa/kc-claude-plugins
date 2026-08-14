@@ -8,7 +8,7 @@ sprint: S2
 started: 2026-08-14T07:45:49Z
 completed:
 verdict:
-worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/roborev-implementation-exit
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/roborev-implementation-exit-recut
 issue:
 pr:
 mod-block:
@@ -582,8 +582,9 @@ science_officer_em_upward_report:
 
 ### Checklist
 
-- `DONE` — Implemented the approved conditional RoboRev implementation-exit
-  slice at candidate `78ae901808445f11bbf143dda51be741f245fb17`, with a
+- `DONE` — Implemented and recut the approved conditional RoboRev
+  implementation-exit slice at candidate
+  `b2b2e229738cef5caec84b1a87e69f5f23a50717`, with a
   reachable RED failure for the absent provider contract and GREEN package,
   adopted, loader, configuration, outcome, authority, and spend-cap coverage.
 - `DONE` — Proved the closed outcome matrix, omitted-control zero-call path,
@@ -606,9 +607,12 @@ daemon, second ledger, generalized evaluator, hook, or lock service was added.
 
 ### Evidence
 
-- Approved base and merge base:
+- Exact recut base and merge base:
+  `f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7`.
+- Candidate commit: `b2b2e229738cef5caec84b1a87e69f5f23a50717`.
+- Superseded deterministic candidate:
+  `78ae901808445f11bbf143dda51be741f245fb17` on approved base
   `6f0e274e6e02ff7e0e5b158859783df037c45c4d`.
-- Candidate commit: `78ae901808445f11bbf143dda51be741f245fb17`.
 - RED: `python3 scripts/roborev-implementation-exit-contract.test.py` failed
   with `missing packaged provider reference` before the implementation.
 - GREEN at the candidate tree:
@@ -623,10 +627,13 @@ daemon, second ledger, generalized evaluator, hook, or lock service was added.
   `review_min_severity=medium`.
 - Configuration object SHA-256:
   `63b6d59a39c07c8a28db161da4d79af412d4b01d46b5bdcf1c7cc4eec58e64dd`.
-- Current `origin/main` advanced to
-  `f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7` after the approved base was
-  pinned. The candidate was not rebased; fresh validation must reconcile this
-  base movement before delivery evidence is approved.
+- Recut proof: `git range-diff
+  6f0e274e6e02ff7e0e5b158859783df037c45c4d..78ae901808445f11bbf143dda51be741f245fb17
+  f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7..b2b2e229738cef5caec84b1a87e69f5f23a50717`
+  reported `=`. Both patches have stable patch ID
+  `8b4e1372577bf5a18286cf9262e5092a65cba2d1`; the two overlapping PR #227
+  paths auto-merged without changing either patch, so there is no
+  non-mechanical difference to explain.
 
 ### Work Control evidence
 
@@ -636,8 +643,8 @@ mode: observe
 provider: roborev
 boundary: implementation-exit
 repository: kc-claude-plugins
-base: 6f0e274e6e02ff7e0e5b158859783df037c45c4d
-tip: 78ae901808445f11bbf143dda51be741f245fb17
+base: f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7
+tip: b2b2e229738cef5caec84b1a87e69f5f23a50717
 configuration_sha256: 63b6d59a39c07c8a28db161da4d79af412d4b01d46b5bdcf1c7cc4eec58e64dd
 outcome: UNAVAILABLE
 reason: unavailable
