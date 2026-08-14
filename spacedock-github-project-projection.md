@@ -390,6 +390,20 @@ The installable local path and both live read-only projections are working. Auto
 
 The focused review found and closed the cross-run idempotency defect plus linked-Issue and option-identity hazards. The remaining blockers are live provider execution and credential authority, not a known local planner/installer failure.
 
+## Stage Report: implementation (cycle 4 — public free-runner proof)
+
+- DONE: Captain approved the public synthetic fallback. Created public disposable repository `iamcxa/spacedock-projection-public-proof`; default branch `main@9a0b7b6105b9f4063b9ad1fe12c77b646b8ea25b` contains only synthetic workflow/config/projector bytes, and true orphan `spacedock-state/dev@03cdc090cc6eb6e8ccf4aebca18cf0f57df147ff` contains three synthetic entities with no `.github` tree.
+- DONE: Public standard-runner smoke run `31766471570` completed successfully, proving the earlier private-repository billing failure can be bypassed without paid Actions minutes. Projector runs `31766507882`, `31766540815`, and `31766595885` all started runner jobs, checked out both trunk and orphan state refs, reached the deterministic reconciler, and uploaded a failure receipt.
+- DONE: The projector failure is the expected authority boundary, not runner failure: built-in `GITHUB_TOKEN` receives `403 Resource not accessible by integration` when reading private user Project #3. No repository secret or ambient local credential was copied, and no GitHub Issue or Project mutation occurred.
+- DONE: A local authenticated read-only reconcile over those exact public refs and Project #3 classified `alpha`, `bravo`, and `charlie` as three `CREATE` operations, zero conflicts/orphans, no Project schema change, and deterministic counts `inbox=1`, `building=1`, `released=1`, terminal `1`.
+- DONE: Live runner warnings showed `actions/checkout@v4` and `actions/upload-artifact@v4` were deprecated Node 20 actions forced onto Node 24. Official latest releases were v7.0.1 for both; the installed template now uses `@v7`, its generated workflow passes `actionlint`, and run `31766595885` has no Node 20 warning. The focused suite remains 17/17 and the registered kc-dev-flow contract, frontmatter, parity, marketplace L0-L2, and diff checks pass.
+- UNOBSERVED: No schedule event appeared during the bounded six-minute observation window after registration. GitHub permits scheduled-run delay, so this is latency evidence rather than a failed schedule verdict; manual dispatch is proven.
+- BLOCKED AUTHORITY: A full remote apply and no-op rerun still require a dedicated supported Project credential. The built-in repository token is now live-proven insufficient, and the local OAuth token remains ambient operator authority that may not be installed as a secret.
+
+### Summary
+
+The no-cost hosted-runner route works and exercises the real split-ref workflow through its credential boundary. Remaining live proof is a dedicated user-Project credential plus bounded apply/no-op convergence; schedule delivery is still unobserved rather than failed.
+
 ## Out of scope
 
 - GitHub Project changes flowing back into SD state.
