@@ -38,3 +38,14 @@ Install the merged deterministic projector into `iamcxa/kc-claude-plugins`, proj
 ## Evidence boundary
 
 The repository secret value is a separate host operation and never enters installer output, git history, task state, or chat. If the dedicated classic PAT secret is absent or its expiry cannot be bounded, stop before external apply while continuing all file-only validation.
+
+## Stage Report: ideation — cycle 1
+
+**Decision: proceed with the three-file selected-scope dogfood installation; live apply remains separately blocked on a dedicated credential and complete expiring envelope.**
+
+- `Lenses:` value is a visible ten-item Project #1 slice; authority stays one-way from SD; mechanism is the merged installer plus its one workflow and vendored deterministic projector; removal remains the scheduled-automation sunset task.
+- `Minimal stack:` no service, database, webhook, reverse sync, reusable workflow repository, or LLM runtime is added. The no-write plan at product base `f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7` reports exactly three CREATE files and zero external mutations.
+- `Selected envelope:` exactly ten named slugs, no linked human Issues, Project ID `PVT_kwHOABc8eM4A-a-N`, and fail-closed cap 80 subject to the actual dry-run count being no greater than 80.
+- `Credential boundary:` repository readback shows no `SPACEDOCK_PROJECT_TOKEN`; the existing `RELEASE_PLEASE_TOKEN` is not dedicated and may not be reused. Secret provisioning is a host operation and blocks only live apply.
+- `Cross-model:` PASS — fresh Claude Opus 5, high effort, safe mode, no tools or MCP, returned `proceed`; it found no file-implementation blocker and independently required the dedicated classic PAT, recorded permissions and expiries, rotation owner, fallback blast radius, exact selected scope, dry-run count, manual dispatch, and identical no-op rerun before live apply.
+- `Disproof hooks:` any fourth installed file, external mutation during install, plan count above 80, absent or over-broad envelope metadata, receipt-less foreign-item mutation, or a non-zero identical rerun rejects the slice.
