@@ -358,6 +358,23 @@ Proceed after the single ROADMAP commit is accepted. The first implementation ac
 
 The local deterministic seam is real and testable, but it is not yet an automatic sync. Continue only after bounded approval for disposable trigger/credential/API-shape proof; Project #1 remains read-only and empty.
 
+## Stage Report: implementation (cycle 2 — installer and live read-only proof)
+
+- DONE: Captain approved disposable trigger/API-shape proof. Created private disposable repository `iamcxa/spacedock-projection-proof` and user Project #3; Project #1 remained read-only and empty.
+- DONE: Trigger controls used a true orphan `spacedock-state/dev@ea12a0eb9df2b4971516b30005bf0a2fe15b2924` with no `.github` tree. Its push created no Actions run. A workflow-bearing control push created run `31761294869`, and default-branch manual dispatch created run `31761324704`, proving event/workflow resolution. Both positive runs stopped before runner steps because GitHub reported a failed payment or spending-limit condition, so runner execution and scheduled convergence remain unproven.
+- DONE: Project #3 exposed REST 2026-03-10 fields and items as arrays keyed by numeric field IDs. The disposable `SD Stage` field is numeric ID `379617073`; the projector now normalizes numeric REST IDs rather than the CLI display key `sD Stage`.
+- DONE: Added a dry-run-first installer for exactly the workflow, JSON config, and projector bytes. Generated workflow validation passes `actionlint`; it has default-branch `workflow_dispatch`, schedule convergence, separate state checkout, `issues: write`, serialized writes with `cancel-in-progress: false`, and a failure artifact path. External apply remains false unless a reviewed config records credential metadata and explicitly arms it.
+- DONE: Added the REST adapter with separate repository/Project authorities, pagination, receipt recovery for an Issue stranded before Project insertion, numeric field writes, resumable create/update order, and single-select option extension that preserves observed options. The local contract suite now passes 11/11, including quoted real-world Issue references, foreign fields, archive ownership, no-op convergence, installer audit, and REST operation ordering.
+- DONE: A live read-only reconcile against disposable Project #3 used trunk `411a44b07789eaaa70a8edebb7f60f12226d2bd8` and orphan state `ea12a0eb9df2b4971516b30005bf0a2fe15b2924`. It planned three creates, no schema change, zero conflicts, and emitted deterministic counts `inbox=1`, `building=1`, `released=1`; Project #3 remained one pre-existing fixture item.
+- DONE: A live read-only ten-entity dogfood plan against Project #1 used trunk `5f14040b22f0c7f019398d7209981226b9782ac2` and state `6dd6001f193c1dd1e6afcd5faa5a78f7455b4e0e`. It produced 5 `CREATE` and 5 `PARTIAL` classifications, zero conflicts, ten planned entity mutations, and schema plans for `SD Stage` plus `SD Product`. Missing optional product/sprint values did not suppress any Issue projection, and quoted `issue: "189"` now resolves to linked ownership. Project #1 readback remained zero items after the run.
+- BLOCKED LIVE: GitHub Actions runner proof cannot continue until the account billing/spending-limit condition is fixed. This blocks runner execution evidence, not local workflow resolution or deterministic planning.
+- BLOCKED AUTHORITY: The selected user-owned Project REST endpoints do not accept fine-grained PATs or GitHub App tokens. Arming Project #1 therefore requires explicit acceptance of a dedicated classic PAT's blast radius, expiry, rotation owner, and repository secret; no token was minted, copied, or stored.
+- IN PROGRESS: Product bytes remain uncommitted pending final focused review and captain confirmation of the exact commit set. AC-9/AC-10 live negative/archive procedures remain deferred under the approved POC carve.
+
+### Summary
+
+The installable local path and both live read-only projections are working. Automatic runner execution and any Project #1 mutation remain intentionally unclaimed until billing and credential authority are resolved.
+
 ## Out of scope
 
 - GitHub Project changes flowing back into SD state.
