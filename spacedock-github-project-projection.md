@@ -4,7 +4,7 @@ title: Project Spacedock state into GitHub Issues and Projects through a portabl
 status: backlog
 source: Captain request on 2026-08-13, retargeted after live inspection from iamcxa Project #2 to Project #1
 product: kc-dev-flow
-sprint:
+sprint: S3
 started:
 completed:
 verdict:
