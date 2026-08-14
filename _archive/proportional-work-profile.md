@@ -1,19 +1,20 @@
 ---
 id: 4wkne0vvpgsy2japzr08xqtx
 title: "kc-dev-flow: choose a proportional work profile before AC expansion"
-status: validation
+status: done
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint: S2
 started: 2026-08-13T03:14:12Z
-completed:
-verdict:
+completed: 2026-08-14T07:37:45Z
+verdict: passed
 worktree: .worktrees/spacedock-ensign-proportional-work-profile
 issue:
 pr: pr-merge:226
-mod-block: merge:pr-merge
+mod-block:
 design: required
 lane: main
+archived: 2026-08-14T07:37:45Z
 ---
 
 ## Problem
