@@ -144,3 +144,13 @@ science_officer_em_upward_report:
 - `Visible sample:` Issue #232 remains #232 and previews title `[g5] Kill the parse-and-discard class in flow step operands`; its body begins `## Problem`, fields are `Status=Todo`, `SD Stage=backlog`, and qualified `SD Identity`, and its only projector label addition is `spacedock:managed`.
 - `Final line measurement:` the canonical runtime is 1,879 lines versus 1,572 at `origin/main`, net +307 (19.5%); contract tests are net +405. The equal vendored runtime delta is generated installation parity. The size is acceptable but at the upper bound: every retained block maps to a required lifecycle seam, while the implementation adds no dependency, workflow, config schema, mapping ledger, or reverse sync.
 - `Pending:` Claude Opus High produced no implementation verdict before the host reset. No code commit, push, PR, Project schema write, Issue update, or external apply has been performed.
+
+## Stage Report: validation — cycle 2
+
+**Decision: PASS for local implementation and exact live dry-run; retain post-delivery zero-write readback as the final AC-5 falsifier.**
+
+- `Fresh Claude Opus High:` initial verdict `FAIL` found one High normalization defect: `_body_with_receipt()` and `_body_without_receipt()` stripped all trailing whitespace while the entity digest preserved Markdown hard-break spaces, causing a self-created permanent `BODY_DRIFT` on rerun.
+- `Repair evidence:` a Markdown hard-break fixture first failed with `BODY_DRIFT`, then passed after both receipt insertion and extraction were restricted to trimming CR/LF only. The scoped suite remains 43/43 and checks `NO_CHANGE` plus empty mutations on the real rerun path.
+- `Adjudication:` the review's linked-Issue concern is unreachable because any valid quoted or unquoted `issue` parses to a positive integer, forces linked ownership, requires a reviewed binding, and conflicts before mutation when missing. Existing `issue=404` evidence proves zero mutations. Live Project item observation was separately inspected and contains the `labels` key.
+- `Focused re-review:` `VERDICT: PASS`; findings 1 and 3 closed. The only retained item is the already-declared post-apply dry-run: any replanned `ADD_LABEL` or other write reopens validation rather than permitting completion.
+- `Exact revision evidence:` canonical/vendored projector digest `sha256:b0327065f19c4c11808ab7403293954fbafa36360231d2c5e5037c79967ca33a`; canonical runtime 1,880 lines versus 1,572 at `origin/main`, net +308. Package contract PASS, projector 43/43 PASS, and `git diff --check` PASS.
