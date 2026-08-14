@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/roborev-implementation-exit-repair-recut
 issue:
-pr:
+pr: pr-merge:239
 mod-block:
 design: required
 lane: main
