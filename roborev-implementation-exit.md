@@ -1,14 +1,14 @@
 ---
 id: e9nrdgxgnp1rqwwbcxfzb1nj
 title: "kc-dev-flow: adopt a proportional RoboRev implementation exit"
-status: ideation
+status: implementation
 source: captain:conversation-2026-08-13
 product: kc-dev-flow
 sprint: S2
 started: 2026-08-14T07:45:49Z
 completed:
 verdict:
-worktree:
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.worktrees/roborev-implementation-exit
 issue:
 pr:
 mod-block:
