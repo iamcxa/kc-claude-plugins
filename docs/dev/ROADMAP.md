@@ -319,6 +319,28 @@ acceptance criteria expand. All three items have exact-revision validation and
 delivery evidence; the proportional-profile product diff retains no generalized
 evaluation platform. Hold the S2 Release PR until all three items exit.
 
+### Sprint S3 — GitHub projection dogfood
+
+Dependency: begin after `kc-dev-flow/S2` completes.
+
+Captain-approved sequence:
+
+1. `spacedock-github-project-projection` (`qa`)
+
+End value: a repository can install a one-way, idempotent projection of one
+selected Spacedock workflow into one selected GitHub Project without making
+GitHub lifecycle authority or requiring LLM-generated runtime facts. The first
+dogfood maps `kc-claude-plugins/docs/dev` into user Project #1.
+
+Exit: a disposable proof establishes the selected trigger and authentication
+topology; a ten-entity Project #1 dry-run is reviewed before an approved bounded
+subset is applied; an identical rerun performs zero mutations; a view grouped by
+exact SD stage is usable; and sprint delivery, scope, and definition changes
+produce deterministic status-update drafts that remain human-published.
+
+Out of scope: GitHub-to-SD writeback, Relay or CarLove rollout, automatic Project
+Status Update publication, and LLM-authored unattended payloads.
+
 ## `repo-platform`
 
 ### Sprint S1 — reduce the runtime reading surface
