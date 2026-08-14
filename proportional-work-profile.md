@@ -2138,3 +2138,183 @@ Rebased the accepted proportional-profile slice onto #222, preserved both
 landed contract families at the conflict boundary, and returned a clean,
 mechanically green exact head without changing AC-1 through AC-4 or expanding
 the POC surface.
+
+## Stage Report: validation (cycle 5 — current-base recut passed)
+
+Verdict: **PASS / DELIVERY-READY AT EXACT HEAD**
+`d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7` against exact current base
+`5f14040b22f0c7f019398d7209981226b9782ac2`. The fresh validation EM returns
+`proceed` with high confidence, `multi_model: not_needed`, and no surviving
+Material finding.
+
+- DONE: Verify AC-1 through AC-4 against exact candidate d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7 and current base 5f14040b22f0c7f019398d7209981226b9782ac2.
+  AC-1/AC-3 contract mutants reject a changed profile set, unsafe POC downscoping, AC expansion before receipt re-read, and active-item abandonment; AC-2 reuses the unchanged exact host artifact; AC-4 has 100% changed-Python-line coverage and no unearned evaluator surface.
+- DONE: Confirm the recut preserves #222 path-and-necessity and github-pr-feedback/v1 contracts while keeping the accepted 11-file, 454-line POC surface.
+  `git range-diff` keeps commits 1, 2, and 4 patch-equivalent and changes commit 3 only to retain #222's seven-line reverse-recovery path assertion; the exact contract exercises that assertion plus the normalized-feedback mutants and passes.
+- DONE: Use the accepted host artifact only if chooser bytes and behavior-producing inputs remain identical; return one fresh EM verdict and any surviving Material finding without modifying product files or delivering.
+  Accepted chooser blob `8e8f5063f01ddbe3d05ab26048f789701ba0a463` and Codex metadata blob `aa21cc4ba78aa2756c580baf52eaebae5610ca56` are identical at `7c1b12d...` and `d96bc9ad...`; the preserved two-case artifact remains `sha256:d62d1faa4a9501349b2f82072e795f26b9d68b5adcf438e25b2d0a4ab0601ea9`, so no host rerun was warranted.
+
+PR feedback: N/A — brand-new local delivery with no remote feature ref or PR;
+`gh pr list` returned an empty population, so no `github-pr-feedback/v1`
+provider envelope applies before initial Draft creation.
+
+Lenses: PASS — behavior, contract/schema, state/concurrency, security/authority,
+runtime, docs/policy, and delivery fired; zero surviving findings at the exact
+base/head pair. A changed profile set, reordered receipt gate, unsafe mutation,
+lost active-item path, lost #222 assertion, feedback normalization drift, added
+evaluator, changed head, or remote PR would have failed the corresponding lens.
+
+Diff coverage: PASS — 100% (38/38 coverable changed Python lines) from a fresh
+coverage run of `scripts/kc-dev-flow-contract-test.py` against exact base
+`5f14040b...`; any unexecuted added contract branch would lower this result.
+
+Adversarial: PASS — the exact contract rejects the three work-profile mutants
+and the active-item regression, while its `github-pr-feedback/v1` mutation set
+and #222 workflow-relative reverse-recovery assertion remain active. Replacing
+the closed Production row, production refusal, receipt order, active-item guard,
+feedback fingerprint/serialization/evidence, or `_mods/` path would make it red.
+
+Cross-model: `not_needed` — patch identity, deterministic contract falsifiers,
+and unchanged accepted behavior inputs settle this reversible rebase review.
+
+E2E: PASS — reused accepted fresh-host artifact
+`.context/validation/proportional-work-profile-909e3bd-forward-test.md` at
+`sha256:d62d1faa4a9501349b2f82072e795f26b9d68b5adcf438e25b2d0a4ab0601ea9`;
+the chooser and both recorded raw cases are unchanged, so the dispatch's
+identity condition deliberately avoids another bounded model trial.
+
+Origin re-observation: PASS — Reported scenario: choose the shell-first
+staging/local POC route over the Go coordinator while retaining production
+refusal | Originating runtime kind: fresh Codex agent reading the exact chooser
+skill path | Re-observation artifact/revision:
+`proportional-work-profile-909e3bd-forward-test.md`,
+`sha256:d62d1faa4a9501349b2f82072e795f26b9d68b5adcf438e25b2d0a4ab0601ea9`,
+candidate `d96bc9ad...` by accepted identity reuse | Equivalent-runtime rationale:
+same recorded Codex actor kind, direct chooser-skill instrument, local unpushed
+planning path, host configuration, chooser/metadata blobs, and two raw
+claim-relevant cases; the recut changes only the shared contract-test boundary |
+Falsifier kind: refusal | Result: Case A selects POC and rejects the Go
+coordinator without a named journey failure; Case B requires Production or an
+explicit sandbox recut and preserves missing-authority stops.
+
+Retained-surface challenge: the three work-profile contract mutants fail without
+the receipt/activation/safety group; the active-item mutant fails without the
+bounded continuation repair; accepted packaging evidence still shows 8,929
+bytes avoided by conditional chooser loading. The exact 11-file diff has 395
+insertions and 59 deletions, contains no work-profile evaluator fixture, scorer,
+loader-eval, or loader-test addition, and remains one dependent value journey.
+
+Exact-head checks: contract, loader-evaluator regression, 41-skill frontmatter
+lint, isolated chooser validation, version parity, marketplace L0/L1/all-seven
+L2 installs, `git diff --check`, and canonical/adopted kernel,
+reverse-recovery, and work-control byte parity all pass. The worktree is clean;
+remote `main` is the bound base, and neither a remote feature ref nor PR exists.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Proceed. Exact candidate d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7
+    satisfies AC-1 through AC-4 on base 5f14040b22f0c7f019398d7209981226b9782ac2;
+    the recut preserves #222 and github-pr-feedback/v1 contracts, and no
+    Material finding survives.
+  evidence_synthesis: >-
+    Fresh source review, range-diff, blob identity, exact-head contract mutants,
+    100% changed-Python-line coverage, package checks, 11-file/454-gross-line
+    accounting, evaluator-surface subtraction, remote-base identity, and the
+    unchanged accepted host artifact support all four ACs. No PR exists, so
+    provider feedback observation is not yet applicable.
+  risk_tradeoff_call: >-
+    Proceeding keeps the validated one-journey POC surface while integrating
+    #222 at its real shared boundary. Repeating an unchanged host trial adds
+    cost without new evidence; the bounded alternative is to return only if a
+    chooser/input blob or exact-head receipt changes.
+  recommendation: >-
+    Treat d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7 as validation-passed for
+    Captain-authorized delivery mechanics, preserving exact-head, Draft-first,
+    feedback-observation, and no-merge-authority boundaries.
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    FO may account for this gate and perform separately authorized state or
+    delivery mechanics, but may not alter scope, push, create or ready a PR,
+    merge, close out, or claim delivery from this advisory verdict.
+  engineering_judgment:
+    question: >-
+      Does rebased candidate d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7
+      satisfy AC-1 through AC-4 while preserving #222 path-and-necessity and
+      github-pr-feedback/v1 contracts without expanding the accepted POC surface?
+    revision: >-
+      product d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7 against
+      5f14040b22f0c7f019398d7209981226b9782ac2; state entity commit
+      72ddc5d84f0ddf960f1ae995f9b6c2441fe4b427; pre-report task sha256
+      6e1b45a7749a72ed8f2bb0fcfc8dbc121a925f23c831695922c9a0990a5e5554
+    evidence_synthesis: >-
+      Fresh source review, range-diff, blob identity, exact-head contract mutants,
+      100% changed-Python-line coverage, package checks, 11-file/454-gross-line
+      accounting, evaluator-surface subtraction, remote-base identity, and the
+      unchanged accepted host artifact support all four ACs. No PR exists, so
+      provider feedback observation is not yet applicable.
+    adjudications:
+      - finding: F1-current-base-contract-integration
+        disposition: supported
+        basis: >-
+          Range-diff isolates the recut delta to #222's seven-line
+          workflow-relative reverse-recovery assertion before the work-profile
+          block; the exact contract retains and passes both that assertion and
+          github-pr-feedback/v1 normalization/mutation checks.
+      - finding: F2-host-artifact-identity-reuse
+        disposition: supported
+        basis: >-
+          Chooser blob 8e8f5063f01ddbe3d05ab26048f789701ba0a463 and
+          Codex metadata blob aa21cc4ba78aa2756c580baf52eaebae5610ca56
+          match accepted head 7c1b12d..., while the raw two-case artifact and
+          claim-relevant conditions are unchanged; the accepted refusal result
+          therefore remains bound without another model trial.
+      - finding: F3-ac-and-appetite-coverage
+        disposition: supported
+        basis: >-
+          Closed-profile, unsafe-downscoping, receipt-order, and active-item
+          mutants fail; exact checks pass with 100% changed Python coverage;
+          all 11 changed files map to AC-1 through AC-3 and the 454-gross-line
+          diff contains no generalized evaluator surface, satisfying AC-4.
+      - finding: F4-delivery-and-feedback-boundary
+        disposition: supported
+        basis: >-
+          Remote main equals the bound base; no feature ref or PR exists, so the
+          repository's brand-new-delivery exception applies. The candidate
+          preserves github-pr-feedback/v1 for future Draft observation and this
+          verdict grants no delivery authority.
+    risk_tradeoff: >-
+      Proceeding keeps the validated one-journey POC surface while integrating
+      #222 at its real shared boundary. Repeating an unchanged host trial adds
+      cost without new evidence; the bounded alternative is to return only if a
+      chooser/input blob or exact-head receipt changes.
+    recommendation: >-
+      Treat d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7 as validation-passed for
+      Captain-authorized delivery mechanics, preserving exact-head, Draft-first,
+      feedback-observation, and no-merge-authority boundaries.
+    route: proceed
+    confidence: high
+    dissent: ""
+    disproof_condition: >-
+      Return if either exact ref changes; the #222 path assertion or
+      github-pr-feedback/v1 mutants stop failing; a work-profile, active-item,
+      package, parity, install, or byte-parity check fails; an unearned or
+      unmapped surface appears; a PR exposes unresolved feedback; or chooser,
+      metadata, or behavior-producing input identity differs from the accepted
+      host artifact.
+    authority_boundary: >-
+      Captain retains scope, profile, appetite exceptions, scheduling,
+      irreversibility, and delivery authorization; Gate Authority retains stage
+      and verdict recording; work-item authority retains receipt mutation;
+      Spacedock and FO retain state mechanics; delivery authority alone retains
+      push, PR creation/readiness, merge, and closeout; this EM supplies advice.
+```
+
+### Summary
+
+Fresh validation passes the exact rebased candidate with no Material finding.
+The recut preserves the accepted behavior and POC appetite while incorporating
+#222 and retaining the current PR-feedback contract; no product or delivery
+mutation was performed.
