@@ -38,7 +38,7 @@ Build a schema-driven projector with two layers:
    - Read the commissioned workflow README from a pinned trunk commit and entities from a separately pinned state commit. The README is not assumed to exist on a split state branch.
    - Use repository + workflow directory + slug as the primary identity. Treat a non-empty `id` as a stable secondary key; `id-style: slug` legitimately stores an empty `id`, and more than one commissioned workflow may exist in a repository.
    - Populate `SD Stage` from the workflow's declared `stages.states[]`, not a fixed enum.
-   - Derive only the lossless generic GitHub Status buckets: initial stage → Backlog, terminal stage → Done, intermediate stage → In progress.
+   - Derive GitHub Status only through discovered target capabilities. Project #1 currently exposes `Todo`, `In Progress`, and `Done`, so the generic profile may map initial → Todo, intermediate → In Progress, and terminal → Done. If no compatible option exists, write only exact `SD Stage` rather than creating or guessing Status semantics.
    - Parse permissively enough to preserve workflow README extensions and tolerate legacy entities that omit fields listed as schema `always_present`. Project `score`, `started`, `completed`, `issue`, and `pr` only when configured and valid.
    - Never project `worktree`; it is machine-local execution state and may disclose local paths. Preserve `source` only in the bounded Issue projection block.
    - Preserve unknown custom fields as unmapped capabilities; never publish them based on field name alone.
@@ -188,6 +188,8 @@ Verified by: install into a fixture repository, diff of exactly the expected wor
 **AC-6 — GitHub authentication is explicitly supported**
 
 The workflow separately proves same-repository Issue access and user-owned Project #1 access. Current live evidence shows Project #1 is a private user-owned Project with Board, Roadmap, and Table views; current Projects v2 REST and GraphQL surfaces both require direct capability probing rather than inheriting an older GraphQL-only assumption. The spike must test the actual REST and/or GraphQL mutations chosen by the implementation and record a fine-grained-token attempt before any classic-PAT fallback. The workflow uses a dedicated projector credential stored under a named repository secret, never the operator's ambient local `gh` credential. The setup receipt identifies token type, minimum permissions, secret name, expiry, rotation/revocation owner, and fallback blast radius; it rejects an unsupported token before partial mutation and keeps `GITHUB_TOKEN` for repository-scoped writes.
+
+Fresh read-only evidence on 2026-08-14 confirms Project #1 ID `PVT_kwHOABc8eM4A-a-N`, zero items, and native Status options `Todo`, `In Progress`, and `Done`. Current official REST documentation for list/add/update items and add fields on a user-owned Project states that those endpoints do not support fine-grained PATs or GitHub App tokens. Therefore REST v1 must either use a dedicated classic PAT with explicit blast-radius acceptance or be displaced by a separately proven narrower GraphQL route; local ambient `gh` success does not decide the workflow credential.
 
 Verified by: read-only Project probe followed by a reversible fixture-item mutation using the documented secret in a disposable target, with negative coverage for an insufficient token. Falsified by: the workflow creates an Issue and only then discovers it cannot add or update the Project item.
 
@@ -341,6 +343,20 @@ Use one disposable repository with default-branch workflow/config/projector, a t
 ### Summary
 
 Proceed after the single ROADMAP commit is accepted. The first implementation action remains local fake-adapter RED tests and vendored bytes; disposable repositories, Projects, credentials, secrets, Project #1 apply, and AC-9/AC-10 live procedures retain separate approval gates.
+
+## Stage Report: implementation (cycle 1 — local planner)
+
+- DONE: Initialized `setup-github-project-projection` through the canonical skill-creator scaffold with concise SKILL.md, Codex UI metadata, a progressive-loaded mapping contract, and one deterministic vendored projector asset.
+- DONE: Recorded RED before implementation. `python3 kc-dev-flow/scripts/project-spacedock-state.test.py` failed because `assets/project-spacedock-state.py` did not exist.
+- DONE: GREEN covers five deterministic contracts: dynamic non-kc stages with missing kc optional fields, create/apply/no-op convergence, projector-owned versus linked archive state plus foreign-item preservation, missing-tombstone conflict, and time-bearing freshness plus stable status snapshot. The suite reports 5/5 passing.
+- DONE: Fresh Project #1 read-only probe confirms project ID `PVT_kwHOABc8eM4A-a-N`, zero items, 14 fields, and Status options `Todo`, `In Progress`, `Done`. The projector now negotiates those actual options and omits Status when none is compatible while always preserving exact `SD Stage`.
+- DONE: Python compilation, repository skill-frontmatter lint across 41 skill directories, and `git diff --check` pass. Skill-creator `quick_validate.py` is unavailable because its host environment lacks the PyYAML module; no dependency was installed or changed.
+- IN PROGRESS: file installer, Actions workflow, and GitHub adapter remain uncommitted. A non-empty disposable Project is required to observe exact `gh project item-list` bytes and prove one reversible item/field mutation before freezing the adapter.
+- BLOCKED BY AUTHORITY, not implementation uncertainty: creating a disposable repository/Project, minting or storing a credential, or writing fixtures requires a separate bounded captain approval. Current official REST documentation says user-owned Project item/field endpoints reject fine-grained PATs and GitHub App tokens; the proof must compare a narrower GraphQL route before accepting a dedicated classic-PAT fallback.
+
+### Summary
+
+The local deterministic seam is real and testable, but it is not yet an automatic sync. Continue only after bounded approval for disposable trigger/credential/API-shape proof; Project #1 remains read-only and empty.
 
 ## Out of scope
 
