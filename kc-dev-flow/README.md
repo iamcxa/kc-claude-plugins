@@ -18,6 +18,52 @@ provider while sharing the same authority and evidence discipline.
   canonical replacement for the former Ship-Flow skill, preserving its legacy
   report envelope while carrying the complete portable advisory record.
 
+## Work profiles
+
+Profiles use one workflow with different obligations, not three workflows. For
+every request, first analyze the audience, lifespan, state, mutation boundary,
+and authority. Preserve the same authority, safety, evidence honesty, cleanup,
+and delivery gates; then let the Captain choose the intended commitment before
+ideation expands acceptance criteria.
+
+```mermaid
+flowchart TD
+    A["Request: Build an import workflow."] --> B["Project context<br/>Audience, lifespan, state,<br/>mutation boundary, authority"]
+    B --> C["Shared invariants<br/>Authority, safety, evidence honesty,<br/>cleanup, delivery gates"]
+    C --> D{"Captain chooses<br/>intended commitment"}
+
+    D -->|POC / Exploration| P1["Ideation<br/>One demoable journey<br/>and riskiest assumption"]
+    P1 --> P2["Implementation<br/>Simplest safe mechanism"]
+    P2 --> P3["Validation<br/>Owned logic, critical risk,<br/>one real end-to-end journey"]
+    P3 --> P4["Outcome<br/>Validated experiment;<br/>cleanup and unproved limits recorded"]
+
+    D -->|Pilot / Product slice| L1["Ideation<br/>Limited real users<br/>and persistent valuable state"]
+    L1 --> L2["Implementation<br/>Maintainable repository-native slice<br/>with diagnostics and recovery"]
+    L2 --> L3["Validation<br/>Real seams, retries, data safety,<br/>accepted end-to-end journey"]
+    L3 --> L4["Outcome<br/>Limited usable product slice<br/>for bounded real use"]
+
+    D -->|Production| R1["Ideation<br/>Operational commitment, compatibility,<br/>ownership, and failure policy"]
+    R1 --> R2["Implementation<br/>Lifecycle, migration, observability,<br/>integrity, rollback, release support"]
+    R2 --> R3["Validation<br/>Recovery, production boundaries,<br/>ownership, operational readiness"]
+    R3 --> R4["Outcome<br/>Operated capability ready<br/>for long-term support"]
+
+    P4 -. "Real users, persistent value,<br/>or reused shortcuts" .-> L1
+    L4 -. "Production data, SLO,<br/>public compatibility, or unattended operation" .-> R1
+```
+
+For the same import request, the practical difference is:
+
+| Profile | Architecture and implementation | Validation | Outcome |
+|---|---|---|---|
+| POC / Exploration | One file-to-preview journey; a safe shell, CLI, library, or existing tool is enough. | Parser-owned logic, the riskiest input assumption, and one real import. | Experiment validated; cleanup and unproved limits recorded. |
+| Pilot / Product slice | Limited users and persistent import state in a maintainable repository-native slice with diagnostics and recovery. | Integration seams, retry and duplicate handling, data safety, and the accepted journey. | Limited usable slice for bounded real use. |
+| Production | Owned operation with compatibility, lifecycle, migration, observability, integrity, rollback, and release support. | Recovery and production boundaries, plus ownership and operational readiness. | Operated capability ready for long-term support. |
+
+Promotion is a new Captain decision in the same ideation workflow. Move from POC
+to Pilot when real users, persistent value, or reused shortcuts enter scope;
+move from Pilot to Production for production data, an SLO, public compatibility,
+or unattended operation.
+
 ## Optional policy mods
 
 - `engineering-judgment` — adjudicate reviewer conflict against governing
