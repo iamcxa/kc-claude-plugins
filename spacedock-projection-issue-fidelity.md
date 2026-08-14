@@ -1,7 +1,7 @@
 ---
 id: q0ndnhere7c5pgkft8n3kcp5
 title: Make projected Issues readable and identity-safe
-status: implementation
+status: validation
 source: Captain review of the Project #1 Issue #232 projection screenshot on 2026-08-14
 product: kc-dev-flow
 sprint: S3
@@ -120,3 +120,15 @@ science_officer_em_upward_report:
     disproof_condition: "Return if a single-signal deletion can reach CREATE, normalized unmodified body reports drift, exact preview names a new/out-of-scope Issue, or the captain declines either additive anchor."
     authority_boundary: "Captain retains schema, scope, merge, and external apply; work-item authority retains task state; EM is advisory and FO owns mechanics only."
 ```
+
+## Stage Report: implementation — cycle 1
+
+**Decision: implementation complete at the uncommitted exact worktree revision; advance to fresh validation without external apply.**
+
+- `RED/GREEN:` the first valid projector run failed at all six new contract surfaces (five failures plus one missing-schema error): short-ID title, entity body, text identity field, anchor repair/conflict, body drift, and structured label ownership. The final scoped suite passes 42/42, including v1 summary migration, unknown legacy-body preservation, duplicate/disagreeing anchors, label-only duplicate prevention, additive label preservation, selected-scope short-ID stability, and zero-operation convergence.
+- `Implementation:` the existing projector now derives workflow-native short IDs across active plus archived entities, renders normalized entity Markdown, records a body digest, indexes receipt plus `SD Identity`, recognizes label-only managed candidates, writes typed Project fields, and adds `spacedock:managed` without replacing human labels. Linked Issue bytes and labels remain outside Issue PATCH paths.
+- `Dogfood installation:` the packaged installer synchronized the canonical projector to `.github/scripts/project-spacedock-state.py` byte-for-byte and updated only the approval projector digest to `sha256:928b74ab29cb3343000d3e31894d629cb4f4579d58a0ec836a8e67ba908dae8f`; the workflow file remained unchanged and no GitHub mutation occurred.
+- `Live read-only probe:` Project #1 resolves all selected entities to existing Issues #229-#238. The plan contains no `CREATE`, `BODY_DRIFT`, `CONFLICT`, or orphan; it requests one new text field, `SD Identity`. Issue #232 previews as `[g5] Kill the parse-and-discard class in flow step operands` with `## Problem` as its first visible body heading.
+- `Package evidence:` `python3 scripts/kc-dev-flow-contract-test.py` PASS; `python3 kc-dev-flow/scripts/project-spacedock-state.test.py` 42/42 PASS; `git diff --check` PASS. The installer audit proves canonical/vendored byte parity.
+- `Line measurement:` the one canonical runtime adds 383 and removes 79 lines (net +304, about 19% of its prior 1,568 lines); tests add 338 and remove 12 (net +326). The second +304 runtime copy is generated dogfood vendoring, not a second implementation. This is the upper edge of a small change but proportionate to five lifecycle seams—body normalization/drift, short IDs, dual-anchor recovery, typed text fields, and additive labels—without a dependency, workflow, config schema, mapping ledger, or state writeback.
+- `Blocked evidence:` a fresh Claude Opus High implementation review attempted at 19:08 CST but the host session limit resets at 19:30; it produced no verdict. The earlier ideation Opus verdict remains `proceed / medium`. Fresh cross-model review and post-delivery live apply/readback remain validation work, not implementation claims.
