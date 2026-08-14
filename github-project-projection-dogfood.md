@@ -62,3 +62,15 @@ The repository secret value is a separate host operation and never enters instal
 - Repository Actions secret readback confirms `SPACEDOCK_PROJECT_TOKEN`; its value was never read, copied, printed, or stored. `RELEASE_PLEASE_TOKEN` remains separate.
 - Focused projector suite PASS 34/34; kc-dev-flow contract PASS; installed config validation PASS; installer audit PASS; Ruff PASS; Python compilation PASS; actionlint PASS; token-pattern scan PASS; staged diff check PASS.
 - External authority remains unopened until the default-branch workflow is merged. The first manual dispatch and its identical no-op rerun are validation evidence, not implementation assumptions.
+
+## Stage Report: validation — cycle 1, pre-delivery
+
+**Verdict: exact candidate `cf61b4b5d631358d0f85f28a046c773737cf802f` may enter Draft review; Ready, merge, dispatch, and Project mutation remain pending.**
+
+- `Lenses:` behavior and mapping PASS with ten selected projectable entities and zero conflicts; authority PASS with split tokens and expiring selected scope; security PASS with no credential bytes in tracked or reported data; runtime PASS locally; delivery remains pending GitHub CI and post-merge live proof.
+- `Diff coverage:` all 1,572 installed projector lines are byte-identical to merged asset digest `be538048ee802a8d9e80568c6dc5558eba50a420bb0ee252245cc674ddfc5c18`; the novel 136 lines are the generated workflow and config, both covered by installer audit, config validation, actionlint, and contract checks.
+- `Adversarial:` the initial sample's two unapproved linked Issue references were refused before writes; the final sample has no linked bindings, no conflicts, a 32-write deterministic count, and cap 80.
+- `Cross-model:` Claude Opus 5 High returned `draft_pr_only` with confidence 0.86 and no blockers. It independently identified a schedule-before-first-dispatch race as the merge-time risk and requested independent re-confirmation at Ready/merge.
+- `Schedule disposition:` merge only just after a 15-minute cron boundary, dispatch manually immediately, and require ten-item field readback plus an identical zero-operation rerun before schedule evidence is accepted. Any scheduled run that starts first becomes the first apply evidence and must satisfy the same readback/convergence bar; it is never hidden or relabeled manual.
+- `E2E:` local live read-only Project observation PASS; GitHub-hosted apply and no-op remain pending delivery.
+- `Origin re-observation:` pending the Project #1 manual run; Project #1 remains zero items at this checkpoint.
