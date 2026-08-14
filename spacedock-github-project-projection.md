@@ -207,13 +207,17 @@ Verified by: dry-run, first apply, repeated no-op apply, concurrent-run test, an
 
 The installation exposes when reconciliation has not completed within its configured freshness window, provisionally three times the selected schedule interval, including a disabled/delayed schedule or expired Project token. The signal compares the timestamped last-successful reconcile receipt against that window; silence cannot look like a quiet, current Project.
 
-Verified by: disable the scheduled workflow and separately use an expired/invalid fixture token; each produces an observable stale/failing signal without mutating Issue state. Falsified by: the last successful projection remains visually `Current` indefinitely.
+POC verification is local: deterministic clock fixtures cover fresh, overdue, missing-receipt, and failed-auth observations through the fake adapter. The live negative procedure — disabling the real schedule and separately using an expired/invalid GitHub credential — is deferred until production-readiness and does not block the eight-hour POC.
+
+Verified by: local clock/receipt fixtures now; later live schedule-disable and invalid-token evidence before a production-ready claim. Falsified by: the last successful projection remains visually `Current` indefinitely or the local and live freshness decisions disagree.
 
 **AC-10 — Archive and removal semantics are explicit**
 
 When an entity moves to `_archive/`, the projector retains qualified identity, marks the Project item archived or an equivalent explicit terminal projection, and closes only projector-owned Issues when policy permits. A pre-existing linked Issue is never closed merely because the SD entity was archived. A foreign Project item without a projector receipt is never changed. Deletion without an archive tombstone is quarantined rather than silently removing history.
 
-Verified by: live create → archive → reconcile for both projector-owned and linked fixture Issues. Falsified by: charts retain an apparently active orphan or a linked human Issue is closed.
+POC verification is local: fake-adapter fixtures cover projector-owned, linked, foreign, and missing-tombstone cases through create → archive → reconcile → no-op. The equivalent disposable GitHub live procedure is deferred until production-readiness and does not block the eight-hour POC.
+
+Verified by: fake-adapter before/after operation receipts now; later disposable GitHub Issue/Project readback before a production-ready claim. Falsified by: charts retain an apparently active orphan, a linked human Issue is closed, a foreign item changes, or a missing tombstone is treated as archive.
 
 **AC-11 — The deployed slice proves value and bounded cost**
 
@@ -331,12 +335,12 @@ Use one disposable repository with default-branch workflow/config/projector, a t
 - DONE: AC-1 through AC-8, AC-11, and AC-12 define local-first or bounded-live falsifiers for portability, mapping, schema, topology, install, credentials, receipts, convergence, dogfood value, and the snapshot producer.
 - DONE: `spacedock status --read qa --ac-scan` resolves AC-1 through AC-12 at lines 150-224. It reports `unevidenced=true citations=0` for AC-2, AC-3, AC-4, AC-6, and AC-7 despite each containing a `Verified by:` paragraph, matching the ROADMAP's known citation-counter hazard rather than proving missing evidence.
 - DONE: Fresh Claude architecture challenge returned `narrow`; its material corrections are incorporated. Fresh ideation EM session `54df0ad0-656b-45a7-93c5-484ef67450cb` returned `proceed / high / multi_model:not_needed`, supporting F1-F4 and preserving every captain/external-provider boundary.
-- PENDING CAPTAIN: decide whether AC-9 liveness and AC-10 archive live procedures are inside this eight-hour POC or deferred. EM warns that keeping both inside falsifies the appetite; recommendation is to defer their live procedures while keeping local contract fixtures and the dated automation review.
+- DONE: Captain decision on 2026-08-14 defers AC-9 liveness and AC-10 archive live procedures until production-readiness while retaining their local deterministic/fake-adapter contract fixtures in the eight-hour POC.
 - PENDING DELIVERY: accept the proposed ROADMAP split that schedules `spacedock-project-status-updates` (`16`) after the projection snapshot contract. No repository commit or PR exists yet.
 
 ### Summary
 
-Proceed once the captain resolves the AC-9/AC-10 appetite mismatch and confirms the single ROADMAP commit. The first implementation action remains local fake-adapter RED tests and vendored bytes; disposable repositories, Projects, credentials, secrets, and Project #1 apply retain separate approval gates.
+Proceed after the single ROADMAP commit is accepted. The first implementation action remains local fake-adapter RED tests and vendored bytes; disposable repositories, Projects, credentials, secrets, Project #1 apply, and AC-9/AC-10 live procedures retain separate approval gates.
 
 ## Out of scope
 
