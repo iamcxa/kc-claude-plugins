@@ -577,3 +577,105 @@ science_officer_em_upward_report:
   Captain gate, implementation dispatch, external spend, PR readiness, or merge;
   existing Spacedock, validation, GitHub-observation, and Captain authorities
   remain in force.
+
+## Stage Report: implementation
+
+### Checklist
+
+- `DONE` — Implemented the approved conditional RoboRev implementation-exit
+  slice at candidate `78ae901808445f11bbf143dda51be741f245fb17`, with a
+  reachable RED failure for the absent provider contract and GREEN package,
+  adopted, loader, configuration, outcome, authority, and spend-cap coverage.
+- `DONE` — Proved the closed outcome matrix, omitted-control zero-call path,
+  repository-owned single reviewer and named-panel refusal, reuse-before-enqueue,
+  one-request/one-confirmation caps, incomplete cost coverage, package/adopted
+  byte parity, and unchanged validation/GitHub/Captain authority.
+- `DONE` — Exercised the real Git-backed Spacedock state transaction in two
+  independent clones and one shared-parent checkout. Both topologies produced
+  one winner, performed a post-push remote re-read, and kept the loser from
+  provider re-query, enqueue, or retry.
+
+### Summary
+
+The candidate adds one repository-declared RoboRev sensor at implementation
+exit. It records an exact-input four-state observation or honest fallback,
+loads no provider contract for undeclared adopters, defaults this repository to
+one `gpt-5.6-terra` thorough reviewer at medium severity with `panel: none`, and
+continues into fresh validation without giving RoboRev delivery authority. No
+daemon, second ledger, generalized evaluator, hook, or lock service was added.
+
+### Evidence
+
+- Approved base and merge base:
+  `6f0e274e6e02ff7e0e5b158859783df037c45c4d`.
+- Candidate commit: `78ae901808445f11bbf143dda51be741f245fb17`.
+- RED: `python3 scripts/roborev-implementation-exit-contract.test.py` failed
+  with `missing packaged provider reference` before the implementation.
+- GREEN at the candidate tree:
+  `python3 scripts/roborev-implementation-exit-contract.test.py` and
+  `python3 scripts/kc-dev-flow-contract-test.py` both reported `PASS`;
+  `git diff --check origin/main...HEAD` passed and the product worktree was
+  clean.
+- Local read-only capability/config probe: RoboRev `v0.62.0`, healthy local
+  daemon/database/workers, max workers `4`; `roborev config list --local
+  --show-origin` resolved repository-local `review_agent=codex`,
+  `review_model=gpt-5.6-terra`, `review_reasoning=thorough`, and
+  `review_min_severity=medium`.
+- Configuration object SHA-256:
+  `63b6d59a39c07c8a28db161da4d79af412d4b01d46b5bdcf1c7cc4eec58e64dd`.
+- Current `origin/main` advanced to
+  `f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7` after the approved base was
+  pinned. The candidate was not rebased; fresh validation must reconcile this
+  base movement before delivery evidence is approved.
+
+### Work Control evidence
+
+```yaml
+capability: review_convergence
+mode: observe
+provider: roborev
+boundary: implementation-exit
+repository: kc-claude-plugins
+base: 6f0e274e6e02ff7e0e5b158859783df037c45c4d
+tip: 78ae901808445f11bbf143dda51be741f245fb17
+configuration_sha256: 63b6d59a39c07c8a28db161da4d79af412d4b01d46b5bdcf1c7cc4eec58e64dd
+outcome: UNAVAILABLE
+reason: unavailable
+detail: "The implementation dispatch did not authorize paid/live provider spend. Read-only capability and state probes ran; no review was enqueued."
+request_count: 0
+confirmation_count: 0
+cost:
+  approximate_total: null
+  jobs_with_cost: null
+  jobs_total: null
+  complete: false
+authority: evidence-only
+continuation: fresh-validation
+```
+
+The smallest remaining live-provider proof request is authorization for at most
+one 20-minute exact-tip review at the candidate above, using agent `codex`, model
+`gpt-5.6-terra`, reasoning `thorough`, minimum severity `medium`, and
+`--panel none`. The observer must first use the documented state claim, then
+snapshot jobs and invoke the exact base/tip request once; approximate cost is
+unknown until provider evidence reports it. No repair confirmation is requested
+unless a material finding changes the tip.
+
+### Changed-file to acceptance-criteria map
+
+| Surface | AC |
+|---|---|
+| `.roborev.toml` | AC3 |
+| `PRODUCT.md`, `ARCHITECTURE.md` | AC1, AC3, AC4 |
+| `kc-dev-flow/README.md`, `kc-dev-flow/skills/continue-dev-flow/SKILL.md` | AC1, AC4, AC5 |
+| Packaged and adopted RoboRev contract | AC1, AC2, AC3, AC4, AC5 |
+| `docs/dev/README.md`, `docs/dev/ROADMAP.md` | AC1, AC3, AC4, AC5 |
+| Absolute registry, focused fixture/test, and aggregate contract test | AC1, AC2, AC3, AC4, AC5 |
+
+### Delivery topology
+
+This is one dependent product slice, not multiple dependent layers or
+independent sibling slices. The merge-base diff is 13 files and 881 gross
+additions/deletions, below both numeric triggers. The authoritative topology is
+one Draft PR with no Native stack exception. The implementation worker has no
+push or PR-creation authority.
