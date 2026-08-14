@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/qa-project-install
 issue:
-pr: "#228"
+pr: pr-merge:228
 mod-block:
 design: required
 lane: main
