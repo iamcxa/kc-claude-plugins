@@ -2318,3 +2318,15 @@ Fresh validation passes the exact rebased candidate with no Material finding.
 The recut preserves the accepted behavior and POC appetite while incorporating
 #222 and retaining the current PR-feedback contract; no product or delivery
 mutation was performed.
+
+### Pre-Ready PR feedback observation — PR #226
+
+Observation evidence: `PASS` — start/end state `OPEN`, Draft `true`, and head
+`d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7`; GraphQL thread pages 1, raw
+threads 0, nested comment overflow false, normalized external unresolved
+threads 0; REST review pages 1, raw reviews 0, duplicate IDs 0, normalized
+external reviews 0. Repository, PR, author, and head were stable across both
+paginated reads; required checks pass.
+
+Canonical population input: `{"head":"d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7","items":[],"layer":"single","pr":226,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}`.
+PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr":226,"layer":"single","head":"d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7","fingerprint":"sha256:afd2e7571d7d1f5da8bec1f05d666f9553905c1a779c0abe797cfa9ec6c606e2","dispositions":[]}
