@@ -730,3 +730,153 @@ push or PR-creation authority.
 - tip: `b2b2e229738cef5caec84b1a87e69f5f23a50717`
 - configuration-sha256: `63b6d59a39c07c8a28db161da4d79af412d4b01d46b5bdcf1c7cc4eec58e64dd`
 - state: `claimed`
+
+## Stage Report: validation
+
+### Checklist
+
+- `DONE` — Bound fresh validation to merge target
+  `f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7`, candidate
+  `b2b2e229738cef5caec84b1a87e69f5f23a50717`, validation-entry state
+  `33bed021`, the authoritative AC1-AC5 revision, and all 13 changed files.
+  The product worktree was clean; both the focused and full relevant suites
+  passed, and `git diff --check` passed.
+- `DONE` — Adjudicated both medium findings from RoboRev job `170` against
+  exact code, the Local Profile, kernel, Work Control Profile, and direct
+  falsifiers. Both are supported; the concrete repair asks below remain inside
+  AC2/AC3 and do not add a daemon, ledger, tracker, evaluator, or reviewer
+  round.
+- `DONE` — Obtained exactly one fresh-context GPT-5.6 High engineering
+  judgment at the exact candidate. It returned `route: return`, confidence
+  `high`, with `multi_model: not_needed`.
+- `DONE` — Recorded the initial-delivery no-PR condition, one-PR topology,
+  complete AC/file mapping, provider-origin re-observation, and the exact
+  return-to-implementation route without editing implementation or exercising
+  push, PR, provider, Ready, merge, release, or terminalization authority.
+
+### Summary
+
+`REJECTED`. RoboRev job `170` raised two medium claims and fresh validation
+supports both. The current contract can claim single-flight without requiring
+the repository's registered Spacedock state boundary, and its executable
+identity matcher accepts reviewer-configuration and panel/member-population
+mismatches as `PASS`. Return the same bounded slice to implementation, repair
+AC2/AC3, recut against the then-current target, and re-enter fresh validation.
+
+### Validation evidence
+
+- Exact inputs: base `f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7`;
+  candidate `b2b2e229738cef5caec84b1a87e69f5f23a50717`; state
+  `33bed021`; candidate worktree clean; merge base equal to the declared base.
+- Fresh suites: `python3 scripts/roborev-implementation-exit-contract.test.py`
+  reported `PASS`; `python3 scripts/kc-dev-flow-contract-test.py` reported
+  `PASS`; `git diff --check` reported no error.
+- Fresh origin-target observation at `2026-08-14T10:09:44Z` found
+  `origin/main` at `c00de6c2140db268eb1fe693abfa347b13a9e0b4`. Its three
+  GitHub-projection files are disjoint from this 13-file candidate and a
+  merge-tree showed no conflict. This does not alter either adjudication, but
+  the repaired candidate must bind the latest merge target.
+
+```text
+Lenses: FAIL — behavior, contract/schema, state/concurrency, runtime/platform, docs/policy, and delivery fired; 2 supported findings from exact base/tip, AC1-AC5, the Local Profile/state prerequisite, provider runbook, focused fixture, job 170 JSON, and direct mismatch/binary-absence falsifiers. Security/privacy found no new credential, disclosure, destructive, or GitHub-mutation path; delivery authority remained intact.
+Diff coverage: 100% measured statement execution (231/231 focused contract statements and 1386/1386 aggregate contract statements; 1617/1617 total) and 13/13 changed files mapped to ACs. This is not behavioral closure: six declared identity mutations remained incorrectly green outside the modeled denominator.
+Adversarial: FAIL — agent, model, reasoning, minimum-severity, panel-name, and member-identity/population mismatches each returned PASS; the focused concurrency fixture also passed with Spacedock absent from PATH, proving it exercises bare Git rather than the registered workflow-state boundary.
+Cross-model: not_needed — the one fresh GPT-5.6 High EM adjudicated both findings supported, returned route `return` with high confidence, and found no contested, irreversible, low-confidence, or unresolved residue.
+E2E: FAIL — provider-native local RoboRev v0.62 job 170 evaluated the exact range with the repository-owned single reviewer and retained two supported medium findings; validation re-read it without enqueue, retry, confirmation, repair, or external mutation.
+Origin re-observation: FAIL — Reported scenario: one exact-tip implementation-exit observation must bind the supported state transaction and full reviewer/panel identity before fresh validation | Originating runtime kind: local RoboRev v0.62 daemon, single Codex reviewer, exact Git range | Re-observation artifact/revision: job 170 / cb3847db-560b-4053-9235-2e378d5b6f87 at candidate b2b2e229738cef5caec84b1a87e69f5f23a50717 | Equivalent-runtime rationale: same provider-native job, actor, exact range, repository configuration, daemon path, and medium-severity policy were re-read through `show --json`; direct mutations exercised the claim-relevant matcher | Falsifier kind: mutation | Result: both provider claims reproduced as supported contract failures; cost remains 0 observed USD across 0/1 covered jobs with `complete: false`, so zero is not a cost claim.
+```
+
+### Finding adjudications and repair route
+
+1. **F1 — supported (`AC3`, with AC4/AC5 parity implications).** The Local
+   Profile at `docs/dev/README.md:79-103` requires the registered
+   `spacedock-state/dev` holder, `scripts/dev-flow-state-prereq.sh`, and the
+   supported Spacedock mutation/durability transaction. The candidate provider
+   runbook at lines 68-91 instead prescribes direct append, commit, and push
+   without requiring that boundary. The focused proof at lines 133-235 creates
+   temporary bare-Git clones and still passes when `spacedock` is absent from
+   `PATH`; it therefore cannot prove the accepted Spacedock lifecycle claim.
+   **Repair ask:** make the provider contract resolve and obey the Local
+   Profile's registered state holder/prerequisite and repository-supported
+   claim transaction, return non-green when that boundary is unavailable, and
+   exercise both concurrency topologies through that real boundary. Prove a
+   missing, stale, ahead, divergent, or bypassed state holder cannot earn a
+   winner. Do not add a second state system.
+2. **F2 — supported (`AC2`).** The runbook at lines 49-66 binds RoboRev
+   version/JSON contract, agent, model, reasoning, minimum severity, panel, and
+   complete declared member population, but `classify` at test lines 32-64 and
+   fixture identity lines 2-7 compare only repository, base, tip, and
+   configuration. Independent mutations of every omitted reviewer/panel field
+   still returned `PASS`. **Repair ask:** extend the canonical fixture and
+   matcher to correlate every declared identity field and stable member
+   identities/population before lifecycle/verdict interpretation; add one
+   mutation per field and require `UNKNOWN(reason: stale)` or the other exact
+   declared non-pass.
+
+After the bounded repair, keep package/adopted contracts byte-identical, rerun
+the focused and aggregate suites plus the adversarial mutations, recut against
+the then-current `origin/main`, and dispatch a new fresh validation worker. Do
+not request another RoboRev job unless separately authorized under the existing
+confirmation cap.
+
+### Feedback and delivery topology
+
+- `PR feedback: N/A — initial delivery has no product PR or stack layer; the
+  authoritative task's pr field is blank, and the workflow creates its first
+  Draft only after local validation and Captain push approval. No PR was
+  queried or created merely to satisfy observation.`
+- Delivery topology remains one dependent product slice and one future Draft
+  PR; no stack exception is earned.
+- Changed-file coverage remains complete: `.roborev.toml` maps to AC3;
+  `PRODUCT.md` and `ARCHITECTURE.md` to AC1/AC3/AC4; package README and
+  continuation skill to AC1/AC4/AC5; packaged/adopted provider contracts to
+  AC1-AC5; workflow README/Roadmap to AC1/AC3/AC4/AC5; and the registry,
+  outcome fixture, focused test, and aggregate test to AC1-AC5. F1/F2 prevent
+  acceptance despite this complete map.
+
+### Engineering judgment
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    The validation gate is not ready. F1 and F2 are supported by the governing contracts and adversarial behavior, so the exact candidate b2b2e229738cef5caec84b1a87e69f5f23a50717 should return to implementation for a bounded AC2/AC3 repair.
+  evidence_synthesis: >-
+    The clean candidate is bound to base f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7, candidate b2b2e229738cef5caec84b1a87e69f5f23a50717, and validation-entry state 33bed021. The focused and aggregate contract tests pass, and the focused script executes 231/231 measured statements, but those receipts do not close the behavioral contract. For F1, docs/dev/README.md:79-103 requires the registered spacedock-state/dev holder, the clean-holder prerequisite, and the supported Spacedock mutation/durability transaction; docs/dev/runbooks/roborev-implementation-exit.md:68-91 instead prescribes direct task append, Git commit, and push, while scripts/roborev-implementation-exit-contract.test.py:133-235 proves only temporary bare-Git clones and still passes with Spacedock absent from PATH. For F2, the runbook's exact-input record at lines 49-66 includes RoboRev version/JSON contract, agent, model, reasoning, minimum severity, panel, and complete member population, but classify at test lines 32-64 and the fixture identity correlate only repository, base, tip, and configuration; direct mutations of agent, model, reasoning, severity, panel, member identity, and member population still return PASS. RoboRev job 170 is exact-range findings evidence with two medium claims and incomplete cost coverage, not authority. No PR exists at this brand-new delivery point, so GitHub feedback observation is not yet required. origin/main later advanced to c00de6c2140db268eb1fe693abfa347b13a9e0b4 through three disjoint projection files; that does not change either adjudication, but a repaired candidate must bind the latest target.
+  risk_tradeoff_call: >-
+    The sensor buys useful early exact-tip defect evidence, but the current contract can claim single-flight without exercising the repository's authoritative state path and can reuse a job whose declared reviewer identity does not match. That risks duplicate provider work, incorrect evidence attribution, and false confidence at implementation exit. The lowest-cost alternative is a bounded repair to the existing runbook and fixture, not a new ledger, daemon, tracker, or evaluator.
+  recommendation: >-
+    Return to implementation. For AC3, require the Local Profile's registered state holder, clean-holder prerequisite, and supported Spacedock mutation/durability transaction, then replace the bare-Git-only proof with both required concurrency topologies through that real boundary and prove missing Spacedock cannot pass. For AC2, extend the canonical fixture and matcher to validate RoboRev version/JSON contract, agent, model, reasoning, minimum severity, panel identity, member identities, and complete member population before lifecycle/verdict interpretation; make every independent mismatch produce stale or another declared non-pass. Keep packaged and adopted contracts byte-identical, rerun the focused and full relevant suites plus all adversarial mutations, recut against latest origin/main, and re-enter fresh validation at the new exact head.
+  route: return
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    FO may account for evidence and route this advisory to Gate Authority; it may not adjudicate the findings, mutate state, invoke RoboRev, create or push a PR, or advance the stage.
+  engineering_judgment:
+    question: >-
+      Do RoboRev findings F1 and F2 identify material AC2/AC3 gaps at candidate b2b2e229738cef5caec84b1a87e69f5f23a50717, or do the green focused/full tests and implementation report justify proceeding from validation?
+    revision: >-
+      base f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7; candidate b2b2e229738cef5caec84b1a87e69f5f23a50717; validation-entry state 33bed021
+    evidence_synthesis: >-
+      The clean candidate is bound to base f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7, candidate b2b2e229738cef5caec84b1a87e69f5f23a50717, and validation-entry state 33bed021. The focused and aggregate contract tests pass, and the focused script executes 231/231 measured statements, but those receipts do not close the behavioral contract. For F1, docs/dev/README.md:79-103 requires the registered spacedock-state/dev holder, the clean-holder prerequisite, and the supported Spacedock mutation/durability transaction; docs/dev/runbooks/roborev-implementation-exit.md:68-91 instead prescribes direct task append, Git commit, and push, while scripts/roborev-implementation-exit-contract.test.py:133-235 proves only temporary bare-Git clones and still passes with Spacedock absent from PATH. For F2, the runbook's exact-input record at lines 49-66 includes RoboRev version/JSON contract, agent, model, reasoning, minimum severity, panel, and complete member population, but classify at test lines 32-64 and the fixture identity correlate only repository, base, tip, and configuration; direct mutations of agent, model, reasoning, severity, panel, member identity, and member population still return PASS. RoboRev job 170 is exact-range findings evidence with two medium claims and incomplete cost coverage, not authority. No PR exists at this brand-new delivery point, so GitHub feedback observation is not yet required. origin/main later advanced to c00de6c2140db268eb1fe693abfa347b13a9e0b4 through three disjoint projection files; that does not change either adjudication, but a repaired candidate must bind the latest target.
+    adjudications:
+      - finding: F1-state-holder-and-supported-transaction
+        disposition: supported
+        basis: >-
+          AC3 requires the claim to use existing Spacedock execution state. The Local Profile at docs/dev/README.md:79-103 makes the registered spacedock-state/dev holder, scripts/dev-flow-state-prereq.sh, and the supported Spacedock setter/durability transaction authoritative. The candidate runbook at lines 68-91 directly specifies append, commit, and push without requiring that boundary, and the focused test at lines 133-235 substitutes temporary bare-Git clones; its PASS with Spacedock absent from PATH demonstrates that the declared lifecycle obligation is not exercised.
+      - finding: F2-incomplete-exact-input-identity
+        disposition: supported
+        basis: >-
+          AC2 and the candidate runbook at lines 49-66 require correlation across repository, range/tip, configuration, RoboRev version/JSON contract, agent, model, reasoning, minimum severity, panel, and complete member identity/population. The classifier at scripts/roborev-implementation-exit-contract.test.py:32-64 and fixture identity at outcomes.json:2-7 check only repository, base, tip, and configuration. Independent reviewer and panel identity/population mutations remaining PASS directly falsify the declared exact-input matching claim.
+    risk_tradeoff: >-
+      The sensor buys useful early exact-tip defect evidence, but the current contract can claim single-flight without exercising the repository's authoritative state path and can reuse a job whose declared reviewer identity does not match. That risks duplicate provider work, incorrect evidence attribution, and false confidence at implementation exit. The lowest-cost alternative is a bounded repair to the existing runbook and fixture, not a new ledger, daemon, tracker, or evaluator.
+    recommendation: >-
+      Return to implementation. For AC3, require the Local Profile's registered state holder, clean-holder prerequisite, and supported Spacedock mutation/durability transaction, then replace the bare-Git-only proof with both required concurrency topologies through that real boundary and prove missing Spacedock cannot pass. For AC2, extend the canonical fixture and matcher to validate RoboRev version/JSON contract, agent, model, reasoning, minimum severity, panel identity, member identities, and complete member population before lifecycle/verdict interpretation; make every independent mismatch produce stale or another declared non-pass. Keep packaged and adopted contracts byte-identical, rerun the focused and full relevant suites plus all adversarial mutations, recut against latest origin/main, and re-enter fresh validation at the new exact head.
+    route: return
+    confidence: high
+    dissent: >-
+      The implementation report says AC2 and AC3 are proved, and both declared suites are green. That conclusion is rejected because the executable fixture omits the authoritative Spacedock boundary and accepts six declared identity mismatches; there is no unresolved dissent after primary-source adjudication.
+    disproof_condition: >-
+      Change to proceed on a new exact candidate if both concurrency topologies exercise the registered Local Profile state holder and supported Spacedock transaction, absence or bypass of that boundary cannot pass, every declared reviewer/panel/member identity mutation produces the specified non-pass, all relevant tests pass at that exact head, and the candidate is rebound to the then-current merge target.
+    authority_boundary: >-
+      Captain retains scope, Roadmap, irreversibility, accepted-red, push, initial Draft, Ready, merge, and terminalization authority; Gate Authority owns stage advancement; the implementation owner performs any repair; Spacedock and its registered state holder retain work-item and execution-state mutation authority; fresh validation and later GitHub observation retain their existing roles; RoboRev remains an evidence-only sensor with no provider-posting or workflow authority.
+```
