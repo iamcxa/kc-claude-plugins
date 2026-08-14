@@ -327,17 +327,22 @@ validation work. S3 does not change S2 scope, ordering, or release hold.
 Captain-approved sequence:
 
 1. `spacedock-github-project-projection` (`qa`)
+2. `spacedock-project-status-updates` (`16`), after the projection snapshot contract is stable
 
 End value: a repository can install a one-way, idempotent projection of one
 selected Spacedock workflow into one selected GitHub Project without making
 GitHub lifecycle authority or requiring LLM-generated runtime facts. The first
 dogfood maps `kc-claude-plugins/docs/dev` into user Project #1.
 
-Exit: a disposable proof establishes the selected trigger and authentication
-topology; a ten-entity Project #1 dry-run is reviewed before an approved bounded
-subset is applied; an identical rerun performs zero mutations; a view grouped by
-exact SD stage is usable; and sprint delivery, scope, and definition changes
-produce deterministic status-update drafts that remain human-published.
+Projection exit: a disposable proof establishes the selected trigger and
+authentication topology; a ten-entity Project #1 dry-run is reviewed before an
+approved bounded subset is applied; an identical rerun performs zero mutations;
+a view grouped by exact SD stage is usable; and every successful reconcile emits
+a versioned deterministic status snapshot.
+
+Status-update exit: the sibling classifies delivery, scope, and definition deltas
+from that snapshot, produces deterministic reviewable drafts, refuses stale or
+foreign baselines, and publishes only after explicit human confirmation.
 
 Out of scope: GitHub-to-SD writeback, Relay or CarLove rollout, automatic Project
 Status Update publication, and LLM-authored unattended payloads.
