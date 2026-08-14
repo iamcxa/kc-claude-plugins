@@ -2649,3 +2649,234 @@ commit, `2b9adb3e1028545ee08287ad6a8b905c5cfc92d2`, directly on rejected head
 Aligned the adopter journey with the shipped conditional activation, direct
 Production promotion boundary, and complete Production proof floor while
 keeping the correction documentation-only and inside the accepted appetite.
+
+## Stage Report: validation (cycle 7 — repair passed)
+
+Verdict: **PASS / DELIVERY-READY AT EXACT HEAD**
+`2b9adb3e1028545ee08287ad6a8b905c5cfc92d2` against freshly fetched
+`origin/main@029047b0e7d510b71ac260f2643ec8aef52298a5`. All three prior
+Material documentation findings are closed without a new contract, authority,
+profile, or lifecycle contradiction. The fresh EM returns `proceed` with high
+confidence and `multi_model: not_needed`.
+
+- DONE: Re-reviewed the repaired README directly against the exact chooser,
+  kernel, continuation seam, AC-1 through AC-4, and every prior counterexample.
+- DONE: Confirmed the repair is one README-only commit, the cumulative candidate
+  remains inside appetite, all cheap earned checks pass, and the exact current
+  base/head pair merges cleanly.
+- DONE: Re-observed Draft PR #226 through the complete GitHub-native feedback
+  population at its still-old head and kept it distinct from the unpushed local
+  candidate.
+- DONE: Returned one final exact-head EM verdict without rerunning unchanged
+  model evidence or editing product files, workflow state, GitHub, or refs.
+
+### Prior-finding adjudication
+
+1. **F1 conditional activation — CLOSED.** `kc-dev-flow/README.md:23-30`
+   limits selection to normal ideation, reuses a valid unchanged receipt, asks
+   the Captain only for a missing or stale receipt, preserves the promotion-only
+   post-ideation re-entry, and preserves the bounded mechanical-defect skip. The
+   diagram repeats those branches at lines 36-41. A valid-receipt resume now
+   reaches “Reuse receipt / No Captain pause,” matching
+   `choose-work-profile/SKILL.md:19-26`, `kernel.md:53-64`, and
+   `continue-dev-flow/SKILL.md:40-49`; the prior every-request counterexample no
+   longer applies.
+2. **F2 Production promotion safety — CLOSED.** The diagram now routes both POC
+   and Pilot outcomes directly to Production on a retained production boundary
+   (`kc-dev-flow/README.md:58-60`), and lines 71-75 say either lower profile
+   moves directly to Production after a new Captain decision. A POC acquiring
+   production credentials therefore cannot stop at Pilot, matching
+   `choose-work-profile/SKILL.md:40-44,108-123` and AC-3.
+3. **F3 Production validation proof — CLOSED.** The Production validation node
+   and comparison both require every applicable lifecycle, compatibility,
+   migration/recovery, observability, integrity, rollback, release, and ownership
+   obligation (`kc-dev-flow/README.md:53-56,69`). This is factually equivalent to
+   the chooser proof floor at `choose-work-profile/SKILL.md:38` and no longer
+   treats implementation work as validation evidence.
+
+The repaired journey still uses one workflow and one existing receipt path,
+preserves shared authority/safety/evidence/cleanup/delivery invariants, retains
+the approved POC/Pilot/Production ideation-to-outcome differences, and states no
+implementation-language requirement. It adds no second schema, tracker, stage,
+state machine, evaluator, or enforcement contract.
+
+### Acceptance-criterion results
+
+| AC | Result | Basis |
+|---|---|---|
+| AC-1 | PASSED | The README now matches the conditional `choose -> record -> re-read -> derive` route and its valid-receipt, post-ideation, and bounded-defect exceptions; the unchanged contract mutants remain green. |
+| AC-2 | PASSED | The POC import journey still accepts shell, CLI, library, or an existing tool; validates owned logic, the critical risk, and one real import; and records cleanup and unproved limits without Production ceremony. |
+| AC-3 | PASSED | Every profile retains the common invariants, and either lower profile now moves directly to Production for a retained production boundary under a new Captain decision. |
+| AC-4 | PASSED | Repair commit `2b9adb3e...` changes only the README with 20 insertions and 10 deletions; the cumulative candidate is 11 files and 510 gross lines with no evaluator, schema, runtime, workflow-state, or test addition. |
+
+### Exact-head and proportional evidence
+
+- Fresh pair: base `029047b0e7d510b71ac260f2643ec8aef52298a5`,
+  candidate `2b9adb3e1028545ee08287ad6a8b905c5cfc92d2` on
+  `spacedock-ensign/proportional-work-profile`. The worktree is clean; the branch
+  is six commits ahead and one behind the bound base. Both rejected README head
+  `4c4ff052...` and remote PR head `d96bc9ad...` are normal ancestors.
+- `python3 scripts/kc-dev-flow-contract-test.py` — PASS.
+- Repair and cumulative `git diff --check` — PASS; exact diff-tree proves the
+  repair changes only `kc-dev-flow/README.md`, 20 additions and 10 deletions.
+- Canonical/adopted kernel byte parity — PASS. The chooser, Codex metadata,
+  continuation, canonical kernel, and contract-test blobs are identical to the
+  rejected docs parent, so no behavior-producing or enforcement input changed.
+- Cumulative merge-base diff: 11 files, 451 insertions and 59 deletions, 510
+  gross lines, below the 1,000-line appetite and with no work-profile fixture,
+  scorer, loader-eval, loader-test, or standing prose/diagram test surface.
+- `git merge-tree --write-tree 029047b0... 2b9adb3e...` — clean, tree
+  `b02e1953b707373159b2c55a7b426571eebac1cd`.
+
+### Draft PR #226 observation
+
+Observation evidence: `PASS` — explicit repository
+`iamcxa/kc-claude-plugins`, PR 226, start/end state `OPEN`, Draft `true`, author
+`iamcxa`, and head `d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7`; one complete GraphQL page had
+zero threads and no nested overflow, one complete REST page had zero reviews and
+no duplicate IDs, and the repeated PR view was identity-stable.
+
+Canonical population input: `{"head":"d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7","items":[],"layer":"single","pr":226,"repository":"iamcxa/kc-claude-plugins","scheme":"github-pr-feedback/v1"}`.
+PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr":226,"layer":"single","head":"d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7","fingerprint":"sha256:afd2e7571d7d1f5da8bec1f05d666f9553905c1a779c0abe797cfa9ec6c606e2","dispositions":[]}
+
+PR #226 is clean feedback evidence only for remote head `d96bc9ad...`. It does
+not contain either local docs commit, is not the validation candidate, remains
+Draft, and was not edited or pushed in this round.
+
+Lenses: PASS — docs/policy, contract/schema, behavior, state/concurrency, security/authority, runtime/platform, and delivery fired with zero surviving findings. Reintroducing every-request selection, removing either direct Production path, narrowing the Production proof list, changing shared invariants, adding language prescriptions, changing behavior inputs, exceeding appetite, or drifting either exact ref would fail the corresponding lens.
+
+Diff coverage: N/A — prose-only repair with no executable surface; direct comparison covered all 20 additions and 10 deletions against the three prior findings and authoritative sources.
+
+Adversarial: PASS — a valid unchanged receipt now avoids a Captain pause; a POC acquiring a retained production boundary routes directly to Production; and a Production proof plan missing compatibility, rollback, or release no longer satisfies the displayed validation floor.
+
+Cross-model: `not_needed` — the bounded reversible correction is settled by exact primary-source parity, unchanged behavior blobs, and cheap deterministic checks; no dissent or unresolved claim remains.
+
+E2E: N/A — the repair changes only adopter documentation, and the dispatch explicitly excludes repeating unchanged chooser model evidence.
+
+Origin re-observation: PASS — Reported scenario: choose the shell-first staging/local POC route over the Go coordinator while preserving production refusal | Originating runtime kind: fresh Codex agent reading the exact chooser skill | Re-observation artifact/revision: accepted entity receipt for `proportional-work-profile-909e3bd-forward-test.md`, `sha256:d62d1faa4a9501349b2f82072e795f26b9d68b5adcf438e25b2d0a4ab0601ea9`, behavior parent `d96bc9ad7f014c388e29bd5a10c7e407a0a2ccd7`, docs-only candidate `2b9adb3e1028545ee08287ad6a8b905c5cfc92d2` | Equivalent-runtime rationale: chooser, Codex metadata, continuation, kernel, and contract-test blobs plus actor kind, instrument, delivery path, configuration, and both claim-relevant cases are unchanged; the explicit dispatch therefore reuses the accepted receipt instead of rerunning the model | Falsifier kind: refusal | Result: accepted runtime evidence still selects POC for the shell-first case and requires Production or a safe non-production recut for the adversarial case; the README now explains both outcomes truthfully.
+
+Retained-surface challenge: the repaired `## Work profiles` section is one
+inseparable documentation surface. Removing it eliminates the Captain-authorized
+adopter journey; splitting it creates no independently deliverable value. Its
+only durable cost is keeping a concise guide aligned with the authoritative
+chooser, and this validation closes that risk by direct source comparison rather
+than a standing duplicate test.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Proceed. Exact documentation candidate
+    2b9adb3e1028545ee08287ad6a8b905c5cfc92d2 closes all three prior
+    Material findings against base 029047b0e7d510b71ac260f2643ec8aef52298a5;
+    no new contract, authority, profile, lifecycle, or delivery contradiction
+    survives.
+  evidence_synthesis: >-
+    Fresh exact-line adjudication closes conditional activation, direct
+    lower-profile-to-Production promotion, and complete Production validation
+    proof. The README-only repair, unchanged behavior blobs, contract and diff
+    checks, kernel parity, 510-gross-line appetite, clean merge-tree, and complete
+    old-head PR feedback observation all pass; model evidence was correctly not
+    repeated because its producing bytes are unchanged.
+  risk_tradeoff_call: >-
+    Proceeding delivers the requested adopter journey with no new executable or
+    lifecycle surface. The durable risk is future guide drift from the chooser;
+    the lower-cost alternative is direct source review at documentation changes,
+    not a second schema, evaluator, or standing prose test.
+  recommendation: >-
+    Treat 2b9adb3e1028545ee08287ad6a8b905c5cfc92d2 as validation-passed for
+    separately Captain-authorized exact-head delivery mechanics; keep PR #226
+    Draft and at its old head until such authorization, then re-observe feedback
+    after any delivered head change.
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: >-
+    FO may account for this gate and perform separately authorized state or
+    delivery mechanics, but may not change scope, push, edit or ready the PR,
+    merge, or close out from this advisory verdict alone.
+  engineering_judgment:
+    question: >-
+      Does repaired documentation candidate
+      2b9adb3e1028545ee08287ad6a8b905c5cfc92d2 close all three prior
+      Material parity findings without a new contradiction against current base
+      029047b0e7d510b71ac260f2643ec8aef52298a5?
+    revision: >-
+      product 2b9adb3e1028545ee08287ad6a8b905c5cfc92d2 against
+      029047b0e7d510b71ac260f2643ec8aef52298a5; pre-report state commit
+      b59eab8abcc863d31777e6a6d9226035fceff7e6; pre-report entity
+      sha256:385bc94a0d6500386c6eaa581307c80188a92a30be7ed6878b17500794621a26
+    evidence_synthesis: >-
+      Fresh exact-line adjudication closes conditional activation, direct
+      lower-profile-to-Production promotion, and complete Production validation
+      proof. The README-only repair, unchanged behavior blobs, contract and diff
+      checks, kernel parity, 510-gross-line appetite, clean merge-tree, and complete
+      old-head PR feedback observation all pass; model evidence was correctly not
+      repeated because its producing bytes are unchanged.
+    adjudications:
+      - finding: F1-conditional-activation-parity
+        disposition: unsupported
+        basis: >-
+          README lines 23-30 and 36-41 now match chooser lines 19-26, kernel
+          lines 53-64, and continuation lines 40-49: only missing/stale receipts
+          select, valid receipts reuse without a Captain pause, and post-ideation
+          and bounded-defect exceptions remain intact.
+      - finding: F2-production-promotion-safety
+        disposition: unsupported
+        basis: >-
+          README lines 58-60 and 71-75 now route either lower profile directly
+          to Production for a retained production boundary under a new Captain
+          decision, matching chooser lines 40-44 and 108-123 and closing the AC-3
+          production-credential POC counterexample.
+      - finding: F3-production-validation-proof
+        disposition: unsupported
+        basis: >-
+          README lines 53-56 and 69 now retain every applicable lifecycle,
+          compatibility, migration/recovery, observability, integrity, rollback,
+          release, and ownership proof named by chooser line 38.
+      - finding: F4-proportional-repair-surface
+        disposition: supported
+        basis: >-
+          Exact diff-tree shows only kc-dev-flow/README.md with 20 additions and
+          10 deletions; cumulative scope is 11 files and 510 gross lines, and
+          contract, diff, byte-parity, unchanged-blob, and merge-tree checks pass
+          with no schema, runtime, state, test, evaluator, or language requirement.
+      - finding: F5-old-pr-head-distinction
+        disposition: supported
+        basis: >-
+          Complete GitHub-native observation finds an empty normalized population
+          at Draft PR #226 head d96bc9ad..., while local candidate 2b9adb3e... is
+          its unpushed descendant; the PR is input, not candidate validation.
+    risk_tradeoff: >-
+      Proceeding delivers the requested adopter journey with no new executable or
+      lifecycle surface. The durable risk is future guide drift from the chooser;
+      the lower-cost alternative is direct source review at documentation changes,
+      not a second schema, evaluator, or standing prose test.
+    recommendation: >-
+      Treat 2b9adb3e1028545ee08287ad6a8b905c5cfc92d2 as validation-passed for
+      separately Captain-authorized exact-head delivery mechanics; keep PR #226
+      Draft and at its old head until such authorization, then re-observe feedback
+      after any delivered head change.
+    route: proceed
+    confidence: high
+    dissent: ""
+    disproof_condition: >-
+      Return if either exact ref changes; valid receipts regain a Captain pause;
+      a post-ideation or bounded-defect exception disappears; either lower profile
+      lacks direct Production promotion for a retained production boundary; the
+      Production proof floor narrows; an implementation-language, second-contract,
+      unmapped, or executable surface appears; a cheap check turns red; or a
+      delivered PR head exposes unresolved feedback.
+    authority_boundary: >-
+      Captain retains scope, profile, appetite exceptions, scheduling,
+      irreversibility, and delivery authorization; Gate Authority retains stage
+      and verdict recording; work-item authority retains receipt mutation;
+      Spacedock and FO retain state mechanics; delivery authority alone retains
+      push, PR creation/readiness, merge, and closeout; this EM supplies advice.
+```
+
+### Summary
+
+Fresh exact-head validation passes the bounded README repair with all three
+prior Material findings closed. The candidate remains mechanically green,
+README-only, within appetite, cleanly mergeable, and unpushed; Draft PR #226
+remains unchanged at its older validated head.
