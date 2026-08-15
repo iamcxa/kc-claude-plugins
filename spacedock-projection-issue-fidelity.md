@@ -468,3 +468,11 @@ Captain approved the corrected canonical delivery unit after the body disclosed 
 PR #240 was restored to Draft before the exact lease replaced old head `8af38c437201abf2f47fbbc3966af028c80daa2e`; local candidate, remote branch, and PR `headRefOid` now equal `bdd4dee58e373711a793bfe397bfdff71af08c13`. Candidate-bound version parity, portable E2E, real-browser decision/proof, and GitGuardian checks pass. Quinn's old approval remains bound only to `8af38c43`; a fresh `quinn-code-agent` review is requested for `bdd4dee5`. Ready, merge, Project #4 apply, and task completion remain closed.
 
 The separately approved workflow-rule follow-up is captured unscheduled as backlog task `delivery-topology-review-deduplication` (`bzj`). It does not change PR #240's governing contract or delivery gates.
+
+## Post-merge reconciliation — 2026-08-16
+
+PR #240 was already provider-merged before the requested merge command could run. GitHub reports `mergedBy=iamcxa`, `mergedAt=2026-08-15T18:13:56Z`, head `bdd4dee58e373711a793bfe397bfdff71af08c13`, base `004444c5501fc1ef32c9fe61ea616e8fdc3bc426`, and squash merge `54594f1871a1a693528f8bdbbe132010ea4fb6db`. The merge commit has that exact base as its parent, its tree is byte-equal to the candidate tree, and the explicit required version-parity check passes.
+
+`PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr_number":240,"layer":"single","head":"bdd4dee58e373711a793bfe397bfdff71af08c13","fingerprint":"sha256:5d2fb209f03b109e8989b6084373c839854c65a2cb03d877cdef9b9cc3a08efc","items":[{"kind":"review","id":"4943821972"}],"dispositions":[{"kind":"review","id":"4943821972","disposition":"rejected-with-reason","reason":"Approval is bound to superseded head 8af38c437201abf2f47fbbc3966af028c80daa2e and cannot satisfy candidate-bound feedback or the Native stack acknowledgement for bdd4dee5."}]}`
+
+The merge occurred while `quinn-code-agent` remained requested and no non-author review acknowledged the Native stack exception at `bdd4dee5`. This is missing completion evidence, so no sentinel, merge guard, `PASSED`, `done`, or archive mutation is authorized. Project #4 apply, live identity/byte readback, and the identical zero-write rerun also remain pending separate authority.
