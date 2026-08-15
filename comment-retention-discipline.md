@@ -419,9 +419,22 @@ engineering_judgment:
   `8af38c437201abf2f47fbbc3966af028c80daa2e`, with
   `docs/dev/ROADMAP.md` in its file set. No projection wording was copied,
   stacked, or absorbed.
-- N/A: contract/release checks, changed-file-to-AC mapping, delivery topology,
-  and RoboRev were not earned because no candidate revision or product diff
-  exists.
+
+### Dispatched checklist
+
+1. `FAILED` — Produce a valid exact-arm ordinary-worker receipt. The baseline
+   responses crossed an invalid behavior-producing boundary: fixture paths and
+   the live entity leaked the hidden classification/candidate, and matching
+   per-response kernel-digest provenance was not retained. The result is
+   `UNKNOWN`, not a countable baseline or positive pair.
+2. `SKIPPED` — Apply the positive-pair-gated documentation diff. No positive
+   pair was earned, so the canonical/adopted kernel sentence, `PRODUCT.md`, and
+   independent S3 `docs/dev/ROADMAP.md` wording were not changed.
+3. `SKIPPED` — Commit and verify an exact candidate. No candidate revision or
+   product diff exists, so contract/release checks, changed-file-to-AC mapping,
+   RoboRev observation, and delivery-topology loading were not earned.
+
+Route: `return to ideation for Captain-approved experiment correction`.
 
 ### Bounded experiment receipt
 
