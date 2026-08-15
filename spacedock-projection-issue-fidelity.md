@@ -374,3 +374,37 @@ roborev_confirmation_claim:
   request_count: 1
   confirmation_count: 0
 ```
+
+## RoboRev changed-tip confirmation receipt — bdd4dee5
+
+```yaml
+roborev_observation:
+  schema: roborev-implementation-exit-observation/v1
+  identity_sha256: 608c26d72a99d8d356fb85034b732ee1b7a43b0686c9b650c53105dd03efca11
+  parent_identity_sha256: 89a1b88f6063d7973493019dc17e9f804635e28702f183c324fb606d1e7aba68
+  config_sha256: 63b6d59a39c07c8a28db161da4d79af412d4b01d46b5bdcf1c7cc4eec58e64dd
+  provider: roborev
+  provider_version: 0.62.0
+  mode: observe
+  outcome: PASS
+  reason: passed
+  job_id: 172
+  job_uuid: 0984dc79-4f2c-45cd-a923-4e7fbc8b8dfc
+  review_uuid: f7623779-e618-482e-af75-afb8b07f89ce
+  base_sha: 004444c5501fc1ef32c9fe61ea616e8fdc3bc426
+  tip_sha: bdd4dee58e373711a793bfe397bfdff71af08c13
+  status: done
+  verdict: P
+  member_states:
+    - identity: codex:gpt-5.6-terra:thorough:medium
+      state: done
+      findings: 0
+  summary: The change correctly detects same-repository receipt-only projections outside the selected workflow scope.
+  request_count: 1
+  confirmation_count: 1
+  cost_coverage:
+    approximate_total: unknown
+    jobs_with_cost: 0
+    jobs_total: 3
+    complete: false
+```
