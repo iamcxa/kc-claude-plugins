@@ -1465,13 +1465,13 @@ def plan_projection(
     identity_prefix = f"{repository}:{workflow_dir}:"
     unidentified_managed = []
     for item in target_items:
-        if (
-            item.get("repository") not in {None, repository}
-            or MANAGED_LABEL not in _normalized_labels(item)
-        ):
+        if item.get("repository") not in {None, repository}:
             continue
         receipt = parse_receipt(item.get("body"))
         field_identity = (item.get("fields") or {}).get(IDENTITY_FIELD)
+        has_anchor = receipt is not None or isinstance(field_identity, str)
+        if not has_anchor and MANAGED_LABEL not in _normalized_labels(item):
+            continue
         identities = (
             receipt.get("identity") if receipt else None,
             field_identity,

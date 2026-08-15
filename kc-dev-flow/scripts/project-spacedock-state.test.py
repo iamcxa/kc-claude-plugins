@@ -396,6 +396,7 @@ class ProjectorContractTest(unittest.TestCase):
         )[0]
         foreign = self.projected(task, workflow_dir="docs/other")
         foreign["repository"] = "example/repo"
+        foreign["labels"] = []
         for candidate in (label_only, foreign):
             with self.subTest(issue=candidate["issue_number"]):
                 plan = self.plan([task], [candidate])
