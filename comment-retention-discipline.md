@@ -63,8 +63,10 @@ constraints, hazards, and rejected alternatives.
 
 Appetite: one ideation worker and one implementation worker. Behavioral pressure
 uses the installed Spacedock loader and one ordinary-cost `gpt-5.6-terra`
-high-reasoning worker. The initial experiment is six responses; one ambiguous
-pair may be repeated. All live model pressure stops within 20 minutes.
+high-reasoning worker. The correction has six fixed additional response slots
+and no repeat. The three invalid calls remain accounted, so the cumulative total
+may reach nine. The cumulative experiment stays within 20 minutes: 190 seconds
+are consumed and at most 1,010 seconds remain for calls plus scoring.
 
 Tolerance: no necessary rationale loss, executable-behavior change, or test
 regression. Add no skill, mod, linter, recurring gate, daemon, general evaluator,
@@ -148,43 +150,28 @@ behavior-producing boundary.
 
 ### Paired installed-loader experiment
 
-Materialize baseline `origin/main` and a kernel-only treatment commit into
-isolated temporary worktrees. In each worktree, use installed Spacedock to build
-the same implementation dispatch, then invoke the installed
-`kc-dev-flow:continue-dev-flow` ordinary-worker path. The response counts only
-when its tool trace proves a complete read of that worktree's
-`docs/dev/_mods/kernel.md` and the observed digest matches the arm manifest.
-Stage-only capture is an invalid sample.
+Create six standalone non-git shadow roots with opaque names: baseline and
+treatment for the redundant, necessary, and mixed cases. Installed Spacedock and
+`continue-dev-flow` resolve only each shadow. Its task body contains only the
+maintainability request and fixture; class/arm labels, candidate-as-proposal
+wording, expected results, and rubric stay in a controller-only directory outside
+the worker sandbox. The sentence appears only in the treatment kernel.
 
-For each arm, record exact revision, installed Spacedock and continuation-skill
-versions/digests, dispatch and implementation-stage bytes, workflow README and
-complete vendored-kernel bytes, fixture digest, opaque arm ID, response status,
-tool-read evidence, and elapsed wall time. The manifest must show that every
-effective instruction input other than the proposed kernel sentence is
-byte-identical across arms. Give each fresh-context `gpt-5.6-terra`
-high-reasoning response the same ordinary maintainability task and require
-executable tokens to remain unchanged; do not expose the hidden comment
-classification, source revision, or arm identity.
+Before calls, retain Safehouse policy plus denial probes for the live entity,
+product worktree, shared state, and controller rubric. Reject any git-linked
+grant, readable target, or symlink escape. A byte diff must show each paired
+shadow differs only by the sentence in `docs/dev/_mods/kernel.md`.
 
-Run these three frozen cases once on each arm, for six initial responses:
+Use six fixed fresh-context `gpt-5.6-terra` high slots, one per case/arm. The
+external manifest binds source and input digests, provider-native trace and
+response digests, kernel digest, executable-token result, hidden score, and
+elapsed time. A response counts only when retained tool events prove the complete
+shadow-kernel read and matching SHA-256; reconstructed provenance is invalid.
 
-1. `R-redundant`: two comments only restate the immediately adjacent operation;
-   expected maintenance-value comments: none.
-2. `N-necessary`: comments carry an external wire-compatibility constraint and a
-   hazard not derivable from the code; both rationales must remain, though
-   wording may improve.
-3. `M-mixed`: one narration comment and one rejected-alternative rationale; the
-   narration should be removed and the rationale retained.
-
-Score the comment-only diff against the frozen rationale rubric and separately
-confirm executable-token identity. A scorer uncertainty about semantic
-equivalence may repeat both arms of one case once; no other retry is permitted,
-so the maximum is eight responses. Start one clock before loader capture, stop
-model work at minute 15, and reserve the remaining five minutes for local
-scoring and the receipt. Timeout, missing output, changed executable tokens,
-unresolved ambiguity after the repeat, or an unaccounted response yields
-`UNKNOWN`. Report per-case retained/removed rationale and paired deltas; do not
-convert aggregate comment volume into a ratio gate.
+No repeat, retry, auxiliary/grader model, or seventh response is authorized.
+Calls plus scoring have 1,010 seconds remaining; cumulative elapsed is
+`190 + correction_elapsed <= 1200`. Any invalid, missing, leaked, ambiguous,
+non-improving, unaccounted, or late sample yields `UNKNOWN` and no product edit.
 
 ## Acceptance criteria
 
@@ -200,9 +187,10 @@ candidate removes more redundant narration in at least one matched case without
 a paired regression. Falsified by: either arm lacks a matching complete-kernel
 read, the input diff contains another treatment, the baseline never retains
 redundant narration, the candidate has no strict paired improvement, any arm
-identity or hidden rubric leaks into its prompt, or the run cannot finish
-honestly inside the response and time caps; the result is then `UNKNOWN` or
-no-change.
+identity, case class, candidate-as-proposal wording, expected outcome, or hidden
+rubric leaks through any model-readable path, task, workflow, or prompt, or the
+run cannot finish honestly inside the response and cumulative time caps; the
+result is then `UNKNOWN` or no-change.
 
 **AC-2 — Necessary maintenance rationale is preserved with no executable change.**
 
@@ -210,8 +198,8 @@ Verified by: every candidate response for `N-necessary` and `M-mixed` retains
 the frozen external-constraint, hazard, and rejected-alternative meanings, and a
 token-aware comparison shows identical executable content. Falsified by: any
 required meaning disappears, narration is merely rewritten as narration, or any
-executable token changes. One semantically ambiguous case may repeat as one pair;
-ambiguity after that repeat is `UNKNOWN`, not a pass.
+executable token changes. Semantic ambiguity is `UNKNOWN`; no repeat is
+authorized.
 
 **AC-3 — The shipped policy and documentation remain the smallest recovered surface.**
 
@@ -248,12 +236,14 @@ change, or projection reorder.
 
 ### Test and correction plan
 
-1. Before product edits, run the three baseline responses through installed
-   `continue-dev-flow`; reject any sample whose trace does not prove the complete
-   local kernel read. If none retains redundant narration, stop with no-change.
-2. Commit only the proposed sentence in the byte-identical kernel copies. Prove
-   every other effective instruction input is unchanged, then run and score the
-   three treatment responses. Repeat at most one ambiguous pair.
+1. Before product edits or calls, build opaque standalone shadow pairs, prove
+   Safehouse denies the live entity/repository/state/rubric, and prove each pair
+   differs only at the natural kernel sentence. Any failed preflight is
+   `UNKNOWN` with zero additional calls.
+2. Fill the six fixed baseline/treatment slots through installed
+   `continue-dev-flow`, retaining provider-native tool traces and matching kernel
+   digests. No repeat or seventh new response is authorized; calls plus scoring
+   have 1,010 seconds remaining.
 3. Only after a positive pair, apply the PRODUCT and ROADMAP wording. Run the
    existing kc-dev-flow contract, marketplace, frontmatter/version, and
    release checks. Record word-count and changed-surface observations without
@@ -502,3 +492,35 @@ changing the accepted cap or silently granting a retry.
 The behavior claim remains unproved. Prompt/rubric leakage and incomplete
 per-response provenance invalidated all three baseline samples, so the worker
 stopped inside the cap and left the product branch unchanged.
+
+## Stage Report: ideation (cycle 3 — Captain-approved correction)
+
+- DONE: The authoritative experiment above now uses opaque standalone shadows;
+  model-readable tasks contain only the request and fixture, with hidden mapping
+  and scoring outside a Safehouse boundary.
+- DONE: The executable handoff is denial/diff preflight, six fixed traced calls,
+  then external scoring. Each response needs a retained matching kernel digest;
+  only a complete positive receipt earns product edits.
+- DONE: Recorded six new slots, no repeat, nine cumulative calls at most, 190
+  consumed seconds, and 1,010 seconds remaining. Every non-pass is
+  `UNKNOWN/no-change`.
+- DONE: Made no product edit, provider call, scope expansion, or new EM request;
+  the assigned code branch remains clean at `004444c5501fc1ef32c9fe61ea616e8fdc3bc426`.
+- DONE: AC scan enumerated AC-1 through AC-4 without claiming implementation
+  evidence; bound work-context validation returned `PASS`.
+
+### Correction receipt
+
+```yaml
+experiment_correction: {authority: captain:kent, prior_invalid_responses: 3,
+  additional_response_slots: 6, repeat_or_retry_slots: 0,
+  cumulative_response_ceiling: 9, prior_elapsed_seconds: 190,
+  remaining_seconds: 1010, cumulative_elapsed_ceiling_seconds: 1200,
+  model: gpt-5.6-terra, reasoning: high, nonpass: UNKNOWN}
+```
+
+### Summary
+
+Implementation now has six opaque fixed slots and an isolated, digest-bound
+ordinary-worker path. If that clean pair cannot finish within the remaining
+1,010 seconds, the result is `UNKNOWN` and the product remains unchanged.
