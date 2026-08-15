@@ -56,9 +56,10 @@ Render projector-owned Issues for people first:
   summary;
 - Project fields and the managed label: lifecycle and machine identity metadata.
 
-The receipt records the normalized body digest in addition to pinned commits,
-entity digest, projector version and byte digest, ownership, and archive state.
-Normalize CRLF and CR to LF and use exactly one terminal newline before hashing.
+The v2 receipt records pinned commits, entity digest, projector version and byte
+digest, ownership, and archive state. Normalize the rendered entity Markdown to
+LF with one terminal newline. Projector-owned title and body are derived bytes,
+not a second content authority.
 
 - `projector`: the projector may manage Issue open/closed state.
 - `linked`: require a reviewed full `owner/repo#number` binding; preserve every
@@ -67,10 +68,11 @@ Normalize CRLF and CR to LF and use exactly one terminal newline before hashing.
   a label-only managed candidate is a conflict that blocks duplicate creation.
 
 Discover managed candidates from the union of `SD Identity`, receipt, and
-`spacedock:managed`. A missing field or missing receipt is repairable when the
-remaining anchor identifies exactly one Issue and the body is safe. If field and
-receipt disagree, or either anchor is duplicated, report a conflict. Deleting
-one signal must never cause `CREATE`.
+`spacedock:managed`. A v2 projector-owned Issue normally requires receipt and
+field agreement. One unique trusted same-scope v2 receipt may restore only a
+missing `SD Identity` field after an interrupted cross-API apply. A missing
+receipt, field-only identity, disagreement, duplicate, label-only candidate, or
+out-of-scope receipt reports a conflict and cannot cause `CREATE`.
 
 ## Classification
 
@@ -78,21 +80,19 @@ one signal must never cause `CREATE`.
 - `UPDATE`: managed values differ from desired values.
 - `NO_CHANGE`: desired and managed values are identical.
 - `PARTIAL`: identity remains projectable but optional profile inputs are absent.
-- `BODY_DRIFT`: a projector-owned body differs from its recorded normalized
-  digest; preserve the Issue bytes and continue planning other entities.
 - `CONFLICT`: applying would require guessing identity, lifecycle, or authority.
 
 For projector-owned Issues, identical managed inputs and observed target state
-produce zero mutations. For linked Issues, equality covers Project membership
-and managed Project fields; human Issue title, body, and state are not desired
-values and are never PATCHed.
+produce zero mutations; differing title or body bytes are restored from SD. For
+linked Issues, equality covers Project membership and managed Project fields;
+human Issue title, body, state, and labels are not desired values and are never
+PATCHed.
 Human-owned Project fields and repository labels outside the desired managed set
 do not participate in the equality check and remain untouched.
 
-Legacy visible-summary Issues may migrate in place only when their body matches
-the recognized projector-summary shape. A legacy receipt attached to any other
-body is `BODY_DRIFT`, because the old receipt has no digest proving ownership of
-those bytes.
+A schema-valid v1 projector receipt may migrate the approved Issue in place to
+v2. No title or summary-shape heuristic grants migration, and no other legacy or
+foreign body form gains ownership.
 
 ## Freshness and archive
 

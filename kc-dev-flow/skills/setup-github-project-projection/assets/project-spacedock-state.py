@@ -24,8 +24,6 @@ from typing import Any
 VERSION = "0.1.0"
 RECEIPT_START = "<!-- spacedock-projection:v1"
 RECEIPT_END = "-->"
-SUMMARY_START = "<!-- spacedock-projection-summary:v1 -->"
-SUMMARY_END = "<!-- /spacedock-projection-summary:v1 -->"
 MANAGED_LABEL = "spacedock:managed"
 IDENTITY_FIELD = "SD Identity"
 COMPARED_RECEIPT_KEYS = {
@@ -34,7 +32,6 @@ COMPARED_RECEIPT_KEYS = {
     "slug",
     "entity_id",
     "entity_digest",
-    "body_digest",
     "projector_version",
     "projector_digest",
     "ownership",
@@ -312,7 +309,6 @@ def parse_entity_text(text: str, *, slug: str, archived: bool = False) -> dict[s
     values["_archived"] = archived
     values["_content_digest"] = _digest(text)
     values["_body"] = _entity_markdown(text)
-    values["_body_digest"] = _digest(values["_body"])
     return values
 
 
@@ -370,7 +366,10 @@ def parse_receipt(body: str | None) -> dict[str, Any] | None:
     for key, expected_type in RECEIPT_REQUIRED_TYPES.items():
         if not isinstance(value.get(key), expected_type):
             raise ProjectionError(f"projection receipt has invalid {key!r}")
-    if value["schema"] != "spacedock-projection-receipt/v1":
+    if value["schema"] not in {
+        "spacedock-projection-receipt/v1",
+        "spacedock-projection-receipt/v2",
+    }:
         raise ProjectionError("unsupported projection receipt schema")
     if value["ownership"] not in {"projector", "linked"}:
         raise ProjectionError("projection receipt has invalid ownership")
@@ -381,12 +380,6 @@ def parse_receipt(body: str | None) -> dict[str, Any] | None:
     entity_id = value.get("entity_id")
     if entity_id is not None and not isinstance(entity_id, str):
         raise ProjectionError("projection receipt has invalid entity ID")
-    body_digest = value.get("body_digest")
-    if body_digest is not None and (
-        not isinstance(body_digest, str)
-        or not re.fullmatch(r"[0-9a-f]{64}", body_digest)
-    ):
-        raise ProjectionError("projection receipt has invalid body digest")
     return value
 
 
@@ -420,22 +413,6 @@ def _normalized_labels(item: dict[str, Any]) -> set[str]:
         for label in item.get("labels", [])
         if isinstance(label, str) and label
     }
-
-
-def _is_legacy_projector_body(body: str | None, entity: dict[str, Any]) -> bool:
-    lines = _body_without_receipt(body).rstrip("\n").split("\n")
-    return bool(
-        len(lines) == 9
-        and lines[0] == SUMMARY_START
-        and lines[1] == "This Issue is a read-only projection from Spacedock."
-        and lines[2] == ""
-        and lines[3] == f"- Entity: `{entity['_slug']}`"
-        and lines[4].startswith("- Stage: `")
-        and lines[5].startswith("- Workflow: `")
-        and lines[6].startswith("- State ref: `")
-        and lines[7].startswith("- Source: ")
-        and lines[8] == SUMMARY_END
-    )
 
 
 def _receipt_core(receipt: dict[str, Any] | None) -> dict[str, Any] | None:
@@ -1138,8 +1115,8 @@ def _same_managed_state(current: dict[str, Any], desired: dict[str, Any]) -> boo
                 for name, value in desired["fields"].items()
             ),
             MANAGED_LABEL in _normalized_labels(current),
-            _digest(_body_without_receipt(current.get("body")))
-            == desired["receipt"].get("body_digest"),
+            _body_without_receipt(current.get("body"))
+            == _body_without_receipt(desired.get("body")),
             _receipt_core(parse_receipt(current.get("body")))
             == _receipt_core(desired["receipt"]),
         )
@@ -1153,8 +1130,8 @@ def _same_projector_issue_bytes(
         (
             current.get("title") == desired["title"],
             current.get("issue_state") == desired["issue_state"],
-            _digest(_body_without_receipt(current.get("body")))
-            == desired["receipt"].get("body_digest"),
+            _body_without_receipt(current.get("body"))
+            == _body_without_receipt(desired.get("body")),
             _receipt_core(parse_receipt(current.get("body")))
             == _receipt_core(desired["receipt"]),
         )
@@ -1215,6 +1192,8 @@ def _resolve_target(
         return None, ownership, str(current["_identity_conflict"])
     if receipt and receipt["ownership"] != ownership:
         return None, ownership, "ownership_mismatch"
+    if current and ownership == "projector" and receipt is None:
+        return None, ownership, "missing_receipt_anchor"
     return current, ownership, None
 
 
@@ -1252,7 +1231,7 @@ def _projection_receipt(
     projector_digest: str,
 ) -> dict[str, Any]:
     return {
-        "schema": "spacedock-projection-receipt/v1",
+        "schema": "spacedock-projection-receipt/v2",
         "identity": identity,
         "slug": entity["_slug"],
         "entity_id": entity.get("id") or None,
@@ -1260,7 +1239,6 @@ def _projection_receipt(
         "trunk_commit": trunk_commit,
         "state_commit": state_commit,
         "entity_digest": entity["_content_digest"],
-        "body_digest": entity["_body_digest"],
         "projector_version": projector_version,
         "projector_digest": projector_digest,
         "ownership": ownership,
@@ -1406,34 +1384,6 @@ def _plan_entity(
             else None
         ),
     }
-    current_receipt = parse_receipt(current.get("body")) if current else None
-    if ownership == "projector" and current:
-        recorded_body_digest = current_receipt.get("body_digest") if current_receipt else None
-        current_body_digest = _digest(_body_without_receipt(current.get("body")))
-        missing_receipt_drift = (
-            current_receipt is None and current_body_digest != entity["_body_digest"]
-        )
-        recorded_drift = (
-            isinstance(recorded_body_digest, str)
-            and current_body_digest != recorded_body_digest
-        )
-        unsafe_legacy_body = (
-            current_receipt is not None
-            and recorded_body_digest is None
-            and not _is_legacy_projector_body(current.get("body"), entity)
-        )
-        if missing_receipt_drift or recorded_drift or unsafe_legacy_body:
-            return (
-                {
-                    "slug": slug,
-                    "classification": "BODY_DRIFT",
-                    "reason": "human_body_edit",
-                    "desired": desired,
-                    "missing_optional": missing_optional,
-                    "source_metadata": source_metadata,
-                },
-                None,
-            )
     action = (
         "CREATE"
         if current is None
@@ -1512,14 +1462,25 @@ def plan_projection(
         for item in target_items
         if isinstance(item.get("issue_number"), int)
     }
-    unidentified_managed = [
-        item
-        for item in target_items
-        if item.get("repository") in {None, repository}
-        and MANAGED_LABEL in _normalized_labels(item)
-        and parse_receipt(item.get("body")) is None
-        and not isinstance((item.get("fields") or {}).get(IDENTITY_FIELD), str)
-    ]
+    identity_prefix = f"{repository}:{workflow_dir}:"
+    unidentified_managed = []
+    for item in target_items:
+        if (
+            item.get("repository") not in {None, repository}
+            or MANAGED_LABEL not in _normalized_labels(item)
+        ):
+            continue
+        receipt = parse_receipt(item.get("body"))
+        field_identity = (item.get("fields") or {}).get(IDENTITY_FIELD)
+        identities = (
+            receipt.get("identity") if receipt else None,
+            field_identity,
+        )
+        if not any(
+            isinstance(value, str) and value.startswith(identity_prefix)
+            for value in identities
+        ):
+            unidentified_managed.append(item)
     bindings = linked_issue_bindings or {}
     entity_results: list[dict[str, Any]] = []
     mutations: list[dict[str, Any]] = []

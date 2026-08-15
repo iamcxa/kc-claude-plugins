@@ -169,6 +169,18 @@ class ProjectorContractTest(unittest.TestCase):
     def binding(self, slug: str, number: int) -> dict[str, str]:
         return {slug: f"example/repo#{number}"}
 
+    def plan(self, tasks, current=(), *, workflow=None, **provenance):
+        return projector.plan_projection(
+            workflow or self.workflow,
+            tasks,
+            list(current),
+            profile="generic",
+            **{**self.provenance, **provenance},
+        )
+
+    def projected(self, task, **provenance):
+        return apply_fake(self.plan([task], **provenance), [])[0]
+
     def test_dynamic_stages_and_missing_kc_fields_remain_projectable(self) -> None:
         task = projector.parse_entity_text(
             entity("Portable task", "building"), slug="portable-task"
@@ -212,6 +224,7 @@ class ProjectorContractTest(unittest.TestCase):
         self.assertEqual("NO_CHANGE", second["entities"][0]["classification"])
         self.assertEqual([], second["mutations"])
         receipt = projector.parse_receipt(applied[0]["body"])
+        self.assertEqual("spacedock-projection-receipt/v2", receipt["schema"])
         self.assertEqual("example/repo:docs/dev:one", receipt["identity"])
         self.assertEqual(self.provenance["projector_digest"], receipt["projector_digest"])
         self.assertEqual("[one] One", applied[0]["title"])
@@ -244,55 +257,35 @@ class ProjectorContractTest(unittest.TestCase):
     def test_sd_b32_title_uses_shortest_unique_prefix_from_whole_population(self) -> None:
         workflow = projector.parse_workflow_text(WORKFLOW.replace("id-style: slug", "id-style: sd-b32"))
         tasks = [
-            projector.parse_entity_text(
-                entity_with_id("Alpha", "building", "ab0000000000000000000000"), slug="alpha"
-            ),
-            projector.parse_entity_text(
-                entity_with_id("Beta", "building", "ab1000000000000000000000"), slug="beta"
-            ),
-            projector.parse_entity_text(
-                entity_with_id("Gamma", "building", "cd0000000000000000000000"), slug="gamma"
-            ),
+            projector.parse_entity_text(entity_with_id(title, "building", stored_id), slug=slug)
+            for title, stored_id, slug in (
+                ("Alpha", "ab0000000000000000000000", "alpha"),
+                ("Beta", "ab1000000000000000000000", "beta"),
+                ("Gamma", "cd0000000000000000000000", "gamma"),
+            )
         ]
-
-        plan = projector.plan_projection(
-            workflow, tasks, [], profile="generic", **self.provenance
-        )
+        plan = self.plan(tasks, workflow=workflow)
         titles = {item["slug"]: item["desired"]["title"] for item in plan["entities"]}
-
-        self.assertEqual("[ab0] Alpha", titles["alpha"])
-        self.assertEqual("[ab1] Beta", titles["beta"])
-        self.assertEqual("[cd] Gamma", titles["gamma"])
+        self.assertEqual(
+            {"alpha": "[ab0] Alpha", "beta": "[ab1] Beta", "gamma": "[cd] Gamma"},
+            titles,
+        )
 
         projector._assign_short_ids(workflow, tasks)
-        selected = projector.plan_projection(
-            workflow, [tasks[0]], [], profile="generic", **self.provenance
-        )
+        selected = self.plan([tasks[0]], workflow=workflow)
         self.assertEqual("[ab0] Alpha", selected["entities"][0]["desired"]["title"])
 
-    def test_entity_body_is_markdown_after_frontmatter_with_normalized_digest(self) -> None:
-        lf = projector.parse_entity_text(
-            entity_with_id("Body", "building", "body-id", body="# Context\n\nDetails"),
-            slug="body",
+    def test_entity_body_is_normalized_markdown_and_converges(self) -> None:
+        source = entity_with_id("Body", "building", "body-id", body="# Context\n\nDetails")
+        lf = projector.parse_entity_text(source, slug="body")
+        lf_plan = self.plan([lf])
+        crlf_plan = self.plan(
+            [projector.parse_entity_text(source.replace("\n", "\r\n"), slug="body")]
         )
-        crlf = projector.parse_entity_text(
-            entity_with_id("Body", "building", "body-id", body="# Context\n\nDetails").replace(
-                "\n", "\r\n"
-            ),
-            slug="body",
-        )
-
-        lf_plan = projector.plan_projection(
-            self.workflow, [lf], [], profile="generic", **self.provenance
-        )
-        crlf_plan = projector.plan_projection(
-            self.workflow, [crlf], [], profile="generic", **self.provenance
-        )
-
         self.assertTrue(lf_plan["entities"][0]["desired"]["body"].startswith("# Context\n\nDetails\n"))
         self.assertEqual(
-            lf_plan["entities"][0]["desired"]["receipt"]["body_digest"],
-            crlf_plan["entities"][0]["desired"]["receipt"]["body_digest"],
+            projector._body_without_receipt(lf_plan["entities"][0]["desired"]["body"]),
+            projector._body_without_receipt(crlf_plan["entities"][0]["desired"]["body"]),
         )
 
         observed = apply_fake(lf_plan, [])[0]
@@ -300,58 +293,40 @@ class ProjectorContractTest(unittest.TestCase):
             "# Context\r\n\r\nDetails\r\n",
             lf_plan["entities"][0]["desired"]["receipt"],
         )
-        round_trip = projector.plan_projection(
-            self.workflow, [lf], [observed], profile="generic", **self.provenance
-        )
+        round_trip = self.plan([lf], [observed])
         self.assertEqual("NO_CHANGE", round_trip["entities"][0]["classification"])
         self.assertEqual([], round_trip["mutations"])
 
         hard_break = projector.parse_entity_text(
-            entity_with_id(
-                "Hard break",
-                "building",
-                "hard-break-id",
-                body="Line with a Markdown hard break  ",
-            ),
+            entity_with_id("Hard break", "building", "hard-break-id", body="Hard break  "),
             slug="hard-break",
         )
-        hard_break_plan = projector.plan_projection(
-            self.workflow, [hard_break], [], profile="generic", **self.provenance
-        )
-        hard_break_rerun = projector.plan_projection(
-            self.workflow,
-            [hard_break],
-            apply_fake(hard_break_plan, []),
-            profile="generic",
-            **self.provenance,
-        )
-        self.assertEqual(
-            "NO_CHANGE", hard_break_rerun["entities"][0]["classification"]
-        )
+        hard_break_plan = self.plan([hard_break])
+        hard_break_rerun = self.plan([hard_break], apply_fake(hard_break_plan, []))
+        self.assertEqual("NO_CHANGE", hard_break_rerun["entities"][0]["classification"])
         self.assertEqual([], hard_break_rerun["mutations"])
 
-    def test_identity_anchor_repairs_one_missing_anchor_and_conflicts_on_disagreement(self) -> None:
+    def test_v2_identity_refuses_missing_receipt_but_resumes_missing_field(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
-        baseline = apply_fake(
-            projector.plan_projection(
-                self.workflow, [task], [], profile="generic", **self.provenance
-            ),
-            [],
-        )[0]
+        baseline = self.projected(task)
 
         missing_receipt = copy.deepcopy(baseline)
         missing_receipt["body"] = "Fixture body.\n"
-        repair = projector.plan_projection(
-            self.workflow, [task], [missing_receipt], profile="generic", **self.provenance
-        )
-        self.assertEqual("UPDATE", repair["entities"][0]["classification"])
-        self.assertEqual(baseline["issue_number"], repair["mutations"][0]["current_issue_number"])
+        repair = self.plan([task], [missing_receipt])
+        self.assertEqual("CONFLICT", repair["entities"][0]["classification"])
+        self.assertEqual("missing_receipt_anchor", repair["entities"][0]["reason"])
+        self.assertEqual([], repair["mutations"])
+
+        missing_field = copy.deepcopy(baseline)
+        missing_field["fields"].pop("SD Identity")
+        resume = self.plan([task], [missing_field])
+        self.assertEqual("UPDATE", resume["entities"][0]["classification"])
+        self.assertTrue(resume["mutations"][0]["field_update_required"])
+        self.assertFalse(resume["mutations"][0]["issue_update_required"])
 
         disagreement = copy.deepcopy(baseline)
         disagreement["fields"]["SD Identity"] = "example/repo:docs/dev:other"
-        conflict = projector.plan_projection(
-            self.workflow, [task], [disagreement], profile="generic", **self.provenance
-        )
+        conflict = self.plan([task], [disagreement])
         self.assertEqual("CONFLICT", conflict["entities"][0]["classification"])
         self.assertEqual("identity_anchor_mismatch", conflict["entities"][0]["reason"])
         self.assertEqual([], conflict["mutations"])
@@ -359,90 +334,52 @@ class ProjectorContractTest(unittest.TestCase):
         duplicate = copy.deepcopy(baseline)
         duplicate["item_id"] = "FAKE-duplicate"
         duplicate["issue_number"] = 99
-        duplicate_plan = projector.plan_projection(
-            self.workflow,
-            [task],
-            [baseline, duplicate],
-            profile="generic",
-            **self.provenance,
-        )
+        duplicate_plan = self.plan([task], [baseline, duplicate])
         self.assertEqual("CONFLICT", duplicate_plan["entities"][0]["classification"])
-        self.assertEqual(
-            "duplicate_identity_anchor", duplicate_plan["entities"][0]["reason"]
-        )
+        self.assertEqual("duplicate_identity_anchor", duplicate_plan["entities"][0]["reason"])
         self.assertEqual([], duplicate_plan["mutations"])
 
-    def test_human_body_edit_is_reported_and_not_overwritten(self) -> None:
-        one = projector.parse_entity_text(entity("One", "building"), slug="one")
-        two = projector.parse_entity_text(entity("Two", "building"), slug="two")
-        baseline = apply_fake(
-            projector.plan_projection(
-                self.workflow, [one, two], [], profile="generic", **self.provenance
-            ),
-            [],
-        )
-        baseline[0]["body"] = baseline[0]["body"].replace("Fixture body.", "Human edit.")
-        changed_two = projector.parse_entity_text(entity("Two renamed", "building"), slug="two")
-
-        plan = projector.plan_projection(
-            self.workflow,
-            [one, changed_two],
-            baseline,
-            profile="generic",
-            **self.provenance,
-        )
-        by_slug = {item["slug"]: item for item in plan["entities"]}
-
-        self.assertEqual("BODY_DRIFT", by_slug["one"]["classification"])
-        self.assertEqual("human_body_edit", by_slug["one"]["reason"])
-        self.assertEqual(["two"], [mutation["desired"]["receipt"]["slug"] for mutation in plan["mutations"]])
-
-    def test_legacy_summary_migrates_but_unknown_legacy_body_is_preserved(self) -> None:
+    def test_projector_owned_body_edit_is_overwritten_from_sd(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
-        current = apply_fake(
-            projector.plan_projection(
-                self.workflow, [task], [], profile="generic", **self.provenance
-            ),
-            [],
-        )[0]
+        current = self.projected(task)
+        current["body"] = current["body"].replace("Fixture body.", "Human edit.")
+        plan = self.plan([task], [current])
+        mutation = plan["mutations"][0]
+
+        self.assertEqual("UPDATE", plan["entities"][0]["classification"])
+        self.assertTrue(mutation["issue_update_required"])
+        self.assertTrue(mutation["desired"]["body"].startswith("Fixture body.\n"))
+        self.assertNotIn("Human edit.", mutation["desired"]["body"])
+
+    def test_exact_v1_receipt_migrates_to_v2_without_general_body_recognition(self) -> None:
+        task = projector.parse_entity_text(entity("One", "building"), slug="one")
+        current = self.projected(task)
         legacy_receipt = projector.parse_receipt(current["body"])
-        legacy_receipt.pop("body_digest")
-        legacy_summary = "\n".join(
+        legacy_receipt["schema"] = "spacedock-projection-receipt/v1"
+        legacy_receipt.pop("body_digest", None)
+        current["body"] = "\n\n".join(
             (
-                projector.SUMMARY_START,
-                "This Issue is a read-only projection from Spacedock.",
-                "",
-                "- Entity: `one`",
-                "- Stage: `building`",
-                "- Workflow: `example/repo:docs/dev`",
-                "- State ref: `spacedock-state/dev`",
-                "- Source: fixture",
-                projector.SUMMARY_END,
+                "Arbitrary projector-owned v1 body.",
+                "<!-- spacedock-projection:v1\n"
+                + json.dumps(legacy_receipt, sort_keys=True, separators=(",", ":"))
+                + "\n-->",
             )
         )
-        current["body"] = projector._body_with_receipt(legacy_summary, legacy_receipt)
         current["fields"].pop("SD Identity")
         current["labels"] = []
-
-        migration = projector.plan_projection(
-            self.workflow, [task], [current], profile="generic", **self.provenance
-        )
+        migration = self.plan([task], [current])
 
         self.assertEqual("UPDATE", migration["entities"][0]["classification"])
         self.assertEqual(current["issue_number"], migration["mutations"][0]["current_issue_number"])
+        self.assertEqual(
+            "spacedock-projection-receipt/v2",
+            migration["entities"][0]["desired"]["receipt"]["schema"],
+        )
         self.assertTrue(migration["entities"][0]["desired"]["body"].startswith("Fixture body.\n"))
 
-        edited = copy.deepcopy(current)
-        edited["body"] = projector._body_with_receipt("Human note.\n", legacy_receipt)
-        preserved = projector.plan_projection(
-            self.workflow, [task], [edited], profile="generic", **self.provenance
-        )
-        self.assertEqual("BODY_DRIFT", preserved["entities"][0]["classification"])
-        self.assertEqual([], preserved["mutations"])
-
-    def test_label_only_candidate_blocks_duplicate_create(self) -> None:
+    def test_unidentified_managed_candidates_block_duplicate_create(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
-        unidentified = projector.merge_repository_issues(
+        label_only = projector.merge_repository_issues(
             [],
             [
                 {
@@ -457,42 +394,25 @@ class ProjectorContractTest(unittest.TestCase):
             ],
             repository="example/repo",
         )[0]
-
-        plan = projector.plan_projection(
-            self.workflow, [task], [unidentified], profile="generic", **self.provenance
-        )
-
-        self.assertEqual("CONFLICT", plan["entities"][0]["classification"])
-        self.assertEqual("managed_candidate_missing_identity", plan["entities"][0]["reason"])
-        self.assertEqual([], plan["mutations"])
+        foreign = self.projected(task, workflow_dir="docs/other")
+        foreign["repository"] = "example/repo"
+        for candidate in (label_only, foreign):
+            with self.subTest(issue=candidate["issue_number"]):
+                plan = self.plan([task], [candidate])
+                self.assertEqual("CONFLICT", plan["entities"][0]["classification"])
+                self.assertEqual("managed_candidate_missing_identity", plan["entities"][0]["reason"])
+                self.assertEqual([], plan["mutations"])
 
     def test_missing_managed_label_is_added_without_replacing_human_labels(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
-        current = apply_fake(
-            projector.plan_projection(
-                self.workflow, [task], [], profile="generic", **self.provenance
-            ),
-            [],
-        )[0]
+        current = self.projected(task)
         current["labels"] = ["human-owned"]
         current["repository"] = "example/repo"
         current["issue_id"] = 31
-        plan = projector.plan_projection(
-            self.workflow, [task], [current], profile="generic", **self.provenance
-        )
+        plan = self.plan([task], [current])
         fields = [
-            {
-                "id": 10,
-                "name": "Status",
-                "data_type": "single_select",
-                "options": [{"id": "progress", "name": {"raw": "In Progress"}}],
-            },
-            {
-                "id": 11,
-                "name": "SD Stage",
-                "data_type": "single_select",
-                "options": [{"id": "building", "name": {"raw": "building"}}],
-            },
+            {"id": 10, "name": "Status", "data_type": "single_select", "options": [{"id": "progress", "name": {"raw": "In Progress"}}]},
+            {"id": 11, "name": "SD Stage", "data_type": "single_select", "options": [{"id": "building", "name": {"raw": "building"}}]},
             {"id": 12, "name": "SD Identity", "data_type": "text"},
         ]
 
@@ -526,30 +446,23 @@ class ProjectorContractTest(unittest.TestCase):
         self.assertEqual(["ADD_LABEL"], [operation["action"] for operation in operations])
         self.assertEqual(
             {"labels": ["spacedock:managed"]},
-            next(body for method, path, _, body in client.calls if method == "POST" and path.endswith("/labels")),
+            next(body for method, path, _, body in client.calls if path.endswith("/labels")),
         )
 
     def test_project_schema_uses_text_identity_and_single_select_dimensions(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
-        plan = projector.plan_projection(
-            self.workflow, [task], [], profile="generic", **self.provenance
-        )
-
+        plan = self.plan([task])
         schema = projector.required_project_schema(plan)
         schema_plan = {item["field"]: item for item in projector.project_schema_plan(plan, [])}
-
-        self.assertEqual("text", schema["SD Identity"]["data_type"])
-        self.assertEqual("single_select", schema["SD Stage"]["data_type"])
-        self.assertEqual("text", schema_plan["SD Identity"]["data_type"])
-        self.assertEqual("single_select", schema_plan["SD Stage"]["data_type"])
-
-        wrong_type = [
-            {"id": 12, "name": "SD Identity", "data_type": "single_select"}
-        ]
-        wrong_plan = {
-            item["field"]: item
-            for item in projector.project_schema_plan(plan, wrong_type)
-        }
+        self.assertEqual(("text", "single_select"), (
+            schema["SD Identity"]["data_type"], schema["SD Stage"]["data_type"]
+        ))
+        self.assertEqual(("text", "single_select"), (
+            schema_plan["SD Identity"]["data_type"], schema_plan["SD Stage"]["data_type"]
+        ))
+        wrong_plan = {item["field"]: item for item in projector.project_schema_plan(
+            plan, [{"id": 12, "name": "SD Identity", "data_type": "single_select"}]
+        )}
         self.assertEqual("CONFLICT_FIELD_TYPE", wrong_plan["SD Identity"]["action"])
 
     def test_quoted_issue_number_selects_linked_ownership(self) -> None:

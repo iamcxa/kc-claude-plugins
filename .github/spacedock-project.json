@@ -3,7 +3,7 @@
     "expires_at": "2026-08-20T23:59:59Z",
     "linked_issues": {},
     "max_mutations_per_run": 80,
-    "projector_digest": "b0327065f19c4c11808ab7403293954fbafa36360231d2c5e5037c79967ca33a",
+    "projector_digest": "345b61e36c765d033e7f9d5c0a39822f9d1c7982f017fa053c5f510bebc5c004",
     "scope": "selected"
   },
   "credential": {
@@ -28,8 +28,8 @@
   "external_apply_enabled": true,
   "profile": "kc-dev-flow",
   "project": {
-    "node_id": "PVT_kwHOABc8eM4A-a-N",
-    "number": 1,
+    "node_id": "PVT_kwHOABc8eM4BgcAp",
+    "number": 4,
     "owner": "iamcxa",
     "owner_type": "user"
   },
