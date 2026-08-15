@@ -285,4 +285,29 @@ science_officer_em_upward_report:
 - `Local evidence:` 44 behavior cases across 43 test methods pass, package contract PASS, installer audit clean, version parity PASS, skill frontmatter PASS, marketplace schema/install PASS, canonical and dogfood projector bytes identical, and `git diff --check` PASS.
 - `Subtraction:` current diff is 1,489 gross lines (1,210 additions, 279 deletions), including two byte-identical projector deltas for canonical distribution and dogfood vendoring. This is below the 1,500-line topology re-review trigger and removes BODY_DRIFT, body-digest ownership, general legacy-summary recognition, and symmetric anchor recovery.
 - `Historical title:` #234 comes from an archived completed entity whose `Project #1` title records the original dogfood target. Preserve that archive byte in this slice; the live config and current acceptance target Project #4 independently.
-- `Pending:` commit the exact product candidate only after captain confirmation, run candidate-bound RoboRev observation plus fresh validation EM, and keep push, Ready, merge, and Project #4 apply closed.
+- `Candidate:` captain-confirmed local commit `b7d9a5534dd833a0aa69d44cf97709f3d6ff86f4`; push, Ready, merge, and Project #4 apply remain closed.
+
+## RoboRev implementation-exit claim
+
+```yaml
+roborev_claim:
+  schema: roborev-implementation-exit-claim/v1
+  identity_sha256: 89a1b88f6063d7973493019dc17e9f804635e28702f183c324fb606d1e7aba68
+  claimant: codex-montpellier-v1-b7d9a553
+  observed_state_revision: 7d9f7d1e25f7a7cfc2217193cdec895f4223ca31
+  repository: iamcxa/kc-claude-plugins
+  base_sha: 004444c5501fc1ef32c9fe61ea616e8fdc3bc426
+  tip_sha: b7d9a5534dd833a0aa69d44cf97709f3d6ff86f4
+  provider: roborev
+  provider_version: 0.62.0
+  config_object_sha: cd46a0b2fc23a91036ab0a8f8885be0dfc9e7380
+  config_sha256: 63b6d59a39c07c8a28db161da4d79af412d4b01d46b5bdcf1c7cc4eec58e64dd
+  agent: codex
+  model: gpt-5.6-terra
+  reasoning: thorough
+  minimum_severity: medium
+  panel: none
+  member_count: 1
+  state: claimed
+  request_count: 0
+```
