@@ -311,3 +311,39 @@ roborev_claim:
   state: claimed
   request_count: 0
 ```
+
+## RoboRev implementation-exit receipt — b7d9a553
+
+```yaml
+roborev_observation:
+  schema: roborev-implementation-exit-observation/v1
+  identity_sha256: 89a1b88f6063d7973493019dc17e9f804635e28702f183c324fb606d1e7aba68
+  config_sha256: 63b6d59a39c07c8a28db161da4d79af412d4b01d46b5bdcf1c7cc4eec58e64dd
+  provider: roborev
+  provider_version: 0.62.0
+  mode: observe
+  outcome: FAIL
+  reason: findings
+  job_id: 171
+  job_uuid: d0d374f7-1467-4f0d-a8de-34e84059c279
+  review_uuid: 9cc26390-4239-40b8-be53-ead383603f5f
+  base_sha: 004444c5501fc1ef32c9fe61ea616e8fdc3bc426
+  tip_sha: b7d9a5534dd833a0aa69d44cf97709f3d6ff86f4
+  status: done
+  verdict: F
+  member_states:
+    - identity: codex:gpt-5.6-terra:thorough:medium
+      state: done
+      findings: 1
+  finding:
+    severity: medium
+    location: .github/scripts/project-spacedock-state.py:1468
+    summary: A receipt-only Project item outside the selected workflow scope is ignored when its managed label is absent, contrary to union discovery.
+  request_count: 1
+  confirmation_count: 0
+  cost_coverage:
+    approximate_total: unknown
+    jobs_with_cost: 0
+    jobs_total: 2
+    complete: false
+```
