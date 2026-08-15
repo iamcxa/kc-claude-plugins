@@ -460,3 +460,11 @@ science_officer_em_upward_report:
     disproof_condition: "Return if the approved base or candidate changes, the union-discovery RED no longer fails on the prior tip, any exact-candidate local receipt becomes non-pass, candidate-bound CI or complete GitHub feedback is non-pass, or a fresh Project #4 plan creates an Issue, reports a conflict or orphan, targets an Issue outside #229-#238, or attaches anything beyond #234 and #235. Block completion if authorized apply changes Issue identity or linked-Issue bytes, or if the identical post-apply rerun plans any write."
     authority_boundary: "The captain retains exact push, PR-body and topology approval, Draft or Ready transition, merge, Project #4 target acceptance, and external apply authority. Validation and work-item authorities retain verdict and stage transitions; delivery and provider owners retain GitHub mutations and evidence. This EM record is advisory and grants none of those actions."
 ```
+
+## Delivery checkpoint — candidate bdd4dee5
+
+Captain approved the corrected canonical delivery unit after the body disclosed that the current 1,499-gross-line diff had an equivalent 1,505-line uncompressed repair form. The unit keeps `## Native stack exception`, targets kc-plugins Project #4, and records candidate `bdd4dee58e373711a793bfe397bfdff71af08c13` exactly once. The reviewed mode-0600 body and GitHub readback are byte-equal at `sha256:5dab42cc68300bf29528d7cec74408e1afcf2ec9142ec28d28ebf127ebc270da`.
+
+PR #240 was restored to Draft before the exact lease replaced old head `8af38c437201abf2f47fbbc3966af028c80daa2e`; local candidate, remote branch, and PR `headRefOid` now equal `bdd4dee58e373711a793bfe397bfdff71af08c13`. Candidate-bound version parity, portable E2E, real-browser decision/proof, and GitGuardian checks pass. Quinn's old approval remains bound only to `8af38c43`; a fresh `quinn-code-agent` review is requested for `bdd4dee5`. Ready, merge, Project #4 apply, and task completion remain closed.
+
+The separately approved workflow-rule follow-up is captured unscheduled as backlog task `delivery-topology-review-deduplication` (`bzj`). It does not change PR #240's governing contract or delivery gates.
