@@ -397,3 +397,95 @@ engineering_judgment:
   disproof_condition: "Return or block the route if the installed ordinary-worker run cannot emit complete local-kernel read evidence and a matching digest, if any other effective input differs between arms, if the cap is exceeded, or if the paired result loses necessary rationale, changes executable tokens, lacks a reproduced baseline defect, or lacks strict improvement."
   authority_boundary: "Captain Kent retains scope, Production obligations, PRODUCT and ROADMAP strategy wording, and irreversible decisions; Spacedock Gate Authority retains ideation advancement; work-item authority retains the artifact and ACs; Spacedock FO retains dispatch and state mechanics; the implementation worker performs only the accepted bounded experiment; provider output is evidence only and has no gate, delivery, or policy authority."
 ```
+
+## Stage Report: implementation — UNKNOWN, no product change
+
+- `UNKNOWN`: stopped after three baseline provider responses. The test prompts
+  exposed the frozen case classes in fixture paths (`R-redundant`,
+  `N-necessary`, and `M-mixed`), and the required ordinary-worker entity read
+  exposed the candidate sentence and hidden scoring rubric. AC-1 declares that
+  leakage non-counting, so no response can enter the paired receipt.
+- `UNKNOWN`: the outer JSON event capture also did not retain a matching kernel
+  digest line for every response even though complete local-kernel reads were
+  observed. The strict exact-arm provenance bar therefore remains unmet.
+- DONE: stopped all model work before treatment. No retry was used because the
+  accepted design permits a repeat only for semantic scorer ambiguity, not for
+  prompt/provenance defects. Total provider responses: 3 of the maximum 8.
+- DONE: made no product edit or commit. The assigned branch remains at
+  `004444c5501fc1ef32c9fe61ea616e8fdc3bc426`; canonical/adopted kernels,
+  `PRODUCT.md`, `docs/dev/ROADMAP.md`, `ARCHITECTURE.md`, versions, release
+  metadata, workflow policy, and the user-owned untracked file remain untouched.
+- DONE: re-observed PR #240 as open and Ready at
+  `8af38c437201abf2f47fbbc3966af028c80daa2e`, with
+  `docs/dev/ROADMAP.md` in its file set. No projection wording was copied,
+  stacked, or absorbed.
+- N/A: contract/release checks, changed-file-to-AC mapping, delivery topology,
+  and RoboRev were not earned because no candidate revision or product diff
+  exists.
+
+### Bounded experiment receipt
+
+```yaml
+experiment:
+  result: UNKNOWN
+  product_change: none
+  clock_start: 2026-08-15T12:40:16Z
+  scoring_complete: 2026-08-15T12:43:26Z
+  elapsed_seconds: 190
+  provider_calls:
+    model: gpt-5.6-terra
+    reasoning: high
+    codex_cli: 0.147.0
+    completed: 3
+    baseline: 3
+    treatment: 0
+    maximum: 8
+  arm:
+    opaque_id: arm-7m3q
+    revision: 004444c5501fc1ef32c9fe61ea616e8fdc3bc426
+    kernel_sha256: 300149e43cf2bc3c548fbdae750a90d305869280af5517436932741047210473
+  loader:
+    spacedock: "0.26.0 (contract 3)"
+    continue_dev_flow_version: 2.5.0
+    continue_dev_flow_sha256: 28c358633fd7a0d076c4175e783e1a872607627f814192b06bc51eb9877b959f
+    dispatch_sha256: 9580de96cc07d7477ee3d81f6e583f533d580d9f67060ef78e9ab93df0aaba64
+    implementation_stage_sha256: 2d60ff0b2f1303390d87ce67c987d9f126c902530b0bfee8665aeb64983e7f78
+    workflow_readme_sha256: e7bc979d867b79f2669326cd164a74b70e50d326ef087f5db9c7588105b9df5d
+    work_control_profile_sha256: 2cbe5de8dbebbd88f8d200b8fa7c87b740ed6a8b5efe27ee53eec3a2a0089a81
+  cases:
+    - id: R
+      fixture_sha256: b67c98373da4174600725a17e0c13ccad78a990a18846fb817144f2d249fe6e7
+      output_sha256: a304bb68f2495fccf716673809c8db148da0e7b9aa0ed34a6aa3f22343657ea6
+      executable_tokens_identical: true
+      observed_comment_result: "removed both adjacent-code narration comments"
+      counted: false
+    - id: N
+      fixture_sha256: d96c94497e514fd89347ef0085f4f4aca91a4ee7e0138114d8fb815fe622e74b
+      output_sha256: 4fda36a6cf331663030a5d221908e334479481e5516ae9abc6333b2273938ada
+      executable_tokens_identical: true
+      observed_comment_result: "retained both wire-compatibility and caller-array rationales"
+      counted: false
+    - id: M
+      fixture_sha256: 4b20b965481874b16ea1d38cdd67e390bc864eddcc4bcbc078a66011b7043834
+      output_sha256: 6d4a543c9cf19b6b9e5940760e4015c0ace5aa658fe1db927bb80e54eb9774d4
+      executable_tokens_identical: true
+      observed_comment_result: "removed narration and retained the concurrency hazard/rejected-alternative rationale"
+      counted: false
+  falsifiers:
+    - "fixture paths exposed the hidden case classification"
+    - "the ordinary-worker entity read exposed the candidate and rubric"
+    - "matching digest evidence was not retained for every response"
+```
+
+The raw, invalid model outputs and fixtures were kept only long enough to score
+and hash this receipt, then discarded. Because no countable baseline exists,
+the observed comment edits are not evidence for either no-change or treatment
+benefit. A future attempt requires a Captain-approved experiment correction that
+separates ordinary-worker authority loading from an opaque rubric without
+changing the accepted cap or silently granting a retry.
+
+### Summary
+
+The behavior claim remains unproved. Prompt/rubric leakage and incomplete
+per-response provenance invalidated all three baseline samples, so the worker
+stopped inside the cap and left the product branch unchanged.
