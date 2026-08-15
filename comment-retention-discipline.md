@@ -339,7 +339,7 @@ engineering_judgment:
   match. PRODUCT/ROADMAP wording follows only after a positive result.
 - Added no response, retry, time, worker, policy, or retained evaluator surface.
 
-## Stage Report: ideation (cycle 2 — bounded repair, pre-EM)
+## Stage Report: ideation (cycle 2 — final)
 
 - DONE: Applied only the EM-required evidence-boundary correction; accepted
   value, scope, proposed product sentence, and explicit non-goals are unchanged.
@@ -352,10 +352,48 @@ engineering_judgment:
 - DONE: The three cases, six initial responses, one optional ambiguous-pair
   repeat, 20-minute cap, necessary-rationale guard, and `UNKNOWN/no-change`
   boundaries remain unchanged.
-- PENDING: One fresh-context EM verdict on the corrected exact artifact.
+- DONE: `spacedock status --read comment-retention-discipline --ac-scan`
+  enumerated AC-1 through AC-4 and reported `unevidenced=true citations=0`; this
+  is recorded as pre-implementation evidence absence, not treated as a pass or
+  as a finding from the ROADMAP's known-unreliable citation counter.
+- DONE: The fresh-context EM reviewed state commit
+  `0fe1b09f25ab7563182171d123677920c1dd143f` and artifact
+  `sha256:40d53ffcc1792bf32a76335a6fadd4c28de6d1d3162cba284a662e42fddf8300`,
+  returning `proceed / high / multi_model:not_needed` with all F1-F4 findings
+  supported and the paired run retained as implementation-owned evidence.
 
 ### Summary
 
 The bounded repair now measures the actual instruction consumer: no response
 counts unless the ordinary worker demonstrably read the candidate or baseline
-kernel, and the two arms differ only by the proposed sentence.
+kernel, and the two arms differ only by the proposed sentence. Proceed as one
+implementation worker; apply PRODUCT/ROADMAP wording only after a positive pair.
+
+### Fresh EM verdict (cycle 2)
+
+```yaml
+engineering_judgment:
+  question: "Whether the single bounded correction closes cycle-1 F2 so comment-retention-discipline may proceed as one implementation worker without a new policy or evaluator surface."
+  revision: "state commit 0fe1b09f25ab7563182171d123677920c1dd143f; artifact SHA-256 40d53ffcc1792bf32a76335a6fadd4c28de6d1d3162cba284a662e42fddf8300; product comparison origin/main@004444c5501fc1ef32c9fe61ea616e8fdc3bc426"
+  evidence_synthesis: "Artifact SHA-256 is 40d53ffcc1792bf32a76335a6fadd4c28de6d1d3162cba284a662e42fddf8300 both on disk and in state commit 0fe1b09f25ab7563182171d123677920c1dd143f; product comparison origin/main resolves to 004444c5501fc1ef32c9fe61ea616e8fdc3bc426, where canonical and vendored kernels share blob cb0daf615fa642ce20eba7880d7ab6032f20d6a0. The installed continue-dev-flow skill requires a complete vendored kernel read before stage policy. The corrected artifact rejects stage-only capture, counts a response only with an ordinary-worker tool trace and matching arm kernel digest, requires a kernel-only treatment commit and byte-identical other effective inputs, and retains explicit no-change and UNKNOWN outcomes. No behavioral result exists yet; that is the implementation experiment's evidence obligation."
+  adjudications:
+    - finding: F1
+      disposition: supported
+      basis: "Kernel Outcome discipline requires recovery and subtraction before addition. The exact product comparison contains the existing absolute-claim and minimum/simple kernel seam, its canonical and vendored copies are byte-identical, and the candidate is one sentence in that seam with no independent lifecycle surface."
+    - finding: F2
+      disposition: supported
+      basis: "Kernel Verification discipline requires an instrument able to fail and observation at the behavior-producing boundary. Cycle 1 used stage-only bytes that omit the kernel; the correction instead invokes installed continue-dev-flow, which requires the complete vendored kernel, and rejects any response without trace evidence of that exact read, a matching digest, a kernel-only treatment commit, and a manifest showing every other effective input byte-identical. Missing evidence, mismatched input, or failed read is explicitly non-counting."
+    - finding: F3
+      disposition: supported
+      basis: "AC-1 and AC-2 require a reproduced baseline defect, strict paired improvement, preserved external-constraint, hazard, and rejected-alternative rationale, and identical executable tokens. The design preserves three cases, six initial responses, at most one ambiguous matched-pair repeat, a maximum of eight responses, and a 20-minute envelope with UNKNOWN or no-change for timeout, leakage, ambiguity, missing output, or non-improvement."
+    - finding: F4
+      disposition: supported
+      basis: "The valid Production receipt retains long-lived compatibility and release obligations while prohibiting added workflow surfaces. PRODUCT and ROADMAP changes are expressly post-positive-pair, ARCHITECTURE has no proposed change because ownership and runtime seams are reused, and the ROADMAP wording is bounded to an independent S3 lane that neither gates nor reorders projection items 1 then 2."
+  risk_tradeoff: "The benefit is a causal, bounded observation of one existing kernel seam with no retained runner, scorer, linter, skill, mod, gate, daemon, or evaluator. The material risk is treating an unexecuted or incompletely bound run as proof; the trace/digest, input-manifest, response, retry, and time failures now resolve that risk to UNKNOWN or no-change. The durable alternative remains no kernel change."
+  recommendation: "Proceed to the one-worker implementation experiment exactly as recorded: reject any response lacking complete-kernel read evidence or an identical-input manifest, make only the kernel treatment before a positive pair, and apply PRODUCT and ROADMAP wording only after that result."
+  route: proceed
+  confidence: high
+  dissent: ""
+  disproof_condition: "Return or block the route if the installed ordinary-worker run cannot emit complete local-kernel read evidence and a matching digest, if any other effective input differs between arms, if the cap is exceeded, or if the paired result loses necessary rationale, changes executable tokens, lacks a reproduced baseline defect, or lacks strict improvement."
+  authority_boundary: "Captain Kent retains scope, Production obligations, PRODUCT and ROADMAP strategy wording, and irreversible decisions; Spacedock Gate Authority retains ideation advancement; work-item authority retains the artifact and ACs; Spacedock FO retains dispatch and state mechanics; the implementation worker performs only the accepted bounded experiment; provider output is evidence only and has no gate, delivery, or policy authority."
+```
