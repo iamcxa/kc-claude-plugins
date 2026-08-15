@@ -103,8 +103,11 @@ already has the authoring and delivery seams:
   their byte identity and the absolutes registry. An isolated exact-ref run of
   `scripts/kc-dev-flow-contract-test.py` passed.
 - The installed `spacedock 0.26.0 (contract 3)` loader exposes exact stage text,
-  and `continue-dev-flow` already requires the complete vendored kernel before
-  the active stage and its declared mods.
+  but `show-stage-def` does not include the common kernel and is not by itself a
+  valid treatment boundary.
+- The installed `continue-dev-flow` ordinary-worker path requires the complete
+  vendored kernel before the active stage and its declared mods. A captured tool
+  trace and kernel digest, not stage bytes alone, must prove that read occurred.
 
 The seam is `WORKING_UNIT_UNPROVEN / REQUIRED`: packaging, loading instructions,
 and parity checks exist, but no bound baseline observation yet proves the stated
@@ -120,35 +123,48 @@ byte-identical kernel copies. Its proposed sentence is:
 > external constraint, hazard, or rejected alternative—rather than narrate
 > adjacent code.
 
-The without-it arm is unmodified `origin/main`; the with-it arm differs by that
-sentence and the approved documentation wording. If the without-it arm already
-satisfies the behavioral ACs, or the candidate does not improve it, ship no
-kernel rule. No fixture, scorer, runner, or model service is retained in the
-repository.
+The without-it arm is unmodified `origin/main`; the experimental with-it arm is
+an exact implementation commit that differs only by that sentence in the two
+byte-identical kernel copies. PRODUCT and ROADMAP wording is applied only after
+the behavioral pair succeeds and never enters the experiment. If the without-it
+arm already satisfies the behavioral ACs, or the candidate does not improve it,
+ship no kernel rule. No fixture, scorer, runner, or model service is retained in
+the repository.
 
 ### Fastest path and smallest cut
 
 One implementation worker owns one independently releasable value surface:
-rewrite the existing kernel paragraph, keep canonical/adopted bytes identical,
-apply the minimal PRODUCT and ROADMAP wording, run the disposable paired
-experiment, and execute existing release/contract checks. The code-comment
-fixtures and outputs live outside the repository and are discarded after their
-receipt is recorded.
+capture the baseline through the actual ordinary-worker path, commit only the
+kernel treatment, run its paired arm, and apply the minimal PRODUCT and ROADMAP
+wording only after a positive result. The worker then executes existing
+release/contract checks. The code-comment fixtures and outputs live outside the
+repository and are discarded after their receipt is recorded.
 
 There is no second slice: policy text and its behavioral proof cannot ship or be
 blocked independently. This is docs/config/agent-instruction behavior, so a code
-or browser E2E is not applicable; the installed-loader paired run is the real
+or browser E2E is not applicable; an installed `continue-dev-flow`
+ordinary-worker run that proves the local kernel read is the real
 behavior-producing boundary.
 
 ### Paired installed-loader experiment
 
-Materialize the baseline and candidate exact revisions into isolated temporary
-snapshots. For each snapshot, record the installed Spacedock version, the loaded
-implementation-stage bytes, the complete vendored-kernel bytes, exact revision,
-fixture digest, opaque arm ID, response status, and elapsed wall time. Give each
-fresh-context `gpt-5.6-terra` high-reasoning response the same ordinary
-maintainability task and require executable tokens to remain unchanged; do not
-expose the hidden comment classification or the arm identity.
+Materialize baseline `origin/main` and a kernel-only treatment commit into
+isolated temporary worktrees. In each worktree, use installed Spacedock to build
+the same implementation dispatch, then invoke the installed
+`kc-dev-flow:continue-dev-flow` ordinary-worker path. The response counts only
+when its tool trace proves a complete read of that worktree's
+`docs/dev/_mods/kernel.md` and the observed digest matches the arm manifest.
+Stage-only capture is an invalid sample.
+
+For each arm, record exact revision, installed Spacedock and continuation-skill
+versions/digests, dispatch and implementation-stage bytes, workflow README and
+complete vendored-kernel bytes, fixture digest, opaque arm ID, response status,
+tool-read evidence, and elapsed wall time. The manifest must show that every
+effective instruction input other than the proposed kernel sentence is
+byte-identical across arms. Give each fresh-context `gpt-5.6-terra`
+high-reasoning response the same ordinary maintainability task and require
+executable tokens to remain unchanged; do not expose the hidden comment
+classification, source revision, or arm identity.
 
 Run these three frozen cases once on each arm, for six initial responses:
 
@@ -175,14 +191,18 @@ convert aggregate comment volume into a ratio gate.
 **AC-1 — The portable sentence improves redundant-comment removal in the bounded ordinary-agent baseline.**
 
 Verified by: the six-response paired receipt binds `origin/main`, the exact
-candidate revision, installed loader/version, kernel/stage bytes, three fixture
-digests, opaque arms, `gpt-5.6-terra` high reasoning, and elapsed time. The
-baseline retains at least one rubric-labeled redundant comment and the candidate
-removes more redundant narration in at least one matched case without a paired
-regression. Falsified by: the baseline never retains redundant narration, the
-candidate has no strict paired improvement, any arm identity or hidden rubric
-leaks into its prompt, or the run cannot finish honestly inside the response and
-time caps; the result is then `UNKNOWN` or no-change.
+kernel-only treatment revision, installed loader and continuation-skill
+identity, dispatch/stage/workflow/kernel bytes, tool-read evidence, three fixture
+digests, opaque arms, `gpt-5.6-terra` high reasoning, and elapsed time. It proves
+all effective instruction inputs except the proposed sentence are byte-identical.
+The baseline retains at least one rubric-labeled redundant comment and the
+candidate removes more redundant narration in at least one matched case without
+a paired regression. Falsified by: either arm lacks a matching complete-kernel
+read, the input diff contains another treatment, the baseline never retains
+redundant narration, the candidate has no strict paired improvement, any arm
+identity or hidden rubric leaks into its prompt, or the run cannot finish
+honestly inside the response and time caps; the result is then `UNKNOWN` or
+no-change.
 
 **AC-2 — Necessary maintenance rationale is preserved with no executable change.**
 
@@ -228,12 +248,14 @@ change, or projection reorder.
 
 ### Test and correction plan
 
-1. Before product edits, capture the exact baseline loader/kernel inputs and run
-   the three baseline responses; if none retains redundant narration, stop with
-   no-change.
-2. Apply only the proposed docs diff, run the three candidate responses, and
-   score the frozen rubrics. Repeat at most one ambiguous pair.
-3. Run the existing kc-dev-flow contract, marketplace, frontmatter/version, and
+1. Before product edits, run the three baseline responses through installed
+   `continue-dev-flow`; reject any sample whose trace does not prove the complete
+   local kernel read. If none retains redundant narration, stop with no-change.
+2. Commit only the proposed sentence in the byte-identical kernel copies. Prove
+   every other effective instruction input is unchanged, then run and score the
+   three treatment responses. Repeat at most one ambiguous pair.
+3. Only after a positive pair, apply the PRODUCT and ROADMAP wording. Run the
+   existing kc-dev-flow contract, marketplace, frontmatter/version, and
    release checks. Record word-count and changed-surface observations without
    turning them into a new standing gate.
 4. Fresh validation may authorize at most one bounded correction. Rejection
@@ -247,7 +269,7 @@ task pressure. The paired baseline/candidate result is the disproof instrument:
 without a reproduced baseline defect and strict candidate improvement, do not
 ship stronger prose or invent enforcement.
 
-## Stage Report: ideation (pre-EM)
+## Stage Report: ideation (cycle 1 — EM return)
 
 - DONE: Recorded, committed, pushed, and re-read the Captain-approved
   `production` work-profile receipt before expanding acceptance criteria.
@@ -260,10 +282,80 @@ ship stronger prose or invent enforcement.
   evaluator surface.
 - DONE: Defined four falsifiable ACs and a six-response, three-case installed-
   loader experiment with one optional ambiguous-pair repeat and a 20-minute cap.
-- PENDING: One fresh-context ideation EM verdict on the exact committed artifact.
+- FAILED: The fresh-context EM reviewed state commit
+  `71e17fa76fac5158adeab3e7374db6866386ba8a` and artifact
+  `sha256:8d27de8daa4a603a4d3e14be14fd92f09db92f796ce744c1685fac7f28c54e5c`,
+  returning `return / high / multi_model:not_needed`. The recovered seam,
+  no-new-surface design, no-change boundary, and S3 wording were supported; the
+  stage-only experiment was rejected because its captured prompt omitted the
+  kernel treatment.
 
 ### Summary
 
-The smallest candidate is one portable kernel sentence earned only if an exact
-baseline reproduces redundant-comment retention and the candidate improves it
-without losing necessary rationale or changing executable tokens.
+Return only the evidence design: the behavioral arm must prove that the actual
+ordinary worker read the arm's complete vendored kernel, not merely the identical
+implementation-stage output.
+
+### Fresh EM verdict (cycle 1)
+
+```yaml
+engineering_judgment:
+  question: "Whether comment-retention-discipline is sufficient to proceed as one implementation worker with the smallest recovered kernel edit, bounded paired installed-loader experiment, and minimal PRODUCT/ROADMAP wording while preserving the stated constraints."
+  revision: "state artifact 71e17fa76fac5158adeab3e7374db6866386ba8a; artifact SHA-256 8d27de8daa4a603a4d3e14be14fd92f09db92f796ce744c1685fac7f28c54e5c; product comparison origin/main@004444c5501fc1ef32c9fe61ea616e8fdc3bc426"
+  evidence_synthesis: "Artifact SHA-256 matches 8d27de8daa4a603a4d3e14be14fd92f09db92f796ce744c1685fac7f28c54e5c both on disk and in state commit 71e17fa76fac5158adeab3e7374db6866386ba8a; origin/main and the product comparison revision resolve to 004444c5501fc1ef32c9fe61ea616e8fdc3bc426, whose canonical and vendored kernels share blob cb0daf615fa642ce20eba7880d7ab6032f20d6a0. Installed spacedock is 0.26.0 contract 3. Its actual implementation-stage output contains only the implementation section and work-control-profile policy, not the kernel. The existing loader adapter captures that stage and builds runner prompts from only stage plus fixture scenario, so a kernel-only candidate produces no specified treatment in the six responses. The AC scan reports AC-1 through AC-4 as unevidenced with citations=0; the artifact nevertheless supplies explicit verification and falsifier conditions, and the ROADMAP records that this scanner citation count is not trustworthy."
+  adjudications:
+    - finding: F1
+      disposition: supported
+      basis: "Kernel Outcome discipline requires recovery of an existing seam and subtraction before addition. The exact comparison revision has the existing minimum/simple and absolute-claim seam, byte-identical canonical and vendored copies, and contract-test enforcement; the proposed edit reuses that paragraph and forbids a new skill, mod, linter, gate, daemon, evaluator, or standing run."
+    - finding: F2
+      disposition: unsupported
+      basis: "Verification discipline requires an instrument able to fail on the asserted behavior and preservation of the behavior-producing boundary. `spacedock dispatch show-stage-def --stage implementation` omits the kernel, while `kc-dev-flow-loader-eval.py` sends only captured stage bytes and scenario to `runner_prompt`; the proposed candidate changes only the kernel. Therefore the specified paired inputs do not demonstrate that the worker received the treatment, so six responses and one repeat cannot falsify or establish the claimed policy effect."
+    - finding: F3
+      disposition: supported
+      basis: "Kernel Outcome discipline requires value ACs with falsifiers and treats missing evidence as missing. AC-1 and AC-2 require a reproduced baseline defect, strict paired improvement, preserved rationale, unchanged executable tokens, and UNKNOWN or no-change on timeout, leakage, ambiguity, or non-improvement. The current unevidenced AC scan is explicitly not positive evidence and does not authorize the claim."
+    - finding: F4
+      disposition: supported
+      basis: "The Local Profile assigns PRODUCT/ARCHITECTURE proposal to ideation and ROADMAP scheduling or strategy to the Captain or sprint commander. The artifact records Captain-approved independent S3 scope, preserves existing projection items 1 then 2, proposes no architecture mechanism, and maps the small documentation surface to AC-3 and AC-4; the implementation must keep the ROADMAP statement bounded to that approved order."
+  risk_tradeoff: "The benefit is a one-sentence, portable refinement of an existing authoring/minimality seam with no retained evaluator or policy surface. The material risk is shipping or claiming a behavior improvement from an experiment whose baseline and candidate prompts are equivalent at the stated loader boundary; this can be avoided by returning only the evidence design to bind the actual worker context that loads the kernel, or by declining the claim when that boundary cannot be shown. The durable alternative is no kernel change."
+  recommendation: "Amend the ideation artifact before implementation to name and capture the real ordinary-worker context that causes the complete vendored kernel to be read, prove that the baseline and candidate inputs differ only by the proposed kernel sentence, and retain the existing UNKNOWN/no-change outcome when that binding is unavailable; keep the one-worker, no-new-surface scope and bind ROADMAP wording to the approved S3 order."
+  route: return
+  confidence: high
+  dissent: ""
+  disproof_condition: "A reproducible installed ordinary-worker capture showing that both arms load the complete vendored kernel, with input manifests proving the candidate differs only by the proposed sentence and the hidden-rubric paired run remaining bounded, would remove F2 and could change the route to proceed."
+  authority_boundary: "Captain Kent retains scope, ROADMAP strategy wording, irreversible decisions, and any acceptance of a changed experiment; Spacedock Gate Authority retains ideation advancement; work-item authority retains the artifact and ACs; the implementation worker may act only after those authorities accept the corrected design; the model provider supplies evidence only and has no gate or delivery authority."
+```
+
+## EM feedback disposition
+
+- Retained the supported recovered seam, one-sentence kernel candidate,
+  no-new-surface boundary, value/falsifier ACs, no-change alternative, and
+  Captain-approved independent S3 wording.
+- Rejected `show-stage-def` and the existing stage-only loader adapter as the
+  behavioral boundary; both omit the kernel treatment.
+- Bound every counted response to an installed `continue-dev-flow`
+  ordinary-worker trace that proves a matching complete local-kernel read.
+- Made the experiment causal: the treatment commit changes only the two
+  byte-identical kernel copies, and every other effective instruction input must
+  match. PRODUCT/ROADMAP wording follows only after a positive result.
+- Added no response, retry, time, worker, policy, or retained evaluator surface.
+
+## Stage Report: ideation (cycle 2 — bounded repair, pre-EM)
+
+- DONE: Applied only the EM-required evidence-boundary correction; accepted
+  value, scope, proposed product sentence, and explicit non-goals are unchanged.
+- DONE: The installed ordinary-worker path now must prove the exact arm's
+  complete kernel read through tool evidence and matching digests; stage-only
+  capture is an invalid sample.
+- DONE: The treatment commit is kernel-only and all other effective instruction
+  inputs must be byte-identical; PRODUCT/ROADMAP changes happen after behavioral
+  success and do not contaminate the pair.
+- DONE: The three cases, six initial responses, one optional ambiguous-pair
+  repeat, 20-minute cap, necessary-rationale guard, and `UNKNOWN/no-change`
+  boundaries remain unchanged.
+- PENDING: One fresh-context EM verdict on the corrected exact artifact.
+
+### Summary
+
+The bounded repair now measures the actual instruction consumer: no response
+counts unless the ordinary worker demonstrably read the candidate or baseline
+kernel, and the two arms differ only by the proposed sentence.
