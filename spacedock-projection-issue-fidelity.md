@@ -1,7 +1,7 @@
 ---
 id: q0ndnhere7c5pgkft8n3kcp5
 title: Make projected Issues readable and identity-safe
-status: implementation
+status: validation
 source: Captain review of the Project #1 Issue #232 projection screenshot on 2026-08-14
 product: kc-dev-flow
 sprint: S3
