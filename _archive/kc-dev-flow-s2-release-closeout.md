@@ -1,19 +1,20 @@
 ---
 id: tgta74m7bxs4jypvs2mvwwnt
 title: "Close kc-dev-flow S2 through Release PR #221"
-status: validation
+status: done
 source: "Captain-approved S2 release closeout after all four implementation tasks exited, 2026-08-14"
 product: kc-dev-flow
 sprint: S2
 started: 2026-08-14T14:59:28Z
-completed:
-verdict:
+completed: 2026-08-15T11:31:28Z
+verdict: passed
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/kc-dev-flow-s2-release-221-aad7
 issue:
 pr: pr-merge:221
 mod-block:
 design: required
 lane: main
+archived: 2026-08-15T11:31:28Z
 ---
 
 ## Problem
