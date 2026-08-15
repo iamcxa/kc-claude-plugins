@@ -1,7 +1,7 @@
 ---
 id: q0ndnhere7c5pgkft8n3kcp5
 title: Make projected Issues readable and identity-safe
-status: validation
+status: ideation
 source: Captain review of the Project #1 Issue #232 projection screenshot on 2026-08-14
 product: kc-dev-flow
 sprint: S3
@@ -22,7 +22,7 @@ Projector-owned Issues currently replace the Spacedock entity body with visible 
 
 ## Proposed approach
 
-Repair the existing projector seam rather than create another synchronizer. Render each projector-owned Issue body from the entity Markdown after frontmatter, prefix its title with the workflow-native short entity ID, keep stage/product/status in Project fields, add one `spacedock:managed` repository label, and add a Project text field named `SD Identity` containing a stable repository/workflow/entity key. Match by the Project field and hidden receipt as independent anchors; repair one missing anchor, reject disagreement, and report body drift without overwriting user bytes. Recognize the current receipt/summary form only as an in-place migration source.
+Repair the existing projector seam rather than create another synchronizer. Render each projector-owned Issue body from the entity Markdown after frontmatter, prefix its title with the workflow-native short entity ID, keep stage/product/status in Project fields, add one `spacedock:managed` repository label, and add a Project text field named `SD Identity` containing a stable repository/workflow/entity key. Projector-owned Issue title and body are derived bytes: edit the SD entity, not the GitHub projection. A v2 managed Issue requires an agreeing hidden receipt and `SD Identity`; a missing or disagreeing anchor is a conflict that requires operator repair, while the label is only a visible marker and collision guard. Recognize the exact v1 receipt only for the bounded first migration, then emit v2; do not retain body-drift or general self-healing behavior. Linked human Issues remain byte-read-only.
 
 ## Design determination
 
@@ -41,23 +41,23 @@ Verified by: a fixture and Project #1 dry-run show `[{short-id}] {title}` where 
 Verified by: projector-owned Issues retain `Status`, `SD Stage`, and optional `SD Product`, gain text field `SD Identity` plus `spacedock:managed`, and preserve unrelated Project fields and repository labels. Falsified by: lifecycle metadata remains duplicated in visible body, a human field/label is replaced, or an absent optional SD field suppresses projection.
 
 **AC-3 — Mutable Issue content is not the sole mapping key.**
-Verified by: fixtures cover field-plus-receipt agreement, either anchor missing, disagreement, duplicate anchors, and a managed item with neither anchor; discovery uses the union of `spacedock:managed`, `SD Identity`, and hidden receipt, so one valid anchor repairs the other while label-only or ambiguous candidates produce `CONFLICT` and cannot plan `CREATE`. Falsified by: deleting any single signal can hide a managed candidate, deleting the hidden receipt can plan a second Issue, or editing `SD Identity` silently rebinds an Issue.
+Verified by: v2 fixtures require an agreeing receipt and `SD Identity`; a missing or disagreeing anchor, duplicate anchor, or label-only candidate produces `CONFLICT` and cannot plan `CREATE`. One exact v1 receipt may migrate the ten approved dogfood Issues in place and emits v2 plus `SD Identity`; no other repair path exists. Falsified by: deleting a v2 receipt or identity field can plan a second Issue, editing `SD Identity` silently rebinds an Issue, or a non-v1 candidate enters migration.
 
-**AC-4 — User body edits fail closed without becoming SD input.**
-Verified by: a post-projection body mutation produces per-item typed `BODY_DRIFT`, preserves the GitHub body, emits no mutation or refreshed receipt, and leaves comments outside the managed comparison without blocking unrelated safe entities. The digest covers body-minus-receipt after pinned CRLF/CR-to-LF normalization and one terminal newline; an unmodified normalized round-trip is `NO_CHANGE`. Falsified by: an unmodified body drifts, one drifted item blocks unrelated safe updates, or a drifted body is overwritten, accepted as current, or written back to the state branch.
+**AC-4 — Issue ownership determines whether GitHub bytes are writable.**
+Verified by: a projector-owned v2 Issue with an intact agreeing identity is restored from SD after a GitHub title/body edit, while a linked human Issue preserves every title/body/state/label byte and receives only managed Project fields. No GitHub edit becomes SD input. Falsified by: projector-owned GitHub prose survives as a second content authority, a linked Issue byte is patched, or any GitHub content is written to the state branch.
 
 **AC-5 — The ten Project #1 dogfood Issues migrate in place and converge.**
 Verified by: an exact-state dry-run names only existing Issues #229-#238, stays below the approved mutation cap, and predicts no new Issue or Project item; after authorized apply, live readback preserves all ten numbers/URLs/comments and an identical rerun records zero operations. Falsified by: any duplicate, missing item, foreign-item mutation, or non-empty identical rerun.
 
 ## Test plan
 
-- Add RED fixtures for full-population short IDs, entity-body rendering, text-field schema/apply, managed-label preservation, v1 migration, anchor repair/conflict, and body drift.
+- Replace the recovery/drift fixtures with RED fixtures for full-population short IDs, entity-body rendering, text-field schema/apply, managed-label preservation, exact v1-to-v2 migration, v2 anchor refusal, projector-owned overwrite, and linked-Issue byte preservation.
 - Run the scoped projector suite, then `scripts/kc-dev-flow-contract-test.py` and repository-required lint/parity checks earned by the diff.
 - Generate an exact `origin/main` plus `spacedock-state/dev` Project #1 dry-run before requesting external apply.
 
 ## Measurement
 
-One user-visible journey and one projector lifecycle surface. Success is ten preserved Issue identities, readable bodies, deterministic short-ID titles, zero ambiguous matches, and a zero-operation rerun.
+One user-visible journey and one projector lifecycle surface. Success is ten preserved Issue identities, readable bodies, deterministic short-ID titles, zero ambiguous matches, no steady-state repair lifecycle, and a zero-operation rerun.
 
 ## Doc diff
 
@@ -69,6 +69,12 @@ Update the setup skill's mapping contract and runtime receipt/refusal guidance. 
 - Editing linked/human Issue title, body, state, or labels.
 - Per-stage/product repository labels, organization Issue fields, or a second mapping ledger.
 - Sprint-to-Milestone enablement, status-update publication, Relay/CarLove rollout, or LLM-authored projection content.
+
+## Captain-approved route revision — 2026-08-15
+
+After PR #240 reached provider approval, the captain challenged whether the 1,628-line gross diff was necessary and approved the smaller route proposed in the same discussion. The pre-change surface set was readable rendering plus three-signal auto-recovery, body-drift preservation, and general legacy-summary migration. The accepted replacement keeps readable rendering, structured identity, collision refusal, and one exact v1-to-v2 dogfood migration, while removing steady-state auto-repair and the `BODY_DRIFT` lifecycle. Projector-owned Issues are explicitly derived and overwritable; human prose belongs in SD or in a linked Issue.
+
+The route is reversible before merge and external apply. Implementation must return to this authority if the exact ten-Issue migration cannot complete without general recovery, if missing v2 anchors can reach `CREATE`, or if linked Issue bytes require mutation. Product commit, push, Ready/merge, and Project apply remain separately gated.
 
 ## Stage Report: ideation — cycle 1
 
