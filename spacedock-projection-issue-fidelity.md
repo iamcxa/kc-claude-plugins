@@ -1,7 +1,7 @@
 ---
 id: q0ndnhere7c5pgkft8n3kcp5
 title: Make projected Issues readable and identity-safe
-status: ideation
+status: implementation
 source: Captain review of the Project #1 Issue #232 projection screenshot on 2026-08-14
 product: kc-dev-flow
 sprint: S3
@@ -22,7 +22,7 @@ Projector-owned Issues currently replace the Spacedock entity body with visible 
 
 ## Proposed approach
 
-Repair the existing projector seam rather than create another synchronizer. Render each projector-owned Issue body from the entity Markdown after frontmatter, prefix its title with the workflow-native short entity ID, keep stage/product/status in Project fields, add one `spacedock:managed` repository label, and add a Project text field named `SD Identity` containing a stable repository/workflow/entity key. Projector-owned Issue title and body are derived bytes: edit the SD entity, not the GitHub projection. A v2 managed Issue requires an agreeing hidden receipt and `SD Identity`; a missing or disagreeing anchor is a conflict that requires operator repair, while the label is only a visible marker and collision guard. Recognize the exact v1 receipt only for the bounded first migration, then emit v2; do not retain body-drift or general self-healing behavior. Linked human Issues remain byte-read-only.
+Repair the existing projector seam rather than create another synchronizer. Render each projector-owned Issue body from the entity Markdown after frontmatter, prefix its title with the workflow-native short entity ID, keep stage/product/status in Project fields, add one `spacedock:managed` repository label, and add a Project text field named `SD Identity` containing a stable repository/workflow/entity key. Projector-owned Issue title and body are derived bytes: edit the SD entity, not the GitHub projection. A v2 managed Issue normally requires an agreeing hidden receipt and `SD Identity`; missing receipt, disagreement, duplicates, and label-only candidates are conflicts. The only resume exception lets one unique trusted projector-owned v2 receipt restore a missing `SD Identity` after an interrupted Issue-to-Project write. Recognize the exact v1 receipt only for the bounded first migration, then emit v2; do not retain body-drift, field-to-receipt repair, or general self-healing behavior. Linked human Issues remain byte-read-only.
 
 ## Design determination
 
@@ -41,7 +41,7 @@ Verified by: a fixture and Project #1 dry-run show `[{short-id}] {title}` where 
 Verified by: projector-owned Issues retain `Status`, `SD Stage`, and optional `SD Product`, gain text field `SD Identity` plus `spacedock:managed`, and preserve unrelated Project fields and repository labels. Falsified by: lifecycle metadata remains duplicated in visible body, a human field/label is replaced, or an absent optional SD field suppresses projection.
 
 **AC-3 — Mutable Issue content is not the sole mapping key.**
-Verified by: v2 fixtures require an agreeing receipt and `SD Identity`; a missing or disagreeing anchor, duplicate anchor, or label-only candidate produces `CONFLICT` and cannot plan `CREATE`. One exact v1 receipt may migrate the ten approved dogfood Issues in place and emits v2 plus `SD Identity`; no other repair path exists. Falsified by: deleting a v2 receipt or identity field can plan a second Issue, editing `SD Identity` silently rebinds an Issue, or a non-v1 candidate enters migration.
+Verified by: v2 fixtures require agreement and make missing receipt, disagreement, duplicate anchors, and label-only candidates `CONFLICT` without `CREATE`; only one unique trusted projector-owned v2 receipt may complete a missing `SD Identity` field. One exact v1 receipt may migrate the ten approved dogfood Issues in place and emits v2 plus `SD Identity`. Falsified by: deleting a v2 receipt can plan a second Issue, field-only state can reconstruct a receipt, a receipt-only candidate can bind a duplicate or out-of-scope Issue, editing `SD Identity` silently rebinds an Issue, or a non-v1 candidate enters migration.
 
 **AC-4 — Issue ownership determines whether GitHub bytes are writable.**
 Verified by: a projector-owned v2 Issue with an intact agreeing identity is restored from SD after a GitHub title/body edit, while a linked human Issue preserves every title/body/state/label byte and receives only managed Project fields. No GitHub edit becomes SD input. Falsified by: projector-owned GitHub prose survives as a second content authority, a linked Issue byte is patched, or any GitHub content is written to the state branch.
@@ -81,14 +81,14 @@ work_profile:
   obligations:
     architecture:
       - Keep one-way SD authority, separate repository and Project credentials, and one workflow to one Project.
-      - Bound compatibility to one exact v1-to-v2 receipt migration; v2 anchor damage is fail-closed and operator-repaired.
+      - Bound compatibility to one exact v1-to-v2 receipt migration; v2 anchor damage is fail-closed except for trusted receipt-to-missing-field completion of an interrupted apply.
       - Keep projector-owned Issue bytes derived and linked Issue bytes human-owned; add no reverse sync, mapping ledger, hosted service, or body-drift lifecycle.
     implementation:
       - Use the existing deterministic Python standard-library projector and keep installed and packaged bytes identical.
       - Preserve preflight validation, mutation cap, append-only operation journal, bounded retry, and credential expiry checks.
-      - Replace steady-state anchor auto-repair with exact v2 agreement and collision refusal.
+      - Replace symmetric steady-state anchor auto-repair with exact v2 agreement, collision refusal, and one receipt-to-field transaction-prefix resume.
     testing:
-      - Record RED and GREEN for exact v1 migration, v2 missing or disagreeing anchor refusal, projector-owned overwrite, linked-Issue byte preservation, and identical no-op rerun.
+      - Record RED and GREEN for exact v1 migration, interrupted v2 receipt-to-field resume, every other missing or disagreeing anchor refusal, projector-owned overwrite, linked-Issue byte preservation, and identical no-op rerun.
       - Run the scoped projector suite, package contract, installer parity, repository checks earned by the diff, and an exact Project #1 dry-run.
       - Require post-apply live readback and zero-operation rerun before completion.
   invariant_sources:
@@ -111,7 +111,7 @@ work_profile:
 
 After PR #240 reached provider approval, the captain challenged whether the 1,628-line gross diff was necessary and approved the smaller route proposed in the same discussion. The pre-change surface set was readable rendering plus three-signal auto-recovery, body-drift preservation, and general legacy-summary migration. The accepted replacement keeps readable rendering, structured identity, collision refusal, and one exact v1-to-v2 dogfood migration, while removing steady-state auto-repair and the `BODY_DRIFT` lifecycle. Projector-owned Issues are explicitly derived and overwritable; human prose belongs in SD or in a linked Issue.
 
-The route is reversible before merge and external apply. Implementation must return to this authority if the exact ten-Issue migration cannot complete without general recovery, if missing v2 anchors can reach `CREATE`, or if linked Issue bytes require mutation. Product commit, push, Ready/merge, and Project apply remain separately gated.
+The route is reversible before merge and external apply. Fresh EM review required one production resume exception: a unique trusted projector-owned v2 receipt may restore only a missing `SD Identity` field after a partial cross-API write. This does not authorize field-to-receipt repair or any ambiguous recovery. Implementation must return to this authority if the exact ten-Issue migration cannot complete without broader recovery, if missing v2 receipt can reach `CREATE`, or if linked Issue bytes require mutation. Product commit, push, Ready/merge, and Project apply remain separately gated.
 
 ## Stage Report: ideation — cycle 1
 
@@ -219,3 +219,57 @@ Captain approved the canonical recut delivery packet binding `main@387be484ae353
 `PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr_number":240,"layer":"single","head":"8af38c437201abf2f47fbbc3966af028c80daa2e","fingerprint":"sha256:6318c612cab0d6278740cf062d06f62c5d8718e0f7961db539b8873497efe831","items":[],"dispositions":[]}`
 
 Ready still requires a fresh matching feedback observation plus explicit non-author reviewer acknowledgement of the native-stack exception and captain authorization. Merge, Project #1 apply, and the post-apply zero-write rerun remain pending and captain-owned.
+
+## Stage Report: ideation — cycle 2
+
+**Decision: NARROW to the captain-approved smaller route with one trusted receipt-to-field partial-apply resume; return the product to implementation.**
+
+- `Profile:` the captain selected Production because the public skill installs an unattended cron using a separate PAT against persistent Issues and Project #1.
+- `Surface subtraction:` remove `BODY_DRIFT`, body-digest ownership, general legacy-summary recognition, field-to-receipt repair, and symmetric anchor recovery. Retain readable rendering, exact v1 migration, strict v2 identity, collision refusal, projector-owned overwrite, linked-byte preservation, and one transaction-prefix resume.
+- `Route proof:` fresh GPT-5.6 High EM returned `narrow / high`; the smaller route remains sufficient and strictly smaller. Production requires resumable partial writes but not human-body preservation on projector-owned Issues.
+- `Disproof hooks:` return if the receipt-only resume can bind a duplicate or foreign Issue, any non-v1 candidate migrates, missing receipt reaches `CREATE`, interrupted apply cannot resume, linked bytes mutate, or the identical rerun is non-empty.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Narrow the current candidate to the captain-approved smaller route, but retain one asymmetric partial-apply resume rule: a unique trusted projector-owned v2 receipt may restore a missing SD Identity field; field-only, missing-receipt, mismatched, duplicate, or label-only states remain conflicts. This remains cumulatively sufficient and strictly smaller. Production does not require BODY_DRIFT, human-body preservation, general legacy-summary migration, or symmetric anchor repair."
+  evidence_synthesis: "At state 1dbfae54b9330d395d1be3540340a9b1c93c0551, the accepted outcome makes projector-owned title and body derived from SD, preserves linked Issue bytes, bounds migration to exact v1-to-v2, and explicitly removes BODY_DRIFT and general repair. Candidate 8af38c437201abf2f47fbbc3966af028c80daa2e still emits receipt v1, repairs either missing anchor, recognizes general legacy-summary shape, computes body digests, and returns BODY_DRIFT. Its apply path writes the Issue receipt before the Project field, while the governing runtime contract requires successful partial sequences to be resumable. Current origin/main 004444c5501fc1ef32c9fe61ea616e8fdc3bc426 differs from the candidate parent only in release metadata, so it introduces no contrary projector behavior but still requires a fresh recut and exact-revision validation."
+  risk_tradeoff_call: "The smaller route removes an independently violated and reconciled BODY_DRIFT lifecycle and collapses projector-owned prose into normal one-way convergence; it also replaces symmetric steady-state anchor repair and general legacy migration with one bounded migration plus one transaction-prefix resume. The remaining risk is that a trusted receipt-only state can also restore a deliberately deleted projector-owned field; bind it to a unique schema-valid v2 projector receipt, trusted automation authorship, repository/workflow scope, and absence of disagreement or duplication. Manual repair for every missing field violates the accepted resumable production runtime, while a durable recovery ledger or two-phase protocol adds a larger lifecycle surface."
+  recommendation: "Emit and require v2 agreement at steady state; permit only trusted v2 receipt-to-missing-SD-Identity completion; keep exact v1 migration; remove BODY_DRIFT, body-digest ownership, general summary recognition, and field-to-receipt repair; overwrite projector-owned title/body from SD; preserve linked Issue bytes. Recut onto 004444c5501fc1ef32c9fe61ea616e8fdc3bc426 and re-run exact migration, interrupted-apply resume, refusal, linked-byte, and zero-operation evidence before readiness, merge, or Project apply."
+  route: narrow
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "FO may implement, test, recut, and produce read-only evidence after the captain-owned route clarification is recorded; FO may not approve the route delta, mark Ready, merge, apply to Project #1, or advance task state."
+  engineering_judgment:
+    question: "Does the captain-approved smaller route remain sufficient and strictly smaller, and does the production profile require any removed lifecycle?"
+    revision: "State 1dbfae54b9330d395d1be3540340a9b1c93c0551; candidate 8af38c437201abf2f47fbbc3966af028c80daa2e; comparison base origin/main 004444c5501fc1ef32c9fe61ea616e8fdc3bc426."
+    evidence_synthesis: "At state 1dbfae54b9330d395d1be3540340a9b1c93c0551, the accepted outcome makes projector-owned title and body derived from SD, preserves linked Issue bytes, bounds migration to exact v1-to-v2, and explicitly removes BODY_DRIFT and general repair. Candidate 8af38c437201abf2f47fbbc3966af028c80daa2e still emits receipt v1, repairs either missing anchor, recognizes general legacy-summary shape, computes body digests, and returns BODY_DRIFT. Its apply path writes the Issue receipt before the Project field, while the governing runtime contract requires successful partial sequences to be resumable. Current origin/main 004444c5501fc1ef32c9fe61ea616e8fdc3bc426 differs from the candidate parent only in release metadata, so it introduces no contrary projector behavior but still requires a fresh recut and exact-revision validation."
+    adjudications:
+      - finding: "F-1: The revised route is cumulatively sufficient and strictly smaller than candidate 8af38c437201abf2f47fbbc3966af028c80daa2e."
+        disposition: supported
+        basis: "It retains readable projection and structured identity, narrows migration to the approved v1 population, retains only transaction-prefix recovery, and removes the independently violable BODY_DRIFT lifecycle."
+      - finding: "F-2: Production requires BODY_DRIFT or preservation of human edits to projector-owned title/body."
+        disposition: unsupported
+        basis: "The Production receipt defines projector-owned bytes as derived, forbids a body-drift lifecycle, and assigns human prose to SD or linked Issues."
+      - finding: "F-3: Production requires general symmetric repair whenever either v2 identity anchor is missing."
+        disposition: unsupported
+        basis: "Missing receipt, disagreement, duplicates, and label-only candidates can conflict; field-to-receipt repair would let mutable Project state reconstruct Issue identity."
+      - finding: "F-4: Every missing v2 anchor can require manual repair without affecting production obligations."
+        disposition: unsupported
+        basis: "Issue receipt writes precede Project field writes, so an ordinary interruption would otherwise become permanently non-resumable."
+      - finding: "F-5: A unique trusted v2 receipt may restore only a missing SD Identity field without recreating general repair."
+        disposition: supported
+        basis: "This is the minimum recovery for the actual write order when bounded to schema-valid projector ownership, trusted automation authorship, repository/workflow scope, uniqueness, and no contradiction."
+      - finding: "F-6: Overwriting projector-owned title/body while preserving linked Issue bytes maintains the accepted ownership boundary."
+        disposition: supported
+        basis: "SD owns projector bytes and GitHub owns linked Issue bytes; the existing linked path excludes Issue and label PATCH operations."
+      - finding: "F-7: Candidate 8af38c437201abf2f47fbbc3966af028c80daa2e already implements the smaller route."
+        disposition: unsupported
+        basis: "It still emits v1, repairs either anchor, recognizes general legacy summaries, records body_digest, and returns BODY_DRIFT."
+    risk_tradeoff: "The smaller route removes BODY_DRIFT and symmetric recovery while retaining one bounded migration and one transaction-prefix resume. The trusted receipt-only resume may also restore a deliberately deleted field, but full manual repair or a durable two-phase ledger costs more and defeats unattended recovery."
+    recommendation: "Implement the narrow route, recut to current main, and validate exact migration, interrupted resume, refusal, linked-byte preservation, and zero-operation convergence before any external apply."
+    route: narrow
+    confidence: high
+    dissent: "The earlier phrase requiring conflict on every missing v2 anchor is too broad for the accepted production runtime; a trusted receipt-only transaction prefix must remain resumable."
+    disproof_condition: "Return if an interrupted run cannot resume without CREATE or guessing, a trusted receipt-only candidate can bind a duplicate or out-of-scope Issue, any non-exact v1 candidate migrates, projector-owned overwrite fails a zero-operation rerun, or linked Issue bytes mutate."
+    authority_boundary: "The captain retains route delta, schema transition, readiness, merge, and external apply; work-item authority owns scope; validation owns exact-revision evidence; delivery and provider owners retain push, PR, and Project mutation authority."
+```
