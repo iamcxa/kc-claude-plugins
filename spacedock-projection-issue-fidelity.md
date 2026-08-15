@@ -347,3 +347,30 @@ roborev_observation:
     jobs_total: 2
     complete: false
 ```
+
+## RoboRev changed-tip confirmation claim
+
+```yaml
+roborev_confirmation_claim:
+  schema: roborev-implementation-exit-claim/v1
+  identity_sha256: 608c26d72a99d8d356fb85034b732ee1b7a43b0686c9b650c53105dd03efca11
+  parent_identity_sha256: 89a1b88f6063d7973493019dc17e9f804635e28702f183c324fb606d1e7aba68
+  claimant: codex-montpellier-v1-bdd4dee5
+  observed_state_revision: a4acefb7dbbb36aeeca1d4fa5a6de7373377efe1
+  repository: iamcxa/kc-claude-plugins
+  base_sha: 004444c5501fc1ef32c9fe61ea616e8fdc3bc426
+  tip_sha: bdd4dee58e373711a793bfe397bfdff71af08c13
+  provider: roborev
+  provider_version: 0.62.0
+  config_object_sha: cd46a0b2fc23a91036ab0a8f8885be0dfc9e7380
+  config_sha256: 63b6d59a39c07c8a28db161da4d79af412d4b01d46b5bdcf1c7cc4eec58e64dd
+  agent: codex
+  model: gpt-5.6-terra
+  reasoning: thorough
+  minimum_severity: medium
+  panel: none
+  member_count: 1
+  state: claimed
+  request_count: 1
+  confirmation_count: 0
+```
