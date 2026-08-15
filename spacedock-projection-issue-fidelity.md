@@ -35,7 +35,7 @@ The thinnest journey is one existing v1 projector-owned Issue: dry-run resolves 
 ## Acceptance criteria
 
 **AC-1 — A projected Issue presents the same task humans discuss in Spacedock.**
-Verified by: a fixture and Project #1 dry-run show `[{short-id}] {title}` where the short ID matches the whole active-plus-archived workflow population, and the rendered body is the entity Markdown after frontmatter with no visible projection-summary block. Falsified by: a title prefix differs from `spacedock status --short-id`, frontmatter or worktree data leaks, or the Issue body omits entity content.
+Verified by: a fixture and kc-plugins Project #4 dry-run show `[{short-id}] {title}` where the short ID matches the whole active-plus-archived workflow population, and the rendered body is the entity Markdown after frontmatter with no visible projection-summary block. Falsified by: a title prefix differs from `spacedock status --short-id`, frontmatter or worktree data leaks, or the Issue body omits entity content.
 
 **AC-2 — Structured projection metadata lives on structured GitHub surfaces.**
 Verified by: projector-owned Issues retain `Status`, `SD Stage`, and optional `SD Product`, gain text field `SD Identity` plus `spacedock:managed`, and preserve unrelated Project fields and repository labels. Falsified by: lifecycle metadata remains duplicated in visible body, a human field/label is replaced, or an absent optional SD field suppresses projection.
@@ -46,14 +46,14 @@ Verified by: v2 fixtures require agreement and make missing receipt, disagreemen
 **AC-4 — Issue ownership determines whether GitHub bytes are writable.**
 Verified by: a projector-owned v2 Issue with an intact agreeing identity is restored from SD after a GitHub title/body edit, while a linked human Issue preserves every title/body/state/label byte and receives only managed Project fields. No GitHub edit becomes SD input. Falsified by: projector-owned GitHub prose survives as a second content authority, a linked Issue byte is patched, or any GitHub content is written to the state branch.
 
-**AC-5 — The ten Project #1 dogfood Issues migrate in place and converge.**
-Verified by: an exact-state dry-run names only existing Issues #229-#238, stays below the approved mutation cap, and predicts no new Issue or Project item; after authorized apply, live readback preserves all ten numbers/URLs/comments and an identical rerun records zero operations. Falsified by: any duplicate, missing item, foreign-item mutation, or non-empty identical rerun.
+**AC-5 — The ten kc-plugins Project #4 dogfood Issues migrate without changing Issue identity and converge.**
+Verified by: an exact-state dry-run names only existing Issues #229-#238, stays below the approved mutation cap, predicts no new Issue, and limits Project-item creation to attaching existing Issues #234 and #235 that were absent when deleted Project #1 was replaced by Project #4; after authorized apply, live readback preserves all ten numbers/URLs/comments and an identical rerun records zero operations. Falsified by: any Issue creation, Issue-number change, foreign-item mutation, attachment beyond #234/#235, or non-empty identical rerun.
 
 ## Test plan
 
 - Replace the recovery/drift fixtures with RED fixtures for full-population short IDs, entity-body rendering, text-field schema/apply, managed-label preservation, exact v1-to-v2 migration, v2 anchor refusal, projector-owned overwrite, and linked-Issue byte preservation.
 - Run the scoped projector suite, then `scripts/kc-dev-flow-contract-test.py` and repository-required lint/parity checks earned by the diff.
-- Generate an exact `origin/main` plus `spacedock-state/dev` Project #1 dry-run before requesting external apply.
+- Generate an exact `origin/main` plus `spacedock-state/dev` kc-plugins Project #4 dry-run before requesting external apply.
 
 ## Measurement
 
@@ -77,7 +77,7 @@ work_profile:
   schema: kc-dev-flow-work-profile/v1
   selected: production
   recommended: production
-  basis: Public installable skill plus unattended GitHub Actions cron uses a separately scoped PAT to mutate persistent repository Issues and user Project #1 while SD remains authoritative.
+  basis: Public installable skill plus unattended GitHub Actions cron uses a separately scoped PAT to mutate persistent repository Issues and user kc-plugins Project #4 while SD remains authoritative.
   obligations:
     architecture:
       - Keep one-way SD authority, separate repository and Project credentials, and one workflow to one Project.
@@ -89,7 +89,7 @@ work_profile:
       - Replace symmetric steady-state anchor auto-repair with exact v2 agreement, collision refusal, and one receipt-to-field transaction-prefix resume.
     testing:
       - Record RED and GREEN for exact v1 migration, interrupted v2 receipt-to-field resume, every other missing or disagreeing anchor refusal, projector-owned overwrite, linked-Issue byte preservation, and identical no-op rerun.
-      - Run the scoped projector suite, package contract, installer parity, repository checks earned by the diff, and an exact Project #1 dry-run.
+      - Run the scoped projector suite, package contract, installer parity, repository checks earned by the diff, and an exact kc-plugins Project #4 dry-run.
       - Require post-apply live readback and zero-operation rerun before completion.
   invariant_sources:
     - docs/dev/README.md
@@ -97,7 +97,7 @@ work_profile:
     - docs/dev/_mods/engineering-judgment.md
     - docs/dev/_mods/work-control-profile.md
     - kc-dev-flow/skills/setup-github-project-projection/references/mapping-contract.md
-  scope_boundary: One selected docs/dev workflow, user Project #1, and the existing ten dogfood Issues; excludes Relay, CarLove, reverse sync, status-update publication, broader rollout, and automatic prose generation.
+  scope_boundary: One selected docs/dev workflow, user kc-plugins Project #4, and the existing ten dogfood Issues; excludes Relay, CarLove, reverse sync, status-update publication, broader rollout, and automatic prose generation.
   promote_when:
     - Relay or CarLove rollout enters scope.
     - GitHub-to-SD writeback, a hosted service, automatic status publication, or organization-wide compatibility enters scope.
@@ -273,3 +273,15 @@ science_officer_em_upward_report:
     disproof_condition: "Return if an interrupted run cannot resume without CREATE or guessing, a trusted receipt-only candidate can bind a duplicate or out-of-scope Issue, any non-exact v1 candidate migrates, projector-owned overwrite fails a zero-operation rerun, or linked Issue bytes mutate."
     authority_boundary: "The captain retains route delta, schema transition, readiness, merge, and external apply; work-item authority owns scope; validation owns exact-revision evidence; delivery and provider owners retain push, PR, and Project mutation authority."
 ```
+
+## Stage Report: implementation — cycle 2
+
+**Decision: the smaller route is locally green; retarget dogfood from deleted Project #1 to its observed kc-plugins successor Project #4 before fresh validation.**
+
+- `Target drift:` live GraphQL lists Projects #2, #3, and #4; Project #1 no longer resolves. Project #4 (`kc-plugins`, node `PVT_kwHOABc8eM4BgcAp`) contains Issues #229-#233 and #236-#238 plus PR #240. The installed config's deleted #1 target explains the cron's repeated 404 with `operations=[]`.
+- `Exact read-only dry-run:` product worktree `bdb2768525f001b05161f74590cd73b0606fd7e7` with uncommitted candidate bytes and state `30e05526e5b75aa632395fc78611d6d6c7a85102` plans ten in-place Issue updates for #229-#238, `CREATE=0`, conflicts `=0`, and orphans `=0`. It attaches existing Issues #234 and #235 as the only two missing Project items.
+- `Visible sample:` Issue #232 remains #232 and previews `[g5] Kill the parse-and-discard class in flow step operands`, body heading `## Problem`, qualified `SD Identity`, and receipt schema v2.
+- `Schema/apply preview:` create `SD Identity` text, `SD Product` single-select, and `SD Stage` single-select; create/add `spacedock:managed`; update ten derived Issue surfaces and ten Project field sets. The exact plan remains below the approved 80-write cap. No external apply occurred.
+- `Local evidence:` 44 behavior cases across 43 test methods pass, package contract PASS, installer audit clean, version parity PASS, skill frontmatter PASS, marketplace schema/install PASS, canonical and dogfood projector bytes identical, and `git diff --check` PASS.
+- `Subtraction:` current diff is 1,489 gross lines (1,210 additions, 279 deletions), including two byte-identical projector deltas for canonical distribution and dogfood vendoring. This is below the 1,500-line topology re-review trigger and removes BODY_DRIFT, body-digest ownership, general legacy-summary recognition, and symmetric anchor recovery.
+- `Pending:` correct the separate dogfood task's obsolete `Project #1` title, commit the exact product candidate only after captain confirmation, run candidate-bound RoboRev observation plus fresh validation EM, and keep push, Ready, merge, and Project #4 apply closed.
