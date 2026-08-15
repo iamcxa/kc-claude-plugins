@@ -1,13 +1,13 @@
 ---
 title: "Teach agents to retain only comments with maintenance value"
-status: ideation
+status: implementation
 source: "Captain-approved independent kc-dev-flow/S3 slice, 2026-08-15; does not alter the existing projection sequence"
 product: kc-dev-flow
 sprint: S3
 started: 2026-08-15T12:03:26Z
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-ensign-comment-retention-discipline
 issue:
 pr:
 mod-block:
