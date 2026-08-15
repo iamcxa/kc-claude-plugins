@@ -70,6 +70,43 @@ Update the setup skill's mapping contract and runtime receipt/refusal guidance. 
 - Per-stage/product repository labels, organization Issue fields, or a second mapping ledger.
 - Sprint-to-Milestone enablement, status-update publication, Relay/CarLove rollout, or LLM-authored projection content.
 
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v1
+  selected: production
+  recommended: production
+  basis: Public installable skill plus unattended GitHub Actions cron uses a separately scoped PAT to mutate persistent repository Issues and user Project #1 while SD remains authoritative.
+  obligations:
+    architecture:
+      - Keep one-way SD authority, separate repository and Project credentials, and one workflow to one Project.
+      - Bound compatibility to one exact v1-to-v2 receipt migration; v2 anchor damage is fail-closed and operator-repaired.
+      - Keep projector-owned Issue bytes derived and linked Issue bytes human-owned; add no reverse sync, mapping ledger, hosted service, or body-drift lifecycle.
+    implementation:
+      - Use the existing deterministic Python standard-library projector and keep installed and packaged bytes identical.
+      - Preserve preflight validation, mutation cap, append-only operation journal, bounded retry, and credential expiry checks.
+      - Replace steady-state anchor auto-repair with exact v2 agreement and collision refusal.
+    testing:
+      - Record RED and GREEN for exact v1 migration, v2 missing or disagreeing anchor refusal, projector-owned overwrite, linked-Issue byte preservation, and identical no-op rerun.
+      - Run the scoped projector suite, package contract, installer parity, repository checks earned by the diff, and an exact Project #1 dry-run.
+      - Require post-apply live readback and zero-operation rerun before completion.
+  invariant_sources:
+    - docs/dev/README.md
+    - docs/dev/_mods/kernel.md
+    - docs/dev/_mods/engineering-judgment.md
+    - docs/dev/_mods/work-control-profile.md
+    - kc-dev-flow/skills/setup-github-project-projection/references/mapping-contract.md
+  scope_boundary: One selected docs/dev workflow, user Project #1, and the existing ten dogfood Issues; excludes Relay, CarLove, reverse sync, status-update publication, broader rollout, and automatic prose generation.
+  promote_when:
+    - Relay or CarLove rollout enters scope.
+    - GitHub-to-SD writeback, a hosted service, automatic status publication, or organization-wide compatibility enters scope.
+    - The current PAT, cron, or one-Project ownership boundary changes.
+  decision:
+    authority: iamcxa as captain
+    at: 2026-08-15T12:48:32Z
+```
+
 ## Captain-approved route revision — 2026-08-15
 
 After PR #240 reached provider approval, the captain challenged whether the 1,628-line gross diff was necessary and approved the smaller route proposed in the same discussion. The pre-change surface set was readable rendering plus three-signal auto-recovery, body-drift preservation, and general legacy-summary migration. The accepted replacement keeps readable rendering, structured identity, collision refusal, and one exact v1-to-v2 dogfood migration, while removing steady-state auto-repair and the `BODY_DRIFT` lifecycle. Projector-owned Issues are explicitly derived and overwritable; human prose belongs in SD or in a linked Issue.
