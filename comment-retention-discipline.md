@@ -246,3 +246,24 @@ cause is that the sentence reads as style advice and loses to local imitation or
 task pressure. The paired baseline/candidate result is the disproof instrument:
 without a reproduced baseline defect and strict candidate improvement, do not
 ship stronger prose or invent enforcement.
+
+## Stage Report: ideation (pre-EM)
+
+- DONE: Recorded, committed, pushed, and re-read the Captain-approved
+  `production` work-profile receipt before expanding acceptance criteria.
+- DONE: Recovered the existing kernel authoring/minimality seam at fresh
+  `origin/main@004444c5501fc1ef32c9fe61ea616e8fdc3bc426`; canonical and adopted
+  kernels share blob `cb0daf615fa642ce20eba7880d7ab6032f20d6a0`, and the isolated
+  exact-ref contract run passed.
+- DONE: Reduced the design to one sentence in the existing kernel paragraph,
+  minimal PRODUCT/ROADMAP wording, no ARCHITECTURE change, and no new policy or
+  evaluator surface.
+- DONE: Defined four falsifiable ACs and a six-response, three-case installed-
+  loader experiment with one optional ambiguous-pair repeat and a 20-minute cap.
+- PENDING: One fresh-context ideation EM verdict on the exact committed artifact.
+
+### Summary
+
+The smallest candidate is one portable kernel sentence earned only if an exact
+baseline reproduces redundant-comment retention and the candidate improves it
+without losing necessary rationale or changing executable tokens.
