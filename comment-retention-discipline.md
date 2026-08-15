@@ -170,7 +170,7 @@ unresolved ambiguity after the repeat, or an unaccounted response yields
 `UNKNOWN`. Report per-case retained/removed rationale and paired deltas; do not
 convert aggregate comment volume into a ratio gate.
 
-### Acceptance criteria
+## Acceptance criteria
 
 **AC-1 — The portable sentence improves redundant-comment removal in the bounded ordinary-agent baseline.**
 
