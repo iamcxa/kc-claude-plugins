@@ -1,6 +1,6 @@
 ---
 title: "Teach agents to retain only comments with maintenance value"
-status: ideation
+status: implementation
 source: "Captain-approved independent kc-dev-flow/S3 slice, 2026-08-15; does not alter the existing projection sequence"
 product: kc-dev-flow
 sprint: S3
