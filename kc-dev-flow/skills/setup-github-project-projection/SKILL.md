@@ -121,16 +121,31 @@ is appended to the run journal so a partial failure remains actionable.
 
 ## Receipts and refusal
 
-Manage projector-created Issue bytes only when a schema-valid qualified receipt
-is already in the selected Project, or a stranded receipt Issue was authored by
-the configured automation identity. A title match and a public receipt-shaped
-comment are not ownership. An explicitly linked human Issue must match its
-reviewed `owner/repo#number` binding; never PATCH its title, body, or state. Only
-add it to the Project when needed and manage projector-owned Project fields.
+Discover projector-created candidates from the union of the `SD Identity`
+Project text field, hidden receipt, and additive `spacedock:managed` repository
+label. A v2 projector-owned Issue normally requires the field and receipt to
+agree. The only missing-anchor resume is a unique trusted v2 receipt restoring
+its missing `SD Identity` after an interrupted Issue-to-Project write. A field
+without a receipt, a disagreement, a duplicate, or a label-only candidate is a
+conflict. A title match and a public receipt-shaped comment are not ownership;
+the receipt Issue must be authored by the configured automation identity. An
+explicitly linked human Issue must match its reviewed `owner/repo#number`
+binding; never PATCH its title, body, state, or labels. Only add it to the
+Project when needed and manage projector-owned Project fields.
+
+For projector-owned Issues, render `[{short-id}] {title}` and copy only the
+entity Markdown after frontmatter into the visible body. Keep lifecycle and
+identity metadata in Project fields and the managed label. These title and body
+bytes are a derived view: an edit on a projector-owned Issue is overwritten from
+SD on the next successful reconcile and never becomes SD input. Migrate only a
+schema-valid v1 projector receipt to v2; the visible v1 body is not a separate
+human authority. Linked Issue bytes remain human-owned.
 
 Refuse or quarantine:
 
 - duplicate qualified identities or Issue references;
+- missing v2 receipts, disagreeing or duplicate anchors, field-only identities,
+  label-only candidates, or receipt-only candidates outside the selected scope;
 - unknown stages, malformed receipts, or pinned-input drift;
 - deletion without an `_archive/` tombstone;
 - unsupported Project fields or credentials;

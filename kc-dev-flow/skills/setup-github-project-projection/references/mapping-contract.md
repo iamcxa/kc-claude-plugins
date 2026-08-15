@@ -14,14 +14,17 @@ non-empty ID, title, status, and source. Treat score, dates, Issue/PR references
 and workflow-specific fields as optional. Never publish worktree paths.
 
 One installed configuration selects one workflow and one Project. Therefore the
-generic Project schema creates only `SD Stage`; it does not need `SD Workflow`.
+generic Project schema creates `SD Stage` and `SD Identity`; it does not need
+`SD Workflow`.
 Map the initial stage to GitHub Status `Todo` (fall back to `Backlog` only when
 that is the available option), the terminal stage to `Done`, and other stages to
 `In Progress` only when those options exist. Exact `SD Stage` remains the
 lossless lifecycle view.
 
 `SD Stage` and `SD Product` are single-select fields so Project views can group
-and chart them. Installation creates missing fields from observed source values.
+and chart them. `SD Identity` is a text field containing the full qualified
+identity for exact matching and operator inspection; it is not a chart
+dimension. Installation creates missing fields from observed source values.
 When a later source value needs a new option, the runtime reports
 `UPDATE_FIELD_OPTIONS` and refuses apply. Updating an existing option set remains
 a separately reviewed operator action because replacing the set may invalidate
@@ -38,15 +41,38 @@ When selected explicitly:
 
 ## Identity and ownership
 
-Primary identity is `<repository>:<workflow-dir>:<slug>`. Store optional entity
-ID only as a secondary key. Every receipt records pinned commits, entity digest,
-projector version and byte digest, ownership, and archive state.
+Primary identity is `<repository>:<workflow-dir>:<slug>`. Store it in the
+Project text field `SD Identity` and in the hidden Issue receipt. Add the
+repository label `spacedock:managed` to projector-owned Issues without replacing
+any existing label. Store optional entity ID only as a secondary key.
+
+Render projector-owned Issues for people first:
+
+- title: `[{short-id}] {entity title}`; use the Spacedock short-ID rule for the
+  workflow ID style, including shortest-unique `sd-b32` prefixes across active
+  and archived entities;
+- body: the entity Markdown after frontmatter, followed only by the hidden
+  receipt; never expose frontmatter, worktree paths, or a visible metadata
+  summary;
+- Project fields and the managed label: lifecycle and machine identity metadata.
+
+The v2 receipt records pinned commits, entity digest, projector version and byte
+digest, ownership, and archive state. Normalize the rendered entity Markdown to
+LF with one terminal newline. Projector-owned title and body are derived bytes,
+not a second content authority.
 
 - `projector`: the projector may manage Issue open/closed state.
 - `linked`: require a reviewed full `owner/repo#number` binding; preserve every
   human Issue byte and manage only projector-owned Project fields.
-- receipt-less: foreign; report and leave unchanged unless the SD entity carries
-  the exact Issue reference selected in the reviewed plan.
+- receipt-less and field-less: foreign unless it carries `spacedock:managed`;
+  a label-only managed candidate is a conflict that blocks duplicate creation.
+
+Discover managed candidates from the union of `SD Identity`, receipt, and
+`spacedock:managed`. A v2 projector-owned Issue normally requires receipt and
+field agreement. One unique trusted same-scope v2 receipt may restore only a
+missing `SD Identity` field after an interrupted cross-API apply. A missing
+receipt, field-only identity, disagreement, duplicate, label-only candidate, or
+out-of-scope receipt reports a conflict and cannot cause `CREATE`.
 
 ## Classification
 
@@ -57,11 +83,16 @@ projector version and byte digest, ownership, and archive state.
 - `CONFLICT`: applying would require guessing identity, lifecycle, or authority.
 
 For projector-owned Issues, identical managed inputs and observed target state
-produce zero mutations. For linked Issues, equality covers Project membership
-and managed Project fields; human Issue title, body, and state are not desired
-values and are never PATCHed.
-Human-owned Project fields outside the desired `SD *` set do not participate in
-the equality check and remain untouched.
+produce zero mutations; differing title or body bytes are restored from SD. For
+linked Issues, equality covers Project membership and managed Project fields;
+human Issue title, body, state, and labels are not desired values and are never
+PATCHed.
+Human-owned Project fields and repository labels outside the desired managed set
+do not participate in the equality check and remain untouched.
+
+A schema-valid v1 projector receipt may migrate the approved Issue in place to
+v2. No title or summary-shape heuristic grants migration, and no other legacy or
+foreign body form gains ownership.
 
 ## Freshness and archive
 
