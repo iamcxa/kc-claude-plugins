@@ -1550,3 +1550,16 @@ is not runtime observation; an `UNKNOWN` known-bad arm cannot support a positive
 pair result; and distinct provider model-usage keys cannot count repeated
 responses. Its correction-cycle run stopped after one of sixteen declared
 responses, so none of its model output is an acceptance verdict for this task.
+
+## Research input: kc-dev-flow installed-loader dogfood — 2026-08-16
+
+`comment-retention-discipline` produced no product verdict and does not reactivate
+this task or authorize compute. It exposed three reusable evaluator failures:
+stage-only capture omitted the changed kernel; fixture/task text leaked hidden
+labels and rubric; and Safehouse isolation around nested Codex caused every
+filesystem read to fail before a kernel digest could be retained.
+
+The harvest candidate is one agent-native invocation boundary that can export
+provider-native tool traces while keeping arm mapping and scoring outside the
+model-readable surface. Until that boundary proves exact kernel reads for both
+opaque arms, apparent comment behavior remains non-counting `UNKNOWN` evidence.
