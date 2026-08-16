@@ -97,8 +97,8 @@ The installed default-branch workflow uses one reconcile path:
 - overlapping writes serialize with `cancel-in-progress: false`.
 
 The repository `GITHUB_TOKEN` only reads same-repository Issues for explicit
-links and migration observation. A dedicated, named secret owns Project Draft,
-item, and field writes only after token type, minimum permissions,
+links. A dedicated, named secret owns Project Draft, item, and field writes only
+after token type, minimum permissions,
 expiry, and rotation/revocation owner are recorded. The REST 2026-03-10 adapter
 for a user-owned Project requires a classic PAT; GitHub documents those user
 Project [item](https://docs.github.com/en/rest/projects/items) and
@@ -113,6 +113,11 @@ The workflow remains a read-only projection dry-run until the reviewed config
 sets `external_apply_enabled` true. A successful partial sequence is resumable:
 receipt-bearing Draft items are rediscovered when a later field write did not
 finish, and a rerun converges through the same plan.
+
+Before arming apply, attended setup must provision `SD Identity` as text plus
+`SD Stage` and any profile field as single-select with every required option.
+Steady-state reconcile validates that schema and fails before its first write;
+it never creates fields or changes option sets.
 
 Before the first write, runtime validates the approval scope and expiry, requires
 expiry no later than the credential expiry, compares the installed projector
@@ -137,19 +142,12 @@ view: an edit on a projector-owned Draft is overwritten from SD on the next
 successful reconcile and never becomes SD input. Linked Issue bytes remain
 human-owned.
 
-A legacy projector Issue is only a migration residue when its v2 receipt and
-`SD Identity` agree and its author is `github-actions[bot]`. Create and verify
-the replacement Draft first. Permanent Issue deletion is never scheduled: an
-attended cleanup must commit the Issue-number-to-SD-identity journal, recheck
-author and zero comments, remove the old Project membership, delete only the
-approved Issues, and prove a final zero-write reconcile.
-
 Refuse or quarantine:
 
 - duplicate qualified identities or Issue references;
 - missing v2 receipts, disagreeing or duplicate anchors, field-only identities,
-  untrusted legacy Issue residues, or receipt-only candidates outside the
-  selected scope;
+  non-Draft identity anchors, or receipt-only candidates outside the selected
+  scope;
 - unknown stages, malformed receipts, or pinned-input drift;
 - source disappearance without an `_archive/` tombstone;
 - unsupported Project fields or credentials;
@@ -165,8 +163,7 @@ Local deterministic fixtures prove mapping, production reconcile convergence,
 scope and expiry refusal, no-op reruns, retry bounds, mutation-cap refusal,
 receipt trust, and archive ownership before any external write. Disabled-
 schedule, invalid-token, and live archive procedures remain production-readiness
-evidence, not prerequisites for the local POC. The result snapshot records
-qualified Project/sprint identities but reports freshness `MISSING` until a
-later owner persists the last successful timestamp needed for a decaying
-liveness signal. Do not present the configured schedule alone as liveness
+evidence, not prerequisites for the local POC. The versioned reconcile result is
+the projection runtime artifact; status metrics and prose belong to the sibling
+status-update feature. Do not present the configured schedule alone as liveness
 evidence.

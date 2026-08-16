@@ -3,8 +3,9 @@
 ## Authority
 
 Spacedock owns entity identity and lifecycle. Project Drafts, explicitly linked
-GitHub Issues, and projector-created fields are derived views. GitHub-owned Priority, Size,
-Estimate, and Iteration never flow back or become projection inputs.
+GitHub Issues, and setup-provisioned projection fields are derived views.
+GitHub-owned Priority, Size, Estimate, and Iteration never flow back or become
+projection inputs.
 
 ## Generic source
 
@@ -14,7 +15,7 @@ non-empty ID, title, status, and source. Treat score, dates, Issue/PR references
 and workflow-specific fields as optional. Never publish worktree paths.
 
 One installed configuration selects one workflow and one Project. Therefore the
-generic Project schema creates `SD Stage` and `SD Identity`; it does not need
+generic Project schema requires `SD Stage` and `SD Identity`; it does not need
 `SD Workflow`.
 Map the initial stage to GitHub Status `Todo` (fall back to `Backlog` only when
 that is the available option), the terminal stage to `Done`, and other stages to
@@ -24,11 +25,11 @@ lossless lifecycle view.
 `SD Stage` and `SD Product` are single-select fields so Project views can group
 and chart them. `SD Identity` is a text field containing the full qualified
 identity for exact matching and operator inspection; it is not a chart
-dimension. Installation creates missing fields from observed source values.
-When a later source value needs a new option, the runtime reports
-`UPDATE_FIELD_OPTIONS` and refuses apply. Updating an existing option set remains
-a separately reviewed operator action because replacing the set may invalidate
-existing option identities.
+dimension. Attended setup creates missing fields and options before apply is
+armed. Runtime only validates live names, types, and required options, then
+refuses before its first write when schema drift is present. Changing an option
+set remains a separately reviewed operator action because replacing it may
+invalidate existing option identities.
 
 ## kc-dev-flow profile
 
@@ -72,12 +73,6 @@ interrupted cross-API apply. A missing receipt, field-only identity,
 disagreement, duplicate, or out-of-scope receipt reports a conflict and cannot
 cause `CREATE`.
 
-During Issue-to-Draft migration, a legacy Issue qualifies as a residue only
-when its v2 receipt and `SD Identity` agree and the author is
-`github-actions[bot]`. Any weaker candidate fails closed. Cleanup is attended,
-never scheduled, and requires a durable `Issue number -> slug -> SD Identity`
-journal plus immediate ownership and zero-comment rechecks before deletion.
-
 ## Classification
 
 - `CREATE`: no matching managed Draft/item exists.
@@ -109,7 +104,7 @@ not implicit completion.
 
 ## Credential boundary
 
-Use the repository token only to read same-repository linked or legacy Issues.
+Use the repository token only to read explicitly linked same-repository Issues.
 Use a separately named Project token for Draft, item, and field observation and
 mutation. The current REST
 2026-03-10 user-Project [item](https://docs.github.com/en/rest/projects/items)
