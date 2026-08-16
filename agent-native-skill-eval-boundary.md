@@ -413,3 +413,16 @@ retain one complete kernel read, but it did not retain the complete installed
 skill read and the selected Codex profile exposed unrelated global memory.
 Therefore the existing boundary still cannot produce the promised isolated,
 countable loader provenance; the correction is exhausted without product work.
+
+## Captain decision — accept POC no-go, 2026-08-16
+
+The Captain selected the POC stop route. Do not dispatch another evaluator
+attempt, widen Safehouse, retain a controller, or promote this task implicitly.
+Return the no-go evidence to `comment-retention-discipline`, whose next
+ideation must use proportional observable-output evidence instead of exact
+raw-loader provenance.
+
+This entity remains nonterminal because the commissioned workflow has no
+honest cancelled/no-go terminal and its `done` path requires delivered
+`PASSED` evidence. Do not fabricate a PR, merge timestamp, or success verdict
+to archive it.
