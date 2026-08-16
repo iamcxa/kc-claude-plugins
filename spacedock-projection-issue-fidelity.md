@@ -792,3 +792,23 @@ legacy removal remains closed behind the recorded migration gate.**
   ownership gates.
 - `Return condition:` any named behavior category would be lost to the 1,600-line
   test ceiling, or legacy removal lacks the exact live migration-complete signal.
+
+## Project #4 Draft migration and cleanup checkpoint — 2026-08-16
+
+Captain-authorized attended cleanup is complete. Exact migration carrier
+`8359bc3226d2ccf06cfa45fc785421916fee9425` at state
+`5da4cc684b2173646e173dd32d3f766478350b6c` first observed all ten replacement
+Drafts with exact title, entity body, v2 receipt, `SD Identity`, `SD Stage`,
+optional `SD Product`, and a residue-present zero-mutation reconcile.
+
+The immediate pre-delete audit then proved that exactly Issues #229-#238 were
+still authored by `github-actions[bot]` and had zero comments. Their ten Project
+#4 memberships were removed using the journaled item IDs, the intermediate
+conflicts were limited to the expected now-untrusted legacy residues, and the
+Issues were permanently deleted through GitHub's `deleteIssue` mutation.
+
+Final readback proves Issues #229-#238 are absent while all ten scoped replacement
+Drafts remain. The exact carrier rerun reports `NO_CHANGE=2`, `PARTIAL=8`,
+zero mutations, zero migration residues, zero orphans, and zero schema writes.
+AC-5's cleanup and final convergence gates pass. Legacy Issue migration code is
+now eligible for removal; scheduled automation did not receive cleanup authority.
