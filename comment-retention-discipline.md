@@ -524,3 +524,149 @@ experiment_correction: {authority: captain:kent, prior_invalid_responses: 3,
 Implementation now has six opaque fixed slots and an isolated, digest-bound
 ordinary-worker path. If that clean pair cannot finish within the remaining
 1,010 seconds, the result is `UNKNOWN` and the product remains unchanged.
+
+## Stage Report: implementation (cycle 2 correction) — UNKNOWN, no product change
+
+- DONE: The no-call preflight passed before the correction clock started.
+  Safehouse selected each standalone non-git shadow as the project/workdir
+  grant, reported no common Git directory or linked-worktree grants, and denied
+  direct and symlink reads of the product worktree, live state, and controller
+  rubric. All symlinks were removed before dispatch.
+- FAILED: Exactly six new fixed responses completed, but all six were invalid.
+  The nested Codex read-only sandbox rejected every filesystem command before
+  execution with `sandbox_apply: Operation not permitted`; every worker returned
+  `BLOCKED`, and no retained trace contained a complete kernel read or matching
+  kernel digest. Under AC-1 and the Captain-approved correction, none counts and
+  the final result is `UNKNOWN`.
+- SKIPPED: No positive matched pair exists, so the candidate sentence,
+  `PRODUCT.md`, and independent S3 `docs/dev/ROADMAP.md` wording were not edited.
+- SKIPPED: With no candidate revision, product checks, changed-file-to-AC
+  mapping, PR #240/RoboRev observation, delivery-topology loading, and a product
+  commit were not earned.
+
+Route: `return to Captain; the authorized correction is exhausted`.
+
+### Corrected bounded experiment receipt
+
+```yaml
+experiment:
+  result: UNKNOWN
+  product_change: none
+  correction_clock_start: 2026-08-15T13:09:19Z
+  calls_and_initial_scoring_complete: 2026-08-15T13:10:15Z
+  correction_elapsed_seconds: 56
+  cumulative_elapsed_seconds: 246
+  cumulative_elapsed_ceiling_seconds: 1200
+  provider_calls:
+    model: gpt-5.6-terra
+    reasoning: high
+    codex_cli: 0.146.0
+    prior_invalid: 3
+    correction_completed: 6
+    correction_counted: 0
+    cumulative_completed: 9
+    repeat_or_retry: 0
+    cumulative_ceiling: 9
+  prompt:
+    sha256: 020fa882963549e946042a31fac65c4949579b6ff2154a432048bf4162b7ce2c
+    model_readable_scope: "request and fixture only"
+  loader:
+    continue_dev_flow_version: 2.5.0
+    continue_dev_flow_sha256: 28c358633fd7a0d076c4175e783e1a872607627f814192b06bc51eb9877b959f
+  preflight:
+    safehouse_version: 0.9.0
+    isolated_policy_sha256: 9ff0d2fdeb13c9eef61a5e8a7801c0fc0d4efe611b47a9d64116cd7e900e8db2
+    controller_deny_sha256: 6ef0ffdaa232b68d55873c48a4ba8eec0bf8cf560f5b23d7712f563b33160732
+    capture_program_sha256: c9d16c41a6285b48d5b9f65fc88af14ad4293c0beca63b4ad32751862d72ab43
+    trace_retention_probe_sha256: 1519251b1062dc71aac04deae5db105723af8a133f66c7607333540ff5e43875
+    git_linked_grants: none
+    live_product_read: denied
+    live_state_read: denied
+    controller_read: denied
+    symlink_escape: denied
+    paired_diff: "only docs/dev/_mods/kernel.md candidate sentence"
+  shared_inputs:
+    workflow_readme_sha256: 6b434c4044b910970a6125195ecd7d2dbb90dad14caf25b0f1b20b45fa26c4b2
+    roadmap_sha256: 9afdee290b6f328054817d262444f0235237c5c22f5323a8e0d2a0d4ac1c2698
+    work_control_profile_sha256: 2cbe5de8dbebbd88f8d200b8fa7c87b740ed6a8b5efe27ee53eec3a2a0089a81
+    response_schema_sha256: b19cca5edc55eced90537b2293e150f27b381fb2c18ba3a2360e18284fdb5ff3
+    baseline_kernel_sha256: 300149e43cf2bc3c548fbdae750a90d305869280af5517436932741047210473
+    treatment_kernel_sha256: 06ca694e3c0d66fca90439829485ed0a9f8bd59ef275ea4f0124316c110ac207
+  responses:
+    - opaque_root: 17ab43
+      hidden_assignment: R-baseline
+      thread: 01a0058a-bec6-7840-a937-860903ccef5c
+      task_sha256: 04e4f0e22d80c1e27adc749e804a25ad0e6be2ff923469841fc4e1053060e8a3
+      trace_sha256: f8ad0fbc133915a95966d8563af30578734d3c41e4c8f34f78911e208e51b4bf
+      stderr_sha256: 2b6aa4f0644b803be608b20f83c7edefcefca5179039e0ee9f98462fab3347ff
+      elapsed_seconds: 27.755
+      result: BLOCKED
+      kernel_read: false
+      counted: false
+    - opaque_root: 83cf26
+      hidden_assignment: R-treatment
+      thread: 01a0058a-bebc-7840-a0df-cce99937c4b2
+      task_sha256: 04e4f0e22d80c1e27adc749e804a25ad0e6be2ff923469841fc4e1053060e8a3
+      trace_sha256: 66acb6aff6465113ad5bc6502bb4a65f6731c52f40990f25630f9c109c89da59
+      stderr_sha256: a312a3a38c9da60e9b7ccbfe526715c460525b38218e122da2599c282b29b4b2
+      elapsed_seconds: 26.116
+      result: BLOCKED
+      kernel_read: false
+      counted: false
+    - opaque_root: 29de71
+      hidden_assignment: N-baseline
+      thread: 01a0058a-beca-7c92-832b-296fd546d9cc
+      task_sha256: d6859f2bb0f1e23db4d7f2700fa0ac4bb52ef7008b1201e43d09ae74fc3f38ed
+      trace_sha256: 0d1f955b8b9be2c2f279b86c2fabfa5ef21d6bdc904328df61da24645704c099
+      stderr_sha256: 4def3acf41456bab44639d1ce78ef9c75548f6751746416cdc8c8c2a814c00b1
+      elapsed_seconds: 27.552
+      result: BLOCKED
+      kernel_read: false
+      counted: false
+    - opaque_root: 95fa08
+      hidden_assignment: N-treatment
+      thread: 01a0058a-bec7-7263-ace4-1048be25a0ff
+      task_sha256: d6859f2bb0f1e23db4d7f2700fa0ac4bb52ef7008b1201e43d09ae74fc3f38ed
+      trace_sha256: 69eff3231fe522bf82b1f118dad772494f79c837e242366b1f68e4076f8b0170
+      stderr_sha256: 2e4e2e545501af0f1898fd9e0d4d781938b5cc76911c3e4d48d4ff8da8808d2a
+      elapsed_seconds: 22.971
+      result: BLOCKED
+      kernel_read: false
+      counted: false
+    - opaque_root: 3bc614
+      hidden_assignment: M-baseline
+      thread: 01a0058a-bece-72e2-82c3-27dea60acb70
+      task_sha256: 793eb0305ee2d4454d7fc63568ce58ae04ab41a928a01e942b42328511971283
+      trace_sha256: e1658ae57291a95046fd41a86a90b60adf5b156799d4b62b4b0c041f9a904688
+      stderr_sha256: 52bb72be4dda77857c7cab285b6fc742a9ca50bb84f04f54b62a277e4b27b08d
+      elapsed_seconds: 25.152
+      result: BLOCKED
+      kernel_read: false
+      counted: false
+    - opaque_root: a640ed
+      hidden_assignment: M-treatment
+      thread: 01a0058a-beab-7340-b5db-edf51971d724
+      task_sha256: 793eb0305ee2d4454d7fc63568ce58ae04ab41a928a01e942b42328511971283
+      trace_sha256: 880a7d091f5269693e9089cedbbbc6b1e5ca366488cd6aed234d8bd151983e93
+      stderr_sha256: 8e4384e2b79e37c3c6cdbd02dded5bfec9db7a61262344bf432ab9db27d2ad22
+      elapsed_seconds: 23.361
+      result: BLOCKED
+      kernel_read: false
+      counted: false
+  falsifier: >-
+    All six traces lack the required complete local-kernel read and matching
+    digest because the nested Codex sandbox denied filesystem execution.
+```
+
+The six disposable shadows and controller artifacts were retained only through
+hashing and receipt construction, then discarded. The assigned product branch
+remains clean at `004444c5501fc1ef32c9fe61ea616e8fdc3bc426`; the user-owned
+untracked `e2e-pipeline/scripts/measure-prose-load.sh` in the shared root remains
+untouched.
+
+### Summary
+
+The correction satisfied isolation, causal-diff, trace-retention, call-count,
+and time controls, but the actual ordinary-worker reads never executed. The
+behavior claim therefore remains unproved, the authorized nine-call ceiling is
+exhausted, and no product change was made.
