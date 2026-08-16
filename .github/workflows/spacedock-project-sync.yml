@@ -11,7 +11,7 @@ concurrency:
 
 permissions:
   contents: read
-  issues: write
+  issues: read
 
 jobs:
   reconcile:

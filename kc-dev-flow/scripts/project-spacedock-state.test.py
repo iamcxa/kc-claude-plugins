@@ -105,13 +105,17 @@ def apply_fake(plan: dict[str, object], target_items: list[dict[str, object]]):
         desired = mutation["desired"]
         if mutation["action"] == "CREATE":
             issue_number = desired.get("issue_number")
-            if not isinstance(issue_number, int):
+            if desired.get("content_type") == "Issue" and not isinstance(issue_number, int):
                 issue_number = next_issue
                 next_issue += 1
             result.append(
                 {
-                    "item_id": f"FAKE-{len(result) + 1}",
+                    "item_id": len(result) + 1,
+                    "content_type": desired["content_type"],
+                    "content_node_id": f"DI-FAKE-{len(result) + 1}",
                     "issue_number": issue_number,
+                    "issue_id": None,
+                    "repository": None,
                     "title": desired["title"],
                     "issue_state": desired["issue_state"],
                     "body": desired["body"],
@@ -136,6 +140,7 @@ def apply_fake(plan: dict[str, object], target_items: list[dict[str, object]]):
                 else:
                     item.update(
                         {
+                            "content_type": desired["content_type"],
                             "title": desired["title"],
                             "issue_state": desired["issue_state"],
                             "body": desired["body"],
@@ -210,6 +215,18 @@ class ProjectorContractTest(unittest.TestCase):
         )
         self.assertNotIn("Status", without_options["entities"][0]["desired"]["fields"])
 
+    def test_default_projection_targets_a_project_draft_not_a_repository_issue(self) -> None:
+        """Catch a regression that routes an unlinked SD task through Issue creation."""
+
+        task = projector.parse_entity_text(entity("One", "building"), slug="one")
+
+        planned = self.plan([task])
+        desired = planned["entities"][0]["desired"]
+
+        self.assertEqual("DraftIssue", desired.get("content_type"))
+        self.assertIsNone(desired["issue_number"])
+        self.assertEqual([], desired["labels"])
+
     def test_create_apply_and_identical_rerun_converge_to_no_change(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
         first = projector.plan_projection(
@@ -232,7 +249,8 @@ class ProjectorContractTest(unittest.TestCase):
         self.assertNotIn("This Issue is a read-only projection from Spacedock.", applied[0]["body"])
         self.assertNotIn("worktree", applied[0]["body"])
         self.assertEqual("example/repo:docs/dev:one", applied[0]["fields"]["SD Identity"])
-        self.assertEqual(["spacedock:managed"], applied[0]["labels"])
+        self.assertEqual("DraftIssue", applied[0]["content_type"])
+        self.assertEqual([], applied[0]["labels"])
 
         moved_refs = {
             **self.provenance,
@@ -347,9 +365,20 @@ class ProjectorContractTest(unittest.TestCase):
         mutation = plan["mutations"][0]
 
         self.assertEqual("UPDATE", plan["entities"][0]["classification"])
-        self.assertTrue(mutation["issue_update_required"])
+        self.assertTrue(mutation["content_update_required"])
         self.assertTrue(mutation["desired"]["body"].startswith("Fixture body.\n"))
         self.assertNotIn("Human edit.", mutation["desired"]["body"])
+
+    def test_terminal_draft_field_repair_does_not_rewrite_unchanged_content(self) -> None:
+        task = projector.parse_entity_text(entity("One", "released"), slug="one")
+        current = apply_fake(self.plan([task]), [])[0]
+        current["issue_state"] = None
+        current["fields"].pop("SD Identity")
+
+        mutation = self.plan([task], [current])["mutations"][0]
+
+        self.assertTrue(mutation["field_update_required"])
+        self.assertFalse(mutation["content_update_required"])
 
     def test_exact_v1_receipt_migrates_to_v2_without_general_body_recognition(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
@@ -376,6 +405,73 @@ class ProjectorContractTest(unittest.TestCase):
             migration["entities"][0]["desired"]["receipt"]["schema"],
         )
         self.assertTrue(migration["entities"][0]["desired"]["body"].startswith("Fixture body.\n"))
+
+    def test_projector_issue_becomes_residue_while_replacement_draft_converges(self) -> None:
+        """Catch an old projector Issue winning target selection or causing rerun writes."""
+
+        task = projector.parse_entity_text(entity("One", "building"), slug="one")
+        legacy = apply_fake(self.plan([task]), [])[0]
+        legacy.update(
+            {
+                "content_type": "Issue",
+                "content_node_id": "I_fixture",
+                "repository": "example/repo",
+                "issue_number": 229,
+                "issue_id": 31,
+                "issue_identity": "example/repo#229",
+                "author_login": "github-actions[bot]",
+                "labels": ["spacedock:managed"],
+            }
+        )
+
+        migration = self.plan([task], [legacy])
+
+        self.assertEqual("CREATE", migration["entities"][0]["action"])
+        self.assertIsNone(migration["mutations"][0]["current_item_id"])
+        self.assertEqual(
+            [
+                {
+                    "identity": "example/repo:docs/dev:one",
+                    "item_id": 1,
+                    "issue_number": 229,
+                }
+            ],
+            migration["migration_residues"],
+        )
+
+        with_draft = apply_fake(migration, [legacy])
+        converged = self.plan([task], with_draft)
+
+        self.assertEqual("NO_CHANGE", converged["entities"][0]["action"])
+        self.assertEqual([], converged["mutations"])
+        self.assertEqual(migration["migration_residues"], converged["migration_residues"])
+
+    def test_untrusted_projector_issue_cannot_become_migration_residue(self) -> None:
+        """Catch deleting or replacing an Issue whose bot ownership is unproven."""
+
+        task = projector.parse_entity_text(entity("One", "building"), slug="one")
+        legacy = apply_fake(self.plan([task]), [])[0]
+        legacy.update(
+            {
+                "content_type": "Issue",
+                "content_node_id": "I_fixture",
+                "repository": "example/repo",
+                "issue_number": 229,
+                "issue_id": 31,
+                "issue_identity": "example/repo#229",
+                "author_login": "attacker",
+                "labels": ["spacedock:managed"],
+            }
+        )
+
+        plan = self.plan([task], [legacy])
+
+        self.assertEqual("CONFLICT", plan["entities"][0]["classification"])
+        self.assertEqual(
+            "untrusted_issue_migration_residue", plan["entities"][0]["reason"]
+        )
+        self.assertEqual([], plan["migration_residues"])
+        self.assertEqual([], plan["mutations"])
 
     def test_unidentified_managed_candidates_block_duplicate_create(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
@@ -404,12 +500,10 @@ class ProjectorContractTest(unittest.TestCase):
                 self.assertEqual("managed_candidate_missing_identity", plan["entities"][0]["reason"])
                 self.assertEqual([], plan["mutations"])
 
-    def test_missing_managed_label_is_added_without_replacing_human_labels(self) -> None:
+    def test_draft_projection_does_not_manage_repository_labels(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
         current = self.projected(task)
         current["labels"] = ["human-owned"]
-        current["repository"] = "example/repo"
-        current["issue_id"] = 31
         plan = self.plan([task], [current])
         fields = [
             {"id": 10, "name": "Status", "data_type": "single_select", "options": [{"id": "progress", "name": {"raw": "In Progress"}}]},
@@ -423,8 +517,6 @@ class ProjectorContractTest(unittest.TestCase):
 
             def request(self, method, path, *, authority, body=None):
                 self.calls.append((method, path, authority, body))
-                if method == "GET":
-                    return [{"name": "spacedock:managed"}, {"name": "human-owned"}]
                 return {}
 
         client = Client()
@@ -444,11 +536,8 @@ class ProjectorContractTest(unittest.TestCase):
             fields,
         )
 
-        self.assertEqual(["ADD_LABEL"], [operation["action"] for operation in operations])
-        self.assertEqual(
-            {"labels": ["spacedock:managed"]},
-            next(body for method, path, _, body in client.calls if path.endswith("/labels")),
-        )
+        self.assertEqual([], operations)
+        self.assertEqual([], client.calls)
 
     def test_project_schema_uses_text_identity_and_single_select_dimensions(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
@@ -488,7 +577,7 @@ class ProjectorContractTest(unittest.TestCase):
         self.assertEqual(22, plan["entities"][0]["desired"]["issue_number"])
         self.assertEqual("linked", plan["entities"][0]["desired"]["receipt"]["ownership"])
 
-    def test_terminal_stage_closes_only_projector_owned_issue(self) -> None:
+    def test_terminal_stage_completes_draft_without_closing_linked_issue(self) -> None:
         owned = projector.parse_entity_text(entity("Owned", "released"), slug="owned")
         linked = projector.parse_entity_text(
             entity("Linked", "released", issue=22), slug="linked"
@@ -509,7 +598,8 @@ class ProjectorContractTest(unittest.TestCase):
         )
         by_slug = {item["slug"]: item["desired"] for item in plan["entities"]}
 
-        self.assertEqual("CLOSED", by_slug["owned"]["issue_state"])
+        self.assertEqual("DraftIssue", by_slug["owned"]["content_type"])
+        self.assertEqual("Done", by_slug["owned"]["fields"]["Status"])
         self.assertEqual("OPEN", by_slug["linked"]["issue_state"])
 
     def test_missing_explicit_issue_is_a_conflict_before_mutation(self) -> None:
@@ -580,7 +670,7 @@ class ProjectorContractTest(unittest.TestCase):
                 **self.provenance,
             )
 
-    def test_archive_closes_owned_preserves_linked_and_ignores_foreign(self) -> None:
+    def test_archive_completes_draft_preserves_linked_and_ignores_foreign(self) -> None:
         owned = projector.parse_entity_text(
             entity("Owned", "released"), slug="owned", archived=True
         )
@@ -632,7 +722,8 @@ class ProjectorContractTest(unittest.TestCase):
             if projector.parse_receipt(item["body"])
         }
 
-        self.assertEqual("CLOSED", by_slug["owned"]["issue_state"])
+        self.assertEqual("DraftIssue", by_slug["owned"]["content_type"])
+        self.assertEqual("Done", by_slug["owned"]["fields"]["Status"])
         self.assertEqual(
             "OPEN",
             next(item for item in applied if item["issue_number"] == 22)["issue_state"],
@@ -760,6 +851,38 @@ class ProjectorContractTest(unittest.TestCase):
         self.assertEqual("OPEN", observed[0]["issue_state"])
         self.assertEqual({"Status": "Todo", "SD Stage": "inbox"}, observed[0]["fields"])
 
+    def test_rest_observation_normalizes_draft_content_for_stable_updates(self) -> None:
+        """Catch dropping DraftIssue items or losing the node ID needed for updates."""
+
+        fields = [{"id": 12, "name": "SD Identity", "data_type": "text"}]
+        items = [
+            {
+                "id": 21,
+                "node_id": "PVTI_fixture",
+                "content_type": "DraftIssue",
+                "content": {
+                    "id": 31,
+                    "node_id": "DI_fixture",
+                    "title": "[one] One",
+                    "body": "Fixture body.",
+                },
+                "fields": [
+                    {"id": 12, "value": {"raw": "example/repo:docs/dev:one"}}
+                ],
+            }
+        ]
+
+        observed = projector.target_items_from_rest(fields, items)
+
+        self.assertEqual(1, len(observed))
+        self.assertEqual("DraftIssue", observed[0]["content_type"])
+        self.assertEqual("DI_fixture", observed[0]["content_node_id"])
+        self.assertIsNone(observed[0]["issue_number"])
+        self.assertEqual("[one] One", observed[0]["title"])
+        self.assertEqual(
+            "example/repo:docs/dev:one", observed[0]["fields"]["SD Identity"]
+        )
+
     def test_rest_apply_uses_separate_authorities_and_convergent_operations(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
         plan = projector.plan_projection(
@@ -791,8 +914,6 @@ class ProjectorContractTest(unittest.TestCase):
 
             def request(self, method, path, *, authority, body=None):
                 self.calls.append((method, path, authority, body))
-                if method == "GET" and "/labels?" in path:
-                    return [{"name": "spacedock:managed"}]
                 if method == "POST" and path.endswith("/fields"):
                     return {
                         "value": {
@@ -801,11 +922,21 @@ class ProjectorContractTest(unittest.TestCase):
                             "data_type": "text",
                         }
                     }
-                if method == "POST" and path.endswith("/issues"):
-                    return {"id": 31, "number": 7}
-                if method == "POST" and path.endswith("/items"):
-                    return {"value": {"id": 21}}
-                return {"id": 31, "number": 7}
+                return {}
+
+            def graphql(self, query, variables, *, authority):
+                self.calls.append(
+                    ("GRAPHQL", "addProjectV2DraftIssue", authority, variables)
+                )
+                return {
+                    "addProjectV2DraftIssue": {
+                        "projectItem": {
+                            "id": "PVTI_fixture",
+                            "fullDatabaseId": "21",
+                            "content": {"id": "DI_fixture"},
+                        }
+                    }
+                }
 
         client = FakeClient()
         config = {
@@ -821,16 +952,12 @@ class ProjectorContractTest(unittest.TestCase):
         operations = projector.apply_github_plan(client, config, plan, fields)
 
         self.assertEqual(
-            ["CREATE_FIELD", "CREATE_ISSUE", "ADD_PROJECT_ITEM", "UPDATE_FIELDS"],
+            ["CREATE_FIELD", "CREATE_DRAFT", "UPDATE_FIELDS"],
             [operation["action"] for operation in operations],
         )
-        self.assertEqual("repository", client.calls[0][2])
-        self.assertEqual("project", client.calls[1][2])
-        self.assertEqual("repository", client.calls[2][2])
-        self.assertEqual("project", client.calls[3][2])
-        self.assertEqual("project", client.calls[4][2])
+        self.assertTrue(all(call[2] == "project" for call in client.calls))
         self.assertEqual(
-            {"name": "SD Identity", "data_type": "text"}, client.calls[1][3]
+            {"name": "SD Identity", "data_type": "text"}, client.calls[0][3]
         )
         self.assertEqual(
             {
@@ -840,8 +967,148 @@ class ProjectorContractTest(unittest.TestCase):
                     {"id": 12, "value": "example/repo:docs/dev:one"},
                 ]
             },
-            client.calls[4][3],
+            client.calls[2][3],
         )
+
+    def test_apply_creates_a_draft_and_sets_fields_without_issue_writes(self) -> None:
+        """Catch routing default projection through repository Issue mutation."""
+
+        task = projector.parse_entity_text(entity("One", "building"), slug="one")
+        plan = self.plan([task])
+        fields = [
+            {
+                "id": 10,
+                "name": "Status",
+                "data_type": "single_select",
+                "options": [{"id": "progress", "name": {"raw": "In Progress"}}],
+            },
+            {
+                "id": 11,
+                "name": "SD Stage",
+                "data_type": "single_select",
+                "options": [{"id": "building", "name": {"raw": "building"}}],
+            },
+            {"id": 12, "name": "SD Identity", "data_type": "text"},
+        ]
+
+        class Client:
+            def __init__(self) -> None:
+                self.calls: list[tuple[str, str, str, object]] = []
+
+            def request(self, method, path, *, authority, body=None):
+                self.calls.append((method, path, authority, body))
+                if method == "GET" and "/labels?" in path:
+                    return [{"name": "spacedock:managed"}]
+                if method == "POST" and path.endswith("/issues"):
+                    return {"id": 31, "number": 7}
+                if method == "POST" and path.endswith("/items"):
+                    return {"value": {"id": 21}}
+                return {}
+
+            def graphql(self, query, variables, *, authority):
+                self.calls.append(("GRAPHQL", "addProjectV2DraftIssue", authority, variables))
+                return {
+                    "addProjectV2DraftIssue": {
+                        "projectItem": {
+                            "id": "PVTI_fixture",
+                            "fullDatabaseId": "21",
+                            "content": {"id": "DI_fixture"},
+                        }
+                    }
+                }
+
+        client = Client()
+        operations = projector.apply_github_plan(
+            client,
+            {
+                "repository": "example/repo",
+                "approval": {"max_mutations_per_run": 4},
+                "project": {
+                    "owner_type": "user",
+                    "owner": "example",
+                    "number": 1,
+                    "node_id": "PVT_example",
+                },
+            },
+            plan,
+            fields,
+        )
+
+        self.assertEqual(
+            ["CREATE_DRAFT", "UPDATE_FIELDS"],
+            [operation["action"] for operation in operations],
+        )
+        self.assertFalse(any(authority == "repository" for _, _, authority, _ in client.calls))
+        self.assertEqual("PVT_example", client.calls[0][3]["projectId"])
+        self.assertEqual("[one] One", client.calls[0][3]["title"])
+        self.assertIn("Fixture body.", client.calls[0][3]["body"])
+        self.assertEqual("users/example/projectsV2/1/items/21", client.calls[1][1])
+
+    def test_apply_updates_existing_draft_content_in_place(self) -> None:
+        """Catch leaving stale Draft prose or replacing the Project item identity."""
+
+        task = projector.parse_entity_text(entity("One", "building"), slug="one")
+        current = apply_fake(self.plan([task]), [])[0]
+        current.update(
+            {
+                "content_type": "DraftIssue",
+                "content_node_id": "DI_fixture",
+                "issue_number": None,
+                "issue_id": None,
+                "repository": None,
+                "title": "Stale title",
+            }
+        )
+        plan = self.plan([task], [current])
+        fields = [
+            {
+                "id": 10,
+                "name": "Status",
+                "data_type": "single_select",
+                "options": [{"id": "progress", "name": {"raw": "In Progress"}}],
+            },
+            {
+                "id": 11,
+                "name": "SD Stage",
+                "data_type": "single_select",
+                "options": [{"id": "building", "name": {"raw": "building"}}],
+            },
+            {"id": 12, "name": "SD Identity", "data_type": "text"},
+        ]
+
+        class Client:
+            def __init__(self) -> None:
+                self.calls = []
+
+            def request(self, method, path, *, authority, body=None):
+                self.calls.append((method, path, authority, body))
+                return {}
+
+            def graphql(self, query, variables, *, authority):
+                self.calls.append(("GRAPHQL", "updateProjectV2DraftIssue", authority, variables))
+                return {"updateProjectV2DraftIssue": {"draftIssue": {"id": "DI_fixture"}}}
+
+        client = Client()
+        operations = projector.apply_github_plan(
+            client,
+            {
+                "repository": "example/repo",
+                "approval": {"max_mutations_per_run": 1},
+                "project": {
+                    "owner_type": "user",
+                    "owner": "example",
+                    "number": 1,
+                    "node_id": "PVT_example",
+                },
+            },
+            plan,
+            fields,
+        )
+
+        self.assertEqual(["UPDATE_DRAFT"], [item["action"] for item in operations])
+        self.assertEqual("DI_fixture", client.calls[0][3]["draftIssueId"])
+        self.assertEqual("[one] One", client.calls[0][3]["title"])
+        self.assertFalse(any(authority == "repository" for _, _, authority, _ in client.calls))
 
     def test_foreign_project_fields_do_not_prevent_no_change(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
@@ -918,33 +1185,18 @@ class ProjectorContractTest(unittest.TestCase):
             ),
         )
 
-    def test_stranded_receipt_issue_resumes_without_duplicate_issue(self) -> None:
+    def test_partial_draft_resumes_with_field_update_only(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
-        created = apply_fake(
-            projector.plan_projection(
-                self.workflow, [task], [], profile="generic", **self.provenance
-            ),
-            [],
-        )[0]
-        issues = [
-            {
-                "id": 31,
-                "number": created["issue_number"],
-                "title": created["title"],
-                "state": "open",
-                "body": created["body"],
-                "labels": [{"name": "spacedock:managed"}],
-                "user": {"login": "github-actions[bot]"},
-            }
-        ]
-        target = projector.merge_repository_issues([], issues, repository="example/repo")
+        target = apply_fake(self.plan([task]), [])
+        target[0]["fields"].pop("SD Identity")
         plan = projector.plan_projection(
             self.workflow, [task], target, profile="generic", **self.provenance
         )
         mutation = plan["mutations"][0]
 
-        self.assertEqual(created["issue_number"], mutation["current_issue_number"])
-        self.assertIsNone(mutation["current_item_id"])
+        self.assertEqual(target[0]["item_id"], mutation["current_item_id"])
+        self.assertFalse(mutation["content_update_required"])
+        self.assertTrue(mutation["field_update_required"])
 
         class ResumeClient:
             def __init__(self) -> None:
@@ -952,11 +1204,10 @@ class ProjectorContractTest(unittest.TestCase):
 
             def request(self, method, path, *, authority, body=None):
                 self.calls.append((method, path, authority))
-                if method == "GET" and "/labels?" in path:
-                    return [{"name": "spacedock:managed"}]
-                if method == "POST" and path.endswith("/items"):
-                    return {"value": {"id": 21}}
                 return {}
+
+            def graphql(self, *args, **kwargs):
+                raise AssertionError("unchanged Draft content must not be rewritten")
 
         fields = [
             {
@@ -974,7 +1225,7 @@ class ProjectorContractTest(unittest.TestCase):
             {"id": 12, "name": "SD Identity", "data_type": "text"},
         ]
         client = ResumeClient()
-        projector.apply_github_plan(
+        operations = projector.apply_github_plan(
             client,
             {
                 "repository": "example/repo",
@@ -989,12 +1240,8 @@ class ProjectorContractTest(unittest.TestCase):
             plan,
             fields,
         )
-        self.assertEqual("GET", client.calls[0][0])
-        self.assertEqual("repository", client.calls[0][2])
-        self.assertFalse(any(method == "PATCH" and "/issues/" in path for method, path, _ in client.calls))
-        self.assertFalse(
-            any(method == "POST" and path.endswith("/issues") for method, path, _ in client.calls)
-        )
+        self.assertEqual(["UPDATE_FIELDS"], [item["action"] for item in operations])
+        self.assertTrue(all(authority == "project" for _, _, authority in client.calls))
 
     def test_external_user_project_apply_requires_classic_pat_receipt(self) -> None:
         config = {
@@ -1338,8 +1585,9 @@ class ProjectorContractTest(unittest.TestCase):
 
             def request(self, method, path, *, authority, body=None):
                 self.calls.append((method, path))
-                if method == "GET" and "/labels?" in path:
-                    return [{"name": "spacedock:managed"}]
+                raise AssertionError("cap must refuse before writes")
+
+            def graphql(self, *args, **kwargs):
                 raise AssertionError("cap must refuse before writes")
 
         client = Client()
@@ -1366,11 +1614,11 @@ class ProjectorContractTest(unittest.TestCase):
                 "number": 1,
                 "node_id": "PVT_example",
             },
-            "approval": {"max_mutations_per_run": 2},
+            "approval": {"max_mutations_per_run": 1},
         }
         with self.assertRaisesRegex(projector.ProjectionError, "mutation cap"):
             projector.apply_github_plan(client, config, plan, fields)
-        self.assertEqual([("GET", "repos/example/repo/labels?per_page=100")], client.calls)
+        self.assertEqual([], client.calls)
 
     def test_issue_identity_preflight_refuses_before_schema_or_label_write(self) -> None:
         task = projector.parse_entity_text(entity("One", "building"), slug="one")
@@ -1560,11 +1808,18 @@ class ProjectorContractTest(unittest.TestCase):
 
         class Client:
             def request(self, method, path, *, authority, body=None):
-                if method == "GET" and "/labels?" in path:
-                    return [{"name": "spacedock:managed"}]
-                if method == "POST" and path.endswith("/issues"):
-                    return {"id": 31, "number": 7}
                 raise projector.ProjectionError("injected Project failure")
+
+            def graphql(self, query, variables, *, authority):
+                return {
+                    "addProjectV2DraftIssue": {
+                        "projectItem": {
+                            "id": "PVTI_fixture",
+                            "fullDatabaseId": "21",
+                            "content": {"id": "DI_fixture"},
+                        }
+                    }
+                }
 
         journal: list[dict[str, object]] = []
         with self.assertRaisesRegex(projector.ProjectionError, "injected"):
@@ -1584,7 +1839,10 @@ class ProjectorContractTest(unittest.TestCase):
                 fields,
                 journal=journal,
             )
-        self.assertEqual([{"action": "CREATE_ISSUE", "issue_number": 7}], journal)
+        self.assertEqual(
+            [{"action": "CREATE_DRAFT", "identity": "example/repo:docs/dev:one"}],
+            journal,
+        )
 
     def test_rest_client_retries_transient_http_with_bounded_retry_after(self) -> None:
         waits: list[float] = []
@@ -1660,7 +1918,6 @@ class ProjectorContractTest(unittest.TestCase):
 
             class Client:
                 def __init__(self) -> None:
-                    self.issues: list[dict[str, object]] = []
                     self.items: list[dict[str, object]] = []
                     self.fields = [
                         {
@@ -1685,42 +1942,15 @@ class ProjectorContractTest(unittest.TestCase):
                 def request_all(self, path, *, authority):
                     if path.endswith("/fields"):
                         return self.fields
-                    if "/labels?" in path:
-                        return [{"name": "spacedock:managed"}]
                     if "/items" in path:
                         return self.items
-                    return self.issues
+                    return []
 
                 def request(self, method, path, *, authority, body=None):
                     if method == "GET" and path == "repos/example/repo":
                         return {"default_branch": "main"}
                     if method == "GET" and path.endswith("projectsV2/1"):
                         return {"value": {"node_id": "PVT_example"}}
-                    if method == "POST" and path.endswith("/issues"):
-                        issue = {
-                            "id": 31,
-                            "number": 7,
-                            "title": body["title"],
-                            "state": body["state"],
-                            "body": body["body"],
-                            "labels": [{"name": name} for name in body.get("labels", [])],
-                            "user": {"login": "github-actions[bot]"},
-                        }
-                        self.issues.append(issue)
-                        return issue
-                    if method == "POST" and path.endswith("/items"):
-                        issue = next(item for item in self.issues if item["id"] == body["id"])
-                        project_item = {
-                            "id": 21,
-                            "node_id": "PVTI_fixture",
-                            "content": {
-                                **issue,
-                                "repository_url": "https://api.github.com/repos/example/repo",
-                            },
-                            "fields": [],
-                        }
-                        self.items.append(project_item)
-                        return {"value": {"id": 21}}
                     if method == "PATCH" and "/items/" in path:
                         self.items[0]["fields"] = [
                             {
@@ -1743,6 +1973,31 @@ class ProjectorContractTest(unittest.TestCase):
                         return {}
                     raise AssertionError((method, path, authority, body))
 
+                def graphql(self, query, variables, *, authority):
+                    self.items.append(
+                        {
+                            "id": 21,
+                            "node_id": "PVTI_fixture",
+                            "content_type": "DraftIssue",
+                            "content": {
+                                "id": 31,
+                                "node_id": "DI_fixture",
+                                "title": variables["title"],
+                                "body": variables["body"],
+                            },
+                            "fields": [],
+                        }
+                    )
+                    return {
+                        "addProjectV2DraftIssue": {
+                            "projectItem": {
+                                "id": "PVTI_fixture",
+                                "fullDatabaseId": "21",
+                                "content": {"id": "DI_fixture"},
+                            }
+                        }
+                    }
+
             with mock.patch.object(projector, "_git_commit", side_effect=["a" * 40, "b" * 40]):
                 result = projector.reconcile(
                     config, trunk_dir=trunk, state_dir=state, client=Client()
@@ -1750,7 +2005,7 @@ class ProjectorContractTest(unittest.TestCase):
 
         self.assertEqual("apply", result["mode"])
         self.assertEqual(
-            ["CREATE_ISSUE", "ADD_PROJECT_ITEM", "UPDATE_FIELDS"],
+            ["CREATE_DRAFT", "UPDATE_FIELDS"],
             [operation["action"] for operation in result["operations"]],
         )
         self.assertEqual([], result["converged_plan"]["mutations"])

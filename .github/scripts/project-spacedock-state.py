@@ -58,6 +58,28 @@ MANAGED_ENTITY_FIELDS = {
     "product",
     "sprint",
 }
+ADD_DRAFT_MUTATION = """
+mutation AddProjectDraft($projectId: ID!, $title: String!, $body: String!) {
+  addProjectV2DraftIssue(
+    input: {projectId: $projectId, title: $title, body: $body}
+  ) {
+    projectItem {
+      id
+      fullDatabaseId
+      content { ... on DraftIssue { id } }
+    }
+  }
+}
+"""
+UPDATE_DRAFT_MUTATION = """
+mutation UpdateProjectDraft($draftIssueId: ID!, $title: String!, $body: String!) {
+  updateProjectV2DraftIssue(
+    input: {draftIssueId: $draftIssueId, title: $title, body: $body}
+  ) {
+    draftIssue { id }
+  }
+}
+"""
 
 
 class ProjectionError(ValueError):
@@ -147,6 +169,25 @@ class GitHubRestClient:
             match = re.search(r'<([^>]+)>; rel="next"', link)
             next_path = match.group(1) if match else None
         return result
+
+    def graphql(
+        self, query: str, variables: dict[str, Any], *, authority: str
+    ) -> dict[str, Any]:
+        payload = self.request(
+            "POST",
+            "graphql",
+            authority=authority,
+            body={"query": query, "variables": variables},
+        )
+        if not isinstance(payload, dict):
+            raise ProjectionError("GitHub GraphQL response is not an object")
+        errors = payload.get("errors")
+        if errors:
+            raise ProjectionError(f"GitHub GraphQL mutation failed: {_canonical(errors)[:500]}")
+        data = payload.get("data")
+        if not isinstance(data, dict):
+            raise ProjectionError("GitHub GraphQL response lacks data")
+        return data
 
 
 def _canonical(value: Any) -> str:
@@ -522,18 +563,25 @@ def target_items_from_rest(
     }
     result: list[dict[str, Any]] = []
     for item in items:
-        if item.get("content_type") not in {None, "Issue"}:
+        content_type = item.get("content_type") or "Issue"
+        if content_type not in {"DraftIssue", "Issue"}:
             continue
         content = item.get("content") or {}
-        if (
-            isinstance(content.get("number"), bool)
-            or not isinstance(content.get("number"), int)
-            or content["number"] <= 0
-        ):
-            continue
-        content_repository = _repository_from_url(content.get("repository_url"))
-        if content_repository is None:
-            raise ProjectionError("Project Issue observation lacks repository identity")
+        content_repository: str | None = None
+        issue_number: int | None = None
+        issue_identity: str | None = None
+        if content_type == "Issue":
+            if (
+                isinstance(content.get("number"), bool)
+                or not isinstance(content.get("number"), int)
+                or content["number"] <= 0
+            ):
+                continue
+            issue_number = content["number"]
+            content_repository = _repository_from_url(content.get("repository_url"))
+            if content_repository is None:
+                raise ProjectionError("Project Issue observation lacks repository identity")
+            issue_identity = _issue_identity(content_repository, issue_number)
         values: dict[str, Any] = {}
         for value in item.get("fields", []):
             field_name = field_names.get(value.get("id"), value.get("name"))
@@ -548,16 +596,26 @@ def target_items_from_rest(
             {
                 "item_id": item.get("id"),
                 "item_node_id": item.get("node_id"),
-                "issue_number": content.get("number"),
+                "content_type": content_type,
+                "content_node_id": content.get("node_id"),
+                "issue_number": issue_number,
                 "repository": content_repository,
-                "issue_identity": _issue_identity(content_repository, content["number"]),
-                "issue_id": content.get("id"),
+                "issue_identity": issue_identity,
+                "issue_id": content.get("id") if content_type == "Issue" else None,
                 "author_login": (content.get("user") or {}).get("login"),
                 "title": content.get("title"),
-                "issue_state": str(content.get("state", "open")).upper(),
+                "issue_state": (
+                    str(content.get("state", "open")).upper()
+                    if content_type == "Issue"
+                    else None
+                ),
                 "body": content.get("body") or "",
                 "fields": values,
-                "labels": _label_names(content.get("labels")),
+                "labels": (
+                    _label_names(content.get("labels"))
+                    if content_type == "Issue"
+                    else []
+                ),
             }
         )
     return result
@@ -914,13 +972,14 @@ def apply_github_plan(
     *,
     journal: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
-    """Apply a conflict-free plan through resumable Issue then Project writes."""
+    """Apply a conflict-free plan through resumable content then field writes."""
 
     conflicts = [item for item in plan["entities"] if item["classification"] == "CONFLICT"]
     if conflicts or plan["orphans"]:
         raise ProjectionError("conflicts must be resolved before external apply")
     repository = config["repository"]
     for mutation in plan["mutations"]:
+        desired_type = mutation["desired"].get("content_type")
         issue_number = mutation.get("current_issue_number")
         issue_id = mutation.get("current_issue_id")
         if issue_number is not None and mutation.get("current_repository") != repository:
@@ -930,48 +989,32 @@ def apply_github_plan(
         ):
             raise ProjectionError("linked Issue observation lacks stable Issue identity")
         if (
-            issue_number is not None
+            desired_type == "Issue"
+            and issue_number is not None
             and mutation.get("current_item_id") is None
-            and not mutation.get("issue_update_required")
             and not isinstance(issue_id, int)
         ):
             raise ProjectionError("stranded Issue observation lacks stable Issue identity")
+        if (
+            desired_type == "DraftIssue"
+            and mutation.get("current_item_id") is not None
+            and mutation.get("current_content_type") == "DraftIssue"
+            and not isinstance(mutation.get("current_content_node_id"), str)
+        ):
+            raise ProjectionError("Draft observation lacks stable content node ID")
     validate_project_schema(plan, fields, allow_missing=True)
     project_base = _project_base(config)
     operations = journal if journal is not None else []
     by_name = _field_by_name(fields)
-    needs_managed_label = any(
-        mutation.get("ownership") == "projector" for mutation in plan["mutations"]
-    )
-    repository_labels: set[str] = set()
-    if needs_managed_label:
-        request_all = getattr(client, "request_all", None)
-        raw_labels = (
-            request_all(f"repos/{repository}/labels?per_page=100", authority="repository")
-            if request_all
-            else _unwrap(
-                client.request(
-                    "GET",
-                    f"repos/{repository}/labels?per_page=100",
-                    authority="repository",
-                )
-            )
-        )
-        if not isinstance(raw_labels, list):
-            raise ProjectionError("repository label observation did not return a list")
-        repository_labels = set(_label_names(raw_labels))
     planned_writes = sum(name not in by_name for name in required_project_schema(plan))
-    if needs_managed_label and MANAGED_LABEL not in repository_labels:
-        planned_writes += 1
     for mutation in plan["mutations"]:
-        if mutation.get("ownership") != "linked" and (
-            mutation.get("current_issue_number") is None
-            or mutation.get("issue_update_required")
+        desired_type = mutation["desired"].get("content_type")
+        if desired_type == "DraftIssue" and (
+            mutation.get("current_item_id") is None
+            or mutation.get("content_update_required")
         ):
             planned_writes += 1
-        if mutation.get("label_update_required"):
-            planned_writes += 1
-        if mutation.get("current_item_id") is None:
+        if desired_type == "Issue" and mutation.get("current_item_id") is None:
             planned_writes += 1
         if mutation.get("field_update_required"):
             planned_writes += 1
@@ -982,18 +1025,6 @@ def apply_github_plan(
         raise ProjectionError(
             f"planned {planned_writes} writes exceed mutation cap {cap}"
         )
-    if needs_managed_label and MANAGED_LABEL not in repository_labels:
-        client.request(
-            "POST",
-            f"repos/{repository}/labels",
-            authority="repository",
-            body={
-                "name": MANAGED_LABEL,
-                "color": "6f42c1",
-                "description": "Issue managed by the Spacedock projection",
-            },
-        )
-        operations.append({"action": "CREATE_LABEL", "label": MANAGED_LABEL})
     for name, requirement in required_project_schema(plan).items():
         if name in by_name:
             continue
@@ -1018,56 +1049,56 @@ def apply_github_plan(
 
     for mutation in plan["mutations"]:
         desired = mutation["desired"]
+        desired_type = desired.get("content_type")
         issue_number = mutation.get("current_issue_number") or desired.get("issue_number")
         issue_id: int | None = mutation.get("current_issue_id")
-        issue_payload = {
-            "title": desired["title"],
-            "body": desired["body"],
-            "state": desired["issue_state"].lower(),
-        }
-        if mutation.get("ownership") != "linked":
-            if issue_number is None:
-                issue_payload["labels"] = desired["labels"]
-                issue = client.request(
-                    "POST",
-                    f"repos/{repository}/issues",
-                    authority="repository",
-                    body=issue_payload,
-                )
-                issue_number = issue["number"]
-                issue_id = issue["id"]
-                operations.append(
-                    {"action": "CREATE_ISSUE", "issue_number": issue_number}
-                )
-            elif mutation.get("issue_update_required"):
-                issue = client.request(
-                    "PATCH",
-                    f"repos/{repository}/issues/{issue_number}",
-                    authority="repository",
-                    body=issue_payload,
-                )
-                issue_id = issue["id"]
-                operations.append(
-                    {"action": "UPDATE_ISSUE", "issue_number": issue_number}
-                )
-
-        if mutation.get("label_update_required"):
-            client.request(
-                "POST",
-                f"repos/{repository}/issues/{issue_number}/labels",
-                authority="repository",
-                body={"labels": [MANAGED_LABEL]},
-            )
-            operations.append(
-                {
-                    "action": "ADD_LABEL",
-                    "issue_number": issue_number,
-                    "label": MANAGED_LABEL,
-                }
-            )
-
         item_id = mutation.get("current_item_id")
-        if item_id is None:
+        if desired_type == "DraftIssue":
+            if item_id is None:
+                data = client.graphql(
+                    ADD_DRAFT_MUTATION,
+                    {
+                        "projectId": config["project"]["node_id"],
+                        "title": desired["title"],
+                        "body": desired["body"],
+                    },
+                    authority="project",
+                )
+                project_item = (data.get("addProjectV2DraftIssue") or {}).get(
+                    "projectItem"
+                )
+                if not isinstance(project_item, dict):
+                    raise ProjectionError("Draft creation response lacks Project item")
+                raw_item_id = project_item.get("fullDatabaseId")
+                try:
+                    item_id = int(raw_item_id)
+                except (TypeError, ValueError) as exc:
+                    raise ProjectionError(
+                        "Draft creation response lacks numeric Project item ID"
+                    ) from exc
+                content = project_item.get("content") or {}
+                if not isinstance(content.get("id"), str):
+                    raise ProjectionError("Draft creation response lacks content node ID")
+                operations.append(
+                    {"action": "CREATE_DRAFT", "identity": mutation["identity"]}
+                )
+            elif mutation.get("content_update_required"):
+                draft_id = mutation.get("current_content_node_id")
+                if not isinstance(draft_id, str):
+                    raise ProjectionError("Draft update lacks content node ID")
+                client.graphql(
+                    UPDATE_DRAFT_MUTATION,
+                    {
+                        "draftIssueId": draft_id,
+                        "title": desired["title"],
+                        "body": desired["body"],
+                    },
+                    authority="project",
+                )
+                operations.append(
+                    {"action": "UPDATE_DRAFT", "identity": mutation["identity"]}
+                )
+        elif mutation.get("ownership") == "linked" and item_id is None:
             item = client.request(
                 "POST",
                 f"{project_base}/items",
@@ -1076,6 +1107,8 @@ def apply_github_plan(
             )
             item_id = _unwrap(item)["id"]
             operations.append({"action": "ADD_PROJECT_ITEM", "issue_number": issue_number})
+        elif desired_type != "Issue":
+            raise ProjectionError(f"unsupported desired content type {desired_type!r}")
 
         if mutation.get("field_update_required"):
             field_values: list[dict[str, Any]] = []
@@ -1096,7 +1129,13 @@ def apply_github_plan(
                 authority="project",
                 body={"fields": field_values},
             )
-            operations.append({"action": "UPDATE_FIELDS", "issue_number": issue_number})
+            operations.append(
+                {
+                    "action": "UPDATE_FIELDS",
+                    "identity": mutation["identity"],
+                    "issue_number": issue_number,
+                }
+            )
     return operations
 
 
@@ -1106,36 +1145,39 @@ def _same_managed_state(current: dict[str, Any], desired: dict[str, Any]) -> boo
             current.get("fields", {}).get(name) == value
             for name, value in desired["fields"].items()
         )
+    common = (
+        current.get("content_type") == desired["content_type"],
+        current.get("item_id") is not None,
+        current.get("title") == desired["title"],
+        all(
+            current.get("fields", {}).get(name) == value
+            for name, value in desired["fields"].items()
+        ),
+        _body_without_receipt(current.get("body"))
+        == _body_without_receipt(desired.get("body")),
+        _receipt_core(parse_receipt(current.get("body")))
+        == _receipt_core(desired["receipt"]),
+    )
+    if desired["content_type"] == "DraftIssue":
+        return all(common)
     return all(
-        (
-            current.get("title") == desired["title"],
-            current.get("issue_state") == desired["issue_state"],
-            all(
-                current.get("fields", {}).get(name) == value
-                for name, value in desired["fields"].items()
-            ),
-            MANAGED_LABEL in _normalized_labels(current),
-            _body_without_receipt(current.get("body"))
-            == _body_without_receipt(desired.get("body")),
-            _receipt_core(parse_receipt(current.get("body")))
-            == _receipt_core(desired["receipt"]),
-        )
+        (*common, current.get("issue_state") == desired["issue_state"], MANAGED_LABEL in _normalized_labels(current))
     )
 
 
-def _same_projector_issue_bytes(
+def _same_projector_content_bytes(
     current: dict[str, Any], desired: dict[str, Any]
 ) -> bool:
-    return all(
-        (
-            current.get("title") == desired["title"],
-            current.get("issue_state") == desired["issue_state"],
-            _body_without_receipt(current.get("body"))
-            == _body_without_receipt(desired.get("body")),
-            _receipt_core(parse_receipt(current.get("body")))
-            == _receipt_core(desired["receipt"]),
-        )
+    same_content = (
+        current.get("title") == desired["title"],
+        _body_without_receipt(current.get("body"))
+        == _body_without_receipt(desired.get("body")),
+        _receipt_core(parse_receipt(current.get("body")))
+        == _receipt_core(desired["receipt"]),
     )
+    if desired["content_type"] == "DraftIssue":
+        return all(same_content)
+    return all((*same_content, current.get("issue_state") == desired["issue_state"]))
 
 
 def _conflict(slug: str, reason: str) -> dict[str, Any]:
@@ -1274,6 +1316,7 @@ def _desired_issue(
     )
     return {
         "identity": identity,
+        "content_type": "Issue" if linked else "DraftIssue",
         "title": (
             current.get("title", entity["title"])
             if linked and current
@@ -1287,7 +1330,7 @@ def _desired_issue(
         "issue_state": issue_state,
         "body": body,
         "fields": fields,
-        "labels": [] if linked else [MANAGED_LABEL],
+        "labels": [],
         "receipt": receipt,
     }
 
@@ -1403,20 +1446,18 @@ def _plan_entity(
         "action": action,
         "identity": identity,
         "current_item_id": current.get("item_id") if current else None,
+        "current_content_type": current.get("content_type") if current else None,
+        "current_content_node_id": current.get("content_node_id") if current else None,
         "current_issue_number": current.get("issue_number") if current else None,
         "current_issue_id": current.get("issue_id") if current else None,
         "current_repository": current.get("repository") if current else None,
         "ownership": ownership,
-        "issue_update_required": bool(
+        "content_update_required": bool(
             current
             and ownership == "projector"
-            and not _same_projector_issue_bytes(current, desired)
+            and not _same_projector_content_bytes(current, desired)
         ),
-        "label_update_required": bool(
-            current
-            and ownership == "projector"
-            and MANAGED_LABEL not in _normalized_labels(current)
-        ),
+        "issue_update_required": False,
         "field_update_required": bool(
             current is None
             or current.get("item_id") is None
@@ -1454,15 +1495,49 @@ def plan_projection(
     _validate_entity_population(entities)
     if any(not entity.get("_short_id") for entity in entities):
         _assign_short_ids(workflow, entities)
+    draft_items = [
+        item for item in target_items if item.get("content_type") == "DraftIssue"
+    ]
     target_by_identity = _target_by_identity(
-        target_items, repository=repository, workflow_dir=workflow_dir
+        draft_items, repository=repository, workflow_dir=workflow_dir
+    )
+    legacy_issue_items = []
+    invalid_legacy_by_identity: dict[str, list[dict[str, Any]]] = {}
+    identity_prefix = f"{repository}:{workflow_dir}:"
+    for item in target_items:
+        if item.get("content_type") not in {None, "Issue"}:
+            continue
+        receipt = parse_receipt(item.get("body"))
+        field_identity = (item.get("fields") or {}).get(IDENTITY_FIELD)
+        if not (
+            (receipt and receipt.get("ownership") == "projector")
+            or MANAGED_LABEL in _normalized_labels(item)
+        ):
+            continue
+        receipt_identity = receipt.get("identity") if receipt else None
+        is_valid_residue = (
+            receipt is not None
+            and receipt.get("schema") == "spacedock-projection-receipt/v2"
+            and receipt.get("ownership") == "projector"
+            and item.get("author_login") == "github-actions[bot]"
+            and field_identity == receipt_identity
+        )
+        if is_valid_residue:
+            legacy_issue_items.append(item)
+            continue
+        for candidate_identity in {receipt_identity, field_identity}:
+            if isinstance(candidate_identity, str) and candidate_identity.startswith(
+                identity_prefix
+            ):
+                invalid_legacy_by_identity.setdefault(candidate_identity, []).append(item)
+    legacy_by_identity = _target_by_identity(
+        legacy_issue_items, repository=repository, workflow_dir=workflow_dir
     )
     target_by_issue = {
         item.get("issue_identity") or _issue_identity(repository, item["issue_number"]): item
         for item in target_items
         if isinstance(item.get("issue_number"), int)
     }
-    identity_prefix = f"{repository}:{workflow_dir}:"
     unidentified_managed = []
     for item in target_items:
         if item.get("repository") not in {None, repository}:
@@ -1484,8 +1559,10 @@ def plan_projection(
     bindings = linked_issue_bindings or {}
     entity_results: list[dict[str, Any]] = []
     mutations: list[dict[str, Any]] = []
+    migration_residues: list[dict[str, Any]] = []
 
     for entity in sorted(entities, key=lambda item: item["_slug"]):
+        identity = _identity(repository, workflow_dir, entity["_slug"])
         result, mutation = _plan_entity(
             workflow,
             entity,
@@ -1502,6 +1579,21 @@ def plan_projection(
             target_by_issue=target_by_issue,
             linked_issue_bindings=bindings,
         )
+        residue = legacy_by_identity.get(identity)
+        if invalid_legacy_by_identity.get(identity):
+            result = _conflict(entity["_slug"], "untrusted_issue_migration_residue")
+            mutation = None
+        elif residue and residue.get("_identity_conflict"):
+            result = _conflict(entity["_slug"], str(residue["_identity_conflict"]))
+            mutation = None
+        elif residue:
+            migration_residues.append(
+                {
+                    "identity": identity,
+                    "item_id": residue.get("item_id"),
+                    "issue_number": residue.get("issue_number"),
+                }
+            )
         if (
             mutation
             and mutation["action"] == "CREATE"
@@ -1552,6 +1644,7 @@ def plan_projection(
         "workflow": workflow,
         "entities": entity_results,
         "orphans": orphans,
+        "migration_residues": migration_residues,
         "mutations": mutations,
     }
 

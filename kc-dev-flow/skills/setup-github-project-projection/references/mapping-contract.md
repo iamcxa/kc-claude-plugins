@@ -2,8 +2,8 @@
 
 ## Authority
 
-Spacedock owns entity identity and lifecycle. GitHub Issues, Project items, and
-projector-created fields are derived views. GitHub-owned Priority, Size,
+Spacedock owns entity identity and lifecycle. Project Drafts, explicitly linked
+GitHub Issues, and projector-created fields are derived views. GitHub-owned Priority, Size,
 Estimate, and Iteration never flow back or become projection inputs.
 
 ## Generic source
@@ -42,11 +42,10 @@ When selected explicitly:
 ## Identity and ownership
 
 Primary identity is `<repository>:<workflow-dir>:<slug>`. Store it in the
-Project text field `SD Identity` and in the hidden Issue receipt. Add the
-repository label `spacedock:managed` to projector-owned Issues without replacing
-any existing label. Store optional entity ID only as a secondary key.
+Project text field `SD Identity` and in the hidden Draft receipt. Store optional
+entity ID only as a secondary key.
 
-Render projector-owned Issues for people first:
+Render projector-owned Drafts for people first:
 
 - title: `[{short-id}] {entity title}`; use the Spacedock short-ID rule for the
   workflow ID style, including shortest-unique `sd-b32` prefixes across active
@@ -54,45 +53,46 @@ Render projector-owned Issues for people first:
 - body: the entity Markdown after frontmatter, followed only by the hidden
   receipt; never expose frontmatter, worktree paths, or a visible metadata
   summary;
-- Project fields and the managed label: lifecycle and machine identity metadata.
+- Project fields: lifecycle and machine identity metadata.
 
 The v2 receipt records pinned commits, entity digest, projector version and byte
 digest, ownership, and archive state. Normalize the rendered entity Markdown to
 LF with one terminal newline. Projector-owned title and body are derived bytes,
 not a second content authority.
 
-- `projector`: the projector may manage Issue open/closed state.
+- `projector`: the projector may manage Draft title, body, and Project fields.
 - `linked`: require a reviewed full `owner/repo#number` binding; preserve every
   human Issue byte and manage only projector-owned Project fields.
-- receipt-less and field-less: foreign unless it carries `spacedock:managed`;
-  a label-only managed candidate is a conflict that blocks duplicate creation.
+- receipt-less and field-less: foreign.
 
-Discover managed candidates from the union of `SD Identity`, receipt, and
-`spacedock:managed`. A v2 projector-owned Issue normally requires receipt and
-field agreement. One unique trusted same-scope v2 receipt may restore only a
-missing `SD Identity` field after an interrupted cross-API apply. A missing
-receipt, field-only identity, disagreement, duplicate, label-only candidate, or
-out-of-scope receipt reports a conflict and cannot cause `CREATE`.
+Discover managed Drafts from `SD Identity` and the receipt. A v2 projector-owned
+Draft normally requires receipt and field agreement. One unique trusted
+same-scope v2 receipt may restore only a missing `SD Identity` field after an
+interrupted cross-API apply. A missing receipt, field-only identity,
+disagreement, duplicate, or out-of-scope receipt reports a conflict and cannot
+cause `CREATE`.
+
+During Issue-to-Draft migration, a legacy Issue qualifies as a residue only
+when its v2 receipt and `SD Identity` agree and the author is
+`github-actions[bot]`. Any weaker candidate fails closed. Cleanup is attended,
+never scheduled, and requires a durable `Issue number -> slug -> SD Identity`
+journal plus immediate ownership and zero-comment rechecks before deletion.
 
 ## Classification
 
-- `CREATE`: no matching managed Issue/item exists.
+- `CREATE`: no matching managed Draft/item exists.
 - `UPDATE`: managed values differ from desired values.
 - `NO_CHANGE`: desired and managed values are identical.
 - `PARTIAL`: identity remains projectable but optional profile inputs are absent.
 - `CONFLICT`: applying would require guessing identity, lifecycle, or authority.
 
-For projector-owned Issues, identical managed inputs and observed target state
+For projector-owned Drafts, identical managed inputs and observed target state
 produce zero mutations; differing title or body bytes are restored from SD. For
 linked Issues, equality covers Project membership and managed Project fields;
 human Issue title, body, state, and labels are not desired values and are never
 PATCHed.
 Human-owned Project fields and repository labels outside the desired managed set
 do not participate in the equality check and remain untouched.
-
-A schema-valid v1 projector receipt may migrate the approved Issue in place to
-v2. No title or summary-shape heuristic grants migration, and no other legacy or
-foreign body form gains ownership.
 
 ## Freshness and archive
 
@@ -102,15 +102,16 @@ decisions but does not yet persist or display a timestamped last-successful
 reconcile receipt. That liveness integration remains production-readiness work;
 never substitute a frozen per-item `Current` field.
 
-An `_archive/` tombstone may close a projector-owned Issue and must preserve a
-linked Issue. Retain the Project item with explicit terminal/archive receipt
+An `_archive/` tombstone marks a projector-owned Draft complete and must preserve
+a linked Issue. Retain the Project item with explicit terminal/archive receipt
 state. A managed item whose source disappears without a tombstone is a conflict,
 not implicit completion.
 
 ## Credential boundary
 
-Use the repository token only for same-repository Issues and a separately named
-Project token only for Project observation and mutation. The current REST
+Use the repository token only to read same-repository linked or legacy Issues.
+Use a separately named Project token for Draft, item, and field observation and
+mutation. The current REST
 2026-03-10 user-Project [item](https://docs.github.com/en/rest/projects/items)
 and [field](https://docs.github.com/en/rest/projects/fields?apiVersion=2026-03-10)
 endpoints do not accept fine-grained PATs or GitHub App tokens; the user-owned

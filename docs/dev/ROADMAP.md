@@ -330,8 +330,8 @@ validation work. S3 does not change S2 scope, ordering, or release hold.
 Captain-approved sequence:
 
 1. `spacedock-github-project-projection` (`qa`)
-2. `spacedock-projection-issue-fidelity` (`q0`), after Project #1 dogfood exposed unreadable Issue bodies and a mutable receipt-only lookup
-3. `spacedock-project-status-updates` (`16`), after the projection snapshot and Issue identity contracts are stable
+2. `spacedock-projection-issue-fidelity` (`q0`), after Project #1 dogfood exposed repository Issue noise and a mutable receipt-only lookup
+3. `spacedock-project-status-updates` (`16`), after the projection snapshot and Draft identity contracts are stable
 
 End value: a repository can install a one-way, idempotent projection of one
 selected Spacedock workflow into one selected GitHub Project without making
@@ -343,11 +343,11 @@ Projection exit: a disposable proof establishes the selected trigger and
 authentication topology; a ten-entity Project #4 dry-run is reviewed before an
 approved bounded subset is applied; an identical rerun performs zero mutations;
 a view grouped by exact SD stage is usable; and every successful reconcile emits
-a versioned deterministic status snapshot. Projector-owned Issues expose the
-Spacedock entity body, use the workflow's short entity ID in the title, keep
+a versioned deterministic status snapshot. Projector-owned Draft items expose
+the Spacedock entity body, use the workflow's short entity ID in the title, keep
 structured lifecycle metadata in Project fields, and retain stable matching when
-the rendered body changes; a removed receipt fails closed without creating a
-second Issue.
+the rendered body changes. Explicitly bound human Issues remain human-owned; a
+removed receipt fails closed without creating a second Draft.
 
 Status-update exit: the sibling classifies delivery, scope, and definition deltas
 from that snapshot, produces deterministic reviewable drafts, refuses stale or
