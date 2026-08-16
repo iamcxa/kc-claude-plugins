@@ -680,3 +680,20 @@ exhausted, and no product change was made.
   `choose-work-profile`: prefer the active host/harness native structured
   question surface without naming a tool, and use plain chat only when no such
   interactive surface exists. No duplicate policy text is earned here.
+
+## Captain evidence reset — 2026-08-16
+
+The separate `agent-native-skill-eval-boundary` POC ended `UNKNOWN/no-go` and
+the Captain selected its stop route. Exact raw-loader provenance is no longer
+the evidence requirement for this small, reversible authoring rule; do not
+retry or generalize that evaluator.
+
+Return this task to ideation and replace the invalid A/B design with one normal
+ordinary-worker smoke covering redundant, necessary, and mixed comments in a
+single response. Judge observable edits only. If it removes adjacent-code
+narration, preserves external-constraint/hazard/rejected-alternative meaning,
+and leaves executable tokens unchanged, the existing one-sentence kernel edit
+may proceed with canonical/adopted parity and proportional contract checks.
+Otherwise make no product change. Retain no harness or recurring test; use the
+next two or three real tasks as post-merge dogfood and revert the sentence if it
+causes necessary-comment loss or no observable improvement.
