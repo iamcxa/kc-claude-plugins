@@ -876,3 +876,31 @@ until the deployed Issue-first cron is replaced and its new residue is cleaned.*
 - `Authority:` this report changes the work-item criterion and permits commit
   preparation only. Product commit/push, cleanup of #243-#248, Ready, merge, and
   terminal stage changes retain their existing Captain gates.
+
+## Delivery checkpoint — Draft-first merge and regenerated residue audit
+
+PR #242 was squash-merged as
+`f187ddbdf3442b883512dc1d37c05442edf28e08` after exact-head CI passed and
+`quinn-code-agent` explicitly accepted the Native stack exception at candidate
+`441b2f238d24b71c3baf4d50930b210d6fc0318f`. The merge has prior main
+`54594f1871a1a693528f8bdbbe132010ea4fb6db` as its sole parent and its tree is
+byte-equal to the candidate. No old-SHA projection run remains queued or active.
+
+Before any new deletion, live readback proved that exactly Issues #243-#248 are
+authored by `github-actions[bot]`, have zero comments, retain agreeing v2 receipt
+and `SD Identity` anchors, and each has an already-existing replacement Draft:
+
+| Issue | Slug | SD Identity | Issue item | Draft item |
+| --- | --- | --- | ---: | ---: |
+| #243 | `ci-integration-consumer-count-backport` | `iamcxa/kc-claude-plugins:docs/dev:ci-integration-consumer-count-backport` | 229451431 | 229448271 |
+| #244 | `e2e-prose-load` | `iamcxa/kc-claude-plugins:docs/dev:e2e-prose-load` | 229451435 | 229448275 |
+| #245 | `e2e-schema-contract` | `iamcxa/kc-claude-plugins:docs/dev:e2e-schema-contract` | 229451437 | 229448279 |
+| #246 | `e2e-typed-operands` | `iamcxa/kc-claude-plugins:docs/dev:e2e-typed-operands` | 229451440 | 229448280 |
+| #247 | `executable-diff-coverage-ratchet` | `iamcxa/kc-claude-plugins:docs/dev:executable-diff-coverage-ratchet` | 229451443 | 229448284 |
+| #248 | `github-project-projection-dogfood` | `iamcxa/kc-claude-plugins:docs/dev:github-project-projection-dogfood` | 229451458 | 229448288 |
+
+This second journal is required because the old deployed cron regenerated only
+these six Issues after the first cleanup. No Project membership or Issue has
+been removed yet. Commit and re-read this exact mapping, immediately recheck bot
+ownership and zero comments, then remove only the six journaled memberships and
+Issues. A merged-main apply and identical zero-write rerun remain mandatory.
