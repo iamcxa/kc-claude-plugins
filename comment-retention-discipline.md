@@ -626,3 +626,74 @@ may proceed with canonical/adopted parity and proportional contract checks.
 Otherwise make no product change. Retain no harness or recurring test; use the
 next two or three real tasks as post-merge dogfood and revert the sentence if it
 causes necessary-comment loss or no observable improvement.
+
+## Stage Report: ideation (cycle 4 — observable-output reset, final)
+
+- DONE: Treated the Captain's evidence reset as authoritative. The active design
+  retires task-specific raw-loader A/B, Safehouse, trace, retry, and evaluator
+  work; the earlier receipts remain historical evidence only.
+- DONE: Replaced the affected work-profile, AC, and test language with one normal
+  ordinary-worker response over three neutrally named snippets. The prompt may
+  contain only a maintainability request and code, and scoring observes only the
+  returned code.
+- DONE: Preserved the fail-closed behavior bar: remove adjacent-code narration,
+  retain external-constraint, hazard, and rejected-alternative meaning, and keep
+  executable tokens identical. Any failure or ambiguity means no product change.
+- DONE: Preserved the smallest proposed product surface: one sentence in the
+  byte-identical canonical/adopted kernels plus the already-approved minimal
+  PRODUCT and independent S3 ROADMAP wording. No retained smoke fixture, runner,
+  evaluator, recurring test, or additional product surface is allowed.
+- DONE: Fresh `origin/main@54594f1871a1a693528f8bdbbe132010ea4fb6db`
+  retains the existing kernel/parity/release seams. AC scan enumerated AC-1
+  through AC-4 without treating pre-implementation evidence absence as a pass.
+- DONE: A fresh-context EM reviewed state commit
+  `53ea7aa368fe1e5e86ae30eddea1c973f3baa899` and artifact
+  `sha256:f556254c33da1cf43c648d1b36bd6d6370a8a4016eeb707aa918509bd87dc612`,
+  returning `proceed / high / multi_model:not_needed`. Its exact remaining
+  concern is that one response is a go/no-go compatibility signal, not causal or
+  population-level proof.
+
+### Summary
+
+Proceed to one implementation worker. Run exactly one neutral three-snippet
+smoke before product edits; a complete observable-behavior pass earns only the
+bounded kernel/PRODUCT/ROADMAP diff and proportional Production checks. Every
+non-pass leaves the product unchanged.
+
+### Fresh EM verdict (cycle 4)
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "The Captain-approved observable-output reset justifies proceeding to exactly one implementation worker. The retired A/B, raw-loader provenance, Safehouse, trace, retry, and retained evaluator surfaces are disproportionate to this small reversible rule; the strict behavior, no-product-change, Production, dogfood, and rollback bars remain binding."
+  evidence_synthesis: "State commit 53ea7aa368fe1e5e86ae30eddea1c973f3baa899 contains the reviewed artifact with matching SHA-256 f556254c33da1cf43c648d1b36bd6d6370a8a4016eeb707aa918509bd87dc612, compared against fresh origin/main@54594f1871a1a693528f8bdbbe132010ea4fb6db. The prior nine responses established only measurement-boundary failures: three leaked classifications or lacked complete digest retention, and six were blocked before filesystem reads by the nested sandbox; none established comment-behavior failure and no product edit occurred. The reset replaces that disproportional causal experiment with one neutral, single-response, three-snippet observable-output smoke before edits. Every required behavior must pass, executable tokens must remain identical, and any failure or ambiguity yields no product change. A passing smoke permits only the existing one-sentence canonical/adopted kernel edit plus minimal PRODUCT and independent S3 ROADMAP wording, followed by existing contract, marketplace, release, parity, and exact-revision checks. The next two or three real tasks provide bounded post-merge dogfood and a rollback signal. The smoke is a go/no-go compatibility signal, not evidence that the sentence caused an improvement."
+  risk_tradeoff_call: "The benefit is a proportional check for a small reversible authoring rule while eliminating an already-failed experimental stack and its lifecycle cost. The material risk is overstating one response as causal proof or weakening the necessary-rationale and executable-token bars; the accepted contract prevents that by treating the smoke only as a pre-edit go/no-go and making every non-pass no-change. The durable alternative is to leave the product unchanged, and post-merge regression is handled by Captain-owned rollback rather than adding enforcement."
+  recommendation: "Proceed to exactly one implementation worker under the recorded reset: run one neutral three-snippet smoke, score only observable returned code, stop with no product change on any failure, ambiguity, rationale loss, or executable-token change, and only after a complete pass apply the bounded documentation-only surface and run the existing Production checks. Retire the task-specific raw-loader A/B, Safehouse, trace, retry, harness, and evaluator work; do not delete unrelated shared repository tooling. Record two or three real post-merge observations and return any rollback decision to the Captain."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "Spacedock FO retains dispatch and state mechanics only; it does not own this judgment, gate advancement, scope, rollback, or delivery authority."
+  engineering_judgment:
+    question: "Does the Captain-approved observable-output reset justify proceeding to one implementation worker while retiring exact raw-loader A/B, Safehouse, trace, retry, and permanent harness or evaluator work, with strict behavior, no-product-change, Production, dogfood, and rollback obligations retained?"
+    revision: "state commit 53ea7aa368fe1e5e86ae30eddea1c973f3baa899; artifact SHA-256 f556254c33da1cf43c648d1b36bd6d6370a8a4016eeb707aa918509bd87dc612; product comparison origin/main@54594f1871a1a693528f8bdbbe132010ea4fb6db"
+    evidence_synthesis: "State commit 53ea7aa368fe1e5e86ae30eddea1c973f3baa899 contains the reviewed artifact with matching SHA-256 f556254c33da1cf43c648d1b36bd6d6370a8a4016eeb707aa918509bd87dc612, compared against fresh origin/main@54594f1871a1a693528f8bdbbe132010ea4fb6db. The prior nine responses established only measurement-boundary failures: three leaked classifications or lacked complete digest retention, and six were blocked before filesystem reads by the nested sandbox; none established comment-behavior failure and no product edit occurred. The reset replaces that disproportional causal experiment with one neutral, single-response, three-snippet observable-output smoke before edits. Every required behavior must pass, executable tokens must remain identical, and any failure or ambiguity yields no product change. A passing smoke permits only the existing one-sentence canonical/adopted kernel edit plus minimal PRODUCT and independent S3 ROADMAP wording, followed by existing contract, marketplace, release, parity, and exact-revision checks. The next two or three real tasks provide bounded post-merge dogfood and a rollback signal. The smoke is a go/no-go compatibility signal, not evidence that the sentence caused an improvement."
+    adjudications:
+      - finding: "F1 proportional evidence"
+        disposition: supported
+        basis: "Kernel Verification discipline prefers the cheapest instrument that can fail. For this small reversible instruction-only change, one neutral response spanning redundant, necessary, and mixed comments can fail on every accepted behavior criterion without retaining an evaluator. The earlier A/B machinery repeatedly failed at provenance and sandbox boundaries rather than observing comment behavior, so retiring it is proportional."
+      - finding: "F2 strict behavior bar"
+        disposition: supported
+        basis: "AC-1 and AC-2 remain fail-closed: every narration comment must be removed, external-constraint, hazard, and rejected-alternative meaning must remain, narration may not merely be rewritten, and executable tokens must be identical. Prompt leakage, missing or ambiguous output, rationale loss, residual narration, or token change yields no product change."
+      - finding: "F3 smallest product surface and Production obligations"
+        disposition: supported
+        basis: "The candidate reuses the existing kernel minimality seam and adds no independent lifecycle surface. Only the byte-identical canonical and adopted kernel copies, one PRODUCT sentence, and bounded independent S3 ROADMAP wording may change after the smoke passes; ARCHITECTURE, versions, projection order, executable behavior, and unrelated tooling remain unchanged. Existing contract, marketplace, release, parity, and exact-revision checks retain the Production obligations."
+      - finding: "F4 post-merge dogfood and rollback"
+        disposition: supported
+        basis: "Two or three real subsequent tasks re-observe the behavior-producing boundary without creating a recurring gate or evaluator. Necessary-comment loss or no observable benefit is a recorded rollback signal; observation remains non-authoritative, and Captain Kent retains the rollback and scope decision."
+    risk_tradeoff: "The benefit is a proportional check for a small reversible authoring rule while eliminating an already-failed experimental stack and its lifecycle cost. The material risk is overstating one response as causal proof or weakening the necessary-rationale and executable-token bars; the accepted contract prevents that by treating the smoke only as a pre-edit go/no-go and making every non-pass no-change. The durable alternative is to leave the product unchanged, and post-merge regression is handled by Captain-owned rollback rather than adding enforcement."
+    recommendation: "Proceed to exactly one implementation worker under the recorded reset: run one neutral three-snippet smoke, score only observable returned code, stop with no product change on any failure, ambiguity, rationale loss, or executable-token change, and only after a complete pass apply the bounded documentation-only surface and run the existing Production checks. Retire the task-specific raw-loader A/B, Safehouse, trace, retry, harness, and evaluator work; do not delete unrelated shared repository tooling. Record two or three real post-merge observations and return any rollback decision to the Captain."
+    route: proceed
+    confidence: high
+    dissent: "The one-response smoke cannot establish that the proposed sentence caused an improvement. It supports proceeding only as the Captain-approved proportional go/no-go compatibility signal; any later causal or population-level effectiveness claim would remain unsupported."
+    disproof_condition: "Change the route to return if the smoke prompt exposes classifications, expected edits, candidate wording, or scoring criteria; if any narration remains, necessary rationale is lost, executable tokens change, output is missing or ambiguous, the proposed diff expands beyond the accepted surface, any Production check is non-pass, or post-merge tasks show necessary-comment loss or no observable benefit."
+    authority_boundary: "Captain Kent retains scope, Production obligations, PRODUCT and ROADMAP strategy wording, rollback, irreversibility, and acceptance of any changed evidence contract; Spacedock Gate Authority retains ideation advancement; work-item authority retains the artifact and acceptance criteria; Spacedock FO retains dispatch and state mechanics; the implementation worker may execute only the accepted bounded smoke and conditional product edit; validation and delivery owners retain exact-revision verdict and merge authority; provider output is evidence only."
+```
