@@ -1,7 +1,7 @@
 ---
 id: q0ndnhere7c5pgkft8n3kcp5
-title: Make projected Issues readable and identity-safe
-status: ideation
+title: Project SD tasks without repository Issue noise
+status: implementation
 source: Captain review of the Project #1 Issue #232 projection screenshot on 2026-08-14
 product: kc-dev-flow
 sprint: S3
@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/spacedock-project-draft-items
 issue:
-pr: "#240"
+pr:
 mod-block:
 design: required
 lane: main
@@ -18,56 +18,96 @@ lane: main
 
 ## Problem
 
-Projector-owned Issues currently replace the Spacedock entity body with visible projection metadata and rely on a mutable hidden body receipt as the only source-to-Issue lookup key. This makes Project views redundant, leaves the actual task unreadable on GitHub, and can lose or duplicate the mapping when a user edits or removes the receipt.
+Projecting every SD task as a repository Issue inflates the repository tracker and
+mixes derived execution state with user and agent feedback Issues. Project #4
+needs the task content and lifecycle fields, but an SD task is not inherently a
+GitHub Issue and should not consume repository Issue identity by default.
 
 ## Proposed approach
 
-Repair the existing projector seam rather than create another synchronizer. Render each projector-owned Issue body from the entity Markdown after frontmatter, prefix its title with the workflow-native short entity ID, keep stage/product/status in Project fields, add one `spacedock:managed` repository label, and add a Project text field named `SD Identity` containing a stable repository/workflow/entity key. Projector-owned Issue title and body are derived bytes: edit the SD entity, not the GitHub projection. A v2 managed Issue normally requires an agreeing hidden receipt and `SD Identity`; missing receipt, disagreement, duplicates, and label-only candidates are conflicts. The only resume exception lets one unique trusted projector-owned v2 receipt restore a missing `SD Identity` after an interrupted Issue-to-Project write. Recognize the exact v1 receipt only for the bounded first migration, then emit v2; do not retain body-drift, field-to-receipt repair, or general self-healing behavior. Linked human Issues remain byte-read-only.
+Repair the existing projector seam. Project an SD task to a Project Draft item by
+default, with `[{short-id}] {title}`, the entity Markdown body plus a hidden
+receipt, and managed `Status`, `SD Stage`, optional `SD Product`, and
+`SD Identity` fields. A reviewed `linked_issue` binding reuses that exact
+repository Issue and manages only its Project membership and fields; repository
+Issue title, body, state, and labels remain human-owned.
+
+Keep Project observation, fields, membership removal, approval, mutation cap,
+journal, and retry on the existing REST adapter. Add only the GitHub GraphQL
+Draft create/update mutations required to preserve Draft content and identity.
+For the ten bot-created dogfood Issues, create and converge replacement Drafts
+while treating the old Issue items as typed migration residue. After live
+readback and a residue-present zero-write rerun, record the exact Issue-to-SD
+mapping, remove the old Project memberships, permanently delete only #229-#238
+after the approved ownership/comment recheck, and require a final zero-write
+reconcile. Scheduled automation never performs repository Issue deletion.
 
 ## Design determination
 
-`design: required`. The captain approved one projection-contract repair after reviewing the live Project #1 Issue #232 screenshot on 2026-08-14. The protected value is immediate FO-to-human recognition plus readable task content without allowing a mutable title or body to become identity authority. Appetite is one small S3 follow-up before status-update work; tolerance is no new Issue, no Issue-number change, no GitHub-to-SD writeback, and no replacement state store.
+`design: required`. The protected value is useful SD visualization without
+polluting the feedback tracker. Appetite remains one S3 follow-up before status
+updates; tolerance is one existing projector, one existing workflow, no second
+state store, no inferred Issue binding, and no unattended destructive cleanup.
 
-Reverse recovery at `origin/main@c00de6c2`: the installed projector, receipt parser, Project field adapter, mutation journal, and no-op planner are `EXISTS_BROKEN / REQUIRED`. `_projector_summary()` at the projector asset's lines 350-365 renders metadata instead of entity content; `_target_by_identity()` at lines 386-404 indexes only body receipts; `_same_managed_state()` at lines 912-929 compares receipt core but not rendered body drift. The simplest sufficient route extends those seams. A separate mapping file, state-branch writeback, unique per-entity labels, and another workflow are unnecessary.
+Reverse recovery at `origin/main@54594f18`: approval validation, REST Project
+observation and field writes, linked-Issue byte preservation, mutation cap,
+journal, retry, and canonical-to-installed parity are `WORKING / REQUIRED`.
+Draft items are `EXISTS_BROKEN / REQUIRED`: `target_items_from_rest()` discards
+`DraftIssue`, while `_desired_issue()` and `apply_github_plan()` default to
+repository Issue create/PATCH. The manual Project #4 Draft preview proves only
+platform capability. Official REST exposes Draft creation and Project field/item
+writes but not Draft title/body update; `addProjectV2DraftIssue` and
+`updateProjectV2DraftIssue` are therefore the smallest additional API seam.
 
-The thinnest journey is one existing v1 projector-owned Issue: dry-run resolves it, proposes the same Issue number with `[short-id]` title, entity Markdown body, `SD Identity`, existing lifecycle fields, and managed label; apply updates it in place; an identical rerun is empty. The pre-mortem is that either REST text-field handling or v1 migration ambiguity causes a duplicate or silent overwrite; the plan therefore makes those cases fail mechanically before any external write.
+The thinnest journey is one selected SD entity creating one Draft, receiving its
+managed fields, and producing an empty identical rerun. The pre-mortem is a
+partial Draft-create/field-write sequence or coexistence with the old Issue
+causing duplicate identity or perpetual writes; dual anchors, typed residue, and
+two zero-write gates make those failures stop before deletion.
 
 ## Acceptance criteria
 
-**AC-1 — A projected Issue presents the same task humans discuss in Spacedock.**
-Verified by: a fixture and kc-plugins Project #4 dry-run show `[{short-id}] {title}` where the short ID matches the whole active-plus-archived workflow population, and the rendered body is the entity Markdown after frontmatter with no visible projection-summary block. Falsified by: a title prefix differs from `spacedock status --short-id`, frontmatter or worktree data leaks, or the Issue body omits entity content.
+**AC-1 — Default projection creates a readable Project Draft, not a repository Issue.**
+Verified by: `kc-dev-flow/scripts/project-spacedock-state.test.py` and a selected-scope Project #4 readback show `[{short-id}] {title}`, normalized entity Markdown plus only the hidden receipt, and zero `CREATE_ISSUE`, Issue PATCH, or label writes. Falsified by: a default entity consumes an Issue number, leaks frontmatter/worktree metadata, or omits the SD body.
 
-**AC-2 — Structured projection metadata lives on structured GitHub surfaces.**
-Verified by: projector-owned Issues retain `Status`, `SD Stage`, and optional `SD Product`, gain text field `SD Identity` plus `spacedock:managed`, and preserve unrelated Project fields and repository labels. Falsified by: lifecycle metadata remains duplicated in visible body, a human field/label is replaced, or an absent optional SD field suppresses projection.
+**AC-2 — Draft lifecycle and identity metadata remain structured and optional-safe.**
+Verified by: `kc-dev-flow/scripts/project-spacedock-state.test.py` shows every Draft receiving `Status`, exact `SD Stage`, and `SD Identity`, receiving `SD Product` only when supplied, and preserving unrelated Project fields; an absent optional field reports `PARTIAL` without suppressing the item. Falsified by: metadata is duplicated visibly, a human field is replaced, or an absent optional source field drops the projection.
 
-**AC-3 — Mutable Issue content is not the sole mapping key.**
-Verified by: v2 fixtures require agreement and make missing receipt, disagreement, duplicate anchors, and label-only candidates `CONFLICT` without `CREATE`; only one unique trusted projector-owned v2 receipt may complete a missing `SD Identity` field. One exact v1 receipt may migrate the ten approved dogfood Issues in place and emits v2 plus `SD Identity`. Falsified by: deleting a v2 receipt can plan a second Issue, field-only state can reconstruct a receipt, a receipt-only candidate can bind a duplicate or out-of-scope Issue, editing `SD Identity` silently rebinds an Issue, or a non-v1 candidate enters migration.
+**AC-3 — Draft identity converges without guessing or duplicate repair.**
+Verified by: `kc-dev-flow/scripts/project-spacedock-state.test.py` requires agreeing `SD Identity` and deterministic hidden receipt bytes, permits only one unique trusted receipt-to-missing-field transaction-prefix resume, rejects disagreement/duplicate/field-only/unknown candidates, and makes an identical Draft rerun empty. Falsified by: anchor damage can plan a second Draft, a field reconstructs a receipt, or unchanged receipt-bearing body bytes replan an update.
 
-**AC-4 — Issue ownership determines whether GitHub bytes are writable.**
-Verified by: a projector-owned v2 Issue with an intact agreeing identity is restored from SD after a GitHub title/body edit, while a linked human Issue preserves every title/body/state/label byte and receives only managed Project fields. No GitHub edit becomes SD input. Falsified by: projector-owned GitHub prose survives as a second content authority, a linked Issue byte is patched, or any GitHub content is written to the state branch.
+**AC-4 — Explicit Issue binding remains human-owned while old projector Issues become bounded residue.**
+Verified by: linked-Issue fixtures preserve title, body, state, labels, number, and comments while managing only membership/fields; the exact #229-#238 migration plan creates one Draft per SD identity, types the existing Issue items as non-target residue, plans no repository Issue mutation, and the residue-present identical rerun performs zero writes. Falsified by: any linked Issue byte is PATCHed, a residue wins target selection, two Drafts bind one identity, or the scheduled workflow removes/deletes an Issue.
 
-**AC-5 — The ten kc-plugins Project #4 dogfood Issues migrate without changing Issue identity and converge.**
-Verified by: an exact-state dry-run names only existing Issues #229-#238, stays below the approved mutation cap, predicts no new Issue, and limits Project-item creation to attaching existing Issues #234 and #235 that were absent when deleted Project #1 was replaced by Project #4; after authorized apply, live readback preserves all ten numbers/URLs/comments and an identical rerun records zero operations. Falsified by: any Issue creation, Issue-number change, foreign-item mutation, attachment beyond #234/#235, or non-empty identical rerun.
+**AC-5 — The attended dogfood cleanup removes noise only after recoverable convergence.**
+Verified by: the q0n migration journal records all ten `Issue number → slug → SD Identity` rows; immediate pre-delete readback proves `github-actions[bot]` ownership and zero comments for exactly #229-#238; Draft identity/title/body/fields and a residue-present zero-write rerun pass before Project membership removal and deletion; a final reconcile is also zero-write. Falsified by: a row/audit differs, #229/#238 cross-reference mapping is absent, any deletion occurs before both pre-delete gates, any target falls outside #229-#238, or the final reconcile plans a write.
 
 ## Test plan
 
-- Replace the recovery/drift fixtures with RED fixtures for full-population short IDs, entity-body rendering, text-field schema/apply, managed-label preservation, exact v1-to-v2 migration, v2 anchor refusal, projector-owned overwrite, and linked-Issue byte preservation.
+- Record RED against current Issue-only normalization and `CREATE_ISSUE` behavior, then GREEN for Draft normalization, GraphQL create/update, managed fields, dual-anchor resume/refusal, linked-Issue preservation, typed migration residue, and both no-op states.
 - Run the scoped projector suite, then `scripts/kc-dev-flow-contract-test.py` and repository-required lint/parity checks earned by the diff.
-- Generate an exact `origin/main` plus `spacedock-state/dev` kc-plugins Project #4 dry-run before requesting external apply.
+- Generate an exact `origin/main` plus `spacedock-state/dev` selected-scope Project #4 dry-run before requesting external apply; exercise cleanup only after its separately recorded gates.
 
 ## Measurement
 
-One user-visible journey and one projector lifecycle surface. Success is ten preserved Issue identities, readable bodies, deterministic short-ID titles, zero ambiguous matches, no steady-state repair lifecycle, and a zero-operation rerun.
+One user-visible journey and one projector lifecycle surface. Success is ten
+readable Drafts, zero new repository Issues, zero ambiguous identities, an empty
+residue-present rerun, deletion of only the ten synthetic Issues, and an empty
+post-cleanup rerun.
 
 ## Doc diff
 
-Update the setup skill's mapping contract and runtime receipt/refusal guidance. Record this S3 repair before the status-update item in ROADMAP. No PRODUCT or ARCHITECTURE change is required because SD remains authoritative and the existing one-way topology is unchanged.
+Update the setup skill, mapping contract, projector/test assets, and dogfood
+installed projector/config as earned by the diff. Update the existing S3 roadmap
+wording. No root PRODUCT or ARCHITECTURE duplication is required because the
+plugin mapping contract owns this provider-specific projection topology.
 
 ## Out of scope
 
 - GitHub-to-SD content or lifecycle writeback.
-- Editing linked/human Issue title, body, state, or labels.
-- Per-stage/product repository labels, organization Issue fields, or a second mapping ledger.
+- Creating repository Issues for unlinked SD tasks or editing linked/human Issue bytes.
+- Unattended Project membership removal or repository Issue deletion.
+- A durable migration database, per-stage/product repository labels, or a second mapping ledger.
 - Sprint-to-Milestone enablement, status-update publication, Relay/CarLove rollout, or LLM-authored projection content.
 
 ## Work profile receipt
@@ -117,6 +157,93 @@ permanent deletion of bot-created Issues #229-#238 only after their replacement
 Draft items pass live identity readback and an identical zero-write rerun. This
 record changes no acceptance criterion yet; ideation must normalize the route
 after the committed receipt is re-read.
+
+## Stage Report: ideation — cycle 3
+
+**Decision: proceed with Draft-first projection and an attended, proof-gated retirement of the ten synthetic Issues; return the product to implementation.**
+
+- `Profile:` the replacement Production receipt was committed at state
+  `6b8e27ec2386fa852226041fb0e8fdfad5ef5c84` and re-read before AC-1 through
+  AC-5 were replaced.
+- `AC normalization:` readable SD content and chartable lifecycle fields remain
+  value; repository Issue identity preservation is superseded by the higher
+  value of keeping derived tasks out of the feedback tracker. One-way SD
+  authority, explicit linked-Issue byte ownership, irreversible cleanup
+  authority, and no reverse sync remain governing constraints.
+- `Reverse recovery:` the existing projector, approval envelope, REST adapter,
+  field schema, journal, cap, retry, linked binding, and installer parity remain
+  `WORKING / REQUIRED`. Draft normalization and Draft content convergence are
+  the two `EXISTS_BROKEN / REQUIRED` seams. No second workflow, service, state
+  store, language, or repository is proposed.
+- `Surface mapping:` before: projector plus default repository Issue lifecycle,
+  managed label lifecycle, and one-time cleanup debt. After: the same projector
+  plus Draft content mutations and attended cleanup. Linked Issues remain the
+  same explicit path. Default Issue create/PATCH and managed repository labels
+  are removed, so the steady-state surface set is smaller.
+- `Simpler routes:` filtering Issues keeps the unwanted lifecycle; a tracking
+  repository adds one; REST delete/recreate churns Draft identity; one identity
+  field alone can orphan a partial write; scheduled deletion turns a one-time
+  irreversible obligation into permanent authority.
+- `Risk spike:` official GitHub REST 2026-03-10 supports Draft creation and
+  Project field/item writes but not Draft title/body updates. Official GraphQL
+  supplies `addProjectV2DraftIssue` and `updateProjectV2DraftIssue`; those are
+  the only new API operations. A manual Project #4 Draft proves platform
+  acceptance but not projector behavior.
+- `Journey/demo:` one selected SD entity creates one Draft, reads back the exact
+  title/body/identity fields, and reruns with zero writes. The ten-entity demo
+  then proves residue-present convergence before any cleanup.
+- `Pre-mortem:` receipt bytes thrash, a partial create loses its identity field,
+  or an old Issue wins target selection. Deterministic receipt comparison,
+  one asymmetric receipt-to-field resume, typed residue, and two zero-write
+  gates make those failures stop before deletion.
+- `Sizing:` one worker and one existing projector/test/doc seam; cleanup is an
+  attended delivery procedure, not a second product slice.
+- `Cross-model:` PASS — fresh Claude Opus 5 High in tool-less safe mode returned
+  `proceed / high`, recommended no additional model, and required the durable
+  Issue-to-SD migration journal now included in AC-5.
+- `AC scan:` the required scan resolved AC-1 through AC-5 but reported
+  `citations=0` despite each criterion naming its test or live artifact. This is
+  the ROADMAP's carried-forward scanner defect, recorded rather than treated as
+  a finding about the criteria.
+- `Disproof hooks:` any default Issue write, linked-Issue PATCH, duplicate Draft,
+  non-empty residue-present rerun, failed ownership/comment recheck, cleanup in
+  GHA, or non-empty final rerun returns or blocks the route as specified below.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Proceed. The route removes the default repository Issue create/PATCH responsibility and replaces it with narrowly scoped Draft mutations plus one attended migration. The irreversible deletion is Captain-authorized and remains behind live readback and two zero-write gates."
+  evidence_synthesis: "At product 54594f1871a1a693528f8bdbbe132010ea4fb6db and state 6b8e27ec2386fa852226041fb0e8fdfad5ef5c84, the existing seam already owns REST Project observation and fields, approval expiry, mutation cap, journaling, bounded retry, linked-Issue preservation, and byte-identical vendoring. Current normalization discards DraftIssue and current apply defaults to repository Issue mutation. REST cannot update Draft title/body, while GraphQL supplies the two required Draft mutations. The live manual Draft is capability evidence only. Issues #229-#238 are bot-authored with zero comments; #229 and #238 are cross-referenced by merged PR #240."
+  risk_tradeoff_call: "The material irreversible risk is loss of the #229/#238 cross-reference trail. The accepted benefit is a clean feedback tracker; the durable cost is two bounded GraphQL mutations and a one-time attended cleanup. Record Issue number to slug and SD Identity before deletion, and require deterministic receipt bytes so both zero-write gates can fail honestly."
+  recommendation: "Proceed with GraphQL confined to addProjectV2DraftIssue and updateProjectV2DraftIssue; keep observation, fields, membership removal, and cleanup preflight on existing REST. Require deterministic receipt comparison, a durable ten-row migration journal, a new reviewed projector digest and mutation cap, residue-present zero-write proof, attended cleanup, and a final zero-write proof."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "FO may implement, test, dry-run, and prepare bounded migration evidence. Captain retains external apply and irreversible deletion authority; scheduled automation receives no cleanup authority."
+  engineering_judgment:
+    question: "Should the one-way projector default to Project Draft items while retaining explicit linked Issues and use the bounded migration for #229-#238?"
+    revision: "Product 54594f1871a1a693528f8bdbbe132010ea4fb6db; state 6b8e27ec2386fa852226041fb0e8fdfad5ef5c84; Project #4 PVT_kwHOABc8eM4BgcAp."
+    evidence_synthesis: "At product 54594f1871a1a693528f8bdbbe132010ea4fb6db and state 6b8e27ec2386fa852226041fb0e8fdfad5ef5c84, the existing seam already owns REST Project observation and fields, approval expiry, mutation cap, journaling, bounded retry, linked-Issue preservation, and byte-identical vendoring. Current normalization discards DraftIssue and current apply defaults to repository Issue mutation. REST cannot update Draft title/body, while GraphQL supplies the two required Draft mutations. The live manual Draft is capability evidence only. Issues #229-#238 are bot-authored with zero comments; #229 and #238 are cross-referenced by merged PR #240."
+    adjudications:
+      - finding: "The proposed route is the fewest maintained lifecycle responsibilities sufficient for the accepted value."
+        disposition: supported
+        basis: "It removes the default Issue and managed-label lifecycles, adds only two Draft-content mutations inside the existing client, and keeps cleanup non-recurring and attended. Every rejected alternative retains or adds a larger lifecycle."
+      - finding: "Dual-anchor Draft identity with one receipt-to-missing-field resume avoids duplicates without general repair."
+        disposition: supported
+        basis: "Receipt and SD Identity must agree; only a unique trusted same-scope receipt may complete the known create-then-field interruption. Disagreement, duplicate, field-only, and unknown candidates fail closed."
+      - finding: "The create, readback, zero-write, membership removal, exact deletion, final zero-write ordering is safe and falsifiable."
+        disposition: supported
+        basis: "The destructive step is last, each preceding predicate is binary, old Issues are typed residue during proof, and any nonzero write or ownership/comment mismatch stops before deletion."
+      - finding: "GraphQL should be confined to Draft creation and title/body update."
+        disposition: supported
+        basis: "REST item update exposes fields only; delete/recreate would churn identity and increase writes. Existing REST remains sufficient for every other Project operation."
+    risk_tradeoff: "The material irreversible risk is loss of the #229/#238 cross-reference trail. The accepted benefit is a clean feedback tracker; the durable cost is two bounded GraphQL mutations and a one-time attended cleanup. Record Issue number to slug and SD Identity before deletion, and require deterministic receipt bytes so both zero-write gates can fail honestly."
+    recommendation: "Proceed with GraphQL confined to addProjectV2DraftIssue and updateProjectV2DraftIssue; keep observation, fields, membership removal, and cleanup preflight on existing REST. Require deterministic receipt comparison, a durable ten-row migration journal, a new reviewed projector digest and mutation cap, residue-present zero-write proof, attended cleanup, and a final zero-write proof."
+    route: proceed
+    confidence: high
+    dissent: "Deleting #229 and #238 severs PR #240 cross-reference context; closing those two would be narrower. The Captain accepted full deletion, so the durable mapping journal is the required mitigation."
+    disproof_condition: "Return on any nonzero residue-present or final rerun, Draft readback divergence, duplicate or disagreeing identity, linked-Issue PATCH, or deletion candidate failing the bot/zero-comment recheck. Block if cleanup enters the scheduled workflow or external apply lacks a new digest and reviewed cap."
+    authority_boundary: "Captain retains scope, external apply, deletion, Ready, and merge. Work-item and validation authorities retain stage verdicts; delivery and provider owners retain remote mutation evidence. This advisory grants none of those actions."
+```
 
 ## Captain-approved route revision — 2026-08-15
 
