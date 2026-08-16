@@ -364,3 +364,52 @@ Containment was proven before launch, but the existing Safehouse-to-Codex
 execution seam failed before provider spend because sanitized PATH resolution
 could not find `codex`. No countable loader evidence exists, no retry or product
 claim was substituted, and cleanup left no durable experiment surface.
+
+## Stage Report: implementation (bounded launch correction) — UNKNOWN/no-go
+
+- DONE: Recreated the same disposable opaque shadow/controller at exact product
+  and `origin/main` revision
+  `54594f1871a1a693528f8bdbbe132010ea4fb6db`. The only launch-resolution
+  change was a read-only grant for the fixed native Codex vendor directory and
+  direct invocation of its binary; the binary SHA-256 was
+  `19c4f144c5226a9f17c58e6f0fa854843b0f77a6eb420f40e2745a12f10f5d37`.
+- DONE: The corrected policy SHA-256 was
+  `2439e477385dcf93fed8ee5884da57bdaba66843385c6f049247be24e6afe138`.
+  It retained no common-Git or linked-worktree grants and passed 14/14 local
+  probes: prior direct/symlink denials remained, required shadow/skill/binary
+  reads succeeded, and the exact native binary returned `codex-cli 0.147.0`
+  inside that policy. The launch-regenerated policy was byte-identical.
+- DONE: Ran the one Captain-authorized `gpt-5.6-terra` high response with no
+  retry. It terminated exit 0 in 112 seconds, from
+  `2026-08-16T08:14:39Z` through `2026-08-16T08:16:31Z`, producing 29 JSONL
+  events and 11 completed command events.
+- FAILED: Exact external reconstruction found the full 21,918-byte vendored
+  kernel but not the full 4,370-byte installed skill. The worker's first command
+  requested the skill before later denied paths, but its retained aggregated
+  output contained only the later denial messages. A command string or inferred
+  read does not satisfy AC-1, so the trace is not countable.
+- FAILED: The provider trace also showed a successful read from global
+  `~/.codex/memories/MEMORY.md` through Safehouse's automatically selected
+  Codex profile. Controller, live product, shared state, and alternate inputs
+  remained denied, but the literal AC-2 claim that only the opaque shadow and
+  exact skill bytes were readable is false for this policy.
+- DONE: Hashed the 1,274-byte minimal receipt as
+  `dfa013980868f0372b11497e4e168bc59fadb6dc5edf216810a7d98a9a4016a9`;
+  provider JSONL SHA-256 was
+  `8135ebf11a81cf293145ba3d3a6756f7c737214c6be91fed298267f971705471`
+  and stderr SHA-256 was
+  `a09e6fb512b21beca1698f57610a5f0e7dcb000f93a875b2527fcec0ff03bfb2`.
+  The ephemeral nested thread retained no session file. Removed every shadow,
+  controller, alternate-input, policy, prompt, trace, receipt, and path marker;
+  the product worktree remains clean and exact with no runner, schema, commit,
+  PR, or behavioral claim.
+
+Route: `return to Captain; corrected launch exhausted, UNKNOWN/no-go`.
+
+### Summary
+
+The fixed native binary solved launch resolution and proved that JSONL can
+retain one complete kernel read, but it did not retain the complete installed
+skill read and the selected Codex profile exposed unrelated global memory.
+Therefore the existing boundary still cannot produce the promised isolated,
+countable loader provenance; the correction is exhausted without product work.
