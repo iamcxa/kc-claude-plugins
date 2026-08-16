@@ -1,7 +1,7 @@
 ---
 id: q0ndnhere7c5pgkft8n3kcp5
 title: Project SD tasks without repository Issue noise
-status: ideation
+status: implementation
 source: Captain review of the Project #1 Issue #232 projection screenshot on 2026-08-14
 product: kc-dev-flow
 sprint: S3
@@ -724,3 +724,71 @@ steady-state reduction route.**
   migration and cleanup gates pass.
 - `Authority:` the EM is advisory. Product edits, commit, push, Project apply,
   Issue deletion, Ready, and merge retain their existing owners and gates.
+
+## Science Officer EM — steady-state reduction
+
+The first fresh Claude Opus 5 High consult was aborted after 23 read-only turns
+ended at another tool request without a result. A second fresh, tool-less Opus 5
+High challenge used only the embedded exact evidence and completed successfully.
+Its semantic result was `proceed`; the record below normalizes its schema-drifted
+`medium_high` confidence and extra presentation keys into the selected closed
+contract without changing the adjudications or recommendation.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Proceed with the accepted steady-state reduction as sequenced. The numeric bound is reached through duplicate elimination, transient-code removal, and responsibility consolidation rather than semantic compression; legacy removal remains closed until the live migration gate passes."
+  evidence_synthesis: "Candidate 8359bc3226d2ccf06cfa45fc785421916fee9425 has a 5,883-line measured runtime-copy-test baseline. The component targets of canonical runtime at most 1,050 lines, no dogfood copy, and tests at most 1,600 lines total at most 2,650, leaving 291 lines below AC-6. The dogfood copy is byte-identical, the portable installer can continue vending a regular file, planner representations can collapse without changing authority, and Python preserves batching, cap, journal, retry, and partial-write semantics. Test consolidation is the only reduction with meaningful semantic risk."
+  risk_tradeoff_call: "The dominant risk is deleting migration behavior before evidence proves it dead; carrying that code until all ten Drafts converge, a residue-present rerun is empty, and the separately authorized cleanup completes is the lower-cost choice. The secondary risk is hiding lost behavior inside compressed tests, so named behavior identities and standalone lifecycle, installer, journal, retry, and production convergence checks remain mandatory. The alternative is to split the post-migration reduction into a separate item if either guard cannot be met."
+  recommendation: "Proceed one green, revertible responsibility at a time: remove the dogfood duplicate under a byte-derivation contract RED/GREEN; retain candidate 8359bc32 as the migration carrier; gate every legacy removal on recorded migration completion; require fail-closed missing-field tests before provisioning moves to attended setup; bind status analytics to its accepted sibling item before moving them; retain Python; and measure LOC as an exit observation rather than a reason to delete behavior."
+  route: proceed
+  confidence: medium
+  multi_model: not_needed
+  fo_boundary: "This advisory record may be relayed and used to resume implementation; it grants no edit, commit, push, Project, Issue, stage, Ready, merge, or completion authority."
+  engineering_judgment:
+    question: "Should the accepted steady-state reduction plan for PR #242 proceed before product implementation resumes?"
+    revision: "Repository iamcxa/kc-claude-plugins; base 54594f1871a1a693528f8bdbbe132010ea4fb6db; candidate 8359bc3226d2ccf06cfa45fc785421916fee9425; authoritative state ac3292dce84933834be1c337bdd369de02d222cd."
+    evidence_synthesis: "Candidate 8359bc3226d2ccf06cfa45fc785421916fee9425 has a 5,883-line measured runtime-copy-test baseline. The component targets of canonical runtime at most 1,050 lines, no dogfood copy, and tests at most 1,600 lines total at most 2,650, leaving 291 lines below AC-6. The dogfood copy is byte-identical, the portable installer can continue vending a regular file, planner representations can collapse without changing authority, and Python preserves batching, cap, journal, retry, and partial-write semantics. Test consolidation is the only reduction with meaningful semantic risk."
+    adjudications:
+      - finding: "F-1: The at-least-half bound is compatible with retained behavior."
+        disposition: supported
+        basis: "The component ceilings total 2,650 and therefore satisfy the 2,941 aggregate without another semantic cut; every retained behavior still requires a named test identity."
+      - finding: "F-2: Direct canonical dogfood execution is compatible with portable installer ownership."
+        disposition: supported
+        basis: "The plugin repository contains the canonical asset, while consumer repositories continue receiving a regular vendored file; byte derivation remains contract-tested."
+      - finding: "F-3: Legacy removal must wait for the live migration gate, but duplicate removal may precede it."
+        disposition: supported
+        basis: "Residue paths are required to prove residue-present convergence; the byte-identical dogfood copy has no migration semantics and can be removed independently."
+      - finding: "F-4: Setup-owned field provisioning and sibling-owned status analytics are the correct split."
+        disposition: supported
+        basis: "Privileged one-time provisioning does not belong in reconcile, which must fail closed when pinned fields are absent; status analytics move only after the accepted sibling owner is recorded."
+      - finding: "F-5: Keeping Python is the smaller lifecycle stack."
+        disposition: supported
+        basis: "A shell or wholesale gh-project rewrite would have to recreate batching, cap, journal, retry, and partial-write guarantees for little code reduction."
+      - finding: "F-6: The reduction is one independently releasable value surface."
+        disposition: supported
+        basis: "The value is one steady-state projector, with internal green and revertible boundaries before and after the separately authorized migration gate."
+    risk_tradeoff: "The dominant risk is deleting migration behavior before evidence proves it dead; carrying that code until all ten Drafts converge, a residue-present rerun is empty, and the separately authorized cleanup completes is the lower-cost choice. The secondary risk is hiding lost behavior inside compressed tests, so named behavior identities and standalone lifecycle, installer, journal, retry, and production convergence checks remain mandatory. The alternative is to split the post-migration reduction into a separate item if either guard cannot be met."
+    recommendation: "Proceed one green, revertible responsibility at a time: remove the dogfood duplicate under a byte-derivation contract RED/GREEN; retain candidate 8359bc32 as the migration carrier; gate every legacy removal on recorded migration completion; require fail-closed missing-field tests before provisioning moves to attended setup; bind status analytics to its accepted sibling item before moving them; retain Python; and measure LOC as an exit observation rather than a reason to delete behavior."
+    route: proceed
+    confidence: medium
+    dissent: "A formal split at the migration authorization boundary is defensible, but currently changes labels rather than work because the sequence already has independently green and revertible boundaries. The 1,050 runtime estimate remains an exit condition rather than proof until measured."
+    disproof_condition: "Return to narrow if tests cannot reach 1,600 lines without dropping a named behavior category, or if no recorded migration-complete signal exists when legacy removal is proposed."
+    authority_boundary: "The Captain retains scope, product commit and push, Project and Issue mutation, Ready, and merge authority; work-item and gate owners retain stage and completion authority."
+```
+
+## Stage Report: ideation — cycle 4 (post-EM)
+
+**Decision: PROCEED to implementation of the dogfood duplicate removal only;
+legacy removal remains closed behind the recorded migration gate.**
+
+- `EM:` fresh Claude Opus 5 High, tool-less exact evidence, route `proceed`,
+  normalized contract confidence `medium`, no further model pass recommended.
+- `Immediate slice:` add a failing contract that requires the dogfood workflow to
+  invoke the canonical asset and preserves portable installer byte derivation;
+  then update the workflow and delete the tracked copy.
+- `Held slice:` v1, managed-label inference, repository-wide Issue discovery,
+  migration residue, runtime schema provisioning, status snapshot, planner-model,
+  and test consolidation changes remain pending their individual RED/GREEN and
+  ownership gates.
+- `Return condition:` any named behavior category would be lost to the 1,600-line
+  test ceiling, or legacy removal lacks the exact live migration-complete signal.
