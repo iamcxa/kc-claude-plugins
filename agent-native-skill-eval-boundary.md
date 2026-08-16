@@ -135,7 +135,7 @@ complete reads, the answer is no-go rather than another surface.
    then remove shadow, controller, trace, and any Codex session created for the
    POC. Do not run a baseline/treatment comparison or edit comment policy.
 
-### Acceptance criteria
+## Acceptance criteria
 
 **AC-1 — One real agent-native loader journey is trace-bound.** `Verified by:`
 one retained `codex exec --json` event stream whose provider tool-call/output
@@ -180,3 +180,143 @@ The likeliest failure is that `--json` retains a command event but truncates or
 normalizes the 21,918-byte kernel output, so an apparently successful worker
 still cannot bind exact bytes. That is a useful no-go: it names trace retention,
 not instruction prose, as the smallest missing capability.
+
+## Fresh EM verdict
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: >-
+    Proceed with the single disposable POC. It is one reversible value surface,
+    uses recovered agent-native and provider-trace seams, directly targets the
+    two prior UNKNOWN causes, and fails closed without creating a reusable
+    evaluator or authorizing a behavioral experiment.
+  evidence_synthesis: >-
+    At state commit b42a99a772164fe26e6db33803409faf42d26705 and governing
+    product revision 54594f1871a1a693528f8bdbbe132010ea4fb6db, the installed
+    continue-dev-flow 2.5.0 skill is 4,370 bytes with SHA-256
+    28c358633fd7a0d076c4175e783e1a872607627f814192b06bc51eb9877b959f,
+    while the canonical and vendored kernels are 21,918 bytes with SHA-256
+    300149e43cf2bc3c548fbdae750a90d305869280af5517436932741047210473.
+    Codex 0.147.0 exposes JSONL execution events and reserves sandbox bypass for
+    externally sandboxed environments; Safehouse 0.9.0 exposes exact grants.
+    Whether provider events retain complete bytes remains the POC's unresolved
+    claim; no behavioral or cross-provider conclusion follows.
+  risk_tradeoff_call: >-
+    The benefit is one countable answer about whether the existing loader and
+    trace support later evaluation. The sole response may still produce an
+    unreadable, truncated, ambiguous, or blocked trace; preflight probes, exact
+    hashes, a five-minute cap, no retry, UNKNOWN/no-go, and cleanup contain that
+    risk. No durable surface remains. Stopping now avoids the small spend but
+    leaves the decisive observation boundary untested.
+  recommendation: >-
+    Accept the design. If Captain Kent separately schedules it and authorizes
+    spend, execute exactly one gpt-5.6-terra high journey under outer Safehouse;
+    count it only when provider-native evidence reconstructs both pinned files.
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: ""
+  engineering_judgment:
+    question: >-
+      Should the pinned ideation advance as one disposable agent-native
+      loader/trace POC after nine invalid or blocked prior calls?
+    revision: >-
+      state b42a99a772164fe26e6db33803409faf42d26705; product
+      54594f1871a1a693528f8bdbbe132010ea4fb6db
+    evidence_synthesis: >-
+      At state commit b42a99a772164fe26e6db33803409faf42d26705 and governing
+      product revision 54594f1871a1a693528f8bdbbe132010ea4fb6db, the installed
+      continue-dev-flow 2.5.0 skill is 4,370 bytes with SHA-256
+      28c358633fd7a0d076c4175e783e1a872607627f814192b06bc51eb9877b959f,
+      while the canonical and vendored kernels are 21,918 bytes with SHA-256
+      300149e43cf2bc3c548fbdae750a90d305869280af5517436932741047210473.
+      Codex 0.147.0 exposes JSONL execution events and reserves sandbox bypass for
+      externally sandboxed environments; Safehouse 0.9.0 exposes exact grants.
+      Whether provider events retain complete bytes remains the POC's unresolved
+      claim; no behavioral or cross-provider conclusion follows.
+    adjudications:
+      - finding: prior-receipts-establish-worker-behavior
+        disposition: unsupported
+        basis: >-
+          The first three calls leaked hidden authority and lacked matching
+          provenance; the next six executed no reads. They prove failure shapes only.
+      - finding: exact-skill-and-kernel-inputs-are-bindable
+        disposition: supported
+        basis: >-
+          Direct inspection confirmed byte counts and hashes; AC-1 rejects
+          claims, truncation, incomplete output, and mismatches.
+      - finding: outer-safehouse-removes-the-known-nested-sandbox-conflict
+        disposition: supported
+        basis: >-
+          Codex documents bypass for external containment and Safehouse supplies
+          that exact-grant boundary plus pre-spend denial probes.
+      - finding: provider-trace-retains-complete-file-output
+        disposition: unresolved
+        basis: >-
+          Structured execution evidence exists, but complete untruncated kernel
+          retention is unproved and is precisely the bounded POC claim.
+      - finding: proposed-scope-fits-one-poc-iteration
+        disposition: supported
+        basis: >-
+          This is one value surface, one journey, one capped response, no retry,
+          and no surviving evaluator responsibility.
+    risk_tradeoff: >-
+      The benefit is one countable answer about whether the existing loader and
+      trace support later evaluation. The sole response may still produce an
+      unreadable, truncated, ambiguous, or blocked trace; preflight probes, exact
+      hashes, a five-minute cap, no retry, UNKNOWN/no-go, and cleanup contain that
+      risk. No durable surface remains. Stopping now avoids the small spend but
+      leaves the decisive observation boundary untested.
+    recommendation: >-
+      Accept the design. If Captain Kent separately schedules it and authorizes
+      spend, execute exactly one gpt-5.6-terra high journey under outer Safehouse;
+      count it only when provider-native evidence reconstructs both pinned files.
+    route: proceed
+    confidence: high
+    dissent: ""
+    disproof_condition: >-
+      Return or block if preflight cannot prove the required denials, pinned
+      hashes drift, the one journey cannot launch inside the envelope, or its
+      provider events cannot reconstruct both complete file outputs.
+    authority_boundary: >-
+      Captain Kent retains scope, scheduling, sprint admission, and spend;
+      Gate Authority retains transition and verdict; work-item authority retains
+      acceptance mutation. This report authorizes no provider call, retry,
+      product edit, stage advancement, merge, archive, or closeout.
+```
+
+## Stage Report: ideation
+
+- DONE: Pin the live origin/main, active Conductor/Spacedock/Codex harness
+  surfaces, and the two comment-retention UNKNOWN receipts; identify the exact
+  nested-sandbox and provenance failure without running provider experiments.
+  Bound product `54594f18`, tool versions/hashes, leakage/provenance failure,
+  and six `sandbox_apply: Operation not permitted` read failures.
+- DONE: Determine whether an existing agent-native invocation can expose
+  retained provider-native tool evidence for a worker that reads the exact
+  installed continue-dev-flow skill and vendored kernel while hidden arm
+  mapping and scoring remain unreadable.
+  Recovered `codex exec --json`; Conductor summaries and agent-written receipts
+  do not qualify, and exact full-byte retention remains AC-1's falsifiable claim.
+- DONE: Recover the smallest disposable one-journey design; prove why existing
+  surfaces cannot be reused before proposing any new code, runner, schema, or
+  framework.
+  Outer Safehouse plus inner Codex bypass reuses existing seams and leaves no
+  new surface; any missing exact trace binding is no-go.
+- DONE: Define value-level ACs, falsifiers, cleanup, explicit unproved claims,
+  a bounded future compute envelope, and a no-go route when exact trace binding
+  is unavailable.
+  AC-1 through AC-4 cap work at one response/five minutes/no retry and exclude
+  behavioral, cross-host, generalized, and production claims.
+- DONE: Append and sync a concise ideation report. Obtain one fresh EM judgment
+  under the local gate; do not run the POC, edit product files, schedule a
+  sprint, or create another tracker.
+  Fresh EM at state `b42a99a7` returned `proceed/high`, multi-model not needed;
+  this stage made only state-file edits and no provider experiment.
+
+### Summary
+
+Ideation recovered one viable existing boundary and deliberately stopped before
+spend: outer Safehouse contains one `codex exec --json` worker while external
+validation requires exact full-file provider events. EM recommends proceeding;
+Captain and Gate Authority retain scheduling, spend, and transition decisions.
