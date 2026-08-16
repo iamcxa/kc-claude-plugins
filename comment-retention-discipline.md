@@ -670,3 +670,13 @@ The correction satisfied isolation, causal-diff, trace-retention, call-count,
 and time controls, but the actual ordinary-worker reads never executed. The
 behavior claim therefore remains unproved, the authorized nine-call ceiling is
 exhausted, and no product change was made.
+
+## Captain checkpoint — 2026-08-16
+
+- Do not start a third model attempt or weaken provenance. The reusable failure
+  was harvested into `skill-ablation-harness`; re-entry needs an agent-native
+  boundary that exports exact kernel-read traces without a nested sandbox.
+- The Captain's profile-selection reminder is already satisfied by released
+  `choose-work-profile`: prefer the active host/harness native structured
+  question surface without naming a tool, and use plain chat only when no such
+  interactive surface exists. No duplicate policy text is earned here.
