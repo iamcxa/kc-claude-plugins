@@ -1,14 +1,14 @@
 ---
 id: q0ndnhere7c5pgkft8n3kcp5
 title: Make projected Issues readable and identity-safe
-status: validation
+status: ideation
 source: Captain review of the Project #1 Issue #232 projection screenshot on 2026-08-14
 product: kc-dev-flow
 sprint: S3
 started: 2026-08-14
 completed:
 verdict:
-worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/spacedock-projection-issue-fidelity
+worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/spacedock-project-draft-items
 issue:
 pr: "#240"
 mod-block:
@@ -77,35 +77,46 @@ work_profile:
   schema: kc-dev-flow-work-profile/v1
   selected: production
   recommended: production
-  basis: Public installable skill plus unattended GitHub Actions cron uses a separately scoped PAT to mutate persistent repository Issues and user kc-plugins Project #4 while SD remains authoritative.
+  basis: Public installable skill plus unattended GitHub Actions cron projects authoritative SD tasks into persistent GitHub Project #4 Draft items, may reuse explicitly linked human Issues without editing repository bytes, and performs one irreversible cleanup of projector-created Issues #229-#238 only after verified migration convergence.
   obligations:
     architecture:
-      - Keep one-way SD authority, separate repository and Project credentials, and one workflow to one Project.
-      - Bound compatibility to one exact v1-to-v2 receipt migration; v2 anchor damage is fail-closed except for trusted receipt-to-missing-field completion of an interrupted apply.
-      - Keep projector-owned Issue bytes derived and linked Issue bytes human-owned; add no reverse sync, mapping ledger, hosted service, or body-drift lifecycle.
+      - Keep one-way SD authority, one workflow to one Project, and Project items as derived visualization rather than lifecycle authority.
+      - Project an SD task to a Project Draft item by default; reuse an explicitly linked repository Issue only when SD declares that delivery binding, while preserving all repository Issue bytes.
+      - Keep stable matching in Project-owned structured identity, with no repository Issue creation, reverse sync, mapping ledger, hosted service, or second task universe.
     implementation:
-      - Use the existing deterministic Python standard-library projector and keep installed and packaged bytes identical.
-      - Preserve preflight validation, mutation cap, append-only operation journal, bounded retry, and credential expiry checks.
-      - Replace symmetric steady-state anchor auto-repair with exact v2 agreement, collision refusal, and one receipt-to-field transaction-prefix resume.
+      - Extend the existing deterministic projector and GitHub adapter rather than add another workflow, service, language, or state store.
+      - Preserve preflight validation, mutation cap, append-only operation journal, bounded retry, credential expiry checks, and canonical-to-installed byte parity.
+      - Sequence migration as create or reconcile Draft items, verify live identity and an identical zero-write rerun, remove old Project memberships, then delete only projector-created Issues #229-#238.
     testing:
-      - Record RED and GREEN for exact v1 migration, interrupted v2 receipt-to-field resume, every other missing or disagreeing anchor refusal, projector-owned overwrite, linked-Issue byte preservation, and identical no-op rerun.
+      - Record RED and GREEN for Draft create, update, stable identity, collision refusal, linked-Issue byte preservation, migration ordering, and identical no-op rerun.
       - Run the scoped projector suite, package contract, installer parity, repository checks earned by the diff, and an exact kc-plugins Project #4 dry-run.
-      - Require post-apply live readback and zero-operation rerun before completion.
+      - Require live readback and zero-operation rerun before Project-item removal, and require a complete zero-comment and ownership audit before the separately authorized permanent deletion.
   invariant_sources:
     - docs/dev/README.md
     - docs/dev/_mods/kernel.md
     - docs/dev/_mods/engineering-judgment.md
     - docs/dev/_mods/work-control-profile.md
     - kc-dev-flow/skills/setup-github-project-projection/references/mapping-contract.md
-  scope_boundary: One selected docs/dev workflow, user kc-plugins Project #4, and the existing ten dogfood Issues; excludes Relay, CarLove, reverse sync, status-update publication, broader rollout, and automatic prose generation.
+  scope_boundary: One selected docs/dev workflow, user kc-plugins Project #4, migration of the ten existing dogfood projections, and deletion of only bot-created Issues #229-#238 after convergence; excludes Relay, CarLove, reverse sync, status-update publication, broader rollout, and automatic prose generation.
   promote_when:
     - Relay or CarLove rollout enters scope.
-    - GitHub-to-SD writeback, a hosted service, automatic status publication, or organization-wide compatibility enters scope.
+    - GitHub-to-SD writeback, automatic linking inferred from Issue prose, a hosted service, automatic status publication, or organization-wide compatibility enters scope.
     - The current PAT, cron, or one-Project ownership boundary changes.
   decision:
     authority: iamcxa as captain
-    at: 2026-08-15T12:48:32Z
+    at: 2026-08-16T06:04:11Z
 ```
+
+## Promotion trigger — Project Draft migration
+
+The live Project #4 dogfood showed that one repository Issue per SD task inflates
+the repository's Issue tracker and mixes derived execution state with user and
+agent feedback. The captain approved returning this item from validation to
+ideation, selected the replacement Production profile above, and authorized
+permanent deletion of bot-created Issues #229-#238 only after their replacement
+Draft items pass live identity readback and an identical zero-write rerun. This
+record changes no acceptance criterion yet; ideation must normalize the route
+after the committed receipt is re-read.
 
 ## Captain-approved route revision — 2026-08-15
 
