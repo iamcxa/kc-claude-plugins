@@ -321,3 +321,46 @@ Ideation recovered one viable existing boundary and deliberately stopped before
 spend: outer Safehouse contains one `codex exec --json` worker while external
 validation requires exact full-file provider events. EM recommends proceeding;
 Captain and Gate Authority retain scheduling, spend, and transition decisions.
+
+## Stage Report: implementation — UNKNOWN/no-go, no product change
+
+- DONE: Re-pinned the exact inputs before setup. Product HEAD and fresh
+  `origin/main` were both `54594f1871a1a693528f8bdbbe132010ea4fb6db`;
+  Codex CLI was 0.147.0, Safehouse was 0.9.0, and Spacedock was 0.26.0
+  contract 3. The 4,370-byte installed skill and both 21,918-byte kernels
+  retained the accepted SHA-256 values.
+- DONE: Prepared one disposable opaque shadow and external controller without a
+  product edit. The generated outer Safehouse policy had SHA-256
+  `4ec70de2d8dc8f49042ac0c3707b48674fec8548db381e8ee01a93ef4bc4a4f7`,
+  reported no common-Git or linked-worktree grants, and passed 12/12 pre-spend
+  probes: the shadow README/kernel and exact installed skill were readable,
+  while direct and symlink reads of controller, live product, shared state, and
+  alternate input plus a non-required product sibling were denied. All probe
+  symlinks were removed before launch.
+- FAILED: The one authorized launch attempt did not reach the provider.
+  Safehouse regenerated the byte-identical policy, then its sanitized execution
+  environment returned `env: codex: No such file or directory` with exit 127.
+  It ran from `2026-08-16T07:09:37Z` to `2026-08-16T07:09:39Z`; the provider
+  JSONL was empty. The no-retry slot is exhausted, so no second launch was made.
+- FAILED: External trace validation found zero provider tool-call/output events.
+  It therefore cannot reconstruct either complete file or satisfy AC-1; under
+  AC-4 the result is `UNKNOWN/no-go`, not a loader, trace, or comment-behavior
+  pass.
+- DONE: Hashed a 926-byte minimal receipt as
+  `8e4133e11bb462e1c30637809e0bbee05658a314652e34fb57d6b19f97b8b960`.
+  The empty JSONL hash was
+  `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`;
+  stderr hash was
+  `b8a5a0e719eb890cab5eb5620a3a3656afcca098087746fe92607a0612bf5cae`.
+  Removed every controller, shadow, alternate-input, policy, trace, prompt,
+  receipt, and path-marker artifact. The product worktree remains clean at the
+  exact origin/main revision with no runner, schema, commit, or PR.
+
+Route: `return to Captain; the one-response POC ended UNKNOWN/no-go`.
+
+### Summary
+
+Containment was proven before launch, but the existing Safehouse-to-Codex
+execution seam failed before provider spend because sanitized PATH resolution
+could not find `codex`. No countable loader evidence exists, no retry or product
+claim was substituted, and cleanup left no durable experiment surface.
