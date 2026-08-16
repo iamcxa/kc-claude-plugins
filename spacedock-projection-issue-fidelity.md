@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/spacedock-project-draft-items
 issue:
-pr:
+pr: 242
 mod-block:
 design: required
 lane: main
@@ -271,6 +271,21 @@ This journal preserves the #229 and #238 mappings referenced by merged PR #240.
 It is not deletion evidence: bot ownership, zero comments, Draft readback, and
 residue-present zero-write convergence must still be rechecked immediately
 before the approved attended cleanup.
+
+## Stage Report: implementation — exact candidate delivery
+
+- Product candidate `8359bc3226d2ccf06cfa45fc785421916fee9425`
+  contains the approved nine-file Draft-first slice and is the exact head of
+  Draft PR #242 against `main@54594f1871a1a693528f8bdbbe132010ea4fb6db`.
+- The scoped projector suite passed 50/50, the aggregate kc-dev-flow contract
+  passed, installer audit was clean, canonical and installed projector bytes
+  were identical, and `git diff --check` passed at the candidate.
+- Exact-state Project #4 read-only reconcile found ten Draft creates, ten typed
+  legacy residues, zero conflicts, and zero orphans. No Draft or Issue mutation
+  occurred during this implementation gate.
+- PR #242 remains Draft. CI, feedback observation, Ready, merge, live Project
+  apply, attended Issue deletion, and terminalization retain their later
+  authorities.
 
 ## Captain-approved route revision — 2026-08-15
 
