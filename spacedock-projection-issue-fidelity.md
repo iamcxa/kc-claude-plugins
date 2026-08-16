@@ -1,7 +1,7 @@
 ---
 id: q0ndnhere7c5pgkft8n3kcp5
 title: Project SD tasks without repository Issue noise
-status: implementation
+status: validation
 source: Captain review of the Project #1 Issue #232 projection screenshot on 2026-08-14
 product: kc-dev-flow
 sprint: S3
@@ -936,3 +936,86 @@ The post-cutover cleanup and both live convergence gates now pass. The deletion
 of #243-#248 is permanent; recovery evidence is the committed number-to-slug-to-
 identity journal plus the surviving Drafts. This checkpoint grants no terminal
 stage or archive transition; exact merged-main validation remains the next gate.
+
+## Stage Report: validation — cycle 1
+
+**Decision: enter validation at exact merged main; AC-1 through AC-6 have green
+primary evidence, while terminal verdict and archive authority remain closed.**
+
+- `Revision:` product `f187ddbdf3442b883512dc1d37c05442edf28e08`;
+  authoritative state `e9536215a1e204d293ed213ed8c58680875c16c8`;
+  PR #242 candidate `441b2f238d24b71c3baf4d50930b210d6fc0318f`.
+  The merge tree is byte-equal to the reviewed candidate and its sole parent is
+  the declared base.
+- `Local GREEN:` a clean detached merged-main worktree passed 36/36 projector
+  tests, `kc-dev-flow contract: PASS`, digest parity, and `git diff --check`.
+  The identical `wc -l` method remeasured 1,421 runtime + 0 dogfood copy + 1,517
+  tests = 2,938 lines against the 5,883-line baseline.
+- `Generator absence:` main deletes the dogfood Issue-first runtime, the active
+  workflow executes the canonical Draft-first asset with `issues: read`, and the
+  runtime contains no repository Issue create or patch path. State
+  `e9536215` changes source data and evidence only; product generator ownership
+  is correctly bound to main `f187ddbd`.
+- `Live GREEN:` run `31937634596` applied the ten expected receipt-only Draft
+  updates with zero conflicts; identical run `31937667005` performed zero
+  operations. A fresh exact merged-main dry-run reports `NO_CHANGE=2`,
+  `PARTIAL=8`, zero mutations, zero orphans, and zero operations.
+- `PARTIAL readback:` all eight PARTIAL rows have matching `Status`, exact
+  `SD Stage`, and `SD Identity`. Missing values are limited to optional
+  `product` and `sprint`; a missing product has no live `SD Product`, while each
+  supplied product matches the live single-select value. Sprint remains
+  deliberately unmapped.
+- `Cleanup gate definition:` AC-5 explicitly requires the durable mapping,
+  immediate bot ownership and zero-comment readback, replacement Draft
+  identity/title/body/fields, and residue-present plus final zero-write gates.
+  It declares no separate hidden human-edit check. The regenerated six-item
+  cleanup used the same authority shape plus agreeing v2 anchors and surviving
+  Drafts before deletion.
+- `Independent judgment:` fresh tool-less Claude Opus 5 High session
+  `119d0eef-dced-40ff-a113-8a86880a210e` adjudicated AC-1 through AC-6 PASS and
+  returned `PROCEED_TO_VALIDATION`. It found historical PR #240 review timing
+  non-blocking after replacement delivery #242, and scoped the manually seeded
+  `[bz]` Draft as a separate follow-up rather than part of the ten-item approval.
+- `AC scan:` the exact validation read reports all six headings but again emits
+  `unevidenced=true citations=0` despite each AC's `Verified by:` clause and the
+  bound evidence above. This is the already-recorded scanner defect, not a new
+  product finding or a substitute for the primary evidence.
+- `Scope limit:` this record proves only the selected ten-item approval. It does
+  not claim workflow-global orphan freedom while the manually seeded `[bz]`
+  Draft remains outside selection.
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "AC-1 through AC-6 have exact merged-main primary evidence and the four requested terminal-evidence clarifications are now closed; proceed into validation without granting the terminal verdict."
+  evidence_synthesis: "At product f187ddbdf3442b883512dc1d37c05442edf28e08 and state e9536215a1e204d293ed213ed8c58680875c16c8, clean local tests and contract checks pass, the maintained surface is 2,938 lines with digest parity, main has no Issue-first writer, ten selected Drafts converge through operation_count 10 then 0, all eight PARTIAL rows expose the required structured fields with only optional product/sprint absence, and the committed cleanup journals plus live rechecks bound both permanent deletion rounds."
+  risk_tradeoff_call: "The accepted benefit is a clean repository Issue tracker with readable, chartable SD Draft projection and one maintained runtime. The residual risk is overclaiming workflow-global cleanliness from a selected approval because the manually seeded [bz] Draft remains outside scope; the durable cost is the Python reconcile and attended schema ownership already measured and tested. The lower-risk alternative is to keep the terminal gate scoped to the selected ten rather than pull [bz] into this completed delivery."
+  recommendation: "Advance q0n to validation, preserve the selected-scope qualifier, and let the existing validation/work-item authority decide the terminal verdict from this exact record; do not return to implementation or expand scope to [bz]."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "No FO authority is granted; this record may be relayed to the existing validation and work-item owners only."
+  engineering_judgment:
+    question: "Does exact merged delivery f187ddbdf3442b883512dc1d37c05442edf28e08 satisfy q0n AC-1 through AC-6 sufficiently to enter validation, and do PR #240 or the unselected [bz] Draft require implementation return?"
+    revision: "Product f187ddbdf3442b883512dc1d37c05442edf28e08; state e9536215a1e204d293ed213ed8c58680875c16c8; Project #4 selected ten-item approval."
+    evidence_synthesis: "At product f187ddbdf3442b883512dc1d37c05442edf28e08 and state e9536215a1e204d293ed213ed8c58680875c16c8, clean local tests and contract checks pass, the maintained surface is 2,938 lines with digest parity, main has no Issue-first writer, ten selected Drafts converge through operation_count 10 then 0, all eight PARTIAL rows expose the required structured fields with only optional product/sprint absence, and the committed cleanup journals plus live rechecks bound both permanent deletion rounds."
+    adjudications:
+      - finding: "F-1: AC-1 through AC-6 pass at the exact merged product and selected live target."
+        disposition: supported
+        basis: "Clean merged-main tests, contract, digest and LOC receipts plus exact live Draft readback, two-run convergence, and committed deletion evidence directly exercise every accepted criterion and falsifier."
+      - finding: "F-2: Historical PR #240 review timing still blocks the replacement q0n delivery."
+        disposition: unsupported
+        basis: "PR #242 replaced the delivery, received non-author Native stack acceptance bound to its exact candidate, passed exact-head checks, and merged with a tree byte-equal to that reviewed candidate."
+      - finding: "F-3: The manually seeded [bz] Draft invalidates the ten-item selected-scope result."
+        disposition: unsupported
+        basis: "The approved selected scope intentionally suppresses workflow-global orphan conclusions; [bz] was not selected, counted, or modified, so it is a separately scoped follow-up and prevents only a global claim."
+      - finding: "F-4: The independent validator's four requested terminal clarifications remain open."
+        disposition: unsupported
+        basis: "Main contains no Issue writer; LOC and digest were remeasured at f187ddbd; all eight PARTIAL rows have correct live required fields and optional-only omissions; and AC-5 names bot ownership, zero comments, Draft recovery, and zero-write gates without another hidden human-edit test."
+    risk_tradeoff: "The accepted benefit is a clean repository Issue tracker with readable, chartable SD Draft projection and one maintained runtime. The residual risk is overclaiming workflow-global cleanliness from a selected approval because the manually seeded [bz] Draft remains outside scope; the durable cost is the Python reconcile and attended schema ownership already measured and tested. The lower-risk alternative is to keep the terminal gate scoped to the selected ten rather than pull [bz] into this completed delivery."
+    recommendation: "Advance q0n to validation, preserve the selected-scope qualifier, and let the existing validation/work-item authority decide the terminal verdict from this exact record; do not return to implementation or expand scope to [bz]."
+    route: proceed
+    confidence: high
+    dissent: "No selected-scope dissent remains. The record must not be restated as workflow-global orphan-free while [bz] remains outside approval."
+    disproof_condition: "Return if main regains any Issue write path, the same line/digest measurement changes, a selected Draft loses a required field or agreeing anchor, a future identical run plans a mutation, or deletion evidence no longer matches the committed journals."
+    authority_boundary: "The Captain retains scope and any future irreversible action; validation and work-item authorities retain the terminal verdict and stage transition; delivery and provider owners retain GitHub evidence. This advisory record grants none of those actions."
+```
