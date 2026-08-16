@@ -1,6 +1,6 @@
 ---
 name: setup-github-project-projection
-description: Install, dry-run, audit, or update a deterministic one-way projection from one commissioned Spacedock workflow into GitHub Issues and one GitHub Project. Use when a repository needs SD state visible in GitHub without making GitHub lifecycle authority, when checking an installed projection, or when reviewing the target files and external mutation plan before apply.
+description: Install, dry-run, audit, or update a deterministic one-way projection from one commissioned Spacedock workflow into GitHub Project Draft items, with optional explicit links to existing Issues. Use when a repository needs SD state visible in GitHub without making GitHub lifecycle authority, when checking an installed projection, or when reviewing the target files and external mutation plan before apply.
 ---
 
 # Setup GitHub Project Projection
@@ -38,7 +38,7 @@ only accepted files. Do not maintain a second upgrade mode.
    allowlist.
 2. Run local capability discovery against the pinned workflow README and entity
    bytes. Unknown fields remain unmapped; missing optional profile fields produce
-   partial projection rather than suppressing Issue identity.
+   partial projection rather than suppressing Project identity.
 3. Run the vendored deterministic planner. A local approval is valid only when
    the planner digest equals the bytes proposed for the target repository.
 4. Present two plans separately: target file changes and external GitHub
@@ -96,8 +96,9 @@ The installed default-branch workflow uses one reconcile path:
   then invoke the same vendored projector;
 - overlapping writes serialize with `cancel-in-progress: false`.
 
-The repository `GITHUB_TOKEN` owns same-repository Issue writes. A dedicated,
-named secret owns Project writes only after token type, minimum permissions,
+The repository `GITHUB_TOKEN` only reads same-repository Issues for explicit
+links. A dedicated, named secret owns Project Draft, item, and field writes only
+after token type, minimum permissions,
 expiry, and rotation/revocation owner are recorded. The REST 2026-03-10 adapter
 for a user-owned Project requires a classic PAT; GitHub documents those user
 Project [item](https://docs.github.com/en/rest/projects/items) and
@@ -110,8 +111,13 @@ first mutation.
 
 The workflow remains a read-only projection dry-run until the reviewed config
 sets `external_apply_enabled` true. A successful partial sequence is resumable:
-receipt-bearing repository Issues are rediscovered even when Project item
-creation did not finish, and a rerun converges through the same plan.
+receipt-bearing Draft items are rediscovered when a later field write did not
+finish, and a rerun converges through the same plan.
+
+Before arming apply, attended setup must provision `SD Identity` as text plus
+`SD Stage` and any profile field as single-select with every required option.
+Steady-state reconcile validates that schema and fails before its first write;
+it never creates fields or changes option sets.
 
 Before the first write, runtime validates the approval scope and expiry, requires
 expiry no later than the credential expiry, compares the installed projector
@@ -121,33 +127,29 @@ is appended to the run journal so a partial failure remains actionable.
 
 ## Receipts and refusal
 
-Discover projector-created candidates from the union of the `SD Identity`
-Project text field, hidden receipt, and additive `spacedock:managed` repository
-label. A v2 projector-owned Issue normally requires the field and receipt to
-agree. The only missing-anchor resume is a unique trusted v2 receipt restoring
-its missing `SD Identity` after an interrupted Issue-to-Project write. A field
-without a receipt, a disagreement, a duplicate, or a label-only candidate is a
-conflict. A title match and a public receipt-shaped comment are not ownership;
-the receipt Issue must be authored by the configured automation identity. An
-explicitly linked human Issue must match its reviewed `owner/repo#number`
-binding; never PATCH its title, body, state, or labels. Only add it to the
-Project when needed and manage projector-owned Project fields.
+Discover projector-created Drafts from the `SD Identity` Project text field and
+hidden receipt. The two anchors must agree; one unique receipt may restore a
+missing field after an interrupted Draft-to-field write. A field without a
+receipt, disagreement, or duplicate is a conflict. An explicitly linked human
+Issue must match its reviewed `owner/repo#number` binding; never PATCH its title,
+body, state, or labels. Only add it to the Project when needed and manage
+projector-owned Project fields.
 
-For projector-owned Issues, render `[{short-id}] {title}` and copy only the
+For projector-owned Drafts, render `[{short-id}] {title}` and copy only the
 entity Markdown after frontmatter into the visible body. Keep lifecycle and
-identity metadata in Project fields and the managed label. These title and body
-bytes are a derived view: an edit on a projector-owned Issue is overwritten from
-SD on the next successful reconcile and never becomes SD input. Migrate only a
-schema-valid v1 projector receipt to v2; the visible v1 body is not a separate
-human authority. Linked Issue bytes remain human-owned.
+identity metadata in Project fields. These title and body bytes are a derived
+view: an edit on a projector-owned Draft is overwritten from SD on the next
+successful reconcile and never becomes SD input. Linked Issue bytes remain
+human-owned.
 
 Refuse or quarantine:
 
 - duplicate qualified identities or Issue references;
 - missing v2 receipts, disagreeing or duplicate anchors, field-only identities,
-  label-only candidates, or receipt-only candidates outside the selected scope;
+  non-Draft identity anchors, or receipt-only candidates outside the selected
+  scope;
 - unknown stages, malformed receipts, or pinned-input drift;
-- deletion without an `_archive/` tombstone;
+- source disappearance without an `_archive/` tombstone;
 - unsupported Project fields or credentials;
 - apply when the approval expired, its projector digest differs, or its mutation
   cap would be exceeded.
@@ -161,8 +163,7 @@ Local deterministic fixtures prove mapping, production reconcile convergence,
 scope and expiry refusal, no-op reruns, retry bounds, mutation-cap refusal,
 receipt trust, and archive ownership before any external write. Disabled-
 schedule, invalid-token, and live archive procedures remain production-readiness
-evidence, not prerequisites for the local POC. The result snapshot records
-qualified Project/sprint identities but reports freshness `MISSING` until a
-later owner persists the last successful timestamp needed for a decaying
-liveness signal. Do not present the configured schedule alone as liveness
+evidence, not prerequisites for the local POC. The versioned reconcile result is
+the projection runtime artifact; status metrics and prose belong to the sibling
+status-update feature. Do not present the configured schedule alone as liveness
 evidence.

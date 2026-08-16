@@ -11,7 +11,7 @@ concurrency:
 
 permissions:
   contents: read
-  issues: write
+  issues: read
 
 jobs:
   reconcile:
@@ -78,7 +78,7 @@ jobs:
           SPACEDOCK_REPOSITORY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SPACEDOCK_PROJECT_TOKEN: ${{ secrets.SPACEDOCK_PROJECT_TOKEN }}
         run: |
-          python3 projection-trunk/.github/scripts/project-spacedock-state.py reconcile \
+          python3 projection-trunk/kc-dev-flow/skills/setup-github-project-projection/assets/project-spacedock-state.py reconcile \
             --config projection-trunk/.github/spacedock-project.json \
             --trunk-dir projection-trunk \
             --state-dir projection-state \
