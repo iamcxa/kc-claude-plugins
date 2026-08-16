@@ -3,11 +3,12 @@ title: Prove one agent-native skill evaluation boundary
 source: comment-retention-discipline UNKNOWN receipts, 2026-08-15 and Captain continuation on 2026-08-16
 product: kc-dev-flow
 sprint:
-status: ideation
+status: implementation
 design: required
 lane: main
 id: 2yrthe1tx7v4zmawgs1bqpkx
 started: 2026-08-16T06:45:51Z
+worktree: .worktrees/spacedock-ensign-agent-native-skill-eval-boundary
 ---
 
 ## Work profile receipt
