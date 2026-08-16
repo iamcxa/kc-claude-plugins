@@ -39,8 +39,9 @@ approved cleanup, remove every legacy Issue migration responsibility before the
 Draft PR can merge.
 
 The final steady-state projector has one tracked runtime source and one plan
-representation. Setup owns Project field provisioning and pins field/option IDs;
-reconcile only validates them. Project status snapshot analytics move to the
+representation. Attended setup owns Project field and option provisioning;
+reconcile validates live names, types, and options and writes through observed
+numeric IDs. Project status snapshot analytics move to the
 separately owned status-update item. Dogfood executes the canonical plugin asset
 directly, while the portable installer continues to vendor a regular file into
 external repositories. Scheduled automation never removes or deletes an Issue.
@@ -86,7 +87,7 @@ Verified by: linked-Issue fixtures preserve title, body, state, labels, number, 
 Verified by: the q0n migration journal records all ten `Issue number → slug → SD Identity` rows; immediate pre-delete readback proves `github-actions[bot]` ownership and zero comments for exactly #229-#238; Draft identity/title/body/fields and a residue-present zero-write rerun pass before Project membership removal and deletion; a final reconcile is also zero-write. Falsified by: a row/audit differs, #229/#238 cross-reference mapping is absent, any deletion occurs before both pre-delete gates, any target falls outside #229-#238, or the final reconcile plans a write.
 
 **AC-6 — The final maintained projector surface is at least half smaller without semantic compression.**
-Verified by: physical line measurement over the canonical runtime, tracked dogfood runtime copy, and projector test file is at most 2,941 lines versus the committed 5,883-line baseline; canonical runtime is at most 1,050 lines; the dogfood copy is absent; every retained behavior maps to a named test row or standalone integration test, and all operation-order, authority, refusal, partial-journal, retry, and production-convergence checks pass. Falsified by: either numeric bound is exceeded, table conversion drops a behavior/falsifier, test helpers reproduce planner logic, or a duplicate runtime source remains tracked.
+Verified by: the same physical `wc -l` measurement over the canonical runtime, tracked dogfood runtime copy, and projector test file is at most 2,941 lines versus the committed 5,883-line baseline; canonical runtime is at most 1,421 lines; projector tests are at most 1,600 lines; the dogfood copy is absent; every retained behavior maps to a named test row or standalone integration test, and all operation-order, authority, refusal, partial-journal, retry, and production-convergence checks pass. Falsified by: any numeric bound is exceeded, table conversion drops a behavior/falsifier, test helpers reproduce planner logic, or a duplicate runtime source remains tracked.
 
 ## Test plan
 
@@ -812,3 +813,66 @@ Drafts remain. The exact carrier rerun reports `NO_CHANGE=2`, `PARTIAL=8`,
 zero mutations, zero migration residues, zero orphans, and zero schema writes.
 AC-5's cleanup and final convergence gates pass. Legacy Issue migration code is
 now eligible for removal; scheduled automation did not receive cleanup authority.
+
+## Stage Report: implementation — cycle 5 Candidate surface pilot
+
+**Decision: NARROW the speculative runtime sub-ceiling, accept the measured
+at-least-half candidate for commit preparation, and keep live completion closed
+until the deployed Issue-first cron is replaced and its new residue is cleaned.**
+
+- `Revision boundary:` measurements and local GREEN bind exact product candidate
+  `441b2f238d24b71c3baf4d50930b210d6fc0318f`; no delivery claim exists yet.
+- `Pinned counting method:` baseline uses `git show 8359bc32:<path> | wc -l`
+  for the canonical runtime, dogfood runtime copy, and projector test; current
+  uses `wc -l` on the same paths and records an absent copy as zero. Baseline is
+  `1,934 + 1,934 + 2,015 = 5,883`; current is
+  `1,421 + 0 + 1,517 = 2,938`, a 2,945-line or 50.06% reduction.
+- `Reduction attribution:` 1,934 lines come from deleting the byte-identical
+  dogfood copy, 513 from the canonical runtime, and 498 from projector tests.
+  Runtime behavior did not move to an uncounted implementation: the workflow
+  changes one invocation path, config changes one digest, and the installer
+  continues to vendor the canonical bytes into consumer repositories.
+- `Runtime responsibility attribution:` lines 1-203 own constants, REST/GraphQL
+  transport, authority routing, digests, and retry; 204-453 own source parsing,
+  short IDs, receipt/body rendering, and status mapping; 454-827 own target
+  observation, explicit linked Issues, approval/config validation, and live
+  schema validation; 828-979 own mutation preflight, cap, Draft/link apply, and
+  the append-only journal; 980-1256 own identity comparison, desired state,
+  diff/conflict, and archive behavior; 1257-1421 own state loading, selection,
+  provenance, reconcile/re-observe convergence, and the CLI result. An AST name
+  and test-reference scan found zero unreferenced top-level definitions across
+  all 47 definitions.
+- `Candidate dispositions:` DELETE the dogfood duplicate and completed legacy
+  Issue migration; MOVE Project schema provisioning to attended setup and status
+  metrics/prose to the accepted sibling item; CONSOLIDATE planner and fixture
+  representations; KEEP identity, authority, preflight, cap, journal, retry,
+  archive, linked-Issue byte preservation, installer parity, and post-apply
+  convergence. Each kept responsibility retains a named test or integration
+  journey.
+- `GREEN:` 36/36 focused projector tests, `kc-dev-flow contract: PASS`, projector
+  digest parity, and `git diff --check` pass at exact candidate `441b2f23`. The final maintained
+  three-file surface is 2,938 lines, below the unchanged 2,941 aggregate and
+  1,600 test bounds. The prior 1,050 runtime estimate is disproved by the
+  behavior-attributed residual and is replaced by the measured 1,421 bound;
+  forcing another 371 lines would reward unsafe compression or boundary shifts.
+- `Independent challenge:` fresh tool-less Claude Opus 5 High returned
+  `NARROW`: rebase rather than remove the runtime fence, retain the aggregate,
+  duplicate, and test bounds, pin the count method, attribute the residual, and
+  record the post-cutover live gate.
+- `Live pre-commit observation:` zero external writes occurred, but Project #4
+  now reports six `non_draft_identity` conflicts and four Draft updates. The
+  deployed old Issue-first cron run `31933899060` recreated Issues #243-#248;
+  later runs fail while trying to create the next Issue because its body exceeds
+  65,536 characters. This is deployment residue, not a claimed green result.
+  After PR #242 replaces that cron, attended cleanup must recheck the exact
+  residue scope, remove it under Captain authority, and an exact-head live
+  dry-run must report zero conflicts, orphans, operations, and mutations before
+  task completion.
+- `Dev-flow learning:` the portable kernel already requires candidate-surface
+  subtraction before addition and fresh validation after a later subtraction.
+  A previous generalized post-diff bookkeeping trial was retired. This q0n pass
+  is therefore one bounded Candidate-stage pilot with a concrete subtraction
+  win, not silent authority to restore a global LOC gate or mandatory ceremony.
+- `Authority:` this report changes the work-item criterion and permits commit
+  preparation only. Product commit/push, cleanup of #243-#248, Ready, merge, and
+  terminal stage changes retain their existing Captain gates.
