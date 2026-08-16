@@ -245,6 +245,33 @@ science_officer_em_upward_report:
     authority_boundary: "Captain retains scope, external apply, deletion, Ready, and merge. Work-item and validation authorities retain stage verdicts; delivery and provider owners retain remote mutation evidence. This advisory grants none of those actions."
 ```
 
+## Migration journal — Project #4 pre-apply baseline
+
+Exact live read-only reconcile at product
+`54594f1871a1a693528f8bdbbe132010ea4fb6db`, state
+`c56aaad847e623e4583014e2cb310e972fad4c6b`, and reviewed projector digest
+`a30e8a4e3588b81ca76bf8cce9b4258dc3128b3e634ad68ffb3032505617897a`
+classified all ten selected entities as replacement Draft creates, reported no
+orphans, and identified these exact legacy residues:
+
+| Issue | Slug | SD Identity |
+| --- | --- | --- |
+| #229 | `ci-integration-consumer-count-backport` | `iamcxa/kc-claude-plugins:docs/dev:ci-integration-consumer-count-backport` |
+| #230 | `e2e-prose-load` | `iamcxa/kc-claude-plugins:docs/dev:e2e-prose-load` |
+| #231 | `e2e-schema-contract` | `iamcxa/kc-claude-plugins:docs/dev:e2e-schema-contract` |
+| #232 | `e2e-typed-operands` | `iamcxa/kc-claude-plugins:docs/dev:e2e-typed-operands` |
+| #233 | `executable-diff-coverage-ratchet` | `iamcxa/kc-claude-plugins:docs/dev:executable-diff-coverage-ratchet` |
+| #234 | `github-project-projection-dogfood` | `iamcxa/kc-claude-plugins:docs/dev:github-project-projection-dogfood` |
+| #235 | `roborev-implementation-exit` | `iamcxa/kc-claude-plugins:docs/dev:roborev-implementation-exit` |
+| #236 | `ship-flow-pr-merge-audit-link-parity` | `iamcxa/kc-claude-plugins:docs/dev:ship-flow-pr-merge-audit-link-parity` |
+| #237 | `spacedock-project-status-updates` | `iamcxa/kc-claude-plugins:docs/dev:spacedock-project-status-updates` |
+| #238 | `spacedock-projector-automation-sunset-review` | `iamcxa/kc-claude-plugins:docs/dev:spacedock-projector-automation-sunset-review` |
+
+This journal preserves the #229 and #238 mappings referenced by merged PR #240.
+It is not deletion evidence: bot ownership, zero comments, Draft readback, and
+residue-present zero-write convergence must still be rechecked immediately
+before the approved attended cleanup.
+
 ## Captain-approved route revision — 2026-08-15
 
 After PR #240 reached provider approval, the captain challenged whether the 1,628-line gross diff was necessary and approved the smaller route proposed in the same discussion. The pre-change surface set was readable rendering plus three-signal auto-recovery, body-drift preservation, and general legacy-summary migration. The accepted replacement keeps readable rendering, structured identity, collision refusal, and one exact v1-to-v2 dogfood migration, while removing steady-state auto-repair and the `BODY_DRIFT` lifecycle. Projector-owned Issues are explicitly derived and overwritable; human prose belongs in SD or in a linked Issue.
