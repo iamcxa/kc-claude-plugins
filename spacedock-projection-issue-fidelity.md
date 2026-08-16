@@ -904,3 +904,35 @@ these six Issues after the first cleanup. No Project membership or Issue has
 been removed yet. Commit and re-read this exact mapping, immediately recheck bot
 ownership and zero comments, then remove only the six journaled memberships and
 Issues. A merged-main apply and identical zero-write rerun remain mandatory.
+
+## Project #4 post-cutover convergence checkpoint
+
+The second journal was committed and re-read at state
+`9832a464846715427effcb1bf4644d81503f3f33`. Immediate live recheck again proved
+that Issues #243-#248 were authored by `github-actions[bot]`, had zero comments,
+and used the exact journaled Project item IDs. The six Issue memberships were
+removed, all six replacement Drafts remained, and only then were the six Issues
+permanently deleted. GraphQL readback now resolves #243-#248 as absent.
+
+At merged main `f187ddbdf3442b883512dc1d37c05442edf28e08`, the post-cleanup read-only
+plan reported `PARTIAL=8`, `UPDATE=2`, ten Draft content updates, zero conflicts,
+zero orphans, and zero external operations. All ten updates were the expected
+one-time hidden-receipt refresh to projector digest
+`0fcd5ea7f54870cfb331f83bbfa75077fb960ae46a627257bc58884dadeb2bde`;
+no Project field update was planned.
+
+Manual merged-main run
+[`31937634596`](https://github.com/iamcxa/kc-claude-plugins/actions/runs/31937634596)
+completed with `conflict_count=0` and `operation_count=10`. The identical second
+run
+[`31937667005`](https://github.com/iamcxa/kc-claude-plugins/actions/runs/31937667005)
+completed with `conflict_count=0` and `operation_count=0`. Final selected-scope
+readback finds exactly 10/10 expected items, all Drafts, all receipt and
+`SD Identity` anchors agreeing, and every receipt carrying the reviewed current
+projector digest. The separate manually seeded `[bz]` Draft is outside the ten-
+entity selection and was neither counted nor modified.
+
+The post-cutover cleanup and both live convergence gates now pass. The deletion
+of #243-#248 is permanent; recovery evidence is the committed number-to-slug-to-
+identity journal plus the surviving Drafts. This checkpoint grants no terminal
+stage or archive transition; exact merged-main validation remains the next gate.
