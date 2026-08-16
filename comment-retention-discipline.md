@@ -20,7 +20,10 @@ id: hpxks7c1kndqqhhr38kzna6q
 
 Agents have repeatedly produced code diffs where comments restate more code than they clarify. The portable kernel constrains absolute claims but does not require comments to preserve non-obvious maintenance value, so adopters lack a proportional rule that removes narration while retaining invariants, external constraints, hazards, and rejected alternatives.
 
-This independent S3 slice must prove a behavior change through the installed loader within a 20-minute model-pressure cap, add no new skill, mod, linter, or standing model gate, and leave the existing projection sequence unchanged.
+This independent S3 slice uses one proportional observable-output smoke before
+shipping a small, reversible kernel rule. It adds no new skill, mod, linter,
+standing model gate, evaluator, or retained test surface, and leaves the existing
+projection sequence unchanged.
 
 ## Work profile receipt
 
@@ -38,8 +41,8 @@ work_profile:
       - "Keep canonical and vendored kernel copies byte-identical and record only the minimal independent S3 ROADMAP wording without changing projection sequence."
       - "Keep net always-loaded policy growth at or below roughly 50 words and aim near zero by rewriting existing minimality prose."
     testing:
-      - "Run six paired installed-loader responses across three cases, repeating at most one ambiguous pair, within a 20-minute live-model cap."
-      - "Require baseline redundant-comment retention at least once and candidate improvement without necessary-comment loss; otherwise report UNKNOWN or no-change."
+      - "Run one ordinary-worker response over three neutrally named cases and score only its observable code edits."
+      - "Require redundant narration removal, preservation of necessary rationale, and identical executable tokens; otherwise make no product change."
       - "Run existing contract and release checks and verify no executable-behavior or test regression at the exact candidate revision."
   invariant_sources:
     - "docs/dev/_mods/kernel.md — authority, outcome, minimality, and verification discipline"
@@ -53,7 +56,7 @@ work_profile:
     at: 2026-08-15T12:03:26Z
 ```
 
-## Ideation design
+## Ideation design — Captain-approved observable-output reset
 
 ### Accepted bounds and criterion normalization
 
@@ -61,164 +64,96 @@ Protected value: agents produce maintainable code without comments that merely
 narrate adjacent code, while preserving non-obvious invariants, external
 constraints, hazards, and rejected alternatives.
 
-Appetite: one ideation worker and one implementation worker. Behavioral pressure
-uses the installed Spacedock loader and one ordinary-cost `gpt-5.6-terra`
-high-reasoning worker. The correction has six fixed additional response slots
-and no repeat. The three invalid calls remain accounted, so the cumulative total
-may reach nine. The cumulative experiment stays within 20 minutes: 190 seconds
-are consumed and at most 1,010 seconds remain for calls plus scoring.
+Appetite: one ideation reset and one implementation worker. The implementation
+gets one normal ordinary-worker response containing a single maintainability
+request and three neutrally named code snippets. It scores only returned code.
+There is no baseline/treatment pair, raw trace requirement, Safehouse work,
+second response, retry, permanent fixture, runner, grader, or evaluator.
 
-Tolerance: no necessary rationale loss, executable-behavior change, or test
-regression. Add no skill, mod, linter, recurring gate, daemon, general evaluator,
-or standing model run. Keep net always-loaded policy growth at or below roughly
-50 words and aim near zero. Comment volume may trigger review but is not a global
-pass/fail ratio.
+Tolerance: no necessary-rationale loss, executable-token change, or product
+regression. Add no skill, mod, linter, recurring gate, daemon, or standing model
+run. Keep net always-loaded policy growth at or below roughly 50 words and aim
+near zero. Comment volume is not a pass/fail ratio.
 
-If cut, retain the existing absolute-claim rule and one portable comment-value
-sentence. Explicit non-goals are capability-scoped `work-control-profile`
-loading, repository-wide comment cleanup, language-specific style rules, and
-RoboRev or PR-review policy changes.
+If cut, retain the existing absolute-claim rule and make no product change.
+Explicit non-goals remain capability-scoped work-profile loading,
+repository-wide comment cleanup, language-specific style rules, and RoboRev or
+PR-review policy changes.
 
-The problem statement's protected value is retained as value. Production
-compatibility, the 20-minute envelope, one bounded correction, exact projection
-ordering, and the prohibited surfaces are Captain-imposed governing constraints.
-The proposed kernel sentence is a mechanism and earns retention only through the
-paired behavioral result below.
-
-The assumption most likely to be wrong is that portable prose changes ordinary
-agent behavior. A positive result therefore requires the exact baseline to
-retain a known redundant comment at least once and the candidate to improve a
-paired response without losing required rationale. Otherwise this item returns
-`UNKNOWN` or no-change.
+The assumption most likely to be wrong is that one portable sentence reliably
+guides ordinary-worker judgment. The smoke is a proportional go/no-go signal,
+not a causal estimate. Any required behavior failure leaves the product
+unchanged.
 
 ### Reverse recovery and subtractive result
 
-Fresh `origin/main@004444c5501fc1ef32c9fe61ea616e8fdc3bc426`
-already has the authoring and delivery seams:
+Fresh `origin/main@54594f1871a1a693528f8bdbbe132010ea4fb6db` retains the
+existing authoring and delivery seam: the canonical kernel owns outcome and
+minimality discipline, the adopted kernel mirrors it, and existing contract and
+release checks own parity. The separate `agent-native-skill-eval-boundary` POC
+showed that exact raw-loader provenance is unavailable proportionally on the
+current stack; that result does not measure comment behavior and does not justify
+an evaluation platform.
 
-- `kc-dev-flow/references/kernel.md:138-163` contains Outcome discipline and the
-  absolute-claim authoring rule, including code comments.
-- `kc-dev-flow/references/kernel.md:200-207` defines minimum and simple in the
-  existing always-loaded minimality paragraph.
-- `docs/dev/_mods/kernel.md` and the canonical kernel resolve to the same blob
-  `cb0daf615fa642ce20eba7880d7ab6032f20d6a0`; the existing contract test checks
-  their byte identity and the absolutes registry. An isolated exact-ref run of
-  `scripts/kc-dev-flow-contract-test.py` passed.
-- The installed `spacedock 0.26.0 (contract 3)` loader exposes exact stage text,
-  but `show-stage-def` does not include the common kernel and is not by itself a
-  valid treatment boundary.
-- The installed `continue-dev-flow` ordinary-worker path requires the complete
-  vendored kernel before the active stage and its declared mods. A captured tool
-  trace and kernel digest, not stage bytes alone, must prove that read occurred.
-
-The seam is `WORKING_UNIT_UNPROVEN / REQUIRED`: packaging, loading instructions,
-and parity checks exist, but no bound baseline observation yet proves the stated
-comment behavior. Its disproof hook is the exact-ref paired experiment; if the
-baseline never retains a known redundant comment, no behavioral gap was
-reproduced and the policy change is not earned. This is not a `MISSING`
-capability and does not justify a new surface.
-
-The smallest candidate edits the existing minimality paragraph in both
-byte-identical kernel copies. Its proposed sentence is:
+The smallest candidate remains one sentence in the existing minimality paragraph
+of both kernel copies:
 
 > Comments preserve non-obvious maintenance value—such as an invariant,
 > external constraint, hazard, or rejected alternative—rather than narrate
 > adjacent code.
 
-The without-it arm is unmodified `origin/main`; the experimental with-it arm is
-an exact implementation commit that differs only by that sentence in the two
-byte-identical kernel copies. PRODUCT and ROADMAP wording is applied only after
-the behavioral pair succeeds and never enters the experiment. If the without-it
-arm already satisfies the behavioral ACs, or the candidate does not improve it,
-ship no kernel rule. No fixture, scorer, runner, or model service is retained in
-the repository.
+The without-it instrument is the one-response smoke itself: if ordinary-worker
+output cannot meet every behavior criterion before product edits, the sentence
+is not earned. No fixture, scorer, runner, or model service is retained.
 
 ### Fastest path and smallest cut
 
-One implementation worker owns one independently releasable value surface:
-capture the baseline through the actual ordinary-worker path, commit only the
-kernel treatment, run its paired arm, and apply the minimal PRODUCT and ROADMAP
-wording only after a positive result. The worker then executes existing
-release/contract checks. The code-comment fixtures and outputs live outside the
-repository and are discarded after their receipt is recorded.
+One implementation worker sends one ordinary worker a maintainability request
+plus three opaque snippets covering redundant narration, necessary rationale,
+and mixed comments. The prompt does not reveal classifications, expected edits,
+the candidate sentence, or the scoring rubric. After the response, the
+implementation worker checks only the returned code.
 
-There is no second slice: policy text and its behavioral proof cannot ship or be
-blocked independently. This is docs/config/agent-instruction behavior, so a code
-or browser E2E is not applicable; an installed `continue-dev-flow`
-ordinary-worker run that proves the local kernel read is the real
-behavior-producing boundary.
-
-### Paired installed-loader experiment
-
-Create six standalone non-git shadow roots with opaque names: baseline and
-treatment for the redundant, necessary, and mixed cases. Installed Spacedock and
-`continue-dev-flow` resolve only each shadow. Its task body contains only the
-maintainability request and fixture; class/arm labels, candidate-as-proposal
-wording, expected results, and rubric stay in a controller-only directory outside
-the worker sandbox. The sentence appears only in the treatment kernel.
-
-Before calls, retain Safehouse policy plus denial probes for the live entity,
-product worktree, shared state, and controller rubric. Reject any git-linked
-grant, readable target, or symlink escape. A byte diff must show each paired
-shadow differs only by the sentence in `docs/dev/_mods/kernel.md`.
-
-Use six fixed fresh-context `gpt-5.6-terra` high slots, one per case/arm. The
-external manifest binds source and input digests, provider-native trace and
-response digests, kernel digest, executable-token result, hidden score, and
-elapsed time. A response counts only when retained tool events prove the complete
-shadow-kernel read and matching SHA-256; reconstructed provenance is invalid.
-
-No repeat, retry, auxiliary/grader model, or seventh response is authorized.
-Calls plus scoring have 1,010 seconds remaining; cumulative elapsed is
-`190 + correction_elapsed <= 1200`. Any invalid, missing, leaked, ambiguous,
-non-improving, unaccounted, or late sample yields `UNKNOWN` and no product edit.
+If the response removes adjacent-code narration, preserves external-constraint,
+hazard, and rejected-alternative meaning, and keeps executable tokens identical,
+apply the one-sentence canonical/adopted kernel edit and minimal PRODUCT/ROADMAP
+wording. Otherwise stop with no product change. This is instruction behavior, so
+a code/browser E2E is not applicable.
 
 ## Acceptance criteria
 
-**AC-1 — The portable sentence improves redundant-comment removal in the bounded ordinary-agent baseline.**
+**AC-1 — One ordinary-worker smoke demonstrates the required comment judgment.**
 
-Verified by: the six-response paired receipt binds `origin/main`, the exact
-kernel-only treatment revision, installed loader and continuation-skill
-identity, dispatch/stage/workflow/kernel bytes, tool-read evidence, three fixture
-digests, opaque arms, `gpt-5.6-terra` high reasoning, and elapsed time. It proves
-all effective instruction inputs except the proposed sentence are byte-identical.
-The baseline retains at least one rubric-labeled redundant comment and the
-candidate removes more redundant narration in at least one matched case without
-a paired regression. Falsified by: either arm lacks a matching complete-kernel
-read, the input diff contains another treatment, the baseline never retains
-redundant narration, the candidate has no strict paired improvement, any arm
-identity, case class, candidate-as-proposal wording, expected outcome, or hidden
-rubric leaks through any model-readable path, task, workflow, or prompt, or the
-run cannot finish honestly inside the response and cumulative time caps; the
-result is then `UNKNOWN` or no-change.
+Verified by: one response to one neutral maintainability request over three
+neutrally named snippets removes every adjacent-code narration comment, preserves
+the required external-constraint, hazard, and rejected-alternative meanings, and
+does not merely rewrite narration. Falsified by: any narration remains, any
+required meaning disappears, the prompt reveals a classification, expected edit,
+candidate sentence, or scoring rubric, or the response is missing or ambiguous;
+the result is no product change.
 
-**AC-2 — Necessary maintenance rationale is preserved with no executable change.**
+**AC-2 — The smoke and shipped rule do not alter executable behavior.**
 
-Verified by: every candidate response for `N-necessary` and `M-mixed` retains
-the frozen external-constraint, hazard, and rejected-alternative meanings, and a
-token-aware comparison shows identical executable content. Falsified by: any
-required meaning disappears, narration is merely rewritten as narration, or any
-executable token changes. Semantic ambiguity is `UNKNOWN`; no repeat is
-authorized.
+Verified by: a token-aware comparison finds identical executable tokens for all
+three returned snippets, and the eventual repository diff changes instruction
+and documentation text only. Falsified by: any executable token changes or an
+executable product surface enters the diff; the result is no product change.
 
 **AC-3 — The shipped policy and documentation remain the smallest recovered surface.**
 
-Verified by: the final diff changes the existing canonical/adopted kernel
-paragraph, one PRODUCT sentence, and the independent S3 ROADMAP wording; the
-kernel copies remain byte-identical, the existing absolute-claim rule remains,
-and always-loaded policy growth stays roughly 50 words or fewer with a
-near-zero target. Falsified by: a new skill, mod, linter, recurring gate, daemon,
-general evaluator, standing run, capability-scoped work-control load, or an
-unexplained additional product surface appears.
+Verified by: after AC-1 and AC-2 pass, the final diff changes the existing
+canonical/adopted kernel paragraph, one PRODUCT sentence, and the independent S3
+ROADMAP wording; the kernel copies remain byte-identical and the absolute-claim
+rule remains. Falsified by: a new skill, mod, linter, recurring gate, fixture,
+runner, evaluator, daemon, standing run, or unexplained product surface appears.
 
 **AC-4 — Existing contract, release, authority, and S3 sequence behavior does not regress.**
 
-Verified by: changed-file inspection contains no executable product change;
-`scripts/kc-dev-flow-contract-test.py`, `scripts/marketplace-verify.sh`, relevant
-release metadata checks, and exact-revision fresh validation pass; ROADMAP keeps
-projection items 1 and 2 in the same order. Falsified by: any test failure,
-canonical/adopted drift, hand-edited version metadata, executable behavior
-change, or projection reorder.
+Verified by: `scripts/kc-dev-flow-contract-test.py`,
+`scripts/marketplace-verify.sh`, relevant release metadata checks, and
+exact-revision validation pass; ROADMAP keeps projection items 1 and 2 in the
+same order. Falsified by: any relevant check failure, canonical/adopted drift,
+hand-edited version metadata, or projection reorder.
 
 ### Proposed documentation diff
 
@@ -231,33 +166,27 @@ change, or projection reorder.
   sequence effect): `comment-retention-discipline` teaches portable
   maintenance-value comment retention and does not gate or reorder projection
   items 1–2.”
-- `ARCHITECTURE.md` needs no change because this reuses the existing kernel,
-  loader, parity check, release path, and ownership boundaries.
+- `ARCHITECTURE.md` needs no change because this reuses existing ownership and
+  runtime seams.
 
 ### Test and correction plan
 
-1. Before product edits or calls, build opaque standalone shadow pairs, prove
-   Safehouse denies the live entity/repository/state/rubric, and prove each pair
-   differs only at the natural kernel sentence. Any failed preflight is
-   `UNKNOWN` with zero additional calls.
-2. Fill the six fixed baseline/treatment slots through installed
-   `continue-dev-flow`, retaining provider-native tool traces and matching kernel
-   digests. No repeat or seventh new response is authorized; calls plus scoring
-   have 1,010 seconds remaining.
-3. Only after a positive pair, apply the PRODUCT and ROADMAP wording. Run the
-   existing kc-dev-flow contract, marketplace, frontmatter/version, and
-   release checks. Record word-count and changed-surface observations without
-   turning them into a new standing gate.
-4. Fresh validation may authorize at most one bounded correction. Rejection
-   after that returns to the Captain; it does not buy another model loop.
+1. Before product edits, run one ordinary-worker response with the neutral
+   three-snippet prompt. Do not request trace evidence or a second response.
+2. Score observable code only against AC-1 and AC-2. Any failure or ambiguity
+   ends implementation with no product change.
+3. Only after the smoke passes, apply the kernel, PRODUCT, and ROADMAP wording;
+   run existing proportional contract, marketplace, release, and exact-revision
+   checks. Retain no smoke fixture or evaluator.
+4. After merge, observe the next two or three real tasks. Necessary-comment loss
+   or no observable improvement is the rollback signal.
 
 ### Pre-mortem
 
-If this design ships and agents still produce low-value comments, the likely
-cause is that the sentence reads as style advice and loses to local imitation or
-task pressure. The paired baseline/candidate result is the disproof instrument:
-without a reproduced baseline defect and strict candidate improvement, do not
-ship stronger prose or invent enforcement.
+If the sentence ships and agents still produce low-value comments, local code
+imitation or task pressure likely outweighs the general rule. Two or three real
+post-merge tasks are the disproof instrument; revert the sentence rather than
+add enforcement if it loses necessary rationale or shows no observable benefit.
 
 ## Stage Report: ideation (cycle 1 — EM return)
 
