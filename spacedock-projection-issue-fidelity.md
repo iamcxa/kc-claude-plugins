@@ -1,7 +1,7 @@
 ---
 id: q0ndnhere7c5pgkft8n3kcp5
 title: Project SD tasks without repository Issue noise
-status: implementation
+status: ideation
 source: Captain review of the Project #1 Issue #232 projection screenshot on 2026-08-14
 product: kc-dev-flow
 sprint: S3
@@ -32,38 +32,41 @@ receipt, and managed `Status`, `SD Stage`, optional `SD Product`, and
 repository Issue and manages only its Project membership and fields; repository
 Issue title, body, state, and labels remain human-owned.
 
-Keep Project observation, fields, membership removal, approval, mutation cap,
-journal, and retry on the existing REST adapter. Add only the GitHub GraphQL
-Draft create/update mutations required to preserve Draft content and identity.
-For the ten bot-created dogfood Issues, create and converge replacement Drafts
-while treating the old Issue items as typed migration residue. After live
-readback and a residue-present zero-write rerun, record the exact Issue-to-SD
-mapping, remove the old Project memberships, permanently delete only #229-#238
-after the approved ownership/comment recheck, and require a final zero-write
-reconcile. Scheduled automation never performs repository Issue deletion.
+Keep Project observation, approval, mutation cap, journal, retry, dual identity,
+and explicit linked-Issue ownership. Treat candidate `8359bc32` as a temporary
+migration carrier for the ten bot-created Issues; after live convergence and the
+approved cleanup, remove every legacy Issue migration responsibility before the
+Draft PR can merge.
+
+The final steady-state projector has one tracked runtime source and one plan
+representation. Setup owns Project field provisioning and pins field/option IDs;
+reconcile only validates them. Project status snapshot analytics move to the
+separately owned status-update item. Dogfood executes the canonical plugin asset
+directly, while the portable installer continues to vendor a regular file into
+external repositories. Scheduled automation never removes or deletes an Issue.
 
 ## Design determination
 
 `design: required`. The protected value is useful SD visualization without
-polluting the feedback tracker. Appetite remains one S3 follow-up before status
-updates; tolerance is one existing projector, one existing workflow, no second
-state store, no inferred Issue binding, and no unattended destructive cleanup.
+polluting either the feedback tracker or the maintained projector. The Captain
+accepted an explicit reduction target: final runtime plus tests must be at most
+half the current 5,883-line baseline, without removing the identity, authority,
+preflight, journal, cap, or zero-write guarantees.
 
-Reverse recovery at `origin/main@54594f18`: approval validation, REST Project
-observation and field writes, linked-Issue byte preservation, mutation cap,
-journal, retry, and canonical-to-installed parity are `WORKING / REQUIRED`.
-Draft items are `EXISTS_BROKEN / REQUIRED`: `target_items_from_rest()` discards
-`DraftIssue`, while `_desired_issue()` and `apply_github_plan()` default to
-repository Issue create/PATCH. The manual Project #4 Draft preview proves only
-platform capability. Official REST exposes Draft creation and Project field/item
-writes but not Draft title/body update; `addProjectV2DraftIssue` and
-`updateProjectV2DraftIssue` are therefore the smallest additional API seam.
+Reverse recovery at candidate `8359bc32`: the Draft journey, dual anchors,
+approval envelope, REST transport, cap, journal, retry, and linked-Issue byte
+boundary are `WORKING / REQUIRED`. The byte-identical dogfood copy, one-time
+legacy migration, runtime schema provisioning, status analytics, duplicate
+`entities`/`desired`/`mutations` representations, and linked human byte copies
+are `WORKING / NOT STEADY-STATE`. Shell or wholesale `gh project` replacement is
+not proposed: it changes batching and partial-write semantics for little net
+maintenance reduction.
 
-The thinnest journey is one selected SD entity creating one Draft, receiving its
-managed fields, and producing an empty identical rerun. The pre-mortem is a
-partial Draft-create/field-write sequence or coexistence with the old Issue
-causing duplicate identity or perpetual writes; dual anchors, typed residue, and
-two zero-write gates make those failures stop before deletion.
+The final core is `load -> compile DesiredDraft|DesiredLink -> observe ->
+validate/index -> diff operations/conflicts -> preflight -> journaled apply ->
+re-observe zero operations`. The pre-mortem is line-count reduction hiding lost
+behavior or setup drift; named behavior rows, operation transcripts, exact field
+ID validation, and the two live zero-write gates falsify those failures.
 
 ## Acceptance criteria
 
@@ -76,31 +79,37 @@ Verified by: `kc-dev-flow/scripts/project-spacedock-state.test.py` shows every D
 **AC-3 — Draft identity converges without guessing or duplicate repair.**
 Verified by: `kc-dev-flow/scripts/project-spacedock-state.test.py` requires agreeing `SD Identity` and deterministic hidden receipt bytes, permits only one unique trusted receipt-to-missing-field transaction-prefix resume, rejects disagreement/duplicate/field-only/unknown candidates, and makes an identical Draft rerun empty. Falsified by: anchor damage can plan a second Draft, a field reconstructs a receipt, or unchanged receipt-bearing body bytes replan an update.
 
-**AC-4 — Explicit Issue binding remains human-owned while old projector Issues become bounded residue.**
-Verified by: linked-Issue fixtures preserve title, body, state, labels, number, and comments while managing only membership/fields; the exact #229-#238 migration plan creates one Draft per SD identity, types the existing Issue items as non-target residue, plans no repository Issue mutation, and the residue-present identical rerun performs zero writes. Falsified by: any linked Issue byte is PATCHed, a residue wins target selection, two Drafts bind one identity, or the scheduled workflow removes/deletes an Issue.
+**AC-4 — Explicit Issue binding remains human-owned and legacy migration does not survive in steady state.**
+Verified by: linked-Issue fixtures preserve title, body, state, labels, number, and comments while managing only membership/fields; the temporary exact #229-#238 migration carrier creates one Draft per SD identity and performs no repository Issue mutation; after cleanup the final projector has no v1, managed-label, repository-wide Issue discovery, or migration-residue path. Falsified by: any linked Issue byte is PATCHed, the final runtime retains legacy ownership inference, two Drafts bind one identity, or scheduled automation removes/deletes an Issue.
 
 **AC-5 — The attended dogfood cleanup removes noise only after recoverable convergence.**
 Verified by: the q0n migration journal records all ten `Issue number → slug → SD Identity` rows; immediate pre-delete readback proves `github-actions[bot]` ownership and zero comments for exactly #229-#238; Draft identity/title/body/fields and a residue-present zero-write rerun pass before Project membership removal and deletion; a final reconcile is also zero-write. Falsified by: a row/audit differs, #229/#238 cross-reference mapping is absent, any deletion occurs before both pre-delete gates, any target falls outside #229-#238, or the final reconcile plans a write.
 
+**AC-6 — The final maintained projector surface is at least half smaller without semantic compression.**
+Verified by: physical line measurement over the canonical runtime, tracked dogfood runtime copy, and projector test file is at most 2,941 lines versus the committed 5,883-line baseline; canonical runtime is at most 1,050 lines; the dogfood copy is absent; every retained behavior maps to a named test row or standalone integration test, and all operation-order, authority, refusal, partial-journal, retry, and production-convergence checks pass. Falsified by: either numeric bound is exceeded, table conversion drops a behavior/falsifier, test helpers reproduce planner logic, or a duplicate runtime source remains tracked.
+
 ## Test plan
 
-- Record RED against current Issue-only normalization and `CREATE_ISSUE` behavior, then GREEN for Draft normalization, GraphQL create/update, managed fields, dual-anchor resume/refusal, linked-Issue preservation, typed migration residue, and both no-op states.
+- Preserve RED/GREEN evidence for Draft normalization, content create/update, managed fields, dual-anchor resume/refusal, linked-Issue preservation, migration ordering, and both no-op states while changing one responsibility at a time.
+- Convert repeated fixtures and same-shape classifications into literal named tables; keep create/apply/rerun, partial journal, retry, archive, installer audit, and production reconcile as standalone tests.
+- Measure the exact three-file baseline and final physical lines; LOC is a Captain-accepted bound, while behavior tests remain the proof that the reduction is not compression.
 - Run the scoped projector suite, then `scripts/kc-dev-flow-contract-test.py` and repository-required lint/parity checks earned by the diff.
 - Generate an exact `origin/main` plus `spacedock-state/dev` selected-scope Project #4 dry-run before requesting external apply; exercise cleanup only after its separately recorded gates.
 
 ## Measurement
 
-One user-visible journey and one projector lifecycle surface. Success is ten
-readable Drafts, zero new repository Issues, zero ambiguous identities, an empty
-residue-present rerun, deletion of only the ten synthetic Issues, and an empty
-post-cleanup rerun.
+One user-visible journey and one steady-state projector lifecycle surface.
+Success is ten readable Drafts, zero new repository Issues, zero ambiguous
+identities, both empty live reruns, deletion of only the ten synthetic Issues,
+one tracked runtime source, and at most 2,941 runtime-plus-test lines.
 
 ## Doc diff
 
-Update the setup skill, mapping contract, projector/test assets, and dogfood
-installed projector/config as earned by the diff. Update the existing S3 roadmap
-wording. No root PRODUCT or ARCHITECTURE duplication is required because the
-plugin mapping contract owns this provider-specific projection topology.
+Update the setup skill, mapping contract, canonical projector/test assets,
+dogfood workflow/config, and existing S3 roadmap wording. Delete the tracked
+dogfood projector copy. Move snapshot ownership wording to the sibling status
+item. No root PRODUCT or ARCHITECTURE duplication is required because the plugin
+mapping contract owns this provider-specific projection topology.
 
 ## Out of scope
 
@@ -117,18 +126,19 @@ work_profile:
   schema: kc-dev-flow-work-profile/v1
   selected: production
   recommended: production
-  basis: Public installable skill plus unattended GitHub Actions cron projects authoritative SD tasks into persistent GitHub Project #4 Draft items, may reuse explicitly linked human Issues without editing repository bytes, and performs one irreversible cleanup of projector-created Issues #229-#238 only after verified migration convergence.
+  basis: Public installable skill plus unattended GitHub Actions cron projects authoritative SD tasks into persistent GitHub Project #4 Draft items, may reuse explicitly linked human Issues without editing repository bytes, performs one proof-gated cleanup of Issues #229-#238, and must finish with one steady-state runtime source at no more than half the current runtime-plus-test surface.
   obligations:
     architecture:
       - Keep one-way SD authority, one workflow to one Project, and Project items as derived visualization rather than lifecycle authority.
       - Project an SD task to a Project Draft item by default; reuse an explicitly linked repository Issue only when SD declares that delivery binding, while preserving all repository Issue bytes.
-      - Keep stable matching in Project-owned structured identity, with no repository Issue creation, reverse sync, mapping ledger, hosted service, or second task universe.
+      - Keep stable matching in Project-owned structured identity, with no repository Issue creation, reverse sync, mapping ledger, hosted service, second task universe, or permanent one-time migration subsystem.
     implementation:
-      - Extend the existing deterministic projector and GitHub adapter rather than add another workflow, service, language, or state store.
-      - Preserve preflight validation, mutation cap, append-only operation journal, bounded retry, credential expiry checks, and canonical-to-installed byte parity.
+      - Reduce the existing deterministic Python projector rather than add another workflow, service, language, state store, or wholesale gh-project transport lifecycle.
+      - Preserve preflight validation, mutation cap, append-only operation journal, bounded retry, credential expiry checks, and portable installer byte parity; dogfood executes the canonical asset directly.
       - Sequence migration as create or reconcile Draft items, verify live identity and an identical zero-write rerun, remove old Project memberships, then delete only projector-created Issues #229-#238.
+      - Move Project schema provisioning to attended setup, move status snapshot analytics to their sibling item, and collapse final planning to one operation representation.
     testing:
-      - Record RED and GREEN for Draft create, update, stable identity, collision refusal, linked-Issue byte preservation, migration ordering, and identical no-op rerun.
+      - Record RED and GREEN for Draft create, update, stable identity, collision refusal, linked-Issue byte preservation, migration ordering, identical no-op rerun, and each removed responsibility.
       - Run the scoped projector suite, package contract, installer parity, repository checks earned by the diff, and an exact kc-plugins Project #4 dry-run.
       - Require live readback and zero-operation rerun before Project-item removal, and require a complete zero-comment and ownership audit before the separately authorized permanent deletion.
   invariant_sources:
@@ -137,7 +147,7 @@ work_profile:
     - docs/dev/_mods/engineering-judgment.md
     - docs/dev/_mods/work-control-profile.md
     - kc-dev-flow/skills/setup-github-project-projection/references/mapping-contract.md
-  scope_boundary: One selected docs/dev workflow, user kc-plugins Project #4, migration of the ten existing dogfood projections, and deletion of only bot-created Issues #229-#238 after convergence; excludes Relay, CarLove, reverse sync, status-update publication, broader rollout, and automatic prose generation.
+  scope_boundary: One selected docs/dev workflow, user kc-plugins Project #4, migration of the ten existing dogfood projections, deletion of only bot-created Issues #229-#238 after convergence, and a final steady-state runtime-plus-test surface no larger than 2,941 lines; excludes Relay, CarLove, reverse sync, status-update implementation/publication, broader rollout, and automatic prose generation.
   promote_when:
     - Relay or CarLove rollout enters scope.
     - GitHub-to-SD writeback, automatic linking inferred from Issue prose, a hosted service, automatic status publication, or organization-wide compatibility enters scope.
@@ -666,3 +676,51 @@ Live readback confirms all ten Issues now have workflow-native short-ID title pr
 The already-queued scheduled run `31901116656` followed the manual apply at the same exact trunk and state commits. It completed successfully with `operations=[]` and `conflict_count=0`, proving identical-run convergence without requiring another dispatch. AC-5's external apply, live readback, identity preservation, bounded attachment, and zero-write rerun are satisfied.
 
 Task terminalization remains blocked only by the pre-existing delivery-contract defect: PR #240 merged without a non-author exact-candidate acknowledgement of the Native stack exception. The only Quinn approval remains bound to superseded head `8af38c437201abf2f47fbbc3966af028c80daa2e`; `quinn-code-agent` is still requested on merged head `bdd4dee58e373711a793bfe397bfdff71af08c13`. No projection failure or further Project write is pending.
+
+## Promotion trigger — steady-state projection reduction
+
+The Captain accepted a reduction pass before PR #242 can merge. The measured
+baseline is 5,883 physical lines across the canonical projector, its tracked
+dogfood copy, and projector tests; the final bound is 2,941 lines, with the
+canonical runtime at or below 1,050 lines and no tracked dogfood runtime copy.
+
+Five read-only audits support the route. Dogfood can execute the canonical asset
+directly while the portable installer still vendors a regular file. The planner
+can collapse to `DesiredDraft` and `DesiredLink` plus one operation stream.
+Legacy Issue migration can be removed after the approved ten-item cleanup while
+explicit linked-Issue ownership remains. Repeated tests can become literal named
+tables without dropping standalone lifecycle, journal, retry, installer, or live
+convergence checks. Replacing the Python transport wholesale with `gh project`
+does not materially reduce lifecycle surface and would weaken batching and
+partial-write semantics.
+
+The safe order is: obtain a fresh ideation EM; remove the dogfood duplicate with
+a contract RED/GREEN; preserve candidate `8359bc32` as the temporary migration
+carrier until live Draft convergence, residue-present zero-write proof, and the
+authorized #229-#238 cleanup complete; then remove legacy migration, runtime
+schema provisioning, status analytics, and duplicate plan models with focused
+RED/GREEN evidence. No product file, GitHub Project item, or Issue is mutated by
+this state-only promotion trigger.
+
+## Stage Report: ideation — cycle 4 (pre-EM)
+
+**Decision: HOLD implementation while one fresh EM evaluates the accepted
+steady-state reduction route.**
+
+- `Changed premise:` the Captain accepted an explicit at-least-half maintained
+  surface target after observing that the projection implementation is too large.
+- `Evidence:` exact candidate `8359bc3226d2ccf06cfa45fc785421916fee9425`
+  contains 1,934 runtime lines, an identical 1,934-line dogfood copy, and 2,015
+  projector-test lines. The five bounded audits identify duplication, transient
+  migration, schema/status ownership, and redundant planner representations as
+  removable surface without removing projection authority or safety controls.
+- `Proposed boundary:` keep one-way SD authority, Draft-first projection,
+  explicit linked Issues, exact identity, approval envelope, mutation cap,
+  append-only journal, bounded retry, and zero-write convergence; remove only
+  distribution duplication and non-steady-state responsibilities.
+- `Disproof hooks:` return if the half-size bound requires deleting a named
+  behavior or safety guarantee, if direct canonical dogfood execution breaks the
+  portable installer contract, or if legacy code is removed before the live
+  migration and cleanup gates pass.
+- `Authority:` the EM is advisory. Product edits, commit, push, Project apply,
+  Issue deletion, Ready, and merge retain their existing owners and gates.
