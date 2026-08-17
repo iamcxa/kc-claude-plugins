@@ -7,6 +7,26 @@ Working perspective: staff engineer and delivery lead.
 Define the production outcome, architecture and lifecycle ownership, failure
 policy, rollout, and release boundary.
 
+## Conditional shape references
+
+```json
+{
+  "schema": "kc-dev-flow-conditional-references/v1",
+  "references": [
+    {
+      "path": "../../reverse-recovery-audit.md",
+      "trigger": "brownfield_capability_change",
+      "receipt": "reverse_recovery"
+    },
+    {
+      "path": "../../journey-slicing.md",
+      "trigger": "multi_slice_required",
+      "receipt": "journey_slices"
+    }
+  ]
+}
+```
+
 ## Required output
 
 - accepted journey, constraints, non-goals, and exact owners;

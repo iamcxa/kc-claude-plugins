@@ -21,10 +21,11 @@ reads the workflow's small Local Profile, the exact work item, and its committed
 v2 profile receipt. A deterministic repository-local loader then emits three
 policy artifacts: shared core, selected profile base, and selected current
 stage. The selected build contract contains that profile's typed exit
-observation. It rejects a stage outside the selected route. The loader
-takes and hash-binds the exact committed work item, so profile is item-local
-rather than a project-global switch; concurrent items may follow different
-routes safely.
+observation. A selected stage may also contain a typed conditional-reference
+descriptor; its referenced file remains unread unless the named trigger is
+true. The loader rejects a stage outside the selected route. It takes and
+hash-binds the exact committed work item, so profile is item-local rather than a
+project-global switch; concurrent items may follow different routes safely.
 
 One superset Spacedock graph serves all three routes. The loading boundary is:
 
@@ -35,7 +36,17 @@ flowchart LR
     P["Selected profile<br/>base + current stage"] --> L
     L --> C["Active policy<br/>core + base + stage"]
     C -. "when stage is build" .-> X["Implementation exit<br/>typed observation"]
+    C -. "typed trigger true" .-> R["One conditional reference<br/>and bounded receipt"]
+    D["PR delivery event"] -.-> M["Spacedock pr-merge<br/>runtime mod"]
 ```
+
+POC build may trigger reverse recovery for a proposed brownfield capability
+change. Pilot and Production shape may trigger reverse recovery and, only when
+one integrated slice is insufficient, the multi-slice guard. Selecting a
+profile, vendoring a reference, or seeing a link does not activate it.
+
+Spacedock `pr-merge` is an orthogonal delivery event mod. Any profile may use it
+when PR delivery is selected; no profile loads it as policy.
 
 Backlog and done are state boundaries rather than worker stages. Chief Engineer
 is a bounded delivery advisor for unclear sequencing or blockers. Science

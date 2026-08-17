@@ -19,10 +19,13 @@ repair the cheapest compatible seam.
 
 1. Add a concise `## Local Profile` near the workflow frontmatter. Bind existing
    authorities plus the repository-local profile loader and contracts root.
-2. Vendor `../../references/kernel.md`, the `references/profiles/` tree, and
+2. Vendor `../../references/kernel.md`, the `references/profiles/` tree,
+   `../../references/reverse-recovery-audit.md`,
+   `../../references/journey-slicing.md`, and
    `../../scripts/profile-contract-loader.py` without local edits. The selected
-   `build.md` owns its typed proportional observation. Local provider paths and
-   exceptions stay in the workflow README.
+   stage owns each typed conditional-reference trigger; vendoring a reference
+   does not load it. The selected `build.md` owns its typed proportional observation.
+   Local provider paths and exceptions stay in the workflow README.
 3. Select a profile before the first working stage and store the v2 receipt in
    the existing work item. Each item selects independently; do not create a
    project-global profile or another profile registry. Invoke the loader with
@@ -30,7 +33,8 @@ repair the cheapest compatible seam.
 4. Map the logical routes to the runtime. A runtime with one superset graph uses:
    POC `implementation -> validation`; Pilot adds `ideation`; Production adds
    `release`. Backlog and done remain non-working states.
-5. Make each working stage a small loader invocation or pointer. At
+5. Make each working stage a small loader invocation or pointer. Load a
+   conditional reference only when the selected stage predicate fires. At
    implementation exit, use only the selected typed observation emitted by the
    loader. Do not duplicate the profile contracts in the workflow README.
 6. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and

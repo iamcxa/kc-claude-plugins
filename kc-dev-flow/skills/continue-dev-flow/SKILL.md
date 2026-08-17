@@ -32,6 +32,12 @@ Do not separately read the full kernel, another profile, another stage, or an
 installed-package fallback. Profile selection is per work item, never a
 project-global mode; simultaneous items may load different routes.
 
+A selected stage may emit a `kc-dev-flow-conditional-references/v1` block. For
+each entry, resolve `path` relative to the selected stage contract and read it
+only when its named `trigger` is true; otherwise leave it unread. Record the
+named receipt in the existing work item. A link is not activation. A reference
+cannot add stages, broaden scope, or become a standing policy bundle.
+
 The canonical vendored loader invocation is:
 
 ```bash

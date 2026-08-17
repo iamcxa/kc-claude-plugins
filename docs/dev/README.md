@@ -63,8 +63,11 @@ README as a policy bundle.
 | Normal delivery advice | `kc-dev-flow:chief-engineer`, only on its bounded triggers |
 | Independent assurance | `kc-dev-flow:science-officer`, only on its bounded triggers |
 | Optional observation | Typed RoboRev observation at every profile's implementation exit; `docs/dev/runbooks/roborev-implementation-exit.md` |
+| Conditional shape references | `docs/dev/_mods/reverse-recovery-audit.md`; `docs/dev/_mods/journey-slicing.md` |
+| PR lifecycle | Spacedock `pr-merge`, only when a PR is the selected delivery artifact |
 
-The loader, shared core, and profile contracts are vendored from `kc-dev-flow`.
+The loader, shared core, profile contracts, and two conditional references are
+vendored from `kc-dev-flow`.
 `scripts/kc-dev-flow-contract-test.py` checks their package/adopter identity and
 every supported profile-stage combination.
 
@@ -157,6 +160,9 @@ moving to the selected route's first working state.
 
 Active only for Pilot and Production. Load the selected `shape` contract. Record
 the accepted outcome and task-specific acceptance evidence in the work item.
+Its conditional references load only when their predicates fire: reverse
+recovery for a proposed addition, replacement, removal, or missing claim in
+existing code; the multi-slice guard when one integrated slice is insufficient.
 POC moves directly from backlog to implementation.
 
 ### `implementation` — selected `build`
@@ -164,6 +170,10 @@ POC moves directly from backlog to implementation.
 Load the selected `build` contract. Use an isolated worktree when the checkout is
 contended. Run scoped checks while iterating and only the relevant exit checks
 earned by the selected profile and diff.
+
+POC build performs its conditional reverse-recovery check here because POC has
+no shape stage. Pilot and Production do not repeat a completed shape audit; an
+unplanned new surface returns to the stage that owns scope.
 
 After tests and an exact candidate revision exist, the loader's selected typed
 RoboRev observation loads
@@ -182,6 +192,10 @@ When a GitHub PR exists, observe all current provider feedback at the exact head
 and record a bounded disposition. A code repair returns to implementation and
 gets one final re-verification. A new delivery completes its selected local
 verification before Captain-authorized Draft creation.
+
+`pr-merge` owns PR creation, provider polling, and landed-state reconciliation.
+It is a delivery event mod, not a profile contract, and remains unread until PR
+delivery is selected or a tracked PR needs reconciliation.
 
 POC and Pilot proceed to done after their selected delivery authority is met.
 Production proceeds to release.

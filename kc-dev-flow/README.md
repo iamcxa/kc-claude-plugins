@@ -110,6 +110,10 @@ The package source contains:
 - `references/profiles/<profile>/base.md` — one selected base contract;
 - `references/profiles/<profile>/<stage>.md` — one selected role/stage contract,
   with its proportional exit observation in `build.md`;
+- `references/reverse-recovery-audit.md` — conditional brownfield recovery
+  method triggered by POC build or Pilot/Production shape;
+- `references/journey-slicing.md` — conditional multi-slice guard triggered only
+  by Pilot/Production shape;
 - `scripts/profile-contract-loader.py` — the closed route and loading mechanism.
 
 An adopter vendors these files and binds their local paths in the workflow's
@@ -117,16 +121,20 @@ An adopter vendors these files and binds their local paths in the workflow's
 item and receipt, then invokes the local loader. It does not read the full
 workflow README, unselected profiles, or installed package fallback.
 
-Optional observations and policy references load only on their named trigger.
+Optional observations and conditional references load only on their named
+stage trigger. A reference link is not activation, and vendoring it adds no
+ordinary-stage work.
 An unavailable provider cannot silently become a delivery failure. Improvement
 harvesting also remains explicit and cannot create work, change sprint
 membership, or interrupt the selected product route.
 
-Profile selection does not activate the other standalone references. Journey
-slicing is already expressed by the profile routes; reverse-recovery and
-improvement harvesting keep their explicit triggers. An adopter-owned runtime
-mod such as Spacedock `pr-merge` remains a delivery mechanism outside the
-profile loader.
+Profile selection does not activate standalone references. Reverse recovery
+fires only for a proposed addition, replacement, removal, or missing claim in
+existing code. The multi-slice guard fires only when a Pilot or Production
+journey cannot be one integrated slice. Improvement harvesting remains explicit.
+An adopter-owned runtime mod such as Spacedock `pr-merge` is orthogonal: any
+profile may use it when PR delivery is selected, and none loads it merely by
+selecting a profile.
 
 Install through the `kc-claude-plugins` marketplace in Claude Code. Codex uses
 the co-shipped `.codex-plugin` manifest and the same skill and contract files.

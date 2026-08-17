@@ -6,6 +6,21 @@ Working perspective: incubation engineer.
 
 Build the smallest end-to-end path that can answer the experiment's question.
 
+## Conditional references
+
+```json
+{
+  "schema": "kc-dev-flow-conditional-references/v1",
+  "references": [
+    {
+      "path": "../../reverse-recovery-audit.md",
+      "trigger": "brownfield_capability_change",
+      "receipt": "reverse_recovery"
+    }
+  ]
+}
+```
+
 ## Required output
 
 - one runnable integrated artifact;

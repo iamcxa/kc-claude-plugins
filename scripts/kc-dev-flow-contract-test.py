@@ -63,6 +63,8 @@ required = [
     "kc-dev-flow/.claude-plugin/plugin.json",
     "kc-dev-flow/.codex-plugin/plugin.json",
     "kc-dev-flow/references/kernel.md",
+    "kc-dev-flow/references/reverse-recovery-audit.md",
+    "kc-dev-flow/references/journey-slicing.md",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
     "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
@@ -83,6 +85,45 @@ required = [
 ]
 for relative in required:
     require((ROOT / relative).is_file(), f"missing {relative}")
+for retired in [
+    "kc-dev-flow/references/work-control-profile.md",
+    "docs/dev/_mods/work-control-profile.md",
+]:
+    require(not (ROOT / retired).exists(), f"retired control still shipped: {retired}")
+
+conditional_stage_references = {
+    ("poc-exploration", "build.md"): [
+        {
+            "path": "../../reverse-recovery-audit.md",
+            "trigger": "brownfield_capability_change",
+            "receipt": "reverse_recovery",
+        }
+    ],
+    ("pilot-product-slice", "shape.md"): [
+        {
+            "path": "../../reverse-recovery-audit.md",
+            "trigger": "brownfield_capability_change",
+            "receipt": "reverse_recovery",
+        },
+        {
+            "path": "../../journey-slicing.md",
+            "trigger": "multi_slice_required",
+            "receipt": "journey_slices",
+        },
+    ],
+    ("production", "shape.md"): [
+        {
+            "path": "../../reverse-recovery-audit.md",
+            "trigger": "brownfield_capability_change",
+            "receipt": "reverse_recovery",
+        },
+        {
+            "path": "../../journey-slicing.md",
+            "trigger": "multi_slice_required",
+            "receipt": "journey_slices",
+        },
+    ],
+}
 for profile, names in profile_files.items():
     for name in names:
         require(
@@ -97,12 +138,29 @@ for profile, names in profile_files.items():
                 "Working perspective:" in stage_contract and "\nRole:" not in stage_contract,
                 f"stage perspective is not a lightweight cue: {profile}/{name}",
             )
+            json_blocks = [
+                json.loads(block)
+                for block in re.findall(r"```json\s*\n(.*?)```", stage_contract, re.DOTALL)
+            ]
+            conditional = [
+                block
+                for block in json_blocks
+                if block.get("schema") == "kc-dev-flow-conditional-references/v1"
+            ]
+            expected_references = conditional_stage_references.get((profile, name), [])
+            require(
+                len(conditional) == (1 if expected_references else 0)
+                and (not conditional or conditional[0].get("references") == expected_references),
+                f"wrong conditional references: {profile}/{name} {conditional}",
+            )
+            require(
+                "work-control-profile" not in stage_contract,
+                f"retired work control leaked into stage: {profile}/{name}",
+            )
             if name == "build.md":
-                blocks = re.findall(r"```json\s*\n(.*?)```", stage_contract, re.DOTALL)
-                typed = [json.loads(block) for block in blocks]
                 typed = [
                     item
-                    for item in typed
+                    for item in json_blocks
                     if item.get("schema") == "kc-dev-flow-observation/v1"
                 ]
                 require(len(typed) == 1, f"wrong observation count: {profile}")
@@ -218,6 +276,12 @@ require(
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),
     "self-adopted profile loader differs from package source",
 )
+for reference in ["reverse-recovery-audit.md", "journey-slicing.md"]:
+    require(
+        (PLUGIN / "references" / reference).read_bytes()
+        == (ADOPTED / reference).read_bytes(),
+        f"self-adopted conditional reference differs: {reference}",
+    )
 for profile, names in profile_files.items():
     for name in names:
         require(
@@ -317,6 +381,8 @@ for phrase in [
     "Do not separately read the full kernel, another profile, another stage",
     "kc-dev-flow:chief-engineer",
     "kc-dev-flow:science-officer",
+    "kc-dev-flow-conditional-references/v1",
+    "A link is not activation",
 ]:
     require(phrase in normalized_continue, f"continuation is missing: {phrase}")
 require("fresh-context EM verdict" not in continue_skill, "continuation still mandates EM")
@@ -348,10 +414,12 @@ for phrase in [
     "profile-contract-loader.py",
     "Profiles are per item",
     "No agent is a general gatekeeper",
+    "delivery event mod, not a profile contract",
 ]:
     require(phrase in workflow, f"self-adoption is missing: {phrase}")
 
 package_readme = read("kc-dev-flow/README.md")
+normalized_package_readme = " ".join(package_readme.split())
 root_readme = read("README.md")
 require(
     "run POC, Pilot, and Production items concurrently" in package_readme,
@@ -361,6 +429,29 @@ require(
     "cognitive cue, not another agent, review, or gate" in package_readme,
     "package README overstates stage-role authority",
 )
+for phrase in [
+    "conditional brownfield recovery",
+    "conditional multi-slice guard",
+    "any profile may use it when PR delivery is selected",
+]:
+    require(
+        phrase in normalized_package_readme,
+        f"package README omits mod boundary: {phrase}",
+    )
+
+validation_runbook = read("docs/dev/runbooks/validation-evidence.md")
+normalized_validation_runbook = " ".join(validation_runbook.split())
+for stale in ["selected policy mods", "Write all six lines", "the EM selects"]:
+    require(stale not in validation_runbook, f"validation runbook retains stale ceremony: {stale}")
+for phrase in [
+    "POC never loads it",
+    "smallest evidence set that can fail",
+    "Science Officer remains risk-triggered and advisory",
+]:
+    require(
+        phrase in normalized_validation_runbook,
+        f"validation runbook omits: {phrase}",
+    )
 for name in ["chief-engineer", "science-officer", "science-officer-em"]:
     require(name in package_readme, f"package README omits {name}")
     require(name in root_readme, f"root README omits {name}")
