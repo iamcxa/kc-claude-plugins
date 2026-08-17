@@ -697,3 +697,73 @@ science_officer_em_upward_report:
     disproof_condition: "Change the route to return if the smoke prompt exposes classifications, expected edits, candidate wording, or scoring criteria; if any narration remains, necessary rationale is lost, executable tokens change, output is missing or ambiguous, the proposed diff expands beyond the accepted surface, any Production check is non-pass, or post-merge tasks show necessary-comment loss or no observable benefit."
     authority_boundary: "Captain Kent retains scope, Production obligations, PRODUCT and ROADMAP strategy wording, rollback, irreversibility, and acceptance of any changed evidence contract; Spacedock Gate Authority retains ideation advancement; work-item authority retains the artifact and acceptance criteria; Spacedock FO retains dispatch and state mechanics; the implementation worker may execute only the accepted bounded smoke and conditional product edit; validation and delivery owners retain exact-revision verdict and merge authority; provider output is evidence only."
 ```
+
+## Stage Report: implementation (cycle 3 — observable-output smoke) — no product change
+
+- DONE: Re-pinned the clean product worktree before the smoke at
+  `f187ddbdf3442b883512dc1d37c05442edf28e08`, exactly matching fresh
+  `origin/main`. Re-queried overlapping PR #240: it is merged at
+  `bdd4dee58e373711a793bfe397bfdff71af08c13`, and its ROADMAP projection
+  ordering is already present in the pinned base.
+- DONE: Dispatched exactly one fresh-context ordinary worker with one normal
+  maintainability request and three neutral filenames (`alpha.ts`, `beta.ts`,
+  and `gamma.ts`). The prompt contained only the request and code; it did not
+  expose classifications, expected edits, candidate wording, AC text, or the
+  scoring rubric. No retry or second response was used.
+- FAILED: The returned code was not executable-token identical. The worker
+  collapsed `trimmed` declaration/use into one expression in `alpha.ts`, added
+  a callback-argument trailing comma while reformatting `beta.ts`, and merged
+  the array-copy and in-place sort statements into one expression in
+  `gamma.ts`. These are observable executable-token changes even where runtime
+  behavior appears equivalent, so AC-2 fails and the fail-closed result is no
+  product change.
+- DONE: Comment judgment itself was directionally correct but is not a product
+  authorization: adjacent-code narration was removed, while the partner API
+  constraint, ICU-stability rejected alternative, caller-array preservation,
+  and retry-scheduler hazard remained represented. The single response is only
+  a compatibility signal and cannot override the AC-2 failure.
+- SKIPPED: The positive-smoke-gated kernel, `PRODUCT.md`, and independent S3
+  ROADMAP edits were not earned. No product file was edited or committed; both
+  kernel copies remain byte-identical at the pinned base.
+- SKIPPED: Candidate-only contract, marketplace, release/parity,
+  changed-surface, RoboRev, delivery-topology, push, and PR work were not
+  earned because no candidate revision exists.
+
+Route: `return to Captain; the one-response smoke is exhausted and the product
+remains unchanged`.
+
+### Observable smoke receipt
+
+```yaml
+smoke:
+  result: FAIL_CLOSED
+  product_change: none
+  responses:
+    completed: 1
+    retry: 0
+  prompt:
+    kind: "normal maintainability request"
+    snippets: [alpha.ts, beta.ts, gamma.ts]
+    hidden_classification_exposed: false
+    expected_edit_exposed: false
+    candidate_wording_exposed: false
+    rubric_exposed: false
+  observable_result:
+    adjacent_code_narration_removed: true
+    external_constraint_retained: true
+    rejected_alternative_retained: true
+    hazard_retained: true
+    executable_tokens_identical: false
+  token_failures:
+    - "alpha.ts eliminated the local declaration and combined the expression"
+    - "beta.ts added an executable-syntax trailing comma while reformatting"
+    - "gamma.ts combined the copy and sort statements into one expression"
+  candidate_revision: none
+```
+
+### Summary
+
+The proportional smoke reached the intended observable behavior boundary, but
+the ordinary worker also rewrote executable tokens. The strict preservation
+bar therefore rejected the response, and the implementation correctly ended
+without product changes, retained evaluator surface, retry, commit, push, or PR.
