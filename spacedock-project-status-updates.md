@@ -1,14 +1,14 @@
 ---
 id: 16npdbnbe8707v7h5hcm4nbb
 title: Turn projection snapshots into reviewable GitHub Project Status Updates
-status: ideation
+status: implementation
 source: Captain-approved split from spacedock-github-project-projection after Claude Opus 5 ideation challenge on 2026-08-14
 product: kc-dev-flow
 sprint: S3
 started: 2026-08-17
 completed:
 verdict:
-worktree:
+worktree: .worktrees/spacedock-project-status-updates
 issue:
 pr:
 mod-block:
