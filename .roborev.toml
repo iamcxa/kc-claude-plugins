@@ -1,6 +1,7 @@
-# Repository-owned implementation-exit reviewer. The workflow passes these
-# values explicitly and forces `--panel none`; this file installs no hook.
-review_agent = "codex"
-review_model = "gpt-5.6-terra"
-review_reasoning = "thorough"
-review_min_severity = "medium"
+# Repository fallback for the dominant OpenAI implementation path. The profile
+# loader selects the complementary reviewer and profile controls explicitly.
+# This file installs no hook or panel.
+review_agent = "claude-code"
+review_model = "sonnet"
+review_reasoning = "medium"
+review_min_severity = "high"

@@ -15,3 +15,21 @@ and recovery for bounded use.
 
 Run scoped tests while iterating and the relevant integrated checks at exit. Do
 not add production lifecycle surfaces or a standing review loop.
+
+## Implementation exit observation
+
+```json
+{
+  "schema": "kc-dev-flow-observation/v1",
+  "capability": "review_convergence",
+  "mode": "observe",
+  "provider": "roborev",
+  "trigger": "implementation_exit",
+  "reasoning": "medium",
+  "minimum_severity": "medium",
+  "panel": "none",
+  "live_batch_timeout_seconds": 900,
+  "request_cap": 1,
+  "repair_confirmation_cap": 1
+}
+```

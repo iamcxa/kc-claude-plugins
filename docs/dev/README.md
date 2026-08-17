@@ -62,17 +62,29 @@ README as a policy bundle.
 | Orchestration | First Officer |
 | Normal delivery advice | `kc-dev-flow:chief-engineer`, only on its bounded triggers |
 | Independent assurance | `kc-dev-flow:science-officer`, only on its bounded triggers |
-| Optional observation | RoboRev at Production implementation exit only; local runbook below |
+| Optional observation | Typed RoboRev observation at every profile's implementation exit; `docs/dev/runbooks/roborev-implementation-exit.md` |
 
 The loader, shared core, and profile contracts are vendored from `kc-dev-flow`.
 `scripts/kc-dev-flow-contract-test.py` checks their package/adopter identity and
 every supported profile-stage combination.
 
-The Production-only observation is `review_convergence` in `observe` mode with
-provider RoboRev. Repository config `.roborev.toml` binds agent, model, reasoning,
-and severity; `panel: none` and one exact-tip request bound the run.
-The run allows one changed-tip repair confirmation.
-POC and Pilot do not load this runbook.
+The selected profile's `build.md` supplies one typed `review_convergence`
+observation in `observe` mode, which appears only in the implementation-stage
+loader result. The runbook selects a complementary reviewer mapping from
+the actual implementation provider family: OpenAI uses Claude Code `sonnet`;
+Anthropic uses Codex `gpt-5.6-terra`. An unknown family is `UNAVAILABLE`, not a
+guess. Pass every value explicitly; `.roborev.toml` is only the committed
+repository fallback and installs no hook or panel.
+
+| Profile | Reasoning | Minimum severity | Timeout | Request / confirmation cap |
+|---|---|---|---:|---:|
+| POC | `medium` | `high` | 10 minutes | `1 / 0` |
+| Pilot | `medium` | `medium` | 15 minutes | `1 / 1` |
+| Production | `thorough` | `medium` | 20 minutes | `1 / 1` |
+
+All use `panel: none`. The result is observation, not validation or delivery
+authority. Missing CLI, daemon/local mode, mapped agent, authentication, or host
+bridge is an honest `UNAVAILABLE`; normal fresh validation remains reachable.
 
 ## State prerequisite
 
@@ -153,11 +165,11 @@ Load the selected `build` contract. Use an isolated worktree when the checkout i
 contended. Run scoped checks while iterating and only the relevant exit checks
 earned by the selected profile and diff.
 
-For Production only, after tests and an exact candidate revision exist, the
-declared optional RoboRev observation may load
+After tests and an exact candidate revision exist, the loader's selected typed
+RoboRev observation loads
 [`runbooks/roborev-implementation-exit.md`](./runbooks/roborev-implementation-exit.md).
-Its receipt is observation, not validation or delivery authority. POC and Pilot
-do not load this runbook.
+Its receipt is observation, not validation or delivery authority. POC ends after
+one request; Pilot and Production allow one changed-tip confirmation.
 
 ### `validation` — selected `prove`, `verify-deliver`, or `verify`
 

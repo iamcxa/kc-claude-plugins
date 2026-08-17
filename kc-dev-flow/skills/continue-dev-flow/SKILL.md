@@ -80,9 +80,15 @@ that changes the decision, and next action.
 
 ## Optional observations
 
-Load a repository-declared observation such as RoboRev only at its named trigger.
+At implementation exit, inspect only the typed observation in the selected
+`build` contract returned by the loader. When it declares `review_convergence`
+in `observe` mode, resolve the repository-local
+RoboRev runbook from `## Local Profile`, select the reviewer complementary to the
+actual implementation provider family, and pass the emitted profile controls
+explicitly. An absent declaration performs no RoboRev probe or invocation. An unknown
+implementation family or unavailable provider produces an honest non-gating
+`UNAVAILABLE` result; do not guess or use ambient defaults.
+
 `../../references/roborev-implementation-exit.md` is an adoption source, not a
-runtime fallback. Omission performs no RoboRev probe or invocation. An unavailable
-optional observation does not become a hidden validation failure. Load
-improvement harvesting only on an explicit request; it never interrupts the
-selected product route.
+runtime fallback. Load improvement harvesting only on an explicit request; it
+never interrupts the selected product route.

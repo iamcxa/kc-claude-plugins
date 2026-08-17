@@ -53,6 +53,11 @@ profile_files = {
     ),
     "production": ("base.md", "shape.md", "build.md", "verify.md", "release.md"),
 }
+profile_observation_limits = {
+    "poc-exploration": ("medium", "high", 600, 0),
+    "pilot-product-slice": ("medium", "medium", 900, 1),
+    "production": ("thorough", "medium", 1200, 1),
+}
 
 required = [
     "kc-dev-flow/.claude-plugin/plugin.json",
@@ -92,6 +97,32 @@ for profile, names in profile_files.items():
                 "Working perspective:" in stage_contract and "\nRole:" not in stage_contract,
                 f"stage perspective is not a lightweight cue: {profile}/{name}",
             )
+            if name == "build.md":
+                blocks = re.findall(r"```json\s*\n(.*?)```", stage_contract, re.DOTALL)
+                typed = [json.loads(block) for block in blocks]
+                typed = [
+                    item
+                    for item in typed
+                    if item.get("schema") == "kc-dev-flow-observation/v1"
+                ]
+                require(len(typed) == 1, f"wrong observation count: {profile}")
+                observation = typed[0]
+                require(
+                    (
+                        observation.get("reasoning"),
+                        observation.get("minimum_severity"),
+                        observation.get("live_batch_timeout_seconds"),
+                        observation.get("repair_confirmation_cap"),
+                    )
+                    == profile_observation_limits[profile]
+                    and observation.get("capability") == "review_convergence"
+                    and observation.get("mode") == "observe"
+                    and observation.get("provider") == "roborev"
+                    and observation.get("trigger") == "implementation_exit"
+                    and observation.get("panel") == "none"
+                    and observation.get("request_cap") == 1,
+                    f"wrong proportional observation: {profile} {observation}",
+                )
 
 for relative in [
     "kc-dev-flow/scripts/profile-contract-loader.py",

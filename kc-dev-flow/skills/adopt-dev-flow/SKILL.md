@@ -20,8 +20,9 @@ repair the cheapest compatible seam.
 1. Add a concise `## Local Profile` near the workflow frontmatter. Bind existing
    authorities plus the repository-local profile loader and contracts root.
 2. Vendor `../../references/kernel.md`, the `references/profiles/` tree, and
-   `../../scripts/profile-contract-loader.py` without local edits. Local
-   mechanisms and exceptions stay in the workflow README.
+   `../../scripts/profile-contract-loader.py` without local edits. The selected
+   `build.md` owns its typed proportional observation. Local provider paths and
+   exceptions stay in the workflow README.
 3. Select a profile before the first working stage and store the v2 receipt in
    the existing work item. Each item selects independently; do not create a
    project-global profile or another profile registry. Invoke the loader with
@@ -29,11 +30,14 @@ repair the cheapest compatible seam.
 4. Map the logical routes to the runtime. A runtime with one superset graph uses:
    POC `implementation -> validation`; Pilot adds `ideation`; Production adds
    `release`. Backlog and done remain non-working states.
-5. Make each working stage a small loader invocation or pointer. Do not duplicate
-   the profile contracts in the workflow README.
+5. Make each working stage a small loader invocation or pointer. At
+   implementation exit, use only the selected typed observation emitted by the
+   loader. Do not duplicate the profile contracts in the workflow README.
 6. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
    release-owner authority. Advice never gains state or merge authority.
-7. Run the profile loader contract test and the repository's normal gates.
+7. Bind the local RoboRev runbook when the emitted observation is supported.
+   Missing provider capability remains an honest non-gating `UNAVAILABLE` result.
+8. Run the profile loader contract test and the repository's normal gates.
 
 If the workflow runtime cannot skip inactive stages or represent the Production
 release boundary, record a refit requirement. Do not emulate progress with empty

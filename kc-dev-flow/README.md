@@ -12,13 +12,41 @@ runtime, and delivery provider.
 | Pilot / Product slice | `shape -> build -> verify-deliver` | A bounded slice works for limited real use with appropriate persistence, diagnostics, recovery, and data safety. |
 | Production | `shape -> build -> verify -> release` | An operated capability has the applicable lifecycle, compatibility, recovery, observability, integrity, rollback, release, and ownership proof. |
 
+```mermaid
+flowchart TB
+    A["Backlog<br/>capture the problem"] --> B["Captain selects a profile<br/>commit the work-item receipt"]
+    B --> L["At each working stage, load<br/>shared core + selected base + selected stage"]
+    L --> C{Selected profile}
+
+    C -->|POC| P1["Build<br/>smallest real journey"]
+    P1 --> P2["Optional RoboRev<br/>High+ observation"]
+    P2 --> P3["Prove<br/>journey + riskiest assumption"]
+    P3 --> D[Done]
+
+    C -->|Pilot| T1["Shape<br/>bounded user journey"]
+    T1 --> T2["Build<br/>real seams + recovery"]
+    T2 --> T3["Optional RoboRev<br/>Medium+ observation"]
+    T3 --> T4["Verify and deliver<br/>journey + data safety"]
+    T4 --> D
+
+    C -->|Production| R1["Shape<br/>operational boundaries"]
+    R1 --> R2["Build<br/>operable lifecycle"]
+    R2 --> R3["Optional RoboRev<br/>thorough Medium+ observation"]
+    R3 --> R4["Verify<br/>exact-revision obligations"]
+    R4 --> R5["Release<br/>rollout + recovery + authority"]
+    R5 --> D
+```
+
 Backlog and done are state boundaries, not working stages. A runtime may expose
 the union of route states and skip inactive stages. The deterministic profile
-loader emits only:
+loader emits only these policy contracts:
 
 ```text
 shared core + selected profile base + selected current stage
 ```
+
+The selected `build` contract also contains one typed implementation-exit
+observation. It does not load another profile or stage.
 
 It rejects a stage outside the committed profile route. POC therefore does not
 pay for Production policy merely because both are available in the package.
@@ -80,7 +108,8 @@ The package source contains:
 
 - `references/kernel.md` — the shared core;
 - `references/profiles/<profile>/base.md` — one selected base contract;
-- `references/profiles/<profile>/<stage>.md` — one selected role/stage contract;
+- `references/profiles/<profile>/<stage>.md` — one selected role/stage contract,
+  with its proportional exit observation in `build.md`;
 - `scripts/profile-contract-loader.py` — the closed route and loading mechanism.
 
 An adopter vendors these files and binds their local paths in the workflow's
@@ -89,9 +118,15 @@ item and receipt, then invokes the local loader. It does not read the full
 workflow README, unselected profiles, or installed package fallback.
 
 Optional observations and policy references load only on their named trigger.
-Their absence cannot silently become a delivery failure. Improvement harvesting
-also remains explicit and cannot create work, change sprint membership, or
-interrupt the selected product route.
+An unavailable provider cannot silently become a delivery failure. Improvement
+harvesting also remains explicit and cannot create work, change sprint
+membership, or interrupt the selected product route.
+
+Profile selection does not activate the other standalone references. Journey
+slicing is already expressed by the profile routes; reverse-recovery and
+improvement harvesting keep their explicit triggers. An adopter-owned runtime
+mod such as Spacedock `pr-merge` remains a delivery mechanism outside the
+profile loader.
 
 Install through the `kc-claude-plugins` marketplace in Claude Code. Codex uses
 the co-shipped `.codex-plugin` manifest and the same skill and contract files.
