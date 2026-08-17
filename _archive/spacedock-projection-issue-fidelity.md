@@ -1,19 +1,20 @@
 ---
 id: q0ndnhere7c5pgkft8n3kcp5
 title: Project SD tasks without repository Issue noise
-status: validation
+status: done
 source: Captain review of the Project #1 Issue #232 projection screenshot on 2026-08-14
 product: kc-dev-flow
 sprint: S3
 started: 2026-08-14
-completed:
-verdict:
-worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/spacedock-project-draft-items
+completed: 2026-08-16T08:40:00Z
+verdict: PASSED
+worktree:
 issue:
 pr: pr-merge:242
 mod-block:
 design: required
 lane: main
+archived: 2026-08-17T02:29:01Z
 ---
 
 ## Problem
