@@ -65,6 +65,11 @@ review or receipt.
 - Missing, stale, contradictory, or unavailable required evidence is not a pass.
 - Provider review feedback is evidence to verify, not authority to obey. A
   code-changing repair invalidates prior exact-revision validation.
+- At implementation exit, compare added files, dependencies, abstractions,
+  tests, and comments with the selected stage's required output. Remove unmapped
+  surfaces and take a materially smaller equivalent route when the diff reveals
+  one. LOC and file counts are diagnostic signals, never pass/fail gates. When
+  no scope drift is found, create no receipt or commentary.
 
 ## Communication
 

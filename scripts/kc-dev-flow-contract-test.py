@@ -80,6 +80,7 @@ required = [
     "kc-dev-flow/scripts/project-spacedock-state.test.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
+    "scripts/kc-dev-flow-published-tag-smoke.test.py",
     "scripts/roborev-implementation-exit-contract.test.py",
     "scripts/pr-merge-portable-delivery.test.py",
 ]
@@ -196,6 +197,10 @@ run(
 )
 run([sys.executable, "scripts/kc-dev-flow-loader-eval.test.py"], "loader eval")
 run(
+    [sys.executable, "scripts/kc-dev-flow-published-tag-smoke.test.py"],
+    "published-tag smoke behavior",
+)
+run(
     [sys.executable, "scripts/roborev-implementation-exit-contract.test.py"],
     "RoboRev contract",
 )
@@ -271,6 +276,13 @@ require(
     == (ADOPTED / "kernel.md").read_bytes(),
     "self-adopted shared core differs from package source",
 )
+kernel = read("kc-dev-flow/references/kernel.md")
+for phrase in [
+    "compare added files, dependencies, abstractions, tests, and comments",
+    "LOC and file counts are diagnostic signals, never pass/fail gates",
+    "create no receipt or commentary",
+]:
+    require(phrase in " ".join(kernel.split()), f"kernel omits subtraction rule: {phrase}")
 require(
     (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),
