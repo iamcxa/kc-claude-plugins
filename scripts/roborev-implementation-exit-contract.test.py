@@ -738,12 +738,14 @@ for forbidden in ["default_panel", "hook_review_panel", "[[hooks]]"]:
 
 local_profile = (ROOT / "docs/dev/README.md").read_text(encoding="utf-8")
 for phrase in [
-    "`review_convergence` in `observe` mode at implementation exit",
+    "RoboRev at Production implementation exit only",
+    "`review_convergence` in `observe` mode",
     "provider RoboRev",
     "`.roborev.toml`",
     "`panel: none`",
     "one exact-tip request",
     "one changed-tip repair confirmation",
+    "POC and Pilot do not load this runbook",
 ]:
     require(phrase in local_profile, f"Local Profile is missing ownership/cap: {phrase}")
 for field in ["review_agent", "review_model", "review_reasoning", "review_min_severity"]:

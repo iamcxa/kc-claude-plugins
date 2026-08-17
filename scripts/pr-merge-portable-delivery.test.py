@@ -95,8 +95,12 @@ def validate(text: str) -> list[str]:
             errors.append("ambient gh pr view is forbidden")
     if "Automatically fall back to local merge" in text or "automatic local-merge terminal success" in text:
         errors.append("automatic local-merge terminal success is forbidden")
-    if "authenticated product PR `mergedAt`" not in README:
-        errors.append("README merged-product terminal requirement drifted")
+    if (
+        "When a PR is the selected delivery artifact, authenticated product PR"
+        not in README
+        or "`mergedAt` supplies the completion time" not in README
+    ):
+        errors.append("README selected-PR terminal requirement drifted")
     return errors
 
 

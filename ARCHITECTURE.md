@@ -14,32 +14,42 @@ ship-flow-style task workflow (split-root state under
 `docs/dev/.spacedock-state`) that governs how repo changes are proposed,
 built, and verified.
 
-## kc-dev-flow continuation ownership
+## kc-dev-flow profile-native loading
 
-The continuation path keeps three ownership boundaries explicit:
+Continuation resolves authority and profile before loading workflow policy. It
+reads the workflow's small Local Profile, the exact work item, and its committed
+v2 profile receipt. A deterministic repository-local loader then emits three
+artifacts: shared core, selected profile base, and selected current stage. It
+rejects a stage outside the selected route. The loader takes and hash-binds the
+exact committed work item, so profile is item-local rather than a project-global
+switch; concurrent items may follow different routes safely.
 
-- The **default product router** resolves the live work item, current stage, and
-  next approved product action before any optional improvement work.
-- The **conditional adopter-harvest reference** is loaded only when the current
-  invocation explicitly requests improvement harvesting. It may derive a
-  candidate, but it does not create work, admit it to a sprint, or pause product
-  delivery.
-- **downstream source intake** independently rechecks reusable handoffs and
-  prepares captain-reviewable proposals; it does not inherit adopter authority
-  or make a placement decision.
+One superset Spacedock graph serves three routes without creating another task
+universe:
 
-Normal ideation first reads the existing task's work-profile receipt. An
-unchanged receipt keeps the full chooser unloaded; a missing or stale receipt
-loads `choose-work-profile`. The chooser recommends and asks, while the actor
-already authorized by the repository records, syncs, and re-reads the choice
-before AC expansion. This adds no tracker field, lifecycle stage, or mutation
-authority.
+```mermaid
+flowchart LR
+    B[Backlog and profile choice] --> P{Selected profile}
+    P -->|POC| PB[Build] --> PP[Prove] --> D[Done]
+    P -->|Pilot| LS[Shape] --> LB[Build] --> LV[Verify and deliver] --> D
+    P -->|Production| RS[Shape] --> RB[Build] --> RV[Verify] --> RR[Release] --> D
+```
+
+Backlog and done are state boundaries rather than worker stages. Chief Engineer
+is a bounded delivery advisor for unclear sequencing or blockers. Science
+Officer is a separate independent-assurance seat for contested, high-risk, or
+hard-to-reverse technical claims. Neither role owns a general gate: FO applies
+declared checks, deterministic instruments gate decidable conditions, and the
+Captain or declared release owner retains risk and release authority.
+
+The optional improvement-harvest reference still loads only on explicit request.
+It cannot create work, admit it to a sprint, or interrupt the selected route.
 
 ### Conditional implementation-exit observation
 
-A Local Profile may bind `review_convergence` in `observe` mode to RoboRev. The
-loader leaves the provider reference unread when the declaration is absent. At
-implementation exit, a declared adapter binds repository, base, tip, committed
+A Production profile may bind `review_convergence` in `observe` mode to RoboRev.
+POC and Pilot leave the provider reference unread. At Production implementation
+exit, a declared adapter binds repository, base, tip, committed
 reviewer configuration, and panel membership; it reuses matching provider jobs
 or uses the existing Git-backed Spacedock state transaction to select one claim
 winner before a bounded explicit request. Independent clones are serialized by
@@ -49,14 +59,14 @@ claim attempt.
 
 The provider observation emits the existing Work Control `PASS | FAIL | UNKNOWN
 | UNAVAILABLE` envelope. Missing tools and unsupported hosts stay non-green but
-do not block the separate fresh-validation route. A claim loser does not
+do not block the selected verification route. A claim loser does not
 re-query or enqueue. No daemon, second ledger, generalized evaluator, or lock
 service belongs to this seam.
 
 ```mermaid
 flowchart LR
-    I[Implementation evidence and exact tip] --> D{Local Profile declares RoboRev?}
-    D -->|no| V[Fresh validation]
+    I[Production implementation evidence and exact tip] --> D{Local Profile declares RoboRev?}
+    D -->|no| V[Production verification]
     D -->|yes| R[Reuse matching job]
     R -->|match| E[Four-state observation]
     R -->|miss| C[Spacedock state claim]

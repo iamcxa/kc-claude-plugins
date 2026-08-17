@@ -91,18 +91,15 @@ Repository-level [product](./PRODUCT.md) and [architecture](./ARCHITECTURE.md) c
 
 ### [kc-dev-flow](./kc-dev-flow/)
 
-Portable development-flow kernel for Claude Code and Codex. It binds existing
-project context, work-item, sprint, execution, delivery, and observation
-authorities instead of replacing them. `adopt-dev-flow` audits or upgrades the
-binding; `continue-dev-flow` keeps an approved sprint moving through fresh
-validation and delivery without unnecessary captain pauses; `promote-dev-flow`
-reviews sanitized adopter evidence at the canonical source without granting it
-task or policy authority; `science-officer-em` provides independent engineering
-judgment through the canonical replacement skill while preserving the legacy
-report envelope and existing captain, gate, and delivery authority.
+Profile-native development routes for Claude Code and Codex. One minimal shared
+core preserves local authority while POC, Pilot, and Production load different
+base and stage contracts. `chief-engineer` advises normal delivery;
+`science-officer` provides risk-triggered independent assurance; deterministic
+checks and named owners retain their scoped gates. The legacy
+`science-officer-em` skill remains only as a report-envelope adapter.
 
-**Use when:** You want multiple repositories or agent harnesses to share a lean,
-evidence-bound workflow while retaining their local tracker and runtime.
+**Use when:** You want proportional development rigor without making an
+experiment load or execute a Production workflow.
 
 ```bash
 /plugin install kc-dev-flow@kc-claude-plugins

@@ -1,7 +1,7 @@
 {
   "name": "kc-dev-flow",
   "version": "2.5.0",
-  "description": "Portable, evidence-bound development flow for adopting and continuously advancing repository sprints without duplicating local authority.",
+  "description": "Profile-native POC, Pilot, and Production delivery routes with a minimal shared authority core.",
   "author": {
     "name": "Kent Chen",
     "url": "https://github.com/iamcxa"
@@ -18,8 +18,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "KC Dev Flow",
-    "shortDescription": "Portable sprint flow with explicit authority and evidence",
-    "longDescription": "Adopt, audit, upgrade, and continue a repository-owned development flow, review sanitized adopter evidence at the canonical source, and request independent engineering judgment while preserving local and source decision authority.",
+    "shortDescription": "Profile-native delivery with proportional rigor",
+    "longDescription": "Adopt and continue repository-owned POC, Pilot, and Production routes that load only one minimal shared core plus the selected profile-stage contract, with bounded delivery advice and risk-triggered independent assurance.",
     "developerName": "Kent Chen",
     "category": "Productivity",
     "capabilities": [
@@ -30,7 +30,8 @@
       "Audit this repository with adopt-dev-flow",
       "Continue the approved sprint with continue-dev-flow",
       "Review sanitized adopter evidence with promote-dev-flow",
-      "Ask $science-officer-em to adjudicate this engineering decision"
+      "Ask $chief-engineer for the next smallest integrated delivery step",
+      "Ask $science-officer for independent assurance on this high-risk technical decision"
     ],
     "brandColor": "#2563EB"
   }
