@@ -10,7 +10,7 @@ completed:
 verdict:
 worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v1/.context/worktrees/spacedock-project-draft-items
 issue:
-pr: 242
+pr: pr-merge:242
 mod-block:
 design: required
 lane: main
@@ -1018,4 +1018,58 @@ science_officer_em_upward_report:
     dissent: "No selected-scope dissent remains. The record must not be restated as workflow-global orphan-free while [bz] remains outside approval."
     disproof_condition: "Return if main regains any Issue write path, the same line/digest measurement changes, a selected Draft loses a required field or agreeing anchor, a future identical run plans a mutation, or deletion evidence no longer matches the committed journals."
     authority_boundary: "The Captain retains scope and any future irreversible action; validation and work-item authorities retain the terminal verdict and stage transition; delivery and provider owners retain GitHub evidence. This advisory record grants none of those actions."
+```
+
+## Stage Report: validation — cycle 2 terminal
+
+**Decision: PASS at exact merged product `f187ddbdf3442b883512dc1d37c05442edf28e08` for the selected ten Project #4 entities; proceed through the repository-owned terminalization guard.**
+
+- `Binding:` reviewed candidate `441b2f238d24b71c3baf4d50930b210d6fc0318f` and merge share tree `469633d3f438bf56eb29e45b1e170d6dd8a398cf`; the merge has sole parent `54594f1871a1a693528f8bdbbe132010ea4fb6db`. The q0n bytes are unchanged from validation entry `ba5992d7` through the current holder; intervening state commits affect only another task.
+- `Lenses:` behavior, contract/schema, state/retry, authority/destructive scope, runtime, docs, and delivery all fired; 0 Material findings survive. A changed generator path, required field, identity anchor, line bound, provider head, or feedback fingerprint would have failed its corresponding lens.
+- `Diff coverage:` 100% of the 36 named projector behavior cases pass at the merged product; the full kc-dev-flow contract also passes. This is behavior-row coverage, not a source-line coverage claim.
+- `Adversarial:` exact tree/base checks, Issue-writer absence, runtime digest and physical-line bounds, complete feedback pagination, Candidate/head equality, required-check query, and a fresh read-only Project reconcile all remained green. Each instrument has the contrary value that would fail it recorded in AC-1 through AC-6.
+- `Cross-model:` `not_needed` — fresh tool-less Claude Opus 5 High session `8702c9aa-07d4-4861-8241-f6c763404f8d` returned `proceed / high`; the selected-scope call is uncontested and no new irreversible action is proposed.
+- `E2E:` PASS — apply run `31937634596` performed the ten expected receipt-only Draft updates, identical run `31937667005` performed zero operations, and the fresh merged-main/current-state read-only reconcile again reports ten `NO_CHANGE` actions, zero mutations, zero operations, zero conflicts, and zero selected-scope orphans.
+- `Origin re-observation:` PASS — Reported scenario: repository Issues were noise and replacement Drafts must converge without Issue writes | Originating runtime kind: GitHub Project #4 API plus installed scheduled projector | Re-observation artifact/revision: Project #4 selected ten at product `f187ddbd` and authoritative state whose selected/task bytes equal `33d0d612` | Equivalent-runtime rationale: same GitHub actor, API transport, config, Project, selected identities, and deployed canonical runtime | Falsifier kind: mutation | Result: all ten live items reconcile with zero operations and the workflow grants `issues: read` only.
+- `Surface note:` runtime is exactly at the accepted 1,421-line cap; a later runtime change must re-baseline its own scope. The manually seeded `[bz]` Draft remains outside selection and prevents only a workflow-global cleanliness claim.
+
+PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr_number":242,"layer":"single","head":"441b2f238d24b71c3baf4d50930b210d6fc0318f","fingerprint":"sha256:605d998806687169ec5affc048f5a0d2107aa1c05ad91a675241b08feb620ac2","items":[],"dispositions":[]}
+
+```yaml
+science_officer_em_upward_report:
+  em_judgment: "Task q0n satisfies AC-1 through AC-6 and the complete terminal delivery predicate at the exact merged product, scoped only to the selected ten Project #4 entities; recommend final validation PASS and proceed to the repository-owned terminalization guard."
+  evidence_synthesis: "Merge f187ddbdf3442b883512dc1d37c05442edf28e08 is tree-equal to reviewed candidate 441b2f238d24b71c3baf4d50930b210d6fc0318f; 36/36 projector tests and the full contract pass; the Issue-first writer is absent; the maintained surface is 2,938 lines with the configured digest; the fresh selected-ten reconcile is zero-operation; and PR #242 is merged with one matching Candidate line, required checks green, complete empty feedback population, and fingerprint sha256:605d998806687169ec5affc048f5a0d2107aa1c05ad91a675241b08feb620ac2. The [bz] Draft remains outside selection and forbids only a global cleanliness claim."
+  risk_tradeoff_call: "Terminalizing closes a fully evidenced merged lifecycle and keeps repository Issue noise removed for the accepted ten. The bounded residuals are zero runtime line headroom and the out-of-selection [bz] Draft; holding q0n open to reduce either would expand the accepted scope without improving its satisfied outcome."
+  recommendation: "Record final validation PASS for product f187ddbdf3442b883512dc1d37c05442edf28e08 and candidate 441b2f238d24b71c3baf4d50930b210d6fc0318f, preserve the selected-ten qualifier, commit the delivery sentinel, and invoke the repository-owned merge guard."
+  route: proceed
+  confidence: high
+  multi_model: not_needed
+  fo_boundary: "FO may record this report, commit the pr-merge sentinel, invoke the merge guard, and let registered state mechanics terminalize and archive. FO may not expand selection to [bz], claim workflow-global cleanliness, mutate Project #4, or delete or modify an Issue."
+  engineering_judgment:
+    question: "May q0n receive final validation PASS and proceed to terminalization for the selected ten Project #4 entities?"
+    revision: "Product f187ddbdf3442b883512dc1d37c05442edf28e08; candidate 441b2f238d24b71c3baf4d50930b210d6fc0318f; task bytes unchanged from state ba5992d7 through the current holder; selected-ten live observation equivalent to state 33d0d612c87c46a5620afb30341e04e75f254617."
+    evidence_synthesis: "Merge f187ddbdf3442b883512dc1d37c05442edf28e08 is tree-equal to reviewed candidate 441b2f238d24b71c3baf4d50930b210d6fc0318f; 36/36 projector tests and the full contract pass; the Issue-first writer is absent; the maintained surface is 2,938 lines with the configured digest; the fresh selected-ten reconcile is zero-operation; and PR #242 is merged with one matching Candidate line, required checks green, complete empty feedback population, and fingerprint sha256:605d998806687169ec5affc048f5a0d2107aa1c05ad91a675241b08feb620ac2. The [bz] Draft remains outside selection and forbids only a global cleanliness claim."
+    adjudications:
+      - finding: "F-1: AC-1 through AC-6 pass at the exact merged product and selected live target."
+        disposition: supported
+        basis: "Exact tree identity, 36/36 behavior tests, contract PASS, writer absence, digest and line bounds, current zero-operation reconcile, and the two-run live convergence exercise every declared criterion and falsifier."
+      - finding: "F-2: The four clarifications withheld by the preliminary validator remain open."
+        disposition: unsupported
+        basis: "Generator absence, authoritative line/digest measurement, PARTIAL required-field readback, and the journaled bot-only deletion gate are now each directly evidenced."
+      - finding: "F-3: The GitHub terminal delivery predicate remains incomplete."
+        disposition: unsupported
+        basis: "PR #242 is authenticated merged delivery at the matching Candidate head; required checks pass and complete exact-head feedback has an empty population with a stable fingerprint."
+      - finding: "F-4: The manually seeded [bz] Draft blocks the accepted selected-ten closeout."
+        disposition: unsupported
+        basis: "The governing scope selects ten identities and prohibits only restating their zero-orphan result as workflow-global; [bz] was neither selected nor mutated."
+      - finding: "F-5: A further implementation or validation cycle is required."
+        disposition: unsupported
+        basis: "No Material finding, contradiction, missing disproof evidence, provider drift, or unmet lifecycle obligation survives at the exact product and selected runtime boundary."
+    risk_tradeoff: "Terminalizing closes a fully evidenced merged lifecycle and keeps repository Issue noise removed for the accepted ten. The bounded residuals are zero runtime line headroom and the out-of-selection [bz] Draft; holding q0n open to reduce either would expand the accepted scope without improving its satisfied outcome."
+    recommendation: "Record final validation PASS for product f187ddbdf3442b883512dc1d37c05442edf28e08 and candidate 441b2f238d24b71c3baf4d50930b210d6fc0318f, preserve the selected-ten qualifier, commit the delivery sentinel, and invoke the repository-owned merge guard."
+    route: proceed
+    confidence: high
+    dissent: ""
+    disproof_condition: "Return if an Issue write path exists at f187ddbd, a selected Draft loses a required field or agreeing anchor, a line/digest bound changes, the current selected reconcile plans an operation, q0n bytes change, or PR #242 head, required checks, or feedback population no longer match this record before the guard runs."
+    authority_boundary: "The EM retains advisory judgment only. Gate and work-item authority own PASS and stage transition; registered state mechanics own sentinel, terminal fields, and archive; Captain retains scope and any new irreversible action; provider owners retain GitHub evidence."
 ```
