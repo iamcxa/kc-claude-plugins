@@ -767,3 +767,80 @@ The proportional smoke reached the intended observable behavior boundary, but
 the ordinary worker also rewrote executable tokens. The strict preservation
 bar therefore rejected the response, and the implementation correctly ended
 without product changes, retained evaluator surface, retry, commit, push, or PR.
+
+## Stage Report: implementation (cycle 4 — final bounded comment-only smoke) — no product change
+
+- DONE: Re-pinned the clean product worktree at
+  `f187ddbdf3442b883512dc1d37c05442edf28e08`, exactly matching freshly fetched
+  `origin/main`, before scoring the final response. The worktree stayed clean.
+- DONE: Dispatched exactly one fresh-context ordinary worker using
+  `gpt-5.6-terra` at high reasoning. Its prompt contained only a normal request
+  to improve comments, three neutral filenames (`alpha.ts`, `beta.ts`, and
+  `gamma.ts`), and the explicit comment-only constraint. It exposed no
+  classifications, expected comment edits, candidate wording, acceptance
+  criteria, or scoring rubric. No retry or second response was used.
+- DONE: Every executable token remained identical. The worker changed comments
+  only; it did not change, move, add, remove, or reformat executable code.
+- FAILED: The returned comments did not meet the complete maintenance-value
+  bar. In `beta.ts`, the external constraint that the partner signs the exact
+  incoming bytes and that decoding before verification breaks signature
+  compatibility was replaced with a generic statement about a
+  "compatibility-safe comparator," losing the required exact-byte/signature
+  boundary. The new decode comment also continued to narrate the adjacent
+  statement.
+- FAILED: `alpha.ts` replaced two adjacent-code narration comments with a new
+  comment that restated normalization behavior and introduced an unsupported
+  storage rationale. This is rewritten narration rather than demonstrated
+  non-obvious maintenance value. The ICU rejected-alternative rationale in
+  `beta.ts`, caller-order rationale in `gamma.ts`, and retry-scheduler re-entry
+  hazard in `gamma.ts` were retained, but partial success cannot override either
+  failure.
+- SKIPPED: The smoke did not earn the kernel, `PRODUCT.md`, or independent S3
+  ROADMAP edits. No product file, fixture, runner, evaluator, or recurring test
+  was created; candidate-only contract, marketplace, release/parity,
+  changed-surface, RoboRev, delivery-topology, commit, push, and PR work were not
+  applicable.
+
+Route: `return to Captain; the final bounded correction is exhausted and this
+task permanently ends with no product change`.
+
+### Final bounded smoke receipt
+
+```yaml
+smoke:
+  result: FAIL_CLOSED
+  product_change: none
+  model: gpt-5.6-terra
+  reasoning: high
+  responses:
+    completed: 1
+    retry: 0
+  prompt:
+    kind: "normal comment-maintainability request with a strict comment-only scope"
+    snippets: [alpha.ts, beta.ts, gamma.ts]
+    hidden_classification_exposed: false
+    expected_edit_exposed: false
+    candidate_wording_exposed: false
+    acceptance_criteria_exposed: false
+    rubric_exposed: false
+  observable_result:
+    executable_tokens_identical: true
+    all_adjacent_code_narration_removed: false
+    external_constraint_retained: false
+    rejected_alternative_retained: true
+    caller_preservation_rationale_retained: true
+    hazard_retained: true
+  falsifiers:
+    - "beta.ts lost the exact incoming-byte and signature-compatibility constraint"
+    - "beta.ts retained adjacent decode narration"
+    - "alpha.ts rewrote narration and introduced an unsupported storage rationale"
+  candidate_revision: none
+```
+
+### Summary
+
+The final correction isolated comment judgment without permitting executable
+changes, and that preservation constraint passed. The response still rewrote
+narration and lost a required external constraint, so the fail-closed contract
+ends this task without a kernel or documentation change, retained test surface,
+commit, push, or PR.
