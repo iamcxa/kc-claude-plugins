@@ -133,7 +133,10 @@ The package source contains:
   only when no local provider owns that ceremony;
 - `references/roborev-implementation-exit.md` — the provider method for the
   `build` contract's typed observation, loaded at implementation exit when that
-  observation names a provider;
+  observation names a provider and the repository meets its recorded
+  precondition. RoboRev claims single-flight through a Spacedock-registered
+  state holder, so the observation is in scope for a Spacedock adopter and
+  recorded once as out of scope for any other;
 - `scripts/profile-contract-loader.py` — the closed route and loading mechanism.
 
 An adopter vendors these files and binds their local paths in the workflow's

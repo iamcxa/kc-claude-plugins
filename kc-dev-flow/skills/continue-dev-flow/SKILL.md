@@ -54,8 +54,11 @@ only for a route that delivers without one. `pr_delivery_selected` is narrower:
 true only when no local delivery provider owns the PR ceremony, so the portable
 one applies. A repository whose provider mod owns the ceremony has the first
 trigger true and the second false. `implementation_exit_observation_declared` is
-true only at a build stage whose emitted typed observation names a provider; it
-is the method for that observation, not an extra review. A newly true trigger loads its reference
+true only at a build stage whose emitted typed observation names a provider and
+whose repository meets that provider's recorded precondition; it is the method
+for that observation, not an extra review. RoboRev's precondition is a
+Spacedock-registered state holder, so a repository without one leaves the trigger
+false and never loads the contract. A newly true trigger loads its reference
 before the stage verdict. Record a named receipt in the existing work item;
 `receipt: null` creates no receipt. A link is not activation. A reference cannot
 add stages, broaden scope, or become a standing policy bundle.
