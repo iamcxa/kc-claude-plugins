@@ -13,6 +13,7 @@ WORKFLOWS = {
     "shadow": ROOT / ".github/workflows/review-shadow-tests.yml",
     "post": ROOT / ".github/workflows/review-post-tests.yml",
     "evaluation": ROOT / ".github/workflows/review-evaluation-tests.yml",
+    "cross_model": ROOT / ".github/workflows/cross-model-tests.yml",
 }
 
 
@@ -75,7 +76,7 @@ expected_routes = {
     "kc-pr-flow/scripts/review-runtime-benchmark.sh": {"evaluation"},
     "kc-pr-flow/scripts/review-ablation-core.py": {"evaluation"},
     "kc-pr-flow/test/fixtures/review-runtime/paired-runs.jsonl": {"evaluation"},
-    "kc-pr-flow/skills/kc-pr-review/SKILL.md": {"shadow", "evaluation"},
+    "kc-pr-flow/skills/kc-pr-review/SKILL.md": {"shadow", "evaluation", "cross_model"},
     "kc-pr-flow/reference/review-triage.md": {"evaluation"},
     "kc-pr-flow/reference/learned-patterns.md": {"evaluation"},
     "kc-pr-flow/reference/gh-api-patterns.md": set(),
@@ -85,7 +86,9 @@ expected_routes = {
     "kc-pr-flow/docs/review-runtime.md": set(),
     "kc-pr-flow/.claude-plugin/plugin.json": set(),
     ".claude-plugin/marketplace.json": set(),
-    "kc-pr-flow/scripts/cross-model.sh": set(),
+    "kc-pr-flow/scripts/cross-model.sh": {"cross_model"},
+    "kc-pr-flow/scripts/cross-model.test.sh": {"cross_model"},
+    ".github/workflows/cross-model-tests.yml": {"cross_model"},
     "kc-pr-flow/scripts/review-architecture-diagrams-validate.sh": set(),
     "docs/ship-flow/tools/validate-tdd-ledger.py": set(),
 }
@@ -102,6 +105,7 @@ expected_commands = {
         "bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh",
         "bash kc-pr-flow/scripts/review-ablation.test.sh",
     ],
+    "cross_model": ["bash kc-pr-flow/scripts/cross-model.test.sh"],
 }
 all_commands = [command for commands in expected_commands.values() for command in commands]
 
@@ -115,7 +119,6 @@ for name, text in texts.items():
         "validate-tdd-ledger.py",
         "review-tdd-evidence",
         "grep -Fq",
-        "cross-model.test.sh",
         "review-architecture-diagrams.test.sh",
     ):
         require(retired not in text, f"{name}: retained non-owned check {retired}")

@@ -3,14 +3,14 @@ name: kc-pr-flow review CI contracts
 on:
   pull_request:
     paths:
-      - ".github/workflows/review-*.yml"
+      - ".github/workflows/*.yml"
       - "scripts/review-ci-routing.test.py"
       - "kc-pr-flow/scripts/review-*"
       - "kc-pr-flow/test/fixtures/review-post/stub-transport.sh"
   push:
     branches: [main]
     paths:
-      - ".github/workflows/review-*.yml"
+      - ".github/workflows/*.yml"
       - "scripts/review-ci-routing.test.py"
       - "kc-pr-flow/scripts/review-*"
       - "kc-pr-flow/test/fixtures/review-post/stub-transport.sh"
@@ -54,7 +54,7 @@ jobs:
 
       - name: Validate workflow routing
         run: |
-          actionlint .github/workflows/review-*.yml
+          actionlint .github/workflows/*.yml
           python3 scripts/review-ci-routing.test.py
 
       - name: Validate review source

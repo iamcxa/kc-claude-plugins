@@ -21,6 +21,8 @@ on:
     paths:
       - "kc-pr-flow/scripts/cross-model.sh"
       - "kc-pr-flow/scripts/cross-model.test.sh"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - ".github/workflows/cross-model-tests.yml"
 
 permissions:
   contents: read
