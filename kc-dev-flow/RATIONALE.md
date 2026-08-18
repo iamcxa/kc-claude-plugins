@@ -92,9 +92,10 @@ The smaller route must still tell the truth.
 
 ## Evidence, not a victory lap
 
-In bounded evaluation, required policy input fell by about 83.5%–84.3%.
-Repeated samples reduced POC wall time by 28.3% and Production shape time by
-43.2%. The change also removed about 1,710 net repository lines.
+The bounded evaluation recorded in [PR #249](https://github.com/iamcxa/kc-claude-plugins/pull/249)
+measured lower required policy input and shorter sampled wall time. The work
+record owns those measurements; this retained rationale owns the decision they
+bought.
 
 I treat those as directional evidence, not a universal speed claim. The samples
 are small. Migration has a real cost. The package now contains more separate

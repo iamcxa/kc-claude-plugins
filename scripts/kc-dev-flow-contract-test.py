@@ -434,6 +434,10 @@ for phrase in [
     "Load the work, not the ceremony",
 ]:
     require(phrase in normalized_rationale, f"rationale omits: {phrase}")
+require(
+    "net repository lines" not in normalized_rationale,
+    "rationale retains a mutable PR diff snapshot",
+)
 
 for phrase in [
     "next smallest integrated step",
