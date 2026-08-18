@@ -37,11 +37,15 @@ runtime has its own deep-dive entry below this catalog.
   one-command PR workflow with consistent review quality across model
   providers. Its agent-native review runtime is detailed in the dedicated
   entry below.
-- **`kc-dev-flow`** — Portable authority and evidence kernel that adopts an
-  existing repository's tracker, sprint model, workflow runtime, and delivery
-  provider, then continues approved sprint work without unnecessary captain
-  pauses. Serves teams that need one lean workflow across Claude Code and Codex
-  without duplicating repository truth.
+- **`kc-dev-flow`** — Profile-native development routes over an existing
+  repository's tracker, iteration authority, workflow runtime, and delivery
+  provider. One small authority core is shared; POC, Pilot, and Production load
+  different base and stage contracts, so a disposable experiment does not pay
+  for Production lifecycle ceremony. Chief Engineer provides bounded next-step
+  delivery advice, while Science Officer is reserved for independent assurance
+  on material contested or high-risk technical claims. Deterministic checks and
+  named owners keep their scoped gates, and the Captain retains scope,
+  irreversibility, spend, merge, and release authority.
 
 ## kc-pr-flow: Agent-native PR review
 

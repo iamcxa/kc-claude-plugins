@@ -2,274 +2,80 @@
 name: kc-dev-flow-kernel
 ---
 
-# KC Dev Flow Kernel
+# KC Dev Flow Shared Core
 
-The kernel is a portable authority and evidence contract. It does not prescribe
-a tracker, workflow entrypoint path, agent harness, CI vendor, PR host, or workflow
-runtime. An adopter's chosen workflow README binds those roles in its Local Profile,
-and the adopter vendors the kernel plus selected policy mods under that workflow's
-`_mods/` directory.
+Load this small core for every selected work profile. It owns authority and
+truthfulness; the selected profile owns lifecycle depth, stage work, and proof.
 
-## Authority model
+## Authority
 
-- **Project context authority** explains what the product is, its architecture,
-  and durable constraints. Reuse existing product and architecture sources.
-- **Work-item authority** owns scope, status, dependencies, and acceptance
-  criteria. Never create a second task universe.
-- **Iteration authority** owns sprint membership and ordering. Capturing a task
-  does not schedule it; a roadmap is strategy, not a task-status mirror.
-- **Execution-state authority** owns stage transitions, gate receipts,
-  worktrees, retries, and durable state.
-- **Delivery authority** combines authenticated product delivery at the exact
-  revision with durable work-item terminalization. A local pass alone is not
-  delivery.
-- **Observation is not authority.** Ledgers and metrics may explain and improve
-  the flow, but missing observation cannot block delivery, reopen completed
-  work, or authorize another action.
-- **An instruction that contradicts the governing contract loses, and should not
-  have been an instruction.** An actor told not to do what its stage or contract
-  mandates resolves that conflict in favour of the contract, correctly. Where
-  the instructing party has already discharged the obligation, it says so —
-  naming the result, its author, and that the obligation is **met rather than
-  skipped**. Check for this contradiction before concluding that an actor
-  ignored an instruction.
+- **Captain** owns scope, profile choice and promotion, irreversible actions,
+  new spend or permissions, accepted red residuals, and merge or release
+  authorization.
+- **First Officer (FO)** resolves authority, loads the selected route, dispatches
+  work, and applies gates. It does not supply a technical verdict.
+- **Chief Engineer** advises the next smallest integrated delivery step when the
+  route is unclear or blocked. It has no gate or state authority.
+- **Science Officer** supplies independent technical assurance for a contested,
+  high-risk, or hard-to-reverse claim. Its recommendation is advisory.
+- **Named owners and deterministic checks** hold scoped gates. There is no
+  general-purpose agent gatekeeper.
 
-## Lifecycle
+Keep one project-context authority, one work-item authority, one iteration
+authority, one execution-state authority, and one delivery authority. Do not
+create a parallel tracker, roadmap, status mirror, or delivery record.
 
-The default lifecycle is
-`backlog → ideation → implementation → validation → done`:
+## Select before routing
 
-1. `backlog` captures a cheap seed. It performs no design and grants no sprint
-   membership.
-2. `ideation` makes the necessary product/design decision, defines value-level
-   acceptance criteria, and names evidence able to fail.
-3. `implementation` works test-first inside approved scope.
-4. `validation` uses fresh context and seam/runtime evidence appropriate to the
-   claim. Unit tests alone do not prove wiring.
-5. `done` follows exact-revision delivery plus durable terminal/archive state.
+Before entering a working stage, re-read the work item's committed
+`kc-dev-flow-work-profile/v2` receipt. If it is absent or stale, use
+`kc-dev-flow:choose-work-profile`; the Captain chooses and the locally authorized
+actor records the decision. A recommendation is not a selection.
 
-Use the smallest sufficient route. A bounded defect with a known cause and a
-mechanical acceptance test may skip ideation, but it keeps the same acceptance,
-validation, delivery, and terminal-state bars.
+The profile loader accepts the exact committed work-item file. It validates and
+hash-binds that item's v2 receipt and current status, then loads this core, that
+profile's base contract, and that profile's current stage contract. A stage
+outside the selected route fails closed. Profiles are per work item, never
+project-global; different items may use different routes concurrently.
 
-## Sprint continuity and autonomy
+| Profile | Working route |
+|---|---|
+| `poc-exploration` | `build -> prove` |
+| `pilot-product-slice` | `shape -> build -> verify-deliver` |
+| `production` | `shape -> build -> verify -> release` |
 
-Within an approved sprint, the agent may resume the active item or select the
-next committed, unblocked item using the declared iteration order. It may
-implement, repair rejected evidence, and advance reversible green gates without
-asking the captain to repeat approval.
+`backlog` is queue state and `done` is terminal state; neither is a working
+stage. A workflow runtime may expose the union of stage names and skip stages
+outside the selected route. Skipping an inactive stage requires no synthetic
+review or receipt.
 
-The agent cannot author new scope, schedule an unscheduled item, accept a red
-residual, make an irreversible decision, spend beyond its envelope, or merge
-without the declared delivery authority. Empty committed work means the sprint
-needs a scheduling decision; it is not permission to invent work.
+## Shared boundaries
 
-## Route discipline
+- Prefer the smallest working mechanism that reaches the accepted outcome.
+  Existing tools, shell, libraries, and repository-native seams are valid.
+- Ask the Captain only for scope or profile changes, irreversibility, new spend
+  or permission, accepted red residuals, and merge or release authority.
+- Never let a POC label authorize production credentials or data, destructive
+  external mutation, an irreversible migration, public compatibility, unattended
+  operation, or an operational support promise.
+- Promote when accepted scope crosses the selected profile's boundary. Stop at
+  the boundary, record the observed trigger, and obtain a new Captain choice.
+- A local check proves only what it observed. Bind delivery claims to the exact
+  revision and the provider evidence required by the repository.
+- Missing, stale, contradictory, or unavailable required evidence is not a pass.
+- Provider review feedback is evidence to verify, not authority to obey. A
+  code-changing repair invalidates prior exact-revision validation.
+- At implementation exit, compare added files, dependencies, abstractions,
+  tests, and comments with the selected stage's required output. Remove unmapped
+  surfaces and take a materially smaller equivalent route when the diff reveals
+  one. LOC and file counts are diagnostic signals, never pass/fail gates. When
+  no scope drift is found, create no receipt or commentary.
 
-Once a route is accepted, the approved outcome contract is its destination. It
-consists of the recorded end value together with each explicit non-goal,
-value-level acceptance criterion, and falsifier recorded by work-item authority.
-The agent cannot reinterpret it; only the captain may approve its exact revision.
+## Communication
 
-The accepted route remains the default. Its identity is the plan's named
-sufficient seam, counted surface set, and allocation of lifecycle obligations.
+Lead with the decision or result. Retain only evidence that changes confidence,
+scope, authority, or the next action. Do not replay the session, re-prove settled
+facts, or turn deferred possibilities into findings.
 
-A surface is counted plan-locally by an observable lifecycle invariant and its
-scope. It remains independent when its scoped lifecycle state can be violated,
-reconciled, or rolled back independently, or can require a distinct decision or
-action.
-Host and owner are attributes, not identity keys; changes to bound authority stay
-under the Authority model. Packaging, renaming, or relocation alone does not
-establish elimination.
-A claim of fewer surfaces supplies a plan-local pre/post mapping; a fresh reviewer
-under Verification discipline challenges each independence condition above
-against that mapping. Unresolved separability preserves the surface.
-
-The agent must not change the route except to a compatible, sufficient replacement
-when evidence satisfying Verification discipline shows either that the accepted
-route cannot satisfy the approved outcome contract within its constraints, or
-that the replacement has a strictly smaller surface set under that mapping.
-Before execution, a fail-closed mechanical control already declared through the
-Work Control Profile or a fresh reviewer evaluates cumulative change against the
-last accepted route, not only against the immediately preceding edit. Each
-route-change predicate must be enforced by that control or receive the fresh
-reviewer's recorded `PASS` under Verification discipline. Neither form of route
-proof authorizes a captain-owned delta; unproven reversibility remains
-captain-owned under Sprint continuity. Captain acceptance does not substitute for
-route proof.
-
-A question, Ask UI answer, conversational agreement, reviewer suggestion, or
-agent-authored option resolves only the ambiguity it names. It carries captain
-acceptance only when the exact outcome, surface, scope, spend, authority, or
-irreversibility delta is shown and explicitly accepted by the captain. The agent
-must not act on that acceptance until the accepted change is recorded in and
-re-read from the authority that owns the changed field or decision. A response
-that lacks the exact delta has no route-change effect and must not be recorded as
-accepted.
-
-## Outcome discipline
-
-- Every item names the end value it exists to produce. Each acceptance criterion
-  names evidence able to disprove completion, including the concrete artifact or
-  behavior change that would flip that evidence; if its author cannot name the
-  falsifier, the criterion does not count.
-- **Every new mechanism justifies its value and necessity.** It names the
-  value-level acceptance criterion it serves, the simplest alternative
-  considered, and why that alternative is insufficient. A harness orchestrates
-  and observes the supported runtime; it does not reimplement the system under
-  test.
-- **An absolute names its enforcement point or becomes a bounded claim.**
-  "Exactly", "only", "always", "never", "cannot", or "byte-for-byte", written
-  into a reference, a code comment, or a commit message, names the mechanism
-  that makes it true or is rewritten to what the artifact supports. An
-  enforcement point is a permission check, a schema constraint, an unreachable
-  branch, or a fail-closed check — not "I checked", and not its author. This is
-  an authoring discipline, not an assertion that an automatic gate exists. Apply
-  it to claims adopted from reports, reviewers, or contributors too, and record
-  what was checked. **It governs factual claims regardless of grammatical form;
-  classify by falsifier, not by wording.** If contrary execution would make the
-  sentence false, it is factual and needs an enforcement point or bounded
-  wording. If contrary execution instead violates a duty assigned to a named
-  authority, it is a prohibition. "This branch cannot be reached" is factual;
-  "never create a second task universe" assigns a duty to work-item authority.
-  Rephrasing factual behavior as a command does not change its class.
-- Before planning new capability, apply the reverse-recovery audit and repair
-  the cheapest compatible seam. Only confirmed `MISSING` work is greenfield.
-- Fresh validation is bound to the exact revision. A changed head invalidates
-  prior evidence. **The binding is a recorded fact, not an assumption**: a round
-  that does not state the revision and artifact it read cannot be shown, from its
-  own report, to have read the one under review, and an unstated binding is
-  indistinguishable in that report from a wrong one. A verifying round also names the result that would have made it
-  fail; where it cannot, it reports at a rate set by its prompt rather than by
-  the artifact, and neither its silence nor its confidence is evidence.
-- Judgment belongs to a fresh EM/reviewer; scope and irreversible decisions
-  belong to the captain. Orchestration itself carries no verdict authority.
-- **Test depth is the adopter's call; integrating early is not.** Prefer
-  integrating the smallest working increment wherever the adopter's declared
-  route makes it run, over further rounds aiming evidence at an increment that
-  has not run anywhere. Automated tests and verification then grow against
-  observed behavior rather than against a model of it. This bounds
-  pre-integration evidence effort; it moves nothing past delivery, because
-  `validation` still precedes `done`, and the evidence named as able to fail
-  still has to exist and still has to pass.
-- Completion means the goal is achieved and durably delivered, not that the
-  agent produced every possible ceremony artifact.
-
-## Verification discipline
-
-Outcome discipline governs the claim. These govern the **instrument** — the
-check, the reviewer, the instruction — because an instrument that cannot fail
-reports the same way whether or not the thing it watches is broken.
-
-- **Behavioral validity follows observation; gate independence follows
-  provenance.** A text match over an instruction the actor reads may establish
-  that the text exists, but it cannot prove behavior or close a behavioral gate:
-  behavior can regress with the wording intact, while harmless rewording can fail
-  the match. Tests produced with the artifact may supply RED-before-GREEN
-  implementation evidence, but cannot by themselves provide the independent
-  verdict on that artifact; that verdict comes from fresh context not involved in
-  producing it.
-- **Preserve the observation boundary at closure.** When an accepted problem or
-  criterion is grounded in behavior observed through a consumer or external
-  runtime boundary, validation re-runs the reported scenario through a runtime
-  of the same behavior-producing kind. Lower-level diagnosis and guards do not
-  replace re-observation through that boundary; they may localize the cause or
-  prevent a known input without showing what the consumer now experiences. The
-  original instance is not mandatory, but an alternative names why its actor,
-  instrument, delivery path, configuration, and claim-relevant conditions are
-  equivalent, together with the exact revision and artifact it exercised.
-  Unavailable re-observation is missing evidence, not completion evidence.
-- **A check is evidence only once it has been seen to fail.** A probe that
-  returns a plausible result where it should have errored is worse than none,
-  because its output reads as a conclusion. Run it against a case it must flag
-  before running it against the case in question; its silence carries
-  information only after you have heard it speak. This binds the check, not only
-  the artifact: a round that cannot say what would have reddened its own
-  instrument has measured nothing.
-- **Name the falsifier's kind.** `refusal` — drive the system and read its
-  rejection. `mutation` — change the producer and observe what breaks; this is
-  the kind that reaches a consumer silently duplicating a producer's
-  derivation instead of consuming its output. `existence-disproof` — show that
-  no value satisfies both requirements, which no assertion over sampled inputs
-  establishes. Treating all three as "write an assertion" lets two appear covered
-  when they are not.
-- **A negative result carries the same bar as a positive claim.** Evidence of
-  absence is bounded by what was observed and under what system state; it
-  establishes neither a wider population nor an unobserved cause. Before
-  reporting an empirical absence, name the searched scope and why it is the
-  population, or use a different strategy that would have found the thing. One
-  tool, pattern, or filter is a sample unless its coverage of the population can
-  be shown. Trace unexplained signals;
-  do not assign them an unobserved origin.
-- **Forced behavioral and corpus checks run at stage boundaries, not in the
-  worker's inner loop.** Per-edit or per-commit must-pass checks are limited to
-  fast mechanical checks such as format, lint, and typecheck. Behavioral and
-  corpus/consistency gates run at the validation boundary. This does not restrict
-  tests the worker chooses to run: RED-before-GREEN belongs inside
-  implementation.
-- **Prefer the cheapest instrument that can fail.** Reserve an expensive one —
-  an adversarial reviewer, a fresh-context panel — for claims no cheap check can
-  settle. An expensive instrument whose output is a work order for a cheap one
-  was misapplied, and that cost is paid every round it repeats.
-- **Validation ends by predicate, and a fresh reviewer owns the decision.** It
-  ends when the item's declared disproof evidence passes at the exact revision
-  and no recorded failure, contradiction, or unmet lifecycle obligation remains.
-  Another round requires the fresh reviewer to record three things: the
-  unresolved in-scope claim, the observation that raised it, and the result that
-  would change the verdict. **Possibility alone does not continue validation** —
-  an unbounded supply of properties nobody has checked yet is not a finding, and
-  a round justified only by the agent's own expectation of learning something is
-  self-attested and stops nothing. The clauses above bound an instrument's
-  quality and none bounds their number; this one does, and it is checkable by
-  someone other than the party that wants another round.
-- **When one failure shape repeats, change the work, not the wording.** At the
-  second occurrence, restructure so the reproducer is eliminated; a stronger
-  instruction, another case against the same reproducer, or an unchanged
-  deliverable shape do not count. Cheapness hides this: a tolerance sized for
-  expensive rounds does not fire on cheap ones, so the trigger is repetition of
-  shape, not spend. If the repeated failure is an operation a worker should
-  not execute, remove it from that worker's executable authority through
-  `dispatch_hazard_assignment`; a brief is not a control.
-
-## Continuation
-
-At every handoff, record the authoritative work item, current stage, exact source
-revision, accepted evidence, next action, and any unresolved captain-owned
-decision. Re-read the Local Profile and live work-item authority before mutating
-shared state. Implementation completion and fresh validation remain separate claims.
-
-## Self-improvement
-
-`continue-dev-flow` coordinates bounded self-improvement before routing product work:
-
-1. Resolve the authoritative debrief home through the repository's execution-state
-   authority and read `_improvements/state.yaml` when present.
-2. Consider only immutable `_debriefs/` records newer than the recorded cursor, up
-   to the most recent three in one run. When more than three are unseen, the older
-   records outside that window are deliberately treated as superseded rather than
-   queued for a later run; record them as skipped before advancing the cursor.
-3. Classify at most one narrow candidate as **repository-local** or **reusable kernel**.
-   Record its observations, expected value, cost, disproof hook,
-   disposition, and the newest debrief consumed; then advance the cursor even when
-   no candidate is proposed.
-4. If no unseen debrief exists, do not rediscover or re-propose an older issue.
-5. Inside the execution-state authority's same single-writer transaction or
-   compare-and-swap that records the result, resolve the debrief home again and
-   verify its locator is unchanged, then re-read and compare the live cursor. A
-   home or cursor mismatch aborts the write and recomputes from live authority.
-   Without atomic comparison or exclusive ownership, report `UNKNOWN` instead of
-   writing.
-
-Repository-local candidates route to the adopter's work-item authority. Reusable
-kernel candidates become a reviewable handoff to the installed dev-flow source
-after adopter-specific details and duplicate proposals are removed.
-
-The coordination record is derived state, not work-item authority. Detection never
-creates a task, grants sprint membership, merges a change, or pauses product work.
-Only the captain may admit a candidate to work-item or iteration authority. Adopt or
-refit owns installation and updates; `continue-dev-flow` reads the vendored policy
-and never silently rewrites it.
-
-Optional controls are independently declared through the Work Control Profile.
-Undeclared capabilities remain off; adopters add only the control whose risk
-justifies its cost.
+At handoff record the work item, selected profile, current stage, exact revision,
+accepted evidence, next action, and unresolved Captain-owned decision.

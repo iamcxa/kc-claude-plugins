@@ -67,7 +67,9 @@ Session lifecycle & context efficiency. Detects context pressure and enforces cl
 
 Team operations pipeline for engineering managers. EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, and **cross-model second opinion** via Google's agy / Antigravity CLI (`/gemini review|challenge|consult` — same usage as `/codex`, routed through Google's `agy` for a non-OpenAI outside voice; participates in a gstack cross-model review dashboard when gstack is installed).
 
-**Use when:** You're an EM running triage on Linear issues, drafting weekly pulse updates, decomposing oversized issues with team context, or want an independent cross-model review / adversarial challenge / consult from Gemini.
+Also draws **user journey maps from the code** (`kc-journey-map`) — three lanes per step (what a person does / what the system does / what must stay true), every system claim cited to a `file:line` read that session, and a mandatory status card naming what is unproven, unmerged, or undeployed. Renders to FigJam when a Figma file is available, and always to a self-contained HTML + PNG.
+
+**Use when:** You're an EM running triage on Linear issues, drafting weekly pulse updates, decomposing oversized issues with team context, checking a journey map against what the code actually does, or want an independent cross-model review / adversarial challenge / consult from Gemini.
 
 **Prerequisite:** Linear MCP enabled.
 
@@ -91,18 +93,18 @@ Repository-level [product](./PRODUCT.md) and [architecture](./ARCHITECTURE.md) c
 
 ### [kc-dev-flow](./kc-dev-flow/)
 
-Portable development-flow kernel for Claude Code and Codex. It binds existing
-project context, work-item, sprint, execution, delivery, and observation
-authorities instead of replacing them. `adopt-dev-flow` audits or upgrades the
-binding; `continue-dev-flow` keeps an approved sprint moving through fresh
-validation and delivery without unnecessary captain pauses; `promote-dev-flow`
-reviews sanitized adopter evidence at the canonical source without granting it
-task or policy authority; `science-officer-em` provides independent engineering
-judgment through the canonical replacement skill while preserving the legacy
-report envelope and existing captain, gate, and delivery authority.
+Profile-native development routes for Claude Code and Codex. One minimal shared
+core preserves local authority while POC, Pilot, and Production load different
+base and stage contracts. `chief-engineer` advises normal delivery;
+`science-officer` provides risk-triggered independent assurance; deterministic
+checks and named owners retain their scoped gates. The legacy
+`science-officer-em` skill remains only as a report-envelope adapter.
 
-**Use when:** You want multiple repositories or agent harnesses to share a lean,
-evidence-bound workflow while retaining their local tracker and runtime.
+**Use when:** You want proportional development rigor without making an
+experiment load or execute a Production workflow.
+
+Existing 2.x adopters must follow the [profile-native migration guide](./kc-dev-flow/MIGRATION.md)
+before updating the installed plugin used for ordinary continuation.
 
 ```bash
 /plugin install kc-dev-flow@kc-claude-plugins

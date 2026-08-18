@@ -1,0 +1,7 @@
+# Repository fallback for the dominant OpenAI implementation path. The profile
+# loader selects the complementary reviewer and profile controls explicitly.
+# This file installs no hook or panel.
+review_agent = "claude-code"
+review_model = "sonnet"
+review_reasoning = "medium"
+review_min_severity = "high"

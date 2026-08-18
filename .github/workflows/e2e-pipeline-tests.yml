@@ -43,8 +43,14 @@ name: e2e-pipeline tests
 
 on:
   pull_request:
+    paths:
+      - "e2e-pipeline/**"
+      - ".github/workflows/e2e-pipeline-tests.yml"
   push:
     branches: [main]
+    paths:
+      - "e2e-pipeline/**"
+      - ".github/workflows/e2e-pipeline-tests.yml"
 
 permissions:
   contents: read

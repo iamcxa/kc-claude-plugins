@@ -1,0 +1,64 @@
+name: kc-pr-flow review CI contracts
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/*.yml"
+      - "scripts/review-ci-routing.test.py"
+      - "kc-pr-flow/scripts/review-*"
+      - "kc-pr-flow/test/fixtures/review-post/stub-transport.sh"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/*.yml"
+      - "scripts/review-ci-routing.test.py"
+      - "kc-pr-flow/scripts/review-*"
+      - "kc-pr-flow/test/fixtures/review-post/stub-transport.sh"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: review-ci-contracts-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review-ci-contracts:
+    name: review CI routing and static contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Install pinned linters
+        env:
+          ACTIONLINT_VERSION: 1.7.12
+          ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+          SHELLCHECK_VERSION: v0.9.0
+          SHELLCHECK_SHA256: 700324c6dd0ebea0117591c6cc9d7350d9c7c5c287acbad7630fa17b1d4d9e2f
+        run: |
+          curl -fsSL --retry 3 \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
+            -o /tmp/actionlint.tar.gz
+          printf '%s  /tmp/actionlint.tar.gz\n' "$ACTIONLINT_SHA256" | sha256sum --check --strict
+          tar -xzf /tmp/actionlint.tar.gz -C /tmp actionlint
+          sudo install -m 0755 /tmp/actionlint /usr/local/bin/actionlint
+
+          curl -fsSL --retry 3 \
+            "https://github.com/koalaman/shellcheck/releases/download/${SHELLCHECK_VERSION}/shellcheck-${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" \
+            -o /tmp/shellcheck.tar.xz
+          printf '%s  /tmp/shellcheck.tar.xz\n' "$SHELLCHECK_SHA256" | sha256sum --check --strict
+          tar -xJf /tmp/shellcheck.tar.xz -C /tmp
+          sudo install -m 0755 "/tmp/shellcheck-${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin/shellcheck
+
+      - name: Validate workflow routing
+        run: |
+          actionlint .github/workflows/*.yml
+          python3 scripts/review-ci-routing.test.py
+
+      - name: Validate review source
+        run: |
+          python3 -m py_compile kc-pr-flow/scripts/review-*.py
+          bash -n kc-pr-flow/scripts/review-*.sh kc-pr-flow/test/fixtures/review-post/stub-transport.sh
+          shellcheck kc-pr-flow/scripts/review-*.sh kc-pr-flow/test/fixtures/review-post/stub-transport.sh

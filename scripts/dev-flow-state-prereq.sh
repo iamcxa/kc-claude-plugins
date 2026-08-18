@@ -26,8 +26,8 @@
 #   76  holder is clean but local-ahead
 #   77  holder and remote state diverged
 #
-# 75/76/77 each enter the attributable recovery in docs/dev/README.md and must
-# rerun this check to observed equality before normal lifecycle work resumes.
+# 75/76/77 each enter docs/dev/runbooks/state-recovery.md and must rerun this
+# check to observed equality before normal lifecycle work resumes.
 set -uo pipefail
 
 REPO_DISCOVERED=$(git rev-parse --show-toplevel) || exit 1

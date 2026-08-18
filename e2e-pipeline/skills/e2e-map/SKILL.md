@@ -236,12 +236,29 @@ mapping: <mapping-filename-no-ext>   # REQUIRED
 
 steps:
   - id: <unique-step-id>            # REQUIRED — not `name:`
-    action: "<natural language>"
+    action: "<action string>"        # must match the pattern for `type:`
+    type: <step-type>               # REQUIRED — compile fails without it
     expect:
       - "<element_name> is visible"  # grammar strings — NOT structured objects
     screenshot: true
 ```
 **Never generate v1 format** (`app:` instead of `mapping:`, step `name:` instead of `id:`, structured expect objects).
+
+**`type:` is required and was previously missing from this template.** Valid
+values are `navigate`, `click`, `fill`, `snapshot`, `wait`, `verify-external`,
+`execute-external`, `capture-url-query` — there is no `assert`; assertion-only
+steps use `snapshot`. See e2e-test's SKILL.md → Flow File Format for the action
+string each type expects, and its Expect grammar reference for the complete list
+of resolvable `expect` strings.
+
+**Parameterized selectors cannot be clicked or filled.** If exploration produced
+`${...}` in a selector — a dropdown option keyed by label, a table row keyed by
+index — the compiler rejects it on a `click`/`fill` step: *"Nothing supplies a
+selector parameter on a click or fill action — only an `expect:` entry accepts a
+parameterized reference."* Since dropdown options and table rows are exactly what
+list flows need to click, emit a **literal sibling** alongside the parameterized
+form (e.g. `status_option_finalized` beside `status_filter_option`) so the
+generated flow can act on it. Keep the parameterized entry as documentation.
 
 5. Ask user if they want to commit
 6. Ask if ready to close browser: `<browser_command> close`

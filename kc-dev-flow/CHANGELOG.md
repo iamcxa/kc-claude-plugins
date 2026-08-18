@@ -1,5 +1,51 @@
 # Changelog
 
+## [2.5.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.4.0...kc-dev-flow-v2.5.0) (2026-08-14)
+
+
+### Features
+
+* **kc-dev-flow:** add GitHub Project projection installer ([#227](https://github.com/iamcxa/kc-claude-plugins/issues/227)) ([f9895e5](https://github.com/iamcxa/kc-claude-plugins/commit/f9895e5ee925b1cb20e82c1e7f494212ca0ff9d7))
+* **kc-dev-flow:** add proportional RoboRev implementation exit ([#239](https://github.com/iamcxa/kc-claude-plugins/issues/239)) ([387be48](https://github.com/iamcxa/kc-claude-plugins/commit/387be484ae353ebe4603720cc7cc3f8c633d25a1))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** gate delivery on GitHub PR feedback ([#220](https://github.com/iamcxa/kc-claude-plugins/issues/220)) ([951618f](https://github.com/iamcxa/kc-claude-plugins/commit/951618fbc81f9dae46a22014d109904a54eda6b2))
+
+## [2.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.3.0...kc-dev-flow-v2.4.0) (2026-08-13)
+
+
+### Features
+
+* **kc-dev-flow:** carve along the journey, not by layer ([#207](https://github.com/iamcxa/kc-claude-plugins/issues/207)) ([f572b01](https://github.com/iamcxa/kc-claude-plugins/commit/f572b013ceb994596a29b348a1afa74b530e461f))
+* **kc-dev-flow:** route product work before harvesting ([#218](https://github.com/iamcxa/kc-claude-plugins/issues/218)) ([3e28d4a](https://github.com/iamcxa/kc-claude-plugins/commit/3e28d4a7c3e32fa53c44f21eb78bafaa5b91fa9b))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** align policy activation and retire change-shape ([#212](https://github.com/iamcxa/kc-claude-plugins/issues/212)) ([a18ba78](https://github.com/iamcxa/kc-claude-plugins/commit/a18ba78f72c03036d8463629bd19977aa684e159))
+* **kc-dev-flow:** normalize inherited seed criteria ([#206](https://github.com/iamcxa/kc-claude-plugins/issues/206)) ([c41cbbb](https://github.com/iamcxa/kc-claude-plugins/commit/c41cbbbf60efa841379fc59216f3e75921174557))
+
+## [2.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.2.0...kc-dev-flow-v2.3.0) (2026-08-11)
+
+
+### Features
+
+* **kc-dev-flow:** add change-shape observation ([53e3232](https://github.com/iamcxa/kc-claude-plugins/commit/53e3232d61d689d34a6c493495c791fe0d0f85b4))
+
+
+### Bug Fixes
+
+* **kc-dev-flow:** validate runtime compatibility before release ([1db7e77](https://github.com/iamcxa/kc-claude-plugins/commit/1db7e7729595b090715943da544a0f8327912c05))
+
+## [2.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.1.0...kc-dev-flow-v2.2.0) (2026-08-11)
+
+
+### Features
+
+* **kc-dev-flow:** streamline reviews and prove minimal surfaces ([7e8fa5e](https://github.com/iamcxa/kc-claude-plugins/commit/7e8fa5e89e94c951c4d4f0c90a5476bdbd324175))
+
 ## [2.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-v2.0.0...kc-dev-flow-v2.1.0) (2026-08-10)
 
 

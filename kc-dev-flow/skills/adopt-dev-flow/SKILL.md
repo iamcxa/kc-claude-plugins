@@ -1,100 +1,94 @@
 ---
 name: adopt-dev-flow
-description: Use when a brownfield repository needs to adopt, audit, or upgrade a portable development workflow without replacing its existing tracker, sprint authority, stage runtime, or delivery provider.
+description: Audit, adopt, or upgrade profile-native kc-dev-flow in a brownfield repository while preserving its existing tracker, iteration authority, workflow runtime, and delivery provider.
 ---
 
 # Adopt Dev Flow
 
-Establish the smallest repository-local adoption of the dev-flow kernel and any
-independently selected policy mods. The same procedure applies in Claude Code and Codex;
-use host-native read, edit, test, and review tools without changing the authority
-model.
+Bind the existing repository to one shared core and profile-native routes. Do not
+replace a working tracker, roadmap, workflow runtime, or delivery provider.
 
-## Required references
+## Audit
 
-Read `../../references/kernel.md` completely. For brownfield adoption, also read
-`../../references/reverse-recovery-audit.md`. Read
-`../../references/work-control-profile.md` only when the repository declares or
-is considering an optional control. Read another reference only when the adopter
-is considering that policy mod.
-
-## Select a mode
-
-- **audit** — default read-only mode; report recovered surfaces,
-  contradictions, and the smallest repair.
-- **adopt** — after the user asks for implementation, bind existing authority in
-  the workflow README and vendor only the selected policy.
-- **upgrade** — compare adopted files with this installed source, present the
-  changed policy for acceptance, and replace accepted files byte-for-byte.
-
-## Audit before changing anything
-
-1. Read the nearest repository instructions and check live branch, worktree,
-   dirty state, shared-state ownership, and current tracker/runtime contracts.
-2. Run the reverse-recovery audit. Do not replace an existing tracker, roadmap,
-   workflow runtime, PR flow, or document merely because its name differs.
-3. Map these authorities with evidence: project context, work items, iteration,
-   execution state, delivery, observation, gate verdicts, and scope changes.
-4. Classify each relevant surface as `WORKING`, `WORKING_UNIT_UNPROVEN`,
-   `EXISTS_BROKEN`, `STUB`, or `MISSING`. Repair the cheapest compatible seam;
-   only confirmed `MISSING` capability is greenfield.
+Read `../../references/kernel.md` and the existing repository authorities. Map
+project context, work items, iteration, execution state, delivery, scope, and
+observation. Classify the relevant seams as working, broken, stubbed, or missing;
+repair the cheapest compatible seam.
 
 ## Adopt
 
-1. Add a concise `## Local Profile` to the repository's existing workflow
-   README. It binds the local locators for project context, work items,
-   iteration, execution state, delivery, gate verdicts, scope changes, and any
-   observation source. A missing optional observation source is written as
-   `none`; it is never allowed to become delivery authority.
-2. In each lifecycle stage section, add `Policy mods:` followed by the selected
-   local `_mods/` paths, or `Policy mods: none`. The list is the stage's policy
-   selection; merely finding a file in `_mods/` does not activate it.
-3. Create the workflow's `_mods/` directory if needed and vendor
-   `../../references/kernel.md` as `_mods/kernel.md` byte-for-byte. Vendor each
-   explicitly selected policy mod under `_mods/` with the same basename.
-4. Keep repository-specific mechanisms and exceptions in the workflow README.
-   Never edit a vendored file to encode local policy. File presence records
-   adoption; do not add a second status registry.
-5. Validate the real local enforcement point and the repository's normal gates.
-   A documentation grep does not prove runtime behavior.
+1. Add a concise `## Local Profile` near the workflow frontmatter. Bind existing
+   authorities plus the repository-local profile loader and contracts root.
+2. Vendor `../../references/kernel.md`, the `references/profiles/` tree,
+   `../../references/reverse-recovery-audit.md`,
+   `../../references/journey-slicing.md`, and
+   `../../references/retained-document-policy.md`,
+   `../../references/project-context-maintenance.md`, and
+   `../../scripts/profile-contract-loader.py` without local edits. The selected
+   stage owns each typed conditional-reference trigger; vendoring a reference
+   does not load it. The selected `build.md` owns its typed proportional observation.
+   Local provider paths and exceptions stay in the workflow README.
+3. Select a profile before the first working stage and store the v2 receipt in
+   the existing work item. Each item selects independently; do not create a
+   project-global profile or another profile registry. Invoke the loader with
+   the exact work item so simultaneous items cannot borrow each other's route.
+4. Map the logical routes to the runtime. A runtime with one superset graph uses:
+   POC `implementation -> validation`; Pilot adds `ideation`; Production adds
+   `release`. Backlog and done remain non-working states. Preserve an extra
+   local terminal state only through an explicit mapping; it does not silently
+   join every profile route.
+5. Make each working stage a small loader invocation or pointer. Load a
+   conditional reference only when the selected stage predicate fires. Bind
+   `retained_document_change` to accepted or observed retained-document changes
+   and `project_context_claim_may_change` to a possible changed claim in the
+   repository's bound project context. Recheck both from the exact diff at
+   implementation exit or validation; `receipt: null` adds no receipt. At
+   implementation exit, use only the selected typed observation emitted by the
+   loader. Do not duplicate the profile contracts in the workflow README.
+6. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
+   release-owner authority. Advice never gains state or merge authority.
+7. Bind the local RoboRev runbook when the emitted observation is supported.
+   Missing provider capability remains an honest non-gating `UNAVAILABLE` result.
+8. Run the profile loader contract test and the repository's normal gates.
 
-The Local Profile is the binding. No binding YAML, digest, package fallback, or
-ambient runtime hook is part of this design.
+If the workflow runtime cannot skip inactive stages or represent the Production
+release boundary, record a refit requirement. Do not emulate progress with empty
+review stages.
 
 ## Upgrade
 
-1. Re-run the audit and recover the Local Profile before comparing files.
-2. Compare local `_mods/kernel.md` with `../../references/kernel.md`, then compare
-   each adopted policy mod with the installed reference of the same basename.
-   A missing local kernel or a missing stage-selected mod is a refit requirement,
-   not permission to read the installed file at runtime.
-3. For every changed file, explain the changed invariants one at a time. The
-   repository's captain may accept the complete canonical file or retain the old
-   local version and record a local exception in the Local Profile. Do not create
-   a locally edited hybrid.
-4. Replace each accepted file byte-for-byte and rerun local gates. Do not delete
-   an unselected or retired mod, and do not change any stage's `Policy mods`
-   declaration, unless that change is explicitly part of the approved upgrade.
+Compare the adopted loader, core, and selected profile files with this source.
+Present changed authority, route, and proof semantics for acceptance. Replace
+accepted canonical files mechanically; do not create locally edited hybrids.
+Re-run every profile-stage loader combination and prove that unselected profile
+and stage markers are absent.
 
-## Legacy migration
+An existing v1 receipt remains evidence of the prior choice but cannot drive the
+new loader. When its basis is unchanged, migrate it mechanically to v2 with the
+same selection and derived route; do not ask the Captain to repeat the choice.
+Re-select only when its basis is stale. Do not reopen completed work solely to
+migrate a receipt.
 
-A legacy kernel-binding file is migration evidence, not live authority. Recover
-its locators and selected controls. Before removal, record an itemized migration
-receipt: every legacy authority or control, whether it remains in force, and its
-exact Local Profile row, stage `Policy mods` declaration, or local enforcement
-point. Any in-force entry without a unique destination stops the migration.
-Immediately before removal, re-read the legacy source and every mapped destination;
-if any bytes or in-force entries changed, rebuild and revalidate the receipt.
-Remove the binding plus verifier references only after that final comparison and
-in the same approved migration slice. Do not keep both mechanisms active.
+An older explicit Captain choice outside the v1 schema may also migrate without
+another question only when the exact work item names the selected profile, the
+Captain as its authority, and an unchanged basis. Record those legacy sources,
+set the canonical route, and use the selected profile as the prior
+recommendation. A missing, ambiguous, or stale element requires a new selection.
 
-## Authority boundary
+Retire old source mods by disposition, not by filename alone:
 
-The audit may produce one narrow improvement proposal with observations,
-expected value, cost, and a disproof hook. Do not create, schedule, advance, or merge
-a process-improvement task merely because the audit found a problem. The
-repository's captain or named scheduling authority decides whether it enters a
-sprint.
+| Retired source mod | Upgrade disposition |
+|---|---|
+| `engineering-judgment.md` | Remove an unchanged vendored copy. Stage perspectives, Chief Engineer, and Science Officer own its surviving duties; preserve a repository-specific extension as local policy. |
+| `work-control-profile.md` | Map each activated capability first. Bound-field checks stay repository-local, review convergence moves to the selected build observation, and delivery controls stay with the provider. Preserve any unmatched control locally before removing the vendored source. |
 
-Never add a parallel status mirror. If authority cannot be established, stop
-with `UNKNOWN`, name the missing evidence, and leave existing state unchanged.
+Preserve the surviving `retained-document-policy.md` and
+`project-context-maintenance.md` references byte-for-byte. They remain typed
+conditional references; do not fold either into the shared core or load it for
+an unrelated work record.
+
+## Boundary
+
+Audit and upgrade findings do not create or schedule work. The Captain or named
+iteration owner admits the change. Missing authority or an unsafe mutation path
+returns `UNKNOWN` and leaves existing state unchanged.

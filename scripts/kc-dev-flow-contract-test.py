@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""Fail-closed package contract for the portable kc-dev-flow product."""
+"""Behavior and packaging contract for kc-dev-flow."""
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "kc-dev-flow"
+ADOPTED = ROOT / "docs/dev/_mods"
 
 
 def require(condition: bool, message: str) -> None:
@@ -19,534 +22,560 @@ def require(condition: bool, message: str) -> None:
         raise SystemExit(f"kc-dev-flow contract: {message}")
 
 
-def load_json(path: Path) -> object:
-    require(path.is_file(), f"missing {path.relative_to(ROOT)}")
-    return json.loads(path.read_text(encoding="utf-8"))
+def run(command: list[str], label: str) -> None:
+    result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True)
+    require(
+        result.returncode == 0,
+        f"{label} failed:\n{result.stdout}{result.stderr}",
+    )
 
 
-required_files = [
-    PLUGIN / ".claude-plugin/plugin.json",
-    PLUGIN / ".codex-plugin/plugin.json",
-    PLUGIN / "skills/adopt-dev-flow/SKILL.md",
-    PLUGIN / "skills/continue-dev-flow/SKILL.md",
-    PLUGIN / "references/kernel.md",
-    PLUGIN / "references/project-context-maintenance.md",
-    PLUGIN / "references/reverse-recovery-audit.md",
-    PLUGIN / "references/work-control-profile.md",
-    PLUGIN / "scripts/absolutes-check.py",
-    PLUGIN / "references/absolutes.registry",
-    PLUGIN / "skills/promote-dev-flow/SKILL.md",
-    PLUGIN / "skills/promote-dev-flow/agents/openai.yaml",
-    PLUGIN / "scripts/improvement-intake.py",
-    PLUGIN / "scripts/improvement-intake.test.py",
-    PLUGIN / "references/engineering-judgment.md",
-    PLUGIN / "skills/science-officer-em/SKILL.md",
-    PLUGIN / "skills/science-officer-em/agents/openai.yaml",
-    PLUGIN / "references/retained-document-policy.md",
+def read(relative: str) -> str:
+    path = ROOT / relative
+    require(path.is_file(), f"missing {relative}")
+    return path.read_text(encoding="utf-8")
+
+
+def skill_name(relative: str) -> str:
+    text = read(relative)
+    match = re.match(r"---\nname: ([a-z0-9-]+)\ndescription: .+?\n---\n", text, re.DOTALL)
+    require(match is not None, f"invalid skill frontmatter: {relative}")
+    return match.group(1)
+
+
+profile_files = {
+    "poc-exploration": ("base.md", "build.md", "prove.md"),
+    "pilot-product-slice": (
+        "base.md",
+        "shape.md",
+        "build.md",
+        "verify-deliver.md",
+    ),
+    "production": ("base.md", "shape.md", "build.md", "verify.md", "release.md"),
+}
+profile_observation_limits = {
+    "poc-exploration": ("medium", "high", 600, 0),
+    "pilot-product-slice": ("medium", "medium", 900, 1),
+    "production": ("thorough", "medium", 1200, 1),
+}
+
+required = [
+    "kc-dev-flow/.claude-plugin/plugin.json",
+    "kc-dev-flow/.codex-plugin/plugin.json",
+    "kc-dev-flow/MIGRATION.md",
+    "kc-dev-flow/RATIONALE.md",
+    "kc-dev-flow/references/kernel.md",
+    "kc-dev-flow/references/reverse-recovery-audit.md",
+    "kc-dev-flow/references/journey-slicing.md",
+    "kc-dev-flow/references/retained-document-policy.md",
+    "kc-dev-flow/references/project-context-maintenance.md",
+    "kc-dev-flow/scripts/profile-contract-loader.py",
+    "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/profile-spacedock-route.test.py",
+    "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
+    "kc-dev-flow/skills/choose-work-profile/SKILL.md",
+    "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+    "kc-dev-flow/skills/chief-engineer/SKILL.md",
+    "kc-dev-flow/skills/chief-engineer/agents/openai.yaml",
+    "kc-dev-flow/skills/science-officer/SKILL.md",
+    "kc-dev-flow/skills/science-officer/agents/openai.yaml",
+    "kc-dev-flow/skills/science-officer-em/SKILL.md",
+    "kc-dev-flow/skills/science-officer-em/agents/openai.yaml",
+    "kc-dev-flow/scripts/improvement-intake.test.py",
+    "kc-dev-flow/scripts/project-spacedock-state.test.py",
+    "scripts/kc-dev-flow-loader-eval.test.py",
+    "scripts/kc-dev-flow-published-tag-smoke.py",
+    "scripts/kc-dev-flow-published-tag-smoke.test.py",
+    "scripts/roborev-implementation-exit-contract.test.py",
+    "scripts/pr-merge-portable-delivery.test.py",
 ]
-for required_file in required_files:
-    require(required_file.is_file(), f"missing {required_file.relative_to(ROOT)}")
-
-require(
-    (PLUGIN / "scripts/absolutes-check.py").stat().st_mode & 0o111,
-    "scripts/absolutes-check.py is not executable",
-)
-require(
-    (PLUGIN / "scripts/improvement-intake.py").stat().st_mode & 0o111,
-    "scripts/improvement-intake.py is not executable",
-)
-
-for legacy in [
-    PLUGIN / "assets/kernel-binding.template.yaml",
-    PLUGIN / "scripts/verify-binding.py",
-    ROOT / "scripts/verify-binding.test.sh",
-    ROOT / "docs/dev/kernel-binding.yaml",
-    ROOT / "docs/dev/_mods/STATUS.md",
+for relative in required:
+    require((ROOT / relative).is_file(), f"missing {relative}")
+for retired in [
+    "kc-dev-flow/references/work-control-profile.md",
+    "docs/dev/_mods/work-control-profile.md",
 ]:
-    require(not legacy.exists(), f"legacy distribution artifact remains: {legacy.relative_to(ROOT)}")
+    require(not (ROOT / retired).exists(), f"retired control still shipped: {retired}")
 
-claude_manifest = load_json(required_files[0])
-codex_manifest = load_json(required_files[1])
-marketplace = load_json(ROOT / ".claude-plugin/marketplace.json")
-release_manifest = load_json(ROOT / ".release-please-manifest.json")
-release_config = load_json(ROOT / "release-please-config.json")
-
-require(claude_manifest["name"] == "kc-dev-flow", "wrong Claude plugin name")
-require(codex_manifest["name"] == "kc-dev-flow", "wrong Codex plugin name")
-require(codex_manifest.get("skills") == "./skills/", "Codex skills path is missing")
-
-entries = [p for p in marketplace["plugins"] if p["name"] == "kc-dev-flow"]
-require(len(entries) == 1, "marketplace must contain exactly one entry")
-versions = {
-    claude_manifest["version"],
-    codex_manifest["version"],
-    entries[0]["version"],
-    release_manifest["kc-dev-flow"],
-}
-require(len(versions) == 1, f"version parity failed: {sorted(versions)}")
-version = next(iter(versions))
-require(re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version) is not None, "version is not semver")
-
-package = release_config["packages"].get("kc-dev-flow")
-require(package is not None, "release-please package is missing")
-extra_paths = {item["path"] for item in package["extra-files"]}
-require(
-    extra_paths
-    == {
-        ".claude-plugin/plugin.json",
-        ".codex-plugin/plugin.json",
-        "/.claude-plugin/marketplace.json",
+documentation_references = [
+    {
+        "path": "../../retained-document-policy.md",
+        "trigger": "retained_document_change",
+        "receipt": None,
     },
-    f"release propagation paths are incomplete: {sorted(extra_paths)}",
-)
-
-adopt_skill = required_files[2].read_text(encoding="utf-8")
-for phrase in [
-    "adopt, audit, or upgrade",
-    "Do not replace an existing tracker",
-    "Do not create, schedule, advance, or merge",
-    "one narrow improvement proposal",
-    "Claude Code and Codex",
-    "Local Profile",
-    "byte-for-byte",
-    "_mods/",
-]:
-    require(phrase in adopt_skill, f"adopt skill is missing boundary: {phrase}")
-
-continue_skill = required_files[3].read_text(encoding="utf-8")
-for phrase in [
-    "next committed work item",
-    "continue without a captain pause",
-    "Do not invent or schedule work",
-    "fresh validation",
-    "Claude Code and Codex",
-    "repository-local",
-    "reusable kernel",
-    "_mods/kernel.md",
-    "Policy mods",
-    "_improvements/state.yaml",
-    "If no debrief home is bound",
-    "no unseen debrief",
-    "Inside the same transaction",
-    "report `UNKNOWN`, skip the improvement write, and continue to product routing",
-    "compatibility transport label",
-    "kc-dev-flow-improvement-handoff/v1",
-    "rule-gap",
-    "enforcement-gap",
-    "merge its existing observations by ID",
-    "write neither",
-    "Before the handoff leaves the repository",
-    "source_namespace",
-    "durable pseudonymous state",
-    "16 bytes decoded from the stored lowercase hex key",
-    "kc-dev-flow-vX.Y.Z",
-    "adopter-coined label",
-    "First-write-wins",
-    "_improvements/.private/source-identity.json",
-    "require ignore proof",
-    "roll over to the next sequence",
-]:
-    require(phrase in continue_skill, f"continue skill is missing boundary: {phrase}")
-require(
-    "If none or multiple candidates remain" not in continue_skill,
-    "continue skill still blocks product work when no debrief home exists",
-)
-require(
-    "stop with `UNKNOWN` instead of risking an overwrite" not in continue_skill,
-    "continue skill still lets self-improvement storage block product routing",
-)
-
-promote_skill = required_files[10].read_text(encoding="utf-8")
-for phrase in [
-    "source-side intake",
-    "captain-review-only",
-    "rule-gap",
-    "enforcement-gap",
-    "local-instance",
-    "duplicate/no-change",
-    "Do not create, schedule, edit, post, or merge",
-    "improvement-intake.py",
-    "captain-approved file attachment or copied path",
-    "not source-verified",
-]:
-    require(phrase in promote_skill, f"promote skill is missing boundary: {phrase}")
-
-package_readme = (PLUGIN / "README.md").read_text(encoding="utf-8")
-require("promote-dev-flow" in package_readme, "package README is missing source intake skill")
-require(
-    "engineering-judgment" in package_readme,
-    "package README is missing engineering judgment mod",
-)
-require(
-    "- `retained-document-policy` —" in package_readme,
-    "package README is missing the independently selectable retained-document policy mod",
-)
-require(
-    "- `project-context-maintenance` —" in package_readme,
-    "package README is missing the independently selectable project-context mod",
-)
-require(
-    "independently adoptable parts" not in package_readme,
-    "package README still claims path-internal policy selection",
-)
-root_readme = (ROOT / "README.md").read_text(encoding="utf-8")
-require("promote-dev-flow" in root_readme, "root README is missing source intake skill")
-default_prompts = codex_manifest["interface"]["defaultPrompt"]
-require(
-    any("promote-dev-flow" in prompt for prompt in default_prompts),
-    "Codex manifest is missing source intake discovery",
-)
-require(
-    any("science-officer-em" in prompt for prompt in default_prompts),
-    "Codex manifest is missing Science Officer discovery",
-)
-
-intake_tests = subprocess.run(
-    [sys.executable, str(PLUGIN / "scripts/improvement-intake.test.py")],
-    capture_output=True,
-    text=True,
-)
-require(
-    intake_tests.returncode == 0,
-    intake_tests.stdout.strip() or intake_tests.stderr.strip() or "improvement intake tests failed",
-)
-
-project_context_mod = required_files[5].read_text(encoding="utf-8")
-retained_document_mod = required_files[-1].read_text(encoding="utf-8")
-require(
-    "# Part 1" not in project_context_mod,
-    "project-context-maintenance still embeds the separately selectable retained-document policy",
-)
-require(
-    "name: retained-document-policy" in retained_document_mod,
-    "retained-document policy has the wrong mod identity",
-)
-retained_stage_rows = {
-    line.split("|", 2)[1].strip(" `"): line
-    for line in retained_document_mod.splitlines()
-    if line.startswith("| `")
+    {
+        "path": "../../project-context-maintenance.md",
+        "trigger": "project_context_claim_may_change",
+        "receipt": "project_context",
+    },
+]
+conditional_stage_references = {
+    ("poc-exploration", "build.md"): [
+        {
+            "path": "../../reverse-recovery-audit.md",
+            "trigger": "brownfield_capability_change",
+            "receipt": "reverse_recovery",
+        }
+    ]
+    + documentation_references,
+    ("poc-exploration", "prove.md"): documentation_references,
+    ("pilot-product-slice", "shape.md"): [
+        {
+            "path": "../../reverse-recovery-audit.md",
+            "trigger": "brownfield_capability_change",
+            "receipt": "reverse_recovery",
+        },
+        {
+            "path": "../../journey-slicing.md",
+            "trigger": "multi_slice_required",
+            "receipt": "journey_slices",
+        },
+    ]
+    + documentation_references,
+    ("pilot-product-slice", "build.md"): documentation_references,
+    ("pilot-product-slice", "verify-deliver.md"): documentation_references,
+    ("production", "shape.md"): [
+        {
+            "path": "../../reverse-recovery-audit.md",
+            "trigger": "brownfield_capability_change",
+            "receipt": "reverse_recovery",
+        },
+        {
+            "path": "../../journey-slicing.md",
+            "trigger": "multi_slice_required",
+            "receipt": "journey_slices",
+        },
+    ]
+    + documentation_references,
+    ("production", "build.md"): documentation_references,
+    ("production", "verify.md"): documentation_references,
 }
-require(
-    "For an addition or deletion, execute Rule 4."
-    in retained_stage_rows.get("implementation", ""),
-    "retained-document policy does not assign Rule 4 to implementation",
-)
-require(
-    "For an addition or deletion, repeat Rule 4 independently"
-    in retained_stage_rows.get("validation", ""),
-    "retained-document policy does not assign independent Rule 4 verification",
-)
-require(
-    "`work-context-protocol`" not in project_context_mod,
-    "project-context-maintenance references an unshipped work-context-protocol",
-)
-require(
-    "`kernel.md` Authority model" in project_context_mod,
-    "project-context-maintenance does not name the shipped project-context binding policy",
-)
-
-runtime_docs = {
-    "adopt skill": adopt_skill,
-    "continue skill": continue_skill,
-    "package README": (PLUGIN / "README.md").read_text(encoding="utf-8"),
-    "workflow README": (ROOT / "docs/dev/README.md").read_text(encoding="utf-8"),
-}
-for label, content in runtime_docs.items():
-    for legacy_reference in [
-        "verify-binding.py",
-        "kernel-binding.yaml",
-        "kernel-binding.template.yaml",
-    ]:
+for profile, names in profile_files.items():
+    for name in names:
         require(
-            legacy_reference not in content,
-            f"{label} still instructs the legacy distribution path: {legacy_reference}",
+            (PLUGIN / "references/profiles" / profile / name).is_file(),
+            f"missing profile contract: {profile}/{name}",
+        )
+        if name != "base.md":
+            stage_path = PLUGIN / "references/profiles" / profile / name
+            stage_contract = stage_path.read_text(encoding="utf-8")
+            require(
+                "Working perspective:" in stage_contract and "\nRole:" not in stage_contract,
+                f"stage perspective is not a lightweight cue: {profile}/{name}",
+            )
+            json_blocks = [
+                json.loads(block)
+                for block in re.findall(r"```json\s*\n(.*?)```", stage_contract, re.DOTALL)
+            ]
+            conditional = [
+                block
+                for block in json_blocks
+                if block.get("schema") == "kc-dev-flow-conditional-references/v1"
+            ]
+            expected_references = conditional_stage_references.get((profile, name), [])
+            require(
+                len(conditional) == (1 if expected_references else 0)
+                and (not conditional or conditional[0].get("references") == expected_references),
+                f"wrong conditional references: {profile}/{name} {conditional}",
+            )
+            for reference in expected_references:
+                resolved = (stage_path.parent / reference["path"]).resolve()
+                require(
+                    resolved.is_relative_to(PLUGIN / "references")
+                    and resolved.is_file(),
+                    f"unresolved conditional reference: {profile}/{name} {reference}",
+                )
+            require(
+                "work-control-profile" not in stage_contract,
+                f"retired work control leaked into stage: {profile}/{name}",
+            )
+            if name == "build.md":
+                typed = [
+                    item
+                    for item in json_blocks
+                    if item.get("schema") == "kc-dev-flow-observation/v1"
+                ]
+                require(len(typed) == 1, f"wrong observation count: {profile}")
+                observation = typed[0]
+                require(
+                    (
+                        observation.get("reasoning"),
+                        observation.get("minimum_severity"),
+                        observation.get("live_batch_timeout_seconds"),
+                        observation.get("repair_confirmation_cap"),
+                    )
+                    == profile_observation_limits[profile]
+                    and observation.get("capability") == "review_convergence"
+                    and observation.get("mode") == "observe"
+                    and observation.get("provider") == "roborev"
+                    and observation.get("trigger") == "implementation_exit"
+                    and observation.get("panel") == "none"
+                    and observation.get("request_cap") == 1,
+                    f"wrong proportional observation: {profile} {observation}",
+                )
+
+for relative in [
+    "kc-dev-flow/scripts/profile-contract-loader.py",
+    "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/profile-spacedock-route.test.py",
+    "scripts/kc-dev-flow-loader-eval.test.py",
+    "scripts/kc-dev-flow-published-tag-smoke.py",
+]:
+    require((ROOT / relative).stat().st_mode & 0o111, f"not executable: {relative}")
+
+run(
+    [sys.executable, "kc-dev-flow/scripts/profile-contract-loader.test.py"],
+    "profile loader",
+)
+run(
+    [sys.executable, "kc-dev-flow/scripts/profile-spacedock-route.test.py"],
+    "profile Spacedock route",
+)
+run([sys.executable, "scripts/kc-dev-flow-loader-eval.test.py"], "loader eval")
+run(
+    [sys.executable, "scripts/kc-dev-flow-published-tag-smoke.test.py"],
+    "published-tag smoke behavior",
+)
+run(
+    [sys.executable, "scripts/roborev-implementation-exit-contract.test.py"],
+    "RoboRev contract",
+)
+run(
+    [sys.executable, "scripts/pr-merge-portable-delivery.test.py"],
+    "portable PR delivery",
+)
+run(
+    [sys.executable, "kc-dev-flow/scripts/improvement-intake.test.py"],
+    "improvement intake",
+)
+run(
+    [sys.executable, "kc-dev-flow/scripts/project-spacedock-state.test.py"],
+    "Spacedock projection",
+)
+
+loader_path = PLUGIN / "scripts/profile-contract-loader.py"
+spec = importlib.util.spec_from_file_location("profile_contract_loader", loader_path)
+require(spec is not None and spec.loader is not None, "cannot import profile loader")
+loader = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(loader)
+
+expected_routes = {
+    "poc-exploration": {
+        "implementation": ("build", "validation"),
+        "validation": ("prove", "done"),
+    },
+    "pilot-product-slice": {
+        "ideation": ("shape", "implementation"),
+        "implementation": ("build", "validation"),
+        "validation": ("verify-deliver", "done"),
+    },
+    "production": {
+        "ideation": ("shape", "implementation"),
+        "implementation": ("build", "validation"),
+        "validation": ("verify", "release"),
+        "release": ("release", "done"),
+    },
+}
+require(loader.ROUTES == expected_routes, "profile route topology drifted")
+
+
+def write_profile_work_item(
+    root: Path, profile: str, workflow_stage: str, logical_route: list[str]
+) -> Path:
+    path = root / f"{profile}-{workflow_stage}.md"
+    path.write_text(
+        "\n".join(
+            [
+                "---",
+                f"status: {workflow_stage}",
+                "---",
+                "",
+                "## Work profile receipt",
+                "",
+                "```yaml",
+                "work_profile:",
+                "  schema: kc-dev-flow-work-profile/v2",
+                f"  selected: {profile}",
+                f"  recommended: {profile}",
+                f"  route: [{', '.join(logical_route)}]",
+                "  basis: contract fixture",
+                "```",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+require(
+    (PLUGIN / "references/kernel.md").read_bytes()
+    == (ADOPTED / "kernel.md").read_bytes(),
+    "self-adopted shared core differs from package source",
+)
+kernel = read("kc-dev-flow/references/kernel.md")
+for phrase in [
+    "compare added files, dependencies, abstractions, tests, and comments",
+    "LOC and file counts are diagnostic signals, never pass/fail gates",
+    "create no receipt or commentary",
+]:
+    require(phrase in " ".join(kernel.split()), f"kernel omits subtraction rule: {phrase}")
+require(
+    (PLUGIN / "scripts/profile-contract-loader.py").read_bytes()
+    == (ADOPTED / "profile-contract-loader.py").read_bytes(),
+    "self-adopted profile loader differs from package source",
+)
+for reference in [
+    "reverse-recovery-audit.md",
+    "journey-slicing.md",
+    "retained-document-policy.md",
+    "project-context-maintenance.md",
+]:
+    require(
+        (PLUGIN / "references" / reference).read_bytes()
+        == (ADOPTED / reference).read_bytes(),
+        f"self-adopted conditional reference differs: {reference}",
+    )
+for reference, trigger in [
+    ("retained-document-policy.md", "retained_document_change"),
+    ("project-context-maintenance.md", "project_context_claim_may_change"),
+]:
+    policy = re.sub(
+        r"\s+",
+        " ",
+        (PLUGIN / "references" / reference).read_text(encoding="utf-8"),
+    )
+    require(
+        "as a typed conditional reference" in policy
+        and trigger in policy
+        and "do not load the file when that trigger is false" in policy,
+        f"conditional reference has stale adoption instructions: {reference}",
+    )
+for profile, names in profile_files.items():
+    for name in names:
+        require(
+            (PLUGIN / "references/profiles" / profile / name).read_bytes()
+            == (ADOPTED / "profiles" / profile / name).read_bytes(),
+            f"self-adopted profile contract differs: {profile}/{name}",
         )
 
-workflow = (ROOT / "docs/dev/README.md").read_text(encoding="utf-8")
+with tempfile.TemporaryDirectory(prefix="kc-dev-flow-work-items-") as temporary:
+    work_items = Path(temporary)
+    for contracts_root in [PLUGIN / "references", ADOPTED]:
+        for profile, stages in expected_routes.items():
+            logical_route = [logical for logical, _next in stages.values()]
+            for workflow_stage, (logical_stage, next_stage) in stages.items():
+                work_item = write_profile_work_item(
+                    work_items, profile, workflow_stage, logical_route
+                )
+                contract = loader.load_contracts(contracts_root, work_item)
+                paths = [entry["path"] for entry in contract["loaded"]]
+                require(
+                    paths
+                    == [
+                        "kernel.md",
+                        f"profiles/{profile}/base.md",
+                        f"profiles/{profile}/{logical_stage}.md",
+                    ]
+                    and contract["next_workflow_stage"] == next_stage
+                    and contract["work_item"] == work_item.resolve().as_posix(),
+                    f"wrong selected load set: {contracts_root} {profile} {workflow_stage}",
+                )
+                require(
+                    contract["schema"] == "kc-dev-flow-profile-contract/v2"
+                    and contract["receipt_schema"] == "kc-dev-flow-work-profile/v2",
+                    f"work-item binding schema drifted: {contract}",
+                )
+                require(
+                    all(
+                        f"profiles/{other}/" not in "\n".join(paths)
+                        for other in expected_routes
+                        if other != profile
+                    ),
+                    f"unselected profile path leaked: {profile} {workflow_stage}",
+                )
+
+skills = {
+    "adopt-dev-flow": "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
+    "choose-work-profile": "kc-dev-flow/skills/choose-work-profile/SKILL.md",
+    "continue-dev-flow": "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
+    "chief-engineer": "kc-dev-flow/skills/chief-engineer/SKILL.md",
+    "science-officer": "kc-dev-flow/skills/science-officer/SKILL.md",
+    "science-officer-em": "kc-dev-flow/skills/science-officer-em/SKILL.md",
+}
+for expected, relative in skills.items():
+    require(skill_name(relative) == expected, f"skill name drifted: {relative}")
+
+codex_manifest = json.loads(read("kc-dev-flow/.codex-plugin/plugin.json"))
+starter_prompts = codex_manifest["interface"]["defaultPrompt"]
 require(
-    "ship-flow:science-officer-em" not in workflow,
-    "self-adoption still routes engineering judgment to the replaced Ship-Flow skill",
+    any("$chief-engineer" in prompt for prompt in starter_prompts),
+    "Codex starter prompts omit Chief Engineer",
 )
 require(
-    workflow.count("kc-dev-flow:science-officer-em") >= 2,
-    "self-adoption does not route both EM gate and escalation to the replacement skill",
+    any("$science-officer" in prompt for prompt in starter_prompts),
+    "Codex starter prompts omit Science Officer",
+)
+require(
+    all("$science-officer-em" not in prompt for prompt in starter_prompts),
+    "Codex starter prompts still activate the legacy adapter",
+)
+
+chooser = read(skills["choose-work-profile"])
+continue_skill = read(skills["continue-dev-flow"])
+chief = read(skills["chief-engineer"])
+science = read(skills["science-officer"])
+legacy = read(skills["science-officer-em"])
+adopter = read(skills["adopt-dev-flow"])
+migration = read("kc-dev-flow/MIGRATION.md")
+rationale = read("kc-dev-flow/RATIONALE.md")
+normalized_adopter = " ".join(adopter.split())
+normalized_rationale = " ".join(rationale.split())
+normalized_chooser = " ".join(chooser.split())
+normalized_continue = " ".join(continue_skill.split())
+normalized_chief = " ".join(chief.split())
+normalized_science = " ".join(science.split())
+
+for phrase in [
+    "kc-dev-flow-work-profile/v2",
+    "build -> prove",
+    "shape -> build -> verify-deliver",
+    "shape -> build -> verify -> release",
+    "structured Ask UI",
+    "do not ask the Captain to repeat the decision",
+]:
+    require(phrase in normalized_chooser, f"chooser is missing: {phrase}")
+require("before a work item enters its first working stage" in normalized_chooser, "profile selection is still ideation-bound")
+
+for phrase in [
+    "read that bounded section plus the frontmatter",
+    "repository-local profile loader",
+    "--work-item <exact-committed-work-item>",
+    "simultaneous items may load different routes",
+    "Do not separately read the full kernel, another profile, another stage",
+    "kc-dev-flow:chief-engineer",
+    "kc-dev-flow:science-officer",
+    "kc-dev-flow-conditional-references/v1",
+    "A link is not activation",
+]:
+    require(phrase in normalized_continue, f"continuation is missing: {phrase}")
+for phrase in [
+    "retained_document_change",
+    "project_context_claim_may_change",
+    "A Markdown work record alone satisfies neither trigger",
+    "`receipt: null` creates no receipt",
+]:
+    require(phrase in normalized_continue, f"continuation omits doc trigger: {phrase}")
+require("fresh-context EM verdict" not in continue_skill, "continuation still mandates EM")
+for retired in ["`engineering-judgment.md`", "`work-control-profile.md`"]:
+    require(retired in adopter, f"adopter omits retired-mod disposition: {retired}")
+for phrase in [
+    "older explicit Captain choice outside the v1 schema",
+    "extra local terminal state only through an explicit mapping",
+    "Preserve the surviving `retained-document-policy.md`",
+    "`receipt: null` adds no receipt",
+]:
+    require(phrase in normalized_adopter, f"adopter omits migration rule: {phrase}")
+for phrase in [
+    "breaking upgrade",
+    "one coordinated cutover",
+    "leave completed and archived items unchanged",
+    "finding-only terminal",
+    "Preserve `retained-document-policy.md`",
+]:
+    require(phrase in migration, f"migration guide omits: {phrase}")
+for phrase in [
+    "The first version of KC Dev Flow",
+    "carrying the whole workshop",
+    "kc-dev-flow-work-profile/v2",
+    "directional evidence",
+    "What would prove this wrong",
+    "Load the work, not the ceremony",
+]:
+    require(phrase in normalized_rationale, f"rationale omits: {phrase}")
+require(
+    "net repository lines" not in normalized_rationale,
+    "rationale retains a mutable PR diff snapshot",
+)
+
+for phrase in [
+    "next smallest integrated step",
+    "recommendation: proceed | adjust | escalate",
+    "no gate or state authority",
+]:
+    require(phrase in normalized_chief, f"Chief Engineer is missing: {phrase}")
+for phrase in [
+    "contested, high-risk, hard-to-reverse",
+    "recommendation: proceed | adjust | hold | escalate",
+    "It is not a state mutation or veto",
+    "Do not read `science-officer-em`",
+]:
+    require(phrase in normalized_science, f"Science Officer is missing: {phrase}")
+require("Do not treat `EM` as an alias" in legacy, "legacy adapter still owns EM")
+
+workflow = read("docs/dev/README.md")
+frontmatter = workflow.split("---", 2)[1]
+expected_stage_order = ["backlog", "ideation", "implementation", "validation", "release", "done"]
+actual_stage_order = re.findall(r"    - name: ([a-z-]+)", frontmatter)
+require(actual_stage_order == expected_stage_order, f"workflow stage graph drifted: {actual_stage_order}")
+for phrase in [
+    "POC | `backlog -> implementation -> validation -> done`",
+    "Pilot | `backlog -> ideation -> implementation -> validation -> done`",
+    "Production | `backlog -> ideation -> implementation -> validation -> release -> done`",
+    "profile-contract-loader.py",
+    "Profiles are per item",
+    "No agent is a general gatekeeper",
+    "delivery event mod, not a profile contract",
+    "four conditional references",
+    "Work-item records and unrelated Markdown changes activate neither",
+]:
+    require(phrase in workflow, f"self-adoption is missing: {phrase}")
+
+package_readme = read("kc-dev-flow/README.md")
+normalized_package_readme = " ".join(package_readme.split())
+root_readme = read("README.md")
+require(
+    "run POC, Pilot, and Production items concurrently" in package_readme,
+    "package README omits item-local concurrent profiles",
+)
+require(
+    "cognitive cue, not another agent, review, or gate" in package_readme,
+    "package README overstates stage-role authority",
+)
+require("[2.x migration](./MIGRATION.md)" in package_readme, "package README omits migration guide")
+require("[design rationale](./RATIONALE.md)" in package_readme, "package README omits rationale")
+require(
+    "[profile-native migration guide](./kc-dev-flow/MIGRATION.md)" in root_readme,
+    "root README omits migration guide",
 )
 for phrase in [
-    "## Local Profile",
-    "| Project context |",
-    "| Work items |",
-    "| Iteration |",
-    "| Execution state |",
-    "| Delivery |",
-    "| Gate verdicts |",
-    "| Scope and irreversibility |",
-    "| Observation |",
-    "No binding YAML",
-    "Origin re-observation:",
-    "Reported scenario:",
-    "Originating runtime kind:",
-    "Re-observation artifact/revision:",
-    "Equivalent-runtime rationale:",
-    "Falsifier kind:",
-    "is not an `N/A` condition",
-    "costly_no recommendations",
-    "engineering_judgment advisory record",
+    "conditional brownfield recovery",
+    "conditional multi-slice guard",
+    "conditional retained-document checks",
+    "conditional correspondence checks",
+    "any profile may use it when PR delivery is selected",
 ]:
-    require(phrase in workflow, f"self-adoption is missing Local Profile boundary: {phrase}")
+    require(
+        phrase in normalized_package_readme,
+        f"package README omits mod boundary: {phrase}",
+    )
 
-judgment_mod = (PLUGIN / "references/engineering-judgment.md").read_text(
-    encoding="utf-8"
-)
-normalized_judgment = " ".join(judgment_mod.lower().split())
+validation_runbook = read("docs/dev/runbooks/validation-evidence.md")
+normalized_validation_runbook = " ".join(validation_runbook.split())
+for stale in ["selected policy mods", "Write all six lines", "the EM selects"]:
+    require(stale not in validation_runbook, f"validation runbook retains stale ceremony: {stale}")
 for phrase in [
-    "governing contract and primary-source behavior",
-    "reviewer confidence and labels carry no authority",
-    "independent synthesis",
-    "costly_no",
-    "irreversible, schema, or scope-cut",
-    "PASS | FAIL | UNKNOWN | UNAVAILABLE",
-    "advisory",
-    "unsupported is not a blocking basis",
-    "schedule pressure, sunk cost, and an instruction to conclude",
-    "before acceptance criteria expand",
-    "independently releasable value surfaces",
-    "governing contract's route discipline",
-    "technical seams spanning one primary journey do not multiply",
-    "actor count is evidence",
-    "more than one value surface defaults to `narrow`",
-    "exact scope exception is captain-approved and recorded by work-item authority",
-    "re-estimating the same scope does not resolve an appetite mismatch",
+    "POC never loads it",
+    "smallest evidence set that can fail",
+    "Science Officer remains risk-triggered and advisory",
 ]:
     require(
-        " ".join(phrase.lower().split()) in normalized_judgment,
-        f"engineering judgment is missing: {phrase}",
+        phrase in normalized_validation_runbook,
+        f"validation runbook omits: {phrase}",
     )
-require(
-    re.search(r"^## Iteration-size precheck$", judgment_mod, re.MULTILINE)
-    is not None,
-    "engineering judgment is missing the top-level iteration-size precheck",
-)
-for forbidden in [
-    "science officer",
-    "first officer",
-    "ship-flow",
-    "github",
-    "gh api",
-    "model: opus",
-    "science_officer_em",
-    "upward_report",
-    "subagent_type",
-    "team_name",
-    "reasoning: xhigh",
-    "re-trigger",
-]:
-    require(
-        forbidden not in normalized_judgment,
-        f"engineering judgment imported orchestration-specific surface: {forbidden}",
-    )
-science_skill = (PLUGIN / "skills/science-officer-em/SKILL.md").read_text(
-    encoding="utf-8"
-)
-normalized_science_skill = " ".join(science_skill.lower().split())
-for phrase in [
-    "canonical replacement",
-    "ship-flow:science-officer-em",
-    "science-officer",
-    "科學官",
-    "selected repository-local",
-    "_mods/engineering-judgment.md",
-    "invocation-only",
-    "../../references/engineering-judgment.md",
-    "parent decides whether judgment runs inline or in isolated context",
-    "never spawns itself",
-    "science_officer_em_upward_report",
-    "engineering_judgment",
-    "adjudications",
-    "dissent",
-    "disproof_condition",
-    "authority_boundary",
-    "deadline, sunk cost, mechanical green, and an orchestrator instruction",
-    "status-only report is invalid",
-    "activates without an explicit request and no stage selects the mod",
-    "loaded mod is authoritative",
-    "grants no task creation, sprint admission, scheduling, policy edit, provider posting, gate re-trigger, stage advancement, merge, archive, or closeout authority",
-    "keep duplicated envelope and nested values identical",
-]:
-    require(
-        " ".join(phrase.lower().split()) in normalized_science_skill,
-        f"Science Officer skill is missing: {phrase}",
-    )
-for forbidden in [
-    "user-invocable:",
-    "argument-hint:",
-    "gh api",
-    "model: opus",
-    "reasoning: xhigh",
-    "subagent_type",
-    "team_name",
-]:
-    require(
-        forbidden not in normalized_science_skill,
-        f"Science Officer skill imported adapter-specific surface: {forbidden}",
-    )
+for name in ["chief-engineer", "science-officer", "science-officer-em"]:
+    require(name in package_readme, f"package README omits {name}")
+    require(name in root_readme, f"root README omits {name}")
 
-compatibility_block = re.search(
-    r"```yaml\s+(science_officer_em_upward_report:.*?\n)```",
-    science_skill,
-    re.DOTALL,
-)
-require(
-    compatibility_block is not None,
-    "Science Officer compatibility report is not one bounded YAML block",
-)
-compatibility_yaml = compatibility_block.group(1)
-for field in [
-    "em_judgment",
-    "evidence_synthesis",
-    "risk_tradeoff_call",
-    "recommendation",
-    "route",
-    "confidence",
-    "fo_boundary",
-    "engineering_judgment",
-]:
-    require(
-        re.search(rf"^  {field}:\s*", compatibility_yaml, re.MULTILINE) is not None,
-        f"Science Officer legacy envelope is missing nested field: {field}",
-    )
-for field in [
-    "question",
-    "revision",
-    "evidence_synthesis",
-    "adjudications",
-    "risk_tradeoff",
-    "recommendation",
-    "route",
-    "confidence",
-    "dissent",
-    "disproof_condition",
-    "authority_boundary",
-]:
-    require(
-        re.search(rf"^    {field}:\s*", compatibility_yaml, re.MULTILINE)
-        is not None,
-        f"Science Officer portable record is missing nested field: {field}",
-    )
-
-science_agent = (
-    PLUGIN / "skills/science-officer-em/agents/openai.yaml"
-).read_text(encoding="utf-8")
-require(
-    "$science-officer-em" in science_agent,
-    "Science Officer UI metadata does not explicitly invoke the skill",
-)
-require(
-    "science-officer-em" in package_readme,
-    "package README is missing the Science Officer replacement skill",
-)
-require(
-    "science-officer-em" in root_readme,
-    "root README is missing the Science Officer replacement skill",
-)
-
-stage_headings = [
-    "### `backlog`",
-    "### `ideation`",
-    "### `implementation`",
-    "### `validation`",
-    "### `done`",
-]
-for heading in stage_headings:
-    start = workflow.find(heading)
-    require(start >= 0, f"self-adoption is missing stage: {heading}")
-    boundaries = [
-        position
-        for position in [
-            workflow.find("### `", start + len(heading)),
-            workflow.find("\n## ", start + len(heading)),
-        ]
-        if position >= 0
-    ]
-    end = min(boundaries, default=len(workflow))
-    require(
-        "Policy mods:" in workflow[start:end],
-        f"self-adoption stage is missing Policy mods: {heading}",
-    )
-    selected = "_mods/engineering-judgment.md" in workflow[start:end]
-    require(
-        selected == (heading in {"### `ideation`", "### `validation`"}),
-        f"engineering judgment stage selection is wrong: {heading}",
-    )
-
-kernel = required_files[4].read_text(encoding="utf-8")
-for phrase in [
-    "Project context authority",
-    "Work-item authority",
-    "Iteration authority",
-    "Delivery authority",
-    "Observation is not authority",
-    "backlog → ideation → implementation → validation → done",
-    "smallest sufficient route",
-    "before routing product work",
-    "repository-local",
-    "reusable kernel",
-    "_improvements/state.yaml",
-    "newer than the recorded cursor",
-    "compare-and-swap",
-    "Preserve the observation boundary at closure",
-    "Unavailable re-observation is missing evidence",
-]:
-    require(phrase in kernel, f"kernel is missing invariant: {phrase}")
-require(
-    re.search(
-        r"Lower-level diagnosis and guards do not\s+replace re-observation",
-        kernel,
-    )
-    is not None,
-    "kernel is missing the lower-level evidence boundary",
-)
-
-route_discipline = kernel.find("## Route discipline")
-require(route_discipline >= 0, "kernel is missing Route discipline")
-require(
-    kernel.find("## Sprint continuity and autonomy")
-    < route_discipline
-    < kernel.find("## Outcome discipline"),
-    "Route discipline is not between Sprint continuity and Outcome discipline",
-)
-for phrase in [
-    "approved outcome contract is its destination",
-    "last accepted route",
-    "observable lifecycle invariant",
-    "plan-local pre/post mapping",
-    "Work Control Profile",
-    "reviewer's recorded `PASS`",
-    "resolves only the ambiguity it names",
-    "authority that owns the changed field or decision",
-]:
-    require(phrase in kernel, f"Route discipline is missing invariant: {phrase}")
-
-# The kernel requires an absolute to name its enforcement point or be rewritten
-# as a bounded claim, and that rule had none of its own. Four hand-audits of one
-# file each found a different subset, so the registry replaces re-reading: every
-# block carrying an absolute is judged once, and an unjudged or edited one fails
-# here rather than in a fifth read-through.
-absolutes = subprocess.run(
-    [sys.executable, str(PLUGIN / "scripts/absolutes-check.py"), str(PLUGIN / "references/absolutes.registry")]
-    + [str(p) for p in sorted((PLUGIN / "references").glob("*.md"))],
-    capture_output=True,
-    text=True,
-)
-require(absolutes.returncode == 0, absolutes.stdout.strip() or "absolutes-check failed")
-
-for reference_name in [
-    "engineering-judgment.md",
-    "kernel.md",
-    "reverse-recovery-audit.md",
-    "work-control-profile.md",
-]:
-    canonical = (PLUGIN / "references" / reference_name).read_bytes()
-    self_adoption = (ROOT / "docs/dev/_mods" / reference_name).read_bytes()
-    require(canonical == self_adoption, f"self-adoption drifted: {reference_name}")
+run([sys.executable, "-m", "py_compile", str(loader_path)], "loader compile")
 
 print("kc-dev-flow contract: PASS")

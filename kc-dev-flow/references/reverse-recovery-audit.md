@@ -1,135 +1,81 @@
 ---
 name: reverse-recovery-audit
-description: "Brownfield shape/plan mindset: assume the abstraction already exists, classify its completeness and its observed need as separate axes, and only greenfield what is confirmed MISSING"
-version: 0.2.0
+description: "Triggered brownfield audit that distinguishes recovery, missing capability, and removal candidates before new implementation is accepted"
+version: 0.3.0
 ---
 
-# Reverse-Recovery Audit — Assume It Exists, Prove What's Missing
+# Reverse-Recovery Audit
 
-> Plugin-canonical copy. Adopting repos copy this to
-> `docs/ship-flow/_mods/reverse-recovery-audit.md` and MAY append a
-> repo-specific worked example and their own known seam-defect classes.
+Use this reference only when the selected profile stage emits its typed trigger,
+or when a source-maintenance skill explicitly invokes the audit. Its purpose is
+to stop a proposed addition, replacement, or removal from bypassing existing
+working or repairable code.
 
-## Why This Exists
+## Trigger
 
-In a brownfield codebase, the default planning instinct — "the feature doesn't
-work, so plan to build it" — is systematically wrong and expensive. It
-produces duplicate implementations beside broken-but-present ones, misses
-one-line wiring fixes disguised as features, and inflates a one-day seam
-repair into a multi-day rebuild. Empirically (carlove v1 gap analysis,
-2026-07-05): of 71 golden-path capabilities audited, only 6 were truly
-MISSING; the dominant states were EXISTS_BROKEN and unproven wiring. The work
-was recovery, not construction.
+`brownfield_capability_change` is true when work in an existing codebase
+proposes to create, replace, or remove a capability or abstraction, or claims
+that one is missing.
 
-## The Rule
+Do not load it for a greenfield experiment, a direct repair of an already named
+broken seam, or a mechanical docs, configuration, rename, formatting, or pinned
+dependency change. Implementation does not repeat a completed shape audit. If
+implementation discovers an unplanned surface, return that changed premise to
+the profile stage that owns scope.
 
-**Before planning ANY capability as new work, run the reverse-recovery audit:
-assume the abstraction already exists, hunt for it, classify it with
-evidence, surface evidence-backed removal candidates for the scope owner, and
-only greenfield what is confirmed MISSING.**
+## Two-axis classification
 
-**Completeness and need are separate axes.** The ladder below says how finished
-a layer is. It cannot say whether the layer should be there — a surface nothing
-consults is `WORKING`, and is thereby protected by the very evidence that
-describes it. So every classified layer carries a completeness tier **and** a
-need field, and neither substitutes for the other.
+Completeness and need answer different questions. Record both for every layer
+that the proposed change would create, replace, remove, or directly build on.
 
-### 5-tier completeness classification (evidence ladder)
-
-| Tier | Meaning | Minimum evidence |
-|------|---------|------------------|
-| `WORKING` | works end-to-end | behavioral E2E (API-level or browser) or a runtime walk — **unit tests alone never qualify** |
-| `WORKING_UNIT_UNPROVEN` | logic tested, wiring unproven | unit tests pass, no seam proof |
-| `EXISTS_BROKEN` | implemented but fails | concrete defect evidence: broken wiring, contract mismatch, swallowed error/rejection path, failing runtime probe |
-| `STUB` | abstraction only | type/contract/route/page skeleton with placeholder logic |
-| `MISSING` | no abstraction | exhaustive search came up empty (see below) |
-
-### Need field (recorded beside the tier, never instead of it)
-
-| Value | Meaning | Minimum evidence |
+| Completeness | Meaning | Minimum evidence |
 |---|---|---|
-| `REQUIRED` | a consumer or an obligation is named | the consumer at file:line, or the rule/contract that requires it |
-| `NO_OBSERVED_CONSUMER` | none found inside stated boundaries | two search strategies, **and the boundaries named** — see discipline 3 |
-| `UNKNOWN` | not searched, or the boundaries cannot be closed | say which |
+| `WORKING` | Works through the relevant journey | Runtime or end-to-end observation |
+| `WORKING_UNIT_UNPROVEN` | Owned logic passes but wiring is unproved | Focused unit result and missing seam proof |
+| `EXISTS_BROKEN` | Present but fails at a named seam | Concrete failure or contract mismatch |
+| `STUB` | Shape exists without the required behavior | Located placeholder, skeleton, or fake |
+| `MISSING` | No relevant abstraction was found | Two search strategies with boundaries named |
 
-`NO_OBSERVED_CONSUMER` is a removal **candidate**, not a verdict. It is the
-strongest claim the evidence supports: searches establish what was not found
-inside a boundary, never that nothing requires a thing.
+| Need | Meaning | Minimum evidence |
+|---|---|---|
+| `REQUIRED` | A consumer or accepted obligation needs it | Named consumer or contract |
+| `NO_OBSERVED_CONSUMER` | None found inside declared boundaries | Two searches plus the boundary where they stopped |
+| `UNKNOWN` | Need was not established | Missing search or an open boundary named |
 
-### Discipline
+`NO_OBSERVED_CONSUMER` is a removal candidate, never removal authority.
 
-1. **Layer-trace before classifying**: UI entry → API contract → handler →
-   domain logic → persistence/projection → UI readback. Record file:line per
-   layer or the literal `MISSING`. One broken layer ≠ MISSING — it is
-   EXISTS_BROKEN at that seam, and the fix is scoped to that seam.
-2. **MISSING requires proof of absence, not absence of proof.** Search domain
-   nouns in every language the codebase uses, across contracts, routes,
-   domain types, and UI surfaces, with at least two search strategies before
-   writing MISSING. "Not found after one grep" is the easiest false claim.
-3. **A `NO_OBSERVED_CONSUMER` claim names its search boundaries.**
-   In-repo callers are the easy half. Also state what was done about external
-   repositories, dynamic or reflective references, manual and operational use,
-   contractual or compatibility obligations, and dormant paths — searched, out
-   of scope, or unknown. A `NO_OBSERVED_CONSUMER` claim that does not say where
-   it stopped looking is `UNKNOWN`.
-4. **The audit proposes; the scope owner disposes.** Removal is a scope
-   decision. The audit records the candidate with its evidence and stops. An
-   agent that likes deleting is as dangerous as one that likes adding, and the
-   same evidence bar governs both directions.
-5. **Sizing follows the decision, not the proposal.** Once a removal is
-   accepted, size the increment against the tree that remains. Until then size
-   against the tree as it is, or present both as conditional alternatives.
-   Sizing against a removal nobody approved plans against a tree that does not
-   exist.
-6. **Every non-runtime classification carries a `disproof_hook`** — the one
-   command or observation that would flip it. The audit stays
-   self-correcting instead of authoritative.
-7. **Unit tests prove logic, never wiring.** Silent-failure architectures
-   (event-sourced rejection-as-event, schema-boundary stripping, CQRS
-   projection lag) fail BETWEEN tested units; seam claims need runtime or
-   E2E evidence.
-8. **Boundary conditions.** Greenfield domains take no search tax — the rule
-   is "prove MISSING before building", not "never build". The need field is
-   asked of every surface the increment proposes to create, change, or remove,
-   and of existing layers the increment will sit on — not of the whole tree or
-   of shared foundations the increment merely passes through. And
-   cheapest-literal recovery is a scope tool, not an architecture tool: when
-   a recovered abstraction fights the domain model, escalate to a redesign
-   decision instead of contorting the old shape.
+## Procedure
 
-### Where it binds
+1. Name the affected journey and the smallest relevant search boundary.
+2. Trace only its applicable layers: entry, contract, handler, domain behavior,
+   persistence or projection, and readback. Record a location or `MISSING`.
+3. Before writing `MISSING` or `NO_OBSERVED_CONSUMER`, use two search strategies
+   and state what was searched, excluded, or remains unknown. Include external,
+   dynamic, manual, compatibility, and dormant consumers when they can apply.
+4. Classify the relevant layers on both axes. Unit tests can prove logic, not
+   wiring. Every non-runtime claim gets one command or observation that could
+   disprove it.
+5. Choose the smallest supported route: recover the seam, use the working
+   mechanism, build what is proven missing, present a removal candidate to the
+   scope owner, or escalate an incompatible recovered design.
 
-- **shape stage**: frame the entity around recovered capability + named gaps,
-  citing existing abstractions by file:line, not around "build X".
-- **plan stage**: every task that creates a new file/domain/route MUST carry
-  a classification line justifying why recovery was impossible (MISSING with
-  search evidence). Plan reviewers reject greenfield tasks without it.
-- **plan stage, need**: a task that creates, changes, or removes a surface, or
-  builds on an existing foundation, MUST carry the need field for those
-  surfaces and layers. Plan reviewers reject it without one, on the same
-  footing as a missing MISSING claim. Without a rejection predicate the field
-  is prose an author can decline to write and still pass.
-- **any "build/add/implement X" request**: run the audit for the touched
-  capability before writing the plan.
+## Receipt
 
-### Why need is asked separately
+Record one bounded receipt in the work item; do not create a parallel ledger.
 
-In one adopting repository's session, six changes were made where the rules as
-written permitted an addition and the human scope owner chose a removal: a
-status file added to hold facts that expire, two pre-existing files nothing
-consulted, a stale document given a warning banner rather than deleted, a new
-policy file where an existing one had room, and a new token added to a list that
-already had a format.
+```yaml
+reverse_recovery:
+  trigger: <proposed addition, replacement, removal, or missing claim>
+  boundary: <journey and search boundary>
+  layers:
+    - surface: <name>
+      location: <file:line | MISSING>
+      completeness: <tier>
+      need: <value>
+      evidence: <short evidence>
+      disproof_hook: <command or observation>
+  decision: <recover | use | build | removal_candidate | redesign>
+```
 
-**What that shows and does not show.** Three of the six are arguably reachable
-under "prefer the smallest addition" if it is read strictly, so this is not six
-gaps. It also does not show that unnecessary surfaces were shipped — a human
-caught every one. What it does show is direction: the correction always ran the
-same way, and the two pre-existing unconsulted files were never questioned at
-all, because no rule asks about a surface no new work is proposing to touch.
-
-The observation that would settle whether this field changed behaviour, rather
-than reading well: among comparable brownfield plans, does the rate at which a
-scope owner turns a proposed addition into reuse or removal fall? Count first
-drafts, not final artifacts. Track removals later reverted alongside it, or the
-measure rewards destructive false positives.
+The audit proposes. Captain or the declared scope owner decides removal,
+redesign, profile change, or added scope.

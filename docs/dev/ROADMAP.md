@@ -285,11 +285,91 @@ the weaker sense that the assertion now names what it does *not* cover. Anyone
 reading this sprint as having closed the false-`verified` class should read #149
 first.
 
+## `kc-dev-flow`
+
+### Sprint S1 — prove the runtime, then shorten the route
+
+Captain-approved order for the next single-release batch:
+
+1. `kc-dev-flow-published-tag-smoke-review`
+2. `halve-dev-flow-cycle-time`
+3. `subtractive-first-bounded-irreducibility`
+
+Exit: all three items have exact-revision validation, implementation opens no
+EM review loop, the published-tag smoke has a keep-or-remove disposition backed
+by installed-runtime evidence, and the subtractive pilot rejects green or
+`UNKNOWN` proposed additions. Hold the kc-dev-flow Release PR until the dependent
+`repo-platform/S1` item below also exits.
+
+### Sprint S2 — make evidence proportional without weakening delivery
+
+Dependency: begin product delivery after the kc-dev-flow 2.4.0 Release PR and
+the S1 release closeout finish.
+
+Captain-approved order:
+
+1. `issue213`
+2. `kc-dev-flow-path-and-necessity`
+3. `proportional-work-profile`
+4. `roborev-implementation-exit`
+
+Exit: external PR feedback is reconciled before completion, each proposed
+control names the criterion and failed simpler route that earn it, and normal
+ideation records one Captain-selected POC, Pilot, or Production receipt before
+acceptance criteria expand. A declared RoboRev implementation exit records one
+exact-revision observation or an honest non-green fallback without becoming
+validation or delivery authority. All four items have exact-revision validation
+and delivery evidence, and the product diff retains no generalized evaluation
+platform. Hold the S2 Release PR until all four items exit.
+
+### Sprint S3 — GitHub projection dogfood
+
+Captain direction: begin immediately alongside the remaining `kc-dev-flow/S2`
+validation work. S3 does not change S2 scope, ordering, or release hold.
+
+Captain-approved sequence:
+
+1. `spacedock-github-project-projection` (`qa`)
+2. `spacedock-projection-issue-fidelity` (`q0`), after Project #1 dogfood exposed repository Issue noise and a mutable receipt-only lookup
+3. `spacedock-project-status-updates` (`16`), after the projection result and Draft identity contracts are stable
+
+End value: a repository can install a one-way, idempotent projection of one
+selected Spacedock workflow into one selected GitHub Project without making
+GitHub lifecycle authority or requiring LLM-generated runtime facts. The first
+dogfood maps `kc-claude-plugins/docs/dev` into user `kc-plugins` Project #4;
+deleted Project #1 remains only the historical proof target.
+
+Projection exit: a disposable proof establishes the selected trigger and
+authentication topology; a ten-entity Project #4 dry-run is reviewed before an
+approved bounded subset is applied; an identical rerun performs zero mutations;
+a view grouped by exact SD stage is usable; and every successful reconcile emits
+a versioned deterministic result. Projector-owned Draft items expose
+the Spacedock entity body, use the workflow's short entity ID in the title, keep
+structured lifecycle metadata in Project fields, and retain stable matching when
+the rendered body changes. Explicitly bound human Issues remain human-owned; a
+removed receipt fails closed without creating a second Draft.
+
+Status-update exit: the sibling derives facts and metrics from state plus the
+projection result, classifies delivery, scope, and definition deltas, produces
+reviewable drafts, refuses stale or foreign baselines, and publishes only after
+explicit human confirmation.
+
+Out of scope: GitHub-to-SD writeback, Relay or CarLove rollout, automatic Project
+Status Update publication, and LLM-authored unattended payloads.
+
 ## `repo-platform`
 
-No sprint is scheduled in this roadmap yet. Shared workflow, CI, marketplace,
-and root-configuration work uses this product's own sequence beginning at
-`repo-platform/S1`.
+### Sprint S1 — reduce the runtime reading surface
+
+Dependency: run after `kc-dev-flow/S1` settles the review contract.
+
+1. `workflow-readme-runtime-budget`
+
+Exit: the runtime README keeps authority locators while selected profile and
+stage contracts load through the deterministic route boundary; recovery and
+optional details load only on their trigger, and the contract suite plus bounded
+real-journey validation pass. Only then may the pending kc-dev-flow Release PR
+be merged.
 
 ### Hazard carried forward
 

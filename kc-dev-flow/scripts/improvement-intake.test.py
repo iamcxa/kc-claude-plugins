@@ -39,7 +39,7 @@ def handoff(**overrides: object) -> dict[str, object]:
         "disproof_hook": "A text-only closure attempt is refused before done.",
         "duplicate_search": [
             "kernel.md behavioral validity",
-            "work-control-profile.md review convergence",
+            "build.md review convergence observation",
         ],
         "observations": [
             {
@@ -119,8 +119,8 @@ class ImprovementIntakeTest(unittest.TestCase):
         self.assertEqual(
             proposal["duplicate_search"],
             [
+                "build.md review convergence observation",
                 "kernel.md behavioral validity",
-                "work-control-profile.md review convergence",
             ],
         )
         self.assertEqual(
