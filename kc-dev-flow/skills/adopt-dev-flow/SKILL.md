@@ -67,11 +67,22 @@ repair the cheapest compatible seam.
 7. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
    release-owner authority. Advice never gains state or merge authority.
 8. The vendored `roborev-implementation-exit.md` supplies the provider method;
-   bind only the repository-local parts the emitted observation needs — the
+   the repository still owns four bindings the emitted observation needs — the
    reviewer mapping for the implementation provider family, the registered state
-   holder, its clean-holder prerequisite, and the durability command. Resolve the
-   declared equivalents rather than copying another repository's paths. Missing
-   provider capability remains an honest non-gating `UNAVAILABLE` result.
+   holder, its clean-holder prerequisite, and the durability command. Derive the
+   reviewer mapping from the repository's dominant implementation agent, propose
+   the complementary reviewer and its model, and record the confirmed pair;
+   resolve the other three from the repository's own state authority rather than
+   copying another repository's paths. Then probe once: provider CLI present, the
+   mapped reviewer available and authenticated, and the state holder resolvable.
+   Report each of the four bindings as bound or unbound.
+
+   Separate the two ways this ends up unusable. An absent CLI, agent, or
+   authentication is an environment result and stays an honest non-gating
+   `UNAVAILABLE`. A binding the adopter never recorded is an adoption defect:
+   the observation would emit and resolve nothing on every future
+   implementation exit, so record it as a refit requirement instead of leaving a
+   permanent silent `UNAVAILABLE`.
 9. Run the profile loader contract test and the repository's normal gates.
 
 If the workflow runtime cannot skip inactive stages or represent the Production

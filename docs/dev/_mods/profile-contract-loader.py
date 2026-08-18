@@ -124,9 +124,22 @@ def check_conditional_references(root: Path, contract_path: Path, text: str) -> 
             raise ContractError(
                 f"{contract_path.name} has an unparseable JSON block: {exc}"
             ) from exc
+        if not isinstance(declared, dict):
+            continue
         if declared.get("schema") != CONDITIONAL_SCHEMA:
             continue
-        for entry in declared.get("references", []):
+        entries = declared.get("references")
+        if not isinstance(entries, list):
+            raise ContractError(
+                f"{contract_path.name} declares conditional references that are "
+                "not a list"
+            )
+        for entry in entries:
+            if not isinstance(entry, dict) or not isinstance(entry.get("path"), str):
+                raise ContractError(
+                    f"{contract_path.name} has a conditional reference entry "
+                    f"without a string path: {entry!r}"
+                )
             declared_path = entry["path"]
             if Path(declared_path).is_absolute():
                 raise ContractError(

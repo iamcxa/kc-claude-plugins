@@ -420,4 +420,34 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         "in-root absolute conditional reference was accepted",
     )
 
+    # A non-object or malformed JSON block must not escape as a traceback: an
+    # unrelated array is ignored, a malformed reference set is a ContractError.
+    for block, expect_rc, label in [
+        ('["not", "an", "object"]', 0, "unrelated JSON array"),
+        ('{"schema": "kc-dev-flow-conditional-references/v1", "references": {}}',
+         2, "non-list reference set"),
+        ('{"schema": "kc-dev-flow-conditional-references/v1", "references": [1]}',
+         2, "reference entry without a path"),
+    ]:
+        declaring_stage.write_text(
+            "STAGE-poc-exploration-prove\n\n```json\n" + block + "\n```\n",
+            encoding="utf-8",
+        )
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(LOADER),
+                "--contracts-root",
+                str(root),
+                "--work-item",
+                str(unvendored_item),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        require(
+            result.returncode == expect_rc and "Traceback" not in result.stderr,
+            f"{label} did not resolve to a clean rc={expect_rc}: {result.returncode} {result.stderr[:120]}",
+        )
+
 print("profile contract loader test: PASS")
