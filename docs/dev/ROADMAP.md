@@ -365,10 +365,11 @@ Dependency: run after `kc-dev-flow/S1` settles the review contract.
 
 1. `workflow-readme-runtime-budget`
 
-Exit: the runtime README is at most 700 lines, every retained mandatory clause
-has an enforcement/owner mapping, recovery and stage-specific details are loaded
-only when their trigger fires, and the contract suite plus fresh EM validation
-pass. Only then may the pending kc-dev-flow Release PR be merged.
+Exit: the runtime README keeps authority locators while selected profile and
+stage contracts load through the deterministic route boundary; recovery and
+optional details load only on their trigger, and the contract suite plus bounded
+real-journey validation pass. Only then may the pending kc-dev-flow Release PR
+be merged.
 
 ### Hazard carried forward
 

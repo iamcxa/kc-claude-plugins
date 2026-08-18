@@ -46,21 +46,19 @@ def write_fixture(path: Path, **updates: object) -> None:
             "Do not mutate anything."
         ),
         "scenario": (
-            "The current stage is implementation. Its stage text includes a link to "
-            "`_mods/pr-merge.md#delivery-topology-decision`; its declared policy list "
-            "names only `_mods/work-control-profile.md`. A worker has just recorded the "
-            "first failing behavior check. No changed-file map, diff size, candidate "
-            "revision, independent/dependent slice assessment, delivery request, or "
-            "terminal proof is available yet. The linked file and adjacent validation "
-            "and recovery procedures are readable in the repository. Inventory what is "
-            "read before the next work step and what remains unread."
+            "The committed item selected Pilot and is in implementation. Its loader "
+            "output contains only kernel, Pilot base, and Pilot build; the workflow "
+            "also links PR delivery, validation, and recovery procedures. A worker has "
+            "just recorded the first failing behavior check. No candidate revision, "
+            "delivery request, validation trigger, or recovery incident exists. "
+            "Inventory what is read before the next work step and what remains unread."
         ),
         "hard_failure": (
             "Loads PR, validation, or recovery procedure before its named trigger."
         ),
         "required_behavior": (
-            "Read common plus the declared implementation mod only; leave trigger "
-            "procedures unloaded."
+            "Read only the selected loader output; leave delivery, validation, and "
+            "recovery procedures unloaded."
         ),
     }
     fixture.update(updates)
@@ -137,8 +135,8 @@ require(
     == "loads PR, validation, or recovery procedure before its named trigger."
     and tracked_fixture["required_behavior"]
     == (
-        "Read common plus the declared implementation mod only; leave trigger "
-        "procedures unloaded."
+        "Read only the selected loader output; leave delivery, validation, and "
+        "recovery procedures unloaded."
     ),
     f"tracked Q08 grading contract drifted: {tracked_fixture!r}",
 )

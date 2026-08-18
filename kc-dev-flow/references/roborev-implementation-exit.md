@@ -1,34 +1,35 @@
 # RoboRev Implementation Exit
 
-Use this provider contract when the repository's Local Profile declares
-`review_convergence` in `observe` mode with `provider: roborev` at
+Use this provider contract when the selected build contract in the profile
+loader result declares `review_convergence` in `observe` mode with `provider: roborev` at
 `implementation exit`. The observation gives fresh validation exact-tip defect
 evidence. It does not replace validation and it does not make RoboRev a gate.
 
 ## Activation and repository ownership
 
-The declaration names:
+The typed observation and repository Local Profile together name:
 
-- the repository-local contract path and committed RoboRev configuration path;
-- `agent`, `model`, `reasoning`, `minimum severity`, and either `panel: none` or
-  one named panel;
+- the repository-local contract path and selected build-contract configuration;
+- the selected profile and complementary reviewer mapping for the actual
+  implementation provider family;
+- `agent`, `model`, `reasoning`, `minimum severity`, and `panel: none`;
 - the exact implementation-exit boundary and `observe` mode;
 - the live-batch timeout, explicit-request cap, and repair-confirmation cap;
 - any authorized local-command bridge.
 
-An omitted declaration performs no RoboRev detection, configuration read,
-provider query, or invocation. A present declaration with an absent field is
-`UNAVAILABLE(reason: unavailable)`; ambient global defaults do not fill it.
-File presence alone does not activate this contract.
+An absent typed declaration performs no RoboRev detection, configuration read,
+provider query, or invocation. An unknown implementation family, absent mapped
+reviewer, or missing field is `UNAVAILABLE(reason: unavailable)`; ambient global
+defaults do not fill it. File presence alone does not activate this contract.
 
 RoboRev reads repository configuration from its precedence chain, and exact
-commit/range reviews may read the default branch's copy. Resolve the declared
-values from the candidate Git object, record that object's configuration hash,
-and pass the values explicitly to the candidate review command. This keeps a
-new candidate configuration repository-owned before it reaches the default
-branch. A default-branch configuration may be used after its bytes match the
-recorded candidate hash. Force single-reviewer execution with `--panel none`;
-Production does not select a panel by itself.
+commit/range reviews may read the default branch's copy. Resolve the typed
+observation and mapped reviewer from the candidate Git object, record that
+object's configuration hash, and pass the values explicitly to the candidate
+review command. This keeps a new candidate configuration repository-owned
+before it reaches the default branch. A default-branch configuration may be used
+after its bytes match the recorded candidate hash. Every profile forces
+single-reviewer execution with `--panel none`.
 
 ## Capability matrix
 
@@ -56,13 +57,16 @@ base SHA
 tip SHA
 RoboRev version and required JSON command/response contract
 configuration object SHA
+selected profile and implementation provider family
 agent, model, reasoning, minimum severity
+live-batch timeout, request cap, and repair-confirmation cap
 panel identity, sorted stable member identities, and complete member count
 ```
 
 The claim identity is the SHA-256 of that canonical record. Provider evidence
-matches only when its repository, exact range or tip, configuration, RoboRev
-version/JSON contract, agent, model, reasoning, minimum severity, panel
+matches only when its repository, exact range or tip, configuration, selected
+profile, implementation family, RoboRev version/JSON contract, agent, model,
+reasoning, minimum severity, caps, timeout, panel
 identity, stable member identities, and complete population match the record.
 Every evidence field must be present; missing or null fields and malformed,
 duplicate, extra, or incomplete member populations are `UNKNOWN(reason:
@@ -160,26 +164,27 @@ parent verdict.
 | Claim lost | `UNKNOWN(reason: claim_lost)` |
 | Claim, launch identity, JSON evidence, registered state boundary, or state is indeterminate | `UNKNOWN(reason: state_unknown)` |
 
-Store the result in the ordinary implementation report's Work Control evidence
-envelope. Bind it to the candidate revision and include capability, mode,
+Store the result in the repository's ordinary implementation evidence. Bind it
+to the candidate revision and include capability, mode, selected profile,
 provider, outcome, reason, identity hash, config hash, job identity when known,
 member states, request count, confirmation count, and cost coverage. This is not
 a separate receipt database.
 
 ## Repair and spend boundary
 
-A matching queued/running/completed job is reused before a claim. One identity
-has one explicit-request allowance. After an ordinary implementation repair,
-the repository may authorize one repair confirmation for the changed tip. A
-second non-pass, timeout, ambiguity, or setup failure is carried into fresh
-validation. Do not invoke `refine`, install hooks, review intermediate repair
-commits, or silently fall back from a named panel to a single reviewer.
+A matching queued/running/completed job is reused before a claim. The selected
+profile's request and repair-confirmation caps are absolute. POC authorizes one
+request and no RoboRev confirmation; Pilot and Production authorize one request
+and at most one changed-tip confirmation. A further non-pass, timeout,
+ambiguity, or setup failure is carried into fresh validation. Do not invoke
+`refine`, install hooks, review intermediate repair commits, or add a panel.
 
 When `cost --json` is supported, record its approximate total with
 `jobs_with_cost`, `jobs_total`, and `complete`. Incomplete coverage stays
 visible and is not an exact-dollar ceiling. The enforceable controls are the
 request cap, confirmation cap, selected reviewer/panel, model, reasoning, and
-live-batch timeout.
+live-batch timeout. Minimum severity reduces finding and repair noise; it is not
+an inference-cost ceiling.
 
 ## Authority boundary
 

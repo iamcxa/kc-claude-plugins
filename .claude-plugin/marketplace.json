@@ -128,7 +128,7 @@
     {
       "name": "kc-dev-flow",
       "source": "./kc-dev-flow",
-      "description": "Portable, evidence-bound development flow — adopt or upgrade a repository-owned authority binding, then keep approved sprints moving with fresh validation and minimal ceremony in Claude Code or Codex",
+      "description": "Profile-native POC, Pilot, and Production delivery routes that load one minimal authority core plus only the selected stage contract in Claude Code or Codex",
       "version": "2.5.0",
       "keywords": [
         "development-workflow",

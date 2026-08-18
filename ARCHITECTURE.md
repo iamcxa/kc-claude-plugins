@@ -14,57 +14,90 @@ ship-flow-style task workflow (split-root state under
 `docs/dev/.spacedock-state`) that governs how repo changes are proposed,
 built, and verified.
 
-## kc-dev-flow continuation ownership
+## kc-dev-flow profile-native loading
 
-The continuation path keeps three ownership boundaries explicit:
+Continuation resolves authority and profile before loading workflow policy. It
+reads the workflow's small Local Profile, the exact work item, and its committed
+v2 profile receipt. A deterministic repository-local loader then emits three
+policy artifacts: shared core, selected profile base, and selected current
+stage. The selected build contract contains that profile's typed exit
+observation. A selected stage may also contain a typed conditional-reference
+descriptor; its referenced file remains unread unless the named trigger is
+true. The loader rejects a stage outside the selected route. It takes and
+hash-binds the exact committed work item, so profile is item-local rather than a
+project-global switch; concurrent items may follow different routes safely.
 
-- The **default product router** resolves the live work item, current stage, and
-  next approved product action before any optional improvement work.
-- The **conditional adopter-harvest reference** is loaded only when the current
-  invocation explicitly requests improvement harvesting. It may derive a
-  candidate, but it does not create work, admit it to a sprint, or pause product
-  delivery.
-- **downstream source intake** independently rechecks reusable handoffs and
-  prepares captain-reviewable proposals; it does not inherit adopter authority
-  or make a placement decision.
-
-Normal ideation first reads the existing task's work-profile receipt. An
-unchanged receipt keeps the full chooser unloaded; a missing or stale receipt
-loads `choose-work-profile`. The chooser recommends and asks, while the actor
-already authorized by the repository records, syncs, and re-reads the choice
-before AC expansion. This adds no tracker field, lifecycle stage, or mutation
-authority.
-
-### Conditional implementation-exit observation
-
-A Local Profile may bind `review_convergence` in `observe` mode to RoboRev. The
-loader leaves the provider reference unread when the declaration is absent. At
-implementation exit, a declared adapter binds repository, base, tip, committed
-reviewer configuration, and panel membership; it reuses matching provider jobs
-or uses the existing Git-backed Spacedock state transaction to select one claim
-winner before a bounded explicit request. Independent clones are serialized by
-fast-forward push rejection, while a shared parent refuses an identity already
-present in the authoritative task. Both paths re-read the remote task after the
-claim attempt.
-
-The provider observation emits the existing Work Control `PASS | FAIL | UNKNOWN
-| UNAVAILABLE` envelope. Missing tools and unsupported hosts stay non-green but
-do not block the separate fresh-validation route. A claim loser does not
-re-query or enqueue. No daemon, second ledger, generalized evaluator, or lock
-service belongs to this seam.
+One superset Spacedock graph serves all three routes. The loading boundary is:
 
 ```mermaid
 flowchart LR
-    I[Implementation evidence and exact tip] --> D{Local Profile declares RoboRev?}
-    D -->|no| V[Fresh validation]
+    W["Exact work item<br/>status + v2 receipt"] --> L[Profile loader]
+    K[Shared kernel] --> L
+    P["Selected profile<br/>base + current stage"] --> L
+    L --> C["Active policy<br/>core + base + stage"]
+    C -. "when stage is build" .-> X["Implementation exit<br/>typed observation"]
+    C -. "typed trigger true" .-> R["Triggered references<br/>and bounded receipts"]
+    D["PR delivery event"] -.-> M["Spacedock pr-merge<br/>runtime mod"]
+```
+
+POC build may trigger reverse recovery for a proposed brownfield capability
+change. Pilot and Production shape may trigger reverse recovery and, only when
+one integrated slice is insufficient, the multi-slice guard. Selecting a
+profile, vendoring a reference, or seeing a link does not activate it.
+
+Spacedock `pr-merge` is an orthogonal delivery event mod. Any profile may use it
+when PR delivery is selected; no profile loads it as policy.
+
+Backlog and done are state boundaries rather than worker stages. Chief Engineer
+is a bounded delivery advisor for unclear sequencing or blockers. Science
+Officer is a separate independent-assurance seat for contested, high-risk, or
+hard-to-reverse technical claims. Neither role owns a general gate: FO applies
+declared checks, deterministic instruments gate decidable conditions, and the
+Captain or declared release owner retains risk and release authority.
+
+The optional improvement-harvest reference still loads only on explicit request.
+It cannot create work, admit it to a sprint, or interrupt the selected route.
+
+### Proportional implementation-exit observation
+
+Every profile emits `review_convergence` in `observe` mode at implementation
+exit. POC requests one Medium-reasoning Claude Sonnet review with a High finding
+floor and no RoboRev confirmation. Pilot uses Medium reasoning and a Medium
+floor with one changed-tip confirmation. Production uses Thorough reasoning and
+a Medium floor with one changed-tip confirmation. All routes use one reviewer
+and no panel.
+
+Reviewer selection is complementary to the actual implementation provider:
+OpenAI implementation selects Claude Code `sonnet`; Anthropic implementation
+selects Codex `gpt-5.6-terra`. An unknown family or unavailable mapped provider
+returns `UNAVAILABLE` rather than using ambient defaults.
+
+The adapter binds repository, base, tip, selected profile, implementation
+family, selected build-contract configuration, reviewer, limits, and panel. It
+reuses matching provider jobs or uses the existing Git-backed Spacedock state
+transaction to select one claim winner before a bounded explicit request.
+Independent clones are serialized by fast-forward push rejection, while a
+shared parent refuses an identity already present in the authoritative task.
+Both paths re-read the remote task after the claim attempt.
+
+The provider observation stores `PASS | FAIL | UNKNOWN | UNAVAILABLE` in the
+ordinary implementation evidence. Missing tools and unsupported hosts stay
+non-green but do not block the selected verification route. A claim loser does
+not re-query or enqueue. No daemon, second ledger, generalized evaluator, or
+lock service belongs to this seam.
+
+```mermaid
+flowchart TB
+    I["Selected implementation<br/>evidence + exact tip"] --> D{Mapped reviewer available?}
+    D -->|no| E[Four-state observation]
     D -->|yes| R[Reuse matching job]
     R -->|match| E[Four-state observation]
     R -->|miss| C[Spacedock state claim]
     C -->|winner| Q[One bounded provider request]
     C -->|loss or unknown| E
     Q --> E
-    E --> V
-    V --> G[GitHub feedback and Captain delivery gates]
+    E --> V[Selected profile verification]
+    V --> G[Repository delivery gates]
 ```
 
 RoboRev is evidence only. Its verdict does not advance or block a stage, mutate

@@ -1,149 +1,157 @@
 # KC Dev Flow
 
-A small, versioned development-flow kernel for Claude Code and Codex. It lets a
-repository keep its own tracker, sprint model, workflow runtime, and delivery
-provider while sharing the same authority and evidence discipline.
+KC Dev Flow supplies one minimal authority core and three profile-native delivery
+routes. A repository keeps its own tracker, iteration authority, workflow
+runtime, and delivery provider.
+
+## Breaking upgrade from 2.x
+
+Profile-native loading changes the receipt schema, lifecycle routes, role
+semantics, and required local loader. Existing adopters must complete the
+[2.x migration](./MIGRATION.md) before updating the installed plugin used for
+ordinary continuation; a partially upgraded adopter fails closed. The
+[design rationale](./RATIONALE.md) records the observed pain, trade-offs,
+directional evidence, and conditions that would falsify this direction.
+
+## Routes
+
+| Profile | Working route | Intended result |
+|---|---|---|
+| POC / Exploration | `build -> prove` | One real journey and its riskiest assumption are observed; cleanup and unproved limits are recorded. |
+| Pilot / Product slice | `shape -> build -> verify-deliver` | A bounded slice works for limited real use with appropriate persistence, diagnostics, recovery, and data safety. |
+| Production | `shape -> build -> verify -> release` | An operated capability has the applicable lifecycle, compatibility, recovery, observability, integrity, rollback, release, and ownership proof. |
+
+```mermaid
+flowchart TB
+    A["Backlog<br/>capture the problem"] --> B["Captain selects a profile<br/>commit the work-item receipt"]
+    B --> L["At each working stage, load<br/>shared core + selected base + selected stage"]
+    L --> C{Selected profile}
+
+    C -->|POC| P1["Build<br/>smallest real journey"]
+    P1 --> P2["Optional RoboRev<br/>High+ observation"]
+    P2 --> P3["Prove<br/>journey + riskiest assumption"]
+    P3 --> D[Done]
+
+    C -->|Pilot| T1["Shape<br/>bounded user journey"]
+    T1 --> T2["Build<br/>real seams + recovery"]
+    T2 --> T3["Optional RoboRev<br/>Medium+ observation"]
+    T3 --> T4["Verify and deliver<br/>journey + data safety"]
+    T4 --> D
+
+    C -->|Production| R1["Shape<br/>operational boundaries"]
+    R1 --> R2["Build<br/>operable lifecycle"]
+    R2 --> R3["Optional RoboRev<br/>thorough Medium+ observation"]
+    R3 --> R4["Verify<br/>exact-revision obligations"]
+    R4 --> R5["Release<br/>rollout + recovery + authority"]
+    R5 --> D
+```
+
+Backlog and done are state boundaries, not working stages. A runtime may expose
+the union of route states and skip inactive stages. The deterministic profile
+loader emits only these policy contracts:
+
+```text
+shared core + selected profile base + selected current stage
+```
+
+The selected `build` contract also contains one typed implementation-exit
+observation. It does not load another profile or stage.
+
+It rejects a stage outside the committed profile route. POC therefore does not
+pay for Production policy merely because both are available in the package.
+The receipt belongs to the work item rather than the repository: one project can
+run POC, Pilot, and Production items concurrently, and each loader result
+hash-binds the exact item that selected its route.
+
+Each stage contract also names a one-line **working perspective**. It is a
+cognitive cue, not another agent, review, or gate; the mission and required
+output remain the operative contract. Chief Engineer and Science Officer are
+separate trigger-based seats and stay unloaded on ordinary green transitions.
+
+## Seats and gates
+
+- **Captain** owns scope, profile, irreversible actions, spend/permission, red
+  residuals, and merge/release authorization.
+- **First Officer** resolves authority, loads and dispatches the selected route,
+  and applies declared gates.
+- **Chief Engineer** gives bounded normal-delivery advice about the next smallest
+  integrated step. It is not a mandatory reviewer.
+- **Science Officer** gives independent assurance on a contested, high-risk,
+  hard-to-reverse, or low-confidence technical claim. It is advisory.
+- **Deterministic checks and named accountable owners** hold scoped gates. No
+  agent is a general-purpose gatekeeper.
 
 ## Skills
 
-- `adopt-dev-flow` — audit, adopt, or upgrade the kernel without rebuilding an
-  existing workflow.
-- `continue-dev-flow` — resume an approved sprint and keep advancing committed
-  work without unnecessary captain pauses.
-- `choose-work-profile` — recommend a proportional POC, Pilot, or Production
-  proof burden before normal ideation expands acceptance criteria.
-- `promote-dev-flow` — review sanitized adopter field evidence at the canonical
-  source without granting it task or policy authority.
-- `science-officer-em` — provide independent engineering judgment through the
-  canonical replacement for the former Ship-Flow skill, preserving its legacy
-  report envelope while carrying the complete portable advisory record.
-- `setup-github-project-projection` — plan, install, and audit a deterministic
-  one-way projection from one Spacedock workflow into GitHub Issues and one
-  GitHub Project without making GitHub lifecycle authority.
+- `choose-work-profile` — recommend and ask for POC, Pilot, or Production before
+  the first working stage.
+- `continue-dev-flow` — load and advance only the selected route.
+- `chief-engineer` — advise the next integrated delivery step when the route is
+  unclear, blocked, or drifting.
+- `science-officer` — provide bounded independent technical assurance.
+- `science-officer-em` — legacy report-envelope compatibility only.
+- `adopt-dev-flow` — bind or upgrade a brownfield repository without replacing
+  its existing authorities.
+- `promote-dev-flow` — bring sanitized adopter evidence back for source review
+  without granting it task or policy authority.
+- `setup-github-project-projection` — install a deterministic one-way Spacedock
+  projection without making GitHub lifecycle authority.
 
-## Work profiles
+## Selection and promotion
 
-Profiles use one workflow with different obligations, not three workflows. For
-normal ideation, first analyze the audience, lifespan, state, mutation boundary,
-and authority. Reuse a valid unchanged receipt. Only a missing or stale receipt
-asks the Captain to choose the intended commitment before ideation expands
-acceptance criteria. Every profile preserves the same authority, safety,
-evidence honesty, cleanup, and delivery gates. Work already beyond ideation is
-not reopened without a promotion trigger, and a bounded mechanical defect keeps
-its valid ideation skip.
+The Captain selects a profile through the host's structured Ask UI when
+available, with plain chat as fallback. The authorized work-item actor commits a
+`kc-dev-flow-work-profile/v2` receipt before the first working stage. Selection
+is not deferred to ideation because POC has no ideation stage.
 
-```mermaid
-flowchart TD
-    A["Request: Build an import workflow."] --> B["Project context<br/>Audience, lifespan, state,<br/>mutation boundary, authority"]
-    B --> C["Shared invariants<br/>Authority, safety, evidence honesty,<br/>cleanup, delivery gates"]
-    C --> G{"Workflow route"}
-    G -->|Normal ideation| H{"Receipt valid<br/>and unchanged?"}
-    H -->|Yes| U["Reuse receipt<br/>No Captain pause"]
-    H -->|Missing or stale| D{"Captain chooses<br/>intended commitment"}
-    G -->|Already beyond ideation| X["Do not reopen<br/>without a promotion trigger"]
-    G -->|Bounded mechanical defect| Y["Keep the valid<br/>ideation skip"]
+Promote POC to Pilot when accepted scope adds limited real users, persistent
+valuable state, reused shortcuts, beyond-session operation, or retry/recovery
+duty. Promote either lower profile to Production when production data or
+credentials, destructive external mutation, irreversible migration, public
+compatibility, unattended operation, broad exposure, SLO/support, or
+release/rollback ownership enters accepted scope.
 
-    D -->|POC / Exploration| P1["Ideation<br/>One demoable journey<br/>and riskiest assumption"]
-    P1 --> P2["Implementation<br/>Simplest safe mechanism"]
-    P2 --> P3["Validation<br/>Owned logic, critical risk,<br/>one real end-to-end journey"]
-    P3 --> P4["Outcome<br/>Validated experiment;<br/>cleanup and unproved limits recorded"]
+## Distribution and adoption
 
-    D -->|Pilot / Product slice| L1["Ideation<br/>Limited real users<br/>and persistent valuable state"]
-    L1 --> L2["Implementation<br/>Maintainable repository-native slice<br/>with diagnostics and recovery"]
-    L2 --> L3["Validation<br/>Real seams, retries, data safety,<br/>accepted end-to-end journey"]
-    L3 --> L4["Outcome<br/>Limited usable product slice<br/>for bounded real use"]
+The package source contains:
 
-    D -->|Production| R1["Ideation<br/>Operational commitment, compatibility,<br/>ownership, and failure policy"]
-    R1 --> R2["Implementation<br/>Lifecycle, migration, observability,<br/>integrity, rollback, release support"]
-    R2 --> R3["Validation<br/>Prove every applicable lifecycle, compatibility,<br/>migration/recovery, observability, integrity,<br/>rollback, release, and ownership obligation"]
-    R3 --> R4["Outcome<br/>Operated capability ready<br/>for long-term support"]
+- `references/kernel.md` — the shared core;
+- `references/profiles/<profile>/base.md` — one selected base contract;
+- `references/profiles/<profile>/<stage>.md` — one selected role/stage contract,
+  with its proportional exit observation in `build.md`;
+- `references/reverse-recovery-audit.md` — conditional brownfield recovery
+  method triggered by POC build or Pilot/Production shape;
+- `references/journey-slicing.md` — conditional multi-slice guard triggered only
+  by Pilot/Production shape;
+- `references/retained-document-policy.md` — conditional retained-document
+  checks at the selected shape/build/verification stage, with no new receipt;
+- `references/project-context-maintenance.md` — conditional correspondence
+  checks when accepted behavior may change a claim in bound project context;
+- `scripts/profile-contract-loader.py` — the closed route and loading mechanism.
 
-    P4 -. "Real users, persistent value,<br/>or reused shortcuts" .-> L1
-    P4 -. "Retained production boundary" .-> R1
-    L4 -. "Retained production boundary" .-> R1
-```
+An adopter vendors these files and binds their local paths in the workflow's
+`## Local Profile`. `continue-dev-flow` reads that small binding, the exact work
+item and receipt, then invokes the local loader. It does not read the full
+workflow README, unselected profiles, or installed package fallback.
 
-For the same import request, the practical difference is:
+Optional observations and conditional references load only on their named
+stage trigger. A reference link is not activation, and vendoring it adds no
+ordinary-stage work.
+An unavailable provider cannot silently become a delivery failure. Improvement
+harvesting also remains explicit and cannot create work, change sprint
+membership, or interrupt the selected product route.
 
-| Profile | Architecture and implementation | Validation | Outcome |
-|---|---|---|---|
-| POC / Exploration | One file-to-preview journey; a safe shell, CLI, library, or existing tool is enough. | Parser-owned logic, the riskiest input assumption, and one real import. | Experiment validated; cleanup and unproved limits recorded. |
-| Pilot / Product slice | Limited users and persistent import state in a maintainable repository-native slice with diagnostics and recovery. | Integration seams, retry and duplicate handling, data safety, and the accepted journey. | Limited usable slice for bounded real use. |
-| Production | Owned operation with compatibility, lifecycle, migration, observability, integrity, rollback, and release support. | Every applicable lifecycle, compatibility, migration/recovery, observability, integrity, rollback, release, and ownership obligation. | Operated capability ready for long-term support. |
+Profile selection does not activate standalone references. Reverse recovery
+fires only for a proposed addition, replacement, removal, or missing claim in
+existing code. The multi-slice guard fires only when a Pilot or Production
+journey cannot be one integrated slice. Retained-document policy fires only for
+an accepted or observed retained-document change. Project-context maintenance
+fires only when accepted behavior, architecture, or a public contract may change
+a claim in the bound project context. Both are rechecked against the exact diff
+before implementation exit or validation. Improvement harvesting remains explicit.
+An adopter-owned runtime mod such as Spacedock `pr-merge` is orthogonal: any
+profile may use it when PR delivery is selected, and none loads it merely by
+selecting a profile.
 
-Promotion is a new Captain decision in the same ideation workflow. Move from POC
-to Pilot when real users, persistent value, or reused shortcuts enter scope;
-move either lower profile directly to Production when a retained production
-boundary such as production data, an SLO, public compatibility, or unattended
-operation enters scope.
-
-## Optional policy mods
-
-- `engineering-judgment` — adjudicate reviewer conflict against governing
-  contracts and primary behavior, synthesize risk and durable cost, and return
-  an advisory `proceed | narrow | return | block | costly_no` recommendation
-  without replacing gate or captain authority.
-- `retained-document-policy` — keep retained documentation free of mutable state,
-  duplicate live claims, and unverified checks.
-- `project-context-maintenance` — keep approved product and architecture context
-  aligned with delivered behavior.
-- `reverse-recovery-audit` — recover existing brownfield seams before proposing
-  greenfield work.
-- `journey-slicing` — carve an accepted outcome along the journey rather than by
-  layer, and keep the first slice demoable.
-- `work-control-profile` — bind optional mechanical controls to local adapters
-  and four-state receipts.
-
-## Distribution
-
-The plugin is not a tracker, scheduler, daemon, or merge bot. The kernel defines
-portable semantics; each repository binds its existing authorities in a README
-`Local Profile` and vendors the accepted kernel plus selected policy mods under
-its workflow `_mods/` directory. Stage `Policy mods` lists decide which local
-policies apply. There is no binding YAML, digest registry, or runtime package
-fallback.
-
-`adopt-dev-flow` owns initial vendoring and explicit upgrades. It replaces an
-accepted canonical file byte-for-byte while local mechanisms and exceptions stay
-in the workflow README. `continue-dev-flow` reads the vendored policy and never
-installs or rewrites it. Optional controls remain off until individually declared.
-
-Ordinary continuation resolves committed product work first and does not inspect
-`_debriefs/` or `_improvements/`. Only an explicit request to harvest improvements
-loads `references/improvement-harvesting.md`. That conditional path may derive at
-most one repository-local or reusable kernel candidate from unseen immutable
-debriefs, but it cannot create tasks, admit work to a sprint, schedule, merge, or
-pause product work.
-
-At normal ideation entry, a valid work-profile receipt skips the question and
-full chooser load. A missing or stale receipt loads `choose-work-profile`; the
-Captain chooses and the repository's existing authorized actor records and
-re-reads the receipt before AC expansion. The chooser adds no workflow state or
-delivery authority.
-
-`reusable-kernel` is the version-1 transport label for a sanitized source
-handoff, not a placement verdict. `promote-dev-flow` rechecks duplicates and
-classifies rule, enforcement, local-instance, and no-change dispositions at the
-canonical source. Its deterministic intake helper preserves distinct recurrence
-and renders a captain-review-only proposal without writing repository or provider
-state.
-
-`science-officer-em` loads a stage-selected repository-local
-`_mods/engineering-judgment.md` when active. An explicit direct invocation may
-use the plugin-shipped reference for that answer only; it does not adopt the mod,
-activate stage policy, satisfy a gate, or gain provider and workflow authority.
-The skill returns `science_officer_em_upward_report` for compatibility and nests
-the complete `engineering_judgment` advisory record inside it.
-
-An adopter may separately declare `review_convergence` in `observe` mode at
-implementation exit with `provider: roborev`. It vendors
-`references/roborev-implementation-exit.md` to the repository-local path named
-by its Local Profile and commits the agent, model, reasoning, minimum severity,
-panel choice, timeout, and request/confirmation caps. `continue-dev-flow` loads
-that local provider contract only after the declaration is active. Omission
-keeps the reference unloaded and performs no RoboRev work; tool or host absence
-records a non-green fallback and does not block fresh validation. The provider
-receipt never gains validation, GitHub, or Captain delivery authority.
-
-Install the plugin through the `kc-claude-plugins` marketplace in Claude Code.
-Codex uses the co-shipped `.codex-plugin` manifest and the same skill files.
+Install through the `kc-claude-plugins` marketplace in Claude Code. Codex uses
+the co-shipped `.codex-plugin` manifest and the same skill and contract files.

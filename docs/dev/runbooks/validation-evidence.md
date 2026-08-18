@@ -1,76 +1,57 @@
 # Validation Evidence Runbook
 
-Load this runbook only when entering or re-entering `validation`. The workflow
-README owns the gate predicate; this file gives the stage-specific procedure.
+Load this runbook for Production validation, or when accepted Pilot evidence
+explicitly names it. POC never loads it. The selected profile verification
+contract owns the mission; this runbook only binds evidence to the exact change.
 
-## Bind the review
+## Bind the claim
 
-Record the exact head revision, merge-target revision, task/AC revision, paths
-read, and selected policy mods. A stale buffer, base commit, `origin/main`, and
-the worktree are different artifacts.
+Record the exact candidate revision, merge-target revision, accepted claim or
+AC revision, and the instruments that can falsify each material claim. A stale
+buffer, base commit, remote trunk, and worktree are different artifacts.
 
-For every review round, name:
-
-- what exact artifact and path it read;
-- which AC, claim, or lens it tested;
-- the concrete change to that claim that would have produced a finding.
-
-## Evidence block
-
-Write all six lines. Empty means not done. `Lenses:` and `Cross-model:` are never
-`N/A`; every permitted `N/A` includes its local reason.
+Use the smallest evidence set that can fail the accepted claims. Do not create
+empty fields, mandatory `N/A` lines, a prose transcript of routine checks, or a
+review round for an unfired risk.
 
 ```text
-Lenses: <classification; fired lenses, verdicts, finding counts, inputs, falsifiers>
-Diff coverage: <measured percent and denominator> | N/A — prose-only diff, no executable surface
-Adversarial: <attempt and result> | N/A — no behavioral guard to break
-Cross-model: recommended|not_needed — <EM decision; optional pass result if captain approved it>
-E2E: <scenario and result> | N/A — <ideation-approved docs/config/CI-only reason>
-Origin re-observation: <form below>
+Revision: <candidate and merge target>
+Accepted claims: <claim -> falsifier>
+Observed journey: <scenario and result>
+Fired risks: <only applicable risk -> evidence>
+Provider feedback: <finding disposition when a delivery artifact exists>
+Residual: <material unproved limit or none>
 ```
 
-When an accepted problem or AC came from a consumer or external runtime, use:
+## Select evidence by risk
 
-```text
-Origin re-observation: PASS|FAIL — Reported scenario: <scenario> | Originating runtime kind: <kind> | Re-observation artifact/revision: <artifact and exact revision> | Equivalent-runtime rationale: <matching actor, instrument, delivery path, configuration, and claim-relevant conditions> | Falsifier kind: refusal|mutation|existence-disproof | Result: <observed result>
-```
+- behavior: accepted journey, errors, fallback, and swallowed failures;
+- contract/schema: producer-consumer compatibility, migration, and defaults;
+- state/concurrency: ownership, interruption, retry, and duplicate delivery;
+- security/privacy: trust boundaries, credentials, disclosure, and destructive
+  scope;
+- runtime/platform: relevant OS, clock, tool, configuration, and timeout edge;
+- delivery: exact-head provider checks, version propagation, install, and
+  release surfaces.
 
-Otherwise write:
+Measure diff coverage only when it changes confidence in owned behavior. Run an
+adversarial probe only for a claimed guard. Use a specialist or complementary
+model only when the selected risk calls for it; Science Officer remains
+risk-triggered and advisory.
 
-```text
-Origin re-observation: N/A — no accepted claim originated in consumer or external runtime behavior
-```
+When an accepted claim originated in a consumer or external runtime, re-observe
+that reported scenario in the originating runtime or a justified equivalent.
+Name the actor, instrument, delivery path, configuration, claim-relevant
+conditions, exact artifact revision, and result. An unavailable runtime is
+missing evidence, not a pass.
 
-An unavailable runtime or instrument is missing evidence, not `N/A`.
+## Correction
 
-## Review lenses
+Route material failures to one implementation owner. Re-enter validation at the
+changed revision and perform one final re-verification of affected claims. If
+the same boundary fails twice, ask Chief Engineer for the next smallest delivery
+step; use Science Officer only when the underlying technical judgment is
+contested, high-risk, hard to reverse, or low confidence.
 
-Classify the diff, then run every fired lens:
-
-- behavior: acceptance path, errors, validation, fallback, swallowed failures;
-- contract/schema: producer and consumer compatibility, migrations, defaults;
-- state/concurrency: ownership, interruption, retry, duplicate delivery;
-- security/privacy: trust boundaries, credentials, disclosure, destructive scope;
-- runtime/platform: OS, locale, clock, pinned tools, timeout margin;
-- docs/policy: internal consistency, executable references, authority boundaries;
-- delivery: exact-head checks, version propagation, install and release surfaces.
-
-Diff coverage counts coverable changed behavior lines exercised by a failing
-test, runtime scenario, or direct falsifier. Prose-only diffs may be `N/A` but
-still require adversarial document review.
-
-## Correction rounds
-
-Reject with evidence tied to an AC or fired lens, route to implementation, and
-re-enter with fresh context. Rework re-anchors on the source requirement; it
-does not optimize for reviewer wording.
-
-At two consecutive rejected cycles on the same gate, the EM selects one
-recommendation for the captain when needed: another bounded correction,
-ideation reset because the shape is wrong, narrower captain-approved scope, or
-stop. Record each round's effort against the ideation appetite/tolerance; never
-extend scope or compress verification silently.
-
-Before accepting, map every changed file to an AC. Delete unmapped scope or ask
-the captain to authorize it. Preserve accepted measurement and coverage in the
-entity, but do not make token availability a delivery predicate.
+Delete unmapped implementation scope or ask the Captain to authorize it. Do not
+expand acceptance, add ceremony, or compress required proof silently.

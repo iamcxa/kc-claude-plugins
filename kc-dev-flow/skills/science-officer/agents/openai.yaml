@@ -1,0 +1,4 @@
+interface:
+  display_name: "Science Officer"
+  short_description: "Provide independent technical assurance"
+  default_prompt: "Use $science-officer to assess this contested or high-risk technical decision."

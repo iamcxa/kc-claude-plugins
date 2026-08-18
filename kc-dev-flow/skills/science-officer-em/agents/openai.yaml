@@ -1,4 +1,4 @@
 interface:
-  display_name: "Science Officer (EM)"
-  short_description: "Independent engineering judgment and costly-no"
-  default_prompt: "Use $science-officer-em to adjudicate this engineering decision and return a primary-source-grounded recommendation."
+  display_name: "Science Officer EM (Legacy)"
+  short_description: "Emit the legacy assurance report envelope"
+  default_prompt: "Use $science-officer-em only when a consumer requires the legacy Science Officer EM report envelope."

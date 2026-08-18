@@ -24,12 +24,17 @@ CANONICAL_FIELDS = (
     "base",
     "tip",
     "configuration",
+    "profile",
+    "implementation_family",
     "provider_version",
     "json_contract",
     "agent",
     "model",
     "reasoning",
     "minimum_severity",
+    "live_batch_timeout_seconds",
+    "request_cap",
+    "repair_confirmation_cap",
     "panel",
 )
 
@@ -169,8 +174,8 @@ def repository_config_complete(text: str) -> bool:
     )
 
 
-def request_allowed(kind: str, completed_for_kind: int) -> bool:
-    return kind in {"initial", "confirmation"} and completed_for_kind < 1
+def request_allowed(kind: str, completed_for_kind: int, cap: int = 1) -> bool:
+    return kind in {"initial", "confirmation"} and completed_for_kind < cap
 
 
 def authority_errors(text: str) -> list[str]:
@@ -587,12 +592,17 @@ required_stale_mutations = {
     "stale_base",
     "stale_tip",
     "stale_configuration",
+    "stale_profile",
+    "stale_implementation_family",
     "stale_provider_version",
     "stale_json_contract",
     "stale_agent",
     "stale_model",
     "stale_reasoning",
     "stale_minimum_severity",
+    "stale_live_batch_timeout",
+    "stale_request_cap",
+    "stale_repair_confirmation_cap",
     "stale_panel",
     "stale_member_identity",
     "stale_member_population_missing",
@@ -683,6 +693,10 @@ require(request_allowed("initial", 0), "initial request allowance is missing")
 require(not request_allowed("initial", 1), "second initial request survived the cap")
 require(request_allowed("confirmation", 0), "repair confirmation allowance is missing")
 require(not request_allowed("confirmation", 1), "second repair confirmation survived the cap")
+require(
+    not request_allowed("confirmation", 0, cap=0),
+    "POC unexpectedly permits a RoboRev repair confirmation",
+)
 
 reference = PLUGIN / "references/roborev-implementation-exit.md"
 adopted = ROOT / "docs/dev/runbooks/roborev-implementation-exit.md"
@@ -701,7 +715,7 @@ for phrase in [
     "supported Spacedock state transaction",
     "post-push re-read",
     "no provider re-query, enqueue, or retry",
-    "one repair confirmation",
+    "at most one changed-tip confirmation",
     "RoboRev is observation, not authority",
 ]:
     require(phrase in normalized_reference, f"provider reference is missing: {phrase}")
@@ -727,10 +741,10 @@ require(
 
 repo_config = (ROOT / ".roborev.toml").read_text(encoding="utf-8")
 for phrase in [
-    'review_agent = "codex"',
-    'review_model = "gpt-5.6-terra"',
-    'review_reasoning = "thorough"',
-    'review_min_severity = "medium"',
+    'review_agent = "claude-code"',
+    'review_model = "sonnet"',
+    'review_reasoning = "medium"',
+    'review_min_severity = "high"',
 ]:
     require(phrase in repo_config, f"repository config is missing: {phrase}")
 for forbidden in ["default_panel", "hook_review_panel", "[[hooks]]"]:
@@ -738,14 +752,18 @@ for forbidden in ["default_panel", "hook_review_panel", "[[hooks]]"]:
 
 local_profile = (ROOT / "docs/dev/README.md").read_text(encoding="utf-8")
 for phrase in [
-    "`review_convergence` in `observe` mode at implementation exit",
-    "provider RoboRev",
+    "Typed RoboRev observation at every profile's implementation exit",
+    "`build.md` supplies one typed `review_convergence`",
+    "OpenAI uses Claude Code `sonnet`",
+    "Anthropic uses Codex `gpt-5.6-terra`",
     "`.roborev.toml`",
     "`panel: none`",
-    "one exact-tip request",
-    "one changed-tip repair confirmation",
+    "| POC | `medium` | `high` | 10 minutes | `1 / 0` |",
+    "| Pilot | `medium` | `medium` | 15 minutes | `1 / 1` |",
+    "| Production | `thorough` | `medium` | 20 minutes | `1 / 1` |",
 ]:
     require(phrase in local_profile, f"Local Profile is missing ownership/cap: {phrase}")
+
 for field in ["review_agent", "review_model", "review_reasoning", "review_min_severity"]:
     mutated = "\n".join(line for line in repo_config.splitlines() if not line.startswith(f"{field} ="))
     require(

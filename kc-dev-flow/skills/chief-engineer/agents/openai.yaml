@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chief Engineer"
+  short_description: "Recommend the next smallest delivery step"
+  default_prompt: "Use $chief-engineer to recommend the next smallest integrated delivery step."
