@@ -63,10 +63,11 @@ README as a policy bundle.
 | Normal delivery advice | `kc-dev-flow:chief-engineer`, only on its bounded triggers |
 | Independent assurance | `kc-dev-flow:science-officer`, only on its bounded triggers |
 | Optional observation | Typed RoboRev observation at every profile's implementation exit; `docs/dev/runbooks/roborev-implementation-exit.md` |
-| Conditional references | `docs/dev/_mods/reverse-recovery-audit.md`; `docs/dev/_mods/journey-slicing.md`; `docs/dev/_mods/retained-document-policy.md`; `docs/dev/_mods/project-context-maintenance.md` |
-| PR lifecycle | Spacedock `pr-merge`, only when a PR is the selected delivery artifact |
+| Conditional references | `docs/dev/_mods/reverse-recovery-audit.md`; `docs/dev/_mods/journey-slicing.md`; `docs/dev/_mods/retained-document-policy.md`; `docs/dev/_mods/project-context-maintenance.md`; `docs/dev/_mods/delivery-branch-base.md`; `docs/dev/_mods/pr-delivery.md` |
+| Delivery branch base | `delivery_artifact_review` is true: this repository delivers through GitHub PRs. An open unmerged PR carrying work the candidate builds on is the default base. Trunk-basing needs checked independence and a recorded reason. |
+| PR lifecycle | Spacedock `pr-merge`, only when a PR is the selected delivery artifact. It owns the ceremony, so `pr_delivery_selected` stays false and `pr-delivery.md` is not loaded here. |
 
-The loader, shared core, profile contracts, and four conditional references are
+The loader, shared core, profile contracts, and six conditional references are
 vendored from `kc-dev-flow`.
 `scripts/kc-dev-flow-contract-test.py` checks their package/adopter identity and
 every supported profile-stage combination.

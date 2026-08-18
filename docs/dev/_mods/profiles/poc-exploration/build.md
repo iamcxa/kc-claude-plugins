@@ -13,6 +13,16 @@ Build the smallest end-to-end path that can answer the experiment's question.
   "schema": "kc-dev-flow-conditional-references/v1",
   "references": [
     {
+      "path": "../../delivery-branch-base.md",
+      "trigger": "delivery_artifact_review",
+      "receipt": null
+    },
+    {
+      "path": "../../pr-delivery.md",
+      "trigger": "pr_delivery_selected",
+      "receipt": null
+    },
+    {
       "path": "../../reverse-recovery-audit.md",
       "trigger": "brownfield_capability_change",
       "receipt": "reverse_recovery"
