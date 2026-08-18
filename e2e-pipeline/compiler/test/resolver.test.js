@@ -257,6 +257,88 @@ test('resolve: explicit missing page qualifier returns page-not-found with page 
   });
 });
 
+// ---------------------------------------------------------------------------
+// #189 — the click grammar is anchored, so no click action is accepted on a prefix
+//
+// `fill` has always been anchored (`/^Fill…$/`); `click` was not, so the engine was
+// free to match a prefix and report success. Every test below fails if either the
+// `^` or the `$` is removed from ACTION_PARSERS.click.pattern.
+// ---------------------------------------------------------------------------
+
+describe('#189 anchored click grammar', () => {
+  function resolveClick(action) {
+    return resolve(
+      { name: 'test-click-grammar', steps: [{ id: 'the-click', type: 'click', action: action }] },
+      SIMPLE_MAPPING
+    );
+  }
+
+  test('trailing content beyond the grammar is refused, not silently discarded', () => {
+    const result = resolveClick('Click login_button on login extra');
+    assert.equal(
+      result.errors[0],
+      "Step 'the-click': action string does not match expected format for type 'click'. Got: Click login_button on login extra"
+    );
+    assert.equal(result.errors.length, 1);
+    assert.equal(result.resolved.steps.length, 0, 'a refused action must not produce a step');
+  });
+
+  test('leading content before the grammar is refused, not skipped over', () => {
+    // Pins the `^`. With only the `$`, the engine may start the match at the first
+    // `Click` it finds and consume the prefix silently — "fully consumed" has to mean
+    // both ends, so both anchors need a test that fails without them.
+    const result = resolveClick('Please Click login_button on login');
+    assert.equal(
+      result.errors[0],
+      "Step 'the-click': action string does not match expected format for type 'click'. Got: Please Click login_button on login"
+    );
+    assert.equal(result.resolved.steps.length, 0);
+  });
+
+  test('a dropped page qualifier cannot resolve the element off the named page', () => {
+    // The sharp edge. `heading` exists only on `dashboard`. Unanchored, `\w+` binds
+    // `heading`, the `(` stops the optional ` on <page>` group from matching, and
+    // ` on login` is discarded — so page arrives as null, the lookup falls back to a
+    // global search, and the step resolves CLEANLY to dashboard's heading. The page
+    // qualifier did not merely vanish; it defeated the page-scoping gate that
+    // 'explicit page qualifier rejects element found only on another real page'
+    // (above) proves is otherwise enforced.
+    const result = resolveClick('Click heading(id=1) on login');
+    assert.ok(result.errors.length > 0, 'must not resolve a click whose page qualifier was dropped');
+    assert.equal(result.resolved.steps.length, 0);
+  });
+
+  test('the parameterized element form is refused by name, not generically', () => {
+    const result = resolveClick('Click row(id=7) on list');
+    assert.equal(result.errors.length, 1);
+    const message = result.errors[0];
+    assert.match(message, /^Step 'the-click':/);
+    assert.match(message, /element\(param=value\)/, 'must name the form the author actually wrote');
+    assert.match(message, /\/e2e-test/, 'must name the executor that does support the form');
+    assert.doesNotMatch(
+      message,
+      /does not match expected format/,
+      'the generic mismatch text leaves the author guessing which token was wrong'
+    );
+    assert.deepEqual(result.errorDetails[0], { message: message });
+    assert.equal(result.resolved.steps.length, 0);
+  });
+
+  test('control: the anchored form still binds both element and page', () => {
+    const result = resolveClick('Click heading on dashboard');
+    assert.deepEqual(result.errors, []);
+    assert.equal(result.resolved.steps[0].operands.element, 'heading');
+    assert.equal(result.resolved.steps[0].operands.page, 'dashboard');
+  });
+
+  test('control: a click with no page qualifier still binds page null', () => {
+    const result = resolveClick('Click sidebar_home');
+    assert.deepEqual(result.errors, []);
+    assert.equal(result.resolved.steps[0].operands.element, 'sidebar_home');
+    assert.equal(result.resolved.steps[0].operands.page, null);
+  });
+});
+
 test('resolve: _global elements resolve from any explicit real page', () => {
   const mapping = {
     version: 2,
@@ -1341,10 +1423,15 @@ describe('errorDetails — additive structured channel', () => {
 
   test('an unresolved ${...} surviving into a click selector is refused', () => {
     // The expect path has guarded this since #91 (resolver.js, resolveVisibilityElement).
-    // The action path did not, and `Click row(id=7)` does not even reach substitution:
-    // the click pattern's `\w+` cannot match `row(id=7)` and is unanchored, so it binds
-    // `row`, drops the parameters, and emits `[data-testid="row-${id}"]` to the DOM.
-    // Compiling it produced zero errors, which is how it was mistaken for safe.
+    // The action path did not, and emitted `[data-testid="row-${id}"]` to the DOM with
+    // zero errors, which is how it was mistaken for safe.
+    //
+    // #184 originally drove this through `Click row(id=7) on list`, which only reached
+    // the guard because the click pattern was unanchored and quietly dropped `(id=7)`.
+    // #189 anchored the pattern, so that string is now refused by name at parse time
+    // (see '#189 anchored click grammar' above) and no longer exercises THIS guard.
+    // The input below is the case the guard actually owns and always did: a plain
+    // reference to an element whose mapping selector is a template nothing fills in.
     const TEMPLATE_MAPPING = {
       version: 2,
       app: 'tpl',
@@ -1360,7 +1447,7 @@ describe('errorDetails — additive structured channel', () => {
     };
     const result = resolve({
       name: 'test-click-template',
-      steps: [{ id: 'hit', type: 'click', action: 'Click row(id=7) on list' }],
+      steps: [{ id: 'hit', type: 'click', action: 'Click row on list' }],
     }, TEMPLATE_MAPPING);
     assert.equal(result.errors.length, 1);
     assert.match(result.errors[0], /unresolved selector parameter/);
@@ -1481,7 +1568,9 @@ describe('cross-site traversal carries the same refusals', function() {
     const result = resolveMultiSite({
       name: 'cross-site-template',
       sites: { office: { mapping: 'tpl-a' } },
-      steps: [{ id: 'hit', site: 'office', type: 'click', action: 'Click row(id=7) on list' }],
+      // Plain reference, not `row(id=7)` — see the single-site twin above for why #189
+      // moved the parameterized form to its own, earlier diagnostic.
+      steps: [{ id: 'hit', site: 'office', type: 'click', action: 'Click row on list' }],
     }, TEMPLATE_SITE_MAPPINGS);
     assert.equal(result.errors.length, 1);
     assert.match(result.errors[0], /unresolved selector parameter/);
@@ -1495,6 +1584,34 @@ describe('cross-site traversal carries the same refusals', function() {
     }, TEMPLATE_SITE_MAPPINGS);
     assert.equal(result.errors.length, 1);
     assert.match(result.errors[0], /never interpolate/);
+  });
+
+  test('the parameterized element form is refused by name on the cross-site walk', function() {
+    // The cross-site twin of "the parameterized element form is refused by name, not
+    // generically" (#189 anchored click grammar, above). Without this test nothing in the
+    // suite reaches resolveMultiSite's parse-refusal branch: it was uncovered before #189
+    // and after it, and the diff moved the last cross-site input carrying the
+    // parameterized form onto the plain `Click row on list` reference two tests up.
+    const result = resolveMultiSite({
+      name: 'cross-site-parameterized',
+      sites: { office: { mapping: 'tpl-a' } },
+      steps: [{ id: 'hit', site: 'office', type: 'click', action: 'Click row(id=7) on list' }],
+    }, TEMPLATE_SITE_MAPPINGS);
+    assert.equal(result.errors.length, 1);
+    const message = result.errors[0];
+    assert.match(message, /^Step 'hit':/, 'must name the step the author has to go edit');
+    assert.match(message, /element\(param=value\)/, 'must name the form the author actually wrote');
+    assert.match(message, /\/e2e-test/, 'must name the executor that does support the form');
+    assert.doesNotMatch(
+      message,
+      /does not match expected format/,
+      'the generic mismatch text leaves the author guessing which token was wrong'
+    );
+    assert.deepEqual(result.errorDetails[0], { message: message });
+    // Arrangement check, not a behaviour claim: green under every neuter of the branch
+    // tried in the RED record, because each one still skips the step. It is here so a
+    // later green cannot be read as "refused AND emitted anyway".
+    assert.equal(result.resolved.steps.length, 0);
   });
 
   test('the same cross-site flow without templates still resolves clean', function() {
