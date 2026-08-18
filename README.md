@@ -67,7 +67,9 @@ Session lifecycle & context efficiency. Detects context pressure and enforces cl
 
 Team operations pipeline for engineering managers. EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, and **cross-model second opinion** via Google's agy / Antigravity CLI (`/gemini review|challenge|consult` — same usage as `/codex`, routed through Google's `agy` for a non-OpenAI outside voice; participates in a gstack cross-model review dashboard when gstack is installed).
 
-**Use when:** You're an EM running triage on Linear issues, drafting weekly pulse updates, decomposing oversized issues with team context, or want an independent cross-model review / adversarial challenge / consult from Gemini.
+Also draws **user journey maps from the code** (`kc-journey-map`) — three lanes per step (what a person does / what the system does / what must stay true), every system claim cited to a `file:line` read that session, and a mandatory status card naming what is unproven, unmerged, or undeployed. Renders to FigJam when a Figma file is available, and always to a self-contained HTML + PNG.
+
+**Use when:** You're an EM running triage on Linear issues, drafting weekly pulse updates, decomposing oversized issues with team context, checking a journey map against what the code actually does, or want an independent cross-model review / adversarial challenge / consult from Gemini.
 
 **Prerequisite:** Linear MCP enabled.
 

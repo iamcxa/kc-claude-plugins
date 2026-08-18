@@ -83,7 +83,7 @@
     {
       "name": "kc-team-ops",
       "source": "./kc-team-ops",
-      "description": "Team operations pipeline — EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review, and on-demand cross-model second opinion via Google's agy / Antigravity CLI (/gemini review|challenge|consult)",
+      "description": "Team operations pipeline — EM triage with strategic lens (depth-adaptive routing, team context cache), project pulse updates, codebase exploration, issue decomposition, structured Linear management, EM plan/project review (keystone verification + cross-model pressure-test), evidence-cited user journey maps checked against the code (FigJam or HTML/PNG), and on-demand cross-model second opinion via Google's agy / Antigravity CLI (/gemini review|challenge|consult)",
       "version": "1.5.0",
       "keywords": [
         "team-ops",
@@ -97,9 +97,13 @@
         "strategic-lens",
         "context-cache",
         "plan-review",
+        "keystone-verification",
         "gemini",
         "cross-model",
-        "second-opinion"
+        "second-opinion",
+        "journey-map",
+        "user-journey",
+        "figjam"
       ]
     },
     {
