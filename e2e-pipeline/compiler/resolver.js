@@ -10,7 +10,13 @@ const ACTION_PARSERS = {
     extract: function(m) { return { target: m[1].trim() }; },
   },
   click: {
-    pattern: /Click\s+(\w+)(?:\s+on\s+([\w-]+))?/i,
+    // Anchored, like `fill` below. Unanchored, the engine was free to match a prefix
+    // and report success: `Click heading(id=1) on login` bound element `heading`, was
+    // stopped by the `(` before the optional ` on <page>` group could match, and threw
+    // away ` on login` — so the page arrived null, the lookup fell back to a global
+    // search, and the step resolved cleanly against a DIFFERENT page's element. The
+    // qualifier did not just vanish, it defeated the page-scoping gate (#189).
+    pattern: /^Click\s+(\w+)(?:\s+on\s+([\w-]+))?$/i,
     extract: function(m) { return { element: m[1], page: m[2] || null }; },
   },
   fill: {
@@ -123,6 +129,43 @@ function unmatchedExpectDetail(stepId, raw, message) {
   };
 }
 
+/**
+ * Name the `element(param=value)` form when a click uses it, instead of reporting a
+ * bare grammar mismatch.
+ *
+ * `agents/e2e-test-runner.md` documents `Click <element(param=val)> on <loc>` as
+ * supported, and on that executor it is: the agent runner substitutes the parameters
+ * into the mapping selector's `${...}` placeholders. Compilation substitutes selector
+ * parameters on the `expect:` side only — `resolveVisibilityElement` runs
+ * `parseElementReference` + `substituteSelectorTemplate`; the action side
+ * (`resolvedActionElement`) reads neither. So the same mapping is parameterizable in an
+ * assertion and not in a click.
+ *
+ * Anchoring the pattern turns that into a mismatch, which is already an improvement on
+ * silently discarding the parameters. But "does not match expected format" points at the
+ * whole string and names no token, and the author has no way to see the regex it failed.
+ * Saying which form was used, and which executor does honour it, is the difference
+ * between a diagnostic and a shrug.
+ *
+ * Returns a message, or null when this is not the parameterized shape.
+ */
+function parameterizedClickError(action, stepId) {
+  var match = /^Click\s+([A-Za-z_][A-Za-z0-9_]*)\([^)]*\)/i.exec(action);
+  if (!match) return null;
+  // The literal characters are the point: the message names the placeholder the author
+  // wrote in their mapping, so it must not become a template string.
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: quoting the author's placeholder
+  var placeholder = '`${param}`';
+  return "Step '" + stepId + "': click on a parameterized element reference is not " +
+    'supported by the compiler. Got: ' + action +
+    '. The `element(param=value)` form substitutes ' + placeholder + ' into the mapping selector ' +
+    'on the /e2e-test agent runner, which does support it; /e2e-compile substitutes ' +
+    'selector parameters in `expect:` entries only, never on a click action — so the ' +
+    'parameters would reach the DOM call unsubstituted. Click an element whose selector ' +
+    'is literal (`Click ' + match[1] + ' on <page>`), or assert the parameterized ' +
+    'element through an `expect:` entry.';
+}
+
 function parseActionString(type, action, stepId) {
   var parser = ACTION_PARSERS[type];
   if (!parser) {
@@ -131,6 +174,12 @@ function parseActionString(type, action, stepId) {
   }
   var match = parser.pattern.exec(action);
   if (!match) {
+    if (type === 'click') {
+      var parameterizedMsg = parameterizedClickError(action, stepId);
+      if (parameterizedMsg) {
+        return { error: parameterizedMsg, detail: tier2Detail(parameterizedMsg) };
+      }
+    }
     var formatMsg = "Step '" + stepId + "': action string does not match expected format for type '" + type + "'. Got: " + action;
     return { error: formatMsg, detail: tier2Detail(formatMsg) };
   }
@@ -464,12 +513,19 @@ function resolvedActionElement(resolved) {
  * The expect path has refused this since #91 (`resolveVisibilityElement`); the action
  * path did not, so the same mapping was safe to assert against and unsafe to click.
  *
- * Nothing supplies the parameter on this path at all: the click pattern's `\w+` cannot
- * match `row(id=7)` and is unanchored, so it binds `row`, silently discards both the
- * parameters and the ` on <page>` qualifier, and `substituteSelectorTemplate` never
- * runs. `agents/e2e-test-runner.md:272` documents that form as substituted, so the
- * artifact carried a literal `${id}` while the agent runner resolved it — the same
+ * Nothing supplies the parameter on this path at all: `substituteSelectorTemplate` runs
+ * only for `expect:` entries (`resolveVisibilityElement`), never for an action, so a
+ * templated mapping selector reaches the DOM call with its braces intact.
+ * `agents/e2e-test-runner.md:272` documents the parameterized form as substituted, so
+ * the artifact carried a literal `${id}` while the agent runner resolved it — the same
  * divergence as an uninterpolated fill value, one layer down.
+ *
+ * #184 wrote this paragraph describing `Click row(id=7)` reaching here because the click
+ * pattern was unanchored and dropped `(id=7)`. #189 anchored the pattern, so that string
+ * is now refused by name at parse time (`parameterizedClickError`) and never arrives.
+ * What still arrives — and is why this guard is not dead — is a plain `Click row` or
+ * `Fill row …` against a templated selector, where nothing was discarded and nothing
+ * fills the template in.
  *
  * Measured against the reference corpus before changing behaviour: 355 mapping
  * elements, 4 carrying `${...}`, 45 flows, and **0** click or fill actions targeting
@@ -481,11 +537,11 @@ function unresolvedActionSelectorError(operands, stepId) {
   if (!pattern.test(operands.selector || '') && !pattern.test(operands.cssSelector || '')) {
     return null;
   }
-  // State the condition, not the cause. Only one of the three ways to reach this
-  // message involves discarded parameters (a click written as `row(id=7)`, #189);
-  // for a bare `Click row` — or any `Fill`, whose pattern is anchored and rejects
-  // the parameterized form outright — nothing was discarded and the author would be
-  // sent looking for a parser bug they did not hit.
+  // State the condition, not the cause. Since #189 anchored the click pattern, no route
+  // that reaches this message involves discarded parameters: `row(id=7)` is refused
+  // earlier by name, and a bare `Click row` — or any `Fill`, anchored all along —
+  // discarded nothing. Naming a parser bug here would send the author hunting one they
+  // did not hit.
   return "Step '" + stepId + "': unresolved selector parameter for " +
     JSON.stringify(operands.cssSelector || operands.selector) +
     '. Nothing supplies a selector parameter on a click or fill action — only an' +

@@ -42,15 +42,17 @@ name: e2e-pipeline real browser
 # and an install-flake surface to a gate whose value depends on being believed, and the
 # argv-level question a PR needs answered is #180's, not this one's.
 #
-# The scope decision is a separate cheap job so the reported check exists on every pull
-# request. A path-filtered required check never reports on a PR it does not match, which
-# leaves that PR pending forever — the failure mode this shape avoids.
+# The PR trigger is path-scoped and the macOS job is further limited to the
+# same-repository release PR. This workflow is advisory, not a required check.
 
 on:
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
   pull_request:
+    paths:
+      - "e2e-pipeline/**"
+      - ".github/workflows/e2e-pipeline-real-browser.yml"
 
 permissions:
   contents: read
@@ -60,64 +62,11 @@ defaults:
     working-directory: e2e-pipeline
 
 jobs:
-  scope:
-    name: decide whether the real browser is needed
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      run: ${{ steps.decide.outputs.run }}
-      reason: ${{ steps.decide.outputs.reason }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Decide
-        id: decide
-        working-directory: .
-        # head_ref and base_ref go through env rather than into the script text:
-        # a branch name is attacker-controllable on a fork PR, and `${{ }}` inside
-        # `run:` is textual substitution.
-        env:
-          EVENT: ${{ github.event_name }}
-          HEAD_REF: ${{ github.head_ref }}
-          BASE_REF: ${{ github.base_ref }}
-          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
-          THIS_REPO: ${{ github.repository }}
-        run: |
-          set -euo pipefail
-          if [ "$EVENT" != 'pull_request' ]; then
-            printf 'run=true\nreason=%s trigger\n' "$EVENT" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          # A fork's branch can be named anything, including the release branch's name.
-          # Without this, any returning contributor can light up a 20-minute macos-latest
-          # job — 10x minutes — by naming a branch and touching e2e-pipeline/. This is
-          # `pull_request`, so the token is read-only and no secret is exposed; the cost
-          # is compute, and one condition removes it.
-          if [ "$HEAD_REPO" != "$THIS_REPO" ]; then
-            printf 'run=false\nreason=fork pull request\n' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if [ "$HEAD_REF" != 'release-please--branches--main' ]; then
-            printf 'run=false\nreason=not the release pull request\n' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          # `|| true` swallows a git failure into changed=0, which reads as "release does
-          # not touch e2e-pipeline" and skips the gate. Left as is: checkout fetches
-          # +refs/heads/*:refs/remotes/origin/*, so origin/$BASE_REF is reliably present,
-          # and `grep -c` legitimately exits 1 on zero matches. Recorded, not defended.
-          changed=$(git diff --name-only "origin/$BASE_REF...HEAD" -- e2e-pipeline | grep -c . || true)
-          if [ "$changed" -eq 0 ]; then
-            printf 'run=false\nreason=release does not touch e2e-pipeline\n' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          printf 'run=true\nreason=release pull request touching e2e-pipeline (%s files)\n' "$changed" >> "$GITHUB_OUTPUT"
-
   real-browser:
-    needs: scope
-    if: needs.scope.outputs.run == 'true'
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+      github.head_ref == 'release-please--branches--main')
     # macOS because that is where the runtime currently works. When #174 closes, this
     # should move to (or add) Linux — the point of the job is to catch what a stub cannot,
     # and a single platform is how #110 came to be closed on one machine's evidence.
@@ -157,7 +106,11 @@ jobs:
         run: |
           set -euo pipefail
           agent_browser=$(agent-browser --version 2>&1 | head -1)
-          browsers=$(ls ~/.agent-browser/browsers 2>/dev/null | tr '\n' ' ')
+          browsers=''
+          if [ -d "$HOME/.agent-browser/browsers" ]; then
+            browsers=$(find "$HOME/.agent-browser/browsers" -mindepth 1 -maxdepth 1 \
+              -exec basename {} \; | sort | tr '\n' ' ')
+          fi
           printf 'agent_browser=%s\n' "$agent_browser" >> "$GITHUB_OUTPUT"
           printf 'browsers=%s\n' "${browsers:-none}" >> "$GITHUB_OUTPUT"
           printf '%s\nbrowsers: %s\n' "$agent_browser" "${browsers:-none}"
@@ -168,48 +121,10 @@ jobs:
         # three of three serial runs passed.
         run: npm run test:real
 
-  proofs:
-    # The reported check. It exists on every pull request, including those where the
-    # browser job never ran, so it can be made a required check without leaving
-    # non-release pull requests pending forever.
-    name: real-browser proofs
-    needs: [scope, real-browser]
-    if: always()
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Verdict
-        working-directory: .
-        env:
-          SCOPE_RESULT: ${{ needs.scope.result }}
-          SCOPE_RUN: ${{ needs.scope.outputs.run }}
-          SCOPE_REASON: ${{ needs.scope.outputs.reason }}
-          BROWSER_RESULT: ${{ needs.real-browser.result }}
-        run: |
-          set -euo pipefail
-          # Fail closed. A failed or cancelled `scope` job produces empty outputs, and
-          # `always()` still runs this one — so without this the check reads "" != "true",
-          # prints "not required", and goes green precisely when its own gate is broken.
-          # That is the state in which a release would ship with no browser having run.
-          if [ "$SCOPE_RESULT" != 'success' ]; then
-            printf 'scope job did not succeed (%s) — cannot tell whether the proofs were needed\n' \
-              "$SCOPE_RESULT" >&2
-            exit 1
-          fi
-          if [ "$SCOPE_RUN" != 'true' ]; then
-            printf 'not required for this pull request: %s\n' "$SCOPE_REASON"
-            exit 0
-          fi
-          if [ "$BROWSER_RESULT" != 'success' ]; then
-            printf 'real-browser proofs did not pass (%s): %s\n' "$BROWSER_RESULT" "$SCOPE_REASON" >&2
-            exit 1
-          fi
-          printf 'real-browser proofs passed: %s\n' "$SCOPE_REASON"
-
   report-failure:
     # Only for runs nobody is looking at. A failure on the release pull request is
     # already in front of a reader; filing an issue for it would be noise.
-    needs: [scope, real-browser]
+    needs: real-browser
     if: always() && needs.real-browser.result == 'failure' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
