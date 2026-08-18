@@ -17,6 +17,43 @@ design:
 lane:
 ---
 
+## Work profile receipt
+
+```yaml
+work_profile:
+  schema: kc-dev-flow-work-profile/v2
+  selected: pilot-product-slice
+  recommended: pilot-product-slice
+  basis: >-
+    This is a durable, limited-use regression gate for one compiler journey. It
+    creates persistent repository value but changes no compiler behavior,
+    credential, production data, external mutation, unattended operation, or
+    public compatibility boundary.
+  route: [shape, build, verify-deliver]
+  obligations:
+    architecture:
+      - Choose the smallest observable seam that makes a dropped generated wait falsifiable.
+      - Reuse the existing happy-path PATH-stub boundary without creating a second test framework.
+    implementation:
+      - Keep the candidate test-only and leave compiler and generated-runtime behavior unchanged.
+      - Observe sleep argv independently from browser argv for the single accepted wait boundary.
+    testing:
+      - Prove deletion of the fixture wait fails only the newly owned observation.
+      - Run focused and full portable suites at the exact candidate revision.
+      - Prove the candidate merges cleanly with current main before delivery.
+  scope_boundary: >-
+    No compiler code change, general fake-clock abstraction, cross-channel
+    ordering guarantee, real-browser claim, CI trigger change, release surface,
+    or additional harness beyond the PR #254 candidate.
+  promote_when:
+    - The sleep observer becomes a shared compatibility surface outside this happy-path test.
+    - Accepted scope requires relative ordering across browser and sleep channels.
+    - A production runtime, CI trigger, or operational commitment enters scope.
+  decision:
+    authority: Captain Kent
+    at: 2026-08-18T08:54:13Z
+```
+
 ## Problem
 
 `happy-path.test.js` now executes the compiled script against a stubbed
