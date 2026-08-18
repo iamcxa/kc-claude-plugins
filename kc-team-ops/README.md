@@ -41,6 +41,7 @@ Required plugins:
 - **kc-em-triage** — Main orchestrator with strategic lens. Depth-adaptive triage: EM Lens entry → explore → deliberate → EM Lens exit → discuss → post.
 - **kc-em-sync** — Team context sync. Fetches initiatives, projects, members, cycles, customers from Linear into `~/.claude/kc-team-ops/<team>-context.yaml`.
 - **kc-project-pulse** — Project status update drafting and posting to Linear.
+- **kc-journey-map** — Draw a user journey from the code, or check an existing journey against it. Three lanes per step (person / system / invariant), every system claim cited to `file:line`, and a mandatory status card for what is unproven, unmerged, or undeployed. FigJam when available, self-contained HTML + PNG otherwise.
 
 ### Agents
 
