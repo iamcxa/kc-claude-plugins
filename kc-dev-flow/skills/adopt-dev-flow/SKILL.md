@@ -32,7 +32,9 @@ repair the cheapest compatible seam.
    the exact work item so simultaneous items cannot borrow each other's route.
 4. Map the logical routes to the runtime. A runtime with one superset graph uses:
    POC `implementation -> validation`; Pilot adds `ideation`; Production adds
-   `release`. Backlog and done remain non-working states.
+   `release`. Backlog and done remain non-working states. Preserve an extra
+   local terminal state only through an explicit mapping; it does not silently
+   join every profile route.
 5. Make each working stage a small loader invocation or pointer. Load a
    conditional reference only when the selected stage predicate fires. At
    implementation exit, use only the selected typed observation emitted by the
@@ -60,6 +62,12 @@ new loader. When its basis is unchanged, migrate it mechanically to v2 with the
 same selection and derived route; do not ask the Captain to repeat the choice.
 Re-select only when its basis is stale. Do not reopen completed work solely to
 migrate a receipt.
+
+An older explicit Captain choice outside the v1 schema may also migrate without
+another question only when the exact work item names the selected profile, the
+Captain as its authority, and an unchanged basis. Record those legacy sources,
+set the canonical route, and use the selected profile as the prior
+recommendation. A missing, ambiguous, or stale element requires a new selection.
 
 Retire old source mods by disposition, not by filename alone:
 

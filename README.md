@@ -101,6 +101,9 @@ checks and named owners retain their scoped gates. The legacy
 **Use when:** You want proportional development rigor without making an
 experiment load or execute a Production workflow.
 
+Existing 2.x adopters must follow the [profile-native migration guide](./kc-dev-flow/MIGRATION.md)
+before updating the installed plugin used for ordinary continuation.
+
 ```bash
 /plugin install kc-dev-flow@kc-claude-plugins
 ```

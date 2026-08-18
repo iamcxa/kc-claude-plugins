@@ -4,6 +4,15 @@ KC Dev Flow supplies one minimal authority core and three profile-native deliver
 routes. A repository keeps its own tracker, iteration authority, workflow
 runtime, and delivery provider.
 
+## Breaking upgrade from 2.x
+
+Profile-native loading changes the receipt schema, lifecycle routes, role
+semantics, and required local loader. Existing adopters must complete the
+[2.x migration](./MIGRATION.md) before updating the installed plugin used for
+ordinary continuation; a partially upgraded adopter fails closed. The
+[design rationale](./RATIONALE.md) records the observed pain, trade-offs,
+directional evidence, and conditions that would falsify this direction.
+
 ## Routes
 
 | Profile | Working route | Intended result |

@@ -62,6 +62,8 @@ profile_observation_limits = {
 required = [
     "kc-dev-flow/.claude-plugin/plugin.json",
     "kc-dev-flow/.codex-plugin/plugin.json",
+    "kc-dev-flow/MIGRATION.md",
+    "kc-dev-flow/RATIONALE.md",
     "kc-dev-flow/references/kernel.md",
     "kc-dev-flow/references/reverse-recovery-audit.md",
     "kc-dev-flow/references/journey-slicing.md",
@@ -376,6 +378,10 @@ chief = read(skills["chief-engineer"])
 science = read(skills["science-officer"])
 legacy = read(skills["science-officer-em"])
 adopter = read(skills["adopt-dev-flow"])
+migration = read("kc-dev-flow/MIGRATION.md")
+rationale = read("kc-dev-flow/RATIONALE.md")
+normalized_adopter = " ".join(adopter.split())
+normalized_rationale = " ".join(rationale.split())
 normalized_chooser = " ".join(chooser.split())
 normalized_continue = " ".join(continue_skill.split())
 normalized_chief = " ".join(chief.split())
@@ -407,6 +413,27 @@ for phrase in [
 require("fresh-context EM verdict" not in continue_skill, "continuation still mandates EM")
 for retired in ["`engineering-judgment.md`", "`work-control-profile.md`"]:
     require(retired in adopter, f"adopter omits retired-mod disposition: {retired}")
+for phrase in [
+    "older explicit Captain choice outside the v1 schema",
+    "extra local terminal state only through an explicit mapping",
+]:
+    require(phrase in normalized_adopter, f"adopter omits migration rule: {phrase}")
+for phrase in [
+    "breaking upgrade",
+    "one coordinated cutover",
+    "leave completed and archived items unchanged",
+    "finding-only terminal",
+]:
+    require(phrase in migration, f"migration guide omits: {phrase}")
+for phrase in [
+    "The first version of KC Dev Flow",
+    "carrying the whole workshop",
+    "kc-dev-flow-work-profile/v2",
+    "directional evidence",
+    "What would prove this wrong",
+    "Load the work, not the ceremony",
+]:
+    require(phrase in normalized_rationale, f"rationale omits: {phrase}")
 
 for phrase in [
     "next smallest integrated step",
@@ -449,6 +476,12 @@ require(
 require(
     "cognitive cue, not another agent, review, or gate" in package_readme,
     "package README overstates stage-role authority",
+)
+require("[2.x migration](./MIGRATION.md)" in package_readme, "package README omits migration guide")
+require("[design rationale](./RATIONALE.md)" in package_readme, "package README omits rationale")
+require(
+    "[profile-native migration guide](./kc-dev-flow/MIGRATION.md)" in root_readme,
+    "root README omits migration guide",
 )
 for phrase in [
     "conditional brownfield recovery",
