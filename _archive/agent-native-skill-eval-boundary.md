@@ -3,12 +3,15 @@ title: Prove one agent-native skill evaluation boundary
 source: comment-retention-discipline UNKNOWN receipts, 2026-08-15 and Captain continuation on 2026-08-16
 product: kc-dev-flow
 sprint:
-status: implementation
+status: done
 design: required
 lane: main
 id: 2yrthe1tx7v4zmawgs1bqpkx
 started: 2026-08-16T06:45:51Z
-worktree: .worktrees/spacedock-ensign-agent-native-skill-eval-boundary
+worktree:
+completed: 2026-08-18T08:15:48Z
+verdict: no-go
+archived: 2026-08-18T08:16:41Z
 ---
 
 ## Work profile receipt
@@ -426,3 +429,10 @@ This entity remains nonterminal because the commissioned workflow has no
 honest cancelled/no-go terminal and its `done` path requires delivered
 `PASSED` evidence. Do not fabricate a PR, merge timestamp, or success verdict
 to archive it.
+
+## State reconciliation — 2026-08-18
+
+Captain-authorized stale-state reconciliation maps the already accepted POC
+stop to terminal `done` with verdict `no-go`. This is lifecycle cleanup, not a
+delivery or PASS claim: the experiment remains `UNKNOWN/no-go`, produced no
+product change, and earned no retry, promotion, PR, or merge evidence.

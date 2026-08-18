@@ -1,19 +1,20 @@
 ---
 title: "Teach agents to retain only comments with maintenance value"
-status: implementation
+status: done
 source: "Captain-approved independent kc-dev-flow/S3 slice, 2026-08-15; does not alter the existing projection sequence"
 product: kc-dev-flow
 sprint: S3
 started: 2026-08-15T12:03:26Z
-completed:
-verdict:
-worktree: .worktrees/spacedock-ensign-comment-retention-discipline
+completed: 2026-08-18T08:15:48Z
+verdict: no-go
+worktree:
 issue:
 pr:
 mod-block:
 design: required
 lane: main
 id: hpxks7c1kndqqhhr38kzna6q
+archived: 2026-08-18T08:16:41Z
 ---
 
 ## Problem
@@ -844,3 +845,10 @@ changes, and that preservation constraint passed. The response still rewrote
 narration and lost a required external constraint, so the fail-closed contract
 ends this task without a kernel or documentation change, retained test surface,
 commit, push, or PR.
+
+## State reconciliation — 2026-08-18
+
+Captain-authorized stale-state reconciliation maps the recorded permanent stop
+to terminal `done` with verdict `no-go`. This is lifecycle cleanup, not a PASS
+or delivery claim: the bounded smoke failed closed, the repository product was
+not changed, and no retry, PR, or merge evidence is implied.
