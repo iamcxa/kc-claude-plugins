@@ -1,6 +1,6 @@
 ---
 title: Route review-runtime CI by the contract a change can affect
-status: validation
+status: release
 product: kc-pr-flow
 sprint:
 source: Captain direction after PR 249 CI review, 2026-08-18
@@ -8,7 +8,7 @@ design: required
 started: 2026-08-18T03:28:12Z
 worktree: .context/worktrees/review-runtime-ci-routing
 id: ntrtwg834txp70x6sqv27fke
-pr: "#251"
+pr: pr-merge:253
 ---
 
 The `typed review runtime contract` job takes about eleven minutes and currently
@@ -79,3 +79,28 @@ validation plus one PR run showing the fast path and no missing required check;
 the PR records before/after selected jobs and wall time. Falsified by: a skipped
 path leaves a required check pending or the fast path still executes the full
 behavioral suite.
+
+## Validation and release closeout
+
+**Decision: passed with one Captain-accepted historical delivery residual.**
+
+- PR #251 delivered the capability-owned runtime, shadow, posting, and
+  evaluation routes. PR #253 delivered the repository-write owner, repo-wide
+  workflow lint, and symmetric cross-model route at exact head
+  `53c08eab4a42e3cc31731a86bbfcad691d93a54f`.
+- PR #253 selected only its relevant contracts: cross-model and repository-write
+  each passed in 5 seconds, review CI routing passed in 19 seconds, and version
+  parity passed in 20 seconds. Typed review runtime and e2e-pipeline suites were
+  absent, proving the unrelated fast path rather than inferring it from green.
+- Local routing, actionlint, cross-model `68/68`, and repository-write `53/53`
+  checks passed. GitHub reports no external review, thread, or PR-comment
+  population on PR #251 or #253.
+- GitHub merged PR #253 as
+  `d5a68b34c24881daf7e6e93e4724c396aa813212` at
+  `2026-08-18T07:34:54Z`; all required checks passed.
+- Historical residual: PR #251 and PR #253 were created outside the adopted
+  `pr-merge` delivery unit and their bodies contain no approved `Candidate:`
+  SHA. Kent explicitly accepted this audit-only residual on 2026-08-18 so this
+  already-merged task can close. The bodies remain unchanged because a
+  retroactive edit cannot recreate pre-merge approval. Future delivery receives
+  no waiver and must use the repository's current `pr-merge` contract.
