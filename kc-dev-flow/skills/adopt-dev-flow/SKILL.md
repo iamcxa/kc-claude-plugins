@@ -61,6 +61,13 @@ same selection and derived route; do not ask the Captain to repeat the choice.
 Re-select only when its basis is stale. Do not reopen completed work solely to
 migrate a receipt.
 
+Retire old source mods by disposition, not by filename alone:
+
+| Retired source mod | Upgrade disposition |
+|---|---|
+| `engineering-judgment.md` | Remove an unchanged vendored copy. Stage perspectives, Chief Engineer, and Science Officer own its surviving duties; preserve a repository-specific extension as local policy. |
+| `work-control-profile.md` | Map each activated capability first. Bound-field checks stay repository-local, review convergence moves to the selected build observation, and delivery controls stay with the provider. Preserve any unmatched control locally before removing the vendored source. |
+
 ## Boundary
 
 Audit and upgrade findings do not create or schedule work. The Captain or named

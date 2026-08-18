@@ -67,6 +67,7 @@ required = [
     "kc-dev-flow/references/journey-slicing.md",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "kc-dev-flow/skills/adopt-dev-flow/SKILL.md",
     "kc-dev-flow/skills/choose-work-profile/SKILL.md",
     "kc-dev-flow/skills/continue-dev-flow/SKILL.md",
@@ -186,6 +187,7 @@ for profile, names in profile_files.items():
 for relative in [
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
+    "kc-dev-flow/scripts/profile-spacedock-route.test.py",
     "scripts/kc-dev-flow-loader-eval.test.py",
     "scripts/kc-dev-flow-published-tag-smoke.py",
 ]:
@@ -194,6 +196,10 @@ for relative in [
 run(
     [sys.executable, "kc-dev-flow/scripts/profile-contract-loader.test.py"],
     "profile loader",
+)
+run(
+    [sys.executable, "kc-dev-flow/scripts/profile-spacedock-route.test.py"],
+    "profile Spacedock route",
 )
 run([sys.executable, "scripts/kc-dev-flow-loader-eval.test.py"], "loader eval")
 run(
@@ -369,6 +375,7 @@ continue_skill = read(skills["continue-dev-flow"])
 chief = read(skills["chief-engineer"])
 science = read(skills["science-officer"])
 legacy = read(skills["science-officer-em"])
+adopter = read(skills["adopt-dev-flow"])
 normalized_chooser = " ".join(chooser.split())
 normalized_continue = " ".join(continue_skill.split())
 normalized_chief = " ".join(chief.split())
@@ -398,6 +405,8 @@ for phrase in [
 ]:
     require(phrase in normalized_continue, f"continuation is missing: {phrase}")
 require("fresh-context EM verdict" not in continue_skill, "continuation still mandates EM")
+for retired in ["`engineering-judgment.md`", "`work-control-profile.md`"]:
+    require(retired in adopter, f"adopter omits retired-mod disposition: {retired}")
 
 for phrase in [
     "next smallest integrated step",
