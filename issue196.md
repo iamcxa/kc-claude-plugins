@@ -266,3 +266,5 @@ Captain delivery authorization.**
   two pre-existing environment-gated portable-suite skips.
 - No Production obligation or promotion trigger was introduced. Readiness,
   merge, and terminalization remain Captain-owned.
+
+PR feedback: {"scheme":"github-pr-feedback/v1","repository":"iamcxa/kc-claude-plugins","pr":254,"layer":"single","head":"8e3594564b25f4607c55f1617a60ae011c2c6b85","fingerprint":"sha256:adbfeb24a353d682265316b01ee2a7638f08913274dd9ef5669c9282636e5f84","dispositions":[]}
