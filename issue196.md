@@ -13,8 +13,8 @@ issue: "196"
 pr: 254
 pr_artifact_v1:
 mod-block:
-design:
-lane:
+design: required
+lane: main
 ---
 
 ## Work profile receipt
@@ -87,28 +87,101 @@ The seed's premise was confirmed before filing; no option was chosen.
 
 ## Proposed approach
 
-Deferred — ideation owns this. The issue leaves an open choice between three
-defensible mechanisms, so this task is not in the defect lane (condition 4
-fails).
+Extend the existing happy-path `PATH` stub seam with a local `sleep` wrapper
+that records argv to its own temporary log. Run the compiled real-shaped
+fixture, then require its single `settle` step to invoke `sleep 2` exactly once.
+This observes the generated command rather than the stable system utility.
+
+The source-assertion alternative can match dead text or a helper definition,
+the same proxy failure that caused the happy-path gate to move from source text
+to argv. A total-step count is weaker because a compensating omission or
+addition can preserve the count without identifying the missing wait.
 
 ## Design determination
 
-Deferred — ideation owns this. Not pre-judged at seed capture.
+**Pilot slice, one journey:** compile and run the existing corpus-shaped fixture
+containing `settle: Wait 2`, observe the browser and wait channels separately,
+and fail if the wait call disappears or its duration changes. Repository
+maintainers are the limited user; the persistent value is the retained
+regression gate, not product data.
+
+The implementation owns no persistent runtime state, retry policy, recovery
+loop, external mutation, or production data. Its logs and wrapper live only in
+the test's temporary directory and are removed by the existing `t.after`
+cleanup. One wait needs no cross-channel ordering guarantee. Adding a second
+wait, shared reuse, or ordering semantics is a promotion trigger, not work to
+generalize here.
 
 ## Acceptance criteria
 
-Deferred — ideation owns this.
+**AC-1 — Removing the fixture wait makes the happy-path gate fail for the
+missing wait.** Verified by: against the PR #254 candidate, deleting `settle`
+leaves the compiled script at exit 0 and every existing browser assertion green,
+while the new sleep assertion fails with actual `[]` versus expected `[["2"]]`.
+Falsified by: the same deletion leaves the complete happy-path test green, or
+the observed failure comes from an unrelated browser assertion.
+
+**AC-2 — The retained fixture emits exactly the accepted wait command.**
+Verified by: the executed compiled script records exactly one sleep invocation
+with argv `["2"]` in a log separate from browser calls. Falsified by: no call,
+multiple calls, a different duration, or an assertion that only matches emitted
+source text without executing the script.
+
+**AC-3 — The slice changes assurance, not compiler behavior.** Verified by: the
+effective merge diff contains only `happy-path.test.js` and its sleep argv
+fixture; `codegen.js` and other production bytes are unchanged, the current-main
+merge simulation is clean, and the relevant suite passes at the exact PR head.
+Falsified by: any compiler/runtime hunk, new generalized timing abstraction, or
+required test skipped because of the shim.
 
 ## Test plan
 
-Deferred — ideation owns this.
+1. Run the focused happy-path and codegen tests with the retained `Wait 2`.
+2. Delete the fixture wait in a disposable sabotage run and require AC-1's
+   isolated failure.
+3. Run lint and the full portable suite at the exact candidate head.
+4. Simulate the merge with current `origin/main` and require a clean tree and
+   `git diff --check`.
 
 ## Measurement
 
+Before this slice, deleting `settle` produced exit 0 and a green happy-path
+gate. At PR #254 head `8e3594564b25f4607c55f1617a60ae011c2c6b85`, the same deletion produces the
+targeted `[]` versus `[["2"]]` failure while prior browser evidence stays green.
+The full suite reports 1060 passed, 0 failed, and the same 2 environment-gated
+skips. The clean current-main merge simulation is tree
+`7f608c5a43fa16511619d00c67b0d58ef13d7636` over
+`origin/main@03f0325515c110bc12a022fc5bbf662ec7887821`.
+
 ## Doc diff
 
-Deferred — ideation owns this.
+No external documentation changes. PR #254 updates the owning test's existing
+header comment to distinguish browser actions from waits and to replace the old
+declared blind spot with the new local sleep observation.
 
 ## Out of scope
 
-Deferred — ideation owns this.
+- Compiler or generated-runtime behavior changes.
+- Real-browser selector or timing validation.
+- A fake clock, shared timing framework, or reuse outside this happy-path test.
+- Relative ordering between browser and sleep logs, or support for multiple
+  waits in the fixture.
+- CI trigger, release, version, changelog, or production-surface changes.
+
+## Stage Report: shape — out-of-order implementation adoption
+
+**Decision: accept the PATH sleep shim as the smallest sufficient Pilot slice;
+the existing PR is candidate build evidence, not retroactive workflow proof.**
+
+- Captain Kent selected Pilot at `2026-08-18T08:54:13Z`; the committed v2
+  receipt loaded the logical `shape` contract before these criteria were added.
+- PR #254 was authored while the task still said every mechanism and criterion
+  was deferred. That ordering is recorded rather than rewritten: its exact-head
+  CI, sabotage result, and clean current-main merge simulation may be adopted at
+  build, but do not prove the earlier implementation was authorized.
+- A fresh Claude Sonnet interviewer found no blocking code defect and judged
+  the bytes `MERGE_NOW`. This is advisory code evidence, not GitHub approval,
+  Captain merge authorization, validation, or a terminal verdict.
+- Separate logs intentionally do not prove browser/sleep interleaving. With one
+  accepted wait, presence, multiplicity, and duration are the owned boundary;
+  cross-channel ordering remains outside scope.
