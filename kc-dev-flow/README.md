@@ -123,6 +123,10 @@ The package source contains:
   method triggered by POC build or Pilot/Production shape;
 - `references/journey-slicing.md` — conditional multi-slice guard triggered only
   by Pilot/Production shape;
+- `references/retained-document-policy.md` — conditional retained-document
+  checks at the selected shape/build/verification stage, with no new receipt;
+- `references/project-context-maintenance.md` — conditional correspondence
+  checks when accepted behavior may change a claim in bound project context;
 - `scripts/profile-contract-loader.py` — the closed route and loading mechanism.
 
 An adopter vendors these files and binds their local paths in the workflow's
@@ -140,7 +144,11 @@ membership, or interrupt the selected product route.
 Profile selection does not activate standalone references. Reverse recovery
 fires only for a proposed addition, replacement, removal, or missing claim in
 existing code. The multi-slice guard fires only when a Pilot or Production
-journey cannot be one integrated slice. Improvement harvesting remains explicit.
+journey cannot be one integrated slice. Retained-document policy fires only for
+an accepted or observed retained-document change. Project-context maintenance
+fires only when accepted behavior, architecture, or a public contract may change
+a claim in the bound project context. Both are rechecked against the exact diff
+before implementation exit or validation. Improvement harvesting remains explicit.
 An adopter-owned runtime mod such as Spacedock `pr-merge` is orthogonal: any
 profile may use it when PR delivery is selected, and none loads it merely by
 selecting a profile.

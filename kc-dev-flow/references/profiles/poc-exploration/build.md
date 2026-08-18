@@ -16,6 +16,16 @@ Build the smallest end-to-end path that can answer the experiment's question.
       "path": "../../reverse-recovery-audit.md",
       "trigger": "brownfield_capability_change",
       "receipt": "reverse_recovery"
+    },
+    {
+      "path": "../../retained-document-policy.md",
+      "trigger": "retained_document_change",
+      "receipt": null
+    },
+    {
+      "path": "../../project-context-maintenance.md",
+      "trigger": "project_context_claim_may_change",
+      "receipt": "project_context"
     }
   ]
 }

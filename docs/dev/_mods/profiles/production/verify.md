@@ -7,6 +7,26 @@ Working perspective: risk-selected verification owner.
 Prove the accepted production obligations at the exact revision using the
 cheapest instruments that can fail.
 
+## Conditional references
+
+```json
+{
+  "schema": "kc-dev-flow-conditional-references/v1",
+  "references": [
+    {
+      "path": "../../retained-document-policy.md",
+      "trigger": "retained_document_change",
+      "receipt": null
+    },
+    {
+      "path": "../../project-context-maintenance.md",
+      "trigger": "project_context_claim_may_change",
+      "receipt": "project_context"
+    }
+  ]
+}
+```
+
 ## Required output
 
 - exact-revision journey and lifecycle evidence;

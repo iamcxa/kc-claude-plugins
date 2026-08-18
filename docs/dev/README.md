@@ -63,13 +63,21 @@ README as a policy bundle.
 | Normal delivery advice | `kc-dev-flow:chief-engineer`, only on its bounded triggers |
 | Independent assurance | `kc-dev-flow:science-officer`, only on its bounded triggers |
 | Optional observation | Typed RoboRev observation at every profile's implementation exit; `docs/dev/runbooks/roborev-implementation-exit.md` |
-| Conditional shape references | `docs/dev/_mods/reverse-recovery-audit.md`; `docs/dev/_mods/journey-slicing.md` |
+| Conditional references | `docs/dev/_mods/reverse-recovery-audit.md`; `docs/dev/_mods/journey-slicing.md`; `docs/dev/_mods/retained-document-policy.md`; `docs/dev/_mods/project-context-maintenance.md` |
 | PR lifecycle | Spacedock `pr-merge`, only when a PR is the selected delivery artifact |
 
-The loader, shared core, profile contracts, and two conditional references are
+The loader, shared core, profile contracts, and four conditional references are
 vendored from `kc-dev-flow`.
 `scripts/kc-dev-flow-contract-test.py` checks their package/adopter identity and
 every supported profile-stage combination.
+
+The selected stage resolves documentation triggers from accepted scope and
+rechecks them against the exact diff before implementation exit or validation.
+An accepted or observed retained-document change loads
+`retained-document-policy.md` without creating a receipt. A possible changed
+claim in the bound `PRODUCT.md`, `ARCHITECTURE.md`, or `CLAUDE.md` context loads
+`project-context-maintenance.md` and records its existing `project_context`
+receipt. Work-item records and unrelated Markdown changes activate neither.
 
 The selected profile's `build.md` supplies one typed `review_convergence`
 observation in `observe` mode, which appears only in the implementation-stage

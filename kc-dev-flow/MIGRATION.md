@@ -39,7 +39,10 @@ the installed package or silently run the 2.x workflow.
    profile route; an unrepresentable transition is a refit requirement.
 7. Retire old source mods by disposition. Keep provider mods and unmatched
    repository controls local instead of deleting them or copying them into the
-   shared core.
+   shared core. Preserve `retained-document-policy.md` and
+   `project-context-maintenance.md` as conditional references; bind their
+   retained-document and project-context triggers instead of loading either as
+   standing policy.
 8. Run every profile-stage loader combination, prove unselected contracts are
    absent, exercise runtime skips, and run the repository's normal gates. Merge
    the adopter refit before updating the installed plugin used for continuation.

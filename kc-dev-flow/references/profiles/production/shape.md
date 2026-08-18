@@ -22,6 +22,16 @@ policy, rollout, and release boundary.
       "path": "../../journey-slicing.md",
       "trigger": "multi_slice_required",
       "receipt": "journey_slices"
+    },
+    {
+      "path": "../../retained-document-policy.md",
+      "trigger": "retained_document_change",
+      "receipt": null
+    },
+    {
+      "path": "../../project-context-maintenance.md",
+      "trigger": "project_context_claim_may_change",
+      "receipt": "project_context"
     }
   ]
 }

@@ -7,6 +7,26 @@ Working perspective: integration and delivery owner.
 Exercise the accepted journey through real seams, confirm bounded recovery and
 data safety, and deliver it through the repository's declared authority.
 
+## Conditional references
+
+```json
+{
+  "schema": "kc-dev-flow-conditional-references/v1",
+  "references": [
+    {
+      "path": "../../retained-document-policy.md",
+      "trigger": "retained_document_change",
+      "receipt": null
+    },
+    {
+      "path": "../../project-context-maintenance.md",
+      "trigger": "project_context_claim_may_change",
+      "receipt": "project_context"
+    }
+  ]
+}
+```
+
 ## Required output
 
 - exact-revision journey evidence;

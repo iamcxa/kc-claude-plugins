@@ -7,6 +7,26 @@ Working perspective: experiment owner.
 Exercise the real journey and decide whether the experiment answered its stated
 question.
 
+## Conditional references
+
+```json
+{
+  "schema": "kc-dev-flow-conditional-references/v1",
+  "references": [
+    {
+      "path": "../../retained-document-policy.md",
+      "trigger": "retained_document_change",
+      "receipt": null
+    },
+    {
+      "path": "../../project-context-maintenance.md",
+      "trigger": "project_context_claim_may_change",
+      "receipt": "project_context"
+    }
+  ]
+}
+```
+
 ## Required output
 
 - observed journey result and artifact revision;

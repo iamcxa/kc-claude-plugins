@@ -36,7 +36,7 @@ flowchart LR
     P["Selected profile<br/>base + current stage"] --> L
     L --> C["Active policy<br/>core + base + stage"]
     C -. "when stage is build" .-> X["Implementation exit<br/>typed observation"]
-    C -. "typed trigger true" .-> R["One conditional reference<br/>and bounded receipt"]
+    C -. "typed trigger true" .-> R["Triggered references<br/>and bounded receipts"]
     D["PR delivery event"] -.-> M["Spacedock pr-merge<br/>runtime mod"]
 ```
 

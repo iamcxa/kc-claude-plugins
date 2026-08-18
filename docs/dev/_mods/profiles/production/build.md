@@ -6,6 +6,26 @@ Working perspective: senior software engineer.
 
 Build the smallest operable slice and its accepted lifecycle behavior.
 
+## Conditional references
+
+```json
+{
+  "schema": "kc-dev-flow-conditional-references/v1",
+  "references": [
+    {
+      "path": "../../retained-document-policy.md",
+      "trigger": "retained_document_change",
+      "receipt": null
+    },
+    {
+      "path": "../../project-context-maintenance.md",
+      "trigger": "project_context_claim_may_change",
+      "receipt": "project_context"
+    }
+  ]
+}
+```
+
 ## Required output
 
 - integrated production path;

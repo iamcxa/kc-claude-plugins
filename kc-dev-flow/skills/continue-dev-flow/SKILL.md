@@ -34,9 +34,17 @@ project-global mode; simultaneous items may load different routes.
 
 A selected stage may emit a `kc-dev-flow-conditional-references/v1` block. For
 each entry, resolve `path` relative to the selected stage contract and read it
-only when its named `trigger` is true; otherwise leave it unread. Record the
-named receipt in the existing work item. A link is not activation. A reference
-cannot add stages, broaden scope, or become a standing policy bundle.
+only when its named `trigger` is true; otherwise leave it unread. Resolve the
+trigger first from accepted scope, then recheck it against the exact changed
+files before implementation exit or validation. `retained_document_change` is
+true only when the accepted output or exact diff adds, removes, or changes a
+retained document. `project_context_claim_may_change` is true only when accepted
+behavior, architecture, or a public contract may change a claim in the bound
+project context, or the exact diff changes that bound context. A Markdown work
+record alone satisfies neither trigger. A newly true trigger loads its reference
+before the stage verdict. Record a named receipt in the existing work item;
+`receipt: null` creates no receipt. A link is not activation. A reference cannot
+add stages, broaden scope, or become a standing policy bundle.
 
 The canonical vendored loader invocation is:
 

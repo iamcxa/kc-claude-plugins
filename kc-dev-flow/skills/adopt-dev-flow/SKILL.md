@@ -22,6 +22,8 @@ repair the cheapest compatible seam.
 2. Vendor `../../references/kernel.md`, the `references/profiles/` tree,
    `../../references/reverse-recovery-audit.md`,
    `../../references/journey-slicing.md`, and
+   `../../references/retained-document-policy.md`,
+   `../../references/project-context-maintenance.md`, and
    `../../scripts/profile-contract-loader.py` without local edits. The selected
    stage owns each typed conditional-reference trigger; vendoring a reference
    does not load it. The selected `build.md` owns its typed proportional observation.
@@ -36,7 +38,11 @@ repair the cheapest compatible seam.
    local terminal state only through an explicit mapping; it does not silently
    join every profile route.
 5. Make each working stage a small loader invocation or pointer. Load a
-   conditional reference only when the selected stage predicate fires. At
+   conditional reference only when the selected stage predicate fires. Bind
+   `retained_document_change` to accepted or observed retained-document changes
+   and `project_context_claim_may_change` to a possible changed claim in the
+   repository's bound project context. Recheck both from the exact diff at
+   implementation exit or validation; `receipt: null` adds no receipt. At
    implementation exit, use only the selected typed observation emitted by the
    loader. Do not duplicate the profile contracts in the workflow README.
 6. Bind Captain, FO, Chief Engineer, Science Officer, deterministic gate, and
@@ -75,6 +81,11 @@ Retire old source mods by disposition, not by filename alone:
 |---|---|
 | `engineering-judgment.md` | Remove an unchanged vendored copy. Stage perspectives, Chief Engineer, and Science Officer own its surviving duties; preserve a repository-specific extension as local policy. |
 | `work-control-profile.md` | Map each activated capability first. Bound-field checks stay repository-local, review convergence moves to the selected build observation, and delivery controls stay with the provider. Preserve any unmatched control locally before removing the vendored source. |
+
+Preserve the surviving `retained-document-policy.md` and
+`project-context-maintenance.md` references byte-for-byte. They remain typed
+conditional references; do not fold either into the shared core or load it for
+an unrelated work record.
 
 ## Boundary
 

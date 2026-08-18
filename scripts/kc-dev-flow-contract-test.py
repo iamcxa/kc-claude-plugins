@@ -67,6 +67,8 @@ required = [
     "kc-dev-flow/references/kernel.md",
     "kc-dev-flow/references/reverse-recovery-audit.md",
     "kc-dev-flow/references/journey-slicing.md",
+    "kc-dev-flow/references/retained-document-policy.md",
+    "kc-dev-flow/references/project-context-maintenance.md",
     "kc-dev-flow/scripts/profile-contract-loader.py",
     "kc-dev-flow/scripts/profile-contract-loader.test.py",
     "kc-dev-flow/scripts/profile-spacedock-route.test.py",
@@ -95,6 +97,18 @@ for retired in [
 ]:
     require(not (ROOT / retired).exists(), f"retired control still shipped: {retired}")
 
+documentation_references = [
+    {
+        "path": "../../retained-document-policy.md",
+        "trigger": "retained_document_change",
+        "receipt": None,
+    },
+    {
+        "path": "../../project-context-maintenance.md",
+        "trigger": "project_context_claim_may_change",
+        "receipt": "project_context",
+    },
+]
 conditional_stage_references = {
     ("poc-exploration", "build.md"): [
         {
@@ -102,7 +116,9 @@ conditional_stage_references = {
             "trigger": "brownfield_capability_change",
             "receipt": "reverse_recovery",
         }
-    ],
+    ]
+    + documentation_references,
+    ("poc-exploration", "prove.md"): documentation_references,
     ("pilot-product-slice", "shape.md"): [
         {
             "path": "../../reverse-recovery-audit.md",
@@ -114,7 +130,10 @@ conditional_stage_references = {
             "trigger": "multi_slice_required",
             "receipt": "journey_slices",
         },
-    ],
+    ]
+    + documentation_references,
+    ("pilot-product-slice", "build.md"): documentation_references,
+    ("pilot-product-slice", "verify-deliver.md"): documentation_references,
     ("production", "shape.md"): [
         {
             "path": "../../reverse-recovery-audit.md",
@@ -126,7 +145,10 @@ conditional_stage_references = {
             "trigger": "multi_slice_required",
             "receipt": "journey_slices",
         },
-    ],
+    ]
+    + documentation_references,
+    ("production", "build.md"): documentation_references,
+    ("production", "verify.md"): documentation_references,
 }
 for profile, names in profile_files.items():
     for name in names:
@@ -135,9 +157,8 @@ for profile, names in profile_files.items():
             f"missing profile contract: {profile}/{name}",
         )
         if name != "base.md":
-            stage_contract = read(
-                f"kc-dev-flow/references/profiles/{profile}/{name}"
-            )
+            stage_path = PLUGIN / "references/profiles" / profile / name
+            stage_contract = stage_path.read_text(encoding="utf-8")
             require(
                 "Working perspective:" in stage_contract and "\nRole:" not in stage_contract,
                 f"stage perspective is not a lightweight cue: {profile}/{name}",
@@ -157,6 +178,13 @@ for profile, names in profile_files.items():
                 and (not conditional or conditional[0].get("references") == expected_references),
                 f"wrong conditional references: {profile}/{name} {conditional}",
             )
+            for reference in expected_references:
+                resolved = (stage_path.parent / reference["path"]).resolve()
+                require(
+                    resolved.is_relative_to(PLUGIN / "references")
+                    and resolved.is_file(),
+                    f"unresolved conditional reference: {profile}/{name} {reference}",
+                )
             require(
                 "work-control-profile" not in stage_contract,
                 f"retired work control leaked into stage: {profile}/{name}",
@@ -296,11 +324,31 @@ require(
     == (ADOPTED / "profile-contract-loader.py").read_bytes(),
     "self-adopted profile loader differs from package source",
 )
-for reference in ["reverse-recovery-audit.md", "journey-slicing.md"]:
+for reference in [
+    "reverse-recovery-audit.md",
+    "journey-slicing.md",
+    "retained-document-policy.md",
+    "project-context-maintenance.md",
+]:
     require(
         (PLUGIN / "references" / reference).read_bytes()
         == (ADOPTED / reference).read_bytes(),
         f"self-adopted conditional reference differs: {reference}",
+    )
+for reference, trigger in [
+    ("retained-document-policy.md", "retained_document_change"),
+    ("project-context-maintenance.md", "project_context_claim_may_change"),
+]:
+    policy = re.sub(
+        r"\s+",
+        " ",
+        (PLUGIN / "references" / reference).read_text(encoding="utf-8"),
+    )
+    require(
+        "as a typed conditional reference" in policy
+        and trigger in policy
+        and "do not load the file when that trigger is false" in policy,
+        f"conditional reference has stale adoption instructions: {reference}",
     )
 for profile, names in profile_files.items():
     for name in names:
@@ -410,12 +458,21 @@ for phrase in [
     "A link is not activation",
 ]:
     require(phrase in normalized_continue, f"continuation is missing: {phrase}")
+for phrase in [
+    "retained_document_change",
+    "project_context_claim_may_change",
+    "A Markdown work record alone satisfies neither trigger",
+    "`receipt: null` creates no receipt",
+]:
+    require(phrase in normalized_continue, f"continuation omits doc trigger: {phrase}")
 require("fresh-context EM verdict" not in continue_skill, "continuation still mandates EM")
 for retired in ["`engineering-judgment.md`", "`work-control-profile.md`"]:
     require(retired in adopter, f"adopter omits retired-mod disposition: {retired}")
 for phrase in [
     "older explicit Captain choice outside the v1 schema",
     "extra local terminal state only through an explicit mapping",
+    "Preserve the surviving `retained-document-policy.md`",
+    "`receipt: null` adds no receipt",
 ]:
     require(phrase in normalized_adopter, f"adopter omits migration rule: {phrase}")
 for phrase in [
@@ -423,6 +480,7 @@ for phrase in [
     "one coordinated cutover",
     "leave completed and archived items unchanged",
     "finding-only terminal",
+    "Preserve `retained-document-policy.md`",
 ]:
     require(phrase in migration, f"migration guide omits: {phrase}")
 for phrase in [
@@ -467,6 +525,8 @@ for phrase in [
     "Profiles are per item",
     "No agent is a general gatekeeper",
     "delivery event mod, not a profile contract",
+    "four conditional references",
+    "Work-item records and unrelated Markdown changes activate neither",
 ]:
     require(phrase in workflow, f"self-adoption is missing: {phrase}")
 
@@ -490,6 +550,8 @@ require(
 for phrase in [
     "conditional brownfield recovery",
     "conditional multi-slice guard",
+    "conditional retained-document checks",
+    "conditional correspondence checks",
     "any profile may use it when PR delivery is selected",
 ]:
     require(
