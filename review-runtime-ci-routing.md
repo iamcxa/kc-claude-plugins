@@ -1,12 +1,12 @@
 ---
 title: Route review-runtime CI by the contract a change can affect
-status: backlog
+status: implementation
 product: kc-pr-flow
 sprint:
 source: Captain direction after PR 249 CI review, 2026-08-18
 design: required
-started:
-worktree:
+started: 2026-08-18T03:28:12Z
+worktree: .context/worktrees/review-runtime-ci-routing
 id: ntrtwg834txp70x6sqv27fke
 ---
 
