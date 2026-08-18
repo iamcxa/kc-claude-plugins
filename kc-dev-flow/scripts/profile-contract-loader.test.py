@@ -302,4 +302,152 @@ with tempfile.TemporaryDirectory(prefix="profile-contract-loader-") as temporary
         "missing selected stage did not fail closed",
     )
 
+    # A stage that declares a conditional reference the adopter never vendored
+    # must fail at load, not silently drop the capability the stage declares.
+    declaring_stage = root / "profiles" / "poc-exploration" / "prove.md"
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "../../never-vendored.md", '
+        '"trigger": "example", "receipt": null}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    unvendored_item = write_work_item(
+        root, "poc-exploration", "validation", "unvendored-conditional-reference"
+    )
+    rejected = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(
+        rejected.returncode == 2
+        and "never-vendored.md" in rejected.stderr
+        and "not vendored" in rejected.stderr,
+        "unvendored conditional reference did not fail closed",
+    )
+
+    # The same stage passes once the reference exists, so the check gates on
+    # presence rather than on declaring a conditional reference at all.
+    (root / "never-vendored.md").write_text("VENDORED\n", encoding="utf-8")
+    accepted = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(
+        accepted.returncode == 0
+        and "STAGE-poc-exploration-prove" in accepted.stdout
+        and "VENDORED" not in accepted.stdout,
+        "vendored conditional reference did not load, or was read eagerly",
+    )
+
+    # Presence is not enough: a path that escapes the contracts root must be
+    # refused even when a real file sits at the resolved location.
+    outside = root.parent / "outside-contracts-root.md"
+    outside.write_text("OUTSIDE\n", encoding="utf-8")
+    for escaping_path, label in [
+        ("../../../outside-contracts-root.md", "traversal"),
+        (str(outside), "absolute"),
+    ]:
+        declaring_stage.write_text(
+            "STAGE-poc-exploration-prove\n\n"
+            "```json\n"
+            '{"schema": "kc-dev-flow-conditional-references/v1", '
+            '"references": [{"path": "' + escaping_path + '", '
+            '"trigger": "example", "receipt": null}]}\n'
+            "```\n",
+            encoding="utf-8",
+        )
+        rejected = subprocess.run(
+            [
+                sys.executable,
+                str(LOADER),
+                "--contracts-root",
+                str(root),
+                "--work-item",
+                str(unvendored_item),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        require(
+            rejected.returncode == 2 and "OUTSIDE" not in rejected.stdout,
+            f"{label} conditional reference escaped the contracts root",
+        )
+
+    # An absolute path is refused even when it resolves inside the root: a
+    # vendored contract carrying one is unportable, which containment misses.
+    declaring_stage.write_text(
+        "STAGE-poc-exploration-prove\n\n"
+        "```json\n"
+        '{"schema": "kc-dev-flow-conditional-references/v1", '
+        '"references": [{"path": "' + str(root / "never-vendored.md") + '", '
+        '"trigger": "example", "receipt": null}]}\n'
+        "```\n",
+        encoding="utf-8",
+    )
+    rejected = subprocess.run(
+        [
+            sys.executable,
+            str(LOADER),
+            "--contracts-root",
+            str(root),
+            "--work-item",
+            str(unvendored_item),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    require(
+        rejected.returncode == 2 and "absolute" in rejected.stderr,
+        "in-root absolute conditional reference was accepted",
+    )
+
+    # A non-object or malformed JSON block must not escape as a traceback: an
+    # unrelated array is ignored, a malformed reference set is a ContractError.
+    for block, expect_rc, label in [
+        ('["not", "an", "object"]', 0, "unrelated JSON array"),
+        ('{"schema": "kc-dev-flow-conditional-references/v1", "references": {}}',
+         2, "non-list reference set"),
+        ('{"schema": "kc-dev-flow-conditional-references/v1", "references": [1]}',
+         2, "reference entry without a path"),
+    ]:
+        declaring_stage.write_text(
+            "STAGE-poc-exploration-prove\n\n```json\n" + block + "\n```\n",
+            encoding="utf-8",
+        )
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(LOADER),
+                "--contracts-root",
+                str(root),
+                "--work-item",
+                str(unvendored_item),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        require(
+            result.returncode == expect_rc and "Traceback" not in result.stderr,
+            f"{label} did not resolve to a clean rc={expect_rc}: {result.returncode} {result.stderr[:120]}",
+        )
+
 print("profile contract loader test: PASS")

@@ -5,6 +5,18 @@ loader result declares `review_convergence` in `observe` mode with `provider: ro
 `implementation exit`. The observation gives fresh validation exact-tip defect
 evidence. It does not replace validation and it does not make RoboRev a gate.
 
+## Precondition
+
+This contract's single-flight claim runs through a Spacedock-registered state
+holder and its supported state transaction. That dependency is deliberate and is
+not being made portable: the observation is in scope for a repository running
+Spacedock together with kc-dev-flow, and out of scope for one that is not.
+
+A repository with no Spacedock state authority records that once and leaves the
+observation unloaded. That is a declared boundary, not a missing binding, not an
+adoption defect, and not an `UNAVAILABLE` result to re-derive at every
+implementation exit. Ordinary fresh validation is unchanged either way.
+
 ## Activation and repository ownership
 
 The typed observation and repository Local Profile together name:

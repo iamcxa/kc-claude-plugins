@@ -104,6 +104,62 @@ def resolve_work_item(path: Path) -> dict[str, str]:
     }
 
 
+CONDITIONAL_SCHEMA = "kc-dev-flow-conditional-references/v1"
+
+
+def check_conditional_references(root: Path, contract_path: Path, text: str) -> None:
+    """Refuse a stage contract that names a reference the adopter has not vendored.
+
+    The reference itself stays unread until its trigger fires; only its presence
+    is checked, so an incomplete vendor fails at load instead of silently
+    dropping the capability the stage declares. Presence alone is not enough:
+    the resolved target must stay inside the contracts root, so an absolute
+    path, a `..` escape, or a symlink out of the tree cannot satisfy the check
+    with a file the adopter never vendored.
+    """
+    for block in re.findall(r"```json\s*\n(.*?)```", text, re.DOTALL):
+        try:
+            declared = json.loads(block)
+        except json.JSONDecodeError as exc:
+            raise ContractError(
+                f"{contract_path.name} has an unparseable JSON block: {exc}"
+            ) from exc
+        if not isinstance(declared, dict):
+            continue
+        if declared.get("schema") != CONDITIONAL_SCHEMA:
+            continue
+        entries = declared.get("references")
+        if not isinstance(entries, list):
+            raise ContractError(
+                f"{contract_path.name} declares conditional references that are "
+                "not a list"
+            )
+        for entry in entries:
+            if not isinstance(entry, dict) or not isinstance(entry.get("path"), str):
+                raise ContractError(
+                    f"{contract_path.name} has a conditional reference entry "
+                    f"without a string path: {entry!r}"
+                )
+            declared_path = entry["path"]
+            if Path(declared_path).is_absolute():
+                raise ContractError(
+                    f"{contract_path.name} declares absolute conditional "
+                    f"reference {declared_path!r}"
+                )
+            target = (contract_path.parent / declared_path).resolve()
+            if not target.is_relative_to(root):
+                raise ContractError(
+                    f"{contract_path.name} declares conditional reference "
+                    f"{declared_path!r}, which resolves outside the contracts "
+                    f"root at {target}"
+                )
+            if not target.is_file():
+                raise ContractError(
+                    f"{contract_path.name} declares conditional reference "
+                    f"{declared_path!r}, which is not vendored at {target}"
+                )
+
+
 def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
     root = root.expanduser().resolve()
     receipt = resolve_work_item(work_item)
@@ -130,6 +186,7 @@ def load_contracts(root: Path, work_item: Path) -> dict[str, object]:
             text = raw.decode("utf-8")
         except (OSError, UnicodeDecodeError, ValueError) as exc:
             raise ContractError(f"cannot load selected contract {path}: {exc}") from exc
+        check_conditional_references(root, path, text)
         loaded.append(
             {
                 "path": relative.as_posix(),

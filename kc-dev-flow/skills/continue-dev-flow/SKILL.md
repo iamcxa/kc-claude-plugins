@@ -13,6 +13,12 @@ Continue by the selected profile's smallest sufficient route.
    `## Local Profile` and the next same-level heading, then read that bounded
    section plus the frontmatter; do not open the full workflow README.
 2. Recheck the worktree, branch, shared-state owner, and remote delivery state.
+   When this item is delivered through a reviewable delivery artifact, list the
+   open artifacts before creating or reusing a branch. An open unmerged artifact
+   that carries work this item builds on is the default base: branch from its
+   source branch and stack, rather than branching from the trunk or waiting for
+   it to merge. `delivery-branch-base.md` owns the rule and its exceptions, and
+   applies whoever owns the delivery ceremony.
 3. Read iteration authority. If it contains no committed item, report that
    scheduling is needed; do not inspect or invent execution state.
 4. Read the exact committed work item and current state from their declared
@@ -41,7 +47,18 @@ true only when the accepted output or exact diff adds, removes, or changes a
 retained document. `project_context_claim_may_change` is true only when accepted
 behavior, architecture, or a public contract may change a claim in the bound
 project context, or the exact diff changes that bound context. A Markdown work
-record alone satisfies neither trigger. A newly true trigger loads its reference
+record alone satisfies neither trigger. `delivery_artifact_review` is true when
+this item is delivered through a reviewable delivery artifact — pull request,
+merge request, or forge equivalent — no matter who owns the ceremony; it is false
+only for a route that delivers without one. `pr_delivery_selected` is narrower:
+true only when no local delivery provider owns the PR ceremony, so the portable
+one applies. A repository whose provider mod owns the ceremony has the first
+trigger true and the second false. `implementation_exit_observation_declared` is
+true only at a build stage whose emitted typed observation names a provider and
+whose repository meets that provider's recorded precondition; it is the method
+for that observation, not an extra review. RoboRev's precondition is a
+Spacedock-registered state holder, so a repository without one leaves the trigger
+false and never loads the contract. A newly true trigger loads its reference
 before the stage verdict. Record a named receipt in the existing work item;
 `receipt: null` creates no receipt. A link is not activation. A reference cannot
 add stages, broaden scope, or become a standing policy bundle.
@@ -96,13 +113,18 @@ that changes the decision, and next action.
 
 At implementation exit, inspect only the typed observation in the selected
 `build` contract returned by the loader. When it declares `review_convergence`
-in `observe` mode, resolve the repository-local
-RoboRev runbook from `## Local Profile`, select the reviewer complementary to the
-actual implementation provider family, and pass the emitted profile controls
-explicitly. An absent declaration performs no RoboRev probe or invocation. An unknown
-implementation family or unavailable provider produces an honest non-gating
-`UNAVAILABLE` result; do not guess or use ambient defaults.
+in `observe` mode, that same `build` contract's
+`implementation_exit_observation_declared` trigger is true, so read the provider
+contract it names — `../../references/roborev-implementation-exit.md` — as the
+method. Take the reviewer mapping, state holder, prerequisite, and durability
+command from `## Local Profile`, select the reviewer complementary to the actual
+implementation provider family, and pass the emitted profile controls explicitly.
+An absent declaration leaves the trigger false and performs no RoboRev probe or
+invocation. An unknown implementation family or unavailable provider produces an
+honest non-gating `UNAVAILABLE` result; do not guess or use ambient defaults.
 
-`../../references/roborev-implementation-exit.md` is an adoption source, not a
-runtime fallback. Load improvement harvesting only on an explicit request; it
+The provider contract is vendored and loaded like any other conditional
+reference, so an adopter that vendors the profile tree gets this capability
+rather than having to author a runbook for it. Only the repository-local
+bindings stay local. Load improvement harvesting only on an explicit request; it
 never interrupts the selected product route.

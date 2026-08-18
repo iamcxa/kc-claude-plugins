@@ -7,6 +7,26 @@ Working perspective: release owner.
 Confirm that the exact verified revision can be released and recovered under the
 declared production authority.
 
+## Conditional references
+
+```json
+{
+  "schema": "kc-dev-flow-conditional-references/v1",
+  "references": [
+    {
+      "path": "../../delivery-branch-base.md",
+      "trigger": "delivery_artifact_review",
+      "receipt": null
+    },
+    {
+      "path": "../../pr-delivery.md",
+      "trigger": "pr_delivery_selected",
+      "receipt": null
+    }
+  ]
+}
+```
+
 ## Required output
 
 - exact delivery revision and required provider checks;
