@@ -1,0 +1,85 @@
+name: kc-pr-flow review evaluation tests
+
+# These model-free suites validate the A/B skill-ablation harness and the
+# sanitized paired-receipt scorer. They do not validate runtime or posting.
+
+on:
+  pull_request:
+    paths:
+      - "kc-pr-flow/scripts/review-runtime.sh"
+      - "kc-pr-flow/scripts/review-runtime-safe-io.py"
+      - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
+      - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
+      - "kc-pr-flow/scripts/review-ablation.sh"
+      - "kc-pr-flow/scripts/review-ablation-core.py"
+      - "kc-pr-flow/scripts/review-ablation.test.sh"
+      - "kc-pr-flow/scripts/review-ablation-spans.tsv"
+      - "kc-pr-flow/scripts/review-ablation-corpus.tsv"
+      - "kc-pr-flow/scripts/review-ablation-driver-prompt.md"
+      - "kc-pr-flow/test/fixtures/review-runtime/paired-runs.jsonl"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/reference/review-triage.md"
+      - "kc-pr-flow/reference/learned-patterns.md"
+      - ".github/workflows/review-evaluation-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-pr-flow/scripts/review-runtime.sh"
+      - "kc-pr-flow/scripts/review-runtime-safe-io.py"
+      - "kc-pr-flow/scripts/review-runtime-benchmark.sh"
+      - "kc-pr-flow/scripts/review-runtime-benchmark.test.sh"
+      - "kc-pr-flow/scripts/review-ablation.sh"
+      - "kc-pr-flow/scripts/review-ablation-core.py"
+      - "kc-pr-flow/scripts/review-ablation.test.sh"
+      - "kc-pr-flow/scripts/review-ablation-spans.tsv"
+      - "kc-pr-flow/scripts/review-ablation-corpus.tsv"
+      - "kc-pr-flow/scripts/review-ablation-driver-prompt.md"
+      - "kc-pr-flow/test/fixtures/review-runtime/paired-runs.jsonl"
+      - "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+      - "kc-pr-flow/reference/review-triage.md"
+      - "kc-pr-flow/reference/learned-patterns.md"
+      - ".github/workflows/review-evaluation-tests.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: review-evaluation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review-benchmark:
+    name: paired review benchmark contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Require runtime tools
+        run: |
+          command -v bash
+          command -v jq
+          command -v python3
+          command -v sha256sum
+
+      - name: Run paired benchmark contract
+        run: bash kc-pr-flow/scripts/review-runtime-benchmark.test.sh
+
+  review-ablation:
+    name: review skill ablation contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Require runtime tools
+        run: |
+          command -v bash
+          command -v jq
+          command -v python3
+          command -v sha256sum
+
+      - name: Run ablation harness contract
+        run: bash kc-pr-flow/scripts/review-ablation.test.sh
